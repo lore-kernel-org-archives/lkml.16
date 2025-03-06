@@ -1,130 +1,162 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2805C199FB0;
-	Thu,  6 Mar 2025 06:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F28578F45;
+	Thu,  6 Mar 2025 06:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741242384; cv=none; b=cSMa1qf9IJv5uQeClCb3KF1ltOebliv+q2/f3561G7JQ4KoHkF4LY/ToBBQ2pfw6/7IRm8PnNmB1cYNqjs+iXSG4qpi2XusdkmhQeSDEi2LOLlcaV18cQCvj1VvR2s1KC9QHsbDd+nsrm6tWOhzZy7cBCrWBUARS0bvPuajLOtk=
+	t=1741242673; cv=none; b=I8SYKj8JkTlVF0ZxwnhiADSWuJrJU9iXf0OFeVpxAa5HtXUwWLtoU3Yc12zakOHYK41L/gkfXEo9d7Qf0Y/q0+vQpQFP3HSW34hl/NMIh8XnvaWMTD7T1S1sbo45kC/SzJizMxsmvJxvaqHlCXt4XoCYxx6ZUSqwxWuQ1VWhGlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741242384; c=relaxed/simple;
-	bh=zXTwBxHNlR7kli2CChDZ8XPBeiUUU0Nacd4/B7dZ++M=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=bAQD926oHbNbTh1Net/RfgqzMCYmfaPq5CzSDXNQdPC8SixFL+h08IWVqLIThkEAjXNJLVL+7wVKCZ59MsFuHpsfP6+DKT03AJp8BR1XOqhnVpUPe8J6XDg4bOM7pPYlrXQThJZaVo238zkLMRmw/1A6xp4YtRpouDs+YfUGHug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxWXEKQMln+f2LAA--.42935S3;
-	Thu, 06 Mar 2025 14:26:18 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxbsUGQMlnuPk4AA--.15820S3;
-	Thu, 06 Mar 2025 14:26:16 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: mm: Set max_pfn with the PFN of the last
- page
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org
-References: <20250306035314.2131976-1-maobibo@loongson.cn>
- <CAAhV-H45DobYbBFBatJtHPF22VAX=QWH8i=jzpWNvN-ELgWr4Q@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <b1fde3cf-f4ed-68cc-fd4d-8b8b089870f1@loongson.cn>
-Date: Thu, 6 Mar 2025 14:25:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1741242673; c=relaxed/simple;
+	bh=1RM+XKiz2InHZKwcemv4fAzqpEQpi7paLLvTAQeR/Og=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRSKHQl8P1NvHn6q7mizO8tOep/enqWqMzr6bJDRkwj0xUw0mdJF0CpLV52GufW6x2sTA3PFzaKK/BrzGSd5QeTd2lmNryiRlkgdOrR9DSuTlX59OcouF6Ra7boTEiP8iLUmMAPmQ5Z4lZAWkUprPC0fb3wiTnsvPYHGceWWUgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QCZq/oGh; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QCZq/oGh"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525KcxsN028695;
+	Thu, 6 Mar 2025 06:30:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=7qufjD/TfK5MxuwDXYkHpEzCdUsv3a
+	nqlYbsR18my/0=; b=QCZq/oGhIWsV/P0X6bkmtEov1Xv4lzeTcinJ6x4o8BxIfy
+	vMjzZB3X+DFrMZ6sC5LXNWXmJYiRUbyNjP7g8JMehPPnWeX06eE7htAHGrvHjmSm
+	9uav9ohtkMimKYn09096cfN0dfFhbMEMf3UrD5E4gL/R/FHmRw3lbChGwx03KNSM
+	X5eIQgsNqTOBmHPiJLfzOPIEbLFZbX3k00Fj0a4Q+lP1Meka/VL68mwWmoJaAjJ+
+	N/04qtTmPa1gd/dHTvygKRCtMMXVpCPL8CDW9QCudqG9OZ434MiP735hEepVPSV5
+	QwM2uyYtFUZ2TCFjoHN+VN6kIjfxyUNNoA1gAWCA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 456wu0236j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 06:30:57 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5266Lla2013261;
+	Thu, 6 Mar 2025 06:30:57 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 456wu0236e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 06:30:56 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5265HGWu020841;
+	Thu, 6 Mar 2025 06:30:56 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djnq5pm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 06:30:56 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5266UsaF21037458
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Mar 2025 06:30:54 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 42F982004B;
+	Thu,  6 Mar 2025 06:30:54 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5A49220040;
+	Thu,  6 Mar 2025 06:30:52 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.109.219.249])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  6 Mar 2025 06:30:52 +0000 (GMT)
+Date: Thu, 6 Mar 2025 12:00:49 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: linux-ext4@vger.kernel.org, Jan Kara <jack@suse.com>, tytso@mit.edu
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Baokun Li <libaokun1@huawei.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v2 2/2] ext4: protect ext4_release_dquot against freezing
+Message-ID: <Z8lBGaJGnM3SZZ-g@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <20241121123855.645335-1-ojaswin@linux.ibm.com>
+ <20241121123855.645335-3-ojaswin@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H45DobYbBFBatJtHPF22VAX=QWH8i=jzpWNvN-ELgWr4Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxbsUGQMlnuPk4AA--.15820S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxur1UWr1xXr1xXr1fXr4xGrX_yoW5GF1Dpw
-	4fAF17Wr4UGr1xAw18Xw1fuFyfX39YkaySgF4UtF1Iyrs8Grn3Kw4jqw13urn2gr10ya1F
-	qrW2gF9IvayjyagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUU
-	U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241121123855.645335-3-ojaswin@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lOF2C5IGhBKrbxO3AofFh7cOFvT-pvek
+X-Proofpoint-ORIG-GUID: z8x8t88IJ8EpnKqv000xgbHE-aHZbNeS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-06_03,2025-03-06_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 spamscore=0 mlxlogscore=927 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503060046
 
-
-
-On 2025/3/6 下午12:06, Huacai Chen wrote:
-> Hi, Bibo,
+On Thu, Nov 21, 2024 at 06:08:55PM +0530, Ojaswin Mujoo wrote:
+> Protect ext4_release_dquot against freezing so that we
+> don't try to start a transaction when FS is frozen, leading
+> to warnings.
 > 
-> On Thu, Mar 6, 2025 at 11:53 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> The current max_pfn equals to zero. In this case, it caused users cannot
->> get some page information through /proc such as kpagecount. The following
->> message is displayed by stress-ng test suite with the command
->> "stress-ng --verbose --physpage 1 -t 1".
->>
->>   # stress-ng --verbose --physpage 1 -t 1
->>   stress-ng: error: [1691] physpage: cannot read page count for address 0x134ac000 in /proc/kpagecount, errno=22 (Invalid argument)
->>   stress-ng: error: [1691] physpage: cannot read page count for address 0x7ffff207c3a8 in /proc/kpagecount, errno=22 (Invalid argument)
->>   stress-ng: error: [1691] physpage: cannot read page count for address 0x134b0000 in /proc/kpagecount, errno=22 (Invalid argument)
->>   ...
->>
->> After applying this patch, the kernel can pass the test.
->>   # stress-ng --verbose --physpage 1 -t 1
->>   stress-ng: debug: [1701] physpage: [1701] started (instance 0 on CPU 3)
->>   stress-ng: debug: [1701] physpage: [1701] exited (instance 0 on CPU 3)
->>   stress-ng: debug: [1700] physpage: [1701] terminated (success)
->>
->> Cc: stable@vger.kernel.org
->> Fixes: ff6c3d81f2e8 ("NUMA: optimize detection of memory with no node id assigned by firmware")
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/kernel/setup.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
->> index edcfdfcad7d2..a9c1184ab893 100644
->> --- a/arch/loongarch/kernel/setup.c
->> +++ b/arch/loongarch/kernel/setup.c
->> @@ -390,6 +390,7 @@ static void __init arch_mem_init(char **cmdline_p)
->>          if (usermem)
->>                  pr_info("User-defined physical RAM map overwrite\n");
->>
->> +       max_low_pfn = max_pfn = PHYS_PFN(memblock_end_of_DRAM());
-> max_low_pfn is already calculated for all three cases, so here just
-> need "max_pfn = max_low_pfn".
-In theory it should be.
-
-However there are potential problems, it should be recalculated in 
-function early_parse_mem() also if commandline "mem=" is added.
-
-The other thing is that calculation init_numa_memory() is unnecessary 
-since it is already calculated in memblock_init(). Memory block 
-information comes from UEFI table or FDT table, and ACPI srat 
-information only adds node information.
-
-Regards
-Bibo Mao
+> Further, avoid taking the freeze protection if a transaction
+> is already running so that we don't need end up in a deadlock
+> as described in
 > 
-> Huacai
+>   46e294efc355 ext4: fix deadlock with fs freezing and EA inodes
 > 
->>          check_kernel_sections_mem();
->>
->>          /*
->>
->> base-commit: 848e076317446f9c663771ddec142d7c2eb4cb43
->> --
->> 2.39.3
->>
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
 
+Hey Ted,
+
+Just a ping, I think you might have missed this patch. Let me know if
+anything else is needed from my side.
+
+Regards,
+ojaswin
+
+> ---
+>  fs/ext4/super.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 16a4ce704460..f7437a592359 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -6887,12 +6887,25 @@ static int ext4_release_dquot(struct dquot *dquot)
+>  {
+>  	int ret, err;
+>  	handle_t *handle;
+> +	bool freeze_protected = false;
+> +
+> +	/*
+> +	 * Trying to sb_start_intwrite() in a running transaction
+> +	 * can result in a deadlock. Further, running transactions
+> +	 * are already protected from freezing.
+> +	 */
+> +	if (!ext4_journal_current_handle()) {
+> +		sb_start_intwrite(dquot->dq_sb);
+> +		freeze_protected = true;
+> +	}
+>  
+>  	handle = ext4_journal_start(dquot_to_inode(dquot), EXT4_HT_QUOTA,
+>  				    EXT4_QUOTA_DEL_BLOCKS(dquot->dq_sb));
+>  	if (IS_ERR(handle)) {
+>  		/* Release dquot anyway to avoid endless cycle in dqput() */
+>  		dquot_release(dquot);
+> +		if (freeze_protected)
+> +			sb_end_intwrite(dquot->dq_sb);
+>  		return PTR_ERR(handle);
+>  	}
+>  	ret = dquot_release(dquot);
+> @@ -6903,6 +6916,10 @@ static int ext4_release_dquot(struct dquot *dquot)
+>  	err = ext4_journal_stop(handle);
+>  	if (!ret)
+>  		ret = err;
+> +
+> +	if (freeze_protected)
+> +		sb_end_intwrite(dquot->dq_sb);
+> +
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.43.5
+> 
