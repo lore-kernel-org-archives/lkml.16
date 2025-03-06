@@ -1,103 +1,311 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C3D20B7FC;
-	Thu,  6 Mar 2025 12:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B23320B7FC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741263852; cv=none; b=uhPK5wHHuRcSensXLQxqLJSAD9BQVwUpd7bKvAau0PPuWkzXMu8NH6Zfcu6+/00Ik3g3am2HP8vLmliHyjOPXYofziAdY0/d5pfulQt+BysGTIQH32jb/IjczSj8+wEc9i5BD4shLypXjpXywv71TFvYISUU+vc/T/zCmKotFjQ=
+	t=1741263866; cv=none; b=lysdrhRcQaVOtgHb105N3jl54DjfAC69ptF4gw5a9bC9lKTCnkvskrqHZxyCnFTUir7MxRuIEsvWb2ejgtlPDTTReR9VpT+5pfG6Cv5R/q+JXCMT6DoJAHKKtJhY/REYbOBNQ3H1UQInhiznsH4AHKHuDXqjYMRr4F2RhU1OYow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741263852; c=relaxed/simple;
-	bh=qzLIfj24eCaV6FZdSTktCdO7Ubv8artGxsJKxm1jD60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXxqNY/fFvt+uWzUrFQKIJedkAYXElx0AX5WUV93i8F5bQpcO13xzMKxvruMIqZlfQLsg+TLI0kpSt+rGxdkAlBDa/GGRGi2vkGRtoBxkh3bGSYcIuPZC4sMJ/bzZjAs5FpmVQc7IBkH5r4NpkIX1b2MJBA4vJ9vv7NdsON4tQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nXDjOQrr; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nXDjOQrr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741263851; x=1772799851;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qzLIfj24eCaV6FZdSTktCdO7Ubv8artGxsJKxm1jD60=;
-  b=nXDjOQrr8ffQdfaSbTr64OA0M9DrLpuPR/AOqs6rjHv3eph4yhPjNxX7
-   5TmtBbvT5f5lDvCRFls/jdn7s2aHoj/Dj9KnXS1A3OYBaMrwZBkjcbEZi
-   o08hNNB+MQu863uB+y4FzuiBlsCebrejyDltVcqea+hJ3MizjFufuOmG/
-   qBhGLymD5POVbaC71uBH1qrdn3k8t+ZNQ5fmnmBBZKwh7W2aYMZ2tsyPK
-   xAxIVUZYLTxl42SwUGwjA+q8cetKGuIBFTgUKsEjULmi2NakFnaRmz7KW
-   sSAlnrLtdx1LFMNtLVLryV0KcV2BMqpMqYSc+m41lqymhqQ0vwdq/Atd7
-   w==;
-X-CSE-ConnectionGUID: h9Hy6g4ATQiWD8b6vthQUg==
-X-CSE-MsgGUID: FIOMyiOmRZqGUYhDA4PE5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42406463"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="42406463"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 04:24:10 -0800
-X-CSE-ConnectionGUID: zrIc1M9QTtCL4OxlUvWRQw==
-X-CSE-MsgGUID: THaLNgaaRem9bfibAxoorw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="118739220"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 06 Mar 2025 04:24:07 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tqAGi-000N3C-2a;
-	Thu, 06 Mar 2025 12:24:04 +0000
-Date: Thu, 6 Mar 2025 20:23:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Akshay Gupta <akshay.gupta@amd.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux@roeck-us.net,
-	gregkh@linuxfoundation.org, arnd@arndb.de, shyam-sundar.s-k@amd.com,
-	gautham.shenoy@amd.com, mario.limonciello@amd.com,
-	naveenkrishna.chatradhi@amd.com,
-	Akshay Gupta <akshay.gupta@amd.com>
-Subject: Re: [PATCH v5 02/11] misc: amd-sbi: Move protocol functionality to
- core file
-Message-ID: <202503062020.pOZSz5ye-lkp@intel.com>
-References: <20250303105902.215009-3-akshay.gupta@amd.com>
+	s=arc-20240116; t=1741263866; c=relaxed/simple;
+	bh=hnmsdv0n+xyd1APCTpa5wP64QRKPNqtvYR6RQlwEw+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QBEgsihGdP4B8KIjHSu93E0fuIasPV+wv93/yYlF4uJpotyFstnLKj1d77Hd3Xi0yncHYYYbc0L+1eZwco4pMyc1xXzS7pUN8uMdTTLazhwLJxTAVLqPGmw1df0Lx1t/A/Dt58JEQ3ueUV3QCEJ8Hzij0SdWmrNn57kLA2ptmvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 415C71007;
+	Thu,  6 Mar 2025 04:24:36 -0800 (PST)
+Received: from [10.57.40.132] (unknown [10.57.40.132])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C8343F673;
+	Thu,  6 Mar 2025 04:24:20 -0800 (PST)
+Message-ID: <34521ae6-5dba-4861-a971-8f7c8a37bb04@arm.com>
+Date: Thu, 6 Mar 2025 12:24:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303105902.215009-3-akshay.gupta@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/uclamp: Let each sched_class handle uclamp
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
+ linux-kernel@vger.kernel.org, Xuewen Yan <xuewen.yan@unisoc.com>
+References: <84441660bef0a5e67fd09dc3787178d0276dad31.1740664400.git.hongyan.xia2@arm.com>
+ <CAB8ipk_xXY7Dia32NzCpva_Bi1L7ijTHjZHA_riCUwj7e4PtpA@mail.gmail.com>
+Content-Language: en-US
+From: Hongyan Xia <hongyan.xia2@arm.com>
+In-Reply-To: <CAB8ipk_xXY7Dia32NzCpva_Bi1L7ijTHjZHA_riCUwj7e4PtpA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Akshay,
+On 06/03/2025 12:03, Xuewen Yan wrote:
+> Hi Hongyan,
+> 
+> On Thu, Feb 27, 2025 at 9:55 PM Hongyan Xia <hongyan.xia2@arm.com> wrote:
+>>
+>> While delayed dequeue issues were being resolved, uclamp was made out of
+>> sync with cpufreq, especially in enqueue_task().
+>>
+>> For example, when a task with uclamp_min goes through enqueue_task() and
+>> updates cpufreq, its uclamp_min won't even be considered in the cpufreq
+>> update. It is only after enqueue will the uclamp_min be added to rq
+>> buckets, and cpufreq will only pick it up at the next update. This is
+>> very different from the old behavior, where a uclamp value immediately
+>> has an effect at enqueue. Worse, sub classes like fair.c issue cpufreq
+>> updates on utilization changes. If no utilization changes for a while,
+>> the new uclamp will be delayed further.
+>>
+>> So, let each sched_class handle uclamp in its own class, in case delayed
+>> dequeue needs further tweaks or there are potential future similar
+>> changes, and make sure uclamp is picked up immediately on enqueue. In
+>> fair.c, we re-use the guard logic for util_est.
+>>
+>> Signed-off-by: Hongyan Xia <hongyan.xia2@arm.com>
+>> ---
+>>   kernel/sched/core.c  | 28 ++--------------------------
+>>   kernel/sched/ext.c   |  8 ++++----
+>>   kernel/sched/fair.c  | 12 ++++++------
+>>   kernel/sched/rt.c    |  8 ++++----
+>>   kernel/sched/sched.h |  9 +++++----
+>>   5 files changed, 21 insertions(+), 44 deletions(-)
+>>
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index b00f884701a6..2d51608a4c46 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -1745,7 +1745,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+>>          }
+>>   }
+>>
+>> -static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>> +void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>>   {
+>>          enum uclamp_id clamp_id;
+>>
+>> @@ -1758,12 +1758,6 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>>          if (!static_branch_unlikely(&sched_uclamp_used))
+>>                  return;
+>>
+>> -       if (unlikely(!p->sched_class->uclamp_enabled))
+>> -               return;
+>> -
+>> -       if (p->se.sched_delayed)
+>> -               return;
+>> -
+>>          for_each_clamp_id(clamp_id)
+>>                  uclamp_rq_inc_id(rq, p, clamp_id);
+>>
+>> @@ -1772,7 +1766,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>>                  rq->uclamp_flags &= ~UCLAMP_FLAG_IDLE;
+>>   }
+>>
+>> -static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+>> +void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+>>   {
+>>          enum uclamp_id clamp_id;
+>>
+>> @@ -1785,12 +1779,6 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+>>          if (!static_branch_unlikely(&sched_uclamp_used))
+>>                  return;
+>>
+>> -       if (unlikely(!p->sched_class->uclamp_enabled))
+>> -               return;
+>> -
+>> -       if (p->se.sched_delayed)
+>> -               return;
+>> -
+>>          for_each_clamp_id(clamp_id)
+>>                  uclamp_rq_dec_id(rq, p, clamp_id);
+>>   }
+>> @@ -2029,8 +2017,6 @@ static void __init init_uclamp(void)
+>>   }
+>>
+>>   #else /* !CONFIG_UCLAMP_TASK */
+>> -static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
+>> -static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
+>>   static inline void uclamp_fork(struct task_struct *p) { }
+>>   static inline void uclamp_post_fork(struct task_struct *p) { }
+>>   static inline void init_uclamp(void) { }
+>> @@ -2066,11 +2052,6 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+>>                  update_rq_clock(rq);
+>>
+>>          p->sched_class->enqueue_task(rq, p, flags);
+>> -       /*
+>> -        * Must be after ->enqueue_task() because ENQUEUE_DELAYED can clear
+>> -        * ->sched_delayed.
+>> -        */
+>> -       uclamp_rq_inc(rq, p);
+>>
+>>          psi_enqueue(p, flags);
+>>
+>> @@ -2097,11 +2078,6 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+>>
+>>          psi_dequeue(p, flags);
+>>
+>> -       /*
+>> -        * Must be before ->dequeue_task() because ->dequeue_task() can 'fail'
+>> -        * and mark the task ->sched_delayed.
+>> -        */
+>> -       uclamp_rq_dec(rq, p);
+>>          return p->sched_class->dequeue_task(rq, p, flags);
+>>   }
+>>
+>> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+>> index 8857c0709bdd..4521c27f9ab8 100644
+>> --- a/kernel/sched/ext.c
+>> +++ b/kernel/sched/ext.c
+>> @@ -2094,6 +2094,8 @@ static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags
+>>   {
+>>          int sticky_cpu = p->scx.sticky_cpu;
+>>
+>> +       uclamp_rq_inc(rq, p);
+>> +
+>>          if (enq_flags & ENQUEUE_WAKEUP)
+>>                  rq->scx.flags |= SCX_RQ_IN_WAKEUP;
+>>
+>> @@ -2181,6 +2183,8 @@ static void ops_dequeue(struct task_struct *p, u64 deq_flags)
+>>
+>>   static bool dequeue_task_scx(struct rq *rq, struct task_struct *p, int deq_flags)
+>>   {
+>> +       uclamp_rq_dec(rq, p);
+>> +
+>>          if (!(p->scx.flags & SCX_TASK_QUEUED)) {
+>>                  WARN_ON_ONCE(task_runnable(p));
+>>                  return true;
+>> @@ -4456,10 +4460,6 @@ DEFINE_SCHED_CLASS(ext) = {
+>>          .prio_changed           = prio_changed_scx,
+>>
+>>          .update_curr            = update_curr_scx,
+>> -
+>> -#ifdef CONFIG_UCLAMP_TASK
+>> -       .uclamp_enabled         = 1,
+>> -#endif
+>>   };
+>>
+>>   static void init_dsq(struct scx_dispatch_q *dsq, u64 dsq_id)
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 857808da23d8..7e5a653811ad 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6941,8 +6941,10 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>>           * Let's add the task's estimated utilization to the cfs_rq's
+>>           * estimated utilization, before we update schedutil.
+>>           */
+>> -       if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE))))
+>> +       if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE)))) {
+>> +               uclamp_rq_inc(rq, p);
+>>                  util_est_enqueue(&rq->cfs, p);
+>> +       }
+>>
+>>          if (flags & ENQUEUE_DELAYED) {
+>>                  requeue_delayed_entity(se);
+>> @@ -7183,8 +7185,10 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+>>    */
+>>   static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>>   {
+>> -       if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
+>> +       if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE)))) {
+>> +               uclamp_rq_dec(rq, p);
+>>                  util_est_dequeue(&rq->cfs, p);
+>> +       }
+>>
+>>          util_est_update(&rq->cfs, p, flags & DEQUEUE_SLEEP);
+>>          if (dequeue_entities(rq, &p->se, flags) < 0)
+>> @@ -13660,10 +13664,6 @@ DEFINE_SCHED_CLASS(fair) = {
+>>   #ifdef CONFIG_SCHED_CORE
+>>          .task_is_throttled      = task_is_throttled_fair,
+>>   #endif
+>> -
+>> -#ifdef CONFIG_UCLAMP_TASK
+>> -       .uclamp_enabled         = 1,
+>> -#endif
+>>   };
+>>
+>>   #ifdef CONFIG_SCHED_DEBUG
+>> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+>> index 4b8e33c615b1..7c0642ea85f2 100644
+>> --- a/kernel/sched/rt.c
+>> +++ b/kernel/sched/rt.c
+>> @@ -1471,6 +1471,8 @@ enqueue_task_rt(struct rq *rq, struct task_struct *p, int flags)
+>>   {
+>>          struct sched_rt_entity *rt_se = &p->rt;
+>>
+>> +       uclamp_rq_inc(rq, p);
+>> +
+>>          if (flags & ENQUEUE_WAKEUP)
+>>                  rt_se->timeout = 0;
+>>
+>> @@ -1487,6 +1489,8 @@ static bool dequeue_task_rt(struct rq *rq, struct task_struct *p, int flags)
+>>   {
+>>          struct sched_rt_entity *rt_se = &p->rt;
+>>
+>> +       uclamp_rq_dec(rq, p);
+>> +
+>>          update_curr_rt(rq);
+>>          dequeue_rt_entity(rt_se, flags);
+>>
+>> @@ -2649,10 +2653,6 @@ DEFINE_SCHED_CLASS(rt) = {
+>>   #ifdef CONFIG_SCHED_CORE
+>>          .task_is_throttled      = task_is_throttled_rt,
+>>   #endif
+>> -
+>> -#ifdef CONFIG_UCLAMP_TASK
+>> -       .uclamp_enabled         = 1,
+>> -#endif
+>>   };
+>>
+>>   #ifdef CONFIG_RT_GROUP_SCHED
+>> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+>> index ab16d3d0e51c..990d87e8d8ed 100644
+>> --- a/kernel/sched/sched.h
+>> +++ b/kernel/sched/sched.h
+>> @@ -2410,10 +2410,6 @@ extern s64 update_curr_common(struct rq *rq);
+>>
+>>   struct sched_class {
+>>
+>> -#ifdef CONFIG_UCLAMP_TASK
+>> -       int uclamp_enabled;
+>> -#endif
+> 
+> Why delete the uclamp_enable?
+> 
 
-kernel test robot noticed the following build errors:
+After moving uclamp enqueue dequeue into each sched_class, we no longer 
+check sched_class->uclamp_enabled in core.c and it won't be used anywhere.
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus groeck-staging/hwmon-next soc/for-next linus/master v6.14-rc5 next-20250305]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>> -
+>>          void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
+>>          bool (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
+>>          void (*yield_task)   (struct rq *rq);
+>> @@ -3393,6 +3389,8 @@ static inline bool update_other_load_avgs(struct rq *rq) { return false; }
+>>   #ifdef CONFIG_UCLAMP_TASK
+>>
+>>   unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+>> +void uclamp_rq_inc(struct rq *rq, struct task_struct *p);
+>> +void uclamp_rq_dec(struct rq *rq, struct task_struct *p);
+>>
+>>   static inline unsigned long uclamp_rq_get(struct rq *rq,
+>>                                            enum uclamp_id clamp_id)
+>> @@ -3470,6 +3468,9 @@ uclamp_se_set(struct uclamp_se *uc_se, unsigned int value, bool user_defined)
+>>
+>>   #else /* !CONFIG_UCLAMP_TASK: */
+>>
+>> +static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { };
+>> +static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { };
+>> +
+>>   static inline unsigned long
+>>   uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+>>   {
+>> --
+>> 2.34.1
+>>
+>>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Akshay-Gupta/hwmon-misc-amd-sbi-Move-core-sbrmi-from-hwmon-to-misc/20250303-190830
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20250303105902.215009-3-akshay.gupta%40amd.com
-patch subject: [PATCH v5 02/11] misc: amd-sbi: Move protocol functionality to core file
-config: i386-randconfig-004-20250306 (https://download.01.org/0day-ci/archive/20250306/202503062020.pOZSz5ye-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250306/202503062020.pOZSz5ye-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503062020.pOZSz5ye-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/slub_kunit.o
->> ERROR: modpost: "devm_hwmon_device_register_with_info" [drivers/misc/amd-sbi/sbrmi-i2c.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
