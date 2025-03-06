@@ -1,140 +1,126 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B71D20F062
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 15:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57E21865E2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 15:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741276335; cv=none; b=BoUsg2Xcmago0vIIpe9Yr0lWEh90PjZJaJJiEE7snEnjCo/YtJ6saq87qRsO5pILmi62WP5z7KBdBFmjizyEI4NvKiaGyKNE71uPKvMY+B1ndQtW+ZR0eQhaeqqKO+l9SSQahamI9hubm8+TsKBQd6Bc+M+0jlMbL731XXeSksI=
+	t=1741276355; cv=none; b=MdkL/DpENG0sHs9fStySt7J0rVh1Z8NgV+AMjX5rbQGE8FR2pfNDsaqAxndBkitYWFsblDOagV7wEtUsXkr/TTiEOcEML9S9VgEa+rsWxQxFYKjebHYFm0wSvXW+Uze6P+rytRz7S+dtG1QUT1+T6gP96ID15bpnrA4pd8Jrp3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741276335; c=relaxed/simple;
-	bh=1mrQA3uTO5h6ZiINd3iS+tcdz2BagICZLJWut1QbQmE=;
+	s=arc-20240116; t=1741276355; c=relaxed/simple;
+	bh=PV5Jc62V87unU2s3v2Pnp2p1mLoJgFL5K20eJNXMrfk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EIGg9ibAInMNitcyd2c5ZcveOIDqz/qD91ke7WTK8r+mfwid4yRCG2Qrqu7vDca29w7NSDiA11/HQWq7su2ShuoHsI+ADjfBpTrYBIkk8YC2bGS20lMWPyGwHrETDYpNzwyibLT42knTW3Llr+BdvUsxdlcDACMLf9/6aMBZDMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=DSb2ehzX; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=hWZCaxXmChj7gQZODFhwxrtqqAOUVaIfbBFrgZ2oe8k0pCuUiwpdqjKrF8jsblHWtGgkE/8yhwPtEB10pm2m9MAIDl8RD4bV7/nZfuqwmu1x+ancbU0YaQiy+31f8n/XtnhXngfBULbZDrJKzbsgWHgHXpA2CdM7OJQJIRtwP2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=eJIOlHRm; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DSb2ehzX"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43bc638686eso14003015e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 07:52:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1741276332; x=1741881132; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=65Y7a4qK+Y/6ES6G6BlQKGj/GPIU9m2PJUgZAs9+KOM=;
-        b=DSb2ehzXuBDZ/lrh9QR+MPuYF3Uz5TO4qHiJW6jD8ZcKjtuDXMXbyrQu5gFB4iWLzu
-         ANjMy9CWC5UdNjTm0MpIH+gHZLanmjj630VBqwuDVotWLuftLEvpjiHjjpmQuX3KH0U1
-         Qxt7YL1aYks+6Td+onIcZoxCDu7in9JGb9BfQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741276332; x=1741881132;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=65Y7a4qK+Y/6ES6G6BlQKGj/GPIU9m2PJUgZAs9+KOM=;
-        b=DXkuZpUYMz3VXTWcB0tQmujFoNP2bMrQRc9C/Q5k7svXSIFQ6qMLZFDpY3BQfswPoV
-         dlcHbOjVfLSlusE93q+DG0lju3L813ErPWWv/vBXoa7qU9DzyRIAPfUPG/AGC1+8/zoB
-         R7pl2mVsnLLWQD8CCDoB1DWOfokDn8roPrw02GUib99tC4Zd171c6q48YJz9vwPa53ZD
-         5iLfwu/MPxRYCStC/LMc5ihqM3I8YbQJ2cZbrloVTetcEeYMn4QI5ipWOUPGQZsVG/X6
-         n2pL6doRaGm/cIYa03NINIIBkGxy1v88UUIzP+Z7h4cccpLOM3c6ob1AKZ4arLcahjUB
-         UHrw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7c1cBQF1hPUv2sCXeecSAJ14lIRA4kf4yzfsllJc++qiUGTlIlB3lQK5PrElDNqn9O92vOhPlDLadjOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUFzcT7YNf+bogVcHDylcR3waN3rtCv9Bqgu+VibE0SFDFoc/3
-	TsY4JJjm+lyzchAvM63VD4vJDTYm5q0NDnAdOCiFH2yuDssBpuRASGU+t3m7Mb8=
-X-Gm-Gg: ASbGncv1SqmKTS2gFJYGDLXfuMx87Ef1VKYz/HTrgi073lqwXMpjwqJMtnWgMIVvKHk
-	C7v+/7iHTZYsvz1V1rjVmgFHMdRiKRFf6KlbFvVdmKtAghbU0og6gUMmKf6lylH/Qu3aAnV7NdB
-	I3dW+DOeIpZTYaikvUJOgJemf64gMz/cRdwT+qsUb9GekShyxBSrWdW/jjeh+dhSmwzfm16kKwi
-	lHZe2SnwfcUuvjG2hc7XGzirPzImdHMB6hLmtnq08Gg47Pd23m+DDOddsYYXaER99WeZsOIegBI
-	76RNnwYdLjH4bMaIYGXwcmkmvzqC6xxTUHI2G8FSpMcO2c6GyH6jhhSp
-X-Google-Smtp-Source: AGHT+IHeuGIWVWKb5j99SUKnlkK36tGpar1+KKK0aAa1IuGT6GpOgqR53OExqVvUKbkpEbvf2dKyFQ==
-X-Received: by 2002:a05:600c:3b17:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-43c5a6014b5mr36395e9.5.1741276332172;
-        Thu, 06 Mar 2025 07:52:12 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bcc135676sm65178565e9.1.2025.03.06.07.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 07:52:10 -0800 (PST)
-Date: Thu, 6 Mar 2025 16:52:08 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="eJIOlHRm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=I6efTm9PV4pBjdbnqkqM78JjSWuS+IsxuUu8XtCPY50=; b=eJIOlHRmlzyVk07y
+	JYR+R2Ub5dqbL9UX6DE2heD/fmdKnJtlowguv8rM3dWdPIrtuWOAd8aEc6LdVwTefxFpLQZGTu+0D
+	LPc/qpIzBHiL4xb3ZIbd2DN91Ux/kr/yLmEC4gJmbqxviEtDcxNpDr8rY0M1wIGJJj7dKJieyLnQS
+	IF1NItAWIgcy5iw8Rz4OFwd5VYa0/oTv/5vyAy7S+tGGuBSTDdvk0Usv2nveZt4OkZAgo4DbA8cHX
+	aBnrtKbMR6Acr9V1HaiGVKIeJRnZWhKfhOoTfnrXXaNi/iiX7TDyTAf2YRt2wX0Sgw3DW5md6YC6m
+	PO+8jVzw52UovEM7uQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1tqDWO-0039N5-0Y;
+	Thu, 06 Mar 2025 15:52:28 +0000
+Date: Thu, 6 Mar 2025 15:52:28 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
 	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
-	akpm@linux-foundation.org, urezki@gmail.com, hch@infradead.org,
-	dmitry.osipenko@collabora.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-mm@kvack.org
-Subject: Re: [PATCH drm-next 1/2] vmalloc: Add atomic_vmap
-Message-ID: <Z8nEqDQhjU-Ly8Js@phenom.ffwll.local>
-Mail-Followup-To: Jocelyn Falempe <jfalempe@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
-	akpm@linux-foundation.org, urezki@gmail.com, hch@infradead.org,
-	dmitry.osipenko@collabora.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-mm@kvack.org
-References: <20250305152555.318159-1-ryasuoka@redhat.com>
- <20250305152555.318159-2-ryasuoka@redhat.com>
- <Z8kp9Z9VgTpQmV9d@casper.infradead.org>
- <3bfd4238-6954-41a3-a5a3-8515a3ac9dce@redhat.com>
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/gma500: Remove unused mrst_helper_funcs
+Message-ID: <Z8nEvKh5evPw7qxp@gallifrey>
+References: <20250201011434.453879-1-linux@treblig.org>
+ <CAMeQTsa8enkergRai6ixmE-ivTQgWazoTJ9stMWSgzobexphJw@mail.gmail.com>
+ <Z8m8i0iqgDUk5uFk@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3bfd4238-6954-41a3-a5a3-8515a3ac9dce@redhat.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z8m8i0iqgDUk5uFk@gallifrey>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 15:52:05 up 302 days,  3:06,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Thu, Mar 06, 2025 at 02:24:51PM +0100, Jocelyn Falempe wrote:
-> On 06/03/2025 05:52, Matthew Wilcox wrote:
-> > On Thu, Mar 06, 2025 at 12:25:53AM +0900, Ryosuke Yasuoka wrote:
-> > > Some drivers can use vmap in drm_panic, however, vmap is sleepable and
-> > > takes locks. Since drm_panic will vmap in panic handler, atomic_vmap
-> > > requests pages with GFP_ATOMIC and maps KVA without locks and sleep.
-> > 
-> > In addition to the implicit GFP_KERNEL allocations Vlad mentioned, how
-> > is this supposed to work?
-> > 
-> > > +	vn = addr_to_node(va->va_start);
-> > > +
-> > > +	insert_vmap_area(va, &vn->busy.root, &vn->busy.head);
-> > 
-> > If someone else is holding the vn->busy.lock because they're modifying the
-> > busy tree, you'll corrupt the tree.  You can't just say "I can't take a
-> > lock here, so I won't bother".  You need to figure out how to do something
-> > safe without taking the lock.  For example, you could preallocate the
-> > page tables and reserve a vmap area when the driver loads that would
-> > then be usable for the panic situation.  I don't know that we have APIs
-> > to let you do that today, but it's something that could be added.
-> > 
-> Regarding the lock, it should be possible to use the trylock() variant, and
-> fail if the lock is already taken. (In the panic handler, only 1 CPU remain
-> active, so it's unlikely the lock would be released anyway).
+* Dr. David Alan Gilbert (linux@treblig.org) wrote:
+> * Patrik Jakobsson (patrik.r.jakobsson@gmail.com) wrote:
+> > On Sat, Feb 1, 2025 at 2:14 AM <linux@treblig.org> wrote:
+> > >
+> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > >
+> > > The mrst_helper_funcs const was added in 2013 by
+> > > commit ac6113ebb70d ("drm/gma500/mrst: Add SDVO clock calculation")
+> > > and commented as 'Not used yet'.
+> > >
+> > > It's not been used since, so remove it.
 > 
-> If we need to pre-allocate the page table and reserve the vmap area, maybe
-> it would be easier to just always vmap() the primary framebuffer, so it can
-> be used in the panic handler?
+> Hi Patrik,
+> 
+> > You talk about mrst_helper_funcs but the patch removes
+> > mrst_clock_funcs. I assume this is not intentional.
+> 
+> Oops! Thanks for spotting that, I'll send a v2 fixing the commit
+> message; I think I was intending to write something like
+> 'the helper functions it references are still used elsewhere.'
+> 
+> v2 coming up soon.
 
-Yeah I really don't like the idea of creating some really brittle one-off
-core mm code just so we don't have to vmap a buffer unconditionally. I
-think even better would be if drm_panic can cope with non-linear buffers,
-it's entirely fine if the drawing function absolutely crawls and sets each
-individual byte ...
+See message 20250306155155.212599-1-linux@treblig.org.
 
-The only thing you're allowed to do in panic is try_lock on a raw spinlock
-(plus some really scare lockless tricks), imposing that on core mm sounds
-like a non-starter to me.
+Thanks again,
 
-Cheers, Sima
+Dave
+
+> Dave
+> 
+> > -Patrik
+> > 
+> > >
+> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> > > ---
+> > >  drivers/gpu/drm/gma500/oaktrail_crtc.c | 7 -------
+> > >  1 file changed, 7 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> > > index de8ccfe9890f..ea9b41af0867 100644
+> > > --- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> > > +++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> > > @@ -658,10 +658,3 @@ const struct drm_crtc_helper_funcs oaktrail_helper_funcs = {
+> > >         .prepare = gma_crtc_prepare,
+> > >         .commit = gma_crtc_commit,
+> > >  };
+> > > -
+> > > -/* Not used yet */
+> > > -const struct gma_clock_funcs mrst_clock_funcs = {
+> > > -       .clock = mrst_lvds_clock,
+> > > -       .limit = mrst_limit,
+> > > -       .pll_is_valid = gma_pll_is_valid,
+> > > -};
+> > > --
+> > > 2.48.1
+> > >
+> > 
+> -- 
+>  -----Open up your eyes, open up your mind, open up your code -------   
+> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+> \        dave @ treblig.org |                               | In Hex /
+>  \ _________________________|_____ http://www.treblig.org   |_______/
+> 
 -- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
