@@ -1,116 +1,106 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7FD2E3369;
-	Thu,  6 Mar 2025 08:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490F72E3369;
+	Thu,  6 Mar 2025 08:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741251028; cv=none; b=k/99RPkH/wXjIn/Xdj8xJW5KwR3Z2Ok13JLWoOAO1QKm9j3hB17eQkD8ENPd2vp378SIV2ntL7lu+eCrHG2+ekqtSIpiAwNjnmZx9Oytnxs1CNcoxu2mKO4Ct9zZ8cTMK+uWDUYZ1y6mCHD7HFEI/C0IcEsXJh8BuZf+P7VpvAM=
+	t=1741251049; cv=none; b=h6QnCunPP9bKo7lOjr7U/ttnM0xOf6UkJTfQ/0rovvEe2m1DqDQZd/VJOpxiaeS62Ky9j7s3xLGvStnRhP/yajSJx3hR2frc3S7rov6Do7TEHp05vtBt1TINJF2AoNri1aY6pEf2YRXNOF934Nu2/4L8YC9IY3tB6kW5hpZnbEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741251028; c=relaxed/simple;
-	bh=48yO3J3+siY7ATLtE0ddXjtLybSDlrSr5KtoJ1IapD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z8M++z8dt5IKV7epc9jOG6P8w35t+Y5tjpg2sg+HddT8KOrALNkvQhaxRyU1bHDA+TfxJT0k4NjVfP6wcXAvOYCryGUleX3HySsZaNCiBn5KJagZLfTC14W6RAkuBo5TRA4vYHJZa4AzbhAtPrCycvHyjedkIJEaZOyrR1dnEQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=im0/b2Aa; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741251049; c=relaxed/simple;
+	bh=eo0o+rvg6o+QpEcefXMMEpNkvpXSgy0XOsxXwMvNYVI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=trFaw8BgBL72lWq2MCeUTTdzlnaAYI5yKJvK6KpxaXR738U6yyjStE5/H+nanhF65NOo7+Vox4wS/aaIi0p9I7+cy53YP/V4hDvTw16l7KOjni7BW/BaA8HujNnySxBTVDEL6hLS38kn3yeXuI4Q6mo7NFrJ/nmJ38z6sG9fsV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=PbHGUyWL; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im0/b2Aa"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e058ca6806so641613a12.3;
-        Thu, 06 Mar 2025 00:50:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741251025; x=1741855825; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0orzevFKofVCF3fLmry3ssqra7W/C6VJgcuX8QJRVqo=;
-        b=im0/b2AansSJQEb1ArpoPXBiG9s/w7YRBOeUm9OZk4cz88uf6z9RvEqybGKskgBpo+
-         5NV8WFtoakAaoRqPyEu+UvxLrSCfuaqaSfw1pf+jOxnk8FSVE/Xho0VvDPbTCBm08SsV
-         hJpbjCpbzXe1Ne6wDk8IGmqcKZZI8XJ0a9xQOVb5Hk/ElpKgv3BIjWTjrR9eWZm2Qz0u
-         kBNk/Wf5TDao4njh1Qe354PByKFIuUnjw3zBKKAnmL+eVmjTZgN32RQjgmDsk0UC4WCk
-         TZUZcPG4Zolf+gYYxQHWygzEEl0EhK3oqFy/xENH1oWJfK7BXSrCBec3Qn/Qms3b0PCV
-         vpMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741251025; x=1741855825;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0orzevFKofVCF3fLmry3ssqra7W/C6VJgcuX8QJRVqo=;
-        b=BqldsA7bPhRfdEFmCHh9S5LVCARi/EFtfGu7smOgPoK5LnH2knjXhDcUXsZzdDeiEH
-         ihZfRRwhvZs2052FAhwTmNNn22k2iEic7SVs99/f9uEmPeE99NZCWeVtwmilhalRS9Xw
-         ofbGumwSVXVAkF1namKdKo4sH4OsXlDvZdaQxmj4sIfXcZPM4iuLdz7Rr3TDKWNVT3/X
-         F6RVJGzXxm8SZkf1kVWHKiaPMijQPAR/+FlFW1t3uYFCjsC5Gb9fvyaYvtUQldW8v6N7
-         3tkZRQT60j2vaR8ocE+IouyTpuK+zRDXgK1aPcvvhEnj0w7y1MjIK02PebnnwyJ1gJ0y
-         uJhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWWXsKiGToBM/YXieuYqSElP8+mbDKvzzOatsKFLVWusZC64S0wBPZcj/Cqp3//XW/4DKKqGc3MTrH@vger.kernel.org, AJvYcCVn/r/2Z8iIZUPEzTe0MArwxPPVxpljK+5pou6oRNGpz1h4MgAGiRhMP734TQ8t3VseYtQCPrG4e2Sbkwg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6dVr620Stnd9Anoi+CzQJp0eoTNSXg3OyOKh3ltCRmftK2il/
-	SNVEFtjKn/Z5ADreMOmOdisJGa3KoyW4khdiX//AuL5rkDf/pmhM
-X-Gm-Gg: ASbGncujLosS5JqSoc+TVHtiILBEiE4tGm4aCfnq5/UWXmEUWHf7E8kr/sAsuA19wwB
-	Oa/zi4d/LPPtBVy3N6dsQ6u16dT38uA7kj/IdvJ7vLLy/XHhixt5Fhn7CaGUjVozL3l2rD4ebHt
-	nmCUtHV4wmURqtjv+b8pYmrxdn7lVhcTpDSu72QnMwUbnE6Vq0QcSCvWRcA19atWysONVLbpkpJ
-	b/3AsxZOdfnxW1EguQGz1kxYsc2Ak9Za3f1aYFaKHN4g24Byr/eYvgmgldHZ8ZEW7QKZI9NMatf
-	QcYT2IfbiuU16I39ONAj0H5z3EzxpU+9hW31s58Wl01f8HLzLgxZcTFcqQTTpA==
-X-Google-Smtp-Source: AGHT+IH11m+G5fg7q9nL4VgnNwtmhA8S8Gavr29gxnvuDDmRIaQiwKNbSdXoVwVJd0AVqXxib7OLEw==
-X-Received: by 2002:a17:907:2d20:b0:abf:56e3:e899 with SMTP id a640c23a62f3a-ac20e1d898amr590333466b.40.1741251024200;
-        Thu, 06 Mar 2025 00:50:24 -0800 (PST)
-Received: from foxbook (adts246.neoplus.adsl.tpnet.pl. [79.185.230.246])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239888261sm57214366b.127.2025.03.06.00.50.23
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Thu, 06 Mar 2025 00:50:23 -0800 (PST)
-Date: Thu, 6 Mar 2025 09:50:19 +0100
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: ki.chiang65@gmail.com, gregkh@linuxfoundation.org,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFT PATCH] xhci: Handle spurious events on Etron host isoc
- enpoints
-Message-ID: <20250306095019.2e354de3@foxbook>
-In-Reply-To: <2a44ee96-25e4-4693-8f43-913942091c51@linux.intel.com>
-References: <41847336-9111-4aaa-b3dc-f3c18bb03508@linux.intel.com>
-	<20250228161824.3164826-1-mathias.nyman@linux.intel.com>
-	<20250303113401.280cb911@foxbook>
-	<2a44ee96-25e4-4693-8f43-913942091c51@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PbHGUyWL"
+X-UUID: 1366947afa6811efaae1fd9735fae912-20250306
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+L7XbtqDHwNvJUYAa1gSH9tcjYho7+xK58vS0fLoWWw=;
+	b=PbHGUyWLkS78neyhusP+36+5eaglCBmiBvkfFR7EIngAe7RuFS/7QohJs6tRm6gD0dA1k6d7dxXLFp41K5dRs1RqQJqdk5c5ihyObwXjAO/ujXjSObtY0S+emqcmYLUBR3YgSO8Hn1zSn7b+LfohNBcXAsUnog427EYAAgjIx0M=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:262a9632-a172-4838-bc07-28e35c1ff6cb,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:90ccc249-a527-43d8-8af6-bc8b32d9f5e9,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 1366947afa6811efaae1fd9735fae912-20250306
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
+	(envelope-from <axe.yang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 653749506; Thu, 06 Mar 2025 16:50:38 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 6 Mar 2025 16:50:36 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Thu, 6 Mar 2025 16:50:36 +0800
+From: Axe Yang <axe.yang@mediatek.com>
+To: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson
+	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Wenbin Mei
+	<wenbin.mei@mediatek.com>
+CC: <yong.mao@mediatek.com>, <qingliang.li@mediatek.com>,
+	<andy-ld.lu@mediatek.com>, <linux-mmc@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	Axe Yang <axe.yang@mediatek.com>
+Subject: [PATCH 1/2] dt-bindings: mmc: mtk-sd: add single burst switch
+Date: Thu, 6 Mar 2025 16:48:05 +0800
+Message-ID: <20250306085028.5024-2-axe.yang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250306085028.5024-1-axe.yang@mediatek.com>
+References: <20250306085028.5024-1-axe.yang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Mon, 3 Mar 2025 17:08:39 +0200, Mathias Nyman wrote:
-> > The hack could almost be removed now, but if there really are HCs
-> > which report Success on the first event, this won't work for them:  
-> 
-> This looks better, and I agree that the hack/quirk is annoying, but
-> in fear of regression I don't want to touch that in this patch yet.
+Add 'mediatek,disable-single-burst' setting. This property can be
+used to switch bus burst type, from single burst to INCR, which is
+determined by the bus type within the IP. Some versions of the IP
+are using AXI bus, thus this switch is necessary as 'single' is not
+the burst type supported by the bus.
 
-For the record, I didn't mean removing support for HCs reporting
-Success with nonzero residual, the problem may be real and the commit
-which introduced this code describes plausible symptoms.
+Signed-off-by: Axe Yang <axe.yang@mediatek.com>
+---
+ Documentation/devicetree/bindings/mmc/mtk-sd.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-But handle_tx_event() part of this workaround could be done without
-changing trb_comp_code, like process_xxx_td() are. You are replacing
-practically all of this code already, so it's an opportunity.
+diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.yaml b/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
+index 0debccbd6519..6076aff0a689 100644
+--- a/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
++++ b/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
+@@ -100,6 +100,14 @@ properties:
+     minimum: 0
+     maximum: 0xffffffff
+ 
++  mediatek,disable-single-burst:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Burst type setting. For some versions of the IP that do not use
++      AHB bus, the burst type need to be switched to INCR.
++      If present, use INCR burst type.
++      If not present, use single burst type.
++
+   mediatek,hs200-cmd-int-delay:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     description:
+-- 
+2.46.0
 
-And one more thing:
-
-> -				ep_ring->last_td_was_short = false;
-...
-> +				ep_ring->old_trb_comp_code = trb_comp_code;
-
-This is a behavior change, due to the aforementioned hack. You are
-replacing comp_code 13 with 13 and the mechanism stays "armed". It
-will continue silently ignoring arbitrary events because there is
-no validation if they really came from the "old" TD's TRB.
-
-It's a pet peeve of mine, because I have already seen cases when the
-old mechanism "swallows" illegal events which should be reported, and
-now this problem may only get worse.
-
-You can preserve behavior by clearing old_trb_comp_code to 0 or -1
-or otherwise marking this entry as "inactive".
-
-Regards,
-Michal
