@@ -1,110 +1,113 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D309825A2B5
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 21:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864CB20469E;
+	Thu,  6 Mar 2025 21:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741296313; cv=none; b=jSFywT/GK4LmvYn066gpKqIc6HrLP9EumAByi6bV8+5vXYl0am/DvaNuYGOh2A6Qsu8CTd+LqqRGTdosgI7wLf98GN8ExluJvaxdEpgOeRdmHhYQKiIcgbG+PI/+51Ie42qW7ylH8d2amy44MTxcPYNrbAHWaRFjayKUpX8D64Y=
+	t=1741296411; cv=none; b=G8xc4F2dA3IxqpObn9OAii4JI9tc64Giptyx9LlE7AYwiLdG6lnlk6tmTVoJQ8XqHCC5cdYrp6d5mfQzT2AdBGVYv9kOyhI0R8GobfXHZe3Ux2xNfVRDTe/qqJ6Qzva/XWlCozco10SM4m8Z6T8Mh0PMuiytePwlVlchVCYZJUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741296313; c=relaxed/simple;
-	bh=6nLUeGZBsOZaxX7lD0yAqrwnU/9EkCCEKqX2KbebjDY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aCC5BB0g0ZacenQDL4TpZ0jkMmiqvTdNzIIUQpWL6no88wGuuJW/yB6A2n5yN1feyUIKPRwZk6WWa6MVh0YAcaDNTZlh0Cw1W0vWx4eRAj94UsrsYe2iJoq51TxzS6IKx8PT6saQ8uN5qV805Z0O6KKKBLVaK+PvQOxNfgP1inY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y8yXhYxb; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741296411; c=relaxed/simple;
+	bh=CdwdRiO9iz24Y8hWaQ9+XhtVJb25oR/xbe14/trXsRg=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=fVDemX/18fKUlzyO0xntc7G9VpM/gQrVLBzVEKXcK4wxri1DQjmTgSQpJVUWRehSNo6hf9fDy98CmEXtLBYfzR8qKNTf6PCGliJGS2vsgtGzYZl7rXrC5DFku++IiK4Oqde7AKOq56akdJj6joYaUKsgC0UjnUxt/ktXJ/HHPtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=WQFx1oxY; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8yXhYxb"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaec111762bso220706866b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 13:25:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741296310; x=1741901110; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6nLUeGZBsOZaxX7lD0yAqrwnU/9EkCCEKqX2KbebjDY=;
-        b=y8yXhYxbNasZPZMGQjweQq91JrwF0qwIqKnhDD00CsLW1+uxQB96aHu+/RgxhmQSyY
-         ocaQgUQameDnuXFZnKF53BOYjaCdlipwjqg0e4znaayu/EBBoiS4qIYFN0Kz+bfvuPAz
-         rlyEmStL4Fr0rQnC7O+dx3Jzqfcvs3t23rGiqtMrtKpJs5Srhr7RkcgkXI6GsbHZjyTN
-         5TV6gNy3GffpoEtc7HPbxSCUxOkgp5Y/PXiqB4pvr81Jwlcl/4ThuqsTv8Cz6c5JmbHA
-         xPGVmi+wUAV8Om/qWkYPC4VQJBgMRtrYgSPSddxu1KfJ5IgQbEOlnGGIZPr69EdZPBLi
-         ST9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741296310; x=1741901110;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6nLUeGZBsOZaxX7lD0yAqrwnU/9EkCCEKqX2KbebjDY=;
-        b=gTWhkCQgdywHG9A9BAb7AedUP/oBXma/owfs5qVPkAwVMjosGOEgP6DuhVu7Jdwuqw
-         y6npMbfJhISezJv2TMt0NRRD9Bz2WsViQ0EyTDQhSgUxedO9XubecjFHs6N2o5BQKxEI
-         hSJe5hSRQcpyV/1S3HMig55ie19g6YmOhqKjwalW+tYETUIur1GwVvjeUqCQDFtbwD8d
-         Vlndvm9uQMAeY2OP47cngakje/qwksQ7URCMnigUw2lPgDWeQ7O+yCCd8G0FYqPsJQJo
-         2r4kL1y399C/BuMc3sPxr+g+LbZXcJ2UeaF7WmLmhMXmizW2dFN29v/vyvdJehSvsDtq
-         qt+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUrbx+MeESuTwusML2Z1o9zrO0nm+0HlqdVnOK/te3tvf+QjjFYbA0XaCCZ7aknWHNVKdiDpy8XAXwVq/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr8he/ZchdY2vKusFZNN7SSxIyGoR89bGOVqQAaDcuyrABSWFs
-	OTIcPVBsL8FI9pyRXCWhmPk5REk/KTKA2bI4ty3pXn6dSwZ8knXUXhwU7i2qL1g=
-X-Gm-Gg: ASbGncv704nnCxyS8KlXr2VEi1BxUdKgg56+nle21ZVnCaeFyhaZE0rDGyHXuoFS831
-	aSi9/IU/ksx2wNUJvG2jr6uMYobTq4uXr6Bw5QIplxFN8oMuSZDmUyRMa+5mTs0DJzZWJrzlEVh
-	yCpiAAhOlRgeLlRZ/N3bodP4hO2AxCB71/7632cqVYwDh78YBpp3CbpJ/pZXH9Uo57sX3G1MCsJ
-	VMkZ5SvTBG+IcdnUpjTQImsuqjkpTe9F/e5WA4ALV44hPHKC0HaWyNJUYy+RGSUtHBA+Nz5bYhI
-	qhi/ZFsu/xY4wNBQW9FW5igPxbVjTZUHLdutSZra4/a/44g=
-X-Google-Smtp-Source: AGHT+IEfkrY7UVJaq0/ND9NEi5g0hc9ml44W1eaBzgh92FLmrsjRrsJKvCEmtLb9GKZY9TgjXouEaw==
-X-Received: by 2002:a17:907:3f9b:b0:ac1:ddaa:2c11 with SMTP id a640c23a62f3a-ac25210ff7emr88036066b.0.1741296310064;
-        Thu, 06 Mar 2025 13:25:10 -0800 (PST)
-Received: from salami.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2399d7da1sm156779066b.174.2025.03.06.13.25.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 13:25:09 -0800 (PST)
-Message-ID: <2c1cab545cd3b57a2155df2e87ad9830b2b94ab1.camel@linaro.org>
-Subject: Re: [PATCH v3 3/4] pinctrl: samsung: add gs101 specific eint
- suspend/resume callbacks
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, Krzysztof Kozlowski	
- <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
-	 <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, 	kernel-team@android.com,
- jaewon02.kim@samsung.com, stable@vger.kernel.org
-Date: Thu, 06 Mar 2025 21:25:08 +0000
-In-Reply-To: <20250306-pinctrl-fltcon-suspend-v3-3-f9ab4ff6a24e@linaro.org>
-References: <20250306-pinctrl-fltcon-suspend-v3-0-f9ab4ff6a24e@linaro.org>
-	 <20250306-pinctrl-fltcon-suspend-v3-3-f9ab4ff6a24e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3-2 
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="WQFx1oxY"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1741296406;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0cniJTIAMdIpdeQmR2BhsRWVUgh641WfBYMvCtapTXs=;
+	b=WQFx1oxYMJEnrSFTAQ0UbkBpVyh0nQAgIwQEIXxuZrxgDTGBlVo43SGsVKMZ2CuuVaFS4I
+	sKegnKlrteJk2c0RFwHqlW1CXBvObg64lnLfmmeOOavHBwgqmuknkFtzGQTLiFYomE2ul+
+	Kcj+8Rrs9qPnuIHs5Zpx0ktxl2fRwxZ4ND/TLNIkFbiYdhsX/esaaBDyBNBRiimZ0RzF3a
+	ukmnvwn1RF3g/pSw+jf8W+JrTM6BAYLrk+wjBRSdR/TmkctJHlNPwMM/TI/s4aAjRYAN6e
+	CaqyoPGmG895fskrCqOIb4CwY1YC6gbpJg1UhXAefv9dcHPQH84Ou7Tegiln8g==
+Date: Thu, 06 Mar 2025 22:26:45 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre
+ Torgue <alexandre.torgue@foss.st.com>, Ezequiel Garcia
+ <ezequiel@vanguardiasur.com.ar>, David Wu <david.wu@rock-chips.com>,
+ netdev@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 2/3] net: stmmac: dwmac-rk: Use DELAY_ENABLE macro for
+ RK3566/RK3568
+In-Reply-To: <20250306203858.1677595-3-jonas@kwiboo.se>
+References: <20250306203858.1677595-1-jonas@kwiboo.se>
+ <20250306203858.1677595-3-jonas@kwiboo.se>
+Message-ID: <73ac54350ee3e42dee2b886403f003de@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Thu, 2025-03-06 at 20:42 +0000, Peter Griffin wrote:
-> gs101 differs to other SoCs in that fltcon1 register doesn't
-> always exist. Additionally the offset of fltcon0 is not fixed
-> and needs to use the newly added eint_fltcon_offset variable.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Fixes: 4a8be01a1a7a ("pinctrl: samsung: Add gs101 SoC pinctrl configurati=
-on")
-> Cc: stable@vger.kernel.org
+Hello Jonas,
+
+On 2025-03-06 21:38, Jonas Karlman wrote:
+> Support for Rockchip RK3566/RK3568 GMAC was added without use of the
+> DELAY_ENABLE macro to assist with enable/disable use of MAC rx/tx 
+> delay.
+> 
+> Change to use the DELAY_ENABLE macro to help disable MAC delay when
+> RGMII_ID/RXID/TXID is used. This also re-order to enable/disable before
+
+s/re-order/re-orders/
+
+> the delay is written to match all other GMAC and vendor kernel.
+
+s/GMAC/GMACs/
+
+> Fixes: 3bb3d6b1c195 ("net: stmmac: Add RK3566/RK3568 SoC support")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 > ---
-> Changes since v2:
-> * make it clear exynos_set_wakeup(bank) is conditional on bank type (Andr=
-e)
-> * align style where the '+' is placed (Andre)
-> * remove unnecessary braces (Andre)
-> ---
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 24 ++++-----
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 70 ++++++++++++++++++++++++++
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 2 +
-> =C2=A03 files changed, 84 insertions(+), 12 deletions(-)
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> index 297fa93e4a39..37eb86e4e325 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> @@ -1049,14 +1049,13 @@ static void rk3568_set_to_rgmii(struct
+> rk_priv_data *bsp_priv,
+>  	con1 = (bsp_priv->id == 1) ? RK3568_GRF_GMAC1_CON1 :
+>  				     RK3568_GRF_GMAC0_CON1;
+> 
+> +	regmap_write(bsp_priv->grf, con1,
+> +		     RK3568_GMAC_PHY_INTF_SEL_RGMII |
+> +		     DELAY_ENABLE(RK3568, tx_delay, rx_delay));
+> +
+>  	regmap_write(bsp_priv->grf, con0,
+>  		     RK3568_GMAC_CLK_RX_DL_CFG(rx_delay) |
+>  		     RK3568_GMAC_CLK_TX_DL_CFG(tx_delay));
+> -
+> -	regmap_write(bsp_priv->grf, con1,
+> -		     RK3568_GMAC_PHY_INTF_SEL_RGMII |
+> -		     RK3568_GMAC_RXCLK_DLY_ENABLE |
+> -		     RK3568_GMAC_TXCLK_DLY_ENABLE);
+>  }
+> 
+>  static void rk3568_set_to_rmii(struct rk_priv_data *bsp_priv)
 
-Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+Thanks for this patch...  It's looking good to me, and good job
+spotting this issue!  Please, free to include:
 
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
