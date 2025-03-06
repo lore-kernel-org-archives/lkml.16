@@ -1,74 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B5525C713;
-	Thu,  6 Mar 2025 17:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6358F25A625;
+	Thu,  6 Mar 2025 17:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741281645; cv=none; b=dwWcIeFPD7pOvQ3fWX9BTZod9BBttQnxzKC/sakhyKcXe9Yut1+b8hImTPy3N8/FVCw5VRIJc8a4resDlvXqu81bQ0ZGk200JPGIDSRl9JSB6RB5A9pku2eUIKNhBS3Va7FdMofIeWNnhgleQ79AvOJ+yoB8IL+t5+NK9KJjjig=
+	t=1741281671; cv=none; b=IRufXvl143T/xdvboon3fq932u0YuG5hrJz/axuxB+fozhsW0ChUpL92Ediazs3bOqUA7IPxWKowytahrzjefwdRaufIyAvBg3qihkMZ2AP32aNLW/ijS/6LjgUMPdUmn7bvkYNquK9OYf1q4bLiDbF2yLLeN5D+QjMmi2OBnTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741281645; c=relaxed/simple;
-	bh=9GUHUm17IEQGFD6aYmbJ0438ocdu4QCOxvX9Y6riGNw=;
+	s=arc-20240116; t=1741281671; c=relaxed/simple;
+	bh=i0ekTf1M+bd5eEWZXf6YDhkPTOgl8mRGaDK1NwV/q3k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y0uRIEW75vhUEVyk1h2MPT9hZkJenffEnRi+I82Jy2siYfisGHPMHFYq5eWz6y+YfdYEe6j505elSssL8t61lN4bKgruzmCQjTCWk0kuZh5wxHCPO/4YHE5ZecWbYaPQUBtzjnYMUn5xotIXeFJV7A57k7Cq5MP44MHhQTivVZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jawEpkgl; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bFJOAjdtr8QvUjeibYSlIYZwSdITFjLgDPphjid7GcX7GkfBtQUk9sbZSWV4La0ZKtoqlLzx/6aqi8VcQLZkDhlkI++DRLLrTX4FK9TH7KB2+/gn94E0bJC8qqJUDhTJfd0Gh7fO2RzBR/Kgpz34ItNVrzp6xnx6zvhtbl12IFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIKQ9I4j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jawEpkgl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741281643; x=1772817643;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9GUHUm17IEQGFD6aYmbJ0438ocdu4QCOxvX9Y6riGNw=;
-  b=jawEpkgl/u2AVTWr/G/Ey8ashubYmJbL7BeZc9JI/D1Qy2+Q45+r6J5n
-   vxQ8coyA2SZXyKDDVaAznjho6vnctlrzl+8xCq/G2LeeF7jhQYVvwZeFa
-   FzAcOmaMwq3sID1Va1KDaXj0GL5d1r1XH1+cOVpSwK7GRVEdjWfVxbKV9
-   yLVxEkuutC7Yn/3wiZDgQzIc/EcGO+Ot2SWiYXGKGSYxm781MRQ45Q9zi
-   8IGv9ddAKXrzP6TSqBNnI9fTpOzWugUk8v6W+Q4+xt/xXcF9GZG/aFw+M
-   S9ouzsYdj9gv9QV+3iPUIsUM4jOtN4ZT1EY+8socSvuXqwwu55YFB/Anm
-   Q==;
-X-CSE-ConnectionGUID: AIbOlETDRNu6Kr+OY4sABQ==
-X-CSE-MsgGUID: A55RFoOfTRuXJHN4LTYNDw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="45113709"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="45113709"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 09:20:41 -0800
-X-CSE-ConnectionGUID: q6yKqGi/RTO2LwlRfA2WsQ==
-X-CSE-MsgGUID: fQND1tF+R4268TMVX/TiMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="119589068"
-Received: from sho10-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.178])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 09:20:41 -0800
-Date: Thu, 6 Mar 2025 09:20:34 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIKQ9I4j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E6AC4CEE0;
+	Thu,  6 Mar 2025 17:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741281670;
+	bh=i0ekTf1M+bd5eEWZXf6YDhkPTOgl8mRGaDK1NwV/q3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YIKQ9I4jsrv0V8I3AwahPaVjd78I/dtipLm9M/X896M9bAQUHeydbF+TOTlG5wvSu
+	 J5VFQVZ7rxvWyPPuoGIcCo/nd4e/71HF1ujYVQ1jup5u5Ys7zAns910Zn2Gntt7zp4
+	 kXDCkafdKoLa9GTgEytdANH6af4Ec3XKqZ9HsFFqu+8q0gxykgxqDCgfK7R7d/F2em
+	 rGcsxFcYxiJYbgw7iusBiFgf+3IMrjsNE3KbiAh573H6Qd/AXtL8wma33E6XKYlW2K
+	 fAaPTK9Tw1osO0WF19oKUWKnfhlVfMmPig9MBDNrBpDhGPD7Y0sMh0b5jsmAfO9NZJ
+	 Bo2VWbWgEbj5Q==
+Date: Thu, 6 Mar 2025 09:21:07 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Bill Wendling <morbo@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v6 4/5] x86/bugs: Declutter vulnerable CPU list
-Message-ID: <20250306172034.qf767eqcrw5m22ln@desk>
-References: <20250305-add-cpu-type-v6-0-4741735bcd75@linux.intel.com>
- <20250305-add-cpu-type-v6-4-4741735bcd75@linux.intel.com>
- <542cfd1b-65f8-4fa9-811e-d70850d0cf9a@intel.com>
- <20250306165757.sh6azitvazhq5lxj@desk>
- <39d1597a-d165-4f79-a2fc-d37fc2822909@intel.com>
+	"H . Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	linux-crypto@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] x86/crc32: optimize tail handling for crc32c short inputs
+Message-ID: <20250306172107.GA1796@sol.localdomain>
+References: <20250304213216.108925-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,17 +49,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39d1597a-d165-4f79-a2fc-d37fc2822909@intel.com>
+In-Reply-To: <20250304213216.108925-1-ebiggers@kernel.org>
 
-On Thu, Mar 06, 2025 at 09:03:52AM -0800, Dave Hansen wrote:
-> On 3/6/25 08:57, Pawan Gupta wrote:
-> > As one of the goal of the patch is to shorten the macro names and follow
-> > the VULNWL_<> pattern, would it make sense to rename VULNWL_INTEL to:
-> > 
-> > #define VULNWL_VFM(vfm, whitelist)		\
-> > 	X86_MATCH_VFM(vfm, whitelist)
+On Tue, Mar 04, 2025 at 01:32:16PM -0800, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> I don't think saving 6 characters justifies the extra level of
-> abstraction personally.
+> For handling the 0 <= len < sizeof(unsigned long) bytes left at the end,
+> do a 4-2-1 step-down instead of a byte-at-a-time loop.  This allows
+> taking advantage of wider CRC instructions.  Note that crc32c-3way.S
+> already uses this same optimization too.
+> 
+> crc_kunit shows an improvement of about 25% for len=127.
+> 
+> Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+> 
+> This applies to
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next
 
-Ok, I will stick with X86_MATCH_VFM().
+Applied to
+https://web.git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next
+
+- Eric
