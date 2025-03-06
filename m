@@ -1,132 +1,211 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257311FF5FF;
-	Thu,  6 Mar 2025 12:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F25201005
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741265438; cv=none; b=I/BmzRz+R9Tl2rWsQpfScyqkFTbt9+fWzx8m2dbrKBlVkq2+dcescI44QlGNSspUcjQmRntUjZMkOmCc2CSZgbQRRqmCSEanwTtxNDZL2bPWfrKs0D04hkq/WWOt6swQL6DEQH+FyLvYQ0HX+p5sBcZWJJ8SiIPxTTxNHac+d+M=
+	t=1741265463; cv=none; b=r8LIxGTBHhlvYWq0ZlrrFiIe/gM336MUAnhzcyfvDrpER5sMi2CwLMgJdkzkVA8S8TnRs43+YSElSc3+a/8RUeXobjcuwnCPfgoZoPv8WSVtS9h+539nmyJpf8EHO/nCftCJIl6+ncK8Eusr4gNDViSxs+qwzs9hwlGUCOQ03Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741265438; c=relaxed/simple;
-	bh=qAIaa5YTxPQth20rjdhj3lsn7De7pEvS1miIRXCuVQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vn3mGJmtWvRhgc+zCnHrpUrF7phsmjnuGmYm5fx7Htt5j39QHoFtTVwPhKDmdi63zK7fvdP8zM5VLez4eW/Wrsbz+veaz9jEb5YpIXwXE0KmEpoPyfIqQaIil7uiZM5EonITtFdklZcJUcPix5dZOPqKEh/VHsWNdI72hyOCrYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43E1E1007;
-	Thu,  6 Mar 2025 04:50:47 -0800 (PST)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 392143F673;
-	Thu,  6 Mar 2025 04:50:33 -0800 (PST)
-Date: Thu, 6 Mar 2025 12:50:17 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org, arm-scmi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [Bug report] Memory leak in scmi_device_create
-Message-ID: <Z8maCX5QJRqODl6u@pluto>
-References: <Z8g8vhS9rqQ_ez48@google.com>
- <Z8iFeEWq16pNQdMa@pluto>
- <Z8mCbc2Z2QGd3f8M@google.com>
+	s=arc-20240116; t=1741265463; c=relaxed/simple;
+	bh=njxf6y5pyhmeInfBHOslV7CsXmJ8ztcHfHOXm07MRa0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gt3424sgHGnjZpUnbtGW3g93EgzilCr9ei5N3/W8CkVzHJOIv61R0/+4HNTTSSZI4jMBGhA9fR5sgUGJpmjQ3nb8EI5otcd0r1euzuFjJRRHrPsXQJI+7gwrLkXi8w84AlKnIc3SwWLvfmN8E5e5Lg+uLnJeoRLTA/t8pNdJMrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=icMrSTub; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="icMrSTub"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526952Cn020153
+	for <linux-kernel@vger.kernel.org>; Thu, 6 Mar 2025 12:51:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rR7talaNqtIpgG6BnMXQyYngWs9JqhRdQCma/K1hsFk=; b=icMrSTubB9SZAon0
+	2lJr/BDocNqY3ulT0ybde+gZuGMWe14o5JD3jNuQoj1Y736/zZVqbZoeKX46ulE/
+	wnvGi0zwiUxOnKPDqgX24Txszlk3XMnou9L51HOrmd5gznmkphiBKPCEFeKPmIEF
+	GKyAT9sGu2V+sBE0bKjzYY0xHdyJIFGqXWHTs0ugL7nNQ8ui6opf+V0sosJeCGVe
+	ER9Onww4ji8wKjL6+8vQUhKfpx4Y+LfzcnXUM4e694FYlvty5CvAdxRnyTgPgwF/
+	SOW02fceiYlagUiBQeDsb6QrxAR939R9ydBjSTrZxCsS0M1rhdce03WwlFMcqJHf
+	SXbQYA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 456xcuj9jf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 12:51:00 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c3c5833b58so18453285a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 04:51:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741265459; x=1741870259;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rR7talaNqtIpgG6BnMXQyYngWs9JqhRdQCma/K1hsFk=;
+        b=ejTQx5BzFUAjb88/UMv5ao9rhVgsTBszR+bCx2Nin+cs8IWKxlUTJos3ArjA1QfygJ
+         3wdgY5G1kkEBPIFmIDBpxKpxSqP6ewi/mdzeb/UHnawAzbNsjcTkR9Yj3Xd9LaF/4Sub
+         bejawhfqQGeMxRnJ2Xmmjrc7qezgy6RPg7iC7k5jxSTSw4QeVzwzr9q3rjVNC+rbt7eG
+         M52DcxUo/70o1LvGKyA7lsGrM1v9YGOQL39U2WCfpWO7HTmRBnG28I4m77FhAG6uO6ov
+         fgWgXalg+O72o6JjS9DRuHErjrWWuZLG5o7Ufuac/RlWOyH7taq54U4X3X6CkehyrBZQ
+         ls3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVQZ6URvSVgtiGuUMHOJGa3tuFcyXsGpIOy9FUzGfKmh5jnQgz7yG27Je1tXMhDmhDvPlg8bwJemL9vtiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB1iWTAouDh1QWuoCkrZSb0Vx6/meivGJG0MC45kMLhlZ/7MEs
+	F5hW8ITjIQz/rqQ62aU4p4JYuer/bIwzWHdyJGvSIB6qV+gru+uSGO6e5vKSpbnSsZ3lAt98rmD
+	irxh1Ics3ylefvMhEFctxoZiVC+myYIv21HsJfPK3yrzJWPvexrHgjlnm/nktTRiZtmnqzsg=
+X-Gm-Gg: ASbGncvw5EU2+s22x41Q4q5CVOv05YKbdSnIN0Lw20f59P/NmqGpVSrLN1vgJmDvY56
+	CbtdTguVLnfslTAhXe7DD+GJDnXSvmnhwH9YPKQWingaYvjIlF0pNJsGb6VnwdJJN/89rrqAMuv
+	QgzijDZIFHrC0izBDMH3AawyLTKB9u8yuRMlAaOAW8KnVEc41akCR5kVIlqRVNGqLzLaRWGB/N7
+	A1eEVyG3n3LQKIkJBs806wyQ6oDaD3qqnBv3K3OxlYaSE6ELBAdTGA28BoVvebspvgQpOUnKyWQ
+	EmFDzQGxpljCVBXNmAUR/ODtTnZsvOcGj6d26+d3U1ar3/xZbzzxTfqcPUbxkk7awknNWQ==
+X-Received: by 2002:a05:620a:45a5:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7c3d8eb1d1amr362886385a.11.1741265459249;
+        Thu, 06 Mar 2025 04:50:59 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFGFeZzV5Gmz2xjrjPxgVHagGLQpB8t4BoOY66hcYV5oNZhHazGLh/6he83HV2x8pZLW82bwQ==
+X-Received: by 2002:a05:620a:45a5:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7c3d8eb1d1amr362885285a.11.1741265458827;
+        Thu, 06 Mar 2025 04:50:58 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c745d5cfsm908598a12.19.2025.03.06.04.50.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Mar 2025 04:50:58 -0800 (PST)
+Message-ID: <5e72992c-170c-48b9-8df4-2caf31c4ae44@oss.qualcomm.com>
+Date: Thu, 6 Mar 2025 13:50:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8mCbc2Z2QGd3f8M@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: Add device tree for TUXEDO Elite 14
+ Gen1
+To: Georg Gottleuber <ggo@tuxedocomputers.com>,
+        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wse@tuxedocomputers.com,
+        cs@tuxedocomputers.com
+References: <57589859-fec1-4875-9127-d1f99e40a827@tuxedocomputers.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <57589859-fec1-4875-9127-d1f99e40a827@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: jmvtFFoDCVcM9NSBi02q4ZK_wDzwIs6N
+X-Proofpoint-GUID: jmvtFFoDCVcM9NSBi02q4ZK_wDzwIs6N
+X-Authority-Analysis: v=2.4 cv=eeXHf6EH c=1 sm=1 tr=0 ts=67c99a34 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=yDUiu3_GAAAA:8 a=n7UT6Et6nPPvcfnAv1EA:9 a=QEXdDO2ut3YA:10 a=RVmHIydaz68A:10
+ a=DbJdjrQMpfET-33fQHBk:22 a=PEH46H7Ffwr30OY-TuGO:22 a=gafEeHOdjwYkg5oUpzAY:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-06_05,2025-03-06_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503060097
 
-On Thu, Mar 06, 2025 at 11:09:33AM +0000, Alice Ryhl wrote:
-> On Wed, Mar 05, 2025 at 05:10:16PM +0000, Cristian Marussi wrote:
-> > On Wed, Mar 05, 2025 at 11:59:58AM +0000, Alice Ryhl wrote:
-> > > Dear SYSTEM CONTROL & POWER/MANAGEMENT INTERFACE (SCPI/SCMI) Message
-> > > Protocol drivers maintainers,
-> > > 
-> > > I flashed a v6.13-rc3 kernel onto a Rock5B board and noticed the
-> > > following output in my terminal:
-> > > 
-> > > [  687.694465] kmemleak: 4 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
-> > > 
-> > > It seems that there is a memory leak for devices created with
-> > > scmi_device_create.
-> > > 
-> > `
-> > Hi Alice,
-> > 
-> > thanks for this report.
-> > 
-> > > This was with a kernel running v6.13-rc3, but as far as I can tell, no
-> > > relevant changes have landed since v6.13-rc3. My tree *does* include
-> > > commit 295416091e44 ("firmware: arm_scmi: Fix slab-use-after-free in
-> > > scmi_bus_notifier()"). I've only seen this kmemleak report once, so it's
-> > > not happening consistently.
-> > > 
-> > > See below for the full kmemleak report.
-> > > 
-> > > Alice
-> > > 
-> > > $ sudo cat /sys/kernel/debug/kmemleak
-> > > unreferenced object 0xffffff8106c86000 (size 2048):
-> > >   comm "swapper/0", pid 1, jiffies 4294893094
-> > >   hex dump (first 32 bytes):
-> > >     02 00 00 00 10 00 00 00 c0 01 bc 03 81 ff ff ff  ................
-> > >     60 67 ba 03 81 ff ff ff 18 60 c8 06 81 ff ff ff  `g.......`......
-> > >   backtrace (crc feae9680):
-> > >     [<00000000197aa008>] kmemleak_alloc+0x34/0xa0
-> > >     [<0000000056fe02c9>] __kmalloc_cache_noprof+0x1e0/0x450
-> > >     [<00000000a8b3dfe1>] __scmi_device_create+0xb4/0x2b4
-> > >     [<000000008714917b>] scmi_device_create+0x40/0x194
-> > >     [<000000001818f3cf>] scmi_chan_setup+0x144/0x3b8
-> > >     [<00000000970bad38>] scmi_probe+0x584/0xa78
-> > >     [<000000002600d2fd>] platform_probe+0xbc/0xf0
-> > >     [<00000000f6f556b4>] really_probe+0x1b8/0x520
-> > >     [<00000000eed93d59>] __driver_probe_device+0xe0/0x1d8
-> > >     [<00000000d613b754>] driver_probe_device+0x6c/0x208
-> > >     [<00000000187a9170>] __driver_attach+0x168/0x328
-> > >     [<00000000e3ff1834>] bus_for_each_dev+0x14c/0x178
-> > >     [<00000000984a3176>] driver_attach+0x34/0x44
-> > >     [<00000000fc35bf2a>] bus_add_driver+0x1bc/0x358
-> > >     [<00000000747fce19>] driver_register+0xc0/0x1a0
-> > >     [<0000000081cb8754>] __platform_driver_register+0x40/0x50
-> > > unreferenced object 0xffffff8103bc01c0 (size 32):
-> > 
-> > I could not reproduce on my setup, even though I run a system with
-> > all the existent SCMI protocols (and related drivers) enabled (and
-> > so a lot of device creations) and a downstream test driver that causes
-> > even more SCMI devices to be created/destroyed at load/unload.
-> > 
-> > Coming down the path from scmi_chan_setup(), it seems something around
-> > transport devices creation, but it is not obvious to me where the leak
-> > could hide....
-> > 
-> > ...any particular setup on your side ? ...using LKMs, loading/unloading,
-> > any usage pattern that could help me reproduce ?
+On 6.03.2025 1:25 PM, Georg Gottleuber wrote:
+> Initial support for TUXEDO Elite 14 Gen1 based on Qualcomm Snapdragon X
+> Elite SoC (X1E78100).
 > 
-> I looked into this a bit more, and actually it does happen consistently.
-> It's just that kmemleak doesn't report it until 10 minutes after
-> booting, so I did not notice it.
+> Working:
+> * Touchpad
+> * Keyboard
+> * eDP (no brightness control yet)
+
+in case your panel as a PWM backlight, you will need to set the PWM
+output pin function explicitly, see x1e80100-microsoft-romulus.dtsi
+
+> * NVMe
+> * USB Type-C port
+> * WiFi (WiFi 7 untested)
+> * GPU (software rendering)
 > 
-> As for my setup, well, I boot the kernel over pxe and the rootfs is
-> mounted over NFSv4. The memory leak happens even if I don't do anything
-> at all - I just boot and wait. The device is a Radxa Rock5B.
+> Not working:
+> * GPU (WIP: firmware loading but output is jerky)
+
+Please tell us more
+
+> * USB Type-A (WIP)
+> * Suspend with substantial energy saving
+> * Audio, Speakers, Microphones
+> * Camera
+> * Fingerprint Reader
+
+If it's connected to the multiport controller, you should be able to
+just enable it, like on the T14s, similarly to the Type-A port
+
+[...]
+
+> Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../qcom/x1e80100-tuxedo-elite-14-gen1.dts    | 798 ++++++++++++++++++
+>  2 files changed, 799 insertions(+)
+>  create mode 100644
+> arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
 > 
-> Not sure what other information there is to give.
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 140b0b2abfb5..f0a9d677d957 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -298,3 +298,4 @@ dtb-$(CONFIG_ARCH_QCOM)     += x1e80100-lenovo-yoga-slim7x.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-microsoft-romulus13.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-microsoft-romulus15.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-qcp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-tuxedo-elite-14-gen1.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
+> new file mode 100644
+> index 000000000000..86bdec4a2dd8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
+> @@ -0,0 +1,798 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + * Copyright (c) 2025 TUXEDO Computers GmbH
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +
+> +#include "x1e80100.dtsi"
+> +#include "x1e80100-pmics.dtsi"
+> +
+> +/ {
+> +       model = "TUXEDO Elite 14 Gen1";
 
-My question as stated above was mainly to understand if the SCMI stack
-was built-in or compiled as loadable modules (lsmod|grep -i scmi)...
-...I am just to try to pin down a possible 'more-vulnerable' configuration..
-..I could not see any report even triggering a kmemleak scan on v6.14-rc5
-BUT I only tested with a fully built-in SCMI stack indeed as of now...so
-the question.
+Please use 8-wide tabs instead of spaces
 
-> I tried again with v6.14-rc5, and I still got the leak:
+> +       compatible = "tuxedo,elite14gen1", "qcom,x1e80100";
 
-Ok...thanks I will investigate with different configs.
+You'll need to define a new vendor in:
 
-Thanks,
-Cristian
+Documentation/devicetree/bindings/vendor-prefixes.yaml
+
+[...]
+
+> +       vreg_edp_3p3: regulator-edp-3p3 {
+> +               compatible = "regulator-fixed";
+> +
+> +               regulator-name = "VREG_EDP_3P3";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +
+> +               // EDP_VDD_EN_GPIO54
+
+C-style (/* foo */) comments are preferred, but these ones can be
+removed, as they repeat what the code says
+
+[...]
+
+> +&gpu {
+> +       status = "okay";
+> +
+> +       zap-shader {
+> +               firmware-name = "qcom/a740_zap.mbn";
+
+Are the laptop's OEM key/security fuses not blown?
+
+Konrad
