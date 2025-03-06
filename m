@@ -1,585 +1,260 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B6520297E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78442E3397;
+	Thu,  6 Mar 2025 12:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741262261; cv=none; b=eteFbKwBlbgHJPuTAFh2lvCtaQZicDWUAohJ9L6OijksN2YXZDhM2bj3lteVYh6rG0PvxR1gMJD94rMg5x84zvLYBKEdaGmBy9CwkoX2b2nwtHK/HHfZDcsxvt210Dn9HFVG9/VWIbD2yNilXBqL1fh0kjMVuITHgi3ZDqo9B8g=
+	t=1741262423; cv=none; b=XdBl+IAMTgH9+dfbhqt9hIdydzA6JOiwMxR3U+jOF+uY9dfTlhsDPDJT46GV+5QjQNvZmbrA7+2EvsinQi8nU71JgByUQG2e5Ewtl/W5EvSMYy2aMwmPdA2GUEnEeLeFZ7h6bdiNhvmNQGAkHDrGF3nJTFKxOLfEcUDS9xx0ObQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741262261; c=relaxed/simple;
-	bh=5H7eg+WL3WR1CRhmTiHpru9iL0FA1jYfIqvgL+L7RGM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PBo+GC23s6g7buNEEJZhZupnlKoApVxa4G0b7XU3Acjy9ZpmnxojCVe+3vFIBOb/3lCgEjqvMw7WB+E5dS1CCWXLYvrzCImiVhF8JfYtBX2m13I7++YLyV7X11ljovkOwCeJ/aRgdudAJD//HHF4e78A3YLuBgIK9D8DpAZvvlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mZhrrtOb; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741262423; c=relaxed/simple;
+	bh=k/Z3JskPodBWb7rxNqwMFKnqIJPwtUB3Twegd1jUOEg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=hU3FwJ8Vw0ZOd0UzOGrpGKUFdlJyrquoI93flC9002L+SSymuyZp/keM1Tdx0wqWnzC9pgW+2cdtQlJg8GUxh4KbgIZw90OG0kswDJGnhf0BwM/EPytYW617MubCvo6SIYdM36KoFrZDNItOxkQxJGbXF00emMtjkvj60LmwL7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q9v+vhmI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WGTpdKVc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mZhrrtOb"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so132531a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:57:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741262257; x=1741867057; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BARUASpJRV7rjuWtAQfVw6iGKUQXuRHG9Omp79hJ7oc=;
-        b=mZhrrtOb4RSm8IBaL29iN5g5loA1gkaqQvp4mGrxtkw4Brl9Qapwod/AncIaeGa0Hr
-         oPpGAi64EbeRvjHQyJDt+HwrrxsP4fiN58EMHnb8uytVlJoTmAfmtechRxEdOmd5Uh9f
-         wuSppeZe2xiD2bKEC0tWstyKn++p0Si3bORRTobxmBB0ErfB6iJHilqP7smDaHfddfM+
-         Hc7rG/C8MUDjVmSLGq3EWQnLlAADj7xMGyfYgPXOtTIlpLY7ZMMelpnBNtGbv14XqcYP
-         Z/5HYNpAq6BFyzxcapmG/YQkKzmNWXnSjOiVW/GHpvr4WVcqp5AULeCMoqcEcKOW2IPP
-         DckA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741262257; x=1741867057;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BARUASpJRV7rjuWtAQfVw6iGKUQXuRHG9Omp79hJ7oc=;
-        b=vLTY28Kw+iyztbtKrLyATOiLpA13ifCMDOb6E5StffJ7WdEe5xOyXsq0f7fsg/njQo
-         Ba0vlfjRDLi6T6e91jyir3iJDc/o7NTAgjgBnEsg4aaejQY0OehvnbarTKxf27uIU0XT
-         WNoJ4pjIQ3Xhk26akWa9drOoYHumhaX5oARNJvR0p8FrJdrRZx4CeC8Hb4YztUDarclc
-         1JYrcvYpzgdiAQfDhutNhps83eIQcO1h7bogk8QN7OJLCYSmROHZpZPEXbYRXHnr3IYd
-         xPyLybDKS79mHnNj0N3wB4zFYgOCG9VUnkyQSbzjImiYKPAy0cp+7doSaMTohLqvNf3D
-         KbQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhwSv0obsjW+59ols9nachytPrtNCcjgPZ+p4YSKJPZMjguaXF2MpTY0qiweXrveSpwKtRfoDzcH5vuy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6pJl5MKnhXna0L1XnwfRoDjlEqjrUiPNfToZWoJwacAXlRQyw
-	eZ+PmslPf78hSaaq1zmyo3Is1qOH7g1n66XyN7v256sWHiRzbFbewgZPLHZm8SA=
-X-Gm-Gg: ASbGnctW2cez96MgpXbMvnJ/fbWZ/SrJetMM19jbl+NPIVM9daIkMo9h9bcETqefcWx
-	AmQBwGjk2stFQWYdjcxJQ5281cE6EcynHaFytW433l5cT712Z4d9+vwH3DEOoyfLbY88+OmuCLF
-	cGPf6q6t86m/OJl0aKQnmgCOijqES5Te8FLo+nEE3TBWQLU7QqFI6GuxAEaBldm6cWl0MGYqbSt
-	v1BokJNdU9bV8Wpy5owxqrjGlzB3MkCOvbahVVksNxSasrqc26TRhbqKZSHlDiGOHUuugBjDHGe
-	x5yVe+QRFJJeVFfx/w26bsIp0Ucry6LcQQ13ZLMQor9oBTa8
-X-Google-Smtp-Source: AGHT+IFVm1H9GI3kx+kJniQRxYGCrEUbz/D381snyIxSGg+a4nF/a3d4dUAKhYqpsRUeFr9SNwunXA==
-X-Received: by 2002:a05:6402:84d:b0:5e0:745c:6503 with SMTP id 4fb4d7f45d1cf-5e59f530e18mr6315105a12.31.1741262256822;
-        Thu, 06 Mar 2025 03:57:36 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c768f213sm839847a12.74.2025.03.06.03.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 03:57:36 -0800 (PST)
-Message-ID: <f7c0101ff26ac0d4ef70a374ae31ee5d23b3c8fc.camel@linaro.org>
-Subject: Re: [PATCH v2 2/4] pinctrl: samsung: add dedicated SoC eint
- suspend/resume callbacks
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, Krzysztof Kozlowski	
- <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
-	 <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, 	kernel-team@android.com,
- jaewon02.kim@samsung.com
-Date: Thu, 06 Mar 2025 11:57:35 +0000
-In-Reply-To: <20250301-pinctrl-fltcon-suspend-v2-2-a7eef9bb443b@linaro.org>
-References: <20250301-pinctrl-fltcon-suspend-v2-0-a7eef9bb443b@linaro.org>
-	 <20250301-pinctrl-fltcon-suspend-v2-2-a7eef9bb443b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q9v+vhmI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WGTpdKVc"
+Date: Thu, 06 Mar 2025 12:00:16 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741262418;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TKYsissuzvT9ielN6X7uJeEG5droGUC8fYTwP7lvPJ0=;
+	b=Q9v+vhmIBX7SlwAa15q4qCci46LQKpUlamCEZ3uXxLPU0pssyiarXHJfXy3VXblvQIpWs+
+	vYyxBgL0RIuT8EJmowLVu/cC9xz0Y2NxGhj8pCWfJY0+0TJ8Lzu5ZhAOExmcDmd3xC39ML
+	4MTT3QFarTCr6Bb+uSxJ57umVYD38oYHhaJ4X2SY9nNRooUoZQcn+pxCbq5qosj2E7AYPs
+	yj0Br6fCNlSxtMuefxjMqyXm6ejhZi/CvsQnWRtZtYIEO0tAzCKOhdIKtvsJ5QFJBd0lln
+	irPetMXmm5W5p4tN4iE970+N1rZ0HaRAA1j/3FLl8iqFWFxMKJYPaUNE+fvhoA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741262418;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TKYsissuzvT9ielN6X7uJeEG5droGUC8fYTwP7lvPJ0=;
+	b=WGTpdKVcTMRxjTCeIyJ5rVn+MA0wDj6C5aVp0vPvz1U1FCfV2Jwv03leeVQ4zxP3YtLBLW
+	1T9L37YelVAGcvAg==
+From: "tip-bot2 for Eric Biggers" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu: Improve crypto performance by making
+ kernel-mode FPU reliably usable in softirqs
+Cc: Eric Biggers <ebiggers@google.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Oleg Nesterov <oleg@redhat.com>, Uros Bizjak <ubizjak@gmail.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250304204954.3901-1-ebiggers@kernel.org>
+References: <20250304204954.3901-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <174126241675.14745.2521678635311279694.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Sat, 2025-03-01 at 11:43 +0000, Peter Griffin wrote:
-> gs101 needs it's own suspend/resume callbacks to use the newly
-> added eint_fltcon_offset for saving & restoring fltcon0 & fltcon1
-> registers. It also differs to previous SoCs in that fltcon1
-> register doesn't always exist for each bank.
->=20
-> exynosautov920 also has dedicated logic for using eint_con_offset
-> and eint_mask_offset for saving & restoring it's registers.
->=20
-> Refactor the existing platform specific suspend/resume callback
-> so that each SoC variant has their own callback containing the
-> SoC specific logic.
->=20
-> Additionally we now call drvdata->suspend() & drvdata->resume()
-> from within the loop that iterates the banks in
-> samsung_pinctrl_suspend() and samsung_pinctrl_resume().
->=20
-> This simplifies the logic, and allows us to remove the
-> clk_enable() and clk_disable() from the callbacks.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
-> Changes since v1:
-> * Split code refactor & gs101 parts into separate patches (Andre)
-> ---
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |=C2=A0 28 ++--
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 201 ++++++++++---------------
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 6 +-
-> =C2=A0drivers/pinctrl/samsung/pinctrl-samsung.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0 11 +-
-> =C2=A0drivers/pinctrl/samsung/pinctrl-samsung.h=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A05 files changed, 111 insertions(+), 143 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pin=
-ctrl/samsung/pinctrl-exynos-arm64.c
-> index e28fe8177646..57c98d2451b5 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> @@ -1112,8 +1112,8 @@ static const struct samsung_pin_ctrl exynosautov920=
-_pin_ctrl[] =3D {
-> =C2=A0		.pin_banks	=3D exynosautov920_pin_banks0,
-> =C2=A0		.nr_banks	=3D ARRAY_SIZE(exynosautov920_pin_banks0),
-> =C2=A0		.eint_wkup_init	=3D exynos_eint_wkup_init,
-> -		.suspend	=3D exynos_pinctrl_suspend,
-> -		.resume		=3D exynos_pinctrl_resume,
-> +		.suspend	=3D exynosautov920_pinctrl_suspend,
-> +		.resume		=3D exynosautov920_pinctrl_resume,
-> =C2=A0		.retention_data	=3D &exynosautov920_retention_data,
-> =C2=A0	}, {
-> =C2=A0		/* pin-controller instance 1 AUD data */
-> @@ -1124,43 +1124,43 @@ static const struct samsung_pin_ctrl exynosautov9=
-20_pin_ctrl[] =3D {
-> =C2=A0		.pin_banks	=3D exynosautov920_pin_banks2,
-> =C2=A0		.nr_banks	=3D ARRAY_SIZE(exynosautov920_pin_banks2),
-> =C2=A0		.eint_gpio_init	=3D exynos_eint_gpio_init,
-> -		.suspend	=3D exynos_pinctrl_suspend,
-> -		.resume		=3D exynos_pinctrl_resume,
-> +		.suspend	=3D exynosautov920_pinctrl_suspend,
-> +		.resume		=3D exynosautov920_pinctrl_resume,
-> =C2=A0	}, {
-> =C2=A0		/* pin-controller instance 3 HSI1 data */
-> =C2=A0		.pin_banks	=3D exynosautov920_pin_banks3,
-> =C2=A0		.nr_banks	=3D ARRAY_SIZE(exynosautov920_pin_banks3),
-> =C2=A0		.eint_gpio_init	=3D exynos_eint_gpio_init,
-> -		.suspend	=3D exynos_pinctrl_suspend,
-> -		.resume		=3D exynos_pinctrl_resume,
-> +		.suspend	=3D exynosautov920_pinctrl_suspend,
-> +		.resume		=3D exynosautov920_pinctrl_resume,
-> =C2=A0	}, {
-> =C2=A0		/* pin-controller instance 4 HSI2 data */
-> =C2=A0		.pin_banks	=3D exynosautov920_pin_banks4,
-> =C2=A0		.nr_banks	=3D ARRAY_SIZE(exynosautov920_pin_banks4),
-> =C2=A0		.eint_gpio_init	=3D exynos_eint_gpio_init,
-> -		.suspend	=3D exynos_pinctrl_suspend,
-> -		.resume		=3D exynos_pinctrl_resume,
-> +		.suspend	=3D exynosautov920_pinctrl_suspend,
-> +		.resume		=3D exynosautov920_pinctrl_resume,
-> =C2=A0	}, {
-> =C2=A0		/* pin-controller instance 5 HSI2UFS data */
-> =C2=A0		.pin_banks	=3D exynosautov920_pin_banks5,
-> =C2=A0		.nr_banks	=3D ARRAY_SIZE(exynosautov920_pin_banks5),
-> =C2=A0		.eint_gpio_init	=3D exynos_eint_gpio_init,
-> -		.suspend	=3D exynos_pinctrl_suspend,
-> -		.resume		=3D exynos_pinctrl_resume,
-> +		.suspend	=3D exynosautov920_pinctrl_suspend,
-> +		.resume		=3D exynosautov920_pinctrl_resume,
-> =C2=A0	}, {
-> =C2=A0		/* pin-controller instance 6 PERIC0 data */
-> =C2=A0		.pin_banks	=3D exynosautov920_pin_banks6,
-> =C2=A0		.nr_banks	=3D ARRAY_SIZE(exynosautov920_pin_banks6),
-> =C2=A0		.eint_gpio_init	=3D exynos_eint_gpio_init,
-> -		.suspend	=3D exynos_pinctrl_suspend,
-> -		.resume		=3D exynos_pinctrl_resume,
-> +		.suspend	=3D exynosautov920_pinctrl_suspend,
-> +		.resume		=3D exynosautov920_pinctrl_resume,
-> =C2=A0	}, {
-> =C2=A0		/* pin-controller instance 7 PERIC1 data */
-> =C2=A0		.pin_banks	=3D exynosautov920_pin_banks7,
-> =C2=A0		.nr_banks	=3D ARRAY_SIZE(exynosautov920_pin_banks7),
-> =C2=A0		.eint_gpio_init	=3D exynos_eint_gpio_init,
-> -		.suspend	=3D exynos_pinctrl_suspend,
-> -		.resume		=3D exynos_pinctrl_resume,
-> +		.suspend	=3D exynosautov920_pinctrl_suspend,
-> +		.resume		=3D exynosautov920_pinctrl_resume,
-> =C2=A0	},
-> =C2=A0};
-> =C2=A0
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/s=
-amsung/pinctrl-exynos.c
-> index ac6dc22b37c9..d65a9fba0781 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> @@ -761,153 +761,118 @@ __init int exynos_eint_wkup_init(struct samsung_p=
-inctrl_drv_data *d)
-> =C2=A0	return 0;
-> =C2=A0}
-> =C2=A0
-> -static void exynos_pinctrl_suspend_bank(
-> -				struct samsung_pinctrl_drv_data *drvdata,
-> -				struct samsung_pin_bank *bank)
-> +static void exynos_set_wakeup(struct samsung_pin_bank *bank)
-> =C2=A0{
-> -	struct exynos_eint_gpio_save *save =3D bank->soc_priv;
-> -	const void __iomem *regs =3D bank->eint_base;
-> +	struct exynos_irq_chip *irq_chip =3D NULL;
+The following commit has been merged into the x86/fpu branch of tip:
 
-This is a useless init and the value is overwritten right away.
+Commit-ID:     d02198550423a0b695e7a24ec77153209ad45b09
+Gitweb:        https://git.kernel.org/tip/d02198550423a0b695e7a24ec77153209ad45b09
+Author:        Eric Biggers <ebiggers@google.com>
+AuthorDate:    Tue, 04 Mar 2025 12:49:54 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 06 Mar 2025 12:44:09 +01:00
 
-> =C2=A0
-> -	if (clk_enable(bank->drvdata->pclk)) {
-> -		dev_err(bank->gpio_chip.parent,
-> -			"unable to enable clock for saving state\n");
-> -		return;
-> +	if (bank->eint_type =3D=3D EINT_TYPE_WKUP) {
-> +		if (bank->irq_chip) {
-> +			irq_chip =3D bank->irq_chip;
-> +			irq_chip->set_eint_wakeup_mask(bank->drvdata, irq_chip);
-> +		}
-> =C2=A0	}
-> -
-> -	save->eint_con =3D readl(regs + EXYNOS_GPIO_ECON_OFFSET
-> -						+ bank->eint_offset);
-> -	save->eint_fltcon0 =3D readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> -						+ 2 * bank->eint_offset);
-> -	save->eint_fltcon1 =3D readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> -						+ 2 * bank->eint_offset + 4);
-> -	save->eint_mask =3D readl(regs + bank->irq_chip->eint_mask
-> -						+ bank->eint_offset);
-> -
-> -	clk_disable(bank->drvdata->pclk);
-> -
-> -	pr_debug("%s: save=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x\n", bank->name, s=
-ave->eint_con);
-> -	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
-> -	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
-> -	pr_debug("%s: save=C2=A0=C2=A0=C2=A0 mask %#010x\n", bank->name, save->=
-eint_mask);
-> =C2=A0}
-> =C2=A0
-> -static void exynosauto_pinctrl_suspend_bank(struct samsung_pinctrl_drv_d=
-ata *drvdata,
-> -					=C2=A0=C2=A0=C2=A0 struct samsung_pin_bank *bank)
-> +void exynos_pinctrl_suspend(struct samsung_pin_bank *bank)
-> =C2=A0{
-> =C2=A0	struct exynos_eint_gpio_save *save =3D bank->soc_priv;
-> =C2=A0	const void __iomem *regs =3D bank->eint_base;
-> =C2=A0
-> -	if (clk_enable(bank->drvdata->pclk)) {
-> -		dev_err(bank->gpio_chip.parent,
-> -			"unable to enable clock for saving state\n");
-> -		return;
-> +	exynos_set_wakeup(bank);
-> +
-> +	if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
+x86/fpu: Improve crypto performance by making kernel-mode FPU reliably usable in softirqs
 
-Can you swap the order, and make the call to exynos_set_wakeup()
-an else, to avoid some needless tests and make it clearer that
-set_wakeup() is conditional as well, i.e.:
+Background:
+===========
 
-	if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
-	  ...
-	} else {
-	  exynos_set_wakeup(bank);
-	}
+Currently kernel-mode FPU is not always usable in softirq context on
+x86, since softirqs can nest inside a kernel-mode FPU section in task
+context, and nested use of kernel-mode FPU is not supported.
 
-What makes it hard to read is that as-is, it looks like the
-set_wakeup() is unconditional, while it's also based on
-bank->eint_type (which is also more obvious before your patch).
+Therefore, x86 SIMD-optimized code that can be called in softirq context
+has to sometimes fall back to non-SIMD code.  There are two options for
+the fallback, both of which are pretty terrible:
 
-Or maybe even have exynos_set_wakeup() return a bool, as in
-the follow-up gs101 patch, there are three tests of this type.
+  (a) Use a scalar fallback.  This can be 10-100x slower than vectorized
+      code because it cannot use specialized instructions like AES, SHA,
+      or carryless multiplication.
 
-Other than that, I think I looks good.
+  (b) Execute the request asynchronously using a kworker.  In other
+      words, use the "crypto SIMD helper" in crypto/simd.c.
 
-Cheers,
-Andre'
+Currently most of the x86 en/decryption code (skcipher and aead
+algorithms) uses option (b), since this avoids the slow scalar fallback
+and it is easier to wire up.  But option (b) is still really bad for its
+own reasons:
 
-> +		save->eint_con =3D readl(regs + EXYNOS_GPIO_ECON_OFFSET
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + bank->eint_offset);
-> +		save->eint_fltcon0 =3D readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> +					=C2=A0=C2=A0 + 2 * bank->eint_offset);
-> +		save->eint_fltcon1 =3D readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> +					=C2=A0=C2=A0 + 2 * bank->eint_offset + 4);
-> +		save->eint_mask =3D readl(regs + bank->irq_chip->eint_mask
-> +					+ bank->eint_offset);
-> +
-> +		pr_debug("%s: save=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x\n",
-> +			 bank->name, save->eint_con);
-> +		pr_debug("%s: save fltcon0 %#010x\n",
-> +			 bank->name, save->eint_fltcon0);
-> +		pr_debug("%s: save fltcon1 %#010x\n",
-> +			 bank->name, save->eint_fltcon1);
-> +		pr_debug("%s: save=C2=A0=C2=A0=C2=A0 mask %#010x\n",
-> +			 bank->name, save->eint_mask);
-> =C2=A0	}
-> -
-> -	save->eint_con =3D readl(regs + bank->pctl_offset + bank->eint_con_offs=
-et);
-> -	save->eint_mask =3D readl(regs + bank->pctl_offset + bank->eint_mask_of=
-fset);
-> -
-> -	clk_disable(bank->drvdata->pclk);
-> -
-> -	pr_debug("%s: save=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x\n", bank->name, s=
-ave->eint_con);
-> -	pr_debug("%s: save=C2=A0=C2=A0=C2=A0 mask %#010x\n", bank->name, save->=
-eint_mask);
-> =C2=A0}
-> =C2=A0
-> -void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
-> +void exynosautov920_pinctrl_suspend(struct samsung_pin_bank *bank)
-> =C2=A0{
-> -	struct samsung_pin_bank *bank =3D drvdata->pin_banks;
-> -	struct exynos_irq_chip *irq_chip =3D NULL;
-> -	int i;
-> +	struct exynos_eint_gpio_save *save =3D bank->soc_priv;
-> +	const void __iomem *regs =3D bank->eint_base;
-> =C2=A0
-> -	for (i =3D 0; i < drvdata->nr_banks; ++i, ++bank) {
-> -		if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
-> -			if (bank->eint_con_offset)
-> -				exynosauto_pinctrl_suspend_bank(drvdata, bank);
-> -			else
-> -				exynos_pinctrl_suspend_bank(drvdata, bank);
-> -		}
-> -		else if (bank->eint_type =3D=3D EINT_TYPE_WKUP) {
-> -			if (!irq_chip) {
-> -				irq_chip =3D bank->irq_chip;
-> -				irq_chip->set_eint_wakeup_mask(drvdata,
-> -							=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq_chip);
-> -			}
-> -		}
-> +	exynos_set_wakeup(bank);
-> +
-> +	if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
-> +		save->eint_con =3D readl(regs + bank->pctl_offset +
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bank->eint_con_offset);
-> +		save->eint_mask =3D readl(regs + bank->pctl_offset +
-> +					bank->eint_mask_offset);
-> +		pr_debug("%s: save=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x\n",
-> +			 bank->name, save->eint_con);
-> +		pr_debug("%s: save=C2=A0=C2=A0=C2=A0 mask %#010x\n",
-> +			 bank->name, save->eint_mask);
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> -static void exynos_pinctrl_resume_bank(
-> -				struct samsung_pinctrl_drv_data *drvdata,
-> -				struct samsung_pin_bank *bank)
-> +void exynos_pinctrl_resume(struct samsung_pin_bank *bank)
-> =C2=A0{
-> =C2=A0	struct exynos_eint_gpio_save *save =3D bank->soc_priv;
-> =C2=A0	void __iomem *regs =3D bank->eint_base;
-> =C2=A0
-> -	if (clk_enable(bank->drvdata->pclk)) {
-> -		dev_err(bank->gpio_chip.parent,
-> -			"unable to enable clock for restoring state\n");
-> -		return;
-> +	if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
-> +		pr_debug("%s:=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x =3D> %#010x\n", bank-=
->name,
-> +			 readl(regs + EXYNOS_GPIO_ECON_OFFSET
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + bank->eint_offset), save->eint=
-_con);
-> +		pr_debug("%s: fltcon0 %#010x =3D> %#010x\n", bank->name,
-> +			 readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + 2 * bank->eint_offset), save->=
-eint_fltcon0);
-> +		pr_debug("%s: fltcon1 %#010x =3D> %#010x\n", bank->name,
-> +			 readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + 2 * bank->eint_offset + 4),
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 save->eint_fltcon1);
-> +		pr_debug("%s:=C2=A0=C2=A0=C2=A0 mask %#010x =3D> %#010x\n", bank->name=
-,
-> +			 readl(regs + bank->irq_chip->eint_mask
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + bank->eint_offset), save->eint=
-_mask);
-> +
-> +		writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + bank->eint_offset);
-> +		writel(save->eint_fltcon0, regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + 2 * bank->eint_offset);
-> +		writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + 2 * bank->eint_offset + 4);
-> +		writel(save->eint_mask, regs + bank->irq_chip->eint_mask
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + bank->eint_offset);
-> =C2=A0	}
-> -
-> -	pr_debug("%s:=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x =3D> %#010x\n", bank->=
-name,
-> -			readl(regs + EXYNOS_GPIO_ECON_OFFSET
-> -			+ bank->eint_offset), save->eint_con);
-> -	pr_debug("%s: fltcon0 %#010x =3D> %#010x\n", bank->name,
-> -			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> -			+ 2 * bank->eint_offset), save->eint_fltcon0);
-> -	pr_debug("%s: fltcon1 %#010x =3D> %#010x\n", bank->name,
-> -			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> -			+ 2 * bank->eint_offset + 4), save->eint_fltcon1);
-> -	pr_debug("%s:=C2=A0=C2=A0=C2=A0 mask %#010x =3D> %#010x\n", bank->name,
-> -			readl(regs + bank->irq_chip->eint_mask
-> -			+ bank->eint_offset), save->eint_mask);
-> -
-> -	writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
-> -						+ bank->eint_offset);
-> -	writel(save->eint_fltcon0, regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> -						+ 2 * bank->eint_offset);
-> -	writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
-> -						+ 2 * bank->eint_offset + 4);
-> -	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
-> -						+ bank->eint_offset);
-> -
-> -	clk_disable(bank->drvdata->pclk);
-> =C2=A0}
-> =C2=A0
-> -static void exynosauto_pinctrl_resume_bank(struct samsung_pinctrl_drv_da=
-ta *drvdata,
-> -					=C2=A0=C2=A0 struct samsung_pin_bank *bank)
-> +void exynosautov920_pinctrl_resume(struct samsung_pin_bank *bank)
-> =C2=A0{
-> =C2=A0	struct exynos_eint_gpio_save *save =3D bank->soc_priv;
-> =C2=A0	void __iomem *regs =3D bank->eint_base;
-> =C2=A0
-> -	if (clk_enable(bank->drvdata->pclk)) {
-> -		dev_err(bank->gpio_chip.parent,
-> -			"unable to enable clock for restoring state\n");
-> -		return;
-> +	if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
-> +		/* exynosautov920 has eint_con_offset for all but one bank */
-> +		if (!bank->eint_con_offset)
-> +			exynos_pinctrl_resume(bank);
-> +
-> +		pr_debug("%s:=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x =3D> %#010x\n", bank-=
->name,
-> +			 readl(regs + bank->pctl_offset + bank->eint_con_offset),
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 save->eint_con);
-> +		pr_debug("%s:=C2=A0=C2=A0=C2=A0 mask %#010x =3D> %#010x\n", bank->name=
-,
-> +			 readl(regs + bank->pctl_offset +
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bank->eint_mask_offset), save->e=
-int_mask);
-> +
-> +		writel(save->eint_con,
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs + bank->pctl_offset + bank->=
-eint_con_offset);
-> +		writel(save->eint_mask,
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs + bank->pctl_offset + bank->=
-eint_mask_offset);
-> =C2=A0	}
-> -
-> -	pr_debug("%s:=C2=A0=C2=A0=C2=A0=C2=A0 con %#010x =3D> %#010x\n", bank->=
-name,
-> -		 readl(regs + bank->pctl_offset + bank->eint_con_offset), save->eint_c=
-on);
-> -	pr_debug("%s:=C2=A0=C2=A0=C2=A0 mask %#010x =3D> %#010x\n", bank->name,
-> -		 readl(regs + bank->pctl_offset + bank->eint_mask_offset), save->eint_=
-mask);
-> -
-> -	writel(save->eint_con, regs + bank->pctl_offset + bank->eint_con_offset=
-);
-> -	writel(save->eint_mask, regs + bank->pctl_offset + bank->eint_mask_offs=
-et);
-> -
-> -	clk_disable(bank->drvdata->pclk);
-> -}
-> -
-> -void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
-> -{
-> -	struct samsung_pin_bank *bank =3D drvdata->pin_banks;
-> -	int i;
-> -
-> -	for (i =3D 0; i < drvdata->nr_banks; ++i, ++bank)
-> -		if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
-> -			if (bank->eint_con_offset)
-> -				exynosauto_pinctrl_resume_bank(drvdata, bank);
-> -			else
-> -				exynos_pinctrl_resume_bank(drvdata, bank);
-> -		}
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void exynos_retention_enable(struct samsung_pinctrl_drv_data=
- *drvdata)
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/s=
-amsung/pinctrl-exynos.h
-> index 33df21d5c9d6..35c2bc4ea488 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-> @@ -221,8 +221,10 @@ struct exynos_muxed_weint_data {
-> =C2=A0
-> =C2=A0int exynos_eint_gpio_init(struct samsung_pinctrl_drv_data *d);
-> =C2=A0int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d);
-> -void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata);
-> -void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata);
-> +void exynosautov920_pinctrl_resume(struct samsung_pin_bank *bank);
-> +void exynosautov920_pinctrl_suspend(struct samsung_pin_bank *bank);
-> +void exynos_pinctrl_suspend(struct samsung_pin_bank *bank);
-> +void exynos_pinctrl_resume(struct samsung_pin_bank *bank);
-> =C2=A0struct samsung_retention_ctrl *
-> =C2=A0exynos_retention_init(struct samsung_pinctrl_drv_data *drvdata,
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct samsung_retention_dat=
-a *data);
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/=
-samsung/pinctrl-samsung.c
-> index 963060920301..375634d8cc79 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> @@ -1349,6 +1349,9 @@ static int __maybe_unused samsung_pinctrl_suspend(s=
-truct device *dev)
-> =C2=A0		const u8 *widths =3D bank->type->fld_width;
-> =C2=A0		enum pincfg_type type;
-> =C2=A0
-> +		if (drvdata->suspend)
-> +			drvdata->suspend(bank);
-> +
-> =C2=A0		/* Registers without a powerdown config aren't lost */
-> =C2=A0		if (!widths[PINCFG_TYPE_CON_PDN])
-> =C2=A0			continue;
-> @@ -1373,8 +1376,6 @@ static int __maybe_unused samsung_pinctrl_suspend(s=
-truct device *dev)
-> =C2=A0
-> =C2=A0	clk_disable(drvdata->pclk);
-> =C2=A0
-> -	if (drvdata->suspend)
-> -		drvdata->suspend(drvdata);
-> =C2=A0	if (drvdata->retention_ctrl && drvdata->retention_ctrl->enable)
-> =C2=A0		drvdata->retention_ctrl->enable(drvdata);
-> =C2=A0
-> @@ -1406,9 +1407,6 @@ static int __maybe_unused samsung_pinctrl_resume(st=
-ruct device *dev)
-> =C2=A0		return ret;
-> =C2=A0	}
-> =C2=A0
-> -	if (drvdata->resume)
-> -		drvdata->resume(drvdata);
-> -
-> =C2=A0	for (i =3D 0; i < drvdata->nr_banks; i++) {
-> =C2=A0		struct samsung_pin_bank *bank =3D &drvdata->pin_banks[i];
-> =C2=A0		void __iomem *reg =3D bank->pctl_base + bank->pctl_offset;
-> @@ -1416,6 +1414,9 @@ static int __maybe_unused samsung_pinctrl_resume(st=
-ruct device *dev)
-> =C2=A0		const u8 *widths =3D bank->type->fld_width;
-> =C2=A0		enum pincfg_type type;
-> =C2=A0
-> +		if (drvdata->resume)
-> +			drvdata->resume(bank);
-> +
-> =C2=A0		/* Registers without a powerdown config aren't lost */
-> =C2=A0		if (!widths[PINCFG_TYPE_CON_PDN])
-> =C2=A0			continue;
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/=
-samsung/pinctrl-samsung.h
-> index 371e4f02bbfb..e939e5bb0347 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-> @@ -285,8 +285,8 @@ struct samsung_pin_ctrl {
-> =C2=A0	int		(*eint_gpio_init)(struct samsung_pinctrl_drv_data *);
-> =C2=A0	int		(*eint_wkup_init)(struct samsung_pinctrl_drv_data *);
-> =C2=A0	void		(*pud_value_init)(struct samsung_pinctrl_drv_data *drvdata);
-> -	void		(*suspend)(struct samsung_pinctrl_drv_data *);
-> -	void		(*resume)(struct samsung_pinctrl_drv_data *);
-> +	void		(*suspend)(struct samsung_pin_bank *bank);
-> +	void		(*resume)(struct samsung_pin_bank *bank);
-> =C2=A0};
-> =C2=A0
-> =C2=A0/**
-> @@ -335,8 +335,8 @@ struct samsung_pinctrl_drv_data {
-> =C2=A0
-> =C2=A0	struct samsung_retention_ctrl	*retention_ctrl;
-> =C2=A0
-> -	void (*suspend)(struct samsung_pinctrl_drv_data *);
-> -	void (*resume)(struct samsung_pinctrl_drv_data *);
-> +	void (*suspend)(struct samsung_pin_bank *bank);
-> +	void (*resume)(struct samsung_pin_bank *bank);
-> =C2=A0};
-> =C2=A0
-> =C2=A0/**
->=20
+  - Punting the request to a kworker is bad for performance too.
 
+  - It forces the algorithm to be marked as asynchronous
+    (CRYPTO_ALG_ASYNC), preventing it from being used by crypto API
+    users who request a synchronous algorithm.  That's another huge
+    performance problem, which is especially unfortunate for users who
+    don't even do en/decryption in softirq context.
+
+  - It makes all en/decryption operations take a detour through
+    crypto/simd.c.  That involves additional checks and an additional
+    indirect call, which slow down en/decryption for *everyone*.
+
+Fortunately, the skcipher and aead APIs are only usable in task and
+softirq context in the first place.  Thus, if kernel-mode FPU were to be
+reliably usable in softirq context, no fallback would be needed.
+Indeed, other architectures such as arm, arm64, and riscv have already
+done this.
+
+Changes implemented:
+====================
+
+Therefore, this patch updates x86 accordingly to reliably support
+kernel-mode FPU in softirqs.
+
+This is done by just disabling softirq processing in kernel-mode FPU
+sections (when hardirqs are not already disabled), as that prevents the
+nesting that was problematic.
+
+This will delay some softirqs slightly, but only ones that would have
+otherwise been nested inside a task context kernel-mode FPU section.
+Any such softirqs would have taken the slow fallback path before if they
+tried to do any en/decryption.  Now these softirqs will just run at the
+end of the task context kernel-mode FPU section (since local_bh_enable()
+runs pending softirqs) and will no longer take the slow fallback path.
+
+Alternatives considered:
+========================
+
+- Make kernel-mode FPU sections fully preemptible.  This would require
+  growing task_struct by another struct fpstate which is more than 2K.
+
+- Make softirqs save/restore the kernel-mode FPU state to a per-CPU
+  struct fpstate when nested use is detected.  Somewhat interesting, but
+  seems unnecessary when a simpler solution exists.
+
+Performance results:
+====================
+
+I did some benchmarks with AES-XTS encryption of 16-byte messages (which is
+unrealistically small, but this makes it easier to see the overhead of
+kernel-mode FPU...).  The baseline was 384 MB/s.  Removing the use of
+crypto/simd.c, which this work makes possible, increases it to 487 MB/s,
+a +27% improvement in throughput.
+
+CPU was AMD Ryzen 9 9950X (Zen 5).  No debugging options were enabled.
+
+[ mingo: Prettified the changelog and added performance results. ]
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Link: https://lore.kernel.org/r/20250304204954.3901-1-ebiggers@kernel.org
+---
+ arch/x86/include/asm/fpu/api.h | 17 +++++++----------
+ arch/x86/kernel/fpu/core.c     | 17 +++++++++++++----
+ 2 files changed, 20 insertions(+), 14 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
+index f86ad33..f42de5f 100644
+--- a/arch/x86/include/asm/fpu/api.h
++++ b/arch/x86/include/asm/fpu/api.h
+@@ -16,10 +16,9 @@
+ 
+ /*
+  * Use kernel_fpu_begin/end() if you intend to use FPU in kernel context. It
+- * disables preemption so be careful if you intend to use it for long periods
+- * of time.
+- * If you intend to use the FPU in irq/softirq you need to check first with
+- * irq_fpu_usable() if it is possible.
++ * disables preemption and softirq processing, so be careful if you intend to
++ * use it for long periods of time.  Kernel-mode FPU cannot be used in all
++ * contexts -- see irq_fpu_usable() for details.
+  */
+ 
+ /* Kernel FPU states to initialize in kernel_fpu_begin_mask() */
+@@ -50,10 +49,10 @@ static inline void kernel_fpu_begin(void)
+ }
+ 
+ /*
+- * Use fpregs_lock() while editing CPU's FPU registers or fpu->fpstate.
+- * A context switch will (and softirq might) save CPU's FPU registers to
+- * fpu->fpstate.regs and set TIF_NEED_FPU_LOAD leaving CPU's FPU registers in
+- * a random state.
++ * Use fpregs_lock() while editing CPU's FPU registers or fpu->fpstate, or while
++ * using the FPU in kernel mode.  A context switch will (and softirq might) save
++ * CPU's FPU registers to fpu->fpstate.regs and set TIF_NEED_FPU_LOAD leaving
++ * CPU's FPU registers in a random state.
+  *
+  * local_bh_disable() protects against both preemption and soft interrupts
+  * on !RT kernels.
+@@ -63,8 +62,6 @@ static inline void kernel_fpu_begin(void)
+  * preemptible. Disabling preemption is the right choice here as bottom
+  * half processing is always in thread context on RT kernels so it
+  * implicitly prevents bottom half processing as well.
+- *
+- * Disabling preemption also serializes against kernel_fpu_begin().
+  */
+ static inline void fpregs_lock(void)
+ {
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 36df548..422c98c 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -60,9 +60,16 @@ bool irq_fpu_usable(void)
+ 	if (WARN_ON_ONCE(in_nmi()))
+ 		return false;
+ 
+-	/* In kernel FPU usage already active? */
+-	if (this_cpu_read(in_kernel_fpu))
++	/*
++	 * In kernel FPU usage already active?  This detects any explicitly
++	 * nested usage in task or softirq context, which is unsupported.  It
++	 * also detects attempted usage in a hardirq that has interrupted a
++	 * kernel-mode FPU section.
++	 */
++	if (this_cpu_read(in_kernel_fpu)) {
++		WARN_ON_FPU(!in_hardirq());
+ 		return false;
++	}
+ 
+ 	/*
+ 	 * When not in NMI or hard interrupt context, FPU can be used in:
+@@ -420,7 +427,8 @@ EXPORT_SYMBOL_GPL(fpu_copy_uabi_to_guest_fpstate);
+ 
+ void kernel_fpu_begin_mask(unsigned int kfpu_mask)
+ {
+-	preempt_disable();
++	if (!irqs_disabled())
++		fpregs_lock();
+ 
+ 	WARN_ON_FPU(!irq_fpu_usable());
+ 	WARN_ON_FPU(this_cpu_read(in_kernel_fpu));
+@@ -448,7 +456,8 @@ void kernel_fpu_end(void)
+ 	WARN_ON_FPU(!this_cpu_read(in_kernel_fpu));
+ 
+ 	this_cpu_write(in_kernel_fpu, false);
+-	preempt_enable();
++	if (!irqs_disabled())
++		fpregs_unlock();
+ }
+ EXPORT_SYMBOL_GPL(kernel_fpu_end);
+ 
