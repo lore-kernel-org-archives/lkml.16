@@ -1,313 +1,145 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C90F17E473;
-	Thu,  6 Mar 2025 01:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF54EEA9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 01:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741225119; cv=none; b=lwlWqpNq+z5SLEpImLCMF4z30Xofao9gAnvg9uCnjjeTw7pPCKWhP38f6qSqL2NBQkmcdirjE6e/nqjWilgdncawDU26bKvJwPru97xlCPIQUEhpb/YmvRxUpDq9PdvWalqIoOPN8o1ZrXCUbXzfAlpq8CY1LT/l1wguff52+VY=
+	t=1741225361; cv=none; b=lxvlhLHjkaQFQnvOu55GADIWzrJ4XG4JBCLcUSp7ieZCYzULLyNTy/lI8x/kzy04Tc2gWy6xisoww1JE3n+Tp2mS9CqjVkIO2N4tSKQ+6EN6GgEtixtUqNKWaFT1U7ZN2I0Oz5G16dz0nPUTLWpxyEZN3ratF/zttZoYvxwOCEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741225119; c=relaxed/simple;
-	bh=n37GYU1TrA94POxtjoQVj6BwqVafhkocGlcUk6vjz1U=;
+	s=arc-20240116; t=1741225361; c=relaxed/simple;
+	bh=XHvW3ycQBFWggaOSJ8vyOSVd00mPwcXwlVmZWzFWPGk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWq923YOB7Yxx1iftrz7zf/PE+nmzKskJpBcU46/FY2pk/jvdHT6fNIKvl36xL9zCrMsC2pUZvoKsM1tWlqsOn+uUVhdCw8T1QOdNrdQgB1XQ2vpWDAFQ2Ood6ilvTRPFRPGU9T5JoBfxs3QSC9AtVNnsBfH+rxaOlDv6AoCywU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwA3vS2L_MhnlAzuBg--.29477S2;
-	Thu, 06 Mar 2025 09:38:19 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBHS4d9_MhnaOY7AA--.2066S2;
-	Thu, 06 Mar 2025 09:38:15 +0800 (CST)
-Date: Thu, 6 Mar 2025 09:37:49 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Gregory Price <gourry@gourry.net>
-Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0: ACPI and Linux Resources
-Message-ID: <Z8j8bZ5TS+gDV8+M@phytium.com.cn>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUbv93ZdfPBfD7VS3tOCy8tfs82aMy4faYb+YFvWYJiZGhlmYIb57yDLI3kqSEGukzCWz+YAPp71HS7G9L0L8hvUgh+/+I2npIH4/uhDtqUa4LhdyjJ37hQe2GFay4wDQiJcgj5px+Qreo58cwIO+NBvmPO1Nu9hOgwUBhQhmo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=UiBIAF1V; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="UiBIAF1V"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2241053582dso1289295ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 17:42:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1741225359; x=1741830159; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IJKWxmub+lotgzSWC/amTp/chHjkeAB/SDtxMJaHbJI=;
+        b=UiBIAF1VOycAdowQ15wxoKNfts54yukj/Rco7rWMVhUcdfkFao8Paxw0U6ZTWimYVZ
+         b7O3F15unqgrwhkIGVwkchIsOKxxaItfMs3FE7srnPEUOFAfna9cH20IDFsWiojhNqwe
+         dqqEjsG2fMzyZ44a0YfBHDwvU8tASLGU8ZOrA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741225359; x=1741830159;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IJKWxmub+lotgzSWC/amTp/chHjkeAB/SDtxMJaHbJI=;
+        b=VfpA2jhouWoK00DgiWdxlYRtkAHN2kQUKrYRglwsr9K2ScF+jRxToiWuI9bZX1lEje
+         NBcJr+dARSxhzunpU7FCNQfEjwxuLRyPK8ssQL1U0AxfnrbMN5+z5z0/aYoHeRXKdp15
+         WV5NAPEXtGnsBATu/ntM8Ib5zhQtRhugh9aeLuWF5D9cQLIJPClKRSju4DwNZxmMJVlO
+         xuTBy1y6YRABoTAfIvOjQK7HZn5nw1mCLSF/VMKYTShWc5SShDz1RJAL1Rao+lSH+u1I
+         r1ykK2ZyY5tsqraDJn33hcjB1HOoMA5yrQCbiXkPcA/PC+BzFEg5Rf1rreJ7gRaOK2Ql
+         B/Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCWoi+AqQhqwzCy3OcyIolEtMw9xxhgT2RokisAl7L650FCC+AExElZjog9/R8bNIFjL8Uh1PfW9voIvx9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsRz4vW/2hEceDvzkpV9Ckx0Wqj+Pro1roJlBhP/+JlUwf8MBN
+	PkRsIp2/difzqQErgJzSaDfCNZcpcNRHVAP+3eeFQ04nBziwcW7Ivc99Pa8Anq0=
+X-Gm-Gg: ASbGncuHrDF4RxTR+wa3jh70vuD3xrBDsWX7tN9RFnl06Rdg/ovn9nRzC/fE7CTicqt
+	V1P1QH8kpf97ZIadtWGkLeLFnk5KS97U17x0phUx3PxMWFZD64l36i/Fu1m9HT8VS/P376I0NTz
+	+kRdHrMWdR12GKqiYhBqE9Q2k/IvAPGlZc8RgShFWc9mqhQCPUy0pPHpbEg2IaKEIzba+Y717SR
+	gRujKj7FJi2bbqr+Nooc0he2pAKObd/swde7q1pOahxUp3tqGB8+/89m3km//gP3IN5EQ47Omgj
+	aSBnirV/ZIQ2rPfEEerCKkvyKHMCkrRg6oppe2Kv1JqkwSB57XS3D9xXY2b7hQ/ivvI3ZfLP1hw
+	e4Ett6ip66Wk=
+X-Google-Smtp-Source: AGHT+IHimzEWYok/7eEF2qEOfWup3jke8xbE2s20bz5FMsbXG9wqEzxeTrKe9ompiWcW/VmgcjtyoQ==
+X-Received: by 2002:a05:6a00:2e17:b0:736:3ed1:e83a with SMTP id d2e1a72fcca58-73682be572bmr8332195b3a.12.1741225359121;
+        Wed, 05 Mar 2025 17:42:39 -0800 (PST)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73698514eb7sm110830b3a.122.2025.03.05.17.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 17:42:38 -0800 (PST)
+Date: Wed, 5 Mar 2025 17:42:35 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, mkarsten@uwaterloo.ca,
+	gerhard@engleder-embedded.com, jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com, mst@redhat.com, leiyang@redhat.com,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v5 3/4] virtio-net: Map NAPIs to queues
+Message-ID: <Z8j9i-bW3P-GOpbw@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	mkarsten@uwaterloo.ca, gerhard@engleder-embedded.com,
+	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, mst@redhat.com,
+	leiyang@redhat.com,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+References: <20250227185017.206785-1-jdamato@fastly.com>
+ <20250227185017.206785-4-jdamato@fastly.com>
+ <20250228182759.74de5bec@kernel.org>
+ <Z8Xc0muOV8jtHBkX@LQ3V64L9R2>
+ <Z8XgGrToAD7Bak-I@LQ3V64L9R2>
+ <Z8X15hxz8t-vXpPU@LQ3V64L9R2>
+ <20250303160355.5f8d82d8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
-X-CM-TRANSID:AQAAfwBHS4d9_MhnaOY7AA--.2066S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQABAWfIrdcBhQAAsQ
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Ww1UWr1UZryxGFW3Kr48WFg_yoWfJF4fpF
-	s3JrZ7Krs3GrWxCw1xtay09w1fJa4xCayUJryxGryxCws09ryjvr43K3W8ZFWDGryUCF15
-	Xa17tF1jvay8AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+In-Reply-To: <20250303160355.5f8d82d8@kernel.org>
 
-On Wed, Mar 05, 2025 at 05:20:52PM -0500, Gregory Price wrote:
-> ====
-> SRAT
-> ====
-> The System/Static Resource Affinity Table describes resource (CPU,
-> Memory) affinity to "Proximity Domains". This table is technically
-> optional, but for performance information (see "HMAT") to be enumerated
-> by linux it must be present.
+On Mon, Mar 03, 2025 at 04:03:55PM -0800, Jakub Kicinski wrote:
+> On Mon, 3 Mar 2025 13:33:10 -0500 Joe Damato wrote:
+> > 
+> > How about we don't use the API at all from refill_work?
+> > 
+> > Patch 4 adds consistent NAPI config state and refill_work isn't a
+> > queue resize maybe we don't need to call the netif_queue_set_napi at
+> > all since the NAPI IDs are persisted in the NAPI config state and
+> > refill_work shouldn't change that?
+> > 
+> > In which case, we could go back to what refill_work was doing
+> > before and avoid the problem entirely.
+> > 
+> > What do you think ?
 > 
+> Should work, I think. Tho, I suspect someone will want to add queue API
+> support to virtio sooner or later, and they will run into the same
+> problem with the netdev instance lock, as all of ndo_close() will then
+> be covered with netdev->lock.
 > 
-> # Proximity Domain
-> A proximity domain is ROUGHLY equivalent to "NUMA Node" - though a
-> 1-to-1 mapping is not guaranteed.  There are scenarios where "Proximity
-> Domain 4" may map to "NUMA Node 3", for example.  (See "NUMA Node Creation")
+> More thorough and idiomatic way to solve the problem would be to cancel
+> the work non-sync in ndo_close, add cancel with _sync after netdev is
+> unregistered (in virtnet_remove()) when the lock is no longer held, then
+> wrap the entire work with a relevant lock and check if netif_running()
+> to return early in case of a race.
 > 
-> # Memory Affinity
-> Generally speaking, if a host does any amount of CXL fabric (decoder)
-> programming in BIOS - an SRAT entry for that memory needs to be present.
-> 
-> ```
->         Subtable Type : 01 [Memory Affinity]
->                Length : 28
->      Proximity Domain : 00000001          <- NUMA Node 1
->             Reserved1 : 0000
->          Base Address : 000000C050000000  <- Physical Memory Region
->        Address Length : 0000003CA0000000
->             Reserved2 : 00000000
-> Flags (decoded below) : 0000000B
->              Enabled : 1
->        Hot Pluggable : 1
->         Non-Volatile : 0
-> ```
-> 
-> # Generic Initiator / Port
-> In the scenario where CXL devices are not present or configured by
-> BIOS, we may still want to generate proximity domain configurations
-> for those devices.   The Generic Initiator interfaces are intended to
-> fill this gap, so that performance information can still be utilized
-> when the devices become available at runtime.
-> 
-> I won't cover the details here, for now, but I will link to the
-> proosal from Dan Williams and Jonathan Cameron if you would like
-> more information.
-> https://lore.kernel.org/all/e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com/
-> 
-> ====
-> HMAT
-> ====
-> The Heterogeneous Memory Attributes Table contains information such as
-> cache attributes and bandwidth and latency details for memory proximity
-> domains.  For the purpose of this document, we will only discuss the
-> SSLIB entry.
-> 
-> # SLLBI
-> The System Locality Latency and Bandwidth Information records latency
-> and bandwidth information for proximity domains. This table is used by
-> Linux to configure interleave weights and memory tiers.
-> 
-> ```
-> Heavily truncated for brevity
->               Structure Type : 0001 [SLLBI]
->                    Data Type : 00         <- Latency
-> Target Proximity Domain List : 00000000
-> Target Proximity Domain List : 00000001
->                        Entry : 0080       <- DRAM LTC
->                        Entry : 0100       <- CXL LTC
-> 
->               Structure Type : 0001 [SLLBI]
->                    Data Type : 03         <- Bandwidth
-> Target Proximity Domain List : 00000000
-> Target Proximity Domain List : 00000001
->                        Entry : 1200       <- DRAM BW
->                        Entry : 0200       <- CXL BW
-> ```
-> 
-> 
-> ---------------------------------
-> Part 00: Linux Resource Creation.
-> ---------------------------------
-> 
-> ==================
-> NUMA node creation
-> ===================
-> NUMA nodes are *NOT* hot-pluggable.  All *POSSIBLE* NUMA nodes are
-> identified at `__init` time, more specifically during `mm_init`.
-> 
-> What this means is that the CEDT and SRAT must contain sufficient
-> `proximity domain` information for linux to identify how many NUMA
-> nodes are required (and what memory regions to associate with them).
-> 
-Hi, Gregory.
+> Middle ground would be to do what you suggested above and just leave 
+> a well worded comment somewhere that will show up in diffs adding queue
+> API support?
 
-Recently, I found a corner case in CXL numa node creation.
+Seems like Jason agrees that leaving refill_work unmodified will
+work [1].
 
-Condition:
-1) A UMA/NUMA system that SRAT is absence, but it keeps CEDT.CFMWS
-2）Enable CONFIG_ACPI_NUMA
+I think leaving a comment is a good idea and am happy to do so. Not
+sure where would be a good spot for it.
 
-Results:
-1) acpi_numa_init: the fake_pxm will be 0 and send to acpi_parse_cfmws()
-2）If dynamically create cxl ram region, the cxl memory would be assigned
-to node0 rather than a fake new node.
+Two spots that come to mind are:
+ - in virtnet_probe where all the other netdev ops are plumbed
+   through, or
+ - above virtnet_disable_queue_pair which I assume a future queue
+   API implementor would need to call for ndo_queue_stop
 
-Confusions:
-1) Does CXL memory usage require a numa system with SRAT? As you
-mentioned in SRAT section: 
+I get the feeling you have a much better suggestion in mind though
+:)
 
-"This table is technically optional, but for performance information
-to be enumerated by linux it must be present."
-
-Hence, as I understand it, it seems a bug in kernel.
-
-2) If it is a bug, could  we forbid this situation by adding fake_pxm
-check and returning error in acpi_numa_init()?
-
-3）If not,  maybe we can add some kernel logic to allow create these fake
-nodes on a system without SRAT?
-
-Yuquan
-> The relevant code exists in: linux/drivers/acpi/numa/srat.c
-> ```
-> static int __init
-> acpi_parse_memory_affinity(union acpi_subtable_headers *header,
->                            const unsigned long table_end)
-> {
-> ... heavily truncated for brevity
->         pxm = ma->proximity_domain;
->         node = acpi_map_pxm_to_node(pxm);
->         if (numa_add_memblk(node, start, end) < 0)
->             ....
->         node_set(node, numa_nodes_parsed);    <--- mark node N_POSSIBLE
-> }
-> 
-> static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->                                    void *arg, const unsigned long table_end)
-> {
-> ... heavily truncated for brevity
->         /*
->          * The SRAT may have already described NUMA details for all,
->          * or a portion of, this CFMWS HPA range. Extend the memblks
->          * found for any portion of the window to cover the entire
->          * window.
->          */
->         if (!numa_fill_memblks(start, end))
->                 return 0;
-> 
->         /* No SRAT description. Create a new node. */
->         node = acpi_map_pxm_to_node(*fake_pxm);
->         if (numa_add_memblk(node, start, end) < 0)
-> 	        ....
->         node_set(node, numa_nodes_parsed);    <--- mark node N_POSSIBLE
-> }
-> 
-> int __init acpi_numa_init(void)
-> {
-> ...
->     if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
->         cnt = acpi_table_parse_srat(ACPI_SRAT_TYPE_MEMORY_AFFINITY,
->                                     acpi_parse_memory_affinity, 0);
->     }
->     /* fake_pxm is the next unused PXM value after SRAT parsing */
->     acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
->                           &fake_pxm);
-> 
-> ```
-> 
-> Basically, the heuristic is as follows:
-> 1) Add one NUMA node per Proximity Domain described in SRAT
-> 2) If the SRAT describes all memory described by all CFMWS
->    - do not create nodes for CFMWS
-> 3) If SRAT does not describe all memory described by CFMWS
->    - create a node for that CFMWS
-> 
-> Generally speaking, you will see one NUMA node per Host bridge, unless
-> inter-host-bridge interleave is in use (see Section 4 - Interleave).
-> 
-> 
-> ============
-> Memory Tiers
-> ============
-> The `abstract distance` of a node dictates what tier it lands in (and
-> therefore, what tiers are created).  This is calculated based on the
-> following heuristic, using HMAT data:
-> 
-> ```
-> int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
-> {
->  ...
->     /*
->      * The abstract distance of a memory node is in direct proportion to
->      * its memory latency (read + write) and inversely proportional to its
->      * memory bandwidth (read + write).  The abstract distance, memory
->      * latency, and memory bandwidth of the default DRAM nodes are used as
->      * the base.
->      */
->     *adist = MEMTIER_ADISTANCE_DRAM *
->         (perf->read_latency + perf->write_latency) /
->         (default_dram_perf.read_latency + default_dram_perf.write_latency) *
->         (default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
->         (perf->read_bandwidth + perf->write_bandwidth);
->     return 0;
-> }
-> ```
-> 
-> Debugging hint: If you have DRAM and CXL memory in separate numa nodes
->                 but only find 1 memory tier, validate the HMAT!
-> 
-> 
-> ============================
-> Memory Tier Demotion Targets
-> ============================
-> When `demotion` is enabled (see Section 5 - allocation), the reclaim
-> system may opportunistically demote a page from one memory tier to
-> another.  The selection of a `demotion target` is partially based on
-> Abstract Distance and Performance Data.
-> 
-> ```
-> An example of demotion targets from memory-tiers.c
-> /* Example 1:
->  *
->  * Node 0 & 1 are CPU + DRAM nodes, node 2 & 3 are PMEM nodes.
->  *
->  * node distances:
->  * node   0    1    2    3
->  *    0  10   20   30   40
->  *    1  20   10   40   30
->  *    2  30   40   10   40
->  *    3  40   30   40   10
->  *
->  * memory_tiers0 = 0-1
->  * memory_tiers1 = 2-3
->  *
->  * node_demotion[0].preferred = 2
->  * node_demotion[1].preferred = 3
->  * node_demotion[2].preferred = <empty>
->  * node_demotion[3].preferred = <empty>
->  */
-> ```
-> 
-> =============================
-> Mempolicy Weighted Interleave
-> =============================
-> The `weighted interleave` functionality of `mempolicy` utilizes weights
-> to distribute memory across NUMA nodes according to some set weight.
-> There is a proposal to auto-configure these weights based on HMAT data.
-> 
-> https://lore.kernel.org/linux-mm/20250305200506.2529583-1-joshua.hahnjy@gmail.com/T/#u
-> 
-> See Section 4 - Interleave, for more information on weighted interleave.
-> 
-> 
-> 
-> --------------
-> Build Options.
-> --------------
-> We can add these build configurations to our complexity picture.
-> 
-> CONFIG_NUMA        - req for ACPI numa, mempolicy, and memory tiers
-> CONFIG_ACPI_NUMA   -- enables srat and cedt parsing
-> CONFIG_ACPI_HMAT   -- enables hmat parsing
-> 
-> 
-> ~Gregory
-
+[1]: https://lore.kernel.org/netdev/CACGkMEvWuRjBbc3PvOUpDFkjcby5QNLw5hA_FpNSPyWjkEXD_Q@mail.gmail.com/
