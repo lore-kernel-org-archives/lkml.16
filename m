@@ -1,177 +1,177 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2071.outbound.protection.outlook.com [40.107.20.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64862142903
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 02:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741228306; cv=fail; b=I+PXFmeXFEthCnvedeHChTlsgvmO9W8QJyArmnwkLwAb2zLp0cDCk6YVKSQcmOtoIA23YQXxjK8M29L1B3m2QLd8lVcVaqSYKgsiHfSCCLy/OtznlzYlvuB850SqmULQ980SlPLqOg05mmYOXKwX1a9j6vJanOg/FMM/cm9rbo0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741228306; c=relaxed/simple;
-	bh=Hjw7Dos2YCGrUlaYe0bJCjil2pr0IrlUdX1MBq9fKUI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kuutGgkrRAtX+YwlkeZaKRxyn+FvlBZM1ldRVV4Kdq48r2QhMuw3BfhtHcp4uzPeS0Yz4k7nrTZZFe3nDA0veZ81apu66xJTJ091Z2NKO9LAOn6UbN6aizG2UifbPkXEWlYmj6gbrkXnoYlVyhtCngshx868Faiv+J3sQGAXIeY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KYbKeFw6; arc=fail smtp.client-ip=40.107.20.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55356150997
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 02:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741228316; cv=none; b=EUruxiQ6hGORiDrcEsz2yEFZUsv7WmsIabdJqT9b0CNA3p1wFMT9ADE+GJ03vNXxYaI+o4TWoBLvhvmv3S8kbRNxbzJh3qL2zABfyTZFMMvkwWrdDhvz86d9dcthW0XtzK8Kn16RxPN5ooKIP+N0LJ3y2dmaGi2kaqtQCIu44+0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741228316; c=relaxed/simple;
+	bh=W1tcb7tlttKSGSGcmJVIThQ+ztQfMVdTvzNQlwimA1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EXJcO+i5SjoXH0ditywwwyCk+iZhLqQHlzI7POXuBV6ku2dzf8oxVHBgwExLeCPAYfi6g2d5k4IvHiBLqSAQwZdl0R7WLYbYD/je4AKlriLRnkg9c4P6Zq/tT91hfTLMhfXA7wEdYV7jJreoIyheEqn2Drp3L8hf2DYrguswMNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dCm/d1N7; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KYbKeFw6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SHtFytKK/D/rYqTiMwcNeEB2z8gfPW3LxpOe1GZgROnltacqPGPyJXH8zyfc1RBnrZ2ZzkrtMT3ME9rDFtMX/iJolsznoZ9WjpKI5rC/55TCcWJqziio3MmyyBfQqhj4fw3VGQfGq4ivqeQEyheEjaVVI2z9wTcIhtIMPDg/OD/Y5tyRNCLskkHSNf4z7zNyUbjSdOzgdBWkb9CJIcAZqF9acIDecZWFHaGZPEbQAbXK8DIObR6F0e3sPo5P/MSe365n6yvNNIuyQBExX2soO5VLgZ0X23luKZ+s26rnuNWThu1AMvIk9LdzQKoRYfwuq0GFWJtyCL/gESSWlLz14Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SC5tJypOOmI1sneTuw2mCJNI9zhZhfmAOHPAkTfUPE8=;
- b=Di/de6hDjsK8/Cpb1eI2ZxULxak5vjuXQVS4usvk/9SVPyVBUy9FTejkULKgIGqk8GyXuS1u9NTBhcq2ZgUmUsBc9rDW1ByhOpuDBAXDZDPKmJQNEobmllEsE/mD4NsLzfm2RoeWsxCYVn1Fa/yhO+PTfYB1uGBRANpquCtVtBNzRDB5WUHzpg7MgSaWIA+oSySSUZu2VpfW7z1STLWgDPSZ7D8DRThCHDtaGHFJT8PTXSZZKn4YmN1cDsiObfQFrju2rxppsHxKJFv9pFa6bPIsB7bvYAURhQaoZ8SRgp8KUBT11S4oseYxmc4S7TzQA3SkvUTRc/ZUL4TirOyufw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SC5tJypOOmI1sneTuw2mCJNI9zhZhfmAOHPAkTfUPE8=;
- b=KYbKeFw657C0B+hvECfCBRrbe96E61kTIvgK05cGjUf680+B7BAcItkPZcrcJTLpfif+pEkE8sxIFryl3GC6hm8esXXBqGvIFd7fNLWPsY+6JMn2hWK6Evi78VN6lEYxvGtNKCsOs3yj+uPRDxkM2gVq11YKvoq8TVa4aCUTvajlKzeC0Ji0C4j06cK5L/fn2MXismRcZE29IgqLr7wUlL7HCytYXbYEjY4sljRYRSdTr/Zvh919htXShSXoyKUgx0seI3wk9EGNJkUshAFORSNI0o8cCttGD8ZBIxRD0Xx3DBx2dwj5HaceXaDwiGUYd01L/N8Az4exWQPg5hpBvA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by DB8PR04MB7195.eurprd04.prod.outlook.com (2603:10a6:10:12d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
- 2025 02:31:41 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 02:31:41 +0000
-Message-ID: <62642284-ab9c-49fd-b682-6606850aa6c7@nxp.com>
-Date: Thu, 6 Mar 2025 10:32:49 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/imx: legacy-bridge: fix inconsistent indenting
- warning
-To: Charles Han <hanchunchao@inspur.com>, andrzej.hajda@intel.com,
- neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com
-Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250305103042.3017-1-hanchunchao@inspur.com>
-From: Liu Ying <victor.liu@nxp.com>
-Content-Language: en-US
-In-Reply-To: <20250305103042.3017-1-hanchunchao@inspur.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR04CA0004.apcprd04.prod.outlook.com
- (2603:1096:4:197::22) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dCm/d1N7"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223fb0f619dso2158115ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 18:31:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1741228313; x=1741833113; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iO6wA6XWmxnHhVJNEGwMRLVJm1A8Q49xyow/a4mczm0=;
+        b=dCm/d1N7dDe2NPkJ6Jya2T99qQvSQqcVohRzYDzooC1TwgQXwUjR2mp3beEQEPjufO
+         bMX29nCjbNnYi53u5O5+LOHAvi/JMLXbvGn0mAARYfmnripixu/pZ08xH9qb0Z7h2iNN
+         fLR3l7w0oDd+jdNmbOhuBQB4n+cIbYZEt+kptHRB5QN9/r/uADD5NhCho2GcV+iLDSy4
+         gQf2IVuFR2GQinBMykau1tO2cPB+6x16i6SDPh6ucMMreeq5H8wNB1CW8sWf5F6tjDNC
+         rUnuD5sjGE9S0YxfEmIoPG4NJq/PSvxYB1Apruun/3/Nqr067yjSmDHVREtE8l1XWZEc
+         AdAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741228313; x=1741833113;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iO6wA6XWmxnHhVJNEGwMRLVJm1A8Q49xyow/a4mczm0=;
+        b=cSdix3W+s2PiTniAEEtfMjbG5250EMtdLsJHplt56LGxSV8Fhmq4lXA2LcGAHpwtKo
+         Rix7vL4Boh1A/syyNXAgpsi3gAu3xC9hZ5M5fMFgWojcCmQeW3ZUCVzM9cDZ2SXA1QzR
+         bBbxeXAJUDobb/cp19wIVYXGeSzT8i3LwCQeFaoWnrTdZc8HzrXhDSznI6hnL8/bMcdA
+         PWbeqRR30UYv6ewrZUXC6z0+OwbJVMhMXnclAB97jGG0/XjElQiBNBpw0ecdK5ODozoh
+         ZKIcpM/QqDHAZlS8T8luTVYzpMccjDTkqyC8VNpZlbxhlf5eqTjeeGcJt53Y5DA3L2IZ
+         FlFw==
+X-Gm-Message-State: AOJu0Yzb0XUA0hNL6WmbgB2rpBnbg44044ByNur5eoPuIJvlZ/1K4Yuf
+	EURiLdQ0sZodLVxprGAkIUkq7rtjp/aLbG02ryvBuy3AxiztEowTP9iDN/AxWg8=
+X-Gm-Gg: ASbGnctgxHCtU6Uo3ZAGeaOAqIrfl5uwAGDPqYfiq2HM9IVeIBKCCWt4syWBfM9980L
+	zijNQm+pV+mDT+Ha07zc8SgVG8dmTzJNGjzzZga8VM32036mYPql8OPLsuvhiP0zQnn5e0OGwir
+	REaVWddKJt4g1oSpaw2XuKBP/4HzAV56+SLKVbuZsNpNoGpP0PyyeHO0/T+NHfZ+OmyysHmEm9J
+	eTDo6DF9eAul8+BGtrRAq0iG5og4iJznVTEULDu6WITn1FFy+rdgzpPNV0ZzCp3n5x0VEeE+WJ5
+	FWer1ytI8J+agUqz+w1AafE9EI+b+NCFj9OJpCFtdchV6LxEEfqFYhGOzTYN6jT3eGUkm+776I1
+	7OXtJ
+X-Google-Smtp-Source: AGHT+IFwn29sDeYBmdp4CEswbdIWIO0mgSzC0Fu02o+1MLOPwdvWyiKyshtyKjhFx5G7dBzbMS/5rQ==
+X-Received: by 2002:a17:902:f683:b0:223:5c77:7ef1 with SMTP id d9443c01a7336-223f1c982c4mr86775385ad.21.1741228313590;
+        Wed, 05 Mar 2025 18:31:53 -0800 (PST)
+Received: from PXLDJ45XCM.bytedance.net ([139.177.225.250])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109ddcaesm1318185ad.28.2025.03.05.18.31.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 05 Mar 2025 18:31:52 -0800 (PST)
+From: Muchun Song <songmuchun@bytedance.com>
+To: hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	akpm@linux-foundation.org,
+	kasong@tencent.com,
+	chrisl@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	Muchun Song <songmuchun@bytedance.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] mm: memcontrol: fix swap counter leak from offline cgroup
+Date: Thu,  6 Mar 2025 10:31:33 +0800
+Message-Id: <20250306023133.44838-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DB8PR04MB7195:EE_
-X-MS-Office365-Filtering-Correlation-Id: dd04c74a-1b37-4421-03f1-08dd5c57073f
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?QnMzcFlGK3d3aTFCMnhXZWNWV2VFU0d6bHg5K3BlZnA3Q3diYW5mcDQ2OU8w?=
- =?utf-8?B?UHp6ZXF5K3poamJCRnR1d3VJQ3BQTWtwdEhEYk1wT1c0MnkvbzU3Vi9YenFR?=
- =?utf-8?B?bWtjUEIyOTVPcU1WcXFqQUpzeExGeUNMQmUyRGpMbWtnSXhRY3dNTEJibkY4?=
- =?utf-8?B?K25wVDEvSnRGRGN5Q2g5bk9DUUg3aWNXNHcxTTlvUXBIcmFtenJLbUNnVWVi?=
- =?utf-8?B?NFY5dHBBdjFESThBa1ZvNXgvK3VHUU44YW1iWGdndUhGYm1YaFQ0bTMwYlJt?=
- =?utf-8?B?NXBNODEwdXNQWGpPNEFFSXJ4TXNtWmxydkxhaXdubS9wSmZ5ZnpheHRrajg2?=
- =?utf-8?B?dHo4NFdscm5Ma3BXeWk0cGN6c2lMUDVDTjNMRy9GeTNKbWU0VWFGNDZ6V3pQ?=
- =?utf-8?B?ZEovZjNqRnpla2xhcWlNdElNMUxhUXY0SHc1TzR6U0RtaExMMDVHdmtVWnJq?=
- =?utf-8?B?cFpLTVlwUEJqa3Jwc05uQjd1YWtNcGdhM1pmWjVYaVh3Yk9lMk84cDZHNE9M?=
- =?utf-8?B?ejFYdUZhZm16ZXJqS1IxNHZiYnBzcXlBNTZ4NXRKalU0UGdqZCtVQTZmTWo4?=
- =?utf-8?B?YmxKaE9iRkxRUXFMWHl0Vk1ISVRrb01CQUJJd2hpZG1LcmVXeWw5UlAyQkY2?=
- =?utf-8?B?dnpCNVk3aHBvNHE4dWNIS1BjRmtOdmtyVjRMai8wYUJ3WWhFYTRnK3MxU2p2?=
- =?utf-8?B?QmlPTUtwTkh5M1BlOTc4d2pmQmVPYTFuKzlab1YxTnZ5b2FQL01EeXllcisw?=
- =?utf-8?B?RHhHUjB5UGd4VGFiM0w4TWVLeXQ5d2ZJQmY5MlMwaDUvYUowRnJ6bmFralVx?=
- =?utf-8?B?NklwMVExS3VNQ2ZsVDErNnFSV1NJMk1sS2xKRUh5REx4bG9ERW1iVUhHTnhK?=
- =?utf-8?B?QklLbTlPeE1IUjIwZ0VjQWtaUWFMMHZZVmUxUHBURnI5NmlIOHRnbGZEaWQv?=
- =?utf-8?B?U0x1eWlkKyswem1qUmUxQVBsR0pyRHdmcUN1SlE4MUl2MEVBUGZocUtVSHNP?=
- =?utf-8?B?UllkN1AydHJXVVpacHlScVdKRUEzTFNIdGZUUWh1WURqdFV2ZnRpeUJHL1hY?=
- =?utf-8?B?UjQ4SEJDSEtpVGJ4S3BnSWxWL1ZDRlczNWFEajFyQm5SQTVYdUtrMUsyK01n?=
- =?utf-8?B?bThuSmNyVEpVckdXZ2lUZEpzTFBUWUdRdVFHa2FGQmowa0VPUDB0ZG9wMHI0?=
- =?utf-8?B?RFI5cjllVUc4YUFXa1FJR3pqOFNPQWJvUXcvWmk5MjRFVWhWSW9ibjZ3NWg0?=
- =?utf-8?B?YVU0S2FYZlFNRWFqNHpHYmpRRnBYODdiZEtPTm0zQnFRNEFXRVhoYnhxcEc1?=
- =?utf-8?B?L1c0SXVVekhSZDlqQWcrR0hJMU5UVDhxcFp1anQzakNHOE50RDdJZWFJY290?=
- =?utf-8?B?RUxOMmRSbjFURmFxUE5IR3U2eXZPOXAwdS9IdUVuUGtvYUZkZ01ZZldkVmVU?=
- =?utf-8?B?VkdTVSttNWgzdlh0OC9TLzRPUjYrQ0lqOVFIWnlkcFl6MHRkMU1VRlZGNDZu?=
- =?utf-8?B?dncwZHFvWit6YWxveDdSSHlxN0sxdUswbzU1REN4UFNDTmpadFA1allGNS9h?=
- =?utf-8?B?NThXdytobUVrMlo1VzRkMHc2VGpVUlN4MGhJOE8zVzdzNW5SVGR0ZCtET1NL?=
- =?utf-8?B?UXlIcTNEQnFnamdxMlpwb2ptRmZzOE4zV2xkcHJLTXc5cUFxRVFaVHZJd2VX?=
- =?utf-8?B?dStlRDJZaHB3aUtiL0M1QmpjN1kzK0EvZFdFcUNGV0JuNGQ1UlUvNXRXR2FP?=
- =?utf-8?B?NlZUYm5YZGtqV3hpRWk3bVlESHBQbmdLREgzTFN3VGtGb3ZTQUJiMllBRXRk?=
- =?utf-8?B?NThwdjVJZ2p4bW1wbTlOOU1LZVVvZE5BQm93WUt5NHNOVWlpd2FFcVdyV3VD?=
- =?utf-8?B?aEdrQm5ZaGRtVnI2NFRqUHBpQjhSUWZxdEg1a1d0WlVub2I3NkFmVktGWUls?=
- =?utf-8?Q?fylJNR95xMw=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?SDNVL1o2OURObmh1dmoxM0lHbnBUaktqakJFdm1XWStFR2E3WGduYy9xKzE4?=
- =?utf-8?B?UTUzNWo3MXZ5bURUb0pCQml2NUx0NEVnRHY5bUpZZ1ZDdmVlK1RtNFFPWjJ3?=
- =?utf-8?B?YVlnNlJSZTZkL1JBOVRzOWo0bGpWeXJvcUs1MDFNNldEVWNZR0JBeWFqSGxI?=
- =?utf-8?B?c0FCU000dHNqV0tocVJUSlJVVUcvK1BrTU4rZ3JmbFJPZG5rOU9FbkwrMXF4?=
- =?utf-8?B?UkpUdkZHVEJycGRwdmZjQU4vVHRIOU5rN1RwMHc0MitaRlNmUEliV29xQ3JD?=
- =?utf-8?B?bXdKdS9Ga3ZVUHlydWdXdHorRGN5Uk0rSmd2dGlma1RiT3N0dzIrSE9LQUhU?=
- =?utf-8?B?ZnJTMEJWTk1ubzZGK0tFcDdOaDB4OXBPTjZ1YWxVaENVeS9VbTc4dks3WW1D?=
- =?utf-8?B?TTNiYlIyL1JKckVDQk9DL3R4MmFPLzBlN0hZZkg2MXdVOXdRSldYWUl5Ti9K?=
- =?utf-8?B?K2t1SG4yeGVZdXVyTlBVMDRJQ0ZUcVZydDZzU3V4aFp5ZGNqcm9xSHVuZjFm?=
- =?utf-8?B?ZmVpUG03dkpRT253M2l0VmVEQndwQndvdTMwYTJtVERPb3E0SHFqL2hXU2U0?=
- =?utf-8?B?dElIV3NiWXF5bjlhZ1lUN3B2UEh1RGZaZ3RMTE1CZll1YkY4cWdONEpSaFN1?=
- =?utf-8?B?TGlia0tNRjhzMDVzcks0SlcwVzgrdVdlMTY2Wkhrb0U3bTVNUkpoUm1wNVZY?=
- =?utf-8?B?MjErR0tkRXpURVZxR2FoWE5UdDdzMDRjUjk2eWhGVFFPd0VKMi93ZjFaUUl1?=
- =?utf-8?B?NStNa0x1Sjl4QW1XQU52M29nYjMvRTk3bWFIYTByZUVMd3FNanhMb1NWTXRm?=
- =?utf-8?B?enA3QkhpWUU2Z0RUNU9oMk94bUtnRHprOGphQlI3alJDM1Q2TjBIdityNW5v?=
- =?utf-8?B?VjlJbnV1K25GeWY2eGZMK0g0bDg5RmhrdFE4TDkwN0VmTkx5akFIUWhxRm9i?=
- =?utf-8?B?RklUV2QvTE95VWQ0dFZrNmpBdjlBc0lISGRQNVd6YlR6RUQwV3ZjYW5uT0dI?=
- =?utf-8?B?TXVXWURRYjNXQytQaGt1NmxTTUZRSVBRS295ZmdXQUpvRVVYdmFTbDBGeEZH?=
- =?utf-8?B?TzlNREVzWDVJTTJYUlh5Q3VrS1JIVmUrSHhUS3A2aFNreTNFclJTZ3YxZTBW?=
- =?utf-8?B?ZmdyeHdkOU4wYmgzeXlFb2RudU11aDRWem5Wcml2d2Z2R3p4b3VHdWdqbmdN?=
- =?utf-8?B?K2RYbDhxYTFLc0xwcEVBLzJGclVnZWdGRnVIaXgwZ0x6eWlJSHNwVVAycndz?=
- =?utf-8?B?NktRVjh3MENkbFJueXRTQkZKNzdxa0JGc0orNVR6SmVmK08rbzc3VG0yK0xl?=
- =?utf-8?B?L05XYjIzTkRFREpKK1NwV2ZBd3NXR1E2Smk1UXRLREpjYXpMMHAvRlJYV3pv?=
- =?utf-8?B?dzZjTXlDWlBGbFhxRzBoZ3FQb3orc2NBN1h3U0NQbkVSajJUNXhaa09KWDRB?=
- =?utf-8?B?THRXSUFLajF0SjJHdjVTS1R1TERoYmltS2VOYWp5eWpIZGtITENqT0ZSVTVB?=
- =?utf-8?B?N2l3b3R5VnhoMnRicG1qcXhLU3dFbkQ5cSt3U3QwdnBPY1IvNXVDZWtXeXNF?=
- =?utf-8?B?QVg1NmRTN1liQnBMbXlpOFpMRHBibGJBY1VMVjNybFVKVlh4U09ueFhwZWJq?=
- =?utf-8?B?UzJzQ0I0TlhDK2lBSUFmVHNGeERLcG92NTdlZWpIMEM2VGNCQ3NuWXVadFdF?=
- =?utf-8?B?dE11L3VlOXJsRnVTMWpUTmp4YkdaSlBKNjVuNHYycGpTVlRTTzdEYkJpNDk3?=
- =?utf-8?B?Nko4aEwvRVpheGFsVGhSV2RQUm5rUVloVlFUc0Jtb1FmdGdlMTlNcmNDSVFY?=
- =?utf-8?B?MUtCbkNzRUpvU290WDI2YWJIbVhSQjFJQnBxZThTUDNzWGtJRnU0YUpvQmx1?=
- =?utf-8?B?SXM3V1ErbHdyMGFmc1BZaE5JVUFMNXlRNmMxRXBTNGdVVEpjUXFLQmVLczVM?=
- =?utf-8?B?OTVyeWtNRXA5VzZXamNQRzVBUjZOTzZLdkdMWnhPUW9aMldyQk9Oenkra2c2?=
- =?utf-8?B?ZSs5eEo3RExabEJSZjFnL2hNbE5VNUVpdTRCVGpyOTlUTWh1bUlhTG5tczU1?=
- =?utf-8?B?UHVQQ21Xa0k0Uzd4SkExRHVNQmpCRzRxMlE5QTRERWNiK2tBUnVxRzJrZEdW?=
- =?utf-8?Q?jIB9pAeVcPjJWXneuhdtFW9O0?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd04c74a-1b37-4421-03f1-08dd5c57073f
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 02:31:41.2734
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JCRAn/+FLnhgYMC4HlBxfSMiB5PSDAPs2qz+VWeq7RxXmHTA2GtX0VxBY4foGJfBDKUNF7PrXXwk7dG5hcJS/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7195
+Content-Transfer-Encoding: 8bit
 
-On 03/05/2025, Charles Han wrote:
-> Fix below inconsistent indenting smatch warning.
-> smatch warnings:
-> drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c:79 devm_imx_drm_legacy_bridge() warn: inconsistent indenting
-> 
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
->  drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+The commit 6769183166b3 has removed the parameter of id from
+swap_cgroup_record() and get the memcg id from
+mem_cgroup_id(folio_memcg(folio)). However, the caller of it
+may update a different memcg's counter instead of
+folio_memcg(folio). E.g. in the caller of mem_cgroup_swapout(),
+@swap_memcg could be different with @memcg and update the counter
+of @swap_memcg, but swap_cgroup_record() records the wrong memcg's
+ID. When it is uncharged from __mem_cgroup_uncharge_swap(), the
+swap counter will leak since the wrong recorded ID. Fix it by
+bring the parameter of id back.
 
-Reviewed-by: Liu Ying <victor.liu@nxp.com>
+Fixes: 6769183166b3 ("mm/swap_cgroup: decouple swap cgroup recording and clearing")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ include/linux/swap_cgroup.h | 4 ++--
+ mm/memcontrol.c             | 4 ++--
+ mm/swap_cgroup.c            | 7 ++++---
+ 3 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/swap_cgroup.h b/include/linux/swap_cgroup.h
+index b5ec038069dab..91cdf12190a03 100644
+--- a/include/linux/swap_cgroup.h
++++ b/include/linux/swap_cgroup.h
+@@ -6,7 +6,7 @@
+ 
+ #if defined(CONFIG_MEMCG) && defined(CONFIG_SWAP)
+ 
+-extern void swap_cgroup_record(struct folio *folio, swp_entry_t ent);
++extern void swap_cgroup_record(struct folio *folio, unsigned short id, swp_entry_t ent);
+ extern unsigned short swap_cgroup_clear(swp_entry_t ent, unsigned int nr_ents);
+ extern unsigned short lookup_swap_cgroup_id(swp_entry_t ent);
+ extern int swap_cgroup_swapon(int type, unsigned long max_pages);
+@@ -15,7 +15,7 @@ extern void swap_cgroup_swapoff(int type);
+ #else
+ 
+ static inline
+-void swap_cgroup_record(struct folio *folio, swp_entry_t ent)
++void swap_cgroup_record(struct folio *folio, unsigned short id, swp_entry_t ent)
+ {
+ }
+ 
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index a5d870fbb4321..a5ab603806fbb 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4988,7 +4988,7 @@ void mem_cgroup_swapout(struct folio *folio, swp_entry_t entry)
+ 		mem_cgroup_id_get_many(swap_memcg, nr_entries - 1);
+ 	mod_memcg_state(swap_memcg, MEMCG_SWAP, nr_entries);
+ 
+-	swap_cgroup_record(folio, entry);
++	swap_cgroup_record(folio, mem_cgroup_id(swap_memcg), entry);
+ 
+ 	folio_unqueue_deferred_split(folio);
+ 	folio->memcg_data = 0;
+@@ -5050,7 +5050,7 @@ int __mem_cgroup_try_charge_swap(struct folio *folio, swp_entry_t entry)
+ 		mem_cgroup_id_get_many(memcg, nr_pages - 1);
+ 	mod_memcg_state(memcg, MEMCG_SWAP, nr_pages);
+ 
+-	swap_cgroup_record(folio, entry);
++	swap_cgroup_record(folio, mem_cgroup_id(memcg), entry);
+ 
+ 	return 0;
+ }
+diff --git a/mm/swap_cgroup.c b/mm/swap_cgroup.c
+index be39078f255be..1007c30f12e2c 100644
+--- a/mm/swap_cgroup.c
++++ b/mm/swap_cgroup.c
+@@ -58,9 +58,11 @@ static unsigned short __swap_cgroup_id_xchg(struct swap_cgroup *map,
+  * entries must not have been charged
+  *
+  * @folio: the folio that the swap entry belongs to
++ * @id: mem_cgroup ID to be recorded
+  * @ent: the first swap entry to be recorded
+  */
+-void swap_cgroup_record(struct folio *folio, swp_entry_t ent)
++void swap_cgroup_record(struct folio *folio, unsigned short id,
++			swp_entry_t ent)
+ {
+ 	unsigned int nr_ents = folio_nr_pages(folio);
+ 	struct swap_cgroup *map;
+@@ -72,8 +74,7 @@ void swap_cgroup_record(struct folio *folio, swp_entry_t ent)
+ 	map = swap_cgroup_ctrl[swp_type(ent)].map;
+ 
+ 	do {
+-		old = __swap_cgroup_id_xchg(map, offset,
+-					    mem_cgroup_id(folio_memcg(folio)));
++		old = __swap_cgroup_id_xchg(map, offset, id);
+ 		VM_BUG_ON(old);
+ 	} while (++offset != end);
+ }
+-- 
+2.20.1
+
