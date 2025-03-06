@@ -1,647 +1,452 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011049.outbound.protection.outlook.com [52.101.125.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFBF2063C7;
-	Thu,  6 Mar 2025 11:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741259801; cv=none; b=kAxdrlsVw8OVwCrflvPgVUzfUoV2fMb7PeWyubmBBqYaeuGqgSvkUc1vMINh6l+Iz9Fyc/H8Nku0L6J9cw08TPACGnSgkbvL3pmdTnzsJT3zYehiHM4ddanbnEeXRBvbcq5Zc7VZX6/TXsN8mmFUQ8t9vJudx+cgeSDPVxJHMo8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741259801; c=relaxed/simple;
-	bh=LQRcsN87COSt9tNwk1gyRQbbX8vE/IFNpfjt89dMhGM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ItaU+94eQUIV5x9LL+evTwab3kUohMz+Em3ZXUXn66EhlX2HO3DCYghZlTuWHpFDDUqqWCXp1o4W0eom61kxHcE7Rj5+LdWVwANWvkJhxSy457nBUGOe/Tw0/FDUvo/GHP/1QuRz+HH0sZCj0b3vyJLnVwP8uhRT7hblLe2mYJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WVxVjoN0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2036134CF;
+	Thu,  6 Mar 2025 11:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741259851; cv=fail; b=aw3luVjM0O3NCsyWjKjZS6gwyKROWw2mMQvrZ/NqdeyhQVzJSfvu6+Em3a7C3l0fHH5z9zgSwUFxDZGjZJmL3ccIo4vAkF9UtvEwA7BlkOfxxBEz1+S7KKLLy+8oqa8zMxyx/MJo3Um64yHaYOfkg5hERieQVELYG9/V2tRaq08=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741259851; c=relaxed/simple;
+	bh=hWU7V0Vxm7YPCGhHWgQ5QsVa+cgNj+aPrEPnUMbpG1M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VKi47QVpWyu0WGxllL9XS7F3eoujbp9bo7j6wpikiEnJ/I/u1t7J8VmbacWVJi2hQcPjaWJOzR7PMzjtIvk3L1hbSWAQlJkCDYc38ilIBBvmx/qiibPEtFWVu0BwRCPBpsJliwAvA2sv4oheT5+TiUzKcIy5c5YY1NI0TDSwR0U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=eM6MbsnH; arc=fail smtp.client-ip=52.101.125.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WVxVjoN0"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5268q1jB003700;
-	Thu, 6 Mar 2025 11:16:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8uxFped26gG114tT3NHPlq7fw7m1ZVXw6WKUxqzCDXI=; b=WVxVjoN0pyGWvOwH
-	BncsdNi7Cg+BoAmWGDzz7PfRlk54YKJP5A7FvF2bAw8Rwr7YY2RQQjWB9PCD54r1
-	sFGgfOaRHq33zWjjLj92iLc7cCJQj4fyNJRU1e0KuZbJxs3HNDHI49YYTrXQN8AB
-	YDMXQKNmPgRVDyF2+DQUyIW2yPXJ8Q76lYXOojpriF+nh09Oq5Bc8UYvjedNNbmm
-	O0BHCutI3ikg9WkwLOrfO0Kg23zqObGkiRGChBOhtEKZonqPRRfQd14UZan1WnlH
-	kUb8uh5QbgRZNsGnWexQKH7QNGyRtCAhb8Fl2ruZq53RPrmvc8bCNocNYwGGt+LF
-	xofubg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 456wrja1hh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 11:16:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 526BGX4v020884
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Mar 2025 11:16:34 GMT
-Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Mar 2025 03:16:30 -0800
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-Subject: [PATCH v5 1/2] arm64: dts: qcom: ipq5424: Add PCIe PHYs and controller nodes
-Date: Thu, 6 Mar 2025 16:46:09 +0530
-Message-ID: <20250306111610.3313495-2-quic_mmanikan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250306111610.3313495-1-quic_mmanikan@quicinc.com>
-References: <20250306111610.3313495-1-quic_mmanikan@quicinc.com>
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="eM6MbsnH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UFUxAYJ/WTMVrAs2ktvtjr2VST5eXHk6V6hXq1/ZrTdsBBcrlmKSjQG1yJXJ0Pe8kg1YW7r3FfBU+XqCFgxR7vdJ69epJNe/s+FYt7tpuEgLQUBhNsByNZnOULwHJ87jja6+/iDlVl49olLBGbnUk8yNDJJ/2v6d8gB/yI4hEy+H9v4116f/NniQGwK/Lh2MFB7i0zFgZsHfwYqCRabprezP6tYnAnb4Lpc/k4c35kv2A03k7zx4rbJToKzYK50bXtGuJOGMfEmwOGQXp6du6/zYoLtuyM8squqvej93xcUKMoZkQbuHvgNsFjJFOw6Vn1nvPcy3RtCjDQrq4LiArw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bnhQEf+ATi/IqgDOTz2XvqWcKLgQYZbcCBKMBKUy0sI=;
+ b=Qi8bKGbgGS1CPQJVO4lZ3OHW5B3Phlcy0vWAqUhrcNrP6KwUJc2+GkCB4wevCy4O/MGbwx8pfUDmnTH28BHB+0YDDhZ3krIsHr78WnGX4+m7kRaeJKkqYPmI9YIBTmPRPK97GiNIzp6DA/CXccZkawayBfQKLHSAfg4RZV6T4NCFFVcllWMIj3/xkQDWdMjTzkipflfl2NGjdJNWC2ZPpOkW26hZee1ofRyf/HmUj40P/TGRxXtKD1+OKjayZHGnjX7a/o9PF9qk17YBTnhfDBzeeZQOWpcdmh39SlmSQKMOKoga5KctM5QwsPTmoi6tDAAUpDUEgWEfh+X0T5rX/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bnhQEf+ATi/IqgDOTz2XvqWcKLgQYZbcCBKMBKUy0sI=;
+ b=eM6MbsnH6Z+poPR6JWUriOB2BgXulOhyIfxgSKDabhnkF3OA1yo2XnnHDdzap+py+Kbv/mA5MugyXj7nQ5pMHAOW+VTN2nEXp1QAnlVT2WEQy5sRf7eDF/qQfLB18PpU1Hv8mSYXdtKcDPTTQCAcLpTSbz+9J1lrZhLdAECKosA=
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com (2603:1096:400:448::7)
+ by OS9PR01MB15621.jpnprd01.prod.outlook.com (2603:1096:604:3bd::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
+ 2025 11:17:26 +0000
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::439:42dd:2bf:a430]) by TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::439:42dd:2bf:a430%7]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 11:17:26 +0000
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Biju
+ Das <biju.das.jz@bp.renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v2 2/2] reset: Add USB2PHY control driver for Renesas
+ RZ/V2H(P)
+Thread-Topic: [PATCH v2 2/2] reset: Add USB2PHY control driver for Renesas
+ RZ/V2H(P)
+Thread-Index: AQHbjcumAKkaq95VEEiIxX0Tw+LMrrNl9vZg
+Date: Thu, 6 Mar 2025 11:17:26 +0000
+Message-ID:
+ <TYCPR01MB1209369446D719022AC81D4D4C2CA2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
+References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305123915.341589-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250305123915.341589-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB12093:EE_|OS9PR01MB15621:EE_
+x-ms-office365-filtering-correlation-id: 453598d2-a946-4cbb-99d0-08dd5ca0799e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?dM+pnvSoljRkk2feBIGbLEp8rYDVeeBBWp5BsWfcgFEHEQFtMB0I+nltF6ck?=
+ =?us-ascii?Q?ZUyIXADXFWKdJZbFl7nnEzktnvg5AYL8L5FXNc1z0MAze0FfrgFdjla2J1k2?=
+ =?us-ascii?Q?x9OG/c+74c18ypxbGY1bmYG0RwqNG1rh5j+wngfSrJX9ves5b7KC0dyxdkac?=
+ =?us-ascii?Q?q5ECzalrTeaFa2hz5EY6Ev5TEo1ABbTq3ICgZ3/9Nq/kqjHsMKkxLywimPIP?=
+ =?us-ascii?Q?QwZxAr4lYu3++EQjYGTIKE0lJqtjKBKzHIeFo/H07NBajb575H39kqlV7WYM?=
+ =?us-ascii?Q?VckCNNPOTqmiviMsW0x7oYHvd6Fl1w55IbPaCiPrccSCTmg1HwLi9+CaHrCM?=
+ =?us-ascii?Q?tKH/pNALk+Md86lP9k7h3+EzHYyeBUAxhTccDlIVZLzTIPsd6YgHD5+8qOkN?=
+ =?us-ascii?Q?a5rbcoMe58AN+OBF2iKEQPet/Qflus56OJ1V0Jbah9JefzcHtOrpE7PJ6NUk?=
+ =?us-ascii?Q?iGikVPgpXXCR+ccx1i9KVBPHM7TwtrunlIYIgszP1dLu7LmrQG7ugGqP4+cx?=
+ =?us-ascii?Q?QaZtgj8AMqVM3c9endXuLSLQ1blIq5w32e7U2gKrP4lRztoWZC4K72Bf1pnE?=
+ =?us-ascii?Q?Y/Rel1ND/RBT+vNhz4YzKHiLTzZskcBTG4Z5SNbfZhH/NgNz9amYnrENXIjr?=
+ =?us-ascii?Q?P/NjEnfJclcxYwBKfbfU7l0Qq7JhtdMy7yRy+Dth7tBvlUBE9UaNsSYGbXoP?=
+ =?us-ascii?Q?WvxTYp6IU499D0mZbhckU5z81E7DFt8DSUJi1/p5FCTyKlR6Y6wtBX+NqYv5?=
+ =?us-ascii?Q?OWQm3coZP4LUADx84m95gfvcsoynPuuu9+l1ndnpbFG61i247pTmqsjif9f9?=
+ =?us-ascii?Q?EaJK4tWHMjNkvSBITCXbhSR7/LOEA4qgn9oLqKMaRMNDrG7T3akBnyZenbWB?=
+ =?us-ascii?Q?pweDlXEB3JuzVB+kV2RYXcBk0X0kpM67ZnL7uWPRP4iRRtWUXLD5ag1ih1Iu?=
+ =?us-ascii?Q?w/Po5/u8cAqkVpmB+z2FerYgS+WPUEfqB0lLRzlVHMs2lNTJOxh0OURhR+7s?=
+ =?us-ascii?Q?pUJtY+Cg8+Ln9smolJXO1PaOjy0qrdB3qeGcVqqHSJ/qpwl0Myfg+sA6TR/O?=
+ =?us-ascii?Q?heETlZJefONltGE9eTJgOrdGw+ih4ZmXQIcBxrFcQabWy+GaP+NIVpazJ/SP?=
+ =?us-ascii?Q?2ZJlJpVpkjt/TxHbVLmpvD6e910WQ79j3yW97pxuOCaUleOUMMTlWRpY6YDW?=
+ =?us-ascii?Q?4BcBvmmrI0EefZR29T+mK66yjUxaI1BZYm5HZaEl52ETXJpJnmsAmDI1QeKK?=
+ =?us-ascii?Q?LOpcwZiRwZ7VBnCZIxTCZEIhftZnQQMtM+sUp0SaQXieFMLIOxYyq5PA5KfH?=
+ =?us-ascii?Q?KssZmsxRmodWkvV/0t4JsuLU2vnD0LpxX36DAdyVJJQOpNRi9IpBCjeHKWbH?=
+ =?us-ascii?Q?eqmWnox0WPLJuuvfvCrGHrGJl4z/3+mT5MYpQesB5HdbGvlVmwYep8Fz/u7u?=
+ =?us-ascii?Q?K8g0iNMDevmrVCFDJWwSlem0elbvQmv8?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB12093.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?fgKXr7gQy/GYL06mXus+ogj2HM4kjHG/PeHIaKzQOp7IU3NJ8iZq3D+TPwwe?=
+ =?us-ascii?Q?G5qkJhk02gLhlANbG8/GY2ssbJ+oSwV8q7KjKZ9BBPYh/GDZS985Sjnt5RP0?=
+ =?us-ascii?Q?lpKo02Ye1xXPSHmSBapGRNeIzgGixhgbnT60XDJchTbPGK4TH8jBGAfRnUDl?=
+ =?us-ascii?Q?ErRLyUq3yvrPVdpuPzy8EOydYdt8xGWZnbN6LqHxJwX8VfKkWC/KGfkmb1lK?=
+ =?us-ascii?Q?XscFVNf5gQdRBsex65en7/xK2PDuHhBsJuR4AI9q4oHSiTxomkgYXGA+0f6Q?=
+ =?us-ascii?Q?IyQtNwsbN4qR0elbEVQK74jVCBvTFxFhpA+kDSJH5IY1mEkMigl4szl7DQwF?=
+ =?us-ascii?Q?6Pv1hX4UmN1rmdZ6t8XYTA9eM0ENT12++khTCvXm7c04oajx13MaCsKIN9To?=
+ =?us-ascii?Q?9XnGQvVEyn9losgHZr+JNtWsNVcnpYssocxKcM0MbKwaLXLn7Gm3MOJMc0cB?=
+ =?us-ascii?Q?VEhfoUYLxLiVAIWVeJdDxjTexh+XwnJMSmjsGyImLZXduKC46lwAprePiMDn?=
+ =?us-ascii?Q?5BPa1xmOi1Po4LLOycXp8YIl8jnl8dit+Js6DNuGE8t+9ENbbfnVN5EcSr0C?=
+ =?us-ascii?Q?jlWVdSd7EIDP5jMNHeGUyTrakZ2PFdVd1UVrvJL7VhgyPC19HIs8xL9/f7Y+?=
+ =?us-ascii?Q?6XHvLagt9/EqazVixPUPxkEvDedQfbADD3B38rSuJvk5Bf+ezddNU/ql+5Ps?=
+ =?us-ascii?Q?UzPJg9V9UeEUcMPC+EFrIgOi9czU8gDPITOBitQ+o7mZXKCsNlsUffzu6p+/?=
+ =?us-ascii?Q?iJa6XlJLhRqoAZ0Y2TPSUkAHUri7UvozjjO+cOPYH/WyS+nMixjJWl7njf/f?=
+ =?us-ascii?Q?vqDoGScwOmaANx7GZCUUzh3F0QhuuHgVKS3Z+8VfDPOUWEhztSS+OdEqwM5m?=
+ =?us-ascii?Q?OCHZUqsvRuSGimy0fsH49iajnDjmp3u0dlpvZZ8DqvgaCZnYpPlQq6DBIUxH?=
+ =?us-ascii?Q?k9nRXapW++HIR9Xh2Mi69x7+agieBFljXB08Efnfg0DmDalLpV2b3/JhQCaU?=
+ =?us-ascii?Q?lhFTGQRSJRIHOvRnSNQPl/Hu2KKfpZZH0ryNrw6Zle6AkZLu961vfvCr8+N5?=
+ =?us-ascii?Q?owdvjGGHLwU6p6FZqc4+7Oy2pm1zgD4lfp7V3eR4RVksYK9Vs6scaMmzD7oA?=
+ =?us-ascii?Q?n1fhx338G4SvRMPnkSnchEZZeWXQoGDJGuz/NzBzpm7f6axNobMiqnlrtLY1?=
+ =?us-ascii?Q?NtkOa3FOiE8VJUW4wa1RPHkNSR50fWMg2dYsDiP97mkIPhW8B7TENobTB+mp?=
+ =?us-ascii?Q?uSyf8vLdDGAEirXKSlmkG2X6alhAVSC7PEr91jBbTcpYc5CfyFgBnYnSJYCG?=
+ =?us-ascii?Q?JWP5e90QnCMrW8FztW5zNCaVqoBubbjzn2LCGRHJBW37eQ+aKFRlphTPlvEu?=
+ =?us-ascii?Q?YDjLq9S4TVU98wTGPEKtnvHOSLqEnddtjmC0OTHj7VktQAc86w97YlrcjuCp?=
+ =?us-ascii?Q?AbBXQ/ILUW1bNbKd9pCWoSHyPUguuvleF1Az+pF18mLIzgoGRN14VF03tzDi?=
+ =?us-ascii?Q?/axZwyEXvSDvXBcjCqq0n4hsn0BDSRuk47tbRvg5ENfceVsvP5fHFx2oxOJR?=
+ =?us-ascii?Q?ldcm18jlJGE1QL7/Mey2OMM3o15QU80C1AUg7Z1zEO+ugnYWCWLZV9sngr58?=
+ =?us-ascii?Q?kQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 4e0KOOVEOxmLvRzrMInEnZ1yPbJMOF-h
-X-Authority-Analysis: v=2.4 cv=FYDNxI+6 c=1 sm=1 tr=0 ts=67c98412 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=LGJC_kMlNMoNBjmRxgkA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 4e0KOOVEOxmLvRzrMInEnZ1yPbJMOF-h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_05,2025-03-06_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503060085
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB12093.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 453598d2-a946-4cbb-99d0-08dd5ca0799e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 11:17:26.1366
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8ez740i5TQ03DshiGyqAOaGREASt/DDa2CfidO9fOiqbjQxsBt61JRXkGW8/33adaDfdGHIpm7nqPD9qsNOxl2z9IapLOvH/G7ryAiMF7+k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9PR01MB15621
 
-Add PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
-found on IPQ5424 platform. The PCIe0 & PCIe1 are 1-lane Gen3
-host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
+> From: Prabhakar <prabhakar.csengg@gmail.com>
+> Sent: 05 March 2025 12:39
+> Subject: [PATCH v2 2/2] reset: Add USB2PHY control driver for Renesas RZ/=
+V2H(P)
+>=20
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> Add support for the USB2PHY control driver on the Renesas RZ/V2H(P) SoC.
+> Make the driver handle reset and power-down operations for the USB2PHY.
+>=20
+> Pass OF data to support future SoCs with similar USB2PHY hardware but
+> different register configurations. Define device-specific initialization
+> values and control register settings in OF data to ensure flexibility
+> for upcoming SoCs.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
----
-Changes in V5:
-	- Pick up R-b tag.
-	- Updated pcie node order based on unit address.
-	- Updated the dbi address space size from 0xf1d to 0xf1c
-	  in all pcie controller nodes.
-	- Rebased on linux-next tip.
+Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 
- arch/arm64/boot/dts/qcom/ipq5424.dtsi | 514 +++++++++++++++++++++++++-
- 1 file changed, 510 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-index 7a7ad700a382..ff6faffc3b48 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,ipq5424-gcc.h>
- #include <dt-bindings/reset/qcom,ipq5424-gcc.h>
-+#include <dt-bindings/interconnect/qcom,ipq5424.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-@@ -152,6 +153,258 @@ soc@0 {
- 		#size-cells = <2>;
- 		ranges = <0 0 0 0 0x10 0>;
- 
-+		pcie0: pcie@80000 {
-+			compatible = "qcom,pcie-ipq5424", "qcom,pcie-ipq9574";
-+			reg = <0x0 0x00080000 0x0 0x3000>,
-+			      <0x0 0x70000000 0x0 0xf1c>,
-+			      <0x0 0x70000f20 0x0 0xa8>,
-+			      <0x0 0x70001000 0x0 0x1000>,
-+			      <0x0 0x70100000 0x0 0x1000>,
-+			      <0x0 0x00086000 0x0 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config",
-+				    "mhi";
-+			device_type = "pci";
-+			linux,pci-domain = <0>;
-+			num-lanes = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x00000000 0x0 0x70200000 0x0 0x00100000>,
-+				 <0x02000000 0x0 0x70300000 0x0 0x70300000 0x0 0x0fd00000>;
-+
-+			msi-map = <0x0 &intc 0x0 0x1000>;
-+
-+			interrupts = <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 426 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 427 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 428 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 431 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 432 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 433 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 434 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 435 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 436 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 437 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_PCIE0_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE0_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE0_AXI_S_BRIDGE_CLK>,
-+				 <&gcc GCC_PCIE0_RCHNG_CLK>,
-+				 <&gcc GCC_PCIE0_AHB_CLK>,
-+				 <&gcc GCC_PCIE0_AUX_CLK>;
-+			clock-names = "axi_m",
-+				      "axi_s",
-+				      "axi_bridge",
-+				      "rchng",
-+				      "ahb",
-+				      "aux";
-+
-+			assigned-clocks = <&gcc GCC_PCIE0_RCHNG_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
-+				 <&gcc GCC_PCIE0_CORE_STICKY_RESET>,
-+				 <&gcc GCC_PCIE0_AXI_S_STICKY_RESET>,
-+				 <&gcc GCC_PCIE0_AXI_S_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_M_STICKY_RESET>,
-+				 <&gcc GCC_PCIE0_AXI_M_ARES>,
-+				 <&gcc GCC_PCIE0_AUX_ARES>,
-+				 <&gcc GCC_PCIE0_AHB_ARES>;
-+			reset-names = "pipe",
-+				      "sticky",
-+				      "axi_s_sticky",
-+				      "axi_s",
-+				      "axi_m_sticky",
-+				      "axi_m",
-+				      "aux",
-+				      "ahb";
-+
-+			phys = <&pcie0_phy>;
-+			phy-names = "pciephy";
-+			interconnects = <&gcc MASTER_ANOC_PCIE0 &gcc SLAVE_ANOC_PCIE0>,
-+					<&gcc MASTER_CNOC_PCIE0	&gcc SLAVE_CNOC_PCIE0>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
-+		};
-+
-+		pcie0_phy: phy@84000 {
-+			compatible = "qcom,ipq5424-qmp-gen3x1-pcie-phy",
-+				     "qcom,ipq9574-qmp-gen3x1-pcie-phy";
-+			reg = <0x0 0x00084000 0x0 0x2000>;
-+			clocks = <&gcc GCC_PCIE0_AUX_CLK>,
-+				 <&gcc GCC_PCIE0_AHB_CLK>,
-+				 <&gcc GCC_PCIE0_PIPE_CLK>;
-+			clock-names = "aux", "cfg_ahb", "pipe";
-+
-+			assigned-clocks = <&gcc GCC_PCIE0_AUX_CLK>;
-+			assigned-clock-rates = <20000000>;
-+
-+			resets = <&gcc GCC_PCIE0_PHY_BCR>,
-+				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
-+			reset-names = "phy", "common";
-+
-+			#clock-cells = <0>;
-+			clock-output-names = "gcc_pcie0_pipe_clk_src";
-+
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		pcie1: pcie@88000 {
-+			compatible = "qcom,pcie-ipq5424", "qcom,pcie-ipq9574";
-+			reg = <0x0 0x00088000 0x0 0x3000>,
-+			      <0x0 0x60000000 0x0 0xf1c>,
-+			      <0x0 0x60000f20 0x0 0xa8>,
-+			      <0x0 0x60001000 0x0 0x1000>,
-+			      <0x0 0x60100000 0x0 0x1000>,
-+			      <0x0 0x0008e000 0x0 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config",
-+				    "mhi";
-+			device_type = "pci";
-+			linux,pci-domain = <1>;
-+			num-lanes = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x00000000 0x0 0x60200000 0x0 0x00100000>,
-+				 <0x02000000 0x0 0x60300000 0x0 0x60300000 0x0 0x0fd00000>;
-+
-+			msi-map = <0x0 &intc 0x0 0x1000>;
-+
-+			interrupts = <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 441 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 442 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 443 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 449 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 450 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 451 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 452 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_PCIE1_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE1_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE1_AXI_S_BRIDGE_CLK>,
-+				 <&gcc GCC_PCIE1_RCHNG_CLK>,
-+				 <&gcc GCC_PCIE1_AHB_CLK>,
-+				 <&gcc GCC_PCIE1_AUX_CLK>;
-+			clock-names = "axi_m",
-+				      "axi_s",
-+				      "axi_bridge",
-+				      "rchng",
-+				      "ahb",
-+				      "aux";
-+
-+			assigned-clocks = <&gcc GCC_PCIE1_RCHNG_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			resets = <&gcc GCC_PCIE1_PIPE_ARES>,
-+				 <&gcc GCC_PCIE1_CORE_STICKY_RESET>,
-+				 <&gcc GCC_PCIE1_AXI_S_STICKY_RESET>,
-+				 <&gcc GCC_PCIE1_AXI_S_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_M_STICKY_RESET>,
-+				 <&gcc GCC_PCIE1_AXI_M_ARES>,
-+				 <&gcc GCC_PCIE1_AUX_ARES>,
-+				 <&gcc GCC_PCIE1_AHB_ARES>;
-+			reset-names = "pipe",
-+				      "sticky",
-+				      "axi_s_sticky",
-+				      "axi_s",
-+				      "axi_m_sticky",
-+				      "axi_m",
-+				      "aux",
-+				      "ahb";
-+
-+			phys = <&pcie1_phy>;
-+			phy-names = "pciephy";
-+			interconnects = <&gcc MASTER_ANOC_PCIE1	&gcc SLAVE_ANOC_PCIE1>,
-+					<&gcc MASTER_CNOC_PCIE1	&gcc SLAVE_CNOC_PCIE1>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
-+		};
-+
-+		pcie1_phy: phy@8c000 {
-+			compatible = "qcom,ipq5424-qmp-gen3x1-pcie-phy",
-+				     "qcom,ipq9574-qmp-gen3x1-pcie-phy";
-+			reg = <0x0 0x0008c000 0x0 0x2000>;
-+			clocks = <&gcc GCC_PCIE1_AUX_CLK>,
-+				 <&gcc GCC_PCIE1_AHB_CLK>,
-+				 <&gcc GCC_PCIE1_PIPE_CLK>;
-+			clock-names = "aux", "cfg_ahb", "pipe";
-+
-+			assigned-clocks = <&gcc GCC_PCIE1_AUX_CLK>;
-+			assigned-clock-rates = <20000000>;
-+
-+			resets = <&gcc GCC_PCIE1_PHY_BCR>,
-+				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
-+			reset-names = "phy", "common";
-+
-+			#clock-cells = <0>;
-+			clock-output-names = "gcc_pcie1_pipe_clk_src";
-+
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		efuse@a4000 {
- 			compatible = "qcom,ipq5424-qfprom", "qcom,qfprom";
- 			reg = <0 0x000a4000 0 0x741>;
-@@ -209,6 +462,259 @@ tsens_base1: base1@41a {
- 			};
- 		};
- 
-+		pcie2: pcie@f0000 {
-+			compatible = "qcom,pcie-ipq5424", "qcom,pcie-ipq9574";
-+			reg = <0x0 0x000f0000 0x0 0x3000>,
-+			      <0x0 0x50000000 0x0 0xf1c>,
-+			      <0x0 0x50000f20 0x0 0xa8>,
-+			      <0x0 0x50001000 0x0 0x1000>,
-+			      <0x0 0x50100000 0x0 0x1000>,
-+			      <0x0 0x000f6000 0x0 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config",
-+				    "mhi";
-+			device_type = "pci";
-+			linux,pci-domain = <2>;
-+			num-lanes = <2>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x00000000 0x0 0x50200000 0x0 0x00100000>,
-+				 <0x02000000 0x0 0x50300000 0x0 0x50300000 0x0 0x0fd00000>;
-+
-+			msi-map = <0x0 &intc 0x0 0x1000>;
-+
-+			interrupts = <GIC_SPI 455 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 456 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 460 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 461 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 462 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 463 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 464 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 465 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 466 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 467 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_PCIE2_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE2_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE2_AXI_S_BRIDGE_CLK>,
-+				 <&gcc GCC_PCIE2_RCHNG_CLK>,
-+				 <&gcc GCC_PCIE2_AHB_CLK>,
-+				 <&gcc GCC_PCIE2_AUX_CLK>;
-+			clock-names = "axi_m",
-+				      "axi_s",
-+				      "axi_bridge",
-+				      "rchng",
-+				      "ahb",
-+				      "aux";
-+
-+			assigned-clocks = <&gcc GCC_PCIE2_RCHNG_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			resets = <&gcc GCC_PCIE2_PIPE_ARES>,
-+				 <&gcc GCC_PCIE2_CORE_STICKY_RESET>,
-+				 <&gcc GCC_PCIE2_AXI_S_STICKY_RESET>,
-+				 <&gcc GCC_PCIE2_AXI_S_ARES>,
-+				 <&gcc GCC_PCIE2_AXI_M_STICKY_RESET>,
-+				 <&gcc GCC_PCIE2_AXI_M_ARES>,
-+				 <&gcc GCC_PCIE2_AUX_ARES>,
-+				 <&gcc GCC_PCIE2_AHB_ARES>;
-+			reset-names = "pipe",
-+				      "sticky",
-+				      "axi_s_sticky",
-+				      "axi_s",
-+				      "axi_m_sticky",
-+				      "axi_m",
-+				      "aux",
-+				      "ahb";
-+
-+			phys = <&pcie2_phy>;
-+			phy-names = "pciephy";
-+			interconnects = <&gcc MASTER_ANOC_PCIE2 &gcc SLAVE_ANOC_PCIE2>,
-+					<&gcc MASTER_CNOC_PCIE2 &gcc SLAVE_CNOC_PCIE2>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
-+		};
-+
-+		pcie2_phy: phy@f4000 {
-+			compatible = "qcom,ipq5424-qmp-gen3x2-pcie-phy",
-+				     "qcom,ipq9574-qmp-gen3x2-pcie-phy";
-+			reg = <0x0 0x000f4000 0x0 0x2000>;
-+			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
-+				 <&gcc GCC_PCIE2_AHB_CLK>,
-+				 <&gcc GCC_PCIE2_PIPE_CLK>;
-+			clock-names = "aux", "cfg_ahb", "pipe";
-+
-+			assigned-clocks = <&gcc GCC_PCIE2_AUX_CLK>;
-+			assigned-clock-rates = <20000000>;
-+
-+			resets = <&gcc GCC_PCIE2_PHY_BCR>,
-+				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
-+			reset-names = "phy", "common";
-+
-+			#clock-cells = <0>;
-+			clock-output-names = "gcc_pcie2_pipe_clk_src";
-+
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		pcie3: pcie@f8000 {
-+			compatible = "qcom,pcie-ipq5424", "qcom,pcie-ipq9574";
-+			reg = <0x0 0x000f8000 0x0 0x3000>,
-+			      <0x0 0x40000000 0x0 0xf1c>,
-+			      <0x0 0x40000f20 0x0 0xa8>,
-+			      <0x0 0x40001000 0x0 0x1000>,
-+			      <0x0 0x40100000 0x0 0x1000>,
-+			      <0x0 0x000fe000 0x0 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config",
-+				    "mhi";
-+			device_type = "pci";
-+			linux,pci-domain = <3>;
-+			num-lanes = <2>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x00100000>,
-+				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x0fd00000>;
-+
-+			msi-map = <0x0 &intc 0x0 0x1000>;
-+
-+			interrupts = <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 476 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 477 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 478 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 479 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 480 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 481 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 482 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_PCIE3_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE3_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE3_AXI_S_BRIDGE_CLK>,
-+				 <&gcc GCC_PCIE3_RCHNG_CLK>,
-+				 <&gcc GCC_PCIE3_AHB_CLK>,
-+				 <&gcc GCC_PCIE3_AUX_CLK>;
-+			clock-names = "axi_m",
-+				      "axi_s",
-+				      "axi_bridge",
-+				      "rchng",
-+				      "ahb",
-+				      "aux";
-+
-+			assigned-clocks = <&gcc GCC_PCIE3_RCHNG_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			resets = <&gcc GCC_PCIE3_PIPE_ARES>,
-+				 <&gcc GCC_PCIE3_CORE_STICKY_RESET>,
-+				 <&gcc GCC_PCIE3_AXI_S_STICKY_RESET>,
-+				 <&gcc GCC_PCIE3_AXI_S_ARES>,
-+				 <&gcc GCC_PCIE3_AXI_M_STICKY_RESET>,
-+				 <&gcc GCC_PCIE3_AXI_M_ARES>,
-+				 <&gcc GCC_PCIE3_AUX_ARES>,
-+				 <&gcc GCC_PCIE3_AHB_ARES>;
-+			reset-names = "pipe",
-+				      "sticky",
-+				      "axi_s_sticky",
-+				      "axi_s",
-+				      "axi_m_sticky",
-+				      "axi_m",
-+				      "aux",
-+				      "ahb";
-+
-+			phys = <&pcie3_phy>;
-+			phy-names = "pciephy";
-+			interconnects = <&gcc MASTER_ANOC_PCIE3 &gcc SLAVE_ANOC_PCIE3>,
-+					<&gcc MASTER_CNOC_PCIE3 &gcc SLAVE_CNOC_PCIE3>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+			status = "disabled";
-+
-+			pcie@0 {
-+				device_type = "pci";
-+				reg = <0x0 0x0 0x0 0x0 0x0>;
-+				bus-range = <0x01 0xff>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges;
-+			};
-+		};
-+
-+		pcie3_phy: phy@fc000 {
-+			compatible = "qcom,ipq5424-qmp-gen3x2-pcie-phy",
-+				     "qcom,ipq9574-qmp-gen3x2-pcie-phy";
-+			reg = <0x0 0x000fc000 0x0 0x2000>;
-+			clocks = <&gcc GCC_PCIE3_AUX_CLK>,
-+				 <&gcc GCC_PCIE3_AHB_CLK>,
-+				 <&gcc GCC_PCIE3_PIPE_CLK>;
-+			clock-names = "aux", "cfg_ahb", "pipe";
-+
-+			assigned-clocks = <&gcc GCC_PCIE3_AUX_CLK>;
-+			assigned-clock-rates = <20000000>;
-+
-+			resets = <&gcc GCC_PCIE3_PHY_BCR>,
-+				 <&gcc GCC_PCIE3PHY_PHY_BCR>;
-+			reset-names = "phy", "common";
-+
-+			#clock-cells = <0>;
-+			clock-output-names = "gcc_pcie3_pipe_clk_src";
-+
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		tsens: thermal-sensor@4a9000 {
- 			compatible = "qcom,ipq5424-tsens";
- 			reg = <0 0x004a9000 0 0x1000>,
-@@ -276,10 +782,10 @@ gcc: clock-controller@1800000 {
- 			reg = <0 0x01800000 0 0x40000>;
- 			clocks = <&xo_board>,
- 				 <&sleep_clk>,
--				 <0>,
--				 <0>,
--				 <0>,
--				 <0>,
-+				 <&pcie0_phy>,
-+				 <&pcie1_phy>,
-+				 <&pcie2_phy>,
-+				 <&pcie3_phy>,
- 				 <0>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
--- 
-2.34.1
+> ---
+>  drivers/reset/Kconfig                    |   7 +
+>  drivers/reset/Makefile                   |   1 +
+>  drivers/reset/reset-rzv2h-usb2phy-ctrl.c | 223 +++++++++++++++++++++++
+>  3 files changed, 231 insertions(+)
+>  create mode 100644 drivers/reset/reset-rzv2h-usb2phy-ctrl.c
+>=20
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 5b3abb6db248..bac08dae8905 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -218,6 +218,13 @@ config RESET_RZG2L_USBPHY_CTRL
+>  	  Support for USBPHY Control found on RZ/G2L family. It mainly
+>  	  controls reset and power down of the USB/PHY.
+>=20
+> +config RESET_RZV2H_USB2PHY_CTRL
+> +	tristate "Renesas RZ/V2H(P) (and similar SoCs) USB2PHY control driver"
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	help
+> +	  Support for USB2PHY Control found on the RZ/V2H(P) SoC (and similar S=
+oCs).
+> +	  It mainly controls reset and power down of the USB2 PHY.
+> +
+>  config RESET_SCMI
+>  	tristate "Reset driver controlled via ARM SCMI interface"
+>  	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 677c4d1e2632..3cb3df018cf8 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -30,6 +30,7 @@ obj-$(CONFIG_RESET_QCOM_AOSS) +=3D reset-qcom-aoss.o
+>  obj-$(CONFIG_RESET_QCOM_PDC) +=3D reset-qcom-pdc.o
+>  obj-$(CONFIG_RESET_RASPBERRYPI) +=3D reset-raspberrypi.o
+>  obj-$(CONFIG_RESET_RZG2L_USBPHY_CTRL) +=3D reset-rzg2l-usbphy-ctrl.o
+> +obj-$(CONFIG_RESET_RZV2H_USB2PHY_CTRL) +=3D reset-rzv2h-usb2phy-ctrl.o
+>  obj-$(CONFIG_RESET_SCMI) +=3D reset-scmi.o
+>  obj-$(CONFIG_RESET_SIMPLE) +=3D reset-simple.o
+>  obj-$(CONFIG_RESET_SOCFPGA) +=3D reset-socfpga.o
+> diff --git a/drivers/reset/reset-rzv2h-usb2phy-ctrl.c b/drivers/reset/res=
+et-rzv2h-usb2phy-ctrl.c
+> new file mode 100644
+> index 000000000000..a6daeaf37e1c
+> --- /dev/null
+> +++ b/drivers/reset/reset-rzv2h-usb2phy-ctrl.c
+> @@ -0,0 +1,223 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Renesas RZ/V2H(P) USB2PHY control driver
+> + *
+> + * Copyright (C) 2025 Renesas Electronics Corporation
+> + */
+> +
+> +#include <linux/cleanup.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/reset.h>
+> +#include <linux/reset-controller.h>
+> +
+> +struct rzv2h_usb2phy_regval {
+> +	u16 reg;
+> +	u16 val;
+> +};
+> +
+> +struct rzv2h_usb2phy_data {
+> +	const struct rzv2h_usb2phy_regval *init_vals;
+> +	unsigned int init_val_count;
+> +
+> +	u16 ctrl_reg;
+> +	u16 ctrl_assert_val;
+> +	u16 ctrl_deassert_val;
+> +	u16 ctrl_status_bits;
+> +	u16 ctrl_release_val;
+> +
+> +	u16 ctrl2_reg;
+> +	u16 ctrl2_acquire_val;
+> +	u16 ctrl2_release_val;
+> +};
+> +
+> +struct rzv2h_usb2phy_ctrl_priv {
+> +	const struct rzv2h_usb2phy_data *data;
+> +	void __iomem *base;
+> +	struct device *dev;
+> +	struct reset_controller_dev rcdev;
+> +	spinlock_t lock;
+> +};
+> +
+> +#define rcdev_to_priv(x) container_of(x, struct rzv2h_usb2phy_ctrl_priv,=
+ rcdev)
+> +
+> +static int rzv2h_usbphy_ctrl_assert(struct reset_controller_dev *rcdev,
+> +				    unsigned long id)
+> +{
+> +	struct rzv2h_usb2phy_ctrl_priv *priv =3D rcdev_to_priv(rcdev);
+> +	const struct rzv2h_usb2phy_data *data =3D priv->data;
+> +	struct device *dev =3D priv->dev;
+> +	int ret;
+> +
+> +	ret =3D pm_runtime_resume_and_get(dev);
+> +	if (ret) {
+> +		dev_err(dev, "pm_runtime_resume_and_get failed\n");
+> +		return ret;
+> +	}
+> +	scoped_guard(spinlock, &priv->lock) {
+> +		writel(data->ctrl2_acquire_val, priv->base + data->ctrl2_reg);
+> +		writel(data->ctrl_assert_val, priv->base + data->ctrl_reg);
+> +	}
+> +
+> +	/* The reset line needs to be asserted for more than 10 microseconds. *=
+/
+> +	udelay(11);
+> +	pm_runtime_put(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rzv2h_usbphy_ctrl_deassert(struct reset_controller_dev *rcdev=
+,
+> +				      unsigned long id)
+> +{
+> +	struct rzv2h_usb2phy_ctrl_priv *priv =3D rcdev_to_priv(rcdev);
+> +	const struct rzv2h_usb2phy_data *data =3D priv->data;
+> +	struct device *dev =3D priv->dev;
+> +	int ret;
+> +
+> +	ret =3D pm_runtime_resume_and_get(dev);
+> +	if (ret) {
+> +		dev_err(dev, "pm_runtime_resume_and_get failed\n");
+> +		return ret;
+> +	}
+> +
+> +	scoped_guard(spinlock, &priv->lock) {
+> +		writel(data->ctrl_deassert_val, priv->base + data->ctrl_reg);
+> +		writel(data->ctrl2_release_val, priv->base + data->ctrl2_reg);
+> +		writel(data->ctrl_release_val, priv->base + data->ctrl_reg);
+> +	}
+> +
+> +	pm_runtime_put(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rzv2h_usbphy_ctrl_status(struct reset_controller_dev *rcdev,
+> +				    unsigned long id)
+> +{
+> +	struct rzv2h_usb2phy_ctrl_priv *priv =3D rcdev_to_priv(rcdev);
+> +	struct device *dev =3D priv->dev;
+> +	int ret;
+> +	u32 reg;
+> +
+> +	ret =3D pm_runtime_resume_and_get(dev);
+> +	if (ret) {
+> +		dev_err(dev, "pm_runtime_resume_and_get failed\n");
+> +		return ret;
+> +	}
+> +
+> +	scoped_guard(spinlock, &priv->lock)
+> +		reg =3D readl(priv->base + priv->data->ctrl_reg);
+> +
+> +	pm_runtime_put(dev);
+> +
+> +	return (reg & priv->data->ctrl_status_bits) =3D=3D priv->data->ctrl_sta=
+tus_bits;
+> +}
+> +
+> +static const struct reset_control_ops rzv2h_usbphy_ctrl_reset_ops =3D {
+> +	.assert =3D rzv2h_usbphy_ctrl_assert,
+> +	.deassert =3D rzv2h_usbphy_ctrl_deassert,
+> +	.status =3D rzv2h_usbphy_ctrl_status,
+> +};
+> +
+> +static int rzv2h_reset_of_xlate(struct reset_controller_dev *rcdev,
+> +				const struct of_phandle_args *reset_spec)
+> +{
+> +	/* No special handling needed, we have only one reset line per device *=
+/
+> +	return 0;
+> +}
+> +
+> +static int rzv2h_usb2phy_ctrl_probe(struct platform_device *pdev)
+> +{
+> +	const struct rzv2h_usb2phy_data *data;
+> +	struct rzv2h_usb2phy_ctrl_priv *priv;
+> +	struct device *dev =3D &pdev->dev;
+> +	struct reset_control *rstc;
+> +	int error;
+> +
+> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	data =3D of_device_get_match_data(dev);
+> +	if (!data)
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "failed to match device\n");
+> +
+> +	priv->data =3D data;
+> +	priv->dev =3D dev;
+> +	priv->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	rstc =3D devm_reset_control_get_shared_deasserted(dev, NULL);
+> +	if (IS_ERR(rstc))
+> +		return dev_err_probe(dev, PTR_ERR(rstc),
+> +				     "failed to get deasserted reset\n");
+> +
+> +	spin_lock_init(&priv->lock);
+> +	dev_set_drvdata(dev, priv);
+> +
+> +	error =3D devm_pm_runtime_enable(dev);
+> +	if (error)
+> +		return dev_err_probe(dev, error, "Failed to enable pm_runtime\n");
+> +
+> +	error =3D pm_runtime_resume_and_get(dev);
+> +	if (error)
+> +		return dev_err_probe(dev, error, "pm_runtime_resume_and_get failed\n")=
+;
+> +
+> +	for (unsigned int i =3D 0; i < data->init_val_count; i++)
+> +		writel(data->init_vals[i].val, priv->base + data->init_vals[i].reg);
+> +
+> +	pm_runtime_put(dev);
+> +
+> +	priv->rcdev.ops =3D &rzv2h_usbphy_ctrl_reset_ops;
+> +	priv->rcdev.of_reset_n_cells =3D 0;
+> +	priv->rcdev.nr_resets =3D 1;
+> +	priv->rcdev.of_xlate =3D rzv2h_reset_of_xlate;
+> +	priv->rcdev.of_node =3D dev->of_node;
+> +	priv->rcdev.dev =3D dev;
+> +
+> +	return devm_reset_controller_register(dev, &priv->rcdev);
+> +}
+> +
+> +static const struct rzv2h_usb2phy_regval rzv2h_init_vals[] =3D {
+> +	{ .reg =3D 0xc10, .val =3D 0x67c },
+> +	{ .reg =3D 0xc14, .val =3D 0x1f },
+> +	{ .reg =3D 0x600, .val =3D 0x909 },
+> +};
+> +
+> +static const struct rzv2h_usb2phy_data rzv2h_of_data =3D {
+> +	.init_vals =3D rzv2h_init_vals,
+> +	.init_val_count =3D ARRAY_SIZE(rzv2h_init_vals),
+> +	.ctrl_reg =3D 0,
+> +	.ctrl_assert_val =3D 0x206,
+> +	.ctrl_status_bits =3D BIT(2),
+> +	.ctrl_deassert_val =3D 0x200,
+> +	.ctrl_release_val =3D 0x0,
+> +	.ctrl2_reg =3D 0xb04,
+> +	.ctrl2_acquire_val =3D 0x303,
+> +	.ctrl2_release_val =3D 0x3,
+> +};
+> +
+> +static const struct of_device_id rzv2h_usb2phy_ctrl_match_table[] =3D {
+> +	{ .compatible =3D "renesas,r9a09g057-usb2phy-ctrl", .data =3D &rzv2h_of=
+_data },
+> +	{ /* Sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rzv2h_usb2phy_ctrl_match_table);
+> +
+> +static struct platform_driver rzv2h_usb2phy_ctrl_driver =3D {
+> +	.driver =3D {
+> +		.name		=3D "rzv2h_usb2phy_ctrl",
+> +		.of_match_table	=3D rzv2h_usb2phy_ctrl_match_table,
+> +	},
+> +	.probe =3D rzv2h_usb2phy_ctrl_probe,
+> +};
+> +module_platform_driver(rzv2h_usb2phy_ctrl_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>")=
+;
+> +MODULE_DESCRIPTION("Renesas RZ/V2H(P) USB2PHY Control");
+> --
+> 2.43.0
 
