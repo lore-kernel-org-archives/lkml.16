@@ -1,121 +1,96 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76987211A19
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0054D2066FF;
+	Thu,  6 Mar 2025 11:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260964; cv=none; b=ujz2t6LoowVr5R00Hy90ieIhWVFpDqejj2d1+KMgQBloCXb3cwExeXMRSFi2WuxcLNY1q6OvIrFwRbeSUXNT3PgyJpb3XM7zbn3y+5JTQmuxpsf1ENRpQMZJYVXs/J8cIlkTCtkKNq+LH3xaXrU+9KHrmTxeAUU/N/e0xh5sKK8=
+	t=1741261020; cv=none; b=ERO823/L6YgM9fW86qtBdKxFZ8eiVof/UV7PErDb+KpC9lltW7aSSqin6Sdd+IrZMOBcfY9Jktd+csCObodryAKjlEb3SPAYi+WtAid1l3icyS5jPCA1TZziRHM+gdhVvRiIjoI9kU8Afq8bVXpR6r/vjCjnFyn8h7RncL4EW4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260964; c=relaxed/simple;
-	bh=3nZQ7e6h+YacqRMgx/Xd4BzDtN/zr2bOXSyLefmucUg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M5CM+TQDqTOXTgAqcE99RcQD3jnBZcKgnsZNHGD6F2KCuYb+DF1bWIwlWJsf6ynBRJpoUCz2p5p2d/Wam1O3dkuVf7+WSxBrZO2XIal2dPHUuRaZ/lsnzaOQWzQ9snRsU8sk0wEwxFJOsY+n/ydIBdgE8eYokI3ZbGQtk25An4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=luYK1E9E; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741261020; c=relaxed/simple;
+	bh=J7YyaxuyjzZE9rRVT+aVgEUuE6f/mN7Q1m2L/2ehXpc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dO/ZaXklWA5YYthj+vJUScFaKtsKEJTJ9xLtYpGiiv+EpUn+8ZFAoAXyx4ldHOYUXmBrYFgJyD5Vfd72pGA4QwB9edpWXs+Zj9gDf48ZXPrG8NfB7IqXW0vmoLpveROGb/nP53EWrtnrhTLkVsqB6EKC1t6jiN/hVsYBrjZBvMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKzo6U20; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="luYK1E9E"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so614952e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:36:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741260960; x=1741865760; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s+AyyFlWHkvIaDbzkVyONzVVHpZRnmhFgeQIexgdJRs=;
-        b=luYK1E9EukrklF3Da1KFaE0zJUWoZdADjqhPeXYS+0O9GuXlY5uTN7f1xhHA657OYe
-         SG45t1qH0WR057Kr9mpStJ6YCQSKsL74uLHBwggf9x2jns3PuFKk8tU9YKeLF1M+70o9
-         r0R09n9+avzwVtdzoHFPpyPRx3EOlyM+kc/syvduKQrrT99kq2705JtGPG9PPgKITT5o
-         qo3dy1E2/d5tiQJZgJPkV3w8sZvSpHjbkDNBHNzck40P76XdzN6gkGwVWXUURte+6Iwp
-         rjRC1cAsz/WC/t0VNO3gEeLQxLcBrEmYemsanmVyyLn9fNXPJRLHutS63xrqnIi+Q1V5
-         Xnhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741260960; x=1741865760;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s+AyyFlWHkvIaDbzkVyONzVVHpZRnmhFgeQIexgdJRs=;
-        b=DxSERRWda5JkRoNWHFKbFQpIk5TSBNaR2Yf0O1+j8+QSFkyg2zUVp1O+SSHkE5o8Ea
-         QMl/9fnn+QQWKbhp/hP6JY6U/UeewJguCjCAq8R6+kNKD3I2T35m2cBpCyFIC6qHY6NB
-         MQ0H8A8oogy5KWEEOA+50ApPsQsNc6OUMnIwnz7jfE7z9oise6eMk45/Ne2OWWw3a14n
-         o10oL3NPO5vvKKAJbH2z5cInUYzm9VcwD3pYsudpbGChD9cWBL4KZD1h93NgAmD56ZPj
-         7sePS9NPWqhuLQjZg5ype8dTx9vwZ+d8DpyUbWpq//fDxAYR+pN1sz/PC9vCHSBfOQ/3
-         tZSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNI5hWVUjumABBzdJdeGlNXAYFuhfHsK504ygJ1edP4KfNdXNCaRbhp+z7w80yRWaCO948utugqmos1IM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUx9TgBtD/HEbs8+/fB59MMia0WSASWUhTnjNwJjeMHcqdT+YW
-	BiEirWHv4bRdpqsj0qslTFiq0sjVU7trSWcU0260efjrC1AFt/ABv/iivFFJdC8=
-X-Gm-Gg: ASbGncuXVav8m52pwSHHtD5542bL71WUqTlAlOAbMNxQvXuO6Eli2g6N0pMe5ubXJXK
-	0GOac0FjuEJPwxAly+W1ZzV95lXGot5QTD3l2nNGdIILJyxGAxx6E7iZhRXdhYM2VMq4M7CFow3
-	o9BCimDhFCefDFCmZfk/xCBsg32LbXEuhZp/+B9G2pqOg8aPrzPS8PO8Fnp5qRTQ0qOX1ldLW9D
-	zkNhPyktyR4bJ5DB2ZmuPYhJKJxiMA4Kap0sSUKIUEhGSaHMh5pDB1apZkeN8H4FfPuEmsE+in0
-	kIF+juMA1DCruePWs5V4xoxH9lKom37IYXZE9K1tADvZOPPdLvJMzApjaoRUKB5bgqxT3yK05U7
-	wUqt7QnnL+OvKwRkMF6I=
-X-Google-Smtp-Source: AGHT+IGdluhAdfmeE1f9+qi3DVUdsCzNksoJolzcqmbX6FS/jk4/mksaZKHzfgsja4/EHr4gkuoFrg==
-X-Received: by 2002:a05:6512:b1f:b0:549:4ac4:a464 with SMTP id 2adb3069b0e04-5497d33215dmr2277928e87.2.1741260960489;
-        Thu, 06 Mar 2025 03:36:00 -0800 (PST)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30be9918086sm1809511fa.54.2025.03.06.03.35.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 03:36:00 -0800 (PST)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	linux-pm@vger.kernel.org
-Cc: Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] PM: s2idle: Avoid holding the s2idle_lock when calling pm_wakeup_pending()
-Date: Thu,  6 Mar 2025 12:35:41 +0100
-Message-ID: <20250306113549.796524-3-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250306113549.796524-1-ulf.hansson@linaro.org>
-References: <20250306113549.796524-1-ulf.hansson@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKzo6U20"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775EDC4CEEC;
+	Thu,  6 Mar 2025 11:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741261019;
+	bh=J7YyaxuyjzZE9rRVT+aVgEUuE6f/mN7Q1m2L/2ehXpc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oKzo6U209sNppYHc6sLdNcpyjyK6SqEQnFg0sdVpTiwIlDzaWElb4aACfqV07f0DS
+	 MP4IxKYG4uxqb7HfH1z15wrpRANN/sxA7rUdePL+JwAVM7XQ5K3QvRApdWyaT+2q6h
+	 K6sV0pGTnNDhbeOkYMwcmGe95/alky+/VV50Nxnb45VIpTWuPR09Fbrb+yYLHCZTub
+	 ZZRP1eKkDZClNJKz0R0RpKyHRr2PQPe/1tEGP6/bvykyEcjtv6P+Ig+X8LsJ7e+83t
+	 Uo4J2oR3eE6j/Jf4QaqjExxhBk/n5qzzau0wKGyP3bL5jw+4rHiaK9ot+YOJfUjiWc
+	 nugrFRR0MnXSA==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54954fa61c8so654403e87.1;
+        Thu, 06 Mar 2025 03:36:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUoKMFy76f/8VBa3Na7uWWElN5ATAheoRb7yeTCJBPHBLYTLPZ2G6ouDZXC+x+zjf6AfqBCrGM5ewt67NmN@vger.kernel.org, AJvYcCWsPs9qCD39tyuTNyAGWZorSWgp7rH9zuMU+56cFZNd4kXa4ft1OFIWbHsvzwv6Jy709lnPvjxDS/D6IEWN@vger.kernel.org, AJvYcCX/NenAftbZ6iPMqsEbkoRh0cQlNjoVd9km2ftJmEwTwmPJJX2Q+2gKacc//L8Kqf7TERtwlxFY3hAqg9VlOnY=@vger.kernel.org, AJvYcCXkEt5632dOkVgeZuvInsf0SUVMmFi9kVlQuJKsKhQKF5R6khED/08IRAivr5r7sn+pzPC5FR8hwxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLc1ca66Rn+hkKbO99LUjR+V2XBQnWbxtFkUGxXRHaQ4Uul0O/
+	RXyNvEpHUXxOz+AXEO2JBdmdOEjWjrfdZyw0A/z30Fp2YDo1/Swd8qsUEzXHrMqZQBWjAyT60mV
+	SWfJTF413el2mUveMf6GKGYLhYes=
+X-Google-Smtp-Source: AGHT+IFzAyFRwVte8Hotabo7FMYBd05dZcaElxdlKllY9eUVFhjtPLRMD29Y6HH4VN6rZ8EcX8AQhANlE5QfwByaun0=
+X-Received: by 2002:a05:6512:3ca2:b0:549:4ab7:7221 with SMTP id
+ 2adb3069b0e04-5497d382feemr3061824e87.50.1741261018116; Thu, 06 Mar 2025
+ 03:36:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250210164245.282886-1-ojeda@kernel.org> <CAK7LNAQBFX5q6yyKBJoxMoD5d9SwdKm0c23J4+LpjwA1eh=bZw@mail.gmail.com>
+ <CANiq72n=95jgJs17NFAkit5uzxqtO9xij9Um3ybd_RiMCpFrDQ@mail.gmail.com>
+In-Reply-To: <CANiq72n=95jgJs17NFAkit5uzxqtO9xij9Um3ybd_RiMCpFrDQ@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 6 Mar 2025 20:36:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQC5Q5EQjuvMEWS5NAs-pixj3b--rkCHZ=xGQDTHqBBFQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JreRF_M4JISf0E2-xc60a7758UzryRd2z_zSk0dC77hJQoqe1lml4uhHqY
+Message-ID: <CAK7LNAQC5Q5EQjuvMEWS5NAs-pixj3b--rkCHZ=xGQDTHqBBFQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: rust: add rustc-min-version support function
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org, 
+	moderated for non-subscribers <linux-arm-kernel@lists.infradead.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There's no reason to hold the s2idle_lock longer than necessary. Let's
-instead acquire it when really needed in s2idle_enter().
+On Sat, Feb 15, 2025 at 3:48=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Fri, Feb 14, 2025 at 2:39=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
+.org> wrote:
+> >
+> > Do you want me to pick it up to kbuild tree,
+> > or will you take it with my Ack?
+> >
+> > If you go with the latter,
+> > Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Thanks a lot Masahiro -- happy to take it on my side if that means
+> less work for you.
+>
+> Cheers,
+> Miguel
+>
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- kernel/power/suspend.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+This has not been picked up by any one in linux-next.
 
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index e7aca4e40561..ca09f26cbf4e 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -91,10 +91,10 @@ static void s2idle_enter(void)
- {
- 	trace_suspend_resume(TPS("machine_suspend"), PM_SUSPEND_TO_IDLE, true);
- 
--	raw_spin_lock_irq(&s2idle_lock);
- 	if (pm_wakeup_pending())
- 		goto out;
- 
-+	raw_spin_lock_irq(&s2idle_lock);
- 	s2idle_state = S2IDLE_STATE_ENTER;
- 	raw_spin_unlock_irq(&s2idle_lock);
- 
-@@ -111,11 +111,10 @@ static void s2idle_enter(void)
- 	wake_up_all_idle_cpus();
- 
- 	raw_spin_lock_irq(&s2idle_lock);
--
-- out:
- 	s2idle_state = S2IDLE_STATE_NONE;
- 	raw_spin_unlock_irq(&s2idle_lock);
- 
-+ out:
- 	trace_suspend_resume(TPS("machine_suspend"), PM_SUSPEND_TO_IDLE, false);
- }
- 
--- 
-2.43.0
+I applied this to linux-kbuild now. Thanks.
 
+
+
+
+--
+Best Regards
+Masahiro Yamada
