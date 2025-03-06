@@ -1,106 +1,112 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6777F19DF4D;
-	Thu,  6 Mar 2025 07:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1096B1AAE13;
+	Thu,  6 Mar 2025 07:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741244754; cv=none; b=sQQYQik5+F7s2kLrxphIqj2C3krs5i9Mc6k3xXTaQodKzz9v93Cv495AgZXBk3NoPpsk1ZqwaNbJHtJrjMCmEnbQrOYyY8qSuy1DAKMjlsIqcfwFvkfcQiRqbOcpx5PCpzYEWOolBnIXJtvFoQV470F8tQ2R0y1popzlJG7Lzmk=
+	t=1741244755; cv=none; b=V1QudCxIZPWLwxm7lLuYnz14Hea8bM0g53osPXF8ReLt1ysbKIXMBG/NjDTStTpkm9psAluYg98urfQciO0SEuniK0NQegfSKrmWrQoyqq0Nfi9Dwo2IBfASRRSLStgGuCJHz5i3rd5n6V5c51W+jRQ2Qr7Yo4eqJPkPXj01v6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741244754; c=relaxed/simple;
-	bh=4fsBYDyG/UEtkcJyh44OJqX7sie/l9Ni8w36iQM9FbY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RsNsG3VoOHAKYeRSnQf0HFJSn+GWImToIQBIc1eJzjqErnrIe0KJB8Sxq/psi8VKJkIIW8o5WOskoRvn2sqCCrRBEZU8O6ThOrz1YS17nvUk/UeX0RIbh6wMJGBS92oJkAt83BiPoDsB5PPbKQdI+KZvEimiHlJxphbFg50pOwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=JTO18am8; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1741244755; c=relaxed/simple;
+	bh=j9Pdlj4VRjam+HMpMP+9l4d9Wirj4tRY7kQm1QzX/GA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WRyc91kugkUs/CHp7MFXtqC2DQ6cEFaRC0n2Zo779d2lbcfMdXVeHosEOV0tQpjllyWigKMhlWkoZxLBrwPhkEGRNfKB9CHM8fIlDBTiHNw0+MxIBkp/OZdejJxblWX3ZYSav2GytoYVMe0YVfX+5XiOnpC+2tO/zdqDebw8w8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4RUG5vU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="JTO18am8"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 52675MJs82833910, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1741244722; bh=4fsBYDyG/UEtkcJyh44OJqX7sie/l9Ni8w36iQM9FbY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	b=JTO18am8PEgzoe0jl+NBRUznyO+YcUUrswQ4hz1gaYjzjYUeQXbXbRbLXU+YZREfR
-	 R1+/oOLFwRt5oaWXPauhLuENMmV0Gwf1GT5fw0LoDgERbhjDrMqE+ncF7yO8dbFtJm
-	 sBL50G/HnFPIe5GB4NM+4loSVfWvY2OGRhO3J0iAFu5RaL5Wnxk6bgVYLvTLhr8HbG
-	 UZGWufjAnGvwpB9G1O6x9bS3DwPkWdtNbjiWWPwipCbBqAzmBS1IuYiHIs9YbRwyLZ
-	 ZSCrdPq83exeuVa/ubp9TykpO0iMEWwpWaNiSE1ctIad66w2EO2WbIlMfyTqynsnAk
-	 58yQAEr6Ft0Jw==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 52675MJs82833910
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Mar 2025 15:05:22 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 6 Mar 2025 15:05:23 +0800
-Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 6 Mar
- 2025 15:05:23 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
-Subject: [PATCH net] rtase: Fix improper release of ring list entries in rtase_sw_reset
-Date: Thu, 6 Mar 2025 15:05:10 +0800
-Message-ID: <20250306070510.18129-1-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4RUG5vU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D93BCC4CEE5;
+	Thu,  6 Mar 2025 07:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741244754;
+	bh=j9Pdlj4VRjam+HMpMP+9l4d9Wirj4tRY7kQm1QzX/GA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=d4RUG5vUsosy2HxjD2BpjwunUe3VpgVi3MDnecVQ14O4qGQzpJ7xMjImjqp/O6YMR
+	 1gunGmUoFe3+TK/CY6Rv6bAcdWdOVT/UNqyJzbHBkMni2ddBGdldK0hopnerpUGLrt
+	 swb5vUrRFsOAMXb0xIDuH7TQSJrKX3bQsS/NTN3rM7Iz7zUKySbO93AVF37jM77iyL
+	 fHNWiKuHnC2k2NqK+0J4EHwotOqvB94xF5Nx05b1zh+5N+KfAuZfArEMIwdn1Im5gj
+	 A3ds4YM587Z9F6Zd5zYVUQbnx1mTDsMgGVhqHVDJPo6J4e5SU8X57ybg3qLSvndhsk
+	 GH/YLiGtwN6Sg==
+From: William Breathitt Gray <wbg@kernel.org>
+Date: Thu, 06 Mar 2025 16:05:43 +0900
+Subject: [PATCH 1/2] counter: Introduce the compare component
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250306-introduce-compare-component-v1-1-93993b3dca9c@kernel.org>
+References: <20250306-introduce-compare-component-v1-0-93993b3dca9c@kernel.org>
+In-Reply-To: <20250306-introduce-compare-component-v1-0-93993b3dca9c@kernel.org>
+To: csokas.bence@prolan.hu, Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ William Breathitt Gray <wbg@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2443; i=wbg@kernel.org;
+ h=from:subject:message-id; bh=j9Pdlj4VRjam+HMpMP+9l4d9Wirj4tRY7kQm1QzX/GA=;
+ b=owGbwMvMwCW21SPs1D4hZW3G02pJDOknPQNeRzyULZCda8dpJf+O/5/XJ6MO+1v2gtO4BWd+f
+ fnyl0ZzRykLgxgXg6yYIkuv+dm7Dy6pavx4MX8bzBxWJpAhDFycAjCRE7aMDOe85ra2Xl0imBW9
+ 7sXHxQkiTzQd/h3s3Sy26sfdXcq9l+cyMrz/fEpeuvqck3wS9+ZYh5buTYaJLgJyvkLnGh9quD9
+ z5wQA
+X-Developer-Key: i=wbg@kernel.org; a=openpgp;
+ fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
 
-Since rtase_init_ring, which is called within rtase_sw_reset, adds ring
-entries already present in the ring list back into the list, it causes
-the ring list to form a cycle. This results in list_for_each_entry_safe
-failing to find an endpoint during traversal, leading to an error.
-Therefore, it is necessary to remove the previously added ring_list nodes
-before calling rtase_init_ring.
+Compare registers are used in devices to compare a counter channel
+against a particular count value (e.g. to check if a threshold has been
+reached). A macro COUNTER_COMP_COMPARE() is introduced to facilitate the
+creation of compare components as Count extensions.
 
-Fixes: 079600489960 ("rtase: Implement net_device_ops")
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+Signed-off-by: William Breathitt Gray <wbg@kernel.org>
 ---
- drivers/net/ethernet/realtek/rtase/rtase_main.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-counter | 9 +++++++++
+ include/linux/counter.h                     | 3 +++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 3bd11cb56294..2aacc1996796 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1501,7 +1501,10 @@ static void rtase_wait_for_quiescence(const struct net_device *dev)
- static void rtase_sw_reset(struct net_device *dev)
- {
- 	struct rtase_private *tp = netdev_priv(dev);
-+	struct rtase_ring *ring, *tmp;
-+	struct rtase_int_vector *ivec;
- 	int ret;
-+	u32 i;
+diff --git a/Documentation/ABI/testing/sysfs-bus-counter b/Documentation/ABI/testing/sysfs-bus-counter
+index 73ac84c0bca76e013f2534efc40c0f0e8d5fb023..3e8259e56d384225ec6e952b6d5d75208f185736 100644
+--- a/Documentation/ABI/testing/sysfs-bus-counter
++++ b/Documentation/ABI/testing/sysfs-bus-counter
+@@ -34,6 +34,14 @@ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		Count data of Count Y represented as a string.
  
- 	netif_stop_queue(dev);
- 	netif_carrier_off(dev);
-@@ -1512,6 +1515,13 @@ static void rtase_sw_reset(struct net_device *dev)
- 	rtase_tx_clear(tp);
- 	rtase_rx_clear(tp);
- 
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		list_for_each_entry_safe(ring, tmp, &ivec->ring_list,
-+					 ring_entry)
-+			list_del(&ring->ring_entry);
-+	}
++What:		/sys/bus/counter/devices/counterX/countY/compare
++KernelVersion:	6.15
++Contact:	linux-iio@vger.kernel.org
++Description:
++		If the counter device supports compare registers -- registers
++		used to compare counter channels against a particular count --
++		the compare count for channel Y is provided by this attribute.
 +
- 	ret = rtase_init_ring(dev);
- 	if (ret) {
- 		netdev_err(dev, "unable to init ring\n");
+ What:		/sys/bus/counter/devices/counterX/countY/capture
+ KernelVersion:	6.1
+ Contact:	linux-iio@vger.kernel.org
+@@ -301,6 +309,7 @@ Description:
+ 
+ What:		/sys/bus/counter/devices/counterX/cascade_counts_enable_component_id
+ What:		/sys/bus/counter/devices/counterX/external_input_phase_clock_select_component_id
++What:		/sys/bus/counter/devices/counterX/countY/compare_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/capture_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/ceiling_component_id
+ What:		/sys/bus/counter/devices/counterX/countY/floor_component_id
+diff --git a/include/linux/counter.h b/include/linux/counter.h
+index 426b7d58a438d59e5178bc5e76bac82e99737323..f208e867dd0f6995f58cf6a41c67538dad6428d0 100644
+--- a/include/linux/counter.h
++++ b/include/linux/counter.h
+@@ -580,6 +580,9 @@ struct counter_array {
+ #define COUNTER_COMP_CEILING(_read, _write) \
+ 	COUNTER_COMP_COUNT_U64("ceiling", _read, _write)
+ 
++#define COUNTER_COMP_COMPARE(_read, _write) \
++	COUNTER_COMP_COUNT_U64("compare", _read, _write)
++
+ #define COUNTER_COMP_COUNT_MODE(_read, _write, _available) \
+ { \
+ 	.type = COUNTER_COMP_COUNT_MODE, \
+
 -- 
-2.34.1
+2.48.1
 
