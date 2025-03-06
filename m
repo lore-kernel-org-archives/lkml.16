@@ -1,145 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5890A19C554;
-	Thu,  6 Mar 2025 06:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F59119CC08;
+	Thu,  6 Mar 2025 06:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741242996; cv=none; b=mqUJ5+dUObOF1hy/BPd84zFPLcHWHd/Igyumi5v7pYmZanQqRRZi+wVT/hh/snygSW6nijfsTAPLYRORLnGhN/hAhfe0gkLrMY919GQFCNZUhGJKe5IVPzg/GiWextBjWzv0cPkpdVfLFZ7jUSBU5uYcx/54+cTgRoTXEYPKJ9o=
+	t=1741243047; cv=none; b=LsffZxzvIA3bWLMZriRuAWmiGciLRmsaXgsAPPF9ZmbdxYaR8q/2dStbxL0cV/LIZLjWb/jxzqdf85+TQS5L0MezOvq1/5DlVF8lQn/oSOHPxX0vwZzS1mv+ZBG7x3P5AYuy0aHOdt4CKsKD1zBBOROK9A2A/kbdy8OYmZrI1xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741242996; c=relaxed/simple;
-	bh=3gjOUzCOeobpo+bQrS61L5KTw/nl8QOpdeWmBF5tBl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SNjGmLPjv2yLUuQXv0pGWLQBg1QQMnbAnVMe97H3ZiB3yF0ruKpgfQfOm4SJuNKQ0RaEO///DhnrUssVf1BGiFYNKhODnFdR/nDFbSi7HX6weoh3VvrRf/JqmJa4Q7/9440OUzIelc3iURmkaYNMp2CJepKJjfHs8gAjA2sJ8Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rj3cHtnK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rj3cHtnK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC78C4CEE9;
-	Thu,  6 Mar 2025 06:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741242995;
-	bh=3gjOUzCOeobpo+bQrS61L5KTw/nl8QOpdeWmBF5tBl8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Rj3cHtnKrurG1GOwFFmkNxNIjzde1+iQTGEkHB40RNWwdKs00wbIr7589+UfOzo1r
-	 8A6hqP3mwunJdSXGQ4TGlZnK37/B31WgmNXszDXvCaD3wR40MoUBGT7pI9qzYJU4m/
-	 3FVm/NjN5crPPu+E2vX6s5zAk4Tq0QaugdCa5YYxFfsE6dEA2zdtjqtx8fl2r1TI1L
-	 4tqdmMwIuhUbsbOtjni7TjYC2wfixipdZscYCruUYl7izkE7JRd35eVpwPCOyTmipt
-	 eRZLBFUWubbnx2jMfQ+tkvgX5qPcCpBi44gcTP6JwbyuUdF/1Rd/17bbqs0haCsiPI
-	 ZnYc23h0Px48g==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dca468c5e4so466474a12.1;
-        Wed, 05 Mar 2025 22:36:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVYqsYX3EDeNSh0aQJxNxR+HtL/DIo2m5VRm/lOW8G7nhF5wZ/8ep3GLLlzVEXLLJZi05h3UV3S1tBWPwU=@vger.kernel.org, AJvYcCWsFlJE3lTFNzTnGLyWLtz9VNpQDj8ojz/iY9dfeCtURXXuBl1jZbG2/t/7dw3pCq/I0q7n1vjG@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPTbWOMjz8dpN3//+L6FvKjSbUqwYhHH8Ecidf4NTA/T7nOYVy
-	uejfPB9PwA7ytK/R4GP9xU3ZUgaDTSn+0FskTqnFOsgpUTJCdF3HBZeR2QG5XjjEFm8ljfwVGtT
-	dVf2ooJZO5YJaxLfT6l2rsct2Bf4=
-X-Google-Smtp-Source: AGHT+IGzRQmG6IWerhpKvupSsx10MS2/s0rwwZdeICWvvyWFMnHWE7lef7OcTQQRGEk7U3RkX/E4Iuxec3s/khFHBcc=
-X-Received: by 2002:a17:907:6d12:b0:ac2:acf:84c1 with SMTP id
- a640c23a62f3a-ac20da8944cmr565485666b.46.1741242994224; Wed, 05 Mar 2025
- 22:36:34 -0800 (PST)
+	s=arc-20240116; t=1741243047; c=relaxed/simple;
+	bh=HFoHSfplOgZCiqY8zDKCWgwmxCt1FJB6aWfOeBanAsU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pvi181rX7JFzjnn4GuCN3eiCFwfpSok5tcD3Md/o8n929z1vIYm4jWfeVdW4NBirhYbIypMHAIPufRAM+4P05Nc2tBMSKsNveCR0Cqa6aTYUB7XS83r3R3sTTBURxpf5Aiw7KnUT73odTrqO3r7g8/F7IaOPEGQE+VgcCX5NpGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z7fpX00NBz4f3jJK;
+	Thu,  6 Mar 2025 14:36:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 25C091A179F;
+	Thu,  6 Mar 2025 14:37:14 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgBXvGCYQslneN7AFg--.9515S4;
+	Thu, 06 Mar 2025 14:37:13 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: linux-ext4@vger.kernel.org
+Cc: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	libaokun@huaweicloud.com,
+	Baokun Li <libaokun1@huawei.com>
+Subject: [PATCH] jbd2: remove jbd2_journal_unfile_buffer()
+Date: Thu,  6 Mar 2025 14:32:40 +0800
+Message-Id: <20250306063240.157884-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306035314.2131976-1-maobibo@loongson.cn> <CAAhV-H45DobYbBFBatJtHPF22VAX=QWH8i=jzpWNvN-ELgWr4Q@mail.gmail.com>
- <b1fde3cf-f4ed-68cc-fd4d-8b8b089870f1@loongson.cn>
-In-Reply-To: <b1fde3cf-f4ed-68cc-fd4d-8b8b089870f1@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 6 Mar 2025 14:36:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H47shgAGtB59Yth0tPVwaLFjsq-4nix5BXTExaVAHxa0A@mail.gmail.com>
-X-Gm-Features: AQ5f1JqorG9glBtNWXwIgv-uVhK1qOmPSFS24TYERI6YqitAw7OpBKdqFhjY0Ok
-Message-ID: <CAAhV-H47shgAGtB59Yth0tPVwaLFjsq-4nix5BXTExaVAHxa0A@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: mm: Set max_pfn with the PFN of the last page
-To: bibo mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXvGCYQslneN7AFg--.9515S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7AryxKF1rGF1Duw18Zw4rAFb_yoW8CFWrpF
+	9Ik348Zr9YvrW8Zr1kWF45AFWjga1q9ryUGrWv93Z7ta1Ut3saq34Utr129F98tFWIg34U
+	Xr1UG3yDC34jqwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lw4CEc2x0rVAKj4xx
+	MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
+	IFyTuYvjfUO73vUUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgATBWfIBf5ODAAAsC
 
-On Thu, Mar 6, 2025 at 2:26=E2=80=AFPM bibo mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2025/3/6 =E4=B8=8B=E5=8D=8812:06, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Thu, Mar 6, 2025 at 11:53=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> The current max_pfn equals to zero. In this case, it caused users cann=
-ot
-> >> get some page information through /proc such as kpagecount. The follow=
-ing
-> >> message is displayed by stress-ng test suite with the command
-> >> "stress-ng --verbose --physpage 1 -t 1".
-> >>
-> >>   # stress-ng --verbose --physpage 1 -t 1
-> >>   stress-ng: error: [1691] physpage: cannot read page count for addres=
-s 0x134ac000 in /proc/kpagecount, errno=3D22 (Invalid argument)
-> >>   stress-ng: error: [1691] physpage: cannot read page count for addres=
-s 0x7ffff207c3a8 in /proc/kpagecount, errno=3D22 (Invalid argument)
-> >>   stress-ng: error: [1691] physpage: cannot read page count for addres=
-s 0x134b0000 in /proc/kpagecount, errno=3D22 (Invalid argument)
-> >>   ...
-> >>
-> >> After applying this patch, the kernel can pass the test.
-> >>   # stress-ng --verbose --physpage 1 -t 1
-> >>   stress-ng: debug: [1701] physpage: [1701] started (instance 0 on CPU=
- 3)
-> >>   stress-ng: debug: [1701] physpage: [1701] exited (instance 0 on CPU =
-3)
-> >>   stress-ng: debug: [1700] physpage: [1701] terminated (success)
-> >>
-> >> Cc: stable@vger.kernel.org
-> >> Fixes: ff6c3d81f2e8 ("NUMA: optimize detection of memory with no node =
-id assigned by firmware")
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/kernel/setup.c | 1 +
-> >>   1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/set=
-up.c
-> >> index edcfdfcad7d2..a9c1184ab893 100644
-> >> --- a/arch/loongarch/kernel/setup.c
-> >> +++ b/arch/loongarch/kernel/setup.c
-> >> @@ -390,6 +390,7 @@ static void __init arch_mem_init(char **cmdline_p)
-> >>          if (usermem)
-> >>                  pr_info("User-defined physical RAM map overwrite\n");
-> >>
-> >> +       max_low_pfn =3D max_pfn =3D PHYS_PFN(memblock_end_of_DRAM());
-> > max_low_pfn is already calculated for all three cases, so here just
-> > need "max_pfn =3D max_low_pfn".
-> In theory it should be.
->
-> However there are potential problems, it should be recalculated in
-> function early_parse_mem() also if commandline "mem=3D" is added.
->
-Yes, you are right, thanks.
+From: Baokun Li <libaokun1@huawei.com>
 
-Huacai
+Since the function jbd2_journal_unfile_buffer() is no longer called
+anywhere after commit e5a120aeb57f ("jbd2: remove journal_head from
+descriptor buffers"), so let's remove it.
 
-> The other thing is that calculation init_numa_memory() is unnecessary
-> since it is already calculated in memblock_init(). Memory block
-> information comes from UEFI table or FDT table, and ACPI srat
-> information only adds node information.
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >>          check_kernel_sections_mem();
-> >>
-> >>          /*
-> >>
-> >> base-commit: 848e076317446f9c663771ddec142d7c2eb4cb43
-> >> --
-> >> 2.39.3
-> >>
->
->
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+ fs/jbd2/transaction.c | 15 ---------------
+ include/linux/jbd2.h  |  1 -
+ 2 files changed, 16 deletions(-)
+
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 9fe17e290c21..2bc14291a0fb 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2078,21 +2078,6 @@ static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
+ 	jh->b_transaction = NULL;
+ }
+ 
+-void jbd2_journal_unfile_buffer(journal_t *journal, struct journal_head *jh)
+-{
+-	struct buffer_head *bh = jh2bh(jh);
+-
+-	/* Get reference so that buffer cannot be freed before we unlock it */
+-	get_bh(bh);
+-	spin_lock(&jh->b_state_lock);
+-	spin_lock(&journal->j_list_lock);
+-	__jbd2_journal_unfile_buffer(jh);
+-	spin_unlock(&journal->j_list_lock);
+-	spin_unlock(&jh->b_state_lock);
+-	jbd2_journal_put_journal_head(jh);
+-	__brelse(bh);
+-}
+-
+ /**
+  * jbd2_journal_try_to_free_buffers() - try to free page buffers.
+  * @journal: journal for operation
+diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+index 82ef232935c0..2205c99beff4 100644
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1401,7 +1401,6 @@ JBD2_FEATURE_INCOMPAT_FUNCS(fast_commit,	FAST_COMMIT)
+  */
+ 
+ /* Filing buffers */
+-extern void jbd2_journal_unfile_buffer(journal_t *, struct journal_head *);
+ extern bool __jbd2_journal_refile_buffer(struct journal_head *);
+ extern void jbd2_journal_refile_buffer(journal_t *, struct journal_head *);
+ extern void __jbd2_journal_file_buffer(struct journal_head *, transaction_t *, int);
+-- 
+2.46.1
+
