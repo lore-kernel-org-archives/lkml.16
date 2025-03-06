@@ -1,353 +1,326 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazolkn19011035.outbound.protection.outlook.com [52.103.7.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F72D25CC9F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741283850; cv=none; b=uYEmEukgRktQc6UjumO4HC4+BzESZ9+DmOM+JQzpc1lwzgUeqRkau7IAv9sdGDwjb2NgJn1gC/h+KA6R0Y0Z6cEG/EKw0FLzMD8UfIvzBC8usWo+ikv1rkMbMyRz2HGSz1MPZu6+Ft+a5gHOPTjO9tBjo4KJRXhEm/ec+ZKBl9g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741283850; c=relaxed/simple;
-	bh=cuP/vScxGtaMqppW/h6NaC/dlve9qOgtjc8hq4kp0AU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=rTysyROKyjeFL+sbjrKF/GybuMIKp4lp29U24dYPe8uKhTY4x3cpirqkcw/cA82UTjhpbcYh7CzTC7iLeqZWnVp+sMrg+x4gC/ygtFYmofJKOF3s4lufGF6ZeSGRiy5hkmWFQGCNa1dMRyesyq5LAJ6EqPxMhfiUEwlE7JxbXGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d4423d0c49so445045ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:57:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741283847; x=1741888647;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ifMmxd60Hb7OPYrM+DTw5Np2I8L4Y/29uTi+Rh8hpQk=;
-        b=BqPWWGIJ++6Q197bYzMRe6MK2KXruPkV3uHzUcS6FuTRTkhrLRSOvj1pzgM+5CSvnf
-         iomIXcEC+1JO8j29K3enbC5yu0ASaPk10aVkjubGt9utG1huzfVD/9vwwnhnqqnFf1ql
-         NhBroRgOxk9+i1LuWAB0OG8kcb7UoVHMBbs2bV7s7jw95QL58eyE6DLRc39NMrZAUNdB
-         NpLfGeCiZAIhaXLCOUKDh5a2w8HEsYElUEJpIoF5f/KCC75/UzMC4pgUO1TgGL393+O/
-         n1aEGUaQo4rJf2jW5yhUWWEauCmfRrTAVJ9TAxhCNnOyekEvyiXpbbJvZi8eMuWkVfV9
-         oUIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWgtS/itnbib5Zhb7FZ6UuyxdZOVi/3WS5dDbFdJ4WD/OjA+BODRuUuiYqDsSBMGMn3eEXO5U0QKqXtA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3Oini9p8qsC+f5ILXe/3HtQ2eh36UMSwta4jL6NLzYyShe86F
-	ln1S1GYngf2E/mbYQ2TEUl9kTTA0PgN67mmnzKNVwMl0XFZbb5fb9hiTutudWuxbIuYSWUwxNkg
-	F/IFXHN95ifG/RKjP2IlklP2JdbCD5ahL88LXQ1vyvwF1HlkjqfnjWuY=
-X-Google-Smtp-Source: AGHT+IFVIqSWwCFtZ50FheN4IvJX8vArr87rSFAMgBXAlkwEwYEJhwPVgslshx0bBuKftYPImWm0HWVZeMc3DMEEKgPEYPDB6Qfk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C0625D52E;
+	Thu,  6 Mar 2025 17:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741283871; cv=fail; b=CGPq0t0RyHIB5P24EKJUt1oWGZg60ZlISCQM27K8zFqMwE/jcKPFgSQ77cMUVAw3bTcJUdXBnbDWAoaWpZ/P8n7a1sNQuBZ0GmfvpoakhnYQT/DytxzJrpnu1+WkpNllSqKLZCebQbg792h1ZKpjhL+tKojxSxORtTpvf5MxB9Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741283871; c=relaxed/simple;
+	bh=U+N1ZE/ugkoSnYupmmzt5mtTJ38sCREUBNFYEo7OlNs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AiKm/34UStwuX4qNP0REu+6XnRkit5pbeYl5tvwUjsnk+6GLCVUjBdXNXugzEX4TlKy7fS+H5Zy6bN+r1+Lpc/HNTHQnP7WOIZdHkp5XFy1ThIwud9zeqKVd93aPIoQ0h25tOW+vZADepQlBK6l3NPEG54AmJw6k14VnBT7m1X8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=SgIWpIeD; arc=fail smtp.client-ip=52.103.7.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="SgIWpIeD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yXo2uVHTOn86yTEowS3SYfnh2m0RZ27YpzW5E4GVHrKvwzzuYCZzJAERi1jqY6mr+LWn3Bf15MfZkORUpqskzcluoWulhyhH2nYci1/ZUAC8tH/bNa/N2p9blGnwHkohFyMpWwXn8LsRwsLDbST9/NhSVnYUqYTtQbuZXehi56/6mGjxH9rKhhsdkptbkiOnlSBck7ZmtIC905hcMNKS596zviOF/9HcLc8ousDCxSZf9vaoPN3SDVEnPfdqvyu4YIOgPnI8Z11I7MzWsr8lUQYwXxrNslYZ5Ie191pziSQebGKdMsXInPy+ON5Rm6Ra8D2rYqfjU3XbFeXdnFByvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+dxMXgDLbrG32/f38i9JjHZIUrjfzGchsc4HHXcuLRk=;
+ b=dBer98fmClbIxHFnj/3WpFD5upK7ilSE6mHrICRSwjdjvLIuo0zDIiyig9/Atq3/DYfk2yfDItQGtkt6MPxxRg6v+i6q5+lvw7MgeXtnqhKCYxC/tcTKNs7V2RCwmUb1jEp6JCGpguFHlw6Qg0dD6cIwEgn3OQ1RBVKmOXy7RyOzo2VJq1CaoWwMPWO2lTcV2UprKMMO3BltLq10ktQzc7SG8rRcuAYnS3PDdqBArWBXpm5jYPFF1c5KIADkfx7thyOAbIqStg6ZZra1O2gKu3VtlzpdkLFSxbYKPfS5cDGVSKl0qEjpMjBXSlBCauNIbAAhVg792KUlPv3pu0UdpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+dxMXgDLbrG32/f38i9JjHZIUrjfzGchsc4HHXcuLRk=;
+ b=SgIWpIeDCe03d7bYR9Xj0g12bELvYQpubTs1ZDvmMo5ToMCGeDqqg8XRZIswWrP+HLJBK2cIGsicgOTNsxHsbMSNx85bDg25LhgRQkP4hM8rWwiT/GN5nP3rSiOxsq7r796NBauVJzkJQ+jTmn6Lp6xBldXoQwScSQ7MiaoGE4djDOcjrkR15w8/ZbIrqeqxGCKF7cJiIfOu/xswhJM1SdOOLnDl6KLP03UKsV8uOUyMeGfFYfwnB+YeKaJ4caxjbq3QcOY2G6Y3zE2lfb04j6Ve0Bh71CyzCQ2K1M03NKOj/u6/hxM80vEw11VUf45fc3GaqEhvjRkMgD1brnsXZg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by MW4PR02MB7476.namprd02.prod.outlook.com (2603:10b6:303:67::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.18; Thu, 6 Mar
+ 2025 17:57:45 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 17:57:45 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+	"joro@8bytes.org" <joro@8bytes.org>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+	"muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+	"mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"apais@linux.microsoft.com" <apais@linux.microsoft.com>,
+	"Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
+	"stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>, "prapal@linux.microsoft.com"
+	<prapal@linux.microsoft.com>, "muislam@microsoft.com"
+	<muislam@microsoft.com>, "anrayabh@linux.microsoft.com"
+	<anrayabh@linux.microsoft.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
+Subject: RE: [PATCH v5 01/10] hyperv: Convert Hyper-V status codes to strings
+Thread-Topic: [PATCH v5 01/10] hyperv: Convert Hyper-V status codes to strings
+Thread-Index: AQHbiKNs/uCEZOh33UCUZSZ5oZ+szbNma5PQ
+Date: Thu, 6 Mar 2025 17:57:44 +0000
+Message-ID:
+ <SN6PR02MB41577560030C55503D1BAFDCD4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To:
+ <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW4PR02MB7476:EE_
+x-ms-office365-filtering-correlation-id: f39e481c-b6cf-469d-7ccf-08dd5cd865e7
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|19110799003|8060799006|8062599003|15080799006|12121999004|102099032|13041999003|440099028|3412199025|12091999003|41001999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?hZzawpkJrxmSN/MDMpqJGDgz26ApBWsnXLI5x0U4/XkTjI1q9IVpRRQvkMWL?=
+ =?us-ascii?Q?vrWVv8g2o8Lw9aTzkq9AWmL6+cwNm93Gc4tF3yZY9UBiAQx4j0BiZ/FnCxW0?=
+ =?us-ascii?Q?tMUflixfjkNyx2gWXYjvW5gOOl5YwZlio9ul9Cx0NdNclh6grJPau2O2tZaX?=
+ =?us-ascii?Q?SVhFtvEp9IMCqB9F1K6zCLefjQ9FNZF5y5yWDwOXFJBAKHKud9Mqkbjda4HA?=
+ =?us-ascii?Q?SEbk00BpWX4MHGpEHPZCusRRkSNfdO/VTXpmAbyR9oomkFwN3iuxm77ul7xd?=
+ =?us-ascii?Q?SfOnoJ3FKiJ04vvt16QAFZkMeALRVi2WE1paXpBeehucYh5LwHyBSexxlf4y?=
+ =?us-ascii?Q?Dxwqb+ng/bq1TNBzkA4WKbBqEb97J7TRGrImPPmkJi4Ht7n4K2TsD8z9RUhT?=
+ =?us-ascii?Q?riXBIbsA9X65pzFpSCduwUBjG2kletHbOKn/ju8SxwY8mxFx/BtfkLWf8MUf?=
+ =?us-ascii?Q?RL/LRr6od4HXnU+HcQeUTbrdrE6KoDjanHww3KULdydT/j4mtT1ICKIDBLH3?=
+ =?us-ascii?Q?29cm8L/vlG0FeHDsQ60u3e3sf5lg2Cj7hSqF9C7RBZdgu234OZCkA4IrGh4A?=
+ =?us-ascii?Q?0tYHkBomS/Xf1mWHgRBT6O1snwDcxTZftwl+w4XQHPqIKqIWRnn0ocVdLv3c?=
+ =?us-ascii?Q?7c3lXquV02UJRtoOgHl/qs6WMb3rCZjGnLHi63b5ub5v9LLt7BEwQlS8ToHR?=
+ =?us-ascii?Q?heMwuH50i0lj/F8WlKX7lb1tRUeGdNzRPbXsNDlQBJILKNxrD1IO7uB5frP0?=
+ =?us-ascii?Q?+hZ/tNa51CvWIzae+HLjiVZcJpsGIdLMr3arcFSKBMcxTWYrSBGnygYdDhZN?=
+ =?us-ascii?Q?Ei4Urd9OK5GWppmvL4er1GV8S0awQdJnLnxefezCY+vByxEvHjk786Y9t/2f?=
+ =?us-ascii?Q?D3VefSrhkDXpK/BCorfgIE3TpCjqnTLXmeJcI4c5sgUA3v9mTkSWunuJqSUs?=
+ =?us-ascii?Q?i+1+Htdmr/ULiIvaXrMaY0s6ZxRdgkuYIWzBjL7dbUS9VeQycN7zxvaQ+QZR?=
+ =?us-ascii?Q?UW70FBiDi5ylJBs7mAI1ZaVOC1BOLfsY5LRvP4jfL7k//1fDat7xJuJs0fYK?=
+ =?us-ascii?Q?TjNGr9cLfvz7PdFUfIl3vXvAnjYk69SRvhXtLQyym3lGjv4VUFtymZ25JokA?=
+ =?us-ascii?Q?jCpDw9pfpCf4wr0f9t0zODiRX1xwefxlQnI5qlsrMaiDjUidVUt9sJg=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?u8uFEyIWHgowUZWtSLKihC7OUItTGqk5jLQrSN4Yzgei/QZYkkolKC+mLlQl?=
+ =?us-ascii?Q?C6VDRknmVuwqyGOKnQuzFfMtNWm+0Zjh1T9cYD4z7KnTies/6UKOxJcfK1eY?=
+ =?us-ascii?Q?mX4PaCpE/dcSx6lL6MP9OkURUlNFoxIfxCLXcKWDt9yfDHHLHOkYKp1tkKtL?=
+ =?us-ascii?Q?YagMyKg0Jw8pmESgmmXnDkeCxupTB7Pl26yovhUAfFWm9hIFJ6Qjyo+ywz7T?=
+ =?us-ascii?Q?k4914ThSBjujDdfIoq/lu2U98jT9xdc3fN9LAW5KJ3929P61MxIDccVF24yN?=
+ =?us-ascii?Q?7ro5i5uoWPrZ7GGIvK8ovITMKnULeN3XtmBsO7dOsod1MSBayYstl/zSu1Sb?=
+ =?us-ascii?Q?PVZXLSULsSdV6TCipyfRN8z+uZ/w+fY5IOdmqwMMV7nXX/rjD0WgUOX8m9+D?=
+ =?us-ascii?Q?p6/qIITJCMPKEO4AQ8KZtp4c+5fI3lZzQgEMVeRXBbS+U57oBlsraazGbQZC?=
+ =?us-ascii?Q?Y399uqJ4oQuZoX1OaVs67GktJa992PzHEY0yqXKWk2uOQdCOpK6b+eXdPm1n?=
+ =?us-ascii?Q?pDB9VB8KDaXh7qMU6jIUXsXR6jC8Um5Bq6yemC7jHiFGaFqcSTekOzKWzDiv?=
+ =?us-ascii?Q?7RGgtkh52L8v2ORN9AP7BHFr6HRgGPQ6r6eBjrwRklvz+N5++CTF4g1Yt1To?=
+ =?us-ascii?Q?97KXY3yTtsHcY2gq5IKBbTAWoiCry5rlHzXku6ePxOgEIR0rzH580S1guBDs?=
+ =?us-ascii?Q?LEJfrD5yTYV+HsoVW+dV1H2TVnjbkMndBm2gYKelrojAfijjyFxhyecN47lL?=
+ =?us-ascii?Q?Qojy0HJSjAxzMdbyKT9VkSge0tSGuZl1dTS+vn0OH5q9QfWPCPjPZ4795Fr4?=
+ =?us-ascii?Q?95tLyZXx1wroLqsrUoBZiYEoGfw9ki53R2mk0yPvVuXBJeZj2wF1btZ36icd?=
+ =?us-ascii?Q?MFAbJqm1uBRFLJ5eW0snTOk/Pp8Xh7CFj9jVK8ZzR7BPBJ9i2J3G3KjzvdeZ?=
+ =?us-ascii?Q?LzwNCLt3scQLwbgkkVrAqLEPj2pg4IV9Poeqfp0BhMD7FwdiwthCSiEEHUUs?=
+ =?us-ascii?Q?8GfzzU420jCciRRuY4UsjXrSs3l8oLLKedkDmTmhI/S6Ws/PFwpiFUyoLFbM?=
+ =?us-ascii?Q?t8Q4BBXeJEzgv0MNQ/i6V4ANH/gwssAzOvg4/OT8a9bUiNzNAdo9tLyev2yh?=
+ =?us-ascii?Q?BMeiFf1I7qcP9NYwX3sbU4uxC3MGNOZfEwa0tzUTYiN20yOeUL/FBLgM9+Z5?=
+ =?us-ascii?Q?vAmsgeQc5ErDkzd7Z+1GDvJxSpTqrlwTb5ERbDv8KCO4X0e1ZCW/6+IOLBE?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d1b:b0:3d0:4700:db0f with SMTP id
- e9e14a558f8ab-3d4419e6b1amr7443695ab.12.1741283847535; Thu, 06 Mar 2025
- 09:57:27 -0800 (PST)
-Date: Thu, 06 Mar 2025 09:57:27 -0800
-In-Reply-To: <6761bbbd.050a0220.29fcd0.0075.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c9e207.050a0220.15b4b9.004d.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in l2cap_connect_cfm
-From: syzbot <syzbot+e9abaabc441d3dd18735@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f39e481c-b6cf-469d-7ccf-08dd5cd865e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 17:57:44.8379
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR02MB7476
 
-syzbot has found a reproducer for the following issue on:
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, Fe=
+bruary 26, 2025 3:08 PM
+>=20
+> Introduce hv_result_to_string() for this purpose. This allows
+> hypercall failures to be debugged more easily with dmesg.
+>=20
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  drivers/hv/hv_common.c         | 65 ++++++++++++++++++++++++++++++++++
+>  drivers/hv/hv_proc.c           | 13 ++++---
+>  include/asm-generic/mshyperv.h |  1 +
+>  3 files changed, 74 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 9804adb4cc56..ce20818688fe 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -740,3 +740,68 @@ void hv_identify_partition_type(void)
+>  			pr_crit("Hyper-V: CONFIG_MSHV_ROOT not enabled!\n");
+>  	}
+>  }
+> +
+> +const char *hv_result_to_string(u64 hv_status)
+> +{
+> +	switch (hv_result(hv_status)) {
+> +	case HV_STATUS_SUCCESS:
+> +		return "HV_STATUS_SUCCESS";
+> +	case HV_STATUS_INVALID_HYPERCALL_CODE:
+> +		return "HV_STATUS_INVALID_HYPERCALL_CODE";
+> +	case HV_STATUS_INVALID_HYPERCALL_INPUT:
+> +		return "HV_STATUS_INVALID_HYPERCALL_INPUT";
+> +	case HV_STATUS_INVALID_ALIGNMENT:
+> +		return "HV_STATUS_INVALID_ALIGNMENT";
+> +	case HV_STATUS_INVALID_PARAMETER:
+> +		return "HV_STATUS_INVALID_PARAMETER";
+> +	case HV_STATUS_ACCESS_DENIED:
+> +		return "HV_STATUS_ACCESS_DENIED";
+> +	case HV_STATUS_INVALID_PARTITION_STATE:
+> +		return "HV_STATUS_INVALID_PARTITION_STATE";
+> +	case HV_STATUS_OPERATION_DENIED:
+> +		return "HV_STATUS_OPERATION_DENIED";
+> +	case HV_STATUS_UNKNOWN_PROPERTY:
+> +		return "HV_STATUS_UNKNOWN_PROPERTY";
+> +	case HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE:
+> +		return "HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE";
+> +	case HV_STATUS_INSUFFICIENT_MEMORY:
+> +		return "HV_STATUS_INSUFFICIENT_MEMORY";
+> +	case HV_STATUS_INVALID_PARTITION_ID:
+> +		return "HV_STATUS_INVALID_PARTITION_ID";
+> +	case HV_STATUS_INVALID_VP_INDEX:
+> +		return "HV_STATUS_INVALID_VP_INDEX";
+> +	case HV_STATUS_NOT_FOUND:
+> +		return "HV_STATUS_NOT_FOUND";
+> +	case HV_STATUS_INVALID_PORT_ID:
+> +		return "HV_STATUS_INVALID_PORT_ID";
+> +	case HV_STATUS_INVALID_CONNECTION_ID:
+> +		return "HV_STATUS_INVALID_CONNECTION_ID";
+> +	case HV_STATUS_INSUFFICIENT_BUFFERS:
+> +		return "HV_STATUS_INSUFFICIENT_BUFFERS";
+> +	case HV_STATUS_NOT_ACKNOWLEDGED:
+> +		return "HV_STATUS_NOT_ACKNOWLEDGED";
+> +	case HV_STATUS_INVALID_VP_STATE:
+> +		return "HV_STATUS_INVALID_VP_STATE";
+> +	case HV_STATUS_NO_RESOURCES:
+> +		return "HV_STATUS_NO_RESOURCES";
+> +	case HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED:
+> +		return "HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED";
+> +	case HV_STATUS_INVALID_LP_INDEX:
+> +		return "HV_STATUS_INVALID_LP_INDEX";
+> +	case HV_STATUS_INVALID_REGISTER_VALUE:
+> +		return "HV_STATUS_INVALID_REGISTER_VALUE";
+> +	case HV_STATUS_OPERATION_FAILED:
+> +		return "HV_STATUS_OPERATION_FAILED";
+> +	case HV_STATUS_TIME_OUT:
+> +		return "HV_STATUS_TIME_OUT";
+> +	case HV_STATUS_CALL_PENDING:
+> +		return "HV_STATUS_CALL_PENDING";
+> +	case HV_STATUS_VTL_ALREADY_ENABLED:
+> +		return "HV_STATUS_VTL_ALREADY_ENABLED";
+> +	default:
+> +		return "Unknown";
+> +	};
+> +	return "Unknown";
+> +}
+> +EXPORT_SYMBOL_GPL(hv_result_to_string);
+> +
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index 2fae18e4f7d2..8fc30f509fa7 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -87,7 +87,8 @@ int hv_call_deposit_pages(int node, u64 partition_id, u=
+32
+> num_pages)
+>  				     page_count, 0, input_page, NULL);
+>  	local_irq_restore(flags);
+>  	if (!hv_result_success(status)) {
+> -		pr_err("Failed to deposit pages: %lld\n", status);
+> +		pr_err("%s: Failed to deposit pages: %s\n", __func__,
+> +		       hv_result_to_string(status));
+>  		ret =3D hv_result_to_errno(status);
+>  		goto err_free_allocations;
+>  	}
+> @@ -137,8 +138,9 @@ int hv_call_add_logical_proc(int node, u32 lp_index, =
+u32 apic_id)
+>=20
+>  		if (hv_result(status) !=3D HV_STATUS_INSUFFICIENT_MEMORY) {
+>  			if (!hv_result_success(status)) {
+> -				pr_err("%s: cpu %u apic ID %u, %lld\n", __func__,
+> -				       lp_index, apic_id, status);
+> +				pr_err("%s: cpu %u apic ID %u, %s\n",
+> +				       __func__, lp_index, apic_id,
+> +				       hv_result_to_string(status));
+>  				ret =3D hv_result_to_errno(status);
+>  			}
+>  			break;
+> @@ -179,8 +181,9 @@ int hv_call_create_vp(int node, u64 partition_id, u32=
+ vp_index,
+> u32 flags)
+>=20
+>  		if (hv_result(status) !=3D HV_STATUS_INSUFFICIENT_MEMORY) {
+>  			if (!hv_result_success(status)) {
+> -				pr_err("%s: vcpu %u, lp %u, %lld\n", __func__,
+> -				       vp_index, flags, status);
+> +				pr_err("%s: vcpu %u, lp %u, %s\n",
+> +				       __func__, vp_index, flags,
+> +				       hv_result_to_string(status));
+>  				ret =3D hv_result_to_errno(status);
+>  			}
+>  			break;
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyper=
+v.h
+> index b13b0cda4ac8..dc4729dba9ef 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -298,6 +298,7 @@ static inline int cpumask_to_vpset_skip(struct hv_vps=
+et *vpset,
+>  	return __cpumask_to_vpset(vpset, cpus, func);
+>  }
+>=20
+> +const char *hv_result_to_string(u64 hv_status);
+>  int hv_result_to_errno(u64 status);
+>  void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
+>  bool hv_is_hyperv_initialized(void);
+> --
+> 2.34.1
 
-HEAD commit:    f66d6acccbc0 Merge tag 'x86_urgent_for_v6.12' of git://git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1666b2e8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca2f08f822652bd0
-dashboard link: https://syzkaller.appspot.com/bug?extid=e9abaabc441d3dd18735
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+I've read through the other comments on this patch. I definitely vote
+for outputting both the hex code along with a string translation, which
+could be empty if the hex code is unrecognized by the translation code.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I can see providing something like hv_hvcall_err() as Nuno proposed, since
+that standardizes the text output. But I wonder if it would be too limiting=
+.
+For example, in the changes above, both hv_call_add_logical_proc() and
+hv_call_create_vp() output additional debugging values, which we probably
+don't want to give up.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5b28ec7d6aaa/disk-f66d6acc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1999546fff71/vmlinux-f66d6acc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ef848d42ab19/bzImage-f66d6acc.xz
+Lastly, from an implementation standpoint, rather than using a big
+switch statement, build a static array of entries that each have the
+hex code and string equivalent. Then hv_result_to_string() loops through
+the array looking for a match. This won't be any slower than the big switch
+statement. I've seen other places in the kernel where string names are
+output, and looking up the strings in a static array is the typical approac=
+h.
+You'll have to work through the details and see if avoids being too clumsy,
+but I think it will be OK.
 
-Bisection is inconclusive: the issue happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=147adb78580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=167adb78580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=127adb78580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e9abaabc441d3dd18735@syzkaller.appspotmail.com
-
-kobject: kobject_add_internal failed for hci5:201 with -EEXIST, don't try to register things with the same name in the same directory.
-Bluetooth: hci5: failed to register connection device
-==================================================================
-BUG: KASAN: slab-use-after-free in l2cap_conn_ready net/bluetooth/l2cap_core.c:1619 [inline]
-BUG: KASAN: slab-use-after-free in l2cap_connect_cfm+0xdbe/0xf80 net/bluetooth/l2cap_core.c:7278
-Read of size 8 at addr ffff8880780f0480 by task kworker/u9:3/5950
-
-CPU: 0 UID: 0 PID: 5950 Comm: kworker/u9:3 Not tainted 6.12.0-rc7-syzkaller-00216-gf66d6acccbc0 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
-Workqueue: hci5 hci_rx_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0xc3/0x620 mm/kasan/report.c:488
- kasan_report+0xd9/0x110 mm/kasan/report.c:601
- l2cap_conn_ready net/bluetooth/l2cap_core.c:1619 [inline]
- l2cap_connect_cfm+0xdbe/0xf80 net/bluetooth/l2cap_core.c:7278
- hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
- le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
- hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
- hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
- hci_event_func net/bluetooth/hci_event.c:7440 [inline]
- hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
- hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
- process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
- process_scheduled_works kernel/workqueue.c:3310 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
- kthread+0x2c4/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-Allocated by task 5950:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
- kmalloc_noprof include/linux/slab.h:878 [inline]
- kzalloc_noprof include/linux/slab.h:1014 [inline]
- l2cap_chan_create+0x44/0x920 net/bluetooth/l2cap_core.c:449
- l2cap_sock_alloc.constprop.0+0xf3/0x180 net/bluetooth/l2cap_sock.c:1886
- l2cap_sock_new_connection_cb+0x101/0x240 net/bluetooth/l2cap_sock.c:1468
- l2cap_connect_cfm+0x4cc/0xf80 net/bluetooth/l2cap_core.c:7261
- hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
- le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
- hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
- hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
- hci_event_func net/bluetooth/hci_event.c:7440 [inline]
- hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
- hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
- process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
- process_scheduled_works kernel/workqueue.c:3310 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
- kthread+0x2c4/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Freed by task 6070:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:230 [inline]
- slab_free_hook mm/slub.c:2342 [inline]
- slab_free mm/slub.c:4579 [inline]
- kfree+0x14f/0x4b0 mm/slub.c:4727
- l2cap_chan_destroy net/bluetooth/l2cap_core.c:495 [inline]
- kref_put include/linux/kref.h:65 [inline]
- l2cap_chan_put+0x216/0x2c0 net/bluetooth/l2cap_core.c:519
- l2cap_sock_cleanup_listen+0x4d/0x2a0 net/bluetooth/l2cap_sock.c:1451
- l2cap_sock_release+0x5c/0x210 net/bluetooth/l2cap_sock.c:1411
- __sock_release+0xb3/0x270 net/socket.c:658
- sock_close+0x1c/0x30 net/socket.c:1426
- __fput+0x3f9/0xb60 fs/file_table.c:431
- task_work_run+0x151/0x250 kernel/task_work.c:239
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xda/0x250 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff8880780f0000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 1152 bytes inside of
- freed 2048-byte region [ffff8880780f0000, ffff8880780f0800)
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff8880780f6000 pfn:0x780f0
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b042000 ffffea0001292c00 0000000000000002
-raw: ffff8880780f6000 0000000080080003 00000001f5000000 0000000000000000
-head: 00fff00000000040 ffff88801b042000 ffffea0001292c00 0000000000000002
-head: ffff8880780f6000 0000000080080003 00000001f5000000 0000000000000000
-head: 00fff00000000003 ffffea0001e03c01 ffffffffffffffff 0000000000000000
-head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 2965, tgid 2965 (kworker/u8:7), ts 97728781507, free_ts 97577158223
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1556
- prep_new_page mm/page_alloc.c:1564 [inline]
- get_page_from_freelist+0xfce/0x2f80 mm/page_alloc.c:3474
- __alloc_pages_noprof+0x223/0x25a0 mm/page_alloc.c:4751
- alloc_pages_mpol_noprof+0x2c9/0x610 mm/mempolicy.c:2265
- alloc_slab_page mm/slub.c:2412 [inline]
- allocate_slab mm/slub.c:2578 [inline]
- new_slab+0x2c9/0x410 mm/slub.c:2631
- ___slab_alloc+0xdac/0x1880 mm/slub.c:3818
- __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3908
- __slab_alloc_node mm/slub.c:3961 [inline]
- slab_alloc_node mm/slub.c:4122 [inline]
- __do_kmalloc_node mm/slub.c:4263 [inline]
- __kmalloc_node_track_caller_noprof+0x355/0x430 mm/slub.c:4283
- kmalloc_reserve+0xef/0x2c0 net/core/skbuff.c:609
- __alloc_skb+0x164/0x380 net/core/skbuff.c:678
- alloc_skb include/linux/skbuff.h:1322 [inline]
- nlmsg_new include/net/netlink.h:1015 [inline]
- rtmsg_ifinfo_build_skb+0x81/0x280 net/core/rtnetlink.c:4099
- unregister_netdevice_many_notify+0x983/0x1e50 net/core/dev.c:11411
- cleanup_net+0x58c/0xb40 net/core/net_namespace.c:621
- process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
- process_scheduled_works kernel/workqueue.c:3310 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
- kthread+0x2c4/0x3a0 kernel/kthread.c:389
-page last free pid 2965 tgid 2965 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1127 [inline]
- free_unref_page+0x661/0x1080 mm/page_alloc.c:2657
- __folio_put+0x32a/0x450 mm/swap.c:112
- kvfree+0x47/0x50 mm/util.c:701
- unix_net_exit+0x61/0xb0 net/unix/af_unix.c:3708
- ops_exit_list+0xb3/0x180 net/core/net_namespace.c:173
- cleanup_net+0x5b7/0xb40 net/core/net_namespace.c:626
- process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
- process_scheduled_works kernel/workqueue.c:3310 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
- kthread+0x2c4/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Memory state around the buggy address:
- ffff8880780f0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880780f0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880780f0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff8880780f0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880780f0580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-==================================================================
-BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-BUG: KASAN: wild-memory-access in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
-BUG: KASAN: wild-memory-access in l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
-BUG: KASAN: wild-memory-access in l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
-BUG: KASAN: wild-memory-access in l2cap_connect_cfm+0x7eb/0xf80 net/bluetooth/l2cap_core.c:7278
-Read of size 4 at addr deacfffffffffc8c by task kworker/u9:3/5950
-
-CPU: 0 UID: 0 PID: 5950 Comm: kworker/u9:3 Tainted: G    B              6.12.0-rc7-syzkaller-00216-gf66d6acccbc0 #0
-Tainted: [B]=BAD_PAGE
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
-Workqueue: hci5 hci_rx_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- kasan_report+0xd9/0x110 mm/kasan/report.c:601
- check_region_inline mm/kasan/generic.c:183 [inline]
- kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
- l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
- l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
- l2cap_connect_cfm+0x7eb/0xf80 net/bluetooth/l2cap_core.c:7278
- hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
- le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
- hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
- hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
- hci_event_func net/bluetooth/hci_event.c:7440 [inline]
- hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
- hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
- process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
- process_scheduled_works kernel/workqueue.c:3310 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
- kthread+0x2c4/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-==================================================================
-Oops: general protection fault, probably for non-canonical address 0xfbd59bffffffff91: 0000 [#1] PREEMPT SMP KASAN NOPTI
-KASAN: maybe wild-memory-access in range [0xdeacfffffffffc88-0xdeacfffffffffc8f]
-CPU: 0 UID: 0 PID: 5950 Comm: kworker/u9:3 Tainted: G    B              6.12.0-rc7-syzkaller-00216-gf66d6acccbc0 #0
-Tainted: [B]=BAD_PAGE
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
-Workqueue: hci5 hci_rx_work
-RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
-RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
-RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
-RIP: 0010:l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
-RIP: 0010:l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
-RIP: 0010:l2cap_connect_cfm+0x7f2/0xf80 net/bluetooth/l2cap_core.c:7278
-Code: 80 fb ff ff 49 39 c5 0f 84 29 01 00 00 e8 26 a0 6e f7 49 8d 6f 0c be 04 00 00 00 48 89 ef e8 b5 80 cf f7 48 89 e8 48 c1 e8 03 <0f> b6 14 18 48 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 c5
-RSP: 0018:ffffc90003e0f878 EFLAGS: 00010213
-RAX: 1bd59fffffffff91 RBX: dffffc0000000000 RCX: ffffffff814e821f
-RDX: ffff888030808000 RSI: ffffffff81ee2f8e RDI: 0000000000000007
-RBP: deacfffffffffc8c R08: 0000000000000007 R09: 0000000000000000
-R10: 0000000000000000 R11: 3d3d3d3d3d3d3d3d R12: ffff88804779003b
-R13: ffff88806c83d2c0 R14: 0000000000000080 R15: deacfffffffffc80
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055558a5ef5c8 CR3: 000000007bf02000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
- le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
- hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
- hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
- hci_event_func net/bluetooth/hci_event.c:7440 [inline]
- hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
- hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
- process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
- process_scheduled_works kernel/workqueue.c:3310 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
- kthread+0x2c4/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
-RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
-RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
-RIP: 0010:l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
-RIP: 0010:l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
-RIP: 0010:l2cap_connect_cfm+0x7f2/0xf80 net/bluetooth/l2cap_core.c:7278
-Code: 80 fb ff ff 49 39 c5 0f 84 29 01 00 00 e8 26 a0 6e f7 49 8d 6f 0c be 04 00 00 00 48 89 ef e8 b5 80 cf f7 48 89 e8 48 c1 e8 03 <0f> b6 14 18 48 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 c5
-RSP: 0018:ffffc90003e0f878 EFLAGS: 00010213
-RAX: 1bd59fffffffff91 RBX: dffffc0000000000 RCX: ffffffff814e821f
-RDX: ffff888030808000 RSI: ffffffff81ee2f8e RDI: 0000000000000007
-RBP: deacfffffffffc8c R08: 0000000000000007 R09: 0000000000000000
-R10: 0000000000000000 R11: 3d3d3d3d3d3d3d3d R12: ffff88804779003b
-R13: ffff88806c83d2c0 R14: 0000000000000080 R15: deacfffffffffc80
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055558a5ef5c8 CR3: 000000007bf02000 CR4: 0000000000350ef0
-----------------
-Code disassembly (best guess), 4 bytes skipped:
-   0:	49 39 c5             	cmp    %rax,%r13
-   3:	0f 84 29 01 00 00    	je     0x132
-   9:	e8 26 a0 6e f7       	call   0xf76ea034
-   e:	49 8d 6f 0c          	lea    0xc(%r15),%rbp
-  12:	be 04 00 00 00       	mov    $0x4,%esi
-  17:	48 89 ef             	mov    %rbp,%rdi
-  1a:	e8 b5 80 cf f7       	call   0xf7cf80d4
-  1f:	48 89 e8             	mov    %rbp,%rax
-  22:	48 c1 e8 03          	shr    $0x3,%rax
-* 26:	0f b6 14 18          	movzbl (%rax,%rbx,1),%edx <-- trapping instruction
-  2a:	48 89 e8             	mov    %rbp,%rax
-  2d:	83 e0 07             	and    $0x7,%eax
-  30:	83 c0 03             	add    $0x3,%eax
-  33:	38 d0                	cmp    %dl,%al
-  35:	7c 08                	jl     0x3f
-  37:	84 d2                	test   %dl,%dl
-  39:	0f                   	.byte 0xf
-  3a:	85 c5                	test   %eax,%ebp
-
-
----
+Michael
