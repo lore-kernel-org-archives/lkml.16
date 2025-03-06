@@ -1,169 +1,110 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5C820E6F6
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AB520E710
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741266927; cv=none; b=YDFtpH6QEXzXxGEQrUbJYezVYky9yO721CxRt1Inl/g2nWGT+lBNh6+vSG9UbEhgyepzPeyR5HCvOkxPHdWPT1AuZCLcE+KANterl8jhhAnmhlzPJ/TR7TQKPd6Wig3mqlugAyfgsVPCIhNFEYumIGgnLuAItm3ilodQXQ1lNWQ=
+	t=1741266932; cv=none; b=XYG0hKYAtyBZJPjF/93XUbB4u73/PFEb1Q47Y6kKf5/UApKNxPNO+mtn3CfftuI9Dg/OI+yZQsS2sMZHw7m8QWjenD+VuAR62CGBMFtNWY31Geu9PcHLKrj1janT77akFvCvLjKh3WTwzlEQmFG/n5eiDioOWe8ULqkwVixklr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741266927; c=relaxed/simple;
-	bh=tuXAj8epHA1okuSh3jNGyyI9p2J9gO/ol36jpkgVrGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cgTeGuKvbTDR57GaSMTWr5ESfMPdPzUnGgeKTFrxXN7Bwf/8F+shOgSJsuO9/sa9A2pij+HV4C0PUqUV7xn1IRM5IWRagV3FF9iUwAfsXJY4e4ZAAoX/N8wECMqNc5lp8ar+m5XbDsgXnww0D0B4U+lIsOgIhyFJHD0AhHC86jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LmgtsH9d; arc=none smtp.client-ip=209.85.218.47
+	s=arc-20240116; t=1741266932; c=relaxed/simple;
+	bh=t9WUE4puJ3y/u1gPad4p78vEDZXVaqsDCLjaQIolUf8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lk5M/bxv5ERJgemo9WFNdHCsI5DluNAWOqM60Sxdwox8zn4qyAy1czYr6rvECgjFBIwUP8MM1ummWrNatDFe7rUFd0SaISLAEtRbJd4Mz2lURH1xpGe7cfhsnd8rQdfxEeN6s4xMY/WRGcAAt+4DN30TH+bUkiOr8UT3IyHa2q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MIeD1qum; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LmgtsH9d"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abf518748cbso119008666b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:15:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MIeD1qum"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43bbc8b7c65so7135475e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:15:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741266923; x=1741871723; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tkjipGCLl59HXX7zIHl0ZVIsR0Gq+aS61W9w8YQk4eA=;
-        b=LmgtsH9d2f0gIWB7aUwalJmvasY0JFbQFFl9IfH3XdJPcU7oLkvc87/VMJYF57YiZ0
-         osjSxAWEaAST2TQwvnqty47usGgv5/9tPmtw86LlWR4sD4aKWbg3VIFtPoGiPUGGIVHP
-         QVpWH83HIY8G2VpdauCMT8k3yh2/oeQK7iTskKa4VkuGFZ+MOoFTsmOyiCE9etXA2C1I
-         zk6pnaJ/OkAP+WPuUiOMFV8XGYnaahki5I6Dgj45ykp+TK/gkOvBn4iAw3mot/H0EcnF
-         uh5by/gnjlh604Io8GvLsZogWp5e4+EcyvKU3VKS/poWxEdjzvkiT4zY8tD1f+ddoHK2
-         MWyw==
+        d=suse.com; s=google; t=1741266929; x=1741871729; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XvqE0gdDd8D80g4QcmunzIAXwiMoEWGi2ibgkUreq8w=;
+        b=MIeD1qumAArSC7exNSs3ricWz+59+FCdxDfnEWtDCTePJDnI2b8j+IVFztpSUT+5o7
+         zU1OFfJ8wFcq9M3b3mAnLERCVtfIhOW3ajlyyxGCNAuPx6mV3Now0cD4vFzNjuD0KgOw
+         loU8sPfamk/6xZ0qp66b25HGUSPXODtHmwZhWgX8c08zAjb5FCwkMB8wJeaqWFsEGTem
+         eJU/JYPmSGBbIlp6FIGydP+Malk8xxCrc7tOFAp/ojh5fejmq0x9+9ox9zG7B1Ri7jqJ
+         MHWekudtOYYwzjDlNnuq5BM4l4TbNuusFD6kEFHL5qKRcTNFnEZsoGNAIDSFC2KifrVP
+         dW2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741266923; x=1741871723;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1741266929; x=1741871729;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tkjipGCLl59HXX7zIHl0ZVIsR0Gq+aS61W9w8YQk4eA=;
-        b=hWEfNSJmX43jj4HZZXOVgqRBZM4pQRamhIPZK2bS7mBHEMZlpE5B31IZOcXkG10n77
-         Gw9A0LIWbzPBjLWXMS+RErYa4E6mxMla7zHMJ5jokUKBEgCIRrd2JUfHmPLIBQRrkd/C
-         WIdWAnXMD/NrY5P5lsi/98HLBDyuON/5IO60kTLOUaXwiEs5hv5aeZ0DMgCSNbtZEHrH
-         H3ofAEuVU0TgQNswlfV/VhIXLTaRhxOLqkjKAws1qKkqDpd6brouy7wm+GpSiD2KP+Gx
-         07tED8p6dDygvY3W7b4qjgD7B3UkA6/dVrvcLn6ESLf63BFik+5XfdNGE71IWPwV2DSm
-         0d6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXWxx6qAxx8xzzYuKtfwn+FrEmx01jWuYZlI4UehpTdJI5XlgqGLarzgn7R7Uf1d7OPRa2r0YvY2QdBY7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpz+HZV9KiynxP2dLcpA8T4s7AUecuXOCIuef0LBw4gLmtl6kR
-	9FmvPBNAje4YaM0qwSO8yxrlm40W17ce+Sv7ZrlGE6KipSYxmJg+JIN3bioe807SaRdya88Vo0N
-	gj+6GXT8IBmumPZou9wfCiKnvloKtRVZAS9dWfg==
-X-Gm-Gg: ASbGncvZt6jzXsx7tpicp0Vpn1FWCsZ5XdV1UZZftZMXCmGjSksxuYQADBgsd3/UCgl
-	dyuMIIqlW9hV7bUCDJ42wPaIT5IOSlCSqze1yHDOJvHgbPvcz/VH+qBPMpmjMwzUXmoiZwKPXgq
-	IgV5QCmNnXExLy4Mlw5KdHti8k
-X-Google-Smtp-Source: AGHT+IH1nTf2aYG2MsKHGRRVysAJUQZtUWYOVVYk8ihsB5hOgO5e2gNmewj2gMfrlyivRtXUsTVQNcE00VH9S1lvD9E=
-X-Received: by 2002:a17:907:da9:b0:abf:497d:a23d with SMTP id
- a640c23a62f3a-ac20db01cbbmr767637566b.53.1741266923049; Thu, 06 Mar 2025
- 05:15:23 -0800 (PST)
+        bh=XvqE0gdDd8D80g4QcmunzIAXwiMoEWGi2ibgkUreq8w=;
+        b=KhENjMBdt2aC/rwNLVHCvzdrsb2EFe0QghJcYnaVXmJs9K6/QkBBM+AA2xekFK1h77
+         EdqpV0RzgV0KOKs5ENujHl2AjgvemF/hjusbS8OLLZWmFuSTeK8Vsgj+ZiPQgSSt11pv
+         7PY9PstA7LBXzOos4pYGHAAkymqYE6HRyQ7NSE35AZep63PTTKa7xMGREjLZrMMQAhW6
+         hAqa3CLNDyRUqwQbAbt1CYLBJNUuGSA67u7Ked22/edXGsoU1Sk1mHAao9xv7rT6pMGB
+         LZqeAXrSgBeuH0zRLX+Me9MK+/Ovp7TPGPPvg3u0ye0kC//l2/aXLDmqDKZevm53wkGW
+         Jmlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXR52cf1knEhioDLLQCdGZcOR1lh1wRBcwAFO4u6IYptcOsbJhq0mgOtr5PgIKaq/4lEJGu2EUKR606HOI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGcF9nlQdI/g7ikuYxb37sXLNDd4szflDEbeswOCO7cmaChAE9
+	CstFbADkpQJ2sv/sFsJyMfdRVP+HXrrStHKlpVoOYHBVRTmShvdMR+zmq7Midb0=
+X-Gm-Gg: ASbGncvIjxSq1coYGKC380VDRMKGG5YCYE8LSE6DYQzrHJy0kA2AlcT8gx+shFi3/+b
+	V+JC4ngf9AM/fxK6N+gsTueMUZxF2N+dqtHICy3o0WtOqBf+KbIb5hSYiROZAeaN8LXkGoRu2e3
+	JGhRmdGcl9BIydi48wQfLNYhL3ADE5DiiwYHKLAgu/gzsbvhHTTl0VdSZ64v6cusIfPVV+MfyI9
+	Oq8ob7FA1g6reaqK575BQX0d19TFOuSaWZ2QDEY6OBOYYvTa9L9fODJGHRPGYQXS/DCBq7J14hF
+	vuefopGpJixPj9t6Flei7VAzJPyRb8OGS4dIvhdTCiH+uctQ
+X-Google-Smtp-Source: AGHT+IGN9G2IHEnZL3cvPtt7JMOOBNRM/b0RxlvzKWb5wGb0QePNN3COkLKHXonQaY7+rv3elRBeMQ==
+X-Received: by 2002:a05:600c:4f11:b0:439:916a:b3db with SMTP id 5b1f17b1804b1-43bd292fee0mr67965375e9.6.1741266928699;
+        Thu, 06 Mar 2025 05:15:28 -0800 (PST)
+Received: from dhcp161.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd8c327fsm19704485e9.13.2025.03.06.05.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 05:15:27 -0800 (PST)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] module: Make .static_call_sites read-only after init
+Date: Thu,  6 Mar 2025 14:13:51 +0100
+Message-ID: <20250306131430.7016-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304171403.571335-1-neelx@suse.com> <20250305103235.719210-1-neelx@suse.com>
- <20250306082730.GG5777@twin.jikos.cz>
-In-Reply-To: <20250306082730.GG5777@twin.jikos.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Thu, 6 Mar 2025 14:15:10 +0100
-X-Gm-Features: AQ5f1JruieyZRQ8kZf1KT75C5t_eIN5DR3-4IzvxJDsf5PbdFyekwC_gnrW5kX4
-Message-ID: <CAPjX3FeBVghdwQO8v+DGXzzFRcpfkHTprrpv=GtWbCPfyuZkmg@mail.gmail.com>
-Subject: Re: [PATCH v2] btrfs/defrag: implement compression levels
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	Nick Terrell <terrelln@fb.com>, Qu Wenruo <wqu@suse.com>, linux-btrfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 6 Mar 2025 at 09:27, David Sterba <dsterba@suse.cz> wrote:
->
-> On Wed, Mar 05, 2025 at 11:32:34AM +0100, Daniel Vacek wrote:
-> > The zstd and zlib compression types support setting compression levels.
-> > Enhance the defrag interface to specify the levels as well.
-> >
-> > Signed-off-by: Daniel Vacek <neelx@suse.com>
-> > Reviewed-by: Qu Wenruo <wqu@suse.com>
-> > ---
-> > v2: Fixed the commit message and added an explicit level range check.
->
-> Where is the level range check? It silently clamps the range but this is
-> not a check. What I had in mind was to return -EINVAL if the level is
-> out of range.
+Section .static_call_sites holds data structures that need to be sorted and
+processed only at module load time. The section is never modified
+afterwards. Make it therefore read-only after module initialization to
+avoid any (non-)accidental modifications.
 
-I see. For some reason I still had the clamping on my mind. I'll send
-a v3 with this.
+Changes since v1 [1]:
+* Rebase the patches. The kernel now has commit 110b1e070f1d ("module:
+  Don't fail module loading when setting ro_after_init section RO failed")
+  which addresses a previous problem with handling ro_after_init sections.
 
-> > @@ -1376,10 +1377,21 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
-> >               return -EINVAL;
-> >
-> >       if (do_compress) {
-> > -             if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
-> > -                     return -EINVAL;
-> > -             if (range->compress_type)
-> > -                     compress_type = range->compress_type;
-> > +             if (range->flags & BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL) {
-> > +                     if (range->compress.type >= BTRFS_NR_COMPRESS_TYPES)
-> > +                             return -EINVAL;
-> > +                     if (range->compress.type) {
-> > +                             compress_type = range->compress.type;
-> > +                             compress_level= range->compress.level;
->
-> Please put spaces around binary operators, so " = ".
->
-> > +                             compress_level= btrfs_compress_set_level(compress_type,
-> > +                                                                      compress_level);
->
-> This should check if the test is in the range.
->
-> My idea was to add helper like this
->
-> bool btrfs_compress_level_valid(type, level) {
->         ... ops = btrfs_compress_op[type];
->
->         if (level < ops->min_type || level > ops->max_type)
->                 return false;
-> }
-> > +                     }
-> > +             } else {
-> > +                     if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
-> > +                             return -EINVAL;
-> > +                     if (range->compress_type)
-> > +                             compress_type = range->compress_type;
-> > +             }
-> >       }
-> >
-> >       if (extent_thresh == 0)
-> >       if (ret)
-> > diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
-> > index d3b222d7af240..3540d33d6f50c 100644
-> > --- a/include/uapi/linux/btrfs.h
-> > +++ b/include/uapi/linux/btrfs.h
-> > @@ -615,7 +615,9 @@ struct btrfs_ioctl_clone_range_args {
-> >   */
-> >  #define BTRFS_DEFRAG_RANGE_COMPRESS 1
-> >  #define BTRFS_DEFRAG_RANGE_START_IO 2
-> > +#define BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL 4
-> >  #define BTRFS_DEFRAG_RANGE_FLAGS_SUPP        (BTRFS_DEFRAG_RANGE_COMPRESS |          \
-> > +                                      BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL |    \
-> >                                        BTRFS_DEFRAG_RANGE_START_IO)
-> >
-> >  struct btrfs_ioctl_defrag_range_args {
-> > @@ -643,7 +645,13 @@ struct btrfs_ioctl_defrag_range_args {
-> >        * for this defrag operation.  If unspecified, zlib will
-> >        * be used
-> >        */
-> > -     __u32 compress_type;
->
-> Please update the comment mentioning that the type + level are used when
-> the BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL flag is set.
->
-> > +     union {
-> > +             __u32 compress_type;
-> > +             struct {
-> > +                     __u8 type;
-> > +                     __s8 level;
-> > +             } compress;
-> > +     };
-> >
-> >       /* spare for later */
-> >       __u32 unused[4];
-> > --
-> > 2.47.2
-> >
+[1] https://lore.kernel.org/linux-modules/20241223093840.29417-1-petr.pavlu@suse.com/
+
+Petr Pavlu (3):
+  module: Constify parameters of module_enforce_rwx_sections()
+  module: Add a separate function to mark sections as read-only after
+    init
+  module: Make .static_call_sites read-only after init
+
+ kernel/module/internal.h   |  7 ++++--
+ kernel/module/main.c       | 18 +++------------
+ kernel/module/strict_rwx.c | 47 ++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 53 insertions(+), 19 deletions(-)
+
+
+base-commit: 848e076317446f9c663771ddec142d7c2eb4cb43
+-- 
+2.43.0
+
