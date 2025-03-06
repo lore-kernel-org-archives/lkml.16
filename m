@@ -1,244 +1,153 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6B41FC7F9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479121FAC52
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248816; cv=none; b=CWbYE5vtXbbqTpP0BXu88mfD5M1jKHhkC3KCTCtQk53gkkUNZLvzjqM//Km4FHkG1cLS7OusJmx9w5iVTHwoK9wANNSRkfcPl2uoLzkvMj91Ra7GN1gAAXUuqmMQ5t9PZiiuHTRI92k0ujbJMwvezaj2siTQKZetj9LzvVqyjmo=
+	t=1741248830; cv=none; b=SDJJNtCoo/gYNcFvb1EAX1AqtvkC+leZcvFIPpCE6++t/siFOD4w51YV1pN1HwNiwmi6GBJQGsde7Pprd+cuf/UkhfBIRazeVOszFvxw1NWrR6OzMywqWFMbBdvfNEXetDYmE0QoD30nY3QR8KA7iRUfDd5wieCtfuRh/5RMtqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248816; c=relaxed/simple;
-	bh=eUWsVZlYIjL3uAIwhBG07uNNCBfBviynwix7o2rDp44=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=O1ivvcPlf4jtivrTWsoj6RgXrSbwQiyelIdkYL/N7hOFFPXcrxZrW3LSzLjADuTPY27ZGrf1HINLG4HwTBYntCMIdChQO101/eheP0ip505+uPzjbGuwOynL6mQU7X8IMZUAFjxpp6dEoxL5wtyoMArGffahwM5u4MXCJ2HVOls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VuDXOzlj; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1741248830; c=relaxed/simple;
+	bh=RmZfOZv9mSU7muKmuICqF7kMncNlxjNLjpCX8r/rE20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZaJoF5ezyX4L4Ms4itXhGZ9Ab4f/G9p9aL8L+aFEhnyn26jvlSBIg9un4uJieOQP2Tx8Ig2ZzwD9Z0bZ3ow9ppyu6ZQb3pnq5i4uTT4lfcnbAsbXhUikU8I+TRKjoIT4tID8b8bZB0T+X8pZkQUlMEYJlOQWDujA+9OrRPyB4Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ZU6l3dcK; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VuDXOzlj"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250306081331epoutp040975efa09c81a494d958f7f7a2015e89~qKJGYQLr70806808068epoutp046
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:13:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250306081331epoutp040975efa09c81a494d958f7f7a2015e89~qKJGYQLr70806808068epoutp046
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741248811;
-	bh=Knqwjqi8GM+4dP/latZEf+wvPDK1ylOIsGOJ/pjBcKs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=VuDXOzljywT9rE+DTveaUSn7uB8cE+o57upwpdEKg8GP25T0odmG+QWbeiliYBJjM
-	 pF3AJbVKf0aFDPb+GxLY37N2gtizQoi6HAxO+AKe/T74XJXXEsv8XYZdnEqjb5wXYV
-	 9OHHbkDGF82fWw3akJNyEXexM0OLiA/IGvUPDaZM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250306081331epcas5p4262255b3e8a8503f816fb6d82a9b1c90~qKJF1jdSG2477724777epcas5p4T;
-	Thu,  6 Mar 2025 08:13:31 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z7hy139Hqz4x9Q7; Thu,  6 Mar
-	2025 08:13:29 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	AE.A6.19933.82959C76; Thu,  6 Mar 2025 17:13:28 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250306063546epcas5p388084f298ae5d55eab7fbbb7cc1db2d9~qIzvhmjmb0821708217epcas5p3e;
-	Thu,  6 Mar 2025 06:35:46 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250306063546epsmtrp183610b81ac1e5a41fa084533ed2e7dc3~qIzvgx2MP2210422104epsmtrp1k;
-	Thu,  6 Mar 2025 06:35:46 +0000 (GMT)
-X-AuditID: b6c32a4a-b87c770000004ddd-41-67c959281b3b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3B.4A.33707.14249C76; Thu,  6 Mar 2025 15:35:45 +0900 (KST)
-Received: from FDSFTE245 (unknown [107.122.81.20]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250306063545epsmtip1d4a3d8251fe06ce0f9469ed7fbe08272~qIzun50W40927409274epsmtip1W;
-	Thu,  6 Mar 2025 06:35:44 +0000 (GMT)
-From: "Aatif Mushtaq/Aatif Mushtaq" <aatif4.m@samsung.com>
-To: "'Vinod Koul'" <vkoul@kernel.org>
-Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<pankaj.dubey@samsung.com>, <aswani.reddy@samsung.com>
-In-Reply-To: 
-Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-Date: Thu, 6 Mar 2025 12:05:43 +0530
-Message-ID: <014701db8e61$fdd331d0$f9799570$@samsung.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ZU6l3dcK"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bdc607c3fso1794005e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 00:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1741248825; x=1741853625; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gLj5XWg7CIE0WfrqZc/tm6IHxyhmUxBPEQxl5xJpjbY=;
+        b=ZU6l3dcKui5HpnluuvhRRRr6ihSgUF+VqdR0xI0uWtKO63tVKVIP2EozrAMrYmJw7l
+         ugb1AHDTobNPgsPSC3x/sJE5euc+MjbK4GH8NPq8BubRCcDhLr/GvodttT4tbNSncbz8
+         iVamZgHbBS6yBpKk+cv0CMpOUA1QZLZ5OHrahrstxITZyCEtSnPvILnH4V6OsxPY1CVH
+         T+K8ButUBRnuxpovbVeHcWLxuLJZ8lcbE51jHDm3qxsOdJTnxOjOxaCBzHrIQRwFWm4u
+         cViGZqp/5Ieu3WbcpzYxmbUPuDoAxU4E51aIy/ACNR+Y16pUXoBKQegB0icyLdijUJMX
+         4TNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741248825; x=1741853625;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gLj5XWg7CIE0WfrqZc/tm6IHxyhmUxBPEQxl5xJpjbY=;
+        b=qxLb8S/yz0LA8Tf5PbxDoO0lIqJJkeQrupN1NAwkEsmBoLcSnwfjRPC6KW64ggpnwH
+         WstuK8E3DPdq4fBN/MwIFcEOC6Px5cXyV0yLbAJwvpXcFjnxHhJ00F+jX8AYhsc0V0ez
+         VHoQLUP+J+OmXkrp0z2VjCHZ/QOjU1F081ewvN0WkPMkuoP6AkZdSso3hQQqLSAnaJ9B
+         ktJrEzrWDLdZGHxS+IoyhVqQ7Dr3ZcpPCHVgrEIn+p7IuF/pM4CuS6xfbGI7xDxlzQou
+         3CxOu0w7iaaX1gZJQRrC6PfwAeoBQ1fawfl7NsrI5pFqVTacSJyQomYr7BI0kFkQjgJR
+         GxZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJxHWngmo2Hk08QdHpfuHuajDUL0lhKtnZvDcgrVmPGWWPVLKh7bh40p9Yx7WcvdYZXXucVNgsaI/7Ueg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9iuMO8m66HxwAyTmwjPzwy9iyT43ayuNatcPsuuJkljjclbzP
+	yXMSZFGCcoHL/aeLYdObZtg8JDjMoQWA57FQyG1LylatW7cIpB8TBD6zFS1/ENg=
+X-Gm-Gg: ASbGncvnVkuRM2tl6uHp1BbNAx93L/BUNpH1lnehcLjpPu0mQ8z1OKRdMUSMieK2UlD
+	zdL2Ale2zV5Fd639dLcyyI7tW9shDbgd5ymkdJDOoboQ81r0i+Vg+lSmUx8d1hCfcjEsFaklv6X
+	kNf7QpymRYSE8dmpj1m7R4QemMM/bEvbFK49mPj52i1Jwj0JanNSptszvUkgvkxkRNrCXC1bGES
+	4FXFF4yhu1EJcs0m1kmjH252/2EduN7C/ySMte10QvS7D0IDxNGROGGnIgFqacfLOYQdJUdF3/N
+	QzU24zDhxBuZJA6NNcSgZNxmsyrzP+/EJ4lUMEqoShW0TcWOy0/G7mL2HEWTe7QKsS/EXNk5Xw=
+	=
+X-Google-Smtp-Source: AGHT+IEizEhonB9j6mrELEVT2fWpqMYrBXgXdwXsHsJznxRDUYEH+hFr9DD372KDSR8Qo+hFwnpfNA==
+X-Received: by 2002:a05:600c:198f:b0:43b:c309:da40 with SMTP id 5b1f17b1804b1-43bd294de7dmr48473505e9.4.1741248825382;
+        Thu, 06 Mar 2025 00:13:45 -0800 (PST)
+Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c019557sm1262734f8f.50.2025.03.06.00.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 00:13:44 -0800 (PST)
+Date: Thu, 6 Mar 2025 09:13:43 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	cleger@rivosinc.com, alex@ghiti.fr, Anup Patel <apatel@ventanamicro.com>, 
+	corbet@lwn.net
+Subject: Re: [PATCH v3 0/8] riscv: Unaligned access speed probing fixes and
+ skipping
+Message-ID: <20250306-3f25ee3d4686442bd215a0fa@orel>
+References: <20250304120014.143628-10-ajones@ventanamicro.com>
+ <Z8jU2i5d3e4Dv4vk@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFsIHTrWqAe9Pu9L3iNOvGTrR8WTgG4P+QRAcvczKUCj5EGvbQKqHTggAfgiMA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjk+LIzCtJLcpLzFFi42LZdlhTU1cj8mS6wZ8nYhaHNm9lt1g99S+r
-	xeVdc9gsFm39wm6x884JZgdWj02rOtk8+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUzL91W
-	yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
-	I7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITvjfeMtpoLHGhXzTt5lamBco9DF
-	yMkhIWAisfjtGdYuRi4OIYHdjBJtvz6xQTifGCWmbFrADOdcmLqVCaZlYsclqMRORomTs7+y
-	QDjPGSX+r+5iA6liE7CSOP9rH5gtIqAqseXJAyCbg4NZoFJiyytNEJNTgFdiwj9rkAphAReJ
-	k+f+gFWzCKhIvGk4yApi8wpYSky83MkGYQtKnJz5hAXEZhaQl9j+dg4zxD0KEj+fLmOF2OQn
-	8ezPUXaIGnGJoz97wO6UEPjKLvHl1RZ2iAYXiWXfe6CahSVeHYeJS0m87G+DspMlbr7fB2Xn
-	SExYuBrKtpc4cGUOC8QrmhLrd+lDhGUlpp5axwSxl0+i9/cTaFjxSuyYB2MrSax538cGYUtI
-	/Dt4knECo9IsJK/NQvLaLCQvzELYtoCRZRWjZGpBcW56arFpgVFeajk8vpPzczcxghOkltcO
-	xocPPugdYmTiYDzEKMHBrCTCe9HvZLoQb0piZVVqUX58UWlOavEhRlNgeE9klhJNzgem6LyS
-	eEMTSwMTMzMzE0tjM0Mlcd7mnS3pQgLpiSWp2ampBalFMH1MHJxSDUy6xm+mvLy74Zd/sMnW
-	tYkP2kpN0g8sD8x/kKnO4Wm97qn77+c9j1bNuGKwKfzGVOYpTXO5eP2O/dnX/sR60ztF81ln
-	35x5XhrfaX72r+C6XQdvfN9j/+R1T1fFi8pulYMBz6PD2z1uL5rls1lgqbSpmR7bRJvqQ0tN
-	XKpnSq5q1XmTf0Jw2XXf9qv3E37G1nUf1mUTZmoSP7zRaOKa6R770uL/5PeunfNr3q7zZywf
-	bUvrvJhkviDjx/s1As++W/U/jnmUY9n74W+NdvCUzDsOLD/PN4Tqffze11rk6iCSJ2neuuV8
-	60K2VsfpPUvkX93XrJosuuwaSzq7IfN15VPLF9WJXtj1edP0y1fTLIxrlFiKMxINtZiLihMB
-	TpaQvBkEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsWy7bCSnK6j08l0gyMHzCwObd7KbrF66l9W
-	i8u75rBZLNr6hd1i550TzA6sHptWdbJ59G1ZxejxeZNcAHMUl01Kak5mWWqRvl0CV8b7xltM
-	BY81KuadvMvUwLhGoYuRk0NCwERiYsclZhBbSGA7o8TLwwYQcQmJ5s5GJghbWGLlv+fsXYxc
-	QDVPGSVuHP4BlmATsJI4/2sfG4gtIqAqseXJAzCbWaBW4sGia0wQDZcZJV697AFKcHBwCvBK
-	TPhnDVIjLOAicfLcH7B6FgEViTcNB1lBbF4BS4mJlzvZIGxBiZMzn7CAtDIL6Em0bWSEGC8v
-	sf3tHGaI2xQkfj5dxgpxgp/Esz9H2SFqxCWO/uxhnsAoPAvJpFkIk2YhmTQLSccCRpZVjKKp
-	BcW56bnJBYZ6xYm5xaV56XrJ+bmbGMGRoRW0g3HZ+r96hxiZOBgPMUpwMCuJ8L4+dTxdiDcl
-	sbIqtSg/vqg0J7X4EKM0B4uSOK9yTmeKkEB6YklqdmpqQWoRTJaJg1OqgWnCkRDxV2/yV0le
-	vOdyjvmZu9tD8ZpAz9AHwReqcvn6v3V9jA9cFTH1WUq/gu7O7Z7r01oc+tUcDhz+Fh+f9fCc
-	0inJaROLX+nzHj3z+lycxLRpHlGNNbkBN/uFw7aKzPO5IRx0ojX9JMeP5DVf/+62+/P8Tc4M
-	zh1nWD7nLhDPTOz/xfZ3RsqRhFPyzLN4zD9Uv/DV2jP93L/Fi2636W1RK/338EZqguw7N/Oi
-	T8bZEjd9/T+n/JGamWEa6+Ij1VFWvmBtwKWi4lubTeJTmZ07VWU+Xvu5O+uGX9O1m+WMelx1
-	USerCp/eaOMz2qYjyn/tyTNe7gkf9uSfmqL4TuHEZw72vme9bMmHqg9UVyixFGckGmoxFxUn
-	AgBhg6cq+wIAAA==
-X-CMS-MailID: 20250306063546epcas5p388084f298ae5d55eab7fbbb7cc1db2d9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
-References: <20250210061915.26218-1-aatif4.m@samsung.com>
-	<CGME20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc@epcas5p4.samsung.com>
-	<20250210061915.26218-2-aatif4.m@samsung.com> <Z8Ab3VcAXf5z7UqE@vaman> 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8jU2i5d3e4Dv4vk@ghost>
 
-
-
-> -----Original Message-----
-> From: Aatif Mushtaq/Aatif Mushtaq <aatif4.m@samsung.com>
-> Sent: 28 February 2025 15:03
-> To: 'Vinod Koul' <vkoul@kernel.org>
-> Cc: 'dmaengine@vger.kernel.org' <dmaengine@vger.kernel.org>; 'linux-
-> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>;
-> 'pankaj.dubey@samsung.com' <pankaj.dubey@samsung.com>;
-> 'aswani.reddy@samsung.com' <aswani.reddy@samsung.com>
-> Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
+On Wed, Mar 05, 2025 at 02:48:58PM -0800, Charlie Jenkins wrote:
+> On Tue, Mar 04, 2025 at 01:00:15PM +0100, Andrew Jones wrote:
+> > The first six patches of this series are fixes and cleanups of the
+> > unaligned access speed probing code. The next patch introduces a
+> > kernel command line option that allows the probing to be skipped.
+> > This command line option is a different approach than Jesse's [1].
+> > [1] takes a cpu-list for a particular speed, supporting heterogeneous
+> > platforms. With this approach, the kernel command line should only
+> > be used for homogeneous platforms. [1] also only allowed 'fast' and
+> > 'slow' to be selected. This parameter also supports 'unsupported',
+> > which could be useful for testing code paths gated on that. The final
+> > patch adds the documentation.
 > 
-> 
-> 
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: 27 February 2025 13:32
-> > To: Aatif Mushtaq <aatif4.m@samsung.com>
-> > Cc: dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > pankaj.dubey@samsung.com; aswani.reddy@samsung.com
-> > Subject: Re: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-> >
-> > On 10-02-25, 11:49, Aatif Mushtaq wrote:
-> > > Add a new dma engine API to support 2D DMA operations.
-> > > The API will be used to get the descriptor for 2D transfer based on
-> > > the 16-bit immediate to define the stride length between
-> > > consecuitive source address or destination address after every DMA
-> > > load and store instruction is processed.
-> >
-> > Why should we define a new API for this...? Why not use the sg or
-> > interleaved api for this?
-> >
-> 
-> Thanks for pointing out, interleaved API can be used for this.
-> I will make the change
-> 
+> Why constrain the command line option to homogeneous platforms?
 
-While trying to make the change I realised that sg and interleaved
-APIs cannot be used for our use case.
-Interleaved API is used to transfer data from non-contiguous
-buffer to non-contiguous buffer and sg API is used to transfer 
-non-contiguous buffer to contiguous buffer but both the APIs work 
-on multiple data chunks where each chunk has its individual attributes 
-and there is a tx descriptor for each data chunk.
-But in our case we have single tx descriptor to increment the source or
-destination after every DMA LOAD and STORE operation till the desired
-length of transfer is achieved, which means we don't have multiple data
-chunks which is required in case of interleaved and sg.
-The use case is to do memory to memory copy but not in a linear way,
-such that we can define a gap between each burst.
+Based on feedback at the last Plumber's, we've decided not to go out of
+our way to support heterogeneous platforms unless they start to
+materialize. With that in mind, and the fact that heterogeneous platforms
+can use the probing mechanism instead of the command line, then I didn't
+think the cpu-list support was worth it yet. Also, we can introduce
+support for an optional [,<cpu-list>] attribute later, since the
+definition of the parameters would stay the same for when the cpu-list
+attribute is absent. Indeed, even if I was to introduce the cpu-list
+support now, I would make it optional with the absence of it behaving
+as this patch series implements.
 
-> > >
-> > > Signed-off-by: Aatif Mushtaq <aatif4.m@samsung.com>
-> > > ---
-> > >  include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > >
-> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > index b137fdb56093..8a73b2147983 100644
-> > > --- a/include/linux/dmaengine.h
-> > > +++ b/include/linux/dmaengine.h
-> > > @@ -833,6 +833,7 @@ struct dma_filter {
-> > >   *	be called after period_len bytes have been transferred.
-> > >   * @device_prep_interleaved_dma: Transfer expression in a generic
-> way.
-> > >   * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the
-> > dst
-> > > address
-> > > + * @device_prep_2d_dma_memcpy: prepares a 2D memcpy operation
-> > >   * @device_caps: May be used to override the generic DMA slave
-> > capabilities
-> > >   *	with per-channel specific ones
-> > >   * @device_config: Pushes a new configuration to a channel, return
-> > > 0 or an error @@ -938,6 +939,9 @@ struct dma_device {
-> > >  	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
-> > >  		struct dma_chan *chan, dma_addr_t dst, u64 data,
-> > >  		unsigned long flags);
-> > > +	struct dma_async_tx_descriptor
-> > *(*device_prep_2d_dma_memcpy)(
-> > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
-> > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags);
-> > >
-> > >  	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps
-> > *caps);
-> > >  	int (*device_config)(struct dma_chan *chan, struct
-> > dma_slave_config
-> > > *config); @@ -1087,6 +1091,27 @@ static inline struct
-> > dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
-> > >  						    len, flags);
-> > >  }
-> > >
-> > > +/**
-> > > + * device_prep_2d_dma_memcpy() - Prepare a DMA 2D memcpy
-> > descriptor.
-> > > + * @chan: The channel to be used for this descriptor
-> > > + * @dest: Address of the destination data for a DMA channel
-> > > + * @src: Address of the source data for a DMA channel
-> > > + * @len: The total size of data
-> > > + * @src_imm: The immediate value to be added to the src address
-> > > +register
-> > > + * @dest_imm: The immediate value to be added to the dst address
-> > > +register
-> > > + * @flags: DMA engine flags
-> > > + */
-> > > +static inline struct dma_async_tx_descriptor
-> > *device_prep_2d_dma_memcpy(
-> > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
-> > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags)
-{
-> > > +	if (!chan || !chan->device || !chan->device-
-> > >device_prep_2d_dma_memcpy)
-> > > +		return NULL;
-> > > +
-> > > +	return chan->device->device_prep_2d_dma_memcpy(chan, dest,
-> > src, len,
-> > > +						       src_imm, dest_imm,
-> > flags); }
-> > > +
-> > >  static inline bool dmaengine_is_metadata_mode_supported(struct
-> > dma_chan *chan,
-> > >  		enum dma_desc_metadata_mode mode)  {
-> > > --
-> > > 2.17.1
-> >
-> > --
-> > ~Vinod
+Thanks,
+drew
 
+
+> 
+> - Charlie
+> 
+> > 
+> > (I'd be happy to split the fixes from the new skip support if we want to
+> > discuss the skip support independently, but I want to base on the fixes
+> > and I'm not sure if patchwork supports Based-on: $MESSAGE_ID/$LORE_URL
+> > or not at the moment, so I'm just posting together for now in order to
+> > be able to check for my patchwork green lights!)
+> > 
+> > [1] https://lore.kernel.org/linux-riscv/20240805173816.3722002-1-jesse@rivosinc.com/
+> > 
+> > Thanks,
+> > drew
+> > 
+> > ---
+> > v3:
+> >  - Fix compile when RISCV_PROBE_UNALIGNED_ACCESS is not selected
+> > 
+> > v2:
+> >  - Change to command line option from table
+> > 
+> > 
+> > Andrew Jones (8):
+> >   riscv: Annotate unaligned access init functions
+> >   riscv: Fix riscv_online_cpu_vec
+> >   riscv: Fix check_unaligned_access_all_cpus
+> >   riscv: Change check_unaligned_access_speed_all_cpus to void
+> >   riscv: Fix set up of cpu hotplug callbacks
+> >   riscv: Fix set up of vector cpu hotplug callback
+> >   riscv: Add parameter for skipping access speed tests
+> >   Documentation/kernel-parameters: Add riscv unaligned speed parameters
+> > 
+> >  .../admin-guide/kernel-parameters.txt         |  16 ++
+> >  arch/riscv/include/asm/cpufeature.h           |   4 +-
+> >  arch/riscv/kernel/traps_misaligned.c          |  14 +-
+> >  arch/riscv/kernel/unaligned_access_speed.c    | 237 +++++++++++-------
+> >  4 files changed, 168 insertions(+), 103 deletions(-)
+> > 
+> > -- 
+> > 2.48.1
+> > 
