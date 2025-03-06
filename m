@@ -1,186 +1,118 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCBE19342E;
-	Thu,  6 Mar 2025 02:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67A6191484;
+	Thu,  6 Mar 2025 02:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741229673; cv=none; b=NwlCaZWrl3uDdzJfLP3j6HGxEh+k23szkEl0i0EdF1GlGt9ouU+OJUgCl0NEvP3WPSozRwK+ZjxQxhoZnFuakbnuWLO9A8gAwTVXur/KZCYpfUK7nBRaDe2r3/3AnOFV8VplI7/cISPGEFeDXXegp+kaC7RvwXNJ8pnen9LaH8Q=
+	t=1741229806; cv=none; b=MVhQDIDW/TJV40s+7QVNqnIvd0W0Ao/fr2UMCEpAEBzZTO1FCMzgtRvOgIEQ3k6HMsuEAfcM+AXERNpligaEZ/ZwiHnrzmtZE3CoB2+ctQXioo1Q3MwM2+G79lqqz4uFX8r4nhcHKee+aMXX6NaCN95abVbyhMMIDYWAOvQ7gCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741229673; c=relaxed/simple;
-	bh=AOEzvbbLywvKrHC1thVnHqNCN4jpDd36x98Q1oY//Zc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J/SLPbwurc1SzPNi4qhw+1CdJF588Pwure6iEzLuIn4dGCph7SB4aNnYgcUS+1gbwmb3rsoTNoFYUzkJ1IXOenRFKWGczIUFmrzTeLSZGkT6FVdJRdYAXN9Wd7TcHWoXseKFpji+31PARFZaXU4y5CswI+91ZxQJHCaL3pIevos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nn8VJhor; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741229806; c=relaxed/simple;
+	bh=8DeWfzCxrqel0/a7+qeFa55jA1XHeM+A8wMYrayk/U8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s8VX/5utz1FQQrXm2Y3ZVjcl2VQLdBBigHDqeHOd2O8Bpq3MgLFu+xW4P1/mcwXNpDKbB/iFBlf99KP1aN0NufNlPiIsfn1Lrk1rlJmtvv1pGOmCfUqzbxSK6X5bq7d8i6VWtM7ydVo4Ov86K6IhueqH2I9E8ve4Ev/xnxlUznw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CW9jEJvf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nn8VJhor"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-547bcef2f96so234106e87.1;
-        Wed, 05 Mar 2025 18:54:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741229669; x=1741834469; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Th9BnbvFSv/H4LV5KRUlInal6A2L1r1zSMusFTF7La0=;
-        b=Nn8VJhorYdeM4+0oIujGh8H9cm6xYlBJZsrBMsqs7TcPhM44dDEJgXFtGiosHNVW7l
-         r3IYaDL9oS5fA1LW3TxQ8b5l1VJq5jddbxpO2z+/hELUZbZ7mlvXiUT2MyxuUd1KrkhL
-         y9CKcWX/YEQyCQpL5/SBiYpRvzDadB9p/Sp83hfHRbk/EXoWTVQMl42+MSVgyhwWoSOl
-         TkKxF2FQvGZqwmKmODsrkPc2CDDTfqy60MoZCLei3BpSqJHci2UuCqANdr/R464D398l
-         ucmuDZTVZ8IKDBm+BC7nSTPikGPodRZItkTD7XUUgZHl8BfHS6dc7d4LZGP/5PrfroTX
-         /eoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741229669; x=1741834469;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Th9BnbvFSv/H4LV5KRUlInal6A2L1r1zSMusFTF7La0=;
-        b=QCbai3VzzLjUEdFLGfmVOYlSlsUpxopq394sZfyTMWzDVyA5tnQM8bhe8pDKg3DGDr
-         P8AXZZR20nixufel94wEwfzRIO4BGRONh5S7FJnLCZ3WTSNZFcl7qqVCc6gXavcw+n8m
-         KT1D9vNNgJdMZ0U5+krPvZtuLzcHZxiBTmZJ7sZLCiSHHSwaDE5AJ+WKVEkFxTbZKQF1
-         aKKbf9GeONR7YOavw27cO29Het2Y66a46EvMQd28cQtXnikqf3mfvlLJwYRaM368UjZI
-         W7VqskKpKxZz7cGZ3i7irm4SzguEhaZ9sr6ufFuLDeGjMGErdFOmUrW/80Saf7m6jTkl
-         MvtA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVOgOBujagcHktcBzN2Fa4BEKEwmIcXRbqfg5axyuAZ6UXzQUrtFvtfbgdyebznD9viBLqO/bVgfa2dbmn@vger.kernel.org, AJvYcCVhTl+OOkFYVRdLGkQDX8RHqkGwJSOEhLDT8FtLSRgNIAiYKxN6PSiCtLCaKJoQsWMkV4xf5ggQ@vger.kernel.org, AJvYcCViVZ3xeQ2qANAzSXTLmO/iNbnrrpek4CI+NaoRLblaIsRUY9nsuTAeIoIXwSbMIIMbnF1G6Cf6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5e6gB13AoFmKVIg4Ew2rtfeZ1glo3odPcUUUZnHrW5mV6gwK4
-	l4xe33Tcd5S/XhujyfIyARoeOjLoYUFGG7ZAoPYcm2m59QRPcLxAR8sClVaGuTY/DOECbCzVRuY
-	kHxCaRZCaIig6COYL79NAqclD3eM=
-X-Gm-Gg: ASbGnctmZOHROc8ZBbco9SIQ7vWGTITajXkOuhZNxmE3IGYaWgm85FSDxqPLkLWWocI
-	uhBEYXwdu1lVipUg3AyItQJfgOEMqykifnNsuEUFVn+UCcFHeqS2b33UtzteLolSFEFAa+yBG7N
-	auB3YpaEdNHJWlMUUohvO9wU/lOA==
-X-Google-Smtp-Source: AGHT+IEJfVTrJM22yJTFgts9tci5nFp84rzjL9nZelaYrsIqHQ0VTM31zK+owTJLFjPMRhkTZOP1AOKhm9lNe6TiUlU=
-X-Received: by 2002:a05:6512:2309:b0:545:b89:309b with SMTP id
- 2adb3069b0e04-5497d3806ebmr1990378e87.44.1741229668765; Wed, 05 Mar 2025
- 18:54:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CW9jEJvf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F43C4CED1;
+	Thu,  6 Mar 2025 02:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741229805;
+	bh=8DeWfzCxrqel0/a7+qeFa55jA1XHeM+A8wMYrayk/U8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CW9jEJvfczPFw6j9/0McknStDTMBFz1KTucb6dKvDCc0zaL1eTb2kHQNJCIR+DlzV
+	 Bv7gzJXXnQHzlLbylnKsV+sEYTbcREaDrv9m+X6fbXil6ccqgkenc9gRgo19OshVDO
+	 GgEyIfXjOxM1mV1Jn/3xlYF1m1+e4kxJ8DcTSPtxGOSP1t6u7fDOYdRTEPBSmRwoJx
+	 hOF5PueZbmDztYOFSZ85wV1dKtDqtDhRmLb5SZsHDCPHRPh67ltmvThYPACTuCh9B3
+	 mMZ9h0ECnkTac85q2TaO3uXCRol+iyUHjhJ4O83CiKnVJ9wnFogXH/sEhDo2EqMdn3
+	 2EoupNof6gtcw==
+Date: Wed, 5 Mar 2025 18:56:43 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Bill Wendling <morbo@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>, linux-crypto@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] x86/crc32: optimize tail handling for crc32c short inputs
+Message-ID: <20250306025643.GA1592@sol.localdomain>
+References: <20250304213216.108925-1-ebiggers@kernel.org>
+ <20250305142653.751d9840@pumpkin>
+ <20250305191608.GA19889@sol.localdomain>
+ <20250305220739.1cb4b61e@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306023133.44838-1-songmuchun@bytedance.com>
-In-Reply-To: <20250306023133.44838-1-songmuchun@bytedance.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Thu, 6 Mar 2025 10:54:12 +0800
-X-Gm-Features: AQ5f1Jo_jQXxQST2BfF6to7nckWMOdtZOnQRa7kHnH_qKevSEQD4MehIIfl6GcU
-Message-ID: <CAMgjq7B5SyqYFbLhbgNCvQejqxVs5C6SaV_iot4P64EZLHZ8Gg@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: fix swap counter leak from offline cgroup
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, akpm@linux-foundation.org, 
-	chrisl@kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305220739.1cb4b61e@pumpkin>
 
-On Thu, Mar 6, 2025 at 10:32=E2=80=AFAM Muchun Song <songmuchun@bytedance.c=
-om> wrote:
->
-> The commit 6769183166b3 has removed the parameter of id from
-> swap_cgroup_record() and get the memcg id from
-> mem_cgroup_id(folio_memcg(folio)). However, the caller of it
-> may update a different memcg's counter instead of
-> folio_memcg(folio). E.g. in the caller of mem_cgroup_swapout(),
-> @swap_memcg could be different with @memcg and update the counter
-> of @swap_memcg, but swap_cgroup_record() records the wrong memcg's
-> ID. When it is uncharged from __mem_cgroup_uncharge_swap(), the
-> swap counter will leak since the wrong recorded ID. Fix it by
-> bring the parameter of id back.
->
-> Fixes: 6769183166b3 ("mm/swap_cgroup: decouple swap cgroup recording and =
-clearing")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
->  include/linux/swap_cgroup.h | 4 ++--
->  mm/memcontrol.c             | 4 ++--
->  mm/swap_cgroup.c            | 7 ++++---
->  3 files changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/include/linux/swap_cgroup.h b/include/linux/swap_cgroup.h
-> index b5ec038069dab..91cdf12190a03 100644
-> --- a/include/linux/swap_cgroup.h
-> +++ b/include/linux/swap_cgroup.h
-> @@ -6,7 +6,7 @@
->
->  #if defined(CONFIG_MEMCG) && defined(CONFIG_SWAP)
->
-> -extern void swap_cgroup_record(struct folio *folio, swp_entry_t ent);
-> +extern void swap_cgroup_record(struct folio *folio, unsigned short id, s=
-wp_entry_t ent);
->  extern unsigned short swap_cgroup_clear(swp_entry_t ent, unsigned int nr=
-_ents);
->  extern unsigned short lookup_swap_cgroup_id(swp_entry_t ent);
->  extern int swap_cgroup_swapon(int type, unsigned long max_pages);
-> @@ -15,7 +15,7 @@ extern void swap_cgroup_swapoff(int type);
->  #else
->
->  static inline
-> -void swap_cgroup_record(struct folio *folio, swp_entry_t ent)
-> +void swap_cgroup_record(struct folio *folio, unsigned short id, swp_entr=
-y_t ent)
->  {
->  }
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index a5d870fbb4321..a5ab603806fbb 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4988,7 +4988,7 @@ void mem_cgroup_swapout(struct folio *folio, swp_en=
-try_t entry)
->                 mem_cgroup_id_get_many(swap_memcg, nr_entries - 1);
->         mod_memcg_state(swap_memcg, MEMCG_SWAP, nr_entries);
->
-> -       swap_cgroup_record(folio, entry);
-> +       swap_cgroup_record(folio, mem_cgroup_id(swap_memcg), entry);
->
->         folio_unqueue_deferred_split(folio);
->         folio->memcg_data =3D 0;
-> @@ -5050,7 +5050,7 @@ int __mem_cgroup_try_charge_swap(struct folio *foli=
-o, swp_entry_t entry)
->                 mem_cgroup_id_get_many(memcg, nr_pages - 1);
->         mod_memcg_state(memcg, MEMCG_SWAP, nr_pages);
->
-> -       swap_cgroup_record(folio, entry);
-> +       swap_cgroup_record(folio, mem_cgroup_id(memcg), entry);
->
->         return 0;
->  }
-> diff --git a/mm/swap_cgroup.c b/mm/swap_cgroup.c
-> index be39078f255be..1007c30f12e2c 100644
-> --- a/mm/swap_cgroup.c
-> +++ b/mm/swap_cgroup.c
-> @@ -58,9 +58,11 @@ static unsigned short __swap_cgroup_id_xchg(struct swa=
-p_cgroup *map,
->   * entries must not have been charged
->   *
->   * @folio: the folio that the swap entry belongs to
-> + * @id: mem_cgroup ID to be recorded
->   * @ent: the first swap entry to be recorded
->   */
-> -void swap_cgroup_record(struct folio *folio, swp_entry_t ent)
-> +void swap_cgroup_record(struct folio *folio, unsigned short id,
-> +                       swp_entry_t ent)
->  {
->         unsigned int nr_ents =3D folio_nr_pages(folio);
->         struct swap_cgroup *map;
-> @@ -72,8 +74,7 @@ void swap_cgroup_record(struct folio *folio, swp_entry_=
-t ent)
->         map =3D swap_cgroup_ctrl[swp_type(ent)].map;
->
->         do {
-> -               old =3D __swap_cgroup_id_xchg(map, offset,
-> -                                           mem_cgroup_id(folio_memcg(fol=
-io)));
-> +               old =3D __swap_cgroup_id_xchg(map, offset, id);
->                 VM_BUG_ON(old);
->         } while (++offset !=3D end);
->  }
-> --
-> 2.20.1
->
+On Wed, Mar 05, 2025 at 10:07:39PM +0000, David Laight wrote:
+> On Wed, 5 Mar 2025 11:16:08 -0800
+> Eric Biggers <ebiggers@kernel.org> wrote:
+> 
+> > On Wed, Mar 05, 2025 at 02:26:53PM +0000, David Laight wrote:
+> > > On Tue,  4 Mar 2025 13:32:16 -0800
+> > > Eric Biggers <ebiggers@kernel.org> wrote:
+> > >   
+> > > > From: Eric Biggers <ebiggers@google.com>
+> > > > 
+> > > > For handling the 0 <= len < sizeof(unsigned long) bytes left at the end,
+> > > > do a 4-2-1 step-down instead of a byte-at-a-time loop.  This allows
+> > > > taking advantage of wider CRC instructions.  Note that crc32c-3way.S
+> > > > already uses this same optimization too.  
+> > > 
+> > > An alternative is to add extra zero bytes at the start of the buffer.
+> > > They don't affect the crc and just need the first 8 bytes shifted left.
+> > > 
+> > > I think any non-zero 'crc-in' just needs to be xor'ed over the first
+> > > 4 actual data bytes.
+> > > (It's over 40 years since I did the maths of CRC.)
+> ...
+> > > 	David  
+> > 
+> > Sure, but that only works when len >= sizeof(unsigned long).  Also, the initial
+> > CRC sometimes has to be divided between two unsigned longs.
+> 
+> Yes, I was thinking that might make it a bit more tricky.
+> I need to find some spare time :-)
+> 
+> I wasn't taught anything about using non-carry multiplies either.
+> And I can't remember the relevant 'number field' stuff either.
+> But (with no-carry maths) I think you have:
+> 	crc(n + 1) = (crc(n) + data(n)) * poly
+> If data(n+1) and data(n+2) are zero (handled elsewhere) you have:
+> 	crc(n + 3) = (((crc(n) + data(n)) * poly) * poly) * poly
+> I think that because it is a field this is the same as
+> 	crc(n + 3) = (crc(n) + data(n)) * (poly * poly * poly)
+> which is just a different crc polynomial.
+> If true your '3-way' cpu doesn't have to use big blocks.
 
-Good catch, Thanks!
+Well, to extend by some constant number of bits 'n', you can carryless-multiply
+by the polynomial x^n, pre-reduced by the CRC's generator polynomial.  That's
+basically how all the CRC implementations using carryless multiplication work.
+Take a look at the x86 and riscv optimized code, for example -- especially my
+new versions in the crc-next tree at
+https://web.git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next.
 
-Reviewed-by: Kairui Song <kasong@tencent.com>
+But x86 does not have a scalar carryless multiplication instruction, only vector
+(PCLMULQDQ).  It does have a scalar CRC instruction, for crc32c *specifically*,
+and that is what the code we're discussing is taking advantage of.  Given that
+there is overhead associated with using kernel-mode FPU (i.e. vector), it makes
+sense to do that, at least on short messages.
+
+On longer messages a PCLMULQDQ-only implementation would work well, but so does
+interleaving the crc32c scalar instruction on multiple chunks, which is what is
+currently wired up in the kernel via crc32c-3way.S.  And yes, the chunks for
+that do not *have* to be long, but you still need to use pclmulqdq instructions
+to combine them (unless you do a really slow bit-at-a-time carryless
+multiplication), and you have to enter a kernel-mode FPU section to do that.
+
+- Eric
