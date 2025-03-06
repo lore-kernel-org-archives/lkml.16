@@ -1,65 +1,51 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2E820896C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA651FE47F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741250895; cv=none; b=f4KONTa3aK5Uo7iXgQ4h2ZJPKh6BGa5k4TKZWE0hdXgl9Zs4LV7T4Wxje0nqYzCOLOcxQASbVIdnbku1YQVXD3vpNM7wM5jhqCYTVyMgQHdCBgdTmYXZnl+KzRBtA6wDcyQsqvv1BQR34C9928BBlBshtaVUmJbJazd/I72Hg+g=
+	t=1741250910; cv=none; b=Ha/2N9a4ESIVL7zBOqowTC9bezwP6A8OKc7bu6fBhgQM75WIoV8RdIJ7jUkdN4nhshY7g8Q/FCvcJCYiNnMvPT4kv/pNmp399cWuBkCu18QPsfH8TQs36DfWaEjIhym+IFV/xd5ApAeePZezEyMP/5QUxavUYCzKwHglLuVxvks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741250895; c=relaxed/simple;
-	bh=eN2UxJs/P0sNcKbeYZx5A6ber95WpSjYnmsGggEt1+U=;
+	s=arc-20240116; t=1741250910; c=relaxed/simple;
+	bh=fQNHc8Wr/wKivk7VE5YqGJHPEgb1EJ6erNAHT7rMeNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hRH0mK6SqGOK5XON9jC6jML9TRnioc96aRi+/ZYTlbgGYtAaUxzAUYxQOxyhfC6Lb5gpI9aW4KmkLqG5X5/WKhDvXvmBv24WiO0EAfQwJ2tLvTIVy8660+JSygVpbIE/ewfuxVv9ua/G9A7AIeXxGxw6PiHGgjjtzgDhSVvuxpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=jjqyJYr3; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="jjqyJYr3"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so326829a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 00:48:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1741250893; x=1741855693; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w4k+jXFhr9NDIRUmOU/UyvLqGcx7hV3cHJqh3EvrMGk=;
-        b=jjqyJYr3BZ2t+TXJRZksijLIUHO9KQVi+rASpiLxjcieoe84XmIDYaR3WXCAPOBTJy
-         UyqZV++9uyWRP0DOEpTIUgv1ftKbXH4HnIhd4tCpKqCDPWlmyKIokgPKo87aKdis3nC4
-         5SXmwax1sJcACkem++Gr3d3A8A62Q2SxSo2XU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741250893; x=1741855693;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w4k+jXFhr9NDIRUmOU/UyvLqGcx7hV3cHJqh3EvrMGk=;
-        b=XA4gLErreFhgBV6BoSAcQUaUfjXPcQArQLOwCkPPdsT3F3dfk39xjoIliXnwOP5rJ4
-         Nth7TAcHfuX1frYZHMStP1ZE+f4PyX/Bx7Hp16Zl3Ht8n2jLWaksyb3qekNXqe32U/ls
-         GDnI3H+ICHnlbH1ZqF1ouzXf4OuZApI70F29DgZE1fckJ4uKBmgjWAn5nFPqDcD05aAW
-         inkXJYHlLn1NRC9sULb7Yl+NwkKrfQ+SWyNQe7BfqG+nXEyYNfOUPAe/2XUq30v6Dlk8
-         HUUM0mQ3Jz/L4wCZk+P3+NA3463TH37PB8L2xWsRMaLVUoQdgBx+UrC74zgxNHa+Icnb
-         6rkA==
-X-Gm-Message-State: AOJu0YzSZ1qTt8vldBtZr5gF7M8OMgY1q+NxITUcNJk/dpIUoviJEst6
-	v/tqInhvDHBhDhv9PaluQwVAMR92fS25fUlk9LZt/9urDmFt37Uho9IOiz4oRFs=
-X-Gm-Gg: ASbGncsEGAQSwSFDF7qV/6mpDf5Ulxr3ANCGVSGg69k5rokW4Rf1gtq6LGdsgBxWZ2V
-	qbRCrMSkJrk3vuiPcwXw6p5DLk5b63jKHjjJ3t7pqenUHizTHK2qbZLzGns/o2OxQzm4NVTF/Gw
-	3Lbrqf50y78lVhF5r/92gMNfBYFS3JjeytEoqY2rHyaCNEQw4EWcsqxiuenCrF1e46/ewRD6kHS
-	CQBe9+T4v2GeX5Oee90gyRXdZ4+bKSmx5BgyJeW2vbkAgr1IF6QCiWiSZUYF0832PLPDDcvddlA
-	mqlikalIHDLYSxfaj1kDz016bHmMrlh8i0B7hIbDUpAfxjC1aA==
-X-Google-Smtp-Source: AGHT+IFzZ0vFCL7WbpviFO4L9vuMIRkk6grLTKfpSaA2lbSdMUSiTAorLN0JYGBYyPjaalZWK0RreA==
-X-Received: by 2002:a17:90b:524f:b0:2fe:ba82:ca5 with SMTP id 98e67ed59e1d1-2ff497283aamr10783848a91.11.1741250893553;
-        Thu, 06 Mar 2025 00:48:13 -0800 (PST)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2ff6933b039sm727306a91.1.2025.03.06.00.48.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 00:48:13 -0800 (PST)
-Date: Thu, 6 Mar 2025 09:48:07 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, Juergen Gross <jgross@suse.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 0/3] xen: Fix usage of devices behind a VMD bridge
-Message-ID: <Z8lhR2DSsB8P6L96@macbook.local>
-References: <20250219092059.90850-1-roger.pau@citrix.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z38SNRzq5JPzxBy8CbJpgpRyOjlhaOHYBMkQ7TFe7Vke6ly8UovlHKkVfQOmcGa0b/gWePWzw/hlPJgISt45afpXJmxG5PSrNtHmmlEVSsCQqaVusmP5cFZtfYCyJMdcWAV3D/UWdD8prFgJdHDD3wrR2MiJCh6p84nvmhG2px8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tq6th-0003qy-MK; Thu, 06 Mar 2025 09:48:05 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tq6tg-004HjX-0x;
+	Thu, 06 Mar 2025 09:48:04 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tq6tg-00GCes-0a;
+	Thu, 06 Mar 2025 09:48:04 +0100
+Date: Thu, 6 Mar 2025 09:48:04 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Andrew Lunn <andrew@lunn.ch>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com,
+	Phil Elwell <phil@raspberrypi.org>
+Subject: Re: [PATCH net-next v2 06/10] net: usb: lan78xx: Improve error
+ handling in EEPROM and OTP operations
+Message-ID: <Z8lhRCkxvtkB_U3x@pengutronix.de>
+References: <20241204084142.1152696-1-o.rempel@pengutronix.de>
+ <20241204084142.1152696-7-o.rempel@pengutronix.de>
+ <ac965de8-f320-430f-80f6-b16f4e1ba06d@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,50 +54,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250219092059.90850-1-roger.pau@citrix.com>
+In-Reply-To: <ac965de8-f320-430f-80f6-b16f4e1ba06d@sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Mark,
 
-I've attempted to ping Nirmal directly on the VMD patch, but got no
-reply so far.
+On Mon, Mar 03, 2025 at 06:02:23PM +0000, Mark Brown wrote:
+> On Wed, Dec 04, 2024 at 09:41:38AM +0100, Oleksij Rempel wrote:
+> > Refine error handling in EEPROM and OTP read/write functions by:
+> > - Return error values immediately upon detection.
+> > - Avoid overwriting correct error codes with `-EIO`.
+> > - Preserve initial error codes as they were appropriate for specific
+> >   failures.
+> > - Use `-ETIMEDOUT` for timeout conditions instead of `-EIO`.
+> 
+> This patch (which is in Linus' tree) appears to break booting with a NFS
+> root filesystem on Raspberry Pi 3B+.  There appears to be at least no
+> incoming traffic seen on the device, I've not checked if there's
+> anything outgoing:
+> 
+> [   19.234086] usb 1-1.1.1: new high-speed USB device number 6 using dwc2
+> [   19.394134] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000): clkctl 0x50
+> [   19.710839] lan78xx 1-1.1.1:1.0 enxb827ebea22ac: renamed from eth0
+> Device /sys/class/net/enxb827ebea22ac found
+> done.
+> Begin: Waiting up to 180 secs for any network device to become available ... done.
+> IP-Config: enxb827ebea22ac hardware address b8:27:eb:ea:22:ac mt[   20.663606] lan78xx 1-1.1.1:1.0 enxb827ebea22ac: Link is Down
+> u 1500 DHCP
+> [   22.708103] lan78xx 1-1.1.1:1.0 enxb827ebea22ac: Link is Up - 1Gbps/Full - flow control off
+> IP-Config: no response after 2 secs - giving up
 
-First version of this series was posted on 10/01, yet there hasn't
-been any feedback from Nirmal.  Would it be possible to merge this
-without Nirmal Ack due to timeout?
+I can't reproduce it without U-boot. Since netboot is used, this adapter
+stays in some kind of preconfugured state. Where can I get the SD image
+which is used on this system?
 
-It's not even a new feature, just a bugfix that allows running with
-VMD devices when using Xen.
-
-Thanks, Roger.
-
-On Wed, Feb 19, 2025 at 10:20:54AM +0100, Roger Pau Monne wrote:
-> Hello,
-> 
-> The following series should fix the usage of devices behind a VMD bridge
-> when running Linux as a Xen PV hardware domain (dom0).  I've only been
-> able to test PV. I think PVH should also work but I don't have hardware
-> capable of testing it right now.
-> 
-> I don't expect the first two patches to be problematic, the last patch
-> is likely to be more controversial.  I've tested it internally and
-> didn't see any issues, but my testing of PV mode is mostly limited to
-> dom0.
-> 
-> Thanks, Roger.
-> 
-> Roger Pau Monne (3):
->   xen/pci: Do not register devices with segments >= 0x10000
->   PCI: vmd: Disable MSI remapping bypass under Xen
->   PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag
-> 
->  arch/x86/pci/xen.c           |  8 ++------
->  drivers/pci/controller/vmd.c | 20 +++++++++++++++++++
->  drivers/pci/msi/msi.c        | 37 ++++++++++++++++++++----------------
->  drivers/xen/pci.c            | 32 +++++++++++++++++++++++++++++++
->  include/linux/msi.h          |  3 ++-
->  kernel/irq/msi.c             |  2 +-
->  6 files changed, 78 insertions(+), 24 deletions(-)
-> 
-> -- 
-> 2.46.0
-> 
+Best Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
