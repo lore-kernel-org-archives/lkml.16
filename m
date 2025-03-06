@@ -1,51 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B7725CC9F;
-	Thu,  6 Mar 2025 17:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BBC25CC96;
+	Thu,  6 Mar 2025 17:54:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741283691; cv=none; b=TfhFE0J1TIUmzVT5kHeHQwxWgyhT6EG9qEQzsJRGtlLTb2wIboP3heTxTcXVw/75FiX90nWXztWAgOSEWd4GfAuJ6GBkdv3lJbBYP5EqipDHEZO6g3TPmWtZyxsAEjpk54xJfvEievrMAncEXZpgcN/MCmPEv4cvaVlxjre0eog=
+	t=1741283697; cv=none; b=d7jLUJ+fO7lWTsPIPyDg7aUxRuK14xyl7i1SJUFhcHJqJqooyeL4sN/YZR0puc0tR6KG7/YQrospWn02hT4HVbkO+UYpTS9fy2WEXro0Jjg0UrfJFh+SX4M+69ywrc0pRPtg5iG9XZjL61sgmw1IUEudy8/p7q99kb7L7Q69Ew0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741283691; c=relaxed/simple;
-	bh=qdm0HXf809KweRtwUqUjuGRSBGOGTK1ZwZaRFgirYRE=;
+	s=arc-20240116; t=1741283697; c=relaxed/simple;
+	bh=U3xdOAHZKeSPz+aKFdQVzR86S0fcAtL0VWeNwF394GU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvA+OHro7Y5F2jI+JZalXBGtk4K4uYjnWVOnx9biV+AQSJr5DayVH3AEJ4iU/z5654+4o6Bmtt6mhwTLNl8E/dCAUx543R+NUdBr8TZkh2JIChonwqhxMHwtKlOAYYg/7tQEHmMeXa6KnEcC64cZsY6vkcBVIUPnqBn03hTrgyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvyeca8q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=om1gIx5WXA/CNw+GXQp9nRPNnyUy+DaLOHHS5RQwVXVTnx1D7VTgAxXlR+CJau5MGIdh4AyZJTnqHmwq7STqtVym9IiZfuIXkssroHXRs7lL8SJ16d7qUwXJCS69+kZuOMl5StBig9wNqgYbuaT8d6O0a6PVB7FUN9Lu3fGLLec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgmITw3i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvyeca8q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22CEC4CEE4;
-	Thu,  6 Mar 2025 17:54:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgmITw3i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F90DC4CEE0;
+	Thu,  6 Mar 2025 17:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741283690;
-	bh=qdm0HXf809KweRtwUqUjuGRSBGOGTK1ZwZaRFgirYRE=;
+	s=k20201202; t=1741283696;
+	bh=U3xdOAHZKeSPz+aKFdQVzR86S0fcAtL0VWeNwF394GU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tvyeca8qxs7P3W1cB3g1bfO7xa34ZgU6UzS/2Xw2Ke8Y5C+SHP42WUYKTCA/XDjSz
-	 FjbkFpLBkmJ68b7CEwE9qW2Iz0u9aFlQbYa7hPxav/f5BwY+9xjfwIjSM80HNOTp1q
-	 deE5Xv3bzsptGL79GvA31/lWGAxZiQ4mVAsy2U2VB5QLW6En9wYGDzl0lBFgxgXKcd
-	 HtICT7lmTGARxxeBF/1IN/Bx1ztga1oBogdPLEmauOzTMIrybmbYCgGdnLPuVx+HOi
-	 eKDaqhfLtiO+g7wrIFMgzJz12m3R0G+Bh6USaIIo3MCOvBUS/2U9lUgHjU7AHeNsYd
-	 bT/69fw5lyhTQ==
-Date: Thu, 6 Mar 2025 11:54:47 -0600
+	b=qgmITw3itpG7rB5G4E2ytRfHOf/CZyLWYSRSCbnm+w+AwTfWijs5gy/RdBsSJMK4b
+	 3QzzZ0KTatu2G+qOh5xBDH6GImXzOfG4vVdLGB9tiL1h/3RCBu9FWivFK0FRmVxTU/
+	 RQRBziC0h9xr+87NHjTCvONt//OdhWp+FWnOjIAligvHHuQWxMj6MV+WNuegWpWUou
+	 rwAz+QYFeqA0Wz2+EpZzjsaFAlFblkhd1JIm9kIDiqE+xtrZEgxrsOAhuvMK7zFXyJ
+	 wkJLv+8bdL8G8i8UPoaofgbfY4ZfcNgkP7FOL4aunsdNt3yMlhCzOOwvvjXRoBAspa
+	 Rgbye1eT1DP1w==
+Date: Thu, 6 Mar 2025 11:54:55 -0600
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>,
-	David Airlie <airlied@gmail.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Simona Vetter <simona@ffwll.ch>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	David Airlie <airlied@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
 	Neil Armstrong <neil.armstrong@linaro.org>,
-	dri-devel@lists.freedesktop.org,
+	Thierry Reding <thierry.reding@gmail.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>
-Subject: Re: [PATCH 1/2] dt-bindings: display: mitsubishi,aa104xd12: Allow
- jeida-18 for data-mapping
-Message-ID: <174128367535.567143.5317524679699355354.robh@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: display: mitsubishi,aa104xd12: Adjust
+ allowed and required properties
+Message-ID: <174128369455.567749.6557990524216998006.robh@kernel.org>
 References: <20250225210316.3043357-1-robh@kernel.org>
+ <20250225210316.3043357-2-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,19 +56,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225210316.3043357-1-robh@kernel.org>
+In-Reply-To: <20250225210316.3043357-2-robh@kernel.org>
 
 
-On Tue, 25 Feb 2025 15:03:14 -0600, Rob Herring (Arm) wrote:
-> There's both a user and the datasheet[1] indicate that 6-bpp is supported
-> as well.
+On Tue, 25 Feb 2025 15:03:15 -0600, Rob Herring (Arm) wrote:
+> The Mitsubishi aa104xd12 panel requires an external backlight driver
+> circuit, so allow the "backlight" property.
 > 
-> [1] https://agdisplays.com/pub/media/catalog/datasheet/Mitsubishi/AA104XD12.pdf
+> There are users of this panel without a vcc-supply, so it shouldn't be
+> required.
 > 
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  .../bindings/display/panel/mitsubishi,aa104xd12.yaml          | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Applied, thanks!
