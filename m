@@ -1,313 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EDA209692;
-	Thu,  6 Mar 2025 09:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF35209681;
+	Thu,  6 Mar 2025 09:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741252786; cv=none; b=I3rQCs4ffSXr3Pv1+D+khVGFJQUd04GYvx8rT7z/DcL/u5at09jsQewTf9oWUXBYUeJ4a+3mEjPYVcNfBS30pSNgp1o5n+fj10yMeIU6Ase8uNDlO0I2u3YQPn2TVNKu4f4KekZE+0PU6Uv6ucZtJIp5ZlBTmc/ST4r7sb4J+qQ=
+	t=1741252797; cv=none; b=nygXyFWD7yOuqqcEMWMnlIxbfY1n/KcJX9vD/D0BL69pxbYgJ+kF5EwPox0A8PNu4jxuFDUAUwgmjq3oMaQNf0FQyon107HEXB+SmyhiYzRL+mKalMW0+QRHxP4m+FZVDUsm8ZXsmHs1spRvw/I14bGOH4owK2iQ9niV8bmQDs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741252786; c=relaxed/simple;
-	bh=PQcQ4pkB0f4T3bhPQP6VeqH0uGP/yGUpWFtoLt2L+GQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TvLU61+FyefgjaDEukgjRjmcrI9BLbnR3PBerBdEDA6mbt7GNGWn7a3BYaWmuEDS/vTIzhxXPreqgi5XPSPsAZyufOgvK5MCYSviZsBbxtN5DLurrxWmg8dWbM/Mv4iApPrG9ClXdaiWzr9OeC5xVaw7SpK7JeU/r9AKoIoUhn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z7kMk5qHMz6K9Q8;
-	Thu,  6 Mar 2025 17:17:22 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 94C32140159;
-	Thu,  6 Mar 2025 17:19:40 +0800 (CST)
-Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Mar
- 2025 10:19:29 +0100
-Date: Thu, 6 Mar 2025 17:19:25 +0800
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
-	<lenb@kernel.org>, <mchehab@kernel.org>, <leo.duran@amd.com>,
-	<Yazen.Ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
-	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <rientjes@google.com>,
-	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
-	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
-	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
-	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
-	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
-	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 2/3] ACPI:RAS2: Add ACPI RAS2 driver
-Message-ID: <20250306171925.00002721@huawei.com>
-In-Reply-To: <20250305180225.1226-3-shiju.jose@huawei.com>
-References: <20250305180225.1226-1-shiju.jose@huawei.com>
-	<20250305180225.1226-3-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741252797; c=relaxed/simple;
+	bh=HaJSPixWk9LaPQTM/7v8ziJlqwgqjQtFlWD0716NMgA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CBF8P6L6iR307HlPTVR2kXl0Xtag1fktMlw5sL6qX507ccWo5QMaiA8CneAJrfmWGMHns8RaXudM8K2j9nSYUVdJItzDq49IoWkBW8X0doKDcOvHif6LkMoEOwZMZvLzUfhPXAOb7YAQ1N3e2iHi9F9XOTLsHJoJcdPCLAiJbwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YEpxC2nf; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YEpxC2nf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741252793;
+	bh=HaJSPixWk9LaPQTM/7v8ziJlqwgqjQtFlWD0716NMgA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YEpxC2nfGB56882Ka73HUj6sruDMJS5dK4rsbbJv3CacywU3xGTS+fkvrsZkHN5ix
+	 JmSBie5uIbZyfaKJlQoIVqh+UzbjQaLGSqTF9DkOKU6nMwUSqZjZhiBzyL5mpUO42Q
+	 +7DXScC4/SVm+y6d1jpa/s3rjPxq3BnifGor7uqhPacQ5WVLt00Ghx0UmtHGLTE/y6
+	 CJcBrCTG8X+XI/GoszYcMqAkTwljE6Qezxbdo+ADxKoAZEYuu3+kvzBXk2TjNroPAz
+	 6cMigYwHRGF+5V5EAV21ybE+9Ah9b2ddxTJ4L9y274KsmskIPFyxmIq0pSUIMkEtJK
+	 RH52QjaWQugFg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6C53D17E0599;
+	Thu,  6 Mar 2025 10:19:52 +0100 (CET)
+Message-ID: <3e84fda8-2566-4f18-8ef9-850c84789c34@collabora.com>
+Date: Thu, 6 Mar 2025 10:19:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: mtk-sd: add single burst switch
+To: Axe Yang <axe.yang@mediatek.com>,
+ Chaotian Jing <chaotian.jing@mediatek.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Wenbin Mei <wenbin.mei@mediatek.com>
+Cc: yong.mao@mediatek.com, qingliang.li@mediatek.com,
+ andy-ld.lu@mediatek.com, linux-mmc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20250306085028.5024-1-axe.yang@mediatek.com>
+ <20250306085028.5024-2-axe.yang@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250306085028.5024-2-axe.yang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 5 Mar 2025 18:02:23 +0000
-<shiju.jose@huawei.com> wrote:
-
-> From: Shiju Jose <shiju.jose@huawei.com>
+Il 06/03/25 09:48, Axe Yang ha scritto:
+> Add 'mediatek,disable-single-burst' setting. This property can be
+> used to switch bus burst type, from single burst to INCR, which is
+> determined by the bus type within the IP. Some versions of the IP
+> are using AXI bus, thus this switch is necessary as 'single' is not
+> the burst type supported by the bus.
 > 
-> Add support for ACPI RAS2 feature table (RAS2) defined in the
-> ACPI 6.5 Specification, section 5.2.21.
-> Driver defines RAS2 Init, which extracts the RAS2 table and driver
-> adds auxiliary device for each memory feature which binds to the
-> RAS2 memory driver.
+> Signed-off-by: Axe Yang <axe.yang@mediatek.com>
+
+I am mostly sure that this is not something to put in devicetree, but as
+platform data for specific SoC(s), as much as I'm mostly sure that all of
+the instances of the MSDC IP in one SoC will be *all* using either single
+or INCR.
+
+So, I think I know the answer but I'll still ask just to be extremely sure:
+
+is there any MediaTek SoC that has different IP versions for different MSDC
+instances, and that hence require single burst on one instance and INCR on
+another instance?
+
+And if there is - is there a pattern? Is it always SDIO requiring INCR or
+always eMMC/SD requiring it?
+
+Regards,
+Angelo
+
+> ---
+>   Documentation/devicetree/bindings/mmc/mtk-sd.yaml | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 > 
-> Driver uses PCC mailbox to communicate with the ACPI HW and the
-> driver adds OSPM interfaces to send RAS2 commands.
-> 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Co-developed-by: A Somasundaram <somasundaram.a@hpe.com>
-> Signed-off-by: A Somasundaram <somasundaram.a@hpe.com>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Tested-by: Daniel Ferguson <danielf@os.amperecomputing.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-
-Hi Shiju,
-
-I took another look through as it's been a while and I've
-pretty much forgotten this code :(
-
-Anyhow, a few minor comments inline.
-
-Thanks,
-
-Jonathan
-
-> diff --git a/drivers/acpi/ras2.c b/drivers/acpi/ras2.c
-> new file mode 100755
-> index 000000000000..8831a2bd5fab
-> --- /dev/null
-> +++ b/drivers/acpi/ras2.c
-
-
-
-
-> +static int ras2_register_pcc_channel(struct ras2_mem_ctx *ras2_ctx, int pcc_id)
-> +{
-> +	struct ras2_pcc_subspace *pcc_subspace;
-> +	struct pcc_mbox_chan *pcc_chan;
-> +	struct mbox_client *mbox_cl;
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.yaml b/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
+> index 0debccbd6519..6076aff0a689 100644
+> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
+> @@ -100,6 +100,14 @@ properties:
+>       minimum: 0
+>       maximum: 0xffffffff
+>   
+> +  mediatek,disable-single-burst:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Burst type setting. For some versions of the IP that do not use
+> +      AHB bus, the burst type need to be switched to INCR.
+> +      If present, use INCR burst type.
+> +      If not present, use single burst type.
 > +
-> +	if (pcc_id < 0)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&ras2_pcc_lock);
-> +	list_for_each_entry(pcc_subspace, &ras2_pcc_subspaces, elem) {
-> +		if (pcc_subspace->pcc_id != pcc_id)
-> +			continue;
-> +		ras2_ctx->pcc_subspace = pcc_subspace;
-> +		pcc_subspace->ref_count++;
-> +		mutex_unlock(&ras2_pcc_lock);
-> +		return 0;
-> +	}
-> +	mutex_unlock(&ras2_pcc_lock);
-> +
-> +	pcc_subspace = kcalloc(1, sizeof(*pcc_subspace), GFP_KERNEL);
-
-if allocating a count of 1, why not kzalloc?
-
-> +	if (!pcc_subspace)
-> +		return -ENOMEM;
+>     mediatek,hs200-cmd-int-delay:
+>       $ref: /schemas/types.yaml#/definitions/uint32
+>       description:
 
 
-
-
-> +static int acpi_ras2_parse(void)
-> +{
-> +	struct acpi_ras2_pcc_desc *pcc_desc_list;
-> +	int pcc_id;
-> +	u8 count = 0;
-> +	int rc, i;
-> +
-> +	if (ras2_tab->header.length  < sizeof(struct acpi_table_ras2)) {
-
-extra space before <
-
-Maybe sizeof(*ras2_tab) is cleaner.
-
-> +		pr_warn(FW_WARN "ACPI RAS2 table present but broken (too short #1)\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!ras2_tab->num_pcc_descs) {
-> +		pr_warn(FW_WARN "No PCC descs in ACPI RAS2 table\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pcc_desc_list = (struct acpi_ras2_pcc_desc *)(ras2_tab + 1);
-> +	/* Double scan for the case of only one actual controller */
-> +	pcc_id = -1;
-> +	count = 0;
-
-Already set above, so no need to do it again.  I'd do it just here.  Can
-put it in the loop init though.
-
-> +	for (i = 0; i < ras2_tab->num_pcc_descs; i++, pcc_desc_list++) {
-> +		if (pcc_desc_list->feature_type != RAS2_FEAT_TYPE_MEMORY)
-> +			continue;
-> +		if (pcc_id == -1) {
-> +			pcc_id = pcc_desc_list->channel_id;
-> +			count++;
-> +		}
-> +		if (pcc_desc_list->channel_id != pcc_id)
-> +			count++;
-> +	}
-> +
-> +	/*
-> +	 * Workaround for the client platform with multiple scrub devices
-> +	 * but uses single PCC subspace for communication.
-> +	 */
-> +	if (count == 1) {
-> +		/* Add auxiliary device and bind ACPI RAS2 memory driver */
-> +		rc = ras2_add_aux_device(RAS2_MEM_DEV_ID_NAME, pcc_id);
-> +		if (rc)
-> +			return rc;
-> +
-> +		return 0;
-> +	}
-> +
-> +	pcc_desc_list = (struct acpi_ras2_pcc_desc *)(ras2_tab + 1);
-> +	count = 0;
-
-Maybe set in loop init.
-
-> +	for (i = 0; i < ras2_tab->num_pcc_descs; i++, pcc_desc_list++) {
-> +		if (pcc_desc_list->feature_type != RAS2_FEAT_TYPE_MEMORY)
-> +			continue;
-> +		pcc_id = pcc_desc_list->channel_id;
-> +		/* Add auxiliary device and bind ACPI RAS2 memory driver */
-obvious enough to drop the comment I think.
-
-> +		rc = ras2_add_aux_device(RAS2_MEM_DEV_ID_NAME, pcc_id);
-					 pcc_desc_list->channel_id);
-and no local variable.
-
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void __init acpi_ras2_init(void)
-> +{
-> +	acpi_status status;
-> +	int rc;
-> +
-> +	status = acpi_get_table(ACPI_SIG_RAS2, 0,
-> +				(struct acpi_table_header **)&ras2_tab);
-> +	if (ACPI_FAILURE(status) || !ras2_tab) {
-> +		const char *msg = acpi_format_exception(status);
-> +
-> +		pr_err("Failed to get table, %s\n", msg);
-
-If only going to use it here maybe
-		pr_err("Failed to get table, %s\n",
-		       acpi_format_exception(status));
-and save on the local variable.
-
-> +		return;
-> +	}
-> +
-> +	rc = acpi_ras2_parse();
-> +	if (rc) {
-> +		acpi_put_table((struct acpi_table_header *)ras2_tab); 
-> +		pr_err("Failed to parse RAS2 table\n");
-> +	}
-> +}
-> diff --git a/include/acpi/ras2.h b/include/acpi/ras2.h
-> new file mode 100644
-> index 000000000000..5b27c1f30096
-> --- /dev/null
-> +++ b/include/acpi/ras2.h
-> @@ -0,0 +1,48 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * ACPI RAS2 driver header file
-> + *
-> + * Copyright (c) 2024-2025 HiSilicon Limited
-> + */
-> +
-> +#ifndef _ACPI_RAS2_H
-> +#define _ACPI_RAS2_H
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/auxiliary_bus.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
-> +
-> +#define RAS2_PCC_CMD_COMPLETE	BIT(0)
-> +#define RAS2_PCC_CMD_ERROR	BIT(2)
-> +
-I think these bits are from table 14.11 and
-generic to all PCC status registers? Should these
-have more generic names rather than ras2 specific ones?
-
-> +/* RAS2 specific PCC commands */
-> +#define RAS2_PCC_CMD_EXEC 0x01
-Are we mixing commands and field definitions both
-with prefix RAS2_PCC_CMD_ ?  That is somewhat
-confusing. 
-
-> +
-> +#define RAS2_AUX_DEV_NAME "ras2"
-> +#define RAS2_MEM_DEV_ID_NAME "acpi_ras2_mem"
-> +
-I would add a forwards def
-struct device;  
-
-whilst it is really unlikely that headers would ever be reorganized
-such that auxiliary_bus.h would not include device.h given the embedded
-device we shouldn't rely on that here.
-
-> +/* Data structure RAS2 table */
-> +struct ras2_mem_ctx {
-> +	struct auxiliary_device adev;
-> +	/* Lock to provide mutually exclusive access to PCC channel */
-> +	struct mutex lock;
-> +	struct device *dev;
-> +	struct acpi_ras2_shmem __iomem *comm_addr;
-> +	void *pcc_subspace;
-> +	int id;
-> +};
-> +
-> +#ifdef CONFIG_ACPI_RAS2
-> +void __init acpi_ras2_init(void);
-> +int ras2_send_pcc_cmd(struct ras2_mem_ctx *ras2_ctx, u16 cmd);
-> +#else
-> +static inline void acpi_ras2_init(void) { }
-> +
-> +static inline int ras2_send_pcc_cmd(struct ras2_mem_ctx *ras2_ctx, u16 cmd)
-
-Is this stub ever needed?  To me it seems unlikely
-we would have a user that is built without a dependency
-on CONFIG_ACPI_RAS2.  This is different from acpi_ras2_init()
-which makes much more sense to me.
-
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif
-> +#endif /* _ACPI_RAS2_H */
 
