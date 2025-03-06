@@ -1,112 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.bezdeka.de (mx1.bezdeka.de [5.181.50.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2180238382;
-	Thu,  6 Mar 2025 16:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F185B2139B1;
+	Thu,  6 Mar 2025 16:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.181.50.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741278869; cv=none; b=iTEixzXKpN5IBcV6BET9vAj/WqWcWSpf/AABuZ5Wg4GaRbbf+G7HOYH3KsQqzk8xJpVsgdr3oRsmw+NAu+aWZw0fMyncrhlrVVV1OCF84gvil1zYGJ7J7cLSlf7uTFLSvQIiWv/Sj7GDKMrGeR5VLbkcC9ZFOOoMYfMm4YiFh7Y=
+	t=1741278911; cv=none; b=YY2Zv3Us3dCW2XCTJy3BMKZcpQpvnoULTOo3Hi37jFYz8C++iu3N21D9D9gQjQwAD6ss18fSjQ+F2kt355bjRW3u8pfppVgDqDFn6a/q4BCrM1rk5I1J8ozjb5H5sso6SKe4YqzEb9py9h+cMLP/dMN4bCjHDhtmghRAfK8ZXGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741278869; c=relaxed/simple;
-	bh=y8w9Z5XBGvuLTNVCiYL3sVM/L5ZsatxzgXTOSmbh1dY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CIP7X3m4qedK230Tmfs83M2r7v1ixD2768aJ7Ow/yHOP8gfZbMd6Ibm3DYKxe3hMokjYLevFgrVtXn1Xq8xF/lyiJCGavfVxgVSYkVGiSdnB3pCvis9beb77ubxHpaVTKxRVMynqDw6YJ9gF3Gk499ZShA8McS/jcV6TI69wTIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VlLxC4Wb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741278911; c=relaxed/simple;
+	bh=ePQ8fgR2Ol+QBJmaiwdkBzfqyre62w0pV7VP0pAL7u4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=kwqp1Tp7Odf8jZQuHRGtl38dHPR/576Pf0NM1lQT2WM0Nkwe0sbBQbi6GT54MVr9x0LmRQRo5FNOjgpS76/asaj2WO9jb8WY1lCboWyYbG4q3MYJ2FX44I1xxQ9sc9nRIYytplld60+e2tVPyfEPlzPzLjCl84EpdCCG2bWkPRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bezdeka.de; spf=pass smtp.mailfrom=bezdeka.de; dkim=pass (2048-bit key) header.d=bezdeka.de header.i=@bezdeka.de header.b=q82kf6lm; arc=none smtp.client-ip=5.181.50.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bezdeka.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bezdeka.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VlLxC4Wb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E4BC4CEE4;
-	Thu,  6 Mar 2025 16:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741278868;
-	bh=y8w9Z5XBGvuLTNVCiYL3sVM/L5ZsatxzgXTOSmbh1dY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VlLxC4Wbu1cdNhjxZzjiVL/C5tkGwZlf23bdXVa3qCrhfN8CmtftVb20j29BCf5LK
-	 Y/sCfElxHHfVikbYUa0e/0j7g2tgVXcml3GmVrK+8ujY+bKTwyyDOkpIcVRf1jMvZd
-	 99WDtUreuEkMqxYlOBhNkc6rNSRpulykPMZi+jf0hHbBPlZvfkVM0dO3Ywphir7eun
-	 q/xsNHIvW8ZxKWwLCQ1YKqjbfOA1Lwa6Jevn6uzKx3nuSgsV/ofiNou+XNm2v7aWmj
-	 olBAhlmIn+u0d0pDU/N7HUZl91u0pODjgWjo3oBGF4APSlsZsI1L/H/BILmh4/oBlr
-	 KwXleXLvWhoVg==
-Date: Thu, 6 Mar 2025 17:34:21 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Simona Vetter <simona.vetter@ffwll.ch>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>, aliceryhl@google.com,
-	robin.murphy@arm.com, daniel.almeida@collabora.com,
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v12 2/3] rust: add dma coherent allocator abstraction.
-Message-ID: <Z8nOjV5CoUfq6ogU@cassiopeiae>
-References: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
- <20250224115007.2072043-3-abdiel.janulgue@gmail.com>
- <20250305174118.GA351188@nvidia.com>
- <Z8mlAxsszdOH-ow8@cassiopeiae>
- <Z8m9j3SwWHqaCTXo@phenom.ffwll.local>
- <Z8nFJjb30_Wm3cJJ@cassiopeiae>
- <20250306161818.GG354511@nvidia.com>
+	dkim=pass (2048-bit key) header.d=bezdeka.de header.i=@bezdeka.de header.b="q82kf6lm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bezdeka.de;
+	s=mail201812; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
+	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ymJP0/xT4dIjoC4+iVCO8nK9r0zha61bXHc9VHBaPaE=; b=q82kf6lmkojePCD/vKq+7R2b9x
+	hPERb6d1DvIUomd/fFr413UpPHoUzGr4VNiV2eQWWv2bHVDC1z2nnWsvQYJ8Vd0Kquk4POca+xfHc
+	h3r2ZKALCgGQwcWeoYRazNvmkHc9MGQGxZAnxbfql5zspztkug5CO8jvr7X6KS+sIwM/8EBpyur4x
+	3C9Fsxmx6HCEZT41l9B3kxDHavchRFlHLG/who1WMViP+rtT28a3ae7Eq8Y2s/4Ce1rCTG5gCtqc2
+	DdCyG6o1QWP0M+nT7jeYQ+eNapCxk+9Bu6Sp2454wN/ulEzhsYMoS7y8FRDUMbglRIkIjclZH+uCm
+	Wc2SMazw==;
+Received: from web5.bezdeka.de ([2a03:4000:6b:b6::1] helo=email.bezdeka.de)
+	by smtp.bezdeka.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <florian@bezdeka.de>)
+	id 1tqE4R-00Dch6-38;
+	Thu, 06 Mar 2025 17:27:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306161818.GG354511@nvidia.com>
+Date: Thu, 06 Mar 2025 17:27:38 +0100
+From: florian@bezdeka.de
+To: Joe Damato <jdamato@fastly.com>
+Cc: netdev@vger.kernel.org, vitaly.lifshits@intel.com,
+ avigailx.dahan@intel.com, anthony.l.nguyen@intel.com,
+ stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, "David S. Miller" <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ bpf@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH iwl-net] igc: Fix XSK queue NAPI ID mapping
+In-Reply-To: <20250305180901.128286-1-jdamato@fastly.com>
+References: <20250305180901.128286-1-jdamato@fastly.com>
+Message-ID: <796726995fe2c0e895188862321a0de8@bezdeka.de>
+X-Sender: florian@bezdeka.de
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authenticated-User: florian@bezdeka.de
+X-Authenticator: login
 
-On Thu, Mar 06, 2025 at 12:18:18PM -0400, Jason Gunthorpe wrote:
-> On Thu, Mar 06, 2025 at 04:54:14PM +0100, Danilo Krummrich wrote:
-> > (For some reason, when replying to this mail, mutt removed Sima from To: and
-> > instead switched Cc: to To:, hence resending.)
+Hi Joe,
+
+On 2025-03-05 19:09, Joe Damato wrote:
+> In commit b65969856d4f ("igc: Link queues to NAPI instances"), the XSK
+> queues were incorrectly unmapped from their NAPI instances. After
+> discussion on the mailing list and the introduction of a test to codify
+> the expected behavior, we can see that the unmapping causes the
+> check_xsk test to fail:
 > 
-> It is normal, Simona's mail client is setup to do that.
+> NETIF=enp86s0 ./tools/testing/selftests/drivers/net/queues.py
+> 
+> [...]
+>   # Check|     ksft_eq(q.get('xsk', None), {},
+>   # Check failed None != {} xsk attr on queue we configured
+>   not ok 4 queues.check_xsk
+> 
+> After this commit, the test passes:
+> 
+>   ok 4 queues.check_xsk
+> 
+> Note that the test itself is only in net-next, so I tested this change
+> by applying it to my local net-next tree, booting, and running the 
+> test.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b65969856d4f ("igc: Link queues to NAPI instances")
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> ---
+>  drivers/net/ethernet/intel/igc/igc_xdp.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igc/igc_xdp.c
+> b/drivers/net/ethernet/intel/igc/igc_xdp.c
+> index 13bbd3346e01..869815f48ac1 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_xdp.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_xdp.c
+> @@ -86,7 +86,6 @@ static int igc_xdp_enable_pool(struct igc_adapter 
+> *adapter,
+>  		napi_disable(napi);
+>  	}
+> 
+> -	igc_set_queue_napi(adapter, queue_id, NULL);
+>  	set_bit(IGC_RING_FLAG_AF_XDP_ZC, &rx_ring->flags);
+>  	set_bit(IGC_RING_FLAG_AF_XDP_ZC, &tx_ring->flags);
+> 
+> @@ -136,7 +135,6 @@ static int igc_xdp_disable_pool(struct igc_adapter
+> *adapter, u16 queue_id)
+>  	xsk_pool_dma_unmap(pool, IGC_RX_DMA_ATTR);
+>  	clear_bit(IGC_RING_FLAG_AF_XDP_ZC, &rx_ring->flags);
+>  	clear_bit(IGC_RING_FLAG_AF_XDP_ZC, &tx_ring->flags);
+> -	igc_set_queue_napi(adapter, queue_id, napi);
+> 
+>  	if (needs_reset) {
+>  		napi_enable(napi);
 
-Huh! Never noticed that in the past.
+That doesn't look correct to me. You removed both invocations of
+igc_set_queue_napi() from igc_xdp.c. Where is the napi mapping now
+done (in case XDP is enabled)?
+
+To me it seems flipped. igc_xdp_enable_pool() should do the mapping
+(previously did the unmapping) and igc_xdp_disable_pool() should do
+the unmapping (previously did the mapping). No?
+
+Btw: I got this patch via stable. It doesn't make sense to send it
+to stable where this patch does not apply.
 
 > 
-> > > I think for basic driver allocations that you just need to run the device
-> > > stuffing it all into devres is ok.
-> > 
-> > What exactly do you mean with that? DMA memory allocations or "normal" memory
-> > allocations?
-> 
-> Simona means things like a coherent allocation backing something
-> allocated once like a global queue for talking to the device.
-
-Yeah, that's what I propose then.
-
-> 
-> Ie DMA API usage that is not on the performance path.
-> 
-> > > But for dma mappings at runtime this will be too slow.
-> > 
-> > What exactly do you mean with "DMA mappings at runtime"? What to you think is
-> > is slow in this aspect?
-> 
-> Things like dma_map_sg(), dma_map_page(), etc, etc.
-> 
-> You cannot propose to add any runtime overhead to those paths and get
-> any support from the kernel community. They are performance paths
-> optimized to be fast.
-
-Oh, I didn't do that. How could I, since I did not knew what was referred
-to? :-)
-
-Quite the opposite, I fully agree with that.
-
-I think for this we need higher level abstraction (which now that I know what
-was meant I know Sima proposed already), or maybe provide an API that can
-consolidate single operations for a single Devres container, etc.
-
-But that's out of scope for this series.
-
-- Danilo
+> base-commit: 3c9231ea6497dfc50ac0ef69fff484da27d0df66
