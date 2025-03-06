@@ -1,70 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C175B20B7E2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FEC1EDA1F;
+	Thu,  6 Mar 2025 12:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741264417; cv=none; b=AkqPCvdE7tSzoCGk0J95rqNelSiWcqvz+2mc0NHtWh3FatYV5qNnysVBR/RAo0MmcU29SsfkE1Vt2o4Ah4txaeOWkTtIJ7R/5ToDir/LOB+Pxg7L5hQyEcm4rVNHg0E35vIZZs+vdR3wLaOQVFK8+92HYv74EbqHKSfpMtSTWCI=
+	t=1741264429; cv=none; b=WTZ4+X564LW3ZaDtqE0eqZUJzX6WIWW7Xrgx7xalUmn85LTW5Rdn15RjM1zdJCSz9v/fslz+fsbOAp18vi/C7/4kTFTxS8OPWgkmpiZlEUHfrfgcNr9DNPENh1LHxJrjrL4rBshabC+4GjSskVe8bP9E9LH29J2JhUuqoa/h9us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741264417; c=relaxed/simple;
-	bh=kFnpwOqp85UqVvm4pdv7W15a85XO7BqfmlYiqyDaHpw=;
+	s=arc-20240116; t=1741264429; c=relaxed/simple;
+	bh=P5/bQBujci4UcWFgDKpxgC7L6tOL6QdQ90C1u/6ZuWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tT3w0mjxjfCil/ivp7Wqv7xojZ2+bCXreXQadLCnkeErcQ7y03ugtEMotmN4sHFqhNq6e3wTeGGBooe+mx2JmFbWPooJoNbJr1OUHH94x6JihHWjj60/+kZNVEwV4LKMXX31aiDQpBlUbhcDqtrwOC+aEWZ4hzznSjrUXYykFzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GwUdjJpL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JUf5mF/4Db4jbhLvniyR1vMGKZFCO4Ry7UImS6KYwuSkYTApaseNBfRThqrOzDD1KWehsBVp2GWubi+iwTTzK32Pr8SXdIqrF6yTgMnMkhnanmRcSY55GNbMAbkJw2TW7cNmr8DiOUHsXXxf6zjCOh9Ks88fRbMeyBgNyX4HQhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1g5NbEl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GwUdjJpL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741264414;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YSaun7lz0bYxj+TpuiSszwxCug8hPax6TNKoHPYNE3k=;
-	b=GwUdjJpL430wMKRtz8jYrsZhrVZfW0zuuMukS9UKd5voyAx4JdP0lOYhd3aDZrXpRIzDE4
-	sV3mwqGTfYtbaa/72abioYUi2hvtzauAUEvl5mdJ3KJK9sx89XKIK4zsNMcB51ORVVqK0S
-	UuvMD6OCpCfz6/Tv8usyjgGQ3t3jkik=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-106-7dVMJNGsO7ylcJzUCNfUbg-1; Thu,
- 06 Mar 2025 07:33:28 -0500
-X-MC-Unique: 7dVMJNGsO7ylcJzUCNfUbg-1
-X-Mimecast-MFC-AGG-ID: 7dVMJNGsO7ylcJzUCNfUbg_1741264406
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27E1719560AB;
-	Thu,  6 Mar 2025 12:33:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.240])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 110551955DDE;
-	Thu,  6 Mar 2025 12:33:17 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  6 Mar 2025 13:32:54 +0100 (CET)
-Date: Thu, 6 Mar 2025 13:32:46 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Jan Kara <jack@suse.cz>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Rasmus Villemoes <ravi@prevas.dk>, Neeraj.Upadhyay@amd.com,
-	Ananth.narayan@amd.com, Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: Re: [RFC PATCH 3/3] treewide: pipe: Convert all references to
- pipe->{head,tail,max_usage,ring_size} to unsigned short
-Message-ID: <20250306123245.GE19868@redhat.com>
-References: <CAHk-=wjyHsGLx=rxg6PKYBNkPYAejgo7=CbyL3=HGLZLsAaJFQ@mail.gmail.com>
- <20250306113924.20004-1-kprateek.nayak@amd.com>
- <20250306113924.20004-4-kprateek.nayak@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1g5NbEl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24169C4CEE4;
+	Thu,  6 Mar 2025 12:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741264428;
+	bh=P5/bQBujci4UcWFgDKpxgC7L6tOL6QdQ90C1u/6ZuWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P1g5NbEl7bkSKYa7caiviUHuN6Lyuqm0/Qep0kyaOrJs7oMLo/CdWuOXYMO9ZJp02
+	 8HjTStp7fZPtK3ZhYZzrUaDkBxMUjtXFj+zxBL0SeE6MGjeUWwn+ByCTs33+BWuQPa
+	 hmRup15H4PeRfDBD+a9vitj0bivxiSIuqHLMKBFN+Zak7+kwtz1eIGgOIS/9esC6Ni
+	 o7NEG7xqW2WUC0QNEHPH2q5FHEWB4ZHGNTMLriPau/f89AWycPObq9NXFI5I8WWHMS
+	 s0cl+lnWOAhKCU9hyeOC3ZoW5Iey8aNuzjzMey8thWBe/zkZC9NuATaLG0p3pLCUGy
+	 XWhQuaFAhhVbQ==
+Date: Thu, 6 Mar 2025 13:33:42 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>
+Subject: Re: [PATCH V3 2/2] rust: Add initial clk abstractions
+Message-ID: <Z8mWJox-0IyP1uUo@cassiopeiae>
+References: <cover.1740995194.git.viresh.kumar@linaro.org>
+ <023e3061cc164087b9079a9f6cb7e9fbf286794e.1740995194.git.viresh.kumar@linaro.org>
+ <CANiq72kdWzFOZ39EoFNxEAbk4KYgzLi1OAEc1zn8BM07VpXy3g@mail.gmail.com>
+ <20250304085351.inrvjgixvxla4yn3@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,27 +56,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250306113924.20004-4-kprateek.nayak@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20250304085351.inrvjgixvxla4yn3@vireshk-i7>
 
-On 03/06, K Prateek Nayak wrote:
->
-> @@ -272,9 +272,9 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
->  	 */
->  	for (;;) {
->  		/* Read ->head with a barrier vs post_one_notification() */
-> -		unsigned int head = smp_load_acquire(&pipe->head);
-> -		unsigned int tail = pipe->tail;
-> -		unsigned int mask = pipe->ring_size - 1;
-> +		unsigned short head = smp_load_acquire(&pipe->head);
-> +		unsigned short tail = pipe->tail;
-> +		unsigned short mask = pipe->ring_size - 1;
+On Tue, Mar 04, 2025 at 02:23:51PM +0530, Viresh Kumar wrote:
+> +/// This structure represents the Rust abstraction for a C [`struct clk`].
+> +///
+> +/// # Invariants
+> +///
+> +/// A [`Clk`] instance always corresponds to a valid [`struct clk`] created by the C portion of the
+> +/// kernel.
+> +///
+> +/// Instances of this type are reference-counted. Calling `get` ensures that the allocation remains
+> +/// valid for the lifetime of the [`Clk`].
+> +///
+> +/// ## Example
+> +///
+> +/// The following example demonstrates how to obtain and configure a clock for a device.
+> +///
+> +/// ```
+> +/// use kernel::clk::{Clk, Hertz};
+> +/// use kernel::device::Device;
+> +/// use kernel::error::Result;
+> +///
+> +/// fn configure_clk(dev: &Device) -> Result {
+> +///     let clk = Clk::get(dev, "apb_clk")?;
+> +///
+> +///     clk.prepare_enable()?;
+> +///
+> +///     let expected_rate = Hertz::new(1_000_000_000);
+> +///
+> +///     if clk.rate() != expected_rate {
+> +///         clk.set_rate(expected_rate)?;
+> +///     }
+> +///
+> +///     clk.disable_unprepare();
+> +///     Ok(())
+> +/// }
+> +/// ```
+> +///
+> +/// [`struct clk`]: https://docs.kernel.org/driver-api/clk.html
+> +#[repr(transparent)]
+> +pub struct Clk(*mut bindings::clk);
+> +
+> +impl Clk {
+> +    /// Gets `Clk` corresponding to a [`Device`] and a connection id.
+> +    pub fn get(dev: &Device, name: Option<&CStr>) -> Result<Self> {
+> +        let con_id = if let Some(name) = name {
+> +            name.as_ptr() as *const _
+> +        } else {
+> +            ptr::null()
+> +        };
+> +
+> +        // SAFETY: It is safe to call `clk_get()` for a valid device pointer.
+> +        Ok(Self(from_err_ptr(unsafe {
+> +            bindings::clk_get(dev.as_raw(), con_id)
+> +        })?))
+> +    }
+> +
+> +    /// Obtain the raw `struct clk *`.
+> +    #[inline]
+> +    pub fn as_raw(&self) -> *mut bindings::clk {
+> +        self.0
+> +    }
+> +
+> +    /// Enable the clock.
+> +    #[inline]
+> +    pub fn enable(&self) -> Result {
+> +        // SAFETY: It is safe to call clk APIs of the C code for a clock pointer earlier returned
+> +        // by `clk_get()`.
 
-I dunno... but if we do this, perhaps we should
-s/unsigned int/pipe_index_t instead?
+You may want to add an invariant for this, i.e. something along the lines of
+"Clk always holds either a pointer to a valid struct clk or a NULL pointer".
 
-At least this would be more grep friendly.
+In this safety comment you can then say that by the type invariant of Clk
+self.as_raw() is a valid argument for $func.
 
-Oleg.
+Not that your type invariant needs the NULL case, since OptionalClk may set Clk
+to hold a NULL pointer.
 
+I still think that a new type MaybeNull<T> would be nice to encapsulate this
+invariant, but we can also wait until we get another use-case for it.
