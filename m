@@ -1,170 +1,370 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2044.outbound.protection.outlook.com [40.107.220.44])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C153423FC59;
-	Thu,  6 Mar 2025 21:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741296426; cv=fail; b=ohajWJC2rkv7cJFsCqB04DK+pBoMibWfbo4UjPI5XaSKBGOkHEkOY4LwzbctWGIzmohkruURrryH4RVd1W209ZrXKsNLwGbmN6W8kOEVqnLBMxCfYcRVdvTt48BIozFDL3Xvr1khea3OtA3IB0zIlhGwLdxX2FvH85WktGfZxSc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741296426; c=relaxed/simple;
-	bh=d28+P444m0mLMJHk0GbO2/twMos+IjANQjpCi9DkuJc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oUFAk8cVlC/Bj9fVELPjLyCgBNlY8G2MTOaPHOd70DZSoM7E8neGoUxhtiCg/2mSGUXmGJVXnjkQfrH3DelDVg5aaf9eBsssXSMSM9dgmZ90y3Jni7wegEQ03ihABOwmhJKLMgmRRrKBolPpqCB91+wHmrbc5vmONnQaFX9X6DE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EYUvorY4; arc=fail smtp.client-ip=40.107.220.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50B227701E;
+	Thu,  6 Mar 2025 21:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741296432; cv=none; b=se5eMjZFQG5MAjSjuuKaohaQk0A1F3z7DIh24S+ZiSvQyrRZDmb25zMfUVktv2SigLeZrftHYNHTIIdF5e6eMMgdr0WwdVaNsHe+wUjPfH2ncMsasAQzsd0Zo486hvYGKfFRaVzW1cJVhm9vZZVEJjb4PymdTVZlLdWSOjD3GE8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741296432; c=relaxed/simple;
+	bh=+teJ2bIy+jRuCWoObGYUP/8ODUMDyG81dtPF3thWKtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ump+i1KDbsmiKT8AKwvBGBwXAyFbbNFZLd9vPubXt+amLxfFpQWg6NAb2Ef8hIcPeQN6eseVpopVsem/pngUouAoVAKfRKywDUoHHDhBt3CcPGhch0Ad3MCJWcW16MDnV6Vf6l/vE3MR0zbCe8v/aO+Wti5SrD2tUobfahddueI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QN1LH5ig; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EYUvorY4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pxFmth9QdHB8XRosj1OMJa0bAKVzFbg/aDWza7MwyPsM2R6lcP/QVWgwULd2lTe5ULg1Eehh0gT0Tj0UkdkOUPPhlI1z+fq2VFu1A8IQB3TI6G7B6gIy3lxwBwwBzCwh9veF4WkZzA3kM6yTn5LaexNC962u6C9PxyQg4ViS1tMN6xZfD8owqWwUtfCupzTQfIeNRtpN9+VglMRgTdQogEcLWZUHwvqg96xTyteYZn4kClIkNbJ9u2eXeiC/FXjOTnniM9qwQK/81aTtL4Hj1+Vkg4wyWvgirWQe4BoAIhyJKC1zA7TqEuXkZ/swHbYSs1wfIToT+/upVuPp95RSBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UDF9UxIwfNTC1xwxT3KN9nnSejko0o5Kas5taovfeIs=;
- b=BWyZxuV+DGWUrOQWpmGSQuB47ZxNnQfw7lFypR7tY/HvhXXoE7Vd7SjKWeFcs3Kn3hyLumJih108FdLf4c8PAkW+jczZ2+acNxufbk+E2GXYmmIYOXo/WMA6+0wXJHegTAMaz8Wn+/Vrr+SKb65Qo+V2U8RRpWCz1vu3BC4AxfUGnvuXiyYQKJaMVjcGWGywRsZlI4hOh5yboetJeXuUXHl9lcjduxAenB/Ap6y2D+LOKTs3Spoz/+j0Xei01NYhewdHnnuXxnXfZ3FHaIuqq93JiGXIB4dH67iwV4KwxNYD5hm7iIfSjecn2Mkaff1UREaZQPJLBXzzsWhaIoThYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UDF9UxIwfNTC1xwxT3KN9nnSejko0o5Kas5taovfeIs=;
- b=EYUvorY4acMHg2KwUc4q65vFYubSmxDMMpdXK7z8mJBLiKqeTt58JnNINvdsBBtFHGxzKcVGiXzi40gZkLj/C9JIKAeeKANAqpH6ll0VPGqJVzEDs+FZF16Rfvr+mq67ayv+Ysu5LaY4Wepk3jHwuySyhSyqK3CsCf28EDRrEky9hxVwJd/9jNJIV8t0qnVWWDmRRy9nKnUKRD/hfDbXcAH6to3+K5jj147hTIKOXNJMyiVp2UV9a6AyCnVfPU3KtjJ8nOjxLOBXkTHrn6P3JKRh7Sxn3No5rCx6SsZm3xb2sStbUS05MCl+d4eJYqtKbaK4OuiT4c1ayHhEuiSY8A==
-Received: from DM6PR04CA0011.namprd04.prod.outlook.com (2603:10b6:5:334::16)
- by BL3PR12MB6475.namprd12.prod.outlook.com (2603:10b6:208:3bb::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 21:27:01 +0000
-Received: from CY4PEPF0000EDD3.namprd03.prod.outlook.com
- (2603:10b6:5:334:cafe::7) by DM6PR04CA0011.outlook.office365.com
- (2603:10b6:5:334::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.19 via Frontend Transport; Thu,
- 6 Mar 2025 21:27:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EDD3.mail.protection.outlook.com (10.167.241.199) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.15 via Frontend Transport; Thu, 6 Mar 2025 21:27:00 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 6 Mar 2025
- 13:26:42 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 6 Mar
- 2025 13:26:42 -0800
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Thu, 6 Mar
- 2025 13:26:38 -0800
-From: Tariq Toukan <tariqt@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>
-CC: Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>, "Leon
- Romanovsky" <leonro@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Jiri Pirko
-	<jiri@resnulli.us>, Leon Romanovsky <leon@kernel.org>, Tariq Toukan
-	<tariqt@nvidia.com>, <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Jiri Pirko <jiri@nvidia.com>, Kalesh AP
-	<kalesh-anakkur.purayil@broadcom.com>
-Subject: [PATCH net RESEND] net/mlx5: Fill out devlink dev info only for PFs
-Date: Thu, 6 Mar 2025 23:25:29 +0200
-Message-ID: <20250306212529.429329-1-tariqt@nvidia.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QN1LH5ig"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1741296428; x=1741901228; i=w_armin@gmx.de;
+	bh=051DgrsrM1mRUaTBGkVQbh7iCUdWww5XbKpVKTf7eAc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=QN1LH5igilIB4Oftm2MOX1So74Ru8M5MD4/DBY2PeOTvmde5z0klQgUQ3nhEboFu
+	 exPJpYfr9S7SBfnpld1XwNPM3VcJaS9JoeZMpVLBhskXyoOAxNJL1bmMjzgb0YuhQ
+	 JBKJLyq1h0Qy3H7RwkG0ht6rYSkMs8ptzXiFjwkaJT3Zxqz2iIh0Q/y51KMoc7r8L
+	 icG5+sF4bSZJBI529lZne9QtiNBihCSSKgKNo4ZMGlyr9kCfjdH+oBu6v3LDhNwFg
+	 3qxbulR0Sn/UlnLbPXlNLE+MJP2fD+QaOyQpqROhbTDB5v4BodGVGE6+LtuyoBl70
+	 IVpU+4MzI0JXmzHbLQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJmKX-1tWr103BoP-00IVz2; Thu, 06
+ Mar 2025 22:27:07 +0100
+Message-ID: <fc3875fa-8ec9-4279-b8b6-d2ee35eb7602@gmx.de>
+Date: Thu, 6 Mar 2025 22:27:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD3:EE_|BL3PR12MB6475:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6325633e-8a3c-4a02-2655-08dd5cf5a1d2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?S6UKSLdWzr4SIP230hgR3ddV+cYu6sjb4n/w8skqyyC1gYKRkqULUKf/XIIt?=
- =?us-ascii?Q?yKVWm8J4U8khGcJbvC+FxTSOcxS/GIn7eg/++ZkN7ufhrGnjrRzmegHoKq9D?=
- =?us-ascii?Q?bwiiRxRKVx/By7F3bOZbWWkQZr2Zyue5G6S4k9AcKFOTSn71+fiuAFSlrCqT?=
- =?us-ascii?Q?88M0NkuWtKq8zFWHeYCPjIH75I83SWCs6Mjn6xYL0r5XpcLWITz2kiOgcLND?=
- =?us-ascii?Q?EKYD3rBuhd92CKaT37HeaEDOzJ1krl8gZUU58b+pzHqiDcFFS7QmDwTrrIjq?=
- =?us-ascii?Q?vkqU2zHoTSe0ws+xHbNxltanzbZlYswlFxVWdF+BoUeV+SQ4HI8+BUNqWNAR?=
- =?us-ascii?Q?uzIEPWY56MFuJxl0GPL/CrLWTFMUYdxaJH40LkGe8C8OE7LCWpVjdv4u4c4i?=
- =?us-ascii?Q?uD/l3X1HtDEe2YzHA2GtXE6F8N60cDFXKxy/AIB3D0Cnyeghn0DEpsVMNe6Z?=
- =?us-ascii?Q?1tFdO5tanBckX4YC1N4oAR3nQKdYoDGndc6nDFAJmjSjq80OFisiCYOBDhof?=
- =?us-ascii?Q?SwUIH/C3olrSmv8Nm4VE7nkdO2vhtFrNYcTwtpwcSk7EJSBZyujVvA2XQXKN?=
- =?us-ascii?Q?PZ5nG/1JZq58p7RgcNIoAL0oK2HyczZAUUy+Dq0yNREoPrzUpjCsKZYqbvbe?=
- =?us-ascii?Q?GmOYPJWwpttsRCHF0z6YmH+yhDHz9YkfReJPzO9ke5/hxPXIKoflnuW3N8YG?=
- =?us-ascii?Q?bjOs3xGgmhsGjvhv7jV7dfurn94dER6edEJc6Csld44selOXDEcY1kPbTxms?=
- =?us-ascii?Q?6uEZhUf/CEiUvL+KU/Jpvl1OA6EskBY8YcJBlAP1OUtV+j7hIf8QxkbXw8FL?=
- =?us-ascii?Q?GQrYCkyqV+PAgfdfM605sumpP4MtOVrb2QWaoyQfd1kyU5scyrcfLorGkOeB?=
- =?us-ascii?Q?KKhKCPNimKw7B0nYtF4qjzMYHH2QkGpAbcFf2ZcVpnFrU8Hl9id5RAKN2360?=
- =?us-ascii?Q?t3fzCB3P1qdik467NGQUJsFUfQqPbZb32qze1H2lFdJXpU2SfDbQ9I15FHsk?=
- =?us-ascii?Q?qDqzOf5we0SG3dn9aRqDegvmQOKsoh5SSAIXeKxwqCxKAZqYDmon3TgF8WHQ?=
- =?us-ascii?Q?xHYw2WAjDeyv7VAb9zWWayy+lU/+cLdmt6OABnhbGrVv2UyfYsl66H2BzvGi?=
- =?us-ascii?Q?z5yJNXSXbnOeQg79eTjgRNSjmtb/jHmKLMKdDZ8UDJ4BYCJ1JaYXmTrPNvJd?=
- =?us-ascii?Q?Cm1okaxiOiG1PMxt99cQNDrwy5gFqBRcKV7vJ5afp+rJkPHX8hpZDpfdkuMz?=
- =?us-ascii?Q?VwXFrjG/Myp6Q+KsZJus1tu1DB6fYG42O7Ywym3frtyMema5lAS+f2INiioG?=
- =?us-ascii?Q?frifjBCpUSdkwfT5EcgHNlcyEVeKfOq8OhUo0meJAFtib/mH0acnT+1aFAoy?=
- =?us-ascii?Q?WBlMbRucN3g62acf507Zyb0mZfpVgw7ezcqxUru/qdXzVqQhtyfOBnFYQn24?=
- =?us-ascii?Q?DprDGEZSFg6RfMpl/YCqTdX14+1vvkcHukb0WSDYVHM5pZhK6MRW34HdBV+V?=
- =?us-ascii?Q?6UH1J8r4Kkq/5As=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 21:27:00.6250
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6325633e-8a3c-4a02-2655-08dd5cf5a1d2
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD3.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6475
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/10] platform/x86: alienware-wmi-wmax: Improve
+ internal AWCC API
+To: Kurt Borja <kuurtb@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org
+References: <20250305-hwm-v3-0-395e7a1407e2@gmail.com>
+ <20250305-hwm-v3-3-395e7a1407e2@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250305-hwm-v3-3-395e7a1407e2@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:V2qYOwSFOW5a0q2+7/G9ZrWtTnCr5hkO8xJk0szn9WsVjqZzxJK
+ sbbjqH7m1N1GUNgpTp4gmAgwcqcSxF7ic1fbncKTBsAFGcQz0T+zjx6d30/wr8hfCwNladh
+ R9Fh8CfPjIdwXT6vQ5zr0T1cy7VCUr7zmrSjXzXeQSJk0aa0hFqKyR/Txw0jshRdqVyE68C
+ kVh0GYj9rtxqUxnrq+g4g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:GHPVV1RyvxY=;amZYKBw2Q0457dRHcKp3dGoGWLv
+ +JDTfRFIDTSj78QIywCca+s9Cga/WAmBEqjfkuTvoo31jN9NQIiDY3l+yKsGtXXXDEl+9AzEP
+ FK+oe+jkkir7lKeCcg0WVrhVqxG/NaQ8R9WRmrgxlRTKKUN2x7zu5pVt3LfT7e73oHFPqbSO/
+ x7zWpOMfcn7LOjlCZrSYEjjCr0jwW52dNiZPgzLy25R+nqbGLw82HYhJMZQpNx5/ZMsBFPznk
+ hpIvV4xu09RaPspWAK+Bm9TKE1XPjmPfwL8QGJz1ZudCm5x+OO1hd0Y5DBkkQTn1QquQOUQno
+ VrzCie4BUrEwVn/9SH5sqenJCGtl4iHJaU+9CvU5U7uLhfp8W9feF+HHFInCf0F8/QxQAXIDw
+ 5OXt2vwzX+rHhcaJnndCserl5QWTkemt+Opf4lZhFAZhdj6aTkl/jVeVpaK9ZaqWkbzTojm0j
+ I5bAjGaoHwE9C5b2INNr0h8yVseNRUM3WVzgtjd2RPqnuI/OdP357qJZrbo05abtkkkRMwRFe
+ /viflKfXZ4Kjppin4TIIVRVLR+TTt+e+IHVklHHmTtg8C28LydEAZPwbPOkbtjieMJ55/miF6
+ eMmoAekuE64V4+PlKKt+KvXbUu26CB8/QmC7oHyLIQ7nslcnA0WtC2+nsp9NeDkBnkqteteDj
+ +BLcokjyGeMgPyXv8k6jeQrEj1dwvOwvJAkTdy/00tJDC//zEEYMsG2REaRVmmYUD1YszM+JX
+ aSlIH9BRH2/jCBhLLHNPOlTImTagx6tZxDCS3F1wAyXLuLwfZ+KkJK1bKCHYlfBhBzVty3/IJ
+ Ojkwx0Fopd8muqtM1g47D82ZphUDo7x5RezDc3RAXIxv76XMe/blQtTx7oQClqR3DnwPgBz2a
+ ISV17XuZB66rbGeocnRc+qoilEpo2HAMSHnnkS9bBmxyePwT7++ePkY3Tsrg/FvSyKNhf6Qct
+ pJ7Pk0o+5OR7SJfPc+M+FrBpOi92LhV5U4tBsu3QuDg3uVKQ4vkai4eG8o19viDmVXkkEFvTl
+ hQPMRINyJsU1jNoUW7+VyVATOHpJ2M+x5E8jbPXb8LgmDGhO2/R/ycVsBqkSj8PY8bsoQC6MH
+ s/uo5ahm6ZlOcsjO6jldCqh/aES1uTIBHlL6MT74GnnykKGm8WxQmeo+yeD3QBES8tfSIFYHV
+ 36sKWh1DCn/glZS0sHhOfbsczkzjqKpZC9KjvmG0WncBv/OpmSeWu4Fw3GAG2KOgsyh+oCN+2
+ Kg90ikPIZijZVajCEbMjWNksmbLNd1+SYrcchr67sruY4GIaKW1F2C9dRtvmm6aYAs5NJ0W1z
+ /JL8X3cGoJ1BjqJZeoVJxxEDnOhOcVrZYW6Mn0/hQBmXueYnlG3PRd+9seiMPINWTtOwiSvmG
+ ZbPWx0oR8IjwBhmUM+Y43IZM4x3jJ3MlfmKRnR5i66uheVNryXWk9+yRu6
 
-From: Jiri Pirko <jiri@nvidia.com>
+Am 06.03.25 um 01:56 schrieb Kurt Borja:
 
-Firmware version query is supported on the PFs. Due to this
-following kernel warning log is observed:
+> Inline all AWCC WMI helper methods and directly return the newly
+> introduced __awcc_wmi_command() helper to simplify implementation.
+>
+> Drop awcc_thermal_control() in favor of awcc_op_activate_profile().
+>
+> Add awcc_op_get_resource_id() and awcc_profile_id_to_pprof() helpers to
+> support upcoming changes, as well as a new failure code.
 
-[  188.590344] mlx5_core 0000:08:00.2: mlx5_fw_version_query:816:(pid 1453): fw query isn't supported by the FW
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-Fix it by restricting the query and devlink info to the PF.
-
-Fixes: 8338d9378895 ("net/mlx5: Added devlink info callback")
-Signed-off-by: Jiri Pirko <jiri@nvidia.com>
-Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/devlink.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-index 98d4306929f3..a2cf3e79693d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-@@ -46,6 +46,9 @@ mlx5_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
- 	u32 running_fw, stored_fw;
- 	int err;
- 
-+	if (!mlx5_core_is_pf(dev))
-+		return 0;
-+
- 	err = devlink_info_version_fixed_put(req, "fw.psid", dev->board_id);
- 	if (err)
- 		return err;
--- 
-2.45.0
-
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>   drivers/platform/x86/dell/alienware-wmi-wmax.c | 176 +++++++++++++++--=
+--------
+>   1 file changed, 110 insertions(+), 66 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-wmax.c
+> index 80aefba5b22d6b4ac18aeb2ca356f8c911150abd..a43373717bd4580e8f62a726=
+3e67664630165e28 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -32,6 +32,7 @@
+>   #define AWCC_THERMAL_MODE_GMODE			0xAB
+>
+>   #define AWCC_FAILURE_CODE			0xFFFFFFFF
+> +#define AWCC_FAILURE_CODE_2			0xFFFFFFFE
+>   #define AWCC_THERMAL_TABLE_MASK			GENMASK(7, 4)
+>   #define AWCC_THERMAL_MODE_MASK			GENMASK(3, 0)
+>   /* Some IDs have a BIT(8) flag that we ignore */
+> @@ -443,8 +444,7 @@ const struct attribute_group wmax_deepsleep_attribut=
+e_group =3D {
+>   };
+>
+>   /*
+> - * Thermal Profile control
+> - *  - Provides thermal profile control through the Platform Profile API
+> + * AWCC Helpers
+>    */
+>   static bool is_awcc_thermal_profile_id(u8 code)
+>   {
+> @@ -463,95 +463,140 @@ static bool is_awcc_thermal_profile_id(u8 code)
+>   	return false;
+>   }
+>
+> -static int awcc_thermal_information(struct wmi_device *wdev, u8 operati=
+on,
+> -				    u8 arg, u32 *out_data)
+> +static int __awcc_wmi_command(struct wmi_device *wdev, u32 method_id,
+> +			      struct wmax_u32_args *args, u32 *out)
+>   {
+> -	struct wmax_u32_args in_args =3D {
+> +	int ret;
+> +
+> +	ret =3D alienware_wmi_command(wdev, method_id, args, sizeof(*args), ou=
+t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (*out =3D=3D AWCC_FAILURE_CODE || *out =3D=3D AWCC_FAILURE_CODE_2)
+> +		return -EBADRQC;
+> +
+> +	return 0;
+> +}
+> +
+> +static inline int awcc_thermal_information(struct wmi_device *wdev, u8 =
+operation,
+> +					   u8 arg, u32 *out)
+> +{
+> +	struct wmax_u32_args args =3D {
+>   		.operation =3D operation,
+>   		.arg1 =3D arg,
+>   		.arg2 =3D 0,
+>   		.arg3 =3D 0,
+>   	};
+> -	int ret;
+>
+> -	ret =3D alienware_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION,
+> -				    &in_args, sizeof(in_args), out_data);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	if (*out_data =3D=3D AWCC_FAILURE_CODE)
+> -		return -EBADRQC;
+> -
+> -	return 0;
+> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args=
+, out);
+>   }
+>
+> -static int awcc_thermal_control(struct wmi_device *wdev, u8 profile)
+> +static inline int awcc_game_shift_status(struct wmi_device *wdev, u8 op=
+eration,
+> +					 u32 *out)
+>   {
+> -	struct wmax_u32_args in_args =3D {
+> -		.operation =3D AWCC_OP_ACTIVATE_PROFILE,
+> -		.arg1 =3D profile,
+> -		.arg2 =3D 0,
+> -		.arg3 =3D 0,
+> -	};
+> -	u32 out_data;
+> -	int ret;
+> -
+> -	ret =3D alienware_wmi_command(wdev, AWCC_METHOD_THERMAL_CONTROL,
+> -				    &in_args, sizeof(in_args), &out_data);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (out_data =3D=3D AWCC_FAILURE_CODE)
+> -		return -EBADRQC;
+> -
+> -	return 0;
+> -}
+> -
+> -static int awcc_game_shift_status(struct wmi_device *wdev, u8 operation=
+,
+> -				  u32 *out_data)
+> -{
+> -	struct wmax_u32_args in_args =3D {
+> +	struct wmax_u32_args args =3D {
+>   		.operation =3D operation,
+>   		.arg1 =3D 0,
+>   		.arg2 =3D 0,
+>   		.arg3 =3D 0,
+>   	};
+> -	int ret;
+>
+> -	ret =3D alienware_wmi_command(wdev, AWCC_METHOD_GAME_SHIFT_STATUS,
+> -				    &in_args, sizeof(in_args), out_data);
+> -	if (ret < 0)
+> -		return ret;
+> +	return __awcc_wmi_command(wdev, AWCC_METHOD_GAME_SHIFT_STATUS, &args, =
+out);
+> +}
+>
+> -	if (*out_data =3D=3D AWCC_FAILURE_CODE)
+> -		return -EOPNOTSUPP;
+> +/**
+> + * awcc_op_get_resource_id - Get the resource ID at a given index
+> + * @wdev: AWCC WMI device
+> + * @index: Index
+> + * @out: Value returned by the WMI call
+> + *
+> + * Get the resource ID at a given index. Resource IDs are listed in the
+> + * following order:
+> + *
+> + *	- Fan IDs
+> + *	- Sensor IDs
+> + *	- Unknown IDs
+> + *	- Thermal Profile IDs
+> + *
+> + * The total number of IDs of a given type can be obtained with
+> + * AWCC_OP_GET_SYSTEM_DESCRIPTION.
+> + *
+> + * Return: 0 on success, -errno on failure
+> + */
+> +static inline int awcc_op_get_resource_id(struct wmi_device *wdev, u8 i=
+ndex, u32 *out)
+> +{
+> +	struct wmax_u32_args args =3D {
+> +		.operation =3D AWCC_OP_GET_RESOURCE_ID,
+> +		.arg1 =3D index,
+> +		.arg2 =3D 0,
+> +		.arg3 =3D 0,
+> +	};
+> +
+> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args=
+, out);
+> +}
+> +
+> +static inline int awcc_op_get_current_profile(struct wmi_device *wdev, =
+u32 *out)
+> +{
+> +	struct wmax_u32_args args =3D {
+> +		.operation =3D AWCC_OP_GET_CURRENT_PROFILE,
+> +		.arg1 =3D 0,
+> +		.arg2 =3D 0,
+> +		.arg3 =3D 0,
+> +	};
+> +
+> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args=
+, out);
+> +}
+> +
+> +static inline int awcc_op_activate_profile(struct wmi_device *wdev, u8 =
+profile)
+> +{
+> +	struct wmax_u32_args args =3D {
+> +		.operation =3D AWCC_OP_ACTIVATE_PROFILE,
+> +		.arg1 =3D profile,
+> +		.arg2 =3D 0,
+> +		.arg3 =3D 0,
+> +	};
+> +	u32 out;
+> +
+> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_CONTROL, &args, &o=
+ut);
+> +}
+> +
+> +static int awcc_profile_id_to_pprof(u32 id, enum platform_profile_optio=
+n *profile)
+> +{
+> +	switch (id) {
+> +	case AWCC_THERMAL_MODE_GMODE:
+> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+> +		return 0;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	if (!is_awcc_thermal_profile_id(id))
+> +		return -ENODATA;
+> +
+> +	id =3D FIELD_GET(AWCC_THERMAL_MODE_MASK, id);
+> +	*profile =3D awcc_mode_to_platform_profile[id];
+>
+>   	return 0;
+>   }
+>
+> +/*
+> + * Thermal Profile control
+> + *  - Provides thermal profile control through the Platform Profile API
+> + */
+>   static int awcc_platform_profile_get(struct device *dev,
+>   				     enum platform_profile_option *profile)
+>   {
+>   	struct awcc_priv *priv =3D dev_get_drvdata(dev);
+> -	u32 out_data;
+> +	u32 profile_id;
+>   	int ret;
+>
+> -	ret =3D awcc_thermal_information(priv->wdev, AWCC_OP_GET_CURRENT_PROFI=
+LE,
+> -				       0, &out_data);
+> -
+> -	if (ret < 0)
+> +	ret =3D awcc_op_get_current_profile(priv->wdev, &profile_id);
+> +	if (ret)
+>   		return ret;
+>
+> -	if (out_data =3D=3D AWCC_THERMAL_MODE_GMODE) {
+> -		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+> -		return 0;
+> -	}
+> -
+> -	if (!is_awcc_thermal_profile_id(out_data))
+> -		return -ENODATA;
+> -
+> -	out_data &=3D AWCC_THERMAL_MODE_MASK;
+> -	*profile =3D awcc_mode_to_platform_profile[out_data];
+> +	ret =3D awcc_profile_id_to_pprof(profile_id, profile);
+> +	if (ret)
+> +		return ret;
+>
+>   	return 0;
+>   }
+> @@ -583,8 +628,8 @@ static int awcc_platform_profile_set(struct device *=
+dev,
+>   		}
+>   	}
+>
+> -	return awcc_thermal_control(priv->wdev,
+> -				    priv->supported_thermal_profiles[profile]);
+> +	return awcc_op_activate_profile(priv->wdev,
+> +					priv->supported_thermal_profiles[profile]);
+>   }
+>
+>   static int awcc_platform_profile_probe(void *drvdata, unsigned long *c=
+hoices)
+> @@ -606,8 +651,7 @@ static int awcc_platform_profile_probe(void *drvdata=
+, unsigned long *choices)
+>   	first_mode =3D sys_desc[0] + sys_desc[1];
+>
+>   	for (u32 i =3D 0; i < sys_desc[3]; i++) {
+> -		ret =3D awcc_thermal_information(priv->wdev, AWCC_OP_GET_RESOURCE_ID,
+> -					       i + first_mode, &out_data);
+> +		ret =3D awcc_op_get_resource_id(priv->wdev, i + first_mode, &out_data=
+);
+>
+>   		if (ret =3D=3D -EIO)
+>   			return ret;
+>
