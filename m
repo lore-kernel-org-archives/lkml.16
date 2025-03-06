@@ -1,250 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1D8367
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 00:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825B7376
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 00:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741219329; cv=none; b=Sn10VrRp3FAwDK4Kog3YzpGtuawA1pcuYE+zzlUdIvyBGCa4myUVHEBkhV7CPaKcM0QarND02yjGIDRRStRu0a7cWtMYgjdk1fe5aHcIsHXNUzaiVdzXWBJ03+J6dvec2eVrWGjytSrhGhu0L7bg4U2xGb0CJA231MruayLqCfU=
+	t=1741219437; cv=none; b=C4XJxV/qsDQc0mIRau06FudwlDFedLqfNZpO/E1XdNrav++/p64iq3cTIpkCvqSct4seHuOXmd6qcIDGWC/NcGs70qn5zeLknTA2Ccgv9XmXlZA/pLoQ1RK0vpLNOT3Euw2HTt9qqDd2xZ/w7NbpchotpQZozuwuUTOv3y9MlTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741219329; c=relaxed/simple;
-	bh=SI01v/GvXKsWkHCWbN4W6/RI+OOqT+u0JdAUIdO8NYQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=huSvy6C7a+0XKmJ5U/paAwBIYX+X7MwRLrZ/Hl9h7cuWVxqawq3ijCU4AdfSDzS8CisSY8EwUVlyH5pKoA5GD5psB35Jg1Tyrae0eknn5i/fhQC8YYnco0Y5D+sFbDDP+e03hr4cnjCfRc01adaeXo3uZ948fDujlThYxiU1GGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MmpHc2nB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmpHc2nB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741219325;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jEKt+hBJR4uXO0c4V+S/A62H5N37CE5EDIIAzZxF7mQ=;
-	b=MmpHc2nBXmVlnBU59T07BTgEOOVJfxZctXMRQglAiyI6jAuyJR9CkAMXmCb8oNCLrpS4fD
-	sKgLqqHVQIAjqFnGIITsipm3T8nITD8jdVYnUg1aeLfGTb+Kooo4FlzjLOeoeUWseTnRI/
-	7vhLO1tNVKRIHzgWk5eEcgyAow/NKqg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-wQY37EuaMxydvWyHApR1eg-1; Wed,
- 05 Mar 2025 19:01:47 -0500
-X-MC-Unique: wQY37EuaMxydvWyHApR1eg-1
-X-Mimecast-MFC-AGG-ID: wQY37EuaMxydvWyHApR1eg_1741219306
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6F8F6180A8F8;
-	Thu,  6 Mar 2025 00:01:45 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.107])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 99A6E1955DCE;
-	Thu,  6 Mar 2025 00:01:42 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Wed, 05 Mar 2025 19:01:41 -0500
-Subject: [PATCH] drm/panel/synaptics-r63353: Use _multi variants
+	s=arc-20240116; t=1741219437; c=relaxed/simple;
+	bh=kjp8x1ytnycfKo+KUkfRyVWWh0PRBeKDaQEeW9/9CJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aLpm9Z1ts98ibUxNclZF4Ge/s4LFDaP4eiy84fje1rEGmYdgNd6VEQJU0PWzkbteU4LBPCqyqiXWRJperSQyitlhH/GlPGqWE42D9++97xY9RwbYXE6DHaPg9+PjKn7LaFm4O7oE7cjOV4Gz44K3SEjiWnYvy4RbFkbN/yeaueo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 18EF568BEB; Thu,  6 Mar 2025 01:03:49 +0100 (CET)
+Date: Thu, 6 Mar 2025 01:03:48 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Nilay Shroff <nilay@linux.ibm.com>,
+	John Meneghini <jmeneghi@redhat.com>, bmarzins@redhat.com,
+	Bryan Gurney <bgurney@redhat.com>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Marco Patalano <mpatalan@redhat.com>,
+	axboe@kernel.dk
+Subject: Re: [PATCH] nvme: remove multipath module parameter
+Message-ID: <20250306000348.GA1233@lst.de>
+References: <8a1730a1-1faf-4722-99e1-c3a85257b6f4@redhat.com> <Z7TARX-tFY3mnuU7@kbusch-mbp> <2ff87386-c6db-4f2e-be91-213504d99a78@linux.ibm.com> <0656b66c-dd9c-495d-b1fc-4f09e763fa66@grimberg.me> <Z7dct_AbaSO7uZ2h@kbusch-mbp> <91ae613a-7b56-4ca0-b91c-6bc1eee798b8@suse.de> <20250305141554.GA18065@lst.de> <Z8hrJ5JVqi7TgFCn@kbusch-mbp> <20250305235119.GB896@lst.de> <Z8jk-D3EjEdyBIU5@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250305-mipi-synaptic-1-v1-1-92017cd19ef6@redhat.com>
-X-B4-Tracking: v=1; b=H4sIAOTlyGcC/x3MTQqAIBBA4avIrBvwd9NVooXoVLPIRCMK6e5Jy
- 2/xXoNKhanCKBoUurjykTrUICBsPq2EHLtBS+2kkQ53zoz1ST6fHFCh19IaZ02IxkOvcqGF7/8
- 4ze/7AYM7zthhAAAA
-X-Change-ID: 20250305-mipi-synaptic-1-a2043543cd3a
-To: Michael Trimarchi <michael@amarulasolutions.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Tejas Vipin <tejasvipin76@gmail.com>, Doug Anderson <dianders@chromium.org>, 
- Anusha Srivatsa <asrivats@redhat.com>, Maxime Ripard <mripard@kernel.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741219302; l=4982;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=SI01v/GvXKsWkHCWbN4W6/RI+OOqT+u0JdAUIdO8NYQ=;
- b=bnb9Gz3wAJPi0ser8N+I+0FlLNl5cDMN3jw0NPXqOO3aKy0U5R6CHsiJpdIMUJ2CLI7Q9tbRC
- J2/4Jpv1NUjAJN7q3nvKDgIbL2nSuWf/YUky0qEHXbILbyRgC+gzO74
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8jk-D3EjEdyBIU5@kbusch-mbp>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Move away from using deprecated API and use _multi
-variants if available. Use mipi_dsi_msleep()
-and mipi_dsi_usleep_range() instead of msleep()
-and usleep_range() respectively.
+On Wed, Mar 05, 2025 at 04:57:44PM -0700, Keith Busch wrote:
+> > > Obviously he's not talking about multiported PCIe.
+> > 
+> > Why is that obvious?  
+> 
+> No one here would think a multiported device *wouldn't* report CMIC.
 
-Used Coccinelle to find the multiple occurences.
-SmPl patch:
-@rule@
-identifier dsi_var;
-identifier r;
-identifier func;
-type t;
-position p;
-expression dsi_device;
-expression list es;
-@@
-t func(...) {
-...
-struct mipi_dsi_device *dsi_var = dsi_device;
-+struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi_var };
-<+...
-(
--mipi_dsi_dcs_write_seq(dsi_var,es)@p;
-+mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
-|
--mipi_dsi_generic_write_seq(dsi_var,es)@p;
-+mipi_dsi_generic_write_seq_multi(&dsi_ctx,es);
-|
--mipi_dsi_generic_write(dsi_var,es)@p;
-+mipi_dsi_generic_write_multi(&dsi_ctx,es);
-|
--r = mipi_dsi_dcs_nop(dsi_var)@p;
-+mipi_dsi_dcs_nop_multi(&dsi_ctx);
-|
-....rest of API
-..
-)
--if(r < 0) {
--...
--}
-...+>
+I hopes so.
 
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Tejas Vipin <tejasvipin76@gmail.com>
-Cc: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
-Previous attempt for this change was addressed in:[1]
-The series did not handle returns properly and still
-used msleep() and usleep_range() API.
-It also collided with an Tejas's similar efforts.
+> The
+> fact Hannes thinks that's a questionable feature for his device gives
+> away that it is single ported.
 
-Will be sending the patches per driver instead of
-major haul of changes.
+Well, his quote reads like he doesn't know about multiport PCIe devices.
+But maybe he just meant to say "despite being single-ported"
 
-Following [2] for reference.
+> > At least based on the stated works he talks about
+> > PCIe and not about multi-port.  The only not multiported devices I've
+> > seen that report NMIC and CMIC are a specific firmware so that the
+> > customer would get multipath behavior, which is a great workaround for
+> > instable heavily switched fabrics.  Note that multiported isn't always
+> > obvious as there are quite a few hacks using lane splitting around that
+> > a normal host can't really see.
+> 
+> In my experience, it's left enabled because of SRIOV, which many of
+> these devices end up shipping without supporting in PCI space anyway.
 
-[1] -> https://patchwork.freedesktop.org/series/144824/
-[2] -> https://lore.kernel.org/dri-devel/20250220045721.145905-1-tejasvipin76@gmail.com/#iZ31drivers:gpu:drm:panel:panel-sony-td4353-jdi.c
----
- drivers/gpu/drm/panel/panel-synaptics-r63353.c | 64 +++++++-------------------
- 1 file changed, 17 insertions(+), 47 deletions(-)
+If a device supports SR-IO setting CMIC and NMIC is corret, but I've
+actually seen surprisingly few production controllers actually supporting
+SR-IOV despite what the datasheets say.
 
-diff --git a/drivers/gpu/drm/panel/panel-synaptics-r63353.c b/drivers/gpu/drm/panel/panel-synaptics-r63353.c
-index 17349825543fe6a117bbfd9cb92a564ce433d13a..9cb1fe985a6fde7a475746019e89bd1dcee898ff 100644
---- a/drivers/gpu/drm/panel/panel-synaptics-r63353.c
-+++ b/drivers/gpu/drm/panel/panel-synaptics-r63353.c
-@@ -106,53 +106,32 @@ static int r63353_panel_power_off(struct r63353_panel *rpanel)
- static int r63353_panel_activate(struct r63353_panel *rpanel)
- {
- 	struct mipi_dsi_device *dsi = rpanel->dsi;
--	struct device *dev = &dsi->dev;
--	int i, ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
-+	int i;
- 
--	ret = mipi_dsi_dcs_soft_reset(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to do Software Reset (%d)\n", ret);
--		goto fail;
--	}
-+	mipi_dsi_dcs_soft_reset_multi(&dsi_ctx);
- 
--	usleep_range(15000, 17000);
-+	mipi_dsi_usleep_range(&dsi_ctx, 15000, 17000);
- 
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode (%d)\n", ret);
--		goto fail;
--	}
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
- 
- 	for (i = 0; i < rpanel->pdata->init_length; i++) {
- 		const struct r63353_instr *instr = &rpanel->pdata->init[i];
- 
--		ret = mipi_dsi_dcs_write_buffer(dsi, instr->data, instr->len);
--		if (ret < 0)
--			goto fail;
-+		mipi_dsi_dcs_write_buffer_multi(&dsi_ctx, instr->data,
-+						instr->len);
- 	}
- 
--	msleep(120);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
- 
--	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to exit sleep mode (%d)\n", ret);
--		goto fail;
--	}
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
- 
--	usleep_range(5000, 10000);
-+	mipi_dsi_usleep_range(&dsi_ctx, 5000, 10000);
- 
--	ret = mipi_dsi_dcs_set_display_on(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display ON (%d)\n", ret);
--		goto fail;
--	}
--
--	return 0;
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
- 
--fail:
--	gpiod_set_value(rpanel->reset_gpio, 0);
-+	return dsi_ctx.accum_err;
- 
--	return ret;
- }
- 
- static int r63353_panel_prepare(struct drm_panel *panel)
-@@ -181,24 +160,15 @@ static int r63353_panel_prepare(struct drm_panel *panel)
- static int r63353_panel_deactivate(struct r63353_panel *rpanel)
- {
- 	struct mipi_dsi_device *dsi = rpanel->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
--	ret = mipi_dsi_dcs_set_display_off(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display OFF (%d)\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
- 
--	usleep_range(5000, 10000);
-+	mipi_dsi_usleep_range(&dsi_ctx, 5000, 10000);
- 
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode (%d)\n", ret);
--		return ret;
--	}
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
- static int r63353_panel_unprepare(struct drm_panel *panel)
+> 
+> > > And he's right, the
+> > > behavior of a PCIe hot plug is very different and often undesirable when
+> > > it's under native multipath.
+> > 
+> > If you do actual hotplug and expect the device to go away it's indeed
+> > not desirable.  If you want the same device to come back after switched
+> > fabric issues it is so desirable that people hack to devices to get it.
+> > People talked about adding a queue_if_no_path-like parameter to control
+> > keeping the multipath node alive a lot, but no one has ever invested
+> > work into actually implementing it.
+> 
+> Not quite the same thing, but kind of related: I proposed this device
+> missing debounce thing about a year ago:
+> 
+> https://lore.kernel.org/linux-nvme/Y+1aKcQgbskA2tra@kbusch-mbp.dhcp.thefacebook.com/
 
----
-base-commit: ced7486468ac3b38d59a69fca5d97998499c936b
-change-id: 20250305-mipi-synaptic-1-a2043543cd3a
-
-Best regards,
--- 
-Anusha Srivatsa <asrivats@redhat.com>
-
+Yes, that somehow fell off the cliff.
