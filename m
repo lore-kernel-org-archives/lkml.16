@@ -1,334 +1,91 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C72D214805
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163B425C6E6;
+	Thu,  6 Mar 2025 17:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741281577; cv=none; b=mgxURetFct4ILnkDTg2DocDnP22mkkEsMaHxm1Ty7hex1HdW4n6hH2van+lUirsWMVJ/XL16FB9ff231IBB7DiJU354X+BTJBUBgi/PMj94MYYkPnVAGI18PF/FHX5d5PK5EK6zhoqU+o5HZGSjTUugZMdccVehc8DTp95sCLqQ=
+	t=1741281608; cv=none; b=GZH+YYfgTDJp10QWjUv8N/kKDoOe2COYQoiULRgWad3vw0Wq7JkDeW7c4yQWZnk5rwyFPlhaEd93MVPsAk/zeJ8MjlkGQ2kMtDhdJq5shQRpFbwbhrZZjz3estHvqnghGJiJpPFmHm/DJp2JbuFFKRgUHe0yC21VmTcxReQKhLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741281577; c=relaxed/simple;
-	bh=n0O0Tj/cxjFkRs9/6vOfTa7XNH3IBMWM07hdD+wUTHc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lgpSoJ860WbJWtS1scEM6y7PQhyrm01MsTWi7cRZIC6vSPmbOPR2XLlkKGa0oiifySQMmWHw4l5NVkduq5xVGBc6W1Xf3kbmRN98AsSOwttGc7tmCI6vtzpxOkcaKLK3Q1RUX7CsakUBWhssX8o/T1Oj0gDNy0dk/Z+cJcDm/wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZZjchcRr; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1741281608; c=relaxed/simple;
+	bh=jro/Hbh0PVRMm17RAdN1D5xn9Gy8MGklCX8MalsLCa8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EbWeuMdheWh3Ip3iJsB9KSd0UPHnbIoMN1AAHad1ufA+srI5t9lQfoeCdCc4mKqwR6cj6atAwX8KsgkoDqnrJhYCFdeiPOL1Dp+R3QgMKgvDjuM2RyUzyH+IirvskGnEh8drCm1WnwTpgBigpKKhByswlQAt1xfFYNpeIcFwbxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6fdP6ki; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZZjchcRr"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bc4b16135so6016225e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:19:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6fdP6ki"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f9b8ef4261so235875a91.1;
+        Thu, 06 Mar 2025 09:20:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741281573; x=1741886373; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9kyHgVZhc600PXZ8OEx3rlFbLkHugaQwdjxo+/xhLGo=;
-        b=ZZjchcRrCwcREhf26UjAJQjaISQxKs1l06uww0ISIlrMnUoh3enZHu7jibPVj/urSD
-         a2+SebBybGzLORs2+Wky1f2PnXmpkNS3u0RyLnYWjGscUPwdn1B/hu+hZvuNeVVHcq9t
-         d6B7lrznJ+CtfgEtmCB7sjryPvvZ+RGII+fJznzq6FGYevy2LcLgHKTIu3ZBSxe7SMJz
-         cX3cnrsqQTuLDi6ICGjcLZRqkdFaVBE+EtYMuqeCwKIwfB14CsX9ygqukcuNOE5ZNVUM
-         eJ40b0k14I26Lrg071qR1UnGv1hoWww+jYiNdACw9hJK/mY5Kn3g7Gf42IWvcTBX5weC
-         dI3A==
+        d=gmail.com; s=20230601; t=1741281606; x=1741886406; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jro/Hbh0PVRMm17RAdN1D5xn9Gy8MGklCX8MalsLCa8=;
+        b=O6fdP6kiy04aHdbll2HGbMsNwMTBH9sssMObyNEfPO6B7X7HOxG2MitgHaqw+VHbol
+         5m2F3MZRWHeKFyjFkXmOov3FOGF4IVRuQnagHg8zgWwZERtDUzFLytxDNq8qD5xoUreH
+         GJPMoTxKOLRmgiaEL6qyYVX6p2go0lq+wR2p8CPxhOxCZ7Pefc7oagDIWMr1GvazsdJT
+         308Th/iW1lYFAJcqMEuq9Znelxjf3SZK3TPwg0Y5X8wUv24PxGGcfRJG1Ki/ApAAlJfJ
+         CPyHa9VIw94c4SaZpMWzQIXoKC6rH9u5RTPSJ26Itvp3oYJsNyxVyOW3AP66S1XjAxKq
+         d0SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741281573; x=1741886373;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741281606; x=1741886406;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9kyHgVZhc600PXZ8OEx3rlFbLkHugaQwdjxo+/xhLGo=;
-        b=VFtFfxE4RcVtrQYV9/KyYQlPjcaKw7dqjGEGQrjUkIvBMkOs9IfaVq5AcJyRdDnP4p
-         5sd3wCgPEIIYxZ/kiQDNrSUQlcrbQPenj1vTv1uau7lAm3fkYeXbdnqQsNJ32PSsZs1q
-         sX2qgBMCJ9DgOkbHPSAT9RDp7HYNQpQhv0rukkCZqR12ka9eOL27KptMq0Itp46EHPDQ
-         +PU4TFPAQqjdGWCOMBSeqTUktra32UoXFD+Q5G8gSxIjWSHkYk5qulaRcWrHu7RXmn0M
-         0OUgfvt7e2fwMi5bLZJMQ3QukCAB1H6Yz2elky1YhFS1xFhCduSv7ji7WI8EytnSZoqn
-         NYeA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3NnkSDeKG4NUxncRead0Jo5YMWwdSLOa8SkQ4sxLgvrYrXIUVRbDS5Cmxya6aQM8+IzsJ5MCXwcuYZrA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnA3Bt4N4dh492d19XXJLB10/DkrWG6vh+ijn+FlXE3D0uCbM/
-	nQE6cTDBWVdlYWcJMNGB4AUxq/Zsp01OSlNBIKU2uW325xyocm14PWKY8NGACWO/pwV+4E7MIIy
-	S
-X-Gm-Gg: ASbGncuvMr5TOZgReOOi5mO7Y550g9WrhBh43xOfgU1/XO0ufOfTw26EYcvsm6dWxO/
-	SXkDT0aAKoK04NbybUZ6IM5UdVgmR6oBKxS6PrMsCIDIxB1MyemRj8S9TaKuNzw6Wz51gJ/d+9S
-	E22eEDOTHsUUKwQwYSsiaJjVwj+vhDgE8TOz0r1+5jBoAoziKW+C61zVaJvtRs7krn8BulAm5Aa
-	F2bFPEnn5cMQFkX2yTUPLRvuePeNWCxuQBKOEJ26X1aw3iAaxhSzY2RX7LHyjGnsA1ZkAbxQRYC
-	FiQr47zDMW3zXtTvl/G+WMk3Qy9PVQ41Ho4J
-X-Google-Smtp-Source: AGHT+IFx64qNX8KOE0m+03lf77OqC2vUhSphiuS13cJJQb1D+TEOQwbLCi2vw2cl9KR30DrjKU0vhw==
-X-Received: by 2002:a05:600c:4ece:b0:43b:ca39:6c7d with SMTP id 5b1f17b1804b1-43c601cdc0emr2490865e9.3.1741281573439;
-        Thu, 06 Mar 2025 09:19:33 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:ce13:b3e4:d0d:c6a2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd426c33asm57673915e9.3.2025.03.06.09.19.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 09:19:33 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 06 Mar 2025 18:19:26 +0100
-Subject: [PATCH v2 1/2] gpio: adnp: use lock guards for the I2C lock
+        bh=jro/Hbh0PVRMm17RAdN1D5xn9Gy8MGklCX8MalsLCa8=;
+        b=NYQfi2kkHTB6+b1ainBkPTrmRxGsDBwcl4g0RJaOR7mMS8fowMIU8+/hCT93AvMgih
+         FbQvvQLt30wdbavM1c2yS0xrkTAgItNLBVxjzLZ21KDQbpla7W2iF9Ny023KU3AwwjVv
+         nYAv7hhOjruNQ3Cz14pjAi0UiQdEm4ds6BnelGKTsbo8mo52RDOowofH7B82XgkvM06Z
+         Y0NUnVtRhoxYyfvMvCHGh6IWUkYiVB8qyvauWSLRZVdwlK8aPkJt8L7hphDFCruTsLY5
+         AxadhbmXd5vK99GIxJjsRbs7qw29hecy9qe+EDsRDHiat0bFpk/vM4vF7Tl3GrLEh1bR
+         jYEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4rjtOBxPl15Xixb05wEUafTcKove/oIOjLO69R//tKiCwXqAHf5hCLAmFaS9vbzSmgq5HuNLyOSKNIaY=@vger.kernel.org, AJvYcCVIoob+qWhQsn2Ag/6jm97iI+mh2FibNIAjtcsR033bv+WBlkXQXpjFJ2LErMHEQfTU/NCftQPnap/AJxVdiL4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm8fLZNARDYzeIO/F9HJOMty509KDPjk3f+op3444MYSYZDZMO
+	hI/5lfnsDFozz+6mshU57vh/scEqXTG71ubKQyORlrONZvNv1YqNYDJIV+J8zl6jLP5m8uHkG7p
+	FNhozt5X60jzoZ5mAd29LQL7ntLA=
+X-Gm-Gg: ASbGncs8KnNXP/SLAdRFee+++oHjjtYQz5yyLYGpZGOdB7axjVBiJ/jDgOny8dg9YBV
+	UrGlf2d1swU7+W6QtkLBvyONlzfqGep8+Ep/fg8cwE7PED1THczF2Rvh3zSxG0V5H+Xd8+8s/4o
+	c56J7Onc+TbFXrdoQNaowBnuTqgg==
+X-Google-Smtp-Source: AGHT+IEJ0ZbOJXDh4ZxTTCwkcVFO971ZHgpLvODntDZs2sWDdHeKnkvGwePWAIGtVoBUdWog16IM2WmdU0Jb1tYWrc8=
+X-Received: by 2002:a17:90b:3146:b0:2ff:6941:9b6a with SMTP id
+ 98e67ed59e1d1-2ff7cee0eadmr20217a91.3.1741281606209; Thu, 06 Mar 2025
+ 09:20:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250306-gpiochip-set-conversion-v2-1-a76e72e21425@linaro.org>
-References: <20250306-gpiochip-set-conversion-v2-0-a76e72e21425@linaro.org>
-In-Reply-To: <20250306-gpiochip-set-conversion-v2-0-a76e72e21425@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5836;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=5uY7osM07/+oU72WUoWAWrPIBRSKfXw4Ey7fR/6GiBk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnydkj0xt4ax8CVco0/qLq5ODStvdLa26DV3+Ek
- JWO2+RzO/iJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8nZIwAKCRARpy6gFHHX
- crB5EACfqVtvGK0iiZZEbWdbMMVlwpR76SgbdqvhbmJCBWTCsF32NTetkOk9X8gULH6P/7R8gvr
- E84GPeP2CziFcjg8e7r3d/juW89JuTNfMaBD+tWcAdN5H+2b3Cfva3uCnUlM0VUH+U3h+FU782o
- JsEL8Sw0NsgHsoEjFS4V/aehGybtPrkktC8AVhLmSlQsyYqemJ/QkhdQaljVhPKHLVZgUNpgZFT
- tzFIPcVIsXfwLWwvDxEOOwxrfgIX014/rU+QYB9iyvORoWno4Nr/R1277KE3LDod+7JrMr0T6RF
- rJHzB0bKRK9VoPwiKQtTXWNQjTKv7gQpNCacFIrIZo55goBheDhY4W8zMOKNLBbw+3GAqCDGF+l
- e1HTnpm14rn/NpJ6ZR8PyesL4wZ+sdNqzldXUchvuShfQ+6ryoa18bg2beQ2QixOlx3t8wspPOg
- H6B2iTvZ/7oZn+G70v8Dpa3yKnJZZy2kRp44T1QiH8FtBNrAZkZmdz+xqcXSskF5ZKgP09eccP3
- Tc4pup+5PDlz42kififykByCN/8Plz00eVd6U1VtBLDeTPxcM9FOAd87NKFwmT4STHgjznUxxe6
- RT0t0nl+tHDUI8ijkWdOgGUwllh3ZlOdPzXcmnomOwPMa8avNxLqpX5/aG78hlzWychQL7NyogJ
- ib/bqjO6uNooIkw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <CANiq72nXzY_j38ytE7KwHpH3Cy4sDw85WU2MyUe5u74oB2UP+Q@mail.gmail.com>
+ <20250306171829.365809-1-trintaeoitogc@gmail.com>
+In-Reply-To: <20250306171829.365809-1-trintaeoitogc@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 6 Mar 2025 18:19:45 +0100
+X-Gm-Features: AQ5f1JpWvE0IRPHwLDHpIkF6uuc_TxVZDObgDuO3j__IKMqxzQ-ELCn3J_lQj_c
+Message-ID: <CANiq72=KJt89yUy-rX5n+4Xqdb7F=NnoPkymcjAhMP1sArmF7g@mail.gmail.com>
+Subject: Re: [PATCH V6 2/2] checkpatch: check format of Vec<String> in modules
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com, 
+	apw@canonical.com, arnd@arndb.de, aswinunni01@gmail.com, axboe@kernel.dk, 
+	benno.lossin@proton.me, bhelgaas@google.com, bjorn3_gh@protonmail.com, 
+	boqun.feng@gmail.com, dakr@kernel.org, dwaipayanray1@gmail.com, 
+	ethan.twardy@gmail.com, fujita.tomonori@gmail.com, gary@garyguo.net, 
+	gregkh@linuxfoundation.org, joe@perches.com, linux-kernel@vger.kernel.org, 
+	lukas.bulwahn@gmail.com, ojeda@kernel.org, pbonzini@redhat.com, 
+	rust-for-linux@vger.kernel.org, tmgross@umich.edu, walmeida@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Mar 6, 2025 at 6:18=E2=80=AFPM Guilherme Giacomo Simoes
+<trintaeoitogc@gmail.com> wrote:
+>
+> Is good make a check for this too and senda a v7
 
-Reduce the code complexity by using automatic lock guards with the I2C
-mutex.
+Sure, the more the check catches, the better (as long as it is not
+unreasonably complex).
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-adnp.c | 122 +++++++++++++++++++----------------------------
- 1 file changed, 49 insertions(+), 73 deletions(-)
-
-diff --git a/drivers/gpio/gpio-adnp.c b/drivers/gpio/gpio-adnp.c
-index 6dafab0cf964..1a282cba8489 100644
---- a/drivers/gpio/gpio-adnp.c
-+++ b/drivers/gpio/gpio-adnp.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2011-2012 Avionic Design GmbH
-  */
- 
-+#include <linux/cleanup.h>
- #include <linux/gpio/driver.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
-@@ -101,9 +102,9 @@ static void adnp_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- {
- 	struct adnp *adnp = gpiochip_get_data(chip);
- 
--	mutex_lock(&adnp->i2c_lock);
-+	guard(mutex)(&adnp->i2c_lock);
-+
- 	__adnp_gpio_set(adnp, offset, value);
--	mutex_unlock(&adnp->i2c_lock);
- }
- 
- static int adnp_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-@@ -114,32 +115,26 @@ static int adnp_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
- 	u8 value;
- 	int err;
- 
--	mutex_lock(&adnp->i2c_lock);
-+	guard(mutex)(&adnp->i2c_lock);
- 
- 	err = adnp_read(adnp, GPIO_DDR(adnp) + reg, &value);
- 	if (err < 0)
--		goto out;
-+		return err;
- 
- 	value &= ~BIT(pos);
- 
- 	err = adnp_write(adnp, GPIO_DDR(adnp) + reg, value);
- 	if (err < 0)
--		goto out;
-+		return err;
- 
- 	err = adnp_read(adnp, GPIO_DDR(adnp) + reg, &value);
- 	if (err < 0)
--		goto out;
-+		return err;
- 
--	if (value & BIT(pos)) {
--		err = -EPERM;
--		goto out;
--	}
-+	if (value & BIT(pos))
-+		return -EPERM;
- 
--	err = 0;
--
--out:
--	mutex_unlock(&adnp->i2c_lock);
--	return err;
-+	return 0;
- }
- 
- static int adnp_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
-@@ -151,33 +146,28 @@ static int adnp_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
- 	int err;
- 	u8 val;
- 
--	mutex_lock(&adnp->i2c_lock);
-+	guard(mutex)(&adnp->i2c_lock);
- 
- 	err = adnp_read(adnp, GPIO_DDR(adnp) + reg, &val);
- 	if (err < 0)
--		goto out;
-+		return err;
- 
- 	val |= BIT(pos);
- 
- 	err = adnp_write(adnp, GPIO_DDR(adnp) + reg, val);
- 	if (err < 0)
--		goto out;
-+		return err;
- 
- 	err = adnp_read(adnp, GPIO_DDR(adnp) + reg, &val);
- 	if (err < 0)
--		goto out;
-+		return err;
- 
--	if (!(val & BIT(pos))) {
--		err = -EPERM;
--		goto out;
--	}
-+	if (!(val & BIT(pos)))
-+		return -EPERM;
- 
- 	__adnp_gpio_set(adnp, offset, value);
--	err = 0;
- 
--out:
--	mutex_unlock(&adnp->i2c_lock);
--	return err;
-+	return 0;
- }
- 
- static void adnp_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
-@@ -187,27 +177,26 @@ static void adnp_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- 	int err;
- 
- 	for (i = 0; i < num_regs; i++) {
--		u8 ddr, plr, ier, isr;
-+		u8 ddr = 0, plr = 0, ier = 0, isr = 0;
- 
--		mutex_lock(&adnp->i2c_lock);
-+		scoped_guard(mutex, &adnp->i2c_lock) {
-+			err = adnp_read(adnp, GPIO_DDR(adnp) + i, &ddr);
-+			if (err < 0)
-+				return;
- 
--		err = adnp_read(adnp, GPIO_DDR(adnp) + i, &ddr);
--		if (err < 0)
--			goto unlock;
-+			err = adnp_read(adnp, GPIO_PLR(adnp) + i, &plr);
-+			if (err < 0)
-+				return;
- 
--		err = adnp_read(adnp, GPIO_PLR(adnp) + i, &plr);
--		if (err < 0)
--			goto unlock;
-+			err = adnp_read(adnp, GPIO_IER(adnp) + i, &ier);
-+			if (err < 0)
-+				return;
- 
--		err = adnp_read(adnp, GPIO_IER(adnp) + i, &ier);
--		if (err < 0)
--			goto unlock;
-+			err = adnp_read(adnp, GPIO_ISR(adnp) + i, &isr);
-+			if (err < 0)
-+				return;
- 
--		err = adnp_read(adnp, GPIO_ISR(adnp) + i, &isr);
--		if (err < 0)
--			goto unlock;
--
--		mutex_unlock(&adnp->i2c_lock);
-+		}
- 
- 		for (j = 0; j < 8; j++) {
- 			unsigned int bit = (i << adnp->reg_shift) + j;
-@@ -232,11 +221,6 @@ static void adnp_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- 				   direction, level, interrupt, pending);
- 		}
- 	}
--
--	return;
--
--unlock:
--	mutex_unlock(&adnp->i2c_lock);
- }
- 
- static irqreturn_t adnp_irq(int irq, void *data)
-@@ -248,32 +232,24 @@ static irqreturn_t adnp_irq(int irq, void *data)
- 
- 	for (i = 0; i < num_regs; i++) {
- 		unsigned int base = i << adnp->reg_shift, bit;
--		u8 changed, level, isr, ier;
-+		u8 changed, level = 0, isr = 0, ier = 0;
- 		unsigned long pending;
- 		int err;
- 
--		mutex_lock(&adnp->i2c_lock);
-+		scoped_guard(mutex, &adnp->i2c_lock) {
-+			err = adnp_read(adnp, GPIO_PLR(adnp) + i, &level);
-+			if (err < 0)
-+				continue;
- 
--		err = adnp_read(adnp, GPIO_PLR(adnp) + i, &level);
--		if (err < 0) {
--			mutex_unlock(&adnp->i2c_lock);
--			continue;
-+			err = adnp_read(adnp, GPIO_ISR(adnp) + i, &isr);
-+			if (err < 0)
-+				continue;
-+
-+			err = adnp_read(adnp, GPIO_IER(adnp) + i, &ier);
-+			if (err < 0)
-+				continue;
- 		}
- 
--		err = adnp_read(adnp, GPIO_ISR(adnp) + i, &isr);
--		if (err < 0) {
--			mutex_unlock(&adnp->i2c_lock);
--			continue;
--		}
--
--		err = adnp_read(adnp, GPIO_IER(adnp) + i, &ier);
--		if (err < 0) {
--			mutex_unlock(&adnp->i2c_lock);
--			continue;
--		}
--
--		mutex_unlock(&adnp->i2c_lock);
--
- 		/* determine pins that changed levels */
- 		changed = level ^ adnp->irq_level[i];
- 
-@@ -365,12 +341,12 @@ static void adnp_irq_bus_unlock(struct irq_data *d)
- 	struct adnp *adnp = gpiochip_get_data(gc);
- 	unsigned int num_regs = 1 << adnp->reg_shift, i;
- 
--	mutex_lock(&adnp->i2c_lock);
-+	scoped_guard(mutex, &adnp->i2c_lock) {
-+		for (i = 0; i < num_regs; i++)
-+			adnp_write(adnp, GPIO_IER(adnp) + i,
-+				   adnp->irq_enable[i]);
-+	}
- 
--	for (i = 0; i < num_regs; i++)
--		adnp_write(adnp, GPIO_IER(adnp) + i, adnp->irq_enable[i]);
--
--	mutex_unlock(&adnp->i2c_lock);
- 	mutex_unlock(&adnp->irq_lock);
- }
- 
-
--- 
-2.45.2
-
+Cheers,
+Miguel
