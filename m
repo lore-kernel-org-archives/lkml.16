@@ -1,146 +1,86 @@
-Received: from mx10.gouders.net (mx10.gouders.net [202.61.206.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3121A76BC
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.206.94
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1FB22040BD
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741258407; cv=none; b=fY7t6I1uZCgV7jGXeh1iB3rjsK4otOpJ6EIz7MRMsqC3qpFJahilMJePajSmc1ziKKcV7nxGLZVioJDLpx9jFdnxaQzYBVmVDuP+rePKUbG5SvW4HHBF28272ovzNRFzzzhrtPz9EvPA/Tv0XTtixL3JDQH7DXodeY2iKsV8kNo=
+	t=1741258433; cv=none; b=iDXQMuvVDwJD7aPlQ42m3EWOQffIAnGJFllkq6yJ/DV6uFhEbQYN91CARwFRe2ctyQEIEM9bxgSRC+qxerpCM/nqsZSAgtYNfocnle/YaKJVXr4ej/RwvIzgjiH4XddXAmtv3BSXy9s3fRQsdUWWx9So+N8bx6u8CpLuiaX33zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741258407; c=relaxed/simple;
-	bh=MQyGl26Whql4FvL52ynnLjyqxmPpjyEauG0LYmwzoVs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HF6q1YDojLA2MQVFnuPgr6EMwA2hw8QeHYp9iibCwF8JDqjCU68vCLYrtR/RYBNkiFukVpmZzXJ2wRqR0gdRHLKCUC/SkxIfw7HzvpLMLhNwxJvrm/wpNO9FXw1wIETGPvp8hm/YQ/VVcwkI4/OnG3F7E7oZKKk/6IreVqrHRWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net; spf=pass smtp.mailfrom=gouders.net; dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b=ar576irM; arc=none smtp.client-ip=202.61.206.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gouders.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b="ar576irM"
-Received: from localhost (ip-109-42-177-222.web.vodafone.de [109.42.177.222])
-	(authenticated bits=0)
-	by mx10.gouders.net (8.17.1.9/8.17.1.9) with ESMTPSA id 526AqD7U021659
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 6 Mar 2025 11:52:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gouders.net; s=gnet;
-	t=1741258334; bh=MQyGl26Whql4FvL52ynnLjyqxmPpjyEauG0LYmwzoVs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=ar576irMuzc2sXSuJ1W8FiDS59YIegPWWoHsyA2nKIbxpFW1Nru5QoMZGghvBWFq4
-	 +sXkUmQz81H+RVDSHDP8F7y/Nf5SM76khqqBCE6fR8tNN2GixiEcL2XUyM7oW3uh7C
-	 YloJIAwxIeUKibq45HT+t/KNtBMcM6vOgqbHj3dY=
-From: Dirk Gouders <dirk@gouders.net>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>, Borislav Petkov <bp@alien8.de>,
-        Dave
- Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen
- <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus
- Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
- locking insns
-In-Reply-To: <Z8ix9YQEIdyAopCw@gmail.com> (Ingo Molnar's message of "Wed, 5
-	Mar 2025 21:20:05 +0100")
-References: <20250228123825.2729925-1-ubizjak@gmail.com>
-	<20f1af22-71dc-4d62-9615-03030012222e@intel.com>
-	<CAFULd4bpHGE83qc37sbh=rpGj+SFqQrsNDLzL_-NQpo6pQH3jw@mail.gmail.com>
-	<c4aca08a-95c1-48ee-b4da-55a69b74101c@intel.com>
-	<CAFULd4YVOEtT+bsp9H7ijaoJn2e2108tWhiFarRv=QxoUMZaiw@mail.gmail.com>
-	<20250301123802.GCZ8L_qsv7-WwUwqt5@fat_crate.local>
-	<CAFULd4b=4rHcVAVSg_3yMb8=3ReiSriw_rM4vJL9_HvheXE92w@mail.gmail.com>
-	<Z8isNxBxC9pcG4KL@gmail.com> <Z8ix9YQEIdyAopCw@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-Date: Thu, 06 Mar 2025 11:52:08 +0100
-Message-ID: <gh8qpil9d3.fsf@gouders.net>
+	s=arc-20240116; t=1741258433; c=relaxed/simple;
+	bh=7Vkkin5fS73NPdakk81hq+ToszA7b+qp0QgWpd30JV8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LMYrrV/YSCxiptrxOxyim9Wj8RV2rt/on0hvUbgMCi9DGAdJYnobncJEwBAhEqH03rCvqR+qO2gSY/9qGJ7Ua2DShusyAM6vsRYVUKQczZzZ6GatsvH4CMUqpsYd2V3rUI6EDKMeIcBu3xs2nj1SWD+U7cnvetTa5w/1L2RGBnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CA7BFEC;
+	Thu,  6 Mar 2025 02:54:04 -0800 (PST)
+Received: from [10.57.40.132] (unknown [10.57.40.132])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B52193F66E;
+	Thu,  6 Mar 2025 02:53:48 -0800 (PST)
+Message-ID: <e123524c-8c27-4ee7-8799-10931375712f@arm.com>
+Date: Thu, 6 Mar 2025 10:53:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/uclamp: Let each sched_class handle uclamp
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org
+References: <84441660bef0a5e67fd09dc3787178d0276dad31.1740664400.git.hongyan.xia2@arm.com>
+ <4394f2a7-b4e8-419a-a299-f1afa560c944@arm.com>
+Content-Language: en-US
+From: Hongyan Xia <hongyan.xia2@arm.com>
+In-Reply-To: <4394f2a7-b4e8-419a-a299-f1afa560c944@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Ingo,
+On 05/03/2025 18:22, Dietmar Eggemann wrote:
+> On 27/02/2025 14:54, Hongyan Xia wrote:
+> 
+> [...]
+> 
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 857808da23d8..7e5a653811ad 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6941,8 +6941,10 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>>   	 * Let's add the task's estimated utilization to the cfs_rq's
+>>   	 * estimated utilization, before we update schedutil.
+>>   	 */
+>> -	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE))))
+>> +	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE)))) {
+>> +		uclamp_rq_inc(rq, p);
+>>   		util_est_enqueue(&rq->cfs, p);
+>> +	}
+> 
+> So you want to have p uclamp-enqueued so that its uclamp_min value
+> counts for the cpufreq_update_util()/cfs_rq_util_change() calls later in
+> enqueue_task_fair?
+> 
+>    if (p->in_iowait)
+>      cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT);
+> 
+>    enqueue_entity() -> update_load_avg() -> cfs_rq_util_change() ->
+>    cpufreq_update_util()
+> 
+> But if you do this before requeue_delayed_entity() (1) you will not
+> uclamp-enqueue p which got his ->sched_delayed just cleared in (1)?
 
-my interest comes, because I just started to try to better understand
-PCL and am reading the perf manual pages.  Perhaps I should therefore
-keep my RO-bit permanent for some more months, but:
+Sorry I'm not sure I'm following. The only condition of the 
+uclamp_rq_inc() here should be
 
-> And if the benchmark is context-switching heavy, you'll want to use 
-> 'perf stat -a' option to not have PMU context switching costs, and the 
+     if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & 
+ENQUEUE_RESTORE))))
 
-I'm sure you know what you are talking about so I don't doubt the above
-is correct but perhaps, the manual page should also clarify -a:
-
--a::
---all-cpus::
-        system-wide collection from all CPUs (default if no target is specified)
-
-In the last example -a is combined with -C 2 which is even more irritating when
-you just started with the manual pages.
-
-
-But the main reason why I thought it might be OK to once toggle my
-RO-bit is that I tried your examples and with the first one I have way
-higher numbers than yours and I thought that must be, because you just
-own the faster machine (as I would have expected):
-
->  starship:~> perf bench sched pipe
->  # Running 'sched/pipe' benchmark:
->  # Executed 1000000 pipe operations between two processes
->
->      Total time: 6.939 [sec]
->
->        6.939128 usecs/op
->          144110 ops/sec
-
-lena:~> perf bench sched pipe
-# Running 'sched/pipe' benchmark:
-# Executed 1000000 pipe operations between two processes
-
-     Total time: 11.129 [sec]
-
-      11.129952 usecs/op
-          89847 ops/sec
-
-And I expected this to continue throughout the examples.
-
-But -- to keep this short -- with the last example, my numbers are
-suddenly significantly lower than yours:
-
->  starship:~> taskset 0x4 perf stat -a -C 2 -e instructions --repeat 5 perf bench sched pipe
->        5.808068 usecs/op
->        5.843716 usecs/op
->        5.826543 usecs/op
->        5.801616 usecs/op
->        5.793129 usecs/op
->
->  Performance counter stats for 'system wide' (5 runs):
->
->     32,244,691,275      instructions                                                            ( +-  0.21% )
->
->            5.81624 +- 0.00912 seconds time elapsed  ( +-  0.16% )
-
-lena:~> taskset 0x4 perf stat -a -C 2 -e instructions --repeat 5 perf bench sched pipe
-       4.204444 usecs/op
-       4.169279 usecs/op
-       4.186812 usecs/op
-       4.217039 usecs/op
-       4.208538 usecs/op
-
- Performance counter stats for 'system wide' (5 runs):
-
-    14,196,762,588      instructions                                                            ( +-  0.04% )
-
-           4.20203 +- 0.00854 seconds time elapsed  ( +-  0.20% )
-
-
-
-Of course, I don't want to waste anyones time if this is a so obvious
-thing that only newbies don't understand.  So, feel free to just ignore this.
-
-Regards
-
-Dirk
+Could you elaborate why it doesn't get enqueued?
