@@ -1,83 +1,71 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6854230273;
-	Thu,  6 Mar 2025 18:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEFD1A01B9;
+	Thu,  6 Mar 2025 18:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741285310; cv=none; b=dFhrlT+k8P9AT64IB6UBeB31MSkubJ3WvqquJB0hDg2gcwagKmthpEAIAYihSuXBuGAZ8KmJtPHWdg3NQMW+mD1yvgfErLDOhhZ48D+2GPBXLnNb6XoJeb6+aJ3LlBSX5NTVb0JUclFTElO3xDNfDZjPx2uTIhB2R7XxnYPnISg=
+	t=1741285517; cv=none; b=ss/qSQBBflFOSFOYsEtIqJy59X3GDGazp+R2X0zXyDuXWbwYlH017TRHFX3OCqcTkcRTZ2isfLYtdsRdWKBoDlZyxfDAeiuMtn57iLrzrEVF/honIfnEpdJWr3Jzx2szzzsQqLUdLID/AF+1+MLHTHXL58Jzlzylh8JK/RlI2YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741285310; c=relaxed/simple;
-	bh=zT//KZZFEKytLDpgaT8Obwl7x/iYNsngN/KykrGbh3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JXGNH7pj46CADJhe6V7jgWXcpP3bJ8XGAC6ZGMbT8h2nNX+HT5DkRCSnMbuMzMA50O+YF8dwwnNODBlQMizDdCOFho21HErFhTRWXSAdvg/uub0Fuqk3tAHr60MM3dV2zifZ2cU+iDl0Mz1kjEP3gV+cYiU6pstCjvKy79ENejk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=UnDMrJ75; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UnDMrJ75"
-Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id AF501C003E08;
-	Thu,  6 Mar 2025 10:21:47 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com AF501C003E08
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1741285307;
-	bh=zT//KZZFEKytLDpgaT8Obwl7x/iYNsngN/KykrGbh3U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UnDMrJ75OX3hcsHuFZ+n0/AfWoS5zAilNrJihvoWQKa8tA/VS2RNaCrIReq3AkN8Z
-	 LZiPMi6YzuF4/OG+P2+zjT+pQqL/WuydAgCwMfQuigDfZOjl4ynJNWn/72Yg71mPf8
-	 djq0lnPC6KUDfj+aFFmZ5AgNQTye338MYwspbnkM=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	s=arc-20240116; t=1741285517; c=relaxed/simple;
+	bh=Xq+XQYMHYGkmTz8iLRFLigF6QisLFRgLCNzHoNhQ3cA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C49A9wBjTKKbnVVd8EnJEm4wefI/G6TUsA+xVKi0lHoLWwa1cc7+crnEa+jHbOVWfUsP6t6GSJw7Rxa9nczODQd/pSl4cynPphkGt6l3U7+Bt7LDw98eRBAUJy9c1aeuYVcMjSdVebrWVpsjMDVuOrEG2s5+oOzAUGsx4wnS+Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 394BB1800051E;
-	Thu,  6 Mar 2025 10:21:47 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: bcm-kernel-feedback-list@broadcom.com,
-	Artur Weber <aweber.kernel@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id C2547100D9429;
+	Thu,  6 Mar 2025 19:18:53 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 9AC1825EB1; Thu,  6 Mar 2025 19:18:53 +0100 (CET)
+Date: Thu, 6 Mar 2025 19:18:53 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Kenneth Crudup <kenny@panix.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v3 6/6] ARM: dts: bcm2166x: Add bcm2166x-pinctrl DTSI
-Date: Thu,  6 Mar 2025 10:21:46 -0800
-Message-ID: <20250306182146.1762360-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250303-bcm21664-pinctrl-v3-6-5f8b80e4ab51@gmail.com>
-References: <20250303-bcm21664-pinctrl-v3-0-5f8b80e4ab51@gmail.com> <20250303-bcm21664-pinctrl-v3-6-5f8b80e4ab51@gmail.com>
+	Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
+Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
+ Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
+Message-ID: <Z8nnDTfGCUvl8K9I@wunner.de>
+References: <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+ <20250214162948.GJ3713119@black.fi.intel.com>
+ <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
+ <20250226084404.GM3713119@black.fi.intel.com>
+ <Z77ak-4YsdAKXbHr@wunner.de>
+ <20250226091958.GN3713119@black.fi.intel.com>
+ <Z8YKXC1IXYXctQrZ@wunner.de>
+ <20250304082314.GE3713119@black.fi.intel.com>
+ <Z8nRI6xjGl3frMe5@wunner.de>
+ <8d270603-4604-4c1c-b3a9-f596e2e8af6d@panix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d270603-4604-4c1c-b3a9-f596e2e8af6d@panix.com>
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-
-On Mon, 03 Mar 2025 21:54:51 +0100, Artur Weber <aweber.kernel@gmail.com> wrote:
-> Add common DTSI with common pin control configs for BCM21664/BCM23550
-> and include it in bcm2166x-common.dtsi. The configs are kept in a
-> separate DTSI to keep things cleaner (pin config definitions take up
-> quite a lot of space).
+On Thu, Mar 06, 2025 at 08:56:44AM -0800, Kenneth Crudup wrote:
+> On 3/6/25 08:45, Lukas Wunner wrote:
+> > Thanks for testing.  Would you mind giving the below a spin?
 > 
-> Currently contains pins for BSC buses and SD/MMC; more pins can be
-> added in the future.
-> 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> ---
+> Is this a separate commit on top of master, or along with your previous fix?
 
-Applied to https://github.com/Broadcom/stblinux/commits/devicetree/next, thanks!
---
-Florian
+It's a separate commit on top of master.
+
+Thanks,
+
+Lukas
