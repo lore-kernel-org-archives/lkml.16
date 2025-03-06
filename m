@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982E6207DF0
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF37270EBF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741294229; cv=none; b=TXNBey3R+gYS32k6DNs/WkqLl5TcMbHLzxD0P3g7JA7gM2UzANUFE8I9K+PMeOmoP7YadgfDxyg6u+meN9qpZHEYeRSdsayFCgoRjWyFGKANyJ9X0iMhlx0XJUFmc5+nou8E84oh+tAHKZg9odTktQ4s6y9SNlscXUng/IsrFbk=
+	t=1741294232; cv=none; b=db3DlUI0LSlc4ZR9teKgjIooQMoMt9/hyT7PFKbsIyrJh6Ol1scj9JLMWbxRfHvelACusuUyNGA+uY/8I43RsUCv7P9ijHX5q4iPdNtcDzQzZfCaIqrVxC95znmERwgk94r5iYtcowyAvTAH2o+eq0Lb/9NyRd4KP7vwkmbcua4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741294229; c=relaxed/simple;
-	bh=lj/zdMUB/zXUQujBEpe+WVR+k7MIDgNioSQiZ0dB4OA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ce30NT2llUTkwWKDfkiodjd3fBpnMhRT0xxc6w9UI6MT7A2M8rYaipqUWRfkiGp0u7xLn1W1HTrb5Hz9jmcG++hU+3m/DJW0W44GnsFJ9ROMUrM0ochnUQkKQo3yqxKGWzQj8lRBjJF7kj7I1ibQygi9tBNHXboqB6MRzUrxbCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fXkSQTm1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ob8Mhfv6; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1741294232; c=relaxed/simple;
+	bh=etYCWwZuY6WBwGV1mwSClKPJGtnqn08gMHsF1t0ivMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lJWAOg0Z+HjvXFHsNLqV9A94rvX8bnrcNQ4PfqK+wjR+0EucwFUJ57SZ9Lgiu0Hwi7MXzVQGtVfPvtDBg+mjX5Z0EEpsli/u2EcC3Ya37cDAOB7d0y/ICDv7h7pXJl8WCHGrVD1Pt4OL9Nqb9OTt+87KMn3gS/f1mRgZkisQcNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BKZwTppk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q58QeEmV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fXkSQTm1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ob8Mhfv6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BKZwTppk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q58QeEmV"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741294219;
+	s=2020; t=1741294228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jv+CLkPXJjOH3lPUk/jYdaQez332Q1CoAyi49LlZOUQ=;
-	b=fXkSQTm1A0FbXpilFtJZ9IE5Mu1GDgiGavuGQTVy1JBX3im1pUaKMPGmydkG1kBGgnM+3V
-	prXqKZnF0z5iutY+kIz/6ws8mltObeXM8T5XNM244GDXYM9bzZ2ittuOOIbcxX4GsJOJNi
-	NxMLStlArsnG0lr4uW/t4k/+2LTNpzpul+1iTE2Ot2JgggqYha9Bmac2RauRw4cRc4pJH3
-	Ba7BpbHew1ChHyQDPFwtkFsKf2JCdrS2D7BugZ1lZY52IKqNdLoMP8S644+QuUVxtY3eE2
-	ZqpkQbw4Z4LqXErgOCUWuhcdqFdPsg8Ayi5xcEO/55mlVR7DLqZjGx1QpqIw2g==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W2PA07qsEgo3bJF/icLfJrJMUGWk+opu3HdPA13I9PQ=;
+	b=BKZwTppkIVgdKDTiY11nCpOYAUjNH/Kgnb/qC8NBd44nJ+UzDq4nvx4OHs/UHTK7Nb665B
+	09zJSVWIKzIEix8x1Gz3HaaicKax7olAwpbC0Cykpa3j6x07B6yBJv1d1CmdNERmW0pbCC
+	3iE+gddxDEIJmMbrHhP9P4DNEA9RyBNVGZGV5WcmOz/c0stDYm1bnPJXiZ8v2fLR1f+Nrd
+	++iaaRDmocuuQ7m00sDMz/XMascToHzzyZDM11eGZWlLNAOpoTGWFg0fH+4HvNsrgOhOsU
+	01QdDDkZZBKiOs7OAukgv4mTgzTjtl5JREKWApTrBXr8OFj2l0RMhiUHLL3s6Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741294219;
+	s=2020e; t=1741294228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jv+CLkPXJjOH3lPUk/jYdaQez332Q1CoAyi49LlZOUQ=;
-	b=Ob8Mhfv6GJFOtTS5HCTh0+iYlyjOWGJSYb/B4JyIpP1id2b5sAsSYsr25sTmGwz/1t81Yq
-	kQ6VmxdwOeYiFlBw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W2PA07qsEgo3bJF/icLfJrJMUGWk+opu3HdPA13I9PQ=;
+	b=Q58QeEmVpOgrjdHxdjldX7DImI7pQkv+bUrjkxGi9I0IotIsPmt0bwiq5B1sxIXyCBaH96
+	IWnGnlAu9qSOcUBw==
 To: Borislav Petkov <bp@alien8.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -47,9 +50,11 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 00/12] tools/x86/kcpuid: x86-cpuid-db v2.2 update
-Date: Thu,  6 Mar 2025 21:49:48 +0100
-Message-ID: <20250306205000.227399-1-darwi@linutronix.de>
+Subject: [PATCH v1 03/12] tools/x86/kcpuid: Remove unused global variable
+Date: Thu,  6 Mar 2025 21:49:51 +0100
+Message-ID: <20250306205000.227399-4-darwi@linutronix.de>
+In-Reply-To: <20250306205000.227399-1-darwi@linutronix.de>
+References: <20250306205000.227399-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,68 +63,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+The global variable "is_amd" is not used anywhere. Remove it.
 
-This series updates kcpuid's CSV file from v1.0 to v2.2, as generated by
-the x86-cpuid-db project. [*]
+Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+---
+ tools/arch/x86/kcpuid/kcpuid.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-The CSV changes include:
-
-* New leaves for Transmeta and Centaur/Zhaoxin.
-* New bitfields at leaves 0x7, 0x80000001, 0x80000020, and 0x80000021.
-* A standardized style for all x86 trademarks, registers, opcodes, byte
-  units, hexadecimal digits, and x86 technical terms.
-
-More details about the CSV changes are at the actual commit logs.
-
-PQ Summary:
-
-* Patch 1 is a generic kcpuid bugfix.
-
-* Patches 2-4 are preparatory cleanups.
-
-* Patches 5-9 add rudimentary x86 vendor detection and filtering to
-  kcpuid, as the CSV file is updated with indices that are exclusive to
-  certain CPU vendors.
-
-* Patch 10 updates the CSV file to x86-cpuid-db v2.0.
-
-* Patch 11 updates the CSV file to x86-cpuid-db v2.2.
-
-  Patch 10 and 11 are separate on purpose, to make the CSV commit log
-  diffs more sensible.
-
-* Patch 12 puts the whole kcpuid tool under MAINTAINERS' X86 CPUID entry,
-  since changes to the CSV file may require updates to the kcpuid code.
-  I would also like to have myself and the x86-cpuid mailing list CCed
-  for all future kcpuid patches.
-
-Thanks!
-
-[*] https://gitlab.com/x86-cpuid.org/x86-cpuid-db
-    https://x86-cpuid.org
-
-8<-----
-
-Ahmed S. Darwish (12):
-  tools/x86/kcpuid: Fix error handling
-  tools/x86/kcpuid: Remove unused local variable
-  tools/x86/kcpuid: Remove unused global variable
-  tools/x86/kcpuid: Simplify usage() handling
-  tools/x86/kcpuid: Refactor CPUID range handling for future expansion
-  tools/x86/kcpuid: Extend CPUID index mask macro
-  tools/x86/kcpuid: Add rudimentary CPU vendor detection
-  tools/x86/kcpuid: Restrict CPUID scanning to valid vendor ranges
-  tools/x86/kcpuid: Define Transmeta and Centaur index ranges
-  tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.0
-  tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.2
-  MAINTAINERS: Include kcpuid under X86 CPUID DATABASE
-
- MAINTAINERS                     |   2 +-
- tools/arch/x86/kcpuid/cpuid.csv | 787 +++++++++++++++++++-------------
- tools/arch/x86/kcpuid/kcpuid.c  | 257 +++++++----
- 3 files changed, 621 insertions(+), 425 deletions(-)
-
-base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
---
+diff --git a/tools/arch/x86/kcpuid/kcpuid.c b/tools/arch/x86/kcpuid/kcpuid.c
+index 1159204b9902..ceed560cd8a3 100644
+--- a/tools/arch/x86/kcpuid/kcpuid.c
++++ b/tools/arch/x86/kcpuid/kcpuid.c
+@@ -78,7 +78,6 @@ struct cpuid_range {
+  */
+ struct cpuid_range *leafs_basic, *leafs_ext;
+ 
+-static bool is_amd;
+ static bool show_details;
+ static bool show_raw;
+ static bool show_flags_only = true;
+@@ -571,16 +570,6 @@ static void show_info(void)
+ 
+ static void setup_platform_cpuid(void)
+ {
+-	 u32 eax, ebx, ecx, edx;
+-
+-	/* Check vendor */
+-	eax = ebx = ecx = edx = 0;
+-	cpuid(&eax, &ebx, &ecx, &edx);
+-
+-	/* "htuA" */
+-	if (ebx == 0x68747541)
+-		is_amd = true;
+-
+ 	/* Setup leafs for the basic and extended range */
+ 	leafs_basic = setup_cpuid_range(0x0);
+ 	leafs_ext = setup_cpuid_range(0x80000000);
+-- 
 2.48.1
+
