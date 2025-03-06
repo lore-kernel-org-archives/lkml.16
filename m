@@ -1,78 +1,100 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2059.outbound.protection.outlook.com [40.107.237.59])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8191448E3
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91651448E3
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741294597; cv=fail; b=PbkRkSsg+bp6asF1MWukWcwhlm78plMVqlEMsyRY3cccAkVnnklGiCxLZAOeK2i9Kw7sdeGF0AIa4vYM9TPJvYfgFyPLPjNVcJ9Gf3YdRj4tmVJ4JiUmeAY6irnj44bqvKpJl+VhpQN6L1nCmcLrWieT9N2PhtqJIInlKR5GSGc=
+	t=1741294631; cv=fail; b=eB7poki8bvN4K58FLlkyAYS9SIVU6ToiSJ1NjXAjQ94zFG+01VmK1NAZCaOamluuJKRmJFNwd67/YdOXDzlV8FM+2FkIOMKnSq9J44m6tYzi+4NooYEOWoApLqbTS5DD5/FCyDCWS88hqU6RGCOuXEkpeoBXPJY+URomybnk2d8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741294597; c=relaxed/simple;
-	bh=2SP24WJOFLiwost02n45YhU0/1PSkJppFSiKhIS2U/0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qzIhdehMExupBS197pKFZs4azs82W97Qp8+nAI5I1cOfFw9RtuNDLepdLdAXn3DCqvgx8l9RVccbXgDPHnwg8wMo34mHxjpS0yMaY88njg3a+/lwmp7Jx8+iF+qdEXiTf3DPQIaTpXOPwvgnUacb9O2JIrONs6mstIWDkPSCOhM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=saLIhU19; arc=fail smtp.client-ip=40.107.237.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1741294631; c=relaxed/simple;
+	bh=+Jca9lHWIKszEc9Y3Ty+i9h4VhgrgaJcfXO70UFws6Y=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=k/5UzpK5qh0FJg9A3NMW1+lNqWLLBaLU+y45iR3QtVIQQ455Vk5YLxWiBVhz4BQWsf7zUc2FPsbpvEhOMK0jHThHi2sLP0znXYYEpYWudSNhHHX0O81yhRBpn+X7NWAxLMjEcjg0Dt+xrvyYtMP9VAGNIMkVP8fs1IP8okEZzAo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJqbMD7I; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="saLIhU19"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJqbMD7I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741294630; x=1772830630;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=+Jca9lHWIKszEc9Y3Ty+i9h4VhgrgaJcfXO70UFws6Y=;
+  b=OJqbMD7ItVG5pA3hamwKo7bEpIgh/hogObn82+4RBuO+G/OUH29SGchv
+   15aWvv7V6mcLcfHMYVOh+6iIsAEXFghNPyCUVgy8C5mV3/McZnO5B8pej
+   RItFTPfxc3LkW22uFQWcOPpd8MAxqIbV5hB+BixOrkCnOkEWDRq86vUYS
+   TZHrH4bDLp0V9X3eehvWyFZKCP9pDj8jSM87+0DkH70HLbDwdTa0Rc/yL
+   rDcgEA+clXLuW8l7s5wKMdYv7jkQI3g5a3KP8aUQo6yievCRYX5bjZEQq
+   Z7Js4KDE2QFA34J4AnZAK2QrKqCUJGqQFKBEVZZZKEkcwuwbNmohs2dfe
+   A==;
+X-CSE-ConnectionGUID: xEnxeaFQTrCUROya9QU6kg==
+X-CSE-MsgGUID: iy5Rcxz2Qg6gwQfO+Cnvrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46101340"
+X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
+   d="scan'208";a="46101340"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 12:57:09 -0800
+X-CSE-ConnectionGUID: lQbiUAs5SPeXkVfKn3cj3w==
+X-CSE-MsgGUID: kiRfK3lxQXuyg+8J/ZsE/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
+   d="scan'208";a="149928326"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 12:57:09 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 6 Mar 2025 12:57:08 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 6 Mar 2025 12:57:08 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 6 Mar 2025 12:57:08 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qH8QYJT+Fd1WXfdETgMEasf3pZTA7ekB5sj4+2SXZTPwUT8uzM4flvcjbmAhg4PoL1XBeJDOCQ24a3cmNPV9YhFmR5dtaSQXGXqNggRhekERNF21EbE2UdoXmNtyGXDpqqgGpF8U+G/jAKgwk9w8p0QuC4wnMqI24JRLSFs6jCLGTwZ89IQ0ttfBcPgA4Wi5gPi+WLevDaTrKsqo1aBVTTv0AeR/5fTsdCTdH+sG8VG8wpsa4Cn2emzukv6wAmDDqmlKL8Uhxxmct4evO5SwD13AMqMEWkIlB15WZTRcUk2IDgy/FPliPNgFAjOn2UdeKX7bMMOHkQtdMZibTsY1LQ==
+ b=Njeo6LlvNTIFBbaVCyHF6GQSMwzf1VP1Z4MhSwTWOGvVfxk/HF4FXQiu2S0Oia811FeGzlKiUY6BKWKn5QaKdGk54RMSPmFmfhqMhjyE+irDdbDby3uytnBpzuy/rYrjZGj7yzLi5JrJyEkhrqkpeyxyxdUGQ4E+a3RmAaZ4ZoeTMGxTJuzJY36a8o/crK/9VYBt7/cxtshP6hwHYZjNfJkC+tQ2A965adnnkxpKvTbadMS5Th3TYlNCblKpnAhvzVPOeg7ZZpxWUXCuM99BOZhHeno+z4UUTmypz4cC9v5AP8gE0VZKXZAJdG7yGXWfBLpiMlS2VVoKvK7cIoibjA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2SP24WJOFLiwost02n45YhU0/1PSkJppFSiKhIS2U/0=;
- b=yXZ53jS1ZR57V+rXtXgF40rzuqgyniMJjYYXRqQfTAZbmrpEo2IlNVVtHS6EuMH30tuk3SzZjbnkveICzr6WGTPHraUXsXqHLm4mJFSmPKbrmQ/Ji/c68Ju+RCeg1z1JOzvkQfs/YCs9Lip3vy4FRQXQFk0WAW/lOHK4OiYlqtyn3XgX1s3BqLJp+XNYXk66FGx0n7YDbuOpPeFafMduG5wPM7K8xr4858rIeJ9iDChu8+GehuQUVBV1/cLPbKjR5kyX+NKaxfxegZXGKhLUd3SX3jJ27HiAc0lYHAna/1BsBrEqe93XKzcOyqwny5nsEawI+cXbhmVpaQlXDI4jRg==
+ bh=OqLwkKZ6/4Ed+B08i9Gqf76jl7JotCWUAh7Lb81VX60=;
+ b=czVoX5mGzoak9DVQCdiik8kfWz+jByk75ui2dA0XcL/DXtVLdr20M+zuccz+/cMq18HlBzrE7g2M2WcUXcl1jMNGhinlY9ViZsHRybAX9lfFeT1XfcutD7Khd9pom/0H+EP86YY0uMgGDoZYNzl9RbmlrAL0L9D5SxSO/eKJi8xo7nKRKeI1L8MVDK449NjHqcvFKSPLUjyuwK0Ljq1bkCl0nrtsms+S18CdPFtQdrkTyVweNc+hyWvk9exS4eBR9jZiHLS20MFGxkVrzx8PRDDOQ594AQNUhTOBGmX1DltyugnZMrV8xeObaLzpHWsVbs4Z4VzlexsH1uzQSrspCw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2SP24WJOFLiwost02n45YhU0/1PSkJppFSiKhIS2U/0=;
- b=saLIhU19ovDXxtj9zMucrjPqcAd56Bc0OkSYpz1DXqRZdZo33x/2KGZsCcYLB0xd0tz6t6xMHP7DZ2FAob7eay+f0TM4hFEutQdP1s4a5o/npt3DdSU3dO0SuWelHQ6xjpNIQuaHl9gSoGlCaxw/q1eVZH08DFFnAo4sQ/u4y1vOAXpfOrHmRc72IHz9f9RrX532I/9k+Sybj99A1WNxIx9+HNf1pf/YnQKoBwojcOk8h7yJj5/L0oEcRD6MBS4L7itir5t/fdgwjl4YVGDf7ZMNNgnLEP+eBNC+VF16N1IaPHwZD1C4r4VYM4A3ey6l0iyqW/TJWkBaTf6c/BnWdQ==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
- IA1PR12MB7662.namprd12.prod.outlook.com (2603:10b6:208:425::20) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by SA1PR11MB6894.namprd11.prod.outlook.com (2603:10b6:806:2b1::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
- 2025 20:56:33 +0000
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2%5]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 20:56:33 +0000
-Message-ID: <37c8bd95-5cc5-41f7-99a5-6e701cec80e3@nvidia.com>
-Date: Thu, 6 Mar 2025 12:56:31 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 01/49] x86/resctrl: Fix allocation of cleanest CLOSID
- on platforms with no monitors
-To: James Morse <james.morse@arm.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>,
- Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
-References: <20250228195913.24895-1-james.morse@arm.com>
- <20250228195913.24895-2-james.morse@arm.com>
-Content-Language: en-US
-From: Fenghua Yu <fenghuay@nvidia.com>
-In-Reply-To: <20250228195913.24895-2-james.morse@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR04CA0005.namprd04.prod.outlook.com
- (2603:10b6:a03:40::18) To DM6PR12MB2667.namprd12.prod.outlook.com
- (2603:10b6:5:42::28)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.18; Thu, 6 Mar
+ 2025 20:56:39 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%3]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 20:56:38 +0000
+Date: Thu, 6 Mar 2025 12:57:45 -0800
+From: Matthew Brost <matthew.brost@intel.com>
+To: Philipp Stanner <phasta@kernel.org>
+CC: Danilo Krummrich <dakr@kernel.org>, Christian =?iso-8859-1?Q?K=F6nig?=
+	<ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 3/3] drm/sched: Update timedout_job()'s documentation
+Message-ID: <Z8oMSWulN0mF43aB@lstrano-desk.jf.intel.com>
+References: <20250305130551.136682-2-phasta@kernel.org>
+ <20250305130551.136682-5-phasta@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250305130551.136682-5-phasta@kernel.org>
+X-ClientProxiedBy: MW4PR03CA0216.namprd03.prod.outlook.com
+ (2603:10b6:303:b9::11) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,130 +102,220 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|IA1PR12MB7662:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac11b8b7-bf49-437a-a961-08dd5cf1606c
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|SA1PR11MB6894:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b6c7261-4239-4236-b1c5-08dd5cf163b3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K1RYSnFENlgzL2FVQXdhcG1CS2FBVFRreFZwK3p2RmEzaEJScThjRDVGYWFX?=
- =?utf-8?B?aWptU2JReDJUcGxpN2syWVc5TnpKZkJBWXBCS0d5dnpDSjN0RlBIUnltL0t4?=
- =?utf-8?B?NXBIWmlUTTVmK2pzVHl2RDg1eXFqZ0lYSTFhTlFIU0ZCVUNtTTNZR2ZZdjJY?=
- =?utf-8?B?SlJ3YjhNRS9uTVIzZndpSEEwcVVvNmhSbzM5UUxicitXcnY3c25ZL2MzTjdY?=
- =?utf-8?B?dldQdmIrTDJHSmJhTkx2ZGp6WHMzam9XeXNYdHBEblc3alpQNDRXc3lIMG9W?=
- =?utf-8?B?YW5vNjBTaHdoRnVzS3czZWI4UXg3RzlmSTdzUlJNUXZjaGRXa0dkUUNkazlh?=
- =?utf-8?B?eTBMQkNFWmEyL3IrN0R4aFVETm5mcW5BcWNpU1BQVldmdDMySlA1Mnh2R0RF?=
- =?utf-8?B?WUNrVmRDZStoRjU5WDJZOHZ5Zkw5OHdvZmhSQU1rTVh1R1duRVplUyt4ZUdn?=
- =?utf-8?B?RWp6WW5NWHJ1ZGM5WWs5TlVNQVZMOFlCWlNRTjFQTGpDR2wxWHZPWXhvMHZo?=
- =?utf-8?B?TkJCMXN0aTN0WVJscjMveHh5Ly9YVGh2Y1UxcEV2c0JhVXJHOExpa1JHMjFY?=
- =?utf-8?B?QlZqcldkaEFTeE1HdVRmTEd1RnNsRFVNNm1OYjRpK1MySFhITllJaDgzOEZY?=
- =?utf-8?B?NzgvWElPT3d0amIvelc0K1E0NXdKdVJlbUFxZ3BkMndQNjN2cm1tOC95ZkVp?=
- =?utf-8?B?dkFXUzA4ZmJ3aitjQitmQVZVNlBnd09ELy85cGREajhXNk05U0h4ZHFUSFNs?=
- =?utf-8?B?STg4enFRd0RRM3Q2aE9kYU9SbWhsc3pvaWs2bzRWdzg2WGtHLzc5Z0x1Z215?=
- =?utf-8?B?K1lheWJzTmwyR0tLZE9HM2hZSmIxaFk5MDMxZGJtL1VneTRJb0JmdnQ2OVZP?=
- =?utf-8?B?R1RtcXpVWkZQU0FOeTNxSVJoUmErdzEvZXB3Z1FNTnFQR1RtUU1xNXhZMElC?=
- =?utf-8?B?Wk1kRE1oVkRlR3lBZEt1U2IrOEpQZlpDN1BSZmMrdk5MVW1KRS9XaVM2WFQr?=
- =?utf-8?B?TW43dmlCdHdmR0psMUl5alJYV2RjcUFWdE5YU0FTNTI1M2d2Zlp1aDB3c0Zo?=
- =?utf-8?B?dklBUU5kUlMrK0NUTFpldk9iUVVLbFRUVEkwZVZOWGZNNnFybXN6eGN4dXg4?=
- =?utf-8?B?M0c3TUNZcEdBMXBFV1Nxa0s1UUJpWVRHcHNWWUFCMkhSbFZKY0hHQ1ZKeGZE?=
- =?utf-8?B?cWkyK3VlKzhjaGs2QXFqWi90cHVxUzcwaWt1TnRRakgyMEJWRGNyZmNlM1Nm?=
- =?utf-8?B?bXA1T1h0UXM3bGR3NFFTcmdEbjU1YVQ3L29vWlZIUVE4YnpIQlRtTmg0em1v?=
- =?utf-8?B?azlQMHZkZXJ0dzZMVnREZWRLem9aMUhLQktpZ2RxU3BUVG9zWkEwNWI0RWtx?=
- =?utf-8?B?Wko3Y0hxT0JHRjdCcExncFlFcXlxNjRraURzSGJnbG1lUGFZc05hc2Rjbkhr?=
- =?utf-8?B?bzhMMkxPVzVWVTVpL2NkZnovdXlmb0s2dHFRdW1NSTB5dDNyVGpnZGs1QUJl?=
- =?utf-8?B?ODNJTWQ3V3JCNE42Y2NaYllUd25XQ3lIMWRDUDB1V0h1cXJERzFWT3p4dzJi?=
- =?utf-8?B?YTk2emF5dGJWKzh4Ym01Y1NFeW03RWJ0SUJJL0RqKzI2RVQ4VlozV2ZRclFq?=
- =?utf-8?B?eXJqWE9tN00wUnVXbEhSRXErLzF3REU3TDdoWkNhd2VyYUV3dkxXYjJBT3pD?=
- =?utf-8?B?bnJhODAwVjBwandGLzhUd2dxdDJsTTVScUFxYVhyUzFKd0d3enpObEg5VDVU?=
- =?utf-8?B?MlNjYVpqemJxQ3orYnowWXg1aStBVUgwZGJuNktoK1BGY1g0czVXRmIvS0Zz?=
- =?utf-8?B?NUJTNDBUK1hVQlo0d00yVytFQm9ndVlBUjU4Tm5DYVJ4djNtSjZlMEtSLzlo?=
- =?utf-8?Q?BUT/qSOeyTovx?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?H43LTvxDVO+944DJmnYvX1j7XnmUP+xPOHtSTmRKnmiSHamXe9Z73ZpyblV2?=
+ =?us-ascii?Q?Z5BJ1dkHey5TDxiDOwyS5cFcbswi1BsbStuNjDXlSqbrAIOiLR71jnE5BOkS?=
+ =?us-ascii?Q?KDAGmvoLPs+rOHkleYQtkq0ydUywsmpJyK3YQluPLj59snKYsKGL+uyAckQn?=
+ =?us-ascii?Q?gaWuD9P9gpRQ6T04NDD8OfbN6ZUWv0DdjBr5HZS1l51sbsOf85KDauFuYgBC?=
+ =?us-ascii?Q?KnfVpNgLulDQNy682c2nMXuDTXnXvdIOSLS8Z2oczOfC7JAXDS3iS/Wmira4?=
+ =?us-ascii?Q?JM+cJ6futAH0HemruwX51qK5nKoeOzkQ6nHp00AldG3buGGPHUArGgOJ67o/?=
+ =?us-ascii?Q?Ra5j5VT+EMgE55fb5n8ttMxSwiCN6Cv86MQILnXqJ2yNzey1rvmy0qqpc8v4?=
+ =?us-ascii?Q?kf3X5wzD1RvUppfUN42doyVXwxdjjulhRyWb0//b4EafATn/FSN1vN/32F5Q?=
+ =?us-ascii?Q?oHi3PCjWBHd85xPojMuOlCRtfP7fkdCxE0wLPaApxyyfWxRKw8AsTUU9FO+D?=
+ =?us-ascii?Q?oj58l5WmmrxdYR/qfPubur111nCbXMJYydroM4IABHgBVCVVX59vd6tFneqf?=
+ =?us-ascii?Q?tqpYvzmXDw8X5V+4o/Dh29NXgUc9exEXzu5PcRoRLBqY8b2bR/Vba6rPo3OP?=
+ =?us-ascii?Q?Tj6QLj26k7F4uZ2Pze3M6Zv7713Yg7irGLIyzKkggpC6MUaqglrp4yMLRukY?=
+ =?us-ascii?Q?4AaBDi4JtoZ6gcpvUu3H+CN2ioOT9li0W/fxlpApPTJ3BkII0ftkTWYCTpIx?=
+ =?us-ascii?Q?X1Kyi6y6j7iBOdtQy13ZfPg8m56/eIucDdpdfRteWW5bW3RfmOeK0SW+oi/y?=
+ =?us-ascii?Q?xCvlmPJgH6vB7OUagAXWDPKfqfy0snOA0jKOysrJiI+RBqnpydBuuOjywdDZ?=
+ =?us-ascii?Q?3vnFL1lEtTgqsJwyS48OrSYL28BpNtEnw5JguUYK1jIPhpD8WP1aXjd8MvHa?=
+ =?us-ascii?Q?PX1a9Ue30kJcHMxXVVlR7sOZ4ZxiX6bBRjFlyt3ciiiy0+wosFx/9OeI41yr?=
+ =?us-ascii?Q?9mhm/V6Bl5swH6PIf6cWeaRaF2rpMLjsiQikEM80Rk9/bfGsP8yRYZhvAzNd?=
+ =?us-ascii?Q?asJAIJIAFg+a3SKvmjL8q/D8oRz/X62ampmIuN81u8sVSG+KbcuVa9Y+uKGk?=
+ =?us-ascii?Q?hfknr1M7Vj9EEZJII/0LFwNiv6/A8lT4XVyWe2hThafSmSOQmznb7OIxEg9W?=
+ =?us-ascii?Q?+QO7BQ1PmDOxwEwIIBStaaUrUzA4uzuVoamrvWOZgS+bZBV7u4y6Ovt0NYTu?=
+ =?us-ascii?Q?flHCr4/LGR4WJ7N68ytziNXpLyp8YhsSQjBjGOGyRYnyCO75mbviAAealbdP?=
+ =?us-ascii?Q?Ze/mCtHtGqqLv3G7drmrDJt/G73NcCabLPnM+OokH9ozh4DF1rQ46rHFky46?=
+ =?us-ascii?Q?WvIVuE3Xc4zIk/SpvO9ScYXY+cje?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TFhQUEpHQUplY2xzZ01jelplV0FqTnB4Q1NQdzNtbjVzTkY3YnJnWVZ2Z2xr?=
- =?utf-8?B?QUJwbkJjR2lscklhU3RLaXFabVkrQlBzajkwZ3JFR3NZeTlyYzBiZUpZbHhX?=
- =?utf-8?B?MWMzVW5GaTY0d3lFWmlTM0xkUVhUZGVCVnIveFRDMkt5eHB6aDdYd2F3WU9y?=
- =?utf-8?B?RzZaeDJpQ0sxWWZxdVRZVjdlQk5rcVFrSWNUMUtjZTdvbHVuall6RllBS1l6?=
- =?utf-8?B?Mnl0VCswWUxNVDFOTHFXeG1RTVJDMG9aelRodWd2S2NWaE54Q3lQeHdNazU5?=
- =?utf-8?B?UGYyY1owUzZUbkhZb3doTjErbEQ5czJSYzh0NEtJUEgwbVhRY0o2TW1rbzFi?=
- =?utf-8?B?OGErWWdtL29wT1pUeXV4bXhXNUpCdHdRdk1yZHRzMTVHaVNOTEpIMlZleUVl?=
- =?utf-8?B?U2lRZ1B2d2F1bThNcU96Wm81SklhcVBhWHUyWVI3TkpzTlNORHo5T1dKNllJ?=
- =?utf-8?B?azBYVkcxbHZ1ZjFNYkNVbTVEZXp1UGM1WnM0UHRzZmh4ZnNySEljTk9EaDJF?=
- =?utf-8?B?NFZzOWRCeWl1Vm1IUytka3phemNKRmlCeDVyK0swUzdYWnliL3YxWkhMQ29r?=
- =?utf-8?B?SVJHcUZTSnZqcmlkUTROOTdWV2FnNmR1Qk9DWFRSamxYZ09UdXhVRityek10?=
- =?utf-8?B?WWprMmZ2Q3NvUGtjdmtnVGpMTTNGaWpGZ0hMcWZOQmRITWRSL3VZcmU5MG1N?=
- =?utf-8?B?Z01ySGlmdFJISzZiT0F3NHFLbGJ3UVpCUUJQclRCSVdsOTFFN1hzNlpLOTNH?=
- =?utf-8?B?bWpIM0NXdDcxdHp5OXBnWmZaN0xKWldkVW13OEhQdXcxWERzd2RVdWZFU1JX?=
- =?utf-8?B?YnBjSHRCOHlmaWM1UzUrWDRqWGF5aW5UQ2VIZTVLOXJZRHZyaGlTcCtyOVBs?=
- =?utf-8?B?S1gyeWlNblkwYjhZYlBnS3orSlFhR1o2RUZZNzU1QWNGbkV4Z2VmbnVseUt5?=
- =?utf-8?B?aFMyNmgxTzNFcjhBS0NLSWFxRm9DZzU1ODYzSWViTW10aUwvQmdqRnhGV2pm?=
- =?utf-8?B?a1FzdDNZaE55OFoxdFhSU2ViZ2g1ejFaWWRCMkxBcWxBMkUzRHRrb21KeFBo?=
- =?utf-8?B?QkV6cEVGbVhmMWpuMTMrQkRYMmlBNStIQ2ZlMXVWT3NiaEJzckptZUpESVRP?=
- =?utf-8?B?VmNqeHNKNHZNY0hyS204eEdCZHhEM3RGaTVUaGNEeG9hR2tZRU1vT0pLZXUv?=
- =?utf-8?B?a0g3UjlHc2tPNHJjd0VCeU1aRmtRYkN4WVI1MnpXZDFuUFhvTjlPajByMERP?=
- =?utf-8?B?Nml3SjVnR2VoU2w2UVRrTVpHSXc0QW9rUFVZTWJWQ1o3cC8wamJnNm91bzFH?=
- =?utf-8?B?UlVWaFgvRFdpTEpCOHU0VmNJVHNhaU8vRkhGekpsS2k3N2NVK25JbkZNM0NY?=
- =?utf-8?B?ZG1jRzVsenBWMnpCZTRGaGhZUFU5WXZIWVk4c09NQWxRQXRhdERNVmh0QWY5?=
- =?utf-8?B?YjV3NGhxODk2Njh1aGhJc0ZtU1lhM1M4VjJBYWZkVGw3SzIyMjlqZkZxRmE1?=
- =?utf-8?B?aXBDMGlZVnFiL2M5V3RnNTJPUEtLbi9ycjNnTmp3MUJweWFIdmt2c1FhRENR?=
- =?utf-8?B?T1hBS2VRYmQvMTh4UFpDMU9zSVBwbUJZOEdsdmZoVjNCMWpLbnROK1NQWDBX?=
- =?utf-8?B?VTRhdzhOS3FLbmZORzlMbDA4UUV3eW5Yenc3Tms1WGg3bDc2RlZiQ2w4c1V0?=
- =?utf-8?B?aHB5bm8rTHVMYUhvbG4raHJoNklyZWNyWGs1a0R2QkN0WENkblpMSjJIVDl3?=
- =?utf-8?B?VUNOMW1INHNtWWprVDBKRXJpbmYzSGw0Q2tuNGQwZTZlam5yOVhFQTNRMlhu?=
- =?utf-8?B?VmdRbmZJNjNQTk1KcjlaUXBxOFJ6c3Q0bEZCbE9yQlMrWGFDMVU2WDdpeGQw?=
- =?utf-8?B?WHdzdTRtNDRzSXhGdGRtdlJSZzRHcjd1OW9MZ1FNdnpYaGllME9ibmFZK2d5?=
- =?utf-8?B?WjVLNUVqQmcvZUloaDlwV2JOUExwNnNzQWx3aHVYSERLUHV6dTYyRUtwaVgv?=
- =?utf-8?B?STE2dHU1eWI2Qkt4YkZsNWEycEl0L3RGdHgwQVdNK0dTSFJwd1FibmVma1pR?=
- =?utf-8?B?MTk2UW4rSVJaN3RVYWJxZTJGRGFuUEtzZHlPUk9jc1lSMEdRWGVlWlp4Z1dO?=
- =?utf-8?Q?BfSrb2fZOow+4pfw6cSccIuvJ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac11b8b7-bf49-437a-a961-08dd5cf1606c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NFu/Mn6R22Nps/pOowScHHdFCkxVJeCUUFWUsPeThvMwexikT/OGkr3gqtIz?=
+ =?us-ascii?Q?Uv3rpjut3lnElBr2ANQMcLiH8G2m8tkihrbie6UuR9SeJro9NyxzXlfsXQzX?=
+ =?us-ascii?Q?9mSSa48260O7GrkJbg+6WlfMKkVQitGT312fZBqUILUa47EUugn+ymOLIozp?=
+ =?us-ascii?Q?s7qUUz6R9yYv3yXg3eYzIDig0eSoINZTlz7i5q5Q8wAyt9JiiHZcdTk8+UMo?=
+ =?us-ascii?Q?mOfN8aijCCBALg8nLWm3yVo90lv9+0epn3NR6fjzqJAgRUnlExIp/bY94+oy?=
+ =?us-ascii?Q?L5eSLC0SVXo2PovMdb4ifOjm962btD/pqITrnpYGbL2AsTc/Jvn9krRuYSVz?=
+ =?us-ascii?Q?5fk95OeAGVu69UBmF8YaF8Zp3aTMD9GCKYfLI932NKFrT4dgoe1zwp6lPE5+?=
+ =?us-ascii?Q?7uqA8TxumN6oeBItbAQ4tUr0SPreuw3KdIi8mfLbsyCTF54NNXrYbkV8f9i8?=
+ =?us-ascii?Q?uGofig6S9fJPFXvtXYWFcTFwsNVgwADXG4VsRGmgPUBbg7amdOeuvUd2kICO?=
+ =?us-ascii?Q?7JA8BXE6jiR3j8cnobBlOY6uSpvxe/pyOILSgRjKTzVXvHYLLgKojR73Mwt4?=
+ =?us-ascii?Q?sehm+sjkeR24Z8ZzuVtcXiMnB8crCh07JYZ1Kx0DCDTu7leynPmqE0s4Wm1d?=
+ =?us-ascii?Q?LR9Ps156lYcK5lU350ArLREKurVPBXuZTTW84VLA2ZC+EZffl1PWC25V3yhW?=
+ =?us-ascii?Q?DMA4GWY2ivQexdwMB0hLHmLp0zJ4v3bLehV0ta24s2V6gUWbGr7FRrgsgAeg?=
+ =?us-ascii?Q?3QladiOMkfcY2kFVq5xp10K+s/DHjek/ucl8XHV9WLJaV6lMNEjXcyjQqW0K?=
+ =?us-ascii?Q?vLgqgULBoUPt2YXob8Yl2/+UDylA3eRe8xXPyCzHa1fiCxEgRgHWk5/5kAHQ?=
+ =?us-ascii?Q?rA2zgUDUVV+3Nv39LR+BQUM634G0aXLzmmNPDTTM04k3oRG4zYU0BFetykWI?=
+ =?us-ascii?Q?frXTYWTrdIguzvVGAgZIDcs6f7l8JGdf/3ie0DPSjcKowYXY07+po6XqiP2x?=
+ =?us-ascii?Q?SVOPOf8/Op9tSQ4UA84l1vb/xpvrmieET0MF7uelpCNc41F2+5emUSbuzb/b?=
+ =?us-ascii?Q?PQP8mAvbxFoRZe+cqREtwwYZdOK/xyNKaBzbc13GAI3Ia7DybA8KLvD+q8il?=
+ =?us-ascii?Q?JTIkzuBPVf0gkz636n2UgUx4Xk72vze+tpVXQr+ecjvsYqaJFREB9UgkWcbs?=
+ =?us-ascii?Q?WQxMZCitMe5XA6wFXi29xqdkq5wLGS7rjz5NfClJegVIhbtZpN7rxdLnq/od?=
+ =?us-ascii?Q?gxxQGeC+exrflYQl7Fc6r3VWvUaNXDHLx/h62M+opWVPBE0jkclu3/xgY6ck?=
+ =?us-ascii?Q?ka2gSsuZ4J0KhZ5YDfYyR4zJ3qx5RU8CZ/DxqGGDnElvs5Vo7ZYBIVxeYpO2?=
+ =?us-ascii?Q?IRQpFp1SIVIMZcMo/Cmws881Yl7tJQqqsl1KkJ9s1FgONr+oBL52+dTrP6SI?=
+ =?us-ascii?Q?HBJN3nvxg3ys/BtUurOPM0t0oGereWG8H9r3DRwbu86fcsAQfdGvM842bi+v?=
+ =?us-ascii?Q?V/Nhtai4GtIIUNTcBCX94rk471by6e6+gGyBY62Cyky9nXC9Go37RPZrFp4p?=
+ =?us-ascii?Q?IEYg/XKssR3WdsRlO7XX6M3w0J5OHSwcgw8xWxLtOuhNs15v9hK/Q/UCQ3Mu?=
+ =?us-ascii?Q?JA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b6c7261-4239-4236-b1c5-08dd5cf163b3
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 20:56:33.2458
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 20:56:38.8070
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EgcvJB73oRMf1weCJPK3qMRmDP4/EZ046SpgqH7+ZqCHcHDJQMGZY+WvV8mMUMR1dWkQ413k5MFnUAc838IePw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7662
+X-MS-Exchange-CrossTenant-UserPrincipalName: /Z1Dln2TDcp30bl0+oLZhmiZZgrezsX76GFoAeBXZ5MVzkbTkgKI4aQD3SZCPyol4HOkoL5h/UddsoYFeBPsXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6894
+X-OriginatorOrg: intel.com
 
+On Wed, Mar 05, 2025 at 02:05:52PM +0100, Philipp Stanner wrote:
+> drm_sched_backend_ops.timedout_job()'s documentation is outdated. It
+> mentions the deprecated function drm_sched_resubmit_jobs(). Furthermore,
+> it does not point out the important distinction between hardware and
+> firmware schedulers.
+> 
+> Since firmware schedulers typically only use one entity per scheduler,
+> timeout handling is significantly more simple because the entity the
+> faulted job came from can just be killed without affecting innocent
+> processes.
+> 
+> Update the documentation with that distinction and other details.
+> 
+> Reformat the docstring to work to a unified style with the other
+> handles.
+> 
 
-On 2/28/25 11:58, James Morse wrote:
-> commit 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by
-> searching closid_num_dirty_rmid") added logic that causes resctrl to
-> search for the CLOSID with the fewest dirty cache lines when creating a
-> new control group, if requested by the arch code. This depends on the
-> values read from the llc_occupancy counters. The logic is applicable to
-> architectures where the CLOSID effectively forms part of the monitoring
-> identifier and so do not allow complete freedom to choose an unused
-> monitoring identifier for a given CLOSID.
->
-> This support missed that some platforms may not have these counters.
-> This causes a NULL pointer dereference when creating a new control
-> group as the array was not allocated by dom_data_init().
->
-> As this feature isn't necessary on platforms that don't have cache
-> occupancy monitors, add this to the check that occurs when a new
-> control group is allocated.
->
-> Fixes: 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by searching closid_num_dirty_rmid")
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-> Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-> Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
+Looks really good, one suggestion.
 
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+>  include/drm/gpu_scheduler.h | 78 ++++++++++++++++++++++---------------
+>  1 file changed, 47 insertions(+), 31 deletions(-)
+> 
+> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+> index 6381baae8024..1a7e377d4cbb 100644
+> --- a/include/drm/gpu_scheduler.h
+> +++ b/include/drm/gpu_scheduler.h
+> @@ -383,8 +383,15 @@ struct drm_sched_job {
+>  	struct xarray			dependencies;
+>  };
+>  
+> +/**
+> + * enum drm_gpu_sched_stat - the scheduler's status
+> + *
+> + * @DRM_GPU_SCHED_STAT_NONE: Reserved. Do not use.
+> + * @DRM_GPU_SCHED_STAT_NOMINAL: Operation succeeded.
+> + * @DRM_GPU_SCHED_STAT_ENODEV: Error: Device is not available anymore.
+> + */
+>  enum drm_gpu_sched_stat {
+> -	DRM_GPU_SCHED_STAT_NONE, /* Reserve 0 */
+> +	DRM_GPU_SCHED_STAT_NONE,
+>  	DRM_GPU_SCHED_STAT_NOMINAL,
+>  	DRM_GPU_SCHED_STAT_ENODEV,
+>  };
+> @@ -447,43 +454,52 @@ struct drm_sched_backend_ops {
+>  	 * @timedout_job: Called when a job has taken too long to execute,
+>  	 * to trigger GPU recovery.
+>  	 *
+> -	 * This method is called in a workqueue context.
+> +	 * @sched_job: The job that has timed out
+>  	 *
+> -	 * Drivers typically issue a reset to recover from GPU hangs, and this
+> -	 * procedure usually follows the following workflow:
+> +	 * Drivers typically issue a reset to recover from GPU hangs.
+> +	 * This procedure looks very different depending on whether a firmware
+> +	 * or a hardware scheduler is being used.
+>  	 *
+> -	 * 1. Stop the scheduler using drm_sched_stop(). This will park the
+> -	 *    scheduler thread and cancel the timeout work, guaranteeing that
+> -	 *    nothing is queued while we reset the hardware queue
+> -	 * 2. Try to gracefully stop non-faulty jobs (optional)
+> -	 * 3. Issue a GPU reset (driver-specific)
+> -	 * 4. Re-submit jobs using drm_sched_resubmit_jobs()
+> -	 * 5. Restart the scheduler using drm_sched_start(). At that point, new
+> -	 *    jobs can be queued, and the scheduler thread is unblocked
+> +	 * For a FIRMWARE SCHEDULER, each ring has one scheduler, and each
+> +	 * scheduler has one entity. Hence, the steps taken typically look as
+> +	 * follows:
+> +	 *
+> +	 * 1. Stop the scheduler using drm_sched_stop(). This will pause the
+> +	 *    scheduler workqueues and cancel the timeout work, guaranteeing
+> +	 *    that nothing is queued while the ring is being removed.
+> +	 * 2. Remove the ring. The firmware will make sure that the
+> +	 *    corresponding parts of the hardware are resetted, and that other
+> +	 *    rings are not impacted.
+> +	 * 3. Kill the entity and the associated scheduler.
 
+Xe doesn't do step 3.
 
-Thanks.
+It does:
+- Ban entity / scheduler so futures submissions are a NOP. This would be
+  submissions with unmet dependencies. Submission at the IOCTL are
+  disallowed 
+- Signal all job's fences on the pending list
+- Restart scheduler so free_job() is naturally called
 
+I'm unsure if this how other firmware schedulers do this, but it seems
+to work quite well in Xe.
 
--Fenghua
+Matt
 
+> +	 *
+> +	 *
+> +	 * For a HARDWARE SCHEDULER, a scheduler instance schedules jobs from
+> +	 * one or more entities to one ring. This implies that all entities
+> +	 * associated with the affected scheduler cannot be torn down, because
+> +	 * this would effectively also affect innocent userspace processes which
+> +	 * did not submit faulty jobs (for example).
+> +	 *
+> +	 * Consequently, the procedure to recover with a hardware scheduler
+> +	 * should look like this:
+> +	 *
+> +	 * 1. Stop all schedulers impacted by the reset using drm_sched_stop().
+> +	 * 2. Kill the entity the faulty job stems from.
+> +	 * 3. Issue a GPU reset on all faulty rings (driver-specific).
+> +	 * 4. Re-submit jobs on all schedulers impacted by re-submitting them to
+> +	 *    the entities which are still alive.
+> +	 * 5. Restart all schedulers that were stopped in step #1 using
+> +	 *    drm_sched_start().
+>  	 *
+>  	 * Note that some GPUs have distinct hardware queues but need to reset
+>  	 * the GPU globally, which requires extra synchronization between the
+> -	 * timeout handler of the different &drm_gpu_scheduler. One way to
+> -	 * achieve this synchronization is to create an ordered workqueue
+> -	 * (using alloc_ordered_workqueue()) at the driver level, and pass this
+> -	 * queue to drm_sched_init(), to guarantee that timeout handlers are
+> -	 * executed sequentially. The above workflow needs to be slightly
+> -	 * adjusted in that case:
+> +	 * timeout handlers of different schedulers. One way to achieve this
+> +	 * synchronization is to create an ordered workqueue (using
+> +	 * alloc_ordered_workqueue()) at the driver level, and pass this queue
+> +	 * as drm_sched_init()'s @timeout_wq parameter. This will guarantee
+> +	 * that timeout handlers are executed sequentially.
+>  	 *
+> -	 * 1. Stop all schedulers impacted by the reset using drm_sched_stop()
+> -	 * 2. Try to gracefully stop non-faulty jobs on all queues impacted by
+> -	 *    the reset (optional)
+> -	 * 3. Issue a GPU reset on all faulty queues (driver-specific)
+> -	 * 4. Re-submit jobs on all schedulers impacted by the reset using
+> -	 *    drm_sched_resubmit_jobs()
+> -	 * 5. Restart all schedulers that were stopped in step #1 using
+> -	 *    drm_sched_start()
+> +	 * Return: The scheduler's status, defined by &enum drm_gpu_sched_stat
+>  	 *
+> -	 * Return DRM_GPU_SCHED_STAT_NOMINAL, when all is normal,
+> -	 * and the underlying driver has started or completed recovery.
+> -	 *
+> -	 * Return DRM_GPU_SCHED_STAT_ENODEV, if the device is no longer
+> -	 * available, i.e. has been unplugged.
+>  	 */
+>  	enum drm_gpu_sched_stat (*timedout_job)(struct drm_sched_job *sched_job);
+>  
+> -- 
+> 2.48.1
+> 
