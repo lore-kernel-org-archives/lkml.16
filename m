@@ -1,437 +1,131 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373E025CC9B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD8825C6F7;
+	Thu,  6 Mar 2025 16:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741280270; cv=none; b=mQd8UOYLKzCuRnLOESfcsXM5LXIT9UjTaIc0Gih0k95sR2xSZv81RgzwX6ese8B5f4JGA989YeOJxt9n5qIpKl5IXwgCSGy8BlYbJj+mwV5rP7UGdpsMNSHtS8tQdYT849w7ZyH8p8NRzIdX5MIDpMUlt6nMVjrp2eHy3JMxpmU=
+	t=1741280287; cv=none; b=I+Kag+Q5AquBXKOa8H3BS+OSDX0JY5MXXNCIdPd2ncjiBUIWw5TuC+r294zWU+v/nCHcV5vFhDIQ09W7+Vh4SWAJ8JpljTPOU+fujrav6SkjeCHWWX84RJsiEHjaG7XefSq0RwswFTqyGx687x/gmF7Hm807OXMdzAUeJ2UDekk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741280270; c=relaxed/simple;
-	bh=FVLp7JQN6EA1ZahX8/bhjFj8HmQHSEfgKYsu84WvCcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CJ4eIlXWZptCvUjm1QUTBs+IsMGURrRsh0GtD9SSva13Cla39Wl6vCGrrl6xXR2Z/fFXmCKg96yLJdMmpD1hpXLs4frUu3dp65dKti8zj2VJOzerHmFEWvs8qQrko4GsTyDjfDBiXht2fm8oVa720NNqbn5ivfPhUerrYcQpvJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SUGWgPKP; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741280287; c=relaxed/simple;
+	bh=iye/SSIddxiY8mSsOHtwpzr/U8xVr9GpyZGHUWgmDAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FtihvCXmOBEjtGU+I6nt/1MlmmRTqWFDLK1z/Kvotv/eTsNq0NDqUBwwe1cdDfqN/v1XiFy/bFO9fBqpNGtlTlxr1H/mKVvsRcrF3GXrDEedktgr2mEBSe4bBClrnSvaAKGnqJUAttQVf1ARG6MSBZHt2k3ocp/BlJ98Avo8vQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kE2TqQgr; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUGWgPKP"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22355618fd9so17392265ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 08:57:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741280267; x=1741885067; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MTMiYHneXp94DLeHXQsW830wBQws5W30d/JjL49grQE=;
-        b=SUGWgPKPiAHm+tAqiwF0riTkxFCIlZyW3MMNWhlWmZIfpfv2znQTe0M21oi6X4LFMH
-         t+bVj9I4RZgf6c8wr3m6tLahN2nL8mp57upAO2cgJ4V/wzE+4hJxzqSuFFyXk/M8cmNC
-         cFgK96jw9XDUI6o7WN85P1ifL2iteIOvYFq5AmJEgYzswwydvJwFIevJa5xxmRbQ3wT3
-         TqmBoxpi4tHppnKJbQx7pJ1YzG3jVGrpWh0pmosajmkrqLs2jBYVK8nD3ZwGOeWR0gRh
-         WiFiivgZP3UWJaRgL8zDW2djPJBzHq/Pch9XJkVIBvzK9ZoUqXEEsAGpLN31Jk2fzdCx
-         yoeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741280267; x=1741885067;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MTMiYHneXp94DLeHXQsW830wBQws5W30d/JjL49grQE=;
-        b=H+a5IgUFRet6nh7JOiX5IeQq2UnxqX3BzdjddRub74nWS7NSXY4P+3xPlUqZAfDzuM
-         bK68T2fml2zSIQiuqGbEl1bFMWS2CMz48/tvdOPlZRgdnROVfwajp3/hr28s80kC5oGR
-         UyCQzdxfqpPOxUkkTPbuWgit5g7sOkNDddDH51boFxeJhcm+pACZXwBvOwlS9/DomJBL
-         vccPAUSetqPrc3y2rn3Ru8DNu+VzDykfMdVf6P8oYZ27Ln4xa4r7HdJeFEQFYsG2PQSv
-         fRCf33W32InnB34X4sZQ53BGhByqo3gUf20cP3yy24iH06EP1IghA9uc0JktPoAaUj0A
-         hvdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbVBzH7Gspad63d4hLzUrKjhoPtZcl0oringmzSyLltkyWldPPvsJNzg5Wxx3V66kySmLhxPFXLO8WtrY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVFHVAqVW1puyvclbsoF9H1ahDZaV+8/eztPHWZmQFa+BtmXka
-	Bvp6Y9aL+3Yzhdd/zX1aqdtJIhKv2/Dka20Kg2B7vPiaS/B4O+NPb9vxk6BXwKBW1zf89aCLMXy
-	cUrGptVemDsTfquyg3+J+i3eJVD1rRWsy1kdX0Q==
-X-Gm-Gg: ASbGncurNrVMo1aq07tfVTLJ/v2u9nQNTfeOXUMMnqkuOH+RjEp4hx16hJg3H1f6DbC
-	ySYSfPxAlMsZWJvjpvEMT+i61CGbh9rWlgYx9eIYeGN9hKsVmTplzqv9/C8Mc5HfEXyXFwskW3v
-	K2vH40WZIlGmmSWplkOPLKNLOLUaw=
-X-Google-Smtp-Source: AGHT+IFSILdL9gbquB4cJiTN2WJfhWPVNdAcHWiK58AOk52WrMFPjK/+cifJuWBrga9oy5DCzHOlrArOLOW8Kf0BBPo=
-X-Received: by 2002:aa7:81c9:0:b0:736:9e40:13b1 with SMTP id
- d2e1a72fcca58-7369e401d84mr2472384b3a.23.1741280267339; Thu, 06 Mar 2025
- 08:57:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kE2TqQgr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741280286; x=1772816286;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iye/SSIddxiY8mSsOHtwpzr/U8xVr9GpyZGHUWgmDAI=;
+  b=kE2TqQgrHPMiIww8/j3eNQzcLvf7NDgTa44zOtNvLsbzBBOba/DieSvZ
+   UVDDzzwNf7Mw4XLplT2ZKrlCWT4Qx+lRGCf+6nfYxpseJXQQZSy9Xf8l/
+   kWPEfHzt0eMEhxu2dWzWcFEEaheEos0p2yjDZPRX8D4vhPz8OgPNYiBQT
+   vJDjqlwTpvtN7u8stsaGwzQBsFLJUFYFgItrk2Z6f5v5haulJutViaNus
+   Bnd906QGRJBYzoZrbrMmybpPTjqZW1nTHBExWG9dDyAkzn1SqxEuY2KqG
+   LkB45bjlHr4L+20VpIMaKzSof0EgwdpyRYMf0/jifVvSIMnhlaO440OTF
+   Q==;
+X-CSE-ConnectionGUID: nTvGVPz4SD69csXyOtI9IQ==
+X-CSE-MsgGUID: MB6sbF/yQTmzltyHa2ihtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="52942743"
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="52942743"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 08:58:05 -0800
+X-CSE-ConnectionGUID: uAIDf/VsTtO0dQ/Xd2EERA==
+X-CSE-MsgGUID: bCZGL2y2SnGL9qhLf1QKUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="142307035"
+Received: from sho10-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.178])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 08:58:04 -0800
+Date: Thu, 6 Mar 2025 08:57:57 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v6 4/5] x86/bugs: Declutter vulnerable CPU list
+Message-ID: <20250306165757.sh6azitvazhq5lxj@desk>
+References: <20250305-add-cpu-type-v6-0-4741735bcd75@linux.intel.com>
+ <20250305-add-cpu-type-v6-4-4741735bcd75@linux.intel.com>
+ <542cfd1b-65f8-4fa9-811e-d70850d0cf9a@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227092640.2666894-1-quic_songchai@quicinc.com> <20250227092640.2666894-3-quic_songchai@quicinc.com>
-In-Reply-To: <20250227092640.2666894-3-quic_songchai@quicinc.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Thu, 6 Mar 2025 16:57:35 +0000
-X-Gm-Features: AQ5f1JqTdlROGkZvhS3goiHemEI-Ou9K5R8l6YZoCNZ_BnPwM7nXi9j3dLITMbQ
-Message-ID: <CAJ9a7Vip6Dda1q7R_LoQjB4696Yi3iDv6512Vsy6aqdpiPTWgw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] coresight: Add coresight TGU driver
-To: songchai <quic_songchai@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, James Clark <james.clark@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <agross@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <542cfd1b-65f8-4fa9-811e-d70850d0cf9a@intel.com>
 
-Hi,
+On Thu, Mar 06, 2025 at 07:18:55AM -0800, Dave Hansen wrote:
+> On 3/5/25 23:13, Pawan Gupta wrote:
+> ...
+> >  #define VULNWL_INTEL(vfm, whitelist)		\
+> > -	X86_MATCH_VFM(vfm, whitelist)
+> > +	X86_MATCH_VFM(INTEL_##vfm, whitelist)
+> 
+> I think the new VFM code may have thrown you off here. Doing HASWELL_X
+> is not as nice as INTEL_HASWELL_X because, while you can grep for it, it
+> won't work when you're looking for full identifiers like with ctags or
+> cscope.
+> 
+> Also, this is just putting the "INTEL" in the macro instead of the VFM.
+> I'm not sure there's much value in doing:
+> 
+> 	VULNWL_INTEL(ALDERLAKE_L, ...)	
+> 
+> over:
+> 
+> 	X86_MATCH_VFM(INTEL_ALDERLAKE_L, ...)
 
-On Thu, 27 Feb 2025 at 09:27, songchai <quic_songchai@quicinc.com> wrote:
->
-> From: Songwei Chai <quic_songchai@quicinc.com>
->
-> Add driver to support Coresight device TGU (Trigger Generation Unit).
-> TGU is a Data Engine which can be utilized to sense a plurality of
-> signals and create a trigger into the CTI or generate interrupts to
-> processors. Add probe/enable/disable functions for tgu.
->
-> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
-> Signed-off-by: songchai <quic_songchai@quicinc.com>
-> ---
->  .../testing/sysfs-bus-coresight-devices-tgu   |   9 +
->  drivers/hwtracing/coresight/Kconfig           |  11 +
->  drivers/hwtracing/coresight/Makefile          |   1 +
->  drivers/hwtracing/coresight/coresight-tgu.c   | 218 ++++++++++++++++++
->  drivers/hwtracing/coresight/coresight-tgu.h   |  36 +++
->  5 files changed, 275 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
->  create mode 100644 drivers/hwtracing/coresight/coresight-tgu.c
->  create mode 100644 drivers/hwtracing/coresight/coresight-tgu.h
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
-> new file mode 100644
-> index 000000000000..741bc9fd9df5
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
-> @@ -0,0 +1,9 @@
-> +What:          /sys/bus/coresight/devices/<tgu-name>/enable_tgu
-> +Date:          February 2025
-> +KernelVersion  6.15
-> +Contact:       Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
-> +Description:
-> +               (RW) Set/Get the enable/disable status of TGU
-> +               Accepts only one of the 2 values -  0 or 1.
-> +               0 : disable TGU.
-> +               1 : enable TGU.
-> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-> index 06f0a7594169..3fe59c745dd4 100644
-> --- a/drivers/hwtracing/coresight/Kconfig
-> +++ b/drivers/hwtracing/coresight/Kconfig
-> @@ -247,4 +247,15 @@ config CORESIGHT_DUMMY
->
->           To compile this driver as a module, choose M here: the module will be
->           called coresight-dummy.
-> +
-> +config CORESIGHT_TGU
-> +       tristate "CoreSight Trigger Generation Unit driver"
-> +       help
-> +         This driver provides support for Trigger Generation Unit that is
-> +         used to detect patterns or sequences on a given set of signals.
-> +         TGU is used to monitor a particular bus within a given region to
-> +         detect illegal transaction sequences or slave responses. It is also
-> +         used to monitor a data stream to detect protocol violations and to
-> +         provide a trigger point for centering data around a specific event
-> +         within the trace data buffer.
->  endif
-> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> index 4ba478211b31..7c2b9e9cf1cd 100644
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
-> @@ -51,3 +51,4 @@ coresight-cti-y := coresight-cti-core.o       coresight-cti-platform.o \
->                    coresight-cti-sysfs.o
->  obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
->  obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
-> +obj-$(CONFIG_CORESIGHT_TGU) += coresight-tgu.o
-> diff --git a/drivers/hwtracing/coresight/coresight-tgu.c b/drivers/hwtracing/coresight/coresight-tgu.c
-> new file mode 100644
-> index 000000000000..da4c04ac1097
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-tgu.c
-> @@ -0,0 +1,218 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <linux/amba/bus.h>
-> +#include <linux/coresight.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +
-> +#include "coresight-priv.h"
-> +#include "coresight-tgu.h"
-> +
-> +DEFINE_CORESIGHT_DEVLIST(tgu_devs, "tgu");
-> +
-> +static void tgu_write_all_hw_regs(struct tgu_drvdata *drvdata)
-> +{
-> +       CS_UNLOCK(drvdata->base);
-> +       /* Enable TGU to program the triggers */
-> +       tgu_writel(drvdata, 1, TGU_CONTROL);
-> +       CS_LOCK(drvdata->base);
-> +}
-> +
-> +static int tgu_enable(struct coresight_device *csdev, enum cs_mode mode,
-> +                     void *data)
-> +{
-> +       struct tgu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> +
-> +       spin_lock(&drvdata->spinlock);
-> +
-> +       if (drvdata->enable) {
-> +               spin_unlock(&drvdata->spinlock);
-> +               return -EBUSY;
-> +       }
-> +       tgu_write_all_hw_regs(drvdata);
-> +       drvdata->enable = true;
-> +
-> +       spin_unlock(&drvdata->spinlock);
-> +       return 0;
-> +}
-> +
-> +static int tgu_disable(struct coresight_device *csdev, void *data)
-> +{
-> +       struct tgu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> +
-> +       spin_lock(&drvdata->spinlock);
-> +
-> +       if (!drvdata->enable) {
+Ahh, right. I will fix that. Thanks for pointing this out.
 
-Could simplify by changing logic here -
-if (enable) { do disable stuff }
+As one of the goal of the patch is to shorten the macro names and follow
+the VULNWL_<> pattern, would it make sense to rename VULNWL_INTEL to:
 
-and have a single return point
+#define VULNWL_VFM(vfm, whitelist)		\
+	X86_MATCH_VFM(vfm, whitelist)
 
-> +               spin_unlock(&drvdata->spinlock);
-> +               return 0;
-> +       }
-> +
-> +       CS_UNLOCK(drvdata->base);
-> +       tgu_writel(drvdata, 0, TGU_CONTROL);
-> +       CS_LOCK(drvdata->base);
-> +
-> +       drvdata->enable = false;
-> +       spin_unlock(&drvdata->spinlock);
-> +       return 0;
-> +}
-> +
-> +static ssize_t enable_tgu_show(struct device *dev,
-> +                              struct device_attribute *attr, char *buf)
-> +{
-> +       bool enabled;
-> +
-> +       struct tgu_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +
-> +       spin_lock(&drvdata->spinlock);
-> +       enabled = drvdata->enable;
-> +       spin_unlock(&drvdata->spinlock);
-> +
-> +       return sprintf(buf, "%d\n", enabled);
+Then the table would look like:
 
-sysfs_emit() should be used here.
+	VULNWL_VFM(INTEL_TIGERLAKE,	NO_MMIO),
 
-> +}
-> +
-> +/* enable_tgu_store - Configure Trace and Gating Unit (TGU) triggers. */
-> +static ssize_t enable_tgu_store(struct device *dev,
-> +                               struct device_attribute *attr, const char *buf,
-> +                               size_t size)
-> +{
-> +       int ret = 0;
-> +       unsigned long val;
-> +       struct tgu_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +
-> +       ret = kstrtoul(buf, 0, &val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (val) {
-> +               ret = pm_runtime_resume_and_get(dev->parent);
-> +               if (ret)
-> +                       return ret;
-> +               ret = tgu_enable(drvdata->csdev, CS_MODE_SYSFS, NULL);
-> +               if (ret)
-> +                       pm_runtime_put(dev->parent);
-> +       } else {
-> +               ret = tgu_disable(drvdata->csdev, NULL);
-> +               if (!ret)
+Simlarly for cpu_vuln_blacklist the macros become:
 
+#define VULNBL_VFM(vfm, issues)			\
+	VULNBL_VFM_STEPS(vfm, X86_STEP_MAX, issues)
 
-redundant - tgu_disable always returns 0.
+#define VULNBL_VFM_STEPS(vfm, max_stepping, issues)		   \
+	X86_MATCH_VFM_STEPS(vfm, X86_STEP_MIN, max_stepping, issues)
 
-> +                       pm_runtime_put(dev->parent);
-> +       }
-> +
-> +       if (ret)
-> +               return ret;
-> +       return size;
-> +}
-> +static DEVICE_ATTR_RW(enable_tgu);
-> +
-> +static const struct coresight_ops_helper tgu_helper_ops = {
-> +       .enable = tgu_enable,
-> +       .disable = tgu_disable,
-> +};
-> +
-> +static const struct coresight_ops tgu_ops = {
-> +       .helper_ops = &tgu_helper_ops,
-> +};
-> +
-> +static struct attribute *tgu_common_attrs[] = {
-> +       &dev_attr_enable_tgu.attr,
-> +       NULL,
-> +};
-> +
-> +static const struct attribute_group tgu_common_grp = {
-> +       .attrs = tgu_common_attrs,
-> +       NULL,
-> +};
-> +
-> +static const struct attribute_group *tgu_attr_groups[] = {
-> +       &tgu_common_grp,
-> +       NULL,
-> +};
-> +
-> +static int tgu_probe(struct amba_device *adev, const struct amba_id *id)
-> +{
-> +       int ret = 0;
-> +       struct device *dev = &adev->dev;
-> +       struct coresight_desc desc = { 0 };
-> +       struct coresight_platform_data *pdata;
-> +       struct tgu_drvdata *drvdata;
-> +
-> +       desc.name = coresight_alloc_device_name(&tgu_devs, dev);
-> +       if (!desc.name)
-> +               return -ENOMEM;
-> +
-> +       pdata = coresight_get_platform_data(dev);
-> +       if (IS_ERR(pdata))
-> +               return PTR_ERR(pdata);
-> +
-> +       adev->dev.platform_data = pdata;
-> +
-> +       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> +       if (!drvdata)
-> +               return -ENOMEM;
-> +
-> +       drvdata->dev = &adev->dev;
-> +       dev_set_drvdata(dev, drvdata);
-> +
-> +       drvdata->base = devm_ioremap_resource(dev, &adev->res);
-> +       if (!drvdata->base)
-> +               return -ENOMEM;
-> +
-> +       spin_lock_init(&drvdata->spinlock);
-> +
-> +       drvdata->enable = false;
-> +       desc.type = CORESIGHT_DEV_TYPE_HELPER;
-> +       desc.pdata = adev->dev.platform_data;
-> +       desc.dev = &adev->dev;
-> +       desc.ops = &tgu_ops;
-> +       desc.groups = tgu_attr_groups;
-> +
-> +       drvdata->csdev = coresight_register(&desc);
-> +       if (IS_ERR(drvdata->csdev)) {
-> +               ret = PTR_ERR(drvdata->csdev);
-> +               goto err;
-> +       }
-> +
-> +       pm_runtime_put(&adev->dev);
-> +       return 0;
-> +err:
-> +       pm_runtime_put(&adev->dev);
-> +       return ret;
-> +}
-> +
-> +static void tgu_remove(struct amba_device *adev)
-> +{
-> +       struct tgu_drvdata *drvdata = dev_get_drvdata(&adev->dev);
-> +
-> +       coresight_unregister(drvdata->csdev);
-> +}
-> +
-> +static const struct amba_id tgu_ids[] = {
-> +       {
-> +               .id = 0x000f0e00,
-> +               .mask = 0x000fffff,
-> +               .data = "TGU",
-> +       },
-> +       { 0, 0, NULL },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(amba, tgu_ids);
-> +
-> +static struct amba_driver tgu_driver = {
-> +       .drv = {
-> +               .name = "coresight-tgu",
-> +               .suppress_bind_attrs = true,
-> +       },
-> +       .probe  = tgu_probe,
-> +       .remove = tgu_remove,
-> +       .id_table       = tgu_ids,
-> +};
-> +
-> +module_amba_driver(tgu_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("CoreSight TGU driver");
-> diff --git a/drivers/hwtracing/coresight/coresight-tgu.h b/drivers/hwtracing/coresight/coresight-tgu.h
-> new file mode 100644
-> index 000000000000..380686f94130
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-tgu.h
-> @@ -0,0 +1,36 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef _CORESIGHT_TGU_H
-> +#define _CORESIGHT_TGU_H
-> +
-> +/* Register addresses */
-> +#define TGU_CONTROL 0x0000
-> +
-> +/* Register read/write */
-> +#define tgu_writel(drvdata, val, off) __raw_writel((val), drvdata->base + off)
-> +#define tgu_readl(drvdata, off) __raw_readl(drvdata->base + off)
-> +
-> +/**
-> + * struct tgu_drvdata - Data structure for a TGU (Trigger Generator Unit) device
-> + * @base: Memory-mapped base address of the TGU device
-> + * @dev: Pointer to the associated device structure
-> + * @csdev: Pointer to the associated coresight device
-> + * @spinlock: Spinlock for handling concurrent access
-> + * @enable: Flag indicating whether the TGU device is enabled
-> + *
-> + * This structure defines the data associated with a TGU device, including its base
-> + * address, device pointers, clock, spinlock for synchronization, trigger data pointers,
+#define VULNBL_VFM_TYPE(vfm, cpu_type, issues)			\
+	X86_MATCH_VFM_CPU_TYPE(vfm,				\
+			       INTEL_CPU_TYPE_##cpu_type,	\
+			       issues)
 
-I don't see any trigger data pointers or limits here. Comment on what
-is there, if more is added later, expand the comment later.
+And the table would look like:
 
-> + * maximum limits for various trigger-related parameters, and enable status.
-> + */
-> +struct tgu_drvdata {
-> +       void __iomem *base;
-> +       struct device *dev;
-> +       struct coresight_device *csdev;
-> +       spinlock_t spinlock;
-> +       bool enable;
-> +};
-> +
-> +#endif
->
-
-Regards
-
-Mike
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+	VULNBL_VFM(INTEL_COMETLAKE,			MMIO | MMIO_SBDS | RETBLEED | GDS),
+	VULNBL_VFM_STEPS(INTEL_COMETLAKE_L,	0x0,	MMIO | RETBLEED),
+	...
+	VULNBL_VFM_TYPE(INTEL_ALDERLAKE,	ATOM,	RFDS),
