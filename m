@@ -1,64 +1,65 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAE817B50B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A866620A5C6
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741259760; cv=none; b=krwqwT8aciHeSRz0Ajg7zWganXN19z1eNYOR3Cjpc3V/Leo3VTBkCstCycR6+YnDsSNqFpXMfDjXp+nEJL0iKY/nyc7avmXsI0TW5TZvqVmT72Pcyli4MTy8e1/j/GvmZtvB99Zl3255NSEDTosB0vuveTRARGUS5runJ4PAtJA=
+	t=1741259763; cv=none; b=qXquffilSKsABkxGGJzZegSWjjsAVkpAedjEedP+L/gx3xGjV8D/rB4LdyRvJ9UbBVpIpzqvYiHFVBB4zVNHFEVr1ydF9GP/hAkSOZC64fc6kUF1divOw+5Ecv5LgsFa+qobQQnhOUuArlawJt0VVctfecGMBdMngbHXZN8aIoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741259760; c=relaxed/simple;
-	bh=YevAipZm/+lyAcJ9AjGTXmRxKhKQj/5yvsZrO88ZVtA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PliTtvP1ciqvTmZXtPCpNetcXcl28tYliG0S464ZzJXXNPtj4/bXR5n6Cw1f3OuCEAS9ZbykQKI7KSI49wyfSxyGMH91BMZ8Em4aZLphwvE8o2ffyx4cq982S9e9vlCXJNST6FEpim2K+hZvyFSKj1ImxjbGgVfjFnxlfRGTEbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2ALoJCRw; arc=none smtp.client-ip=209.85.208.47
+	s=arc-20240116; t=1741259763; c=relaxed/simple;
+	bh=MfFZLvNgPjqf41DYixOzP+LujWeubVPB6G1Uw3Qe6a8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GjmKkwuWDXEDkubVjjzeDGCF6VdnVnaHoMbDLvy0x4AcIx9E75j0+veGP8JTd0qlx4VNDE1rOTIylDFsYNhUdku0Nd8NuDwQ+UcA6PzhGVDdvUJtntcxsH9ml51JUMGd0Pj/F9ZgPMTEwzhNL7t5pg4flLtdmIiTrDNca4+mtmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=d0VGyZD/; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2ALoJCRw"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e4f88ea298so863295a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:15:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="d0VGyZD/"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3912e96c8e8so213325f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:16:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741259755; x=1741864555; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dWLJq7ftyKy37p7zHFjkyk8VxM1La8FbGatFxYaxm+o=;
-        b=2ALoJCRw60pO6EnooOS0RR8MD6KUgp+vfENCNjHrrEWFAiBKPCO3k/lK0tjVmIUqpq
-         YTlSyaFjsddYMMKbZqhfU0ZRQ6VDcmhOuJYc2vxWP3cCGArla/NhBkSVo7Mh383Zr4SN
-         tZ+f3pukr36g2jkIl+ojPPc+zCxpYCWH2mW5w5Zh2HFAKFUXnv24ftQaE60139rDnUNf
-         gZsJSyUfaETm5o+t5+9Ujr8QpJcYQ1EfOBdVrscweFi9b7zR1uTmrs8BxhA0Rmh7ODy2
-         gUB0PpSL/X7Fvg/fK0BvHvax8c/tgkki4qJnrERF2cU/Ce8x28m57y8uBMv7E76Iexe6
-         WuUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741259755; x=1741864555;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741259760; x=1741864560; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dWLJq7ftyKy37p7zHFjkyk8VxM1La8FbGatFxYaxm+o=;
-        b=dye725wr8OmEhZHNgl45yvWttbXnAGkC8H1j2QaLwi0rH1vDC2gZARaP1Cddl3nRDF
-         1IyCIT8eD1rxjj3EhchDYb3rHu3Z3TPYpxtunzwi3UgjBYIe0qsi4coldWHzeN17SjS5
-         YQOudexdeEvGakLZrH7VHgJ+Gc2eK+trJsFdY7i4AdOv8Mf3qKtaiE3YxHVmV6XXbkXu
-         dpet5Eldao/a7G2G18QHTYKxnImjoDyfukzd3EWlzDmsdDdvmImlY0YqvhTvTNwFnG6o
-         ySCmGjdFgpHKvbsi6vbZ2cciOAsKYsJnlyfDB/d9fFYAcKlqDOOZaFSbvV1XXfCje6dm
-         P9lw==
-X-Forwarded-Encrypted: i=1; AJvYcCXK5H3nUa6NVytNJdtG5ggIz4XkfHzGUPjH35vRymJrdcJQOKUaKxtf/6stxV9X/LgZXw8WXu5MeRZttx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVCR14WEq+OXg4KLfjWkfjNsGv5eMH04Gd9fBGt3cZYsWcMJfA
-	G0VZv56mg+IqJT2Q1za/IwLkM95JspZeN9NNGL0S5RCXuHxHN1wByVSzVfWU1aQ=
-X-Gm-Gg: ASbGnct19Z59gzLrbs6eYnHwRP7X5IHLvXITpZmS/qs30mSX9tRqfZu/5/xupjQhzug
-	JCvHht4JPkMAj+d0Zc0ktHHfWJ4t+98MPJp/ubYXGXzYnkcBNU175yQikqaEuXoq9cRuZ4+geDH
-	4pMqtzWD65Y97SXFKd/c/lRb/3+KhRPxZDlWYvpbTXp6cbtKRaxm7Qsacxvv3LcNydaidhenpPv
-	tGjoxcn5DQBMG+GjF5NwvfiWB1nSuQGj9DNlJUC+vxBtNICSXEUw09LliO2Gh1iCk5qxsEKgQMx
-	Fs6klrnrFvDoVDuU1AAa77+Ts5cw6iRfjSF1B/LDUg==
-X-Google-Smtp-Source: AGHT+IHSKv/iLY4xG1FTSXhFmi2aztkk4M5rcVMuXstlVjF4Qr5KDJ4BrcjybmmrVGWo69K5HXyYQQ==
-X-Received: by 2002:a05:6402:5110:b0:5e5:c1fd:bf56 with SMTP id 4fb4d7f45d1cf-5e5c1fdc40amr2678822a12.26.1741259755275;
-        Thu, 06 Mar 2025 03:15:55 -0800 (PST)
+        bh=AuN0/pwTHZ9vhnZKyENKczH8fXv0gjKVeEKQIoqI9qs=;
+        b=d0VGyZD/057WUi6gaRce86qcybsT27VRbrOowak8eNrEB/IZczycDZ3xfBPGD+58gL
+         n8H/NAvRQRSgRpzIkPUEU4p8E7Hd8jhlnsmbthgDkIh8IOC8bToavm/gZdGoCXNRRdYD
+         7jDvsoceBs70N2w44HAjPbbND/EEZWSQ5mmCZf2dRTYiRaCdesH0DgxjVGoax6VB8XZN
+         BI3Hiae4TGAQe7/FxzjeA5CWQl0yjaKZGTu7CmOsoNzhowf2FA0vuTw++Cz29jRYMyX8
+         jAJlQpcjTxTRrgZTU9mRmCVqlQBFb7lE5fXFgDfdmk9IIZAcwYMluKFT0YLTP6ZRasFd
+         U6NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741259760; x=1741864560;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AuN0/pwTHZ9vhnZKyENKczH8fXv0gjKVeEKQIoqI9qs=;
+        b=HX6sECwTLCuLS7d8cv/vXmkgRifoRU6N+kFNt0BdKiM3jit43PWPDzanFWH9YexAJR
+         zrXdldPVmTmVDNRyK+SVJQieJgmAT+ut/ka/ZPMM+FaEpefmOBzSlRX409JdOPL6svK8
+         P61tj9zArenvBJeMf3yDVXTGC38sxh3h3d1X91ljFEMcENVig+b4HMKW5kAIJjxeEN8G
+         CRtVEILm7AgDaGhJkodtxGIKuOW+O4MjWZyGgNGW08qLFv+Q80Gj0rUENgnEGDwJRIkB
+         doxPyx19kU/gjPOEu7tnEFSgX1T5J+R6vhfsy66nVzB6WuIqKnpDwRc0T5W0d/GoxcKN
+         piQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWaqOWIVHWKleSoA0n6JqnFGYiaZIkd+c6PgFod33w2WaXFB6q6llV4+5JTp56jaL3gYux+jAEQlRPH1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRp9ZvNviqgsBUnm9pDhpPT+XB4JCxRIzpxatOEVxGgjeVvjlv
+	ffsPQbcU/l0HfOfOKOQaLnmvQMJx0FJY1VORd7gAxNLsfiHKNE0hfkrQE39icqI=
+X-Gm-Gg: ASbGncu1iq0EAroZCbMkSpzmt2P0q4rXRhEk40H/bZ1PaZc9qYph4P7KrK2zUIwzt0S
+	9LicscFQqj1KSNlpx3H9jgZVBCF9G5iBvnYpZdOmxkgjlZJ5de4YXna0nmGrUipyyNCE+CaRsaz
+	mpTyXLwPAAFeXV5a4ulyc9gHJt4XY3mw9JQP/Izxv813PfUekIQT3BVwGAdpiaqKZdfB5u1VopV
+	19Hevgjcng7W/k4/0Y1CYJQWpYa6FFfegUkewPGHAYTczRqZ+akXzLF5XJdBwAmrM0ffPounw9A
+	RVZY2f38shjp/MOxjvgGGgbQBHRmb2wnofSQxYq9Uw==
+X-Google-Smtp-Source: AGHT+IEfL0NWZoLLWRUTFCp+4DpyOhfP6ZpCXD8lXd7n6hvyRmuTOarjAISZof3JEfKOs/w46sjnwA==
+X-Received: by 2002:a5d:6c6f:0:b0:391:2e7:6811 with SMTP id ffacd0b85a97d-3911f7404b0mr5947283f8f.14.1741259759759;
+        Thu, 06 Mar 2025 03:15:59 -0800 (PST)
 Received: from localhost ([2001:4091:a245:8327:80ad:8144:3b07:4679])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5e5c7472100sm793530a12.27.2025.03.06.03.15.54
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5e5c768f213sm784211a12.74.2025.03.06.03.15.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 03:15:54 -0800 (PST)
+        Thu, 06 Mar 2025 03:15:59 -0800 (PST)
 From: Markus Schneider-Pargmann <msp@baylibre.com>
-Subject: [PATCH v5 00/13] firmware: ti_sci: Partial-IO support
-Date: Thu, 06 Mar 2025 12:14:38 +0100
-Message-Id: <20250306-topic-am62-partialio-v6-12-b4-v5-0-f9323d3744a2@baylibre.com>
+Date: Thu, 06 Mar 2025 12:14:41 +0100
+Subject: [PATCH v5 03/13] dt-bindings: can: m_can: Add wakeup properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,11 +68,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJ6DyWcC/4XOQQ6CMBCF4auYrh3TllrQlfcwLto6yCRAsWAjI
- dzdoiYmLnT5ZvH9M7EeA2HP9quJBYzUk2/T2K5XzFWmvSDQOW0muVSC8wIG35ED02gJnQkDmZo
- 8RA1CglXgZJ6V1jilVM6S0QUs6f70j6fXDni9pczwOVbUDz6Mzx9itlzfuWT+zsUMOJS500t3p
- wtxsGasyQbcON+wBY/qA0qx+weqBApnCzT2rHiOX+A8zw/mfljsMwEAAA==
-X-Change-ID: 20241008-topic-am62-partialio-v6-12-b4-c273fbac4447
+Message-Id: <20250306-topic-am62-partialio-v6-12-b4-v5-3-f9323d3744a2@baylibre.com>
+References: <20250306-topic-am62-partialio-v6-12-b4-v5-0-f9323d3744a2@baylibre.com>
+In-Reply-To: <20250306-topic-am62-partialio-v6-12-b4-v5-0-f9323d3744a2@baylibre.com>
 To: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, 
  Santosh Shilimkar <ssantosh@kernel.org>, 
  Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh@kernel.org>, 
@@ -86,179 +85,64 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Akashdeep Kaur <a-kaur@ti.com>, Kendall Willis <k-willis@ti.com>, 
  linux-can@vger.kernel.org, Markus Schneider-Pargmann <msp@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7677; i=msp@baylibre.com;
- h=from:subject:message-id; bh=YevAipZm/+lyAcJ9AjGTXmRxKhKQj/5yvsZrO88ZVtA=;
- b=owGbwMvMwCGm0rPl0RXRdfaMp9WSGNJPNq88dqfCad2hSYcKoqKzxa1//vJjVhd9eKYs8C3b0
- bTmqZoSHaUsDGIcDLJiiix3Pyx8Vyd3fUHEukeOMHNYmUCGMHBxCsBE9FMY/gemnDrY/llP1nOu
- yfIJDAuPxlZ0qOstiHQy1EwIjOzWVGL4H8xiaPcycWb85CeLwt5W7DR/67J+1ekm640PHvcFxK3
- aygwA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1648; i=msp@baylibre.com;
+ h=from:subject:message-id; bh=MfFZLvNgPjqf41DYixOzP+LujWeubVPB6G1Uw3Qe6a8=;
+ b=owGbwMvMwCGm0rPl0RXRdfaMp9WSGNJPNm9X+56w2K1+/c7Ce/Gfi6IMU0XDit/e/J73zXtzp
+ W5s6zTmjlIWBjEOBlkxRZa7Hxa+q5O7viBi3SNHmDmsTCBDGLg4BWAi1SWMDJ/1uafnP3n+07y1
+ 66coo+WxvoOrREtrviwpnH+vqGLmqkZGhhNuT4pTtrVatqdxV/z9eJT7rnO1YN/Tkwsd4/VS7u/
+ U4gYA
 X-Developer-Key: i=msp@baylibre.com; a=openpgp;
  fpr=BADD88DB889FDC3E8A3D5FE612FA6A01E0A45B41
 
-Hi,
+The pins associated with m_can have to have a special configuration to
+be able to wakeup the SoC from some system states. This configuration is
+described in the wakeup pinctrl state while the default state describes
+the default configuration.
 
-up to last series, the Partial-IO support consisted of two independent
-series. As this last rework introduced file-based conflicts, I merged
-the mcan series introducing wakeup support into this series:
-
-  can: m_can: Add am62 wakeup support
-  https://lore.kernel.org/lkml/20241219-topic-mcan-wakeup-source-v6-12-v6-0-1356c7f7cfda@baylibre.com/
-
-Series
-------
-The series contains three parts:
- - m_can support for Partial-IO, in particular 'wakeup' pinctrl support.
- - ti_sci support for Partial-IO, which checks wakeup-sources if they
-   are enabled for Partial-IO
- - DT description of system states on am62, am62a, am62p and the
-   enabling of wakeup support on the starter kits that support it.
-
-The series is based on v6.14-rc1.
-
-Partial-IO
-----------
-Partial-IO is a low power system state in which nearly everything is
-turned off except the pins of the CANUART group. CANUART contains the
-mcu_mcan0, mcu_mcan1, wkup_uart0 and mcu_uart0 devices. These can
-trigger a wakeup of the system on pin activity. Note that this does not
-resume the system as the DDR is off as well. So this state can be
-considered a power-off state with wakeup capabilities.
-
-The wakeup capability of a device is described in the devicetree with
-the wakeup-source property. This can hold phandles to system states in
-which the device is capable of wakeup. Additionally a WKUP_EN flag is
-set in the pinctrl of devices that are wakeup enabled.
-
-On poweroff ti_sci checks if potential wakeup-sources for Partial-IO are
-wakeup-enabled by the user. If that is the case, the poweroff is done
-by TI_SCI by sending a PREPARE_SLEEP message with a specific mode. Once
-sent the system will poweroff apart from the CANUART pins.
-
-Dependencies
-------------
-This series requires an updated DT binding for the wakeup-source
-property that allows the use of system-states which are also being added
-in this pullrequest:
- - dt-schema wakeup-source binding update
-   https://github.com/devicetree-org/dt-schema/pull/150
-
-Testing
--------
-After enabling Wake-on-LAN the system can be powered off and will enter
-the Partial-IO state in which it can be woken up by activity on the
-specific pins:
-    ethtool -s can0 wol p
-    ethtool -s can1 wol p
-    poweroff
-
-These patches are tested on am62-lp-sk on linux-next.
-
-Best,
-Markus
-
-Previous versions "firmware: ti_sci: Partial-IO support":
- v1: https://lore.kernel.org/lkml/20240523080225.1288617-1-msp@baylibre.com/
- v2: https://lore.kernel.org/lkml/20240729080101.3859701-1-msp@baylibre.com/
- v3: https://lore.kernel.org/r/20241012-topic-am62-partialio-v6-13-b4-v3-0-f7c6c2739681@baylibre.com
- v4: https://lore.kernel.org/r/20241219-topic-am62-partialio-v6-12-b4-v4-0-1cb8eabd407e@baylibre.com
-
-Previous versions "can: m_can: Add am62 wakeup support":
- v1: https://lore.kernel.org/lkml/20240523075347.1282395-1-msp@baylibre.com/
- v2: https://lore.kernel.org/lkml/20240729074135.3850634-1-msp@baylibre.com/
- v3: https://lore.kernel.org/lkml/20241011-topic-mcan-wakeup-source-v6-12-v3-0-9752c714ad12@baylibre.com
- v4: https://lore.kernel.org/r/20241015-topic-mcan-wakeup-source-v6-12-v4-0-fdac1d1e7aa6@baylibre.com
- v5: https://lore.kernel.org/r/20241028-topic-mcan-wakeup-source-v6-12-v5-0-33edc0aba629@baylibre.com
- v6: https://lore.kernel.org/r/20241219-topic-mcan-wakeup-source-v6-12-v6-0-1356c7f7cfda@baylibre.com
-
-Changes in v5:
- - Rebased to v6.14-rc1
- - Merged m_can and ti_sci series to avoid conflicts and show
-   dependencies more easily
- - Added definitions of system-states for am62/am62a/am62p
- - Moved wakeup-source definitions into board dts files as they require
-   a bit of support on the board.
- - Updated ti_sci support to walk through the wakeup-source phandle
-   lists
- - Added pinctrl settings for mcu_mcan0/1 on all boards
- - Minor style updates for ti_sci support for transfers without response
- - Update and move the dt-binding for wakeup-source from the m_can
-   binding to the dt-schema repository
-
-Changes in v4:
- - Rebased to v6.13-rc1
- - Removed all regulator related structures from patches and implemented
-   the wakeup-source property use instead.
-
-Changes in v3:
- - Remove other modes declared for PREPARE_SLEEP as they probably won't
-   ever be used in upstream.
- - Replace the wait loop after sending PREPARE_SLEEP with msleep and do
-   an emergency_restart if it exits
- - Remove uarts from DT wakeup sources
- - Split no response handling in ti_sci_do_xfer() into a separate patch
-   and use goto instead of if ()
- - Remove DT binding parital-io-wakeup-sources. Instead I am modeling
-   the devices that are in the relevant group that are powered during
-   Partial-IO with the power supplies that are externally provided to
-   the SoC. In this case they are provided through 'vddshv_canuart'. All
-   devices using this regulator can be considered a potential wakeup
-   source if they are wakeup capable and wakeup enabled.
- - Added devicetree patches adding vcc_3v3_sys regulator and
-   vddshv_canuart for am62-lp-sk
- - Add pinctrl entries for am62-lp-sk to add WKUP_EN for mcu_mcan0 and
-   mcu_mcan1
-
-Changes in v2:
- - Rebase to v6.11-rc1
- - dt-binding:
-    - Update commit message
-    - Add more verbose description of the new binding for a better
-      explanation.
- - ti_sci driver:
-    - Combine ti_sci_do_send() into ti_sci_do_xfer and only wait on a
-      response if a flag is set.
-    - On failure to enter Partial-IO, do emergency_restart()
-    - Add comments
-    - Fix small things
+Also m_can can be a wakeup-source if capable of wakeup.
 
 Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
 ---
-Markus Schneider-Pargmann (13):
-      firmware: ti_sci: Support transfers without response
-      firmware: ti_sci: Partial-IO support
-      dt-bindings: can: m_can: Add wakeup properties
-      can: m_can: Map WoL to device_set_wakeup_enable
-      can: m_can: Return ERR_PTR on error in allocation
-      can: m_can: Support pinctrl wakeup state
-      arm64: dts: ti: k3-pinctrl: Add WKUP_EN flag
-      arm64: dts: ti: k3-am62: Define possible system states
-      arm64: dts: ti: k3-am62a: Define possible system states
-      arm64: dts: ti: k3-am62p: Define possible system states
-      arm64: dts: ti: k3-am62-lp-sk: Set wakeup-source system-states
-      arm64: dts: ti: k3-am62a7-sk: Set wakeup-source system-states
-      arm64: dts: ti: k3-am62p5-sk: Set wakeup-source system-states
+ .../devicetree/bindings/net/can/bosch,m_can.yaml       | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
- .../devicetree/bindings/net/can/bosch,m_can.yaml   |  18 +++
- arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts           |  60 +++++++++
- arch/arm64/boot/dts/ti/k3-am62.dtsi                |  22 ++++
- arch/arm64/boot/dts/ti/k3-am62a.dtsi               |  27 +++++
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts            |  76 ++++++++++++
- arch/arm64/boot/dts/ti/k3-am62p.dtsi               |  27 +++++
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts            |  76 ++++++++++++
- arch/arm64/boot/dts/ti/k3-pinctrl.h                |   2 +
- drivers/firmware/ti_sci.c                          | 134 ++++++++++++++++++++-
- drivers/firmware/ti_sci.h                          |   5 +
- drivers/net/can/m_can/m_can.c                      | 111 ++++++++++++++++-
- drivers/net/can/m_can/m_can.h                      |   4 +
- drivers/net/can/m_can/m_can_pci.c                  |   4 +-
- drivers/net/can/m_can/m_can_platform.c             |   4 +-
- drivers/net/can/m_can/tcan4x5x-core.c              |   4 +-
- 15 files changed, 562 insertions(+), 12 deletions(-)
----
-base-commit: 7ec162622e66a4ff886f8f28712ea1b13069e1aa
-change-id: 20241008-topic-am62-partialio-v6-12-b4-c273fbac4447
+diff --git a/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml b/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
+index c4887522e8fe97c3947357b4dbd4ecf20ee8100a..0c1f9fa7371897d45539ead49c9d290fb4966f30 100644
+--- a/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
++++ b/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
+@@ -106,6 +106,22 @@ properties:
+         maximum: 32
+     minItems: 1
+ 
++  pinctrl-0:
++    description: Default pinctrl state
++
++  pinctrl-1:
++    description: Wakeup pinctrl state
++
++  pinctrl-names:
++    description:
++      When present should contain at least "default" describing the default pin
++      states. The second state called "wakeup" describes the pins in their
++      wakeup configuration required to exit sleep states.
++    minItems: 1
++    items:
++      - const: default
++      - const: wakeup
++
+   power-domains:
+     description:
+       Power domain provider node and an args specifier containing
+@@ -122,6 +138,8 @@ properties:
+     minItems: 1
+     maxItems: 2
+ 
++  wakeup-source: true
++
+ required:
+   - compatible
+   - reg
 
-Best regards,
 -- 
-Markus Schneider-Pargmann <msp@baylibre.com>
+2.47.2
 
