@@ -1,181 +1,260 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A4224166A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664AE2144BC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741280119; cv=none; b=V5Og9Nb3Q0bqts8zzXISJzy21WbfniDM6Wi9nGomNVcB2sbB67SaRdDixibkDbNeOqt5W0CzTQTaOOh8QynHYzYCSYd0IA69L87sLEIylmgLxbmZKtZ4CsWEvfsqmcrZJxQDdmuk8+bbMRurxpbwTEkZLAoNxfJ4FR1z2ahxmXo=
+	t=1741280137; cv=none; b=K6+MAm8GBBqD1pTlCFzpT99XLsBKK6eEKYzKXet9bgFwbBWuZ5hoh1YBLwdnRRJ0UmbPzl5aLxpWrtZeSRpZ9Bu5JvrR3Kk3rA7eAUsQekRMvBAzFWFoNgXiLjynj8hRg3uABusE6pPuUfjkuCvTKPVW/Lb1vmTNSfD8+q7TYzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741280119; c=relaxed/simple;
-	bh=A1cLMm/rRtTJu3o30/XbaiexFMSeVAOcT21ZnNpF9HU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BjAODbCItyZ3k9sQsZIk0useQKNmxIw1pEYu7xWrcrSj43kgPEcHNWkfpP+vgyO5KBKOK2yvy1tlNJC+NgK8NyVv/ba8CGLKKkCiToXvFI49Js/FHlXns3BsJP3ZNPXn+WaAaNhgiw64Cb76bOhr7hcaSZYkq5nZJTfufRy5fdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g30lr/yk; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741280137; c=relaxed/simple;
+	bh=cNmccHvTTMSoTFUGW5G92HYWRzCGPOazWKInDL47LPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O7HJPXz7pUytb/EHYDP19WzUFrleIojrrrDou93mZqc5ty4KWAnf4MjwDkNDHbybwk6KezfFolf8L0wwTpT1Af3ac6GFoS51pNkStgXGW7yCCrxDzir4pXNF3faZ9Z88B4bDN1SCbAFUZXZzCNFdTsNhZ0DktNww+TwYNGZnrJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=j4U/3HjK; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g30lr/yk"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223a0da61easo189805ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 08:55:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741280117; x=1741884917; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XGPTfeCWeF4i6ufv6n34mMSCAIJVic/m06/TER4ZKg8=;
-        b=g30lr/yk+kFGN7QTlEoaexiugPC6zifUe1VezYP8jqaHdsyrlV0nyvat01pa9gb5bD
-         9rfSpeTz+k9RYT2l1khDw5vitnpkhCIYkvYE0cxVGq9RvZZjMY7Te4IxfcPZUDxPqCEZ
-         DJGHYIvXFrvObvZQi2l8w5QtFYeFIm5C8/IM1TvoHhGMPT5LvfpqffCA4YeDIa1x0LjV
-         j+Kk+RqoxwPlWKSq+QNYOAgNHdutLEj6AkxKT4PVJNOMGh+JwkyEcvgBEUS/6VYzIZKl
-         ygsIQYsU3hT1EB1xq46VRC30/rA1XLd7A+av4xq0qTIk2PauhWMfUgnLU6dRHSNbxKw/
-         zWhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741280117; x=1741884917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XGPTfeCWeF4i6ufv6n34mMSCAIJVic/m06/TER4ZKg8=;
-        b=OjJQf7UPRQBPisGN9Hx7CBjDjo7yIb3z6+XRuABLcjZBJiITradpZiTV5DWcllvvWs
-         wEjebgkuRUHdzsbibIW2IRxhIkJQBjHaMgJOk8dZkOXYbEQp278LW2+TJYaX67izBFr4
-         kFRXV9I+PWwm/3+cN+PvWS4rS+ZmIVT5Qu5QWNasZ0RpvPcEomZWtq6TAsqU4c7L52wI
-         XVughI8urYA39Jvu5i/tuhU8MFQDYTxGmmsg4kt5n1mC8JOEg6wE3ZYZ1DqjJG7MkDDy
-         3G1tgT3Dx6EWNawZZsFl0WLvh/izW5lO5P7xxuKSJQGLAjZoxRqRTs+O/IDWtVVlNZxK
-         oFtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVr2SRvQ6L3awdXj89ymSkWVOQhgXt8eNK7jb/HzdCFxjTbvmWDduJZ2F4xwyqxSQ0A6QjBDo2K311YwDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4H3s+2HhaSgQSZ5rHD25/a5LWzD7aQNOArpwa1EpfvFjejBOj
-	EzwphO0dMNDzgXtu1++J72alsycwfwiuHr+/h94uo4/chCQzgxwm1MvxvrR+xWU4iarpl9sGVE3
-	DCFRx+S1dCQ4OUcfTiUM9GfjPXMm/oeU5Ro46
-X-Gm-Gg: ASbGncuXj8JURppu9f+KoS39cuts1L7wQtEbzwTbgZ1QzFiqZKb1Du0vqPveilfZvSu
-	O17O67JLJjZ2qJjcuB1ymaruGlH/6TOmtKwoX7Eup3/iroE62jLQGYFEk0C4EU/JoBTkzn8eGz+
-	p9VR2u2wVfdZ702TrriDTzkb1a22paDL2RirXKacI3FoKV9hps8ymHZCM=
-X-Google-Smtp-Source: AGHT+IG7VYKcPSJdNPDtzXRMrhi3PHqP9/H7o2SFOhAfQZu8ErWsr2svswtqD0x0WBKS4GgmTFEyB2NO3kZnl42VbYI=
-X-Received: by 2002:a17:903:1670:b0:216:5e53:d055 with SMTP id
- d9443c01a7336-2240e496477mr2665035ad.9.1741280117182; Thu, 06 Mar 2025
- 08:55:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="j4U/3HjK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1741280134;
+ bh=6bMGhfu3cKthCvL1T3G+dPSizYb8EcgG80qlrt/kJJ8=;
+ b=j4U/3HjKIlIV0GDb6nSJD/eAMPCeps+0sI81Ny4k++X013ANHaM9kaL4iMBXdz/vIsC6qqbKa
+ Of4mjCmVaWQxz+sJGfRNBloR0WCkjuSBe5VK4VV9bxlVoilDh95UGM5hIiR/XAnsBNByhAuykxJ
+ n1J0s//3SsoM3ZChWgpzYmANw/k+twrQAE5QESJk7Dvi59cHEWuqfGh8jHYAOY9qsDkFWwv0h6R
+ Y58Ey+aS6LO6Kn1nj3zdXqQD6kbc9Kl7ljUy9F5IvOUeWZRuoX6ONN/PSyBzT3izi7hS0nto7gh
+ A3ljRy57mSaNRb033lh10ayhWMQ1cVhwhlQHa4PlCR1g==
+X-Forward-Email-ID: 67c9d3797d53aa09926043e9
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 0.4.40
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <cdbc1556-4662-4078-a4d6-33545e2e2491@kwiboo.se>
+Date: Thu, 6 Mar 2025 17:55:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306075147.195435-1-namhyung@kernel.org> <20250306075147.195435-2-namhyung@kernel.org>
-In-Reply-To: <20250306075147.195435-2-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Mar 2025 08:55:05 -0800
-X-Gm-Features: AQ5f1Jro2absOUzAa1tYd-i-Ic6Yvfz43s385OY1qtm3Om5lPsqwFwr2Uif_sQY
-Message-ID: <CAP-5=fW=Gs2ATy8DhcZFjGP5tcEemoZp9q=voFV8HRisY9ki7w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf report: Fix memory leaks in the hierarchy mode
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: Add rk3528 QoS register node
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: Yao Zi <ziyao@disroot.org>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250306123809.273655-1-amadeus@jmu.edu.cn>
+ <20250306123809.273655-3-amadeus@jmu.edu.cn>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250306123809.273655-3-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 5, 2025 at 11:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Ian told me that there are many memory leaks in the hierarchy mode.  I
-> can easily reproduce it with the follwing command.
->
->   $ make DEBUG=3D1 EXTRA_CFLAGS=3D-fsanitize=3Dleak
->
->   $ perf record --latency -g -- ./perf test -w thloop
->
->   $ perf report -H --stdio
->   ...
->   Indirect leak of 168 byte(s) in 21 object(s) allocated from:
->       #0 0x7f3414c16c65 in malloc ../../../../src/libsanitizer/lsan/lsan_=
-interceptors.cpp:75
->       #1 0x55ed3602346e in map__get util/map.h:189
->       #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
->       #3 0x55ed36025208 in hist_entry__new util/hist.c:588
->       #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
->       #5 0x55ed36027e2e in hists__hierarchy_insert_entry util/hist.c:1638
->       #6 0x55ed36027fa4 in hists__collapse_insert_entry util/hist.c:1685
->       #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
->       #8 0x55ed35de0323 in report__collapse_hists /home/namhyung/project/=
-linux/tools/perf/builtin-report.c:735
->       #9 0x55ed35de15b4 in __cmd_report /home/namhyung/project/linux/tool=
-s/perf/builtin-report.c:1119
->       #10 0x55ed35de43dc in cmd_report /home/namhyung/project/linux/tools=
-/perf/builtin-report.c:1867
->       #11 0x55ed35e66767 in run_builtin /home/namhyung/project/linux/tool=
-s/perf/perf.c:351
->       #12 0x55ed35e66a0e in handle_internal_command /home/namhyung/projec=
-t/linux/tools/perf/perf.c:404
->       #13 0x55ed35e66b67 in run_argv /home/namhyung/project/linux/tools/p=
-erf/perf.c:448
->       #14 0x55ed35e66eb0 in main /home/namhyung/project/linux/tools/perf/=
-perf.c:556
->       #15 0x7f340ac33d67 in __libc_start_call_main ../sysdeps/nptl/libc_s=
-tart_call_main.h:58
->   ...
->
->   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
->   93
->
-> I found that hist_entry__delete() missed to release child entries in the
-> hierarchy tree (hroot_{in,out}).  It needs to iterate the child entries
-> and call hist_entry__delete() recursively.
->
-> After this change:
->
->   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
->   0
->
-> Reported-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Hi Chukun,
+
+On 2025-03-06 13:38, Chukun Pan wrote:
+> The Quality-of-Service (QsS) node stores/restores specific
+> register contents when the power domains is turned off/on.
+> Add QoS node so that they can connect to the power domain.
+> 
+> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 > ---
->  tools/perf/util/hist.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index fbf131aeae7ffe9b..bbc6a299b5106c3b 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -1385,6 +1385,15 @@ void hist_entry__delete(struct hist_entry *he)
->  {
->         struct hist_entry_ops *ops =3D he->ops;
->
-> +       while (!RB_EMPTY_ROOT(&he->hroot_out.rb_root)) {
-> +               struct rb_node *node =3D rb_first(&he->hroot_out.rb_root)=
-;
-> +               struct hist_entry *child =3D rb_entry(node, struct hist_e=
-ntry, rb_node);
+>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 160 +++++++++++++++++++++++
+>  1 file changed, 160 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> index b1713ed4d7e2..0c0e7f151462 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> @@ -129,6 +129,166 @@ gic: interrupt-controller@fed01000 {
+>  			#interrupt-cells = <3>;
+>  		};
+>  
+> +		qos_crypto_a: qos@ff200000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff200000 0x0 0x20>;
+> +		};
 > +
-> +               rb_erase_init(node, &he->hroot_out.rb_root);
+> +		qos_crypto_p: qos@ff200080 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff200080 0x0 0x20>;
+> +		};
 > +
-> +               hist_entry__delete(child);
-> +       }
+> +		qos_dcf: qos@ff200100 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff200100 0x0 0x20>;
+> +		};
+> +
+> +		qos_dft2apb: qos@ff200200 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff200200 0x0 0x20>;
+> +		};
+> +
+> +		qos_dma2ddr: qos@ff200280 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff200280 0x0 0x20>;
+> +		};
+> +
+> +		qos_dmac: qos@ff200300 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff200300 0x0 0x20>;
+> +		};
+> +
+> +		qos_keyreader: qos@ff200380 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff200380 0x0 0x20>;
+> +		};
+> +
+> +		qos_cpu: qos@ff210000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff210000 0x0 0x20>;
+> +		};
+> +
+> +		qos_debug: qos@ff210080 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff210080 0x0 0x20>;
+> +		};
+> +
+> +		qos_gpu_m0: qos@ff220000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff220000 0x0 0x20>;
+> +		};
+> +
+> +		qos_gpu_m1: qos@ff220080 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff220080 0x0 0x20>;
+> +		};
+> +
+> +		qos_pmu_mcu: qos@ff240000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff240000 0x0 0x20>;
+> +		};
+> +
+> +		qos_rkvdec: qos@ff250000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff250000 0x0 0x20>;
+> +		};
+> +
+> +		qos_rkvenc: qos@ff260000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff260000 0x0 0x20>;
+> +		};
+> +
+> +		qos_gmac0: qos@ff270000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270000 0x0 0x20>;
+> +		};
+> +
+> +		qos_hdcp: qos@ff270080 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270080 0x0 0x20>;
+> +		};
+> +
+> +		qos_jpegdec: qos@ff270100 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270100 0x0 0x20>;
+> +		};
+> +
+> +		qos_rga2_m0ro: qos@ff270200 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270200 0x0 0x20>;
+> +		};
+> +
+> +		qos_rga2_m0wo: qos@ff270280 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270280 0x0 0x20>;
+> +		};
+> +
+> +		qos_sdmmc0: qos@ff270300 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270300 0x0 0x20>;
+> +		};
+> +
+> +		qos_usb2host: qos@ff270380 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270380 0x0 0x20>;
+> +		};
+> +
+> +		qos_vdpp: qos@ff270480 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270480 0x0 0x20>;
+> +		};
+> +
+> +		qos_vop: qos@ff270500 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff270500 0x0 0x20>;
+> +		};
+> +
+> +		qos_emmc: qos@ff280000 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280000 0x0 0x20>;
+> +		};
+> +
+> +		qos_fspi: qos@ff280080 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280080 0x0 0x20>;
+> +		};
+> +
+> +		qos_gmac1: qos@ff280100 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280100 0x0 0x20>;
+> +		};
+> +
+> +		qos_pcie: qos@ff280180 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280180 0x0 0x20>;
+> +		};
+> +
+> +		qos_sdio0: qos@ff280200 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280200 0x0 0x20>;
+> +		};
+> +
+> +		qos_sdio1: qos@ff280280 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280280 0x0 0x20>;
+> +		};
+> +
+> +		qos_tsp: qos@ff280300 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280300 0x0 0x20>;
+> +		};
+> +
+> +		qos_usb3otg: qos@ff280380 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280380 0x0 0x20>;
+> +		};
+> +
+> +		qos_vpu: qos@ff280400 {
+> +			compatible = "rockchip,rk3528-qos", "syscon";
+> +			reg = <0x0 0xff280400 0x0 0x20>;
+> +		};
 
-Thanks for the fix! A nit, iterating the rbtree of N nodes and calling
-erase on the first entry, an O(log N) operation, means this is a O(N *
-log N). rbtree.h has rbtree_postorder_for_each_entry_safe:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/include/linux/rbtree.h?h=3Dperf-tools-next#n81
-```
- * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_roo=
-t of
- * given type allowing the backing memory of @pos to be invalidated
-```
-which is O(N). I think this code would be better something like:
-```
-struct hist_entry *pos, *tmp;
-rbtree_postorder_for_each_entry_safe(pos, tmp, he->hroot_out.rb_root, rb_no=
-de)
-        hist_entry__delete(pos);
-```
+These QoS node are typically referenced from power domains so that the
+PMU driver know what QoS to save/restore when a power domain is power
+cycled.
 
-Thanks!
-Ian
+Vendor kernel only reference the two qos_gpu nodes in it's power domains,
+do you have any documentation or knowledge about what power domain the
+remaining QoS are related to?
+
+It would have been helpful to include PMU support to help understand the
+QoS <-> PD relationship, on their own they do not tell us that much :-)
+
+Regards,
+Jonas
 
 > +
->         thread__zput(he->thread);
->         map_symbol__exit(&he->ms);
->
-> --
-> 2.48.1.711.g2feabab25a-goog
->
+>  		cru: clock-controller@ff4a0000 {
+>  			compatible = "rockchip,rk3528-cru";
+>  			reg = <0x0 0xff4a0000 0x0 0x30000>;
+
