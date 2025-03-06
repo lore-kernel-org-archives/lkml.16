@@ -1,122 +1,147 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7BA20FA99
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634B420E6F8
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741266937; cv=none; b=A3GjsNJJKD7ZuuJmzrH8uzaYOjoTm9cTuECXBVxZOtJuqJfki2fyJQ0KeJPkwgP9ljoTVEOUTP3IXvvShhObaGeMngW/dvmSSFodyBfW0T78LnFdU7yrqWyUWn2i9o0nhzr2rvba1pAeZG2cEINvxK9BBC6nJDKCTlN1Q6ehVWE=
+	t=1741266948; cv=none; b=bG0OJXfyQUXCgle1/QdR82WX09VBC7h+FLK6EvSGldRIPXQUIv8LKwICMIUafVNwscqujXc8meC31Q/GjvTRZ+cSuAZ3+O8SeuVv8I+mSgVIpz0e7/rXRRptVErI6iOVhywUGv42LyEdrabgyTujFaJGzpIr7LNandZwfB8fVHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741266937; c=relaxed/simple;
-	bh=sqdytAodsHq9QNCvtIZ+Zn5N0QYNPXaH3EIcLQ+sw0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NYZuRP23zR29x5D7yBgFXhqMF8PIn14nn9Ur+Wyc2Y4jdvpA6FeDCOMw3DsAkdUpX3YF49/ZgYa7Z10Eg+kCIonEXihQW1q7Nf7xP/atfIJChdYjX+wxb0iq+lpfELsYO4mde5OwtkN77qqG2q+7wemvxsyh9x7lPi2k+8B7hEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LgpclZZj; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1741266948; c=relaxed/simple;
+	bh=iCLwruORYDxCtsWv+hcP88C3gvbW1fbzcoS5L/5ij9g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LN5UJH8eyYkTbVhrsbo2acwse7REdZ1aqTVx48eeSZVoX9d7bRMBKCEG2uWVAhp3Ll58pDR9+HYoJTmsHlxpk6MX1UYjG4zp48V+fgU+9Sap1p049Z12hVcvDszPsrRZnjS3knafX/08MHVjMxkSyut0vFC99L+syZ0SSzgIM6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LDGW3yh7; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LgpclZZj"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394036c0efso3725995e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:15:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LDGW3yh7"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso132392566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:15:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741266933; x=1741871733; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2F56/bXpgvW/PQd4WvaaCrrA3/3M+CJr+Y5MI4QmHaE=;
-        b=LgpclZZj3U0fINsuUb75w886HF7sCDLRA8wccWhTlLz++4I+gh61laBhNJlzfGhyVj
-         dnXyn2rAHluoFTus9o+30f/JaoTBE+CoZqFMDBQTkDAqJTfjqAUJq/q9d2az1u1QqMx2
-         xvbwAS6+tOGPxwh+/PbwlV2MkQWY1Zm51HC3m31Cj6snBoCxd8vLxRm4WduMNHoiWa/S
-         O7flxjnMSZLyKbTw62nsLP9/QTrY/TyrViNioznuVqp1rrp4Oo7Y1nsaz0LCIF3udDAM
-         i/HDxR8c0pOrdViAgJUPfLAXIjLhpJhfRRm0By6bS65QsS4a0Nq4DDzSA6Szjj9saQ3P
-         80WQ==
+        d=linaro.org; s=google; t=1741266944; x=1741871744; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=odFKhUpOD0oBGtCw0Lzrsic1VmySccICXYvC2207ePM=;
+        b=LDGW3yh7Szy45/wsV/IUGCy955wA2YdwhlkObqZXBdaFySMt+6CxeTpxiKstDcZCZI
+         AY3D+v9gSjK9h80eTPYUtwL9wLJUKC9/LFX0w/I6Zj7HO/1ia3R+Etrw4PCbBP0Bfm4c
+         +ymNGYklrLlgrqYXIaLJqwba2yFWTMaSfks0mUIDPLqgj/8t2nSt+Fr9bN01T0J5/3f6
+         g0dpGSF1Sc8BqUkmP2Fixw/mvwGixhdZmm7MJ9sQMGV/LITE3mCm5wBcTiJxMu3AsLUE
+         xu72cyYprwaDj5bAXMvh2QyzBEMEftvj3cWObJai4GBLchItmKjt2/2DMfUc5S/e6D2g
+         V1XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741266933; x=1741871733;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2F56/bXpgvW/PQd4WvaaCrrA3/3M+CJr+Y5MI4QmHaE=;
-        b=UIjp7KhMKqlMr1RjNaa3V06kFhbSkmK1fdxvuCgOB3o1ZAqjMSWAASL332Kss9fvqM
-         mOoJnEoKQkO7w1JMXk6/1mDGmm9ashT+K9LRAdIBl+67qZLnRbRyuktk+pgSNHx9sULh
-         U+oeis5XG7Fw+NlBKnjSCA4KcpLktWhUdQYXkDKpQMuD6Y8qE41eVLgg3IKJlyVq0fK7
-         /aIcE9iVMaMAIGQcc+nPskUan6eA+g6ckAUPvUyqD78y5axsVexxOwJEJQ4+YkljbJzQ
-         d8JZPp1R9Fz+T/KJNbbif9VY5uVLUEpr+qsXPav0lo1Cl0bpNG5mXD9rSvZ7CzEQg6xm
-         Rvcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvQ8ckGvvdcrHYGKpOPWKx4ptt1Ozg87q6XTrF1a6fHeiY6bbDE03YQqOh5LScIZW0XCyEc+yddW6P6VY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH9ASnn8JCFg6x7jaqQXPdjpJSdUWNHEiSEOoGverLRqJh3IHQ
-	miZSTylwBsSUvP1GRoUPwYO8A/8dnsPzkusI/8yUU/hz1d5LXwQQcOt67n9X0WQ=
-X-Gm-Gg: ASbGncuin5Xr4b1KIuLpIiny0zlsy+GOkc9tF2MEP1IdOOTFHb6IADEruwRXvxF36t5
-	xPWQDiOCmKRXCWohdIqCqXv/7I4nIfL4PgJWnpRwhXiranuE+vFW7r005geJfFb+NlROCt6FgCF
-	kRVoKV9xQ4U9LxohtpuCatpJNllkUBMcZ9xNquKrFMtwjnmRCTnlvanA0fc5zzcWzmC4u8Y3Jkw
-	UuwX6LPQN36xY2U7FNAWlPZN7V/ioiuN5DtGTXOiva6/HZJjYTo8pTSP0vqi9nICBcFI35UgXO4
-	yogiIjytw3fjbEcaaq1sfai1B+r1az8cf3me5ruJwZx9hCBl
-X-Google-Smtp-Source: AGHT+IHOyulRWsRbaL8sagZbBUzdBihh8XWqd70FOnBN7LQrsvkLlJuS76NdiPbsbr5xA7z7M3wvvQ==
-X-Received: by 2002:a05:600c:1c29:b0:43b:c94d:e200 with SMTP id 5b1f17b1804b1-43bd2929948mr46520145e9.1.1741266933457;
-        Thu, 06 Mar 2025 05:15:33 -0800 (PST)
-Received: from dhcp161.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd8c327fsm19704485e9.13.2025.03.06.05.15.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 05:15:32 -0800 (PST)
-From: Petr Pavlu <petr.pavlu@suse.com>
-To: Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] module: Make .static_call_sites read-only after init
-Date: Thu,  6 Mar 2025 14:13:54 +0100
-Message-ID: <20250306131430.7016-4-petr.pavlu@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250306131430.7016-1-petr.pavlu@suse.com>
-References: <20250306131430.7016-1-petr.pavlu@suse.com>
+        d=1e100.net; s=20230601; t=1741266944; x=1741871744;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=odFKhUpOD0oBGtCw0Lzrsic1VmySccICXYvC2207ePM=;
+        b=vkNabSMoG7rJXMsdb7ToQMMEU8Mr7ysFy7Ju83+GP/BI1hHhz/aO376QHV/oZrhEdz
+         jSCrznubXAQFKgNMkOZYOcFKxiDJaPWEa2Ke6pn0XEWm8RYfOpDNMD3EroAnw46DAqvZ
+         qQEWS5QfzbPH68KGDJHhU77Kmc/iV+EXhS6k95yppnkBNLRw9YZZxhHGS28tQ+geXRch
+         5Zf+2u/WT8Bl7sBSqg73R3aFmBTBYHSCryWiNEnU/Jg2u5ZLQa/bYXFMAXjU04G/wRC3
+         PleP2QRr0Rvrwk0Ny7IVziiRIlGdbL3Y6lsdJ1bvmJ7ICZOY/Wv7hcVsI3Cng9/Lcvu0
+         kJIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjd0C0YFqskFzOTzrQq6kHKiVeLG/rlPp0v8ZNIQeRMwfI2dhY8tbRncgmlpWQrJHpzi97ikc68Hs+1LM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwawXruL2DcfLICbbJBTRf28aUzXZAl15ziEuYxfU3tM2V82YIB
+	TOpCRmuvwrfHfJXoNOqwdA+dp22+79ajbwawUmRQgD8Mmf3jw0MYcoboPE55myg=
+X-Gm-Gg: ASbGncsyO+FmG6aos+ugRsJCqzdUpVssRoyLXHfA4214vBLABdOC9pwZOirNlOVDiCF
+	lAG6G/WJwhfXTsNx+00ARzZNuBSnxyKryNS1A/Cm1cvyop+0XP5zqc2bWN7l7bRgPk0IOLP/RBq
+	uhzRVrrUUD1MkYEBcEa5fAtrgiGCnEp5mFRZMPd0GFEL0+xELlB+GqqE2COhPRwSJ0DNiBDsnyT
+	fXQrvg5FTMR4DOPBdldlwZHoz8Skzqo1j7GCHoWIYkM/6wheGex7l5wEVFa/LD8kJ2I/mcF/lWK
+	Cjh41a5lybS9VsxGfDQ+WoizaH89na8+IVGggpy0vcLPHfbzV+UA372Tbmxefqg=
+X-Google-Smtp-Source: AGHT+IHMPmbTge6zDjHa6859H1+k4sdDZ/gMAiX6FUPawQ8PGqqQPLxpyvCVwbjTBKNQwMK3CnzSHA==
+X-Received: by 2002:a17:907:72d6:b0:ac1:daba:c6c with SMTP id a640c23a62f3a-ac20d8bf12dmr589079966b.24.1741266944582;
+        Thu, 06 Mar 2025 05:15:44 -0800 (PST)
+Received: from [192.168.68.113] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac2394fd578sm94632366b.81.2025.03.06.05.15.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Mar 2025 05:15:44 -0800 (PST)
+Message-ID: <9b4fd423-a463-4d50-a597-dbda532b6b61@linaro.org>
+Date: Thu, 6 Mar 2025 13:15:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] ASoC: q6apm: fix under runs and fragment sizes
+To: Caleb Connolly <caleb.connolly@linaro.org>, broonie@kernel.org
+Cc: perex@perex.cz, tiwai@suse.com, krzysztof.kozlowski@linaro.org,
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org,
+ johan+linaro@kernel.org
+References: <20250304105723.10579-1-srinivas.kandagatla@linaro.org>
+ <ea047098-2baf-456a-a57f-b698c0ce1b6e@linaro.org>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <ea047098-2baf-456a-a57f-b698c0ce1b6e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Section .static_call_sites holds data structures that need to be sorted and
-processed only at module load time. This initial processing happens in
-static_call_add_module(), which is invoked as a callback to the
-MODULE_STATE_COMING notification from prepare_coming_module().
 
-The section is never modified afterwards. Make it therefore read-only after
-module initialization to avoid any (non-)accidental modifications.
 
-Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
----
- kernel/module/strict_rwx.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 05/03/2025 22:17, Caleb Connolly wrote:
+> Hi Srini,
+> 
+> On 3/4/25 10:57, srinivas.kandagatla@linaro.org wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> On Qualcomm Audioreach setup, some of the audio artifacts are seen in
+>> both recording and playback. These patches fix issues by
+>> 1. Adjusting the fragment size that dsp can service.
+>> 2. schedule available playback buffers in time for dsp to not hit 
+>> under runs
+>> 3. remove some of the manual calculations done to get hardware pointer.
+>>
+>> With these patches, am able to see Audio quality improvements.
+>>
+>> Any testing would be appreciated.
+> 
+> This totally breaks audio on SDM845, and often results in a hard-crash 
+> to crashdump mode on my OnePlus 6.
 
-diff --git a/kernel/module/strict_rwx.c b/kernel/module/strict_rwx.c
-index fa701dad4ed1..a3fc8d603750 100644
---- a/kernel/module/strict_rwx.c
-+++ b/kernel/module/strict_rwx.c
-@@ -120,6 +120,15 @@ static const char *const ro_after_init[] = {
- 	 * section, which are marked as such at module load time.
- 	 */
- 	"__jump_table",
-+
-+#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-+	/*
-+	 * Section .static_call_sites holds data structures that need to be
-+	 * sorted and processed at module load time but are never modified
-+	 * afterwards.
-+	 */
-+	".static_call_sites",
-+#endif
- };
- 
- void module_mark_ro_after_init(const Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
--- 
-2.43.0
+Its not possible.. as SDM845 is Elite DSP architecture, all of these 
+patches changes are very specific to Audioreach DSP architecture.
 
+Could you please share the crash logs if you have any. It highly likely 
+that something else is triggering the hard-crash that you reported.
+
+thanks,
+Srini
+> 
+> Unfortunately I can't get UART logs right now. But I imagine this is 
+> reproducible on RB3.
+> 
+> Kind regards,
+>>
+>> thanks,
+>> Srini
+>>
+>> Changes since v2:
+>>     - dropped patch which is causing regression with pluseaudio.
+>>     - setup period sizes only for capture path
+>>     - fix underruns/overruns in dsp pipelines.
+>>     - add fixes tag
+>>     - add patch to fix buffer alignment
+>>
+>> Changes since v1:
+>>     - added new patches to fix the fragment size, pointer
+>>       calculations
+>>     - updated to schedule only available buffers.
+>>
+>> Srinivas Kandagatla (6):
+>>    ASoC: q6apm-dai: schedule all available frames to avoid dsp under-runs
+>>    ASoC: q6apm: add q6apm_get_hw_pointer helper
+>>    ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
+>>    ASoC: qdsp6: q6apm-dai: set correct period and buffer alignment.
+>>    ASoC: qdsp6: q6apm-dai: fix capture pipeline overruns.
+>>    ASoC: qdsp6: q6apm-dai: fix playback dsp pipeline underruns
+>>
+>>   sound/soc/qcom/qdsp6/q6apm-dai.c | 63 +++++++++++++++++---------------
+>>   sound/soc/qcom/qdsp6/q6apm.c     | 18 ++++++++-
+>>   sound/soc/qcom/qdsp6/q6apm.h     |  3 ++
+>>   3 files changed, 53 insertions(+), 31 deletions(-)
+>>
+> 
