@@ -1,121 +1,95 @@
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360EB1448E3;
-	Thu,  6 Mar 2025 20:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B2E1448E3
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741293516; cv=none; b=E7WD3Mv4Q0gXHolkCG632/DP5SDFngh/Wzz3C+20FnUmoPdrj2iMFXb5KDhCmqDBQjHH04Upv3rALNOCpPeqQNlqHD/KKVWCb6DqQRdyQPGGuK5BuO/63PxdS4KMvM0rDFMqwGf9x90boucICEM2WmeEfQBdvtu9jToBMEoo1lc=
+	t=1741293553; cv=none; b=NmJHptzK/EEX2XRVUJzVgklmpHUcauYw+m7BqoKSe2875XcQG8jYt5IIGphY7KC1pMXQCrphui+YhtGZq6g4N9zVZJ+4jz1tuCnAYyFpdI9U5urnAdjwQvMQnbEKUiBjwTt2Y8GiiPE9dBpVlu0xXk1/+3BFmhHkEPfobeBCAnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741293516; c=relaxed/simple;
-	bh=qnoXiEkk5n6/KIxOU4pLw61ipm/zP5dR4OPIi0DeCzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BC6nOMJ4EaRhGXqMY7lbo7YKfij8AkP7QoUP4zXjjic2sc9Rdu0OBV9fpXt5CnjTJFnvl2GFsYOB5Talhr/EU+IkKA743TLEeShiGsjs+MlWmJVVS2olk9QgiQTYYiWjzSE7h/HJ3MBX+nTJUVcetY5zWdFKmXXAK4ZU+BxNPgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=JbTCmFOu; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+	s=arc-20240116; t=1741293553; c=relaxed/simple;
+	bh=wduhX53R8HjEeAjnRW1KoaV39KQVKrQ6gif7EZPc4Mw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sZA6BEzRSzZltDQ2jBd6IIwZOeSchAQvzku/Oks+S/F0v06/prFINPb0NdPvgKnSUb7fwOuNOPzz1hVDcUmwjfSmPWBmrdEJnUTO8uBGAVtlKclbRnwVlIW/xu0TW+ZAjpCciNF1zpxZkbGp3y87F4VFyeFXCfcxgVJodDHEZ6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=faCbeRXy; arc=none smtp.client-ip=121.127.44.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="JbTCmFOu"
-Received: from [10.50.4.49] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z81Tg5Mf6z4JYX;
-	Thu,  6 Mar 2025 15:38:31 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1741293513; bh=qnoXiEkk5n6/KIxOU4pLw61ipm/zP5dR4OPIi0DeCzo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JbTCmFOuvaAF+WEJLsMMmjdYU2ERE7Dj9XrwPtB2Jx6YLzYQt6B79o34R1tcBE6tZ
-	 SLiUxC0DSLy6YA18cnQGsval8x960npt/75L41AmMs0Ed7BaqONLX6BUfgCvt6kECd
-	 GUk7gSouMlK6eMsjLzkRJFqfngIKpo/6ufhos6Tw=
-Message-ID: <8c485ed6-85e0-4d8f-b6dc-2e5c9115b116@panix.com>
-Date: Thu, 6 Mar 2025 12:38:30 -0800
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="faCbeRXy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1741293550; bh=7JyxP8FBRDIO7vgzFTNLCIrseIO0xPkXO1N8Yvb5Wzo=;
+ b=faCbeRXyCbZt5rtix2Gez+LKozwr25b7Z2DTOkjQXbaB18FkJQWRA2YZOuF8K+P1nVVpSzJ/U
+ zsXtDxOHjK3uL+CfhLzRjyVT8bpxVAcqU428otGiHgreikM9ZRPjOa7594M7n8oTspdOUu6wXqu
+ 3M5/oxg6oMTNSUgKXUz7y+lO3edaEpyYHPJGleXrh73GAhkl+H/OFy2/nQKMXpyyPVEhGBOx0CS
+ YruQDJUC4RsHOAPWicClgHcz2++ZH7na4o1U7ohYUMCoP4vzynSCBir/9MVYpwgW+NKo/n3ecCV
+ ftvLE0y/cN85tA/lTyBukE8+YJPGIfuySX4g2U+5yflw==
+X-Forward-Email-ID: 67ca07ecdeafcb1458af9261
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.59
+X-Forward-Email-Version: 0.4.40
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Wadim Egorov <w.egorov@phytec.de>
+Cc: netdev@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jonas Karlman <jonas@kwiboo.se>,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 1/3] net: stmmac: dwmac-rk: Use DELAY_ENABLE macro for RK3328
+Date: Thu,  6 Mar 2025 20:38:52 +0000
+Message-ID: <20250306203858.1677595-2-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250306203858.1677595-1-jonas@kwiboo.se>
+References: <20250306203858.1677595-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-To: Lukas Wunner <lukas@wunner.de>,
- Mika Westerberg <mika.westerberg@linux.intel.com>, Me <kenny@panix.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
- Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>,
- Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
-References: <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
- <20250213135911.GG3713119@black.fi.intel.com>
- <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
- <20250214162948.GJ3713119@black.fi.intel.com>
- <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
- <20250226084404.GM3713119@black.fi.intel.com> <Z77ak-4YsdAKXbHr@wunner.de>
- <20250226091958.GN3713119@black.fi.intel.com> <Z8YKXC1IXYXctQrZ@wunner.de>
- <20250304082314.GE3713119@black.fi.intel.com> <Z8nRI6xjGl3frMe5@wunner.de>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <Z8nRI6xjGl3frMe5@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Support for Rockchip RK3328 GMAC and addition of the DELAY_ENABLE macro
+was merged in the same merge window. This resulted in RK3328 not being
+converted to use the new DELAY_ENABLE macro.
 
-I'll do more testing but it's been a couple of attempts and it hasn't 
-locked up on me.
+Change to use the DELAY_ENABLE macro to help disable MAC delay when
+RGMII_ID/RXID/TXID is used.
 
-Curious to see how Mika fares with it.
+Fixes: eaf70ad14cbb ("net: stmmac: dwmac-rk: Add handling for RGMII_ID/RXID/TXID")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
--Kenny
-
-
-On 3/6/25 08:45, Lukas Wunner wrote:
-> On Tue, Mar 04, 2025 at 10:23:14AM +0200, Mika Westerberg wrote:
->> Unfortunately I still see the same hang. I double checked, with revert the
->> problem goes a way and with this patch I still see it.
->>
->> Steps:
->>
->> 1. Boot the system, nothing connected.
->> 2. Connect TBT 4 dock to the host.
->> 3. Connect TBT 3 NVMe to the TBT4 doc.
->> 4. Authorize both PCIe tunnels, verify devices are there.
->> 5. Enter s2idle.
->> 6. Unplug the TBT 4 dock from the host.
->> 7. Exit s2idle.
-> 
-> Thanks for testing.  Would you mind giving the below a spin?
-> 
-> I've realized this can likely be solved in a much easier way:
-> 
-> The ->resume_noirq callback is invoked while traversing down
-> the hierarchy and the topmost slot which detects device replacement
-> already marks everything below as disconnected.  Hence any nested
-> hotplug ports can just skip the replacement check because they're
-> disconnected as well.
-> 
-> -- >8 --
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-> index ff458e6..997841c 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -286,9 +286,12 @@ static int pciehp_suspend(struct pcie_device *dev)
->   
->   static bool pciehp_device_replaced(struct controller *ctrl)
->   {
-> -	struct pci_dev *pdev __free(pci_dev_put);
-> +	struct pci_dev *pdev __free(pci_dev_put) = NULL;
->   	u32 reg;
->   
-> +	if (pci_dev_is_disconnected(ctrl->pcie->port))
-> +		return false;
-> +
->   	pdev = pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0, 0));
->   	if (!pdev)
->   		return true;
-> 
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index 003fa5cf42c3..297fa93e4a39 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -593,8 +593,7 @@ static void rk3328_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 	regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON1,
+ 		     RK3328_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3328_GMAC_RMII_MODE_CLR |
+-		     RK3328_GMAC_RXCLK_DLY_ENABLE |
+-		     RK3328_GMAC_TXCLK_DLY_ENABLE);
++		     DELAY_ENABLE(RK3328, tx_delay, rx_delay));
+ 
+ 	regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON0,
+ 		     RK3328_GMAC_CLK_RX_DL_CFG(rx_delay) |
 -- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+2.48.1
 
