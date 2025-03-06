@@ -1,117 +1,68 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6C619D880
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6F81DF759;
+	Thu,  6 Mar 2025 09:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741251699; cv=none; b=B1odTdleDbk76QB0Dd6a4LGarEC9wr1OC2T71rbEuB0bo8duynM3f0cxBWf5N+O/Zu4r5Y5ZjKmAiNFyY7SDPMpyvYJVkfwQ7EshC11l5PXP82kAXbxt49b1/ozx2lS7cs3gGTJoyC22gdSPvmzm/TuQUsxgLGd1zyDxX4vTngU=
+	t=1741251747; cv=none; b=JO7Hl1bkT+VGaIz1hCbnRfHvj0cxzD7moAmwyjU4oMaPHZ7QUvwDahwxcLqgD0Rop3igE9engTPPzD8el3ilDeC12H4OhsmlvEXaZCBA8g7o7F7Nk7tHmq6QLCLyoeI4pnawwsHr3x+0mu9P7xIBYFqjVeKyj9HC2rHZ8/gSIDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741251699; c=relaxed/simple;
-	bh=4JZq/mGfFlnxPW9pNixuWia30OIERIh5Dpt80vZaWd0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c4Y5/72VpCI0fRO33wqZsePMIhy+8DnNO1h0bsCVMsTTVr+mXClVJ13asay2AIHS8cAcBAvlsV0ztLCgC7KVOmOJ7LozSNhBP+OgS2tdNmloDuX+vFxOqX/LKR9sRBSO6U99oamdpTQYyUFhvR0eWZAT1XOgg5J+Widi+pbVBFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEPYBiBY; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEPYBiBY"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bef9b04adso606211fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:01:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741251695; x=1741856495; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pGDL4TEb6k2+qfa9R2TSSmcOiUuibbQbJSU/WRBG5z0=;
-        b=MEPYBiBYNZg/7B66IXX/TIH6QWm54IuLXfRWi5t0HvnW7sC0Ql4wqY0lYSrxE4dBjk
-         64woXQZQ82BBLjiZInU8GePt/nMqJdNFzWYP03+KSegAzg0SXGw4H40VPu52MmJpoDYb
-         TtYVn5jL8KVt+7IXwhtP5gthxxIaXx4smG7BZzz5bMF6+oG4+VMfRG8MzE9K4sAIaeMF
-         Sn5V51sJW8nwBXGHXXUXH0BVej4JZpBlWXZYNC5SN3u0fAOY7iTchyZUvQQMeMqQrNMu
-         tzeE6912QcIEe4tR1e41SFwMbCG5zmKAJgV7R7gXpRTStZQMqfdGpylNFb7Ku11IGF31
-         8zxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741251695; x=1741856495;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pGDL4TEb6k2+qfa9R2TSSmcOiUuibbQbJSU/WRBG5z0=;
-        b=SUKAbFiOQm77iQiGPDmksmac3+ZGXHFD9/sj1cGid5ZVP3orIciKd77y5bZd1cjIJE
-         FMvHcJf41uFrjDZOG1hjFRzaQtQ0BTBze9vpfxNGTZq/rS4ZCwT5xXniltu8IQG6wRAT
-         k7FWok2F9v4oyP2B3RO7oWCFeWRglJbhDrPl12UVVyiVT5ueBP6Qct5UB+ghWNJXnanC
-         YULR7WF3bHOn+Xm5ZIfKbD9UTAB/NH7GmgTNnCMiJGo+eVquaTOPZdO5mG41fvHxYXat
-         Wfw5vzWhEAcwGViwR10rQumsMmOjNGH2qw+vcvI9+jevb3kEcO9rv8KPiOthC8VSywEF
-         EfeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgFdbtW2mELQqU2pnKl6HfGv/Dr8crXVOG0AA4gbTrwLithnJA4I3Wpah0972CxCngxA8RZ7HoebRTeRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzyeRep8U1uleny0gaJ0g7Qtqj1dQXmTFnP1hF4xihq5W1hVrW
-	XOqOUo4APiFzzZAaf9pNo33zMmhY1hG+4CpPQ1mEAnr4mUbmo9//2TfebFgg0rRUVToOTp+97du
-	m/gXTT7vGW8lNbf0ZXnLSNrvZTqQ=
-X-Gm-Gg: ASbGncuCfP3u6//sCfiWx9WqHqyu3dJolhjBe7bTz/lurI/glnv962sEmekpStqHgpA
-	ru1NulJyBv6tUH6LeszgR4LAMpje6QXsUSZJfi4sciE4z3vVZ1T214LMRKLJwDbgi8DsEvcQSFN
-	eWGogcpzSaxaEmZpizY9Nv3beiag==
-X-Google-Smtp-Source: AGHT+IHXbMHW4YyShS1AIona/bs0M+r8jlEJ2xiWHRMpOX0N5js+AHUqQ2QNK9oCKsBGzam+l2IFP/7etWxsjce82Gc=
-X-Received: by 2002:a2e:9645:0:b0:30a:448a:467 with SMTP id
- 38308e7fff4ca-30bd7a6fdadmr19351551fa.21.1741251695146; Thu, 06 Mar 2025
- 01:01:35 -0800 (PST)
+	s=arc-20240116; t=1741251747; c=relaxed/simple;
+	bh=D9/WEW6tyPw9DbuSZopa9attlAEU5bOtQtJOBNnThlg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fN02le5vkwQoB4H5sOq7BKybK4Z/aBRGb91v9bL4qIuWESP6HjyW2zU/HH65bdV2NX8ToZLVzH0kmCsAAGX39WubR+jfhSMLxcATxcZl8MjaJqaO60O/eeFH4jnhi80QkEwLiQgnvIBXcrblbsIxiPiBHrT9/SyHy8JVIvkTtiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [119.122.215.89])
+	by smtp.qiye.163.com (Hmail) with ESMTP id d2603c59;
+	Thu, 6 Mar 2025 17:02:11 +0800 (GMT+08:00)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: jonas@kwiboo.se
+Cc: conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	heiko@sntech.de,
+	krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: Re: [PATCH 0/3] rockchip: Add support for onboard eMMC on Radxa E20C
+Date: Thu,  6 Mar 2025 17:00:01 +0800
+Message-Id: <20250306090001.113127-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250305214108.1327208-1-jonas@kwiboo.se>
+References: <20250305214108.1327208-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228123825.2729925-1-ubizjak@gmail.com> <20f1af22-71dc-4d62-9615-03030012222e@intel.com>
- <CAFULd4bpHGE83qc37sbh=rpGj+SFqQrsNDLzL_-NQpo6pQH3jw@mail.gmail.com>
- <c4aca08a-95c1-48ee-b4da-55a69b74101c@intel.com> <CAFULd4YVOEtT+bsp9H7ijaoJn2e2108tWhiFarRv=QxoUMZaiw@mail.gmail.com>
- <20250301123802.GCZ8L_qsv7-WwUwqt5@fat_crate.local> <CAFULd4b=4rHcVAVSg_3yMb8=3ReiSriw_rM4vJL9_HvheXE92w@mail.gmail.com>
- <20250305203633.GNZ8i10cVCCnhhULis@fat_crate.local> <20250305212638.GC35526@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250305212638.GC35526@noisy.programming.kicks-ass.net>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Thu, 6 Mar 2025 10:01:31 +0100
-X-Gm-Features: AQ5f1JrRoa_h3AnkQYSTAY5Il94GcvsYSiPDByfBE6bFOLjB-n8gdCfuAyUMEeE
-Message-ID: <CAFULd4ZsHKA4Yh9CsxPjdoW-fa7yD1-Ov7xDN4E3J3c8O8yQ7g@mail.gmail.com>
-Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
- locking insns
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Linus Torvalds <torvalds@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHR5PVkJOQktIQ0gdTE1MGVYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKTlVDQllXWRYaDxIVHRRZQVlPS0hVSktISk5MTlVKS0tVSk
+	JLS1kG
+X-HM-Tid: 0a956ab0e16203a2kunmd2603c59
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MDo6Dww5SjJKIjwxDjgIPkIR
+	AS8wFENVSlVKTE9KSU5KTEhJQkxOVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
+	QlVKSUlVSUpOVUNCWVdZCAFZQUhISTcG
 
-On Wed, Mar 5, 2025 at 10:26=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, Mar 05, 2025 at 09:36:33PM +0100, Borislav Petkov wrote:
-> > On Wed, Mar 05, 2025 at 09:54:11AM +0100, Uros Bizjak wrote:
-> > > The -Os argument was to show the effect of the patch when the compile=
-r
-> > > is instructed to take care of the overall size. Giving the compiler
-> > > -O2 and then looking at the overall size of the produced binary is
-> > > just wrong.
-> >
-> > No one cares about -Os AFAICT. It might as well be non-existent. So the=
- effect
-> > doesn't matter.
->
-> Well, more people would care if it didn't stand for -Ostupid I suppose.
-> That is, traditionally GCC made some very questionable choices with -Os,
-> quite horrendous code-gen.
+Hi,
 
-Size optimizations result in 15% code size reduction (x86_64
-defconfig, gcc-14.2), so they reflect what user wanted:
+> Driver changes to use different delay and tap num is needed to be able
+> to support HS400 modes, something for a future series. With this HS200
+> mode should work:
 
-  text    data     bss     dec     hex filename
-27478996        4635807  814660 32929463        1f676b7 vmlinux-O2.o
-23859143        4617419  814724 29291286        1bef316 vmlinux-Os.o
-
-The compiler heuristics depend on tradeoffs, and -Os uses different
-tradeoffs than -O2. Unfortunately, there is no
--Os-but-I-really-want-performace switch, but OTOH, tradeoffs can be
-adjusted. The compiler is open-source, and these adjustments can be
-discussed in public spaces (mailing lists and bugzilla) and eventually
-re-tuned. We are aware that the world around us changes, so tunings
-are not set in stone, but we also depend on user feedback.
+I have tried HS200 mode on other rk3528 boards and it works fine,
+so can we enable HS200 mode for Radxa E20C first?
 
 Thanks,
-Uros.
+Chukun
+
+-- 
+2.25.1
+
