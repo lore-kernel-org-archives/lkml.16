@@ -1,113 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABC7204686;
-	Thu,  6 Mar 2025 10:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50351624C7
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741258776; cv=none; b=ZSXFsqQ9cngUXTRf2ynydbP4eBWgCPka2/PI3hLMj1jA0M0/EJOf18mnofckxaJTZo4asPILhJaxveg/ZQPI4uiuug8bMtz6iceZ+TtbcNW4nj1ds9LqFWCwJ0x3ldQYjGUx5N3rLpmF+asrr8DXZbBxmI1+YU1iRwcB2ZJa3pQ=
+	t=1741258849; cv=none; b=Yu9XGy+EPeufenzDGUxQXVeuSlnDRRJBB2YmRfc6/sksFxxd7Y36iISR5+NXs24zp/KFsW5nP9OSWqGRUFrn2vRhcTpH15nYZpuKRyjsxvuGy5u62/2FHgCTNL2Q6CeqwNffvTM5aceD7EXVFqY1C+YCiTSnWcwj1qHd56VPavw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741258776; c=relaxed/simple;
-	bh=pn7HsBf7477qOG8Rcf22SNHgAPgmTHb73sR7+rGmUIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+CzVUCIRGrm0jyQX+dEKvuAEcRnWGVSktCmH4KFLzGNnCSsItQDqfT1Ckj0klM9wyZxU3JRvKhW8GuF+aLBwKB8TSwrD9vOjmf9iOdkZcre62FS4oVzzT9PQQbaR+VcCutWBn3uzheSv4aJ2Z43JnoKTRQxZm34+HkDyKDdLog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aeYXgZNI; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741258849; c=relaxed/simple;
+	bh=cXOUGzXJisDnk0/ye+2VvQdHhCVvaIPyZYsa3alQEpw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=irtsYN8aJL8eq8xAoePYjDV7KogWUewCyxzv2tKKVlRVwevTypl+wu0DvVCsf4RhoDDxjQqQZ6Hob3IT5F3FUQ6xfTS2GKzGLd6VOx9YM59ZUuWVVV8CnGXhopLeScpPz3XPNa73Ovg4ua4H6JBHoTdgfMlibQDRxB7s+dfCGeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UVPOFh1A; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aeYXgZNI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741258774; x=1772794774;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pn7HsBf7477qOG8Rcf22SNHgAPgmTHb73sR7+rGmUIU=;
-  b=aeYXgZNIAQLZFgYHoAg4/0MIBt25RWMksM+DXYQu32TaHn5urjgOzUvX
-   9KGGMImjUrTSsCnt68dUV0Y0QbUD5IbKowODuaXpewUMlkEh4JM8o/o4s
-   nVrn0YzqqoJyAzr/pLTv/8WASjO6dkCy5fJQSqq/UWDJwJtMgamCDQNkj
-   Z+hhwd5Cqm5UE+hu9Roley4tNgRJOrEHskKNx7CsgqkHU84HBwP6wsjzq
-   inSPJj+pXSyyQehXaGn8zSA0XnI2NAw1c283mavEnml4CMIAJCzTAT03m
-   cwtwxGxIJiUdATrs/HfwQtNt4v3pCbwhu0vTb2xC49IwGYY+brHgyawdI
-   A==;
-X-CSE-ConnectionGUID: rPjQ6yVmQl+TpHNcfV0xTQ==
-X-CSE-MsgGUID: Ugk7auzaSemqar2YrYJbnQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52907262"
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="52907262"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 02:59:33 -0800
-X-CSE-ConnectionGUID: 5HFDfgG9TSK9iDaUKvCqqw==
-X-CSE-MsgGUID: SfPtaCZ7R4OLUtDyxqLQ2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="124199673"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 06 Mar 2025 02:59:30 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tq8wp-000MwI-27;
-	Thu, 06 Mar 2025 10:59:27 +0000
-Date: Thu, 6 Mar 2025 18:59:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Akshay Gupta <akshay.gupta@amd.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux@roeck-us.net,
-	gregkh@linuxfoundation.org, arnd@arndb.de, shyam-sundar.s-k@amd.com,
-	gautham.shenoy@amd.com, mario.limonciello@amd.com,
-	naveenkrishna.chatradhi@amd.com,
-	Akshay Gupta <akshay.gupta@amd.com>
-Subject: Re: [PATCH v5 03/11] misc: amd-sbi: Move hwmon device sensor as
- separate entity
-Message-ID: <202503061815.wWrdDMmv-lkp@intel.com>
-References: <20250303105902.215009-4-akshay.gupta@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UVPOFh1A"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4394c747c72so1942255e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:00:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741258845; x=1741863645; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PvJOjZ7gASzBfvYGoJZPS5obCWwIrSTS1iwOGHLb12c=;
+        b=UVPOFh1AM1lqLn5lwZjzhSDMo7OuZ7OARe5FaTDQ+GjKoFJ8p6bYX3vQPZ+Jm09+58
+         x2t2uuvAadptpwIizJCLchtp4Di/Bk7T0aNWDqG+xdJ2veki7Dh9whZiu3x8Z0CTdEFS
+         zilXY2v8UPWKzW1UPYb62wQGbbvBdv1bQHAO+Gen0sVot1O/tHQn79KcX/Y4Hp2xnRBB
+         g8nRx0BYezmKJhnqwM9MU12QuJgksaypMer2orKV8cjYM+vimMyjzoVJXAr9SHFm24JH
+         /SvIqEhGuae1B+Xvbd9UPMy/Qy8Eiu48TFSrCOj6/47LBBhqCilNl4fvTBPyp7YFE3Ap
+         kR1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741258845; x=1741863645;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PvJOjZ7gASzBfvYGoJZPS5obCWwIrSTS1iwOGHLb12c=;
+        b=GJHK6ES2rpD60xcFVOt3OufzU9BlIw1lUVExeOVRtZa5Lic5v5P2OrZRGxukxssJas
+         h1lBcBAOZ4l1T94KtA6yZwQScYmPgChGIMCgrm+23wecscPoE+gXuSUf/ZkN6Htp51TY
+         h49X4Gj/iCDVYmKkdkehc1yW3Dn5ta6tISBZCWAgtTqrVZv57YY3JBBQZdv54w39ZRiA
+         ZTxvpU4pjOjTsrqpl8yHKQ6+LHdZL58v6gKkD6nhe2fPPK8Lf4D1J1CIirORld74F2BL
+         1p1LvbmnbwkSVEJ+FibHZP6NQ0TC+jm8uN3UANl8TNSfu+4cI5o8HoC75JJRZBvYlFBd
+         kA7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWRUvagqSiTzQvEM1jcVeQgqaUaRiwBSFvutlm9OaBeC1IqJPpdh6WbwoMEoYsIQlSp1JAd5uJG3MlJzyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKGG5S0TFdmDHn/81wMej213lsdRAF6tblb77z6sBdIsmJRstR
+	h5Uxkf+1Srh/vAxYipfhvUpLSxyuj+b1zAprTddyxvJvfGMA4UQSVUadwu6IbaXaBKlgDm5gNMD
+	7n233lwoqzB+MRtCxhw==
+X-Google-Smtp-Source: AGHT+IEGIm+qxrHFi7YMwd4v2mWCai/lo65N8Xe9xbdmYtOuCPL/1azW8IfDSK4oVWN0pRfPGkpSLhGS4zv1Dg9I
+X-Received: from wmbet7.prod.google.com ([2002:a05:600c:8187:b0:43b:c6a4:89a0])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:190f:b0:43b:b756:f0a9 with SMTP id 5b1f17b1804b1-43bd295286dmr61943825e9.11.1741258845390;
+ Thu, 06 Mar 2025 03:00:45 -0800 (PST)
+Date: Thu,  6 Mar 2025 11:00:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303105902.215009-4-akshay.gupta@amd.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250306110038.3733649-1-vdonnefort@google.com>
+Subject: [PATCH v2 0/9] Stage-2 huge mappings for pKVM np-guests
+From: Vincent Donnefort <vdonnefort@google.com>
+To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
+	will@kernel.org
+Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Akshay,
+Hi all,
 
-kernel test robot noticed the following build errors:
+This series adds support for stage-2 huge mappings (PMD_SIZE) to pKVM
+np-guests, that is installing PMD-level mappings in the stage-2,
+whenever the stage-1 is backed by either Hugetlbfs or THPs.
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus groeck-staging/hwmon-next soc/for-next linus/master v6.14-rc5 next-20250305]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The last patch of that series is an optimization for CMOs using a shared
+PMD_SIZE fixmap.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Akshay-Gupta/hwmon-misc-amd-sbi-Move-core-sbrmi-from-hwmon-to-misc/20250303-190830
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20250303105902.215009-4-akshay.gupta%40amd.com
-patch subject: [PATCH v5 03/11] misc: amd-sbi: Move hwmon device sensor as separate entity
-config: x86_64-randconfig-078-20250306 (https://download.01.org/0day-ci/archive/20250306/202503061815.wWrdDMmv-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250306/202503061815.wWrdDMmv-lkp@intel.com/reproduce)
+Changes since v1: https://lore.kernel.org/all/20250228102530.1229089-1-vdonnefort@google.com/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503061815.wWrdDMmv-lkp@intel.com/
+  - WARN_ON() on !PAGE_ALIGNED size for guest CMOs (Quentin)
+  - check_range_allowed_memory() before accessing the Vmemmap (Quentin)
 
-All errors (new ones prefixed by >>):
+Quentin Perret (2):
+  KVM: arm64: Convert pkvm_mappings to interval tree
+  KVM: arm64: Add a range to pkvm_mappings
 
-   ld: drivers/misc/amd-sbi/rmi-hwmon.o: in function `create_hwmon_sensor_device':
->> drivers/misc/amd-sbi/rmi-hwmon.c:118: undefined reference to `devm_hwmon_device_register_with_info'
+Vincent Donnefort (7):
+  KVM: arm64: Handle huge mappings for np-guest CMOs
+  KVM: arm64: Add a range to __pkvm_host_share_guest()
+  KVM: arm64: Add a range to __pkvm_host_unshare_guest()
+  KVM: arm64: Add a range to __pkvm_host_wrprotect_guest()
+  KVM: arm64: Add a range to __pkvm_host_test_clear_young_guest()
+  KVM: arm64: Stage-2 huge mappings for np-guests
+  KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
+
+ arch/arm64/include/asm/kvm_pgtable.h          |   7 +-
+ arch/arm64/include/asm/kvm_pkvm.h             |   2 +
+ arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |   8 +-
+ arch/arm64/kvm/hyp/include/nvhe/mm.h          |   4 +-
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c            |  16 +-
+ arch/arm64/kvm/hyp/nvhe/mem_protect.c         | 236 +++++++++++++-----
+ arch/arm64/kvm/hyp/nvhe/mm.c                  |  86 ++++++-
+ arch/arm64/kvm/hyp/nvhe/setup.c               |   2 +-
+ arch/arm64/kvm/hyp/pgtable.c                  |   6 -
+ arch/arm64/kvm/mmu.c                          |   5 +-
+ arch/arm64/kvm/pkvm.c                         | 129 +++++-----
+ 11 files changed, 342 insertions(+), 159 deletions(-)
 
 
-vim +118 drivers/misc/amd-sbi/rmi-hwmon.c
-
-   113	
-   114	int create_hwmon_sensor_device(struct device *dev, struct sbrmi_data *data)
-   115	{
-   116		struct device *hwmon_dev;
-   117	
- > 118		hwmon_dev = devm_hwmon_device_register_with_info(dev, "sbrmi", data,
-
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1.711.g2feabab25a-goog
+
