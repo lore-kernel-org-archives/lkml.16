@@ -1,68 +1,91 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27545212B38;
-	Thu,  6 Mar 2025 15:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD68C20E6F6;
+	Thu,  6 Mar 2025 15:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741274827; cv=none; b=mRcG9ay9qEorH3MNJZahojdmSwBo3NIQjmM4hCb9CeKKjSsr1HlQ7GkePU+r5mre3mDQ/AUo4o1/2GX4s9WTL99MNMBJf1w1iSrZQZU6m2ROke2/Gs3iQo/X/tZVK68P2VZL/J0JLToo+1zG4ZmdghftYkMMyUreByB0MwzYZMc=
+	t=1741274977; cv=none; b=IRHIIxnhHTSu4z+FUG1jnPL+DVjQ/+l8hBSPywd9glphIjDkRCWbkQ8G5a+S/7Mk8tJB2b+z6KSWsVnBfiByUe8t1BN4ZvywEhm7IIROE4YZ7K6krfQ1xn1r54Jki0kEDI+5b1GHr6pJL5bNYu9ArHZ94AU4TqorZ9xSrau2TEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741274827; c=relaxed/simple;
-	bh=0vAGNxEXvcMnWd9i3SSpwKgAZSLnib+IaDV8WQTKa/Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XiK45fpLDK/mXBjforlBU/MtfdYN97vNNn46j6yLC+ZrmCojbX0h2ZYfM94qAxoQE7rae8WvKi57iDx+EwVfGgKkxqZLhuqfHk+7c8G/7C383vAYXxkHhoPo6h+O4ebw3D8C62jrEX3VtDoYxDSkpq56N0VjyOIRWfBDIk6AGyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: xxiKjAxeSTmGXV/kVDUV8A==
-X-CSE-MsgGUID: k7Y5oJ7jT6Gpp2h/+8ehBQ==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 07 Mar 2025 00:27:04 +0900
-Received: from superbuilder.administration.lan (unknown [10.226.93.123])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9225D400091F;
-	Fri,  7 Mar 2025 00:27:01 +0900 (JST)
-From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-To: thierry.bultel@linatsea.fr
-Cc: linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org,
-	paul.barker.ct@bp.renesas.com,
-	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 13/13] arm64: defconfig: Enable Renesas RZ/T2H serial SCI
-Date: Thu,  6 Mar 2025 16:24:47 +0100
-Message-ID: <20250306152451.2356762-14-thierry.bultel.yh@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250306152451.2356762-1-thierry.bultel.yh@bp.renesas.com>
-References: <20250306152451.2356762-1-thierry.bultel.yh@bp.renesas.com>
+	s=arc-20240116; t=1741274977; c=relaxed/simple;
+	bh=fOOQowHJHtW+gHqQRw+cobzO7tlDBCXQk58mod4OwP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H8XHDjItxwBtyNG7qjOXWb9c/m+sKqC1WMdiuoxZio+iEGRqslPGQuiM5HidzP6EP+lLRbnrFegQKg65waUh8yJi+1/zDEAr/52f0ftO8Hwij3R5WDD/0Pcc9evkJAqhsdzkBxaC3fkHzrl5b3RRA3HAtYj9u0HS0J2Wq/8wHsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=fZezFYM7; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fZezFYM7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=+IzmAbgju3FDk0Ryltpo+ejh+hoS4Rf/7x9rJ3Yw0EU=; b=fZezFYM7Q7hsuSZ7fLNC1YsWMD
+	DMwJd4MIBQUfPVlx1hne+poqp2G3TNmrhsdZ10bbkAJkvrwOoaKZRJI6Frn1wp/XUr/I4vKrB3sgN
+	XPoJWax9YeByq6lz1rUci/uJ0sZ1jzmG+TQ3rdi1O35pli7N37Qp6ofYEqu27pc6pHGs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tqDA0-002pzB-Ms; Thu, 06 Mar 2025 16:29:20 +0100
+Date: Thu, 6 Mar 2025 16:29:20 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jie Luo <quic_luoj@quicinc.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lei Wei <quic_leiwei@quicinc.com>,
+	Suruchi Agarwal <quic_suruchia@quicinc.com>,
+	Pavithra R <quic_pavir@quicinc.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
+	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
+	john@phrozen.org
+Subject: Re: [PATCH net-next v3 04/14] net: ethernet: qualcomm: Initialize
+ PPE buffer management for IPQ9574
+Message-ID: <74f89e1e-c440-42cb-9d8e-be213a3d83a4@lunn.ch>
+References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
+ <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
+ <a79027ed-012c-4771-982c-b80b55ab0c8a@lunn.ch>
+ <c592c262-5928-476f-ac2a-615c44d67277@quicinc.com>
+ <33529292-00cd-4a0f-87e4-b8127ca722a4@lunn.ch>
+ <cffdd8e8-76bc-4424-8cdb-d48f5010686d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cffdd8e8-76bc-4424-8cdb-d48f5010686d@quicinc.com>
 
-Selects RZ/T2H (aka r9a09g077) SCI (serial) specific code.
+> Thanks for the suggestion. Just to clarify, we preferred
+> u32p_replace_bits() over FIELD_PREP() because the former does
+> a clear-and-set operation against a given mask, where as with
+> FIELD_PREP(), we need to clear the bits first before we use the
+> macro and then set it. Due to this, we preferred using
+> u32_replace_bits() since it made the macro definitions to modify
+> the registers simpler. Given this, would it be acceptable to
+> document u32p_replace_bits() better, as it is already being used
+> by other drivers as well?
 
-Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
----
-Changes v3->v4:
-   - Remove CONFIG_ARCH_R9A09G077=y
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+I suggest you submit a patch to those who maintain that file and see
+what they say.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index cb7da4415599..1403848d659e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -492,6 +492,7 @@ CONFIG_SERIAL_TEGRA_TCU=y
- CONFIG_SERIAL_IMX=y
- CONFIG_SERIAL_IMX_CONSOLE=y
- CONFIG_SERIAL_SH_SCI=y
-+CONFIG_SERIAL_RZ_SCI=y
- CONFIG_SERIAL_MSM=y
- CONFIG_SERIAL_MSM_CONSOLE=y
- CONFIG_SERIAL_QCOM_GENI=y
--- 
-2.43.0
+But maybe also look at how others are using u32p_replace_bits() and
+should it be wrapped up in a macro? FIELD_MOD()? These macros do a lot
+of build time checking that you are not overflowing the type. It would
+be good to have that to catch bugs at build time, rather than years
+later at runtime.
 
+      Andrew
