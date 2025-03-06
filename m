@@ -1,72 +1,80 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD881F3FF8;
-	Thu,  6 Mar 2025 08:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9691FC7D5;
+	Thu,  6 Mar 2025 08:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248754; cv=none; b=IT8c3N+qhhoFUHTp5qhLjHOOu9J+QWNPMpiY2op0WPUAWxJfWZb9ohmZauOwbWQcGegjfTH3iMyBILf91rkHnefGXLUlel3lWJCTtIp0KqRolC9ysPAXbefyrjNejF1Pn/nZtq8uo8YxMGlvSMRcTrK+G0/3v1kzuif5vgqFbAo=
+	t=1741248757; cv=none; b=q5nqxYzsP/BPFjWAaTEWE2EpfR3UzlJTFk8viT9ML1o4CRpZlJWi438s1ISfG8nKvjqbNJN4b7M4uOJdRm1sMYxwObNfaOc00RmVvrhSmde4a1Z4P5FU/ADBvWaYIpCygIy/UsD/UKNeE5jwauved1jgIi+bgtJxxDZF517pego=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248754; c=relaxed/simple;
-	bh=wl2BDLiRBF6hoKXY6axrcQy8DYsjUmOVVI7P/s2cE1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tREu7I4fH8/7ORIcwRjqyk1qhJWOOScvvC6MPAeVKjVmOu8vJngGS56dZY7jNrZcRGR4bedrBm1kRaAldx8iGRwoZRrTGl/kjN4ggCVefy4tXH3n+dTmsSKkfCItIHfDSdFIVs7TXEcnLVgJ3+zfukV5AAgmNTZIUuJn68YW+6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=N2Z4VPpn; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="N2Z4VPpn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=/9lsyVw/jLL6PgCYLWqutBR3oMdvMfXAvoJtnAK45Do=; b=N2Z4VPpn/+sXJ/OvgU9GgY+ZUj
-	uvaxUzXZQsf5WCP6hxVswH6hia1WFb3T3XUCs/Nq4XXrWTxcl1u1m1qZbqm7tMEfaDdIIqCMycmlb
-	CoX1syO69gChTmRaC/BKPeYHC24bvg23a6lRKPdY8sGTR7Yv73IX/SeZp7cc0g+lviZMcHja4fJjS
-	XixyyY0JXWOnsaUowgbk7BxnNV1aG8szWyhKNp2UgCOW/5fB+dfauAN8u8kTP9hgkJL16UbQ9HmOb
-	o26gjtwCi7md86nfKxqfvZkENi4C8+aNOJ7qG8Z/c6VgXtokFP2Jfxpek82AUr5+usvsNk+26BRDC
-	jRMcn6pw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tq6L7-004D90-1i;
-	Thu, 06 Mar 2025 16:12:22 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 06 Mar 2025 16:12:21 +0800
-Date: Thu, 6 Mar 2025 16:12:21 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>,
-	"thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/10] crypto: tegra: Reserve keyslots to allocate
- dynamically
-Message-ID: <Z8lY5Qd4g5eMDMnu@gondor.apana.org.au>
-References: <20250224091610.49683-1-akhilrajeev@nvidia.com>
- <20250224091610.49683-10-akhilrajeev@nvidia.com>
- <PH7PR12MB8178B92B6ED11B891AAFCE0BC0CB2@PH7PR12MB8178.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1741248757; c=relaxed/simple;
+	bh=r2SNjSzrTJri8d4TezjFMm+gimnEBaOKUfo4+QtRBeI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B1/5VRgOrtBatUDZ09pwrfd6RIjU7pF8to5sVRSGyhmhq99875pFWayJeeyPFbbIw41sc6TB878ZJXkVXKUFkbjMHyjyFtzAC4l3DegmesVGZrL/IEZifK29mW+xLtQ8cGUAKWIHNerFCRRyx160qhgRQJcQtdzz7gqSs4SGuPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7443C1A1021;
+	Thu,  6 Mar 2025 09:03:52 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B8D91A1018;
+	Thu,  6 Mar 2025 09:03:52 +0100 (CET)
+Received: from lsv03121.swis.in-blr01.nxp.com (lsv03121.swis.in-blr01.nxp.com [92.120.146.118])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 693181800257;
+	Thu,  6 Mar 2025 16:03:50 +0800 (+08)
+From: Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>
+To: miquel.raynal@bootlin.com,
+	conor.culhane@silvaco.com,
+	alexandre.belloni@bootlin.com,
+	linux-i3c@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	manjunatha.venkatesh@nxp.com,
+	rvmanjumce@gmail.com
+Subject: [PATCH v2] svc-i3c-master: Fix read from unreadable memory at svc_i3c_master_ibi_work()
+Date: Thu,  6 Mar 2025 13:33:45 +0530
+Message-ID: <20250306080345.243957-1-manjunatha.venkatesh@nxp.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR12MB8178B92B6ED11B891AAFCE0BC0CB2@PH7PR12MB8178.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On Wed, Mar 05, 2025 at 07:05:25AM +0000, Akhil R wrote:
->
-> Do we have any other concerns with the patches in this series.
-> If all those look good, I can push a new version with this change included.
+As part of I3C driver probing sequence for particular device instance,
+While adding to queue it is trying to access ibi variable of dev which is
+not yet initialized causing "Unable to handle kernel read from unreadable
+memory" resulting in kernel panic.
 
-I have no other concerns.  I can fold this change in if you want.
+Signed-off-by: Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>
+---
+Changes since v1:
+  - Patch tittle updated as per the review feedback
 
-Thanks,
+ drivers/i3c/master/svc-i3c-master.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index d6057d8c7dec..98c4d2e5cd8d 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -534,8 +534,11 @@ static void svc_i3c_master_ibi_work(struct work_struct *work)
+ 	switch (ibitype) {
+ 	case SVC_I3C_MSTATUS_IBITYPE_IBI:
+ 		if (dev) {
+-			i3c_master_queue_ibi(dev, master->ibi.tbq_slot);
+-			master->ibi.tbq_slot = NULL;
++			data = i3c_dev_get_master_data(dev);
++			if (master->ibi.slots[data->ibi]) {
++				i3c_master_queue_ibi(dev, master->ibi.tbq_slot);
++				master->ibi.tbq_slot = NULL;
++			}
+ 		}
+ 		svc_i3c_master_emit_stop(master);
+ 		break;
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.46.1
+
