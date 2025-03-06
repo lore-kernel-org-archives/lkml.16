@@ -1,203 +1,238 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2088.outbound.protection.outlook.com [40.107.22.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C48B20297F;
-	Thu,  6 Mar 2025 18:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741284459; cv=none; b=nMtwcQXWV1tCQJ7xQrD4B/zoJV1bg4WpWfrTO6L5J/80St+jnca/J+ylhJQtJU31a+7RlFY/gKc0fYDsG8xHSpcqgWGNCivYikNBMS7Ym65/ZeElGFiGZiGQSQt+y7b4l6VjrJM7mKy0nxnUds97KpPcokmpebOlbZBm1mffME0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741284459; c=relaxed/simple;
-	bh=WxCDxKvwx05OVHtKOWOTU0JzbKbZ3P3yo+m77c/gUhU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uJzxjar4itZr/+VeOAZh2SMaEHmDVjjF+QImqYSiDiEwG4gjkfkkP9kg4VoVV3XiR0B08xBdEUw+KnJ9OJx5Kylig+CPtQThEQqu5oDOwSSoCe2zx4sudaEKSzJGYw43448dqyXYKn6tEob83f8uIhAPpTbad+vk360BYzCRFfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=lPLkfXB9; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96B626FD99;
+	Thu,  6 Mar 2025 18:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741284466; cv=fail; b=FBLlEofkiGkwSbjn1AsLz3w0rxAE/zkXbImCGxT5E84BwXNVcMt9AYi2fg2/PyosILTrUcgLUyiwo7zE1v7IoiW3iZU+kPGR9GFewq/uTz9xtMsN7k9uYx0mpCO0WN4cZ+95JfFaNEY0P4ClVfTFdmw/yN5g6iOyMI/W82uUs9Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741284466; c=relaxed/simple;
+	bh=1/jR9CYISle8eUo4WHf9ycLSTcDJYf+Ly+Gn3OEJzZQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bZw+Q3sTUhRMzJHvfoQy9v6LwB5QxLx6KdbAU1bkYFVluaAfLGS647yCfQ0+DZY8vxAVS3XowaCjvWhyA3z0wBFaao+Vjcna4HKMpN5rcdd7OZbAJDtPu8Bm6vRT6aQz0fr6cHbh0hjzih0a1465q9b0hPONxbP57uAI7gyRKmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=RvcFUeYn; arc=fail smtp.client-ip=40.107.22.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="lPLkfXB9"
-Received: from [192.168.42.116] (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 3F85E2FC0048;
-	Thu,  6 Mar 2025 19:07:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1741284453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+YruPu9v9sIT76G5kplZf/CfyxeIhZe1CYjCLArFoMg=;
-	b=lPLkfXB9aF+kbYknYQb/JoynUTjRXRAQbj68R5BoBgoncGI5T/KJUiXh9VRmNwB1WizwAN
-	b2Ksfq9UAvvuDrAMlvbbEgsmpAh3BJFG09IyZK9um5m2FcjaVrzEKKc1CBRsxCB+wFET87
-	uQO03ER+nXf9IG1TnN3WA1xnW/muRhY=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <0a468a3f-41cb-4fee-b583-6b9debabb01c@tuxedocomputers.com>
-Date: Thu, 6 Mar 2025 19:07:33 +0100
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="RvcFUeYn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CptSelw/AsK4HjSopZrg0cnlwTVG9YpNIMdlANo8e8Boe49PO/OpZogG+vM9ncSGrQzaSHM46bNmwSOOHtIUtyNmMHh0QDgJqLPDGFrabKYCYaHBKjTE8ACGnUAdhdXdxn4RGhGjj1KJCzsEfslCwQW/iSo/zYHuCegirPJ4tBb1+0QKQfc9a1/e6T+jCQNxMRenZ7pnkBATd0LVZl7PuFegObWP8UwszKGVgDTxOwSZPZgZmtEvKPy5H4qIJuupi7N3t2T5pQDUEorjERvYVOrsJgXFeXa7vQ57syF6plgPeUtY4J+wrJN4lsLJFpEQNbbLiQhloFEN24+cxcnynQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XirvluISeAskvpLn4Zp9T7aOtGLrRQbthOjlybDRx7k=;
+ b=IAGap9jZCD6IgyONIGvH0sGtjf3o4rxzVvv7BzSUrn0Z0+oY/tdZTRq5Z9bRWx00qWHa8lCEuz8cOU+Ng/ddXrxM/15ojCV8jZKI8qfQYShkr1+JEVxmTSztGYtdYUGWhUZAbJYoIdnQPT67yNzCeAatG4+ulCWtITspFt4FMQ/Cx1htC44beO2bsNzijsjuJGulFvtaoRPfWfyaH/sdClsPnujBTJMLbnUzRjXr5HvpKy6XLGcV8RgCSxpISQvENmMgOMVjxq7d5Y02bk/pWr6AhupAEFz+Ph1aLOdbccJLvdvtxcGATJrr8wN/129clVYATrSLQL5JpFfiqqDtsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XirvluISeAskvpLn4Zp9T7aOtGLrRQbthOjlybDRx7k=;
+ b=RvcFUeYnWQILRIdWVIUuaH7yeOuvsZ+7mnlYmFZLa0XcOuDPpxnQp/PBDA4UfLmbSOlQVgMb0R2Zz5XyRcZQjNevKM/6QsZevlm5PH9V2MF/JUGaF+s0DPwldydYcMmToaMfvKgFzzQuGLkpLqB23MdaHUpyGH47js+an3U8o7oDV1je6mEGzEmw9IssFEYYZ4pEYRB7zwSAX5+BOqWgYC8NuESxvkyttXIY9zchvp1Jd+BjeNLPpph95uVdnN1l5+V3hOwo28iOxYq74AL42e2E8b8FpOWdlvgDRf+zeUbprYdnQ503SpwImU8rRRZEatuzDqdu84I4P3cs/txuPg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
+ by PA1PR04MB10603.eurprd04.prod.outlook.com (2603:10a6:102:484::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
+ 2025 18:07:41 +0000
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 18:07:41 +0000
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amitkumar.karwar@nxp.com,
+	neeraj.sanjaykale@nxp.com
+Subject: [PATCH v2 1/3] Bluetooth: btnxpuart: Add correct bootloader error codes
+Date: Thu,  6 Mar 2025 23:39:29 +0530
+Message-Id: <20250306180931.57705-1-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0006.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::22) To AS4PR04MB9692.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
- FN-keys
-To: Hans de Goede <hdegoede@redhat.com>, mario.limonciello@amd.com,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250303190442.551961-1-wse@tuxedocomputers.com>
- <20250303190442.551961-2-wse@tuxedocomputers.com>
- <1bee0a62-058b-482a-8eec-d45b8aca1614@redhat.com>
- <d74c348d-474a-4871-8b94-d836e8d054e8@tuxedocomputers.com>
- <1fbdfe7f-0f25-4de0-805c-b712663f7681@redhat.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <1fbdfe7f-0f25-4de0-805c-b712663f7681@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|PA1PR04MB10603:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85ebf39a-b517-46ce-c77e-08dd5cd9c938
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3ZNERO+zxGersm5E6B3HfltvR4DmzwxFW221KvkZHflLScH8FGTxK1T7cXpO?=
+ =?us-ascii?Q?VQ1WYeASA5RO3LZZCdGf4gMSZdS55FZYMXfHRvwWMRdXEwfjdcp2JLOFeOr4?=
+ =?us-ascii?Q?A6rAYOltYvjH5UxJ7LSe5iysBQdMSosA50m0NrLVwZQRpnY6Qdenp8SeMpk0?=
+ =?us-ascii?Q?B3tCzBDt5ZRRwU0VZ5fMjQxnL9ACOJzaPaYdLZYKiYVlLWdR34ElDWBOQu3B?=
+ =?us-ascii?Q?umqMgpA1fpFcbt7SgvJaJiLh51zqltSwBMd79aSQWJJaqXLHN3LAq6kU+3JU?=
+ =?us-ascii?Q?/zRBjwgMYAPcZRVcx7zFr46utSc7KKL7yLISFeuoVmzcQ7h2SsOvLJd19W51?=
+ =?us-ascii?Q?lLpdNVagAU6CmnH4z6eWh1OPKU9MPxrulm4gRguIiGjjOl7zqMPJxROjHe+3?=
+ =?us-ascii?Q?37USJGGyJ9SjpWDvB2dtdI8TRwg0loBjkvF8cyxpMNbkFpzvra5sBvufDtXo?=
+ =?us-ascii?Q?RWhIXVHt7SxwWgbnJMO4RvbmHunJbwuSsyr+tjsvz8YTGWNOH2zY3hkh/w+5?=
+ =?us-ascii?Q?/LHF/Nldr3AsPtQ7pHJEjEolz6pvdOXI/3PdiVSvf1V5328y/QCD36LAo3CR?=
+ =?us-ascii?Q?f/Qk/l1ISJfituqqOhZXi49jb/tPi0zAkSx7vjzquCw8TZ90ITM2E+mV8lJ4?=
+ =?us-ascii?Q?sSC1d6oDb4U+wIYodsKTfYGEa9+YjV1WYFQybdU9bndY5Tl0SrfBQseFFuLt?=
+ =?us-ascii?Q?m5OO+uWB8WtZF0sRmMTBDT89gYiv+cMPyNV34Dnfa/RpjRFJak7Vzavm9nXe?=
+ =?us-ascii?Q?pm8kSegKH9J7UargUEX0eqaXcpIn00jCp69qyeF0WnR/3EPGNPZ5+QLMATwd?=
+ =?us-ascii?Q?9kVitBDBv/RiMmwtqIEF32MCkg7E/IF10OhJj310MuYzKhSv4qz4aFP2wop8?=
+ =?us-ascii?Q?1SI9D8n4QnY5djq7+Np+wYtJOo8v1J0NV+HIXvsffUFNkcfljWcAw0LvrOB8?=
+ =?us-ascii?Q?QdeODoqxPqzAIGPopPrpbvTVMw+NTHhOLUboE5abqhGKulzVRrEiU0B1jFUQ?=
+ =?us-ascii?Q?Je4e4dSpp+a5MYpUA0uU33nloOA2mqztQ0jeh6NEUQsRo4H5D3tVJyGqZU1f?=
+ =?us-ascii?Q?HWdaPQYOR60DvAZXLKmDNVpa3cdrPAeLFzWlKhFP5Qd6NtTzatCOz/iw+fky?=
+ =?us-ascii?Q?tknf0BkxtazyyIuo4a+dliYctXAKSAYLhSSNh/xxof9B1G2/HAdGwKB59Zrz?=
+ =?us-ascii?Q?3iI7slbPBGInMSwItu6jt9fYiFSWD7nE2TSI3/TFDcxfvly6FkOdd3d8mgva?=
+ =?us-ascii?Q?T8k5bre1jp5vXmBue2MmtDec2+VbtlcgfQR3yQ3db0hQLmuohAIfXEcqkmMt?=
+ =?us-ascii?Q?klvljQohK2JRMEJO+teQFiMQJ2PuIGTu1XFArtHvW2e+xnHNhRl7oAifcj47?=
+ =?us-ascii?Q?9wZnix4W3yapQfO9sfwZcjN3h3BeAhgft/tfoAIoN2IJ5bxW3mk1ntDC+0dr?=
+ =?us-ascii?Q?HpEB7h8yvpVTwIAm+7DnmKhVbYDr2Mbp?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?9cpRjVoyNpDVg2jPVWN35skebW34q2F2rPO6frR0/Lsy0v2vL9KOSeZPklBV?=
+ =?us-ascii?Q?1+UkjdTd84UIYNPWwtsUS52j1N+/FjWtNYDc6cTPQq3q+2PkqFBAFgI2dQFp?=
+ =?us-ascii?Q?8fal4B8ZRoYdq+pS+PEkWKbPzGGWAZfDHq9YaRNl3qP+p2Wtt7XEK1z8Qc/n?=
+ =?us-ascii?Q?Ff3hbF7yM0tFXCPRtpJXZPfEWZj/kCXaCNOw95MXkvfjvpRO9oT33NLCCU82?=
+ =?us-ascii?Q?3EVlVqxIBnDeyOD/EMFIGfRpMHuVcrruuD/fwUOLOL0tFDJvK+RsufXX4wP6?=
+ =?us-ascii?Q?5jvXB50liV9K4C1K4kqqsw1glr2dM0f2MIXWt48TE12RbC+uAy0mkUR7pmxR?=
+ =?us-ascii?Q?1ihGv3DWVrZD5uTwBa8mmFNUZgLcFyXW3wFc73smgxDzV7VoyH0IKlVnEIHL?=
+ =?us-ascii?Q?wAWojxPhYZYzy3bBgPhMeWzn/qVseJ8xG/O197GxzXszhzEZm9CxkQ3uxP75?=
+ =?us-ascii?Q?FARwyNcBZY15fahd90yftwzDQsTicaCWgssiMjIDYHOupP/0QmtHTBYZDTWD?=
+ =?us-ascii?Q?2vXBYtmiWXNUrWeIjpT+2mnCxGNvLh0J4YsnBplNF1FVjM+aDbR3fkXq2Ft9?=
+ =?us-ascii?Q?y5MsgLfcsdvrlZOwQ4y52JXZTECjjiHHHtF+iKMBo+LcKCJYP/Hjn5hsAU2f?=
+ =?us-ascii?Q?YV2B0bTcK9AYT+yQkMn0Rn1bnyhx/h7RswJ7qaTft5KfwGo+aMLU4wUflmbS?=
+ =?us-ascii?Q?tHW6mNR7azBSAsflhnmC51QZMyad4dw3kRC+vgharjuV3ZMY0FPwDwwDYRpe?=
+ =?us-ascii?Q?4TT6FJTSwK8ay1Wf8WKXMs70+Rsad26tcwe4XTagjuBzCxSPleF8BHixA0k2?=
+ =?us-ascii?Q?w+WG7E2R5OA3a8XdmH7mW9lshcPf2tF/PdPNOzUCeKGIXrQKVDkBmmG1ci5s?=
+ =?us-ascii?Q?Knh8KRFbv3U0gttjVwAzHCleM8CEUJwsLtnkCbjKeDaLtZx7XOaFCIjX4Zs2?=
+ =?us-ascii?Q?SMiRhkqTdE+w8ZOFfpgRICyTS76YRi2fTmD1YDlECnDOPeChHp9uhqYJYH3C?=
+ =?us-ascii?Q?T7aMM7UcjYoJpDJdM2i6O2rnWsth6b9X+Qoc6Q54Fe4vpg5bExx/BK71W9of?=
+ =?us-ascii?Q?XuIXdDnCfbESjmeJ0GnmoveFXLdXRaL4QKabLqDzYeqzIWWBgZcnyu2qFEnJ?=
+ =?us-ascii?Q?HxUm3OZt03tPKuYFwCn44f4UyCGUz49zuocQGx/z2PgdamwBsFeqGf1ibSA5?=
+ =?us-ascii?Q?oSNlmKcsmxJfV6QZKEQCi0D6TJ2WL6dRhFy1dI67imETtF3h34R3/C+ry3mo?=
+ =?us-ascii?Q?LGYChRv7kyyI6j/Sifos+NzJnbAni+tFJukk3a6vrtuLcPGrm0TH4C+K/S2C?=
+ =?us-ascii?Q?tSk2yyMQPTGKHEsYCDpOULHmvAb3KhbVX+PHE8MTjmzH2Zx/Czgy8KPviluH?=
+ =?us-ascii?Q?Q48Bmfpg2HTYOXbKYdr+kB1D++Cqg8A8qUlvVoUpkGTGywec3VQ+hoC8u6nY?=
+ =?us-ascii?Q?OYHQomEBgjbE9QpDSoNALLrA1rRnBBuDhfrAVcJnzozWvYHxF9Q8CfwsMagm?=
+ =?us-ascii?Q?JwBWo4qzmwn0xRXC3u+lwXFS6H8MyVsz6lv0GKEyxgZqnVwfgaBc+U9squHD?=
+ =?us-ascii?Q?88BezrYMM2z9tUrr82BCIjFYiNyxr06WSl3W1gQsPyA3G1W3E165K9sRp2tN?=
+ =?us-ascii?Q?Ag=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85ebf39a-b517-46ce-c77e-08dd5cd9c938
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 18:07:41.2018
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oaodfj/uXVhh4cH95Ji6NB7Lh2QybMgPmAwVfym59Z6m9uz8E2o38yVbAeEAPUYswhFPPmpLvPuomPBfkhs9S4DnQaUL6BlekCb90N1UjG8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10603
 
-Hi Hans,
+This corrects the bootloader error codes for NXP chipsets.
+Since we have a common handling for all error codes, there is no backward
+compatibility issue.
+Added error handling for CRC error code in V3 bootloader signature.
 
-Am 05.03.25 um 15:18 schrieb Hans de Goede:
-> Hi Werner,
->
-> On 5-Mar-25 1:07 PM, Werner Sembach wrote:
->> Am 05.03.25 um 12:25 schrieb Hans de Goede:
->>> Hi Werner,
->>>
->>> On 3-Mar-25 8:04 PM, Werner Sembach wrote:
->>>> This small driver does 2 things:
->>>>
->>>> It remaps the touchpad toggle key from Control + Super + Hangaku/Zenkaku to
->>>> F21 to conform with established userspace defaults. Note that the
->>>> Hangaku/Zenkaku scancode used here is usually unused, with real
->>>> Hangaku/Zenkaku keys using the tilde scancode.
->>> So this control + super + scancode 0x76 sending is also seen on
->>> quite a few other laptops and I think we need a generic fix for this.
->>>
->>> I recently noticed that KDE's keyboard-shortcut settings actually has
->>> a  control + super + Hangaku/Zenkaku -> touchpad-toggle key binding
->>> in its default bindings (IIRC). But that cannot work because xkb actually
->>> has no mapping for evdev code 85 / KEY_ZENKAKUHANKAKU if you look in:
->>>
->>> /usr/share/X11/xkb/keycodes/evdev and then look for 93 (*) you will
->>> find no mapping. I think this KDE default binding may be from a long
->>> time ago when this did work. Or maybe KDE uses the FOO part of KEY_FOO
->>> as symbolic when there is no xkb mapping ?
->> It does not work on X11, but it does work on Wayland (there xev also sees the Zenkaku/Hankaku keypress). Don't ask me why.
-> Interesting, so in xev under Wayland you see something like this
-> on release:
->
->      state 0x0, keycode 38 (keysym 0x61, a), same_screen YES,
->
-> With there actually being a keysym of "Zenkaku_Hankaku" there ?
->
-> Because that is not working on Wayland on my laptop with the same
-> issue (after disabling the hwdb mapping) and I don't understand
-> how that could work at all given that /usr/share/X11/xkb/keycodes/evdev
-> has no mapping for EV keycode 85 (93 in that file) ?
->
->> Also: Other DEs don't have this binding.
-> Yes that is an issue, but see below.
->
->>> *) 85 + 8 all codes there are shifted up 8 compared to the KEY_FOO
->>> defines because codes 0-7 are reserved for modifier.
->>>
->>> I hit the same issue years ago on "T-boa Tbook air" laptop and
->>> their I fixed this by mapping Hangaku/Zenkaku -> f21 in
->>> /lib/udev/hwdb.d/60-keyboard.hwdb :
->>>
->>> ###########################################################
->>> # T-bao
->>> ###########################################################
->>>
->>> evdev:atkbd:dmi:bvn*:bvr*:bd*:svnT-bao:pnTbookair:*
->>>    KEYBOARD_KEY_76=f21                                    # Touchpad toggle
->>>
->>> + teaching GNOME to also accept Ctrl + Super + XF86TouchpadToggle
->>> as touchpad-toggle:
->>>
->>> https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in?ref_type=heads#L577
->> Yeah KDE would need a similar fix and other DEs probably too. I hoped for a generic fix that does not need adjustments in so many projects.
->>
->> My first try was to do it on the XKB level but on Wayland the RedirectKey action is not implemented https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config/-/merge_requests/794#note_2803713 (and probably wont be even in the future https://github.com/xkbcommon/libxkbcommon/issues/18#issuecomment-72728366) so I can't "unpress" control and super.
->>
->> If it is a more general issue, why not fix it on a more general level in the kernel? Maybe a generic filter applyable via a command line quirk and/or a quirk list?
-> The problem is that filtering keys with modifiers like you are doing
-> here just does not work.
->
-> Your filter is seriously messing with the timing of the keypresses
-> which can be a real issue when not actually using the toggle touchpad
-> hotkey.
->
-> Lets say the user is playing a game and has mapped super to
-> one of the fire buttons and is using an in game weapon with
-> some sort of auto-repeat firing.
->
-> And your seqpos variable likely is 0 when super gets pressed,
-> now the keyboard sends 0xe0, 0x5b which your filter filters
-> out, and the user keeps super pressed because they expect
-> the weapon to start firing on auto-repeat. But the super
-> press is never send until super is released or another key
-> is pressed so things don't work.
->
-> Likewise if the DE, an app or accessibility settings want to
-> differentiate between a short and a long super press all
-> presses now become super (pun not intended) short because
-> you insert the press directly in front of the release, losing
-> any timing information about how long the key was pressed.
->
-> This is why using an i8042 filter for filtering key-combinations
-> (and the EC emulates a key-combination here) can never work reliably.
+Fixes: 27489364299a ("Bluetooth: btnxpuart: Add handling for boot-signature timeout errors")
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+---
+ drivers/bluetooth/btnxpuart.c | 57 +++++++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 22 deletions(-)
 
-I just had an idea how this filter could work without running into these issues:
+diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+index 021983686cb3..b8a00bf062e2 100644
+--- a/drivers/bluetooth/btnxpuart.c
++++ b/drivers/bluetooth/btnxpuart.c
+@@ -204,10 +204,11 @@ struct btnxpuart_dev {
+ #define NXP_NAK_V3		0x7b
+ #define NXP_CRC_ERROR_V3	0x7c
+ 
+-/* Bootloader signature error codes */
+-#define NXP_ACK_RX_TIMEOUT	0x0002	/* ACK not received from host */
+-#define NXP_HDR_RX_TIMEOUT	0x0003	/* FW Header chunk not received */
+-#define NXP_DATA_RX_TIMEOUT	0x0004	/* FW Data chunk not received */
++/* Bootloader signature error codes: Refer AN12820 from nxp.com */
++#define NXP_CRC_RX_ERROR	BIT(0)	/* CRC error in previous packet */
++#define NXP_ACK_RX_TIMEOUT	BIT(2)	/* ACK not received from host */
++#define NXP_HDR_RX_TIMEOUT	BIT(3)	/* FW Header chunk not received */
++#define NXP_DATA_RX_TIMEOUT	BIT(4)	/* FW Data chunk not received */
+ 
+ #define HDR_LEN			16
+ 
+@@ -310,6 +311,16 @@ union nxp_v3_rx_timeout_nak_u {
+ 	u8 buf[6];
+ };
+ 
++struct nxp_v3_crc_nak {
++	u8 nak;
++	u8 crc;
++} __packed;
++
++union nxp_v3_crc_nak_u {
++	struct nxp_v3_crc_nak pkt;
++	u8 buf[2];
++};
++
+ static u8 crc8_table[CRC8_TABLE_SIZE];
+ 
+ /* Default configurations */
+@@ -1059,25 +1070,27 @@ static void nxp_handle_fw_download_error(struct hci_dev *hdev, struct v3_data_re
+ 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
+ 	__u32 offset = __le32_to_cpu(req->offset);
+ 	__u16 err = __le16_to_cpu(req->error);
+-	union nxp_v3_rx_timeout_nak_u nak_tx_buf;
+-
+-	switch (err) {
+-	case NXP_ACK_RX_TIMEOUT:
+-	case NXP_HDR_RX_TIMEOUT:
+-	case NXP_DATA_RX_TIMEOUT:
+-		nak_tx_buf.pkt.nak = NXP_NAK_V3;
+-		nak_tx_buf.pkt.offset = __cpu_to_le32(offset);
+-		nak_tx_buf.pkt.crc = crc8(crc8_table, nak_tx_buf.buf,
+-				      sizeof(nak_tx_buf) - 1, 0xff);
+-		serdev_device_write_buf(nxpdev->serdev, nak_tx_buf.buf,
+-					sizeof(nak_tx_buf));
+-		break;
+-	default:
+-		bt_dev_dbg(hdev, "Unknown bootloader error code: %d", err);
+-		break;
+-
++	union nxp_v3_rx_timeout_nak_u timeout_nak_buf;
++	union nxp_v3_crc_nak_u crc_nak_buf;
++
++	if (err & NXP_CRC_RX_ERROR) {
++		crc_nak_buf.pkt.nak = NXP_CRC_ERROR_V3;
++		crc_nak_buf.pkt.crc = crc8(crc8_table, crc_nak_buf.buf,
++					   sizeof(crc_nak_buf) - 1, 0xff);
++		serdev_device_write_buf(nxpdev->serdev, crc_nak_buf.buf,
++					sizeof(crc_nak_buf));
++	} else if (err & NXP_ACK_RX_TIMEOUT ||
++		   err & NXP_HDR_RX_TIMEOUT ||
++		   err & NXP_DATA_RX_TIMEOUT) {
++		timeout_nak_buf.pkt.nak = NXP_NAK_V3;
++		timeout_nak_buf.pkt.offset = __cpu_to_le32(offset);
++		timeout_nak_buf.pkt.crc = crc8(crc8_table, timeout_nak_buf.buf,
++					       sizeof(timeout_nak_buf) - 1, 0xff);
++		serdev_device_write_buf(nxpdev->serdev, timeout_nak_buf.buf,
++					sizeof(timeout_nak_buf));
++	} else {
++		bt_dev_err(hdev, "Unknown bootloader error code: %d", err);
+ 	}
+-
+ }
+ 
+ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
+-- 
+2.25.1
 
-Still listen to the whole key sequence and just suppress the 0x76 and 0xf6. Then 
-after the sequence has finished issue a F21 keypress.
-
-Would this fly?
-
-Best regards,
-
-Werner
-
->
-> OTOH desktop environments already allow having Ctrl+Super+something
-> keybindings for DE actions. So we can re-use the tried and trusted
-> modifier handling in the DE to deal with combi part leaving just
-> the issue of mapping PS/2 scancode 0x76 aka evdev code
-> 85 / KEY_ZENKAKUHANKAKU to something usable by the DE.
->
-> ATM both GNOME and KDE already have support for
-> Ctrl+Super+something for touchpad-toggle except that KDE expects
-> a "Zenkaku_Hankaku" keysym where as GNOME expects "XF86TouchpadToggle"
-> arguably the GNOME solution is slightly better because Japanese
-> keyboard layouts already use/send the "Zenkaku_Hankaku" keysym
-> unrelated to touchpad-toggle use. And I don't know what happens
-> when pressing ctrl+super+Zenkaku_Hankaku while using a Japanese
-> layout.
->
-> I think maybe we just need to patch atkbd.c at the kernel to
-> map scancode 0x76 -> KEY_TOUCHPAD_TOGGLE since normal PS/2
-> keyboards never generate 0x76, this would lose the mapping to
-> KEY_ZENKAKUHANKAKU but since /usr/share/X11/xkb/keycodes/evdev
-> does not even map KEY_ZENKAKUHANKAKU I don't think loosing that
-> mapping will do a big deal.
->
-> So I think that going with the evdev mapping + teaching KDE
-> that Ctrl+Super+XF86TouchpadToggle is just XF86TouchpadToggle
-> is the best way forward to solve this once and for all.
->
->>>> It suppresses the reserved scancode produced by pressing the FN-key on its
->>>> own, which fixes a warning spamming the dmesg log otherwise.
->>> Can you not also suppress this by mapping the key to "unknown" in hwdb?
->> Maybe, I didn't try. Was convenient to just do it here since I already had the filter. Will look into it once it is decided what to do with the touchpad toggle issue.
-> Please give using hwdb for this a try.
->
-> Regards,
->
-> Hans
->
->
