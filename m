@@ -1,68 +1,112 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6F81DF759;
-	Thu,  6 Mar 2025 09:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919171EDA10;
+	Thu,  6 Mar 2025 09:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741251747; cv=none; b=JO7Hl1bkT+VGaIz1hCbnRfHvj0cxzD7moAmwyjU4oMaPHZ7QUvwDahwxcLqgD0Rop3igE9engTPPzD8el3ilDeC12H4OhsmlvEXaZCBA8g7o7F7Nk7tHmq6QLCLyoeI4pnawwsHr3x+0mu9P7xIBYFqjVeKyj9HC2rHZ8/gSIDo=
+	t=1741251760; cv=none; b=QEN6MsD0vt/SBM6U0hmXqtKhAT0BCN+7h0e2BtylbAXZRc9VVn6mhahOeRuK+MlsAXli+lMsxjCxU4jCCWK6BuFVJ4FObaL1S4kZlxlJAsF3b4+zQovxtCLeCc50LZXLOQonyv3nBY/MI0MvPyvV8CIXfsIVHg4Rk3VQaiLYJdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741251747; c=relaxed/simple;
-	bh=D9/WEW6tyPw9DbuSZopa9attlAEU5bOtQtJOBNnThlg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fN02le5vkwQoB4H5sOq7BKybK4Z/aBRGb91v9bL4qIuWESP6HjyW2zU/HH65bdV2NX8ToZLVzH0kmCsAAGX39WubR+jfhSMLxcATxcZl8MjaJqaO60O/eeFH4jnhi80QkEwLiQgnvIBXcrblbsIxiPiBHrT9/SyHy8JVIvkTtiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [119.122.215.89])
-	by smtp.qiye.163.com (Hmail) with ESMTP id d2603c59;
-	Thu, 6 Mar 2025 17:02:11 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: jonas@kwiboo.se
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	heiko@sntech.de,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: Re: [PATCH 0/3] rockchip: Add support for onboard eMMC on Radxa E20C
-Date: Thu,  6 Mar 2025 17:00:01 +0800
-Message-Id: <20250306090001.113127-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250305214108.1327208-1-jonas@kwiboo.se>
-References: <20250305214108.1327208-1-jonas@kwiboo.se>
+	s=arc-20240116; t=1741251760; c=relaxed/simple;
+	bh=EmzY32j5rrDzC9R6X90mqEI/cN8KHLb58ft9sgUPtjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ofUhNJX/mQ+8zqs0Gk/TdLKCvvwW7HJd1ONpqG8VXR77bRMIkNje0isVZfjQ3BqA1uyG4hdMnpr/CFsnJPiwEZWtph8Nj8XM5+qafoOOxcGF6lQrXpY0LOqsUmulRtnwSWfq8zRAz0Deq151Ot2TBDOzSkuCenAoRo4OaovwBJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2feb91a25bdso666538a91.1;
+        Thu, 06 Mar 2025 01:02:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741251758; x=1741856558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=61ZqbVDQw/xvqBk0WBOL0pupyCSc6ErVs2yZMS/tx8g=;
+        b=AQ5FqP6VfPPNcJYnrmq4XpuuJUSq07vOciGMMquxTeXLO4mgsJCK6ir5+QB+BeTBjj
+         hVhTmrFddAm8saH2cuDrlUai4JiXBHZZypqfQ99b9LwGldbkb+lZkTBv7GLWeWpDlvF4
+         F4QeWOGJanJ2KAHJkqGS2fIJT7gRy+wblfYRbxlHb7sbqmV3mUPEXHe//+VhQ3Ccl5ZK
+         kwNhDqfO+tE+cG1q6/MW4apXONeUkF7Iar8VL6vUmW+HdF65KhLNMOCEeIV5QPv8GtFV
+         mHdA/3iVbSNN07pb/GwYidMSiCDSH3o5GQ4QjfELqJ6mOyYwxmhan3FD+0KHJLCCd0b2
+         XHKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfArC9EKanpeTNI6iMvsdyO4LuiH6gwetQZWZU2Czp08t0Ckuq8WN6qUKaV6vas1+kvvvhkMtQ1IHn@vger.kernel.org, AJvYcCWmRtKSSUCc2x5bHtX8dwGmW4hmRCPPagr3OhcqQuZP2NmvsIFTeYt/9d0q3vxhn+DLQ16UhMizsscvrsJHTzVkLQ==@vger.kernel.org, AJvYcCXlXvaerZWUNODoU3oqOvGajzWhBoa1Oh4vEZ4gu6VmXMm8zC+xyUHQ1n/9O1FemHuvo2oku2A/QVgfipYXJJEr2dk=@vger.kernel.org, AJvYcCXn1k4xkNsbR9W0DaQoUV84Af9S8nryi2Chh9WlY5oOR+XMUcmL261J+cvNrf+hvCj+x286oDqqH69a0zg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaaAvOdf35JnE70AkrYp2A0xtagsau6wH+NsRqPNFlibtRb8JM
+	M5sgLtVophYz8U6dothx+KY2X8lSHJIkkQD2GOy7A+emn0rCj51B
+X-Gm-Gg: ASbGncvZCkaZAC+czwhUqNv0MYc3f2KlDuTbGau0R9FwrMLLof3oN6peGk/aSCoeVKY
+	TkfOoDq9Hdn+IvIGSxIPsWp3gLbSS5lNJzb5OCZRB5us3XnK4OoZYwrMmIZpjNPM8woYqN1prjG
+	PRLHOs+XuCV4gaohM5cuM4FOF3KrHWtlwqo6Ty37DGaPA5CfswVIyjNGHacgueAFxgFGEW4qmy+
+	UDs3MhlSGEvJWeJJC7YK12ZC5eBTaYKs19ANCH6juO5OP5nhw4oYqzBzhzSb9y0OCkGwg6p3Tnm
+	xt1mQTZNTm9kxeofNYJPLlI5+qHvTnmZqGGhpSFzqr5ey2wMGtMXo5NkeNrkEzpTRALL/IWqwbH
+	GNf0=
+X-Google-Smtp-Source: AGHT+IEVObRPs9r9DCgAFKVxTkcg7YE/ev/oTYXjSeBAHqcHwBFpzXUfu6D3RSOSTJvuqgree5Nh5A==
+X-Received: by 2002:a17:90b:4c07:b0:2ff:6ac2:c5a6 with SMTP id 98e67ed59e1d1-2ff6ac2c770mr1605779a91.31.1741251757794;
+        Thu, 06 Mar 2025 01:02:37 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2ff4e75ed7csm2641751a91.3.2025.03.06.01.02.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 01:02:37 -0800 (PST)
+Date: Thu, 6 Mar 2025 18:02:34 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, Fan Ni <nifan.cxl@gmail.com>,
+	Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
+Message-ID: <20250306090234.GA390800@rocinante>
+References: <20250304171154.njoygsvfd567pb66@thinkpad>
+ <20250305173826.GA303920@bhelgaas>
+ <20250305182833.cgrwbrcwzjscxmku@thinkpad>
+ <20250305190955.GK847772@rocinante>
+ <CAMuHMdVRSjkss3gPnocXpfPQ=mEo4AevpaU=fdGvm=kb3RTmcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHR5PVkJOQktIQ0gdTE1MGVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKTlVDQllXWRYaDxIVHRRZQVlPS0hVSktISk5MTlVKS0tVSk
-	JLS1kG
-X-HM-Tid: 0a956ab0e16203a2kunmd2603c59
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MDo6Dww5SjJKIjwxDjgIPkIR
-	AS8wFENVSlVKTE9KSU5KTEhJQkxOVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	QlVKSUlVSUpOVUNCWVdZCAFZQUhISTcG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVRSjkss3gPnocXpfPQ=mEo4AevpaU=fdGvm=kb3RTmcQ@mail.gmail.com>
 
-Hi,
+Hello,
 
-> Driver changes to use different delay and tap num is needed to be able
-> to support HS400 modes, something for a future series. With this HS200
-> mode should work:
+[...]
+> Another issue is that the caller does not handle failures correctly,
+> given (A) the irqdomain WARNING I got, and (B) the half-registered
+> PCI bus, oopsing on "lspci"...
 
-I have tried HS200 mode on other rk3528 boards and it works fine,
-so can we enable HS200 mode for Radxa E20C first?
+This is something we will look into.  A more robust DesignWare core is
+something we would definitely want to have.
 
-Thanks,
-Chukun
+Sorry about the issues with this...
 
--- 
-2.25.1
+[...]
+> > -int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> > +void dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> >  {
+> >         char dirname[DWC_DEBUGFS_BUF_MAX];
+> >         struct device *dev = pci->dev;
+> > @@ -174,17 +174,15 @@ int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> >         snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+> >         dir = debugfs_create_dir(dirname, NULL);
+> >         debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
+> > -       if (!debugfs)
+> > -               return -ENOMEM;
+> > +       if (!debugfs) {
+> > +               dev_err(dev, "failed to allocate memory for debugfs\n");
+> 
+> There is no need to print an error message when a memory allocation
+> fails, as the memory allocation core already takes care of that.
+> So please drop the dev_err() call.
 
+Done.  Thank you!
+
+	Krzysztof
