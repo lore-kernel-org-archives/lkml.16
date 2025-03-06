@@ -1,85 +1,138 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05367202F92
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA0F1F63E1
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741258439; cv=none; b=jP+W6v7hYalMta4/5rOB4bX0DLuMNKc/MPXPuqW2OlmVwhFhRUk5vixAkW7OPhOnOMv9GsgBZ5nQweVuSAX8ECZh8uVjE7u3u8fpe0pFzyjd8CWM//t/dPEQbYsc+seAheEa5scu8FtMwQynw11p2SiR6HbVVxbPaE/NM6SutQw=
+	t=1741258586; cv=none; b=snzxX0TuHhvdSz4Ha0hTwJ1iTd+Mwxy5wVuEbtoZA1HFdtuiWSHQ8SlkNo31iyIeU//ajH0h0Im0Q3MyXrhgcMvp2Uuam7NRtR3yMbSXotp4dK2GYdUwJn2FbArgc4/XMEFEY6pJuth78/Utc+RUGrDLItpaESaSBmNESLU5bFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741258439; c=relaxed/simple;
-	bh=mlfJGkDy4TYPN23XQOALun4gCtktQqPl5OUILFcu94g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KR0KhaE4/ReBZ80CHk9BZT/aGJyvsZJUkrmrIJARbN8FX4W3xfNUoZcrFP6ZSHr1oJ021KqN1hTqse7nl4NJXxt37CWZpszdMl+3v9Ri96mYUBfC7ZdgFlgabHpWTS9h0h9PiXSPf404iromMokF65hHEAS3MHQDEyOGSipoEfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Adxdai4B; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1741258586; c=relaxed/simple;
+	bh=wdLF9WAxR22XqcYA7gK8+yGhNvwlObpcwbXvFtZiEFs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FYOzePoROvuU9bZ4csYJFyHA+gCqrqacjhHdxdd4ttrKis0mYhUG6HccaGugqRg6L7FFlLsftOGCy74f+ozVc0QHbOE8XddTo3QpFO+OUzAsYmiXtlEJCuFj7+zestexgIFCBOLCp/3wslkThz83qEZw5wzlirfKSS2iAOlgJlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D3nZXF5/; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Adxdai4B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741258434;
-	bh=mlfJGkDy4TYPN23XQOALun4gCtktQqPl5OUILFcu94g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Adxdai4BHQ0nrk+Y8TguTPs3jteQqha22poRWLoQgrvVF+zA3MyEMhAgziIOIy+2y
-	 OjHxAw4IRwy/8GS9KDxEmtD1zT8HvYL/FgVIGbjfuYQ/x6WrDiLPMSXffgT/+oLvCn
-	 ldiABCy7QePDBPP3N77tk/wEL2QI5UDBKC9y4tbGsCf1AdZ/ttOYfaX2DTtEcFql0R
-	 R5KLzKh8zzlBWO1L+/6verr1o91S4KpSsMRqf83LsDREgjMLRGi1Zq4JEFifA9YL8C
-	 nAFJTxWfJmIchSeZFDGM5oQPnzBLPEXGEzLC+hu16nS+sOOi9war6JjdgCsKnlqAVJ
-	 f2Tyj6DiY7lhg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1037F17E0599;
-	Thu,  6 Mar 2025 11:53:54 +0100 (CET)
-Message-ID: <7af26747-34cd-4088-a6b5-865de9e87fba@collabora.com>
-Date: Thu, 6 Mar 2025 11:53:53 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D3nZXF5/"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so2959575e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 02:56:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741258583; x=1741863383; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ntfm4QuEvNugJ4xYbOkC0QKXHv8rdJmW1XkWNgsvim8=;
+        b=D3nZXF5/EgmrpyRYvBHvXgqQwreMtdW7zYzSUkjRcUyZhSQDGq0a6hTe6RCQ7Vix7j
+         P2LDfsYrOR2prJdlpe7zZMpjr88e2KIBGZMcjg8PYRksQlNYeRw61n4ns410TZP09T/N
+         X3a6Mv0yB6/0Ia5JmZeUopkD/Qi9yUucM3iWluMBdgV9q6drpTQMSyqIivK9X0qBN9GI
+         wvySesvU115luFCgGGSQbJU+w2OX9U1pE694urQrIHmSdHvGNOAdMoQzg5XzASBU+CnU
+         YSq4jvSMfuhp4xOUjdBqRKLZAc1ESr90iRfUj7WJq9yxRx+s32+CQo/vz44R2X+kaIhf
+         vdDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741258583; x=1741863383;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ntfm4QuEvNugJ4xYbOkC0QKXHv8rdJmW1XkWNgsvim8=;
+        b=L1JeCyhTTgIaeuvYVj3h/WFvkSE15gnCfqAqH5oewX3yyXXRX2RNWgWfmXnA7cKxcf
+         fdc6Hi6zM1CPhVQjJM1S7HFTSi95SpkOvtG82bO8P/oEsZXDCt78Ut72JQCntzDs7Del
+         6mS+LSsuHZCB9c8RbDnUZ0EvlIdBXeQuQIwO79SH0cuFSM+PJhZbtDhtfn4/WeUwo8Vf
+         IJyP7AyatGVf3rPji+JqOcrRruD9R2m3VZJ6F1RccP2CM1NM9N/4qmg0846JmtscNA6C
+         Py4wEIuTZRIvj3P0KwMsNKezQsJJhm9FMMWdVfc7Wep0aMd6fBv/tAEFrjXKO7lA93h+
+         AzVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBxcrcFJr/8dg1I5gKmZZ6+upuyLLl1x1MhXXSqcZWPhshTYXldr/lv9edDduFJU9+7T6+0UC5IVm5msk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRsWEWs5sHqIufB6q0285M972LhwFpwzeY54hHWwjHwUGJ1xld
+	Xn6Vx0A6I16be6iMlwSWixhIGaHtySF2P8z3ZGwS8d2HVf6ZsudgxB21J4TwcLk=
+X-Gm-Gg: ASbGncuWmOHeGEgr4/IpNjM1DTO++aw0D30+FTgix7k7U0Z+EFYzFkhcYpK+boGMwXe
+	JsrVcqDGpjWkY1L5DJAGbmfSn5+pEi564asG5YOAtKNDwuI1zEDvrc9qsNlplLsBQ8k9Ry0nstR
+	YH1fEttmPn0b7ZAAXEy3kY8oP4ff+V61AZpoQSv9eVHk3sJ52UkUm42PGxu0ZO+If6s3o3fKWc6
+	I3asarPCLVg9KiC2IkqUQrzemIcjThfLbLw17kF4Z0pddFlxzhOk2O4Lm6bS3t+ndRBGC9Mkh4F
+	OqpURMfnYcgzvqHtYzj3FbB8Mu314Q7BS9H5O/ov8RlRlHqR5v48ASvXjRwZNxClbw==
+X-Google-Smtp-Source: AGHT+IGfTbr6JhO0xYsYYnKUYMZiygPSfbhn9Cgj55ShmF4I2gr2O9JfOHtuext0rfjHkqMFS1qAtw==
+X-Received: by 2002:a05:600c:2d16:b0:43b:cc3c:60bc with SMTP id 5b1f17b1804b1-43bd2989f68mr54496775e9.15.1741258582923;
+        Thu, 06 Mar 2025 02:56:22 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd831719sm17406675e9.0.2025.03.06.02.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 02:56:22 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v4 0/2] input: convert dlg,da7280.txt to dt-schema & update
+ MAINTAINERS
+Date: Thu, 06 Mar 2025 11:56:18 +0100
+Message-Id: <20250306-topic-misc-da7280-convert-v4-0-2972c4e81cb5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mailbox: mtk-cmdq: Refine GCE_GCTL_VALUE setting
-To: Jason-JH Lin <jason-jh.lin@mediatek.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc: Nancy Lin <nancy.lin@mediatek.com>, Singo Chang
- <singo.chang@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>,
- Sirius Wang <sirius.wang@mediatek.com>,
- Xavier Chang <xavier.chang@mediatek.com>, Fei Shao <fshao@chromium.org>,
- Chen-yu Tsai <wenst@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20250224105414.3576243-1-jason-jh.lin@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250224105414.3576243-1-jason-jh.lin@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFJ/yWcC/43NQQrCMBCF4atI1o5k0rRNXXkPcRHTRAe0KUkJS
+ undTbuqCMXl/2C+GVm0gWxkx93Igk0UyXc55H7HzF13NwvU5maCC4mCSxh8TwaeFA20uhaKg/F
+ dsmEAwa3Tui2VMprl+z5YR6/FPl9y3ykOPryXVwnn9R81ISBwp5qmxqs1ujk9qNPBH3y4sZlNY
+ k1VW5TIFJqiLBpXlxWXP1SxohC3qAI4yNapWhuulMIvapqmD9zoqKRZAQAA
+X-Change-ID: 20241204-topic-misc-da7280-convert-20efaad588ca
+To: Support Opensource <support.opensource@diasemi.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Roy Im <roy.im.opensource@diasemi.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ kernel test robot <lkp@intel.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1401;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=wdLF9WAxR22XqcYA7gK8+yGhNvwlObpcwbXvFtZiEFs=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnyX9UgiMec+Jkuqwmb/vnRfNsJpglm2TjPIvifTXq
+ caV2I/CJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ8l/VAAKCRB33NvayMhJ0ZyGD/
+ 9JLMH75fDc+JZn3kyPSoLWA6NUk1y5pD4d24VcPcnhtBhsGJmuETnH5218iWGyXllL2t3satA1jrR1
+ 2ZMjU8d8ErEUvLCpO1gEz3t0MebOQcyZ4IsWqzl3kTXDashCCJ5ateMN54HRgJoS2yPK6uq5zRV2sH
+ vJyhPHsL9z2R4JaYxJPGRVChone4axmtRW3Xhm2C1HOljtKBOlwdpnZp2675EAIA6Omcinz2lmVi7e
+ x1XMGoS3WKLFVTmpGGa90UAUfQeGxvULMT4znYhASyxQAy1LuSuxBuAuSTOg1UGWnDJ7/iSzTMXV4E
+ zukKRCQjnq1BIzLGzpL1USpd+jRTFV2xLRpfshZK53opT2+u8ROuqAMf1AUiMTeoplHMY5eemjwDsc
+ durFUsp0f7K4l0wLEzRpkMAIfKPuzaXSZ2/AFfbIm9+JcVs0BS0NyJ9ZpWL7OYXBvFrDiDvY2Sorae
+ wEKUZspv//O0Q4mZ/4Gt2PD3IE+/2IU+1SI4fw6ImPECBCbsuzPFKLHn4XBIxVw5R/5q/d7laE9Brs
+ /TNOAxHDy237B5K08kBoya8ptoPqKv0GBpLoDgpvnlGsDigAEFKgRRtXtVVc74EvapkWZ3pM6EWouW
+ y7+tgtDUGz/iNpYVIqsKDrECVP1hE96H/VUaM6JPfrLFWiDBIqx65mLBOuqw==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Il 24/02/25 11:50, Jason-JH Lin ha scritto:
-> Add cmdq_gctl_value_toggle() to configure GCE_CTRL_BY_SW and GCE_DDR_EN
-> together in the same GCE_GCTL_VALUE register.
-> 
-> For the SoCs whose GCE is located in MMINFRA and uses MMINFRA_AO power,
-> this allows it to be written without enabling the clocks. Otherwise, all
-> GCE registers should be written after the GCE clocks are enabled.
-> Move this function into cmdq_runtime_resume() and cmdq_runtime_suspend()
-> to ensure it is called when the GCE clock is enabled.
-> 
-> Fixes: 7abd037aa581 ("mailbox: mtk-cmdq: add gce ddr enable support flow")
-> Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
+Convert the Dialog Semiconductor DA7280 Low Power High-Definition
+Haptic Driver bindings to dt-schema. and update the corresponding
+MAINTAINERS entry.
 
-I have erroneously picked this patch in the MediaTek tree, as I had misread the
-changed file, thought that it was mtk-cmdq-helper.c.
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Changes in v4:
+- Rebase on next-20250306
+- Link to v3: https://lore.kernel.org/r/20241211-topic-misc-da7280-convert-v3-0-4df87ac08881@linaro.org
 
-This patch also has the wrong recipients, as this should not go through the
-MediaTek trees, but through the mailbox one.
+Changes in v3:
+- Add conor's review
+- Also fix the MAINTAINERS entry
+- Link to v2: https://lore.kernel.org/r/20241206-topic-misc-da7280-convert-v2-1-1c3539f75604@linaro.org
 
-Therefore, I dropped this patch from the MediaTek tree - sorry for the confusion.
+Changes in v2:
+- Switched to flag instead of boolean
+- Switched the array to unit32_t, because this is how it was defined in the txt, DT and driver
+- Link to v1: https://lore.kernel.org/r/20241204-topic-misc-da7280-convert-v1-1-0f89971beca9@linaro.org
 
-Regards,
-Angelo
+---
+Neil Armstrong (2):
+      dt-bindings: input: convert dlg,da7280.txt to dt-schema
+      MAINTAINERS: update dlg,da72??.txt to yaml
+
+ .../devicetree/bindings/input/dlg,da7280.txt       | 108 ---------
+ .../devicetree/bindings/input/dlg,da7280.yaml      | 248 +++++++++++++++++++++
+ MAINTAINERS                                        |   2 +-
+ 3 files changed, 249 insertions(+), 109 deletions(-)
+---
+base-commit: 565351ae7e0cee80e9b5ed84452a5b13644ffc4d
+change-id: 20241204-topic-misc-da7280-convert-20efaad588ca
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
+
