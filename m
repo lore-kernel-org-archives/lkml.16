@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B39027C142
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0761FFC47
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741294249; cv=none; b=o2VzVdyErIBm4au63r0ta8x18gbbCcwmY1GoR8/MJXS4iY2ZCxQ0Dz5T0h+LMbb+oSF7jrIcB8us1GIrTyjZvbrp3a47drB88bbiggUobre99962BrnQck0ZdLbp9+B6VtrdAw3Y/snBBONgFH68MNTcXUHgS9WmbSnn7Zq7sHg=
+	t=1741294259; cv=none; b=kRx7iIVC8H8yT1sjV+5qAlg+ZPIUsGpxrMb6/QQZO6EZscL0B0WWU46PjTgOZmX2ViTVHC96HoaAoqncxC6hxgxcDLKwH/G3L9dnrz6EzZBQCg/OMdjWrBn/ES7PtjJfuDoVlxOkubd4po3sW69QsPJUymKqFU/6N7nK0M2gY5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741294249; c=relaxed/simple;
-	bh=V1xKLv7fGjTGyGSTuQoHum7FUR9cS3g9ZcWAgCPS5BM=;
+	s=arc-20240116; t=1741294259; c=relaxed/simple;
+	bh=MF8HFhiUZUDinK062eJHnkaFQfssdWehO3KR9KcPAAs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yjk+xVFbyYmf+4ufsSlWzIlePh+WDT0WpW43C3s8yHQadSUZxZ+3enWGjNXG15GmMdz3MGqsAINrBSmLnsUtc7aPxOFPq6P6ncHqBoLxV+F9qBKefOezUsJvldwgp6dhyZamvXHRn34+yBLcUR3H04y/0ldtZ8PC+tjI0dTZDKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QnJn8V6C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YGrG9CEI; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=QYB35lR09JJbG2R6waDfqUTMagnTZX/3tiX5PbxZRID8sN0xYOOjEkm56ThgvjIKu490ZiUmLpvqelcFooxYxRFtupRuPYmwGFMTqAK5IwUOieae+ELouEJFigNTEERx877PdSH9BWuCM10FRdBj/hfLB/6GICgfuSPu7oG55Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=poxtjuRr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wDzjdPaI; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QnJn8V6C";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YGrG9CEI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="poxtjuRr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wDzjdPaI"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741294247;
+	s=2020; t=1741294256;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uyXUfiF73TZVwlcUt3XKk2DxpNAPNJ531VTI1u5c/mI=;
-	b=QnJn8V6ChfLTxZ3IaJY3xg5Ws0wHz2HDDHAYfc1qtWhNssFa+OjqmLgOPNYIlK4JzEjNDg
-	wg2Ng3/XUcMRwrflQZ6Xo+0HQIjhYH8xZKIk5bXDvqarFTyXPjBFHtjT3SxMJPVeU8ZczB
-	UnZqSL31d8g8tmj6RdljmKRka6rLIYZt37Zq0tp+5/vw0wxm+xhNohr3DS63z2o9Yy6MES
-	ZLOMiS5tYlGIx/uMATS/ae4Wrb+Fahjb8B6XJ8hi/Osc2ozfKaIONkJcjUBbHygxEXVG0v
-	jO1N9SQsH3OJoawEEqG4v9Z8xuTpudhCoVeQafsExDq2Zu0ikJBF/Fs/118wFA==
+	bh=Mr/Zg6bdWYBv14HAE/K1gAt0CWK9/X6FmYmcqMeDgRw=;
+	b=poxtjuRr83W0vmdcoDPkqclMhceX6Yrqht/fW2wjIWJEg54cRwLyAaSgaTcuxgLRDh0/sc
+	Ajhx5Dr+ke7rCR6zPbfnJs9DBZ1HM4+fsr68IgQmxJaP58hHa3R5soTp69oN4aIUJOIA/b
+	5z2qzbYQVfZKqIFTt16/1og4fNH8O+L7O8vLvsGlA7Q5kKn/jvRES3WA4rJQb+r5vQBOiY
+	DYzMJFdXPZAWlqhmA63hWS8Horbea3QbGGJCS35AzC9qVUKf6x5MsfEuvBlekhLA0HfFqp
+	ngX9/gl0pRHcCe5lWV+Fxzyk1ZcfvHukZ7EywKvBo58vz/62LCvpWySBUFy29A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741294247;
+	s=2020e; t=1741294256;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uyXUfiF73TZVwlcUt3XKk2DxpNAPNJ531VTI1u5c/mI=;
-	b=YGrG9CEI3QPWADjnXpip/7LwEBiA4RORmk+FiczuJSwOLlaFHvwmAS6QOEKzgeSzhKszoW
-	UjDGU00u0IaYt+DA==
+	bh=Mr/Zg6bdWYBv14HAE/K1gAt0CWK9/X6FmYmcqMeDgRw=;
+	b=wDzjdPaI6FadtN52lUERuts4xtS3azmrHcsUPSOwe2bNQbNCk1+Yk7xOsgLpIpdVJ3ZW2F
+	I1Y6w0BvXsxoLNDg==
 To: Borislav Petkov <bp@alien8.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 09/12] tools/x86/kcpuid: Define Transmeta and Centaur index ranges
-Date: Thu,  6 Mar 2025 21:49:57 +0100
-Message-ID: <20250306205000.227399-10-darwi@linutronix.de>
+Subject: [PATCH v1 12/12] MAINTAINERS: Include kcpuid under X86 CPUID DATABASE
+Date: Thu,  6 Mar 2025 21:50:00 +0100
+Message-ID: <20250306205000.227399-13-darwi@linutronix.de>
 In-Reply-To: <20250306205000.227399-1-darwi@linutronix.de>
 References: <20250306205000.227399-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,52 +63,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Explicitly define the CPUID index ranges for Transmeta (0x80860000) and
-Centaur/Zhaoxin (0xc0000000).
+kcpuid's CSV file is covered by the "x86 CPUID database" MAINTAINERS
+entry.  Recent patches have shown that changes to this CSV file may
+require updates to the kcpuid code.
 
-Without these explicit definitions, their respective CPUID indices would
-be skipped during CSV bitfield parsing.
+Include the whole of kcpuid under the same entry where its CSV file
+resides.  This also ensures that myself and the x86-cpuid mailing list
+are CCed on all future kcpuid patches.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- tools/arch/x86/kcpuid/kcpuid.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/arch/x86/kcpuid/kcpuid.c b/tools/arch/x86/kcpuid/kcpuid.c
-index 3153c8eba0c4..823226fbf089 100644
---- a/tools/arch/x86/kcpuid/kcpuid.c
-+++ b/tools/arch/x86/kcpuid/kcpuid.c
-@@ -83,6 +83,8 @@ static enum cpu_vendor this_cpu_vendor;
- enum range_index {
- 	RANGE_STD = 0,			/* Standard */
- 	RANGE_EXT = 0x80000000,		/* Extended */
-+	RANGE_TSM = 0x80860000,		/* Transmeta */
-+	RANGE_CTR = 0xc0000000,		/* Centaur/Zhaoxin */
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8e0736dc2ee0..d52702451b82 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25695,7 +25695,7 @@ R:	Ahmed S. Darwish <darwi@linutronix.de>
+ L:	x86-cpuid@lists.linux.dev
+ S:	Maintained
+ W:	https://x86-cpuid.org
+-F:	tools/arch/x86/kcpuid/cpuid.csv
++F:	tools/arch/x86/kcpuid/
  
- #define CPUID_INDEX_MASK		0xffff0000
-@@ -105,6 +107,12 @@ static struct cpuid_range ranges[] = {
- 	{	.index		= RANGE_EXT,
- 		.vendors	= VENDOR_ALL,
- 	},
-+	{	.index		= RANGE_TSM,
-+		.vendors	= VENDOR_TRANSMETA,
-+	},
-+	{	.index		= RANGE_CTR,
-+		.vendors	= VENDOR_CENTAUR,
-+	},
- };
- 
- static char *range_to_str(struct cpuid_range *range)
-@@ -112,6 +120,8 @@ static char *range_to_str(struct cpuid_range *range)
- 	switch (range->index) {
- 	case RANGE_STD:		return "Standard";
- 	case RANGE_EXT:		return "Extended";
-+	case RANGE_TSM:		return "Transmeta";
-+	case RANGE_CTR:		return "Centaur";
- 	default:		return NULL;
- 	}
- }
+ X86 ENTRY CODE
+ M:	Andy Lutomirski <luto@kernel.org>
 -- 
 2.48.1
 
