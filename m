@@ -1,155 +1,156 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6802040B3;
-	Thu,  6 Mar 2025 10:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00ED8202984;
+	Thu,  6 Mar 2025 10:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741258606; cv=none; b=tSvw/Mz1D9Cj6l9lBkZCOYuuU7b9tzz4X6Sq+rv7nRvAhveHNIP0wrtC5aASi3pr0XmOubo4HD8M5DoYTOkLdL259RJ+eS7qwN6uTobdSd48XZk+FJUlvGowZs2RUV2JdezkxpnL0nEP1A0slawMsnxnogb9VOcpsvaX0piF+2I=
+	t=1741258640; cv=none; b=DJqGgOXvvbfyPydLnHE8JuyYD0PR9cq2EDIUBF0nhE4r0H5vPNSKRLtPccQLpLgEupIqiD4AdbG2uIKi4c8seqXB/8jwtIAK6Yv7Vs70V+L5S4n1Dp9ojvv1h5Vr2VadsnElM6KT17nIwEONqpb3Vhr6DN1PpqOpcH/99RoBvLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741258606; c=relaxed/simple;
-	bh=OZOz4ppa2x3js0XKm0w8nNkZ/jFIt9LsQCdsSo8qZhE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LEmCpa6uEdraFEFe3CmA49DRl1J8Zzj1C1ZfNTBadQL+c1m/oF7/wVHGheipZLA8F5wOLPH15D+8wfXdFcI+epkn/1z+WmpAfHoaZq+OzpM0kHuvk+cwqgDSVYSQgTrE+umO4j1aEs7GLrTIM/Kv6+aaJi1hAk/GvGt/CAiGiV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWqBMR5k; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1741258640; c=relaxed/simple;
+	bh=I9pdTKoLaw+6AaESsv4LPJeCEfXkPMTSZEKG9PY9KuY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2tpscL3q/9zV5OtjIJOKPigWmLbCNTlAh84qb2rwTIQSYwyFbF6Pw4+CKa++3dGsZFVbMXv/fWxFzDzXJ6yFTTwaoAmPUVcwEAKTziK0+ht43cfuCM69VVCbRQqSzOg2652Bsfh7eXNb3YVchJ7Es10on0dzUTqZPGpUKYik3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmjxlUG6; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWqBMR5k"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bb64a4060so4606481fa.2;
-        Thu, 06 Mar 2025 02:56:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmjxlUG6"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4394a823036so4252855e9.0;
+        Thu, 06 Mar 2025 02:57:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741258602; x=1741863402; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hMHaQ1o6v21KrrkkRtJmLVVRwtGp3fBs93qM6xwU+Zc=;
-        b=OWqBMR5kn4NdrkiO+NDSHKuO1N58vjfEVSFNaxcMbyx8xWXSDk7NrtiSp/ii6yGQfH
-         YTrHEZobUdlJPF6M57NExpcXo5/9OCP3oncm4ftMxWoK+l1igkGT471zxVDr/auOjJpI
-         3W+s9Yoxr1PuxGI6Pj+EZurz0H1t7evkP/6yHrfSf2feEo6fyp+CU88kg4LkIqdoRT/X
-         6fmNthjN8pIqIUjT6wwHgAUJIqw8fiIG7Y+Dzp1a+tkxCVuxQbYsMVTyUTDuPK1ebnBn
-         fPQciSJ7O+idn48If9WDGMB7TGM85y2kqw4v3eD0P8TaV81VY2+H4YSa4fp4mXieGEWV
-         E5Cg==
+        d=gmail.com; s=20230601; t=1741258637; x=1741863437; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lgkMBhBzFh4GMW6txcVgpWsBqFCCmiQ9SftChtsfc9M=;
+        b=PmjxlUG6VrJKmJPC6cd+uEun1KdKE+THkC4GWs67ZKj2jbJp/1g4JtGtXbsqEQmeZo
+         xa3NRg9xSZua+CuuTFilX3ZZj70RrSuwKLd6xEf+GeWD1VfSnMb7FdW7kLrOSg/LoykZ
+         2w8Rh8dbIebmg7XsXQ1nR8kMKK76/uQTMkQYjtlMC5TPrNqTzL/1418qAFJFTeUy3+Hy
+         UiF/XXAKb1hMM2SDXGs+7e7QleH0G2atTD4k/aZ7h+JyDKraohBWjZk73mfAedKx5toq
+         fSiOlHRm1Wx8Db4gFsxnyczi81ms358608cQYGQ1BtyZXODHeLlgGVEpK96hp7EZeida
+         +0dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741258602; x=1741863402;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hMHaQ1o6v21KrrkkRtJmLVVRwtGp3fBs93qM6xwU+Zc=;
-        b=S1igTMqc4xWP6+jTXgi5IvaPpz1ImAwzGsFGYXo74aRH+KlNX4b+Fx/xVHFsXnZFNX
-         HI9fxkf1gwWsThnbKflYmLJbNTe7n5cgCN5Je+rz+K6fsQ4AqyB/Vy/f19zVjDtn8bfC
-         ZMcy+zPVLm4EFsiYsgDVbwaXVJgPrnnyJGvD67I+dEQ3y9fMZ2m8lybc0O8n/MygE/4F
-         dXLLQqA1iOzVpdyPUb+o7un9WHWL3Xa0cBwGTOzQxixOQitG+j3v6QTuVgz+E3I4P65i
-         yq1BuMAHmZJDD43ge6uwsKAjOC2ysc/2Bzr2E2YJ/6lY9V6Qnh6DRzXC+6OT3T9IdAOX
-         A3Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9liOGYsIhWGgIwytmAp+vxALeOAvfmHe7Plc8iYAMwVxRJBnNGPzXGyVnjM192SaGAEP+fXaWJ+dXHtY=@vger.kernel.org, AJvYcCWoCJF/Gu/CGPs0wDmPI0eCBw5TPSNHpwxL9kSVZqCREWIQ4rOnntpIaDHPVbnInp2Jm9hMIeS/WWSr8QmoTWoy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuaMw2Ni6QhQ4eaNyq7A/OkJN6GYZ2bC6KPPwtc6BSY+x7HeJm
-	cuv2Yewv+cH5NbEED8LQsQ/nmlmPMrWlHbqFEoRnV+NwzNKa/zcY+DQ1UXhPIECzlZMLV3q8HVk
-	tMw36zJhD+ANBavQHO6ZvRyn8bbLkNxSgKG8=
-X-Gm-Gg: ASbGncsyDrX0646S69D6rYLK93evpR6Ap/iI8vVgK/z2LwIHQNlWD9BTaIyX90/FLlb
-	E6JJ7H04u2rOqxa1v+G9A+gS2L8CSXykIxpzfAMW6UR8sgh+14WtFBTd6sq9xqQsbqRKFAHvKIV
-	8V5RuIQVHVFWExsDsaJJaWxXtDieod5G3LK8JpTThY7KzC9TYi9bz8z5ji3e+U
-X-Google-Smtp-Source: AGHT+IG/TO5T0n0wIvdg1Tm0CVBvk9K3gHk3VYPGFJfuz5YDgYf4G5nntM0CP18nSr2vF+yrV9bLaUe/sBClD35k5FE=
-X-Received: by 2002:a2e:bc06:0:b0:30b:cc6a:ffd9 with SMTP id
- 38308e7fff4ca-30bd789238amr28340571fa.0.1741258602110; Thu, 06 Mar 2025
- 02:56:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741258637; x=1741863437;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lgkMBhBzFh4GMW6txcVgpWsBqFCCmiQ9SftChtsfc9M=;
+        b=DnmU+AmyGQUJvIQc43ZrWedLu8YVNK9IR4A0Vsbmi0hA5QZJbYt3LcsS7ke46ajTlc
+         8IHCFRWZEimj8N5O6rr0HJ57uVd9D3mi4XZgdfiOHw9aPG5e6343PeZBJhD77hfcN3Qt
+         zvU5rSSrXTthQDFHkVDHao0CJborEMP6o+MlQS3whJ3+tL47D8KXT0zKGfLzMoIzeSxF
+         7GEimLqRQ8thTr/BPy6sZiEx1uXsqeZJwkRorTZ0n/oJajEpTdvTptQof0qeLDZY3bFq
+         t73cgZBVUtiVRXXRQ2jCNFak8iy3eHfBd5Ha1b+gvaOvjwGAR08PYkOT3AB+UfV4Oy+M
+         lUPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGGlg/GpDKulMPxPPZOmAhAi2kZFmO7RBSwXjYHCZlIJEWrG3AAQ9U5wy6S7F9f2bUtcEXWgXYqg4WF2V/@vger.kernel.org, AJvYcCUUY7hdyTI3q6ZNSmFmsyEhMdTOoys+7fXiuKTERsR8crdAz7hQLjUuSl6BcUPRsDvYkSZG1SOVIxWr@vger.kernel.org, AJvYcCVbJD9ckb7u53lcssV+yJrRPsBlwkWf9fm1/Lm9sKbxrvZPT3Y6O/kUyr8WAUJMS35IUrE=@vger.kernel.org, AJvYcCW0f4jWFDk/A+hgw9YIcmobkKkhdA4w41HRa+P7Kd/R7wVtox2hIvcrMB+AeMNd+J9+hW5nThci@vger.kernel.org, AJvYcCWdblM5mYu3Od982WBbTNg/c/KNToMio0epDMGyVi8t0WAWW81TuB/rnUOba6EE9J5+2MwRVLC71FtsmCrBfBPAGqFJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyol0cm7lv0K1Av3qib7fXvRlSgpgyRJEIcOXcTYDYYbfYyXQkU
+	NSAzOBEQyk15M9907URiY8qmKTSWwu+SMlkmXSRjIKOUHbpfAcIadlX+wTaGHis=
+X-Gm-Gg: ASbGnctErop6Lcri2Leua4OkAor+I/vMrdmOn+Afky7YaADGvIiDekz+36KQeiDPm95
+	0dEWuVxvXPiKNr8tCZJs9LYYpa6YD1kMCcsECOAmqiIqq7THFj7ETWXhpDQgvYjMNsOI7Jk0UPd
+	nly83edHLcjBLhpr7BHQr5RCpgnX7Sn95rdPuVEpkw5/k4IfMzO3WfYDbjz8pFMsO2H8m3677ni
+	GDq8bEw8FiS2WqoluuLT0nYJVwJKATFesF7/FQQEg76rSo1cZ1DwSXu6fLAU9jcbwnhgPymvSyo
+	A0UHij5u+GvXXH440irrcZTvl+CxWORITxtuxQ==
+X-Google-Smtp-Source: AGHT+IGLhJA7BskK5ld+jvgOXMpsvckCM2ZvvuLBgJH2nBAC7Z74GOkDTinBbaMSWaLdw5nhhGwZtQ==
+X-Received: by 2002:a05:600c:3205:b0:439:969e:d80f with SMTP id 5b1f17b1804b1-43be1d8de13mr4102405e9.31.1741258636883;
+        Thu, 06 Mar 2025 02:57:16 -0800 (PST)
+Received: from krava ([2a00:102a:401e:9b3a:b228:9e66:580a:3bc8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb79adsm1674487f8f.7.2025.03.06.02.57.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 02:57:16 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 6 Mar 2025 11:57:14 +0100
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Kees Cook <kees@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>, stable@vger.kernel.org,
+	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, bpf@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Deepak Gupta <debug@rivosinc.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCHv3 perf/core] uprobes: Harden uretprobe syscall trampoline
+ check
+Message-ID: <Z8l_ipCn8tBE1d9Q@krava>
+References: <20250212220433.3624297-1-jolsa@kernel.org>
+ <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
+ <Z623ZcZj6Wsbnrhs@krava>
+ <CALCETrVt=N-QG3zGyPspNCF=8tA4icC75RVVe70-DvJfsh7Sww@mail.gmail.com>
+ <Z7MnB3yf2u9eR1yp@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214-scanf-kunit-convert-v8-0-5ea50f95f83c@gmail.com>
- <20250214-scanf-kunit-convert-v8-4-5ea50f95f83c@gmail.com>
- <Z8hnXIrMV0ct1YR6@pathway.suse.cz> <CAJ-ks9k7G31uBqygXNtfXcwVQXWvkaAWJh1vkFw2_VZ5bAz=Vg@mail.gmail.com>
- <Z8hz8-Sa6XRC0W5Z@smile.fi.intel.com> <CAJ-ks9kz-fEH1YLiCn3fHR9AtYQLCZS77GKfOObifEL4GLwk8A@mail.gmail.com>
- <Z8ltGEp7NmhTwPRW@pathway.suse.cz>
-In-Reply-To: <Z8ltGEp7NmhTwPRW@pathway.suse.cz>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 6 Mar 2025 05:56:04 -0500
-X-Gm-Features: AQ5f1JpKo5Ng2Vlq-qCIgYpgDnzhnALdfZF8-xRNElx2CsSV5d1QAgxLDHkcU1E
-Message-ID: <CAJ-ks9=6qM2nn9eGZirtEUa=WifdToFRr=kE0gXw3OjFoqi4zA@mail.gmail.com>
-Subject: Re: [PATCH v8 4/4] scanf: break kunit into test cases
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <davidgow@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7MnB3yf2u9eR1yp@krava>
 
-On Thu, Mar 6, 2025 at 4:38=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
-:
->
-> On Wed 2025-03-05 10:57:47, Tamir Duberstein wrote:
-> > On Wed, Mar 5, 2025 at 10:55=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Feb 17, 2025 at 01:09:43PM +0100, Jiri Olsa wrote:
+> On Thu, Feb 13, 2025 at 09:58:29AM -0800, Andy Lutomirski wrote:
+> > On Thu, Feb 13, 2025 at 1:16 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 > > >
-> > > On Wed, Mar 05, 2025 at 10:25:51AM -0500, Tamir Duberstein wrote:
-> > > > On Wed, Mar 5, 2025 at 10:01=E2=80=AFAM Petr Mladek <pmladek@suse.c=
-om> wrote:
-> > > > > On Fri 2025-02-14 11:20:01, Tamir Duberstein wrote:
-> > >
-> > > ...
-> > >
-> > > > > >  #include <kunit/test.h>
-> > > > > > -#include <linux/bitops.h>
-> > > > > > -#include <linux/kernel.h>
-> > > > > >  #include <linux/module.h>
-> > > > > > -#include <linux/overflow.h>
-> > > > > > -#include <linux/printk.h>
-> > > > > >  #include <linux/prandom.h>
-> > > > > >  #include <linux/slab.h>
-> > > > > > -#include <linux/string.h>
-> > > > > > +#include <linux/sprintf.h>
-> > > > > >
-> > > > > >  #define BUF_SIZE 1024
+> > > On Wed, Feb 12, 2025 at 05:37:11PM -0800, Andy Lutomirski wrote:
+> > > > On Wed, Feb 12, 2025 at 2:04 PM Jiri Olsa <jolsa@kernel.org> wrote:
 > > > > >
-> > > > > It would make more sense to do this clean up in the 3rd patch
-> > > > > where some code was replaced by the kunit macros.
+> > > > > Jann reported [1] possible issue when trampoline_check_ip returns
+> > > > > address near the bottom of the address space that is allowed to
+> > > > > call into the syscall if uretprobes are not set up.
 > > > > >
-> > > > > I would personally prefer to keep the explicit includes when the
-> > > > > related API is still used. It helps to optimize nested includes
-> > > > > in the header files which helps to speedup build. AFAIK, there
-> > > > > are people working in this optimization and they might need
-> > > > > to revert this change.
+> > > > > Though the mmap minimum address restrictions will typically prevent
+> > > > > creating mappings there, let's make sure uretprobe syscall checks
+> > > > > for that.
 > > > >
-> > > > Yeah, I don't feel strongly. I'll just restore all the includes.
+> > > > It would be a layering violation, but we could perhaps do better here:
+> > > >
+> > > > > -       if (regs->ip != trampoline_check_ip())
+> > > > > +       /* Make sure the ip matches the only allowed sys_uretprobe caller. */
+> > > > > +       if (unlikely(regs->ip != trampoline_check_ip(tramp)))
+> > > > >                 goto sigill;
+> > > >
+> > > > Instead of SIGILL, perhaps this should do the seccomp action?  So the
+> > > > logic in seccomp would be (sketchily, with some real mode1 mess):
+> > > >
+> > > > if (is_a_real_uretprobe())
+> > > >     skip seccomp;
 > > >
-> > > It will be blind approach. Please, try to look at them closely and in=
-clude what
-> > > you use (IWYU principle). I don't think anybody uses kernel.h here, f=
-or
-> > > example.
+> > > IIUC you want to move the address check earlier to the seccomp path..
+> > > with the benefit that we would kill not allowed caller sooner?
+> > 
+> > The benefit would be that seccomp users that want to do something
+> > other than killing a process (returning an error code, getting
+> > notified, etc) could retain that functionality without the new
+> > automatic hole being poked for uretprobe() in cases where uprobes
+> > aren't in use or where the calling address doesn't match the uprobe
+> > trampoline.  IOW it would reduce the scope to which we're making
+> > seccomp behave unexpectedly.
+> 
+> Kees, any thoughts about this approach?
+
+ping, any idea?
+
+thanks,
+jirka
+
+> 
+> thanks,
+> jirka
+> 
+> 
+> > 
 > > >
-> > I think I'm getting conflicting instructions here. IWYU is indeed what
-> > I did: bitops, kernel, overflow, printk are all unused;
->
-> I believe that the headers were added for a reason. And this patchset
-> keeps most of the code. This is why the change look suspicious.
-> And I see in the patched lib/tests/scanf_kunit.c:
->
->   + hweight32(), BITS_PER_TYPE(), BITS_PER_LONG which looks like bitops s=
-tuff
->   + is_signed_type(), type_min(), type_max() from overflow.h
->
-> So, I would keep bitops.h and overflow.h.
-
-Thanks for checking.
-
-> The printk() calls were obviously removed in the 3rd patch so printk.h
-> include should be removed there.
->
-> I do not see any obvious reason for kernel.h, so I would remove it
-> in a separate patch.
->
-> >  string is used only for sprintf, so I made that replacement.
->
-> Makes sense. But please do this in a separate patch with this
-> explanation. It might be done together with the kernel.h removal.
-
-Will do.
-
-Thanks again.
-Tamir
+> > > jirka
+> > >
+> > > >
+> > > > where is_a_real_uretprobe() is only true if the nr and arch match
+> > > > uretprobe *and* the address is right.
+> > > >
+> > > > --Andy
+> > >
