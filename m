@@ -1,56 +1,56 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646E4199230;
-	Thu,  6 Mar 2025 03:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB4C1519A8;
+	Thu,  6 Mar 2025 03:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741230007; cv=none; b=dyaNfM3+r8sUg0sAJ39r6ybVpq3yNUy0NsLoWlLazG2PWqR0PBekTSGSwPQcUdz8YVgqn/CZe+XD2sCMBOjtrn0yHvC1Z1CiowUew8lxUT1s86+1j+JZ9QrR2qy/7ZCZ/Y1CcTuJL2ZvdNuclF2t4VguD0f48GRHNqxX2XWThUs=
+	t=1741230177; cv=none; b=AyAajVsSB1rK9iAjV1P34WOX2x2KJaTpPCUnhoHk/46XX1OWa4572R6rwpTd+/X84xryskg9KaQIaVZxT+9j9lroymqJvubeIvAgvkS/9IGYrM6vFTMj2OIOYlPacvOizJS9bB5haSc5sJWYeUdXc5ynxRUV+53FX9NwfDvGjkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741230007; c=relaxed/simple;
-	bh=pphNzZjoskzWzkOM/yq4hlV4xR2iKnYzcrrbGIr4huY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=X8vGOTF/ye8Q5Zt1dy8BKAbNMTqat6iCdZZF6J5nIR6PpyLh9UKUQHsz2QWbKVX5SotFscC+3cBFgs68b7nJpZMJX0c3K8bTkPTW4WGm08O2UunLdK8ZqsFmTOcyQU6tJmS61WtK5JM4y6lR8dqDhaoy6tzdMaWCmxatQG/4SO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jW8/h/eM; arc=none smtp.client-ip=209.85.219.50
+	s=arc-20240116; t=1741230177; c=relaxed/simple;
+	bh=gR+D/nNv6tD0i04PJOdCHa9N4xJvGW8XjsG/Ek2CWKM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=kcafBWDuOblpL9JHHYuGaEZ6McqZUctAxL4QznqnxvQr8rJ+goSovx503heHwbsP8l1Zwni1/aZ26y3XvgWRe2nD3CIgzkRXB68ASBKdu4eFjhgOWZ2cG04DW+HWPEJniGvy7sXXit55XC5L7AjxVs7Z2ibNGZLRrd5g9waRbNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OV4Zh42Z; arc=none smtp.client-ip=209.85.219.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jW8/h/eM"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6df83fd01cbso923556d6.2;
-        Wed, 05 Mar 2025 19:00:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OV4Zh42Z"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd049b5428so2083016d6.2;
+        Wed, 05 Mar 2025 19:02:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741230004; x=1741834804; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741230175; x=1741834975; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pphNzZjoskzWzkOM/yq4hlV4xR2iKnYzcrrbGIr4huY=;
-        b=jW8/h/eMdJp9ulSmcc7Fd3hiyKYpA0if7m6IvZhZYrEzXN8wxNqo+uPOsyctGyuI+e
-         r3L6KsvUIOD2ywfx3t2s3GYCwDYmeTCzJofWTF+2SfGb+UfVaWlnv1MSG4eQNJBahLQ3
-         3K0IH/A9zWLZZnI6IyJK3iyo3b98GcbHKTRHx6BX5ftzqSV9aWnq1AVBUyWPuN1sQAuE
-         D60ApsJpOFrreGaNws3mVKvsGhGwtonBpSAgfCHP0mZ/MjXthwBkBasHxprHmEl3BdNb
-         JPeAHv5O135Bf2iPZ78Em2ziogzxbp2+NXPrFkgQftskXjwBpCCJ+dgJSde+mXWlALmO
-         AFIg==
+        bh=gR+D/nNv6tD0i04PJOdCHa9N4xJvGW8XjsG/Ek2CWKM=;
+        b=OV4Zh42ZK54pVXqtFz5AMvkD4xjWJ3LefQciGSd/ihmawZQeeBn4CFojcQ7/GtRPYc
+         qlvE7voJ268YuUdmzHgpd77IVVfgmDp7a4AZdg148VoOJSwNcx4rku5gtWkkW+h3q9sb
+         3sxHku0RGgfL8hfu11/4CQ3jqopvDchu5+OHHrrdq4+/PpjQquv32at6N5ZCszdH9t8S
+         92HtHMTmskptx4I3r7IoK06tN27JeQg3CDTHAdhxZgH9ox+4dJszR/fx3wel4k+Bx63z
+         754QSrP9aTtmMmhCR2Vox4iWp9xic7uRqVY/gsY90IgHo0t0scEgK4D9kn400+VXwIRS
+         QzMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741230004; x=1741834804;
+        d=1e100.net; s=20230601; t=1741230175; x=1741834975;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pphNzZjoskzWzkOM/yq4hlV4xR2iKnYzcrrbGIr4huY=;
-        b=EOC957QHDzQh/sq1kGNJwhPe2qKyBgwMK3snzMTq+5yRaCs3vtoloFCcFrNgYn819o
-         hn7DYGMwjtfxwnImwF0je3nvHcJaX5O5Q6ZWwa+Vl30oBUJN4KdjB9JBeugpggYsoy9E
-         pDK9O7jcRyBgEElVaZgOAkiwC51WHP5D3nlPtaWFaHdUeAT+QNAcOJNYk7BKJ+1oS997
-         d+PLo2Ecl+YmwwYvgvUNJS0hT0mznRjdG1KIk5W96fyusdiDncvlAsLG315hh67PK6uY
-         qgd4+IxKl3fmZdycDRyLjmjJkiTDW2n+JXNQC6sR+3UnyTvgQj5IiY7xLsC4Z58H6UoC
-         wiFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeTO8MJwFMlG5vvRC6Wa2L9phDkR7Sl3SBVO9yj4wKOsPh439rD8YYNcqgk23StSjscIPQ8k52950oSAY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfFbxRorjbp0/zgNMHSG2+LRIuu+IacIxILR5ckPOtZgVlHlUC
-	ZscmWUP5lP14FF9+enJD7bWH7k01mgjIe8MXHJBejWm/LrPgDdK266eT9STbhiSIelzi7ok6A07
-	4JjDmENJwVhfcCwefud1KBK3weRDU7RlXzOg=
-X-Gm-Gg: ASbGncvV9z6nYFIu7EL70VGMJe8bS8OL4gMJNb4EmRQRVw9Gk13f2GJYaOOSiyYMDhr
-	i3vkZp41b+kxKHQwh3iBfS9cyyzuZNfBwmML8S/EWwk0DHa1a1nVN9orQJRP3heaC4SQ50NfWnE
-	K8J6aQOWW69Z1AoCWntnNie9rrtlI=
-X-Google-Smtp-Source: AGHT+IEoAOZWQbjqyEMft7Py0/fTn4Im38vvO39WGbHXfXyWQ4vYD36tcpn1tsE8Z4E6vO/crmdq4W5leyJ3CQsf8D8=
-X-Received: by 2002:ad4:5ec9:0:b0:6e8:90eb:e5a1 with SMTP id
- 6a1803df08f44-6e8e6d442d1mr85550936d6.35.1741230004116; Wed, 05 Mar 2025
- 19:00:04 -0800 (PST)
+        bh=gR+D/nNv6tD0i04PJOdCHa9N4xJvGW8XjsG/Ek2CWKM=;
+        b=E+LiCAT2SuKKbiV6YaCalrVk8X+E3rfwJJweAQS29m/EFWO2CvyOdAhPPE6wPwwjTP
+         7OpYGUF6Rvp0J2JTFr+zD724GSts2bbOFmhGAcB4/9YMYcqH8fuFqmB5pRmXXxAz7BaC
+         /tZD7Bajm6rKm1vuQ0uyIMtaOz7OxBdvLTSF69ufxEu0Zu9rQhL7k2EAweMa183b0DOI
+         Qlc3jGltXVKCGtZ8O6h7b0xqIK7M6rqFyvm1Jxu407A3CAtY68V85ZnDKfQhaBG7rte/
+         2qL8Dhw1/sVmifgNOPbzwtwPOeDvRnM6xkF+OQ6GKYNFHGE2t8+zZyezGGS+wNM4PJas
+         Qp4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUCqZpnESp3M41XYIvBShz0UlBsKa7pA7krr5PlF80JU9G3L2/MFB9ZZC9P3K7L2Vo9MbEln1iqWn5seEy0@vger.kernel.org, AJvYcCWkU7oXM5MDnAwLpGTgCOtl2Cu2LW0LVHCpFI1N1mt94Pg7xAVg91n4Yrih2hTX1t/CKetpsKAdUKug@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4lcsHjUQdJibtezx9BuJNOW5Y+R9Ana1ytOcHszrssn70+IYw
+	9O0CUzoDYIj0ERsjXrWCR1IrHQV+d8UcG489uhDyaOOLYF3BVM3GWk2uvrczEJEkidW07c0L7m8
+	KaY8JUKFIohAfCTKn4+geuFWKvtA=
+X-Gm-Gg: ASbGncvAS0Q1nNYQ5CwAYGUEeAF0PUXgDap8/2KRUqEvvqTfeLRUOFXDB1XT0qHAJeV
+	ghkMct5s+UHzobuUHr3OXxZIPzgArW9mCoBgzLCOLzmodgBewbRGqNV0oAkCQi62LE8rYCGgLep
+	IsIwQvK+/2NfrnkKN4T7ILhoO+Td8=
+X-Google-Smtp-Source: AGHT+IE+DMh5JnIy8OhF6gThQ29MjaOP9qGnjxeH0Yj9frhBeBdXlGi1dN3DsPr5UssZdyTrcs0lzTVRVYUpdwtq4so=
+X-Received: by 2002:a05:6214:1089:b0:6e8:efd0:2dad with SMTP id
+ 6a1803df08f44-6e8efd0309dmr32098496d6.12.1741230174979; Wed, 05 Mar 2025
+ 19:02:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,13 +58,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Luka <luka.2016.cs@gmail.com>
-Date: Thu, 6 Mar 2025 10:59:52 +0800
-X-Gm-Features: AQ5f1JpCOetcZL7QWyaomQkqZP8byiUPAUhT018USnerMvbneS1dBPELx-rgzKw
-Message-ID: <CALm_T+3qoQAChNSzULwKOvYDmvkxC8U5moKM5JEVRocR62s3yQ@mail.gmail.com>
-Subject: Potential Linux Crash: KASAN slab-use-after-free Read in
- ext4_find_extent in Linux kernel v6.13-rc5
-To: "Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 6 Mar 2025 11:02:43 +0800
+X-Gm-Features: AQ5f1JqAAhkZ8OPJc6k-o-yGioRG0IiD2rxQn-voX51pCMGbrK5T9Bd-Fj78exk
+Message-ID: <CALm_T+1CroJ5OcWxJ=S3J6wS8xdM6xDgRT0LCDDOuTZWWSNrpA@mail.gmail.com>
+Subject: Potential Linux Crash: KASAN: slab-use-after-free Read in
+ acpi_ut_valid_internal_object in Linux kernel v6.13-rc5
+To: Robert Moore <robert.moore@intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -74,8 +76,9 @@ Hello!
 
 I am a security researcher focused on testing Linux kernel
 vulnerabilities. Recently, while testing the v6.13-rc5 Linux kernel,
-we encountered a crash related to the fs/ext4 kernel module. We have
-successfully captured the call trace information for this crash.
+we encountered a crash related to the drivers/acpi/acpica kernel
+module. We have successfully captured the call trace information for
+this crash.
 
 Unfortunately, we have not been able to reproduce the issue in our
 local environment, so we are unable to provide a PoC (Proof of
@@ -88,152 +91,179 @@ summary of the relevant information:
 
 Kernel Version: v6.13.0-rc5
 
-Kernel Module: fs/ext4/extents.c
+Kernel Module: drivers/acpi/acpica/utobject.c
 
 =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=
 =80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94CallTr=
 ace=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=
 =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94
 
-BUG: KASAN: slab-use-after-free in ext4_ext_binsearch
-fs/ext4/extents.c:840 [inline]
-BUG: KASAN: slab-use-after-free in ext4_find_extent+0x9b8/0xa00
-fs/ext4/extents.c:955
-I/O error, dev sr0, sector 1 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
-Read of size 4 at addr ffff888104c720ac by task kworker/u16:4/218
-Buffer I/O error on dev sr0, logical block 1, async page read
+BUG: KASAN: slab-use-after-free in
+acpi_ut_valid_internal_object+0x5e/0x60
+drivers/acpi/acpica/utobject.c:319
+Read of size 1 at addr ffff888108821620 by task sh/6442
 
-CPU: 3 UID: 0 PID: 218 Comm: kworker/u16:4 Not tainted
-6.13.0-rc5-00012-g0bc21e701a6f #2
-EXT4-fs (loop5): unmounting filesystem 76b65be2-f6da-4727-8c75-0525a5b65a09=
-.
+CPU: 0 UID: 0 PID: 6442 Comm: sh Not tainted 6.13.0-rc5-00012-g0bc21e701a6f=
+ #2
 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/=
 2014
-Workqueue: writeback wb_workfn (flush-7:2)
 Call Trace:
  <TASK>
  __dump_stack lib/dump_stack.c:94 [inline]
  dump_stack_lvl+0x7b/0xa0 lib/dump_stack.c:120
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
  print_address_description mm/kasan/report.c:378 [inline]
  print_report+0xce/0x660 mm/kasan/report.c:489
-I/O error, dev sr0, sector 2 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
-Buffer I/O error on dev sr0, logical block 2, async page read
  kasan_report+0xc6/0x100 mm/kasan/report.c:602
- ext4_ext_binsearch fs/ext4/extents.c:840 [inline]
- ext4_find_extent+0x9b8/0xa00 fs/ext4/extents.c:955
- ext4_ext_map_blocks+0x1bc/0x4e70 fs/ext4/extents.c:4205
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-I/O error, dev sr0, sector 3 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
-Buffer I/O error on dev sr0, logical block 3, async page read
- ext4_map_create_blocks fs/ext4/inode.c:516 [inline]
- ext4_map_blocks+0x3c8/0x11c0 fs/ext4/inode.c:702
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-I/O error, dev sr0, sector 4 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
-Buffer I/O error on dev sr0, logical block 4, async page read
- mpage_map_one_extent fs/ext4/inode.c:2219 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2272 [inline]
- ext4_do_writepages+0x15b1/0x3040 fs/ext4/inode.c:2735
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-I/O error, dev sr0, sector 5 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
-Buffer I/O error on dev sr0, logical block 5, async page read
- ext4_writepages+0x275/0x510 fs/ext4/inode.c:2824
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-I/O error, dev sr0, sector 6 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
- do_writepages+0x197/0x7b0 mm/page-writeback.c:2702
-Buffer I/O error on dev sr0, logical block 6, async page read
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-I/O error, dev sr0, sector 7 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
-Buffer I/O error on dev sr0, logical block 7, async page read
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-I/O error, dev sr0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class =
-0
-Buffer I/O error on dev sr0, logical block 0, async page read
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-Buffer I/O error on dev sr0, logical block 1, async page read
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- __writeback_single_inode+0xe5/0x950 fs/fs-writeback.c:1680
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- writeback_sb_inodes+0x593/0xd00 fs/fs-writeback.c:1976
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- wb_writeback+0x188/0x790 fs/fs-writeback.c:2156
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- wb_do_writeback fs/fs-writeback.c:2303 [inline]
- wb_workfn+0x1d2/0xa50 fs/fs-writeback.c:2343
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- process_one_work+0x61a/0x1050 kernel/workqueue.c:3229
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- process_scheduled_works kernel/workqueue.c:3310 [inline]
- worker_thread+0x8cc/0x1160 kernel/workqueue.c:3391
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- kthread+0x25a/0x330 kernel/kthread.c:389
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
+ acpi_ut_valid_internal_object+0x5e/0x60 drivers/acpi/acpica/utobject.c:319
+ acpi_ut_add_reference+0x15/0x30 drivers/acpi/acpica/utdelete.c:684
+ acpi_ds_method_data_get_value+0xc2/0x2e0 drivers/acpi/acpica/dsmthdat.c:41=
+7
+ acpi_ex_resolve_object_to_value drivers/acpi/acpica/exresolv.c:129 [inline=
+]
+ acpi_ex_resolve_to_value+0x3ba/0x730 drivers/acpi/acpica/exresolv.c:59
+ acpi_ex_resolve_operands+0x740/0xde0 drivers/acpi/acpica/exresop.c:321
+ acpi_ds_exec_end_op+0x8fc/0x1350 drivers/acpi/acpica/dswexec.c:400
+ acpi_ps_parse_loop+0x3e4/0x1b00 drivers/acpi/acpica/psloop.c:525
+ acpi_ps_parse_aml+0x372/0xbe0 drivers/acpi/acpica/psparse.c:475
+ acpi_ps_execute_method+0x52e/0xb20 drivers/acpi/acpica/psxface.c:190
+ acpi_ns_evaluate+0x717/0xc30 drivers/acpi/acpica/nseval.c:205
+ acpi_ut_evaluate_object+0xcf/0x420 drivers/acpi/acpica/uteval.c:60
+ acpi_rs_get_prt_method_data+0x84/0xf0 drivers/acpi/acpica/rsutils.c:446
+ acpi_get_irq_routing_table+0x9b/0xd0 drivers/acpi/acpica/rsxface.c:137
+ acpi_pci_irq_find_prt_entry+0x171/0xc00 drivers/acpi/pci_irq.c:214
+ acpi_pci_irq_lookup+0x8a/0x5a0 drivers/acpi/pci_irq.c:298
+ acpi_pci_irq_enable+0x1aa/0x570 drivers/acpi/pci_irq.c:413
+ pcibios_enable_device+0x97/0xc0 arch/x86/pci/common.c:699
+ do_pci_enable_device+0x11f/0x260 drivers/pci/pci.c:2077
+ pci_enable_device_flags+0x1cf/0x250 drivers/pci/pci.c:2162
+ enable_store+0x1b2/0x220 drivers/pci/pci-sysfs.c:314
+ dev_attr_store+0x58/0x80 drivers/base/core.c:2439
+ sysfs_kf_write+0x136/0x1a0 fs/sysfs/file.c:139
+ kernfs_fop_write_iter+0x323/0x530 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:586 [inline]
+ vfs_write+0x51e/0xc80 fs/read_write.c:679
+ ksys_write+0x110/0x200 fs/read_write.c:731
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xa6/0x1a0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9fe9b04513
+Code: Unable to access opcode bytes at 0x7f9fe9b044e9.
+RSP: 002b:00007ffd9a260f18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00005560279bf6b0 RCX: 00007f9fe9b04513
+RDX: 0000000000000005 RSI: 00005560279bf6b0 RDI: 0000000000000001
+RBP: 0000000000000005 R08: 00005560279bf6b0 R09: 00007f9fe9be7be0
+R10: 0000000000000070 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000000005 R14: 7fffffffffffffff R15: 0000000000000000
  </TASK>
 
-Allocated by task 119:
+Allocated by task 6442:
  kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
  kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
  unpoison_slab_object mm/kasan/common.c:319 [inline]
  __kasan_slab_alloc+0x6e/0x70 mm/kasan/common.c:345
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
  kasan_slab_alloc include/linux/kasan.h:250 [inline]
  slab_post_alloc_hook mm/slub.c:4119 [inline]
  slab_alloc_node mm/slub.c:4168 [inline]
  kmem_cache_alloc_noprof+0xf5/0x360 mm/slub.c:4175
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- getname_flags.part.0+0x48/0x4e0 fs/namei.c:139
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- getname_flags include/linux/audit.h:322 [inline]
- getname+0x84/0xd0 fs/namei.c:223
-sr 1:0:0:0: [sr0] tag#0 unaligned transfer
- do_sys_openat2+0xfb/0x1a0 fs/open.c:1396
- do_sys_open fs/open.c:1417 [inline]
- __do_sys_openat fs/open.c:1433 [inline]
- __se_sys_openat fs/open.c:1428 [inline]
- __x64_sys_openat+0x16b/0x210 fs/open.c:1428
+ acpi_ut_allocate_object_desc_dbg drivers/acpi/acpica/utobject.c:359 [inlin=
+e]
+ acpi_ut_create_internal_object_dbg+0x6d/0x3c0 drivers/acpi/acpica/utobject=
+.c:69
+ acpi_ut_copy_iobject_to_iobject+0x65/0x390 drivers/acpi/acpica/utcopy.c:94=
+7
+ acpi_ds_store_object_to_local+0x260/0x440 drivers/acpi/acpica/dsmthdat.c:5=
+42
+ acpi_ex_store+0x1ee/0x970 drivers/acpi/acpica/exstore.c:147
+ acpi_ex_opcode_1A_1T_1R+0x51d/0x10b0 drivers/acpi/acpica/exoparg1.c:443
+ acpi_ds_exec_end_op+0x618/0x1350 drivers/acpi/acpica/dswexec.c:415
+ acpi_ps_parse_loop+0x3e4/0x1b00 drivers/acpi/acpica/psloop.c:525
+ acpi_ps_parse_aml+0x372/0xbe0 drivers/acpi/acpica/psparse.c:475
+ acpi_ps_execute_method+0x52e/0xb20 drivers/acpi/acpica/psxface.c:190
+ acpi_ns_evaluate+0x717/0xc30 drivers/acpi/acpica/nseval.c:205
+ acpi_ut_evaluate_object+0xcf/0x420 drivers/acpi/acpica/uteval.c:60
+ acpi_rs_get_prt_method_data+0x84/0xf0 drivers/acpi/acpica/rsutils.c:446
+ acpi_get_irq_routing_table+0x9b/0xd0 drivers/acpi/acpica/rsxface.c:137
+ acpi_pci_irq_find_prt_entry+0x171/0xc00 drivers/acpi/pci_irq.c:214
+ acpi_pci_irq_lookup+0x8a/0x5a0 drivers/acpi/pci_irq.c:298
+ acpi_pci_irq_enable+0x1aa/0x570 drivers/acpi/pci_irq.c:413
+ pcibios_enable_device+0x97/0xc0 arch/x86/pci/common.c:699
+ do_pci_enable_device+0x11f/0x260 drivers/pci/pci.c:2077
+ pci_enable_device_flags+0x1cf/0x250 drivers/pci/pci.c:2162
+ enable_store+0x1b2/0x220 drivers/pci/pci-sysfs.c:314
+ dev_attr_store+0x58/0x80 drivers/base/core.c:2439
+ sysfs_kf_write+0x136/0x1a0 fs/sysfs/file.c:139
+ kernfs_fop_write_iter+0x323/0x530 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:586 [inline]
+ vfs_write+0x51e/0xc80 fs/read_write.c:679
+ ksys_write+0x110/0x200 fs/read_write.c:731
  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
  do_syscall_64+0xa6/0x1a0 arch/x86/entry/common.c:83
  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 6442:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:582
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x37/0x50 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4613 [inline]
+ kmem_cache_free+0xec/0x380 mm/slub.c:4715
+ acpi_os_release_object+0x1c/0x30 drivers/acpi/osl.c:1624
+ acpi_ut_delete_object_desc+0x92/0xb0 drivers/acpi/acpica/utobject.c:402
+ acpi_ut_delete_internal_obj drivers/acpi/acpica/utdelete.c:316 [inline]
+ acpi_ut_update_ref_count.part.0+0x3a4/0xc80 drivers/acpi/acpica/utdelete.c=
+:436
+ acpi_ut_update_ref_count drivers/acpi/acpica/utdelete.c:374 [inline]
+ acpi_ut_update_object_reference+0x58f/0x6a0 drivers/acpi/acpica/utdelete.c=
+:632
+ acpi_ut_remove_reference drivers/acpi/acpica/utdelete.c:740 [inline]
+ acpi_ut_remove_reference+0x65/0x80 drivers/acpi/acpica/utdelete.c:710
+ acpi_ds_clear_implicit_return drivers/acpi/acpica/dsutils.c:55 [inline]
+ acpi_ds_clear_implicit_return drivers/acpi/acpica/dsutils.c:34 [inline]
+ acpi_ds_do_implicit_return drivers/acpi/acpica/dsutils.c:106 [inline]
+ acpi_ds_do_implicit_return+0xaa/0x140 drivers/acpi/acpica/dsutils.c:79
+ acpi_ds_is_result_used+0x5b/0x3b0 drivers/acpi/acpica/dsutils.c:156
+ acpi_ds_delete_result_if_not_used+0x8f/0x120 drivers/acpi/acpica/dsutils.c=
+:320
+ acpi_ds_exec_end_op+0x2ca/0x1350 drivers/acpi/acpica/dswexec.c:740
+ acpi_ps_parse_loop+0x3e4/0x1b00 drivers/acpi/acpica/psloop.c:525
+ acpi_ps_parse_aml+0x372/0xbe0 drivers/acpi/acpica/psparse.c:475
+ acpi_ps_execute_method+0x52e/0xb20 drivers/acpi/acpica/psxface.c:190
+ acpi_ns_evaluate+0x717/0xc30 drivers/acpi/acpica/nseval.c:205
+ acpi_ut_evaluate_object+0xcf/0x420 drivers/acpi/acpica/uteval.c:60
+ acpi_rs_get_prt_method_data+0x84/0xf0 drivers/acpi/acpica/rsutils.c:446
+ acpi_get_irq_routing_table+0x9b/0xd0 drivers/acpi/acpica/rsxface.c:137
+ acpi_pci_irq_find_prt_entry+0x171/0xc00 drivers/acpi/pci_irq.c:214
+ acpi_pci_irq_lookup+0x8a/0x5a0 drivers/acpi/pci_irq.c:298
+ acpi_pci_irq_enable+0x1aa/0x570 drivers/acpi/pci_irq.c:413
+ pcibios_enable_device+0x97/0xc0 arch/x86/pci/common.c:699
+ do_pci_enable_device+0x11f/0x260 drivers/pci/pci.c:2077
+ pci_enable_device_flags+0x1cf/0x250 drivers/pci/pci.c:2162
+ enable_store+0x1b2/0x220 drivers/pci/pci-sysfs.c:314
+ dev_attr_store+0x58/0x80 drivers/base/core.c:2439
+ sysfs_kf_write+0x136/0x1a0 fs/sysfs/file.c:139
+ kernfs_fop_write_iter+0x323/0x530 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:586 [inline]
+ vfs_write+0x51e/0xc80 fs/read_write.c:679
+ ksys_write+0x110/0x200 fs/read_write.c:731
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xa6/0x1a0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888108821618
+ which belongs to the cache Acpi-Operand of size 72
+The buggy address is located 8 bytes inside of
+ freed 72-byte region [ffff888108821618, ffff888108821660)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x108821
+flags: 0x200000000000000(node=3D0|zone=3D2)
+page_type: f5(slab)
+raw: 0200000000000000 ffff8881000e0a00 ffffea000402fd40 dead000000000002
+raw: 0000000000000000 0000000000270027 00000001f5000000 0000000000000000
+page dumped because: kasan: bad access detected
 
 
 
