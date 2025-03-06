@@ -1,52 +1,43 @@
-Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC8277017;
-	Thu,  6 Mar 2025 21:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.47.171.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08E41FF1AA;
+	Thu,  6 Mar 2025 21:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741295736; cv=none; b=BiEgWsNJM5wj/r+NXdks033+e8tOqb6QRKbW+W9Tv5WHYAa81SwYp6LALDgzNv7n++53KLw2zXHlEOPE0+DRaZ+4yTAeUh1jp1xlO+VFg4ouYGrHPjVx0LdOHNgGYIVi9lbxct4oKyCAJ0olk0I791StGQIn2zrWZF9v39zA5SQ=
+	t=1741295736; cv=none; b=r5egLM3J6Iz+zsiYmwfqYi7ySwdLGp6o0fmBvog6CAtbp+RozazOzMjNhzSMOZ2nj0hnXpeLc0xnFKPGe+DV07OJErtOMwHRrZ/fdqLe1vdrqX0a8hQYCeCcflu7UcMOZFlprRZy1Hj3U0djVBEV0N0E86+YKJ/ZJmDcQxhJ0U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741295736; c=relaxed/simple;
-	bh=gij/ZjBozazw9QMucfCzOqeE+vX+wQDy+lz7JzWJloM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TFo73rJjEu1UsP5ro/4q6j9IAxQboG7719qGlxrVdbHFTzRRLBsndPxyUdX77sVOc+4iY+lgknalysRyHrQDMUyYuiv3/XG2PsLGvoZ0ui1BP0C/5UFS2nv8tm+CQrK1ULkVfFcl5qJDpxEAzarfnPfTFO5KSS48CIIroi59EFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org; spf=pass smtp.mailfrom=datenfreihafen.org; arc=none smtp.client-ip=78.47.171.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=datenfreihafen.org
-Received: from work.datenfreihafen.local (unknown [45.118.184.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: stefan@sostec.de)
-	by proxima.lasnet.de (Postfix) with ESMTPSA id BBCF5C03F3;
-	Thu,  6 Mar 2025 22:05:54 +0100 (CET)
-From: Stefan Schmidt <stefan@datenfreihafen.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Stefan Schmidt <stefan@datenfreihafen.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [PATCH net-next v4 0/4] ieee802154: ca8210: Sparse fix and GPIOd conversion
-Date: Thu,  6 Mar 2025 22:05:01 +0100
-Message-ID: <174129482390.1935348.6456362941147965930.b4-ty@datenfreihafen.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
-References: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
+	bh=sYQMd9jtAcMXQq31WqrbCsoeBlpEOogNZ42LeKgZRLE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=M9Ivm6Amz7zmCRkoaj9wzYYmEeT2or6/I89MxbCUTgfeWZPPZWOnJC57Ys5FiQfjxB8orRV0XYQlQdFaCBwE6Gueh2rSJyW/zektgjjvdyP+BJACkMkNI0YMzNG2wOihNRhfzIG9GT/8eT/gF/i8OA9DFP4mUIu3MGQYJL3RzQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5sPRdEz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5sPRdEz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16C27C4CEE0;
+	Thu,  6 Mar 2025 21:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741295735;
+	bh=sYQMd9jtAcMXQq31WqrbCsoeBlpEOogNZ42LeKgZRLE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=P5sPRdEzBxLsvmJQ4ev5ME8sxk0V0l/CWholldIGCQ9ojT1YjN9XAYmBia0q+cr+Z
+	 7pFhmUyV5qdIzp1rF8Yxyvpvz7ITIs6wMcxzgScGlryhcFRWKONh6Cdt2lSzxPhUTd
+	 7h8NmPoHxk/SZQGbTq/mDGoVh8dBaVUCoSkXEWgWCaQVuXXAEbAwoAsBad249CDYGM
+	 BCRvYBSOFV1FsY70Y3RFgu3r+XZMLzHHmPw75xX1NjZErpHQX0P8LL4B6r8G3CQhWg
+	 SIlGyXkbmjn/2e0lDtmJHTUG7Ab0HtkpFzgIHPq2Ab9CUOO7RZ8X4jbOxNtmPXmody
+	 8CNrI96VmvZog==
+From: Mark Brown <broonie@kernel.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+Cc: imx@lists.linux.dev
+In-Reply-To: <20250306170954.242707-1-Frank.Li@nxp.com>
+References: <20250306170954.242707-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH] dt-bindings: spi: fsl-lpspi: Add i.MX94 support
+Message-Id: <174129573262.723955.4642185166611701005.b4-ty@kernel.org>
+Date: Thu, 06 Mar 2025 21:15:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,31 +45,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-Hello Andy Shevchenko.
-
-On Wed, 05 Mar 2025 12:55:33 +0200, Andy Shevchenko wrote:
-> The main part is the patch 3 that converts the driver to GPIO descriptor APIs,
-> the first one is just an ad-hoc fix WRT sparse complains on the bitwise
-> types misuse. The second one is a small cleanup that helps patch 3 to be nicer.
+On Thu, 06 Mar 2025 12:09:53 -0500, Frank Li wrote:
+> Add compatible string "fsl,imx94-spi" for the i.MX94 chip, which is
+> backward compatible with i.MX7ULP. Set it to fall back to
+> "fsl,imx7ulp-spi".
 > 
-> In v4:
-> - split DT patch (Krzysztof)
-> - collected tags (Miquel)
 > 
-> [...]
 
-Applied to wpan/wpan-next.git, thanks!
+Applied to
 
-[1/4] ieee802154: ca8210: Use proper setters and getters for bitwise types
-      https://git.kernel.org/wpan/wpan-next/c/169b22622058
-[2/4] ieee802154: ca8210: Get platform data via dev_get_platdata()
-      https://git.kernel.org/wpan/wpan-next/c/0a3e89b06d36
-[3/4] ieee802154: ca8210: Switch to using gpiod API
-      https://git.kernel.org/wpan/wpan-next/c/20629a48d50a
-[4/4] dt-bindings: ieee802154: ca8210: Update polarity of the reset pin
-      https://git.kernel.org/wpan/wpan-next/c/a5d4d993fac4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-regards,
-Stefan Schmidt
+Thanks!
+
+[1/1] dt-bindings: spi: fsl-lpspi: Add i.MX94 support
+      commit: 02a838b01b8e7c00e2efe78db06fff356a112dec
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
