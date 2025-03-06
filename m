@@ -1,213 +1,154 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2248E42A8C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC5C42A8C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741291627; cv=none; b=TLRmqrcAOxteOwLcwTxljFx2iHAM3NblhZNMxqaJeJh8xMWwy7/I9qBrYtpot/cfroaTL/6RtV/4RosodJY7ji/IIh5BXUFkuLKGiUOy/ZfxTtUcm/0/AEZxSpcpE+efxlDTKVRKDOZLBRm+R6b+u/J7RgmOgqju40doD0+KaKU=
+	t=1741291732; cv=none; b=gviwBBQi9ts16cJnutQdwlWFwzTLqus1U4fd+u8njQ9VVdVPfL6ePvojUzUBQ7WxVKhdX4iI+6GB34ITWqdowUx1IfJRkGLYC6i9VjfnY7lznhf44t3hNuT6X3FCqyb+tir6xH+8/ekHRZ7Bjq8rLvhfvCCiwnq8gQ3GI4554qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741291627; c=relaxed/simple;
-	bh=6Ht9y0FtS3pAPN6DrTM4ZFPOZKebMKX1OsxrHCXdk6Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lUuBtdUxHnriLHiJqr9TQZZ5asg2KfVyLmoKgpk+qzIeVI3kLt/jgTqTy0Ytjm1BsIV0N/gbCwqXjz6hv3jvsIltogXolV8GBqNjRHgJyY6MVOpQW+TIoAMF4EhXAgSo0u5CQh8+4DGGy3OjatWWo+uGuqzXiq9aqVdl6R5UUf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HJ61RuyK; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741291732; c=relaxed/simple;
+	bh=4ANQ6jxnMVqPUbO8KxS0IbrnE06KdtXQZKCpH/+k1M8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jcFdp0PbhNATy+BcMjdIQ3hdfUT3QuuQ5jIwXljWjEoSNW5eLt2P3qkJvJphyhCpVLzwVyFwGu5AcjRohz6zyn8wB8qtBSutnyL79PMRuT6FJTJPOgclEOhx6hgGbZfHhBDoOdtc7SthrCZ8tSSGMQVm4o8EnP1TLT8c0wVob4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=euhcaooe; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HJ61RuyK"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bae572157so10194641fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 12:07:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="euhcaooe"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-390d98ae34dso857115f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 12:08:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741291620; x=1741896420; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DFBVTxBK91gOv/J1RwnobV6isevkXmYhVXuftt1K/I8=;
-        b=HJ61RuyKsllDStNNbWdzXsz//fAtqXQKOsgp1NriTptGQ0TulDbWWPWOaO6SIMTvRA
-         73ejOsywCCjIl2JzMtyBoR4pGqVFtRMG74GvcYiNYZM6EVVEjNHI2XGhseUwjUPzRi/P
-         jSZv3PuDdf+YJ/RHuSZJ0jcqOPBJN0GbbNBWs=
+        d=linaro.org; s=google; t=1741291728; x=1741896528; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vu6Nb3Ka+Nd4QHA4BCCuDDi+MFoZySYQiXMqKDLBjpo=;
+        b=euhcaooeRrLJfc8iV0QsMELCxV+j8/zxsrPUDsIiqjTESr2tj0ZUvH0+eeqpaNaw6Q
+         ZZXgll9XMjEJMnLyXF6lbuI3lYlw/gnlFF495tAkjkg8JRlisrCislRwfH6NckD184D4
+         V+eeCOyGvS2b7eheTyeAwYnuQo5aye0lbrNmUfE/F3fKv/87dVfEZVl2kMmdz+T81Twn
+         SVZERV1QP9p3vz9dGub3yYNvp3C610M0zpsMSAd91Por1od3avTdvSHmrbOHcvKL70M+
+         ODNqCcbax0e64QDnk9RSRujP0iJujQMnuSN9SMUlcpTAf9Bj6nzAEG3iOuy+qYsoATVu
+         l/kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741291620; x=1741896420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DFBVTxBK91gOv/J1RwnobV6isevkXmYhVXuftt1K/I8=;
-        b=AGuvFnO62UC8e/TKYmEm6qyHWJWsm8Bof3irYThjJkDTUftwwMlHmOfEmlKVSx3sky
-         j3MnLjQjVA+VPUxM3NrTqb3CurwVg78RIkNrLsjsak0n788rjNkrhrIEmIbaCMkrFrym
-         ScYB9dGaVveANAm/+XDgZpYmTjBl3yFZRV9ERBU2hFaexdU7icy1WeJR2LAulKpQpqhy
-         JWA1wcrpTfmui583t8T60Yqgb5j3hjSvk2R2s2SkODQ6Zfec3X3UwcEEwljCpwmaNw/w
-         4/cCgOP4A8hygLeL0Z/Z+QZ3p/xfYujAXe1uZ87vxpHGOiaf8EWBEv+ZdBfdFA+5mI7L
-         YKjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHrArWw4vv4jnCgluxUyBSTIHHhy30HShGOjHLgB+Gg+d53hILUReYEzhr6tn47vpenTi8uWY4gXODmgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz12HCZXeXaaaQF33V7MtwWjz9y9fpsll01iuqZyQTNMw6BIUO+
-	oFh5gqzI0SqOf/4TpMJ9cJQqA0CoT3jNL0jWmzQboss/q378enXNCG7MPkl5CDwYaeOX9+e/4GL
-	9MCeG
-X-Gm-Gg: ASbGncuVbmrTmDkIzOrPDQ9YSbBp3CBLLHkFTPkYUQgP7KKTGEN2eT17rO3dYyKh4Qu
-	32O5Wan2CHQkTvZichL0FR5L0f/vVKnX9THBw5NtpaLvLa+5VPc5KlPkTkI28yKGUtsZSfL4Vq4
-	ra76pdFLfNjp/5UwqiTSongUG1ZomvmdE1XUEysjUz0NCP/qzauPwJy77ARuLeQuAIZsCoyrR7s
-	zOzSRXe8l+fmSlVjXf1X6ZmWoo/lvGL1vqbyuY0dx0TvvveaO1vS9FwZZaSlxx04kiEt6tFRcBr
-	E4GoSdCaq0pGEJIQwuVncriJ1RjBLU0aPjShLlaoNlimpDsZdrN3PNkqlzyUeyXsfsryoTscC6w
-	CQOAgkpK+q8BH
-X-Google-Smtp-Source: AGHT+IG1PXOi0Tl9HgoTpy2urpvWdIjI2d+hhZUmTqa5KfCQ6X5Xlo8N9d/dKM9ajNV5uStF+BEy7w==
-X-Received: by 2002:a05:651c:4ca:b0:30b:ca48:10be with SMTP id 38308e7fff4ca-30bf43b5219mr1909571fa.0.1741291620090;
-        Thu, 06 Mar 2025 12:07:00 -0800 (PST)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30be99179fdsm3023981fa.51.2025.03.06.12.06.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 12:06:59 -0800 (PST)
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf2513a2dso4497781fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 12:06:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXuM80u25q2klBg+al1wzxzZe9Egh/RNbQ/zZ0OdFlsotKJCV6ATbsLDKnHJCc5xGFIF/7w9jznjZVuQ7o=@vger.kernel.org
-X-Received: by 2002:a05:6512:2309:b0:549:7d6e:fe84 with SMTP id
- 2adb3069b0e04-549910b7650mr139656e87.53.1741291617911; Thu, 06 Mar 2025
- 12:06:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741291728; x=1741896528;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vu6Nb3Ka+Nd4QHA4BCCuDDi+MFoZySYQiXMqKDLBjpo=;
+        b=ukE+CxjYhQuyRuTOoXw8hTtRO8UHurdf+6G+an6BWEpnA0gO7kMLt320FCYeuk3Kh0
+         wV44rVQf67ZtgVzkHFA3cAaG4JGpT6YoucGamXEAHHItCwhaKq6YqL0SxCxcvKHw8uva
+         tjPn8MZvh0lw9wxIQyWh0zS1p0NM3PqAmT/Ixx43Y6IUelkV3qCeFG4HZWINRYbcUkHL
+         gYftGD/I7RmVgQRBXLjjmMNPDhv/r6oyVL9fSEUt9tKZcp/qsL5qJc0VbVfLt8g+icXH
+         rTTHE8NlHexnobEf+4OU1eG5GfAtbyKTHeiN0qyYrU0w6BcH76DvyxNQE47MDUcMVIg9
+         Nkew==
+X-Forwarded-Encrypted: i=1; AJvYcCVAUQLdQyowmWG56H5WT2sPbdVMQyzof/08SqiTaxysxxHkBnYa0/z64+mPHmjdy2iUpZw2u8a0uxfxbbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf7t8WNZ7+sPViZlly3d7hNE9KFekw9hjvIf2YGXNyxpcPp9zV
+	EJh8DykEj73cb5pQdGdjtPLWRsc7pjPruS0eZzfb6Ywh9ab0o8LBSl5ErFSvAMQ=
+X-Gm-Gg: ASbGncv26lUqxXkpGZ0kJgCe6ebWv6Rx7P4llvvlhfZ2SzBWyise4egp1xd80IPSI1Y
+	Ld/UGf997Qxc2msixXNFmsS3U15hH553q4bIXiWSs+zL8hLDiq9ubEiZBqh+eEZZ/6eXb/bm4zB
+	BhN76SirHnPv+EWVHzIyDZEIU+Ed8aeHYSehwbcqpGifW3zMK79u+KkV8MokFb2WJIw0r76e4f7
+	JfMLOH2nTIPYsT4PROB8cvlNRMbJ9Lgyfdrgy1Zxb8abmXdr9vYClH7E0jcfrIic//wefSQTvsW
+	STi//NllL0uvk5ttyD9i0JP6kPD/HYq0ScD9/xjxk5PNtpPztg==
+X-Google-Smtp-Source: AGHT+IEUEM1THRDjnKYSch5Ww+/6WcBAoHn7/OHeW6aQR2tMBEMKVdYUpqjgGMl6Rqo4PDPLKLMO6g==
+X-Received: by 2002:a5d:6d8a:0:b0:391:1218:d5f7 with SMTP id ffacd0b85a97d-39132dacbd3mr295375f8f.40.1741291728288;
+        Thu, 06 Mar 2025 12:08:48 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912bfe0004sm2942613f8f.40.2025.03.06.12.08.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 12:08:47 -0800 (PST)
+Date: Thu, 6 Mar 2025 23:08:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Gabriel Lima Luz <lima.gabriel.luz@gmail.com>
+Cc: linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Teddy Wang <teddy.wang@siliconmotion.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	~lkcamp/patches@lists.sr.ht
+Subject: Re: [PATCH] staging: sm750fb: Fix CamelCase variable naming
+Message-ID: <b500aadd-e273-4434-8219-6e5c04f7c8e9@stanley.mountain>
+References: <20250228162359.14029-1-lima.gabriel.luz@gmail.com>
+ <ba45d980-c6b1-482a-8bfd-457a92d3e24b@stanley.mountain>
+ <635f849e14854b0db1f53a0d0bf329c3070e5859.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306134350.139792-1-tejasvipin76@gmail.com>
- <ca5b0825-a485-4bec-bd93-b57a8d7ced99@linaro.org> <p2esqngynwfrshz5rqfnmx6qgwf4dclpkb3mphwg2vavx2jbcg@clqoy5tjh7bb>
- <CAD=FV=XyOwoMmdvFA565AzGRUSNwonQ-5Ke2H6jc2ki9Sz+0Pg@mail.gmail.com> <CAA8EJpoG-rfaVb0rhbP-6xwzD7=k-95NVeyHUy=X3ESLEwZgYw@mail.gmail.com>
-In-Reply-To: <CAA8EJpoG-rfaVb0rhbP-6xwzD7=k-95NVeyHUy=X3ESLEwZgYw@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 6 Mar 2025 12:06:46 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WvKjTFOubSyDcdn1TKoBL9jeExkKSLydfxpKhqjVPLuA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jos7fHq7Zgo3vzyzU6fKV4__HXNnXnaQS-cI3RFMrxWkmNF6UCCasL5LYQ
-Message-ID: <CAD=FV=WvKjTFOubSyDcdn1TKoBL9jeExkKSLydfxpKhqjVPLuA@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: novatek-nt36523: transition to mipi_dsi
- wrapped functions
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: neil.armstrong@linaro.org, Tejas Vipin <tejasvipin76@gmail.com>, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, lujianhua000@gmail.com, 
-	quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <635f849e14854b0db1f53a0d0bf329c3070e5859.camel@gmail.com>
 
-Hi,
+On Thu, Mar 06, 2025 at 04:40:05PM -0300, Gabriel Lima Luz wrote:
+> Em sex, 2025-02-28 às 20:40 +0300, Dan Carpenter escreveu:
+> > On Fri, Feb 28, 2025 at 01:23:54PM -0300, Gabriel Lima Luz wrote:
+> > > Adhere to Linux kernel coding style.
+> > > 
+> > > Reported by checkpatch:
+> > > 
+> > > CHECK: Avoid CamelCase
+> > > 
+> > > Signed-off-by: Gabriel Lima Luz <lima.gabriel.luz@gmail.com>
+> > > ---
+> > >  drivers/staging/sm750fb/ddk750_power.h | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/sm750fb/ddk750_power.h
+> > > b/drivers/staging/sm750fb/ddk750_power.h
+> > > index 63c9e8b6ffb3..33e852fe6949 100644
+> > > --- a/drivers/staging/sm750fb/ddk750_power.h
+> > > +++ b/drivers/staging/sm750fb/ddk750_power.h
+> > > @@ -3,10 +3,10 @@
+> > >  #define DDK750_POWER_H__
+> > >  
+> > >  enum dpms {
+> > > -	crtDPMS_ON = 0x0,
+> > > -	crtDPMS_STANDBY = 0x1,
+> > > -	crtDPMS_SUSPEND = 0x2,
+> > > -	crtDPMS_OFF = 0x3,
+> > > +	crt_DPMS_ON = 0x0,
+> > > +	crt_DPMS_STANDBY = 0x1,
+> > > +	crt_DPMS_SUSPEND = 0x2,
+> > > +	crt_DPMS_OFF = 0x3,
+> > >  };
+> > >  
+> > 
+> > It seems these are not used.  Just delete them.
+> > 
+> > regards,
+> > dan carpenter
+> > 
+> The dpms enum is used in the definition of the 
+> ddk750_set_dpms function in ddk750_power.h file and
+> this function is called in ddk750_display.c on line 158.
+> 
+> If I were to delete it, what changes should I make to 
+> the function mentioned above ? 
+> 
+> this is my first contribution, thanks for all the help.
 
-On Thu, Mar 6, 2025 at 11:03=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Thu, 6 Mar 2025 at 18:44, Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Mar 6, 2025 at 8:33=E2=80=AFAM Dmitry Baryshkov
-> > <dmitry.baryshkov@linaro.org> wrote:
-> > >
-> > > On Thu, Mar 06, 2025 at 03:05:10PM +0100, neil.armstrong@linaro.org w=
-rote:
-> > > > On 06/03/2025 14:43, Tejas Vipin wrote:
-> > > > > Changes the novatek-nt36523 panel to use multi style functions fo=
-r
-> > > > > improved error handling.
-> > > > >
-> > > > > Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
-> > > > > ---
-> > > > >   drivers/gpu/drm/panel/panel-novatek-nt36523.c | 1683 ++++++++--=
--------
-> > > > >   1 file changed, 823 insertions(+), 860 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36523.c b/driv=
-ers/gpu/drm/panel/panel-novatek-nt36523.c
-> > > > > index 04f1d2676c78..922a225f6258 100644
-> > > > > --- a/drivers/gpu/drm/panel/panel-novatek-nt36523.c
-> > > > > +++ b/drivers/gpu/drm/panel/panel-novatek-nt36523.c
-> > > > > @@ -23,10 +23,12 @@
-> > > > >   #define DSI_NUM_MIN 1
-> > > > > -#define mipi_dsi_dual_dcs_write_seq(dsi0, dsi1, cmd, seq...)    =
-    \
-> > > > > -           do {                                                 =
-\
-> > > > > -                   mipi_dsi_dcs_write_seq(dsi0, cmd, seq);      =
-\
-> > > > > -                   mipi_dsi_dcs_write_seq(dsi1, cmd, seq);      =
-\
-> > > > > +#define mipi_dsi_dual_dcs_write_seq_multi(dsi_ctx0, dsi_ctx1, cm=
-d, seq...)      \
-> > > > > +           do {                                                 =
-           \
-> > > > > +                   mipi_dsi_dcs_write_seq_multi(&dsi_ctx0, cmd, =
-seq);      \
-> > > > > +                   dsi_ctx1.accum_err =3D dsi_ctx0.accum_err;   =
-             \
-> > > > > +                   mipi_dsi_dcs_write_seq_multi(&dsi_ctx1, cmd, =
-seq);      \
-> > > > > +                   dsi_ctx0.accum_err =3D dsi_ctx1.accum_err;   =
-             \
-> > > >
-> > > > Just thinking out loud, but can't we do :
-> > > >
-> > > > struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D NULL };
-> > > >
-> > > > #define mipi_dsi_dual_dcs_write_seq_multi(dsi_ctx, dsi0, dsi1, cmd,=
- seq...)      \
-> > > >               do {
-> > > >                       dsi_ctx.dsi =3D dsi0;                        =
-             \
-> > > >                       mipi_dsi_dcs_write_seq_multi(&dsi_ctx, cmd, s=
-eq);       \
-> > > >                       dsi_ctx.dsi =3D dsi1;                        =
-             \
-> > > >                       mipi_dsi_dcs_write_seq_multi(&dsi_ctx, cmd, s=
-eq);       \
-> > > >
-> > > > ?
-> > > >
-> > > > So we have a single accum_err.
-> > >
-> > > I'd say that can be counter-prodactive. If only one of the links fall=
-s
-> > > apart, then the second link still can be initialized (and by observin=
-g a
-> > > half of the screen the user / devloper can make several assumptions).
-> > > In case of using just one context the driver will fail on the first
-> > > error and skip the rest of the init for both halves.
-> > >
-> > > I'd have a different suggestion though: what about passing two contex=
-ts
-> > > to the init_sequence callback and letting nt36523_prepare() handle ea=
-ch
-> > > of the error separately?
-> >
-> > IMO that's a bit outside the scope of what Tejas is doing since it's a
-> > functional change. Unless something is a super obvious bugfix it feels
-> > like doing the conversions like we're doing here should not include
-> > functionality changes and should be straight conversions.
-> >
-> > Also: I don't have tons of experience with dual MIPI panels, but I'm
-> > not totally sure how your suggestion would work in the end. Would you
-> > expect that if one panel succeeded and the other didn't that the
-> > prepare/enable calls in the panel should return "success"?
->
-> Well, panel bridge ignores return codes.
->
-> >  If they
-> > don't then higher levels will assume that the single "panel" that
-> > they're aware of didn't initialize at all and won't continue to do
-> > more. That means the user wouldn't have a chance to observe half the
-> > screen working.
-> >
-> > I could believe that, for all practical purposes, we could keep the
-> > errors separate and then just return the if either panel got an error
-> > in the end. It probably wouldn't make a huge difference and would
-> > shrink the code side. ...but that I think that should probably be the
-> > second patch in the series and not squahsed into the conversion.
->
-> I think passing two contexts can be considered a part of the
-> conversion. In the end, we have been changing some of the function
-> arguments already to pass context instead of global data.
-> In the end, currently there was no way for either of those double-DSI
-> panels to fail the init seq.
+Huh.  Using a enum for shifting isn't the right thing.  It should
+be unsigned int.
 
-OK, fair enough. No objections from me for going this way, then.
-Please make sure that the functionality change is mentioned in the
-commit message, though.
+The enum does serve as documentation.  Maybe just change it to
+a comment or something next to the ddk750_set_dpms() function.
 
--Doug
+The ddk750_set_dpms() function does a weird thing:
+
+	value = (value & ~SYSTEM_CTRL_DPMS_MASK) | state;
+
+state is something in 0x3 but SYSTEM_CTRL_DPMS_MASK is
+(0x3u << 30).  I bet it should match the on both sides of the
+if statement:
+
+	value = (value & ~SYSTEM_CTRL_DPMS_MASK) | (state << 30);
+
+But I can't test it so who knows?
+
+regards,
+dan carpenter
+
+
