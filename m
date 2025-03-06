@@ -1,90 +1,90 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60081C8602;
-	Thu,  6 Mar 2025 08:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248445; cv=pass; b=nnscRxojIqA+BKPyS/a9UgMG/gXzXlYWQeTF8xWYDuG5WnUSF/qclOiz+/wmeTcO5M5jmjM1mgwOuGi0MScBMUMsz6zJrD7uLn+le/FnGh8ItwNbqRoiBTQsTqjiORlBlU+6OtZSmdM8PvF+tG+q+0lRitQJrBwz+WZJKSJJAoI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248445; c=relaxed/simple;
-	bh=lA+iBJcFX6Jy8GTqBQJtCX4q+kEAxMYiJnZ1Q1Vk6YI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oMj8lFehRCVbu5W/+xPwZ4Ted5vsa30MIMzQvRuUuuN3oSNf6jIcUPo0BJXrTGEeWJcDWiAANcyhEynP0ehExDhVqNRIBfzXlu3bmUghqJUnt4deSjXvAWc9jsjaPU7XQNVB4Sr2NP00llx9Y3uYZalRL0xICWBEnx6ma+s0Yl8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Erj10uqx; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D352A4315F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741248566; cv=none; b=TE0QRyKQtYnsLe0FrZGXWRkzWM2Xyz5eSP/RxdEP4trQWWjZJIdUh2EYVQ4OuwXBbMGrDzGgQhUfJFHuNkE9fmr4m2yBQyBC/itXBkwvWRUzIMWPhKuhzUptgF2S8yn4eXljV/5dNsV9jM8Rquu03gSCOeIad/VAArD1pi4q4p4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741248566; c=relaxed/simple;
+	bh=xPcQs3lJY8BB/0zd8o3PUQwJewA3MOzuF4NKPjQvBqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BDv4m5GAXyNzvL/kzrOqFLYjwGQDE1RpRunw4L2bRldPsgnKfGn4ltopyFTn9kRJYiN37oYTc0h+7NA3CYGo09qiWPAkoA9T+fNWQdXb7oDL7Meoij/iPDozt4U7RlRqykVVk/XuSimLz4yrb+ySOBS3qxJBrCKstwSnwTLqy6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PWEfxxIH; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Erj10uqx"
-ARC-Seal: i=1; a=rsa-sha256; t=1741248391; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=CWvERW0aqJYos4A9ChZ0WUYpVAlLVFcka6xZ2DPgwvhNJaLV+ulwb86isCMTiDUYd/JbTGnMv/Icx1AmyM30qhjBwxVm5cA48k1rqgJuQrUa0vV0UY1EM+hZj70FX7usbKyLso6eyU5KZfDMJf25DqHEL3d6tMFRQsuLItb+BRM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741248391; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=pJnrzorwJZg5YVopIF87hrP6/JAWjqvnB+RBADKXXwE=; 
-	b=aweY4RFBbqtihLY1gVBtSPV4PS6Wk+Z8mXv28xlIXIhoreRVvzDEdPa8yyInVep2ODkU8e+MowviUpKgc9CmVy4YYRVsZ+lbMxrfQFDQ6mNihiQwIv2Kz/ArAkwcmkntfaXTaGUla47ZCdaFOuvlVbYcMc0TMe3saX+2Iuo1tm0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741248391;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=pJnrzorwJZg5YVopIF87hrP6/JAWjqvnB+RBADKXXwE=;
-	b=Erj10uqxvm9Iu8s/SDjtOeOxUkedSot1Wk0iS/H8EzDUM92HUKs+A3KDhXr6nWns
-	NFJQYC7clS0PRJq9vuIyYAEefmD/K7BVwYaoRc6bD/ffZb+/xP4n43Q30UjJGjxSXt8
-	ZDotbJ9sVKoP7QVH4dCkq4Rvdg3uKuje3p99xhhw=
-Received: by mx.zohomail.com with SMTPS id 174124838915716.167179851729884;
-	Thu, 6 Mar 2025 00:06:29 -0800 (PST)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	jose.abreu@synopsys.com,
-	nelson.costa@synopsys.com,
-	shawn.wen@rock-chips.com,
-	nicolas.dufresne@collabora.com,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH v1 0/3] Remove unused code from HDMI RX driver
-Date: Thu,  6 Mar 2025 11:05:30 +0300
-Message-ID: <20250306080533.294964-1-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PWEfxxIH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6803C41C84;
+	Thu,  6 Mar 2025 08:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741248562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tbxg8nlpln53T35IaEKbJFCQSSWdYtZsE7K0d58flLA=;
+	b=PWEfxxIH0L4Y1E3CuI9oP7O05/P0dvsyT+oHx1bbxPlyK0py+Nl79iJ/QIJONaBO6ckPp6
+	SN7z7VBm8tQmqPZNrOMVItugcL7tMQy4ECjwFjVBg4ntOmGOM32FHPPLsXqMP3rQ68X7rG
+	ky7x4c7jbkUwiKJgheW65CxwUjg4BhPgPHH/hPbFNzHjOJD/2z1x91LJf3ezMomGZ6yhpL
+	/vBMJ22PUpinYX4wjzLTXoaAi+MKBij7H7n5cQUc7VGvYpD3oI9WlxjWcPPWYYYo7H2tXs
+	vItVn4gkKJVaq+PORX5HVR4kGZ3zEIH9SXApsJwLQCQNVRgNDtNx7qkv5fnMcQ==
+Date: Thu, 6 Mar 2025 09:09:19 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas
+ Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v5 10/16] drm/bridge: ti-sn65dsi83: Switch to
+ drm_bridge_helper_reset_crtc
+Message-ID: <20250306090919.2ef0d65b@bootlin.com>
+In-Reply-To: <20250304-bridge-connector-v5-10-aacf461d2157@kernel.org>
+References: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
+	<20250304-bridge-connector-v5-10-aacf461d2157@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdejvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhiv
+ ggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Hans,
+Hi Maxime,
 
-This is a follow up to the v13 HDMI RX patches [1] addressing warning
-produced by Intel's test robot.
+On Tue, 04 Mar 2025 12:10:53 +0100
+Maxime Ripard <mripard@kernel.org> wrote:
 
-It also removes the unused HDMI CODEC leftovers that we accidentally
-missed to remove previously and makes minor improvement to the definition
-of struct snps_hdmirx_dev, all of which I noticed while was looking at
-the warning report.
+> Now that we have a helper for bridge drivers to call to reset the output
+> pipeline, let's use it.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi83.c | 28 +++++++++++-----------------
+>  1 file changed, 11 insertions(+), 17 deletions(-)
+> 
 
-Dmitry Osipenko (3):
-  media: platform: synopsys: hdmirx: Remove duplicated header inclusion
-  media: platform: synopsys: hdmirx: Remove unused HDMI audio CODEC
-    relics
-  media: platform: synopsys: hdmirx: Optimize struct snps_hdmirx_dev
+Reviewed-by: Herve Codina <herve.codina@bootlin.com>
 
- drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Also tested on my system with faults manually generated and no regressions
+were observed in the driver recovery process. Works fine.
 
--- 
-2.48.1
+Tested-by: Herve Codina <herve.codina@bootlin.com>
 
+Best regards,
+Hervé
