@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40131209F4A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E7120A5C1
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741253960; cv=none; b=H7uE+4hGoEEh//v/01Swo2hAkJl95JC68oTOk+P9uGEFaJmFl1Je0q/3laATAWwRzleCSz/a90/oYnY3ePHgakLHgohTtscB39WNp6hIXTcTVK50RBvfRtx59JH53Vrm59Wtns5yehp29gdX5GEQLTq1ixYJ3Wm6H7vZIwSnhMs=
+	t=1741253959; cv=none; b=h9pUEhpjj4lKf0x0t/QF1+gHhv/R0e7YjUWMpmjSgvdVJ64h5S+i5GhgLjLcVpHUkm1L73kCBvbnJGkDXb5Bvb6OXqtAM56erM2blCMVerJViEH2cv78guOwrIbbblaZ+IYYD7GcuHtylS5jbT4mdDdx6w7FOMWvX/sNgODXhco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741253960; c=relaxed/simple;
-	bh=X22BauJ/yxhjyd9bdHmx73unUwfLqnlpQZoxOrJ9bLs=;
+	s=arc-20240116; t=1741253959; c=relaxed/simple;
+	bh=97NucGCt7fLDCBZsxvtwk7nqDHmguV4mhYEZZK4elfA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oi78Grj+QJSH0cqHNq9yjsMJFqsFfpTi5UAp4Gn8CXKCfLKNMyXs1SNnfqP0TC0jTY6X6fOb53Q+rzGNkXz0Z1YJRWyi4IG7Likl/cNmwZ6Kc8KpqmqdT27ox6ge17JCXZ3uIaRnQYuCI7mWQVFRPH+rrmIG7dzTOdrIRlA+eEk=
+	 MIME-Version; b=qduz4sFpM8AKHDUoueHBTB86DIa+eSYHQbrxeEb46Lsx2pN5sJWyI40rgipay6b2SjaJ1VKnS2pY7LsUY0iXzcd+DvQOje+qTIIRBW1qCVvHt7rpHJaVohTMCYPgVIzB1ZMKGUITO2PfVGYFZHkQV/JXO4Z9Yntz3bcqHgDGSHA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tq7h0-0002QS-Iy; Thu, 06 Mar 2025 10:39:02 +0100
+	id 1tq7h0-0002QP-Iy; Thu, 06 Mar 2025 10:39:02 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tq7gz-004I9j-2O;
+	id 1tq7gz-004I9d-2D;
 	Thu, 06 Mar 2025 10:39:01 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tq7gz-009ECn-28;
+	id 1tq7gz-009ECI-1x;
 	Thu, 06 Mar 2025 10:39:01 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Sebastian Reichel <sre@kernel.org>,
@@ -43,9 +43,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Lukasz Luba <lukasz.luba@arm.com>,
 	linux-pm@vger.kernel.org,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH v4 7/7] thermal: core: Record PSCR before hw_protection_shutdown()
-Date: Thu,  6 Mar 2025 10:38:59 +0100
-Message-Id: <20250306093900.2199442-8-o.rempel@pengutronix.de>
+Subject: [PATCH v4 4/7] nvmem: add support for device and sysfs-based cell lookups
+Date: Thu,  6 Mar 2025 10:38:56 +0100
+Message-Id: <20250306093900.2199442-5-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250306093900.2199442-1-o.rempel@pengutronix.de>
 References: <20250306093900.2199442-1-o.rempel@pengutronix.de>
@@ -61,46 +61,180 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Enhance the thermal core to record the Power State Change Reason (PSCR)
-prior to invoking hw_protection_shutdown(). This change integrates the
-PSCR framework with the thermal subsystem, ensuring that reasons for
-power state changes, such as overtemperature events, are stored in a
-dedicated non-volatile memory (NVMEM) cell.
+Introduce new API functions to allow looking up NVMEM devices and cells
+by name, enhancing flexibility in cases where devicetree-based  lookup
+is not available.
 
-This 'black box' recording is crucial for post-mortem analysis, enabling
-a deeper understanding of system failures and abrupt shutdowns,
-especially in scenarios where PMICs or watchdog timers are incapable of
-logging such events.  The recorded data can be utilized during system
-recovery routines in the bootloader or early kernel stages of subsequent
-boots, significantly enhancing system diagnostics, reliability, and
-debugging capabilities.
+Key changes:
+- Added `nvmem_device_get_by_name()`: Enables retrieving an NVMEM device by its
+  name for systems where direct device reference is needed.
+- Added `nvmem_cell_get_by_sysfs_name()`: Allows retrieving an NVMEM cell based
+  on its sysfs-style name (e.g., "cell@offset,bits"), making it possible to
+  identify cells dynamically.
+- Introduced `nvmem_find_cell_entry_by_sysfs_name()`: A helper function that
+  constructs sysfs-like names and searches for matching cell entries.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/thermal/thermal_core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nvmem/core.c           | 91 ++++++++++++++++++++++++++++++++++
+ include/linux/nvmem-consumer.h | 14 ++++++
+ 2 files changed, 105 insertions(+)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 2328ac0d8561..af4e9cf22bf6 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -16,6 +16,7 @@
- #include <linux/kdev_t.h>
- #include <linux/idr.h>
- #include <linux/thermal.h>
-+#include <linux/pscrr.h>
- #include <linux/reboot.h>
- #include <linux/string.h>
- #include <linux/of.h>
-@@ -380,6 +381,8 @@ static void thermal_zone_device_halt(struct thermal_zone_device *tz, bool shutdo
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 928ac15f04a0..2ff0926dea23 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -1203,6 +1203,20 @@ struct nvmem_device *of_nvmem_device_get(struct device_node *np, const char *id)
+ EXPORT_SYMBOL_GPL(of_nvmem_device_get);
+ #endif
  
- 	dev_emerg(&tz->device, "%s: critical temperature reached\n", tz->type);
- 
-+	set_power_state_change_reason(PSCR_OVERTEMPERATURE);
++/**
++ * nvmem_device_get_by_name - Look up an NVMEM device by its device name
++ * @name: String matching device name in the provider
++ *
++ * Return: A valid pointer to struct nvmem_device on success,
++ * or ERR_PTR(...) on failure. The caller must later call nvmem_device_put() to
++ * release the reference.
++ */
++struct nvmem_device *nvmem_device_get_by_name(const char *name)
++{
++	return __nvmem_device_get((void *)name, device_match_name);
++}
++EXPORT_SYMBOL_GPL(nvmem_device_get_by_name);
 +
- 	if (shutdown)
- 		hw_protection_shutdown(msg, poweroff_delay_ms);
- 	else
+ /**
+  * nvmem_device_get() - Get nvmem device from a given id
+  *
+@@ -1516,6 +1530,83 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np, const char *id)
+ EXPORT_SYMBOL_GPL(of_nvmem_cell_get);
+ #endif
+ 
++/**
++ * nvmem_find_cell_entry_by_sysfs_name - Find an NVMEM cell entry by its sysfs
++ *					 name.
++ * @nvmem:      The nvmem_device pointer where the cell is located.
++ * @sysfs_name: The full sysfs cell name, e.g. "mycell@0x100,8".
++ *
++ * This function constructs the sysfs-like name for each cell and compares it
++ * to @sysfs_name. If a match is found, the matching nvmem_cell_entry pointer
++ * is returned. This is analogous to nvmem_find_cell_entry_by_name(), except
++ * it matches on the sysfs naming convention used in the device's attributes.
++ *
++ * Return: Pointer to the matching nvmem_cell_entry on success, or NULL if no
++ * match is found.
++ */
++static struct nvmem_cell_entry *
++nvmem_find_cell_entry_by_sysfs_name(struct nvmem_device *nvmem,
++				    const char *sysfs_name)
++{
++	struct nvmem_cell_entry *entry;
++	char *tmp;
++
++	mutex_lock(&nvmem_mutex);
++	list_for_each_entry(entry, &nvmem->cells, node) {
++		/* Reconstruct how the sysfs name is assigned */
++		tmp = kasprintf(GFP_KERNEL, "%s@%x,%u", entry->name,
++				entry->offset, entry->bit_offset);
++		if (!tmp)
++			continue;
++
++		if (!strcmp(tmp, sysfs_name)) {
++			kfree(tmp);
++			mutex_unlock(&nvmem_mutex);
++			return entry;
++		}
++		kfree(tmp);
++	}
++	mutex_unlock(&nvmem_mutex);
++
++	return NULL;
++}
++
++/**
++ * nvmem_cell_get_by_sysfs_name - Get a cell by its sysfs name from a given
++ *				  nvmem_device.
++ * @nvmem:      The nvmem_device pointer where the cell is located.
++ * @sysfs_name: The sysfs-style name, e.g. "mycell@0x100,8".
++ *
++ * This function uses nvmem_find_cell_entry_by_sysfs_name() to locate the cell
++ * entry, increments the reference counts for the matching NVMEM device, and
++ * then creates a struct nvmem_cell for the caller.
++ *
++ * Return: On success, a valid pointer to an nvmem_cell. On failure, an
++ * ERR_PTR() encoded error (e.g., -ENOENT if the cell entry is not found).
++ */
++struct nvmem_cell *nvmem_cell_get_by_sysfs_name(struct nvmem_device *nvmem,
++						const char *sysfs_name)
++{
++	struct nvmem_cell_entry *entry;
++	struct nvmem_cell *cell;
++
++	entry = nvmem_find_cell_entry_by_sysfs_name(nvmem, sysfs_name);
++	if (!entry)
++		return ERR_PTR(-ENOENT);
++
++	if (!try_module_get(nvmem->owner))
++		return ERR_PTR(-EINVAL);
++
++	kref_get(&nvmem->refcnt);
++
++	cell = nvmem_create_cell(entry, entry->name, 0);
++	if (IS_ERR(cell))
++		__nvmem_device_put(nvmem);
++
++	return cell;
++}
++EXPORT_SYMBOL_GPL(nvmem_cell_get_by_sysfs_name);
++
+ /**
+  * nvmem_cell_get() - Get nvmem cell of device form a given cell name
+  *
+diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+index bcb0e17e415d..6fc12cce8eb2 100644
+--- a/include/linux/nvmem-consumer.h
++++ b/include/linux/nvmem-consumer.h
+@@ -52,6 +52,8 @@ enum {
+ /* Cell based interface */
+ struct nvmem_cell *nvmem_cell_get(struct device *dev, const char *id);
+ struct nvmem_cell *devm_nvmem_cell_get(struct device *dev, const char *id);
++struct nvmem_cell *nvmem_cell_get_by_sysfs_name(struct nvmem_device *nvmem,
++						const char *cell_name);
+ void nvmem_cell_put(struct nvmem_cell *cell);
+ void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
+ void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len);
+@@ -70,6 +72,7 @@ int nvmem_cell_read_variable_le_u64(struct device *dev, const char *cell_id,
+ struct nvmem_device *nvmem_device_get(struct device *dev, const char *name);
+ struct nvmem_device *devm_nvmem_device_get(struct device *dev,
+ 					   const char *name);
++struct nvmem_device *nvmem_device_get_by_name(const char *name);
+ void nvmem_device_put(struct nvmem_device *nvmem);
+ void devm_nvmem_device_put(struct device *dev, struct nvmem_device *nvmem);
+ int nvmem_device_read(struct nvmem_device *nvmem, unsigned int offset,
+@@ -109,6 +112,12 @@ static inline struct nvmem_cell *devm_nvmem_cell_get(struct device *dev,
+ 	return ERR_PTR(-EOPNOTSUPP);
+ }
+ 
++struct nvmem_cell *nvmem_cell_get_by_sysfs_name(struct nvmem_device *nvmem,
++						const char *cell_name)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
+ static inline void devm_nvmem_cell_put(struct device *dev,
+ 				       struct nvmem_cell *cell)
+ {
+@@ -185,6 +194,11 @@ static inline struct nvmem_device *devm_nvmem_device_get(struct device *dev,
+ 	return ERR_PTR(-EOPNOTSUPP);
+ }
+ 
++struct nvmem_device *nvmem_device_get_by_name(const char *name)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
+ static inline void nvmem_device_put(struct nvmem_device *nvmem)
+ {
+ }
 -- 
 2.39.5
 
