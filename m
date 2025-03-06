@@ -1,257 +1,424 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DAD20F089
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 15:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FE3020E700;
+	Thu,  6 Mar 2025 15:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741274794; cv=none; b=uvrP7wVzkENTk3ScxgXiRZONERHPLbhIPeco4qXSpUXO+OYb6qkK9fLEfcPXonqaG2dtblJ/PdnvKaAwTZuLl3bCMB4dK/hmUoagEbQUotPqD7MeC4xloMzBZ+6fcjIz3qpL827C49nCoODBwWYYJML8nfMRaGwd80WAdyFuBj8=
+	t=1741274796; cv=none; b=RqVwin1xsNpOo+n5j4P2/zoSwA6kmn8VErE681zfKP+FNYXO7hKLT963jO2FuQaOg0ysjKS6j8pr8z8qCxzwOLBlIn1Vcs/x1TyD2kfaemQv0Kbz44WmP91cXnNWd3PBZK7kMZAM83zkAxiZ46BrG2T+35/7o8EKUfp2AZaDvFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741274794; c=relaxed/simple;
-	bh=rq3ebekspowb+RTf0p8oYZyBTCEKc4l+e107QAknleI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jkIly/KevgsfqRsOde9gJHKgLjw2jp6QUelyBMy8jHJdzQbPRY0qWMUpXxR6R7UAk66XRWMg2bZpZQLc9iTgYDdQ5lbwAzntqy3qk2VwYWcJaO9rQrVFWb9TqaYWQeIMcvonW7y6lv4aOVTHGxIWypdG7Ap0kaU3Dm0zAQxyqDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ckbFkW3L; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ckbFkW3L"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e4ad1d67bdso1208106a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 07:26:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741274790; x=1741879590; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iIFvuaqHhFntvQlpRTIvoKjIOarKQMOq9Ag0pcr/34A=;
-        b=ckbFkW3LarT0Ylf2YXvXcU34exZ+nwldcYVSAjGMUQi0HxplMr6t4e8yeFluPYo98P
-         6N0R/qQ5ELj9Z+CRJvmGIblisqyG1LQMB5ovpTNHhoX4zkNsmbiNoPukpC6Bc1UdjfRO
-         9eyHSxVi9oyDUUcapn+hiLnk3IS7oaDriw0SFTvOiOdYhHWiZ9uCeBlIJoNVpLoi/0lQ
-         7ME5PYORNJuedKqLDWxtZNlM/PXF1ZZ68N0Lp+C/SWZUB5JGnN5AxUymLXCGgtmZ5Vpx
-         YwGTQr+YDpXaQBJHVePHzgJge/A3EbL+zmCgw4fL9ZRGphCcJsXgE2HnO17JIzk+xHOB
-         NfHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741274790; x=1741879590;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iIFvuaqHhFntvQlpRTIvoKjIOarKQMOq9Ag0pcr/34A=;
-        b=pYxtQbeE44ZlfJm+zbR6Pr8vNMnLcx7aqP7uKsImOOzX+NUluVZdGOe9caJjkA+8NN
-         m+qibBBX8EjjASuuj6qgLEpsxnBxNx85gw9quLEM3bIHXqWc3SRx5ZhH+2ZTxQjvTO9x
-         BAtsKha20PV4Xh4c1gLyvj5LZ6HihmvQPXGcRwR1loRG3wG+wqH1QTlpOk7LLD6U/8Hs
-         l20Nku+ngCwIjbb7ZLRwe3mE98vzOLS6mrVbtXibzip2Fg299m1lwg+sc1tToNH8o24w
-         H9ZNQFX5bpcUy8P+OFok2sSMB11H6+KNvdA3LE+qhPHQOZLNl5IvHqG1MnhMey4JQSYc
-         Yxqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWu0fHpWF2AFnRbJzmevUCsri7nT5JkYCerYEuwLJYiX0RuCNdUkagZveQzrWZvUAyfZD5w2rRH4baiwc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHsCRp65p6YZoxDZal87m2Vux/LX4iMOog4Psa3u4gGoNQHp7f
-	DEMOaNDoqFVyVpylP8rM71bwX4hX6POt+uJP614KAh6blZhe5oS8AIuCTGMbZDQ=
-X-Gm-Gg: ASbGncsGMuJ5TttJRR+lQN1pAfLgi8KzUEApnrMJSrR+Jd1DqZBopS8Z/D2dJzjCeqa
-	rmQFS2euUDcjlwkOKNaC2ktR/e/ygwfwYzk/NdxJi7CMPbQWxU5uqJofqF8OXdGdfcdiMCo7X7k
-	umQierWMtOhglVu9KoUmBE7WOArCIdipFHUMubQADzozywFe/XN56dxDp/GpwZE0WeYcXvJjQve
-	tcjgZrFQBilc/b6Rml5Z3H9HFnYg38/lxa9UGuMF02sHHIZBQKg3KUB6nJT1gvYfhY1Xa3mH6uf
-	sxZWr79ibxX651ScxsiPQvRQReks3WwZzE9FoWIlFVm7D5Hc
-X-Google-Smtp-Source: AGHT+IH0jkdkKlxaqF3wkqHwudjs10mK4wes1NDX4QS5VUliT9VayRAZEVO93js8rAurkPGvYT2syQ==
-X-Received: by 2002:a05:6402:234a:b0:5d0:8197:7ab3 with SMTP id 4fb4d7f45d1cf-5e59f353369mr8529169a12.3.1741274790139;
-        Thu, 06 Mar 2025 07:26:30 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c766a5bcsm1078630a12.52.2025.03.06.07.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 07:26:29 -0800 (PST)
-Message-ID: <ac831e724393dd928d3e62a4cfe2d9d30af7a081.camel@linaro.org>
-Subject: Re: [PATCH v2 4/4] pinctrl: samsung: Add filter selection support
- for alive bank on gs101
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, Krzysztof Kozlowski	
- <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
-	 <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, 	kernel-team@android.com,
- jaewon02.kim@samsung.com
-Date: Thu, 06 Mar 2025 15:26:28 +0000
-In-Reply-To: <20250301-pinctrl-fltcon-suspend-v2-4-a7eef9bb443b@linaro.org>
-References: <20250301-pinctrl-fltcon-suspend-v2-0-a7eef9bb443b@linaro.org>
-	 <20250301-pinctrl-fltcon-suspend-v2-4-a7eef9bb443b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+	s=arc-20240116; t=1741274796; c=relaxed/simple;
+	bh=s18q+Pc31Q6ftDhyOfg0aBWMy27a69oWlNJP6Pvcne0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=najJfdpHFOoDie/sAxNcFzZN4VInnfTgfYLTJi8DZwlX/glfxPQJwK03wgMFudiiyA3QtMxsppWtvNFdQViPN/nw8j0R/9eme6rRY4QUDyCgPW/Ci0vmgl1gYXRIFburTigtUUxVJhP9npIHrtQxSG1rsDowofa9DRGmKrz00hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: GzUy20AjRQeX061D6PP2HA==
+X-CSE-MsgGUID: WXHGJxQfTnK/AotX0ei+Lg==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 07 Mar 2025 00:26:33 +0900
+Received: from superbuilder.administration.lan (unknown [10.226.93.123])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 49BEE400091E;
+	Fri,  7 Mar 2025 00:26:30 +0900 (JST)
+From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+To: thierry.bultel@linatsea.fr
+Cc: linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org,
+	paul.barker.ct@bp.renesas.com,
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v4 09/13] serial: sh-sci: Introduced sci_of_data
+Date: Thu,  6 Mar 2025 16:24:43 +0100
+Message-ID: <20250306152451.2356762-10-thierry.bultel.yh@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250306152451.2356762-1-thierry.bultel.yh@bp.renesas.com>
+References: <20250306152451.2356762-1-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2025-03-01 at 11:43 +0000, Peter Griffin wrote:
-> Newer Exynos based SoCs have a filter selection bitfield in the filter
-> configuration registers on alive bank pins. This allows the selection of
-> a digital or analog delay filter for each pin. Add support for selecting
-> and enabling the filter.
->=20
-> On suspend we set the analog filter to all pins in the bank (as the
-> digital filter relies on a clock). On resume the digital filter is
-> reapplied to all pins in the bank. The digital filter is working via
-> a clock and has an adjustable filter delay flt_width bitfield, whereas
-> the analog filter uses a fixed delay.
->=20
-> The filter determines to what extent signal fluctuations received through
-> the pad are considered glitches.
->=20
-> The code path can be exercised using
-> echo mem > /sys/power/state
-> And then wake the device using a eint gpio
->=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->=20
-> Changes since v1:
-> * Remove eint_flt_selectable bool as it can be deduced from EINT_TYPE_WKU=
-P (Peter)
-> * Move filter config comment to header (Andre)
-> * Rename EXYNOS_FLTCON_DELAY to EXYNOS_FLTCON_ANALOG (Andre)
-> * Remove misleading old comment (Andre)
-> * Refactor exynos_eint_update_flt_reg() into a loop (Andre)
->=20
-> Note: this patch was previously sent as part of the initial gs101/ Pixel =
-6
-> series and was dropped in v6. This new version incorporates the review
-> feedback from Sam Protsenko here in v5.
->=20
-> Link: https://lore.kernel.org/all/20231201160925.3136868-1-peter.griffin@=
-linaro.org/T/#m79ced98939e895c840d812c8b4c2b3f33ce604c8
->=20
-> Changes since previous version
-> * Drop fltcon_type enum and use bool eint_flt_selectable (Sam)
-> * Refactor and add exynos_eint_update_flt_reg() (Sam)
-> * Rename function to exynos_eint_set_filter() for easier readability (Sam=
-)
-> * Remove comments and `if bank->fltcon_type !=3D FLT_DEFAULT)` checks and=
- indentation (Sam)
-> ---
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.c | 35 +++++++++++++++++++++=
-+++++++++++
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.h | 21 +++++++++++++++++++
-> =C2=A02 files changed, 56 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/s=
-amsung/pinctrl-exynos.c
-> index ddc7245ec2e5..4c467651b034 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> @@ -369,6 +369,39 @@ struct exynos_eint_gpio_save {
-> =C2=A0	u32 eint_mask;
-> =C2=A0};
-> =C2=A0
-> +static void exynos_eint_update_flt_reg(void __iomem *reg, int cnt, int c=
-on)
-> +{
-> +	unsigned int val, shift;
-> +	int i;
-> +
-> +	val =3D readl(reg);
-> +	for (i =3D 0; i < cnt; i++) {
-> +		shift =3D i * EXYNOS_FLTCON_LEN;
-> +		val |=3D con << shift;
+The aim here is to provide an easier support to more different SCI
+controllers, like the RZ/T2H one.
 
-EXYNOS_FLTCON_ANALOG =3D=3D 0, so this code still needs to clear
-bit 6 to undo a previous enabling of digital filter:
+The existing .data field of_sci_match is changed to a structure containing
+all what that can be statically initialized, and avoid a call to
+'sci_probe_regmap', in both 'sci_init_single', and 'early_console_setup'.
 
-    val &=3D ~(EXYNOS_FLTCON_DIGITAL << shift);
-    val |=3D con << shift;
+'sci_probe_regmap' is now assumed to be called in the only case where the
+device description is from a board file instead of a dts.
 
+In this way, there is no need to patch 'sci_probe_regmap' for adding new
+SCI type, and also, the specific sci_port_params for a new SCI type can be
+provided by an external file.
 
-> +	}
-> +	writel(val, reg);
-> +}
-> +
-> +/*
-> + * Set the desired filter (digital or analog delay) and enable it to
-> + * every pin in the bank. Note the filter selection bitfield is only
-> + * found on alive banks. The filter determines to what extent signal
-> + * fluctuations received through the pad are considered glitches.
-> + */
-> +static void exynos_eint_set_filter(struct samsung_pin_bank *bank, int fi=
-lter)
-> +{
-> +	unsigned int off =3D EXYNOS_GPIO_EFLTCON_OFFSET + bank->eint_fltcon_off=
-set;
-> +	void __iomem *reg =3D bank->drvdata->virt_base + off;
-> +	unsigned int con =3D EXYNOS_FLTCON_EN | filter;
-> +
-> +	if (bank->eint_type !=3D EINT_TYPE_WKUP)
-> +		return;
-> +
-> +	for (int n =3D 0; n < bank->nr_pins; n +=3D 4)
-> +		exynos_eint_update_flt_reg(reg + n,
-> +					=C2=A0=C2=A0 min(bank->nr_pins - n, 4), con);
-> +}
-> +
-> =C2=A0/*
-> =C2=A0 * exynos_eint_gpio_init() - setup handling of external gpio interr=
-upts.
-> =C2=A0 * @d: driver data of samsung pinctrl driver.
-> @@ -834,6 +867,7 @@ void gs101_pinctrl_suspend(struct samsung_pin_bank *b=
-ank)
-> =C2=A0		pr_debug("%s: save=C2=A0=C2=A0=C2=A0 mask %#010x\n",
-> =C2=A0			 bank->name, save->eint_mask);
-> =C2=A0	}
-> +	exynos_eint_set_filter(bank, EXYNOS_FLTCON_ANALOG);
+Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+---
+Changes v3->v4:
+   - Fix the bot compilation error on superh in sci_probe_earlyprink()
+---
+ drivers/tty/serial/sh-sci-common.h |  10 +-
+ drivers/tty/serial/sh-sci.c        | 164 +++++++++++++++++++++--------
+ 2 files changed, 131 insertions(+), 43 deletions(-)
 
-Similar to patch 2, might be nicer to have this all if / else if to
-make it more obvious that set_filter() is not unconditional.
-
-
-> =C2=A0}
-> =C2=A0
-> =C2=A0void exynosautov920_pinctrl_suspend(struct samsung_pin_bank *bank)
-> @@ -889,6 +923,7 @@ void gs101_pinctrl_resume(struct samsung_pin_bank *ba=
-nk)
-> =C2=A0		writel(save->eint_mask, regs + bank->irq_chip->eint_mask
-> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + bank->eint_offset);
-> =C2=A0	}
-> +	exynos_eint_set_filter(bank, EXYNOS_FLTCON_DIGITAL);
-
-dito.
-
-Cheers,
-Andre'
-
-> =C2=A0}
-> =C2=A0
-> =C2=A0void exynos_pinctrl_resume(struct samsung_pin_bank *bank)
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/s=
-amsung/pinctrl-exynos.h
-> index 773f161a82a3..203d4b76a956 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-> @@ -52,6 +52,27 @@
-> =C2=A0#define EXYNOS_EINT_MAX_PER_BANK	8
-> =C2=A0#define EXYNOS_EINT_NR_WKUP_EINT
-> =C2=A0
-> +/*
-> + * EINT filter configuration register (on alive banks) has
-> + * the following layout.
-> + *
-> + * BitfieldName[PinNum][Bit:Bit]
-> + * FLT_EN[3][31] FLT_SEL[3][30] FLT_WIDTH[3][29:24]
-> + * FLT_EN[2][23] FLT_SEL[2][22] FLT_WIDTH[2][21:16]
-> + * FLT_EN[1][15] FLT_SEL[1][14] FLT_WIDTH[1][13:8]
-> + * FLT_EN[0][7]=C2=A0 FLT_SEL[0][6]=C2=A0 FLT_WIDTH[0][5:0]
-> + *
-> + * FLT_EN	0x0 =3D Disable, 0x1=3DEnable
-> + * FLT_SEL	0x0 =3D Analog delay filter, 0x1 Digital filter (clock count)
-> + * FLT_WIDTH	Filtering width. Valid when FLT_SEL is 0x1
-> + */
-> +
-> +#define EXYNOS_FLTCON_EN		BIT(7)
-> +#define EXYNOS_FLTCON_DIGITAL		BIT(6)
-> +#define EXYNOS_FLTCON_ANALOG		(0 << 6)
-> +#define EXYNOS_FLTCON_MASK		GENMASK(7, 0)
-> +#define EXYNOS_FLTCON_LEN		8
-> +
-> =C2=A0#define EXYNOS_PIN_BANK_EINTN(pins, reg, id)		\
-> =C2=A0	{						\
-> =C2=A0		.type		=3D &bank_type_off,	\
->=20
+diff --git a/drivers/tty/serial/sh-sci-common.h b/drivers/tty/serial/sh-sci-common.h
+index 3ea116033d53..16b41da4afd9 100644
+--- a/drivers/tty/serial/sh-sci-common.h
++++ b/drivers/tty/serial/sh-sci-common.h
+@@ -89,6 +89,14 @@ struct sci_port_ops {
+ 	size_t (*suspend_regs_size)(void);
+ };
+ 
++struct sci_of_data {
++	const struct sci_port_params *params;
++	const struct uart_ops *uart_ops;
++	const struct sci_port_ops *ops;
++	unsigned short regtype;
++	unsigned short type;
++};
++
+ struct sci_port {
+ 	struct uart_port	port;
+ 
+@@ -152,7 +160,7 @@ int sci_startup(struct uart_port *port);
+ #define max_sr(_port)		fls((_port)->sampling_rate_mask)
+ 
+ #ifdef CONFIG_SERIAL_SH_SCI_EARLYCON
+-int __init scix_early_console_setup(struct earlycon_device *device, int);
++int __init scix_early_console_setup(struct earlycon_device *device, const struct sci_of_data *data);
+ #endif
+ 
+ #endif /* __SH_SCI_COMMON_H__ */
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 4e82055a41c8..a8e7f739c4ec 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -2996,10 +2996,13 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
+ }
+ 
+ static const struct sci_port_params *
+-sci_probe_regmap(const struct plat_sci_port *cfg)
++sci_probe_regmap(const struct plat_sci_port *cfg, struct sci_port *sci_port)
+ {
+ 	unsigned int regtype;
+ 
++	sci_port->ops = &sci_port_ops;
++	sci_port->port.ops = &sci_uart_ops;
++
+ 	if (cfg->regtype != SCIx_PROBE_REGTYPE)
+ 		return &sci_port_params[cfg->regtype];
+ 
+@@ -3046,9 +3049,7 @@ static int sci_init_single(struct platform_device *dev,
+ 	int ret;
+ 
+ 	sci_port->cfg	= p;
+-	sci_port->ops	= &sci_port_ops;
+ 
+-	port->ops	= &sci_uart_ops;
+ 	port->iotype	= UPIO_MEM;
+ 	port->line	= index;
+ 	port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_SH_SCI_CONSOLE);
+@@ -3088,10 +3089,6 @@ static int sci_init_single(struct platform_device *dev,
+ 		for (i = 1; i < ARRAY_SIZE(sci_port->irqs); i++)
+ 			sci_port->irqs[i] = sci_port->irqs[0];
+ 
+-	sci_port->params = sci_probe_regmap(p);
+-	if (unlikely(sci_port->params == NULL))
+-		return -EINVAL;
+-
+ 	switch (p->type) {
+ 	case PORT_SCIFB:
+ 		sci_port->rx_trigger = 48;
+@@ -3277,13 +3274,18 @@ static struct console early_serial_console = {
+ static int sci_probe_earlyprintk(struct platform_device *pdev)
+ {
+ 	const struct plat_sci_port *cfg = dev_get_platdata(&pdev->dev);
++	struct sci_port *sp = &sci_ports[pdev->id];
+ 
+ 	if (early_serial_console.data)
+ 		return -EEXIST;
+ 
+ 	early_serial_console.index = pdev->id;
+ 
+-	sci_init_single(pdev, &sci_ports[pdev->id], pdev->id, cfg, true);
++	sp->params = sci_probe_regmap(cfg, sp);
++	if (!sp->params)
++		return -ENODEV;
++
++	sci_init_single(pdev, sp, pdev->id, cfg, true);
+ 
+ 	if (!strstr(early_serial_buf, "keep"))
+ 		early_serial_console.flags |= CON_BOOT;
+@@ -3332,58 +3334,126 @@ static void sci_remove(struct platform_device *dev)
+ 		device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
+ }
+ 
+-#define SCI_OF_DATA(type, regtype)	(void *)((type) << 16 | (regtype))
+-#define SCI_OF_TYPE(data)		((unsigned long)(data) >> 16)
+-#define SCI_OF_REGTYPE(data)		((unsigned long)(data) & 0xffff)
++static const struct sci_of_data of_sci_scif_sh2 = {
++	.type = PORT_SCIF,
++	.regtype = SCIx_SH2_SCIF_FIFODATA_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_SH2_SCIF_FIFODATA_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_scif_rz_scifa = {
++	.type = PORT_SCIF,
++	.regtype = SCIx_RZ_SCIFA_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_RZ_SCIFA_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_scif_rzv2h = {
++	.type = PORT_SCIF,
++	.regtype = SCIx_RZV2H_SCIF_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_RZV2H_SCIF_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_rcar_scif = {
++	.type = PORT_SCIF,
++	.regtype = SCIx_SH4_SCIF_BRG_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_SH4_SCIF_BRG_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_scif_sh4 = {
++	.type = PORT_SCIF,
++	.regtype = SCIx_SH4_SCIF_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_SH4_SCIF_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_scifa = {
++	.type = PORT_SCIFA,
++	.regtype = SCIx_SCIFA_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_SCIFA_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_scifb = {
++	.type = PORT_SCIFB,
++	.regtype = SCIx_SCIFB_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_SCIFB_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_hscif = {
++	.type = PORT_HSCIF,
++	.regtype = SCIx_HSCIF_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_HSCIF_REGTYPE],
++};
++
++static const struct sci_of_data of_sci_sci = {
++	.type = PORT_SCI,
++	.regtype = SCIx_SCI_REGTYPE,
++	.ops = &sci_port_ops,
++	.uart_ops = &sci_uart_ops,
++	.params = &sci_port_params[SCIx_SCI_REGTYPE],
++};
+ 
+ static const struct of_device_id of_sci_match[] __maybe_unused = {
+ 	/* SoC-specific types */
+ 	{
+ 		.compatible = "renesas,scif-r7s72100",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH2_SCIF_FIFODATA_REGTYPE),
++		.data = &of_sci_scif_sh2,
+ 	},
+ 	{
+ 		.compatible = "renesas,scif-r7s9210",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
++		.data = &of_sci_scif_rz_scifa,
+ 	},
+ 	{
+ 		.compatible = "renesas,scif-r9a07g044",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
++		.data = &of_sci_scif_rz_scifa,
+ 	},
+ 	{
+ 		.compatible = "renesas,scif-r9a09g057",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZV2H_SCIF_REGTYPE),
++		.data = &of_sci_scif_rzv2h,
+ 	},
+ 	/* Family-specific types */
+ 	{
+ 		.compatible = "renesas,rcar-gen1-scif",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH4_SCIF_BRG_REGTYPE),
++		.data = &of_sci_rcar_scif,
+ 	}, {
+ 		.compatible = "renesas,rcar-gen2-scif",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH4_SCIF_BRG_REGTYPE),
++		.data = &of_sci_rcar_scif,
+ 	}, {
+ 		.compatible = "renesas,rcar-gen3-scif",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH4_SCIF_BRG_REGTYPE),
++		.data = &of_sci_rcar_scif
+ 	}, {
+ 		.compatible = "renesas,rcar-gen4-scif",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH4_SCIF_BRG_REGTYPE),
++		.data = &of_sci_rcar_scif
+ 	},
+ 	/* Generic types */
+ 	{
+ 		.compatible = "renesas,scif",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH4_SCIF_REGTYPE),
++		.data = &of_sci_scif_sh4,
+ 	}, {
+ 		.compatible = "renesas,scifa",
+-		.data = SCI_OF_DATA(PORT_SCIFA, SCIx_SCIFA_REGTYPE),
++		.data = &of_sci_scifa,
+ 	}, {
+ 		.compatible = "renesas,scifb",
+-		.data = SCI_OF_DATA(PORT_SCIFB, SCIx_SCIFB_REGTYPE),
++		.data = &of_sci_scifb,
+ 	}, {
+ 		.compatible = "renesas,hscif",
+-		.data = SCI_OF_DATA(PORT_HSCIF, SCIx_HSCIF_REGTYPE),
++		.data = &of_sci_hscif,
+ 	}, {
+ 		.compatible = "renesas,sci",
+-		.data = SCI_OF_DATA(PORT_SCI, SCIx_SCI_REGTYPE),
++		.data = &of_sci_sci,
+ 	}, {
+ 		/* Terminator */
+ 	},
+@@ -3402,7 +3472,7 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
+ 	struct reset_control *rstc;
+ 	struct plat_sci_port *p;
+ 	struct sci_port *sp;
+-	const void *data;
++	const struct sci_of_data *data;
+ 	int id, ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_OF) || !np)
+@@ -3449,8 +3519,12 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
+ 	sp->rstc = rstc;
+ 	*dev_id = id;
+ 
+-	p->type = SCI_OF_TYPE(data);
+-	p->regtype = SCI_OF_REGTYPE(data);
++	p->type = data->type;
++	p->regtype = data->regtype;
++
++	sp->ops = data->ops;
++	sp->port.ops = data->uart_ops;
++	sp->params = data->params;
+ 
+ 	sp->has_rtscts = of_property_read_bool(np, "uart-has-rtscts");
+ 
+@@ -3557,6 +3631,7 @@ static int sci_probe(struct platform_device *dev)
+ 		p = sci_parse_dt(dev, &dev_id);
+ 		if (IS_ERR(p))
+ 			return PTR_ERR(p);
++		sp = &sci_ports[dev_id];
+ 	} else {
+ 		p = dev->dev.platform_data;
+ 		if (p == NULL) {
+@@ -3565,9 +3640,12 @@ static int sci_probe(struct platform_device *dev)
+ 		}
+ 
+ 		dev_id = dev->id;
++		sp = &sci_ports[dev_id];
++		sp->params = sci_probe_regmap(p, sp);
++		if (!sp->params)
++			return -ENODEV;
+ 	}
+ 
+-	sp = &sci_ports[dev_id];
+ 	sp->suspend_regs = devm_kzalloc(&dev->dev,
+ 					sp->ops->suspend_regs_size(),
+ 					GFP_KERNEL);
+@@ -3714,19 +3792,23 @@ static int early_console_exit(struct console *co)
+ }
+ 
+ int __init scix_early_console_setup(struct earlycon_device *device,
+-				      int type)
++				    const struct sci_of_data *data)
+ {
+ 	const struct sci_common_regs *regs;
+ 
+ 	if (!device->port.membase)
+ 		return -ENODEV;
+ 
+-	device->port.type = type;
++	device->port.type = data->type;
+ 	sci_ports[0].port = device->port;
+-	port_cfg.type = type;
++
++	port_cfg.type = data->type;
++	port_cfg.regtype = data->regtype;
++
+ 	sci_ports[0].cfg = &port_cfg;
+-	sci_ports[0].ops = &sci_port_ops;
+-	sci_ports[0].params = sci_probe_regmap(&port_cfg);
++	sci_ports[0].params = data->params;
++	sci_ports[0].ops = data->ops;
++	sci_ports[0].port.ops = data->uart_ops;
+ 	sci_uart_earlycon = true;
+ 	regs = sci_ports[0].params->common_regs;
+ 
+@@ -3743,41 +3825,39 @@ int __init scix_early_console_setup(struct earlycon_device *device,
+ static int __init sci_early_console_setup(struct earlycon_device *device,
+ 					  const char *opt)
+ {
+-	return scix_early_console_setup(device, PORT_SCI);
++	return scix_early_console_setup(device, &of_sci_sci);
+ }
+ static int __init scif_early_console_setup(struct earlycon_device *device,
+ 					  const char *opt)
+ {
+-	return scix_early_console_setup(device, PORT_SCIF);
++	return scix_early_console_setup(device, &of_sci_scif_sh4);
+ }
+ static int __init rzscifa_early_console_setup(struct earlycon_device *device,
+ 					  const char *opt)
+ {
+-	port_cfg.regtype = SCIx_RZ_SCIFA_REGTYPE;
+-	return scix_early_console_setup(device, PORT_SCIF);
++	return scix_early_console_setup(device, &of_sci_scif_rz_scifa);
+ }
+ 
+ static int __init rzv2hscif_early_console_setup(struct earlycon_device *device,
+ 						const char *opt)
+ {
+-	port_cfg.regtype = SCIx_RZV2H_SCIF_REGTYPE;
+-	return scix_early_console_setup(device, PORT_SCIF);
++	return scix_early_console_setup(device, &of_sci_scif_rzv2h);
+ }
+ 
+ static int __init scifa_early_console_setup(struct earlycon_device *device,
+ 					  const char *opt)
+ {
+-	return scix_early_console_setup(device, PORT_SCIFA);
++	return scix_early_console_setup(device, &of_sci_scifa);
+ }
+ static int __init scifb_early_console_setup(struct earlycon_device *device,
+ 					  const char *opt)
+ {
+-	return scix_early_console_setup(device, PORT_SCIFB);
++	return scix_early_console_setup(device, &of_sci_scifb);
+ }
+ static int __init hscif_early_console_setup(struct earlycon_device *device,
+ 					  const char *opt)
+ {
+-	return scix_early_console_setup(device, PORT_HSCIF);
++	return scix_early_console_setup(device, &of_sci_hscif);
+ }
+ 
+ OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
+-- 
+2.43.0
 
