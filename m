@@ -1,123 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42121DB375;
-	Thu,  6 Mar 2025 07:05:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCA419DF4D;
+	Thu,  6 Mar 2025 07:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741244756; cv=none; b=sU/ILHgstT/F2YyoiAzXYk9I5wLuVAh5ujSCvabOXAa+LNY5nJT13akC2eVJocs4qJ//95aHkvGrruWOv7AamXFxMydn5qNCsuutbCnqQdX4pz2lRicXZ1trqcSKUddrs5A62rbN20PlihuZ/2kVbJvusTVTMa+PJpqgAymv8GY=
+	t=1741244808; cv=none; b=O00SojbCNXRM7JvnG3PucFG7RP8JankwRG9C1xpjFtnqmxsuY7XbBU2dbUjYJ0H+WVGwV2ujobFVz7ypdNMjulk28IGlDj9k5w3/hxv2BhC1VwzrHvPGIf9dM5IM8E+8hygCts1pL5SIjh2TJ3XaYtdLwo2Ih6XRo/rnxt0Jrsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741244756; c=relaxed/simple;
-	bh=0pW/AzRF/RuX+cwE3R6LyUhFONr4bslHUHFeHtCPcU8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jFAQ3H5yTGeQohiYdOF8bIvHS8iFgO+WO3Jt6+G+fiZwfNMYvjrsQmC6qYb22ittcN7bAaT1T1qIR/rghT1hHRrURTOdJ8JdLEfj2vR/wh1SXKpZETN9V6gRjI9mlpfi8nh9fWAU7HoHxeEKZHLV+XqrVIZ9Puybgmblxkmngmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LngcmC5h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741244808; c=relaxed/simple;
+	bh=TPHLV7UHKuf3IzBVO5JpmSCDRfQpTpWNmkLIv6ixv3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oXfUbtt7gM0aZhWIEq7xPIFj5xaa0rL/61SoHpO14eCOPm9eBI7L503IGzFIArZXS7j+k1N1fgmYoz84SmOpftSM2n43jL+/NQKhPTZPkWNBy3Pc2Y2UBPawXjQCCyfSkJDwMuD6yrIfSJ5Ot4eMOnV35IjGe+/tLf/9XI/vx1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KJWQwjEO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LngcmC5h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D99C4CEED;
-	Thu,  6 Mar 2025 07:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741244756;
-	bh=0pW/AzRF/RuX+cwE3R6LyUhFONr4bslHUHFeHtCPcU8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LngcmC5hlaMxZxKui39ZWm3OV7a8sOWHNSWyRPVrCBcU5tgJpETNKoILjc2V0v7Ft
-	 B5ARU6Mq3XMQhSytdSe/GTY7/AAgHbFJ9ThhpJwws0kVBImfTYqL54bS6ZnEx2lAPs
-	 NmYMDhSZmJFHtwbXfZo6DxyEvK/qeaJuJb2YQcjR2kTnIKSghdhUU3r0atc8q4c0Ju
-	 D6QVS5goosTY45uzv0oW6QxlCxRCvWKSDbe2uJ5aWBTxHDeYbzeFbcAJz19OC6hvlo
-	 bxz461xpxbEzGUNO+1/VgJe6qo7QTawxnlj/If1wFr9RTY3CW2eZ4cSlv+qkGhxyVy
-	 Ouoyas0f4ld1w==
-From: William Breathitt Gray <wbg@kernel.org>
-Date: Thu, 06 Mar 2025 16:05:44 +0900
-Subject: [PATCH 2/2] counter: microchip-tcb-capture: Add support for RC
- Compare
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KJWQwjEO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A98C4CEE4;
+	Thu,  6 Mar 2025 07:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741244808;
+	bh=TPHLV7UHKuf3IzBVO5JpmSCDRfQpTpWNmkLIv6ixv3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KJWQwjEOGIt9/gFgeaCTjmeE+/X8TH4tFo2FNsDIzsh41e/Q5Tzvljo4LOrKjl/bT
+	 2v9zJdVYUGyj83wp2WwjfTFD450ReFMiCHZTOr23WO9tjijfmvJc2+L+RTe4WB2TQB
+	 2l3v+wsubzwWxJc8eCWfsMOwqEdXoEh/6rtojfPY=
+Date: Thu, 6 Mar 2025 08:05:33 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: xiaopeitux@foxmail.com
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	xiaopei01 <xiaopei01@kylinos.cn>
+Subject: Re: [PATCH] serial: 8250: Optimize port function assignment with
+ generic macro
+Message-ID: <2025030602-frays-profusely-0656@gregkh>
+References: <tencent_50535E8627177335AEA311C5DC0A54609008@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250306-introduce-compare-component-v1-2-93993b3dca9c@kernel.org>
-References: <20250306-introduce-compare-component-v1-0-93993b3dca9c@kernel.org>
-In-Reply-To: <20250306-introduce-compare-component-v1-0-93993b3dca9c@kernel.org>
-To: csokas.bence@prolan.hu, Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- William Breathitt Gray <wbg@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2155; i=wbg@kernel.org;
- h=from:subject:message-id; bh=0pW/AzRF/RuX+cwE3R6LyUhFONr4bslHUHFeHtCPcU8=;
- b=owGbwMvMwCW21SPs1D4hZW3G02pJDOknPQN+hHXN4+LN2LD/lehFfe9NrXdmsbyaqhYsbN4xL
- 90pVNC6o5SFQYyLQVZMkaXX/OzdB5dUNX68mL8NZg4rE8gQBi5OAZiIvhDDH449rk1dhyMEJCZL
- Wz9msHgacf+Mt/CddxPzrnw//7RUNJnhf6Fr2Ra7ySGTe6PP/C6+9vOr06yGC2cSWqSZdBeVqnJ
- 4MgMA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp;
- fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_50535E8627177335AEA311C5DC0A54609008@qq.com>
 
-In Capture mode, the RC register serves as a compare register for the
-Timer Counter Channel. When a the Counter Value reaches the RC value, a
-RC Compare event occurs (COUNTER_EVENT_THRESHOLD). This patch exposes
-the RC register to userspace as the 'compare' Count extension, thus
-allowing users to configure the threshold condition for these events.
+On Thu, Mar 06, 2025 at 11:00:32AM +0800, xiaopeitux@foxmail.com wrote:
+> From: xiaopei01 <xiaopei01@kylinos.cn>
 
-Signed-off-by: William Breathitt Gray <wbg@kernel.org>
----
- drivers/counter/microchip-tcb-capture.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Sorry, as per the documentation we need a name, not just an email alias.
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index 2f096a5b973d18edf5de5a2b33f2f72571deefb7..e32f8d324cb373909e0a093b14d742fa0a93e07e 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -247,6 +247,37 @@ static int mchp_tc_count_read(struct counter_device *counter,
- 	return 0;
- }
- 
-+static int mchp_tc_count_compare_read(struct counter_device *counter, struct counter_count *count,
-+				      u64 *val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+	u32 cnt;
-+	int ret;
-+
-+	ret = regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), &cnt);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = cnt;
-+
-+	return 0;
-+}
-+
-+static int mchp_tc_count_compare_write(struct counter_device *counter, struct counter_count *count,
-+				       u64 val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+
-+	if (val > U32_MAX)
-+		return -ERANGE;
-+
-+	return regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), val);
-+}
-+
-+static struct counter_comp mchp_tc_count_ext[] = {
-+	COUNTER_COMP_COMPARE(mchp_tc_count_compare_read, mchp_tc_count_compare_write),
-+};
-+
- static struct counter_count mchp_tc_counts[] = {
- 	{
- 		.id = 0,
-@@ -255,6 +286,8 @@ static struct counter_count mchp_tc_counts[] = {
- 		.num_functions = ARRAY_SIZE(mchp_tc_count_functions),
- 		.synapses = mchp_tc_count_synapses,
- 		.num_synapses = ARRAY_SIZE(mchp_tc_count_synapses),
-+		.ext = mchp_tc_count_ext,
-+		.num_ext = ARRAY_SIZE(mchp_tc_count_ext),
- 	},
- };
- 
+> Refactor repetitive conditional function pointer assignments using a
+> generic macro ASSIGN_IF_EXIST. This consolidates 15+ conditional
+> checks into a consistent pattern while maintaining type safety.
 
--- 
-2.48.1
+But why?  Macros are a pain and hide what is happening here.  Do you
+think this makes the code more maintainable over time?  Does it fix any
+existing bugs?
 
+thanks,
+
+greg k-h
