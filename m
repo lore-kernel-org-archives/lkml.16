@@ -1,73 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA01CD26D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE56BA4A;
+	Thu,  6 Mar 2025 13:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741266172; cv=none; b=ncXI5O4qqPNeGLdlpst+7IixO5LiVJ6lRxdUi5UUSTRGvFNkWCejV6TYygg9SaM5ZDUiHYY0nFmtv0nZAmJFDLmknqBZVnCafAXeOehdX91YmO509v0i0/kUwaKiiUjTTql6DNi0LXjv/fVkmVxh+U0duUH7r2ithQUGy2p4SFE=
+	t=1741266277; cv=none; b=jjZAc9Zhz3UlLYLcJQYI5MSfshMt3b9bGXbui04fDud4lrIC5q6I/cTCBKo58yMdjATNnWO1Vpm1vNAwwe+v3jSJn9N9+HsRXFEcmUXIKkdwJl4vg1gnxz5JTFnL/PRohC4sk9QGVBjOsmCEuPIAhc0uiZJBtfiJiK1HM7QXcVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741266172; c=relaxed/simple;
-	bh=zvqUPQ5xDGGVdVd7TADQXHUeO+pBV6JYWZxWMCQ6W98=;
+	s=arc-20240116; t=1741266277; c=relaxed/simple;
+	bh=ceTk5ZjC2+nhScZyfNEEyeEXW2EalroQXV8HXca9qJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J9YjLJaSLgO1T3Y/ABiiXh4b/omNn+/X4O0aHRK6P3ZgMZmla1hG4+HLE1EoAkdtbjNxrGT/vCofGjconQ8P5ptRSyaNelwczyOCl1WNqbSnSykDxR2uOszpR8m5ATxxcPA1n9x8NRSXYQkXpgqF1uckJphDc6kt2pUKYp3tXTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TveEw6+o; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFyi+LaMCn7racqor/vM1ai/Vd/susJVR3Yy6OOvLpLiC7TLvwFDzithEOJfmxagKRhandd5UxfrB32FQzokmN7eMOLn7SFm9+EBKcY08ZDyy3RaUszvaLfT4+G/j+9B5fafeyGKZWADZv9DRKvA3FNwFiI/KG2jEsqTrZRysA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajpCiLQl; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TveEw6+o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741266170; x=1772802170;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zvqUPQ5xDGGVdVd7TADQXHUeO+pBV6JYWZxWMCQ6W98=;
-  b=TveEw6+ojd2MfBUfvIM/w59GQh3VX5qpnFMwk1TA2Xi6c36Fvs46Amf+
-   YN++zWpiLPVGN1CmGLrF1BQpSl4YPcxxCepFsVLdFciEg5NihPQ7ahXZu
-   Tjxs/ZUrUzWI3sZ3QRmwt1LkL67MM/uoZ5okn59RXjKPtrTI3LGcpe9fs
-   JFSxHs4tIzMtTS/MI291LqaTr3XS8X4t2pUpM80xrLAmVQF4ujebS7XB9
-   pfgICkDNT4IEslYG6OAzwMA+YpAh4Z2Fjp71lj8b3c8NqtUJX8iMR3vTu
-   CMjQ/x55BMkx0FnbbBpFFw8TjqfmD1K7c2/4Ui0wRI+hwfoKnXMp2hW81
-   A==;
-X-CSE-ConnectionGUID: Agv4KFOuTvqKMh6pbmiHkQ==
-X-CSE-MsgGUID: mwhCUpbeRXm+1/l3oL79xw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42297512"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="42297512"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 05:02:50 -0800
-X-CSE-ConnectionGUID: eosJfhSsRX2NIO7VsGruiQ==
-X-CSE-MsgGUID: Gf9Mmk6QSXi1wI72FPblKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118929453"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 05:02:46 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tqAs6-000000007dA-2FVL;
-	Thu, 06 Mar 2025 15:02:42 +0200
-Date: Thu, 6 Mar 2025 15:02:42 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: mailhol.vincent@wanadoo.fr
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	David Laight <David.Laight@aculab.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [PATCH v5 0/7] bits: Fixed-type GENMASK()/BIT()
-Message-ID: <Z8mc8t_OJzUGFjH-@smile.fi.intel.com>
-References: <20250306-fixed-type-genmasks-v5-0-b443e9dcba63@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajpCiLQl"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224171d6826so8117285ad.3;
+        Thu, 06 Mar 2025 05:04:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741266275; x=1741871075; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uWxKAJFVHJylNyI9jtxBrquI/a//krrQE7gMaAA6tWk=;
+        b=ajpCiLQl4v6HGKYk3GxLI8HFgxbUmgeixiOcstDvyKCJdi1La0lfgIEl4OjCWeeGR0
+         KlcyHpK3nT3W+ughyOnHmImEU3rm2VoHmg2HVKHBoMmZRQlJVtYmGfxsrUg5IzZ1VWDU
+         +2W+D+vk1iccTlxFOHpz0EEIqULxhap1BJilmpfRot3lmPDPCo9fZuo0IKZETSyyibjQ
+         6m6UVRt4n0S1udnyWNBx+pzMpgsG6X51VJPFKrwRUNrW0AUDodi62PNI+P6BgDxs4f8w
+         u+AnmUFAvVgIzfZ+qd33GKkSDjPMwcBfvXse12cANYXEv/s1mUNv7bbBN/CFwXoLmOnL
+         UJBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741266275; x=1741871075;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uWxKAJFVHJylNyI9jtxBrquI/a//krrQE7gMaAA6tWk=;
+        b=qpd/jMPnxN0N8gaeRQ3LMCf6xmfwnUhGwHCZEVusPsrlbqjkJiXVw9XKZ854U6JjKH
+         GiCVpsKMq9Ch2UKBB1AAFtP4Z4i4myHX0dRNbjY4OjN1TZE0JmSopm9b5h34qnJZ4mah
+         3jK7kKqkQvFHW5lwNWsE6ofnMWxdZrAqiPZmCizn8C+uH9Z9fwQKCiA+SJUp+VFv4QFT
+         knKwuNV3DbfyvFdj1CT6mXdThx9FUmqpMxkvLmgjPfZ53k58TUq3jde7QPcdHVSLiIv1
+         eTWfEF4e4DfaZo9k5u+UaJzeFPZTEJmGh1spU1IanhXrFWdZ//el15wNZ2GQlpptbFsS
+         xMGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqEgqwmYQQtRPJcooKco39tEwlrxUWDw1Jk9fKzfIvrogbDJUTzRHnwVcW7IA6rKDsxY/RRtfIZluYJtgD6r2w@vger.kernel.org, AJvYcCX9Rl1LT1nPq69qLbtcZCIP2Q40fjigHOES+kqKwVzqz/bd1T6IHWrapgUz/5O68WnK2zF40rTt@vger.kernel.org, AJvYcCXs4TdyWiFXoCTIZRIhLEF+svm1QSCYlwG1WDKLpMkOrkccVS8FOBRsLrc5H4lcggvVouC7lVSsStdQ3gA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP2MhPqBw85SLAGZptShrm4eSkqPypq9FDyGanTfAO+7vGmKsQ
+	MAf68bjQSqj9jsMzYNebpa940hn6Mc8E2PTLbrSDVwTS/HTMdmib
+X-Gm-Gg: ASbGncu0Y8k/j0yelTfQiGAEhHv7OGp1RhPVFQq+phGkPUbMNauxmHy3662ciE4k4hC
+	MOoA0CVRfB2E6pteGoegm3EzDMN4u3EnZVv0ftl/T6E94oabcRlS7k6o907wS+kTFY3x6ZJFfAV
+	82Sa/H4dWZxL94AMopDOpdOuNtVMwvNKOVEfe7hyMOiW7c1mUMOhHmGuAICeW8tO2rpSh8sMJrB
+	Fi7UgoZMxEPIRazWOLinrZNJcMVOKrQH4BU6M09roin36ub7Ad78sWvfKL+rOPiipt6uiYPl/Hz
+	A0hLZLzkXH6d/rGfIsY0aiBtTwQ1kKdnNbRcLEhFJJdKootxpQ==
+X-Google-Smtp-Source: AGHT+IGD16J71n2Pm8M/1w+CsWPpwyYkkyi0HZeHzeB7F2JGPIZw/+hZkqnjgVPWS8nCVpuo0RhFLg==
+X-Received: by 2002:a17:902:ef06:b0:223:f9a4:3fb6 with SMTP id d9443c01a7336-223f9a45826mr93414255ad.11.1741266275014;
+        Thu, 06 Mar 2025 05:04:35 -0800 (PST)
+Received: from fedora ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a91bd2sm11371635ad.193.2025.03.06.05.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 05:04:34 -0800 (PST)
+Date: Thu, 6 Mar 2025 13:04:27 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Cosmin Ratiu <cratiu@nvidia.com>
+Cc: "razor@blackwall.org" <razor@blackwall.org>,
+	Petr Machata <petrm@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"jv@jvosburgh.net" <jv@jvosburgh.net>,
+	"jarod@redhat.com" <jarod@redhat.com>,
+	Jianbo Liu <jianbol@nvidia.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCHv4 net 1/3] bonding: move IPsec deletion to
+ bond_ipsec_free_sa
+Message-ID: <Z8mdW_PnpuOeAQjA@fedora>
+References: <20250304131120.31135-1-liuhangbin@gmail.com>
+ <20250304131120.31135-2-liuhangbin@gmail.com>
+ <4108bfd8-b19f-46ea-8820-47dd8fb9ee7c@blackwall.org>
+ <Z8hcFSElK7iF8u9o@fedora>
+ <f9bf79aff80eae232bc16863aa7a3ea56c80069a.camel@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,84 +92,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250306-fixed-type-genmasks-v5-0-b443e9dcba63@wanadoo.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <f9bf79aff80eae232bc16863aa7a3ea56c80069a.camel@nvidia.com>
 
-On Thu, Mar 06, 2025 at 08:29:51PM +0900, Vincent Mailhol via B4 Relay wrote:
-> Introduce some fixed width variant of the GENMASK() and the BIT()
-> macros in bits.h. Note that the main goal is not to get the correct
-> type, but rather to enforce more checks at compile time. For example:
-> 
->   GENMASK_U16(16, 0)
-> 
-> will raise a build bug.
-> 
-> This series is a continuation of:
-> 
->   https://lore.kernel.org/intel-xe/20240208074521.577076-1-lucas.demarchi@intel.com
-> 
-> from Lucas De Marchi. Above series is one year old. I really think
-> that this was a good idea and I do not want this series to die. So I
-> am volunteering to revive it.
-> 
-> Meanwhile, many changes occurred in bits.h. The most significant
-> change is that __GENMASK() was moved to the uapi headers.
-> 
-> In v4 an onward, I introduce one big change: split the definition of
-> the asm and non-asm GENMASK(). I think this is controversial.
-> Especially, Yury commented that he did not want such split. So I
-> initially implemented a first draft in which both the asm and non-asm
-> version would rely on the same helper macro, i.e. adding this:
-> 
->   #define __GENMASK_t(t, w, h, l)			\
+On Wed, Mar 05, 2025 at 04:12:18PM +0000, Cosmin Ratiu wrote:
+> +++ b/drivers/net/bonding/bond_main.c
+> @@ -613,8 +613,11 @@ static void bond_ipsec_del_sa_all(struct bonding
+> *bond)
+>  
+>         mutex_lock(&bond->ipsec_lock);
+>         list_for_each_entry(ipsec, &bond->ipsec_list, list) {
+> -               if (!ipsec->xs->xso.real_dev)
+> +               spin_lock(&ipsec->x->lock);
+> +               if (!ipsec->xs->xso.real_dev) {
+> +                       spin_unlock(&ipsec->x->lock);
+>                         continue;
+> +               }
+>  
+>                 if (!real_dev->xfrmdev_ops ||
+>                     !real_dev->xfrmdev_ops->xdo_dev_state_delete ||
+> @@ -622,12 +625,16 @@ static void bond_ipsec_del_sa_all(struct bonding
+> *bond)
+>                         slave_warn(bond_dev, real_dev,
+>                                    "%s: no slave
+> xdo_dev_state_delete\n",
+>                                    __func__);
+> -               } else {
+> -                       real_dev->xfrmdev_ops-
+> >xdo_dev_state_delete(real_dev, ipsec->xs);
+> -                       if (real_dev->xfrmdev_ops->xdo_dev_state_free)
+> -                               real_dev->xfrmdev_ops-
+> >xdo_dev_state_free(ipsec->xs);
+> -                       ipsec->xs->xso.real_dev = NULL;
+> +                       spin_unlock(&ipsec->x->lock);
+> +                       continue;
+>                 }
+> +
+> +               real_dev->xfrmdev_ops->xdo_dev_state_delete(real_dev,
+> ipsec->xs);
+> +               ipsec->xs->xso.real_dev = NULL;
+> +               /* Unlock before freeing device state, it could sleep.
+> */
+> +               spin_unlock(&ipsec->x->lock);
+> +               if (real_dev->xfrmdev_ops->xdo_dev_state_free)
+> +                       real_dev->xfrmdev_ops-
+> >xdo_dev_state_free(ipsec->xs);
 
-I thought we agreed on renaming...
+BTW, with setting real_dev = NULL here, I think
 
->   	(((t)~_ULL(0) - ((t)1 << (l)) + 1) &		\
->   	 ((t)~_ULL(0) >> (w - 1 - (h))))
->     
-> to uapi/bits.h. And then, the different GENMASK()s would look like
-> this:
-> 
->   #define __GENMASK(h, l) __GENMASK_t(unsigned long, __BITS_PER_LONG, h, l)
+> To fix that, these entries should be freed here and the WARN_ON in
+> bond_ipsec_free_sa() should be converted to an if...goto out, so that
+> bond_ipsec_free_sa() calls would hit one of these conditions:
+> 1. "if (!slave)", when no active device exists.
+> 2. "if (!xs->xso.real_dev)", when xdo_dev_state_add() failed.
+> 3. "if (xs->xso.real_dev != real_dev)", when a DEAD xs was already
+> freed by bond_ipsec_del_sa_all() migration to a new device.
+> In all 3 cases, xdo_dev_state_free() shouldn't be called, only xs
+> removed from the bond->ipsec list.
 
-Ditto.
+The if (xs->xso.real_dev != real_dev) should never happen again.
+As the real_dev = NULL, it will trigger 2 "if (!xs->xso.real_dev)"
+directly.
 
-> and so on.
->     
-> I implemented it, and the final result looks quite ugly. Not only do
-> we need to manually provide the width each time, the biggest concern
-> is that adding this to the uapi is asking for trouble. Who knows how
-> people are going to use this? And once it is in the uapi, there is
-> virtually no way back.
-> 
-> Finally, I do not think it makes sense to expose the fixed width
-> variants to the asm. The fixed width integers type are a C
-> concept. For asm, the long and long long variants seems sufficient.
-> 
-> And so, after implementing both, the asm and non-asm split seems way
-> more clean and I think this is the best compromise. Let me know what
-> you think :)
-> 
-> As requested, here are the bloat-o-meter stats:
-> 
->   $ ./scripts/bloat-o-meter vmlinux_before.o vmlinux_after.o 
->   add/remove: 0/0 grow/shrink: 4/2 up/down: 5/-4 (1)
->   Function                                     old     new   delta
->   intel_psr_invalidate                         666     668      +2
->   mst_stream_compute_config                   1652    1653      +1
->   intel_psr_flush                              977     978      +1
->   intel_dp_compute_link_config                1327    1328      +1
->   cfg80211_inform_bss_data                    5109    5108      -1
->   intel_drrs_activate                          379     376      -3
->   Total: Before=22723481, After=22723482, chg +0.00%
-> 
-> (done with GCC 12.4.1 on a defconfig)
+And in bond_ipsec_add_sa_all(), it will set ipsec->xs->xso.real_dev =
+real_dev, which the active slave already finished changing.
 
-What defconfig? x86_64_defconfig?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks
+Hangbin
