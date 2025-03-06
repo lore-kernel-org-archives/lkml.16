@@ -1,181 +1,179 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011056.outbound.protection.outlook.com [52.101.65.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19AF14F9FF;
-	Thu,  6 Mar 2025 14:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741271246; cv=fail; b=lSNyqgqLlKsaz0HhQzjbSyLiqyVg/VJIACKEhdxZzlnuDsWronLJSUWRKR6UXAiD4H9vdLXSNIhU25jN7P6lZ6+sQzKXU6449K0g9eGAeej9fJoaj6zENTwIP06Y59D8gFlfH1LoNSH2a55Olu3Ukwn3DXofYrRYzPfDAlw25CU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741271246; c=relaxed/simple;
-	bh=ReNlllr7jD6HjhxEFMr3UEQUdd6BuWPGFkiD+fA5kVo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=IygdfKGG5mLvQzcZq72nIDF6Vxkmz9svIjzU933Fmf89NWMp8Kli3ULOSROXL+tuL/xfspi1+AtIlj/et/zB9Vu7mIjqsLWsdsFqCO4+ehVhYf4VcFm8a4wWKci6U1jVtcQZTSzixqNfptHmdc1WoZtguzd/nEIGTAusT312JVM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=MIMQVhvQ; arc=fail smtp.client-ip=52.101.65.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588DA1624DC;
+	Thu,  6 Mar 2025 14:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741271306; cv=none; b=oHilNyLB73fQbsYkeR49AYlleLtcxVwXNripsdAV7sYtpAm/UyMz45p4fjft4yU9KPiYaxolHA7xM5bSH2WjPjxnep60/bSWXFTB5pYw43X5HMrK6/1QF2iFJrFRUjCc52v16kIjlOL8cmPZ75g+yWZnVnBzq60xP8tPoDe3s9Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741271306; c=relaxed/simple;
+	bh=AbwweIdVlQuGTpxqBxt0AtzrQBaGwIPj9kBjzOEZl2k=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ufgDrgRxni59wd16Tgxa0WlZ7VoUCoVgSQM/98NLEZ9GKb5zz8NdoIEzt/bZEATCVckVc/ad84sbMlny510qxvGdr06dcV15TDi3p9tiZvtN+C2q/amMcagfIWfGWmVMvaNgiiMzRH8KjeUoRMOCAl97UjC/05pwacVEuG/yvk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XGrnyQbX; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="MIMQVhvQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oD7bv8SMfnbr00+XdTXWEnETUNAzeyVWfHjGA4LLeEdbhv8RiQQpdcrNkzDP5JvYf3dinJiTL+yYvGNpcHzKcR+s5Ad5ep4ib+62iDVHrBcbhiJ3Ln495VVj3tykAjHF89Kxxf8vXx5Y72ejUvkP+AH7D52ohV5HrVS6wLsy4VarWNknCFxxh6euIJCHGgMkFrcQIdJ8iwPhHnTNpvLjqo9AmmwTg8PznIJGPEmGxxxFPIVDappvWq/m9NIH5kcK8aYvwqu+I0aw3U869bCAu5zADq8FTgQdpUGLIIl/VSDUEBDEmM8GauycRmXzEort69cEvRN8SABtQGxViatHEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8D+fNWxMGYbs40FrqidwR8C+IQjb3JNJ4Ybp9B8O8Vo=;
- b=yTtBa+co+LcEXv+UFzBN4Menk4jPzhqWRSWFYWgMlrP2f64SBS0T6qnSRkMksC+x1O9UpAwyJNHvrei6299tvFvT3o9Qa+H0qBHPFAinFZ/+IOYF98bYH/oYqGEPPUNqVzUnpR8wgtoCFC747AcOeiW57Ep8O2uxPTga0jXuM82jA6DF3RPw5YP42BMpZYjWOrs0MBdwKg0n0pDmwu8Lg1JIoBipdJ15a3YdwCSSaZpLA9426M1zuJng8h3kcpCwT+49eqk1jzFaS2MYc6+GgRxyBwoiysy3n0Y6lH8dlVYkvwY7wdAAKHT9Zm7nnaRPTNun+YkTjjDlTEW+7aqFbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8D+fNWxMGYbs40FrqidwR8C+IQjb3JNJ4Ybp9B8O8Vo=;
- b=MIMQVhvQSI8dtV1J88n3q30AVhBXdf7CzImHQwY2E7mGoTcApi5QdQI67YeNHjHZPE4XZ5HGxaqCp8kLkm4yiFSjVttSKBFE99W10pbqVKpYsUNd4tKegTudWzLZ9oxoL1J0VjesJ9V12Em2rJRg2TFEgbAXROEFV4/yNkwF5rY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=prevas.dk;
-Received: from DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:41::17)
- by DB9PR10MB5642.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:30d::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 14:27:17 +0000
-Received: from DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::7e2c:5309:f792:ded4]) by DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::7e2c:5309:f792:ded4%5]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 14:27:17 +0000
-From: Rasmus Villemoes <ravi@prevas.dk>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,  Linus Torvalds
- <torvalds@linux-foundation.org>,  Miklos Szeredi <miklos@szeredi.hu>,
-  Alexander Viro <viro@zeniv.linux.org.uk>,  Christian Brauner
- <brauner@kernel.org>,  Andrew Morton <akpm@linux-foundation.org>,  Hugh
- Dickins <hughd@google.com>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Jan Kara
- <jack@suse.cz>,  "Matthew Wilcox (Oracle)" <willy@infradead.org>,  Mateusz
- Guzik <mjguzik@gmail.com>,  "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-  Neeraj.Upadhyay@amd.com,  Ananth.narayan@amd.com,  Swapnil Sapkal
- <swapnil.sapkal@amd.com>
-Subject: Re: [RFC PATCH 3/3] treewide: pipe: Convert all references to
- pipe->{head,tail,max_usage,ring_size} to unsigned short
-In-Reply-To: <20250306123245.GE19868@redhat.com> (Oleg Nesterov's message of
-	"Thu, 6 Mar 2025 13:32:46 +0100")
-References: <CAHk-=wjyHsGLx=rxg6PKYBNkPYAejgo7=CbyL3=HGLZLsAaJFQ@mail.gmail.com>
-	<20250306113924.20004-1-kprateek.nayak@amd.com>
-	<20250306113924.20004-4-kprateek.nayak@amd.com>
-	<20250306123245.GE19868@redhat.com>
-Date: Thu, 06 Mar 2025 15:27:16 +0100
-Message-ID: <87v7sm44l7.fsf@prevas.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-Content-Type: text/plain
-X-ClientProxiedBy: MM0P280CA0001.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:a::10) To DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:41::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGrnyQbX"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abbb12bea54so150317066b.0;
+        Thu, 06 Mar 2025 06:28:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741271302; x=1741876102; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e0vWWMcXjFfg9c9qiH6NSV7bmKttHRNGNsOhNehrSvM=;
+        b=XGrnyQbX2toPV8G9GlRc1SC+IHbLR6cc2yEYSR/w7PxwENlnZoTz2/MtW/I9INpBSS
+         bsGVdRnSREAq+1fVKM3d15ER0I5MnxiQ0PnFQ3+Bp1DtqG16Dpe+tHee1wPytyMeuq7p
+         BTot7cnFGVjpDaEuXnLeUDw4aHO6hCsfKXIh3Pvs5tGViTXa97/Xdy6YiwtKYfR1Od2o
+         fbicEoTQWTwfPu4yWtwkZTWoLYUT2LeMfgKmlmY5Z46YL5gmsqrN6E9l7tqXT+d75MOU
+         VQNvSHH+7MzJRUHIJ+avIHr8Wz4omI9fm6Iu7mmX5cp+PDJSTqSy3KeWAtSlN+LBdydH
+         cjqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741271302; x=1741876102;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e0vWWMcXjFfg9c9qiH6NSV7bmKttHRNGNsOhNehrSvM=;
+        b=hguHVZws8OsciStjwAVCQW5wvwSiv3Z612rDlTqj91gCljWEoFag3rFVFS59xlnIJv
+         DS/iZbR8TL4dgXf+e55JE3izx59Kg9AChRSbQSjownwICR+UvsY0v08LFL2ccqHJ+aiX
+         /FzsgZZLpHCid+uB/ENeYtYDRRDU5EKUsxga6AM3hVZAupcHpVv/SOwQKBRQ2+TQSYVP
+         01EuKI65HszbDJeXQ6dDt4i9mdT7+7RpjTKfNp3TiZo59I+6dwix4RoNGoQ4C9Aadwk1
+         QF145FdlQwBFOpyUgGmSjpv5p9Uh9rrOl3S8uWjszy8+d69ouRp+XBbg0aA7W/kpyjQP
+         7MPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTMC4C0YdjgAJFEPlVKbdavK1vHyTk/szcKo4HXo3YWMcVBzbC7A/9WBoincWckvDepfFPxt1bmZCt@vger.kernel.org, AJvYcCW7bhn8fB1pUa3usKXjftpdlNJXLyDplpB/BcDR/Z46M3GtxKHvn3FSp4f2LlwhLTVuWnHPgziIv1TpXTxC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8WCBRx3HSAwBhwO9RMs31H/pzoqUJ4Y8VtCRSMVHFjqMsFHq7
+	55kNEOVAiVI/DDZkocIQBPKeYBhyapossaf9qb2rqJtgWjrJzJ3I
+X-Gm-Gg: ASbGnct5FVMePMaBvKi1g5JvZ03FtB7eOerM80HLXgEFM6au2BNH3+mxNHKAeEBZ06z
+	P9cCeby8vxkaSCOaMh08H9hHFDD5KfYebCBPPmXPptHZYzypopQJwuRADO7U9HrkjgjEBbzOhN6
+	iBn4HhOx4zVOzlEj9QhYhgA7TEYLZwU3uvizhR7KnqSMsRuf8kGUjN96Pql0XyurBjcN7/Cantg
+	N5FRSxe61bTgWcGHSztQ8SK6Pbm4PFke/LdYnKWVQLxGzr7qKJ+AWc1UmuWvMy+iUPwUcwPLP3h
+	UqeD0i3wqBN12E9/6qZKvTKMeoj3F90cbKNvXV0TfgzlWQr/VUf0PRhP4Yx+iKj/jd141cPv7SB
+	cd6UCTpI9AfYhR0G8GUgHPcQXBQ==
+X-Google-Smtp-Source: AGHT+IFozHswlf0bg9ThZSp1FbgljtVYCPPvnTD1k5tckBB+eJRBJhF1NQdof80kjppsiFvLEvgOsA==
+X-Received: by 2002:a17:907:3da2:b0:ac1:e2e0:f8d6 with SMTP id a640c23a62f3a-ac20d8bcb19mr672425066b.17.1741271302225;
+        Thu, 06 Mar 2025 06:28:22 -0800 (PST)
+Received: from smtpclient.apple (89-66-237-154.dynamic.chello.pl. [89.66.237.154])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2399d4ed4sm104210166b.178.2025.03.06.06.28.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Mar 2025 06:28:21 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB7PR10MB2475:EE_|DB9PR10MB5642:EE_
-X-MS-Office365-Filtering-Correlation-Id: a41b13a1-3c2f-40e1-1412-08dd5cbaff34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5XeRcYAHB70mbbAQsTL/5WTkwLaWre842tFWkDcuRBlZDnB7vQVML2UmxHVK?=
- =?us-ascii?Q?z6uJZRShGiYlE/kdNPaW4rhidUTpECqhY7OMj6fArl57ZHQhwKcPkn/UjNHl?=
- =?us-ascii?Q?P/weQePaHz7goUkY1bajn0n/ks/Ns45ydQkGdBaadDPZyk8GGH6TzTc0olKL?=
- =?us-ascii?Q?zBZMYknb5YTuRIf+aQBAPeR+rtxxvHwhFTMqvPU+RBLw2cr7I7+U1XOCq0vd?=
- =?us-ascii?Q?VzkS4ct6exsgFYYM2/QUJgceT3bFwJ6LcK4OSoPVyQ2Lvx4wdZzwCGpeiUFF?=
- =?us-ascii?Q?eLHDmjefZV6xk2cBa5zZixZgtQ5p/TmCl/3tjEnYc0yYyA2aLIIurAC9YOqT?=
- =?us-ascii?Q?LtzDS7C0pBG0+KfAEu9qUF91sHnWosZkgXkszfO2Ne4kwlYLWqrJhFQntI4W?=
- =?us-ascii?Q?tnLq7HG0N1xt6MttARi6AEjYtaBydwM9HcmUmV8QSbmaOswjrlxFZOWALYhh?=
- =?us-ascii?Q?r7WRR8Vh6PxJHWg80pugjF4i2MaojxhCSlc/7GbXD0o8r313qwtbWiDlaj9E?=
- =?us-ascii?Q?mvhj2tJcOU+ovtU3oNaS/4eAXri28qCyMvAYGcc95D52eVAlJWPeFrqrEdyO?=
- =?us-ascii?Q?EOLtPXesutsF8dw5IEsSodELaaCuHU2eYwfYP1IGMjdJQ8JHKCLASKcG0601?=
- =?us-ascii?Q?mbJfncauxtf1bP5x3AM+yikrVcYMDM6KsDZ6/VCxWT/xOTNHw63zl1C4cM4w?=
- =?us-ascii?Q?rKbxJBw2aF/IW50vM8e4CXcKEcr7ghJbtWr9O9kYsLlyXZzD/2BjSilUjZuw?=
- =?us-ascii?Q?xjQ5Ee/3CeAMYNvVhOBnrRlJGsY7ZWVoy4cu89fP7fOAW6lv2KXbofbGZv2g?=
- =?us-ascii?Q?FqWOf30D85pdBkyOZK5bAapUxxwN8MlypbLEZxmXwa7y1Zsp5iJ7M/mHl4bW?=
- =?us-ascii?Q?N5H6G5lY8OANbSSCaIzRZnDq63/6T8wIZKV73FVTQTYp9TjMtZBcz/FRsRq3?=
- =?us-ascii?Q?6VQgSpTFaKrGBWF2eniB9IloR1TtYCDiVigwUGvQEwqWn8curhiTEHGclNah?=
- =?us-ascii?Q?mdyT34DNtr9ROnb2C9xodt8k+/B69zwfiu4l1eSb/UebNlrUcuYvK3K6GfS8?=
- =?us-ascii?Q?ex96sisw6paDnyB7ualkt74XMqKVfi20rnrJH3mGq//sYDIZdESZRlp55cLp?=
- =?us-ascii?Q?21sSuaS/J8kYpte4zZQzZEcD1Rd2RnMbe/ZYwQsu6i7h32G7nx2C3+yMMloX?=
- =?us-ascii?Q?id+IjN6I3q+1MBEJdJCK+Pdz1AunPfky1cLrUIAPop+UF/8EOIQs0cEmg1mt?=
- =?us-ascii?Q?3eHM6+QyS6249Gs+xq+0TV+vs366O8s65CR3/KrMTcbbfjRn2N5MoBpFwaAm?=
- =?us-ascii?Q?KlDe81JZMPsgVE6oib/Hb6+rUI1x1DMHF+cTLowAbhl8xD6CngSOnpfuQDQO?=
- =?us-ascii?Q?gnjOH7AzC//PdF/XNBe9bppweJbD1UQd04v/gxLXv/TACN/+8lOxVjBznc9V?=
- =?us-ascii?Q?H7LgFYHFTVf5JceXGfTuN/7msYvatxpO?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/isMP2ltZ0loMVf3tbPSH63q6hEMZSqq/bbMQ/Icf3yN7WpsnemEDkB8mTFQ?=
- =?us-ascii?Q?ppxsvXF+Ebfkydr2VAFcnct4HfflTakEabSr/8ydmY7HMDQtuNDEM6sOKqRn?=
- =?us-ascii?Q?vilGrgeIfdudT/T3dv98I8SI7kam+2YNecfKXL3R5otNG5+cvw6W26rkuq+u?=
- =?us-ascii?Q?tAXmFZCrQcO2nXxKh1WDn7kRNl5baqDtfR98PKxoTdVI6dNBstqYPQPFJZFI?=
- =?us-ascii?Q?GKbVue4JNVPcu0KHSAehOY1tKrwaYvU+qDAIzrW1tLn+rGdN5fWP0+u/cAKG?=
- =?us-ascii?Q?fhLhJbH2q/UeB1S96XBuBx9R/i848idIvBKN7eLEGs50okML1e5Srn+2ueq5?=
- =?us-ascii?Q?OBXZKnae+9UMjM9GupK1LT9FH1CUiCrGkye0xN7ynSUq5NHdBXPlWS90IdrA?=
- =?us-ascii?Q?8an4cAyzcc52st6muxd6ixZbmGt9nI8480ZBsybZh2fZIrtMw36zaqq/Uto6?=
- =?us-ascii?Q?Ld3qBVwaYnsmRxfcH3dIHnZRQ7HNVKlXlJ2kBLySKYcoHle4rohchCg089aX?=
- =?us-ascii?Q?BgQs1JL/q75wwIYlm5BxIr7Z4a3jCVEBzvj2kKy55jT842lpJa6WjC1lcqay?=
- =?us-ascii?Q?VWPo3Xu0WL2wVQ4w77/GXR2r6H4w9JaOZIhZectFU0VrVbM7vvKxpPKnNAon?=
- =?us-ascii?Q?XuJ1mu8vaQEU+FmDRZ4zhNwiGEtTOgqfUFSZpyRNK8M1qudYGw9MAKgq3kVk?=
- =?us-ascii?Q?yBNnOd8U6/ORcxTUbhbUSr8hzvzsyAQWmCl9SfGl6WWiGEpoBihfozJBIXw0?=
- =?us-ascii?Q?yqte/vxpbIfpysVOdRCfQZJKKG1l/EPX8Ma1ezPq3P4FCcNkITZFBw4eUSee?=
- =?us-ascii?Q?31KZRIstH0xP1uOkfVjJs9K8X9bGmfQj71X7iEzlemCFeNamzGEsJ/VuqJ/3?=
- =?us-ascii?Q?TveBfvAawBB2Kf4gMbNxUlVX/5KGmP7oyzR/uTmGL5l+VajvUgUbAP9E+i2u?=
- =?us-ascii?Q?mW+Kj5Xl8iwpDx4sUz2hNSt59ExVGIkedvXmfCJtwk6h5KS3fs3NWla29R5J?=
- =?us-ascii?Q?QcOybSOQ5dhsUdk4G3hqorPn6hsl+dsBXdc9xFpQhBqDr8BPrJTA3OJhy8y1?=
- =?us-ascii?Q?TmbRwEBDlRwNRGOM9H/KZPzPmBEk6kniMWJysNfSrJUHp6qVPjds3vYrIzjY?=
- =?us-ascii?Q?sNfMxGpG+EH186b6htzKMS309bCm0Jos8YCtWuXZIGEiGtpYH6lZVyMDWOho?=
- =?us-ascii?Q?8XMbaqL1DRYcupaedIsup0yX4NParEmVRE0HpF4ByLdlR1qFT7/51D69Jpa+?=
- =?us-ascii?Q?4SklLGtQt/++jJUEl1q3vUD1IOEjn8Ix9udyk0fjYCwn+AQKafM24LfcKTE0?=
- =?us-ascii?Q?BbGUxAyNQ2PDDqAWLpWsPvxAaqsSc3rjP7Pj1UN+/U5LTMCmz43gdMOVVaWl?=
- =?us-ascii?Q?9IFQNeQX9i8Q2yOMXA7MZFCRh/MvSjTQ26Lckthj1xh4Wsba3i3cmoJbMV92?=
- =?us-ascii?Q?ELVWu61GAaQCE3rjxdVIXumWVjHrGWCCeirsqsHnzBZ4NP6gALsm6HlFkUqe?=
- =?us-ascii?Q?lS2+Aww7KeWeaIYvTWHlA5BvgBtETVzRcIiheZ/xFVWvWgN+qvdTTrjZzUNp?=
- =?us-ascii?Q?PT48M/F5mjj9CjNDLTLNkO2I+x+S0XAebpeqY0VkCJKIyr+JHGQtIKVPWFYs?=
- =?us-ascii?Q?6A=3D=3D?=
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: a41b13a1-3c2f-40e1-1412-08dd5cbaff34
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 14:27:17.3057
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3MUc6xa8y3QVUwpRW2UEpFPTNZkgzKuBP5aKEHRxzLsk8iGEkXWPfOmHl51p83YaMM7ESttUPzmZittCujr6EhRnw5AtYVtzHXXYdo2kSn0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB5642
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH 0/6] Add support for RK3588 DisplayPort Controller
+From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+X-Priority: 3
+In-Reply-To: <252BB2E2-4BC5-4402-953D-F7B30EA5DE14@gmail.com>
+Date: Thu, 6 Mar 2025 15:28:08 +0100
+Cc: heiko@sntech.de,
+ neil.armstrong@linaro.org,
+ sebastian.reichel@collabora.com,
+ devicetree@vger.kernel.org,
+ hjc@rock-chips.com,
+ mripard@kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org,
+ yubing.zhang@rock-chips.com,
+ dri-devel@lists.freedesktop.org,
+ Andy Yan <andy.yan@rock-chips.com>,
+ krzk+dt@kernel.org,
+ robh@kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <326B91E9-FB91-43C3-B98B-3EF079F313C6@gmail.com>
+References: <25401bfa.291d.19564244e54.Coremail.andyshrk@163.com>
+ <75189787-28E1-4FC2-8E10-4960B3877A6F@gmail.com>
+ <28b0d3fc.bb3.19568f6b5f8.Coremail.andyshrk@163.com>
+ <44213B17-FE14-4FB8-8319-1E31BBF6EAA0@gmail.com>
+ <74c154b6.8c50.1956aa8c8d2.Coremail.andyshrk@163.com>
+ <1573D5D6-AFED-4D92-8112-B0C6BB52D5FF@gmail.com>
+ <46c0d239.a4f5.1956b619b97.Coremail.andyshrk@163.com>
+ <252BB2E2-4BC5-4402-953D-F7B30EA5DE14@gmail.com>
+To: Andy Yan <andyshrk@163.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
 
-On Thu, Mar 06 2025, Oleg Nesterov <oleg@redhat.com> wrote:
 
-> On 03/06, K Prateek Nayak wrote:
->>
->> @@ -272,9 +272,9 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
->>  	 */
->>  	for (;;) {
->>  		/* Read ->head with a barrier vs post_one_notification() */
->> -		unsigned int head = smp_load_acquire(&pipe->head);
->> -		unsigned int tail = pipe->tail;
->> -		unsigned int mask = pipe->ring_size - 1;
->> +		unsigned short head = smp_load_acquire(&pipe->head);
->> +		unsigned short tail = pipe->tail;
->> +		unsigned short mask = pipe->ring_size - 1;
->
-> I dunno... but if we do this, perhaps we should
-> s/unsigned int/pipe_index_t instead?
->
-> At least this would be more grep friendly.
 
-Agreed. Also, while using u16 on all arches may be good for now to make
-sure everything is updated, it may also be that it ends up causing
-suboptimal code gen for 64 bit architectures, so even if we do change
-pipe_index_t now, perhaps we'd want to change it back to "half a ulong"
-at some point in the future.
+> Wiadomo=C5=9B=C4=87 napisana przez Piotr Oniszczuk =
+<piotr.oniszczuk@gmail.com> w dniu 6 mar 2025, o godz. 15:08:
+>=20
+>=20
+>=20
+>> Wiadomo=C5=9B=C4=87 napisana przez Andy Yan <andyshrk@163.com> w dniu =
+6 mar 2025, o godz. 13:15:
+>>=20
+>> Hi Piotr,
+>>=20
+>>=20
+>>=20
+>> Then when you DP cable plugin, you can run command as bellow to see =
+if the driver detects the HPD:
+>>=20
+>> # cat /sys/class/drm/card0-DP-1/status=20
+>> connected
+>> #=20
+>>=20
+>=20
+>=20
+> Andy,
+> Thx!
+>=20
+> With above changes i=E2=80=99m getting =E2=80=9Econnected=E2=80=9D.
+> Also it looks crtc gets reasonable mode: =
+https://gist.github.com/warpme/d6220e3cc502086a4c95f05bd9f9cf0c
+>=20
+> Still black screen however=E2=80=A6
+>  =20
 
-Rasmus
+some additional data point: /sys/kernel/debug/dri/1/vop2/summary=20
+
+
+working hdmi:
+
+Video Port1: ACTIVE
+    Connector: HDMI-A-1
+        bus_format[0]: Unknown
+        output_mode[f] color_space[0]
+    Display mode: 1920x1080p60
+        clk[148500] real_clk[148500] type[48] flag[5]
+        H: 1920 2008 2052 2200
+        V: 1080 1084 1089 1125
+    Cluster0-win0: ACTIVE
+        win_id: 0
+        format: XR24 little-endian (0x34325258) glb_alpha[0xff]
+        rotate: xmirror: 0 ymirror: 0 rotate_90: 0 rotate_270: 0
+        zpos: 0
+        src: pos[0, 0] rect[1920 x 1080]
+        dst: pos[0, 0] rect[1920 x 1080]
+        buf[0]: addr: 0x00000000017e1000 pitch: 7680 offset: 0
+Video Port2: DISABLED
+
+
+
+
+non-working DP:
+
+Video Port1: DISABLED
+Video Port2: ACTIVE
+    Connector: DP-1
+        bus_format[100a]: RGB888_1X24
+        output_mode[f] color_space[0]
+    Display mode: 1920x1080p60
+        clk[148500] real_clk[148500] type[48] flag[5]
+        H: 1920 2008 2052 2200
+        V: 1080 1084 1089 1125
+    Cluster1-win0: ACTIVE
+        win_id: 1
+        format: XR24 little-endian (0x34325258) glb_alpha[0xff]
+        rotate: xmirror: 0 ymirror: 0 rotate_90: 0 rotate_270: 0
+        zpos: 0
+        src: pos[0, 0] rect[1920 x 1080]
+        dst: pos[0, 0] rect[1920 x 1080]
+        buf[0]: addr: 0x00000000007ed000 pitch: 7680 offset: 0
+
