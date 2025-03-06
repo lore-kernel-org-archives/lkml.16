@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF5825A2B5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC47925D54E
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741285104; cv=none; b=uEBhH6ZpY6chmcnVgJUdQeCeQiir5FGZeFN1lLtsF0Ogfu1zQ7knLzXHIl4Rdpyrjklr49VvxGyLN8SiN3wtAn79Hcbg0GAbb10xUycECxZPdVgSU5MS3AkqSPzEriwN+akuRj0ary2XjAymjOzne8QEtO6+XkcG/ykvsprMVEE=
+	t=1741285104; cv=none; b=aHDY+4Lh/cdspdUeQfm6FqlnrWFAWHNqlsOe5NalLpcw4y9ETt9W+9arUa2wSGpnAPsNF/0qSY7ZlRziwXbBidu168cGrd/mIffeoqPIKIreMn/E+bFR6eoyXKspGnJY6drBu75pvTrJZTT1aM3jGGG6Ev5js/a3k/tKzak//Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741285104; c=relaxed/simple;
-	bh=gsaXe5RYlJkso+aavT0nSGeOjR6X2weyybAnNMJE7Mc=;
+	bh=BT/zsGO2ost9yei3Tam/3K3wPgLq3JjuFRpxiowqqlM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Pyz1BNYoep3EVFcbxkqsZwJ15qIDdoMw1nXJjSmScl3xdPNHTFzE0v8KP19UhQjlGJXgjYnD+l8aonFg2GQ88sySrRUl2Dsy7W3EJERjBJUIjMvp8AZ6RNA8Kb1wSlBpYbdGD3eG0dnYXx/puVd6CfiRFSNpt6tQZoazqWJhnKQ=
+	 Content-Type; b=HQKcv0YvgPE5WGRu9u6WlmWZolGULNKan0K+aeLtnJV+0EFHbyMn1NZcsPJNbwxRGtsF6DzTnRqI5EWRauE9ozgz2DBp+J8XSKEjcqEpxXUliZVGBPr3jnjsT0hIBkxtxlZfYDOn5YXmktDmQkGpVw+i9YaGy4iEasYecgygCiY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44A21C4CEE9;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D44DC4CEEC;
 	Thu,  6 Mar 2025 18:18:24 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tqFnd-00000000PGd-4Bej;
+	id 1tqFne-00000000PHd-1FT1;
 	Thu, 06 Mar 2025 13:18:26 -0500
-Message-ID: <20250306181825.857105005@goodmis.org>
+Message-ID: <20250306181826.175499698@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 06 Mar 2025 13:18:04 -0500
+Date: Thu, 06 Mar 2025 13:18:06 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
@@ -28,7 +28,7 @@ Cc: Tomas Glozar <tglozar@redhat.com>,
  Luis Goncalves <lgoncalv@redhat.com>,
  Gabriele Monaco <gmonaco@redhat.com>,
  Clark Williams <williams@redhat.com>
-Subject: [for-next][PATCH 03/10] rtla: Add optional dependency on BPF tooling
+Subject: [for-next][PATCH 05/10] rtla/timerlat_hist: Use BPF to collect samples
 References: <20250306181801.485766945@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,102 +40,249 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Tomas Glozar <tglozar@redhat.com>
 
-If tooling required for building BPF CO-RE skeletons is present (that
-is, libbpf, clang with BPF CO-RE support, and bpftool), turn on
-HAVE_BPF_SKEL flag.
+Collect samples using BPF program instead of pulling them from tracefs.
 
-Those requirements are similar to what perf requires, with the
-difference of using system libbpf and bpftool instead of in-tree
-versions.
+If the osnoise:timerlat_sample tracepoint is unavailable or the BPF
+program fails to load for whatever reason, rtla falls back to the old
+implementation.
 
-rtla can be forcefully built without BPF skeleton support by setting
-BUILD_BPF_SKEL=0 manually; in that case, a warning is displayed.
+The collection of samples using the BPF program is fully self-contained
+and requires no activity of the userspace part of rtla during the
+measurement. Thus, instead of waking up every second to collect samples,
+rtla simply sleeps until woken up by a signal or threshold overflow.
 
 Cc: John Kacur <jkacur@redhat.com>
 Cc: Luis Goncalves <lgoncalv@redhat.com>
 Cc: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Clark Williams <williams@redhat.com>
-Link: https://lore.kernel.org/20250218145859.27762-4-tglozar@redhat.com
+Link: https://lore.kernel.org/20250218145859.27762-6-tglozar@redhat.com
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/tracing/rtla/Makefile        |  6 +++++
- tools/tracing/rtla/Makefile.config | 42 ++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ tools/tracing/rtla/src/timerlat_hist.c | 167 +++++++++++++++++++++----
+ 1 file changed, 146 insertions(+), 21 deletions(-)
 
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index 8b5101457c70..0aa116f7b355 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -33,9 +33,15 @@ DOCSRC		:= ../../../Documentation/tools/rtla/
- FEATURE_TESTS	:= libtraceevent
- FEATURE_TESTS	+= libtracefs
- FEATURE_TESTS	+= libcpupower
-+FEATURE_TESTS	+= libbpf
-+FEATURE_TESTS	+= clang-bpf-co-re
-+FEATURE_TESTS	+= bpftool-skeletons
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- FEATURE_DISPLAY	+= libcpupower
-+FEATURE_DISPLAY	+= libbpf
-+FEATURE_DISPLAY	+= clang-bpf-co-re
-+FEATURE_DISPLAY	+= bpftool-skeletons
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index fe683a20b0e2..202d99a598ba 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -17,6 +17,7 @@
+ #include "timerlat.h"
+ #include "timerlat_aa.h"
+ #include "timerlat_u.h"
++#include "timerlat_bpf.h"
  
- ifeq ($(V),1)
-   Q		=
-diff --git a/tools/tracing/rtla/Makefile.config b/tools/tracing/rtla/Makefile.config
-index 92a6e12e42d3..5f2231d8d626 100644
---- a/tools/tracing/rtla/Makefile.config
-+++ b/tools/tracing/rtla/Makefile.config
-@@ -53,6 +53,48 @@ else
-   $(info Please install libcpupower-dev/kernel-tools-libs-devel)
- endif
+ struct timerlat_hist_cpu {
+ 	int			*irq;
+@@ -193,6 +194,89 @@ timerlat_hist_handler(struct trace_seq *s, struct tep_record *record,
+ 	return 0;
+ }
  
-+ifndef BUILD_BPF_SKEL
-+  # BPF skeletons are used to implement improved sample collection, enable
-+  # them by default.
-+  BUILD_BPF_SKEL := 1
-+endif
++/*
++ * timerlat_hist_bpf_pull_data - copy data from BPF maps into userspace
++ */
++static int timerlat_hist_bpf_pull_data(struct osnoise_tool *tool)
++{
++	struct timerlat_hist_data *data = tool->data;
++	int i, j, err;
++	long long value_irq[data->nr_cpus],
++		  value_thread[data->nr_cpus],
++		  value_user[data->nr_cpus];
 +
-+ifeq ($(BUILD_BPF_SKEL),0)
-+  $(info BPF skeleton support disabled, building without BPF skeleton support.)
-+endif
++	/* Pull histogram */
++	for (i = 0; i < data->entries; i++) {
++		err = timerlat_bpf_get_hist_value(i, value_irq, value_thread,
++						  value_user, data->nr_cpus);
++		if (err)
++			return err;
++		for (j = 0; j < data->nr_cpus; j++) {
++			data->hist[j].irq[i] = value_irq[j];
++			data->hist[j].thread[i] = value_thread[j];
++			data->hist[j].user[i] = value_user[j];
++		}
++	}
 +
-+$(call feature_check,libbpf)
-+ifeq ($(feature-libbpf), 1)
-+  $(call detected,CONFIG_LIBBPF)
-+else
-+  $(info libbpf is missing, building without BPF skeleton support.)
-+  $(info Please install libbpf-dev/libbpf-devel)
-+  BUILD_BPF_SKEL := 0
-+endif
++	/* Pull summary */
++	err = timerlat_bpf_get_summary_value(SUMMARY_COUNT,
++					     value_irq, value_thread, value_user,
++					     data->nr_cpus);
++	if (err)
++		return err;
++	for (i = 0; i < data->nr_cpus; i++) {
++		data->hist[i].irq_count = value_irq[i];
++		data->hist[i].thread_count = value_thread[i];
++		data->hist[i].user_count = value_user[i];
++	}
 +
-+$(call feature_check,clang-bpf-co-re)
-+ifeq ($(feature-clang-bpf-co-re), 1)
-+  $(call detected,CONFIG_CLANG_BPF_CO_RE)
-+else
-+  $(info clang is missing or does not support BPF CO-RE, building without BPF skeleton support.)
-+  $(info Please install clang)
-+  BUILD_BPF_SKEL := 0
-+endif
++	err = timerlat_bpf_get_summary_value(SUMMARY_MIN,
++					     value_irq, value_thread, value_user,
++					     data->nr_cpus);
++	if (err)
++		return err;
++	for (i = 0; i < data->nr_cpus; i++) {
++		data->hist[i].min_irq = value_irq[i];
++		data->hist[i].min_thread = value_thread[i];
++		data->hist[i].min_user = value_user[i];
++	}
 +
-+$(call feature_check,bpftool-skeletons)
-+ifeq ($(feature-bpftool-skeletons), 1)
-+  $(call detected,CONFIG_BPFTOOL_SKELETONS)
-+else
-+  $(info bpftool is missing or not supporting skeletons, building without BPF skeleton support.)
-+  $(info Please install bpftool)
-+  BUILD_BPF_SKEL := 0
-+endif
++	err = timerlat_bpf_get_summary_value(SUMMARY_MAX,
++					     value_irq, value_thread, value_user,
++					     data->nr_cpus);
++	if (err)
++		return err;
++	for (i = 0; i < data->nr_cpus; i++) {
++		data->hist[i].max_irq = value_irq[i];
++		data->hist[i].max_thread = value_thread[i];
++		data->hist[i].max_user = value_user[i];
++	}
 +
-+ifeq ($(BUILD_BPF_SKEL),1)
-+  CFLAGS += -DHAVE_BPF_SKEL
-+  EXTLIBS += -lbpf
-+endif
++	err = timerlat_bpf_get_summary_value(SUMMARY_SUM,
++					     value_irq, value_thread, value_user,
++					     data->nr_cpus);
++	if (err)
++		return err;
++	for (i = 0; i < data->nr_cpus; i++) {
++		data->hist[i].sum_irq = value_irq[i];
++		data->hist[i].sum_thread = value_thread[i];
++		data->hist[i].sum_user = value_user[i];
++	}
 +
- ifeq ($(STOP_ERROR),1)
-   $(error Please, check the errors above.)
- endif
++	err = timerlat_bpf_get_summary_value(SUMMARY_OVERFLOW,
++					     value_irq, value_thread, value_user,
++					     data->nr_cpus);
++	if (err)
++		return err;
++	for (i = 0; i < data->nr_cpus; i++) {
++		data->hist[i].irq[data->entries] = value_irq[i];
++		data->hist[i].thread[data->entries] = value_thread[i];
++		data->hist[i].user[data->entries] = value_user[i];
++	}
++
++	return 0;
++}
++
+ /*
+  * timerlat_hist_header - print the header of the tracer to the output
+  */
+@@ -1152,6 +1236,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	pthread_t timerlat_u;
+ 	int retval;
+ 	int nr_cpus, i;
++	bool no_bpf = false;
+ 
+ 	params = timerlat_hist_parse_args(argc, argv);
+ 	if (!params)
+@@ -1177,6 +1262,24 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	 */
+ 	hist_inst = trace;
+ 
++	if (getenv("RTLA_NO_BPF") && strncmp(getenv("RTLA_NO_BPF"), "1", 2) == 0) {
++		debug_msg("RTLA_NO_BPF set, disabling BPF\n");
++		no_bpf = true;
++	}
++
++	if (!no_bpf && !tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
++		debug_msg("osnoise:timerlat_sample missing, disabling BPF\n");
++		no_bpf = true;
++	}
++
++	if (!no_bpf) {
++		retval = timerlat_bpf_init(params);
++		if (retval) {
++			debug_msg("Could not enable BPF\n");
++			no_bpf = true;
++		}
++	}
++
+ 	retval = enable_timerlat(trace);
+ 	if (retval) {
+ 		err_msg("Failed to enable timerlat tracer\n");
+@@ -1304,35 +1407,55 @@ int timerlat_hist_main(int argc, char *argv[])
+ 		trace_instance_start(&record->trace);
+ 	if (!params->no_aa)
+ 		trace_instance_start(&aa->trace);
+-	trace_instance_start(trace);
++	if (no_bpf) {
++		trace_instance_start(trace);
++	} else {
++		retval = timerlat_bpf_attach();
++		if (retval) {
++			err_msg("Error attaching BPF program\n");
++			goto out_hist;
++		}
++	}
+ 
+ 	tool->start_time = time(NULL);
+ 	timerlat_hist_set_signals(params);
+ 
+-	while (!stop_tracing) {
+-		sleep(params->sleep_time);
+-
+-		retval = tracefs_iterate_raw_events(trace->tep,
+-						    trace->inst,
+-						    NULL,
+-						    0,
+-						    collect_registered_events,
+-						    trace);
+-		if (retval < 0) {
+-			err_msg("Error iterating on events\n");
+-			goto out_hist;
+-		}
+-
+-		if (osnoise_trace_is_off(tool, record))
+-			break;
++	if (no_bpf) {
++		while (!stop_tracing) {
++			sleep(params->sleep_time);
++
++			retval = tracefs_iterate_raw_events(trace->tep,
++							    trace->inst,
++							    NULL,
++							    0,
++							    collect_registered_events,
++							    trace);
++			if (retval < 0) {
++				err_msg("Error iterating on events\n");
++				goto out_hist;
++			}
+ 
+-		/* is there still any user-threads ? */
+-		if (params->user_workload) {
+-			if (params_u.stopped_running) {
+-				debug_msg("timerlat user-space threads stopped!\n");
++			if (osnoise_trace_is_off(tool, record))
+ 				break;
++
++			/* is there still any user-threads ? */
++			if (params->user_workload) {
++				if (params_u.stopped_running) {
++					debug_msg("timerlat user-space threads stopped!\n");
++					break;
++				}
+ 			}
+ 		}
++	} else
++		timerlat_bpf_wait(-1);
++
++	if (!no_bpf) {
++		timerlat_bpf_detach();
++		retval = timerlat_hist_bpf_pull_data(tool);
++		if (retval) {
++			err_msg("Error pulling BPF data\n");
++			goto out_hist;
++		}
+ 	}
+ 
+ 	if (params->user_workload && !params_u.stopped_running) {
+@@ -1376,6 +1499,8 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	osnoise_destroy_tool(tool);
+ 	free(params);
+ 	free_cpu_idle_disable_states();
++	if (!no_bpf)
++		timerlat_bpf_destroy();
+ out_exit:
+ 	exit(return_value);
+ }
 -- 
 2.47.2
 
