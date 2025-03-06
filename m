@@ -1,168 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B8A20C006
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD131156225
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741261160; cv=none; b=BTsFlRrMMC9QwiFhRnHFnGjMOh9y3jcHLWGzS+OYNLoE1A0zx+K/cuKILylKzVvaNYiyKFdynnITK1VAQGk9Gn3R2M0H89Eg91eUGD+TRqiIlzaphn+7tjWBxRT3xt6rKw0E1hRwZlJeKLfWmF2dkf0gNP3wSxyejuxn29iaEBE=
+	t=1741261189; cv=none; b=TCG//LuCEj7Kww4uD8CK2deyoNW48WIpSwrPHWp3tCJt/NU+j4Q6qrwlREKGTXfLBqTanROS3ph+ycFy1rwiKddvqUu80opvJnByXYaStu678KUzA7/KxhkQQfGFhANqsvlYQw80szZhE6291zI3pNdeu9iav+idHdPgSuYu8sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741261160; c=relaxed/simple;
-	bh=dWVb/SXTpDtb7mwLqEemWB++22QPNT6n+SXCs+yAruI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DAf9WJv3oVz/DRxydK71UmSEyEC+BodSf0STgk/hoVIOtG7UxznHtbDx8+FXAom0DxLvLxtqkLXQTRNUaaw2AhNzL+i7YzabZdujUf593CXc2ONhBqNs8uTncPEE1cHfZPRqt9wX2d+MItousy80MVh8fJ3t60T+jLvddAc1eko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C90891007;
-	Thu,  6 Mar 2025 03:39:29 -0800 (PST)
-Received: from [10.57.38.145] (unknown [10.57.38.145])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E204C3F66E;
-	Thu,  6 Mar 2025 03:39:14 -0800 (PST)
-Message-ID: <7ad365f0-d335-4da1-845a-8fe3bc5eb055@arm.com>
-Date: Thu, 6 Mar 2025 11:39:14 +0000
+	s=arc-20240116; t=1741261189; c=relaxed/simple;
+	bh=r8MoCqYNCe4c9qiwvRf0xvcKFpCn1DtHAUefcThDDSs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JxL10y2MYTZECnuKslw2DSNozSpCCw2ac3OSKZ2SdzOC1LjzW6pT+hGbPGo1aovwGw4u+exqE7bcY+DE4jPq/bPbymD5gDTA00qhrxWNUU+seiZq+da6ILmR2CkTzCvk5maOqsI2Vg9ZL7gOO2jgzuxmpGUIRqfrrtKIoHMAG+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mYBbgkAn; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYBbgkAn"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fea8d8c322so1224832a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:39:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741261187; x=1741865987; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M9sq4YJ2DQyZHH2kbpoDNtjyXycKYdNphmP6Nz8SeIk=;
+        b=mYBbgkAnFlE+onG9dd6lF4sZAWFuLaXIbj/IUViab9BlITFHcExT1s96AJdSVwjRJE
+         gUAeQ9EYVfo0h+K3RfYtmR+q3fIRVlteAcF7jyLyNzKQhiOSvEhBqysdUCbK1BYdUSTs
+         BLQpgsNhR9ZJTkySIN0qZ33dCJALHeagCMUMgPt3tkFS5L/e/OJzfwbaDKZ8dgJRsvAI
+         /HWWKDfqHB5Nv8FTyGlcoEZz7obFnvhSn6PlsfX7QqUUEJQU0jjM6Nz6R8I6smempo/Z
+         2yV+Lz/O7DlUjIHQG9zkq+oofMuckZR5C7IVsh4WxKQQby1/69kNnBNsG8AUb+YmQaY2
+         AiNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741261187; x=1741865987;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M9sq4YJ2DQyZHH2kbpoDNtjyXycKYdNphmP6Nz8SeIk=;
+        b=qGbBsvmjq96BqdJLIF+iF1YVrp4zSQ+u5FXVU5kg/GETDT20nVJBOwE6E+HllTD/PR
+         oIOxIYT38ChQT1THxdoasWo1HsYjDAVvJMANSC9kSe6LyXddlUrSrTagoomj7KcSODKd
+         aXSsFKO7quwi1U8pZ5zzgYGW4TxMbyDWDEAk4YeRWn66GG6rR7mxikWYG9Li7cgAaR1A
+         wfKWbvgXaDGsj71TYx3nghV1wumbMptUgRNhb31j2qIf+y/rFssDNk6w9/GqZxtxB/wo
+         FI9lCbMPyr7a2QZchHlyVCM5yfYKkLgnCSTHt7a6ySKZwaL3nCvrpAFf3YApzOGdn0qL
+         +vRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsCYx1qf2a2TQH6Gvy49mjRF24UYnytAZWk1T76iuor8l5CZcj5qRFhs74aIytPr5o8Ef226YSOlzyjB0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwajijGoFZeizn5uijLUjLVMv46t5m9756icau7XZNFWkFG9IKv
+	TQa5myJPDXGafOsvkLvzMUtYuxw2E4aXVBbQPIr+sePbkOd6JSwUVR+g/d9+gamZr7dKNyuk1tl
+	GqrPdl59etM381WSEmmEHmAvS6Gg=
+X-Gm-Gg: ASbGncvKV8h2ivCCl+vRxUsds3kL9RNioJfVhFg9U335OBSySHuna40SQmZVfzaVxNQ
+	5s2tsMJ6QnEibltFn4NhOl7YjaBWD0SUiTsaMHb2tqddt1nRZGajhmp9TXVraA2jCbepgxy7xxb
+	XpJwSFEQCI3YvdgbmM+AShhP+gGg==
+X-Google-Smtp-Source: AGHT+IGs0+c/x0S+rEnB9r9arTUQu+Vq33cCnvRawv0eZWYUAB4OlHgVB6iO4SL5SpyXzI91b16wKcUF2KfbZN7iDSg=
+X-Received: by 2002:a17:90b:2494:b0:2ff:556f:be1 with SMTP id
+ 98e67ed59e1d1-2ff556f0c2amr6549409a91.1.1741261186979; Thu, 06 Mar 2025
+ 03:39:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] arm64: realm: Fix DMA address for devices
-Content-Language: en-GB
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
- linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-Cc: maz@kernel.org, steven.price@arm.com, aneesh.kumar@kernel.org,
- gshan@redhat.com, robin.murphy@arm.com,
- linux-arm-kernel@lists.infradead.org,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Christoph Hellwig <hch@lst.de>, Tom Lendacky <thomas.lendacky@amd.com>
-References: <20250227144150.1667735-1-suzuki.poulose@arm.com>
- <CGME20250303113525eucas1p1099e087e2c11b9021603a6f13f8135c4@eucas1p1.samsung.com>
- <2b6d5287-bdea-4ec3-a07f-986bd3c3b285@arm.com>
- <7b5c90cf-00e4-4684-8719-f380badab064@samsung.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <7b5c90cf-00e4-4684-8719-f380badab064@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250211063028.382169-1-linchengming884@gmail.com>
+ <20250211063028.382169-2-linchengming884@gmail.com> <e5458a0e-528f-44ec-a0f0-543472ad3b85@linaro.org>
+ <bb9f8a80-4662-4ab1-b9ad-6899977c3827@linaro.org>
+In-Reply-To: <bb9f8a80-4662-4ab1-b9ad-6899977c3827@linaro.org>
+From: Cheng Ming Lin <linchengming884@gmail.com>
+Date: Thu, 6 Mar 2025 19:39:34 +0800
+X-Gm-Features: AQ5f1Jp7ftJJkR8tfGcMH27z_ma1ePnjFVkBFADoZ0Hv_21ZXLggZXYjswmbA0A
+Message-ID: <CAAyq3SamyhtCkd47939dKWCZN3ejaDvM6EJzwizWVqhNW=27bA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: macronix: Add post_sfdp fixups for
+ Quad Input Page Program
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: pratyush@kernel.org, mwalle@kernel.org, miquel.raynal@bootlin.com, 
+	richard@nod.at, vigneshr@ti.com, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, alvinzhou@mxic.com.tw, leoyu@mxic.com.tw, 
+	Cheng Ming Lin <chengminglin@mxic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/03/2025 13:40, Marek Szyprowski wrote:
-> Hi,
-> 
-> On 03.03.2025 12:35, Suzuki K Poulose wrote:
->> On 27/02/2025 14:41, Suzuki K Poulose wrote:
->>> Linux can be run as a Confidential Guest in Arm CCA from Linux v6.13.
->>> The address
->>> space (GPA or IPA) of a Realm VM is split into two halves, with
->>> private bottom
->>> half and shared top half. In Linux we treat the "top" bit of the IPA
->>> space as
->>> an attribute, to indicate whether it is shared or not (MSB == 1
->>> implies shared).
->>> Stage2 (GPA to PA) translations used by the CPU accesses, cover the
->>> full IPA space,
->>> and are managed by RMM. The "top" bit as attribute is only a software
->>> construct.
->>>
->>> At present any device passed through to a Realm is treated as
->>> untrusted and the
->>> Realm uses bounce buffering for any DMA, using the "decrypted"
->>> (shared) DMA
->>> buffers (i.e., IPA with top bit set). In Linux, we only send the
->>> "DMA" address
->>> masking the "top" bit. In Arm CCA, SMMU for untrusted devices are
->>> managed by the
->>> non-secure Host and thus it can be confusing for the host/device when
->>> an unmasked
->>> address is provided. Given there could be other hypervisors than
->>> Linux/KVM
->>> running Arm CCA guests, the Realm Guest must adhere to a single
->>> convention for
->>> the DMA address. This gets further complicated when we add support
->>> for trusted
->>> devices, which can DMA into the full Realm memory space, once
->>> accepted. Thus,
->>> a DMA masked address (with "top" bit lost) will prevent a trusted
->>> device from
->>> accessing a shared buffer.
->>>
->>> To resolve this Arm has decided to standardise the DMA address used
->>> by the Realm
->>> to include the full IPA address bits (including the "top" bit, which
->>> Linux uses
->>> as an attribute). This implies, any DMA to a shared buffer must have
->>> the top bit
->>> of the IPA space set.
->>>
->>> There is already a provision to do this in phys_to_dma* and
->>> dma_to_phys(), but
->>> that is specific to AMD SME and is quite the opposite of what we need
->>> for Arm CCA.
->>> i.e., For Arm CCA we need to set the bit for "decrypted" DMA and
->>> clear the bit
->>> for "encrypted".
->>>
->>> This series converts the existing __sme_* helpers to a bit more
->>> generalised versions :
->>> dma_addr_decrypted() and dma_encrypted(). Also, while converting a
->>> DMA address back
->>> to CPU physical address requires clearing off any
->>> "encryption/decryption" bits.
->>> I have named this "dma_addr_canonical()". (The other options are :
->>>     * dma_addr_clear_encryption - Well, not just for encryption, but
->>> we clear decryption
->>>       too, so not ideal.
->>>     * dma_addr_normal
->>>     * dma_addr_clear
->>>     * dma_addr_default
->>>
->>> This also implies that the VMMs must take care to :
->>>
->>>    1. Create the S2-SMMU mappings for VFIO at the "unprotected" alias.
->>>    2. Always mask the "top" bit off any IPA it receives from the Realm
->>> for DMA.
->>>       KVM already does that today and no changes are required.
->>>
->>> A kvmtool branch with the changes above is available here [1]. There
->>> are two
->>> patches [2] & [3], that are really required on top of the Arm CCA
->>> support.
->>>
->>> Ideally it would be good to get this backported to v6.13 stable
->>> kernel releases
->>> to make sure that they are compliant with this change.
->>>
->>
->> Please could you take a look at this series and let us know your
->> thoughts ? If you are happy with the changes, are you happy to pull
->> this through the DMA MAP tree ? The relevant bits have been reviewed/
->> acked by people (arm64 and AMD bits).
-> 
-> The changes look fine. However I won't be able to setup new dma-mapping
-> git tree this week because I got really sick has to stay in bed. :/ If
-> You don't want such delay, please merge it via ARM64 tree. Here is my:
+Hi Tudor,
 
-Sorry to hear that. Hope you feel better soon.
+Tudor Ambarus <tudor.ambarus@linaro.org> =E6=96=BC 2025=E5=B9=B43=E6=9C=886=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:01=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+>
+>
+> On 2/11/25 7:20 AM, Tudor Ambarus wrote:
+> > On 2/11/25 6:30 AM, Cheng Ming Lin wrote:
+> >>              .fixup_flags =3D SPI_NOR_4B_OPCODES,
+> >> +            .fixups =3D &macronix_qpp4b_fixups,
+> > For your next patch that'll drop the redundant flash info fields, you
+> > can drop SPI_NOR_4B_OPCODES as well if these flashes define the 4bait
+> > sfdp table.
+>
+> Any plan in doing this, please?
 
-> 
-> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Sorry for the late reply.
 
-Thanks Marek.
+This matter is currently in progress. Since collecting all the chips
+will take some more time, the project has been delayed. Once I
+have all the chips, I will start the verification process immediately.
+Thanks for the reminder.
 
-Btw, this series fixes the "Realm Guest" support for Linux, which was 
-merged in v6.13. To be precise, this should have :
-
-Fixes: 42be24a4178f ("arm64: Enable memory encrypt for Realms")
-
-Will/Catalin,
-
-Please let me know if you would like me to send the series with
-all the Acks, Reviews and mainly the Fixes tag added ?
-
-Kind regards
-Suzuki
-
-> 
-> 
-> Best regards
-
+Thanks,
+Cheng Ming Lin
