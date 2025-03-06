@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A3FB661;
-	Thu,  6 Mar 2025 07:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440811C8625;
+	Thu,  6 Mar 2025 07:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741246064; cv=none; b=b9vajL5WETKUALRfVYhEY0IZc1zheJMrdOYzhptqVGb+1FM16jtaYvZOM2cq7KmxmZM6zXV6ZwwqJyybgJ42IKeaQ7WzW5Khg35vUwpRSGsvKfWre7oumNML+Czsxia+bt15rr52SMoC754EYTTS4XGpiB9f2xj93bc34Ble62M=
+	t=1741246155; cv=none; b=hjP//QMpE4lwsz0UM1bXRHVTuaKPRe/ajMOYdMnRsGCq3ayAzLG1klgkKWzAhRVvhRWbAU1ARgUlTpiWHdpX3Hsz+AlK+T+fcfZYL3bwqygceqBJrzS57HqdgMEyuQZ9K47/5P9od0GksNV1CYzoTtZQJ+inkR90XwdgWKd1gds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741246064; c=relaxed/simple;
-	bh=yMJYAu2IKw5s118360bMsqyuFwq3Xwx+0xpCnG/i6Eg=;
+	s=arc-20240116; t=1741246155; c=relaxed/simple;
+	bh=UHABwz7deCMq6VmoeOJOZCNr+1pSSgpT8myP0hHyVAA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C3V0GT61jVMMMhLR2ccd5oSyGvSg1aMnJxz6DgLXxmpnKeVR7XzTxfaKmfyC5S7mcjgUjdc41YJ+aenTONqEM+lahkMg1PT5nuLGq9r5dR2GkxBsI1O81TAaoSEM2NhawgeUr4C9FPKJNWiq3ruq+Ry3p9k/Tvz4Ei4Jy0Dq2VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jW1hwAVa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HrixyNd8V765I5TJiRpkZKx31y1xpkPWoc8daUPkHFN/UYDDSxMnhCzWZOoUPgHMsF0qlhDQsRB8T/0apjRD77/Nd01oMdSH32b8yc/6akt3nrP0HMoE+ujPHlWJNHB6nF8tZ9oQIKzvKr7vBjDdfILBxE1XtGT6t1icItcYcTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjmW+W5Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jW1hwAVa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B04FC4CEE0;
-	Thu,  6 Mar 2025 07:27:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjmW+W5Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78660C4CEE0;
+	Thu,  6 Mar 2025 07:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741246064;
-	bh=yMJYAu2IKw5s118360bMsqyuFwq3Xwx+0xpCnG/i6Eg=;
+	s=k20201202; t=1741246154;
+	bh=UHABwz7deCMq6VmoeOJOZCNr+1pSSgpT8myP0hHyVAA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jW1hwAVaLloB3Yo2yoP5qMuSevMGN6Peaz5bOk66ptd9gmTwHUn9G4TMC48aD1g5z
-	 hUYYYrS+IubQXkOkgXEMDlvj+ZX2DJ+AH7xl2Lv2B5Lotb4cT1xIX2VSWwP5S1DTlC
-	 fa6luvre778cU/toDeckZR8DeboSiLWx94bH7Ha9UKI+ntBdwkF08O2M7EuZI0e6qc
-	 iGQmetysxoMbhsogRbvHtcnDalYbEYSO3094588MtEKojnqeEyPoTPPz3ySQ4O0Cy5
-	 T+PVXiwCgwXnxeyPMl6SA/YtCYwkrA0BpH09QOcTbtNLBgzl6PDDJRHXNtxAg/lzb+
-	 /oNUhHZNAD2rg==
-Message-ID: <b6b88442-92cb-401b-bca4-c7cf72212114@kernel.org>
-Date: Thu, 6 Mar 2025 08:27:36 +0100
+	b=WjmW+W5QWjTTfJGBg1pHU0Xy8F+3x1lSda3sHWSURxiky9YUedB+h/g2fHrcuBtHN
+	 TZuFxuiMoJGvkzraI+i/F6d1q/LRfvoKJGKLm0KWnqInACm6i5Mfyj5TBwhv01A3p7
+	 LGYnc6ZqtbHFLZzJBd5W/mk09goT+Ps3G1hbGDewdL8iwbpCoxr6+xHBZt7a1Ganke
+	 p6Abpq6xfhslIvl2TPfYbyNokfI1T3eTKZJkC5ntNwR2OVtA7MG8qG6PZxjOJiVfXc
+	 jjZFSsoRAHtuHZC1ffuOQrre6Aj0LCpWU4/J1R/PohJe4RQGH4VftBAIysxMMQKtWH
+	 7+Xh6+XMbAslA==
+Message-ID: <03b14353-5d47-48de-99fd-9cc48bad5651@kernel.org>
+Date: Thu, 6 Mar 2025 08:29:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/9] Add TI TPS65214 & TPS65215 MFD & Regulator Support
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>, lgirdwood@gmail.com,
- broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, aaro.koskinen@iki.fi, andreas@kemnade.info,
- khilman@baylibre.com, rogerq@kernel.org, tony@atomide.com, lee@kernel.org,
- linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: m-leonard@ti.com, praneeth@ti.com
-References: <20250305210351.249811-1-s-ramamoorthy@ti.com>
+Subject: Re: [PATCH v3 3/3] arm64: dts: marvell: cp11x: Add reset controller
+ node
+To: Wilson Ding <dingwei@marvell.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "robh@kernel.org" <robh@kernel.org>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>,
+ "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+ "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ Sanghoon Lee <salee@marvell.com>, Geethasowjanya Akula <gakula@marvell.com>
+References: <20250227192536.2426490-1-dingwei@marvell.com>
+ <20250227192536.2426490-4-dingwei@marvell.com>
+ <d085c34a-fdbf-4950-a2e3-b3d25a1c0145@kernel.org>
+ <BY3PR18MB46730C150D4CB9619B3B05FBA7CC2@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <050ae833-10b5-4d80-9856-8bc2f434a74f@kernel.org>
+ <BY3PR18MB46739700B533630D65C60808A7C82@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <87b9e9c3-87db-4ebe-96b0-4f04705ef6f8@kernel.org>
+ <BY3PR18MB4673B4CEB60D3D21AB17B01DA7C82@BY3PR18MB4673.namprd18.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,39 +102,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250305210351.249811-1-s-ramamoorthy@ti.com>
+In-Reply-To: <BY3PR18MB4673B4CEB60D3D21AB17B01DA7C82@BY3PR18MB4673.namprd18.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 05/03/2025 22:03, Shree Ramamoorthy wrote:
-> TPS65214 and TPS65215 are Power Management Integrated Circuits (PMICs) that
-> have significant register map overlap with TPS65219 and each other. The 
-> series introduces the 2 new PMICs and restructures the existing driver to 
-> support multiple devices.
+On 04/03/2025 20:08, Wilson Ding wrote:
 > 
-> - TPS65214, TPS65215, and TPS65219 each have 3 Buck regulators
-> - TPS65214 has 2 LDOS and 1 GPO, whereas TPS65219 has 4 LDOs and 2 GPOs.
-> - TPS65214's LDO1 maps to TPS65219's LDO3.
-> - A key difference between TPS65215 & TPS65214 are the LDO current and
->   voltage output ranges and the configurable options available.
-> - TPS65215 has 2 LDOs, whereas TPS65219 has 4 LDOs.
-> - TPS65215's LDO2 maps to TPS65219's LDO3.
-> - TPS65215 has 1 GPO, whereas TPS65219 has 2 GPOs.
+> I did consider shrinking the syscon's register address range to
+> make the reset-controller node to be independent from the
+> syscon node. However, I found the syscon node is also referred
+> by some devices for miscellaneous configurations . The reset
+> configuration register happens to be located in between these
+> registers and clock/GPIO registers.
 > 
-> TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
-> TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
+>> drop offset in your patch or unify everything into 'reg'.
+>>
 > 
-> AM62L + TPS65214 Test Logs:
-> https://gist.github.com/ramamoorthyhs/0793f7813332d94423ca1baee02f62c9
-> AM62L + TPS65215 Test Logs:
-> https://gist.github.com/ramamoorthyhs/7560eca6110fafc77b51894fa2c0fd22
+> This is exactly what I proposed in v3 patch. Do I misunderstand
+> you?
 > 
-> ---
-> Change Log:
-> v5 -> v6:
+> CP11X_LABEL(swrst): reset-controller@268 {
+> 	compatible = "marvell,armada8k-reset";
+> 	reg = <0x268 0x4>;
+> 	#reset-cells = <1>;
+> };
 
-All of this was applied and you already got message about it. Sending
-everything again is just noise and not helping us.
+I don't see the other device being fixed here. How did you unify them?
 
 Best regards,
 Krzysztof
