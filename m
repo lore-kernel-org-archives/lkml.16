@@ -1,129 +1,98 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F0F19DF5B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 21:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7D820E315;
+	Thu,  6 Mar 2025 21:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741295726; cv=none; b=bZJSmfsoeBvY5khOySaJoqZtP/s3Mtlppzj13W2X8i0Q0VAm+zulgmKPXQGzkH+dAP4zaAR7j1TNTjNsuSmGuBs0ezyJBM2pW2Q6nBSGbeXzxEwsvk2e8HQZT0oZE9T6ys//Cgim/ikFFnlE5pp9Y6OBra4dEHy6t+HF+Il3IPk=
+	t=1741295729; cv=none; b=iK1KBUvw9w1kC8pbZUq2aH/Y+fke8kUVW1oYrb95DVAFGRX1V/5LltUjbhIYU5wDaXnwMDa/SKzlwy+HVymBlT0gwmyFzyYIBDAtI0ddDzhwPfl6N0rhd7jQRGdMQRG3IU430MhzfrNZ2riiNIKcFaEFAvLFvqyYgUogLY1Dkno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741295726; c=relaxed/simple;
-	bh=vEXvflwEV04efj6bnvhXaeOA0qHCeEgvrAzgI3xl7wA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OD/LzzBSUoOMZ7IUOKFY0yRxUlhilUynjdOZ8O/fjJL8605VAJEyh8qaZS06dLEgpiY7dv5zhX1q0rFnIajvYAZWnmEEaw4daV2wXZuyKP93L9zHib3JesxFQrWZ4Z9naTCwNDXi2ZM114anPgv+FcmYO7gFGolhZeIbLt0UHXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DsIj3VKe; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741295729; c=relaxed/simple;
+	bh=uZeojrfvjOuNPdEaD2fjxFVsMYcR4nZzJgFj6J0yLmM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=UMQkTMBl6zbXiKMpKa8RcaK13vLDVLKdz3wB4kNvpZIuIHTh+Ii98LH76M8E2CVwmz5fExx4JkdYy+AOsi8wJPEm5EMyCadvCYlmRvbboBELy4PoljAg68n+g8dirWFaLY91X03UCPJ8rGX9OWZ1fR17A7LNreWVleumKH+py/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=WiSqWs27; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DsIj3VKe"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-abf518748cbso208784966b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 13:15:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741295722; x=1741900522; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vEXvflwEV04efj6bnvhXaeOA0qHCeEgvrAzgI3xl7wA=;
-        b=DsIj3VKeLHdEyUqNenk75PVHmr8R3bDFxHIWKbBzLV/+0mAd0/srz+KYSKWiz2/Umr
-         8aP90On4uip1RVIyis5A7XDTvaQvSkbzaEsFTUcQIQiE+0wgi7zrAxcjbtOn+PDpwmYD
-         1isxmiCG8AYjQBHJJBIfU4RTk4NnkTmz8bCK3tljJsgPH84CH1mTFV2ISaQpXFap0+QO
-         5/RnMIg6CXAXtzsr2Perikh4yO9hvO3xyLEsOWR4AvnvoLThDXGaazwefn440UyiZhep
-         +SRm5p59fyIZ5GLedeoTbF8R54phMghDPDnT/LDfVq6z6t56E2BjqzgpNmjyg+tijrfI
-         M5jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741295722; x=1741900522;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vEXvflwEV04efj6bnvhXaeOA0qHCeEgvrAzgI3xl7wA=;
-        b=WmeUf8bRonAq1iRq9QABNdomvZ28RJzIvick75JYQu1tWEyAEY8N3evl0MElRuYd2g
-         XBH62AWNCepKs5y9iX9TWvPpytgd1JyWkP9SWuhPTnq1N83lVcreRDnV+KUTQrtbPeQx
-         3e9SRJLz95qYjJB7CRhpOnMLkIZHBvgQilmhOYzbONqk1PHsJ63K4+TajhixQkRgkGSD
-         jUUfVoQ4UdI8CL5FE+xCEX4KSJgL4hOX02NLJW25cpm02mfu/TvK5GzLAbkM6fRkg1M7
-         7pYT8FtbzKk2hRZwt7iXqLugPh8ef7J3BV1gZG8/I2eiu9JiMaCElaP6g051ZBDUg9OG
-         iwsw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1lqh5mBZ1ThkFjrN5tBhZDPDWzzLa5H4z1iqKTyK54dMBi+N+6XDoMC33D8n6U8zpYTcgLHNsNG5/jcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywKY2LhK1Rdv1j0crZBA1RJvGfuYHPUWCTitQ5ugxKl7PnlIid
-	9I7Wi0RdqMo9SO1HQAvPf9fY8sZDHLDgo0mlBw4xqxZKx/A632Sb9YW8gMYw+y0+yh3N9YlNUsR
-	D+Go88A==
-X-Gm-Gg: ASbGncttV88w37qJDwsaZrxMHRXjDYe/YfIRo8qqh0SKn2JFs2iFUjRWFO9+F/KUiR2
-	GlCEN+/q1rAIHPQAKF90jiXHx8vKFO7GF9nZE+Hc4TY27GIcZXBUMdxA4RAXs5s3zs27W8+VSVr
-	YbRCnfX1jyl1QpRZyznOVA/pLgysFFWVPCVssvndosqVnUckSA4sWKD6lS7wG3tqxfVnLciOnqt
-	3yGqrFdy9VcEAw87LPoql8rIG1XGmKiWanV27ohyedWO1grl0p3oIaKDmqc6Ot/BxzmGTzXeoOx
-	Hzn9pOxrQ5WbCYakreM5ve81M0T0McWGIAOLJc4jvGVrIXU=
-X-Google-Smtp-Source: AGHT+IE+LHNfvlp8dFOhg8/hGQEzMaTOw9w3ZnSxV/FqKSm/TD4PkI2UTRYu6TY3+BOkP+WRqnVYGg==
-X-Received: by 2002:a17:907:9490:b0:ac1:ebfe:fd90 with SMTP id a640c23a62f3a-ac2525980femr71342066b.1.1741295721652;
-        Thu, 06 Mar 2025 13:15:21 -0800 (PST)
-Received: from salami.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239887693sm152427066b.126.2025.03.06.13.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 13:15:21 -0800 (PST)
-Message-ID: <1418fde488646160a1be14b2153e409488f3d861.camel@linaro.org>
-Subject: Re: [PATCH v3 2/4] pinctrl: samsung: add dedicated SoC eint
- suspend/resume callbacks
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, Krzysztof Kozlowski	
- <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
-	 <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, 	kernel-team@android.com,
- jaewon02.kim@samsung.com
-Date: Thu, 06 Mar 2025 21:15:19 +0000
-In-Reply-To: <20250306-pinctrl-fltcon-suspend-v3-2-f9ab4ff6a24e@linaro.org>
-References: <20250306-pinctrl-fltcon-suspend-v3-0-f9ab4ff6a24e@linaro.org>
-	 <20250306-pinctrl-fltcon-suspend-v3-2-f9ab4ff6a24e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3-2 
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="WiSqWs27"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1741295347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L2c81lklMsWoewbTrDLPjzFIwtetRMhEGhB4+GnHcqo=;
+	b=WiSqWs276XwmL6ya8O18OlaDotyFuFbRKOpfqddTDFGjegQF7yrFJ/fjZqymvfCuHegLIW
+	HidnrhNz9DXyySlOqdgziypXpdovMd53ofUUCHADRAqZkUQUPdGWCoT5QwgqyhForVQcaS
+	SLy+g0SDLLq6eKdiqA6beA27hQuYi3YHLH8XpvNpLeVyKuDz15NKBPDyQJ8NRaObqvesP5
+	H9nB8siyzS1lzqkqpfAsqgBKH871WqOw+loSNYZ1Nd6isC6x9WdSxTufdr7kj4JfcLX5Sy
+	0zdnbY4+vqADaC/N/SxFzkqHCoQHzOeX6cJc7+IpxSPj0pC/0zQrSGWPz25dUg==
+Date: Thu, 06 Mar 2025 22:09:06 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre
+ Torgue <alexandre.torgue@foss.st.com>, Wadim Egorov <w.egorov@phytec.de>,
+ netdev@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 1/3] net: stmmac: dwmac-rk: Use DELAY_ENABLE macro for
+ RK3328
+In-Reply-To: <20250306203858.1677595-2-jonas@kwiboo.se>
+References: <20250306203858.1677595-1-jonas@kwiboo.se>
+ <20250306203858.1677595-2-jonas@kwiboo.se>
+Message-ID: <427cbfc8c6b71bf70804a0d535ff9d18@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Thu, 2025-03-06 at 20:42 +0000, Peter Griffin wrote:
-> gs101 needs it's own suspend/resume callbacks to use the newly
-> added eint_fltcon_offset for saving & restoring fltcon0 & fltcon1
-> registers. It also differs to previous SoCs in that fltcon1
-> register doesn't always exist for each bank.
->=20
-> exynosautov920 also has dedicated logic for using eint_con_offset
-> and eint_mask_offset for saving & restoring it's registers.
->=20
-> Refactor the existing platform specific suspend/resume callback
-> so that each SoC variant has their own callback containing the
-> SoC specific logic.
->=20
-> Additionally we now call drvdata->suspend() & drvdata->resume()
-> from within the loop that iterates the banks in
-> samsung_pinctrl_suspend() and samsung_pinctrl_resume().
->=20
-> This simplifies the logic, and allows us to remove the
-> clk_enable() and clk_disable() from the callbacks.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Hello Jonas,
+
+On 2025-03-06 21:38, Jonas Karlman wrote:
+> Support for Rockchip RK3328 GMAC and addition of the DELAY_ENABLE macro
+> was merged in the same merge window. This resulted in RK3328 not being
+> converted to use the new DELAY_ENABLE macro.
+> 
+> Change to use the DELAY_ENABLE macro to help disable MAC delay when
+> RGMII_ID/RXID/TXID is used.
+> 
+> Fixes: eaf70ad14cbb ("net: stmmac: dwmac-rk: Add handling for
+> RGMII_ID/RXID/TXID")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 > ---
-> Changes since v2:
-> * Remove useless init (Andre)
-> * make it clear set_wakeup is conditional on bank->eint_type (Andre)
->=20
-> Changes since v1:
-> * Split code refactor & gs101 parts into separate patches (Andre)
-> ---
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |=C2=A0 28 ++--
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 201 ++++++++++---------------
-> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 6 +-
-> =C2=A0drivers/pinctrl/samsung/pinctrl-samsung.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0 11 +-
-> =C2=A0drivers/pinctrl/samsung/pinctrl-samsung.h=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A05 files changed, 109 insertions(+), 145 deletions(-)
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> index 003fa5cf42c3..297fa93e4a39 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> @@ -593,8 +593,7 @@ static void rk3328_set_to_rgmii(struct
+> rk_priv_data *bsp_priv,
+>  	regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON1,
+>  		     RK3328_GMAC_PHY_INTF_SEL_RGMII |
+>  		     RK3328_GMAC_RMII_MODE_CLR |
+> -		     RK3328_GMAC_RXCLK_DLY_ENABLE |
+> -		     RK3328_GMAC_TXCLK_DLY_ENABLE);
+> +		     DELAY_ENABLE(RK3328, tx_delay, rx_delay));
+> 
+>  	regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON0,
+>  		     RK3328_GMAC_CLK_RX_DL_CFG(rx_delay) |
 
-Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+Thanks for this patch...  It's looking good to me, and good job
+spotting this issue!  Please, feel free to include:
 
-
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
