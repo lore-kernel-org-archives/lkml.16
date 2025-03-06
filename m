@@ -1,593 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE5525D541;
-	Thu,  6 Mar 2025 18:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741287276; cv=none; b=fx6hzLufnEkXjD+WXci1gMX+zULdWnDqDgsp4mimeIuKnBNYzRL2K7xuZzy52W7njkO/i0wqpYJfc2qW2GxD+4RIO33LrNO0O5gnkTSBSb28KaerY8lKvCxcGBnEUD83QRRFT+R5pXijsRDDUTveTe+lNGHHHULdiaCEYsdpz6E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741287276; c=relaxed/simple;
-	bh=i7YZzIHjlu++jS8DtrmhAxtbfRCM0U79L0Q3tH96qkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dumncCh0XmC2Noe7sbCwPfMJXGECuC6RHcb1ZiVzZoL8OtFR21sjPpUl3jYlnnJ7tuotBylpaQHbglmRNpVEscW6FKy4qq9Zvigcnev8jJoQxivHA0jpOBvlYhl9JUlJDGMppNEQIbrwQ8wcPBALZH4aPdN4wI3zZt4Rz1DK5/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTJWFqAh; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8291425D541;
+	Thu,  6 Mar 2025 18:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741287287; cv=fail; b=c9LTMdnQHzV6M6NM0H2M2sNDNE2ChLDfYhemAgWbomFLXDrq9+b4RL6dxSWTuqxuY/ZttoVyhsxrLKk9hKDQK/Xh/ObXg/3UR5hA5lDFwJKX+f7KZkcHDlUY2u9z58VEbttFmgfkEtpGz/bjNOjQtrlwBZhSCWBMdPouZ1g4d6E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741287287; c=relaxed/simple;
+	bh=JbK/LN6s90RD/XGeVWowa1k1Q4lR+7aZCjoIu3zt8Xo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=S+Xic+1HQyf/TeAUFcG0QN9AS2sh4BeCEL8W6AggRdl3dryHC3pS8rJzrZZwanoZpq5j/Q+3CRNSBQQbZsBa9xzqXtKFg5IYx777OWz3O5w8fqwMD7JvI/IXqYIl4Ehj92UvemkhBFesJ1IUUfAAdPceLWUFxrCkCYGRFqIirfo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nH/dVGuR; arc=fail smtp.client-ip=40.107.93.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTJWFqAh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2F7C4CEE0;
-	Thu,  6 Mar 2025 18:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741287276;
-	bh=i7YZzIHjlu++jS8DtrmhAxtbfRCM0U79L0Q3tH96qkU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fTJWFqAhSwgDaONoPqxuhnIT2Is0wHT3SJ9NPMkR7fA2iYPIkxFnZjd5M1VKYba3r
-	 dDFOLnBZGbl/UOrasudxdir+GD8gQBx9F/6TlUl+ZQ3ZqU+RuseUBX+1m8gI1shazW
-	 c2YOCkYAPepNIqJzcQ3r560m8/Nz/Jnrm2aaD6yFQV9t6WahulOSxpbL0fc/ChBRD0
-	 d36fBgwjkwhcZg64NkyCm8krI23YIVZTEvin5KonBRkWM6GTgOP36TFx4HMfL+Ekjj
-	 5Mp+97kxK/Ji8jvgsKgn3LoklCa5pvmEb5qHciiN97Crlfe37/SeCqdA5Ua7qpMDx0
-	 d2I10+Nz85pfg==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Matt Turner <mattst88@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Mike Rapoport <rppt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [PATCH 13/13] arch, mm: make releasing of memory to page allocator more explicit
-Date: Thu,  6 Mar 2025 20:51:23 +0200
-Message-ID: <20250306185124.3147510-14-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250306185124.3147510-1-rppt@kernel.org>
-References: <20250306185124.3147510-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nH/dVGuR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HbwxaIov2oOsnJOTXC5N/Aq8O/Dj0eJMOf/wTiNrTBt49HlK268wQxmtJUWmY+sqhKDY0kZu4Ppb9eJ32ZSrrxMV1CdxhOWH77nerKFpO9VFLI7sKLVeyRumJ4UhWZwFul1fTZesqYhn4h+WKNQRlvkjdeEnoixLBZAc8Qq0TJPBtFL5azteclm6NUcpEJqNlefniBS819rols1NLm9qprHiim29E/Mcbr1uY8FNGBXjOieGSl1ykI9l/08dFa+v1wjAj1L0kcMVmKVKofpKZF/GPBI5cK1jrzZ/RT/5WnFSy1qUNHk9JfPcY7GDJIJ+rLkOueChPN2JHcrHY725ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RWoc/rCC+zYssdVHtSa2L7pmd7F/3CbBx+u+f/aSh9c=;
+ b=Mi214EVjkbvJACQDZXG8a8qWmVGRtl2nGKC8NCgDm4Bk5j4rsrDzvzeSsefrkct3LXVPxNoCAoCgAnfvHffvBrKgcN2eMm0LbQvYZkFcPjb5eu/ir2/or8OcMYWyK57rlEsCA6VJWiXcCM6uiUHzyRYUVk13raO2iC92xhVt4qlgZB10v1RTOtCOd2uQM+4RY1jzLgh07e8zEF9ZUhjkH/FPeREqQACK2J9nd6YobxkICs0rMyjyffv5N6a9Oj0U54vNQWL4FZYYaug8LTMH68zIQ/oRRE5NX74hHQokPJWrdxLoZsNP/7fiPHHLue5AHPFp9R15A52uVRHw0lxU6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RWoc/rCC+zYssdVHtSa2L7pmd7F/3CbBx+u+f/aSh9c=;
+ b=nH/dVGuR6SUrVtViM2ur0eDvc9N3zEkG4g6lfVqbesZhQFwGike8BoDTiTrewcGlyNcTMD4Wi5aLeZ8IJ9bCJkz7fWTYJxIeRo76dZNHt5QeG1uR/VgvKFSEN6uhAONph6lc5c3ivp/7bdD7d65l3lsk6bXh4Le+VJ8l4MU+tOAfjRw6AqwXBu0WxYNnzlEWEQ7bdoPmpTwpm7A/2zKJTblU3aVYxGOg6trDyMzMvtizBcOfVBzZQOhifam/+Bvk2xMXo2x5GJ0AEE9v1R8NjpEwOZD9O7bQqMzyow+oY5ks1q1J9NsP+KCQL3LDhk8hMA/A6HH1Xva84XkI6TdrBA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by SN7PR12MB6888.namprd12.prod.outlook.com (2603:10b6:806:260::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
+ 2025 18:54:42 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 18:54:42 +0000
+Date: Thu, 6 Mar 2025 19:54:34 +0100
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHSET sched_ext/for-6.15] sched_ext: Enhance built-in idle
+ selection with preferred CPUs
+Message-ID: <Z8nvam-WarNqdLw9@gpd3>
+References: <20250306182544.128649-1-arighi@nvidia.com>
+ <Z8nqpyEQmmff9E8X@slm.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8nqpyEQmmff9E8X@slm.duckdns.org>
+X-ClientProxiedBy: MI1P293CA0004.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:2::13) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|SN7PR12MB6888:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea60a80a-16cb-4dc9-740a-08dd5ce05ae6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HQSRT/29oILQiPyq6y4yDrDkvxY0YBDCbaDj5YnobHZN00LaAk/DFnnkGAzy?=
+ =?us-ascii?Q?F+QkjKQKpa93oZ52eSqRS4BQ2Zn5/olyFUQztbA4bj8XX/CuAkHige1ZJdgd?=
+ =?us-ascii?Q?D32cnk/JSfHXA+/Oa0a5ixbkbqO+5lPuyP1UE8P2n33+uEIhSebycNz6OGhi?=
+ =?us-ascii?Q?wEGZvQRcyBKdrfX6pOwrB8w2YVqqx+VCKK1k7yNZv2HuIj11c5gbQUBuZ0wH?=
+ =?us-ascii?Q?r4eUpVv5Rvah7mW8rYIZriUkzp66tg3pOvpenoDaNlEvjTVlpRd4ihGDa2Z4?=
+ =?us-ascii?Q?5AqB87h6GnA2qzJW76Ny7t9L0LyGrTcmZgC4E65njhr+mgRmLRhbb4gIOLvA?=
+ =?us-ascii?Q?CLfDLvk1+yU79Nbzd7050GbKmgQPfVLKyzWrnKi5Dp1xaKpUU4p7FP4NvyN1?=
+ =?us-ascii?Q?3Ibr5ti0DrYm0QwRFQwlHoGid6j6PCuz6UVbmpBHxb7brEtIAt5+N0GJJaid?=
+ =?us-ascii?Q?bR5pFSyVb+hUvvxFRpNC8tzjbTbQWODRF7RMlMDW+0163HATao7ILgPc4c04?=
+ =?us-ascii?Q?jZ3dgv6AgbEgot9p9JMm14qQCUbitv20+AipVEOU+c+jk0TZ4etlTkInfeHR?=
+ =?us-ascii?Q?X7VyM1I8uNengxUolldiqAZRJc3Zxp292YXkk8CDy4/+wPF1ZWkvyw5ORYbo?=
+ =?us-ascii?Q?TcAzKigih5xfHo/Tueg9AK+7o/KXlRdyGCA9vkwL0tNrauHchXyVNDKRntJB?=
+ =?us-ascii?Q?ow1sZHuQHU6j6tONvsmjFfZ64y6dS9go+ulrwu5RJzy8d6y8SeaQh/0KLrp1?=
+ =?us-ascii?Q?o8zP2+Pbri96Pj32oRuUS18/Jv+Qzm39s0QO94JF3Bu/iMwBm5Y7uI/Px8A6?=
+ =?us-ascii?Q?e4NtqFfyj7yAuR54VqnCjl8KV3eQtv0Hh+acn3Oi4ZgeThIzWotw6e4RGb9R?=
+ =?us-ascii?Q?NQL8btyskfDcZZckquIiyPhPI8Ls1yar3CuP8SfZGZDGMHl3+uovlH++++BX?=
+ =?us-ascii?Q?WkC2V6SXcaSVNwDutZswXg2Gw5A2DF1n1BU6Ij4wakDDVL7po8bRqGPb+e5+?=
+ =?us-ascii?Q?H5ERbF/X3TWtwA7gwoq6rOX4wQbdlEBC8S4u1hczcfxUtt1TbzjwUjibajgn?=
+ =?us-ascii?Q?+x4KF0FKe+iJWytC/STsDIK+X6KeajzkVQGoDwjkeQMvUSMJP7BsIMTHU3xY?=
+ =?us-ascii?Q?Gl0KHEeb7ECGLD++oW8Sx1cHdlrV5yYYBSEKWJ1otrnVtCqGe/vBbXl//P5Z?=
+ =?us-ascii?Q?Jn+WQtUUWyXirrW3gNV3lALepJEnqwf22lInAMbE064jcaK1Qqjxxb4urbGt?=
+ =?us-ascii?Q?KySmFQwZf0femrE9GqIp6BSXII/4vD3SeSocVUHPdzCQOJWNe3rvveGGMrKr?=
+ =?us-ascii?Q?gmWwyEmQBvLW5KidQUo10zEQmX1hV6f2Eby6KtyS5TFm1y33SBNuA13Rt0PH?=
+ =?us-ascii?Q?47wAhiGZ678YaMEZJ4E/tGn2bXqp?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?h+mUN2YdNDoY26V1uJeTCH+izicTLDt98idhOFafqAjzPqWymUvuCZViNd9v?=
+ =?us-ascii?Q?fWrSNq4ipdkwO2wafk+6tkQGR9BYA+H1FXaapoe8F/2yZ2uaVIr84MMzOPDL?=
+ =?us-ascii?Q?z/07MfJqEcm7dSztoS1R8aJyjG7boi9Vp8URUX2QVM+ZNc2MA0YQ/2Zn+Pd3?=
+ =?us-ascii?Q?FMi1ik6OTM4NeY+D3pny+SKg8QsZTnGEHwX3hDpAGHy6WpitFpMkeFf8ka2F?=
+ =?us-ascii?Q?WuWpOSguHrXuEphbQ3ZoHJ4BreQXnRGEVLHKHVufr15Civ7Wm7TRsjSGqdXD?=
+ =?us-ascii?Q?8jOAGsuT/OguI2gdzggLgiWCyZHTPayYnC/pddKzcYg1p53KENFcbqiFy5+D?=
+ =?us-ascii?Q?ObYmcWFAEi8pXlYHtwj8H1DQ+v8cd+F+bRcTrzkbQW1eifTFuacUDNmB7uyi?=
+ =?us-ascii?Q?6HjbWlnl6PWn0lHt+zcCXi2zDXnrk6jvvWVETxOYq1c8DoPCUSa4TzozNagR?=
+ =?us-ascii?Q?28FoDUHXzYoJhXQmda1ARsm9zR5XjMvqIhx1ehVK8Nm9UdpKAsCweDsdNIgU?=
+ =?us-ascii?Q?N+OgObiIBV9jbS4z2Oht1z04/o3/meXUKnsEW1zjIckMcPkqJyXQzWsoOOSr?=
+ =?us-ascii?Q?NHuemdMuMDVfggBFvdzPW8GlE4MkuWEV1MeYIM3DIIM2/anTUOqfxeyR+Rbg?=
+ =?us-ascii?Q?b0SJf4qfkw9xa9k4tEMPNcdHa9F/V5BPw8pJmkr5K0bzv+nCTd8YUa1fxv0X?=
+ =?us-ascii?Q?ug6Z9WV5w83BrGTTLgOl0cyEyJI4LMXz0wfeIW60U1Zl/9VrTlsJ2ay1mYtL?=
+ =?us-ascii?Q?ndGVc2GuodEf2jJyxKp3PJiWhyA9B4gH/3dtrip+K9tpl6fLQcyXyo9Tw9h2?=
+ =?us-ascii?Q?mxCF28ISID4O3NfbkUE6DmRJ9Mx5nhixD4bs5+V/bdiFiAnyuoUxTei6683S?=
+ =?us-ascii?Q?Jm8rCq0aMJZXBLmtmjGJgMD9XQQLLb93kskkMgzLjJHto9UAiDP3u5SqWpKV?=
+ =?us-ascii?Q?hmGF3ZQGJ2FnpBUa0pMnz6l3F4sqPw2yCCADOT/DV9Uc5GBygRwJJNNydJzl?=
+ =?us-ascii?Q?DI0Hy2GRAk5yKbKBR86l+7fIm34wZzNfV5gW0Foa/jmFhpe/uIXxfyBWaz8X?=
+ =?us-ascii?Q?+2ZF6eHk3fvjr5auP1Pid9Lleavks2do0jPtmc71ew9moRxvE10rPV1NEIZU?=
+ =?us-ascii?Q?DHSMmi3leoeeGy2RHQBKaLeft/0OXXTX9v/sXw9TwQsiQT+wtfDP+PYRZ1ys?=
+ =?us-ascii?Q?2RJ6hrMzyKA7AD0Tgyo8vUlWK6IflqaGn1aSBOQx7repvI9AMtj95q3OnS2i?=
+ =?us-ascii?Q?V+oZhDwMDI7AH2UgPOvitfv1R9rDWfHYKSXRsVWeFeIFglJFvenDR0SuS+iR?=
+ =?us-ascii?Q?MniWtenMrVPQmdMZzRzM9+XsI2Hr9MtJ6stjBqEuBnzFmtjbpmKxmqFh5UWr?=
+ =?us-ascii?Q?b/nzq0FEuGGOXjoBI+8KF3eL1pADkn9lCyE3bjeAuG3EGETsbiHxr74/xqtz?=
+ =?us-ascii?Q?rzZYVL2rmYR2Fh4+A6CX+//8psFyCs4B5WRew3C3AODdkdyQpigekuO9MLua?=
+ =?us-ascii?Q?vFUc4K0NtUpgyWnkBSppd2z3OsAWCnJD0z6hYNbKHzzP9zcYCM0ZK0p1N5a5?=
+ =?us-ascii?Q?zqQw8R2qqn6ONtIDs3R/ZAAnplEsbyqBxbnu/dfE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea60a80a-16cb-4dc9-740a-08dd5ce05ae6
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 18:54:42.4878
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bI5nByWyPK08lLhScC+Hb3tNEpj82Z82vtnks38hUahEbo+qmtDXxMXoBRdtwbTVQgi2FowgwVBKWx4DSp4NKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6888
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Hi Tejun,
 
-The point where the memory is released from memblock to the buddy allocator
-is hidden inside arch-specific mem_init()s and the call to
-memblock_free_all() is needlessly duplicated in every artiste cure and
-after introduction of arch_mm_preinit() hook, mem_init() implementation on
-many architecture only contains the call to memblock_free_all().
+On Thu, Mar 06, 2025 at 08:34:15AM -1000, Tejun Heo wrote:
+> Hello,
+> 
+> On Thu, Mar 06, 2025 at 07:18:03PM +0100, Andrea Righi wrote:
+> > To implement this, introduce a new helper kfunc scx_bpf_select_cpu_pref()
+> > that allows to specify a cpumask of preferred CPUs:
+> > 
+> > s32 scx_bpf_select_cpu_pref(struct task_struct *p,
+> > 			    const struct cpumask *preferred_cpus,
+> > 			    s32 prev_cpu, u64 wake_flags, u64 flags);
+> > 
+> > Moreover, introduce the new idle flag %SCX_PICK_IDLE_IN_PREF that can be
+> > used to enforce selection strictly within the preferred domain.
+> 
+> Would something like scx_bpf_select_cpu_and() work which is only allowed
+> pick in the intersection (ie. always SCX_PICK_IDLE_IN_PREF). I'm not sure
+> how much more beneficial a built-in two-level mechanism is especially given
+> that it wouldn't be too uncommon to need multi-level pick - e.g. within l3
+> then within numa node and so on.
 
-Pull memblock_free_all() call into mm_core_init() and drop mem_init() on
-relevant architectures to make it more explicit where the free memory is
-released from memblock to the buddy allocator and to reduce code
-duplication in architecture specific code.
+Just to make sure I understand, you mean provide two separate kfuncs:
+scx_bpf_select_cpu_and() and scx_bpf_select_cpu_pref(), instead of
+introducing the flag?
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/alpha/mm/init.c         |  6 ------
- arch/arc/mm/init.c           | 11 -----------
- arch/arm/mm/init.c           | 11 -----------
- arch/arm64/mm/init.c         | 11 -----------
- arch/csky/mm/init.c          |  5 -----
- arch/hexagon/mm/init.c       | 18 ------------------
- arch/loongarch/kernel/numa.c |  5 -----
- arch/loongarch/mm/init.c     |  5 -----
- arch/m68k/mm/init.c          |  2 --
- arch/microblaze/mm/init.c    |  3 ---
- arch/mips/mm/init.c          |  5 -----
- arch/nios2/mm/init.c         |  6 ------
- arch/openrisc/mm/init.c      |  3 ---
- arch/parisc/mm/init.c        |  2 --
- arch/powerpc/mm/mem.c        |  5 -----
- arch/riscv/mm/init.c         |  5 -----
- arch/s390/mm/init.c          |  6 ------
- arch/sh/mm/init.c            |  2 --
- arch/sparc/mm/init_32.c      |  5 -----
- arch/sparc/mm/init_64.c      |  2 --
- arch/um/kernel/mem.c         |  2 --
- arch/x86/mm/init_32.c        |  3 ---
- arch/x86/mm/init_64.c        |  2 --
- arch/xtensa/mm/init.c        |  9 ---------
- include/linux/memblock.h     |  1 -
- mm/internal.h                |  3 ++-
- mm/mm_init.c                 |  5 +++++
- 27 files changed, 7 insertions(+), 136 deletions(-)
-
-diff --git a/arch/alpha/mm/init.c b/arch/alpha/mm/init.c
-index 3ab2d2f3c917..2d491b8cdab9 100644
---- a/arch/alpha/mm/init.c
-+++ b/arch/alpha/mm/init.c
-@@ -273,12 +273,6 @@ srm_paging_stop (void)
- }
- #endif
- 
--void __init
--mem_init(void)
--{
--	memblock_free_all();
--}
--
- static const pgprot_t protection_map[16] = {
- 	[VM_NONE]					= _PAGE_P(_PAGE_FOE | _PAGE_FOW |
- 								  _PAGE_FOR),
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index 90715b4a0bfa..a73cc94f806e 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -169,17 +169,6 @@ void __init arch_mm_preinit(void)
- 	BUILD_BUG_ON((PTRS_PER_PTE * sizeof(pte_t)) > PAGE_SIZE);
- }
- 
--/*
-- * mem_init - initializes memory
-- *
-- * Frees up bootmem
-- * Calculates and displays memory available/used
-- */
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- #ifdef CONFIG_HIGHMEM
- int pfn_valid(unsigned long pfn)
- {
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 7222100b0631..54bdca025c9f 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -263,17 +263,6 @@ void __init arch_mm_preinit(void)
- #endif
- }
- 
--/*
-- * mem_init() marks the free areas in the mem_map and tells us how much
-- * memory is free.  This is done after various parts of the system have
-- * claimed their memory after the kernel image.
-- */
--void __init mem_init(void)
--{
--	/* this will put all unused low memory onto the freelists */
--	memblock_free_all();
--}
--
- #ifdef CONFIG_STRICT_KERNEL_RWX
- struct section_perm {
- 	const char *name;
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 8eff6a6eb11e..510695107233 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -411,17 +411,6 @@ void __init arch_mm_preinit(void)
- 	}
- }
- 
--/*
-- * mem_init() marks the free areas in the mem_map and tells us how much memory
-- * is free.  This is done after various parts of the system have claimed their
-- * memory after the kernel image.
-- */
--void __init mem_init(void)
--{
--	/* this will put all unused low memory onto the freelists */
--	memblock_free_all();
--}
--
- void free_initmem(void)
- {
- 	void *lm_init_begin = lm_alias(__init_begin);
-diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
-index 3914c2b873da..573da66b2543 100644
---- a/arch/csky/mm/init.c
-+++ b/arch/csky/mm/init.c
-@@ -42,11 +42,6 @@ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
- 						__page_aligned_bss;
- EXPORT_SYMBOL(empty_zero_page);
- 
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- void free_initmem(void)
- {
- 	free_initmem_default(-1);
-diff --git a/arch/hexagon/mm/init.c b/arch/hexagon/mm/init.c
-index d412c2314509..34eb9d424b96 100644
---- a/arch/hexagon/mm/init.c
-+++ b/arch/hexagon/mm/init.c
-@@ -43,24 +43,6 @@ DEFINE_SPINLOCK(kmap_gen_lock);
- /*  checkpatch says don't init this to 0.  */
- unsigned long long kmap_generation;
- 
--/*
-- * mem_init - initializes memory
-- *
-- * Frees up bootmem
-- * Fixes up more stuff for HIGHMEM
-- * Calculates and displays memory available/used
-- */
--void __init mem_init(void)
--{
--	/*  No idea where this is actually declared.  Seems to evade LXR.  */
--	memblock_free_all();
--
--	/*
--	 *  To-Do:  someone somewhere should wipe out the bootmem map
--	 *  after we're done?
--	 */
--}
--
- void sync_icache_dcache(pte_t pte)
- {
- 	unsigned long addr;
-diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-index 8eb489725b1a..30a72fd528c0 100644
---- a/arch/loongarch/kernel/numa.c
-+++ b/arch/loongarch/kernel/numa.c
-@@ -387,11 +387,6 @@ void __init paging_init(void)
- 	free_area_init(zones_size);
- }
- 
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- int pcibus_to_node(struct pci_bus *bus)
- {
- 	return dev_to_node(&bus->dev);
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index 6affa3609188..fdb7f73ad160 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -75,11 +75,6 @@ void __init paging_init(void)
- 
- 	free_area_init(max_zone_pfns);
- }
--
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
- #endif /* !CONFIG_NUMA */
- 
- void __ref free_initmem(void)
-diff --git a/arch/m68k/mm/init.c b/arch/m68k/mm/init.c
-index e03ac556c59e..3d9aa9cce144 100644
---- a/arch/m68k/mm/init.c
-+++ b/arch/m68k/mm/init.c
-@@ -119,7 +119,5 @@ static inline void init_pointer_tables(void)
- 
- void __init mem_init(void)
- {
--	/* this will put all memory onto the freelists */
--	memblock_free_all();
- 	init_pointer_tables();
- }
-diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
-index 3e664e0efc33..65f0d1fb8a2a 100644
---- a/arch/microblaze/mm/init.c
-+++ b/arch/microblaze/mm/init.c
-@@ -107,9 +107,6 @@ void __init setup_memory(void)
- 
- void __init mem_init(void)
- {
--	/* this will put all memory onto the freelists */
--	memblock_free_all();
--
- 	mem_init_done = 1;
- }
- 
-diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index 619e2e394392..6ea27bbd387e 100644
---- a/arch/mips/mm/init.c
-+++ b/arch/mips/mm/init.c
-@@ -453,11 +453,6 @@ void __init arch_mm_preinit(void)
- }
- #endif /* !CONFIG_NUMA */
- 
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- void free_init_pages(const char *what, unsigned long begin, unsigned long end)
- {
- 	unsigned long pfn;
-diff --git a/arch/nios2/mm/init.c b/arch/nios2/mm/init.c
-index 4ba8dfa0d238..94efa3de3933 100644
---- a/arch/nios2/mm/init.c
-+++ b/arch/nios2/mm/init.c
-@@ -60,12 +60,6 @@ void __init paging_init(void)
- 			(unsigned long)empty_zero_page + PAGE_SIZE);
- }
- 
--void __init mem_init(void)
--{
--	/* this will put all memory onto the freelists */
--	memblock_free_all();
--}
--
- void __init mmu_init(void)
- {
- 	flush_tlb_all();
-diff --git a/arch/openrisc/mm/init.c b/arch/openrisc/mm/init.c
-index 72c5952607ac..be1c2eb8bb94 100644
---- a/arch/openrisc/mm/init.c
-+++ b/arch/openrisc/mm/init.c
-@@ -196,9 +196,6 @@ void __init mem_init(void)
- 	/* clear the zero-page */
- 	memset((void *)empty_zero_page, 0, PAGE_SIZE);
- 
--	/* this will put all low memory onto the freelists */
--	memblock_free_all();
--
- 	printk("mem_init_done ...........................................\n");
- 	mem_init_done = 1;
- 	return;
-diff --git a/arch/parisc/mm/init.c b/arch/parisc/mm/init.c
-index 4fbe354dc9b4..14270715d754 100644
---- a/arch/parisc/mm/init.c
-+++ b/arch/parisc/mm/init.c
-@@ -562,8 +562,6 @@ void __init mem_init(void)
- 	BUILD_BUG_ON(TMPALIAS_MAP_START >= 0x80000000);
- #endif
- 
--	memblock_free_all();
--
- #ifdef CONFIG_PA11
- 	if (boot_cpu_data.cpu_type == pcxl2 || boot_cpu_data.cpu_type == pcxl) {
- 		pcxl_dma_start = (unsigned long)SET_MAP_OFFSET(MAP_START);
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 68efdaf14e58..d8fe11b64259 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -327,11 +327,6 @@ void __init arch_mm_preinit(void)
- #endif /* CONFIG_PPC32 */
- }
- 
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- void free_initmem(void)
- {
- 	ppc_md.progress = ppc_printk_progress;
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 9efadabf6be1..79b649f6de72 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -196,11 +196,6 @@ void __init arch_mm_preinit(void)
- 	print_vm_layout();
- }
- 
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- /* Limit the memory size via mem. */
- static phys_addr_t memory_limit;
- #ifdef CONFIG_XIP_KERNEL
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index 6741b38fc864..e8585011fbfc 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -167,12 +167,6 @@ void __init arch_mm_preinit(void)
- 	setup_zero_pages();	/* Setup zeroed pages. */
- }
- 
--void __init mem_init(void)
--{
--	/* this will put all low memory onto the freelists */
--	memblock_free_all();
--}
--
- unsigned long memory_block_size_bytes(void)
- {
- 	/*
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index 6d459ffba4bc..99e302eeeec1 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -330,8 +330,6 @@ unsigned int mem_init_done = 0;
- 
- void __init mem_init(void)
- {
--	memblock_free_all();
--
- 	/* Set this up early, so we can take care of the zero page */
- 	cpu_cache_init();
- 
-diff --git a/arch/sparc/mm/init_32.c b/arch/sparc/mm/init_32.c
-index e16c32c5728f..fdc93dd12c3e 100644
---- a/arch/sparc/mm/init_32.c
-+++ b/arch/sparc/mm/init_32.c
-@@ -264,11 +264,6 @@ void __init arch_mm_preinit(void)
- 	taint_real_pages();
- }
- 
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- void sparc_flush_page_to_ram(struct page *page)
- {
- 	unsigned long vaddr = (unsigned long)page_address(page);
-diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
-index 34d46adb9571..760818950464 100644
---- a/arch/sparc/mm/init_64.c
-+++ b/arch/sparc/mm/init_64.c
-@@ -2505,8 +2505,6 @@ static void __init register_page_bootmem_info(void)
- }
- void __init mem_init(void)
- {
--	memblock_free_all();
--
- 	/*
- 	 * Must be done after boot memory is put on freelist, because here we
- 	 * might set fields in deferred struct pages that have not yet been
-diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-index cce387438e60..379f33a1babf 100644
---- a/arch/um/kernel/mem.c
-+++ b/arch/um/kernel/mem.c
-@@ -71,8 +71,6 @@ void __init arch_mm_preinit(void)
- 
- void __init mem_init(void)
- {
--	/* this will put all low memory onto the freelists */
--	memblock_free_all();
- 	kmalloc_ok = 1;
- }
- 
-diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index 16664c5464b5..95b2758b4e4d 100644
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -702,9 +702,6 @@ void __init arch_mm_preinit(void)
- 
- void __init mem_init(void)
- {
--	/* this will put all low memory onto the freelists */
--	memblock_free_all();
--
- 	after_bootmem = 1;
- 	x86_init.hyper.init_after_bootmem();
- 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index f8981e29633c..451e796427d3 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1357,8 +1357,6 @@ void __init mem_init(void)
- {
- 	/* clear_bss() already clear the empty_zero_page */
- 
--	/* this will put all memory onto the freelists */
--	memblock_free_all();
- 	after_bootmem = 1;
- 	x86_init.hyper.init_after_bootmem();
- 
-diff --git a/arch/xtensa/mm/init.c b/arch/xtensa/mm/init.c
-index 47ecbe28263e..cc52733a0649 100644
---- a/arch/xtensa/mm/init.c
-+++ b/arch/xtensa/mm/init.c
-@@ -129,15 +129,6 @@ void __init zones_init(void)
- 	print_vm_layout();
- }
- 
--/*
-- * Initialize memory pages.
-- */
--
--void __init mem_init(void)
--{
--	memblock_free_all();
--}
--
- static void __init parse_memmap_one(char *p)
- {
- 	char *oldp;
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index e79eb6ac516f..ef5a1ecc6e59 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -133,7 +133,6 @@ int memblock_mark_nomap(phys_addr_t base, phys_addr_t size);
- int memblock_clear_nomap(phys_addr_t base, phys_addr_t size);
- int memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t size);
- 
--void memblock_free_all(void);
- void memblock_free(void *ptr, size_t size);
- void reset_all_zones_managed_pages(void);
- 
-diff --git a/mm/internal.h b/mm/internal.h
-index 109ef30fee11..26e2e8cea495 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1407,7 +1407,8 @@ static inline bool gup_must_unshare(struct vm_area_struct *vma,
- }
- 
- extern bool mirrored_kernelcore;
--extern bool memblock_has_mirror(void);
-+bool memblock_has_mirror(void);
-+void memblock_free_all(void);
- 
- static __always_inline void vma_set_range(struct vm_area_struct *vma,
- 					  unsigned long start, unsigned long end,
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 9cca3d497bf8..545e11f1a3ba 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -2672,6 +2672,10 @@ void __init __weak arch_mm_preinit(void)
- {
- }
- 
-+void __init __weak mem_init(void)
-+{
-+}
-+
- /*
-  * Set up kernel memory allocators
-  */
-@@ -2693,6 +2697,7 @@ void __init mm_core_init(void)
- 	report_meminit();
- 	kmsan_init_shadow();
- 	stack_depot_early_init();
-+	memblock_free_all();
- 	mem_init();
- 	kmem_cache_init();
- 	/*
--- 
-2.47.2
-
+Thanks,
+-Andrea
