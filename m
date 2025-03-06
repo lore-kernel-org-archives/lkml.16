@@ -1,197 +1,162 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A31020E037;
-	Thu,  6 Mar 2025 13:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772F420D510
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741267509; cv=none; b=d0tTLc/h8GlHohsODcKsLj1W675L7z3cA99dcKdvmOgo2Pzas54haaBF0OTNj0UnIBSnebcyNxRP1fzDlS31PgNv0gPOHAvdhtqdg8Kr4exvHdKelBa/3nJkW7lFI+3B+Rb2qqnH5Ho+X/z8pHGhhnQMhWgWR1K7BvXKCtnl73U=
+	t=1741267531; cv=none; b=pAn05OZfyFAz9cgouLpmeQcI1Akf0OucuQLkn19m579Son9V85TeXBV3JLd+/4qNRxQyFQrfNW/NCKKnQxklkSn+lQ3+EQqpHt3WzbPMixzZALzN2EUdFEGjvXkKJ12txdcTs8u/x/MRLlkRdRmxE/3Ub8aKUj3qQWx2zCYNYrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741267509; c=relaxed/simple;
-	bh=hFWuuPdbuYxcb+LTn5HhjxwnaOnWLb+LGyugAIBeud4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D8gibK0fdveCdiWE1uPwva32I9wrwR7DpzoyxCu4crTh/+DCsfHtCMgJ4pzKpZb+aZX5VW/ObQ4ItwkdFhCVFP92D2VTstv3GubhtI+zDnRt/J6kb8p140tw3rvGMuR2mni5QBbKtx6w1mtNinfZ2AevittaQkOc2IqrvJn66VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJ5mqzPr; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741267531; c=relaxed/simple;
+	bh=ckVgwD1idrTgBPnpfYdKRlrhltmVgKJP8KD/7137wAo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DMAp3Ojs0w/td9VhrjFQ+cvFoT5mrc9gZ0OzBX9pv9XycYIEUNjTqiAvX46Bu5Iqj2tLCWZv4JdGPPoYUkWXROh9EIfgCaojLliRL+Vf+ebz6oVE0X7Wp8YPtJbAdHyBnz+1juP9tnj60l1WAGX2ONFSQggRCuWEuHIqW8joWKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JMwaUY8Z; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJ5mqzPr"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5237c18a97eso222833e0c.2;
-        Thu, 06 Mar 2025 05:25:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JMwaUY8Z"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43bc1aa0673so2653035e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:25:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741267507; x=1741872307; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pczLQVMYKQNjopy0MycJrlivlSAhMtMp/TTkHXcLHZw=;
-        b=fJ5mqzPrLwuD6gjTJ3d4L2HrAE64bH89pLqeNHJ7YV3ffTpCH4xRzsYro1QdvpAxZy
-         pfSlx1+aqUMZwr/UYAxiQ2Bd9ViyBB/oMDNLwcqnY9kJtTafvBpw+31uX+wRluKLIxoN
-         xvwRPQ5W23W75WBrf3jHF50rCSt9HraNq7sGfHCjYMi8LvSyOSj5AiwgneUYvJ7S0gwl
-         gmM3vdpr7a9oEI0aQwTov7BlmYsLnWhRs13N/cdpw+LKz8+j/jolmlU0J3ccYg0RonwP
-         Vw1cK0N2KM1VpAzyItY5dUSqeXhoDJmG8HXxUybtKtvgQ/W9IIkHogWKGdgXDM8IyoBw
-         FTnw==
+        d=google.com; s=20230601; t=1741267528; x=1741872328; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XjvY8QE+WfjDEBedvFnnwEvqcwGNoef7rD13NkLbjhw=;
+        b=JMwaUY8ZCxQmjqMeR/9FOdvl27VJBE9yDRuZ+fT+c7menTiKcI3fWvh1LCmef25d5U
+         wiGVFQDhL9/MqHX86G5jFpo9xZfQM0Aki6VtR15MHLvC+IwC8Xk6KQr/gBlOz26hGMDB
+         oSN2uQ9lh1dmG7//d5+/AoU9bWXTVvbHVMSumLjzfBborjf1jp8WKj5SAZvygI0Cyn+c
+         zea4N0yvC/viIJVYYQDSe6uhAjJx1FzzIs+jmeVwROpXE0s6KUeRYL2ICDcHtrJI/vto
+         RVPEaTDtBAyEeDZWaFs8Roia4AxNavf8FVifw0KKMej6J6wRCY0/FTzQMA8gyBZA/AgK
+         8D3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741267507; x=1741872307;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pczLQVMYKQNjopy0MycJrlivlSAhMtMp/TTkHXcLHZw=;
-        b=edckGIrDFmrbeFgWD5vU0YvL+51awJC/ncqtxeVihDR+RI4YKVx6zKeTGvqMZkk7cA
-         jjCPYXX9hf2FleMY4ryrlgegiBZpQO7TLGlawk/eh4Lpgc8Bh/9jaP1vpy3WaVcPaRlP
-         TJ5Vp5sPb0fSuiM3GH3VfGJNYAtd34t1KXhO+qiMcQOKoW0LWzcxRdee5VpUC3k0myrN
-         QvwzU8ZLAsl+Ty+Zw8R9sE4DBgpX95LaHtZRH9KeIkLogPGxsmrwB8wdiTn7jHJIsGYP
-         XF+h9ZL0JLYH2kRVQCIjpYmsSoG7SZzpYLLyA+vqGtXrXm9Fpc9uIRUk1lHoZxpiGS8e
-         vA7A==
-X-Forwarded-Encrypted: i=1; AJvYcCVaf8dAil7I1D7TOooMeDeUl5eKpLnTVabw2uwiMgeCQ5/jxgAnz4c40y49PorjeNqvzcfpbQkXRbS3xRWz@vger.kernel.org, AJvYcCVt6XZVXdmWKQ3PH66jfja7Wlv9sYLrGJem8Y04s52tpkJ2EFiLY+9JQfGZDV410BSoe8vTCbJX/2A=@vger.kernel.org, AJvYcCWXELQmbfq5OsK8yoEvMatNeJJsOWsKwchDWaPo/YZgmJESSP4Ct+Zw0HgHyZM3WlqZutPo7nEuJpKcLr/xoGY4yjU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYhB5BaVv08BTgEj2uKhgAuiPUHmuVKrQLXvUehbesbIoClaZI
-	HpcQpYh/cjsJki97rMA23ECCP9ZCJ2FpVYq1RB6uW51AXiiUXKLGAY7i4eZLGDqPAOfZpJNZQWF
-	ClKcP9COssVIYm/Tr+jp0XrvdrkY=
-X-Gm-Gg: ASbGncsQk6btX+NyFCs3e7sF8rc84Bq3/xH4QM1Nks4mG+nhL6vd49TU3eQPm5AMWlq
-	D4IixpEIdj1r8AWeUATO5GllYIkdizHIJXJnajNavJ7t8I2yLnsX44fer7Qd4CXAzKIAFqw2ZNU
-	/sEHAQVdrA3LS317JriEAMjMOJ8w==
-X-Google-Smtp-Source: AGHT+IHgiM4ICdjafzmTABqUctgFSAnbeftgAaTIqLRQol12JOmBumy+PQVI/b3uj4OJSh5eWKjsIrneXRlQI/vMI3s=
-X-Received: by 2002:a05:6122:1d55:b0:520:652b:cdf9 with SMTP id
- 71dfb90a1353d-523c617d306mr4101936e0c.5.1741267506786; Thu, 06 Mar 2025
- 05:25:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741267528; x=1741872328;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XjvY8QE+WfjDEBedvFnnwEvqcwGNoef7rD13NkLbjhw=;
+        b=uzO5VvoC4YnMbU70Q6Z6vVNoUL3QGueu8HQjhvFiv880RzG1uUSA6F/oKK86TXYJKo
+         NFgaNzp+govgv+JMOJQ089ae9u0kx8Kotl7YeOe1k5gdNBhy1xz3nqrv6rVh4E2Y75gG
+         LaAv+X6wL5CpA8pvqYJeM1/xI6z2XLSu0Lrm9U0UC7+kuprxnC7wMaFUVowU3PBUr7s8
+         3GX8FKcW6xTCiPJNNrwEYkaXxRPxJdIdg8x7WFYch+u/qvU+hVHD+uvUQo8xk3YZyTQc
+         RSe7rG5gPG7eiSf0ozWz5QGmo01Mgv/1Ks6eV0fxz3zm+L3YEgBfB9ptNlWd/0cqqMP/
+         ZRsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUspOyAsOwscoeB2LRP940wNenNNYHN4x9OE75Le5slx5FpbqvnykomSyJwVuTPMrFUshbcZErMOgzm95Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwRy3Nlndk1bnn4ur1XErp2YabgRichX7YOvQHOE/g/qJnAFzq
+	LA5OUlquMMqJAZiLJuaMvT40kjD0yJME70WzRX7Lb95q/ag/AA+JUTPYEcZfEMNvFyr2HF3X1Dd
+	EJpOeCZ1N3RsXOg==
+X-Google-Smtp-Source: AGHT+IGu6TNRJ9xsT+tbNha9i/40T4DWFVb5ajxHxFzrjaRSighLgqQn9S9T5+RQz5NbxV86JeMfKntspt/d6/4=
+X-Received: from wmrn30.prod.google.com ([2002:a05:600c:501e:b0:43b:d157:3b9e])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4447:b0:43b:c0fa:f9e4 with SMTP id 5b1f17b1804b1-43bd29589fcmr52982055e9.13.1741267527969;
+ Thu, 06 Mar 2025 05:25:27 -0800 (PST)
+Date: Thu, 6 Mar 2025 13:25:25 +0000
+In-Reply-To: <Z8maCX5QJRqODl6u@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250218114353.406684-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250218114353.406684-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdUhZ_qV=16jnWD6cPfuMmZpDUeRMTUgbqy=Mkzp-29=bA@mail.gmail.com>
- <CA+V-a8uvfb=a=K1YzGNeZdiAzeXWMpdbxj=6UuL_xQfxKmOBZA@mail.gmail.com> <CAMuHMdXermXD2yCJxYjw-bmWKiazF5LVJ8PHoELKEdp_q2UnfQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdXermXD2yCJxYjw-bmWKiazF5LVJ8PHoELKEdp_q2UnfQ@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 6 Mar 2025 13:24:40 +0000
-X-Gm-Features: AQ5f1JrbmqE4Ljn85aeM0u0c_u1ndtYdv9GmzW5Js2FPoUxJ69rtGqH1qcFxjY0
-Message-ID: <CA+V-a8tRptyKJ2fmawvyN89bEMeN==7EeA7VXW24EpXenkUK_w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] clk: renesas: rzv2h-cpg: Add support for enabling PLLs
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <Z8g8vhS9rqQ_ez48@google.com> <Z8iFeEWq16pNQdMa@pluto>
+ <Z8mCbc2Z2QGd3f8M@google.com> <Z8maCX5QJRqODl6u@pluto>
+Message-ID: <Z8miRewURwdvU36h@google.com>
+Subject: Re: [Bug report] Memory leak in scmi_device_create
+From: Alice Ryhl <aliceryhl@google.com>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	arm-scmi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Hi Geert
+On Thu, Mar 06, 2025 at 12:50:17PM +0000, Cristian Marussi wrote:
+> On Thu, Mar 06, 2025 at 11:09:33AM +0000, Alice Ryhl wrote:
+> > On Wed, Mar 05, 2025 at 05:10:16PM +0000, Cristian Marussi wrote:
+> > > On Wed, Mar 05, 2025 at 11:59:58AM +0000, Alice Ryhl wrote:
+> > > > Dear SYSTEM CONTROL & POWER/MANAGEMENT INTERFACE (SCPI/SCMI) Message
+> > > > Protocol drivers maintainers,
+> > > > 
+> > > > I flashed a v6.13-rc3 kernel onto a Rock5B board and noticed the
+> > > > following output in my terminal:
+> > > > 
+> > > > [  687.694465] kmemleak: 4 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+> > > > 
+> > > > It seems that there is a memory leak for devices created with
+> > > > scmi_device_create.
+> > > > 
+> > > `
+> > > Hi Alice,
+> > > 
+> > > thanks for this report.
+> > > 
+> > > > This was with a kernel running v6.13-rc3, but as far as I can tell, no
+> > > > relevant changes have landed since v6.13-rc3. My tree *does* include
+> > > > commit 295416091e44 ("firmware: arm_scmi: Fix slab-use-after-free in
+> > > > scmi_bus_notifier()"). I've only seen this kmemleak report once, so it's
+> > > > not happening consistently.
+> > > > 
+> > > > See below for the full kmemleak report.
+> > > > 
+> > > > Alice
+> > > > 
+> > > > $ sudo cat /sys/kernel/debug/kmemleak
+> > > > unreferenced object 0xffffff8106c86000 (size 2048):
+> > > >   comm "swapper/0", pid 1, jiffies 4294893094
+> > > >   hex dump (first 32 bytes):
+> > > >     02 00 00 00 10 00 00 00 c0 01 bc 03 81 ff ff ff  ................
+> > > >     60 67 ba 03 81 ff ff ff 18 60 c8 06 81 ff ff ff  `g.......`......
+> > > >   backtrace (crc feae9680):
+> > > >     [<00000000197aa008>] kmemleak_alloc+0x34/0xa0
+> > > >     [<0000000056fe02c9>] __kmalloc_cache_noprof+0x1e0/0x450
+> > > >     [<00000000a8b3dfe1>] __scmi_device_create+0xb4/0x2b4
+> > > >     [<000000008714917b>] scmi_device_create+0x40/0x194
+> > > >     [<000000001818f3cf>] scmi_chan_setup+0x144/0x3b8
+> > > >     [<00000000970bad38>] scmi_probe+0x584/0xa78
+> > > >     [<000000002600d2fd>] platform_probe+0xbc/0xf0
+> > > >     [<00000000f6f556b4>] really_probe+0x1b8/0x520
+> > > >     [<00000000eed93d59>] __driver_probe_device+0xe0/0x1d8
+> > > >     [<00000000d613b754>] driver_probe_device+0x6c/0x208
+> > > >     [<00000000187a9170>] __driver_attach+0x168/0x328
+> > > >     [<00000000e3ff1834>] bus_for_each_dev+0x14c/0x178
+> > > >     [<00000000984a3176>] driver_attach+0x34/0x44
+> > > >     [<00000000fc35bf2a>] bus_add_driver+0x1bc/0x358
+> > > >     [<00000000747fce19>] driver_register+0xc0/0x1a0
+> > > >     [<0000000081cb8754>] __platform_driver_register+0x40/0x50
+> > > > unreferenced object 0xffffff8103bc01c0 (size 32):
+> > > 
+> > > I could not reproduce on my setup, even though I run a system with
+> > > all the existent SCMI protocols (and related drivers) enabled (and
+> > > so a lot of device creations) and a downstream test driver that causes
+> > > even more SCMI devices to be created/destroyed at load/unload.
+> > > 
+> > > Coming down the path from scmi_chan_setup(), it seems something around
+> > > transport devices creation, but it is not obvious to me where the leak
+> > > could hide....
+> > > 
+> > > ...any particular setup on your side ? ...using LKMs, loading/unloading,
+> > > any usage pattern that could help me reproduce ?
+> > 
+> > I looked into this a bit more, and actually it does happen consistently.
+> > It's just that kmemleak doesn't report it until 10 minutes after
+> > booting, so I did not notice it.
+> > 
+> > As for my setup, well, I boot the kernel over pxe and the rootfs is
+> > mounted over NFSv4. The memory leak happens even if I don't do anything
+> > at all - I just boot and wait. The device is a Radxa Rock5B.
+> > 
+> > Not sure what other information there is to give.
+> > 
+> 
+> My question as stated above was mainly to understand if the SCMI stack
+> was built-in or compiled as loadable modules (lsmod|grep -i scmi)...
+> ...I am just to try to pin down a possible 'more-vulnerable' configuration..
+> ..I could not see any report even triggering a kmemleak scan on v6.14-rc5
+> BUT I only tested with a fully built-in SCMI stack indeed as of now...so
+> the question.
+> 
+> > I tried again with v6.14-rc5, and I still got the leak:
+> 
+> Ok...thanks I will investigate with different configs.
 
-On Thu, Mar 6, 2025 at 1:16=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, 6 Mar 2025 at 14:04, Lad, Prabhakar <prabhakar.csengg@gmail.com> =
-wrote:
-> > On Wed, Mar 5, 2025 at 4:42=E2=80=AFPM Geert Uytterhoeven <geert@linux-=
-m68k.org> wrote:
-> > > On Tue, 18 Feb 2025 at 12:44, Prabhakar <prabhakar.csengg@gmail.com> =
-wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Some RZ/V2H(P) SoC variants do not have a GPU, resulting in PLLGPU =
-being
-> > > > disabled by default in TF-A. Add support for enabling PLL clocks in=
- the
-> > > > RZ/V2H(P) CPG driver to manage this.
-> > >
-> > > Does it make sense to enable the GPU PLL if no GPU is present?
-> > >
-> > No it doesn't,  PLLGPU is enabled on needs basis ie if GPU node is
-> > enabled the PLLGPU is enabled, if GPU is disabled the PLLGPU will be
-> > untouched and will remain OFF. Note I also have a patch which does
-> > disable the PLL's but I have not added as this isn't tested with the
-> > full system running and I'm not sure if there will be any radiation if
-> > we turn ON/OFF PLLs (Im discussing this internally once approved I
-> > will add support to disable PLLs too).
->
-> OK. It just sounded a bit strange in the patch description,
->
-I'll reword it to make it clear.
+Here is the config I used:
+https://gist.github.com/Darksonn/ecd31a0512f43f7e74a30ab83ff2196f
 
-> > > > Introduce `is_enabled` and `enable` callbacks to handle PLL state
-> > > > transitions. With the `enable` callback, PLLGPU will be turned ON o=
-nly
-> > > > when the GPU node is enabled; otherwise, it will remain off. Define=
- new
-> > > > macros for PLL standby and monitor registers to facilitate this pro=
-cess.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > ---
-> > > >  drivers/clk/renesas/rzv2h-cpg.c | 57 +++++++++++++++++++++++++++++=
-++++
-> > > >  1 file changed, 57 insertions(+)
-> > > >
-> > > > diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/=
-rzv2h-cpg.c
-> > > > index 1ebaefb36133..d7230a7e285c 100644
-> > > > --- a/drivers/clk/renesas/rzv2h-cpg.c
-> > > > +++ b/drivers/clk/renesas/rzv2h-cpg.c
->
-> > > >  #define PLL_CLK_ACCESS(n)      (!!((n) & BIT(31)))
-> > > >  #define PLL_CLK1_OFFSET(n)     FIELD_GET(GENMASK(15, 0), (n))
-> > > >  #define PLL_CLK2_OFFSET(n)     (PLL_CLK1_OFFSET(n) + (0x4))
-> > > > +#define PLL_STBY_OFFSET(n)     (PLL_CLK1_OFFSET(n) - (0x4))
-> > >
-> > > Let's subtract 4...
-> > >
-> > > > +#define PLL_MON_OFFSET(n)      (PLL_STBY_OFFSET(n) + (0x10))
-> > >
-> > > ... and add 0x10. Where are we now? ;-)
-> > >
-> > > I think it would be better to store the PLL base offset instead of th=
-e
-> > > PLL CLK1 offset in cpg_core_clk.cfg.conf, and define offsets
-> > > relative to that:
-> > >
-> > You mean PLL_STBY offset in cpg_core_clk.cfg.conf and have the below
-> > CPG_PLL_XX macros.
->
-> Exactly, the PLL_STBY offset is the "base offset" of the various
-> CPG_PLL_* registers.
->
-> > Or maybe instead of using a conf can I add the below?
->
-> Sure, sounds fine!
->
-Thanks.
-
-> > +/**
-> > + * struct pll - Structure for PLL configuration
-> > + *
-> > + * @offset: STBY register offset
-> > + * @clk: Flag to indicate if CLK1/2 are accessible or not
-> > + * @sscen: Flag to indicate if SSCEN bit needs enabling/disabling
-> > + */
-> > +struct pll {
-> > +    unsigned int offset:8;
-> > +    unsigned int clk:1;
-> > +    unsigned int sscen:1;
->
-> This is a new flag?
->
-I was experimenting with this so just included this hunk but I wont
-add it as part of the current submission.
-
-> > +};
-> > +
-> > +#define PLL_PACK(_offset, _clk, _sscen) \
-> > +    ((struct pll){ \
-> > +        .offset =3D _offset, \
-> > +        .clk =3D _clk \
-> > +        .sscen =3D _sscen \
-> > +    })
-> > +
-> > +#define PLLCA55        PLL_PACK(0x64, 1, 0)
->
-> 0x60
-Ouch.
-
-Cheers,
-Prabhakar
+Alice
