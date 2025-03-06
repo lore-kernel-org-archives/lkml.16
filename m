@@ -1,118 +1,197 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FA020D4F9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C6020FAB2;
+	Thu,  6 Mar 2025 11:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260649; cv=none; b=jk9Gf8z6AjiYIQsiIOI4zV3+d9wXpJ8YrWv40li3HqDPrpxbQZcYXUWNAV/0SWRtDwwmMisIuYLw2QngIeEQP2lusXgaCvumwKU3CEUHRCYzCWAg9YWpMx5EolP2Sj4A6or1u9aWwKmjhryNrE3vLyjv46gZLYnKDHiTsqlJvek=
+	t=1741260651; cv=none; b=PZaHEe0jNLn3erjYrAcM8LA0e1Qh4XWPUnmSDcFQVI4cSOE5hM6JlFPJbH4araf0M1PSgWMB08UChcbhdpawLapacPKrS6oi+BdiRJiCzMKtdD24dMoQkWNqnqvCWiXnAWggjDdaH0UYwUzNVUAGZMHccSHQK5WSg5hxh99Nk3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260649; c=relaxed/simple;
-	bh=vc25/TFqvg0Ekr2Sm4G/VkkviBdPeMF5e7FdTWNCvAE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vyan708sLll/NDuN2OrYuyGCqExv8DKU5/aJYVH1jOW8L+hhlePntbz8H1K/rtuu0SSWqjussA0260mfjgr/d0iN5hH50fcEtv4egiDZOKwffzM/X22OK1p4OqaahU1W/H5To1MsgGddqE1ax+t6Zs0eYTo7U4N8Px0PY5eANLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=m4emcEW0; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1741260651; c=relaxed/simple;
+	bh=99SvQXLjoPiWd0/gxkEdf3AsdJ/IenQsyJp3SptYBS0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eIOgOKnbWDfnkY+9lyHaNBOtCzMcsn0pXG/nbYEzvZzMuHiTS3Zl1jFpTPVM27/g1LWjp8McqJLerCMQWtz6EinNmE/IAMNszuiU/C9P89Ee91Hg5tY4uIPEJ/ptwJWhfzoWydBqwpRvsTOLbgvKs0RVOIXIE4B0f6VZmeitlCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsB+83JE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="m4emcEW0"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4394036c0efso3043055e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:30:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1741260645; x=1741865445; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BHj8xJJDjB/nn7+FV+WNgNcGZHPneQlK/63TZumKERk=;
-        b=m4emcEW0yiQfuQOMZx8+UcBr8ZY78Juen+ulRxvdeHGzI1x0FeVdDKbNXUaWXnwt0t
-         V5Y70hcM9FzV+RFUVDNylCLWWAi9oFhgtlI0J2mm4TIvYdVFd4uL8Q/5Ke/ZoXT7/dXS
-         jWNT4wz/x+iQteDnMIS51sxqTSlANN9JeGeZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741260645; x=1741865445;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BHj8xJJDjB/nn7+FV+WNgNcGZHPneQlK/63TZumKERk=;
-        b=GQa2NxEkRLnylx1ABOOyD87uT7ABQznqHklyhnh65dlyezGGn06VNBkk7ECnDY4gI2
-         KDArb36CBd8kIBVJaqGwupOwUlPwIMMjzkRVtgUbOxEkEzfkiyCIa0EXRF6rIn+wbMFl
-         7kzXfkMgIti0p5aChH1Q3KykgmmlnY7Wu2lEYk2AsH9vz49rnorCuc4meh7EKNB0FmkM
-         QrVpbuKoiWKY2mMvSd3MsARcsG5NzLgunPJlcJxaAC62XMgHJTDmRw2eGli0UdcaIqTg
-         aR/4RrHXaNwUQsYEb000f490mcvmSh/5ENR/IyIzNNVvtklYnMIMbTYv6gbxg9yDws8i
-         qoEQ==
-X-Gm-Message-State: AOJu0YzVU/p2vSCkDQlOrb7eemUWGV+ydsI+k34SkEpnHq/UNujlOvWU
-	lxvzu7Xm860+b//3P3nXBeOzvQ+4klxLCol65YhAKsluwER5XjviL+fQp4r2ZUJhfpFVP0zHMGi
-	6
-X-Gm-Gg: ASbGncs/ycqqQevUPA5TBaYkMjecOn8XqrVHxMGTZmhYs4KUkBGIlCX+GNou+zg8H7D
-	sQtAco3B5w2APT5NmrucbWx4TTx2U65pQ3LAa8bvcPy284fl4gQN7L53c5OIawrTiupTWtnscqc
-	dTK0mKIcCz5qw5f+afnIUlwQIqKBkYlSuq0i4teIitqnY0dfifAokLdbZdd0i+Y7DBwWuWjtRnp
-	PGq0hIPSFYESdcf487SdIrWPzSICzBpbjtfNj+rogQiVGCf+p+bjO53GS9Zan8EIln7W3Hhnoxn
-	DjMY0fVPif+LNoVksFu899Ck/mQ19NrKo/CRho8LN7JLdjMyn+cbcUx13ybgOSHCNeHGTSwpwHf
-	9JWDIJQ==
-X-Google-Smtp-Source: AGHT+IEIhom6wfbT8hJyrqgr8W86q8u3iJF7VXHkbhSBY+5SfYi4rIInhmlezzKH/X0h3w//D7kRaQ==
-X-Received: by 2002:a05:600c:2e48:b0:439:98ca:e3a4 with SMTP id 5b1f17b1804b1-43bd29b4cdbmr53979685e9.19.1741260645366;
-        Thu, 06 Mar 2025 03:30:45 -0800 (PST)
-Received: from localhost.localdomain ([2001:b07:6474:ebbf:4703:aa8c:6eab:8161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb79b9sm1749650f8f.3.2025.03.06.03.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 03:30:45 -0800 (PST)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: Stephen Boyd <sboyd@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	Abel Vesa <abelvesa@kernel.org>,
-	linux-amarula@amarulasolutions.com,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v10 09/18] arm64: dts: imx8mq: add anatop clocks
-Date: Thu,  6 Mar 2025 12:27:58 +0100
-Message-ID: <20250306112959.242131-10-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250306112959.242131-1-dario.binacchi@amarulasolutions.com>
-References: <20250306112959.242131-1-dario.binacchi@amarulasolutions.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsB+83JE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 75BF2C116D0;
+	Thu,  6 Mar 2025 11:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741260650;
+	bh=99SvQXLjoPiWd0/gxkEdf3AsdJ/IenQsyJp3SptYBS0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MsB+83JENy4bW9g3bpjuwmP+kbUNdrl+d5CcB2Oh40EK1W71V2APHKE2BSu8QIY3A
+	 fF14Q3RAbdy60m9iEJEZUir2FEfkPNZeRNcE5yLyXwiy5IN4/lX49lrYTbG6O2XgXe
+	 nVQ30B1isqj0ZK+W3Kjaik7vSrdmWTS08LQ1RxjNDFKsYxSoYhy96m7uByjscoJf6m
+	 ouU9CSjVPJ75QDLiEdUjNWHj83qADURumwXwhKe91ZwMAiUskN/bdDRQD1jGJV3B6O
+	 gePzK8I/FtpK+6G4EyRCpJsD0HwTiqT6SAvtMAKpy78mazJQ0CrnnsT11c1EoNBRmB
+	 UZUITlPwwDH2A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3271EC282EC;
+	Thu,  6 Mar 2025 11:30:50 +0000 (UTC)
+From: Joel Granados <joel.granados@kernel.org>
+Date: Thu, 06 Mar 2025 12:29:41 +0100
+Subject: [PATCH v2 1/6] panic: Move panic ctl tables into panic.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250306-jag-mv_ctltables-v2-1-71b243c8d3f8@kernel.org>
+References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
+In-Reply-To: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
+To: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-s390@vger.kernel.org, Joel Granados <joel.granados@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3223;
+ i=joel.granados@kernel.org; h=from:subject:message-id;
+ bh=99SvQXLjoPiWd0/gxkEdf3AsdJ/IenQsyJp3SptYBS0=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGfJh2UQmfyhQ+EURZAkXCrvML2DKQGqYGu4r
+ aqjXVDEii6Yi4kBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJnyYdlAAoJELqXzVK3
+ lkFPdYAL/j/eLPROZngY5rs5T5RaG4XQ/S80kGl9A+zpvq7RocnU8PM8Pc7vCZaCUN5AaJs86xy
+ nILcjVhHH4miZlpoNJlyIAxgadB/xyzrwYGGClLFUlH5vk2KfU51blKWPkY1MURehM45fGvKmPI
+ d1vCwcBkbaJoOPOu0h6HFEqxNU/fCalmQQACoIaw32o298YJ9sl1zqxIEcbOgB6S86NZaEz67V8
+ 5UMaJQe7g+5y4bixa6gjKKQZ/stWF5fNu6AlcHqYZBz10aiaXRX0/ucaSrpBY54T+zox+ukxpEO
+ JiPCRQCIR9IGXLX8PcTrTDe21NqX89Z3shcCI2ciUNfP//GduQsnMHiTrjUQstTYUIQTvrLwnwG
+ 8kyvBiZTBR78AFImMgCQ9TpfVYnFGCYMMFIcB1OXH9zub6zyV6kFyX9vAP6uwisccl6nWBIo5RZ
+ WbSO9xaefycxW8NJsDn5VPoZQfm6xb1GQM4P61CkaYmcLVVv/SMLGmRvhy0C2CKo75meAIiAFp7
+ H4=
+X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
+ auth_id=239
 
-Add clocks to anatop node.
+Move panic, panic_on_oops, panic_print, panic_on_warn into
+kerne/panic.c. This is part of a greater effort to move ctl tables into
+their respective subsystems which will reduce the merge conflicts in
+kerenel/sysctl.c.
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-
+Signed-off-by: Joel Granados <joel.granados@kernel.org>
 ---
+ kernel/panic.c  | 30 ++++++++++++++++++++++++++++++
+ kernel/sysctl.c | 31 -------------------------------
+ 2 files changed, 30 insertions(+), 31 deletions(-)
 
-(no changes since v4)
-
-Changes in v4:
-- New
-
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d51de8d899b2..1d1424a136f0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -817,6 +817,8 @@ anatop: clock-controller@30360000 {
- 				reg = <0x30360000 0x10000>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 				#clock-cells = <1>;
-+				clocks = <&ckil>, <&osc_25m>, <&osc_27m>;
-+				clock-names = "ckil", "osc_25m", "osc_27m";
- 			};
+diff --git a/kernel/panic.c b/kernel/panic.c
+index d8635d5cecb2505da1c08a4f70814e9b87ac3b37..f9bf88f4c26216cd5a93754378a36ea1e841472a 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -96,6 +96,36 @@ static const struct ctl_table kern_panic_table[] = {
+ 		.extra2         = SYSCTL_ONE,
+ 	},
+ #endif
++	{
++		.procname	= "panic",
++		.data		= &panic_timeout,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++	{
++		.procname	= "panic_on_oops",
++		.data		= &panic_on_oops,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++	{
++		.procname	= "panic_print",
++		.data		= &panic_print,
++		.maxlen		= sizeof(unsigned long),
++		.mode		= 0644,
++		.proc_handler	= proc_doulongvec_minmax,
++	},
++	{
++		.procname	= "panic_on_warn",
++		.data		= &panic_on_warn,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ 	{
+ 		.procname       = "warn_limit",
+ 		.data           = &warn_limit,
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index cb57da499ebb1216cefb3705694ab62028fee03e..7759b1ed7221f588f49ec3d81b19aeb4d2fdf2f7 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -26,7 +26,6 @@
+ #include <linux/sysctl.h>
+ #include <linux/bitmap.h>
+ #include <linux/signal.h>
+-#include <linux/panic.h>
+ #include <linux/printk.h>
+ #include <linux/proc_fs.h>
+ #include <linux/security.h>
+@@ -1610,13 +1609,6 @@ int proc_do_static_key(const struct ctl_table *table, int write,
+ }
  
- 			snvs: snvs@30370000 {
+ static const struct ctl_table kern_table[] = {
+-	{
+-		.procname	= "panic",
+-		.data		= &panic_timeout,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+ #ifdef CONFIG_PROC_SYSCTL
+ 	{
+ 		.procname	= "tainted",
+@@ -1803,20 +1795,6 @@ static const struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dointvec,
+ 	},
+ #endif
+-	{
+-		.procname	= "panic_on_oops",
+-		.data		= &panic_on_oops,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+-	{
+-		.procname	= "panic_print",
+-		.data		= &panic_print,
+-		.maxlen		= sizeof(unsigned long),
+-		.mode		= 0644,
+-		.proc_handler	= proc_doulongvec_minmax,
+-	},
+ 	{
+ 		.procname	= "ngroups_max",
+ 		.data		= (void *)&ngroups_max,
+@@ -1990,15 +1968,6 @@ static const struct ctl_table kern_table[] = {
+ 		.extra2		= SYSCTL_ONE_THOUSAND,
+ 	},
+ #endif
+-	{
+-		.procname	= "panic_on_warn",
+-		.data		= &panic_on_warn,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
+-	},
+ #ifdef CONFIG_TREE_RCU
+ 	{
+ 		.procname	= "panic_on_rcu_stall",
+
 -- 
-2.43.0
+2.47.2
+
 
