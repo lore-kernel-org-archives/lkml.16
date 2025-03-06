@@ -1,75 +1,96 @@
-Received: from out.smtpout.orange.fr (out-13.smtpout.orange.fr [193.252.22.13])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB901A2846;
-	Thu,  6 Mar 2025 07:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF2B1624F2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 07:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741245324; cv=none; b=BCaJctFB2EAbxMuvAIgkZn6MIYdF/k4+vXGTJeqj2fq7lrFBRQWluM+nZUuxGc78oAMavOd7IW7zXbflHgbSrzQKcTEoPgMVnzn6c7lE2jcSB/gOlrJ5oE0+IHtNiXhR5hXn30SxZ7ghVl6U8fHGlp2v45+hPQo7hHk47uMHJsc=
+	t=1741245353; cv=none; b=YpleVz16GVSdqaFe53387Ifikt3AHPD3X8Ve8FQmuxGK9SfAvsfhdVbE6yoIWHW3I5MJBkCXSnksNmGyJooSOymxbMqeaCfQv8XCZrPjhhcXEs4dcKlQ47LxckUa81wL8c78JDTuLjeU9qTFZTxEjieRPMUPOdUzFFX9mK66W+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741245324; c=relaxed/simple;
-	bh=7IUWR6VRphGA3aYG0HEflrporgT5Cn484F0bHIkP0Cw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tJAxhwddHDMWpBb9xwy2io8XL9IQpbVO4/YQrCePOf4vO/m3yLiAE91Q7eprLZrBflgiAdynjPOg0Jc3DaEvZ5voByRYaHSki2I3+Swg/CtQe3MViHFvWUpI4w/kHfXe255FKiWhCZXrINa/7nWKfyiL0V8pMm/6CtjmGTw8f7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=f3SzWnFk; arc=none smtp.client-ip=193.252.22.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="f3SzWnFk"
-Received: from mail-ej1-f51.google.com ([209.85.218.51])
-	by smtp.orange.fr with ESMTPSA
-	id q5RrtKn7dP9tpq5RutIUq9; Thu, 06 Mar 2025 08:15:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741245318;
-	bh=7IUWR6VRphGA3aYG0HEflrporgT5Cn484F0bHIkP0Cw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=f3SzWnFkBHBNsSUVUak8ipH/vV54a6yvsobqC5kUVQU2mhMQIunOM255/nxBlDg4w
-	 vs/unQ9pk2y3gOQPhayvwDcvuMN8y/h1DksXa2YbthX9888tAt9Neoo/Zw+zq5TfRR
-	 dwGCrPb0bCDryWRzUl+j/JsGmTuRV3eCXeEUcKMB6k0HAYgSOvPaU4bj0f7wgiT3cs
-	 xcMjxkM/RSAUuRbRv3PDUr+FSELcC2HGzaO4L2jDThQOXqaBWOr9HYVcOBds1ddWVi
-	 +TVeJWKf7MrXCYqkq+NEjN3rQ/PgORB7IfACrAdmEAvFJYr5M75xCvsDkM7pBFeleW
-	 1vxiBQWo8ByiA==
-X-ME-Helo: mail-ej1-f51.google.com
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 06 Mar 2025 08:15:18 +0100
-X-ME-IP: 209.85.218.51
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abbd96bef64so50861966b.3;
-        Wed, 05 Mar 2025 23:15:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWvzNzgCAiB1S0NF6L+9Qxv3fyJ+hima0iU7P1TJIX5emM2yxN9lftEGltpfpv2Olq+J3jzoSkvnps=@vger.kernel.org, AJvYcCX4YBdfh7Vxtqaov6/FTEGSuh5tFCPvEIKeHXzHsazqwmvY3KC75FJi/wnAr/8pxByluzyscGFE/ynsoSAB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU9afT5VDLXYlOhkrbDXvXF/BSXVIcOb/WRTN87231z/dq4e5W
-	hrpBF+7lt9XYVFJjQ5BX8deGQ81wJACrXds0L6zaWdr/19gQnLEcExDMQAeWakXVG6gSGcUT6kt
-	F151pUcVu9NJ120uP70Adi8mKj1Q=
-X-Google-Smtp-Source: AGHT+IH8hhh6oAYyC6uPKA9rsfgpkWm6NvzIO7DuDV3vZ2zHoYRgLCoR764aoz0s0rZpSzABXV4x3MLsFt2ljnQKjUc=
-X-Received: by 2002:a17:907:c302:b0:abe:c894:5986 with SMTP id
- a640c23a62f3a-ac20dae1ff1mr707065166b.39.1741245315138; Wed, 05 Mar 2025
- 23:15:15 -0800 (PST)
+	s=arc-20240116; t=1741245353; c=relaxed/simple;
+	bh=wGfAs74KCaUlJxPiFDfFiHceEtknho+iBeYZPc/m/SM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dbjwpV0ijLzuvwCkH/GCuPgZrMgM9viZBICYA4Dd8n2dGEI9K5j8R+Df+4HReLbJRFsRtYmFmI9DkRuL9r6WoAu6KW6AMv3AbbtBEWE5/ILxn4DKp7ms/+Zu/cVfzbestJLs9cWw2lzaZtxcz2gBjCE6o/ExrFA/L2+EiR22SJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id cef8990e-fa5a-11ef-8397-005056bdd08f;
+	Thu, 06 Mar 2025 09:15:42 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 6 Mar 2025 09:15:39 +0200
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v9 5/6] net: stmmac: configure SerDes according
+ to the interface mode
+Message-ID: <Z8lLm9Ze9VAx3cE_@surfacebook.localdomain>
+References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
+ <20250227121522.1802832-6-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306065921.2329517-1-haibo.chen@nxp.com>
-In-Reply-To: <20250306065921.2329517-1-haibo.chen@nxp.com>
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Date: Thu, 6 Mar 2025 16:15:03 +0900
-X-Gmail-Original-Message-ID: <CAMZ6Rq+XNSCKLucZkiMReh+8M4Enh2s0ugHzdkJeGT1=d+GkLw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpY8DmpHY3mF04-zFYQMw4LTMTeBGxWIrKJrVySNOR79ap0KMlA_eWB2ik
-Message-ID: <CAMZ6Rq+XNSCKLucZkiMReh+8M4Enh2s0ugHzdkJeGT1=d+GkLw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] can: flexcan: only set CAN_STATE_ERROR_ACTIVE when
- resume has no issue
-To: haibo.chen@nxp.com
-Cc: mkl@pengutronix.de, ciprianmarian.costea@oss.nxp.com, han.xu@nxp.com, 
-	u.kleine-koenig@baylibre.com, linux-can@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227121522.1802832-6-yong.liang.choong@linux.intel.com>
 
-On Thu. 6 Mar 2025 at 15:58, <haibo.chen@nxp.com> wrote:
-> From: Haibo Chen <haibo.chen@nxp.com>
->
-> Only set CAN state to CAN_STATE_ERROR_ACTIVE when resume process has
-> no issue, otherwise keep in CAN_STATE_SLEEPING as suspend did.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Thu, Feb 27, 2025 at 08:15:21PM +0800, Choong Yong Liang kirjoitti:
+> Intel platform will configure the SerDes through PMC API based on the
+> provided interface mode.
 
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> This patch adds several new functions below:-
+> - intel_tsn_lane_is_available(): This new function reads FIA lane
+>   ownership registers and common lane registers through IPC commands
+>   to know which lane the mGbE port is assigned to.
+> - intel_mac_finish(): To configure the SerDes based on the assigned
+>   lane and latest interface mode, it sends IPC command to the PMC through
+>   PMC driver/API. The PMC acts as a proxy for R/W on behalf of the driver.
+> - intel_set_reg_access(): Set the register access to the available TSN
+>   interface.
+
+...
+
+> config DWMAC_INTEL
+
+>  	default X86
+>  	depends on X86 && STMMAC_ETH && PCI
+>  	depends on COMMON_CLK
+> +	depends on ACPI
+
+Stray and unexplained change. Please, fix it. We don't need the dependencies
+which are not realised in the compile time.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
