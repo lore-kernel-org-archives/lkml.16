@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4199620ADE9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E2820B800
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741254494; cv=none; b=JGX3EEmLalqCZ9UKHvvqOJEkOijVFc7oyNfjvyFzw9Dane5YhZiEhxiJNauj+8bzcQaJ5qjyFvCseBNDdWN9C+qBik7JkOBjWnxbgsz0FA24718LOvZCuNP6ec8f6Js+3at2dtTFMFFP8Nmw90Io7Cwm2t/FJLKmMjWEE0hyWy4=
+	t=1741254498; cv=none; b=nec/+HRJrEyrGWVKYMi44ydsbpeRyIkjAQPnQZfm6WwwKVmq3X4+TNjqoQakOV0AibBq9ugG3Ilk9W9ikvunc4IriCaFciRT7WBWeiseJMYBDI63k4T95h/SzUsvz6sUDSCSWreCmI1cTgGcAyb3aLdFUiuebsr7lX9yAkrTsXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741254494; c=relaxed/simple;
-	bh=0SjD4y2lb8a1yDuiYxladzJFWaK70WOkGkG9TdoOQU0=;
+	s=arc-20240116; t=1741254498; c=relaxed/simple;
+	bh=I778jcywmJL+J7FNP5OapM64WVgu/Fj+5Q1WpIy1tjY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=feBhbWPlojF+SWPnZnhUY+EBQaSpQQJxX8yh0gmXxHa18YnA8u+S1HbGIyNYoAwRDEw9FVep/p/wXlkcPM794YzIwIHCvgoZrekWL3Ng32km5bArXXA2KATXe8ue2fkEkKVguyuouffx+WKTI3W6jrrDISEP1YhF6eCvPSXT684=
+	 MIME-Version; b=KKZFp7hXRRcUsNKH2ahOlqzCH9nloAaPF9vD/aox2KdWeILjMnc+HFdTLqJLo6Ol65DKkeq/zm5cNqyuYbvBP7lOo867rPxKk+Re/WE0Qe3ydrSzfP40giaILcEzVWAJ6EBrgR9JJ+aAmuC7EZFCrGMWE5xqT9KOlRr5qfUMPGI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A065D1AED;
-	Thu,  6 Mar 2025 01:48:23 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB5781007;
+	Thu,  6 Mar 2025 01:48:27 -0800 (PST)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DD8613F673;
-	Thu,  6 Mar 2025 01:48:08 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E879A3F673;
+	Thu,  6 Mar 2025 01:48:12 -0800 (PST)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: suzuki.poulose@arm.com,
 	mike.leach@linaro.org,
@@ -31,9 +31,9 @@ Cc: coresight@lists.linaro.org,
 	linux-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v5 3/9] coresight: change coresight_trace_id_map's lock type to raw_spinlock_t
-Date: Thu,  6 Mar 2025 09:47:54 +0000
-Message-Id: <20250306094800.1082950-4-yeoreum.yun@arm.com>
+Subject: [PATCH v5 5/9] coresight-etb10: change etb_drvdata spinlock's type to raw_spinlock_t
+Date: Thu,  6 Mar 2025 09:47:56 +0000
+Message-Id: <20250306094800.1082950-6-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250306094800.1082950-1-yeoreum.yun@arm.com>
 References: <20250306094800.1082950-1-yeoreum.yun@arm.com>
@@ -45,133 +45,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-coresight_trace_id_map->lock can be acquired while coresight devices'
-drvdata_lock.
+In coresight-etb10 drivers, etb_drvdata->spinlock can be held
+during __schedule() by perf_event_task_sched_out()/in().
 
-But the drvdata_lock can be raw_spinlock_t (i.e) coresight-etm4x.
+Since etb_drvdata->spinlock type is spinlock_t and
+perf_event_task_sched_out()/in() is called after acquiring rq_lock,
+which is raw_spinlock_t (an unsleepable lock),
+this poses an issue in PREEMPT_RT kernel where spinlock_t is sleepable.
 
-To address this, change type of coresight_trace_id_map->lock to
-raw_spinlock_t
+To address this, change type etb_drvdata->spinlock in coresight-etb10 drivers,
+which can be called by perf_event_task_sched_out()/in(),
+from spinlock_t to raw_spinlock_t.
 
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 Reviewed-by: James Clark <james.clark@linaro.org>
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-core.c  |  2 +-
- .../hwtracing/coresight/coresight-trace-id.c  | 22 +++++++++----------
- include/linux/coresight.h                     |  2 +-
- 3 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/hwtracing/coresight/coresight-etb10.c | 26 +++++++++----------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index bd0a7edd38c9..90649837c29e 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -1296,7 +1296,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 
- 	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
- 	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
--		spin_lock_init(&csdev->perf_sink_id_map.lock);
-+		raw_spin_lock_init(&csdev->perf_sink_id_map.lock);
- 		csdev->perf_sink_id_map.cpu_map = alloc_percpu(atomic_t);
- 		if (!csdev->perf_sink_id_map.cpu_map) {
- 			kfree(csdev);
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-index 378af743be45..7ed337d54d3e 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.c
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-@@ -22,7 +22,7 @@ enum trace_id_flags {
- static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
- static struct coresight_trace_id_map id_map_default = {
- 	.cpu_map = &id_map_default_cpu_ids,
--	.lock = __SPIN_LOCK_UNLOCKED(id_map_default.lock)
-+	.lock = __RAW_SPIN_LOCK_UNLOCKED(id_map_default.lock)
- };
- 
- /* #define TRACE_ID_DEBUG 1 */
-@@ -131,11 +131,11 @@ static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map
+diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+index aea9ac9c4bd0..7948597d483d 100644
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -84,7 +84,7 @@ struct etb_drvdata {
+ 	struct clk		*atclk;
+ 	struct coresight_device	*csdev;
+ 	struct miscdevice	miscdev;
+-	spinlock_t		spinlock;
++	raw_spinlock_t		spinlock;
+ 	local_t			reading;
+ 	pid_t			pid;
+ 	u8			*buf;
+@@ -145,7 +145,7 @@ static int etb_enable_sysfs(struct coresight_device *csdev)
  	unsigned long flags;
- 	int cpu;
+ 	struct etb_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
  
--	spin_lock_irqsave(&id_map->lock, flags);
-+	raw_spin_lock_irqsave(&id_map->lock, flags);
- 	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
- 	for_each_possible_cpu(cpu)
- 		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
--	spin_unlock_irqrestore(&id_map->lock, flags);
-+	raw_spin_unlock_irqrestore(&id_map->lock, flags);
- 	DUMP_ID_MAP(id_map);
+-	spin_lock_irqsave(&drvdata->spinlock, flags);
++	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
+ 
+ 	/* Don't messup with perf sessions. */
+ 	if (coresight_get_mode(csdev) == CS_MODE_PERF) {
+@@ -163,7 +163,7 @@ static int etb_enable_sysfs(struct coresight_device *csdev)
+ 
+ 	csdev->refcnt++;
+ out:
+-	spin_unlock_irqrestore(&drvdata->spinlock, flags);
++	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 	return ret;
  }
  
-@@ -144,7 +144,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
- 	unsigned long flags;
- 	int id;
+@@ -176,7 +176,7 @@ static int etb_enable_perf(struct coresight_device *csdev, void *data)
+ 	struct perf_output_handle *handle = data;
+ 	struct cs_buffers *buf = etm_perf_sink_config(handle);
  
--	spin_lock_irqsave(&id_map->lock, flags);
-+	raw_spin_lock_irqsave(&id_map->lock, flags);
+-	spin_lock_irqsave(&drvdata->spinlock, flags);
++	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
  
- 	/* check for existing allocation for this CPU */
- 	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
-@@ -171,7 +171,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
- 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
+ 	/* No need to continue if the component is already in used by sysFS. */
+ 	if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS) {
+@@ -219,7 +219,7 @@ static int etb_enable_perf(struct coresight_device *csdev, void *data)
+ 	}
  
- get_cpu_id_out_unlock:
--	spin_unlock_irqrestore(&id_map->lock, flags);
-+	raw_spin_unlock_irqrestore(&id_map->lock, flags);
- 
- 	DUMP_ID_CPU(cpu, id);
- 	DUMP_ID_MAP(id_map);
-@@ -188,12 +188,12 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
- 	if (!id)
- 		return;
- 
--	spin_lock_irqsave(&id_map->lock, flags);
-+	raw_spin_lock_irqsave(&id_map->lock, flags);
- 
- 	coresight_trace_id_free(id, id_map);
- 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
- 
--	spin_unlock_irqrestore(&id_map->lock, flags);
-+	raw_spin_unlock_irqrestore(&id_map->lock, flags);
- 	DUMP_ID_CPU(cpu, id);
- 	DUMP_ID_MAP(id_map);
+ out:
+-	spin_unlock_irqrestore(&drvdata->spinlock, flags);
++	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 	return ret;
  }
-@@ -204,9 +204,9 @@ static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *i
+ 
+@@ -352,11 +352,11 @@ static int etb_disable(struct coresight_device *csdev)
+ 	struct etb_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
  	unsigned long flags;
- 	int id;
  
--	spin_lock_irqsave(&id_map->lock, flags);
-+	raw_spin_lock_irqsave(&id_map->lock, flags);
- 	id = coresight_trace_id_alloc_new_id(id_map, preferred_id, traceid_flags);
--	spin_unlock_irqrestore(&id_map->lock, flags);
-+	raw_spin_unlock_irqrestore(&id_map->lock, flags);
+-	spin_lock_irqsave(&drvdata->spinlock, flags);
++	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
  
- 	DUMP_ID(id);
- 	DUMP_ID_MAP(id_map);
-@@ -217,9 +217,9 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
+ 	csdev->refcnt--;
+ 	if (csdev->refcnt) {
+-		spin_unlock_irqrestore(&drvdata->spinlock, flags);
++		raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -366,7 +366,7 @@ static int etb_disable(struct coresight_device *csdev)
+ 	/* Dissociate from monitored process. */
+ 	drvdata->pid = -1;
+ 	coresight_set_mode(csdev, CS_MODE_DISABLED);
+-	spin_unlock_irqrestore(&drvdata->spinlock, flags);
++	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	dev_dbg(&csdev->dev, "ETB disabled\n");
+ 	return 0;
+@@ -443,7 +443,7 @@ static unsigned long etb_update_buffer(struct coresight_device *csdev,
+ 
+ 	capacity = drvdata->buffer_depth * ETB_FRAME_SIZE_WORDS;
+ 
+-	spin_lock_irqsave(&drvdata->spinlock, flags);
++	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
+ 
+ 	/* Don't do anything if another tracer is using this sink */
+ 	if (csdev->refcnt != 1)
+@@ -566,7 +566,7 @@ static unsigned long etb_update_buffer(struct coresight_device *csdev,
+ 	__etb_enable_hw(drvdata);
+ 	CS_LOCK(drvdata->base);
+ out:
+-	spin_unlock_irqrestore(&drvdata->spinlock, flags);
++	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	return to_read;
+ }
+@@ -587,13 +587,13 @@ static void etb_dump(struct etb_drvdata *drvdata)
  {
  	unsigned long flags;
  
--	spin_lock_irqsave(&id_map->lock, flags);
-+	raw_spin_lock_irqsave(&id_map->lock, flags);
- 	coresight_trace_id_free(id, id_map);
--	spin_unlock_irqrestore(&id_map->lock, flags);
-+	raw_spin_unlock_irqrestore(&id_map->lock, flags);
+-	spin_lock_irqsave(&drvdata->spinlock, flags);
++	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
+ 	if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS) {
+ 		__etb_disable_hw(drvdata);
+ 		etb_dump_hw(drvdata);
+ 		__etb_enable_hw(drvdata);
+ 	}
+-	spin_unlock_irqrestore(&drvdata->spinlock, flags);
++	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
  
- 	DUMP_ID(id);
- 	DUMP_ID_MAP(id_map);
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 4541bfc1cc6b..d79a242b271d 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -239,7 +239,7 @@ struct coresight_trace_id_map {
- 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
- 	atomic_t __percpu *cpu_map;
- 	atomic_t perf_cs_etm_session_active;
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- };
+ 	dev_dbg(&drvdata->csdev->dev, "ETB dumped\n");
+ }
+@@ -746,7 +746,7 @@ static int etb_probe(struct amba_device *adev, const struct amba_id *id)
+ 	drvdata->base = base;
+ 	desc.access = CSDEV_ACCESS_IOMEM(base);
  
- /**
+-	spin_lock_init(&drvdata->spinlock);
++	raw_spin_lock_init(&drvdata->spinlock);
+ 
+ 	drvdata->buffer_depth = etb_get_buffer_depth(drvdata);
+ 
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
