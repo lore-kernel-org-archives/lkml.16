@@ -1,124 +1,77 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38CB20AF71
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E5E201022;
+	Thu,  6 Mar 2025 12:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741262943; cv=none; b=CO7cHt+JD1A4zPsJb/rkCcHPydHFYQ2SdJPujTj4Gc2mTrpFK7ma31DsU2Cm6gI8WOpovCBMKr0RwuwpzmWaAWhIQXr3Vspv1kWGuARIERP1yZww2F4Kw8ITyjkCblMMuo6ws0isWJgjvLBAycSg87Qgr5QGHMVj1VGlVOwJ9d4=
+	t=1741263007; cv=none; b=NCm+wpEddlUZNXI1v69dNv7bggbAF8tQ9yK2WdIkYbf/4KcsxlYd2/t6G5ym15Z6f8YkKQglVMXC0s85fkBqSj1TYkjOLgdgx9zS8L/l82/pbeKZiEzswc5C+Ew1cSawlgyR3TCgJ7e764sTcZuX4xBdyT4yNW3TNyU89CW374E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741262943; c=relaxed/simple;
-	bh=8gMyGXqU/SBGZF0jBgw5T2jKjTWgikTdAvJL7Z5QQzo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iAo1NiZE9AqmRcvJ/pDv8q1BJPoMNVdPYbzUpvTfii0WTEMXTP5lceGTDxwtXfEy92TG1Ofd96nn5k/mZsEK63kxBbqXRQWAU8Ieqaq+kkCidqOkHsNCbFE+dlqLhWzHBra1jLI6eDGqW4TL0ltxA7o049Hs2Xw3HpibkiLWHtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jcHG9yDC; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741263007; c=relaxed/simple;
+	bh=4VrMJIjVFPsbDL3AXCsxRkmOwzuv5lOz64/j+1TMEco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUiRFyVaNdRB/Fa5i0mFt3V8Z7x/x79LStqjZYKbhVIJXVoGviPZ8ABGqKNXgEhdQfZQ9HqES4bqOd2ohElVsRxKzuw2G4MNpLaY0JgB+iu8oUlOye2XdXbuZwGhyVVSpnJeL42TU1dlpWfvV98ZzNPXeK641S24RCjkFQMRugY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C/ZS0pye; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jcHG9yDC"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43bdcd0d97dso3116375e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 04:09:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741262940; x=1741867740; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GJKmQPf0uQyBP0dHMptwPuPrmOF7WEuR5rgBIZ7vJzY=;
-        b=jcHG9yDCbdOqqC852432BNU+0GTsCG1ethtdVU93Ty3m7IW1CcNo+gLmoQLY9ws14m
-         1p455Zsy8bUAndhX6+xtbgGlPOg92xvjzYFQxwS+U3VTeFshxRiNVUl6iaG+7MNMQrkQ
-         NjUE/wpTA6sg/4mqtOHR9WPl8UkIqFicfXmo4+ikeWfzM22zD7/ZJN1GvxisxKCwdK8d
-         CvwgHLeDsK3+1yO/9V87Xv7T+lLaFSPUrfE81RC//WlcK+XKfrJCZ3twWIfohCPphrYP
-         LrXWnCc5fDrWTz9cdcthr4aNeo1/vAlvn+itPoIWqmqWAXnigWPr3tvH9cZHtij834B7
-         SpLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741262940; x=1741867740;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GJKmQPf0uQyBP0dHMptwPuPrmOF7WEuR5rgBIZ7vJzY=;
-        b=Vl6qwVwNq+6jfMzUjQFjC9N3X5S2Dezf9AeWBmP1808fXHI3ekISyAv259AAQRYbLC
-         JbbMIA3yWV35/JaJDzHGQ/mBq+lSYRd1WjgyPouMfWplsCQXCmf0KqQWeJq7jZBeP2ub
-         4CyCJI7y0K0Q1wzOQsE8hWbJN/vla9UFx4D5jguxV5LMXz3wTT/bliUJdNo0gFXT0bW3
-         tulEZ9joaRu5pm/I9Bja7Kt0sfRkzAu25xTQ3xl8PRWAkeGrBmqIO7Ym8FRg0s+GIE16
-         kzGI44XstX7k7ZhgIU9h3S9HMmWdsyYksFpfFN8wRvmsjUnFVJvF5+eg7Rbsy64nndOl
-         Pe1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXGYl/+nGLtz07CFVe+S4Bjtimt4rOt0dCGmUGADZYp8MdpJWNIvXqpp6DWf3k4qamdXhkH3ecK9xwmXew=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGAAc1fU8keOQOd4SvZ1IQK2JtmVqtvvmpqShk1V+QTA2oHBKG
-	nsmd7ljU9OVYh7mo6gymlFzTMZBO7ZDsavPT9nPsQvfHYh5T9Mv5YKyW0uCCI+ROzfJplnfzGT3
-	BtStuZt/XVV/pjRXq6NJ5Uqk1VovEJYdVRZwG
-X-Gm-Gg: ASbGncvEe4uItr3wT3OY09ws1GFvmCg/h7XvchD2t0taglZBQKdTxArO8cVS2UUg6Km
-	sVB6u3jAk/yYO3jLjlD+Bkm7GNcOdrB1UW/Mhkw4MyaXcitK3Uqkb8d7UZ/ilBBZdLUMl/VOlo0
-	1/pEElc2FCN6AOZzVivFE+6O8nxEDxua74uOyQXqu8fZ3IKU3DzRz9b245
-X-Google-Smtp-Source: AGHT+IH+/3M/U14wpw955BJKhrim9WmmzCgc6th+mDwUTIqQ602Kvkk7v7WDijJkGkstjzFRh3Jy8fCVs9BU8fAj/mE=
-X-Received: by 2002:a05:600c:4f87:b0:43b:c3af:3304 with SMTP id
- 5b1f17b1804b1-43bd29c93e3mr48707005e9.28.1741262940126; Thu, 06 Mar 2025
- 04:09:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C/ZS0pye"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JmS89W/xehVecg6LuB8zf80ZnuxBLneMU7jkajJH5Nk=; b=C/ZS0pyeW+kSZXL1yqW1XEpjHW
+	XcCnpRcD/Bac7VesklBGS89gQoJaRAxLRjPe+TpsSJYn8z8oWWEEIo5rp3ndmFdjKleHMJSZCRfQw
+	3o5PIGqFwLpptvJwpzl12nrQn5tONJmxjjHxnJrj4fUnVCfLQg2ggLgfz0wRu4vSCvRY9aaLtetIa
+	Ywp7lbl0EjQSim7K0ow06uMH6Ag3KBsFvBrfwhpcKG2ihaDgr8bHp1hYOYD90sNfVCitswjxFlrbn
+	FEX8imaHo8Kue6UKonywD95qO30gT7wO0Qfuv7NprVgcbcRS7njmUs1qv35f3Hq+MmJaORZwzDVXp
+	pbIW66VQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tqA2u-000000094eH-2HZO;
+	Thu, 06 Mar 2025 12:09:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 438FD30049D; Thu,  6 Mar 2025 13:09:47 +0100 (CET)
+Date: Thu, 6 Mar 2025 13:09:47 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Greear <greearb@candelatech.com>,
+	Xiao Liang <shaw.leon@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [RFC PATCH v2] x86/fpu: make kernel-mode FPU reliably usable in
+ softirqs
+Message-ID: <20250306120947.GF16878@noisy.programming.kicks-ass.net>
+References: <20250304204954.3901-1-ebiggers@kernel.org>
+ <Z8gUYamgBr4M5ZaB@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z8hUIPtE_9P60fAf@google.com> <CAH5fLgjFBknTmhxQBPUdB-iNMjEkcyuLiu22-Nj-DGB1Gb7NkA@mail.gmail.com>
- <87ldtj8p2m.fsf@kernel.org> <JPqvzrz3Zy0HgwNoHh2psup7imFItiN_j_VmmjVPBfwJzf040DTvZAwUDjNv1FQiLXFiSAANIxc2IegeKGCJvA==@protonmail.internalid>
- <CAH5fLgirYTV6K2QoH9LLwhHxJzz=h1R0jB4G2kpKQ_pBtBgePg@mail.gmail.com>
- <875xkn8k5z.fsf@kernel.org> <Z8lsetLbHvn-6cai@google.com> <Z8l1Zt3ibanzBhnX@mango>
- <Z8mHgyNxb6rv6Vhm@google.com> <Z8mPBvL--zUxBpYN@mango>
-In-Reply-To: <Z8mPBvL--zUxBpYN@mango>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 6 Mar 2025 13:08:47 +0100
-X-Gm-Features: AQ5f1JoLaP5Ondt1o6hqOpFvvtrsNPIO2ONwLOTDvGS8y43jDq6e77zIeSzkMCw
-Message-ID: <CAH5fLghbb8zMsJ7y+it3U3pE0xdXfOxGX3kfLQf0kJp=4xZWgA@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: adding UniqueRefCounted and UniqueRef types
-To: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8gUYamgBr4M5ZaB@gmail.com>
 
-On Thu, Mar 6, 2025 at 1:03=E2=80=AFPM Oliver Mangold <oliver.mangold@pm.me=
-> wrote:
->
-> On 250306 1131, Alice Ryhl wrote:
-> >
-> > How about this:
-> >
-> > * Rename AlwaysRefCounted to RefCounted.
-> > * Introduce a new AlwaysRefCounted trait with no methods and gate
-> >   `From<&T>` on it. It has RefCounted as a sub-trait.
-> > * Introduce an Ownable trait with an Owned type like in [1].
-> > * Given an Owned<T> where T:RefCounted you can convert from Owned<T> to
-> >   ARef<T>.
-> >
-> > And there needs to be a safety requirement on Ownable or
-> > AlwaysRefCounted which requires that a type cannot implement both
-> > traits. Alternatively, if a type implements both, it needs to be safe t=
-o
-> > have both Owned<T> and ARef<T> references at the same time, which could
-> > make sense for a type that has one "special" reference and many normal
-> > references.
-> >
-> > If you want conversions ARef<T> to Owned<T>, you should add a new trait
-> > TryIntoOwned that's a super-trait of both RefCounted and Owned and has
-> > the `try` method for the conversion.
-> >
-> > Thoughts?
-> >
-> Yes. Sounds good to me. Basically what I had in mind. Only the naming
-> is different.
->
-> I will build an implementation like this and post it as v5.
-> I won't change the names of UniqueRef and UniqueRefCounted for now,
-> but more out of laziness than because of having strong feelings about it.
-> I like UniqueRef a bit better as our focus is on pointing out that
-> it is unique. But if you or other prefers Owned I can change it.
+On Wed, Mar 05, 2025 at 10:07:45AM +0100, Ingo Molnar wrote:
+> > From: Eric Biggers <ebiggers@google.com>
 
-Advantage of the Owned naming is that it also makes sense for types
-that *only* support Owned pointers. The UniqueRef name kind of assumes
-that it's refcounted, but the design I proposed does not have that
-limitation.
+> > Alternatives considered:
+> > 
+> > - Make kernel-mode FPU sections fully preemptible.  This would require
+> >   growing task_struct by another struct fpstate which is more than 2K.
+> 
+> So that's something that will probably happen once the kernel is built 
+> using APX anyway?
 
-Alice
+ISTR looking into this at some point for RT. I also have vague memories
+of other architectures doing something similar, but its all a long time
+ago.
+
