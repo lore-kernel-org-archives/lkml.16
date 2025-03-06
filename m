@@ -1,229 +1,203 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CE91C8625
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBB81FC11D
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741249388; cv=none; b=bWRfrvECqK/SclnXnVs3cAvtPHy+jRLCpvYC/UlQjmYz2kO0zmbaq2RCOpHfeqPQN04Cn6SUPjdZVEQ6hJFd5VeOAnmuPop3J8dxD1wN0EKUvvEDCIX+CCNDgEbPK9plDzOBohxoPsKG4FqktvpjPOWAU/nIx/7LfKQjJ900Go4=
+	t=1741249403; cv=none; b=Eya+S/sNKL0wma42ydGM/OOq+B39yaEMXaaW3XPEsMrI0Z8flSUlyn6uf3LP3sCNrhO01ms3RzuN2LdGdJj2F5XlRT9jmKq8oZJ1VSuJhwLVVYQqAwhjDgRyR9tMHFEsYYgr9xtfHKVjohD89W9yDo2VUDU6qtjgQPqruW9Hh/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741249388; c=relaxed/simple;
-	bh=TBM7ZdoAEJmWV4G+EtplAqbhqX+oEIuKc0qcEJTTXSs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=i+hDTq7RJB71OKGZPKH3vfilFRgFu7UD4mMVOxzZxRGfnYy2UPCU64C6TSYSp2sKBfaxrk8rXI1TBAqjQJ5SzuFUDp9NBS7AN1gM6qiAc1K5E7jRkpZA6FbZOwy7AYNyTUQvKAa8eD7/PM8nh5ZQKFVCjOqIgSOwNB+KrnzZ/Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oVBIkaXx; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741249403; c=relaxed/simple;
+	bh=LAESgKwjsOolqILQ7EFqXdhdFKselMeHOYpzQPd3EDs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K2y1lL4VsQ0mqfLPsHpaZEJw6NtW8Tk1gOA7fRKSAMUDb6YhaIGgH/fRarOLzf866vxPj5P6inNDPKrG4tCuY1YyNvZTlvDJb+gL7URRaglmYAC81pLJlbMGBehbSMG1r3/aleepM3ow136GkS6JJIHgMDdBV/IFQpQN9B86tBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dG++pnu/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVBIkaXx"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bc48ff815so2392115e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 00:23:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741249384; x=1741854184; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FGuGofdiBgeCaS66wbZZbCbyCtmGJE9XpjuRggbUJ/A=;
-        b=oVBIkaXx9oyiyv2b9+I+j38kslqoHppOYGgfBzuFCWpJl50cgcdXh1bVFet2lC8Mov
-         D+4j+jcsIT8CcBGJ7XbJ8PbpDap8Fqd9/fq9KxsBfhyRNk2EYL4bv8Uiq9GJcD5rgQb3
-         fyOzj/JbIt36rnFKZEPBPrMCQjAo9uET2488P86+9pDV23OT9YT79dLby3/uWdC6P7f9
-         j9r3EgA5c9S/G2t3k1weZFMU89QqDgINgTE9m4t/5IhxNjyela6bG2Odecm36xpcok2i
-         cPjuOjSqo4x4aE7x96210tGViPKqjZO/IYiiIE/9pmjaIMXuBtX3/UrcBvpNJiV3SbBe
-         zEMQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dG++pnu/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741249400;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p7r18lDDaYnSU7d2JOl6qmtUJzAYao+io6UYl9OANnk=;
+	b=dG++pnu/zC2++ehDgE1RgC0FE0V+zAUyT04mwcMidClFcTRvtm+UgCNb9lYe9rUEgSK2h4
+	b4eqJXlFkVrxmm0NBtHHBHRD6/8JtKBcSnHpb+UkjBOtR7202xRWJtaJXEH9dRLcAiRjna
+	kb7lYehEpjCsVbfaxqpj7/gGJH1VIQQ=
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
+ [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-557-zO1NBHmPNbSfzxFikJ0TFw-1; Thu, 06 Mar 2025 03:23:18 -0500
+X-MC-Unique: zO1NBHmPNbSfzxFikJ0TFw-1
+X-Mimecast-MFC-AGG-ID: zO1NBHmPNbSfzxFikJ0TFw_1741249398
+Received: by mail-yb1-f199.google.com with SMTP id 3f1490d57ef6-e60aebf48e8so453349276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 00:23:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741249384; x=1741854184;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FGuGofdiBgeCaS66wbZZbCbyCtmGJE9XpjuRggbUJ/A=;
-        b=ZYi4lOBamYy89H3lk+a1T65D+rLxLOM+juqIFTxigjPaS5wglJCL4XPIvQqP85FYCz
-         SdE3BeKi5jOFaVBpdr8D8+rdy5RQjPD4BqB4ASyKGbkxo0SDjDLG1qOYzWn+4q9Ees12
-         NPw5NaIqZuF53Bd7AIk0VEw9nQKyJMZfOm7aGE3PjCpzPIotAgP7LEbXlO/Iw8iauQ8h
-         mBl4o3+ZbaEVt1ZKM10W36ANkDKPf9FsCbhOW6gDrby3hX/lA2Hrfn1j3S7u++S+7fw3
-         F4PTiCsu8ZfxYFMCOCamb+145cTdgtyaz5NPVCNLt7Zzf8fk9lQG3OCWOecMfZimeBvV
-         QcjA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9QlDHWiQhQOXaKbhworJCkZk+jPpGk9EMPNJ61xeZnhhwKsVVbN6l7GIZI5XZKUcNcLMOwJZOXXb7k2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAOlZXbtl8CRvHwxatvbnlUETdtNkByHaohN/GVBmFMmtvrQc+
-	4Az0gH4ZQDCxREhmBgQVQBy7BPOcZdcWLB0jFHCVMQW5e1xPueO/Ro8NTuWQ7TM=
-X-Gm-Gg: ASbGncscBOxXQen24ZEMYAyn3DjPDyocjWxgv2H+UGaXyS7Yx3gGIO4a5uk0pZFM6ge
-	wHCqneEgZZ6eXdY9ARDiG+ehhe1W92VOf3jW5bKQEchMCYsnxy613tQfwD+ONUJr3WoFskPx+98
-	LERxyfAD8rfYBsn8J5BfY62xBQKHE7HS18ko/8DlssdvX5cL+96IYZ9pffGsBSPPWzQY2r7BFeN
-	c5hYRh6hX2k14byMX2AU9rhjf2RAGYYDINuut08vfVb7sHog4hcdlXv7viXgg7PUuwGZqtX2TLf
-	/NhVJgN6m30YCAN0GsOwUhk0/Yz5qgQT6TrIJBZX3B6SIfeA9W3xT5F75A==
-X-Google-Smtp-Source: AGHT+IH151lwQVNoK7D/gsd6Nuf9nzMnhqbH1DqJBNBByko64LML2udj6wgGGTZX+oEUFfskKpkrrA==
-X-Received: by 2002:a7b:ca55:0:b0:43b:4829:8067 with SMTP id 5b1f17b1804b1-43bdb37ce80mr16864395e9.6.1741249384220;
-        Thu, 06 Mar 2025 00:23:04 -0800 (PST)
-Received: from [192.168.1.101] ([37.167.203.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd42c6203sm42080905e9.24.2025.03.06.00.22.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 00:23:03 -0800 (PST)
-Message-ID: <ffff2d49-d90b-4512-a12e-cf7c4251b4a8@linaro.org>
-Date: Thu, 6 Mar 2025 09:22:45 +0100
+        d=1e100.net; s=20230601; t=1741249398; x=1741854198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p7r18lDDaYnSU7d2JOl6qmtUJzAYao+io6UYl9OANnk=;
+        b=Dy3B36X1UZDNZ9AaT9miX+/m66Z+QyUMzIJ+vv5yIVXNfsZQQYmo7/DFYdtFZXSQq7
+         /HP4ak3U0aG7TPNcmVkp3A6Sj+3eEWRGeS+mm3zd/vIvKf7ER1obBtSn7r65/rgnAaDp
+         xEpFxIIMcbaBDo8Hfcic8CNEwgJZv5dBmvvmNhy746iklKvzBo9LhCMAI2V0Bm7LLuLi
+         oz3kJVYPuRRHZr/A7PyuftgehgriohUEzGUa0if+TZVkfaPwgxgbEAD7GVu9YX7OfL9l
+         BgAdlSmyTqnv94PKsvbpkJOSCWTPPV9ftOQbKacH1qOB9JvbX689zpyJFDjZfE0IUgiM
+         nmtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVielL62KXNxOd0nWFjgTpYJkBZx6dQ4wTwVcDpoNmX+bsYroEvmRs5tFZ4V7MAFPEyeoZ/fvV7aLF6QVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOJk9qD+oH77mSkF4qJ1jRkHMT4+yxiF2MEZKaTwmpXgo323SI
+	52C79Db7esEVdEdxvbSjM1lEX4h7Bk6I0DxM1LsWuTowidhI/gDf6zf52mwVgkQ+SNqsW1aIKFN
+	+PhMbl3NqVlgytdzQCmKQ3YJGxn9xb8mwxwMYMT/TXaUFIl0FNKsn6GEZEZoxSJXuyWIadhfcTQ
+	kioCL7ShCq9KSW8b2y1ePDBeGUDoSDPSgkjFqa
+X-Gm-Gg: ASbGncuPCpHXxqjr5TtrnTc9tX4sN1IAGgrfDDNY0hWcpA4KKilBY3IH6pFUSo0K48t
+	7Vn+tA6aUgB6Egxdrksg6V0gmiJNjbzFeF0589sBHoczNpjk4nbV5MZK4WXH+lBjo7BLZIpY=
+X-Received: by 2002:a25:1ec2:0:b0:e63:474e:c861 with SMTP id 3f1490d57ef6-e634eef0b1fmr718515276.25.1741249398217;
+        Thu, 06 Mar 2025 00:23:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF7nJyNaHwTKfCFf2zsd6PiaEGoXlfFh+yzGhdtdq5/XYd3bHYtIZ0oKB/mltmXYT1qA2ZSl8TLqva2zRpXEPU=
+X-Received: by 2002:a25:1ec2:0:b0:e63:474e:c861 with SMTP id
+ 3f1490d57ef6-e634eef0b1fmr718493276.25.1741249397848; Thu, 06 Mar 2025
+ 00:23:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 3/7] media: platform: qcom/iris: add
- power_off_controller to vpu_ops
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org>
- <20250305-topic-sm8x50-iris-v10-v2-3-bd65a3fc099e@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250305-topic-sm8x50-iris-v10-v2-3-bd65a3fc099e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20200116172428.311437-1-sgarzare@redhat.com> <20200427142518.uwssa6dtasrp3bfc@steredhat>
+ <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com> <20200428160052.o3ihui4262xogyg4@steredhat>
+ <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com> <20250305022248-mutt-send-email-mst@kernel.org>
+ <v5c32aounjit7gxtwl4yxo2q2q6yikpb5yv3huxrxgfprxs2gk@b6r3jljvm6mt>
+ <CACGkMEvms=i5z9gVRpnrXXpBnt3KGwM4bfRc46EztzDi4pqOsw@mail.gmail.com> <CAPpAL=xsDM4ffe9kpAnvL3AfQrKg9tpbDdbTGgSwecHFf5wSLA@mail.gmail.com>
+In-Reply-To: <CAPpAL=xsDM4ffe9kpAnvL3AfQrKg9tpbDdbTGgSwecHFf5wSLA@mail.gmail.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Thu, 6 Mar 2025 09:23:05 +0100
+X-Gm-Features: AQ5f1JohM_t7j7Fpc0COSkCeLVhsbQLpCfbrtS-97yp_c3OjYm5Amp7QVm4NzL8
+Message-ID: <CAGxU2F7_0hXc-0hasa-_p_0z6nGCY6bsF_49ZRRN2mKZEJcziw@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
+To: Lei Yang <leiyang@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, 
+	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org, 
+	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, 
+	Bobby Eshleman <bobbyeshleman@gmail.com>, linux-hyperv@vger.kernel.org, 
+	Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org, 
+	Jason Wang <jasowang@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05/03/2025 20:05, Neil Armstrong wrote:
-> In order to support the SM8650 iris33 hardware, we need to provide a
-> specific constoller power off sequences via the vpu_ops callbacks.
-> 
-> Add the callback, and use the current helper for currently supported
-> platforms.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->   drivers/media/platform/qcom/iris/iris_vpu2.c       |  1 +
->   drivers/media/platform/qcom/iris/iris_vpu3.c       |  2 ++
->   drivers/media/platform/qcom/iris/iris_vpu_common.c | 14 ++++++++++----
->   drivers/media/platform/qcom/iris/iris_vpu_common.h |  2 ++
->   4 files changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu2.c b/drivers/media/platform/qcom/iris/iris_vpu2.c
-> index 8f502aed43ce2fa6a272a2ce14ff1ca54d3e63a2..7cf1bfc352d34b897451061b5c14fbe90276433d 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu2.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu2.c
-> @@ -34,5 +34,6 @@ static u64 iris_vpu2_calc_freq(struct iris_inst *inst, size_t data_size)
->   
->   const struct vpu_ops iris_vpu2_ops = {
->   	.power_off_hw = iris_vpu_power_off_hw,
-> +	.power_off_controller = iris_vpu_power_off_controller,
->   	.calc_freq = iris_vpu2_calc_freq,
->   };
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3.c b/drivers/media/platform/qcom/iris/iris_vpu3.c
-> index b484638e6105a69319232f667ee7ae95e3853698..95f362633c95b101ecfda6480c4c0b73416bd00c 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu3.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu3.c
-> @@ -117,6 +117,8 @@ static u64 iris_vpu3_calculate_frequency(struct iris_inst *inst, size_t data_siz
->   }
->   
->   const struct vpu_ops iris_vpu3_ops = {
-> +	.reset_controller = iris_vpu_reset_controller,
+On Thu, 6 Mar 2025 at 02:37, Lei Yang <leiyang@redhat.com> wrote:
+>
+> QE tested this series patch with virtio-net regression tests,
+> everything works fine.
+>
+> Tested-by: Lei Yang <leiyang@redhat.com>
 
-Seems I sent the patches too fast, this is remnant of v1, it should disappear, I'll fix it in v3.
+Sorry, but this test doesn't involve virtio-net at all, so what is the
+point on testing it with virtio-net?
 
->   	.power_off_hw = iris_vpu3_power_off_hardware,
-> +	.power_off_controller = iris_vpu_power_off_controller,
->   	.calc_freq = iris_vpu3_calculate_frequency,
->   };
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.c b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> index d6ce92f3c7544e44dccca26bf6a4c95a720f9229..3b3e1ca1e42183561ee78c89f50946fd0cc3c3ab 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> @@ -251,7 +251,7 @@ static void iris_vpu_power_off_controller_disable(struct iris_core *core)
->   	iris_disable_power_domains(core, core->pmdomain_tbl->pd_devs[IRIS_CTRL_POWER_DOMAIN]);
->   }
->   
-> -static int iris_vpu_power_off_controller(struct iris_core *core)
-> +int iris_vpu_power_off_controller(struct iris_core *core)
->   {
->   	u32 val = 0;
->   	int ret;
-> @@ -284,23 +284,29 @@ void iris_vpu_power_off(struct iris_core *core)
->   {
->   	dev_pm_opp_set_rate(core->dev, 0);
->   	core->iris_platform_data->vpu_ops->power_off_hw(core);
-> -	iris_vpu_power_off_controller(core);
-> +	core->iris_platform_data->vpu_ops->power_off_controller(core);
->   	iris_unset_icc_bw(core);
->   
->   	if (!iris_vpu_watchdog(core, core->intr_status))
->   		disable_irq_nosync(core->irq);
->   }
->   
-> -static int iris_vpu_power_on_controller(struct iris_core *core)
-> +static int iris_vpu_reset_controller(struct iris_core *core)
->   {
->   	u32 rst_tbl_size = core->iris_platform_data->clk_rst_tbl_size;
-> +
-> +	return reset_control_bulk_reset(rst_tbl_size, core->resets);
-> +}
+Thanks,
+Stefano
 
-Same here, I'll remove this now useless iris_vpu_reset_controller() function.
-
-Neil
-
-> +
-> +static int iris_vpu_power_on_controller(struct iris_core *core)
-> +{
->   	int ret;
->   
->   	ret = iris_enable_power_domains(core, core->pmdomain_tbl->pd_devs[IRIS_CTRL_POWER_DOMAIN]);
->   	if (ret)
->   		return ret;
->   
-> -	ret = reset_control_bulk_reset(rst_tbl_size, core->resets);
-> +	ret = iris_vpu_reset_controller(core);
->   	if (ret)
->   		goto err_disable_power;
->   
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.h b/drivers/media/platform/qcom/iris/iris_vpu_common.h
-> index 63fa1fa5a4989e48aebdb6c7619c140000c0b44c..f8965661c602f990d5a7057565f79df4112d097e 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.h
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.h
-> @@ -13,6 +13,7 @@ extern const struct vpu_ops iris_vpu3_ops;
->   
->   struct vpu_ops {
->   	void (*power_off_hw)(struct iris_core *core);
-> +	int (*power_off_controller)(struct iris_core *core);
->   	u64 (*calc_freq)(struct iris_inst *inst, size_t data_size);
->   };
->   
-> @@ -22,6 +23,7 @@ void iris_vpu_clear_interrupt(struct iris_core *core);
->   int iris_vpu_watchdog(struct iris_core *core, u32 intr_status);
->   int iris_vpu_prepare_pc(struct iris_core *core);
->   int iris_vpu_power_on(struct iris_core *core);
-> +int iris_vpu_power_off_controller(struct iris_core *core);
->   void iris_vpu_power_off_hw(struct iris_core *core);
->   void iris_vpu_power_off(struct iris_core *core);
->   
-> 
+>
+> On Thu, Mar 6, 2025 at 8:17=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
+rote:
+> >
+> > On Wed, Mar 5, 2025 at 5:30=E2=80=AFPM Stefano Garzarella <sgarzare@red=
+hat.com> wrote:
+> > >
+> > > On Wed, Mar 05, 2025 at 02:27:12AM -0500, Michael S. Tsirkin wrote:
+> > > >On Tue, Mar 04, 2025 at 04:39:02PM -0800, Bobby Eshleman wrote:
+> > > >> I think it might be a lot of complexity to bring into the picture =
+from
+> > > >> netdev, and I'm not sure there is a big win since the vsock device=
+ could
+> > > >> also have a vsock->net itself? I think the complexity will come fr=
+om the
+> > > >> address translation, which I don't think netdev buys us because th=
+ere
+> > > >> would still be all of the work work to support vsock in netfilter?
+> > > >
+> > > >Ugh.
+> > > >
+> > > >Guys, let's remember what vsock is.
+> > > >
+> > > >It's a replacement for the serial device with an interface
+> > > >that's easier for userspace to consume, as you get
+> > > >the demultiplexing by the port number.
+> >
+> > Interesting, but at least VSOCKETS said:
+> >
+> > """
+> > config VSOCKETS
+> >         tristate "Virtual Socket protocol"
+> >         help
+> >          Virtual Socket Protocol is a socket protocol similar to TCP/IP
+> >           allowing communication between Virtual Machines and hyperviso=
+r
+> >           or host.
+> >
+> >           You should also select one or more hypervisor-specific transp=
+orts
+> >           below.
+> >
+> >           To compile this driver as a module, choose M here: the module
+> >           will be called vsock. If unsure, say N.
+> > """
+> >
+> > This sounds exactly like networking stuff and spec also said something =
+similar
+> >
+> > """
+> > The virtio socket device is a zero-configuration socket communications
+> > device. It facilitates data transfer between the guest and device
+> > without using the Ethernet or IP protocols.
+> > """
+> >
+> > > >
+> > > >The whole point of vsock is that people do not want
+> > > >any firewalling, filtering, or management on it.
+> >
+> > We won't get this, these are for ethernet and TCP/IP mostly.
+> >
+> > > >
+> > > >It needs to work with no configuration even if networking is
+> > > >misconfigured or blocked.
+> >
+> > I don't see any blockers that prevent us from zero configuration, or I
+> > miss something?
+> >
+> > >
+> > > I agree with Michael here.
+> > >
+> > > It's been 5 years and my memory is bad, but using netdev seemed like =
+a
+> > > mess, especially because in vsock we don't have anything related to
+> > > IP/Ethernet/ARP, etc.
+> >
+> > We don't need to bother with that, kernel support protocols other than =
+TCP/IP.
+> >
+> > >
+> > > I see vsock more as AF_UNIX than netdev.
+> >
+> > But you have a device in guest that differs from the AF_UNIX.
+> >
+> > >
+> > > I put in CC Jakub who was covering network namespace, maybe he has so=
+me
+> > > advice for us regarding this. Context [1].
+> > >
+> > > Thanks,
+> > > Stefano
+> > >
+> > > [1] https://lore.kernel.org/netdev/Z8edJjqAqAaV3Vkt@devvm6277.cco0.fa=
+cebook.com/
+> > >
+> >
+> > Thanks
+> >
+> >
+>
 
