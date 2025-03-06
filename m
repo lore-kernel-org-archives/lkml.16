@@ -1,316 +1,656 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013067.outbound.protection.outlook.com [40.107.162.67])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E20199FC9;
-	Thu,  6 Mar 2025 05:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8D443166
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 05:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741240081; cv=fail; b=Gyms9HuL5QwvaG03oOZtU2xtAlZCHPRSfYE7DcWgv3S1iD7+zR4ApQ36Xy4WDTmgpNzZptE0K76wvMr6qZVbjbxvZOQbzSbhA7AYreJrgLTwkfBUXfqJypE2v3CRKKKINwOtF2IOHWig6dzlVa73rCjyRC7zinzrSecUkK/uxAc=
+	t=1741240107; cv=fail; b=WTqrMsPFgOZXm+0/yzOQ7zFVEk2E7ulNodI1z45r01NKKATOywfaLT/NXA4NO6tb+u8Aqk6ZjX4NcAa8b2SzK2FYpCHmrZJqEuBOffXRZGR/iCiQnk5DR7D7sZplN74C0hId3LS4lKPZuu/ZIf7Xa6m/SkJdgWbsXC06CUr9NDk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741240081; c=relaxed/simple;
-	bh=VmhuW3hljpS5NRYuzFFpiQlviwQNimnuuEFlaheAmq8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ELgOleDwPU7cxqUfZJLDxGuHidZ/gSFP637EhZ479e23V8jF9UDOjIlgD/l/xzHnHlOzfCcDnEirPCefjAZW9q6q5sbG5v43y+CxvKNtTbD6RyggxG8LT1+BOYi1Ucl/vSa/slVLZXaHWkFVMtGU+3BOdrjRX975y79KJYqFhd0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=gYmdB8V9; arc=fail smtp.client-ip=40.107.162.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1741240107; c=relaxed/simple;
+	bh=rcAsL3rL7EC95QH12SWPEfab5BNAnJ5eCK6i/IgT7rE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DwilEEz+PQUUj9midbnwF05hggxn04OEHTF2quPjXYRjvdRuFa0cQpVAalsnh4ydf/plusMkzjjpw+OktTkeEEdmk0M+QcMV4k3B5S6VdZBqp0qMWD3ZdoepVy4vYYW4pAyn2BqVsZG0/An6gettjljHxJvVbANJU/iXpCQLAig=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L6zAb5lP; arc=fail smtp.client-ip=40.107.223.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="gYmdB8V9"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L6zAb5lP"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ANPkFBlNCG6lkW9+JSrg7iRji+nZpOcsLIDMwisbl9vQJp6pG+CMX2FsVw/4HTv0RbHioTLpH4QiXEP5HZUKmQ1BgZ1cdXIhaTMCu7z2378ArvJmidN7dy5YADkh05d0uRzFkp1AJH1+xpd8fPm5D6NWpve82PofNNS1sSBUEcPGK64AviCjYucVJ17R50sEQtwD0QZy5LjzIj5Mrg5tWv9s0sPoQLI+ateD3gZ5yEbw6cnQthKhxZ5nnmQVo9WpWxIBuJAGyJPijCIOr83iHTaWjMEwIcZTKMa93EWkavzQQialrnedIjoQXhKC6pZ1mvBo+wotH44BDsX4BVOljw==
+ b=kieDVAnnyw/YEz71KjoqB9PMqD7cp1ANpIDoWhGTRAPoGavQgMtwNBwrt3YYDxT285AVYeCyzZZTywRn0BYa61yNoHNTfXOMsE8EQ1DLCesE2v5PY/vVj45dLjbo4h4pOCeiG7P1vC0u3PANIfvC5NXHhsh4tltBTW3WsueHHNhZrYKYNQcaTESVXzcQ3ksJtWgo4UhuF1mZJUsn/DHPsBQEwHqHdINtG6x0/DoPQ3739pyYixD76Hj1XQcf2bZhklkqMSEZO0797evpKGqnvEWuQvnwcPi9Nb3FIXBe3sSa0NYzT0rpkMlwBjGlpkIxZQtpWzF8BWgrdThEPEFB+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=18G4MRU7bour7zR6mZc1ilHo6WwIUIHtz/Q8rzxIRTw=;
- b=Twne/i5jGC+jpqJjRH6rwsNTPVqWFuMJi1qQcurLFfC+BECGBJ8waX1vFjx0i5gtovnrWOM76IXd1eMJ4uX2YTkaepAkHdMvgn8t/zWWjcig5wrrWhTZdxlx5Rm2sbXMR3jObXQ3c8jkJLGIoSUI3/RTTAgJeVU7bKUUv3sQ1w8ArbcEEhksDvT9Fcwp+EzEVmNYE5oyiIPNANtNIIh9PHjPSiU/HYMCXm3li+sisGtdUISjUPAciS7B5K7VcG8z/YFSM0dKJGcxp5CncyxeZ6FFLsI0b48KmSQ7qX3Qn6KmeuVhJjBGezx9NhAsRTg4NuAokaP9FsWPjGBcK3iJ+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ bh=5juOMg1h6w8SYB34nVKzLjnpS6LJy7kqJtjxvaQIYKE=;
+ b=eJKRB3R5rniazFptDF8sGsEA2zzKWSids1ERpSvpR4DdAKv7adImRiJOoNMrfy1Qo+gfOSb6ImOXw5TetO7Zd54XLrQW9ZL6xT3SO6pA8K0WRynra+bYOV9ZbYsHl9VYwut44iXLBKwNr3qZdwAykTPWppQv7zMGK83kdAP5whA2EzgTX61wHtTOYCN/BoKeOgmDNN+ewlQI1ssbxX3EVneGeuzCe03p4wt+JoOYvpnYvqfzc4MLQM1H8z+XVfWoH0dQVH51443pqeLrPMJmP9g4++VX2bMzNgiskUx5/2XxqELaJv4NqQbTIdFmHxFBIR+Dha8Ei+houJgsVKTn3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=18G4MRU7bour7zR6mZc1ilHo6WwIUIHtz/Q8rzxIRTw=;
- b=gYmdB8V9lNjp0GThSdangjNb0qo2b1r981arc3iMWKuO/1mswiJqmWBzQk+up5sHj0PkrE4CZc1FnFRcpI8Z72F/I51VkjXUD8jI1hW7dPSXZPjq+/Oe6ANVMfqHh/i4X5unZIk+YLn5hVSDsncdyHOrcstelZvSnyO58G8C0DL94aRpqT6hMqngbAxo2LpzOfDfFIuZLDWCvn3/rK/FDfbKFTG1rB2EQr+viR6AU7Q2u1M/rh0zoqaZiZjHkqtQFGxPY/twx+Urx00B8kc037TiB3fEzFIcY0MTpJLQ/vTkTMJeNQ/Ldqke2ekLvqaiTAAW9LWSp+Rgl9acoghkfA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by DBAPR04MB7270.eurprd04.prod.outlook.com (2603:10a6:10:1af::8) with
+ bh=5juOMg1h6w8SYB34nVKzLjnpS6LJy7kqJtjxvaQIYKE=;
+ b=L6zAb5lP0pZYS0jnFvVPsw2EnxuVLsFI5JCEDgSU7QcT9LHecRAx0wUcfUw3e0YTufTOw3NQlEQ87wV7oPxGfTZYjy2s8ow4P3+4LiPVOtPKEV83SW2f1nHZTUIPF3dl32iD9GrlbHzm0nhUo+fEheaRtWI7owOxm4y9UFgC+2A=
+Received: from BN9PR03CA0198.namprd03.prod.outlook.com (2603:10b6:408:f9::23)
+ by DS7PR12MB5765.namprd12.prod.outlook.com (2603:10b6:8:74::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.16; Thu, 6 Mar
- 2025 05:47:54 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 05:47:54 +0000
-Message-ID: <b6320f0b-8605-455f-b834-57a8bdaf3f91@nxp.com>
-Date: Thu, 6 Mar 2025 13:49:05 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
- color encoder
-To: Maxime Ripard <mripard@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, andrzej.hajda@intel.com, neil.armstrong@linaro.org,
- rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch
-References: <20250304101530.969920-1-victor.liu@nxp.com>
- <20250304101530.969920-4-victor.liu@nxp.com>
- <20250304-wandering-tangible-doberman-5b6dd0@houat>
-From: Liu Ying <victor.liu@nxp.com>
-Content-Language: en-US
-In-Reply-To: <20250304-wandering-tangible-doberman-5b6dd0@houat>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR04CA0007.apcprd04.prod.outlook.com
- (2603:1096:4:197::19) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
+ 2025 05:48:19 +0000
+Received: from BL02EPF0001A0FE.namprd03.prod.outlook.com
+ (2603:10b6:408:f9:cafe::a1) by BN9PR03CA0198.outlook.office365.com
+ (2603:10b6:408:f9::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Thu,
+ 6 Mar 2025 05:48:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A0FE.mail.protection.outlook.com (10.167.242.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.15 via Frontend Transport; Thu, 6 Mar 2025 05:48:18 +0000
+Received: from BLR-L-BHARARAO.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Mar
+ 2025 23:48:07 -0600
+From: Bharata B Rao <bharata@amd.com>
+To: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC: <AneeshKumar.KizhakeVeetil@arm.com>, <Hasan.Maruf@amd.com>,
+	<Jonathan.Cameron@huawei.com>, <Michael.Day@amd.com>,
+	<akpm@linux-foundation.org>, <dave.hansen@intel.com>, <david@redhat.com>,
+	<feng.tang@intel.com>, <gourry@gourry.net>, <hannes@cmpxchg.org>,
+	<honggyu.kim@sk.com>, <hughd@google.com>, <jhubbard@nvidia.com>,
+	<k.shutemov@gmail.com>, <kbusch@meta.com>, <kmanaouil.dev@gmail.com>,
+	<leesuyeon0506@gmail.com>, <leillc@google.com>, <liam.howlett@oracle.com>,
+	<mgorman@techsingularity.net>, <mingo@redhat.com>, <nadav.amit@gmail.com>,
+	<nphamcs@gmail.com>, <peterz@infradead.org>, <raghavendra.kt@amd.com>,
+	<riel@surriel.com>, <rientjes@google.com>, <rppt@kernel.org>,
+	<shivankg@amd.com>, <shy828301@gmail.com>, <sj@kernel.org>, <vbabka@suse.cz>,
+	<weixugc@google.com>, <willy@infradead.org>, <ying.huang@linux.alibaba.com>,
+	<ziy@nvidia.com>, <dave@stgolabs.net>, <yuanchu@google.com>,
+	<hyeonggon.yoo@sk.com>, Bharata B Rao <bharata@amd.com>
+Subject: [RFC PATCH 3/4] x86: ibs: In-kernel IBS driver for memory access profiling
+Date: Thu, 6 Mar 2025 11:15:31 +0530
+Message-ID: <20250306054532.221138-4-bharata@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250306054532.221138-1-bharata@amd.com>
+References: <20250306054532.221138-1-bharata@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DBAPR04MB7270:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6dd8fa31-4131-4640-c5a9-08dd5c727063
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FE:EE_|DS7PR12MB5765:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4f40f431-1813-490f-9d26-08dd5c727f57
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|36860700013|82310400026|13003099007;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?eExzeTRTRGcwY0R0bXpQQ1NMTEVXd0lYR3RaNkpVZ1lhakV3MVQxc25xcEZF?=
- =?utf-8?B?UkhKL2lkTFlSY3Y2a2YzYXBQbkFHQzVkVm9sem5IOWVJNmVMUEJEditJQkRS?=
- =?utf-8?B?QnB0UkxseGlJeEVzVHJCYktvNDRKYStQbk1nVDNoT3Q5TkxSNUlvd2FCT2U3?=
- =?utf-8?B?MzNHb1VadXdYRmNMMXEyV2ZGeDRzK0ZuYXdHZThWZS9Fc0ovMk1weGZ3K2N6?=
- =?utf-8?B?MUk4OFM4SVljdnBZT1ptVUtTNlVjcm5scERXcHZ4bTNQWjVXMU50ZE1kck9i?=
- =?utf-8?B?YlFSSkNhdTBBMVFQbm1DRnpoRHVGeHJSdVZMR0hFb0c5QS9qUzVQQzVKYjUw?=
- =?utf-8?B?QndGZ01pekh2QzFZKzV4Y1NTdDgwbnAyZWJOTVh2cHdjU3o0MTJtL01xK2pa?=
- =?utf-8?B?dnpWSDhTb0ZGMklZVUFwM0kxS3U1NUdSRzc1Z1RVS2Qzdmp1RWhWSGNTMGU2?=
- =?utf-8?B?bGpqbWlNenJDd09VZnExeEhxY2Y0UTVQL3NVdnU3Uk5rN0YxWGttY2c5UG5t?=
- =?utf-8?B?V3hHTFFhVFNZb1F0R2Z2ald3QnJ1ckEyYnd0elRrSHBaVlo2eG8rU0JtVzJZ?=
- =?utf-8?B?Z3cyS0dBOWIzcVVzMEIwbkdnL0RoVEVlN25NNlVPbmg4QVozN3JjUGlvdjBw?=
- =?utf-8?B?UzUrRDRuU0lPcUVwbHl1RHNFejRqUjNLblVwZ2pUN1lwS3RVbWhGVitXRkpn?=
- =?utf-8?B?UTZHWk1ZRk1sbFdDd1dzM2dEZ1JwUmRRcUNaSVZ3ZWtiVGh6QWpWc1dqbG5j?=
- =?utf-8?B?dkk2eklHU21tSmFKYXJSOWY5OWUrbSs0Z1pzM2U5K1BrdlFzVEc3dWFvZk5v?=
- =?utf-8?B?dzdRS05scjN4QkhxMzdzeC83Snl5TlliK00vM1BmZ1lBR2FPY3VIWDFKdGw4?=
- =?utf-8?B?YzNvWDdDVHFqMmVMYXBuVjFYeUd3MSsrL1VJQ0xoMzViUGZ4MDJUbVFDUVMy?=
- =?utf-8?B?R2JYYyt3S20zRHBUcE1YdmNoNzcxSEFJT2NMU2R6b2ZCN3plYS9LUEFHTzFy?=
- =?utf-8?B?QkZoakdwZ2dDamhTaGVCZGFWWXluaHEzZGpWQTVTbERWcXhmdlZtOEVWRkl4?=
- =?utf-8?B?aFJ6UFoyd1JTOEtQbG5JcHI2YWdOUGd4NHNrSGZHWnV0cWR2SXNMM05RQ2xi?=
- =?utf-8?B?dWRWLzBRYkVpd0dtRUVjT1JqcVcrZjlGZkxQT0RWWW0zNElHVTEzUHFxQWth?=
- =?utf-8?B?TkEyckwyYVQ1UmJJd01ibjArOG1IdU9JVmpSdHN1ZjZWN0dHMDVabUNKa3JV?=
- =?utf-8?B?UXlXWXEvT1AwdzFab3Z2Y2lnRk5KM0tOQ3p0ZFpTZlJZYmpJMXB2SzhJL1h4?=
- =?utf-8?B?by9QZmFabFlDeEZXZlpVeG5LK0FuY0ppT1l2TE5NZGJ1M2lJTG92M0N1a3RY?=
- =?utf-8?B?VG5MV2NnNDVHdlk3bGxKQVF3Uk1SdmhSTC8vc1BnWnJ3UWd0NUY0ZXhIMGFH?=
- =?utf-8?B?d1VMUkNPckQwdll3MURZdkpFcDJtSEVhM2Q4VDJlM21vTU1uWTdhSzB0MnBj?=
- =?utf-8?B?c0NyaldUZ1VqSXVZZXlub3d3b0lZWmx4YjRwUGpuek1iVlZPalRrajR3d2Z3?=
- =?utf-8?B?T3U1b0M2TWkwMUVyV0U0L3RmemwvRkdTQzhvVmwrMS9ITlRtRHI2dVp3YTFP?=
- =?utf-8?B?TDZqdTcxQmpwdzAyOFRoTEE4M0l2TmtHaHlmK3Vnay9CRmYwM0hLSnNTSnBh?=
- =?utf-8?B?dUhMZGNVT0ZHVTQ3WDhzbnVLWmNaRmJ1dzkvZGJNWmRvS1phZ3JIM3JkVUVQ?=
- =?utf-8?B?OVVsL0RIaXhFcTJmZ3gxTDkvcHFseTRmamlheXdkVjdQM2VCU3grRzF6ejlz?=
- =?utf-8?B?UzdIcGpjdWd2bWI3YW91UT09?=
+	=?us-ascii?Q?nKxSD6bJboedXI2jBlnJp6C+CoAgPR4UhaMxs1MyUX9DxLsOdbruOGz5vOHK?=
+ =?us-ascii?Q?SuTNPIuezT1WYdwT2Ka1W2MTM5zI+6iAmbH7CPchw+znPRxUT43CJBbtx5o8?=
+ =?us-ascii?Q?DsefkNsGdmTSS0fUMq7oQ60XexlyE9W1rKHwRTLslasWcSGL8cfCbz+f4QHh?=
+ =?us-ascii?Q?Xd3L8qkQRUioJ/09zSjESyGrSxmMov7BL4O5/8bz++rhPQ2C8PMRTynwF5CA?=
+ =?us-ascii?Q?W1bHqnJNEOMiUwoscPwOqsv7EiYtkuxoOZqxc4XmV4dz2QjVlDqHIZMsH3wJ?=
+ =?us-ascii?Q?jT5UzMCFrJkOgWgH1WuWv/SzcqpPIpmxfgmQVu6ZXeXKCFrrAn7EVZE0amHF?=
+ =?us-ascii?Q?jPRr/LtFlSE5prYJRD8AVzOyHwumli1pHieREnqEMA02W/LdT6kuw3SuVrza?=
+ =?us-ascii?Q?epSiAgadkeDZu0qiGlE2HESb6K0ZwF1Y9RC3RoncxCelamvOdINWrZX6xD3Y?=
+ =?us-ascii?Q?9NSynfts8Yg08JzrwQk5CNAKhoMsaQ2IHzp84lIuEOq7gvxtzUydSbKpVCKj?=
+ =?us-ascii?Q?QiNgSfC48almNnEvPZoUKLZn7WSI3H4Qw+9PXaD0tFL7ncYotj3FlwRbvb5T?=
+ =?us-ascii?Q?HcAhxfmiH/02fpoPgtsm5GYQYeUUABiRfQEMDvnHPOPF9im6TDjfLHSfnjcy?=
+ =?us-ascii?Q?REUl126XHlEXp7B6+zD5x10+vt5gIQ7WiUN0iBECcdg7dfMDdqnMlYmulpA4?=
+ =?us-ascii?Q?GYsT3w13SdbJNdo7adMchx55YUB+9LCDyit1cFOStzgFxIW1Tyiri37CgJkE?=
+ =?us-ascii?Q?wydWii3L8EyA6He7q+Pax+j3WVVCHwEVu9apsXlrku1T8UwTc51BvuIB3k05?=
+ =?us-ascii?Q?FdD/oidhwGfMbmHClZI+kDRE/TkpMG3Ac8aLfBd84vetiRi12l4FeMTHbYDu?=
+ =?us-ascii?Q?Wo7h6Kt/W8xSJFUCtwd9yaYQTTNTqm/9Pq18gzM/AjZI1zRGTT6BVNbXwtuF?=
+ =?us-ascii?Q?+jOjCszctjlLAatKftOt05RDrfkV5jvAU2Wf2TQbd98BZUbzuSWsjajaoI8R?=
+ =?us-ascii?Q?9AAgVTP1WTqNGuhXXjTh4lTkvYGDRQIS8dzfW+nRSfe6+vvJ1o9KiYbXLuv6?=
+ =?us-ascii?Q?BHvYAoX0uAahxsc1Uvj6e95Noj6gmlxPMdaK3wQP1KLqnZQai9Q2NS0k4Yx3?=
+ =?us-ascii?Q?lG48jY5ZhrhBWV9CxfSdPS/8a9ry1QtBdbozg5DagFpWK9r9u3aHEKRKfVqE?=
+ =?us-ascii?Q?mdNgannpWg0rZ+UUixJ/0iPTieK4INXuSmdgr/zPeQyLDq1ZzMoMr1lQJ5/7?=
+ =?us-ascii?Q?p41tweC7SrZtXdbVpeY8yeo3FMGuryjNfloXNZxr5JxchCXT45SoI18MuMx+?=
+ =?us-ascii?Q?1PMhjnlTv1WE0Vy0udqKgmw3jZj/XVAj0tpEGl/YTxtCEGZU7ocGLHxRNl7P?=
+ =?us-ascii?Q?Iew9ejrn/12Qk0KmAGYwJfzhMyAbtgIdTkNttFpcyplkAICgVmbrF/o8VQnT?=
+ =?us-ascii?Q?6JwqSPTd0AYv7S0eJFL87XFrTR0+HPJY?=
 X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?UHp0VW8zYkZmMU41NFo2MFY3WjZnMTEyUHFkVkluWHQrUG1ObUp5MDFUa1I4?=
- =?utf-8?B?SzVmUzdoYWdxRGVSTG9XVHJOY2ZvdzFFenVTMkNLY3BXUUVPc1lzNXpCcXJy?=
- =?utf-8?B?VHBGVEk0Y2hHUklTWVJNNGwwNENLVmlkZHdlSDg0Nk54Z1FTZFF2aFNkb2xw?=
- =?utf-8?B?ZlB2Zk5oazhQU0FSZmZvS3E1dUFhZ2k5N1B6dUNiQ3dxb285bk1kaVlidVQy?=
- =?utf-8?B?L0UxdUVIeFNiZWNRUXloanpCYnFUeWp2WDNZaEdSNmJCaFMrbVY3OGtUZnMv?=
- =?utf-8?B?MVFsTU0wSDZ6eFM1QS81ZFh0UkN3QWJMcHVqR1FkUWlGeGVYNlJzdU9SbDRq?=
- =?utf-8?B?MVExZFlJenBSbmxReVg3MFMyQnhKKzhXYjkvWFpHaVI4VkJCMDREZHpwaUxT?=
- =?utf-8?B?Mk9wZFZ1eWlXYkJQUTJsL1JwZXc1RjJ6cjUwT1ZkK3hFbllPMjhhTzMwVDky?=
- =?utf-8?B?WUJKN2hOS2szV0l0NGtkdG1GR3EwUEdOVTVWYUpYUUhYTksrTERWU0NzTFRM?=
- =?utf-8?B?cW9IUXhROGQvUU1PYlVzd3o5U0Q1dkhVREx2WjZydXZkSUVyTVpXUEZNSXpW?=
- =?utf-8?B?VjVPUDFhWkptM0JyK2c5aU9NNmdkVExkUGZ6SmhUdUxNSXF0OHplL0J3dGJ6?=
- =?utf-8?B?V05yU1V2NVhrd2VjY3UwaGt1aG81VFcxSmJOQmpDZmIyOWRYNEphdXNjZzFJ?=
- =?utf-8?B?WkhZbnNibllPcStzbXBEajZHbERzWndlaUE2NmRuVHMvMEd3TlVZWkluRkNF?=
- =?utf-8?B?dXdSNkdHRWQrOWxmNTE5M2JxMk1YdVRGa2ptNkxZeVRFYktHZGx2dk9LaWkw?=
- =?utf-8?B?cFJETTh5QkpjT2E3UFRTMFFrSzllUW9DS2M5WE04bWRFcm1BOVUxMUpBS3Y5?=
- =?utf-8?B?bS8xMlphN096aWxUWjBmYS9HcnQ5SzdXd2ZNNkhyTzBxSzRDQTA1dWE0ZHRO?=
- =?utf-8?B?YjI0ZVU5ODU0NjhiSHZ1dDRBS3ZpckkwMFRESlFvaFJySTZNbU11V1JVL2Za?=
- =?utf-8?B?bXlXTlRVbXNKZEtUbFpoYVZtYkpGeWxMaUR2N2diL2ZyS2ZLdzVEdFo3RWh1?=
- =?utf-8?B?aGJ2dm42Q1RoT05aVHhQRGRkQXpnc3RWeUtBZWtNT1V0cEtWd1B1N3YweExn?=
- =?utf-8?B?UkJxazVuTWpQdEtWMWV3akpaWEoxVmdVNFlhRURtOUVibTBBT0VsaTRHUmEw?=
- =?utf-8?B?UFI2L3dwNUliK3JOWXo5WkVzS0VSdi9JMlJjQUJLYkg0UkFZcXI0UkpvV2Jm?=
- =?utf-8?B?NlA3dlIzQWlLdXUwRE5zVExpbE1aY2h1Njh5bjByQklYVGFMc1VoTVAyby93?=
- =?utf-8?B?ODBCd1BxNHg5UW5UV2lETCtGcDlaVHFlbThHZ0JOcUorWEkrVFh3bW9TaW5N?=
- =?utf-8?B?NjVYSEVKL2xhTEhKc1llNnFFOU44R05rdW5SaFhaRm5aaXFyTGsxak9RZzhW?=
- =?utf-8?B?TVJuaGV2YWNDcEpnNjJEaFVlRTlRRTZ2azhWSG90RnBIZFdNREJRZTRvUld1?=
- =?utf-8?B?eFQ4ei9mRDFEd1RXOXpPeXBqNzdUWEJZL1Z0REphbzRmeEhpbW5jcEhNbmhQ?=
- =?utf-8?B?dW56SWxpRmlqOEVMY0hLMzRNQktIdDRBSjFGNERxQ1FTa0YrYkdTN3h1MTVK?=
- =?utf-8?B?RzFCbjFIeEJ5Z05mODNnMkZwNmVqK3NZbDVCNkpucFpkdXVFU0FDNnVINXNJ?=
- =?utf-8?B?TjVPSk5qbGVLazFNQ3JJZFZycVIrenFGbzRPMFoyMkxZMDhXYTVzcm0vNnQy?=
- =?utf-8?B?elZEZTdnaUh1SlVHYVpZd3BFQW0wallnYnl4cFIrK0hXcTN6em8wc1RGUE9s?=
- =?utf-8?B?am5IMkd4ODVKaHJvOFlvbWRqTWhITGJhbEV3WkM5eDJUM0p2VmdPaDFveWM0?=
- =?utf-8?B?TkQyaHFZS2NacWRXenE5OGdYNnl6eVhNa0Y0OUVQenJvcnRMTU84aW9mY0h4?=
- =?utf-8?B?WFd6bzZuZDBsYWtnQ1lhNDh0ZC83RW5QMEZna0dGOHJZVHRKQWxRdWdIRkJp?=
- =?utf-8?B?ekQweU0zU0NDR2syamZIZ3JPdkZOcUlNWUljdGFOcU5MTVFaaVV4RTRKT2VS?=
- =?utf-8?B?NDRhUFpzbGlvbkxQM2FKWkl0T0Zsb3lQVTRidmIweHlsaWRNZ2F5WGluR1NY?=
- =?utf-8?Q?mvRr8/rlesy7jMj3RWUZ1DhHq?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6dd8fa31-4131-4640-c5a9-08dd5c727063
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 05:47:53.9791
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 05:48:18.8485
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YKFwilB71IM9mX7uWaemI8m/RcWGlTjQJmRj7er9BeLsK9fGHTTIcX7uwX7mgNbxFz1nOFK0r7RYvcOWvaVuMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7270
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f40f431-1813-490f-9d26-08dd5c727f57
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A0FE.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5765
 
-On 03/04/2025, Maxime Ripard wrote:
-> On Tue, Mar 04, 2025 at 06:15:28PM +0800, Liu Ying wrote:
->> A DPI color encoder, as a simple display bridge, converts input DPI color
->> coding to output DPI color coding, like Adafruit Kippah DPI hat[1] which
->> converts input 18-bit pixel data to 24-bit pixel data(with 2 low padding
->> bits in every color component though). Document the DPI color encoder.
->>
->> [1] https://learn.adafruit.com/adafruit-dpi-display-kippah-ttl-tft/downloads
->>
->> Signed-off-by: Liu Ying <victor.liu@nxp.com>
-> 
-> So it's just a bunch of signals that aren't wired / set to the ground? I
-> assume to free a few GPIOs?
+Use IBS (Instruction Based Sampling) feature present
+in AMD processors for memory access tracking. The access
+information obtained from IBS via NMI is fed to kpromoted
+daemon for futher action.
 
-Yes. Freed pins could work as GPIOs or other functions.
+In addition to many other information related to the memory
+access, IBS provides physical (and virtual) address of the access
+and indicates if the access came from slower tier. Only memory
+accesses originating from slower tiers are further acted upon
+by this driver.
 
-> 
-> I guess that makes sense.
-> 
->> ---
->>  .../display/bridge/simple-bridge.yaml         | 89 ++++++++++++++++++-
->>  1 file changed, 87 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml
->> index 43cf4df9811a..c1747c033040 100644
->> --- a/Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml
->> +++ b/Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml
->> @@ -27,6 +27,7 @@ properties:
->>            - const: adi,adv7123
->>        - enum:
->>            - adi,adv7123
->> +          - dpi-color-encoder
-> 
-> I don't think we can claim that there's a generic DPI color encoder.
-> Maybe we can add the prefix dumb or transparent?
+The samples are initially accumulated in percpu buffers which
+are flushed to kpromoted using irq_work.
 
-TBH, I don't have a best compatible string and open to suggestions.
-"dpi-color-encoder" came up to my mind just because the MIPI DPI standard
-documentation mentions *color coding* and this bridge changes the coding,
-hence *encoder*.
+About IBS
+---------
+IBS can be programmed to provide data about instruction
+execution periodically. This is done by programming a desired
+sample count (number of ops) in a control register. When the
+programmed number of ops are dispatched, a micro-op gets tagged,
+various information about the tagged micro-op's execution is
+populated in IBS execution MSRs and an interrupt is raised.
+While IBS provides a lot of data for each sample, for the
+purpose of  memory access profiling, we are interested in
+linear and physical address of the memory access that reached
+DRAM. Recent AMD processors provide further filtering where
+it is possible to limit the sampling to those ops that had
+an L3 miss which greately reduces the non-useful samples.
 
-If folks think "dumb-dpi-color-encoder" or "transparent-dpi-color-encoder"
-are good enough, I'd use it.  Just let me know which one to use.
+While IBS provides capability to sample instruction fetch
+and execution, only IBS execution sampling is used here
+to collect data about memory accesses that occur during
+the instruction execution.
 
-> 
->>            - dumb-vga-dac
->>            - ti,opa362
->>            - ti,ths8134
->> @@ -37,13 +38,31 @@ properties:
->>  
->>      properties:
->>        port@0:
->> -        $ref: /schemas/graph.yaml#/properties/port
->> +        $ref: /schemas/graph.yaml#/$defs/port-base
->> +        unevaluatedProperties: false
->>          description: The bridge input
->>  
->> +        properties:
->> +          endpoint:
->> +            $ref: /schemas/media/video-interfaces.yaml#
->> +            unevaluatedProperties: false
->> +
->> +            properties:
->> +              dpi-color-coding: true
->> +
->>        port@1:
->> -        $ref: /schemas/graph.yaml#/properties/port
->> +        $ref: /schemas/graph.yaml#/$defs/port-base
->> +        unevaluatedProperties: false
->>          description: The bridge output
->>  
->> +        properties:
->> +          endpoint:
->> +            $ref: /schemas/media/video-interfaces.yaml#
->> +            unevaluatedProperties: false
->> +
->> +            properties:
->> +              dpi-color-coding: true
->> +
->>      required:
->>        - port@0
->>        - port@1
->> @@ -61,6 +80,44 @@ required:
->>  
->>  additionalProperties: false
->>  
->> +allOf:
->> +  - $ref: /schemas/display/dpi-color-coding.yaml#
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: dpi-color-encoder
->> +    then:
->> +      properties:
->> +        ports:
->> +          properties:
->> +            port@0:
->> +              properties:
->> +                endpoint:
->> +                  required:
->> +                    - dpi-color-coding
->> +
->> +            port@1:
->> +              properties:
->> +                endpoint:
->> +                  required:
->> +                    - dpi-color-coding
->> +    else:
->> +      properties:
->> +        ports:
->> +          properties:
->> +            port@0:
->> +              properties:
->> +                endpoint:
->> +                  properties:
->> +                    dpi-color-coding: false
->> +
->> +            port@1:
->> +              properties:
->> +                endpoint:
->> +                  properties:
->> +                    dpi-color-coding: false
->> +
-> 
-> Also it complicates the binding enough to warrant for another binding for
-> that specific "component".
+More information about IBS is available in Sec 13.3 of
+AMD64 Architecture Programmer's Manual, Volume 2:System
+Programming which is present at:
+https://bugzilla.kernel.org/attachment.cgi?id=288923
 
-Do you suggest to write a separate/new DT binding for this bridge?
+Information about MSRs used for programming IBS can be
+found in Sec 2.1.14.4 of PPR Vol 1 for AMD Family 19h
+Model 11h B1 which is currently present at:
+https://www.amd.com/system/files/TechDocs/55901_0.25.zip
 
-> 
->>  examples:
->>    - |
->>      bridge {
->> @@ -88,4 +145,32 @@ examples:
->>          };
->>      };
->>  
->> +  - |
->> +    bridge {
->> +        compatible = "dpi-color-enoder";
-> 
-> You have a typo in the compatible.
+Signed-off-by: Bharata B Rao <bharata@amd.com>
+---
+ arch/x86/events/amd/ibs.c        |  11 ++
+ arch/x86/include/asm/ibs.h       |   7 +
+ arch/x86/include/asm/msr-index.h |  16 ++
+ arch/x86/mm/Makefile             |   3 +-
+ arch/x86/mm/ibs.c                | 312 +++++++++++++++++++++++++++++++
+ include/linux/vm_event_item.h    |  17 ++
+ mm/vmstat.c                      |  17 ++
+ 7 files changed, 382 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/include/asm/ibs.h
+ create mode 100644 arch/x86/mm/ibs.c
 
-Hmm, good catch!  I did upgrade dtschema to version 2025.2 with pip3 and
-didn't see any warnings/errors reported by dt_binding_check, weird...
-
-> 
-> Maxime
-
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index e7a8b8758e08..35497e8c0846 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -13,8 +13,10 @@
+ #include <linux/ptrace.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/sched/clock.h>
++#include <linux/kpromoted.h>
+ 
+ #include <asm/apic.h>
++#include <asm/ibs.h>
+ 
+ #include "../perf_event.h"
+ 
+@@ -1539,6 +1541,15 @@ static __init int amd_ibs_init(void)
+ {
+ 	u32 caps;
+ 
++	/*
++	 * TODO: Find a clean way to disable perf IBS so that IBS
++	 * can be used for memory access profiling.
++	 */
++	if (arch_hw_access_profiling) {
++		pr_info("IBS isn't available for perf use\n");
++		return 0;
++	}
++
+ 	caps = __get_ibs_caps();
+ 	if (!caps)
+ 		return -ENODEV;	/* ibs not supported by the cpu */
+diff --git a/arch/x86/include/asm/ibs.h b/arch/x86/include/asm/ibs.h
+new file mode 100644
+index 000000000000..b5a4f2ca6330
+--- /dev/null
++++ b/arch/x86/include/asm/ibs.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_IBS_H
++#define _ASM_X86_IBS_H
++
++extern bool arch_hw_access_profiling;
++
++#endif /* _ASM_X86_IBS_H */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 72765b2fe0d8..12291e362b01 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -719,6 +719,22 @@
+ /* AMD Last Branch Record MSRs */
+ #define MSR_AMD64_LBR_SELECT			0xc000010e
+ 
++/* AMD IBS MSR bits */
++#define MSR_AMD64_IBSOPDATA2_DATASRC			0x7
++#define MSR_AMD64_IBSOPDATA2_DATASRC_LCL_CACHE		0x1
++#define MSR_AMD64_IBSOPDATA2_DATASRC_PEER_CACHE_NEAR	0x2
++#define MSR_AMD64_IBSOPDATA2_DATASRC_DRAM		0x3
++#define MSR_AMD64_IBSOPDATA2_DATASRC_FAR_CCX_CACHE	0x5
++#define MSR_AMD64_IBSOPDATA2_DATASRC_EXT_MEM		0x8
++#define	MSR_AMD64_IBSOPDATA2_RMTNODE			0x10
++
++#define MSR_AMD64_IBSOPDATA3_LDOP		BIT_ULL(0)
++#define MSR_AMD64_IBSOPDATA3_STOP		BIT_ULL(1)
++#define MSR_AMD64_IBSOPDATA3_DCMISS		BIT_ULL(7)
++#define MSR_AMD64_IBSOPDATA3_LADDR_VALID	BIT_ULL(17)
++#define MSR_AMD64_IBSOPDATA3_PADDR_VALID	BIT_ULL(18)
++#define MSR_AMD64_IBSOPDATA3_L2MISS		BIT_ULL(20)
++
+ /* Zen4 */
+ #define MSR_ZEN4_BP_CFG                 0xc001102e
+ #define MSR_ZEN4_BP_CFG_SHARED_BTB_FIX_BIT 5
+diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
+index 690fbf48e853..3b1a5dbbac64 100644
+--- a/arch/x86/mm/Makefile
++++ b/arch/x86/mm/Makefile
+@@ -26,7 +26,8 @@ CFLAGS_REMOVE_pgprot.o			= -pg
+ endif
+ 
+ obj-y				:=  init.o init_$(BITS).o fault.o ioremap.o extable.o mmap.o \
+-				    pgtable.o physaddr.o tlb.o cpu_entry_area.o maccess.o pgprot.o
++				    pgtable.o physaddr.o tlb.o cpu_entry_area.o maccess.o pgprot.o \
++				    ibs.o
+ 
+ obj-y				+= pat/
+ 
+diff --git a/arch/x86/mm/ibs.c b/arch/x86/mm/ibs.c
+new file mode 100644
+index 000000000000..5c966050ad86
+--- /dev/null
++++ b/arch/x86/mm/ibs.c
+@@ -0,0 +1,312 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/init.h>
++#include <linux/kpromoted.h>
++#include <linux/percpu.h>
++#include <linux/workqueue.h>
++#include <linux/irq_work.h>
++
++#include <asm/nmi.h>
++#include <asm/perf_event.h> /* TODO: Move defns like IBS_OP_ENABLE into non-perf header */
++#include <asm/apic.h>
++#include <asm/ibs.h>
++
++bool arch_hw_access_profiling;
++static u64 ibs_config __read_mostly;
++static u32 ibs_caps;
++
++#define IBS_NR_SAMPLES	50
++
++/*
++ * Basic access info captured for each memory access.
++ */
++struct ibs_sample {
++	unsigned long pfn;
++	unsigned long time;	/* jiffies when accessed */
++	int nid;		/* Accessing node ID, if known */
++};
++
++/*
++ * Percpu buffer of access samples. Samples are accumulated here
++ * before pushing them to kpromoted for further action.
++ */
++struct ibs_sample_pcpu {
++	struct ibs_sample samples[IBS_NR_SAMPLES];
++	int head, tail;
++};
++
++struct ibs_sample_pcpu __percpu *ibs_s;
++
++/*
++ * The workqueue for pushing the percpu access samples to kpromoted.
++ */
++static struct work_struct ibs_work;
++static struct irq_work ibs_irq_work;
++
++/*
++ * Record the IBS-reported access sample in percpu buffer.
++ * Called from IBS NMI handler.
++ */
++static int ibs_push_sample(unsigned long pfn, int nid, unsigned long time)
++{
++	struct ibs_sample_pcpu *ibs_pcpu = raw_cpu_ptr(ibs_s);
++	int next = ibs_pcpu->head + 1;
++
++	if (next >= IBS_NR_SAMPLES)
++		next = 0;
++
++	if (next == ibs_pcpu->tail)
++		return 0;
++
++	ibs_pcpu->samples[ibs_pcpu->head].pfn = pfn;
++	ibs_pcpu->samples[ibs_pcpu->head].time = time;
++	ibs_pcpu->head = next;
++	return 1;
++}
++
++static int ibs_pop_sample(struct ibs_sample *s)
++{
++	struct ibs_sample_pcpu *ibs_pcpu = raw_cpu_ptr(ibs_s);
++
++	int next = ibs_pcpu->tail + 1;
++
++	if (ibs_pcpu->head == ibs_pcpu->tail)
++		return 0;
++
++	if (next >= IBS_NR_SAMPLES)
++		next = 0;
++
++	*s = ibs_pcpu->samples[ibs_pcpu->tail];
++	ibs_pcpu->tail = next;
++	return 1;
++}
++
++/*
++ * Remove access samples from percpu buffer and send them
++ * to kpromoted for further action.
++ */
++static void ibs_work_handler(struct work_struct *work)
++{
++	struct ibs_sample s;
++
++	while (ibs_pop_sample(&s))
++		kpromoted_record_access(s.pfn, s.nid, KPROMOTED_HW_HINTS,
++					s.time);
++}
++
++static void ibs_irq_handler(struct irq_work *i)
++{
++	schedule_work_on(smp_processor_id(), &ibs_work);
++}
++
++/*
++ * IBS NMI handler: Process the memory access info reported by IBS.
++ *
++ * Reads the MSRs to collect all the information about the reported
++ * memory access, validates the access, stores the valid sample and
++ * schedules the work on this CPU to further process the sample.
++ */
++static int ibs_overflow_handler(unsigned int cmd, struct pt_regs *regs)
++{
++	struct mm_struct *mm = current->mm;
++	u64 ops_ctl, ops_data3, ops_data2;
++	u64 laddr = -1, paddr = -1;
++	u64 data_src, rmt_node;
++	struct page *page;
++	unsigned long pfn;
++
++	rdmsrl(MSR_AMD64_IBSOPCTL, ops_ctl);
++
++	/*
++	 * When IBS sampling period is reprogrammed via read-modify-update
++	 * of MSR_AMD64_IBSOPCTL, overflow NMIs could be generated with
++	 * IBS_OP_ENABLE not set. For such cases, return as HANDLED.
++	 *
++	 * With this, the handler will say "handled" for all NMIs that
++	 * aren't related to this NMI.  This stems from the limitation of
++	 * having both status and control bits in one MSR.
++	 */
++	if (!(ops_ctl & IBS_OP_VAL))
++		goto handled;
++
++	wrmsrl(MSR_AMD64_IBSOPCTL, ops_ctl & ~IBS_OP_VAL);
++
++	count_vm_event(HWHINT_NR_EVENTS);
++
++	if (!user_mode(regs)) {
++		count_vm_event(HWHINT_KERNEL);
++		goto handled;
++	}
++
++	if (!mm) {
++		count_vm_event(HWHINT_KTHREAD);
++		goto handled;
++	}
++
++	rdmsrl(MSR_AMD64_IBSOPDATA3, ops_data3);
++
++	/* Load/Store ops only */
++	/* TODO: DataSrc isn't valid for stores, so filter out stores? */
++	if (!(ops_data3 & (MSR_AMD64_IBSOPDATA3_LDOP |
++			   MSR_AMD64_IBSOPDATA3_STOP))) {
++		count_vm_event(HWHINT_NON_LOAD_STORES);
++		goto handled;
++	}
++
++	/* Discard the sample if it was L1 or L2 hit */
++	if (!(ops_data3 & (MSR_AMD64_IBSOPDATA3_DCMISS |
++			   MSR_AMD64_IBSOPDATA3_L2MISS))) {
++		count_vm_event(HWHINT_DC_L2_HITS);
++		goto handled;
++	}
++
++	rdmsrl(MSR_AMD64_IBSOPDATA2, ops_data2);
++	data_src = ops_data2 & MSR_AMD64_IBSOPDATA2_DATASRC;
++	if (ibs_caps & IBS_CAPS_ZEN4)
++		data_src |= ((ops_data2 & 0xC0) >> 3);
++
++	switch (data_src) {
++	case MSR_AMD64_IBSOPDATA2_DATASRC_LCL_CACHE:
++		count_vm_event(HWHINT_LOCAL_L3L1L2);
++		break;
++	case MSR_AMD64_IBSOPDATA2_DATASRC_PEER_CACHE_NEAR:
++		count_vm_event(HWHINT_LOCAL_PEER_CACHE_NEAR);
++		break;
++	case MSR_AMD64_IBSOPDATA2_DATASRC_DRAM:
++		count_vm_event(HWHINT_DRAM_ACCESSES);
++		break;
++	case MSR_AMD64_IBSOPDATA2_DATASRC_EXT_MEM:
++		count_vm_event(HWHINT_CXL_ACCESSES);
++		break;
++	case MSR_AMD64_IBSOPDATA2_DATASRC_FAR_CCX_CACHE:
++		count_vm_event(HWHINT_FAR_CACHE_HITS);
++		break;
++	}
++
++	rmt_node = ops_data2 & MSR_AMD64_IBSOPDATA2_RMTNODE;
++	if (rmt_node)
++		count_vm_event(HWHINT_REMOTE_NODE);
++
++	/* Is linear addr valid? */
++	if (ops_data3 & MSR_AMD64_IBSOPDATA3_LADDR_VALID)
++		rdmsrl(MSR_AMD64_IBSDCLINAD, laddr);
++	else {
++		count_vm_event(HWHINT_LADDR_INVALID);
++		goto handled;
++	}
++
++	/* Discard kernel address accesses */
++	if (laddr & (1UL << 63)) {
++		count_vm_event(HWHINT_KERNEL_ADDR);
++		goto handled;
++	}
++
++	/* Is phys addr valid? */
++	if (ops_data3 & MSR_AMD64_IBSOPDATA3_PADDR_VALID)
++		rdmsrl(MSR_AMD64_IBSDCPHYSAD, paddr);
++	else {
++		count_vm_event(HWHINT_PADDR_INVALID);
++		goto handled;
++	}
++
++	pfn = PHYS_PFN(paddr);
++	page = pfn_to_online_page(pfn);
++	if (!page)
++		goto handled;
++
++	if (!PageLRU(page)) {
++		count_vm_event(HWHINT_NON_LRU);
++		goto handled;
++	}
++
++	if (!ibs_push_sample(pfn, numa_node_id(), jiffies)) {
++		count_vm_event(HWHINT_BUFFER_FULL);
++		goto handled;
++	}
++
++	irq_work_queue(&ibs_irq_work);
++	count_vm_event(HWHINT_USEFUL_SAMPLES);
++
++handled:
++	return NMI_HANDLED;
++}
++
++static inline int get_ibs_lvt_offset(void)
++{
++	u64 val;
++
++	rdmsrl(MSR_AMD64_IBSCTL, val);
++	if (!(val & IBSCTL_LVT_OFFSET_VALID))
++		return -EINVAL;
++
++	return val & IBSCTL_LVT_OFFSET_MASK;
++}
++
++static void setup_APIC_ibs(void)
++{
++	int offset;
++
++	offset = get_ibs_lvt_offset();
++	if (offset < 0)
++		goto failed;
++
++	if (!setup_APIC_eilvt(offset, 0, APIC_EILVT_MSG_NMI, 0))
++		return;
++failed:
++	pr_warn("IBS APIC setup failed on cpu #%d\n",
++		smp_processor_id());
++}
++
++static void clear_APIC_ibs(void)
++{
++	int offset;
++
++	offset = get_ibs_lvt_offset();
++	if (offset >= 0)
++		setup_APIC_eilvt(offset, 0, APIC_EILVT_MSG_FIX, 1);
++}
++
++static int x86_amd_ibs_access_profile_startup(unsigned int cpu)
++{
++	setup_APIC_ibs();
++	return 0;
++}
++
++static int x86_amd_ibs_access_profile_teardown(unsigned int cpu)
++{
++	clear_APIC_ibs();
++	return 0;
++}
++
++static int __init ibs_access_profiling_init(void)
++{
++	if (!boot_cpu_has(X86_FEATURE_IBS)) {
++		pr_info("IBS capability is unavailable for access profiling\n");
++		return 0;
++	}
++
++	ibs_s = alloc_percpu_gfp(struct ibs_sample_pcpu, __GFP_ZERO);
++	if (!ibs_s)
++		return 0;
++
++	INIT_WORK(&ibs_work, ibs_work_handler);
++	init_irq_work(&ibs_irq_work, ibs_irq_handler);
++
++	/* Uses IBS Op sampling */
++	ibs_config = IBS_OP_CNT_CTL | IBS_OP_ENABLE;
++	ibs_caps = cpuid_eax(IBS_CPUID_FEATURES);
++	if (ibs_caps & IBS_CAPS_ZEN4)
++		ibs_config |= IBS_OP_L3MISSONLY;
++
++	register_nmi_handler(NMI_LOCAL, ibs_overflow_handler, 0, "ibs");
++
++	cpuhp_setup_state(CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
++			  "x86/amd/ibs_access_profile:starting",
++			  x86_amd_ibs_access_profile_startup,
++			  x86_amd_ibs_access_profile_teardown);
++
++	pr_info("IBS setup for memory access profiling\n");
++	return 0;
++}
++
++arch_initcall(ibs_access_profiling_init);
+diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+index b5823b037883..24279c46054c 100644
+--- a/include/linux/vm_event_item.h
++++ b/include/linux/vm_event_item.h
+@@ -195,6 +195,23 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+ 		KPROMOTED_MIG_CANDIDATE,
+ 		KPROMOTED_MIG_PROMOTED,
+ 		KPROMOTED_MIG_DROPPED,
++		HWHINT_NR_EVENTS,
++		HWHINT_KERNEL,
++		HWHINT_KTHREAD,
++		HWHINT_NON_LOAD_STORES,
++		HWHINT_DC_L2_HITS,
++		HWHINT_LOCAL_L3L1L2,
++		HWHINT_LOCAL_PEER_CACHE_NEAR,
++		HWHINT_FAR_CACHE_HITS,
++		HWHINT_DRAM_ACCESSES,
++		HWHINT_CXL_ACCESSES,
++		HWHINT_REMOTE_NODE,
++		HWHINT_LADDR_INVALID,
++		HWHINT_KERNEL_ADDR,
++		HWHINT_PADDR_INVALID,
++		HWHINT_NON_LRU,
++		HWHINT_BUFFER_FULL,
++		HWHINT_USEFUL_SAMPLES,
+ 		NR_VM_EVENT_ITEMS
+ };
+ 
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 618f44bae5c8..a21d3118d6f6 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1479,6 +1479,23 @@ const char * const vmstat_text[] = {
+ 	"kpromoted_mig_candidate",
+ 	"kpromoted_mig_promoted",
+ 	"kpromoted_mig_dropped",
++	"hwhint_nr_events",
++	"hwhint_kernel",
++	"hwhint_kthread",
++	"hwhint_non_load_stores",
++	"hwhint_dc_l2_hits",
++	"hwhint_local_l3l1l2",
++	"hwhint_local_peer_cache_near",
++	"hwhint_far_cache_hits",
++	"hwhint_dram_accesses",
++	"hwhint_cxl_accesses",
++	"hwhint_remote_node",
++	"hwhint_invalid_laddr",
++	"hwhint_kernel_addr",
++	"hwhint_invalid_paddr",
++	"hwhint_non_lru",
++	"hwhint_buffer_full",
++	"hwhint_useful_samples",
+ #endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
+ };
+ #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA || CONFIG_MEMCG */
 -- 
-Regards,
-Liu Ying
+2.34.1
+
