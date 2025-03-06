@@ -1,313 +1,138 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB254BA4A;
-	Thu,  6 Mar 2025 13:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486A020C009;
+	Thu,  6 Mar 2025 13:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741266293; cv=none; b=uZd/N8f10ht+vnsWex80zZgrkZMVazgZr3V8gpkky6V78bPiPiqY6ied1m0jFcCU5kaM9ZhyjA5A12YFnQEaqxeLiBibRXfa1GRlh8WcY4ohRN3I23sUcMzBkKxo+l9mS19u2QqqKmin/sbw+LausoAdPSDQ25+DLjop+726YUw=
+	t=1741266303; cv=none; b=dQ9Dr5mXXBevRhpG3Cmwvmws3bsg6dMEpcAOFbJfbu+pfscFhAJWnGOIE8im+SrtmKEhn1WoUHobBWlyg2o3s6vR34AgpYaGD/X5NK0dj0UpQm6CIOcRnplEnumcbOlUj/zpW/AZrl48ZAyZthJnrWtwTG6wkTjYjWGCd6gkkvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741266293; c=relaxed/simple;
-	bh=qCDKpADemGDDYCfhI/N5KOQxe8pDvVbHCSJnDL6GYtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aj2Dv0OYam2+6dGWlqwWGg2HUryNqPnC4kHBPyjX6OUavxYXHuPfPNCv5RamFPkK/YRk8odRJ2M38w8y1ehyMbt/fZBdPt9Qo995K+Xd6yi8PVWPiCsfwdQ4UbsH1p21mUD+TiM5oXnEe+WReAp05U2E/5rFei7DADrm3v9mtqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=djNdtBsD; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741266303; c=relaxed/simple;
+	bh=YNELi245vPsmcaIKuPOO2R4iHmuof+ZAbfWgXuQSYgQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Av6KxZRvOBj5h2eWTPFch60hOZw4iRxSGV4oUaldFyUGTmTODeACXXeWkXlxtLCswOlitNHsRlTDzDjl61OTzCwnizHuGj7ZaKZXYqXvo8/win1SG3PwxR8908OCbjEBRKRDANPvMlAU7Dy+Y540zZozCC8UXWXeU385DsrzyWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GEAE9Iht; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djNdtBsD"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e1b11859a7so2134236d6.1;
-        Thu, 06 Mar 2025 05:04:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741266290; x=1741871090; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fwtQbo4c/+0nP1ZBh3OcW9J/EfLuZOrEvjWNhxSbfx0=;
-        b=djNdtBsDZeGelXkr0YzAo3M2IVLv9Zt3/E48okoyqsqiOwdpL3QphGUqszIUv7srTf
-         Ph6OLgPgCjgci9aGEGRJW0dn/lWvHKtn0bQMd5A8MTp4IeOddN+Pj4B3AMbkHKCSElE9
-         PUAANKR/YJc7D9cShz54V/qqGkUIS8rfsYG8+G2UkVdTIs/6oJ3vucDkOWGqkYmYOecG
-         O891CA0Aq5dGtu6LWiehB1/ci/RhVhBdavxRgesgptF5KYMStUR2TV8IeZN2TDFyuaJc
-         GnutF/Bk2a9aynwx6iY/vfKGOxJSOgQV6EVNmB7MIuptaE2wmrrFAUxLRXkywfaQ8qNx
-         x23w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741266290; x=1741871090;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fwtQbo4c/+0nP1ZBh3OcW9J/EfLuZOrEvjWNhxSbfx0=;
-        b=ObvESyLWqzAjeZ76Epy5Bibvoi4W7yxpqNbZp6eFK4MXk1Oaqzcs965cHFuCVZlZ1X
-         fB6+xZSlHtTYHkmwOt9+OwsN2aJBI61o+LsNUGBF1GiSPsj6TkOKukTh0F35R9v7B3TT
-         msGKBBenYQc5w+ms4KeSWU1CkEsc2fvAM8JE5yiBiIhCK/458VAlwg1d/0eD9/DDpf3T
-         LyGqaqisivNhciTSZdxdi2tbCKjXXEFhlOU2QZ1rvYrbmayJ7hI5zED8DM6b8IRd2adl
-         daeI6Bha11zkhXKHQH98xGGFQBATFx+DrJxOvIuGgS/QyVQk5SAY7MN/vPVa/C3Tu46m
-         ExSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtrNwLZNXwhxlEBQgiWrxhG0D2qLaUg+A/gh8rfVGurpx+2sPkPIhQHfrwwEsxDBAXTs7ciB/IBIPmGXKD@vger.kernel.org, AJvYcCW+YfBZiY+Gfu6ySSk3It4FGZZ8LGdYHLy6yE4f4+BUppy7tMCBT8N+GIw+C5yUlnAglKtdrixZoAgHnFjSKMVeK/g=@vger.kernel.org, AJvYcCX53tUdc9KjE8ShifM13CTjo9E5lu07MXZU18uV9Goz1FuEMqFc+CucOBLY2i7xdTw6D6CydDp0gas=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrLLNtvDWmCbkF1zSFzAvC0FYaahHrPb4FsEhreAZv33RmCoGx
-	y11ZnTy6IrNjxPrCS4NIiPDmbDo4obI2jPM9w+18p8YoPek8t0QL7q0MOgMpi1UDkD7eCzKNiIV
-	seq3kTFk4e+UXAzAfWjljJ6whQTI=
-X-Gm-Gg: ASbGncu9NmkqgfG0IMXLQ7XGuUNupfieruJ1uQh9phdc+Ie5q5J9XC03sGYZ5ysyZnH
-	rTFj7UOJAx61iAM5quMW4cEfMAcixUoI6UEEJcuS4T1h2l175FrEDybC4JDBsLgkSTAQo1q7XeN
-	5osqVgtH0uOz73Ra+OD+I/iIlJ3FYboMsDlrrCzuHYIT3/PnHSjFwzHTxOsQ==
-X-Google-Smtp-Source: AGHT+IG3jsf38OT7KWRRfxdlMxgW5pX91fPtiKVDYvVnc1lux9uapmuHdKZS92YY6eWhXtrSE5hdsgHhdFYuxrlr/gI=
-X-Received: by 2002:a05:6214:3002:b0:6e8:91fd:cfc0 with SMTP id
- 6a1803df08f44-6e8e6cdd70fmr104063636d6.16.1741266290454; Thu, 06 Mar 2025
- 05:04:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GEAE9Iht"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741266301; x=1772802301;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=YNELi245vPsmcaIKuPOO2R4iHmuof+ZAbfWgXuQSYgQ=;
+  b=GEAE9IhtIZU912xQwtXBXyqfQU8sHOgu4pcAbwv27XTUMYqSQLUmsw95
+   1S1RlscQE1GASv+HtJA510N5DzS3dkXMQy4iFyiR326Zka5CxpZJujtpA
+   ftPJvHoyoaqpuoI50T7tPSHv7q0EIUPYwbD9U1sVeg8wKa0ADXjcvyLuU
+   crW2mjBIXrF6CXE+XKtC0LMiDaRXjy7P9QZeN8rqTArgL6dQpq85kqGeM
+   v7f6XZ7WzSgZiATEcgKNYO+oKkVLBlsSfH9eTRb2FyeisZj506cpe9MWh
+   JZJ85l4NfeSL9YjiFE3a5xOwlHOSDRAqU3fDe74y+/tQOdSZxEbCB6Sdr
+   Q==;
+X-CSE-ConnectionGUID: E5d5eS7gTOGQmua/XHefYQ==
+X-CSE-MsgGUID: yv5XPPWES9SRZ7tCpQ7wPw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="41447285"
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="41447285"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 05:05:00 -0800
+X-CSE-ConnectionGUID: bwaNFyECQie78jsFcEQlRQ==
+X-CSE-MsgGUID: QkNFBrDxQFWlSj1RB07U9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="149800015"
+Received: from unknown (HELO localhost) ([10.237.66.160])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 05:04:55 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Lyude Paul
+ <lyude@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, Marijn Suijten
+ <marijn.suijten@somainline.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+Subject: Re: [PATCH RFC v2 0/7] drm/display: dp: add new DPCD access functions
+In-Reply-To: <87a59ywda3.fsf@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250301-drm-rework-dpcd-access-v2-0-4d92602fc7cd@linaro.org>
+ <87a59ywda3.fsf@intel.com>
+Date: Thu, 06 Mar 2025 15:04:50 +0200
+Message-ID: <877c52wbrh.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218114353.406684-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250218114353.406684-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUhZ_qV=16jnWD6cPfuMmZpDUeRMTUgbqy=Mkzp-29=bA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUhZ_qV=16jnWD6cPfuMmZpDUeRMTUgbqy=Mkzp-29=bA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 6 Mar 2025 13:04:24 +0000
-X-Gm-Features: AQ5f1JrimiJhSM8I2aViC79LpPFgUNwzAcs3MANZ_cWJOmq-VxT3mgANqF6Vgl0
-Message-ID: <CA+V-a8uvfb=a=K1YzGNeZdiAzeXWMpdbxj=6UuL_xQfxKmOBZA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] clk: renesas: rzv2h-cpg: Add support for enabling PLLs
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Geert,
+On Thu, 06 Mar 2025, Jani Nikula <jani.nikula@linux.intel.com> wrote:
+> On Sat, 01 Mar 2025, Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+>> Existing DPCD access functions return an error code or the number of
+>> bytes being read / write in case of partial access. However a lot of
+>> drivers either (incorrectly) ignore partial access or mishandle error
+>> codes. In other cases this results in a boilerplate code which compares
+>> returned value with the size.
+>>
+>> As suggested by Jani implement new set of DPCD access helpers, which
+>> ignore partial access, always return 0 or an error code. Reimplement
+>> existing helpers using the new functions to ensure backwards
+>> compatibility.
+>
+> I think that description is for earlier versions of the series, it's the
+> other way round now.
+>
+> Regardless, glanced through the series quickly, I like it, this is
+>
+> Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-Thank you for the review.
+PS. If you need to send another round, please Cc: intel-gfx and intel-xe
+to run this through CI for both i915 and xe drivers. Thanks!
 
-On Wed, Mar 5, 2025 at 4:42=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
 >
-> Hi Prabhakar,
 >
-> Thanks for your patch!
->
-> On Tue, 18 Feb 2025 at 12:44, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Some RZ/V2H(P) SoC variants do not have a GPU, resulting in PLLGPU bein=
-g
-> > disabled by default in TF-A. Add support for enabling PLL clocks in the
-> > RZ/V2H(P) CPG driver to manage this.
->
-> Does it make sense to enable the GPU PLL if no GPU is present?
->
-No it doesn't,  PLLGPU is enabled on needs basis ie if GPU node is
-enabled the PLLGPU is enabled, if GPU is disabled the PLLGPU will be
-untouched and will remain OFF. Note I also have a patch which does
-disable the PLL's but I have not added as this isn't tested with the
-full system running and I'm not sure if there will be any radiation if
-we turn ON/OFF PLLs (Im discussing this internally once approved I
-will add support to disable PLLs too).
+>>
+>> This series targets only the DRM helpers code. If the approach is found
+>> to be acceptable, each of the drivers should be converted on its own.
+>>
+>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> ---
+>> Changes in v2:
+>> - Reimplemented new helpers using old ones (Lyude)
+>> - Reworked the drm_dp_dpcd_read_link_status() patch (Lyude)
+>> - Dropped the dp-aux-dev patch (Jani)
+>> - Link to v1: https://lore.kernel.org/r/20250117-drm-rework-dpcd-access-v1-0-7fc020e04dbc@linaro.org
+>>
+>> ---
+>> Dmitry Baryshkov (7):
+>>       drm/display: dp: implement new access helpers
+>>       drm/display: dp: change drm_dp_dpcd_read_link_status() return value
+>>       drm/display: dp: use new DCPD access helpers
+>>       drm/display: dp-aux-dev: use new DCPD access helpers
+>>       drm/display: dp-cec: use new DCPD access helpers
+>>       drm/display: dp-mst-topology: use new DCPD access helpers
+>>       drm/display: dp-tunnel: use new DCPD access helpers
+>>
+>>  drivers/gpu/drm/amd/amdgpu/atombios_dp.c           |   8 +-
+>>  .../gpu/drm/bridge/cadence/cdns-mhdp8546-core.c    |   2 +-
+>>  drivers/gpu/drm/display/drm_dp_aux_dev.c           |  12 +-
+>>  drivers/gpu/drm/display/drm_dp_cec.c               |  37 ++-
+>>  drivers/gpu/drm/display/drm_dp_helper.c            | 307 +++++++++------------
+>>  drivers/gpu/drm/display/drm_dp_mst_topology.c      | 105 ++++---
+>>  drivers/gpu/drm/display/drm_dp_tunnel.c            |  20 +-
+>>  drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c       |   4 +-
+>>  drivers/gpu/drm/msm/dp/dp_ctrl.c                   |  24 +-
+>>  drivers/gpu/drm/msm/dp/dp_link.c                   |  18 +-
+>>  drivers/gpu/drm/radeon/atombios_dp.c               |   8 +-
+>>  include/drm/display/drm_dp_helper.h                |  92 +++++-
+>>  12 files changed, 322 insertions(+), 315 deletions(-)
+>> ---
+>> base-commit: c0eb65494e59d9834af7cbad983629e9017b25a1
+>> change-id: 20241231-drm-rework-dpcd-access-b0fc2e47d613
+>>
+>> Best regards,
 
-GPU node enabled in board DTS:
----------------------------------------------
-root@rzv2h-evk-alpha:~# cat /sys/kernel/debug/clk/clk_summary | grep gpu
-    .pllgpu                          1       1        0
-1260000000  0          0     50000      Y      deviceless
-        no_connection_id
-       .pllgpu_gear                  1       1        0
-630000000   0          0     50000      Y         deviceless
-           no_connection_id
-          gpu_0_clk                  1       2        0
-630000000   0          0     50000      Y            14850000.gpu
-              no_connection_id
-
-                                             14850000.gpu
-      no_connection_id
-             gpu_0_ace_clk           0       1        0
-400000000   0          0     50000      N               deviceless
-                 of_clk_get_from_provider
-             gpu_0_axi_clk           1       2        0
-400000000   0          0     50000      Y               14850000.gpu
-                 bus
-root@rzv2h-evk-alpha:~#
-
-GPU node disabled in board DTS:
----------------------------------------------
-root@rzv2h-evk-alpha:~# cat /sys/kernel/debug/clk/clk_summary | grep gpu
-    .pllgpu                          0       0        0
-1260000000  0          0     50000      N      deviceless
-        no_connection_id
-       .pllgpu_gear                  0       0        0
-630000000   0          0     50000      Y         deviceless
-           no_connection_id
-          gpu_0_clk                  0       0        0
-630000000   0          0     50000      N            deviceless
-              no_connection_id
-             gpu_0_ace_clk           0       0        0
-400000000   0          0     50000      N               deviceless
-                 no_connection_id
-             gpu_0_axi_clk           0       0        0
-400000000   0          0     50000      N               deviceless
-                 no_connection_id
-root@rzv2h-evk-alpha:~#
-
-
-> > Introduce `is_enabled` and `enable` callbacks to handle PLL state
-> > transitions. With the `enable` callback, PLLGPU will be turned ON only
-> > when the GPU node is enabled; otherwise, it will remain off. Define new
-> > macros for PLL standby and monitor registers to facilitate this process=
-.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/clk/renesas/rzv2h-cpg.c | 57 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 57 insertions(+)
-> >
-> > diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2=
-h-cpg.c
-> > index 1ebaefb36133..d7230a7e285c 100644
-> > --- a/drivers/clk/renesas/rzv2h-cpg.c
-> > +++ b/drivers/clk/renesas/rzv2h-cpg.c
-> > @@ -56,9 +56,16 @@
-> >
-> >  #define CPG_CLKSTATUS0         (0x700)
-> >
-> > +#define PLL_STBY_RESETB                BIT(0)
-> > +#define PLL_STBY_RESETB_WEN    BIT(16)
->
-> Please move these just below the definition of PLL_STBY_OFFSET().
-> (Hmm, [KMP]DIV() should be below PLL_CLK1_OFFSET(), and
->  SDIV() below PLL_CLK2_OFFSET()).
->
-OK.
-
-> > +#define PLL_MON_RESETB         BIT(0)
-> > +#define PLL_MON_LOCK           BIT(4)
->
-> Please move these just below the definition of PLL_MON_OFFSET().
->
-OK.
-
-> > +
-> >  #define PLL_CLK_ACCESS(n)      (!!((n) & BIT(31)))
-> >  #define PLL_CLK1_OFFSET(n)     FIELD_GET(GENMASK(15, 0), (n))
-> >  #define PLL_CLK2_OFFSET(n)     (PLL_CLK1_OFFSET(n) + (0x4))
-> > +#define PLL_STBY_OFFSET(n)     (PLL_CLK1_OFFSET(n) - (0x4))
->
-> Let's subtract 4...
->
-> > +#define PLL_MON_OFFSET(n)      (PLL_STBY_OFFSET(n) + (0x10))
->
-> ... and add 0x10. Where are we now? ;-)
->
-> I think it would be better to store the PLL base offset instead of the
-> PLL CLK1 offset in cpg_core_clk.cfg.conf, and define offsets
-> relative to that:
->
-You mean PLL_STBY offset in cpg_core_clk.cfg.conf and have the below
-CPG_PLL_XX macros.
-
-Or maybe instead of using a conf can I add the below?
-
-+/**
-+ * struct pll - Structure for PLL configuration
-+ *
-+ * @offset: STBY register offset
-+ * @clk: Flag to indicate if CLK1/2 are accessible or not
-+ * @sscen: Flag to indicate if SSCEN bit needs enabling/disabling
-+ */
-+struct pll {
-+    unsigned int offset:8;
-+    unsigned int clk:1;
-+    unsigned int sscen:1;
-+};
-+
-+#define PLL_PACK(_offset, _clk, _sscen) \
-+    ((struct pll){ \
-+        .offset =3D _offset, \
-+        .clk =3D _clk \
-+        .sscen =3D _sscen \
-+    })
-+
-+#define PLLCA55        PLL_PACK(0x64, 1, 0)
-
-
->     #define CPG_PLL_STBY    0x000
->     #define CPG_PLL_CLK1    0x004
->     #define CPG_PLL_CLK2    0x008
->     #define CPG_PLL_MON     0x010
->
-> >
-> >  /**
-> >   * struct rzv2h_cpg_priv - Clock Pulse Generator Private Data
-> > @@ -144,6 +151,54 @@ struct ddiv_clk {
-> >
-> >  #define to_ddiv_clock(_div) container_of(_div, struct ddiv_clk, div)
-> >
-> > +static int rzv2h_cpg_pll_clk_is_enabled(struct clk_hw *hw)
-> > +{
-> > +       struct pll_clk *pll_clk =3D to_pll(hw);
-> > +       struct rzv2h_cpg_priv *priv =3D pll_clk->priv;
-> > +       u32 mon_offset =3D PLL_MON_OFFSET(pll_clk->conf);
-> > +       u32 val;
-> > +
-> > +       val =3D readl(priv->base + mon_offset);
->
-> As mon_offset is used only once, you can combine the above 4 lines
-> into a single line.
->
-OK.
-
-> > +
-> > +       /* Ensure both RESETB and LOCK bits are set */
-> > +       return (val & (PLL_MON_RESETB | PLL_MON_LOCK)) =3D=3D
-> > +              (PLL_MON_RESETB | PLL_MON_LOCK);
-> > +}
-> > +
-> > +static int rzv2h_cpg_pll_clk_enable(struct clk_hw *hw)
-> > +{
-> > +       bool enabled =3D rzv2h_cpg_pll_clk_is_enabled(hw);
-> > +       struct pll_clk *pll_clk =3D to_pll(hw);
-> > +       struct rzv2h_cpg_priv *priv =3D pll_clk->priv;
-> > +       u32 conf =3D pll_clk->conf;
-> > +       unsigned long flags =3D 0;
-> > +       u32 stby_offset;
-> > +       u32 mon_offset;
-> > +       u32 val;
-> > +       int ret;
-> > +
-> > +       if (enabled)
->
->     if (!rzv2h_cpg_pll_clk_is_enabled(hw))
->
-> for brevity.
->
-OK.
-
-> > +               return 0;
-> > +
-> > +       stby_offset =3D PLL_STBY_OFFSET(conf);
-> > +       mon_offset =3D PLL_MON_OFFSET(conf);
-> > +
-> > +       val =3D PLL_STBY_RESETB_WEN | PLL_STBY_RESETB;
-> > +       spin_lock_irqsave(&priv->rmw_lock, flags);
-> > +       writel(val, priv->base + stby_offset);
-> > +       spin_unlock_irqrestore(&priv->rmw_lock, flags);
->
-> A single writel does not need protection by a spinlock.
->
-OK, I will drop it.
-
-> > +
-> > +       /* ensure PLL is in normal mode */
-> > +       ret =3D readl_poll_timeout(priv->base + mon_offset, val,
-> > +                                (val & (PLL_MON_RESETB | PLL_MON_LOCK)=
-) =3D=3D
-> > +                                (PLL_MON_RESETB | PLL_MON_LOCK), 0, 25=
-0000);
->
-> How long does this typically take?
-> I.e. would it make sense to use a non-zero delay_us()?
->
-I'll rework on timeout value.
-
-Cheers,
-Prabhakar
+-- 
+Jani Nikula, Intel
