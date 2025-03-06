@@ -1,318 +1,135 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013046.outbound.protection.outlook.com [40.107.159.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FD5211469;
-	Thu,  6 Mar 2025 13:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.46
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741268619; cv=fail; b=JJUN47dfKp2oLclOaJNPPqMISIkmh1fK7MRB4pGoeVBMDFLmX4ZR/F91GMDH+zzNw3+QBuQvyHtxpG/PvqvbpPFv6u+i037d7bD4aRetbrv8tW/4xIx7+MkEKS6p8mRV9nuQqxD/bKsZb6kTUVslVt6wNEspT9iCdUw3nZPEPF8=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741268619; c=relaxed/simple;
-	bh=X3ntK8VNnd2M4GDJG5UWX7JLx5+cZPdkihDmq0Cn1vk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oWbnrEM2vwcDI+sgWqWuNNwjTcXfB2o5q6mbvZq9Tryt+qUEw6hy3bPrHvE/fSljZZbtwh6R4W88JLVeQOVh11+Tik4DC5FWtaF9B9ZLf44aVKJ/Dw4buxRdXx8QYMoEa/9SMZOga4T0XobBBz9KBWIb/m0YndubVLpeiC7QAuI=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UyzHPipV; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UyzHPipV; arc=fail smtp.client-ip=40.107.159.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BF520E6F2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741268658; cv=none; b=XvidOb8H4GDEKvwzswHOMZEZFp5GeqBL6woJHO890Ijekpxog/4s5iLFV+8BWet4Jpnn6D2q4ZGEHxwx3tVoPLGdkjWkkfKkOiXDqCw+24Bvp7gitbkkp89dCyEVVZf+3+mWl5Zk3K0t7IEqEV6mHyrhkVNinCx6IOQHvJHNh08=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741268658; c=relaxed/simple;
+	bh=A2My8BDMQF8VFr+4sgwGBz/rcCSkVwtLYDvDB+wZbtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JJaw11AbDLBhenZDPzZnDdokn74xmbdY58B+K+0mmfrdf1hY5hnq9Ta1HpIyUGP0bQ4ThD0fX6O4YIQv2HU1/PLsl5vbejIb6HCux5EydtSxxM0yy98r4ufR8B5I9bKsj5CaS+7cuTdTc+Ec03BBtdf7BZYnY2MRBW0a2SmkbQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=S6lVwSsk; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="UyzHPipV";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="UyzHPipV"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=zHJ51XFndHhvD53F1qSv8B62LmdlXmfoXiJl7y322MWX7VNjwvKLiReia2fUK22Mqq98vkXm/MjGQkPqisfJ3PqKs1wJHd1NgN88nmeiKrX/bxo76xHGHxptKTA/j4Zwq71nSl/lqiHhuC2Qk8I6ZYB0bGmwmP1aKOcrJzeJo76tPIRqiBI0jLXHxfOiI6kD7aQAK2PNCZzWB73tRelqORov/wio/G5idGJJpmPrE1QOUnn2Q1nir7kmH7ekYu9oJERStnznzZnIcuOzaxRpW6o4dYsHjYMTfHZIt+CzIM/oQmJrCy3+UnfAwNjqhzR6DWm61Fl59T8s0kGaypY/bw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vDN49Gai7PlHze5MMCEBuFxp8dZrfZhs2UVrR4Gu708=;
- b=p6uzt3CkGGISXn+1qhyPjf6rYDWgKYUDMIjEH8bK9gYn15zSVSPzSoPIQKPmUUFQwVPhjaJvlxMKchzi88C9JoipUl5wJs3aAwxYMxJjRHUlePUgdH/yWm/ez/ATa0nejW66B7FnoVzqn3YotO+0tutm6jRpMJMTldQTZtw4cy7vi0T3F+0fvt5NNM2BLVIVjEo8VNShDiCtGdZd9ExqudqIX6zkirQPsKK8c10o19jzSkzjZBJ+VqHO674hHTm+y1Djhl5IR8o06xRzn3/Vhwu3dhqLGKGVhRap09EVo6gghRaE+vVfpk+2kMI5lqw1LBsMaM+f0Z6EQoRCwUkrFA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vDN49Gai7PlHze5MMCEBuFxp8dZrfZhs2UVrR4Gu708=;
- b=UyzHPipVX1wYVaPDPkfnHNe2O9TnCIb8JNHg/W6otZyb+CUHsjbo/HRpubR3SxXQD67O2ok++7GYZBlQu7jQvOhO1fGdkdO1gZI0iP8sgj4+rXUxRN+RGWSE/sytu7XZd7xiFL/Wszn1xx6T3XfqdRYDbFy82cc3wSFb5zEiFe8=
-Received: from AS9PR06CA0267.eurprd06.prod.outlook.com (2603:10a6:20b:45f::33)
- by DB9PR08MB7867.eurprd08.prod.outlook.com (2603:10a6:10:39e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 13:43:30 +0000
-Received: from AM3PEPF0000A796.eurprd04.prod.outlook.com
- (2603:10a6:20b:45f:cafe::cf) by AS9PR06CA0267.outlook.office365.com
- (2603:10a6:20b:45f::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.17 via Frontend Transport; Thu,
- 6 Mar 2025 13:43:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM3PEPF0000A796.mail.protection.outlook.com (10.167.16.101) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.15
- via Frontend Transport; Thu, 6 Mar 2025 13:43:29 +0000
-Received: ("Tessian outbound 7c48d84d1965:v585"); Thu, 06 Mar 2025 13:43:29 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 3d1c76ef3f681ba5
-X-TessianGatewayMetadata: PbqUChtM4rk7QrUHZlQRKAVLzEK30VG6Np8kKU12q2s9qmzpJxeArSqILiA+b3lJUlU8RKegErmB+SxonCweRPqUEkGJzEBvGIVROOhKDx4ziOflMrguDfWz3fB66qamOeBXls0M57if5AZs0Ax23Q==
-X-CR-MTA-TID: 64aa7808
-Received: from Lf897603d0057.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id B467410E-6E80-48F2-885E-FE0C507E751F.1;
-	Thu, 06 Mar 2025 13:43:18 +0000
-Received: from PA4PR04CU001.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id Lf897603d0057.2
-    (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-    Thu, 06 Mar 2025 13:43:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mLYUbxih3oz79BPa96BPp5WwZd5X0qITSV//QFm/Kf5H+3Ph2jIaW+LQH15pMe2YRQlwsXWUUWQ9T68U+7I+B1rZ/ERBaIlfJkr8ZgFQ69SFmoQDrIBscuYFdo1FmLByWYvCiEgluJ+/QTrkjD/cAmoxcCnkfFSzdwr7zUyxrq7u7lDMB7dMWaH3ZWE55Ll6222ZevCyb41eFMkewuzlQhnrH8wCGc+rT0P/eHt39Lvtzkq0eW8tZSKt0wxt4Dfn9wNPxBV7kxUITkFX/+t4Oo2k8repd00LOSxHg3KbEIfnqwnLp9E+cAie3aOwBDdzRNGRWY+tvttK2MiNBVRHvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vDN49Gai7PlHze5MMCEBuFxp8dZrfZhs2UVrR4Gu708=;
- b=G/a+kKw5YgxZPxgyKo4RR4y1a7cD85x4KaFQXluWbv0d9nLsQGzQutTmba82wOE0n/QxVkvEeU+n57lzNglWxSnZpsgsc1l+FgRyoGPXjrlIXNgowXDQJa1GPgsfmzJMqK0ptSmmGKyeMvP0Ufx/PVgjnunTp7oOosGgcD3NsHllULAXeTSlbOcRMQ2G4+qQwRw0I3uP/vys8HPAA7n0bc472ol8Zs1JBgnQEiQCadJQn2+AQoj+Y6VBTLxMXtKK3y61kAYCXfBge4aRVBaekX1gQR6kJHufgqX7jSHf8VSjmH749uwboPeR5ZRmuoy+KWPiCG75bXRcCarYquBAXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vDN49Gai7PlHze5MMCEBuFxp8dZrfZhs2UVrR4Gu708=;
- b=UyzHPipVX1wYVaPDPkfnHNe2O9TnCIb8JNHg/W6otZyb+CUHsjbo/HRpubR3SxXQD67O2ok++7GYZBlQu7jQvOhO1fGdkdO1gZI0iP8sgj4+rXUxRN+RGWSE/sytu7XZd7xiFL/Wszn1xx6T3XfqdRYDbFy82cc3wSFb5zEiFe8=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by AM9PR08MB5890.eurprd08.prod.outlook.com
- (2603:10a6:20b:281::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
- 2025 13:43:15 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%6]) with mapi id 15.20.8511.015; Thu, 6 Mar 2025
- 13:43:15 +0000
-Date: Thu, 6 Mar 2025 13:43:12 +0000
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	Mark Rutland <Mark.Rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"irogers@google.com" <irogers@google.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] events/core: fix acoount failure for event's
- total_enable_time
-Message-ID: <Z8mmcBDLcgRxl4cH@e129823.arm.com>
-References: <20241220100202.804062-1-yeoreum.yun@arm.com>
- <20241220133359.GC17537@noisy.programming.kicks-ass.net>
- <Z2V5s2JM4W7BRckR@e129823.arm.com>
- <20241220151414.GO11133@noisy.programming.kicks-ass.net>
- <Z2WMsnbFmqpEV5Pu@e129823.arm.com>
- <20241220153040.GP11133@noisy.programming.kicks-ass.net>
- <Z2WaC0CqSwU5Ux1B@e129823.arm.com>
- <20250110163643.GB4213@noisy.programming.kicks-ass.net>
- <GV1PR08MB105213E200ED463126D478DF1FBEF2@GV1PR08MB10521.eurprd08.prod.outlook.com>
- <Z74p1QaMdNKQRNeu@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z74p1QaMdNKQRNeu@gmail.com>
-X-ClientProxiedBy: LO4P123CA0568.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:276::18) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="S6lVwSsk"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c3be0d212fso90210485a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:44:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1741268655; x=1741873455; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WwgjDPu5gQ57J7qpYXbCmGMvklNaQu3hyIrZ9bRfd44=;
+        b=S6lVwSsk8ucJquJ+3M+Tiyid9mwG6Wgs0wpWG2gB+uQCcJvpXeTcrS6c3hL/Pg1KY6
+         v5f4AxzU9BnyUXEEXV7iQIrAVnTa5eCr5HfwlwEnWHzeBi0l3vCmQkzYmqMdctVetatw
+         NyDcuLhTuIMERvZ+pL0CeoRdkrbpXTWg54i77FHUW47fH64IWk7UxKC6YkIq/0DL3A6B
+         Qv9Ka4aP+WoHWsKEhjkOLATLdMVPz6eM4eg0AJ1kunDB3KjjwDmb+50uh8TSpi4M7kVd
+         UhMF2GlZwmXHjm/Cm15BU4YZDX8sOSgUO4duwsA6yE7COXRu9vj4nwuCjSaB/069h0xk
+         Yu+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741268655; x=1741873455;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WwgjDPu5gQ57J7qpYXbCmGMvklNaQu3hyIrZ9bRfd44=;
+        b=posJUhxzNTVeuHlnxAK2aqVY1xc99z7m46PvFizNeGdEhA4wAEZaS54c84rX6xsLlP
+         GNVGwnHe6a92C8JvcfIYvneEca0myRHu1gCbncCxoywxTDDPbJ5CuVwApt6r7MTxy3cg
+         eBTXFXBI5YZHWNyj5E8GFaNoADGD0c7LF8rXhm/N9+tHy/Dp2cNHgI7wvzJd2LiNy1LT
+         4WODTUDqwNln0sNiP9rNTv7rLMnBacLU/6AYWnVgKwqtO76lBzuWGVfMIY0pL/ONPiVP
+         vF0YU7c7GNmrLRkb8vlNGGQ/sX8frU2xoJNxUPK7xS+xhlMwvY/PIi1gnb9rOj3fLokC
+         otPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWEaGMTjy4+KZ8GKm1J5oPw4CswYADbXkL1RrMRjCiH158FpbV5jtP796XshWwiyBk8eYdbFRfKRzAsd+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPkcwRjwk6GRaEjkxhEfSlX41C4dYX33EVUn/JgyyunSejubVM
+	52c/uahX+3smUs4aT8zPFHbF5xFsFL0myeVL5gVgZbWW3vIK0HtLZc/1kywiNg==
+X-Gm-Gg: ASbGnctWFTWVS1kN39SM2BxbCbc+95/y8eRSh/9VBHWlE2b9216UA7DhZ/ZcJgkJkpn
+	tc7wIj50iqSf/r6L9ugS0GeO054kjiyUN9m+hu52VeGxBRQRpZiUdxHYI6EhO6uKnPj7G4vMITx
+	GwgsZiHAtHzfSWt0PoCpJx6Spv3K/lKFCJoYIcHQ+IrXMCXEUOfuT/ZcMP+IqnXN36D+Qo1k35T
+	aZPbhp6ym4VcDc+++MDQRuGsVC46t3mwj4B2Vew0W6b826mFgqQesSupdXwuoJ7bCpoh1CsgXm1
+	Lj1/SWIrh0cXMpVkfqAL5vyheB+91XjLETRE1hsJqwAeIg==
+X-Google-Smtp-Source: AGHT+IFEipRBi3b1Lbw6KErxXrLIwaAdjxI5V6kG1WF27EYioXALQ7PyJP14C34zZXLZBr80yPK9Iw==
+X-Received: by 2002:a05:620a:4c8b:b0:7c0:9df3:a0cb with SMTP id af79cd13be357-7c3d8f10b02mr922493685a.53.1741268655321;
+        Thu, 06 Mar 2025 05:44:15 -0800 (PST)
+Received: from rowland.harvard.edu ([2601:19b:681:fd10::3ca7])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3e533a1b7sm93507085a.5.2025.03.06.05.44.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 05:44:14 -0800 (PST)
+Date: Thu, 6 Mar 2025 08:44:11 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: incansvl <colin.evans.parkstone@gmail.com>
+Cc: eichest@gmail.com, francesco.dolcini@toradex.com,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, stable@vger.kernel.org,
+	stefan.eichenberger@toradex.com
+Subject: Re: [PATCH v1] usb: core: fix pipe creation for get_bMaxPacketSize0
+Message-ID: <1005263f-0a07-4dae-b74f-28e6ae3952bf@rowland.harvard.edu>
+References: <Z6HxHXrmeEuTzE-c@eichest-laptop>
+ <857c8982-f09f-4788-b547-1face254946d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|AM9PR08MB5890:EE_|AM3PEPF0000A796:EE_|DB9PR08MB7867:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf79517b-726c-45f7-e8ac-08dd5cb4e150
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?mHJrdPLAxdfe5XTcc6tl4UUWWOXQtAPBrltfhzUDqREdaUzGKxpBx3gg3bRc?=
- =?us-ascii?Q?UNnco6q9qeJsO6jhY/6g1mH+HwFnfYmnRmDwnsDdO4KqG5XDJfJWWWl7+n2G?=
- =?us-ascii?Q?ZGxSm2xW8414qQzb1iLI85bZYS8ozXf00o3zZisezIH+iVQ1QNu1hVsPptlx?=
- =?us-ascii?Q?x5mZldrgqML0klBPo/6FZwY7H3F5MXE+M7oAetNCk06EmMx6RSfHnvzzYv+H?=
- =?us-ascii?Q?9nOFvW/yvCfnxTVhgdzk7M4Kpodl8RycKYJ7ZVZyBEvrIht3nHdimDFitXVc?=
- =?us-ascii?Q?je+pf6YHUSYcfMqIZITAoJHr6Nff1OfqDbqJsqzRMcgDV0J4nZZLc1kfrion?=
- =?us-ascii?Q?XRDfKEYkg5V+uY2GcYTldRdLNrnKKWSbkJDaCCxGesWA2J0YFVEBc8GZMAJi?=
- =?us-ascii?Q?O/IxxFp+O8U4JQBtpvpAx6KgVKeQVKLlcA7r3oWj1ZyeQgF1r5tHT58gDlEt?=
- =?us-ascii?Q?7a6Ht6Av+OS2INZ4+UbIwuFiBk0GaArcRQ3UUvZwzsH5UC+WQOuSIHIcGy1D?=
- =?us-ascii?Q?A/ZIrPEgWGC3+xVgn8l0tM7uxHSsVPYSkdvKJSRhsbu+/u41O56AK/5WwBaU?=
- =?us-ascii?Q?hAaD/Vy4OzHVmpDsa/RVRAnI2W6/HlJVx6oaGGyTNUPynIqUCdH8tqlwgJFU?=
- =?us-ascii?Q?0DfBrQJWBWSgUVznf1Y6HVrYkbL+bIufLlsx7crLWvDX/JuRTLAZ2NWVygt0?=
- =?us-ascii?Q?6hwVCtGLwhlkU6LFZcl1zpGZH7gAOeDT7H681WGyvKrdos2P+6nxzAMe9C0J?=
- =?us-ascii?Q?9lpJJUd87CXD1P6TqE6WCcGE9aYfkboLn2w2YBRsOO6L5cD4E7bBh+deucjW?=
- =?us-ascii?Q?yGf3DthTRWqKsmXrxnL5V++nR9SoeSTYkH40nyYu/bfANYsRj7CBMWwsVpYA?=
- =?us-ascii?Q?sFKgmfCLzSNSpTimx0k7drMwytQWbVT03cB8casDMhGGlBSMhQXyYshFmdh/?=
- =?us-ascii?Q?SktvyluFu5qeDkP836CoqjHKTQ1pigmQhSlC8bmaIuWXoxqZge8vP7xYEZAY?=
- =?us-ascii?Q?7nHguyHP8wl4MZJ5V3Uw0OvLw3Hzt9Ikqck3a5Ifo+UQSyhHSRVp3BBywOTR?=
- =?us-ascii?Q?zGPITmV+9OLUsUeRbuEzGGJMe1sFKbb1rB7C/MEV2ALIJ7J/uIulyupjrO5J?=
- =?us-ascii?Q?Yo6zhR+LOx/ycm8jb4SqjGuRCYUxxxO+QsZDQfkOHizifNlvKbO5lhEqHjo6?=
- =?us-ascii?Q?DuDTbCxhRgSjyTbfEx8Lbyl7MtyRQ8EPHYG2Bkswidy1YO5jqsoRHckqhOIf?=
- =?us-ascii?Q?cyRgS00dGgvB18RNkUrGYW49kQnn8wQfrzNsVprsqzuImLJcvBUOhnhnwqMD?=
- =?us-ascii?Q?drcfv9R0KJuf5ttGpUZBokbgRFSZCfNbknNKRooAJVZOpVIhpsD3dHk4V9Sc?=
- =?us-ascii?Q?vKpZnwZ1JFzW3ffP+CIM8k3xTaKsc+38asJYRD5aEWEkqXAJLQ=3D=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB5890
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-SkipListedInternetSender:
- ip=[2603:10a6:150:163::20];domain=GV1PR08MB10521.eurprd08.prod.outlook.com
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM3PEPF0000A796.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	297cce70-419c-42d0-0013-08dd5cb4d827
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|36860700013|35042699022|82310400026|376014|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6NcxBePy+F4KDEP9bXrasFb/hvEXk0hnIxO2drmFUTxwZWfbVhFgBlLwtxmN?=
- =?us-ascii?Q?YFmYtD+ZQ7/pupQ7H6YOI6ba1Y0Q9s95VlexvId4QS81jidLcSpef5efAimX?=
- =?us-ascii?Q?5VofEVHg2uYiJxrSvaBLbwHKPWzGBDyJqOKdUBnLEFDBNcxm4L59qBQoqV9k?=
- =?us-ascii?Q?M4DSO8RK+oioLTn5/ZDOTVkVLp1BE5OOeJgg4wDURd5sVJ/fYclzhPzWTyIQ?=
- =?us-ascii?Q?v1TodBZTiIVIhXsKPZLzYOa7I7eCvOj4O16Anu6YFT7YLsQAWR8MbYg78kIB?=
- =?us-ascii?Q?S+YaG3kLgdt+w2ck9sS9Lpe0ZYkkz5TOvwgpvNERHDjj/TbVjHRPX92MZniL?=
- =?us-ascii?Q?lasEeE8la69Hcyi3lufevJf+TdqkjA5DbTlBq2/af4AnnCNhx3GLo9Wtgx6C?=
- =?us-ascii?Q?1sTv4jw5eGVEqGTyzOy7fAS2N7Wb9Df5dNz6/YB37vYxU6gGkpyoZ/3CXpgV?=
- =?us-ascii?Q?UN9OWC470+Sz1hX5+nBbUDttYcYAKqYKxo2or9aA6i+NsnbXpKNNfCu4Rse4?=
- =?us-ascii?Q?QkM0Bk9gyPOy7+KCDiiFFgkergE0ySj/IrBoaUYwpRg/eZIWiFyH/27+OhlR?=
- =?us-ascii?Q?53ry08GgsX1fJUg1p42BD+FV0IBIvWzF2CXCRj1Kv9rO5RjYuQfdElHvYqy1?=
- =?us-ascii?Q?Bqd8oFILoIipEVGkv/uvK3vBNJ9h4ZHy7koyh/quud2whl/kgwDT9u60baFw?=
- =?us-ascii?Q?Y8Zy9S0+PlBavUwKJ/XhgiSKJXGoZJFS7Id7QEZEn5/h6W8930b+TaNu+Td3?=
- =?us-ascii?Q?b5eYYuWi13A2n8NbnVzG16bzDAAwM+uSsVEMq8cXTiabebxqeEa8HZyk9l7k?=
- =?us-ascii?Q?jF9eGLZ2v5Pd5SlEVsXr2iSc06rxUusOlivL3xcyOR7/mL/6s4jELJ0nWnCl?=
- =?us-ascii?Q?pdS1aDYzGQb8s2budG1tDXzurpHCGH4VG5fYDdBk03v/72JNRkWyKShKKZkY?=
- =?us-ascii?Q?giiQQobMIg/aznp92uNM9lT3kqEg1maer+LmeZZy2/J7tewsjxTtSUhjAMQQ?=
- =?us-ascii?Q?cfue0ghhOiVFDa9wELZ3PeauwFwrbDwO0maZIP3qXYIg8NIL03w8AydX8Rjy?=
- =?us-ascii?Q?94Hsw/Rqfd0KD4ZOdoDIC0VoFAr6lzZAezy+n6wnYqEkBRGzoDCPSk7jtwwe?=
- =?us-ascii?Q?gSU1NkYEOD1ajEDyg4oF5U2RYqhDDtVc//3/6adypr1798egwNrpM2Csjjz+?=
- =?us-ascii?Q?vcPsYsQ34Ok8myh803EtQkj3AKQLdxyg/ZqAqZumnI3HOvBeyahfq6FtDpvA?=
- =?us-ascii?Q?Lr1Od/NpMpls9u/B72X9NOfT2hsCKAb8FG/GEI9uyUxyXqHqT7pxOuJrDjga?=
- =?us-ascii?Q?yRWZH0z/xp8EI/ZcqRd+nJtDpqF8SdYhCyx33vrhc9iPG7O7tVuFhZsy+sLW?=
- =?us-ascii?Q?ovRmdO9ZX9kmrDadSmzDZAcr2UZdqwUNMKIQ9pfJcfMz2n0SehvXrOwDYXdJ?=
- =?us-ascii?Q?gZwf4qavvZSnAG1EY8hJN8hJFrBjU2D+8wao6zAqtgeBew1oaf201QrxwLJy?=
- =?us-ascii?Q?Zi6UoQRv/h47vfo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:64aa7808-outbound-1.mta.getcheckrecipient.com;CAT:NONE;SFS:(13230040)(14060799003)(36860700013)(35042699022)(82310400026)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 13:43:29.9741
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf79517b-726c-45f7-e8ac-08dd5cb4e150
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM3PEPF0000A796.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB7867
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <857c8982-f09f-4788-b547-1face254946d@gmail.com>
 
-> > Hi Peter,
-> >
-> > Sorry to late answer. I've missed your last repsonse in this thread,
-> > and waiting for in new thread:
-> > https://lore.kernel.org/all/20250110163643.GB4213@noisy.programming.kicks-ass.net/
-> >
-> > > > This patch doesn't work when the event is child event.
-> > > > In case of parent's event, when you see the list_del_event(),
-> > > > the total_enable_time is updated properly by changing state with
-> > > > PERF_EVENT_STATE_OFF.
-> > > >
-> > > > However, child event's total_enable_time is added before list_del_event.
-> > > > So, the missing total_enable_time isn't added to parents event and the
-> > > > error print happens.
-> > > >
-> > > > So, I think it wouldn't be possible to update time with set_state.
-> > > > instead I think it should update total_enable_time before
-> > > > child's total_enable_time is added to parents' child_total_enable_time
-> > > >
-> > > > like
-> > > >
-> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > > index 065f9188b44a..d27717c44924 100644
-> > > > --- a/kernel/events/core.c
-> > > > +++ b/kernel/events/core.c
-> > > > @@ -13337,6 +13337,7 @@ static void sync_child_event(struct perf_event *child_event)
-> > > >         }
-> > > >
-> > > >         child_val = perf_event_count(child_event, false);
-> > > > +       perf_event_update_time(child_event);
-> > > >
-> > > >         /*
-> > > >          * Add back the child's count to the parent's count:
-> > >
-> > > Well, that again violates the rule that we update time on state change.
-> > >
-> > > AFAICT there is no issue with simply moving the perf_event_set_state()
-> > > up a few lines in __perf_remove_from_context().
-> > >
-> > > Notably event_sched_out() will already put us in OFF state; and nothing
-> > > after that cares about further states AFAICT.
-> > >
-> > > So isn't the below the simpler solution?
-> > >
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> > > @@ -2438,14 +2438,13 @@ __perf_remove_from_context(struct perf_e
-> > >                state = PERF_EVENT_STATE_DEAD;
-> > >        }
-> > >       event_sched_out(event, ctx);
-> > > +       perf_event_set_state(event, min(event->state, state));
-> > >       if (flags & DETACH_GROUP)
-> > >                perf_group_detach(event);
-> > >       if (flags & DETACH_CHILD)
-> > >                perf_child_detach(event);
-> > >        list_del_event(event, ctx);
-> > >
-> > > -       perf_event_set_state(event, min(event->state, state));
-> > > -
-> > >        if (!pmu_ctx->nr_events) {
-> > >                pmu_ctx->rotate_necessary = 0;
-> >
-> > Agree, for DETACH_EXIT case, below code in list_del_event()
-> > doesn't need to be considered because
-> > the all of event related to event ctx would be freed:
-> >
-> >      /*
-> >       * If event was in error state, then keep it
-> >       * that way, otherwise bogus counts will be
-> >       * returned on read(). The only way to get out
-> >       * of error state is by explicit re-enabling
-> >       * of the event
-> >       */
-> >       if (event->state > PERF_EVENT_STATE_OFF) {
-> >           perf_cgroup_event_disable(event, ctx);
-> >           perf_event_set_state(event, PERF_EVENT_STATE_OFF);
-> >       }
-> >
-> > With your suggestion, Could I send the v4 for this?
->
-> Yes, please send a -v4 version.
->
-> Thanks,
->
-> 	Ingo
+On Wed, Mar 05, 2025 at 10:02:15PM +0000, incansvl wrote:
+> Team,
+> 
+>     I am experiencing a problem on multiple versions of the 6.x kernel, where initialisation
+> of a motherboard usb hub device fails and causes a stream of errors. The performance of the
+> machine is badly affected.
+> 
+> I would have considered this most likely a hardware fault except-
+> 
+> 1) I am seeing the same issue on 2 machines of very different age and spec.
 
-Hi Ingo,
-Sorry for late.
+The differences may not matter if they use similar hardware components.
 
-Here is v4:
-  - https://lore.kernel.org/all/20250306123350.1650114-1-yeoreum.yun@arm.com/
+> 2) In each case the hub generating errors has no external devices connected to it, so
+>    the error can't be caused by an external device that has failed. In fact on
+>    "machine 2", having no devices plugged in seems to be a necessary condition for the
+>    error to occur (see details below).
+> 
+> I found the discussion of this patch, but I am not clear about this description-
 
-Thanks!
+I suspect that patch has nothing to do with your problem.  Have you 
+tried applying (or reverting) it to see if that causes the problem to go 
+away?
 
+> 4) On both machines the errors relate to a USB root hub that has NO DEVICES connected to it.
+>    On "machine 2", having a powered USB3.0 hub (which has a number of downstream devices
+>    connected) plugged in to one port on the hub is enough to suppress the errors, although
+>    I note the that "bad" port number (hub 2 : port 3) is not enumerated (skipped?).
+
+> (tail of "dmesg -w")
+> [  781.020436] usb usb2-port3: Cannot enable. Maybe the USB cable is bad?
+> [  784.990637] usb usb2-port3: Cannot enable. Maybe the USB cable is bad?
+...
+
+Please try collecting a usbmon trace for bus 2 showing the problem.  
+Ideally the trace should show what happens from system boot-up, but 
+there's no way to do that.  Instead, you can do this (the first command 
+below disables the bus, the second starts the usbmon trace, and the 
+third re-enables the bus):
+
+	echo 0 >/sys/bus/usb/devices/usb2/bConfigurationValue
+	cat /sys/kernel/debug/usb/usbmon/2u >usbmon.txt &
+	echo 1 >/sys/bus/usb/devices/usb2/bConfigurationValue
+
+Then after enough time has passed for the errors to show up, kill the 
+"cat" process and post the resulting trace file.  (Note: If your 
+keyboard is attached to bus 2, you won't be able to use it to issue the 
+second and third commands.  You could use a network login, or put the 
+commands into a shell file and run them that way.)
+
+In fact, you should do this twice: The second time, run it on machine 2 
+with the powered hub plugged in to suppress the errors.
+
+Alan Stern
