@@ -1,229 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3912080E4
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B0B2080E9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741252375; cv=none; b=Qi8rYD3b1M1hlMWT/BoPS8/NjGJUyH6DAvajxEZq3MwwAy8mOEI9cDkm8usvSmcXWsRuqMfI6V3bgSNVFZ1fbE38OgbjfCt775/T0OWdiVQvcDquwpcbNA78IuNKRcbiVknji8GAWCe7b4ah6THGQtdXyHPzWxykGIrmNwBbr1Q=
+	t=1741252385; cv=none; b=WG7/cZ9iNrgqtaTJdk+uMzMDYRlu356nsj47VvJ9b/pRtX2uvR5G4BfTyVgWVYi6AwyJp5831rPZ7rWPH9fVe6JD4Q2fagD9K/S/hI1zl4y0/hrcncbix/HUvrD9bwEqDIHmmySKeB21hB32G/LR2awVp0DQrWKKeZ3DAgCjON0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741252375; c=relaxed/simple;
-	bh=mSmxSodve0PlbUHGBdbSXfSGjnqU4KNXXxkLRgpJjd8=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=DXP7eFsK18tCuGGr7Ek0ef+tTNQfkMKrcMAqrTpEw6geKaO74EaL/Dxg4eOLXYrNuP4f6H74qRJtv2zcdBxw7zMewLAT9Pi4I6yj/w1vImXlVZrW2p3cmb8PqOkQrQZ3eft9WFAMfyEzAe3bMQDwlHXmnGPubKrsICpsLg9emgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RefmqvHe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741252385; c=relaxed/simple;
+	bh=Fa3khYTsYb65t1eGIqtFP/8//326/NxcLm3FoWFgUpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pw9Jx6q1DxHt0NwxEx8hvboVvYJNeO9X95ZxKIj7+GLOt+l1fZGQDNoZkXz2BWwMaJJfkAvBPWU8p66stsyPjfYRhjl/iwwYa2piqHsWhN2HU2vtuZK24yLRvkBoH4XVqmwXtTraV0q8yFHWRQ/cctTn3O+7GM0QjuwpuW888LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UqK9OTqB; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RefmqvHe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741252372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OLLdr9AqfAd99MzyxSvOzi/mUQAgoq76kZjDdYfTJYM=;
-	b=RefmqvHeA0ksNJE4YpF8xWvjuPlpbtuTH+nLSOeGB07mP8s6iL7sh/JPk5r9mFZ/h1wfaq
-	Dm8NTSVEG6Cwd3x/aueofGcVM+0Rq4+4mYctjD73BpUDytt+lLJOfwftaE7bg5f3Kxfnxe
-	VLCi3txc0ot/p3h20lanmLXNWbGJdwM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-249-pSKpUaHrPQWvv75Yu9GcHw-1; Thu,
- 06 Mar 2025 04:12:47 -0500
-X-MC-Unique: pSKpUaHrPQWvv75Yu9GcHw-1
-X-Mimecast-MFC-AGG-ID: pSKpUaHrPQWvv75Yu9GcHw_1741252366
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6988C18001F8;
-	Thu,  6 Mar 2025 09:12:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 133A418009BC;
-	Thu,  6 Mar 2025 09:12:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <3761344.1740995350@warthog.procyon.org.uk>
-References: <3761344.1740995350@warthog.procyon.org.uk>
-To: Christian Brauner <brauner@kernel.org>,
-    Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
-    Jakub Kicinski <kuba@kernel.org>,
-    "David S.
- Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    linux-afs@lists.infradead.org, linux-fsdevel@lists.infradead.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL v3] afs, rxrpc: Clean up refcounting on afs_cell and afs_server records
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UqK9OTqB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741252383; x=1772788383;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Fa3khYTsYb65t1eGIqtFP/8//326/NxcLm3FoWFgUpE=;
+  b=UqK9OTqBXybm3lubgYz/+rXvESEwAO6+QGWdKuz1tKcpjTFFPuhYatSW
+   EpPBf+vIXGOVtb9qy+SZP5BW7YNclJUFJJWwd/w0Lf3eztZUqOqtxYO95
+   49TFCnJmqElJ2yBa0y9fC46V3I6jOzbfAz+zJTUeEB14I6uOkRLbAWj4W
+   Y3yBq8P97rgCdGOZarhHRNEt9vGD2351h9zVe1Xjc1WeuGPmNii24zWdK
+   kdA4xV7ApKRIzP1Q4PCVuTc8Whk0xOnfnJ1i6igZOh8fy8wzAcBUfNjUF
+   Xr4yvCWYsqfjlHNob8lrEunLBas47fZljnc9ms+nOCUk/vUdv0pOmb/26
+   A==;
+X-CSE-ConnectionGUID: ctX8oUVVRNSIICPquwAnYg==
+X-CSE-MsgGUID: Bknri0uiQECKrnlX+O3GOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53235047"
+X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
+   d="scan'208";a="53235047"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 01:13:03 -0800
+X-CSE-ConnectionGUID: dFBNRtAfSS6CGP6FLmnZ9w==
+X-CSE-MsgGUID: mAS1kDNERQ6UBT2LTMCvdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="156189644"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 01:12:58 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tq7Hi-000000004PZ-41p3;
+	Thu, 06 Mar 2025 11:12:54 +0200
+Date: Thu, 6 Mar 2025 11:12:54 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Yury Norov <yury.norov@gmail.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	David Laight <David.Laight@aculab.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jani Nikula <jani.nikula@intel.com>
+Subject: Re: [PATCH v4 4/8] bits: introduce fixed-type BIT
+Message-ID: <Z8lnFpkVTjpFHZtB@smile.fi.intel.com>
+References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
+ <20250305-fixed-type-genmasks-v4-4-1873dcdf6723@wanadoo.fr>
+ <Z8hgqOB5Ym-GGykS@smile.fi.intel.com>
+ <d7f3150d-0167-44be-90b2-17f8a050687c@wanadoo.fr>
+ <Z8hyNXVZxLzhEzNy@smile.fi.intel.com>
+ <824dc1d1-14f0-433e-aa3f-679527b87077@wanadoo.fr>
+ <Z8isZodEqhZw5p7-@smile.fi.intel.com>
+ <20250305215027.5d9be1fa@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <66440.1741252359.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 06 Mar 2025 09:12:39 +0000
-Message-ID: <66441.1741252359@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250305215027.5d9be1fa@pumpkin>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Al spotted another bug (fix below).  Subject to his okaying of the patch, =
-I'll
-fold it down and ask for a repull.
+On Wed, Mar 05, 2025 at 09:50:27PM +0000, David Laight wrote:
+> On Wed, 5 Mar 2025 21:56:22 +0200
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Mar 06, 2025 at 02:17:18AM +0900, Vincent Mailhol wrote:
+> > > On 06/03/2025 at 00:48, Andy Shevchenko wrote:  
+> > > > On Wed, Mar 05, 2025 at 11:48:10PM +0900, Vincent Mailhol wrote:  
+> > > >> On 05/03/2025 at 23:33, Andy Shevchenko wrote:  
+> > > >>> On Wed, Mar 05, 2025 at 10:00:16PM +0900, Vincent Mailhol via B4 Relay wrote:  
 
-David
----
-afs: Fix afs_atcell_get_link() to handle RCU pathwalk
+...
 
-The ->get_link() method may be entered under RCU pathwalk conditions (in
-which case, the dentry pointer is NULL).  This is not taken account of by
-afs_atcell_get_link() and lockdep will complain when it tries to lock an
-rwsem.
+> > > >>>> +#define BIT_U8(b) (BIT_INPUT_CHECK(u8, b) + (unsigned int)BIT(b))
+> > > >>>> +#define BIT_U16(b) (BIT_INPUT_CHECK(u16, b) + (unsigned int)BIT(b))  
+> > > >>>
+> > > >>> Why not u8 and u16? This inconsistency needs to be well justified.  
+> > > >>
+> > > >> Because of the C integer promotion rules, if casted to u8 or u16, the
+> > > >> expression will immediately become a signed integer as soon as it is get
+> > > >> used. For example, if casted to u8
+> > > >>
+> > > >>   BIT_U8(0) + BIT_U8(1)
+> > > >>
+> > > >> would be a signed integer. And that may surprise people.  
+> > > > 
+> > > > Yes, but wouldn't be better to put it more explicitly like
+> > > > 
+> > > > #define BIT_U8(b)	(BIT_INPUT_CHECK(u8, b) + (u8)BIT(b) + 0 + UL(0)) // + ULL(0) ?  
+> > > 
+> > > OK, the final result would be unsigned. But, I do not follow how this is
+> > > more explicit.
+> > > 
+> > > Also, why doing:
+> > > 
+> > >   (u8)BIT(b) + 0 + UL(0)
+> > > 
+> > > and not just:
+> > > 
+> > >   (u8)BIT(b) + UL(0)
+> > > 
+> > > ?
+> > > 
+> > > What is that intermediary '+ 0' for?
+> > > 
+> > > I am sorry, but I am having a hard time understanding how casting to u8
+> > > and then doing an addition with an unsigned long is more explicit than
+> > > directly doing a cast to the desired type.  
+> > 
+> > Reading this again, I think we don't need it at all. u8, aka unsigned char,
+> > will be promoted to int, but it will be int with a value < 256, can't be signed
+> > as far as I understand this correctly.
+> 
+> The value can't be negative, but the type will be a signed one.
 
-Fix this by marking net->ws_cell as __rcu and using RCU access macros on i=
-t
-and by making afs_atcell_get_link() just return a pointer to the name in
-RCU pathwalk without taking net->cells_lock or a ref on the cell as RCU
-will protect the name storage (the cell is already freed via call_rcu()).
+Yes, that's what I mentioned above: "int with the value < 256".
 
-Reported-by: Alexander Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- fs/afs/cell.c     |   11 ++++++-----
- fs/afs/dynroot.c  |   21 +++++++++++++++++----
- fs/afs/internal.h |    2 +-
- fs/afs/proc.c     |    2 +-
- 4 files changed, 25 insertions(+), 11 deletions(-)
+> Anything comparing types (and there are a few) will treat it as signed.
+> It really is bad practise to even pretend you can have an expression
+> (rather that a variable) that has a type smaller than 'int'.
+> It wouldn't surprise me if even an 'a = b' assignment promotes 'b' to int.
 
-diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-index 4ca713d3862c..0168bbf53fe0 100644
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -57,7 +57,8 @@ static struct afs_cell *afs_find_cell_locked(struct afs_=
-net *net,
- 		return ERR_PTR(-ENAMETOOLONG);
- =
+We have tons of code with u8/u16, what you are proposing here is like
+"let's get rid of those types and replace all of them by int/unsigned int".
+We have ISAs that are byte-oriented despite being 32- or 64-bit platforms.
 
- 	if (!name) {
--		cell =3D net->ws_cell;
-+		cell =3D rcu_dereference_protected(net->ws_cell,
-+						 lockdep_is_held(&net->cells_lock));
- 		if (!cell)
- 			return ERR_PTR(-EDESTADDRREQ);
- 		goto found;
-@@ -394,8 +395,8 @@ int afs_cell_init(struct afs_net *net, const char *roo=
-tcell)
- =
+> So it is even questionable whether BIT8() and BIT16() should even exist at all.
 
- 	/* install the new cell */
- 	down_write(&net->cells_lock);
--	old_root =3D net->ws_cell;
--	net->ws_cell =3D new_root;
-+	old_root =3D rcu_replace_pointer(net->ws_cell, new_root,
-+				       lockdep_is_held(&net->cells_lock));
- 	up_write(&net->cells_lock);
- =
+The point is to check the boundaries and not in the returned value per se.
 
- 	afs_unuse_cell(old_root, afs_cell_trace_unuse_ws);
-@@ -869,8 +870,8 @@ void afs_cell_purge(struct afs_net *net)
- 	_enter("");
- =
+> There can be reasons to return 'unsigned int' rather than 'unsigned long'.
+> But with the type definitions that Linux uses (and can't really be changed)
+> you can have BIT32() that is 'unsigned int' and BIT64() that is 'unsigned long
+> long'. These are then the same on 32bit and 64bit.
 
- 	down_write(&net->cells_lock);
--	ws =3D net->ws_cell;
--	net->ws_cell =3D NULL;
-+	ws =3D rcu_replace_pointer(net->ws_cell, NULL,
-+				 lockdep_is_held(&net->cells_lock));
- 	up_write(&net->cells_lock);
- 	afs_unuse_cell(ws, afs_cell_trace_unuse_ws);
- =
+-- 
+With Best Regards,
+Andy Shevchenko
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index 0b66865e3535..9732a1e17db3 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -210,12 +210,23 @@ static const char *afs_atcell_get_link(struct dentry=
- *dentry, struct inode *inod
- 	const char *name;
- 	bool dotted =3D vnode->fid.vnode =3D=3D 3;
- =
-
--	if (!net->ws_cell)
-+	if (!dentry) {
-+		/* We're in RCU-pathwalk. */
-+		cell =3D rcu_dereference(net->ws_cell);
-+		if (dotted)
-+			name =3D cell->name - 1;
-+		else
-+			name =3D cell->name;
-+		/* Shouldn't need to set a delayed call. */
-+		return name;
-+	}
-+
-+	if (!rcu_access_pointer(net->ws_cell))
- 		return ERR_PTR(-ENOENT);
- =
-
- 	down_read(&net->cells_lock);
- =
-
--	cell =3D net->ws_cell;
-+	cell =3D rcu_dereference_protected(net->ws_cell, lockdep_is_held(&net->c=
-ells_lock));
- 	if (dotted)
- 		name =3D cell->name - 1;
- 	else
-@@ -324,12 +335,14 @@ static int afs_dynroot_readdir(struct file *file, st=
-ruct dir_context *ctx)
- 		return 0;
- =
-
- 	if (ctx->pos =3D=3D 2) {
--		if (net->ws_cell && !dir_emit(ctx, "@cell", 5, 2, DT_LNK))
-+		if (rcu_access_pointer(net->ws_cell) &&
-+		    !dir_emit(ctx, "@cell", 5, 2, DT_LNK))
- 			return 0;
- 		ctx->pos =3D 3;
- 	}
- 	if (ctx->pos =3D=3D 3) {
--		if (net->ws_cell && !dir_emit(ctx, ".@cell", 6, 3, DT_LNK))
-+		if (rcu_access_pointer(net->ws_cell) &&
-+		    !dir_emit(ctx, ".@cell", 6, 3, DT_LNK))
- 			return 0;
- 		ctx->pos =3D 4;
- 	}
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index addce2f03562..440b0e731093 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -288,7 +288,7 @@ struct afs_net {
- 	/* Cell database */
- 	struct rb_root		cells;
- 	struct idr		cells_dyn_ino;	/* cell->dynroot_ino mapping */
--	struct afs_cell		*ws_cell;
-+	struct afs_cell __rcu	*ws_cell;
- 	atomic_t		cells_outstanding;
- 	struct rw_semaphore	cells_lock;
- 	struct mutex		cells_alias_lock;
-diff --git a/fs/afs/proc.c b/fs/afs/proc.c
-index 0af94c846504..9d4df9e4562b 100644
---- a/fs/afs/proc.c
-+++ b/fs/afs/proc.c
-@@ -207,7 +207,7 @@ static int afs_proc_rootcell_show(struct seq_file *m, =
-void *v)
- =
-
- 	net =3D afs_seq2net_single(m);
- 	down_read(&net->cells_lock);
--	cell =3D net->ws_cell;
-+	cell =3D rcu_dereference_protected(net->ws_cell, lockdep_is_held(&net->c=
-ells_lock));
- 	if (cell)
- 		seq_printf(m, "%s\n", cell->name);
- 	up_read(&net->cells_lock);
 
