@@ -1,161 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537E613D897;
-	Thu,  6 Mar 2025 23:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010FA27E1D3;
+	Thu,  6 Mar 2025 23:40:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741304016; cv=none; b=IHrXtG/92mShk3HgyHAOaKcPuhCeU/NhNWXe2r3BJwM06v6ktGxfEMT5BiJZ68TZ4Fe66qiggYIx2egICdWGRtAJfnNqvoSTR6+0wH98VO8ajpbbq5XATtPHmMKxbyR9t+qXXb19stoxI7EQyAhiTNq489GiBkA/UBEIyeAoZPk=
+	t=1741304405; cv=none; b=k7R2k1+UhMblE/KtADmAIOB+ox2eJqZFFZXY2C1LWPYp4RRCcmg0TsFjIA9LQFn5gPNCBl9qFLcVHtNriD7JPrxGDs01LjwXkR6wF/G9e70+tgy3uAXUS3kY8NkbMD4MmRieuYiDdef4f4rbtTrraR6vFHGcD2LV5rngYK1LBSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741304016; c=relaxed/simple;
-	bh=kCdbLq4MKXLwDRdTHw76PigGCWnhj7eKDSPYYqRZntY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EgeOv4AnfZVU4ARZReYuu4S0G+z7luwKfTVezun+HDHHeGSH1vYNQ+wOES4U1HJuSlSaZAWUKCr3WCvhg8oRiLtkKg29DBEqENoyv5lJitvoN6+oLX6Vkq/MXYlJaHlDjh5CWLC/3If1jfZJosyLp67Iag6hHZApr5yYmQNxMUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9FAyKy8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741304405; c=relaxed/simple;
+	bh=2QSee9WokSYspQJ+xRHNNYB0mN5bS+JLoP/ZWB/o79g=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Ep/mXmDDhNB5NlHbfDwix5xA/KykU78qhIxklXfHs/kQ1p+lILqv9bKMJDuu8MNV5Oq0mDpay916QPkGDbm1nHPDk+CXDHjz2LqWHepRepzRcvMce5mSMX6CoyxdxS1jUhXYZuU5XZwfCrsQUdIr/kjr6L6ai+TYj1DyYffUwU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhc1fDh6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9FAyKy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E9EFC4CEE5;
-	Thu,  6 Mar 2025 23:33:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhc1fDh6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF55C4CEE0;
+	Thu,  6 Mar 2025 23:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741304015;
-	bh=kCdbLq4MKXLwDRdTHw76PigGCWnhj7eKDSPYYqRZntY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A9FAyKy8ohb1PeLj1EqmWd1zPedYvgckso3d73bNbfFKOExw3imTL95t3pTSiWZ9O
-	 Gw6RsY01zRa5tsmxukA1MTzSs3B4bFP58eyeqKRoT1Y8sfLRhxQaUpM83sZhBuVEzQ
-	 2QogVagOJ+ysSDFkXqeRtKLc7wArWKBU2z7tPbV+4AwIgXmhDl1neVPVO2YnyQg6ky
-	 VlqnQXopv9kiQQR5XVzarpjkkx36xWsLAO5kDarYQ7Yc74AdWgX4s7LJBc11gSM8qi
-	 areNCTtOUsOgSAKrRYxxHesMCrTswH27mP2gnO5+ad9yIOM7FU9ysSFIJoFOMsuazB
-	 Ada39tJXebrRA==
-Date: Fri, 7 Mar 2025 00:33:32 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Abel Vesa <abel.vesa@linaro.org>, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>, 
-	Kamal Wadhwa <quic_kamalw@quicinc.com>, Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
-	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
- period instead
-Message-ID: <fnxx2tduww5m3ljs3g5po23ucr4qfytzipgspcf2udkusg7ys6@semr224oy56d>
-References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
- <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
- <dbfb17df-90e2-4a7c-9921-9dff5e9382f4@kernel.org>
- <ovnmhbzwwimil3opuv6e2ayyntlx7upxfkzm5qdfskx2x7hl7x@wmtul33ttow5>
- <bdca9e9f-7e0d-4ca7-8e8b-f27ea8bb3b54@kernel.org>
+	s=k20201202; t=1741304404;
+	bh=2QSee9WokSYspQJ+xRHNNYB0mN5bS+JLoP/ZWB/o79g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rhc1fDh67EBOuiKV1bApq40dxAjAq5x/hauy5rCh6DpnHSwhNcSTIFmjmPMQpai5C
+	 shJSi+TKWch6PItoD7htSicRlB2sHSCDkYo0guwyt7ogxakmmmycXo37+hRMcO2b0n
+	 c5v1gFuSk2PyInqkK3UsRmzbhdaPO+Ru6N5lCGl4KTPc4IydcEnDrTsWqsYXqDv1wz
+	 B4Arp2PgfIzhYVegzstUmNjA814/2FXMYtdwpXPktI0C+Roxlb+0KkLmJitsH08GPD
+	 Ak0a47mxubiTcIVi43Ktk11jaij8nSVZbHLzyXeqzq9YTeR1VPXg3wIay6yL6pJUXb
+	 TXn9plJ9h1pyA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFC6380CFF6;
+	Thu,  6 Mar 2025 23:40:38 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="h3wax27yl7jges3z"
-Content-Disposition: inline
-In-Reply-To: <bdca9e9f-7e0d-4ca7-8e8b-f27ea8bb3b54@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v8 0/2] net: stmmac: dwc-qos: Add FSD EQoS support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174130443748.1819102.11441827117696182422.git-patchwork-notify@kernel.org>
+Date: Thu, 06 Mar 2025 23:40:37 +0000
+References: <20250305091246.106626-1-swathi.ks@samsung.com>
+In-Reply-To: <20250305091246.106626-1-swathi.ks@samsung.com>
+To: Swathi K S <swathi.ks@samsung.com>
+Cc: krzk+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ conor+dt@kernel.org, richardcochran@gmail.com, mcoquelin.stm32@gmail.com,
+ alexandre.torgue@foss.st.com, rmk+kernel@armlinux.org.uk,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
+
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed,  5 Mar 2025 14:42:44 +0530 you wrote:
+> FSD platform has two instances of EQoS IP, one is in FSYS0 block and
+> another one is in PERIC block. This patch series add required DT binding
+> and platform driver specific changes for the same.
+> 
+> Changes since v1:
+> 1. Updated dwc_eqos_setup_rxclock() function as per the review comments
+> given by Andrew.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v8,1/2] dt-bindings: net: Add FSD EQoS device tree bindings
+    https://git.kernel.org/netdev/net-next/c/1f6c3899833a
+  - [v8,2/2] net: stmmac: dwc-qos: Add FSD EQoS support
+    https://git.kernel.org/netdev/net-next/c/ae7f6b34f5cd
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---h3wax27yl7jges3z
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
- period instead
-MIME-Version: 1.0
-
-Hello Krzysztof,
-
-On Tue, Mar 04, 2025 at 05:30:40PM +0100, Krzysztof Kozlowski wrote:
-> On 04/03/2025 17:03, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Mar 04, 2025 at 10:53:53AM +0100, Krzysztof Kozlowski wrote:
-> >> On 04/03/2025 07:24, Uwe Kleine-K=C3=B6nig wrote:
-> >>>> [...]
-> >>>> ---
-> >>>> base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
-> >>>
-> >>> My git repo doesn't know that commit. Given that you said your patch
-> >>> bases on that other series, this isn't surprising. Please use a publi=
-cly
-> >>> available commit as base parameter, otherwise you (and I) don't benef=
-it
-> >>> from the armada of build bots because they just silently fail to test=
- in
-> >>
-> >> As you can easily see in the signature, this patchset was generated by
-> >> b4 and such tag was added automatically. No point in stripping it even
-> >> if it is not useful (life, happens).
-> >=20
-> > My request was not about stripping it, but making it useful. I don't
-> > know the b4 patch sending side, but git send-email has the capability to
-> > make it more useful in this scenario. I didn't check, but
-> > `b4 --edit-deps` which Abel mentioned sounds about right.
-> >=20
-> > The relevant documentation for the git side is the paragraph "BASE TREE
-> > INFORMATION" in git-format-patch(1).
->=20
-> Useful how? The dependency is on the lists, so there is no base-commit
-> you would know.
-
-Have you tried to understand the part of the manpage I pointed out? It
-seems to me "base-commit" has different semantics for us and only mine
-is aligned to git's (and consequently b4's) meaning.
-The correct base commit would have been
-cd3215bbcb9d4321def93fea6cfad4d5b42b9d1d.
-
-> And regardless of edit-deps, that base-commit tag is standard from b4,
-> so what do you expect from all submitters even if this was not RFC?
-
-I don't understand this question. I expect from submitters to pick a
-publicly known commit as base no matter if the series is an RFC or who's
-standard this is.
-
-> Always base on known commit?
-
-Yes please. The manpage isn't explicit about that but the above
-referenced commit has:
-
-    The base tree info consists of the "base commit", which is a well-known
-    commit that is part of the stable part of the project history everybody
-    else works off of, and zero or more "prerequisite patches", which are
-    well-known patches in flight that is not yet part of the "base commit"
-    that need to be applied on top of "base commit" in topological order
-    before the patches can be applied.
-
-> But for most of the cases this is
-> irrelevant. I can have intermediate commit between linux-next tip and my
-> patch, thus base-commit will be bogus for you, but it does not matter
-> for the patch - it's based on linux-next.
-
-I agree, linux-next is the base. So the respective tip of linux-next is
-the right thing to pass to git format-patch --base (independent of if
-it's called directly or through b4). Ideally you also drop the
-irrelevant intermediate patches to make the build bots test exactly the
-changes you suggest with your series. I would expect that this is the
-tree you actually tested, so it shouldn't be a big hurdle.
-
-So summarizing we have: Iff you use --base with a non-public commit, it's
-useless and irrelevant. I fully agree. Our conclusion is different
-though. You accept it's useless (and even request from me that I do the
-same), and I asked the submitter to use --base as intended to make the
-resulting information usable.
-
-Best regards
-Uwe
-
---h3wax27yl7jges3z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfKMMcACgkQj4D7WH0S
-/k7Lygf/Wa8FyPopVUtLVV8RF+FamEmr7aP28fWYMpJ9idhxmdffTkrUmF7NiT4J
-0pFxztHcSNJ1a9jZ9SGJ8EPovbz3fhwrvo9bvsmKRVWOaqC+YdnysBEzPbehBroo
-YM7YnPZNLXy2Z/sgAh9a7w3A83gr+Uy86LfE8x6CQIuSM9byW50qgRZoDOIkmTuv
-IzenAuIx7nt9Q4GM6toaaenlm8E/eze4pM8Yo6p9emHXPfqyGnm0UOqM9pc0uuoq
-Lp5pjLpMjKOuaon2utLIGH10Yd2uM98v/ky3Iu0s9OrfjBMhmIJr/dFuWbHB+CwB
-qul6dih0nSTcXdrI/m9B2txhPsxPJA==
-=F+Te
------END PGP SIGNATURE-----
-
---h3wax27yl7jges3z--
