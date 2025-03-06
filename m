@@ -1,128 +1,37 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2EC2147E5;
-	Thu,  6 Mar 2025 16:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827DA230251
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741278400; cv=none; b=OpW+Ab0JxaJEZW22iVdpB6/5UsFNhwSxSKjqNYRWBsWBCj8FIH35QqfjyGPzBJ9gX6FWJMyhV2ZLbnFwLtJTgkGemo5Y5PiGANU+i7ewpYo10QwIM+sx6gnvwA0Q8JZbRLWdG+g3HuPV8Oq5NiOpQ64VTon2plDww9s72Ad+HBc=
+	t=1741278408; cv=none; b=XgFqpAMlal936Z8l2+ZGYfwRtqOHOiGicX4Kz3iMk14Nn49pXLRk/hELYFwb8oEbmoW3lJilX6kIqmY41QrprJABCtQG+w29NLEufkDwYbecpyeqtxmJ782cARg+Ya1L/xikuPo7W0UwSum69Qv0ipUzuE+9Es7RDqlr9Sygvxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741278400; c=relaxed/simple;
-	bh=JIGbdj519hBofglwm1x6Wa4PWHJoF7xJSHZGDTpyM6Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eeaWuwIJejNv4Y2OC4U0JCp6FNoCblih5MdKkSyST5d8yvisKkv2i8lqmfsj5SWib/AdUemeKC6y+EaZU1tQ2rQKdG8iOLziMxLZV0FnIUORxL5JvRdwI1mdg4gDYdr1VPTvOhm55zkpvjJeCMbhsuEsIHU6W3ythgBja7IOzpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vlodpozr; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vlodpozr"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f42992f608so1719360a91.0;
-        Thu, 06 Mar 2025 08:26:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741278397; x=1741883197; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r0Ho2aCKNYfg5T/o22fFzxZ+UyjSx6Fm0wn6W8o8Gr8=;
-        b=VlodpozrEtsyJB7yVBQbWAuEZ3FILQTFZfdq+Sy2YjFV7zKhB77BwEsmW+teTdMZwp
-         6vRTtopTGRzNWpOhjWJuHpmggGt6veijCa+kN9han/pU03oPm5uyhSmk/Z0Jq+iVm8fP
-         cZVnVa7Rz442OQNSqOTRS1R2WmutVFs9CTJyYpOHvgFWFYNLVeWWz9SLVTuFV3Uh6ciV
-         EZa6PND3ParJ9TIltyJcORcWcJh9oLdW/UUdV6lzq8q6xva/82s0qHgcICOK9CiNasHS
-         rMGQ6ChY3k4X9VGP8e0OCsKhCa3ZGtbvrT3+5uTkH2fQ7udCKxemYMmnEKo4FtMtJtYB
-         UZVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741278397; x=1741883197;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r0Ho2aCKNYfg5T/o22fFzxZ+UyjSx6Fm0wn6W8o8Gr8=;
-        b=krfQMTMWJqdfaygyaH8N+W9/JvZsdzH2tz5dZpPO3b8IEKdOBNpAL1D2ATg8Sr+GCm
-         bU8FbhptZTAa9YSvJdSsTnT98GgSxUfscRSJCJTsxBCiAQbKN84MjeC8ky1MEHxXAqe4
-         zFuuLKjmPWFzIe3bR64Rgl0+0Dz4uTkafnf55hM5K5VQEk5o25jXbB5dbzsI19/ycxKI
-         2/c2EFo4B2OamREzHIetAPsUEJsCjMUiBzEosT5+G4cdtnDmfCCts55tuu8qE8ax0WaQ
-         GsrUfQlv8eboNuOV9KwJtvtjFphgKfFm9BBO1bNvnc8+5g5RRBKG/W4MAeXA44M/braC
-         5lqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURv8FIEbEV0YWhZe4Pqs5R+AFO3UwYj0r0kUiX672e2lT2H5muFF28CNtQ018ym/JnGOg0dn0M@vger.kernel.org, AJvYcCUnN03p11Gly4JLiHWbbphMXjT+Rth5joLeHBuN1m2HcojcE/3jVlbyt77AgLe0SgyoCVmy3z+kGEBfN1zCYcg=@vger.kernel.org, AJvYcCVHfKmu03iPISA+WN0Km6dIc6XL7pLhpUX/bv3BsVyRoipSUvFYL6edJIsdxkBkKzDtUk9tJQx1Gw/5AmPj@vger.kernel.org, AJvYcCVoVpY4XDCWkc9GiaWPgtpBFyVxkTNrChkqb/aHytww4kSjYbc/XGYdMG+iJDojSOpxIoo=@vger.kernel.org, AJvYcCVx7KijXj+WKOF88s0FoawDX7wlrHhsmB5e70r8WoDTBEeZutODNVVrfkZpHsLJrBl9f7ytJ46MFTQhMBY=@vger.kernel.org, AJvYcCVykCMGaNNb1hMYqFWgM1bbklTk9c2mPVSc+HVt/paFHZcPoOD0r14UEi0r+VYpa9GkiEaaOOV3rypeMi1z@vger.kernel.org, AJvYcCWGnvBk98+RRQGyeLYsvWP2/7A+tgxpB/8bTjA1FAd0XcXIbSbsM8vEQXU9RzUA6QbHOLWKj73UlqHd2xA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy9wozAGk56yy+H7ecISZzvBzxYbziQtbW6R8Jyui28te4sPZQ
-	lWmRwgi1MnF7k+MCAWagAwh9XVWA7l5ZXdjeNe2vfS1MOiMbhror
-X-Gm-Gg: ASbGncuK5+qYVkVLA62UXwB7oDGTOAnUUs/WhpxyB9Enpe8hFitmKWN+AB2YxX3zX8s
-	0KGs2mLwPLj1CAwYz451n6+u4vfB2AgUJfcyLUxxNgjVgOAo6fWNlwNvTfmekjsy6sXYvAUdBwp
-	3YIPJzrLtWTJN7+j/ENVPtzq8Va7zaJF/JSmBFelNCeX7fA91AXhyLp6bROiYOySYe0tiIC76Cq
-	H3tsGsxJTxukuHZwXa+RvIl+WezwYuNdAUJ0g00oTd7nGpFrClbdWO1Ru5uFAYqPhWC2X5gKNnf
-	2MwdB9wOdGRDjyjRagtX8v0LjdeW542Oak30TNsLh8Gs3kc9ehZ56fdt5IQ9E5T1FVFvmhH+8rs
-	=
-X-Google-Smtp-Source: AGHT+IEdHwa48DziWanocz8wQ67fQs43cM3+X1TXQ11+KVNWCpcETjdD+vdPtUkiB0WUQbIndA90jg==
-X-Received: by 2002:a17:90b:1cc6:b0:2fe:afbc:cd53 with SMTP id 98e67ed59e1d1-2ff497a62c4mr12413101a91.28.1741278397498;
-        Thu, 06 Mar 2025 08:26:37 -0800 (PST)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff693e75bfsm1464298a91.33.2025.03.06.08.26.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 08:26:36 -0800 (PST)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	jk@ozlabs.org,
-	joel@jms.id.au,
-	eajames@linux.ibm.com,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dmitry.torokhov@gmail.com,
-	mchehab@kernel.org,
-	awalls@md.metrocast.net,
-	hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	louis.peens@corigine.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com,
-	arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	yury.norov@gmail.com,
-	akpm@linux-foundation.org
-Cc: hpa@zytor.com,
-	alistair@popple.id.au,
-	linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v3 04/16] media: pci: cx18-av-vbi: Replace open-coded parity calculation with parity8()
-Date: Fri,  7 Mar 2025 00:25:29 +0800
-Message-Id: <20250306162541.2633025-5-visitorckw@gmail.com>
+	s=arc-20240116; t=1741278408; c=relaxed/simple;
+	bh=U4D6AnkAm3DyMaIpwwnp4I3SonqejwJWrZdwMLpk5XY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M+UsaKAinYrDVC7QioXUS98bw+IdA0FUIsYrgA8lSznPI6+/YGtJ9iJe6Uc4TzsamRNVZNOUNeZ3VSLgvBka66JBhOYKWat0LqBKkPrSTSp9dfZDV1kJyZZvtEIOVEk8tberJZEnSmIVDfQDvZsMVYWBYNeBF626u2BgYRH+mjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 564161007;
+	Thu,  6 Mar 2025 08:26:57 -0800 (PST)
+Received: from e125579.fritz.box (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 721683F673;
+	Thu,  6 Mar 2025 08:26:42 -0800 (PST)
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Hagar Hemdan <hagarhem@amazon.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] /sched/core: Fix Unixbench spawn test regression
+Date: Thu,  6 Mar 2025 17:26:35 +0100
+Message-Id: <20250306162635.2614376-1-dietmar.eggemann@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250306162541.2633025-1-visitorckw@gmail.com>
-References: <20250306162541.2633025-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -131,54 +40,130 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor parity calculations to use the standard parity8() helper. This
-change eliminates redundant implementations and improves code
-efficiency.
+Hagar reported a 30% drop in UnixBench spawn test with commit
+eff6c8ce8d4d ("sched/core: Reduce cost of sched_move_task when config
+autogroup") on a m6g.xlarge AWS EC2 instance with 4 vCPUs and 16 GiB RAM
+(aarch64) (single level MC sched domain) [1].
 
-Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+There is an early bail from sched_move_task() if p->sched_task_group is
+equal to p's 'cpu cgroup' (sched_get_task_group()). E.g. both are
+pointing to taskgroup '/user.slice/user-1000.slice/session-1.scope'
+(Ubuntu '22.04.5 LTS').
+
+So in:
+
+  do_exit()
+
+    sched_autogroup_exit_task()
+
+      sched_move_task()
+
+        if sched_get_task_group(p) == p->sched_task_group
+          return
+
+        /* p is enqueued */
+        dequeue_task()              \
+        sched_change_group()        |
+          task_change_group_fair()  |
+            detach_task_cfs_rq()    |                              (1)
+            set_task_rq()           |
+            attach_task_cfs_rq()    |
+        enqueue_task()              /
+
+(1) isn't called for p anymore.
+
+Turns out that the regression is related to sgs->group_util in
+group_is_overloaded() and group_has_capacity(). If (1) isn't called for
+all the 'spawn' tasks then sgs->group_util is ~900 and
+sgs->group_capacity = 1024 (single CPU sched domain) and this leads to
+group_is_overloaded() returning true (2) and group_has_capacity() false
+(3) much more often compared to the case when (1) is called.
+
+I.e. there are much more cases of 'group_is_overloaded' and
+'group_fully_busy' in WF_FORK wakeup sched_balance_find_dst_cpu() which
+then returns much more often a CPU != smp_processor_id() (5).
+
+This isn't good for these extremely short running tasks (FORK + EXIT)
+and also involves calling sched_balance_find_dst_group_cpu() unnecessary
+(single CPU sched domain).
+
+Instead if (1) is called for 'p->flags & PF_EXITING' then the path
+(4),(6) is taken much more often.
+
+  select_task_rq_fair(..., wake_flags = WF_FORK)
+
+    cpu = smp_processor_id()
+
+    new_cpu = sched_balance_find_dst_cpu(..., cpu, ...)
+
+      group = sched_balance_find_dst_group(..., cpu)
+
+        do {
+
+          update_sg_wakeup_stats()
+
+            sgs->group_type = group_classify()
+
+              if group_is_overloaded()                             (2)
+                return group_overloaded
+
+              if !group_has_capacity()                             (3)
+                return group_fully_busy
+
+              return group_has_spare                               (4)
+
+        } while group
+
+        if local_sgs.group_type > idlest_sgs.group_type
+          return idlest                                            (5)
+
+        case group_has_spare:
+
+          if local_sgs.idle_cpus >= idlest_sgs.idle_cpus
+            return NULL                                            (6)
+
+Unixbench Tests './Run -c 4 spawn' on:
+
+(a) VM AWS instance (m7gd.16xlarge) with v6.13 ('maxcpus=4 nr_cpus=4')
+    and Ubuntu 22.04.5 LTS (aarch64).
+
+    Shell & test run in '/user.slice/user-1000.slice/session-1.scope'.
+
+    w/o patch	w/ patch
+    21005	27120
+
+(b) i7-13700K with tip/sched/core ('nosmt maxcpus=8 nr_cpus=8') and
+    Ubuntu 22.04.5 LTS (x86_64).
+
+    Shell & test run in '/A'.
+
+    w/o patch	w/ patch
+    67675	88806
+
+CONFIG_SCHED_AUTOGROUP=y & /sys/proc/kernel/sched_autogroup_enabled equal
+0 or 1.
+
+[1] https://lkml.kernel.org/r/20250205151026.13061-1-hagarhem@amazon.com
+
+Reported-by: Hagar Hemdan <hagarhem@amazon.com>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- drivers/media/pci/cx18/cx18-av-vbi.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/cx18/cx18-av-vbi.c b/drivers/media/pci/cx18/cx18-av-vbi.c
-index 65281d40c681..1a113aad9cd4 100644
---- a/drivers/media/pci/cx18/cx18-av-vbi.c
-+++ b/drivers/media/pci/cx18/cx18-av-vbi.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index b00f884701a6..ca0e3c2eb94a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -9064,7 +9064,7 @@ void sched_move_task(struct task_struct *tsk)
+ 	 * group changes.
+ 	 */
+ 	group = sched_get_task_group(tsk);
+-	if (group == tsk->sched_task_group)
++	if ((group == tsk->sched_task_group) && !(tsk->flags & PF_EXITING))
+ 		return;
  
- 
-+#include <linux/bitops.h>
- #include "cx18-driver.h"
- 
- /*
-@@ -56,15 +57,6 @@ struct vbi_anc_data {
- 	/* u8 fill[]; Variable number of fill bytes */
- };
- 
--static int odd_parity(u8 c)
--{
--	c ^= (c >> 4);
--	c ^= (c >> 2);
--	c ^= (c >> 1);
--
--	return c & 1;
--}
--
- static int decode_vps(u8 *dst, u8 *p)
- {
- 	static const u8 biphase_tbl[] = {
-@@ -278,7 +270,7 @@ int cx18_av_decode_vbi_line(struct v4l2_subdev *sd,
- 		break;
- 	case 6:
- 		sdid = V4L2_SLICED_CAPTION_525;
--		err = !odd_parity(p[0]) || !odd_parity(p[1]);
-+		err = !parity8(p[0]) || !parity8(p[1]);
- 		break;
- 	case 9:
- 		sdid = V4L2_SLICED_VPS;
+ 	update_rq_clock(rq);
 -- 
 2.34.1
 
