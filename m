@@ -1,91 +1,73 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2781F5FD;
-	Thu,  6 Mar 2025 12:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098F41F5FD
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741265511; cv=none; b=cwmvavMlWyzEN6zzrqmi+KdB87q6krbSYC51JgM+FvJjqDx0Ves7rxdIwNxh3ttJultk9R3peFhkyzhP4Rj1b4u+XVeKYtRbqOj789JfUe+FXbwYKHMVsk735oBw4QKi/NaiCv6BKZDfLZrFO0AGAQ554NE6xIAdaWGFvJHrzQI=
+	t=1741265646; cv=none; b=pm6dpR9F0vjWPxplIdU+ynFCgSqULo+BcZE3BTR6B/QAtfwLd9ua8o1pzWYU0q301IHi677wWH2nQ53XdbixI+BrNgM4BcTGDXuYh9cGNvCHSSYMaU7dcvcS93iYIGrh9wEOe05LeeL2EybJMSrNs7M2A38Hn6bzd9DssKaIt2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741265511; c=relaxed/simple;
-	bh=Zz0u44CTQSns6sJk7jghxEbeUrI7Oc+e6U/ixES3qVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1pKPfcB1LvcZRNQw/OYTLo8oBhyc6l3f/q8OA9/hSmO818LBl2D6QBRNW0mSNIXjrs9x5VnU4/+kR67GSSbHw773gjLqODE1NWEuSyMnW1RbwewGCV9uOMJXf4gptm5ukUp8qY/YD6XxsP6WkT0WmJ1GTL3c+G37yiQFI4Mso0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2234e4b079cso9182195ad.1;
-        Thu, 06 Mar 2025 04:51:49 -0800 (PST)
+	s=arc-20240116; t=1741265646; c=relaxed/simple;
+	bh=ty5L/uryJDvHGbVrQm+/VIO4X0GS68Pg5bNdkh6lsVE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=nmw0QQcDsxp14vy7hXDEvU0t4Y/aJePHkVMtwm5qbQBVx8zcexuuZo0f5b565y0h2ffakIuKo3qvXUYd1M7l7kCNdq4aJp8KE9O+9p1eP4Ot5k2Wqlx9xKfKctSob4YsVcQ6bbTegFmBlQEo3fZFBAr8x7tdyiFG3Yz5HK7ZPh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d3decc7b4cso4652825ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 04:54:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741265509; x=1741870309;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H4cM1T3UuNpNu/U2G8pNowOEoTdTHEWvrKuxbrr/y/s=;
-        b=rrRzV8mztwuHf1pSFYbG6MMbfQslgMYCG7z91QLZD/5FzfW2Z/KdPbXo83inWxdEeD
-         2CbtdFqMF3RW1iQ5WHVMxrh9SfH1oR/0eDg/9Vs2yGExZ3jGuAIAE0mYLe/Z58ZHPYNR
-         Alx6+YurLKmW/T9fqR0Hb4sjVqEVFG2yF7cHGmjAAcUepMaeH129MqxdJ7rBpHYJ79cQ
-         PXc+7kn7lwdT4jg+jFI93zh6M0DmLrM/YirmoasEgES+RVgNwYhIlsL8KcO1y8jtUrba
-         FMmqVD5wgZMEfSAhXynaVst9XdEfeOBC54eflpyqYl+Es/Ah3vj3EGesKVtL0oIvhgNg
-         StVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnPFQ6e8KQDEPuG7EKXgu7LZImllZp2i5hMFP3xKPq4VMnK5O2di7GsEgsgRGNVroimPQf5hqxUH1c@vger.kernel.org, AJvYcCUvdZrbnkL0pC7fXbvmbfP4rohaLRwXXJ3uBXvinkw7HpNyIi7Yq7+6KuCdd8tF/W0SYPY9CxwWbHhSwwsr@vger.kernel.org, AJvYcCVRZWSn6v+yrdK8KLnkKNGuroESIHq1mrO4lPo6jK3Iv6PiyL4rvC0bT4xekI5nvlpsjiVSRV+xH9pc@vger.kernel.org, AJvYcCX5O6MsFO0aYONyv2hWKRX/3oJodOoNOeVxzN1zjQ+R4iBPG+N3ixJa3UI0JFe+oXSWPJLAd3t5r0V/Tchn5A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlbJ2b7V4Dv/NCu6/qxj+r36yaJUHjnF1L1Y1/wYkmb4usWHRL
-	K3mhKbqkS3vORKOOnePFwUC0ACyGC6OJZEAs2H+ANJxZwjpRPydo
-X-Gm-Gg: ASbGncuk2ba+wD8gw5DYc3pinaN4ANs/nwLiOpm1AsjBlLipNGK+W8s5oACdTKhX71h
-	cgkFK/waH0KUt5qpuDK/U0DOlqXjUlJfvWweyth0N7MTi1Q6gsIJ8y1A9Olv0ylqxC13ieu2vAI
-	WWZCXWGGyN8ettWFOoXmZ3QgulPzTI8UXJjX2/MaPC30vfytlxeOYNtLsokcml1VxgOmzNEDAuR
-	fs+BooM2/+3IFhrQ2R7Oe7g4m4VLwz+kNLSnyRoiSdeC22K/Fh9Ke2DwK9hAxvnkBVWQJqp1lUP
-	MPLqhQXDrH2o9peQITlGTI0ioJy35YY3fg4vVOn9cw2fu996uqvHXbVerW42CbnKJGELsEeUatT
-	NN5c=
-X-Google-Smtp-Source: AGHT+IHlKKib+yNPGnND+D+ePJ/13KrkYSmXwFybdYM1CzCFTjspnrAFaPc8IvV3IWlpLQYFhO77rQ==
-X-Received: by 2002:a05:6a00:cc7:b0:736:5725:59b4 with SMTP id d2e1a72fcca58-73682b5a0b6mr11753649b3a.3.1741265509412;
-        Thu, 06 Mar 2025 04:51:49 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-736984f8611sm1272908b3a.98.2025.03.06.04.51.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 04:51:48 -0800 (PST)
-Date: Thu, 6 Mar 2025 21:51:47 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Varadarajan Narayanan <quic_varada@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2] dt-bindings: PCI: Revert "dt-bindings: PCI: qcom: Use
- SDX55 'reg' definition for IPQ9574"
-Message-ID: <20250306125147.GB478887@rocinante>
-References: <20250306120359.200369-1-krzysztof.kozlowski@linaro.org>
+        d=1e100.net; s=20230601; t=1741265644; x=1741870444;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cqc7rplTKmQV7uqrftINjNhQmisaZdXxhTgKBl8N+9g=;
+        b=gR4UC6NYvOymnCd9xUR/4lBEKmmI+QkQS/BIkFCNWf7BgfoI1RsvbaKM4THsdDdBtT
+         8SOfY6Sfg5+rIz4JZM2Q/V/E6OFF0gFrNREdIO13btz4/lQyTFMfR6kkgomWxDpB9b6I
+         5CYxcIh1FXFuKRqb6ACYgdwl1KCo0NLaecNaqT4Jwy/ZICH/RZ++Jexktelrpe20ZLrR
+         L2NAqSOu7akXcGSpgx0Sl69I1GxNxsRxLUszYzjKC5YeWSsPWlajEBvjISDPnyw09hCR
+         HL5FlyOT0AggY6DFfSHAueviQiwVIyqmfAKlUzL9PCDU411q6WgQj/ynzOWTCQewhwqK
+         rMkA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjg9xSe0fL/q09GAglcbdpgu35/91xOZxrbv6EDBnpErLJkQn3ZcbHwzJi7F5+BNeyTBcdmc09LioSbik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPxTGYSStUwISHy5E8yNJJQcwH9G99+eOetiWGJenBohszcjmj
+	8l47UAmHqHw6gKuwIWEdJO2u5DEU+UqbHv6l27ScRYEV9xNanpWmLZZKJHHwBNFKj7v6rGW/njP
+	vzVCqC1ag16kuslgMSC3ca4u15rHPg+lM3VrK49KV+2+N/P4q29Q8Bw8=
+X-Google-Smtp-Source: AGHT+IFSm/FYnBsLSX8C4pZouDKXSN6EhP+0Ax7VsFkuzJzxBXxKjODS9u4XWXMXms/8YKxRgoBoCVa2fqah7NAmu5d67v839CrS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306120359.200369-1-krzysztof.kozlowski@linaro.org>
+X-Received: by 2002:a05:6e02:160a:b0:3d4:3fbf:967d with SMTP id
+ e9e14a558f8ab-3d43fcedbc4mr5200905ab.7.1741265644174; Thu, 06 Mar 2025
+ 04:54:04 -0800 (PST)
+Date: Thu, 06 Mar 2025 04:54:04 -0800
+In-Reply-To: <tencent_B91EEF32CDAC780A6FF82FD56DE49590EB0A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c99aec.050a0220.15b4b9.0034.GAE@google.com>
+Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
+From: syzbot <syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
-> Revert commit 829aa3693f8d ("dt-bindings: PCI: qcom: Use SDX55 'reg'
-> definition for IPQ9574") because it affected existing DTS (already
-> released), without any valid reason and without explanation.
-> 
-> Reverted commit 829aa3693f8d ("dt-bindings: PCI: qcom: Use SDX55 'reg'
-> definition for IPQ9574") also introduces new warnings:
-> 
->   ipq9574-rdp449.dtb: pcie@10000000: reg-names:0: 'parf' was expected
+syzbot tried to test the proposed patch but the build/boot failed:
 
-I removed the offending commit from the dt-bindings branch.
+failed to checkout kernel repo git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/for-kernelci: failed to run ["git" "fetch" "--force" "433dfd5a8a5d80bbf0669b14e9ed908911a52dd6" "for-kernelci"]: exit status 128
+fatal: read error: Connection reset by peer
 
-The next branch will be updated in due course.
 
-Thank you!
 
-	Krzysztof
+Tested on:
+
+commit:         [unknown 
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d6b7e15dc5b5e776
+dashboard link: https://syzkaller.appspot.com/bug?extid=8f9f411152c9539f4e59
+compiler:       
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17774a54580000
+
