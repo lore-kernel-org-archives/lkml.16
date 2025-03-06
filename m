@@ -1,123 +1,169 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2FB22331;
-	Thu,  6 Mar 2025 13:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5C820E6F6
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741266921; cv=none; b=PJK0UqJFOmBswCoDDWFAYHtqAb0VZRkMdMWogP+cMN5Q7Q7YwFSrLMBlHWfmuHyhxpCrBMjO3K0Li1BDYaVAy6N7J9DHe4lNavRzq8EAaMA3mhBzR5+E451kbmWdYYlYwq1zjW6XoXwmOyE+3XWZnwSr0pQwDdVF/2/TlJCZXsQ=
+	t=1741266927; cv=none; b=YDFtpH6QEXzXxGEQrUbJYezVYky9yO721CxRt1Inl/g2nWGT+lBNh6+vSG9UbEhgyepzPeyR5HCvOkxPHdWPT1AuZCLcE+KANterl8jhhAnmhlzPJ/TR7TQKPd6Wig3mqlugAyfgsVPCIhNFEYumIGgnLuAItm3ilodQXQ1lNWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741266921; c=relaxed/simple;
-	bh=6g9vsWTzXPTCxUAz6B0EW+KOIOdPOMJF7xnhnoJl8Ic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HabNowdkTSSewu/KVw62Z2uIeIzzEW/2wzz5eN/rjtouCAfs8ieD5aAFYuTvBEZbqMtMG1oa7xNbHwQJSSPh1gjVcBT65cCPmE/z1xQE5k2va9b8CgYPv+wljR11HJv516ArwjEm3+UAnCfZP1Ws4FMKfIkWfMpyW43m93WM0oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gdpkuISm; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741266927; c=relaxed/simple;
+	bh=tuXAj8epHA1okuSh3jNGyyI9p2J9gO/ol36jpkgVrGQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cgTeGuKvbTDR57GaSMTWr5ESfMPdPzUnGgeKTFrxXN7Bwf/8F+shOgSJsuO9/sa9A2pij+HV4C0PUqUV7xn1IRM5IWRagV3FF9iUwAfsXJY4e4ZAAoX/N8wECMqNc5lp8ar+m5XbDsgXnww0D0B4U+lIsOgIhyFJHD0AhHC86jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LmgtsH9d; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gdpkuISm"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526CrBmH031234;
-	Thu, 6 Mar 2025 13:15:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cUxhOdDBqjG8nS3JgsLPZmXLfIMs3zvTOkwCPFPDLuE=; b=gdpkuISmfC5CHF1j
-	g2yvlBnIN15zMstMh+VFDnQqndPu9ZyQ1e160n2N/RJUwp4y9O+G65Q9gOHT3IDx
-	lDZcYaGlf9/CDyWX/50hftcT3B/zOJHAeHkpkVeiLlyFEThXckR2ijojaCYYPD8N
-	S0j02FIUQcHn2aV88QzVgt6LOsD99Gec4GZedzfibE/tqQL6xkS7fiHKxxcnbdoY
-	kli9hGWYQy4eGpp3Q94ZIMIxaK0q9Vfntb43tzVcK7A2ALyN2KwROXQVUzW+AqHx
-	cHZyoTEniA0skc5fDWB/6WsrpGltsD0vlzO+gB9R8Xn5dSPiLqYPvHOMnkT0omFQ
-	y689Fg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4574ce9ht7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 13:15:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 526DFCq7002196
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Mar 2025 13:15:12 GMT
-Received: from [10.50.63.230] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Mar 2025
- 05:15:09 -0800
-Message-ID: <f4f7e2a7-6878-515d-c8c4-73cd424e78fc@quicinc.com>
-Date: Thu, 6 Mar 2025 18:45:06 +0530
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LmgtsH9d"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abf518748cbso119008666b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:15:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741266923; x=1741871723; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tkjipGCLl59HXX7zIHl0ZVIsR0Gq+aS61W9w8YQk4eA=;
+        b=LmgtsH9d2f0gIWB7aUwalJmvasY0JFbQFFl9IfH3XdJPcU7oLkvc87/VMJYF57YiZ0
+         osjSxAWEaAST2TQwvnqty47usGgv5/9tPmtw86LlWR4sD4aKWbg3VIFtPoGiPUGGIVHP
+         QVpWH83HIY8G2VpdauCMT8k3yh2/oeQK7iTskKa4VkuGFZ+MOoFTsmOyiCE9etXA2C1I
+         zk6pnaJ/OkAP+WPuUiOMFV8XGYnaahki5I6Dgj45ykp+TK/gkOvBn4iAw3mot/H0EcnF
+         uh5by/gnjlh604Io8GvLsZogWp5e4+EcyvKU3VKS/poWxEdjzvkiT4zY8tD1f+ddoHK2
+         MWyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741266923; x=1741871723;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tkjipGCLl59HXX7zIHl0ZVIsR0Gq+aS61W9w8YQk4eA=;
+        b=hWEfNSJmX43jj4HZZXOVgqRBZM4pQRamhIPZK2bS7mBHEMZlpE5B31IZOcXkG10n77
+         Gw9A0LIWbzPBjLWXMS+RErYa4E6mxMla7zHMJ5jokUKBEgCIRrd2JUfHmPLIBQRrkd/C
+         WIdWAnXMD/NrY5P5lsi/98HLBDyuON/5IO60kTLOUaXwiEs5hv5aeZ0DMgCSNbtZEHrH
+         H3ofAEuVU0TgQNswlfV/VhIXLTaRhxOLqkjKAws1qKkqDpd6brouy7wm+GpSiD2KP+Gx
+         07tED8p6dDygvY3W7b4qjgD7B3UkA6/dVrvcLn6ESLf63BFik+5XfdNGE71IWPwV2DSm
+         0d6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXWxx6qAxx8xzzYuKtfwn+FrEmx01jWuYZlI4UehpTdJI5XlgqGLarzgn7R7Uf1d7OPRa2r0YvY2QdBY7Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpz+HZV9KiynxP2dLcpA8T4s7AUecuXOCIuef0LBw4gLmtl6kR
+	9FmvPBNAje4YaM0qwSO8yxrlm40W17ce+Sv7ZrlGE6KipSYxmJg+JIN3bioe807SaRdya88Vo0N
+	gj+6GXT8IBmumPZou9wfCiKnvloKtRVZAS9dWfg==
+X-Gm-Gg: ASbGncvZt6jzXsx7tpicp0Vpn1FWCsZ5XdV1UZZftZMXCmGjSksxuYQADBgsd3/UCgl
+	dyuMIIqlW9hV7bUCDJ42wPaIT5IOSlCSqze1yHDOJvHgbPvcz/VH+qBPMpmjMwzUXmoiZwKPXgq
+	IgV5QCmNnXExLy4Mlw5KdHti8k
+X-Google-Smtp-Source: AGHT+IH1nTf2aYG2MsKHGRRVysAJUQZtUWYOVVYk8ihsB5hOgO5e2gNmewj2gMfrlyivRtXUsTVQNcE00VH9S1lvD9E=
+X-Received: by 2002:a17:907:da9:b0:abf:497d:a23d with SMTP id
+ a640c23a62f3a-ac20db01cbbmr767637566b.53.1741266923049; Thu, 06 Mar 2025
+ 05:15:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 5/7] media: platform: qcom/iris: rename iris_vpu3 to
- iris_vpu3x
-Content-Language: en-US
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org>
- <20250305-topic-sm8x50-iris-v10-v2-5-bd65a3fc099e@linaro.org>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <20250305-topic-sm8x50-iris-v10-v2-5-bd65a3fc099e@linaro.org>
+References: <20250304171403.571335-1-neelx@suse.com> <20250305103235.719210-1-neelx@suse.com>
+ <20250306082730.GG5777@twin.jikos.cz>
+In-Reply-To: <20250306082730.GG5777@twin.jikos.cz>
+From: Daniel Vacek <neelx@suse.com>
+Date: Thu, 6 Mar 2025 14:15:10 +0100
+X-Gm-Features: AQ5f1JruieyZRQ8kZf1KT75C5t_eIN5DR3-4IzvxJDsf5PbdFyekwC_gnrW5kX4
+Message-ID: <CAPjX3FeBVghdwQO8v+DGXzzFRcpfkHTprrpv=GtWbCPfyuZkmg@mail.gmail.com>
+Subject: Re: [PATCH v2] btrfs/defrag: implement compression levels
+To: dsterba@suse.cz
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	Nick Terrell <terrelln@fb.com>, Qu Wenruo <wqu@suse.com>, linux-btrfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: xaLxHz1dNr3lIMum4P1EJWOaxptfRYQY
-X-Proofpoint-GUID: xaLxHz1dNr3lIMum4P1EJWOaxptfRYQY
-X-Authority-Analysis: v=2.4 cv=bNLsIO+Z c=1 sm=1 tr=0 ts=67c99fe2 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EFsFfAAxFMx2BpdI774A:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_05,2025-03-06_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=964
- suspectscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503060100
 
+On Thu, 6 Mar 2025 at 09:27, David Sterba <dsterba@suse.cz> wrote:
+>
+> On Wed, Mar 05, 2025 at 11:32:34AM +0100, Daniel Vacek wrote:
+> > The zstd and zlib compression types support setting compression levels.
+> > Enhance the defrag interface to specify the levels as well.
+> >
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > Reviewed-by: Qu Wenruo <wqu@suse.com>
+> > ---
+> > v2: Fixed the commit message and added an explicit level range check.
+>
+> Where is the level range check? It silently clamps the range but this is
+> not a check. What I had in mind was to return -EINVAL if the level is
+> out of range.
 
+I see. For some reason I still had the clamping on my mind. I'll send
+a v3 with this.
 
-On 3/6/2025 12:35 AM, Neil Armstrong wrote:
-> The vpu33 HW is very close to vpu3, and shares most of the
-> operations, so rename file to vpu3x since we'll handle all vpu3
-> variants in it.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/media/platform/qcom/iris/Makefile                      | 2 +-
->  drivers/media/platform/qcom/iris/{iris_vpu3.c => iris_vpu3x.c} | 0
->  2 files changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/Makefile b/drivers/media/platform/qcom/iris/Makefile
-> index 35390534534e93f4617c1036a05ca0921567ba1d..473aaf655448180ade917e642289677fc1277f99 100644
-> --- a/drivers/media/platform/qcom/iris/Makefile
-> +++ b/drivers/media/platform/qcom/iris/Makefile
-> @@ -20,7 +20,7 @@ qcom-iris-objs += \
->               iris_vb2.o \
->               iris_vdec.o \
->               iris_vpu2.o \
-> -             iris_vpu3.o \
-> +             iris_vpu3x.o \
->               iris_vpu_buffer.o \
->               iris_vpu_common.o \
->  
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
-> similarity index 100%
-> rename from drivers/media/platform/qcom/iris/iris_vpu3.c
-> rename to drivers/media/platform/qcom/iris/iris_vpu3x.c
-> 
-Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> > @@ -1376,10 +1377,21 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
+> >               return -EINVAL;
+> >
+> >       if (do_compress) {
+> > -             if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
+> > -                     return -EINVAL;
+> > -             if (range->compress_type)
+> > -                     compress_type = range->compress_type;
+> > +             if (range->flags & BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL) {
+> > +                     if (range->compress.type >= BTRFS_NR_COMPRESS_TYPES)
+> > +                             return -EINVAL;
+> > +                     if (range->compress.type) {
+> > +                             compress_type = range->compress.type;
+> > +                             compress_level= range->compress.level;
+>
+> Please put spaces around binary operators, so " = ".
+>
+> > +                             compress_level= btrfs_compress_set_level(compress_type,
+> > +                                                                      compress_level);
+>
+> This should check if the test is in the range.
+>
+> My idea was to add helper like this
+>
+> bool btrfs_compress_level_valid(type, level) {
+>         ... ops = btrfs_compress_op[type];
+>
+>         if (level < ops->min_type || level > ops->max_type)
+>                 return false;
+> }
+> > +                     }
+> > +             } else {
+> > +                     if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
+> > +                             return -EINVAL;
+> > +                     if (range->compress_type)
+> > +                             compress_type = range->compress_type;
+> > +             }
+> >       }
+> >
+> >       if (extent_thresh == 0)
+> >       if (ret)
+> > diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
+> > index d3b222d7af240..3540d33d6f50c 100644
+> > --- a/include/uapi/linux/btrfs.h
+> > +++ b/include/uapi/linux/btrfs.h
+> > @@ -615,7 +615,9 @@ struct btrfs_ioctl_clone_range_args {
+> >   */
+> >  #define BTRFS_DEFRAG_RANGE_COMPRESS 1
+> >  #define BTRFS_DEFRAG_RANGE_START_IO 2
+> > +#define BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL 4
+> >  #define BTRFS_DEFRAG_RANGE_FLAGS_SUPP        (BTRFS_DEFRAG_RANGE_COMPRESS |          \
+> > +                                      BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL |    \
+> >                                        BTRFS_DEFRAG_RANGE_START_IO)
+> >
+> >  struct btrfs_ioctl_defrag_range_args {
+> > @@ -643,7 +645,13 @@ struct btrfs_ioctl_defrag_range_args {
+> >        * for this defrag operation.  If unspecified, zlib will
+> >        * be used
+> >        */
+> > -     __u32 compress_type;
+>
+> Please update the comment mentioning that the type + level are used when
+> the BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL flag is set.
+>
+> > +     union {
+> > +             __u32 compress_type;
+> > +             struct {
+> > +                     __u8 type;
+> > +                     __s8 level;
+> > +             } compress;
+> > +     };
+> >
+> >       /* spare for later */
+> >       __u32 unused[4];
+> > --
+> > 2.47.2
+> >
