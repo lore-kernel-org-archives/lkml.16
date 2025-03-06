@@ -1,233 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1941DDA14;
-	Thu,  6 Mar 2025 08:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248810; cv=fail; b=m06MCmpSoWPq6NwKX535GZsVKgBexz2KDVj68wQ+cLWUZNxs4bETzn2BuRHUxSuCln54EXzHPT0mfP+sqTtJE7lJhlPHcpLvXSar2Or8kWen/tJ1D9skCjt28/jG4FHcrhEsPXeOEAYMna+gdYOiNqLikFjw9aj9QDmzR5kzW5M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248810; c=relaxed/simple;
-	bh=+Q/iQ/6ePUPxIQ9F4thHRrE2hsLhhMejqdXJqyPFB2g=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OLI9kXcY0z7qgFVRgCEutTH9h7c2Tj0SKBPfIEtR3ARDjHdx7Fz2kjfKWK8codgyZnFmzktp4j+g9LQfRhYEuhEGbQb5vZcN6y5zS8DOY7hoHCQ2uHM68rdZykfcihgEEH9bpwkE7TIyTLcilwrNaBkHvOqxGwv8qPVCKGykn80=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=In1pUr+h; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6B41FC7F9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741248816; cv=none; b=CWbYE5vtXbbqTpP0BXu88mfD5M1jKHhkC3KCTCtQk53gkkUNZLvzjqM//Km4FHkG1cLS7OusJmx9w5iVTHwoK9wANNSRkfcPl2uoLzkvMj91Ra7GN1gAAXUuqmMQ5t9PZiiuHTRI92k0ujbJMwvezaj2siTQKZetj9LzvVqyjmo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741248816; c=relaxed/simple;
+	bh=eUWsVZlYIjL3uAIwhBG07uNNCBfBviynwix7o2rDp44=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=O1ivvcPlf4jtivrTWsoj6RgXrSbwQiyelIdkYL/N7hOFFPXcrxZrW3LSzLjADuTPY27ZGrf1HINLG4HwTBYntCMIdChQO101/eheP0ip505+uPzjbGuwOynL6mQU7X8IMZUAFjxpp6dEoxL5wtyoMArGffahwM5u4MXCJ2HVOls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VuDXOzlj; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="In1pUr+h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741248809; x=1772784809;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+Q/iQ/6ePUPxIQ9F4thHRrE2hsLhhMejqdXJqyPFB2g=;
-  b=In1pUr+hVNEVGoerEp6uICYo80ZWQuhEF5e5xY0JwlXooLGbORBjg1QU
-   9flTp3z9s3U1fcGfR6E0vskn/8WZM8psYPN4K0kNzGKTiFBRjoG8dFRLy
-   4VOYBK0VsDbzAONUpsTCcqZ+aAayF42KDS9A9HNLCG967WgLa80xB6CCr
-   9JxWxtX8naVD/UzJvVD+tN+03CffIH1boltPThKehR7Mwc+I9qOe6XsGJ
-   BBN5S+PhtncHPbRk/bIEc7nwghiMTHjIeM2AuZ9nGYl58mK4qsV0yNkOa
-   mffCk0wJezEis1wjlak2KgD7I55OG+MolC2HcM+LwoUwuyRVw9Ncp8JJ8
-   Q==;
-X-CSE-ConnectionGUID: 42DjNIwASHCTXskPm66cPw==
-X-CSE-MsgGUID: RbO6yitcRN2sUjeZgwEqVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53230450"
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="53230450"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 00:13:28 -0800
-X-CSE-ConnectionGUID: qNXJRu6pTbCf+cXAigNFcg==
-X-CSE-MsgGUID: cArZ88Q8R+SAPS6Ahaxf4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="119643247"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Mar 2025 00:13:29 -0800
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 6 Mar 2025 00:13:27 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 6 Mar 2025 00:13:27 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 6 Mar 2025 00:13:27 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LTHopc4n9c5RTVB+scjyr6EnysQDBzCcaqo0wYqM/uNRCcC3+tJFrRcJeTeZI/iOmZx8yJk3tmTxpe6XADNaJZkakenAYskbdOV3GM3uZDUlYGlstdxxAvoGVgYzz6oSJE775qof/qJukuAZ4yhUpT96x4o1eKKrAZSBleRdzWXZ+81uz+mGFWZAZ4w1stLtB4rVWbQTWMymBVeEAXF/FwlWxXIBpclbuYeIiNxKz3LJFa2pw64R8BdJETRRt1Xb3QWdL+zImu7I/t362rbcNlgTBGW5Z3a3JLMtGYyGLZ41mZ7Jol91Q7JPLjp3Q/yxPwX8R9wDQ0ApfESGzYLHPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NK7exU7eQmihNBb5iMy2wuWc6o6l8oGqXkN5zHYEQ5k=;
- b=U6vwRNu5DPFxrQ7L3qkiJ27OF64K3kSoJPq17M2COvAhR+xvUejDszC8N2S8deZja0Fyi/2/czTFashSTTRE6f1xtbRsHnJwVFJNR74SBG0kEp5kcpFXVFvQ3jUrSRwRtRCHSSLer+A0k5abINMX0EEcF4OXifzS3WYhPYfYwD+JN7JgQMT3u0TLwl+jIY8gPSi3ZOqWDneVGD8vamRlkPArn+tRY1Rd18nNKlrlwxV6usUAKrBQhXEgu6Incu6v6TiyRXa+8I6rN1dlh+o7dfJKY3QKFUl+AT2HeB0UZrMjMV6eZU/2l3dAuHrhaa7Vc/k3zFXpqkKDCd5x6848eQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3605.namprd11.prod.outlook.com (2603:10b6:a03:f5::33)
- by MN2PR11MB4709.namprd11.prod.outlook.com (2603:10b6:208:267::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
- 2025 08:12:43 +0000
-Received: from BYAPR11MB3605.namprd11.prod.outlook.com
- ([fe80::1c0:cc01:1bf0:fb89]) by BYAPR11MB3605.namprd11.prod.outlook.com
- ([fe80::1c0:cc01:1bf0:fb89%4]) with mapi id 15.20.8489.025; Thu, 6 Mar 2025
- 08:12:43 +0000
-Message-ID: <f76517de-9d59-4cf7-a7f5-b19ee4b2b3b2@intel.com>
-Date: Thu, 6 Mar 2025 10:12:34 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mmc: sdhci: Disable SD card clock before changing
- parameters
-To: Erick Shepherd <erick.shepherd@ni.com>, <linux-kernel@vger.kernel.org>
-CC: <linux-mmc@vger.kernel.org>, <ulf.hansson@linaro.org>,
-	<gratian.crisan@emerson.com>, Kyle Roeschley <kyle.roeschley@ni.com>, "Brad
- Mouring" <brad.mouring@ni.com>
-References: <20250211214645.469279-1-erick.shepherd@ni.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20250211214645.469279-1-erick.shepherd@ni.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZR0P278CA0072.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:21::23) To BYAPR11MB3605.namprd11.prod.outlook.com
- (2603:10b6:a03:f5::33)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VuDXOzlj"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250306081331epoutp040975efa09c81a494d958f7f7a2015e89~qKJGYQLr70806808068epoutp046
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:13:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250306081331epoutp040975efa09c81a494d958f7f7a2015e89~qKJGYQLr70806808068epoutp046
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741248811;
+	bh=Knqwjqi8GM+4dP/latZEf+wvPDK1ylOIsGOJ/pjBcKs=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=VuDXOzljywT9rE+DTveaUSn7uB8cE+o57upwpdEKg8GP25T0odmG+QWbeiliYBJjM
+	 pF3AJbVKf0aFDPb+GxLY37N2gtizQoi6HAxO+AKe/T74XJXXEsv8XYZdnEqjb5wXYV
+	 9OHHbkDGF82fWw3akJNyEXexM0OLiA/IGvUPDaZM=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250306081331epcas5p4262255b3e8a8503f816fb6d82a9b1c90~qKJF1jdSG2477724777epcas5p4T;
+	Thu,  6 Mar 2025 08:13:31 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z7hy139Hqz4x9Q7; Thu,  6 Mar
+	2025 08:13:29 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	AE.A6.19933.82959C76; Thu,  6 Mar 2025 17:13:28 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250306063546epcas5p388084f298ae5d55eab7fbbb7cc1db2d9~qIzvhmjmb0821708217epcas5p3e;
+	Thu,  6 Mar 2025 06:35:46 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250306063546epsmtrp183610b81ac1e5a41fa084533ed2e7dc3~qIzvgx2MP2210422104epsmtrp1k;
+	Thu,  6 Mar 2025 06:35:46 +0000 (GMT)
+X-AuditID: b6c32a4a-b87c770000004ddd-41-67c959281b3b
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3B.4A.33707.14249C76; Thu,  6 Mar 2025 15:35:45 +0900 (KST)
+Received: from FDSFTE245 (unknown [107.122.81.20]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250306063545epsmtip1d4a3d8251fe06ce0f9469ed7fbe08272~qIzun50W40927409274epsmtip1W;
+	Thu,  6 Mar 2025 06:35:44 +0000 (GMT)
+From: "Aatif Mushtaq/Aatif Mushtaq" <aatif4.m@samsung.com>
+To: "'Vinod Koul'" <vkoul@kernel.org>
+Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<pankaj.dubey@samsung.com>, <aswani.reddy@samsung.com>
+In-Reply-To: 
+Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
+Date: Thu, 6 Mar 2025 12:05:43 +0530
+Message-ID: <014701db8e61$fdd331d0$f9799570$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3605:EE_|MN2PR11MB4709:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8d17171-9817-478a-7902-08dd5c86ab04
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aEVscklvaWh5RTBuNWFHNnM4bGZVNXJQR3NLcGxtcGF4elJ2ZmRNcmNTbGZp?=
- =?utf-8?B?bEZyZmtnTjhwejJWNTBTN3JEZ2JMTmRXOC9YUlZoN1VjRTVYRlA2QkszL2VF?=
- =?utf-8?B?eFpsYi9Ualo4dC9ocVBqMU1ySzZHc1NIQk1uR0kzVEVUcUtxSVFWa2FDRzlP?=
- =?utf-8?B?QkxvOVJ6YUJpay9uVEdLZUNsMjZ5MEloR1NVQ1JXbkU3ZkhJUGYrdHk1d1Er?=
- =?utf-8?B?WGFZSDVhbTg0bXBWM08ycDZHcEN5eXJZcCt6RXRtSThQTXVram9xS1hBc0VP?=
- =?utf-8?B?dW9aSnl0bDhNb05KQjZQbncrNW81K001c3hDODVlMGpSSllqQkttSVJmSGtY?=
- =?utf-8?B?YjMzYWoyL093QjFyWEozMS8rYzErY2NNNnlRS3Q3U1JhRjhvYXBod3N5QU5Z?=
- =?utf-8?B?RHVpaHg0Yk5VajE1WU0xb0FaY3FJS1owN0RjdlNoTEZJOEZkWjYrSTdGdy9w?=
- =?utf-8?B?aDJpR0JZK3AzN2pVWU5MZWxvY0tIcHpiWFNuMTZqVWFCSWRmN3pVd1JTUGY1?=
- =?utf-8?B?bDQ1N085R3pjdWNuK1pBTWFaVlZwWnZTdWUxaFdGUElqeitmVWwwbFJSWjVk?=
- =?utf-8?B?bC9CVEJGVExjQmdhdTZnT3ZYODY3d2JTZndZLzNVMkhTUWRqUWR4NTlGVFZp?=
- =?utf-8?B?emsyNXpBWFBoOWJWMXhTSWdvdzl3OGt1Q3poTWhNOFhWTS9nMXRzU2pZM2Zk?=
- =?utf-8?B?RS9rdnFtaS9JN3VPTmVCTE53V1RFVVEyMDN1dzM3T1RHYkdtY0traW9IQmwy?=
- =?utf-8?B?V2cvelNlY0U4UnVTeXkvRTBRUk5odzgwZlFqSjIxdXE5Y1lqUEZHczN2RVFZ?=
- =?utf-8?B?K3diaWNuNllrZFJFa3BYNXVQOFJIMUtHQVZlWTgxb0JkakpIUmJjSEo4Slcy?=
- =?utf-8?B?bmpnRFBJL3RnSEVMUllneGdyZWtnTWIwSEVjVHdxUngzTW5Yc3RwY0dvT1c2?=
- =?utf-8?B?eUQyTWNpZ0ttZTJDRDQwck9aWVZ2K2F1TEd2Q1BtOERGd3pjRmtrUlVucGhu?=
- =?utf-8?B?QWlEMzMyMSs1UFIvVUVkeXNLeW9DWnlVOWZHeWp2a1hjaDhxd29ieHdqRXBN?=
- =?utf-8?B?dm5VMFNyMHliSVNXYnZYN3FuNVhhMStVKzY4YXA0SEVCSnMwZTNUOG5HeDdW?=
- =?utf-8?B?amVkQkx5ZTBOVEVPREdwNWJKOGZFRExyTEZnNS96TE80bTNjUnMwdlc4eTJq?=
- =?utf-8?B?OVRmMC9PbnZhcjVndWJRN1JtdFBvMmsyQnVGZWMvei9ONHVtY3ZXVzYwNGVn?=
- =?utf-8?B?SkxlMTRLQlZuR2xvbkYwVTdpelVyQ0dXSlE4aUx6Mk9hTHFVN2xZZ3h1QmYx?=
- =?utf-8?B?NzJBdThJb0traStRMUZkVEJ4c3RsZUpVTGpRdDNnU2lBSjl0NjBESXBsbGlL?=
- =?utf-8?B?YkdvSEpYSkdka3BhQVp1cGR4TkpBUlVkSFAyYXJmdG5INHN1eGNXS01HS2hR?=
- =?utf-8?B?T09icUVIbkFVR1NTM0J5aE5WTlBxTm43MVlxVllUa0pMZkxxZDJlUjJ1ZzJ2?=
- =?utf-8?B?ZVVjZnd1QUg1Y1duQjBhUWVsSm9ReUF0WnhrVVJ2Tlk5ZjhzVXFUazRReHR3?=
- =?utf-8?B?bis1UVliL3dROXIzWnEvMG5mVDl2bXNMMytBM29ONGp4YW5zeG5uSHVQaXlW?=
- =?utf-8?B?dnJBRkNxTERsdnFjZFJOUlRWNTV5eFRCS0VzZVdJOWlKeDMxOHgxZ1B2M1oz?=
- =?utf-8?B?cmNNMzhGOGVYRE5TVjFKRW9BZlN0ZE82ek9PeG9DQ2dhM0lrT2pMK2RyQXN5?=
- =?utf-8?B?djk0U3EyV21aMnljV09rOFJvRHZZWWVWTnBEbFg5OTBkNmE4TUlGRWJoVk1w?=
- =?utf-8?B?WFE0WFZnb3JGTXdmZW04em1zazZveWVMZGp0bFJlZFpZUUFDbU1jK2dJa0tS?=
- =?utf-8?Q?kYmqP8bGHzh7K?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TGZkVG81REh1a21YcVZUWUp1NHFUY3p6OXpIblVzZlRqR0xMaEdhengwYmUr?=
- =?utf-8?B?a3czbGFkL3U1Qi84NUM0T3dBV0xZOFdoWk4rNzhUQmVDK1dMVHVPUnhDMkJu?=
- =?utf-8?B?NzZEKzNoV3JlQk0wcTFGV2duMGVBUmFSeXEwN1luc0pydWQ2N0prR1BkWnAz?=
- =?utf-8?B?czlJdTZpZCtvTE5GUWdRYURUbCtjMm80MFJBeFRsWlhZMTRoakZJTjZsSm9p?=
- =?utf-8?B?cTVLM08vTHVKMXYzaDBOVDZTSm0zeVN3RUFSa3RjR29pcFdTOWdPSjk2dlYz?=
- =?utf-8?B?M2gwN2ZTWmF5c0pKUGxmSXFUZVBTUnlqQTVuN093cXZjL0o1eDlUMkQ3bXVU?=
- =?utf-8?B?ZjRTZS9kUlRMRGZ6eS93VFZ2eTFNVkxpaXVVb3M5cFU0aXNEZ2VBcW5FbU5N?=
- =?utf-8?B?b0EyNmNqZmNkZjczOFdldkVuRlAvdUxqdHhOaUhZc3RpTlhWOWkrdkdNOTRV?=
- =?utf-8?B?QW5xdFBSdUU5bnp5cjBISTBVV2tFZWpQV1hqMVNtOS9CbU1CWjdMNDNEQ08z?=
- =?utf-8?B?MnNOcnhCeWV3Q2VReDgwU2xCU0JLUGhNMCtHQVdpcElVK1RuWVJrVnJQS3Fx?=
- =?utf-8?B?YVJuOGtoSDJaeW5ZQmxjSy93SWJsNWlBSmEzZHhLV2hHclN0NXFsbjNEc2V1?=
- =?utf-8?B?Rk5ncm1BekJ4eGJlY0FhNEFYQllXcVNScjJoSnZZUk1PdFZLaGFPL0hGN0x2?=
- =?utf-8?B?THRJaW5GQ3NkeFJXMWdYekRLL2VQaUwzVTE1ZVAwaHkzR2h6anBIMWI3d0RN?=
- =?utf-8?B?NmpoRkNEQjkzRC9lc2Y4ZmlzNEpINTdaOTlUS0dremwrYnMvaHZ2VjZEbEt1?=
- =?utf-8?B?RWtDRnpyekNPVXZMcC9ZVUJuTTI1ZzcveU4vTDRSTUZZMExpRWRSamRJcXNr?=
- =?utf-8?B?ZlJWdFluUzlNWEJrRS9wSjZaLzU3WmZxa3UrcVJNVFAyZE40K0tEQnF2TEtL?=
- =?utf-8?B?SDJyNW8xdkRwKzZ0bmphUk8wQzNiTXFkMDFXMWY2czAzdHhpVnkxUDFQaThG?=
- =?utf-8?B?dENhZ1hob1M1MnNPdEhZM0JKYUd5UlBrZmUrTXNVeUYvd1VNS3JDb2JNYmJL?=
- =?utf-8?B?NTdncE9OMnlHaXR2T2R5Q0l4TlIyQm5VcnlnVVdLQ2hFVGZzblpHZHFHYXQ3?=
- =?utf-8?B?dWZMY2tWQ2VKSldaeCtGV3lzWk9YRW5FWlVGbEdkUUx2VXBBOGEyb1o0SXl3?=
- =?utf-8?B?V0tuc2QyRFJFR1plUG4xNmdvbjJTMDE2NkNMeEUvUGJ6bmR1STE4Q0tYODVN?=
- =?utf-8?B?TkQ0U29icXpmd2NCM05jSVR1Z1VKaVQ1cVkreDFSak9sdWJEZlpydDM3dnNp?=
- =?utf-8?B?OHZUc3BCWSszNUxOcU03NWZyRVJYQ2p4ZWFlNGloVmxMbk0yTmFhVEVic0FN?=
- =?utf-8?B?dy9iR3QrbmxuZ1EzU0NnaHZaOXlkSEZBcnJQY3VNeHQxWEczZnY5cXhHd3N3?=
- =?utf-8?B?K2VIc1BrZS9heks3Q25ENUZxTGg4N0FCbVJLNmdxd2V6MUpEM0V0NjFpRzNn?=
- =?utf-8?B?eVpLdGw1aHEwZFpvaGhzUm1vWmNRanFEWHR1SmlWTHBMcHNWU0U0bmY1TXN1?=
- =?utf-8?B?aW5hek0wbjB0aVhpa040TW00bVp0VjJtNE5oa1FsbVFtTkhacE41cVR5c3d0?=
- =?utf-8?B?bmVXdDBJWHlpRGxWQW1qcm4yOWpWblhsdWo1YXkxTU1HSXN5NkdPbERkNlpt?=
- =?utf-8?B?a1YvV2F1L0cxZWVIMHQ1aC9GR3Y3aTVBbUV5OVg1QU5FTVdNeVdESGdMZ2p4?=
- =?utf-8?B?UUJVSTY5L0xwdzZoK2d6dXVoNUJRaTIvaDVLMHVOb2xadWt1cmFpZUhNeWJy?=
- =?utf-8?B?d1RnZHhGWE1YM3AvNjdIdnlHVStxODF2eXEvZyt1MDV2a2x3emdwdTE5dmdO?=
- =?utf-8?B?eDQ5M2dIZDN5RXhMUllESUc2eVJQN2prVGpPNkdoaVhURkJybnY2QWdkWXAv?=
- =?utf-8?B?OWRnTGR2YVhsckdLRmNvTTM2aUZSdHBsRzQ1UndnSGR1M3hteUFYSVdEQzAy?=
- =?utf-8?B?TkMwdjBFZklpT3pnRG1BRkRLbUp5LzljdGFsNFhKbWloSVIrY2hSTll2S1pS?=
- =?utf-8?B?NTI2SlNZdVg5bjJpaEtwdy80UlZ3YjNDa3ZUbnI2TmhsL1lrby9ORnQzbDVM?=
- =?utf-8?B?ZWpodG5jcjlBWGlURlMrTEd6Y21OZzUrN0FSOStoQlA4enBVZnNkWTcxcDBo?=
- =?utf-8?B?Wmc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8d17171-9817-478a-7902-08dd5c86ab04
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3605.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 08:12:43.2780
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8EKrZ1DS/z4bVjS4ogpJ7R2ceOeLxxTvw3c+pbPUfUFSvPTFL6lXXQIXhqnkGMvTLZf5Q92fdCJRAQBeZAevQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4709
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFsIHTrWqAe9Pu9L3iNOvGTrR8WTgG4P+QRAcvczKUCj5EGvbQKqHTggAfgiMA=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjk+LIzCtJLcpLzFFi42LZdlhTU1cj8mS6wZ8nYhaHNm9lt1g99S+r
+	xeVdc9gsFm39wm6x884JZgdWj02rOtk8+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUzL91W
+	yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
+	I7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITvjfeMtpoLHGhXzTt5lamBco9DF
+	yMkhIWAisfjtGdYuRi4OIYHdjBJtvz6xQTifGCWmbFrADOdcmLqVCaZlYsclqMRORomTs7+y
+	QDjPGSX+r+5iA6liE7CSOP9rH5gtIqAqseXJAyCbg4NZoFJiyytNEJNTgFdiwj9rkAphAReJ
+	k+f+gFWzCKhIvGk4yApi8wpYSky83MkGYQtKnJz5hAXEZhaQl9j+dg4zxD0KEj+fLmOF2OQn
+	8ezPUXaIGnGJoz97wO6UEPjKLvHl1RZ2iAYXiWXfe6CahSVeHYeJS0m87G+DspMlbr7fB2Xn
+	SExYuBrKtpc4cGUOC8QrmhLrd+lDhGUlpp5axwSxl0+i9/cTaFjxSuyYB2MrSax538cGYUtI
+	/Dt4knECo9IsJK/NQvLaLCQvzELYtoCRZRWjZGpBcW56arFpgVFeajk8vpPzczcxghOkltcO
+	xocPPugdYmTiYDzEKMHBrCTCe9HvZLoQb0piZVVqUX58UWlOavEhRlNgeE9klhJNzgem6LyS
+	eEMTSwMTMzMzE0tjM0Mlcd7mnS3pQgLpiSWp2ampBalFMH1MHJxSDUy6xm+mvLy74Zd/sMnW
+	tYkP2kpN0g8sD8x/kKnO4Wm97qn77+c9j1bNuGKwKfzGVOYpTXO5eP2O/dnX/sR60ztF81ln
+	35x5XhrfaX72r+C6XQdvfN9j/+R1T1fFi8pulYMBz6PD2z1uL5rls1lgqbSpmR7bRJvqQ0tN
+	XKpnSq5q1XmTf0Jw2XXf9qv3E37G1nUf1mUTZmoSP7zRaOKa6R770uL/5PeunfNr3q7zZywf
+	bUvrvJhkviDjx/s1As++W/U/jnmUY9n74W+NdvCUzDsOLD/PN4Tqffze11rk6iCSJ2neuuV8
+	60K2VsfpPUvkX93XrJosuuwaSzq7IfN15VPLF9WJXtj1edP0y1fTLIxrlFiKMxINtZiLihMB
+	TpaQvBkEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsWy7bCSnK6j08l0gyMHzCwObd7KbrF66l9W
+	i8u75rBZLNr6hd1i550TzA6sHptWdbJ59G1ZxejxeZNcAHMUl01Kak5mWWqRvl0CV8b7xltM
+	BY81KuadvMvUwLhGoYuRk0NCwERiYsclZhBbSGA7o8TLwwYQcQmJ5s5GJghbWGLlv+fsXYxc
+	QDVPGSVuHP4BlmATsJI4/2sfG4gtIqAqseXJAzCbWaBW4sGia0wQDZcZJV697AFKcHBwCvBK
+	TPhnDVIjLOAicfLcH7B6FgEViTcNB1lBbF4BS4mJlzvZIGxBiZMzn7CAtDIL6Em0bWSEGC8v
+	sf3tHGaI2xQkfj5dxgpxgp/Esz9H2SFqxCWO/uxhnsAoPAvJpFkIk2YhmTQLSccCRpZVjKKp
+	BcW56bnJBYZ6xYm5xaV56XrJ+bmbGMGRoRW0g3HZ+r96hxiZOBgPMUpwMCuJ8L4+dTxdiDcl
+	sbIqtSg/vqg0J7X4EKM0B4uSOK9yTmeKkEB6YklqdmpqQWoRTJaJg1OqgWnCkRDxV2/yV0le
+	vOdyjvmZu9tD8ZpAz9AHwReqcvn6v3V9jA9cFTH1WUq/gu7O7Z7r01oc+tUcDhz+Fh+f9fCc
+	0inJaROLX+nzHj3z+lycxLRpHlGNNbkBN/uFw7aKzPO5IRx0ojX9JMeP5DVf/+62+/P8Tc4M
+	zh1nWD7nLhDPTOz/xfZ3RsqRhFPyzLN4zD9Uv/DV2jP93L/Fi2636W1RK/338EZqguw7N/Oi
+	T8bZEjd9/T+n/JGamWEa6+Ij1VFWvmBtwKWi4lubTeJTmZ07VWU+Xvu5O+uGX9O1m+WMelx1
+	USerCp/eaOMz2qYjyn/tyTNe7gkf9uSfmqL4TuHEZw72vme9bMmHqg9UVyixFGckGmoxFxUn
+	AgBhg6cq+wIAAA==
+X-CMS-MailID: 20250306063546epcas5p388084f298ae5d55eab7fbbb7cc1db2d9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
+References: <20250210061915.26218-1-aatif4.m@samsung.com>
+	<CGME20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc@epcas5p4.samsung.com>
+	<20250210061915.26218-2-aatif4.m@samsung.com> <Z8Ab3VcAXf5z7UqE@vaman> 
 
-On 11/02/25 23:46, Erick Shepherd wrote:
-> Per the SD Host Controller Simplified Specification v4.20 §3.2.3, change
-> the SD card clock parameters only after first disabling the external card
-> clock. Doing this fixes a spurious clock pulse on Baytrail and Apollo Lake
-> SD controllers which otherwise breaks voltage switching with a specific
-> Swissbit SD card.
+
+
+> -----Original Message-----
+> From: Aatif Mushtaq/Aatif Mushtaq <aatif4.m@samsung.com>
+> Sent: 28 February 2025 15:03
+> To: 'Vinod Koul' <vkoul@kernel.org>
+> Cc: 'dmaengine@vger.kernel.org' <dmaengine@vger.kernel.org>; 'linux-
+> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>;
+> 'pankaj.dubey@samsung.com' <pankaj.dubey@samsung.com>;
+> 'aswani.reddy@samsung.com' <aswani.reddy@samsung.com>
+> Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
 > 
-> Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
-> Signed-off-by: Brad Mouring <brad.mouring@ni.com>
-> Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index f4a7733a8ad2..5f91b44891f9 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2065,10 +2065,15 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
->  
->  	host->mmc->actual_clock = 0;
->  
-> -	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> +	if (clk & SDHCI_CLOCK_CARD_EN)
-> +		sdhci_writew(host, clk & ~SDHCI_CLOCK_CARD_EN,
-> +			SDHCI_CLOCK_CONTROL);
->  
-> -	if (clock == 0)
-> +	if (clock == 0) {
-> +		sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
->  		return;
-> +	}
->  
->  	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
->  	sdhci_enable_clk(host, clk);
+> 
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: 27 February 2025 13:32
+> > To: Aatif Mushtaq <aatif4.m@samsung.com>
+> > Cc: dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > pankaj.dubey@samsung.com; aswani.reddy@samsung.com
+> > Subject: Re: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
+> >
+> > On 10-02-25, 11:49, Aatif Mushtaq wrote:
+> > > Add a new dma engine API to support 2D DMA operations.
+> > > The API will be used to get the descriptor for 2D transfer based on
+> > > the 16-bit immediate to define the stride length between
+> > > consecuitive source address or destination address after every DMA
+> > > load and store instruction is processed.
+> >
+> > Why should we define a new API for this...? Why not use the sg or
+> > interleaved api for this?
+> >
+> 
+> Thanks for pointing out, interleaved API can be used for this.
+> I will make the change
+> 
+
+While trying to make the change I realised that sg and interleaved
+APIs cannot be used for our use case.
+Interleaved API is used to transfer data from non-contiguous
+buffer to non-contiguous buffer and sg API is used to transfer 
+non-contiguous buffer to contiguous buffer but both the APIs work 
+on multiple data chunks where each chunk has its individual attributes 
+and there is a tx descriptor for each data chunk.
+But in our case we have single tx descriptor to increment the source or
+destination after every DMA LOAD and STORE operation till the desired
+length of transfer is achieved, which means we don't have multiple data
+chunks which is required in case of interleaved and sg.
+The use case is to do memory to memory copy but not in a linear way,
+such that we can define a gap between each burst.
+
+> > >
+> > > Signed-off-by: Aatif Mushtaq <aatif4.m@samsung.com>
+> > > ---
+> > >  include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > > index b137fdb56093..8a73b2147983 100644
+> > > --- a/include/linux/dmaengine.h
+> > > +++ b/include/linux/dmaengine.h
+> > > @@ -833,6 +833,7 @@ struct dma_filter {
+> > >   *	be called after period_len bytes have been transferred.
+> > >   * @device_prep_interleaved_dma: Transfer expression in a generic
+> way.
+> > >   * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the
+> > dst
+> > > address
+> > > + * @device_prep_2d_dma_memcpy: prepares a 2D memcpy operation
+> > >   * @device_caps: May be used to override the generic DMA slave
+> > capabilities
+> > >   *	with per-channel specific ones
+> > >   * @device_config: Pushes a new configuration to a channel, return
+> > > 0 or an error @@ -938,6 +939,9 @@ struct dma_device {
+> > >  	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
+> > >  		struct dma_chan *chan, dma_addr_t dst, u64 data,
+> > >  		unsigned long flags);
+> > > +	struct dma_async_tx_descriptor
+> > *(*device_prep_2d_dma_memcpy)(
+> > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+> > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags);
+> > >
+> > >  	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps
+> > *caps);
+> > >  	int (*device_config)(struct dma_chan *chan, struct
+> > dma_slave_config
+> > > *config); @@ -1087,6 +1091,27 @@ static inline struct
+> > dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
+> > >  						    len, flags);
+> > >  }
+> > >
+> > > +/**
+> > > + * device_prep_2d_dma_memcpy() - Prepare a DMA 2D memcpy
+> > descriptor.
+> > > + * @chan: The channel to be used for this descriptor
+> > > + * @dest: Address of the destination data for a DMA channel
+> > > + * @src: Address of the source data for a DMA channel
+> > > + * @len: The total size of data
+> > > + * @src_imm: The immediate value to be added to the src address
+> > > +register
+> > > + * @dest_imm: The immediate value to be added to the dst address
+> > > +register
+> > > + * @flags: DMA engine flags
+> > > + */
+> > > +static inline struct dma_async_tx_descriptor
+> > *device_prep_2d_dma_memcpy(
+> > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+> > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags)
+{
+> > > +	if (!chan || !chan->device || !chan->device-
+> > >device_prep_2d_dma_memcpy)
+> > > +		return NULL;
+> > > +
+> > > +	return chan->device->device_prep_2d_dma_memcpy(chan, dest,
+> > src, len,
+> > > +						       src_imm, dest_imm,
+> > flags); }
+> > > +
+> > >  static inline bool dmaengine_is_metadata_mode_supported(struct
+> > dma_chan *chan,
+> > >  		enum dma_desc_metadata_mode mode)  {
+> > > --
+> > > 2.17.1
+> >
+> > --
+> > ~Vinod
 
