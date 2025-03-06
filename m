@@ -1,44 +1,41 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C51207DED
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982E6207DF0
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741294229; cv=none; b=BORk3QWgObI5sVR8urNIEuRqL0Zx8MgOxykkvmakaPVziHTZMm9FAXIqQqRj+73S93D3BJ6p7aHxxplvxYo34E18UUTZIsVTMoBWFgTOYIfuwVfMgmPTN/pizkr3NrIP9NUJVm41q0iJbP03lFFO4zW9KVxz8wza/1q1B4oWMyE=
+	t=1741294229; cv=none; b=TXNBey3R+gYS32k6DNs/WkqLl5TcMbHLzxD0P3g7JA7gM2UzANUFE8I9K+PMeOmoP7YadgfDxyg6u+meN9qpZHEYeRSdsayFCgoRjWyFGKANyJ9X0iMhlx0XJUFmc5+nou8E84oh+tAHKZg9odTktQ4s6y9SNlscXUng/IsrFbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741294229; c=relaxed/simple;
-	bh=KRluoi8tQE78rsIoqjBBTa7FMdeeGx8cw5Ioy9X4io4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hLEgjekwDYMJOd0dTY/3f+5BWtbEhIEmHVpx/2ujrlIduPsqZmh0kJKaMQeLZ9xyT+Bawbjt/lFiGS0kOR3vqivPOAs0Q1YmqsdP0yaPGKrggbY1YNHJaCji9bzfLDSTLBxC8KuRTHXIUeNh1XU8rq0JuZtPBSl6FgnIRAQSfM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KRZI9nZp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NQt5d+D9; arc=none smtp.client-ip=193.142.43.55
+	bh=lj/zdMUB/zXUQujBEpe+WVR+k7MIDgNioSQiZ0dB4OA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ce30NT2llUTkwWKDfkiodjd3fBpnMhRT0xxc6w9UI6MT7A2M8rYaipqUWRfkiGp0u7xLn1W1HTrb5Hz9jmcG++hU+3m/DJW0W44GnsFJ9ROMUrM0ochnUQkKQo3yqxKGWzQj8lRBjJF7kj7I1ibQygi9tBNHXboqB6MRzUrxbCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fXkSQTm1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ob8Mhfv6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KRZI9nZp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NQt5d+D9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fXkSQTm1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ob8Mhfv6"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741294225;
+	s=2020; t=1741294219;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lwVtck4Unu5sM6JeYtaPoha2zMPYGqqNVUo58AiBHJk=;
-	b=KRZI9nZpx97ZwvF+V/AwxSLCv5eRtaF1o2o3OYqRjErxo1D7FCMuOd/JPWPoYqqJ39gXF2
-	fALQ5Y56xV4CRZdWB7TNHsVT+BqZCIFZ5yzXZU+hanma56C7QyALn4cuJ+/T22qR55Oq4y
-	sNHUba/CwTOwCv7fXoGD+X/mwmrU6I82tKxZ0rd3wnWGtC764SJk8oDgxiW8leGPa0HOvp
-	UEJGNdR0W3ATB2qN4Me/FJU/qPQ+zJZspXCn1KURMYOLico4FbdIQwAeUAzmCwnWzsEARQ
-	KgF+c9a2dSuRgJIW2R1S1h79xt6vGqg9DMGmjRFhTcIPu5EINvKIHKfM2/kdHQ==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jv+CLkPXJjOH3lPUk/jYdaQez332Q1CoAyi49LlZOUQ=;
+	b=fXkSQTm1A0FbXpilFtJZ9IE5Mu1GDgiGavuGQTVy1JBX3im1pUaKMPGmydkG1kBGgnM+3V
+	prXqKZnF0z5iutY+kIz/6ws8mltObeXM8T5XNM244GDXYM9bzZ2ittuOOIbcxX4GsJOJNi
+	NxMLStlArsnG0lr4uW/t4k/+2LTNpzpul+1iTE2Ot2JgggqYha9Bmac2RauRw4cRc4pJH3
+	Ba7BpbHew1ChHyQDPFwtkFsKf2JCdrS2D7BugZ1lZY52IKqNdLoMP8S644+QuUVxtY3eE2
+	ZqpkQbw4Z4LqXErgOCUWuhcdqFdPsg8Ayi5xcEO/55mlVR7DLqZjGx1QpqIw2g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741294225;
+	s=2020e; t=1741294219;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lwVtck4Unu5sM6JeYtaPoha2zMPYGqqNVUo58AiBHJk=;
-	b=NQt5d+D9SrmvSpLtQC14+WKrdBWrzwjC3BvNY7UPquwg1ZnB5yI1GdOI7TVQxToFJwX6JU
-	yJFRouxFg6YdEzCg==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jv+CLkPXJjOH3lPUk/jYdaQez332Q1CoAyi49LlZOUQ=;
+	b=Ob8Mhfv6GJFOtTS5HCTh0+iYlyjOWGJSYb/B4JyIpP1id2b5sAsSYsr25sTmGwz/1t81Yq
+	kQ6VmxdwOeYiFlBw==
 To: Borislav Petkov <bp@alien8.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,11 +47,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 02/12] tools/x86/kcpuid: Remove unused local variable
-Date: Thu,  6 Mar 2025 21:49:50 +0100
-Message-ID: <20250306205000.227399-3-darwi@linutronix.de>
-In-Reply-To: <20250306205000.227399-1-darwi@linutronix.de>
-References: <20250306205000.227399-1-darwi@linutronix.de>
+Subject: [PATCH v1 00/12] tools/x86/kcpuid: x86-cpuid-db v2.2 update
+Date: Thu,  6 Mar 2025 21:49:48 +0100
+Message-ID: <20250306205000.227399-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,28 +58,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The local variable "index" is not used anywhere. Remove it.
+Hi,
 
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
----
- tools/arch/x86/kcpuid/kcpuid.c | 4 ----
- 1 file changed, 4 deletions(-)
+This series updates kcpuid's CSV file from v1.0 to v2.2, as generated by
+the x86-cpuid-db project. [*]
 
-diff --git a/tools/arch/x86/kcpuid/kcpuid.c b/tools/arch/x86/kcpuid/kcpuid.c
-index abfeecce5aa8..1159204b9902 100644
---- a/tools/arch/x86/kcpuid/kcpuid.c
-+++ b/tools/arch/x86/kcpuid/kcpuid.c
-@@ -180,10 +180,6 @@ static void raw_dump_range(struct cpuid_range *range)
- 
- 	for (f = 0; (int)f < range->nr; f++) {
- 		struct cpuid_func *func = &range->funcs[f];
--		u32 index = f;
--
--		if (range->is_ext)
--			index += 0x80000000;
- 
- 		/* Skip leaf without valid items */
- 		if (!func->nr)
--- 
+The CSV changes include:
+
+* New leaves for Transmeta and Centaur/Zhaoxin.
+* New bitfields at leaves 0x7, 0x80000001, 0x80000020, and 0x80000021.
+* A standardized style for all x86 trademarks, registers, opcodes, byte
+  units, hexadecimal digits, and x86 technical terms.
+
+More details about the CSV changes are at the actual commit logs.
+
+PQ Summary:
+
+* Patch 1 is a generic kcpuid bugfix.
+
+* Patches 2-4 are preparatory cleanups.
+
+* Patches 5-9 add rudimentary x86 vendor detection and filtering to
+  kcpuid, as the CSV file is updated with indices that are exclusive to
+  certain CPU vendors.
+
+* Patch 10 updates the CSV file to x86-cpuid-db v2.0.
+
+* Patch 11 updates the CSV file to x86-cpuid-db v2.2.
+
+  Patch 10 and 11 are separate on purpose, to make the CSV commit log
+  diffs more sensible.
+
+* Patch 12 puts the whole kcpuid tool under MAINTAINERS' X86 CPUID entry,
+  since changes to the CSV file may require updates to the kcpuid code.
+  I would also like to have myself and the x86-cpuid mailing list CCed
+  for all future kcpuid patches.
+
+Thanks!
+
+[*] https://gitlab.com/x86-cpuid.org/x86-cpuid-db
+    https://x86-cpuid.org
+
+8<-----
+
+Ahmed S. Darwish (12):
+  tools/x86/kcpuid: Fix error handling
+  tools/x86/kcpuid: Remove unused local variable
+  tools/x86/kcpuid: Remove unused global variable
+  tools/x86/kcpuid: Simplify usage() handling
+  tools/x86/kcpuid: Refactor CPUID range handling for future expansion
+  tools/x86/kcpuid: Extend CPUID index mask macro
+  tools/x86/kcpuid: Add rudimentary CPU vendor detection
+  tools/x86/kcpuid: Restrict CPUID scanning to valid vendor ranges
+  tools/x86/kcpuid: Define Transmeta and Centaur index ranges
+  tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.0
+  tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.2
+  MAINTAINERS: Include kcpuid under X86 CPUID DATABASE
+
+ MAINTAINERS                     |   2 +-
+ tools/arch/x86/kcpuid/cpuid.csv | 787 +++++++++++++++++++-------------
+ tools/arch/x86/kcpuid/kcpuid.c  | 257 +++++++----
+ 3 files changed, 621 insertions(+), 425 deletions(-)
+
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+--
 2.48.1
-
