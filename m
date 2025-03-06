@@ -1,171 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3232E20ADC9;
-	Thu,  6 Mar 2025 11:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88ECF1FC0F9;
+	Thu,  6 Mar 2025 11:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260607; cv=none; b=o/RA4Jz9iYWt2UzbbOBUHNWwAyqKADjtkmPP14QO9QZieQzQ1l0K7WakYr85X4lqEyqfMvBCFOJ4+0GC0zxqvRvdxIcFVU7iwhFsfcxyAJXfB6MuNAp+1TlHqsaSA4HW4XfMI8I+u/pBTQnXYNKj/A2bMnYQv0Wo4oh/aPv0VaE=
+	t=1741260632; cv=none; b=RspTpGqS+Dy8oF4Xjqsyl1ngDYXznkd+ac0JCuy7V0O86j2bd5s2GbgEV4/v9nh2/055mfXOqfMcB4/PEtFUvhDtKMkcddWPzWcJn3pUDjcG9ucprjgTFMwxju5y6XIFzaVZ6RScM7CaZwvseeKhPkuDA9DO9Ur4zSmGylo7574=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260607; c=relaxed/simple;
-	bh=OpJrKTIFzZ5pckjudi3Qin4EgJkRHJdkbCYsaO+8+/E=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=L2vOMEzW30Ns+WzijtUN6lpvUVGC5CkLLzm1CsggXtpDFVKy9REsvSIlotdUGZCb4C2CilhfhkUc85X308NzjAQpBr6WdFtIWAFBwgDJCuPnuiDtlYCzjXmSncXa2PzBtgSKZdjlDLgSJpfqmviSM9fiq4dA92ca30pbVWrRQ6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZZUwjdE1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qBfNQ4Bp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741260632; c=relaxed/simple;
+	bh=Qr0sGyrLmQ6es4CO43+zm0fmuYxQlueRct9R+BrDTHM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Owmq1aN9xBm3Sw8OIcssyxL8+SAgBKGyX9AyErczHex8fzbowWVyZrNwqv++gWVuw3JRSmaymEygw5cM3UOvJMuXOC7xnqotTHDh1wYg+dQh4x/oF+9EWw+Jzr2mH8cDNKjzc+Q1hlsq7l98/6UUP1tHeQpzB7f52hveJC8PY3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLlrPblq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZZUwjdE1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qBfNQ4Bp"
-Date: Thu, 06 Mar 2025 11:30:02 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741260604;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7NdCogl1ODaHR/OAf9QpmrH+l5xcgxjNSNuiCkD2Hn8=;
-	b=ZZUwjdE137yKZD+ExuxH6v4eTf56vE7QF4nmnNP8QQJQ3MtkvgOF4HJ93hENavhTmIHdPK
-	GsEY8KDgvZvZxnknZXz68+SROSzlPtzQjMRftLw+9g5Xobf9YrE+1kYCh41TpIm2ri2GMU
-	qDqEly49yyTyhrA6bGrL7cfeXQ51CE/d+eB7luJTPje/ZUQT/h96Nsi+0ecCnwDbmTks9k
-	gaBaDNDzwFRL0M/foPXBJ9OyQmv8J02rJwjkQNO5Wh1+yqkHe1gQs7Xj9wd57lOygBL5Re
-	ZKV83vhShqcNZY4ZBHq6g7E7KMMqsLybVtA/2An/gmZuxIuQMF0rX0/pILVADw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741260604;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7NdCogl1ODaHR/OAf9QpmrH+l5xcgxjNSNuiCkD2Hn8=;
-	b=qBfNQ4Bp5xJmWqiW+NECXOZqYZPqE1vH5opXz1Ove/f77XPCa/pK3zuw8qLYjLa5XYbmoW
-	Am03WtcDc6+cpLAA==
-From: "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/core] uprobes/x86: Harden uretprobe syscall trampoline check
-Cc: Jann Horn <jannh@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Kees Cook <kees@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Andy Lutomirski <luto@kernel.org>, stable@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250212220433.3624297-1-jolsa@kernel.org>
-References: <20250212220433.3624297-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLlrPblq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF0DC4CEE0;
+	Thu,  6 Mar 2025 11:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741260632;
+	bh=Qr0sGyrLmQ6es4CO43+zm0fmuYxQlueRct9R+BrDTHM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=VLlrPblqXk0hvw/yfgsRaMg7o5ZGImnJKiCuHLCBcG5Mqphl/n2sah0y7Oz2WmTYw
+	 6/1RtIoHcJivpGewzX0z9TKosnc5fW25xB0mDnYpDKeRLVUjCCGqm+pR6IyDs1YL/N
+	 Z4kn00rF4QlKmvRkMsrxzIJmD5+T67Z8W9ZhqhAoBPMGKEuxEt+UdE7ZmQNvyFejTQ
+	 59EY6aHMlyies9499Fm0HLbomJASWb/sZJ27jvEQWfxFNfJc1VXTS3kTWQGLBCjX7e
+	 SJLvNhDegscin37BW5i6u3Uf7vR83/eXwRLmQHvBWmnisqrydCoWU7w220NNbXN7CB
+	 /lNvr+4cjWNdg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/2] tcp: ulp: diag: expose more to non net admin
+ users
+Date: Thu, 06 Mar 2025 12:29:26 +0100
+Message-Id: <20250306-net-next-tcp-ulp-diag-net-admin-v1-0-06afdd860fc9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174126060240.14745.15365015848455636391.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABaHyWcC/zWNQQqEMBAEvyJz3oFEUXG/InuIzqgDbgxJFCH4d
+ 4PgoQ/VUN0JAnvhAN8igedDgmw2g/4UMC7GzoxCmaFUZa0q1aDlmHNGjKPDfXVIYuanNfQXi0Z
+ TQ+3UdVoNkFec50nO56GHV4bfdd3TPyaMewAAAA==
+X-Change-ID: 20250306-net-next-tcp-ulp-diag-net-admin-a1d6d7f9910b
+To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
+ John Fastabend <john.fastabend@gmail.com>
+Cc: Davide Caratti <dcaratti@redhat.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1345; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Qr0sGyrLmQ6es4CO43+zm0fmuYxQlueRct9R+BrDTHM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnyYdUFD9xJyEeInj0DwaLM9fl53Png/7uclYVV
+ UZl0Quc64mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8mHVAAKCRD2t4JPQmmg
+ c14cD/9YQKASsBE+hbG+LjxHAejiXxM0uvZgu3sb+9gffexHJ7p4nYpx4zkaBVJoMsTocGGgRQB
+ zwOeW0nF82mw6c7EHS2jzr+tsVPNxEaZsRCY6rBauhqvHBeeMO6sNUmTJXlzECOYLu1/cHCeZmO
+ 2wBPIKc0uJ8/cELc9pssBdlW3R16CCOetIGZautRkYaGugXlw4Ogt1qQUNYuZVdLwdA5O5eI9B8
+ w7ERjpp3SYeSAG0tLJI4uEaStAUhcwUsDVt0CmdYPuujNoVfm5KocNboYs9bx9n9KnfVWloZgaY
+ 4KmWfxgdLIRkpYAA/P078JW79z0WgJZLZWUfySC1P2wzzKIln6OoTVCnpAgjATXJ4pCgV6i8Hdb
+ OSitbgYSL+3SXAl+bc1CgQr62CpLgjVOqAqfCUOKhQ4zMmg/hk5bKi8xDvWy3Y6YOG3Lykjrjc7
+ wUzkFD1Ni4bWrm/k2x1AyFWy9TfquEYhv86roMwHeuLhJayR/cGc+d0JcpareggUhZUbME6uN9E
+ 5jrKKcsncpjR9QV0YDyNfZua4MfxyrmHoRBQo8meSc6qUhO/acVfDdQbzZGvmxPb4CLWp1tP0jI
+ M77US5hS592ptolW65hESWOFRw26LJ+rFMfwpKpzSSpN4d6vXAHcLw58v8r1w5RDTC0lYiFBa15
+ vNToL/Qv38ZRcmQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The following commit has been merged into the perf/core branch of tip:
+Since its introduction in commit 61723b393292 ("tcp: ulp: add functions
+to dump ulp-specific information"), the ULP diag info have been exported
+only to users with CAP_NET_ADMIN capability.
 
-Commit-ID:     fa6192adc32f4fdfe5b74edd5b210e12afd6ecc0
-Gitweb:        https://git.kernel.org/tip/fa6192adc32f4fdfe5b74edd5b210e12afd6ecc0
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Wed, 12 Feb 2025 23:04:33 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 06 Mar 2025 12:22:45 +01:00
+Not everything is sensitive, and some info can be exported to all users
+in order to ease the debugging from the userspace side without requiring
+additional capabilities.
 
-uprobes/x86: Harden uretprobe syscall trampoline check
+First, the ULP name can be easily exported. Then more depending on each
+layer:
 
-Jann reported a possible issue when trampoline_check_ip returns
-address near the bottom of the address space that is allowed to
-call into the syscall if uretprobes are not set up:
+ - On kTLS side, it looks like everything can be exported to all users:
+   version, cipher type, tx/rx user config type, plus some flags.
 
-   https://lore.kernel.org/bpf/202502081235.5A6F352985@keescook/T/#m9d416df341b8fbc11737dacbcd29f0054413cbbf
+ - On MPTCP side, everything but the sequence numbers are exported to
+   all non net admin users, similar to TCP.
 
-Though the mmap minimum address restrictions will typically prevent
-creating mappings there, let's make sure uretprobe syscall checks
-for that.
-
-Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return probe")
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Kees Cook <kees@kernel.org>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20250212220433.3624297-1-jolsa@kernel.org
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- arch/x86/kernel/uprobes.c | 14 +++++++++-----
- include/linux/uprobes.h   |  2 ++
- kernel/events/uprobes.c   |  2 +-
- 3 files changed, 12 insertions(+), 6 deletions(-)
+Matthieu Baerts (NGI0) (2):
+      tcp: ulp: diag: always print the name if any
+      tcp: ulp: diag: more info without CAP_NET_ADMIN
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 5a952c5..9194695 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -357,19 +357,23 @@ void *arch_uprobe_trampoline(unsigned long *psize)
- 	return &insn;
- }
- 
--static unsigned long trampoline_check_ip(void)
-+static unsigned long trampoline_check_ip(unsigned long tramp)
- {
--	unsigned long tramp = uprobe_get_trampoline_vaddr();
--
- 	return tramp + (uretprobe_syscall_check - uretprobe_trampoline_entry);
- }
- 
- SYSCALL_DEFINE0(uretprobe)
- {
- 	struct pt_regs *regs = task_pt_regs(current);
--	unsigned long err, ip, sp, r11_cx_ax[3];
-+	unsigned long err, ip, sp, r11_cx_ax[3], tramp;
-+
-+	/* If there's no trampoline, we are called from wrong place. */
-+	tramp = uprobe_get_trampoline_vaddr();
-+	if (unlikely(tramp == UPROBE_NO_TRAMPOLINE_VADDR))
-+		goto sigill;
- 
--	if (regs->ip != trampoline_check_ip())
-+	/* Make sure the ip matches the only allowed sys_uretprobe caller. */
-+	if (unlikely(regs->ip != trampoline_check_ip(tramp)))
- 		goto sigill;
- 
- 	err = copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof(r11_cx_ax));
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index a40efdd..2e46b69 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -39,6 +39,8 @@ struct page;
- 
- #define MAX_URETPROBE_DEPTH		64
- 
-+#define UPROBE_NO_TRAMPOLINE_VADDR	(~0UL)
-+
- struct uprobe_consumer {
- 	/*
- 	 * handler() can return UPROBE_HANDLER_REMOVE to signal the need to
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 921ad91..70c84b9 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2169,8 +2169,8 @@ void uprobe_copy_process(struct task_struct *t, unsigned long flags)
-  */
- unsigned long uprobe_get_trampoline_vaddr(void)
- {
-+	unsigned long trampoline_vaddr = UPROBE_NO_TRAMPOLINE_VADDR;
- 	struct xol_area *area;
--	unsigned long trampoline_vaddr = -1;
- 
- 	/* Pairs with xol_add_vma() smp_store_release() */
- 	area = READ_ONCE(current->mm->uprobes_state.xol_area); /* ^^^ */
+ include/net/tcp.h   |  4 ++--
+ net/ipv4/tcp_diag.c | 21 ++++++++++-----------
+ net/mptcp/diag.c    | 42 ++++++++++++++++++++++++++----------------
+ net/tls/tls_main.c  |  4 ++--
+ 4 files changed, 40 insertions(+), 31 deletions(-)
+---
+base-commit: f130a0cc1b4ff1ef28a307428d40436032e2b66e
+change-id: 20250306-net-next-tcp-ulp-diag-net-admin-a1d6d7f9910b
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
