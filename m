@@ -1,173 +1,124 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674E925C708
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2993525C6E6;
+	Thu,  6 Mar 2025 17:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741283640; cv=none; b=q2Zrn6nAhpCGXQInJAIgCqvgpGcpKk9AXE9fKkMe/CDQmgEFrlsen2zWhkY+MLoPObGTBHzj+W1oYDkIs28IuPtclVK80V/Q3EKDJCzkAVrDMMtAnGDwk6zHHevld7eS+noUU48485O+b4XcYVQTQ4wH6YpHeQBMi6mwz8d7fxI=
+	t=1741283651; cv=none; b=KSmAfXfSrvJzT7nppZU2UkUGGM8RXWUuXTCNBeQzsh4EflSKf30+V3DTRu7sC8VK/2hm9mTAfpx6LuZkaw4IKeGryaweg60y0AbNu7joXnrUsc4m/9x8bcSpAo8ZbLPwZ4laGvmwN6VZ9fjwzRJ1niBk/B+ES+yaOmqy6p5pvNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741283640; c=relaxed/simple;
-	bh=VcmDipHwuj8PgRhQ4UBe7gUhRK502GziUS3SiEtvIAg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IappOdSNhWBa6bZqNH6ZCDqIeGVZA7jTnFXxAJ2MA0G688n2EzCjTE9mHj1kBK63MMfmGaXcLlidrr72D3hDxTlwrzc/7AvFUpoRihMcFrKbXhL1N3OhSj+F+OXMfTNG08HNCdcVOcxcgDl+F8TD9kOOsQf/oS76T4dRyr6Dr18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FhXbOlJk; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741283651; c=relaxed/simple;
+	bh=QE+LjaL2ZyYUoUH2d1IXBLbqS3fGrTB93p+UI1vbjt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tuaCYz8ojKvsRUPebQFYZBlnr5LlKAJ9VnanEbEX5c+tra6PMgnHaT5N6e1yyTKh0dj12KJ7n/K7IJOknD4exHvaw3/aPOUHYLqUVNd3HOq71lAn4lIio0uyCGgqccaoe5otUHclFYb3S5qbqLjE9sSvfdwzGAB2CoCteWIcKpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=alCf/78u; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FhXbOlJk"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54959d1a856so2630445e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:53:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alCf/78u"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-390edaee0cfso745649f8f.2;
+        Thu, 06 Mar 2025 09:54:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741283633; x=1741888433; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VcmDipHwuj8PgRhQ4UBe7gUhRK502GziUS3SiEtvIAg=;
-        b=FhXbOlJkaGqHLAxHA/n8S7KSyIcFRnoigqKNOYYcXYYHgHTah7VB2OV6qX15HPwpRr
-         k+KXbr1AfmxJHGiCzlbqPKv4y+XtSN2SgVsZb5/YEnbXBRjW+1L4501ZQU675CfJUVQ2
-         Ot4HCaYF2tXleKJ6vpqfR1PBoAYoNEZlpNH1A=
+        d=gmail.com; s=20230601; t=1741283648; x=1741888448; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E3tn1nC4FIEWcFvHKdbKDxUQM2tvo3bFJqFt7q3komc=;
+        b=alCf/78uPJtr3RkpDX1ioq7bf6g+DFZoZ/OSVZ6iNSnOtbU6VjMHCvsZh+1/+mULel
+         /oatFM0jEdx1qjY4IrxK25ZoROgvCVyFaJl3r4V6sC14zZGuhOtnjhVrbbDqF3mJgemV
+         z7YYpg4PNB/g9Wg9lZH8wR50haTGw+tiUoulHOHV97LJctGnKEPX3tcvfwyPqLCdN3/n
+         VgUTMcWpAnmng2/S5qJooFz11dobdRdTI+AV5T16cU7ptmjgzJQhtbpUsBB6HMqpszZZ
+         uw0HOC0iAhRrTAHPgTBsrt77aTQBmrKLstkoiIWtH3yB+cEFg4BBGRlXEeJrzxRuF2lq
+         Ucew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741283633; x=1741888433;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VcmDipHwuj8PgRhQ4UBe7gUhRK502GziUS3SiEtvIAg=;
-        b=kGprXWtlnlgyoYAl0mTPVAu20RFOh7kZx55KpA737dhQJar8gUkP2P9d7wGQSYUnNK
-         MtWwwsB53N0vStiZHDPrdisAmG5NnAU1B1LeZqEIOwHJQFa9FJk/et+BqramQxhcQnNV
-         MyivkWH1X81XIppqgmr0vwqpqAojaKKXeDbJRn7a+YkpkK8LfBn+4TEMg0HvV5rIkj0A
-         oRieLfT/EgmGlSvq97gepEiexswDFAJ6u9zofzCdmYHSmtRmj90HWpT6pxpT3m92D3ho
-         4zIz2p2SDKSr9I9JKrhm79V9ExCc5rtAbTw+DFf1iIC0q4b6YSiNsXTyFj6Ql8sgt6Hb
-         z0FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjrg1oTfM6dJQBtnRyggKF20mtNnTLkKzImRdHobmw/Wg+xSO8nw6KO44+vF1zrci5kL1of0yRuVbh4fg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye/AfLSCEEnbERaFZjNfhIGCmddDFQreAFQDC9QXF++tH6TSff
-	Qlyuyf+vVbbHkrcldHKFLniDxkY7FP08XodV9ugfsN/9LlrYi0RY3i9cQD/jmkKYoFwtUCpAWTk
-	gc/rA
-X-Gm-Gg: ASbGnctXpmZYLTP2gwqdPaR4NjGqiAX20WN1Gw6Q6HFN9/UIcFcimPYKcG5LknmVdkK
-	yd9Vp395p83jYXkqrAabZe2KjKIAyXopvGbwJgmV2p+88l4OaCi9teFMfKYZKoFyJ+XuKeYBJAe
-	NXRjr6V/Lh1aDgNwaQlPUj6WrCfTET/ZUVWn/LS4g4+eNoTl8PG5lZtq4Dm48xemB+cGOdZzlsJ
-	FCYbsPVNcJQVhUQgqJaBgTf9KvlFG+bOeqpSvPE5d1VLcfjNhRigwj7i1RDchRyoB4uWIrVjLUG
-	93REVjCTaDD9vLadW+vVYbj+XSy9K+0YMdKKavzKvfjBGnl2TFyNCD0I6lYXpIhTLOjTY3Ejnon
-	0j0vUTckVYjlt
-X-Google-Smtp-Source: AGHT+IGE/qpOq1hMT9YtTX7SEzMNKSZR2HbDjXZ4YIJmBDGxaKyURHPa3NsnbIHw/3xzDW75u9i6Wg==
-X-Received: by 2002:ac2:48a3:0:b0:549:8c0c:ea15 with SMTP id 2adb3069b0e04-5498c0cec7emr1016881e87.0.1741283633267;
-        Thu, 06 Mar 2025 09:53:53 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498fc0ac2asm54739e87.192.2025.03.06.09.53.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 09:53:52 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-307c13298eeso11618551fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:53:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXQiySX4KR2sM3zmceTzCcvZXLFPxkOPU0x61oGN6LoBdcs0GJkWtnYom9dpNp43FmbCwisScuo0sfKKxw=@vger.kernel.org
-X-Received: by 2002:a2e:9187:0:b0:30b:f0fd:5136 with SMTP id
- 38308e7fff4ca-30bf0fd5290mr6793931fa.18.1741283631322; Thu, 06 Mar 2025
- 09:53:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741283648; x=1741888448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E3tn1nC4FIEWcFvHKdbKDxUQM2tvo3bFJqFt7q3komc=;
+        b=vk6ZxiwBiatZj6jCpvkgbJ3HiPCq7tpj/MYfxKa38MtqNvMGRrcsVMyraG8hgf0Tsk
+         8r16E+SarDZQ9JiutW/gjV2CYWY0WZfxbLDZL2Ayby4hQWdEB0fBPxV7UsLtqtfYiKk7
+         g3eart7pS2vnaQ+kVbArMWQiSjqEAd4AuhP/pBygE+YUEuIgNzu4/2JpiNwV3rWoq82Z
+         nkjNWBT5kskmYZbfQ+qrAqFsKiyey6YWMX+N0aDVnYyQr6IyGHFjVMeprLuRMmubJ18h
+         Rvg4NbFonDrbWjndTop/jge6r7GuFqYMfjsk4Uh1pWfLuDcfM75Y9Hhbm3s5seNkbdqB
+         JkIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUamvJld4aE2ZvEdOVYtv0O7M9UaZEz9cZ6zfN32YBq3uli+j/oyoCnF0Wy4nfaRaEl0UiQyxiohT+mYekl@vger.kernel.org, AJvYcCVi77z1WdM84/USqw1Y7DMlyPrdrsEhDbDUT0bzwxsbn4W1YxPGZtde7cX/2Zx4ikOZzuWl4fS5YxqP@vger.kernel.org, AJvYcCWfZXAQWIr1iQUHD1/7b1hP00EH8x2xshuh4X5d1NoPo2KFGUui/R55e9X+Rn4bJzyLGkMiYMDSmaHx6bU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4YU2I6+I8zbs3AvgMDI2QQpPcQdqmh/HAuM3QE1DPiakGCUHa
+	WIXc6jNMHQWfiQUb8tcv+IJ4VqTB0Q4Ikq8O3NTf+NKsQhCzVQ0k
+X-Gm-Gg: ASbGncvg/moD0wJsG2Kg8x3h+1Lrpqdbs0zjt69DUBbpYeNeep/v0uR85FkJlmmBNU9
+	Yo3e70hdJRwjhITiuR3ojxTbGP4qNN1ScHj4mMUI5VYEPtBR47Ujr8Dr8u1G64Wla107bDaI5S7
+	WQK1/Ji5H1IyUDP61LYvU/BJkx5HpJmELqViBzNJHNUl9u2IRA46mEDNEDRXlLK2WqJA+kdJGvZ
+	+Mot94qovI9ak6xdjtupiAzNSjZujOL5byZns+qnyhdXkKmPv2GtQ895KTWWQBeiFt0NWJb3diS
+	7YXEQdABhcRg66lbEVdMHoj+CgHcSXVNioJUeAGzjkQHP9mM0wOshvNLkbeYxR9nstZPAFG3KIe
+	OhtT3VTeuPjCMFHEkVQ3wElFUh/mn/lw=
+X-Google-Smtp-Source: AGHT+IF8JOhotUrzkkAhhUVap8uNQR5LdOejIE5iz1HzD0XBwpr1ACZBG7lQnXoUPEqY9UlVKDHjZA==
+X-Received: by 2002:a5d:5f45:0:b0:391:329b:893e with SMTP id ffacd0b85a97d-39132d06be9mr56725f8f.5.1741283646837;
+        Thu, 06 Mar 2025 09:54:06 -0800 (PST)
+Received: from orome (p200300e41f3a9f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3a:9f00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd8b0425sm26788095e9.3.2025.03.06.09.54.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 09:54:05 -0800 (PST)
+Date: Thu, 6 Mar 2025 18:54:03 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/6] ARM: tegra114: add HDA node
+Message-ID: <kzwr2feo6i653nniemd6omjmdpo5ukqdfcmc5gjik2cyopvoyx@7ua6a3tb7sz4>
+References: <20250226105615.61087-1-clamor95@gmail.com>
+ <20250226105615.61087-5-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305-mipi-synaptic-1-v1-1-92017cd19ef6@redhat.com>
- <20250306-clever-lime-tanuki-e2fc43@houat> <CAN9Xe3SDyC47HWww1eH63aZOiM-WF9BGxztM3yh9bf6ORuY7VA@mail.gmail.com>
- <20250306-brave-wonderful-sambar-3d0bc5@houat>
-In-Reply-To: <20250306-brave-wonderful-sambar-3d0bc5@houat>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 6 Mar 2025 09:53:39 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XZJjNpzUgvGog0pFGwqUR09SocYFEk5355eptbK_gjqA@mail.gmail.com>
-X-Gm-Features: AQ5f1JrRJDiXo61n02Hjt29_oRyhxwMEG-u37b6Vvo-aWJLulx2MO1UpXmYjZko
-Message-ID: <CAD=FV=XZJjNpzUgvGog0pFGwqUR09SocYFEk5355eptbK_gjqA@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel/synaptics-r63353: Use _multi variants
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, Michael Trimarchi <michael@amarulasolutions.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Tejas Vipin <tejasvipin76@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="adrlf4fwc7byfa5p"
+Content-Disposition: inline
+In-Reply-To: <20250226105615.61087-5-clamor95@gmail.com>
+
+
+--adrlf4fwc7byfa5p
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 4/6] ARM: tegra114: add HDA node
+MIME-Version: 1.0
 
-Hi,
+On Wed, Feb 26, 2025 at 12:56:13PM +0200, Svyatoslav Ryhel wrote:
+> Add HDA device binding.
+>=20
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> ---
+>  arch/arm/boot/dts/nvidia/tegra114.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 
-On Thu, Mar 6, 2025 at 9:20=E2=80=AFAM Maxime Ripard <mripard@kernel.org> w=
-rote:
->
-> On Thu, Mar 06, 2025 at 10:08:24AM -0500, Anusha Srivatsa wrote:
-> > On Thu, Mar 6, 2025 at 4:31=E2=80=AFAM Maxime Ripard <mripard@kernel.or=
-g> wrote:
-> >
-> > > Hi Anusha,
-> > >
-> > > On Wed, Mar 05, 2025 at 07:01:41PM -0500, Anusha Srivatsa wrote:
-> > > > Move away from using deprecated API and use _multi
-> > > > variants if available. Use mipi_dsi_msleep()
-> > > > and mipi_dsi_usleep_range() instead of msleep()
-> > > > and usleep_range() respectively.
-> > > >
-> > > > Used Coccinelle to find the multiple occurences.
-> > > > SmPl patch:
-> > > > @rule@
-> > > > identifier dsi_var;
-> > > > identifier r;
-> > > > identifier func;
-> > > > type t;
-> > > > position p;
-> > > > expression dsi_device;
-> > > > expression list es;
-> > > > @@
-> > > > t func(...) {
-> > > > ...
-> > > > struct mipi_dsi_device *dsi_var =3D dsi_device;
-> > > > +struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi_var };
-> > > > <+...
-> > > > (
-> > > > -mipi_dsi_dcs_write_seq(dsi_var,es)@p;
-> > > > +mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
-> > > > |
-> > > > -mipi_dsi_generic_write_seq(dsi_var,es)@p;
-> > > > +mipi_dsi_generic_write_seq_multi(&dsi_ctx,es);
-> > > > |
-> > > > -mipi_dsi_generic_write(dsi_var,es)@p;
-> > > > +mipi_dsi_generic_write_multi(&dsi_ctx,es);
-> > > > |
-> > > > -r =3D mipi_dsi_dcs_nop(dsi_var)@p;
-> > > > +mipi_dsi_dcs_nop_multi(&dsi_ctx);
-> > > > |
-> > > > ....rest of API
-> > > > ..
-> > > > )
-> > > > -if(r < 0) {
-> > > > -...
-> > > > -}
-> > > > ...+>
-> > >
-> > > The point of sending a single patch was to review the coccinelle scri=
-pt,
-> > > so you must put the entire script you used here.
-> >
-> > I was actually thinking of sending patches per driver this time around
-> > since Tejas also seems to be looking into similar parts....Thoughts?
->
-> Not really?
->
-> The point of doing it with one driver was to make sure the coccinelle
-> script was fine before rolling it to other drivers. And actually, it
-> doesn't really matter: the whole point of putting the script in the
-> commit log is to be able to review and document the script you used. If
-> you're not going to put the one you used, it's kind of pointless.
+The nvidia,tegra114-hda compatible string doesn't exist in the bindings
+yet, but I've applied this for now and added a patch to the Tegra tree
+that adds the compatible string.
 
-Personally, I don't have any interest in reviewing the coccinelle
-script so I don't need it and, from my point of view, you could just
-remove it from the patch description (or point to it indirectly or
-something). I'll review each patch on its own merits. I am a bit
-curious if you ended up fully generating this patch with a coccinelle
-script or if you used a coccinelle script to start and then had to
-manually tweak the patch after. Actually, I guess I'll take it back.
-If you manage to fully generate conversions for all the panels with a
-single cocinelle script, I would love to take a glance at your full
-script just to satisfy my curiosity for how you handled everything
-properly. :-P
+Thierry
 
--Doug
+--adrlf4fwc7byfa5p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfJ4TsACgkQ3SOs138+
+s6EJ3BAAlMkfh43c2FIlRw7ZM70aUadsuK7Sgbk4J9AYZYBeHskaQ9gbKcmm7YVd
+PAa1xIxmmJUtg5dyZMHUi31wFIZ8Hgk5Rn0MGY4tkMLPA3X+FU1nmVI4h+c+OGnx
+FHc1CInS32PNsDBXjkpkl7sBbhKwyagOlwEUgAGM1ko32avKjFQwfHcNvelF+o69
+CxamH7Ja+WTuXBeidQWQbOOwJxDqb9dDrCDc2NpvlK8A/afS2dXX0k9bYLAxS/5s
+U3T+yS225l8YNAB80AWEA94MtrpYc8FEWaha93MarX5MGKvBANvy7PRhUuZBp8b2
+yNoQlIpZxPFqzWab0n25vOVhJBKpCxCQCszvuOZ3o0pnwnA+f+4ngEEqi90P+M0R
+Gjd/IIjw3QscPUPeVhnM1p7PPF5qzLQZMldHgfkefkiorRPTV/rUQVU70IczgL1U
+g8fRHdft8pbEc+37wZgmpZ+HyFWnuykOmI7AEe2YbYozS9uOwGDbo11DEmkJLsaP
+8/qRgK5D+3yACqrNMeRFjm1uJRPQ/pvL55fVCSwml9BPayn9zEv41pSeomlS0OZt
+PankenQIrOjtUEl7Dbgy+M3AQq7dN9w4yywdnYo3BbshdBPI0ZNdJNqRTIQjgcE+
+PU2kPjbRveUfQ2PgXu/AiAXs8KYDFczyUxlX46IE69s0SZgG8yw=
+=88q4
+-----END PGP SIGNATURE-----
+
+--adrlf4fwc7byfa5p--
