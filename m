@@ -1,153 +1,184 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479121FAC52
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879FF1C8602
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248830; cv=none; b=SDJJNtCoo/gYNcFvb1EAX1AqtvkC+leZcvFIPpCE6++t/siFOD4w51YV1pN1HwNiwmi6GBJQGsde7Pprd+cuf/UkhfBIRazeVOszFvxw1NWrR6OzMywqWFMbBdvfNEXetDYmE0QoD30nY3QR8KA7iRUfDd5wieCtfuRh/5RMtqk=
+	t=1741248843; cv=none; b=q7GClvfO2G/Is7Z+xKUaRn4UR8QUKWDD2geyTs3a3XHYRfmzbwjkepPU+lmRxqk7gzChXQqX+9kdL0Fgyy8qLRJ1RdXxBO9PcOSH9eOJuBG762+CzEOibRxGiboC/dXGZub9EiZpPVTBDsG8M9ZNpkDWfjsEQoL0W/iR+wog8M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248830; c=relaxed/simple;
-	bh=RmZfOZv9mSU7muKmuICqF7kMncNlxjNLjpCX8r/rE20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaJoF5ezyX4L4Ms4itXhGZ9Ab4f/G9p9aL8L+aFEhnyn26jvlSBIg9un4uJieOQP2Tx8Ig2ZzwD9Z0bZ3ow9ppyu6ZQb3pnq5i4uTT4lfcnbAsbXhUikU8I+TRKjoIT4tID8b8bZB0T+X8pZkQUlMEYJlOQWDujA+9OrRPyB4Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ZU6l3dcK; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1741248843; c=relaxed/simple;
+	bh=TkDcozBHBnKIV2auGGkHeHlQgJZ4HaUOFBQ63/NI+P8=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=WT8lmouAOhYHgc6dEJaz+ZsGNlfsRy1V3ionQoFThXdknw1KweSM6XbzDXeIw7aKSiAF1+0Vu6lbQLRIXY/6V6EMulAOFfuEy6h1klFJh/mvsYTa/ZenO3WkQB+kWpZ4qxjexnkwg6xKansXm1zGl9HW0whpVXMciaDHVRHOLR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TRRYU3YQ; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ZU6l3dcK"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bdc607c3fso1794005e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 00:13:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1741248825; x=1741853625; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gLj5XWg7CIE0WfrqZc/tm6IHxyhmUxBPEQxl5xJpjbY=;
-        b=ZU6l3dcKui5HpnluuvhRRRr6ihSgUF+VqdR0xI0uWtKO63tVKVIP2EozrAMrYmJw7l
-         ugb1AHDTobNPgsPSC3x/sJE5euc+MjbK4GH8NPq8BubRCcDhLr/GvodttT4tbNSncbz8
-         iVamZgHbBS6yBpKk+cv0CMpOUA1QZLZ5OHrahrstxITZyCEtSnPvILnH4V6OsxPY1CVH
-         T+K8ButUBRnuxpovbVeHcWLxuLJZ8lcbE51jHDm3qxsOdJTnxOjOxaCBzHrIQRwFWm4u
-         cViGZqp/5Ieu3WbcpzYxmbUPuDoAxU4E51aIy/ACNR+Y16pUXoBKQegB0icyLdijUJMX
-         4TNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741248825; x=1741853625;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gLj5XWg7CIE0WfrqZc/tm6IHxyhmUxBPEQxl5xJpjbY=;
-        b=qxLb8S/yz0LA8Tf5PbxDoO0lIqJJkeQrupN1NAwkEsmBoLcSnwfjRPC6KW64ggpnwH
-         WstuK8E3DPdq4fBN/MwIFcEOC6Px5cXyV0yLbAJwvpXcFjnxHhJ00F+jX8AYhsc0V0ez
-         VHoQLUP+J+OmXkrp0z2VjCHZ/QOjU1F081ewvN0WkPMkuoP6AkZdSso3hQQqLSAnaJ9B
-         ktJrEzrWDLdZGHxS+IoyhVqQ7Dr3ZcpPCHVgrEIn+p7IuF/pM4CuS6xfbGI7xDxlzQou
-         3CxOu0w7iaaX1gZJQRrC6PfwAeoBQ1fawfl7NsrI5pFqVTacSJyQomYr7BI0kFkQjgJR
-         GxZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJxHWngmo2Hk08QdHpfuHuajDUL0lhKtnZvDcgrVmPGWWPVLKh7bh40p9Yx7WcvdYZXXucVNgsaI/7Ueg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9iuMO8m66HxwAyTmwjPzwy9iyT43ayuNatcPsuuJkljjclbzP
-	yXMSZFGCcoHL/aeLYdObZtg8JDjMoQWA57FQyG1LylatW7cIpB8TBD6zFS1/ENg=
-X-Gm-Gg: ASbGncvnVkuRM2tl6uHp1BbNAx93L/BUNpH1lnehcLjpPu0mQ8z1OKRdMUSMieK2UlD
-	zdL2Ale2zV5Fd639dLcyyI7tW9shDbgd5ymkdJDOoboQ81r0i+Vg+lSmUx8d1hCfcjEsFaklv6X
-	kNf7QpymRYSE8dmpj1m7R4QemMM/bEvbFK49mPj52i1Jwj0JanNSptszvUkgvkxkRNrCXC1bGES
-	4FXFF4yhu1EJcs0m1kmjH252/2EduN7C/ySMte10QvS7D0IDxNGROGGnIgFqacfLOYQdJUdF3/N
-	QzU24zDhxBuZJA6NNcSgZNxmsyrzP+/EJ4lUMEqoShW0TcWOy0/G7mL2HEWTe7QKsS/EXNk5Xw=
-	=
-X-Google-Smtp-Source: AGHT+IEizEhonB9j6mrELEVT2fWpqMYrBXgXdwXsHsJznxRDUYEH+hFr9DD372KDSR8Qo+hFwnpfNA==
-X-Received: by 2002:a05:600c:198f:b0:43b:c309:da40 with SMTP id 5b1f17b1804b1-43bd294de7dmr48473505e9.4.1741248825382;
-        Thu, 06 Mar 2025 00:13:45 -0800 (PST)
-Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c019557sm1262734f8f.50.2025.03.06.00.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 00:13:44 -0800 (PST)
-Date: Thu, 6 Mar 2025 09:13:43 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	cleger@rivosinc.com, alex@ghiti.fr, Anup Patel <apatel@ventanamicro.com>, 
-	corbet@lwn.net
-Subject: Re: [PATCH v3 0/8] riscv: Unaligned access speed probing fixes and
- skipping
-Message-ID: <20250306-3f25ee3d4686442bd215a0fa@orel>
-References: <20250304120014.143628-10-ajones@ventanamicro.com>
- <Z8jU2i5d3e4Dv4vk@ghost>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TRRYU3YQ"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250306081359epoutp02e821fa98cf4963b5db15a68bbc0a3909~qKJgTacQi2511125111epoutp02i
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:13:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250306081359epoutp02e821fa98cf4963b5db15a68bbc0a3909~qKJgTacQi2511125111epoutp02i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741248839;
+	bh=GFNB3GQfHuZhgoLh28ySpFkcndevRW3IQZO7WqPJuLc=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=TRRYU3YQJPsGxLk2/M/mc9QNMWkBFVrclJD3t50D40EOYKrvT8TDLWlMOay0wXKA+
+	 Cvn5BD+p9d/jW2OA35+xZx/jx9gzRV3uTqqcOy9l8Z9sarGrw6cZc2wn/Hp/BoKEdE
+	 5v69T4r3M1hrNZNFg4nGR8JhCcKWe4n3pA6twuPg=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250306081358epcas5p45839d254f72b81c22b1854bf49ddf2bd~qKJfudMFH3180531805epcas5p4j;
+	Thu,  6 Mar 2025 08:13:58 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Z7hyY07Xjz4x9Q7; Thu,  6 Mar
+	2025 08:13:57 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	0A.75.19710.44959C76; Thu,  6 Mar 2025 17:13:56 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250306074425epcas5p20a08ef2dbd5705a1044fafb8c4a9ec15~qJvr5Zkdd1625216252epcas5p22;
+	Thu,  6 Mar 2025 07:44:25 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250306074425epsmtrp13d2eb93faea97f50364276552d52caec~qJvr4VzDQ3019030190epsmtrp1-;
+	Thu,  6 Mar 2025 07:44:25 +0000 (GMT)
+X-AuditID: b6c32a44-36bdd70000004cfe-fa-67c959443956
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	41.8E.18729.95259C76; Thu,  6 Mar 2025 16:44:25 +0900 (KST)
+Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250306074422epsmtip18b4df393bbcbb9f3899d26f119ba0546~qJvpHt7NI2008120081epsmtip1a;
+	Thu,  6 Mar 2025 07:44:22 +0000 (GMT)
+From: "Swathi K S" <swathi.ks@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <krzk+dt@kernel.org>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
+	<conor+dt@kernel.org>, <richardcochran@gmail.com>,
+	<mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>
+Cc: <rmk+kernel@armlinux.org.uk>, <netdev@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<pankaj.dubey@samsung.com>, <ravi.patel@samsung.com>, <gost.dev@samsung.com>
+In-Reply-To: <789ecb2f-dddc-491b-b9f8-5fb89058fd1b@kernel.org>
+Subject: RE: [PATCH v8 1/2] dt-bindings: net: Add FSD EQoS device tree
+ bindings
+Date: Thu, 6 Mar 2025 13:14:13 +0530
+Message-ID: <012701db8e6b$950550c0$bf0ff240$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8jU2i5d3e4Dv4vk@ghost>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-in
+Thread-Index: AQHcwqSBZNYxUrKMqce/4F1P5N/GfgGyT6S5AetEnA8CiHKSMrMyHirw
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf1CTdRzH/T7bs2eQs0cE+cIdtKZk4oFbbOuBE5AkeiJJUq+7uro54Gns
+	gG23jQg9L6ydCelwpl48oBArLYSIMWAT+REhNuRARBZw4oGAB04Owp1FKbXxQPHf6/v+vj/f
+	z+f9/d6Xy/IrwIK5SpWe0qrk2QKOL7vxl+0vRyS+51AIz3ZKiMWZ84C4PGZDieqWXoQo6zOw
+	ifLOXpSY6rqPEcPtdoSYoe9xiL6+nzDiVqMRJSwTTpQYuFrGIYqckyhx8VkNSnRVbCae3HwE
+	iMoGN0aMz1/DiM6eaRZxu9iEEP9cs2G7A8gBZz+LtP4wjJBTxQ0YaadHMbLCkktaqgo5ZP23
+	n5J222OEnGsd5JBGaxUgf24VkY8toanr38/alUnJMygtn1KlqzOUKkWs4K0Dsj0yiVQoihBF
+	E68K+Cp5DhUrSNybGpGkzPZkFfA/lmfneqRUuU4n2Bm3S6vO1VP8TLVOHyugNBnZGrEmUifP
+	0eWqFJEqSh8jEgpfkXiMh7IyF2+eA5pZ/JOm3yvRAnBqQxHw4UJcDB+Y/8CKgC/XD28G0Oly
+	c5jFAoDdfzahzOIJgE/dNGe1pMjQvOJqAbD2af2KaxrAOkf7souDh8NKYyvmZX+8BYEPjqV6
+	TSy8AoF1N8yId8MHj4MlxvPLvAl/B5Z13QVeZuNbofWrJraXeXg0vNM1jDK8ETpKJpd1Fr4D
+	XvrGxWJG4sPFqUsoowfC64snPTrX0zgJTvSkeftC/LIPPOamUa8O8UT45UAUU7oJPrxhxRgO
+	hjPFx1dYBq8YB9kMZ8LRv0wr6eNh+50ytvcYFr4d1l7dycgh8Fz3jwgzwQZ46u9JhNF50HZx
+	lbfAZy7nypFBsPG7Oew0ENBrgtFrgtFrwtD/d6sA7CoQRGl0OQoqXaIRqai8/x48XZ1jActf
+	ITzRBobKlyI7AMIFHQByWQJ/Xv/bDoUfL0Oef5jSqmXa3GxK1wEknts2sYID0tWev6TSy0Ti
+	aKFYKpWKo6OkIkEg73O7QeGHK+R6KouiNJR2tQ7h+gQXICnJUXD8tnR+JN+fL90ygiydeS2O
+	jhweS3jRlsi6sOCwTtVmWGOyjrr6267Ub3gj4GCb9jNh7Im8NoO9KbU5eDCiq/T5+UZrWK95
+	Nr/v3f3K5+C8pRtoHoXVG6uFmPU6ht27NTA7ZXSOhP42ML3kyz9dfkb5kXTY5l6Ijy81xplF
+	+WGLyTGmaWRo/cbAWV153lKoa3/Cm3OlLsmOD8a3YuLol3qG8l6XrQsK4R13m/d9P56C7TGf
+	TJLtXafcd//h16FHqg0hh2t3d/psq+ksjD9R8mGaoeHIoRo/+tcDKWkJphatZcw0ykk+GzJx
+	oXQz/2Be+hdL2+oK7Udldx359AsCti5TLgpnaXXyfwEUJ5spkwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHec9l52w2PM3KVyOREZZGq3V9lZIssfOlC33ToFp6WNNNbWul
+	flG8dJm5kspwaU3RldNIp+nmvKSZZVrTMm2rJDNLK1A0RAW7uCH47ff8/+/z4/nw0rhonPCn
+	FYnnOHWiTCnmCYj6p+KAzdHHuuRbdU4vNDdeAND9z1YSVTW/xlCRI5tA9zpek2i08wuFnE9s
+	GBo3DPGQw1FNod56PYksIwMkettYxEO6ga8kurvwkESdxjVopvsXQKWPf1NoeLKJQh09Yzh6
+	cy0fQ3+brNS+1ezbgT6cratwYuzotccUazN8olijRctazFd4bG1ZOmuzTmPsRMs7HquvMwO2
+	rUXKTlsCjq6IEeyJ45SK85x6S/gpwZm2NzYyuYZJGZx/SWSAPqEO8GnI7IC6bDtPBwS0iLED
+	+HliEPMUfnAq6xbpYR9Y8ec75Xn0DcDnd2qJxYLHhMBSfYu7WMV0Y3D20h/3gDNmDNaXv3Sr
+	RMwEgOYH8YvMZ8Jhob7AnfswR2DmUCG+yASzHtbdaHBbhUwo7O90kh5eCbsKv7pznNkE84Zz
+	wBKbSn7invMC4dyoifTkvvDZ3NX/Of3/oig40nP6OvAxLDMZlpkMy0yGZdtGQJiBH5esUclV
+	GmmyNJG7INHIVBptolwSm6SyAPdvCAm2ggbzpKQdYDRoB5DGxauEfYe75CJhnCw1jVMnnVRr
+	lZymHaylCbGv0HcsL07EyGXnuASOS+bUSy1G8/0zsPQ1uxUHXxl6dilwVWp2eHTQiQfB0t1Y
+	calr0tWtzGlsYsiRv67cgwHM2j4q9pA65fLT1hmN4sLs7Rc2emVQUGhW2PC2/qqZR/vvVy5Q
+	Bfn2VJN8qCLzkry5Oubk1up3rbXes86Ujcpcr+OyAUfWhvxwW781bPhma+RURGRwrPG9qyej
+	/XuT7KLJGJ1QY0zJL7fP4/HrJOSGwZ3jHzNnS8szH/7+4M2vcOiLVuT6pN0UyBsnjof1cr3p
+	tPeTtobisqmo7cUuQUOgVhkNCyQfCVNSmLbqgJNfkxBin6Gn2iJS/Tuq05uJY5VlMA+NqUN1
+	XiV7j0z/4J39NRrvEBOaMzJpCK7WyP4BMmZmenwDAAA=
+X-CMS-MailID: 20250306074425epcas5p20a08ef2dbd5705a1044fafb8c4a9ec15
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250305091852epcas5p18a0853e85a5ed3d36d5d42ef89735ca6
+References: <20250305091246.106626-1-swathi.ks@samsung.com>
+	<CGME20250305091852epcas5p18a0853e85a5ed3d36d5d42ef89735ca6@epcas5p1.samsung.com>
+	<20250305091246.106626-2-swathi.ks@samsung.com>
+	<789ecb2f-dddc-491b-b9f8-5fb89058fd1b@kernel.org>
 
-On Wed, Mar 05, 2025 at 02:48:58PM -0800, Charlie Jenkins wrote:
-> On Tue, Mar 04, 2025 at 01:00:15PM +0100, Andrew Jones wrote:
-> > The first six patches of this series are fixes and cleanups of the
-> > unaligned access speed probing code. The next patch introduces a
-> > kernel command line option that allows the probing to be skipped.
-> > This command line option is a different approach than Jesse's [1].
-> > [1] takes a cpu-list for a particular speed, supporting heterogeneous
-> > platforms. With this approach, the kernel command line should only
-> > be used for homogeneous platforms. [1] also only allowed 'fast' and
-> > 'slow' to be selected. This parameter also supports 'unsupported',
-> > which could be useful for testing code paths gated on that. The final
-> > patch adds the documentation.
-> 
-> Why constrain the command line option to homogeneous platforms?
-
-Based on feedback at the last Plumber's, we've decided not to go out of
-our way to support heterogeneous platforms unless they start to
-materialize. With that in mind, and the fact that heterogeneous platforms
-can use the probing mechanism instead of the command line, then I didn't
-think the cpu-list support was worth it yet. Also, we can introduce
-support for an optional [,<cpu-list>] attribute later, since the
-definition of the parameters would stay the same for when the cpu-list
-attribute is absent. Indeed, even if I was to introduce the cpu-list
-support now, I would make it optional with the absence of it behaving
-as this patch series implements.
-
-Thanks,
-drew
 
 
-> 
-> - Charlie
-> 
-> > 
-> > (I'd be happy to split the fixes from the new skip support if we want to
-> > discuss the skip support independently, but I want to base on the fixes
-> > and I'm not sure if patchwork supports Based-on: $MESSAGE_ID/$LORE_URL
-> > or not at the moment, so I'm just posting together for now in order to
-> > be able to check for my patchwork green lights!)
-> > 
-> > [1] https://lore.kernel.org/linux-riscv/20240805173816.3722002-1-jesse@rivosinc.com/
-> > 
-> > Thanks,
-> > drew
-> > 
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 06 March 2025 12:45
+> To: Swathi K S <swathi.ks=40samsung.com>; krzk+dt=40kernel.org;
+> andrew+netdev=40lunn.ch; davem=40davemloft.net; edumazet=40google.com;
+> kuba=40kernel.org; pabeni=40redhat.com; robh=40kernel.org;
+> conor+dt=40kernel.org; richardcochran=40gmail.com;
+> mcoquelin.stm32=40gmail.com; alexandre.torgue=40foss.st.com
+> Cc: rmk+kernel=40armlinux.org.uk; netdev=40vger.kernel.org;
+> devicetree=40vger.kernel.org; linux-stm32=40st-md-mailman.stormreply.com;
+> linux-arm-kernel=40lists.infradead.org; linux-kernel=40vger.kernel.org;
+> pankaj.dubey=40samsung.com; ravi.patel=40samsung.com;
+> gost.dev=40samsung.com
+> Subject: Re: =5BPATCH v8 1/2=5D dt-bindings: net: Add FSD EQoS device tre=
+e
+> bindings
+>=20
+> On 05/03/2025 10:12, Swathi K S wrote:
+> > Add FSD Ethernet compatible in Synopsys dt-bindings document. Add FSD
+> > Ethernet YAML schema to enable the DT validation.
+> >
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
+> > Signed-off-by: Ravi Patel <ravi.patel=40samsung.com>
+> > Signed-off-by: Swathi K S <swathi.ks=40samsung.com>
 > > ---
-> > v3:
-> >  - Fix compile when RISCV_PROBE_UNALIGNED_ACCESS is not selected
-> > 
-> > v2:
-> >  - Change to command line option from table
-> > 
-> > 
-> > Andrew Jones (8):
-> >   riscv: Annotate unaligned access init functions
-> >   riscv: Fix riscv_online_cpu_vec
-> >   riscv: Fix check_unaligned_access_all_cpus
-> >   riscv: Change check_unaligned_access_speed_all_cpus to void
-> >   riscv: Fix set up of cpu hotplug callbacks
-> >   riscv: Fix set up of vector cpu hotplug callback
-> >   riscv: Add parameter for skipping access speed tests
-> >   Documentation/kernel-parameters: Add riscv unaligned speed parameters
-> > 
-> >  .../admin-guide/kernel-parameters.txt         |  16 ++
-> >  arch/riscv/include/asm/cpufeature.h           |   4 +-
-> >  arch/riscv/kernel/traps_misaligned.c          |  14 +-
-> >  arch/riscv/kernel/unaligned_access_speed.c    | 237 +++++++++++-------
-> >  4 files changed, 168 insertions(+), 103 deletions(-)
-> > 
-> > -- 
-> > 2.48.1
-> > 
+> >  .../devicetree/bindings/net/snps,dwmac.yaml   =7C   5 +-
+> >  .../bindings/net/tesla,fsd-ethqos.yaml        =7C 118 ++++++++++++++++=
+++
+> >  2 files changed, 121 insertions(+), 2 deletions(-)  create mode
+> > 100644 Documentation/devicetree/bindings/net/tesla,fsd-ethqos.yaml
+> >
+>=20
+> I tried and did not see any differences, so point me exactly to any diffe=
+rence
+> in the binding (binding=21) which would justify dropping review?
+
+Added the following in the example given in DT binding doc:
+
+assigned-clocks =3D <&clock_peric PERIC_EQOS_PHYRXCLK_MUX>,
+                                <&clock_peric PERIC_EQOS_PHYRXCLK>;
+assigned-clock-parents =3D <&clock_peric PERIC_EQOS_PHYRXCLK>;
+
+Given the significance of these changes, I assumed the changes need to be r=
+eviewed again.
+That was why the tag was removed. Please correct me if I am wrong and provi=
+de your feedback on this patch.
+
+- Swathi
+
+>=20
+> Best regards,
+> Krzysztof
+
