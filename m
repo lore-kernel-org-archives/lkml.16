@@ -1,104 +1,143 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EC32702B8
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DBED269CE8;
+	Thu,  6 Mar 2025 18:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741286545; cv=none; b=OsIQCUcphb7RMVqwFqWRX0bdh8zZOwem8N3KqGG2dMnhwKajrek3E9fYvNZ0zN2PQ2BWu/GmLnykeezoaNux5rJ4YZJ4D5sBjPVeD8Ny4IQTSmdG6akHIuT9RsO6d6zvzusQacCcL9cPikkg++CTffhR83fgXic8n38XXGofAGc=
+	t=1741286635; cv=none; b=e/aHlsXDQjVkjGzmfDD5+wy405tvqV2CgOrDm9jxG5ZK+ibqwl/NT1TROJUmnkjqEciigzIVqM2mQ++/ezyIEQzw9UFjMADpTtAeFSwLwI5a8uUy43ER1iOYXaKq7hZyhA8bdWiGh2tnQwvVj1xG7Ac9I1VyIvAtdEAQ3URzkbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741286545; c=relaxed/simple;
-	bh=9Dig6sAHtsyHbkq2491f7Tg8tRugSKtgbFGFfoTAC3Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WjcZVafHgr3sj8MAWP42PHJrF9sg4vLgpVQRNBHqaVk/U/UWqRiAhpzNAOORstLr7oINbdHKFTv+vfAMtiLDp33vUWHSa2NCG09PlB6BUKYbxXZMvaR75FB4z2i9U+TGw4/lHlrjlx3ZKZ7up6EmyEKGo/YkgS6uB7xuGWrXpSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu; spf=none smtp.mailfrom=kragniz.eu; dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b=EFWz9dw6; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kragniz.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="EFWz9dw6"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso12310835e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 10:42:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google; t=1741286542; x=1741891342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QAl6qbd5AUIqBk2GNL7RYgkgYgmohGeVwmROfTx+sCw=;
-        b=EFWz9dw6n6WUMBqu2bwYeIT6Oh7OKtdAXlw04wweBBV/anWKZmrRtGxaSdE1KZf0EK
-         RvaDX0TmekAoxoGUWTxHbYPi5/kePwX+YxYSoJNV5MRkQK5t3aoaD9VcR9axCASVDjNE
-         5/7oRzDzbhnOFDI10ZDQSFkKXNIGF9fmswR+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741286542; x=1741891342;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QAl6qbd5AUIqBk2GNL7RYgkgYgmohGeVwmROfTx+sCw=;
-        b=eWzw1FU3DtrORy2Gc7POeJQ+QjkXXiMy1G34t0aqfJ8k4H2Ojyj3EAiglnWcys9Vse
-         kJMiH2uhiYnBQBHmKfBBeZgK2cY6dPBqPjaZ3Wto5F2BUHVsfNE48iOoHSxxZkKjQ7qz
-         Y7GQb425xlsOUycOhmrBwIHZTA9Dn3c92NNRrC5624hYqhCO4EoRY0Rr6XDkVMumkPZt
-         nShRvnaBTzPeBSKOYTbL6t1QXQ0lhlZb7FI+CiyE2wgXuK4pYyO9ajlTqqyCq3r1rqeg
-         FeV+eDN1Dcs0ZiHCir6wc745PRYGqzvfW0BhOII+k15A2QOrj8gZUKIU4C8DZQn8dW9S
-         osPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyD/0fjhZxsL8oEax5VO5SjoW6+BUxRVn7Mu5JlPDXFIMyBpTGwqXWsJwTTxAPxqi8XU+xr+NXw3pyZE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNM24PuVkMwCHR3c4TSOd3fMo7ThJOaxii18gDVYDYnk9ALmg3
-	tXFbDlRu5UCY6ejNeh6KPs1JiEtNgAAeqA/8msjKz93XN5msvaGC893La+XTfhmeX0Y4bTaPprh
-	MPZ4BFg==
-X-Gm-Gg: ASbGncvSLRfdgHieAGgVG6IbvIGqf73yWg4qTEGzK7jjRlglrwTIdZVaLxlIz/aTcRR
-	HG3MvAjhwh5bDN9wxWUGfxjGcAbyBUVYipvO+1NOtDo0jn9qcjh/rrmyXXMaEPYuGJqv3kULJK2
-	fJcazM8327/f/u4qbNGfxKKVvZtBY9fA7SxvRE9afjJ7RLQejdnNcmT1Z3GSymH4+04pr4Jhdb6
-	2xHHsqFSWiN0HSIF5b6hcL1dJoTu2DuucrmcBA/0gUsgDSCKMA17vBfvzJdCEgQve93cSHaBCtD
-	Yn2F9e81FpTRuRmgegTHPKUJOX1H0mxXUBJclsyTwHLrh3hY/A0d3JWthypRTiJGQFCFM4b4WBh
-	rYchAUA==
-X-Google-Smtp-Source: AGHT+IEe5BwBXjl5g/UzaCny2ATgwBksaUC6y4ZTKWmkNFRie4pvQ0MC4LOjIjjxc7s/T6NPUmwSxg==
-X-Received: by 2002:a05:600c:3b1e:b0:439:9ee1:86bf with SMTP id 5b1f17b1804b1-43c5c98089bmr7080135e9.7.1741286541998;
-        Thu, 06 Mar 2025 10:42:21 -0800 (PST)
-Received: from localhost.localdomain (161.26.169.217.in-addr.arpa. [217.169.26.161])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd42c55e6sm57052725e9.23.2025.03.06.10.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 10:42:21 -0800 (PST)
-From: Louis Taylor <louis@kragniz.eu>
-To: Willy Tarreau <w@1wt.eu>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Louis Taylor <louis@kragniz.eu>,
-	linux-kselftest@vger.kernel.org,
+	s=arc-20240116; t=1741286635; c=relaxed/simple;
+	bh=CnUH+VX9AF2B3Qo/OiIZWOtpvxNv168dZVeCLZvdv6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=InbOZWWFYCrHMJYJznHq5CXAOrtr05K2Rr+Uqiep+iW9R6LW3oNLz1pfm5Xs1StmavJyzFitPOI4YfPNWymB0hT30zLdtu/G77gh0nnPt7jIMy8i5LBgOx90Kj2oRCS9XjVSaX4iHG/X7997xa1mlzt/FgWel32cU40pI+SnsUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59F68169E;
+	Thu,  6 Mar 2025 10:44:03 -0800 (PST)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE5EE3F673;
+	Thu,  6 Mar 2025 10:43:48 -0800 (PST)
+Date: Thu, 6 Mar 2025 18:43:45 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org, arm-scmi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] selftests/nolibc: use O_RDONLY flag instead of 0
-Date: Thu,  6 Mar 2025 18:41:22 +0000
-Message-ID: <20250306184147.208723-5-louis@kragniz.eu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250306184147.208723-1-louis@kragniz.eu>
-References: <20250306184147.208723-1-louis@kragniz.eu>
+Subject: Re: [Bug report] Memory leak in scmi_device_create
+Message-ID: <Z8ns4T6pas9DEy8B@pluto>
+References: <Z8g8vhS9rqQ_ez48@google.com>
+ <Z8iFeEWq16pNQdMa@pluto>
+ <Z8mCbc2Z2QGd3f8M@google.com>
+ <Z8my4MZ-In0ibxVY@arm.com>
+ <Z8nDj129ZVeZBVSp@pluto>
+ <Z8nK3uFkspy61yjP@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8nK3uFkspy61yjP@arm.com>
 
-This doesn't matter much, but is what the standard says.
+On Thu, Mar 06, 2025 at 04:18:38PM +0000, Catalin Marinas wrote:
+> On Thu, Mar 06, 2025 at 03:47:27PM +0000, Cristian Marussi wrote:
+> > On Thu, Mar 06, 2025 at 02:36:16PM +0000, Catalin Marinas wrote:
+> > > This loop in scmi_device_create() looks strange:
+> > > 
+> > > 	list_for_each_entry(rdev, phead, node) {
+> > > 		struct scmi_device *sdev;
+> > > 
+> > > 		sdev = __scmi_device_create(np, parent,
+> > > 					    rdev->id_table->protocol_id,
+> > > 					    rdev->id_table->name);
+> > > 		/* Report errors and carry on... */
+> > > 		if (sdev)
+> > > 			scmi_dev = sdev;
+> > > 		else
+> > > 			pr_err("(%s) Failed to create device for protocol 0x%x (%s)\n",
+> > > 			       of_node_full_name(parent->of_node),
+> > > 			       rdev->id_table->protocol_id,
+> > > 			       rdev->id_table->name);
+> > > 	}
+> > > 
+> > > We can override scmi_dev a few times in the loop and lose the previous
+> > > sdev allocations. Is this intended?
+> > 
+> > Yes...it is weird..but by design I would say :P ...
+> > 
+> > ...because this is called to instantiate one single device OR instantiate at
+> > once all the multiple devices needed for a protocol: in this latter case it
+> > returns just one of the created devices to signal success or NULL if all the
+> > devices' creation failed....we dont need to keep the allocated devices references
+> > anyway here since on success those devices are now referenced and kept on the
+> > SCMI bus, so they can be searched/scanned/destroyed from there.
+> 
+> Not sure why the pointer isn't found, device_add() should link it with
+> the parent. Unless something else fails, the parent is freed and the
+> linked devices unreachable. I'm not familiar at all with this code, I
+> just saw kmemleak and thought of replying.
+> 
+> The loop is still weird, scmi_chan_setup() seems to use the pointer to
+> scmi_device for something more meaningful than a pass/fail check. Also
+> the overall result is based only on what the last __scmi_device_create()
+> return value was, irrespective of the previous iterations of the loop.
+> You do have a pr_err() but no early bailing out of the loop on failure.
+> I'm curious if there are any SCMI errors in the Alice's kernel log.
+> 
 
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
----
- tools/testing/selftests/nolibc/nolibc-test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yes, the weirdness comes from the fact such function is used alternatively
+to create a single named device (and make some use of it, like in
+scmi_chan_setup) OR to create a bunch of devices for the same protocol
+when no specific device is asked for (name==NULL)...anyway the case at
+hand that kmemleak complains about does NOT pass through that weird loop...
 
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index e8faddcecf9d..a5abf16dbfe0 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -1130,8 +1130,8 @@ int run_syscall(int min, int max)
- 		CASE_TEST(mmap_bad);          EXPECT_PTRER(1, mmap(NULL, 0, PROT_READ, MAP_PRIVATE, 0, 0), MAP_FAILED, EINVAL); break;
- 		CASE_TEST(munmap_bad);        EXPECT_SYSER(1, munmap(NULL, 0), -1, EINVAL); break;
- 		CASE_TEST(mmap_munmap_good);  EXPECT_SYSZR(1, test_mmap_munmap()); break;
--		CASE_TEST(open_tty);          EXPECT_SYSNE(1, tmp = open("/dev/null", 0), -1); if (tmp != -1) close(tmp); break;
--		CASE_TEST(open_blah);         EXPECT_SYSER(1, tmp = open("/proc/self/blah", 0), -1, ENOENT); if (tmp != -1) close(tmp); break;
-+		CASE_TEST(open_tty);          EXPECT_SYSNE(1, tmp = open("/dev/null", O_RDONLY), -1); if (tmp != -1) close(tmp); break;
-+		CASE_TEST(open_blah);         EXPECT_SYSER(1, tmp = open("/proc/self/blah", O_RDONLY), -1, ENOENT); if (tmp != -1) close(tmp); break;
- 		CASE_TEST(openat_dir);        EXPECT_SYSZR(1, test_openat()); break;
- 		CASE_TEST(pipe);              EXPECT_SYSZR(1, test_pipe()); break;
- 		CASE_TEST(poll_null);         EXPECT_SYSZR(1, poll(NULL, 0, 0)); break;
--- 
-2.45.2
+...good news is, I was able to reproduce a similar report consistently
+with a load/unload/load sequence....the culprit is that when looking for
+a device to destroy on unload, the SCMI bus uses device_find_child()
+and that bumps the device refcnt implicitly...as a result when the device
+is destroyed the refcnt is NEVER found as zero and so NO device_release
+is ever called...this results in dev->p private_data to be never released
+and that is what kmemleak spotted (at the start of teh chain):
 
+
+unreferenced object 0xffff00000f583800 (size 512):
+      comm "insmod", pid 227, jiffies 4294912190
+      hex dump (first 32 bytes):
+        00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+        ff ff ff ff ff ff ff ff 60 36 1d 8a 00 80 ff ff  ........`6......
+      backtrace (crc 114e2eed):
+        kmemleak_alloc+0xbc/0xd8
+        __kmalloc_cache_noprof+0x2dc/0x398
+        device_add+0x954/0x12d0
+        device_register+0x28/0x40
+        __scmi_device_create.part.0+0x1bc/0x380
+        scmi_device_create+0x2d0/0x390
+        scmi_create_protocol_devices+0x74/0xf8
+        scmi_device_request_notifier+0x1f8/0x2a8
+        notifier_call_chain+0x110/0x3b0
+        blocking_notifier_call_chain+0x70/0xb0
+        scmi_driver_register+0x350/0x7f0
+        0xffff80000a3b3038
+        do_one_initcall+0x12c/0x730
+        do_init_module+0x1dc/0x640
+        load_module+0x4b20/0x5b70
+        init_module_from_file+0xec/0x158
+    
+    $ ./scripts/faddr2line ./vmlinux device_add+0x954/0x12d0
+    device_add+0x954/0x12d0:
+    kmalloc_noprof at include/linux/slab.h:901
+    (inlined by) kzalloc_noprof at include/linux/slab.h:1037
+    (inlined by) device_private_init at drivers/base/core.c:3510
+    (inlined by) device_add at drivers/base/core.c:3561
+
+I am posting a fix.
+
+Thanks for the report and the help.
+Any feedback and testing is much welcomed :D
+
+Cristian
