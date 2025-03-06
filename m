@@ -1,146 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F95277024;
-	Thu,  6 Mar 2025 22:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C6323F40A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 22:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741298421; cv=none; b=cwXHtHKibSdz+wdej6pRMmLpGDdRhqjdEsd3uguQDNZ0tNtoPEDex7CA3If9ZWImhmocaAIhXjewoOvsHXtxu4yYLmj1fmu2pLeUdxYR61Ml7bKCnMPFZTq8E3wG+gbp042NOgiAWe6v6HB1S3MbIo1TurWAuPhv/7zl0xc/ls0=
+	t=1741298432; cv=none; b=klF87GMpfHpWMvSOWbJlg5CYM4unHw8su6r+u+wAWV3idkk5MCnKqSS6fN1CKEAwUqNGvgoY9xit7xmjQ+1yFEKUcqCYj2mD+XXg1aBrWWmUaAmIUbvVWU+G0IgOkZFuVk5BpwG20rGMNyzlfStYwChcqRgEgM/d7GcZqlb1f4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741298421; c=relaxed/simple;
-	bh=Zs+tTAIxX3ePN/KYhRZTW8Wmq0k2cGIFNrzoMNDUR3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5G0VzO/rfVAF2Iiq8CV0LpiXYByde9zD/FhH+MDeNS6v3QuH2jrf9FsC/37p/c34Hz5iW2MORk95bvky1GKntniCcXnewyyh0ZkZrIpl1oY5W8c6rDYU1PWGcNuKlq5FW55cWoZqT4y9HRYGmjKugE5nYWZeV6XG5yAu5lbVTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bi9LCvTA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741298432; c=relaxed/simple;
+	bh=h9M//6a54qcUwRZ9pPr7/OWIx8Cbbr/ZQonhNJvLioI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LiwDhzfWbdBSxsvZ1vNpw9pXdda6DFKKD//XT7G+znMNouyVZjv6OMYPwW81PVrAKusOduJDwb7uIW8CTWt7bSY3HJIWteaEN4SvUenLTan7HPbminM0HvHHTz+loRyBZZ/5mzJph0DUO2SRzwCGz2KFgNsiItay86t2lzN3XH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RMoLlFNa; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bi9LCvTA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5265C4CEE0;
-	Thu,  6 Mar 2025 22:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741298420;
-	bh=Zs+tTAIxX3ePN/KYhRZTW8Wmq0k2cGIFNrzoMNDUR3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bi9LCvTA7VrS+yobZyd4FP6V2NU7Jd84HaSskT/Bjxn2Riy6icyAiJIBk+F2GEAYm
-	 hmR7FLVHWQU1VQTYnZxeDOibogfv08JIRoN8ZxmVKnXZfISxfHAiVxMs2a8QIb1a7V
-	 i11P+wNAkaDnzISQBzUho3Z0/d3fZbm+SI6GHjGF1p05tKdLeXQq4u6lJrGNWki8Xk
-	 N0oFVRf1XhHmJnp09vO05dWY4sSzn8/H65GxABDUdLE6awBX2TKOX/j1bx4Nol0VJf
-	 KsT8NtJYKb5Oo/q12j2VHf77aa8FTZagXqzBg1Dw0N+5q97X7ybdPV7LSVOqedindd
-	 eggVxomNEsBJA==
-Date: Thu, 6 Mar 2025 23:00:16 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, x86@kernel.org
-Subject: [PATCH] x86/mm: Define PTRS_PER_PMD for assembly code too
-Message-ID: <Z8oa8AUVyi2HWfo9@gmail.com>
-References: <20250306092658.378837-1-andriy.shevchenko@linux.intel.com>
- <174125602814.14745.12946945836213678532.tip-bot2@tip-bot2>
- <CAHk-=whTGVy1aaEashu3K49wuG7-hARh02xbAr_hMm3844Ec7Q@mail.gmail.com>
- <Z8oSAQiBvVJ_METQ@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RMoLlFNa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741298431; x=1772834431;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=h9M//6a54qcUwRZ9pPr7/OWIx8Cbbr/ZQonhNJvLioI=;
+  b=RMoLlFNaTDykroOFU9RgZkwSx6bZ5H09AcChN/g42KLcUl7CvkjAae+p
+   yFZATxSbSKr50HlGl6ghl4B1HmskifbIRuDliozLZNRAw8b3YMlVftFZS
+   BJqFmhLnkMwelKKnY9SOrGPbsFHbONKSm44rq1KwHDj5DRNNHdPb6+Ght
+   wHFkHmIyh4idAZv/BIY8p04vEAcKW9akIMCeJNDmtlTAhJ1cFxc1Dzvsz
+   UeVjrckLLVkqo/rthm1GM4oO3cSd+6yrc1HlvSEPD3/LY96/U2oMJRS19
+   Yb6j2wzN6ay0XD66XKfkioY1gzhz+1fvTLZHfZlbOwTNzDKrcf77tvBXo
+   Q==;
+X-CSE-ConnectionGUID: L0+Baoy0ShWv3W5qVTsYkw==
+X-CSE-MsgGUID: uMpAuzSfSVGvBCeiuUjOBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="52974394"
+X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
+   d="scan'208";a="52974394"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 14:00:30 -0800
+X-CSE-ConnectionGUID: ochOd0YvQ5e1u5hCabolMg==
+X-CSE-MsgGUID: w7Xsev9MQoOpoR8PhhxYMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="124347486"
+Received: from kinlongk-mobl1.amr.corp.intel.com (HELO [10.125.110.90]) ([10.125.110.90])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 14:00:30 -0800
+Message-ID: <0ada12f8-4fdb-4dad-90f7-b044993e829c@intel.com>
+Date: Thu, 6 Mar 2025 14:00:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8oSAQiBvVJ_METQ@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 07/12] tools/x86/kcpuid: Add rudimentary CPU vendor
+ detection
+To: "Ahmed S. Darwish" <darwi@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, John Ogness <john.ogness@linutronix.de>,
+ x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+References: <20250306205000.227399-1-darwi@linutronix.de>
+ <20250306205000.227399-8-darwi@linutronix.de>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250306205000.227399-8-darwi@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 3/6/25 12:49, Ahmed S. Darwish wrote:
+> +/*
+> + * Leaf 0x0 EDX output, CPU vendor ID string bytes 4 - 7.
+> + */
+> +enum {
+> +	EDX_INTEL	= fourcc('i', 'n', 'e', 'I'),	/* Genu_ineI_ntel */
+> +	EDX_AMD		= fourcc('e', 'n', 't', 'i'),	/* Auth_enti_cAMD */
+> +	EDX_HYGON	= fourcc('n', 'G', 'e', 'n'),	/* Hygo_nGen_uine */
+> +	EDX_TRANSMETA	= fourcc('i', 'n', 'e', 'T'),	/* Genu_ineT_Mx86 */
+> +	EDX_CENTAUR	= fourcc('a', 'u', 'r', 'H'),	/* Cent_aurH_auls */
+> +	EDX_ZHAOXIN	= fourcc('a', 'n', 'g', 'h'),	/*   Sh_angh_ai	  */
+> +};
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+So, this is cute and all. But isn't it a _wee_ bit too clever for its
+own good?
 
-> Separating out the assembler-compatible defines from the types 
-> headers appears to be a bigger patch, since it's all mixed in with C 
-> syntax:
-> 
-> <=-----------------------------------===============================
-> typedef struct { pud_t pud; } pmd_t;
-> 
-> #define PMD_SHIFT       PUD_SHIFT
-> #define PTRS_PER_PMD    1
-> #define PMD_SIZE        (1UL << PMD_SHIFT)
-> #define PMD_MASK        (~(PMD_SIZE-1))
-> 
-> /*
->  * The "pud_xxx()" functions here are trivial for a folded two-level
->  * setup: the pmd is never bad, and a pmd always exists (as it's folded
->  * into the pud entry)
->  */
-> static inline int pud_none(pud_t pud)           { return 0; }
-> static inline int pud_bad(pud_t pud)            { return 0; }
-> static inline int pud_present(pud_t pud)        { return 1; }
-> ================================================================>
-> 
-> In any case I've removed the commit for the time being until this all 
-> is cleared up.
+Why not just have a dumb array:
 
-So there's a simple solution: define it on i386 too, via the patch 
-below. It appears the double-definition doesn't create any warnings, on 
-GCC at least.
+	{ INTEL, "GenuineIntel" },
+	{ AMD,   "AuthenticAMD" ],
+	...
 
-But if it's an issue, we could do something like this in 
-<asm-generic/pgtable-nopmd.h>:
-
- #if defined(PTRS_PER_PMD) && (PTRS_PER_PMD != 1)
- # error "mm: Wait a minute, that's a super confusing pagetable setup ..."
- #endif
-
-?
-
-Thanks,
-
-	Ingo
-
-=========================>
-From: Ingo Molnar <mingo@kernel.org>
-Date: Thu, 6 Mar 2025 22:53:49 +0100
-Subject: [PATCH] x86/mm: Define PTRS_PER_PMD for assembly code too
-
-Andy reported the following build warning from head_32.S:
-
-  In file included from arch/x86/kernel/head_32.S:29:
-  arch/x86/include/asm/pgtable_32.h:59:5: error: "PTRS_PER_PMD" is not defined, evaluates to 0 [-Werror=undef]
-       59 | #if PTRS_PER_PMD > 1
-
-The reason is that on 2-level i386 paging the folded in PMD's
-PTRS_PER_PMD constant is not defined in assembly headers,
-only in generic MM C headers.
-
-Instead of trying to fish out the definition from the generic
-headers, just define it - it even has a comment for it already...
-
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/pgtable-2level_types.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/pgtable-2level_types.h b/arch/x86/include/asm/pgtable-2level_types.h
-index 7f6ccff0ba72..4a12c276b181 100644
---- a/arch/x86/include/asm/pgtable-2level_types.h
-+++ b/arch/x86/include/asm/pgtable-2level_types.h
-@@ -23,17 +23,17 @@ typedef union {
- #define ARCH_PAGE_TABLE_SYNC_MASK	PGTBL_PMD_MODIFIED
- 
- /*
-- * traditional i386 two-level paging structure:
-+ * Traditional i386 two-level paging structure:
-  */
- 
- #define PGDIR_SHIFT	22
- #define PTRS_PER_PGD	1024
- 
--
- /*
-- * the i386 is two-level, so we don't really have any
-- * PMD directory physically.
-+ * The i386 is two-level, so we don't really have any
-+ * PMD directory physically:
-  */
-+#define PTRS_PER_PMD	1
- 
- #define PTRS_PER_PTE	1024
- 
-
+Are we really looking to save a few dozen CPU cycles in this thing? It
+took me at least a minute or two of staring at this thing to figure out
+what the heck it was doing.
