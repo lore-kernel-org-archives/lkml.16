@@ -1,85 +1,197 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395BF194147;
-	Thu,  6 Mar 2025 03:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8CA367
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 03:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741233207; cv=none; b=PNK17TnHXgvrmn2ge+zfujysAB0Hkvd+i+BrEXk67lk5wBSRsd6nGH8v3hokthib+9knU/lPkhFdlD+lm1jdYoxfE5cwRj/6qD0qK6P/+u2OTV4C3meRHkUMIVNq1nxC/f/rEbn1q6g5mx7J+e6bysT2KJ485VowiQ1s42qh5e0=
+	t=1741233260; cv=none; b=XwCMdBpNNwkpnY/r6eHP73HOHw6HQ5muOxcftnVOCxWUc/yPuDW+kwVH3on1GYWNT+BBiriLSqtBeC4WNDc9Xar2BZiY15A9emr4CbiuJM8yaX68F9xpbuoE17htF8FEQroW/AkPz1p+8JDa8rnH/PhagljMNWrZai5WgSkA8Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741233207; c=relaxed/simple;
-	bh=7cn86iQZzeSzLx4TZ+B2VFpB0fRGSWzetk4yGmo+dMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sD+XXemd7mPgsY7iLRnnZ3k97PeDpWy1FKVtpVj/dXpAOXwb9u7Qbpse5ov/bDAxRiVqYV8f+qSM5J8S/TSIRfsZOB1WTwvcOaozlI2c3dKWkKBAKVwks1rwKd3VI5gO2S+YcH0mJABYi6X5uHyG0FqeEWFZs7rKMRujntks7Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxOGoxHMlntd2LAA--.43319S3;
-	Thu, 06 Mar 2025 11:53:21 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDxH+UwHMln48U4AA--.15034S2;
-	Thu, 06 Mar 2025 11:53:20 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] LoongArch: mm: Set max_pfn with the PFN of the last page
-Date: Thu,  6 Mar 2025 11:53:14 +0800
-Message-Id: <20250306035314.2131976-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1741233260; c=relaxed/simple;
+	bh=M+tdIbH/OOQ9B2+GPQFTqQLawkecNMO/8W+4Ii4xSzk=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=Z0XMjWYFwOuaI0dkzwN1rK7t9sg+eMG04s/x7OSv3/4KaFlZe/NhzAp2trezUxHbhfS7s1hcRPGl0uFwwCC7DGOinegr9+sRz3M5iQcY77vg7JFWWXa9qiTodt7oC1rZwPKus0vADitwjI54eb6D1tG2jfcQ/9DuCucCto6zNDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qiGViF3o; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qiGViF3o"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250306035413epoutp04e03d797f1ee94aac222409046abcf623~qGmsQZH-40341603416epoutp04I
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 03:54:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250306035413epoutp04e03d797f1ee94aac222409046abcf623~qGmsQZH-40341603416epoutp04I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741233253;
+	bh=M+tdIbH/OOQ9B2+GPQFTqQLawkecNMO/8W+4Ii4xSzk=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=qiGViF3ogjRaWBCI9FhNDOUwoNPTblslDHBLmJRk2eCEzYc5qrWj+G1Kyt5zkiB6M
+	 Q6MIuwEvv3/Q43eiBy4xeLJOnlUS5yv3DqVtXCHV6DOs3gFCzBPE+D8pKt/Y2Dd1I6
+	 8atGyNM9fsTo2sxE94UWczir0VTvjGFF9NFrDOYE=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250306035412epcas5p26ae10de1003a9c71415d135415e756d9~qGmrrFaG00784807848epcas5p26;
+	Thu,  6 Mar 2025 03:54:12 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Z7bBp3xQ6z4x9Pt; Thu,  6 Mar
+	2025 03:54:10 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6A.7B.19933.26C19C76; Thu,  6 Mar 2025 12:54:10 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250306034103epcas5p2f1f67fe07c770d22c74a5ccabe69430f~qGbNDbm5C2061720617epcas5p2M;
+	Thu,  6 Mar 2025 03:41:03 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250306034103epsmtrp10afca51e630cdde56b25613551c21e60~qGbNCJhEJ1649016490epsmtrp1J;
+	Thu,  6 Mar 2025 03:41:03 +0000 (GMT)
+X-AuditID: b6c32a4a-b87c770000004ddd-8f-67c91c626329
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	98.56.33707.F4919C76; Thu,  6 Mar 2025 12:41:03 +0900 (KST)
+Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250306034100epsmtip2475c2bc5a013bdb7f4b299ba32f5c694~qGbKRDM9N0050300503epsmtip26;
+	Thu,  6 Mar 2025 03:41:00 +0000 (GMT)
+From: "Swathi K S" <swathi.ks@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <krzk+dt@kernel.org>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
+	<conor+dt@kernel.org>, <richardcochran@gmail.com>,
+	<mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>
+Cc: <rmk+kernel@armlinux.org.uk>, <netdev@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<pankaj.dubey@samsung.com>, <ravi.patel@samsung.com>, <gost.dev@samsung.com>
+In-Reply-To: <89dcfb2a-d093-48f9-b6d7-af99b383a1bc@kernel.org>
+Subject: RE: [PATCH v8 1/2] dt-bindings: net: Add FSD EQoS device tree
+ bindings
+Date: Thu, 6 Mar 2025 09:10:49 +0530
+Message-ID: <00e301db8e49$95bfbf90$c13f3eb0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxH+UwHMln48U4AA--.15034S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-in
+Thread-Index: AQHcwqSBZNYxUrKMqce/4F1P5N/GfgGyT6S5AetEnA8CjXdByrMxtKXg
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkl+LIzCtJLcpLzFFi42LZdlhTSzdJ5mS6wZxJshY/X05jtFj+YAer
+	xZq955gs5pxvYbGYf+Qcq8XTY4/YLW4e2Mlk8XLWPTaL8+c3sFtc2NbHarHp8TVWi8u75rBZ
+	dF17wmox7+9aVotjC8Qsvp1+w2ixaOsXdouHH/awWxw584LZ4lL/RCaL/3t2sDuIely+dpHZ
+	Y8vKm0weT/u3snvsnHWX3WPBplKPTas62Tw2L6n32LnjM5PH+31X2Tz6tqxi9Di4z9Dj8ya5
+	AJ6obJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoF+V
+	FMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQUmBXrFibnFpXnpenmpJVaGBgZGpkCF
+	CdkZPUf3sxUcF63YseUBWwPjAqEuRk4OCQETicPXVjCD2EICuxklOncUdzFyAdmfGCUevHnI
+	BOe8nbGRDabj78bjUImdjBLL3j9mhHBeMEr0f+hlB6liE9CSWNS3D8wWEdjLJPGsMQCkiFlg
+	AZPExuOLmUASnAJ2Eh8e9oLZwgKBEnOO3WEEsVkEVCRuT1sA1swrYCkx884HNghbUOLkzCcs
+	IDazgLbEsoWvmSFOUpD4+XQZK0RcXOLozx5miMVuEq+efmYHWSwhsJhT4mDDNqgGF4mZK5ez
+	Q9jCEq+Ob4GypSRe9rdB2fESq/uuskDYGRJ3f02E+t9e4sCVOUBxDqBlmhLrd+lDhGUlpp5a
+	xwRxA59E7+8nTBBxXokd82BsZYm/r69BjZSU2Lb0PfsERqVZSF6bheS1WUjemYWwbQEjyypG
+	ydSC4tz01GLTAqO81HJ4jCfn525iBOcFLa8djA8ffNA7xMjEwXiIUYKDWUmE9/Wp4+lCvCmJ
+	lVWpRfnxRaU5qcWHGE2B4T2RWUo0OR+YmfJK4g1NLA1MzMzMTCyNzQyVxHmbd7akCwmkJ5ak
+	ZqemFqQWwfQxcXBKNTAFzfz49MH2JzIq3hsE95mz2U2f/Ojx5o3TRe7vrmOZlS+7KMpPLNL8
+	mfVM4YwXMuntCTaPrK69Ffv5OIKh0T9tgdc6qYdcX/aZhXnaOf4Jqdu/bXvdfdPJ4m0PUh7+
+	PGvEO3133LGNy3LPHBVfOLvEWnOVb7PX+frMJEFfoxbZlaVCbbundl77dfyu3FYF3nV294/b
+	5a221JblS7B9mnY6yv68jmfHGUbh43WTfh9yM5AL/sF8RNGBWVney2nu/ae7tvtySn9Yp/I+
+	9Pf+t3t7bRfuX5XR/7/7vp/dufv/Kuc/q9yz+USt2vLbe4qv/8tTOVkgE3J8gezFhDfZO2sS
+	jztHNFQs9L+SJ3iT8f1FJZbijERDLeai4kQA44zLsZQEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOIsWRmVeSWpSXmKPExsWy7bCSvK6/5Ml0g/1/5C1+vpzGaLH8wQ5W
+	izV7zzFZzDnfwmIx/8g5Vounxx6xW9w8sJPJ4uWse2wW589vYLe4sK2P1WLT42usFpd3zWGz
+	6Lr2hNVi3t+1rBbHFohZfDv9htFi0dYv7BYPP+xhtzhy5gWzxaX+iUwW//fsYHcQ9bh87SKz
+	x5aVN5k8nvZvZffYOesuu8eCTaUem1Z1snlsXlLvsXPHZyaP9/uusnn0bVnF6HFwn6HH501y
+	ATxRXDYpqTmZZalF+nYJXBndN1axFkwTrXj17BBTA+NLwS5GTg4JAROJvxuPM3UxcnEICWxn
+	lPi45TEbREJS4lPzVFYIW1hi5b/n7BBFzxgl9q9qBStiE9CSWNS3DywhInCaSeJH+z8wh1lg
+	FZPEtqWnoOa+Z5R4/mMJ2CxOATuJDw97mUBsYQF/iaZ7M5lBbBYBFYnb0xawg9i8ApYSM+98
+	YIOwBSVOznzCAmIzC2hL9D5sZYSxly18zQxxn4LEz6fLWCHi4hJHf/aAxUUE3CRePf3MPoFR
+	eBaSUbOQjJqFZNQsJO0LGFlWMYqmFhTnpucmFxjqFSfmFpfmpesl5+duYgSnBa2gHYzL1v/V
+	O8TIxMF4iFGCg1lJhPf1qePpQrwpiZVVqUX58UWlOanFhxilOViUxHmVczpThATSE0tSs1NT
+	C1KLYLJMHJxSDUwWyb90Lb7Iak3+17zBgIdF6PmBQ4+DpkUZRGrzqM5vLXQvuMU4b+8fdvfj
+	t0ryulKSXj282FD+ZJn2SaMdYn65099U1y58n/A8s2r1dpnO5A6Fx3HKwU5/Feax56fbsax6
+	Mjc+/MaMirfvtr8+fthkGXNZd/SNTGWNfwZGBTKpG3l3ma8NKD61KdZ1r13T6R9uK9226W76
+	Y3ciuqCgQeqIT4f35tTH9yL2bfxqFRqUKl0pxSdqvX1lpuPsS9O2aciXsrfeXO9UaDPj6+uE
+	W4u22B0+7fElb7GDlPDV/k+bA8KVXjyWdt3VpqLt8ly839XdKGBRgKnK70xfnrRXNZ+/HV7K
+	+GLvsumJ/B1WO5RYijMSDbWYi4oTAQNZDc96AwAA
+X-CMS-MailID: 20250306034103epcas5p2f1f67fe07c770d22c74a5ccabe69430f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250305091852epcas5p18a0853e85a5ed3d36d5d42ef89735ca6
+References: <20250305091246.106626-1-swathi.ks@samsung.com>
+	<CGME20250305091852epcas5p18a0853e85a5ed3d36d5d42ef89735ca6@epcas5p1.samsung.com>
+	<20250305091246.106626-2-swathi.ks@samsung.com>
+	<89dcfb2a-d093-48f9-b6d7-af99b383a1bc@kernel.org>
 
-The current max_pfn equals to zero. In this case, it caused users cannot
-get some page information through /proc such as kpagecount. The following
-message is displayed by stress-ng test suite with the command
-"stress-ng --verbose --physpage 1 -t 1".
 
- # stress-ng --verbose --physpage 1 -t 1
- stress-ng: error: [1691] physpage: cannot read page count for address 0x134ac000 in /proc/kpagecount, errno=22 (Invalid argument)
- stress-ng: error: [1691] physpage: cannot read page count for address 0x7ffff207c3a8 in /proc/kpagecount, errno=22 (Invalid argument)
- stress-ng: error: [1691] physpage: cannot read page count for address 0x134b0000 in /proc/kpagecount, errno=22 (Invalid argument)
- ...
 
-After applying this patch, the kernel can pass the test.
- # stress-ng --verbose --physpage 1 -t 1
- stress-ng: debug: [1701] physpage: [1701] started (instance 0 on CPU 3)
- stress-ng: debug: [1701] physpage: [1701] exited (instance 0 on CPU 3)
- stress-ng: debug: [1700] physpage: [1701] terminated (success)
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 05 March 2025 21:12
+> To: Swathi K S <swathi.ks=40samsung.com>; krzk+dt=40kernel.org;
+> andrew+netdev=40lunn.ch; davem=40davemloft.net; edumazet=40google.com;
+> kuba=40kernel.org; pabeni=40redhat.com; robh=40kernel.org;
+> conor+dt=40kernel.org; richardcochran=40gmail.com;
+> mcoquelin.stm32=40gmail.com; alexandre.torgue=40foss.st.com
+> Cc: rmk+kernel=40armlinux.org.uk; netdev=40vger.kernel.org;
+> devicetree=40vger.kernel.org; linux-stm32=40st-md-mailman.stormreply.com;
+> linux-arm-kernel=40lists.infradead.org; linux-kernel=40vger.kernel.org;
+> pankaj.dubey=40samsung.com; ravi.patel=40samsung.com;
+> gost.dev=40samsung.com
+> Subject: Re: =5BPATCH v8 1/2=5D dt-bindings: net: Add FSD EQoS device tre=
+e
+> bindings
+>=20
+> On 05/03/2025 10:12, Swathi K S wrote:
+> > Add FSD Ethernet compatible in Synopsys dt-bindings document. Add FSD
+> > Ethernet YAML schema to enable the DT validation.
+> >
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
+> > Signed-off-by: Ravi Patel <ravi.patel=40samsung.com>
+> > Signed-off-by: Swathi K S <swathi.ks=40samsung.com>
+>=20
+> <form letter>
+> This is a friendly reminder during the review process.
+>=20
+> It looks like you received a tag and forgot to add it.
+>=20
+> If you do not know the process, here is a short explanation:
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+> versions of patchset, under or above your Signed-off-by tag, unless patch
+> changed significantly (e.g. new properties added to the DT bindings). Tag=
+ is
+> =22received=22, when provided in a message replied to you on the mailing =
+list.
+> Tools like b4 can help here. However, there's no need to repost patches
+> *only* to add the tags. The upstream maintainer will do that for tags
+> received on the version they apply.
+>=20
+> Please read:
+> https://protect2.fireeye.com/v1/url?k=3D19972162-781c345b-1996aa2d-
+> 000babffae10-7bd6b1a1d78b210b&q=3D1&e=3D94dcc3a6-5303-441a-8c1e-
+> de696b216f86&u=3Dhttps%3A%2F%2Felixir.bootlin.com%2Flinux%2Fv6.12-
+> rc3%2Fsource%2FDocumentation%2Fprocess%2Fsubmitting-
+> patches.rst%23L577
+>=20
+> If a tag was not added on purpose, please state why and what changed.
 
-Cc: stable@vger.kernel.org
-Fixes: ff6c3d81f2e8 ("NUMA: optimize detection of memory with no node id assigned by firmware")
+Hi Krzysztof,=20
+As per a review comment received from Russell, I had added 2 new properties=
+ to the DT - assigned-clocks and assigned-clock-parents properties.=20
+The example in the DT binding reflects the same.
+I felt it wouldn't be fair to add 'Reviewed-by' tag without you reviewing t=
+he updates again.
+But I should have mentioned that in cover letter and apologies for missing =
+to do that.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kernel/setup.c | 1 +
- 1 file changed, 1 insertion(+)
+- Swathi
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index edcfdfcad7d2..a9c1184ab893 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -390,6 +390,7 @@ static void __init arch_mem_init(char **cmdline_p)
- 	if (usermem)
- 		pr_info("User-defined physical RAM map overwrite\n");
- 
-+	max_low_pfn = max_pfn = PHYS_PFN(memblock_end_of_DRAM());
- 	check_kernel_sections_mem();
- 
- 	/*
-
-base-commit: 848e076317446f9c663771ddec142d7c2eb4cb43
--- 
-2.39.3
+> </form letter>
+>=20
+> Best regards,
+> Krzysztof
 
