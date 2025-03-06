@@ -1,288 +1,213 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2040.outbound.protection.outlook.com [40.107.92.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A187FD
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 04:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741236532; cv=none; b=omWth5GbWlMuYZ1tTHdreutVbW3EivGy6/r1c9kxKHkS6z3jZj9GBHZMqQTfaIB7/f+y5b5kFqwGvdn7XCX2q7+2JH6cUyrB+9TaZNwrO8wqdfujZXfttdcRG6wqpd3JVuHoxntFvF72HmoaprN/brNaFwk/9gKIlMO+iL2lnog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741236532; c=relaxed/simple;
-	bh=/RLhckEvknyPIuDLWygMxijGKZQrmwdEnzAEyBcI+4E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z14Uf7A2n9BgC/GwgpqxGhksrwzIoUWVbYu86z4ImOvsoVgL9Vqkd6qckUdl8dMWbYhw62tZh3XgFp88jVvsMef+KJ2vkp0rlVxIS+v5QM1eH4K/RgmawsmhDSx9CDuYiaK5T562a/37Z0C/02w4wmOG0obE7IhQu5x+ugwK0dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fK+ZTqa0; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799DC2F50
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 04:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741236558; cv=fail; b=poZmHkl4pgt+qG+6F2/2g+jvDpHYpGaYzICgKEabYdjz9EdDJxj4zQgsAkZETfqwvwq4FUrP5p9VujDqEDEnK7wr8wUT0ZB6+j9Ijw0gSqL9cKbGMq9Fg9FRJOZt2FOvd0RAqCCE46TdfNjjrU2CrUU5kQwFXLySNlo5VtTlPOo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741236558; c=relaxed/simple;
+	bh=ocAIFiwiUPAYwOntqd4FpEX60hkYsSydmuJInUyZXss=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=J9v9/o4PfPnjWF/1gd3ODWPKYUZQeF70pLqQRYjWE3St+rks6cjpabLganuuO6jDIpedDP1tbRNfZPsrjVMkqTH3xoCaKvhnc+wCd6PaQ3CUMW5TRV21NvKi69oYz5PXgbtmM8zCelCVPSHk4RQGzEflwONleVPuuektvpENRMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cl/17yYn; arc=fail smtp.client-ip=40.107.92.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fK+ZTqa0"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525Kcxk9028695;
-	Thu, 6 Mar 2025 04:48:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=4X/CoW
-	babJva0wcKAJX50W2hG5IeeQQ0zM6RIVXoD7s=; b=fK+ZTqa06jDaMSzjkvFoDy
-	W4/CCJ86oUe85hnB3ck11sh8oMKuqQJn9Ad0Yx9lqAM9ufz5xatrwtGGvHbLValR
-	Bunm44FxMt6ml+GkzDfhWvo8LX6yAsVq/AxVjwbUqm6Vp/8Akimv0oEdziMjf5MC
-	UasYX+Eq6Ax2Nq/QariwHhuApfW3FuYUvtA/QysLMAiSbXZmROoFLppfB611QwEU
-	Bmbns8NtdXiQ9l7WjORvpwlADxQhO2RLjmotioWWGi3frER5Gp4o/yleSzuQmuGw
-	uoyCTSAFsnavXI6NAisgZELMg7X3vzBEsauPC/3T9q2d1xb+WhmqQ59HlIPmFHmg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 456wu01p24-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 04:48:13 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5264jECB006825;
-	Thu, 6 Mar 2025 04:48:12 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 456wu01p23-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 04:48:12 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5261H08u013805;
-	Thu, 6 Mar 2025 04:48:12 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2kxneq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 04:48:12 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5264mBKm24773120
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Mar 2025 04:48:11 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CEAC35805C;
-	Thu,  6 Mar 2025 04:48:11 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0EBE958054;
-	Thu,  6 Mar 2025 04:48:07 +0000 (GMT)
-Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.ibm.com (unknown [9.39.18.221])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Mar 2025 04:48:06 +0000 (GMT)
-Message-ID: <172769aab6901361f992a4ca67dd5dd8864f43ba.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] sched/fair: Fix invalid pointer dereference in
- child_cfs_rq_on_list()
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com, riel@surriel.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com, odin@uged.al, linux-kernel@vger.kernel.org
-Date: Thu, 06 Mar 2025 10:18:04 +0530
-In-Reply-To: <f1bf21e6-4fd3-4f97-b28f-b0e8dc37ff91@arm.com>
-References: <20250304170007.245261-1-aboorvad@linux.ibm.com>
-	 <CAKfTPtCJKkwFeMKUrD3o224Nz4N+1qjtq0LvL945k9tJ8t8h-g@mail.gmail.com>
-	 <f1bf21e6-4fd3-4f97-b28f-b0e8dc37ff91@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cl/17yYn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PqP86OyEWPsMe23HHP12fBv9aDuUo/OeRJPpiHU8rVQNz6FOQN9Wr/Ug03L7mMCOYfn4TK6wjIqHFbwVvBmiVSJwtPCdhvIEkKoKdeg/ATqUCwNYR9oQLbuJbCTf7huKIDbh6/e5iPXE6MQly8HrYxEiz5moL/6cKVrfcI8mjFY4Y172c2JYiTMuk5tVzTzhOLeY1Yj9BeG0r3ObhEXaMIu/uMcuqDP+vnO3D0px7bifsqybJWPPM3IRdppC6V1R+EDCdxjuAIwFXVLsv9dWbJlbdc5rMZFE+Ebz7mY7hy/Q/GNaT3gFSthacEAdvtOlD1In3RUtQv60jNIemRQXww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8v8ZGfPVUJssfDbU4lGsI//Hvg1ao0ZfW1BswMSUaLI=;
+ b=xX+DS15IpORXCjHUNRvVNJZGLoPgMlN0hPYKk3kcBZwzx054TYZBIFaswu5x1V28UKHR9hUJzFHzHc6dZsPFASR6DowkDhPeCer2/BffGKUfrK/0e5tqxytlHo1M8gF7Ldmw5QB9jtA9hcdwpQvRLsRMM9KDpeyM5yJ4AsBAWaLFqJaWrUgoKS7rfQ4YQ/bQ6RTeZmNNcp61V3+KeyJPLAUkLK2suGUphoyuJFyRMMwpd8ySvFjEkbZNIxm75Y78uOmXcslg+sPlBHQJDgdh32BMk9RqyFvKUZ7QVrylfC1rOA0YdjPhtb4fIEZFCB7G0/h6SPLqMWl5WVDKImU16g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8v8ZGfPVUJssfDbU4lGsI//Hvg1ao0ZfW1BswMSUaLI=;
+ b=cl/17yYnCuvjpFQHTAyyk6u6SUGJCd7LqTqnbo7Ni8mrnS2AL6XPpUs43PWKKHb66nMZSOZtwDSGP5P2KNIn52Syg4uDa7xYDRIE/ymbQLp4czg+aBSW5GrxC09I/Glr8z/t4h7LylVTBy8ryVq622kPRSr+o/vwrjVCVliFAOw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+ by MW4PR12MB7216.namprd12.prod.outlook.com (2603:10b6:303:226::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Thu, 6 Mar
+ 2025 04:49:11 +0000
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::1fc8:2c4c:ea30:a42f]) by DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::1fc8:2c4c:ea30:a42f%7]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 04:49:11 +0000
+Message-ID: <7bda5c5c-3f2e-496c-b5a0-6f7d9120dacb@amd.com>
+Date: Thu, 6 Mar 2025 10:19:04 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ktest: Fix Test Failures Due to Missing LOG_FILE
+ Directories
+From: "Jain, Ayush" <ayushjai@amd.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Ayush Jain <Ayush.jain3@amd.com>
+Cc: warthog9@eaglescrag.net, linux-kernel@vger.kernel.org,
+ srikanth.aithal@amd.com, kalpana.shetty@amd.com
+References: <20250305041913.1720599-1-Ayush.jain3@amd.com>
+ <20250305190159.7c590242@gandalf.local.home>
+ <faadd6ad-3b85-4ad3-8d17-acb5e0991a18@amd.com>
+Content-Language: en-US
+In-Reply-To: <faadd6ad-3b85-4ad3-8d17-acb5e0991a18@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0092.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9b::10) To DM6PR12MB4401.namprd12.prod.outlook.com
+ (2603:10b6:5:2a9::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -OMTedxBvcznT2QOWSyxCk7hNMmTEb1R
-X-Proofpoint-ORIG-GUID: akJXhoAYz05ayWYSmxi6BMTO-O7YiZPh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_02,2025-03-05_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
- bulkscore=0 adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503060025
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4401:EE_|MW4PR12MB7216:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5687302d-5650-4393-5e09-08dd5c6a3c78
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VjZoQWJIM2ZEUTFnUXRkRERkOWRtdjF6bXdCMWo0K3dDcTE3bmR4eUU0cWlJ?=
+ =?utf-8?B?RGJHSUEySjgwNnlVTnh5blNrSGpvTXNqSGVCajAyRnVuSnhDWWRET3h0ZlhN?=
+ =?utf-8?B?VVppenRoUHZTWFdRbDM4UEU1SjlLL0NnOTNmc0NSYlRkZW1wcFRhT2hCRldE?=
+ =?utf-8?B?djVDbjZNTWUvNnAxUWhvaEs1ekRiTnlIRlQ0RVBEa1pvNE9oaEJmckpNTW50?=
+ =?utf-8?B?Z2ZQWHN4NUt4MFVIdzI3YXVsVnYzck01OWF2ZDI1UWlCQkZueVMxUFpaa2RN?=
+ =?utf-8?B?N1IwSFc2ekZqbjlQMXRaUWp3cmc2bDNkSVJ6REdBN1VqZXZGVWlxcnZFTjNq?=
+ =?utf-8?B?VDhMQVFYVFlpaTZKUUR0Z2R3UGI2eTdJZGhvRDhaOThieVl0SWF5QU1WVnp3?=
+ =?utf-8?B?bTNXanpzWm00OHQrODJoZklaUWhEWDBFR0RCaVBJZFNqM2xwL2IycENEM3Jy?=
+ =?utf-8?B?Nm92N2w3RkpPMjZZZEYxc2FRb2JZdUhWMmtiMGQxMUIyOUlyRTc5cVFpa2V4?=
+ =?utf-8?B?a0VEdzhuVlZmeXVvbFVnNVQ0U1liSUxEMzdYSEdUTWdPMzVyUWJHQjl4Z096?=
+ =?utf-8?B?UjVWZVo2SGl4UCszYm5ieWNUeGhFalpvQng1MFNpQ01WbHA1eXFabk1wRVZ4?=
+ =?utf-8?B?WEc5NkRtNXA5YXhVSGgyWFd0Nk9SVDlyQS9rbE4rR2czcWtWV2hEZUxGb1I2?=
+ =?utf-8?B?WGZQSFVnSmlZTHBHY0drT3lJZFFkQnFKcWdnVmsvWStNNWk1d1lXQXVDc0hR?=
+ =?utf-8?B?N215OWxJeXAxcTFjL25rWlQ0a0ZLbGN5R243U0xRZnBvNW5KSHdLZWdGakJQ?=
+ =?utf-8?B?dkRDbnRBVzFPV3RaZnRPczNaalhnVE9SV2Z2Q2l2ODduT09hbFNZUjkxS05S?=
+ =?utf-8?B?bVFubnlqZERNNEpnbWxNd0FoTUYxMWIzVnE5UmJVamtQUVJRVVhhTFJWbG5E?=
+ =?utf-8?B?S05qN2VpbG5UeC94cmloRHdvUDNHU0I3Z2RzS1NkQ013SDNzdnJLUWRrY0xx?=
+ =?utf-8?B?bS91eGtoVVZvQ0lsUkVSMXBMbnZYN1lJWlBpMEpHNGdrWlB6dzBrSHBHTkgw?=
+ =?utf-8?B?ejRNdWl5aUxtc2lHOEd6eVV5enZiRnhhQ0tBK1JrazFvYlRqcHQ4QTFKS1Ex?=
+ =?utf-8?B?QVJrTHZVYlhxdjBReUxrRGZ1clRHblpKVUlNZGNoOHluK3E2TDlkaFkxK1c5?=
+ =?utf-8?B?MGxPVExReHJGYlFxV2hIanVsSUltaGdzdVFKOURPTWN1eXJhUlZtNnZQVUVh?=
+ =?utf-8?B?TndkYlVKakpvcGNtdUl3WXMrMldES3JNaFBHZ0x3SU9ZcEhIbmpSMDVpb1lq?=
+ =?utf-8?B?SUxpRWx3YzdXbzVyUk5hc0Z4OWgra0k3Nkx0S2FKenhWQWRPSDNzM0tjVGdz?=
+ =?utf-8?B?dW5xWGV0bHp4R0FJYnhyQ28yZTE2dnBFeGx4cmJsemdwRlo5c0NuY1pTT28v?=
+ =?utf-8?B?TmdFSkFVY3MzREhzQXorUFd5SWMwZERsZVp2T1hIU2ZUU2tWUk1vaUFrSnJ0?=
+ =?utf-8?B?SFNZOGUrUEsxT0IzTW45b2FXRUxuNjlFblpwUXRQMDEvcWFTUlhtSTFuSEZM?=
+ =?utf-8?B?SnZ4cmY0cXJLOHZmd2RvZzZwOHNSSmVBcktZNzkvSnFtOU1YUHcwSXVjcHp4?=
+ =?utf-8?B?cUtyOVB1QlBHRGs2aHdobUVMMm5nd3diTWlrekkxYUVIbkRmTlA5L0JWZ3VX?=
+ =?utf-8?B?ZUxHVmgwWnJ1cXBEMWlCZDY0U3lxU1phSUk4azNISUtYYmRibFJ1TzZpc3c0?=
+ =?utf-8?B?eVBORmVBOUlXdGhZZEh5Zk5zV2ZNem0rT3pkNUkwK3E3OTNZc29PL0FWSEZp?=
+ =?utf-8?B?akRSRGVUcTdUbHNaaEEyTlNvN3ZRdmVOWGtIckJ4Qlp3SmFic2NyZ0xGMS9O?=
+ =?utf-8?Q?XVHcsinc+qjak?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aVdvT3NmMXoxYTFKZHkvT0pCSXE2UktsTDBlR1NWYzdBNmdPQ0ZZMUJYa3hP?=
+ =?utf-8?B?TFZtNTlPQmh3bVRpb1NwR3JpQXd0SHIzeTdWUWx5TzI3WG9UdTRxbUVqdFRR?=
+ =?utf-8?B?aUprTlBzYy9RVXV1UjBad3ZKYnlBZ05EalhCZnlGbGRMUG0vZjdFd1lXWGtq?=
+ =?utf-8?B?aXk0cm5qRTQ2eEU5VmdjVUVDTEgvaHJsa1dKQ1E0NE51Q21mNFFNREdwQ3pL?=
+ =?utf-8?B?U1RjenNhTXpJZ0pBU0NhMWFYbjVjOWRmcE41V3lCNTNlaWZpZmFNM0h6ZUpY?=
+ =?utf-8?B?cW9td3NnbFBPVkEyQVR4Mm1FVG04MCsyTEJMQkE4eHVmb2FvblFBOW43UUQ5?=
+ =?utf-8?B?REcwcDFGY2xmbDdkZE9EY3FuN0ptTDJZRy9pbEhWeTlCc2o3NjJjQ3U5cEE1?=
+ =?utf-8?B?MUR1ejNGbWV6Kzg2V2hYUGN1ZGhKYU43VFNaUGpLZkx3QUFUdUUvb2VnU1hx?=
+ =?utf-8?B?YTE3RmRSR1NTaE9HSjg1OVgvc1U5Y09nQkg2eDVsNGtQRUJNc3IwaHJJbWdz?=
+ =?utf-8?B?blVhK3l3RG1rODdodmREKy9tTDZiTm8wZFJYTldJSHNFcWNubmp3cklVdEFl?=
+ =?utf-8?B?a0htdjUxenk0QXg0WWcrTmVhTVhCU0NnYlA1YnR1QVBLZEQwT3k5Mlk0V29O?=
+ =?utf-8?B?eFFRWHV1eXljb2hlQ09ZVXRzUXRxeGlXYXo5UzVsMVdYQ3Q4M2RCcy9Cd3JZ?=
+ =?utf-8?B?bVpBWGVNYjZrTUt3RVBZVTlzd2RuakVSb2Z5MmQzVUwwaXlkY05BV1VRdXJI?=
+ =?utf-8?B?cnVNcnM5cHVRK0txaU9hSTlwWlJzRzN0MDBYSUYvTFFYbVBHWDluYzJPdlpx?=
+ =?utf-8?B?dDcveWlSZS82Q0N0N1YrVy80WHF4a1lzUVJFMFRHeWg4cmdVNHRSTHFZY05v?=
+ =?utf-8?B?bHl0U1RHTHlLWFplRHRjTWNrcHNQV1dIUHkyNFh4UUpYREZheXRxRnE0Y2kw?=
+ =?utf-8?B?QjNvUXBXUHFRUnZ2Y0dLdmhXWHFneVhadGdYNXNrYWVMSDlyakZCVkdwNnVL?=
+ =?utf-8?B?aVFTUlNrSlo1OWQxWXE2UVlROUdBYm9scGc2RmxRNDZZZ3ZVbnlNaHBESHM3?=
+ =?utf-8?B?bHFzUG91a0pnSVBjY2JOcU1xTUJGRzViU09QejhGWE5RdlZuczlYN3pmYmsy?=
+ =?utf-8?B?dE9HQUFlUTB6OXhoWldSQ0FFSHREZFFsenI0Z0VmRTU2MTJUb3JnWmFwZjVr?=
+ =?utf-8?B?b1F6RDM5M1FHbDVvOTUzbmROcGl6ZmswaG9OY2hrNUZpQVJnd1dJU2IySm1u?=
+ =?utf-8?B?Ty8zcThjWlBrc2h4TXRTWk5iTER3ZkE4V1N2VkVzTFRrNmd5bktUMWVHMk5z?=
+ =?utf-8?B?NlNwOFd0MEhMY3NNejE2TVYzQitEZHk4QU9SNGZPREdSMGwyNWxnUk5ielRa?=
+ =?utf-8?B?NzRwQVJXS25pbUZOMWJ2Z3RnRmZyTGpPY0RNNGVOaGNSVlhudWFiMnpZaUZq?=
+ =?utf-8?B?d0F5NEVZMnZ2OUlzWXNnbXMvd2pvYTFjTWc5V2JEVTVrUFRGOW1rQjJOdFdX?=
+ =?utf-8?B?cHlBMlhXU2VacllKUWVSSUx5bHFlSk9aOFpmdnRzN0JKb3o5b1ZFeVlEVFgr?=
+ =?utf-8?B?dlRtNkZsODNsTDRCVWpPRFo5QWJtemdCMmw4T3ZHSkVNWkI2YjR4WXJ3ZHFI?=
+ =?utf-8?B?TkhIenNrOVVyQjFIK1VybnFMODlEQys2NmtGTGx0Z1pRdndDa216WXovaGxX?=
+ =?utf-8?B?N25VSkR4NW40TVROc1p6OWhuRytXeGRDcVhjMUdpcTlsZTNLd2Y4ODFkV3k4?=
+ =?utf-8?B?OGxKTHpUamFBZ1R6elBva1Nnbk05eWYrMXRHaEZJVGhHRlJtajdKRGRSRnlF?=
+ =?utf-8?B?MFdUQXplNnpsbXUvRjlhUHJUU0hNelF4VTVNK0xrT0dtVjRoK29RWGxlSFdi?=
+ =?utf-8?B?VW1tT2lLY2RlVWJPbFcwb0tFazkrODNGWmptdlZpaGZybC8rcEovaE1nbGhi?=
+ =?utf-8?B?L1FUazlUYkk1c1pXazRTbkRMSnh5aktjMkh6TGswblFWRlE0bHA5YzAxTUx5?=
+ =?utf-8?B?V1NsQkRwUVMzMkhwM0EzWmFpM29YaGppdHVwQWlFNTRXaDZpN3NPOU96VTlB?=
+ =?utf-8?B?YlFMVDJ4TDZhS2IxbmJ1SExRZWNpMTNOMWd1VVVqWVU5NDBtaG1sWEtvbnNl?=
+ =?utf-8?Q?jMOwCvO8MWoR3KX0TvJ/XoZGI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5687302d-5650-4393-5e09-08dd5c6a3c78
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4401.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 04:49:11.2160
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f1pkrp5o0JHt4q0AnO/tJFdLe0ZAwYhXB01lQOKR2abRn98QUOxi9PFqGk0Fj+UQOdbkbLEipBb9Ujj0oevvtg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7216
 
-On Wed, 2025-03-05 at 10:23 +0100, Dietmar Eggemann wrote:
-> On 05/03/2025 09:21, Vincent Guittot wrote:
-> > On Tue, 4 Mar 2025 at 18:00, Aboorva Devarajan <aboorvad@linux.ibm.com>=
- wrote:
-> > >=20
-> > > In child_cfs_rq_on_list(), leaf_cfs_rq_list.prev is expected to point=
- to
-> > > a valid cfs_rq->leaf_cfs_rq_list in the hierarchy. However, when acce=
-ssed
-> > > from the first node in a list, leaf_cfs_rq_list.prev can incorrectly =
-point
-> > > back to the list head (rq->leaf_cfs_rq_list) instead of another
-> > > cfs_rq->leaf_cfs_rq_list.
-> > >=20
-> > > The function does not handle this case, leading to incorrect pointer
-> > > calculations and unintended memory accesses, which can result in a ke=
-rnel
-> > > crash.
-> > >=20
-> > > A recent attempt to reorder fields in struct rq exposed this issue by
-> > > modifying memory offsets and affecting how pointer computations are
-> > > resolved. While the problem existed before, it was previously masked =
-by
-> > > specific field arrangement. The reordering caused erroneous pointer
-> > > accesses, leading to a NULL dereference and a crash, as seen in the
->=20
-> I'm running tip/sched/core on arm64 and I still only see the wrong
-> pointer for 'prev_cfs_rq->tg->parent' in the 'prev =3D=3D
-> &rq->leaf_cfs_rq_list' case?
->=20
-> ...
-> cpu=3D5 prev_cfs_rq->tg=3Dffff00097efb63a0 parent=3D0000000000000010
-> cfs_rq->tg=3Dffff000802084000
-> ...
->=20
+Hello steven,
 
-Hi Dietmar,
+On 3/6/2025 8:29 AM, Jain, Ayush wrote:
+> Hello steven,
+>
+> On 3/6/2025 5:31 AM, Steven Rostedt wrote:
+>> On Wed, 5 Mar 2025 04:19:13 +0000
+>> Ayush Jain <Ayush.jain3@amd.com> wrote:
+>>
+>>> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+>>> index 8c8da966c641..13b97e6b8459 100755
+>>> --- a/tools/testing/ktest/ktest.pl
+>>> +++ b/tools/testing/ktest/ktest.pl
+>>> @@ -4303,6 +4303,14 @@ if (defined($opt{"LOG_FILE"})) {
+>>>      if ($opt{"CLEAR_LOG"}) {
+>>>  	unlink $opt{"LOG_FILE"};
+>>>      }
+>>> +
+>>> +	if (! -e $opt{"LOG_FILE"} && $opt{"LOG_FILE"} =~ m,^(.*/),) {
+>>> +	my $dir = $1;
+>>> +	if (! -d $dir) {
+>>> +	mkpath($dir) or die "Failed to create directories '$dir': $!";
+>>> +	print "\nThe log directory $dir did not exist, so it was created.\n";
+>>> +	}
+>>> +	}
+>> Hmm, somehow the indentation is messed up here. Should be:
+> Sure, will update it in next version
 
-Yes, you are right, I meant that we will still have invalid pointers and us=
-e it=20
-silently in the vanilla kernel, but it won't always lead to a crash.
+Just to be clear on my end, you mean 4 space wide tab for indentation here.
 
-The crash in this specific case happens if `prev_cfs_rq->tg` points to a me=
-mory
-location that cannot be de-referenced. Otherwise, the function de-reference=
-s and
-uses memory locations that are not valid but did not cause a visible failur=
-e so far.
+- Ayush
 
-Here are more details on what I meant by reordering the runqueue:
-
-With the system and kernel configuration, I encountered the crash while try=
-ing
-to reorder the runqueue structure, here is the minimal change that caused t=
-he
-crash on top of v6.14-rc5 kernel:
-
----
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c8512a9fb022..597c1e6a9b5d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1143,8 +1143,8 @@ struct rq {
-=20
- #ifdef CONFIG_FAIR_GROUP_SCHED
-        /* list of leaf cfs_rq on this CPU: */
-+       struct list_head        *tmp_alone_branch;
-        struct list_head        leaf_cfs_rq_list;
--       struct list_head        *tmp_alone_branch;
- #endif /* CONFIG_FAIR_GROUP_SCHED */
----
-
-Here is the crash signature:
-
-[    1.114431][  T552] Kernel attempted to read user page (10000012f) - exp=
-loit attempt? (uid: 0)
-[    1.114440][  T552] BUG: Unable to handle kernel data access on read at =
-0x10000012f
-[    1.114446][  T552] Faulting instruction address: 0xc0000000001c1044
-[    1.116344][  T241] pstore: backend (nvram) writing error (-1)
-[    1.116351][  T241]=20
-[    1.116354][  T552] Oops: Kernel access of bad area, sig: 11 [#2]
-[    1.116354][  T241] note: kworker/44:0[241] exited with irqs disabled
-[    1.116356][  T552] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D2048 NU=
-MA pSeries
-[    1.116368][  T552] Modules linked in: autofs4
-[    1.116374][  T552] CPU: 73 UID: 0 PID: 552 Comm: kworker/73:1 Tainted: =
-G      D            6.14.0-rc5-dirty #193
-[    1.116381][  T552] Tainted: [D]=3DDIE
-[    1.116384][  T552] Hardware name: IBM,9080-HEX POWER10 (architected) 0x=
-800200 0xf000006 of:IBM,FW1060.00 (NH1060_012) hv:phyp pSeries
-[    1.116391][  T552] NIP:  c0000000001c1044 LR: c0000000001c0f98 CTR: c00=
-0000000027ad4
-[    1.116396][  T552] REGS: c000000076627870 TRAP: 0300   Tainted: G      =
-D             (6.14.0-rc5-dirty)
-[    1.116401][  T552] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI=
-,LE>  CR: 48008202  XER: 20040154
-...
-[    1.116467][  T552] NIP [c0000000001c1044] sched_balance_update_blocked_=
-averages+0x35c/0x88c
-[    1.116474][  T552] LR [c0000000001c0f98] sched_balance_update_blocked_a=
-verages+0x2b0/0x88c
-
-~~~~
-
-Before reordering, struct rq and cfs_rq had the following memory layout
-(snippet from pahole):
-
-struct rq {
-	...                                                 (offset  bytes)
-	struct list_head           leaf_cfs_rq_list;     /*  4048    16 */
-	struct list_head *         tmp_alone_branch;     /*  4064     8 */
-	unsigned int               nr_uninterruptible;   /*  4072     4 */
-	...
-}
-struct cfs_rq {
-	...
-	struct list_head           leaf_cfs_rq_list;     /*   456    16 */
-	struct task_group *        tg;                   /*   472     8 */
-	...
-}
-
-In child_cfs_rq_on_list(), `prev_cfs_rq` is computed using the `container_o=
-f`
-macro:
-
-prev_cfs_rq =3D container_of(prev, struct cfs_rq, leaf_cfs_rq_list);
-
-Since `prev =3D=3D &rq->leaf_cfs_rq_list`, this results in:
-
-prev_cfs_rq =3D rq->leaf_cfs_rq_list -  456 (offset of leaf_cfs_rq_list in =
-cfs_rq)
-
-Then, `prev_cfs_rq->tg` is accessed at an offset of 472 bytes from base cfs=
-_rq:
-
-prev_cfs_rq->tg =3D (rq->leaf_cfs_rq_list - 456) + 472
-                 =3D rq->leaf_cfs_rq_list + 16
-                 =3D rq->tmp_alone_branch
-
-Since `tmp_alone_branch` is always at this point a valid pointer, dereferen=
-cing
-`prev_cfs_rq->tg->parent` doesn't cause a crash, even though it is not
-a valid task_group pointer.
-
-~~~~
-
-After reordering, the layout of `struct rq` changed as follows:
-
-struct rq {
-	...                                                (offset  bytes)
-	struct list_head *         tmp_alone_branch;     /*  4048     8 */ -> this=
- is shuffled up
-	struct list_head           leaf_cfs_rq_list;     /*  4056    16 */
-	unsigned int               nr_uninterruptible;   /*  4072     4 */
-	...
-}
-
-The layout of `struct cfs_rq` is unchanged.
-
-Now, when the same pointer arithmetic is performed:
-
-prev_cfs_rq =3D rq->leaf_cfs_rq_list - 456
-
-prev_cfs_rq->tg =3D (rq->leaf_cfs_rq_list - 456) + 472
-                 =3D rq->leaf_cfs_rq_list + 16
-                 =3D rq->nr_uninterruptible        # now this mem location =
-corresponds to nr_uninterruptible.
-
-Since nr_uninterruptible is an integer rather than a de-referenceable point=
-er, I presume because of
-this, de-referencing parent from prev_cfs_rq->tg results in a crash. Otherw=
-ise,
-incorrect pointers are silently used without a visible failure.
-
-
-But looks like a patch similar to this is merged yesterday [1], so this can
-be ignored :)
-
-
-[1] https://lore.kernel.org/all/174119292742.14745.16827644501260146974.tip=
--bot2@tip-bot2/
-
-Thanks,
-Aboorva
-
-
-> > > ...
-> > >=20
->=20
-
+>> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+>> index 8c8da966c641..13b97e6b8459 100755
+>> --- a/tools/testing/ktest/ktest.pl
+>> +++ b/tools/testing/ktest/ktest.pl
+>> @@ -4303,6 +4303,14 @@ if (defined($opt{"LOG_FILE"})) {
+>>      if ($opt{"CLEAR_LOG"}) {
+>>  	unlink $opt{"LOG_FILE"};
+>>      }
+>> +
+>> +    if (! -e $opt{"LOG_FILE"} && $opt{"LOG_FILE"} =~ m,^(.*/),) {
+>> +	my $dir = $1;
+>> +	if (! -d $dir) {
+>> +	    mkpath($dir) or die "Failed to create directories '$dir': $!";
+>> +	    print "\nThe log directory $dir did not exist, so it was created.\n";
+>> +	}
+>> +    }
+>>
+>> -- Steve
+> Regards,
+>
+> Ayush Jain
+>
