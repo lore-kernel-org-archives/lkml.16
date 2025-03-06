@@ -1,232 +1,128 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394762E64A;
-	Thu,  6 Mar 2025 10:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3381EA7C5
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741255338; cv=none; b=lHfb543M/FkwLw+eeoLbA4zQKNJOAyKlPUO10WoME30K0cU685MFUH2vVNQDxLNIJ4WeznMZQRGNeGv/7SQA1yEDELL79+cxM+3s0okq9hFgHUBOta7vC1pFxfRN2lBes+YmCC62eNeZolpqQUBEZ+QGabV3wB7efvnW//Goa2o=
+	t=1741255348; cv=none; b=X29hAK4UyuDqrXVQOrpQTkJB31i2v5EL3YZpn+sLaKMyUm40LH/9C8/BsJ0+ieVewB+13qg1MHI/ZUi+Pn1mZM35Ua/UhDYQ5uOqvwYIn4b0mimxpAdu+xGTygZSmitxF/RNQnBZesOfyebEgja9zFIlTsuOKo7V4rlpj8LP5Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741255338; c=relaxed/simple;
-	bh=4PhF8y6VGkokPsiYhWYkMDRA6AcFOvVZ20VX6LyDvh8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=jIT/UjvFzV1ZxMk2NYDTu4bZ95OojgsgJ2ePXQs63Gt54N1zfKlVCWx8RMuvavzUXeVzpKV9bProa3R7oPEQxwYvohGlG1+X7CwIu3t4f4tYe3R9PVnqlMxWIagQ3tG5/nciyC5yAdagpMbK2WThwtnuK1NdyuWnMOSlQdR7m8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S2xB2lWj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741255348; c=relaxed/simple;
+	bh=WBfnqS0S8f7OQxDKflJus4EO1fZci6/u+wznmscyMl0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MOhXftdlE3yyBE2DcKJ9co9V5WPPgENoiQsGUtkUKuW5uyKyXbm8+be2jmBvwzN/oMpGWePHfDq/0yz5VnhUMlg3jOEltidaj42tPR9OV2+6y5Y8ePNr2LVPYnak6691pkYTMj5JDo/WE2gWIRI7SOW6C2yM6VNchLJrMCT5tU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xyzg6XLw; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S2xB2lWj"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5268stUI027093;
-	Thu, 6 Mar 2025 10:01:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GUiNQxR6oXFyrfw8pmpUcgdUr3UYT8uMhlX0EwErzwg=; b=S2xB2lWjBg2sjruf
-	Qioeo9dhbHS8bie7RPugvvpgnWm9GDmfsS78ExNm7PQ8wXuQ5E9WJA1YzLBXtaSg
-	iVBRqa0vKn2LMkafTk9O6AcuKP8XWXCvsrJwRZlHgC8cE1x+fJtJY3U1SUl2L6x1
-	XgRLjPi1wiPbfjnAcfsoPwUuVpm8/b6AUAv5AyOfn6DXQY//oBT7uklBk/Yzti+H
-	jj+e4cyJzDWUFfceXxsMVmm7qRwOPW4gQ9oz2qv9tekLQv50olhcOPqcR6/swP6h
-	Z+dSCngBj9RUBEj5xV/mRUkhl+2le8IX+QujkrIUHavcTiNK2eHM8/3XnjM7ZhwJ
-	iSWRew==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6trhph-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 10:01:58 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 526A1vdl007311
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Mar 2025 10:01:57 GMT
-Received: from [10.253.37.89] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Mar 2025
- 02:01:51 -0800
-Message-ID: <cffdd8e8-76bc-4424-8cdb-d48f5010686d@quicinc.com>
-Date: Thu, 6 Mar 2025 18:01:49 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xyzg6XLw"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3f6740963b4so298262b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 02:02:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741255346; x=1741860146; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BjlyJFGbEZ5AGo1PtX3zO+4PQA4fvsT0t5eYe3h3Qgw=;
+        b=Xyzg6XLwfxfpOknT75j7HhvbSxeLZQh2Qm1rdk8LZ2zAa8tDsnllmeUuM/diLl/78s
+         16SHQQ0WyFIPPdMhMSxhnadYDqIhKWf/8I/3PdhgZfBOGwaisEPFZUYAg+hxhWajlkwB
+         7miqZvkI9eYrjBPACC3sKhcVjMfhtMHnJZw36utg90OOFeBhMbvsoAWh14SMROX8lSlE
+         RiyZOMgAOh77iJQU4hgpFojfbtKWuiff5fiGojz39rXWCd/vKhrN/3HLAchhrra6GgN5
+         eNT2vHCZhWm5OGaD/HQOEhwfkgaUcbBrft0iiqPa1NeZjo40WzuM0o2uzzWKLdJ3/RPL
+         NvWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741255346; x=1741860146;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BjlyJFGbEZ5AGo1PtX3zO+4PQA4fvsT0t5eYe3h3Qgw=;
+        b=nQuGq+LqTfZqC8xLp4VStr5VCXmIgsx3+oybEO5jMF7DTx8AlSL61bZDl+qcqpAdur
+         kL1/gAiCJsv2NJ/DX+zbwY6R/DjMF0wNpF2bLHfQ6wnMfy69nYs43jLIK41d9I4KH47Y
+         Hfdnqx98wTxYYKOBXT0gxC15wSXoKtxXoXPr4DR7xDGEFwQdNgXwSww62pO6NQGVRTuq
+         vM5pVIPCbZXzbcaA+c8jeaijO4zy2Iggz+Kl6OekucTezNXRFZG0KHIDH0/n1ZxNK7ZB
+         t8yqmPquHTaYfOWTnIdziNfKs4K/yFjct4jwmlEwWZaDgIQYsvU3ferVGqARsM1mYkMO
+         XbYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXu33Ccevh1zcLS17wjDWhjyWwo0N9YUv8FTs+Jw38hzQhiTFNgr9YqaeL17ZXElt04bL4EpkICZ/xu640=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQTV6cBwtlRzzqHkCNxl1fxFUYzZgRO5Y94OnqSpJPNZubSmZ+
+	IRbpjq+hYuB6sAxPDF2qSdNdnweAfJt5pc1dR24zkeBmB425Fa8Ba36Q/WRoNOfZ6ZiQTwbH3D1
+	CR+k6pf2ICpPbuql+lOpThc7XxbY=
+X-Gm-Gg: ASbGncv+N+4PgAPaWHDZmYKnb7wzRyjRuhI96Hien5m51QFk94pq2hkBcq8zA6gCS1Y
+	IDNP7VUSHEzzgg6Pp/tuBefROSEY4r0hixWoLPylXHRcYoj0buOkMFbxW3WBMKNCPqq0K9OHZYT
+	N6MJGrTESbbF2zdl0+dHm88Lgl
+X-Google-Smtp-Source: AGHT+IGktwl8RHqxyYhUIgJi6CiDGuwav2mr9f9ZxPvSiuh2DPm3TXfAG1Nj1w++8u4AXmmRlftDeAZPpvCYOXbu9zY=
+X-Received: by 2002:a05:6808:3a0b:b0:3f4:9e6:fd6 with SMTP id
+ 5614622812f47-3f68316d410mr4124510b6e.23.1741255346176; Thu, 06 Mar 2025
+ 02:02:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jie Luo <quic_luoj@quicinc.com>
-Subject: Re: [PATCH net-next v3 04/14] net: ethernet: qualcomm: Initialize PPE
- buffer management for IPQ9574
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
- <a79027ed-012c-4771-982c-b80b55ab0c8a@lunn.ch>
- <c592c262-5928-476f-ac2a-615c44d67277@quicinc.com>
- <33529292-00cd-4a0f-87e4-b8127ca722a4@lunn.ch>
-Content-Language: en-US
-In-Reply-To: <33529292-00cd-4a0f-87e4-b8127ca722a4@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=HZbuTjE8 c=1 sm=1 tr=0 ts=67c97296 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=P-IC7800AAAA:8 a=pGLkceISAAAA:8 a=-cV8Hw4QFi719GmBsEsA:9
- a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: ORV12Dt2uiUbTZnam6MxJqs5otzzHqIG
-X-Proofpoint-ORIG-GUID: ORV12Dt2uiUbTZnam6MxJqs5otzzHqIG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_04,2025-03-06_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503060074
+References: <20250305112038.43852-1-i.abramov@mt-integration.ru>
+In-Reply-To: <20250305112038.43852-1-i.abramov@mt-integration.ru>
+From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date: Thu, 6 Mar 2025 11:02:14 +0100
+X-Gm-Features: AQ5f1JrBT3mLoOQn49e3Z1XJM2wsj6BZo-pbHKXZ26bJSLKWAVr7Xp_R-lJsWXA
+Message-ID: <CAMeQTsYVnBFiirGLKfG+pDt0Aagr0sjanPafKCygUou0s+iB=Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/gma500: Add NULL check for pci_gfx_root in mid_get_vbt_data()
+To: Ivan Abramov <i.abramov@mt-integration.ru>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Sinan Kaya <okaya@codeaurora.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	lvc-project@linuxtesting.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Mar 5, 2025 at 12:20=E2=80=AFPM Ivan Abramov
+<i.abramov@mt-integration.ru> wrote:
+>
+> Since pci_get_domain_bus_and_slot() can return NULL, add NULL check for
+> pci_gfx_root in the mid_get_vbt_data().
+>
+> This change is similar to the checks implemented in mid_get_fuse_settings=
+()
+> and mid_get_pci_revID(), which were introduced by commit 0cecdd818cd7
+> ("gma500: Final enables for Oaktrail") as "additional minor
+> bulletproofing".
+>
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Fixes: ba99d8348864 ("drm/gma500: Deprecate pci_get_bus_and_slot()")
 
+Patch looks good but pci_get_bus_and_slot() also returned a struct
+pci_dev so the issue was present before ba99d8348864.
+The correct fixes tag should be:
+Fixes: f910b411053f ("gma500: Add the glue to the various BIOS and
+firmware interfaces")
 
-On 2/20/2025 11:09 PM, Andrew Lunn wrote:
-> On Thu, Feb 20, 2025 at 10:38:03PM +0800, Jie Luo wrote:
->>
->>
->> On 2/11/2025 9:22 PM, Andrew Lunn wrote:
->>>> +	/* Configure BM flow control related threshold. */
->>>> +	PPE_BM_PORT_FC_SET_WEIGHT(bm_fc_val, port_cfg.weight);
->>>> +	PPE_BM_PORT_FC_SET_RESUME_OFFSET(bm_fc_val, port_cfg.resume_offset);
->>>> +	PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(bm_fc_val, port_cfg.resume_ceil);
->>>> +	PPE_BM_PORT_FC_SET_DYNAMIC(bm_fc_val, port_cfg.dynamic);
->>>> +	PPE_BM_PORT_FC_SET_REACT_LIMIT(bm_fc_val, port_cfg.in_fly_buf);
->>>> +	PPE_BM_PORT_FC_SET_PRE_ALLOC(bm_fc_val, port_cfg.pre_alloc);
->>>
->>> ...
->>>
->>>> +#define PPE_BM_PORT_FC_CFG_TBL_ADDR		0x601000
->>>> +#define PPE_BM_PORT_FC_CFG_TBL_ENTRIES		15
->>>> +#define PPE_BM_PORT_FC_CFG_TBL_INC		0x10
->>>> +#define PPE_BM_PORT_FC_W0_REACT_LIMIT		GENMASK(8, 0)
->>>> +#define PPE_BM_PORT_FC_W0_RESUME_THRESHOLD	GENMASK(17, 9)
->>>> +#define PPE_BM_PORT_FC_W0_RESUME_OFFSET		GENMASK(28, 18)
->>>> +#define PPE_BM_PORT_FC_W0_CEILING_LOW		GENMASK(31, 29)
->>>> +#define PPE_BM_PORT_FC_W1_CEILING_HIGH		GENMASK(7, 0)
->>>> +#define PPE_BM_PORT_FC_W1_WEIGHT		GENMASK(10, 8)
->>>> +#define PPE_BM_PORT_FC_W1_DYNAMIC		BIT(11)
->>>> +#define PPE_BM_PORT_FC_W1_PRE_ALLOC		GENMASK(22, 12)
->>>> +
->>>> +#define PPE_BM_PORT_FC_SET_REACT_LIMIT(tbl_cfg, value)	\
->>>> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_REACT_LIMIT)
->>>> +#define PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(tbl_cfg, value)	\
->>>> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_RESUME_THRESHOLD)
->>>
->>> Where is u32p_replace_bits()?
->>
->> u32p_replace_bits is defined by the macro __MAKE_OP(32) in the header
->> file "include/linux/bitfield.h".
-> 
-> Given it is pretty well hidden, and not documented, it makes me think
-> you should not be using it. The macros you are expected to use from
-> that file are all well documented.
+-Patrik
 
-OK, understand.
-
-> 
->>> This cast does not look good.
->>
->> Yes, we can remove the cast.
-> 
-> To some extent, this is a symptom. Why is the cast there in the first
-> place? Cast suggest bad design, not thinking about types, thinking it
-> is actual O.K. to cast between types. Please look at all the casts you
-> have. Is it because of bad design? If so, please fix your types to
-> eliminate the casts.
-
-Sure, this cast is actually redundant, the type of value passed to this
-macro is already defined as the type u32. I will review and remove the
-remaining casts in the ppe_reg.h file.
-
-> 
->>> And this does not look like anything any
->>> other driver does. I suspect you are not using FIELD_PREP() etc when
->>> you should.
->>>
->>> https://elixir.bootlin.com/linux/v6.14-rc2/source/include/linux/bitfield.h
->>>
->>> 	Andrew
->>
->> The PPE_BM_XXX macros defined here write to either of two different
->> 32bit words in the register table, and the actual word used (0 or 1)
->> is hidden within the macro. For example, the below macro.
->>
->> #define PPE_BM_PORT_FC_SET_CEILING_HIGH(tbl_cfg, value)	\
->> 	u32p_replace_bits((u32 *)(tbl_cfg) + 0x1, value,
->> 	PPE_BM_PORT_FC_W1_CEILING_HIGH)
->>
->> We could have used FIELD_PREP as well for this purpose. However using
->> u32p_replace_bits() seemed more convenient and cleaner in this case,
->> since with FIELD_PREP, we would have needed an assignment statement to
->> be defined in the macro implementation. We also noticed many other
->> drivers using u32_replace_bits(). Hope this is ok.
-> 
-> Please extend the set of FIELD_{GET,PREP} macros to cover your use
-> case. Document them to the level of the existing macros. Submit the
-> patch to:
-> 
-> Yury Norov <yury.norov@gmail.com> (maintainer:BITMAP API)
-> Rasmus Villemoes <linux@rasmusvillemoes.dk> (reviewer:BITMAP API)
-> etc
-> 
-> and see what they say about this.
-> 
-> 	Andrew
-
-Thanks for the suggestion. Just to clarify, we preferred
-u32p_replace_bits() over FIELD_PREP() because the former does
-a clear-and-set operation against a given mask, where as with
-FIELD_PREP(), we need to clear the bits first before we use the
-macro and then set it. Due to this, we preferred using
-u32_replace_bits() since it made the macro definitions to modify
-the registers simpler. Given this, would it be acceptable to
-document u32p_replace_bits() better, as it is already being used
-by other drivers as well?
-
-If you prefer to use FIELD_PREP() over u32p_replace_bits(), we
-can update the driver to change the macros to use FIELD_PREP().
-Please note that all our macros for register modifications
-operate only on 32bit values. so we do not have any necessity
-for casts in the code.
-
-Below is one example per my understanding, implemented for
-both cases - u32p_replace_bits() and FIELD_PREP:
-
-#define PPE_BM_PORT_FC_SET_WEIGHT(tbl_cfg, value) \
-       u32p_replace_bits(tbl_cfg + 0x1, value, PPE_BM_PORT_FC_W1_WEIGHT)
-		
-#define PPE_BM_PORT_FC_SET_WEIGHT(tbl_cfg, value) \
-do { \
-      *(tbl_cfg + 0x1) &= ~PPE_BM_PORT_FC_W1_WEIGHT; \
-      *(tbl_cfg + 0x1) |= FIELD_PREP(PPE_BM_PORT_FC_W1_WEIGHT, value); \
-} while (0)
-
+>
+> Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
+> ---
+>  drivers/gpu/drm/gma500/mid_bios.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/gma500/mid_bios.c b/drivers/gpu/drm/gma500/m=
+id_bios.c
+> index 7e76790c6a81..cba97d7db131 100644
+> --- a/drivers/gpu/drm/gma500/mid_bios.c
+> +++ b/drivers/gpu/drm/gma500/mid_bios.c
+> @@ -279,6 +279,11 @@ static void mid_get_vbt_data(struct drm_psb_private =
+*dev_priv)
+>                                             0, PCI_DEVFN(2, 0));
+>         int ret =3D -1;
+>
+> +       if (pci_gfx_root =3D=3D NULL) {
+> +               WARN_ON(1);
+> +               return;
+> +       }
+> +
+>         /* Get the address of the platform config vbt */
+>         pci_read_config_dword(pci_gfx_root, 0xFC, &addr);
+>         pci_dev_put(pci_gfx_root);
+> --
+> 2.48.1
+>
