@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEF3255E54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF5825A2B5
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741285104; cv=none; b=pUQFEkSmgG1ypSlIfPuGz9WGtCWKGlUAIau9Azwm/jdiWfsLV8zh1qV3lkszil0EmDorzVR8QiE3tBOnEhHkTq1h8RZXH9h0VPih5KKzOpJteZ/zx0U2IzmdtXrPQDO9jMVqS4umZWLB94VfyEVTV8au8QPwn/54vBSD4YzECYg=
+	t=1741285104; cv=none; b=uEBhH6ZpY6chmcnVgJUdQeCeQiir5FGZeFN1lLtsF0Ogfu1zQ7knLzXHIl4Rdpyrjklr49VvxGyLN8SiN3wtAn79Hcbg0GAbb10xUycECxZPdVgSU5MS3AkqSPzEriwN+akuRj0ary2XjAymjOzne8QEtO6+XkcG/ykvsprMVEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741285104; c=relaxed/simple;
-	bh=/ObXtS+zWSro/hwzqIMzWOPpBwE3Ga++eqdELVgA+Gs=;
+	bh=gsaXe5RYlJkso+aavT0nSGeOjR6X2weyybAnNMJE7Mc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Xeobfnzb00qUD9w6EY/dsbG5FuURF0JjkRqxzE7dNkDNjD4h+3KqhxwNMll/lZXv8N0ckac7SAYBWvoN0PKPwX+UBSGNb070j9Q6NVT0KFRKCsrn2MnxR9l9UgYx75Mu1xfzOfoB/Fe6HI/wfycMB8t/EcoJ6p2lNjY5CR7fwbA=
+	 Content-Type; b=Pyz1BNYoep3EVFcbxkqsZwJ15qIDdoMw1nXJjSmScl3xdPNHTFzE0v8KP19UhQjlGJXgjYnD+l8aonFg2GQ88sySrRUl2Dsy7W3EJERjBJUIjMvp8AZ6RNA8Kb1wSlBpYbdGD3eG0dnYXx/puVd6CfiRFSNpt6tQZoazqWJhnKQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2522BC4CEE8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44A21C4CEE9;
 	Thu,  6 Mar 2025 18:18:24 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tqFnd-00000000PG9-3WJU;
-	Thu, 06 Mar 2025 13:18:25 -0500
-Message-ID: <20250306181825.696586340@goodmis.org>
+	id 1tqFnd-00000000PGd-4Bej;
+	Thu, 06 Mar 2025 13:18:26 -0500
+Message-ID: <20250306181825.857105005@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 06 Mar 2025 13:18:03 -0500
+Date: Thu, 06 Mar 2025 13:18:04 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
@@ -28,7 +28,7 @@ Cc: Tomas Glozar <tglozar@redhat.com>,
  Luis Goncalves <lgoncalv@redhat.com>,
  Gabriele Monaco <gmonaco@redhat.com>,
  Clark Williams <williams@redhat.com>
-Subject: [for-next][PATCH 02/10] tools/build: Add bpftool-skeletons feature test
+Subject: [for-next][PATCH 03/10] rtla: Add optional dependency on BPF tooling
 References: <20250306181801.485766945@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,67 +40,102 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Tomas Glozar <tglozar@redhat.com>
 
-Add bpftool-skeletons feature test, testing the presence of a bpftool
-capable of generating skeletons.
+If tooling required for building BPF CO-RE skeletons is present (that
+is, libbpf, clang with BPF CO-RE support, and bpftool), turn on
+HAVE_BPF_SKEL flag.
 
-This is to be used for tools that do not require building their own
-bootstrap bpftool from the kernel source tree.
+Those requirements are similar to what perf requires, with the
+difference of using system libbpf and bpftool instead of in-tree
+versions.
+
+rtla can be forcefully built without BPF skeleton support by setting
+BUILD_BPF_SKEL=0 manually; in that case, a warning is displayed.
 
 Cc: John Kacur <jkacur@redhat.com>
 Cc: Luis Goncalves <lgoncalv@redhat.com>
 Cc: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Clark Williams <williams@redhat.com>
-Link: https://lore.kernel.org/20250218145859.27762-3-tglozar@redhat.com
+Link: https://lore.kernel.org/20250218145859.27762-4-tglozar@redhat.com
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/build/Makefile.feature   | 3 ++-
- tools/build/feature/Makefile   | 3 +++
- tools/scripts/Makefile.include | 3 +++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+ tools/tracing/rtla/Makefile        |  6 +++++
+ tools/tracing/rtla/Makefile.config | 42 ++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 1931b6321314..1f44ca677ad3 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -135,7 +135,8 @@ FEATURE_TESTS_EXTRA :=                  \
-          libbpf-bpf_create_map		\
-          libpfm4                        \
-          libdebuginfod			\
--         clang-bpf-co-re
-+         clang-bpf-co-re		\
-+         bpftool-skeletons
+diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+index 8b5101457c70..0aa116f7b355 100644
+--- a/tools/tracing/rtla/Makefile
++++ b/tools/tracing/rtla/Makefile
+@@ -33,9 +33,15 @@ DOCSRC		:= ../../../Documentation/tools/rtla/
+ FEATURE_TESTS	:= libtraceevent
+ FEATURE_TESTS	+= libtracefs
+ FEATURE_TESTS	+= libcpupower
++FEATURE_TESTS	+= libbpf
++FEATURE_TESTS	+= clang-bpf-co-re
++FEATURE_TESTS	+= bpftool-skeletons
+ FEATURE_DISPLAY	:= libtraceevent
+ FEATURE_DISPLAY	+= libtracefs
+ FEATURE_DISPLAY	+= libcpupower
++FEATURE_DISPLAY	+= libbpf
++FEATURE_DISPLAY	+= clang-bpf-co-re
++FEATURE_DISPLAY	+= bpftool-skeletons
  
+ ifeq ($(V),1)
+   Q		=
+diff --git a/tools/tracing/rtla/Makefile.config b/tools/tracing/rtla/Makefile.config
+index 92a6e12e42d3..5f2231d8d626 100644
+--- a/tools/tracing/rtla/Makefile.config
++++ b/tools/tracing/rtla/Makefile.config
+@@ -53,6 +53,48 @@ else
+   $(info Please install libcpupower-dev/kernel-tools-libs-devel)
+ endif
  
- FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index cb1e3e2feedf..4f9c1d950f5d 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -418,6 +418,9 @@ $(OUTPUT)test-file-handle.bin:
- $(OUTPUT)test-libpfm4.bin:
- 	$(BUILD) -lpfm
- 
-+$(OUTPUT)test-bpftool-skeletons.bin:
-+	$(BPFTOOL) version | grep '^features:.*skeletons' \
-+		> $(@:.bin=.make.output) 2>&1
- ###############################
- 
- clean:
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 0aa4005017c7..71bbe52721b3 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -91,6 +91,9 @@ LLVM_CONFIG	?= llvm-config
- LLVM_OBJCOPY	?= llvm-objcopy
- LLVM_STRIP	?= llvm-strip
- 
-+# Some tools require bpftool
-+BPFTOOL		?= bpftool
++ifndef BUILD_BPF_SKEL
++  # BPF skeletons are used to implement improved sample collection, enable
++  # them by default.
++  BUILD_BPF_SKEL := 1
++endif
 +
- ifeq ($(CC_NO_CLANG), 1)
- EXTRA_WARNINGS += -Wstrict-aliasing=3
- 
++ifeq ($(BUILD_BPF_SKEL),0)
++  $(info BPF skeleton support disabled, building without BPF skeleton support.)
++endif
++
++$(call feature_check,libbpf)
++ifeq ($(feature-libbpf), 1)
++  $(call detected,CONFIG_LIBBPF)
++else
++  $(info libbpf is missing, building without BPF skeleton support.)
++  $(info Please install libbpf-dev/libbpf-devel)
++  BUILD_BPF_SKEL := 0
++endif
++
++$(call feature_check,clang-bpf-co-re)
++ifeq ($(feature-clang-bpf-co-re), 1)
++  $(call detected,CONFIG_CLANG_BPF_CO_RE)
++else
++  $(info clang is missing or does not support BPF CO-RE, building without BPF skeleton support.)
++  $(info Please install clang)
++  BUILD_BPF_SKEL := 0
++endif
++
++$(call feature_check,bpftool-skeletons)
++ifeq ($(feature-bpftool-skeletons), 1)
++  $(call detected,CONFIG_BPFTOOL_SKELETONS)
++else
++  $(info bpftool is missing or not supporting skeletons, building without BPF skeleton support.)
++  $(info Please install bpftool)
++  BUILD_BPF_SKEL := 0
++endif
++
++ifeq ($(BUILD_BPF_SKEL),1)
++  CFLAGS += -DHAVE_BPF_SKEL
++  EXTLIBS += -lbpf
++endif
++
+ ifeq ($(STOP_ERROR),1)
+   $(error Please, check the errors above.)
+ endif
 -- 
 2.47.2
 
