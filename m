@@ -1,230 +1,190 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020142.outbound.protection.outlook.com [52.101.61.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CB542A8C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741291285; cv=none; b=Tt8sS22IwjBCQb5mCrUwwcm4lDaMhdHtK3rSTbhY0nQujgfV4mgNDjG5Yz4D2tr9x/03uz5rnm/FGT4WuabEqXpdmuPt51U406LZrHjNX6XuK7O6lHIFF9ndyLBDCQKNyCEr9+wxE1lK5LIGzJF61cGoYMcMbL7yBDlzwIHBnXs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741291285; c=relaxed/simple;
-	bh=p3D36DfA6Q0ab8MTdVKveItYTB107li6XDhZ7rP21fU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=InK8LZjFeXCrP577kozcuYnzbAQj1lxdJJEJK5Ltc+TB10w1fLHb4qkqmdxCM5KMJc0VdROLPEwcGMf14jVKeRcQjGMRzC4RD4UPSdphkZHCEIZWT6N0pVMMz0S7V3Z5KIB93+mK/oIfyJz2W/r1UWkMP762Ay3V2vfmQoPMHMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G7Iolmsw; arc=none smtp.client-ip=95.215.58.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235BA14658B;
+	Thu,  6 Mar 2025 20:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.142
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741291312; cv=fail; b=TiOlPiCI5AHrQ50CWCpeNYiTaxsiH0enbqx3wAeGM58MSuvHnjttROcc72sUch+bM9aG5mPK3vMcwhhgN8mSjgb0p6jI2cww2wdv/AblIr+5CrPRkEKB7nAr51tD5qb1yjX33sO7qQUQujgQIhtgf+Q4duQmzWN0DF1Fn0OSX3g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741291312; c=relaxed/simple;
+	bh=ZqJs94kQKEGgKau7tG1BYHeuctA33hD68lOjllkoJh4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VFUxzDKT4cWTfxX1Sd3K+lzqAVj11Urh5NQ+ujwxNDjCatqOKXdjJKgTlaicYLLPn8dH1ZYMGxEnUV0Ep1Fdnx1UJsKuqOJ+cnJIlhQoV96B0NswdND/oBmxnyyabzk7yATnRJscHDdpw0E0Y+5ZlMeywy37lSS/i626N8AJw3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=WbvfaxZX; arc=fail smtp.client-ip=52.101.61.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G7Iolmsw"
-Date: Thu, 6 Mar 2025 20:00:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741291269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KIQjkd+El4xk0mW5CsC/gYtOwzQYTEyP0qN+CtiWc2Y=;
-	b=G7IolmswqePx/eqlqvXsVVauUbL96WQHy2/ONPb50ME3/+r34UmLYN5mHQUbBnHHOKV9gl
-	rCSRKAYPr6hYZMWnAJ4Jq77npiF9+OF7AWBXSAgub073C8SXhTgcj+5s0Fj8fEkCTkrbIJ
-	1PdZjwsg24HBUN4JjKGeWnK+4bGkLHE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, hannes@cmpxchg.org,
-	nphamcs@gmail.com, chengming.zhou@linux.dev, usamaarif642@gmail.com,
-	ryan.roberts@arm.com, 21cnbao@gmail.com,
-	ying.huang@linux.alibaba.com, akpm@linux-foundation.org,
-	linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-	davem@davemloft.net, clabbe@baylibre.com, ardb@kernel.org,
-	ebiggers@google.com, surenb@google.com, kristen.c.accardi@intel.com,
-	wajdi.k.feghali@intel.com, vinodh.gopal@intel.com
-Subject: Re: [PATCH v8 13/14] mm: zswap: Allocate pool batching resources if
- the compressor supports batching.
-Message-ID: <Z8n--rF3H2-uWhEc@google.com>
-References: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
- <20250303084724.6490-14-kanchana.p.sridhar@intel.com>
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WbvfaxZX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zOnSaLXV7V1BLVCQyDvSk1ZpQzEVweoNBQNsp+u+Dt/poeXxcroETMIQJztH9QWoDEmuJTFK3hRzUOW2BMi9CMzBWsa1wuFvTTxwd7XY4JWPkivOUob9OKTuNuqgqWIr3nvXQ/GJZ0xsXzinmDshRPE5pVlvuCqI5J8MI9I2gedNaOSlEt8NHQVCy34yPcOwW+NY7FVXscwuL1r+43h7NDIrIgX8kvPu+MEoMPaDukeVheq1j1/FSkkDcYvihJsQRhUDUMMzJDIVIK9l+vdYs5z2NL7AdjtCDSZxEUj7kjQpeOT9mXTRq9cI+oY4a+TWRWfbHgk8zIv7KirseNfLjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YoJbAOd1OgbJxi4MyNjtTQBn8uc+v/NFe6MTZbPfZLY=;
+ b=weLib7fvXwUqrsOXY0nxEaG5XUO6yURIKnKbC58FO/AHGMlB6vKmueAHhV1ZCAs7Kj0QGO1mivsyBP6DBadipBohrr3Y6P4zaa/474dXOeFlcBxZx/62tZbV1ifbtJPElneQJZesEg7kO8iPlQRt77OAXIFmk4bzqIu7zgYhFZjghMK66H+TNBZPgRKycN/lg4RpXK+V6UMWK/Fx4hNRfVCZMBPvCwwkqr7NYBZ4J7rTYUSaYxrUNt+X8a6cZmtj0HRRIdWjihrZhh5GhlyV9vUmRimr/owmKwL4F+6rLXnCyNtm6tSiAcvUkLJjM7f5YiAFKXMSLPuHHJPG4kEQzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YoJbAOd1OgbJxi4MyNjtTQBn8uc+v/NFe6MTZbPfZLY=;
+ b=WbvfaxZX8+DW+yKtoFEyMrxQP/BiPXflSzurmZUhU0RlrKCjq106Kfkg5KHzKdOZ64mvYHf0cg30n3Mw3m/E9RMn2lt0rTgY4JXR/PD4848zp3Ns/JAfoqOLk7LxJS46Ond98Rqx7KKGzvrHLmk1WGcD9buQgbsWnvWlXYhORww=
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
+ by SA6PR21MB4208.namprd21.prod.outlook.com (2603:10b6:806:415::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
+ 2025 20:01:45 +0000
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff%4]) with mapi id 15.20.8511.012; Thu, 6 Mar 2025
+ 20:01:45 +0000
+From: Long Li <longli@microsoft.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, "longli@linuxonhyperv.com"
+	<longli@linuxonhyperv.com>
+CC: Leon Romanovsky <leon@kernel.org>, Konstantin Taranov
+	<kotaranov@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, "linux-rdma@vger.kernel.org"
+	<linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [patch rdma-next v5 2/2] RDMA/mana_ib: Handle net
+ event for pointing to the current netdev
+Thread-Topic: [EXTERNAL] Re: [patch rdma-next v5 2/2] RDMA/mana_ib: Handle net
+ event for pointing to the current netdev
+Thread-Index: AQHbjtGAHu5I1ObjAEGtSbYSnlR/rrNmhdBg
+Date: Thu, 6 Mar 2025 20:01:45 +0000
+Message-ID:
+ <SA6PR21MB4231E9B17697BFE4857A7E55CECA2@SA6PR21MB4231.namprd21.prod.outlook.com>
+References: <1741289079-18744-1-git-send-email-longli@linuxonhyperv.com>
+ <1741289079-18744-2-git-send-email-longli@linuxonhyperv.com>
+ <20250306195354.GG354403@ziepe.ca>
+In-Reply-To: <20250306195354.GG354403@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3c7ae03-0f2c-4013-b7e7-807bf0e3f508;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-03-06T19:55:35Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA6PR21MB4208:EE_
+x-ms-office365-filtering-correlation-id: acc9b32c-1966-45ab-90bb-08dd5ce9b8f4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?QpOQ2MyQTCfLMSNWNlVqCqgPFoF3paXo9NJjFNAqWJe4WshA16nyNUfKF2gZ?=
+ =?us-ascii?Q?hHqLgihat8n9vsBfPv626IM+z/jYrTQ6nADH4f6O3rJSRHRqyjyVwEYbB98t?=
+ =?us-ascii?Q?yh1ezSxul7aEohmBmFoD4FY8apgiGhdxNLFMGZT5fjVSTn08Ogmbid7xXXBc?=
+ =?us-ascii?Q?+f7FH0idBQ4czzrBowFMVcppS99hmtu0qFAEtp+r2i9B4MQ7fzV9ZhqyNPAF?=
+ =?us-ascii?Q?/Ikw7aYViCfTgy8uN0lQfXwd3ZDLinmH8v+U5wUZxO8CFEqONjp6txq8CY5g?=
+ =?us-ascii?Q?5fg7lUzmh03/X2EPjUqzOAkdbV1cMjolvZ89MZ2A0hYKp+qBVIi4Xj1nhARF?=
+ =?us-ascii?Q?0jGTOPwnCABBbsy0MbFdHjhCC56RtBPQGp4rrl4kfcLibI4j7ZI+eXGZpCS4?=
+ =?us-ascii?Q?6JvUDuucUUlWEIzGv642VEbBbV1KVapbPyrsM1KqLwuejMJYIPhwWf7SEZYE?=
+ =?us-ascii?Q?b00NSOS7QgGFEPTNJT1rpfPOsNb1CnYSTNDvKD5dnzDhOJc1kJV2D/uWl12s?=
+ =?us-ascii?Q?VuVVL1hJA6V7AbBhaOWa6Qbl/fpzXQ37N9DXY8ubC9AzfBVqSrngiZT4S53s?=
+ =?us-ascii?Q?WGIBqc+6R2UJV18s23nsLr+c+6vUbkV+0YTnCxt9ruN8iyEitsUZQ25V1Vf0?=
+ =?us-ascii?Q?vomEhEUu0EiKVrNRXIO3bLI9dPIhgSz5womxzIUdTdRca8lmuH0dh0FxoZWV?=
+ =?us-ascii?Q?WpeBi4p5dJlX32CP+xRL1AOVqeDBTvF3ZMKLwseNxWp0v3nx9UcUP33+SFej?=
+ =?us-ascii?Q?iTazzOcJt1hmTQjVUVUk8WOw/4Osit1dzG2H8pd86Ne1D97RCM9873FeDq+d?=
+ =?us-ascii?Q?xmq6awbjrjjyJmmGMqX8FPzWTjtIWSLyCo6SG3fuRBMsNTAKLXToVAM4GXl5?=
+ =?us-ascii?Q?chqCyTltlFQlqdKcvqf3e6TDCNxVxF/KVy0jGcaK21SIsye7DbcKTdq3tuXN?=
+ =?us-ascii?Q?S23edR+koGiIGLhuPr4vYriRsj3tcspfYnHWZRp4C1Fp43FbBYlnrHgeB3ft?=
+ =?us-ascii?Q?K4Jql56n/kWMpi5HB4ZSb0aV07wqHUGu1rZLvxaWsUL4hwU6the3nTRrNQnu?=
+ =?us-ascii?Q?xsLCijFriNakDs7IGTw4Sg1SJLNmt1rs0wpetpSVX1KGMzQR/yIDejBfx88f?=
+ =?us-ascii?Q?gjmBdwh9pAR5kKxknl3TIgp0jMdOZU3thF++ibMfFLy6P/LzQRq0/+g3fqC6?=
+ =?us-ascii?Q?LZQoS4LCJ169QUUhN0g0R77EQ0i6ld3mQiOrelwCZQJLraxcokQxamn0+kjG?=
+ =?us-ascii?Q?axyu+xbnD7KEU3HbIlGkfPgOPdVS/JRmdxpwAaw6LDCodEHVt9OkJX7mJDSm?=
+ =?us-ascii?Q?LEt0l0qYOCoLhb0JMM6zjjchvwS1w3mwOADFa9tiCBqJ+icAxtvCgaoI74+4?=
+ =?us-ascii?Q?rJNg5wgy8goKjNACGyxfqJQcuHiaFp1rBKl0JQ0129/NrfqfWPlGXrqN6Wx+?=
+ =?us-ascii?Q?1j/kd+qjeSXJcCqxra7uUY0v0QFAkFQs?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?0bpXdM2556QAZ7yOItFFMnMv7BzhcmoWA2phbUU6LvM8wi+RECeAGsIz6x4q?=
+ =?us-ascii?Q?4ZRiRLQ0EwDUL13kgL2O7fUVs72JF5IfuZ7K/09BfoO5S45VOmT2w4TE6L+g?=
+ =?us-ascii?Q?mBo+RmwCW5imlWExGYsTnn9QtMaIS1DXlMr+USxLG769mF1vjtp1VXVBkcLK?=
+ =?us-ascii?Q?wRvoqUeoY+TlW8ODBaMYt+PuGuX6qrG+lAzjQ1tOIzy2LM9vOKY4wB7VgZQ/?=
+ =?us-ascii?Q?DU19T7VQx5nIj0QorQrSwSeUzV6Jy0tx12ahdIEUAypSjWjmoVPGW7vjT9tN?=
+ =?us-ascii?Q?U9SzSRAMS082yQry2VRo9/6+3gzDnAQvYGbdLWa2RValjFfPvm8vAyRCvAZP?=
+ =?us-ascii?Q?EKdGo31N6/X64fOF9rSuvRrT3p1mYFW//+c1lPMjWmmGcBsD5tFcVkXOY3A5?=
+ =?us-ascii?Q?pMetPtIJNJ4H+KhQX3gg9TSvATxyXTeA58Tfh9Z++vHahHRF4vi4ikjDEZEG?=
+ =?us-ascii?Q?J77Z0swLwlrC8qsYtA7P0I1Tqade4IGUvWwULkCTQNJrjBOlbfpVlQqkuuVA?=
+ =?us-ascii?Q?ruj7eWP+Joz1XPxIGvsK+Vq8LbNby9sEVCt0M6aqAcRe7HMaz3YEvNOgoe9K?=
+ =?us-ascii?Q?BKQz+FIysstfiKRZjmEFwysZbg8LPAPX9d0HEOdFAOuhYSz2sy/PjgwWyqhQ?=
+ =?us-ascii?Q?ZXfnLAg2IjzzKMKW+EbZ9tE67dFN0DQFovPNpy8HbiO7YZhDFHugbL17B6LH?=
+ =?us-ascii?Q?Eunc/cRhCcuHaH9MUfqTG9+EFmwePc/C5Tw0vM9HL4QzRhj/VK2XbOGp9gJt?=
+ =?us-ascii?Q?iuIc92nPnIQCQsAMYSL/YGVGxgGBx8no+TK76eedOBI2mQBRhqDSzWuZe9zx?=
+ =?us-ascii?Q?FHExWbrnXrNU/Xj7ideRBA0eQEAdqjHGh+S5iiJjqO1CJ7Ifg6K6SBDbeE+T?=
+ =?us-ascii?Q?1eJFyZ2m3/YxafVnNly/iRHZywEWZbGDqXMxmsh2YuRhPra615daSv0YD5Re?=
+ =?us-ascii?Q?P6oM/h0dQUNr0gvt9xjA1XRsthj8bmGm70EKjhRSn5mooOnklNfCq+/7Yfc9?=
+ =?us-ascii?Q?wbbJdFgy7Q8Y9BnS9E0hLvEI+0wMp3SSKkMPbi2rMkfEoqJBcxn9gI8rJAGK?=
+ =?us-ascii?Q?kVXdmI0/Lf0Sv/n2egvLRHJEYE5C60EGIMc9Vw805Dl8ay2qd8k0XH4hzrfZ?=
+ =?us-ascii?Q?eYZwlK3oBAo0wiKAfJDv8N5EEjESuPy05+07zo5qDrrpaAHaFTaNCECb7jT6?=
+ =?us-ascii?Q?jRgjO9xbKUqYB9wdmUvEGYy2QjnTfqmkP2Iy+TMZzbkvrNJCLit/vic0RKK0?=
+ =?us-ascii?Q?DCNwBiyu2+qKW0P5HXF/GCYUJeAg7jVLhQ1RTrWvDiGqvaJcoMtUUPF+ylXE?=
+ =?us-ascii?Q?B4ckvpYDQmfExCrHGeurj5NzIFr0pI4HZhhMoAwMWbkw5akVzmRCjgUHZh0X?=
+ =?us-ascii?Q?4zZ4tz5akEUdQ2qJOA2s/J/aobNwu/Dedkm1MVHMj5Teun54iHwNZwqLwOBS?=
+ =?us-ascii?Q?IlftrPRLCFiK4xSSy227anIY8cV/3CUIYDemwrxPynwmDPps8JaSQ2+WlHj+?=
+ =?us-ascii?Q?jv4nJfJgcavBxeSsZ2FL4abZgRhOC4IY4z4KUcY5l41mWZgNC8zwGBGpO5ss?=
+ =?us-ascii?Q?lK6fz3JLpMRZ5YqLwda+p8te3YvAGf3Lpyw+a54l?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303084724.6490-14-kanchana.p.sridhar@intel.com>
-X-Migadu-Flow: FLOW_OUT
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acc9b32c-1966-45ab-90bb-08dd5ce9b8f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 20:01:45.6216
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: I2y5roHcvj3jb87NfBxZtLKpBzht4Vpm89sN4ZlKCfru1ZRE3A7xZRyHmG/FJao5uzRivt8UY/WAiv6OGpnPHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4208
 
-On Mon, Mar 03, 2025 at 12:47:23AM -0800, Kanchana P Sridhar wrote:
-> This patch adds support for the per-CPU acomp_ctx to track multiple
-> compression/decompression requests and multiple compression destination
-> buffers. The zswap_cpu_comp_prepare() CPU onlining code will get the
-> maximum batch-size the compressor supports. If so, it will allocate the
-> necessary batching resources.
-> 
-> However, zswap does not use more than one request yet. Follow-up patches
-> will actually utilize the multiple acomp_ctx requests/buffers for batch
-> compression/decompression of multiple pages.
-> 
-> The newly added ZSWAP_MAX_BATCH_SIZE limits the amount of extra memory used
-> for batching. There is a small extra memory overhead of allocating the
-> "reqs" and "buffers" arrays for compressors that do not support batching.
+> Subject: [EXTERNAL] Re: [patch rdma-next v5 2/2] RDMA/mana_ib: Handle net
+> event for pointing to the current netdev
+>=20
+> On Thu, Mar 06, 2025 at 11:24:39AM -0800, longli@linuxonhyperv.com wrote:
+> > +	switch (event) {
+> > +	case NETDEV_CHANGEUPPER:
+> > +		ndev =3D mana_get_primary_netdev(mc, 0, &dev->dev_tracker);
+> > +		/*
+> > +		 * RDMA core will setup GID based on updated netdev.
+> > +		 * It's not possible to race with the core as rtnl lock is being
+> > +		 * held.
+> > +		 */
+> > +		ib_device_set_netdev(&dev->ib_dev, ndev, 1);
+> > +
+> > +		/* mana_get_primary_netdev() returns ndev with refcount held
+> */
+> > +		netdev_put(ndev, &dev->dev_tracker);
+>=20
+> ? What is the point of a tracker in dev if it never lasts outside this sc=
+ope?
+>=20
+> ib_device_set_netdev() already has a tracker built into it.
+>=20
+> Jason
 
-That's two pointers per-CPU (i.e. 16 bytes on x86_64), right? Please
-call that out in the commit log.
+I was asked to use a tracker for netdev_hold()/netdev_put(). But this code =
+(and the code in mana_ib_probe() of the 1st patch) is simple enough that ev=
+erything is done in one scope.
 
-> 
-> Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
-> ---
->  mm/zswap.c | 99 +++++++++++++++++++++++++++++++++++++-----------------
->  1 file changed, 69 insertions(+), 30 deletions(-)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index cff96df1df8b..fae59d6d5147 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -78,6 +78,16 @@ static bool zswap_pool_reached_full;
->  
->  #define ZSWAP_PARAM_UNSET ""
->  
-> +/*
-> + * For compression batching of large folios:
-> + * Maximum number of acomp compress requests that will be processed
-> + * in a batch, iff the zswap compressor supports batching.
-> + * This limit exists because we preallocate enough requests and buffers
-> + * in the per-cpu acomp_ctx accordingly. Hence, a higher limit means higher
-> + * memory usage.
-> + */
+Jakub, do you think it's okay to use NULL as the tracker in both patches?
 
-That's too verbose. Let's do something like:
-
-/* Limit the batch size to limit per-CPU memory usage for reqs and buffers */
-#define ZSWAP_MAX_BATCH_SIZE 8U
-
-> +#define ZSWAP_MAX_BATCH_SIZE 8U
-> +
->  static int zswap_setup(void);
->  
->  /* Enable/disable zswap */
-> @@ -143,8 +153,8 @@ bool zswap_never_enabled(void)
->  
->  struct crypto_acomp_ctx {
->  	struct crypto_acomp *acomp;
-> -	struct acomp_req *req;
-> -	u8 *buffer;
-> +	struct acomp_req **reqs;
-> +	u8 **buffers;
->  	u8 nr_reqs;
->  	struct crypto_wait wait;
->  	struct mutex mutex;
-> @@ -251,13 +261,22 @@ static void __zswap_pool_empty(struct percpu_ref *ref);
->  static void acomp_ctx_dealloc(struct crypto_acomp_ctx *acomp_ctx)
->  {
->  	if (!IS_ERR_OR_NULL(acomp_ctx) && acomp_ctx->nr_reqs) {
-> +		u8 i;
-> +
-> +		if (acomp_ctx->reqs) {
-> +			for (i = 0; i < acomp_ctx->nr_reqs; ++i)
-> +				if (!IS_ERR_OR_NULL(acomp_ctx->reqs[i]))
-
-Hmm I just realized we check IS_ERR_OR_NULL() here for the requests, but
-only a NULL check in zswap_cpu_comp_prepare(). We also check
-IS_ERR_OR_NULL here for acomp, but only IS_ERR() in
-zswap_cpu_comp_prepare().
-
-This doesn't make sense. Would you be able to include a patch before
-this one to make these consistent? I can also send a follow up patch.
-
-> +					acomp_request_free(acomp_ctx->reqs[i]);
-
-Please add braces for the for loop here for readability, since the body
-has more than one line, even if it's technically not required.
-
-> +			kfree(acomp_ctx->reqs);
-> +			acomp_ctx->reqs = NULL;
-> +		}
->  
-> -		if (!IS_ERR_OR_NULL(acomp_ctx->req))
-> -			acomp_request_free(acomp_ctx->req);
-> -		acomp_ctx->req = NULL;
-> -
-> -		kfree(acomp_ctx->buffer);
-> -		acomp_ctx->buffer = NULL;
-> +		if (acomp_ctx->buffers) {
-> +			for (i = 0; i < acomp_ctx->nr_reqs; ++i)
-> +				kfree(acomp_ctx->buffers[i]);
-> +			kfree(acomp_ctx->buffers);
-> +			acomp_ctx->buffers = NULL;
-> +		}
->  
->  		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
->  			crypto_free_acomp(acomp_ctx->acomp);
-> @@ -271,6 +290,7 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
->  	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
->  	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
->  	int ret = -ENOMEM;
-> +	u8 i;
->  
->  	/*
->  	 * Just to be even more fail-safe against changes in assumptions and/or
-> @@ -292,22 +312,41 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
->  		goto fail;
->  	}
->  
-> -	acomp_ctx->nr_reqs = 1;
-> +	acomp_ctx->nr_reqs = min(ZSWAP_MAX_BATCH_SIZE,
-> +				 crypto_acomp_batch_size(acomp_ctx->acomp));
->  
-> -	acomp_ctx->req = acomp_request_alloc(acomp_ctx->acomp);
-> -	if (!acomp_ctx->req) {
-> -		pr_err("could not alloc crypto acomp_request %s\n",
-> -		       pool->tfm_name);
-> -		ret = -ENOMEM;
-> +	acomp_ctx->reqs = kcalloc_node(acomp_ctx->nr_reqs, sizeof(struct acomp_req *),
-> +				       GFP_KERNEL, cpu_to_node(cpu));
-> +	if (!acomp_ctx->reqs)
->  		goto fail;
-> +
-> +	for (i = 0; i < acomp_ctx->nr_reqs; ++i) {
-> +		acomp_ctx->reqs[i] = acomp_request_alloc(acomp_ctx->acomp);
-> +		if (!acomp_ctx->reqs[i]) {
-> +			pr_err("could not alloc crypto acomp_request reqs[%d] %s\n",
-> +				i, pool->tfm_name);
-> +			goto fail;
-> +		}
->  	}
->  
-> -	acomp_ctx->buffer = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
-> -	if (!acomp_ctx->buffer) {
-> -		ret = -ENOMEM;
-> +	acomp_ctx->buffers = kcalloc_node(acomp_ctx->nr_reqs, sizeof(u8 *),
-> +					  GFP_KERNEL, cpu_to_node(cpu));
-> +	if (!acomp_ctx->buffers)
->  		goto fail;
-> +
-> +	for (i = 0; i < acomp_ctx->nr_reqs; ++i) {
-> +		acomp_ctx->buffers[i] = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL,
-> +						     cpu_to_node(cpu));
-> +		if (!acomp_ctx->buffers[i])
-> +			goto fail;
->  	}
->  
-> +	/*
-> +	 * The crypto_wait is used only in fully synchronous, i.e., with scomp
-> +	 * or non-poll mode of acomp, hence there is only one "wait" per
-> +	 * acomp_ctx, with callback set to reqs[0], under the assumption that
-> +	 * there is at least 1 request per acomp_ctx.
-> +	 */
-
-I am not sure I understand. Does this say that we assume that scomp or
-non-poll acomp will never use batching so having a single "wait" is
-fine?
-
-If so, this needs to be enforced at runtime or at least have a warning,
-and not just mentioned in a comment, in case batching support is ever
-added for these. Please clarify.
-
-We should also probably merge the comments above crypto_init_wait() and
-acomp_request_set_callback() now.
-
->  	crypto_init_wait(&acomp_ctx->wait);
->  
->  	/*
+Long
