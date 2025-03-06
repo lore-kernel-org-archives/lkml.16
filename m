@@ -1,116 +1,110 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6291719CCFC
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789161A83ED;
+	Thu,  6 Mar 2025 09:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741253154; cv=none; b=m9AzMZfWEXIgAKWRi/lAtPbqHjcfVpdfL9u+AD7fv36X2M3Hw1PvH5rJ4Yb2f9LFltisr3SbyVavYAMy2zMaaJ1Uz0so3EdhNWc8LhguAuRmX4ewkQbK4BEvjyPEu14vmpf8sO1AN1zv3yOm7qxQk/7ut80rCzhgcdtVzqtChSY=
+	t=1741253190; cv=none; b=mw9UNac/SwWTvm+y5xo3SSmITgwHM7c8+tpi4Z/m1cvMsPx1nYgja0biMLvZP7ikO+XkwP7vrXOV0e2zVE8JyL6/MLCjRMONojWu6gE6OfBwDU7v50rjyvdhrv5EPj0CqzijDmGwFadlPX5so83PKRXxJDdiztiD1Umbv3iuwyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741253154; c=relaxed/simple;
-	bh=G9gyjsCHGbIHu8gdDnvmvC617ahQlBt3bluHdEuwtwE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LBcOJkbi2U0nzxBlOaOw1ZFK2s5F3EjyLSed5cpmkBwXlfHoeWc3pI3kY2VbNOJFfD9yZFCPzhQ51DGNRxiW5OfZG+EVbeeZTySB9XrAgUNTIcWIOytolxx2QWOmnNe8ktdNGwvWXVjfUzQEmOV5/7/LpXOT8m2uHZGFDASOaBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J0jRplbF; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741253190; c=relaxed/simple;
+	bh=UkYBMSyVx9mB9EYLj4kAZNlJQpO9fE0jrQdWxZo0isk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LLmWl9PQzXFnn4mqRHGXpOr28wki+ef7WjrfPCZ1TR45DYyJ6dpW3fEt9AvCoFrGhdn4EIAEyD4MqF/QuzGtekA/xrDNl9kGzqOZaxx6Yjum16Vz3pEPW5lS6F+kttGKT/qIth7lAhKvWGj7ru8+44TlNRoJCcmagTIS0kBQAV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=t33nFIPn; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0jRplbF"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3f67f825468so149657b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:25:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741253152; x=1741857952; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eAXYiA/MHOAdQMXh+C0jw5Ofxnxlrhaorm6TX8gdw8c=;
-        b=J0jRplbFL7RSfSXb/v8sFuq2IPjX3aa082CcdZw0350y3zAIuoq5XkiFemwsvXfGEW
-         ysA3GeXcq0qUm3Ynhn0vV7ECKhHyzPeR3BdZ/BcLYOepifmrPnQ36Ms6iup6pfT/a31B
-         IUx42aSxbwGeR8WpVs/ViS5wz50IGCxXr7JwCZCRnWIMKG1lO0t+k6WhIxYZgQG40bLe
-         ME8E36twUaE8B06GnY/2g3kr8wLsQfxCeH4gvQwVVoYTsCfjidHbTFs8Usb3KJfNHt4M
-         HVq2eEWJZCOmFEycFWObfrKwn9XVU9sM1NLMYaEQ/OO0GhFZdgky0Y7RQfHewrd/Gyex
-         ZccA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741253152; x=1741857952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eAXYiA/MHOAdQMXh+C0jw5Ofxnxlrhaorm6TX8gdw8c=;
-        b=SJiSz66MgENqO3Nw1LO5ONsCt3a1hmRaprPxcNV/adKim1o3ISglByqmue2Eomgn+9
-         k2IZSzTSa4TC8mQON7dHLN4qrySFjHPSYbsXlQQRN2ElsQkiZA9Fx4MCQ5Bgpl0r8biG
-         n9EtSKmMDrhg5LCicKKap6lbc+kjheXc6vxpWU9v3MPikH6OMySpJ7B3CByeWkTL+5vd
-         AratdqPIlSpcuR8/12GXHKmisuUG4Y4eAjJ1KdF8vAPh9afInpzlwXDdc/Dy675K81cB
-         E8yGXoDh4lG5ogaGXZ6TPqMysEjktP8gCePkHirG+VFnyyqaTwlqeg3UYbChxQwEoZV+
-         KJYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+kFN0jArnbd5Wwu8D6fikdpRIfdoxpAwAifdPm7q+BkpAyo0KGQQcUsA5/7k+lNANYpIh8f7ELGsCVZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAAekGSo0AMysLVXgeiQ9ec4FkpGqbnEWE4WdZDOkU/KmrhROr
-	r4xrOxfz6eD3ufCCLTeIQMczMNTdKGbgXSvmdJDBiWJ5MMoEMPdnOf6iaAJ+gaYhjhQ5z+pCWru
-	DGBuoTXYqNHmzTmyxwADDy0Xd11k=
-X-Gm-Gg: ASbGncslMkCezVNeo26fMDhPBR336Bq1Zg32Pkdgjhierdvp9LcoqOAl/xQmC0aCJli
-	J18qs3cyvZ/NTgIBmLpsNlsp8NysRX5Wg5anQHEDZNOwbP8VXZ0xJAi+asVfEaAIZu052RG4UF8
-	nFzdZPeEuwaN35uHqq1bYSXdPU
-X-Google-Smtp-Source: AGHT+IE+MrhlxDA97sRbtzv0SinGLTbWQPhTRvM4OzDVVIZo23dvkiNaf+0XUCosZsqKFyerKq91Qoa7XWsl1LHUYfk=
-X-Received: by 2002:a05:6808:f12:b0:3f3:ff78:e5e4 with SMTP id
- 5614622812f47-3f6831f210dmr3120103b6e.38.1741253152337; Thu, 06 Mar 2025
- 01:25:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="t33nFIPn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=i03ZXI+7609AAGbV95Aop1hWrPoWoth/Ke5U6QVdYNo=; b=t33nFIPnkd+ZsGPfSAax83vcuK
+	yRvYE8KeWFPLsLOG9s059CaYk2lNnlVKO82ARaVr7jvgD2QOiYhf72h1/UWswpkIxewsM3+LQ6DH0
+	RGEUDqsQIcGOxwHtsVVZgbu659VQTG4L7PRCWGsDhxxY2s5IloBkwDPCjRe2CW0UST+aPP9oR/tpK
+	iXECCMrImzkqkHXJQQ/UYavW5NUKD2BA+OY9EjxVc1ZypOH6P8ythIU1FLrsV6KvNMMtUGY5j2LDk
+	h6K2RmpKE19tOhyOTsZq0M41IcoWW0QspVpMW61TghH8b6HB06IGT6BYRK5vj3TrnecozDAdxdPWa
+	/nj2qnzA==;
+Received: from i53875a38.versanet.de ([83.135.90.56] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tq7Ub-0001kw-KD; Thu, 06 Mar 2025 10:26:13 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Shreeya Patel <shreeya.patel@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ jose.abreu@synopsys.com, nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
+ nicolas.dufresne@collabora.com,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Cc: kernel@collabora.com, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Diederik de Haas <didi.debian@cknow.org>
+Subject: Re: [PATCH v14 0/3] Enable HDMI RX controller on RK3588
+Date: Thu, 06 Mar 2025 10:26:07 +0100
+Message-ID: <2906773.tdWV9SEqCh@diego>
+In-Reply-To: <20250306072842.287142-1-dmitry.osipenko@collabora.com>
+References: <20250306072842.287142-1-dmitry.osipenko@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201011434.453879-1-linux@treblig.org>
-In-Reply-To: <20250201011434.453879-1-linux@treblig.org>
-From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Date: Thu, 6 Mar 2025 10:25:41 +0100
-X-Gm-Features: AQ5f1Jrlft8qiL2kDUOEuJjZM9OIv8RXYZ3aWpqOMf8V_TmACTpv9Oxf_0_ImSQ
-Message-ID: <CAMeQTsa8enkergRai6ixmE-ivTQgWazoTJ9stMWSgzobexphJw@mail.gmail.com>
-Subject: Re: [PATCH] drm/gma500: Remove unused mrst_helper_funcs
-To: linux@treblig.org
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Sat, Feb 1, 2025 at 2:14=E2=80=AFAM <linux@treblig.org> wrote:
->
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->
-> The mrst_helper_funcs const was added in 2013 by
-> commit ac6113ebb70d ("drm/gma500/mrst: Add SDVO clock calculation")
-> and commented as 'Not used yet'.
->
-> It's not been used since, so remove it.
+Hi Dmitry,
 
-You talk about mrst_helper_funcs but the patch removes
-mrst_clock_funcs. I assume this is not intentional.
+Am Donnerstag, 6. M=C3=A4rz 2025, 08:28:39 MEZ schrieb Dmitry Osipenko:
+> This is a follow up to the v13 of HDMI RX patches [1]. Hans queued the
+> driver into the media tree. Now the DT patches are left to apply, could
+> you please take care of this series if it's good to you? Thanks
+>=20
+> [1] https://lore.kernel.org/linux-media/20250304085819.108067-1-dmitry.os=
+ipenko@collabora.com/
 
--Patrik
+Linux-Media, has this strange "applied" reporting thing going, so neither
+the thread reports that nor does https://git.linuxtv.org/ show the commits
+yet.
 
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  drivers/gpu/drm/gma500/oaktrail_crtc.c | 7 -------
->  1 file changed, 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma=
-500/oaktrail_crtc.c
-> index de8ccfe9890f..ea9b41af0867 100644
-> --- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-> +++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-> @@ -658,10 +658,3 @@ const struct drm_crtc_helper_funcs oaktrail_helper_f=
-uncs =3D {
->         .prepare =3D gma_crtc_prepare,
->         .commit =3D gma_crtc_commit,
->  };
-> -
-> -/* Not used yet */
-> -const struct gma_clock_funcs mrst_clock_funcs =3D {
-> -       .clock =3D mrst_lvds_clock,
-> -       .limit =3D mrst_limit,
-> -       .pll_is_valid =3D gma_pll_is_valid,
-> -};
-> --
-> 2.48.1
->
+If you see the driver patches appear on https://git.linuxtv.org/ before I d=
+o,
+please ping this thread :-)
+
+
+Thanks a lot
+Heiko
+
+
+>=20
+> Changelog:
+>=20
+> v14: - Re-enabled LOAD_DEFAULT_EDID=3Dy option in the defconfig and
+>        added ack from Hans Verkuil fot that patch.
+>=20
+> Sebastian Reichel (2):
+>   arm64: dts: rockchip: Enable HDMI receiver on rock-5b
+>   arm64: defconfig: Enable Synopsys HDMI receiver
+>=20
+> Shreeya Patel (1):
+>   arm64: dts: rockchip: Add device tree support for HDMI RX Controller
+>=20
+>  .../dts/rockchip/rk3588-base-pinctrl.dtsi     | 14 +++++
+>  .../arm64/boot/dts/rockchip/rk3588-extra.dtsi | 57 +++++++++++++++++++
+>  .../boot/dts/rockchip/rk3588-rock-5b.dts      | 18 ++++++
+>  arch/arm64/configs/defconfig                  |  2 +
+>  4 files changed, 91 insertions(+)
+>=20
+>=20
+
+
+
+
