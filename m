@@ -1,118 +1,115 @@
-Received: from baidu.com (mx22.baidu.com [220.181.50.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61361CD2B;
-	Thu,  6 Mar 2025 05:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08AB199E84;
+	Thu,  6 Mar 2025 05:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741238276; cv=none; b=bZyY8eo3J5Up5+fMqpQCZ8aON9+JwEXdGQUl5ApqKiGfPPb9kgGZuaQg7YPo/+x2hXEQ/uDyR3xlggye+TRrpKdEeW9HJ8a3bIIDMzlZQ0CttVdHw9AljPVUNErIZZDoTKggg2GVAs8F8jKaN8zEi3GV04ZDybYiJhr9BCYglTg=
+	t=1741238323; cv=none; b=Ayx4yjckJwnDy0Sm+wlUnjUgItA3TOSbP+xE8EJe98sKIkgPlC/VriqynpkMsp9yj5KT6H/cQsjxhOBBavzt1OlkQJQ1jIzcNcm2iRfLitbCV6FkU+myA3vhMS8Z/U0gqXLy9ngfrEgin1I//2MMXlKCUdHTBKKAgL/LcXNYqas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741238276; c=relaxed/simple;
-	bh=nAYrs8NJidgWSkW7vHjvMuwcwrY5Il+RPBY2gnn6LKg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T+wFcP1FffNqyS23AlyRMDHzVuK0WF3p5HPPgMJxCcu8/9OCNUyztZYg8kaLZ2XE9xnUxlym70Q3PWvfvTr3ri3LVxEmHrm0vVLdens6ckQOI3+RXVApClb6rGG5T/vPnCJ7dJHvz50kUB6k/UzZu6+h9PypdZodUQZMK5esS2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: lirongqing <lirongqing@baidu.com>
-To: <olsajiri@gmail.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Li RongQing <lirongqing@baidu.com>
-Subject: [PATCH][next] perf/x86/intel/bts: check if bts_ctx is allocated when call bts functions
-Date: Thu, 6 Mar 2025 13:11:02 +0800
-Message-ID: <20250306051102.2642-1-lirongqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1741238323; c=relaxed/simple;
+	bh=bqnnQoj67Yy7FVaCgMfaUiRBSx45piKOGM6OjRIjMd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ldKc6Gf/SwVBiccy2RhX6aXBqyYxZAq7ZY5M7+3DcpolnQ+ZSDglBP7CoGI0iKamfDl4B16eHpVdxOYUqWVJkBPsIP7TIKCJiucZDk9qVM6AARJwkXEgT5egJoYCRxjk2M2QvrYl4TfCUACP5lL1mWMHsDL+Fn05hO8ArjNllVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kWcaqQFn; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWcaqQFn"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-223785beedfso3124425ad.1;
+        Wed, 05 Mar 2025 21:18:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741238321; x=1741843121; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lNP741CtQxhlrtQYl+bTHrt0/2VLrt4PvoQqY1xd1+k=;
+        b=kWcaqQFnB9GhODjYEESGGmfUdKJ0nLV/6pFAfwYtVYcfZTMlRnvhUPPpOWZMsJWvSK
+         XH6ib2KSaClTs2enHghXqbSmFUP0jCq9uO1QB+kY7qzfcQy9nkLxdvZ0OYLh8mfeLZUz
+         OPe15GCY25YqNidgFJVQY7XF1KFjMsckMZRl/i3aAnuxMYFFHw6wUMW/LgW7JAECCCV0
+         NrQ08YRmmWh8pjGn6v1juCUBIM9avNd3h7IZ6xa9cCfT5CvoZOR7PsWWuEu//hEgQkw1
+         jUJezdTTC/yMEACff5T4LjlMC3xadkTfoHYxn4S1PeKXbVAu3i4VAodjO4kwsegIVCft
+         PbTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741238321; x=1741843121;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lNP741CtQxhlrtQYl+bTHrt0/2VLrt4PvoQqY1xd1+k=;
+        b=C9jDaFDqzRUUzURTmCshWnL/iL5OfAGMP9+nn2JW2KiJDtnrUN714VUJkXX7LIjMJP
+         asPtgFKRjm1nJ56JQM1UifhKBEiZxc+2YVldv39OEkE32u+cNiw/gCObay8I6dN3QTm8
+         3DJykBaieMByJAl0nl+/INquiUS2WPWxnhR+eppctvpHNf/ea1FMn8KOEtq2y4tNhxjI
+         V/KYWJcTdbyF1/Aqxagyk9WQfVqeoUPD54wKMSxnKyWHS5oedKtdzjmK7BQv7yZy2HfV
+         sn4Qt3TWY+pD8Qwog4Q+j7vc5ddNSrGApBEfsp12FCzD494DDuVHvxtboEkLfsYIhHFF
+         F2QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiZpoomMxNfNklAsYk97hPfamnirrtXXuWaLF6uW66Zr6FSOnXpq+4WBajBdK6eUwIc0FX81uKtANZYzc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJlwhCpN0m9Z0rGqBcY1psxFX8gvy1IB6kNFRLHx9NYZf9AzaU
+	aIkAdroBF+4Vi2vRth9oHHqzR7y6ihm/4VmTuqYdWHTh5cdy4ip6so2AbzCW
+X-Gm-Gg: ASbGncscd+q3WaqjY0yTdrVTeuD3kg5Rnu9xnKqsT05NlEYI5febu4P2NHh8O6ioM8C
+	CykOdaVlgkjyUuEH61PvfESs/p6C5JmjnL0npMFq1eJ8PaY7W+T55gsx4fRq63w0RXBsZR6mmuG
+	N7VBo3u9ISDtzWsv7u3lk6RACTkWx/i4QPtV8v8Gvr8t8vCRnNHaszmpHlnbCkDs0cxuLAZYzwq
+	ix4UrYF/S4AH8D/0YgW8zMP9yGACTaQNsj+74hsvUKNeilVzasjJ1XDO0Hr9lccAbPqytDRuNZ7
+	QzoiBsdBYAQD1jNlfcb86O+QKGqiMYBydkEMsgt9hzfYvuJrDDfIRqDvBk3PaxkTVlYqKoDCzcy
+	JJPwqSELi4m2XRfen/V+N/Dyu6qNi9tIHzMoAuI6Fsly2NQ==
+X-Google-Smtp-Source: AGHT+IGmB5z3KokiR0t+qvpxsDCS1ZtXYiH0T0OZsd2nmtwUeBX2F4OmXpBlbHbee6eDUemX0A/peA==
+X-Received: by 2002:a17:903:191:b0:220:c4e8:3b9d with SMTP id d9443c01a7336-223f1d0ff79mr79888065ad.37.1741238320728;
+        Wed, 05 Mar 2025 21:18:40 -0800 (PST)
+Received: from sid-dev-env.cgrhrlrrq2nuffriizdlnb1x4b.xx.internal.cloudapp.net ([20.120.208.174])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109ddcfesm3332345ad.29.2025.03.05.21.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 21:18:40 -0800 (PST)
+From: Siddharth Chintamaneni <sidchintamaneni@gmail.com>
+To: stable@vger.kernel.org
+Cc: joro@8bytes.org,
+	suravee.suthikulpanit@amd.com,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	wei.huang2@amd.com,
+	apais@microsoft.com,
+	Siddharth Chintamaneni <sidchintamaneni@gmail.com>
+Subject: [PATCH 6.6.y] iommu/amd: Fixes refcount bug in iommu_v2 driver
+Date: Thu,  6 Mar 2025 05:18:22 +0000
+Message-ID: <20250306051822.4267-1-sidchintamaneni@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: BJHW-Mail-Ex05.internal.baidu.com (10.127.64.15) To
- BJHW-Mail-Ex15.internal.baidu.com (10.127.64.38)
-X-Baidu-BdMsfe-DateCheck: 1_BJHW-Mail-Ex15_2025-03-06 13:11:10:779
-X-Baidu-BdMsfe-DateCheck: 1_BJHW-Mail-Ex15_2025-03-06 13:11:10:810
-X-FEAS-Client-IP: 10.127.64.38
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Content-Transfer-Encoding: 8bit
 
-From: Li RongQing <lirongqing@baidu.com>
+This fix addresses a refcount bug where the reference count was not
+properly decremented due to the mmput function not being called when
+mmu_notifier_register fails.
 
-bts_ctx maybe not allocated, for example if the cpu has X86_FEATURE_PTI,
-but intel_bts_disable/enable_local and intel_bts_interrupt are called
-unconditionally from intel_pmu_handle_irq and exploding on accessing
-bts_ctx
-
-so check if bts_ctx is allocated when call bts functions
-
-Fixes: 3acfcefa795c "(perf/x86/intel/bts: Allocate bts_ctx only if necessary)"
-Reported-by: Jiri Olsa <olsajiri@gmail.com>
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Siddharth Chintamaneni <sidchintamaneni@gmail.com>
 ---
- arch/x86/events/intel/bts.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/iommu/amd/iommu_v2.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 8e09319..e8b3e7b 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -338,9 +338,14 @@ static void bts_event_stop(struct perf_event *event, int flags)
+diff --git a/drivers/iommu/amd/iommu_v2.c b/drivers/iommu/amd/iommu_v2.c
+index 57c2fb1146e2..bce21e266d64 100644
+--- a/drivers/iommu/amd/iommu_v2.c
++++ b/drivers/iommu/amd/iommu_v2.c
+@@ -645,7 +645,7 @@ int amd_iommu_bind_pasid(struct pci_dev *pdev, u32 pasid,
  
- void intel_bts_enable_local(void)
- {
--	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
--	int state = READ_ONCE(bts->state);
-+	struct bts_ctx *bts;
-+	int state;
+ 	ret = mmu_notifier_register(&pasid_state->mn, mm);
+ 	if (ret)
+-		goto out_free;
++		goto out_mmput;
  
-+	if (!bts_ctx)
-+		return;
+ 	ret = set_pasid_state(dev_state, pasid_state, pasid);
+ 	if (ret)
+@@ -673,6 +673,8 @@ int amd_iommu_bind_pasid(struct pci_dev *pdev, u32 pasid,
+ 
+ out_unregister:
+ 	mmu_notifier_unregister(&pasid_state->mn, mm);
 +
-+	bts = this_cpu_ptr(bts_ctx);
-+	state = READ_ONCE(bts->state);
- 	/*
- 	 * Here we transition from INACTIVE to ACTIVE;
- 	 * if we instead are STOPPED from the interrupt handler,
-@@ -358,7 +363,12 @@ void intel_bts_enable_local(void)
++out_mmput:
+ 	mmput(mm);
  
- void intel_bts_disable_local(void)
- {
--	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
-+	struct bts_ctx *bts;
-+
-+	if (!bts_ctx)
-+		return;
-+
-+	bts = this_cpu_ptr(bts_ctx);
- 
- 	/*
- 	 * Here we transition from ACTIVE to INACTIVE;
-@@ -450,12 +460,17 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
- int intel_bts_interrupt(void)
- {
- 	struct debug_store *ds = this_cpu_ptr(&cpu_hw_events)->ds;
--	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
--	struct perf_event *event = bts->handle.event;
-+	struct bts_ctx *bts;
-+	struct perf_event *event;
- 	struct bts_buffer *buf;
- 	s64 old_head;
- 	int err = -ENOSPC, handled = 0;
- 
-+	if (!bts_ctx)
-+		return 0;
-+
-+	bts = this_cpu_ptr(bts_ctx);
-+	event = bts->handle.event;
- 	/*
- 	 * The only surefire way of knowing if this NMI is ours is by checking
- 	 * the write ptr against the PMI threshold.
+ out_free:
 -- 
-2.9.4
+2.43.0
 
