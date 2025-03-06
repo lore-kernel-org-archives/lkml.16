@@ -1,127 +1,183 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9511547F3
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 14:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C4C44C94;
+	Thu,  6 Mar 2025 14:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741269879; cv=none; b=VR922ErckhSb6cSswnmLYEO8ourDqNI5i5Jhvj90KuNORpLZWUZT0oCeCyc/Cd0NTUTxF7CgAg9J9xSBL5Yri4sMwNXs1fo2z5z5ikuqPqr2sx9bpAbzcKFqPTx/5tQzt4jdtq1bkuUK2BjK+YSHODoNMp2T3OP6ctEFqdd9WEU=
+	t=1741269895; cv=none; b=SfRX/wnSrH0pZM/SQ5K58ifO628X29+7IUy5Rvk4FUgSIgIdqtv/5SBXhT74xyuwVnX8BDQPqitGNYDdV63q+uf+tCg/wIj1skeFqStEUIsShWuI2b3cBrZOO28qthWe9T6opdheeL2fYGjCZHMp/2bVoe+pi/fV/wNp3lN5QG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741269879; c=relaxed/simple;
-	bh=R8Sm3svdW/goUTU5rLDpziJHP2XsdLH8VJwkfv4HNAo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DEUiGlA9BszusYawAqmNHJd2HI2nNXEbAlx6llyixqETOt1ob9SRPwwo9W+HLNkM0R5wzXTaft16Z/3BJBcESgU3i9kUPNOP6czp7eQ6cG0jrwtPQy2gDl224vvrnTilnOE2gxflzaUPTboY/eUaLBkzD5rl+7PzSXfKxxenjy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnsN0hbl; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741269895; c=relaxed/simple;
+	bh=ZmXCsps3szqR5PYQD+MhFlQaRORylZnCZhgPt759QdU=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=W+u3bgetYyttuvukTvDkx742OLPWU55mLYqs4MxqMVj0cKHi4x2jE4Qdi8CM6sQCCvpNktvRl1Ui+4k/5PNr7spIXSO2gMQ80NMhPwwNx4dV4OU/IP96HFFOYGPeZbabhMSjwi/CuAqLVNSwpjF9e8QKRY5nKqc/g1jRBRs92QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=SCw4nxYX; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnsN0hbl"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54298ec925bso1043568e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 06:04:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741269875; x=1741874675; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9w1loW1D93ByGjxUH+v0w87cRUrgY5imRrAfL3a+uhQ=;
-        b=RnsN0hbl1C4SdiIVzDA4O/tC67+3S3ayKzN6yQVL83K4AAe52gCt3MJgEku2y0H3PF
-         uLWz7Rlnie5Uq81LMZ+JYZpisVmR7Wg38QdAHRBq8wGn2XggNQ/uHt95EQQCFfX864bU
-         FKpyisFEh9IgWckzxiUO1zNvjmOdT40tUs8wUEWPHLVGz7xfmdLnqiq6vN8m1cE+ozeC
-         afFRT9oJTjvgWHjmp9xmnQLgLShHAtrfDqUsjryoW7zpU7zI5aqz5tpaYrBQ1iMBqSFm
-         cR6p+77U5+9kBNa2Gd/Bme6IS80z/H8Si7dVY0FgOMeAUP16ehNob2yzKtKLpduEnoNP
-         9Hnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741269875; x=1741874675;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9w1loW1D93ByGjxUH+v0w87cRUrgY5imRrAfL3a+uhQ=;
-        b=XmakIZ+yd6WF3Hy7gPfEQ1PuebkqWmt2k5RRoxmiLdTNdxAWq8NJNMgJHGV9qL8xPB
-         tMeoE6YxbsvNcJGyAHLUXD/RPLaSlbVj/28vRS2rM85x7TzdgLUbMQ4+s9VSbu0Lx3XX
-         re7exisp0wOBQKaoXo7953UV/Za/hwItpL/vtm3bgvswhod5C6AetrI5HsBlndCLHhf4
-         LDLOaGRH6Eqzwge0QzwuZDmX2OwkQ4z/b/SLm9GpGhZMV4Trga4BxyDlPLRlDdLmOdit
-         DATeNZUVrPomFUNfMPMuJ8wck1XgZCxah6jv7xBEtJJvE+zckV3NkTomrsdqcSHVtl2i
-         w/Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZfgQX7pqZVYYTgTWPsA5vmG/ekWF1jw33/P4kwtTuw2lfFjFmxUpYJ6lykzL1vAgJ3E2gDg86nwG+1rU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUxeBwOE4lfSkyvEAd/9Ei2WK351iV1t9T4A7iteIYjgbPkNdj
-	ZI5bFo38fkjasSPxKFnhHub8NVXn7WLdgT14g+k3ON3ZVY4SyH4z
-X-Gm-Gg: ASbGnctKkUpqLBrKp13wp8ltWTLcUqGK820834rJg861HXVyzy4l/9NgaDwjKY+tvKJ
-	EZfn0Bef7Qv/Qwn/GhzSxFgpAjkPvhn85RH2XtdiPlfjk1WdNSfe0adl/0RLVAXlMvx6oaSME02
-	RPyUi+d9G8r6zUN527T/BAr3w3qv7GlU8xa47Lo+IL1w3Rj/r8OtLApvZlzR4LgaROA4cLVVQgN
-	QzEohNE1Bb7zuEZJ8qFvNKnfU9vco/7rSkrg596UZw1YaI23AHIVajkRq/L0dAAgZHz6gTl45My
-	IsEwW+yRxoajFmtQKZ1y+sHAEoI0STUcXSJN9gtE/a7RkD+Q/VCZiqVEgLTq5gpHAdY=
-X-Google-Smtp-Source: AGHT+IGonnW2BIlqC2FdXER3bXAFv4ISuWErmmFhIv+nnElrcZtI1jJxe9rCZw7FGgE21qslHhMlvg==
-X-Received: by 2002:a05:6512:281d:b0:549:5b54:2c66 with SMTP id 2adb3069b0e04-5497d345ea7mr2751359e87.23.1741269875014;
-        Thu, 06 Mar 2025 06:04:35 -0800 (PST)
-Received: from pc636 (host-95-203-6-24.mobileonline.telia.com. [95.203.6.24])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b0bcf82sm185064e87.154.2025.03.06.06.04.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 06:04:34 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 6 Mar 2025 15:04:31 +0100
-To: Jocelyn Falempe <jfalempe@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
-	akpm@linux-foundation.org, urezki@gmail.com, hch@infradead.org,
-	dmitry.osipenko@collabora.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-mm@kvack.org
-Subject: Re: [PATCH drm-next 1/2] vmalloc: Add atomic_vmap
-Message-ID: <Z8mrb_zcou6Hn7hF@pc636>
-References: <20250305152555.318159-1-ryasuoka@redhat.com>
- <20250305152555.318159-2-ryasuoka@redhat.com>
- <Z8kp9Z9VgTpQmV9d@casper.infradead.org>
- <3bfd4238-6954-41a3-a5a3-8515a3ac9dce@redhat.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="SCw4nxYX"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526C7l91004799;
+	Thu, 6 Mar 2025 09:04:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=pbsue6LnaHcYvymVhz6Vwle18m7
+	47UokkJq3/J8Ariw=; b=SCw4nxYXIhgmjCZPWv9BdkwT/SVg2eww113XdjQ/DA6
+	lqOZbcjDN++UqSZ60hF8Mc8M27m9MUB5xXquFeEIxczrwpz5QO+Xv5t2EnZSAZ11
+	JA+ghJ3AQqMkILPL2YpP2h4w2esUT0htT3aoZMG6HYc5qA7uoy1JyHb5vB8jYofb
+	4D4WPf/g0NylcBbWNRGXjsZchR4Pk2wxGh2ScuozytTKnp5Jg0w39KgG9TrGrFpy
+	CtIvbZatS4hyLAlXSpZWlAR5Zlt8M7IWzx4ATAHPYrkt9t6JvkgMnSLfwYWdYXq/
+	XetjfkoEme+vh9Po4KMuYPFnkdNaoTYJaiiA3dDbz6w==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 4577p69mmj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 09:04:25 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 526E4OJR016887
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 6 Mar 2025 09:04:24 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 6 Mar 2025
+ 09:04:24 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 6 Mar 2025 09:04:24 -0500
+Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.71])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 526E4CqR024033;
+	Thu, 6 Mar 2025 09:04:14 -0500
+From: Jorge Marques <jorge.marques@analog.com>
+Subject: [PATCH 0/4] Add support for AD4052 device family
+Date: Thu, 6 Mar 2025 15:03:13 +0100
+Message-ID: <20250306-iio-driver-ad4052-v1-0-2badad30116c@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3bfd4238-6954-41a3-a5a3-8515a3ac9dce@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACKryWcC/x3MOQqAMBBA0avI1A5k08KriEWWUacxMoEgSO5us
+ HzF/y8UEqYCy/CCUOXC+erQ4wDx9NdByKkbjDKTsmpG5oxJuJKgT05NBr3zMdoQtA4WencL7fz
+ 8z3Vr7QPlkZGRYwAAAA==
+X-Change-ID: 20250306-iio-driver-ad4052-a4acc3bb11b3
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        David Lechner
+	<dlechner@baylibre.com>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        Jorge Marques
+	<jorge.marques@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741269851; l=3553;
+ i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
+ bh=ZmXCsps3szqR5PYQD+MhFlQaRORylZnCZhgPt759QdU=;
+ b=AxY3yI6EkpUsgGX04TsPN11q/0bEbJGdPiXVEO8sUOUKgCCi7RJNBW12ItMi2ricp5hHbIcHA
+ Nx/tp98cw+bDrWq49ZPE9ZoomrNxwWDw7J2kg2FRYGPog+Kz12AxFPD
+X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
+ pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: EmJCe86d5XodzueoS6YSnQsKtC2UxKrE
+X-Proofpoint-ORIG-GUID: EmJCe86d5XodzueoS6YSnQsKtC2UxKrE
+X-Authority-Analysis: v=2.4 cv=GNDyEvNK c=1 sm=1 tr=0 ts=67c9ab69 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=wI1k2SEZAAAA:8 a=gAnH3GRIAAAA:8 a=giVPYnx8gUsv7YmhhMYA:9 a=QEXdDO2ut3YA:10
+ a=6HWbV-4b7c7AdzY24d_u:22 a=oVHKYsEdi7-vN-J5QA_j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-06_05,2025-03-06_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 mlxscore=0 suspectscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503060107
 
-On Thu, Mar 06, 2025 at 02:24:51PM +0100, Jocelyn Falempe wrote:
-> On 06/03/2025 05:52, Matthew Wilcox wrote:
-> > On Thu, Mar 06, 2025 at 12:25:53AM +0900, Ryosuke Yasuoka wrote:
-> > > Some drivers can use vmap in drm_panic, however, vmap is sleepable and
-> > > takes locks. Since drm_panic will vmap in panic handler, atomic_vmap
-> > > requests pages with GFP_ATOMIC and maps KVA without locks and sleep.
-> > 
-> > In addition to the implicit GFP_KERNEL allocations Vlad mentioned, how
-> > is this supposed to work?
-> > 
-> > > +	vn = addr_to_node(va->va_start);
-> > > +
-> > > +	insert_vmap_area(va, &vn->busy.root, &vn->busy.head);
-> > 
-> > If someone else is holding the vn->busy.lock because they're modifying the
-> > busy tree, you'll corrupt the tree.  You can't just say "I can't take a
-> > lock here, so I won't bother".  You need to figure out how to do something
-> > safe without taking the lock.  For example, you could preallocate the
-> > page tables and reserve a vmap area when the driver loads that would
-> > then be usable for the panic situation.  I don't know that we have APIs
-> > to let you do that today, but it's something that could be added.
-> > 
-> Regarding the lock, it should be possible to use the trylock() variant, and
-> fail if the lock is already taken. (In the panic handler, only 1 CPU remain
-> active, so it's unlikely the lock would be released anyway).
-> 
-> If we need to pre-allocate the page table and reserve the vmap area, maybe
-> it would be easier to just always vmap() the primary framebuffer, so it can
-> be used in the panic handler?
-> 
-We can reserve a vmap space for ATOMIC or NOWAIT allocations. As for PTE
-part, we can also populate reserved space, because after that operation
-those are never get released.
+The AD4052/AD4058/AD4050/AD4056 are versatile, 16-bit/12-bit,
+successive approximation register (SAR) analog-to-digital converter (ADC).
 
-The question is how many users need this. As for this particular case i
-am in line with Jocelyn Falempe. Allocate for DRM and write on panic.
+The series starts with marking iio_dev as const in iio_buffer_enabled,
+to not discard the qualifier when calling from get_current_can_type.
+This is required since the size of storage bytes varies if the offload
+buffer is used or not.
 
---
-Uladzislau Rezki
+The scan_type also depends if the oversampling feature is enabled, since
+the 16-bit device increases the SPI word size from 16-bit to 24-bit.
+Also due to this, the spi message optimization is balanced on the buffer ops,
+instead of once per probe.
+SPI messages related to exiting the ADC mode, and reading raw values are
+never optimized.
+
+The device has autonomous monitoring capabilities, that are exposed as IIO
+events. Since register access requires leaving the monitoring
+state and returning, device access is blocked until the IIO event is disabled.
+An auxiliary method ad4052_iio_device_claim_direct manages the IIO claim
+direct as well as the required wait_event boolean.
+The device has an internal sampling rate for the autonomous modes,
+exposed as the sample_rate attribute.
+
+The device contains two required outputs:
+
+* gp0: Threshold event interrupt on the rising edge.
+* gp1: ADC conversion ready signal on the falling edge.
+       The user should either invert the signal or set the IRQ as falling edge.
+
+And one optional input:
+
+* cnv: Triggers a conversion, can be replaced by shortening the CNV and
+  SPI CS trace.
+
+The devices utilizes PM to enter the low power mode.
+
+The driver can be used with SPI controllers with and without offload support.
+
+A FPGA design is available:
+https://analogdevicesinc.github.io/hdl/projects/ad4052_ardz/
+
+The devices datasheet:
+https://www.analog.com/media/en/technical-documentation/data-sheets/ad4050-ad4056.pdf
+https://www.analog.com/media/en/technical-documentation/data-sheets/ad4052-ad4058.pdf
+
+The unique monitoring capabilities and multiple GPIOs where the decision factor
+to have a standalone driver for this device family.
+
+Non-implemented features:
+
+* Status word: First byte of the SPI transfer aligned to the register
+  address.
+* Averaging mode: Similar to burst averaging mode used in the
+  oversampling, but requiring a sequence of CNV triggers for each
+  conversion.
+* Monitor mode: Similar to trigger mode used in the monitoring mode, but
+  doesn't exit to configuration mode on event, being awkward to expose
+  to user space. 
+
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+Jorge Marques (4):
+      iio: code: mark iio_dev as const in iio_buffer_enabled
+      dt-bindings: iio: adc: Add adi,ad4052
+      docs: iio: new docs for ad4052 driver
+      iio: adc: add support for ad4052
+
+ .../devicetree/bindings/iio/adc/adi,ad4052.yaml    |   80 ++
+ Documentation/iio/ad4052.rst                       |   93 ++
+ MAINTAINERS                                        |    8 +
+ drivers/iio/adc/Kconfig                            |   14 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/ad4052.c                           | 1289 ++++++++++++++++++++
+ drivers/iio/industrialio-core.c                    |    2 +-
+ include/linux/iio/iio.h                            |    2 +-
+ 8 files changed, 1487 insertions(+), 2 deletions(-)
+---
+base-commit: aac287ec80d71a7ab7e44c936a434625417c3e30
+change-id: 20250306-iio-driver-ad4052-a4acc3bb11b3
+
+Best regards,
+-- 
+Jorge Marques <jorge.marques@analog.com>
+
