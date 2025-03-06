@@ -1,163 +1,83 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95FCB33FD
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 01:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B38922094;
+	Thu,  6 Mar 2025 01:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741223856; cv=none; b=euFIwwP3yPiDBVMq56Mx33jpmLsHvQMBu0QowZVG92JmyqU2y0GAGB5gA+A59tIkSIAcKmyzIqeBknXzbGLE4gynSDRqMGwkc+ylRaG0+ut3GEpwkle5BC6Z7SURc9D4z6q/N8mJiN+1DwdacXYeBuDCSk9GldQL5GIHgr3avz8=
+	t=1741223872; cv=none; b=AgDrhF6PEtezYdkgChHiXA3/Sulfdf5nIrKuTyTaW+jTppYvwyU7auShWNTyyGmOzbCxzfikikNkMS8IVmEu6zdItyAM5YZ27HZ8dNb2GO6dfuL6tM1eEw4zNfYTtIZvi04uzkewFE0xFe2VIihPavLa+m+yuh2RlopyMvj4m8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741223856; c=relaxed/simple;
-	bh=Asb1tVt0R+2PVuzu9vwJKCs5UPe4up8SUva1c5FR3zc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=PwG6uzD4I9oEFzg9lJXRn7p7c+HvBRl9dMMopbx2NFO9uv+tLbmYXG/SmmCCivhJ1/k6imHcIoHMkSj9jngLd8j3tX98P0xSmoadRILK4c47mr5x8QaH8ZBKHSjFr9H98MoZIVJ0rC0g25dVXtRucqQiedzsBBLYHoGbXDJ/JC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=l6ZTXAIn; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1741223872; c=relaxed/simple;
+	bh=d8mOkaSxGAgITAm/BsLBpX3YnchGNDkwWdTznfAgOm8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JVJcefMzAQNZI9aZTcABJHgtlTb7py/fgX5RqVNx6FDeuerfTbuY00zX8EQhcm9ahiuW/QLY9hWKpuzoQ9bEVBlDkl62+cYzcvz6Hj5/oYVPDTtEluEIlj894j5d/5pKHkmT6vXrnHRL3ktEyKEUSigZqYS5vSyvaPBDnGTAd+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=VdeJpHcO; arc=none smtp.client-ip=192.19.144.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l6ZTXAIn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=Asb1tVt0R+2PVuzu9vwJKCs5UPe4up8SUva1c5FR3zc=; b=l
-	6ZTXAInlHySLIGVftlX9HAM2mBsgaIAQqF0Oh0DXRVsgr4kIlTXCoXGQu0/9tcwy
-	cvjMXikpgNGKBOTCgjN6Ue2+//BLq73HRnJpaAisj7xG/HWmpcaHCLGuTMVmryEZ
-	IxO8PYG/E1RTphS+VPSGtYwh8wS7RCZYiRCxkFb4kE=
-Received: from andyshrk$163.com ( [103.29.142.67] ) by
- ajax-webmail-wmsvr-40-118 (Coremail) ; Thu, 6 Mar 2025 09:16:24 +0800 (CST)
-Date: Thu, 6 Mar 2025 09:16:24 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>
-Cc: "Maxime Ripard" <mripard@kernel.org>,
-	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
-	"Thomas Zimmermann" <tzimmermann@suse.de>,
-	"David Airlie" <airlied@gmail.com>,
-	"Simona Vetter" <simona@ffwll.ch>,
-	"Andrzej Hajda" <andrzej.hajda@intel.com>,
-	"Neil Armstrong" <neil.armstrong@linaro.org>,
-	"Robert Foss" <rfoss@kernel.org>,
-	"Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>,
-	"Jonas Karlman" <jonas@kwiboo.se>,
-	"Jernej Skrabec" <jernej.skrabec@gmail.com>,
-	"Douglas Anderson" <dianders@chromium.org>,
-	"Herve Codina" <herve.codina@bootlin.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	"Simona Vetter" <simona.vetter@ffwll.ch>
-Subject: Re:Re: [PATCH v5 04/16] drm/atomic: Introduce helper to lookup
- connector by encoder
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <mqh4wedfokuta2tmyctoi6jrzol7mqzm27nj3ylu6yj2vjy22j@mexke5x2o7a2>
-References: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
- <20250304-bridge-connector-v5-4-aacf461d2157@kernel.org>
- <5180089f.a640.19566290538.Coremail.andyshrk@163.com>
- <20250305-ruddy-nightingale-of-wealth-db100a@houat>
- <mqh4wedfokuta2tmyctoi6jrzol7mqzm27nj3ylu6yj2vjy22j@mexke5x2o7a2>
-X-NTES-SC: AL_Qu2fA/6ZvE8j4iSQZ+kfmkcVgOw9UcO5v/Qk3oZXOJF8jDDp2ycwUUJSDXLaweO0FQ+OmgmGXTtC9/R7f4VTVaQNVQrcdePLOYL6u5hRII2AKA==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VdeJpHcO"
+Received: from mail-acc-it-01.broadcom.com (mail-acc-it-01.acc.broadcom.net [10.35.36.83])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 859ABC003AAC;
+	Wed,  5 Mar 2025 17:07:59 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 859ABC003AAC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1741223279;
+	bh=d8mOkaSxGAgITAm/BsLBpX3YnchGNDkwWdTznfAgOm8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VdeJpHcOB6Fmc2C/0BEGa4w+S38QjM5MXZTsv2Pfnw/Z9NLis0tjB/A9VgtIKqEg4
+	 1AHNwAt7Vl7f2Lbis3sZiQLsVGc6H0nGg2Ev3DimDYYgJ6JsNbQyXQHB//tVTZVW4U
+	 /ENYWmSZ//x7Igp8dGt7J6Rf+cc5i4Lw1BRWz4/g=
+Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-acc-it-01.broadcom.com (Postfix) with ESMTPSA id CD5404002F44;
+	Wed,  5 Mar 2025 20:07:58 -0500 (EST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Kees Cook <keescook@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Keith Busch <kbusch@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH stable 5.4 0/3] Missing overflow changes
+Date: Wed,  5 Mar 2025 17:07:53 -0800
+Message-Id: <20250306010756.719024-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7c1c61e7.10e1.19569067029.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:digvCgD33_5o98hniRR3AA--.6430W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0ggIXmfI7EjOUAADsa
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-CkhpIE1heGltZSBhbmQgRG1pdHJ5OgoKQXQgMjAyNS0wMy0wNiAwNDoxMzo1MywgIkRtaXRyeSBC
-YXJ5c2hrb3YiIDxkbWl0cnkuYmFyeXNoa292QGxpbmFyby5vcmc+IHdyb3RlOgo+T24gV2VkLCBN
-YXIgMDUsIDIwMjUgYXQgMDI6MTk6MzZQTSArMDEwMCwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPj4g
-SGkgQW5keSwKPj4gCj4+IE9uIFdlZCwgTWFyIDA1LCAyMDI1IGF0IDA3OjU1OjE5UE0gKzA4MDAs
-IEFuZHkgWWFuIHdyb3RlOgo+PiA+IEF0IDIwMjUtMDMtMDQgMTk6MTA6NDcsICJNYXhpbWUgUmlw
-YXJkIiA8bXJpcGFyZEBrZXJuZWwub3JnPiB3cm90ZToKPj4gPiA+V2l0aCB0aGUgYnJpZGdlcyBz
-d2l0Y2hpbmcgb3ZlciB0byBkcm1fYnJpZGdlX2Nvbm5lY3RvciwgdGhlIGRpcmVjdAo+PiA+ID5h
-c3NvY2lhdGlvbiBiZXR3ZWVuIGEgYnJpZGdlIGRyaXZlciBhbmQgaXRzIGNvbm5lY3RvciB3YXMg
-bG9zdC4KPj4gPiA+Cj4+ID4gPlRoaXMgaXMgbWl0aWdhdGVkIGZvciBhdG9taWMgYnJpZGdlIGRy
-aXZlcnMgYnkgdGhlIGZhY3QgeW91IGNhbiBhY2Nlc3MKPj4gPiA+dGhlIGVuY29kZXIsIGFuZCB0
-aGVuIGNhbGwgZHJtX2F0b21pY19nZXRfb2xkX2Nvbm5lY3Rvcl9mb3JfZW5jb2RlcigpIG9yCj4+
-ID4gPmRybV9hdG9taWNfZ2V0X25ld19jb25uZWN0b3JfZm9yX2VuY29kZXIoKSB3aXRoIGRybV9h
-dG9taWNfc3RhdGUuCj4+ID4gPgo+PiA+ID5UaGlzIHdhcyBhbHNvIG1hZGUgZWFzaWVyIGJ5IHBy
-b3ZpZGluZyBkcm1fYXRvbWljX3N0YXRlIGRpcmVjdGx5IHRvIGFsbAo+PiA+ID5hdG9taWMgaG9v
-a3MgYnJpZGdlcyBjYW4gaW1wbGVtZW50Lgo+PiA+ID4KPj4gPiA+SG93ZXZlciwgYnJpZGdlIGRy
-aXZlcnMgZG9uJ3QgaGF2ZSBhIHdheSB0byBhY2Nlc3MgZHJtX2F0b21pY19zdGF0ZQo+PiA+ID5v
-dXRzaWRlIG9mIHRoZSBtb2Rlc2V0IHBhdGgsIGxpa2UgZnJvbSB0aGUgaG90cGx1ZyBpbnRlcnJ1
-cHQgcGF0aCBvciBhbnkKPj4gPiA+aW50ZXJydXB0IGhhbmRsZXIuCj4+ID4gPgo+PiA+ID5MZXQn
-cyBpbnRyb2R1Y2UgYSBmdW5jdGlvbiB0byByZXRyaWV2ZSB0aGUgY29ubmVjdG9yIGN1cnJlbnRs
-eSBhc3NpZ25lZAo+PiA+ID50byBhbiBlbmNvZGVyLCB3aXRob3V0IHVzaW5nIGRybV9hdG9taWNf
-c3RhdGUsIHRvIG1ha2UgdGhlc2UgZHJpdmVycycKPj4gPiA+bGlmZSBlYXNpZXIuCj4+ID4gPgo+
-PiA+ID5SZXZpZXdlZC1ieTogRG1pdHJ5IEJhcnlzaGtvdiA8ZG1pdHJ5LmJhcnlzaGtvdkBsaW5h
-cm8ub3JnPgo+PiA+ID5Dby1kZXZlbG9wZWQtYnk6IFNpbW9uYSBWZXR0ZXIgPHNpbW9uYS52ZXR0
-ZXJAZmZ3bGwuY2g+Cj4+ID4gPlNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1yaXBhcmRA
-a2VybmVsLm9yZz4KPj4gPiA+LS0tCj4+ID4gPiBkcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pYy5j
-IHwgNDUgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4gPiA+
-IGluY2x1ZGUvZHJtL2RybV9hdG9taWMuaCAgICAgfCAgMyArKysKPj4gPiA+IDIgZmlsZXMgY2hh
-bmdlZCwgNDggaW5zZXJ0aW9ucygrKQo+PiA+ID4KPj4gPiA+ZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9kcm1fYXRvbWljLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pYy5jCj4+ID4g
-PmluZGV4IDllYTI2MTE3NzBmNDNjZTdjY2JhNDEwNDA2ZDVmMmM1MjhhYWIwMjIuLmI5MjZiMTMy
-NTkwZTc4ZjhkNDFkNDhlYjRkYTRiY2NmMTcwZWUyMzYgMTAwNjQ0Cj4+ID4gPi0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9kcm1fYXRvbWljLmMKPj4gPiA+KysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9h
-dG9taWMuYwo+PiA+ID5AQCAtOTg1LDEwICs5ODUsNTUgQEAgZHJtX2F0b21pY19nZXRfbmV3X2Nv
-bm5lY3Rvcl9mb3JfZW5jb2Rlcihjb25zdCBzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUs
-Cj4+ID4gPiAKPj4gPiA+IAlyZXR1cm4gTlVMTDsKPj4gPiA+IH0KPj4gPiA+IEVYUE9SVF9TWU1C
-T0woZHJtX2F0b21pY19nZXRfbmV3X2Nvbm5lY3Rvcl9mb3JfZW5jb2Rlcik7Cj4+ID4gPiAKPj4g
-PiA+Ky8qKgo+PiA+ID4rICogZHJtX2F0b21pY19nZXRfY29ubmVjdG9yX2Zvcl9lbmNvZGVyIC0g
-R2V0IGNvbm5lY3RvciBjdXJyZW50bHkgYXNzaWduZWQgdG8gYW4gZW5jb2Rlcgo+PiA+ID4rICog
-QGVuY29kZXI6IFRoZSBlbmNvZGVyIHRvIGZpbmQgdGhlIGNvbm5lY3RvciBvZgo+PiA+ID4rICog
-QGN0eDogTW9kZXNldCBsb2NraW5nIGNvbnRleHQKPj4gPiA+KyAqCj4+ID4gPisgKiBUaGlzIGZ1
-bmN0aW9uIGZpbmRzIGFuZCByZXR1cm5zIHRoZSBjb25uZWN0b3IgY3VycmVudGx5IGFzc2lnbmVk
-IHRvCj4+ID4gPisgKiBhbiBAZW5jb2Rlci4KPj4gPiA+KyAqCj4+ID4gPisgKiBSZXR1cm5zOgo+
-PiA+ID4rICogVGhlIGNvbm5lY3RvciBjb25uZWN0ZWQgdG8gQGVuY29kZXIsIG9yIGFuIGVycm9y
-IHBvaW50ZXIgb3RoZXJ3aXNlLgo+PiA+ID4rICogV2hlbiB0aGUgZXJyb3IgaXMgRURFQURMSywg
-YSBkZWFkbG9jayBoYXMgYmVlbiBkZXRlY3RlZCBhbmQgdGhlCj4+ID4gPisgKiBzZXF1ZW5jZSBt
-dXN0IGJlIHJlc3RhcnRlZC4KPj4gPiA+KyAqLwo+PiA+ID4rc3RydWN0IGRybV9jb25uZWN0b3Ig
-Kgo+PiA+ID4rZHJtX2F0b21pY19nZXRfY29ubmVjdG9yX2Zvcl9lbmNvZGVyKGNvbnN0IHN0cnVj
-dCBkcm1fZW5jb2RlciAqZW5jb2RlciwKPj4gPiA+KwkJCQkgICAgIHN0cnVjdCBkcm1fbW9kZXNl
-dF9hY3F1aXJlX2N0eCAqY3R4KQo+PiA+ID4rewo+PiA+ID4rCXN0cnVjdCBkcm1fY29ubmVjdG9y
-X2xpc3RfaXRlciBjb25uX2l0ZXI7Cj4+ID4gPisJc3RydWN0IGRybV9jb25uZWN0b3IgKm91dF9j
-b25uZWN0b3IgPSBFUlJfUFRSKC1FSU5WQUwpOwo+PiA+ID4rCXN0cnVjdCBkcm1fY29ubmVjdG9y
-ICpjb25uZWN0b3I7Cj4+ID4gPisJc3RydWN0IGRybV9kZXZpY2UgKmRldiA9IGVuY29kZXItPmRl
-djsKPj4gPiA+KwlpbnQgcmV0Owo+PiA+ID4rCj4+ID4gPisJcmV0ID0gZHJtX21vZGVzZXRfbG9j
-aygmZGV2LT5tb2RlX2NvbmZpZy5jb25uZWN0aW9uX211dGV4LCBjdHgpOwo+PiA+ID4rCWlmIChy
-ZXQpCj4+ID4gPisJCXJldHVybiBFUlJfUFRSKHJldCk7Cj4+ID4gCj4+ID4gSXQgc2VlbXMgdGhh
-dCB0aGlzIHdpbGwgY2F1c2UgYSBkZWFkbG9jayB3aGVuIGNhbGxlZCBmcm9tIGEgaG90cGx1Zwo+
-PiA+IGhhbmRsaW5nIHBhdGgsIEkgaGF2ZSBhIFdJUCBEUCBkaXZlclswXSwgd2hpY2ggc3VnZ2Vz
-dGVkIGJ5IERtaXRyeSB0bwo+PiA+IHVzZSB0aGlzIEFQSSBmcm9tIGEgJmRybV9icmlkZ2VfZnVu
-Y3MuZGV0ZWN0IGNhbGxiYWNrIHRvIGdldCB0aGUKPj4gPiBjb25uZWN0b3IsIGFzIGRldGVjdCBp
-cyBjYWxsZWQgYnkgZHJtX2hlbHBlcl9wcm9iZV9kZXRlY3QsIHdoaWNoIHdpbGwKPj4gPiBob2xk
-IGNvbm5lY3Rpb25fbXV0ZXggZmlyc3QsIHNvIHRoZSBkZWFrbG9jayBoYXBwZW5zOgo+PiA+Cj4+
-ID4gZHJtX2hlbHBlcl9wcm9iZV9kZXRlY3Qoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
-ciwKPj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZHJtX21vZGVzZXRfYWNxdWly
-ZV9jdHggKmN0eCwKPj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBib29sIGZvcmNlKQo+PiA+
-IHsKPj4gPiAgICAgICAgIGNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2hlbHBlcl9mdW5jcyAq
-ZnVuY3MgPSBjb25uZWN0b3ItPmhlbHBlcl9wcml2YXRlOwo+PiA+ICAgICAgICAgc3RydWN0IGRy
-bV9kZXZpY2UgKmRldiA9IGNvbm5lY3Rvci0+ZGV2Owo+PiA+ICAgICAgICAgaW50IHJldDsKPj4g
-PiAKPj4gPiAgICAgICAgIGlmICghY3R4KQo+PiA+ICAgICAgICAgICAgICAgICByZXR1cm4gZHJt
-X2hlbHBlcl9wcm9iZV9kZXRlY3RfY3R4KGNvbm5lY3RvciwgZm9yY2UpOwo+PiA+IAo+PiA+ICAg
-ICAgICAgcmV0ID0gZHJtX21vZGVzZXRfbG9jaygmZGV2LT5tb2RlX2NvbmZpZy5jb25uZWN0aW9u
-X211dGV4LCBjdHgpOwo+PiA+ICAgICAgICAgaWYgKHJldCkKPj4gPiAgICAgICAgICAgICAgICAg
-cmV0dXJuIHJldDsKPj4gPiAKPj4gPiAgICAgICAgIGlmIChmdW5jcy0+ZGV0ZWN0X2N0eCkKPj4g
-PiAgICAgICAgICAgICAgICAgcmV0ID0gZnVuY3MtPmRldGVjdF9jdHgoY29ubmVjdG9yLCBjdHgs
-IGZvcmNlKTsKPj4gPiAgICAgICAgIGVsc2UgaWYgKGNvbm5lY3Rvci0+ZnVuY3MtPmRldGVjdCkK
-Pj4gPiAgICAgICAgICAgICAgICAgcmV0ID0gY29ubmVjdG9yLT5mdW5jcy0+ZGV0ZWN0KGNvbm5l
-Y3RvciwgZm9yY2UpOwo+PiA+ICAgICAgICAgZWxzZQo+PiA+ICAgICAgICAgICAgICAgICByZXQg
-PSBjb25uZWN0b3Jfc3RhdHVzX2Nvbm5lY3RlZDsKPj4gPiAKPj4gPiAgICAgICAgIGlmIChyZXQg
-IT0gY29ubmVjdG9yLT5zdGF0dXMpCj4+ID4gICAgICAgICAgICAgICAgIGNvbm5lY3Rvci0+ZXBv
-Y2hfY291bnRlciArPSAxOwo+PiA+IAo+PiA+IFNvIEkgd29uZGVyIGNhbiB3ZSBsZXQgZHJtX2Jy
-aWRnZV9mdW5jcy5kZXRlY3QgcGFzcyBhIGNvbm5lY3RvciBmb3IKPj4gPiB0aGlzIGNhc2UgPwo+
-PiAKPj4gRG8geW91IGFjdHVhbGx5IHNlZSBhIGRlYWRsb2NrIG9jY3VycmluZz8gQUZBSUssIGRy
-bV9tb2Rlc2V0X2xvY2sgaXMKPj4gZmluZSB3aXRoIHJlZW50cmFuY3kgZnJvbSB0aGUgc2FtZSBj
-b250ZXh0LCBzbyBpdCBzaG91bGQgd29yayBqdXN0IGZpbmUuCj4KPkFuZHksIHRoYXQgcHJvYmFi
-bHkgbWVhbnMgdGhhdCB5b3Ugc2hvdWxkIHVzZSAuZGV0ZWN0X2N0eCgpIGFuZCBwYXNzIHRoZQo+
-Y29udGV4dCB0byBkcm1fYXRvbWljX2dldF9jb25uZWN0b3JfZm9yX2VuY29kZXIoKS4KClVuZm9y
-dHVuYXRlbHksIHRoZSBkcm1fYnJpZGdlX2Z1bmNzIGRvZXMgbm90IGhhdmUgYSAuZGV0ZWN0X2N0
-eCgpICB2ZXJzaW9uIC4KVGhlIGNhbGwgY2hhaW4gaXM6CiBkcm1faGVscGVyX3Byb2JlX2RldGVj
-dCAKIC0tPiBkcm1fYnJpZGdlX2Nvbm5lY3Rvcl9kZXRlY3Qoc3RydWN0IGRybV9jb25uZWN0b3Ig
-KmNvbm5lY3RvciwgYm9vbCBmb3JjZSkKLS0+IGRybV9icmlkZ2VfZnVuY3MuZGV0ZWN0KGJyaWRn
-ZSkKVGhlIGN0eCBnb3QgZHJvcHBlZCB3aGVuIGRybV9oZWxwZXJfcHJvYmVfZGV0ZWN0IGNhbGwg
-IGRybV9icmlkZ2VfY29ubmVjdG9yX2RldGVjdApUaGUgY29ubmVjdG9yIGdvdCBkcm9wcGVkICB3
-aGVuIGNvbm5lY3RvciBjYWxsIGl0J3MgYnJpZGVnZS5kZXRlY3QKClNvIEkgdGhpbmsgdGhlIHNp
-bXBsZXN0IHNvbHV0aW9uIGlzIHRvIGhhdmUgZHJtX2JyaWRnZV9mdW5jcy5kZXRlY3QgZGlyZWN0
-bHkgcGFzcyB0aGUgY29ubmVjdG9yCgo+Cj4tLSAKPldpdGggYmVzdCB3aXNoZXMKPkRtaXRyeQo=
+This patch series backports the minimum set of changes in order to fix
+this warning that popped up with >= 5.4.284 stable kernels:
+
+In file included from ./include/linux/mm.h:29,
+                 from ./include/linux/pagemap.h:8,
+                 from ./include/linux/buffer_head.h:14,
+                 from fs/udf/udfdecl.h:12,
+                 from fs/udf/super.c:41:
+fs/udf/super.c: In function 'udf_fill_partdesc_info':
+./include/linux/overflow.h:70:15: warning: comparison of distinct pointer types lacks a cast
+  (void) (&__a == &__b);   \
+               ^~
+fs/udf/super.c:1162:7: note: in expansion of macro 'check_add_overflow'
+   if (check_add_overflow(map->s_partition_len,
+       ^~~~~~~~~~~~~~~~~~
+
+Kees Cook (2):
+  overflow: Add __must_check attribute to check_*() helpers
+  overflow: Allow mixed type arguments
+
+Keith Busch (1):
+  overflow: Correct check_shl_overflow() comment
+
+ include/linux/overflow.h | 101 +++++++++++++++++++++++----------------
+ 1 file changed, 60 insertions(+), 41 deletions(-)
+
+-- 
+2.34.1
 
