@@ -1,406 +1,666 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1577C200BB2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 23:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78A1200BB2;
+	Thu,  6 Mar 2025 23:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741305380; cv=none; b=YC6mq9gmr8ceK5SssdcyRVSVtG3mqypSInyUMJVrSiRCr8dQ4YSkolz6ZEMxW23tPpQuBUqsBZNkyE+uC0dCGnZEXK/tV3crOLHLEFioal6xwaVQ9mKHinNAm3lHXMBZIJy07kUY73EEvGXPyUU1FItiWbV0+xQYNpOHtaSiEQk=
+	t=1741305454; cv=none; b=rKpvj1fIL/aJMgcDwKYURlDnie1IKQsW+MtGTg894tlMmpjMrf3Z0SK8+GxP6OvRnIwUkE5DJ3IlzB7BUyOAjaMo7RdBSWccPux3LY8nOcuBFdO8xOSEyRF+PViaMNgHfCbFx0UPRfvVUpyD4uxZnPRTKZXu3pVXlpHOnuvI2gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741305380; c=relaxed/simple;
-	bh=EDnut2JJw9QS/vdLIDWZgoog/uv+W8+/FbSRiwqOeC4=;
+	s=arc-20240116; t=1741305454; c=relaxed/simple;
+	bh=2++OQEP4uQAaJ8d8AboWSY6yPvVoJM50nxpJLHppZLk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OAl76lV6Pjc71HdNWDHX/o6ZjLvgIvgF5AIcdMQLMUk8iG+vTt6JsKUbOjQKH8Sz92gmfbQHnYBuxwbxlkZW1fXzNDneO419DopFZzZmmXiFRKb1pVuSs8+c+m5xuraofM1jE1HLbSuYemYDIt8Mbg4RtnNlxok2qyr2uJNDNuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lDVTKEa+; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tt9WQ6Fex47idMK4naXJb1Hp+/FQKoBFMx7d4CFQ+pG5rOo8E6MywGfrxruUUYidZorWvHdQkl6zIewiLUYaLEzSB2d0VP2E8/2jp724qMpalaNn+ALFpB5v0sZ0XQQGNxyq5SsFybcJuJMN1jOOvfwE3VDCMy237kUk5I09Q8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mtPhR7Ue; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lDVTKEa+"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4750bc8d102so12276561cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 15:56:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtPhR7Ue"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22374f56453so31862435ad.0;
+        Thu, 06 Mar 2025 15:57:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741305376; x=1741910176; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741305452; x=1741910252; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8SxknEtouNK3Zjilzhs/nL72q1E1f2BQDuWYXogJJkI=;
-        b=lDVTKEa+F3tj7cXw2K6Bghl1Dg1D/gefEUD5zdYV/+TT8Kmzhpl6GTlKFoFVnK18Rr
-         am+jPCJodvCnlInvcXyJELD8aGYd0LZ8aseV44WWoiHYlVOJwniZSYJqgCknAkZor2j7
-         /f9CyA7Vz8ACTT+5giPPOeqt4zuvKRzl210uQHTTuqKRxq8oII740r8AEB4QtMRE66Uq
-         9bIkl91YKqOFqcw7LuxzxuZeK6Ce59ne0uzXlhddu1euHHcQ5lC5nmK2xDvoTZ3i/Oge
-         rXfk8ZBliB+LMe+u25nnXU2dLNgX5u1Rle147QuxLKhBtGlRcz7AbO39ihiuaCzPNUQ8
-         puFg==
+        bh=/8ISUYW6E3JyjiOm+gjsreDqhcMofw1HmjYx4so36Vo=;
+        b=mtPhR7UeaBOrKjbvTpoWhxfP0OAXsD46ObJe2QkNDD2Nn1++YZ6414/JUVhZWD+7TS
+         5qQEFAyQGXe8e7TItk/XsjvVF1at/3Kzv3cwOjrc4XIVj68LUTHIwtr39qZRVruKzmto
+         Za2IX5K4Tqo5xLPcwE+urSqxDM3vwz16qwDvhkufoKi7LYkPeyuMYDjgvAa9qcbuiAi1
+         2ol/h7P3CiILPDGlJVMUGU4JjMu+cqxvgrZivbOtI7RR+pMth6ydi8Cd7lZqGndPM5TZ
+         F5YK9PnMmGfJqT2TXMULF2F9wagTLnv/AULAqaHETt/5OfUOxYQOYgKNqkjmYq0/c4pk
+         2TMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741305376; x=1741910176;
+        d=1e100.net; s=20230601; t=1741305452; x=1741910252;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8SxknEtouNK3Zjilzhs/nL72q1E1f2BQDuWYXogJJkI=;
-        b=EOWbvtPZbJCFXHVzkOFI0AaFs6YiQ/JuUMbvany3b9JWgR/gXOieuuJbCZ2HSCfz44
-         vWRsdH9/LWnPY7n7BQFZFw3uabBWMU8sTFvLonyWhTyL6cE/nLNtEYFDnqTrjppy/p87
-         q5LI7YiOIgNZlmmyomec4bb5MlC5NqUynWeEh68jwsfTb32rPK50aJw7Sp6mFogoyovY
-         B8eXjL5YD6p9OyfGw5UtNjmHZIVesOT5e9v0spagvJ5oLIYEYG1Thsm28GX2peDSS9nM
-         0QbxbFPWTbqLX+SmLhbIaR7trbLbVBsAGuH1REAbuoGYSPIn04h4m1/mbi2CODr5ewsN
-         cCUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZMPQWpnf2dsZmU47HI95V15mLh7/DSlzNZtx5TnHGUmso7tfAvpKEIc90Gs+B/FZY8LAoeSO6O1j0lkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUIYs/Tnx8cEChZMfaNX+N/uIFhC9wgrPt0McdBHvjKBGaAsQx
-	apDvasWin/V9Z6T70XM1JkciBOg9PQEw21Ix2q2nyaGqYEBwZjlLEY3kEg/PwDk=
-X-Gm-Gg: ASbGncs6QuOKcNHYpNX5j1lLPTx/v5+fCBH7SQw7bH9mBzcEw9HyKJfcGCm/NGsrABo
-	CDwqxwbSpgomfQ7qzFEZElaEqeBTaWa820Olxg2UIMBc/BsS8woiRZ4fpY0d1to0vnSKM4Y9hut
-	2SjthW8WAk9uqOxMzlbbD4FjaeKAbSKvMh8VNpQZJIeXXwSsj3h3v1DcTUzuNUKJNSSRD2hCnOT
-	BiDIXi86vXRPbExFRGTOSfxzPIgVVOAiX6HRDgmRKbggj3D9q7u+DKBQyc3jUrblvUB04oZBl6o
-	LmHU8gMcZV4I+D6g+ze9SqKOcoysodR1vl458NegdhlyD9YLlSA6dkiqtGsxnK58fvSujj9t/Sz
-	dhtEpGlOObcMs3gb84BjlGou6A30=
-X-Google-Smtp-Source: AGHT+IHMfvSB5jDUQA+ycqlh2nLaumrbN/QnnIspplIKXIwSEH68cURXntQcFrU/O3HWCHFOeXosag==
-X-Received: by 2002:ad4:500c:0:b0:6e6:6c7c:984a with SMTP id 6a1803df08f44-6e9006776admr10608846d6.29.1741305375656;
-        Thu, 06 Mar 2025 15:56:15 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f707c39dsm12780056d6.23.2025.03.06.15.56.14
+        bh=/8ISUYW6E3JyjiOm+gjsreDqhcMofw1HmjYx4so36Vo=;
+        b=T0ZsAAb5fwTkKzGu1zsfNBdStXEqC5jAU6jtEk51hXsPmxBGQE8WgToemuDC3ITGvJ
+         sQnN61j3hTds6BSkgqJaiwQLzWDMD6t/OWo2D5WdqwmxDGPYl5Az/6LdIFlX7QobIYzP
+         u+wcs3dbAYgw26QeGEsScpDh/ItN4Oj9Ea1Q4UKXiqwesEmlEjR+CiuAAai+HHEi2L9s
+         sGZbbYxb4J/7uXvLGRwKbpoY/rOzFGMUrCXrnU4TS4TLSfvE4ubdGIpBUZ1sSFwT6jr5
+         ngPVGhzXSnda8c/C+Ng2EKTHqjVRdIkaI6KNTWmbX5uHbSen0mRrfjSKYSBUoxVyOBxn
+         Yg5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWb2n9Rxi5N7BmPLy64bK+VGFvviD6T6a5ADhGZ29S4MSICIXB2QYY84IX604EY77Gumy8NwN40J3D+OrI=@vger.kernel.org, AJvYcCWfu1gfX7seR9EgRfWi6AofsKtg1UNjUSX8/U5GO8moBFavGU8jQkKC+8iSiMf54Ay/4x1Ji21slKv0ORK0pVSmL/DpAQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5w73Hqn/sNP8rNHoV6UmUbDVR/lTQhYTyF+xhes08YrynKLjL
+	6CNGRv8oNNlbGb8D0qoRHxTilAth71I1WMbLIW2o8Q1Bn2RV86klKw6Vwg==
+X-Gm-Gg: ASbGnctRnqYHAUN8ojN3Ze4N0XzhteGofZS3LUwz2lzrfZ8BcRH6uyiFAAz1KAHAyGY
+	EZQdQsAb+bY7M43+zo+3x83FYf8RaAm1JKnNH083jAPfrO3pFDjFe3fJtSy4aQzfhV2Os0zoMpF
+	rCQ4UeZG4Fe+M3BaDCU4a2RRIM7Q8z82tZwi+C2p3FtEA5gNxHUXtMKXiQneWHZQG1uRFj90C56
+	q6jdELHeo12s6/ofR/odeCSQu8JJ89oA7wRfh206Z4T7pad2YS4ZXpBF+IJ27C5Z6gRuQMvw2qT
+	Xl3+A4AA1NZws8OhukEi7SfxsYFjp+BkfTDiBtDCNM51
+X-Google-Smtp-Source: AGHT+IFpJmiU6+uBuLf8oGc4KgO8vDnQb5Yk7bSZ0PwJu5KpMS1t/D9XqZmL8mLYMaE6huLBzjVCzQ==
+X-Received: by 2002:a17:902:d551:b0:224:1ec0:8a1a with SMTP id d9443c01a7336-22428ad54d8mr18475465ad.51.1741305451351;
+        Thu, 06 Mar 2025 15:57:31 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109dd5f8sm18255275ad.52.2025.03.06.15.57.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 15:56:15 -0800 (PST)
-Date: Thu, 6 Mar 2025 18:56:13 -0500
-From: Gregory Price <gourry@gourry.net>
-To: lsf-pc@lists.linux-foundation.org
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+        Thu, 06 Mar 2025 15:57:30 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id E47ED420A74B; Fri, 07 Mar 2025 06:57:26 +0700 (WIB)
+Date: Fri, 7 Mar 2025 06:57:26 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Kurt Borja <kuurtb@gmail.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org
-Subject: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
-Message-ID: <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v3 10/10] Documentation: wmi: Improve and update
+ alienware-wmi documentation
+Message-ID: <Z8o2ZkQmdHkdf13m@archie.me>
+References: <20250305-hwm-v3-0-395e7a1407e2@gmail.com>
+ <20250305-hwm-v3-10-395e7a1407e2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cUeMf+BrXeRS+lLa"
 Content-Disposition: inline
-In-Reply-To: <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
-
-I decided to dig into decoder programming as as an addendum to the
-Driver section - where I said I *wouldn't* do this. It's important
-though, when discussing interleave. So alas, we should at least have
-some base understanding of what the heck decoders are actually doing.
-
-This is not a regutitation of the spec, you can think of it closer to
-a "Theory of Operation" or whatever.  I will show discrete examples of
-how ACPI tables, system memory map, and decoders relate.
-
-----------------------------------------
-Definitions: Addresses and HDM Decoders.
-----------------------------------------
-
-An HDM Decoder can be thought shorthand as a "routing" mechanism,
-where the a Physical Address is used to determine one of:
-
-  1) Fabric routing (i.e. which pipe to send a request down)
-  2) Address translation (Host to Device Physical Address)
-
-In section 2, I referenced a simple device-to-decoder mapping:
-
-    root    ---  decoder0.0   -- Root Port Decoder
-     |               |
-   port1    ---  decoder1.0   -- Host Bridge Decoder
-     |               |
-  endpoint0 ---  decoder2.0   -- Endpoint Decoder
-
-Barring any special innovations (cough) - endpoint decoders should
-be the only decoders that actually "Translation" addresses - at least
-for basic volatile memory devices.
-
-All other decoders (Root, Host Bridge, Switch, etc) should simply
-forward DMA requests with the original Physical Address intact to
-the correct downstream device.
-
-For extra confusion, there are now 3 "Physical Address" domains
-
-System Physical Address (SPA)
-  The physical address of some location according to linux.
-  This is the address you see in the system memory map.
-
-Host Physical Address   (HPA)
-  An abstract address used by decoders (I'll explain later)
-
-Device Physical Address (DPA)
-  A device-local physical address (e.g. if a device has 1TB of
-  memory, it's DPA range might be 0-0x10000000000)
-
-
-----------------------------
-DMA Routing (No Interleave).
-----------------------------
-Ok, we have some decoders and confusing physical address definitions,
-how does a DMA actually go from processor to DRAM via these decoders?
-
-Lets consider our simple fabric with 256MB of memory at SPA base 4GB.
-
-Lets assume this was all set up statically by BIOS.  We'd have the
-following CEDT CFMWS (See Section 0 - ACPI) and decoder programming.
-
-```
-CEDT
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region
-             Window size : 0000000010000000   <- 256MB
-Interleave Members (2^n) : 00                 <- Not interleaved
-
-Memory Map:
-  [mem 0x0000000100000000-0x0000000110000000] usable    <- SPA
-
-Decoders
-  root    ---  decoder0.0   -- range=[0x100000000, 0x110000000]
-   |               |
- port1    ---  decoder1.0   -- range=[0x100000000, 0x110000000]
-   |               |
-endpoint0 ---  decoder2.0   -- range=[0x100000000, 0x110000000]
-```
-
-When the CPU accessed an address in this range, the memory controller
-will send the request down the CXL fabric. The following steps occur:
-
-  0) CPU accesses SPA(0x101234567)
-
-  1) root decoder identifies HPA(0x101234567) is valid and forwards
-     to host bridge associated with that address (port 1)
-
-  2) host bridge decoder identifies HPA(0x101234567) is valid and
-     forwards to endpoint associated with that address (endpoint0)
-
-  3) endpoint decoder identifies HPA(0x101234567) is valid and
-     translates that address to DPA(0x01234567).
-
-  4) The endpoint device uses DPA(0x01234567) to fulfill the request.
-
-In this scenario, our endpoint has a DPA range of (0, 0x10000000),
-but technically DPA address space is device-defined and may be sparse.
-
-As you can see, the root and host bridge decoders simply "route" the
-access to the next appropriate hop, while the endpoint decoder actually
-does the translation work.
-
-
-What if instead, we had two 256MB endpoints on the same host bridge?
-
-```
-CEDT
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region
-             Window size : 0000000020000000   <- 512MB
-Interleave Members (2^n) : 00                 <- Not interleaved
-
-Memory Map:
-  [mem 0x0000000100000000-0x0000000120000000] usable  <- SPA
-
-Decoders
-                            decoder0.0
-                  range=[0x100000000, 0x120000000]
-                                |
-                            decoder1.0
-                  range=[0x100000000, 0x120000000]
-                  /                              \
-            decoded2.0                        decoder3.0
-  range=[0x100000000, 0x110000000]   range=[0x110000000, 0x120000000]
-```
-
-We still only have a single root port and host bridge decoder that
-covers the entire 512MB range, but there are now 2 differently
-programmed endpoint decoders.
-
-This makes the routing a little more obvious.  The root and host bridge
-decoders cover the entire SPA space (512MB), while the endpoint decoders
-only cover their own address space (256MB).
-
-The host bridge in this case is responsible for routing the request to
-the correct endpoint.
-
-
-What if we had 2 endpoints, each attached to their own host bridges? 
-In this case We'd have 2 root ports and host bridge decoders.
-
-```
-CEDT
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region 1
-             Window size : 0000000010000000   <- 256MB
-Interleave Members (2^n) : 00                 <- Not interleaved
-            First Target : 00000007           <- Host Bridge _UID
-
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000110000000   <- Memory Region 1
-             Window size : 0000000010000000   <- 256MB
-Interleave Members (2^n) : 00                 <- Not interleaved
-            First Target : 00000006           <- Host Bridge _UID
-
-Memory Map - this may or may not be collapsed depending on Linux arch
-  [mem 0x0000000100000000-0x0000000110000000] usable  <- System Phys Address
-  [mem 0x0000000110000000-0x0000000120000000] usable  <- System Phys Address
-
-Decoders
-            decoder0.0                     decoder1.0   - roots
-    [0x100000000, 0x110000000]     [0x110000000, 0x120000000]
-                |                              |
-            decoder2.0                     decoder3.0   - host bridges
-    [0x100000000, 0x110000000]     [0x110000000, 0x120000000]
-                |                              |
-            decoder4.0                     decoder5.0   - endpoints
-    [0x100000000, 0x110000000]     [0x110000000, 0x120000000]
-```
-
-This scenario looks functionally same as the first - with two distinct,
-non-overlapping sets of decoders (any given SPA may only be services by
-one device).  The platform memory controller is responsible for routing
-the address to the correct root decoder.
-
-In Section 4 (Interleave) we'll discuss a bit how the interleave is
-accomplished - as this depends whether you are interleaving across
-host bridges (aggregation) or within a host bridge (bifurcation).
-
-
-
----------------------------------------------
-Nuance: Host Physical Address... translation?
----------------------------------------------
-
-You might have noticed that all the addresses in the examples I showed
-are direct subsets of their parent decoder address ranges.  The root is
-assigned a System Physical Address according to the system memory map,
-and all decoders under it are a subset of that range.
-
-You may have even noticed routing steps suddenly change from SPA to HPA
-
-  0) CPU accesses SPA(0x101234567)
-
-  1) root decoder identifies HPA(0x101234567) is valid and forwards
-     to host bridge associated with that address (port 1)
-
-So what the heck is a "Host Physical Address"?
-Why isn't everything just described as a "System Physical Address"?
-
-CXL HDM decoders *definitionally* handle HPA to DPA translations.
-
-That's it, that's the definition of an HPA.
-
-On MOST systems, what you see in the memory map is an SPA, and SPA=HPA,
-so all the decoders will appear to be programmed with SPA.  The platform
-MAY perform translation before a request is routed to decoder complex.
-
-I will cover an example of this in-depth in an interleave addendum.
-
-So the answer is that some ambiguity exists regarding whether platforms
-can/should do translation prior to HDM decoders even being utilized.  So
-for the sake of making everything more complicated and confusing for very
-little value:
-
-1) decoders definitionally do "HPA to DPA" translation
-2) most of the time "SPA=HPA"
-3) so decoders mostly do "SPA to DPA" translation
-
-If you're confused, that's ok, I was too - and still am.  But Hopefully
-between this section and Section 4 (Interleave) we can be marginally
-less confused together.
-
-
------------------------------------------------
-Nuance: Memory Holes and Hotplug Memory Blocks!
------------------------------------------------
-Help, BIOS split my memory device across non-contiguous memory regions!
-
-```
-CEDT
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region 1
-             Window size : 0000000080000000   <- 128MB
-Interleave Members (2^n) : 00                 <- Not interleaved
-            First Target : 00000007           <- Host Bridge _UID
-
-CEDT
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000110000000   <- Memory Region 1
-             Window size : 0000000080000000   <- 128MB
-Interleave Members (2^n) : 00                 <- Not interleaved
-            First Target : 00000007           <- Host Bridge _UID
-
-Memory Map
-  [mem 0x0000000100000000-0x0000000107FFFFFF] usable  <- SPA
-  [mem 0x0000000108000000-0x000000010FFFFFFF] reserved
-  [mem 0x0000000110000000-0x0000000118000000] usable  <- SPA
-```
-
-Take a breath. Everything will be ok. 
-
-You can have multiple decoders at each point in the decoder complex!
-(Most devices should implement for multiple decoders).
-
-```
-Decoders
-                              Root Port 0
-                             /          \
-                    decoder0.0          decoder0.1
-    [0x100000000, 0x108000000]          [0x110000000, 0x118000000]
-                             \          /
-                            Host Bridge 7
-                             /          \
-                    decoder1.0          decoder1.1
-    [0x100000000, 0x108000000]          [0x110000000, 0x118000000]
-                             \          /
-                              Endpoint 0
-                             /          \
-                    decoder2.0          decoder2.1
-    [0x100000000, 0x108000000]          [0x110000000, 0x118000000]
-```
-
-If your BIOS adds a memory hole, it better also use multiple decoders.
-
-Oh, wait, Section 2 and Section 3 allude to hotplug memory blocks
-having size and alignment issues!
-
-If your BIOS adds a memory hole, it better also do it on Linux hotplug
-memory block alignment (2GB on x86) or you'll lose 1 hotplug memory
-block of capacity per CFMWS.
-
-Oi, talk about some rough edges, right? :[
-
----------------------------------------
-Nuance: BIOS vs OS Programmed Decoders.
----------------------------------------
-The driver can (and does) program these decoders.  However, it's
-entirely normal for BIOS/EFI to program decoders prior to OS init.
-
-Earlier in section 2 I said:
-  Most associations built by the driver are done by validating decoders
-
-What I meant by this is the driver does one of two things with decoders:
-
-   1) Detects BIOS programmed decoders and sanity checks them.
-      If an unexpected configuration is found, it bails out.
-      This memory is not accessible if EFI_MEMORY_SP is set.
-
-   2) Provide an interface for user policy configuration of the decoders
-
-For the most part, the mechanism is the same.  This carve-out is to tell
-you if something isn't working, you should check whether the BIOS/EFI or
-driver programmed the decoders. It will help debug the issue quicker.
-
-        In my experience, it's USUALLY a bad ACPI table.
-
-This distinction will be more important in Section 4 (Interleave) when
-we discuss Inter-Host-Bridge and Intra-Host-Bridge interleave.
-
-~Gregory
+In-Reply-To: <20250305-hwm-v3-10-395e7a1407e2@gmail.com>
+
+
+--cUeMf+BrXeRS+lLa
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Mar 05, 2025 at 07:57:01PM -0500, Kurt Borja wrote:
+> diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/=
+wmi/devices/alienware-wmi.rst
+> index ddc5e561960e05fc7cffe700d7d278e32ff2e7b2..79238051b18bc5de9b5023250=
+17cd5c5fcf41748 100644
+> --- a/Documentation/wmi/devices/alienware-wmi.rst
+> +++ b/Documentation/wmi/devices/alienware-wmi.rst
+> @@ -11,7 +11,7 @@ The WMI device WMAX has been implemented for many Alien=
+ware and Dell's G-Series
+>  models. Throughout these models, two implementations have been identifie=
+d. The
+>  first one, used by older systems, deals with HDMI, brightness, RGB, ampl=
+ifier
+>  and deep sleep control. The second one used by newer systems deals prima=
+rily
+> -with thermal, overclocking, and GPIO control.
+> +with thermal control and overclocking.
+> =20
+>  It is suspected that the latter is used by Alienware Command Center (AWC=
+C) to
+>  manage manufacturer predefined thermal profiles. The alienware-wmi driver
+> @@ -69,9 +69,6 @@ data using the `bmfdec <https://github.com/pali/bmfdec>=
+`_ utility:
+>     [WmiMethodId(164), Implemented, read, write, Description("Tobii Camer=
+a Power Off.")] void TobiiCameraPowerOff([out] uint32 argr);
+>   };
+> =20
+> -Some of these methods get quite intricate so we will describe them using
+> -pseudo-code that vaguely resembles the original ASL code.
+> -
+>  Methods not described in the following document have unknown behavior.
+> =20
+>  Argument Structure
+> @@ -87,175 +84,133 @@ ID 0xA0, the argument you would pass to the method =
+is 0xA001.
+>  Thermal Methods
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> +WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
+> +-------------------------------------------------------------
+> +
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| Operation (Byte 0) | Description                        | Arguments   =
+       |
+> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D+
+> +| 0x01               | Get the number of temperature      | - Byte 1: Fa=
+n ID   |
+> +|                    | sensors related with a fan ID      |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x02               | Get the temperature sensor IDs     | - Byte 1: Fa=
+n ID   |
+> +|                    | related to a fan sensor ID         | - Byte 2: In=
+dex    |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +
+>  WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
+>  -------------------------------------------------------------------
+> =20
+> -::
+> -
+> - if BYTE_0(arg2) =3D=3D 0x01:
+> -         argr =3D 1
+> -
+> - if BYTE_0(arg2) =3D=3D 0x02:
+> -         argr =3D SYSTEM_DESCRIPTION
+> -
+> - if BYTE_0(arg2) =3D=3D 0x03:
+> -         if BYTE_1(arg2) =3D=3D 0x00:
+> -                 argr =3D FAN_ID_0
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x01:
+> -                 argr =3D FAN_ID_1
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x02:
+> -                 argr =3D FAN_ID_2
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x03:
+> -                 argr =3D FAN_ID_3
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x04:
+> -                 argr =3D SENSOR_ID_CPU | 0x0100
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x05:
+> -                 argr =3D SENSOR_ID_GPU | 0x0100
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x06:
+> -                 argr =3D THERMAL_MODE_QUIET_ID
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x07:
+> -                 argr =3D THERMAL_MODE_BALANCED_ID
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x08:
+> -                 argr =3D THERMAL_MODE_BALANCED_PERFORMANCE_ID
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x09:
+> -                 argr =3D THERMAL_MODE_PERFORMANCE_ID
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x0A:
+> -                 argr =3D THERMAL_MODE_LOW_POWER_ID
+> -
+> -         if BYTE_1(arg2) =3D=3D 0x0B:
+> -                 argr =3D THERMAL_MODE_GMODE_ID
+> -
+> -         else:
+> -                 argr =3D 0xFFFFFFFF
+> -
+> - if BYTE_0(arg2) =3D=3D 0x04:
+> -         if is_valid_sensor(BYTE_1(arg2)):
+> -                 argr =3D SENSOR_TEMP_C
+> -         else:
+> -                 argr =3D 0xFFFFFFFF
+> -
+> - if BYTE_0(arg2) =3D=3D 0x05:
+> -         if is_valid_fan(BYTE_1(arg2)):
+> -                 argr =3D FAN_RPM()
+> -
+> - if BYTE_0(arg2) =3D=3D 0x06:
+> -         skip
+> -
+> - if BYTE_0(arg2) =3D=3D 0x07:
+> -         argr =3D 0
+> -
+> - If BYTE_0(arg2) =3D=3D 0x08:
+> -         if is_valid_fan(BYTE_1(arg2)):
+> -                 argr =3D 0
+> -         else:
+> -                 argr =3D 0xFFFFFFFF
+> -
+> - if BYTE_0(arg2) =3D=3D 0x09:
+> -         if is_valid_fan(BYTE_1(arg2)):
+> -                 argr =3D FAN_UNKNOWN_STAT_0()
+> -
+> -         else:
+> -                 argr =3D 0xFFFFFFFF
+> -
+> - if BYTE_0(arg2) =3D=3D 0x0A:
+> -         argr =3D THERMAL_MODE_BALANCED_ID
+> -
+> - if BYTE_0(arg2) =3D=3D 0x0B:
+> -         argr =3D CURRENT_THERMAL_MODE()
+> -
+> - if BYTE_0(arg2) =3D=3D 0x0C:
+> -         if is_valid_fan(BYTE_1(arg2)):
+> -                 argr =3D FAN_UNKNOWN_STAT_1()
+> -         else:
+> -                 argr =3D 0xFFFFFFFF
+> -
+> -Operation 0x02 returns a *system description* buffer with the following
+> -structure:
+> -
+> -::
+> -
+> - out[0] -> Number of fans
+> - out[1] -> Number of sensors
+> - out[2] -> 0x00
+> - out[3] -> Number of thermal modes
+> -
+> -Operation 0x03 list all available fan IDs, sensor IDs and thermal profile
+> -codes in order, but different models may have different number of fans a=
+nd
+> -thermal profiles. These are the known ranges:
+> -
+> -* Fan IDs: from 2 up to 4
+> -* Sensor IDs: 2
+> -* Thermal profile codes: from 1 up to 7
+> -
+> -In total BYTE_1(ARG2) may range from 0x5 up to 0xD depending on the mode=
+l.
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| Operation (Byte 0) | Description                        | Arguments   =
+       |
+> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D+
+> +| 0x01               | Unknown.                           | - None      =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x02               | Get system description number with | - None      =
+       |
+> +|                    | the following structure:           |             =
+       |
+> +|                    |                                    |             =
+       |
+> +|                    | - Byte 0: Number of fans           |             =
+       |
+> +|                    | - Byte 1: Number of temperature    |             =
+       |
+> +|                    |   sensors                          |             =
+       |
+> +|                    | - Byte 2: Unknown                  |             =
+       |
+> +|                    | - Byte 3: Number of thermal        |             =
+       |
+> +|                    |   profiles                         |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x03               | List an ID or resource at a given  | - Byte 1: In=
+dex    |
+> +|                    | index. Fan IDs, temperature IDs,   |             =
+       |
+> +|                    | unknown IDs and thermal profile    |             =
+       |
+> +|                    | IDs are listed in that exact       |             =
+       |
+> +|                    | order.                             |             =
+       |
+> +|                    |                                    |             =
+       |
+> +|                    | Operation 0x02 is used to know     |             =
+       |
+> +|                    | which indexes map to which         |             =
+       |
+> +|                    | resources.                         |             =
+       |
+> +|                    |                                    |             =
+       |
+> +|                    | **Returns:** ID at a given index   |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x04               | Get the current temperature for a  | - Byte 1: Se=
+nsor   |
+> +|                    | given temperature sensor.          |   ID        =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x05               | Get the current RPM for a given    | - Byte 1: Fa=
+n ID   |
+> +|                    | fan.                               |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x06               | Get fan speed percentage. (not     | - Byte 1: Fa=
+n ID   |
+> +|                    | implemented in every model)        |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x07               | Unknown.                           | - Unknown   =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x08               | Get minimum RPM for a given FAN    | - Byte 1: Fa=
+n ID   |
+> +|                    | ID.                                |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x09               | Get maximum RPM for a given FAN    | - Byte 1: Fa=
+n ID   |
+> +|                    | ID.                                |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x0A               | Get balanced thermal profile ID.   | - None      =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x0B               | Get current thermal profile ID.    | - None      =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x0C               | Get current `boost` value for a    | - Byte 1: Fa=
+n ID   |
+> +|                    | given fan ID.                      |             =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> =20
+>  WMI method Thermal_Control([in] uint32 arg2, [out] uint32 argr)
+>  ---------------------------------------------------------------
+> =20
+> -::
+> -
+> - if BYTE_0(arg2) =3D=3D 0x01:
+> -         if is_valid_thermal_profile(BYTE_1(arg2)):
+> -                 SET_THERMAL_PROFILE(BYTE_1(arg2))
+> -                 argr =3D 0
+> -
+> - if BYTE_0(arg2) =3D=3D 0x02:
+> -         if is_valid_fan(BYTE_1(arg2)):
+> -                 SET_FAN_SPEED_MULTIPLIER(BYTE_2(arg2))
+> -                 argr =3D 0
+> -         else:
+> -                 argr =3D 0xFFFFFFFF
+> -
+> -.. note::
+> -   While you can manually change the fan speed multiplier with this meth=
+od,
+> -   Dell's BIOS tends to overwrite this changes anyway.
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| Operation (Byte 0) | Description                        | Arguments   =
+       |
+> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D+
+> +| 0x01               | Activate a given thermal profile.  | - Byte 1: Th=
+ermal  |
+> +|                    |                                    |   profile ID=
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x02               | Set a `boost` value for a given    | - Byte 1: Fa=
+n ID   |
+> +|                    | fan ID.                            | - Byte 2: Bo=
+ost    |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> =20
+>  These are the known thermal profile codes:
+> =20
+> -::
+> ++------------------------------+----------+------+
+> +| Thermal Profile              | Type     | ID   |
+> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D+
+> +| Custom                       | Special  | 0x00 |
+> ++------------------------------+----------+------+
+> +| G-Mode                       | Special  | 0xAB |
+> ++------------------------------+----------+------+
+> +| Quiet                        | Legacy   | 0x96 |
+> ++------------------------------+----------+------+
+> +| Balanced                     | Legacy   | 0x97 |
+> ++------------------------------+----------+------+
+> +| Balanced Performance         | Legacy   | 0x98 |
+> ++------------------------------+----------+------+
+> +| Performance                  | Legacy   | 0x99 |
+> ++------------------------------+----------+------+
+> +| Balanced                     | USTT     | 0xA0 |
+> ++------------------------------+----------+------+
+> +| Balanced Performance         | USTT     | 0xA1 |
+> ++------------------------------+----------+------+
+> +| Cool                         | USTT     | 0xA2 |
+> ++------------------------------+----------+------+
+> +| Quiet                        | USTT     | 0xA3 |
+> ++------------------------------+----------+------+
+> +| Performance                  | USTT     | 0xA4 |
+> ++------------------------------+----------+------+
+> +| Low Power                    | USTT     | 0xA5 |
+> ++------------------------------+----------+------+
+> =20
+> - CUSTOM                         0x00
+> +If a model supports the User Selectable Thermal Tables (USTT) profiles, =
+it will
+> +not support the Legacy profiles and vice-versa.
+> =20
+> - BALANCED_USTT                  0xA0
+> - BALANCED_PERFORMANCE_USTT      0xA1
+> - COOL_USTT                      0xA2
+> - QUIET_USTT                     0xA3
+> - PERFORMANCE_USTT               0xA4
+> - LOW_POWER_USTT                 0xA5
+> -
+> - QUIET                          0x96
+> - BALANCED                       0x97
+> - BALANCED_PERFORMANCE           0x98
+> - PERFORMANCE                    0x99
+> -
+> - GMODE                          0xAB
+> -
+> -Usually if a model doesn't support the first four profiles they will sup=
+port
+> -the User Selectable Thermal Tables (USTT) profiles and vice-versa.
+> -
+> -GMODE replaces PERFORMANCE in G-Series laptops.
+> +Every model supports the CUSTOM (0x00) thermal profile. GMODE replaces
+> +PERFORMANCE in G-Series laptops.
+> =20
+>  WMI method GameShiftStatus([in] uint32 arg2, [out] uint32 argr)
+>  ---------------------------------------------------------------
+> =20
+> -::
+> -
+> - if BYTE_0(arg2) =3D=3D 0x1:
+> -         TOGGLE_GAME_SHIFT()
+> -         argr =3D GET_GAME_SHIFT_STATUS()
+> -
+> - if BYTE_0(arg2) =3D=3D 0x2:
+> -         argr =3D GET_GAME_SHIFT_STATUS()
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| Operation (Byte 0) | Description                        | Arguments   =
+       |
+> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D+
+> +| 0x01               | Toggle *Game Shift*.               | - None      =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> +| 0x02               | Get *Game Shift* status.           | - None      =
+       |
+> ++--------------------+------------------------------------+-------------=
+-------+
+> =20
+>  Game Shift Status does not change the fan speed profile but it could be =
+some
+>  sort of CPU/GPU power profile. Benchmarks have not been done.
+> @@ -267,131 +222,27 @@ Thermal_Information does not list it.
+>  G-key on Dell's G-Series laptops also changes Game Shift status, so both=
+ are
+>  directly related.
+> =20
+> -WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
+> --------------------------------------------------------------
+> -
+> -::
+> -
+> - if BYTE_0(arg2) =3D=3D 0x1:
+> -        if is_valid_fan(BYTE_1(arg2)):
+> -                argr =3D 1
+> -        else:
+> -                argr =3D 0
+> -
+> - if BYTE_0(arg2) =3D=3D 0x2:
+> -        if is_valid_fan(BYTE_1(arg2)):
+> -                if BYTE_2(arg2) =3D=3D 0:
+> -                        argr =3D=3D SENSOR_ID
+> -                else
+> -                        argr =3D=3D 0xFFFFFFFF
+> -        else:
+> -                argr =3D 0
+> -
+>  Overclocking Methods
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -.. warning::
+> -   These methods have not been tested and are only partially reverse
+> -   engineered.
+> -
+> -WMI method Return_OverclockingReport([out] uint32 argr)
+> --------------------------------------------------------
+> -
+> -::
+> -
+> - CSMI (0xE3, 0x99)
+> - argr =3D 0
+> -
+> -CSMI is an unknown operation.
+> -
+> -WMI method Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr)
+> --------------------------------------------------------------------
+> -
+> -::
+> -
+> - CSMI (0xE3, 0x99)
+> - argr =3D 0
+> -
+> -CSMI is an unknown operation.
+> -
+> -WMI method Clear_OCFailSafeFlag([out] uint32 argr)
+> ---------------------------------------------------
+> -
+> -::
+> -
+> - CSMI (0xE3, 0x99)
+> - argr =3D 0
+> -
+> -CSMI is an unknown operation.
+> -
+> -
+>  WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
+>  ---------------------------------------------------------------
+> =20
+>  AWCC supports memory overclocking, but this method is very intricate and=
+ has
+>  not been deciphered yet.
+> =20
+> -GPIO methods
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -
+> -These methods are probably related to some kind of firmware update syste=
+m,
+> -through a GPIO device.
+> -
+> -.. warning::
+> -   These methods have not been tested and are only partially reverse
+> -   engineered.
+> -
+> -WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
+> -------------------------------------------------------------------
+> -
+> -::
+> -
+> - if BYTE_0(arg2) =3D=3D 0:
+> -         if BYTE_1(arg2) =3D=3D 1:
+> -                 SET_PIN_A_HIGH()
+> -         else:
+> -                 SET_PIN_A_LOW()
+> -
+> - if BYTE_0(arg2) =3D=3D 1:
+> -         if BYTE_1(arg2) =3D=3D 1:
+> -                 SET_PIN_B_HIGH()
+> -
+> -         else:
+> -                 SET_PIN_B_LOW()
+> -
+> - else:
+> -         argr =3D 1
+> -
+> -WMI method ReadTotalofGPIOs([out] uint32 argr)
+> -----------------------------------------------
+> -
+> -::
+> -
+> - argr =3D 0x02
+> -
+> -WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
+> -------------------------------------------------------------------
+> -
+> -::
+> -
+> - if BYTE_0(arg2) =3D=3D 0:
+> -         argr =3D PIN_A_STATUS
+> -
+> - if BYTE_0(arg2) =3D=3D 1:
+> -         argr =3D PIN_B_STATUS
+> -
+>  Other information Methods
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> =20
+>  WMI method ReadChassisColor([out] uint32 argr)
+>  ----------------------------------------------
+> =20
+> -::
+> -
+> - argr =3D CHASSIS_COLOR_ID
+> +Returns the chassis color internal ID.
+> =20
+>  Acknowledgements
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ for documenting
+> -and testing available thermal profile codes.
+> +Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ and
+> +`T-Troll <https://github.com/T-Troll/alienfx-tools/>`_ for documenting a=
+nd
+> +testing some of this device's functionality, making it possible to gener=
+alize
+> +this driver.
+>=20
+
+Looks good, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--cUeMf+BrXeRS+lLa
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ8o2XwAKCRD2uYlJVVFO
+o17KAP9b/54r24fQ+UmehxvciPpB7urBYAK2rr6xb3qnJ1fP+AEA4bFPNPKx1GxF
+rrnmoQw9jY8z7DuUojSen1ZnPKQpXAE=
+=RzrT
+-----END PGP SIGNATURE-----
+
+--cUeMf+BrXeRS+lLa--
