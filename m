@@ -1,105 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E307263F2C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 23:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC5D200BB2;
+	Thu,  6 Mar 2025 23:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741305496; cv=none; b=aZg/IeBc5wHbsFcQNcxU+yiRDJcvfgeoRpifaTk2Izk8exyX6NrtoFjGYvkcq1CYonFu0nfmHXK6OsqNA9zSsoxIL0+3kooiYb1cWY8hUM61/kPJBw6XoEtAjFVmdFjLM5AHc6gjxvN8RuVUTOZFE/R0DulBfMsZaPZ324wfGzA=
+	t=1741305519; cv=none; b=Gc2bK0SoQUjYq2Akemx+RSHhHSPINELX4c6fRPLNydhINj4dgwEUHyEg8q+/hOiSRl7VxHIDMO4jO4F0AXme6xifPxnEvfffKAe+0l7+OE+mr6dfciNOqHe+e5R7cJ5LHgRnj83WV25pNOR/e7j9EloDSEDksGQ9Ejx11eYPQng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741305496; c=relaxed/simple;
-	bh=Ysfi3IJpWU0q4KuMX92m4SfIaDX+nhzcOw9b5BXdpgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nKeiDq1fqEfyVuaafOuh3FckpVtO//6PRHoVVnYv88qfFhnuBgyiBS3xh1JdRF6qa75R2wLkC/+Gvk+9qumb9u3xSMPz2Mi3gdzaWcjujVXq/cW6dwX3/vz36f1sb9c4Y8JSDRLq86pvgup2Qu+lqgowq7hchV4wEB3rqnsB0rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PP0Y9EzO; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PP0Y9EzO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741305495; x=1772841495;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ysfi3IJpWU0q4KuMX92m4SfIaDX+nhzcOw9b5BXdpgM=;
-  b=PP0Y9EzOvYKPLTeblmqg/7YZr/GUHTw8+ZVvJQT2b2wJDnqtSq2XuMPQ
-   b7D8BmRrb4YaZhwsLdGYHYJTiOS0QkWg19k7i58a82sxyhcZ2tsf+PaEn
-   hktBEy0PKD94hZSdRYblCFvbP8PlPvUZf0ZmcWr2Ezt7bSMZhaOGoWav8
-   SrTN8vP8pYwLPVqIlko/dByCJJHHA4I2TCCnbgHckE5JHeud8jFIfgbXB
-   KuCH7yrlOkV4ItOamO3S1NtbRhvc1Bdmr+OPdkyvoVrlsp3zq8milQlxT
-   ELFkkHxbxherh4RFxDFqsYStRsAxnUvWofuLtZMGMIkg3AVtk7GvSw0sh
-   A==;
-X-CSE-ConnectionGUID: UAu72l73RXWk4oH1T264uw==
-X-CSE-MsgGUID: IlcklWSoR+KpNMN/vLa3pQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42051271"
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="42051271"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 15:58:14 -0800
-X-CSE-ConnectionGUID: iOrXB3uPQIS9LIc4TsgJ+Q==
-X-CSE-MsgGUID: +4LUmdnKRg2IMCJ5r/qOkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="149965485"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 06 Mar 2025 15:58:10 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tqL6A-000NmU-29;
-	Thu, 06 Mar 2025 23:58:04 +0000
-Date: Fri, 7 Mar 2025 07:56:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
-	akpm@linux-foundation.org, urezki@gmail.com, hch@infradead.org,
-	dmitry.osipenko@collabora.com, jfalempe@redhat.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-mm@kvack.org
-Subject: Re: [PATCH drm-next 2/2] drm/virtio: Use atomic_vmap to work
- drm_panic in GUI
-Message-ID: <202503070700.ePiUr1E6-lkp@intel.com>
-References: <20250305152555.318159-3-ryasuoka@redhat.com>
+	s=arc-20240116; t=1741305519; c=relaxed/simple;
+	bh=UlwhL4IbOzjVCfiEuTleJhadOK/7RXehR63c0lmXxUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G3ox2q3Na9KGdfWiMRchsqD2sw671xRLt36eBoTKlWdoopLFXvp6sGkJpyFIZi2IooGCyTvLXXR44S8cYl4qaXZ5wxEj4f+0ZFdSO3SeuINoZTiBGU2tcMipEsBWKsDfdKKwdugmqt6TfBAZSsRCftOoDcb4oLd/Lnao5AWRtkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06F27169E;
+	Thu,  6 Mar 2025 15:58:49 -0800 (PST)
+Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D3D33F673;
+	Thu,  6 Mar 2025 15:58:34 -0800 (PST)
+From: Andre Przywara <andre.przywara@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/8] pinctrl: sunxi: Add Allwinner A523 support
+Date: Thu,  6 Mar 2025 23:58:19 +0000
+Message-ID: <20250306235827.4895-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.46.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305152555.318159-3-ryasuoka@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Ryosuke,
+Hi,
 
-kernel test robot noticed the following build errors:
+this is the fourth drop of the series introducing pinctrl support for the
+Allwinner A523 family of SoCs (comprising A523, A527, T527, H728). [1]
+This time only a small fix, spotted by Jernej, thanks for that. Also
+adding the new tags. Changelog below.
 
-[auto build test ERROR on e21cba704714c301d04c5fd37a693734b623872a]
+==============
+The first four patches extend the sunxi pinctrl core code to deal with
+some specialities of the new SoC: it uses every of the 11 possible banks
+except the first one, which required some register remapping. The first
+patch here is some cleanup, which we should take regardless, I think,
+since it fixes some hack we introduced with the D1 support.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryosuke-Yasuoka/vmalloc-Add-atomic_vmap/20250305-232918
-base:   e21cba704714c301d04c5fd37a693734b623872a
-patch link:    https://lore.kernel.org/r/20250305152555.318159-3-ryasuoka%40redhat.com
-patch subject: [PATCH drm-next 2/2] drm/virtio: Use atomic_vmap to work drm_panic in GUI
-config: i386-buildonly-randconfig-001-20250306 (https://download.01.org/0day-ci/archive/20250307/202503070700.ePiUr1E6-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250307/202503070700.ePiUr1E6-lkp@intel.com/reproduce)
+The main feature is actually patch 5, which introduces a new way to
+express the required pinmux values for each function/pin pair. 
+Traditionally, we dumped a rather large table of data into the (single
+image!) kernel for that, but this approach now puts that value into
+the DT, and builds the table at runtime. This patch was posted twice
+before [2][3], the last time LinusW seemed to be fine with the idea,
+just complained about the abuse of the generic pinmux property. I changed
+that to allwinner,pinmux now.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503070700.ePiUr1E6-lkp@intel.com/
+The rest of the patches are the usual suspects: the two files for the
+two pinctrl instances of the new SoC (now very small), and the DT
+binding.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+Based on v6.14-rc1. Please have a look, review and test!
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
->> ERROR: modpost: "drm_gem_atomic_get_pages" [drivers/gpu/drm/drm_shmem_helper.ko] undefined!
->> ERROR: modpost: "atomic_vmap" [drivers/gpu/drm/drm_shmem_helper.ko] undefined!
+Cheers,
+Andre
+
+[1] https://linux-sunxi.org/A523#Family_of_sun55iw3
+[2] https://patchwork.ozlabs.org/project/linux-gpio/cover/20171113012523.2328-1-andre.przywara@arm.com/
+[3] https://lore.kernel.org/linux-arm-kernel/20221110014255.20711-1-andre.przywara@arm.com/
+
+Changelog v3 .. v4:
+- fix mixed up POW_MOD_SEL registers
+- add review tags (with thanks!)
+
+Changelog v2 .. v3:
+- rename POW_MOD_SEL symbol
+- drop CCU binding header inclusion in DT binding example
+- add review tags (with thanks!)
+
+Changelog v1 .. v2:
+- rebased on v6.14-rc1
+- extend regulator array to cover PortK as well
+- increase number of pins in A523 PortJ from 18 to 28
+- extend comment for new pinctrl DT code
+- move DT binding into separate yaml file
+- Add Jernej's Reviewed-by (with thanks!)
+
+
+Andre Przywara (8):
+  pinctrl: sunxi: refactor pinctrl variants into flags
+  pinctrl: sunxi: increase number of GPIO bank regulators
+  pinctrl: sunxi: move bank K register offset
+  pinctrl: sunxi: support moved power configuration registers
+  pinctrl: sunxi: allow reading mux values from DT
+  dt-bindings: pinctrl: add compatible for Allwinner A523/T527
+  pinctrl: sunxi: Add support for the Allwinner A523
+  pinctrl: sunxi: Add support for the secondary A523 GPIO ports
+
+ .../allwinner,sun55i-a523-pinctrl.yaml        | 175 ++++++++
+ drivers/pinctrl/sunxi/Kconfig                 |  10 +
+ drivers/pinctrl/sunxi/Makefile                |   3 +
+ drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c     |   6 +-
+ drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c     |   8 +-
+ drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c |  54 +++
+ drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c   |  54 +++
+ drivers/pinctrl/sunxi/pinctrl-sun5i.c         |   8 +-
+ drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c     |   8 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     |   7 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c      | 374 ++++++++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  54 ++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |  47 ++-
+ 13 files changed, 758 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.46.3
+
