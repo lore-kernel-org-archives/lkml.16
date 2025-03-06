@@ -1,81 +1,124 @@
-Received: from out.smtpout.orange.fr (out-11.smtpout.orange.fr [193.252.22.11])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9D21624F2;
-	Thu,  6 Mar 2025 07:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9350118DB04
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 07:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741245358; cv=none; b=CmhltI8mBO4GJaoQkHJBUiGHN92CXNbS/ImGpWesL8n0TN3Dgu62n9wmrTe68P26pcv8+mDa3zfZjjB2r2SwyyivBxIVRmhoXxO0yEPhyX+7zzlw8wiVrr126Jh/MAKxUCWrlBmJCSyzF+o8zmwefdAnvS/RBjNzGyv6M9eEWRM=
+	t=1741245441; cv=none; b=DuRjxQlep0Bek6as+0rs3yg0cYYFcM7C2m5KFRzQMcLy4YoKmoU5cjsbDdJXUcQHSRzjD3PgqA5s06HfT7tSQ+ofdgcG5JH6SVmpNYXdUfx2nOYh77uhMvhG06cqIgaFFoQgAOL+H2ou3rYIADsSWfqbAHsp8olahj5OG+8j5Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741245358; c=relaxed/simple;
-	bh=0418C/W8KiV5zE5TlgyDvTR1gSi2KXM/MYdvecfDGyc=;
+	s=arc-20240116; t=1741245441; c=relaxed/simple;
+	bh=afJfrcTUwNndzGvYlL4g8anzka4FSLZnK67S70X21Kk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jU+NxziKVaMjIaXzYSMalYk4gxnPpIV3g3NJdnLDcidcVzDD6wKhiqFGfGZCh38VsxQMoh3jHYTP5LBtpx7V4bgkKpIZlEvYjvUUz4FT552BiEgsK6NT2HFfiU2zzEitmZh87zUgb5NVfeBGThJzkZs42nRTdKsa0arS/353wZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dBGq7ER/; arc=none smtp.client-ip=193.252.22.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 To:Cc:Content-Type; b=C4yUE5SR2GXj6pLlCVkP1HM9j+KyjRJUqx/zL7xdRpJ2FH/3BF/VWlVwRgbzW7VPPGWTRwj0/sD0w1nWmECh2HxgQwiVUw4Gz5XLIVxWMju/0ewPtptoHcL1nJUsBddbHoFSFhVo2jGe17+yfLrTsoRIYXwMXS+itCVw6eTBIac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ofYaGgme; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dBGq7ER/"
-Received: from mail-ej1-f48.google.com ([209.85.218.48])
-	by smtp.orange.fr with ESMTPSA
-	id q5SQtG4G098gkq5STtpo9o; Thu, 06 Mar 2025 08:15:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741245353;
-	bh=0418C/W8KiV5zE5TlgyDvTR1gSi2KXM/MYdvecfDGyc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=dBGq7ER/ePc0sqDdiH8H4DqqlDl14Pu6GoMdV6pvOLRmh0HlopF+rEXMaayouqhv4
-	 G9cosSX/eLUyVLDxrQQ/XIjT+wsmjr2papT0LVsgssPzMrBaObK0yfsEvjuIR4VayC
-	 WA/bSW8Axldy8fkct2bHKreKeR6BYpSPpal160SFjvoBVMFupJU/owooK0V1vkJydF
-	 an4skbMwF9hmruqciyuY7YgDPeQNUI6WNcqzpITdBPmvL1mS2+/x3tF26T9DGDVZNl
-	 dtNMQkONH9mUNxG7oUz1YgkOLImPBuEG81AJ3pd+adg2gEEqNIQi1k3YF409bs0Jwa
-	 79ib5s3sNARNQ==
-X-ME-Helo: mail-ej1-f48.google.com
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 06 Mar 2025 08:15:53 +0100
-X-ME-IP: 209.85.218.48
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaedd529ba1so48140166b.1;
-        Wed, 05 Mar 2025 23:15:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVe6T8nQS7BlVm4+tpqHYHr+sqV5m75w1DZ+hKOUl26svm2L69n+ZmwEfOtLEA8Kqv7q56sn0tSqus=@vger.kernel.org, AJvYcCWNAp9F8Pg/FTRTv+Ioq8oDi9UUeQvbI7Jnz3If1fdrwj18QpokiY0WK2qOgl6Mqwi72UVG2xX566tG9j9l@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwTH8m/aRyyizx8GGTdrn5En7xOCjTNzY6Gla2/Dm7V5NkiR4P
-	96nZgWlMGwbXZHsm5fm1f7Hnkh974Mk7H6gIshrMf0yx73YRZIeVaVSYYr2dYTSkYeT7lW34BAw
-	orvF594P2rUsFctuFIZfiy19sixE=
-X-Google-Smtp-Source: AGHT+IFm3MQS5dgUYs1J7ifAfjVQ57iJeI+pjUmHRcmb45bQF4uoMwgIZEif/LCb+H/9N+qRcChkDTYQ1VADoEncMp4=
-X-Received: by 2002:a05:6402:13cd:b0:5dc:74fd:abf1 with SMTP id
- 4fb4d7f45d1cf-5e59f3ee29amr14210055a12.15.1741245347074; Wed, 05 Mar 2025
- 23:15:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofYaGgme"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2237a32c03aso69835ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 23:17:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741245439; x=1741850239; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=klvvH1kgJs0DL3h7Oo378c2WlFSu+xBYIPROUcHihHA=;
+        b=ofYaGgmeLLS2phpqsyAQV1VQV/QBIpubaxwCAmVEkkJFkOPkiHLkwaE+dqTqkTyZwy
+         4X+IOzVFkM6OSmy5IMT76h3hrpUFzzzRTAEjnC/+3b7ATzdsoPkPc+x6TZrUucu7iDTu
+         BFJAT67c8Ut08un8YTP28X6KYca0md7ZyGPsMFUUts75YRfG2CFt6dj/gLUiKwolSzsV
+         LwRuYbfANQt47fy8KmbyJmwHkVCnUgGsPpNqK0cGOEdiW079wf/oVhQ8B8Qi0aL4sMT0
+         gwTbOO1S+2vu7IGxguV7/K4kDyHEeai9wBWzEnDeWfPwuuvtelB353sEro9lT24fUZ+b
+         zuuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741245439; x=1741850239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=klvvH1kgJs0DL3h7Oo378c2WlFSu+xBYIPROUcHihHA=;
+        b=I5BTcdMuu3m2FpakG4GlRSLZQwEjz2z25tZnbqsT4Af+hWEobeYk84tm1uEYe2sE3t
+         otodXNTtWPdCeqdXI/0OqHX/0UqSvMppM6BOn7gYHJpEbI4k1z7HLXWAz9xsQIqTWln2
+         u6bOrcvpPUgqxAVzWV8jD9cLfZGGOtk7WrghEOiFcqqsW3N+qk0NYepzuIaIAYuGQx7Y
+         cGUoXvqruoPl21r5DlYwmRSeOD7Tvu4zdWflweXyBENNy5UtZYWwhLu3JDlBmaDgZT/9
+         SFBiXecYrUViXYx3b/5HNEJi6d/BPqWd/8gubBdk49GeuVgbGFgSegbZ1VafYOxTorcZ
+         aNLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9b0O5KTpP49V3MDjxE9dJqlgoWcc2o2EpsEmy63Sa1HAamWXauhbQZVv2acOBhDyCq9brDj7T7+1vke4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws4mCqtF8LuBGhtDGSmqGwqpfi2f23BkuLMS3OE9t4/bqN89vU
+	H5cGIFDapgNuBPZBUC6ZahmrXDzv6TE2EL3LR2WgglL44RVmPGAzqM5iWWMJ5aSiBWSVfMmh/ZA
+	P9dRRQ+r0hE5z8Kj/qHJDZ4Na7c/D/uRRijLo
+X-Gm-Gg: ASbGncv6F5NKQlLskOo162cLnTUaSNbHkX81CHpyltwjTlh2wq9lfA7c/DYPtGGV/7r
+	8XkLeVU1RAC42fT8Jh7iqN9KaZgNG924vJ/0WJgvLQFH1V3wgpPd8DoRE2NynckGwmY5PU9gGqU
+	f/FKnnCWJbKVBGmIywTj/yrxnNJp0=
+X-Google-Smtp-Source: AGHT+IG1RI8BspnyGZOOKTSThi3cd0DexZtnopn5sTHOBG5TZxLsFjjcFgrXJI3oj8/gpVr0T6PbhwYLOG00b+Cm/uU=
+X-Received: by 2002:a17:902:e884:b0:223:7f8f:439b with SMTP id
+ d9443c01a7336-2240e4cb713mr1363285ad.29.1741245438515; Wed, 05 Mar 2025
+ 23:17:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306065921.2329517-1-haibo.chen@nxp.com> <20250306065921.2329517-2-haibo.chen@nxp.com>
-In-Reply-To: <20250306065921.2329517-2-haibo.chen@nxp.com>
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Date: Thu, 6 Mar 2025 16:15:35 +0900
-X-Gmail-Original-Message-ID: <CAMZ6RqLZNeTsmXkdxyUtiu016xuqbPeG1jyiE1WMPVNrhS=dAw@mail.gmail.com>
-X-Gm-Features: AQ5f1JrdIDM0fL-S0vORrvulswXM_f2Ms6biMDjYK9kiDkIB2GoOPzf_rtumh5Y
-Message-ID: <CAMZ6RqLZNeTsmXkdxyUtiu016xuqbPeG1jyiE1WMPVNrhS=dAw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] can: flexcan: disable transceiver during system PM
-To: haibo.chen@nxp.com
-Cc: mkl@pengutronix.de, ciprianmarian.costea@oss.nxp.com, han.xu@nxp.com, 
-	u.kleine-koenig@baylibre.com, linux-can@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev
+References: <20250305023120.155420-1-linux@treblig.org>
+In-Reply-To: <20250305023120.155420-1-linux@treblig.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 5 Mar 2025 23:17:07 -0800
+X-Gm-Features: AQ5f1Jo9VrctFJizPJWRd1IcYze4ewTJcAathfia1ysS5f1XFTZ17W_n1GsestQ
+Message-ID: <CAP-5=fUpqfWcQAi8231fdofZ-f_bOTi=t8sdLUenvvXjQ3OfGA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] perf: Deadcode - the P's
+To: linux@treblig.org
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, namhyung@kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu. 6 Mar 2025 at 15:58, <haibo.chen@nxp.com> wrote:
-> From: Haibo Chen <haibo.chen@nxp.com>
+On Tue, Mar 4, 2025 at 6:32=E2=80=AFPM <linux@treblig.org> wrote:
 >
-> During system PM, if no wakeup requirement, disable transceiver to
-> save power.
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 >
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Hi,
+>   This is another set of perf deadcode, this is my set
+> all starting with 'p'.  It was built on top of
+> perf-tools-next as of a few days ago (7788ad59d1d9).
+>
+> Dave
+>
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+>
+>
+>
+> Dr. David Alan Gilbert (6):
+>   perf core: Remove perf_event_attrs and perf_event_refresh
 
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+This will need to go into tip.git.
 
-For this series, I guess you want to add stable@vger.kernel.org in CC.
-Power saving seems worth a backport to me :)
-Marc, maybe you can take care of this when applying?
+>   perf util: Remove unused perf_color_default_config
+>   perf util: Remove unused pstack__pop
+>   perf util: Remove unused perf_data__update_dir
+>   perf util: Remove unused perf_pmus__default_pmu_name
+>   perf util: Remove unused perf_config__refresh
 
-Yours sincerely,
-Vincent Mailhol
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+>  include/linux/perf_event.h     | 10 ----------
+>  kernel/events/core.c           | 24 ------------------------
+>  tools/perf/util/color.h        |  5 -----
+>  tools/perf/util/color_config.c | 11 -----------
+>  tools/perf/util/config.c       |  6 ------
+>  tools/perf/util/config.h       |  1 -
+>  tools/perf/util/data.c         | 20 --------------------
+>  tools/perf/util/data.h         |  1 -
+>  tools/perf/util/pmus.c         | 29 -----------------------------
+>  tools/perf/util/pmus.h         |  1 -
+>  tools/perf/util/pstack.c       | 14 --------------
+>  tools/perf/util/pstack.h       |  1 -
+>  12 files changed, 123 deletions(-)
+>
+> --
+> 2.48.1
+>
