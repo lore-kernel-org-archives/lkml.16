@@ -1,118 +1,118 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638FF20967B;
-	Thu,  6 Mar 2025 09:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22516207DF8
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741251948; cv=none; b=NUikHsPUpX09/X9R3IzteJ2s/6VRx5uZXGvqP+MswBSIiHWq5FLBQ0WvKVxFJuFvhR7Hl+QenNwd+ED+knk2OpXz/WKv/lYyP5u+GnKWmjPh5THLEdZSYezs9DBqBdwEhhqE1hItuNdqe8JxIQZ5IrpLUJW4f3Eutsb9NcyzN0o=
+	t=1741252188; cv=none; b=S3b14coT0xnAH6mp5FvY9TJfNnklv596ngwiujYIX7tYxF/OiCE7e6JoPbRYQQ/MUfvng7ENxoJBVaqk4iVFOkcCnR4NSTwBbAQCQswRM+bRYBJ69dnxHCzX4PyTedxQflHSgsY79p+VJZPl4RCtj2hbV4j9juiNDS9HzudUHAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741251948; c=relaxed/simple;
-	bh=tBF7qxWzzza3ZW6Fbt/OJqSoYXdfOO97tMGgtm4bT6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F4ekfhXEpGXLiQWpukbcXeFnfQ34Vfz1Ot/qJS92UM8DNxDCsgLb2AhPskrXtp5OxaQ2/yx21TX+86d5zf4gkbiqNkxjji9ahX44KWaHI+xkXEodshY3n3n+4UOooccVSyJR8KgLeKUVPgQahe8Tg0f99F7SLra76TxGhGaU4Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLXJ068n; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741252188; c=relaxed/simple;
+	bh=x6I7LCwo+Avhb00YGNpsl7OnqLaXiIjRV7k9qsBtZn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lKY4Jxl+8Q45S00MF6Pn40OYFSBxVIrjq+bet5sWu8Oh8782+QM95iyA0cil0aU2oxKXSHFX56Xj0Bs/HL/j2KwdDM9pfjpl7qyhWHi1hAKI0eaIOGadYcczsJcJUWtYpqAabsNOmEALFpmOhUa+MqstMwiOulOakdJqauquQBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RyiFEy7n; arc=none smtp.client-ip=209.85.128.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLXJ068n"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e4f88ea298so641730a12.2;
-        Thu, 06 Mar 2025 01:05:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RyiFEy7n"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4394036c0efso2078745e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:09:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741251944; x=1741856744; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qF1a4xy5g06O2GkwhB05ytvAS2BqrA8TH0Jy33gZxiw=;
-        b=XLXJ068nQF617QcsTcy1UAF5lPxx3GnBfjfa+C36yU7rSvA4xLdLGIV98Dzg92NEub
-         Ke4Vsl9QQP3/hYA2lUpJxYpMzhUg6UzKCSuVoKcDueZHwz7k0gzA5j+lBrotssOAF+bY
-         Qo/+xo0UQPmC+ubkoY6uDJTaE6chnzu4+S8Ovpipd5Dvc0bhkDwo7sonT80+tbxpfovO
-         L71ZKmeTWkx5/JqZKdfTHG0CCior8j6rE3HND0Vvdyy/H4TmAPoHutJtYJb5MX986Ast
-         P96sYYDGA+3O8TQUaTyd/0t9u5fjDWW6ZZ2Sh0IZq7ItdhNiq8CvkJQEzl563vnlZwdo
-         V27A==
+        d=suse.com; s=google; t=1741252184; x=1741856984; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x6I7LCwo+Avhb00YGNpsl7OnqLaXiIjRV7k9qsBtZn0=;
+        b=RyiFEy7nRr/HTwiO/5ZTGuYoE+i/fh/1bDIFrTWy3YOPTA/QDGkx4dUWpeGBRKvkSd
+         GdSHtAfIYsZZ9J+m5I2D+D6TmrhhORxeap/n6ItbH5d9z4K1F4PnEoqnLtJR8i11dQ0o
+         /Pu7UUA73RJGQ44Z3IjfUpCRU+KpExKMGdnmLnk5e8cEzxrGcNpl31bueQC6uCaqsNQ/
+         OcLE8sEClHEkRAPduOwWmAzsSjjJ4Zjk3IJM1LZPFr8D6Afzr1wZ+vpdxe3mNMIsq/v7
+         Hq7Bw2z3vO8zdlzokl4pds4wW39YmG5AZXQJsvloZl2uXm/E+JH3npJAvDtx0FP8tQOU
+         d4Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741251944; x=1741856744;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qF1a4xy5g06O2GkwhB05ytvAS2BqrA8TH0Jy33gZxiw=;
-        b=t75E2Xs/JxKskRnREqvL10iIsbBEeGOJhQKHNCFrjf23WXAKef896ef/eSRagyLRao
-         vPAlpPy9eAHgcRUjrJy6D9+uGSk8lLFKf+SFKdywABkymsNhinURFtmOGi/wFeHeKaaC
-         9LRcvYFEVB8egXFwOkt/yBkQjR18JTdJps1JOp3MncfpdlQKVSOOn+BqBC0B6A5569HE
-         4kp4q+YKImyhM2KvrXo8vNOIv25JPjk4eXAFlPHNdnZhcrx2Sa2LilvOE9WaPCH8orzA
-         669J/9A3x8qU6Sp0BYr5iKUgAILsU3zb9oBDzRLAIsN3J8NxTNqX6LPl5ZY9hC0e8tro
-         2gqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUV1T8Ee4Ctcu6y+cwXmhWab8/azRdpmmISv0M5Ax9E+/M7CSA6Ox0p3w4tUby9SuGQduCZEg9Q@vger.kernel.org, AJvYcCUaod/z7+h4i9R453j8SDS5a/5WQv/eOn93pvRGsML6jy30ydvlwuHTjVlzIkdNaQ/NTx786i9/sUQlpfc=@vger.kernel.org, AJvYcCWNfPtdKKyJI5bndBiGngVofVobEkyGGh+g7pWBAfQExteY5Xj/yKyW5MnJGBC7rHWORaLFls/XAtXpZTxZuEIvKAdIeQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhQG3EqFJ/km3oC3xEwXWsaKN9Ti+zv0h2z980u7RK/NVqvYEt
-	XX9+IL+w+5wx7xt0PaRz+p0UYLOwtj6Ry9Qz42BbjtqOncd5CiEWgH3/5C42DAksiJg27T/caiV
-	zsouH53hrV1Ujvxj8VVPNmQV7ZqU=
-X-Gm-Gg: ASbGncsoxe8s33U1rOfaCFTrrxBBmX4W8O1FSbNfkfA8b+MV4ZRcqRWonHnSISsJbIC
-	yaVlb3WfqeVWXXdvyxA6EoqSSD8tvvirOL1E9kOIIbRmw7JBrOzmrMivvUKMMhswx5NR9WGchVE
-	9ENw3TWk0jjJzNwRHCww2uyYv94KqB
-X-Google-Smtp-Source: AGHT+IEZf+mByLmt2C5pECGvzvf9DNU4dvPx4rdt3aJSm/Ho3YYl4NaclXM6a/5zGcCuNqGotXObOzkukzSbT9Fj/lE=
-X-Received: by 2002:a17:907:2d21:b0:ac1:de84:dea1 with SMTP id
- a640c23a62f3a-ac20da878e7mr662880966b.43.1741251944175; Thu, 06 Mar 2025
- 01:05:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741252184; x=1741856984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x6I7LCwo+Avhb00YGNpsl7OnqLaXiIjRV7k9qsBtZn0=;
+        b=M/yQJjntezenctVd/zwF+KPs7yfwtIq00SYCnJU49D1sFyK/6+etyL1vl2nKo7ex9h
+         HlkvG8DnPaxfC0A3tyjqjLpB16YDYLQUVMm4MX7vobfZMj9JXM1+7Far8NUpYTewVE5o
+         pc82QbivXNfQJgDaWBEoWtdiqYeC+4E5EIodDjHD1Gmf0L+xu7f5H1lwNHFGP+g62gox
+         Fwonjo0oFg8y1oCJ76qEGhHnJqZgper4BE8M01VDC2ExmgOeFxK1qOioo/L5HcRZqyvg
+         FkeKfaGwRgf7NgO7g+5p6KtIvUhCaTl4L92qqU3aOcBzjZt5dEcykgGl/An5jlBKZfd7
+         bz1A==
+X-Forwarded-Encrypted: i=1; AJvYcCV1k0+7YPjvSvOK3SoOxEhmByzJYBJ4UuxhqHLifRlFc0YaCKf22pCFe62s5ZTEKxiubvm71BLnAcz1AnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbwoDOWQ4oRGGMP/qPCBHD1cQ9bOI8EiY4LkU7UlauXpBWqpmp
+	bvArT4t82z3zxsg1md7xcWdIORzlbhecj0dxopZtLJRUISAFIc9QfGD8nvR2TOc=
+X-Gm-Gg: ASbGncvILN1yRJbt5rERS0k1QANxPT6FM7ASguRdJlg+eZcIlxmQXxWWXRIsAggQxXJ
+	aetdMnx5e6d5ilTQVv4VUSHH61rzitOddLcute4uloMMrAfpqWJ5L6gwVJWQAwcICQ7BHEQailg
+	WZii2ig+/M4ZY3F5db+B64YEXbdoQvMS3VyJyrjtRg0KuF8Ifhv4C/MZbWEz2Cv4CuxSLX9ueda
+	ajiCMGPvENBV2xrk7HYeZOH8AhUe9bQgQAJDnIlZEy7IWC9QEkiZxmBweeZWY+Fz8UaqC3a4BLk
+	H2wFQN/kuvC15bFG4DaHLEkLCaP0t4jyfF764gQtWl8QN7c=
+X-Google-Smtp-Source: AGHT+IE20SfeQZTIROwzNnAwSpomgWzOj7kDG/AFPKSGBYaqpQAWmZKrf9xz0kYJLQXsIi86AmqWOQ==
+X-Received: by 2002:a05:600c:1c26:b0:439:9274:81db with SMTP id 5b1f17b1804b1-43bd292a806mr64639955e9.5.1741252184269;
+        Thu, 06 Mar 2025 01:09:44 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0194f2sm1405811f8f.54.2025.03.06.01.09.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 01:09:43 -0800 (PST)
+Date: Thu, 6 Mar 2025 10:09:41 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Eric W . Biederman" <ebiederm@xmission.com>, 
+	Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH 2/2] pid: Optional first-fit pid allocation
+Message-ID: <ajz3vdl7yqu6a7dtl6dpqm2ea6wfac2jovbx5zl54dw2g2a4ab@tgs4gq5hyim4>
+References: <20250221170249.890014-1-mkoutny@suse.com>
+ <20250221170249.890014-3-mkoutny@suse.com>
+ <20250306-esskultur-sitzheizung-d482c4a35f80@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
- <20250227121522.1802832-6-yong.liang.choong@linux.intel.com>
- <Z8lLm9Ze9VAx3cE_@surfacebook.localdomain> <601c88fb-8ec8-4866-a45d-f28dea6d9625@linux.intel.com>
-In-Reply-To: <601c88fb-8ec8-4866-a45d-f28dea6d9625@linux.intel.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 6 Mar 2025 11:05:08 +0200
-X-Gm-Features: AQ5f1JpWFPB7HB7xwoyOVydwoKV_kFgASdMk4fd6Z1W-9JCutpUYIBvLsaYm1DU
-Message-ID: <CAHp75VeOKbAsvSuf5+VQnGFmUcN92TNnR2eF1+70h3PjaMdMqA@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 5/6] net: stmmac: configure SerDes according
- to the interface mode
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>, 
-	Jose Abreu <Jose.Abreu@synopsys.com>, David E Box <david.e.box@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 6, 2025 at 10:39=E2=80=AFAM Choong Yong Liang
-<yong.liang.choong@linux.intel.com> wrote:
-> On 6/3/2025 3:15 pm, Andy Shevchenko wrote:
-> > Thu, Feb 27, 2025 at 08:15:21PM +0800, Choong Yong Liang kirjoitti:
-
-...
-
-> >> config DWMAC_INTEL
-> >>      default X86
-> >>      depends on X86 && STMMAC_ETH && PCI
-> >>      depends on COMMON_CLK
-> >> +    depends on ACPI
-> > Stray and unexplained change. Please, fix it. We don't need the depende=
-ncies
-> > which are not realised in the compile time.
->
-> The dependency on ACPI is necessary because the intel_pmc_ipc.h header
-> relies on ACPI functionality to interact with the Intel PMC.
-
-So, that header has to be fixed as ACPI here is really unneeded
-dependency for the cases when somebody (for whatever reasons) want to
-build a kernel without ACPI support but with the driver enabled for
-let's say PCI device.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jo3sx6jdjxyyuo56"
+Content-Disposition: inline
+In-Reply-To: <20250306-esskultur-sitzheizung-d482c4a35f80@brauner>
 
 
---=20
-With Best Regards,
-Andy Shevchenko
+--jo3sx6jdjxyyuo56
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 2/2] pid: Optional first-fit pid allocation
+MIME-Version: 1.0
+
+On Thu, Mar 06, 2025 at 09:59:13AM +0100, Christian Brauner <brauner@kernel.org> wrote:
+> I strongly disagree with this approach. This is way worse then making
+> pid_max per pid namespace.
+
+Thanks for taking the look.
+
+> I'm fine if you come up with something else that's purely based on
+> cgroups somehow and is uniform across 64-bit and 32-bit. Allowing to
+> change the pid allocation strategy just for 32-bit is not the solution
+> and not mergable.
+
+Here's a minimalist correction
+https://lore.kernel.org/r/20250305145849.55491-1-mkoutny@suse.com/
+
+
+Michal
+
+--jo3sx6jdjxyyuo56
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ8lmRwAKCRAt3Wney77B
+SVEQAQCv1kf8EBaRDF66bApU+yr8h9OYOK0rqy+iUFrGxAXfSgD/TWrBYLDNn9YJ
+LVkBPIKqH3tjY6+xjhd+d7lU6a/0Sg4=
+=1oAV
+-----END PGP SIGNATURE-----
+
+--jo3sx6jdjxyyuo56--
