@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41D42222CE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41332222C1
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260667; cv=none; b=VdfK3W8aOiTxtdAjfeF4DDjJmmVhm1OqRYI1G0n3hswFlPM7qyMSm5G0ZuTNAMf0sP0iliGfTf6DKDthmt1UqiNyMVWL9PyIPJeM6UvV7i36DK5D2TyeKy14Is/kquPkQituoGrC/zI7slGamlD6gxD8l62CFohQ25AaeOFBi2Y=
+	t=1741260667; cv=none; b=drZJaJezzCncKGxAEnhGQhSqyQTO3k58iCXNE/vrvwG6v7wnfnGJIJJWTKtLg//sbcnHxQ39CB1gXiHPABlr5sZZJe92DycWYZqrkzEhOvfVBE+31CHBemWbpozkbv8Pwgl9cfNvYmyPXMrcZAQEvWFUkeW/O61gAxVvLfJE0tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741260667; c=relaxed/simple;
-	bh=nswRbJg0534axjb88dgcnucQYVhi1rNjBxDjWoz+4sg=;
+	bh=JScz0TMKAGSf8jK8FVCMAWHGLNQQuW9+1Mg0FeL7qBY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UraH4OwgAqlQVmVXGhMLXpyQqnxc6zLAGqLzpFNe3bVZNkc4oJ5A6vSGAw9NjhB7Pu8b/m/lnKH2/bOpuWIrr/PsmLS2rYkGwfzmspa0Ahh85RLFPbUV0U7WW1jlO9SVYlO+Is36YrxSoJree4FFHvGC9jFj5SR6IiRGedY+N00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6Z/LqDY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=dKbg/WTTwlbwNPZXbmazNq7eOphhbX6SndWjKMr/MSnTDyiCuRxbe9O940PTqlaNu6pHex2V+1eGQbl4XmCfiAPbEvuXJe73wr07mMSG0cVY+loiGaVXG56g7aYeNOMWIlXnLZ2AQZltXTKaBMLGMWn8WuWwFviVHObvuXA9khg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFkaI+1w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6Z/LqDY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B4FCC4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFkaI+1w"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6762FC4CEF0;
 	Thu,  6 Mar 2025 11:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741260667;
-	bh=nswRbJg0534axjb88dgcnucQYVhi1rNjBxDjWoz+4sg=;
+	bh=JScz0TMKAGSf8jK8FVCMAWHGLNQQuW9+1Mg0FeL7qBY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=J6Z/LqDYN1zcrETwYMJoohVrou0m7VbhYwy09KG8AvYcgjT5n3PFlZbGOUgkDSSb4
-	 fkDzkrnWeMy5EyiLPma6ETmgdMmoB66RMWNNINCc8CEePoc2tTLMF0rL8ZaZsJqv8V
-	 Pqsaa3rLxMZR8lRuzklVIU/H4eNZDOMb36zU9fdPfkxtd2RD2WYiZMIMsDo3s9Vszd
-	 knYZyno8fGDo/2j2ZKjYN23DfDheOp3jE4crSzMAEurp8wypFOYXZ5iWRpWt8pxS9H
-	 G/uRiRQOT4jNHDXnq4pvq02d2bmIOTCVVzRhMnDbSPd+89S+hwdvgGzd85LOSOBIx+
-	 4GRf+/mm9zI9g==
+	b=sFkaI+1w2EcYJKPVl99w8WW9YASl8+GXSifRMXa4dRXIELseOPmiJHDMeoFPSr0Rf
+	 5UEJMgf7sBi7tQvkGltMLhSTtPNF6eWQHdB+0QGe09lOmLbxJTgkgQiDUckSp+u1FE
+	 IITcM7MRD9Mc5VtHCXfp2rhFTNFztxlAgDV12F5PhdYW3enGXAGI5dYZhyitJzo1CK
+	 86Mos14UGKdzHsW9DzV7nOBFWEschhOrmCeyzDsgLGqfu841jCy1S9VP8pvSHADRMx
+	 kf7oS/RKNPxs0g0HbumordWqaOA9drXg6zKKKOlsin5BjF1lsck41GEWWQQLfaV+tA
+	 bt0LVBsZ2BtfA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8142FC282D1;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4CBC282D1;
 	Thu,  6 Mar 2025 11:31:07 +0000 (UTC)
 From: Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org>
-Date: Thu, 06 Mar 2025 20:29:58 +0900
-Subject: [PATCH v5 7/7] test_bits: add tests for BIT_U*()
+Date: Thu, 06 Mar 2025 20:29:56 +0900
+Subject: [PATCH v5 5/7] test_bits: add tests for __GENMASK() and
+ __GENMASK_ULL()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250306-fixed-type-genmasks-v5-7-b443e9dcba63@wanadoo.fr>
+Message-Id: <20250306-fixed-type-genmasks-v5-5-b443e9dcba63@wanadoo.fr>
 References: <20250306-fixed-type-genmasks-v5-0-b443e9dcba63@wanadoo.fr>
 In-Reply-To: <20250306-fixed-type-genmasks-v5-0-b443e9dcba63@wanadoo.fr>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -58,13 +59,13 @@ Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
  Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1339;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1556;
  i=mailhol.vincent@wanadoo.fr; h=from:subject:message-id;
- bh=asAoSxIsd+6NgC+TDV5wEh4nM1LYuph2VqJY5OZYYVA=;
- b=owGbwMvMwCV2McXO4Xp97WbG02pJDOkn28uit0fOchL91THp8/2pV/2ZatYHPC/pu5WoLLzuq
- OS5RrXZHaUsDGJcDLJiiizLyjm5FToKvcMO/bWEmcPKBDKEgYtTACZiEsvwV9Lq43bev36PTq/U
- 28S76/Gz+Uf49G+sKPm5gDdLReyIUSrD/6T3j8zWV5iXfJwUN/2L1OH+B9t1fn1z3v9/13sNT/n
- Ms5wA
+ bh=lN5M+jT7BPUL1L2f+TXlK22h8uB9+ou65Ns8DPPWhbE=;
+ b=owGbwMvMwCV2McXO4Xp97WbG02pJDOkn2wuKWgILYv0TgmSDHq5d2ROlIS1iW8G85Oysze+5B
+ KzCJhd0lLIwiHExyIopsiwr5+RW6Cj0Djv01xJmDisTyBAGLk4BmMi8KIZ/RkZCkUkHex50vdS/
+ pHHvhtL7pw1z7v0NYtjD58rOPjNmD8M/6+e7+Lb8+c587ubvXZG2K3tslPunN87pybGe6f9b6P1
+ vTgA=
 X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp;
  fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
 X-Endpoint-Received: by B4 Relay for mailhol.vincent@wanadoo.fr/default
@@ -74,45 +75,51 @@ Reply-To: mailhol.vincent@wanadoo.fr
 
 From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
-Add some additional tests in lib/test_bits.c to cover the expected
-results of the fixed type BIT_U*() macros.
+The definitions of GENMASK() and GENMASK_ULL() do not depend any more
+on __GENMASK() and __GENMASK_ULL(). Duplicate the existing unit tests
+so that __GENMASK{,ULL}() is still covered.
 
 Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 ---
-Changelog
-
-  v4 -> v5:
-
-    - BIT_U8()/BIT_U16() are now back to u8/u16.
-
-  v3 -> v4:
-
-    - New patch.
----
- lib/test_bits.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ lib/test_bits.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/lib/test_bits.c b/lib/test_bits.c
-index 91968227687bb11b7d1361b153c27eb851c6c1c2..72984fae7b815031bb6eb2892c772ffcc409cf78 100644
+index c7b38d91e1f16d42b7ca92e62fbd6c19b37e76a0..dc93ded9fdb201e0d44b3c1cd71e233fd62258a5 100644
 --- a/lib/test_bits.c
 +++ b/lib/test_bits.c
-@@ -9,6 +9,16 @@
+@@ -7,6 +7,22 @@
+ #include <linux/bits.h>
  
- #define assert_type(t, x) _Generic(x, t: x, default: 0)
  
-+static_assert(assert_type(u8, BIT_U8(0)) == 1u);
-+static_assert(assert_type(u16, BIT_U16(0)) == 1u);
-+static_assert(assert_type(u32, BIT_U32(0)) == 1u);
-+static_assert(assert_type(u64, BIT_U64(0)) == 1ull);
++static void __genmask_test(struct kunit *test)
++{
++	KUNIT_EXPECT_EQ(test, 1ul, __GENMASK(0, 0));
++	KUNIT_EXPECT_EQ(test, 3ul, __GENMASK(1, 0));
++	KUNIT_EXPECT_EQ(test, 6ul, __GENMASK(2, 1));
++	KUNIT_EXPECT_EQ(test, 0xFFFFFFFFul, __GENMASK(31, 0));
++}
 +
-+static_assert(assert_type(u8, BIT_U8(7)) == 0x80u);
-+static_assert(assert_type(u16, BIT_U16(15)) == 0x8000u);
-+static_assert(assert_type(u32, BIT_U32(31)) == 0x80000000u);
-+static_assert(assert_type(u64, BIT_U64(63)) == 0x8000000000000000ull);
++static void __genmask_ull_test(struct kunit *test)
++{
++	KUNIT_EXPECT_EQ(test, 1ull, __GENMASK_ULL(0, 0));
++	KUNIT_EXPECT_EQ(test, 3ull, __GENMASK_ULL(1, 0));
++	KUNIT_EXPECT_EQ(test, 0x000000ffffe00000ull, __GENMASK_ULL(39, 21));
++	KUNIT_EXPECT_EQ(test, 0xffffffffffffffffull, __GENMASK_ULL(63, 0));
++}
 +
- static_assert(assert_type(unsigned long, GENMASK(31, 0)) == U32_MAX);
- static_assert(assert_type(unsigned long long, GENMASK_ULL(63, 0)) == U64_MAX);
- static_assert(assert_type(u8, GENMASK_U8(7, 0)) == U8_MAX);
+ static void genmask_test(struct kunit *test)
+ {
+ 	KUNIT_EXPECT_EQ(test, 1ul, GENMASK(0, 0));
+@@ -93,6 +109,8 @@ static void genmask_input_check_test(struct kunit *test)
+ 
+ 
+ static struct kunit_case bits_test_cases[] = {
++	KUNIT_CASE(__genmask_test),
++	KUNIT_CASE(__genmask_ull_test),
+ 	KUNIT_CASE(genmask_test),
+ 	KUNIT_CASE(genmask_ull_test),
+ 	KUNIT_CASE(genmask_u128_test),
 
 -- 
 2.45.3
