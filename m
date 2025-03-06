@@ -1,296 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA804201022;
-	Thu,  6 Mar 2025 12:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2532063C3;
+	Thu,  6 Mar 2025 12:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741262889; cv=none; b=JJ+eCO91/u9s61tQac6baKQ4HMvCqyIQL0xGJa6aiZC9mDhdwRdQJRBTrl6770iraDfmPjO/EAvU0pbo60Q3daSiAagLoGnZZqXJ6uXS+4JKM/cEjX+BO1Ye5EtcHqjWhaEbd3YZCsXidGaCiwR7ciWbtOoudJPDHmIZAJUvEu8=
+	t=1741262933; cv=none; b=isJaN+PphC79JCnb1iVj+WjYeNRLJK81Kv7jBWRgtHmIKW9D64O4fZyNFi8+lZ0wGWu2mZ+/A/WNvhTjool+rWbd1j+Y2C3wRs2nP3h08EnmbFizs8+liGsPExROrKwCoP8Ki8u4aZhhGBlESg1hnGGMLDkJYiZOhl/ekQAo32I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741262889; c=relaxed/simple;
-	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rUj1Y2T0Iys92+9oWAosZE8zjB+MhXHaXHBX5wZPWYEziNvfJPlw/PVkKsSiBmMyLfo1WOdcYCF5UGuZMa9TDn7drzS67DTG2ubVUhuOD4RhEWik8sB8bOumZgy/dof9JZpRAP1chYSimuNUvEsscZlFfLoDJIMdG89Xk3B2LFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvV2RCBU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741262933; c=relaxed/simple;
+	bh=b1eskB3+jKzke5mK6dNDmDwkkwAvYzKjmYaFDblRCQg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=VdH5G0SpL8xhUoYBtWHVrcITCe1Goc590OpbVMG/egXirVdJ54/QO0CS+FvZBc3PjvRDx8YyvUtahctvKpki3BRwMLH04wlpILZDLPoVcfYqRbRLEBLjVFFTDGWIQNr5uZfXNFkttrv/W+nRBHUGcdS/2OXq7TarGT1gVQmW23E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b3+eTU51; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8RFkdHVK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvV2RCBU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FEBC4CEE0;
-	Thu,  6 Mar 2025 12:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741262888;
-	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VvV2RCBUgyAKtcOzcBcQ5VFPIpjskYij2cFQ5yWi0x5ZLrpF+Mnxp7N2qmEYa2Vk1
-	 xSohKONmubqMjrN8NxTJmqY/D/G0gK0WRcZhDqNuB/x7MWNUWE1Qy9Gig6eE5tnvOs
-	 K0hTnpdpXV7ZKmN0ZfltaB+QpGBxLtQhw3stmLEu6ZWWZQJmNKhxOSbi4g2KaHJe9D
-	 NlWKTc6UvDfSWTL4tHTw06gv1rgabQgopMuUgiuQhoM7DKjyADNg7NZcaXZXrYzBC4
-	 PlPfxBkoRh0LIFk1S1LnSsUFh1tkiI9oRlqY8PWuni8zCJNjNcJnGmEW2ZEj02pcnQ
-	 NTf2WPVjgPQLA==
-Message-ID: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
-Subject: Re: [PATCH 2/2] NFSD: fix race between nfsd registration and
- exports_proc
-From: Jeff Layton <jlayton@kernel.org>
-To: Maninder Singh <maninder1.s@samsung.com>, chuck.lever@oracle.com, 
-	neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, 
-	lorenzo@kernel.org
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chungki0201.woo@samsung.com, Shubham Rana <s9.rana@samsung.com>
-Date: Thu, 06 Mar 2025 07:08:06 -0500
-In-Reply-To: <20250306092007.1419237-2-maninder1.s@samsung.com>
-References: <20250306092007.1419237-1-maninder1.s@samsung.com>
-		<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcas5p4.samsung.com>
-	 <20250306092007.1419237-2-maninder1.s@samsung.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b3+eTU51";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8RFkdHVK"
+Date: Thu, 06 Mar 2025 12:08:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741262929;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eXSrHbqvc85kekpt3M7gf4ybLOIxtP1viOdbImXDoUA=;
+	b=b3+eTU51nrv/wg46T3pE44H1OB8LhoyMmYnXdEHhsQn6ZBpMd0QL1ulHbLGPSGKkdwdlWg
+	CqtCs8JubCJ7Z4HEnV4ZtS1H8axiuBxyS4PuG+mMXzX504FsTSUi1/kWMJQWKm16wIbqjN
+	nzD4hbeQPt/t+UTGBzSlByHRmpoekqHRIX37ogHeG17FzbttgIrbA+u1Enyz+4JIL/1iic
+	/0hX+zCNSTB+CX2qyKlyG5B6Dnq0b29E4riGlaOApnMDFDknWfHPG7zl9hloTvFmzK6j1A
+	6eiDYL13OpLrOmYuupAmgScgHIx5p1JbromUt2rlcEfNiEZf9PRCBdWB4baOPA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741262929;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eXSrHbqvc85kekpt3M7gf4ybLOIxtP1viOdbImXDoUA=;
+	b=8RFkdHVKLP5LHTaPr+EcKa9mnWOEFTPAFLg2tV+7LFf6q7RlnWmZvO1GtOZJe9r6Rinx/J
+	RBKih3XvrbsciDCw==
+From: "tip-bot2 for Maksim Davydov" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] x86/split_lock: Fix the delayed detection logic
+Cc: Maksim Davydov <davydov-max@yandex-team.ru>,
+ Ingo Molnar <mingo@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250115131704.132609-1-davydov-max@yandex-team.ru>
+References: <20250115131704.132609-1-davydov-max@yandex-team.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <174126292877.14745.3765755603441311896.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-03-06 at 14:50 +0530, Maninder Singh wrote:
-> As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
-> and cleanup by remove_proc_entry() at last of exit_nfsd.
->=20
-> Which causes kernel OOPs if there is race between below 2 operations:
-> (i) exportfs -r
-> (ii) mount -t nfsd none /proc/fs/nfsd
->=20
-> for 5.4 kernel ARM64:
->=20
-> CPU 1:
-> el1_irq+0xbc/0x180
-> arch_counter_get_cntvct+0x14/0x18
-> running_clock+0xc/0x18
-> preempt_count_add+0x88/0x110
-> prep_new_page+0xb0/0x220
-> get_page_from_freelist+0x2d8/0x1778
-> __alloc_pages_nodemask+0x15c/0xef0
-> __vmalloc_node_range+0x28c/0x478
-> __vmalloc_node_flags_caller+0x8c/0xb0
-> kvmalloc_node+0x88/0xe0
-> nfsd_init_net+0x6c/0x108 [nfsd]
-> ops_init+0x44/0x170
-> register_pernet_operations+0x114/0x270
-> register_pernet_subsys+0x34/0x50
-> init_nfsd+0xa8/0x718 [nfsd]
-> do_one_initcall+0x54/0x2e0
->=20
-> CPU 2 :
-> Unable to handle kernel NULL pointer dereference at virtual address 00000=
-00000000010
->=20
-> PC is at : exports_net_open+0x50/0x68 [nfsd]
->=20
-> Call trace:
-> exports_net_open+0x50/0x68 [nfsd]
-> exports_proc_open+0x2c/0x38 [nfsd]
-> proc_reg_open+0xb8/0x198
-> do_dentry_open+0x1c4/0x418
-> vfs_open+0x38/0x48
-> path_openat+0x28c/0xf18
-> do_filp_open+0x70/0xe8
-> do_sys_open+0x154/0x248
->=20
-> Sometimes it crashes at exports_net_open() and sometimes cache_seq_next_r=
-cu().
->=20
-> and same is happening on latest 6.14 kernel as well:
->=20
-> [    0.000000] Linux version 6.14.0-rc5-next-20250304-dirty
-> ...
-> [  285.455918] Unable to handle kernel paging request at virtual address =
-00001f4800001f48
-> ...
-> [  285.464902] pc : cache_seq_next_rcu+0x78/0xa4
-> ...
-> [  285.469695] Call trace:
-> [  285.470083]  cache_seq_next_rcu+0x78/0xa4 (P)
-> [  285.470488]  seq_read+0xe0/0x11c
-> [  285.470675]  proc_reg_read+0x9c/0xf0
-> [  285.470874]  vfs_read+0xc4/0x2fc
-> [  285.471057]  ksys_read+0x6c/0xf4
-> [  285.471231]  __arm64_sys_read+0x1c/0x28
-> [  285.471428]  invoke_syscall+0x44/0x100
-> [  285.471633]  el0_svc_common.constprop.0+0x40/0xe0
-> [  285.471870]  do_el0_svc_compat+0x1c/0x34
-> [  285.472073]  el0_svc_compat+0x2c/0x80
-> [  285.472265]  el0t_32_sync_handler+0x90/0x140
-> [  285.472473]  el0t_32_sync+0x19c/0x1a0
-> [  285.472887] Code: f9400885 93407c23 937d7c27 11000421 (f86378a3)
-> [  285.473422] ---[ end trace 0000000000000000 ]---
->=20
-> It reproduced simply with below script:
-> while [ 1 ]
-> do
-> /exportfs -r
-> done &
->=20
-> while [ 1 ]
-> do
-> insmod /nfsd.ko
-> mount -t nfsd none /proc/fs/nfsd
-> umount /proc/fs/nfsd
-> rmmod nfsd
-> done &
->=20
-> So exporting interfaces to user space shall be done at last and
-> cleanup at first place.
->=20
-> With change there is no Kernel OOPs.
->=20
-> Co-developed-by: Shubham Rana <s9.rana@samsung.com>
-> Signed-off-by: Shubham Rana <s9.rana@samsung.com>
-> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> ---
->  fs/nfsd/nfsctl.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index d773481bcf10..f9763ced743d 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -2291,12 +2291,9 @@ static int __init init_nfsd(void)
->  	if (retval)
->  		goto out_free_pnfs;
->  	nfsd_lockd_init();	/* lockd->nfsd callbacks */
-> -	retval =3D create_proc_exports_entry();
-> -	if (retval)
-> -		goto out_free_lockd;
->  	retval =3D register_pernet_subsys(&nfsd_net_ops);
->  	if (retval < 0)
-> -		goto out_free_exports;
-> +		goto out_free_lockd;
->  	retval =3D register_cld_notifier();
->  	if (retval)
->  		goto out_free_subsys;
-> @@ -2307,12 +2304,17 @@ static int __init init_nfsd(void)
->  	if (retval)
->  		goto out_free_nfsd4;
->  	retval =3D genl_register_family(&nfsd_nl_family);
-> +	if (retval)
-> +		goto out_free_filesystem;
-> +	retval =3D create_proc_exports_entry();
->  	if (retval)
->  		goto out_free_all;
->  	nfsd_localio_ops_init();
-> =20
->  	return 0;
->  out_free_all:
-> +	genl_unregister_family(&nfsd_nl_family);
-> +out_free_filesystem:
->  	unregister_filesystem(&nfsd_fs_type);
->  out_free_nfsd4:
->  	nfsd4_destroy_laundry_wq();
-> @@ -2320,9 +2322,6 @@ static int __init init_nfsd(void)
->  	unregister_cld_notifier();
->  out_free_subsys:
->  	unregister_pernet_subsys(&nfsd_net_ops);
-> -out_free_exports:
-> -	remove_proc_entry("fs/nfs/exports", NULL);
-> -	remove_proc_entry("fs/nfs", NULL);
->  out_free_lockd:
->  	nfsd_lockd_shutdown();
->  	nfsd_drc_slab_free();
-> @@ -2335,14 +2334,14 @@ static int __init init_nfsd(void)
-> =20
->  static void __exit exit_nfsd(void)
->  {
-> +	remove_proc_entry("fs/nfs/exports", NULL);
-> +	remove_proc_entry("fs/nfs", NULL);
->  	genl_unregister_family(&nfsd_nl_family);
->  	unregister_filesystem(&nfsd_fs_type);
->  	nfsd4_destroy_laundry_wq();
->  	unregister_cld_notifier();
->  	unregister_pernet_subsys(&nfsd_net_ops);
->  	nfsd_drc_slab_free();
-> -	remove_proc_entry("fs/nfs/exports", NULL);
-> -	remove_proc_entry("fs/nfs", NULL);
->  	nfsd_lockd_shutdown();
->  	nfsd4_free_slabs();
->  	nfsd4_exit_pnfs();
+The following commit has been merged into the locking/core branch of tip:
 
+Commit-ID:     c85391793f4ef47ba5275c57aea7653ead92632f
+Gitweb:        https://git.kernel.org/tip/c85391793f4ef47ba5275c57aea7653ead92632f
+Author:        Maksim Davydov <davydov-max@yandex-team.ru>
+AuthorDate:    Wed, 15 Jan 2025 16:17:04 +03:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 06 Mar 2025 12:59:51 +01:00
 
-To make sure I understand, the race is that sometimes the exports
-interface gets created before the net namespace is set up, and then
-that causes GPFs when exports_net_open tries to access the nfsd_net?
+x86/split_lock: Fix the delayed detection logic
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+If the warning mode with disabled mitigation mode is used, then on each
+CPU where the split lock occurred detection will be disabled in order to
+make progress and delayed work will be scheduled, which then will enable
+detection back.
+
+Now it turns out that all CPUs use one global delayed work structure.
+This leads to the fact that if a split lock occurs on several CPUs
+at the same time (within 2 jiffies), only one CPU will schedule delayed
+work, but the rest will not.
+
+The return value of schedule_delayed_work_on() would have shown this,
+but it is not checked in the code.
+
+A diagram that can help to understand the bug reproduction:
+
+ - sld_update_msr() enables/disables SLD on both CPUs on the same core
+
+ - schedule_delayed_work_on() internally checks WORK_STRUCT_PENDING_BIT.
+   If a work has the 'pending' status, then schedule_delayed_work_on()
+   will return an error code and, most importantly, the work will not
+   be placed in the workqueue.
+
+Let's say we have a multicore system on which split_lock_mitigate=0 and
+a multithreaded application is running that calls splitlock in multiple
+threads. Due to the fact that sld_update_msr() affects the entire core
+(both CPUs), we will consider 2 CPUs from different cores. Let the 2
+threads of this application schedule to CPU0 (core 0) and to CPU 2
+(core 1), then:
+
+|                                 ||                                   |
+|             CPU 0 (core 0)      ||          CPU 2 (core 1)           |
+|_________________________________||___________________________________|
+|                                 ||                                   |
+| 1) SPLIT LOCK occured           ||                                   |
+|                                 ||                                   |
+| 2) split_lock_warn()            ||                                   |
+|                                 ||                                   |
+| 3) sysctl_sld_mitigate == 0     ||                                   |
+|    (work = &sl_reenable)        ||                                   |
+|                                 ||                                   |
+| 4) schedule_delayed_work_on()   ||                                   |
+|    (reenable will be called     ||                                   |
+|     after 2 jiffies on CPU 0)   ||                                   |
+|                                 ||                                   |
+| 5) disable SLD for core 0       ||                                   |
+|                                 ||                                   |
+|    -------------------------    ||                                   |
+|                                 ||                                   |
+|                                 || 6) SPLIT LOCK occured             |
+|                                 ||                                   |
+|                                 || 7) split_lock_warn()              |
+|                                 ||                                   |
+|                                 || 8) sysctl_sld_mitigate == 0       |
+|                                 ||    (work = &sl_reenable,          |
+|                                 ||     the same address as in 3) )   |
+|                                 ||                                   |
+|            2 jiffies            || 9) schedule_delayed_work_on()     |
+|                                 ||    fials because the work is in   |
+|                                 ||    the pending state since 4).    |
+|                                 ||    The work wasn't placed to the  |
+|                                 ||    workqueue. reenable won't be   |
+|                                 ||    called on CPU 2                |
+|                                 ||                                   |
+|                                 || 10) disable SLD for core 0        |
+|                                 ||                                   |
+|                                 ||     From now on SLD will          |
+|                                 ||     never be reenabled on core 1  |
+|                                 ||                                   |
+|    -------------------------    ||                                   |
+|                                 ||                                   |
+|    11) enable SLD for core 0 by ||                                   |
+|        __split_lock_reenable    ||                                   |
+|                                 ||                                   |
+
+If the application threads can be scheduled to all processor cores,
+then over time there will be only one core left, on which SLD will be
+enabled and split lock will be able to be detected; and on all other
+cores SLD will be disabled all the time.
+
+Most likely, this bug has not been noticed for so long because
+sysctl_sld_mitigate default value is 1, and in this case a semaphore
+is used that does not allow 2 different cores to have SLD disabled at
+the same time, that is, strictly only one work is placed in the
+workqueue.
+
+In order to fix the warning mode with disabled mitigation mode,
+delayed work has to be per-CPU. Implement it.
+
+Fixes: 727209376f49 ("x86/split_lock: Add sysctl to control the misery mode")
+Signed-off-by: Maksim Davydov <davydov-max@yandex-team.ru>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lore.kernel.org/r/20250115131704.132609-1-davydov-max@yandex-team.ru
+---
+ arch/x86/kernel/cpu/bus_lock.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
+index 6cba85c..97222ef 100644
+--- a/arch/x86/kernel/cpu/bus_lock.c
++++ b/arch/x86/kernel/cpu/bus_lock.c
+@@ -192,7 +192,13 @@ static void __split_lock_reenable(struct work_struct *work)
+ {
+ 	sld_update_msr(true);
+ }
+-static DECLARE_DELAYED_WORK(sl_reenable, __split_lock_reenable);
++/*
++ * In order for each CPU to schedule its delayed work independently of the
++ * others, delayed work struct must be per-CPU. This is not required when
++ * sysctl_sld_mitigate is enabled because of the semaphore that limits
++ * the number of simultaneously scheduled delayed works to 1.
++ */
++static DEFINE_PER_CPU(struct delayed_work, sl_reenable);
+ 
+ /*
+  * If a CPU goes offline with pending delayed work to re-enable split lock
+@@ -213,7 +219,7 @@ static int splitlock_cpu_offline(unsigned int cpu)
+ 
+ static void split_lock_warn(unsigned long ip)
+ {
+-	struct delayed_work *work;
++	struct delayed_work *work = NULL;
+ 	int cpu;
+ 
+ 	if (!current->reported_split_lock)
+@@ -235,11 +241,17 @@ static void split_lock_warn(unsigned long ip)
+ 		if (down_interruptible(&buslock_sem) == -EINTR)
+ 			return;
+ 		work = &sl_reenable_unlock;
+-	} else {
+-		work = &sl_reenable;
+ 	}
+ 
+ 	cpu = get_cpu();
++
++	if (!work) {
++		work = this_cpu_ptr(&sl_reenable);
++		/* Deferred initialization of per-CPU struct */
++		if (!work->work.func)
++			INIT_DELAYED_WORK(work, __split_lock_reenable);
++	}
++
+ 	schedule_delayed_work_on(cpu, work, 2);
+ 
+ 	/* Disable split lock detection on this CPU to make progress */
