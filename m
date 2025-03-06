@@ -1,192 +1,290 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C9138DE3
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 06:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741240917; cv=fail; b=dpTy3qu2JY6muStvx/9CkpSkGtRs6hAgYBaot6P14GNCE2OmUJEjLwpU6Dyu4wC+9bjbIQWI1dOu7RfixZ9UauwZB+TfiswinQEQGWVMJS3/GiTyqAmUsM+JZl8BQ+4Q04WyQlb59y+IHHuBQY/i3iqUmorKA/BcyczHwJ9BUlo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741240917; c=relaxed/simple;
-	bh=vkfvbpgAEEe0Ke/T/JikF7uJ0/zDH3GqQfBiW89Kizw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HK/kSLPnvtMoMizkibjASWUjpT1p/gO9u/y4nhQlf+sLi8P7HrDP/QtRT+z4oa1q6o8DifjXDrF0jc0QLrdnn76wIreNFkfxRraBAy5bDvO7RaF1TyFe+DduoKFlTqD+dxNJ12YgYkMP1fpTk9JgT+yKSkqCZG86KvVzYkGyT5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTI6ILkj; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B9536D
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 06:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741241157; cv=none; b=EnCXGizgBQ0+IzhBGq7FR+oBj0Zl9UWIQ737LyhuKVeVBXgJ59LE3ii2IPJPRkL9x/P0QbZ1RCyUr6+lWd/2SGumMe9WXsaqDFss8bhBD8jjzsutrk/OGwHft93sQZVYxDrhi1yOvoPVwUom+mIEIcRsdp7OHZqDUfhhQGvsG/A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741241157; c=relaxed/simple;
+	bh=isAglVlUHW5/henYHfaAflphOnRpORipo00NkYN+Z/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ROgPuY4vG64u9lQ9/QEcQcXXpYNFtpPrv1KFZ1ldJ6SWFogS+FevK7xgl+XWRzbi8whBw8dsDUViQRZUEimwszg5hxtk2tUf8WHbH+MEEW1wl/Gp8vKJq2oYjwGhhk7amOlxtuLz+9Eap9tRvGDKLWORJnYwUxSttcGZ1+psQzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDIKoKaE; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTI6ILkj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741240916; x=1772776916;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=vkfvbpgAEEe0Ke/T/JikF7uJ0/zDH3GqQfBiW89Kizw=;
-  b=OTI6ILkjZIABpiz8366KLzUUzYILae5/4ZoC9D7f//Gq4eRdeIOK7DpG
-   7SO9NB5p1ubJRwmLyCZ4kfQdIEEd50IfUDrH3ifZnAn3ITDJ5BkBJDS1P
-   YDLv5makIqIN5Iz/LkLpjaM1od4r1bO2gkKv4KT0Bp61WZ40+RiThsZR1
-   RTsTDzcq4V2+GYDZAeJeriodMCqWeH5uLZhiPrik/ceVPDoe/CzoqYK31
-   k4tLBEenBdqv8oleBd0OBw9r0VhVQPlCLYKy4Qi2MC3FO9o8GlBk8clXd
-   n/frNei1BTJ//r7gsxuHkkK/q4MN/lrpAwyMQwLxsUvDjw9Wct5XsUmpl
-   A==;
-X-CSE-ConnectionGUID: YmZ/kY7GTfCzGaWVgT2Hpg==
-X-CSE-MsgGUID: ev4qV1SuTamZsnhgO2K8rg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41409563"
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="41409563"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 22:01:55 -0800
-X-CSE-ConnectionGUID: FiFA/WmxRTCU9HZ0JQCDNA==
-X-CSE-MsgGUID: yrpZ+nXfT+OhuLVV5/762w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123065391"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 22:01:55 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 5 Mar 2025 22:01:55 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 5 Mar 2025 22:01:55 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Mar 2025 22:01:53 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Tf+fG25z5/htbJIB811+vhnpTNxdH7Njoh3EGj1lxtrV4d8BT/gEsjAp6cXccgoX5eZRRknvxJuNEEkUWRjMmr1hJSKbtjhtRfUOiXrbKZvsSS/y/uWHQokur4JaSfqDyj1s+QWNzLPe/duYyhgeM6Y6OWrA0Ze50BzbrGqHx8KC3Up2H58a96X8FcsTkrCDCFQNd5zpegWb/yXCUPaXS9MNDRhUadphDNbjLJNKGkG8tLtOZU+3OHyQbR1tOyb3gHpT0CQkfCFJ0P0jcs31BSDoq0o7tsHxiAtkMWdsS2Bz37Meu27aisKXD3WgyMhc0SzUg5sNascjxd2nrxuVwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vkfvbpgAEEe0Ke/T/JikF7uJ0/zDH3GqQfBiW89Kizw=;
- b=yucDCH2ln0PGmLmyaiBIbcDJUs4cu+lGKU/0oleL/yVYiYP2rekGomMoljsdW5CmPTjFUxtmTc7f2kDp7pF+l5OABzqI0yzwyoIeYYxUP4iqjBoUUOnQ0iydhh9UhSKa8KuOHHuJ40UG0V3DmHxmNNsVWa5zERs9KOHARDSCgxKfZRaqqBGLY+GQbtG2KtiFo2n7K5hX7s7ciiwkyPAMtcPcUkqpEMDbu0z872w3jJCVVsPfF7GGVMSaWNT8dcM4uuw3wY+8oZeSxOQp9usfl/DTfjlYEf7kJa6jZXtoh73XH4tyj/xmLGd3H1F/OTwn3B/LVn08JZbsYVtO0mF82w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by CH3PR11MB8706.namprd11.prod.outlook.com (2603:10b6:610:1d1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 06:01:51 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%6]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 06:01:51 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>
-CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 3/3] iommu: Drop sw_msi from iommu_domain
-Thread-Topic: [PATCH v3 3/3] iommu: Drop sw_msi from iommu_domain
-Thread-Index: AQHbjH5TCimyxm71bUuenjSkPehwbrNloVpA
-Date: Thu, 6 Mar 2025 06:01:51 +0000
-Message-ID: <BN9PR11MB5276F45A0E75831D0DB8BCF28CCA2@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <cover.1741034885.git.nicolinc@nvidia.com>
- <17eead28dcf8ae6b246471c05c2cf1eb0774236b.1741034886.git.nicolinc@nvidia.com>
-In-Reply-To: <17eead28dcf8ae6b246471c05c2cf1eb0774236b.1741034886.git.nicolinc@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|CH3PR11MB8706:EE_
-x-ms-office365-filtering-correlation-id: 98dbfd73-2d3b-4a25-96c9-08dd5c746372
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?7WKffw9YfBvSOl/Z9YDAIKEF/+qrWlybwvn382mf2h93xpGZujSNClByDri2?=
- =?us-ascii?Q?q7MzdZFo79C6ysF5E5IFRTtA/SU8sX2h8b61Qlz7/Ba3b8JWdI05FQgs0Qow?=
- =?us-ascii?Q?eKUCSh5n70FSOyOoz++MB6eVplWxg8o4rGBKPIcOPHC7WXSoJStrEG/1WbA+?=
- =?us-ascii?Q?FiyiAlKOD3la5LXuP7OMQwdP9AzNCM2bTyPQLp5yf9SmrZV6uUz+8lLFKxrI?=
- =?us-ascii?Q?WEKc1rLGRK62QHtMcAGrO2BlIh2kSbDX/7uLPdOfZ8VA3Orm2zhTys6n4q44?=
- =?us-ascii?Q?dAz51ALWtVO49rMkvoBhDLkvO07Ze45Fov5ptIDDCCGSzP2GsXlhHuJUQz9W?=
- =?us-ascii?Q?NYPaNAxX1691pExpy5uj5CrJ7X6DlDBQwVz1VyXyUFYxBGFZFcrZzRp/zzhn?=
- =?us-ascii?Q?cmXBJWvRDGz1LymLftsl+U3Xb9BjkBjDc1x8B3TOlsQCi13O9oU7izBgR8Z1?=
- =?us-ascii?Q?MuRPfaPfu7NzArpxjpTU3NAcRsidrabmUuEv+LPW7Jy/r/eZmgs47jHlX7o9?=
- =?us-ascii?Q?8375RKNCZ4CTz13i5sr03DQ9u5nJKgHu3tRVTRf2/DahUu05zIH1kU+snEUc?=
- =?us-ascii?Q?pFVS0rTPNjY0t2CcZX44hDPyVIyyhCXEbSyTv+3pTDDwGZ1eCaRpKMC/E1fv?=
- =?us-ascii?Q?AfP9MlcbuUrE8iKOpKIZzC4UxC/zxCi6C7qfrGoY+qhJ4MZOf64UUKpk8bL5?=
- =?us-ascii?Q?7RK2Od76DFFpncSxR9ElyyjNJiWx0cA3y7a76K2HaW/ejbnCPSY46SDWm3lm?=
- =?us-ascii?Q?Xq5wgmow16kZCbCzmzUX0dLruMkM2XRfXvIq0i0GNw3V9XjCa/MtbYM6qmA+?=
- =?us-ascii?Q?zIGC+6SGBuHb3S6Iqwcl/vk4YtYxIUc+wHSaxRJL1jFnIYpKcsNp1k/vb9r4?=
- =?us-ascii?Q?57ufRqFCioF8t3lfKRkPmzkNRk4DUeu/aXtLEBcEcMizniTj7OmV6z+otIvT?=
- =?us-ascii?Q?Ig9Lf933DhjllOlEa63AeVcxsu9YkQAqXqAO2TTA5tx0XBVzLMT5ONP6CHAu?=
- =?us-ascii?Q?0iSKFYBv75EjGSHYGwKfsmFiqAG2RDT+fYHZr6blC7DDkFbs0wNU7tUcTrlY?=
- =?us-ascii?Q?0nooDCmAM3lh1Z+j2Uchr2xaCVlqGvD6cSOHiKKbEyWBQnXl+KQlHPzjAfJZ?=
- =?us-ascii?Q?gPAo39h0vJfG4ua8LEB0CN6f2UZzeyTtuYDIPfl7NykfG7+MiUH1Mx6y0mzR?=
- =?us-ascii?Q?4SovzHYwN+rYCv/p6rJKJmo4O+/tGbHFbeY3OhD7tvNcVnBVE80G+BMQXEcK?=
- =?us-ascii?Q?2SPN1FWw4Oj67Usm9W0rXaBvLhNGl98wEJeBvwGPwfVf6NRoLA9CtK7EWI0Y?=
- =?us-ascii?Q?k74KeaZd6GuyuXErCaxR7l8p8AjQeDZ5dK6vkk8URk16FAQAsm91YcNbUBhf?=
- =?us-ascii?Q?wgXtacNLC672UqBO6j9NZf8hp0cMllRUGUeOGixV/0seIkyiWOemTe1F5PzS?=
- =?us-ascii?Q?gKzIaHuZmf8=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?5CfxlzEPisDyt+WqeKE7fu9WCOZvt1d1eUy+e89B68JU53gLSH4THZJ5bbJU?=
- =?us-ascii?Q?oiC66aiJYhNyr5Pm72ZvPDKhavJJJeA8GKQsfJ6pvGZ2KkbAzEF2RUIYpvtO?=
- =?us-ascii?Q?ZS91c0XMrS4zTPaViosIOB35mKvo6wXhOkQYMjtGuwL/GGDYNuS4W7P7B1+J?=
- =?us-ascii?Q?dxyWMhoko4ooMQ23STfoRKbNxo2XEWkxiNU+lBrm7eEIkwwZbQdfMIRt9Iu9?=
- =?us-ascii?Q?G2uG3K+Dq3Bj8M2sxtQDxvZwG5vQ0yxPF+ChEnQDiIEvssHgjSWWdt5uBHdo?=
- =?us-ascii?Q?Mbyf+/WlMyupZnhIBk1yPnJ7BR9QuuH3ijMAZoKxoZOqelUMupATiYVUc8oK?=
- =?us-ascii?Q?Fy7Fr3+u6FF7B56Rn+0Hmg8dClK0ZUJS1kReKSd437/lbFTrQRUa8jeEoH4Z?=
- =?us-ascii?Q?//w7SjVoN4QrffVGAMqjHHbjLMekd3jnQEJAIpImzizp1s08HHfPx0eMNaAl?=
- =?us-ascii?Q?0YXHCc6VCmU7mqITOOmDTAwVaK2QldAk+Rj3UpEiDMM2P0GU6j1aMSMkLmLj?=
- =?us-ascii?Q?dMlCG9Bp5VVqvt4IaUFMLvisyLj1PdFEriB8k672Dz7byAJClsR/oUk/B5HM?=
- =?us-ascii?Q?KUwRE2w+cv2xcKzX+mgn18zBI7wg6/nSDUYeQE966CWqT2OLgrSkC+6QukyZ?=
- =?us-ascii?Q?u2ZYxWstoaXRxt6XB2CMZUJqrybcv2jgtI1OLYqCXUyPDu8HSrYPjYEC2ZvV?=
- =?us-ascii?Q?N+KaD7Z06jjo4grvT+ygoCcCuTL+tYdzLJiGLHnsG4nN8PhzG3ObkActa5bz?=
- =?us-ascii?Q?vVcjzj7LTdbB2Wpfg0BmHMmGUzPfzHwdcX07yH8h5CggQhI1/WkyMruxZ11X?=
- =?us-ascii?Q?PBn84XtCRsKUNC6Jiaem4VELkXh+QZe+uWItIIGa+o4fGhuAvnoSZH9VMMny?=
- =?us-ascii?Q?WmZ+OIBhtnGZuUCNP5SyJFppLoMxfPvJLg5QD9xaeokQrLoEa+PxifMcpz+b?=
- =?us-ascii?Q?vmY5DhX9dWal/Y1W85AVd499T+7QojSZJ1mkcbou2rP3qmlsPuBk4BUAzHVW?=
- =?us-ascii?Q?rPxOPRFlbgMOC5Us9V3YcQ65VS1zpXqGDw/bjoEUM2Y4HXd7H5kbnhkT26eP?=
- =?us-ascii?Q?AJ9e8SXGOYEmYoYIhJ6Nyr1dbaXXS4EvnKTYcYnwNW7ioHKB52RaK6s1DKEO?=
- =?us-ascii?Q?yN2bmn+LXvuSQmpcM3JAwJmfv7yPXWLPUaEnl1VdMMOw3WYu+nVySM/pdCQE?=
- =?us-ascii?Q?8sIaJQXgMgZ8FrL1qO4nK/KUE831u/q+4pjz6e+Aw4ggHizHThl6WMOgRYlr?=
- =?us-ascii?Q?VTHlLmtp7CtVtvoqyssk0Ap7B1m8LHpszgAVEe1ZfjQGiXbzgpFEc3XxuMl8?=
- =?us-ascii?Q?GRJFGvB7ujRSyPmsLnrQ3FL4gOIy35PDih/SXZUXlkM75PuxFBf4n+7SWL+P?=
- =?us-ascii?Q?VH5+6LPy0n4Kg1hQEqWCelT00cC5z4F3/+IDaxgXj0zz2vaD7gDkjfukzilq?=
- =?us-ascii?Q?5KVzqmVbKDqkAOL96Ikj6R8sVmPJC32iI81eYXE7ZysKiiNHuQAoET+qwXgl?=
- =?us-ascii?Q?VuL0CLTgkts1P8KONFb0/gZdacIiYVze5loHaN/xK22sR3d6dqqKbhzqKzte?=
- =?us-ascii?Q?vVAZXVv0zcSproifhBpj7WptUmg2FFlJUDlwif88?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDIKoKaE"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223f4c06e9fso5255065ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 22:05:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741241155; x=1741845955; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UG9rqCcnNUyKo1EuZi4UaOq8qKj1OcWCXfP605i9OAs=;
+        b=BDIKoKaEgiQaQs/V8s6W5V5qnkj3anV+D4tp54pmyBMEJlcfQcDyHhbtx8Uu1EaODX
+         KOILd2b8lGNtywaR72Eg5TuVDPicSklC1xK+NrgsallYrWv+yloIi+de3qEjD21IKcY/
+         TIvt3aV3RquL/gbyGeh9JgwPGbpyW8beotM33VVkjWLFx8YsaYyd9qhOGkTDCwaU7YtY
+         PciNBuORtu0HatUsTELyXIrTWDjjV8u6cHrrlxI0DTBg6YjkuSXYAf/3xsVNKGezxARJ
+         llUPxhSIiqLCE+lsEz0Ooud2UOJ4uvy3pE+ES/YPH1L+N8MRUQhE6cAUtKxsUHHjfKyS
+         uD2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741241155; x=1741845955;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UG9rqCcnNUyKo1EuZi4UaOq8qKj1OcWCXfP605i9OAs=;
+        b=Mpx3vtjLk7QVFJ6H1+lcquuAumW8obeRxxeGL/CmCOUIc5Dh+AFEtwsK24/3MJpBe8
+         0Zv7Wv7xie5izmkEB9OaeZHJCLG9CAH/t6LWPawm2cy9JQPBVQfXRWD8LmYS+jDhWly+
+         hZ7QPw1AT+ilnCEcxVLopLQVBxCFln+zSQoBOEEl7eb6L6Em361t2XZdynKbyUxaJjmO
+         KuU5+Gb/8CxOzAuSzsBiYbENskE6jE28vIiNayJHk94OG+VZESSxI7nFqK1ivhdG0gLF
+         E2HQAS9uxKc/TWkPoMcj2ssUUsZJgNPDvqjA+h2cQqHFTrf8HNljqgzCo7m93zkPxxKW
+         FYGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTILqAId4CemwGKdqWtjz9K69+PNMBnzWenKps7fw699Tojdi7JQ2Gy0VMkePwlNNWcUKq5P6BB8kdClE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6cg6bRxMQ39qLLKea6jKfncZF9tX0AJSJvIId2dAe48ymkd/2
+	6csJt3thbbqB3/Nflfz9TGWHg/XwyLL9d4TTZQhGWYgSUe04JmqT
+X-Gm-Gg: ASbGncsfuvZDlviZ2hwijwiodRU8GhWVFQJk1MfErmZugf9L72BsOdaxIdRjZX3pd/1
+	4Y3pFU1n6LTYr2z4MlKPCpgGX7vrpvwlid5+zTsCNLE2LShsrWhFF0F6Q21uH496jP5tJbha/Hq
+	DO/oXbqemKnqB66APjtdomlYqq/KTdL6fM0DHrYCmjyUpEAuUJhwXFb6X7SRgzwx+GAbh28OIZs
+	gNEociTm8UMuPx5g4CWwolf9L4qWjJxGychgDq7PNpAYD2LtN7Brwpew2AGu9RDzitbYpJy0kA/
+	84y17ogA61mkMPe4W6xNYpyORLZOTRs5z/0yP85MU2A9pvdi3A==
+X-Google-Smtp-Source: AGHT+IFAxcTCstjfuF0X0c0N0+rKtDXjn9RJlyyZRr5yiQ9SzWxJAyoAMCJq23quMPQV96bX/TvZnA==
+X-Received: by 2002:a17:902:e84d:b0:215:a56f:1e50 with SMTP id d9443c01a7336-224093ffb90mr33605885ad.8.1741241154765;
+        Wed, 05 Mar 2025 22:05:54 -0800 (PST)
+Received: from EBJ9932692.tcent.cn ([43.129.202.66])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109de155sm4180865ad.27.2025.03.05.22.05.50
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 05 Mar 2025 22:05:54 -0800 (PST)
+From: Lance Yang <ioworker0@gmail.com>
+To: mhiramat@kernel.org
+Cc: akpm@linux-foundation.org,
+	anna.schumaker@oracle.com,
+	boqun.feng@gmail.com,
+	ioworker0@gmail.com,
+	joel.granados@kernel.org,
+	kent.overstreet@linux.dev,
+	leonylgao@tencent.com,
+	linux-kernel@vger.kernel.org,
+	longman@redhat.com,
+	mingo@redhat.com,
+	mingzhe.yang@ly.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	tfiga@chromium.org,
+	will@kernel.org
+Subject: Re: [PATCH 1/1] hung_task: show the blocker task if the task is hung on semaphore
+Date: Thu,  6 Mar 2025 14:05:42 +0800
+Message-ID: <20250306060542.56435-1-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250303152907.d61151bbdaf0b8a6a8f9978f@kernel.org>
+References: <20250303152907.d61151bbdaf0b8a6a8f9978f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98dbfd73-2d3b-4a25-96c9-08dd5c746372
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 06:01:51.0855
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n8rKk5RFBFHr7pWpGAH+so5gZOlPE88q2e8TGbACMfuoc3tCEGtab79DblRaZRc6cgQo65UQQNnMAxQ88DbguA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8706
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-> From: Nicolin Chen <nicolinc@nvidia.com>
-> Sent: Tuesday, March 4, 2025 4:53 AM
->=20
-> There are only two sw_msi implementations in the entire system, thus it's
-> not very necessary to have an sw_msi pointer.
->=20
-> Instead, check domain->private_data_owner to call the two implementations
-> directly from the core code.
+Hi Masami,
 
-s/private_data_owner/cookie_type/
+Could you give me a quick feedback before sending out the v2?
 
->=20
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+It seems unnecessary to make 'blocker' a union. I replaced 'struct mutex
+*blocker_mutex' with 'unsigned long blocker', as only one blocker is active
+at a time, IIUC ;)
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+The blocker filed can store both the lock addrees and the lock type, with
+LSB used to encode the type as you suggested, making it easier to extend
+the feature to cover other types of locks.
+
+Also, once the lock type is determined, we can directly extract the address
+and cast it to a lock pointer ;)
+
+---
+ include/linux/hung_task.h | 82 +++++++++++++++++++++++++++++++++++++++
+ include/linux/sched.h     |  2 +-
+ kernel/hung_task.c        | 15 ++++---
+ kernel/locking/mutex.c    |  8 +++-
+ 4 files changed, 99 insertions(+), 8 deletions(-)
+ create mode 100644 include/linux/hung_task.h
+
+diff --git a/include/linux/hung_task.h b/include/linux/hung_task.h
+new file mode 100644
+index 000000000000..569d2e579f36
+--- /dev/null
++++ b/include/linux/hung_task.h
+@@ -0,0 +1,82 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Detect Hung Task: detecting tasks stuck in D state
++ *
++ * Copyright 2025 Lance Yang <ioworker0@gmail.com>
++ */
++#ifndef __LINUX_HUNG_TASK_H
++#define __LINUX_HUNG_TASK_H
++
++#include <linux/bug.h>
++#include <linux/sched.h>
++#include <linux/compiler.h>
++
++/*
++ * @blocker: Combines lock address and blocking type.
++ *
++ * Since lock pointers are at least 4-byte aligned(32-bit) or 8-byte
++ * aligned(64-bit). This leaves the 2 least bits (LSBs) of the pointer
++ * always zero. So we can use these bits to encode the specific blocking
++ * type.
++ *
++ * Type encoding:
++ * 00 - Blocked on mutex        (BLOCKER_TYPE_MUTEX)
++ * 01 - Blocked on semaphore    (BLOCKER_TYPE_SEM)
++ * 10 - Blocked on rw-mutex     (BLOCKER_TYPE_RWMUTEX)
++ * 11 - Blocked on rw-semaphore (BLOCKER_TYPE_RWSEM)
++ */
++#define BLOCKER_TYPE_MUTEX      0x00UL
++#define BLOCKER_TYPE_SEM        0x01UL
++#define BLOCKER_TYPE_RWMUTEX    0x02UL
++#define BLOCKER_TYPE_RWSEM      0x03UL
++
++#define BLOCKER_TYPE_MASK       0x03UL
++
++#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
++static inline void hung_task_set_blocker(void *lock, unsigned long type)
++{
++	unsigned long lock_ptr = (unsigned long)lock;
++
++	WARN_ON_ONCE(!lock_ptr);
++	WARN_ON_ONCE(lock_ptr & BLOCKER_TYPE_MASK);
++	WARN_ON_ONCE(READ_ONCE(current->blocker));
++
++	WRITE_ONCE(current->blocker, lock_ptr | type);
++}
++
++static inline void hung_task_clear_blocker(void)
++{
++	WARN_ON_ONCE(!READ_ONCE(current->blocker));
++
++	WRITE_ONCE(current->blocker, 0UL);
++}
++
++static inline bool hung_task_blocker_is_type(unsigned long blocker,
++					  unsigned long type)
++{
++	WARN_ON_ONCE(!blocker);
++
++	return (blocker & BLOCKER_TYPE_MASK) == type;
++}
++
++static inline void *hung_task_blocker_to_lock(unsigned long blocker)
++{
++	WARN_ON_ONCE(!blocker);
++
++	return (void *)(blocker & ~BLOCKER_TYPE_MASK);
++}
++#else
++#define hung_task_set_blocker(lock, type)       do {} while (0)
++#define hung_task_clear_blocker()               do {} while (0)
++static inline bool hung_task_blocker_is_type(unsigned long blocker,
++					     unsigned long type)
++{
++	return false;
++}
++static inline void *hung_task_blocker_to_lock(unsigned long blocker)
++{
++	return NULL;
++}
++#endif
++
++#endif /* __LINUX_HUNG_TASK_H */
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 1419d94c8e87..f27060dac499 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1218,7 +1218,7 @@ struct task_struct {
+ #endif
+ 
+ #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+-	struct mutex			*blocker_mutex;
++	unsigned long			blocker;
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index ccd7217fcec1..f7fa832261c8 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -25,6 +25,10 @@
+ 
+ #include <trace/events/sched.h>
+ 
++#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
++#include <linux/hung_task.h>
++#endif
++
+ /*
+  * The number of tasks checked:
+  */
+@@ -98,16 +102,17 @@ static struct notifier_block panic_block = {
+ static void debug_show_blocker(struct task_struct *task)
+ {
+ 	struct task_struct *g, *t;
+-	unsigned long owner;
+-	struct mutex *lock;
++	unsigned long owner, blocker;
+ 
+ 	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
+ 
+-	lock = READ_ONCE(task->blocker_mutex);
+-	if (!lock)
++	blocker = READ_ONCE(task->blocker);
++	if (!blocker || !hung_task_blocker_is_type(blocker, BLOCKER_TYPE_MUTEX))
+ 		return;
+ 
+-	owner = mutex_get_owner(lock);
++	owner = mutex_get_owner(
++		(struct mutex *)hung_task_blocker_to_lock(blocker));
++
+ 	if (unlikely(!owner)) {
+ 		pr_err("INFO: task %s:%d is blocked on a mutex, but the owner is not found.\n",
+ 			task->comm, task->pid);
+diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+index 6a543c204a14..642d6398e0dd 100644
+--- a/kernel/locking/mutex.c
++++ b/kernel/locking/mutex.c
+@@ -42,6 +42,10 @@
+ # define MUTEX_WARN_ON(cond)
+ #endif
+ 
++#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
++#include <linux/hung_task.h>
++#endif
++
+ void
+ __mutex_init(struct mutex *lock, const char *name, struct lock_class_key *key)
+ {
+@@ -189,7 +193,7 @@ __mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
+ 		   struct list_head *list)
+ {
+ #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+-	WRITE_ONCE(current->blocker_mutex, lock);
++	hung_task_set_blocker(lock, BLOCKER_TYPE_MUTEX);
+ #endif
+ 	debug_mutex_add_waiter(lock, waiter, current);
+ 
+@@ -207,7 +211,7 @@ __mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter)
+ 
+ 	debug_mutex_remove_waiter(lock, waiter, current);
+ #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+-	WRITE_ONCE(current->blocker_mutex, NULL);
++	hung_task_clear_blocker();
+ #endif
+ }
+ 
+-- 
+
+Thanks,
+Lance
