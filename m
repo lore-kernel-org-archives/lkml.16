@@ -1,216 +1,119 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6ADBE46;
-	Thu,  6 Mar 2025 10:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E817E9;
+	Thu,  6 Mar 2025 10:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741255356; cv=none; b=B/rhY942xD6orGmnFG/EMhsInfvDw31dv2b665bxr6iC/RmgP3Eh/Cf927v/cheh5Guj13ZNWZi3CkfEGVAD7E3F33o8JqbjNI7Rnuomh3xKhgS2kv1+atUdgbMGCKM4CzxyQCL0EpTV+yutR3YdyzOJGT4QcoYrUMCl4xbjPvM=
+	t=1741255369; cv=none; b=JT6nlv560mQ5oPoOvWM1lKtMShgrRs0SYf96xWrXRHsEZbBMgbkw/jA7aTZH+q0bt0SIHCoFDKKnc0ia4xU8bZFhI9yMYVfr7mKSivDlRsK/ASLHXls16/geHZYqxIQ+iUXZro8KCqI5RdBQFsa9U07kE5HDuTA7S6Bm8inuPD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741255356; c=relaxed/simple;
-	bh=wTFlYBvJD+DPro0IJ6A0zpCSv+QG49I4vgkSUKda6Co=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fyus86SitiLNSdRYXfgirTrVk28VVDmR++xWEwYwA+GRWakjjEqwFU9Dote0sCA3nekFiq8dL26UBJKEhZGd1Nu8h+T6E86lnJnHCALO/3UsRS2ECqo4Q3aafNPQAiNe/tgcEHCqbehLNIrIKeXvIg2h1YslXpVD4pwbDkbdp4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fw3+OLQ9; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741255369; c=relaxed/simple;
+	bh=OAZkdZE40/RK0vqmcq/gMyMNTym8wcfE31sks6j2O4s=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=HkbWq+CyzyBj6qBf6hQuZX+1FSSa2O+4bezwxXxYRfm7X4nhNU0LiT02Jt9JXPUO3TTLklwACHbi4knKlcUDSV6ZwOtC4Ii0+/m5+0+GHK/eZlrVaU/5hVg2J0qMnDFtQ/4iRbFiBpzM1Lg6em8dOPA6xRBO5nJvc7qUGDaZbP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A2Pt+qUq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HJ7DtnuC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fw3+OLQ9"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-223a7065ff8so8978975ad.0;
-        Thu, 06 Mar 2025 02:02:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741255354; x=1741860154; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6C2R+19zIRVeliQUNh0n4zfR/ryo+Fy/zku5DukOZs=;
-        b=fw3+OLQ9h5wO9+PUdm5kJfjnviEHfpqRREeqzEvI6F1TRTFjquaQtPgmlWXMDCue2B
-         FR9SqS4yFXvqbZC0+vNm+36RSJU2kSNk9nWlOk1JQ0WPCGrC7UJ5ncIAf3kH8ISClED8
-         mg+bVTSqI3dqJtOMc0XQHIrnR0eLvYxHoE/2vVI9+k4tbMb8sXZ/0Gm4veWMf/iA99pX
-         o6ORt0zxDnsDv16pfoCFkI31XcrnPaBS79vcMz+WRSOzf6XS/W2C0opbX7gZKvH43FU+
-         bHYULK/nluGEQE5aYlTD1+dMG/ZF39bo0RNOlmGyAwZEVeE7ADSwHqhDDsKdMHI2w6qM
-         PrjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741255354; x=1741860154;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I6C2R+19zIRVeliQUNh0n4zfR/ryo+Fy/zku5DukOZs=;
-        b=sZuwvIiXpGqgsGvnY3zJ9iA516yL061uywpglT9skyHUDF24SqysVZd4JuOh671Y8X
-         IXVNo7q+7AvVTeYCwuoMBoNjg3w1xeaw04VtvvSjx573zQHi5eE09yQP0bpVwJ7OnRgD
-         AnZy03LYDjpjJf39Bp5DpIjv2ukY6CDrp1FNz1wl/a3yMTI4awTD4PCS1lQVzr6JwWhm
-         AhuU4FURViE99TUPLPUND8ZICCjNu3VECh1gOOk96PKsZmtcRVJBoqlrYVkhNIJ0VURL
-         c0dcwOLo350BB0+p3WcHR9Jq8P0kAvAwlQAlcrKNJ/rZs5+rfrySRDaVwhk/rahVu9sP
-         tQ2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVyaGViFgO+KkQ6r0zS5ayd6iLrPsOjXT/9e6a0KhH+WZRYht0iTVyCKhvAjOBn0sTeUZ8lzX/S@vger.kernel.org, AJvYcCWMsZRURKSfUUs0YsgWgqxCR4w+3fctLak9zs/ZrphZ0eAaFqqJ/6yc2c90yiW7pSeKIrMN10VWO/qJrgB0dzjl@vger.kernel.org, AJvYcCWjHe2jvthx/FALvb0xtBTeTkEH6ogv2j387L+MFalCbqQTi6UIMRixphsLapSuhPe4KEm9DtX8IztnoJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0Due2JMqdxNq1hOCw9pf6mQ8S0sqx+El2TWXTva1tJdv6N9xf
-	K9uXdNNi54G8E0/e9x5nqweRss3hm5+5ioN8NZIQUBrNBvFxhhf7
-X-Gm-Gg: ASbGnctI+ewAvBcOH6aVU/suQBhdyLdU9YGsEEjcnLmePoxgPSHu1ktjMmK2TErCMQK
-	rR49TXkBd8o+m9O4VN7ePRQM8Iuz2+e0OvPJUsBRe1SSzeemJ7UprTpFDH0TN1AG/XgVh6Gqqb0
-	4odBUwa/YrxYOwJQTOAaeP7+ys8OX8cawl4h4eThG0pluYvd5yt/MDpelOX8OXLwKL3sluM/Y2R
-	hPeGI+Zt7piMKMnv+HRQMPI7o6owgi/1DbR/e0SDxoXhRA97b1lT9Fa66AC6fZ3xbySgpsdvv8w
-	wwQrY7uHTjckreKoO4yo1P0wsMwnV8dYy8/H6iQDxhJGiWgP3g==
-X-Google-Smtp-Source: AGHT+IEQ/HT20nm25UhSyrBIvKEOt7us6r/8Uje5w1QgDMFkAlZcymJjjQmF/1bibHtRHpgmynXDZA==
-X-Received: by 2002:a05:6a21:8dc2:b0:1f0:e7a4:8f7c with SMTP id adf61e73a8af0-1f34959e143mr12555833637.36.1741255353853;
-        Thu, 06 Mar 2025 02:02:33 -0800 (PST)
-Received: from fedora ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af281075ec4sm848915a12.2.2025.03.06.02.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 02:02:33 -0800 (PST)
-Date: Thu, 6 Mar 2025 10:02:24 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Cosmin Ratiu <cratiu@nvidia.com>
-Cc: "razor@blackwall.org" <razor@blackwall.org>,
-	Petr Machata <petrm@nvidia.com>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"jv@jvosburgh.net" <jv@jvosburgh.net>,
-	"jarod@redhat.com" <jarod@redhat.com>,
-	Jianbo Liu <jianbol@nvidia.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"horms@kernel.org" <horms@kernel.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCHv4 net 1/3] bonding: move IPsec deletion to
- bond_ipsec_free_sa
-Message-ID: <Z8lysOLMnYoknLsW@fedora>
-References: <20250304131120.31135-1-liuhangbin@gmail.com>
- <20250304131120.31135-2-liuhangbin@gmail.com>
- <4108bfd8-b19f-46ea-8820-47dd8fb9ee7c@blackwall.org>
- <Z8hcFSElK7iF8u9o@fedora>
- <f9bf79aff80eae232bc16863aa7a3ea56c80069a.camel@nvidia.com>
- <Z8ls6fAwBtiV_C9b@fedora>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A2Pt+qUq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HJ7DtnuC"
+Date: Thu, 06 Mar 2025 10:02:42 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741255365;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ov/RgVd8BFaTCc1hKcQOXWF/eM4LTkT6SJ9nWenpqbk=;
+	b=A2Pt+qUqGGoVZtN5wUKBjdui4yVSHkO1qcP97irJ4x3srAKkl5ONYGWo8qIeDuaoSO3GtQ
+	1vV9D79QTj+bRSzCiZARLKuDV4CqJlBBa8UNANygpi++otelFGtIjvOr5Jm+lvW1eP+8Po
+	VgEipL7h5ONHyC8cljg0s1dWdnYNpJce4VkaWRVdEooQ2SfW6U18fBb+Iv06qn5ff3c6Cl
+	YOjABAuE8baevo1hnmpjGyutb8vzL8K9+cLt2vtLuDc6G4hBusy3tl7yFGC2Tc+qP7ppd2
+	8yEX94IKf4Q+B4BYsOSXmEWWb7rrQfz2q9JrIjOzcfiDEm+K8fe8ZofJrNNxlA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741255365;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ov/RgVd8BFaTCc1hKcQOXWF/eM4LTkT6SJ9nWenpqbk=;
+	b=HJ7DtnuCuPci4mU+xVXRkA3gAcWW6iSzFR5XL5p241vcWKzEnpFrapox1z70pqDOf40rTV
+	JLHoGbjMnwtOjFDg==
+From: "tip-bot2 for Shrikanth Hegde" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/rt: Update limit of sched_rt sysctl in
+ documentation
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250306052954.452005-3-sshegde@linux.ibm.com>
+References: <20250306052954.452005-3-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8ls6fAwBtiV_C9b@fedora>
+Message-ID: <174125536231.14745.5392833736932300438.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 06, 2025 at 09:37:53AM +0000, Hangbin Liu wrote:
-> > 
-> > The reason the mutex was added (instead of the spinlock used before)
-> > was exactly because the add and free offload operations could sleep.
-> > 
-> > > With your reply, I also checked the xdo_dev_state_add() in
-> > > bond_ipsec_add_sa_all(), which may also sleep, e.g.
-> > > mlx5e_xfrm_add_state(),
-> > > 
-> > > If we unlock the spin lock, then the race came back again.
-> > > 
-> > > Any idea about this?
-> > 
-> > The race is between bond_ipsec_del_sa_all and bond_ipsec_del_sa (plus
-> > bond_ipsec_free_sa). The issue is that when bond_ipsec_del_sa_all
-> > releases x->lock, bond_ipsec_del_sa can immediately be called, followed
-> > by bond_ipsec_free_sa.
-> > Maybe dropping x->lock after setting real_dev to NULL? I checked,
-> > real_dev is not used anywhere on the free calls, I think. I have
-> > another series refactoring things around real_dev, I hope to be able to
-> > send it soon.
-> > 
-> > Here's a sketch of this idea:
-> > 
-> > --- a/drivers/net/bonding/bond_main.c
-> > +++ b/drivers/net/bonding/bond_main.c
-> > @@ -613,8 +613,11 @@ static void bond_ipsec_del_sa_all(struct bonding
-> > *bond)
-> >  
-> >         mutex_lock(&bond->ipsec_lock);
-> >         list_for_each_entry(ipsec, &bond->ipsec_list, list) {
-> > -               if (!ipsec->xs->xso.real_dev)
-> > +               spin_lock(&ipsec->x->lock);
-> > +               if (!ipsec->xs->xso.real_dev) {
-> > +                       spin_unlock(&ipsec->x->lock);
-> >                         continue;
-> > +               }
-> >  
-> >                 if (!real_dev->xfrmdev_ops ||
-> >                     !real_dev->xfrmdev_ops->xdo_dev_state_delete ||
-> > @@ -622,12 +625,16 @@ static void bond_ipsec_del_sa_all(struct bonding
-> > *bond)
-> >                         slave_warn(bond_dev, real_dev,
-> >                                    "%s: no slave
-> > xdo_dev_state_delete\n",
-> >                                    __func__);
-> > -               } else {
-> > -                       real_dev->xfrmdev_ops-
-> > >xdo_dev_state_delete(real_dev, ipsec->xs);
-> > -                       if (real_dev->xfrmdev_ops->xdo_dev_state_free)
-> > -                               real_dev->xfrmdev_ops-
-> > >xdo_dev_state_free(ipsec->xs);
-> > -                       ipsec->xs->xso.real_dev = NULL;
-> > +                       spin_unlock(&ipsec->x->lock);
-> > +                       continue;
-> >                 }
-> > +
-> > +               real_dev->xfrmdev_ops->xdo_dev_state_delete(real_dev,
-> > ipsec->xs);
-> > +               ipsec->xs->xso.real_dev = NULL;
-> 
-> Set xs->xso.real_dev = NULL is a good idea. As we will break
-> in bond_ipsec_del_sa()/bond_ipsec_free_sa() when there is no
-> xs->xso.real_dev.
-> 
-> For bond_ipsec_add_sa_all(), I will move the xso.real_dev = real_dev
-> after .xdo_dev_state_add() in case the following situation.
-> 
-> bond_ipsec_add_sa_all()
-> spin_unlock(&ipsec->x->lock);
-> ipsec->xs->xso.real_dev = real_dev;
->                                            __xfrm_state_delete x->state = DEAD
->                                               - bond_ipsec_del_sa()
->                                                 - .xdo_dev_state_delete()
-> .xdo_dev_state_add()
+The following commit has been merged into the sched/urgent branch of tip:
 
+Commit-ID:     b1536481c81fb604074da799e4f2d2038a1663f7
+Gitweb:        https://git.kernel.org/tip/b1536481c81fb604074da799e4f2d2038a1663f7
+Author:        Shrikanth Hegde <sshegde@linux.ibm.com>
+AuthorDate:    Thu, 06 Mar 2025 10:59:54 +05:30
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 06 Mar 2025 10:21:31 +01:00
 
-Hmm, do we still need to the spin_lock in bond_ipsec_add_sa_all()? With
-xs->xso.real_dev = NULL after bond_ipsec_del_sa_all(), it looks there is
-no need the spin_lock in bond_ipsec_add_sa_all(). e.g.
+sched/rt: Update limit of sched_rt sysctl in documentation
 
+By default fair_server dl_server allocates 5% of the bandwidth to the root
+domain. Due to this writing any value less than 5% fails due to -EBUSY:
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 04b677d0c45b..3ada51c63207 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -537,15 +537,27 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
- 	}
+  $ cat /proc/sys/kernel/sched_rt_period_us
+  1000000
+
+  $ echo 49999 > /proc/sys/kernel/sched_rt_runtime_us
+  -bash: echo: write error: Device or resource busy
+
+  $ echo 50000 > /proc/sys/kernel/sched_rt_runtime_us
+  $
+
+Since the sched_rt_runtime_us allows -1 as the minimum, put this
+restriction in the documentation.
+
+One should check average of runtime/period in
+/sys/kernel/debug/sched/fair_server/cpuX/* for exact value.
+
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
+Link: https://lore.kernel.org/r/20250306052954.452005-3-sshegde@linux.ibm.com
+---
+ Documentation/scheduler/sched-rt-group.rst | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/scheduler/sched-rt-group.rst b/Documentation/scheduler/sched-rt-group.rst
+index 80b05a3..ab46433 100644
+--- a/Documentation/scheduler/sched-rt-group.rst
++++ b/Documentation/scheduler/sched-rt-group.rst
+@@ -102,6 +102,9 @@ The system wide settings are configured under the /proc virtual file system:
+   * sched_rt_period_us takes values from 1 to INT_MAX.
+   * sched_rt_runtime_us takes values from -1 to sched_rt_period_us.
+   * A run time of -1 specifies runtime == period, ie. no limit.
++  * sched_rt_runtime_us/sched_rt_period_us > 0.05 inorder to preserve
++    bandwidth for fair dl_server. For accurate value check average of
++    runtime/period in /sys/kernel/debug/sched/fair_server/cpuX/
  
- 	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
-+		spin_lock_bh(&ipsec->xs->lock);
-+		/* Skip dead xfrm states, they'll be freed later. */
-+		if (ipsec->xs->km.state == XFRM_STATE_DEAD) {
-+			spin_unlock_bh(&ipsec->xs->lock);
-+			continue;
-+		}
-+
- 		/* If new state is added before ipsec_lock acquired */
--		if (ipsec->xs->xso.real_dev == real_dev)
-+		if (ipsec->xs->xso.real_dev == real_dev) {
-+			spin_unlock_bh(&ipsec->xs->lock);
- 			continue;
-+		}
  
--		ipsec->xs->xso.real_dev = real_dev;
- 		if (real_dev->xfrmdev_ops->xdo_dev_state_add(ipsec->xs, NULL)) {
- 			slave_warn(bond_dev, real_dev, "%s: failed to add SA\n", __func__);
- 			ipsec->xs->xso.real_dev = NULL;
- 		}
-+		/* Set real_dev after .xdo_dev_state_add in case
-+		 * __xfrm_state_delete() is called in parallel
-+		 */
-+		ipsec->xs->xso.real_dev = real_dev;
- 	}
-
-The spin_lock here seems useless now. What do you think?
-
-Thanks
-Hangbin
+ 2.2 Default behaviour
