@@ -1,122 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2E98172A;
-	Thu,  6 Mar 2025 05:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3431619E98D
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 05:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741239043; cv=none; b=XAn9mZvH9QJS2WRUAcfRbEVeXxpol39jNQj3OsnR04XUGfDFkLV29+1MfKIjU7BfFd/Ohu+l/tVR5n8Axue+WEwUorpiCCprheU9oPD7J8n5CtqJhk0KtjKmoUuMNGzU9Z1EIGO+0dnjaaFozxsJfNRS9RISCURU9bbiV7bdKx4=
+	t=1741239046; cv=none; b=cl9hyo+3k77JLvt0QW81pbohVYSGtbtO2ItFMPTPmIo06d3EMssROFeCNKUBYSzp7bP3DZdH72NCkV3Ce4NYhFwmJwz/H4KKHMm/J/z1deEZWo8CgH7pEgPF5VKRj299gpriKhJgNyCIVBJWXM709rFX6PT/CkyimEVQiRL25ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741239043; c=relaxed/simple;
-	bh=21iO/G2bQw9K65JrUOqRRdhPgZGB06xxok6XVDEcObw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nc+df1CshBbfQuVwLWlbkvo1/K7jcaQGW+GxpylX77+ihQZKHM2VespxfHl4w+M9Lj3pFnppWL54RQG4AaF1brwm6CR94Vfimh7em2Ear1b6DDVRdbhIi6Mpxv3NX20W3u41ua9yl+FNOtLIjZperlIA6jd8Tj5RZnrgbx4t3GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QfMQ39WD; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741239046; c=relaxed/simple;
+	bh=V+qZrTq3XKqDR+h+jX0jXtqdThW85XNK/pxkTOR434Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LJvnY5f4g+JNW4VpaqPwJaOMRavaWCx5OPyhN9t9VAw0NsevVoQmliEi8UaaJS4dfuuF11c/PzeMPQSDNmTakYH7UKH0f2i0HY2192NXoGIypbS6px6Lai1YhhmVCKhw00k1xRqnQ78+skRAd3HhQysCMiyAFrSbxI8owsrJojI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Sk2zuA3d; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QfMQ39WD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741239041; x=1772775041;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=21iO/G2bQw9K65JrUOqRRdhPgZGB06xxok6XVDEcObw=;
-  b=QfMQ39WD5a8McPhxNMScQqh2EjquCC4+mOvHz477tLbSuxJnF9ip8jyu
-   wo+PzYmnZuPCC0xY3w9nQhbfl3DdCqTRxyMOJQ5FYDNeWk1rHhQOiEeC7
-   Wvk5aZrCEVTlFOEDkRC6juXKxGoG7HXBniALuoQMnTZQZ6plCBMFDh3Vr
-   MpbA7cWE1GJxVgZUdoXc40iQYdCvfW1Ew8I5b6S/V+qp07g1iv/NygYNv
-   UmPyDXBcN7fy4nvkF539u61+8D5XH7cxFzs9yyy+FvgzX7ENtlRE8z0/q
-   vjnV5Qm+gmxxlcg6CqNgrr97rm3nMuxMnkmERGn6o9HDvGSeCUTejftvq
-   A==;
-X-CSE-ConnectionGUID: Bwx920g8Q76UIYJvJY+8fw==
-X-CSE-MsgGUID: OPpfwte5TGGtEVoYW5Dtrg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42258846"
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="42258846"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 21:30:40 -0800
-X-CSE-ConnectionGUID: FOt1b/HPS/Kk/o/pTnuQsA==
-X-CSE-MsgGUID: F1Uayh3pT8GmKmLuuh1/nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="119602412"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 05 Mar 2025 21:30:37 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tq3oX-000MaE-2x;
-	Thu, 06 Mar 2025 05:30:33 +0000
-Date: Thu, 6 Mar 2025 13:29:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-rtc@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Inochi Amaoto <inochiama@gmail.com>, dlan@gentoo.org,
-	linux-kernel@vger.kernel.org,
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	sophgo@lists.linux.dev
-Subject: Re: [PATCH v12 2/3] mfd: sophgo: cv1800: rtcsys: New driver
- (handling RTC only)
-Message-ID: <202503061309.yjpOnrMo-lkp@intel.com>
-References: <20250302195205.3183174-3-alexander.sverdlin@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Sk2zuA3d"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525MNhEk000401;
+	Thu, 6 Mar 2025 05:30:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=diTIjZ+5K2ZYnlDKE
+	Z5q9v0N3zMw6ZPLbDxVEAmlZWI=; b=Sk2zuA3dn0GZcChpr1c9/npM2UPJhkU8u
+	nSVe+0GMdPC8J30MrpVKMRc2pGjimbv0oa5OdmGrbS1On77CULA9URgc4rMamnvd
+	7ewzS+ajq6Zxdvz26f7i9sg4JpXAjFqc9WcVpO0z4FiAVowUP4Qm1reslTp4VJxZ
+	Xz6tS8WurxCgBYe5o20zL3BlJ2dcp7nfnlLkuic9nB9eMj7XGY3BlsKD6nrSfy8p
+	Ek/NWbgVVVwoLCdTzCWX/xTSeB8AYzkecKbYGk+/WO78vV7KrLlYARpr4KrT7SMC
+	54JhFQ9qQmLEqSll5/uMfz1Ri/+STTVcofedtGWWnNF1tSgPIO9lA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 456pnavcjr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 05:30:23 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5265NN0B022526;
+	Thu, 6 Mar 2025 05:30:23 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 456pnavcjk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 05:30:23 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5265Ce4q020845;
+	Thu, 6 Mar 2025 05:30:22 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djnpxhr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 05:30:21 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5265UHUo50594236
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Mar 2025 05:30:17 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B073020049;
+	Thu,  6 Mar 2025 05:30:17 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7312B20040;
+	Thu,  6 Mar 2025 05:30:15 +0000 (GMT)
+Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.in.ibm.com (unknown [9.109.215.252])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  6 Mar 2025 05:30:15 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: juri.lelli@redhat.com, linux-kernel@vger.kernel.org
+Cc: sshegde@linux.ibm.com, mingo@kernel.org, peterz@infradead.org,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        vschneid@redhat.com, hbathini@linux.ibm.com, joelagnelf@nvidia.com
+Subject: [PATCH 2/2] sched/rt: update limit of sched_rt sysctl in documentation
+Date: Thu,  6 Mar 2025 10:59:54 +0530
+Message-ID: <20250306052954.452005-3-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250306052954.452005-1-sshegde@linux.ibm.com>
+References: <20250306052954.452005-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250302195205.3183174-3-alexander.sverdlin@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: R_dZG9f8LwN3Z9LG-d8ZrJZmQ8Clbmav
+X-Proofpoint-GUID: -no_t_MgLe0aMN-TiBa5_o_yNG9T442l
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-06_02,2025-03-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ phishscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=867
+ bulkscore=0 impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503060038
 
-Hi Alexander,
+By default fair_server dl_server allocates 5% of the bandwidth to the root
+domain. Due to this writing any value less than 5% fails due to -EBUSY.
 
-kernel test robot noticed the following build warnings:
+cat /proc/sys/kernel/sched_rt_period_us
+1000000
+$ echo 49999 > /proc/sys/kernel/sched_rt_runtime_us
+-bash: echo: write error: Device or resource busy
+$ echo 50000 > /proc/sys/kernel/sched_rt_runtime_us
+$
 
-[auto build test WARNING on lee-mfd/for-mfd-next]
-[also build test WARNING on abelloni/rtc-next linus/master lee-mfd/for-mfd-fixes v6.14-rc5 next-20250305]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Since the sched_rt_runtime_us allows -1 as the minimum, put this
+restriction in the documentation.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Sverdlin/dt-bindings-mfd-sophgo-add-RTC-support-for-Sophgo-CV1800-series-SoC/20250303-035433
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20250302195205.3183174-3-alexander.sverdlin%40gmail.com
-patch subject: [PATCH v12 2/3] mfd: sophgo: cv1800: rtcsys: New driver (handling RTC only)
-config: sh-allyesconfig (https://download.01.org/0day-ci/archive/20250306/202503061309.yjpOnrMo-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250306/202503061309.yjpOnrMo-lkp@intel.com/reproduce)
+One should check average of runtime/period in 
+/sys/kernel/debug/sched/fair_server/cpuX/* for exact value.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503061309.yjpOnrMo-lkp@intel.com/
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+---
+ Documentation/scheduler/sched-rt-group.rst | 3 +++
+ 1 file changed, 3 insertions(+)
 
-All warnings (new ones prefixed by >>):
-
->> drivers/mfd/cv1800-rtcsys.c:30:30: warning: 'cv1800_rtcsys_rtc_subdev' defined but not used [-Wunused-const-variable=]
-      30 | static const struct mfd_cell cv1800_rtcsys_rtc_subdev =
-         |                              ^~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/cv1800_rtcsys_rtc_subdev +30 drivers/mfd/cv1800-rtcsys.c
-
-    29	
-  > 30	static const struct mfd_cell cv1800_rtcsys_rtc_subdev =
-    31		MFD_CELL_NAME("cv1800-rtc");
-    32	
-
+diff --git a/Documentation/scheduler/sched-rt-group.rst b/Documentation/scheduler/sched-rt-group.rst
+index 80b05a3009ea..ab464335d320 100644
+--- a/Documentation/scheduler/sched-rt-group.rst
++++ b/Documentation/scheduler/sched-rt-group.rst
+@@ -102,6 +102,9 @@ The system wide settings are configured under the /proc virtual file system:
+   * sched_rt_period_us takes values from 1 to INT_MAX.
+   * sched_rt_runtime_us takes values from -1 to sched_rt_period_us.
+   * A run time of -1 specifies runtime == period, ie. no limit.
++  * sched_rt_runtime_us/sched_rt_period_us > 0.05 inorder to preserve
++    bandwidth for fair dl_server. For accurate value check average of
++    runtime/period in /sys/kernel/debug/sched/fair_server/cpuX/
+ 
+ 
+ 2.2 Default behaviour
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.3
+
