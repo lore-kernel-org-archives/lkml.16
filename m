@@ -1,120 +1,139 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67472040BD;
-	Thu,  6 Mar 2025 12:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C26199B8;
+	Thu,  6 Mar 2025 12:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741265309; cv=none; b=btUnTHwDiujNjI+QxMPgPX1jJFcEoRSPcKOHdXHiLohVuXjvUeexiNFiz3UDNo+SKIOfk5SmFdnh2p9cXD4rpVreJMidMHjI56Xwj3X9RiAsf4cMEnq/6TXsD/nryibxkzrr0tO+QWb3zDON3K1hVA4WC6CMd+ACkmBLWRjcKqQ=
+	t=1741265406; cv=none; b=RQdNcn1M0xDJvwFsjaKFWst1yh0oy62S0L8g8b+yNR+0kiffG9eDV7A5iuTMf+/eWjC5r1ktfwK/yqsR68PUgUbGi5lyuT3mLV9GJtxPvgGOlElzWHTt6ew7s9+KdnoUWGWVcYm2iX3ODLKh0Jox1hDBE9NTwCXgAon69yGEX30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741265309; c=relaxed/simple;
-	bh=ViLXaYDDh1JWsyMIsFtFXeNpOns6R2CWpAsph1iAvMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQN2EKPWXMTgHCvG89V9exKXcywk4D150l3eiMD9gk9+2yDhgWjrhA/KvTxav8vHktSXEfNrOf79HphGePsuCSo+NUs+2iE7UefAXHbgKtqUhF7XteGYGtIhNhmkARY0SjLiFiopa3XTxsQIU6r0Kf6UJiYAKkFzL29Q6fbMFlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=CxxAsc2m; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1741265406; c=relaxed/simple;
+	bh=a+G/Y7rybmvz3hjYnOqJRpDSsIxprsBLD30qBcYSPtk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rXck9/IRfVBb2DsoTXvb9qo65WtdO8v24VCEMTdkroPTYstWg5Miy+9fsVE5W1cM9YRbtrCAYCGv4reTkJWlEjgyw5QFfbr4u2DdMFt5jsKy77XCSfomjrcASavnd7fxqpffmmL64HWMx/oyf7GE0nX3JMEOCfiM1RLj3zXV4JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwP9XRNs; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CxxAsc2m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+DzXmk4dFbeO+m8INiuwLYdFt5umLSVckqHmHFprSKg=; b=CxxAsc2me4QVCsLdkb0TVQu/h+
-	R9lAsFcYFiT7hXeI1jTEY5Uu58JXIQjI3gtjpM+pgssnH97R7qM9eahOg2aZPqHkH8tWttXmwvKmt
-	12Tc0Fgpt8cCB9suT7loDaMO3O3+7xHS/UIW72QUAE2quCTqsvRmgGoaLrOzD0WFxvtumRDY5+5OA
-	+p+q99J6JRgZ0nngzpfFEIHB3pXGInsxjScLQd02zDVYMpSh0wK/yon0/5m8+/w7E7nLIMCt28zMA
-	ghSe+sBkFss3w2hxOhxiJSePMHyU5+ma38K79kcOC8t/GszICm62dUH2h3oQtVG3PxuK07YK+Cwt2
-	1adcMuyw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40594)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tqAeA-0005rj-0H;
-	Thu, 06 Mar 2025 12:48:18 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tqAe5-0006no-2J;
-	Thu, 06 Mar 2025 12:48:13 +0000
-Date: Thu, 6 Mar 2025 12:48:13 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v4 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-Message-ID: <Z8mZjabeITVg1Khg@shell.armlinux.org.uk>
-References: <20250303090321.805785-1-maxime.chevallier@bootlin.com>
- <20250303090321.805785-10-maxime.chevallier@bootlin.com>
- <20250304154330.6e00961b@fedora.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwP9XRNs"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso3641825e9.0;
+        Thu, 06 Mar 2025 04:50:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741265403; x=1741870203; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a+G/Y7rybmvz3hjYnOqJRpDSsIxprsBLD30qBcYSPtk=;
+        b=fwP9XRNsv2pplL/C9J5oSMdflSeYlC1verlv4BfM1K+Ydruw8J/SPLt9zrWsQsM1AU
+         RTLGFRrqz0qtk4Abaang10QRbp5SZldM2b7tr/JmcmRuk6MLpKfqD44IGfmdU+UtQWHq
+         +tIQV7NeU90QVjGN5s5xtM+EtbVRY2Zrm8O3xid3tkpa0/qAREq71wb6z3YUTaF8VCt3
+         8QWpcUxbmbPmnDL/reyVjakj/KesPprmUFtjK/qbCYI8m0iOtLZdNQXlH1FtEzEL143l
+         qCcVFxkEvtksm0wSdOAp9SSTKI3kC+3W8Pm2PkkWTuAaoL65Hdvho6NhVVbvYPjOWD1Z
+         OgOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741265403; x=1741870203;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a+G/Y7rybmvz3hjYnOqJRpDSsIxprsBLD30qBcYSPtk=;
+        b=XJ0O+g7vlByiDncRyn3n8VsxKPUugdCAn1cFVTyhxyTzlwlEWGeVySTsDwFwd2P2UM
+         YpdWs1w5H0yRiiARPb+iarw3zxygQotp+xFTZQu9+bGybIM9dS95x/GzWj2xzaaYhNwl
+         Qo0NqVjovm/wLCHq+cjhf3hnLqdxJdaCU630YkNVLk5yBsyWDfeoe2fQvFJBgeKLFpf1
+         Zy9393e1i7eNXl+yMKD1W7U2/I33yJTn2O8+9u7wJ8J2Kh22e7bIEJlSTk9t9mYRdNpL
+         5yF//lkiT/QVXAUhFEyKpSRlNn+LMCKCZ7DsKii0Cu4eCi/XQqD3L7xsu4UhjX8N8s7p
+         BLQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+hsF0a4hbOZuwTmTXFxt+ixtphvZGOqweEZRnClOiT2nv3nXN+nccnc4c/GAl4pY8X1IDLwyV7gpsgoM=@vger.kernel.org, AJvYcCXG0GzfgTdPYCsGZ+j8qVmHdBerCexMgxLrGKHZ5UXsaEq+HsZ1lr17b0fglas45A5xoLUGpYXI2WNIZA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfr1GmaLnDQTm+v1dVMK+METFlJtUJiUhUxnGBu1KoUoRpPvx8
+	PzK8k/pklWYBgq4k4sFB6hfdBD6WAHLX/yLm7wz3J54gCN9K7INw
+X-Gm-Gg: ASbGncvOnrcjZYxHFHZrlFix/o1l7oXel8/CxEMfn/ZHoz7UnLn+vEsvIZH22bKMvaT
+	yvF1zqtgxWRNuBN5woHNHIGgMyxT3GtWN93B0x9xHGOomsY9Yo2NwuAPt/Mmlf7fKaDtbAVewhJ
+	zQ6xrG7Y8bDrGweIo/xE0VznVlT18DUfHpElX/OYopivTQTDi19lKdavX4oOBVS3jsYngCs50r8
+	fRFdGvY8+NGpTijqe1Hydxj7ANc18LZmrAAiQ6+R+uwMialZAVylClk7BlIOoDCl9j6psuEHKl4
+	N+UTbGUyPOlpUq7UhBweTKR1dgRGWV2tgNodUJhfkJonWa4=
+X-Google-Smtp-Source: AGHT+IFYKvawQX/rJxkDeqK1TzC/LaGCItw/YHf/7XxfirminJCWvuPVTfeFgRwzh42P3STp9OX4xg==
+X-Received: by 2002:a05:600c:548f:b0:43b:c0fa:f9bc with SMTP id 5b1f17b1804b1-43bd29c75famr57613835e9.12.1741265402883;
+        Thu, 06 Mar 2025 04:50:02 -0800 (PST)
+Received: from [10.176.235.56] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e2bb7sm1961888f8f.63.2025.03.06.04.50.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 04:50:02 -0800 (PST)
+Message-ID: <bd2e01d8b33413655a4215221c910eaf2cdf6461.camel@gmail.com>
+Subject: Re: [PATCH] ufs: core: bsg: Add hibern8 enter/exit to
+ ufshcd_send_bsg_uic_cmd
+From: Bean Huo <huobean@gmail.com>
+To: Arthur Simchaev <arthur.simchaev@sandisk.com>,
+ martin.petersen@oracle.com,  quic_mapa@quicinc.com, quic_cang@quicinc.com
+Cc: avri.altman@sandisk.com, Avi.Shchislowski@sandisk.com, 
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, bvanassche@acm.org
+Date: Thu, 06 Mar 2025 13:50:01 +0100
+In-Reply-To: <20250304114652.210395-1-arthur.simchaev@sandisk.com>
+References: <20250304114652.210395-1-arthur.simchaev@sandisk.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304154330.6e00961b@fedora.home>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Mar 04, 2025 at 03:43:30PM +0100, Maxime Chevallier wrote:
-> On Mon,  3 Mar 2025 10:03:15 +0100
-> Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
-> 
-> > When phylink creates a fixed-link configuration, it finds a matching
-> > linkmode to set as the advertised, lp_advertising and supported modes
-> > based on the speed and duplex of the fixed link.
-> > 
-> > Use the newly introduced phy_caps_lookup to get these modes instead of
-> > phy_lookup_settings(). This has the side effect that the matched
-> > settings and configured linkmodes may now contain several linkmodes (the
-> > intersection of supported linkmodes from the phylink settings and the
-> > linkmodes that match speed/duplex) instead of the one from
-> > phy_lookup_settings().
-> > 
-> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> > ---
-> 
-> Maybe before anything goes further with this patch, I'd like to get
-> some feedback from it on a particular point. This changes the linkmodes
-> that are reported on fixed-link interfaces. Instead of reporting one
-> single mode, we report all modes supported by the fixed-link' speed and
-> duplex settings.
 
-This is a good question. We have historically only used the baseT link
-modes because the software PHY implementation was based around clause
-22 baseT PHYs (although that doesn't support >1G of course.)
+Arthur,=20
 
-The real question is... does it matter, to which I'd say I don't know.
-One can argue that it shouldn't matter, and I think userspace would be
-unlikely to break, but userspace tends to do weird stuff all the time
-so there's never any guarantee.
+At present, we lack a user-space tool to initiate eye monitor
+measurements. Additionally, opening a channel for users in user land to
+send MP commands seems unsafe.
 
-> The fixed-link in question is for the CPU port of a DSA switch.
-> 
-> In my opinion, this is OK as the linkmodes expressed here don't match
-> physical linkmodes on an actual wire, but as this is a user visible
-> change, I'd like to make sure this is OK. Any comment here is more than
-> welcome.
 
-Maybe Andrew has an opinion, but I suspect like me, it's really a case
-that "we don't know".
+Kind regards,
+Bean
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+On Tue, 2025-03-04 at 13:46 +0200, Arthur Simchaev wrote:
+> Eye monitor measurement functionality was added to the M-PHY v5
+> specification. The measurement of the eye monitor signal for the UFS
+> device begins when the link enters the hibernate state.
+> Hence, allow user-layer applications the capability to send the
+> hibern8
+> enter command through the BSG framework. For completion, allow the
+> sibling functionality of hibern8 exit as well.
+>=20
+> Signed-off-by: Arthur Simchaev <arthur.simchaev@sandisk.com>
+> ---
+> =C2=A0drivers/ufs/core/ufshcd.c | 10 ++++++++++
+> =C2=A01 file changed, 10 insertions(+)
+>=20
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 4e1e214fc5a2..546ab557a77c 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -4366,6 +4366,16 @@ int ufshcd_send_bsg_uic_cmd(struct ufs_hba
+> *hba, struct uic_command *uic_cmd)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0goto out;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> =C2=A0
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (uic_cmd->command =3D=3D UI=
+C_CMD_DME_HIBER_ENTER) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0ret =3D ufshcd_uic_hibern8_enter(hba);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0goto out;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (uic_cmd->command =3D=3D UI=
+C_CMD_DME_HIBER_EXIT) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0ret =3D ufshcd_uic_hibern8_exit(hba);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0goto out;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> +
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_lock(&hba->uic_cmd_=
+mutex);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ufshcd_add_delay_before_d=
+me_cmd(hba);
+> =C2=A0
+> --
+> 2.34.1
+
