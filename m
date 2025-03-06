@@ -1,355 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB4D279338
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 22:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502B320969B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 22:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741299488; cv=none; b=BXj+BLfFtVwqvG3o57WleiPJBElJZkAZGYtS2UMiwVnu3EAQKr3obDaChNrNXqNWT38BB6neFTLBQaAGqUP+ekTp2XpybZbzj7poQGoZPPiZrWBbv22TiwG9VCAf8huXSTXSOCZ0Mtl4UKCr53Fhih3ohD1Su7Aw5CErcGe9N6A=
+	t=1741299559; cv=none; b=e5tPOalGZ2NNpkysy7iCXHNInPKCGx/5H+kOXxj3E1sNe7RwjCpieDJ23pAjJjjC1qFEsg1A8mKWnizHKzKuK/SLlIy8vrm6A9u2WAgSmeziDGlnJ7EsM8yQ/PfgyL7AJw2GYPdaczNVsCTJxz15BV9J1Tz+R6z9ontbLEKNjxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741299488; c=relaxed/simple;
-	bh=lK4O1jfGdmHUc2z6JoK3/xWd8qkNBslpJWwsvBDqXzw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UJ0s4duX6KKw63TlkOYUDCvO0gCRNSIaCf68lOak5s+BG7nPFz2B9ObsezxC7aeXQ4gPclhjVyomwACF0mkQ1kERQI1YfST6xtQ08cJS9r32xuuBZDwD6Iu4mB9CPSaaIvCSnt22uHDixsQ8o2pQ4A+k1DAUXtdkJvZAciWYtY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PlP4wy98; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741299559; c=relaxed/simple;
+	bh=FpxQ1xYJ+FPwvnR/byt4lS/xLOZ4V5p42GGK/bWyLpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NWaoAbEpPsuRUfa/NObgnTsPfhBsCCurJ2dng4Jk546/p9WdZH31NURsWXGYOZRhuNKVtFbqTZNYXakp8dD0ZFItoAI6GlqeL87aLCqCvhReUCzLtIJRdM21ES3DtrKdmzrhnhRAh+eLXYWTaPYEYvTOWASzdBPlR9gfvlP9Cl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/K1kEwY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PlP4wy98"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741299485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fa0nevrfXmxszmsnK4mRY4GxFzPPQGrH49rOdswYLkQ=;
-	b=PlP4wy98wIsHMHLRG8njuB8EUOZJ+T8N+ekswcb+C2Phx/956HW/m1POni4OwqPS2dhXmR
-	K2BeB5meTOXZiTbqa+7uY+P5AhpwjLX1bLGM77eLWcN3ECkEWJHsYGjcOL81mA3PMJjoG6
-	JKsGn2+XMM0TmQox5C0DrArqAEQwDv4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-IG2nnGWkPaysICM33_eAKQ-1; Thu, 06 Mar 2025 17:18:04 -0500
-X-MC-Unique: IG2nnGWkPaysICM33_eAKQ-1
-X-Mimecast-MFC-AGG-ID: IG2nnGWkPaysICM33_eAKQ_1741299483
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39131851046so158533f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 14:18:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741299483; x=1741904283;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fa0nevrfXmxszmsnK4mRY4GxFzPPQGrH49rOdswYLkQ=;
-        b=wtM+KNL0VG7zQd9E+/wnsW9lH/RqTsRZYG5YWqm8LMdze4vOfRWKjS6xCzpG8XxY+j
-         eaRqectBh+hJVz2h5TmW/0ueaXqkbc1w1abyGeH3HCBvIwpFQOBkWMlCuM3Iq35ErvDh
-         xUszvjE99x2H9fMV2JWFeWCQQW2HuGWfsy1R3bUH/pgp55/lHLaqM0FrTnP/aDN/AOtx
-         Oo/UnQNcsaD4JO8oSfMuee+6CJAIIpIgbfNL33Cnk1MWC7fTueWk0g/IlavpBIcI6egE
-         GbZ9rBzN4G7f4xPl2BbEN8TZ0kYkdYCP/HCHgae7nbsBzqercYXrKobs0LJp099AI1TO
-         yecg==
-X-Gm-Message-State: AOJu0YwnxQYZacy1kbeTCaFRyGfWimMN4CplJR5dEwaEqNJu30jtDcFY
-	TphqZYaBMRMwea/vI9EnBMNuW0h2HjlSxTH0CBNvpmAxQnrNOy2g0Cu/xlKCUGnqrgiaDFJ0UIS
-	R26h2dTTlH7G0e01j00Y92RLRPzb/nmx/P3H9LTsKtHmdgu3FYHXqyuA/VWtuzg==
-X-Gm-Gg: ASbGncsAwjCH2ADZQa9qpiOeEpV1H3kSt2e0UjNYMH+hESvKqIgcNAw+HTc5cQM2R1w
-	TLYuX2kTmaXbEbRyhhndRKnbTK9cYoFEPnGczKXD+jj3MOawNBBS5+hTeah2K8giMs425PtXn2K
-	1FmnQQy13zYyCuqDYfA3Ipkk+SxVQ74sPbhu5zTRIkRl/o/SiWoDZBFQ0pYOQgFrWhSw6yHUhSl
-	7aTApRMDXX8LGmRmwTn2GalT/fIg3TSZon/ZJxaSAkr+uFO6QGTATujyjaUw8s2PKFM4G+hoKDR
-	OYDXYVUsDKox+w99MpWxEXBJole9mQIA1Rf/1UooV9fuyRxh8x3nSk65WaxOdlKK0QKtcwO6rhW
-	uBIjpsBWGL4FlfqVUNDFfHCrvtCM9s7yqfn48KVLUzUs=
-X-Received: by 2002:a05:6000:4108:b0:390:df6c:592a with SMTP id ffacd0b85a97d-39132d38302mr538560f8f.29.1741299482750;
-        Thu, 06 Mar 2025 14:18:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG4t8z3slrJMeyZX3Y/YdrNdWwXBJQ2YTtf0cp3DrxD28+nRhzE70t7ckJV48mYTfhnnQBvcA==
-X-Received: by 2002:a05:6000:4108:b0:390:df6c:592a with SMTP id ffacd0b85a97d-39132d38302mr538522f8f.29.1741299480866;
-        Thu, 06 Mar 2025 14:18:00 -0800 (PST)
-Received: from ?IPV6:2003:cb:c74d:4400:2f98:9b35:6822:ce54? (p200300cbc74d44002f989b356822ce54.dip0.t-ipconnect.de. [2003:cb:c74d:4400:2f98:9b35:6822:ce54])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfc96sm3317578f8f.31.2025.03.06.14.17.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 14:18:00 -0800 (PST)
-Message-ID: <f0f242cc-1e9a-41f5-a1e7-6618a0025117@redhat.com>
-Date: Thu, 6 Mar 2025 23:17:58 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/K1kEwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCFBBC4CEE0;
+	Thu,  6 Mar 2025 22:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741299558;
+	bh=FpxQ1xYJ+FPwvnR/byt4lS/xLOZ4V5p42GGK/bWyLpg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R/K1kEwYsH3Q112IllrPfMRqN/bGUDbxvUkkMh4M0//5sO8PKKT236D3s79Qm6sSC
+	 s/qdT3/PLbz0F4eSGCPJOeIUAx7OuqZA6cJflRpX7lGBfkJWwEpD/dEhXL1G8tCvmy
+	 JFvyDhY0W4GJLlw5ovDdI0w6vFQIE3NrW0qdqQTnrxpbNlAdS2Nz4eZExxgLAY6aP6
+	 lUu21ios0E0ajebfmTUjGSNSOjCsncFXoHCvU80G3+9m/pE+VOSDrvOQKfYlqgEahH
+	 Jb5cBcfQ7wFc+OahLpSvaBvvmGg41ASB6gGYpPFhFARl0Vb6L+XmgNFeqyJFoC+QkT
+	 H2RYF16hfgwgg==
+Date: Thu, 6 Mar 2025 23:19:13 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: David Laight <david.laight.linux@gmail.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
+ locking insns
+Message-ID: <Z8ofYTR9nou2650h@gmail.com>
+References: <20f1af22-71dc-4d62-9615-03030012222e@intel.com>
+ <CAFULd4bpHGE83qc37sbh=rpGj+SFqQrsNDLzL_-NQpo6pQH3jw@mail.gmail.com>
+ <c4aca08a-95c1-48ee-b4da-55a69b74101c@intel.com>
+ <CAFULd4YVOEtT+bsp9H7ijaoJn2e2108tWhiFarRv=QxoUMZaiw@mail.gmail.com>
+ <20250301123802.GCZ8L_qsv7-WwUwqt5@fat_crate.local>
+ <CAFULd4b=4rHcVAVSg_3yMb8=3ReiSriw_rM4vJL9_HvheXE92w@mail.gmail.com>
+ <CAHk-=wgBMG7CcwvW15ULJOsVEq5QRSj+ccgaUJU+XGxJKeXEVw@mail.gmail.com>
+ <20250305201429.3026ba9f@pumpkin>
+ <CAFULd4ZzdPcnQAELpukF4vzUnQufteNqV4BzZr3BxuzRG+XK+A@mail.gmail.com>
+ <CAFULd4Yuhb-BbV9LAJ+edMRGEi2kTYfcq70=TTMaSXP3oxwfQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/1] KVM: s390: pv: fix race when making a page secure
-From: David Hildenbrand <david@redhat.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- frankja@linux.ibm.com, borntraeger@de.ibm.com, nrb@linux.ibm.com,
- seiden@linux.ibm.com, nsg@linux.ibm.com, schlameuss@linux.ibm.com,
- hca@linux.ibm.com
-References: <20250304182304.178746-1-imbrenda@linux.ibm.com>
- <20250304182304.178746-2-imbrenda@linux.ibm.com>
- <c60e60a2-07ed-4692-8952-c125c34122f8@redhat.com>
- <af3739da-771a-4987-86b7-d6f7f82252f6@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <af3739da-771a-4987-86b7-d6f7f82252f6@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFULd4Yuhb-BbV9LAJ+edMRGEi2kTYfcq70=TTMaSXP3oxwfQQ@mail.gmail.com>
 
-On 06.03.25 23:07, David Hildenbrand wrote:
-> On 06.03.25 11:23, David Hildenbrand wrote:
->>>     /**
->>> - * make_folio_secure() - make a folio secure
->>> + * __make_folio_secure() - make a folio secure
->>>      * @folio: the folio to make secure
->>>      * @uvcb: the uvcb that describes the UVC to be used
->>>      *
->>> @@ -243,14 +276,13 @@ static int expected_folio_refs(struct folio *folio)
->>>      *         -EINVAL if the UVC failed for other reasons.
->>>      *
->>>      * Context: The caller must hold exactly one extra reference on the folio
->>> - *          (it's the same logic as split_folio())
->>> + *          (it's the same logic as split_folio()), and the folio must be
->>> + *          locked.
->>>      */
->>> -int make_folio_secure(struct folio *folio, struct uv_cb_header *uvcb)
->>> +static int __make_folio_secure(struct folio *folio, struct uv_cb_header *uvcb)
->>
->> One more nit: -EBUSY can no longer be returned from his function, so you
->> might just remove it from the doc above.
->>
->>
->> While chasing a very weird folio split bug that seems to result in late
->> validation issues (:/), I was wondering if __gmap_destroy_page could
->> similarly be problematic.
->>
->> We're now no longer holding the PTL while performing the operation.
->>
->> (not that that would explain the issue I am chasing, because
->> gmap_destroy_page() is never called in my setup)
->>
-> 
-> Okay, I've been debugging for way to long the weird issue I am seeing, and I
-> did not find the root cause yet. But the following things are problematic:
-> 
-> 1) To walk the page tables, we need the mmap lock in read mode.
-> 
-> 2) To walk the page tables, we must know that a VMA exists
-> 
-> 3) get_locked_pte() must not be used on hugetlb areas.
-> 
-> Further, the following things should be cleaned up
-> 
-> 4) s390_wiggle_split_folio() is only used in that file
-> 
-> 5) gmap_make_secure() likely should be returning -EFAULT
-> 
-> 
-> See below, I went with a folio_walk (which also checks for pte_present()
-> like the old code did, but that should not matter here) so we can get rid of the
-> get_locked_pte() usage completely.
-> 
-> 
->   From 1b9a4306b79a352daf80708252d166114e7335de Mon Sep 17 00:00:00 2001
-> From: David Hildenbrand <david@redhat.com>
-> Date: Thu, 6 Mar 2025 22:43:43 +0100
-> Subject: [PATCH] merge
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->    arch/s390/include/asm/uv.h |  1 -
->    arch/s390/kernel/uv.c      | 41 ++++++++++++++++++--------------------
->    arch/s390/kvm/gmap.c       |  2 +-
->    3 files changed, 20 insertions(+), 24 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-> index fa33a6ff2fabf..46fb0ef6f9847 100644
-> --- a/arch/s390/include/asm/uv.h
-> +++ b/arch/s390/include/asm/uv.h
-> @@ -634,7 +634,6 @@ int uv_convert_from_secure_pte(pte_t pte);
->    int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb);
->    int uv_convert_from_secure(unsigned long paddr);
->    int uv_convert_from_secure_folio(struct folio *folio);
-> -int s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio, bool split);
->    
->    void setup_uv(void);
->    
-> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-> index 63420a5f3ee57..11a1894e63405 100644
-> --- a/arch/s390/kernel/uv.c
-> +++ b/arch/s390/kernel/uv.c
-> @@ -270,7 +270,6 @@ static int expected_folio_refs(struct folio *folio)
->     *
->     * Return: 0 on success;
->     *         -EBUSY if the folio is in writeback or has too many references;
-> - *         -E2BIG if the folio is large;
->     *         -EAGAIN if the UVC needs to be attempted again;
->     *         -ENXIO if the address is not mapped;
->     *         -EINVAL if the UVC failed for other reasons.
-> @@ -324,17 +323,6 @@ static int make_folio_secure(struct mm_struct *mm, struct folio *folio, struct u
->    	return rc;
->    }
->    
-> -static pte_t *get_locked_valid_pte(struct mm_struct *mm, unsigned long hva, spinlock_t **ptl)
-> -{
-> -	pte_t *ptep = get_locked_pte(mm, hva, ptl);
-> -
-> -	if (ptep && (pte_val(*ptep) & _PAGE_INVALID)) {
-> -		pte_unmap_unlock(ptep, *ptl);
-> -		ptep = NULL;
-> -	}
-> -	return ptep;
-> -}
-> -
->    /**
->     * s390_wiggle_split_folio() - try to drain extra references to a folio and optionally split
->     * @mm:    the mm containing the folio to work on
-> @@ -344,7 +332,7 @@ static pte_t *get_locked_valid_pte(struct mm_struct *mm, unsigned long hva, spin
->     * Context: Must be called while holding an extra reference to the folio;
->     *          the mm lock should not be held.
->     */
-> -int s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio, bool split)
-> +static int s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio, bool split)
->    {
->    	int rc;
->    
-> @@ -361,20 +349,28 @@ int s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio, bool spli
->    	}
->    	return -EAGAIN;
->    }
-> -EXPORT_SYMBOL_GPL(s390_wiggle_split_folio);
->    
->    int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb)
->    {
-> +	struct vm_area_struct *vma;
-> +	struct folio_walk fw;
->    	struct folio *folio;
-> -	spinlock_t *ptelock;
-> -	pte_t *ptep;
->    	int rc;
->    
-> -	ptep = get_locked_valid_pte(mm, hva, &ptelock);
-> -	if (!ptep)
-> +	mmap_read_lock(mm);
-> +
-> +	vma = vma_lookup(mm, hva);
-> +	if (!vma) {
-> +		mmap_read_unlock(mm);
-> +		return -EFAULT;
-> +	}
-> +
-> +	folio = folio_walk_start(&fw, vma, hva, 0);
-> +	if (!folio) {
-> +		mmap_read_unlock(mm);
->    		return -ENXIO;
-> +	}
->    
-> -	folio = page_folio(pte_page(*ptep));
->    	folio_get(folio);
->    	/*
->    	 * Secure pages cannot be huge and userspace should not combine both.
-> @@ -385,14 +381,15 @@ int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header
->    	 * KVM_RUN will return -EFAULT.
->    	 */
->    	if (folio_test_hugetlb(folio))
-> -		rc =  -EFAULT;
-> +		rc = -EFAULT;
->    	else if (folio_test_large(folio))
->    		rc = -E2BIG;
-> -	else if (!pte_write(*ptep))
-> +	else if (!pte_write(fw.pte) || (pte_val(fw.pte) & _PAGE_INVALID))
->    		rc = -ENXIO;
->    	else
->    		rc = make_folio_secure(mm, folio, uvcb);
-> -	pte_unmap_unlock(ptep, ptelock);
-> +	folio_walk_end(&fw, vma);
-> +	mmap_read_unlock(mm);
->    
->    	if (rc == -E2BIG || rc == -EBUSY)
->    		rc = s390_wiggle_split_folio(mm, folio, rc == -E2BIG);
-> diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
-> index 21580cfecc6ac..1a88b32e7c134 100644
-> --- a/arch/s390/kvm/gmap.c
-> +++ b/arch/s390/kvm/gmap.c
-> @@ -41,7 +41,7 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
->    
->    	vmaddr = gfn_to_hva(kvm, gpa_to_gfn(gaddr));
->    	if (kvm_is_error_hva(vmaddr))
-> -		rc = -ENXIO;
-> +		rc = -EFAULT;
->    	else
->    		rc = make_hva_secure(gmap->mm, vmaddr, uvcb);
->    
 
-The following likely on top as a cleanup as well:
-diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
-index 1a88b32e7c134..6d8944d1b4a0c 100644
---- a/arch/s390/kvm/gmap.c
-+++ b/arch/s390/kvm/gmap.c
-@@ -35,17 +35,13 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
+* Uros Bizjak <ubizjak@gmail.com> wrote:
+
+> On Thu, Mar 6, 2025 at 11:45 AM Uros Bizjak <ubizjak@gmail.com> wrote:
+> >
+> > On Wed, Mar 5, 2025 at 9:14 PM David Laight
+> > <david.laight.linux@gmail.com> wrote:
+> > >
+> > > On Wed, 5 Mar 2025 07:04:08 -1000
+> > > Linus Torvalds <torvalds@linuxfoundation.org> wrote:
+> > >
+> > > > On Tue, 4 Mar 2025 at 22:54, Uros Bizjak <ubizjak@gmail.com> wrote:
+> > > > >
+> > > > > Even to my surprise, the patch has some noticeable effects on the
+> > > > > performance, please see the attachment in [1] for LMBench data or [2]
+> > > > > for some excerpts from the data. So, I think the patch has potential
+> > > > > to improve the performance.
+> > > >
+> > > > I suspect some of the performance difference - which looks
+> > > > unexpectedly large - is due to having run them on a CPU with the
+> > > > horrendous indirect return costs, and then inlining can make a huge
+> > > > difference.
+> > > ...
+> > >
+> > > Another possibility is that the processes are getting bounced around
+> > > cpu in a slightly different way.
+> > > An idle cpu might be running at 800MHz, run something that spins on it
+> > > and the clock speed will soon jump to 4GHz.
+> > > But if your 'spinning' process is migrated to a different cpu it starts
+> > > again at 800MHz.
+> > >
+> > > (I had something where a fpga compile when from 12 mins to over 20 because
+> > > the kernel RSB stuffing caused the scheduler to behave differently even
+> > > though nothing was doing a lot of system calls.)
+> > >
+> > > All sorts of things can affect that - possibly even making some code faster!
+> > >
+> > > The (IIRC) 30k increase in code size will be a few functions being inlined.
+> > > The bloat-o-meter might show which, and forcing a few inlines the same way
+> > > should reduce that difference.
+> >
+> > bloat-o-meter is an excellent idea, I'll analyse binaries some more
+> > and report my findings.
+> 
+> Please find attached bloat.txt where:
+> 
+> a) some functions now include once-called functions. These are:
+> 
+> copy_process                                6465   10191   +3726
+> balance_dirty_pages_ratelimited_flags        237    2949   +2712
+> icl_plane_update_noarm                      5800    7969   +2169
+> samsung_input_mapping                       3375    5170   +1795
+> ext4_do_update_inode.isra                      -    1526   +1526
+> 
+> that now include:
+> 
+> ext4_mark_iloc_dirty                        1735     106   -1629
+> samsung_gamepad_input_mapping.isra          2046       -   -2046
+> icl_program_input_csc                       2203       -   -2203
+> copy_mm                                     2242       -   -2242
+> balance_dirty_pages                         2657       -   -2657
+> 
+> b) ISRA [interprocedural scalar replacement of aggregates,
+> interprocedural pass that removes unused function return values
+> (turning functions returning a value which is never used into void
+> functions) and removes unused function parameters.  It can also
+> replace an aggregate parameter by a set of other parameters
+> representing part of the original, turning those passed by reference
+> into new ones which pass the value directly.]
+> 
+> ext4_do_update_inode.isra                      -    1526   +1526
+> nfs4_begin_drain_session.isra                  -     249    +249
+> nfs4_end_drain_session.isra                    -     168    +168
+> __guc_action_register_multi_lrc_v70.isra     335     500    +165
+> __i915_gem_free_objects.isra                   -     144    +144
+> ...
+> membarrier_register_private_expedited.isra     108       -    -108
+> syncobj_eventfd_entry_func.isra              445     314    -131
+> __ext4_sb_bread_gfp.isra                     140       -    -140
+> class_preempt_notrace_destructor.isra        145       -    -145
+> p9_fid_put.isra                              151       -    -151
+> __mm_cid_try_get.isra                        238       -    -238
+> membarrier_global_expedited.isra             294       -    -294
+> mm_cid_get.isra                              295       -    -295
+> samsung_gamepad_input_mapping.isra.cold      604       -    -604
+> samsung_gamepad_input_mapping.isra          2046       -   -2046
+> 
+> c) different split points of hot/cold split that just move code around:
+> 
+> samsung_input_mapping.cold                   900    1500    +600
+> __i915_request_reset.cold                    311     389     +78
+> nfs_update_inode.cold                         77     153     +76
+> __do_sys_swapon.cold                         404     455     +51
+> copy_process.cold                              -      45     +45
+> tg3_get_invariants.cold                       73     115     +42
+> ...
+> hibernate.cold                               671     643     -28
+> copy_mm.cold                                  31       -     -31
+> software_resume.cold                         249     207     -42
+> io_poll_wake.cold                            106      54     -52
+> samsung_gamepad_input_mapping.isra.cold      604       -    -604
+> 
+> c) full inline of small functions with locking insn (~150 cases).
+> These bring in most of the performance increase because there is no
+> call setup. E.g.:
+> 
+> 0000000000a50e10 <release_devnum>:
+>   a50e10:    48 63 07                 movslq (%rdi),%rax
+>   a50e13:    85 c0                    test   %eax,%eax
+>   a50e15:    7e 10                    jle    a50e27 <release_devnum+0x17>
+>   a50e17:    48 8b 4f 50              mov    0x50(%rdi),%rcx
+>   a50e1b:    f0 48 0f b3 41 50        lock btr %rax,0x50(%rcx)
+>   a50e21:    c7 07 ff ff ff ff        movl   $0xffffffff,(%rdi)
+>   a50e27:    e9 00 00 00 00           jmp    a50e2c <release_devnum+0x1c>
+>             a50e28: R_X86_64_PLT32    __x86_return_thunk-0x4
+>   a50e2c:    0f 1f 40 00              nopl   0x0(%rax)
+> 
+> IMO, for 0.14% code increase, these changes are desirable.
+
+I concur, and it's extra desirable IMHO due to the per function 
+overhead of CPU bug mitigations like retpolines.
+
+The number of function calls executed in a workload can be measured via 
+perf on most modern x86 CPUs as well. For example on Zen5 CPUs the 
+number of RET instructions can be counted:
+
   {
-         struct kvm *kvm = gmap->private;
-         unsigned long vmaddr;
--       int rc = 0;
-  
-         lockdep_assert_held(&kvm->srcu);
-  
-         vmaddr = gfn_to_hva(kvm, gpa_to_gfn(gaddr));
-         if (kvm_is_error_hva(vmaddr))
--               rc = -EFAULT;
--       else
--               rc = make_hva_secure(gmap->mm, vmaddr, uvcb);
--
--       return rc;
-+               return -EFAULT;
-+       return make_hva_secure(gmap->mm, vmaddr, uvcb);
-  }
-  
-  int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr)
+    EventName: ex_ret_near_ret,
+    EventCode: 0xc8,
+    BriefDescription: Retired near returns (RET or RET Iw).
+  },
 
+Which ought to be a good proxy for function calls (modulo 
+tail-optimized jumps).
 
+Thanks,
 
--- 
-Cheers,
-
-David / dhildenb
-
+	Ingo
