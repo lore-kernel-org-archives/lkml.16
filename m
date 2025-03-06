@@ -1,69 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536AC151990;
-	Thu,  6 Mar 2025 14:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2C9CA6B;
+	Thu,  6 Mar 2025 14:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741270114; cv=none; b=s/8n4xOLMGwP54OEDmZEHDFIirhVfnpxv1E/gEYxpmlXXLsg9Xrj2j3GCdhDfl41P0PT5pOrzn05J6agBhYe5itjltWMqZplEcNDHXFTRm8l0dZ5qBDBAGKZp+00D490g2fEvwhhhCrI2Qa3rRbHLJrE8vPTmM+ghjxfsrq0HDQ=
+	t=1741270244; cv=none; b=kIVN2yQ39wHWmODomoTlnMCmtRf1Pg5GTTktQx+e11qnESjhR1J8tygGftauRjeLCWTgScKwVDcYPCYjF6bH6NvWUAbG+2dklO3Vf7ZwoKe3xDLeLt64DTc6x1RCqVaRtqHPjRi+5BXB6PFGlEoT8t+9XxP8ekL3CYe6lI6/K3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741270114; c=relaxed/simple;
-	bh=LkIfOHx5/dcrgATekQOsPiV7zPoeugPYPaspJUC3TN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C53zVIj4yyJVE6b0hsEtkTMzUCXRFYb0pgkYj+5snWEEw9TFhACbibE+ShKzxDATawQ9WT0xZyfz4nREncno3mIaP46D+3ByEVWn6YcVxliD1RfKtzwdM1/ByIcQYLxywyyFLxZF1yRdL65rVtfQRZ2uD9aG0zaJeabci2xCfnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbBGOB0R; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbBGOB0R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B49D4C4CEE0;
-	Thu,  6 Mar 2025 14:08:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741270113;
-	bh=LkIfOHx5/dcrgATekQOsPiV7zPoeugPYPaspJUC3TN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IbBGOB0R7RKhs/DksPDnNSPytvTgwWFHcsTcpTedR628UAdd1V7hYr2OoQ1UTTBvW
-	 02xNfRmtsjukygDZ9U43L1V+ZUKF1AYJG6SxQlIJ7KKWZO79EfwGkxPWJQYH7Ttilf
-	 3cFm0gEfLbNCT7erksLlyqRjF6GyCUq8wW7rDPKu3tF3FdWFBhnzQC1ZpeyCrIyZBw
-	 fYJgkFk9mKgfbi0laikEy2b/4+jDbzZ+2cAhTRd9PS3BsOuxBKrnbBlmzWkA/u3aix
-	 wt4PolrAAQV/mMkl4XJJalcoH+8oFj3v/7Bamf309Ggo6+KQE+jEXj5SO2PGZsfoko
-	 9elPEPwaigtaw==
-From: William Breathitt Gray <wbg@kernel.org>
-To: =?UTF-8?q?Cs=C3=B3k=C3=A1s=20Bence?= <csokas.bence@prolan.hu>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	William Breathitt Gray <wbg@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] counter: microchip-tcb-capture: Fix undefined counter channel state on probe
-Date: Thu,  6 Mar 2025 23:08:23 +0900
-Message-ID: <174126995863.355997.16346927228585162675.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250305-preset-capture-mode-microchip-tcb-capture-v1-1-632c95c6421e@kernel.org>
-References: <20250305-preset-capture-mode-microchip-tcb-capture-v1-1-632c95c6421e@kernel.org>
+	s=arc-20240116; t=1741270244; c=relaxed/simple;
+	bh=tMUiNL1JfsiWCo2yrLVRKdF3GdPL3Pthlyw30VuXphQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ufclro5U4VvKGlcwFg4Kd89Fbo3d0rfGchzAj7pYx+kAtMKYZzP0CUbHhSayngAKVa6t+mYDscNDTwdAXqgYqdWs3OSLvw5QklOZw/XqoOa2QjaDRGLMlpM0tjwVkyK0RwitqyT3F0lkRCe8VTozy7xAwBfmYZmIJIcWRv21Wzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c3b4c4b409so108804185a.3;
+        Thu, 06 Mar 2025 06:10:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741270237; x=1741875037;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p5tWRsmAkNRl3CcCpEBYNoShz/dMC+I168fgqmDeCw4=;
+        b=cIPWrsBFfvHafnKQkNwQEHdg4Gh5xNL+tx31VmUgFODEtIbIIIF5iR/OtQnAf86CUr
+         xuZzb6WdvYQrTBBLbuEK3Cb/1NklkMkVrRZFMT7tHl6Gff08/h/S71D7T+wrxlo7eWrO
+         tKPCWJUVdrcsaoZHsksnAcxHolndOr0WuJ3udk7c74stcknPgD73rM5WlWJ22xKwX3Js
+         Od4fYco9GcuHqFvd/+DnO4yjjTAkmyOyok33R2Uo0iz1NnzNNeGugOAqvK5U9KqsOHnl
+         x8jPGPjJo3GcHy+3JbzOAyC+wy2bkC7YViIdYspKNOwla/s1XQXy+/e0Fp8tSM9wNbhl
+         kf+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUKE3TmgbEE/nmFjaoyLrMnUZF2c1AWTjf8aPxVLbR2KsamET1/ZLpG0kD2bFJmSrbHoH7brGFRItN1PPkn@vger.kernel.org, AJvYcCWSTmBQCxnbL7t2UV7JLWeJEWUGP43k1dSx5ctta9higNlnSyJYrNNanTe+Vj8CSH4G0mPB/1wVIBlI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8qujreEFIzLEjtKxVoevxRamAwlY948Pe1AtR5Fa9qMeGE+FQ
+	8QdJ0hafPyi7os5Bw3fk0mQvIc5Dbl3igR03bPdQztYSevhbWByi9o8vQvGF
+X-Gm-Gg: ASbGncs7DginB+gYFrexC+HuEpYVY7Zr9I13zTXHg0yLRUnZq9JhTSfvYTNFNzKZNYy
+	1CfOURLPq5PTFTAxYCfolCVFVliRKr1TGfVqVksnfRmaQ1NaplB83MBvKrm2asJSWSDLlCI+tQu
+	bxHUzb2zEE9oLTtMqRUpG/kbCtytIBm8qqAS9CJyKbJjtv/dMDOqHIh01ZoEhzjSz91ADPSVXkR
+	amG7M1YNLuNaTbErfksPpARkpR6ce77YAMnBi2qykknMzMGXBJXQcxofrIlLB+f8PD3JCQfBU4B
+	7F79lDr6O8R7h6CFaSoBaSQiCnL5ynUceqvutnWwWPhDpsjzG4bSU6FyJHfH/crdcmwNmNioF66
+	Nn9lTZZfJVpw=
+X-Google-Smtp-Source: AGHT+IESvc1LeM+RqGdLyiHv4lHBcfQIUlSePncT7eUrsnthkSf1LC5tbg4joa1XrGBU0JwYYjBTdw==
+X-Received: by 2002:a05:620a:6285:b0:7c3:9645:354c with SMTP id af79cd13be357-7c3d8e41794mr1307745485a.21.1741270237079;
+        Thu, 06 Mar 2025 06:10:37 -0800 (PST)
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com. [209.85.222.179])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3e533a474sm95696785a.20.2025.03.06.06.10.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Mar 2025 06:10:36 -0800 (PST)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c0155af484so100156385a.0;
+        Thu, 06 Mar 2025 06:10:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUF9m2KQuhtV2cBOV1vUlEDafMUn0EPyfuRFxxDRS11T9YqKIEhUD+XWrG/5YJFw+K72uY06hp7NbAZDxM0@vger.kernel.org, AJvYcCW0wWVSBY0uokRN5p90S/Q0m4vnlr3y1bGqei6CMv4sv0J7zRZWK/8n1+y6UdyPI85AuISfohtjzcOy@vger.kernel.org
+X-Received: by 2002:a05:6214:f26:b0:6e4:4393:de7 with SMTP id
+ 6a1803df08f44-6e8e6cc7519mr101951716d6.2.1741270233688; Thu, 06 Mar 2025
+ 06:10:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=566; i=wbg@kernel.org; h=from:subject:message-id; bh=ZYCqo0M2oAeDQGbSQHEhiD46dBjTRHS0YFHniKGFDv0=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDOknV787fUt35qeoyqI1PbW3rYTOMHd/VktWXLrpzh1po 0snF1RO6yhlYRDjYpAVU2TpNT9798ElVY0fL+Zvg5nDygQyhIGLUwAmkpHAyLBIM/3u+faOSfom QZ+i/j/YcJ73uMP/TxOre9o28EZdFF3F8IfLqeXPV9bY909uN9zx4Y4VDNcLXlDx6e5cnZ0Rkhu vW3IDAA==
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+References: <20250225210316.3043357-1-robh@kernel.org>
+In-Reply-To: <20250225210316.3043357-1-robh@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Mar 2025 15:10:21 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUc1Gx8bQu0ePZFxNgy0=MZv909V74A-2y6wPTy8=MEDg@mail.gmail.com>
+X-Gm-Features: AQ5f1JosAcu1iTpm2frNZuQquQZI0u4F7EQoGM3oNMP34Y7utGYqLFLTZUH1d1A
+Message-ID: <CAMuHMdUc1Gx8bQu0ePZFxNgy0=MZv909V74A-2y6wPTy8=MEDg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: mitsubishi,aa104xd12: Allow
+ jeida-18 for data-mapping
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 25 Feb 2025 at 22:03, Rob Herring (Arm) <robh@kernel.org> wrote:
+> There's both a user and the datasheet[1] indicate that 6-bpp is supported
+> as well.
+>
+> [1] https://agdisplays.com/pub/media/catalog/datasheet/Mitsubishi/AA104XD12.pdf
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-On Wed, 05 Mar 2025 19:01:19 +0900, William Breathitt Gray wrote:
-> Hardware initialize of the timer counter channel does not occur on probe
-> thus leaving the Count in an undefined state until the first
-> function_write() callback is executed. Fix this by performing the proper
-> hardware initialization during probe.
-> 
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Applied to counter-fixes.
+Gr{oetje,eeting}s,
 
-[1/1] counter: microchip-tcb-capture: Fix undefined counter channel state on probe
-      commit: c0c9c73434666dc99ee156b25e7e722150bee001
+                        Geert
 
-Best regards,
 -- 
-William Breathitt Gray <wbg@kernel.org>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
