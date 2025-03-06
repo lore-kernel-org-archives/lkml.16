@@ -1,92 +1,166 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BA419882F;
-	Thu,  6 Mar 2025 06:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734C7199FC9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 06:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741242691; cv=none; b=KTXlsfAq3NFu3yk0TT1knsTtaQ/01y+VFDlV/Ip1//tOmyzNfWWL1BcA0tbzwoxwUJLTtkSTfE05rRfr7eNSdhQmTWsy59/W9swyj2ngVpi9yiPpk2SiR2FR0dxTWDopuxlsbQioBBXgQwil7grqHes4LdkMEf1iCzHD8CK/Nb8=
+	t=1741242935; cv=none; b=HKDrOG+7ps8+KhrE722Sy8zqMHCLdD/WtAapPA0QoxZsHcFdA+DsOAFIwDnSlaoxdWg/sFQplJwSCkbNo8ytefxC8TInIYow+MEOl6kIVcGsHNuaxMBgLV5IZCCb6nyG5dg58a1uDjuid5qXB93hlu+KS8C3MZHNSKRW4B6wYfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741242691; c=relaxed/simple;
-	bh=ru0yOM3azaebE5Y1U1SpcUqyVYne8Lt/4X1VvUoX//c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EMKkPCn8sJD1wdvuYTOLoRoph/SGuEuZcTV/D/zyIWrWM42zH50JSbuqdyRWXd0hkuk7kuGLDMCfUFWUE4/ZXYOmWmSWqBD0eqbKAKEIm56NvRtl8GCT32254GgC/JVFRUzwen5aG8ij80jjZZJdjZKbOtbE6DkJ6snjvS+lieE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=cGqsCgJ0; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+	s=arc-20240116; t=1741242935; c=relaxed/simple;
+	bh=OgVi8LZ/avO7r/TihguE885iMoKtcusZUL+VQwbS8dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ifuCxjxnLrYwkCSfbg64wSCiFJnmLJYwfV+oefmup6q6ipj6LkU6NBa8vhPnBlSJydm9S9r1edpvTY3ecGPnoBkE3u3hoF3Q2oAkMVkIDEv69u+sJhqsrUkc59s2oBlmoCsbyoJ94uikLHo2zNchmTgAOj0tTWU08AL2P0lyClY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NkXkKx12; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="cGqsCgJ0"
-Message-ID: <f3bde84d-b53e-4b81-b995-3b81d614b789@iencinas.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1741242686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bblUkYK5rTVes/OOwKXM7H10R1JrlrPcUhP5Wq4e/a4=;
-	b=cGqsCgJ05RfBl8CUHOvSxMvx0U4R/sCtc1iKSgkqKMnU3rRPu7bKNSBxMf27yiTAmAL0ll
-	BXHMH9QeIZEnpKdBieyhWzOgdDigRbRj4p6+Uddozp9Gfz7PrlQV4SVEtULETnw2b5k39W
-	kVMUcADcB1l5sgDny6PMFFZEMCAl6HoURzD1W5YOxrQYuqnndzs96u/Z9iu7aDYXYwCczc
-	r/uAiZ4ssjiMHJhP27jjIpyRZzP2xo+KYWm4ebGYZcI495r51Teq9xBl+mowyOLRsziGdL
-	yT2l4g3ZFf9PxWELid/G3tbQZfgNMWelyLLXFPHfNJs3p49WYyy8mnzTqPmjyg==
-Date: Thu, 6 Mar 2025 07:31:22 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkXkKx12"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43bc4b16135so1243655e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 22:35:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741242931; x=1741847731; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mx4eXhc4yqpVhI7TdTQuRC9iguxZspH9NuwtaHcC+Lc=;
+        b=NkXkKx121iIVwRfnvL2NV5bLufVR3G63SPc2p4TvkVzVlrqSAO8fwb7sdoMK0GT32C
+         ilASo1O5JK5ny5ODedT2PQkBlTEz9WDqL3Uw3WLQIupKoBZxhobysE7kPRTQY1s9kqa0
+         rk9rvPMv44zRlZlAtGDG7EGQo/5pLiwA8PvxRhYa/g0txZI2zYLfYnN7xk2WsQQZvLOT
+         Vy0eQ+j+Ktk57PekxQCGydsr068OdVmEtWspEdI+gb60MMdV+jfL1SZEn8lDPMasLGpH
+         keu9Rve6CedfwPt/S7sg02dFwD7XQyy23x+MZIoajVllLg+CMTeADiVW/3vHx85yVG83
+         LgwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741242931; x=1741847731;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mx4eXhc4yqpVhI7TdTQuRC9iguxZspH9NuwtaHcC+Lc=;
+        b=ZbYp6jUSDBUgZfzVmU+uNBjOO8TdYexDtyynPWZZuviXEMYcYsWZHAcOgcrpAzbTbD
+         7m8ruNHgiNVkijUFCjRAp49f2o6gpMJkiMgwvlJodJXxKi7XDi0SPr8+08YrmzSfZyoc
+         qWqA0CNqmpfpJX9Jh4aPTB6PlCQf4RntoFdGNz8hzgPIOVQWG3X8PLl1sGGgrL2sqokR
+         qt35nIzu8XHOc4d8lsllgbMcfY/LI9dnKcbuXOThcFSkOcXOV57or2owyJubV9t8eXB2
+         +QntDKzrGfB99/WEU2/aC3qi29c7lZCY5nD+6XNoB14xTPUk6Xbbza1BV27l49o4o451
+         RS0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWcdxo7wuiGL8tYlnLm9rvoIyjiWU+TPTzSVZo5tgkr9lX0dBVoMqiFvEefOqcdBMHAqpofG7eNvpLjSR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyve26t4ppLDLSnQ63xsxbf/CoZ9zcrS/zRZo7jotdW/kcDlR6o
+	JOxHLoLxLqy0oIxN+4oJamwEjGMfegX6GGEWOJwi5N1QKcJ/vlCYIHmGn69SZ/Q=
+X-Gm-Gg: ASbGnctvmyCXtptYq6AkN/B3l2Z6FOnN/5f1zKj9twxNaWnN/jd2aU0ocuYM9J03PU6
+	aUWUQ6K/s/XgKnVhjL1T6l+bKEz2o/9s5fOpahh9L2PPkLZlg53xkMnM3fJaZvG9XusUYBN4dqH
+	yvweskqyyABi4sPiwycIBSFX5oIZOBoBBLQV3IfNjxqDpKGqUDQot1IGLXIc6cHE++sucyfPBjl
+	dAMpkAK6Xbh9LH3OA/slvp0f/aBFYTlwSKD+NW14VZvV9SxH/HBz9OplnjRpPB+2qjxpkt5CB2g
+	ZhCc06eHzmxHXvWdOMYSRtegP7Y9HAkR+WeIcz59sjOqyJh2iQ==
+X-Google-Smtp-Source: AGHT+IEldEFBJ6GcJ/9AsmwidDi0MW22pFoTiX1DY3pYgmQW8PLpDd7QMPBO5UsdG2P8Z7W4b9nJlQ==
+X-Received: by 2002:a05:600c:1551:b0:43b:cb0c:3556 with SMTP id 5b1f17b1804b1-43bd2af49cemr38379685e9.28.1741242930569;
+        Wed, 05 Mar 2025 22:35:30 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bdd8c314asm9415525e9.10.2025.03.05.22.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 22:35:30 -0800 (PST)
+Date: Thu, 6 Mar 2025 09:35:26 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, steven chen <chenste@linux.microsoft.com>,
+	zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, bhe@redhat.com,
+	vgoyal@redhat.com, dyoung@redhat.com
+Subject: Re: [PATCH v9 2/7] kexec: define functions to map and unmap segments
+Message-ID: <7bde870f-07eb-48a6-8b8d-edac57640775@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] selftests: riscv: fix v_exec_initval_nolibc.c
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
- linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250305-fix-v_exec_initval_nolibc-v1-1-b87b60e43002@iencinas.com>
- <Z8jG1ViOUbw79cEN@ghost>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ignacio Encinas Rubio <ignacio@iencinas.com>
-Autocrypt: addr=ignacio@iencinas.com; keydata=
- xjMEZgaZEBYJKwYBBAHaRw8BAQdAYZxeXU5yoeLYkQpvN+eE3wmAF4V0JUzIlpm/DqiSeBnN
- LElnbmFjaW8gRW5jaW5hcyBSdWJpbyA8aWduYWNpb0BpZW5jaW5hcy5jb20+wo8EExYIADcW
- IQSXV5vKYfM26lUMmYnH3J3Ka8TsNgUCZgaZEAUJBaOagAIbAwQLCQgHBRUICQoLBRYCAwEA
- AAoJEMfcncprxOw21F4BAJe+mYh3sIdSvydyDdDXLFqtVkzrFB8PVNSU9eZpvM0mAP9996LA
- N0gyY7Obnc3y59r9jOElOn/5fz5mOEU3nE5lCc44BGYGmRESCisGAQQBl1UBBQEBB0CVC5o6
- qnsTzmmtKY1UWa/GJE53dV/3UPJpZu42p/F0OAMBCAfCfgQYFggAJhYhBJdXm8ph8zbqVQyZ
- icfcncprxOw2BQJmBpkRBQkFo5qAAhsMAAoJEMfcncprxOw2N8ABAPcrkHouJPn2N8HcsL4S
- SVgqxNLVOpsMX9kAYgIMqM0WAQCA40v0iYH1q7QHa2IfgkrBzX2ZLdXdwoxfUr8EY5vtAg==
-In-Reply-To: <Z8jG1ViOUbw79cEN@ghost>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304190351.96975-3-chenste@linux.microsoft.com>
 
+Hi steven,
 
+kernel test robot noticed the following build warnings:
 
-On 5/3/25 22:49, Charlie Jenkins wrote:
-> On Wed, Mar 05, 2025 at 05:39:28PM +0100, Ignacio Encinas wrote:
->> Vector registers are zero initialized by the kernel. Stop accepting
->> "all ones" as a clean value.
->>
->> Note that this was not working as expected given that
->> 	value == 0xff
->> can be assumed to be always false by the compiler as value's range is
->> [-128, 127]. Both GCC (-Wtype-limits) and clang
->> (-Wtautological-constant-out-of-range-compare) warn about this.
-> 
-> This check was included because the "dirty" value is an implementation
-> detail that I believe is not strongly defined in the ABI. Since linux
-> does always set this value to zero (currently) we can safely remove this
-> check. 
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks for the review. Just after sending the patch I noticed it should
-also remove some code that becomes useless after this change: 
-_prev_value_ and _first_ variables were only needed because two "clean" 
-values were supported.
+url:    https://github.com/intel-lab-lkp/linux/commits/steven-chen/ima-copy-only-complete-measurement-records-across-kexec/20250305-031719
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+patch link:    https://lore.kernel.org/r/20250304190351.96975-3-chenste%40linux.microsoft.com
+patch subject: [PATCH v9 2/7] kexec: define functions to map and unmap segments
+config: x86_64-randconfig-161-20250306 (https://download.01.org/0day-ci/archive/20250306/202503061449.gbVGafZc-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
 
-I'll send a v2 tomorrow. I'm guessing keeping your "Reviewed-by" and
-"Tested-by" is the appropriate thing to do as the changes are very
-simple. Let me know if that's not the case.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202503061449.gbVGafZc-lkp@intel.com/
 
-Thanks again!
+smatch warnings:
+kernel/kexec_core.c:896 kimage_map_segment() error: uninitialized symbol 'dest_page_addr'.
+
+vim +/dest_page_addr +896 kernel/kexec_core.c
+
+bf06eab7ae0f04 steven chen 2025-03-04  870  void *kimage_map_segment(struct kimage *image,
+bf06eab7ae0f04 steven chen 2025-03-04  871  			 unsigned long addr, unsigned long size)
+bf06eab7ae0f04 steven chen 2025-03-04  872  {
+bf06eab7ae0f04 steven chen 2025-03-04  873  	unsigned long eaddr = addr + size;
+bf06eab7ae0f04 steven chen 2025-03-04  874  	unsigned long src_page_addr, dest_page_addr;
+bf06eab7ae0f04 steven chen 2025-03-04  875  	unsigned int npages;
+bf06eab7ae0f04 steven chen 2025-03-04  876  	struct page **src_pages;
+bf06eab7ae0f04 steven chen 2025-03-04  877  	int i;
+bf06eab7ae0f04 steven chen 2025-03-04  878  	kimage_entry_t *ptr, entry;
+bf06eab7ae0f04 steven chen 2025-03-04  879  	void *vaddr = NULL;
+bf06eab7ae0f04 steven chen 2025-03-04  880  
+bf06eab7ae0f04 steven chen 2025-03-04  881  	/*
+bf06eab7ae0f04 steven chen 2025-03-04  882  	 * Collect the source pages and map them in a contiguous VA range.
+bf06eab7ae0f04 steven chen 2025-03-04  883  	 */
+bf06eab7ae0f04 steven chen 2025-03-04  884  	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
+bf06eab7ae0f04 steven chen 2025-03-04  885  	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+bf06eab7ae0f04 steven chen 2025-03-04  886  	if (!src_pages) {
+bf06eab7ae0f04 steven chen 2025-03-04  887  		pr_err("Could not allocate ima pages array.\n");
+bf06eab7ae0f04 steven chen 2025-03-04  888  		return NULL;
+bf06eab7ae0f04 steven chen 2025-03-04  889  	}
+bf06eab7ae0f04 steven chen 2025-03-04  890  
+bf06eab7ae0f04 steven chen 2025-03-04  891  	i = 0;
+bf06eab7ae0f04 steven chen 2025-03-04  892  	for_each_kimage_entry(image, ptr, entry) {
+bf06eab7ae0f04 steven chen 2025-03-04  893  		if (entry & IND_DESTINATION) {
+bf06eab7ae0f04 steven chen 2025-03-04  894  			dest_page_addr = entry & PAGE_MASK;
+
+Is the first entry always IND_DESTINATION?
+
+bf06eab7ae0f04 steven chen 2025-03-04  895  		} else if (entry & IND_SOURCE) {
+bf06eab7ae0f04 steven chen 2025-03-04 @896  			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+                                                                    ^^^^^^^^^^^^^^
+otherwise this is uninitialized
+
+bf06eab7ae0f04 steven chen 2025-03-04  897  				src_page_addr = entry & PAGE_MASK;
+bf06eab7ae0f04 steven chen 2025-03-04  898  				src_pages[i++] =
+bf06eab7ae0f04 steven chen 2025-03-04  899  					virt_to_page(__va(src_page_addr));
+bf06eab7ae0f04 steven chen 2025-03-04  900  				if (i == npages)
+bf06eab7ae0f04 steven chen 2025-03-04  901  					break;
+bf06eab7ae0f04 steven chen 2025-03-04  902  				dest_page_addr += PAGE_SIZE;
+bf06eab7ae0f04 steven chen 2025-03-04  903  			}
+bf06eab7ae0f04 steven chen 2025-03-04  904  		}
+bf06eab7ae0f04 steven chen 2025-03-04  905  	}
+bf06eab7ae0f04 steven chen 2025-03-04  906  
+bf06eab7ae0f04 steven chen 2025-03-04  907  	/* Sanity check. */
+bf06eab7ae0f04 steven chen 2025-03-04  908  	WARN_ON(i < npages);
+bf06eab7ae0f04 steven chen 2025-03-04  909  
+bf06eab7ae0f04 steven chen 2025-03-04  910  	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+bf06eab7ae0f04 steven chen 2025-03-04  911  	kfree(src_pages);
+bf06eab7ae0f04 steven chen 2025-03-04  912  
+bf06eab7ae0f04 steven chen 2025-03-04  913  	if (!vaddr)
+bf06eab7ae0f04 steven chen 2025-03-04  914  		pr_err("Could not map ima buffer.\n");
+bf06eab7ae0f04 steven chen 2025-03-04  915  
+bf06eab7ae0f04 steven chen 2025-03-04  916  	return vaddr;
+bf06eab7ae0f04 steven chen 2025-03-04  917  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
