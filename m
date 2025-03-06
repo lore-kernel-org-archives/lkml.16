@@ -1,319 +1,245 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010039.outbound.protection.outlook.com [52.101.229.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278FE1946A2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741259571; cv=none; b=nKqm+yZMWdhHJLSCqkV++RQ8kPxeKJB/piyYD6wqkmpAjES4NpwXWSQkrSF1sOLFKPsXbSgwRx01qHFMi6nirpcHURysUCvbEzoA+ZZ/3NTt7NieoU5vbcoFtOjeTrHNxpVaTpeocG+iKIR5uBq6NN0GGBZ0I80yVVhDQ13OT/8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741259571; c=relaxed/simple;
-	bh=PUiIQxTbPAl6myMVf3n6jYlpzrsKzaCsAkwaHWYA0LA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X3pssaNjy5Oekd+g1yPJSodT2KexOdfIElinm8BkrhiUTOUsO9pyMG1UPTyBZiW5/3XXKBpnIUmTSKlHbGVI9VJtSK6VgdNom19f0p3kGBMupR3fM/8lZYBgWGfc9Wk9jznmI9mj1hPa/mCGwq9n11VykmljEQMldlsap2unPR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQrF+/Yq; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6115417B50B;
+	Thu,  6 Mar 2025 11:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741259734; cv=fail; b=hI1JCvDoSQrb/e6nbR9et8InUv+gwqX1LrgrZrcicTt+g6tdWDih0RWViHV86r6hYijFt6x3XtoVwMHQuVE1QWBo3khvhTsL7lU0YBRI1fq5HIRUdWzOd2L7UKR4R/wa40f5/plBLhwCDbG/VvqsE4d0oI6HMyJDXPUhOpJKhx8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741259734; c=relaxed/simple;
+	bh=3HMQbACVFPMbBrH3xKIRDmTW4sDaeUyfbTYU/HgZTL4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=RE8OClL09LP2I3mWfv+qoSJVjBOp2E0COZmoVQCZZRdscEk0THrrhC8V026Tt858kia7MuxmOKHlk6sii/l9yvZxAfwKwlWoqaB1CT7t4yp2U82Z4IkHMwkhwNASKn7HzKkI6ioKp5qmJ+6iKqld/XVt1PScsbwzG+6aM1tHpU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=LOMn3kfp; arc=fail smtp.client-ip=52.101.229.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQrF+/Yq"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so700134a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:12:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741259567; x=1741864367; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wHsetN/4k5BgXz3g/jpETlxzsnoBsy7otMAail05Cdw=;
-        b=JQrF+/YqC+SfY3zTB+DeRYp7F+Lu7Ct1ZNEEO/BLZMnDzBMm3T/wXmysNCH0TYPDW0
-         7F8QqsgQCTra8yvLYY1rFkPUXHgSU5gMxs5ipnMlLxTJuhOdaIBxXZyGNaVsZg6g8cq0
-         wB4dkOXlfZQbqulVwI03cMY89PyCe8mj3KlwfwNJYY0DaXGxOahkIIvqKuZUbZUv8k/k
-         zLgV/Eb3Q3NDCl8lOmVizXFqRyhgxEsHq7De24fTfgKJZNMGZ2Z42xGWRbgitdf/NcEp
-         ansHNty07YDdVfI47lr0LIesxNKea1wqtNbfBMS28S4q+pqq89UpDn0jqrojq27ZomGd
-         Xnkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741259567; x=1741864367;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wHsetN/4k5BgXz3g/jpETlxzsnoBsy7otMAail05Cdw=;
-        b=wjgPbidQRaLw1Hiwtu00N2qBpHS6+bPxX+zDplIipuyGR/CCK8eq+Eiy4Y38wqqUsd
-         1qw+434gNKMnAGAui0/YBg3Q9ezQctVXTmInINfJTkFCS6ApOaSSiaecP1BD5RhOLDyv
-         k1HRWZiDMiahlfphqLAw5R7m134S5B0iIiiFG1vqWKYwecji2UiXpS5UP4JbICoQ7Lci
-         9nlPqz7+aAM09MjQWoULPdHroKsE2XFyI+noOvVcZlb+U9I9+43zrmSqY1WhIzGm4bcG
-         fc804QLr2IDrgiBQRjF1l1hXAd5XBbhC/E9TBpKQxIAkWDsJn2LKddbZT6h6blV4nzeO
-         BRWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHBpzQSafhFUkBQH4h9JKge8lMXOSiGzJHebFhRcVFdURyEywvZ7u2D5ssgeqSx+0M28qBjFvI1jk+9ig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZpQIvewk23dQ0FZTdTg8u7rjq57AgjSQxUmAGR9vIf+ongDTt
-	sXAkUGPgZmdaqstNAfDK8tsyAWoLTZ64ABaBKxJfAyhJVqBde7MpV45z06VxbBX2mh4b4H4lR3l
-	WTtgxEsQpTpcjLtJ0xSlePQQc9ck=
-X-Gm-Gg: ASbGnctadbvfyey6BQuh0Qk1KExF5qX9NBsALEZXOWVzJMEpo7DrsXe0Z3R2ZRpXwNN
-	JwfMD3fAKMIzdnb/CsihEDj7cS48b1IndMjUifKJU8XSf2y3psTxTGYe+Qjnb6W82qZrpM6mb9W
-	5zjXRJl7B9flPglgOclf+TXWPiT8g=
-X-Google-Smtp-Source: AGHT+IEaBleH3/cM7oX+imORPlfd2sQibCGqk8z/Z5SIx2jCTPdaRhiXFPOabc12N5VgGViUgcAI+QZvRoOZKO9zS5w=
-X-Received: by 2002:a17:907:7245:b0:abf:5fe7:40db with SMTP id
- a640c23a62f3a-ac20da540b4mr697053266b.31.1741259565405; Thu, 06 Mar 2025
- 03:12:45 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="LOMn3kfp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zOqnjf/eeim+BO15dBt948uRRxx025tjB21vzxW0/ISzWFgO0o4GcwP3ThLGbSuAE47Uj9fRWtUtyFZHvgIbGY1DbF6vBJFBNDQS1jqSNQwWPdsFs3SUfG+gpPQotSSIuSZSKwlVtSNVEi9akZHhHRdDQvMH0qLHDzbs6pDnIq4QyqDOA65uG3mHypRM7LFlmNyIATMc27Ln10WdEc8zacWMxZEndobFPO+LkD1SkME79QJaEj2bvc+zjaJZp570UcOaq9oPwm5UsznDf65YXf88fcG0rOkSjX+xiwqfT1ZLLN5X41P4QGXk1vRRssRfzKrvOPqdRiemaU7UgfhCow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9qAHKRs+hHx9zqqAidueKfRXD5kDe6arFFu1E7+WqpI=;
+ b=NCWJZE1PPNGHksxTvjv+beD/J/+WKfRSSIxReOSmQRneUuqbNrMLCR/jCrl6KoXJc4B5txUxbojC25BT9FZXJ5BtGslfTLlwKuP9k34DQMsLST0bEL/PzwxvywjnRFCXXBFvYJbC2KxyVGTv9Jcv15UBandrBKhGXdDcm2+A611TDjSR/Rr6636yPBo1aD/zAPiRUW/yur/6UcRXwq/jLbM2jfDstGey6N7+Xz8EVpfwQ3C6k2lpQ2slcDKM5ExlAsmC1+0U0QciYpGGiWcC574rI3/ZDskG3U317cmxM+SADJSQJYh5coKXIMHAYEzZpI7ldVCrC6GulKu5bAacPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9qAHKRs+hHx9zqqAidueKfRXD5kDe6arFFu1E7+WqpI=;
+ b=LOMn3kfpG7og51itSTsrwXfhGwdkeeuTClsPLdhvDuj1IMcjm3u+wtAyW0zWX22EkHwucvu7rWmVHTtAb0wo5eqjD718TS44q1boOqaWfyNXXrWbK15nxTKpN5Gpp9nSKb4WfuDtD/yhtVO3G5XeBEcUFxDSfbgyY0CnQCpF/kU=
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com (2603:1096:400:448::7)
+ by OS9PR01MB15621.jpnprd01.prod.outlook.com (2603:1096:604:3bd::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
+ 2025 11:15:28 +0000
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::439:42dd:2bf:a430]) by TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::439:42dd:2bf:a430%7]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 11:15:28 +0000
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Biju
+ Das <biju.das.jz@bp.renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY
+ Control
+Thread-Topic: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY
+ Control
+Thread-Index: AQHbjculMtcGsxftVk+Hot8khpQb2rNl9mDg
+Date: Thu, 6 Mar 2025 11:15:28 +0000
+Message-ID:
+ <TYCPR01MB12093A4E8BB151810D0128589C2CA2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
+References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB12093:EE_|OS9PR01MB15621:EE_
+x-ms-office365-filtering-correlation-id: c27827c9-c375-4849-d58f-08dd5ca0333c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?aalTYakSKIDDtbfzqOljSwjanDbGoQ1zOiiHXH6pO912JHbOM5VE+0jvzMoZ?=
+ =?us-ascii?Q?RSd9N0kEAUZIpv6ip+6sspfHSwXoM3UqCrN2S+JRv3XNf7hsiClwC1WYcuat?=
+ =?us-ascii?Q?IcJUjtnYeZF4yCIkKargsuJ6yEUJdpOcLLssyMzZxbZCNdvHTxcKL++RKGqg?=
+ =?us-ascii?Q?gux6MOQ6RdaIS8gdUG+AQLed+/+cd+6/R48tse+Vp2IK+kXtGwzrvRXFuAOX?=
+ =?us-ascii?Q?DgvbFGfN9CHWOnwKu35E7KBde6wdaw5jFlFF2EvPtlHbCnKaXQpavYjrLf8O?=
+ =?us-ascii?Q?DgLmM/Fuo1/KEeaZ89oWDAw00OpVoujlMZWnkuDt9pBR9aidqTZ431+lDSZ1?=
+ =?us-ascii?Q?tibYrUMS3cif71H/GCsNri2wbdAiFwcOIOSobvdeM+amuJqN+e22vpt3eHoD?=
+ =?us-ascii?Q?tGGna39Bdm6Veln0EiNqAeoARU9Z7gRH/u/0CksT/vi8EhhcrnwfJI36Bg6j?=
+ =?us-ascii?Q?TRqCyeGZM/vjRif79szhkM2/u+5fCTyFRaJwyON5fFu/YQi1zpWMYS1QiiEo?=
+ =?us-ascii?Q?YEtc8U6lrLawVGG+e86pjH//4ysQWv5nSD5n1J4iZeUvDDeXiQXqi7JgRmq4?=
+ =?us-ascii?Q?fc4VEkdDha2WMkUVj93Mo0jNhtvvSFGG95f/2eQsycebN7/UmO3zb3rsaXDw?=
+ =?us-ascii?Q?1HY1GzL2BHNNRphlwM2dKvcGx7EglS+oTAgcXG1Np1JMNPvZjIrBaNGS1fud?=
+ =?us-ascii?Q?ACPR2+o3g6mHlzKqudLGDsmSqps5qc0SQQi1rpgtLdjzfmo/NPr2lyr22+XU?=
+ =?us-ascii?Q?ycUyDIALvPqEBE7IySfQwmTLslAIJT54Cd0eFGgbW29i40h/a4A0LBIJKfHw?=
+ =?us-ascii?Q?riw7KRyMP7J3c7o2H1HpcL5y6/OSUtpJCusngRlxbquHP3JQXRm4KuosMx9R?=
+ =?us-ascii?Q?2o5bKlXClu60wQZFiIqu5ok9y+/XSZ8y8lAyqFf/6C1orCGMiIHkIQ0iGYa+?=
+ =?us-ascii?Q?EiQ0opVQFMQ+PfLDz92JMbJeDMk/j3YSdOgRv3QRCNAdHZczvz7iJBLQHN49?=
+ =?us-ascii?Q?sjjoju+YOK2kQQYwtJEKtmgeMldX7mvTKKOiEntz8seJzK80X3A9+YawRLKn?=
+ =?us-ascii?Q?1qmSl7jV5UjPmpMBcmS9uzDLxDq0foazmw2p6yOEiPrhwG76As+vUKZ/6Pkt?=
+ =?us-ascii?Q?5iboAeafkKPS98UaLUKTXWgEVQbRwlMavasbcCz+uWL2zWE2FAdK11D5eJ4q?=
+ =?us-ascii?Q?3NXSeqN9Bgy5yLkEjMpZSrBG6j4dMQf3YkCzLHbjUsEngd+hq4UJq39hrYhK?=
+ =?us-ascii?Q?AtG+eM8uXRHVW0vomzs1BjiujnDPJtErsxx4gjS0WZJrvBGQHRzAHLdPwz7M?=
+ =?us-ascii?Q?AmqnIs9hJAH5mJ14a6ZSG6O39RI6qFxpEBTX/wQFD1cmieuxrnkoa9tUMGOT?=
+ =?us-ascii?Q?Xz4oWrZ1OXHcAR80VnZT3XhTQHU1Kehh9UjJiAj66QvzS4k9RA=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB12093.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?2fDu7l+ECOifOlaaOI1+31YheMFqr3RM/ZRuzcE5aX1cjHuo6uiFAoo+M/D8?=
+ =?us-ascii?Q?wlV0nTXXLfFDJqFnxg4jgufoJiHtNkzZjLiLM6SfARRbTVkrwVt0DFybQzE2?=
+ =?us-ascii?Q?IJo96gkflC/MqbouQx1hM+hoNzCzfHRMsfTHK6+Gf95rRjFCRsDnRz7Vz37b?=
+ =?us-ascii?Q?VMYEllOiaKehN/GptxpWDjp/M6RwXUc1TwNKUNYHxdZfykGp1mDFwFJpwGJv?=
+ =?us-ascii?Q?bbqN2QrSD6EvxzaTQTGI1pcQktY2DRnMWPYf9jIas1L06CXd+ubR5gRXuBXw?=
+ =?us-ascii?Q?c4efoXEkzYns6IF/RgbxMdQAEqHn/oMTuorxH/hhUCnmAN3ChGZKLGoq4m2R?=
+ =?us-ascii?Q?TV8XIFKCPMNKcJ81Oh+AcnzCvv0nIVaBcjds4rJvJpolAvzqVa41oFTpnF9a?=
+ =?us-ascii?Q?ru0Oi1bXe/5tBlK9EO/MPMJjOfWkuS7Cllo7KWXt+V9DtdWrg4zBR+4xUcvJ?=
+ =?us-ascii?Q?6MOazJYC8/O4yDO+edJ6xT8ecg+yEO9Zf9kaEL9gT6EIwLIeDDNO6RvPIROf?=
+ =?us-ascii?Q?KrJM3ABW2I+EVR/EMWHOQcQlHKJ+N1CbHFKmDWoguIR1up+TNg1ZS1ZJgngA?=
+ =?us-ascii?Q?9QAKkJfIfDPSQkGu65PZ+hVZ4bU0N7Dpi0G8S0F/LqjcjT4ygcUmAdVyoVvQ?=
+ =?us-ascii?Q?3HBCleuVSLYCdAL/Y/bAoi8tuWTuSUaN/zAi4ZXlwVq4OFbAPyy6xL+6njr2?=
+ =?us-ascii?Q?2dWUEQQ232cneLJFpADgPjQKwKtWIi5xnla7sYls9KiZgUw8P0FkWzwcjnhG?=
+ =?us-ascii?Q?Q8YeQ1FujIUb7HDkx9G8/Kn8RwE3R0zY8BtpQ+1dMW2iZqb5P6ris3GzLVEC?=
+ =?us-ascii?Q?iosPYenpw+shX7PZaXynu28QegST+VDUm3Gqm0AIwMmeACqhLaVqSDjo+zd/?=
+ =?us-ascii?Q?qiz2A+gxDPcRHdNJXJmBGcSDv6JACIY04mWMH1D9o10L1lUMgn0SjHwtwOfs?=
+ =?us-ascii?Q?g3mxiK9u1yH/wTuJ47mE9lSP4FDuqHcxdrsFCXIBVdvHCRwjnPODqbnp6l5l?=
+ =?us-ascii?Q?c6XsoDPGJYGDDNLS/3dr5YMZ6+V+iPwyQ1glf13lDku7yQLQtBVwVCLm/HUG?=
+ =?us-ascii?Q?lpZMPy1rBAq+LkCIBLhg07uDewei4puazxmtVnGa6NyEUbXaAWovNPDvaHqe?=
+ =?us-ascii?Q?4S/SxPh2+yrUFdbV7VfW4CbNbHhoCoaIQXhpEBKMfwTJ2KyfP7I0b8zGVgAb?=
+ =?us-ascii?Q?3ay9Lx600S3SusjbWu9fasBUaa/bs8p+78+vm9Wc+t7YWfv6LqZ/EWkA/qi1?=
+ =?us-ascii?Q?vMB91Zpi/NHYXHdnQCNNz5GEW8yOd0WasQmDV9Lb6zDJr7whZKcDUBUndYIN?=
+ =?us-ascii?Q?9nm5EZz6q3u4d9nrUzFIlH8GofgOKkvvK/jWJQ7Ik8QBkSIYdCrSWjHbUF48?=
+ =?us-ascii?Q?URBR1e3Wog/41aCK5e288iUCGAW69IUfZvcFVqsHmtyECFkyr5+oGk4i5clZ?=
+ =?us-ascii?Q?hPpJQ6xrsEnBKI4+VM03vObU1XcngixX3/2fNEIymyxmkTHJ2HsWpPxL7Mt3?=
+ =?us-ascii?Q?oBGHDq0Y443eZXSHUBFFLUSkGxx7zXLGViOW3D8/dz258A9HZY6CeCaj7/3i?=
+ =?us-ascii?Q?I2Qp3KUQLJmQjjx0a5pQwIzd97gUiAjAKLFTRqEvOv+rr++cHJ7QffrQgQto?=
+ =?us-ascii?Q?vg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1741091349.git.hongyan.xia2@arm.com>
-In-Reply-To: <cover.1741091349.git.hongyan.xia2@arm.com>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Thu, 6 Mar 2025 19:12:33 +0800
-X-Gm-Features: AQ5f1JqVTVVPJkAkomtI5r-Qi2VHFR8lW3hfFzYJhWDyABfGnA8HxzSH-SpPdPE
-Message-ID: <CAB8ipk_AvaOWp9QhmnFDdbFSWcKLhCH151=no6kRO2z+pSJfyQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] uclamp sum aggregation
-To: Hongyan Xia <hongyan.xia2@arm.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Morten Rasmussen <morten.rasmussen@arm.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Christian Loehle <christian.loehle@arm.com>, Pierre Gondois <pierre.gondois@arm.com>, 
-	linux-kernel@vger.kernel.org, Xuewen Yan <xuewen.yan@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB12093.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c27827c9-c375-4849-d58f-08dd5ca0333c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 11:15:28.0474
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NlxmLhlpYmtLF3I9KC/5QscP/Xz1XOPGJrM0RfZQxEIbAalUDgOvjPyHPa9Y+VJt5dX5A21TCVd04T5/596biuDFXxLekCUdPag94radkQo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9PR01MB15621
 
-Hi Hongyan,
+> From: Prabhakar <prabhakar.csengg@gmail.com>
+> Sent: 05 March 2025 12:39
+> Subject: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY Co=
+ntrol
+>=20
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> Add device tree binding document for the Renesas RZ/V2H(P) USB2PHY Contro=
+l
+> Device. It mainly controls reset and power down of the USB2.0 PHY (for
+> both host and function).
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Tue, Mar 4, 2025 at 10:26=E2=80=AFPM Hongyan Xia <hongyan.xia2@arm.com> =
-wrote:
->
-> This series gives an alternative implementation that addresses some of
-> the problems in uclamp max aggregation. Sum aggregation mostly gives:
->
-> 1. Simplicity. Sum aggregation implements uclamp with less than half of
->    code than max aggregation.
-> 2. Effectiveness. Sum aggregation shows better uclamp effectiveness,
->    either in benchmark scores or sometimes in energy efficiency.
->
-> The key idea of sum aggregation is fairly simple. Each task has a
-> util_avg_bias, which is obtained by:
->
->     util_avg_bias =3D clamp(util_avg, uclamp_min, uclamp_max) - util_avg;
->
-> If a CPU has N tasks, p1, p2, p3... pN, then we sum the biases up and
-> obtain a rq total bias:
->
->     rq_bias =3D util_avg_bias1 + util_avg_bias2... + util_avg_biasN;
->
-> Then we use the biased rq utilization rq_util + rq_bias to select OPP
-> and to schedule tasks.
->
-> PATCH BREAKDOWN:
->
-> Patch 1/6 reverts a patch that accommodate uclamp_max tasks under max
-> aggregation. This patch is not needed and creates other problems for sum
-> aggregation. It is discussed elsewhere that this patch will be improved
-> and there may not be the need to revert it in the future.
->
-> Patch 2, 3 and 4 implement sum aggregation.
->
-> Patch 5 and 6 remove max aggregation.
->
-> Patch 7 applies PELT decay on negative util_avg_bias. This improves
-> energy efficiency and task placement, but is not strictly necessary.
->
-> Patch 8 addresses sum aggregation under-utilization problem.
->
-> TESTING:
->
-> Two notebooks are shared at
->
-> https://nbviewer.org/github/honxia02/notebooks/blob/aac12d9becae2b2fe4690=
-cbb672439fd884ede30/whitebox/max.ipynb
-> https://nbviewer.org/github/honxia02/notebooks/blob/aac12d9becae2b2fe4690=
-cbb672439fd884ede30/whitebox/sum-offset.ipynb
->
-> The experiments done in notebooks are on Arm Juno r2 board. CPU0-3 are
-> little cores with capacity of 383. CPU4-5 are big cores. The rt-app
-> profiles used for these experiments are included in the notebooks.
->
-> Scenario 1: Scheduling 4 tasks with UCLAMP_MAX at 110.
->
-> The scheduling decisions are plotted in Out[11]. Both max and sum
-> aggregation understand the UCLAMP_MAX hint and schedule all 4 tasks on
-> the little cluster. Max aggregation sometimes schedule 2 tasks on 1 CPU,
-> and this is the reason why sum aggregation reverts the 1st commit.
->
-> Scenario 2: Scheduling 4 tasks with UCLAMP_MIN and UCLAMP_MAX at a value
-> slightly above the capacity of the little CPU.
->
-> Results are in Out[17]. The purpose is to use UCLAMP_MIN to place tasks
-> on the big core. Both max and sum aggregation handle this correctly.
->
-> Scenario 3: Task A is a task with a small utilization pinned to CPU4.
-> Task B is an always-running task pinned to CPU5, but UCLAMP_MAX capped
-> at 300. After a while, task A is then pinned to CPU5, joining B.
->
-> Results are in Out[23]. Max aggregation sees a frequency spike at
-> 873.64s. When zoomed in, one can see square-wave-like utilization values
-> because of A periodically going to sleep. When A wakes up, its default
-> UCLAMP_MAX of 1024 will uncap B and reach the highest CPU frequency.
-> When A sleeps, B's UCLAMP_MAX will be in effect and will reduce rq
-> utilization. This happens repeatedly, hence the square wave. In
-> contrast, sum aggregation sees a normal increase in utilization when A
-> joins B, without any square-wave behavior.
->
-> Scenario 4: 4 always-running tasks with UCLAMP_MAX of 110 pinned to the
-> little PD (CPU0-3). 4 same tasks pinned to the big PD (CPU4-5).
-> After a while, remove the CPU pinning of the 4 tasks on the big PD.
->
-> Results are in Out[29]. After unpinning, max aggregation moves all 8
-> tasks to the little cluster, but schedules 5 tasks on CPU0 and 1 each on
-> CPU1-3. In contrast, sum aggregation schedules 2 on each little CPU
-> after unpinning, which is the desired balanced task placement.
->
-> EVALUATION:
->
-> We backport patches to GKI kernel v6.1 on Pixel 9 and run Android
-> benchmarks.
->
-> Speedometer:
->
-> We run Speedometer 2.1 on Chrome v131 to test ADPF/uclamp effectiveness.
-> Because sum aggregation does not circumvent the 25% OPP margin, we
-> reduce uclamp values to 80% to be fair.
->
-> |   score   | score |   %    | CPU power % |
-> |    max    | 192.4 |        |             |
-> |  sum_0.8  | 230.8 | +19.96 |   +31.54    |
-> | sum_tuned | 201.8 |  +4.89 |    -0.41    |
->
-> We see a consistant higher score and higher average power consumption.
-> Note that a higher score also means a reduction in run-time, total
-> energy increase for sum_0.8 is only 9.65%.
->
-> We then reduce uclamp values so that power consumption is roughly
-> the same. If we do so, then sum aggregation achieves slightly better
-> scores, shown in the sum_tuned row.
->
-> UIBench:
->
-> |   score   | jank percentage |   %    | CPU power (mW) |   %   |
-> |    max    |     0.115%      |        |     158.1      |       |
-> |  sum_0.8  |     0.129%      | +11.96 |     154.9      | -4.19 |
->
-> UIBench on Pixel 9 by default already has a low enough jank percentage.
-> Moving to sum aggregation gives slightly higher jank percentage and
-> lower power consumption.
->
+Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+
 > ---
-> Changed in v2:
-> - Completely separate uclamp component from PELT and util_est.
-> - Separate util_est_uclamp into an individual patch.
-> - Address the under-utilization problem.
-> - Update Python notebooks to reflect the latest sched/tip.
->
-> Hongyan Xia (8):
->   Revert "sched/uclamp: Set max_spare_cap_cpu even if max_spare_cap is
->     0"
->   sched/uclamp: Track a new util_avg_bias signal
->   sched/uclamp: Add util_est_uclamp
->   sched/fair: Use util biases for utilization and frequency
->   sched/uclamp: Remove all uclamp bucket logic
-
-I=E2=80=99ve recently been looking into the issue with uclamp and
-delayed-dequeue, and I found that uclamp_rq_inc should be placed
-before enqueue_task, which led to a patch.
-Before sending the patch, I came across your series of patches. I
-haven=E2=80=99t fully understood your patch yet, but it seems like
-uclamp_rq_inc is no longer needed.
-Do you think the patch below is still necessary?
-
---->
-
-Subject: [PATCH] sched/uclamp: Update the rq's uclamp before enqueue task
-
-When task's uclamp is set, we hope that the CPU frequency
-can increase as quickly as possible when the task is enqueued.
-Because the cpu frequency updating happens during the enqueue_task(),
-so the rq's uclamp needs to be updated before the task is enqueued.
-For sched-delayed tasks, the rq uclamp should only be updated
-when they are enqueued upon being awakened.
-
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
- kernel/sched/core.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 67189907214d..b07e78910221 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1747,7 +1747,7 @@ static inline void uclamp_rq_dec_id(struct rq
-*rq, struct task_struct *p,
-        }
- }
-
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct
-*p, int flags)
- {
-        enum uclamp_id clamp_id;
-
-@@ -1763,7 +1763,8 @@ static inline void uclamp_rq_inc(struct rq *rq,
-struct task_struct *p)
-        if (unlikely(!p->sched_class->uclamp_enabled))
-                return;
-
--       if (p->se.sched_delayed)
-+       /* Only inc the delayed task which is being woken up. */
-+       if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
-                return;
-
-        for_each_clamp_id(clamp_id)
-@@ -2031,7 +2032,7 @@ static void __init init_uclamp(void)
- }
-
- #else /* !CONFIG_UCLAMP_TASK */
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
-+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct
-*p, int flags) { }
- static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
- static inline void uclamp_fork(struct task_struct *p) { }
- static inline void uclamp_post_fork(struct task_struct *p) { }
-@@ -2067,12 +2068,9 @@ void enqueue_task(struct rq *rq, struct
-task_struct *p, int flags)
-        if (!(flags & ENQUEUE_NOCLOCK))
-                update_rq_clock(rq);
-
-+       uclamp_rq_inc(rq, p, flags);
-+
-        p->sched_class->enqueue_task(rq, p, flags);
--       /*
--        * Must be after ->enqueue_task() because ENQUEUE_DELAYED can clear
--        * ->sched_delayed.
--        */
--       uclamp_rq_inc(rq, p);
-
-        psi_enqueue(p, flags);
-
---
-
-Thanks!
-
-BR
----
-
->   sched/uclamp: Simplify uclamp_eff_value()
->   sched/uclamp: Propagate negative bias
->   sched/uclamp: Solve under-utilization problem
->
->  include/linux/sched.h            |   8 +-
->  init/Kconfig                     |  32 ---
->  kernel/sched/core.c              | 308 ++--------------------
->  kernel/sched/cpufreq_schedutil.c |   6 +-
->  kernel/sched/debug.c             |   2 +-
->  kernel/sched/fair.c              | 430 ++++++++++++++++---------------
->  kernel/sched/pelt.c              |  62 +++++
->  kernel/sched/rt.c                |   4 -
->  kernel/sched/sched.h             | 132 +++-------
->  kernel/sched/syscalls.c          |   2 +
->  10 files changed, 341 insertions(+), 645 deletions(-)
->
+>  .../reset/renesas,rzv2h-usb2phy-ctrl.yaml     | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/renesas,rzv2h=
+-usb2phy-ctrl.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/reset/renesas,rzv2h-usb2ph=
+y-ctrl.yaml
+> b/Documentation/devicetree/bindings/reset/renesas,rzv2h-usb2phy-ctrl.yaml
+> new file mode 100644
+> index 000000000000..ed156a1d3eb3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/renesas,rzv2h-usb2phy-ctrl.=
+yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/reset/renesas,rzv2h-usb2phy-ctrl.yaml=
+#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/V2H(P) USB2PHY Control
+> +
+> +maintainers:
+> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> +
+> +description:
+> +  The RZ/V2H(P) USB2PHY Control mainly controls reset and power down of =
+the
+> +  USB2.0 PHY.
+> +
+> +properties:
+> +  compatible:
+> +    const: renesas,r9a09g057-usb2phy-ctrl  # RZ/V2H(P)
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  '#reset-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - power-domains
+> +  - '#reset-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/renesas,r9a09g057-cpg.h>
+> +
+> +    usbphy-ctrl@15830000 {
+> +        compatible =3D "renesas,r9a09g057-usb2phy-ctrl";
+> +        reg =3D <0x15830000 0x10000>;
+> +        clocks =3D <&cpg CPG_MOD 0xb6>;
+> +        resets =3D <&cpg 0xaf>;
+> +        power-domains =3D <&cpg>;
+> +        #reset-cells =3D <0>;
+> +    };
 > --
-> 2.34.1
->
->
+> 2.43.0
+
