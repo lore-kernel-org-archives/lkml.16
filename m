@@ -1,102 +1,90 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564EB26BD85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390041DE4EC
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741286541; cv=none; b=HelmzRaDJa4jyuC6f12hWCqIlJ6yf4zy3ueLrTaZ+aMYjyI8+xUpahyO7CXXE2pPYoy2LYB7FfSzIiwx15A91YC+AZg/4bW9OnFRy3nTs044nyEj0DYmUT62LwJ/d1ovGEyGwdyA3yNXceAX65mlLiH9z7ByjFI5urY2jcz7HFs=
+	t=1741286542; cv=none; b=Wswj8nxjhMXdAcI0sjhml2dORTPQ3U+Y0AX4AdhnRVQ3syq/fSbCsMMOb0LjIs1agY99FysN7cHx2sMfUxBEsYUiWIS9u82NlfiCls9+WBBHqJou5W6C4EZ8KM845CvPUUnNK7fKb4tI1F1QEkN0gF9tgpCXqAxw8/zQtFF5by8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741286541; c=relaxed/simple;
-	bh=ffkKklzS+mSa+8hF6E9RwA6ptmWZgFmKAk0mKl2rZWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WKIlCA/aDDs4CDyLUpqxgudqmqKyNNRu1nrOQ2hX/0WH2Da/qoXqbSyl5ghyy8sXn1m5pBlas3jueZATIvI2ZhLhft2zKma8tUCKkSZx6BnIZV1ZVarRv1Grs8M8udL5Qc385cnrf6SI3IikY4NiUwQ5DTdIg0M5KOQHaN1EJOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu; spf=none smtp.mailfrom=kragniz.eu; dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b=b7DXUpxd; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kragniz.eu
+	s=arc-20240116; t=1741286542; c=relaxed/simple;
+	bh=JDnHebyoCcnBx+cDCq/zkG7+g+ESLfON7ldIRucKy8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kDDdPyePr0XRpY9LfymPVT5UZtC7xOP0CE2YFTL+J3symV/6SnhUhylnddLDLTSAIugZKSmTcDJFkmPjA2WZC8vepRkzoz24wwX+eybZth7hOdzBpZEZ4CNxHAKOK1ocJoKi0e1PGCkm41T/dT4Y+GvRwsVR0F9mpFHQJSz7Z0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eHYvcsys; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="b7DXUpxd"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43bd5644de8so12269075e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 10:42:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google; t=1741286536; x=1741891336; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fspkIM0MFhhj+8j/ws7LV3/Ik6vwUd9t9FxZaCSPwBE=;
-        b=b7DXUpxd/nLqVBJqeEdHo+SpWWN13Fsz3Rw8oPfMZS74BFHK6psIJnHeUU9rUCeaw3
-         kxgOaRAu0V7Ccwnp9m5YYTofccdItq+jAUsmS8ntMAm8KPd8zmOpwOfOH/s4/gQHQOVz
-         vltwHUyh3324Sxzi2CWN4ylbmHBvdO7GxkwhU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741286536; x=1741891336;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fspkIM0MFhhj+8j/ws7LV3/Ik6vwUd9t9FxZaCSPwBE=;
-        b=NwYB+epCw2buHJzmrb0ZtEDOT6q1DH3vVZmmZ5HNhN9W+QxKDAdreXVHMLmyFNxJZU
-         h7EITnXAKrblP4LGmNsIlOPrFqYMHprZeYBkMod/uxFaD/OgobsMtz7IED3St6NsqYvf
-         nCnP//S4aiGC1kaQdAr8dFCb3WrotkCebEAXOkuU32kl81eUzCkQrjl/SahL8Xd2CviC
-         QAl1NH4vaypYtxMS+/2dQXidd66AK4Xtylz3+SXix6XI0CHt38TFd1ZN79q6f46K3NXW
-         PKef5Z81KBs8bayAt5UP7k7dtcw6wYTqqPTK2rpY3o84ETFYuXPkrR2h+7vjhOVhWHs5
-         6CCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUF34+Zzz3IS4HmijyrbkBZsWYUeQekKcBOn2ZvwPs+WANJnmhV85xtz/vjcThYXJqFVBw3S7y6vg4pQKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhQkhHmHbw58qq1vHUAZFFHkQ0Ryq23ssGrYzBttQR49xKVu7C
-	VkMtf0eC1T7SUeOv55iAVKq3al2YhyRfm+oGaY4BHD9skiArO2gMHiJQTr4mltgDxPQ2PUYeCk6
-	iHAN20A==
-X-Gm-Gg: ASbGnctGuOjS0/i2DnTu8ITfneXJfgW/po6tYQfvwFPXZT6FakGH+KGmtFn+lbWPFNG
-	KEHMAHX1cTYK5Qg7HpXVPFuC+af4M/zDr2WtY1QBzdJUvzRRYIyJ7QAk/dg+z3FriVa9yFuIGSd
-	hjdNiTQ5JX2CqCtrz2HYdBJQbbKsowDOX1P1rmoVH54wBkUz2BHb9JVlr272XsJfUaQovTnwMXX
-	pOMH2B9jYTUyOAkh4Sie2tzRzbGpgiNMQQYNdo1wZ99QbOB0115oz0lUSmLOSndMiiFCx1/Du1a
-	IHGxiMk68cdrrTVxYOrCJOHen9R3PSV1nmybGJeEaPoaSpg/3coOHPaL8wLZ5k59G+hsfoAFieK
-	H/feJ4g==
-X-Google-Smtp-Source: AGHT+IHYWhm6CLJEOoTdTAhEcrcxD0egOdz7+YQF/vM3ilRKL5hchpwKNaBZjO6SX9IAm4cERiFsxw==
-X-Received: by 2002:a05:600c:4e91:b0:43b:d116:6483 with SMTP id 5b1f17b1804b1-43c6021f13cmr5658405e9.27.1741286536542;
-        Thu, 06 Mar 2025 10:42:16 -0800 (PST)
-Received: from localhost.localdomain (161.26.169.217.in-addr.arpa. [217.169.26.161])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd42c55e6sm57052725e9.23.2025.03.06.10.42.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 10:42:16 -0800 (PST)
-From: Louis Taylor <louis@kragniz.eu>
-To: Willy Tarreau <w@1wt.eu>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Louis Taylor <louis@kragniz.eu>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/5] tools/nolibc: drop outdated example from overview comment
-Date: Thu,  6 Mar 2025 18:41:21 +0000
-Message-ID: <20250306184147.208723-4-louis@kragniz.eu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250306184147.208723-1-louis@kragniz.eu>
-References: <20250306184147.208723-1-louis@kragniz.eu>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eHYvcsys"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=71birkROPl9yB++m29FkJfW455fBG18HUHqmbtdCA+A=; b=eHYvcsyslBQNgH+z6Zyr8371c8
+	0RVewtqIv1nDnUN3e6nGgPG/MkyvcPQtWExVcHFSmGj0LLR9+BVnI/SMOSXd0opaTyNxjnNpCg5sn
+	tZnRYCtOHTEU5shDwIqinECpZNuQnhFyCvQ2h6IInUrSWJarjtkMd9kNycQeU1YaGVmgyvir1cXtd
+	6d1AHUHZSQ3wsxfJUshwOq7DP6R9F4lfNxCu/iqFsf+KGhNavd6D7CGCSur/oD1mGXWjLmRnBYT5+
+	DgzMIuaKEu1e02W11zpnZ0Jh+mvPaKuvSHcV20VMmGS1gcx0PsWdr2k1C8CgD+ljnvVTsUab1JidW
+	1yWdZJvQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tqGAc-0000000B60f-1WkZ;
+	Thu, 06 Mar 2025 18:42:10 +0000
+Date: Thu, 6 Mar 2025 18:42:10 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, AneeshKumar.KizhakeVeetil@arm.com,
+	Hasan.Maruf@amd.com, Jonathan.Cameron@huawei.com,
+	Michael.Day@amd.com, akpm@linux-foundation.org,
+	dave.hansen@intel.com, david@redhat.com, feng.tang@intel.com,
+	hannes@cmpxchg.org, honggyu.kim@sk.com, hughd@google.com,
+	jhubbard@nvidia.com, k.shutemov@gmail.com, kbusch@meta.com,
+	kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com, leillc@google.com,
+	liam.howlett@oracle.com, mgorman@techsingularity.net,
+	mingo@redhat.com, nadav.amit@gmail.com, nphamcs@gmail.com,
+	peterz@infradead.org, raghavendra.kt@amd.com, riel@surriel.com,
+	rientjes@google.com, rppt@kernel.org, shivankg@amd.com,
+	shy828301@gmail.com, sj@kernel.org, vbabka@suse.cz,
+	weixugc@google.com, ying.huang@linux.alibaba.com, ziy@nvidia.com,
+	dave@stgolabs.net, yuanchu@google.com, hyeonggon.yoo@sk.com
+Subject: Re: [RFC PATCH 1/4] mm: migrate: Allow misplaced migration without
+ VMA too
+Message-ID: <Z8nsgr46eVH7W7SJ@casper.infradead.org>
+References: <20250306054532.221138-1-bharata@amd.com>
+ <20250306054532.221138-2-bharata@amd.com>
+ <Z8naQNirs4HfTX0O@gourry-fedora-PF4VCD3F>
+ <Z8nfPlJu8kxUvB8m@casper.infradead.org>
+ <Z8nnPYldSXs5TYND@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8nnPYldSXs5TYND@gourry-fedora-PF4VCD3F>
 
-This behaviour was changed in commit a7604ba149e7 ("tools/nolibc/sys:
-make open() take a vararg on the 3rd argument").
+On Thu, Mar 06, 2025 at 01:19:41PM -0500, Gregory Price wrote:
+> On Thu, Mar 06, 2025 at 05:45:34PM +0000, Matthew Wilcox wrote:
+> > On Thu, Mar 06, 2025 at 12:24:16PM -0500, Gregory Price wrote:
+> > > we may also need this:
+> > > https://lore.kernel.org/linux-mm/20250107000346.1338481-4-gourry@gourry.net/
+> > > 
+> > > May be worth just pulling these ahead to avoid conflict.
+> > 
+> > Or not putting them in at all because this whole thing is a magnificent
+> > waste of time?
+> 
+> Divorced from the tiering mechanisms, is making misplaced migration able
+> to migrate unmapped pages not generally useful?
 
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
----
- tools/include/nolibc/nolibc.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The only thing I can think of is if you have a process or set of
+processes on node A calling read() and the file is cached on node B.
+But in order to decide if the page is on the wrong node, you'd need
+to track a lot of information about which nodes the page is being
+accessed from.  Which is probably why we've never bothered to do it.
 
-diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index 05d92afedb72..70872401aca8 100644
---- a/tools/include/nolibc/nolibc.h
-+++ b/tools/include/nolibc/nolibc.h
-@@ -31,8 +31,7 @@
-  *   - The third level is the libc call definition. It exposes the lower raw
-  *     sys_<name>() calls in a way that looks like what a libc usually does,
-  *     takes care of specific input values, and of setting errno upon error.
-- *     There can be minor variations compared to standard libc calls. For
-- *     example the open() call always takes 3 args here.
-+ *     There can be minor variations compared to standard libc calls.
-  *
-  * The errno variable is declared static and unused. This way it can be
-  * optimized away if not used. However this means that a program made of
--- 
-2.45.2
-
+This is not a large patch for you to carry as part of your patchset.
+There's nothing intrinsically wrong with it; it just has no users in
+mainline and no real prospect of any being added soon.
