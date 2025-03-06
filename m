@@ -1,65 +1,65 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA0F1F63E1
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBE0204686
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741258586; cv=none; b=snzxX0TuHhvdSz4Ha0hTwJ1iTd+Mwxy5wVuEbtoZA1HFdtuiWSHQ8SlkNo31iyIeU//ajH0h0Im0Q3MyXrhgcMvp2Uuam7NRtR3yMbSXotp4dK2GYdUwJn2FbArgc4/XMEFEY6pJuth78/Utc+RUGrDLItpaESaSBmNESLU5bFA=
+	t=1741258587; cv=none; b=lkgwFILGhWo0X9nVvxBKJ0TvZDEKdp0oj03H1zz448ZJ+AJ0iCURtCqbFi8JUQsuDIFnO7a/HlYZ8LGBxA3vyAlesR9hHX/xWRPO9n8IoN6lCG+JSv1UGRi8QoNLiKO+lueDq6jp3SACr92X5vq6ZdOXisqKdlHLGoat5BuwwL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741258586; c=relaxed/simple;
-	bh=wdLF9WAxR22XqcYA7gK8+yGhNvwlObpcwbXvFtZiEFs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FYOzePoROvuU9bZ4csYJFyHA+gCqrqacjhHdxdd4ttrKis0mYhUG6HccaGugqRg6L7FFlLsftOGCy74f+ozVc0QHbOE8XddTo3QpFO+OUzAsYmiXtlEJCuFj7+zestexgIFCBOLCp/3wslkThz83qEZw5wzlirfKSS2iAOlgJlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D3nZXF5/; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1741258587; c=relaxed/simple;
+	bh=P71o+WVhxYn8Se0AGo5XXf4Chk/tu5d7gpsoPtCEyy4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jC4byaWt6Zt3fjVqLXwkdN7qfcyRS+ONpSB15ywy88LNecLlo6z/Qkw8qDFJKRTeUrl9cgZKchgf22wRJA9KmmX9eUL0WYmC6LES1ZBgtuigvoL10Nv74hEjS18BW/Q/auAt96cPBiYwR2+BPRI2vTobk/nC4EbMzeFmJkaLXWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fN5c6zP2; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D3nZXF5/"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so2959575e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 02:56:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fN5c6zP2"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-438a39e659cso2642655e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 02:56:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741258583; x=1741863383; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ntfm4QuEvNugJ4xYbOkC0QKXHv8rdJmW1XkWNgsvim8=;
-        b=D3nZXF5/EgmrpyRYvBHvXgqQwreMtdW7zYzSUkjRcUyZhSQDGq0a6hTe6RCQ7Vix7j
-         P2LDfsYrOR2prJdlpe7zZMpjr88e2KIBGZMcjg8PYRksQlNYeRw61n4ns410TZP09T/N
-         X3a6Mv0yB6/0Ia5JmZeUopkD/Qi9yUucM3iWluMBdgV9q6drpTQMSyqIivK9X0qBN9GI
-         wvySesvU115luFCgGGSQbJU+w2OX9U1pE694urQrIHmSdHvGNOAdMoQzg5XzASBU+CnU
-         YSq4jvSMfuhp4xOUjdBqRKLZAc1ESr90iRfUj7WJq9yxRx+s32+CQo/vz44R2X+kaIhf
-         vdDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741258583; x=1741863383;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1741258584; x=1741863384; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ntfm4QuEvNugJ4xYbOkC0QKXHv8rdJmW1XkWNgsvim8=;
-        b=L1JeCyhTTgIaeuvYVj3h/WFvkSE15gnCfqAqH5oewX3yyXXRX2RNWgWfmXnA7cKxcf
-         fdc6Hi6zM1CPhVQjJM1S7HFTSi95SpkOvtG82bO8P/oEsZXDCt78Ut72JQCntzDs7Del
-         6mS+LSsuHZCB9c8RbDnUZ0EvlIdBXeQuQIwO79SH0cuFSM+PJhZbtDhtfn4/WeUwo8Vf
-         IJyP7AyatGVf3rPji+JqOcrRruD9R2m3VZJ6F1RccP2CM1NM9N/4qmg0846JmtscNA6C
-         Py4wEIuTZRIvj3P0KwMsNKezQsJJhm9FMMWdVfc7Wep0aMd6fBv/tAEFrjXKO7lA93h+
-         AzVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBxcrcFJr/8dg1I5gKmZZ6+upuyLLl1x1MhXXSqcZWPhshTYXldr/lv9edDduFJU9+7T6+0UC5IVm5msk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRsWEWs5sHqIufB6q0285M972LhwFpwzeY54hHWwjHwUGJ1xld
-	Xn6Vx0A6I16be6iMlwSWixhIGaHtySF2P8z3ZGwS8d2HVf6ZsudgxB21J4TwcLk=
-X-Gm-Gg: ASbGncuWmOHeGEgr4/IpNjM1DTO++aw0D30+FTgix7k7U0Z+EFYzFkhcYpK+boGMwXe
-	JsrVcqDGpjWkY1L5DJAGbmfSn5+pEi564asG5YOAtKNDwuI1zEDvrc9qsNlplLsBQ8k9Ry0nstR
-	YH1fEttmPn0b7ZAAXEy3kY8oP4ff+V61AZpoQSv9eVHk3sJ52UkUm42PGxu0ZO+If6s3o3fKWc6
-	I3asarPCLVg9KiC2IkqUQrzemIcjThfLbLw17kF4Z0pddFlxzhOk2O4Lm6bS3t+ndRBGC9Mkh4F
-	OqpURMfnYcgzvqHtYzj3FbB8Mu314Q7BS9H5O/ov8RlRlHqR5v48ASvXjRwZNxClbw==
-X-Google-Smtp-Source: AGHT+IGfTbr6JhO0xYsYYnKUYMZiygPSfbhn9Cgj55ShmF4I2gr2O9JfOHtuext0rfjHkqMFS1qAtw==
-X-Received: by 2002:a05:600c:2d16:b0:43b:cc3c:60bc with SMTP id 5b1f17b1804b1-43bd2989f68mr54496775e9.15.1741258582923;
-        Thu, 06 Mar 2025 02:56:22 -0800 (PST)
+        bh=LxBaNed9RSMl/yW/MAlaQb2l44+yRXzgp7zH4r9ij/k=;
+        b=fN5c6zP2ff/XI10MuSKo/u2HPpgI+MqN5mZrRquTHW/fS6Kk1TwbeYhbwEN0bHDxlv
+         yLvsYK0aw3BHSzOittEyyQV1s+MQN4qHNzK1hdYHPi0YtOG0rXMNmYWcp5wa7qqT44b2
+         ZldUvHkPykJ62pG+iZERELMKFzQKIVwVfhfhmdrnCEv5yFkIkPQyKmElLbHK0F42QhxC
+         xKdtg65/ygpHBOk+y6uBhNeQHqv5aw9hjBFOAKuAi+GxeqltvusNsj9EZpq0izxdVI8B
+         LOOK7tiImFRRzBHyxkj23csieuZR1U3Z7owzpSsCSPYubdtawVqlOPm7kDN9J2SBXq1c
+         jqZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741258584; x=1741863384;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LxBaNed9RSMl/yW/MAlaQb2l44+yRXzgp7zH4r9ij/k=;
+        b=rezYGgOssSecIIJcCr5eDjHnFCJomek8qG7v1GTVUjTZthOC24WvL8s6iv2gEgTqTw
+         9vChYQkS0CAyI+Lt5cbP8z1SPaIpHv4LQy91CzBVwJrJk6AelBh49SU+5R/6jIVLq3LS
+         gpYTwwQos60jS1Gu5mbOfI2xzIY4uCWdTmzc30xC9Kd0XCc3hrtXBr+K5oUE/1H3C1Bp
+         miJmkJsUyK94AFQSvQ4Jd6DkNFtI59oilbQOVKXwZRX5fv5tSkuLRYzzpLynYFAaXMiK
+         1TsfxjD2zm5xQ/z1KV1WJoBh+10w2Yyts+9xtDRfwy9G84sIYBxutxKsnWgKguhVsudM
+         +vZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2WDipzVDEVOdzs1xs9BzE5lKG5mDaDXsqXDHS+/tmcmEFoc+DBquzsIQ6Y4RwHF20E9ugp9SufobMbYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2X9r9UAUsBaAzMQ5Ozut0a0YF3xPoIQ5gOXO1hDQAvCr35Fky
+	flDuBK33qkxQI1cfLHGE+6nMJ1i9AEEDzFWN3/hw3tKnBcu+URhE4C41cPzoipg=
+X-Gm-Gg: ASbGncuX1BwsWMxTNJBFotHI2tCKE/AtluikRhotqXd+uAIAYGgQbcIFzDJB7zAMPcl
+	qLGz5DZ+Zj+oo/9qKng9B9U0JqrbLN53DeC3Jj7CBIdsZ/LO+Cl6jnNCAVkBTFPa3lkQIrN7oAJ
+	VGTicELMXiQLAFWNlf9Ang7KpIxs8rtOwnj9RcgTlzHrFcM1OJsh4qqAPu5ClZfN6E6a6wIm2MB
+	3pfWDxm6FEohniiMw/2A9DbYtCrpLpT/mzFpW6ro4CO4tMnuH/nfnAQKg9zftOfHGeEKBhwA0Bo
+	n4yDrAW6VRwSl8XLrljcJrqmi5zbF3F6N1+41S+VOREKnSDiIxbk+qv/+xOPaZSL5w==
+X-Google-Smtp-Source: AGHT+IECRN+bvTx+8pm4GOrYZ5/1UypaJFOSp9E9046SWdeMqENayv/oHV7TP5Iul0p4eNzKyHKWUg==
+X-Received: by 2002:a5d:6da2:0:b0:38f:451b:653c with SMTP id ffacd0b85a97d-3911f72fe43mr5103677f8f.7.1741258584233;
+        Thu, 06 Mar 2025 02:56:24 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd831719sm17406675e9.0.2025.03.06.02.56.22
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd831719sm17406675e9.0.2025.03.06.02.56.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 02:56:22 -0800 (PST)
+        Thu, 06 Mar 2025 02:56:23 -0800 (PST)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH v4 0/2] input: convert dlg,da7280.txt to dt-schema & update
- MAINTAINERS
-Date: Thu, 06 Mar 2025 11:56:18 +0100
-Message-Id: <20250306-topic-misc-da7280-convert-v4-0-2972c4e81cb5@linaro.org>
+Date: Thu, 06 Mar 2025 11:56:20 +0100
+Subject: [PATCH v4 2/2] MAINTAINERS: update dlg,da72??.txt to yaml
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,71 +68,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFJ/yWcC/43NQQrCMBCF4atI1o5k0rRNXXkPcRHTRAe0KUkJS
- undTbuqCMXl/2C+GVm0gWxkx93Igk0UyXc55H7HzF13NwvU5maCC4mCSxh8TwaeFA20uhaKg/F
- dsmEAwa3Tui2VMprl+z5YR6/FPl9y3ykOPryXVwnn9R81ISBwp5qmxqs1ujk9qNPBH3y4sZlNY
- k1VW5TIFJqiLBpXlxWXP1SxohC3qAI4yNapWhuulMIvapqmD9zoqKRZAQAA
-X-Change-ID: 20241204-topic-misc-da7280-convert-20efaad588ca
+Message-Id: <20250306-topic-misc-da7280-convert-v4-2-2972c4e81cb5@linaro.org>
+References: <20250306-topic-misc-da7280-convert-v4-0-2972c4e81cb5@linaro.org>
+In-Reply-To: <20250306-topic-misc-da7280-convert-v4-0-2972c4e81cb5@linaro.org>
 To: Support Opensource <support.opensource@diasemi.com>, 
  Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Roy Im <roy.im.opensource@diasemi.com>
 Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
- Conor Dooley <conor.dooley@microchip.com>, 
  kernel test robot <lkp@intel.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1401;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1039;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=wdLF9WAxR22XqcYA7gK8+yGhNvwlObpcwbXvFtZiEFs=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnyX9UgiMec+Jkuqwmb/vnRfNsJpglm2TjPIvifTXq
- caV2I/CJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ8l/VAAKCRB33NvayMhJ0ZyGD/
- 9JLMH75fDc+JZn3kyPSoLWA6NUk1y5pD4d24VcPcnhtBhsGJmuETnH5218iWGyXllL2t3satA1jrR1
- 2ZMjU8d8ErEUvLCpO1gEz3t0MebOQcyZ4IsWqzl3kTXDashCCJ5ateMN54HRgJoS2yPK6uq5zRV2sH
- vJyhPHsL9z2R4JaYxJPGRVChone4axmtRW3Xhm2C1HOljtKBOlwdpnZp2675EAIA6Omcinz2lmVi7e
- x1XMGoS3WKLFVTmpGGa90UAUfQeGxvULMT4znYhASyxQAy1LuSuxBuAuSTOg1UGWnDJ7/iSzTMXV4E
- zukKRCQjnq1BIzLGzpL1USpd+jRTFV2xLRpfshZK53opT2+u8ROuqAMf1AUiMTeoplHMY5eemjwDsc
- durFUsp0f7K4l0wLEzRpkMAIfKPuzaXSZ2/AFfbIm9+JcVs0BS0NyJ9ZpWL7OYXBvFrDiDvY2Sorae
- wEKUZspv//O0Q4mZ/4Gt2PD3IE+/2IU+1SI4fw6ImPECBCbsuzPFKLHn4XBIxVw5R/5q/d7laE9Brs
- /TNOAxHDy237B5K08kBoya8ptoPqKv0GBpLoDgpvnlGsDigAEFKgRRtXtVVc74EvapkWZ3pM6EWouW
- y7+tgtDUGz/iNpYVIqsKDrECVP1hE96H/VUaM6JPfrLFWiDBIqx65mLBOuqw==
+ bh=P71o+WVhxYn8Se0AGo5XXf4Chk/tu5d7gpsoPtCEyy4=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnyX9VcGMUWuU5jZ1YXvxkpZFrAABVDhICGdek8KCx
+ BPGWbWaJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ8l/VQAKCRB33NvayMhJ0YNMEA
+ CWQ0pe8i+7H7rezUyIlfPbhcXFUmUor+5YvJ8DcfHAhHZ3hKAGtCbpIkjGeGH5E88m5EgnH4AprVCl
+ +B78O9t1OB4tXX/uFchdJTdybm1Rmrn50HPEuqXbuww2mIKnvvXUY44qz96r1irR8Q7OtfGcH0Jonl
+ +7RpVfvwfw2afEVhP/1vTWJ7p5PZLkrBHDw/IDuR+Ut+UqZkaQD2vnzubKvmZZVj9evyhzuj0ae8oc
+ cH6X8sYFRx4ItwRRpy3dKU73hD74GuKmwSkYdwoEzyddksKfbYj+zfjLjvVHEGo3eondbK7VU1kauG
+ WDUV3zjIPHlCRzFreXGXxomGILTKn81qBxv9rcZrVC2xig+locIeq0zhcrT9Y01gMdUlQTmHQ/0tQy
+ BHuF/y+XAQW4CcHwoOQMw9pwyNMIAkEkGgopRZYYzc1rt/yVxA7/pAacrH+Z+n8joo2cPBv1GM2nOF
+ hmBk8Fg6luOAcByOhRDLw36bsGXgEdttPowaotKTmHxywvc2znNcIKW98n7vOJA94mlM4R9pmO1W9/
+ RtYNaj7wO7pUJGLJ8uZK7Co+CE3I2MpWHr1ep61v2DeKiz5xVSDnwugmaF/gn5B12DS5REDmrEAIJ2
+ m3WBmtFMHCdQ1OVd1YHwvmS8yVANYssFYHgtyAbhyILfJ1Kx9Qrbje3csEFA==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Convert the Dialog Semiconductor DA7280 Low Power High-Definition
-Haptic Driver bindings to dt-schema. and update the corresponding
-MAINTAINERS entry.
+Now the dlg,da7280.txt file has been converted to dt-schema,
+update the corresponding MAINTAINERS entry.
 
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202412070625.zZpw80SM-lkp@intel.com/
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-Changes in v4:
-- Rebase on next-20250306
-- Link to v3: https://lore.kernel.org/r/20241211-topic-misc-da7280-convert-v3-0-4df87ac08881@linaro.org
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v3:
-- Add conor's review
-- Also fix the MAINTAINERS entry
-- Link to v2: https://lore.kernel.org/r/20241206-topic-misc-da7280-convert-v2-1-1c3539f75604@linaro.org
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7109a562c96fe22314201f691f1d3d8e8b231f0a..302c27df1b94d5fd579c2855a6ba57be8b34db17 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6808,7 +6808,7 @@ DIALOG SEMICONDUCTOR DRIVERS
+ M:	Support Opensource <support.opensource@diasemi.com>
+ S:	Supported
+ W:	http://www.dialog-semiconductor.com/products
+-F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.yaml
+ F:	Documentation/devicetree/bindings/input/dlg,da9062-onkey.yaml
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/mfd/dlg,da90*.yaml
 
-Changes in v2:
-- Switched to flag instead of boolean
-- Switched the array to unit32_t, because this is how it was defined in the txt, DT and driver
-- Link to v1: https://lore.kernel.org/r/20241204-topic-misc-da7280-convert-v1-1-0f89971beca9@linaro.org
-
----
-Neil Armstrong (2):
-      dt-bindings: input: convert dlg,da7280.txt to dt-schema
-      MAINTAINERS: update dlg,da72??.txt to yaml
-
- .../devicetree/bindings/input/dlg,da7280.txt       | 108 ---------
- .../devicetree/bindings/input/dlg,da7280.yaml      | 248 +++++++++++++++++++++
- MAINTAINERS                                        |   2 +-
- 3 files changed, 249 insertions(+), 109 deletions(-)
----
-base-commit: 565351ae7e0cee80e9b5ed84452a5b13644ffc4d
-change-id: 20241204-topic-misc-da7280-convert-20efaad588ca
-
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
 
