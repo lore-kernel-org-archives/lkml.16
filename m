@@ -1,175 +1,129 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A212D1991B2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 03:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA38919C540
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 03:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741233262; cv=none; b=as6DAAsjj6BYlYpL51s0CECMkxTATZNQRRq5i/WYjxqLmu9SqQkZfPVFqTxtlSAmkuRpVForMaP6tLIHyWG8SjaHCUAy2GbYnHTsK4OcUb72wXBSq5aBl3V7qbyYqyAC31o6db2aIu1q59EbrvMhVyXIB0Jxchvj4/uU2HZyQfo=
+	t=1741233291; cv=none; b=vD28aPncVh+VgP4LdGOSpKxms3dA0iW+qaAYYCNH7DFUIQ9r8i5b+Vi2wsUn0xwkHCQxBRG6w7GlmsjliLqvhaWTDnyi7qy08Guzf0GNXIosyhVm0DoONYF2FuIqiDaad6cGmFZR0OdqI4X+NRhAUaG6RLBDmF+km3QQkGcW7vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741233262; c=relaxed/simple;
-	bh=v7LFaMMQT5qrY+eFMcg0qAr81bixG1aaagmkYP4Xk5w=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=NWX9q01X+K7iktqT0y/1touR31WX3lPk4KXjYpMm6mS0R5PGK+k+nQgHWxGlFByuDNN/4KNGjoFT2AFAu2KP5Mia20eTArZt0PG95qbZ1NdlLTvopaMifsCayGmMXN+MP2XOHFMI3hqlGV3GtM1DVE+rc+X0cRCjvj5wKJxsdjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EeOmRY61; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1741233291; c=relaxed/simple;
+	bh=gK6PoeLsGO+Auc46xWPQ8Vw6lIha/f1al2HF/4g9bLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h5fIgnJh0KEIV3ydWbKH+ckK5edIgpoodE/JNgr7TYY/5xFU3yIxybdIvCUfeBWke05PGlMymykM+k83ZFluIaRZEqn5ae5LSoy+XQ43ViDXUZ4jlBdYwxPn5tlUjlfRzB9+r2Gv2TKobfvAbqhljOIHAIgyM4CVPMiQDxmUf/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WebLRMYi; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EeOmRY61"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250306035417epoutp045d3d610ddc3295eeaa91f7ba0644ccdc~qGmwmlEEI0116301163epoutp04Q
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 03:54:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250306035417epoutp045d3d610ddc3295eeaa91f7ba0644ccdc~qGmwmlEEI0116301163epoutp04Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741233257;
-	bh=DXfDqyB+rOhMKjLXfrimA7pgRFXTlWdnO4cbB4v1SdY=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=EeOmRY61sEKDO0l7sOdjyCn+ZPZV4UGF0WLSmIOgmlbgPD2ZR+Usrbcbd0FBNfRnc
-	 pyPCHa/Nu+ecaiyboYVpMv6oCWjcc6kAGhp21Ymlcx+rkM5aCX877alVyS1VFxJ0cl
-	 j4ybLqSQPs3P3bOlngGINXC2gaSIXtliv4z+KNRQ=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250306035417epcas5p1558e19e920f71ce54e9b929f23ebb9fb~qGmv9b5UE2592825928epcas5p1j;
-	Thu,  6 Mar 2025 03:54:17 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Z7bBt6v0cz4x9Q1; Thu,  6 Mar
-	2025 03:54:14 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	7E.76.20052.66C19C76; Thu,  6 Mar 2025 12:54:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250306034910epcas5p3e2ae456558f38e44a3fb55bf878d4abc~qGiSLgvFs1755017550epcas5p3R;
-	Thu,  6 Mar 2025 03:49:10 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250306034910epsmtrp296caea2bdd3a7a864c9828418b7d2075~qGiSKVou30610606106epsmtrp2g;
-	Thu,  6 Mar 2025 03:49:10 +0000 (GMT)
-X-AuditID: b6c32a49-3d20270000004e54-9b-67c91c66a7c6
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	17.E6.33707.63B19C76; Thu,  6 Mar 2025 12:49:10 +0900 (KST)
-Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250306034907epsmtip2ecdb5a27d89d31aa4ee2d2e8068aff98~qGiP9j43W0601306013epsmtip26;
-	Thu,  6 Mar 2025 03:49:07 +0000 (GMT)
-From: "Swathi K S" <swathi.ks@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <krzk+dt@kernel.org>,
-	<linux-fsd@tesla.com>, <robh@kernel.org>, <conor+dt@kernel.org>,
-	<richardcochran@gmail.com>, <alim.akhtar@samsung.com>
-Cc: <jayati.sahu@samsung.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pankaj.dubey@samsung.com>, <ravi.patel@samsung.com>, <gost.dev@samsung.com>
-In-Reply-To: <7328e538-31cf-4674-83d2-943f1a2d1455@kernel.org>
-Subject: RE: [PATCH v7 1/2] arm64: dts: fsd: Add Ethernet support for FSYS0
- Block of FSD SoC
-Date: Thu, 6 Mar 2025 09:18:34 +0530
-Message-ID: <00e801db8e4a$b7c2e990$2748bcb0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WebLRMYi"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525La2YW012856
+	for <linux-kernel@vger.kernel.org>; Thu, 6 Mar 2025 03:54:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VMj+XM3Z7JH4+lFd4b2GenYlhhOZHTCBQd8J2A+tk1w=; b=WebLRMYitnfl+Si4
+	FxnOil3mxGXKTb6d+s9nWOzg9pwMBNmAkbyYJFdcfWhtvkBC5I2HQiBsTy7Bei29
+	VDeE/M7QOlJT5zzwacaQOVfgCx2wKDpI1x/IP5rjYwMMKT2jXMweeZB7KHr18YS0
+	1bF6aVoC+Xe75pKeeVPJn/IeY96sWBLAgEmBVrJcrCiivFM9Nd/8ktPr2PeKMIxw
+	IRY8jwMacGhUGpjh/gL+NrGk3nCJMye0MiimmMg6C+vvnnwBKKLqIga4xGmW0ewS
+	0O6WVMoSC0lgQjRjx1vBPGGnYNQPFbvotpkv3AhFxQgIIcHWHL7flqFzMmDMypdJ
+	IM77dw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6vqn7x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:54:48 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22366bcf24bso4378585ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 19:54:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741233288; x=1741838088;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VMj+XM3Z7JH4+lFd4b2GenYlhhOZHTCBQd8J2A+tk1w=;
+        b=cP9JpFnCa4BeNAZ3pckI4MSnd3BgKd6j7TTkogAM6asC0LBYMcoSL+GA2GPvwn9Wny
+         CePEqIU95pPHbgGMqPoNkPXJheHpVubf0uJI5iIY4JadfiRGSumQOMvqPbmT1L3VXFfF
+         /ku9skYCtRORCgjDrvlxUZRk0ZA1pSkeTeHt0Xz/NcAKI6SX83ZKS+NHsK/7RswS4iV1
+         OG+Umqru4jaa3LPFxIAZi0n5fZHONOE3mweG3hFdUjsHF4hPtmg5Ox45nigPbOQj3XTT
+         pON66oRQga3oJWn+DS+dcVev1A9AjpMF6ZKkmM6JuRwZ1UIS4b4c+QgPSavnlhDrEj/w
+         rLtA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7KJveYFry/zKYSiUfxs/aTYucC7ktSXa0epg3vXI1jYfg9e4KxfeqpXYPx8bO+K//7bZb+zXvP/fXk2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxUctrfXGAfrdqVNsv1OcvzL6et4noSc1Ptsf+bkyQPeGDs5UJ
+	3f/hz6ACtg4e9jWgFBqteRyvRAh9FkMtwbyr7QFlb+YUp0AA8b6Ud7vxIcSrZXdsbzX7t4r5XvY
+	htkf29nxK2Un5CszzPG2vlhTkYKbF9p9czKU3oCXhd2G756J6a0Jwd3IBdZ/ukfc=
+X-Gm-Gg: ASbGnctiT86N0ordMfAQJih0wQS5TuShDHYPpVLBFVrzEhmY7fw3aVw286AIWYq0e0v
+	YRKO2SzlzKEfg6ybOoH3P7r3JhgEWvpDJkDs3CS0ZaDATjEBPrKURbtBFIYoSeqjCq/ON0sOxos
+	TYlSk+aof0vFvFmDt7643YY3KNC1C4P0p2W72I0QIkh3ZcKyxnspg+o1pnxDqGolLi3QmEhfU2r
+	4WDJa2UdGb+LR5PMqSA10fdWNS6deiwF/zS8xdSCX5hOuq6j8dbeN6iMMfbPAKmTMLsiXWJNsSL
+	0ajhcMJBd/lwCGbPUSgIXADesvsAUwZXLSUQJRHOD8NFobQJ6irc7hWLwA==
+X-Received: by 2002:a17:902:ec90:b0:221:7343:80f5 with SMTP id d9443c01a7336-223f1d8430bmr93073235ad.53.1741233288036;
+        Wed, 05 Mar 2025 19:54:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHrogsGcvQe4xJVpBUgNzk/PrC3/Ys140YEy4yJBQknm/w4HVahaHFJ7/Au++I8Of0gIUxgkg==
+X-Received: by 2002:a17:902:ec90:b0:221:7343:80f5 with SMTP id d9443c01a7336-223f1d8430bmr93072865ad.53.1741233287636;
+        Wed, 05 Mar 2025 19:54:47 -0800 (PST)
+Received: from [10.152.204.0] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7f7fasm2054525ad.115.2025.03.05.19.54.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 19:54:47 -0800 (PST)
+Message-ID: <4ed9eebf-3470-0cdc-498f-ec4811b909a4@oss.qualcomm.com>
+Date: Thu, 6 Mar 2025 09:24:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQHnZW/QZNZXP7mFyf6Or/FDfq+edAEP4FfLAl/FyHABH54M5LMpTuNQ
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNJsWRmVeSWpSXmKPExsWy7bCmlm6azMl0g7vLzC0ezNvGZrFm7zkm
-	i/lHzrFa3Dywk8niyKklTBYvZ91jszh/fgO7xabH11gtHr4Kt7i8aw6bxYzz+5gsji0Qs1i0
-	9Qu7xcMPe9gtjpx5wWzxf88OdgcBj52z7rJ7bFrVyeaxeUm9R9+WVYwe/5rmsnt83iQXwBaV
-	bZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDdLWSQlli
-	TilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITtj
-	78pdLAVbeCtO7NjP1MC4iLuLkZNDQsBE4vCPI4xdjFwcQgK7GSW+7O1khnA+MUpcOfmTEc65
-	NfEoO0zL5neP2CASOxklPh/9DVX1glHi7/M1YFVsAloSi/r2sYMkRAT2M0qcnvABzGEWmMYk
-	cWTmayaQKk4BO4lVr0+wgdjCAnESfVffAcU5OFgEVCQ6NnKAhHkFLCWeHfrFBmELSpyc+YQF
-	xGYW0JZYtvA1M8RJChI/ny5jhYiLSxz92QMWFxFwk2h58oIJouYOh8TVOWYQtovE3tszoOLC
-	Eq+Ob4F6TUri87u9bBB2vMTqvqssEHaGxN1fE6Hi9hIHrsxhATmTWUBTYv0ufYiwrMTUU+uY
-	IE7gk+j9/QRqPK/EjnkwtrLE39fXoEZKSmxb+p59AqPSLCSfzULy2Swk38xC2LaAkWUVo2Rq
-	QXFuemqxaYFhXmo5PMaT83M3MYJTtZbnDsa7Dz7oHWJk4mA8xCjBwawkwvv61PF0Id6UxMqq
-	1KL8+KLSnNTiQ4ymwNCeyCwlmpwPzBZ5JfGGJpYGJmZmZiaWxmaGSuK8zTtb0oUE0hNLUrNT
-	UwtSi2D6mDg4pRqYYu+bvUl8aV/hnGqefOnHoyXHc75+sZEUe8zdLe7yd2X9dbbKNdkW0aWC
-	FwrmzT/Ju8Npg22qV562/uPqSyWG8439tmy/+2yzw9rllgZOb3xdNE8frd/90ehuZe1aeTd9
-	Mdeu8ier0/Ys2f4maJ6ixr9Fdd3WyWejN6x5qOM3azNfpr7HoSkNcWotR7N+N7R+n8g0xSSh
-	9VajhvQirQ9Mqn3qm6eELLr5J/rin+yS71VVEx737tldle5Yse5fz5w97oyaZ869VX8mIBP8
-	deeDObkS91nD765e79kVk1BjscK8dts59if7boWFJKZrcZbH3I8qnptXciDVge0kq8IS20/F
-	D4pPTnFTXL/58tIyJZbijERDLeai4kQAuMf5RV4EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsWy7bCSvK6Z9Ml0g1PXWCwezNvGZrFm7zkm
-	i/lHzrFa3Dywk8niyKklTBYvZ91jszh/fgO7xabH11gtHr4Kt7i8aw6bxYzz+5gsji0Qs1i0
-	9Qu7xcMPe9gtjpx5wWzxf88OdgcBj52z7rJ7bFrVyeaxeUm9R9+WVYwe/5rmsnt83iQXwBbF
-	ZZOSmpNZllqkb5fAlbFq2mzGgu88FTcmvWFvYHzM1cXIySEhYCKx+d0jti5GLg4hge2MEqvO
-	H2CCSEhKfGqeygphC0us/PecHaLoGaPEwkdHwIrYBLQkFvXtA0uICBxnlJj+cAkziMMssIBJ
-	4kPvXzaQKiGBt4wSW9/ZgdicAnYSq16fAIsLC8RIPDnyiLGLkYODRUBFomMjB0iYV8BS4tmh
-	X2wQtqDEyZlPWEBsZgFtid6HrYww9rKFr5khrlOQ+Pl0GStEXFzi6M8esLiIgJtEy5MXTBMY
-	hWchGTULyahZSEbNQtK+gJFlFaNoakFxbnpucoGhXnFibnFpXrpecn7uJkZwnGoF7WBctv6v
-	3iFGJg7GQ4wSHMxKIryvTx1PF+JNSaysSi3Kjy8qzUktPsQozcGiJM6rnNOZIiSQnliSmp2a
-	WpBaBJNl4uCUamAqUHrF7rwsfQZz8ueWp+c9zlXucth1arFMqqDzjAlqD1w27G660Kh1W2zC
-	+VDJZzeNckT2RTH+NTHear1mTug8d84/myN1eL2OuX1icGpkt5jL+29WTwCHqp3wlqnf5a7/
-	iWd7tGsqi+pHO9FjXWWiz9Y0vys8LTBr06sqXe7qVU0hu1jvcrXWG6dESZlaVV9LfvU1cm9P
-	ykMd9VPdqp+aXT4FmSSqJ6+Xmc6fLBLwZbvbJTOj938bU1k6UhdtfvdZJW/i7f+NH/9z9VTM
-	X5t6nqGl+O77dR42c2/uyNqUe9XC8a/hbtmK494vz/GFfDz2/v/lJ4dS7h1yNK1ril25pfr8
-	78Y4mZUfhc8YPHyjxFKckWioxVxUnAgAFoU4UkIDAAA=
-X-CMS-MailID: 20250306034910epcas5p3e2ae456558f38e44a3fb55bf878d4abc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250220073944epcas5p495ee305ca577a7e1be51ff916f20fc53
-References: <20250220073527.22233-1-swathi.ks@samsung.com>
-	<CGME20250220073944epcas5p495ee305ca577a7e1be51ff916f20fc53@epcas5p4.samsung.com>
-	<20250220073527.22233-2-swathi.ks@samsung.com>
-	<7328e538-31cf-4674-83d2-943f1a2d1455@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH ath-next v9 13/13] wifi: ath12k: enable ath12k AHB support
+Content-Language: en-US
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
+Cc: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Balamurugan S <quic_bselvara@quicinc.com>,
+        P Praneesh <quic_ppranees@quicinc.com>
+References: <20250305185501.2400888-1-quic_rajkbhag@quicinc.com>
+ <20250305185501.2400888-14-quic_rajkbhag@quicinc.com>
+From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+In-Reply-To: <20250305185501.2400888-14-quic_rajkbhag@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: ltNiFhQSP5IzcOX3JJY8_7BmuG1CYu2A
+X-Authority-Analysis: v=2.4 cv=LYfG6ifi c=1 sm=1 tr=0 ts=67c91c88 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=w_ZfqNI5J2udKohul8UA:9 a=QEXdDO2ut3YA:10
+ a=1OuFwYUASf3TG4hYMiVC:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: ltNiFhQSP5IzcOX3JJY8_7BmuG1CYu2A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-06_02,2025-03-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1015 phishscore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 mlxscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=751 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503060025
 
 
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: 01 March 2025 19:29
-> To: Swathi K S <swathi.ks=40samsung.com>; krzk+dt=40kernel.org; linux-
-> fsd=40tesla.com; robh=40kernel.org; conor+dt=40kernel.org;
-> richardcochran=40gmail.com; alim.akhtar=40samsung.com
-> Cc: jayati.sahu=40samsung.com; linux-arm-kernel=40lists.infradead.org; li=
-nux-
-> samsung-soc=40vger.kernel.org; devicetree=40vger.kernel.org; linux-
-> kernel=40vger.kernel.org; netdev=40vger.kernel.org;
-> pankaj.dubey=40samsung.com; ravi.patel=40samsung.com;
-> gost.dev=40samsung.com
-> Subject: Re: =5BPATCH v7 1/2=5D arm64: dts: fsd: Add Ethernet support for=
- FSYS0
-> Block of FSD SoC
->=20
-> On 20/02/2025 08:35, Swathi K S wrote:
-> >  &pinctrl_peric =7B
-> > diff --git a/arch/arm64/boot/dts/tesla/fsd.dtsi
-> > b/arch/arm64/boot/dts/tesla/fsd.dtsi
-> > index 690b4ed9c29b..01850fbf761f 100644
-> > --- a/arch/arm64/boot/dts/tesla/fsd.dtsi
-> > +++ b/arch/arm64/boot/dts/tesla/fsd.dtsi
-> > =40=40 -1007,6 +1007,26 =40=40
-> >  			clocks =3D <&clock_fsys0
-> UFS0_MPHY_REFCLK_IXTAL26>;
-> >  			clock-names =3D =22ref_clk=22;
-> >  		=7D;
-> > +
-> > +		ethernet0: ethernet=4015300000 =7B
-> > +			compatible =3D =22tesla,fsd-ethqos=22;
->=20
-> I don't see bindings in the linux-next, so I am dropping this patch from =
-my
-> queue. Please resend when the bindings hit the linux-next.
+On 3/6/2025 12:25 AM, Raj Kumar Bhagat wrote:
+> From: Balamurugan S <quic_bselvara@quicinc.com>
+> 
+> Currently only PCI devices are supported in Ath12k driver. Refactor
+> Ath12k module_init and module_exit to include Ath12k AHB support.
+> 
+> Add Ath12k AHB support in Kconfig with dependency on Remoteproc
+> driver. Ath12k AHB support relies on remoteproc driver for firmware
+> download, power up/down etc.
+> 
+> Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
+> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00210-QCAHKSWPL_SILICONZ-1
+> 
+> Signed-off-by: Balamurugan S <quic_bselvara@quicinc.com>
+> Co-developed-by: P Praneesh <quic_ppranees@quicinc.com>
+> Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
+> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
 
-Thanks for informing me.
-I have posted v8 of DT bindings: https://lore.kernel.org/netdev/89dcfb2a-d0=
-93-48f9-b6d7-af99b383a1bc=40kernel.org/
-Will wait for some time for the DT binding to reflect on linux-next before =
-posting v8 patches of DT files.
-
-- Swathi
-
->=20
-> Best regards,
-> Krzysztof
-
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
