@@ -1,102 +1,84 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sxb1plsmtpa01-02.prod.sxb1.secureserver.net (sxb1plsmtpa01-02.prod.sxb1.secureserver.net [188.121.53.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC03CA52
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 14:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDB51494DD
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 14:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741270551; cv=none; b=b0o7ua9YoVCftbBsn4ksLw4C3l2KE5yeDV8a3a7iUzyoUCsQIC2eRrHrWqChGt/2xjD+dRomvXAKDM8bCYM3oqeH7lyePj0LJhi30sm2hJIyEBLcdBHTwWBt+ci61/VNmDU5PqaW20W7Z+Dl7WiqjZ2QQw4kWF7vXEJ4ztY/2I4=
+	t=1741270646; cv=none; b=ql33ao6ZQtrMts6s0JGNlseZH19gIBrVXk3+QEZRKUZwmQbH56GD972ous5aL/s8P18m/JwuVSGg06Vae8z7cR46CB1JLeveiyeVVOYmG+E4gem0GnxQ0TF+1TLoSEtDTEVgQNEv58dTunydb/1eA0W51QbisypdMlIvQU+LlZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741270551; c=relaxed/simple;
-	bh=x+GJRsfUDsD4C7Ln5R3MU3dJ1MX9aqJGshcxu+iDAy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sg5v4YcNpgj1a687uHHThTVnKsfx0m9Ejoe4IjCaeVUpuWu0Cx9AdPFkureMDuDkssvkeGj7Jgb0K4HvHUDPB0ZG+WdKUNC77Sc345307E/fPqUF3aw1wcEmwDV+FV96VNJS3COWCx9DlGvFOchZGpCyfD9nS60Zrdnywy3UdBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=NJyQRxIi; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="NJyQRxIi"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c3b533a683so71894785a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 06:15:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1741270547; x=1741875347; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uoufJmQv2HUe7ypcDnbmXL6HESrvjZS9wAJynnsLf5s=;
-        b=NJyQRxIizTw65U/7XeUzMLTP3uZp04gJ6/gV6Eqt0kUrAh81rZEUHFl6K48nxo6xmB
-         t3nipq60AqvYSJd6Z1K0vkIqOk1ZSesl8jafdtMOUXVcnlWa/UO5BuAxX1UtIGnG8XoD
-         o8Ag/Y/mQEV5gSfa1AbgwQ0OwJY0GALHxOFt2VoHsEblUXXNPzrlTrLttVk7ZKVnqWdv
-         rn/tEU1jVnRHQvgiC3XmuZqssdVg+mL62GXPI/g/xjp6KWFrjMP+iEsvdBZEHBFEzyyw
-         s93r8ro87TVdPj/yRb3uocyKSvNGp+oMaF9o/clLUXcLL4Yfl48sK09SHljnKiurWht0
-         qbpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741270547; x=1741875347;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uoufJmQv2HUe7ypcDnbmXL6HESrvjZS9wAJynnsLf5s=;
-        b=LR0QGm2GSEuG1Q0DIZUWJ5o3YrkYnbzbEwFjimOlL7V3CwXNYYa8mXZAqUDW7k0s01
-         qnunL0iZobTb+efWQJaUQlb54OV8Q9emppu2mxFAE5KoMTBMssdBf+z9SyG0HiTrVX8/
-         6Cvu9G19CJBvYtt2RExe8FbTEtWnlFuLuvR9nP2334ZhYcVZF6/lhIjwmSfbiTX2FTZp
-         kEJTRvOzJJ0m2rVkDgOaT9wagCbra5ZGDMIPPVCnbaEvUQ11RnHpBAih3lxxUkQIGIDs
-         nhjkuMMBW07awWEpcevMlVKn8kdz8ga+Q6bOw1zU+BT5c4i4ZykvbG0hWjqDv9dZlMJU
-         mzyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVykxqv2T3UqQAgty+xL2yF17rY9BCa0r/WokVSXESSGgfP9usxaGcWNRA5sJM6ZOoiORBUOIxVEvoYnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj8NSZm39gaqoB5UrxANeghgpsj4lFBquwfeG4wJuRCp71R5Mw
-	is0YvPYB+j2pm8ehZbzGChMpUIUw7JruDbECy/peTSAhKSrP1mI0C3QQZaM4AJi1fMv+dfITOqw
-	O
-X-Gm-Gg: ASbGncvYcRTmi/Oogxz4PkR02L2wtW4UJU8A1iqjYdwtGTUv9Y1CIeQ1qlA8+RvM79H
-	rmIXeCh8faOd5yNIJOVDSS/9G+RyyAqL8elsrM8U/mvaD4lVqp8ehUMx75nx+go5jOpQ8fS9riG
-	m+xmhd12TvPS8Z+lBmdL4syBjt8JrtViDTyjakfNHEII0W4+ZtxO8JMYH4jzeDLujFVttRxHi9f
-	nD45aufLhAcRyeUGPnbee0aNyT3NF0DjV1un3NRIHZDPSZ6rLA+BiJICPOakskRCwJm6+uNtCsq
-	oSAtGdWrTXnxMWLXmMr9L+OWH8jTNKIW4w/UJeGQAv4=
-X-Google-Smtp-Source: AGHT+IGLLqA/C3nLhBQL9c5UnVf95JSrbTd/4mXb2ecn7OXpm83PV2SxcCjvf9Lsz+yoptISEXGN8w==
-X-Received: by 2002:a05:620a:2b96:b0:7c3:d778:6bd with SMTP id af79cd13be357-7c3d8e6faa3mr1137170485a.47.1741270546797;
-        Thu, 06 Mar 2025 06:15:46 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c3e5511047sm94316885a.100.2025.03.06.06.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 06:15:45 -0800 (PST)
-Date: Thu, 6 Mar 2025 09:15:44 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH mm-unstable 3/5] mm: zpool: Remove object mapping APIs
-Message-ID: <20250306141544.GA290530@cmpxchg.org>
-References: <20250305061134.4105762-1-yosry.ahmed@linux.dev>
- <20250305061134.4105762-4-yosry.ahmed@linux.dev>
- <Z8j_Ct0hTwAnd2-w@gondor.apana.org.au>
+	s=arc-20240116; t=1741270646; c=relaxed/simple;
+	bh=gP+bRMDLabVdKkg9fiGZtOotPXrC1J1nOUqUpfoGeIg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rcAebmeeBYtqqDHK4fFZhr2HN7VebBUZ9Mvrlh3SI+pRqte2R1ClzMrh0bVltc2nq5KDj4BnGVmZcjwa/PS/IvP+42eaPcDfDrLwh0QNsWrAam7DbFphBOt8AR9LnQvSNVuAD8bYQUUKLryzLcuoNbKYW08qm05zBhfanOAIo64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+Received: from [192.168.178.95] ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPSA
+	id qBuxtGkbUjsVIqBuytFtDY; Thu, 06 Mar 2025 07:09:45 -0700
+X-CMAE-Analysis: v=2.4 cv=ZNgtmW7b c=1 sm=1 tr=0 ts=67c9aca9
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=FXvPX3liAAAA:8
+ a=70GUUZxsgcFP8lEI_bwA:9 a=QEXdDO2ut3YA:10 a=UObqyxdv-6Yh2QiB9mM_:22
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+Message-ID: <ae31e0a6-7cea-4f76-824c-d8f5ae97c101@squashfs.org.uk>
+Date: Thu, 6 Mar 2025 14:09:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8j_Ct0hTwAnd2-w@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] squashfs: Fix invalid pointer dereference in
+ squashfs_cache_delete
+To: Zhiyu Zhang <zhiyuzhang999@gmail.com>, akpm@linux-foundation.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250306132855.2030-1-zhiyuzhang999@gmail.com>
+Content-Language: en-US
+From: Phillip Lougher <phillip@squashfs.org.uk>
+In-Reply-To: <20250306132855.2030-1-zhiyuzhang999@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfOnnLoEViXSynWXN230Yh91rrSC3vY400r6+cgUzL82cHjJv3lYTHvjI2Zl66DgPVd5qnLbnpEENULljH/6n9sT6NzXqs1Ed41CZk5FwRFOhihCo9/qi
+ b9xRshh5R0vJayXGz2zWHq1aQ4zewdEe8mTW2rVSvNg7/nZGLBHEScMiwznTpnVWvI+iJ7GRgd9kObk0cmVMrj97rO1rwLCcsurc1+4fxGZMFEd/L58L5AxE
+ AlwRvps2xl+oaLsPLoob6UNvNAdfLDYw40k/BP7qmMuzL8aUsGna1cPa4UVdXorKqu/ZTcvW8KzIppznlt5qhIkV4+RsR3l+EZ5YEdkkbrE=
 
-On Thu, Mar 06, 2025 at 09:48:58AM +0800, Herbert Xu wrote:
-> On Wed, Mar 05, 2025 at 06:11:31AM +0000, Yosry Ahmed wrote:
-> > zpool_map_handle(), zpool_unmap_handle(), and zpool_can_sleep_mapped()
-> > are no longer used. Remove them with the underlying driver callbacks.
-> > 
-> > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> > ---
-> >  include/linux/zpool.h | 30 ---------------------
-> >  mm/zpool.c            | 61 -------------------------------------------
-> >  mm/zsmalloc.c         | 27 -------------------
-> >  3 files changed, 118 deletions(-)
+
+
+On 06/03/2025 13:28, Zhiyu Zhang wrote:
+> When mounting a squashfs fails, squashfs_cache_init() may return an error
+> pointer (e.g., -ENOMEM) instead of NULL. However, squashfs_cache_delete()
+> only checks for a NULL cache, and attempts to dereference the invalid
+> pointer. This leads to a kernel crash (BUG: unable to handle kernel paging
+> request in squashfs_cache_delete).
 > 
-> This patch breaks zbud and z3fold because they haven't been converted
-> to the new interface.
+> This patch fixes the issue by checking IS_ERR(cache) before accessing it.
+> 
+> Fixes: 49ff29240ebb ("squashfs: make squashfs_cache_init() return ERR_PTR(-ENOMEM)")
+> Reported-by: Zhiyu Zhang <zhiyuzhang999@gmail.com>
+> Closes: https://lore.kernel.org/linux-fsdevel/CALf2hKvaq8B4u5yfrE+BYt7aNguao99mfWxHngA+=o5hwzjdOg@mail.gmail.com/
+> Tested-by: Zhiyu Zhang <zhiyuzhang999@gmail.com>
+> Signed-off-by: Zhiyu Zhang <zhiyuzhang999@gmail.com>
+> ---
+>   fs/squashfs/cache.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/squashfs/cache.c b/fs/squashfs/cache.c
+> index 4db0d2b0aab8..181260e72680 100644
+> --- a/fs/squashfs/cache.c
+> +++ b/fs/squashfs/cache.c
+> @@ -198,7 +198,7 @@ void squashfs_cache_delete(struct squashfs_cache *cache)
+>   {
+>   	int i, j;
+>   
+> -	if (cache == NULL)
+> +	if (IS_ERR(cache) || cache == NULL)
+>   		return;
+>   
+>   	for (i = 0; i < cache->entries; i++) {
 
-They're both scheduled for removal and already gone in the mm tree.
+Looks good to me.
+
+Reviewed-by: Phillip Lougher <phillip@squashfs.org.uk>
