@@ -1,164 +1,115 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC47206F25
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 21:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A4B2063EB;
+	Thu,  6 Mar 2025 21:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741295537; cv=none; b=HgiqcnIpxj/Fb1gVmOXL54LdiANJM7JjveQ7CQjL7rr9pPhNPcu12O4uMEs6ar4z8XfNLWfVyA0YO85ZHx811R4xIK4oIExEdbi0fI4tut7XfzjiEcYMHVdmxmBuZVS20/Hb+KxYq722ATNiDtq8CKY+iukaffuiSsMGnpcu+UI=
+	t=1741295554; cv=none; b=BLXqMCls0z2Zs7zE0zKPlnsyazSkMm9RzzX0NAQWeyL7JSValrrAEWSK4pdkOzrQN5eoqFBOidJR/3vsdx6Uo2YJ39O8vaoXVyyYB1BEDIKR9Zuhrq65iBcNDLbYHRpFPRkpVIACFssGy1AZ3c9jAl1GWSnvDYLSimVCuMzPn34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741295537; c=relaxed/simple;
-	bh=07Q5s0YnaGkcco6cGr31nyoGcEQOFUkbSK/2I4+E2lI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=guPCatOPofHUSpwgAw/P9AV1vC+T955mNwpuHcT70A23G130+uY1kjJ1iDIGdSmFxq6gRzuptzi+I4WVFcc3w7ERp3FqTGId4R/kCw2dNtaiEMrRa1Pn9bdIeuCuQ1sTVwny7lDNC8smA6QYH6wQs/zR0DToTcZ/lftGg1bhq1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Vo7MOfEb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGV2QuWi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Vo7MOfEb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGV2QuWi; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1741295554; c=relaxed/simple;
+	bh=Ld2j3ntSdCRsdZp0RQs+DWEbBhmg4SEAQbMBFbIaERc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXHb37qAs5BJm9fj8tpot6LDr2ZSf0H1r4x5IKzDofoLGfGHf8mEXqGm9VoRde3cGnNI9gsT3txkNFjM4XGDzzmm2V0vVZ4mhvzusQcrL1auuCpNP+HE/2ufG8D5AfPnGDPVVcj9abjuOcYDrKgfDcMKVZZDNuipI5Ln1Ms1lQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ookv/SQJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Vo7MOfEb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGV2QuWi";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Vo7MOfEb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGV2QuWi"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F322B21172;
-	Thu,  6 Mar 2025 21:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741295532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP//qILTTvyXuat8p3kG7Vms/HKG/PDTdBkdsKbMTQo=;
-	b=Vo7MOfEb/uXt/aVyQEd9sy+Ng9wbLmLUo8Q9+xgfgBnOHnAZlaJ1doyBlDeY8ByKhaXPrc
-	gWRfCwi3MgqyNWNU7qE+5V8keisj3DRgDVvGLG+FMlACuXIXHumXFyhEFGP6+2rWlQT38w
-	tbDA93YjulfuFLj790Mx2ptwbaXIalE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741295532;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP//qILTTvyXuat8p3kG7Vms/HKG/PDTdBkdsKbMTQo=;
-	b=LGV2QuWino1TRK7OigczeiaaYvrRdu5vzPOwAeS8Sjz9IeuV5ufpVxDyXPJ9BFpPLncWoI
-	tSqDt5+X6rJR5zCA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Vo7MOfEb;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=LGV2QuWi
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741295532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP//qILTTvyXuat8p3kG7Vms/HKG/PDTdBkdsKbMTQo=;
-	b=Vo7MOfEb/uXt/aVyQEd9sy+Ng9wbLmLUo8Q9+xgfgBnOHnAZlaJ1doyBlDeY8ByKhaXPrc
-	gWRfCwi3MgqyNWNU7qE+5V8keisj3DRgDVvGLG+FMlACuXIXHumXFyhEFGP6+2rWlQT38w
-	tbDA93YjulfuFLj790Mx2ptwbaXIalE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741295532;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WP//qILTTvyXuat8p3kG7Vms/HKG/PDTdBkdsKbMTQo=;
-	b=LGV2QuWino1TRK7OigczeiaaYvrRdu5vzPOwAeS8Sjz9IeuV5ufpVxDyXPJ9BFpPLncWoI
-	tSqDt5+X6rJR5zCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E3EA513A61;
-	Thu,  6 Mar 2025 21:12:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KuxHN6sPyme5egAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 06 Mar 2025 21:12:11 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 7EA3EA087F; Thu,  6 Mar 2025 22:12:07 +0100 (CET)
-Date: Thu, 6 Mar 2025 22:12:07 +0100
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+a9c0867e4d1dd0c7ab19@syzkaller.appspotmail.com>
-Cc: amir73il@gmail.com, asmadeus@codewreck.org, brauner@kernel.org, 
-	corbet@lwn.net, eadavis@qq.com, ericvh@kernel.org, jack@suse.com, jack@suse.cz, 
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux_oss@crudebyte.com, lucho@ionkov.net, mjguzik@gmail.com, 
-	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev, viro@zeniv.linux.org.uk, 
-	willy@infradead.org
-Subject: Re: [syzbot] [udf?] general protection fault in d_splice_alias
-Message-ID: <bcodvjvbdcv5xtwgf454feurvlg6nawmbhgb7tsyynigtlp7wz@kbnid2eeebnd>
-References: <67a11d8a.050a0220.163cdc.0051.GAE@google.com>
- <67c96503.050a0220.15b4b9.0030.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ookv/SQJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 061BCC4CEE0;
+	Thu,  6 Mar 2025 21:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741295553;
+	bh=Ld2j3ntSdCRsdZp0RQs+DWEbBhmg4SEAQbMBFbIaERc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ookv/SQJ02EbaBXv20RBZv8L1E4F/pdP7Hqp8ipcc1/J7OSQlqT8CokQoqNPeqYKH
+	 MN99nYUt5Dr4Qv5UfzwDIuYtoVH8cLtDB2X6VLfTf4nnNCdmmFWJ+XCa9qhJ59swHo
+	 ozht/YDmlx5jd9Qwe/fnVi71/batQEbrGH4ClKYYHi/E3wRY5TrcN1JRQOw+qhgBK5
+	 2tE9rpGDH/miGZDllERkNF2kSdBxe2pzSRrsdVWcxsUsCIISY7zYKdE+o/U3N6earY
+	 W46JgaS3SMiuljlGQdZcrG75lcsO4lWmLIVagnIwPpKtaVzwsl3d+1W5xjeFkVfcey
+	 ijABptK/3Dl8g==
+From: Shuah Khan <shuah@kernel.org>
+To: gregkh@linuxfoundation.org,
+	corbet@lwn.net
+Cc: Shuah Khan <shuah@kernel.org>,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	conduct@kernel.org,
+	tab@lists.linux.dev,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2] Documentation/CoC: Spell out the TAB role in enforcement decisions
+Date: Thu,  6 Mar 2025 14:12:31 -0700
+Message-ID: <20250306211231.13154-1-shuah@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67c96503.050a0220.15b4b9.0030.GAE@google.com>
-X-Rspamd-Queue-Id: F322B21172
-X-Spam-Score: -1.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=d1a6d4df5fcc342f];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,qq.com];
-	FREEMAIL_CC(0.00)[gmail.com,codewreck.org,kernel.org,lwn.net,qq.com,suse.com,suse.cz,vger.kernel.org,crudebyte.com,ionkov.net,googlegroups.com,lists.linux.dev,zeniv.linux.org.uk,infradead.org];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TAGGED_RCPT(0.00)[a9c0867e4d1dd0c7ab19];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Thu 06-03-25 01:04:03, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
-> 
-> commit 902e09c8acde117b00369521f54df817a983d4ab
-> Author: Al Viro <viro@zeniv.linux.org.uk>
-> Date:   Mon Feb 3 21:16:09 2025 +0000
-> 
->     fix braino in "9p: fix ->rename_sem exclusion"
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d77078580000
-> start commit:   69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d1a6d4df5fcc342f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a9c0867e4d1dd0c7ab19
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125d0eb0580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a595f8580000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
+Updates the document to clearly describe the scope and role the TAB plays
+in making decisions on unresolved violations. If and when the CoC has to
+make a call on instituting a ban, it doesn't act without the TAB's approval
+and only when the TAB approves it with 2/3 vote in favor of the measure.
+
+These changes ensure that the TAB role and its oversight on CoC measures
+is consistently described throughout the document.
+
+Fixes: c818d5c64c9a8cc1 ("Documentation/CoC: spell out enforcement for unacceptable behaviors")
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Acked-by: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+---
+v1 - v2:
+- Reword change log to better describe the changes and updates.
+- Add Fixes tag
+
+ .../process/code-of-conduct-interpretation.rst  | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/process/code-of-conduct-interpretation.rst b/Documentation/process/code-of-conduct-interpretation.rst
+index 1d1150954be3..4cdef8360698 100644
+--- a/Documentation/process/code-of-conduct-interpretation.rst
++++ b/Documentation/process/code-of-conduct-interpretation.rst
+@@ -145,13 +145,16 @@ kernel community.
  
-#syz fix: fix braino in "9p: fix ->rename_sem exclusion"
-
-Not sure how 9p got into this but given where cause bisection landed this
-makes a lot of sense.
-
-								Honza
+ Any decisions regarding enforcement recommendations will be brought to
+ the TAB for implementation of enforcement with the relevant maintainers
+-if needed.  A decision by the Code of Conduct Committee can be overturned
+-by the TAB by a two-thirds vote.
++if needed.  Once the TAB approves one or more of the measures outlined
++in the scope of the ban by two-thirds of the members voting for the
++measures, the Code of Conduct Committee will enforce the TAB approved
++measures.  Any Code of Conduct Committee members serving on the TAB will
++not vote on the measures.
+ 
+ At quarterly intervals, the Code of Conduct Committee and TAB will
+ provide a report summarizing the anonymised reports that the Code of
+ Conduct committee has received and their status, as well details of any
+-overridden decisions including complete and identifiable voting details.
++TAB approved decisions including complete and identifiable voting details.
+ 
+ Because how we interpret and enforce the Code of Conduct will evolve over
+ time, this document will be updated when necessary to reflect any
+@@ -227,9 +230,11 @@ The scope of the ban for a period of time could include:
+        such as mailing lists and social media sites
+ 
+ Once the TAB approves one or more of the measures outlined in the scope of
+-the ban by a two-thirds vote, the Code of Conduct Committee will enforce
+-the TAB approved measure(s) in collaboration with the community, maintainers,
+-sub-maintainers, and kernel.org administrators.
++the ban by two-thirds of the members voting for the measures, the Code of
++Conduct Committee will enforce the TAB approved measure(s) in collaboration
++with the community, maintainers, sub-maintainers, and kernel.org
++administrators.  Any Code of Conduct Committee members serving on the TAB
++will not vote on the measures.
+ 
+ The Code of Conduct Committee is mindful of the negative impact of seeking
+ public apology and instituting ban could have on individuals. It is also
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.45.2
+
