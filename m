@@ -1,188 +1,238 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7096B1624C8;
-	Thu,  6 Mar 2025 15:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDF51898F8
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 15:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741274551; cv=none; b=WLUJVcwWSv2Pqujkwo6pT9/Wy+9cvOrKC7YQOUb+Uqd2uhA3aiKuYjKlOqeFA1AAa5YnsL8lEOgbNyYxmg/vC0xANrgPIP37FZuvuPluYJVgB/w+3+++G2JEwjwWZyCYVqKWxTyg6THqCdgHx2wX8EY2fcCh+ggrPFAglNkFU08=
+	t=1741274712; cv=none; b=IreyICTN/bxuquSq04WvhkY70lhUffS6/tUY1eadDr4pyzHaC//dbLRXUqehi1nhOzWdfxnwaOCKPcVqBuAp45s6tSe2yZCnZBPL1RorF6gr3ayvuYkuX/pQdIytgV20OcZSu0bitUlDYMeeJWEYPKycHgawSu/R03VJ+qZWweE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741274551; c=relaxed/simple;
-	bh=SPwTqU1FQuydEUYFS8l2kMBpEKRE4wRRl01iyIDM5mQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RXMEqgY/TqulrY1NBthONqQzOV1dP06R4QaWF+fYvl6YqihC0qfRZQeWngzZyzwOYKcGmjwFf2uAlaSXU+7Isizc/bpUZhuGWsPIXYqhAzD0kzZgYQf76wJUstT5kOB2H6LqeKGEVeA2s1JsUWLi7Oq8zpj6aSC+4oLIbvm8sjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=dxnQCWqB; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1741274712; c=relaxed/simple;
+	bh=rxGcKYRPAvXxIoJan/V3AndTkZ5ib1DzUvC5fkxlMTE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i+IJRYDR2jUjnhdW1JzMFc7ZgHGwjxTLsUj+5l22KVRRf13jblsF/AZXiQkN3WwJuBaM+a/31Gekac4oS2/x/xXdDs9X3Oh3lrWfBlmc2VpqtQ1PC7Bd9F6JKBP7vt32yIEPbm7EBmCT/LOoKENi0m/zHfJZ1cKMY86vUCEqoTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LL3Rc0r2; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="dxnQCWqB"
-Received: from [192.168.178.76] (business-24-134-207-61.pool2.vodafone-ip.de [24.134.207.61])
-	(Authenticated sender: g.gottleuber@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id C96782FC0048;
-	Thu,  6 Mar 2025 16:22:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1741274545;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xi3cMLXECUOiOsPb3EvB2cc73af22xJrE8sr9a/N9is=;
-	b=dxnQCWqBc2gkM3N72XgL9j3bdEvSKu1LBfLXf6gwU5d8BuJkqKDcvCitHzg1RDmoBzIjRl
-	9tYb1TpSblY6Op92xhbdPZZhbQf+oxlQADUHaVOBKSZwLx4WIFgtfGkEzUCWZZXvJ5wOot
-	Sfsf744jbPzHDLPph0s8fZCAWIwnk0E=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=g.gottleuber@tuxedocomputers.com smtp.mailfrom=g.gottleuber@tuxedocomputers.com
-Message-ID: <58d6c774-2976-43ef-aa04-b339df4b6ff1@tuxedocomputers.com>
-Date: Thu, 6 Mar 2025 16:22:24 +0100
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LL3Rc0r2"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5498c742661so729986e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 07:25:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1741274709; x=1741879509; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yuhLx7uX7YSSKB6DQP0bKdym3whun2vLyOsmh+SSpJM=;
+        b=LL3Rc0r2HIl/Uj26t2VZ+HF00TloJ9ynUTXN3e1jDdUAfykUa/ykjrPFejU4sjz7ny
+         Sj/akkF8f64RfnWfi4B+R9qmUPTYQs5I6cUBHN82tdNU6AT4YBOt8ZOZZg7SDCPaTmvm
+         IFXMJmn0nWMQFgEHao52CWXG0wopD8IOlELdI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741274709; x=1741879509;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yuhLx7uX7YSSKB6DQP0bKdym3whun2vLyOsmh+SSpJM=;
+        b=gVeqrZQvRb+4eiIMMcBrEJAnIYqkFi8SxfnJj+4aw5NAx7MUMPMcOKGY92KsgGkWLJ
+         f2QHnn9zA1epVeX970siXNOqH1bt6yHMkSAnmk+Co9og4yqKclfX76yOzoLC6ULXhVBr
+         EWocVgIkLixKVRrznmvZhuOrx2iVASkZrI2+IVIueD9sD5SVs2XStNmzsGOINRbcIr5E
+         dO7LVbvg0Tzs8RawuQvnNTPswSg6CH0T3KUYY0+B5nHHYwXrNsG+lBf++NbiT1gZdYy1
+         zdoaSOAm5oDordSMYhpFPE3NgZcyH8ZrZTfEM8S3X3WF4t9riRVgCfMhoOo+UpTRoz6Y
+         p47Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWt1FzGcEuxRlO9DkAdn2HpKck/UzTs9C1hsIvNkPGhVfmVH9jEckoNl8Fxb5vzZgRMXzziXfSP6r0QfZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYFRbXq4TNKyCDcUvxuIW/lhOgPoA0Xxl/1l5yvSHK/3c2Chl8
+	aTnYDCQ8JKpHcSHmY5TPxxywZqCfktcJOPvlqOk1tFRSidXl9IUKzngT+fd/kV4vqrc5a3Eh3os
+	7Ud8+7hSKR+5X12uTT1X7MvqxOQ3ayxdIOUMQ
+X-Gm-Gg: ASbGncvHIB2NWEi7W41Y9PGJ1mLKQOqKsRVMwxlWXY377Wmy7BaA24b/sVZ46YAdm+6
+	EU25rxStyKH8yI6Nc3sA4w+i5QeYZuhP534tAC0C/VkeBPiELMAqFpUTQIqlL+9P6jSco+fK3Vp
+	JhX6GSZntImYFlnEfJUB7SlOM5WJw=
+X-Google-Smtp-Source: AGHT+IF2yWz7i9kDki87ltokdbfYDZk0WL+drHziPfedvmVMhVFqp4MF77Rblo9zAoUdSbcuP8JebTt+Wp5PiKUygy0=
+X-Received: by 2002:a05:6512:32a7:b0:549:8c86:7407 with SMTP id
+ 2adb3069b0e04-5498c8675b8mr794742e87.52.1741274708598; Thu, 06 Mar 2025
+ 07:25:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: Add device tree for TUXEDO Elite 14
- Gen1
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Georg Gottleuber <ggo@tuxedocomputers.com>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, wse@tuxedocomputers.com, cs@tuxedocomputers.com
-References: <57589859-fec1-4875-9127-d1f99e40a827@tuxedocomputers.com>
- <5e72992c-170c-48b9-8df4-2caf31c4ae44@oss.qualcomm.com>
-Content-Language: en-US
-From: Georg Gottleuber <g.gottleuber@tuxedocomputers.com>
-In-Reply-To: <5e72992c-170c-48b9-8df4-2caf31c4ae44@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250214173944.47506-5-james.quinlan@broadcom.com>
+ <20250303184011.GA172021@bhelgaas> <CA+-6iNwsCzf30a0vbgStqA+DCyBnk3bGwoXNv0UNYOThE1Us6Q@mail.gmail.com>
+In-Reply-To: <CA+-6iNwsCzf30a0vbgStqA+DCyBnk3bGwoXNv0UNYOThE1Us6Q@mail.gmail.com>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Thu, 6 Mar 2025 10:24:56 -0500
+X-Gm-Features: AQ5f1Jq37MLMRA99pCX37UPItYXdqTq2aPqIxfJ0HUR0Zyg-xMJb8gaw-QKhCwg
+Message-ID: <CA+-6iNyXeXhqzwbV+pcizpyXg-c-gihcLEtPv1s1uczdNN_VOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] PCI: brcmstb: Fix error path upon call of regulator_bulk_get()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000007cc3e5062fae1cde"
 
+--0000000000007cc3e5062fae1cde
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 4, 2025 at 9:49=E2=80=AFAM Jim Quinlan <james.quinlan@broadcom.=
+com> wrote:
+>
+> On Mon, Mar 3, 2025 at 1:40=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+> >
+> > On Fri, Feb 14, 2025 at 12:39:32PM -0500, Jim Quinlan wrote:
+> > > If regulator_bulk_get() returns an error, no regulators are created a=
+nd we
+> > > need to set their number to zero.  If we do not do this and the PCIe
+> > > link-up fails, regulator_bulk_free() will be invoked and effect a pan=
+ic.
+> > >
+> > > Also print out the error value, as we cannot return an error upwards =
+as
+> > > Linux will WARN on an error from add_bus().
+> > >
+> > > Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulator=
+s from DT")
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/cont=
+roller/pcie-brcmstb.c
+> > > index e0b20f58c604..56b49d3cae19 100644
+> > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > @@ -1416,7 +1416,8 @@ static int brcm_pcie_add_bus(struct pci_bus *bu=
+s)
+> > >
+> > >               ret =3D regulator_bulk_get(dev, sr->num_supplies, sr->s=
+upplies);
+> > >               if (ret) {
+> > > -                     dev_info(dev, "No regulators for downstream dev=
+ice\n");
+> > > +                     dev_info(dev, "Did not get regulators; err=3D%d=
+\n", ret);
+> > > +                     pcie->sr =3D NULL;
+> >
+> > Is alloc_subdev_regulators() buying us something useful?  It seems
+> > like it would be simpler to have:
+> >
+> >   struct brcm_pcie {
+> >     ...
+> >     struct regulator_bulk_data supplies[3];
+> >     ...
+> >   };
+> >
+> > I think that's what most callers of devm_regulator_bulk_get() do.
+>
+> Ack.
 
-Am 06.03.25 um 13:50 schrieb Konrad Dybcio:
-> On 6.03.2025 1:25 PM, Georg Gottleuber wrote:
->> Initial support for TUXEDO Elite 14 Gen1 based on Qualcomm Snapdragon X
->> Elite SoC (X1E78100).
->>
->> Working:
->> * Touchpad
->> * Keyboard
->> * eDP (no brightness control yet)
-> 
-> in case your panel as a PWM backlight, you will need to set the PWM
-> output pin function explicitly, see x1e80100-microsoft-romulus.dtsi
+Hi Bjorn,
 
-Thank you, will check this.
+Manivannan stated that this series has already been merged.  So shall
+I implement your comments with a commit sometime in the future?
 
->> * NVMe
->> * USB Type-C port
->> * WiFi (WiFi 7 untested)
->> * GPU (software rendering)
->>
->> Not working:
->> * GPU (WIP: firmware loading but output is jerky)
-> 
-> Please tell us more
+Thanks,
+Jim Quinlan
+Broadcom STB/CM
 
-Oh, this is already an older thing: with kernel 6.10 loading
-gen70500_gmu.bin and gen70500_sqe.fw leading to partly slow and
-stuttering video output. Sometimes it rendered black edges / borders to
-KDE menus. Surely I did something wrong.
+>
+> Jim Quinlan
+> Broadcom STB/CM
+> >
+> > >                       goto no_regulators;
+> > >               }
+> > >
+> > > --
+> > > 2.43.0
+> > >
 
-I have just tried to reproduce the same setup, but I couldn't get it to
-work just now. If you are interested, I can try it again with a
-new/current kernel. (which is preferred? linux? linux-next?)
+--0000000000007cc3e5062fae1cde
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
->> * USB Type-A (WIP)
->> * Suspend with substantial energy saving
->> * Audio, Speakers, Microphones
->> * Camera
->> * Fingerprint Reader
-> 
-> If it's connected to the multiport controller, you should be able to
-> just enable it, like on the T14s, similarly to the Type-A port
-
-sounds promising
-
-> [...]
-> 
->> Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
->> ---
->>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->>  .../qcom/x1e80100-tuxedo-elite-14-gen1.dts    | 798 ++++++++++++++++++
->>  2 files changed, 799 insertions(+)
->>  create mode 100644
->> arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
->>
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index 140b0b2abfb5..f0a9d677d957 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -298,3 +298,4 @@ dtb-$(CONFIG_ARCH_QCOM)     += x1e80100-lenovo-yoga-slim7x.dtb
->>  dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-microsoft-romulus13.dtb
->>  dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-microsoft-romulus15.dtb
->>  dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-qcp.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)        += x1e80100-tuxedo-elite-14-gen1.dtb
->> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
->> new file mode 100644
->> index 000000000000..86bdec4a2dd8
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
->> @@ -0,0 +1,798 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +/*
->> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
->> + * Copyright (c) 2025 TUXEDO Computers GmbH
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->> +
->> +#include "x1e80100.dtsi"
->> +#include "x1e80100-pmics.dtsi"
->> +
->> +/ {
->> +       model = "TUXEDO Elite 14 Gen1";
-> 
-> Please use 8-wide tabs instead of spaces
-
-Sorry.
-
->> +       compatible = "tuxedo,elite14gen1", "qcom,x1e80100";
-> 
-> You'll need to define a new vendor in:
-> 
-> Documentation/devicetree/bindings/vendor-prefixes.yaml
-> 
-> [...]
-> 
->> +       vreg_edp_3p3: regulator-edp-3p3 {
->> +               compatible = "regulator-fixed";
->> +
->> +               regulator-name = "VREG_EDP_3P3";
->> +               regulator-min-microvolt = <3300000>;
->> +               regulator-max-microvolt = <3300000>;
->> +
->> +               // EDP_VDD_EN_GPIO54
-> 
-> C-style (/* foo */) comments are preferred, but these ones can be
-> removed, as they repeat what the code says
-
-I have overlooked this. Sorry.
-
-> [...]
-> 
->> +&gpu {
->> +       status = "okay";
->> +
->> +       zap-shader {
->> +               firmware-name = "qcom/a740_zap.mbn";
-> 
-> Are the laptop's OEM key/security fuses not blown?
-
-I'm not sure. How can I verify this?
-
-Regards,
-Georg
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
+AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCA6fnUgboztbQshQq3uCu813h9lIcpZ
+VHp9TTWAPTEkajAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAz
+MDYxNTI1MDlaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
+AQEFAASCAQB8lgVR9QlbRy4NCuJQTPEFOYgpD3wq92RP5gUFae0OAYVz4Z34eeIejWqes0E6KpL4
+axrEZMFWoverjhOvA3EQFEd5FSldeiIudDdIqM7jhHrPQbWuFwDnZZGHePCOMM9fnBvf0ZTYCwyh
+ZeFqHY+X4ViA0MKMA5g7v7d9z0k5bE8m02JZEDjmSFphj0KX+C+6IyRS3ntYpmgTOEKK8uQqJ4sI
+d1k3XSBhtgilk5v+oS2mGpz5mJBvKOEMBu26/cab8Jax45DMqx0vUDYk3dII5EaaEpuw3AWtyE5B
+ick+snBjNx21qja9wRpng6FHuRbjedhLbjlPctw83/232BRD
+--0000000000007cc3e5062fae1cde--
