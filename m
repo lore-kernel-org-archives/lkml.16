@@ -1,230 +1,216 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012039.outbound.protection.outlook.com [52.101.71.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5121FCCE5
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248852; cv=none; b=hwCWqsYK1S16SXq9ISG3mgsWrQZxR0c7KJgOF7erONmOrEOl3jyCyKjDAStlM7IP4b2FZ5W3AYl0ZtS//TZIOFjq17JV3kmkX9POaPUO3TX7LD+nFUMLAmQar4Q8lsYeNUrUwLeCNVSINinPvhsh9kHaf9r4qcJwBtDuDei8JCg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248852; c=relaxed/simple;
-	bh=k6mnkPFomq2MGfRQMtgnPUDBce80u9EQGOgXgPA1+xs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=QOrMmO+Zww4uCI8703Jz36HsTjXP/C8vsevJOx/vCf97USJZCaXcUMTsl0P8s1WZesjFQ3lIpquObqoPNAqGQYThV+rwn1ytvp0MQxx78WZFNRHXROSUDg1b/4Cg78MWEe5bpJ31ivTpecE7GWjXu0iWHqG/67ibwHm8ClVxCB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HF0rffSX; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C48E1FC7FF;
+	Thu,  6 Mar 2025 08:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741248901; cv=fail; b=muuLu5QBC6kypbkeMZZZYec87kpEaADoKRKPq22tltaITX7kXfCY6+ZbbSx42gWxCWrFDSvn4VBqPgLXFWD5NsIlXsPsb5PBLC/vPud/ncy7OP9/eYRvMUIOFCTfLoAcE/+GDhm3bYy8tlLPUo3t0C62cvf1zjW4fXb8qJn11+M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741248901; c=relaxed/simple;
+	bh=Ki6rApT97dsLgXgZoMGAgK0r3FY1vzR5VOSHKJNfK1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=RDvKZM38VB5eIhAEo8ARf0SR7AyaHMs5wxN+svjZDPlHVcR21KH62/i0Hl06FjfuopFA0utCeIWI7PXLyde3/KEbvyMdmFVXwXH9DoiNQA294jdCDeGHexnHzjMqvnF4SQLWQ23R3OtHHnYJ8MP9/3+T8+imBgGmBr877/+9aYk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=fail (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=XPFlizap reason="signature verification failed"; arc=fail smtp.client-ip=52.101.71.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HF0rffSX"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250306081408epoutp0257a17e8791e659dc6ba4dbd2ddbbc20b~qKJo7K-ea2642826428epoutp02B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:14:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250306081408epoutp0257a17e8791e659dc6ba4dbd2ddbbc20b~qKJo7K-ea2642826428epoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741248848;
-	bh=k6mnkPFomq2MGfRQMtgnPUDBce80u9EQGOgXgPA1+xs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=HF0rffSXDqhsnmM54aUq5+ZRyqRdGkmV1MvgSSslW7Rh3O0cwX548zh/Y6/nACohJ
-	 Qe0idONuj5mZcuhCKJ2z2CQGKJURQhIAm1fOsvSPhk2Jmh9o6G3BjQg3DHFiItcGBz
-	 WbyRNkdAkdgu8dXGyNoEJLPC1eTfTqbGutSS5LOk=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20250306081408epcas5p2cc5cdb6d66503223b5cebc08e06df4f9~qKJoSUYnV1774417744epcas5p2J;
-	Thu,  6 Mar 2025 08:14:08 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Z7hyk0Pxzz4x9QK; Thu,  6 Mar
-	2025 08:14:06 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	10.85.19710.D4959C76; Thu,  6 Mar 2025 17:14:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250306074847epcas5p286f512436a15d1b62ee1e5cc65b8a291~qJzgaAEVu2622726227epcas5p2O;
-	Thu,  6 Mar 2025 07:48:47 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250306074847epsmtrp2908ed13f055262cc6cec405330b5e0af~qJzgY7Ck91823218232epsmtrp2N;
-	Thu,  6 Mar 2025 07:48:47 +0000 (GMT)
-X-AuditID: b6c32a44-36bdd70000004cfe-14-67c9594d1953
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	92.FE.18729.F5359C76; Thu,  6 Mar 2025 16:48:47 +0900 (KST)
-Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250306074844epsmtip29eefffb54bed9090fc6baa6289c5ff5b~qJzdkUr7x2203522035epsmtip2g;
-	Thu,  6 Mar 2025 07:48:44 +0000 (GMT)
-From: "Swathi K S" <swathi.ks@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <krzk+dt@kernel.org>,
-	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
-	<conor+dt@kernel.org>, <richardcochran@gmail.com>,
-	<mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>
-Cc: <rmk+kernel@armlinux.org.uk>, <netdev@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<pankaj.dubey@samsung.com>, <ravi.patel@samsung.com>, <gost.dev@samsung.com>
-In-Reply-To: <a9ddeccf-8fc6-453c-af62-55e895888a77@kernel.org>
-Subject: RE: [PATCH v8 1/2] dt-bindings: net: Add FSD EQoS device tree
- bindings
-Date: Thu, 6 Mar 2025 13:18:37 +0530
-Message-ID: <012901db8e6c$3179a730$946cf590$@samsung.com>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="XPFlizap"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vrQPMwyCvrtrr0RJjWLdYVzc0wx2Q9JmIktZZieHYLsGeC9MZ94MtfjzMhCEY4Ul4fD+R+U2Ia8/Bo3zwrzKPAltax89mSLoL9s6mAR93L/6GEiBaPpN66hP01HUm8uHMuirhUszorneESR1jeIy1qm6Gs9ufYDa5S6gryimeozKVbaxrMwN4gPKgoBWBkSrwjCn5ujiE/kZmbqSlCNFuyQGax5r6FDYaM4zAXKSpaUIoGMNYPC/SsM/ZYW7l3wVyNuk1JB4rqBJXLH49g458rEsBH7euhHO2hveDEkLETLKXk49WDyUhjo6NVQPQEXbEhm1vvYEp/OXPYqQfUzVzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VvRZtRwmOjdMgAgMglw+9ots5sw7Uwyxu9QPdesDkrU=;
+ b=nLT83ft0TYpKcqirClJsLdq5mHvxROheGVRx4JV2m+Ep9uL3LeltsrgfVYeAyM6Rfbrqu7n5OEWHFm6NyUP7GEAXq6CThC8n/1K2XKsX4u+zi9BnxmTTJYrWHctaNjhr2lrlHYwSc7vVYS702/dIq/VVEtUVRqcG7+N1oIw58zhR9ss8qFgLhgc2jQC4XEZKc5npmzrpTCG3qObmNyIilqkpDgMT6GSjqVsyEyCXfBHfiJiYVx3WKxbSJZkxkj0pj6xxAhyFm6SIl9JDQ/YWzdifFer8yyaE2UeTiaYOhkrvtTxQVRp9AQ5fuKjVGKali+frHJRRqAV61DKE80Cr2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VvRZtRwmOjdMgAgMglw+9ots5sw7Uwyxu9QPdesDkrU=;
+ b=XPFlizappvKUyLfhtqIpnPHr0rt52TX2Ff0kbuQzudnAZrOCV2YBtIsdWyWkbAyE2PAV0gaGMIV/SBL8NN42nS7xVM7MOW6fb4zv6NFwAHJxAJc74VtK53aMQqOoM5tJN3WuoFZtx0+svCi26lHlRv4iBhD8HVWtPiM3RmT6ZVF/XHl1KTJGwSY6JX/s+5D7I0twWOUg//yz6yNeg8tEPdNJEuPf1DPWuOjGYwmQKda1UBqW3tTCdDz8vxTp85e+Kh195g5ISXxGBAGbjm52cQa1zxFTJKJz0+mrqnmJYUkV4mJTyVMFfv2kVLkTSAx/2oJisx1nNW+rxQNHFHFMAg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::12)
+ by AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
+ 2025 08:14:55 +0000
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30]) by AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 08:14:54 +0000
+Date: Thu, 6 Mar 2025 10:14:51 +0200
+From: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To: Julien Massot <julien.massot@collabora.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH 2/5] media/i2c: max96717: implement the .get_frame_desc()
+ operation
+Message-ID: <iowx7ej5qfkwhoqvdocpuvjzytihukephb7lpuazll754e45kf@yo22sxya5n36>
+References: <20250207112958.2571600-1-laurentiu.palcu@oss.nxp.com>
+ <20250207112958.2571600-3-laurentiu.palcu@oss.nxp.com>
+ <f5940c764af6587b97d39fdb9b64ec9bfe09b4e8.camel@collabora.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f5940c764af6587b97d39fdb9b64ec9bfe09b4e8.camel@collabora.com>
+X-ClientProxiedBy: AM0PR07CA0031.eurprd07.prod.outlook.com
+ (2603:10a6:208:ac::44) To AS4PR04MB9576.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQHcwqSBZNYxUrKMqce/4F1P5N/GfgGyT6S5AetEnA8CjXdBygKIabXqAWIbQ0mzEqYV4A==
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxzOubftLQpyByJH9khTTQhslFZKdzCUmY3NuxdjD93GNuECdy0C
-	bdPHcGbO6tA4Bi3ofDWVl1NcGbh1QAoKImgZolRkFInrFAcISkTGQgIbspYLG/995/u+3/n9
-	vnPy4+NBRiKMn6XSM1oVnSPkreA0tEeER735YadCXNQdj2bGjgBUdcfBRT80d2PI6srnoLJL
-	3Vw07LxLoIHWRgyNWX7nIZfrRwJdbzBxkf0PNxf1Nll5qMA9xEWlczVc5Cxfg6a7xgGqrP+L
-	QIOPzhPo0tVRHN0wl2Bo/ryD2BRC9bp7cKru+wGMGjbXE1SjxUNQ5XYDZbd9zaN+/m431eiY
-	wqiJlj4eZaqzAepii4Sasj+T7J+SHa9k6ExGK2BUGerMLJVCLnz93dSXUmNlYkmUJA49LxSo
-	6FxGLkx8Iznqlawcb1ah4DM6x+ClkmmdThidEK9VG/SMQKnW6eVCRpOZo5FqRDo6V2dQKUQq
-	Rr9RIhZviPUa07KVta3tQLNfsKNjupAwgn1PFgA/PiSlcOToCaIArOAHkecALNp/iOMTgsg/
-	AWyaTGKFaQBHHx8mlipuTY7xWKEZwPbifi57GAXwjG2a53PxyEhYaWpZqFhNNmNwZE+yz4ST
-	5Rj8qeMk5hP8yATYO9KL+3Aw+Ta0On8DPswh18PxvdULngAyDt4/MgtY/ATsPD60MB9OPgtP
-	VzzA2ZEEcGb4NJflQ+HlmUIvz/c23gq/tW319YVklR+c6rvGYf2JsPHQUm0wvN9RtxgtDE49
-	bOaxOBVWm/oW/UromS1Z5F+Arb9aOb77cTICnm2KZumn4eErtRg7wipY9PcQxvIB0FG6hNfB
-	uQfuxSvXwoZTE0QxEFqWJbMsS2ZZlsbyf7dywLGBtYxGl6tgMmI1EhWT99+HZ6hz7WBhFSIT
-	HeBm2WNRG8D4oA1APi5cHdCT1KkICsikP9/JaNWpWkMOo2sDsd7nLsHDQjLU3l1S6VMl0jix
-	VCaTSeNiZBJhaMBXjfmKIFJB65lshtEw2qU6jO8XZsQEB4j019zUGm3FUMW8w9/UVdv/xcUt
-	mz0t4Rd0Edcdw+mhN17eIG/xp9/PxNJGRQ/Xmdy7inecdLuDtZXDc8pvnNXiLdVv3Qu8reko
-	KufXEJtcbkPxwWbzreK6Vo05haRWlealVHyaf7B9m3bCEwI+PofjxsmNr2ZHZ/Vw9jzXYzx7
-	Jt4ym7TdVW/cvWtbv7z6l0+eMp+wfymirC/Gm+94yMs9hpu30zgrXahbdKzwwF7rsZWB3Pds
-	0ojCWPlVxRXncee9wXx6e0Zv1QdlDfYLkcmSa55HmwvJ/sEaevKjBHGMLB3mdVFxdeED7wSe
-	coz7tcpy5+/G/LOvLC+qyb5TyNEpaUkkrtXR/wJmf8iikwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJIsWRmVeSWpSXmKPExsWy7bCSvG588Ml0gwNrNS1+vpzGaLH8wQ5W
-	izV7zzFZzDnfwmIx/8g5Vounxx6xW9w8sJPJ4uWse2wW589vYLe4sK2P1WLT42usFpd3zWGz
-	6Lr2hNVi3t+1rBbHFohZfDv9htFi0dYv7BYPP+xhtzhy5gWzxaX+iUwW//fsYHcQ9bh87SKz
-	x5aVN5k8nvZvZffYOesuu8eCTaUem1Z1snlsXlLvsXPHZyaP9/uusnn0bVnF6HFwn6HH501y
-	ATxRXDYpqTmZZalF+nYJXBmPZq5mK5gjX3FpWkUD42ypLkZODgkBE4nbH1+ydTFycQgJ7GaU
-	uHH+IDtEQlLiU/NUVghbWGLlv+fsEEXPGCV+9/awgCTYBLQkFvXtA0uICJxmkvjR/g/MYRZY
-	xSSxbekpJoiW80wSN+Y8YgNp4RSwk7j87DIziC0s4C/RdG8mmM0ioCLxpmk1E4jNK2Ap8Wra
-	L0YIW1Di5MwnYOuYBbQleh+2MsLYyxa+Zoa4T0Hi59NlrBBxcYmjP3uA4hxAJ4VJTFkVNoFR
-	eBaSSbOQTJqFZNIsJN0LGFlWMUqmFhTnpucWGxYY5qWW6xUn5haX5qXrJefnbmIEpwYtzR2M
-	21d90DvEyMTBeIhRgoNZSYT3ot/JdCHelMTKqtSi/Pii0pzU4kOM0hwsSuK84i96U4QE0hNL
-	UrNTUwtSi2CyTBycUg1MPUI/s/Tl+z92JAp5H98/Le33Kd3lQcdzHd0nbbHhP8DzOoSpd5re
-	/4O6HJOOeDSbPFSYtUYyySFpYySThYWthFfI7pKvprbXp/kuTtyb8X6egK/Q1Zp9H8O9ZOzO
-	NMiacTgcUMqYLm736EbE2TUPHqz9ujM+e8sUfqbwXdqfG/o3P75stys3OKBQrDIzWfWRttdq
-	bT7LyQkcvZ/apKyvmq3zm+4vOulentPispXRFjrvLn1YnnhUvOQIf5Rm08yZF79o/VESiztR
-	55xmdzRMpSFLofj4lq2/PJuilrOXtAlJ+sYlbjcTYtXU6svad6bu/8kySb2nd/mbHT5PebSl
-	VIr1k8C7hEVGB2M8PJVYijMSDbWYi4oTATPsM7d8AwAA
-X-CMS-MailID: 20250306074847epcas5p286f512436a15d1b62ee1e5cc65b8a291
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250305091852epcas5p18a0853e85a5ed3d36d5d42ef89735ca6
-References: <20250305091246.106626-1-swathi.ks@samsung.com>
-	<CGME20250305091852epcas5p18a0853e85a5ed3d36d5d42ef89735ca6@epcas5p1.samsung.com>
-	<20250305091246.106626-2-swathi.ks@samsung.com>
-	<89dcfb2a-d093-48f9-b6d7-af99b383a1bc@kernel.org>
-	<00e301db8e49$95bfbf90$c13f3eb0$@samsung.com>
-	<a9ddeccf-8fc6-453c-af62-55e895888a77@kernel.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9576:EE_|AS8PR04MB8676:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1f096ac0-5148-4dec-89ca-08dd5c86fa02
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?Pt1CzQinm+N0fXY2ll6jyFiMMA0JgwJU5UlEQKevjZ9bXOfaqHo9YBCSJ/?=
+ =?iso-8859-1?Q?CCeaQQUdbAgsHSqpdL8UrmuhmiZNuzZedPabFHTJWC8dJ2u6RuGGky7xMn?=
+ =?iso-8859-1?Q?sqKSe1loRvuocLthWfZkX1RczCdaAUHvEJiNzjDMfQ1cezJDixdutriNSE?=
+ =?iso-8859-1?Q?IMcFeKqKn9Kdk0c9vWhTSqNN3Hnfr4RIn/gSa5EyOO3s/DyIoeLDQeuS3w?=
+ =?iso-8859-1?Q?bgtUr5oWaym0XpDBq2jdCPvjrsAZQRgFl0Hy3g6J7eGz5X73SiwAn+Wpv9?=
+ =?iso-8859-1?Q?D8s7tiMqiGYmaPI2nUAp+rClfqQZBKuF8pzdXyAWiuO1eAY17krORobN8F?=
+ =?iso-8859-1?Q?YPOSRLYL67sAUlZXZlLERzYa2Zt+aCgUpJLpyGExgQYuOHLzfPdsXghqL0?=
+ =?iso-8859-1?Q?BOdbz9AXfznQwsX0SByvlIbNu7MSvpxvSW8HScnyCzZ2SEcDqvX0NwtDe2?=
+ =?iso-8859-1?Q?Re5e412FIug62Bli8azjM+zMO859ec5Ymiup0QCRF8b2WGn2LzQ1dWDKTY?=
+ =?iso-8859-1?Q?yOLMBh/cqWVWw9W3Ip7JR/Cz2p2cVzh1hcZvMJfEXN3T9tEon0CSrSX/+j?=
+ =?iso-8859-1?Q?rFW25MmHynSiN95LAOq84ZgBxrbzvM5a4x9742sZao5kf0P9HAJPvOu7NB?=
+ =?iso-8859-1?Q?SlrskM1/oHwpVV1rjQ2xgw2xgk7bVs1evNxSPI5P6np3Hnt0FESn+33l7+?=
+ =?iso-8859-1?Q?5FTSe1XjtPdqgPWTctzeUE3ciVOgpmXKEc8Ak1E1jjqswAcwf128nkHkZZ?=
+ =?iso-8859-1?Q?hp4SmGH2uVH9TADe+OaSGkhEoWJeZhs1PQi3riElmPNC6l74I5b7wt2wiM?=
+ =?iso-8859-1?Q?F3Fzw6bbJnJMIsXTQ0sohPdxWZyxPOm8YypZUv+y63NrJ+IaMQ96PH8Gq8?=
+ =?iso-8859-1?Q?ji+qtmKy202wg3cmydNFIRx4xpFvlfT9FbsDP/0WHtDeq96F9IZmyROdXB?=
+ =?iso-8859-1?Q?0FYZFsnBLzbNK7hQBIFYrwVOuKfGS456e5vrlEsU9zpqtmksDv+Q+aqGMm?=
+ =?iso-8859-1?Q?bAiimpY9urUVFrTsCctdc71a8VFMzRqF9nUXqflnO0JvZxD3zvMUxVT7tJ?=
+ =?iso-8859-1?Q?Sapah3CsogENhoW/iGU0h8FjCrgIqhG01EacW2UqaP3ol5QYk4QF8Y2Qgc?=
+ =?iso-8859-1?Q?1b84v8fW4k1bKRYl2nb86uBJ7rhLvXch1Lf1v7o32pT986FFypV0jFw8AQ?=
+ =?iso-8859-1?Q?sgyG80izd0pcJsQr82GKq/QE3Pm9YB0NlJ2wuXNPyIkAWFe/WOj+ESWhEI?=
+ =?iso-8859-1?Q?nG1jJakWxiLxFOdHpSS1pC1so5Sse0mFQBrOgz33BzqlW8MCh/5k6Z6B3T?=
+ =?iso-8859-1?Q?VLbO8Y5ZNaVopaBCIW6Teq2ZMF/bbebtJ6jBWjZehti0sk7UzqoFNKyrwn?=
+ =?iso-8859-1?Q?yhIJcrNQs0tjnoZxlk9mn8kB9sojKBuKq/DeL/hAfLCTqCY/UYYs6bAo/e?=
+ =?iso-8859-1?Q?veA2PqexzwpEHJYI?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9576.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?1Ev8VC+EUnTchQRRA7XEC4DdnnHnbTxHMsAUF58+4MN82E8TfFh+hBkvzs?=
+ =?iso-8859-1?Q?tuzf246XD8j+kNjuUJ7IKlnyTz4BrvV5p3DzS4MLa3cMgyJhMYAljhvNwo?=
+ =?iso-8859-1?Q?rwYFs2tJxrSfdNLiAK2EnCZC3JuIDf2LqXFtF2jSOvzqeIGUHd22GnRRrs?=
+ =?iso-8859-1?Q?CbEikVlvJVjOV8btwRfS6oCWk+6DulXvKyV6LH083sheMvHX++uPH4plUH?=
+ =?iso-8859-1?Q?HCsq6s81aG1n0KhVg103W1bEQJo0xeLWeIxBtpI53DkXewEzUdFRB00yNC?=
+ =?iso-8859-1?Q?FAmdEJFMl+SoSlC79rNw7h6pEWUz1HBmv45fNdmoQZADreyzCbszuntgwS?=
+ =?iso-8859-1?Q?MYkEoPFNwXQnZh/f49GF5uzbPYPNjRjiYLVGxx9ZIKy3aNSP0EMb9Gkipq?=
+ =?iso-8859-1?Q?+KcmVJzN3KLk9OWVPC2ZQju5ZkYjcR8cPLKD+Gr4l/UVoAevCRoxMc42T+?=
+ =?iso-8859-1?Q?IN/5/+SS7MAQQNOLaPtqoXoQFZkHpU9VJZ6rD/dsHcJX4Ii6cQXMg+svcD?=
+ =?iso-8859-1?Q?Oz58SFpt5TGOruEHD4I5f6vZp/PSbCeYighe8ZOqJf6yLnPk2rJoReVOEK?=
+ =?iso-8859-1?Q?5jJcqkIcd1HyqmoUO6q6/JxVP1IyhkqTgKaepCq8mKUtUZrY8k/G+bPKgF?=
+ =?iso-8859-1?Q?6Drna9hnbN5Fb1q3UEW5UtriYUDJQaheGDKWayYE5VMRrnNdCZpqpnOwqE?=
+ =?iso-8859-1?Q?y2zc8OJXtSinCTuHdeBz4eiZYf/IhVwOz4xb+pUE/yrbJVQBUHkFnWmiTL?=
+ =?iso-8859-1?Q?XF6qXpTOGjELOpvjeqZD1dHlpJ8PGHRrQcXTsTMA3v1kQsD9ieKXP2FWXT?=
+ =?iso-8859-1?Q?lT4I1swuLIXlbvnxrcLd8r2RE7ky0YlWwy8Sh3unCQMO8TvxOv1TR622rx?=
+ =?iso-8859-1?Q?d09UoSrcmdpTCf0s9HTVHZK433byevi0dDC2jt4bvwFolO7UxmdAWGNZ7s?=
+ =?iso-8859-1?Q?oLcygFcVrZtg3dQEe1a/t6AVgDXKBDhLltzlWEoRassOETBuKSkKU7rasZ?=
+ =?iso-8859-1?Q?zAqsVPD3X/zxexY91RnwskHu+hnrk88JhCAC4K6urk7D+i4//SHgmfjVcF?=
+ =?iso-8859-1?Q?lIUg9JpT8OXmp/RyFagwAjtLJSLNpNARjDxj3sd5GYIKynSx1G9myMyv3g?=
+ =?iso-8859-1?Q?rNho0L1WJG8NMo7Rjnw65U77eUGQKfO8R9y3UB/ET+tEt/7dvb2/WdTCH1?=
+ =?iso-8859-1?Q?ztJz2YBHCQmOj+qwxg44N+8zCJZyqly45WmIRNNTedycHSoZNYl5fcm/Qw?=
+ =?iso-8859-1?Q?rk/Fm5BBoTq6hXoCYsKm4KkGaHdqUqjj9UYLRSMVwlqd8pZsnwI5ALcN2d?=
+ =?iso-8859-1?Q?z2j0fLN5cj2uJdJ13+0fc8ZfIfca/tQsHSBksEQV7icPGYoapU7KykpInx?=
+ =?iso-8859-1?Q?7bUphLBEBVFvmO6SPju2OWtDrRoHfSCzcU3aGL2PKeEE9jmP1OsEFY64B4?=
+ =?iso-8859-1?Q?uBi4XwApju+fEZChEFDLzf3vSdylQAf0XtcXHdEcq0vXPeLvJya8XRtxHy?=
+ =?iso-8859-1?Q?gXeILSzdVFqy8ISoiRD84ehFnRZSZjoxlz5RV2369EgxmGZhBhoPOel4Eg?=
+ =?iso-8859-1?Q?UPcL24LL47NBigVq5dC3A1C06nYcgq+PCoP4N3tErmSosjqiHEetvXnrNj?=
+ =?iso-8859-1?Q?1R4ZH/rnYZQYzVtzm6iV3CaE96N+J8WUJyR1L2IYXQ4U8Z6hL/FssfHA?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f096ac0-5148-4dec-89ca-08dd5c86fa02
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9576.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 08:14:54.7657
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p7SaIlihkZF90kCxqvgbNlTizJMLcy+rQKgKIQQnrDx6sjgIdsF9bf+YFG49aNfdquxtzXad5RBoBV+Ykm41Kg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8676
 
+Hi,
 
+On Tue, Feb 18, 2025 at 02:29:30PM +0100, Julien Massot wrote:
+> Hi,
+> 
+> On Fri, 2025-02-07 at 13:29 +0200, Laurentiu Palcu wrote:
+> > Since the max96717 serializer can work with various sensors, we need to
+> > implement the .get_frame_desc() callback to get the VCs and DTs for the
+> > incoming stream(s).
+> > 
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+> > ---
+> >  drivers/media/i2c/max96717.c | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> > 
+> > diff --git a/drivers/media/i2c/max96717.c b/drivers/media/i2c/max96717.c
+> > index b1116aade0687..6a668a004c717 100644
+> > --- a/drivers/media/i2c/max96717.c
+> > +++ b/drivers/media/i2c/max96717.c
+> > @@ -575,12 +575,33 @@ static int max96717_disable_streams(struct v4l2_subdev *sd,
+> >  	return 0;
+> >  }
+> >  
+> > +static int max96717_get_frame_desc(struct v4l2_subdev *sd, unsigned int pad,
+> > +				   struct v4l2_mbus_frame_desc *fd)
+> > +{
+> > +	struct max96717_priv *priv = sd_to_max96717(sd);
+> > +	int ret;
+> > +	struct v4l2_mbus_frame_desc source_fd;
+> > +
+> > +	if (pad != MAX96717_PAD_SOURCE)
+> > +		return -EINVAL;
+> > +
+> Please check priv->source_sd first, we support the case where we only have a test pattern from
+> the serializer. Then we can simply return the result of v4l2_subdev_call.
+> 
+>         return v4l2_subdev_call(priv->source_sd, pad, get_frame_desc,
+> 			       priv->source_sd_pad, fd);
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: 06 March 2025 12:35
-> To: Swathi K S <swathi.ks=40samsung.com>; krzk+dt=40kernel.org;
-> andrew+netdev=40lunn.ch; davem=40davemloft.net; edumazet=40google.com;
-> kuba=40kernel.org; pabeni=40redhat.com; robh=40kernel.org;
-> conor+dt=40kernel.org; richardcochran=40gmail.com;
-> mcoquelin.stm32=40gmail.com; alexandre.torgue=40foss.st.com
-> Cc: rmk+kernel=40armlinux.org.uk; netdev=40vger.kernel.org;
-> devicetree=40vger.kernel.org; linux-stm32=40st-md-mailman.stormreply.com;
-> linux-arm-kernel=40lists.infradead.org; linux-kernel=40vger.kernel.org;
-> pankaj.dubey=40samsung.com; ravi.patel=40samsung.com;
-> gost.dev=40samsung.com
-> Subject: Re: =5BPATCH v8 1/2=5D dt-bindings: net: Add FSD EQoS device tre=
-e
-> bindings
->=20
-> On 06/03/2025 04:40, Swathi K S wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> >> Sent: 05 March 2025 21:12
-> >> To: Swathi K S <swathi.ks=40samsung.com>; krzk+dt=40kernel.org;
-> >> andrew+netdev=40lunn.ch; davem=40davemloft.net;
-> edumazet=40google.com;
-> >> kuba=40kernel.org; pabeni=40redhat.com; robh=40kernel.org;
-> >> conor+dt=40kernel.org; richardcochran=40gmail.com;
-> >> mcoquelin.stm32=40gmail.com; alexandre.torgue=40foss.st.com
-> >> Cc: rmk+kernel=40armlinux.org.uk; netdev=40vger.kernel.org;
-> >> devicetree=40vger.kernel.org; linux-stm32=40st-md-
-> mailman.stormreply.com;
-> >> linux-arm-kernel=40lists.infradead.org; linux-kernel=40vger.kernel.org=
-;
-> >> pankaj.dubey=40samsung.com; ravi.patel=40samsung.com;
-> >> gost.dev=40samsung.com
-> >> Subject: Re: =5BPATCH v8 1/2=5D dt-bindings: net: Add FSD EQoS device
-> >> tree bindings
-> >>
-> >> On 05/03/2025 10:12, Swathi K S wrote:
-> >>> Add FSD Ethernet compatible in Synopsys dt-bindings document. Add
-> >>> FSD Ethernet YAML schema to enable the DT validation.
-> >>>
-> >>> Signed-off-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
-> >>> Signed-off-by: Ravi Patel <ravi.patel=40samsung.com>
-> >>> Signed-off-by: Swathi K S <swathi.ks=40samsung.com>
-> >>
-> >> <form letter>
-> >> This is a friendly reminder during the review process.
-> >>
-> >> It looks like you received a tag and forgot to add it.
-> >>
-> >> If you do not know the process, here is a short explanation:
-> >> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> >> versions of patchset, under or above your Signed-off-by tag, unless
-> >> patch changed significantly (e.g. new properties added to the DT
-> >> bindings). Tag is =22received=22, when provided in a message replied t=
-o you
-> on the mailing list.
-> >> Tools like b4 can help here. However, there's no need to repost
-> >> patches
-> >> *only* to add the tags. The upstream maintainer will do that for tags
-> >> received on the version they apply.
-> >>
-> >> Please read:
-> >> https://protect2.fireeye.com/v1/url?k=3D19972162-781c345b-1996aa2d-
-> >> 000babffae10-7bd6b1a1d78b210b&q=3D1&e=3D94dcc3a6-5303-441a-8c1e-
-> >> de696b216f86&u=3Dhttps%3A%2F%2Felixir.bootlin.com%2Flinux%2Fv6.12-
-> >> rc3%2Fsource%2FDocumentation%2Fprocess%2Fsubmitting-
-> >> patches.rst%23L577
-> >>
-> >> If a tag was not added on purpose, please state why and what changed.
-> >
-> > Hi Krzysztof,
-> > As per a review comment received from Russell, I had added 2 new
-> properties to the DT - assigned-clocks and assigned-clock-parents propert=
-ies.
-> > The example in the DT binding reflects the same.
-> > I felt it wouldn't be fair to add 'Reviewed-by' tag without you reviewi=
-ng the
-> updates again.
-> > But I should have mentioned that in cover letter and apologies for miss=
-ing
-> to do that.
-> Nothing in changelog explained new properties. Nothing mentioned
+Ok, I guess I missed the test pattern functionality completely.
 
-Had mentioned under 'changes since v7' in the cover letter patch where I ha=
-d mentioned about addressing Russell's comment and corresponding DT binding=
- example changes of setting clock tree in DT.
+Thanks,
+Laurentiu
 
-- Swathi=20
-
-> dropping tag, which you always must explicitly say.
->=20
-> Best regards,
-> Krzysztof
-
+> 
+> > +	ret = v4l2_subdev_call(priv->source_sd, pad, get_frame_desc,
+> > +			       priv->source_sd_pad, &source_fd);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	*fd = source_fd;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct v4l2_subdev_pad_ops max96717_pad_ops = {
+> >  	.enable_streams = max96717_enable_streams,
+> >  	.disable_streams = max96717_disable_streams,
+> >  	.set_routing = max96717_set_routing,
+> >  	.get_fmt = v4l2_subdev_get_fmt,
+> >  	.set_fmt = max96717_set_fmt,
+> > +	.get_frame_desc = max96717_get_frame_desc,
+> >  };
+> >  
+> >  static const struct v4l2_subdev_core_ops max96717_subdev_core_ops = {
+> 
+> Regards,
+> -- 
+> Julien
