@@ -1,86 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D3B1A38E1;
-	Thu,  6 Mar 2025 07:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6777F19DF4D;
+	Thu,  6 Mar 2025 07:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741244754; cv=none; b=dA25xwkLB/1VkXDEhtWdcfuCyCz/RxSpKnYihFYba1NvlAaqa+LM26maBsnQYRCbHPoykYh26soN87DBT4T2md/APThyDVBrJKfRW8+UxmQoq06Vezf5VSj2fWTHu4oCRHMsl8InSyJdpzcXSL3hW2qBRbNanqbmULtlKpr65oY=
+	t=1741244754; cv=none; b=sQQYQik5+F7s2kLrxphIqj2C3krs5i9Mc6k3xXTaQodKzz9v93Cv495AgZXBk3NoPpsk1ZqwaNbJHtJrjMCmEnbQrOYyY8qSuy1DAKMjlsIqcfwFvkfcQiRqbOcpx5PCpzYEWOolBnIXJtvFoQV470F8tQ2R0y1popzlJG7Lzmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741244754; c=relaxed/simple;
-	bh=El74G6/NI0u0FdRCimXmohZXkOMOrBaMbRBx6pb9WWY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=btCiWDkUOMcWYPY5QYldf1+44P9JvAXyLdXMV+u+zUhLE/jveHJeq0Ddv/S+uCMPJfKV5/y7A8075WxBalVsuP8zsky7zLib6CbBaPZ704SAND3I1RdtoRu5nJXJ+kVznVx4RTETRaspIOWhHE6kb36+dXlloF/C2yGySKiDdrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFfLBx3N; arc=none smtp.client-ip=10.30.226.201
+	bh=4fsBYDyG/UEtkcJyh44OJqX7sie/l9Ni8w36iQM9FbY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RsNsG3VoOHAKYeRSnQf0HFJSn+GWImToIQBIc1eJzjqErnrIe0KJB8Sxq/psi8VKJkIIW8o5WOskoRvn2sqCCrRBEZU8O6ThOrz1YS17nvUk/UeX0RIbh6wMJGBS92oJkAt83BiPoDsB5PPbKQdI+KZvEimiHlJxphbFg50pOwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=JTO18am8; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFfLBx3N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73CA4C4CEE4;
-	Thu,  6 Mar 2025 07:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741244753;
-	bh=El74G6/NI0u0FdRCimXmohZXkOMOrBaMbRBx6pb9WWY=;
-	h=From:Subject:Date:To:Cc:From;
-	b=DFfLBx3NgfryZifDyoUEj913Py+XsgKqdaYhDhgmNRfM1L7AVrl7X6DAxSuLuWtqP
-	 q/X+nPVpQvVppmgSLhkH/r7OfPfeHaVbVnbnHi26Ll7OEpxNh9tjOwU3cWFFYZRky8
-	 WSaWangG70YS3ALg6G04e9ebvxkZKWTOpmHNM6OQXCjfLWtUKcChmznmmCaIqTEuB9
-	 3qEMN6u1aHw+yywmbWQd+sRDcaX1MMdRliUv1RtxpVTEkNoU83gkRG8V+eczGzN3fr
-	 hV9v//r9lc+6B87OocbFVygZe62ARX+NyS5fE7XIFvh0agUQDf3azkUb84oUOFmncw
-	 lvG/3jHjOOPEw==
-From: William Breathitt Gray <wbg@kernel.org>
-Subject: [PATCH 0/2] counter: Introduce the compare component
-Date: Thu, 06 Mar 2025 16:05:42 +0900
-Message-Id: <20250306-introduce-compare-component-v1-0-93993b3dca9c@kernel.org>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="JTO18am8"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 52675MJs82833910, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1741244722; bh=4fsBYDyG/UEtkcJyh44OJqX7sie/l9Ni8w36iQM9FbY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=JTO18am8PEgzoe0jl+NBRUznyO+YcUUrswQ4hz1gaYjzjYUeQXbXbRbLXU+YZREfR
+	 R1+/oOLFwRt5oaWXPauhLuENMmV0Gwf1GT5fw0LoDgERbhjDrMqE+ncF7yO8dbFtJm
+	 sBL50G/HnFPIe5GB4NM+4loSVfWvY2OGRhO3J0iAFu5RaL5Wnxk6bgVYLvTLhr8HbG
+	 UZGWufjAnGvwpB9G1O6x9bS3DwPkWdtNbjiWWPwipCbBqAzmBS1IuYiHIs9YbRwyLZ
+	 ZSCrdPq83exeuVa/ubp9TykpO0iMEWwpWaNiSE1ctIad66w2EO2WbIlMfyTqynsnAk
+	 58yQAEr6Ft0Jw==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 52675MJs82833910
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Mar 2025 15:05:22 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 6 Mar 2025 15:05:23 +0800
+Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 6 Mar
+ 2025 15:05:23 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net] rtase: Fix improper release of ring list entries in rtase_sw_reset
+Date: Thu, 6 Mar 2025 15:05:10 +0800
+Message-ID: <20250306070510.18129-1-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEZJyWcC/yXMMQqAMAxA0atIZgttRRGvIg61Rs1gKqmKULy7R
- afPW36CiEIYoSsSCF4UKXCGKQvwq+MFFU3ZYLWtdaUbRXxImE6Pyodtd/I3MPKhjJmtdR7bdjS
- QD7vgTPd374fneQG4+V/kbQAAAA==
-X-Change-ID: 20250306-introduce-compare-component-11f22ace88b1
-To: csokas.bence@prolan.hu, Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- William Breathitt Gray <wbg@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1213; i=wbg@kernel.org;
- h=from:subject:message-id; bh=El74G6/NI0u0FdRCimXmohZXkOMOrBaMbRBx6pb9WWY=;
- b=owGbwMvMwCW21SPs1D4hZW3G02pJDOknPQMExE5tV31i2jGxe7kHk/5q6fR/Ni/P1tno/Eme3
- ZCu9PNNRykLgxgXg6yYIkuv+dm7Dy6pavx4MX8bzBxWJpAhDFycAjARw+sM//TvJyhZxTBUSFSc
- 4oi4Ff0z5RZf8crN2f9+/g6oYN0w4zMjw6rmnOCHEQ3zc28wXpz0aPLBXe8y5jk4lEsu2XJUPmg
- rIxcA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp;
- fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-In previous drivers, we have exposed compare operations as part of a
-larger set of functionalities; such as preseting a Count channel,
-defining ceiling and floor boundaries, etc. However, we've lacked a
-standard way to expose the compare operation in its strict sense as a
-threshold comparison.
+Since rtase_init_ring, which is called within rtase_sw_reset, adds ring
+entries already present in the ring list back into the list, it causes
+the ring list to form a cycle. This results in list_for_each_entry_safe
+failing to find an endpoint during traversal, leading to an error.
+Therefore, it is necessary to remove the previously added ring_list nodes
+before calling rtase_init_ring.
 
-The need has become apparent in the microchip-tcb-capture module, which
-requires a way to configure the threshold value provided by the RC
-register for compare operations. To that end, a new compare component is
-introduced with a helper macro COUNTER_COMP_COMPARE() to create such.
-
-Signed-off-by: William Breathitt Gray <wbg@kernel.org>
+Fixes: 079600489960 ("rtase: Implement net_device_ops")
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
 ---
-William Breathitt Gray (2):
-      counter: Introduce the compare component
-      counter: microchip-tcb-capture: Add support for RC Compare
+ drivers/net/ethernet/realtek/rtase/rtase_main.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
- Documentation/ABI/testing/sysfs-bus-counter |  9 ++++++++
- drivers/counter/microchip-tcb-capture.c     | 33 +++++++++++++++++++++++++++++
- include/linux/counter.h                     |  3 +++
- 3 files changed, 45 insertions(+)
----
-base-commit: c2a756660324fceca26780a50950e6d91dfdc210
-change-id: 20250306-introduce-compare-component-11f22ace88b1
-
-Best regards,
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 3bd11cb56294..2aacc1996796 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1501,7 +1501,10 @@ static void rtase_wait_for_quiescence(const struct net_device *dev)
+ static void rtase_sw_reset(struct net_device *dev)
+ {
+ 	struct rtase_private *tp = netdev_priv(dev);
++	struct rtase_ring *ring, *tmp;
++	struct rtase_int_vector *ivec;
+ 	int ret;
++	u32 i;
+ 
+ 	netif_stop_queue(dev);
+ 	netif_carrier_off(dev);
+@@ -1512,6 +1515,13 @@ static void rtase_sw_reset(struct net_device *dev)
+ 	rtase_tx_clear(tp);
+ 	rtase_rx_clear(tp);
+ 
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		list_for_each_entry_safe(ring, tmp, &ivec->ring_list,
++					 ring_entry)
++			list_del(&ring->ring_entry);
++	}
++
+ 	ret = rtase_init_ring(dev);
+ 	if (ret) {
+ 		netdev_err(dev, "unable to init ring\n");
 -- 
-William Breathitt Gray <wbg@kernel.org>
+2.34.1
 
