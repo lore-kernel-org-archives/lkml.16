@@ -1,139 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AE22780E3;
-	Thu,  6 Mar 2025 17:59:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F0327816B;
+	Thu,  6 Mar 2025 17:59:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741283971; cv=none; b=a/+5qCaVnR29UjoV7daLxPN3sohn5Oii7ZFAuRaBwtpOsCugicDLzQskV6gJHhniwlq6DiQhvL5srg/49/xFy8+hdNM/R6bwkJjBUlz+IGLnEuqj9N7Pa2wxDql2ghHyhjHsAAwnS1LQMzrKMNAMoeryBsY9TIVSv4lJyViVdmw=
+	t=1741283973; cv=none; b=CjdAVxEqJP6XgJIbqjoQ4rR5RwwbVzef7MgjbTo0LmvTO5DZVxvTpxaw9GwtSMTPrsOXx5/W5Paxd3Em4KaQhVp4msUUOLm/TCq4BV9ieyyk0YdKdc6eTLx7eCCNLK1T5WWDFoJCHyyFSJ8ZSu9JjAJLDaCKf/RG51Yax6tba18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741283971; c=relaxed/simple;
-	bh=Rn+6YydnhrV6FETkcIfmvP4YuDQr4oebn96i4+L/goY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X/aTumtGoGqvUx67dM3vXlueEsoX28guKqhKfo1gd7YhpE8Kl8mNdNI3Uig9ENy6omPiFgJuWYZy4ltXIKyjkCKzNSOuydxzvCQlsdAUr+M2xA6McxjZ/t40vnvaw0YfId2hoRxUV0pcjxPZ26CHkuX0jbuKheSAxgGUcth8ZxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLOqrOWm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741283973; c=relaxed/simple;
+	bh=HsZsRg0h5uwVIQMQE3vjF3G4QVR/MCEOcYsPWYhd/3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QcmA2XJjcD8A+k7aRxbR+hf6rwez4gRJcc/27XiKSrviDhKGItFq+gVB03xKE8uDXPW66SvYncwhn+ftT/mQU9dDVmxZdCoxtTZlCJHC2eWsIvPlPcmmyTZWnodZbzAOug5q5ZVBeiB9MpMyPDvrUDK4sP1zQveBlyMxxfMArdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sTdjgXYI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLOqrOWm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E640C4CEE4;
-	Thu,  6 Mar 2025 17:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741283970;
-	bh=Rn+6YydnhrV6FETkcIfmvP4YuDQr4oebn96i4+L/goY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KLOqrOWmjdNfeRf4uTFfilXrUOaL0GSy6hMQWsxUT2If3kQvq6UTPuQULqnbC0NZn
-	 9fo5jXUGPK0CFGpdYaOcnKVIAEj6wx/i3uexc3urCzkplgnA6CiTAnvtxiq2JRXyGR
-	 uqK60K9LqCudw0fkFgiyspQa41ohjAmBNmgVfh4u0/PSzjxTlek38b8SFnPpeGeThw
-	 FKTmWUH3bxOdyCiVdpMeDsqqEZ0uZuTRsCAbxd5XT8+O2SXNfC/BjX2GgyMl8iM27O
-	 gCjMozI7x4UUkqFr3/B1s+4nUS32ekumybJfXPGl99tntavBZW6wAgYyJt+HG5U1Sn
-	 hOgCwGYkq6fZA==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 13/13] mm/damon: remove damon_operations->reset_aggregated
-Date: Thu,  6 Mar 2025 09:59:08 -0800
-Message-Id: <20250306175908.66300-14-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250306175908.66300-1-sj@kernel.org>
-References: <20250306175908.66300-1-sj@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sTdjgXYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5C1C4CEEB;
+	Thu,  6 Mar 2025 17:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741283973;
+	bh=HsZsRg0h5uwVIQMQE3vjF3G4QVR/MCEOcYsPWYhd/3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sTdjgXYIo/WZQLW+3Y3AhImuJW+FUYnN4BLzSyrlcundiZ0bn8rJRfrHfjvtpwWTu
+	 pLoLUeCDrMcVTRlcY1xXJUwtFqWL31tjo6w4kDX8KYd4QOiuVipFpgKRWb9/tDP6Fs
+	 z3haF41z+QlAAhOMMszKqePDiOCLM/uTBPZRaZoQ=
+Date: Thu, 6 Mar 2025 18:59:30 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Borislav Petkov <bp@alien8.de>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>, nik.borisov@suse.com,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH 6.6 000/147] 6.6.81-rc2 review
+Message-ID: <2025030604-bootie-sandbox-3fcd@gregkh>
+References: <20250306151412.957725234@linuxfoundation.org>
+ <CA+G9fYtfmMThUC+erk6jVk8BN0jWJCw=FnKh68ypwhgv65OZ+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYtfmMThUC+erk6jVk8BN0jWJCw=FnKh68ypwhgv65OZ+w@mail.gmail.com>
 
-The operations layer hook was introduced to let operations set do any
-aggregation data reset if needed.  But it is not really be used now.
-Remove it.
+On Thu, Mar 06, 2025 at 10:59:35PM +0530, Naresh Kamboju wrote:
+> On Thu, 6 Mar 2025 at 20:50, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 6.6.81 release.
+> > There are 147 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.81-rc2.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> 
+> Regressions on i386 the defconfig builds failed with clang-20
+> and gcc-13 the stable-rc 6.6.81-rc2.
+> 
+> First seen on the
+>  Good: v6.6.78
+>  Bad: v6.6.78-442-g8f0527d547fe
+> 
+> * i386 build
+>   - clang-20-defconfig
+>   - clang-nightly-defconfig
+>   - gcc-13-defconfig
+>   - gcc-8-defconfig
+> 
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> Build regression: i386 microcode core.c use of undeclared identifier
+> 'initrd_start_early'
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Build log
+> arch/x86/kernel/cpu/microcode/core.c:198:11: error: use of undeclared
+> identifier 'initrd_start_early'; did you mean 'initrd_start'?
+>   198 |                 start = initrd_start_early;
+>       |                         ^~~~~~~~~~~~~~~~~~
+>       |                         initrd_start
+> include/linux/initrd.h:18:22: note: 'initrd_start' declared here
+>    18 | extern unsigned long initrd_start, initrd_end;
+>       |                      ^
+> 1 error generated.
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/linux/damon.h | 7 +------
- mm/damon/core.c       | 2 --
- mm/damon/paddr.c      | 1 -
- mm/damon/vaddr.c      | 1 -
- 4 files changed, 1 insertion(+), 10 deletions(-)
+Boris, this is due to your 6.6 backports, did you happen to test-build
+i386?
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index be7b281fb922..3db4f77261f5 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -542,7 +542,6 @@ enum damon_ops_id {
-  * @update:			Update operations-related data structures.
-  * @prepare_access_checks:	Prepare next access check of target regions.
-  * @check_accesses:		Check the accesses to target regions.
-- * @reset_aggregated:		Reset aggregated accesses monitoring results.
-  * @get_scheme_score:		Get the score of a region for a scheme.
-  * @apply_scheme:		Apply a DAMON-based operation scheme.
-  * @target_valid:		Determine if the target is valid.
-@@ -554,8 +553,7 @@ enum damon_ops_id {
-  * (&damon_ctx.kdamond) calls @init and @prepare_access_checks before starting
-  * the monitoring, @update after each &damon_attrs.ops_update_interval, and
-  * @check_accesses, @target_valid and @prepare_access_checks after each
-- * &damon_attrs.sample_interval.  Finally, @reset_aggregated is called after
-- * each &damon_attrs.aggr_interval.
-+ * &damon_attrs.sample_interval.
-  *
-  * Each &struct damon_operations instance having valid @id can be registered
-  * via damon_register_ops() and selected by damon_select_ops() later.
-@@ -570,8 +568,6 @@ enum damon_ops_id {
-  * last preparation and update the number of observed accesses of each region.
-  * It should also return max number of observed accesses that made as a result
-  * of its update.  The value will be used for regions adjustment threshold.
-- * @reset_aggregated should reset the access monitoring results that aggregated
-- * by @check_accesses.
-  * @get_scheme_score should return the priority score of a region for a scheme
-  * as an integer in [0, &DAMOS_MAX_SCORE].
-  * @apply_scheme is called from @kdamond when a region for user provided
-@@ -589,7 +585,6 @@ struct damon_operations {
- 	void (*update)(struct damon_ctx *context);
- 	void (*prepare_access_checks)(struct damon_ctx *context);
- 	unsigned int (*check_accesses)(struct damon_ctx *context);
--	void (*reset_aggregated)(struct damon_ctx *context);
- 	int (*get_scheme_score)(struct damon_ctx *context,
- 			struct damon_target *t, struct damon_region *r,
- 			struct damos *scheme);
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index d6271fae4dd4..db357892da74 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -2489,8 +2489,6 @@ static int kdamond_fn(void *data)
- 
- 			kdamond_reset_aggregated(ctx);
- 			kdamond_split_regions(ctx);
--			if (ctx->ops.reset_aggregated)
--				ctx->ops.reset_aggregated(ctx);
- 		}
- 
- 		if (ctx->passed_sample_intervals >= next_ops_update_sis) {
-diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-index fba8b3c8ba30..b08847ef9b81 100644
---- a/mm/damon/paddr.c
-+++ b/mm/damon/paddr.c
-@@ -621,7 +621,6 @@ static int __init damon_pa_initcall(void)
- 		.update = NULL,
- 		.prepare_access_checks = damon_pa_prepare_access_checks,
- 		.check_accesses = damon_pa_check_accesses,
--		.reset_aggregated = NULL,
- 		.target_valid = NULL,
- 		.cleanup = NULL,
- 		.apply_scheme = damon_pa_apply_scheme,
-diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
-index a6174f725bd7..e6d99106a7f9 100644
---- a/mm/damon/vaddr.c
-+++ b/mm/damon/vaddr.c
-@@ -710,7 +710,6 @@ static int __init damon_va_initcall(void)
- 		.update = damon_va_update,
- 		.prepare_access_checks = damon_va_prepare_access_checks,
- 		.check_accesses = damon_va_check_accesses,
--		.reset_aggregated = NULL,
- 		.target_valid = damon_va_target_valid,
- 		.cleanup = NULL,
- 		.apply_scheme = damon_va_apply_scheme,
--- 
-2.39.5
+thanks,
+
+greg k-h
