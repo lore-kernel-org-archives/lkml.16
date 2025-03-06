@@ -1,231 +1,128 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED0E20E310;
-	Thu,  6 Mar 2025 13:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741267480; cv=pass; b=McdywmEig8A8OgnYX0bh6tM1WvxWuqaFTsnHc7f0/mZO8J/2WK8DeFMoBA7qLm0JfoZywEMTSoI9Bf3oiU+mhnW5HhaY75eZxfaYnOot7knuRwUIA72gWwuqNMQfy0TPoJi958z8Vt6G2WJvlixliF2CERoI+SymVrIt6csCsM0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741267480; c=relaxed/simple;
-	bh=mbkWy1IkiFLYW14XsEAYbl1lexi4c5lQWTZ8vkdgCWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jA2BlL9+OyVAC5cHnfWpkMARhTzcPMriBZVv2kCyqOSTtokPRfnH5mhE/JZAbXrsgir2+mLUwFnlAr9vZHmm+LXZLMWwfErWAhZWDkE/E5ujSdXgwEpe9wiI7PSXJkYGfiCmTeWb0+hAZagJA6CFKDzH3DZtQYv2cLmwvPg/v7I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=DNrs1jIc; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCB920E30A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 13:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741267510; cv=none; b=KiPSAoIxRduPy9EZc4jlu5WENv4E3YeiGZPf7N7KJhxKnC9hq0cZmefBi7NlLFw/pz7urClIeh3Gtk0vzW7dRLZyWopMq30mGQdvQoT7QGIv6OJUHlWXA/ICD1I0IScpzRO5PNWgeKH+CUJjrxzYBVJVQRkKOAnhzw+p3q6HNfE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741267510; c=relaxed/simple;
+	bh=BaUEKFsnt/oGux8kiRaCu0JFUJtBvq84zkV5ZqVRACA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mmKrhz5+xoRfdF0cTfhdG2Kl80DZIqoz6OxuQ8Q7RTE5tyEqQPJzcusJ1P1/C/TzdVPzpk9qibgV5TmbGEDP+Vfrpmu4MgCXo0ZiIg5YzhnPMlWdc8daEQg3N6ufGkIOBADJ+EUlPE/DKD328c7qSpfQgtkPIUxRIhNgJk/ULcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vw2pCUUh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="DNrs1jIc"
-ARC-Seal: i=1; a=rsa-sha256; t=1741267434; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QgL47SSHJ9vtvNGtw/7IJWea7s1tN3xEFI/mVIMXA069nGFhQxVEXxDnoarzp2usOk02fZxYfrRtDzPw546IrAHT4uvxVlvLBHo/iqqH8GJaINM9kO0WzwHWp8Ij7HTKG+feYQiR3kWxvS6u8y3pKB1gqq4yeQ2szhfKpbJiaKw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741267434; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=QdBXQyyutw1s7G52118ZdyCMkF3qYh73k0uq6nYhoUc=; 
-	b=HYOiZuRcvyOrJgtQxDu44OGJsC1eftkgEEesU241RychKAaKTVOm9h1dVIei9NofONG7wjG7IX5WUwsqgey/w/dKWtH0n9dPQuUGXwk7nUYLwcm1Vyqlv7kI2bQGqmXnxjUxgHDUtMfKo+8k7R9i6C1OGh8wVJhBELTtEd85GLU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741267434;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=QdBXQyyutw1s7G52118ZdyCMkF3qYh73k0uq6nYhoUc=;
-	b=DNrs1jIcXm+8kHxUy741Rr7Z/ADIv2zMKuTfWVFeSGwvoAe2fb0zlj8Vi2Sq1pGu
-	nKE5xklWMlmOJKwaZSDerOc7nwgBaXLW8tiTqlWnDQN7Q7hoLZvSc1E19imJitcLy4E
-	TDCKhxQDByTnF5HOPAPuklHy32ycqL7+V+gw6qBw=
-Received: by mx.zohomail.com with SMTPS id 1741267433815519.1263942154526;
-	Thu, 6 Mar 2025 05:23:53 -0800 (PST)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Sugar Zhang <sugar.zhang@rock-chips.com>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-Subject:
- Re: [PATCH 4/7] ASoC: rockchip: add Serial Audio Interface (SAI) driver
-Date: Thu, 06 Mar 2025 14:23:46 +0100
-Message-ID: <13731095.uLZWGnKmhe@workhorse>
-In-Reply-To: <20e4754b-ea9a-404d-b529-ec44a7263cbf@kernel.org>
-References:
- <20250305-rk3576-sai-v1-0-64e6cf863e9a@collabora.com>
- <20250305-rk3576-sai-v1-4-64e6cf863e9a@collabora.com>
- <20e4754b-ea9a-404d-b529-ec44a7263cbf@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vw2pCUUh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741267507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AMe2L544kp/d38WLjn3xMcZvhSWCOUekm7mNyssXwXc=;
+	b=Vw2pCUUhjY8aXJ6JGkj6HVUbkga7b7M6e3g8LRAh4To14aoxmGjO9q1IjBNVNtPylaW1Ub
+	GMo8VESZL8cYobIWOqyrNfYDceK1A6HX4lHw1UHrOvB7zH6i/9RXoX02lvRwgumv8UMJO7
+	t9oEx1Q9+px1VkbIss2lg83fggLjel0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-537-lVVALDmNMKqwxf9GqNZxjQ-1; Thu, 06 Mar 2025 08:24:56 -0500
+X-MC-Unique: lVVALDmNMKqwxf9GqNZxjQ-1
+X-Mimecast-MFC-AGG-ID: lVVALDmNMKqwxf9GqNZxjQ_1741267495
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-391079c9798so310643f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 05:24:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741267495; x=1741872295;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AMe2L544kp/d38WLjn3xMcZvhSWCOUekm7mNyssXwXc=;
+        b=fow3kR5xNjHGwdkYmmUqqG2xdUqePallkWU+1f4uLtT1wAsWvKNZWRN44ygHAmyNbx
+         1yCSVMnobrBRJVUxeB+IUT5AiCAhiTaVp75Z8jsiuuXQmPNxDCdBdkrJZDAWyt3QV3BG
+         YJxvOr78UE068y6bEu9zcfYvr5SMQ7kNMQ5yid+4bvKhwXmUm4P52OpuF0tNg9HT+low
+         oeIgYNt7v1LdNzMZOkyQhUULPkin0QudkfU0C8aFMt0S6YiRwQBfpjjrh1JweqnzIDA2
+         +8QodC0oM0dJExCknnOHRYRj2EAPNYqGKAQcdVIqKdO2uFN5GXAHkxGWiKbQzFCz6mwH
+         V4mw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9uMNcArIfBq9XxJH952x8tYZTQ1eXX0w3G5/8Vz+4/R8+sYS883NShhycKi3iL0d5DsTZGN0sbZU1tks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytVXxFEptZOY8kG+DBrV8KCKLZ+mayx4I4ZQ/j4lRTFP3Ieo0W
+	Qz7Gu4sEo+obXT9snljFCoG4TMDur7EGBY8TrQ29Sa+T3uMU1jRnIftMORivOYDl43HkOlJC0Pl
+	MYa8CMq/TYBzMf1o6PVWmVg7FJ075PxunqlqmKEsOmmHsDnq00oAV6qh5PCSBBA==
+X-Gm-Gg: ASbGncsf+seqJYT9VokEztEb3SgB0jv5bICsjLocTqnsndeCVv9D8IcLBN7xFyRyF7j
+	+W+d4a6VuasaPP08nWsh2q6HsHP3BFZ1SOb54yRI7uPcjj4EjNlwp48JZtlvVPGZToNOu6fEKAN
+	LpS2euihj8458m8v+strRUy5qc+9hPlRa16bX863MreCgB0lWLGoo063xljEPlUXWuHgPFodP3T
+	NQDOK3DWphkQrbXPyACqsOskQtwOCAV6/e5tuGQGvhaprowtUyNeMomyiuIIp766TVEyDMawQW3
+	+gB986Kg0AdESIeLeAIJBvaFHNZbFZnG0sW1Nj/WKclplzooNohix30=
+X-Received: by 2002:a05:6000:42c7:b0:390:f9d0:5e4 with SMTP id ffacd0b85a97d-3911f741261mr5096853f8f.21.1741267494952;
+        Thu, 06 Mar 2025 05:24:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEIwqvoLsZ7nWE/oVtc7eKMKzGDa6NvX7GYnOgsSJBfK4lxmD7NxGmoi2sk4zoXn8lH+Jx7Gg==
+X-Received: by 2002:a05:6000:42c7:b0:390:f9d0:5e4 with SMTP id ffacd0b85a97d-3911f741261mr5096838f8f.21.1741267494530;
+        Thu, 06 Mar 2025 05:24:54 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfdfdsm2117782f8f.34.2025.03.06.05.24.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Mar 2025 05:24:53 -0800 (PST)
+Message-ID: <3bfd4238-6954-41a3-a5a3-8515a3ac9dce@redhat.com>
+Date: Thu, 6 Mar 2025 14:24:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH drm-next 1/2] vmalloc: Add atomic_vmap
+To: Matthew Wilcox <willy@infradead.org>,
+ Ryosuke Yasuoka <ryasuoka@redhat.com>
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, kraxel@redhat.com,
+ gurchetansingh@chromium.org, olvaffe@gmail.com, akpm@linux-foundation.org,
+ urezki@gmail.com, hch@infradead.org, dmitry.osipenko@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-mm@kvack.org
+References: <20250305152555.318159-1-ryasuoka@redhat.com>
+ <20250305152555.318159-2-ryasuoka@redhat.com>
+ <Z8kp9Z9VgTpQmV9d@casper.infradead.org>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <Z8kp9Z9VgTpQmV9d@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thursday, 6 March 2025 08:37:54 Central European Standard Time Krzysztof 
-Kozlowski wrote:
-> On 05/03/2025 22:24, Nicolas Frattaroli wrote:
-> ...
+On 06/03/2025 05:52, Matthew Wilcox wrote:
+> On Thu, Mar 06, 2025 at 12:25:53AM +0900, Ryosuke Yasuoka wrote:
+>> Some drivers can use vmap in drm_panic, however, vmap is sleepable and
+>> takes locks. Since drm_panic will vmap in panic handler, atomic_vmap
+>> requests pages with GFP_ATOMIC and maps KVA without locks and sleep.
 > 
-> > +
-> > +static int rockchip_sai_runtime_resume(struct device *dev)
-> > +{
-> > +	struct rk_sai_dev *sai = dev_get_drvdata(dev);
-> > +	unsigned long flags;
-> > +	int ret;
-> > +
-> > +	dev_dbg(dev, "Runtime resuming device!\n");
+> In addition to the implicit GFP_KERNEL allocations Vlad mentioned, how
+> is this supposed to work?
 > 
-> Drop probe entry/exit messages. Core already gives you tracing for this.
+>> +	vn = addr_to_node(va->va_start);
+>> +
+>> +	insert_vmap_area(va, &vn->busy.root, &vn->busy.head);
+> 
+> If someone else is holding the vn->busy.lock because they're modifying the
+> busy tree, you'll corrupt the tree.  You can't just say "I can't take a
+> lock here, so I won't bother".  You need to figure out how to do something
+> safe without taking the lock.  For example, you could preallocate the
+> page tables and reserve a vmap area when the driver loads that would
+> then be usable for the panic situation.  I don't know that we have APIs
+> to let you do that today, but it's something that could be added.
+> 
+Regarding the lock, it should be possible to use the trylock() variant, 
+and fail if the lock is already taken. (In the panic handler, only 1 CPU 
+remain active, so it's unlikely the lock would be released anyway).
 
-Will do.
+If we need to pre-allocate the page table and reserve the vmap area, 
+maybe it would be easier to just always vmap() the primary framebuffer, 
+so it can be used in the panic handler?
 
-> 
-> > +
-> > +	ret = clk_prepare_enable(sai->hclk);
-> > +	if (ret)
-> > +		goto err_hclk;
-> > +
-> > +	ret = clk_prepare_enable(sai->mclk);
-> > +	if (ret)
-> > +		goto err_mclk;
-> > +
-> > +	regcache_cache_only(sai->regmap, false);
-> > +	regcache_mark_dirty(sai->regmap);
-> > +	ret = regcache_sync(sai->regmap);
-> > +	if (ret)
-> > +		goto err_regmap;
-> > +
-> > +	if (sai->quirks & QUIRK_ALWAYS_ON && sai->is_master_mode) {
-> > +		spin_lock_irqsave(&sai->xfer_lock, flags);
-> > +		regmap_update_bits(sai->regmap, SAI_XFER,
-> > +				   SAI_XFER_CLK_MASK |
-> > +				   SAI_XFER_FSS_MASK,
-> > +				   SAI_XFER_CLK_EN |
-> > +				   SAI_XFER_FSS_EN);
-> > +		spin_unlock_irqrestore(&sai->xfer_lock, flags);
-> > +	}
-> > +
-> 
-> ...
-> 
-> > +
-> > +	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Failed to register PCM: %d\n", ret);
-> > +		goto err_runtime_suspend;
-> > +	}
-> > +
-> > +	ret = devm_snd_soc_register_component(&pdev->dev,
-> > +					      
-&rockchip_sai_component,
-> > +					      dai, 1);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Failed to register component: %d\n", 
-ret);
-> > +		goto err_runtime_suspend;
-> > +	}
-> > +
-> > +	pm_runtime_use_autosuspend(&pdev->dev);
-> > +	pm_runtime_put(&pdev->dev);
-> > +
-> > +	/*
-> > +	 * runtime_resume already enabled our hclk again, so we need to also
-> > +	 * get rid of the manual enable we did earlier to balance the 
-counts.
-> > +	 */
-> 
-> Your way of handling this is extra confusing. You rely on some other
-> methods to poke the enable/disable count. It is rather expected that
-> each function handles this fully, so it disables what it have enabled.
-> You must not rely on PM runtime to do something with clocks which you
-> now unwind.
+Best regards,
 
-I believe you misunderstand. I'm not unwinding what PM is doing. I'm unwinding 
-the hclk enable the probe function does earlier on. I will make the comment 
-more clear in V2 (or rather, remove it entirely since it creates more 
-confusion than it clears up). It's unnecessary to talk about PM runtime also 
-enabling hclk; the disable is for our function's enable.
+-- 
 
-> 
-> > +	clk_disable_unprepare(sai->hclk);
-> > +
-> > +	return 0;
-> > +
-> > +err_runtime_suspend:
-> > +	/* If we're !CONFIG_PM, we get -ENOSYS and disable manually */
-> > +	if (pm_runtime_put(&pdev->dev))
-> > +		rockchip_sai_runtime_suspend(&pdev->dev);
-> > +err_disable_hclk:
-> > +	clk_disable_unprepare(sai->hclk);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> 
-> _device_id tables are supposed to be around probe, not beginning of the
-> file.
-
-Will do.
-
-> 
-> > +static void rockchip_sai_remove(struct platform_device *pdev)
-> > +{
-> > +#ifndef CONFIG_PM
-> > +	rockchip_sai_runtime_suspend(&pdev->dev);> +#endif
-> > +}
-> > +
-> > +static const struct dev_pm_ops rockchip_sai_pm_ops = {
-> > +	SET_RUNTIME_PM_OPS(rockchip_sai_runtime_suspend,
-> > rockchip_sai_runtime_resume, NULL)
-> > +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> > pm_runtime_force_resume) +};
-> > +
-> > +static struct platform_driver rockchip_sai_driver = {
-> > +	.probe = rockchip_sai_probe,
-> > +	.remove = rockchip_sai_remove,
-> > +	.driver = {
-> > +		.name = DRV_NAME,
-> > +		.of_match_table = of_match_ptr(rockchip_sai_match),
-> 
-> Drop of_match_ptr, you have warning here.
-
-Will do.
-
-> 
-> > +		.pm = &rockchip_sai_pm_ops,
-> > +	},
-> > +};
-> > +module_platform_driver(rockchip_sai_driver);
-> > +
-> > +MODULE_DESCRIPTION("Rockchip SAI ASoC Interface");
-> > +MODULE_AUTHOR("Sugar Zhang <sugar.zhang@rock-chips.com>");
-> > +MODULE_AUTHOR("Nicolas Frattaroli <nicolas.frattaroli@collabora.com>");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_ALIAS("platform:" DRV_NAME);
-> 
-> You should not need MODULE_ALIAS() in normal cases. If you need it,
-> usually it means your device ID table is wrong (e.g. misses either
-> entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-> for incomplete ID table.
-
-Will do.
-
-> 
-> > +MODULE_DEVICE_TABLE(of, rockchip_sai_match);
-> 
-> Best regards,
-> Krzysztof
-
-Regards,
-Nicolas Frattaroli
-
-
+Jocelyn
 
