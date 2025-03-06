@@ -1,108 +1,162 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B959156F39;
-	Thu,  6 Mar 2025 01:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33562156F39;
+	Thu,  6 Mar 2025 01:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741223987; cv=none; b=hJ6B8QGo2GRVUqruWJCLkoMN/39PyT1EJvv3gSMJTNeNtGk6ZrkrXEQjm+IqDVIQFRXJBUMXx5cBtOaAiRnUtndAVk+TQuTMQDUY8jtlkM9ckC0hYBANC9X/Y3JjS+1V1PdGAYFCRXIAo83E2nPO6y4eWNPgDW2XncxJ8AxI0vc=
+	t=1741224059; cv=none; b=DRoWlqJrp5YNaP0/HT9RKt7J9ayJFhIlMiOvrNczKUaGF/aFJAmmJ1cgTNDn5bm+TRnlP0pm6PVWg9YtHLVSwkpT/hIM3vGNL07ycR3oOzirQbTYJD2JltKCe10mnSGnM8MTLqFwPZ+5wlkJsPENwdPogcD7x0JkrWa2uEXr3KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741223987; c=relaxed/simple;
-	bh=NQ9JaqO7/f8BskH51rnOv+3ZlwJ/qLixzYb9yoPjjUU=;
+	s=arc-20240116; t=1741224059; c=relaxed/simple;
+	bh=qChrOs8Y7o3tEDCaxcShduGkeVGkFSi1RvOK1nsdh0I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CT7P2p6ARmCqtrC8CpI/I164maOXAqhjSTkjIa7ARuum6YzAuhJVTtv+//IjP15TOhG67Nszf/L34LVoePZbfr7mmvJsVl7+DfBd+aK2cAzX7/zE3ehV+JqnaPpazU8r4FO1r9+o1mbWY/krGiWPGzQli4Yj7YOwKbaclLPIba4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=abzSbyzY; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	 In-Reply-To:Content-Type; b=M/bssauEWRw60WKc98tHg39KczwekzsmgPeYjag74UdSj34GMoDbWD6ubwNt0XkOndzgYBj8YYQeZD19OZZZ1dp24UVMsHqR8CdhyBu/ysysel7d9s9qZahsbWx8jzCgtQLEOFWhg8HCNM1MOg9oNJ2tePJDyS170JyxXRL0JN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JLnHnJcm; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="abzSbyzY"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38dcac27bcbso991314f8f.0;
-        Wed, 05 Mar 2025 17:19:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLnHnJcm"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2feb9078888so305723a91.3;
+        Wed, 05 Mar 2025 17:20:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1741223984; x=1741828784; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1741224057; x=1741828857; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tKo26csy1Wj+Q6iZIefqxzUixDxkCmTqOW6lRWj6/Ho=;
-        b=abzSbyzYDnm8/9ejYYiPd6EHiAQ9ihyZUG4ndrjgmo5GyoHlYUKiSMArfCU5VPSCOy
-         XxWDchAlUsfDj5V/mDdZm1yMTHjr2/CqcHBA+ymmMHJZcv7KWcoFXGNWQzBmgUb8ytyH
-         T4DInLmWHf9vObJaXGcWAH6iFFbPFk3NyCiGY9G0kKLOkaJIfXpgZiCRBqO9e99BEbU8
-         nttgh1lTWZiX+hxFxTXdHgxzPKevyOcXs/SNjxHhKJCVZyaLI6/AG81oEz+GegACC5aP
-         DUAURzfRHQMpKz0kyDafAQWudV82nC3epkRU4KMOIrx8quvjUfZp2MulKvSMIK7aIZyI
-         VEPQ==
+        bh=ply0/CzY0yvzBEfEzCiDMoXMyvQu4tZWubmfbiISKOM=;
+        b=JLnHnJcm8nJ8VtMpBfw3F/YNjtlJTcaMddQQmobF9RJXGHecw4fHbO1LMsDRV7it/4
+         2vIwfxEuOMUhaqIN7DR4UsoAbkG/k2g5UBh00yPGyQoZxzdfDttmh/akPNWZKapv6bG9
+         BPThudb4KcBzI7n09NTfe2ltldNqheNVFZtamuoL0H+Om2NiIIjgpUERyD7m9bgxAQND
+         qp6o2Xv7Hst/UKHbnCWZO/uxfJfKK5LFHNFlZuX0hJ3Bi9dBRq//El1uY4WuDx+mdb8B
+         ecyCH6pzhfzhp+AIpDJ8/SI3G8caSfX/k5eim+ZmIrpqHgJntMB6mYEEjeMcoI0/DT4J
+         J/BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741223984; x=1741828784;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1741224057; x=1741828857;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tKo26csy1Wj+Q6iZIefqxzUixDxkCmTqOW6lRWj6/Ho=;
-        b=HBWlBeAQbx6TjAfx4I9Im8a3NpvIWvNcxrCTSUzFn6igB/VF4yntNgwYWbwLiK4IWc
-         JDwa2Rs1+ljONATfCscK+ZnOGOKzJbEYRHjhQyvMZQmE1NSGTSM29HpnueLSrFlJzY8o
-         IbubLvYoO7dHp81c+kyWSk6+qzi35Y6dwkItn5HRH2gb/1F5fvDNgX2KYgfQHz7G2KIO
-         V7g8vXe7x+bvfYdgik7hWsGv+dUlm6/3ctWpaMlY7WYYftDZ+mNEbfVfHSNNLgmVhk1n
-         rD0ll6FDHi8wfj/0mGJlspdaNz1GPmv6TrBubsBn27yV60pNVDsmXdQIiz/QmRRo9qa6
-         G1rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjZJTbKLe34HRiUGdyoZpw8vU0uclBMEb6EExYHh+dGkak5SIUtUPPXBzGCkwpnJtyYasWRwqt@vger.kernel.org, AJvYcCWFhrvxJ2EqNpVbseIorGQMwBvFFS6O5DxG1zIykcvDg0aT2WAPww3HL9LIJS6KoLYpLY/Ptq2N3BsQWF0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPnwHRyukKKekbd1vAah6TCXQtNCCSm5dY4YeFoBU6omeJjWDx
-	xcmhNPCjoOcKaG+XRlHCyMHxAwkbBLHoDFRFmo/lTdbiw3xov0g=
-X-Gm-Gg: ASbGncsq1AH3KkgziRdZHV58zNt9+Ve5D3gp+DSbQBCDpYBtlLdd/shNtQkcXHQG9yY
-	QcXZk33/yEg6DIh2hAWgqbA6usc7C8mVbaWu9j81A6W/oCybNDl6mMRDKw7h7sMz03q0EZ90yYG
-	zNlrSbfdTCBfgcCHvESrhtlSd3mqa2YbEeXhcLc9NRi7Dm/E7aF/AU79R7TAY5lc6CXXSXKokE9
-	xZtMUvJqVtc/RAD9cOI4Lkcx8WyuJYvHsjUDJvgg4egldFFktl3L1YVtGpGWzLKbldq+mSdIW0n
-	ZsNKI+rN++G26gD0BbgtiYug5v+PG1jOkT24tip0KhJxby9VKbjb2rPlqT4eyjU0HvBkCtVwrve
-	yeWv/KcT7eAr+zxGiUS2J
-X-Google-Smtp-Source: AGHT+IFpPgTvwRArsdAwnNWcjZHo/WphvoPPh+mSd9cE5f54PpLp9KMuL1fBCvQFKa40509uQgVZ8w==
-X-Received: by 2002:a5d:6c6e:0:b0:391:952:c74a with SMTP id ffacd0b85a97d-391296d8a65mr962184f8f.8.1741223983547;
-        Wed, 05 Mar 2025 17:19:43 -0800 (PST)
-Received: from [192.168.1.3] (p5b2b4217.dip0.t-ipconnect.de. [91.43.66.23])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd8c3d61sm3465675e9.15.2025.03.05.17.19.42
+        bh=ply0/CzY0yvzBEfEzCiDMoXMyvQu4tZWubmfbiISKOM=;
+        b=NRK6maAvloE2O1Mx+QuNqGFDdj6RrR3rbN+xPCE6yYF88JLdZcx4KoDSqrjwHCc1QR
+         N/j9aisfL/HcG5Jip0xyTy0Ex77Ba/4yc2ZsuGZU+N+MHr0YTbedxAemFfj/R7qopZyX
+         z7Glv/5N8/69cYpvLWWXEBAgGz8KU+D8nE9aYVen9TBrPr5CsaiCDmLos8Ce23HNDcCG
+         C+0+rK1o0T8ThQco2ch89E0q3rDqL+uh30MDTr9Gd+Kjqb/PvGx4u4nWTLnBjziJR3a9
+         8wz/egtQi6iKU+DdC4rVIr8ponjnaLjKnlSt4DzNvXBUrsTMp/JHUOUTc9DzEGf+UgjC
+         gx+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWpuT7dT8wZ8+tXW0sHtVI0iDbiFrGJ0gI5h9po5cvhD7tCQeNPQKEnX3gmGqE+y7+bIQDYVkWAhxcU0ns3@vger.kernel.org, AJvYcCX5k4KZeu5M9HtlwMguApwOaKwATJgGxtEIyXzuaLSCX2M3Zj5sQeTUWMEXis38V+xv3UHgw/sKe+W+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqXBHnEuJwVV414RCi48bZ+mbL3fN/4ZgfzY15KEQe3fGePytK
+	2OaK6eJvC3Q1SEyxL1d6Z7LS7zkMzxuo/5C6pPh3Mc+5VncZsPXe
+X-Gm-Gg: ASbGncvObVgMH9ifsHibx5vwO2LPMoIYYkMG4BnIOY3YoJb1iIngVkhua1J7VgWdWMG
+	nosCNzK+zdwu/E1yuMOTMmrxdj29JZ0KymyD2lUyk+UxPo4D47lTq34uJT0zDklwdkXljLJacky
+	l33PztzUk20VNpnyUse/RfPTNdiwpsBojF8crxyEgVTezLKPUitazgtZswnpuK+pqQ7rZAtfyzW
+	EaRPR6I74l3KOuy8mOntNxVfk9fWwJCDyyL/U7VdQ2J4vbl8kVPYglUBcfJIezExmDEC/YSHiZW
+	16L9V9MkYS+i+fx/E1wqzrIhoVjy1lRrQwRgw51dIF+X+WwEjaI6c+69i6rkrPWi85Oar9mehQQ
+	kpXZ2
+X-Google-Smtp-Source: AGHT+IFojcpy6KUP4bTQSiEwcKBMBi3P0iygm73XtFG4pDDpmIlmVKc+itvV/UD4VcBCJUi2g4g2pw==
+X-Received: by 2002:a17:90b:3c41:b0:2fa:ba3:5457 with SMTP id 98e67ed59e1d1-2ff497cce9amr10138543a91.17.1741224057323;
+        Wed, 05 Mar 2025 17:20:57 -0800 (PST)
+Received: from [10.89.236.32] (wf126-032.ust.hk. [175.159.126.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109ddfc7sm730455ad.22.2025.03.05.17.20.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 17:19:42 -0800 (PST)
-Message-ID: <5b7bcb84-5ad8-46d2-856d-38e3081026bb@googlemail.com>
-Date: Thu, 6 Mar 2025 02:19:41 +0100
+        Wed, 05 Mar 2025 17:20:56 -0800 (PST)
+Message-ID: <b13f29b8-2906-489d-b955-3f94a9bcb231@gmail.com>
+Date: Thu, 6 Mar 2025 09:20:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 000/176] 6.1.130-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250305174505.437358097@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250305174505.437358097@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] arm64: dts: apple: Add SPMI controller nodes
+To: fnkl.kernel@gmail.com, Sven Peter <sven@svenpeter.dev>,
+ Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250305-spmi-v1-0-c98f561fa99f@gmail.com>
+ <20250305-spmi-v1-3-c98f561fa99f@gmail.com>
+Content-Language: en-US
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <20250305-spmi-v1-3-c98f561fa99f@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Am 05.03.2025 um 18:46 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.130 release.
-> There are 176 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
-
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
-
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+Sasha Finkelstein via B4 Relay 於 2025/3/6 凌晨4:26 寫道:
+> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+>
+> Add device tree entries for the SPMI controller
+>
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> ---
+>  arch/arm64/boot/dts/apple/t600x-die0.dtsi | 7 +++++++
+>  arch/arm64/boot/dts/apple/t8103.dtsi      | 8 ++++++++
+>  arch/arm64/boot/dts/apple/t8112.dtsi      | 8 ++++++++
+>  3 files changed, 23 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+> index b1c875e692c8fb9c0af46a23568a7b0cd720141b..d544a35c8af414c583d38b040e1aa753902f1c93 100644
+> --- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+> @@ -53,6 +53,13 @@ wdt: watchdog@2922b0000 {
+>  		interrupts = <AIC_IRQ 0 631 IRQ_TYPE_LEVEL_HIGH>;
+>  	};
+>  
+> +	nub_spmi0: spmi@2920a1300 {
+> +		compatible = "apple,t6000-spmi", "apple,spmi";
+> +		reg = <0x2 0x920a1300 0x0 0x100>;
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +	};
+> +
+>  	sio_dart_0: iommu@39b004000 {
+>  		compatible = "apple,t6000-dart";
+>  		reg = <0x3 0x9b004000 0x0 0x4000>;
+> diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+> index 9b0dad6b618444ac6b1c9735c50cccfc3965f947..0f03dc808cf7c6b7d71afc79dd29d368f957f979 100644
+> --- a/arch/arm64/boot/dts/apple/t8103.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/interrupt-controller/apple-aic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/pinctrl/apple.h>
+> +#include <dt-bindings/spmi/spmi.h>
+>  
+>  / {
+>  	compatible = "apple,t8103", "apple,arm-platform";
+> @@ -604,6 +605,13 @@ pcie_pins: pcie-pins {
+>  			};
+>  		};
+>  
+> +		nub_spmi: spmi@23d0d9300 {
+> +			compatible = "apple,t8103-spmi", "apple,spmi";
+> +			reg = <0x2 0x3d0d9300 0x0 0x100>;
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+> +		};
+> +
+>  		pinctrl_nub: pinctrl@23d1f0000 {
+>  			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
+>  			reg = <0x2 0x3d1f0000 0x0 0x4000>;
+> diff --git a/arch/arm64/boot/dts/apple/t8112.dtsi b/arch/arm64/boot/dts/apple/t8112.dtsi
+> index 1666e6ab250bc0be9b8318e3c8fc903ccd3f3760..4b3730c46c4d14a582627f69094b458ec7481da9 100644
+> --- a/arch/arm64/boot/dts/apple/t8112.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t8112.dtsi
+> @@ -641,6 +641,14 @@ pcie_pins: pcie-pins {
+>  			};
+>  		};
+>  
+> +
+> +		nub_spmi: spmi@23d714000 {
+> +			compatible = "apple,t8112-spmi", "apple,spmi";
+> +			reg = <0x2 0x3d714000 0x0 0x100>;
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+> +		};
+> +
+>  		pinctrl_nub: pinctrl@23d1f0000 {
+>  			compatible = "apple,t8112-pinctrl", "apple,pinctrl";
+>  			reg = <0x2 0x3d1f0000 0x0 0x4000>;
+>
+Reviewed-by: Nick Chan <towinchenmi@gmail.com>
