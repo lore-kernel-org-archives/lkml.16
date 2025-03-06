@@ -1,159 +1,200 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2053.outbound.protection.outlook.com [40.107.247.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076D325BACB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741282191; cv=none; b=e8sYlu+zKK0H/2t++fD6sHkgrkxDi0Qeri55kIQ2DiDsg5y5ZKue6JBrZRMAGlgV3PgWFSjbyNHigA/Hxs3B7LIVyonF7uX1VF9SsJrXb17qikiX0oDFd/U9v9QdJ3MywMd6krWNP9s0DGuK1zq6kYQPTxAWEKOo5HDEUJo8C0A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741282191; c=relaxed/simple;
-	bh=JiXBBKulzpm1G4toJd+w3rK2oa2JI2KBaqVst92x83g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YFHMqiR45tzQSd74+5Gx2qHxDfm+vipHkEFLUDeaXJ9tn+qjlG+iCD4O3J0MMxgjiK9LqapY8tO4LO8c3QQjon+PC1F6KZeEJFaflFXqIEnCG791wz7y6gmws5jSBX0O2rwDTTCeQmEJc0he3XCl6VkTsVmYf4ZYPV8GnXNc//I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vzDzs/cR; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF4D1DDA35;
+	Thu,  6 Mar 2025 17:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741282306; cv=fail; b=bk1XGbxiJLGya9apwAdnQRd8p+i6f46Z53rDa2xl9wn+eoU/qOTmvqvMHrPOJ+OwcNfNIfvrZBui1lgKQxfQx8vlWfCn0vn2oi+iAWV72xVCmOHaCg9R32vgB3apI9R8qHozKwI569Ls4OHee6hXU+vi8YOPOlGencBEKpTKfTI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741282306; c=relaxed/simple;
+	bh=UEh2KJJDq4IB6JpU7Kd7lS6VfxD9cdxXmS8s6dmH5yg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=snaaT4fIuKteNL4bL2hGo4PmB7U6Zx5wWMB+QR2QCnHtV8vZnZcdZ2ev9J3t+bIuA1zkPo0yIYNzVM6cwnYZ5j5t4mV63N7mjzHAc3BJXMwuu1ZuUzMqNi55/U4l7WtS5md/1KhIteAlKhgqMP5Nowm3wnESpWcudMe48P0ev1Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=RnG4DDVX; arc=fail smtp.client-ip=40.107.247.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vzDzs/cR"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8670d630d2dso369474241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:29:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741282188; x=1741886988; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pXtLFB7rHzBBDM/TAUEEN+9FpT67VqyHhiDM0Anig2k=;
-        b=vzDzs/cRCiQItFRB2GbLTmEsO6b2pDtyv0Q1X3irPGjRoy8lOBya/Jq88zvqJLPs6z
-         2LEENMMT4hyKFG+WsiWqjE2kxrZvjeQOMJMuKkgI+uZlErK0yk6lxzRnZzNIjfJ4twvZ
-         XAAO9UmT5VoyxMN1/dtTvE95mZtQ84F9K1S8Aw/eNojGlqlTFnrf0ig9wqLdn5baRzwP
-         t9eIYPxhKZ1bA8H5JxQx29mqL7LovKvi/eQLsEORFZ2LjTGL+/GKYAc4ejJNMtpiVQF/
-         8JgGf7XMajisqhho1xG8MxHX2hWoCRtHTfGqzOtOGbzxtX3hBPEGosGQ/LMPcXN80ie2
-         EAow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741282188; x=1741886988;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pXtLFB7rHzBBDM/TAUEEN+9FpT67VqyHhiDM0Anig2k=;
-        b=L3zX6f0wENscHxPl+ayZ2Poh5NwBRYqHvc7tKU0JLkiw3apHYGIj2RvNf/M4LTCDAj
-         xVn/jTa/hUc3s99JyjPUg2AcqAjHx2LNfS8uWRxbz1EOLwSpBbhnUFbSWpQqwVHVLMqK
-         GU27BURmbnmo7y+vgPAjFZRO81/ynrKqSDU7x/jJS83LSi2byoRTlK/6W4ohnhc2b7ba
-         xj2D9tsevB3QqOuJSFOz/h4Re8sPX3CyU5F4rlvpXeVfBNL99NpM7QprqtABjt5gpn02
-         7cLTO7YdngApW8S28dnO6XZROeSHk6oKeyKpl91wGAIfvhmlOSprYcVUhdK0dV5jpp/B
-         bPJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkSg59r4CwOoQKfU7mQQN1FRVpEI8P9XfrcYKusLme51QH1rRVIBQM5kiLFayw126dsEh8eat7G6+k14o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfep1XqwJ6GzGEHNtKqo2TxpiPDZNVSgv3/GkEeDnLu4h1v6WY
-	IyTiQIq/LYrpVFuLmN1nCZfkR0YoVjF+sI71+HEpdF/qsCK4StyitNx7pItpr3S0/Dpr8yVqs3u
-	8qHdh5M9Evg5V29CTXwP+ydMFNURbFxAoNBRODQ==
-X-Gm-Gg: ASbGnctAdlYLJA4tNeRFwSQFfXAcUO48LvEJfVk4YazgBf+Kzyx+Bbj3xpzulRjKwce
-	2vaxbBIEfScje1ErL1ScDXf1xtDA2a/zSr2qaTL1Nl4FUX3hL9JJWPiSbHw1gHr3wiLsdVSddJR
-	obEk+mDNMoW9Q7m+vDFaEzohYofpX8xX2u4tgatq5ffaNjU8dINuYgK1myjb0=
-X-Google-Smtp-Source: AGHT+IFNXCtuHq8zvVxiVQYiR8dorrj9uyzpsQMGx5pTaYKW3Lqu3uOnXFHmE6jvJxArEtny4FPQcKgSRyM9FNa8LGA=
-X-Received: by 2002:a05:6102:3594:b0:4c1:90ee:ab2 with SMTP id
- ada2fe7eead31-4c2e2815489mr5712797137.14.1741282187745; Thu, 06 Mar 2025
- 09:29:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="RnG4DDVX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H3qW3IqQGbN+27nDBGv7gVIryztPBbGZaxPkkreAwXwHHxOTe5KsfRwFTtYCiP6ZvuBrOQkruzTecxClun7W9qy8Hka0+KcOxjckh4RLvcO8HHJuum+cCDavnKejBLevKTkQ7lcehxnojFwaciRMc/XRslv9qn+fODjm1UrGwwTONSPNYUzuKHYzmGKszCFz/t08Y3LwaH4R4Q5rv5A5xfImTacSwcp+SXf91qqZvutH51Mmj7xMxNLbVwloX/PSnb4vTmcLnbExEdwfpukrhTKj61/GgpBXTJpXTAj08ylT1ZyrcfHw/oweMUYORkLrEz5xVjupjFw8M2RVjoqn7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qVzzO7FWVa1iKwSWOpqsOdr+VG2WMePPJ2nWnMCdAbQ=;
+ b=RQLwPefdSrzk+yE5RectrkE8BNjoPGKhIsNOrfO/0iaZeJbVu4UAniXJDgvklLQi+HTeM+Nk04atGaEWvm6+yxFVmZhz9dsVoIMffppCihtZg/TUys2Ds2dWEwAeMd9VdzUrq1avpLCeiyYnvUpN43TtAhY2I0gv5BzYcTAkX/6J+FIpFh9K+vQGqIVWr8BEHIQQgkIBmH/h2Z2cnF3JXgZSiSlZ2SRREQtu82sR/OWb5edhoFtd7G6CSblTGnH4OdR3FrXkygqpOEogMwFrUgh4ITpfrglkEF92Ybsr5tkCotrmGXLwB0njKFNG6M1fgDtaLy/RfhAO7Jb5xE5MIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qVzzO7FWVa1iKwSWOpqsOdr+VG2WMePPJ2nWnMCdAbQ=;
+ b=RnG4DDVXSqqhpyvQusf5J6TGp+mRatjRv9mrK1gPmtKuA5nCx9MT+Kdbfbwit19ceCT7eTDRNvELBWb4hkWpIBB9Jvy5WzKQkfk4NFRfolW4m6sTpWoRI1aEgUr41kO2YJ6YEWjG1+RPVuoypIlJI/vQBvPGlIg4Bhmh8rdTil875Jk+Wc4jdmR/f2sh7nXNZRZuLuMAyufsvfDCI5Fr0yOXspApxYXs+gO20Cl05nKh1jZpctLd4BAUMuQoH0uBIAlxTYHV5vSzu7SzB1yJKmM0Rsr4JuSCH28L9ln4/eKV8S4XcKUZs4mtIvX6Sj04SDQKv2V4O3IvE+ybYGqkWw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA1PR04MB10627.eurprd04.prod.outlook.com (2603:10a6:102:48b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
+ 2025 17:31:39 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 17:31:38 +0000
+Date: Thu, 6 Mar 2025 12:31:28 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Guido =?iso-8859-1?Q?G=FAnther?= <agx@sigxcpu.org>,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH v2 1/1] dt-bindings: display: nwl-dsi: Allow 'data-lanes'
+ property for port@1
+Message-ID: <Z8nb8F3x9R6PunkI@lizhi-Precision-Tower-5810>
+References: <20250110161733.2515332-1-Frank.Li@nxp.com>
+ <c5y6mocsd77wj5lah6n47vtteqc5ekcrbdod6z5vtcnxhleudw@kfhpyoiylqqp>
+ <Z6prCyX+edpaSwUH@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6prCyX+edpaSwUH@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: SJ0PR05CA0101.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306151412.957725234@linuxfoundation.org>
-In-Reply-To: <20250306151412.957725234@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 6 Mar 2025 22:59:35 +0530
-X-Gm-Features: AQ5f1Jo2c_NWeRxraJqOe3rUK2VTQXZDSVRCocH07muKH4PVHGeh0vesJBzv5Ho
-Message-ID: <CA+G9fYtfmMThUC+erk6jVk8BN0jWJCw=FnKh68ypwhgv65OZ+w@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/147] 6.6.81-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	nik.borisov@suse.com, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10627:EE_
+X-MS-Office365-Filtering-Correlation-Id: a1cb60f9-332a-474c-75ac-08dd5cd4c05f
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?RRmI+HstJq/A4UrpcWt1ErrCjipMIvSqkV9I+vuQ5QXFI/beKW4Ejh5RBUZQ?=
+ =?us-ascii?Q?hiAAgL0kIabqn4A+3bl0G93sUdi5eUbl+qI8BbRb569CG1Li5L57zfjlG25U?=
+ =?us-ascii?Q?1oTaTqJ4vxkDA1DJWRrvMl0TpJVvtjHG6QJwrw3I/HrExFk3o9ATZhQFhwr+?=
+ =?us-ascii?Q?r+kpjmEuZQsG4NR9w/4ohyLbhBpUQ52SHVcuLW1Jl1MAF9Yaz0RxjIAWoQhU?=
+ =?us-ascii?Q?PhuATdtz2krbfkPU7QtUElh7oWA3ZTdFO+DHRYkoTSa0QXjnEVCcmKsQuv4D?=
+ =?us-ascii?Q?FoZju3LTX9QOXTBE1b5cfXGo4vBMS14fh44qAVuNwaDX1ZageXc3Jpv738d4?=
+ =?us-ascii?Q?JPeNwMUD22DZndcx5PY+w7hqBhoFcaOlPtaAsgvU5hj3htTSoehIAiB5L8sw?=
+ =?us-ascii?Q?VlS6ufxUgqQDEwTlhp7ZnwLLYC/A0vH8amD5Nn1Pew7QRrESYUtvVHPxupsj?=
+ =?us-ascii?Q?lgcTPJTBn9O3dLyv0wW+YM9rsZjNjy70QwxREAAYH0r7T6q+Lt+E67Mt3GNf?=
+ =?us-ascii?Q?lBxyrgtckI/lOuvG3ASX+9U2E2tfUQm006lq9l9+MqrNXdkiQiAQLZiNboXr?=
+ =?us-ascii?Q?BLSpQDo4n7QYbE5fXFareqXK6Z9IOZ7EtAiHp/Ej7uifGiUk77nzfnUORFR+?=
+ =?us-ascii?Q?cOlKA4HINJw1LggaiVaCQRzCRowyzYeBB1LVZgpU+K3rp87ubau/PVEm8O1o?=
+ =?us-ascii?Q?c7Lk3G1cZTf0YbeFOGXvJ0/eFkRH/5x8FhWIq+LfcchMgK12MuCSwdiMW9Bd?=
+ =?us-ascii?Q?QmNIvV1ILbgprCMfVsXd2lo5Sybjw75uTkQkA3ADfPTqJp/fZlyQ+PokSA2D?=
+ =?us-ascii?Q?n4ED/5Q8I5pfA6KCVGw1MaYtKrC/2naIaAcirf+LYRp8+YZ3idoB35XspG/D?=
+ =?us-ascii?Q?9XwutCw2kAsxENADvzjpoREmVkBaKJV5C1mjikaEpBUL/x9MrphcGg5d2lYh?=
+ =?us-ascii?Q?6qFI3U3Lnd7DgZXqa0C0JAz7GlMRmNFyusf3yKNiZrUqf53/hG7SWH/o670e?=
+ =?us-ascii?Q?E4zzQl02yabQx4RgVnss2GlY6VrD2W/vhWqC5a0O9IDfYRtQR09XRVCkqNrt?=
+ =?us-ascii?Q?X6Z6Un3FV+HQ/AtmE55D6uh0xG3cWPoyLoYdt2VfsA4a7sNJUUwRDYqORHsn?=
+ =?us-ascii?Q?lSWnnfAaxISStdRXEf/wgHFEgrnTPmcLo9ubitg8F2qWnGblHMub9twOeEwg?=
+ =?us-ascii?Q?TEfXIb3hYdcGyiaqrTPKoJsxl0hMLDEP1Uuz6YOZw/b/VKO9YvrLAiqZEvw2?=
+ =?us-ascii?Q?WTI/Mr63REgL2p32SEFoVNdIhYsOC9WMDNJhc0TIhz6exQFHFjnkATs9p/jU?=
+ =?us-ascii?Q?nEBO/gfISlZ7eQdsrqVmfgddzvjYTfMHldJsgVgyTkyl9oafFZf5emQ2e9fV?=
+ =?us-ascii?Q?udY+OKDRUXF2W4UDm3gGuY4IlEZWWWQt8AUx9TjtniGDQ90chlgRuCgZKksC?=
+ =?us-ascii?Q?KdX9MmsZPDO27ouaxzYY8He3Jt3NS7vD?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?HAmH0ta6Y5nD3daD9+NSHksCSZ9Fezet/P/bt42E70gPYn+hWyKyijEMxrj8?=
+ =?us-ascii?Q?7vTdZzpCv4HBkrOF4Rd8rvbpdtgf1B0iOMcAkmuxzIKxlNZxcZI6oBFe6aDJ?=
+ =?us-ascii?Q?rfCCpGpqcI9hGxSQJ6gui/pHp/QCwb1QpZsQGhUg+wd13R9Lh5SIlgDJoSwG?=
+ =?us-ascii?Q?8t6KGl61js/SF+fbALev/eweK5SDC06XC+DmHJUatYrL8F01gP5namXun34p?=
+ =?us-ascii?Q?qUOFQw93px5uJZBKBjxJIlvJCIJIF2CtczVugdQi3lpY6cNBTV36bQlaMzVD?=
+ =?us-ascii?Q?d9kur/Sr3dGCY7/iZaIGqsQf2E43UJbTBXbF3b6qRp3C+PtOVe2OaGpjgdvU?=
+ =?us-ascii?Q?PEI4C+a4AmJjRJMU3UsufnVdKm5mVg/OewTqbi9m8LoutZb0YEhUszA7wEFI?=
+ =?us-ascii?Q?5KouF07fTIGb6tktln4b4QhCAqFc1XHmzmyC+tRtsWWh1K+y2qYA5L6B9AXi?=
+ =?us-ascii?Q?EkA/Kf9CjSjwlHVDcTYbIco8QnqIX4ZztAqLrmfRQN8RfkiocD+JZlqGGFgK?=
+ =?us-ascii?Q?X5rZy/URpkABSCzx6qOkZFpIe2SI7uXBUBbPOYg/HBB0VZHU+UX4kmwgINwy?=
+ =?us-ascii?Q?DBG8p03KSgS8AeJa5/huMF9A0wWmpkSmUd7PHHV+xhZ+qE7IfehdHbexCimC?=
+ =?us-ascii?Q?VMhl5b4wYDlDdiQfI0KiuBeA+DSwFW9/m8vFf1K3hnWdGG2Yyv29+ZCB9iww?=
+ =?us-ascii?Q?AHBjn9G1jLSd7uqS1a2wWo2Ab4+NtVYiEWhoccfMns62rUQQeZE44BSKDP71?=
+ =?us-ascii?Q?2a4QQulq1AvVA07PaYTwask1i1EBs72xMdUkClr7vo+QEOgIWk7wTKNGRi8h?=
+ =?us-ascii?Q?Dz8dCQ4Di9E5FrwJpTJZjiJDs9whiURu4KTA0fYZxAKkrDRXu8gWZxnQDTHM?=
+ =?us-ascii?Q?pUCPTW05VleXXSrt2/LOY3cs+C+UMQyZIIdhgxhByhWTed0+jhehd+GovIqx?=
+ =?us-ascii?Q?3Dvu1MyqcOF1Nb6e/euZlELiTI6kWolGJEnIebsD7jnEm+oNbdWcBGGeNGIZ?=
+ =?us-ascii?Q?ZG5XlmYO2oIoYHoinsfz4IslU5RFIRF4xdIGVJ5t9srkUKma/yDoR95LGd/s?=
+ =?us-ascii?Q?5NFmpudBI32JKmoHUxk41bltks3XjY0dt1/sIWbWF+xUoHMCk+aou+0BPHtL?=
+ =?us-ascii?Q?92SzKZYDM9T0Z6gePM4ATjNucxDKKX+lrZlKbKbKUoWX66WO1oYOZRTnZ2bh?=
+ =?us-ascii?Q?lJwQt5K4rcygWcBj8HF5VrQc7bvMgVZ0CEkTOgL36dPmw27VjejR0HWkvhUp?=
+ =?us-ascii?Q?X6lnSvl7yhMoPNberzKwrI+BuOBltkW9TCFFKPXJ7feF4q0MWIaf8geDg5gB?=
+ =?us-ascii?Q?BC3w70JwfouJSRbMErCk2hg74u1E87Nz+aHzyr7FUFQ5G+bFRLCpG/jL2l2f?=
+ =?us-ascii?Q?jUFZJJWdQytTKrd8kw2vNEq37bvoW3IoYBxLco6hrdsj9c8LcV7g7ya/JJ2I?=
+ =?us-ascii?Q?GrygclRMULdNBHSVKswmvO/78wVV+2fBmiBGA1smtYIShEJTe3rmUwVjBkBs?=
+ =?us-ascii?Q?0nTp39kLITOR26ieihrm1ubz+uEzx6jRSv58hAKRvJ3Dn8X2Vu47OZHTXY8h?=
+ =?us-ascii?Q?MqArrjY5083CdVktDj3V0gjjuyBXgpQsEZQpDAei?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1cb60f9-332a-474c-75ac-08dd5cd4c05f
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 17:31:38.8054
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NHljpvOTXVqGbOhe+3QvToejb3jKjRC0qB0Yy3qcWftiKbf4vFOoWFR3IveFHBr/+2VeBBU9T2QfH+YNJUmIFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10627
 
-On Thu, 6 Mar 2025 at 20:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Mon, Feb 10, 2025 at 04:09:31PM -0500, Frank Li wrote:
+> On Tue, Jan 14, 2025 at 09:34:49AM +0100, Krzysztof Kozlowski wrote:
+> > On Fri, Jan 10, 2025 at 11:17:32AM -0500, Frank Li wrote:
+> > > This controller support scalable data lanes from 1 to 4. Add the
+> > > 'data-lanes' property to configure the number of MIPI display panel lanes
+> > > selected for boards.
+> > >
+> > > Change $ref of port@1 from 'port' to 'port-base' and add 'endpoint'
+> > > property referencing video-interfaces.yaml. Allow 'data-lanes' values
+> > > 1, 2, 3, and 4 for port@1.
+> > >
+> > > Fix below CHECK_DTB warnings:
+> > > arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx-lvds-tm070jvhg33.dtb:
+> > >  dsi@30a00000: ports:port@1:endpoint: Unevaluated properties are not allowed ('data-lanes' was unexpected)
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > Change from v1 to v2
+> > > - Add the reason why need 'data-lanes' property in commit message.
+> > > ---
+> > >  .../bindings/display/bridge/nwl-dsi.yaml       | 18 +++++++++++++++++-
+> > >  1 file changed, 17 insertions(+), 1 deletion(-)
+> >
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >
-> This is the start of the stable review cycle for the 6.6.81 release.
-> There are 147 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> All:
+> 	Anyone take care this patch? Krysztof already acked.
+
+Rob:
+	Can you pick this patch?  look like display maintainer miss this
+one.
+
+Frank Li
+
 >
-> Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
-> Anything received after that time might be too late.
+> Frank
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.81-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-
-Regressions on i386 the defconfig builds failed with clang-20
-and gcc-13 the stable-rc 6.6.81-rc2.
-
-First seen on the
- Good: v6.6.78
- Bad: v6.6.78-442-g8f0527d547fe
-
-* i386 build
-  - clang-20-defconfig
-  - clang-nightly-defconfig
-  - gcc-13-defconfig
-  - gcc-8-defconfig
-
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
-
-Build regression: i386 microcode core.c use of undeclared identifier
-'initrd_start_early'
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-arch/x86/kernel/cpu/microcode/core.c:198:11: error: use of undeclared
-identifier 'initrd_start_early'; did you mean 'initrd_start'?
-  198 |                 start = initrd_start_early;
-      |                         ^~~~~~~~~~~~~~~~~~
-      |                         initrd_start
-include/linux/initrd.h:18:22: note: 'initrd_start' declared here
-   18 | extern unsigned long initrd_start, initrd_end;
-      |                      ^
-1 error generated.
-
-## Source
-* Kernel version: 6.6.81-rc2
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* Git sha: 8f0527d547fe50fe08bab12d39c9a2cfb4f6ef3f
-* Git describe: v6.6.78-442-g8f0527d547fe
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-437-g9f243f9dd268
-
-## Build
-* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-442-g8f0527d547fe/testrun/27525967/suite/build/test/clang-20-lkftconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-442-g8f0527d547fe/testrun/27526163/suite/build/test/clang-20-lkftconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-442-g8f0527d547fe/testrun/27526163/suite/build/test/clang-20-lkftconfig/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2twuoLsehi5aV5tpYyqa6pqU9cZ/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2twuoLsehi5aV5tpYyqa6pqU9cZ/config
-
-## Steps to reproduce
-- tuxmake --runtime podman --target-arch i386 --toolchain clang-20
---kconfig defconfig LLVM=1 LLVM_IAS=1
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> >
+> > Best regards,
+> > Krzysztof
+> >
