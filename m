@@ -1,132 +1,101 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC8BBE46;
-	Thu,  6 Mar 2025 02:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68961BE46;
+	Thu,  6 Mar 2025 02:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741228842; cv=none; b=K20b3pv5bWoZtQty4CCRe8G/KJk9eOnF3twVh1FHPfz9Hpxfl2AS6BrSqJ3MV4fvIFBmYlFFSLDtb+4Etf78PUndlzUiIlkj8mMK+7itncZ+E6kWgUJpWFt1mAiKCpOUeFy7KVRL+05RRMhURG2jJM0xZsflt/8YXM+/0bjZ/QQ=
+	t=1741228946; cv=none; b=SWKuErvyhAGKMfs1QUoPCCo8I+lK4NBNPM9Eduh7s3uFyXbkFkpVKvWz4IvDS9U0IVAcbBnEeWYMLvBY7HMBmBRJEnJe+9pX7gLnLsM4PH/92NGm2uBYBYJMGW1CO/r8YNWQMbJlMsZKbilhDojMuGkiyV2o0hRSaiPMIEWcwN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741228842; c=relaxed/simple;
-	bh=ONtAi5Sqk5d11lgQN9ofiQ1SwRaBMpb8UpGrlN+B3Dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRfvxaY7/04IY01jcuqgSP/S6Z+sykL07mnR86Uop0ZZHoh2PFnh9mTHhvUhAPGP8FE2dNDVpMAWh/tkvOcl8U+Uitlswy4nCKhrMrbghoNN8mjsk8Qqwt9OeJQdASvgRB4eY+T4BB7MwI2YPMuu/QRLl277HE/wMD4oPrVqmpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z7YYR135vz4f3lW5;
-	Thu,  6 Mar 2025 10:40:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BB4DC1A058E;
-	Thu,  6 Mar 2025 10:40:34 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKl8gC8lnRDSxFg--.7098S3;
-	Thu, 06 Mar 2025 10:40:34 +0800 (CST)
-Message-ID: <355c8355-a6bc-181f-73e7-1baf7749f984@huaweicloud.com>
-Date: Thu, 6 Mar 2025 10:40:32 +0800
+	s=arc-20240116; t=1741228946; c=relaxed/simple;
+	bh=/lrfeCf3sMekVjZTiHvHgbFc5dmY9dc80TFu61Ml3+0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BztAxTqa4dXcmADvs5KHgm9Gtead28j5eYEQdsDMJUKgt/gHapFvonoiKcYFzq2QrI30xR5oN7/4+IMN+vFMIwN4pm4JkdlZKJA9zLs7uMoA+VTY2xBaQSpGifpg4BGgAR1Gv4zsfgNOc3uNU8hQ2+Js858OyTzmeAlH1QGMoF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z7YWr4rl4zCs9Q;
+	Thu,  6 Mar 2025 10:38:48 +0800 (CST)
+Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
+	by mail.maildlp.com (Postfix) with ESMTPS id B1E8B1800CD;
+	Thu,  6 Mar 2025 10:42:18 +0800 (CST)
+Received: from huawei.com (10.175.112.208) by kwepemf500003.china.huawei.com
+ (7.202.181.241) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 6 Mar
+ 2025 10:42:17 +0800
+From: Zhang Zekun <zhangzekun11@huawei.com>
+To: <gregkh@linuxfoundation.org>
+CC: <akpm@linux-foundation.org>, <jslaby@suse.cz>,
+	<linux-kernel@vger.kernel.org>, <lwn@lwn.net>, <stable@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <chenweilong@huawei.com>,
+	<liuyongqiang13@huawei.com>, <arnd@arndb.de>, <zhangzekun11@huawei.com>
+Subject: Is there something wrong with v5.10.234 patch 664760c49d98 ("xhci: use pm_ptr() instead of #ifdef for CONFIG_PM conditionals")?
+Date: Thu, 6 Mar 2025 10:33:01 +0800
+Message-ID: <20250306023301.125540-1-zhangzekun11@huawei.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <2025020133-ultimatum-legwork-0940@gregkh>
+References: <2025020133-ultimatum-legwork-0940@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [Bug report] NULL pointer dereference in frwr_unmap_sync()
-To: Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- linux-nfs@vger.kernel.org, trondmy@hammerspace.com, sagi@grimberg.me,
- cel@kernel.org, "wanghai (M)" <wanghai38@huawei.com>, yanhaitao2@huawei.com,
- chengjike.cheng@huawei.com, dingming09@huawei.com
-References: <e7c72dfc-ecbc-bd99-16f6-977afa642f18@huaweicloud.com>
- <314f60a8-4b0d-45f9-87f4-5a4757d34aea@oracle.com>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <314f60a8-4b0d-45f9-87f4-5a4757d34aea@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKl8gC8lnRDSxFg--.7098S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFWkCw1kuw18uFy5Cr4rKrg_yoW8tw15pF
-	yktrZ8GrW8Crn5Xr4DZ3WkAa40vFsYy3ZxJr1kGF97AF4DJry2qr4UWFyvgasrGr4xGa1r
-	WF1UXa13ur93Xw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBSb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487
-	Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aV
-	AFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E
-	8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
-	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFDGOUUUUU
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemf500003.china.huawei.com (7.202.181.241)
 
+Hi, Greg,
+The stable patch 664760c49d98 ("xhci: use pm_ptr() instead of #ifdef for CONFIG_PM conditionals") in linux-5.10.y, is different with the mainline patch. In the following code.
 
+mainline:
+-#ifdef CONFIG_PM
+-       xhci_pci_hc_driver.pci_suspend = xhci_pci_suspend;
+-       xhci_pci_hc_driver.pci_resume = xhci_pci_resume;
+-       xhci_pci_hc_driver.pci_poweroff_late = xhci_pci_poweroff_late;
+-       xhci_pci_hc_driver.shutdown = xhci_pci_shutdown;
+-#endif
++       xhci_pci_hc_driver.pci_suspend = pm_ptr(xhci_pci_suspend);		
++       xhci_pci_hc_driver.pci_resume = pm_ptr(xhci_pci_resume);		
++       xhci_pci_hc_driver.pci_poweroff_late = pm_ptr(xhci_pci_poweroff_late);	
++       xhci_pci_hc_driver.shutdown = pm_ptr(xhci_pci_shutdown);		
 
-在 2025/3/5 22:02, Chuck Lever 写道:
-> On 3/4/25 9:43 PM, Li Nan wrote:
->> We found a following problem in kernel 5.10, and the same problem should
->> exist in mainline:
->>
->> During NFS mount using 'soft' option over RoCE network, we observed kernel
->> crash with below trace when network issues occur (congestion/disconnect):
->>    nfs: server 10.10.253.211 not responding, timed out
->>    BUG: kernel NULL pointer dereference, address: 00000000000000a0
->>    RIP: 0010:frwr_unmap_sync+0x77/0x200 [rpcrdma]
->>    Call Trace:
->>     ? __die_body.cold+0x8/0xd
->>     ? no_context+0x155/0x230
->>     ? __bad_area_nosemaphore+0x52/0x1a0
->>     ? exc_page_fault+0x2dc/0x550
->>     ? asm_exc_page_fault+0x1e/0x30
->>     ? frwr_unmap_sync+0x77/0x200 [rpcrdma]
->>     xprt_release+0x9e/0x1a0 [sunrpc]
->>     rpc_release_resources_task+0xe/0x50 [sunrpc]
->>     rpc_release_task+0x19/0xa0 [sunrpc]
->>     rpc_async_schedule+0x29/0x40 [sunrpc]
->>     process_one_work+0x1b2/0x350
->>     worker_thread+0x49/0x310
->>     ? rescuer_thread+0x380/0x380
->>     kthread+0xfb/0x140
->>
->> Problem analysis:
->> The crash happens in frwr_unmap_sync() when accessing req->rl_registered
->> list, caused by either NULL pointer or accessing freed MR resources.
->> There's a race condition between:
->> T1
->> __ib_process_cq
->>   wc->wr_cqe->done (frwr_wc_localinv)
->>    rpcrdma_flush_disconnect
->>     rpcrdma_force_disconnect
->>      xprt_force_disconnect
->>       xprt_autoclose
->>        xprt_rdma_close
->>         rpcrdma_xprt_disconnect
->>          rpcrdma_reqs_reset
->>           frwr_reset
->>            rpcrdma_mr_pop(&req->rl_registered)
->> T2
->> rpc_async_schedule
->>   rpc_release_task
->>    rpc_release_resources_task
->>     xprt_release
->>      xprt_rdma_free
->>       frwr_unmap_sync
->>        rpcrdma_mr_pop(&req->rl_registered)
->>                     
->> This problem also exists in function rpcrdma_mrs_destroy().
->>
-> 
-> Dai, is this the same as the system test problem you've been looking at?
-> 
+linux-5.10.y:
+-#ifdef CONFIG_PM
+ 	xhci_pci_hc_driver.pci_suspend = xhci_pci_suspend;
+ 	xhci_pci_hc_driver.pci_resume = xhci_pci_resume;
+ 	xhci_pci_hc_driver.shutdown = xhci_pci_shutdown;
+-#endif
 
-Thank you for looking into it. Is there a patch that needs to be tested? We
-are happy to help with the testing.
+xhci_pci_shutdown() in mainline is wrapped with pm_ptr(), which is NULL if CONFIG_PM is not enabled, but for linux-5.10.y, xhci_pci_shutdown() it will not be converted to a NULL pointer. The .shutdown() function seems has been used in usb_hcd_platform_shutdown() in usb platfrom device shutdown routine:
 
--- 
-Thanks,
-Nan
-
+drivers/usb/host/ehci-atmel.c:  .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-brcm.c:   .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-exynos.c: .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-fsl.c:    .shutdown = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-grlib.c:  .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-mxc.c:    .shutdown = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-npcm7xx.c:        .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-omap.c:   .shutdown               = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-orion.c:  .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-platform.c:       .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-ppc-of.c: .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-spear.c:  .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-st.c:     .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ehci-xilinx-of.c:      .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-at91.c:   usb_hcd_platform_shutdown(pdev);
+drivers/usb/host/ohci-at91.c:   .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-da8xx.c:  .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-omap.c:   .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-platform.c:       .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-ppc-of.c: .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-pxa27x.c: .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-s3c2410.c:        .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-sm501.c:  .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-st.c:     .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/ohci-tmio.c:   .shutdown       = usb_hcd_platform_shutdown,
+drivers/usb/host/xhci-plat.c:   .shutdown = usb_hcd_platform_shutdown,
+ 
+For the mainline patch seems does not want to call xhci_pci_shutdown() when CONFIG_PM is diabled, is there something wrong with the stable patch? 
