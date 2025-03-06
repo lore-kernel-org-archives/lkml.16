@@ -1,404 +1,218 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFC8209681
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4038C1FDE37;
+	Thu,  6 Mar 2025 11:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741259342; cv=fail; b=l5EGRNhoFIi3OxeYYIoLTReVFLpKNodH62LWY6xQKItMUAFpSyen1lygY96/NQHT+iofwkxGWUGZlFThkO3m4GFEwxcMLf9NbCnKy0V+oTcJfT41IEw7EnygPLMEHstxwpk+ugRJknv6/hqCcliWfcsiwQg9+CAMeGEdfu93EcY=
+	t=1741259361; cv=fail; b=tAXrO2FxdZD1N6gNPZv7OTaDWHJUcGHX+zcdaqfAhSMelFb3WRLzPxdK3GmZdbwX3VQvlAImxGaguPbocAWs9dwY0HILyPoA044gkIGfe8/o/kATb/tcZa4kGl/qYk6UvcIRXrf2zeMdhJ/wZs+Ef4fr2FJf5yFXhfZMeP6D6zg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741259342; c=relaxed/simple;
-	bh=cannI8wLSLKJs4HxNvYv/SyCOPBBLafCIovZKgso8d4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fsOhVidA7AJrICvV0y9r0Wn7K7SISqpWUYsn3HDNFt5/6UpY5+S4WtS47M9/7E3njVSyYOV9hdhLv/GTLnyUDWY6qktWcrpTUvbFOg8ihgTcmz6OjRf3SxlrPyLK/F3sClh7I9t0g605cZBNyZ60LD/AKN3qDmk3fb7qnTEtQZU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=POwpDWlb; arc=fail smtp.client-ip=40.107.94.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1741259361; c=relaxed/simple;
+	bh=KFaFHqY3sEW+F6oivy+Y6EAT2ZHmvWxv1pWk167WC84=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QOniQAJegBiTVRiphspa+uq0bd4ksupLLwegw4ERaNqZBQDjccLID4AsJpniPGLw0nlmBwwufR5OtGQbf3EFJq3hozxGwv++rugqBHC5XijdgXVwUDSpCUouklibzs89ZKCC9MVRRiMZZOaX+IcXhMMNV/drIXiXRhmHoXyunBU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YxLMTK9d; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="POwpDWlb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YxLMTK9d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741259360; x=1772795360;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=KFaFHqY3sEW+F6oivy+Y6EAT2ZHmvWxv1pWk167WC84=;
+  b=YxLMTK9dOE1Du6g1Bvi8IYRLTuhkNqaIkSxrgNS/Y4vihMM1x8qUL/FP
+   BtvDTxcmwlld7RrsVoZf+T4jzUoEXHUcs/5Cd4VnkcDhuM69ZRf1BubAx
+   194kjqBwFRgK+ss4HKM5Lkwsfo4MRS+K3pJYW+Ia2qano3qva7583usTV
+   3BoZCspRiU4mDAf6WKmxu2/RJKLGS9U6Kz6LF9lkC7z4kzhuVfBB8y+Pb
+   2dFTzfrJgBSlinlk8eiQuKbd+RjPU7fOtk/R8j5fVjbV1lzykH/8SWV4e
+   mjPLRPQ3J+k1nRgsisFxqlDFYXGEmtwATet0r1f0bCaHV5wA4qgkmMpMk
+   Q==;
+X-CSE-ConnectionGUID: YfQqmt3DS6SaW7sBjT5okg==
+X-CSE-MsgGUID: qQa0A7zUTYOlykRuAVP6VQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="46186235"
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="46186235"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 03:09:19 -0800
+X-CSE-ConnectionGUID: ugcP6VyYRjmuVD2XJfLgVw==
+X-CSE-MsgGUID: m6xwAjGhQn2r2P7gXrNDCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
+   d="scan'208";a="119000344"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Mar 2025 03:09:19 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 6 Mar 2025 03:09:17 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 6 Mar 2025 03:09:17 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 6 Mar 2025 03:09:16 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pLq3Oqe6PQkaHOqxgUIZJVVtLTcc3aUYPdz/Y/Xn7/jCXjO7H7C2O9Koy0APaEOdoIUG9gc88Hj7JAeZRgbmxfL3rGUqMAdmUaWRcYFEN/PgDFi05+Mxd9JoI/ud7ikPRKv/TH1H921H/xf09DmrWi/UWSozxwT4DZNp17qf3m59g0UkUfDxp1cxFwrl7LG6nCW7lTpkR6un3Tw2wyfD3YF6shO8hEzkOtev2162L1IBFZqtF3cTX/aBVIKiT0LdQJU4756oL2Whtiq/nuoatgqig7abpcDdXH5gkqIgRov2xLGeLP8LIaewkLAzLxYvDi0CwQXZjgjGQdKAV1Bz0g==
+ b=qcdo6zhsx0w6jwUeVzx1vleF6fShrTBbEfdAuPYCdsjUatfMAW5TlwSKo69o3PKy6nQRF48YsUkzYCU1Lp6OP39nNUBxVhQJdMtOatS6zPsNxxTTtwKmnAXR/pUHIH+oQrNeKUPbvwSnZCiijD2n/sJ7QzlEMojNWGKGWO7c6CU67VOo9GIST541lH1KFGZHDD1OAxZLxpvnVzp0nVDCfzp19Mku03oB7l5kpH2wM4+m363NpZ/MvuS+zBo5lPsDbDoVIoB15tnSS2LojoM4DJWiFLqt0l2tmZkXaMZgtcgoNZElvet9JqTizRL+PdKpjqZBxhLXWyAGZUCivOLSxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yHUIRi0jHL+VKEOq7A4wC/l3NWO1LytHjAeyNXEqji0=;
- b=rJfGhaKUpI83uZ4wim+wXGgC9qH34WQHU5tekoj6ivW76jiWUHuOPlfOxPOWWFRrAaRPomkxVXG+HOfHtR0mhzRoDQKuO4MHV/96WK8f1UUQYPXgkxuPOkm0Gp6SUu6T/BngOSMTKWqIem8gAaNp4AU+eN7PSFOIEKWLN7iokZQUdpn/a32SVuUFw4eJYe49FVnmGwLL5ubreQSlYsWMLHRg71zuZtuzIh7RuGRAivNOYMQ6YldjZBjUOCZCf9m8ZarVAksTIos1wxn5YHTkCbMX5YO08yUtuPzIk3Ce8gj+SnloGp1fr0IztwkiNydoyHZog5EB7xN5IaD8ppAnSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yHUIRi0jHL+VKEOq7A4wC/l3NWO1LytHjAeyNXEqji0=;
- b=POwpDWlbvvw8FhKHvQyi4201VDy0/DeSeVKd62nbiHJ68ySf/HyNdlZm6HnWzi0K2w2X8bRyB2Y82uWZHINOnynHT53I6R6+zLMlu1D4hGmM7aQpsEhol+lvel7VSycsRjt7gIm9E6oTCBegivi8ARFLn7W/zL5Fo3adxZT0T1k=
-Received: from MW4PR04CA0169.namprd04.prod.outlook.com (2603:10b6:303:85::24)
- by SJ1PR12MB6316.namprd12.prod.outlook.com (2603:10b6:a03:455::22) with
+ bh=KFaFHqY3sEW+F6oivy+Y6EAT2ZHmvWxv1pWk167WC84=;
+ b=lDQ88sde+MT2mArbjz8OGs6O1uEPJrXp/Qn1yWFU7G5EqFOOOrvlcwGAggeuLismE1tEfo90zvhXJHf1/ALDrhqQqCSCGOy4FczFkTflOSNkNJzcezB/FcojUT+ixS6C2qeYED5z9ihgTBiPa9Fh9VrZOQRfV9Fx7DeE30/5n4EOJkgCddE0+gsN/vqtuEFURj0HHwPGj550JLMNW53X+PXR9aU+cwBJcFuU9Cj3jWVPBlWEyu4dx5D34kDj5KGfLZBMwjfT1RvGDJ8Z+5EPb6t0NuD3HI7Wn0l15FgM2mQdM4C/IoWrcbLnCRjdFxK4HoFUtk2NVsEj7NdLZbGu0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6098.namprd11.prod.outlook.com (2603:10b6:208:3d6::20)
+ by PH0PR11MB7585.namprd11.prod.outlook.com (2603:10b6:510:28f::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
- 2025 11:08:56 +0000
-Received: from CO1PEPF000066E7.namprd05.prod.outlook.com
- (2603:10b6:303:85:cafe::30) by MW4PR04CA0169.outlook.office365.com
- (2603:10b6:303:85::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.29 via Frontend Transport; Thu,
- 6 Mar 2025 11:08:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000066E7.mail.protection.outlook.com (10.167.249.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Thu, 6 Mar 2025 11:08:55 +0000
-Received: from penny-System-Product-Name.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 6 Mar 2025 05:08:52 -0600
-From: Penny Zheng <Penny.Zheng@amd.com>
-To: <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
-	<sstabellini@kernel.org>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>
-CC: Ray Huang <Ray.Huang@amd.com>, Jason Andryuk <jason.andryuk@amd.com>,
-	Penny Zheng <Penny.Zheng@amd.com>, <xen-devel@lists.xenproject.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 5/5] xen/cppc: introduce cppc data upload sub-hypercall
-Date: Thu, 6 Mar 2025 19:08:24 +0800
-Message-ID: <20250306110824.1506699-6-Penny.Zheng@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250306110824.1506699-1-Penny.Zheng@amd.com>
-References: <20250306110824.1506699-1-Penny.Zheng@amd.com>
+ 2025 11:08:34 +0000
+Received: from IA1PR11MB6098.namprd11.prod.outlook.com
+ ([fe80::cbbd:ed55:576c:fd55]) by IA1PR11MB6098.namprd11.prod.outlook.com
+ ([fe80::cbbd:ed55:576c:fd55%3]) with mapi id 15.20.8511.015; Thu, 6 Mar 2025
+ 11:08:34 +0000
+From: "Xu, Even" <even.xu@intel.com>
+To: Jiri Kosina <jikos@kernel.org>
+CC: "bentiss@kernel.org" <bentiss@kernel.org>,
+	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+	"mpearson-lenovo@squebb.ca" <mpearson-lenovo@squebb.ca>,
+	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH RESEND v1] HID: Intel-thc-hid: Intel-quickspi: Correct
+ device state after S4
+Thread-Topic: [PATCH RESEND v1] HID: Intel-thc-hid: Intel-quickspi: Correct
+ device state after S4
+Thread-Index: AQHbjLTcANInlVCQx0+6PVpmKEX957NjdcAAgABCBRCAAE/SgIAAAGLwgAA0LoCAAboagA==
+Date: Thu, 6 Mar 2025 11:08:33 +0000
+Message-ID: <IA1PR11MB6098AD3A90B92EBAC95D2818F4CA2@IA1PR11MB6098.namprd11.prod.outlook.com>
+References: <20250304032255.1131067-1-even.xu@intel.com>
+ <96qpo784-8r1o-sor7-p42q-q06n1p389913@xreary.bet>
+ <IA1PR11MB6098ECF413F5F4E8FD120B4EF4CB2@IA1PR11MB6098.namprd11.prod.outlook.com>
+ <68roqo71-3887-ro16-0qss-52q455sqoo1s@xreary.bet>
+ <IA1PR11MB6098DDEBDF3B7A0160CEBBC2F4CB2@IA1PR11MB6098.namprd11.prod.outlook.com>
+ <q70795qp-nq3p-r181-15qn-on41n588s770@xreary.bet>
+In-Reply-To: <q70795qp-nq3p-r181-15qn-on41n588s770@xreary.bet>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6098:EE_|PH0PR11MB7585:EE_
+x-ms-office365-filtering-correlation-id: cea36c82-1f36-4ec8-c97c-08dd5c9f3c6c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?/f0uC+DP2IqPI4FN16SY+NgRzF1VjcYGCdXujTA5WHLleJqPdNDDvvFHw/sI?=
+ =?us-ascii?Q?ouxF3dKg+yfxnC65VXJgmK74EeZk/kP6b/G68OSYSVDm4SnsOJ8nLZSJGIv6?=
+ =?us-ascii?Q?oX26f7koGixgZCD5hKInljNEdiRtxlvKgE8ZUOpdCB89pmLwKyALiDqYf/Sm?=
+ =?us-ascii?Q?moGYqddPHsQfpB9Ry80E5iGO05qvKTw/X48wbRl3H4lAK4eB2OY1e2Id82Pc?=
+ =?us-ascii?Q?m96IThmVPte3/BIUR8vRxbfUUy5vw8ZXthBonNQzQ55cST+vUrYlQ0T9q/wt?=
+ =?us-ascii?Q?ZYTpmIdqy5p5YmgJQqXy58ZsSlc8ccAquW+2cks6vdS7zKRdk6F5zgm4gLjb?=
+ =?us-ascii?Q?O4ylnjlxiSPw5EmeoXEst1EXrp66aeqeUYVLUTkMYJDqLBqeUe915W4b3/Qn?=
+ =?us-ascii?Q?mu9ULG57MyzqAYVjCMhCmEA5jbZhdfFYAI8y3lv6dKRFxcGzoCW/UPWCaUxC?=
+ =?us-ascii?Q?zOvF1AIlGWlBJv24Bu0gUkebc2eYBWL1sHD33uK8bs5u+VIEKQUJDV3d3f/9?=
+ =?us-ascii?Q?NH3Sv32pTNGXp02ZiPX7/2OuNfrsXs7TIH9OLJCb5w/kdTrmIlTuGuUedgI8?=
+ =?us-ascii?Q?Mk5NLUZwB4+drX872X7OadPHdeMAwLytrhKxKifSIiHS/DdMpTEd0p83Dy9C?=
+ =?us-ascii?Q?Vdasc92ttdI3TuUUysYT5kB3ybx9m9LMcSz3sbiNdHrm/T0jQ5ZWoEzTyliP?=
+ =?us-ascii?Q?uusKC6Pu1ZCVWK6FYIx+9ZbjAmevEEyMv061sOj55eTFKnVpqRCRueiwF4aI?=
+ =?us-ascii?Q?LSZ9qS0Xg9kLxLfn+K8bs+F2gdJgCg/GQTZZcgkdRPJqfxBnryNuGlcLBNoR?=
+ =?us-ascii?Q?XeLq6g6B8dc12hWwbrz7UHMzDTa+VjozywMltVVI8/aL/wa8/RqVmXM/12wY?=
+ =?us-ascii?Q?t0GNHLbRDPrsEmmQWvjBKc6u+Cvb8iDgDzOVV8iuTdoWycUkB/LwZ8UHUyIp?=
+ =?us-ascii?Q?FxLXiUMV8K2EEQw1qtVG+XJhCWXMgrFPUEtwe9nP+xf5nmeK/4+SFU5y8ehr?=
+ =?us-ascii?Q?usLa439Ug6lFyc0jKkKyX7nFlDm3UnYefKrRj6VkBw1sX60MCaLPjGHupLuJ?=
+ =?us-ascii?Q?tNOv/XKKG3KqiYv5Tp4ny2qg0S4+N3LJGyj9n1e91ZFii/aNqZgXFsu9M5f8?=
+ =?us-ascii?Q?COFiY7aRbcauw/IIX0LqFjMP0D3DyCKtaLmfa8bz88OUwf1W6QfvNnLhjQea?=
+ =?us-ascii?Q?86I4LF8W9b9a3w4opVDIbf8qUxsW81pDhRgiyLRxAVMtokdPUC+Kd5MaSssq?=
+ =?us-ascii?Q?BtLFDS84ZkxSeFgz0UbLiS6g+61Pn16K/uAXpJ0cNElnZxC1wFhA6XhkQiKW?=
+ =?us-ascii?Q?XY3Ld8fMjlPj9Svq7i94O83738s+7nEPLymMk4nAjFhG+g+Lmnekr5oTkaRR?=
+ =?us-ascii?Q?OGFWQRyW3+V0LcJcyaoxRQ5/gKl4zUWJRiuuIU6wsaa0RnRQhQC9cPp0rXoC?=
+ =?us-ascii?Q?ZIxaiP6uRQ9+6FpPjLMzReCUgxRAm0uv?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6098.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/t9/YNrOqveIbtVYP3pgqHYG0tVxvp59YpV0wO04bdIVCwlCAPOv0pSgyTkm?=
+ =?us-ascii?Q?IC7Z7PPO3UVsYgNlOSyOSApbWRR0yeIzjSCZNAlvfBoj+B8vZDHF/1Pw4ksX?=
+ =?us-ascii?Q?z1JfTJI6NPK2gpueVE5U7+6xECyJgf5sVV2EOzl6cocNLYEM3IawnIDf2EE8?=
+ =?us-ascii?Q?I/aiMrKTGwIhpRpKi9NJn4TlDblxOuuw5nEdJLH30tOBqF5crg8duntyZOOy?=
+ =?us-ascii?Q?0ZQx8Gs5oe/+0d7KdvwpoyFaO162X7A7JERg3wq8khKCoCq637rRsFMDjAjG?=
+ =?us-ascii?Q?uV8WyDarIb9xzo4BPXLMtTRJCGvdutGWf4Qrd76yrQx7fMwkB3+pBMqoGTdP?=
+ =?us-ascii?Q?7LBVsBtgD5z8Lk9JZIlKudDsvF/3zBPXFaIvAsNNl1JIBTN1jNl3WW2KWX9r?=
+ =?us-ascii?Q?RdJbx0sahTgffpyrS1u1ZLF4cGuFnxR4aYVqK47AH1SONiYuoIXdP7iCi5S7?=
+ =?us-ascii?Q?A5ovnvH/nVgoyBEYDHibkDBl94KM9hRo1qNfb9WwoMuPANs9fB1pLiOmeQhB?=
+ =?us-ascii?Q?NrSpLpX0LUsmFk35g9IMnf95PjdS5dOKD9Z/7RO9arHU4I5Te9XYD9c8rNKO?=
+ =?us-ascii?Q?op3tA7FYHjPaOY3SK0nCMMXnw2MBH1+dSLN4j8c/lcn1AqwNPMy2amhlhSpD?=
+ =?us-ascii?Q?AH4+indz9SbRSdaPRLGPLD1BtUk5bRWiDQhd5vrmb9EFZZ4rcq+DlMAns0OV?=
+ =?us-ascii?Q?GZsMXk8BJexvvfAYA8Vd9Phs5cJ/9XaVMOaY49D1+1zMyaoKTfRaFnKwAJra?=
+ =?us-ascii?Q?mi7qMHQ5Ya8FbgsCnEBlWFd3tPlLXYh30G4bwm6T35nuPdDJK52lz0B0M0tP?=
+ =?us-ascii?Q?CH+Z/uiYdIKmjvPDIP7skEgIFC4v5UIMyO8opymCIVEHllFtsiKFOWoNygz0?=
+ =?us-ascii?Q?sYdvwYR2HQhDwnZtfSmZeEa3C7FH643u4QBIPyX0LcpngCUmhNMkkkx48ZVa?=
+ =?us-ascii?Q?4cNJN1639snPFnug4ga2L25/OwXCQ1jk9XrWmp/v+pUvzvJwqErIcPXnHFDM?=
+ =?us-ascii?Q?2ScOkQMmQFyFDxUimx45jxLIbaYery3anYTL3/ykIuIBwPLedhetgnMAgWZl?=
+ =?us-ascii?Q?jq6eYx2UTGoJxQdbjy5dMsGvrdTIeLgh+WhYgdSC1YS8KrpRuatc4UGKS52w?=
+ =?us-ascii?Q?ifVKcgYq9DOZoj4sXPcpNRqv1a06G43iPTOwPOH0YavmNiLXUTGmrI/YHDb6?=
+ =?us-ascii?Q?95b3pzGjJNSj7NqDj3VITnL23DTie+RHT7T9DB/pqOnryWTZ6ryShrIALGnW?=
+ =?us-ascii?Q?x3qjZFGj1c2goRSGMfMC8Z9DCkM0/YDHcqHFmZ+QSx03wzwfFyBBvJo4tBpP?=
+ =?us-ascii?Q?LAlmhFm+CmC4se06vgzXL0kIZ/boNLVQcUSn5mmjF2Hpg8NRffduqXKiGC0i?=
+ =?us-ascii?Q?F0krleE+utk8Nz6pyXQQQkZxp9ugH9I40xDuwH4avMdFcIVuQk3dAhL7YhLn?=
+ =?us-ascii?Q?dlzE8JaKaqNdkf94uIorlm6VZ15T7vNxesYtOW97lhxQALnP1OjqbZ+2qApL?=
+ =?us-ascii?Q?NwkSa9o+Z7bvr3esN8jGmyRCzIHkKw16UddzcSMeMyuqw7y46pUKgsp8fLq2?=
+ =?us-ascii?Q?V8nKgtP2yCQooNOuzBc=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000066E7:EE_|SJ1PR12MB6316:EE_
-X-MS-Office365-Filtering-Correlation-Id: 50e54340-d5e6-4b12-4088-08dd5c9f498d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Z4l3lhxdL8FwebKIeKarDw6pIaLeW8J/Om5VdXdtq16RabP5avdgFqM6VC7Z?=
- =?us-ascii?Q?TPJMASCw2Sc/IcyuOT+unn57EyAkus/5vE0CzCOTrGv8bX2Nfs/jl0F7hbQa?=
- =?us-ascii?Q?s3VH9E61vZu6I03U/shyS+C5EVFR2sWAuw0EQAli8oehmrtKmW2med40+aGq?=
- =?us-ascii?Q?kGz9PrzKCgxmPxt+3jhKKrzhrqaO7eD22Vut9OxB3GH5jChYykCgrL57EqDy?=
- =?us-ascii?Q?hCFxJR7uAMocHM3MmcrTca+LkJ4JNXNpi2qT0zR1eEcSCYvtx3T5uA8UJP7W?=
- =?us-ascii?Q?hLyCjUJ7uZVjnZpMB6C/TVcRv/H19jYRR4O8Fk4O6Zcil+wqRz6TAPxtrwU1?=
- =?us-ascii?Q?3y5vWXI5VogD7RkJH6kRq+XxRkN+ZAK+ANhrzb9Zn3XyHYmQlK75Qgq3bdvt?=
- =?us-ascii?Q?u1/mPIuOwSK1NAbkB5MenEfc816YRjOHGPv5EZKoSB3+cuIXZ95DqDWK+Enl?=
- =?us-ascii?Q?QmH81ZQdbAyD8O03ZYBMQSwBCyHXGbQeMhPRr/u8hWvGRaAoSzIn2+RHU4BT?=
- =?us-ascii?Q?GhIt7wTI5oB9ISh6Hhd6d631Pp8/KF/Mch0DNlmz5G4SaFzFtg4cGAeGQGRi?=
- =?us-ascii?Q?cAYFCv085tg5RJRx1SFrlBBRMmJcOBIxkk73Zh0mWuUsmPdSfxouUIh0tL7/?=
- =?us-ascii?Q?wg1GTexrZ+yLatYE4s6HOtf1JroCPj6QfojmxWql4iJITgbuBXYDv25zoqnG?=
- =?us-ascii?Q?EHgdsTVNyyKGQI17Nu+ZGQO6VIQkJvD3GuPB+iTLyIEnLL8e2rMWK3jDWKgo?=
- =?us-ascii?Q?G2JK+naA0JqLyW+5AYjxFXVOIrSbdw8DFLCIh1EuxvesQ5Zr2TnKYGilhPJC?=
- =?us-ascii?Q?+PSXhyl9w6U4/LacOO7gwtrsyV3hjlqLj5dkSDaVndhdsY+KUBVeJwuSFpat?=
- =?us-ascii?Q?FysvSe9wXfmD8M0Kkfpu2WQm8Z3NUJYyqPOMBdiegFhQRZp6lSG4pWLHM9rT?=
- =?us-ascii?Q?YJnoAsnNiqjpL6WRghS43XG5rkmr9QUW4FTjwh/86Hnud+oQR13KYv3V5Oav?=
- =?us-ascii?Q?z6Iyx1dKW7LRVHjaqZbc85et60R17nmfyd6Is5xMfirolX2IOnvFpxknbtAf?=
- =?us-ascii?Q?+w0IxFysfEJxpoo/I9jTzI1sgACAt7a929mlYbrOGVLq93fhKr/1K8CifCb3?=
- =?us-ascii?Q?4Kuv+pwzpe86Uwqdee8rnB38mgPd6BiLLvluZoaRQpwU74bf3ucXRoBUZmLQ?=
- =?us-ascii?Q?UiBbDWE2FGc1LOegJDcqTkdFG2I4J0IY1Ht6PqNngFQ+77sLcwVyLbfDiwpO?=
- =?us-ascii?Q?v04uECNhg4TQvS6nT8Ba1C6n7B/01/+9lQ5kzR8nO0E3uC467BdO2e2O4Fqv?=
- =?us-ascii?Q?apeCUNEV4oZIIlHqgkNnY9Sc1Zg5uFpBI10qb4qGpy/O9mE0OhnpmRxn0rXS?=
- =?us-ascii?Q?9EGCfWqEBIik8Tpd08BGEXtYXaJ4fQHfCFr/ud/vwknuAEY6XpAJ3Q88SeQG?=
- =?us-ascii?Q?A0/+z7BveEZ4RErVmDlq3rdGHHdUjVsb5HYpuqs4aPivrmv6PnUUCwnPInlQ?=
- =?us-ascii?Q?MhMQJQq2q0dDHi0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 11:08:55.8309
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6098.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cea36c82-1f36-4ec8-c97c-08dd5c9f3c6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 11:08:33.9314
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50e54340-d5e6-4b12-4088-08dd5c9f498d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000066E7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6316
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Kx6/KiT7EOXwGy7zoN9IFtqUq2GettCOyZvUkuSNJvK18zLifjLq6Kmp7T71N+Tf0YVA6yHItxbkx9QRawXmlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7585
+X-OriginatorOrg: intel.com
 
-As Xen is uncapable of parsing the ACPI dynamic table, this commit
-introduces a new sub-hypercall XEN_PM_CPPC to deliver CPPC perf
-caps data.
+Hi, Jiri,
 
-Signed-off-by: Penny Zheng <Penny.Zheng@amd.com>
----
-v2 -> v3:
-- Adapt to the changes from new commit "xen: introduces XEN_PM_PSD
-sub-hypercall for solely delivery of _PSD info"
----
- drivers/acpi/cppc_acpi.c         |  1 +
- drivers/xen/xen-acpi-processor.c | 92 +++++++++++++++++++++++++++++++-
- include/acpi/processor.h         |  1 +
- include/xen/interface/platform.h | 11 ++++
- 4 files changed, 103 insertions(+), 2 deletions(-)
+Just recognized you applied [2/2], could you also pick [1/2] for name fixin=
+g?
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index ee8015ce3ddf..6b1c8d167405 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -856,6 +856,7 @@ static int acpi_cppc_processor_parse(struct acpi_processor *pr, struct cpc_desc
- 		cpc_ptr->cpc_regs[i].cpc_entry.int_value = 0;
- 	}
- 
-+	pr->flags.has_cpc = 1;
- 	pr_debug("Parsed _CPC entry for CPU: %d\n", pr->acpi_id);
- 	kfree(output.pointer);
- 	return 0;
-diff --git a/drivers/xen/xen-acpi-processor.c b/drivers/xen/xen-acpi-processor.c
-index 8db8631a4b9d..9c4faad043bc 100644
---- a/drivers/xen/xen-acpi-processor.c
-+++ b/drivers/xen/xen-acpi-processor.c
-@@ -25,6 +25,7 @@
- #include <xen/xen.h>
- #include <xen/interface/platform.h>
- #include <asm/xen/hypercall.h>
-+#include <acpi/cppc_acpi.h>
- 
- static int no_hypercall;
- MODULE_PARM_DESC(off, "Inhibit the hypercall.");
-@@ -45,8 +46,12 @@ static unsigned long *acpi_ids_done;
- static unsigned long *acpi_id_present;
- /* And if there is an _CST definition (or a PBLK) for the ACPI IDs */
- static unsigned long *acpi_id_cst_present;
-+/* And if there is an _CPC entry for the ACPI IDs */
-+static unsigned long *acpi_id_cpc_present;
- /* Which ACPI P-State dependencies for a enumerated processor */
- static struct acpi_psd_package *acpi_psd;
-+/* ACPI CPPC structures for a enumerated processor */
-+static struct cppc_perf_caps *acpi_cppc_data;
- 
- static bool pr_initialized;
- 
-@@ -228,6 +233,44 @@ static int push_psd_to_hypervisor(struct acpi_processor *_pr)
- 
- 	return 0;
- }
-+static int push_cppc_to_hypervisor(struct acpi_processor *_pr)
-+{
-+	int ret = 0;
-+	struct xen_platform_op op = {
-+		.cmd            = XENPF_set_processor_pminfo,
-+		.interface_version  = XENPF_INTERFACE_VERSION,
-+		.u.set_pminfo.id    = _pr->acpi_id,
-+		.u.set_pminfo.type  = XEN_PM_CPPC,
-+	};
-+	const struct cppc_perf_caps *cppc_perf = acpi_cppc_data + _pr->acpi_id;
-+
-+	op.u.set_pminfo.cppc_data.highest_perf = cppc_perf->highest_perf;
-+	op.u.set_pminfo.cppc_data.lowest_perf = cppc_perf->lowest_perf;
-+	op.u.set_pminfo.cppc_data.nominal_perf = cppc_perf->nominal_perf;
-+	op.u.set_pminfo.cppc_data.lowest_nonlinear_perf = cppc_perf->lowest_nonlinear_perf;
-+	op.u.set_pminfo.cppc_data.lowest_freq = cppc_perf->lowest_freq;
-+	op.u.set_pminfo.cppc_data.nominal_freq = cppc_perf->nominal_freq;
-+
-+	if (!no_hypercall)
-+		ret = HYPERVISOR_platform_op(&op);
-+
-+	if (!ret) {
-+		pr_debug("ACPI CPU%u - CPPC uploaded.\n", _pr->acpi_id);
-+		pr_debug("     highest_perf: %d\n", cppc_perf->highest_perf);
-+		pr_debug("     lowest_perf: %d\n", cppc_perf->lowest_perf);
-+		pr_debug("     lowest_nonlinear_perf: %d\n", cppc_perf->lowest_nonlinear_perf);
-+		pr_debug("     nominal_perf: %d\n", cppc_perf->nominal_perf);
-+		pr_debug("     lowest_freq: %d Mhz\n", cppc_perf->lowest_freq);
-+		pr_debug("     nominal_freq: %d Mhz\n", cppc_perf->nominal_freq);
-+	} else if ((ret != -EINVAL) && (ret != -ENOSYS))
-+		/* EINVAL means the ACPI ID is incorrect - meaning the ACPI
-+		 * table is referencing a non-existing CPU - which can happen
-+		 * with broken ACPI tables. */
-+		pr_warn("(_CPC): Hypervisor error (%d) for ACPI CPU%u\n",
-+			ret, _pr->acpi_id);
-+
-+		return ret;
-+}
- static int push_pxx_to_hypervisor(struct acpi_processor *_pr)
- {
- 	int ret = 0;
-@@ -300,12 +343,16 @@ static int upload_pm_data(struct acpi_processor *_pr)
- 		return -EBUSY;
- 	}
- 
--	if (_pr->performance && _pr->performance->states)
-+	if ((_pr->performance && _pr->performance->states) ||
-+	    _pr->flags.has_cpc)
- 		err |= push_psd_to_hypervisor(_pr);
- 
- 	if (_pr->flags.power)
- 		err = push_cxx_to_hypervisor(_pr);
- 
-+	if (_pr->flags.has_cpc)
-+		err |= push_cppc_to_hypervisor(_pr);
-+
- 	if (_pr->performance && _pr->performance->states)
- 		err |= push_pxx_to_hypervisor(_pr);
- 
-@@ -510,6 +557,7 @@ read_acpi_id(acpi_handle handle, u32 lvl, void *context, void **rv)
- 	union acpi_object object = { 0 };
- 	struct acpi_buffer buffer = { sizeof(union acpi_object), &object };
- 	struct acpi_buffer cst_buf = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer cpc_buf = { ACPI_ALLOCATE_BUFFER, NULL };
- 	acpi_io_address pblk = 0;
- 
- 	status = acpi_get_type(handle, &acpi_type);
-@@ -589,11 +637,20 @@ read_acpi_id(acpi_handle handle, u32 lvl, void *context, void **rv)
- 	/* .. and it has a C-state */
- 	__set_bit(acpi_id, acpi_id_cst_present);
- 
-+	status = acpi_evaluate_object(handle, "_CPC", NULL, &cpc_buf);
-+	if (ACPI_FAILURE(status)) {
-+		return AE_OK;
-+	}
-+	kfree(cpc_buf.pointer);
-+
-+	/* .. and it has a _CPC entry */
-+	__set_bit(acpi_id, acpi_id_cpc_present);
-+
- 	return AE_OK;
- }
- static int check_acpi_ids(struct acpi_processor *pr_backup)
- {
--	if (acpi_id_present && acpi_id_cst_present)
-+	if (acpi_id_present && acpi_id_cst_present && acpi_id_cpc_present)
- 		/* OK, done this once .. skip to uploading */
- 		goto upload;
- 
-@@ -610,11 +667,19 @@ static int check_acpi_ids(struct acpi_processor *pr_backup)
- 		return -ENOMEM;
- 	}
- 
-+	acpi_id_cpc_present = bitmap_zalloc(nr_acpi_bits, GFP_KERNEL);
-+	if (!acpi_id_cpc_present) {
-+		bitmap_free(acpi_id_present);
-+		bitmap_free(acpi_id_cst_present);
-+		return -ENOMEM;
-+	}
-+
- 	acpi_psd = kcalloc(nr_acpi_bits, sizeof(struct acpi_psd_package),
- 			   GFP_KERNEL);
- 	if (!acpi_psd) {
- 		bitmap_free(acpi_id_present);
- 		bitmap_free(acpi_id_cst_present);
-+		bitmap_free(acpi_id_cpc_present);
- 		return -ENOMEM;
- 	}
- 
-@@ -630,6 +695,12 @@ static int check_acpi_ids(struct acpi_processor *pr_backup)
- 			pr_backup->acpi_id = i;
- 			/* Mask out C-states if there are no _CST or PBLK */
- 			pr_backup->flags.power = test_bit(i, acpi_id_cst_present);
-+			/* Mask out relevant flag if there are no _CPC */
-+			pr_backup->flags.has_cpc = test_bit(i, acpi_id_cpc_present);
-+			if (pr_backup->flags.has_cpc) {
-+				if (xen_processor_get_perf_caps(pr_backup, acpi_cppc_data + i))
-+					return -EINVAL;
-+			}
- 			/* num_entries is non-zero if we evaluated _PSD */
- 			if (acpi_psd[i].num_entries) {
- 				memcpy(&pr_backup->performance->domain_info,
-@@ -748,6 +819,15 @@ static int __init xen_acpi_processor_init(void)
- 		bitmap_free(acpi_ids_done);
- 		return -ENOMEM;
- 	}
-+
-+	acpi_cppc_data = kcalloc(nr_acpi_bits, sizeof(struct cppc_perf_caps),
-+				GFP_KERNEL);
-+	if (!acpi_cppc_data) {
-+		pr_debug("Memory allocation error for acpi_cppc_data\n");
-+		rc = -ENOMEM;
-+		goto err1_out;
-+	}
-+
- 	for_each_possible_cpu(i) {
- 		if (!zalloc_cpumask_var_node(
- 			&per_cpu_ptr(acpi_perf_data, i)->shared_cpu_map,
-@@ -773,6 +853,11 @@ static int __init xen_acpi_processor_init(void)
- 		rc = acpi_processor_get_performance_info(pr);
- 		if (rc)
- 			goto err_out;
-+
-+		pr->flags.pcc_unsupported = true;
-+		rc = xen_processor_get_perf_caps(pr, acpi_cppc_data + i);
-+		if (rc)
-+			goto err_out;
- 	}
- 
- 	rc = xen_upload_processor_pm_data();
-@@ -788,6 +873,8 @@ static int __init xen_acpi_processor_init(void)
- 
- err_out:
- 	/* Freeing a NULL pointer is OK: alloc_percpu zeroes. */
-+	kfree(acpi_cppc_data);
-+err1_out:
- 	free_acpi_perf_data();
- 	bitmap_free(acpi_ids_done);
- 	return rc;
-@@ -801,6 +888,7 @@ static void __exit xen_acpi_processor_exit(void)
- 	bitmap_free(acpi_id_present);
- 	bitmap_free(acpi_id_cst_present);
- 	kfree(acpi_psd);
-+	kfree(acpi_cppc_data);
- 	for_each_possible_cpu(i)
- 		acpi_processor_unregister_performance(i);
- 
-diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-index 1decb437c750..12c1398abc7e 100644
---- a/include/acpi/processor.h
-+++ b/include/acpi/processor.h
-@@ -214,6 +214,7 @@ struct acpi_processor_flags {
- 	u8 bm_control:1;
- 	u8 bm_check:1;
- 	u8 has_cst:1;
-+	u8 has_cpc:1;
- 	u8 pcc_unsupported:1;
- 	u8 has_lpi:1;
- 	u8 power_setup_done:1;
-diff --git a/include/xen/interface/platform.h b/include/xen/interface/platform.h
-index a35e1eb958f3..1db915d44dd7 100644
---- a/include/xen/interface/platform.h
-+++ b/include/xen/interface/platform.h
-@@ -320,6 +320,7 @@ DEFINE_GUEST_HANDLE_STRUCT(xenpf_getidletime_t);
- #define XEN_PM_TX   2
- #define XEN_PM_PDC  3
- #define XEN_PM_PSD  4
-+#define XEN_PM_CPPC 5
- /* Px sub info type */
- #define XEN_PX_PCT   1
- #define XEN_PX_PSS   2
-@@ -384,6 +385,15 @@ struct xen_processor_px {
- };
- DEFINE_GUEST_HANDLE_STRUCT(xen_processor_px);
- 
-+struct xen_processor_cppc {
-+    uint32_t highest_perf;
-+    uint32_t nominal_perf;
-+    uint32_t lowest_perf;
-+    uint32_t lowest_nonlinear_perf;
-+    uint32_t lowest_freq;
-+    uint32_t nominal_freq;
-+};
-+
- struct xen_psd_package {
- 	uint64_t num_entries;
- 	uint64_t revision;
-@@ -411,6 +421,7 @@ struct xenpf_set_processor_pminfo {
- 		struct xen_psd_package              domain_info; /* _PSD */
- 		struct xen_processor_performance    perf; /* Px: _PPC/_PCT/_PSS */
- 		GUEST_HANDLE(uint32_t)              pdc;
-+		struct xen_processor_cppc           cppc_data; /* _CPC */
- 	};
- 	uint32_t shared_type;     /* coordination type of this processor */
- };
--- 
-2.34.1
+Thanks!
+
+Best Regards,
+Even Xu
+
+> -----Original Message-----
+> From: Jiri Kosina <jikos@kernel.org>
+> Sent: Wednesday, March 5, 2025 4:44 PM
+> To: Xu, Even <even.xu@intel.com>
+> Cc: bentiss@kernel.org; srinivas.pandruvada@linux.intel.com; mpearson-
+> lenovo@squebb.ca; linux-input@vger.kernel.org; linux-kernel@vger.kernel.o=
+rg
+> Subject: RE: [PATCH RESEND v1] HID: Intel-thc-hid: Intel-quickspi: Correc=
+t device
+> state after S4
+>=20
+> On Wed, 5 Mar 2025, Xu, Even wrote:
+>=20
+> > I didn't realize v1 patch already got applied, just sent out v2 patch
+> > this morning. If so, could you just pick " [PATCH v2 1/2] HID:
+> > Intel-thc-hid: Intel-quickspi: Correct device state names gramatically"
+> > from v2 patch set for the naming fix? Those two patches have no
+> > confliction/dependence.
+>=20
+> 2/2 now in hid.git#for-6.15/intel-thc. Thanks,
+>=20
+> --
+> Jiri Kosina
+> SUSE Labs
 
