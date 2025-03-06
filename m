@@ -1,157 +1,635 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2051.outbound.protection.outlook.com [40.107.96.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903C425A2B5;
-	Thu,  6 Mar 2025 19:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741287773; cv=fail; b=Y5kU5nYoCoymCuNFLnk8elglXdGN3/oRR7Q0rAo3rDmmLCSfWbMMt80bcRKmKrRbV0SPnMZnCEdMmfxrWGv2+OIUz+df8s9QMlWqIH4Q5CScvqVJ5p5wbv8yRKY/U8xI8WSECrKiOTexaMkwcpjO9j/ceSB41csA+9tEuvN9NY4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741287773; c=relaxed/simple;
-	bh=UeuAN+Y81cL3Xripj2bIM+ygCXhd2oZPLDWgYDkRyiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VhzJSe33soE7HKkeO9+Hqyt5WP4IVPeirC01SUYah+nYY7XB6Wvre9nBaPdfm/Eeb5zU0qs2/Buy9xWZV8YDxueoJ//KWDG4tNxSh36ZRIsA+8mL0DTi1Oej23HJLJ9Wsz6MxQBq8tVxXJsvIQBTS+tl2IRlhYchR6IYQxEZ4lk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iKyloF7C; arc=fail smtp.client-ip=40.107.96.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D2825A2B5;
+	Thu,  6 Mar 2025 19:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741287785; cv=none; b=fPgAMex//r5w1xeNlxkRJBXnG5V1jP3zsH8UT7XqRm5kd4gDludRAWpTMJRKn8nz/GlvkIBAxXVg4pbLFJLazqHp3bzjbXC5Ma57CS7muqciGe87R9J5XWF/biOTo3J1cU0BbvbehQNV48XemLdoTG40eguUqZz49MmVfQ4euDc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741287785; c=relaxed/simple;
+	bh=kj5Vmw4cKQN/TQ8VqYNYKR0rJdxfE93ognsDe1M3Pfo=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=bu4sHwZIYDV6mhHdtDeQem2d6MpTdQZoPghz1e+kcALmAbk5IfEsNxvljL9H0I+XCT4IQSGXNP8fBc/8VeWm/c7pY2x0+7wO7JlMRhG36xUsyoZImJiJQ1n1lPi7tDs7c+hD289TXf01fvHvQhI/YeJ2xB3UAlLKBuRo1gufhBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=A3lXl5tt; arc=none smtp.client-ip=80.12.242.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iKyloF7C"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rCS/JdEUefzk6Gq0sYk2+WFKSMpUS8JCi7D6lCsCgONJK6P82to3VEriPp6N62E9z4ah0wGOejpRO5L4uFGxe8fqWIsNNbs/MIYikQBkt4GhW4GMtZccw28Y4yrKwF8m6fRcarprbmiHKRPOpIumjlj04unGCUhLzDkRrfTIB/8sJD2dr4eWdQmWo6WOEjoNJcE028NgjZFZxlni8SVIewuZ0gwO9wVXtzoDh2EoxivxdZmrRxDtAQjgAusf/gWdjwiAbzscK0P22Z5iNP/kxZ1MhqdCFcDIbpXR9R8sp6LknhUZpFxp9CZppmK7CxdVGe2sT/kdrN8g9f5APQIDrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fAmmjiIVxV/OJR8i98bg38egL670w50xbPxu9XDP9es=;
- b=JaDJbH1cKScRZySI11FLeFPQjmqZhv/LnCQmujZDob8dd6Ek7xBUiGtPRrr2jtPu5HRdMt+mpX5UgTcbsKr2fpkaFKkdiuFuyUTXWFRvlCd/luPSQzEJJCKm6BZurMgr/f/igE5r0T36lKd1JTbrXhX0yzH+g65ktsJMeaOWDpblDBQxBAcwWUyl4EBTcpOg0yU+JHkAzb6OxTcSJN0wf/IYAB+IQXHYqw/wHJNzI1y38gOFGgDaVxRzMxSzH5oT9YfC554o2cbspIE//JyrACacRL5CNpAcwo48yj7zIFz/8Ym48Mf+f1V2soIyEqiQDaQRhnfiwW4TW+yBgyVHnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fAmmjiIVxV/OJR8i98bg38egL670w50xbPxu9XDP9es=;
- b=iKyloF7CjFAZsIh63Y7OQ7lMDoYudSErbHr15R9EGsejwTGleJlhcb0gPbVki7AM5Hk7uGBbk9PkP1cUka20dq0IxBXU++UbLRyXBmYLYBRUV/UNAWZd9c4sY5Urrm//q+tFKGsubzVU7fwNErhtjGbuPlgC0kJ8nh8LypwoushUu312XCJsv0HTqlby6VJwTsONHv9B5WGvUtBJuLl8IG01VEix23VpNcdVT5TpXdHWWUV7DTsRBdgzo1IYQhjR34IrHnYqPmwj8f898oPUUBFqzVXDCuldLewMvsIGTY8jLT2/zbJXwVy6Z6JUbvklpFUJklwEUoawZ1xZtTVGyA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by CYXPR12MB9317.namprd12.prod.outlook.com (2603:10b6:930:e2::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 19:02:42 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 19:02:42 +0000
-Date: Thu, 6 Mar 2025 20:02:33 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHSET sched_ext/for-6.15] sched_ext: Enhance built-in idle
- selection with preferred CPUs
-Message-ID: <Z8nxSUEfREpQjRXo@gpd3>
-References: <20250306182544.128649-1-arighi@nvidia.com>
- <Z8nqpyEQmmff9E8X@slm.duckdns.org>
- <Z8nvam-WarNqdLw9@gpd3>
- <Z8nwU3C-WiWN7eia@slm.duckdns.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8nwU3C-WiWN7eia@slm.duckdns.org>
-X-ClientProxiedBy: MI1P293CA0011.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:2::20) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="A3lXl5tt"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id qGLut4db0nwqeqGLxtYKJ1; Thu, 06 Mar 2025 19:53:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1741287234;
+	bh=yHhGP/Jm26P5uwbDPOENf49unxj+shHxyBA4UaYTmg0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=A3lXl5ttdRliA8u3heg1nxTFfnbcfzmZAqrviLjz+wZT7ZQ280NqTrvStqzG9QwWC
+	 +U5EdOw7ARIB+kvkQe5IzqnqwihoI6xPmZ4yEwDYF0L5/BroNobYKagD44W6cBjJ2O
+	 fGw5PGUJSZwzGX18h6bE//RwvsqaaIOMBuVvpGAJUw3FyWcp8EcJNO6DQgljwOAWpx
+	 mM8h8PVK77wa5FqUGG5f9tALK8/2xHIIiCgfu5u4mSK/i7viwRYmdooeRPrpPmmwQX
+	 19mdRHwv8bJhHKcIXFuHzvSyE+I6Of+8t0tys9q2c+52kZmIstqp/RMgGmqjb7LIpm
+	 PJETLfqstm/Uw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Thu, 06 Mar 2025 19:53:54 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <50dab2fb-27ad-4a29-8af9-a0f07098cec2@wanadoo.fr>
+Date: Thu, 6 Mar 2025 19:53:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|CYXPR12MB9317:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f070bbb-458e-49af-3706-08dd5ce178d0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?i1Wks8DlAuMQWt1UgzJ+eeb5ROKCUDL62db/oV9SRxPk3rgO79mATeVIPalK?=
- =?us-ascii?Q?M5feYUqUxnMqdzyjNUMxKslPNG99giezIpRh611cyG3m3ce1Em2DsdhxfETB?=
- =?us-ascii?Q?0shBfvQE5ei4f7KaeeLLZqP6uk3qFBGcDNaVImrFs73A2ghgsEw5tl9ZuEd7?=
- =?us-ascii?Q?+2x/aHIv4NWV1wCO1gjcQuSQWZ22pXU2d+Ll7rXHZwh0iXwKnwalDfwQtug7?=
- =?us-ascii?Q?WZAlM528inGr2B/BsPfFob137MuQvjViiYMpIetAL5YRGeFtORbnKVY+u/WQ?=
- =?us-ascii?Q?64azRUOc+BoYk3qaG52AaITk/9y7CbuWCuT2WidmOO/ZZQrPp48XMmK6vuzj?=
- =?us-ascii?Q?jPco2yH65BxKdShNUIMlPSvH6/YDNOMuZDN9lcbf6XREpgZZWtps4rllGvi5?=
- =?us-ascii?Q?wgD/bFCmAVM8NO7guS9JCOXJDP9MqA5jr0uPfRCHbXgYHK+kv5ONj5L+T5La?=
- =?us-ascii?Q?jlva2Q4EENr0EzsC6ZXq6zWqO8VcUJmLbH9l7YYenAhskSzG61995/SfUyYE?=
- =?us-ascii?Q?SPSJvMUFqykarU0eYPUeZ351WRtd7KqvnlgI8/sjMK8uvBPNfjmTMZvNBFPL?=
- =?us-ascii?Q?6bynGFQ2SXyTuxrhCid2as97x55gLQguYY4RmCpiKxSRDx1fQuJfwFwrP2Tc?=
- =?us-ascii?Q?U50LbgDdGZ/sNI3kuSbq9lozi8UCinuZXm+TmxskvfJfeQ5c8XfuVLX2QFsH?=
- =?us-ascii?Q?dd9g7JxJn9IrXw6zxu6F0wYvOybjDL3WVyOgTa/xggmxW41ieosxtmH3I2Oo?=
- =?us-ascii?Q?PCUIfNJG7PVQ5wvBVwsLByxjT3fiAZZ2gvMHCYyV0FTcOEEIaXH+8Yctggdm?=
- =?us-ascii?Q?0nbMFKx09meVPRLeSmb2UUqeIjoOrvEC2l62Jxp0pXanb0hpa4HQGgpYkrKG?=
- =?us-ascii?Q?Vnndd6OJvVGR2w6118BY0LjYRquLJRYA6q5mBV9YnNF3zWTGrAfNOlkY/Jlg?=
- =?us-ascii?Q?1nEzmoapmdwZkjxNHBtegxRpTtBOPjfAGY9TTA1qdNJXCyVKPvQWQt3ksFzL?=
- =?us-ascii?Q?iBymBon1Ns360js9IHzVicYNkBG6Jfmr+c+qCHtDIcA9Sl0ImxlcbD7UdS2j?=
- =?us-ascii?Q?MHkY/suz9kgxfFPgoXzeMiN/EWgNuIaNiZ30ZJwR/I9jQvjyfcC0qG17sNyd?=
- =?us-ascii?Q?kFImYZ6koW1mZpPEizPeUR325BNSQFhyaWt1huRebbIzgFEOL3nb0RfcQDHR?=
- =?us-ascii?Q?Ukmq5byO1tiNYZUjUMtWaWcG+4isjHpUbDa5n/+joURlOOZktCB0dbDYvbxT?=
- =?us-ascii?Q?GEkahveH/nMuRyzyRV+rAmWZAe8arC7eU4NJBqIHtchwkXPGCDzdbArM3QCG?=
- =?us-ascii?Q?Kl/OBjKow3r1PxCUuifCOfhgUUU/bsyjev63mbbwM5AKRW0IexJ6IUkUPcev?=
- =?us-ascii?Q?6J6kQn669eZLYZxVvqsu+IntyLba?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eq6TtjPMGqeAKwxJ87emBl329b7QP7XRuBHWLzm4LVHb44mUf6qSfqVlru1G?=
- =?us-ascii?Q?bvl0GQitlV+66ANMoypb+U5HRBaPcPH1VELkAO0xbrzVm25EtXVYSBRVm1ns?=
- =?us-ascii?Q?mgoE6d/p1MmkRisOwbxFaeoz1o2E3D+kkg8Wo407S6bIWXja0XLYgQX8sB51?=
- =?us-ascii?Q?0r/2SC2DkSgsyOYU0YutGCdXId9cOQQ2gxOMOrTiiFpPtmoJU3g2lO+2heis?=
- =?us-ascii?Q?sYsOYZCeFTj02aRXkPyrvWZ9jFNagFS7ggYFwCRJsZMueggejglT4yXWIdHs?=
- =?us-ascii?Q?NjvsP9uePXEiyUIMGFXx/6TG7KzqfAauHj66VAWuxzDcjcgvQTR1B3jMUShM?=
- =?us-ascii?Q?ZTWg3t/C4mLmC2EBs/aLzTZzRmSqkAQdf4SQHkBBcN+/uq/9VZB2IXAMeFnk?=
- =?us-ascii?Q?m+6TIKGejExli0UqiB/DaJZ/q0x04W1B4PvRor2Pln5APN07qo/+AYgDooAM?=
- =?us-ascii?Q?tKUqjOgDlxoYyGYWLghB6DAo6lBiqM8U2rbqvTcBHER3qdB84wkapuWC0AeL?=
- =?us-ascii?Q?0OSlrGzrP5mmE2XSi9xnzRgl9QbTvaS5uce2TCtFRl0BTMSKc1IO3F1ugzac?=
- =?us-ascii?Q?1Epx14D7vBhxD/BrZTx4Xsobrv9CD7Up1RC5dnzst+fBaRTwn9hj9fN+Q7zP?=
- =?us-ascii?Q?U5vpV0xRPh6MUhV5jPdx/1Gg0LBSGg91aXR8NNIVUltfATz65DdskAZ3TxXs?=
- =?us-ascii?Q?WjNDxvMUmhQqKmvsI2N62kP/5Mle/e/dLtw0QXUpMSN2qycsfNe9KEY1G71a?=
- =?us-ascii?Q?+0okLwUy2wnZz2cIwqpOkgWyGXAtyTZx5zQIPIGbmBbN5tN5CkLLQXOelKbD?=
- =?us-ascii?Q?m+dhWIP2K4oF+9zkHojZj6hyds2rSZ46oehYbV3Fq+mvyAv6j4UedZK/t8Pf?=
- =?us-ascii?Q?wbfq2D/Npp/FsueqxZmXmf4hVrMEdf5N/0K0SLRuUfBa0A5pc1oITbTyOatx?=
- =?us-ascii?Q?gf/opQmka2RmBboFNpLvDxLZ5jO00ozX5ZlYRO/HfKKZ5BC9m4Phos0jhKzu?=
- =?us-ascii?Q?OK8xMePR+BBR+nLMq3FsPtH4LJ0/LcWRkxFRsSHK+xjM4h+g9wJlqlR2rfNr?=
- =?us-ascii?Q?uNctL2V81anGq956fPNB3+egmaafrKTtbDCQB0M2Eu7nj/5EQDpJIFHckdkS?=
- =?us-ascii?Q?KXBeEmxfqMMwBN+gdWXXxBz79sw0p4wPjc5aEc6+FJY2Th6BSQhinFQzoInF?=
- =?us-ascii?Q?Se40Rb7g0SssTVF6dmKY+pxcxTtERT/CWrMLIydRIFklYQHLIW2a9RJEsCOj?=
- =?us-ascii?Q?RUZO4bVMOBNysHJl8n4EEGa4coB53w+VdOaMn7GP8Qz66YspRXBfX+opZuLF?=
- =?us-ascii?Q?vrH4lRaAZwQ/gjzsqGXldi0eUmZn/YAgMT3wcNA/Dz5L0c5gFbdsi663NCQe?=
- =?us-ascii?Q?oioUHlXcW7G6smgijP8T0bFgQWV6GhmIeOlUgmPVMccObmUSMXrQzfFmUdjc?=
- =?us-ascii?Q?K06LzaTxWLI1WV2znek7oGoWR7w+281cBXVmREf2izOwdkAk8C1ZcBi/JwNx?=
- =?us-ascii?Q?2e4UFDZW8JHaaArJwWu7ijNHNKhiWQdsLk5339z1B9OKGPOC4a1lOMpUbAfL?=
- =?us-ascii?Q?/eLcaj2H9Ne3de6gF2E8RO7JU05/ZwRGFLuETSEO?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f070bbb-458e-49af-3706-08dd5ce178d0
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 19:02:42.1869
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mCy6qaEJxCfFav9MwLa+fs+G0aBe0uaC5rRWA7zviXUtM8B6DobdXUgtCoEpfaafx+MOcDGmPUlQHsdBbGUp7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9317
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] leds: add new LED driver for TI LP5812
+References: <20250306172126.24667-1-trannamatk@gmail.com>
+ <20250306172126.24667-4-trannamatk@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: trannamatk@gmail.com
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
+ lee@kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+ pavel@kernel.org, robh@kernel.org
+In-Reply-To: <20250306172126.24667-4-trannamatk@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 06, 2025 at 08:58:27AM -1000, Tejun Heo wrote:
-> On Thu, Mar 06, 2025 at 07:54:34PM +0100, Andrea Righi wrote:
-> > Just to make sure I understand, you mean provide two separate kfuncs:
-> > scx_bpf_select_cpu_and() and scx_bpf_select_cpu_pref(), instead of
-> > introducing the flag?
+Le 06/03/2025 à 18:21, Nam Tran a écrit :
+> The chip can drive LED matrix 4x3.
+> This driver enables LED control via I2C.
 > 
-> Oh I meant just having scx_bpf_select_cpu_and(). The caller can just call it
-> twice for _pref() behavior, right?
+> The driver is implemented in two parts:
+> - Core driver logic in leds-lp5812.c
+> - Common support functions in leds-lp5812-common.c
+> 
+> Signed-off-by: Nam Tran <trannamatk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
 
-Oh I see, you call it for the pref CPUs first and then for all the CPUs to
-get the same behavior (similar to what we do with the SMT idle cores).
-Yeah, that can work. Good idea!
+A few comments/nitpicks.
 
-Thanks,
--Andrea
+Some of them can be applied in several places, I've not spotted all of 
+them, but you get the idea.
+
+Hoping, this will help to clean the code and help other reviewers.
+
+> +
+> +static ssize_t led_mode_store(struct kobject *kobj,
+> +		struct kobj_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int val, ret;
+> +	struct lp5812_led *led = to_lp5812_led(kobj);
+> +	struct lp5812_chip *chip = led->priv;
+> +
+> +	if (sysfs_streq(buf, "manual")) {
+> +		/* Remove AEU sysfs interface for current led in manual mode */
+> +		aeu_remove_multi_sysfs_groups(led);
+> +		val = 0;
+
+Maybe use AUTONOMOUS or MANUAL directly.
+
+> +	} else if (sysfs_streq(buf, "autonomous")) {
+> +		val = 1;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = lp5812_set_led_mode(chip, led->led_number,
+> +			val ? AUTONOMOUS : MANUAL);
+> +	if (ret) {
+> +		ret = -EIO;
+> +		goto out;
+> +	}
+> +
+> +	ret = aeu_create_multi_sysfs_groups(led);
+> +	if (ret) {
+> +		dev_err(chip->dev, "aeu_create_multi_sysfs_groups() failed\n");
+> +		goto out;
+> +	}
+> +
+> +	mutex_unlock(&chip->lock);
+> +	return count;
+> +out:
+> +	mutex_unlock(&chip->lock);
+> +	return ret;
+> +}
+
+...
+
+> +static ssize_t led_manual_pwm_store(struct kobject *kobj,
+> +		struct kobj_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int manual_pwm;
+> +	int ret;
+> +	struct lp5812_led *led = to_lp5812_led(kobj);
+> +	struct lp5812_chip *chip = led->priv;
+> +
+> +	ret = kstrtoint(buf, 0, &manual_pwm);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (manual_pwm < 0 || manual_pwm > 255)
+> +		return -EINVAL; /* Invalid argument */
+
+Useless comment (here and in several other places)
+
+> +
+> +	/* set to hardware */
+> +	mutex_lock(&chip->lock);
+> +	if (lp5812_manual_dc_pwm_control(chip, led->led_number,
+> +		manual_pwm, PWM)) {
+> +		mutex_unlock(&chip->lock);
+> +		return -EIO;
+> +	}
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return count;
+> +}
+
+...
+
+> +static ssize_t led_auto_dc_store(struct kobject *kobj,
+> +		struct kobj_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int auto_dc;
+> +	int ret;
+> +	struct lp5812_led *led = to_lp5812_led(kobj);
+> +	struct lp5812_chip *chip = led->priv;
+> +
+> +	ret = kstrtoint(buf, 0, &auto_dc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (auto_dc < 0 || auto_dc > 255)
+> +		return -EINVAL; /* Invalid argument */
+
+Useless comment
+
+> +
+> +	/* set to hardware */
+> +	mutex_lock(&chip->lock);
+> +	if (lp5812_autonomous_dc_pwm_control(chip, led->led_number,
+> +			auto_dc, ANALOG)) {
+> +		mutex_unlock(&chip->lock);
+> +		return -EIO;
+> +	}
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return count;
+> +}
+
+...
+
+> +static int parse_autonomous_animation_config(struct lp5812_led *led,
+> +		const char *user_buf)
+> +{
+> +	int ret;
+> +	int i;
+> +	char *str;
+> +	char *sub_str;
+> +	int aeu_select, start_pause_time, stop_pause_time, led_playback_time;
+> +
+> +	str = kmalloc(strlen(user_buf) + 1, GFP_KERNEL);
+
+kstrdup()?
+
+> +	if (!str)
+> +		return -ENOMEM;
+> +	strscpy(str, user_buf, strlen(user_buf) + 1);
+> +
+> +	/* parse aeu_select */
+> +	sub_str = strsep(&str, ":");
+> +	ret = kstrtoint(sub_str, 0, &aeu_select);
+> +	if (ret)
+> +		return ret;
+> +	if (aeu_select < 1 || aeu_select > 3)
+> +		return -EINVAL;
+> +
+> +	aeu_remove_multi_sysfs_groups(led);
+> +
+> +	for (i = 0; i < aeu_select; i++)
+> +		aeu_create_sysfs_group(&led->aeu[i]);
+> +	led->led_playback.s_led_playback.aeu_selection = aeu_select - 1;
+> +
+> +	/* parse start_pause_time */
+> +	sub_str = strsep(&str, ":");
+> +	if (sub_str) {
+> +		ret = kstrtoint(sub_str, 0, &start_pause_time);
+> +		if (ret)
+> +			return ret;
+> +		if (start_pause_time < 0 || start_pause_time > 15)
+> +			return -EINVAL;
+> +		led->start_stop_pause_time.s_time.second = start_pause_time;
+> +	} else {
+> +		led->start_stop_pause_time.s_time.second = 15;
+> +	}
+> +
+> +	/* parse stop_pause_time */
+> +	sub_str = strsep(&str, ":");
+> +	if (sub_str) {
+> +		ret = kstrtoint(sub_str, 0, &stop_pause_time);
+> +		if (ret)
+> +			return ret;
+> +		if (stop_pause_time < 0 || stop_pause_time > 15)
+> +			return -EINVAL;
+> +		led->start_stop_pause_time.s_time.first = stop_pause_time;
+> +	} else {
+> +		led->start_stop_pause_time.s_time.first = 15;
+> +	}
+> +
+> +	/* parse led_playback_time */
+> +	sub_str = strsep(&str, ":");
+> +	if (sub_str) {
+> +		ret = kstrtoint(sub_str, 0, &led_playback_time);
+> +		if (ret)
+> +			return ret;
+> +		if (led_playback_time < 0 || led_playback_time > 15)
+> +			return -EINVAL;
+> +		led->led_playback.s_led_playback.led_playback_time =
+> +			led_playback_time;
+> +	} else {
+> +		led->led_playback.s_led_playback.led_playback_time = 15;
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static ssize_t led_auto_animation_show(struct kobject *kobj,
+> +		struct kobj_attribute *attr, char *buf)
+> +{
+> +	int ret;
+> +	char tmp_str[256] = {};
+> +	char usage[128] = {};
+> +	char *aeu_select = "AEU Select: ";
+> +	char *start_pause_time = "Start pause time: ";
+> +	char *stop_pause_time = "; Stop pause time: ";
+> +	char *led_playback_time = "; LED Playback time: ";
+> +	int aeu_selection, playback_time, start_pause, stop_pause;
+> +	struct lp5812_led *led = to_lp5812_led(kobj);
+> +	struct lp5812_chip *chip = led->priv;
+> +
+> +	sprintf(usage, "%s%s",
+> +	"Command usage: echo (aeu number):(start pause time):",
+> +	"(stop pause time):(playback time) > autonomous_animation");
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = led_get_autonomous_animation_config(led);
+> +	if (ret) {
+> +		ret = -EIO;
+> +		goto out;
+> +	}
+> +
+> +	/* parse config and feedback to userspace */
+> +	aeu_selection = led->led_playback.s_led_playback.aeu_selection;
+> +	playback_time = led->led_playback.s_led_playback.led_playback_time;
+> +	start_pause = led->start_stop_pause_time.s_time.second;
+> +	stop_pause = led->start_stop_pause_time.s_time.first;
+> +	if (aeu_selection == ONLY_AEU1) {
+> +		sprintf(tmp_str, "%s%s%s%s%s%s%s%s\n", aeu_select,
+
+Maybe add a least 1 tab for all this parameters, to improve readability?
+
+> +		"Only use AEU1; ", start_pause_time,
+> +		time_name_array[start_pause], stop_pause_time,
+> +		time_name_array[stop_pause], led_playback_time,
+> +		led_playback_time_arr[playback_time]);
+> +	} else if (aeu_selection == AEU1_AEU2) {
+> +		sprintf(tmp_str, "%s%s%s%s%s%s%s%s\n", aeu_select,
+> +		"Use AEU1 and AEU2; ", start_pause_time,
+> +		time_name_array[start_pause], stop_pause_time,
+> +		time_name_array[stop_pause], led_playback_time,
+> +		led_playback_time_arr[playback_time]);
+> +	} else {
+> +		sprintf(tmp_str, "%s%s%s%s%s%s%s%s\n", aeu_select,
+> +		"Use AEU1,AEU2 and AEU3; ", start_pause_time,
+> +		time_name_array[start_pause], stop_pause_time,
+> +		time_name_array[stop_pause], led_playback_time,
+> +		led_playback_time_arr[playback_time]);
+> +	}
+> +	strcat(tmp_str, usage);
+> +	mutex_unlock(&chip->lock);
+> +	return sprintf(buf, "%s\n", tmp_str);
+> +
+> +out:
+> +	mutex_unlock(&chip->lock);
+> +	return ret;
+> +}
+
+...
+
+> +static ssize_t led_pwm_dimming_scale_store(struct kobject *kobj,
+> +		struct kobj_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int val, ret;
+> +	struct lp5812_led *led = to_lp5812_led(kobj);
+> +	struct lp5812_chip *chip = led->priv;
+> +
+> +	if (sysfs_streq(buf, "linear"))
+> +		val = 0;
+
+Maybe use directly LINEAR or EXPONENTIAL to simplify the code?
+
+> +	else if (sysfs_streq(buf, "exponential"))
+> +		val = 1;
+> +	else
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = lp5812_set_pwm_dimming_scale(chip, led->led_number,
+> +			val ? EXPONENTIAL : LINEAR);
+> +	mutex_unlock(&chip->lock);
+> +	if (ret)
+> +		return -EIO;
+> +
+> +	return count;
+> +}
+
+...
+
+> +static struct attribute *led_kobj_attributes[] = {
+> +	&kobj_attr_enable.attr,
+> +	&kobj_attr_mode.attr,
+> +	&kobj_attr_manual_dc.attr,
+> +	&kobj_attr_manual_pwm.attr,
+> +	&kobj_attr_autonomous_dc.attr,
+> +	&kobj_attr_autonomous_animation.attr,
+> +	&kobj_attr_lod_lsd.attr,
+> +	&kobj_attr_auto_pwm_val.attr,
+> +	&kobj_attr_aep_status.attr,
+> +	&kobj_attr_pwm_phase_align.attr,
+> +	&kobj_attr_pwm_dimming_scale.attr,
+> +	NULL,
+
+Nitpick: unneeded comma after a terminator
+
+> +};
+
+...
+
+> +static ssize_t aeu_pwm4_store(struct kobject *kobj,
+> +		struct kobj_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int val = 0;
+> +	int ret = 0;
+> +	struct anim_engine_unit *aeu = to_anim_engine_unit(kobj);
+> +	struct lp5812_chip *chip = aeu->led->priv;
+> +
+> +	ret = kstrtoint(buf, 0, &val);
+> +	if (ret)
+> +		return -EINVAL;
+> +	if (val < 0 || val > 255)
+> +		return -EINVAL; /* Invalid argument */
+
+This comment is not really useful.
+
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = led_aeu_pwm_set_val(aeu, val, PWM4);
+> +	if (ret != 0) {
+> +		mutex_unlock(&chip->lock);
+> +		return -EIO;
+> +	}
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t aeu_pwm4_show(struct kobject *kobj,
+> +		struct kobj_attribute *attr, char *buf)
+> +{
+> +	int ret = 0;
+> +	u8 val = 0;
+> +	struct anim_engine_unit *aeu = to_anim_engine_unit(kobj);
+> +	struct lp5812_chip *chip = aeu->led->priv;
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = led_aeu_pwm_get_val(aeu, &val, PWM4);
+> +	mutex_unlock(&chip->lock);
+> +	if (ret)
+> +		return -EIO;
+> +
+> +	return sprintf(buf, "%d\n", val);
+> +
+
+Maybe the core of aeu_pwm|14]_store() and aeu_pwm[14]_show() could be 
+implemented only once, with an additional parameter for PWx?
+
+}
+
+...
+
+> +static ssize_t aeu_playback_time_show(struct kobject *kobj,
+> +		struct kobj_attribute *attr, char *buf)
+> +{
+> +	int ret = 0;
+> +	u8 val = 0;
+> +	struct anim_engine_unit *aeu = to_anim_engine_unit(kobj);
+> +	struct lp5812_chip *chip = aeu->led->priv;
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = led_aeu_playback_time_get_val(aeu, &val);
+> +	if (ret != 0) {
+> +		mutex_unlock(&chip->lock);
+> +		return -EIO;
+> +	}
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return sprintf(buf, "%d\n", val);
+
+sysfs_emit? (here and in mayne places)
+
+> +}
+> +
+> +static LP5812_KOBJ_ATTR_RW(pwm1, aeu_pwm1_show, aeu_pwm1_store);
+> +static LP5812_KOBJ_ATTR_RW(pwm2, aeu_pwm2_show, aeu_pwm2_store);
+> +static LP5812_KOBJ_ATTR_RW(pwm3, aeu_pwm3_show, aeu_pwm3_store);
+> +static LP5812_KOBJ_ATTR_RW(pwm4, aeu_pwm4_show, aeu_pwm4_store);
+> +static LP5812_KOBJ_ATTR_RW(pwm5, aeu_pwm5_show, aeu_pwm5_store);
+> +static LP5812_KOBJ_ATTR_RW(slope_time_t1, aeu_slope_time_t1_show,
+> +		aeu_slope_time_t1_store);
+> +static LP5812_KOBJ_ATTR_RW(slope_time_t2, aeu_slope_time_t2_show,
+> +		aeu_slope_time_t2_store);
+> +static LP5812_KOBJ_ATTR_RW(slope_time_t3, aeu_slope_time_t3_show,
+> +		aeu_slope_time_t3_store);
+> +static LP5812_KOBJ_ATTR_RW(slope_time_t4, aeu_slope_time_t4_show,
+> +		aeu_slope_time_t4_store);
+> +static LP5812_KOBJ_ATTR_RW(playback_time, aeu_playback_time_show,
+> +		aeu_playback_time_store);
+> +
+> +static struct attribute *aeu_kobj_attributes[] = {
+> +	&kobj_attr_pwm1.attr,
+> +	&kobj_attr_pwm2.attr,
+> +	&kobj_attr_pwm3.attr,
+> +	&kobj_attr_pwm4.attr,
+> +	&kobj_attr_pwm5.attr,
+> +	&kobj_attr_slope_time_t1.attr,
+> +	&kobj_attr_slope_time_t2.attr,
+> +	&kobj_attr_slope_time_t3.attr,
+> +	&kobj_attr_slope_time_t4.attr,
+> +	&kobj_attr_playback_time.attr,
+> +	NULL,
+
+Nitpick: unneeded comma after a terminator
+
+> +};
+> +
+> +static void aeu_init_properties(struct lp5812_led *led)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < MAX_AEU; i++) {
+> +		led->aeu[i].aeu_name = aeu_name_array[i];
+> +		led->aeu[i].aeu_number = i + 1;
+> +		led->aeu[i].led = led;
+> +		led->aeu[i].enabled = 0;
+> +		led->aeu[i].attr_group.attrs = aeu_kobj_attributes;
+> +		kobject_init(&led->aeu[i].kobj, &aeu_ktype);
+> +	}
+> +}
+> +
+> +static int lp5812_probe(struct i2c_client *client)
+> +{
+> +	struct lp5812_chip *chip;
+> +	int i;
+> +	int ret;
+> +	u8 val;
+> +
+> +	chip = devm_kzalloc(&client->dev, sizeof(struct lp5812_chip),
+> +			GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+> +	mutex_init(&chip->lock);
+> +	chip->i2c_cl = client;
+> +	chip->dev = &client->dev;
+> +	chip->regs = &regs;
+> +	chip->command = NONE;
+> +	chip->total_leds = MAX_LEDS;
+> +	chip->attr_group.name = "lp5812_chip_setup";
+> +	chip->attr_group.attrs = lp5812_chip_attributes;
+> +	chip->chip_leds_map = chip_leds_map;
+> +	chip->u_drive_mode.drive_mode_val = 0x10;
+> +	chip->u_scan_order.scan_order_val = 0x00;
+> +
+> +	/* initialize property for each led */
+> +	for (i = 0; i < MAX_LEDS; i++) {
+> +		chip->leds[i].led_name = led_name_array[i];
+> +		chip->leds[i].led_number = i;
+> +		chip->leds[i].anim_base_addr = anim_base_addr_array[i];
+> +		chip->leds[i].enable = 0; /* LED disable as default */
+> +		chip->leds[i].mode = MANUAL; /* manual mode as default */
+> +		chip->leds[i].priv = chip;
+> +		chip->leds[i].total_aeu = MAX_AEU;
+> +		chip->leds[i].led_playback.led_playback_val = 0;
+> +		chip->leds[i].start_stop_pause_time.time_val = 0;
+> +		/* sysfs for this led not be created */
+> +		chip->leds[i].is_sysfs_created = 0;
+> +		chip->leds[i].attr_group.attrs = led_kobj_attributes;
+> +		kobject_init(&chip->leds[i].kobj, &led_ktype);
+> +
+> +		/* init animation engine unit properties */
+> +		aeu_init_properties(&chip->leds[i]);
+> +
+> +		/* set autonomous animation config as default for all LEDs */
+> +		led_set_autonomous_animation_config(&chip->leds[i]);
+> +	}
+> +
+> +	i2c_set_clientdata(client, chip);
+> +
+> +	ret = sysfs_create_group(&chip->dev->kobj, &chip->attr_group);
+> +	if (ret) {
+> +		dev_err(chip->dev, "sysfs_create_group failed\n");
+
+Maybe return dev_err_probe?
+
+> +		return ret;
+> +	}
+> +
+> +	ret = lp5812_init_dev_config(chip, "tcmscan:4:0:1:2:3", 0);
+> +	if (ret) {
+> +		dev_err(chip->dev, "%s: lp5812_init_dev_config failed\n",
+> +			__func__);
+
+Maybe return dev_err_probe?
+
+> +		return ret;
+> +	}
+> +	/* initialize lp5812 chip */
+
+Nitpick: this comment is not really useful, IMHO, the line just after 
+should be enough
+
+> +	ret = lp5812_initialize(chip);
+
+Missing error handling?
+
+> +
+> +	/* code to verify i2c read/write ok or not */
+> +	lp5812_read(chip, (u16)DEV_CONFIG2, &val);
+> +
+> +	lp5812_write(chip, (u16)LED_A1_AUTO_BASE_ADRR, 0x14);
+> +	lp5812_read(chip, (u16)LED_A1_AUTO_BASE_ADRR, &val);
+> +	/* End code to verify i2c read/write*/
+> +
+> +	return 0;
+> +}
+> +
+> +static void lp5812_remove(struct i2c_client *client)
+> +{
+> +	struct lp5812_chip *chip = i2c_get_clientdata(client);
+> +
+> +	mutex_destroy(&chip->lock);
+> +	leds_remove_existed_sysfs(chip);
+> +	sysfs_remove_group(&chip->dev->kobj, &chip->attr_group);
+> +
+> +	/* Disable all Leds */
+
+Nitpick: this comment is not really useful, IMHI, the line just after 
+should be enough
+
+> +	lp5812_disable_all_leds(chip);
+> +
+> +	/* Disable lp5812 device */
+> +	lp5812_enable_disable(chip, 0);
+> +}
+> +
+> +static const struct i2c_device_id lp5812_id[] = {
+> +	{ "lp5812", 0 },
+
+Nitpick: unneeded explicit 0
+
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, lp5812_id);
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_lp5812_match[] = {
+> +	{ .compatible = "ti,lp5812", },
+> +	{/* NULL */},
+
+Nitpick: unneeded comma after a terminator
+
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_lp5812_match);
+> +#endif
+> +
+> +static struct i2c_driver lp5812_driver = {
+> +	.driver = {
+> +		.name   = "lp5812",
+> +		.of_match_table = of_match_ptr(of_lp5812_match),
+> +	},
+> +	.probe          = lp5812_probe,
+> +	.remove         = lp5812_remove,
+> +	.id_table       = lp5812_id,
+> +};
+> +
+> +module_i2c_driver(lp5812_driver);
+> +
+> +MODULE_DESCRIPTION("Texas Instruments LP5812 LED Driver");
+> +MODULE_AUTHOR("Jared Zhou");
+> +MODULE_LICENSE("GPL");
+
