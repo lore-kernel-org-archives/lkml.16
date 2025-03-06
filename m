@@ -1,217 +1,151 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A56213E73;
-	Thu,  6 Mar 2025 16:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7037213E64
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741278511; cv=none; b=XevklzkJIKA1f/rEN95kHrjDSV4wgA2h2Bv62h+DOmODKxdSayDe4uZ6g4IVVQWOIPcMw4dtIdFlGNDm+9rHo06q5g+Vvl/tjEAxl/+mmiJ8lyJsTxUtGHq42+qo11RoDObHKWcjAMddP6M0aZz2c5Qak8/MBuJ/efirhOVQiXk=
+	t=1741278512; cv=none; b=Yqtfsm6J6vTTp6Ydf1R7RrhzynSwd8Aj2UZRwscQts+S7HblufVYw9mJDSnatH3BHK1VLE7SigBBmaxJlEPWESvYTg784PEQ3E9rrxXT5tN4kjYCq0ZVVnVLD6hRfZ0d5nLhG1tPt0eIvSphf4xO7r8SkL8kVndWSb1wIRiCEXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741278511; c=relaxed/simple;
-	bh=AY7VWX2z+11go+VbveW5z1yOms0/k4EYUoJbq8u7HBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mAIV/mFeMgUe/5YPHSV/U79PtfUnv7+RNQIFy9g1VM3BWc5L1Z7GY74MWaAqLyRkfHGqb1k4x+izmzqWf0CEic5w1cqeEu8hNFSpFVDkGuN0Rgplt1Uh3wpuTfZde6HdKxWvfD79MyTFCJBEayNYp1Dq4svRWOCS97WaGjOZ/Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmapgEQa; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741278512; c=relaxed/simple;
+	bh=u401eKdfAsjVPwVjKoY3JEKzFhztqUsvAALPu64QJMg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L0o6C6WKbUFZDds/ucekIasDlhf5ifUimcfEaA1kFPvKjFHk3R7F4hHVB87m/FaA+FISG5OMPBeP3qqRsxXhehKxjYzMo7lrYHQUSj/q18WA5ywQtAcXK1z/B6X/9fg0x+g4frYm3g6k9GkFHuC2i4C8DTnICPC/eSk0S03z2sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=frVSO7Is; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmapgEQa"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f44353649aso1509220a91.0;
-        Thu, 06 Mar 2025 08:28:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="frVSO7Is"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e53ef7462b6so722675276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 08:28:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741278509; x=1741883309; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1741278510; x=1741883310; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rykqQnwPkGRFwR5KILLeuUxXhWjh1d/Lo2VO4W9LQtQ=;
-        b=cmapgEQaF5qEcEIHLXtKtyL33ei1GuzNMtrzbzqVTNVQ8DslmbKfyhPwr7utMSnEIp
-         PueOlZ+45wYhMqqUjG6ZDT5s9o8IT7I83ToLTi8TYeCYGqOw3VijaEHbFMoJ8uSuUbly
-         t+60PpYM1Jbf4ZltRa402jCb/8JrHvZD6qiMdlv5ne6Z+goSW6V33iDMBkWGF4zSm3H3
-         q8dAuV6eMo4d47OsOKsJ+1I5y2hTSBbQtPzwQSsN1wW3SM0SpzdTp8NSWU3ITpS/aODv
-         +m0DXHsjXHXqCyyk8gMu7urbDMC9u3PIQOP+6m0+9Kcg3PgZszH6VgfeOthKeNdGorF7
-         I32A==
+        bh=u401eKdfAsjVPwVjKoY3JEKzFhztqUsvAALPu64QJMg=;
+        b=frVSO7Is2kIgv0IpZWTcuJdCaQZhIuNbjxUbr99EzHVPo9DRpFF2D5G/WXwmn7iAM6
+         ByPqtqLnT1mpMWyRiQR9ym8m0R/PeFk2vSewnGPlexd45F/Iysu+AnG3ns1rvADYwiWl
+         QPi+COYny0WZeiV63XXoFa7q2oca0IqgrfAptl9ciV4l30/dYgjKwuTTBbgRNm5ty/HL
+         lmhZwlOnAKoerCmG0NPzeu5UhYkKtNjWWgOtPr6hBimwdxFgZHfHSUdjz9Lnem1JROob
+         AvDCRABtMTESWcDf3zntQfkvTTTVXBWJZBGbSOot2zg9uOWaa/6u7nJIDcBrVuv8+OmY
+         Z46Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741278509; x=1741883309;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741278510; x=1741883310;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rykqQnwPkGRFwR5KILLeuUxXhWjh1d/Lo2VO4W9LQtQ=;
-        b=nZbt9AiyQqEHVPfTLus+7/o5VJkEqJWkX65bd6dj5fz2/WMXz4Pxef94se7D0Zl0HZ
-         gZDnPTwG3fj4VsXqcAl/Hcl+3VuqLFVcIprTdkJrBuO+Y9gNDkF3SFFRL7g2XORALaEA
-         NK7+Gy0Nsf2kngC51q4rrhWnnahkTH5nCC0XtEwZpSnZwviZo4fdsIAeZSTKpx2lc0+E
-         o9dBQUhdwVJkygHqaHwDNADCbRnnvBZunwCijU2AJCpX7eipP5bP7fUwjVFRzHmVlOsO
-         526+f69gJTRyMFEth9Pxqb7eF5DhT/YooG2sf8ZGft1jyzXLkllDAxizPbGO6Ogpkhn1
-         ZndA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1C8EPX2zJv7P1c/oi3JvLFlpzhsFhdiGWqcF9YLCWkr332wlBzaVOzxwWRpzw21v/+DF0UCszu2CuCtk8@vger.kernel.org, AJvYcCUgrY9Qz/4whB5ovMZ3lCMgW0FK84sE5IfT6RXClIYRZ2FLTKyRMZj+W9AoBvh5a3DFUggtvGEvNSuRG7WtZg8=@vger.kernel.org, AJvYcCUjD4Y/Ll39DM0hyIsfcZ9PCSmXEthECGjVz8/jMwAA4LsXPpq6KA88uR3I2XViCQxS5zifThU1X4s1/kRO@vger.kernel.org, AJvYcCV0xdZPoVuu+yj2y+JWFI0i/EeK1tZbOmq5Aqp4gjt/kLGBGNZ7OHIxlw7hF9q52X3bpyCkCLpntcrhBiw=@vger.kernel.org, AJvYcCWq0EoLrPfrEbK+MA17m2YQa5YXcvzMm7vgH/W4IQvVBQEB2Ex+BNXRjpFLMG4tDkA7UjmeGtgq@vger.kernel.org, AJvYcCXAed1tyaSouJH1saj0As+rVnSaKezOwJu1oYxlely5/GiH6TOmORJ+qdkt5DezDXrdxuk=@vger.kernel.org, AJvYcCXN+V2c42usC/gtq4YyNsYYeW4ZOAypPRhgUfsnKm9d7HMzdyHt/rSPA+Ul4cvN5poq+ff1Mm6EbJw0NDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydLB73tnZPr3ZmLHdZUywvzPwsbHejXGhZsvARu+uVvchA/yA5
-	RDbCaip7ai43mKnBJTlXs/79isJYNYOIU39FRYL6sapkepx2cdvG
-X-Gm-Gg: ASbGnctxCH0Qu6Smhyxjz6aDyUQRfasSOuVs3R50lvkOWmaXnXQG0fzOmmvUvGPHDIf
-	EaW4znBXEEXOpxoXm5HRca+H7z36TQ9ImZ7klTL86IkbUJZoiF3Xr/wva5UuzmWCq9WJm1OMgwn
-	Ium/s7SLaj/K1la5d/dhbU3oNYnAzfa0SDblyaZieYzLbaaFnztDYSvmK7k1lTrNbgJ1zla3XQ6
-	f3UNxB7FIJfDQmHjjXy1jWAmpliAT0+3R7ReQvHo0kbFZr+nrQc4RZ4MBsNQdgr6hTJT2QOC/5c
-	o0I62T5fj6LjhcNPdTCzsZjnfl6Z/xxpmq5xILM0ljAwmA0m+eqxBu3hVhzOZT7b9Y4HQyDldbY
-	=
-X-Google-Smtp-Source: AGHT+IE7CMC10LMwovhBW4tB6jZafU5napSqaqhkL82rznmGKafZamE59+csgSshd0lW2KvQujLljw==
-X-Received: by 2002:a17:90b:568b:b0:2f9:c139:b61f with SMTP id 98e67ed59e1d1-2ff49728389mr14240353a91.14.1741278507670;
-        Thu, 06 Mar 2025 08:28:27 -0800 (PST)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff693e75bfsm1464298a91.33.2025.03.06.08.28.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 08:28:27 -0800 (PST)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	jk@ozlabs.org,
-	joel@jms.id.au,
-	eajames@linux.ibm.com,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dmitry.torokhov@gmail.com,
-	mchehab@kernel.org,
-	awalls@md.metrocast.net,
-	hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	louis.peens@corigine.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com,
-	arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	yury.norov@gmail.com,
-	akpm@linux-foundation.org
-Cc: hpa@zytor.com,
-	alistair@popple.id.au,
-	linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v3 15/16] Input: joystick - Replace open-coded parity calculation with parity64()
-Date: Fri,  7 Mar 2025 00:25:40 +0800
-Message-Id: <20250306162541.2633025-16-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250306162541.2633025-1-visitorckw@gmail.com>
-References: <20250306162541.2633025-1-visitorckw@gmail.com>
+        bh=u401eKdfAsjVPwVjKoY3JEKzFhztqUsvAALPu64QJMg=;
+        b=J0xfkWcP7CoumosVqUh+oVQ2FnVmp+aYSupNiVHb3Zlhn0zTYtmrNP8fo9T4cWERrG
+         ux8/i1JtsQQ6j09TnqB23KJbGhYubMaAo4G0Jhndlk3XuX6TTAlq4c9dDxsqzBGxy7rl
+         aUNczj889pqhnqiZhsCtKWOSGMn9NVDgU/pH3Q0BHCjGVwWjHYRm45P2lcFrywwM1zpw
+         D8eaDFhstDNeV8SQG09xzO5vcgqSjqQhdxBBLFigWD6+/TF1HQ+F9cZ7uUmjNlmPKA9v
+         BF2bBXXhKsRQsChBrv9YDx2NFPCsHAHzib7x0LGhSl3CmBLuoShW1cTko+oECmpRfM0L
+         4a4A==
+X-Forwarded-Encrypted: i=1; AJvYcCX9i1FyLpOqwpV+PeEONVrgHzUAU9Sc3ygOJjwphvo/m/PQYY9uI4LCya2k4IxgwHo19B7D8HLH3V3w0Sw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymjMNmcPxUXl3meZGJqSHDb9R3RA9Nuco98kgJ2ypsFQu7ImnH
+	c0ZLzyS+gkgw+9JYORvS+UoF6FBdx/3X9RjXOFru4OwtfDIH7x3C7DR3VwtPevrMmJpLHurMt2d
+	EexZKKCRoihhQLJsFoJdov7qXc0V1qX9Cz2zaZQ==
+X-Gm-Gg: ASbGncusrGgW2EO3yXbrY9VPHaT4ePrmMZbuVfSfxjjmRWqH0N6Sz0Qq0az65FyRYIg
+	miTFvI+dfX/bDuwXDVVpCQmK2/9UGwEx0PCzLfz652zvMFLZ0wMdRgJHJDQW3pqdyr+iA2pbHR1
+	tqV1oUVsnxlYJUXq8MHoAbL7io4IN6OdxkBu/9SgyeEzD+Ad5zddZzUIQ6
+X-Google-Smtp-Source: AGHT+IFWX8cMwz1Cinq5ViWvbdeKGSudz4sYjepsj7zpuVhC2/gnGasZpctcONcxuPwKJpNSiunXCog2EiU/l1jDLV4=
+X-Received: by 2002:a05:6902:72e:b0:e61:1b41:1765 with SMTP id
+ 3f1490d57ef6-e611e1af5e5mr11126896276.17.1741278509724; Thu, 06 Mar 2025
+ 08:28:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250305-mipi-synaptic-1-v1-1-92017cd19ef6@redhat.com>
+ <20250306-clever-lime-tanuki-e2fc43@houat> <CAN9Xe3SDyC47HWww1eH63aZOiM-WF9BGxztM3yh9bf6ORuY7VA@mail.gmail.com>
+In-Reply-To: <CAN9Xe3SDyC47HWww1eH63aZOiM-WF9BGxztM3yh9bf6ORuY7VA@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 6 Mar 2025 17:28:17 +0100
+X-Gm-Features: AQ5f1JrGCXtLbfdfJxbvkwabPWzjGFyxIosg6el8QHcriEDkbtpQ9dR5dwW-KkA
+Message-ID: <CAA8EJpqBy22eWZjccT5_UM2PQGjiG4ZEfrb6S_1tP1w962rd8w@mail.gmail.com>
+Subject: Re: [PATCH] drm/panel/synaptics-r63353: Use _multi variants
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Tejas Vipin <tejasvipin76@gmail.com>, 
+	Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Refactor parity calculations to use the standard parity64() helper.
-This change eliminates redundant implementations and improves code
-efficiency.
+On Thu, 6 Mar 2025 at 17:10, Anusha Srivatsa <asrivats@redhat.com> wrote:
+>
+>
+>
+> On Thu, Mar 6, 2025 at 4:31=E2=80=AFAM Maxime Ripard <mripard@kernel.org>=
+ wrote:
+>>
+>> Hi Anusha,
+>>
+>> On Wed, Mar 05, 2025 at 07:01:41PM -0500, Anusha Srivatsa wrote:
+>> > Move away from using deprecated API and use _multi
+>> > variants if available. Use mipi_dsi_msleep()
+>> > and mipi_dsi_usleep_range() instead of msleep()
+>> > and usleep_range() respectively.
+>> >
+>> > Used Coccinelle to find the multiple occurences.
+>> > SmPl patch:
+>> > @rule@
+>> > identifier dsi_var;
+>> > identifier r;
+>> > identifier func;
+>> > type t;
+>> > position p;
+>> > expression dsi_device;
+>> > expression list es;
+>> > @@
+>> > t func(...) {
+>> > ...
+>> > struct mipi_dsi_device *dsi_var =3D dsi_device;
+>> > +struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi_var };
+>> > <+...
+>> > (
+>> > -mipi_dsi_dcs_write_seq(dsi_var,es)@p;
+>> > +mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
+>> > |
+>> > -mipi_dsi_generic_write_seq(dsi_var,es)@p;
+>> > +mipi_dsi_generic_write_seq_multi(&dsi_ctx,es);
+>> > |
+>> > -mipi_dsi_generic_write(dsi_var,es)@p;
+>> > +mipi_dsi_generic_write_multi(&dsi_ctx,es);
+>> > |
+>> > -r =3D mipi_dsi_dcs_nop(dsi_var)@p;
+>> > +mipi_dsi_dcs_nop_multi(&dsi_ctx);
+>> > |
+>> > ....rest of API
+>> > ..
+>> > )
+>> > -if(r < 0) {
+>> > -...
+>> > -}
+>> > ...+>
+>>
+>> The point of sending a single patch was to review the coccinelle script,
+>> so you must put the entire script you used here.
+>>
+>
+> I was actually thinking of sending patches per driver this time around si=
+nce Tejas also seems to be looking into similar parts....Thoughts?
 
-Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
- drivers/input/joystick/sidewinder.c | 24 +++++-------------------
- 1 file changed, 5 insertions(+), 19 deletions(-)
+Have you discussed it with Tejas? What is his next target?
 
-diff --git a/drivers/input/joystick/sidewinder.c b/drivers/input/joystick/sidewinder.c
-index 3a5873e5fcb3..9fe980096f70 100644
---- a/drivers/input/joystick/sidewinder.c
-+++ b/drivers/input/joystick/sidewinder.c
-@@ -7,6 +7,7 @@
-  * Microsoft SideWinder joystick family driver for Linux
-  */
- 
-+#include <linux/bitops.h>
- #include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -240,21 +241,6 @@ static void sw_init_digital(struct gameport *gameport)
- 	local_irq_restore(flags);
- }
- 
--/*
-- * sw_parity() computes parity of __u64
-- */
--
--static int sw_parity(__u64 t)
--{
--	int x = t ^ (t >> 32);
--
--	x ^= x >> 16;
--	x ^= x >> 8;
--	x ^= x >> 4;
--	x ^= x >> 2;
--	x ^= x >> 1;
--	return x & 1;
--}
- 
- /*
-  * sw_ccheck() checks synchronization bits and computes checksum of nibbles.
-@@ -316,7 +302,7 @@ static int sw_parse(unsigned char *buf, struct sw *sw)
- 
- 			for (i = 0; i < sw->number; i ++) {
- 
--				if (sw_parity(GB(i*15,15)))
-+				if (parity64(GB(i*15,15)))
- 					return -1;
- 
- 				input_report_abs(sw->dev[i], ABS_X, GB(i*15+3,1) - GB(i*15+2,1));
-@@ -333,7 +319,7 @@ static int sw_parse(unsigned char *buf, struct sw *sw)
- 		case SW_ID_PP:
- 		case SW_ID_FFP:
- 
--			if (!sw_parity(GB(0,48)) || (hat = GB(42,4)) > 8)
-+			if (!parity64(GB(0,48)) || (hat = GB(42,4)) > 8)
- 				return -1;
- 
- 			dev = sw->dev[0];
-@@ -354,7 +340,7 @@ static int sw_parse(unsigned char *buf, struct sw *sw)
- 
- 		case SW_ID_FSP:
- 
--			if (!sw_parity(GB(0,43)) || (hat = GB(28,4)) > 8)
-+			if (!parity64(GB(0,43)) || (hat = GB(28,4)) > 8)
- 				return -1;
- 
- 			dev = sw->dev[0];
-@@ -379,7 +365,7 @@ static int sw_parse(unsigned char *buf, struct sw *sw)
- 
- 		case SW_ID_FFW:
- 
--			if (!sw_parity(GB(0,33)))
-+			if (!parity64(GB(0,33)))
- 				return -1;
- 
- 			dev = sw->dev[0];
--- 
-2.34.1
+>> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+>>
+>> That hasn't been my email address for 6 years :)
+>>
+> My bad. Will change this.
 
+
+
+--=20
+With best wishes
+Dmitry
