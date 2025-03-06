@@ -1,132 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF6B17995E;
-	Thu,  6 Mar 2025 15:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72641FF7CC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 15:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741276115; cv=none; b=XhfvHywiaGg7RoUvWj+YGYBOZw4TEnDVxDWPTXR11hiSJccKbQ61xLT01fhGgo0O+KYsefkdfqpx+Tbq/uuU6i272YHtI4Ejc1too1aGGrNZxRLKWzCWRpMyJAAldFW3xiRGoZ0wbaMiy1u0D9x7AiMT+Dcdv90Q1aqOYgk/Bhw=
+	t=1741276115; cv=none; b=tJ2nEWnp7ony+sZKPtNNU2I182m4Cv950ep9MXQItym99E0DP5acdT+P3TTee7qQZlq+UbzAtPbcSUaXq0KKPvLhTj94piNU+5tz7q/b23K2GlHTCFdfEOX3eXAhPmeMDzvN69klUSTikwdJgQ11kCfZ0du1Ss0YifelstGqPp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741276115; c=relaxed/simple;
-	bh=PDJ75QttWLXTpda8lbsTkqPOcwBPVsB29z11KajauSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eMDchWSVaE8kC/s+Fkiy8nMuuUeVqwg5MAh74/ZJDZbWuxG8mTv+uhhIzpHMkKqB/KbS7mMW1xR7rtctOCMiQYkn72/ym+Y3WJVCshTfGXCbcKx0bwmsGS0nHUrbvldLP6dkQ60CaSHO8qQznyi7RZgUjvuAGojN4sBIzqhRBmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gxh7bD2K; arc=none smtp.client-ip=10.30.226.201
+	bh=9nc+nlHVLzbF+an9SP1BN1fDldEWWVM2GaTD/JHD38Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BoNGwsfuutFI6lcIpm4/av0fTq7tomHgwBihYMVcfiQCW0uY+BpfjSVLtbin5FFXrv+m20iJvdmyTCaYI6FAe5nvHwghlmVK4s0rfScZYVQO5sMomayFnhAqLPAPJfbNnaIXZPvsBZni2FrtPDXjwgpPx43ZVKuIQKdgkBojHVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n4ztF5JV; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gxh7bD2K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 923FBC4CEE8;
-	Thu,  6 Mar 2025 15:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741276113;
-	bh=PDJ75QttWLXTpda8lbsTkqPOcwBPVsB29z11KajauSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gxh7bD2KfRm/zIyyBKVZGuPR0ZdEqMVyIayfMUtF/umRbiPCARd3V7xr6v2YMMyiI
-	 BcyJAwHsZl0d8D6Yb4CAx2KLXX7nPP25rLuRSZs3HxBTeXTMIfDOdpZ3WrdUVUqZGB
-	 g5xetXuZnsaut08DyRv5hD/9Nhj3YfBO91UFFwiY85mia7pH6SR2j50btdgBfBO4th
-	 qzZQSKBahdPiAS7DfapsPnexmRpoPn22OixcY2501EYfaIa8T6X0xz1sZTAM5Ob3l7
-	 n/HJR98hiUYL8uKHKfhMI+qettf9qggSF6IB30cyHm/lxxCVxWJYcbBuMH8cdKE5ZF
-	 bYM7czwLWHTmQ==
-Date: Thu, 6 Mar 2025 16:48:31 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Silvano Seva <s.seva@4sigma.it>
-Cc: a.greco@4sigma.it, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"open list:ST LSM6DSx IMU IIO DRIVER" <linux-iio@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: fix possible lockup during FIFO
- read
-Message-ID: <Z8nDzyVO596rW0Mf@lore-desk>
-References: <20250303132124.52811-2-s.seva@4sigma.it>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n4ztF5JV"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8fce04655so2999456d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 07:48:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741276112; x=1741880912; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F/vdOVrt2gpTAE6Qt1Fy4CDkFxCZzAdyeoHIg8U7v4Y=;
+        b=n4ztF5JVqy+7XL09j0fZ9Tqjp9FyAYVAPUvOXfPXv3dXgY+J38APnM+dwz9r9PquXE
+         otBHGyl+iCV/96kY6tudZkY8r7rgf7UY/IAUYN5DyDg0w9VX3axCB5v1XPsRi8nq6M8l
+         338stSAUBceEfR498ndsJ4dSwhaEPwYjSbYg0iJp88aeUB8pO5/LzNbPmedQ9n5oYJt4
+         jBH+9Fk/LDpNuAyJwZwy+5dlnInGhtXsxdPl5gtNCkhOVMZkjzV2l4YuC6OZNP/foLGh
+         Hiwe6ElnaIKkm/F+Hut/+HGYu1oVPL7r/km4VueLyKfAChmWnBqT5qB+gAvNbgNrcxJ7
+         Jf2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741276112; x=1741880912;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F/vdOVrt2gpTAE6Qt1Fy4CDkFxCZzAdyeoHIg8U7v4Y=;
+        b=q5GrIK/RZuS+Txk6ZpkDT1HJrKL56bGfu6tuPIARP2YvbR/J4h6uWnhUQ3Wm9uhHin
+         Ekmn+aNeXS9rSJrt4uBL7T8JETfAe2J6GicG9WP6Sos2oKmUnAdNlwUX66vw1GCbFbOT
+         fpiLnEzWtfq+X1Lk5UP0fYHEqwPD5MXL+Z3m7mkaQ5LFUPj3Wl+Qfiu89gpcOiM5sLqW
+         wNyD9PyGkH6+JFZLkf/iV7bKDBFOY90INdCcG0hBSCwPu6Ez5eieTncB/Mp/qQ0ZuC/I
+         iLU4tipkzhqU5CYtR+JYzTGZViwy9qybYjDE6/a5HmZEgUyYWV6rszfPc1FWlNTnm+6L
+         vArA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhLlU5Y9KpLy2K0ridtbhEzvWjfz+84dz5OkfwnqJqlH2l130b/YlJAHHSusKLsLaPI4mJD85eE7Y/V5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvUIhTNks9qUGagCShG3tjxafhmLS6dXqTaY3vRQRJbyVMqMDN
+	9QAIKCrMjQ+o/7IdhMERSyHS1pzraGQByhkUgkFx+xSt6kbC/YTQ7zWOToZypaNR5DAWCbUamZ5
+	NHONgVtlz++CjL5FGLBm945AhSHgyiu6UdrxT
+X-Gm-Gg: ASbGncswoe8IlScoHLHqEQBW20GLlb/nahYjM5ExWtUmAIVi8KuuhIPFAM7XGghdkbY
+	eUCK+DaIby1+LMiL3bQ2rETYbMqAKl0+WK3EoLA2mQRiDDpKkOVw1ES/PU+lXbEt17GvkWnO1sE
+	d5pPmO0A38cTsa8eGY4Z8jTVSjP0eg7c8qHVm54nbKWW22diijoZCWl07B
+X-Google-Smtp-Source: AGHT+IG2NjbsvKGXcwADdAlgVYJgxqLNzRndRMUdTycXQdYU++VkUBDx6MSDbLgKNWOXyJqjCBJAmuRGX/H6gseJcss=
+X-Received: by 2002:a05:6214:d05:b0:6e6:6699:7e58 with SMTP id
+ 6a1803df08f44-6e8e6d1551fmr101200616d6.1.1741276112191; Thu, 06 Mar 2025
+ 07:48:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jIYADJ6xeaDfrRk2"
-Content-Disposition: inline
-In-Reply-To: <20250303132124.52811-2-s.seva@4sigma.it>
-
-
---jIYADJ6xeaDfrRk2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250306002933.1893355-1-rmoar@google.com> <CABVgOSkwrb36rrhH3H17fhYOnywhTgTh06aDaKXT4jZp474sRQ@mail.gmail.com>
+In-Reply-To: <CABVgOSkwrb36rrhH3H17fhYOnywhTgTh06aDaKXT4jZp474sRQ@mail.gmail.com>
+From: Rae Moar <rmoar@google.com>
+Date: Thu, 6 Mar 2025 10:48:20 -0500
+X-Gm-Features: AQ5f1JoJuxVIlo73mw7OMRvVa5L4ygXshyFART2BLs53CpfZgjhb5b6nVql4vZQ
+Message-ID: <CA+GJov6A1dr4PHkV3jSyptKc6PvhA4Zx7=jjFBVOa08=PwKRMQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: tool: Fix bug in parsing test plan
+To: David Gow <davidgow@google.com>
+Cc: shuah@kernel.org, jackmanb@google.com, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
-> from falling in an infinite loop in case pattern_len is equal to zero and
-> the device FIFO is not empty.
->=20
-> Signed-off-by: Silvano Seva <s.seva@4sigma.it>
-> ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio=
-/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> index 0a7cd8c1aa33..7f343614f8a5 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> @@ -395,12 +395,17 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
->  	fifo_len =3D (le16_to_cpu(fifo_status) & fifo_diff_mask) *
->  		   ST_LSM6DSX_CHAN_SIZE;
->  	fifo_len =3D (fifo_len / pattern_len) * pattern_len;
-> +	if (!fifo_len)
-> +		return 0;
+On Thu, Mar 6, 2025 at 4:00=E2=80=AFAM David Gow <davidgow@google.com> wrot=
+e:
+>
+> On Thu, 6 Mar 2025 at 08:29, Rae Moar <rmoar@google.com> wrote:
+> >
+> > A bug was identified where the KTAP below caused an infinite loop:
+> >
+> >  TAP version 13
+> >  ok 4 test_case
+> >  1..4
+> >
+> > The infinite loop was caused by the parser not parsing a test plan
+> > if following a test result line.
+> >
+> > Fix bug to correctly parse test plan and add error if test plan is
+> > missing.
+> >
+> > Signed-off-by: Rae Moar <rmoar@google.com>
+> > ---
+>
+> Thanks for looking into this: I don't think we want to unconditionally
+> error if there's no test plan, though. Pretty much no parameterised
+> tests include one -- it's not always possible to know how many tests
+> there'll be in advance -- so this triggers all of the time.
+>
+> Maybe we can only include an error if we find a test plan line after
+> an existing result, or something?
 
-I do not think this check is necessary since if fifo_len is 0 we will not r=
-un
-the for loop, right?
+Hi David!
 
-> =20
->  	acc_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
->  	gyro_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
->  	if (hw->iio_devs[ST_LSM6DSX_ID_EXT0])
->  		ext_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_EXT0]);
-> =20
-> +	if (!pattern_len)
-> +		pattern_len =3D ST_LSM6DSX_SAMPLE_SIZE;
+I thought I'd include the error in the first version but I figured it
+might not be accepted. Technically it is improper KTAP for the test
+plan to be missing so the error would be correct but because it fires
+on parameterized tests which is not ideal.
 
-same here, I do not think pattern_len can be 0 since hw->sip must be greater
-than 0 in order to enable the FIFO. Moreover, this check should be some lin=
-es
-above since we have already divided fifo_len by pattern_len here.
+I wonder for parameterized tests if we could output a test plan:
+"1..X" indicating an unknown number of tests or something similar. I'd
+be happy to implement this. However, I am happy to remove the error
+for the second version.
 
-> +
->  	for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern_len) {
->  		err =3D st_lsm6dsx_read_block(hw, ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
->  					    hw->buff, pattern_len,
-> @@ -623,6 +628,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw =
-*hw)
->  	if (!fifo_len)
->  		return 0;
-> =20
-> +	if (!pattern_len)
-> +		pattern_len =3D ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
+Thanks!
+-Rae
 
-for the reason above, this is not necessary.
-
-Regards,
-Lorenzo
-
-> +
->  	for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern_len) {
->  		err =3D st_lsm6dsx_read_block(hw,
->  					    ST_LSM6DSX_REG_FIFO_OUT_TAG_ADDR,
-> --=20
-> 2.48.1
->=20
-
---jIYADJ6xeaDfrRk2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ8nDzwAKCRA6cBh0uS2t
-rNrsAQCt/2kEIeYw3RhVJeUiSsUinpgqHklJ0PLaJocnRAdqDgEA/pIyU/bbKsjl
-Wv0S0zV2oJ09LA/ZJ1AVOlSvLtNUjgw=
-=UeEg
------END PGP SIGNATURE-----
-
---jIYADJ6xeaDfrRk2--
+>
+> -- David
+>
+> >  tools/testing/kunit/kunit_parser.py    | 12 +++++++-----
+> >  tools/testing/kunit/kunit_tool_test.py |  5 ++---
+> >  2 files changed, 9 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/=
+kunit_parser.py
+> > index 29fc27e8949b..5dcbc670e1dc 100644
+> > --- a/tools/testing/kunit/kunit_parser.py
+> > +++ b/tools/testing/kunit/kunit_parser.py
+> > @@ -761,20 +761,22 @@ def parse_test(lines: LineStream, expected_num: i=
+nt, log: List[str], is_subtest:
+> >                 test.name =3D "main"
+> >                 ktap_line =3D parse_ktap_header(lines, test, printer)
+> >                 test.log.extend(parse_diagnostic(lines))
+> > -               parse_test_plan(lines, test)
+> > +               plan_line =3D parse_test_plan(lines, test)
+> >                 parent_test =3D True
+> >         else:
+> >                 # If not the main test, attempt to parse a test header =
+containing
+> >                 # the KTAP version line and/or subtest header line
+> >                 ktap_line =3D parse_ktap_header(lines, test, printer)
+> >                 subtest_line =3D parse_test_header(lines, test)
+> > +               test.log.extend(parse_diagnostic(lines))
+> > +               plan_line =3D parse_test_plan(lines, test)
+> >                 parent_test =3D (ktap_line or subtest_line)
+> >                 if parent_test:
+> > -                       # If KTAP version line and/or subtest header is=
+ found, attempt
+> > -                       # to parse test plan and print test header
+> > -                       test.log.extend(parse_diagnostic(lines))
+> > -                       parse_test_plan(lines, test)
+> >                         print_test_header(test, printer)
+> > +
+> > +       if parent_test and not plan_line:
+> > +                       test.add_error(printer, 'missing test plan!')
+> > +
+> >         expected_count =3D test.expected_count
+> >         subtests =3D []
+> >         test_num =3D 1
+> > diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kun=
+it/kunit_tool_test.py
+> > index 0bcb0cc002f8..e1e142c1a850 100755
+> > --- a/tools/testing/kunit/kunit_tool_test.py
+> > +++ b/tools/testing/kunit/kunit_tool_test.py
+> > @@ -181,8 +181,7 @@ class KUnitParserTest(unittest.TestCase):
+> >                         result =3D kunit_parser.parse_run_tests(
+> >                                 kunit_parser.extract_tap_lines(
+> >                                 file.readlines()), stdout)
+> > -               # A missing test plan is not an error.
+> > -               self.assertEqual(result.counts, kunit_parser.TestCounts=
+(passed=3D10, errors=3D0))
+> > +               self.assertEqual(result.counts, kunit_parser.TestCounts=
+(passed=3D10, errors=3D2))
+> >                 self.assertEqual(kunit_parser.TestStatus.SUCCESS, resul=
+t.status)
+> >
+> >         def test_no_tests(self):
+> > @@ -203,7 +202,7 @@ class KUnitParserTest(unittest.TestCase):
+> >                 self.assertEqual(
+> >                         kunit_parser.TestStatus.NO_TESTS,
+> >                         result.subtests[0].subtests[0].status)
+> > -               self.assertEqual(result.counts, kunit_parser.TestCounts=
+(passed=3D1, errors=3D1))
+> > +               self.assertEqual(result.counts, kunit_parser.TestCounts=
+(passed=3D1, errors=3D2))
+> >
+> >
+> >         def test_no_kunit_output(self):
+> >
+> > base-commit: 0619a4868fc1b32b07fb9ed6c69adc5e5cf4e4b2
+> > --
+> > 2.48.1.711.g2feabab25a-goog
+> >
