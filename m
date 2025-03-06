@@ -1,71 +1,78 @@
-Received: from baidu.com (mx22.baidu.com [220.181.50.185])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6BA33C9;
-	Thu,  6 Mar 2025 02:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4CC33C9;
+	Thu,  6 Mar 2025 02:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741229137; cv=none; b=Zqg2gzinkNCLGP/WgUW95DAfmQEcb5CAeQOtBFMbLCsxDk50t8BuTLKjF+/FAaUtdyMIxqpMI3SascpGh0tdU+9i2O1UD7if1iALh9NxpTjEEMy8bome+4fwMuFHcSCB+v/qdDW/jCQdpToNJCBjsxTQCTLJW66rxr8hNj8Yr0Q=
+	t=1741229260; cv=none; b=p5YCYMNq4mcInlbs1ZRqkoC2L9ies6ur4OEvN3Jf7D7dCpzLUGs0CI6TKxQkcqounzUiskObnQGgg1EpdWBfVNOk1vqaFK801UJI1UUSvHjhLvNClZngztGGtxCIvWHwaauDWyl2uItNrxa6jcf1wRar5IMBBHh46Qdr825a+Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741229137; c=relaxed/simple;
-	bh=y4qkiHrv5YzJwTFdfke6HPG9TVpJNfR6GD7LnkavQBo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eLfzQhzYCO7IA4tPJGXI2c5PdEWM3lwwprt17HEfcqZWtUXujQNluu2dj/xrniEartFbVnBbgYfwB4L5Rw/DjvM4+KbVFEUaBS/d1dYFcfET+wjOsi3VnBDiXHaRHRUGjhayg/sZgtSpkmafOBZT2rMtPqFZbjlcmbXD2woO95w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: "Li,Rongqing" <lirongqing@baidu.com>
-To: Dave Hansen <dave.hansen@intel.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Jiri Olsa <olsajiri@gmail.com>
-CC: "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>, "mark.rutland@arm.com"
-	<mark.rutland@arm.com>, "alexander.shishkin@linux.intel.com"
-	<alexander.shishkin@linux.intel.com>, "irogers@google.com"
-	<irogers@google.com>, "kan.liang@linux.intel.com"
-	<kan.liang@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
-	"hpa@zytor.com" <hpa@zytor.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXSBwZXJmL3g4Ni9p?=
- =?utf-8?Q?ntel/bts:_allocate_bts=5Fctx_only_if_necessary?=
-Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF0gcGVyZi94ODYvaW50ZWwvYnRz?=
- =?utf-8?Q?:_allocate_bts=5Fctx_only_if_necessary?=
-Thread-Index: AQHbjd8ZANFZJP37eUuTV7oAm1ygsrNkMLQAgAEx3BA=
-Date: Thu, 6 Mar 2025 02:28:34 +0000
-Message-ID: <5ddaff2748344dc4ac6290f195c8758e@baidu.com>
-References: <20250122074103.3091-1-lirongqing@baidu.com>
- <Z8hV3WYuHxHBNoNV@krava> <Z8hXsvloKEb7ia3V@krava>
- <d70b6f8d-0e86-4814-bf05-4c3d9acd313d@intel.com>
- <293158f0-d36f-4569-bad3-6be1db938457@intel.com>
-In-Reply-To: <293158f0-d36f-4569-bad3-6be1db938457@intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex14_2025-03-06 10:28:35:265
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1741229260; c=relaxed/simple;
+	bh=jIVdm4fhslc+0D4sQTi+TKvZxbyjwooBpCWrRRwAbW8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S8U/IlVEgJ/XNE3pYhgTnzkwGDvg01WNcO8PPH1UYmUKtLjRdIiP9t5xGP/xN37uOhMAsAogW1W79Rwc3XlDuxV7ZwN7iCI1erm8dKpcWoX64/s/SefNaP/LWYv0RTzGTllOiYlqbA9RgLWm1/fY5qx1yEd7s9vdE1W6TNZ/W70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=c+M8MZHa; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="c+M8MZHa"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741229248; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=cydds6dcxAFRZNEZZYF8UB6twxkEdfSrIDqXvVzSON8=;
+	b=c+M8MZHagkMJmSY8ANFKTpaa5lI+SdkeUVTzZEkNr0Dgd5lILu4vkuICDw1Pa0OpM+N/QFOYjAklNSSuyFpCI9GbO3eMcCKloj4CH8RVq061sd3oaEe29rrByTsusv3t9u8Kf66a7x99Lz9k+oTxpi4rM1llLc6sVvcJAy7RdM8=
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WQn5zoS_1741229237 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 06 Mar 2025 10:47:27 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: broonie@kernel.org
+Cc: mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	linux-spi@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] spi: stm32: Remove unnecessary print function dev_err()
+Date: Thu,  6 Mar 2025 10:47:16 +0800
+Message-Id: <20250306024716.27856-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 10.127.64.37
-X-FE-Last-Public-Client-IP: 100.100.100.38
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Content-Transfer-Encoding: 8bit
 
-PiBKaXJpLCB0aGFua3MgZm9yIHRoZSByZXBvcnQhDQo+IA0KPiBPbiAzLzUvMjUgMDY6NTgsIEFk
-cmlhbiBIdW50ZXIgd3JvdGU6DQo+ID4gSXQgbG9va3MgbGlrZSB0aGVyZSBhcmUgMyBmdW5jdGlv
-bnMgYWZmZWN0ZWQ6DQo+ID4NCj4gPiAJaW50ZWxfYnRzX2VuYWJsZV9sb2NhbCgpDQo+ID4gCWlu
-dGVsX2J0c19kaXNhYmxlX2xvY2FsKCkNCj4gPiAJaW50ZWxfYnRzX2ludGVycnVwdCgpDQo+ID4N
-Cj4gPiBQZXJoYXBzIG1ha2UgdGhlbSBzdGF0aWMgY2FsbHM/DQo+IA0KPiBUaGF0LCBvciBhIGZl
-dzoNCj4gDQo+IAlpZiAoIWJ0c19jdHgpDQo+IAkJcmV0dXJuOw0KPiANCj4gaWYgeW91J3JlIG5v
-dCBmZWVsaW5nIGFzIGZhbmN5IHdvdWxkIGRvLg0KPiANCj4gV291bGQgc29tZW9uZSBiZSBpbnRl
-cmVzdGVkIGluIHNlbmRpbmcgYW4gYWN0dWFsIHRlc3RlZCBwYXRjaCwgaWRlYWxseSB0aGUNCj4g
-cGF0Y2ggYXV0aG9yIG9mIHRoZSByZWdyZXNzaW9uPyA8aGludCwgaGludD4NCg0KDQpJIGFtIHNv
-cnJ5IHRvIGludHJvZHVjZSB0aGlzIGJ1ZywgSSB3aWxsIHRyeSB0byBzZW5kIGEgcGF0Y2gNCg0K
-VGhhbmtzIHRvIGFsbA0KDQotTGkNCg==
+The print function dev_err() is redundant because platform_get_irq()
+already prints an error.
+
+./drivers/spi/spi-stm32-ospi.c:798:2-9: line 798 is redundant because platform_get_irq() already prints an error.
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=19220
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ drivers/spi/spi-stm32-ospi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+index 8eadcb64f34a..114ebb1516d4 100644
+--- a/drivers/spi/spi-stm32-ospi.c
++++ b/drivers/spi/spi-stm32-ospi.c
+@@ -794,10 +794,8 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
+ 	}
+ 
+ 	ospi->irq = platform_get_irq(pdev, 0);
+-	if (ospi->irq < 0) {
+-		dev_err(dev, "Can't get irq %d\n", ospi->irq);
++	if (ospi->irq < 0)
+ 		return ospi->irq;
+-	}
+ 
+ 	ret = devm_request_irq(dev, ospi->irq, stm32_ospi_irq, 0,
+ 			       dev_name(dev), ospi);
+-- 
+2.32.0.3.g01195cf9f
+
