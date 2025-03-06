@@ -1,199 +1,182 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF6E7E0FF
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 01:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0222E40B;
+	Thu,  6 Mar 2025 01:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741223573; cv=none; b=R6nxx/ybTBHkNvMFeHAWMnHj6FdbHy0PSSVBqutJF96IWvLRoMD3cWBUA3Olu27yOAa/as9ZPm5CBdV/myRwE0+JYl/E1EdvwjP5zZxHOEGBj3uMkQyTErctzpvve7BGoFFapTn4gcpJgrbpx/3br7sS+qD+XlHToK/qsTuxl6s=
+	t=1741223632; cv=none; b=L0ktDzbyo3phSm9oWC3hr2yWIfCHZiGWdYddgDLId/zfLPAUmBamSunH4+J0vsgnqNiQWysOW+DvByzYNGvfD5K5lJnhmchOEW/q5ACr9HhbYOlrMJpt5CPA3mq+TLDr0VCSo7XwhxylL+pzYENTO/9MH9C8QiD2WU3H5+atzhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741223573; c=relaxed/simple;
-	bh=iwuGm3ZHGbApYL4XEYwpkiGj6XRB3Wy/awOqe4nijcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EJmQh/7jeeneBdFnSBYCqJNOsKZg6bXwJL1RWpyr7kLAIjP0JEzm9ytRFGlwcEoUqj2oznw4wXzLs9OzOT02J+qyNbNomErHYecIGvaOAsCNwdd6g9fJ7pDPoNEK7z+AJfnnCm/EuyxaIrpfwtSUgjY997mUmpWodiM90wC2SzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=CvwX/Aq7; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1741223632; c=relaxed/simple;
+	bh=QWaVP3lU5VkuEOVlItDoif8fyki3ruUbQgi/VV3pfbY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uJI/X+T7bWFFj640U3krC90MtEPB8y0YuvRB0bLmeSalk/GLmLMVPjEgjh9jQHYeNDNOz/og17rFdNK9wjOknr/8A5VoGwZRt4iQf/K0zvbV9NbkNzUN/4gYIwVqqGGHWsqZ4LMDyM72/UeBvSedA0RKhOgWNOTpmJndrErIsFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=QFejrRtK; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="CvwX/Aq7"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e549b0f8d57so89310276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 17:12:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1741223570; x=1741828370; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ns9OcNLiPQZ46N5SAy+lKQOOPBlD1bg4YL1QETokjIw=;
-        b=CvwX/Aq7UGvh8jKF6amc8L4Pjg9vIASGNnPFQjiOrAY64bsl/bjq5hsENfPkoWOvBV
-         bAUDCN6FkW10z5OU3AHzF4I8P3TZrYGLkIC/wRKaZDdwv7zwOIMDroPhLNO8fpBF6iYE
-         FQvmI6sRSc1SmaD3hsW1pcMuoEl5zWH7+NGxZAX4RjINKp9ZsU25e1fc0FR0YByEWfuD
-         EO0YuKeJHGRVMyIoJseCdaFMhYvY7qWCOkNWNSvnfrcPOV1oHtOgWPXagbgOxdZ1JPvR
-         pcaQ8VUX71UTUBQmg7drw5wC6cqip27x1vIG+C3Lxn9/fKiRO1+TdCfdQo4bAI1IUrku
-         UGUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741223570; x=1741828370;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ns9OcNLiPQZ46N5SAy+lKQOOPBlD1bg4YL1QETokjIw=;
-        b=FKMbzlljnxcNHJullckwLf9/tL5Af+chobHmPlnc38VmDbJMBAueIwy5iRlGmP9y5r
-         EBdQlK8yHXoGFL30WN0tGcfdwujmVbz/PBL12RJ/gHVmLwt7yL5vUFhAs7vDV0UqCtUW
-         SXl70vlLv5BZKZBkVxO7syRanysFRZFTbqkxrh/idvsAn0ryCcBhvLBGuPsEeM5ctMag
-         oNIih4SAvTFbH5uyyPHpTh7+nDPjeVEml2gxm7HO4pwHVDfhXU6xJdjmseYPZZIxQlFl
-         nzLC6bRQRyjS3PKc++HQYe1ZCbFxpL1+dMMvXfVYU8hbjSi4xmfhLsCHimbysq/n+ipN
-         bpqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLkuDHWXad3Do5Z7aj+KlTQBUR4LpRzm5gOMDo+7fJPpB1XVeyzz0DyDO0sZ3ZDU04XBGdD20Wdbjn8Qg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLDrb1WNqE92NmYRDrPqKvORpAjxFRMxCFNWXS/eRB1It8cSlD
-	4ZodZNWDL7nH/LiWFCyYERP6Xw5puPQwSfVPHp3NsYAWupkRF5Ec2VdSHQc+6ecWE0W/8f+EuOs
-	T8jwk4PFe48g5fg0q4VWroX8J0Pz5ix6++xU4
-X-Gm-Gg: ASbGncuanvcJmm9OFhOEhzrn5NmV0k7fJMPSu3seRoVVEVvw9vrcRPwtq8ulQgzkr/T
-	ukNcMXZs8Vq5TDrnKdX/A1J9h7lIAnJoYp+jDUPbgf7onepOa4LuZ6uTeyyYgG0/1yRfcouSnzM
-	jXT65o83pACv9pw/gPPKVIdWTeRQ==
-X-Google-Smtp-Source: AGHT+IF7pO968cQESwSx4d3Cse0SeXvFnLRkVRGiC/k9GOy1btAF+uyGL5ue4Dp5VeWQu3Cdo1ybcXgzsv8nGNGFq8o=
-X-Received: by 2002:a05:6902:2a4a:b0:e5d:dcc5:59bc with SMTP id
- 3f1490d57ef6-e611e308b67mr7715694276.39.1741223570094; Wed, 05 Mar 2025
- 17:12:50 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QFejrRtK"
+Received: from mail-acc-it-01.broadcom.com (mail-acc-it-01.acc.broadcom.net [10.35.36.83])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 830D7C002830;
+	Wed,  5 Mar 2025 17:08:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 830D7C002830
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1741223282;
+	bh=QWaVP3lU5VkuEOVlItDoif8fyki3ruUbQgi/VV3pfbY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QFejrRtKtRBsmKmCjqRwdBjMrilEe8DVmBVUq56y4e7MtD59H269h7J0e17vaO5u6
+	 obDX+2v8MZw+PmxDCb8FbTpeaDfnsRsrfxej0NQewgKuG48aN3CC78dGAi43ZG8eaR
+	 o4dXEW4wC8w/C24zHrKBy805dGn4joqQAZpMNJBI=
+Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-acc-it-01.broadcom.com (Postfix) with ESMTPSA id 7739D4002F47;
+	Wed,  5 Mar 2025 20:08:01 -0500 (EST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	linux-hardening@vger.kernel.org,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Keith Busch <kbusch@kernel.org>
+Subject: [PATCH stable 5.4 3/3] overflow: Allow mixed type arguments
+Date: Wed,  5 Mar 2025 17:07:56 -0800
+Message-Id: <20250306010756.719024-4-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250306010756.719024-1-florian.fainelli@broadcom.com>
+References: <20250306010756.719024-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241017155516.2582369-1-eric.snowberg@oracle.com>
- <c490397315c2704e9ef65c8ad3fefedb239f1997.camel@linux.ibm.com>
- <72F52F71-C7F3-402D-8441-3D636A093FE8@oracle.com> <CAHC9VhRHEw5c+drC=aX4xTqWoQJJZ+qkJ7aHUT5dcu+Q5f7BqA@mail.gmail.com>
- <CAHC9VhSJpnaAK1efgs1Uk0Tr3CaDNR1LiDU-t_yDKDQG6J-74Q@mail.gmail.com>
- <E20C617B-EA01-4E69-B5E2-31E9AAD6F7A2@oracle.com> <506e8e58e5236a4525b18d84bafa9aae80b24452.camel@linux.ibm.com>
- <CAHC9VhTsZntLdGBV7=4suauS+rzSQv1O4UAoGcy2vEB02wRkoA@mail.gmail.com>
- <c580811716f550ed5d6777db5e143afe4ad06edc.camel@linux.ibm.com>
- <CAHC9VhTz6U5rRdbJBWq0_U4BSKTsiGCsaX=LTgisNNoZXZokOA@mail.gmail.com>
- <FD501FB8-72D2-4B10-A03A-F52FC5B67646@oracle.com> <CAHC9VhR961uTFueovLXXaOf-3ZAnvQCWOTfw-wCRuAKOKPAOKw@mail.gmail.com>
- <73B78CE7-1BB8-4065-9EBA-FB69E327725E@oracle.com> <CAHC9VhRMUkzLVT5GT5c5hgpfaaKubzcPOTWFDpOmhNne0sswPA@mail.gmail.com>
- <1A222B45-FCC4-4BBD-8E17-D92697FE467D@oracle.com>
-In-Reply-To: <1A222B45-FCC4-4BBD-8E17-D92697FE467D@oracle.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 5 Mar 2025 20:12:39 -0500
-X-Gm-Features: AQ5f1Jodn7KbI0UIW2OdnLduODjPaSZfEKxzP8aA2XiHbTTB_Svl7vi4QeubrRI
-Message-ID: <CAHC9VhTObTee95SwZ+C4EwPotovE9R3vy0gVXf+kATtP3vfXrg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/13] Clavis LSM
-To: Eric Snowberg <eric.snowberg@oracle.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, 
-	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>, 
-	David Woodhouse <dwmw2@infradead.org>, 
-	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, 
-	Ard Biesheuvel <ardb@kernel.org>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	"casey@schaufler-ca.com" <casey@schaufler-ca.com>, Stefan Berger <stefanb@linux.ibm.com>, 
-	"ebiggers@kernel.org" <ebiggers@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"keyrings@vger.kernel.org" <keyrings@vger.kernel.org>, 
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, 
-	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, 
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 5, 2025 at 4:30=E2=80=AFPM Eric Snowberg <eric.snowberg@oracle.=
-com> wrote:
-> > On Mar 4, 2025, at 5:23=E2=80=AFPM, Paul Moore <paul@paul-moore.com> wr=
-ote:
-> > On Tue, Mar 4, 2025 at 9:47=E2=80=AFAM Eric Snowberg <eric.snowberg@ora=
-cle.com> wrote:
-> >>> On Mar 3, 2025, at 3:40=E2=80=AFPM, Paul Moore <paul@paul-moore.com> =
-wrote:
-> >>> On Fri, Feb 28, 2025 at 12:52=E2=80=AFPM Eric Snowberg <eric.snowberg=
-@oracle.com> wrote:
-> >>>>> On Feb 28, 2025, at 9:14=E2=80=AFAM, Paul Moore <paul@paul-moore.co=
-m> wrote:
-> >>>>> On Fri, Feb 28, 2025 at 9:09=E2=80=AFAM Mimi Zohar <zohar@linux.ibm=
-.com> wrote:
-> >>>>>> On Thu, 2025-02-27 at 17:22 -0500, Paul Moore wrote:
-> >>>>>>>
-> >>>>>>> I'd still also like to see some discussion about moving towards t=
-he
-> >>>>>>> addition of keyrings oriented towards usage instead of limiting
-> >>>>>>> ourselves to keyrings that are oriented on the source of the keys=
-.
-> >>>>>>> Perhaps I'm missing some important detail which makes this
-> >>>>>>> impractical, but it seems like an obvious improvement to me and w=
-ould
-> >>>>>>> go a long way towards solving some of the problems that we typica=
-lly
-> >>>>>>> see with kernel keys.
-> >>>>
-> >>>> The intent is not to limit ourselves to the source of the key.  The =
-main
-> >>>> point of Clavis is to allow the end-user to determine what kernel ke=
-ys
-> >>>> they want to trust and for what purpose, irrespective of the origina=
-ting
-> >>>> source (.builtin_trusted, .secondary, .machine, or .platform). If we=
- could
-> >>>> go back in time, individual keyrings could be created that are orien=
-ted
-> >>>> toward usage.   The idea for introducing Clavis is to bridge what we
-> >>>> have today with kernel keys and allow them to be usage based.
-> >>>
-> >>> While it is unlikely that the current well known keyrings could be
-> >>> removed, I see no reason why new usage oriented keyrings could not be
-> >>> introduced.  We've seen far more significant shifts in the kernel ove=
-r
-> >>> the years.
-> >>
-> >> Could you further clarify how a usage oriented keyring would work?  Fo=
-r
-> >> example, if a kernel module keyring was added, how would the end-user
-> >> add keys to it while maintaining a root of trust?
-> >
-> > Consider it an exercise left to the reader :)
-> >
-> > I imagine there are different ways one could do that, either using
-> > traditional user/group/capability permissions and/or LSM permissions,
-> > it would depend on the environment and the security goals of the
-> > overall system.
->
-> These keys are used by the Lockdown LSM to provide signature
-> validation.
->
-> I realize the contents that follow in this paragraph is outside the
-> boundary of mainline kernel code.  Every distro that wants their
-> shim signed must explain how their kernel enforces lockdown
-> mode.  The minimum requirement is lockdown in integrity mode.
-> Also, the expectation is lockdown enforcement continues on
-> through a kexec.
+From: Kees Cook <keescook@chromium.org>
 
-I personally find it very amusing the UEFI Secure Boot shim is reliant
-on an unmaintained and only marginally supported LSM, Lockdown.  Has
-anyone recently verified that Lockdown's protections are still intact
-and comprehensive enough to be worthwhile?  Sorry, this is a bit of a
-digression, but since you were the one to bring up Lockdown I thought
-it would be important to mention that I don't have much faith that it
-is still working to the same level as it originally was intended.  I
-have a TODO list item to draft a policy around deprecating
-unmaintained LSMs after an extended period of time, and once that is
-in place if we don't have a qualified maintainer for Lockdown it will
-likely fall into the deprecation process (whatever that may be).
+When the check_[op]_overflow() helpers were introduced, all arguments
+were required to be the same type to make the fallback macros simpler.
+However, now that the fallback macros have been removed[1], it is fine
+to allow mixed types, which makes using the helpers much more useful,
+as they can be used to test for type-based overflows (e.g. adding two
+large ints but storing into a u8), as would be handy in the drm core[2].
 
-> When in lockdown integrity mode, features that allow the kernel
-> to be modified at runtime are disabled.  How would what you have
-> suggested above adhere to these goals?
+Remove the restriction, and add additional self-tests that exercise
+some of the mixed-type overflow cases, and double-check for accidental
+macro side-effects.
 
-For starters, verify that Lockdown is still comprehensive enough to
-satisfy these requirements on a modern Linux kernel.  After that has
-been done, find someone with some kernel experience to step up and
-maintain Lockdown.  Finally, put a mechanism in place so that
-someone/something is regularly evaluating changes in the upstream
-kernel to ensure that Lockdown is still able to achieve its security
-goals.
+[1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
+[2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
 
-After all that, then you can start worrying about keys.
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-hardening@vger.kernel.org
+Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
+Reviewed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Tested-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+[florian: Drop changes to lib/test_overflow.c]
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ include/linux/overflow.h | 72 +++++++++++++++++++++++-----------------
+ 1 file changed, 41 insertions(+), 31 deletions(-)
 
-> The point of the Clavis LSM is to use the root of trust provided to
-> the kernel prior to it booting. This maintains the lockdown integrity
-> goals, while also giving the end-user the ability to determine how
-> kernel keys are used.
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index d1dd039fe1c3..54788a3cdcf5 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -55,40 +55,50 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+ }
+ 
+ #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
+-/*
+- * For simplicity and code hygiene, the fallback code below insists on
+- * a, b and *d having the same type (similar to the min() and max()
+- * macros), whereas gcc's type-generic overflow checkers accept
+- * different types. Hence we don't just make check_add_overflow an
+- * alias for __builtin_add_overflow, but add type checks similar to
+- * below.
++/** check_add_overflow() - Calculate addition with overflow checking
++ *
++ * @a: first addend
++ * @b: second addend
++ * @d: pointer to store sum
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted addition, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * sum has overflowed or been truncated.
+  */
+-#define check_add_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_add_overflow(__a, __b, __d);	\
+-}))
++#define check_add_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_add_overflow(a, b, d))
+ 
+-#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_sub_overflow(__a, __b, __d);	\
+-}))
++/** check_sub_overflow() - Calculate subtraction with overflow checking
++ *
++ * @a: minuend; value to subtract from
++ * @b: subtrahend; value to subtract from @a
++ * @d: pointer to store difference
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted subtraction, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * difference has underflowed or been truncated.
++ */
++#define check_sub_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_sub_overflow(a, b, d))
+ 
+-#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_mul_overflow(__a, __b, __d);	\
+-}))
++/** check_mul_overflow() - Calculate multiplication with overflow checking
++ *
++ * @a: first factor
++ * @b: second factor
++ * @d: pointer to store product
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted multiplication, but is not
++ * considered "safe for use" on a non-zero return value, which indicates
++ * that the product has overflowed or been truncated.
++ */
++#define check_mul_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_mul_overflow(a, b, d))
+ 
+ #else
+ 
+-- 
+2.34.1
 
---=20
-paul-moore.com
