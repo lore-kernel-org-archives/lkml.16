@@ -1,167 +1,101 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28FE25C6F6;
-	Thu,  6 Mar 2025 16:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741279568; cv=fail; b=SYhC4FiYOHkxJjZdfdVcuv6Coie4+8Hk9Iokwvw5ULvNZ6ClRkWVz3CP3YIgskNT5dVq3SGhbhZexBXtrs6xy9N7OfO3bQN9HF/bPR/kUGuUQjt4H5mwM135r+rtKuGB9G31L9A/23JkodG+Wpcy3TqAuzHLsqyNaaL/1VQgHyU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741279568; c=relaxed/simple;
-	bh=q68rvYXccMhnMN9whFw9DLYKUKZJISHBMsSpyc/META=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s3+Ut408PBKAVW3eQjM8UUr3ibk/l2ME4LpzhxNLPYKyITmMYNeS2zTnolpQc6LsZyKV4rZgsK5CqPFW64eeceB5mbknGdwe19sbtVnkeCsT9iJQpf8KY24PF1jzYa0A3nUVvmbGRk5sGoUrENwVTHz3k0c+AKV8dXjODRZzk7M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C3c4/UnH; arc=fail smtp.client-ip=40.107.220.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A9D2698AE
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741279667; cv=none; b=VWKxFiq/GpuZ53/vTSDCoAupXqykhJY2sXCD/0hipDx3f5BOEwBgzRj+/v7fh1E/LOMb108sKs42nbGIyc9PSp6MG8iG4/ydZx/nYAk6sM8kQ3LLtjI4uCrzd9FZ4GiTSGy4E8h9zqNP/5372gqGNMhhjFK4N3kw2SL48Z677fM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741279667; c=relaxed/simple;
+	bh=twFTbYxAB1EArSmPyT2JRqopxKqWs42pTkltMVGd1gA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 Cc:Content-Type; b=iH1Xz9tLjpOR79RTdrQ7scpkrvsJKhDE1Tia3gOV6EddH3e6S43TjrfW0nhGQ3M7Mxd6gEtM2n0WrniJVLnLjBv9cSl1b/BvkYgcs79bSgdz0AXrzpUIB2yYGZyE6gs2n34Q4HjDWIZC6Csdktuz15vvR9uhbYmZ2uSRPpb/z7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QhpUO6eC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C3c4/UnH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CrHNBHuDdK1wFuEoZZOhXdp0iT3b3ogb6QMWTKuBY1KI32q8/W42vXIbiF7LqhQIxNbhptDyfpEb2x+/avs1Y1KOWWNvgxDg0HOfh3eJtPmoGRHJ6+yooPo758IF0zW/9lLSX9TwPX6L1wKFv+mvS+f6SLYniDJB+SQEFJxin7NJA7dxKUIr9BdnZ6v7A/k+teeqb6wumLFQSCOodMIPOOxLWdFGa8eIoiJqO0ALEOYaAHJgksyHtNVz8mTEc85WV9aHM6qRGv8Sn7PF9qIuUJLLL5zbXVYjy94cDCyaee1UUZh2TWGL6uzs/42y/vQcBGE8wMbjwGM+AEX7BAf6xQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gH2eEhoqySD5sLD+wp42rTKAEOvnJqS0yXkr1HBWN1o=;
- b=dxym5Ur3DAYgQdF6iClXJ+7awPiSksQXREIg42I6So1Hw3HfjJn9SJBOoXstYnP5Q2PIpLxvMj1TCbkeU7gg1vZb0kQvs53vSMj5RlukBJ2EAyfPUyp/zOW7benkTqMZEliWq106Wbi3F42l+Npb9Fmj5FJJCgjo/KYDn93DgJOORO1LlVPNeqvblaWpnPOTdxVAZS+Zp7+LtG9ihwoBu3CNYWzkXEGlE7jFeTAScG8bJzOSxJ8llPU3WYdyU8sacgO9SL4YMGMIOQtzVSfBS19pkpbOt7fLIXxO3Vb62E4DZoTcrQdarBsiD/ed1beh8nVkWAPyuefUDBZYd3571g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gH2eEhoqySD5sLD+wp42rTKAEOvnJqS0yXkr1HBWN1o=;
- b=C3c4/UnHAYhcs9Xkll4cMFKrTRqsjxyktGHqD1c06xjqF54mEHGlMhaYqc5sS3xTD+Wt7WHiP5NkZFpJ13x8qDNTsBwqmkWWCegky5b0JCYWnfrsyUdFbuDAcvRRf9hfjmxm4CpWqG2DioAdjgGfj9daRGtYrDFBDQFb43jV6XU=
-Received: from MW4PR03CA0350.namprd03.prod.outlook.com (2603:10b6:303:dc::25)
- by LV3PR12MB9402.namprd12.prod.outlook.com (2603:10b6:408:213::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Thu, 6 Mar
- 2025 16:46:03 +0000
-Received: from SJ1PEPF00001CE8.namprd03.prod.outlook.com
- (2603:10b6:303:dc:cafe::55) by MW4PR03CA0350.outlook.office365.com
- (2603:10b6:303:dc::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.18 via Frontend Transport; Thu,
- 6 Mar 2025 16:46:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE8.mail.protection.outlook.com (10.167.242.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Thu, 6 Mar 2025 16:46:02 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Mar
- 2025 10:45:58 -0600
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: [PATCH v4 14/14] cxl/acpi: Unify CFMWS memory log messages with SRAT messages
-Date: Thu, 6 Mar 2025 17:44:48 +0100
-Message-ID: <20250306164448.3354845-15-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250306164448.3354845-1-rrichter@amd.com>
-References: <20250306164448.3354845-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QhpUO6eC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC1DC4CEE4
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741279666;
+	bh=twFTbYxAB1EArSmPyT2JRqopxKqWs42pTkltMVGd1gA=;
+	h=References:In-Reply-To:From:Date:Subject:Cc:From;
+	b=QhpUO6eCNrtrllawflc6gCLCYI1Kn+tIfRMdkg4ME11yaYzCLWcRUoRJtx3z6dfLe
+	 moH5TeID0FA9GNEXP5a/dlY9zLbLp08NEQ800o+/eqcXlPSRpnugFbgGomBvKQ9Shg
+	 NSJnTl4+XspVZooYMw65XT7zprutVB92Fs3K2PsxdCbB8nKSGtALu5m454YOWbyJ1+
+	 A6jLVvKpp5GsusiOcTYav9mqyHR4779cNrVdfgeOhLluudoZReIJHsSGpbhA6MGJm5
+	 DXcm+ViEFciQ1U7BYKJz8Ak8XnxtUcTDnxTZVlE1O0ImLA5uVEEaA8nzmoi8E3ILa1
+	 mEjy+iWHPBtOg==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5494bc8a526so1022214e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 08:47:46 -0800 (PST)
+X-Gm-Message-State: AOJu0YzTMha3DT9MzuDJbDsroQ7qubJaUUGGpc1P8ifK+yq8co0zz2k+
+	v+iUIqIlRSNB9wyCuIGKZLh/LrspmSQBAV5mac+2vLa+51oOd5pijxmoo7RS4LvcqUJMSQMCDRU
+	Ai1stSXDqEBp5jmt1i6d2vxWjm5c=
+X-Received: by 2002:a05:6512:1241:b0:549:733b:6afc with SMTP id
+ 2adb3069b0e04-5497d3358bemt3061168e87.12.1741279665290; Thu, 06 Mar 2025
+ 08:47:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE8:EE_|LV3PR12MB9402:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90889276-e85a-4fba-df69-08dd5cce615b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?t8xkCRvlazIE82uEWG5om0ryuJ+RS+ZpRySAn9yNoK4lumdiC2m0kI6KXF+Q?=
- =?us-ascii?Q?3NHgOWd+2YRSk3ppCVS3cdoMeybPF/eWoFJnBeFqjQlnnBMX7/atbRdPaWhR?=
- =?us-ascii?Q?xKIMXoBeyNjPhVtY4uGkG0srCWXu7Or/qsekgTOrk6TClScQaNTQCyj4D6uD?=
- =?us-ascii?Q?zq89xRXYNjJHQdeRlDgNPCqvTbAe7ns7dviBcsJwT8PYsred0ZsTqTE9LlMW?=
- =?us-ascii?Q?S/NnmkspGVMjf9qvnKFykDHBcJH+ebGYTO152Kkz4FghQ+TdsVSDZEOy4ro/?=
- =?us-ascii?Q?WRLAPJc3BntX+8tBf++kM+ohwlw8wG4oLqFdNgXpS3+Zy5iTOqdfkCRXisE6?=
- =?us-ascii?Q?DuOTzjeJQXgHlr+z67GSJe2lmooUKTKWU5YHrunrb7jpExlU2oxz0qNZavEm?=
- =?us-ascii?Q?cdZo+khruf74mVhMES5i3bJwinqaokfcePUYuhsF5bj1fFZITH1jECaFzbvq?=
- =?us-ascii?Q?Iq8YumSt7pZRd54IbMg3VGjL/w/SKMdjy0B7rr2xVinG2QbRglBPbMwvKleM?=
- =?us-ascii?Q?PrxE2a1ea96s3VP36DIAdyJ0ldduYMEJie7gFwrPsVaPaf5hjOE9hlOCp0Su?=
- =?us-ascii?Q?dOMFJpa6MdAcRXgQD9r6Vm1SDNDPsXywZPRtaWebXhZtgBfLV4tSjHhSyyfn?=
- =?us-ascii?Q?92ZEEDmuVp6wCzvW6L7U8Htj14MyLxyGSrpB70prLT0FHT+G4uwWYN988ih6?=
- =?us-ascii?Q?wN5viA5BXaCAWur4TNFHk3Xq2ztQZw5IoGjzrWvTeK9BlHXJWKJKEq/fEYpv?=
- =?us-ascii?Q?SVC77Zxm8kSffiHSwUsBPj+Xn9VLxSYGXar6+b6/Rx88eCc2Y2/DB567GvmJ?=
- =?us-ascii?Q?jrPGtMhibFr1VGxZ7UuONdZdyJAIaCmWodvmDK9BmyO4dXTTQLZVuxovqBbr?=
- =?us-ascii?Q?qLR1XOVLNIQ0ybY2ZNNUaF5lYnQ6NDbS/vCV5S/fBhNG50cuJx1FeQnAAL7R?=
- =?us-ascii?Q?LDzl9pLss2sF1WKDCJwSUJXtbScApC9FxkooW4+RACFLL6GSQRANbtkVh+Kt?=
- =?us-ascii?Q?XREKVnL3m235nODe4weQvJqsFFnSaOrCg31bhzpeBg2a7Qmu9fbscRABsWrq?=
- =?us-ascii?Q?q56zPRRs52gZoIVB6SkEAH3uSGrMfyL+3NB8vFCqBYph02iEzk9rlopWya1q?=
- =?us-ascii?Q?tUaoFGuIMtpxKGHbPW3kZ6uPmEbJwn9OrnS/fzEPMobbnXzpsenaLF/m/m2J?=
- =?us-ascii?Q?FelxGgsRT0WWaOJfS0ms/p+Xvb0vmqRmz6Tlyz+7mWU7ZMEidCPmWJErjybM?=
- =?us-ascii?Q?PbMJllVoTkBUenuC0ZKH/jGqpVyn8YLflBEWMNRX6NkOEh49DyF0w6RdwlrA?=
- =?us-ascii?Q?EC16tdzixNq2W1PEjyW1PBa+0JpbzkFGMXFwlMGyjR5QmqYJ9GaXls96MS5F?=
- =?us-ascii?Q?lAAK8/Dtg5Z3EROkIPuP0/5mwA9FXYfyGKKC6nBw/hP2a26uj90bRpt534jb?=
- =?us-ascii?Q?WLaiNIn0yj7M1yG6DUovYoc/dT12zD3yKfXCRg1JtEM1xvzG/2vZHvj8m4xM?=
- =?us-ascii?Q?eFkSV2ePzXaNyhc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 16:46:02.1188
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90889276-e85a-4fba-df69-08dd5cce615b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE8.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9402
+References: <20250224132132.1765115-6-ardb+git@google.com>
+In-Reply-To: <20250224132132.1765115-6-ardb+git@google.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 6 Mar 2025 17:47:33 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHamiZ8u4YO9FnrWhpcotUkAusDF_db_5H2qaVD85qmVA@mail.gmail.com>
+X-Gm-Features: AQ5f1JqSV6MLnlpRrip5gVWxbX6kcgtJrmEkxxn0pKEv2rCJmgtvhbpESrpcKwY
+Message-ID: <CAMj1kXHamiZ8u4YO9FnrWhpcotUkAusDF_db_5H2qaVD85qmVA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] x86/build: Get rid of vmlinux postlink step
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-kbuild@vger.kernel.org, 
+	Masahiro Yamada <masahiroy@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-CFMWS entries have a similar importance as SRAT table entries to
-describe memory regions. For CXL error analysis and memory debugging
-information of both is needed. Unify output of both messages to
-improve logging. Change the style of CFMWS message according to SRAT
-output. Also, turn messages into a dev_info() same as for SRAT.
+On Mon, 24 Feb 2025 at 14:21, Ard Biesheuvel <ardb+git@google.com> wrote:
+>
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> Kbuild supports an architecture specific Makefile.postlink file that is
+> invoked for the vmlinux target after it has been built. This Makefile
+> takes 'vmlinux' (which has just been built) as the target, and mangles
+> the file and/or constructs other intermediate artifacts from it.
+>
+> This violates the general philosophy of Make, which is based on rules
+> and dependencies, and artifacts that are rebuilt only when any of their
+> dependencies have been updated.
+>
+> Instead, the different incarnations of vmlinux that are consumed by
+> different stages of the build should be emitted as distinct files, where
+> rules and dependencies are used to define one in terms of the other.
+>
+> This also works around an error observed here [0], where vmlinux is
+> deleted by Make because a subsequent step that consumes it as input
+> throws an error.
+>
+> So refactor the vmlinux shell scripts and build rules so that
+> architectures that rely on --emit-relocs to construct vmlinux with
+> static relocations preserved will get a separate vmlinux.unstripped file
+> carrying those relocations. This removes the need for an imperative
+> postlink step, given that any rules that depend on the unstripped
+> vmlinux can now simply depend on vmlinux.unstripped, rather than inject
+> a build step into Makefile.postlink
+>
+> S390 should be able to do the same. MIPS and RISC-V perform some
+> post-build checks on vmlinux, which is reasonable in principle for a
+> postlink step, although deleting vmlinux when the check fails is equally
+> unhelpful.
+>
+> [0] https://lore.kernel.org/all/Z5ARucnUgqjwBnrp@gmail.com/T/#m731ed0206949fc3f39fcc8a7b82fe348a8fc80c4
+>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Ingo Molnar <mingo@kernel.org>
+>
+> Ard Biesheuvel (4):
+>   Kbuild/link-vmlinux.sh: Make output file name configurable
+>   Kbuild: Introduce Kconfig symbol for linking vmlinux with relocations
+>   Kbuild: Create intermediate vmlinux build with relocations preserved
+>   x86: Get rid of Makefile.postlink
+>
 
-SRAT pr_info() for reference:
-
-drivers/acpi/numa/srat.c:
-  pr_info("SRAT: Node %u PXM %u [mem %#010Lx-%#010Lx]%s%s\n",
-
-Signed-off-by: Robert Richter <rrichter@amd.com>
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Gregory Price <gourry@gourry.net>
----
- drivers/cxl/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 3e75e612cbc4..93c73b163c28 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -447,7 +447,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 			cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1, rc);
- 	else
--		dev_dbg(dev, "decode range: node: %d range [%#llx - %#llx]\n",
-+		dev_info(dev, "ACPI: CFMWS: Node %u [mem %#010Lx-%#010Lx]\n",
- 			phys_to_target_node(cfmws->base_hpa), cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1);
- 
--- 
-2.39.5
-
+Ping?
