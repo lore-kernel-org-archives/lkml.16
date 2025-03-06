@@ -1,94 +1,37 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7AB25A637
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F51825B695;
+	Thu,  6 Mar 2025 17:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741280408; cv=none; b=StGQPOVrUxsYorU8EqL8xTVPNq3pEZyQIeqP8Ryephf17f/s1K/MswRSRgmdxRUNsFsLFGrXZI16iXJ5pSsLh5qfiG/fnoSjmDNUQrX0zsgQyqf6ggWludFbn3jglrFunfG/rt5f+T8Wv1BbG86e7esj4YxlLDi0h7+Uy1LpVDo=
+	t=1741280422; cv=none; b=Vrt4O8Os9R0869OXb2fRrUa+AfbHJiO2oneoYZbbziysCa2vORMmy+97Hks7QfVFjSGG3LnHszFr7cf6uzgZqbAx/W9e+lyAjHWMx38d5FZfQIRQ/Rlg6jrQrrHd5uYL4DGXmmyS/RZ7rjILSetjKA28g4MJcdOzZfPcYnj9iO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741280408; c=relaxed/simple;
-	bh=6EHelBLacWleQv44yGckAy3mIbBU9S9fc+Yecr7hfhk=;
+	s=arc-20240116; t=1741280422; c=relaxed/simple;
+	bh=QnceLVnf5feN1aKAcL7nUss5U3kRaifnpXy1wKKSbFE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pEF/U4aS86u0Wxt6aTMO23eWTECy8hvo1pHMNKFUmFqh97kjOmf/qUg5V5bmN1Na9wyi+T/XTtRRLFgU1FqYf1DnSqVvU4aZEtExCgEcDOuRUtWAZC+TyQdqu5XNGt/Kp8MU9Tgz/VuLnJWVJ7hKtffZFpsW25BPPzFXRMobPNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=OBFBi61X; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYKQsMDaxSB0QonjgPJ+0GjdJ1xSac5ZmmYMVpBATrTJd03RA0ef0/eG0Gei3zYdxofPpy+8oFZkW3ETinZjOdHFrKWWwg50Bmy28jitVp+CMcKwF9Eee+HnkXaLcrkdBeOMA3iqzOF2G86I0xfYimXnebAsoDQR50v55A0kjIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=j+nlG+qS; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="OBFBi61X"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2feb9076cdcso2056257a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:00:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1741280406; x=1741885206; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RQqTHFjNB8mAC6MabLFJci/UUFVOIM/RIyf/FHXgNd8=;
-        b=OBFBi61Xhv2xkNoU7z7xkdqvHEZIWTSQ5PJQ2Qsj4ms+zsdxD/ynUw/jToc5bk4IMN
-         h9y4ZMSUPumTLvnf0cJI78LcN0t8NSPHE7avP5fTZ4icmIVLT1BcQaffZwrpCiL5L3Ma
-         JENUqnbSk7BS5gvewlb0OMxyhcz1HkAp0cFAQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741280406; x=1741885206;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RQqTHFjNB8mAC6MabLFJci/UUFVOIM/RIyf/FHXgNd8=;
-        b=oIFzbMyjQ99mKTI1rHFSN2WY+TVHozh5wOBr/89KT6nNaAbOig9C4aVPk1nh68//kA
-         Tl8Pihi7JNaJprhnk/ufLoj+Sbljy+Zogzmp7pnSA1d5JIGeFxTOVOpN/kAqv83/F8cr
-         rezyMrsdn6s+ieA6qAgfh6SDFXTIqKddD+aAU2jfAX5C/B0JEKtHhJ5V/xw3ltkBOO+e
-         qhXhHLmZ/2frHP5LpagP470OkrgQ9AhuOUhMITImVr2yZ1R72gf7y4FzDk3UM7C5Qlnp
-         jpzIiSacxDCP26s8v3YNKwdo/UPATTVXbvSysUlblcIz39luitUxB1vkZGgmW5G/0lHH
-         OzGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCu00zuQH8KRn6yk5E3oasLy0PEQC7DxgQJdgwRBBYTSQnk8t5HjaE98ScV7YRgCWz/mXe6dcr4ebX8+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw54We4qnO6Z+B0F1WRnd9ncfnQ+e+5cME+T15kHXs1w3nNizci
-	w3dwwVCHaCzxrp91TUtdpoLN+w4EPefLSJH+XgIJoQma3o7Oy6NAcUfkarfZsyc=
-X-Gm-Gg: ASbGncuaqWAlqTkEklr1pcgOJKwMp4TArmbJugCiziv0/yqYRAYt+YSjWORUmufHfxl
-	7/8PO3OmlNk8oVs4Lyj8Xd5NKkdEfGPPpCJz88ImtvXVoMHFkdDiPoEMart5sl0CjoU1sbSbjHZ
-	qe61boppD74YQHaJHwysUFDamnXT74dfIIhoZZX0hm0e/n/3Pvm2bzjDWI8rrk5Id0W4/gqXF6d
-	oYIL/cWa1ew0uKC0McBI01aA5OPJRol+FDGLPWvaUWfe0ENPptcMPcpvXfMthVlvWOpU3LmGInu
-	T+uTQBb54Z6x69odp3viAUKOzXy6GmJ1DOExaLttqySSCQQB63Wj6eih+HbUqJaYrnF80dE5E9h
-	t8qwr4ayssJo=
-X-Google-Smtp-Source: AGHT+IGMGInMYoKZVtUaLSTFn7K3E/qcMiV7/r81nffI3pTWDuYLKqaB5kMCtQ4fVSMgy49C9wt38w==
-X-Received: by 2002:a17:90b:5688:b0:2ee:5bc9:75c3 with SMTP id 98e67ed59e1d1-2ff49717481mr11337807a91.5.1741280406235;
-        Thu, 06 Mar 2025 09:00:06 -0800 (PST)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff5f6a64ecsm1685585a91.0.2025.03.06.09.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 09:00:05 -0800 (PST)
-Date: Thu, 6 Mar 2025 09:00:02 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, mkarsten@uwaterloo.ca,
-	gerhard@engleder-embedded.com, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, mst@redhat.com, leiyang@redhat.com,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v5 3/4] virtio-net: Map NAPIs to queues
-Message-ID: <Z8nUksjJyKEbP68-@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	mkarsten@uwaterloo.ca, gerhard@engleder-embedded.com,
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, mst@redhat.com,
-	leiyang@redhat.com,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250227185017.206785-1-jdamato@fastly.com>
- <20250227185017.206785-4-jdamato@fastly.com>
- <20250228182759.74de5bec@kernel.org>
- <Z8Xc0muOV8jtHBkX@LQ3V64L9R2>
- <Z8XgGrToAD7Bak-I@LQ3V64L9R2>
- <Z8X15hxz8t-vXpPU@LQ3V64L9R2>
- <20250303160355.5f8d82d8@kernel.org>
- <Z8j9i-bW3P-GOpbw@LQ3V64L9R2>
- <20250305182118.3d885f0d@kernel.org>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="j+nlG+qS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1741280418;
+	bh=QnceLVnf5feN1aKAcL7nUss5U3kRaifnpXy1wKKSbFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j+nlG+qS2CwYyJbo9TVOSh+8yghMw507glcf+47HIYU0jOMGpzM5sI8ThQcw3lr4d
+	 laG3M7bs6fdVefIXMwtKV4oXTvzJlvvZHyLLDufYGW5uti4Q6+RT+bvA1lbXxXPvuc
+	 FOv2O9bbIt3dqa0a6gJhd/4z3H5bv0JJiXvmRcjw=
+Date: Thu, 6 Mar 2025 18:00:17 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Louis Taylor <louis@kragniz.eu>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] tools/nolibc: mark more test functions as static
+Message-ID: <61636d83-8154-4e7b-850b-1c4ed9a2c2f2@t-8ch.de>
+References: <20250304075846.66563-1-louis@kragniz.eu>
+ <20250304075846.66563-5-louis@kragniz.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,43 +40,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305182118.3d885f0d@kernel.org>
+In-Reply-To: <20250304075846.66563-5-louis@kragniz.eu>
 
-On Wed, Mar 05, 2025 at 06:21:18PM -0800, Jakub Kicinski wrote:
-> On Wed, 5 Mar 2025 17:42:35 -0800 Joe Damato wrote:
-> > Two spots that come to mind are:
-> >  - in virtnet_probe where all the other netdev ops are plumbed
-> >    through, or
-> >  - above virtnet_disable_queue_pair which I assume a future queue
-> >    API implementor would need to call for ndo_queue_stop
+On 2025-03-04 07:58:19+0000, Louis Taylor wrote:
+> It was mentioned that a new test_ function should be static, so go back
+> over existing functions and mark those static as well.
+
+Actually Willy wants these non-static for debugging purposes.
+I can't seem to get that into my head -.-
+Let's drop this one.
+
+> Signed-off-by: Louis Taylor <louis@kragniz.eu>
+> ---
+>  tools/testing/selftests/nolibc/nolibc-test.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 > 
-> I'd put it next to some call which will have to be inspected.
-> Normally we change napi_disable() to napi_disable_locked()
-> for drivers using the instance lock, so maybe on the napi_disable()
-> line in the refill? 
-
-Sure, that seems reasonable to me.
-
-Does this comment seem reasonable? I tried to distill what you said
-in your previous message (thanks for the guidance, btw):
-
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index d6c8fe670005..fe5f6313d422 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2883,6 +2883,18 @@ static void refill_work(struct work_struct *work)
-        for (i = 0; i < vi->curr_queue_pairs; i++) {
-                struct receive_queue *rq = &vi->rq[i];
-
-+               /*
-+                * When queue API support is added in the future and the call
-+                * below becomes napi_disable_locked, this driver will need to
-+                * be refactored.
-+                *
-+                * One possible solution would be to:
-+                *   - cancel refill_work with cancel_delayed_work (note: non-sync)
-+                *   - cancel refill_work with cancel_delayed_work_sync in
-+                *     virtnet_remove after the netdev is unregistered
-+                *   - wrap all of the work in a lock (perhaps vi->refill_lock?)
-+                *   - check netif_running() and return early to avoid a race
-+                */
+> diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+> index 2a1629938dd6..b5464ca8d050 100644
+> --- a/tools/testing/selftests/nolibc/nolibc-test.c
+> +++ b/tools/testing/selftests/nolibc/nolibc-test.c
+> @@ -807,7 +807,7 @@ static int test_dirent(void)
+>  	return 0;
+>  }
+>  
+> -int test_getpagesize(void)
+> +static int test_getpagesize(void)
+>  {
+>  	int x = getpagesize();
+>  	int c;
+> @@ -836,7 +836,7 @@ int test_getpagesize(void)
+>  	return !c;
+>  }
+>  
+> -int test_fork(void)
+> +static int test_fork(void)
+>  {
+>  	int status;
+>  	pid_t pid;
+> @@ -861,7 +861,7 @@ int test_fork(void)
+>  	}
+>  }
+>  
+> -int test_stat_timestamps(void)
+> +static int test_stat_timestamps(void)
+>  {
+>  	struct stat st;
+>  
+> @@ -883,7 +883,7 @@ int test_stat_timestamps(void)
+>  	return 0;
+>  }
+>  
+> -int test_uname(void)
+> +static int test_uname(void)
+>  {
+>  	struct utsname buf;
+>  	char osrelease[sizeof(buf.release)];
+> @@ -922,7 +922,7 @@ int test_uname(void)
+>  	return 0;
+>  }
+>  
+> -int test_mmap_munmap(void)
+> +static int test_mmap_munmap(void)
+>  {
+>  	int ret, fd, i, page_size;
+>  	void *mem;
+> @@ -980,7 +980,7 @@ int test_mmap_munmap(void)
+>  	return !!ret;
+>  }
+>  
+> -int test_pipe(void)
+> +static int test_pipe(void)
+>  {
+>  	const char *const msg = "hello, nolibc";
+>  	int pipefd[2];
+> @@ -1001,7 +1001,7 @@ int test_pipe(void)
+>  	return !!memcmp(buf, msg, len);
+>  }
+>  
+> -int test_rlimit(void)
+> +static int test_rlimit(void)
+>  {
+>  	struct rlimit rlim = {
+>  		.rlim_cur = 1 << 20,
+> -- 
+> 2.45.2
+> 
