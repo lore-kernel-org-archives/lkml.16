@@ -1,146 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F97319C54F;
-	Thu,  6 Mar 2025 04:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAB718FDAA;
+	Thu,  6 Mar 2025 04:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741235159; cv=none; b=C5OWNQEhL+jNG4vwu39t2ZczwUK6cjAoA/yDNCQYhb+qaKN7aVMaP3hBgm9njlVZ8MNWQJgEKZaZr7/cGrMPtx5eym5Cvn8ZteqdSry1oEdDOMuP3o8d+SVd/qdhOWuKJlEn48fRRrl+XU5EAbMLV4nqcqwgmiZ8MaCgqPQE02Y=
+	t=1741235276; cv=none; b=EuVmtoQla0nY34/fx5SNtnKO3qQIfzCWgDTUqiwpNfdgkLjdDzNbh14wlvWTAhCXAv27wMUTAmdVd0o84zy0/AJrno7Go1ZDowzxqgeHVrZsPFyis/28xCZs2psm3SF9DmKghnI1cqRCl1NL5rXu6LfVTfQS83fgGCh3kdo/Cow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741235159; c=relaxed/simple;
-	bh=NJCVt2+YUa5c5YJ95PV1i2GlvWFyPhsZJ0jvLUACEOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u/jECaM+Rke/xuxxeCaVLhkEpP3y2wGIlWvqwwEVw987NcRwYP5Jx+RA0HpeOq/WYnMNOgE4KKD3PH68TepWGasX99KDsjMEUeXjDHu9O+3GuzLaDplEd15v/WA1fDTw6tjwxlaedfS3j4T8FqQARAPwWetiYN18eiWd198Hs9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=myN/k6lZ; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="myN/k6lZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741235157; x=1772771157;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NJCVt2+YUa5c5YJ95PV1i2GlvWFyPhsZJ0jvLUACEOY=;
-  b=myN/k6lZ7+uYPDMV+Oo+LtUQZTeik9LHDeunELxyNBzxDgTYoNsxcx2Z
-   WvxH8i1zsW+LyYtZ3cmjBsa07J2dSV94NyV8K7c0HJuKnoEn9ZSa2A44X
-   k96YDsv1PbemKxTRr05nSgdoW2rLxDaQHzSammjbposQKtAj9P6/KZTRD
-   nH/IJQt3cmbohFc+Rm7M/b5SJRezwILYoeT7icN9UB7TJdLhwwRL7f4/P
-   ZfJxZi9TRlbMVvd/Ukgc9+idfY4IskXWS7CrgFoyIlt0BE/GUfohZEcit
-   yRUG1HUr/Ea/+S0LXI5LRCnyWUxHc4EHRL411A487ssT1pydgAMhDONu4
-   g==;
-X-CSE-ConnectionGUID: zZeoU5FwSBaUBkojruNjsQ==
-X-CSE-MsgGUID: Av8sX98yT/ykmWBYuj+J3Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="46003572"
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="46003572"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 20:25:57 -0800
-X-CSE-ConnectionGUID: Wox4vV5jSb64q56XBB+2rg==
-X-CSE-MsgGUID: BmO2x536SbCjV5jLKsr7Dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="119075926"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 05 Mar 2025 20:25:51 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tq2ns-000MWc-2Z;
-	Thu, 06 Mar 2025 04:25:49 +0000
-Date: Thu, 6 Mar 2025 12:24:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manikandan Muralidharan <manikandan.m@microchip.com>, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, tudor.ambarus@linaro.org,
-	pratyush@kernel.org, mwalle@kernel.org, miquel.raynal@bootlin.com,
-	richard@nod.at, vigneshr@ti.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, manikandan.m@microchip.com,
-	Varshini Rajendran <varshini.rajendran@microchip.com>
-Subject: Re: [PATCH 1/2] mtd: spi-nor: sst: register SFDP region into NVMEM
- framework to read MAC Address
-Message-ID: <202503061244.wH2sylN8-lkp@intel.com>
-References: <20250305100134.1171124-1-manikandan.m@microchip.com>
+	s=arc-20240116; t=1741235276; c=relaxed/simple;
+	bh=+FVxQn4sdkfmsJ5BFi35qzfI/Ggq/Z4b3+c3bvz3hUY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d9H4HOjALZ+6WLzEH6q18gP/ZVvsQHn+IR9h5DHepXLTh8CPBxdB4W5rpKvCVH+qeSnJG86JO4fAu9vk8grwykB8leDOW/FjjMm5B7/fEHgPV9u42lbsiXjWN0mDK45UiVfsWIww4w6KoCfK8m/uceJs0NnxsnjCCyuWIS+86zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowADn7286JMlno9vFEg--.61141S2;
+	Thu, 06 Mar 2025 12:27:42 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: jani.nikula@linux.intel.com,
+	inki.dae@samsung.com,
+	sw0312.kim@samsung.com,
+	kyungmin.park@samsung.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	krzk@kernel.org,
+	alim.akhtar@samsung.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] drm/exynos/vidi: Remove redundant error handling in vidi_get_modes()
+Date: Thu,  6 Mar 2025 12:27:20 +0800
+Message-ID: <20250306042720.2296-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305100134.1171124-1-manikandan.m@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADn7286JMlno9vFEg--.61141S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7urW5Ww1UGr1DurWkXr4fKrg_yoW8GryxpF
+	W7Kr92yryDt3yrAa4jyF1FkFyYya9FkFWqgr4Duwnxur4UArn7ZF4ft3WUXa48Cr95Z34j
+	v3WDtrs8JF1kCr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8XwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhZ2-UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ4MA2fIkRkNFQACs1
 
-Hi Manikandan,
+In the vidi_get_modes() function, if either drm_edid_dup() or 
+drm_edid_alloc() fails, the function will immediately return 0,
+indicating that no display modes can be retrieved. However, in
+the event of failure in these two functions, it is still necessary
+to call the subsequent drm_edid_connector_update() function with
+a NULL drm_edid as an argument. This ensures that operations such
+as connector settings are performed in its callee function, 
+_drm_edid_connector_property_update. To maintain the integrity of
+the operation, redundant error handling needs to be removed.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/gpu/drm/exynos/exynos_drm_vidi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-[auto build test WARNING on mtd/spi-nor/next]
-[also build test WARNING on robh/for-next abelloni/rtc-next linus/master v6.14-rc5 next-20250305]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Manikandan-Muralidharan/ARM-dts-microchip-sama5d29_curiosity-Add-nvmem-layout-in-QSPI-to-describe-EUI48-MAC-address-region/20250305-180433
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git spi-nor/next
-patch link:    https://lore.kernel.org/r/20250305100134.1171124-1-manikandan.m%40microchip.com
-patch subject: [PATCH 1/2] mtd: spi-nor: sst: register SFDP region into NVMEM framework to read MAC Address
-config: m68k-stmark2_defconfig (https://download.01.org/0day-ci/archive/20250306/202503061244.wH2sylN8-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250306/202503061244.wH2sylN8-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503061244.wH2sylN8-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/mtd/spi-nor/sst.c:75: warning: Function parameter or struct member 'off' not described in 'sst26vf_sfdp_mac_addr_read'
->> drivers/mtd/spi-nor/sst.c:75: warning: Excess function parameter 'offset' description in 'sst26vf_sfdp_mac_addr_read'
-
-
-vim +75 drivers/mtd/spi-nor/sst.c
-
-    61	
-    62	/**
-    63	 * sst26vf_sfdp_mac_addr_read() - check if the EUI-48 MAC Address is programmed
-    64	 * and read the data from the prestored SFDP data
-    65	 *
-    66	 * @priv: User context passed to read callbacks.
-    67	 * @offset: Offset within the NVMEM device.
-    68	 * @val: pointer where to fill the ethernet address
-    69	 * @bytes: Length of the NVMEM cell
-    70	 *
-    71	 * Return: 0 on success, -EINVAL  otherwise.
-    72	 */
-    73	static int sst26vf_sfdp_mac_addr_read(void *priv, unsigned int off,
-    74					      void *val, size_t bytes)
-  > 75	{
-    76		struct spi_nor *nor = priv;
-    77		struct sfdp *sfdp = nor->sfdp;
-    78		loff_t offset = off;
-    79		size_t sfdp_size;
-    80	
-    81		/*
-    82		 * Check if the EUI-48 MAC address is programmed in the next six address
-    83		 * locations.
-    84		 * @off is programmed in the DT and stores the start of MAC Address
-    85		 * byte, (off - 1) stores the bit length of the Extended Unique
-    86		 * Identifier
-    87		 */
-    88		if (SST26VF_SFDP_EUI48 != *((u8 *)sfdp->dwords + (offset - 1)))
-    89			return -EINVAL;
-    90	
-    91		sfdp_size = sfdp->num_dwords * sizeof(*sfdp->dwords);
-    92		memory_read_from_buffer(val, bytes, &offset, sfdp->dwords,
-    93					sfdp_size);
-    94		return 0;
-    95	}
-    96	
-
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_vidi.c b/drivers/gpu/drm/exynos/exynos_drm_vidi.c
+index fd388b1dbe68..a956cdb2f33a 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_vidi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_vidi.c
+@@ -312,9 +312,6 @@ static int vidi_get_modes(struct drm_connector *connector)
+ 	else
+ 		drm_edid = drm_edid_alloc(fake_edid_info, sizeof(fake_edid_info));
+ 
+-	if (!drm_edid)
+-		return 0;
+-
+ 	drm_edid_connector_update(connector, drm_edid);
+ 
+ 	count = drm_edid_connector_add_modes(connector);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.42.0.windows.2
+
