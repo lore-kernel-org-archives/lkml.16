@@ -1,91 +1,132 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825B7376
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 00:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AF117578;
+	Thu,  6 Mar 2025 00:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741219437; cv=none; b=C4XJxV/qsDQc0mIRau06FudwlDFedLqfNZpO/E1XdNrav++/p64iq3cTIpkCvqSct4seHuOXmd6qcIDGWC/NcGs70qn5zeLknTA2Ccgv9XmXlZA/pLoQ1RK0vpLNOT3Euw2HTt9qqDd2xZ/w7NbpchotpQZozuwuUTOv3y9MlTs=
+	t=1741219507; cv=none; b=bfGaQC7nHre+Q7o06DaBZwVp5wt3GHB78zqgx5NQQso+1Ca3SdJfqdfv2F/fyoWYmX57KXPD+FAmiG8+168XFlAU1vP74zEz/Cw5TGDUXCT7b+GEbNFHQm1AIbC1k0v7YbY78vGu15lZxvviYgLv4dy2/6A0F90UVxPrT1uKLKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741219437; c=relaxed/simple;
-	bh=kjp8x1ytnycfKo+KUkfRyVWWh0PRBeKDaQEeW9/9CJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aLpm9Z1ts98ibUxNclZF4Ge/s4LFDaP4eiy84fje1rEGmYdgNd6VEQJU0PWzkbteU4LBPCqyqiXWRJperSQyitlhH/GlPGqWE42D9++97xY9RwbYXE6DHaPg9+PjKn7LaFm4O7oE7cjOV4Gz44K3SEjiWnYvy4RbFkbN/yeaueo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 18EF568BEB; Thu,  6 Mar 2025 01:03:49 +0100 (CET)
-Date: Thu, 6 Mar 2025 01:03:48 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Nilay Shroff <nilay@linux.ibm.com>,
-	John Meneghini <jmeneghi@redhat.com>, bmarzins@redhat.com,
-	Bryan Gurney <bgurney@redhat.com>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Marco Patalano <mpatalan@redhat.com>,
-	axboe@kernel.dk
-Subject: Re: [PATCH] nvme: remove multipath module parameter
-Message-ID: <20250306000348.GA1233@lst.de>
-References: <8a1730a1-1faf-4722-99e1-c3a85257b6f4@redhat.com> <Z7TARX-tFY3mnuU7@kbusch-mbp> <2ff87386-c6db-4f2e-be91-213504d99a78@linux.ibm.com> <0656b66c-dd9c-495d-b1fc-4f09e763fa66@grimberg.me> <Z7dct_AbaSO7uZ2h@kbusch-mbp> <91ae613a-7b56-4ca0-b91c-6bc1eee798b8@suse.de> <20250305141554.GA18065@lst.de> <Z8hrJ5JVqi7TgFCn@kbusch-mbp> <20250305235119.GB896@lst.de> <Z8jk-D3EjEdyBIU5@kbusch-mbp>
+	s=arc-20240116; t=1741219507; c=relaxed/simple;
+	bh=gwRerhKsJhNh4ZpQR4SajjAscqi9DkY5YwLDwNvtn9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EhEr9RgZoORGU0hsbzZVZVlGiJKY5g6fgFBQTXJVe1Kg2AMoPijVF91hU2tkRNHt5GFzwwuGiQ9jPiYPZy/Ks+eVn7l6x7hkiyEOjRkRJ6JYI1Nftn8/xqUL80aAwF1Y9c8QA7onZKNMVZKoUKuh+GelI6XZY9XfbPTP9lgUuJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVyW+McL; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVyW+McL"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22349dc31bcso467725ad.3;
+        Wed, 05 Mar 2025 16:05:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741219505; x=1741824305; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X6f/NDGo0Vf2cKafvbyrDyAvIQAgQfr1nIMxIAZAPi4=;
+        b=KVyW+McLR8vR3WPGra2Jyq40pZ7l4rWQEL39+QY29HrL8PcRK/LPN4hxXesgCGdf+J
+         Erd01akLLAb3uDO+KFTy8Co6D84hesh2e++WMyZpt3QkC50p8Jk4zmydIHORF0cfgg+l
+         6nqCXuZ8WKeBtbEq0iM9m3wrMdWKSDGZFrdJdVGizHC39wGIRivG5TGGf5D5Kk5HbJto
+         e2S9kZRQx3sWObv2F/qrVE90xFDDu3fapvrStBqX1yORCcsPXTTr0fiWUdwJW4bizHBd
+         QR9YeuZ0uCcRaxjvKHL9x3RvZ6jURXAOwlAxen2/KVO09bIMHvm1PoCFGtb+bWNEfiJW
+         RqEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741219505; x=1741824305;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X6f/NDGo0Vf2cKafvbyrDyAvIQAgQfr1nIMxIAZAPi4=;
+        b=UvCNNoKoXUZPjq/p66/j5AEFBZURDZ6l4sdP1QsmuKIimo40txJqAhceByhIS4sw/L
+         eIZFdsfakUP6phiA4yUaqfT+mpUEgf/ckJfoPZsyYDmBKvmp2rMRygtPuFrMlrXeLxVA
+         lzxqLSKa0p16QDGid+0p/BvjnvjSnWNSm5D/6lqy6SZb5H+zIQ4wm5xJnho/2Ydx95ID
+         4o9nDu7vcsq5e8srPCxVSpAOERF4OU6gYYawOyBrtkPmIij9k1F+MD81ibVfgzxnvpDZ
+         KSSnIDv3+3PABMztvyEd4xwYOcl0wymQ86o4BWv0+MN1t4nRnQy3U2Jom+9mGqS5ACNy
+         ZC7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUBTvyMDsMtozL95iziCh1FKzQvrvrMAZolAhKjqZiqnkvvsGSGOdl7yVpKCVl2+TkeA41i26wrv7I=@vger.kernel.org, AJvYcCWdgH0ijVaegoJRWqws5FCtPSrmq94f77DzCAjXaafDwdVe8pDhd+lG57oGTQy+GMUC7gSC5lL9EqaEFlyL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5ZVRCZTMZlysw7sk2VN4Ks/iSQQRbQMXuKyEmFawXsHoBYak5
+	ZDSKKJI+QJ1kI8T+CMhN5GShTMIGRuyDoKqPM6SnCVrCRSgwCrIM
+X-Gm-Gg: ASbGncsuPllepMyP5GG4CLKjzp81nflSIqgmes4SPe+1YeGPf60M2NtHCGZPo1htDvX
+	zgMGJxsbeB7vGG8BHyboj6zbjwHMKgGG71W29C230u3qngTlKQI3HUSfUvFsXbBlgGxu4n6wbMN
+	bNPIrGSvpaC8tK0hQjHuHykfvbEYpAO/J7rAJWiyiTdKTv1rdrTzLbZ17xLZQECsKbxLl0jnfuR
+	Z0GGN/IRk1Y0TDFvtiwRkAM0Vm8g9xENXT6S2DE8ClSoOoqyLELJOvhMyRPrombKQHOePpw85iQ
+	4DiRI5dLu3nHkS0X7taLbkZLElyF44rNW/xMpggtxEbxDYHG1QjGAl7guQAHuGyPyrA=
+X-Google-Smtp-Source: AGHT+IE46kf0YUY8UFiD6hZaGT679Z/DNfrodG1uHsXyVqNtQrbPapBDoHF0DTFrnDnBcXneh5xRUg==
+X-Received: by 2002:a17:903:1984:b0:21f:4c8b:c4de with SMTP id d9443c01a7336-223f1cf33ebmr75271685ad.42.1741219505410;
+        Wed, 05 Mar 2025 16:05:05 -0800 (PST)
+Received: from danascape.tail34aafc.ts.net ([2402:e280:218d:2e5:857:3077:7768:d8a9])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a91b95sm18915ad.188.2025.03.05.16.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 16:05:05 -0800 (PST)
+From: Saalim Quadri <danascape@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	gregkh@linuxfoundation.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Saalim Quadri <danascape@gmail.com>
+Subject: [PATCH v2] staging: iio: ad9834: Use devm_regulator_get_enable()
+Date: Thu,  6 Mar 2025 05:34:59 +0530
+Message-Id: <20250306000459.1554007-1-danascape@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8jk-D3EjEdyBIU5@kbusch-mbp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 05, 2025 at 04:57:44PM -0700, Keith Busch wrote:
-> > > Obviously he's not talking about multiported PCIe.
-> > 
-> > Why is that obvious?  
-> 
-> No one here would think a multiported device *wouldn't* report CMIC.
+The regulators are only enabled at probe(),
+hence replace the boilerplate code by making use of
+devm_regulator_get_enable() helper.
 
-I hopes so.
+Signed-off-by: Saalim Quadri <danascape@gmail.com>
+---
+V1 -> V2: Update commit description and return the correct error content
 
-> The
-> fact Hannes thinks that's a questionable feature for his device gives
-> away that it is single ported.
+ drivers/staging/iio/frequency/ad9834.c | 22 ++--------------------
+ 1 file changed, 2 insertions(+), 20 deletions(-)
 
-Well, his quote reads like he doesn't know about multiport PCIe devices.
-But maybe he just meant to say "despite being single-ported"
+diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio/frequency/ad9834.c
+index 6e99e008c5f4..50413da2aa65 100644
+--- a/drivers/staging/iio/frequency/ad9834.c
++++ b/drivers/staging/iio/frequency/ad9834.c
+@@ -387,33 +387,15 @@ static const struct iio_info ad9833_info = {
+ 	.attrs = &ad9833_attribute_group,
+ };
+ 
+-static void ad9834_disable_reg(void *data)
+-{
+-	struct regulator *reg = data;
+-
+-	regulator_disable(reg);
+-}
+-
+ static int ad9834_probe(struct spi_device *spi)
+ {
+ 	struct ad9834_state *st;
+ 	struct iio_dev *indio_dev;
+-	struct regulator *reg;
+ 	int ret;
+ 
+-	reg = devm_regulator_get(&spi->dev, "avdd");
+-	if (IS_ERR(reg))
+-		return PTR_ERR(reg);
+-
+-	ret = regulator_enable(reg);
+-	if (ret) {
+-		dev_err(&spi->dev, "Failed to enable specified AVDD supply\n");
+-		return ret;
+-	}
+-
+-	ret = devm_add_action_or_reset(&spi->dev, ad9834_disable_reg, reg);
++	ret = devm_regulator_get_enable(&spi->dev, "avdd");
+ 	if (ret)
+-		return ret;
++		return dev_err_probe(&spi->dev, ret, "Failed to enable specified AVDD supply\n");
+ 
+ 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+ 	if (!indio_dev) {
+-- 
+2.34.1
 
-> > At least based on the stated works he talks about
-> > PCIe and not about multi-port.  The only not multiported devices I've
-> > seen that report NMIC and CMIC are a specific firmware so that the
-> > customer would get multipath behavior, which is a great workaround for
-> > instable heavily switched fabrics.  Note that multiported isn't always
-> > obvious as there are quite a few hacks using lane splitting around that
-> > a normal host can't really see.
-> 
-> In my experience, it's left enabled because of SRIOV, which many of
-> these devices end up shipping without supporting in PCI space anyway.
-
-If a device supports SR-IO setting CMIC and NMIC is corret, but I've
-actually seen surprisingly few production controllers actually supporting
-SR-IOV despite what the datasheets say.
-
-> 
-> > > And he's right, the
-> > > behavior of a PCIe hot plug is very different and often undesirable when
-> > > it's under native multipath.
-> > 
-> > If you do actual hotplug and expect the device to go away it's indeed
-> > not desirable.  If you want the same device to come back after switched
-> > fabric issues it is so desirable that people hack to devices to get it.
-> > People talked about adding a queue_if_no_path-like parameter to control
-> > keeping the multipath node alive a lot, but no one has ever invested
-> > work into actually implementing it.
-> 
-> Not quite the same thing, but kind of related: I proposed this device
-> missing debounce thing about a year ago:
-> 
-> https://lore.kernel.org/linux-nvme/Y+1aKcQgbskA2tra@kbusch-mbp.dhcp.thefacebook.com/
-
-Yes, that somehow fell off the cliff.
