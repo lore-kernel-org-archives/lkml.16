@@ -1,114 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F132208989;
-	Thu,  6 Mar 2025 12:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DBC20B80B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741265941; cv=none; b=jUbl0noBHzNvnpzH3S9Ujbc9FDviA1Tr1L6rdilOjTU98JPd1/MvbTD02ve1VBtEyI7jJa4k2CtPPuFCM9UtsRp+B9uDjxq3JWdnlsU0tOtW0Z3nl8zyIZuk6HRDIgrDSl8Ue5bFsp08eDGvRfAbB9LhqFB86ufSwG5DTbaiSL4=
+	t=1741265950; cv=none; b=WXJQjLCLXTPr8dDSX4JtEqIq0YvvDPpPS/n9biKbOrzSiI4DYZ4KohNSOl94naLgqKXYHZZ7CvpoXAXZITYLxeA/jAz6Njy6RndqT+axZbBj5FhYHlqipXGAa/9uXKuP7OxPEGCiGZcChbxpyiYfSICNl/YbXVk5U8gW4r48wk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741265941; c=relaxed/simple;
-	bh=02P0oorDl8YxmCQhswPJRMMGr3XNv4F0KrL94tG01oM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=HPPiZjUHDJtzV72bPIV/+yhR2QrY8gPnwKQgNk1QKmg/dDc6TZ+Bgg8sdMxE1i//RxDxjmZwGNchnsrq0tYjLor6abE8lHKa/BqVK/aa4pU+JlUxefWTJ6CtAIZNPUutDRmyyCb9ZDNoMBc569980pQEyQ5vNQGXHvP1I43AC2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btbjTowg; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741265950; c=relaxed/simple;
+	bh=+C6+kiSpVE5KfXsZ+T78U7flNYEuG4uRKZzZ3SXkawY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=rzPWkjOrswTj0mRMGOu6ZyC0ykEWduKt2pdOerY++V6OYmz4f7KBucMJCDL7xdUfLGYOzwsxgtjkavVEpuVI7aq4jwFglgif4yKPP9DOWm8PqWT/fR8+dbnaFKLeGqJ5rJ8h4uGKfUS5pTrkZ4QnRavBQHuaW8iTFC8RwICXkmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VJfDy2DU; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btbjTowg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741265940; x=1772801940;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=02P0oorDl8YxmCQhswPJRMMGr3XNv4F0KrL94tG01oM=;
-  b=btbjTowgptSISIlvf3nsnvXnEaNHGretxwu2x4DQ0o8l7kPMbLNASqtX
-   /sx4GvxcdB7eJQHuYwTHjtXaOo2jU5pwBGx0HJYZWsvi/7dZVAd01i8Gd
-   4YYQC3PjoGEDjjkA4A2Mmp2TGj2gyk57GnfyPBL/6YhKKMGjyJskk1MRL
-   RmTf7cPvrD/Cmp8Em1DoUUe2/eZSJ3t/bFMdpPBIU9K+2uqygFDFYzZcW
-   3fPp6ra2RG+RgsVN7gyqlgNsRue5qjETnOjJ3CyX4DAxIwRunuGcRXh9+
-   3l8YbV5H+M45A1KpO8sypXVguwxH5MF8E+GxlUA1XmNqCZx5EJ7c1e1uC
-   Q==;
-X-CSE-ConnectionGUID: B8lWhlLIQGi9xYKBJQnddg==
-X-CSE-MsgGUID: VEEJxqnWRdGaosBPvSCO3g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53670346"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="53670346"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 04:58:59 -0800
-X-CSE-ConnectionGUID: 8mhP/ByPQQmN5aTAEtapTg==
-X-CSE-MsgGUID: zyJjpjZURWG7Ynn84HcfVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123175948"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.218])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 04:58:56 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 6 Mar 2025 14:58:53 +0200 (EET)
-To: Jiri Kosina <jikos@kernel.org>
-cc: Luke Jones <luke@ljones.dev>, LKML <linux-kernel@vger.kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    linux-input@vger.kernel.org, bentiss@kernel.org, mario.limonciello@amd.com
-Subject: Re: [PATCH v3 0/2] hid-asus: asus-wmi: refactor Ally
- suspend/resume
-In-Reply-To: <878o9n16-33p1-orpr-q957-91ns25pp4804@xreary.bet>
-Message-ID: <bff655e3-e1f3-abd9-b476-f656b682a83a@linux.intel.com>
-References: <20250227085817.1007697-1-luke@ljones.dev> <878o9n16-33p1-orpr-q957-91ns25pp4804@xreary.bet>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VJfDy2DU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1741265941; bh=acioOzHhQ2ctbG30Uphm9oLX1bxxFczzdidUNA2813k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=VJfDy2DUwpX5XfCKnT0SUoEzvWeH9nTnFPFakMr1K7ZpOakNSaCfgmDEw3qWIpvnA
+	 4+mUqdK8KuOHSGTrY9sITRt/EaZVuFMwXfPhYIf2X4QDpovhicV4ACz5vko6Zr25om
+	 5akRQMRXH8/XC1fXcYEyOB54ZPnvaVnmltu/9mVY=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id D35AE069; Thu, 06 Mar 2025 20:52:53 +0800
+X-QQ-mid: xmsmtpt1741265573txfnhenz0
+Message-ID: <tencent_B91EEF32CDAC780A6FF82FD56DE49590EB0A@qq.com>
+X-QQ-XMAILINFO: Nq1uWKlIb9DMOHggUw40dwNIxovu2BK7gG0Y0hWe4T/kSZwlFD3oUyW85KZ6wS
+	 0X1MCZvQyVnv6eQhg72SoVrBTk5q2K3vWqOb+cgYNOcnhlT+rRDEjlDFKrIUNtPTBVvUlGAWVpap
+	 UGaXd7G1CKuTYztCzvW6RvdM/vjGJuwI4h/BWYnaIozso92qrkMmY/+d7h14CMtw5+LaKVa1hV3A
+	 IDDAn6jN00lHHUKscSp6tc9nR7r4uppLQUf/fshYLONN8Gs9FDqoaFMVAmUr+c9IC2xBxuySJuvr
+	 1Mk2GkpYgkX+kVU+q9pbSkne+u5ubQ+afTOaI3WXYnf1GIZJBGXmDDE1aprRddu4WBMICygKvCZx
+	 It/2zw3AAtKUSZqzkavuQXxImH9x92oqq/GG6J2iFsZG1Hd4suVMkUWZyz0JNPhsRzh5JWbaitpS
+	 USYtetgLI2NvNd1TRCfpZdA9Zekw2pGwLgCE/LBL1MnF0ReF+9cnTRJ16II87RLlkcHMrNVpa07J
+	 b3Sy87wfrh8T4PquJVgtZTyJSutc92xlbv/g3dxo3FSwBDIJnWQdxNkovfMqzYYlGXWsaf5eR5qk
+	 ltUUXpLaV4wn0t6eZiTowL/76oPysfpEmfzNjee7D7KQOJaeVosVy/xedc/okRWoCI8KdAIDCedX
+	 3cLf1EfJnvJdriU+H+AhUEOWspTMXohyi8M1NSJE6ONuUbe3Z0IWadOOvow38hiix0pNC7XiPcN5
+	 x9pI2S7pR2ZxRSaKdAR1eKVv9ZBRSRozfJ3JaXBPqYmkR2tr/OulrCkKH897MIi/FL/Ae3KsL5+e
+	 o/p/+IZSVDxPmN1TBXE0y42cBNGVyAU7vZz7omz8ybZhY1K2W6RPrROT0JS6bqI+Dh5BxG+sM2QB
+	 TJFwcXv5mZqRo4TP3kSqHFv2IVYD8YTfF6oe8tYm6n5lu97adDbCpri57Yz0BorA==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
+Date: Thu,  6 Mar 2025 20:52:52 +0800
+X-OQ-MSGID: <20250306125251.1597826-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67c49230.050a0220.55417.04d5.GAE@google.com>
+References: <67c49230.050a0220.55417.04d5.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Mar 2025, Jiri Kosina wrote:
-> On Thu, 27 Feb 2025, Luke Jones wrote:
-> 
-> > This short series refactors the Ally suspend/resume functionality in the
-> > asus-wmi driver along with adding support for ROG Ally MCU version checking.
-> > 
-> > The version checking is then used to toggle the use of older CSEE call hacks
-> > that were initially used to combat Ally suspend/wake issues arising from the MCU
-> > not clearing a particular flag on resume. ASUS have since corrected this
-> > especially for Linux in newer firmware versions.
-> > 
-> > - hid-asus requests the MCU version and displays a warning if the version is
-> >   older than the one that fixes the issue.
-> > - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
-> > version is high enough.
-> > 
-> > *Note: In review it was requested by Mario that I try strsep() for parsing
-> > the version. I did try this and a few variations but the result was much
-> > more code due to having to check more edge cases due to the input being
-> > raw bytes. In the end the cleaned up while loop proved more robust.
-> > 
-> > - Changelog:
-> >   + V2: https://lore.kernel.org/platform-driver-x86/20250226010129.32043-1-luke@ljones.dev/T/#t
-> >     - Adjust warning message to explicitly mention suspend issues
-> >     - Use switch/case block to set min_version
-> >       - Set min_version to 0 by default and toggle hacks off
-> >   + V3
-> >     - Remove noise (excess pr_info)
-> >     - Use kstrtoint, not kstrtolong
-> >     - Use __free(kfree) for allocated mem and drop goto + logging
-> >     - Use print_hex_dump() to show failed data after pr_err in mcu_request_version()
-> >     - Use pr_debug in set_ally_mcu_hack() and set_ally_mcu_powersave() plus
-> >       correct the message.
-> > 
-> > Luke D. Jones (2):
-> >   hid-asus: check ROG Ally MCU version and warn
-> >   platform/x86: asus-wmi: Refactor Ally suspend/resume
-> > 
-> >  drivers/hid/hid-asus.c                     | 111 +++++++++++++++++-
-> >  drivers/platform/x86/asus-wmi.c            | 130 ++++++++++++++-------
-> >  include/linux/platform_data/x86/asus-wmi.h |  15 +++
-> >  3 files changed, 215 insertions(+), 41 deletions(-)
-> 
-> Hans, are you OK taking both patches through your tree?
+#syz test
 
-Yes, I can take them both.
-
--- 
- i.
+diff --git a/mm/gup.c b/mm/gup.c
+index 3883b307780e..9f740d607919 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1194,6 +1194,7 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	}
+ 
+ 	ret = handle_mm_fault(vma, address, fault_flags, NULL);
++	printk("1mm: %p, map held lock: %d, vma: %p, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, __func__);
+ 
+ 	if (ret & VM_FAULT_COMPLETED) {
+ 		/*
+@@ -1216,8 +1217,11 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	if (ret & VM_FAULT_ERROR) {
+ 		int err = vm_fault_to_errno(ret, flags);
+ 
+-		if (err)
++		printk("mm: %p, map held lock: %d, vma: %p, err: %d, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, err, __func__);
++		if (err) {
++			*locked = *locked ? err != -EFAULT : 0;
+ 			return err;
++		}
+ 		BUG();
+ 	}
+ 
+@@ -1487,6 +1491,7 @@ static long __get_user_pages(struct mm_struct *mm,
+ 		cond_resched();
+ 
+ 		page = follow_page_mask(vma, start, gup_flags, &ctx);
++		printk("<after resched and follow page mask> mm: %p, map lock held: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), __func__);
+ 		if (!page || PTR_ERR(page) == -EMLINK) {
+ 			ret = faultin_page(vma, start, gup_flags,
+ 					   PTR_ERR(page) == -EMLINK, locked);
+@@ -1500,6 +1505,7 @@ static long __get_user_pages(struct mm_struct *mm,
+ 			case -EFAULT:
+ 			case -ENOMEM:
+ 			case -EHWPOISON:
++				printk("mm2: %p, map held lock: %d, vma: %p, ret: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), vma, ret, __func__);
+ 				goto out;
+ 			}
+ 			BUG();
+@@ -2029,7 +2035,12 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 		 * double checks the vma flags, so that it won't mlock pages
+ 		 * if the vma was already munlocked.
+ 		 */
++		printk("1mm: %p, vma: %p, mmap lock held: %d, locked: %d, vma is acc: %d, %s\n",
++			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, vma_is_accessible(vma), __func__);
+ 		ret = populate_vma_page_range(vma, nstart, nend, &locked);
++		printk("mm: %p, vma: %p, mmap lock held: %d, locked: %d, ret: %ld, mm addr is valid: %d, %s\n",
++			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, ret, virt_addr_valid((void*)mm), __func__);
++
+ 		if (ret < 0) {
+ 			if (ignore_errors) {
+ 				ret = 0;
+diff --git a/mm/memory.c b/mm/memory.c
+index b4d3d4893267..43e35a0c2841 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -6206,10 +6206,14 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 
+ 	lru_gen_enter_fault(vma);
+ 
++	printk("mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
++		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
+ 	if (unlikely(is_vm_hugetlb_page(vma)))
+ 		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
+ 	else
+ 		ret = __handle_mm_fault(vma, address, flags);
++	printk("2mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
++		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
+ 
+ 	/*
+ 	 * Warning: It is no longer safe to dereference vma-> after this point,
 
