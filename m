@@ -1,101 +1,79 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334FC1DF24E;
-	Thu,  6 Mar 2025 08:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E54E6224FA
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741250244; cv=none; b=mL+8WWPUl1t61QaiLJAg+rI6c8guzt5CzvWTWF6V+UEsrgTQJYkBdHZdYvFHIjEESNvXWvakq8oFNsuiiu2mKHrezLkjZGw8I5piNej4Ookkczm5Eo5aVTSccaAlO5J7iE0Ut1ZZzS+GZ85SqG9f+C33lTAijGNQijgyO7UKPzg=
+	t=1741250310; cv=none; b=bkcE9241dnEE/yhtfAKY6yNNY+W5b6slrl+kxzln0eWTdzv7oqLb4fU4DddQYpaBmg0pbHhFvG9S/6fZa2oWaU2zl6neamvL2cQ/bHlf1TBjUGyCDWJQfEdiENqj8+z/BuTQn033YsTBh0Hb/tx+nVvZkk5pyZrc/SmyGCgUyTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741250244; c=relaxed/simple;
-	bh=/7ANYMaP62+Mbot+ch5lr0itG0Gzhus/1qB4+BuMJ2I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oDVv33TUgq0A9cpgjQXH6H2zoeQd5f9zZwNOihfoRNP9E2vC+uJ5O3Y44+gLuSKhasVMqN1AoWo0z0LXfQ9i1+bO5wHGoznOy8jRCIJMFvnUBqD6+yNb8RDQjFeNlgnzcJhWvMSx/QRMnbEj6VBTZC2LmWv1OgIS+7FSmds4LDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=sGUVnCB9; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1741250310; c=relaxed/simple;
+	bh=e3zB1SRexAvSOxKceijLlQepb4BVkWWKRzflYMQeI3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzZj1aGWgK1ZoqPggkf/wyQbUA1ldgg3gYSv9N2ZQquk5rT1lyIsYHZ5NnbJbAorK3wBV/OQZErabDyracmj5wokM8+ZbseZm1wv8XGIbGaFSZGhJ1rAVLbgHXilVnOwNCVLBKe/9oQjrul4JRjbSMNRkYA+r5SDMKqvw2ni1Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=4KbLu+fR; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="sGUVnCB9"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5267Sk4P015077;
-	Thu, 6 Mar 2025 09:36:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=AjdIaR6MdC1bXj1PgBl4op
-	30U/Eb3YmtVX8LVQkTc3s=; b=sGUVnCB9AsP9lVcBc94H0iRsI1bvs/7vqYrEJW
-	SOJgG+zfq/xn1Wj2Lp0GSUOJUpDOPtJdZh20m879FLpDq69j+QZh3yOCjFD7b0VL
-	EJrCSaIcaB0oHwJTRs8T/UGlypyqr3Audz+1lrymJFgCrUBzImKLz+D0WVv0NTfl
-	HXf4g8xMLVrO73+jSMnP3i6xFnOdOB1nZwY5QAzbWjjZZ+T3vTEfLvIt8S4Wnbh2
-	r7uMAA+3CzAbCFoVihzekdEhgqkdCpbDMLd0hJ4+iBby4aoDHR46Zo4K/FO6dQH9
-	19Ogdgk4+KDlFbOvTWLnbNVh2vypX7OmsgOkMqZC8wOYLSbw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 456krth3ge-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 09:36:57 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A68EF40072;
-	Thu,  6 Mar 2025 09:35:14 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AA4CB374AFA;
-	Thu,  6 Mar 2025 09:34:19 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
- (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Mar
- 2025 09:34:19 +0100
-Received: from localhost (10.48.86.222) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Mar
- 2025 09:34:19 +0100
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-To: <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
-CC: <stable@vger.kernel.org>, <alexandre.torgue@foss.st.com>,
-        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2] clocksource: stm32-lptimer: use wakeup capable instead of init wakeup
-Date: Thu, 6 Mar 2025 09:34:07 +0100
-Message-ID: <20250306083407.2374894-1-fabrice.gasnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="4KbLu+fR"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 792D6413AD;
+	Thu,  6 Mar 2025 09:38:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1741250302;
+	bh=e3zB1SRexAvSOxKceijLlQepb4BVkWWKRzflYMQeI3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=4KbLu+fRtZe6OIx/LFQTsVdVj9nuPFQzQDKRfOF6v+752onzGxtbpiAUH0Wk7fVVe
+	 KC8FjHWKec/HH112QLLKcNYgFamupREFUNCdks2/jZaNAnQjVDP4e+2WHzDhoN5rjz
+	 N+kNUCqHdpdRnVahxKvH5781P+C3i1u+8iuQPnK4FEjPYy8NirLwfbaNNk9PQA9uaH
+	 EApUD+0rWaNYbpeteNg4gEbNT971s/kJbMoVl8Bzy+xqjU5rQvVueN53T3Cot0aos5
+	 41WQnUknaG2weRm2ACKMKsrPDb+7nWTOKXSIGKg+tU9s/NbT1+SaL2lZBJd9Lw8M5E
+	 Z81gIJ449l0uw==
+Date: Thu, 6 Mar 2025 09:38:21 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Joerg Roedel <jroedel@suse.de>, Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org, hpa@zytor.com,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
+	Larry.Dewey@amd.com,
+	"Alexey Gladkov (Intel)" <alexey.gladkov@intel.com>
+Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
+Message-ID: <Z8le_TWUJNebrfs7@8bytes.org>
+References: <20250305105234.235553-1-joro@8bytes.org>
+ <20250305111251.GBZ8gxs_6O7g3gLVEh@fat_crate.local>
+ <Z8g01YhM_FtdB5n6@gmail.com>
+ <20250305113155.GCZ8g2K1XEdgynTA9D@fat_crate.local>
+ <Z8g4sU_dsZgY0PuS@gmail.com>
+ <20250305115035.GEZ8g6i7NTiSfkxk7J@fat_crate.local>
+ <Z8hYEsHvwUwlOold@suse.de>
+ <20250305153705.GKZ8hvoaz2GPt2rGtu@fat_crate.local>
+ <b0cf4bfc-bf22-4986-9e76-62e3f54179ea@intel.com>
+ <2koe2zg26fndx6d6jcmbg6dzybbgldgrjufupj74nvmav2dmqg@w6bknhosl64h>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_03,2025-03-06_01,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2koe2zg26fndx6d6jcmbg6dzybbgldgrjufupj74nvmav2dmqg@w6bknhosl64h>
 
-From: Alexandre Torgue <alexandre.torgue@foss.st.com>
+On Thu, Mar 06, 2025 at 10:01:17AM +0200, Kirill A. Shutemov wrote:
+> Alexey looking into exposing TDX module version in sysfs for both guest
+> and host.
+> 
+> I think it would be useful for guest to make attributes and TD_CTLS
+> available via sysfs. So far, we only dump them in dmesg on boot (see
+> 564ea84c8c14).
 
-"wakeup-source" property describes a device which has wakeup capability
-but should not force this device as a wakeup source.
+Okay, do you have ideas already on where to put this information in
+SYSFS?
 
-Fixes: 48b41c5e2de6 ("clocksource: Add Low Power STM32 timers driver")
-Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
----
- drivers/clocksource/timer-stm32-lp.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Regards,
 
-diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
-index a4c95161cb22..193e4f643358 100644
---- a/drivers/clocksource/timer-stm32-lp.c
-+++ b/drivers/clocksource/timer-stm32-lp.c
-@@ -168,9 +168,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
- 	}
- 
- 	if (of_property_read_bool(pdev->dev.parent->of_node, "wakeup-source")) {
--		ret = device_init_wakeup(&pdev->dev, true);
--		if (ret)
--			goto out_clk_disable;
-+		device_set_wakeup_capable(&pdev->dev, true);
- 
- 		ret = dev_pm_set_wake_irq(&pdev->dev, irq);
- 		if (ret)
--- 
-2.25.1
+	Joerg
 
