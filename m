@@ -1,120 +1,83 @@
-Received: from out-14.pe-a.jellyfish.systems (out-14.pe-a.jellyfish.systems [198.54.127.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C33D2110E;
-	Thu,  6 Mar 2025 19:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2C125A652;
+	Thu,  6 Mar 2025 19:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741288502; cv=none; b=dZG25MSIL0U8wAcx4r9Fls1OGFUpInZ/2YFaFWAibPEUBvWpXyNldnjYStDfgPU/0ZEGZRqgISPgr5sVvyJGGKlO1YTzX7rJkX73MMKJmTl7oPAZv2vk8LXvebVIIbcrtriIRjHsTg0qEX+g7bGgQjY1kghyqCOPMts6Ev3rM4Q=
+	t=1741288544; cv=none; b=pYESfXRUKUex0gjvkOfh0sfUNqspZX19U+ttsyYOsAsjyqZFYz8MTGDYS1e8r2jKFd6VqAfGXIH4hauPmJ5jc1gXCKAzlry68dNF1cFvadxzFMyrfopxfC5wLlTHq1kn3mGEkqQgl7/lEQSnchsLXk+hNdN3ZwQ4KCZJVKtvxnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741288502; c=relaxed/simple;
-	bh=+Ik/gdyh+zfeJEolmcvNxqa0jLVuR+8H4QG2zWcmDDE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KDzX5YxPMMS941+h7Du4G7Ugw+ZUNrW4PsIvhf7UFcZhp/4qKAHQHCdvsj7n2NdxYwydQEoNmzrsEsExdqKH3e7Nb41mL5zcEcONz9mNk1XZL9BzDcK1zLWE4VEPcH/eI0KS/6FQ2HAMal3X9iq5M7XMLBYAgdbhfp8IR3XBdko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=QV60so3i; arc=none smtp.client-ip=198.54.127.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
+	s=arc-20240116; t=1741288544; c=relaxed/simple;
+	bh=FI4Ykkx+qGEIkojq+fXlvHUD0svrkRp76J6+LsOSy7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qjsk8RQFrNk7Rut4S5dSdg4xy0ONZJLBkVR2pvRC+41BkH+S8ZDBugyBNhfus6EBJ+ln9/UDFilNYpuBHSrRdyxy2E35A5nZn6D5mZdDI/rfRpXPIwvzWWA0Cm8fzJ6RY1pLGe/KYBtFfkCBHPeTCxImhg7n8UBDTuizIFmEfLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pMduT6TL; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="QV60so3i"
-Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
-	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4Z7zQq2zwDz3xSr;
-	Thu, 06 Mar 2025 19:05:55 +0000 (UTC)
-Received: from MTA-07.privateemail.com (unknown [10.50.14.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4Z7zQq1Zf7z2Sd0Q;
-	Thu,  6 Mar 2025 14:05:55 -0500 (EST)
-Received: from mta-07.privateemail.com (localhost [127.0.0.1])
-	by mta-07.privateemail.com (Postfix) with ESMTP id 4Z7zQq07Z3z3hhVH;
-	Thu,  6 Mar 2025 14:05:55 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
-	s=default; t=1741287955;
-	bh=+Ik/gdyh+zfeJEolmcvNxqa0jLVuR+8H4QG2zWcmDDE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QV60so3iPg5fj6T3WvRDLiDrQVeb8QnbZ8hMzDjyWbAML4UkZHZ0orhOjnKHXa6P1
-	 Gq66mq7rFg8F1L4E4/d/YVwRNRjEO95k7PimMXz7vmGPfvQ1oLVtF8gcPhifgVgtj9
-	 oyztUOaY8YnEe1+xYPDD3lC1Gmi1f61Qs/jh3lupKwDwZFmEZip86k6acKAh/4JUPL
-	 rfM17rR8M6NRYfIDwW1n8aUrkF9C+Lc3G/GYW67TS2zPg+5c3fSPjJGoC2Kjn02vKN
-	 Vu8rGLVZYTBwJLhPVvDnTNirrFqy4/kkgLVJB1/jT8lYdUcjAeKECoW29Uh7yeC+us
-	 FCElsU+Lp+wkw==
-Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
-	by mta-07.privateemail.com (Postfix) with ESMTPA;
-	Thu,  6 Mar 2025 14:05:41 -0500 (EST)
-From: Sam Winchenbach <sam.winchenbach@framepointer.org>
-To: linux-kernel@vger.kernel.org
-Cc: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	antoniu.miclaus@analog.com,
-	jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sam.winchenbach@framepointer.org,
-	bpellegrino@arka.org
-Subject: [PATCH 5/6] driver core: Add support for writing 64 bit attrs
-Date: Thu,  6 Mar 2025 14:05:27 -0500
-Message-ID: <20250306190528.152133-1-sam.winchenbach@framepointer.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250306183314.150253-1-sam.winchenbach@framepointer.org>
-References: <20250306183314.150253-1-sam.winchenbach@framepointer.org>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pMduT6TL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=njBjp8n+P+eiIOScwAy/pVcoC4cQAunH1M0r8J1fwAM=; b=pMduT6TLeujIJJWivGuHqUM3jV
+	I66Ki5ImnEBN/qOZ6aCPrpZIB3JYgeiOwzwrGydvMNOp5HOqexAj/ItHp0D0241A6L28qna20dEDL
+	7hCDFLiI9EWY2PFEgN8K3jj4he6mA0iC6r6IUC32DN6EJvhvRqjIFYXnUgQwiYKXA3yg5Rc3KtNWj
+	nQjGlMso3NVdfImX8FiydPtaiPrxHEDojnyd24ieqasJV5f0UB+ao8dmII4rMVM/v/gIltKDh4AEV
+	ow5gxi8gRDj5AcMycQ+Kt6vcHtwWidHid4DUr523m6PTfHhOuUb7b0ibJlKEIoM3b+B4FNRwSclrE
+	DpGmzQxA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50112)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tqGgv-0006NI-3B;
+	Thu, 06 Mar 2025 19:15:34 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tqGgt-000731-0C;
+	Thu, 06 Mar 2025 19:15:31 +0000
+Date: Thu, 6 Mar 2025 19:15:30 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: linux@treblig.org
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: phylink: Remove unused phylink_init_eee
+Message-ID: <Z8n0Ui6kXu90TrGG@shell.armlinux.org.uk>
+References: <20250306184534.246152-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306184534.246152-1-linux@treblig.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Prior to this patch it was only possible to read 64 bit integers.
+On Thu, Mar 06, 2025 at 06:45:34PM +0000, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> phylink_init_eee() is currently unused.
+> 
+> It was last added in 2019 by
+> commit 86e58135bc4a ("net: phylink: add phylink_init_eee() helper")
+> but it didn't actually wire a use up.
+> 
+> It had previous been removed in 2017 by
+> commit 939eae25d9a5 ("phylink: remove phylink_init_eee()").
+> 
+> Remove it again.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
----
- drivers/iio/industrialio-core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index a2117ad1337d..b2436b8f3eea 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -965,8 +965,10 @@ static ssize_t iio_write_channel_info(struct device *dev,
- 	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
- 	int ret, fract_mult = 100000;
- 	int integer, fract = 0;
-+	long long integer64;
- 	bool is_char = false;
- 	bool scale_db = false;
-+	bool is_64bit = false;
- 
- 	/* Assumes decimal - precision based on number of digits */
- 	if (!indio_dev->info->write_raw)
-@@ -990,6 +992,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
- 		case IIO_VAL_CHAR:
- 			is_char = true;
- 			break;
-+		case IIO_VAL_INT_64:
-+			is_64bit = true;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1000,6 +1005,13 @@ static ssize_t iio_write_channel_info(struct device *dev,
- 		if (sscanf(buf, "%c", &ch) != 1)
- 			return -EINVAL;
- 		integer = ch;
-+	} else if (is_64bit) {
-+		ret = kstrtoll(buf, 0, &integer64);
-+		if (ret)
-+			return ret;
-+
-+		fract = (int)(integer64 >> 32);
-+		integer = (int)(integer64 & 0xFFFFFFFF);
- 	} else {
- 		ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
- 					    scale_db);
+Thanks!
+
 -- 
-2.48.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
