@@ -1,54 +1,58 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B233204F7A;
-	Thu,  6 Mar 2025 11:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAE420ADCF;
+	Thu,  6 Mar 2025 11:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741259798; cv=none; b=vA5oWX3ll9P6C9ToPmMi1uiWOjKXgps/USFZvi0Q0UFC+4mKjf4fNk3XyXe4OSCQALWI7c9woBFW0GnNOWAGo2mbSPhLei5c9yU3Ao7Tc/SRoIbhChcEwmqoYYcOA/vdxoFjD1V3GxYoH6p9xMBYLzVp9/mWrsMVlhhG6iu2OxY=
+	t=1741259802; cv=none; b=sWCafT03JmZfmaoe4XALv5Wh7X+vcSK8q5HY+GCIf47Hyc9hsvLdZeBib/eJKcePLUpLJd6PHQ49i2NVU1fsWpqJxtcT2dlgIeX5EO0srqnaSaGbCoEbRcc+b1W3xb3R2RQtcq6tIhQqwGK1dOcS0hkhca0hAoXwz+yHYRvFfKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741259798; c=relaxed/simple;
-	bh=ZND3hEjYeqhbELs7dwJhenPkw14OV/4AWJV1s8VtDtc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UXLPN9pOF26y/TxO7kSHHnU87Pzvrv9Z6kc0nKZgiHCTpy0CQUYW6u/P9NQQLyNm/4GQ5WXdWSaFM1J9CZf2CotPsftrnw03V3xvxitBc/pDKUdY6LZPerAwcIZf24ug8jZsxA1soaGmIanijvQJgLCFdX56dhrvRE6UZ+CSicU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PcrrXlty; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1741259802; c=relaxed/simple;
+	bh=BZkFckKgz/23QKW/4a7LiLWN0spvzfgh1rIDtEjh+Gw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FoqnQnmgqjT3aVPsDKVk44MTUg72f/UcoP3j0vyQn0rWVokjW8KDgxsDqTdtRf7KRTLUOZXZAl06hBjekkf/DhBqMvf31DYQqXc4O9r2djBb7RoEzTcD2DDy7hgWiBFZXiuCZ7r56GLDeYMf5Fxtt+FCmBbExPEit+Z7fOVjdVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LsCcARzt; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PcrrXlty"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52645EmP031237;
-	Thu, 6 Mar 2025 11:16:31 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LsCcARzt"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526BEpnP005925;
+	Thu, 6 Mar 2025 11:16:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=N9rqhEYUVXejlm9xlnpG5G
-	7GlCfmT1Rjn+wx/2pO/wY=; b=PcrrXltyzw1JroTNx7xDZKfn4y/jj7sVGeewYf
-	l+Lpkd+HrrtBCKGsoJ7q5RkY5x6eyuEk+2khD7qrCe5EGSOXg8ZwV2l0P5LRYs9M
-	HL1PImEvP/+TVwWboYaCBjnXt5QrFD7CXycQO3UmRSnZUEECkeOVVTpsiLoJ+Lx8
-	5diMYZn+4OjpHyeKk/Ffl4IahyKrxEHifiUEo/3TDlG40h/D5DtvVb10Yugt+EB0
-	ueSUaEfZ4b0sVUf//2kLXoVjjyakK358KxUulgWcU4oR+bQky4YRjG7M7QCZ66Ds
-	j2unoIDrWpdl1HixLXt51TW8W+Jd5hv6JanhxQY7ZR7mJXvA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4574ce9502-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	J/y9YaUvR7VZsOVuQbN75O9Ra/RapbVEN2bb1+QTBmM=; b=LsCcARzto1PpkHxW
+	SUYnPvqRGnRSCHlrNcGVWzpgrexrLh7Y9pnKJbMJWvXwK551tXSJr2XAdlPw/x6i
+	Px1En0b8HmjR6aZPSYRJORCfWvzMM6cvvMsGLvXcR6OfY3e9Dbe33f50WyiuMYqq
+	l0aI0QTXCPbRaSvWF5wJf9MeVl9DLj5rpZQ0wjuPq+K2GAs8os4/hUptUL4BFbNi
+	Gu7eM1CE3a/wFJXt1DRLFHnX/D7dQK2Pu/SUO9OuQxjxzW+FIYmmdwezGSVVmpgR
+	5IzTfChkwMzKpOTgs0NbYbX1SN5fF6hSXuc7LCzRLAZvlh7YEg56Nvyje4WGkT/h
+	r1XWYA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4571sd9gkp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 11:16:31 +0000 (GMT)
+	Thu, 06 Mar 2025 11:16:38 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 526BGUh8004519
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 526BGbbR014652
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Mar 2025 11:16:30 GMT
+	Thu, 6 Mar 2025 11:16:37 GMT
 Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Mar 2025 03:16:27 -0800
+ 15.2.1544.9; Thu, 6 Mar 2025 03:16:34 -0800
 From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
 To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-Subject: [PATCH v5 0/2] Add PCIe support for IPQ5424
-Date: Thu, 6 Mar 2025 16:46:08 +0530
-Message-ID: <20250306111610.3313495-1-quic_mmanikan@quicinc.com>
+Subject: [PATCH v5 2/2] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and controllers
+Date: Thu, 6 Mar 2025 16:46:10 +0530
+Message-ID: <20250306111610.3313495-3-quic_mmanikan@quicinc.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250306111610.3313495-1-quic_mmanikan@quicinc.com>
+References: <20250306111610.3313495-1-quic_mmanikan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,61 +65,93 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: nI_0at5kmODh2zQWazuuypcecvGxvCUr
-X-Proofpoint-GUID: nI_0at5kmODh2zQWazuuypcecvGxvCUr
-X-Authority-Analysis: v=2.4 cv=bNLsIO+Z c=1 sm=1 tr=0 ts=67c9840f cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=e_WfFXnkJZi7GlnV_dQA:9
+X-Proofpoint-ORIG-GUID: dLrhbi_HdHBZb_Jj9vrvRwUBNBkv3ZNA
+X-Authority-Analysis: v=2.4 cv=W6PCVQWk c=1 sm=1 tr=0 ts=67c98416 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=bz5CxGDJJdQApOPKNn0A:9 a=ah7BCnid-rDq_6rtqGnV:22
  a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: dLrhbi_HdHBZb_Jj9vrvRwUBNBkv3ZNA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-06_05,2025-03-06_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=771
- suspectscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 clxscore=1015 impostorscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=798 adultscore=0 bulkscore=0 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
  definitions=main-2503060085
 
-This series adds support for enabling the PCIe host devices (PCIe0,
-PCIe1, PCIe2, PCIe3) found on IPQ5424 platform. The PCIe0 & PCIe1
-are 1-lane Gen3 host and PCIe2 & PCIe3 are 2-lane Gen3 host.
+Enable the PCIe controller and PHY nodes corresponding to RDP466.
 
+Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+---
 Changes in V5:
-	- Dependent dt-bindings patches [1], [2] from series [3] have been merged
-	  in linux-next.
+	- No change.
 
-	[1] https://lore.kernel.org/linux-arm-msm/20250206121803.1128216-4-quic_varada@quicinc.com/
-	[2] https://lore.kernel.org/linux-arm-msm/20250206121803.1128216-6-quic_varada@quicinc.com/
-	[3] https://lore.kernel.org/linux-arm-msm/20250206121803.1128216-1-quic_varada@quicinc.com/
-	
-	- dtsi
-		- Pick up R-b tag.
-		- Updated pcie node order based on unit address.
-		- Updated the dbi address space size from 0xf1d to 0xf1c
-		  in all pcie controller nodes.
-		- Rebased on linux-next tip.
+ arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 41 ++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-V4 can be found at:
-https://lore.kernel.org/linux-arm-msm/20250213071912.2930066-1-quic_mmanikan@quicinc.com/
-
-V3 can be found at:
-https://lore.kernel.org/linux-arm-msm/20250125035920.2651972-1-quic_mmanikan@quicinc.com/
-
-V2 can be found at:
-https://lore.kernel.org/linux-arm-msm/20250115064747.3302912-1-quic_mmanikan@quicinc.com/
-
-V1 can be found at:
-https://lore.kernel.org/linux-arm-msm/20241213134950.234946-1-quic_mmanikan@quicinc.com/
-
-Manikanta Mylavarapu (2):
-  arm64: dts: qcom: ipq5424: Add PCIe PHYs and controller nodes
-  arm64: dts: qcom: ipq5424: Enable PCIe PHYs and controllers
-
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts |  41 +-
- arch/arm64/boot/dts/qcom/ipq5424.dtsi       | 514 +++++++++++++++++++-
- 2 files changed, 550 insertions(+), 5 deletions(-)
-
-
-base-commit: 7ec162622e66a4ff886f8f28712ea1b13069e1aa
+diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+index b6e4bb3328b3..e73f61266012 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
++++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+@@ -53,6 +53,32 @@ &dwc_1 {
+ 	dr_mode = "host";
+ };
+ 
++&pcie2 {
++	pinctrl-0 = <&pcie2_default_state>;
++	pinctrl-names = "default";
++
++	perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
++
++	status = "okay";
++};
++
++&pcie2_phy {
++	status = "okay";
++};
++
++&pcie3 {
++	pinctrl-0 = <&pcie3_default_state>;
++	pinctrl-names = "default";
++
++	perst-gpios = <&tlmm 34 GPIO_ACTIVE_LOW>;
++
++	status = "okay";
++};
++
++&pcie3_phy {
++	status = "okay";
++};
++
+ &qusb_phy_0 {
+ 	vdd-supply = <&vreg_misc_0p925>;
+ 	vdda-pll-supply = <&vreg_misc_1p8>;
+@@ -147,6 +173,20 @@ data-pins {
+ 			bias-pull-up;
+ 		};
+ 	};
++
++	pcie2_default_state: pcie2-default-state {
++		pins = "gpio31";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
++
++	pcie3_default_state: pcie3-default-state {
++		pins = "gpio34";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
+ };
+ 
+ &uart1 {
+@@ -166,4 +206,3 @@ &usb3 {
+ &xo_board {
+ 	clock-frequency = <24000000>;
+ };
+-
 -- 
 2.34.1
 
