@@ -1,662 +1,200 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2059.outbound.protection.outlook.com [40.107.96.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727A327BF91;
-	Thu,  6 Mar 2025 21:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741295105; cv=none; b=oINdu95yw+r9T6UasmnfWJpgs0mlrBelHu30djIDlbhY3mBf/f8pVYh+ZIl8OW8Cbah2F56iAwDe3sVz/GNIPeUIQe+lre7WYsYd9/nLk+EsnQCz2HxHqtscpjC11WtuYQESuvvJ2o0x3v5L57SBAGbkQ97VPP836XpAcSEgdec=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741295105; c=relaxed/simple;
-	bh=TcSoOfX2njirJE4yqbflBkFegngxjperSmvoNnOqaG4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WUK3L7hDYZlSINUcBEXRa3Pq+2+tIPjlmutMm5pou44cNMKBWx9KwVRXQPzx0MXpMxucG+x9Uh+lWL5dHawA9HijGAfmUhXTcDZC1bTWBJdhgP/BSWRE7YlUe/58I+HXr9VpqE4DN13y21fKjiDr1PHnMgL/lOEm42DgIu19BG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=KU7+hXQc; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19BE27C859
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 21:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741295109; cv=fail; b=NE3u60zxhc13AOsu7/Ax5efop5v9oUtm5LYTSufjoEKXPxifhanH2297qjP9e8EX7cb9N9OmzaGyj4FsS3QGvwMWzEivj9sEnQ8kO59hTpT7uCdJqpVPyK3vc6Yi+j3lAhjzE+iDpDmJRTZGWVH+KweVY8534k3Nh/3/4Kq+FL8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741295109; c=relaxed/simple;
+	bh=i9sPgPThkGimSPcnW9RVohWb1Ks6aSeDADK6xJKxzj8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Bd3GE98csjRwNQNYxVBr3ML0zkraXQ1uCRjmT4TGJZfGD7kPALOXkUNSUw5P4n6mQFTpwc9MWQ18REB2P/x/Ql/211cKEzLr9xXsUKV+APD6y+DREjmYNPZP/7xRRvJO2VVK5HPSXqhstiD9Bog1ufAxwAE6sXvBuB1lbKDSVEI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mULNpIun; arc=fail smtp.client-ip=40.107.96.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="KU7+hXQc"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526Hfkf3003159;
-	Thu, 6 Mar 2025 16:04:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=ZvR56
-	Q1C5Sop/7GjSowwtWghntYdPRqglKuC/MxSLQ4=; b=KU7+hXQc7tPnq5N5d+PQ3
-	lc62LEPtkmAZrj2JAh1KJ7KNQja3Kgkx46FO/lh+WUeJUsHtcHPmQAUZve5RGwkY
-	Pxz4Pfh5+oc9lloHKESmzwvYSLKuWndW2zOtq3fgLYrzY7vMlvOel/ghhPwBjeEE
-	CEpxu5Rk0yI4xmvUgTSslPw/KiEAMjJkcNkE/J+H9K/73q4YXZ7k0Ej8LfvRzR9Y
-	41mk+0c3Izbl7MwlBJxAH2xtTWV7+9VAq7oM0DtqtiCBnNUtNPfWYoueU8ifRLNv
-	qT+8vTKpk8whkn6V4mhJxsidweDXbKVuNwZKWni3LJlTswHMNKhwzyHEswr3ooOe
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 455wnuf93k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 16:04:42 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 526L4f7O035169
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Mar 2025 16:04:41 -0500
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Thu, 6 Mar 2025 16:04:41 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Thu, 6 Mar 2025 16:04:41 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 6 Mar 2025 16:04:41 -0500
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 526L4O40011705;
-	Thu, 6 Mar 2025 16:04:27 -0500
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <lars@metafoo.de>,
-        <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
-        <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <dlechner@baylibre.com>,
-        <marcelo.schmitt1@gmail.com>, <jonath4nns@gmail.com>,
-        Pop Paul
-	<paul.pop@analog.com>
-Subject: [PATCH v4 16/17] iio: adc: ad7768-1: add filter type and oversampling ratio attributes
-Date: Thu, 6 Mar 2025 18:04:24 -0300
-Message-ID: <3586a75e3b7bf09c271a44390b2fed9f1ffc8565.1741268122.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1741268122.git.Jonathan.Santos@analog.com>
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mULNpIun"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WFMH4Q13mimxNxzPtgom+Ic9pRwOatpkXN6L5g4KOIs3QZ2N6blqMSlvRQE24vPl7WGRINxq8tcTDXVo03aU7yQWwQYEjakxCo57k8wwg1uEJIBbdyhsErPjSVO2Rr6T37RLZxykyRJdVHiyAAxeYlSBGRDXeDOVN7TtS1GENP7JAqCxETpufY6t9xTJzMfsU2dDlp14moMerfev2BVMdEW8WNOO0mT5xxoo4YHFUBj4LraJAuO+sUFIyK27x1ewofCoZuMHNKK0yXjWRrLsbcQfTsGYGoe7trt+r6g3Krv4+nOJNW8ri/ry0fh9SFd2bE9eee4yjXU94lz5O/FYOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i9sPgPThkGimSPcnW9RVohWb1Ks6aSeDADK6xJKxzj8=;
+ b=G14JPxLtT78pWTmZLJIAQIXirxDhu3JOHDs+4rk/iwgQ3aclBuyrGjvsyhu1/dy29gTgwWCfP00v7/TQfaaQuYbVD7W3DVfqq8M3RLc2LDGpEuAO2yJ6nukUppO5GjZTW0gDk0azvhZfJUXo+AncOwe2tcCG0CdsnTBQHFGV8SqQctzThn+ckPse7zB+1KHbkGB0r5Gc8s7T+oTgMW7idqHfgiufPPi1SbyQPHFzjArgOpFf0XUJJkOZEVwsO/rYX5tKU5dGdfd87y06HllVmYET8Xu0eNrVRn2LqcbUHnHzAMvFb9Oo06blCRMkty7DsQGQoxU0GOrP3L2HNzGbLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i9sPgPThkGimSPcnW9RVohWb1Ks6aSeDADK6xJKxzj8=;
+ b=mULNpIunOOJcJibQyRM2QrynAHYaPHOv65hmM6WQYC6Xz2umlAJE0lZ5tizbJwC2uzt0phFJ45LB7oNR3VGImNfK9sWpoF0Y0mTaAq8jrvs026+AycaU9xMvgsvI7VBlRyUEh+WazyFGRr7n6YzMRe5yV7UD/7NOIAgiIHNOSxUgAvShYtt5wbBYvN7McsGrBBe6ZdB0aLm4ncyoqB9CV5U5D7T+FQPZyyNZbz9XxcVzixT1D0G3eZ4Wz3krczyvuSXDYIsW3SVja/vVNQDrERFcdFsq3ZFi/I6TTLKqz24TBj/T7LA1hNvo1h8P984230uBBn14lZHkh8kTF6mRDA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ MW4PR12MB7237.namprd12.prod.outlook.com (2603:10b6:303:22a::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.19; Thu, 6 Mar 2025 21:05:04 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%5]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 21:05:02 +0000
+Message-ID: <0690a4ae-00f5-446c-bf62-6b3f65e6c48b@nvidia.com>
+Date: Thu, 6 Mar 2025 13:04:59 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 10/49] x86/resctrl: Remove rdtgroup from
+ update_cpu_closid_rmid()
+To: James Morse <james.morse@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
+References: <20250228195913.24895-1-james.morse@arm.com>
+ <20250228195913.24895-11-james.morse@arm.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250228195913.24895-11-james.morse@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH8PR07CA0026.namprd07.prod.outlook.com
+ (2603:10b6:510:2cf::21) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: E8FRMDYFQ3yNe2v7dqjDA6N7JkjhlkxY
-X-Proofpoint-ORIG-GUID: E8FRMDYFQ3yNe2v7dqjDA6N7JkjhlkxY
-X-Authority-Analysis: v=2.4 cv=VNcnn8PX c=1 sm=1 tr=0 ts=67ca0dea cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=Vs1iUdzkB0EA:10 a=gAnH3GRIAAAA:8 a=PqQXOG8vFxuAHkRQ7a0A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_07,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 suspectscore=0 adultscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503060160
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|MW4PR12MB7237:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1e5e204-887d-4a60-d5a8-08dd5cf28fb4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MWNGQStEWWVmMldtR3pUclpxaVEyTld0bWk4aVd6a08yWW5kV1I3N3FmR3hK?=
+ =?utf-8?B?VFRhQ0J2MUR4M2UvNW5XUEZQeC9qUWFYa3pxM283YStqS2d2RUJITmZ4Z0dN?=
+ =?utf-8?B?UTdBa2swSDcwdUo1bWI0UnExUnlSYU1BL05scnB2aXYvZWtzL3ZUdnQrRWwr?=
+ =?utf-8?B?dVp6cG44NURHbkNsNmVRYjdQUStMa2JudG0rVFpvb0lxcHFremFEMjZDTGk3?=
+ =?utf-8?B?a2g1Ym5ydUd0SEpLdHJ5ODhlOFVRb2VhZjdFU3Z4NDArbUQybUx4RG92T3BB?=
+ =?utf-8?B?Y1FzQjI1Y09hNXZwUUViU3QxUzZvNTZHNG52eUx5aWJSSjh1ZWNjVHkwRjR0?=
+ =?utf-8?B?eFNyR2dlQlVzMCt2ZDJONFdYZkpmYU1nQTFYYzRQYjlobEduMGNVb3NxY0pS?=
+ =?utf-8?B?MnErUEFVNmYxWmZYVGlNOUdrZWtjVC9TTGxNbHNORjE1aFYvcUJIVTFWOEEw?=
+ =?utf-8?B?YjBwNnhBTkZXeVYzUFRsUEJWTFpqTUYyQURRWW8wV0lPZ2doTkpLK0UwcW55?=
+ =?utf-8?B?VGJ6bytoZXVEVFM2ZnBxRGRNNXJ5cDFqcHZ5WGl5dnFMQ2JWQ2J2d2JYeDgy?=
+ =?utf-8?B?akNoRU8zZnRPUVZVZG01bW5MWnFoVUQzMnNPcmtITWMvV0FxM25IT2QzOTR0?=
+ =?utf-8?B?dXA4SU5jaEEvbzk1SUw2amxLRE9jOHNkNnU3ZUZUM05RL1FpbG11aFJUYXA2?=
+ =?utf-8?B?ZThpdlVSVk8rZjVKcHNLL1E4M0o2b0hzT0Y0YWROelZhSDJqUmhiLzYyVGE4?=
+ =?utf-8?B?WER1bkp0aDdLejIydTBYL1ZjMng5ZWxZV2hySHNwcUJHeVc0MTlhWUNrNjVz?=
+ =?utf-8?B?Y2s4VytDT3FnYVBWNEpYbExNYndYK0U0T2RYSitxeUNmRHJSTGlBa1Raa2lU?=
+ =?utf-8?B?WnhLUEp5dkM4OXQxMUt5MmtRNmVMSTQ2T055NWJRdFQ5amJXSnZYTFE5MVk3?=
+ =?utf-8?B?WE5naGlDcjBILzlPWWpUQ0RUWXhwclUxdkFqZUEvcEN3MlVpT3BGNzJVVjVq?=
+ =?utf-8?B?TzJ0R1hlVmRzbGVybmtqK0hmSi9BMng1MDBibkVoaXBIZ004WGRFcDBZekZx?=
+ =?utf-8?B?aVRpQmtNakFtQmVISExNNjExV1ZyWVBRazRFTFpqaGM2L056cllmMzkrR1kr?=
+ =?utf-8?B?QVBPOXVCVmZxMUlQelN6ZDdkNjhZZEo2eTV3OUpCQjBOUlN3YU56T1NkbTZl?=
+ =?utf-8?B?MmV2My9BNk13eTU1eC9DQ2dUeFNxSklUYmZKeXg2MGhHa0w0UUdlZ2RuY3pC?=
+ =?utf-8?B?RHpmTnArZ3AzSGxjbDNLNHR2dkROTzQ1dzIyeFUvQzFDOEhscXRPWTNMMGxL?=
+ =?utf-8?B?YlhIUmozY2tDRFE1ZWJPejl0ZnBGbUVDd2NHSktidUpza2NYTzBadFZCWmU3?=
+ =?utf-8?B?N25VVXNFZ2tBaHpMVVQ4eTVjelV4cVZEZ2xJOTk0eThzWTFaRzlUaGE2VFVt?=
+ =?utf-8?B?ckw3d1RidzU5dEc0ZjBhOEllKzh3bTRYWW5WcDJBQ1pyU3VmSzVKaldkRkdX?=
+ =?utf-8?B?dkhGRk1mKzgwMWM2Ym1MZG5uS2FUVW1kemdYakJ2blVsb1BsdjRWZVhWMzVj?=
+ =?utf-8?B?czlleGppVjZTMWd5ZzJ5UXpoSFFTUG5xVFBFL0hOdEZ5NFBWY3dqRmhnRWQ5?=
+ =?utf-8?B?aVRLQVpyaU9DV1I2VSt4OW5Dc0IreHFZdkdWZE81RlFueWxYQ25YVlVwdGp0?=
+ =?utf-8?B?eW40dWxyRkNORlRZakdxVGdUVjBJeGp3am85dUJ2czg0T3p1YjRqVXE5RG1L?=
+ =?utf-8?B?Q3VQdm1MYXY0WElTaGM2dzdZWjdoYm1lWkNvMVA2a0JPOW96KzZveFpyVGhm?=
+ =?utf-8?B?ZnRKTllxSlZSMXFRSURuZFQ4Q1k1b2RqbTd3QVlvT0pSZytsZFgzZ0dKNUZw?=
+ =?utf-8?Q?OBF/CQmGeANTc?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N0QvT2x5N1d6VnY3V0FpUE5qd29lQkVuN2haZmdpeDdES2VTSTJNcnRxL2pP?=
+ =?utf-8?B?U3QvS3N5T3ZXWGRHOTNoM05zNndYYlF0YllxandoQ1p0NGZTM1JoczNXMnN1?=
+ =?utf-8?B?ZXh6YWlaRWxLRTRYb2pRdFJDQnI2c0JIZlBOWWRzRG5jNW00Y3RCVGFDeTRm?=
+ =?utf-8?B?Q2RYT1FGQTR3SEZUVXBkdElHb09aSk1IRFBlbXJsKyt0NHptVlV5SnEvamhW?=
+ =?utf-8?B?aGZDbDJGdVpnRjV2T3pwaDIyRElQaWtHd1k4OW1oNVlORXNWTXZIZE9TaG0r?=
+ =?utf-8?B?aFNCR3BkMm1nZHlEUnQxYU9RYWNxbHFwVWhGamY4ajlXRC9DVWVnaTFLWm9r?=
+ =?utf-8?B?V25UTzluMmtMSXVFUXYwWmI2L0g1RjlLTzREUmFCVzF3U3dLWDlFKzg1YmRB?=
+ =?utf-8?B?aFZPTFYvNzhmRm81MXhBRHZIWjJaMjNxcHM4ektmdjNTYmtvaUdlVGQ4VUc1?=
+ =?utf-8?B?NlorMERsMHlrUE1neWJmQmZLTTRLRDFXdGVtMTNvbDUwMFBJSjlWQkZETTFH?=
+ =?utf-8?B?bFZ3Z1EwcUU1NmtEK1dSdVBta0Y3TUtpbW9wYlZrK2tXMU1ZSS9ISDdseDdP?=
+ =?utf-8?B?Ym9CR0JUeXpjYS8wOGJEaUxGNVBzTTlMNHA3UUJ0NW8vWm9CaUVGeXNKWWwz?=
+ =?utf-8?B?MExDT2RXa25zNnpmbGJvdHV3bDhhVkZ1c1BydVRxZWJjNGwrTkpseThCbzRK?=
+ =?utf-8?B?Mm5nQWdLaGdWUHllM1lXSmx4MDVLRUR3NS9INVdXSzhiRFZYY0QvVXF6UmFG?=
+ =?utf-8?B?U3BvYnZYeGhaaDB4U2psY3NrUDA1ZEcvTGVvV01WZHNWdG5DODhNcmwvSnJp?=
+ =?utf-8?B?L3pKYWVXOVppU25QY3RsMzlZNldieHlMUEU2K00rczVsZ1FvdDMrWmZwNzBk?=
+ =?utf-8?B?UVd1anM3SFBvNmd5VWZvT09tb0J5RkVzWUZrTW1aUWo1MjVPYStJY1FSM095?=
+ =?utf-8?B?S0tCZnNzeGNMMmdYU25rczdxQjZqTlhtRDc2Nm1UOWZxLzZkT250WnY5Y3Nw?=
+ =?utf-8?B?Nkp1ZXNNK1JZd0NCZ2ZjU0l2RTBMWW5XUU1kSmVLR2F0R0xqYkRNZGpyRDM3?=
+ =?utf-8?B?cnlwN3NMcVgvcS9EN0xjclRKenk4WTUyWldEWUxwbzMvMXdJVWJLclpyVTZq?=
+ =?utf-8?B?aWJwdys4dlRjYXZTM0lGQTMrKzY4eUxhSUNyN0ZXRHczd1pRNmQwcXZiMlRF?=
+ =?utf-8?B?TUgyTHdkWXZZQnFaTXJCbnROdDJKRldsbEFWaHF0S3lmZ3FJOEFZdmlSYlFz?=
+ =?utf-8?B?Z3kwZmIycDA1M2cySUdlRDExWlR4VU53bnk0SGNucVFmT2RaMDR4VWpDS2tN?=
+ =?utf-8?B?L2E4L0NpM1hFTUhucGoyVEpDWWxZOFllbHhhR1JjNWZxV2NKSUZuTG9ReTRx?=
+ =?utf-8?B?Z2JDVkZ6N3ZJcUpHM255R1I3d3pVVms4QTd4VjNzWlk4dU56RU1Nb05ncmMx?=
+ =?utf-8?B?Q0hyN1QzUkhlUXBoa2pYV1pXczZqV0tRdmZDMEFLR3JjcHVNZkw5QUs1R3FB?=
+ =?utf-8?B?RXdWZ1BPZVdaWVgydkFZbWJSb0UzdFBoeXVsYmhocExZTVFEMVRGVnkreE8v?=
+ =?utf-8?B?YXhJMXpYekwyRFBTUVlaTUJSRURHdHJLSWU4Z0UzUzViQ1FCb0ZJa1kvMEV2?=
+ =?utf-8?B?MmtLK2FXK256dVh5VllTOVB5SnBkU0tDbml4MXZ2a1V1LzdFbGJudmVhQmI2?=
+ =?utf-8?B?WFlvRWNlM2p1VDU2SjR1TnJZZDZNeS9ibEJVZWk0eWNHUS9PbUQxODd0QVEz?=
+ =?utf-8?B?cS9ZcHY5b2Nzc2F5ZHJleG0xMjcvSFl1dkdlazdyekxmQmM5VVV4VnZxTzBB?=
+ =?utf-8?B?T3F5bUdyMVRvdXQ1MFBBdVRJTU9OZjNoRFNmV2pOeXhDYjFsNnArSzFLMUg0?=
+ =?utf-8?B?OUcwbGgra1RRb3k4Nk5yNGhJd1lIenh3SzFGbHpTUHUvc2ZPMFZHeWJPR21J?=
+ =?utf-8?B?b3BzTklURjZpTVdNRHMvNFd2ZnQ4L2luV3VKNWZHTDdXVGdFbWRTMHJlaHgv?=
+ =?utf-8?B?djRBY2EzRHVtc3AyQ3h6clUwcHg5eDh2b1AwV2xlVHREV3JOTHdaQkhJWHJn?=
+ =?utf-8?B?OGdsR1M3TG1scEpIUUpmd0xaL2dhRXllQTI2Q2E0bWxzV0JDVjRXUzBHRHlV?=
+ =?utf-8?Q?4KHv03/jmAVkOr5r85C6lNRHb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1e5e204-887d-4a60-d5a8-08dd5cf28fb4
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 21:05:02.1077
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ClMR/a/QJvZaPSDY+0PfXoMlrlErnrN0bjZ9ftumusbNEsT+ZZ/C2M2QWFFni7AJ+BopifPE74Q/xr27QKBXGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7237
 
-Separate filter type and decimation rate from the sampling frequency
-attribute. The new filter type attribute enables sinc3, sinc3+rej60
-and wideband filters, which were previously unavailable.
 
-Previously, combining decimation and MCLK divider in the sampling
-frequency obscured performance trade-offs. Lower MCLK divider
-settings increase power usage, while lower decimation rates reduce
-precision by decreasing averaging. By creating an oversampling
-attribute, which controls the decimation, users gain finer control
-over performance.
+On 2/28/25 11:58, James Morse wrote:
+> update_cpu_closid_rmid() takes a struct rdtgroup as an argument, which
+> it uses to update the local CPUs default pqr values. This is a problem
+> once the resctrl parts move out to /fs/, as the arch code cannot
+> poke around inside struct rdtgroup.
+>
+> Rename update_cpu_closid_rmid() as resctrl_arch_sync_cpus_defaults()
+> to be used as the target of an IPI, and pass the effective CLOSID
+> and RMID in a new struct.
+>
+> Co-developed-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+> Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+> Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 
-The addition of those attributes allows a wider range of sampling
-frequencies and more access to the device features. Sampling frequency
-table is updated after every digital filter paramerter change.
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 
-Co-developed-by: Pop Paul <paul.pop@analog.com>
-Signed-off-by: Pop Paul <paul.pop@analog.com>
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
----
-v4 Changes:
-* Sampling frequency table is dinamically updated after every
-  filter configuration.
 
-v3 Changes:
-* removed unsed variables.
-* included sinc3+rej60 filter type.
-* oversampling_ratio moved to info_mask_shared_by_type.
-* reordered functions to avoid foward declaration.
-* simplified regmap writes.
-* Removed locking.
-* replaced some helper functions for direct regmap_update_bits
-  calls.
-* Addressed other nits.
+Thanks.
 
-v2 Changes:
-* Decimation_rate attribute replaced for oversampling_ratio.
----
- drivers/iio/adc/ad7768-1.c | 360 +++++++++++++++++++++++++++++--------
- 1 file changed, 290 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index 0bdf2ae903c6..664d0b535340 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -20,6 +20,7 @@
- #include <linux/regulator/driver.h>
- #include <linux/sysfs.h>
- #include <linux/spi/spi.h>
-+#include <linux/util_macros.h>
- 
- #include <linux/iio/buffer.h>
- #include <linux/iio/iio.h>
-@@ -75,11 +76,15 @@
- #define AD7768_PWR_PWRMODE(x)		FIELD_PREP(AD7768_PWR_PWRMODE_MSK, x)
- 
- /* AD7768_REG_DIGITAL_FILTER */
--#define AD7768_DIG_FIL_FIL_MSK		GENMASK(6, 4)
-+#define AD7768_DIG_FIL_FIL_MSK		GENMASK(7, 4)
- #define AD7768_DIG_FIL_FIL(x)		FIELD_PREP(AD7768_DIG_FIL_FIL_MSK, x)
- #define AD7768_DIG_FIL_DEC_MSK		GENMASK(2, 0)
- #define AD7768_DIG_FIL_DEC_RATE(x)	FIELD_PREP(AD7768_DIG_FIL_DEC_MSK, x)
- 
-+/* AD7768_SINC3_DEC_RATE */
-+#define AD7768_SINC3_DEC_RATE_MSB_MSK	GENMASK(12, 8)
-+#define AD7768_SINC3_DEC_RATE_LSB_MSK	GENMASK(7, 0)
-+
- /* AD7768_REG_CONVERSION */
- #define AD7768_CONV_MODE_MSK		GENMASK(2, 0)
- #define AD7768_CONV_MODE(x)		FIELD_PREP(AD7768_CONV_MODE_MSK, x)
-@@ -124,22 +129,20 @@ enum ad7768_mclk_div {
- 	AD7768_MCLK_DIV_2
- };
- 
--enum ad7768_dec_rate {
--	AD7768_DEC_RATE_32 = 0,
--	AD7768_DEC_RATE_64 = 1,
--	AD7768_DEC_RATE_128 = 2,
--	AD7768_DEC_RATE_256 = 3,
--	AD7768_DEC_RATE_512 = 4,
--	AD7768_DEC_RATE_1024 = 5,
--	AD7768_DEC_RATE_8 = 9,
--	AD7768_DEC_RATE_16 = 10
-+enum ad7768_filter_type {
-+	AD7768_FILTER_SINC5,
-+	AD7768_FILTER_SINC3,
-+	AD7768_FILTER_WIDEBAND,
-+	AD7768_FILTER_SINC3_REJ60,
- };
- 
--struct ad7768_clk_configuration {
--	enum ad7768_mclk_div mclk_div;
--	enum ad7768_dec_rate dec_rate;
--	unsigned int clk_div;
--	enum ad7768_pwrmode pwrmode;
-+enum ad7768_filter_regval {
-+	AD7768_FILTER_REGVAL_SINC5 = 0,
-+	AD7768_FILTER_REGVAL_SINC5_X8 = 1,
-+	AD7768_FILTER_REGVAL_SINC5_X16 = 2,
-+	AD7768_FILTER_REGVAL_SINC3 = 3,
-+	AD7768_FILTER_REGVAL_WIDEBAND = 4,
-+	AD7768_FILTER_REGVAL_SINC3_REJ60 = 11,
- };
- 
- enum ad7768_scan_type {
-@@ -151,18 +154,39 @@ static const int ad7768_mclk_div_rates[4] = {
- 	16, 8, 4, 2,
- };
- 
--static const struct ad7768_clk_configuration ad7768_clk_config[] = {
--	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_8, 16,  AD7768_FAST_MODE },
--	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_16, 32,  AD7768_FAST_MODE },
--	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_32, 64, AD7768_FAST_MODE },
--	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_64, 128, AD7768_FAST_MODE },
--	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_128, 256, AD7768_FAST_MODE },
--	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_128, 512, AD7768_MED_MODE },
--	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_256, 1024, AD7768_MED_MODE },
--	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_512, 2048, AD7768_MED_MODE },
--	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_1024, 4096, AD7768_MED_MODE },
--	{ AD7768_MCLK_DIV_8, AD7768_DEC_RATE_1024, 8192, AD7768_MED_MODE },
--	{ AD7768_MCLK_DIV_16, AD7768_DEC_RATE_1024, 16384, AD7768_ECO_MODE },
-+static const int ad7768_dec_rate_values[8] = {
-+	8, 16, 32, 64, 128, 256, 512, 1024,
-+};
-+
-+/* Decimation Rate range for each filter type */
-+static const int ad7768_dec_rate_range[][3] = {
-+	[AD7768_FILTER_SINC5] = { 8, 8, 1024 },
-+	[AD7768_FILTER_SINC3] = { 32, 32, 163840 },
-+	[AD7768_FILTER_WIDEBAND] = { 32, 32, 1024 },
-+	[AD7768_FILTER_SINC3_REJ60] = { 32, 32, 163840 },
-+};
-+
-+/*
-+ * The AD7768-1 supports three primary filter types:
-+ * Sinc5, Sinc3, and Wideband.
-+ * However, the filter register values can also encode additional parameters
-+ * such as decimation rates and 60Hz rejection. This utility function separates
-+ * the filter type from these parameters.
-+ */
-+static const int ad7768_filter_regval_to_type[] = {
-+	[AD7768_FILTER_REGVAL_SINC5] = AD7768_FILTER_SINC5,
-+	[AD7768_FILTER_REGVAL_SINC5_X8] = AD7768_FILTER_SINC5,
-+	[AD7768_FILTER_REGVAL_SINC5_X16] = AD7768_FILTER_SINC5,
-+	[AD7768_FILTER_REGVAL_SINC3] = AD7768_FILTER_SINC3,
-+	[AD7768_FILTER_REGVAL_WIDEBAND] = AD7768_FILTER_WIDEBAND,
-+	[AD7768_FILTER_REGVAL_SINC3_REJ60] = AD7768_FILTER_SINC3_REJ60,
-+};
-+
-+static const char * const ad7768_filter_enum[] = {
-+	[AD7768_FILTER_SINC5] = "sinc5",
-+	[AD7768_FILTER_SINC3] = "sinc3",
-+	[AD7768_FILTER_WIDEBAND] = "wideband",
-+	[AD7768_FILTER_SINC3_REJ60] = "sinc3+rej60"
- };
- 
- static const struct iio_scan_type ad7768_scan_type[] = {
-@@ -181,13 +205,34 @@ static const struct iio_scan_type ad7768_scan_type[] = {
- 	},
- };
- 
-+static int ad7768_get_fil_type_attr(struct iio_dev *dev,
-+				    const struct iio_chan_spec *chan);
-+static int ad7768_set_fil_type_attr(struct iio_dev *dev,
-+				    const struct iio_chan_spec *chan, unsigned int filter);
-+
-+static const struct iio_enum ad7768_flt_type_iio_enum = {
-+	.items = ad7768_filter_enum,
-+	.num_items = ARRAY_SIZE(ad7768_filter_enum),
-+	.set = ad7768_set_fil_type_attr,
-+	.get = ad7768_get_fil_type_attr,
-+};
-+
-+static struct iio_chan_spec_ext_info ad7768_ext_info[] = {
-+	IIO_ENUM("filter_type", IIO_SHARED_BY_ALL, &ad7768_flt_type_iio_enum),
-+	IIO_ENUM_AVAILABLE("filter_type", IIO_SHARED_BY_ALL, &ad7768_flt_type_iio_enum),
-+	{ },
-+};
-+
- static const struct iio_chan_spec ad7768_channels[] = {
- 	{
- 		.type = IIO_VOLTAGE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
--		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
-+					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
- 		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad7768_ext_info,
- 		.indexed = 1,
- 		.channel = 0,
- 		.scan_index = 0,
-@@ -207,9 +252,12 @@ struct ad7768_state {
- 	struct clk *mclk;
- 	struct gpio_chip gpiochip;
- 	unsigned int mclk_freq;
--	unsigned int dec_rate;
-+	unsigned int mclk_div;
-+	unsigned int oversampling_ratio;
-+	enum ad7768_filter_type filter_type;
- 	unsigned int samp_freq;
--	unsigned int samp_freq_avail[ARRAY_SIZE(ad7768_clk_config)];
-+	unsigned int samp_freq_avail[ARRAY_SIZE(ad7768_mclk_div_rates)];
-+	unsigned int samp_freq_avail_len;
- 	struct completion completion;
- 	struct iio_trigger *trig;
- 	struct gpio_desc *gpio_sync_in;
-@@ -310,11 +358,35 @@ static int ad7768_send_sync_pulse(struct ad7768_state *st)
- 
- static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
- {
--	int i;
-+	int i, freq_filtered, len = 0;
-+
-+	freq_filtered = DIV_ROUND_CLOSEST(st->mclk_freq, st->oversampling_ratio);
-+	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-+		st->samp_freq_avail[len] = DIV_ROUND_CLOSEST(freq_filtered,
-+							     ad7768_mclk_div_rates[i]);
-+		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
-+		if (st->samp_freq_avail[len] >= 50)
-+			len++;
-+	}
-+	st->samp_freq_avail_len = len;
-+}
-+
-+static int ad7768_set_mclk_div(struct ad7768_state *st, unsigned int mclk_div)
-+{
-+	unsigned int mclk_div_value;
-+
-+	mclk_div_value = AD7768_PWR_MCLK_DIV(mclk_div);
-+	/*
-+	 * Set power mode based on mclk_div value.
-+	 * ECO_MODE is only recommended for MCLK_DIV 16
-+	 */
-+	mclk_div_value |= mclk_div > AD7768_MCLK_DIV_16 ?
-+			  AD7768_PWR_PWRMODE(AD7768_FAST_MODE) :
-+			  AD7768_PWR_PWRMODE(AD7768_ECO_MODE);
- 
--	for (i = 0; i < ARRAY_SIZE(ad7768_clk_config); i++)
--		st->samp_freq_avail[i] = DIV_ROUND_CLOSEST(st->mclk_freq,
--							   ad7768_clk_config[i].clk_div);
-+	return regmap_update_bits(st->regmap, AD7768_REG_POWER_CLOCK,
-+				  AD7768_PWR_MCLK_DIV_MSK | AD7768_PWR_PWRMODE_MSK,
-+				  mclk_div_value);
- }
- 
- static int ad7768_set_mode(struct ad7768_state *st,
-@@ -350,7 +422,7 @@ static int ad7768_scan_direct(struct iio_dev *indio_dev)
- 	 * register provides 24-bit data, the precision is reduced by
- 	 * right-shifting the read value by 8 bits.
- 	 */
--	if (st->dec_rate == 8)
-+	if (st->oversampling_ratio == 8)
- 		readval >>= 8;
- 
- 	/*
-@@ -398,22 +470,103 @@ static int ad7768_reg_access(struct iio_dev *indio_dev,
- 	return ret;
- }
- 
--static int ad7768_set_dig_fil(struct ad7768_state *st,
--			      enum ad7768_dec_rate dec_rate)
-+static int ad7768_set_sinc3_dec_rate(struct ad7768_state *st,
-+				     unsigned int dec_rate)
- {
--	unsigned int mode;
-+	unsigned int max_dec_rate;
-+	u8 dec_rate_reg[2];
- 	int ret;
- 
--	if (dec_rate == AD7768_DEC_RATE_8 || dec_rate == AD7768_DEC_RATE_16)
--		mode = AD7768_DIG_FIL_FIL(dec_rate);
--	else
--		mode = AD7768_DIG_FIL_DEC_RATE(dec_rate);
-+	/*
-+	 * Maximum dec_rate is limited by the MCLK_DIV value
-+	 * and by the ODR. The edge case is for MCLK_DIV = 2
-+	 * ODR = 50 SPS.
-+	 * max_dec_rate <= MCLK / (2 * 50)
-+	 */
-+	max_dec_rate = st->mclk_freq / 100;
-+	dec_rate = clamp_t(unsigned int, dec_rate, 32, max_dec_rate);
-+	/*
-+	 * Calculate the equivalent value to sinc3 decimation ratio
-+	 * to be written on the SINC3_DECIMATION_RATE register:
-+	 *  Value = (DEC_RATE / 32) -1
-+	 */
-+	dec_rate = DIV_ROUND_UP(dec_rate, 32) - 1;
-+	dec_rate_reg[0] = FIELD_GET(AD7768_SINC3_DEC_RATE_MSB_MSK, dec_rate);
-+	dec_rate_reg[1] = FIELD_GET(AD7768_SINC3_DEC_RATE_LSB_MSK, dec_rate);
-+	ret = regmap_bulk_write(st->regmap, AD7768_REG_SINC3_DEC_RATE_MSB,
-+				dec_rate_reg, 2);
-+	if (ret)
-+		return ret;
- 
--	ret = regmap_write(st->regmap, AD7768_REG_DIGITAL_FILTER, mode);
--	if (ret < 0)
-+	st->oversampling_ratio = (dec_rate + 1) * 32;
-+
-+	return 0;
-+}
-+
-+static int ad7768_configure_dig_fil(struct iio_dev *dev,
-+				    enum ad7768_filter_type filter_type,
-+				    unsigned int dec_rate)
-+{
-+	struct ad7768_state *st = iio_priv(dev);
-+	unsigned int dec_rate_idx, dig_filter_regval;
-+	int ret;
-+
-+	switch (filter_type) {
-+	case AD7768_FILTER_SINC3:
-+		dig_filter_regval = AD7768_DIG_FIL_FIL(AD7768_FILTER_REGVAL_SINC3);
-+		break;
-+	case AD7768_FILTER_SINC3_REJ60:
-+		dig_filter_regval = AD7768_DIG_FIL_FIL(AD7768_FILTER_REGVAL_SINC3_REJ60);
-+		break;
-+	case AD7768_FILTER_WIDEBAND:
-+		/* Skip decimations 8 and 16, not supported by the wideband filter */
-+		dec_rate_idx = find_closest(dec_rate, &ad7768_dec_rate_values[2],
-+					    ARRAY_SIZE(ad7768_dec_rate_values) - 2);
-+		dig_filter_regval = AD7768_DIG_FIL_FIL(AD7768_FILTER_REGVAL_WIDEBAND) |
-+				    AD7768_DIG_FIL_DEC_RATE(dec_rate_idx);
-+		/* Correct the index offset */
-+		dec_rate_idx += 2;
-+		break;
-+	case AD7768_FILTER_SINC5:
-+		dec_rate_idx = find_closest(dec_rate, ad7768_dec_rate_values,
-+					    ARRAY_SIZE(ad7768_dec_rate_values));
-+
-+		/*
-+		 * Decimations 8 (idx 0) and 16 (idx 1) are set in the
-+		 * FILTER[6:4] field. The other decimations are set in the
-+		 * DEC_RATE[2:0] field, and the idx need to be offsetted by two.
-+		 */
-+		if (dec_rate_idx == 0)
-+			dig_filter_regval = AD7768_DIG_FIL_FIL(AD7768_FILTER_REGVAL_SINC5_X8);
-+		else if (dec_rate_idx == 1)
-+			dig_filter_regval = AD7768_DIG_FIL_FIL(AD7768_FILTER_REGVAL_SINC5_X16);
-+		else
-+			dig_filter_regval = AD7768_DIG_FIL_FIL(AD7768_FILTER_REGVAL_SINC5) |
-+					    AD7768_DIG_FIL_DEC_RATE(dec_rate_idx - 2);
-+		break;
-+	}
-+
-+	ret = regmap_write(st->regmap, AD7768_REG_DIGITAL_FILTER, dig_filter_regval);
-+	if (ret)
- 		return ret;
- 
--	/* A sync-in pulse is required every time the filter dec rate changes */
-+	st->filter_type = filter_type;
-+	/*
-+	 * The decimation for SINC3 filters are configured in different
-+	 * registers
-+	 */
-+	if (filter_type == AD7768_FILTER_SINC3 ||
-+	    filter_type == AD7768_FILTER_SINC3_REJ60) {
-+		ret = ad7768_set_sinc3_dec_rate(st, dec_rate);
-+		if (ret)
-+			return ret;
-+	} else {
-+		st->oversampling_ratio =  ad7768_dec_rate_values[dec_rate_idx];
-+	}
-+
-+	ad7768_fill_samp_freq_tbl(st);
-+
-+	/* A sync-in pulse is required after every configuration change */
- 	return ad7768_send_sync_pulse(st);
- }
- 
-@@ -538,43 +691,69 @@ static int ad7768_gpio_init(struct iio_dev *indio_dev)
- static int ad7768_set_freq(struct ad7768_state *st,
- 			   unsigned int freq)
- {
--	unsigned int diff_new, diff_old, pwr_mode, i, idx;
-+	unsigned int diff_new, diff_old, i, idx;
- 	int res, ret;
- 
-+	freq = clamp_t(unsigned int, freq, 50, 1024000);
- 	diff_old = U32_MAX;
- 	idx = 0;
- 
--	res = DIV_ROUND_CLOSEST(st->mclk_freq, freq);
-+	if (freq == 0)
-+		return -EINVAL;
-+
-+	res = DIV_ROUND_CLOSEST(st->mclk_freq, freq * st->oversampling_ratio);
- 
- 	/* Find the closest match for the desired sampling frequency */
--	for (i = 0; i < ARRAY_SIZE(ad7768_clk_config); i++) {
--		diff_new = abs(res - ad7768_clk_config[i].clk_div);
-+	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-+		diff_new = abs(res - ad7768_mclk_div_rates[i]);
- 		if (diff_new < diff_old) {
- 			diff_old = diff_new;
- 			idx = i;
- 		}
- 	}
- 
--	/*
--	 * Set both the mclk_div and pwrmode with a single write to the
--	 * POWER_CLOCK register
--	 */
--	pwr_mode = AD7768_PWR_MCLK_DIV(ad7768_clk_config[idx].mclk_div) |
--		   AD7768_PWR_PWRMODE(ad7768_clk_config[idx].pwrmode);
--	ret = regmap_write(st->regmap, AD7768_REG_POWER_CLOCK, pwr_mode);
--	if (ret < 0)
-+	/* Set both the mclk_div and pwrmode */
-+	ret = ad7768_set_mclk_div(st, idx);
-+	if (ret)
- 		return ret;
- 
--	ret =  ad7768_set_dig_fil(st, ad7768_clk_config[idx].dec_rate);
--	if (ret < 0)
-+	st->samp_freq = DIV_ROUND_CLOSEST(st->mclk_freq,
-+					  ad7768_mclk_div_rates[idx] * st->oversampling_ratio);
-+
-+	/* A sync-in pulse is required after every configuration change */
-+	return ad7768_send_sync_pulse(st);
-+}
-+
-+static int ad7768_set_fil_type_attr(struct iio_dev *dev,
-+				    const struct iio_chan_spec *chan,
-+				    unsigned int filter)
-+{
-+	struct ad7768_state *st = iio_priv(dev);
-+	int ret;
-+
-+	ret = ad7768_configure_dig_fil(dev, filter, st->oversampling_ratio);
-+	if (ret)
- 		return ret;
- 
--	st->dec_rate = ad7768_clk_config[idx].clk_div /
--		       ad7768_mclk_div_rates[ad7768_clk_config[idx].mclk_div];
--	st->samp_freq = DIV_ROUND_CLOSEST(st->mclk_freq,
--					  ad7768_clk_config[idx].clk_div);
-+	/* Update sampling frequency */
-+	return ad7768_set_freq(st, st->samp_freq);
-+}
- 
--	return 0;
-+static int ad7768_get_fil_type_attr(struct iio_dev *dev,
-+				    const struct iio_chan_spec *chan)
-+{
-+	struct ad7768_state *st = iio_priv(dev);
-+	int ret;
-+	unsigned int mode;
-+
-+	ret = regmap_read(st->regmap, AD7768_REG_DIGITAL_FILTER, &mode);
-+	if (ret)
-+		return ret;
-+
-+	mode = FIELD_GET(AD7768_DIG_FIL_FIL_MSK, mode);
-+
-+	/* From the register value, get the corresponding filter type */
-+	return ad7768_filter_regval_to_type[mode];
- }
- 
- static int ad7768_read_raw(struct iio_dev *indio_dev,
-@@ -618,6 +797,11 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		*val = st->samp_freq;
- 
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		*val = st->oversampling_ratio;
-+
- 		return IIO_VAL_INT;
- 	}
- 
-@@ -632,9 +816,13 @@ static int ad7768_read_avail(struct iio_dev *indio_dev,
- 	struct ad7768_state *st = iio_priv(indio_dev);
- 
- 	switch (info) {
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		*vals = (int *)ad7768_dec_rate_range[st->filter_type];
-+		*type = IIO_VAL_INT;
-+		return IIO_AVAIL_RANGE;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		*vals = (int *)st->samp_freq_avail;
--		*length = ARRAY_SIZE(ad7768_clk_config);
-+		*length = st->samp_freq_avail_len;
- 		*type = IIO_VAL_INT;
- 		return IIO_AVAIL_LIST;
- 	default:
-@@ -642,20 +830,45 @@ static int ad7768_read_avail(struct iio_dev *indio_dev,
- 	}
- }
- 
--static int ad7768_write_raw(struct iio_dev *indio_dev,
--			    struct iio_chan_spec const *chan,
--			    int val, int val2, long info)
-+static int __ad7768_write_raw(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan,
-+			      int val, int val2, long info)
- {
- 	struct ad7768_state *st = iio_priv(indio_dev);
-+	int ret;
- 
- 	switch (info) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		return ad7768_set_freq(st, val);
-+
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		ret = ad7768_configure_dig_fil(indio_dev, st->filter_type, val);
-+		if (ret)
-+			return ret;
-+
-+		/* Update sampling frequency */
-+		return ad7768_set_freq(st, st->samp_freq);
- 	default:
- 		return -EINVAL;
- 	}
- }
- 
-+static int ad7768_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long info)
-+{
-+	int ret;
-+
-+	ret = iio_device_claim_direct_mode(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = __ad7768_write_raw(indio_dev, chan, val, val2, info);
-+	iio_device_release_direct_mode(indio_dev);
-+
-+	return ret;
-+}
-+
- static int ad7768_read_label(struct iio_dev *indio_dev,
- 	const struct iio_chan_spec *chan, char *label)
- {
-@@ -669,7 +882,7 @@ static int ad7768_get_current_scan_type(const struct iio_dev *indio_dev,
- {
- 	struct ad7768_state *st = iio_priv(indio_dev);
- 
--	return st->dec_rate == 8 ? AD7768_SCAN_TYPE_HIGH_SPEED :
-+	return st->oversampling_ratio == 8 ? AD7768_SCAN_TYPE_HIGH_SPEED :
- 		AD7768_SCAN_TYPE_NORMAL;
- }
- 
-@@ -777,6 +990,14 @@ static int ad7768_setup(struct iio_dev *indio_dev)
- 			return ret;
- 	}
- 
-+	/*
-+	 * Set Default Digital Filter configuration:
-+	 * SINC5 filter with x32 Decimation rate
-+	 */
-+	ret = ad7768_configure_dig_fil(indio_dev, AD7768_FILTER_SINC5, 32);
-+	if (ret)
-+		return ret;
-+
- 	/* Set the default sampling frequency to 32000 kSPS */
- 	return ad7768_set_freq(st, 32000);
- }
-@@ -1132,7 +1353,6 @@ static int ad7768_probe(struct spi_device *spi)
- 		return PTR_ERR(st->mclk);
- 
- 	st->mclk_freq = clk_get_rate(st->mclk);
--	ad7768_fill_samp_freq_tbl(st);
- 
- 	indio_dev->channels = ad7768_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(ad7768_channels);
--- 
-2.34.1
+-Fenghua
 
