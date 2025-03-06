@@ -1,263 +1,353 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB273255252;
-	Thu,  6 Mar 2025 17:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741282886; cv=fail; b=Bs0MtiBV4NLq5FnBK/B95qlcqzyMfI0IaXOzGv5BhlmjMRB4m3sagHYC9qD6dfGtOuKdbY4IB3yleNoSbgeKQ/Wwrs1l38BP4hHNMu5wESWrH8Y1D2l9AdyAn3077iF4bRyqNIFw+G8OPBJs1vY9QZtnJMr7Ab9tuxJ2ciH5XUY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741282886; c=relaxed/simple;
-	bh=nvz4FuDhjuOyK/CnLBkkH1or7XfV1W9EewtTm3ttl3A=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=diHVf2IpIb0xA7Hqd118R2uppx7TUaiHpSvX+NdLorJmUXfgKLaJvZsGLHHpptWqClw1xcKZmYq3RiSDVkHyhFv2K9itBdoAOoGjv7e5+CDkbpBdbWAhxv2QspCZnG6RYlzyk6imPD+CQhtzUQZHOk4IS1ILAKArOW3VUxt6ZH0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TWAJAcNN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=tsxIQFku; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TWAJAcNN";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tsxIQFku"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526Fi6Fa028790;
-	Thu, 6 Mar 2025 17:40:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=iChe9b4e7hP3GIWPb84pjyvbxMgxPvBqY5FaQ04PjgQ=; b=
-	TWAJAcNNQy0DvR2hgK5YtJju/m1C1ggRHS68v9uP8IHW3yXZhY9FhBJKW0Q6HGRN
-	DO+fSFYJdy3ynNbfFB39slXXoZ1y8dGDmbXH8T2tYK2hYczCZUBnjAvTiMpUCrlh
-	Jct1XY/RxczNbq+b52oEvmqBxjzYafIO7Vz8UR2iqUqRnkfXUielI4YMsiGInkXj
-	nI0USNFo1t520p3g7q0LRsBVCvc2dKlQKhlYU0UGNneCbjCb9uEBBGa2MyQggiTb
-	ZOF1nEPTTr0NJzuQcu8Brn9PX4HTdCHk5iV4TklBXSjzQTFRGGayppNaL82aBBpG
-	dqdSoARgX4yAe4rTMEAU9w==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 453u9qjsd8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Mar 2025 17:40:59 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 526GLJ4i022645;
-	Thu, 6 Mar 2025 17:40:58 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2174.outbound.protection.outlook.com [104.47.55.174])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 453rwydx2p-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Mar 2025 17:40:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ii1DakUAnZh7r0NlJ9Jm3PUHxUJriBbk+Kqvalq7XA9g2ZbME1qjvtYQYvnnOydQiXKiHSYqn1WYswiq4Bnkoz5Iyn3Eay2hUIHBPAdYl/Uih6EAloaWIhDLm1yVCxyRb4URaym2lyvVMIaZTed6xfXPQSJze1Rbkluij5zqUJewQ2a1ADTdg/6WyurR8Q5gAtFvElQd0QG4WHUZuZesCh5jxXBNpZ2lvrC9EoyNQHYc3ILplRsvsRAWtT4uCb1yUqC7cYge8vONC5DYjTuUZeIGovZetgRrKsl1DEJeWp8VY/19P+j0NVUwCtUVAE1VcTTC2qOPWB6H8Kcx36uE2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iChe9b4e7hP3GIWPb84pjyvbxMgxPvBqY5FaQ04PjgQ=;
- b=EqcNKTjHuOP9v/pX5SHTC9IC+TBo1g9OfvKDSaHCt8QMMl1jkcyBV2FRldWYdDEGz64pPYo+B9HbnM+tz0S5gP5k7etQ7RkU8+RkuuU1VaLvC2mN8nqKY2PhXqAERsFz2hDHtMuQx7i2Y7noEE7pfK/9d6qt5nJ/nldAvJgXZfRkofUgAxLxBSob+yPsEmOeWPBLOXuVIsiCy4zmzSd88L7DgCSeCDTAbawSWz9U6UQjH2lxOR4h6USX74wztOuEqj4QMSkp1R8Gqd+Ej2Vtkimbf+w3wdYYxJmSTSR+HJdhU7pcS7D4jg9CM4tpj6vUGQLqeCS4nmn8fnhDcX1uzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iChe9b4e7hP3GIWPb84pjyvbxMgxPvBqY5FaQ04PjgQ=;
- b=tsxIQFkuOncYkqMeprz6YAgFXfT5toMgmBK3Unhf1A8TvVnVtnAyLhk4Ympa2x/8zjam97v1iRWpFQT8FZFP7pCHbT6dOADAfM5FgKvvUJfoCAV9EruV77Ki75MDwTLA4sfGhgafPI2SVcMjXNJ9ysRrGR37VQR5UKSmSkEfUpE=
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
- by PH7PR10MB6484.namprd10.prod.outlook.com (2603:10b6:510:1ef::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 17:40:52 +0000
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::39b2:9b47:123b:fc63]) by DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::39b2:9b47:123b:fc63%5]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 17:40:52 +0000
-Message-ID: <31ce6d1c-b036-4a7d-a888-47a62a195dba@oracle.com>
-Date: Thu, 6 Mar 2025 12:40:50 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] nfsd: add some stub tracepoints around key vfs
- functions
-To: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: Sargun Dillon <sargun@meta.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20250306-nfsd-tracepoints-v1-0-4405bf41b95f@kernel.org>
- <20250306-nfsd-tracepoints-v1-3-4405bf41b95f@kernel.org>
- <43efb87e-348c-4ad5-84a1-7e30479264bc@oracle.com>
- <e3155f911895be8384b8d522738d8a8e95c8ced5.camel@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <e3155f911895be8384b8d522738d8a8e95c8ced5.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH5PR03CA0013.namprd03.prod.outlook.com
- (2603:10b6:610:1f1::11) To DS7PR10MB5134.namprd10.prod.outlook.com
- (2603:10b6:5:3a1::23)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEA525A652
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741282891; cv=none; b=ZGxwErdnT2t26IfDNT0COEmAGhkYHHCCcJhMZIx6z/osskOGTC5a4m1Khl/ZTNbUpGgEa9HKE04daLVlfpifiRPrtqYgSEuHdQv+R473kfZ6DPBXRRQlJw7YxG468apJhbQ55SGlT4qAHJzbxp8l/Zb3i0+w3V5dA/dkK8500TQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741282891; c=relaxed/simple;
+	bh=cuP/vScxGtaMqppW/h6NaC/dlve9qOgtjc8hq4kp0AU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RAK5tfdeUnTla22syQ1cPnsfqSkv4jT0Jm2mKY9dgI9PQonJfslgxD5evZxyFVTIwsR3ekIBP7QLMRlZS/vvmJG67n1HuWB19mYWGr9d9EvanfkxeMM7ZJvFsyVya8GGW0iFzQznqGOQQ/1LteakuQJMqRKWv6u+HdlkBgknLbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d2ef1a37beso6551985ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:41:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741282889; x=1741887689;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ifMmxd60Hb7OPYrM+DTw5Np2I8L4Y/29uTi+Rh8hpQk=;
+        b=O3zM/osj/rCwneLKLRZ77ff7NgUYOMBVYBsCgVo5PbHIwOnQpunKjj2wQavLpMM1mV
+         SJqAFw56WInw+DMN8b/2+BP2Bs9Fdbp5sfbPAjtIRSsapd3ZbkEtjs0TIThQ8Hgkb8C7
+         nHH3/aGhe0/x8sMIkwri4eeNbqkyWQpdpJ+oBmPQT6s2cyfPevfEoz9ngxgCD0HX0u0J
+         7ONOqf9IV7YYNpC5OT4+yMB2rTd7lDW2BddFQSpbLzHwu+v69SE4thY2pYlRodbwdeWc
+         GQ3IPFqi8EMroaB275Gw92ReswBN8tgyVQ5qid28YugqkX+HYNuQoVSobvFFtQBJjyhZ
+         w5KA==
+X-Forwarded-Encrypted: i=1; AJvYcCU29I0tDCZjiFPEf8wjyXLHxuz8hRgH7yeIxso38Y/huLVk4q9nCBSUPIYsB74amk7FYsVieira+/kol8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhH7pR0KDmxksnObewUqazku9u1hlesgEmiZb7jIJSQwPdfAWs
+	bmYERXlA0Zw2lmUy0h2FtTYXeV+XXnBeeQUt3XWfs0G5VtrwQujlpGv4sD1xgnZ39DtPujquRSC
+	G1VIuH+uYbELviVmwikaylXfbu0F9FnXyZ1UlsVuJecvKCaMUnyvep/A=
+X-Google-Smtp-Source: AGHT+IG74jscPTid21GN5AeFHpwiDjHnBGpR/bu4j/PEbv2yM/Ien+tIxhhe8+veYsy/V4/IwaId4xCFVcSHk3oIb/JGWeTKLUyN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|PH7PR10MB6484:EE_
-X-MS-Office365-Filtering-Correlation-Id: db68d332-8667-4893-79dd-08dd5cd60a39
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?MlVxSTNqTHFKUmtYRm9uTXdRQ3k3aVN2M2RYQkEwT2k5RDlRWjBUSjRrcGE3?=
- =?utf-8?B?SGFDa3BMYWlEU3oybWFrK3lvNFVjTGE0QTNyZnBzdXIxaW83TUlpbUtMcEVM?=
- =?utf-8?B?azhyWkhMTENWcU05TUlJZzN2Qk1IbDMyUTJpWVQyRndQU0Q2VzRtQ21ZeU1a?=
- =?utf-8?B?aGdtUGUzWkFuQU8yZE9uS2U5UWU4UXJLRFNud2VqSTdpMU5HNzhMR1NqMG1y?=
- =?utf-8?B?TnpuZXl5QUdWSDdzMmJwSHQrZHg0V0Z0a1RmTmxncWkrOFBTQUZhS2pxL2di?=
- =?utf-8?B?Q0JYZEZSUTNoMkx0d2xlQWMwOHFqTTZESWZLTUlOclFvOGZtOVdOVzZReHo3?=
- =?utf-8?B?SjRRMHB3czZOc0RHWDNDZmVUdW5penh3dzlOODZmWGorY09TMno0QTBqelN1?=
- =?utf-8?B?Zi9qZnRsZVd1dkhTclBLTmpQY1FJZFQwb3d1UFNpY2pYUHRRQXQyVXpNQU9o?=
- =?utf-8?B?aHdJNjB2YzlpRUhMZW16Tlk1UTlUanVWVHpHSERuK2I2Ylo4VjJZVEcwV3FH?=
- =?utf-8?B?b2NkYjRVRnFBM2Z2cVZMS1MxMUpQRUU3am80MlBxWThKcXhNTWppcDNETWxl?=
- =?utf-8?B?KzZuQUNQdDRlN2VZa1hIWDJJdWp6a25NV0RlK3FuQ2dlOTV5bFZaZUhacFRq?=
- =?utf-8?B?dlRlcmIvb3lrSUdrVlh0NlhENEVyWXpuRmVPUnJiZHhmZWlydG50UDZ3OW1K?=
- =?utf-8?B?aUZoT00wb2hhcDJPZXdvVmljYlZIWUdIZUxvemVFSDN6WVZLNFJLYVpIRGo5?=
- =?utf-8?B?a2ZmUkJlNEkwbW11UmFsc3RwdEgxY09BNStVZ25yRVVBT0lJNCszQU02Q1Vw?=
- =?utf-8?B?M015dkJ1aU0xL05XbnlXM0x6eERvVmRiVTVTd0FhZ1JxWHREQkpKL1JHcE9P?=
- =?utf-8?B?ZHA1M1lDOHlaRTJZVzAyZ2xHb25LNG5sQ01uTUxsTFlNRjg1eWd3QUlSckFN?=
- =?utf-8?B?ZTBCb2FnUng3dGxIOTRlZnFoSWNvSjM4a09QNHM3T29Kd2tzNWxZN0lTOHpY?=
- =?utf-8?B?MWptcTM3c20rbC9TYitlV2wwSGg1cTJ5akhpNUpsMU5pZ1Jhd250TnVqY2pB?=
- =?utf-8?B?QmdKRms5YUxtQmlNUnNQRFpuZmE5UGc4djhVSHFaVWtueDlFR2pGNk9SSXpt?=
- =?utf-8?B?UWU1Myt0NWdFdmNYaEI5YUxQeTVvUU4zYXdxUHBDNENIWitZOGJkT1NFU2Vh?=
- =?utf-8?B?ZE52cGt3NUlkcUNSZWNUMjBRbXNSV2FHY3BQdkx0RVpoM2s0R1RxdkxMZlZs?=
- =?utf-8?B?NmQveGVxT2FCQ1FvNzZyeEQ3L2FIclgrcVJTdG5iRW05aXF0SFNYMkhQN29r?=
- =?utf-8?B?cFB3ZFA0N0t6QjhBMUtROGwwbTZYUG9hQnA0VWNtTDk3bGRMRFRXMHA3MXBF?=
- =?utf-8?B?NE5OMlhQcm15SDRUSVdKYmRwbTlKQWhWeHJMcUZpM09ra1ptU2FNeUdqQXd6?=
- =?utf-8?B?RTMvSUJJM2cxN0cwY0JBZDh0cEhnbmVnZlpvL2xVYktqNmNWY3VjWFhheFZ2?=
- =?utf-8?B?RXRmOFAydE1yNFFZOVFIT0I1anVIT0tlNUloaEFZekhwL3BVUVJRYWZINC9Z?=
- =?utf-8?B?Q0d5K0tsM0F3M055U0l3SXQ5Vk1rc1lnS1dmSjVDYk5VSUFJcko3MFZ1OFlx?=
- =?utf-8?B?QWxUV0Nudml1akFWbUNtUWwyMVFaRElLMjBCeGxGdzdobURHSVovODZobkxM?=
- =?utf-8?B?QlRBd1UvdTRLQjBkbmdaWDF6ZTlpcEpLRVJrMnBSYVRlaG12TWpFMW5PclBX?=
- =?utf-8?B?TDVvZXJQWXJYcWxYeHlxajhyVm1mL1gwVjdLWTZwcEpvOCtkVFlGNEtXaUlt?=
- =?utf-8?B?eENFdnUrTU1udlFLMXVBcVBXcFltck1vVEU4Vjl2YjE2NnBaekxlN09QSmN0?=
- =?utf-8?Q?vRjYfc7TlUMQM?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?U3d6TUlBeWtkaUU1SnFVSTRYYWtxNmNjV3IvSm96ZHVjTVpseDdMSUtEdmpk?=
- =?utf-8?B?T1hNakQ5YVdPNUN6bHorVHZYd3N2bjBVRkwyT2NNbi9uL2t4bTJBeTY5K2Jo?=
- =?utf-8?B?YUZ0bjF1ZzlWNXRnN1hTdlNvRWx2QjZaaXBYK1d1Q09ibWI2MUlMSllTb1Rw?=
- =?utf-8?B?ZU1rVFlwbHE1eTdta3pPZWRIMytrRVBQTXdETXRDdTltekRCODA0ZmFQdFp1?=
- =?utf-8?B?VjZEcVlHditsNGp2YzgrbzdBTnRndGJqVGc3OFB2YkpPWS9QeEhpS3JLZi8x?=
- =?utf-8?B?MC8xaDdMc0pjMERFUzFZeFhmM09LRURTaGRnMm9NOGRrOEQ3b08vZmNROVI1?=
- =?utf-8?B?NktrMXdDc1Fod1daRGQ2cld5SUh5Umw0WkxYNjJsU1NPWTM0dVZYNUJsd1lx?=
- =?utf-8?B?S04rQktzdlp2S2lETE1vODFxNE1HK3FFaHB5UkhiSmpSc0FVQzRJYXRDTDJK?=
- =?utf-8?B?MnByRi8vTGM3RnZJc0UyNm43OUk1QU53QzU2R0ppWGJCSnRxektsRjJwaktP?=
- =?utf-8?B?QzRqdVNGbWd6M0Z3TlFYYTN1S3FIM0lSUFloT0VuR0RjSUJDNm8vZXEwSDho?=
- =?utf-8?B?ZUhzSW81K2pMUko3YXhSQWpXYm9DaVo0MVg0WGVSNFIxU0tmUzFGOUFIbmgz?=
- =?utf-8?B?MFRITlBEcjhhTUZqTEdQanBVdGY4ai9WbXlrQmljVU1NakFPUzZiUDFzQUZn?=
- =?utf-8?B?V2x2K0FJTTRCS1RrRVlHYXh4aVhmQ21aUEcwNllYeWRsSGdTM2Rpclh4eDNn?=
- =?utf-8?B?Q0RUdEdlS2Y5ZGlGSzMrM1dHLy9rcEl5eGVGK2ZyQ08rMmwwaW9ZelBpbzFI?=
- =?utf-8?B?TTVkSE1qTWtyL3AwSzBMeW9jL2pwemY3NWEvYkZjSlJFTkIxOHQ2ekNkcEZR?=
- =?utf-8?B?L1hQUFErZnFLR1dTYnpoLzI5eHV4dStHdzc3QjJLc1F6RUhFYTJwWVBNZXlP?=
- =?utf-8?B?NjluaFNCa1lXZ1ZDWkYwaW1yZTZUeHBzWEYvamNnU2hyV1ZqZ0xqc2I0R2Fq?=
- =?utf-8?B?WGMzOUFSRU44SHo0M1g5WjI4WkVZMGZKek5BRm9raXg1blNydVRMSDFqajdI?=
- =?utf-8?B?emhEQ1dpVkd5UHFYNFBVRmpGRjFQLzJWQThWU2ZMUVRjZFdMZ2Fia3NJSms2?=
- =?utf-8?B?bFNBQmwyTUlKV2FsOUw1R3dORDc0M0pjNkFORHN0VC90bnFCcHBMLzNZRzlj?=
- =?utf-8?B?amtVUFovQTdqbEQrazlDWERkVWtua0FKRnVtZ3d0Q25RSE94TzU5MmQxMFI5?=
- =?utf-8?B?Q2tNc2FZaVNCc0RjYTVhRUl5ZW9HSG1DanpYK3ZiNTVYazFIQ2hTVmFXNm9L?=
- =?utf-8?B?Y0NMdlFsL1BDcEhVUHQzZ3E5K2pkelRDYjVKeno5NEt3QWJhSEphKzM2RGdY?=
- =?utf-8?B?aGl4K05UU3pYS1diclFVV0c3bjVxd2dPQWNuTWMwRHZCR25wUmRkbzJjYXRl?=
- =?utf-8?B?NXNiQkNpS3VjekI1aVo0cndLcTlReEtZeDNNUUxqZ0k5MjFzR1RlWWxWSTRO?=
- =?utf-8?B?d0kxam5zakhEOVBSWk5aaml1WFFnbXZFbFQwWXV1VmZlQmduNzJSSkNZdU96?=
- =?utf-8?B?OHFzOWpFc3BJRFJNNzRKTHBYMjN4ZVhSOWlHdzVxMlExdll3aEt4UytzaUhM?=
- =?utf-8?B?STNyZFBMZVFMM05ncysxV0k2RFRTbHpGbWxnYmtFaFNueE9BMFppM2NHODNz?=
- =?utf-8?B?b2VFaGtlcHptZlVaVE5HTmVVbll2eks2ZFcvREc4V2NSYnlkUERwZEpJMTM0?=
- =?utf-8?B?b1F6TTdZRDY2NXlRVWxrM042Q3Joa1hKeTZmUk85UFpoU1VxTk0yU3hwK2RC?=
- =?utf-8?B?T0Y2TEQ3d0xhcHdnbm81enpTTjdRQisyM2tPNXZUSnZjcFYrZllZN0c2bjIz?=
- =?utf-8?B?VVhiU29iL0MzRTY3VUlpQ210eEtrREtBbjBqZWJPam1SRVZ0TlpjSFNOcERa?=
- =?utf-8?B?WE5hSjI2cnFMRWYwd3JmY2txbHdPbUcwZDBGNGlEai8xRXVnSWF2d2VqNGVy?=
- =?utf-8?B?T2tndkswVFdwdDFrcitwOC9Jc2J2V0RKb2pDb0VESG1haEhOTVVJZ2hBdk1j?=
- =?utf-8?B?RFNrOVVNQ2c0MitRVzk5V3dlcFVOS3poM0lwNnRtYlJQUG9OaDhPdS9HNVBo?=
- =?utf-8?Q?9wHgApdMxXrdMoycaivnl2XYc?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rHSvyC8BhMwCJmqyJQ4zZTeEqGtpxROKpTpWx/b9wOfbbyduh2btE4V54Z9pUUwOZshlpENnOJ5Ce0Tmerd0SnL5SEUjETJPsdAu5ZIfxgWmLjN8OmwFlg4NEY5qoBBw0QfhjtddjjPWrcyI/kk0rVeY8FqBvduHb7NLhE88wJdSkBzOyq0OtAJ3nnXhufsV45Wl0v6+/3EJfeVOsQAZYoWysn9Z0dCqz7sLbTrVtY9vUuIsgK3rDrHTvLi43zXJpakAhhkwCdEcQPKYmuwf9i80LnyfFyiGbpVaUrUdqcwqR4HaZ+uANSM01/kFr5wCaXgGkE5gwwkHHuhQ0c2t6Ub66HPXsOohzD/ydeM4F3SHIERwoSNS/huAs8zfpyJV7v3bnzsk7zhI0IWtnwtg+stzB8HsrRJQLncVtjsQMVrTmOZwAfo2I5Ebv8OnHId/s+prjnSBd7q/yyz6jmV/9ACwDg6LQyl+ywzLGHD9ND8a/Qdkgx1Nh77xnYJ7voEAZI4zpgCFyuhbJaJuEl0FdSCfTJnHlG30Yf/IgAXCSRJefWfKs0rSw4pEL2BxRgDqBgb5Ane5QtKh0L9AZnDDMwL+jHDXL0QnVwYBWWeGyx8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db68d332-8667-4893-79dd-08dd5cd60a39
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 17:40:52.2308
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CC9xnUBdwLsGYwKDyX5usFwAh7sZaiZn4msHFqZtO13Ig1TjhVV8p/PrIzbdRL0Yd2ckwJRwbgQWwCBzLZAWjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6484
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_06,2025-03-06_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- bulkscore=0 adultscore=0 suspectscore=0 spamscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2503060134
-X-Proofpoint-ORIG-GUID: RiMQD7FCNLRxqJUMbgkFfLx1H0nK5C0C
-X-Proofpoint-GUID: RiMQD7FCNLRxqJUMbgkFfLx1H0nK5C0C
+X-Received: by 2002:a05:6e02:1707:b0:3d3:dfc2:912c with SMTP id
+ e9e14a558f8ab-3d4419ff334mr4674985ab.17.1741282888728; Thu, 06 Mar 2025
+ 09:41:28 -0800 (PST)
+Date: Thu, 06 Mar 2025 09:41:28 -0800
+In-Reply-To: <6761bbbd.050a0220.29fcd0.0075.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c9de48.050a0220.15b4b9.003b.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in l2cap_connect_cfm
+From: syzbot <syzbot+e9abaabc441d3dd18735@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/6/25 11:28 AM, Jeff Layton wrote:
-> On Thu, 2025-03-06 at 09:29 -0500, Chuck Lever wrote:
->> On 3/6/25 7:38 AM, Jeff Layton wrote:
->>> Sargun set up kprobes to add some of these tracepoints. Convert them to
->>> simple static tracepoints. These are pretty sparse for now, but they
->>> could be expanded in the future as needed.
->>
->> I have mixed feelings about this.
+syzbot has found a reproducer for the following issue on:
 
-To be very clear: I'm always up for better observability! The details of
-this patch are where I start to have some hesitation.
+HEAD commit:    f66d6acccbc0 Merge tag 'x86_urgent_for_v6.12' of git://git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1666b2e8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ca2f08f822652bd0
+dashboard link: https://syzkaller.appspot.com/bug?extid=e9abaabc441d3dd18735
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5b28ec7d6aaa/disk-f66d6acc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1999546fff71/vmlinux-f66d6acc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ef848d42ab19/bzImage-f66d6acc.xz
+
+Bisection is inconclusive: the issue happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=147adb78580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=167adb78580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=127adb78580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e9abaabc441d3dd18735@syzkaller.appspotmail.com
+
+kobject: kobject_add_internal failed for hci5:201 with -EEXIST, don't try to register things with the same name in the same directory.
+Bluetooth: hci5: failed to register connection device
+==================================================================
+BUG: KASAN: slab-use-after-free in l2cap_conn_ready net/bluetooth/l2cap_core.c:1619 [inline]
+BUG: KASAN: slab-use-after-free in l2cap_connect_cfm+0xdbe/0xf80 net/bluetooth/l2cap_core.c:7278
+Read of size 8 at addr ffff8880780f0480 by task kworker/u9:3/5950
+
+CPU: 0 UID: 0 PID: 5950 Comm: kworker/u9:3 Not tainted 6.12.0-rc7-syzkaller-00216-gf66d6acccbc0 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
+Workqueue: hci5 hci_rx_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc3/0x620 mm/kasan/report.c:488
+ kasan_report+0xd9/0x110 mm/kasan/report.c:601
+ l2cap_conn_ready net/bluetooth/l2cap_core.c:1619 [inline]
+ l2cap_connect_cfm+0xdbe/0xf80 net/bluetooth/l2cap_core.c:7278
+ hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
+ le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
+ hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
+ hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
+ hci_event_func net/bluetooth/hci_event.c:7440 [inline]
+ hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
+ hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
+ process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
+ kthread+0x2c4/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+Allocated by task 5950:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:878 [inline]
+ kzalloc_noprof include/linux/slab.h:1014 [inline]
+ l2cap_chan_create+0x44/0x920 net/bluetooth/l2cap_core.c:449
+ l2cap_sock_alloc.constprop.0+0xf3/0x180 net/bluetooth/l2cap_sock.c:1886
+ l2cap_sock_new_connection_cb+0x101/0x240 net/bluetooth/l2cap_sock.c:1468
+ l2cap_connect_cfm+0x4cc/0xf80 net/bluetooth/l2cap_core.c:7261
+ hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
+ le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
+ hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
+ hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
+ hci_event_func net/bluetooth/hci_event.c:7440 [inline]
+ hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
+ hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
+ process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
+ kthread+0x2c4/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Freed by task 6070:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:230 [inline]
+ slab_free_hook mm/slub.c:2342 [inline]
+ slab_free mm/slub.c:4579 [inline]
+ kfree+0x14f/0x4b0 mm/slub.c:4727
+ l2cap_chan_destroy net/bluetooth/l2cap_core.c:495 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ l2cap_chan_put+0x216/0x2c0 net/bluetooth/l2cap_core.c:519
+ l2cap_sock_cleanup_listen+0x4d/0x2a0 net/bluetooth/l2cap_sock.c:1451
+ l2cap_sock_release+0x5c/0x210 net/bluetooth/l2cap_sock.c:1411
+ __sock_release+0xb3/0x270 net/socket.c:658
+ sock_close+0x1c/0x30 net/socket.c:1426
+ __fput+0x3f9/0xb60 fs/file_table.c:431
+ task_work_run+0x151/0x250 kernel/task_work.c:239
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x250 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff8880780f0000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 1152 bytes inside of
+ freed 2048-byte region [ffff8880780f0000, ffff8880780f0800)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff8880780f6000 pfn:0x780f0
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff88801b042000 ffffea0001292c00 0000000000000002
+raw: ffff8880780f6000 0000000080080003 00000001f5000000 0000000000000000
+head: 00fff00000000040 ffff88801b042000 ffffea0001292c00 0000000000000002
+head: ffff8880780f6000 0000000080080003 00000001f5000000 0000000000000000
+head: 00fff00000000003 ffffea0001e03c01 ffffffffffffffff 0000000000000000
+head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 2965, tgid 2965 (kworker/u8:7), ts 97728781507, free_ts 97577158223
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1556
+ prep_new_page mm/page_alloc.c:1564 [inline]
+ get_page_from_freelist+0xfce/0x2f80 mm/page_alloc.c:3474
+ __alloc_pages_noprof+0x223/0x25a0 mm/page_alloc.c:4751
+ alloc_pages_mpol_noprof+0x2c9/0x610 mm/mempolicy.c:2265
+ alloc_slab_page mm/slub.c:2412 [inline]
+ allocate_slab mm/slub.c:2578 [inline]
+ new_slab+0x2c9/0x410 mm/slub.c:2631
+ ___slab_alloc+0xdac/0x1880 mm/slub.c:3818
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3908
+ __slab_alloc_node mm/slub.c:3961 [inline]
+ slab_alloc_node mm/slub.c:4122 [inline]
+ __do_kmalloc_node mm/slub.c:4263 [inline]
+ __kmalloc_node_track_caller_noprof+0x355/0x430 mm/slub.c:4283
+ kmalloc_reserve+0xef/0x2c0 net/core/skbuff.c:609
+ __alloc_skb+0x164/0x380 net/core/skbuff.c:678
+ alloc_skb include/linux/skbuff.h:1322 [inline]
+ nlmsg_new include/net/netlink.h:1015 [inline]
+ rtmsg_ifinfo_build_skb+0x81/0x280 net/core/rtnetlink.c:4099
+ unregister_netdevice_many_notify+0x983/0x1e50 net/core/dev.c:11411
+ cleanup_net+0x58c/0xb40 net/core/net_namespace.c:621
+ process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
+ kthread+0x2c4/0x3a0 kernel/kthread.c:389
+page last free pid 2965 tgid 2965 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1127 [inline]
+ free_unref_page+0x661/0x1080 mm/page_alloc.c:2657
+ __folio_put+0x32a/0x450 mm/swap.c:112
+ kvfree+0x47/0x50 mm/util.c:701
+ unix_net_exit+0x61/0xb0 net/unix/af_unix.c:3708
+ ops_exit_list+0xb3/0x180 net/core/net_namespace.c:173
+ cleanup_net+0x5b7/0xb40 net/core/net_namespace.c:626
+ process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
+ kthread+0x2c4/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Memory state around the buggy address:
+ ffff8880780f0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880780f0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880780f0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8880780f0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880780f0580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+==================================================================
+BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+BUG: KASAN: wild-memory-access in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+BUG: KASAN: wild-memory-access in l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
+BUG: KASAN: wild-memory-access in l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
+BUG: KASAN: wild-memory-access in l2cap_connect_cfm+0x7eb/0xf80 net/bluetooth/l2cap_core.c:7278
+Read of size 4 at addr deacfffffffffc8c by task kworker/u9:3/5950
+
+CPU: 0 UID: 0 PID: 5950 Comm: kworker/u9:3 Tainted: G    B              6.12.0-rc7-syzkaller-00216-gf66d6acccbc0 #0
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
+Workqueue: hci5 hci_rx_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ kasan_report+0xd9/0x110 mm/kasan/report.c:601
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+ l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
+ l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
+ l2cap_connect_cfm+0x7eb/0xf80 net/bluetooth/l2cap_core.c:7278
+ hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
+ le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
+ hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
+ hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
+ hci_event_func net/bluetooth/hci_event.c:7440 [inline]
+ hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
+ hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
+ process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
+ kthread+0x2c4/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+==================================================================
+Oops: general protection fault, probably for non-canonical address 0xfbd59bffffffff91: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: maybe wild-memory-access in range [0xdeacfffffffffc88-0xdeacfffffffffc8f]
+CPU: 0 UID: 0 PID: 5950 Comm: kworker/u9:3 Tainted: G    B              6.12.0-rc7-syzkaller-00216-gf66d6acccbc0 #0
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
+Workqueue: hci5 hci_rx_work
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
+RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
+RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
+RIP: 0010:l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
+RIP: 0010:l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
+RIP: 0010:l2cap_connect_cfm+0x7f2/0xf80 net/bluetooth/l2cap_core.c:7278
+Code: 80 fb ff ff 49 39 c5 0f 84 29 01 00 00 e8 26 a0 6e f7 49 8d 6f 0c be 04 00 00 00 48 89 ef e8 b5 80 cf f7 48 89 e8 48 c1 e8 03 <0f> b6 14 18 48 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 c5
+RSP: 0018:ffffc90003e0f878 EFLAGS: 00010213
+RAX: 1bd59fffffffff91 RBX: dffffc0000000000 RCX: ffffffff814e821f
+RDX: ffff888030808000 RSI: ffffffff81ee2f8e RDI: 0000000000000007
+RBP: deacfffffffffc8c R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: 3d3d3d3d3d3d3d3d R12: ffff88804779003b
+R13: ffff88806c83d2c0 R14: 0000000000000080 R15: deacfffffffffc80
+FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055558a5ef5c8 CR3: 000000007bf02000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ hci_connect_cfm include/net/bluetooth/hci_core.h:1960 [inline]
+ le_conn_complete_evt+0x1665/0x1d80 net/bluetooth/hci_event.c:5758
+ hci_le_conn_complete_evt+0x23c/0x370 net/bluetooth/hci_event.c:5784
+ hci_le_meta_evt+0x2e5/0x5d0 net/bluetooth/hci_event.c:7132
+ hci_event_func net/bluetooth/hci_event.c:7440 [inline]
+ hci_event_packet+0x669/0x1180 net/bluetooth/hci_event.c:7495
+ hci_rx_work+0x2c6/0x1610 net/bluetooth/hci_core.c:4029
+ process_one_work+0x9c8/0x1ba0 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
+ kthread+0x2c4/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
+RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
+RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
+RIP: 0010:l2cap_chan_lock include/net/bluetooth/l2cap.h:827 [inline]
+RIP: 0010:l2cap_conn_ready net/bluetooth/l2cap_core.c:1621 [inline]
+RIP: 0010:l2cap_connect_cfm+0x7f2/0xf80 net/bluetooth/l2cap_core.c:7278
+Code: 80 fb ff ff 49 39 c5 0f 84 29 01 00 00 e8 26 a0 6e f7 49 8d 6f 0c be 04 00 00 00 48 89 ef e8 b5 80 cf f7 48 89 e8 48 c1 e8 03 <0f> b6 14 18 48 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 c5
+RSP: 0018:ffffc90003e0f878 EFLAGS: 00010213
+RAX: 1bd59fffffffff91 RBX: dffffc0000000000 RCX: ffffffff814e821f
+RDX: ffff888030808000 RSI: ffffffff81ee2f8e RDI: 0000000000000007
+RBP: deacfffffffffc8c R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: 3d3d3d3d3d3d3d3d R12: ffff88804779003b
+R13: ffff88806c83d2c0 R14: 0000000000000080 R15: deacfffffffffc80
+FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055558a5ef5c8 CR3: 000000007bf02000 CR4: 0000000000350ef0
+----------------
+Code disassembly (best guess), 4 bytes skipped:
+   0:	49 39 c5             	cmp    %rax,%r13
+   3:	0f 84 29 01 00 00    	je     0x132
+   9:	e8 26 a0 6e f7       	call   0xf76ea034
+   e:	49 8d 6f 0c          	lea    0xc(%r15),%rbp
+  12:	be 04 00 00 00       	mov    $0x4,%esi
+  17:	48 89 ef             	mov    %rbp,%rdi
+  1a:	e8 b5 80 cf f7       	call   0xf7cf80d4
+  1f:	48 89 e8             	mov    %rbp,%rax
+  22:	48 c1 e8 03          	shr    $0x3,%rax
+* 26:	0f b6 14 18          	movzbl (%rax,%rbx,1),%edx <-- trapping instruction
+  2a:	48 89 e8             	mov    %rbp,%rax
+  2d:	83 e0 07             	and    $0x7,%eax
+  30:	83 c0 03             	add    $0x3,%eax
+  33:	38 d0                	cmp    %dl,%al
+  35:	7c 08                	jl     0x3f
+  37:	84 d2                	test   %dl,%dl
+  39:	0f                   	.byte 0xf
+  3a:	85 c5                	test   %eax,%ebp
 
 
->> - Probably tracepoints should replace the existing dprintk call sites.
->>   dprintk is kind of useless for heavy traffic.
->>
-> 
-> I'm fine with removing dprintks as we go.
-
-Removing them was controversial a few years ago when I first brought
-this up... I would very much like to see these call sites gone, even if
-we don't have immediate replacements in the form of trace points.
-
-
->> - Seems like other existing tracepoints could report most of the same
->>   information. fh_verify, for example, has a tracepoint that reports
->>   the file handle. There's an svc proc tracepoint, and an NFSv4 COMPOUND
->>   tracepoint that can report XID and procedure.
->>
-> 
-> The problem there is the lack of context. Yes, I can see that
-> fh_verify() got called, but on a busy server it can be hard to tell why
-> it got called. I see things like the fh_verify() tracepoint working in
-> conjunction with these new tracepoints. IOW, you could match up the
-> xids and see which fh_verify() was called for which operation.
-
-If we're talking about NFSv3 only, sunrpc:svc_process records the XID,
-nfsd thread, NFSv3 procedure name, and NFSD namespace of each incoming
-RPC call. You also get the NFS client's IP address.
-
-You can also enable nfsd:nfsd_fh_verify to capture several of those
-items, plus the NFS file handle.
-
-The kernel process information will be identical for both the svc_proc
-and nfsd_fh_verify trace points -- that will tie the two records
-together so you can match an XID to an NFS procedure and its file handle
-argument.
-
-If you want to see a little more you can enable the function_graph
-plug-in for nfsd_dispatch().
-
-Another approach is adding trace points in the XDR layer to capture
-all of the arguments of incoming RPC calls:
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/log/?h=topic-xdr-tracepoints
-
-
--- 
-Chuck Lever
+---
