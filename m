@@ -1,69 +1,101 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156D61DF24E;
-	Thu,  6 Mar 2025 08:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334FC1DF24E;
+	Thu,  6 Mar 2025 08:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741250231; cv=none; b=S08myfeBq6tP5OYr/WiJob4rYR2X72slF8Hg2vg96nu7UvWjEvSreTyhARr/MBv6aGICCrbHDKP0z2cW61XZjCLRzGh86EPqo4y2S+WkPC9DrC6SDPDWIQ1Gl8kIKmJtLXZ4zWf7CjBvZLZYUWwMVbRttJj/3LakgoMk7ZtHS04=
+	t=1741250244; cv=none; b=mL+8WWPUl1t61QaiLJAg+rI6c8guzt5CzvWTWF6V+UEsrgTQJYkBdHZdYvFHIjEESNvXWvakq8oFNsuiiu2mKHrezLkjZGw8I5piNej4Ookkczm5Eo5aVTSccaAlO5J7iE0Ut1ZZzS+GZ85SqG9f+C33lTAijGNQijgyO7UKPzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741250231; c=relaxed/simple;
-	bh=Ijp/uqr7w1PYskq3jPI6hjykLFdcqE59PKhO5ibO9Mg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kT9exbY+yarq7pOEE+T53R57oUukroltjJ9Wk/uzTa0ds/b4+n5UCkCxIAJSfp/YOiYNKBPo88v2nYmCJYUb9fgrvla5/rp+LXGmIkA0d7y+hgNp2QcbCVWsWTP9JygHMZ7mRpgMrBHe/e2M8vPNi2HNFJmrB6VObztRJ3UT3qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=wk8K2XWF; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1741250244; c=relaxed/simple;
+	bh=/7ANYMaP62+Mbot+ch5lr0itG0Gzhus/1qB4+BuMJ2I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oDVv33TUgq0A9cpgjQXH6H2zoeQd5f9zZwNOihfoRNP9E2vC+uJ5O3Y44+gLuSKhasVMqN1AoWo0z0LXfQ9i1+bO5wHGoznOy8jRCIJMFvnUBqD6+yNb8RDQjFeNlgnzcJhWvMSx/QRMnbEj6VBTZC2LmWv1OgIS+7FSmds4LDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=sGUVnCB9; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="wk8K2XWF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Ijp/uqr7w1PYskq3jPI6hjykLFdcqE59PKhO5ibO9Mg=;
-	t=1741250230; x=1742459830; b=wk8K2XWFSpNZtblWKZWXViFgz2WDo+4gKX5ufBBXSHJmQ8s
-	zvPnuGjnLnLXu6Z/3WDIqIZ1UnD23Rn0WwX5AVroGD3PDbOZ+NMnkKZFyaLep52hOzUT7WElTnI/k
-	oi4elOmETS/xxchUkGLoWcD1NLFhCkC3DNB5oIb/xnEn7zr2kgeJMVOyu+JaxrZhFC3ufriAmyZ1u
-	tZT6SeAK2fYllYDrExmpyiP9UmEas6Vo5zxnKV51RVa7EzzFSY9qdf40CtHJmE3RcC10I82pZQPhT
-	dQA32MpVBAbbvpjtJUsFH93AY/1A1IqQkCpKCbUDqVV0yD67/Pk8wDswX9mP0onA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tq6j3-00000002j6f-1zcs;
-	Thu, 06 Mar 2025 09:37:06 +0100
-Message-ID: <348c5c7840db255e6cdccb566f7cc3042dd18799.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 0/5] wfx: add support for WoWLAN on Silabs WF200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>, 
-	linux-wireless@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Kalle Valo <kvalo@kernel.org>, 
-	linux-devel@silabs.com
-Date: Thu, 06 Mar 2025 09:37:04 +0100
-In-Reply-To: <47066295.fMDQidcC6G@nb0018864>
-References: <20250302144731.117409-1-jerome.pouiller@silabs.com>
-	 <23857370.6Emhk5qWAg@nb0018864>
-	 <98b872e270bf2d03700b39ec5b62f2746eb46e88.camel@sipsolutions.net>
-	 <47066295.fMDQidcC6G@nb0018864>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="sGUVnCB9"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5267Sk4P015077;
+	Thu, 6 Mar 2025 09:36:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=AjdIaR6MdC1bXj1PgBl4op
+	30U/Eb3YmtVX8LVQkTc3s=; b=sGUVnCB9AsP9lVcBc94H0iRsI1bvs/7vqYrEJW
+	SOJgG+zfq/xn1Wj2Lp0GSUOJUpDOPtJdZh20m879FLpDq69j+QZh3yOCjFD7b0VL
+	EJrCSaIcaB0oHwJTRs8T/UGlypyqr3Audz+1lrymJFgCrUBzImKLz+D0WVv0NTfl
+	HXf4g8xMLVrO73+jSMnP3i6xFnOdOB1nZwY5QAzbWjjZZ+T3vTEfLvIt8S4Wnbh2
+	r7uMAA+3CzAbCFoVihzekdEhgqkdCpbDMLd0hJ4+iBby4aoDHR46Zo4K/FO6dQH9
+	19Ogdgk4+KDlFbOvTWLnbNVh2vypX7OmsgOkMqZC8wOYLSbw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 456krth3ge-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 09:36:57 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A68EF40072;
+	Thu,  6 Mar 2025 09:35:14 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AA4CB374AFA;
+	Thu,  6 Mar 2025 09:34:19 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Mar
+ 2025 09:34:19 +0100
+Received: from localhost (10.48.86.222) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Mar
+ 2025 09:34:19 +0100
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC: <stable@vger.kernel.org>, <alexandre.torgue@foss.st.com>,
+        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v2] clocksource: stm32-lptimer: use wakeup capable instead of init wakeup
+Date: Thu, 6 Mar 2025 09:34:07 +0100
+Message-ID: <20250306083407.2374894-1-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-06_03,2025-03-06_01,2024-11-22_01
 
-On Thu, 2025-03-06 at 09:35 +0100, J=C3=A9r=C3=B4me Pouiller wrote:
->=20
-> I though the missing target tree name was a blocker.
->=20
+From: Alexandre Torgue <alexandre.torgue@foss.st.com>
 
-Ah, no. That's just because it doesn't _always_ manage to apply it. It's
-only a blocker if that's the only thing it reported, but here it just
-said it was missing but went ahead anyway.
+"wakeup-source" property describes a device which has wakeup capability
+but should not force this device as a wakeup source.
 
-Honestly, I have no idea why all that is, sorry.
+Fixes: 48b41c5e2de6 ("clocksource: Add Low Power STM32 timers driver")
+Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+---
+ drivers/clocksource/timer-stm32-lp.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-johannes
+diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
+index a4c95161cb22..193e4f643358 100644
+--- a/drivers/clocksource/timer-stm32-lp.c
++++ b/drivers/clocksource/timer-stm32-lp.c
+@@ -168,9 +168,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (of_property_read_bool(pdev->dev.parent->of_node, "wakeup-source")) {
+-		ret = device_init_wakeup(&pdev->dev, true);
+-		if (ret)
+-			goto out_clk_disable;
++		device_set_wakeup_capable(&pdev->dev, true);
+ 
+ 		ret = dev_pm_set_wake_irq(&pdev->dev, irq);
+ 		if (ret)
+-- 
+2.25.1
+
