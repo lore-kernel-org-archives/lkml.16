@@ -1,108 +1,120 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f201.google.com (mail-qt1-f201.google.com [209.85.160.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5436269CF1
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033E8272931
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741285188; cv=none; b=ou5LlU+wrDN1jLqbzNIE6vwo4rbbCmUudSAc5Q8IHc9z/na55aFwjti9/0r1YZsdpp/olg3LUCQxbVNQvAJu3dxV1lojejHChGO0l6IpYRcvqVRF7GPZEeBNKqJTD9j87a2/kSttRdbqoSpUgCQUcqQmtrmH6juS6oq0ZA4+LPU=
+	t=1741285217; cv=none; b=ZoiH3H+VTQSNBOZ2zYLUW69aihCvY8SRddM8OwLc7ftBb6Eg34N9WySFJkTV6ztBpeEM/gH00+LvlmFVUdf06ptfybWEIKgUSXzSRP/bF72jvQqt78tfW4uqHC76sEt5MmXtQSbjEM6OWAEiGFqbKjXM3cczG1CBI31kY+Fn+3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741285188; c=relaxed/simple;
-	bh=TqiZKDYRbvqiA+onzWKWde9aH/FtaKLM3ZFPhd2Xe3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LI+lamnMIhjzQDMPURzBv6MZ1ruLvweDwFI3fHaJ8mzJ2NZ3FVSjKmw92+seD4jL6QKptBMHmcv5B3QLv43MXAlWGy3ogAH5lSTalRX+hYQJTlV8fsFK93xyIlPdGIon09KljD7BcfgfCbHevDbF7gMldXUfsxSOi8Jdi7QoK1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=KUyRHqeC; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1741285217; c=relaxed/simple;
+	bh=4VuzvYvLcN6dJPQ8n675nSqrtosRx5EBY2qJGYXH/ro=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Rfr8K5Ad+xw6k6mQJ5Az329bUhd9VFzNBiBHbo2hYkdjXck3wLQyYtkd1Y4lml1czVKwsRPUPcyDa0bGJUB9oDq2ByJLlXkmbrwiwvHcDxFfghp/YhD2/t88w0d5rEOKIJ9I46BA4C70qPozPZuGKXTX/JTHbk081vk8d321+ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dvxewfJZ; arc=none smtp.client-ip=209.85.160.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="KUyRHqeC"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-474f15a2087so4423691cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 10:19:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dvxewfJZ"
+Received: by mail-qt1-f201.google.com with SMTP id d75a77b69052e-474f98ba7e4so31398501cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 10:20:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741285185; x=1741889985; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tcWUU1E6OiQ5QkC/8p7XoPGRHT862BXEOfHZQ44uF5Q=;
-        b=KUyRHqeC5JaRGd1hQFjScxhlQnsZFtaFCPRUnv7cwHP0XiZb3Y8sbyuieVbUKI4i0D
-         XTSovfMBDE5Pjt66dyxwNl3iatlF27QuPMG7EVDqN3Q9qvmdWHaQYdgJgiDqIbzvBoxx
-         Z8tYGuZI1F155rpM908pByOUb2Wn+pc9Ahum5wCUOwBVnRQnPpeD+frZbJMMXCkLOu9W
-         clzpGI/5PAdsgm+24kdVW7G+iAhc6Bx8vU+Id2z92vw0EsZpIJnFcNHwlwqE3dv284br
-         5f7GcGvJ8SNdn1jKPic22a7Y2QkMRfpeAKerpA6MMlA0Qes3fTWRwDrcPRrbeJMDBc8p
-         cfgg==
+        d=google.com; s=20230601; t=1741285215; x=1741890015; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kOXNDTF2vrh5uDiXj9TnU3A+yLNXaCYv0mbF7Mtjths=;
+        b=dvxewfJZslxNOdhnlRUtPhvXrlJ0Oivq0SPYtWUmxRIUQdhJTKTdW14+sVEn1OoWB4
+         s4BVjci44rGlIm31woq+MBsuh+7sTsGvSKI/myE608Gdkri6A4YU+OPUoRSynzsH637z
+         8TTAR6ZwA/aYW4clpGJPtjjRECxTFKQgtJKwIBsuBdSifHauD1qjWo8VrlClRZM1RfU/
+         +36D1GNu8ESsyun1rzjqqyqUTK2YBn7BczCzsR0MGboK72mg9LIXyExD7FFAsPmJRhRN
+         V94+VHb82Z2zEod6KStLxOPeg3hS1kKct86gTb67YEeRYittW59h/akvA0L3jPgZWRYl
+         KVOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741285185; x=1741889985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tcWUU1E6OiQ5QkC/8p7XoPGRHT862BXEOfHZQ44uF5Q=;
-        b=E5dztinhW5WxDDQGhJTQsNTQf5uFIG984PB6ZwuYT8mxM097yJuFvhKpsP1LNG7hm9
-         S85pDrGwEVlwbMDUdrWwGQbm2rLFwcQQVTUlo8cr1DSgjwSa0N7orfDFwFTwGgkplg6C
-         0OukehRl/vbU8SL6EAy0Kts+CZOxrfUgmV84abe3KIgnRFa483oVOQkYJS5f2t+bLwvl
-         GmKGMLKDvdmMw1g09i8JMaoFaTsfdGILPNjOtpNywbSpyMF1THJEMa2aKaTrDkjQBXBy
-         3sAnqSHes11h7hKT6n9XqdLf67H6ai18qC+yUrebQKIWNRoGIQ+p6jWZj2Jl3iyM6be3
-         lkhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeLwivvqCbT49N11DLQlC7OkRT75nWxUItvppZROSuHG/uzeOUHGfpDaxO/SNAiWNZHOQuDzxGOSEkC28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIVONXFRcJHeP25NVWfPGq9erErcLp2v0vQ0ygblk0YOfX8W8d
-	dt2Q7TSBzP5vuX17d6ppgl6n0Zh+GSWK2QjMRrqLIZUtcTQqwN1/kS+ojq/sefQ=
-X-Gm-Gg: ASbGncu42fjjr8ChhmkkwSzoSZyeiC1LlWT6Rxobuvi5T4ljiG8nCeipWCNGGBoo/tI
-	366mhCOpdzhF/4DkCJjJ3CPz7uH/edbJu+Tc5EKqw32B8ZkWg3Z/JXLTX4u2rsvUgMiHcdkOVtJ
-	rD42NBOgkXD7MXAGB36amoReSOH4NVM9pc0w5Hb3sS88bB7u2Q8ibIxGegweGOZkZQbOccYZgDL
-	ZXtfOL3PYZzoVeSf7+686xpQ4YLbmCdEMPBQbHR1G2Hre5OvOqLuouLBlzRZ29X0htTXr1B8XX1
-	DIFF/CBX3xTccfTJ0K632irgJ5H84WhGkcWjYRb7DBnKRiYvOrbnAZZmq7xshg+mKZHzjU6TLIV
-	tL6aveWYgBNFD1uZo52jXTy3vEec=
-X-Google-Smtp-Source: AGHT+IF1Oy+4QhvAWwHeDn3R0uQ5Isy1d2l2u08+njtWzaQFhNdJOyfxxqQyz/PR71XHxSfgw3/fYg==
-X-Received: by 2002:ac8:5d54:0:b0:474:dc44:28c4 with SMTP id d75a77b69052e-4761194f13emr906341cf.38.1741285185382;
-        Thu, 06 Mar 2025 10:19:45 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4751db569f1sm10055721cf.80.2025.03.06.10.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 10:19:44 -0800 (PST)
-Date: Thu, 6 Mar 2025 13:19:41 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, AneeshKumar.KizhakeVeetil@arm.com,
-	Hasan.Maruf@amd.com, Jonathan.Cameron@huawei.com,
-	Michael.Day@amd.com, akpm@linux-foundation.org,
-	dave.hansen@intel.com, david@redhat.com, feng.tang@intel.com,
-	hannes@cmpxchg.org, honggyu.kim@sk.com, hughd@google.com,
-	jhubbard@nvidia.com, k.shutemov@gmail.com, kbusch@meta.com,
-	kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com, leillc@google.com,
-	liam.howlett@oracle.com, mgorman@techsingularity.net,
-	mingo@redhat.com, nadav.amit@gmail.com, nphamcs@gmail.com,
-	peterz@infradead.org, raghavendra.kt@amd.com, riel@surriel.com,
-	rientjes@google.com, rppt@kernel.org, shivankg@amd.com,
-	shy828301@gmail.com, sj@kernel.org, vbabka@suse.cz,
-	weixugc@google.com, ying.huang@linux.alibaba.com, ziy@nvidia.com,
-	dave@stgolabs.net, yuanchu@google.com, hyeonggon.yoo@sk.com
-Subject: Re: [RFC PATCH 1/4] mm: migrate: Allow misplaced migration without
- VMA too
-Message-ID: <Z8nnPYldSXs5TYND@gourry-fedora-PF4VCD3F>
-References: <20250306054532.221138-1-bharata@amd.com>
- <20250306054532.221138-2-bharata@amd.com>
- <Z8naQNirs4HfTX0O@gourry-fedora-PF4VCD3F>
- <Z8nfPlJu8kxUvB8m@casper.infradead.org>
+        d=1e100.net; s=20230601; t=1741285215; x=1741890015;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kOXNDTF2vrh5uDiXj9TnU3A+yLNXaCYv0mbF7Mtjths=;
+        b=hjP31wuzb2DIEcYPHpQNgOC3tLR1od+fqxeJsqDPHJiqvIxFTEEbJTUevtW2iE+3ZY
+         ju24Hz1cjxJrLJF6LdzDpVw16rMNyWLc24RnX9VBNyGQedugJ8yowDqkng3TqsQNsvrH
+         M5Cfz0Xa/j+vDvK2zodwoapfG3RbR+EcBSmyNjD7dKPCJRvTY+VXWs3GW27tonbPLirS
+         Hxfr3aNLNMIaiomGtPr+XCs4fw0bBYWF87GHCWUSzmzNd8y2R4LnXtYMmmgFYFF2quZ3
+         tb3x1qTRMQ0gxO/soDyxOKhxFWlMRbD/ey9czfLQ3vaavzv65TJ7RnbuOvoYGZJM8ajB
+         VOeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxGQ2cJKfv8Y/2obxaTdkP63E8VEpgF6y8nV7+zNzi1VhDCbbtD+svlVl9rjMg9C8Dt4w2QdGGRhNc97w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8QqmRncOceOQuiDngjt4kqySIjrhXitLojee17WJdq8e2PqAM
+	zqvu3CLti0m4eU8cAB/wLX0L051S0AJIL+tRc4ZBCCDGaGG5utRWw+zxbAvlWoxy7gxX9Iyw2A=
+	=
+X-Google-Smtp-Source: AGHT+IGgevzdqxTVQQgC72vwzEi5eRcrXB5iZhhzO5dAs3E7uSwYJSqTNfeHkjj5cciErEZHjXxSo/dUtA==
+X-Received: from qtcw41.prod.google.com ([2002:a05:622a:1929:b0:475:580:4020])
+ (user=rmoar job=prod-delivery.src-stubby-dispatcher) by 2002:a05:622a:134a:b0:472:2021:b786
+ with SMTP id d75a77b69052e-47611959d6emr657611cf.35.1741285214860; Thu, 06
+ Mar 2025 10:20:14 -0800 (PST)
+Date: Thu,  6 Mar 2025 18:20:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8nfPlJu8kxUvB8m@casper.infradead.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250306182009.2255241-1-rmoar@google.com>
+Subject: [PATCH v2] kunit: tool: Fix bug in parsing test plan
+From: Rae Moar <rmoar@google.com>
+To: shuah@kernel.org, davidgow@google.com, jackmanb@google.com
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, Rae Moar <rmoar@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 06, 2025 at 05:45:34PM +0000, Matthew Wilcox wrote:
-> On Thu, Mar 06, 2025 at 12:24:16PM -0500, Gregory Price wrote:
-> > we may also need this:
-> > https://lore.kernel.org/linux-mm/20250107000346.1338481-4-gourry@gourry.net/
-> > 
-> > May be worth just pulling these ahead to avoid conflict.
-> 
-> Or not putting them in at all because this whole thing is a magnificent
-> waste of time?
+A bug was identified where the KTAP below caused an infinite loop:
 
-Divorced from the tiering mechanisms, is making misplaced migration able
-to migrate unmapped pages not generally useful?
+ TAP version 13
+ ok 4 test_case
+ 1..4
 
-~Gregory
+The infinite loop was caused by the parser not parsing a test plan
+if following a test result line.
+
+Fix this bug to correctly parse test plan line.
+
+Signed-off-by: Rae Moar <rmoar@google.com>
+---
+Changes since v1:
+- Remove error reported when test plan is missing.
+
+ tools/testing/kunit/kunit_parser.py | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+index 29fc27e8949b..da53a709773a 100644
+--- a/tools/testing/kunit/kunit_parser.py
++++ b/tools/testing/kunit/kunit_parser.py
+@@ -759,7 +759,7 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
+ 		# If parsing the main/top-level test, parse KTAP version line and
+ 		# test plan
+ 		test.name = "main"
+-		ktap_line = parse_ktap_header(lines, test, printer)
++		parse_ktap_header(lines, test, printer)
+ 		test.log.extend(parse_diagnostic(lines))
+ 		parse_test_plan(lines, test)
+ 		parent_test = True
+@@ -768,13 +768,12 @@ def parse_test(lines: LineStream, expected_num: int, log: List[str], is_subtest:
+ 		# the KTAP version line and/or subtest header line
+ 		ktap_line = parse_ktap_header(lines, test, printer)
+ 		subtest_line = parse_test_header(lines, test)
++		test.log.extend(parse_diagnostic(lines))
++		parse_test_plan(lines, test)
+ 		parent_test = (ktap_line or subtest_line)
+ 		if parent_test:
+-			# If KTAP version line and/or subtest header is found, attempt
+-			# to parse test plan and print test header
+-			test.log.extend(parse_diagnostic(lines))
+-			parse_test_plan(lines, test)
+ 			print_test_header(test, printer)
++
+ 	expected_count = test.expected_count
+ 	subtests = []
+ 	test_num = 1
+
+base-commit: 0619a4868fc1b32b07fb9ed6c69adc5e5cf4e4b2
+-- 
+2.49.0.rc0.332.g42c0ae87b1-goog
+
