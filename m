@@ -1,175 +1,92 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F98213E64;
-	Thu,  6 Mar 2025 16:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7797213E64;
+	Thu,  6 Mar 2025 16:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741278518; cv=none; b=mYmC/I9BcRzxZN70MYEI5Ed+77rGJqU0DY5yuJ9qp8jyHiPVsDBye985QM/kTppwQOm1X8GsD6ae1SiEZiTMKg0UVkg+D3CMRHBnFop1hWIhgLAptwWAqpVZ24g2XLXq5WOxMAlvBIYk5Lp2bqNQqYMbe3ERscrBW2tKABkEyh0=
+	t=1741278525; cv=none; b=GruOOIWTKUju+/Doq/L4bBR2v0v7Rx3Jr/8UyvNvBHJu5vAu8ZyRkIK6cE7ZArIirIw7PPwMMNV+F0sGqbB2UDdQ2V7UWudgmYRWelc0sVSIy+KlDbyjrTpXENpg6nFTKutTyQk0OKKpAixDVlvFfsDAcKhCtTXDo0mAS5DdQKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741278518; c=relaxed/simple;
-	bh=I6WJGZ+wmJHASMpeshHLkCaDYKparCJHsPTSZrYO2e4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NAKkn0IXk+fH7mF0e3MKn1G5n82SgRMZaU7GjN1xlUS5c05tcHsZCbYx8shOXPihRyImA6lpcb7z77kAz/S8JMNQxI0hOKFRplCuCUMAkDE1PQqew5RjrQ4cl7DCj09Jcf7V3GGaS+UkPGih1KmuB/U92eCrdTUgW3rvbMJnjn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hcUoBAwN; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741278525; c=relaxed/simple;
+	bh=jLROWwkGrjUcunK7jfUFxszWDwIIb35RmR32aQ9Dg+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TmzH4mlmtu80xzAY6LYOJcyLjPuZpwItb6GpmmnnEpAi2We2DU/LDnJT41boJSY9U4WOpTLTyN26Yuhp+ILxqA0y1f20F4MbpNdLmV9NvatbaLixuiob1JcT8Qk14QGD7yGOhSbkmIVzXgNNAneTJinyyce2ISzCk565Npuqb64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Be8xOyYj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcUoBAwN"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2fec13a4067so1485876a91.2;
-        Thu, 06 Mar 2025 08:28:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741278517; x=1741883317; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AlCo47pw1I/mq/I7vHIVVBFEFMdGZP7EQcov25MLW34=;
-        b=hcUoBAwNnnHEBxps5zeFU/Y0zD0u/WtBJ40PZNM7MlRn4KSyeDkmzCeL0EiGovEF5O
-         Fr+LW0r8FL+wQOfMysJyaFU8iSLQmb48ZaLG0Z6eFRpYBnW50wMbhMD9Xu6BAOI/wPqu
-         khs7QC/i+KLlLFVatGPdlmpCCqyaGD+6OlOjAs4c3E/t7E1EsE+595r9eB4sUHKmLlIu
-         gblcAu8H3IKfrRrpH9MVzFjrsepX3ny6RiKWYqm6/Hn0U9usM7dEDkPmH9DktpVGlrY5
-         SCvmbyp7D05+H0xYcNC/0G5hOoZQPcu8KqvIOTI5DEO/yC2Y2xRY8Wb/6hqbO5ZRzksK
-         WzmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741278517; x=1741883317;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AlCo47pw1I/mq/I7vHIVVBFEFMdGZP7EQcov25MLW34=;
-        b=TsfXnptNjVsUNHeGlHEvWpBqH3WGQt+OGJZ+Fd7R6W6pZXraBEB0EaSwFGwWTnCCJI
-         r6MqoT3+vfr5OKxCqVPlWXceySxSeXmW6CVrOWd8Z4Pszg+V0a0NIziCKeX3OP+JXc9R
-         DAwywgHA50hOqBh7dUoAmg41IQo4Pg171OsScVBwTjg8w1SIbE4ad38QQpeRWh2mMFjn
-         qJeFv4N5a9br7oCXWnthWJfYimowELPShlu3xa7AzpU9NsutYQiCcUnU3IeDM91T7GQ5
-         D1rRIx7vS9TUeH34dLlTvI0A7cSXno1kviTZcLbGmwqsovpF+1a0lkzAxHuVMsC06mAE
-         u76A==
-X-Forwarded-Encrypted: i=1; AJvYcCUfFySXOEpRJ8acvCsnDzRp3KrR8gjnurHX6pdDoUhD3Ny8mCmuAJSh8d6rY48AqaWzXlKmc3Il@vger.kernel.org, AJvYcCUpZRm+PeB5qcrcs8v8R0QGudtJ5c7u3JefCA8+1qef2HBtn4oUqdit+8Vm69whyHbbcdo=@vger.kernel.org, AJvYcCVMnCwgMgITiNG3O2xnXTBqEv8knEqQOnEryy3dxZDS8RkPFg3Cmd6OfRQ4+YLwM9wzrTtf0gEH8F3ptaOaTAk=@vger.kernel.org, AJvYcCVyH9wQBsL/8VVI2Vu3QvOo2Z3n3FjtDK0a4T1RfEW9hN7TJKZdrtKo2fJIZI3FNyLa66MkZkHpHiiGGgs=@vger.kernel.org, AJvYcCWg7EGb0jLO7Rm4gC+ia4RCieiufy7l8D34u6Ky9dLPuBk2jo0tOJyQXt9i9rPAU3tvhG2gZUssd0TBmKE=@vger.kernel.org, AJvYcCX/VPMBctiekShGJ4QnXkuE6kZHVmNPQwg8oU31KEq2ilrBdAo1hMbzjBw16AI6sT6Wrj1koJEv5FQqUTjU@vger.kernel.org, AJvYcCXlcnL1KPwDBVCfjskvarMGP528egwBuYsJknlgFvwSUI5CT18xNWkrV7qbp78DcsPtk1VwlP1gUZC9DVyq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTyWkz4OmOIIe+NyO7/i4F9xo40jE0efNKkdzSkGl7827hNRC3
-	bhZg2W0Okkmico8ZJ18nc7i1ktDxi5x6H31sXfnzPZjaPkAabB6d
-X-Gm-Gg: ASbGncuNLKdf6m1Eu4el34okOxRqct+GvQGRRT5gjtgyY9GYJ6EGrvM8F9Defs6TLhf
-	SMDr0ef3SKzZM0tR9MBoSZCWOgJLVeDy0Qwvulk/fUWjhtS4pbr8hsnH8d1jdWCwvAAADhijmxq
-	V1719bb2hmGa+aKz6+0jhhQ4Zmw02+jDlfqYl1CRipMnP+ilHC2bu+k70owQ7qf//H1K56x3Tf1
-	pm/4sAbslquYTOwrYSM81iv+ceH6u2WwhTla+PJiLcGGmWmzy+pqopme6Qb4C04k6PFcVCBrnKK
-	SJWrKvjqBg6Et6hxNBYXE5aEY1ja/meggbh5Aj7cRqyfrHY0OifLeIkhTfXB/dOGfBOgRxLq0g8
-	=
-X-Google-Smtp-Source: AGHT+IEEoNncBZARV2kGM5Yy+T23A5PpEPT2NiyzW+biIXJ8M18fImFLR3KC2etUuhFwV9KdupSQZw==
-X-Received: by 2002:a17:90b:1f88:b0:2fe:68a5:d84b with SMTP id 98e67ed59e1d1-2ff49716658mr11420319a91.1.1741278516777;
-        Thu, 06 Mar 2025 08:28:36 -0800 (PST)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff693e75bfsm1464298a91.33.2025.03.06.08.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 08:28:36 -0800 (PST)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	jk@ozlabs.org,
-	joel@jms.id.au,
-	eajames@linux.ibm.com,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dmitry.torokhov@gmail.com,
-	mchehab@kernel.org,
-	awalls@md.metrocast.net,
-	hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	louis.peens@corigine.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com,
-	arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	yury.norov@gmail.com,
-	akpm@linux-foundation.org
-Cc: hpa@zytor.com,
-	alistair@popple.id.au,
-	linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v3 16/16] nfp: bpf: Replace open-coded parity calculation with parity64()
-Date: Fri,  7 Mar 2025 00:25:41 +0800
-Message-Id: <20250306162541.2633025-17-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250306162541.2633025-1-visitorckw@gmail.com>
-References: <20250306162541.2633025-1-visitorckw@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Be8xOyYj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23ACDC4CEE0;
+	Thu,  6 Mar 2025 16:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741278524;
+	bh=jLROWwkGrjUcunK7jfUFxszWDwIIb35RmR32aQ9Dg+Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Be8xOyYj3u2frUl+QZNZgNTLIvh7iEQGFAs6wXJACjG3cs8XBnjtHQ2EZpnWCXrxk
+	 Etp/OTDhwRm52et3+4a6xCrJ7Yv5gZfcu5HhjroF0OpqvpNR7A3vqzjCuvIjwUIhyL
+	 7Eea4pcYaJq0AtHI6YPAHET18DG4nzndVoFPXhcQF7SMvhizQKpy8/jOOWueDzu8Pl
+	 /cf/jVECBMneDABSIKGnX950KlrjEO7435yZEF8Y6hdnagES7Mkxc4iKKjpUhPUcKb
+	 BvP9+aB3FDTHS9EMRw9nrRKpmDeriXQWpgQPZFujjHwkYD1DGwtbo7RSHtBpWHupik
+	 3W2TBISN0MvOg==
+Date: Thu, 6 Mar 2025 10:28:42 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "hans.zhang" <hans.zhang@cixtech.com>
+Cc: bhelgaas@google.com, cix-kernel-upstream@cixtech.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Chen <peter.chen@cixtech.com>, ChunHao Lin <hau@realtek.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, nic_swsd@realtek.com,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add PCI quirk to disable L0s ASPM state for RTL8125
+ 2.5GbE Controller
+Message-ID: <20250306162842.GA344204@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84a00461-b8fa-48d0-9049-9a34abfe87a3@cixtech.com>
 
-Refactor parity calculations to use the standard parity64() helper.
-This change eliminates redundant implementations and improves code
-efficiency.
+On Thu, Mar 06, 2025 at 11:32:04AM +0800, hans.zhang wrote:
+> On 2025/3/6 06:20, Bjorn Helgaas wrote:
+> > Sounds like this should be a documented erratum.  Realtek folks?  Or
+> > maybe an erratum on the other end of the link, which looks like a CIX
+> > Root Port:
+> > 
+> >    https://admin.pci-ids.ucw.cz/read/PC/1f6c/0001
+> 
+> Name: CIX P1 CD8180 PCI Express Root Port
+> 
+> 0000:90:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 0001:60:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 0002:00:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 0003:30:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 
+> 
+> This URL does not appear right, how should be changed, is it you? Or can you
+> tell me who I should call to change it?
+> 
+> The correct answer is:
+> 0000:90:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 0001:C0:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 0002:60:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 0003:30:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 0004:00:00.0 PCI bridge [0604]: Device [1f6c:0001]
 
-Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
-Changes in v3:
-- Change parity64() to !!parity64().
+This part of the web page is just commentary.  In this case it's just
+an example of what devices might be on some system.  It's not a
+requirement that all systems have this many devices or devices at
+these addresses.
 
- drivers/net/ethernet/netronome/nfp/nfp_asm.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+The only important parts are the Vendor ID, Device ID, and the name
+("CIX P1 CD8180 PCI Express Root Port").  If those are correct, no
+need to do anything.
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_asm.c b/drivers/net/ethernet/netronome/nfp/nfp_asm.c
-index 154399c5453f..14306f128497 100644
---- a/drivers/net/ethernet/netronome/nfp/nfp_asm.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_asm.c
-@@ -295,11 +295,6 @@ static const u64 nfp_ustore_ecc_polynomials[NFP_USTORE_ECC_POLY_WORDS] = {
- 	0x0daf69a46910ULL,
- };
- 
--static bool parity(u64 value)
--{
--	return hweight64(value) & 1;
--}
--
- int nfp_ustore_check_valid_no_ecc(u64 insn)
- {
- 	if (insn & ~GENMASK_ULL(NFP_USTORE_OP_BITS, 0))
-@@ -314,7 +309,7 @@ u64 nfp_ustore_calc_ecc_insn(u64 insn)
- 	int i;
- 
- 	for (i = 0; i < NFP_USTORE_ECC_POLY_WORDS; i++)
--		ecc |= parity(nfp_ustore_ecc_polynomials[i] & insn) << i;
-+		ecc |= !!parity64(nfp_ustore_ecc_polynomials[i] & insn) << i;
- 
- 	return insn | (u64)ecc << NFP_USTORE_OP_BITS;
- }
--- 
-2.34.1
-
+> The domain might be random, so whichever controller probes first, it's
+> assigned first. The URL currently shows the BDF with one controller missing.
+> That's the order in which we're going to controller probe.
+> 
+> Best regards,
+> Hans
+> 
+> 
