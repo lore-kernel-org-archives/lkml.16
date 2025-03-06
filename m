@@ -1,94 +1,103 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EEB213247;
-	Thu,  6 Mar 2025 20:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F80242A8C;
+	Thu,  6 Mar 2025 20:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741291499; cv=none; b=Cmbv8y+5HGo11/C0S56GXqJXLZs3MUki1hfIiaWTENuvKJADCHA/9TtJa50h1f58CD3NC0uEqJJsSEAt041BK+p/7DTuOREPPlamLHFKYzyA6ZnXK+Pnlgl4ToMtIzoV6A2LhAYAagsOxGk59QkuAETHfoROF/BaEJ4jCrhdaDQ=
+	t=1741291620; cv=none; b=V9dyEfZ08KkPpK2y0Ozwj9ph5mUDC1OPBTl6wrc9JHTNv0x7sU5xszFLACOQxyE6g6W2TMo2j2c3FvUvZbC9/Zg2nKq29cQPxVQXOKGAVZ9Ub4G3UDDNGsrAKtwvdnwAJm5cI3PzCTqroKl0r9PkuDpcfAVxeStVfWoLP16+gW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741291499; c=relaxed/simple;
-	bh=KF/LPtdDSezzoBKwGXXxtooKNC++TTfJBGHa6wz4neE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kXzaCyKPznF3PDEyx15VN+ODkW0qE2LBPsIN/OLun7bNevYJ6o3f6yjj2VWlgrQcREJX9sTTrcs13bSvTrbIvA233mhwSeLnvCsPbSFESiGG6ll5WmpSh67wR3HPj46azIShq7CSiqtRmPW+L3C2bo8QN4KZNJ4xM31A7UnXy3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iAi2c4wc; arc=none smtp.client-ip=209.85.216.53
+	s=arc-20240116; t=1741291620; c=relaxed/simple;
+	bh=sdkT02jNcS0kZespb84Kp2RIi1ofiLBxjATolU61Mq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oNIFw3F2WvSMjlxJEp7BmIBi55Ijhve+1NXX3AsbZlj/9RArOglbBl9BBtRKrOgc7EIQWGkzou4uEMc5GjZ7P2NboFwNsawRy+7X4cRJ3uqVjZyzcTeqf9O/PdPa2wNsAGtTwMI7dbgs2OTsZ7mkPW4SW4tXtCVbZIRgJeWZfCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ba5JXzJh; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAi2c4wc"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f74e6c6cbcso272894a91.2;
-        Thu, 06 Mar 2025 12:04:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ba5JXzJh"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5495888f12eso1361582e87.0;
+        Thu, 06 Mar 2025 12:06:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741291496; x=1741896296; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KF/LPtdDSezzoBKwGXXxtooKNC++TTfJBGHa6wz4neE=;
-        b=iAi2c4wcMn9gZV1OF6nQJjYuFvB/MUbDI3h6T5Hn+MWtkVas0xRFVQUmJgy7qUAfoe
-         7OTbxlU9t30TKvfnHjyc1PvnGHwS+S+J0gWMQtvjMqqlzuPiQGD0KEF8bAAg0RkvBYQm
-         QRmI900YOosGay4ytBWEwpvufuHF1CoNCFPwCxSxx2UGeIcrASrH8uAqf991X7GeY6Uy
-         RDJa8BW90RGY2VRFTNsXBh/Nn2BRvt4T/XlAosTagyhCFcTXRsDtT6W8P9Q9IQus92IE
-         QzspiMvKjU97EZweknU57fj7s59zGIjrB8waNeKtsH+ZcHbSSW9uQGeGjWrU0x6eKJWN
-         /LRQ==
+        d=gmail.com; s=20230601; t=1741291615; x=1741896415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JRaihiIVCnkowWXGgsHIbBoXLF7FM0TLnnmIMsCpwNQ=;
+        b=Ba5JXzJh16ltvMfKl23nggz8ccGzaZYPZczQsIzKqXpQDSBdGSEZYZIP02MQDrAg04
+         d6V5XCzvI35kQD4A/GoG4hn4WsDmgAsuFvYSfVh13eAJPSF9bRbvwWGeZoGnPHR4EaZ6
+         m6pNVbGx0vl5gvJd6rnzaXA5eoxZwPvJocQgfBEPacqqAid4Z7Y4aUvJ1TBW/FkTRSgQ
+         /HYUDGXRSEVozyJZWq/DKN8ZJMSDojzaeZ7BvEAg56CZ0NnP0zGEsrIvLJ2fTPGGPmpc
+         jYuP2dGGy/yfAv8kAzeg9rKCx0ytrXt0N6wAwVAwS6LGMNFf7JqboDPGcGdNrj5Xt+BM
+         IRrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741291496; x=1741896296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KF/LPtdDSezzoBKwGXXxtooKNC++TTfJBGHa6wz4neE=;
-        b=nufNdH76wG5mN1GcmLGKWUfwmXJNdv3nLX9g27hjmo7dMr/eZIdB455J+MQEnTopyL
-         /A0CYXHWdVe2XWVZ+87jjSB0xFUS+5E18A0R4hnIVokM+JS0viexAlQrYmqC54ofl2PX
-         p9TwhYerZb6uYlaZDSdKw+KX6znmuXnwhdEZSLhr9+l7lgg9aat1hQjcU4si6TgU9o15
-         rAmbv/yTOIAWiviz88EmYj037h990GmypTBakRqIKG1W7A88ChLpPYhsGced5swo2twV
-         pdwWaawBTGFkEWN2ryKr/APdPf71qTlYaEHnH6uNV4iSGmIY2wuDQyxZ1qWGBP30eJ8A
-         fnKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLdvZRGnzGopLdUlTyv7hJ4rXDFWBhlDEyeVso/4RMC5sEYXDZVhFCYgZ8u2ArsZ5ZAmxuSEhDDX2NjR0=@vger.kernel.org, AJvYcCVMknxMhCjtFJfrBnTOKCYtNuDHqSDm62zos4gsE/GJF35WSRUrT7bYXBa9x2ovQ4uJuOOLHsGc5hWQOgfj2XU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5bhFNY9mBi5VuOHAikkzUi0CUxMj/SRReGd0qEubcltrZdTOA
-	HQAfmEt7tNZPRlVPn8aHLSb3WAdFrkQKxesGqSGihz00zYeh2VqBiV/t2Qe0+nXFJSHrXxam0Dx
-	1r6D2/YFhY8cVcS772hAZxRlpsu8=
-X-Gm-Gg: ASbGncvhk7ihc1nET/fz2H5pVJDBKGp66zmpUhIDX31ksUCHGFbFFEweBKXuHQ1E1Zg
-	3bNpDcI5zk1FFtUkdlVl01DlvO18yGHpr5Ytngi2X1EysX3jueXesQoTZgoGehUaM3NFlE8xHOD
-	vsLm/xJoFGItPoEx6eEVZnwBcGxw==
-X-Google-Smtp-Source: AGHT+IEm4OX85bA8+CpoWUY8LEDaEKLu7MxGI5PS+e+zjPZeIHnTwgw8j13zNWtRryhrkqUgK5EVjJlcY8sunmurPNI=
-X-Received: by 2002:a17:90b:3e86:b0:2fe:b45b:e7ec with SMTP id
- 98e67ed59e1d1-2ff7cf5618amr309159a91.8.1741291496625; Thu, 06 Mar 2025
- 12:04:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741291615; x=1741896415;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JRaihiIVCnkowWXGgsHIbBoXLF7FM0TLnnmIMsCpwNQ=;
+        b=E4YN02CU0Z45SS/cQHFkh8yQZHiocVC+LQ6bB8A8UipJptkfdX4PWKY0GD5t6nGkZx
+         SYFW/6hCXObIB7ptfeOl47cGtpNudWdjNIovRXLCKMw6kQSii8b7bpm0GNBZrdnvVz6w
+         89PZVg0gvqoEPmXBrSFTVa2W9rntDqNlMxCdcIefk1ozUBPP56PV8uFFG3pGO3SJg3as
+         x9vneYhyxRVFp7Whpy/IPY8goe42g/uFu/XZ4fgAlnD4RpjRf+xRM66MIZiekRgWnxx5
+         fBA6Fqo9YkD44c+Vy3LrrUx4EVQZGthyYOID8GJ9K+guYvvzUCZxQIhy2t+9zYGf0HjD
+         um1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWb/8HSSG2WhpaempML/Q5l5BZNjbuJY3VrtRbj4drD1ODn/2ucf8j2LNPg848rld9gPxUpdYXnLKn@vger.kernel.org, AJvYcCW3da5wy5ikSecmMkms0y5SYb+DNjEsKPMMJeG7/hpwk0BQY0aHT4bEHTKaDHxpiE22gnD1C4OZ+CCN@vger.kernel.org, AJvYcCWMq1/59oBlloh7Hv8l3gVzblLVkdM188fMWPsjx/rLZaHe08GnJEJNJci6lZXGN+i1vapXg0dx7um7RQiJ@vger.kernel.org, AJvYcCWuNz8OBYWrIBTJjFU2SWwQb6dntbr1vHHE7lFUSpAsW17nm447uAoOputfAJ5flmsH9Nc0fQuh99EzW5o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0k2T5PRsv+gLTbazvBmwetdgSqvcEuAzkq+Fjwpuup54QVWLH
+	3MjGyRHWsB4iH9E6x09058luO+TF/VqacBiS3XD1BKCmRTQH1rxh
+X-Gm-Gg: ASbGncvHEq+3XNYZKGGZzbqZXYLs50N7dqRnCiAuefNwrWStAhN7A2khj4znnkCjnIQ
+	3Qj+Bae14O3B+jJFsKRYsMQflGRzBqCBN7PG398d7onQNGqbQGPH3hZ6Meec5XgCaWhIcCouyeB
+	12kabaEnAdixy2ApDo3S1Eqs8lMGjzTeMbURLJ/16kyJdESv2Mpt3mMzF+/82VxsKE+lWWAtuhR
+	4shbw9x3tkoZfbL1XiztKztwrnXvEbQyJkb/lZEULUNzdRVARSlMZYScfBhvd6BoiN9YoYMP/wh
+	oNvKugafCj+ebwNv9HOchG9kMq8snUd61QwphF4GQ44CaYuY+sU18x5Mp7Zpz5i6WlP/ttBl6Uj
+	sbsNWlXfR8w==
+X-Google-Smtp-Source: AGHT+IHny4LHnfSKwvHyf2ZJEoh1X3YqmWiY9P/tjCCfHQlD7eb6btN+FHrNOfcIFgN4DNeoJcLJVQ==
+X-Received: by 2002:a05:6512:3b8f:b0:548:5095:e3a3 with SMTP id 2adb3069b0e04-54990ec5d18mr142683e87.46.1741291615185;
+        Thu, 06 Mar 2025 12:06:55 -0800 (PST)
+Received: from [192.168.2.145] (109-252-148-237.dynamic.spd-mgts.ru. [109.252.148.237])
+        by smtp.googlemail.com with ESMTPSA id 38308e7fff4ca-30be98f2690sm3013111fa.41.2025.03.06.12.06.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Mar 2025 12:06:54 -0800 (PST)
+Message-ID: <a2170519-ec9d-4453-a2ee-0cd46d94d52b@gmail.com>
+Date: Thu, 6 Mar 2025 23:06:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130-task-pid-pub-v1-1-508808bcfcdc@google.com>
-In-Reply-To: <20250130-task-pid-pub-v1-1-508808bcfcdc@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 6 Mar 2025 21:04:42 +0100
-X-Gm-Features: AQ5f1Jrf9WWPthRFdvVU-MrqG3HBmUORg8rSNsaW8IEdyGbk2uJZvtc_AsO6TTQ
-Message-ID: <CANiq72mDo8QWB_wE4o3qk6xxLKOvPKQ-7rTf=8+09UXdmmhcyA@mail.gmail.com>
-Subject: Re: [PATCH] rust: task: make Pid type alias public
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 7/9] memory: tegra: Add Tegra114 EMC driver
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Prashant Gaikwad <pgaikwad@nvidia.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Georgi Djakov <djakov@kernel.org>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250225143501.68966-1-clamor95@gmail.com>
+ <20250225143501.68966-8-clamor95@gmail.com>
+ <04be5106-0d93-449c-b8a9-d8b3dc15ef24@gmail.com>
+ <CAPVz0n1ZTDZnZHu6R_YVfhDqkjcMV0xH1UHVih=bgv9DGoZ2nw@mail.gmail.com>
+Content-Language: en-US
+From: Dmitry Osipenko <digetx@gmail.com>
+In-Reply-To: <CAPVz0n1ZTDZnZHu6R_YVfhDqkjcMV0xH1UHVih=bgv9DGoZ2nw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 30, 2025 at 12:22=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> The Pid type alias represents the integer type used for pids in the
-> kernel. It's the Rust equivalent to pid_t, and there are various methods
-> on Task that use Pid as the return type.
->
-> Binder needs to use Pid as the type for function arguments and struct
-> fields in many places. Thus, make the type public so that Binder can
-> access it.
->
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+06.03.2025 22:48, Svyatoslav Ryhel пишет:
+> чт, 6 бер. 2025 р. о 21:42 Dmitry Osipenko <digetx@gmail.com> пише:
+>>
+>> 25.02.2025 17:34, Svyatoslav Ryhel пишет:
+>>> +     /* Read register to wait until programming has settled */
+>>> +     readl(emc->regs + EMC_INTSTATUS);
+>>
+>> Tegra4 TRM says this must be MC register and not EMC
+>>
+> 
+> Are you sure? Tegra4 has no MC_INTSTATUS but it has EMC_INTSTATUS
 
-Applied to `rust-next` -- thanks everyone!
-
-Cheers,
-Miguel
+Can be any MC register, downstream driver reads MC_EMEM_ADR_CFG.
