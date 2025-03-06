@@ -1,128 +1,163 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9871220E30A;
-	Thu,  6 Mar 2025 13:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E9C210180;
+	Thu,  6 Mar 2025 13:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741266975; cv=none; b=lYmG/Gea+lQ0P/ynurcUveK2N1E+5MIGi90XM2J6Hx+uJBOegL1YO2yWcXQVrmHcmJh3+z8jKNc/poo8Mzx23fV1BHe6cVvR/gGhaKCNTDDN2GdF+J11gb2grCJcvRWGCP6OzGTMl+wCW5XFwoQv4V6ex1wqwXGUTfCRdMFhE+U=
+	t=1741266981; cv=none; b=ka29uVyeYZNiZ/H/n4DXVC3+ZAuIanSFegnaEr5XgYwfyypSgTl5Y3L3fE4V6WdPWWf07FnRZhgJcsfPO+a8Cst13d5l5zJ/6m23T0VPGhQonVzBLu4+cX89lLNUV9iBUuTUHMPgqdRkdZEgEV6kmJ/Ucyd9LbLIwgnKXcnuIss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741266975; c=relaxed/simple;
-	bh=RPvn/9JHKv0KUET0yq7JeqWzZgiTqKGfU9kbzBYO3Aw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lXLrssDE0FbviUvoZ7ZXsKAAGbxyIv9bs2ejUgdvwAkq09LvipbaEu45Nv3vjlvcyxM4fj2zgd201li1RRwv1OGo8JnJksAwE9Ifa7v2BnixIke+ClxVu3DuZxz5s5z/W2+FjtsE1qdkE9IA0JNM/NsZeyoOgaMtWlZXiqN2I3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=c8ESAFFV; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1741266981; c=relaxed/simple;
+	bh=8ZZqQrq8U/ip7fmy3k0FKs7lmTjCF1yWU9LYT4w/A+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Szp1nrxrvGQ3q9uk0m4ei7S9a/1NR9WP9pvYUPovZpkfOUXTt8ipRGcHUEKcAkpMHtZxXDRiSnlQO+hCG7s33/1iaYDfKbHBmglim0k9DpGXtMZx5hEyg02HZgefboj91C9MBURCey30kwVQ1lMa/pG9EQiN6MxG03KCdK4+JJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kMBoDsU1; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="c8ESAFFV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=2oMXT75K3tzJGkfzmknyPEa8yvFgjeDBRC2ukbCyplw=; b=c8ESAFFVd02/xr5SomVhTmc89w
-	YoUUchGt/lkfyW2b09wdC10EQCGMHV6KeL5v6yLZiWlR7+U0HLnRv6XhiOmmVbk2ffwsrBPlkemBF
-	nU668o8bpTsXIAWBbK1RsoqAbRD6z7rDWPuHi06+FlITALCNFMoycse38x+0scUPa/YeVVWR2wxfU
-	ZP4TjBOaWz4xEK/9eQoMJXiNRmCoVTUpcCZ1IhXiEgA27S+WM9yQ4qvdFJe00/jVhdk0xXLR6bTMD
-	sfupizO8tLft/pF2tlSXjE2GJ5L8lQVLb58Tr4AhPrBei/Fs9ezNpdWUXK4lwfkgKLbSyHcNmGhlZ
-	5VSCaxaw==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tqB4u-004kVa-Vw; Thu, 06 Mar 2025 14:16:02 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Bernd Schubert <bernd@bsbernd.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  kernel-dev@igalia.com
-Subject: Re: [PATCH] fuse: fix possible deadlock if rings are never initialized
-In-Reply-To: <1dc28f9d-c453-42f4-8edb-1d5c8084d576@bsbernd.com> (Bernd
-	Schubert's message of "Thu, 6 Mar 2025 12:45:59 +0100")
-References: <20250306111218.13734-1-luis@igalia.com>
-	<1dc28f9d-c453-42f4-8edb-1d5c8084d576@bsbernd.com>
-Date: Thu, 06 Mar 2025 13:16:02 +0000
-Message-ID: <87bjue2tbh.fsf@igalia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kMBoDsU1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741266980; x=1772802980;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8ZZqQrq8U/ip7fmy3k0FKs7lmTjCF1yWU9LYT4w/A+Q=;
+  b=kMBoDsU11rT28NFE2AIevDHJ3nwmNxCqvez5F87Bxmu1Wbky5U7UubjX
+   kQEuWRrQoIwzgymHCGJNQnFi7us86CXekCDZLlR3bPp3OrSoZ0WMOM2o0
+   wiZwbfGESI5X7d52Gs4OlDy4X7Z2Ja3upN2zsebbPH7PR6M5dztGx6jYC
+   s6XgTlmpLCntdjfpKi0ufe82/02O1x2F8CbuI1DSIkZxGqEiXC+pVXfPW
+   FslY9idi1I373RMvqIYjf0bLjaEjLV54kt4jSUDjyUNPaeaacyMnW13RA
+   WF1UxMyx/cMB7SLO28IG53wyhxPChvzD04i4EQS111rMVw/b945SDpMJ+
+   A==;
+X-CSE-ConnectionGUID: 3p+kjUw3SuKtcafHdrLwlg==
+X-CSE-MsgGUID: A1GIaoafQOK8wq5AqmJUgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42188740"
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="42188740"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 05:16:19 -0800
+X-CSE-ConnectionGUID: +P/ybUpGQnKelY8wY6WiBg==
+X-CSE-MsgGUID: BHWOhwHVSMGSXeKOi8Dp8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="119519929"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 06 Mar 2025 05:16:15 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tqB5A-000N5y-0f;
+	Thu, 06 Mar 2025 13:16:12 +0000
+Date: Thu, 6 Mar 2025 21:15:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com,
+	guoren@kernel.org, wefu@redhat.com, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	jszhang@kernel.org, ulf.hansson@linaro.org,
+	m.szyprowski@samsung.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: Re: [PATCH v1 2/5] firmware: thead: Add AON firmware protocol driver
+Message-ID: <202503062029.bHmgxF2Q-lkp@intel.com>
+References: <20250303145901.446791-3-m.wilczynski@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303145901.446791-3-m.wilczynski@samsung.com>
 
-On Thu, Mar 06 2025, Bernd Schubert wrote:
+Hi Michal,
 
-> On 3/6/25 12:12, Luis Henriques wrote:
->> When mounting a user-space filesystem using io_uring, the initialization
->> of the rings is done separately in the server side.  If for some reason
->> (e.g. a server bug) this step is not performed it will be impossible to
->> unmount the filesystem if there are already requests waiting.
->>=20
->> This issue is easily reproduced with the libfuse passthrough_ll example,
->> if the queue depth is set to '0' and a request is queued before trying to
->> unmount the filesystem.  When trying to force the unmount, fuse_abort_co=
-nn()
->> will try to wake up all tasks waiting in fc->blocked_waitq, but because =
-the
->> rings were never initialized, fuse_uring_ready() will never return 'true=
-'.
->>=20
->> Fixes: 3393ff964e0f ("fuse: block request allocation until io-uring init=
- is complete")
->> Signed-off-by: Luis Henriques <luis@igalia.com>
->> ---
->>  fs/fuse/dev.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
->> index 7edceecedfa5..2fe565e9b403 100644
->> --- a/fs/fuse/dev.c
->> +++ b/fs/fuse/dev.c
->> @@ -77,7 +77,7 @@ void fuse_set_initialized(struct fuse_conn *fc)
->>  static bool fuse_block_alloc(struct fuse_conn *fc, bool for_background)
->>  {
->>  	return !fc->initialized || (for_background && fc->blocked) ||
->> -	       (fc->io_uring && !fuse_uring_ready(fc));
->> +	       (fc->io_uring && fc->connected && !fuse_uring_ready(fc));
->>  }
->>=20=20
->>  static void fuse_drop_waiting(struct fuse_conn *fc)
->>=20
->
-> Oh yes, I had missed that.
->
-> Reviewed-by: Bernd Schubert <bschubert@ddn.com>
+kernel test robot noticed the following build errors:
 
-Thanks!  And... by the way, Bernd:
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.14-rc5 next-20250306]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I know io_uring support in libfuse isn't ready yet, but I think there's
-some error handling missing in your uring branch.  In particular, the
-return of fuse_uring_start() is never checked, and thus if the rings
-initialization fails, the server will not get any error.
+url:    https://github.com/intel-lab-lkp/linux/commits/Michal-Wilczynski/dt-bindings-firmware-thead-th1520-Add-support-for-firmware-node/20250303-230224
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250303145901.446791-3-m.wilczynski%40samsung.com
+patch subject: [PATCH v1 2/5] firmware: thead: Add AON firmware protocol driver
+config: sh-allyesconfig (https://download.01.org/0day-ci/archive/20250306/202503062029.bHmgxF2Q-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250306/202503062029.bHmgxF2Q-lkp@intel.com/reproduce)
 
-I found that out because I blindly tried the patch below, and I was
-surprised that the server was started just fine.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503062029.bHmgxF2Q-lkp@intel.com/
 
-Cheers,
---=20
-Lu=C3=ADs
+All errors (new ones prefixed by >>):
 
-diff --git a/lib/fuse_uring.c b/lib/fuse_uring.c
-index 312aa5dbc735..2258cf0d4259 100644
---- a/lib/fuse_uring.c
-+++ b/lib/fuse_uring.c
-@@ -498,6 +498,11 @@ static struct fuse_ring_pool *fuse_create_ring(struct =
-fuse_session *se)
- 		fuse_log(FUSE_LOG_DEBUG, "starting io-uring q-depth=3D%d\n",
- 			 se->uring.q_depth);
-=20
-+	if (!se->uring.q_depth) {
-+		fuse_log(FUSE_LOG_ERR, "Invalid ring queue depth value\n");
-+		goto err;
-+	}
-+
- 	fuse_ring =3D calloc(1, sizeof(*fuse_ring));
- 	if (fuse_ring =3D=3D NULL) {
- 		fuse_log(FUSE_LOG_ERR, "Allocating the ring failed\n");
+   drivers/firmware/thead,th1520-aon.c: In function 'th1520_aon_init':
+>> drivers/firmware/thead,th1520-aon.c:206:20: error: implicit declaration of function 'kzalloc' [-Wimplicit-function-declaration]
+     206 |         aon_chan = kzalloc(sizeof(*aon_chan), GFP_KERNEL);
+         |                    ^~~~~~~
+>> drivers/firmware/thead,th1520-aon.c:206:18: error: assignment to 'struct th1520_aon_chan *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     206 |         aon_chan = kzalloc(sizeof(*aon_chan), GFP_KERNEL);
+         |                  ^
+>> drivers/firmware/thead,th1520-aon.c:219:17: error: implicit declaration of function 'kfree'; did you mean 'kvfree'? [-Wimplicit-function-declaration]
+     219 |                 kfree(aon_chan);
+         |                 ^~~~~
+         |                 kvfree
+
+
+vim +206 drivers/firmware/thead,th1520-aon.c
+
+   185	
+   186	/**
+   187	 * th1520_aon_init() - Initialize TH1520 AON firmware protocol interface
+   188	 * @dev: Device pointer for the AON subsystem
+   189	 *
+   190	 * This function initializes the TH1520 AON firmware protocol interface by:
+   191	 * - Allocating and initializing the AON channel structure
+   192	 * - Setting up the mailbox client
+   193	 * - Requesting the AON mailbox channel
+   194	 * - Initializing synchronization primitives
+   195	 *
+   196	 * Return:
+   197	 * * Valid pointer to th1520_aon_chan structure on success
+   198	 * * ERR_PTR(-ENOMEM) if memory allocation fails
+   199	 * * ERR_PTR() with other negative error codes from mailbox operations
+   200	 */
+   201	struct th1520_aon_chan *th1520_aon_init(struct device *dev)
+   202	{
+   203		struct th1520_aon_chan *aon_chan;
+   204		struct mbox_client *cl;
+   205	
+ > 206		aon_chan = kzalloc(sizeof(*aon_chan), GFP_KERNEL);
+   207		if (!aon_chan)
+   208			return ERR_PTR(-ENOMEM);
+   209	
+   210		cl = &aon_chan->cl;
+   211		cl->dev = dev;
+   212		cl->tx_block = true;
+   213		cl->tx_tout = MAX_TX_TIMEOUT;
+   214		cl->rx_callback = th1520_aon_rx_callback;
+   215	
+   216		aon_chan->ch = mbox_request_channel_byname(cl, "aon");
+   217		if (IS_ERR(aon_chan->ch)) {
+   218			dev_err(dev, "Failed to request aon mbox chan\n");
+ > 219			kfree(aon_chan);
+   220			return ERR_CAST(aon_chan->ch);
+   221		}
+   222	
+   223		mutex_init(&aon_chan->transaction_lock);
+   224		init_completion(&aon_chan->done);
+   225	
+   226		return aon_chan;
+   227	}
+   228	EXPORT_SYMBOL_GPL(th1520_aon_init);
+   229	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
