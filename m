@@ -1,165 +1,199 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2083.outbound.protection.outlook.com [40.107.95.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146C8277027;
-	Thu,  6 Mar 2025 21:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741295127; cv=none; b=Um+aB/Cn3y9dp5T+1ktiv3qhi7QZiHiWfYZvh0jIbgmaLlM7vQssFmsTzhxo5099dVN5OjhWNO0BIhZojejv6z40C+2+26E7tx+NrebmbVruK5lKv4Q00IdgGteMK7eQWZN5FeZe8POzzFeUynML9qDVVyjX1fgNV22U+yERohU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741295127; c=relaxed/simple;
-	bh=V91ZkHPIZZZAbkXphZBgntJmPMOelWGFTakT9oxndo8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UP8PsPkuGs2bu2duFnnc0sef1iPXCmEmNMzuf0KEVaK9VqFToKLjaC3bVFfqKhCDG6F9iLnhE0dJj2F8NVuKxl+O5eI8PU5zZtJ4U9hIIfWo+kYy/caFr+mmCTEpCRYXU2wlcr8iQIVr8RwCMtCOX0OP9u+baUVX5Vgfaf3VaR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=bLGPiSbp; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0672C20F061
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 21:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741295137; cv=fail; b=lN1fLENqKdoXofkTTQ4T52+2F/Exxn2u9XxHt3+yuijZIsmtTc8+YVFd/HDpvicYPulLZuy5OJ1KAsZjc+8/smDWy4MmvJi4UGYZFBY3xvzdbvYufl1M6j19E7wtSIg++pslTt4VtQQf3LaRBEtWSVNkXZGyK/4wGHFlMl8LHdI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741295137; c=relaxed/simple;
+	bh=DvRNb3oN5O5qhoQaIcdETSOyssPGtqPLOaTfjjIm5TU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=evX3tL4c4mdeZRPTWJKdYKePf1sMDGAzuhFqBThkqQGJfW2xL879zRFs5p+OzIrwl3o7MqPeJEjJyDHAPOuaq44TLj6Y4PlFguCuR9MeVhxm4F1VyjZ/CvgQCcFTIe1onMgw09OL0mXbX8QuYXZ594BxLk9y40SV3T5xZvx+J+s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aCGTs+Ct; arc=fail smtp.client-ip=40.107.95.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="bLGPiSbp"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526HffjV003117;
-	Thu, 6 Mar 2025 16:05:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=xsNsZ
-	ZMgWUGbwz7hgpoFf2VeUTpJgili5JE611wvQ50=; b=bLGPiSbpMZx9xbWmonisH
-	ZcZBuQR+G+M2gFHylaVce6jzZotMHcHU/r9yBzh/EMsjCoRVvwuqODoo+PXnG+6J
-	Sy3MYzqt9LwaSf5cc2HRLZvk3u8kExtAuC1u/pw71Io2VLAWKRAFzAWn0mNxnRNs
-	Eovu1xHfqrDHdGf2hSS67heRCNgTr6O5FGaJzC6Snwaxcn3nQLYAIPb2174kb1W5
-	qtbeM/70peqi2m6WKaNmj4L/jH6tu8s6MdbZ/q+dDSZP9MsEDl9T73uFftWl9pKC
-	thMNM4qA1tSJyjv1yD7sXsy7Da7RGjbczyfn6FT9U/a2DwpiWqJdde7TwVC98qvl
-	w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 455wnuf961-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 16:05:06 -0500 (EST)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 526L55pL031521
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Mar 2025 16:05:05 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 6 Mar 2025
- 16:05:05 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 6 Mar 2025 16:05:05 -0500
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 526L4lDA011711;
-	Thu, 6 Mar 2025 16:04:49 -0500
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <lars@metafoo.de>,
-        <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
-        <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <dlechner@baylibre.com>,
-        <marcelo.schmitt1@gmail.com>, <jonath4nns@gmail.com>
-Subject: [PATCH v4 17/17] iio: adc: ad7768-1: add low pass -3dB cutoff attribute
-Date: Thu, 6 Mar 2025 18:04:47 -0300
-Message-ID: <2aa347a97e7ea974951609b0bdf81cad0b21b993.1741268122.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1741268122.git.Jonathan.Santos@analog.com>
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aCGTs+Ct"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=k/Ext1i4U16MdZjagxtoMYqchf6mrdijGM6WU9xyeT4CM9TYNQDiREjlBNM6jPwHRgMJRQB5m7HMFeUSW/IxS/3ClpzqzsExtf7L2tPiCgIXNv0Kt4Pc//kZRcjwGed8PEslASWZ1sOZBJmYPaAXICO8NDu7tmFRZGF8wP+tWK61FXtF/1QtAcFhTXZ9nBDaYGVH0hVqB+riRUlNmTzZglN67hXj8VSWsd7+amkmLr2U+tWdM72XWraCq4EJLkZU8alpON31ftfGFXa+yLVwYtmIhZm9nBOkiwyRaFnE9FBzQ5F+Q8RnrsMAHDRwKmdRlKS300mrCvt2yY4MsYyHfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DvRNb3oN5O5qhoQaIcdETSOyssPGtqPLOaTfjjIm5TU=;
+ b=rvUMgQ6olShsHz3bIcvE9I8X2Z7WP9M/1gyz8QE6MYxSiU9oslD6Tq6vakgBahwi4k7CXuGmo2CfnP65HFtz8RyjQWaIKQZsQLL8dWiMbHi6PJEKFyOADGuyZbQvbYqZj0eot2AE/FdTXl7MtJGbHorOTv6Kb/kw2+MsftkVEJxcPDg/huEGOreb/j3xp/E39sIcZbhfBG8m6vylPQdU55xHMx4166iJydc8iJyT/ByF/wbTYK6Etf/0P29E/VGfuO6V+3WnM5dAYC3B76xkdh+hkkIdl98vxZd7CwcWFTTgS83Bbi/h9vNjPV3/cmV91Wko0NQGnwhrCasIs962gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DvRNb3oN5O5qhoQaIcdETSOyssPGtqPLOaTfjjIm5TU=;
+ b=aCGTs+CtvzgKbW5rJojA8WOwAeQs+IbFpW/0uGij3NTFV5aXcMFzHJtwotrePppMN3S9gn7KxtBRVx/tWaA4k3SO6n8rWySzyZtSScQWbAYvWsGI56MoqskBD+Qg+eCL5stzKlTGkI57qQQvmdfCcM4ZCcaYXlfaMutQwfwN3DE1LiuLjGG4V4y2e72WATG955dMZagw2OSUyhi+OXZ1vmYe88Wz+Nu4exgLOUJn8P7ZbCik18LZWGkpOUJCwgFQDB/00oMSg1KMNkXmOkGCnYbOIsCRzrJgYr3Dwnv5jin/dxw9v1264Zi9HJnF65LYTzz0VRGq0gtLxbnN+QgDZg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ MW4PR12MB7237.namprd12.prod.outlook.com (2603:10b6:303:22a::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.19; Thu, 6 Mar 2025 21:05:30 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%5]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 21:05:30 +0000
+Message-ID: <641a990e-6249-4491-9b6a-6a2d51be3b48@nvidia.com>
+Date: Thu, 6 Mar 2025 13:05:27 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 11/49] x86/resctrl: Expose resctrl fs's init function
+ to the rest of the kernel
+To: James Morse <james.morse@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
+References: <20250228195913.24895-1-james.morse@arm.com>
+ <20250228195913.24895-12-james.morse@arm.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250228195913.24895-12-james.morse@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH8PR07CA0047.namprd07.prod.outlook.com
+ (2603:10b6:510:2cf::10) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: b4hzi77df-eQY3lNKWTpVtvI309rP0lR
-X-Proofpoint-ORIG-GUID: b4hzi77df-eQY3lNKWTpVtvI309rP0lR
-X-Authority-Analysis: v=2.4 cv=VNcnn8PX c=1 sm=1 tr=0 ts=67ca0e03 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=Vs1iUdzkB0EA:10 a=gAnH3GRIAAAA:8 a=ZkoTrUv0hqWFqrPu6skA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_07,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 suspectscore=0 adultscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503060160
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|MW4PR12MB7237:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ab931c0-a3ac-4210-f065-08dd5cf2a051
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WkFsVTRwSHBNK1p2dXJJYUhJQy9aWFZDZW82cjZRVkZwekVVZU8vMS9LZE1w?=
+ =?utf-8?B?WEVFVnNsVTAydWk3TnZoNmJqZTFtYS9lSEVhRGFEdzZ4TWt1MklZR1hUc1l3?=
+ =?utf-8?B?NTdrVVFObnd0aDVyN2YwNXdQaW1xNlNNYnZXV0JSUmE5VGkrYnFKRXgzTHR5?=
+ =?utf-8?B?SGZFTSthcU1qYXNhV1lnMFRZcTRDVDJjdkVvT0h2R3VINUliZ3prNjNmU1ZM?=
+ =?utf-8?B?NXh3YWs5MFY2YUU4ZWhLV3FIUXphd1RjK2kyZ3JBTTVGYWFUY0VlZ290bEtk?=
+ =?utf-8?B?ZDBpL096Y2FqTUk1Wm1zSm4zQi8yYjRwWjlwWnFNSnR5dFlneWNEb0hmOGdV?=
+ =?utf-8?B?M0Y1cXFPWWhOT3FRUVgxZW0wNWxMZVFzbjN6a00zQTFPQmpSZEFHNk5QbUhF?=
+ =?utf-8?B?ZUhtMHB6TWs3aHl2eFFWNkJzQWd4WktPMDQ3TmxUbnM2b3NzanNjWkdDbTVY?=
+ =?utf-8?B?SGVjd29KY2VhcllwWTE4ZkNpN2JMakIyT0FvRWVhVXJrdDFvNGFDNmZ1WnJk?=
+ =?utf-8?B?WjJ2a3lqcWg1ektteU9TOUhZQm9qZjBXblowVVNpbWM1aHBYQnkvbVhVMHR2?=
+ =?utf-8?B?bko4UjZ0dEg0bWNEL1Z0OC9yaFBCTnZ2K2xsdU41dkJldHZ5MWpwUUlFVWg1?=
+ =?utf-8?B?aFN6cTBNT29xNis3T1RzZU4vdDNyRlJsSTJlMldtV0hnbEFXaDBIT0oyTDQ0?=
+ =?utf-8?B?SDhHOVRlN1ZDTjFpN1BCUlp0dFE5OUpjcHBEUGZ5VG1Yb2psVFBRSU50dHpP?=
+ =?utf-8?B?K1lWblF2SkRZbGp0WjljKy8wZzBMTHY4RU9ZcEhUTWNDY2FaNlB4cng5U0Nv?=
+ =?utf-8?B?Q3NUWGdGUFJYVk1sZTlHaGRNOC9CQTVhNldEWGFPRllzWDdkdTZlRC91VUxG?=
+ =?utf-8?B?c2VvczhkZFhoMUxSNHljZ2ZJNjEvYkVldjZoaDd5blZ6bFZ0ZTdmVWtJZXNu?=
+ =?utf-8?B?azFmdkpHNUtFQWllVUJValAyV2o2aXNKeXpkL2NXbHFHeEhFTFB4L0RjazhC?=
+ =?utf-8?B?Y05zdXlsZlF1Yno2V1Y3N093OHA1M2NZdEk5MStFaUcydXJPb1RSaXNYYXpl?=
+ =?utf-8?B?TTJscE1UL1pXd2hXLzdtTnZTUXF2S3lCSnRMQjFYc01OaVpKTUtNR2wybUJl?=
+ =?utf-8?B?cE5LQWtCNjBWYzQxaE1iMjZlcXdQMy9jd0xkb2FLSHliR2VtcnNZNTVrMXNx?=
+ =?utf-8?B?UzJvK0J0ZXYwL2JHWmwvUHBociszeXZGR0xiWkFuN3BXdDhaR2hvOGl0ajdr?=
+ =?utf-8?B?OUNCZmk0TDhwYXEybCs5ZUdVbGpYZHFBVlF6UlJzSllQVC9RWjZMT2ZFMklF?=
+ =?utf-8?B?TEY0Q0FLY0R3US94eFBSTUtyWVVuMmd4d2RyV1k1Q09zSGx6YW80MHB2STIv?=
+ =?utf-8?B?S2VzOFRCR1ZTZ3h2OHNSTnBJSHhGY1hGeTk3bUZhd3E5MC96dncwbHdlVmp6?=
+ =?utf-8?B?WmN1RFRZWUNRUGtZTERSN3prZDZNQ3BsRHphdTNtUkovUis3R2pDKytaZHZR?=
+ =?utf-8?B?UThldUhwMWZjalFxQmdzVDhiOU1VdVFzaFBtdGlPR3oyZ09FS2hOcmkrR2xM?=
+ =?utf-8?B?ckc4dzZ0cDE3TGpGS2dDdmQrajQ2a3R3UUFxR2FaZDY3Ukt2SUZQUUFaaDZQ?=
+ =?utf-8?B?NjBIQjRrQTBxZW9PNUlDb3phT2Jzd3lsTUtXWU5pTVJwZGEwODdNV2FrVUI4?=
+ =?utf-8?B?Zkp2OFRCU2x5a2xlSTdHR1l3L1hMWGFaZ1k3eWRrN2lZU0xUTjRHQzRqWnJE?=
+ =?utf-8?B?aVRmUDg5MW94UG82S2ZheHpYeUVuT2x3RkQwVm9OUU1OUzQyVWxLclY5L1FB?=
+ =?utf-8?B?aGNzd1pWbHpGbE5OMlh4QUNLRXdQNkI1SWJqVFNlS1pXSDFLbEVpK3phT1g0?=
+ =?utf-8?Q?eWeyiSVIPWKbL?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bDhzcVpsbVorQlFXMVpMVXpJMVdKU2tpTU5MMDI5d2hycm5VbjVxamI0QjJX?=
+ =?utf-8?B?aVFlcFVhZEVPK2xMcVBRZ1J6bWdNdWgyUUdOM1VSbkVyQWdoL3RoOG5mV3F1?=
+ =?utf-8?B?TUJCbnI4MFNGL0t2RS9ZamM5bE9XWjE2WS9EdlpQcXBqNDdEbzVMSU9LaDVF?=
+ =?utf-8?B?VEFncit3NTZWKzVjeXJKRUc5SCtESHpqWklRbzRsTUlGTmRjREQ1QTVESGJz?=
+ =?utf-8?B?eFVrdnlUbk9GaEg4MXB6Ykl1dDNwTUFZVU8zeklQaVNJaXo3enV0Nk93LzZS?=
+ =?utf-8?B?ekVWQ2FtOXZTaGVSdmRDY0t5UjBpdmlFd1lJTTBKUWF1NlB5VSs2cDcyOExu?=
+ =?utf-8?B?dG5OcSs3OUIvdlRhdFMvd0toa1hjWk40ZmRrMVFvRGtNZDc0Zk52NXYrVjF0?=
+ =?utf-8?B?a1lwaHErU0RDNXp5eUtjamtleU5PY2hiRmxJM2lVQjRLUkhkUXhZSFBMVGty?=
+ =?utf-8?B?TUduK0h0QlVTaHdaeTdMdTRLMWp1dmxrWGplRWFRU0Znb1ZKWXJKTytZcGZO?=
+ =?utf-8?B?cVRMd3ZqdlI3eTVDcW1LR2wrcTI1ZytFSm5WNnMxRE1BVjBvSXdkb2VMbnIr?=
+ =?utf-8?B?a2FwZTBIVVhwaVZqZmtQTzhLaVA3MnRLZFoxV1djVnFKa2tQSEpWYUdldmJr?=
+ =?utf-8?B?b0c0K1VlWk9Ca3kzUkdUbWNaWS9vdjErMk5pZVZsTThhTmJ3RHRQZ1JuRHFt?=
+ =?utf-8?B?bWZwbk5HbWlkY2xhSUtaYmd3MkpvZ3hRMnVEZFdqTDU3dHA4Q05WdE40YmNT?=
+ =?utf-8?B?KzRjY3BneE85VExLcWg5MCtuM292M1VibGFyWklZMkFac2VDODc2MU1hZUM5?=
+ =?utf-8?B?K0V4NkZCR0huelB6WCtxaGxmRXNtZWtLSkxRWEhyOUhRcHBTaTNjcXB2WS9q?=
+ =?utf-8?B?Tzl3WnpkUnNEeDhmSnlmOFREQXBEclArSXFBV3BZMzZhcUwwSzVyV2tjUkNt?=
+ =?utf-8?B?c1FGQnlDNXB6dlZVNWlJS0lCUUR3M3BFWXZ1b3lhMUdaMk9xdWduR2c2MWRL?=
+ =?utf-8?B?emUvUlk0Nk9uSlJMcml5YWU1ZlFlbUxJOXFodnZSVlF5UVlCVTBibEVvdnNh?=
+ =?utf-8?B?Wmk4ZHd3T2Ywc1dDLzF3K1BqWktrbnJXenI3MlBRN0NNZ202WmFpWDkvcWJv?=
+ =?utf-8?B?SWZnSHRqelBwMldXV1Jjd3RzdnUzcjc4UmpKL2ZpTXlMMDQ5N1duenBOZjh5?=
+ =?utf-8?B?VGhpQi9lbzBKWnpiWTFEZFVNR3VCMStQbzZKbHExaVg4Qno0ZWNMeVAxdkhh?=
+ =?utf-8?B?d08yZWt6WVFPK2R6TWltUExjQy9IUUl3eDVHUjNsZ2h2YXJXSTF5UzB2aTUx?=
+ =?utf-8?B?ODh3dWhZakVqNnNkZUlVZE1qbFo4RTRSQUpCcCt3WGh2SjM4RitqSnoxTzRo?=
+ =?utf-8?B?R0lZY1hMMXNYYjBUSGdzZ2Q4Qmlyci9kMWZYQWR4V0VicUVCTjY5MjJjR2JU?=
+ =?utf-8?B?SFNtWjlDNHlTRGR6TWhEanY5VjlLNTg2NHJ6eFd5STdqaU56Zkp4ZnpLTXB5?=
+ =?utf-8?B?UHJ3QkhKK2tDZUxSK2QzbmJ6c0graTdnN2l2WUZ4ejMyUUwwSm9PcW03dGNN?=
+ =?utf-8?B?eG9OWGtMVWo4UnJWZnBleXRGQWIzczN3Um84OW1vZ3lvdnNqa29RZFIzdFZE?=
+ =?utf-8?B?Ykcwa0EwOHo2cHB0TDBIVEcwQlZlNC9yQXl2SEQ3aGJTR2lUVzJuRDBpM1Rl?=
+ =?utf-8?B?WEFqMVdHZmMzN1AxR2hPMXg3SWxwQ0VQNXMxQTFMa2p6NDA0SFlHM3lFUnFq?=
+ =?utf-8?B?amozSENWdUpHK0RmQXlEalRWZ3ZaOVBFemJoMU85ZG9ML1picW1QSC8rRnBR?=
+ =?utf-8?B?NTJLOTJQckgrN2UrNUxoMExJcWpNUFBZdWZHanJMK2R2VEJRR0I2Z3FDZmZF?=
+ =?utf-8?B?N1hjNXozQXJnUEl1Rk1DNTdybGxjOWZKc3FEUnF4QlNhcUhJMHNlWFplSHVr?=
+ =?utf-8?B?NVdHaEtuMjY4cGY3b2J0UjdsUm43Q21UUE02VEVmVThHalV1RXhsd01YSytD?=
+ =?utf-8?B?NnkxZmlzQ0d6eDRlYWhKVWxDTU5KSlhZOHlHdHRYbEx3UGQ4akRCNFhMQTIx?=
+ =?utf-8?B?blZkOEdOdHhrdDhjRnA0RGRsUlNHbDZnRStnK1hKVDdyc05ZcEhNbm5YSVJk?=
+ =?utf-8?Q?7QDQL255ERS9Y+MqbrLBkEnyK?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ab931c0-a3ac-4210-f065-08dd5cf2a051
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 21:05:29.9789
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m4LhkdbG3yfCni4JL6IXn1RQIbz8l/u73G/ogpzmHKi5bv8RLuyl75rhFmLcrN0EdDOqjhzBcRs/UkG2Tv5KEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7237
 
-Ad7768-1 has a different -3db frequency multiplier depending on
-the filter type configured. The cutoff frequency also varies according
-to the current ODR.
 
-Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-the user which bandwidth is being allowed depending on the filter
-configurations.
+On 2/28/25 11:58, James Morse wrote:
+> rdtgroup_init() needs exposing to the rest of the kernel so that arch
+> code can call it once it lives in core code. As this is one of the few
+> functions exposed, rename it to have "resctrl" in the name. The same
+> goes for the exit call.
+>
+> Rename x86's arch code init functions for RDT to have an arch
+> prefix to make it clear these are part of the architecture code.
+>
+> Co-developed-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+> Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+> Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
----
-v4 Changes:
-* None
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 
-v3 Changes:
-* None
 
-v2 Changes:
-* New patch in v2.
----
- drivers/iio/adc/ad7768-1.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+Thanks.
 
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index 664d0b535340..9ba00e9089bd 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -150,6 +150,17 @@ enum ad7768_scan_type {
- 	AD7768_SCAN_TYPE_HIGH_SPEED,
- };
- 
-+/*
-+ * -3dB cutoff frequency multipliers (relative to ODR) for
-+ * each filter type. Values are multiplied by 1000.
-+ */
-+static const int ad7768_filter_3db_odr_multiplier[] = {
-+	[AD7768_FILTER_SINC5] = 204,
-+	[AD7768_FILTER_SINC3] = 261,
-+	[AD7768_FILTER_SINC3_REJ60] = 261,
-+	[AD7768_FILTER_WIDEBAND] = 433,
-+};
-+
- static const int ad7768_mclk_div_rates[4] = {
- 	16, 8, 4, 2,
- };
-@@ -228,7 +239,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
- 		.type = IIO_VOLTAGE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
--					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-+					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
- 		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
- 		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-@@ -762,7 +774,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- {
- 	struct ad7768_state *st = iio_priv(indio_dev);
- 	const struct iio_scan_type *scan_type;
--	int scale_uv, ret;
-+	int scale_uv, ret, temp;
- 
- 	scan_type = iio_get_current_scan_type(indio_dev, chan);
- 	if (IS_ERR(scan_type))
-@@ -802,6 +814,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
- 		*val = st->oversampling_ratio;
- 
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-+		*val = DIV_ROUND_CLOSEST(temp, 1000);
-+
- 		return IIO_VAL_INT;
- 	}
- 
--- 
-2.34.1
+
+-Fenghua
 
