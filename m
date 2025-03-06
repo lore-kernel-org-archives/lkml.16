@@ -1,109 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A387927426C;
-	Thu,  6 Mar 2025 17:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4833227604B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741283965; cv=none; b=jPChwwLpbBmaNeyF/W1XfPNNW13dRroKnIhZ/SLYtN4kpmvn3Ij/p2S5dwudQSgl9E2hCIDr029zPfyqkiUpcX1N4XKEBPf+b6zzd2OL34sL1E91m+S88IL3vDIyrm/C75nHaqelyq1coCEIgdHs9Z3hn1W4+d5/vl6fZzipDqA=
+	t=1741283968; cv=none; b=LMzByzEtWvKh21M/OsnsWZfCQ/+o7jl1raXe0MecaC0HQPFSzplTdbXURGFPRP4uKTh0LDXL+8n2Gr6br9yVPiY9iRg3ehbY5X5isJddxu0pRq6weKCYSrYfJEX2adDDzrBCkcRuGlbPHf0dhDPwMtm2Fnqe7rMk6mgiM2iBcnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741283965; c=relaxed/simple;
-	bh=I/JHvzw57UoJPSQTgW4gksymyJzz98SL8NUvb1KKOF0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hHDjZGkfK2+GdJ/Zip86Sk5nXB/oHPyt3L3SD5scxGLoJ3r/l2JCKDIfiDANM0ooht76J39OrvWbZR2QtWoAmvMaqY88UF8QT4Bg882J/lb7cqMtSFx5OKoNf5l9R0JjMgZ3BK7N2LDFD4ZkJJ1i6rRBrsYNmudeDFSY6qLmBTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t43p2Qrd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741283968; c=relaxed/simple;
+	bh=NWT0F/KJlYO1vT3bElv/lrz4CjmK9qNstQ1RSsLhO5s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mn3w4QoXcdLiQI+HNtAq6n429KtqhfG8daX8/9JhHcAlWmwRe1GXRbaSczDhz1tEjq3RJ3wAZPSaaPtOhJec63FGZiL+195IEVHIYrVJWJhXOhhw5n9y1jMV17Kw4/nEzO2llIUb3gQb1xqNgHaKDNblNOOBmaX8yNxNGmFAZzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CV/KJ3ZL; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t43p2Qrd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B46C4CEE9;
-	Thu,  6 Mar 2025 17:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741283965;
-	bh=I/JHvzw57UoJPSQTgW4gksymyJzz98SL8NUvb1KKOF0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t43p2Qrd5Bb7hd33jVdLTrPc3yYngQWh01UWIUXiyNaUQsIeXBmLhrndvro9mNHv2
-	 zfYl/VNQsqQJu0YBC9jinTCv46wgeHwLPdii9KyhU2jcPmfRG6y2LcrX2uvE4TEbA5
-	 /oN5lHeLwafXy7EMGqRii5igXdClJvOyse25zjqBjKief9JXj9/AszDV4bcSHwSs34
-	 RYnmA0VahnP38wsXOymiSLn9KTZvrou8KkPEIqHOIi3gfAQJQBMyX9cod5fMyeIedR
-	 vdLmClx/gxJoJLGVb0B2OpPlU2i88kWJzEG5BgOglyKaE8EmtibgkEq+DG67WP2bAW
-	 rMfnSYuiw1a3w==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 11/13] mm/damon: remove damon_callback->after_sampling
-Date: Thu,  6 Mar 2025 09:59:06 -0800
-Message-Id: <20250306175908.66300-12-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250306175908.66300-1-sj@kernel.org>
-References: <20250306175908.66300-1-sj@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CV/KJ3ZL"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so722119a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:59:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1741283964; x=1741888764; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bSYRkarb+7IJw2j2ISIxVnW8mglX4UBJdNIvXLsVq6k=;
+        b=CV/KJ3ZLAfaz3rzANXYuAMaSLYhoq6xXs4A0giCfBbFvXphdAu0wmHMmN7VbF5LIWI
+         CN9QTk0a/6rPB6mAoFn0f29vXNCczL15DE1sbMzHLgxKB++tx3buFLVCE5/GnXm/8L0m
+         +EoFRIW6jSfyM4SITtFVB8lGiseZAnLpW+6Rg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741283964; x=1741888764;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bSYRkarb+7IJw2j2ISIxVnW8mglX4UBJdNIvXLsVq6k=;
+        b=lxIY1yhK5F4xmQKDnJJDpO/9sZm2JptiTYvbIfsHnm4J7Mhu4M0UqIIM3WlFE3L88Q
+         KSIAlQdB4zmJSYomLyLFV88/JNueyd4tsWWnWjXayImpPfGJc9R4xnizEb+YLKKTU8aC
+         mygo5P5iD6N/oJnmvuBLSupJzTwRBvU7XSFXsVgrU5bg1uKX0A2CY1JXW3SsFoWBxqyY
+         b3rpTFGZ43HwloIKKCgtjde/E3i0q4OwMAhpQhVtxJe3/S51isQb5YHS/mLGnX8zuINz
+         GTQOB5nA1e0kJj1B0gJNuPB0ZD98xch3cXFduOyK08QF48iqtyN5twlnv5RiccywYdZu
+         U35g==
+X-Forwarded-Encrypted: i=1; AJvYcCXs/V4JCohKI1kePyWsq8FiDQomaZCLOEAH+QhbwTdLFCsCApph/7anhCY1xCUrHh3vqLYVPD97XoE8qy0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYrRyhtbioqvLQM8bsDEIH5s9dfyVVs4+43J+jCoX6E2lJsvDE
+	i/Gmg5nfVrr3+EcIhdFQ/m0r0C2FGsJFKMzunnJdkoTToeprBIfG3jgR1LUK1GUFl4482BpzzQi
+	fYz8=
+X-Gm-Gg: ASbGncvY8mb8VMQTZTRtuwFvBturLPbSXrq976TRsbV5WDYAt+zDFuEsbKPkz2VvPb4
+	+LpywCIbHRDGXqUxhHu877m3Uwy4JteQVfhJnpwO5XICfeeyxZ0Bp4IIpxcSqEh+tSVRSmJmdXM
+	XA0M9Ul3nnclXPUYsgEL0RrHN1C6Bb7xynDOmEGr9RJG1Bxo6HAcF7O+TtNSAvrtuqP10ATIqcD
+	qk/mRZq0PlhXt7Gh5slJ7N6zG4nMP3a7Q3lPHPtLd3Svg4Z1xZ38lPUg+pmFrNjGIrRNhjXUsdi
+	877Pdy6DnXgT/e3tHGmrvveDOkq1FRC7YYL0R/bOiytkpf1I/9PpR8HmHo8E8p9soS0wgepgdCW
+	JAmye2C0p2lRWbPhT+sE=
+X-Google-Smtp-Source: AGHT+IEa0x5kMVGbFFMwpcqv6/G/+d3x7yq+1dNzH9vrmnoplmXpJ09WxkoOAsOhogKo5PaOtKQ4Jg==
+X-Received: by 2002:a05:6402:358b:b0:5e4:cfb0:f66b with SMTP id 4fb4d7f45d1cf-5e5e22c0b42mr111329a12.7.1741283964261;
+        Thu, 06 Mar 2025 09:59:24 -0800 (PST)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c747218fsm1258472a12.25.2025.03.06.09.59.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Mar 2025 09:59:23 -0800 (PST)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so722025a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:59:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrJySlTUdISekEOztpwfIhqZYRUMkXTIpy/Igq+yMscME7DLE+Cp78dt45GHMnOGdOxIMmbDDxJHy15DA=@vger.kernel.org
+X-Received: by 2002:a17:907:3d86:b0:ac1:e6b9:57ce with SMTP id
+ a640c23a62f3a-ac20d852d1dmr848759766b.7.1741283960242; Thu, 06 Mar 2025
+ 09:59:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250228143049.GA17761@redhat.com> <20250228163347.GB17761@redhat.com>
+ <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com> <CAGudoHHA7uAVUmBWMy4L50DXb4uhi72iU+nHad=Soy17Xvf8yw@mail.gmail.com>
+ <CAGudoHE_M2MUOpqhYXHtGvvWAL4Z7=u36dcs0jh3PxCDwqMf+w@mail.gmail.com>
+ <741fe214-d534-4484-9cf3-122aabe6281e@amd.com> <3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
+ <CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com>
+ <CAGudoHG2PuhHte91BqrnZi0VbhLBfZVsrFYmYDVrmx4gaLUX3A@mail.gmail.com>
+ <CAHk-=whVfFhEq=Hw4boXXqpnKxPz96TguTU5OfnKtCXo0hWgVw@mail.gmail.com>
+ <20250303202735.GD9870@redhat.com> <CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
+ <CAHk-=wjyHsGLx=rxg6PKYBNkPYAejgo7=CbyL3=HGLZLsAaJFQ@mail.gmail.com> <87cyeu5zgk.fsf@prevas.dk>
+In-Reply-To: <87cyeu5zgk.fsf@prevas.dk>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 6 Mar 2025 07:59:03 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wg8e77mmVWZrSjhDe3+3MfF_h1op7VjTJv570zrE2s9Jw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq3Yhgvw2xjomqRUNpCHfEfMY6rND9DoGhv3ZSJetivAGgMEt8CTPE_-Kw
+Message-ID: <CAHk-=wg8e77mmVWZrSjhDe3+3MfF_h1op7VjTJv570zrE2s9Jw@mail.gmail.com>
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
+To: Rasmus Villemoes <ravi@prevas.dk>
+Cc: Oleg Nesterov <oleg@redhat.com>, Mateusz Guzik <mjguzik@gmail.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, "Sapkal, Swapnil" <swapnil.sapkal@amd.com>, 
+	Manfred Spraul <manfred@colorfullife.com>, Christian Brauner <brauner@kernel.org>, 
+	David Howells <dhowells@redhat.com>, WangYuli <wangyuli@uniontech.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>, Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com
+Content-Type: text/plain; charset="UTF-8"
 
-The callback was used by DAMON sysfs interface for reading DAMON
-internal data.  But it is no more being used, and damon_call() can do
-similar works in a better way.  Remove it.
+On Wed, 5 Mar 2025 at 22:35, Rasmus Villemoes <ravi@prevas.dk> wrote:
+>
+> On Wed, Mar 05 2025, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> >
+> > and there might be other cases where the pipe_index_t size might matter.
+>
+> Yeah, for example
+>
+>       unsigned int count, head, tail, mask;
+>
+>       case FIONREAD:
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/linux/damon.h | 11 ++++-------
- mm/damon/core.c       |  3 ---
- 2 files changed, 4 insertions(+), 10 deletions(-)
+Thanks. I've hopefully fixed this (and the FUSE issue you also
+reported), and those should work correctly no on 32-bit. Knock wood.
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 043de2408c65..5aa277f4c948 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -604,7 +604,6 @@ struct damon_operations {
-  * struct damon_callback - Monitoring events notification callbacks.
-  *
-  * @after_wmarks_check:	Called after each schemes' watermarks check.
-- * @after_sampling:	Called after each sampling.
-  * @after_aggregation:	Called after each aggregation.
-  * @before_damos_apply:	Called before applying DAMOS action.
-  * @before_terminate:	Called before terminating the monitoring.
-@@ -617,17 +616,15 @@ struct damon_operations {
-  * attributes of the monitoring context while it's deactivated due to the
-  * watermarks, this is the good place to do.
-  *
-- * The monitoring thread calls @after_sampling and @after_aggregation for each
-- * of the sampling intervals and aggregation intervals, respectively.
-- * Therefore, users can safely access the monitoring results without additional
-- * protection.  For the reason, users are recommended to use these callback for
-- * the accesses to the results.
-+ * The monitoring thread calls @after_aggregation for each of the aggregation
-+ * intervals.  Therefore, users can safely access the monitoring results
-+ * without additional protection.  For the reason, users are recommended to use
-+ * these callback for the accesses to the results.
-  *
-  * If any callback returns non-zero, monitoring stops.
-  */
- struct damon_callback {
- 	int (*after_wmarks_check)(struct damon_ctx *context);
--	int (*after_sampling)(struct damon_ctx *context);
- 	int (*after_aggregation)(struct damon_ctx *context);
- 	int (*before_damos_apply)(struct damon_ctx *context,
- 			struct damon_target *target,
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index 8904b3c079e6..726e581904e5 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -2431,9 +2431,6 @@ static int kdamond_fn(void *data)
- 
- 		if (ctx->ops.prepare_access_checks)
- 			ctx->ops.prepare_access_checks(ctx);
--		if (ctx->callback.after_sampling &&
--				ctx->callback.after_sampling(ctx))
--			break;
- 
- 		kdamond_usleep(sample_interval);
- 		ctx->passed_sample_intervals++;
--- 
-2.39.5
+Mind taking a look and double-checking the fixes?
+
+                Linus
