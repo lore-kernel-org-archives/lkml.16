@@ -1,144 +1,164 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C25207A2E;
-	Wed,  5 Mar 2025 23:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507C563D;
+	Thu,  6 Mar 2025 00:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741219143; cv=none; b=ZhmqJOmnM6uUnmDAkIym+F92igCMtgQfgtV2s5J0VYsN7ho9ylNVG/OKODQbzKlT14qic75FBm0aOvi7JrwzJjG9NxgmjRyzk8vtKdn5uoBsCin6IevS7vAca8NqtmvRdQ/Y3oUiTfRVW1Ae9ffEncAkflVSrWG6EtEgh+/1ydc=
+	t=1741219250; cv=none; b=YrkCEAz7WFVIdb4/Kciqq4ef/2lKIPPnwp7caFyrrACsXe2gCrFraBWk81XPpCgjkVv3qTuqXUV2In/WPuTB9UFnGyfD9hKjlRdjW2B8ZHurVDyxgCdaCgpnWJGPjsmPJl1X3XfRsvp3ZsiSjFIK13HrmzgrlhS65KHvXeusWlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741219143; c=relaxed/simple;
-	bh=8yX0b+cxzeZJbFAkXXMUveQa9NlsJevPh8Mdh/x8K18=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gO7yxo6FRw4Stu31ez25sOW110WCOruCkH2nU4jG4qxkaHn4Ws8+WFUkbNp9kAG8Sqiolsa5udUEvPHMNOrmyqCpElLhfwQoPzJ5yAfUESztopapuzq8jciuEOQoiPOZMhw6NlPGA4h8AH3gq4AV88L5PHOflTeTuQS45Y4/8+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RA3qOFz+; arc=none smtp.client-ip=209.85.208.175
+	s=arc-20240116; t=1741219250; c=relaxed/simple;
+	bh=39CDkvz6XO+Ri5q7s/t0liHhr7O/gnB1BvM5MuQxcsc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W91Nh/LZXfIl7RuJAvTsWzvnEr4EweQwaFdRAPSd+iUe3iUz2F/kI4T9agfxDNWcm6d5x1eNE9tJ4JB9OC5lYThjEnuRMm6lzohUgk7OagC/BsTmXKwVFw97cca3Hzte0u2pMXTotkc15/pzgxQ25YRpry2bfleQPPyEzMIZnZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZD776881; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RA3qOFz+"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30b83290b7bso790571fa.1;
-        Wed, 05 Mar 2025 15:59:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZD776881"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223594b3c6dso402405ad.2;
+        Wed, 05 Mar 2025 16:00:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741219140; x=1741823940; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bNApkpb0u9LUsLegl6qfYrvOR+DiEpU2KcGvbBCioxM=;
-        b=RA3qOFz+QYHYuAw2rq6/KbUTrs+tsqjtEqvMlec2EckIdXoHYPdRWbZroIJB+pHFMZ
-         V0EL7DToWzrneIWdt9PHGIHhshZrdKcL2Ip8Xjx3KtoFuMbHnBg+UoGU97M/gRfGMH2B
-         gIr+56NYWONLhg6zLzp4f0A9YWivdMS0qN/td5isXAGq78vEa1TTRzzdbGPW+af4KxEw
-         9tJzv4QBvmlHOLijbbbgwhJsguHtKeY79B/pmo8gCuqg/Q9HCTmXFNYFKEeP/mZTD0zf
-         glUl04CPtmhdKoSznKKhioA0Pw8PoqTwfMGmZhDQuRWYFIImbBIPs4ReQAkVankF3dD2
-         KjWw==
+        d=gmail.com; s=20230601; t=1741219248; x=1741824048; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YfpB7be3WQ+25k2CF8K/o3LEES2vCMRSkQKM3K3lwew=;
+        b=ZD776881iqACDkiSU4w/+dDrDaPNfkm4xsTvkGZLoMOZX9l67YT0egR+dxqLguTboL
+         FmYDdJ8oH00bjl3rHTziuYlVjVV5o7Qy6emu2JssrJcTPGH/ku7BgaZ5FUz97M1/rSOG
+         yWDE2E0J7jrlIK1ET3PxTfiXWdsnpuFkwJvR2H1GYEJ7d+9PLeeI8NXZojxMbG0BY7bG
+         2nYdZubqqkzQEI/TGty18o/ga6/5Yvk68aDS0/SBKCVFo/jpy1w1C2/ZTGJy8hKlDyX7
+         2UVLz16hc+/KOS18WVyThbI4Z/LB0QWinSAQP648oJBcFORDXxVPokri8Gcwj1ataiMY
+         JWtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741219140; x=1741823940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bNApkpb0u9LUsLegl6qfYrvOR+DiEpU2KcGvbBCioxM=;
-        b=hL4Aarz4QB5coJPEFkN62aPpPkNAndJrtjljAp1f5jwjewUMd1nelyfsVXDmYEmDS/
-         yVzLuj3HXRux28oj/V7QnCzVG77qdMt1/uVDcpN8VPlj+knqenO3rAGIYzaK/n3PTmUH
-         4iE96Ye27oDHHs0f/pg7Et+/CP8aQKv6TR63BayyG06M4x6ZV1JLYtw7dvh2PAIkpHK/
-         EWtw+7D+2tq4or7ECi/4j9OFkQcCf3g+P/aMWQKHNYYYr1oKLMd+Imuu9wtbPw3uSuu2
-         zTle6cyxdeLMj8of90Kg8RzTkvOxhXbLfPwjXhHth5GMGOBMsX+n3p1zRIjFtGNTVncS
-         uJpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhqcvrkx2Y2EbbXNdZgpiAw6VDPMZkFP4EQohg+XG/rU6RGRluIWZpTZQoC7e5ORbPwoouvtxcfKL7fTM=@vger.kernel.org, AJvYcCWvcY6uhlD08OPunyO4Dppb+uYtnfX8v8raw8XiNigQiS1ob7eHIJlahsZoh//uVvfrL5fEM2xH0Lkj+ukWvlA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaQsr2Oa3acWg+jwdeiPTXmpRqWX7uHL1POTYy7W2dh+P3Jt+c
-	ibp40qt+8hc/CvCBApjfsRbfRVua0VixcjiyNebe/0QMwoR5YrJnb0YWIjQWyq3WE5Wt0mdivcx
-	0QUiQ+iWS3R9ze1dyv0pmTWIUY0E=
-X-Gm-Gg: ASbGnculT+QbYSkagHmS1wmI6XLsicGjyI9asfaHt7vq8g2OFku/vp2gILcaX+SObRX
-	Suf/lhShqejUSgY1H73arLBWAj14E5SvGIrIKn+cuqXkY3OGimN5u65FIm7MjOM9mGYF5xPmwZn
-	XvimgZi43vyvn5/92bUBaRvawTWVVXXGX6/dYBbW+jr7Cq5reo2wbb6AN+g1IJ
-X-Google-Smtp-Source: AGHT+IE57FkmJGozU/W884r+pInRmyhnvAqGZtYu7BIf2OwCYVBzoy5YoF44Bpu8sQsgyJP6ccHyD24/PA9+t2EHWUU=
-X-Received: by 2002:a05:651c:2205:b0:30b:d4a9:947c with SMTP id
- 38308e7fff4ca-30bd7b0be35mr20453491fa.24.1741219139562; Wed, 05 Mar 2025
- 15:58:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741219248; x=1741824048;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YfpB7be3WQ+25k2CF8K/o3LEES2vCMRSkQKM3K3lwew=;
+        b=q6zYuGZP65t1O5MARTuCjELy1HPtCaz9ivtWsmMNh7P3yoQ9oALEKau40hxveO+E9P
+         E7WpShmSE/6mAInX4t4qbNUUylMcdFrEznD6JvX7ChjthDg57v0RIed5q6CyodFHe8l0
+         VgeYkOPAapWH2FiC2QP67tLk2dCsau+56gbr/ZR5Ak/uLl9G6o2O6b53faKVCDEJcGWZ
+         LfwhTuEUf0ypH5ALELRabUujOXZrZsanZjSBkjaWA4yNSXwQCunonQBWsI80i13XFklS
+         pjspjb285+812Zf4GYsmhy/70STkXZh/1YhQppuHeuKrog+9dhW9bCp5cGb7gsjar8lu
+         SkVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYSTRYCDtFN125qky1sJPAAjbvTUB75GQBy7rv1GcweE3aJCdJpRFS9rEosVK6Y84OiqnWcmuHEXFdhqke@vger.kernel.org, AJvYcCWzVvkJw27RuYT1DiebZkCH9/2yKm/BF+2MsGVnDPiybv7i7cU6Y9EsrIUkvVq9kv8nnUueVrstWEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyiwew8otkNMlrLtps1zyTLTxQ1dVBifxSIy/I1E1nUNI7kjEXr
+	gT1piQn7BVgPz2dYYABmuCVnXYk5/zZU5t4vBiysrZVmJ0A+1q4T
+X-Gm-Gg: ASbGncv3OVKuOQslVscIBO+Ss6p33Xd+khiQFJQme8A96vtYpO/H/yBwAVLQTBauLzC
+	DG7ymaQBfj1aIQSApFYhxCovJ/OyydBGbJk/TrVoBJd3J3e0or6Xn8QTJ5IdMBSYVNi7xLeOnmU
+	wagE5kbZmRVvChq4VxjqyZWCMN+wESC9tUTJgSY8SM6cN2KO3o2m0tXj79QJYtIMKWrNSg+p4xh
+	S9viJkB7A5H/ARFt7jGMdbHRwPPQedjdRjwKucltjTVU37DXdw0gLIZYAC6BejXuYC6jlRbQQAd
+	fYst7Dwai9ZpH/bi8/0CrekjNQ/97Zri9iFZyb0dWHHlzz1YEpeDLE8aLS+ciW/z/zI=
+X-Google-Smtp-Source: AGHT+IFxHf1uKo8PUiFp492BtjX06i1u/Qae1B6ppFKhEAKyOZPZE48UtdR1xOkhQD05jGDzH74hrg==
+X-Received: by 2002:a17:903:3ba5:b0:21f:ba77:c45e with SMTP id d9443c01a7336-223f1d81964mr73730045ad.45.1741219248439;
+        Wed, 05 Mar 2025 16:00:48 -0800 (PST)
+Received: from danascape.tail34aafc.ts.net ([2402:e280:218d:2e5:857:3077:7768:d8a9])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109ddce7sm68625ad.3.2025.03.05.16.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 16:00:48 -0800 (PST)
+From: Saalim Quadri <danascape@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	gregkh@linuxfoundation.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Saalim Quadri <danascape@gmail.com>
+Subject: [PATCH v2] staging: iio: ad9832: Use devm_regulator_get_enable()
+Date: Thu,  6 Mar 2025 05:30:40 +0530
+Message-Id: <20250306000040.1550656-1-danascape@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-rust-analyzer-macros-core-dep-v3-1-45eb4836f218@gmail.com>
- <CANiq72mvhp-LiWAKEuiptyCV=-nh5i_7kJMgPq3yLbAQOqq09A@mail.gmail.com>
-In-Reply-To: <CANiq72mvhp-LiWAKEuiptyCV=-nh5i_7kJMgPq3yLbAQOqq09A@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 5 Mar 2025 18:58:23 -0500
-X-Gm-Features: AQ5f1JoSD2Kfq4o6CkaFmA0i-VPaNOw_W5Gk9rAnTNzDgpWqQroiR9A1qtXZWUw
-Message-ID: <CAJ-ks9mT3z5Sg0+SBxVmZnmhAE1Y3U9WSfE_x22QfpqKWjEacw@mail.gmail.com>
-Subject: Re: [PATCH v3] scripts: generate_rust_analyzer.py: add missing macros deps
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Boris-Chengbiao Zhou <bobo1239@web.de>, Fiona Behrens <me@kloenk.dev>, Kees Cook <kees@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Chayim Refael Friedman <chayimfr@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 5, 2025 at 6:14=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Mon, Feb 10, 2025 at 6:03=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > The macros crate has depended on std and proc_macro since its
-> > introduction in commit 1fbde52bde73 ("rust: add `macros` crate"). These
-> > dependencies were omitted from commit 8c4555ccc55c ("scripts: add
-> > `generate_rust_analyzer.py`") resulting in missing go-to-definition and
-> > autocomplete, and false-positive warnings emitted from rust-analyzer
-> > such as:
-> >
-> >   [{
-> >         "resource": "/Users/tamird/src/linux/rust/macros/module.rs",
-> >         "owner": "_generated_diagnostic_collection_name_#1",
-> >         "code": {
-> >                 "value": "non_snake_case",
-> >                 "target": {
-> >                         "$mid": 1,
-> >                         "path": "/rustc/",
-> >                         "scheme": "https",
-> >                         "authority": "doc.rust-lang.org",
-> >                         "query": "search=3Dnon_snake_case"
-> >                 }
-> >         },
-> >         "severity": 4,
-> >         "message": "Variable `None` should have snake_case name, e.g. `=
-none`",
-> >         "source": "rust-analyzer",
-> >         "startLineNumber": 123,
-> >         "startColumn": 17,
-> >         "endLineNumber": 123,
-> >         "endColumn": 21
-> >   }]
-> >
-> > Add the missing dependencies to improve the developer experience.
-> >
-> > Fixes: 8c4555ccc55c ("scripts: add `generate_rust_analyzer.py`")
-> > Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> > Suggested-by: Chayim Refael Friedman <chayimfr@gmail.com>
->
-> If this is a fix, then it should use Reported-by -- or the suggestion
-> was about the implementation?
+The regulators are only enabled at probe(),
+hence replace the boilerplate code by making use of
+devm_regulator_get_enable() helper.
 
-The most correct thing here would be Diagnosed-by =F0=9F=98=85
+Signed-off-by: Saalim Quadri <danascape@gmail.com>
+---
+V1 -> V2: Fixed indentations and commit description
 
-> Anyway, I can fix it on my side, but I am also supposed to add a link
-> to the report/suggestion -- do you have one?
+ drivers/staging/iio/frequency/ad9832.c | 37 +++-----------------------
+ 1 file changed, 4 insertions(+), 33 deletions(-)
 
-https://github.com/rust-lang/rust-analyzer/issues/17759#issuecomment-264632=
-8275
+diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+index 140ee4f9c137..db42810c7664 100644
+--- a/drivers/staging/iio/frequency/ad9832.c
++++ b/drivers/staging/iio/frequency/ad9832.c
+@@ -74,8 +74,6 @@
+ /**
+  * struct ad9832_state - driver instance specific data
+  * @spi:		spi_device
+- * @avdd:		supply regulator for the analog section
+- * @dvdd:		supply regulator for the digital section
+  * @mclk:		external master clock
+  * @ctrl_fp:		cached frequency/phase control word
+  * @ctrl_ss:		cached sync/selsrc control word
+@@ -94,8 +92,6 @@
+ 
+ struct ad9832_state {
+ 	struct spi_device		*spi;
+-	struct regulator		*avdd;
+-	struct regulator		*dvdd;
+ 	struct clk			*mclk;
+ 	unsigned short			ctrl_fp;
+ 	unsigned short			ctrl_ss;
+@@ -297,11 +293,6 @@ static const struct iio_info ad9832_info = {
+ 	.attrs = &ad9832_attribute_group,
+ };
+ 
+-static void ad9832_reg_disable(void *reg)
+-{
+-	regulator_disable(reg);
+-}
+-
+ static int ad9832_probe(struct spi_device *spi)
+ {
+ 	struct ad9832_platform_data *pdata = dev_get_platdata(&spi->dev);
+@@ -320,33 +311,13 @@ static int ad9832_probe(struct spi_device *spi)
+ 
+ 	st = iio_priv(indio_dev);
+ 
+-	st->avdd = devm_regulator_get(&spi->dev, "avdd");
+-	if (IS_ERR(st->avdd))
+-		return PTR_ERR(st->avdd);
+-
+-	ret = regulator_enable(st->avdd);
+-	if (ret) {
+-		dev_err(&spi->dev, "Failed to enable specified AVDD supply\n");
+-		return ret;
+-	}
+-
+-	ret = devm_add_action_or_reset(&spi->dev, ad9832_reg_disable, st->avdd);
++	ret = devm_regulator_get_enable(&spi->dev, "avdd");
+ 	if (ret)
+-		return ret;
+-
+-	st->dvdd = devm_regulator_get(&spi->dev, "dvdd");
+-	if (IS_ERR(st->dvdd))
+-		return PTR_ERR(st->dvdd);
++		return dev_err_probe(&spi->dev, ret, "failed to enable specified AVDD voltage\n");
+ 
+-	ret = regulator_enable(st->dvdd);
+-	if (ret) {
+-		dev_err(&spi->dev, "Failed to enable specified DVDD supply\n");
+-		return ret;
+-	}
+-
+-	ret = devm_add_action_or_reset(&spi->dev, ad9832_reg_disable, st->dvdd);
++	ret = devm_regulator_get_enable(&spi->dev, "dvdd");
+ 	if (ret)
+-		return ret;
++		return dev_err_probe(&spi->dev, ret, "Failed to enable specified DVDD supply\n");
+ 
+ 	st->mclk = devm_clk_get_enabled(&spi->dev, "mclk");
+ 	if (IS_ERR(st->mclk))
+-- 
+2.34.1
 
-> Thanks!
->
-> (Tested-by's welcome, by the way!)
->
-> Cheers,
-> Miguel
-
-Thanks!
-
-Tamir
