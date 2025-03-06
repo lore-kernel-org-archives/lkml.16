@@ -1,352 +1,159 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F37D255E54;
-	Thu,  6 Mar 2025 17:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076D325BACB
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 17:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741282167; cv=none; b=RPNRja2vWeJb3n5exLcSOY8A+ilfIUpyaRX09DeT3Sj2v++X77J+70HcbUOnoc6zVy1ESp8ZPjWs+Ybs2fN/+hmlU9WcMngVupTVJK1z2JCHfcp0az+b1/24fHQf1LGQjDlJcWxewlACYUJXmZFLcPQKi4xxgnjh9xsm1jaoeSM=
+	t=1741282191; cv=none; b=e8sYlu+zKK0H/2t++fD6sHkgrkxDi0Qeri55kIQ2DiDsg5y5ZKue6JBrZRMAGlgV3PgWFSjbyNHigA/Hxs3B7LIVyonF7uX1VF9SsJrXb17qikiX0oDFd/U9v9QdJ3MywMd6krWNP9s0DGuK1zq6kYQPTxAWEKOo5HDEUJo8C0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741282167; c=relaxed/simple;
-	bh=2ZDI1BOKBehLrp6Gp9yWJh4BFdQxUqk4fAQd6AEYX7w=;
+	s=arc-20240116; t=1741282191; c=relaxed/simple;
+	bh=JiXBBKulzpm1G4toJd+w3rK2oa2JI2KBaqVst92x83g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e2YJYoXv1fTWACGAgAumGZXxFakJSOV2pA1u+elvJz3cnSbtgLKXWfCshz5dDWeibPxeJ9KwJsHjeTjw/CrcYPDCVMiMrL3zM1jis3C1Twoh0lis7fErV0fD+DO6e8dGR/5+/9Zhw0HIFYFfEyU4dTFFejwVUEz1zeTG8ETDN8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TkXKfeLZ; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=YFHMqiR45tzQSd74+5Gx2qHxDfm+vipHkEFLUDeaXJ9tn+qjlG+iCD4O3J0MMxgjiK9LqapY8tO4LO8c3QQjon+PC1F6KZeEJFaflFXqIEnCG791wz7y6gmws5jSBX0O2rwDTTCeQmEJc0he3XCl6VkTsVmYf4ZYPV8GnXNc//I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vzDzs/cR; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkXKfeLZ"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30ba92c846eso8973451fa.3;
-        Thu, 06 Mar 2025 09:29:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vzDzs/cR"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8670d630d2dso369474241.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 09:29:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741282164; x=1741886964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F3GPRBnBVmbxhI0dCIq/9TZYTROumSbSHyzxyoeisCA=;
-        b=TkXKfeLZhVHLhqIvGcCvfLhPAiiGecgF2kIY7DtMFPP2yid4VCLDAloUPvjQaH0e/m
-         jR4rst351h4Gm8ufniLjaAaFPxpYEeH2Br8v8Bk7YjoTDnJAlHg0zewBp3VzV4mpKTob
-         d4aHsfF74iXl1CNfg0GvxxpdqNZ7BAJdpi+c06w6dnA7wEl5RxZ5gVU73s1UVDICG11M
-         tkk6g/lrDMajXSwE8NImDP01HAuQHRbVQ1d9pSxOeECS1KFJ/xkn/3iiLMLInDIHoKio
-         yMDnZ3GmKxD8miBXy5VZ2jtZMN74W5CD34Y67/ZL4ZWq2On8x72l/wbjUyxRYfJt008V
-         xA8g==
+        d=linaro.org; s=google; t=1741282188; x=1741886988; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pXtLFB7rHzBBDM/TAUEEN+9FpT67VqyHhiDM0Anig2k=;
+        b=vzDzs/cRCiQItFRB2GbLTmEsO6b2pDtyv0Q1X3irPGjRoy8lOBya/Jq88zvqJLPs6z
+         2LEENMMT4hyKFG+WsiWqjE2kxrZvjeQOMJMuKkgI+uZlErK0yk6lxzRnZzNIjfJ4twvZ
+         XAAO9UmT5VoyxMN1/dtTvE95mZtQ84F9K1S8Aw/eNojGlqlTFnrf0ig9wqLdn5baRzwP
+         t9eIYPxhKZ1bA8H5JxQx29mqL7LovKvi/eQLsEORFZ2LjTGL+/GKYAc4ejJNMtpiVQF/
+         8JgGf7XMajisqhho1xG8MxHX2hWoCRtHTfGqzOtOGbzxtX3hBPEGosGQ/LMPcXN80ie2
+         EAow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741282164; x=1741886964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F3GPRBnBVmbxhI0dCIq/9TZYTROumSbSHyzxyoeisCA=;
-        b=DhR6okRmtjdR4BXi2Pjnq17YsGA/CMy6tVhzDHIb9Hgy5PvVnL6Kw21ft9psZwDFtO
-         iraGMpg5OJehMqiU0fHfUjUxmMoOaSHKlgiRfqaxwyy3nrwaSyKg4tL8HtOMdkPnoQZw
-         4lGdlk5zSTUUMxskwFFpSCQLIzUYdQn3E2h0q/McO2w57U1a1p8o1WTV9+TLG3ZaYhyL
-         vCKKIk5Eih88M99qU7SzRhmtUYL8foz7hawKJFPHgKf4der/Rd4MaE6QQEdi1UDw6/yO
-         wsw82HsXdIqAv8UpHiYWB5qSlYcvVAWeM0ZhqHqpqtcieB0gW2cBcz8IYCQYU8j1y2zD
-         o0vA==
-X-Forwarded-Encrypted: i=1; AJvYcCUM2BpXv3G7xzykajlHhHij7wMfncpYWEk4jHI6M8hC2qrVmq9tyBWaWj4z2k+Ctrt3Mx3fP0fm5KLIF373@vger.kernel.org, AJvYcCV46PmO8KVZZ0MPEjhfqv/nS5R9X2HEsY4BR27wqjpe6HR0videhj+zaHA23C6XDNo8FT8VYzPXYG+Vuj3z0vQO@vger.kernel.org, AJvYcCWLSRKiQDwS8ips6V12I2O1ij0o5Ce/E/bqqvn3ADT+iGlc1izZm2MMgEG+7ts6whzvbQsiJ2LjGOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+8yWSuAB3uP6cBuj1e+K7iIG2qoQWh1MkVixVHpnSZAEq/K1h
-	MABHTarwIp5QSs7O+8PkOrmj1nlWAawjqG9+XKA4ia66LuVeMPD0yTChlEmoYXxmty9vGJw6HNy
-	sAggvGuigUlQ/AozpMDeHDcttwrg=
-X-Gm-Gg: ASbGncucZtY48J/p9djmDRvGa3O2zw3RYF5wqpV/D0mBE7VNULXbRb7lpF4d/WORkXK
-	drVgurDauD4uCDV/DnRLa5t4as5mDcNqPwRA4K5axF9DjiKIZfLW+TJWRtfAvmz9DiGEZl9uwOm
-	5GdseemNiKgdY8zMKUCOUwdBPn6F6d7TgoxdnGtNW5Hg==
-X-Google-Smtp-Source: AGHT+IH/YlWmoRHr1Ii2Pc5mZeyT1wbsTGHyOyWkV+/j74OqiWKiPVXIMNv8fKZgc+JSddo0OQ9fxbaIyeYzSitv60o=
-X-Received: by 2002:a2e:a595:0:b0:307:2b3e:a4a9 with SMTP id
- 38308e7fff4ca-30bd7a70812mr37072751fa.20.1741282163283; Thu, 06 Mar 2025
- 09:29:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741282188; x=1741886988;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pXtLFB7rHzBBDM/TAUEEN+9FpT67VqyHhiDM0Anig2k=;
+        b=L3zX6f0wENscHxPl+ayZ2Poh5NwBRYqHvc7tKU0JLkiw3apHYGIj2RvNf/M4LTCDAj
+         xVn/jTa/hUc3s99JyjPUg2AcqAjHx2LNfS8uWRxbz1EOLwSpBbhnUFbSWpQqwVHVLMqK
+         GU27BURmbnmo7y+vgPAjFZRO81/ynrKqSDU7x/jJS83LSi2byoRTlK/6W4ohnhc2b7ba
+         xj2D9tsevB3QqOuJSFOz/h4Re8sPX3CyU5F4rlvpXeVfBNL99NpM7QprqtABjt5gpn02
+         7cLTO7YdngApW8S28dnO6XZROeSHk6oKeyKpl91wGAIfvhmlOSprYcVUhdK0dV5jpp/B
+         bPJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkSg59r4CwOoQKfU7mQQN1FRVpEI8P9XfrcYKusLme51QH1rRVIBQM5kiLFayw126dsEh8eat7G6+k14o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfep1XqwJ6GzGEHNtKqo2TxpiPDZNVSgv3/GkEeDnLu4h1v6WY
+	IyTiQIq/LYrpVFuLmN1nCZfkR0YoVjF+sI71+HEpdF/qsCK4StyitNx7pItpr3S0/Dpr8yVqs3u
+	8qHdh5M9Evg5V29CTXwP+ydMFNURbFxAoNBRODQ==
+X-Gm-Gg: ASbGnctAdlYLJA4tNeRFwSQFfXAcUO48LvEJfVk4YazgBf+Kzyx+Bbj3xpzulRjKwce
+	2vaxbBIEfScje1ErL1ScDXf1xtDA2a/zSr2qaTL1Nl4FUX3hL9JJWPiSbHw1gHr3wiLsdVSddJR
+	obEk+mDNMoW9Q7m+vDFaEzohYofpX8xX2u4tgatq5ffaNjU8dINuYgK1myjb0=
+X-Google-Smtp-Source: AGHT+IFNXCtuHq8zvVxiVQYiR8dorrj9uyzpsQMGx5pTaYKW3Lqu3uOnXFHmE6jvJxArEtny4FPQcKgSRyM9FNa8LGA=
+X-Received: by 2002:a05:6102:3594:b0:4c1:90ee:ab2 with SMTP id
+ ada2fe7eead31-4c2e2815489mr5712797137.14.1741282187745; Thu, 06 Mar 2025
+ 09:29:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221-printf-kunit-convert-v5-0-5db840301730@gmail.com>
- <20250221-printf-kunit-convert-v5-2-5db840301730@gmail.com> <Z8nQ0vCNgz4lEJEj@pathway.suse.cz>
-In-Reply-To: <Z8nQ0vCNgz4lEJEj@pathway.suse.cz>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 6 Mar 2025 12:28:47 -0500
-X-Gm-Features: AQ5f1Jo7c5afgFz2OUPXMWBao9ERbtEDe2_OPEz4cK8LEr1rzbF43Frduj4rlVE
-Message-ID: <CAJ-ks9k8GON_x3doHi6XCNrQLfiva6obrQ7A6Sn+qUgdXLUuhQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] printf: break kunit into test cases
-To: Petr Mladek <pmladek@suse.com>
-Cc: Arpitha Raghunandan <98.arpi@gmail.com>, David Gow <davidgow@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linuxppc-dev@lists.ozlabs.org
+References: <20250306151412.957725234@linuxfoundation.org>
+In-Reply-To: <20250306151412.957725234@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 6 Mar 2025 22:59:35 +0530
+X-Gm-Features: AQ5f1Jo2c_NWeRxraJqOe3rUK2VTQXZDSVRCocH07muKH4PVHGeh0vesJBzv5Ho
+Message-ID: <CA+G9fYtfmMThUC+erk6jVk8BN0jWJCw=FnKh68ypwhgv65OZ+w@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/147] 6.6.81-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	nik.borisov@suse.com, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 6, 2025 at 11:44=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
+On Thu, 6 Mar 2025 at 20:50, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Fri 2025-02-21 15:34:31, Tamir Duberstein wrote:
-> > Move all tests into `printf_test_cases`. This gives us nicer output in
-> > the event of a failure.
-> >
-> > Combine `plain_format` and `plain_hash` into `hash_pointer` since
-> > they're testing the same scenario.
-> >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  lib/tests/printf_kunit.c | 331 +++++++++++++++++----------------------=
---------
-> >  1 file changed, 121 insertions(+), 210 deletions(-)
-> >
-> > diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
-> > index 287bbfb61148..013df6f6dd49 100644
-> > --- a/lib/tests/printf_kunit.c
-> > +++ b/lib/tests/printf_kunit.c
-> > @@ -38,13 +38,8 @@ static unsigned int total_tests;
-> >  static char *test_buffer;
-> >  static char *alloced_buffer;
-> >
-> > -static struct kunit *kunittest;
-> > -
-> > -#define tc_fail(fmt, ...) \
-> > -     KUNIT_FAIL(kunittest, fmt, ##__VA_ARGS__)
-> > -
-> > -static void __printf(4, 0)
-> > -do_test(int bufsize, const char *expect, int elen,
-> > +static void __printf(5, 0)
-> > +do_test(struct kunit *kunittest, int bufsize, const char *expect, int =
-elen,
-> >       const char *fmt, va_list ap)
-> >  {
-> >       va_list aq;
-> > @@ -58,59 +53,64 @@ do_test(int bufsize, const char *expect, int elen,
-> [...]
-> >
-> >       if (memcmp(test_buffer, expect, written)) {
-> > -             tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expe=
-cted '%.*s'",
-> > -                     bufsize, fmt, test_buffer, written, expect);
-> > +             KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wr=
-ote '%s', expected '%.*s'",
-> > +                        bufsize, fmt, test_buffer, written, expect);
-> >               return;
-> >       }
-> >  }
-> >
-> > -static void __printf(3, 4)
-> > -__test(const char *expect, int elen, const char *fmt, ...)
-> > +static void __printf(4, 0)
+> This is the start of the stable review cycle for the 6.6.81 release.
+> There are 147 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> This should be:
+> Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
+> Anything received after that time might be too late.
 >
-> static void __printf(4, 5)
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.81-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
 >
-> The 2nd parameter is zero when the variable list of parameters is
-> passed using va_list.
+> thanks,
+>
+> greg k-h
 
-Yeah, thanks for the catch. I fixed this locally after you observed
-the same on the scanf-kunit series.
 
-> > +__test(struct kunit *kunittest, const char *expect, int elen, const ch=
-ar *fmt, ...)
-> >  {
-> >       va_list ap;
-> >       int rand;
-> >       char *p;
->
-> > @@ -247,89 +225,44 @@ plain_format(void)
-> >  #define ZEROS ""
-> >  #define ONES ""
-> >
-> > -static int
-> > -plain_format(void)
-> > -{
-> > -     /* Format is implicitly tested for 32 bit machines by plain_hash(=
-) */
-> > -     return 0;
-> > -}
-> > -
-> >  #endif       /* BITS_PER_LONG =3D=3D 64 */
-> >
-> > -static int
-> > -plain_hash_to_buffer(const void *p, char *buf, size_t len)
-> > +static void
-> > +plain_hash_to_buffer(struct kunit *kunittest, const void *p, char *buf=
-, size_t len)
-> >  {
-> > -     int nchars;
-> > -
-> > -     nchars =3D snprintf(buf, len, "%p", p);
-> > -
-> > -     if (nchars !=3D PTR_WIDTH)
-> > -             return -1;
-> > +     KUNIT_ASSERT_EQ(kunittest, snprintf(buf, len, "%p", p), PTR_WIDTH=
-);
-> >
-> >       if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) =3D=3D 0) {
-> >               kunit_warn(kunittest, "crng possibly not yet initialized.=
- plain 'p' buffer contains \"%s\"",
-> >                       PTR_VAL_NO_CRNG);
-> > -             return 0;
-> >       }
-> > -
-> > -     return 0;
-> >  }
-> >
-> > -static int
-> > -plain_hash(void)
-> > -{
-> > -     char buf[PLAIN_BUF_SIZE];
-> > -     int ret;
-> > -
-> > -     ret =3D plain_hash_to_buffer(PTR, buf, PLAIN_BUF_SIZE);
-> > -     if (ret)
-> > -             return ret;
-> > -
-> > -     if (strncmp(buf, PTR_STR, PTR_WIDTH) =3D=3D 0)
-> > -             return -1;
-> > -
-> > -     return 0;
-> > -}
-> > -
-> > -/*
-> > - * We can't use test() to test %p because we don't know what output to=
- expect
-> > - * after an address is hashed.
-> > - */
-> >  static void
-> > -plain(void)
-> > +hash_pointer(struct kunit *kunittest)
-> >  {
-> > -     int err;
-> > +     if (no_hash_pointers)
-> > +             kunit_skip(kunittest, "hash pointers disabled");
-> >
-> > -     if (no_hash_pointers) {
-> > -             kunit_warn(kunittest, "skipping plain 'p' tests");
-> > -             return;
-> > -     }
-> > +     char buf[PLAIN_BUF_SIZE];
-> >
-> > -     err =3D plain_hash();
-> > -     if (err) {
-> > -             tc_fail("plain 'p' does not appear to be hashed");
-> > -             return;
-> > -     }
-> > +     plain_hash_to_buffer(kunittest, PTR, buf, PLAIN_BUF_SIZE);
-> >
-> > -     err =3D plain_format();
-> > -     if (err) {
-> > -             tc_fail("hashing plain 'p' has unexpected format");
-> > -     }
-> > +     /*
-> > +      * We can't use test() to test %p because we don't know what outp=
-ut to expect
-> > +      * after an address is hashed.
-> > +      */
->
-> The code does not longer print a reasonable error message on failure.
-> I would extend the comment to make it easier to understand the
-> meaning. Also I would use the imperative style. Something like:
->
->         /*
->          * The hash of %p is unpredictable, therefore test() cannot be us=
-ed.
->          * Instead, verify that the first 32 bits are zeros on a 64-bit s=
-ystem,
->          * and confirm the non-hashed value is not printed.
->          */
+Regressions on i386 the defconfig builds failed with clang-20
+and gcc-13 the stable-rc 6.6.81-rc2.
 
-I'll make this change. Note that this comment isn't changing here, it
-only appears to be because its indentation changed.
+First seen on the
+ Good: v6.6.78
+ Bad: v6.6.78-442-g8f0527d547fe
 
-> > +
-> > +     KUNIT_EXPECT_MEMEQ(kunittest, buf, ZEROS, strlen(ZEROS));
-> > +     KUNIT_EXPECT_MEMNEQ(kunittest, buf+strlen(ZEROS), PTR_STR, PTR_WI=
-DTH);
->
-> This looks wrong. It should be either:
->
->         KUNIT_EXPECT_MEMNEQ(kunittest, buf, PTR_STR, PTR_WIDTH);
->
-> or
->
->         KUNIT_EXPECT_MEMNEQ(kunittest,
->                             buf + strlen(ZEROS),
->                             PTR_STR + strlen(ZEROS),
->                             PTR_WIDTH - strlen(ZEROS));
->
-> I would use the 1st variant. It is easier and it works the same way
-> as the original check.
+* i386 build
+  - clang-20-defconfig
+  - clang-nightly-defconfig
+  - gcc-13-defconfig
+  - gcc-8-defconfig
 
-Ah, I see. Done as you ask.
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
->
-> Anyway, it is a great clean up of the pointer tests. I have wanted to do =
-it
-> since a long time but I never found time.
+Build regression: i386 microcode core.c use of undeclared identifier
+'initrd_start_early'
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Thanks!
+## Build log
+arch/x86/kernel/cpu/microcode/core.c:198:11: error: use of undeclared
+identifier 'initrd_start_early'; did you mean 'initrd_start'?
+  198 |                 start = initrd_start_early;
+      |                         ^~~~~~~~~~~~~~~~~~
+      |                         initrd_start
+include/linux/initrd.h:18:22: note: 'initrd_start' declared here
+   18 | extern unsigned long initrd_start, initrd_end;
+      |                      ^
+1 error generated.
 
-> >  }
-> >
-> >  static void
-> > -test_hashed(const char *fmt, const void *p)
-> > +test_hashed(struct kunit *kunittest, const char *fmt, const void *p)
-> >  {
-> >       char buf[PLAIN_BUF_SIZE];
-> > -     int ret;
-> >
-> > -     /*
-> > -      * No need to increase failed test counter since this is assumed
-> > -      * to be called after plain().
-> > -      */
-> > -     ret =3D plain_hash_to_buffer(p, buf, PLAIN_BUF_SIZE);
-> > -     if (ret)
-> > -             return;
-> > +     plain_hash_to_buffer(kunittest, p, buf, PLAIN_BUF_SIZE);
-> >
-> >       test(buf, fmt, p);
-> >  }
-> > @@ -739,11 +664,9 @@ flags(void)
-> >                                                       (unsigned long) g=
-fp);
-> >       gfp |=3D __GFP_HIGH;
-> >       test(cmp_buffer, "%pGg", &gfp);
-> > -
-> > -     kfree(cmp_buffer);
->
-> I belive that the kfree() should stay. Otherwise, the test leaks memory
-> in every run.
+## Source
+* Kernel version: 6.6.81-rc2
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* Git sha: 8f0527d547fe50fe08bab12d39c9a2cfb4f6ef3f
+* Git describe: v6.6.78-442-g8f0527d547fe
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-437-g9f243f9dd268
 
-This memory is now allocated using `kunit_kmalloc`:
+## Build
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-442-g8f0527d547fe/testrun/27525967/suite/build/test/clang-20-lkftconfig/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-442-g8f0527d547fe/testrun/27526163/suite/build/test/clang-20-lkftconfig/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.78-442-g8f0527d547fe/testrun/27526163/suite/build/test/clang-20-lkftconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2twuoLsehi5aV5tpYyqa6pqU9cZ/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2twuoLsehi5aV5tpYyqa6pqU9cZ/config
 
->  * kunit_kmalloc() - Like kmalloc() except the allocation is *test manage=
-d*.
-> [...]
->  * See kmalloc() and kunit_kmalloc_array() for more information.
+## Steps to reproduce
+- tuxmake --runtime podman --target-arch i386 --toolchain clang-20
+--kconfig defconfig LLVM=1 LLVM_IAS=1
 
-`kunit_kmalloc_array`:
 
-> * Just like `kmalloc_array(...)`, except the allocation is managed by the=
- test case
-> * and is automatically cleaned up after the test case concludes. See kuni=
-t_add_action()
-> * for more information.
-
-So this kfree is not necessary.
-
->
-> >  }
-> >
-> > -static void fwnode_pointer(void)
-> > +static void fwnode_pointer(struct kunit *kunittest)
-> >  {
-> >       const struct software_node first =3D { .name =3D "first" };
-> >       const struct software_node second =3D { .name =3D "second", .pare=
-nt =3D &first };
->
-> Otherwise, it looks good to me.
->
-> Best Regards,
-> Petr
+--
+Linaro LKFT
+https://lkft.linaro.org
