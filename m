@@ -1,80 +1,96 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9691FC7D5;
-	Thu,  6 Mar 2025 08:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E171DF964;
+	Thu,  6 Mar 2025 08:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248757; cv=none; b=q5nqxYzsP/BPFjWAaTEWE2EpfR3UzlJTFk8viT9ML1o4CRpZlJWi438s1ISfG8nKvjqbNJN4b7M4uOJdRm1sMYxwObNfaOc00RmVvrhSmde4a1Z4P5FU/ADBvWaYIpCygIy/UsD/UKNeE5jwauved1jgIi+bgtJxxDZF517pego=
+	t=1741248768; cv=none; b=eLkMHO2RGXEVFpitqjxw/GLCAKjDQ3cGG0ThTZkgoQKCpmFC9j3aICDVbS9JVP05vc0rUey0uYTpRDCnxoDX/MQRsolC5RlCTdS/ccAnH+RMkZj07Yfra644GqN/2RGYl9/Q+omIDAu6BDhITR0Dbz4gb+hj9jWLx+31j3Cm8wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248757; c=relaxed/simple;
-	bh=r2SNjSzrTJri8d4TezjFMm+gimnEBaOKUfo4+QtRBeI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B1/5VRgOrtBatUDZ09pwrfd6RIjU7pF8to5sVRSGyhmhq99875pFWayJeeyPFbbIw41sc6TB878ZJXkVXKUFkbjMHyjyFtzAC4l3DegmesVGZrL/IEZifK29mW+xLtQ8cGUAKWIHNerFCRRyx160qhgRQJcQtdzz7gqSs4SGuPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7443C1A1021;
-	Thu,  6 Mar 2025 09:03:52 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B8D91A1018;
-	Thu,  6 Mar 2025 09:03:52 +0100 (CET)
-Received: from lsv03121.swis.in-blr01.nxp.com (lsv03121.swis.in-blr01.nxp.com [92.120.146.118])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 693181800257;
-	Thu,  6 Mar 2025 16:03:50 +0800 (+08)
-From: Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>
-To: miquel.raynal@bootlin.com,
-	conor.culhane@silvaco.com,
-	alexandre.belloni@bootlin.com,
-	linux-i3c@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	manjunatha.venkatesh@nxp.com,
-	rvmanjumce@gmail.com
-Subject: [PATCH v2] svc-i3c-master: Fix read from unreadable memory at svc_i3c_master_ibi_work()
-Date: Thu,  6 Mar 2025 13:33:45 +0530
-Message-ID: <20250306080345.243957-1-manjunatha.venkatesh@nxp.com>
-X-Mailer: git-send-email 2.46.1
+	s=arc-20240116; t=1741248768; c=relaxed/simple;
+	bh=91HAbFKr7vBKjRHPh0vxDKg8p6ugHwwzn5VdM9GPrV8=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=RQfu5ptIh9ovosZAiVabAESU2JrpUUko7DcvT9U1e7VSesA0+ka/sKkdSIHOZePal5jthCF4jLq+p0f+HLXk9eJw3pQBpPtjx8gpPYYM7TkJ/prXAauiGYwYzi+PZ3FYPuW/BHtUiyEvzV4ZljO+DfyYs1g5yE5PVr7SqS9nbtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVTVvhdZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVTVvhdZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81449C4CEE0;
+	Thu,  6 Mar 2025 08:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741248768;
+	bh=91HAbFKr7vBKjRHPh0vxDKg8p6ugHwwzn5VdM9GPrV8=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=YVTVvhdZD38kw3XWzYl9bT4ixATz5AjarMGBIoTY8YrM7wEDY5vmkHwThyQ2Fa8CF
+	 z4l/hAwV7fDGOU8rWHADcuNoC9rC8xwfzthkIHESwQs0tjlR+cXfNpYJuJmHzMO/q6
+	 Ukkof8dlEA8MburZ+4uARDiwV9tgmhVBtbiZIO7PsIQpXfW8Q+2fZLUZwyXWxmLSMA
+	 gRwX3iWEcR1hSIjp5i+42JwKXDeVALajUkmtrL+VEJwkG/NGaWZCNcuYo0Jjcyem8+
+	 K4yDivhSwyeqUYUyA+9aDI6frqoWL+AC4qFo4Rq+gG3l4SVWdGDvySYUdwtB1kbS+0
+	 g7HYswoOr/gUA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250305235307.14829-1-qasdev00@gmail.com>
+References: <20250305235307.14829-1-qasdev00@gmail.com>
+Subject: Re: [PATCH] net-sysfs: fix NULL pointer dereference
+From: Antoine Tenart <atenart@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Qasim Ijaz <qasdev00@gmail.com>, aleksander.lobakin@intel.com, davem@davemloft.net, edumazet@google.com, horms@kernel.org, jdamato@fastly.com, kuba@kernel.org, pabeni@redhat.com
+Date: Thu, 06 Mar 2025 09:12:44 +0100
+Message-ID: <174124876418.4824.8589202932419197412@kwain>
 
-As part of I3C driver probing sequence for particular device instance,
-While adding to queue it is trying to access ibi variable of dev which is
-not yet initialized causing "Unable to handle kernel read from unreadable
-memory" resulting in kernel panic.
+Quoting Qasim Ijaz (2025-03-06 00:53:07)
+> Commit <79c61899b5ee> introduces a potential NULL pointer dereference=20
+> in the sysfs_rtnl_lock() function when initialising kn:
+>=20
+>         kn =3D sysfs_break_active_protection(kobj, attr);
+>        =20
+> The commit overlooks the fact that sysfs_break_active_protection can=20
+> return NULL if kernfs_find_and_get() fails to find and get the kernfs_nod=
+e=20
+> with the given name.=20
 
-Signed-off-by: Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>
----
-Changes since v1:
-  - Patch tittle updated as per the review feedback
+If it fails to get it, should we let sysfs_rtnl_lock continue is
+execution?
 
- drivers/i3c/master/svc-i3c-master.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+> Later on the code calls sysfs_unbreak_active_protection(kn)=20
+> unconditionally, which could lead to a NULL pointer dereference.
+>=20
+> Resolve this bug by introducing a NULL check before using kn
+> in the sysfs_unbreak_active_protection() call.
 
-diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-index d6057d8c7dec..98c4d2e5cd8d 100644
---- a/drivers/i3c/master/svc-i3c-master.c
-+++ b/drivers/i3c/master/svc-i3c-master.c
-@@ -534,8 +534,11 @@ static void svc_i3c_master_ibi_work(struct work_struct *work)
- 	switch (ibitype) {
- 	case SVC_I3C_MSTATUS_IBITYPE_IBI:
- 		if (dev) {
--			i3c_master_queue_ibi(dev, master->ibi.tbq_slot);
--			master->ibi.tbq_slot = NULL;
-+			data = i3c_dev_get_master_data(dev);
-+			if (master->ibi.slots[data->ibi]) {
-+				i3c_master_queue_ibi(dev, master->ibi.tbq_slot);
-+				master->ibi.tbq_slot = NULL;
-+			}
- 		}
- 		svc_i3c_master_emit_stop(master);
- 		break;
--- 
-2.46.1
+Did you see this in practice? Can you describe what led to this?
 
+Thanks!
+Antoine
+
+> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+> Fixes: 79c61899b5ee ("net-sysfs: remove rtnl_trylock from device attribut=
+es")
+> ---
+>  net/core/net-sysfs.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> index 8d9dc048a548..c5085588e536 100644
+> --- a/net/core/net-sysfs.c
+> +++ b/net/core/net-sysfs.c
+> @@ -117,7 +117,8 @@ static int sysfs_rtnl_lock(struct kobject *kobj, stru=
+ct attribute *attr,
+>          * the rtnl lock.
+>          */
+>  unbreak:
+> -       sysfs_unbreak_active_protection(kn);
+> +       if (kn)
+> +               sysfs_unbreak_active_protection(kn);
+>         dev_put(ndev);
+> =20
+>         return ret;
+> --=20
+> 2.39.5
+>=20
+>
