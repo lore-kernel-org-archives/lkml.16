@@ -1,128 +1,124 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34AD1FF7CC;
-	Thu,  6 Mar 2025 10:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059C91FDE37
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741256059; cv=none; b=HD4MEMKqW45Cxzx9yehP8Zx4l2ER7oSRvapnM2bLf6TOB2f8BUP13TKqHmwyyLy3C4eQdVT9igGHA6hP3W8ebG/rP967cS2c4j37A7v1gCMs+axmtAywygvLHW5SnoMBq+ZOxcJpW0kUYVbpt7eGtMwLY7T4Fa2cIwmuoyLhoWU=
+	t=1741256092; cv=none; b=PRCJi5F3dMvv0dvkXUZorGWNOMj4et8hgS5S6qtpXvdj16u5k3oVsqSy/GH4X3UemwBrwpaBR0wDgQd8IEgvxih/Aqtea2ixoBHA5eCCBCA+MjtKbeSh5eMC7KItKxdui1/gRAlvNOj3wjOkkjloiaH3VF21Ey92YN7+hOrmGoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741256059; c=relaxed/simple;
-	bh=sx8yumw7/slQUX1H6tCQVoJjkcOlHDuGOyOYDOcCSjI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jb8KqRt60FhIlWQa94hp3xgkqhWTgdVaA43uRyRBVixlwbrrWIhJyOmGsYCbqPr6g3hz3MRV6AJSnmiExzX8CeKncfBh7We0Do+Z4klQADcrisp10hwjaHJLBiJdh493UPHN86VOPkvsoccH6AhD8fylRycARJx0B0pZS6QTbNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWZswxCu; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741256092; c=relaxed/simple;
+	bh=Eb7POQGunjSjP8253tuV8Q/qASH50C+05IivcjCHmm4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NKfS1t3XDppzcm/rYmhFdKUzxDh+kZKq69qVBY5z1w7iLkJ4vkTGPZ+s46lBLuxa0ji9OxffdGiafwTC/PujuPf0n+1/bqWw1Tw8BW76VLbC97bqIiOTn86WBhAlAQ4BfWjbmED5+2rAMOLoRgaA5gANSjP3XAy4b6nDK6lIcVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GUid9j3C; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWZswxCu"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30ba5cccc19so4710911fa.1;
-        Thu, 06 Mar 2025 02:14:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GUid9j3C"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e535e6739bso701571a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 02:14:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741256056; x=1741860856; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SC6AHDf1+LSGmHO4yF1LlfxNEvEUB10IW0zw+9ERfVQ=;
-        b=gWZswxCu6wptNfsZBfZ/eB3qYEsrCKBljuJ8repXjxS8fiNA9aEbHEBF3FZRkWXapT
-         tV6jngcZs/knqYGDq7RIyHzy1JdSKmj1gWsTnbk+LrF9Tu+uda1Sl0mFaq7MqW5OHEES
-         6DIuAueXGjjv2zNTvo5u9soB0Cpzfwy/4Ww1iz4kXMjBmmfH9fkd9hI6AiUxf5MIWQ2b
-         a8Ibec9+1zHn+yNofhHW6ts7hCPYGpTflK6YPwcMTX1UzC/ZuLCOcfnmA6oDJLDX6X7k
-         98+A7g0B8gYOepQzBfBdTTXUvW3MMr4DaPvxj9YG8ILSL2aIaVKOsNkIqRFnXCJbQaq9
-         HJnw==
+        d=linaro.org; s=google; t=1741256089; x=1741860889; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gea8RDhxW52XRzq4nksHK4G+nluCQdGJ7LngFtiewMU=;
+        b=GUid9j3CNEGR5PKeXsIF1jHf3M53CacaM/BkJA8fOKzPaBkznlW1xdJGP8Zzad6P0f
+         MEth7R5KTVrq3KmnY/GVeC8DWovh1uBga4Zvae3LB40BSgaXuyTcqcsb2J+rQW4wLt5p
+         eI/4rBHnbqfyQppKe5mXCrf0GyD4hUJZEIscC24U8aAEUdUYX01sprenZO5Gaii7hjEO
+         dN2+kg9thQ1yrzJ8gHCTzDV5LvtKsAw2TGeE4cPkkHNNls53Bfp2YPO2S0Kg5ICCUJYn
+         z3Mgfqi4fcs5oKT9bDEfd9iaW68u8KXsQDV4/4Qdlsi4r3e2jxxZQ9tHuCKG/KmoX4e5
+         Ba9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741256056; x=1741860856;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1741256089; x=1741860889;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SC6AHDf1+LSGmHO4yF1LlfxNEvEUB10IW0zw+9ERfVQ=;
-        b=McXTGvouSdZKC9FxJANPOSTZM2m2UNCnpzkGDXEdk+CpL8zwjHiF+ajlmH0dlXzC7y
-         g0g0VCyUuNCVVTxSfY54hzp2Py6so1hIqEpGyJjy3OkUCggXDgdDijc/SJ/38LKM9IQF
-         jNcGSL6/lC3cNX4mkrC8Onvw5UQvfhacOU/9HlKzRA1fFlfCPwEG/XtHl4a6t7uf5PSc
-         pCfZaWt+UEkEtMlCfBgjYxbGwpLVs1wtWIw12wloLQFO80ALB4VKHlcItiKREY7EWCuL
-         2ps2pixjaZwh+FjAslwds18vuQGzI+t6zyIvj8ahtRU3tiYLkWzDGftYRYpAeucjQvG9
-         t9UA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKSbofjdqltj2J2eZ2fRZTODPs6lxvry4AchXSVbZqX6GpbwU0Q5Xyloe0IAJUESZE9B/E4aDyE36UsoU=@vger.kernel.org, AJvYcCWre6+Q6stbhZabu6QE0voQF7rW/ePQ+sIpohMf9Z/3pGk1khomYOc90YU1zuQG5/iLbH5YGXaM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1EbJJK9P1OLWdVp48mnnGd4OV3t4OdzsLcxN3ZjVBDxmm05Ik
-	O/QU6eDNOryrMfT71ZswIM8aYvjRWUGOA4nQcv6BB1RctNsn3KRb
-X-Gm-Gg: ASbGncsIFtg6oo0rTYxNgBYVdy6+ArKVh6gfYiTrM2QMBWTpIJRhRUJRpLKuOk5p/ID
-	FWmYVIf6En2MJqmv/itET6YoFwhFovtZvBBHOl4ZNrPQlbJJU1WXL9i1GTGlG04UJYC2oah6Nxf
-	KSRdKEevTm+imr+ki30fU0ZYTTRvcKbgopL7E8hTm9W0A21Tu3KAoTs8bYiwmMurY8tNNGnWXGt
-	HcM6z6liAy/mtUIbIpO+PdsbQU7CDqPxpMWYd2zOtskVlPo3OJ5Bvky24FzOj30l0xTB+DBhweB
-	Kw+cybtwKV6D/yXLgwrCCwdtOZhjiY5RKQ0ZVkVUc9SaGCRmxcxgSraD3aPsaBKgatCP1qq1xbr
-	vKA15C9mrdeg=
-X-Google-Smtp-Source: AGHT+IHVUL4RmtkhR/oSDlMOZ3ZOLWUDnE3XMBPxWsK2S/UqrYa1tBtOoYQq3Q6pxGdr9M6ejBkxaA==
-X-Received: by 2002:a2e:bc06:0:b0:30b:cd68:b69c with SMTP id 38308e7fff4ca-30bd7a1c6admr24523521fa.3.1741256055483;
-        Thu, 06 Mar 2025 02:14:15 -0800 (PST)
-Received: from rand-ubuntu-development.dl.local (mail.confident.ru. [85.114.29.218])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30be98d09e2sm1550631fa.12.2025.03.06.02.14.15
+        bh=gea8RDhxW52XRzq4nksHK4G+nluCQdGJ7LngFtiewMU=;
+        b=SRQ0wGr8pbmPom6S2ghY7K5UR1XEVjP81yi6kRMx8XcWmuyHwt0MPzhfxizsc0FLHs
+         +22R5YhRp1OGWYRPKR3zH1dEwnSYvWn7gMyWJnz1nUteV3jglMPw3js7hmnGoZO/fZbB
+         E15h9jQnXFQp0lGtdoEzRtemCzZ7E16P72NurTclR3gwFXPZeMIJN3WkdGu+m/OD47JT
+         GuEetDk5BaF7lRFvBeXAPwXUUSQ4qn0/T56ZcFsn8X27V7KSBeKJApfDVnoheFr4irSK
+         wYKI4gLEo2VnMTdhyuwgakjIC24Hn29aTGWO8EscHhXntQ3CobyvbzI3/Mp5iCwEeUTI
+         TeLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWBhjWvB7bsZHZyvb94mxjnbTIS4DUAu9oiiQ43rnn/Ox/vx57RGVumCI3VURsTAb9dKEsfi9soR6V5fjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH8BJq6gOBH514yrNbmChg3xaxGfMi8i94Kj40XbvaBB/coAGZ
+	7a4hRZHHALEGHs6AA/6Vm5E0OptKG8q9uniF3V3SXa61IwwNxzKptWqVFlrUzFM=
+X-Gm-Gg: ASbGncsRjzo7CFnKREVnQsHgcNEeW5QI/gYnKBOLVCLam2/t+rMYbo50/hDHACWnBrq
+	Ml7Sb3vhtll5/ypDMd0rTAP78VdokZwMD0uDfMySflAehmZWDYAOLv7gkri4BfXfs8iZEqQaq3+
+	KiuN8hJRnRm31uMC1bnMnCUsyweyKjhYbO4A4JwCYydQ77xe+e8F6STFqo4iwjGbwkxO+b3Cg3O
+	rY2Ikf2ebjpvNNq4cUUP25e6kX3Q0GyFoqFZbqpYSDtdpdcFQHzcAzbouBf0m4mRGlZAsVPmNDZ
+	e3DLqEdTSu/qpraHxckgBVzGSruDR9WJQRgTUoM5p7MqJov5t9Td4XlXsRPxm3UGlagw2Mb4fSM
+	S0VGAaHGeT0CKMCrcAHJuljOkUm/T
+X-Google-Smtp-Source: AGHT+IEgLGcDGlkE6kWAXN5bUDSnAdelHUlOLrSKWe6iPW2qcxJJbof7KnLLgyUzGGWjzI7ZpD00UQ==
+X-Received: by 2002:a05:6402:434a:b0:5e5:c0e7:f455 with SMTP id 4fb4d7f45d1cf-5e5c0e7f696mr2569873a12.8.1741256089115;
+        Thu, 06 Mar 2025 02:14:49 -0800 (PST)
+Received: from puffmais.c.googlers.com (30.171.91.34.bc.googleusercontent.com. [34.91.171.30])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c74a6af7sm708972a12.33.2025.03.06.02.14.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 02:14:15 -0800 (PST)
-From: Rand Deeb <rand.sec96@gmail.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
-	netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: deeb.rand@confident.ru,
-	lvc-project@linuxtesting.org,
-	voskresenski.stanislav@confident.ru,
-	Rand Deeb <rand.sec96@gmail.com>
-Subject: [PATCH] ixgbe: Fix unreachable retry logic in combined and byte I2C write functions
-Date: Thu,  6 Mar 2025 13:12:00 +0300
-Message-Id: <20250306101201.1938376-1-rand.sec96@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Thu, 06 Mar 2025 02:14:48 -0800 (PST)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Subject: [PATCH 0/3] gs101 max77759 enablement (DT)
+Date: Thu, 06 Mar 2025 10:14:45 +0000
+Message-Id: <20250306-b4-max77759-mfd-dts-v1-0-9fe8b0eb8123@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJV1yWcC/x3MywqAIBBA0V+JWTdgD7X6lWiROtYseqARQvTvS
+ cuzuPeBSIEpwlA8EOjmyMeeUZUF2HXeF0J22VCLWopGKDQtbnPSWsseN+/QXRG96TqjrDJOCcj
+ lGchz+q/j9L4fWtwzJWUAAAA=
+X-Change-ID: 20250306-b4-max77759-mfd-dts-fb88b6c6bd60
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-The current implementation of `ixgbe_write_i2c_combined_generic_int` and
-`ixgbe_write_i2c_byte_generic_int` sets `max_retry` to `1`, which makes
-the condition `retry < max_retry` always evaluate to `false`. This renders
-the retry mechanism ineffective, as the debug message and retry logic are
-never executed.
+Hi,
 
-This patch increases `max_retry` to `3` in both functions, aligning them
-with the retry logic in `ixgbe_read_i2c_combined_generic_int`. This
-ensures that the retry mechanism functions as intended, improving
-robustness in case of I2C write failures.
+This series enables the recently submitted Maxim max77759 driver and
+updates the DT for the Google Pixel 6 / Pro (oriole / raven) boards
+accordingly.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+!!! Dependency note !!!
 
-Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
+This series depends on the corresponding driver and DT bindings
+proposed in
+https://lore.kernel.org/r/20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org
+
+Note that in that series bindings and gpio driver are accepted, but mfd
+and nvmem drivers are still waiting for review comments.
+
+!!! Dependency note end !!!
+
+This gives us some extra GPIOs, and enables NVMEM which is used to
+communicate the requested boot mode to the bootloader when doing a cold
+reset.
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+André Draszik (3):
+      arm64: defconfig: enable Maxim max77759 driver
+      arm64: dts: exynos: gs101-pixel-common: add the MAX77759 PMIC
+      arm64: dts: exynos: gs101-pixel-common: add nvmem-reboot-mode
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
-index 0a03a8bb5f88..2d54828bdfbb 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
-@@ -167,7 +167,7 @@ int ixgbe_write_i2c_combined_generic_int(struct ixgbe_hw *hw, u8 addr,
- 					 u16 reg, u16 val, bool lock)
- {
- 	u32 swfw_mask = hw->phy.phy_semaphore_mask;
--	int max_retry = 1;
-+	int max_retry = 3;
- 	int retry = 0;
- 	u8 reg_high;
- 	u8 csum;
-@@ -2285,7 +2285,7 @@ static int ixgbe_write_i2c_byte_generic_int(struct ixgbe_hw *hw, u8 byte_offset,
- 					    u8 dev_addr, u8 data, bool lock)
- {
- 	u32 swfw_mask = hw->phy.phy_semaphore_mask;
--	u32 max_retry = 1;
-+	u32 max_retry = 3;
- 	u32 retry = 0;
- 	int status;
- 
+ .../boot/dts/exynos/google/gs101-pixel-common.dtsi | 75 ++++++++++++++++++++++
+ arch/arm64/configs/defconfig                       |  1 +
+ 2 files changed, 76 insertions(+)
+---
+base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
+change-id: 20250306-b4-max77759-mfd-dts-fb88b6c6bd60
+
+Best regards,
 -- 
-2.34.1
+André Draszik <andre.draszik@linaro.org>
 
