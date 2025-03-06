@@ -1,92 +1,141 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C452045AE;
-	Thu,  6 Mar 2025 10:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4AF1A23A2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 10:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741257854; cv=none; b=YRnRPbViALbAzNQlWBX8z3EgHK7dEivpFHrGeWA5YULYV2hC2C/paaOa+CtRaRyyePmuhvkAIqM4SzDTqhSnx6Oz1CG3nOkNdhm3gbI1ANbTa/BZao9lKTAa0bfgnsDH4DdgxCvJLDUuiB1HkEL2Qj95G1wtA79QXRwCCegqHRI=
+	t=1741257946; cv=none; b=T630ke9MKQiMpvcGxjIyN6MJd5P9bd5v7oS/N30AEU1IMgQvxfEc9o2OFR+9QOYRR2IsXukf1iugOOudGmIlZfZBsovUENkt2/FST+oTFJyyuCbPF88hh07Nrqig9alLN6BXtUMQ5kM4vPW95EnyxXfMbO9X6vaAc1/pB8F/0G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741257854; c=relaxed/simple;
-	bh=Y2Ze13u5oiC3+cLqwxTGSF5SsH2PLvoyTg85F5Ty7RA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=traxqp1NeiMTu2kNiF0HjQf3K9rP5qJUi30J94ScoSqx0GvTy6brckvJhzsuAcN8OVxkTr0J755rXR6u8afWx20ZqDAp6RLFCV3a/hCRPPqRfMSOdSSjYNJ1tNAn31qD4XMT97DLLOzhPmjt8NCFMQdHnEZ4ECsI4UShj4gYby4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowAD3_lppfMlnVXXHEg--.33580S2;
-	Thu, 06 Mar 2025 18:43:55 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: saeedm@nvidia.com,
-	leon@kernel.org,
-	tariqt@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v3] net/mlx5: handle errors in mlx5_chains_create_table()
-Date: Thu,  6 Mar 2025 18:43:37 +0800
-Message-ID: <20250306104337.2581-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1741257946; c=relaxed/simple;
+	bh=bNv2kObGR5EMr/+8H5Ii/0GRC7NMFaY3b9AJsTQZiuY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rLbBpipnLTZSAj5O+33ammqkLoNk8slILNbP76zW8XDLNLrir77bh0kUaSZUIZOpkw/AP0/G25rQn3HChmWZ0xwqmo6QcTdGjcWXh8ErtSJEDyQt0Scage0mV5zJZJvozovWdDSg8wA5UZqqu74ikuSnNEau6ZcbVwTETVL3qHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7c8RTxs; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7c8RTxs"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30613802a59so5395881fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 02:45:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741257942; x=1741862742; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bNv2kObGR5EMr/+8H5Ii/0GRC7NMFaY3b9AJsTQZiuY=;
+        b=a7c8RTxsZNT3SVX9Ce7uZwTC1TS4G3d1xZ9uvjp7oedSHZGgnm4su6MnZpFAPHefll
+         V16XKEa6e4rUOYKADlokFkexA05OFQ0TN5Bilb5ZtJNO4XzoNFnLXJ0jhaQ5JeZPIDYH
+         XtxdhXDAiQlLA2EXdrBVtLN8z8OHZEHl1nLW6S56dJVTQiyujbm1/r6SkqCQF4/XtAMB
+         YZuiTLQDNpHb2NEnkybKx9qYvKTJN5ZZW4V3a7MMFICpkzsOs6GmI9GSBNAlwuePSwce
+         CEG/dVGC6o3cbSulfS2u0O9lde4KTdUMZ+0faevLg7HYZo3gAwwJayIgFGO5GS6rCgE8
+         1y+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741257942; x=1741862742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bNv2kObGR5EMr/+8H5Ii/0GRC7NMFaY3b9AJsTQZiuY=;
+        b=Wkmirhm/7SMFhFfaDKKw84mUwTbEZwnOFv2hXWicU08IwBk+MunPsdIG+FFxNKn+9Q
+         0Bfqdc+/hkrA8AtaLVAuG/ny1ZmqktOi3gQWUP2UDVNMUvCcpI2agl95SsmT/Oowt1+C
+         Da1PpfUU7xQjAelYRFwvcwIHgdGyAaCAA67TStYl6rJJyg7G3fCLBi0VPuqyCVdR+XD4
+         ukE1FfCAx7zyBBRncmJqo6HW55x7F9ULrL3bBHqj4hQtsdc0JwPdgDhE3RPDWi4LDC28
+         6vGSQqBIjkexYbhMGwDWdmVB3NvAEu+WAUT25kzPsdic03zCybX4JOQSt8Tisi+eikmu
+         irCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdtLK6VsbpspmKSFOd/hAwVgSOSM7bomR6VKxtUwVx7wJ+AibntyFT1r/XumcUhu/EtRqsUQmSEFXlPvU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQG71dBDD2EGJPwC8d+l/jLZjpivJhyS3bnilJak09zKgCXEY7
+	b09V3qddE2MXiRHheCj+3zsO2SaoPzU7Atv4G4CM4QlFU2IdA0INIJ/Hc3Pnmn2GIEA68WyI+a+
+	b9OERA1GU6rCax4N4T8epLwO88PU=
+X-Gm-Gg: ASbGnctGTzbGZADO6ptn5Bz4QB1Q+EnfPworr0lJqBJ6f/2i4AKK2nZxJOx03xTXKVM
+	kH4jCjpdpDmLtHglJgKUMLJuEou5lLrfJKtgm+1dUpo1Px3gwJhCS3VrfyuJnGL+9xnc10Le7H7
+	NBCJll9cLo3Oixvx5XNzWgf/SuiQ==
+X-Google-Smtp-Source: AGHT+IHtr48fZTkeFEP2QP2QJIgBUVrELcSm8UZ72djIu8UdSuOEclq7Iir0pCi8Zu+PvQl6UhPw6TRTXmFxc9zAAuM=
+X-Received: by 2002:a2e:9dc4:0:b0:30b:eeea:9213 with SMTP id
+ 38308e7fff4ca-30beeea92dfmr2750751fa.17.1741257941602; Thu, 06 Mar 2025
+ 02:45:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAD3_lppfMlnVXXHEg--.33580S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF17XFyfCw1xGryxXFWrZrb_yoW8Gr1rpF
-	47AryDWrZ5J348J34UZFWFq34rua1kKa4j9Fs3K3yfZwnrXanrAF1rG34akr4jkry5G39x
-	tFn8A3WUZFZxC3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwkNA2fJcksk+wAAsI
+References: <20250228123825.2729925-1-ubizjak@gmail.com> <20f1af22-71dc-4d62-9615-03030012222e@intel.com>
+ <CAFULd4bpHGE83qc37sbh=rpGj+SFqQrsNDLzL_-NQpo6pQH3jw@mail.gmail.com>
+ <c4aca08a-95c1-48ee-b4da-55a69b74101c@intel.com> <CAFULd4YVOEtT+bsp9H7ijaoJn2e2108tWhiFarRv=QxoUMZaiw@mail.gmail.com>
+ <20250301123802.GCZ8L_qsv7-WwUwqt5@fat_crate.local> <CAFULd4b=4rHcVAVSg_3yMb8=3ReiSriw_rM4vJL9_HvheXE92w@mail.gmail.com>
+ <CAHk-=wgBMG7CcwvW15ULJOsVEq5QRSj+ccgaUJU+XGxJKeXEVw@mail.gmail.com> <20250305201429.3026ba9f@pumpkin>
+In-Reply-To: <20250305201429.3026ba9f@pumpkin>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Thu, 6 Mar 2025 11:45:38 +0100
+X-Gm-Features: AQ5f1Jr5RLTsRHKRNl-4-ba7nu6aKjXYs6WdR1kvKZUyAEyZC7JV-VIsStIL_ys
+Message-ID: <CAFULd4ZzdPcnQAELpukF4vzUnQufteNqV4BzZr3BxuzRG+XK+A@mail.gmail.com>
+Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
+ locking insns
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In mlx5_chains_create_table(), the return value of mlx5_get_fdb_sub_ns()
-and mlx5_get_flow_namespace() must be checked to prevent NULL pointer
-dereferences. If either function fails, the function should log error
-message with mlx5_core_warn() and return error pointer.
+On Wed, Mar 5, 2025 at 9:14=E2=80=AFPM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Wed, 5 Mar 2025 07:04:08 -1000
+> Linus Torvalds <torvalds@linuxfoundation.org> wrote:
+>
+> > On Tue, 4 Mar 2025 at 22:54, Uros Bizjak <ubizjak@gmail.com> wrote:
+> > >
+> > > Even to my surprise, the patch has some noticeable effects on the
+> > > performance, please see the attachment in [1] for LMBench data or [2]
+> > > for some excerpts from the data. So, I think the patch has potential
+> > > to improve the performance.
+> >
+> > I suspect some of the performance difference - which looks
+> > unexpectedly large - is due to having run them on a CPU with the
+> > horrendous indirect return costs, and then inlining can make a huge
+> > difference.
+> ...
+>
+> Another possibility is that the processes are getting bounced around
+> cpu in a slightly different way.
+> An idle cpu might be running at 800MHz, run something that spins on it
+> and the clock speed will soon jump to 4GHz.
+> But if your 'spinning' process is migrated to a different cpu it starts
+> again at 800MHz.
+>
+> (I had something where a fpga compile when from 12 mins to over 20 becaus=
+e
+> the kernel RSB stuffing caused the scheduler to behave differently even
+> though nothing was doing a lot of system calls.)
+>
+> All sorts of things can affect that - possibly even making some code fast=
+er!
+>
+> The (IIRC) 30k increase in code size will be a few functions being inline=
+d.
+> The bloat-o-meter might show which, and forcing a few inlines the same wa=
+y
+> should reduce that difference.
 
-Fixes: 39ac237ce009 ("net/mlx5: E-Switch, Refactor chains and priorities")
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c | 5 +++++
- 1 file changed, 5 insertions(+)
+bloat-o-meter is an excellent idea, I'll analyse binaries some more
+and report my findings.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c
-index a80ecb672f33..711d14dea248 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c
-@@ -196,6 +196,11 @@ mlx5_chains_create_table(struct mlx5_fs_chains *chains,
- 		ns = mlx5_get_flow_namespace(chains->dev, chains->ns);
- 	}
- 
-+	if (!ns) {
-+		mlx5_core_warn(chains->dev, "Failed to get flow namespace\n");
-+		return ERR_PTR(-EOPNOTSUPP);
-+	}
-+
- 	ft_attr.autogroup.num_reserved_entries = 2;
- 	ft_attr.autogroup.max_num_groups = chains->group_num;
- 	ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
--- 
-2.42.0.windows.2
+> OTOH I'm surprised that a single (or two) instruction makes that much
+> difference - unless gcc is managing to discard the size of the entire
+> function rather than just the asm block itself.
 
+Actually, the compiler uses estimated function code size as one of the
+conditions when to fully (or partially - hot/cold split) inline the
+function. The estimated code size of functions that use (patched)
+locking primitives is now lower, so now they fall below the inlining
+threshold, causing the compiler to do more inlining. Compiler knows
+the performance/size tradeoff of setting up a function call and the
+perf/size tradeoff of creating the function frame in the called
+function and decides accordingly. Please note that the inlining is
+multi-level, so it doesn't stop at the first function.
+
+Thanks,
+Uros.
