@@ -1,33 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9CE20371F;
-	Thu,  6 Mar 2025 11:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA791EE03B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741262222; cv=none; b=DL5KQ3frdtDTd3zlskcrYYdXm9PY/CUF1Bd7g3I5GUBq7MoRYCffb6v4ud/0vJnHMOzhgrdjvyWgl9r2HsLjuo6b1Sx2Ftvu+VcaXA/ZYQ0xhzb/MDJZnsmBN2GNO5kkSX21wNHWKRcPYnuCBvLFQINamBq4uFuv1cWO6UU5fIE=
+	t=1741262261; cv=none; b=RxJJiHpi3LMU7Rg+L9vs6ucyFiwkX2th9uMTSyHDtTY9qYjLpfxB7hsSZtuA/S0kEmX+AsLvW5+8aI8eqHn5XauNvhziESjGvSv6rYCL4WvVnMktAgQ2zph6UOkMGHjpsQ6umAFtvMM8T6UYvVgnZCrEkO0JMnPn/CBTyCAfjXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741262222; c=relaxed/simple;
-	bh=G01RTVIeXOf6DrzPUQQ5C7Z2zidGc3v8Gt+/9EHtOFg=;
+	s=arc-20240116; t=1741262261; c=relaxed/simple;
+	bh=7hK0au45unlHAeUSkndZKafPwMo0WsbkAGoXC+u3dWU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I4avDK5e67eaF0mTiAL48Hq+fYLxu5REcAML8cXzxRoQi2Vo7P21Hs5/ehWulKapF5+akHMM0nkbJctXdMQeWv3U7QC9+E8zMeCpv1EnE5P/SVzr4PKpAo7emgbJevNa9nT0YqH3xXzw7n+jcqSFU6xyV0ZV9+UuVbxFsvb1Kkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd36YxGP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd36YxGP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAFE5C4CEE0;
-	Thu,  6 Mar 2025 11:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741262221;
-	bh=G01RTVIeXOf6DrzPUQQ5C7Z2zidGc3v8Gt+/9EHtOFg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fd36YxGPDjRZEWXAu7gJvUw6HxvxlH77r9HD9BdNok4cI2kkY5qNT+IaqduH/OmVi
-	 7PHyii+8XbcdJnIh0onGNXDZjdO/qksqN0AMzdUtE/3MdWbDM/2ln6QnYzavfDdt3b
-	 v09sTV0JFQC8JXWzuepzuS5E7QjvlQveIodZi2+/slBgx/MFR7tbIHyEviNlOT0i4U
-	 eYbFuCTmfqUuG3CK0lUdwgn2o60wTGcKyhAMmNV/vDM+fiLqcXxOzQPuNgtc/1ouXj
-	 l7f/NnmGy+uSamugDaEdKvw/OcnLIW8AZZ6F3YTtUUIaIgmVvFkEBV8LgXmI+clkmr
-	 wIXpmri9gSXcw==
-Message-ID: <d399a2be-3010-43fc-9531-e4f3560ea6df@kernel.org>
-Date: Thu, 6 Mar 2025 12:56:52 +0100
+	 In-Reply-To:Content-Type; b=QXzn9rrF2zg3GzoaWG/vOtt0+IVS0zHVyIKaKH9gHUPDueL9re6E+7351+KjJn+4gA5dRk7ckvXLLzRQV/OJFLME9nP6OIy8lgZdcc/BzW8MstlSOfnfnohu/qhAbBnvPVRwN1a5BpzTcewn9JqfDZw39QI9TOm/pTioV9U1fgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 451121007;
+	Thu,  6 Mar 2025 03:57:52 -0800 (PST)
+Received: from [10.1.37.172] (XHFQ2J9959.cambridge.arm.com [10.1.37.172])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61B223F673;
+	Thu,  6 Mar 2025 03:57:38 -0800 (PST)
+Message-ID: <5f1b36e2-6455-44d9-97b0-253aefd5024f@arm.com>
+Date: Thu, 6 Mar 2025 11:57:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,81 +27,191 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 0/7] Add PCIe support for Qualcomm IPQ5332
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, p.zabel@pengutronix.de,
- quic_nsekar@quicinc.com, dmitry.baryshkov@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org
-References: <20250220094251.230936-1-quic_varada@quicinc.com>
- <20250220144551.GB1777078@rocinante>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250220144551.GB1777078@rocinante>
+Subject: Re: [PATCH] arm64/mm: Create level specific section mappings in
+ map_range()
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250303041834.2796751-1-anshuman.khandual@arm.com>
+ <0fe6f3b2-1011-4418-bc19-612a3b98c78d@arm.com>
+ <e0c2841b-3776-4d78-9514-b03ada39c739@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <e0c2841b-3776-4d78-9514-b03ada39c739@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 20/02/2025 15:45, Krzysztof Wilczyński wrote:
-> Hello,
+On 06/03/2025 03:37, Anshuman Khandual wrote:
 > 
->> Patch series adds support for enabling the PCIe controller and
->> UNIPHY found on Qualcomm IPQ5332 platform. PCIe0 is Gen3 X1 and
->> PCIe1 is Gen3 X2 are added.
 > 
-> Applied to dt-bindings, thank you!
-I will send reverts for these. This patchset affects users without
-mentioning it and without providing any rationale.
+> On 3/4/25 21:51, Ryan Roberts wrote:
+>> On 03/03/2025 04:18, Anshuman Khandual wrote:
+>>> Currently PMD section mapping mask i.e PMD_TYPE_SECT is used while creating
+>>> section mapping at all page table levels except the last level. This works
+>>> fine as the section mapping masks are exactly the same (0x1UL) for all page
+>>> table levels.
+>>>
+>>> This will change in the future with D128 page tables that have unique skip
+>>> level values (SKL) required for creating section mapping at different page
+>>> table levels. Hence use page table level specific section mapping macros
+>>> instead of the common PMD_TYPE_SECT.
+>>>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Cc: Will Deacon <will@kernel.org>
+>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> ---
+>>> This patch applies on 6.14-rc5
+>>>
+>>> PGD_TYPE_SECT for level -1 section map handling has been added for 4K
+>>> base pages with 52 bit VA configuration that has 5 page table levels.
+>>> In such cases (CONFIG_PGTABLE_LEVELS = 5) early_map_kernel() can call
+>>> map_range() eventually with -1 (i.e 4 - CONFIG_PGTABLE_LEVELS) as the
+>>> root_level.
+>>
+>> Table Table D8-16 on page D8-6459 of ARM DDI 0487 L.a says that block mappings
+>> at level -1 are not permitted for 4K pages; only levels 0-3 support leaf
+>> mappings. Similarly for 16K, table D8-26 says only levels 1-3 permit leaf
+>> mappings. And for 64K, table D8-35 says only levels 1-3 permit leaf mappings.
+> 
+> Then seems like the current code is actually wrong because PMD_TYPE_SECT
+> is being set at all levels (except level 3) regardless of the configured
+> page size ?
 
-What's more, it introduces known to author warnings just to fix them
-later...
+Yes, I think so. In that case, you should mark it with Fixes: and Cc: stable.
 
-Best regards,
-Krzysztof
+But I feel like there might be some subtlely here that means that the problem
+can't happen in practice. Ard might know?
+
+> 
+>>
+>> So I don't think PGD_TYPE_SECT is the right solution. Perhaps we need to
+>> explicitly force the unsupported levels to be table entries even if the
+>> alignment is correct?
+> 
+> Just wondering - something like the following will work instead ? Tested
+> on both 4K and 64K page sizes.
+
+LGTM!
+
+> 
+> --- a/arch/arm64/kernel/pi/map_range.c
+> +++ b/arch/arm64/kernel/pi/map_range.c
+> @@ -26,6 +26,21 @@
+>   * @va_offset:         Offset between a physical page and its current mapping
+>   *                     in the VA space
+>   */
+> +static bool sect_supported(int level)
+> +{
+> +       switch(level) {
+> +       case -1:
+> +               return false;
+> +       case 0:
+> +               if(IS_ENABLED(CONFIG_ARM64_16K_PAGES) ||
+> +                  IS_ENABLED(CONFIG_ARM64_64K_PAGES))
+> +                       return false;
+> +               fallthrough;
+> +       default:
+> +               return true;
+> +       }
+> +}
+> +
+>  void __init map_range(u64 *pte, u64 start, u64 end, u64 pa, pgprot_t prot,
+>                       int level, pte_t *tbl, bool may_use_cont, u64 va_offset)
+>  {
+> @@ -44,13 +59,30 @@ void __init map_range(u64 *pte, u64 start, u64 end, u64 pa, pgprot_t prot,
+>          * Set the right block/page bits for this level unless we are
+>          * clearing the mapping
+>          */
+> -       if (protval)
+> -               protval |= (level < 3) ? PMD_TYPE_SECT : PTE_TYPE_PAGE;
+> +       if (protval && sect_supported(level)) {
+> +               switch (level) {
+> +               case 3:
+> +                       protval |= PTE_TYPE_PAGE;
+> +                       break;
+> +               case 2:
+> +                       protval |= PMD_TYPE_SECT;
+> +                       break;
+> +               case 1:
+> +                       protval |= PUD_TYPE_SECT;
+> +                       break;
+> +               case 0:
+> +                       protval |= P4D_TYPE_SECT;
+> +                       break;
+> +               default:
+> +                       break;
+> +               }
+> +       }
+>  
+>         while (start < end) {
+>                 u64 next = min((start | lmask) + 1, PAGE_ALIGN(end));
+>  
+> -               if (level < 3 && (start | next | pa) & lmask) {
+> +               if ((level < 3 && (start | next | pa) & lmask) ||
+> +                    !sect_supported(level)){
+>                         /*
+>                          * This chunk needs a finer grained mapping. Create a
+>                          * table mapping if necessary and recurse.
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>>
+>>>  arch/arm64/include/asm/pgtable-hwdef.h |  1 +
+>>>  arch/arm64/kernel/pi/map_range.c       | 23 +++++++++++++++++++++--
+>>>  2 files changed, 22 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+>>> index a9136cc551cc..fd0a82e8878c 100644
+>>> --- a/arch/arm64/include/asm/pgtable-hwdef.h
+>>> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+>>> @@ -99,6 +99,7 @@
+>>>  #define PGD_TYPE_TABLE		(_AT(pgdval_t, 3) << 0)
+>>>  #define PGD_TABLE_BIT		(_AT(pgdval_t, 1) << 1)
+>>>  #define PGD_TYPE_MASK		(_AT(pgdval_t, 3) << 0)
+>>> +#define PGD_TYPE_SECT		(_AT(pgdval_t, 1) << 0)
+>>>  #define PGD_TABLE_AF		(_AT(pgdval_t, 1) << 10)	/* Ignored if no FEAT_HAFT */
+>>>  #define PGD_TABLE_PXN		(_AT(pgdval_t, 1) << 59)
+>>>  #define PGD_TABLE_UXN		(_AT(pgdval_t, 1) << 60)
+>>> diff --git a/arch/arm64/kernel/pi/map_range.c b/arch/arm64/kernel/pi/map_range.c
+>>> index 2b69e3beeef8..9ea869f5745f 100644
+>>> --- a/arch/arm64/kernel/pi/map_range.c
+>>> +++ b/arch/arm64/kernel/pi/map_range.c
+>>> @@ -44,8 +44,27 @@ void __init map_range(u64 *pte, u64 start, u64 end, u64 pa, pgprot_t prot,
+>>>  	 * Set the right block/page bits for this level unless we are
+>>>  	 * clearing the mapping
+>>>  	 */
+>>> -	if (protval)
+>>> -		protval |= (level < 3) ? PMD_TYPE_SECT : PTE_TYPE_PAGE;
+>>> +	if (protval) {
+>>> +		switch (level) {
+>>> +		case 3:
+>>> +			protval |= PTE_TYPE_PAGE;
+>>> +			break;
+>>> +		case 2:
+>>> +			protval |= PMD_TYPE_SECT;
+>>> +			break;
+>>> +		case 1:
+>>> +			protval |= PUD_TYPE_SECT;
+>>> +			break;
+>>> +		case 0:
+>>> +			protval |= P4D_TYPE_SECT;
+>>> +			break;
+>>> +		case -1:
+>>> +			protval |= PGD_TYPE_SECT;
+>>> +			break;
+>>> +		default:
+>>> +			break;
+>>> +		}
+>>> +	}
+>>>  
+>>>  	while (start < end) {
+>>>  		u64 next = min((start | lmask) + 1, PAGE_ALIGN(end));
+>>
+
