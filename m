@@ -1,167 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00C6249E5
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BD22135A3
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 20:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741293611; cv=none; b=FnHaypruyGtjdsJsNRmA9ZWBvuoW6SI6iOekBkEKHu99xmaz5oXagT+EZ3ektkmIlAIEy3Pd9BNFnn1dHMbsgMbX2fatXdhG24RSJ2N09Vbg5VRvqAOzaFif/2uIzEtDEY+5so1UgdUU58SKAZQyid7N1XbZaA9QpR3IJEAAXmg=
+	t=1741293786; cv=none; b=h4yCVipDjc73C9X9BftVlRT4lnELBuPNOTrYS1AG4D8TKE07vEemciIJbVaREgdM5iR6jS603CvDQyittDV1RRMd5TxQjihFAyLcUYGvRWvPn8EXk5TsPG5GByWFQFp9BF8BFZc+s8h9Zw84UTJuQSH3dthTwDijQsRVx5JQbQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741293611; c=relaxed/simple;
-	bh=DEYvNVxnuG0CK4oLzt9GQAxyecFKWMQahXDamOyH+zc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=GfPHipFgkRh9kkc7KiwiR6h/XX+8QSux0Tn9EqAkfVXSEkYI2O02ru88d6d7yRTO7fOkFYHtPcFUjATdE397NT/IZ2yzffgEpfG3oIO2JyipBXdDchgRE2QzRmP/sBA3iLVXvxMBTyGDt9q2HI2ls3rLA+MvPPV2o40h5Ajvzx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IxQUD2eF; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741293786; c=relaxed/simple;
+	bh=3I8CBekQ5y/NxfRFNZcDsBWqJ6pOTtgFdlfo4wG1dyw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=A5t7leMkG+eKZaExpOxiu38gLNf46bi5RxRhIHxXM2AwVKZcebVidZMJ63ySwybgTaLXzp+qSYoOIUwff4R0BVK4xMYZ65N2YmJtgxTy3qsZNPV36XhjKHLzYiwSxzKwO4MZYalevYQQPT97Gk1rq1GbwS5oH7JVGWmL/gI49WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hq/FEjdg; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IxQUD2eF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741293609; x=1772829609;
-  h=date:from:to:cc:subject:message-id;
-  bh=DEYvNVxnuG0CK4oLzt9GQAxyecFKWMQahXDamOyH+zc=;
-  b=IxQUD2eFujre3c+y8FnDlgQKsRVzUzkdQZb9O+cByDL+0BnRkmsJGZIz
-   3hgmd20RUJpfsRfxG42uDKQfOwrJhItb/SkjllYdH1iNza6gdEX+QR7GV
-   AXOKZz7BzW2+rk0kw17r8/0GYAbgHEn30/f9kH/EJTnthjFWTj01Dw6xW
-   6o5QIq5ANQukeUf8tFej7T8ZeCMbIk63bAe/B3Qwy3VKB81LbaveNrnc+
-   JAfi/fxts63/MoRA8G76AsLVTdvB+hZTcWWAZK9x2wrdErporljII5VHe
-   jQIJQqM8mpPGuTYziZ7CQqr3o+uChkkr/FQqC9aYTcSCSfFVeyMmBzb7v
-   w==;
-X-CSE-ConnectionGUID: LaKRahq0T5Gd6qWliuUSYA==
-X-CSE-MsgGUID: ZA7lLyISSQyA+IioIjXrOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42468080"
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="42468080"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 12:40:09 -0800
-X-CSE-ConnectionGUID: Lh9/dSYhQqinMFuxrLK4pA==
-X-CSE-MsgGUID: gyOdO0+aQ9GrWYX5bANHNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="123728775"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Mar 2025 12:40:08 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tqI0j-000Nak-37;
-	Thu, 06 Mar 2025 20:40:05 +0000
-Date: Fri, 07 Mar 2025 04:39:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:non-rcu/next] BUILD SUCCESS
- ec20d53540aa1be851902a7655b20591a71672e4
-Message-ID: <202503070401.QpgWoYFz-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hq/FEjdg"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso7105185e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 12:43:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741293782; x=1741898582; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4GimjoaXXladrZg38HxX+WEY/YSmPMUaXL9bgDFdsYs=;
+        b=Hq/FEjdgnCAWesbkOC4IhhELsB0SHZoHhzLo7uX056AxRKqgNeC0VGmJjIl7RpeAKo
+         xgX24Sy5zh0CFhZaGuNjFPDGZu4M08IIg8eQqyYNQeA8Bib3dhgoJ0ZluEfrsGEA6XBW
+         Chm8GzrXpN8XpaNHSmtJCLhXUMlNDdGKoYZxmRmBE5ocsyTxuO8zqwi/XMaJTL7J/2Xh
+         /yHbemj8Z/7WWUh/ZVb/jrFhj4o6uQ1e/4uKABaBvuosVOoayuAhFmNmE2H1sLk94/tq
+         kLGBtpHOp1MR4VNLNWajM905FM+ol2P5vD+i/IyhhAETfqPGlE/QUDemXAq3cwAhWLHq
+         Fv5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741293783; x=1741898583;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4GimjoaXXladrZg38HxX+WEY/YSmPMUaXL9bgDFdsYs=;
+        b=VmfCYV842aDV0sH9wxKU30vUznap8tACgZiCWpuKiUfVdzTc3v8fe6jE7wLHEFFw6h
+         kBlZIctJwPiLfX4puaePNtxawCzxbmJj8qfD/SFr5yYsxyIwPrnjYXndpXjH2EzQQ0Sh
+         HOJL6zLGN6BxwwnpOIbUfDfk/pmAcvNh/Gt7llmoD8ureDVIUS4WUVFwCbStod7M3HKj
+         +O0Tp0mbUNWCpjw4JoPsl74hbFpOzqLH8yoiwKapNr2hYRfbn4vvsQzGslBpM+izjQSj
+         itjF060yu6otC62iZ++3iJTK73vR7qBBtWT6lqEe2HHCIAxZZrZeBKRxRTJQ7Wo1pC/p
+         Qs+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUclVtAd8uKymNqWhzwNJN8ggd69RvTGiVyL+frIVZvHgXxdp89uD9wHUU+QXqaStxXc+Cxrg2crMsUS7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfu62etyO1IBYXUhKRe3DEMBAVAWxs7KxrfMeXxtvG6UTvivZO
+	fN1SszhyWxGIIR3He/wZRzPUugb1T8Dqa5Cmx5dZZRJFBW9umK7+Vi8Ur+sdevg=
+X-Gm-Gg: ASbGncs8/cVKHIlVD6Jc3Xxr0IftvQnQiGOVmAZNq5rWLgNKDoIlacdA8Ob9BA3GEyb
+	7TuraRkBD+iizS1kAehy/uppu3A5epIw+Q3z1GPjNXx17hblzNZ1zVQgmUMoE0wU00Pr8WCHPaa
+	4AzHzM6u6hAtoC0gSsuBtBEPGTVVdW6OMld6pijlTR7SgzvrvNZk3UagqozoWKcar81oy+4+Id9
+	csO9jEihsXJleozGk/RYk6gq6RVyyVG06637bMfE+dGolMMuHOazgvL2RMIzGv4cznzJso+5hXb
+	1G9sdUYtA2yXUbIpgrN34+TShdW9pUZSZwsHCTCpPRB03sZc9cu2y0w2LZPbh0ttcgGanJc1EPo
+	=
+X-Google-Smtp-Source: AGHT+IFFBM1ec0+y9QOjsWkRze+N/TMmKsFw2dds6E7/MII8+8XfXYdGTXLu56qK+wFv8awCozTznQ==
+X-Received: by 2002:a05:600c:4450:b0:43b:d531:ca9a with SMTP id 5b1f17b1804b1-43c68702906mr6559645e9.31.1741293782422;
+        Thu, 06 Mar 2025 12:43:02 -0800 (PST)
+Received: from gpeter-l.roam.corp.google.com ([145.224.67.211])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd9470e2sm30081715e9.33.2025.03.06.12.43.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 12:43:01 -0800 (PST)
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v3 0/4] samsung: pinctrl: Add support for
+ eint_fltcon_offset and filter selection on gs101
+Date: Thu, 06 Mar 2025 20:42:34 +0000
+Message-Id: <20250306-pinctrl-fltcon-suspend-v3-0-f9ab4ff6a24e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALoIymcC/4XNTQqDMBCG4atI1k3Jn6R25T1KF0kcdUASSWxoE
+ e/e6KZ0Ubp8P5hnVpIgIiRyrVYSIWPC4EvIU0XcaPwAFLvSRDBRMy4YndG7JU60nxYXPE2PNIP
+ vqJBSGi61U50i5XiO0OPzgG/30iOmJcTX8Sfzff1LZk4ZBa0bxqwwl1q1E3oTwznEgexmFh9HM
+ v7TEcUxGqBvrFVK2i9n27Y3yVaqygUBAAA=
+X-Change-ID: 20250120-pinctrl-fltcon-suspend-2333a137c4d4
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com, 
+ semen.protsenko@linaro.org, kernel-team@android.com, 
+ jaewon02.kim@samsung.com, Peter Griffin <peter.griffin@linaro.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3165;
+ i=peter.griffin@linaro.org; h=from:subject:message-id;
+ bh=3I8CBekQ5y/NxfRFNZcDsBWqJ6pOTtgFdlfo4wG1dyw=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBnygjO1FoQGjv5WeO6HKLDs5Z3pU7BeLco3mKZb
+ JrQPhD83pGJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCZ8oIzgAKCRDO6LjWAjRy
+ uh6CD/0e3PFcWK5hQCDVm8D0hG5a9L0DcyFK5AY5V3V0os/VHVy2PDL9bwNHCbiYme2oPf3lFCg
+ O3SG6AThUsy/5ubHJaGkVCguuXbGbTO6Hi1M1jeCRAOOzKvIdlDoUYTOKoIX9BLHeKC5rS/FUof
+ WY2MG8jqRDAG6S0GP6RdP0Ga//cBzApEUskyLgdXr2K8woZSlleQ+B662bOYVm3II9KKQgVG82O
+ VVg9rifHPa/l+cnI4lL98o12pWcTPWK9UD8krJrkDS3UTl+Eu4xWRywSmYFjYVdgEQF7lbDZvNd
+ s6flonruKPVDDZAG4HLihYFFsNNFEhtyc52qhVeRmkFJxHkJo3HkSxU4roq7+OcPbFsPsLvXh/T
+ lO6qnJwxhH20G9U0KxvgeFILR63k9kpMu9e+zZ9gBra2KkcSzu/3IOb6rrmV0qS+G/Wwh+eWPFC
+ NBTMdz0XExh1O/4p2sAZWGz2VyaivgdjLD930JNziBmYMih4K1Ne1usDgT8tL/F2U0gXifuv1dy
+ AWrH6RtSZShQ6Of3ulZoa1m1bvz4offCkKbz4PFEyv/91U2p+OoOhO5v2xTLPYmXhbZ3yrc0yr1
+ 6wZY26wW2kq6kgCCejZsiRw41CaXv2e53F77BEf887Vxga8RVIdHQRtyWgAACNgZNYz+W0vyAPb
+ MefopIujLpsI7nA==
+X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
+ fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git non-rcu/next
-branch HEAD: ec20d53540aa1be851902a7655b20591a71672e4  Merge branches 'clocksource.2025.03.05a' and 'lkmm.2025.02.25a' into HEAD
+Hi folks,
 
-elapsed time: 1455m
+This series fixes support for correctly saving and restoring fltcon0
+and fltcon1 registers on gs101 for non-alive banks where the fltcon
+register offset is not at a fixed offset (unlike previous SoCs).
+This is done by adding a eint_fltcon_offset and providing GS101
+specific pin macros that take an additional parameter (similar to
+how exynosautov920 handles it's eint_con_offset).
 
-configs tested: 90
-configs skipped: 1
+Additionally the SoC specific suspend and resume callbacks are
+re-factored so that each SoC variant has it's own callback containing
+the peculiarities for that SoC.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Finally support for filter selection on alive banks is added, this is
+currently only enabled for gs101. The code path can be excercised using
+`echo mem > /sys/power/state`
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                   randconfig-001-20250306    gcc-13.2.0
-arc                   randconfig-002-20250306    gcc-13.2.0
-arm                               allnoconfig    clang-17
-arm                   randconfig-001-20250306    gcc-14.2.0
-arm                   randconfig-002-20250306    gcc-14.2.0
-arm                   randconfig-003-20250306    gcc-14.2.0
-arm                   randconfig-004-20250306    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250306    gcc-14.2.0
-arm64                 randconfig-002-20250306    gcc-14.2.0
-arm64                 randconfig-003-20250306    gcc-14.2.0
-arm64                 randconfig-004-20250306    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250306    gcc-14.2.0
-csky                  randconfig-002-20250306    gcc-14.2.0
-hexagon                           allnoconfig    clang-21
-hexagon               randconfig-001-20250306    clang-21
-hexagon               randconfig-002-20250306    clang-19
-i386        buildonly-randconfig-001-20250306    clang-19
-i386        buildonly-randconfig-001-20250307    clang-19
-i386        buildonly-randconfig-002-20250306    clang-19
-i386        buildonly-randconfig-002-20250307    clang-19
-i386        buildonly-randconfig-003-20250306    clang-19
-i386        buildonly-randconfig-003-20250307    gcc-11
-i386        buildonly-randconfig-004-20250306    gcc-12
-i386        buildonly-randconfig-004-20250307    clang-19
-i386        buildonly-randconfig-005-20250306    gcc-12
-i386        buildonly-randconfig-005-20250307    gcc-12
-i386        buildonly-randconfig-006-20250306    clang-19
-i386        buildonly-randconfig-006-20250307    clang-19
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250306    gcc-14.2.0
-loongarch             randconfig-002-20250306    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250306    gcc-14.2.0
-nios2                 randconfig-002-20250306    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                randconfig-001-20250306    gcc-14.2.0
-parisc                randconfig-002-20250306    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250306    clang-21
-powerpc               randconfig-002-20250306    clang-18
-powerpc               randconfig-003-20250306    gcc-14.2.0
-powerpc64             randconfig-001-20250306    clang-18
-powerpc64             randconfig-002-20250306    clang-21
-powerpc64             randconfig-003-20250306    clang-18
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250306    clang-18
-riscv                 randconfig-002-20250306    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250306    gcc-14.2.0
-s390                  randconfig-002-20250306    clang-19
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250306    gcc-14.2.0
-sh                    randconfig-002-20250306    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250306    gcc-14.2.0
-sparc                 randconfig-002-20250306    gcc-14.2.0
-sparc64               randconfig-001-20250306    gcc-14.2.0
-sparc64               randconfig-002-20250306    gcc-14.2.0
-um                                allnoconfig    clang-18
-um                    randconfig-001-20250306    gcc-12
-um                    randconfig-002-20250306    clang-16
-x86_64                            allnoconfig    clang-19
-x86_64      buildonly-randconfig-001-20250306    gcc-11
-x86_64      buildonly-randconfig-001-20250307    clang-19
-x86_64      buildonly-randconfig-002-20250306    clang-19
-x86_64      buildonly-randconfig-002-20250307    gcc-12
-x86_64      buildonly-randconfig-003-20250306    clang-19
-x86_64      buildonly-randconfig-003-20250307    clang-19
-x86_64      buildonly-randconfig-004-20250306    clang-19
-x86_64      buildonly-randconfig-004-20250307    clang-19
-x86_64      buildonly-randconfig-005-20250306    clang-19
-x86_64      buildonly-randconfig-005-20250307    clang-19
-x86_64      buildonly-randconfig-006-20250306    gcc-12
-x86_64      buildonly-randconfig-006-20250307    gcc-12
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250306    gcc-14.2.0
-xtensa                randconfig-002-20250306    gcc-14.2.0
+regards,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Peter
+
+To: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+To: Alim Akhtar <alim.akhtar@samsung.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: andre.draszik@linaro.org
+Cc: tudor.ambarus@linaro.org
+Cc: willmcvicker@google.com
+Cc: semen.protsenko@linaro.org
+Cc: kernel-team@android.com
+Cc: jaewon02.kim@samsung.com
+
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+Changes in v3:
+
+- Ensure EXYNOS_FLTCON_DIGITAL bit is cleared (Andre)
+- Make it obvious that exynos_eint_set_filter() is conditional on bank type (Andre)
+- Make it obvious exynos_set_wakeup() is conditional on bank type (Andre)
+- Align style where the '+' is placed first (Andre)
+- Remove unnecessary braces (Andre)
+- Link to v2: https://lore.kernel.org/r/20250301-pinctrl-fltcon-suspend-v2-0-a7eef9bb443b@linaro.org
+
+Changes in v2:
+- Remove eint_flt_selectable bool as it can be deduced from EINT_TYPE_WKUP (Peter)
+- Move filter config register comment to header file (Andre)
+- Rename EXYNOS_FLTCON_DELAY to EXYNOS_FLTCON_ANALOG (Andre)
+- Remove misleading old comment (Andre)
+- Refactor exynos_eint_update_flt_reg() into a loop (Andre)
+- Split refactor of suspend/resume callbacks & gs101 parts into separate patches (Andre)
+- Link to v1: https://lore.kernel.org/r/20250120-pinctrl-fltcon-suspend-v1-0-e77900b2a854@linaro.org
+
+---
+Peter Griffin (4):
+      pinctrl: samsung: add support for eint_fltcon_offset
+      pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
+      pinctrl: samsung: add gs101 specific eint suspend/resume callbacks
+      pinctrl: samsung: Add filter selection support for alive bank on gs101
+
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 150 ++++++-------
+ drivers/pinctrl/samsung/pinctrl-exynos.c       | 294 +++++++++++++++----------
+ drivers/pinctrl/samsung/pinctrl-exynos.h       |  50 ++++-
+ drivers/pinctrl/samsung/pinctrl-samsung.c      |  12 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.h      |  12 +-
+ 5 files changed, 318 insertions(+), 200 deletions(-)
+---
+base-commit: 0761652a3b3b607787aebc386d412b1d0ae8008c
+change-id: 20250120-pinctrl-fltcon-suspend-2333a137c4d4
+
+Best regards,
+-- 
+Peter Griffin <peter.griffin@linaro.org>
+
