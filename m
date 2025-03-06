@@ -1,239 +1,145 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD5220AF6C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C5020B1F3;
+	Thu,  6 Mar 2025 11:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260933; cv=none; b=WDeMm5JaVRTe+RfpLfNrl5lW77L/NAvv+CGmcVtSkRjWKsxlMBTJdd6CqBIiBcVU5dDFhRXqBgkhIwRdG6T+NexfAa0zr6r5PJljigmN2hNlq+c4F4x60zDxwcM4k69DD3yh2+qPb1PvNvp1YtB36QM8mbMid7oPmHv6Kh1dHIk=
+	t=1741260953; cv=none; b=rWQpQo0LKQMETMN+gS2bsaYbQ8Hr9FlesCcrZVAz6kzhixckoow1A0yvQjga4VGnePBRJ7zJx4QsDgozm2tlcO2GbFMTpvORYYL++/RgMEN9gHlwCBz9VLKj0u7U1wjsPp2a74j1Pm3eYW5f46rZHDGKtxukBeeqXbDR8I2B8UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260933; c=relaxed/simple;
-	bh=GLLnxJI9yfqrTY4RrclP0nRYB0xiLPfhZUWdc3VqxbE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ba5iOfsiqdBeBwOgKs5IT/p0TKhzJL2xATLnah+y3twy9UKLaWnkS62kotkELHkSdUY5eM0TNGzMW/mxQ7/WNZMSasaRIXclPH+fevtmn7akokRsI0xPjuN/rSmcZeHOVonIexOTRdbSsMFi7tdiysSsCKDzcwj5TGKRx3jOGMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IjUM4kKA; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741260953; c=relaxed/simple;
+	bh=Leu1gIlGz01KC2qXmkX9EuXv0fktHfYgkAuj3cjXmYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W7+26HCbdzx0Qb8tcyp/dR7EGjLUzVfODGOYat2bOAscA8ZuwLLAiWKsclCC8eqIkxw9ZTXMvXuCa/8ZAg6I0rXRWprtB5p4O74Skr/D1K9DSK+VjG9OT5M0Feb2id9g31+kD14RDqPmXPg/W/NCgiGpZFXdi0nedDR01q5HTBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0ZjVSbH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IjUM4kKA"
-Message-ID: <67aa4220-3ed9-4444-abc5-e368e4fcf1ed@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741260918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pakHtTDvixUn3xbzrLB5kmRvJbRII92nAkob5P0R+Q0=;
-	b=IjUM4kKApb1mIGGTiwQAKAQpKxIx5MeGaWtJpCNuKu2EttVfKgnHAnf/WJ6y75TY6y4W6a
-	Ace2YOKIVC8MOl/J1zhoYk7KEoyJA7A8VPJQ31dnvPVXj7jzc9nGGETmBZfSlqrtVUAGOf
-	qLrIa2VUq/eofG7jpjIE5jV8MvQHbh0=
-Date: Thu, 6 Mar 2025 12:35:16 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0ZjVSbH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD17C4CEE0;
+	Thu,  6 Mar 2025 11:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741260952;
+	bh=Leu1gIlGz01KC2qXmkX9EuXv0fktHfYgkAuj3cjXmYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t0ZjVSbHtMk/AGk/0+5zsZZmWz1J7zYKKn+hgJMgEH/5yGLibX4OccWyYTsj6JiFn
+	 8uT1wq0eVoMClAebU6guvInopQZS8/Z7J88QvR4dOVuk18BEu/PWpZR3tzmot/iiO/
+	 mbda0FdpDb2a0eZe48pUemGsg1lyySxbs+kaP6TFgD7xicZK4+X30SBzNQ/3G4AHuR
+	 LK4tmDjTqwl6YLhd6bVVOZWyQ0nFwnzYBLXnhXzO/FcR6W8DYoBXYhi7SjrzKVE8a9
+	 wfABHD6hbH43LxKxNNbnRiWgm2tZKFRvVltOdPlqRzWkHne7xu2MAfN/j6QBtwBqEp
+	 aIerDMl4OwgAA==
+Date: Thu, 6 Mar 2025 12:35:49 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Liu Ying <victor.liu@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Alexander Stein <alexander.stein@ew.tq-group.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, andrzej.hajda@intel.com, 
+	neil.armstrong@linaro.org, rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
+	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch
+Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
+ color encoder
+Message-ID: <20250306-kangaroo-of-pastoral-typhoon-8aefb2@houat>
+References: <20250304101530.969920-1-victor.liu@nxp.com>
+ <20250304101530.969920-4-victor.liu@nxp.com>
+ <20250304152320.GA2630063-robh@kernel.org>
+ <1891036.atdPhlSkOF@steina-w>
+ <20250305163805.GA2071011-robh@kernel.org>
+ <7d98163d-10c8-457d-92e7-6a1d6e379beb@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: linux-next: manual merge of the rdma tree with the rdma-fixes
- tree
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@mellanox.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250306123733.5212bf69@canb.auug.org.au>
- <6d589863-1eba-46dc-a9ff-905d5380cd53@linux.dev>
-Content-Language: en-US
-In-Reply-To: <6d589863-1eba-46dc-a9ff-905d5380cd53@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="qxu4bxugckchmvib"
+Content-Disposition: inline
+In-Reply-To: <7d98163d-10c8-457d-92e7-6a1d6e379beb@nxp.com>
 
-Hi, Stephen
 
-I git clone the latest source code from linux-next.
+--qxu4bxugckchmvib
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
+ color encoder
+MIME-Version: 1.0
 
-The head commit is 565351ae7e0c Add linux-next specific files for 20250306
+On Thu, Mar 06, 2025 at 03:02:41PM +0800, Liu Ying wrote:
+> On 03/06/2025, Rob Herring wrote:
+> > On Wed, Mar 05, 2025 at 10:35:26AM +0100, Alexander Stein wrote:
+> >> Hi,
+> >>
+> >> Am Dienstag, 4. M=E4rz 2025, 16:23:20 CET schrieb Rob Herring:
+> >>> On Tue, Mar 04, 2025 at 06:15:28PM +0800, Liu Ying wrote:
+> >>>> A DPI color encoder, as a simple display bridge, converts input DPI =
+color
+> >>>> coding to output DPI color coding, like Adafruit Kippah DPI hat[1] w=
+hich
+> >>>> converts input 18-bit pixel data to 24-bit pixel data(with 2 low pad=
+ding
+> >>>> bits in every color component though). Document the DPI color encode=
+r.
+> >>>
+> >>> Why do we need a node for this? Isn't this just wired how it is wired=
+=20
+> >>> and there's nothing for s/w to see or do? I suppose if you are trying=
+ to=20
+> >>> resolve the mode with 24-bit on one end and 18-bit on the other end, =
+you=20
+> >>> need to allow that and not require an exact match. You still might ne=
+ed=20
+> >>> to figure out which pins the 18-bit data comes out on, but you have t=
+hat=20
+> >>> problem with an 18-bit panel too. IOW, how is this any different if y=
+ou=20
+> >>> have an 18-bit panel versus 24-bit panel?
+> >>
+> >> Especially panel-simple.c has a fixed configuration for each display, =
+such as:
+> >>> .bus_format =3D MEDIA_BUS_FMT_RGB666_1X18
+> >>
+> >> How would you allow or even know it should be addressed as
+> >> MEDIA_BUS_FMT_RGB888_1X24 instead? I see different ways:
+> >> 1. Create a new display setting/compatible
+> >> 2. Add an overwrite property to the displays
+> >> 3. Use a (transparent) bridge (this series)
+> >>
+> >> Number 1 is IMHO out of question.=20
+> >=20
+> > Agreed.
+> >=20
+> >> I personally don't like number 2 as this
+> >> feels like adding quirks to displays, which they don't have.
+> >=20
+> > This is what I would do except apply it to the controller side. We know=
+=20
+> > the panel side already. This is a board variation, so a property makes=
+=20
+> > sense. I don't think you need any more than knowing what's on each end.=
+=20
+>=20
+> With option 2, no matter putting a property in source side or sink side,
+> impacted display drivers and DT bindings need to be changed, once a board
+> manipulates the DPI color coding.  This adds burdens and introduces new
+> versions of those DT bindings.  Is this what we want?
 
-The following should be applied. In linux-next, because raw_gid is used, 
-in the function rxe_init_ports, ndev is no longer used.
+There's an option 4: make it a property of the OF graph endpoints. In
+essence, it's similar to properties that are already there like
+lane-mapping, and it wouldn't affect the panel drivers, or create an
+intermediate bridge.
 
-So this variable ndev should be removed.
+Maxime
 
-diff --git a/drivers/infiniband/sw/rxe/rxe.c 
-b/drivers/infiniband/sw/rxe/rxe.c
-index b248c68bf9b1..c83e2cf82748 100644
---- a/drivers/infiniband/sw/rxe/rxe.c
-+++ b/drivers/infiniband/sw/rxe/rxe.c
-@@ -133,7 +133,7 @@ static void rxe_init_port_param(struct rxe_port *port)
-  /* initialize port state, note IB convention that HCA ports are always
-   * numbered from 1
-   */
--static void rxe_init_ports(struct rxe_dev *rxe, struct net_device *ndev)
-+static void rxe_init_ports(struct rxe_dev *rxe)
-  {
-         struct rxe_port *port = &rxe->port;
+--qxu4bxugckchmvib
+Content-Type: application/pgp-signature; name="signature.asc"
 
-@@ -162,7 +162,7 @@ static void rxe_init(struct rxe_dev *rxe, struct 
-net_device *ndev)
-         /* init default device parameters */
-         rxe_init_device_param(rxe, ndev);
+-----BEGIN PGP SIGNATURE-----
 
--       rxe_init_ports(rxe, ndev);
-+       rxe_init_ports(rxe);
-         rxe_init_pools(rxe);
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ8mIlQAKCRAnX84Zoj2+
+dnSoAYDBB/bDc4oiForTt6hTu2T7k5fxsgOo6hpzAFvD1SElI/SAR1gLrEg+btZA
+V7TvczkBgLPm3LiHqD7N6MPlIcKl0SPzNFbP8/UcGvqUWcgBigVdJhw6AY6uj4Ey
+73K5s0Sz4A==
+=a1cs
+-----END PGP SIGNATURE-----
 
-         /* init pending mmap list */
-
-Thanks a lot.
-
-Zhu Yanjun
-
-On 06.03.25 11:24, Zhu Yanjun wrote:
-> Hi, Stephen
->
-> I am the author of the commit 8ce2eb9dfac8 ("RDMA/rxe: Fix the failure 
-> of ibv_query_device() and ibv_query_device_ex() tests").
->
-> My replies are inline. Thanks a lot.
->
-> "
->
-> diff --cc drivers/infiniband/sw/rxe/rxe.c
-> index e27478fe9456,4e56a371deb5..000000000000
-> --- a/drivers/infiniband/sw/rxe/rxe.c
-> +++ b/drivers/infiniband/sw/rxe/rxe.c
-> @@@ -72,10 -71,45 +69,39 @@@ static void rxe_init_device_param(struc
->       rxe->attr.max_pkeys            = RXE_MAX_PKEYS;
->       rxe->attr.local_ca_ack_delay        = RXE_LOCAL_CA_ACK_DELAY;
->
->  -    ndev = rxe_ib_device_get_netdev(&rxe->ib_dev);
->  -    if (!ndev)
->  -        return;
->  -
-> +     if (ndev->addr_len) {
-> +         memcpy(rxe->raw_gid, ndev->dev_addr,
-> +             min_t(unsigned int, ndev->addr_len, ETH_ALEN));
-> +     } else {
-> +         /*
-> +          * This device does not have a HW address, but
-> +          * connection mangagement requires a unique gid.
-> +          */
-> +         eth_random_addr(rxe->raw_gid);
-> +     }
-> +
->       addrconf_addr_eui48((unsigned char *)&rxe->attr.sys_image_guid,
-> -             ndev->dev_addr);
-> +             rxe->raw_gid);
->
->  -    dev_put(ndev);
->  -
->
->
-> ------The above snippet is fine with me.
->
->
->       rxe->max_ucontext            = RXE_MAX_UCONTEXT;
-> +
-> +     if (IS_ENABLED(CONFIG_INFINIBAND_ON_DEMAND_PAGING)) {
-> +         rxe->attr.kernel_cap_flags |= IBK_ON_DEMAND_PAGING;
-> +
-> +         /* IB_ODP_SUPPORT_IMPLICIT is not supported right now. */
-> +         rxe->attr.odp_caps.general_caps |= IB_ODP_SUPPORT;
-> +
-> +         rxe->attr.odp_caps.per_transport_caps.ud_odp_caps |= 
-> IB_ODP_SUPPORT_SEND;
-> +         rxe->attr.odp_caps.per_transport_caps.ud_odp_caps |= 
-> IB_ODP_SUPPORT_RECV;
-> +         rxe->attr.odp_caps.per_transport_caps.ud_odp_caps |= 
-> IB_ODP_SUPPORT_SRQ_RECV;
-> +
-> +         rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
-> IB_ODP_SUPPORT_SEND;
-> +         rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
-> IB_ODP_SUPPORT_RECV;
-> +         rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
-> IB_ODP_SUPPORT_WRITE;
-> +         rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
-> IB_ODP_SUPPORT_READ;
-> +         rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
-> IB_ODP_SUPPORT_ATOMIC;
-> +         rxe->attr.odp_caps.per_transport_caps.rc_odp_caps |= 
-> IB_ODP_SUPPORT_SRQ_RECV;
-> +     }
->   }
->
->
->
-> ---------The above snippet is from on_demand paging commits. I do not 
-> why it is involved in this commit.
->
-> ---------It should appear in on_demand_paging patchset.
->
->
->   /* initialize port attributes */
-> @@@ -107,13 -141,18 +133,13 @@@ static void rxe_init_port_param(struct
->   /* initialize port state, note IB convention that HCA ports are always
->    * numbered from 1
->    */
->  -static void rxe_init_ports(struct rxe_dev *rxe)
->  +static void rxe_init_ports(struct rxe_dev *rxe, struct net_device 
-> *ndev)
->
->
-> ----------In this snippet, the variable "struct net_device *ndev" is 
-> not used in the function rxe_init_ports, it should be removed.
->
-> ----------Thanks a lot.
->
-> Zhu Yanjun
->
->
->   {
->       struct rxe_port *port = &rxe->port;
->  -    struct net_device *ndev;
->
->       rxe_init_port_param(port);
->  -    ndev = rxe_ib_device_get_netdev(&rxe->ib_dev);
->  -    if (!ndev)
->  -        return;
->       addrconf_addr_eui48((unsigned char *)&port->port_guid,
-> -                 ndev->dev_addr);
-> +                 rxe->raw_gid);
->  -    dev_put(ndev);
->       spin_lock_init(&port->port_lock);
->   }
->
-> "
->
-> On 06.03.25 02:37, Stephen Rothwell wrote:
->> Hi all,
->>
->> Today's linux-next merge of the rdma tree got a conflict in:
->>
->>    drivers/infiniband/sw/rxe/rxe.c
->>
->> between commit:
->>
->>    8ce2eb9dfac8 ("RDMA/rxe: Fix the failure of ibv_query_device() and 
->> ibv_query_device_ex() tests")
->>
->> from the rdma-fixes tree and commit:
->>
->>    d34d0bdb500e ("RDMA/rxe: Replace netdev dev addr with raw_gid")
->>
->> from the rdma tree.
->>
->> I fixed it up (see below) and can carry the fix as necessary. This
->> is now fixed as far as linux-next is concerned, but any non trivial
->> conflicts should be mentioned to your upstream maintainer when your tree
->> is submitted for merging.  You may also want to consider cooperating
->> with the maintainer of the conflicting tree to minimise any particularly
->> complex conflicts.
->>
--- 
-Best Regards,
-Yanjun.Zhu
-
+--qxu4bxugckchmvib--
