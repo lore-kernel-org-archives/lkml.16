@@ -1,107 +1,152 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBE331A89
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A7AEC2;
+	Thu,  6 Mar 2025 16:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741277020; cv=none; b=rI6DeA9pq6jujSejbXX1P9FlL/+iqCxSdsSR5hkyRV3xhkzaDU6rtDMjQjYmX/hQqChb/r8Gra6B4ITkhUionpVkCOqJ6RuqIM/GS0silo6+d/+swOKSEGfvfnHmEJzrsaQDYYs2q6Yn7GnWb3GRrUb1Gv3QqpVb1VA0TWigCmA=
+	t=1741277030; cv=none; b=UH4fITmYyjfDkpsFGdhBhI9emI+W2pi6U7koWE+PaGF2qK6ApujoSV99Su/Y9GNhKogUVJKA0ivRFSYHQUdltkcpxmVawD2u7DkxEg5FpK9KAY9a39bCNRG46vO9qJW4wuE7NROFWoqZL/rF/t9B9dB6kGipztvkgpm6BNmk+dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741277020; c=relaxed/simple;
-	bh=xVNSnb0jyNfDW//8xinTnXuPgEPSTDWwEpiqXIaFplw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QA7VnZqPVILCpE5PxEkyNn5QHWKrN2DhW2TGzXCVS5W+OwDWxaou2tu4ki2CDrvxNh9Nl88g5biy1JyM5kMYVEF6p4ULmSLxofmLijPxYshXGOt+nwnlSUI1g1eUHbXs5gG+VdDAee8W19JI+00rmEpqMoTKLhllEg7L05dFAuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J0wMIuyh; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1741277030; c=relaxed/simple;
+	bh=TzosbwHEdnIy/bEAra2YOoleYUa+ANh4p0cWMT0d+EE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t32X2A/qWSROwFAkUdo5s6+YCnXORQIUIgpwYAJao5tIag2eTJMr4UW/3Jvn7CZRNo+/KyGtQdjC/YAeXL60KTQ2qz1eiUgwbQ/b/KStdAWMZrzOgusFxMYUzxSTcltauiRtv8dEwrI6dNlIs/0HLUdTBPdTZqHHCKBqKSshPH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Hjm37DPU; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J0wMIuyh"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3cfcf8b7455so9322305ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 08:03:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1741277016; x=1741881816; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BcNdPRCInpMj0KbnCBF2KUxDA1QurFq8iTZjeemnwJ4=;
-        b=J0wMIuyhYdwsdaBtaYJBwc5FmTuVswJ6OYz6GiM2dtuGfDIzkPx1wCe15uHd6LWcnj
-         X8qtQHgCDqyqum9Fj+dK1OI1Rt59zNJlWQin4hZFVMUtcqHIQaiUkAL3ndJ0ZguZXIAF
-         NIMJH0i/KLy2ZJZqsPoJACRePFqRnt9tBOHvY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741277016; x=1741881816;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BcNdPRCInpMj0KbnCBF2KUxDA1QurFq8iTZjeemnwJ4=;
-        b=wCaR12yrTOQ9mGlGXcVQBXRCHg6UmFBlp7WeUalJ7ePsG3pybnEi8s45jHZLWSjwzv
-         J+cOnxnurfIt1iIHRg3ODbcLxbbCk/1rJGJKbDXuFdJYuAMQDMqI1DG7X+PLrtaDfVBV
-         P9ClZmCEL7VjZFUXPxS1N1oJxApx3AOgjI/tBX/Dhgz9vwnFWJkPjF3OOZkSMRKXX0vd
-         xFQP+jt9XTXiE7USD8Pq3L5C55flNLokKGptbDQZ84JWSxrcQWpbeecgJpbnCpMWuUbQ
-         6do598rbbVJnVuec29iF+DlevQV1e7KZbB6Jwsq3ClT8mksgBpEKdOkTeiEW69xiyrpN
-         QFgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1nMh5E+FfOsSl2bqVhEvwq+WNhkwDa7XVTs3A5VEoL7ahwL4qhVgMxbSmbXytrOugyl5dm66Kq5zlsL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNQ5NX56fbMNm7mPGnzvySdH2ELxHSG3keCzp/hlaXHzQylSYx
-	eXT04QfhpJ9D8CPhZCADFHE50Wdm7AeloBc2appUdOEoD3hprUpgpvP5/HgoJuw=
-X-Gm-Gg: ASbGnctdVrYQyEHkRCPrLWR20ADeEWFtoRSjK93VBxJBBECmkXBonV1WYmQSG+HgR0r
-	UisQT+W6eEksgC4ib4400oqQfVUMmYOFy16zHE4jqfTIjZNuHxVDJNNUnmIxCpXwXsa4h5ri/uu
-	7OxEgHBVGSOJZHG2+xlyjwtyyhnuYoC4hvd80/6hICoajSF6BCc6FtaX8gZZ0VUakyFCmNfMhnW
-	05YJBtktveMj/BVUBAm44aPzxVLcmZ/05t/jPHc1w+ssnPkoyPtnJq3LQ122cs5GJpV/pp19XtL
-	0dQgLWfJhY94idEg98gNtOpoIADeFoPZHL56bHdVUDmaTCpFBc13lCA=
-X-Google-Smtp-Source: AGHT+IGQHGUCX/DcHAB0f8MKsKPYCnuinUn3LSlGNP0ULjdmmx+23Lb00DxVmOwmlf9J59UO66TIrQ==
-X-Received: by 2002:a05:6e02:164a:b0:3d2:b0f1:f5b5 with SMTP id e9e14a558f8ab-3d44187c021mr799245ab.3.1741277016390;
-        Thu, 06 Mar 2025 08:03:36 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d43b586ba3sm3501015ab.45.2025.03.06.08.03.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 08:03:35 -0800 (PST)
-Message-ID: <dc1e2731-cfeb-422f-8243-95746aafc889@linuxfoundation.org>
-Date: Thu, 6 Mar 2025 09:03:34 -0700
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Hjm37DPU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1741277029; x=1772813029;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TzosbwHEdnIy/bEAra2YOoleYUa+ANh4p0cWMT0d+EE=;
+  b=Hjm37DPU+NCM8wcrLEgkI6WiFn/TBZ2wru7Wp6VnHpXDKyyZYhthBjJb
+   /7R2X8pmjMtIyo2V5aZql6TmPIE5dA1s1C9j0ciSI+uQugYBUKhE1t4Z2
+   iHk3r1+pvo6o8zydz8PyCB50BNRGlBF+aiGy5BoRB28ICGoLjvA4H5bEV
+   Ebp2X9U5NB72beMZ2UDgDVJ50eWfsDp5lyEQfYk6LTgGIOb5in4F/v4dH
+   6ScpD0u2LLxIoPPzJy1IqemB1MmAaSKJA8dpG7ebcRS7tbxJBfUSF/U5W
+   bZNIoBpHFrk454BhFVOyeq7UDYx7DZ8Bi+ACBKMpXvy9oPPdOCGn5miYH
+   A==;
+X-CSE-ConnectionGUID: Mtzc/U5nQtqKRw1uIzvygw==
+X-CSE-MsgGUID: JOPiCnVkS8msQNbiNLPgKA==
+X-IronPort-AV: E=Sophos;i="6.14,226,1736838000"; 
+   d="scan'208";a="269901966"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2025 09:03:41 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 6 Mar 2025 09:02:57 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 6 Mar 2025 09:02:57 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>
+CC: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+	<linus.walleij@linaro.org>, <ryan.wanner@microchip.com>, Ryan Wanner
+	<Ryan.Wanner@microchip.com>
+Subject: [RESEND PATCH v6 0/3] Add support for SAMA7D65
+Date: Thu, 6 Mar 2025 09:03:17 -0700
+Message-ID: <cover.1736522006.git.Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/176] 6.1.130-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250305174505.437358097@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250305174505.437358097@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Message-ID: <20250306160317.enrZum584FuFUSt0j6y8zCbXBSr0gIlWgGgEAjLGy1c@z>
 
-On 3/5/25 10:46, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.130 release.
-> There are 176 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 07 Mar 2025 17:44:26 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.130-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Compiled and booted on my test system. No dmesg regressions.
+This series adds support for the SAMA7D65 SoC.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+V2 of this series [1].
+V3 of this series [2].
+V4 of this series [4].
+V5 of this series [6].
 
-thanks,
--- Shuah
+For the pinctrl and pit64 timers those will have DTB warnings due to
+those bindings not being in the .yaml format.
+
+Changes v1->v2:
+- V1 set was sent incorrectly as multiple seprate patches v2 took all
+  those patches and put them in 1 thread.
+
+Changes v2->v3:
+- Correct the patch order to follow correct practice.
+- Correct flexcom dt-binding commit messge to reflect the changes in the
+  coding style.
+- Add missing SoB tags to patches.
+- Moved export clocks to DT patch to be included with the clock binding
+  patch.
+- Separate Kconfig changes and defconfig changes into different patches
+  and removed unused Kconfig params.
+- Correct confusing SoB and Co-developed chain.
+- Removed unsued nodes in DTSI file and sorted includes
+  alphanumerically.
+- Fix incorrect dts formatting.
+- Separate dts and pinmux changes into two patches.
+- Combine PLL and MCK changes into core clock driver patch.
+- Correct formatting in main clock driver.
+- MMC dt-binding changes are applied for next so have been removed from
+  the set [3].
+
+Changes v3->v4:
+- Collect all tags from maintainers.
+- Correct compile error on 11/13 and correct location of vendor specific
+  properties.
+- Add USB and UTMI selections to 12/13 to prevent compile errors due to
+  functions in the clock driver that use the USB clock system.
+- Add "microchip,sama7g5-pinctrl" compatible string as a fall back in
+  9/13.
+- Add missing kfree() to 8/13 to correctly handle error case.
+- Replace bad spacing with correct tab formatting on 7/13.
+
+Changes from v4->v5:
+- Remove patches that have been applied [5].
+- Update pinctrl dt-binding to use fallback formatting.
+
+Changes from v5->v6:
+- Remove patches that have been applied [6].
+- Correct incorrect spacing formatting on pinctrl dt-binding.
+- Reintroduce flexcom to the thread since it was removed due to an error
+  in collecting applied patches.
+
+Note:
+- For the SDHCI DTB error that patch has been removed do to it being
+applied see [3].
+- There are DTB errors on microchip,sama7d65-pit64b and
+  microchip,sama7d65-pinctrl, this is due to those bindings being .txt
+  files.
+
+1) https://lore.kernel.org/linux-arm-kernel/cover.1732030972.git.Ryan.Wanner@microchip.com/T/#m9691b4d58b62f36f6cbac1d06883c985766c2c0d
+2) https://lore.kernel.org/linux-arm-kernel/cover.1733505542.git.Ryan.Wanner@microchip.com/T/#m3b52978236907198f727424e69ef21c8898e95c8
+3) https://lore.kernel.org/linux-arm-kernel/cover.1732030972.git.Ryan.Wanner@microchip.com/T/#mccf6521c07e74e1c7dc61b09ae0ebdbbdde73a28
+4) https://lore.kernel.org/linux-arm-kernel/70d429086fd8e858d79ca2824ad8cc4a09e3fe5d.1734723585.git.Ryan.Wanner@microchip.com/T/#m918b8db23c8d30981263846a02dafc085e17de14
+5) https://lore.kernel.org/linux-arm-kernel/70d429086fd8e858d79ca2824ad8cc4a09e3fe5d.1734723585.git.Ryan.Wanner@microchip.com/T/#m69b8f11536e3b0ca3d69d125d0670c90412d4317
+6) https://lore.kernel.org/linux-arm-kernel/20250107160850.120537-1-Ryan.Wanner@microchip.com/T/#m54eaea3dc49c687865e3db33e286eeb29edd7cf0
+
+Dharma Balasubiramani (3):
+  dt-bindings: serial: atmel,at91-usart: add microchip,sama7d65-usart
+  dt-bindings: pinctrl: at91-pio4: add microchip,sama7d65-pinctrl
+  dt-bindings: mfd: atmel,sama5d2-flexcom: add
+    microchip,sama7d65-flexcom
+
+ .../devicetree/bindings/mfd/atmel,sama5d2-flexcom.yaml   | 9 ++++-----
+ .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt         | 1 +
+ .../devicetree/bindings/serial/atmel,at91-usart.yaml     | 1 +
+ 3 files changed, 6 insertions(+), 5 deletions(-)
+
+-- 
+2.43.0
+
