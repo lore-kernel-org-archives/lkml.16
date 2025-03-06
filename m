@@ -1,66 +1,66 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0160720B814
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C9520ADCF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741255034; cv=none; b=r1bwv1KjR+TkYxKS/i9Twupx2AK3ADTg9cfVnMbYkTWhvufv7YvUsLixfDaK6vvzR0AZGtJkgROohvtUKyXnUeC4H6/M1T2dQ3OLZncmL4brE+jZpWPgg9Kt0RYJjwQPw7moXdhS5ShX/0ER2Oyev0XxTBR6PDiB0m5v+2t9pD4=
+	t=1741255046; cv=none; b=rcoU3+Z//HWkfd4KsK+VMiVHeJUKfRdm6Y8faQsoMCweFzVEEvw8RH2g/n+wMDNfzhYqTV/P9YP38hwctBQKz7s9r5Gg03nEAYVA1wVXz5yrEWmiLG4UP7JGJ83cpkaZtP/XyLXf6IHqF4Fp10Qi4NUeMDlYyhV+4atrMg4WHdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741255034; c=relaxed/simple;
-	bh=6JPnLhL8s35dB03n039XAvB3PJPp3xjiscDs8gfFdqE=;
+	s=arc-20240116; t=1741255046; c=relaxed/simple;
+	bh=nEE2/C77oF+j3LxMBPOVoqrwqXRBAnjdJN3gCt7XvfU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=HgzzWs3igSHvUMj8Lmwbn0iUIDdWBEjYpDe2oLQBerkjFec7+5entA4MyJH5f61gAAE7U6aRFtpyY4UgX2QlrknrADSXMPAot88/sf6itSHK9pwXUnaLc4A4X287yMjD/UU9vPTWWo/506Zt2qPXIqrT/3Mqve2Pm16egZKRxts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=1f4Gjbzb; arc=none smtp.client-ip=209.85.214.177
+	 In-Reply-To:To; b=B/cKRpph+Ne5I/h3q5/X9zx/7J6wPoGP04Jj+bJfIiAbvAem57Xg/6JKJuo5p1wK0Sdc4d8wjCjq6CjYs9eAgAE4yyTk84Ijhyn0pi7dQgG+Qo5h8Xs6EFmRY5LiPP25cWFTB/+z4fB11fPsULtkiw+W4pVZytm2eqFWMTJYOGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=Hjzwn3Kj; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="1f4Gjbzb"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240b4de12bso9165445ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:57:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="Hjzwn3Kj"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2235189adaeso7079025ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:57:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1741255032; x=1741859832; darn=vger.kernel.org;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1741255044; x=1741859844; darn=vger.kernel.org;
         h=to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hY0V7oey/1irsg/oxeJVyzd/IX234qFLR74EBUPiqoM=;
-        b=1f4GjbzbUQc2p7rObP8Rffq2hgjmxG5ITm/OnltgmggFk1HeiI5d00OnQ/FuL2k2Iz
-         Nh8YEBYAXNdVn//VjatBjYFbzbE1QQjDVJ/HV7bS9fFT9c21xAVJnv9rztsSNfjXBGtb
-         Noyz7bxrPpGYFGCCVSf9QkbrekXZBREZYZ9zSD3Xj3wOldG4JEx8dwfT+ThnhBCJfi2v
-         7p3iBBJF6UnuMv/7xID6Z9X9OGWyltMqGOwjDT3ynAdbnnK8gc1KarD6KmCJtbEu8q2P
-         0vdcHjZNfJGx5yhTI7hBtvdCru9KbRVRjBc5/C1lOdisJOjKoWjds+vieOUjWtaQ2Nrm
-         0MSA==
+        bh=N/24Tf2dJCQDhe+eHaFoVGEomrBLp8dkxojt6Qs+7G8=;
+        b=Hjzwn3KjYw8Eou3QnNb6xowZIEmBUupqNIClkt/HBVzUdsnhmJnIXlyjcGNhs5m5Ga
+         0I/Dfr7IKdHMR77f4VWw8qtuiYq7RW4WCqyeXMN/x1wt6CaYL2tWsn2FRV9uU2xbfLRG
+         s6cN4pZwOF7NJZ90XsIGlOM5Xnhz5nbobFyrgtdbvPYb6T2nAwRELsJe85ksNGH057yD
+         FY+FyHmlpWYnG0QxEDpECDbYnzZ1sdquLrRHTtbGu6VzCW+OB2ZaBlCh0LytB8+HOjOH
+         OZzOpllSPib8iVsJKVmIEcZ4tQ+PHK9QLUpTXWShCbWYdSaJIYIQzimpxctJSjPoPlUD
+         QlIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741255032; x=1741859832;
+        d=1e100.net; s=20230601; t=1741255044; x=1741859844;
         h=to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hY0V7oey/1irsg/oxeJVyzd/IX234qFLR74EBUPiqoM=;
-        b=i8f0+A5Ovr8GwTNIWvXJULF4lIsGvtKUxS113VBteq+b/JvZzFXye4OxwwI+p813v/
-         FTOzJj0xCNAXG+6OPm3UtOfu1hXDaFAzvwAuYB3svy/R7MQRKgWL+oNTcfmftH1L24RN
-         tZoPd483zwaVgOfctnTPvHBK3PWDTlW+vT8Mx1OIIpvcViiOb2jjqX3lWVzGF14/aztv
-         6naO4/u+bAqCg/qd6Cf6t4z15OkHB7g5xvP2pfL42LGbjjYCSZDkOQoutaW8LUmp46G6
-         orZj5Bed/lpFYgzm6uUCkTHkBxbTzsED+5BsLuyoWXmhCbUaXiyvBeHrq/T/Msvv9KDI
-         Hdbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNceQj7AyN2baTSGUu/3QQp2/IQgGXxAmExtbwJOV+oXLjfUHWDHuX2hF82Y56wekRtIgQEfmjH5NB700=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOWEgQbde3FUX8DFMjBXUviLfgjhl4oEDi/Vl5S+ctrWu1uyU6
-	7VS6eHAj5EWnGdhr6thhzjZKTuxJgsIecGBiMI4DAkLmEmyIBFgH8DDjXIqjZQo=
-X-Gm-Gg: ASbGnct7HFni8AuH9y8ljN4mBhP94Kke0DklIPGaqz7SKKdTlQB6r7E2Sj2TpmCN/OQ
-	7KXMnRamFvohc8PtiyoTqtRlIit8KspWNUIU4HYPtly/bW0wcKvMO3rD2N87ETTImah0Es0DrVm
-	f3b+p56yawNhgc5ZVOCrkFI7SCMPyuP7hsSvopsaKwngDRYvap3jN75xB/9YM5FDrpCHvajUvHj
-	r4rEvu3SckMpfVUptIQ27bc6mRZh1sMUbcO94/kIwdl6s7exbfCuI8P8T9l55yus44+BpOFqHdA
-	rbARwyka/kmPtJXo8/htE9CgLNzDmSDdJ14uukuyvzHmyAMU
-X-Google-Smtp-Source: AGHT+IGlvJ3QJNQ7zdOmSl6WruunBWchSJlMnXfPdh91/T3HMnxY+JOOEGUyqA7YRqbtPgOIa/y+WA==
-X-Received: by 2002:a17:902:ea03:b0:223:f928:4553 with SMTP id d9443c01a7336-223f928486bmr88417775ad.44.1741255032170;
-        Thu, 06 Mar 2025 01:57:12 -0800 (PST)
+        bh=N/24Tf2dJCQDhe+eHaFoVGEomrBLp8dkxojt6Qs+7G8=;
+        b=m78EqOCB2ukbYQrGIUqI+lxEm/HT6dUoyEtWEor4zpMwf5mx0fVuL6POiBAkrAKZuw
+         9pmdX/HoWyRwyGUlil3GqEf8SFwriiAf87sRA1fOECF4Z59pYP0JQU1G1MIvh7nkbvKI
+         8pC6lKv/x8a4YIoRmiuyd3nYYtMNgzijK/fWtAsp6zRfLv9fv2XjEFR4q/KO/gSZl4jJ
+         +4beQbsOUNA/IiVa+JsFsa2czI8UNM2QoqNZjGRRK44vU5BVmJP5Ew6GnY2TckmwGzrh
+         PfeWoFzqpz/1aFuEjDpsGkz6Sd+pkg6SD/wCVpW1omwffq/H6PTzitKGYZdL7d1GYajJ
+         o5kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPc0+ReTohYTkPfzU+5RWaRr2l3GJ1UZAjuKFMpmHJ34wF3w28jDZSU8o035Io3jHDlPRa16ZN/UAo65Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDL78PSX6g2xVp2pOXtKKzXhcByPTWPBNbnruwYUeciD4guvtk
+	V0Y6856aYJPz5OZ60HhOoL6Up05NipoouVrV+L6W2eTYyRL0XDdb1M9JJosFDRg=
+X-Gm-Gg: ASbGncsqgClcwnXyQ9Q7zjRaNtd0P0afVCakbXyIjEZTOY9NjCkpSAxXI/dWN2mkJOX
+	8HqRbWLc0titR8xgZiBPYYdrCE7r11vok3Z9/oGHmhEk3FFlpGdDb3+g0/ZbogIEriJhz8ImJGW
+	NzrjlZRDVbIaGVblRs+WZ1N1raBn0eKwqpjA0diS5MBSv4tHjVVtzDZPYec+NEy7z+oSXY7BS0H
+	QcDxRyj7aXRtlhAKlbqK2b07T0P5g1HR6guO6TgTxthHm7S1h0RC1Z4VeX7LQt/ow2ux5DLAgDz
+	yJhnhLSt8dwnK1It4Ah3D6850ly1f3jgro10OXjj3QWpzMwt
+X-Google-Smtp-Source: AGHT+IF8DbatJk1Q6ANosIF8NkNqX8HFE0PqKk+dfYmnjOrPC/QDLXisFNDJhmMcDSA8YlhDXsU1RQ==
+X-Received: by 2002:a17:902:ea03:b0:220:ff82:1c60 with SMTP id d9443c01a7336-22409426beemr42036455ad.14.1741255043950;
+        Thu, 06 Mar 2025 01:57:23 -0800 (PST)
 Received: from localhost ([157.82.207.107])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22410a7fc55sm8314515ad.138.2025.03.06.01.57.07
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-736985387d3sm943032b3a.172.2025.03.06.01.57.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 01:57:11 -0800 (PST)
+        Thu, 06 Mar 2025 01:57:23 -0800 (PST)
 From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Thu, 06 Mar 2025 18:56:32 +0900
-Subject: [PATCH net-next v8 2/6] net: flow_dissector: Export
- flow_keys_dissector_symmetric
+Date: Thu, 06 Mar 2025 18:56:34 +0900
+Subject: [PATCH net-next v8 4/6] selftest: tun: Test vnet ioctls without
+ device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250306-rss-v8-2-7ab4f56ff423@daynix.com>
+Message-Id: <20250306-rss-v8-4-7ab4f56ff423@daynix.com>
 References: <20250306-rss-v8-0-7ab4f56ff423@daynix.com>
 In-Reply-To: <20250306-rss-v8-0-7ab4f56ff423@daynix.com>
 To: Jonathan Corbet <corbet@lwn.net>, 
@@ -88,41 +88,97 @@ To: Jonathan Corbet <corbet@lwn.net>,
  Akihiko Odaki <akihiko.odaki@daynix.com>
 X-Mailer: b4 0.14.2
 
-flow_keys_dissector_symmetric is useful to derive a symmetric hash
-and to know its source such as IPv4, IPv6, TCP, and UDP.
+Ensure that vnet ioctls result in EBADFD when the underlying device is
+deleted.
 
 Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
 ---
- include/net/flow_dissector.h | 1 +
- net/core/flow_dissector.c    | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/tun.c | 74 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
-index ced79dc8e8560e25a4dd567a04f5710b53452b45..d01c1ec77b7d21b17c14b05c47e3cdda39651bec 100644
---- a/include/net/flow_dissector.h
-+++ b/include/net/flow_dissector.h
-@@ -423,6 +423,7 @@ __be32 flow_get_u32_src(const struct flow_keys *flow);
- __be32 flow_get_u32_dst(const struct flow_keys *flow);
- 
- extern struct flow_dissector flow_keys_dissector;
-+extern struct flow_dissector flow_keys_dissector_symmetric;
- extern struct flow_dissector flow_keys_basic_dissector;
- 
- /* struct flow_keys_digest:
-diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
-index 9cd8de6bebb543c3d672f576e03b29aa86b9d34a..32c7ee31330cf52df05d7a23b3e50d1a1bed9908 100644
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -1862,7 +1862,8 @@ void make_flow_keys_digest(struct flow_keys_digest *digest,
+diff --git a/tools/testing/selftests/net/tun.c b/tools/testing/selftests/net/tun.c
+index fa83918b62d1be1c93adcd6c2f07654893cf97f8..463dd98f2b80b1bdcb398cee43c834e7dc5cf784 100644
+--- a/tools/testing/selftests/net/tun.c
++++ b/tools/testing/selftests/net/tun.c
+@@ -159,4 +159,78 @@ TEST_F(tun, reattach_close_delete) {
+ 	EXPECT_EQ(tun_delete(self->ifname), 0);
  }
- EXPORT_SYMBOL(make_flow_keys_digest);
  
--static struct flow_dissector flow_keys_dissector_symmetric __read_mostly;
-+struct flow_dissector flow_keys_dissector_symmetric __read_mostly;
-+EXPORT_SYMBOL(flow_keys_dissector_symmetric);
- 
- u32 __skb_get_hash_symmetric_net(const struct net *net, const struct sk_buff *skb)
- {
++FIXTURE(tun_deleted)
++{
++	char ifname[IFNAMSIZ];
++	int fd;
++};
++
++FIXTURE_SETUP(tun_deleted)
++{
++	self->ifname[0] = 0;
++	self->fd = tun_alloc(self->ifname);
++	ASSERT_LE(0, self->fd);
++
++	ASSERT_EQ(0, tun_delete(self->ifname))
++		EXPECT_EQ(0, close(self->fd));
++}
++
++FIXTURE_TEARDOWN(tun_deleted)
++{
++	EXPECT_EQ(0, close(self->fd));
++}
++
++TEST_F(tun_deleted, getvnethdrsz)
++{
++	ASSERT_EQ(-1, ioctl(self->fd, TUNGETVNETHDRSZ));
++	EXPECT_EQ(EBADFD, errno);
++}
++
++TEST_F(tun_deleted, setvnethdrsz)
++{
++	ASSERT_EQ(-1, ioctl(self->fd, TUNSETVNETHDRSZ));
++	EXPECT_EQ(EBADFD, errno);
++}
++
++TEST_F(tun_deleted, getvnetle)
++{
++	ASSERT_EQ(-1, ioctl(self->fd, TUNGETVNETLE));
++	EXPECT_EQ(EBADFD, errno);
++}
++
++TEST_F(tun_deleted, setvnetle)
++{
++	ASSERT_EQ(-1, ioctl(self->fd, TUNSETVNETLE));
++	EXPECT_EQ(EBADFD, errno);
++}
++
++TEST_F(tun_deleted, getvnetbe)
++{
++	ASSERT_EQ(-1, ioctl(self->fd, TUNGETVNETBE));
++	EXPECT_EQ(EBADFD, errno);
++}
++
++TEST_F(tun_deleted, setvnetbe)
++{
++	ASSERT_EQ(-1, ioctl(self->fd, TUNSETVNETBE));
++	EXPECT_EQ(EBADFD, errno);
++}
++
++TEST_F(tun_deleted, getvnethashcap)
++{
++	struct tun_vnet_hash cap;
++	int i = ioctl(self->fd, TUNGETVNETHASHCAP, &cap);
++
++	if (i == -1 && errno == EBADFD)
++		SKIP(return, "TUNGETVNETHASHCAP not supported");
++
++	EXPECT_EQ(0, i);
++}
++
++TEST_F(tun_deleted, setvnethash)
++{
++	ASSERT_EQ(-1, ioctl(self->fd, TUNSETVNETHASH));
++	EXPECT_EQ(EBADFD, errno);
++}
++
+ TEST_HARNESS_MAIN
 
 -- 
 2.48.1
