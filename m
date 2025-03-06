@@ -1,127 +1,114 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F51825B695;
-	Thu,  6 Mar 2025 17:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A52325BADC;
+	Thu,  6 Mar 2025 17:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741280422; cv=none; b=Vrt4O8Os9R0869OXb2fRrUa+AfbHJiO2oneoYZbbziysCa2vORMmy+97Hks7QfVFjSGG3LnHszFr7cf6uzgZqbAx/W9e+lyAjHWMx38d5FZfQIRQ/Rlg6jrQrrHd5uYL4DGXmmyS/RZ7rjILSetjKA28g4MJcdOzZfPcYnj9iO4=
+	t=1741280436; cv=none; b=tcwfypwva6KiWO7I3rujXOMhwT/bcuUugCrus1rsctUKRTtrE7udm7DskXiZ7ei20GhKM803mjBs2cBlqvo04BK5/dz1lD9u2F1DTpPn9GYX1MM4PbBObQppz/g+EyWo0GGG3YfmRg2Aakeq44J3KRPdC7eMDeX2VPOcMyJXxfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741280422; c=relaxed/simple;
-	bh=QnceLVnf5feN1aKAcL7nUss5U3kRaifnpXy1wKKSbFE=;
+	s=arc-20240116; t=1741280436; c=relaxed/simple;
+	bh=CA3oS7yvpfmULftQdCN1MhnvUH4iqwV7t8JiQGZfNqg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYKQsMDaxSB0QonjgPJ+0GjdJ1xSac5ZmmYMVpBATrTJd03RA0ef0/eG0Gei3zYdxofPpy+8oFZkW3ETinZjOdHFrKWWwg50Bmy28jitVp+CMcKwF9Eee+HnkXaLcrkdBeOMA3iqzOF2G86I0xfYimXnebAsoDQR50v55A0kjIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=j+nlG+qS; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=S1dE/rQyx4cc3RBdtjczGehVO0aX5TvzlTCklmzGWOTPj5Fgr9Rsx7KfWcBjfJVemAVki+jFzfDSR+1YZOqXB1O7RxYU/oba61nXEu7WuNHCXxBKfRqUQZgE22Q3E5EiHy8yQSi4L17gZLknkz7h02O+XCPn1Rv2x2JNWc7daMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iNTknRuK; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="j+nlG+qS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1741280418;
-	bh=QnceLVnf5feN1aKAcL7nUss5U3kRaifnpXy1wKKSbFE=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iNTknRuK"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 24B8440E0216;
+	Thu,  6 Mar 2025 17:00:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id nxFP5hBSf08p; Thu,  6 Mar 2025 17:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741280419; bh=yRS5zdx12qlghPTisegH/MGSTWiNp0ZxQFtA1dzgSCA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j+nlG+qS2CwYyJbo9TVOSh+8yghMw507glcf+47HIYU0jOMGpzM5sI8ThQcw3lr4d
-	 laG3M7bs6fdVefIXMwtKV4oXTvzJlvvZHyLLDufYGW5uti4Q6+RT+bvA1lbXxXPvuc
-	 FOv2O9bbIt3dqa0a6gJhd/4z3H5bv0JJiXvmRcjw=
-Date: Thu, 6 Mar 2025 18:00:17 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Louis Taylor <louis@kragniz.eu>
-Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] tools/nolibc: mark more test functions as static
-Message-ID: <61636d83-8154-4e7b-850b-1c4ed9a2c2f2@t-8ch.de>
-References: <20250304075846.66563-1-louis@kragniz.eu>
- <20250304075846.66563-5-louis@kragniz.eu>
+	b=iNTknRuK8K0YaWLMKsbSE7wAsBn+qoAs+cnac+2DvCsqlfCH/sERig2gFVI1M1kjX
+	 VjELmvuYsSFT11HDtmwZoEnhliioJJ/OfeH1mqNo2lcg6/6DZhypTeHvRiLX6FLlFl
+	 S60Q1ssaFWb1BBd8EQ6GG1lJObJCygUFYlDUdW4uhTT+69wxNGpcEb9G8g+DaWX49b
+	 5LZH6lpb83J0wjbfeRU/KshRXJ7gxGjI33g5O4VFYJk5EMkGdFAkQrNEbJwlZ9Ro/H
+	 tpyeqR+7F6XOR1d3JZ8vWlJy6h61gPmjidntFdDQoGL8+O/NTTh7DcaW1xYczGf55t
+	 zfXC/16gAmErg2eewKpj7WmDneFcSkWoygk8lrW62aHAQUk8s7YyQVZXGb/MrbM4CH
+	 iHrvUjPaEJy33pAWsfOpPot0tdlZjbh7tvrR/OkRaQZV7qZnqZIEoIfgp0DvNDEjQD
+	 MGegSFaOjE5SgwIWY1tg7WaRPyOtwHKdfg170zLElbeiuWScJeLFHv+YDCWqRh9JEn
+	 E995j59TN8+AZRo9KvMpjv1jkZKveh9BDpFcGVvbxksXCyH32po7/4LkQ3y2tY+hbQ
+	 ySTjZgs4n5QJMgF5fGlbacB9+KY6IWVh2dQwRIyq5N04YM84nwS0eRnK3wIEeJ1MA8
+	 5KZ40LTgQLk49vGlN0AfzjmI=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 32F4A40E0214;
+	Thu,  6 Mar 2025 17:00:05 +0000 (UTC)
+Date: Thu, 6 Mar 2025 17:59:58 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Kim Phillips <kim.phillips@amd.com>
+Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	"Nikunj A . Dadhania" <nikunj@amd.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 1/2] x86/cpufeatures: Add "Allowed SEV Features"
+ Feature
+Message-ID: <20250306165958.GGZ8nUjqVyJnw-JV0B@fat_crate.local>
+References: <20250306003806.1048517-1-kim.phillips@amd.com>
+ <20250306003806.1048517-2-kim.phillips@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250304075846.66563-5-louis@kragniz.eu>
+In-Reply-To: <20250306003806.1048517-2-kim.phillips@amd.com>
 
-On 2025-03-04 07:58:19+0000, Louis Taylor wrote:
-> It was mentioned that a new test_ function should be static, so go back
-> over existing functions and mark those static as well.
-
-Actually Willy wants these non-static for debugging purposes.
-I can't seem to get that into my head -.-
-Let's drop this one.
-
-> Signed-off-by: Louis Taylor <louis@kragniz.eu>
+On Wed, Mar 05, 2025 at 06:38:04PM -0600, Kim Phillips wrote:
+> From: Kishon Vijay Abraham I <kvijayab@amd.com>
+> 
+> Add CPU feature detection for "Allowed SEV Features" to allow the
+> Hypervisor to enforce that SEV-ES and SEV-SNP guest VMs cannot
+> enable features (via SEV_FEATURES) that the Hypervisor does not
+> support or wish to be enabled.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 > ---
->  tools/testing/selftests/nolibc/nolibc-test.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-> index 2a1629938dd6..b5464ca8d050 100644
-> --- a/tools/testing/selftests/nolibc/nolibc-test.c
-> +++ b/tools/testing/selftests/nolibc/nolibc-test.c
-> @@ -807,7 +807,7 @@ static int test_dirent(void)
->  	return 0;
->  }
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 8f8aaf94dc00..6a12c8c48bd2 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -454,6 +454,7 @@
+>  #define X86_FEATURE_DEBUG_SWAP		(19*32+14) /* "debug_swap" SEV-ES full debug state swap support */
+>  #define X86_FEATURE_RMPREAD		(19*32+21) /* RMPREAD instruction */
+>  #define X86_FEATURE_SEGMENTED_RMP	(19*32+23) /* Segmented RMP support */
+> +#define X86_FEATURE_ALLOWED_SEV_FEATURES (19*32+27) /* Allowed SEV Features */
+>  #define X86_FEATURE_SVSM		(19*32+28) /* "svsm" SVSM present */
+>  #define X86_FEATURE_HV_INUSE_WR_ALLOWED	(19*32+30) /* Allow Write to in-use hypervisor-owned pages */
 >  
-> -int test_getpagesize(void)
-> +static int test_getpagesize(void)
->  {
->  	int x = getpagesize();
->  	int c;
-> @@ -836,7 +836,7 @@ int test_getpagesize(void)
->  	return !c;
->  }
->  
-> -int test_fork(void)
-> +static int test_fork(void)
->  {
->  	int status;
->  	pid_t pid;
-> @@ -861,7 +861,7 @@ int test_fork(void)
->  	}
->  }
->  
-> -int test_stat_timestamps(void)
-> +static int test_stat_timestamps(void)
->  {
->  	struct stat st;
->  
-> @@ -883,7 +883,7 @@ int test_stat_timestamps(void)
->  	return 0;
->  }
->  
-> -int test_uname(void)
-> +static int test_uname(void)
->  {
->  	struct utsname buf;
->  	char osrelease[sizeof(buf.release)];
-> @@ -922,7 +922,7 @@ int test_uname(void)
->  	return 0;
->  }
->  
-> -int test_mmap_munmap(void)
-> +static int test_mmap_munmap(void)
->  {
->  	int ret, fd, i, page_size;
->  	void *mem;
-> @@ -980,7 +980,7 @@ int test_mmap_munmap(void)
->  	return !!ret;
->  }
->  
-> -int test_pipe(void)
-> +static int test_pipe(void)
->  {
->  	const char *const msg = "hello, nolibc";
->  	int pipefd[2];
-> @@ -1001,7 +1001,7 @@ int test_pipe(void)
->  	return !!memcmp(buf, msg, len);
->  }
->  
-> -int test_rlimit(void)
-> +static int test_rlimit(void)
->  {
->  	struct rlimit rlim = {
->  		.rlim_cur = 1 << 20,
 > -- 
-> 2.45.2
-> 
+
+I guess this goes thru Sean:
+
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
