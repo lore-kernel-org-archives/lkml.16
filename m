@@ -1,142 +1,117 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E0CDF71;
-	Thu,  6 Mar 2025 14:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3134416D9AA;
+	Thu,  6 Mar 2025 14:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741272209; cv=none; b=j7aB2QWhtTgMhC8zaLykSGMsRqFwMJGlC+o+kkP2b8MFENk4hc0KJb5sYbzGhuR3zzeKBC7nwDo2vRoZU15kemXs56+h/mW4s/qsvaCH+CMvO3pSmx3l+udPA85aHA1PPTsedY87jAi9cX1S3ELDcaEAeqCOfEN+Vm63LOJd0LQ=
+	t=1741272241; cv=none; b=Y+4gdUoESlKA/bWXPdiyI9DHnjIA93p6iro2OWtFLR1+LLJ5mUUGo5j3qwJxbciLUN8u0PtRhpkNn0gkqM1ASFKKhqiNEjCCOnzCjhh09L4AkIvVAREA+z5BIYfgtAKphdZCU4iUKJCAIVU9M/DjLbZP/oqZkY3fanaUC8CUbKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741272209; c=relaxed/simple;
-	bh=5Z1DMv21sdf0Ne/VuvH+jXpSrvdILbGxdSvlin/45XM=;
+	s=arc-20240116; t=1741272241; c=relaxed/simple;
+	bh=IR3HH+r42dNdY13mNau/VyBksWUEJ8Ly+NgzGLbTLfk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gl9NG+oLdota9NJ2r16dN1aytLZfsg1ilDQ0f2BHcHDn5diF/ASjbwGLlHKb+tCZBwzWTndc3gOxyUHrTkiCUzgo+9lh7kqZ0gbMZpnsWWaYVnY+pi6f7TgbpCHdH6O7GfcmRWRL1SiM2ynag/mdvSDtKKOtvuGiJvsf1nGupvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=VMaDzJqa0tTSeEi3R5r2axAO1qUk3yVe5rWiRFTzCnJCqP/1MGBLG9JN3XwRGBvr9Cgjgbiqny4O4hDcxwtb3TzMSnNenT0wtJYumB/m75YUhUZ/E8eTAxUcY4ISenDAeZpISNN28UlzBNySnjjjI8PG/6ekafYBnUcnrsd9Nmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dphn1F12; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-523cbce3fecso686387e0c.0;
-        Thu, 06 Mar 2025 06:43:27 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dphn1F12"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f74e6c6cbcso182716a91.2;
+        Thu, 06 Mar 2025 06:43:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741272239; x=1741877039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oOuXqHLwhoywZeeVkpq77OS6iNRsJcoQHW5JDpHphP4=;
+        b=dphn1F12Ja2v3ambfPgjyBs/4NGjXbJLNPCiZnCHY4HRAo4iviDV9sMIyNehzp2LLE
+         Db2hC3q3J3lfSaJCTF494dt47L4/ZKcK+6an9qjMNC566iA2C5hfUDX5mlw4HWrB6v0+
+         +NmSXhY25VkBz153ajwKRkcVK0ffzzArb6878xBmFoO4TIaiwu8gVbHRv51oNUiTUJ/t
+         2oFYRNAPvE130JRq6LIweJOsJYd6YYcoqB/rhLKeA1VARmYO6f8DP06nPwPtWJVNp0iM
+         62mVxiLaH7NEZmdYXqc0hbjmVD7JJDs3B1pzd/P/DLpKUhCvLae+14FjlrBjw7CY6j/x
+         yZLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741272206; x=1741877006;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RUTS2miX6PVep9uVrOr0nGVc9hTpNXk1WYhPSxq21w8=;
-        b=JAOrzSO+11dlk6lppgZ84K0uruNNedjx9l01cSEQ3ZVwgJAXZQ34ysDIjCHq9fPT9m
-         m4Fpin3RvU7ivqzFoV6/HFNdrnVq5BBfwOZ4U6LAnD0Sp8rre3Tl949aNvYmCwTLn81+
-         yrJt1xa0LpXHa0J6xPlytIR8F2kf4oZcVxPcOgEOv9jL76AgDvrrrqvfjxkzmY19YQBt
-         2MjHWnwhy+tki3IbvWkxHS/93K8+4qKcUTiYesWyQiPL12Q+zLckBCHAxO4IvQ5i80y8
-         ko5PnSy3WDydjjTMgsHF54nF26ZiYQTKVs8XbQgpyjpsdSJzPA0Ab9TSbmHNxMVfl8FA
-         64Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0+sOo5Ba2ZQklVS8Eej9c20JzU6y0yw+M/b8b7IzDj1vqtN8ZXpmbpAKjgJau76iTAmaJOQsjmKHAm/XiCcnXgds=@vger.kernel.org, AJvYcCVQMKAT7lUm470rauYkR0HFfXmQsrN5cGAX3fitn5Z/A0KIvitsbfEIxpVBAWq97N+qlPT/zhq/CaM=@vger.kernel.org, AJvYcCWCJ75FHLmDgqa8lWUnB5RZG+1bbegRvyhBJ+thGm0tJzM+0DfyCuY4DsmsOFqG4R7iH2rXhj8wvKShVxwC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP5ytV2rT5hhtGTnEO/N7EJFyumeCYZ1KWv7pUBcEKWdq/UFyF
-	/SPQBZPuCl1XpdkZqtCVFe6oCeFAYa5XQo1iUhSApodRrRc3ZLOnwyGuVTvUTHA=
-X-Gm-Gg: ASbGncsHWDo9WEuo7E9Z3YVtdnkjUL+dymyUbGPbm14s2d9iIkfmidWrqKsYoKs9bti
-	kcmsn+/v/oNqHuyugNL3l7IUwv+oNDFZFhM5GXYoq4HbKJ8jFQ+fvQtSbuhYifSdIckX7Qjdhvu
-	lKnj+j+bAwYBbpf3P+61yRD1FgoTvyALVvN+mU2Ef8cx3ET2Zfu9KGBEoBKs58kBIxOumywk2V0
-	TwCoBT9ZVtL8SURdulHiVtxfFd7dR63xYuMU+706TPqJFBTVBmFgI7gXTxRbi3bDqlB+t306Wvp
-	c83XYtq3lmG5NGeHIO4sk/gfd8n9bTlYZzGZLnzxy3PAEXElwRVW+wvUrljsqRJrEUVSs9JaBq5
-	Jw9PIOsc2ICg=
-X-Google-Smtp-Source: AGHT+IEFTut9cn2GDd24OgwSJAM2WTxPxVzI97cvUXieVhoF3qUJxmVF8A3r+JTAuL5TrHKe7hsw3Q==
-X-Received: by 2002:a05:6122:2011:b0:520:5e9b:49b3 with SMTP id 71dfb90a1353d-523c614d999mr4981039e0c.3.1741272205794;
-        Thu, 06 Mar 2025 06:43:25 -0800 (PST)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-523d8cbbdb3sm194312e0c.48.2025.03.06.06.43.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 06:43:25 -0800 (PST)
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-51eb1a714bfso722134e0c.3;
-        Thu, 06 Mar 2025 06:43:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUZvbGAiKFWFCoPzmNLuj7SdS97ZLRNKNoNmAXQTlHlXPQfwpt7CC1hKmcQE6dfdgGSWGip/P+Mj+MijdGYXVD1zQQ=@vger.kernel.org, AJvYcCWMPoWpRX5mMGxyCUjMga9HfPdJeN8OHZj/h8MHpXPXZI9Ngwr3hmocTq+nl97DRcd4Nc8TQ8PGThm7dzH4@vger.kernel.org, AJvYcCXYsXzAWAD3en6dJMoZWs9vDdWn+zT1S07C4ObXkHK1HoGHEzxlcys3nGR7N7D7u1hIyOTle72T+vM=@vger.kernel.org
-X-Received: by 2002:a05:6102:160d:b0:4c1:869b:7db4 with SMTP id
- ada2fe7eead31-4c2e27b2c9bmr4823796137.9.1741272203957; Thu, 06 Mar 2025
- 06:43:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741272239; x=1741877039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oOuXqHLwhoywZeeVkpq77OS6iNRsJcoQHW5JDpHphP4=;
+        b=IsZ/NY+ToLWesCuNbWDjAj4uUMQqwXCB6xWhZ1y55lPAqVYu5axd3ZL/AOal8f9fIt
+         S3lbc4qtOKpW0XDFF6OhH+JSzTtwUMapTORdwYQjCHBwEZPcjK6LR0oeOjw4iq00Mtjn
+         MyxrEcHWLhDmZY6kT0vNmmMcXccpSGTTQrrBSRk4NPyO4RTIXzCxSjCWWJ7N25IzawXW
+         hH+tj/He06eUmGCVj5T0gUUicBWkDXbl4V905EppcT0ObGFVX9bIrn3z8LfmgvCDWpP3
+         lK0L1F6alWeBGMgoDxa0jUAVP852XBzn3atGGSjupPiIHIwTrYuoJDdbblG/PBF5tPah
+         Pkaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwVCjw47FUAVPbwuxka6gwlhuLiOmh8oIvn5xNsRd7/cBvPn2lIuMfeA1Qy70Fk1BuIzOIsPgRkJ6q7Rg=@vger.kernel.org, AJvYcCVO/v4G1KY87b8YXiWx6BD79IVuC/oM6j5CvqblpmVn+VPMJIob2W6H+Bf77dyGBf0CWW7LrCTx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYTL2465zX0xF2XMT8WB1rVjw+AitUlOsiaFWWKx3sDV74lRw6
+	9dkeAS9JBktm6zxQAAfUBp7VzAVfm4It8Xgdu/xlveUtoHadDvCbU6euke8o26Xn1Mwmo/lmP7J
+	jR7rH6QZq7Y1ZCOKJYWEWdBzYZcU=
+X-Gm-Gg: ASbGncsUQ27n6+Cx8LH1+ho+Obu7qEsbLbSkJaF64N+YWoIMZ2oqKNpTRKyr80kr3Mm
+	FcY47mjz9FLW2ED2XaFTqXBXSNsN9v1OqPAbNU5whGd3ipSDlLOY2ARiZC1uHAy0yHugQjaZo1t
+	V1aJNY0avN4wtYw8YrFfVqk4u/Cg==
+X-Google-Smtp-Source: AGHT+IFIMuqvtdQeTvKmw8diwqa5n4LJl9yYalj1aquXZaD0QcmpHfmxn43WeV147qVRmmThhKGTyHR49xtqlcPEJkw=
+X-Received: by 2002:a17:90b:1e03:b0:2fe:91d0:f781 with SMTP id
+ 98e67ed59e1d1-2ff497711c1mr4724924a91.2.1741272239200; Thu, 06 Mar 2025
+ 06:43:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228202655.491035-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250228202655.491035-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250228202655.491035-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 6 Mar 2025 15:43:12 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWHpSiVzTeGKZ6tQiHp=6qdzeS6yc9inhQENwVEcSt=eQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jql0xtkZCUNZvipqcOLg7G1CwUSQ5JTJb7udm5La-IerxFIp1PkKoR1tUY
-Message-ID: <CAMuHMdWHpSiVzTeGKZ6tQiHp=6qdzeS6yc9inhQENwVEcSt=eQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] clk: renesas: rzv2h-cpg: Add macro for defining
- static dividers
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250306103603.23350-1-aliaksei.urbanski@gmail.com>
+In-Reply-To: <20250306103603.23350-1-aliaksei.urbanski@gmail.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Thu, 6 Mar 2025 09:43:47 -0500
+X-Gm-Features: AQ5f1JoJiql6AXqg8vp_CW1j7N3EvB_WcR1RWX0ZljQ1MNDzXH3Rf9oQxe6OSHc
+Message-ID: <CADnq5_PaxnYBeTVaidOVJzqnj_HfQH-xwYwUmf3BVeZOaQeT6g@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: fix missing .is_two_pixels_per_container
+To: Aliaksei Urbanski <aliaksei.urbanski@gmail.com>
+Cc: Wenjing Liu <wenjing.liu@amd.com>, Daniel Wheeler <daniel.wheeler@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Rosen Penev <rosenp@gmail.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+Applied.  Thanks!
 
-On Fri, 28 Feb 2025 at 21:27, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, Mar 6, 2025 at 9:13=E2=80=AFAM Aliaksei Urbanski
+<aliaksei.urbanski@gmail.com> wrote:
 >
-> Unlike dynamic dividers, static dividers do not have a monitor bit.
-> Introduce the `DEF_CSDIV()` macro for defining static dividers, ensuring
-> consistency with existing dynamic divider macros.
+> Starting from 6.11, AMDGPU driver, while being loaded with amdgpu.dc=3D1,
+> due to lack of .is_two_pixels_per_container function in dce60_tg_funcs,
+> causes a NULL pointer dereference on PCs with old GPUs, such as R9 280X.
 >
-> Additionally, introduce the `CSDIV_NO_MON` macro to indicate the absence
-> of a monitor bit, allowing the monitoring step to be skipped when
-> `mon` is set to `CSDIV_NO_MON`.
+> So this fix adds missing .is_two_pixels_per_container to dce60_tg_funcs.
 >
-> Note, `rzv2h_cpg_ddiv_clk_register()` will be re-used instead of generic
-> `clk_hw_register_divider_table()` for registering satic dividers
-> as some of the static dividers require RMW operations.
+> Reported-by: Rosen Penev <rosenp@gmail.com>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3942
+> Fixes: e6a901a00822 ("drm/amd/display: use even ODM slice width for two p=
+ixels per container")
+> Cc: <stable@vger.kernel.org> # 6.11+
+> Signed-off-by: Aliaksei Urbanski <aliaksei.urbanski@gmail.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/dce60/dce60_timing_generator.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-I understand this is in preparation of adding GBETH/XSPI clocks, and
-thus related to "[PATCH 2/4] clk: renesas: rzv2h-cpg: Add support for
-static dividers"[1]?
-
-> --- a/drivers/clk/renesas/rzv2h-cpg.h
-> +++ b/drivers/clk/renesas/rzv2h-cpg.h
-> @@ -25,6 +25,14 @@ struct ddiv {
->         unsigned int monbit:5;
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce60/dce60_timing_generator.=
+c b/drivers/gpu/drm/amd/display/dc/dce60/dce60_timing_generator.c
+> index e5fb0e8333..e691a1cf33 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce60/dce60_timing_generator.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce60/dce60_timing_generator.c
+> @@ -239,6 +239,7 @@ static const struct timing_generator_funcs dce60_tg_f=
+uncs =3D {
+>                                 dce60_timing_generator_enable_advanced_re=
+quest,
+>                 .configure_crc =3D dce60_configure_crc,
+>                 .get_crc =3D dce110_get_crc,
+> +               .is_two_pixels_per_container =3D dce110_is_two_pixels_per=
+_container,
 >  };
 >
-> +/*
-> + * On RZ/V2H(P), the dynamic divider clock supports up to 19 monitor bits,
-> + * while on RZ/G3E, it supports up to 16 monitor bits. Use the maximum value
-> + * `0x1f` to indicate that monitor bits are not supported for static divider
-> + * clocks.
-> + */
-> +#define CSDIV_NO_MON   (0x1f)
-> +
->  #define DDIV_PACK(_offset, _shift, _width, _monbit) \
->         ((struct ddiv){ \
->                 .offset = _offset, \
-> @@ -130,6 +138,8 @@ enum clk_types {
->                 .parent = _parent, \
->                 .dtable = _dtable, \
->                 .flag = CLK_DIVIDER_HIWORD_MASK)
-> +#define DEF_CSDIV(_name, _id, _parent, _ddiv_packed, _dtable) \
-> +       DEF_DDIV(_name, _id, _parent, _ddiv_packed, _dtable)
->  #define DEF_SMUX(_name, _id, _smux_packed, _parent_names) \
->         DEF_TYPE(_name, _id, CLK_TYPE_SMUX, \
->                  .cfg.smux = _smux_packed, \
-
-However, Biju's patch adds a new composer DEF_SDIV(), and we end up
-with not using DEF_CSDIV() at all?
-
-[1] https://lore.kernel.org/20250303110433.76576-3-biju.das.jz@bp.renesas.com
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  void dce60_timing_generator_construct(
+> --
+> 2.48.1
+>
