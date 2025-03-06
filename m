@@ -1,184 +1,139 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1E420A5C6
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C1F1853
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741263764; cv=none; b=SDmfdbA6NcQL7ksVuJj66FmXhoPE5ITcqllzf4o2ETCcFHN5xJizAPdPpNpXIXMaUjgxz6Vj6jrzmRh7wFGD7LPg2S1TmNWOJbIJ/qzezXF32U7Gt/QgrVPWImdss+cy3D+EqZzaCRgI4gmAkbvDQQS/GXVWhFAaO1h/bsyCOrU=
+	t=1741263830; cv=none; b=pR3PU2zXGftLmimqvhBJ2eH4jSOHC6j2ru2A2V66eK/+7vDW2IgTMASabjXbMFLmi2CxgZnDfqQ6FcLPZY5hGCYCQis857wr8bIF0aEgFFnIqbME457+wPEl4NZKt5w2r9YsZo26D6gRa+T4JSHMKDtyiWyMdaMbU557FstdDts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741263764; c=relaxed/simple;
-	bh=IYwcKZ9klDpKqc3WNYt4WS/F7VHj1QpFPAqLoaQc6DY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eo/pfEJHgBrxEAK9Uld/eXKKZw4Oy+Pjv6MZjDAi22NFVTmCnfweunbL37AspAc6xiF+REtMUFC8GO0htRGyqF96zEMOgKgi3f0YPuLlIYM41eDixYua7E0ICvbrCnKRUUV8Y8Aay/ActwvD6DfoPLmYDPwFaSxOdsL/7J9f8t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WF3Z+R9l; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741263830; c=relaxed/simple;
+	bh=XnsPLRnXSWb7buELfPusaeb+B8AlBgoQQP15h/UL+Kc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hQxBliRh22YJwzX4CuKqEyw56oqL7HUg/mtQaihzol17JHc9TryO2j/1xkVTacpshxgQQqKe0kDITORXwkQWDpqKelC2t1O5pUPARQxeG2zCxoEyrrgjXGt6gC3uzwe0m8SuFLoIUc8Lc4RLO3xLteDPSWGzqDE0+fvAswdlVa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VIVHm+Ry; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WF3Z+R9l"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5267MW7m017916
-	for <linux-kernel@vger.kernel.org>; Thu, 6 Mar 2025 12:22:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	z5Gq4UTjbsFKwuk0lyvFU281mi+Wp78KDLHWxM5Eb88=; b=WF3Z+R9lVIJeH3b5
-	PSJ9sfrXXS1Y2MH5IbpWq22g6QQ+gJpqHAKT5b/0wfzcbMVjLtUGGPDkRW+XjYlV
-	xq1PEHBl2HfnCyF/g2X8y/j78xS8mD9BeXgCD6wFWi55XcZOwW6k5XZ7B9OWNxI9
-	tN8SGOmyqKE2JUV+/YP8Maz8916C+AprTRFTAQq58Lp/3Lnc3XdW3tuFQ4IpqZTd
-	TR6Uxvlb7xDucyLttyyWb/R7YLa6LhirkJOGUCqGE9kIUlBOBR7XRe+8KjtQ5vMM
-	sS2i7k0W7yVxS0vvn4k+PUBgyxys5yxcBdUneXj7By/pjVDa8n9lPBMa9sgyGav/
-	uIBmvw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45778t8vu2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 12:22:41 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c3c147e8caso6336285a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 04:22:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VIVHm+Ry"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43bbf159247so658055e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 04:23:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741263826; x=1741868626; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M16Hx03LPq6Hpxa+7YZIfd9IWWJDL42bnuEv+y5yizM=;
+        b=VIVHm+RyJq8WE+p3322eTYpgG1NYzUqgF/ySd4KpZlDQJX2sqN7C++0yPJZhyIOKRF
+         u+O1u4+JrFQs6ve8P48QZjJIgdUhInvJNsKVvCNzBOuJuk3bMvdxfDltvWApMwB2DagZ
+         g5ecaOwERnTOcwPhvDQBZX2x3CyvwDVZvU4SFv0xFL2tJQii/0Azank772wFa6PH+7LQ
+         ob47J/aATABG8YNxm8JCQ7VCjyA60pQhfxrPjaU4bz/WRX5CD5NY8XjpnxxQtZYM9Pep
+         qJfWHg5net0118fYAauk91UI2G/xMstHOO1YVh1zBP4umx/dRvDb+Z9gKozTc29N83tv
+         6c1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741263760; x=1741868560;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z5Gq4UTjbsFKwuk0lyvFU281mi+Wp78KDLHWxM5Eb88=;
-        b=Sf9C3t2VmSMcRUEt1T40yX9uaHQ3tvHqSThKBFq2G2QQozzkf8lTdm11TL4G4/10Le
-         IaBrEBrQU6PtMMEKSdYCGnIu4/IXRW1kVQkOfQF/ZeadL+K5y0TC8TtLabH0kKIk2lBC
-         yOG0cMCBuUbyju+FCaxyZHJGd3Krs/SDGlBILGJl41GWmO/Q9qA6W00u535E8g2wfPEH
-         M1o7I4m3GZfuHNWDi9UlM/qcRPw32C8aw3xBer06JwMIxTpdSagYGNAqZ2SOWM1/jQy5
-         yxvu71kxTUWbMKmjp/Ds+py+v/8Z/eX69DmKh/Qz9UnQA9FmYso6LCPnNbbxFxKKk2iB
-         JrAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNH3TPlATRjaAWmTPjYQ8w9/lAvnq7Gd2ygAXGOpKrf3tOLkYjq8U1xUJFJC0Hb0HkuT132n10fKFGfLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdO+EXTVbKdyOh0AQHRk0nK8HEmlNiV4YBXtYJ/do+WOxMPQSM
-	r4KjBEAYV4eh1D5bu3a6qLZoKCwDKIV8//oDK1Vw5JZjsZEM4FOdcjaH4Z3YXqkg54pb3hFsL3K
-	tJpGGDtBb84cZm1vBJSILgSBXmPLrQLvbZJ1PghxyX2VxRae6I+5iIhYEcaC9mJY=
-X-Gm-Gg: ASbGncv9FQlRtERRLTAQLxgoaKWij3ND92z4FblA8LHgdJ7vVLBVKnGQiNVpqRCWvNP
-	uiXBnHkufyVU4KvK9cf4hR0pvTxAWuTTIW+0sJntWJKTBZ5orDNgIqUcEHlXI5XcLaNmsaJmYeV
-	Wvs6kesdQ99aouPXMNITzq9xR6nmKNyO34lNOHT4iK6g4z0m+0TpjIQ8Drb6LrzuivBO+zP3Qs2
-	fUNEEWX9gRpJ8dr33s9g4F6O55HFJPVjCM7yDixE4pz8CbXTwJeNhM2jPHHLzof6Ngrm2ybDKIz
-	Fr2wyQXDbJHjEdhbxV5YfU5rda9jPKgkiFO7rsdRoFz6RGnr1RXxSflrSzKUMcKc1p70Bg==
-X-Received: by 2002:a05:6214:624:b0:6e6:5cad:6080 with SMTP id 6a1803df08f44-6e8e6dab467mr34449766d6.10.1741263759560;
-        Thu, 06 Mar 2025 04:22:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG/QTh0Ug1a5mDs5OMzwOybRslK0jLL6FOkoHx+QI3mLk6kOxx2Z10MrUe5swv+Xyw15xDHmA==
-X-Received: by 2002:a05:6214:624:b0:6e6:5cad:6080 with SMTP id 6a1803df08f44-6e8e6dab467mr34449586d6.10.1741263759099;
-        Thu, 06 Mar 2025 04:22:39 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239516eb5sm87810466b.84.2025.03.06.04.22.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 04:22:38 -0800 (PST)
-Message-ID: <91561f37-5309-45f1-a1d7-20228ba68c2e@oss.qualcomm.com>
-Date: Thu, 6 Mar 2025 13:22:35 +0100
+        d=1e100.net; s=20230601; t=1741263826; x=1741868626;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M16Hx03LPq6Hpxa+7YZIfd9IWWJDL42bnuEv+y5yizM=;
+        b=ttqIEdLK56Mn3l51VfKP2yGFrMa+y63/O4JKxZ+1OHv6sbWI7CxpWVIA2lIfvjAWJW
+         uFyaLqeZgNsLggPHpjXOgo1SPEo1jQdbxhdenLg7qkXTiK0OuV619npUzDZWAwp1shvi
+         V4SjYURswytiYXCQDEhZDiEyVo+nWgeaR3i37esDE6dLVRbjHd+NochlXUk6SVKwi3KE
+         SWjxY/BLn7hHPNrxP3ClfpC/dTfxmZF3xU7jfEmwgBvhmHias4bPfA2IflCyarxNJzie
+         li6OwBsVK8Vpp5B6rXB+OzoQqikana+qHGdwNXdSpd1rFwBa98pSY+tNFW9TfGJ+UqvG
+         5KDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIupRX6SoUdjfEVZHmYRvFPJIW7B4s0CQrHnAGB5Z5HPTFPbDrJ8rvAE+UEj4k3NBEopsWv3S2kUry9kc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuuWNZpbTrA4Ffp3h2PfhKypdOw618LwzivuOmJ7IWKbjPSO/B
+	kPQISCllqYQcX6D8j0TtqzUvSlk1EvKlRVIUXjOJo9RLBmhZ/NRmC1fDLDr7yB4=
+X-Gm-Gg: ASbGncsOpsqqJ+AA3PbrdpWu/Vrh255d78XjO2lvcdiCfPk6kDosFTa/Kv6Of826sRb
+	r2ekxluGPcDbH0+Wp/dPKvQZH74icMbKqitgplPLl74RKsOPGJH/ueJ0QExJw9D0BHN5KaLjrFP
+	aSr9u/gvgWt0f60MtS5wg8pCZMlILLknU6oTBrfdJ7SY2ROfKz8jqb+x21+qWmExlWdbEbG7JMt
+	OCF4tlqthOq6EtUJ8OM3hjWuz96X52Ld5ryneEihpCIUTtdHMrZljpHGhsIRkEYgOcfj8dDxxZv
+	wReoBmmzYI0FBvu/pljHET10GxORlQWs5EXRYUK7iXqMIEDj9p6iHDSDAntgyuXlIPAgZRbRfty
+	to7KluHLAtD8f3fWdx7ninFFG14SFuhpLV+FkTBE5XIkCCm23XA==
+X-Google-Smtp-Source: AGHT+IFsubZy1stzLlAQAO2x9t8qCSSvv55Pi5w0YDWBthveEExrqPR8Wq2/UXbzt8+RS0SQ+6/D5w==
+X-Received: by 2002:a05:600c:3d1a:b0:439:9a1f:d73d with SMTP id 5b1f17b1804b1-43bd2ae647bmr19310215e9.8.1741263826596;
+        Thu, 06 Mar 2025 04:23:46 -0800 (PST)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb79b9sm1886787f8f.3.2025.03.06.04.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 04:23:46 -0800 (PST)
+Date: Thu, 6 Mar 2025 13:23:43 +0100
+From: Petr Tesarik <ptesarik@suse.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Valentin Schneider <vschneid@redhat.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rt-users@vger.kernel.org, Mike Galbraith <efault@gmx.de>, Peter
+ Collingbourne <pcc@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Thiago Jung Bauermann
+ <thiago.bauermann@linaro.org>, Mark Brown <broonie@kernel.org>, Kristina
+ Martsenko <kristina.martsenko@arm.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Jinjie Ruan <ruanjinjie@huawei.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH 1/1] arm64: enable PREEMPT_LAZY
+Message-ID: <20250306132343.6b902a3d@mordecai.tesarici.cz>
+In-Reply-To: <Z8hAZ09Q40fxLJSk@J2N7QTR9R3>
+References: <20250305104925.189198-1-vschneid@redhat.com>
+	<20250305104925.189198-2-vschneid@redhat.com>
+	<Z8hAZ09Q40fxLJSk@J2N7QTR9R3>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] clk: qcom: common: Add support to configure PLL
-To: Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250306-videocc-pll-multi-pd-voting-v2-0-0cd00612bc0e@quicinc.com>
- <20250306-videocc-pll-multi-pd-voting-v2-2-0cd00612bc0e@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250306-videocc-pll-multi-pd-voting-v2-2-0cd00612bc0e@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: v6lkd7BVZGmIM0K99kt-iQs7dwNgG6Eo
-X-Authority-Analysis: v=2.4 cv=U5poDfru c=1 sm=1 tr=0 ts=67c99391 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=AIv-xuq51RFgKBoQvIEA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: v6lkd7BVZGmIM0K99kt-iQs7dwNgG6Eo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_05,2025-03-06_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0
- mlxlogscore=990 adultscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503060093
 
-On 6.03.2025 9:55 AM, Jagadeesh Kona wrote:
-> From: Taniya Das <quic_tdas@quicinc.com>
+On Wed, 5 Mar 2025 12:15:35 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
+
+> On Wed, Mar 05, 2025 at 11:49:25AM +0100, Valentin Schneider wrote:
+> > From: Mark Rutland <mark.rutland@arm.com>
+> > 
+> > For an architecture to enable CONFIG_ARCH_HAS_RESCHED_LAZY, two things are
+> > required:
+> > 1) Adding a TIF_NEED_RESCHED_LAZY flag definition
+> > 2) Checking for TIF_NEED_RESCHED_LAZY in the appropriate locations
+> > 
+> > 2) is handled in a generic manner by CONFIG_GENERIC_ENTRY, which isn't
+> > (yet) implemented for arm64. However, outside of core scheduler code,
+> > TIF_NEED_RESCHED_LAZY only needs to be checked on a kernel exit, meaning:
+> > o return/entry to userspace.
+> > o return/entry to guest.
+> > 
+> > The return/entry to a guest is all handled by xfer_to_guest_mode_handle_work()
+> > which already does the right thing, so it can be left as-is.
+> > 
+> > arm64 doesn't use common entry's exit_to_user_mode_prepare(), so update its
+> > return to user path to check for TIF_NEED_RESCHED_LAZY and call into
+> > schedule() accordingly.
+> > 
+> > Link: https://lore.kernel.org/linux-rt-users/20241216190451.1c61977c@mordecai.tesarici.cz/
+> > Link: https://lore.kernel.org/all/xhsmh4j0fl0p3.mognet@vschneid-thinkpadt14sgen2i.remote.csb/
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > [testdrive, _TIF_WORK_MASK fixlet and changelog.]
+> > Signed-off-by: Mike Galbraith <efault@gmx.de>
+> > [Another round of testing; changelog faff]
+> > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> > ---
+> >  arch/arm64/Kconfig                   |  1 +
+> >  arch/arm64/include/asm/thread_info.h | 16 +++++++++-------
+> >  arch/arm64/kernel/entry-common.c     |  2 +-
+> >  3 files changed, 11 insertions(+), 8 deletions(-)  
 > 
-> Integrate PLL configuration into clk_alpha_pll structure and add support
-> for qcom_cc_clk_alpha_pll_configure() function which can be used to
-> configure the clock controller PLLs from common core code.
+> Catalin, Will, given this is small and self-contained, I reckon it makes
+> sense to pick this up ahead of Jinjie's series to move arm64 over to the
+> generic entry library (which is on my queue of things to review). Even
+> if we pick up both, it'll be easier to bisect and debug issues caused by
+> this patch alone.
 > 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
+> The fixes/cleanups from Mike and Valentin look right to me, so FWIW:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-[...]
+Thank you, all. Much appreciated.
 
-> +static void qcom_cc_clk_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap)
-> +{
-> +	if (!pll->config || !pll->regs)
-> +		return;
-
-This should probably throw some sort of a warning
-
-> +
-> +	switch (GET_PLL_TYPE(pll)) {
-> +	case CLK_ALPHA_PLL_TYPE_LUCID_OLE:
-> +		clk_lucid_ole_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_LUCID_EVO:
-> +		clk_lucid_evo_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_TAYCAN_ELU:
-> +		clk_taycan_elu_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_RIVIAN_EVO:
-> +		clk_rivian_evo_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_TRION:
-> +		clk_trion_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_HUAYRA_2290:
-> +		clk_huayra_2290_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_FABIA:
-> +		clk_fabia_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_AGERA:
-> +		clk_agera_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_PONGO_ELU:
-> +		clk_pongo_elu_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_ZONDA:
-> +	case CLK_ALPHA_PLL_TYPE_ZONDA_OLE:
-> +		clk_zonda_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_STROMER:
-> +	case CLK_ALPHA_PLL_TYPE_STROMER_PLUS:
-> +		clk_stromer_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	case CLK_ALPHA_PLL_TYPE_DEFAULT:
-> +	case CLK_ALPHA_PLL_TYPE_DEFAULT_EVO:
-> +	case CLK_ALPHA_PLL_TYPE_HUAYRA:
-> +	case CLK_ALPHA_PLL_TYPE_HUAYRA_APSS:
-> +	case CLK_ALPHA_PLL_TYPE_BRAMMO:
-> +	case CLK_ALPHA_PLL_TYPE_BRAMMO_EVO:
-> +		clk_alpha_pll_configure(pll, regmap, pll->config);
-> +		break;
-> +	default:
-> +		break;
-
-And so should the 'default' case
-
-Konrad
+Petr T
