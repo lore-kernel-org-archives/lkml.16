@@ -1,199 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D68211497;
-	Thu,  6 Mar 2025 11:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9A9218ABC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260651; cv=none; b=XOr9H12UPUZrWg9NCyl/rtuXJEnFfdjTN7hXvl2PJUTyLtZbYJUbR31/cVklFcwB5eoqYbHI15Vb5sAiUn3eA40Ovd6lrEK/Dhw7FH1r5YRRzLjJKg/3AjC4MDguWVlw6g4wBr3XES3TyaNgQYeS4FwSwkgW25rPxjWGEdNueHc=
+	t=1741260659; cv=none; b=lhl5DbsOk/NQ+MiredKpiONili1Kcj4pE3I359jNxR2/6Qj5cPD/PT8RCIVGxKKIaqcSlj4gpXLuNJNr1q0DDsHxGziqwanQwrRHj65h+0LQVs0wtdn+GTcTg+pYXBlJH3t06Opl0ulzN0ALXX9VSNFfxP5+Dzu+7oyK1DcxWak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260651; c=relaxed/simple;
-	bh=r81yvisX8P4UQm9F7N7hhZ732PaheqwD7Ks9SFpA+WU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WGZ/YGQe5rWNkInhN+Y5sTGVtrenmmk5yA6Nhk0uFtWnKce9uIp4qFQ6xw8QshZAqVoaCApkefPNVKcRYA7XlcXcqGbIJ33m+BbL2wwElrFi6c8qt1sOhVv3kmpOsGpLUZW/XGilVEViY4lBosn4SidnZkxwfUOOc6DQpw4Uk9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ler7t8+S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741260659; c=relaxed/simple;
+	bh=gzAb8Vev7F0m4l48I407MYxa8qXR/pteEzI03GTE0HY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iVyHT1wggyF8IvcatAVUuOqhFfBq2BkS9EO+Sk1JBl6JnpCa4abGzIdl4HLJfx+aORwxNxAO2VInpcrRakjbPcg/Y8PTT46Qbvy2lww92688g29FEu07V9I1qMn4k1YHWo2u2feMoD0nexWVMF4GSPheAqy/GHCddwEr/TQ9v/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=pwKcsgsx; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ler7t8+S"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 04DD3C4AF0C;
-	Thu,  6 Mar 2025 11:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741260651;
-	bh=r81yvisX8P4UQm9F7N7hhZ732PaheqwD7Ks9SFpA+WU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ler7t8+SANzyxeocUaVFF0itfXjdU/AePkZgfwecSb9/3uHn9EJLYdOl7yEWWt26X
-	 gfbgXEaTJbubb6zSFxiE3MJRKjpQXwfLp+1G9BSGiWCqMOTvaKavbo8xZt0/BrR1yQ
-	 xn/1Ptu59MizrbpA03exoCIx/1pM/xhK+vQSaXF1DemvPMQ4BB+ko4e3aWSoWZmJSo
-	 h+loNjGifVudVHzlXFeQCHsKVqs/vwkDcO70Zfm/Qg1PgQ/lR7aNYQu7I7CYExK744
-	 r8T5gba64BoDYPfa2j0BfACWYY/s14KBueIuTPUCOSNxF9bxT0pNglBNMAlCWu/Ipr
-	 eqkJb6AowxlqA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968BAC282D1;
-	Thu,  6 Mar 2025 11:30:50 +0000 (UTC)
-From: joel granados <joel.granados@kernel.org>
-Date: Thu, 06 Mar 2025 12:29:46 +0100
-Subject: [PATCH v2 6/6] s390: mv s390 sysctls into their own file under
- arch/s390 dir
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="pwKcsgsx"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-390f69f8083so521618f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1741260655; x=1741865455; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FS59gZd32BjVBMnl0y8BuCd7aMfa22x1ZHu9pei4qQQ=;
+        b=pwKcsgsxF6MN1VsdsfZVVBUDKMHdq57SmRxTS+nEU9TthWtw894Z/42yEZUg2rIVjE
+         JoP969eRLKuum7zoO1YODhPM4mXuZ8qRCT4cu1O/GwX5WSSgzLf0fmlrx8Xb4vXI5eEI
+         VbcoqHquDBqtQSo48YLmBostmIZcetrE9HM2s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741260655; x=1741865455;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FS59gZd32BjVBMnl0y8BuCd7aMfa22x1ZHu9pei4qQQ=;
+        b=lBjiHLG+9UfejDwvMrFBPhpqkIJgwuvZGQF32Q5Gx0aY6dqvPyB7pnDKl4EZPWux6s
+         PuOTiuROPgj9JK3uVun4DkeA7dC6jv+QPDnebk56sj1Iye1uaIBRixnht4nnLWMPGyaY
+         6q32uX3h8uozoKosJHLF6UpVBQAU9NaOsLejPpAdUwQdW0bOVrt3t55XeD5PpgRksWOS
+         1xsElkOfh7ru8fPbj9v5+BvPSsSS/9bePXSrR1LCXfmlxokUTekZfThFa+hv2YIYkVBA
+         WrynjfSq0/mOkY0vwS478ITR2ca7VDG8Gjkzld6LJyfKY/V7InQPE0J837mlIW1qvCDJ
+         2I8Q==
+X-Gm-Message-State: AOJu0YwNLfif7vTZDH/LU2+9iNdF+I/qNqG/q+zfZEjJN2Sml4B3WIdq
+	roaMDGrkfTkcOrG31GaQ2XhdgCC4e52KqZzF8wKHxGte56RGQNzmmNmsD0l1txxm/odOjgQXq4R
+	b
+X-Gm-Gg: ASbGncuGQR9C/tKHjEoLaSBnrQeQ63xZYu2PgI+z8VGEUOxG0vJzfvWU3AIJI4D++sN
+	7KjVlAKyZXbXJdRKHEOJdKZWmpJ13K4QPP+m5R/lVR7P5i8doGrj0jBN7+IfLNCVGIkqOIWOB1k
+	Pxa0YzisgiQO1sM0tYBsEmmmiM4dgLqDE6upkbtbzTk5QfQfg+Qlrxj/O3eyroTt6ptJ7nQqEFV
+	ZJXyQ86zQOXxIkO0dIzcSVxhgPY9wpR/T+KPivfHTPS7p9l8+hIHgYbXdZkf3DprDughdlYK9E1
+	VtohkDIl6uaIhwvNocDk5BCw1g3sK+7aCysxZeErH6RnwKClgkplwfszibL8n5HsiYnsFi1js4c
+	DfNzBEA==
+X-Google-Smtp-Source: AGHT+IEZn/9kHcDhx+uHLD679Aq/6iWA+3OuKqlfoSyRAz/qXxji0vn2yOVWqnfvegWeGGNMCqwuaw==
+X-Received: by 2002:a05:6000:1788:b0:390:f9a5:bd79 with SMTP id ffacd0b85a97d-3911f74e675mr5508637f8f.26.1741260654829;
+        Thu, 06 Mar 2025 03:30:54 -0800 (PST)
+Received: from localhost.localdomain ([2001:b07:6474:ebbf:4703:aa8c:6eab:8161])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb79b9sm1749650f8f.3.2025.03.06.03.30.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 03:30:54 -0800 (PST)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: Stephen Boyd <sboyd@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	linux-amarula@amarulasolutions.com,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v10 16/18] arm64: dts: imx8mm: add PLLs to clock controller module (CCM)
+Date: Thu,  6 Mar 2025 12:28:05 +0100
+Message-ID: <20250306112959.242131-17-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250306112959.242131-1-dario.binacchi@amarulasolutions.com>
+References: <20250306112959.242131-1-dario.binacchi@amarulasolutions.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250306-jag-mv_ctltables-v2-6-71b243c8d3f8@kernel.org>
-References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
-In-Reply-To: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
-To: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, Heiko Carstens <hca@linux.ibm.com>, 
- Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
- linux-s390@vger.kernel.org, Joel Granados <joel.granados@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3591;
- i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=r81yvisX8P4UQm9F7N7hhZ732PaheqwD7Ks9SFpA+WU=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGfJh2hk9Sl4d4/rt7M4Iv2CUUdgG9l340yBQ
- 6BGtdUWhlaPu4kBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJnyYdoAAoJELqXzVK3
- lkFPr9cL/joKGCY8wwMfNbIM/wGecy7g3xyX2KarUDFaSjpCcTGPnu4HHo8U403Jd27W/skMAG9
- oVpxYveO27v7tBMjjMuxmOZ2oslc37sV8r1ghd2AHHxFE5PgLHtp7EfmYoySst59SKwIxWndwjd
- pVILJ97rkV8dNy4VuIkf7vRkIY8TpezV37Bg3nOiStdEeBer8CwF8/YNWojUb6oF0liBQjLvBRm
- /n81HLHBv64bVKMcW/82pwTrAvtP4Skk4na6AF25lC0iSWmP3k6iPhLrV4XCy+EbJnQx4XYhmOd
- 8/AZE8B8v7esZrpw0FYYg3004UQ6mS9KpGFBjcNCE/pxhBPfeC+MRj24JINqy1oT/bZpXK3fr8H
- AMu//ZLi/gEZ7QS6vGYkolT5M0Bvq6tqF3sOhc9tEp5zdaTOCasIU05PpbNWFzq0JbHpFvox1Lh
- 3bc6S5+/kikkHL42qGx9Ze7F2QAn/4jFnKdY7QjIHiCbAv/SWJhKXtDQLxZ6maCcIhK1UKBDPI7
- W4=
-X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
- auth_id=239
+Content-Transfer-Encoding: 8bit
 
-Move s390 sysctls (spin_retry and userprocess_debug) into their own
-files under arch/s390. We create two new sysctl tables
-(2390_{fault,spin}_sysctl_table) which will be initialized with
-arch_initcall placing them after their original place in proc_root_init.
+Add the PLLs generated by anatop to the clock list of the Clock
+Controller Module (CCM) node.
 
-This is part of a greater effort to move ctl tables into their
-respective subsystems which will reduce the merge conflicts in
-kernel/sysctl.c.
+Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 
-Signed-off-by: joel granados <joel.granados@kernel.org>
 ---
- arch/s390/lib/spinlock.c | 18 ++++++++++++++++++
- arch/s390/mm/fault.c     | 17 +++++++++++++++++
- kernel/sysctl.c          | 18 ------------------
- 3 files changed, 35 insertions(+), 18 deletions(-)
 
-diff --git a/arch/s390/lib/spinlock.c b/arch/s390/lib/spinlock.c
-index a81a01c449272ebad77cb031992078ac8e255eb8..6870b9e03456c34a1dc5c0c706f8e8bf1c4140e8 100644
---- a/arch/s390/lib/spinlock.c
-+++ b/arch/s390/lib/spinlock.c
-@@ -16,6 +16,7 @@
- #include <linux/io.h>
- #include <asm/alternative.h>
- #include <asm/asm.h>
-+#include <linux/sysctl.h>
- 
- int spin_retry = -1;
- 
-@@ -37,6 +38,23 @@ static int __init spin_retry_setup(char *str)
- }
- __setup("spin_retry=", spin_retry_setup);
- 
-+static const struct ctl_table s390_spin_sysctl_table[] = {
-+	{
-+		.procname	= "spin_retry",
-+		.data		= &spin_retry,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+};
-+
-+static int __init init_s390_spin_sysctls(void)
-+{
-+	register_sysctl_init("kernel", s390_spin_sysctl_table);
-+	return 0;
-+}
-+arch_initcall(init_s390_spin_sysctls);
-+
- struct spin_wait {
- 	struct spin_wait *next, *prev;
- 	int node_id;
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index 9b681f74dccc1f525bafe150acf91e666a60d2bd..507da355bf68271c30115a797368f950707a2d8e 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -175,6 +175,23 @@ static void dump_fault_info(struct pt_regs *regs)
- 
- int show_unhandled_signals = 1;
- 
-+static const struct ctl_table s390_fault_sysctl_table[] = {
-+	{
-+		.procname	= "userprocess_debug",
-+		.data		= &show_unhandled_signals,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+};
-+
-+static int __init init_s390_fault_sysctls(void)
-+{
-+	register_sysctl_init("kernel", s390_fault_sysctl_table);
-+	return 0;
-+}
-+arch_initcall(init_s390_fault_sysctls);
-+
- void report_user_fault(struct pt_regs *regs, long signr, int is_mm_fault)
- {
- 	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 0dc41eea1dbd34396c323118cfd0e3133c6993a1..34c525ad0e0e0fe3b64c2ec730e443a75b55f3a3 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1709,15 +1709,6 @@ static const struct ctl_table kern_table[] = {
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_MAXOLDUID,
- 	},
--#ifdef CONFIG_S390
--	{
--		.procname	= "userprocess_debug",
--		.data		= &show_unhandled_signals,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
--	},
--#endif
- 	{
- 		.procname	= "ngroups_max",
- 		.data		= (void *)&ngroups_max,
-@@ -1798,15 +1789,6 @@ static const struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif
--#if defined(CONFIG_S390) && defined(CONFIG_SMP)
--	{
--		.procname	= "spin_retry",
--		.data		= &spin_retry,
--		.maxlen		= sizeof (int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
--	},
--#endif
- #if	defined(CONFIG_ACPI_SLEEP) && defined(CONFIG_X86)
- 	{
- 		.procname	= "acpi_video_flags",
+(no changes since v4)
 
+Changes in v4:
+- New
+
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 597041a05073..79f4c1ae7d8b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -642,9 +642,14 @@ clk: clock-controller@30380000 {
+ 					     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+ 				#clock-cells = <1>;
+ 				clocks = <&osc_32k>, <&osc_24m>, <&clk_ext1>, <&clk_ext2>,
+-					 <&clk_ext3>, <&clk_ext4>;
++					 <&clk_ext3>, <&clk_ext4>,
++					 <&anatop IMX8MM_ANATOP_AUDIO_PLL1>,
++					 <&anatop IMX8MM_ANATOP_AUDIO_PLL2>,
++					 <&anatop IMX8MM_ANATOP_DRAM_PLL>,
++					 <&anatop IMX8MM_ANATOP_VIDEO_PLL>;
+ 				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+-					      "clk_ext3", "clk_ext4";
++					      "clk_ext3", "clk_ext4", "audio_pll1", "audio_pll2",
++					      "dram_pll", "video_pll";
+ 				assigned-clocks = <&clk IMX8MM_CLK_A53_SRC>,
+ 						<&clk IMX8MM_CLK_A53_CORE>,
+ 						<&clk IMX8MM_CLK_NOC>,
 -- 
-2.47.2
-
+2.43.0
 
