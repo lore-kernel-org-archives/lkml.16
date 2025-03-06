@@ -1,430 +1,296 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB181201022;
-	Thu,  6 Mar 2025 12:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA804201022;
+	Thu,  6 Mar 2025 12:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741262871; cv=none; b=OygKY6mGti9PVIhzLk7pI1WJGYgjxgUCDSuN1LwQDYP4/YBVY8lIkJLLqtGIaHbx9WlbQogsfZoR8Bvx23W8hxsyHKe+H0tC7ZI1KqwwwvvptkrQ6td/OlICj3uT+2zYp+rhoemQ9gCb8pbVafXYWF+TYStOi+OreyA9msEh3lA=
+	t=1741262889; cv=none; b=JJ+eCO91/u9s61tQac6baKQ4HMvCqyIQL0xGJa6aiZC9mDhdwRdQJRBTrl6770iraDfmPjO/EAvU0pbo60Q3daSiAagLoGnZZqXJ6uXS+4JKM/cEjX+BO1Ye5EtcHqjWhaEbd3YZCsXidGaCiwR7ciWbtOoudJPDHmIZAJUvEu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741262871; c=relaxed/simple;
-	bh=YbLkp92jfWOa6iKpgDCg5V/zlLT8jOLvtH72uk3o9Jk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ObA0j6vaQDTgVUnho3ahCEKgMTx9yQlTvPAxJEf0sNCz+SqVN5Aba8QpLRpESZwRt5h2rtVXp2311ygiqkWAJcwngcizvK5RNTuFirLi7/Q2Mm8ifkt2ZLSTcQiBsb2R6AL+qE9B2+So4m2hMH7a1Di+i2CevHZb7cvc7uL3Yy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pdnC2gUY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741262889; c=relaxed/simple;
+	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rUj1Y2T0Iys92+9oWAosZE8zjB+MhXHaXHBX5wZPWYEziNvfJPlw/PVkKsSiBmMyLfo1WOdcYCF5UGuZMa9TDn7drzS67DTG2ubVUhuOD4RhEWik8sB8bOumZgy/dof9JZpRAP1chYSimuNUvEsscZlFfLoDJIMdG89Xk3B2LFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvV2RCBU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pdnC2gUY"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5268ii3k003607;
-	Thu, 6 Mar 2025 12:07:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nLMPn6sgOpPr//s1n8yFiplRaVRg1E6ACcvY8+uEKqI=; b=pdnC2gUYXOIBhmxC
-	TWDVEXt7VQOXO1Uq+SxIOTLc0CxBE17s3taaeCtJoPkpavRhwQb9CsE4Smmoowdv
-	12DIiF2ODh2dYhkae4SlXp+rPvEGehwIFyy5paS6xM7jvo04svp5jwPFNQP7pnY9
-	cmlWQXjBAvv2VIpbmAwmIxrXLXg+flVjwthF3D+jfvx0Ee0C3GmISxmDnmy6sqAS
-	7A3TDKLarLvP7+uwMaECX0CnEeGKzhZXVetyYBqu7wzDWc0dMXDN3tqvkcm7iAix
-	p63yvTMQv73t0YDLu+BF83quCQdDliru/eC10hsyaG6jHKM4yDPl49Miqhe5rg1u
-	10pmHw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 456wrja7n0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Mar 2025 12:07:44 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 526C7igQ032231
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Mar 2025 12:07:44 GMT
-Received: from [10.50.63.230] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Mar 2025
- 04:07:41 -0800
-Message-ID: <892eb8ef-d954-aab5-5755-c33e804efad0@quicinc.com>
-Date: Thu, 6 Mar 2025 17:37:38 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvV2RCBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FEBC4CEE0;
+	Thu,  6 Mar 2025 12:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741262888;
+	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=VvV2RCBUgyAKtcOzcBcQ5VFPIpjskYij2cFQ5yWi0x5ZLrpF+Mnxp7N2qmEYa2Vk1
+	 xSohKONmubqMjrN8NxTJmqY/D/G0gK0WRcZhDqNuB/x7MWNUWE1Qy9Gig6eE5tnvOs
+	 K0hTnpdpXV7ZKmN0ZfltaB+QpGBxLtQhw3stmLEu6ZWWZQJmNKhxOSbi4g2KaHJe9D
+	 NlWKTc6UvDfSWTL4tHTw06gv1rgabQgopMuUgiuQhoM7DKjyADNg7NZcaXZXrYzBC4
+	 PlPfxBkoRh0LIFk1S1LnSsUFh1tkiI9oRlqY8PWuni8zCJNjNcJnGmEW2ZEj02pcnQ
+	 NTf2WPVjgPQLA==
+Message-ID: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFSD: fix race between nfsd registration and
+ exports_proc
+From: Jeff Layton <jlayton@kernel.org>
+To: Maninder Singh <maninder1.s@samsung.com>, chuck.lever@oracle.com, 
+	neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, 
+	lorenzo@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	chungki0201.woo@samsung.com, Shubham Rana <s9.rana@samsung.com>
+Date: Thu, 06 Mar 2025 07:08:06 -0500
+In-Reply-To: <20250306092007.1419237-2-maninder1.s@samsung.com>
+References: <20250306092007.1419237-1-maninder1.s@samsung.com>
+		<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcas5p4.samsung.com>
+	 <20250306092007.1419237-2-maninder1.s@samsung.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFC PATCH 02/12] media: iris: Add platform capabilities for HEVC
- and VP9 decoders
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, <quic_vgarodia@quicinc.com>,
-        <quic_abhinavk@quicinc.com>, <mchehab@kernel.org>
-CC: <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250305104335.3629945-1-quic_dikshita@quicinc.com>
- <20250305104335.3629945-3-quic_dikshita@quicinc.com>
- <f4354a08-46e2-4bf5-9395-f9b861a9d7c8@linaro.org>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <f4354a08-46e2-4bf5-9395-f9b861a9d7c8@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: R7F4B-payTECp-hv5loAiMJ2twv0WLpz
-X-Authority-Analysis: v=2.4 cv=FYDNxI+6 c=1 sm=1 tr=0 ts=67c99010 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=IGXroYBQe6CBykfo8BwA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: R7F4B-payTECp-hv5loAiMJ2twv0WLpz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-06_05,2025-03-06_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503060092
+
+On Thu, 2025-03-06 at 14:50 +0530, Maninder Singh wrote:
+> As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
+> and cleanup by remove_proc_entry() at last of exit_nfsd.
+>=20
+> Which causes kernel OOPs if there is race between below 2 operations:
+> (i) exportfs -r
+> (ii) mount -t nfsd none /proc/fs/nfsd
+>=20
+> for 5.4 kernel ARM64:
+>=20
+> CPU 1:
+> el1_irq+0xbc/0x180
+> arch_counter_get_cntvct+0x14/0x18
+> running_clock+0xc/0x18
+> preempt_count_add+0x88/0x110
+> prep_new_page+0xb0/0x220
+> get_page_from_freelist+0x2d8/0x1778
+> __alloc_pages_nodemask+0x15c/0xef0
+> __vmalloc_node_range+0x28c/0x478
+> __vmalloc_node_flags_caller+0x8c/0xb0
+> kvmalloc_node+0x88/0xe0
+> nfsd_init_net+0x6c/0x108 [nfsd]
+> ops_init+0x44/0x170
+> register_pernet_operations+0x114/0x270
+> register_pernet_subsys+0x34/0x50
+> init_nfsd+0xa8/0x718 [nfsd]
+> do_one_initcall+0x54/0x2e0
+>=20
+> CPU 2 :
+> Unable to handle kernel NULL pointer dereference at virtual address 00000=
+00000000010
+>=20
+> PC is at : exports_net_open+0x50/0x68 [nfsd]
+>=20
+> Call trace:
+> exports_net_open+0x50/0x68 [nfsd]
+> exports_proc_open+0x2c/0x38 [nfsd]
+> proc_reg_open+0xb8/0x198
+> do_dentry_open+0x1c4/0x418
+> vfs_open+0x38/0x48
+> path_openat+0x28c/0xf18
+> do_filp_open+0x70/0xe8
+> do_sys_open+0x154/0x248
+>=20
+> Sometimes it crashes at exports_net_open() and sometimes cache_seq_next_r=
+cu().
+>=20
+> and same is happening on latest 6.14 kernel as well:
+>=20
+> [    0.000000] Linux version 6.14.0-rc5-next-20250304-dirty
+> ...
+> [  285.455918] Unable to handle kernel paging request at virtual address =
+00001f4800001f48
+> ...
+> [  285.464902] pc : cache_seq_next_rcu+0x78/0xa4
+> ...
+> [  285.469695] Call trace:
+> [  285.470083]  cache_seq_next_rcu+0x78/0xa4 (P)
+> [  285.470488]  seq_read+0xe0/0x11c
+> [  285.470675]  proc_reg_read+0x9c/0xf0
+> [  285.470874]  vfs_read+0xc4/0x2fc
+> [  285.471057]  ksys_read+0x6c/0xf4
+> [  285.471231]  __arm64_sys_read+0x1c/0x28
+> [  285.471428]  invoke_syscall+0x44/0x100
+> [  285.471633]  el0_svc_common.constprop.0+0x40/0xe0
+> [  285.471870]  do_el0_svc_compat+0x1c/0x34
+> [  285.472073]  el0_svc_compat+0x2c/0x80
+> [  285.472265]  el0t_32_sync_handler+0x90/0x140
+> [  285.472473]  el0t_32_sync+0x19c/0x1a0
+> [  285.472887] Code: f9400885 93407c23 937d7c27 11000421 (f86378a3)
+> [  285.473422] ---[ end trace 0000000000000000 ]---
+>=20
+> It reproduced simply with below script:
+> while [ 1 ]
+> do
+> /exportfs -r
+> done &
+>=20
+> while [ 1 ]
+> do
+> insmod /nfsd.ko
+> mount -t nfsd none /proc/fs/nfsd
+> umount /proc/fs/nfsd
+> rmmod nfsd
+> done &
+>=20
+> So exporting interfaces to user space shall be done at last and
+> cleanup at first place.
+>=20
+> With change there is no Kernel OOPs.
+>=20
+> Co-developed-by: Shubham Rana <s9.rana@samsung.com>
+> Signed-off-by: Shubham Rana <s9.rana@samsung.com>
+> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+> ---
+>  fs/nfsd/nfsctl.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index d773481bcf10..f9763ced743d 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -2291,12 +2291,9 @@ static int __init init_nfsd(void)
+>  	if (retval)
+>  		goto out_free_pnfs;
+>  	nfsd_lockd_init();	/* lockd->nfsd callbacks */
+> -	retval =3D create_proc_exports_entry();
+> -	if (retval)
+> -		goto out_free_lockd;
+>  	retval =3D register_pernet_subsys(&nfsd_net_ops);
+>  	if (retval < 0)
+> -		goto out_free_exports;
+> +		goto out_free_lockd;
+>  	retval =3D register_cld_notifier();
+>  	if (retval)
+>  		goto out_free_subsys;
+> @@ -2307,12 +2304,17 @@ static int __init init_nfsd(void)
+>  	if (retval)
+>  		goto out_free_nfsd4;
+>  	retval =3D genl_register_family(&nfsd_nl_family);
+> +	if (retval)
+> +		goto out_free_filesystem;
+> +	retval =3D create_proc_exports_entry();
+>  	if (retval)
+>  		goto out_free_all;
+>  	nfsd_localio_ops_init();
+> =20
+>  	return 0;
+>  out_free_all:
+> +	genl_unregister_family(&nfsd_nl_family);
+> +out_free_filesystem:
+>  	unregister_filesystem(&nfsd_fs_type);
+>  out_free_nfsd4:
+>  	nfsd4_destroy_laundry_wq();
+> @@ -2320,9 +2322,6 @@ static int __init init_nfsd(void)
+>  	unregister_cld_notifier();
+>  out_free_subsys:
+>  	unregister_pernet_subsys(&nfsd_net_ops);
+> -out_free_exports:
+> -	remove_proc_entry("fs/nfs/exports", NULL);
+> -	remove_proc_entry("fs/nfs", NULL);
+>  out_free_lockd:
+>  	nfsd_lockd_shutdown();
+>  	nfsd_drc_slab_free();
+> @@ -2335,14 +2334,14 @@ static int __init init_nfsd(void)
+> =20
+>  static void __exit exit_nfsd(void)
+>  {
+> +	remove_proc_entry("fs/nfs/exports", NULL);
+> +	remove_proc_entry("fs/nfs", NULL);
+>  	genl_unregister_family(&nfsd_nl_family);
+>  	unregister_filesystem(&nfsd_fs_type);
+>  	nfsd4_destroy_laundry_wq();
+>  	unregister_cld_notifier();
+>  	unregister_pernet_subsys(&nfsd_net_ops);
+>  	nfsd_drc_slab_free();
+> -	remove_proc_entry("fs/nfs/exports", NULL);
+> -	remove_proc_entry("fs/nfs", NULL);
+>  	nfsd_lockd_shutdown();
+>  	nfsd4_free_slabs();
+>  	nfsd4_exit_pnfs();
 
 
-
-On 3/6/2025 5:58 AM, Bryan O'Donoghue wrote:
-> On 05/03/2025 10:43, Dikshita Agarwal wrote:
->> Add platform capabilities for HEVC and VP9 codecs in decoder driver
->> with related hooks.
->>
->> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
->> ---
->>   drivers/media/platform/qcom/iris/iris_ctrls.c | 28 ++++++-
->>   .../qcom/iris/iris_hfi_gen2_command.c         | 30 ++++++-
->>   .../qcom/iris/iris_hfi_gen2_defines.h         |  1 +
->>   .../qcom/iris/iris_hfi_gen2_response.c        | 36 ++++++++-
->>   .../platform/qcom/iris/iris_platform_common.h |  9 ++-
->>   .../platform/qcom/iris/iris_platform_sm8550.c | 80 ++++++++++++++++++-
->>   6 files changed, 170 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/iris/iris_ctrls.c
->> b/drivers/media/platform/qcom/iris/iris_ctrls.c
->> index b690578256d5..fb2b818c7c5c 100644
->> --- a/drivers/media/platform/qcom/iris/iris_ctrls.c
->> +++ b/drivers/media/platform/qcom/iris/iris_ctrls.c
->> @@ -20,9 +20,19 @@ static enum platform_inst_fw_cap_type
->> iris_get_cap_id(u32 id)
->>       case V4L2_CID_MPEG_VIDEO_DECODER_MPEG4_DEBLOCK_FILTER:
->>           return DEBLOCK;
->>       case V4L2_CID_MPEG_VIDEO_H264_PROFILE:
->> -        return PROFILE;
->> +        return PROFILE_H264;
->> +    case V4L2_CID_MPEG_VIDEO_HEVC_PROFILE:
->> +        return PROFILE_HEVC;
->> +    case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
->> +        return PROFILE_VP9;
->>       case V4L2_CID_MPEG_VIDEO_H264_LEVEL:
->> -        return LEVEL;
->> +        return LEVEL_H264;
->> +    case V4L2_CID_MPEG_VIDEO_HEVC_LEVEL:
->> +        return LEVEL_HEVC;
->> +    case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
->> +        return LEVEL_VP9;
->> +    case V4L2_CID_MPEG_VIDEO_HEVC_TIER:
->> +        return TIER;
->>       default:
->>           return INST_FW_CAP_MAX;
->>       }
->> @@ -36,10 +46,20 @@ static u32 iris_get_v4l2_id(enum
->> platform_inst_fw_cap_type cap_id)
->>       switch (cap_id) {
->>       case DEBLOCK:
->>           return V4L2_CID_MPEG_VIDEO_DECODER_MPEG4_DEBLOCK_FILTER;
->> -    case PROFILE:
->> +    case PROFILE_H264:
->>           return V4L2_CID_MPEG_VIDEO_H264_PROFILE;
->> -    case LEVEL:
->> +    case PROFILE_HEVC:
->> +        return V4L2_CID_MPEG_VIDEO_HEVC_PROFILE;
->> +    case PROFILE_VP9:
->> +        return V4L2_CID_MPEG_VIDEO_VP9_PROFILE;
->> +    case LEVEL_H264:
->>           return V4L2_CID_MPEG_VIDEO_H264_LEVEL;
->> +    case LEVEL_HEVC:
->> +        return V4L2_CID_MPEG_VIDEO_HEVC_LEVEL;
->> +    case LEVEL_VP9:
->> +        return V4L2_CID_MPEG_VIDEO_VP9_LEVEL;
->> +    case TIER:
->> +        return V4L2_CID_MPEG_VIDEO_HEVC_TIER;
->>       default:
->>           return 0;
->>       }
->> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
->> b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
->> index beaf3a051d7c..a3ebcda9a2ba 100644
->> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
->> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
->> @@ -309,7 +309,20 @@ static int iris_hfi_gen2_set_profile(struct
->> iris_inst *inst)
->>   {
->>       struct iris_inst_hfi_gen2 *inst_hfi_gen2 =
->> to_iris_inst_hfi_gen2(inst);
->>       u32 port = iris_hfi_gen2_get_port(V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> -    u32 profile = inst->fw_caps[PROFILE].value;
->> +    u32 profile;
->> +
->> +    switch (inst->codec) {
->> +    case V4L2_PIX_FMT_HEVC:
->> +        profile = inst->fw_caps[PROFILE_HEVC].value;
->> +        break;
->> +    case V4L2_PIX_FMT_VP9:
->> +        profile = inst->fw_caps[PROFILE_VP9].value;
->> +        break;
->> +    case V4L2_PIX_FMT_H264:
->> +    default:
->> +        profile = inst->fw_caps[PROFILE_H264].value;
->> +        break;
-> 
-> Following up on my previous comment about returning a 0 default and running
-> with it instead of erroring it - you then treat default == 0 @ inst->codec
-> assigned in iris_hfi_gen[1|2]_sys_init as H264.
-> 
-> In fact why have a default by the time you get this this point in the code
-> anyway ?
-> 
-> Just chuck out parameters which aren't expected as errors and then don't
-> bother with these defaults.
-> 
-Ack, as mentioned in previous comment, will remove the default case.
->> +    }
->>         inst_hfi_gen2->src_subcr_params.profile = profile;
->>   @@ -326,7 +339,20 @@ static int iris_hfi_gen2_set_level(struct
->> iris_inst *inst)
->>   {
->>       struct iris_inst_hfi_gen2 *inst_hfi_gen2 =
->> to_iris_inst_hfi_gen2(inst);
->>       u32 port = iris_hfi_gen2_get_port(V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> -    u32 level = inst->fw_caps[LEVEL].value;
->> +    u32 level;
->> +
->> +    switch (inst->codec) {
->> +    case V4L2_PIX_FMT_HEVC:
->> +        level = inst->fw_caps[LEVEL_HEVC].value;
->> +        break;
->> +    case V4L2_PIX_FMT_VP9:
->> +        level = inst->fw_caps[LEVEL_VP9].value;
->> +        break;
->> +    case V4L2_PIX_FMT_H264:
->> +    default:
->> +        level = inst->fw_caps[LEVEL_H264].value;
->> +        break;
->> +    }
->>         inst_hfi_gen2->src_subcr_params.level = level;
->>   diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
->> b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
->> index 2fcf7914b70f..48c507a1ec27 100644
->> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
->> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
->> @@ -46,6 +46,7 @@
->>   #define HFI_PROP_CROP_OFFSETS            0x03000105
->>   #define HFI_PROP_PROFILE            0x03000107
->>   #define HFI_PROP_LEVEL                0x03000108
->> +#define HFI_PROP_TIER                0x03000109
->>   #define HFI_PROP_STAGE                0x0300010a
->>   #define HFI_PROP_PIPE                0x0300010b
->>   #define HFI_PROP_LUMA_CHROMA_BIT_DEPTH        0x0300010f
-> 
-> These seem like - probably bitfields ?
-> 
-> Could we get the bits in a follow on patch/series ?
-> 
-I didn't understand this comment.
-These are not bit fields, but HFI macros, which we use to communicate with
-firmware.
->> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
->> b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
->> index b75a01641d5d..809bf0f238bd 100644
->> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
->> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
->> @@ -563,8 +563,22 @@ static void
->> iris_hfi_gen2_read_input_subcr_params(struct iris_inst *inst)
->>       inst->crop.width = pixmp_ip->width -
->>           ((subsc_params.crop_offsets[1] >> 16) & 0xFFFF) - inst->crop.left;
->>   -    inst->fw_caps[PROFILE].value = subsc_params.profile;
->> -    inst->fw_caps[LEVEL].value = subsc_params.level;
->> +    switch (inst->codec) {
->> +    case V4L2_PIX_FMT_HEVC:
->> +        inst->fw_caps[PROFILE_HEVC].value = subsc_params.profile;
->> +        inst->fw_caps[LEVEL_HEVC].value = subsc_params.level;
->> +        break;
->> +    case V4L2_PIX_FMT_VP9:
->> +        inst->fw_caps[PROFILE_VP9].value = subsc_params.profile;
->> +        inst->fw_caps[LEVEL_VP9].value = subsc_params.level;
->> +        break;
->> +    case V4L2_PIX_FMT_H264:
->> +    default:
->> +        inst->fw_caps[PROFILE_H264].value = subsc_params.profile;
->> +        inst->fw_caps[LEVEL_H264].value = subsc_params.level;
->> +        break;
->> +    }
->> +
->>       inst->fw_caps[POC].value = subsc_params.pic_order_cnt;
->>         if (subsc_params.bit_depth != BIT_DEPTH_8 ||
->> @@ -791,8 +805,22 @@ static void
->> iris_hfi_gen2_init_src_change_param(struct iris_inst *inst)
->>                            full_range, video_format,
->>                            video_signal_type_present_flag);
->>   -    subsc_params->profile = inst->fw_caps[PROFILE].value;
->> -    subsc_params->level = inst->fw_caps[LEVEL].value;
->> +    switch (inst->codec) {
->> +    case V4L2_PIX_FMT_HEVC:
->> +        subsc_params->profile = inst->fw_caps[PROFILE_HEVC].value;
->> +        subsc_params->level = inst->fw_caps[LEVEL_HEVC].value;
->> +        break;
->> +    case V4L2_PIX_FMT_VP9:
->> +        subsc_params->profile = inst->fw_caps[PROFILE_VP9].value;
->> +        subsc_params->level = inst->fw_caps[LEVEL_VP9].value;
->> +        break;
->> +    case V4L2_PIX_FMT_H264:
->> +    default:
->> +        subsc_params->profile = inst->fw_caps[PROFILE_H264].value;
->> +        subsc_params->level = inst->fw_caps[LEVEL_H264].value;
->> +        break;
->> +    }
->> +
->>       subsc_params->pic_order_cnt = inst->fw_caps[POC].value;
->>       subsc_params->bit_depth = inst->fw_caps[BIT_DEPTH].value;
->>       if (inst->fw_caps[CODED_FRAMES].value ==
->> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h
->> b/drivers/media/platform/qcom/iris/iris_platform_common.h
->> index f6b15d2805fb..67204cddd44a 100644
->> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
->> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
->> @@ -78,8 +78,12 @@ struct platform_inst_caps {
->>   };
->>     enum platform_inst_fw_cap_type {
->> -    PROFILE = 1,
->> -    LEVEL,
->> +    PROFILE_H264 = 1,
->> +    PROFILE_HEVC,
->> +    PROFILE_VP9,
->> +    LEVEL_H264,
->> +    LEVEL_HEVC,
->> +    LEVEL_VP9,
->>       INPUT_BUF_HOST_MAX_COUNT,
->>       STAGE,
->>       PIPE,
->> @@ -88,6 +92,7 @@ enum platform_inst_fw_cap_type {
->>       BIT_DEPTH,
->>       RAP_FRAME,
->>       DEBLOCK,
->> +    TIER,
->>       INST_FW_CAP_MAX,
->>   };
->>   diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->> b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->> index 35d278996c43..29bc50785da5 100644
->> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->> @@ -14,7 +14,7 @@
->>     static struct platform_inst_fw_cap inst_fw_cap_sm8550[] = {
->>       {
->> -        .cap_id = PROFILE,
->> +        .cap_id = PROFILE_H264,
->>           .min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
->>           .max = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH,
->>           .step_or_mask = BIT(V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE) |
->> @@ -28,7 +28,29 @@ static struct platform_inst_fw_cap
->> inst_fw_cap_sm8550[] = {
->>           .set = iris_set_u32_enum,
->>       },
->>       {
->> -        .cap_id = LEVEL,
->> +        .cap_id = PROFILE_HEVC,
->> +        .min = V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN,
->> +        .max = V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_STILL_PICTURE,
->> +        .step_or_mask = BIT(V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_STILL_PICTURE),
->> +        .value = V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN,
->> +        .hfi_id = HFI_PROP_PROFILE,
->> +        .flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
->> +        .set = iris_set_u32_enum,
->> +    },
->> +    {
->> +        .cap_id = PROFILE_VP9,
->> +        .min = V4L2_MPEG_VIDEO_VP9_PROFILE_0,
->> +        .max = V4L2_MPEG_VIDEO_VP9_PROFILE_2,
->> +        .step_or_mask = BIT(V4L2_MPEG_VIDEO_VP9_PROFILE_0) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_PROFILE_2),
->> +        .value = V4L2_MPEG_VIDEO_VP9_PROFILE_0,
->> +        .hfi_id = HFI_PROP_PROFILE,
->> +        .flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
->> +        .set = iris_set_u32_enum,
->> +    },
->> +    {
->> +        .cap_id = LEVEL_H264,
->>           .min = V4L2_MPEG_VIDEO_H264_LEVEL_1_0,
->>           .max = V4L2_MPEG_VIDEO_H264_LEVEL_6_2,
->>           .step_or_mask = BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_0) |
->> @@ -56,6 +78,60 @@ static struct platform_inst_fw_cap
->> inst_fw_cap_sm8550[] = {
->>           .flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
->>           .set = iris_set_u32_enum,
->>       },
->> +    {
->> +        .cap_id = LEVEL_HEVC,
->> +        .min = V4L2_MPEG_VIDEO_HEVC_LEVEL_1,
->> +        .max = V4L2_MPEG_VIDEO_HEVC_LEVEL_6_2,
->> +        .step_or_mask = BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_1) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_2) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_2_1) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_3) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_3_1) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_4) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_4_1) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_5) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_5_1) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_5_2) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_6) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_6_1) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_LEVEL_6_2),
->> +        .value = V4L2_MPEG_VIDEO_HEVC_LEVEL_6_1,
->> +        .hfi_id = HFI_PROP_LEVEL,
->> +        .flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
->> +        .set = iris_set_u32_enum,
->> +    },
->> +    {
->> +        .cap_id = LEVEL_VP9,
->> +        .min = V4L2_MPEG_VIDEO_VP9_LEVEL_1_0,
->> +        .max = V4L2_MPEG_VIDEO_VP9_LEVEL_6_0,
->> +        .step_or_mask = BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_1_0) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_1_1) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_2_0) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_2_1) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_3_0) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_3_1) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_4_0) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_4_1) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_5_0) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_5_1) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_5_2) |
->> +                BIT(V4L2_MPEG_VIDEO_VP9_LEVEL_6_0),
->> +        .value = V4L2_MPEG_VIDEO_VP9_LEVEL_6_0,
->> +        .hfi_id = HFI_PROP_LEVEL,
->> +        .flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
->> +        .set = iris_set_u32_enum,
->> +    },
->> +    {
->> +        .cap_id = TIER,
->> +        .min = V4L2_MPEG_VIDEO_HEVC_TIER_MAIN,
->> +        .max = V4L2_MPEG_VIDEO_HEVC_TIER_HIGH,
->> +        .step_or_mask = BIT(V4L2_MPEG_VIDEO_HEVC_TIER_MAIN) |
->> +                BIT(V4L2_MPEG_VIDEO_HEVC_TIER_HIGH),
->> +        .value = V4L2_MPEG_VIDEO_HEVC_TIER_HIGH,
->> +        .hfi_id = HFI_PROP_TIER,
->> +        .flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
->> +        .set = iris_set_u32_enum,
->> +    },
->>       {
->>           .cap_id = INPUT_BUF_HOST_MAX_COUNT,
->>           .min = DEFAULT_MAX_HOST_BUF_COUNT,
-> 
-> Other than those nits
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To make sure I understand, the race is that sometimes the exports
+interface gets created before the net namespace is set up, and then
+that causes GPFs when exports_net_open tries to access the nfsd_net?
 
 Thanks,
-Dikshita
+--=20
+Jeff Layton <jlayton@kernel.org>
