@@ -1,185 +1,103 @@
-Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F84209F38
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EF920AF66
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741253998; cv=none; b=cBLnZB0YUDw9FejbYLenyoakMVvoFl4NEOYpncVfw1eVsMCA/Fii+RclUWMK4cqs/B2iKei2UrpQC0cWWT83jnGyjYJi9BR6reswb2gmwbuEUo/DOqR/cEm22qGRuKVYe4urPPYaNypWUwFxHyHidxHPGxa88fBomBjVzJ8Dkk8=
+	t=1741254008; cv=none; b=f9YvhMge0TQl+4etMUcDa7LrDKMrCb2XW+3zhWQIS5BfuE0/ILvSVfGmM9pfQVgZ07EfJlzIVNpoYJBuq2E+w1OqLrg9g63HW+lXOlY0eRrN9GDgP/zxa7P7lBROH1gckYLpe/N5CEX9Rx/tVaeEctM+B8/tSmOWlksRCbhFBi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741253998; c=relaxed/simple;
-	bh=OQs+QxFzpPdbAuOKW0844EhpmrJO5bgxGPL6wccNXhs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j+8yQlT7ioDBhFBRvdXPF/2mB3J1tHzWxOsmI9lmOxYH+U4MbdlApCA4nyKITDs8SZQ30/cs5stLUiRM9kLZsQ2DBU/QZZ5W+NCke5/26abR6BbBTZGMcyC+Eg/LWRN3WsmZPPo2dDgL7pgN09sp0NlC+Hbm+yv0Ct8C1i1ZUhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=VhZSLwRR; arc=none smtp.client-ip=193.252.22.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1741254008; c=relaxed/simple;
+	bh=E/HLOCPPolZoPIVQBIEbh+eA5DoNHzTGqfwY2lcY4Yw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=YX3p4ZHAYk0Zw5C1IzJY8zoyk8kL3pKVJhrST12DieBY3j0HbXZrfccuK5bVWmK7ScqO74YgPvM9q5nsM3mbPfez+LCqoTvXdE5NPzdXCjU2+6m4OuuNgHgP3Mu6HeWNWautntpseybT5KJo56TB+JObCtZ3CXB+VUZYFzNSf0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rXPt/AWs; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="VhZSLwRR"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id q7gWtAq3rM2iXq7gatskzm; Thu, 06 Mar 2025 10:38:43 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741253923;
-	bh=TeFwuXaI558YeAA2DS3IrxfJgqUdjuY9B494gVS/IMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=VhZSLwRRGgOF/Ov5Kl4YckowxvwrWf7jCXvU6Vf9CWG1CVBqVGsTP8uAZ/yVFAK3v
-	 zghYZIzWXTYyPwfP0DKsEU565p9l0sv0hi+3pZpptau8JAIRlCtDFmvtpPXRAGnpOY
-	 txvasqxnEOlCaatRtUIp3QTN/7Pn+DRmw/bKlqGwvRmgzdiJhSBM43Xe/ex83MVjBW
-	 EAoPd4rLRNjM2yczQDekkw6TIrqqoPh97YzFB9cOMiGoWJVgo3RbvxWgTX2EbtAMBe
-	 HT+svuqHqHlG47Y49UUFZ+Timcl2yCRhdyoI+wlSL8PjF00vwkR7AndnaDdkLGcDJ1
-	 W9SbT1oRZPdFQ==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 06 Mar 2025 10:38:43 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <f45a2a23-6833-492e-b331-30766f1370f8@wanadoo.fr>
-Date: Thu, 6 Mar 2025 18:38:31 +0900
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rXPt/AWs"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43bcf9612f4so3465675e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:40:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741254005; x=1741858805; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oWy06ZU1rvCMAS6Oepxaxa7BjLic+0Q37gto1sXjZ9k=;
+        b=rXPt/AWsMZ0Il8KwOaVhoEFc4GfGV0PlcibBlNgGO8c4PeQTmcI4FydM2T4nZuHwU0
+         9yfK6GPrOXOL7NeREfkRq84YyBdkbt4Mnd6QpmUzQB5JXOAWvt2pXbz9o5GMe10R+B8t
+         awnw1wtMZcLvBfml957K2H8SN9viqEMbSooyLzH4+q4hT3dzGT+eSaQ7dtzgnf6wI9FC
+         H6hHvOQtsztSLIpk/Cn2Qg/cI1aBqYQ9FfBz3Fk9maxhESDNVfbeauXWzCPxQ//h9VkE
+         6+YHJMQheYgzqK3G40qg4q/lhwu8Jb4vmSOJbm7vwoXD8C4lZMNmtmxVnz2NmEoV6kYt
+         Pu9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741254005; x=1741858805;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oWy06ZU1rvCMAS6Oepxaxa7BjLic+0Q37gto1sXjZ9k=;
+        b=Xo1q/i0Za8IvySf3kx406SvzEN0jCIriUCjUSqfJzBA4JGnZhhqC7LY88CGlx9oAWU
+         zLuTKVVjbxa3s2oe7rEEEPuCNf9So0CbkU69QqarMTcgbbPjDejcL3A6rpDqoGaNVMM8
+         RwuDgVOyDLqKlUNQk2xFZ3dtuITJm+LgK6CLoff+GoVkzT3L0l2L8NkP0zBrbGker7xe
+         pl0iecrBi4DHT6ykXCXG7C2pcQ03RtRmYbdkbsjy+7ZWkvmB5tK+EnZncKPdxPpTJqHn
+         7Vly91CoASkddgLSSDPQLlIt4a7T/aQkuKOARZ9LnYjX6jGBB9q5ehjBihBadkOhqPoz
+         57Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUe8OyHoMqfexWU0gVbylTVXrRSy3c7QlqkUrsq/fm8oSGsV/jR5guBMx8U/HiJ1jgQ1DHN4Q9cuSn1B8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7SZOKlEKg06foCQtu2KxbslyBAM/QUeA2AGIFHDBLehgvlkQv
+	yn4vppk7T9YMDZHxca3RJ55gX3nVrZdRjNt6pr7twZBdxeP+CRkc9NKKLE9BVow=
+X-Gm-Gg: ASbGncvmxAVzJVkRN9SH1tunru2728haBC3Vqrl3LdMAfs7Vn2Njabp2kvmNfLHcwWa
+	60Z7kIanX4lxr5s5CFbtZ8CxvgnZiTue/55wHAZbZLqNt2s0mmzhY03p+J3pxZW6AD8R97r9hvn
+	0vnuyOGEXGdXuxGrxivQWEHBjVf9H8L3yegZhVXt7YqjIdiVitps0zMaVGdwYFuyZFbH/DCly7q
+	+Q1x+yZs4/zd5pkMkzpJJRx3Trt8HrqbRLmkut/GpR3Lr+Wm4P6IN9ZsGoarxCVLnQNx5K+DfXj
+	Cm4ThGv2Qv1F+te2RZZgnuHE9vPIVP32HN6gbcn9XP7uxX/xTA==
+X-Google-Smtp-Source: AGHT+IGuGJLNcho++arjKdFrJpv00rKH3wDvZRWW3PMXVOeUD58q0a3r8mqAyfvuFDAa6Dfhm44YnA==
+X-Received: by 2002:a05:600c:3ba8:b0:43b:cd0d:944f with SMTP id 5b1f17b1804b1-43bd2945f10mr63350985e9.5.1741254005165;
+        Thu, 06 Mar 2025 01:40:05 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bd4293250sm43986635e9.16.2025.03.06.01.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 01:40:04 -0800 (PST)
+Date: Thu, 6 Mar 2025 12:40:01 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+	Varadarajan Narayanan <quic_varada@quicinc.com>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] spi: spi-qpic-snand: Fix ECC_CFG_ECC_DISABLE shift in
+ qcom_spi_read_last_cw()
+Message-ID: <2f4b0a0b-2c03-41c0-8a4a-3d789a83832d@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] bits: introduce fixed-type BIT
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- David Laight <david.laight.linux@gmail.com>,
- Yury Norov <yury.norov@gmail.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
- David Laight <David.Laight@aculab.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Jani Nikula <jani.nikula@intel.com>
-References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
- <20250305-fixed-type-genmasks-v4-4-1873dcdf6723@wanadoo.fr>
- <Z8hgqOB5Ym-GGykS@smile.fi.intel.com>
- <d7f3150d-0167-44be-90b2-17f8a050687c@wanadoo.fr>
- <Z8hyNXVZxLzhEzNy@smile.fi.intel.com>
- <824dc1d1-14f0-433e-aa3f-679527b87077@wanadoo.fr>
- <Z8isZodEqhZw5p7-@smile.fi.intel.com> <20250305215027.5d9be1fa@pumpkin>
- <Z8lnFpkVTjpFHZtB@smile.fi.intel.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <Z8lnFpkVTjpFHZtB@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On 06/03/2025 at 18:12, Andy Shevchenko wrote:
-> On Wed, Mar 05, 2025 at 09:50:27PM +0000, David Laight wrote:
->> On Wed, 5 Mar 2025 21:56:22 +0200
->> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
->>> On Thu, Mar 06, 2025 at 02:17:18AM +0900, Vincent Mailhol wrote:
->>>> On 06/03/2025 at 00:48, Andy Shevchenko wrote:  
->>>>> On Wed, Mar 05, 2025 at 11:48:10PM +0900, Vincent Mailhol wrote:  
->>>>>> On 05/03/2025 at 23:33, Andy Shevchenko wrote:  
->>>>>>> On Wed, Mar 05, 2025 at 10:00:16PM +0900, Vincent Mailhol via B4 Relay wrote:  
-> 
-> ...
-> 
->>>>>>>> +#define BIT_U8(b) (BIT_INPUT_CHECK(u8, b) + (unsigned int)BIT(b))
->>>>>>>> +#define BIT_U16(b) (BIT_INPUT_CHECK(u16, b) + (unsigned int)BIT(b))  
->>>>>>>
->>>>>>> Why not u8 and u16? This inconsistency needs to be well justified.  
->>>>>>
->>>>>> Because of the C integer promotion rules, if casted to u8 or u16, the
->>>>>> expression will immediately become a signed integer as soon as it is get
->>>>>> used. For example, if casted to u8
->>>>>>
->>>>>>   BIT_U8(0) + BIT_U8(1)
->>>>>>
->>>>>> would be a signed integer. And that may surprise people.  
->>>>>
->>>>> Yes, but wouldn't be better to put it more explicitly like
->>>>>
->>>>> #define BIT_U8(b)	(BIT_INPUT_CHECK(u8, b) + (u8)BIT(b) + 0 + UL(0)) // + ULL(0) ?  
->>>>
->>>> OK, the final result would be unsigned. But, I do not follow how this is
->>>> more explicit.
->>>>
->>>> Also, why doing:
->>>>
->>>>   (u8)BIT(b) + 0 + UL(0)
->>>>
->>>> and not just:
->>>>
->>>>   (u8)BIT(b) + UL(0)
->>>>
->>>> ?
->>>>
->>>> What is that intermediary '+ 0' for?
->>>>
->>>> I am sorry, but I am having a hard time understanding how casting to u8
->>>> and then doing an addition with an unsigned long is more explicit than
->>>> directly doing a cast to the desired type.  
->>>
->>> Reading this again, I think we don't need it at all. u8, aka unsigned char,
->>> will be promoted to int, but it will be int with a value < 256, can't be signed
->>> as far as I understand this correctly.
->>
->> The value can't be negative, but the type will be a signed one.
-> 
-> Yes, that's what I mentioned above: "int with the value < 256".
-> 
->> Anything comparing types (and there are a few) will treat it as signed.
->> It really is bad practise to even pretend you can have an expression
->> (rather that a variable) that has a type smaller than 'int'.
->> It wouldn't surprise me if even an 'a = b' assignment promotes 'b' to int.
-> 
-> We have tons of code with u8/u16, what you are proposing here is like
-> "let's get rid of those types and replace all of them by int/unsigned int".
-> We have ISAs that are byte-oriented despite being 32- or 64-bit platforms.
-> 
->> So it is even questionable whether BIT8() and BIT16() should even exist at all.
-> 
-> The point is to check the boundaries and not in the returned value per se.
+The ECC_CFG_ECC_DISABLE define is BIT(0).  It's supposed to be used
+directly instead of used as a shifter.
 
-+1
+Fixes: 7304d1909080 ("spi: spi-qpic: add driver for QCOM SPI NAND flash Interface")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/spi/spi-qpic-snand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I will also add that this adds to the readability of the code. In a
-driver, if I see:
-
-  #define REG_FOO1_MASK GENMASK(6, 2)
-  #define REG_FOO2_MASK GENMASK(12, 7)
-
-it does not tell me much about the register. Whereas if I see:
-
-  #define REG_FOO1_MASK GENMASK_U16(6, 2)
-  #define REG_FOO2_MASK GENMASK_U16(12, 7)
-
-then I know that this is for a 16 bit register.
-
->> There can be reasons to return 'unsigned int' rather than 'unsigned long'.
->> But with the type definitions that Linux uses (and can't really be changed)
->> you can have BIT32() that is 'unsigned int' and BIT64() that is 'unsigned long
->> long'. These are then the same on 32bit and 64bit.
-
-So, at the end, my goal when introducing that unsigned int cast was not
-to confuse people. This had the opposite effect. Nearly all the
-reviewers pointed at that cast.
-
-I will revert this in the v5. The U8 and U16 variants of both GENMASK
-and BIT will return an u8 and u16 respectively. And unless someone
-manages to convince Yury otherwise, I will keep it as such.
-
-
-Yours sincerely,
-Vincent Mailhol
+diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
+index 8c413a6a5152..ffb2b6ec685c 100644
+--- a/drivers/spi/spi-qpic-snand.c
++++ b/drivers/spi/spi-qpic-snand.c
+@@ -514,7 +514,7 @@ static int qcom_spi_read_last_cw(struct qcom_nand_controller *snandc,
+ 	cfg0 = (ecc_cfg->cfg0_raw & ~(7U << CW_PER_PAGE)) |
+ 		0 << CW_PER_PAGE;
+ 	cfg1 = ecc_cfg->cfg1_raw;
+-	ecc_bch_cfg = 1 << ECC_CFG_ECC_DISABLE;
++	ecc_bch_cfg = ECC_CFG_ECC_DISABLE;
+ 
+ 	snandc->regs->cmd = snandc->qspi->cmd;
+ 	snandc->regs->cfg0 = cpu_to_le32(cfg0);
+-- 
+2.47.2
 
