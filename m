@@ -1,80 +1,114 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F27A20E33B;
-	Thu,  6 Mar 2025 13:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C164320F078;
+	Thu,  6 Mar 2025 13:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741267798; cv=none; b=be37AEN2ZsoD7A0sGY+TepPUKjs7vloN3Q2FHQO/+ta5U6AwP7g+hXN8duJHg0KmHJI1iJK+GRPC7nejOh0x0762AnTJ4OgGHRN3KbcpUOZQexGIB+vxlmMQ+ze/64i07Huo9yYWz7Ahb8D2OApT2xdTunRsiNDZ9OcpqZcrK38=
+	t=1741267800; cv=none; b=MGL+HIcgd+zS23eCs3BjpXtaZkefnCUfu9d9yoMNPG9uMG4DsfazVWYwxXDjImWKUmEUyP8pS4JuWDmAE/xEPVSv2BJv71ihjD21mBdiaKB4uvLoP9qJxt4pA/kF995mJN+jiaB1bbZXyUYGKYnXFw9PY8woJuYf4sDkAvRgZvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741267798; c=relaxed/simple;
-	bh=ZqlvbwmjCHHW0riLi6URTpOFQ0T1GqXhnWE3enEVXVE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ViV9IyI9pSvfeeraeezB7ZSWY4+zYwvqH0B6yiM9faGSwahrcB1P1daQq0qJ23al/GbsEqmarqT6wMT75MDfto95JYpDkuHkvy8prU+By9YhcRmSpXN6yPCRd0FiA6CtI6y5pS0XcAYe7Dr/i19IhrFhPIYVr4P5gY9yI83i5Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Afl9wm+B; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741267800; c=relaxed/simple;
+	bh=mUWv69KxFp1nkfKwXwTvoUTd8hihwnHohClUV7h795A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jI7qROGyn8OjGgG+7PYIBEjITdVR5rTAh0iORJT5y8viQJEo46VheGxtoiizdlohMhlkMKtBKeJbm2+gw85LIgQfKRoy6+eL1q5E/UnQbbvDknG4fQp5RqI4OGMm4wVZvCMDYxBmSlxg9yf4alz1T/BrVT56TZDnR1ZxricdOQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=w4QRgGNM; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Afl9wm+B"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=y1r0XL1092fmLSaUg6P9eZbIAeeU2xay/HqiLlb+zMY=; b=Afl9wm+B0ta8/YCf8e7GaHaAlb
-	w3e+75j86lq+KQZK6gvVoTYKa9zUilVpMQx83DWou9X3zPv1zbGTRICX4BYKVzKwDR6PTLcuX9bXM
-	ec7/6WJhxRqCGCVZNjqTNbGOYiZUkCAVQd/gyRR+c9ZtXbKQbcp1uIfK/KtpI2Wm8xtltEdPFSblC
-	MrghlQaA2pKnYO6u5kV9U5iz8BXaYTQ8B3183E+yHppVu7odwKQZPUPfOg3upIrUZKbtviFnsDKSL
-	tZk4uboZ/98MB0VuFk+UmW2/J8K0DT+S5MVF4yEiTfhg4/oXod9vf2YgIjbxmFEvN97Wond06OK9W
-	QhFdvwQA==;
-Received: from i53875a38.versanet.de ([83.135.90.56] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tqBIK-0003LI-U0; Thu, 06 Mar 2025 14:29:48 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Chukun Pan <amadeus@jmu.edu.cn>
-Subject: Re: [PATCH 1/1] arm64: dts: rockchip: enable SCMI clk for RK3528 SoC
-Date: Thu, 06 Mar 2025 14:29:48 +0100
-Message-ID: <4856313.kQq0lBPeGt@diego>
-In-Reply-To: <20250306131016.281290-2-amadeus@jmu.edu.cn>
-References:
- <20250306131016.281290-1-amadeus@jmu.edu.cn>
- <20250306131016.281290-2-amadeus@jmu.edu.cn>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w4QRgGNM"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 526DTGEP4163412
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Mar 2025 07:29:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741267756;
+	bh=j1l3rkpvSqXIl+5ZitL+bxerJBlyJLYrf9pOoucxKqU=;
+	h=From:To:CC:Subject:Date;
+	b=w4QRgGNM5VaMda1+JD4dipmKY6JrBZeshEv18M10QvBrbzJw4jygrBCpd63c9Pe1l
+	 t9yZRZPiEt8zt+M5e2Z7ddtLu4hDLX0ppK3sfAY56YCNkAU7Oe/SM7wB3SjzDiJ3xp
+	 u9w50BCwsGFm/aIHPA1vWf2US7HIEQ37GKUgrTd0=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 526DTGPW088332
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 6 Mar 2025 07:29:16 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
+ Mar 2025 07:29:15 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 6 Mar 2025 07:29:15 -0600
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 526DTFOb021890;
+	Thu, 6 Mar 2025 07:29:15 -0600
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
+        <airlied@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <dri-devel@lists.freedesktop.org>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
+        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
+        <h-shenoy@ti.com>, <devarsht@ti.com>
+Subject: [PATCH v3 0/3] Add support for AM62L DSS
+Date: Thu, 6 Mar 2025 18:59:11 +0530
+Message-ID: <20250306132914.1469387-1-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi,
+This adds support for DSS subsystem present in TI's AM62L SoC
+which supports single display pipeline with DPI output which
+is also routed to DSI Tx controller within the SoC.
 
-Am Donnerstag, 6. M=C3=A4rz 2025, 14:10:16 MEZ schrieb Chukun Pan:
-> Same as RK3568, RK3528 uses SCMI clk instead of ARMCLK.
-> Add SCMI clk for CPU, GPU and RNG will also use it.
->=20
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-> ---
+Change Log:
+V3:
+- Make generic infra to support truncated K3 DSS IP's
+- Remove AM62A updates from AM62L DT binding updates
 
-> @@ -110,6 +129,19 @@ gmac0_clk: clock-gmac50m {
->  		#clock-cells =3D <0>;
->  	};
-> =20
-> +	sram@10f000 {
+V2:
+- Fix incorrect format of compatible string (comma instead of
+  hyphen) for AM62L SoC
+- Use separate register space and helper functions for AM62L
+  due to minor differences in register offset/bit position differences
+  for first plane
 
-That sram is part of the soc (and has an mmio-address), so I'd think
-it should live inside the soc node?
+Rangediff:
+V2->V3:
+- https://gist.github.com/devarsht/24fa8dd2986861efa431352d19ebbb41
 
+V1->V2
+- https://gist.github.com/devarsht/11d47f25ca9fea6976e6284330ddf443
 
-Heiko
+Links to previous versions:
+V2: https://lore.kernel.org/all/20250204061552.3720261-1-devarsht@ti.com/
+V1: https://lore.kernel.org/all/20241231090432.3649158-1-devarsht@ti.com/
 
+Test logs:
+https://gist.github.com/devarsht/16fe796b8fd3ea8abf5df8e2327d2311
+
+Devarsh Thakkar (3):
+  dt-bindings: display: ti,am65x-dss: Add support for AM62L DSS
+  drm/tidss: Update infra to support DSS7 cut-down versions
+  drm/tidss: Add support for AM62L display subsystem
+
+ .../bindings/display/ti/ti,am65x-dss.yaml     |  21 +-
+ drivers/gpu/drm/tidss/tidss_crtc.c            |   7 +-
+ drivers/gpu/drm/tidss/tidss_dispc.c           | 185 +++++++++++++++---
+ drivers/gpu/drm/tidss/tidss_dispc.h           |  12 +-
+ drivers/gpu/drm/tidss/tidss_drv.c             |   1 +
+ drivers/gpu/drm/tidss/tidss_irq.c             |   6 +
+ drivers/gpu/drm/tidss/tidss_kms.c             |  10 +-
+ 7 files changed, 211 insertions(+), 31 deletions(-)
+
+-- 
+2.39.1
 
