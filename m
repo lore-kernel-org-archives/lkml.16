@@ -1,208 +1,187 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2078.outbound.protection.outlook.com [40.107.220.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EF22E339F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741259323; cv=none; b=txBREXqSVTZb5487nQGGWmLI/W/R2rN4vOjVlNruy5TMwK+M2sO7ymoSWtf6Eitzm2AF/FL84SNgA479AwoWhbmBvhu147CqkPQMn54pbefyp357RWRdQLkcjkxgKcKl+sN6cBiH77Yzs3auhQLMLrWx26iJvJb6DGml9tHJZcM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741259323; c=relaxed/simple;
-	bh=1l2lg4pxnKWN66VYlhTC0zCZyNqViTJOeCnoCR667mQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kGkLUn0Oqcq3AiLQUfP7ajl2JvMpkuVzMrtHr/74puD6pKuSAH8jX6egZBKV4Km21YIrGmp4j6BLIAgTJ6EUM/ruIWNd4DYvNKVuZmStvKrvFBVe+9e96UgcK07Kl2KQGauT2UfVrW9QrzDr/EFVWC88KZjLQtGuRsBS3+SraAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CmAfn7Yg; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF15120A5C9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741259328; cv=fail; b=W1qbHR5qBVyAD4Bb1LQCuUWVh6nggZ+yRFndo56MuuaLKDcuCEzHdtLsMUHuc7Z7RPKqfSq8bw33krIhsmiaDkhtEREzNWo48UVrmkLhRIW//sGldribA/ABiD/ZjfD962WIZmsZsL3W7eUcKaWtfYi8k9b1GRRKHbOJjL9yzRo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741259328; c=relaxed/simple;
+	bh=VKOwm3RPSpHqA/cyU68xN8hX2VZUrzjayGrEKuwFF68=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DlRfAv1S6H7oTUQO28IvacfBzQZOaXHMchYs+mMQuTbAxXU5K2KKCYqavESn/+djOZLW/+sMVDEzSUse1Kx+r+FP4pir0w2/vW/DYVFHxrzjbWOJNK/GYz2jFE5uM9xtb/Q+E0fDfD/ArvbSIEQs0wAB1Js/VevGSHMcjmTmoyg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=N7IBMPvU; arc=fail smtp.client-ip=40.107.220.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CmAfn7Yg"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dd420f82e2so6980996d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:08:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741259320; x=1741864120; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8HOAdle44AxtzHdRU+24G5NySxyY61Mu4iq8aJK231o=;
-        b=CmAfn7Yg6yY2VH2yjSe3sy6EMny1FCd3wcKfhsOYhaRauUsDq8VqTA3EjygXuhS6gi
-         tahiMvzPr+kDtxJvtbAt3+ZMw471nibDAkoaiI3rZdBforj61QYKuza9iFFB7F9+G0fw
-         lDRwdfNbFowqsw18evrmyrIF3KfOgC/yF4/Yn9FFm38/1mSeXT8M5NTS75oo5NsBpMFA
-         CPNuraePWimvYNkzZ2q3tZg3QALNg9kmXx0f4VfBNWU7xENmY+fl8uqsLUH5YwR9Y/Dt
-         W+/ZgTja8cvfnjVolpCUlidCcqpiWzGJairMjuslCwTCSoU7jZ8ktKIFT5stb9Er/o4o
-         88TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741259320; x=1741864120;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8HOAdle44AxtzHdRU+24G5NySxyY61Mu4iq8aJK231o=;
-        b=eILem0wpdIEAGz7IBcgCfvzI/sEm77ODeGiLNXRrqpoESuJ12IfYUhOrCvRtaGJMVw
-         WmITh3NsO13f2O5MOfGEpiMOck3nAT3U8eYdWjb9QIykUkFfI59h9dKF2P+2pTHu2K/E
-         Cfwb2WBkV1hOaAk9YoZuaQhBiSwMxQ3gD2uEr6u+oHHy1iLveeEg1poWYlZwVIlhwjFW
-         tG0tsGoCVkNv4cdhOn/KTSesPp1ADWPMzrG+NydxzJbCMiEmC9mBb4bS4dkEd+XsJOb8
-         cTgvjleOFTr1Wn4VbkeqpHfQpmJuaMNKfcZxeLzfNRRHajfQi28YhvHEClkeOYr+xNct
-         f1Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFMMBZPTiylPF2J2KgZek/jkUul/qtpRTHJXpXWz7Xcy7skwnV7jiSB7zwqsT7Ts3A7Lk1piItli0nM0o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr5+ENO1GUxzwpVUvcwFqt4089oYOIKVBb9M/EPfJZTctfBtDO
-	QLMOf8lSRDQDGuWHrrGwTdEH6tDOyoaiInkDJ8nz0+tfaDE+yIuEscvOtTkHa6Pc1ueC3LFATtg
-	E4GMW0FxBmmyXL1Rm73bqHeWwCiRSKwDmov2J
-X-Gm-Gg: ASbGnctxCv09Y0teGHy9Gjdipdgmc+bhdrOHx0C0H/hzpLgT4+/MieWzCiOZR3aMDpQ
-	HcR6HgNxkYQF3zLHqtAUGnEI/UNTCx/FC7Kfv4zJjR0t89EK/B6o/Uj2Tly99IzgJQ/1O9UUpXq
-	/PoqgrI46j8KuR54Tqh5lDMdCiI5I=
-X-Google-Smtp-Source: AGHT+IGqjDyiWMbG6cj6FS2OJY2L/aGCOTmLPTlaPopreMPZINSjvjq5BUceWbtCkk+LzB1fdNlNrVp3CR8l8HiQTI4=
-X-Received: by 2002:a05:6214:252f:b0:6e8:ddf6:d137 with SMTP id
- 6a1803df08f44-6e8e6cd170cmr106132706d6.18.1741259319968; Thu, 06 Mar 2025
- 03:08:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="N7IBMPvU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cnVBTSEVeM7j+FtwSBRMPI7ZIwisZtVSJKt0Ar8132k/M5GuFiw8DURK0efYFDtfviVCOO9DzWWpuluBRzFgPWHnGelrycgG0VAE1Gm2CQcDre3mgzcEN0MZN+Bn661wpEMw0aIccYysL+j6ap97l592+S/d6NY/T9ooat0lJvgATxKrp+tisXo3SfIRQiJrblrifKv5RiY+QAr27qxXRIWiOP2ZUeRvuVzsRVSEqnt+Pt2+4H0HY8nO1knelJwoE01TwAsbM3c2PZ9K/HGpk5zynu7AoBn5rX15959ClrSo1lY2U64liiRW3Vcg1pQRGoU9c1DoWdGrEX6XUsmWRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W1O71ehfXXzRhaoeOAZGnHL5Nefy6bBzATK2U64FJN4=;
+ b=KmqwcX3LYi/hmbpN2fkA+Ic796PZB8KFpimPP9lrZ2ZsCjpOLy/0nECIWBnsXWWeF+3Qw4Jg09Ei7OG7Kdz1zrsZGlpf+omPPAkKPbJWvC1XzEer74oMr8AM54wMdDr7QcL8oGAFVsJtxfJBGRLGadwvjAGyBJkgnysAphzrR2sbjCJ6zsr+3whfHh8txWlP+9Pnd3GUNyfpcu6qhfba+oCxZRG2TYPgvTrO6Ss4AFGzYbxPptXZi7TRLwYgoNlEcP7Xl18Dl9RkylmJdswY9Fh87/H55/xGNBteXNn0R2J7W0Wb05ekXzS27ZT1fxaAWgsquMKnu4XKxeRyE/lsog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W1O71ehfXXzRhaoeOAZGnHL5Nefy6bBzATK2U64FJN4=;
+ b=N7IBMPvUOpXrfFycxQRMzYhYc96NNFvndCBL5wGkYOie+9Fyo+tb2GuVSMR+MI/6YbT/on7q5EUTk8EUwQ43pTYSbzTgK1TAf2jnFAt1JfFtOCFq22H4H2RjaoLuAs7biukjB+ncmdrtQa0qkWELc5cctL96q1HGigdmm4lPi94=
+Received: from BY5PR04CA0024.namprd04.prod.outlook.com (2603:10b6:a03:1d0::34)
+ by PH8PR12MB7280.namprd12.prod.outlook.com (2603:10b6:510:220::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Thu, 6 Mar
+ 2025 11:08:43 +0000
+Received: from CO1PEPF000066EC.namprd05.prod.outlook.com
+ (2603:10b6:a03:1d0:cafe::3f) by BY5PR04CA0024.outlook.office365.com
+ (2603:10b6:a03:1d0::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.20 via Frontend Transport; Thu,
+ 6 Mar 2025 11:08:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000066EC.mail.protection.outlook.com (10.167.249.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.15 via Frontend Transport; Thu, 6 Mar 2025 11:08:42 +0000
+Received: from penny-System-Product-Name.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 6 Mar 2025 05:08:39 -0600
+From: Penny Zheng <Penny.Zheng@amd.com>
+To: <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>
+CC: Ray Huang <Ray.Huang@amd.com>, Jason Andryuk <jason.andryuk@amd.com>,
+	Penny Zheng <Penny.Zheng@amd.com>, <xen-devel@lists.xenproject.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/5] xen/acpi: introduce cppc performance hypercall
+Date: Thu, 6 Mar 2025 19:08:19 +0800
+Message-ID: <20250306110824.1506699-1-Penny.Zheng@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305-net-next-fix-tcp-win-clamp-v1-1-12afb705d34e@kernel.org>
- <CAL+tcoAqZmeV0-4rjH-EPmhBBaS=ZSwgcXhU8ZsBCr_aXS3Lqw@mail.gmail.com>
- <CANn89iLqgi5byZd+Si7jTdg7zrLNn13ejWAQjMRurvrQPeg3zg@mail.gmail.com>
- <281edb3a-4679-4c75-9192-a5f0ef6952ea@kernel.org> <CANn89iKVsDrL9YFx883wTfRSAe6tOR7x2U5zk=TcgHBMr+VtkQ@mail.gmail.com>
- <a3266974-d561-4e8f-a23a-9c0774ee2bbe@kernel.org> <CANn89iJ4DyC8OSEA2Qn3WhWHAUr9Bpo_ZmJdcx3ofM-qKvEU=g@mail.gmail.com>
-In-Reply-To: <CANn89iJ4DyC8OSEA2Qn3WhWHAUr9Bpo_ZmJdcx3ofM-qKvEU=g@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 6 Mar 2025 12:08:28 +0100
-X-Gm-Features: AQ5f1JqnqOEjgEt1NTmjqKYptzUm18O7uGofh7YTyGk_91RbtSC-SoxS4lIhJ18
-Message-ID: <CANn89iJ2S+mCs8PxZ-EBAfH--j6v9cUazCc8O4FWvMat=_yURQ@mail.gmail.com>
-Subject: Re: [PATCH net-next] tcp: clamp window like before the cleanup
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Jason Xing <kerneljasonxing@gmail.com>, mptcp@lists.linux.dev, 
-	Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EC:EE_|PH8PR12MB7280:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70dc0703-a8a8-4109-41e2-08dd5c9f41d9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TjVqQzV3ejl3c00wZHlVWlI3dTNmSjdVQWlOK1RmQWkwc3BqZW1tbm5oczZW?=
+ =?utf-8?B?bmhVTFBqck8wbWh3Ykk0M0NDVG9RWTBJTlhZSzVjZXBDUnQ4djhTeDIrbnlz?=
+ =?utf-8?B?MVVZeVl4RnN1V2Q0cmFQVk0wQlN0N0VoaVEzd3o0Z2RDNFB6cGtlZGM0Mldz?=
+ =?utf-8?B?V1JmUjdkMndZcnhPalNhQ2VieC9pdUR4TlNRbVNNMUtSUGdxbU9DR2luWWtZ?=
+ =?utf-8?B?RHVMK1E0UzN1dXgxSlBFYTEyZkU3NVNZL3Q3eWxUTWswazJDSGw1MUlzeEFR?=
+ =?utf-8?B?MkFoL3dvTWtKby9lMjZjS1FjZEVHVVRlTTlvTi85NEl4dEVsa2c0Z05rMlR0?=
+ =?utf-8?B?RDlJQjlrOE1iZFM2bFFPS0tSUGN1bWYzMWNNdlBwTjBaM0FCcndlRHJlQlpm?=
+ =?utf-8?B?MHNWaldwSmZJcjhhYmV6STJZWjdkNlhDTFZYWmZyblFMUUsvSDUweTdQUFk4?=
+ =?utf-8?B?T1lwQ2VWQmZLN1BWKzZOdWVrdndvTU0rWlhydkk4Q1B1UWFQSmVUeElvalU3?=
+ =?utf-8?B?WmtsaFlneGpxVXlBbFc5TzhOMTd4VlAzM2hDRWRtRlBFSG0wK0pvalZic0RN?=
+ =?utf-8?B?UmZIOUtrODRoRW1nN0hyRC9VWWRhbnU2VWN3a1hqRTFic3doNkwyeEdIcmJz?=
+ =?utf-8?B?a1VVaHJINDJYSFdpaDFiTVJCT1B2UVFDSUNMY1I5VlFCcEo1SUo1UkVGTGdD?=
+ =?utf-8?B?ckV0NVJQWVU1MXFLOFY0aDhicmFtZXNNellicDJNM0NWc1ErMTB2elRzNUwx?=
+ =?utf-8?B?L0lOR0RBSjRtejd1SVhKeHE2QjJudHdXN0N5VVM5cVAwcE8vQ3BIR1B1TGhD?=
+ =?utf-8?B?eEFjZHRqVTNENjFyVDJUYVVpeGJ0bmZPR3NqRzhkaVhuN25ORGc5U0tGMk9P?=
+ =?utf-8?B?U2IxVWEzSjQxdVdJV2JzcFF6WllYcW04TnhFaUZuTlpNTVkyWStNSjZFV1BV?=
+ =?utf-8?B?MUllT3o0ck1tQkc3QzE5L2FZM3hWUHBIUkhtT25zMksraUhWbnY5QzhFOEV3?=
+ =?utf-8?B?ZlkzWEp6dCtYakhvdm1nb3g1ZDZxREVwZWxqM0lJY05PcUxHTFg1a2U2TXAy?=
+ =?utf-8?B?aGNUOE9vcCtRaFFEd2RMSGgvTnhRekREL1RBMHp4YTdOb3BBb29kSjY5U2V3?=
+ =?utf-8?B?T3RMUGo5WmZRUlMvNzlSb29QNWJBNGlxVUtSZG0xcksrN1ZVdTQ5cFdHWFVv?=
+ =?utf-8?B?a3A2N3lrcU9zVUovcSswNzNvcEE0R0p1bzFwbXg0Q3RaSU91RnlVdFphVm4x?=
+ =?utf-8?B?MEFOblNOK3hXMHZicGxiRFV6N2ZSRnNZZE44Mkd6QmdXb2tNa3BEbUxmOWE4?=
+ =?utf-8?B?WVkvODE2UzVxQkIraElrTDVXZmR0b0p3MDAxVW9BZkpOQ0tvRWtZZFJyQ0JI?=
+ =?utf-8?B?ek1mZTVRK2lXdkE5UVNhcU9Ud3JKRExGZ1JsVzhxSWFNdGVYbVkzOW5mOHRN?=
+ =?utf-8?B?UmtLT0t6U2YvTENpaVNnZmd0L0k1UU1ZRGx0NlRwb0M5c2FGMlRHbytEeTU4?=
+ =?utf-8?B?cnJFZXBZMnpVQUQvZURKdno2RzlLcVdjY0J4bHpNYTlQYzcwZzhWMnFxSXNp?=
+ =?utf-8?B?aFg2K2FTaFB5alFWOWxkTjY4RFQyQTF1VDRESlduSDhlQzI5ZkUxa3pxNEhV?=
+ =?utf-8?B?OFMvcVZsMkVhMDRmYkVIVlNRZ2sxNTdlcjF0UVM4V0ZYVm1aYXNYU3NZMlZ5?=
+ =?utf-8?B?QStTc1Z5V3plVm1FZ295ZnArVk1IY01vSzBERnVEVFJRQ0VFdVV6UnZDV3ht?=
+ =?utf-8?B?SnFlclBwdUYzeW93dy9ZaW5GV3dieDQ3S1ZEUCtRZnVRNUxOb0pFZUl1UVov?=
+ =?utf-8?B?a2dQR2QyeTdZY0ozc1JWYmxuSFJRb0d3NWVJUjV4WllHWWY0b3UxdHhISGxI?=
+ =?utf-8?B?S09qa1hHZ2JsMHA4Um4rTDlMSis2RWpnckVhRXhIZGV1S0xBSmdDT3BXeTJS?=
+ =?utf-8?B?VmorSHN2aHZCbUdUNGtLM041enBHSzFWcGs1ZHRPNnBFZmdCTUE2cmMrT01K?=
+ =?utf-8?Q?AvEqPRGfYGc3VUABnjRt/np7YuJgaQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 11:08:42.9072
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70dc0703-a8a8-4109-41e2-08dd5c9f41d9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EC.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7280
 
-On Thu, Mar 6, 2025 at 11:16=E2=80=AFAM Eric Dumazet <edumazet@google.com> =
-wrote:
->
-> On Thu, Mar 6, 2025 at 11:12=E2=80=AFAM Matthieu Baerts <matttbe@kernel.o=
-rg> wrote:
-> >
-> > On 06/03/2025 11:02, Eric Dumazet wrote:
-> > > On Thu, Mar 6, 2025 at 10:55=E2=80=AFAM Matthieu Baerts <matttbe@kern=
-el.org> wrote:
-> > >>
-> > >> Hi Eric,
-> > >>
-> > >> On 06/03/2025 10:45, Eric Dumazet wrote:
-> > >>> On Thu, Mar 6, 2025 at 6:22=E2=80=AFAM Jason Xing <kerneljasonxing@=
-gmail.com> wrote:
-> > >>>>
-> > >>>> On Wed, Mar 5, 2025 at 10:49=E2=80=AFPM Matthieu Baerts (NGI0)
-> > >>>> <matttbe@kernel.org> wrote:
-> > >>>>>
-> > >>>>> A recent cleanup changed the behaviour of tcp_set_window_clamp().=
- This
-> > >>>>> looks unintentional, and affects MPTCP selftests, e.g. some tests
-> > >>>>> re-establishing a connection after a disconnect are now unstable.
-> > >>>>>
-> > >>>>> Before the cleanup, this operation was done:
-> > >>>>>
-> > >>>>>   new_rcv_ssthresh =3D min(tp->rcv_wnd, new_window_clamp);
-> > >>>>>   tp->rcv_ssthresh =3D max(new_rcv_ssthresh, tp->rcv_ssthresh);
-> > >>>>>
-> > >>>>> The cleanup used the 'clamp' macro which takes 3 arguments -- val=
-ue,
-> > >>>>> lowest, and highest -- and returns a value between the lowest and=
- the
-> > >>>>> highest allowable values. This then assumes ...
-> > >>>>>
-> > >>>>>   lowest (rcv_ssthresh) <=3D highest (rcv_wnd)
-> > >>>>>
-> > >>>>> ... which doesn't seem to be always the case here according to th=
-e MPTCP
-> > >>>>> selftests, even when running them without MPTCP, but only TCP.
-> > >>>>>
-> > >>>>> For example, when we have ...
-> > >>>>>
-> > >>>>>   rcv_wnd < rcv_ssthresh < new_rcv_ssthresh
-> > >>>>>
-> > >>>>> ... before the cleanup, the rcv_ssthresh was not changed, while a=
-fter
-> > >>>>> the cleanup, it is lowered down to rcv_wnd (highest).
-> > >>>>>
-> > >>>>> During a simple test with TCP, here are the values I observed:
-> > >>>>>
-> > >>>>>   new_window_clamp (val)  rcv_ssthresh (lo)  rcv_wnd (hi)
-> > >>>>>       117760   (out)         65495         <  65536
-> > >>>>>       128512   (out)         109595        >  80256  =3D> lo > hi
-> > >>>>>       1184975  (out)         328987        <  329088
-> > >>>>>
-> > >>>>>       113664   (out)         65483         <  65536
-> > >>>>>       117760   (out)         110968        <  110976
-> > >>>>>       129024   (out)         116527        >  109696 =3D> lo > hi
-> > >>>>>
-> > >>>>> Here, we can see that it is not that rare to have rcv_ssthresh (l=
-o)
-> > >>>>> higher than rcv_wnd (hi), so having a different behaviour when th=
-e
-> > >>>>> clamp() macro is used, even without MPTCP.
-> > >>>>>
-> > >>>>> Note: new_window_clamp is always out of range (rcv_ssthresh < rcv=
-_wnd)
-> > >>>>> here, which seems to be generally the case in my tests with small
-> > >>>>> connections.
-> > >>>>>
-> > >>>>> I then suggests reverting this part, not to change the behaviour.
-> > >>>>>
-> > >>>>> Fixes: 863a952eb79a ("tcp: tcp_set_window_clamp() cleanup")
-> > >>>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/55=
-1
-> > >>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > >>>>
-> > >>>> Tested-by: Jason Xing <kerneljasonxing@gmail.com>
-> > >>>>
-> > >>>> Thanks for catching this. I should have done more tests :(
-> > >>>>
-> > >>>> Now I use netperf with TCP_CRR to test loopback and easily see the
-> > >>>> case where tp->rcv_ssthresh is larger than tp->rcv_wnd, which mean=
-s
-> > >>>> tp->rcv_wnd is not the upper bound as you said.
-> > >>>>
-> > >>>> Thanks,
-> > >>>> Jason
-> > >>>>
-> > >>>
-> > >>> Patch looks fine to me but all our tests are passing with the curre=
-nt kernel,
-> > >>> and I was not able to trigger the condition.
-> > >>
-> > >> Thank you for having looked at this patch!
-> > >>
-> > >>
-> > >>> Can you share what precise test you did ?
-> > >>
-> > >> To be able to get a situation where "rcv_ssthresh > rcv_wnd", I simp=
-ly
-> > >> executed MPTCP Connect selftest. You can also force creating TCP onl=
-y
-> > >> connections with '-tt', e.g.
-> > >>
-> > >>   ./mptcp_connect.sh -tt
-> > >
-> > > I was asking Jason about TCP tests. He mentioned TCP_CRR
-> >
-> > Oops, I'm sorry, I didn't look at the "To:" field.
-> >
-> > > I made several of them, with temporary debug in the kernel that did
-> > > not show the issue.
-> > >
-> > >
-> > > I am wondering if this could hide an issue in MPTCP ?
-> > Indeed, I was wondering the same thing. I didn't see anything obvious
-> > when looking at this issue. The behaviours around the window clamping,
-> > with MPTCP single flow, and "plain" TCP were quite similar I think.
->
-> OK, let me run mptcp tests just in case I see something dubious.
+When running as Xen dom0 PVH guest, MADT table is customized
+and may have the "wrong" UID processor number, which is
+inconsistent with the UID in Processor entry in native DSDT.
 
-I have no idea why only MPTCP flows can trigger the condition, I do
-not think it matters anyway.
+As a result, during ACPI boot-up for dom0, linux fails to set
+up proper processor logical id <-> physical id map(acpi_map_cpuid).
+Furthermore, It leads to that some ACPI processor feature capibility,
+like per-cpu cpc_desc structure, failed to be correctly stored
+and processed.
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+With upstreaming "amd-pstate CPU Performance Scaling Driver"(
+https://lore.kernel.org/all/20241203081111.463400-1-Penny.Zheng@amd.com/)
+to Xen community, amd-pstate driver is supported on Xen platform.
+And as Xen is uncapable of parsing the ACPI dynamic table, like _CPC
+entry, this patch serie introduces a new sub-hypercall XEN_PM_CPPC
+to deliver CPPC performance capability data.
+
+This patch serie is based on commit "xen/acpi: upload power and performance
+related data from a PVH dom0"(
+https://patchwork.kernel.org/project/xen-devel/patch/20241203225338.1336-1-jason.andryuk@amd.com/),
+which is still under review.
+
+v2 -> v1 :
+- rebase to the latest v3 version of "xen/acpi: upload power and performance
+related data from a PVH dom0"
+
+v3 -> v2:
+- add new commit of "introduces XEN_PM_PSD sub-hypercall for solely delivery
+of _PSD info" to be compatible with
+https://lore.kernel.org/all/20250306083949.1503385-1-Penny.Zheng@amd.com/
+
+Penny Zheng (4):
+  xen: introduces XEN_PM_PSD sub-hypercall for solely delivery of _PSD
+    info
+  acpi/cppc: extract _cpc entry parsing logic
+  xen/cppc: get xen-required cppc perf caps data
+  xen/cppc: introduce cppc data upload sub-hypercall
+
+Roger Pau Monne (1):
+  xen/acpi: upload power and performance related data from a PVH dom0
+
+ drivers/acpi/cppc_acpi.c         | 204 ++++++++++++----
+ drivers/xen/pcpu.c               |   3 +-
+ drivers/xen/xen-acpi-processor.c | 398 +++++++++++++++++++++++++++----
+ include/acpi/cppc_acpi.h         |   5 +
+ include/acpi/processor.h         |   2 +
+ include/xen/interface/platform.h |  19 +-
+ include/xen/xen.h                |   2 +-
+ 7 files changed, 529 insertions(+), 104 deletions(-)
+
+-- 
+2.34.1
+
