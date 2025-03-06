@@ -1,165 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4BF27F4D1;
-	Thu,  6 Mar 2025 23:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A7A27811E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 23:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741304410; cv=none; b=tOP0rAZYTwmwmSRR8/N+PB8no5D4Ty7t2w1qry5R4HRg1Xsxc6lA8slTYWTkF4n8+pInsXF2YUV4xQSb7KaXqlCH2uh9VUgXeArdYjy1vGyYMHZZBICNqFIiur9zqUM9bd/Ui/AlPvDVcMQFHxaL1haSwt8g8F6x97gjPchJR7U=
+	t=1741304542; cv=none; b=PVPQVRMg5RcqQZHcSHnD2w0UcXOK7LQGmC7iv3NO2hYvIlmcAgbzDHFsbYuS8nNMqRo99ZGU7tYtirCetXZys4qXvZ+IFUev0+2wWksC1FO5NM3GRP7YyEm6VNKbmbgXZKLKaRufAAkiOHCKIY2tCUv+VYS56Ud0PUllFBZUiK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741304410; c=relaxed/simple;
-	bh=LE6Y75buJxrkZK3eTiY9vZJQdFYr8tXNgoDl3nQ0z6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WJKWB1/o3pSS8z8mt7mVwpgGpcG8Lt9IfT9HcMYOJdo37fcD4yTYvm+kWyP2/6Ixd3/Tu7hvho8dm4wxVGEDedQFfupzpq2FwkAZytGyS5CTuzu6+7/gLHGp//kefVcCJ8RleGsndHFg4EzTqU58HJJjG7tLao//dvhSsLkup9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA1DA169E;
-	Thu,  6 Mar 2025 15:40:18 -0800 (PST)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EC033F5A1;
-	Thu,  6 Mar 2025 15:40:04 -0800 (PST)
-Date: Thu, 6 Mar 2025 23:39:49 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Samuel Holland
- <samuel@sholland.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/8] pinctrl: sunxi: support moved power
- configuration registers
-Message-ID: <20250306233949.23924567@minigeek.lan>
-In-Reply-To: <6028746.MhkbZ0Pkbq@jernej-laptop>
-References: <20250227231447.20161-1-andre.przywara@arm.com>
-	<20250227231447.20161-5-andre.przywara@arm.com>
-	<6028746.MhkbZ0Pkbq@jernej-laptop>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1741304542; c=relaxed/simple;
+	bh=LtCL5Wa78a/OLv3g+IY7kOW6zY+LdenxnBgMM/9q5fA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/E9nUWKsm3vtPkI9SLqP+Yddw+ppND+R2hGnpJwoNV5+QgsMoXb0ShBaCPGr6SKfg9ixluR9dmiVBPziASYztWeHQhtFdy1P7YU65dkfJem1WUClQSIlKzYwBFhadFW1xve7hc29atcNGz22hNNyH7IW52GA7jr/uVystLJzuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bSNq+nD1; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bSNq+nD1"
+Date: Thu, 6 Mar 2025 23:42:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741304534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fU6cPBemXEC5vkZEvT/CCIy/jzWhHpo6npFWGn/8iRI=;
+	b=bSNq+nD1O3vZsgkjn7awJJ37l2cfr7+cFXTCbKGFr854zjuC25z94Ey3ogM7Nwvj5hnuB+
+	wa1rA4qoXjZTxqL1Eadkf1PdzqrSQn2LWuqUt3o6koSmCVbSG/9j4SOhLOo5mpL92/BFHQ
+	8AOOM2y3mFvAYh0rOi217HSy2TSW/Lw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, chengming.zhou@linux.dev,
+	linux-mm@kvack.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] page_io: return proper error codes for
+ swap_read_folio_zeromap()
+Message-ID: <Z8oy0A-vBbGI6ux9@google.com>
+References: <20250306230015.1456794-1-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306230015.1456794-1-nphamcs@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 05 Mar 2025 18:50:34 +0100
-Jernej =C5=A0krabec <jernej.skrabec@gmail.com> wrote:
+On Thu, Mar 06, 2025 at 03:00:15PM -0800, Nhat Pham wrote:
+> Similar to zswap_load(), also return proper error codes for
+> swap_read_folio_zeromap():
+> 
+> * 0 on success. The folio is unlocked and marked up-to-date.
+> * -ENOENT, if the folio is entirely not zeromapped.
+> * -EINVAL (with the follio unlocked but not marked to date), if the
+>   folio is partially zeromapped. This is not supported, and will SIGBUS
+>   the faulting process.
+> 
+> This patch is purely a clean-up, and should not have any behavioral
+> change. It is based on (and should be applied on top of) [1].
+> 
+> [1]: https://lore.kernel.org/linux-mm/20250306205011.784787-1-nphamcs@gmail.com/
+> 
+> Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
+> ---
+>  mm/page_io.c | 35 ++++++++++++++++++++++++++---------
+>  1 file changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index 4bce19df557b..48ed1e810392 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -511,7 +511,23 @@ static void sio_read_complete(struct kiocb *iocb, long ret)
+>  	mempool_free(sio, sio_pool);
+>  }
+>  
+> -static bool swap_read_folio_zeromap(struct folio *folio)
+> +/**
+> + * swap_read_folio_zeromap - check if the folio was zeromapped, and if so,
+> + *                           zero-fill it.
+> + * @folio: the folio.
+> + *
+> + * Return: 0 on success, with the folio zero-filled, unlocked, and marked
+> + * up-to-date, or one of the following error codes:
+> + *
+> + *  -ENOENT: the folio is entirely not zeromapped. The folio remains locked.
+> + *
+> + *  -EINVAL: some of the subpages in the folio are zeromaped, but not all of
+> + *  them. This is an error because we don't currently support a large folio
+> + *  that is partially in the zeromap. The folio is unlocked, but NOT marked
+> + *  up-to-date, so that an IO error is emitted (e.g. do_swap_page() will
+> + *  sigbus).
 
-Hi,
+This is a bit repetitive. Maybe:
 
-> Dne petek, 28. februar 2025 ob 00:14:43 Srednjeevropski standardni =C4=8D=
-as je Andre Przywara napisal(a):
-> > The Allwinner pincontroller IP features some registers to control the
-> > withstand voltage of each pin group. So far those registers were always
-> > located at the same offset, but the A523 SoC has moved them (probably to
-> > accommodate all eleven pin banks).
-> >=20
-> > Add a flag to note this feature, and use that to program the registers
-> > either at offset 0x340 or 0x380. So far no pincontroller driver uses
-> > this flag, but we need it for the upcoming A523 support.
-> >=20
-> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > ---
-> >  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 15 +++++++++++----
-> >  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  7 +++++--
-> >  2 files changed, 16 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/su=
-nxi/pinctrl-sunxi.c
-> > index 83a031ceb29f2..fc12e6f807e4d 100644
-> > --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> > +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> > @@ -736,9 +736,9 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sun=
-xi_pinctrl *pctl,
-> >  		val =3D uV > 1800000 && uV <=3D 2500000 ? BIT(bank) : 0;
-> > =20
-> >  		raw_spin_lock_irqsave(&pctl->lock, flags);
-> > -		reg =3D readl(pctl->membase + PIO_POW_MOD_CTL_REG);
-> > +		reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset);
-> >  		reg &=3D ~BIT(bank);
-> > -		writel(reg | val, pctl->membase + PIO_POW_MOD_CTL_REG);
-> > +		writel(reg | val, pctl->membase + pctl->pow_mod_sel_offset); =20
->=20
-> These two are missing "+ PIO_POW_MOD_CTL_OFS" right?
+ *  -EINVAL: The folio is partially in the zeromap, which is not
+ *  currently supported. The folio is unlocked, but NOT marked
+ *  up-to-date, so that an IO error is emitted (e.g. do_swap_page() will
+ *  sigbus).
 
-Ah, you are right, I mixed that up. Nice catch!
 
-> >  		raw_spin_unlock_irqrestore(&pctl->lock, flags);
-> > =20
-> >  		fallthrough;
-> > @@ -746,9 +746,12 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct su=
-nxi_pinctrl *pctl,
-> >  		val =3D uV <=3D 1800000 ? 1 : 0;
-> > =20
-> >  		raw_spin_lock_irqsave(&pctl->lock, flags);
-> > -		reg =3D readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-> > +		reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset +
-> > +			    PIO_POW_MOD_CTL_OFS);
-> >  		reg &=3D ~(1 << bank);
-> > -		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-> > +		writel(reg | val << bank,
-> > +		       pctl->membase + pctl->pow_mod_sel_offset +
-> > +		       PIO_POW_MOD_CTL_OFS); =20
->=20
-> And these two have "+ PIO_POW_MOD_CTL_OFS" too much, right?
+> + */
+> +static int swap_read_folio_zeromap(struct folio *folio)
+>  {
+>  	int nr_pages = folio_nr_pages(folio);
+>  	struct obj_cgroup *objcg;
+> @@ -519,15 +535,17 @@ static bool swap_read_folio_zeromap(struct folio *folio)
+>  
+>  	/*
+>  	 * Swapping in a large folio that is partially in the zeromap is not
+> -	 * currently handled. Return true without marking the folio uptodate so
+> +	 * currently handled. Return -EINVAL without marking the folio uptodate so
+>  	 * that an IO error is emitted (e.g. do_swap_page() will sigbus).
+>  	 */
 
-Indeed, fixed now.
+I would drop this whole comment now because it's mostly repeating what's
+now documneted above.
 
-Thanks,
-Andre
+With the comments fixed up:
 
-> Best regards,
-> Jernej
->=20
-> >  		raw_spin_unlock_irqrestore(&pctl->lock, flags);
-> >  		return 0;
-> >  	default:
-> > @@ -1520,6 +1523,10 @@ int sunxi_pinctrl_init_with_flags(struct platfor=
-m_device *pdev,
-> >  		pctl->pull_regs_offset =3D PULL_REGS_OFFSET;
-> >  		pctl->dlevel_field_width =3D DLEVEL_FIELD_WIDTH;
-> >  	}
-> > +	if (flags & SUNXI_PINCTRL_ELEVEN_BANKS)
-> > +		pctl->pow_mod_sel_offset =3D PIO_11B_POW_MOD_SEL_REG;
-> > +	else
-> > +		pctl->pow_mod_sel_offset =3D PIO_POW_MOD_SEL_REG;
-> > =20
-> >  	pctl->irq_array =3D devm_kcalloc(&pdev->dev,
-> >  				       IRQ_PER_BANK * pctl->desc->irq_banks,
-> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/su=
-nxi/pinctrl-sunxi.h
-> > index 6cf721876d89d..742fc795c7664 100644
-> > --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> > +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> > @@ -87,9 +87,11 @@
-> >  #define SUNXI_PINCTRL_VARIANT_MASK	GENMASK(7, 0)
-> >  #define SUNXI_PINCTRL_NEW_REG_LAYOUT	BIT(8)
-> >  #define SUNXI_PINCTRL_PORTF_SWITCH	BIT(9)
-> > +#define SUNXI_PINCTRL_ELEVEN_BANKS	BIT(10)
-> > =20
-> > -#define PIO_POW_MOD_SEL_REG	0x340
-> > -#define PIO_POW_MOD_CTL_REG	0x344
-> > +#define PIO_POW_MOD_SEL_REG		0x340
-> > +#define PIO_11B_POW_MOD_SEL_REG		0x380
-> > +#define PIO_POW_MOD_CTL_OFS		0x004
-> > =20
-> >  #define PIO_BANK_K_OFFSET		0x500
-> > =20
-> > @@ -173,6 +175,7 @@ struct sunxi_pinctrl {
-> >  	u32				bank_mem_size;
-> >  	u32				pull_regs_offset;
-> >  	u32				dlevel_field_width;
-> > +	u32				pow_mod_sel_offset;
-> >  };
-> > =20
-> >  #define SUNXI_PIN(_pin, ...)					\
-> >  =20
->=20
->=20
->=20
->=20
->=20
+Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 
+>  	if (WARN_ON_ONCE(swap_zeromap_batch(folio->swap, nr_pages,
+> -			&is_zeromap) != nr_pages))
+> -		return true;
+> +			&is_zeromap) != nr_pages)) {
+> +		folio_unlock(folio);
+> +		return -EINVAL;
+> +	}
+>  
+>  	if (!is_zeromap)
+> -		return false;
+> +		return -ENOENT;
+>  
+>  	objcg = get_obj_cgroup_from_folio(folio);
+>  	count_vm_events(SWPIN_ZERO, nr_pages);
+> @@ -538,7 +556,8 @@ static bool swap_read_folio_zeromap(struct folio *folio)
+>  
+>  	folio_zero_range(folio, 0, folio_size(folio));
+>  	folio_mark_uptodate(folio);
+> -	return true;
+> +	folio_unlock(folio);
+> +	return 0;
+>  }
+>  
+>  static void swap_read_folio_fs(struct folio *folio, struct swap_iocb **plug)
+> @@ -635,10 +654,8 @@ void swap_read_folio(struct folio *folio, struct swap_iocb **plug)
+>  	}
+>  	delayacct_swapin_start();
+>  
+> -	if (swap_read_folio_zeromap(folio)) {
+> -		folio_unlock(folio);
+> +	if (swap_read_folio_zeromap(folio) != -ENOENT)
+>  		goto finish;
+> -	}
+>  
+>  	if (zswap_load(folio) != -ENOENT)
+>  		goto finish;
+> -- 
+> 2.43.5
+> 
