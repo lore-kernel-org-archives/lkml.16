@@ -1,185 +1,101 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C671607A4;
-	Fri,  7 Mar 2025 18:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0418D18DB32
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 18:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741370830; cv=none; b=DuNIzM/ANiWKnAv/Ho1iBQ4GAaTuC+cH+UxsEaFRZScOAkcazWVuUoG2v7zhmLmYRl+tVaalxfeqzWCYYGstYFY51GUbj27WV35smySuyQRVayFrnbR7rfXTvrUMmD3GJbaUahizpB5dsEdT7X/Q0N3aKnigvdLrBXPbOE3xsDE=
+	t=1741370925; cv=none; b=XzCBNhABlz0MOe0lFj6w8DUxRQ/rj17rvsVFskERgNj6LTu2YFENIM2AtywYfl2HlfCtUZEAhXPmk9rwe2iGwQAxU74zulrVp1xv3M2/L0NzyGegdXabapNdVFFyZGNsCO7hd4SUgExLCtO7Jo7cnD2mErJjol96lKoCiYEkpLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741370830; c=relaxed/simple;
-	bh=PCBLZbxeORQk+gg5YOjCD6ldtBvJ/+2v4ImdaMUnWgA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pmWHk8W+mLNPP3SV16TdTulkJ7GeIs51TmaYrAtz8ANVZ/xqKSjnjKotX61JJ8wUtoYAIbiAOsnFSNOlPEbFN8il0hIKZASWYh7qfIlTv9zeyuFrjAIZQyT3OTjlw1dl8X1iCVkofxRWNRXvn/ZQHGzncX+qdIvsFcPubmDyzek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IxLHrpdg; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxLHrpdg"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac25313ea37so220996466b.1;
-        Fri, 07 Mar 2025 10:07:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741370827; x=1741975627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8wkOomTGttoakawgqhoO+GpdOmml5a28PHZWdVY9aEg=;
-        b=IxLHrpdg2f02pmksqXYVyJ3V8ag8KfHsraLw+xDi3YGe4pcfF9DkRcd9Hopa+WKNeM
-         g6y1fVU/83zCZ8UUWNRGNjtQ96HzRVY/g7tKLmsYxoT7e1napRO9GueDtJMiDSjup0wH
-         6gueklHmbY517i00DhG+2epTELlXBRXnN9m8DYcRzwMZ59YMFZp1mvlhS55EKfwJYRPm
-         NtzqdOrKwaNmEI9SW+cMzzM/QzgBlUT0MM96252wX7D54sXwTWbbbKX2sirPmrRY3/Xc
-         ZHzbufvS70ivJyPf94pxthc27r9xHWoFulXwnwuY5Oa1xFOhSegppwLloijG0iXqeAow
-         SAjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741370827; x=1741975627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8wkOomTGttoakawgqhoO+GpdOmml5a28PHZWdVY9aEg=;
-        b=TnLkdQPCszAKkbDWMRkx31vbBnvouWKwKMi5aCl7MOVPQCaSUewfj1g2eW5RqhsCIl
-         xfbDtXnqYuFbNmLbct7cVD6GhvpTrQLR6Q1MOw0oMgP6wScaujo8Yqd3o06395XAe7pH
-         oDkgQ3owPA8ysvwIRB96pxlyeZux8kjWh+GUF56P8tNQQwuZD+rJQ9/EY/tRaOhxGqS3
-         40HX1qkPNgPdF/9MHWojjXWDSwOZfFdfxDM7ObaTmDZHHHOqo5tKNN2AJC5tLRNOgYLQ
-         ikVPORUFVFpiQ812CUyBv50pQUhgtitWV/XnSkhp7QlBR6sCsE6PpssnwmaD8BXdn03X
-         JlcA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Lzpj7cGc3oDHzckPdH6D3oSbkIqSwdbZe2HniSm0Ih83WV2GR/8n4jy1nZlxziLk3k3l+YVw@vger.kernel.org, AJvYcCW9M9GbLabGUbfaZCuKChN0ulrbKozqbh3ya8FPEjL53X1rDaioUZYEyURVfQJ7w1o4bc/5MCh937+Pd5U=@vger.kernel.org, AJvYcCXRt6qPqi5DHVFyl69Hv6MhtUb0wKvF7HIFLWVs1/CNUuEQQPt9zx5yupiyqv4nRynydWscgCZ0pfVo9wHLkJWpHGetXg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtAR0QMxPaNqGAIm5SYBzcz5eacSjKzqjnMX8dUcMoaCuetRrD
-	af2qPdoP0gkgd1lOLA0cJ/hMYTAh3rZIsQSpXH3X4iNkjI1CLD5Ouq9MG4GQketDqh5Vs/E0FN6
-	OoF2ERDomFxdQZYCKYk7TtYU23Io=
-X-Gm-Gg: ASbGncuOge9ExTGCb+yuZcjy3vaxD2EcMsV/KjgAKLVJRpE1TudfNCEvfruPqNZDM4d
-	ujEYRE6LJ1LtLvRy0+csSaGzIaNnktFppdb1SnYqpkVdR9//wWl1OUMWY1cJ4p4YvDbuwV5HPrv
-	6LtlAvvoXu3ky92fg3CclqIiKCcBgO
-X-Google-Smtp-Source: AGHT+IFBf7glgDcgWmZiKnDmmcF21bxMSuMDhbcpDZPMMBRIr6Vb+pd9XoZN62iofvl9sTrgCJwFci7pDGa5B6mFURE=
-X-Received: by 2002:a17:907:a193:b0:abf:51b7:6071 with SMTP id
- a640c23a62f3a-ac2525f212emr392804766b.13.1741370826759; Fri, 07 Mar 2025
- 10:07:06 -0800 (PST)
+	s=arc-20240116; t=1741370925; c=relaxed/simple;
+	bh=LZnI5p8xIDvueq3e9u19eadPmK04KRDX31Qbc8+mNZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oGUqk/Jqv72zGIGgFJzOx/jvsmACYlXSYwL7y4PHtjIAIBJJvwGGbtUMiThx+O48AV7EZJuzL3tw/88YHDn+5jd/RxvcdeoUh4v6UfyBsgHRj5BK+oT1AyQPyYDACv8Wi4BGN0orhiV9/MA/qa9SYlqVRhUTT33cRA9KmNg6OIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A60EF1A2D;
+	Fri,  7 Mar 2025 10:08:54 -0800 (PST)
+Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7E493F66E;
+	Fri,  7 Mar 2025 10:08:35 -0800 (PST)
+Message-ID: <c064e0d4-e120-4921-a226-db0ec5ac409c@arm.com>
+Date: Fri, 7 Mar 2025 18:08:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
- <20250227121522.1802832-6-yong.liang.choong@linux.intel.com>
- <Z8lLm9Ze9VAx3cE_@surfacebook.localdomain> <601c88fb-8ec8-4866-a45d-f28dea6d9625@linux.intel.com>
- <CAHp75VeOKbAsvSuf5+VQnGFmUcN92TNnR2eF1+70h3PjaMdMqA@mail.gmail.com>
- <d7c0094e-7fd3-4113-8d00-91b7a83ffd1f@linux.intel.com> <257769403908de3ac6271059e1febee88654fbdc.camel@linux.intel.com>
- <19b78790-d4d3-45db-9b1f-fbe40f8ed795@linux.intel.com>
-In-Reply-To: <19b78790-d4d3-45db-9b1f-fbe40f8ed795@linux.intel.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 7 Mar 2025 20:06:30 +0200
-X-Gm-Features: AQ5f1JoeMb52MrYyvd86gAym0UFqsglYSq0MjE2RDPOAAk4Ejr9eExmge1UjnS8
-Message-ID: <CAHp75VcXtwe3zutnZUDNXBPe1qgwP+GbBF9KSFHOPioEvSk3Pw@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 5/6] net: stmmac: configure SerDes according
- to the interface mode
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: david.e.box@linux.intel.com, Simon Horman <horms@kernel.org>, 
-	Jose Abreu <joabreu@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 08/49] x86/resctrl: Generate default_ctrl instead of
+ sharing it
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
+References: <20250228195913.24895-1-james.morse@arm.com>
+ <20250228195913.24895-9-james.morse@arm.com>
+ <ab7becca-7a14-44d2-b0e3-1b12655c8be1@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <ab7becca-7a14-44d2-b0e3-1b12655c8be1@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 7, 2025 at 7:28=E2=80=AFAM Choong Yong Liang
-<yong.liang.choong@linux.intel.com> wrote:
-> On 7/3/2025 4:52 am, David E. Box wrote:
-> > On Thu, 2025-03-06 at 20:56 +0800, Choong Yong Liang wrote:
-> >> On 6/3/2025 5:05 pm, Andy Shevchenko wrote:
-> >>> On Thu, Mar 6, 2025 at 10:39=E2=80=AFAM Choong Yong Liang
-> >>> <yong.liang.choong@linux.intel.com> wrote:
-> >>>> On 6/3/2025 3:15 pm, Andy Shevchenko wrote:
-> >>>>> Thu, Feb 27, 2025 at 08:15:21PM +0800, Choong Yong Liang kirjoitti:
+Hi Reinette,
 
-...
+On 07/03/2025 04:33, Reinette Chatre wrote:
+> On 2/28/25 11:58 AM, James Morse wrote:
+>> The struct rdt_resource default_ctrl is used by both the architecture
+>> code for resetting the hardware controls, and sometimes by the
+>> filesystem code as the default value for the schema, unless the
+>> bandwidth software controller is in use.
+>>
+>> Having the default exposed by the architecture code causes unnecessary
+>> duplication for each architecture as the default value must be specified,
+>> but can be derived from other schema properties. Now that the
+>> maximum bandwidth is explicitly described, resctrl can derive the default
+>> value from the schema format and the other resource properties.
 
-> >>>>>> config DWMAC_INTEL
-> >>>>>>        default X86
-> >>>>>>        depends on X86 && STMMAC_ETH && PCI
-> >>>>>>        depends on COMMON_CLK
-> >>>>>> +    depends on ACPI
-> >>>>> Stray and unexplained change. Please, fix it. We don't need the
-> >>>>> dependencies
-> >>>>> which are not realised in the compile time.
-> >>>> The dependency on ACPI is necessary because the intel_pmc_ipc.h head=
-er
-> >>>> relies on ACPI functionality to interact with the Intel PMC.
-> >>> So, that header has to be fixed as ACPI here is really unneeded
-> >>> dependency for the cases when somebody (for whatever reasons) want to
-> >>> build a kernel without ACPI support but with the driver enabled for
-> >>> let's say PCI device.
+>> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+>> index 4504a12efc97..5280a2819760 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/core.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+>> @@ -143,7 +143,10 @@ static inline void cache_alloc_hsw_probe(void)
+>>  {
+>>  	struct rdt_hw_resource *hw_res = &rdt_resources_all[RDT_RESOURCE_L3];
+>>  	struct rdt_resource *r  = &hw_res->r_resctrl;
+>> -	u64 max_cbm = BIT_ULL_MASK(20) - 1, l3_cbm_0;
+>> +	u64 max_cbm, l3_cbm_0;
+>> +
+>> +	r->cache.cbm_len = 20;
+>> +	max_cbm = resctrl_get_default_ctrl(r);
+>>  
+>>  	if (wrmsrl_safe(MSR_IA32_L3_CBM_BASE, max_cbm))
+>>  		return;
+> 
+> It is unclear to me why this architecture code continues to use
+> resctrl_get_default_ctrl() while you switched away from it in the other
+> architecture code.
+> As resctrl_get_default_ctrl() is "intended for callers that don't know
+> or care what the format is" [1], here it clearly is required to be a
+> bitmask. Using resctrl_get_default_ctrl() here also seems to contradict
+> your argument for not using it in cbm_validate(). [1]
 
-> >> Thank you for your feedback, Andy.
-> >> I appreciate your insights regarding the ACPI dependency.
-> >> The intel_pmc_ipc.h header is under the ownership of David E Box, who
-> >> focuses on the platform code, while my focus is on the netdev.
-> >>
-> >> if you could kindly look into making the ACPI dependency optional in t=
-he
-> >> intel_pmc_ipc.h header, it would be greatly appreciated.
-> >> I am more than willing to provide any support necessary to ensure a sm=
-ooth
-> >> resolution.
-> >
-> > Choong you only need put the function under a #if CONFIG_ACPI block and=
- provide
-> > an alternative that returns an error when the code is not build. Like t=
-his,
-> >
-> > #if CONFIG_ACPI
-> > static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc=
-_ipc_rbuf
-> > *rbuf)
-> > {
-> >     ...
-> > }
-> > #else
-> > static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc=
-_ipc_rbuf
-> > *rbuf) { return -ENODEV; }
-> > #endif
-> >
-> >> This patch series has already been accepted, but we recognize the
-> >> importance of addressing this issue in the next patch series for upstr=
-eam.
-> >> Our goal is to ensure that the driver can be compiled and function
-> >> correctly in both ACPI and non-ACPI environments.
-> >>
-> >> Thank you both for your understanding and collaboration.
+Sure, I'll drop this hunk on the same reasoning.
 
-> The current ACPI dependency for the config DWMAC_INTEL is necessary,
 
-I can argue on this. The driver worked without problems on the cases I
-explained, so the dependency introduced very recently and only for a
-subset of the cases. What you probably wanted to say is that "the
-dependency is needed to avoid compilation errors in CONFIG_ACPI=3Dn
-cases since the used API doesn't (yet) provide the necessary stubs".
-With that being assumed I agree.
+Thanks,
 
-> but I
-> agree on making it optional.
->
-> Implementing the suggestion from David using the "#if CONFIG_ACPI" approa=
-ch
-> would address your concern about users who need to build a kernel without
-> ACPI support.
->
-> If you are okay with this approach, then I will submit the solution for
-> upstream.
-
-Yes, please do it as the ACPI dependency brings a few hundreds of
-kilobytes into the kernel with a lot of possible unneeded stuff.
-
---=20
-With Best Regards,
-Andy Shevchenko
+James
