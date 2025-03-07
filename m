@@ -1,80 +1,183 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EDB194C78
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6FF194C78
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741362595; cv=none; b=PmV086nsl6F4wYB8qjAryakWeB0vcLS8SKjxzqWZMv6/kZAH7Z/tNrlRlm5D2dFNiuK9LDTjJugkxY0Mv/T4+SlUVy7N3D1lGPljjeipztMnx2MIO+Dr+Up9TeYCxWEGkqWfsFkhWWf1odg4z3cJafHBbKnbpN0sbminPTGq05M=
+	t=1741362637; cv=none; b=YbPyVXnxJZHrNwqMfkTCKYoO9B85z9Lzm6GIcgyGcIkQ3TBucIz7PbWqZ7oYQSwNateiJbbtP9mjnLmjAl8/WZIDoEb+ZSVjucOvvC56oxZnZbAcz3ilMrGLnTXBEr7Oi58eEWZZjwXcGl4PA7Vt76xBNudHABYpodP2ejrg7UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741362595; c=relaxed/simple;
-	bh=PbXXM9Y5vHm4WqljvkqdM59Ugf65JX9khBfeZrQLzw0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Df+nmHo79U6jTkmK2OnEY23HMWbu4JaeV1d9RAo5G6taSnpbhsK4oFxZQ4UbDJAIttPZgBTqlgVhXKN54qtNeL6JgGeSAJs6YV13fCAts27637dRmWg6i4Ag9/9Y6pDPeo9JzaP3M6CxHsDHw9/4dUTn6qUR/wQs/0V4lfzKCyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Cc0On2EA; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741362637; c=relaxed/simple;
+	bh=xZP5EW7GhqvrugU6qHPD7d0/NjVWpSU8o4jhkmxEHvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jrCmVu5FdI6DUzagXxvMna2/dtrgz8nYLUExWC4QInwFpPxLfghB9vnAJrYfTeb90NiS7GbKMBP5s0GjmmpELLLHgEbNUbFW1+LKy9q/8IqKkfPg+MlN/q6CBQY88sCatInu25QC/3E0g1bF7pOmEfds2/uf7vBeGC/29PVBlwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=TWTiZvoE; arc=none smtp.client-ip=193.252.22.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Cc0On2EA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 40A98443B6;
-	Fri,  7 Mar 2025 15:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741362586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VtL6eoYzvzBLjULBoBQyAiTAY2Kt7SvuQGNIxrXTK3A=;
-	b=Cc0On2EA9eTB1jEVIhHE9+rFfERJFTWUYrnL7O+IIJsSjjapNhZE7P6AqYNCl2ExsAUAcS
-	sRPKv30gNFtzBVa/5QC9+3+gNs3r3J1nd4qPmC59nLQGrrNDW+sCoZE9UG7m53pZ274ZNh
-	LhEZoUsvRp5AVsATntS67Tg94dpqg9wnDznBP6qWTKqLHQhYUweEbI/L2Dtq18tvxDsSs4
-	jSKs3Iwf6FoMONGNpQRYM+u5OS303TqUesgR4Hyt2kqKjWvVjF17H/Ix7l8rOVbNZBWXLx
-	QbT4+z7If/qJMxQZJ3YxaRJBDtqDpx48kcCdHq67/aOxsl0yP7KDHqLvXY+vVQ==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  Santhosh Kumar K <s-k6@ti.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <michael@walle.cc>,  Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>,  Steam Lin <stlin2@winbond.com>,
-  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/21] mtd: spinand: Use more specific naming for the
- write enable/disable op
-In-Reply-To: <80da4df1-cd35-469b-a636-8f405358ef00@linaro.org> (Tudor
-	Ambarus's message of "Fri, 7 Mar 2025 15:39:43 +0000")
-References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
-	<20250307-winbond-6-14-rc1-octal-v1-2-45c1e074ad74@bootlin.com>
-	<80da4df1-cd35-469b-a636-8f405358ef00@linaro.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 07 Mar 2025 16:49:39 +0100
-Message-ID: <87jz90rgbw.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="TWTiZvoE"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id qZxttvad3LArrqZxxtvbTO; Fri, 07 Mar 2025 16:50:32 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1741362632;
+	bh=u4JFPpnUhifHBkLOOmUUTQNT8VWfspjFasQe3TAxw7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=TWTiZvoEanl972+iLSv8jS2DFAGcCStHX+F3LeX/UwgFtCfgulB3xYCDiEXu+VEya
+	 XcrIQ6O1UAkMyWTgoj/Tb+HF/45bnB3mms9rIUI9+ORqiA/60oUHjg9+f+IfIA//+z
+	 0Q+mejMCamKUPK4H9oKji5sdUgloNO8WoJ4XdQO55AbXMR15bagJPNKQWLtCmu173x
+	 PfYlZWuFF3UUwzbwSXFhOd1pHaVyUL6GgY3wVSlvJIU7aiBrNt6niVb8iwAxBOwhg+
+	 IiEdgX4nZsnpSymRVXv6aWW0tdux+oy8QJYrBldVzdPliJIG2/e6kR9gIajiUXpTW6
+	 dx4jLYmCymv2w==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 07 Mar 2025 16:50:32 +0100
+X-ME-IP: 124.33.176.97
+Message-ID: <d27b4c54-a44b-4df0-8c50-0cc818be92ba@wanadoo.fr>
+Date: Sat, 8 Mar 2025 00:50:20 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtsehttdertddtredtnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfelkedvveffleeuhfeigfdvvefhgfejgffghfeiteegteeiudegfedtjeehkeefnecukfhppeelvddrudekgedruddtkedrudejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrudejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepthhuughorhdrrghmsggrrhhusheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehsqdhkieesthhirdgtohhmpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihgthhgrvghlseifrghllhgvrdgttgdpr
- hgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsthhlihhnvdesfihinhgsohhnugdrtghomh
-X-GND-Sasl: miquel.raynal@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/7] bits: split the definition of the asm and non-asm
+ GENMASK()
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
+ David Laight <David.Laight@ACULAB.COM>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20250306-fixed-type-genmasks-v5-0-b443e9dcba63@wanadoo.fr>
+ <20250306-fixed-type-genmasks-v5-1-b443e9dcba63@wanadoo.fr>
+ <20250306192331.2701a029@pumpkin>
+ <bdce7d99-7f02-4667-acda-9ffc62c92af2@wanadoo.fr>
+ <20250307132742.150a3a77@pumpkin>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <20250307132742.150a3a77@pumpkin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 07/03/2025 at 15:39:43 GMT, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+On 07/03/2025 at 22:27, David Laight wrote:
+> On Fri, 7 Mar 2025 18:58:08 +0900
+> Vincent Mailhol <mailhol.vincent@wanadoo.fr> wrote:
+> 
+>> On 07/03/2025 at 04:23, David Laight wrote:
+>>> On Thu, 06 Mar 2025 20:29:52 +0900
+>>> Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org> wrote:
+>>>   
+>>>> From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
-> On 3/7/25 3:08 PM, Miquel Raynal wrote:
->> -#define SPINAND_WR_EN_DIS_OP(enable)					\
->> +#define SPINAND_WR_EN_DIS_1S_0_0_OP(enable)				\
->>  	SPI_MEM_OP(SPI_MEM_OP_CMD((enable) ? 0x06 : 0x04, 1),		\
->>  		   SPI_MEM_OP_NO_ADDR,					\
->>  		   SPI_MEM_OP_NO_DUMMY,					\
->
-> here too, I lean towards keeping the name as it was, but maybe others
-> can jump in.
+(...)
 
-These are indeed the three commands with just a command cycle. But then
-we have eg. page data reads which have no data: 1s-1s-0 (or 8d-8d-0)
-makes sense to me because it is clear that there is no data cycle. Or
-even worse, a read ID instruction can be 1s-0-1s (or, again,
-8d-0-8d). Removing the 0 in the middle would definitely not make sense,
-and to keep something clear I would actually prefer to keep these three
-members for clarity, even though in this case they will remain 0.
+>>>> +#define GENMASK(h, l)		__GENMASK(h, l)
+>>>> +#define GENMASK_ULL(h, l)	__GENMASK_ULL(h, l)  
+>>>
+>>> What do those actually expand to now?
+>>> As I've said a few times both UL(0) and ULL(0) are just (0) for __ASSEMBLY__
+>>> so the expansions of __GENMASK() and __GENMASK_ULL() contained the
+>>> same numeric constants.  
+>>
+>> Indeed, in asm, the UL(0) and ULL(0) expands to the same thing: 0.
+>>
+>> But the two macros still expand to something different on 32 bits
+>> architectures:
+>>
+>>   * __GENMASK:
+>>
+>>       (((~(0)) << (l)) & (~(0) >> (32 - 1 - (h))))
+>>
+>>   * __GENMASK_ULL:
+>>
+>>       (((~(0)) << (l)) & (~(0) >> (64 - 1 - (h))))
+>>
+>> On 64 bits architecture these are the same.
+> 
+> If the assembler is naive and uses the cpu shift instruction for the >>
+> then a lot of cpu (including all x86 since the 286) mask off the high bits.
+> So __GENMASK_ULL() may well generate the expected pattern - provided it
+> is 32bits wide.
+
+"If", "may", that's still a lot of conditionals in your sentence :)
+
+I do not have enough knowledge to prove or disprove this, but what I am
+sure of is that this uncertainty tells me that this is not something I
+want to touch myself.
+
+I picked up this stalled fixed width patch series and re-spinned it
+because I had confidence here. I do not want to extend this series with
+some asm clean-up which looks uncertain to me. I am not telling you are
+wrong but just that I will happily delegate this to whoever has more
+confidence than me!
+
+>>> This means they should be generating the same values.
+>>> I don't know the correct 'sizeof (int_type)' for the shift right of ~0.
+>>> My suspicion is that a 32bit assembler used 32bit signed integers and a
+>>> 64bit one 64bit signed integers (but a 32bit asm on a 64bit host might
+>>> be 64bit).
+>>> So the asm versions need to avoid the right shift and only do left shifts.
+>>>
+>>> Which probably means they need to be enirely separate from the C versions.
+>>> And then the C ones can have all the ULL() removed.  
+>>
+>> In this v5, I already have the ULL() removed from the non-uapi C
+>> version. And we are left with two distinct variants:
+>>
+>>   - the uapi C & asm
+>>   - the non-uapi C (including fix width)
+>>
+>> For the uapi ones, I do not think we can modify it without a risk of
+>> breaking some random userland. At least, this is not a risk I will take.
+>> And if we have to keep the __GENMASK() and __GENMASK_ULL(), then I would
+>> rather just reuse these for the asm variant instead of splitting further
+>> more and finding ourselves with three variants:
+>>
+>>   - the uapi C
+>>   - the asm
+>>   - the non-uapi C (including fix width)
+>>
+>> If __GENMASK() and __GENMASK_ULL() were not in the uapi, I would have
+>> agreed with you.
+>>
+>> If you believe that the risk of modifying the uapi GENMASK*() is low
+>> enough, then you can submit a patch. But I will definitely not touch
+>> these myself.
+> 
+> I don't think you'll break userspace by stopping the uapi .h working
+> for asm files (with __ASSEMBLER__ defined).
+> 
+> But someone else might have a different opinion.
+
+How do you know that there isn't someone somewhere who is using the uapi
+__GENMASK*() in their userland asm code? Wouldn't such code break?
+
+You may argue that the uapi is not meant to be used that way, but at the
+end, we are not supposed to make assumptions on how the uapi code will
+be used. Once it is exposed, if something break because the uapi was not
+used in the intended way, it is still the kernel fault, not the userland.
+
+
+Yours sincerely,
+Vincent Mailhol
+
