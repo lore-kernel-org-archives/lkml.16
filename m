@@ -1,1198 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013008.outbound.protection.outlook.com [40.107.159.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF00420AF69;
-	Fri,  7 Mar 2025 09:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339910; cv=none; b=VdJ99FBhk8cm9K2cVcyIC/vnGc/7ZkcOWo/9mClYrmYmboe5wZsix6g5dhpqGq7k/8nCDaseleP2W9z3eqf6trnzinA/hAtDOZ9PvUI07H6SKBgBf0Bj3ZaTtkmBUMSvdmwOwHPq11z8kT7QqPL48QhlM4y7K1eA++tT0CrSxf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339910; c=relaxed/simple;
-	bh=M7v0MrQ+M625vENO+WHr9xMhJJv5fLyt4IDJRblANIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZERS4yQWlR6YaM/flJ5RO4mMiK5jIWZuNx5eEQO7miRd/fmGWxzvhxu7kPdOZqwCvfBpgtx8JkkWadpzECvcAubD9mbcGtHjoFaHAAZ45Stppvw+MuXmn1diW4nBWtdAYTnqBZhlQ7cxa7cKZQi5XUzf1Bg1o3A9Iimu/hNJQdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXbxWSYh; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524D21C84BD;
+	Fri,  7 Mar 2025 09:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741339919; cv=fail; b=GxpC8Tr03Ts7ipW6328zv4J/Fx2GqrJGWfyoXXvQAvmzr/fuphEALP9OluVAaXUuFPfo4qDhHlw3a93a3anq0rXHxPFF5L+yketis39zdXzH03j6Qj/6Iv9IeajjsgEG0R+7DhMb4INP07yBLr9TaV0iGR4wsNrDr9tQprQ2mZA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741339919; c=relaxed/simple;
+	bh=r/16opGlPi/HMt0ohz4XmRjc8gvcu8GFBqyg3ZeS3JU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=awQAvdI/Bgtp+3DZVb+M7ZDpzD1qYRbGP571YOnNBJirUMYrFD7vZmLvy7Nh2D9ecE6oB0M6nrHavF9zeOuEgfniCYefC1qZzyIjKZRdogVPA0Y/BUN3RcHr5FW9GY/SnZ6BIAYnMzRxlNUt81r/r5F9OgIpTux2Ch03dspH7l0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=e6ESfSgP; arc=fail smtp.client-ip=40.107.159.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXbxWSYh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDFD1C4CEF0;
-	Fri,  7 Mar 2025 09:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741339909;
-	bh=M7v0MrQ+M625vENO+WHr9xMhJJv5fLyt4IDJRblANIc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BXbxWSYhtcGqubexv5AMxSqV5Da42ictNCAoRsntZCHpFxwRYo6+UlslsdQonfPv/
-	 66Bn7Spz1521plWfw/lHXSij6MMvOag7Mnm90qvm2/paqmpUHXNXhJDZ19zyU3ht19
-	 m2P2tmJ8J6jkMf/R3ZiwTJGWSfuv6Ysgs5O+5I/5HhO6iuoNiW+eqZfvJ7P9sR2Oof
-	 80suoUm1rte461FnKzc5ZQ8rcz13AqtXxTWRF3Ajerhp0RGN4O4TcIEKKuSnp3vkhp
-	 evarOAMbm87xW2153l2qMvkQrPUJAvHceAI3O5rTVXiWBizfgLSV+WuVK/Ujp9MEOo
-	 ELEoBLsOkI4RA==
-Date: Fri, 7 Mar 2025 10:31:39 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Pratyush Yadav <ptyadav@amazon.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>, 
-	Alexander Graf <graf@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	David Woodhouse <dwmw2@infradead.org>, James Gowans <jgowans@amazon.com>, 
-	Mike Rapoport <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Pasha Tatashin <tatashin@google.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Dave Hansen <dave.hansen@intel.com>, David Hildenbrand <david@redhat.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Matthew Wilcox <willy@infradead.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	kexec@lists.infradead.org
-Subject: Re: [RFC PATCH 1/5] misc: introduce FDBox
-Message-ID: <20250307-sachte-stolz-18d43ffea782@brauner>
-References: <20250307005830.65293-1-ptyadav@amazon.de>
- <20250307005830.65293-2-ptyadav@amazon.de>
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="e6ESfSgP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IJ6KHf30BgL9+L0iuvboj0p+duoBtODnN/il01SIwQ82YvROGLhS1U+uHKEenAGmlJBYn1OibMv0u1bXLorsMAamGltl0z7tFPinlo+1S2g7xB20fLIFOhuolXPyx0PLs3OckCh2HnmfzRgB78W75n/ZuCiLzMl07GQS6NjNfmMEqxYKzDtl+Cve4dwrWzkQel3/fU60lVf6QmF6EK3Mgg1JV1+RzlRDc2A9Es966snj4NV2zrcPu2jCcxl1E13ZfiH3hXPiRV/Ce0Zm8WE6byTRgM9CjTy72dA+hAUsPsjSS1qM3cMkyxFtAY0ASlU8QavRX3JlRTSKPdA5dot8cg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b2d8lBGUMmM5wk/O1wf1v0HaSQEp2NcTq09RRa3tsd8=;
+ b=rN1HLRbqAo/4oYjG4Y14xtpOPdV16sVm/vksu/PHV5FeMyJshgn/vAo5Q8KhdaG5v868auxQXavZ0IipRGz8RKu+7bDwt1PZSUDaSODj8sG6zZGBCGlj/IA49L2DluYsYMCrIHdCRFql4evRh2zgDAFsYi6oYHAWRowxePjFZHCozYJ7YxM8YiDd1EYDuWOLWRe1a9n1rGWdZ9tgpISxoxM9CuhZMy2q+txRJoX5zNlT1EvNU4GBabSrf6s93nvVWKvN8YAx5dh89e9bqnLHAfh8ryT1VkmSINMKy+r7mgSU95nym+as1LsZOpZ+AJWLwwsSFRGgpbRWOA3qzHN63g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b2d8lBGUMmM5wk/O1wf1v0HaSQEp2NcTq09RRa3tsd8=;
+ b=e6ESfSgPk3MztMBlZZ5tQXnye9EKUxnQ9LlZMa1m0pq/2xM7izdZUheW3+jC7PmJGQNcDGzlNJHpV7j1L0yFYF4Y/zw3lkxuszoArLZxnMb6qoobHKzIzq1er104vBDbk6a4rhmL75ggdNZY5LWNTJS966it3doAntnVRiiYLy/xWw7nXhpTKMwnkiBN7kowRoXNAGXWK6TvROvQPGcoRDxUdnStLxVbpJoTMJcxxnJayNY5FiGuiHcbqjst/Kg/JEdidhuoWHnrPmhn711NmNj1VgrzH76QqO4td9OdPyFPpKekU6wLg2ymgWDqAFptygzbJTNiO8/5Lr9nO/k2iA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from DBBPR03MB10396.eurprd03.prod.outlook.com (2603:10a6:10:53a::11)
+ by DU5PR03MB10443.eurprd03.prod.outlook.com (2603:10a6:10:529::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Fri, 7 Mar
+ 2025 09:31:53 +0000
+Received: from DBBPR03MB10396.eurprd03.prod.outlook.com
+ ([fe80::ee3c:c9be:681:c0bf]) by DBBPR03MB10396.eurprd03.prod.outlook.com
+ ([fe80::ee3c:c9be:681:c0bf%7]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
+ 09:31:53 +0000
+From: Mathis Foerst <mathis.foerst@mt.com>
+To: linux-kernel@vger.kernel.org
+Cc: Mathis Foerst <mathis.foerst@mt.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	manuel.traut@mt.com,
+	mathis.foerst@zuehlke.com
+Subject: [PATCH v4 1/6] media: dt-bindings: mt9m114: Add slew-rate DT-binding
+Date: Fri,  7 Mar 2025 10:31:35 +0100
+Message-Id: <20250307093140.370061-2-mathis.foerst@mt.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250307093140.370061-1-mathis.foerst@mt.com>
+References: <20250307093140.370061-1-mathis.foerst@mt.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI1P293CA0005.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:2::12) To DBBPR03MB10396.eurprd03.prod.outlook.com
+ (2603:10a6:10:53a::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250307005830.65293-2-ptyadav@amazon.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR03MB10396:EE_|DU5PR03MB10443:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba853279-2a7e-4939-48d7-08dd5d5ae4c7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?g0RM6DjsPADpNdTCq6GuolvKqXElL9ev1vI3dXyASXPg+xutlCtUFYvghUTg?=
+ =?us-ascii?Q?v8hBHElom0Ado2epRMApXPy7wNwn9/4k3RYa+gWYRdYcGEnW513NHI9g9C8z?=
+ =?us-ascii?Q?tVpyJzfp3uEAL60yx8uth0H+zzOQLYGLzp6Zux7p7VG+VPiRj0hu8RDx2ajN?=
+ =?us-ascii?Q?675JJMxGcWQ6NTrqjY6BdZwVa64Jp1Z/H6W2GCAWJSGXGovFIZf+gGxQt0Kc?=
+ =?us-ascii?Q?to55c/hjN1eV1/+jMCpbQpf1JLZVWn4dPsRIL01Ng60erlGV0lNv1iUfV04K?=
+ =?us-ascii?Q?yFe5a1fNwbEej2F+TzwWMEHW5KBmxH/tR+FrMYP5f99f9LrfHa4GujftNen5?=
+ =?us-ascii?Q?l3lHBYmUhpgxCDnQoCXK99QyPOFGp9TLkBL9N5UgUNyRhwhyBxGbl5wFOJbA?=
+ =?us-ascii?Q?EmNq+8FzyNe3bU7RUAkTaWAlemDl/n8CUCPjJrOzfH0jZ5XSEhLCcXQUjGvh?=
+ =?us-ascii?Q?nAj1KpRnc5gOdtKaCU5DC9uTkvOiUmn3DEK+FWjwSK1CQWOYe/MzOF7hMa6X?=
+ =?us-ascii?Q?QKufmF4PgXKsKPTV7X6qa4l6jKG81LPs8RlTl9WtVrRXQHbxsoVmmMmCB24f?=
+ =?us-ascii?Q?t9BuFFKqzhRPZzGAEE7H4tQ0DD/w8LtN4I1IDk8lfyr3TCXfQnZpuXAO0xNC?=
+ =?us-ascii?Q?lQ6LqXuO/9sWyiH+hsqejkhX7Sg0swJbQnNJYurzwKsc31O+FMpCQtyPzUYx?=
+ =?us-ascii?Q?Agq7kupRsghMYlHQaJ5cpGnMNEf6X9jftgSs+zg0C7U99Akzd7ExUF8BehAy?=
+ =?us-ascii?Q?+fODv/KOC/zSva0t/nrZnPkWW1xgxSaZqCXrc/nkmhesB0IYp5t5bwpIaDtN?=
+ =?us-ascii?Q?zR6Ay4Nih+tASA6YRT/fROen8Amr9/LwrLb7Daw+rylqA3pacYujPxvwATqz?=
+ =?us-ascii?Q?SyFnoYbUQiikw7uOQZUETX93zZzWzo0zhcJ0e9zkoVE/8DDxY9f3WSYO9RgH?=
+ =?us-ascii?Q?3zb67PUswNjUiAjQpGgIlgBfwWCllT2Af1wYgHm1oSgNca9y/6a1o+WjRg1O?=
+ =?us-ascii?Q?7mm+iHXnWcmu2U9ZHSkDj7FbURW46S051n/Dt/UcKqNaF3K1YjYAJL4Fvi2/?=
+ =?us-ascii?Q?cqKaWRgxO8ykMEDVgPLqJedp3nGQ+Y0EuDue3xjqv21xoimrsM8M91jjtHsS?=
+ =?us-ascii?Q?uGXy4nGH+VkkoCYSufKL3Fg08cFki9WyH5gIkaaShy/dgBRphwpU+G4KGKn8?=
+ =?us-ascii?Q?4eJHAwoQ6MpkMzeaKhpCS2jJaF7EPkSiHBO5R3SxLagozIZb/wdaDcGQLf6k?=
+ =?us-ascii?Q?8C6OK0niE/jO3mVskPKjx+TNvDcvjPrKhdz5GcXRK+bE645V6OOk3BAK0ayJ?=
+ =?us-ascii?Q?XmuOVRZmRE6vj7XUFSwPGPmOuPEp92CUmUlYvbrwRCabR1UYOGlnOy999XXO?=
+ =?us-ascii?Q?fTX343ON7AW9cM8hOF0aRz+wVYpL+oDywHtU8xvwDyk29tTN7H8N4KVnUJou?=
+ =?us-ascii?Q?hk/DlfYlTGExI5cbu4/bZJ+Od8E/aDtm?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR03MB10396.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eGUIuETRMF9vW33rxbnlAiijidSYp2i7z9rYhtE2Ca10juTsE4cgTA7rR7Kv?=
+ =?us-ascii?Q?vHxdyC5HLBkQIyFUJvtwkYDV8t9rD8F7XfNTpqCVZpMp7Dzbu7YTbAanYbvn?=
+ =?us-ascii?Q?sNZ5pYTPC2bBlJy0asNXT7lYutumA4GYmpItEtZCoDPfU+uUIDJv+Znu8+GS?=
+ =?us-ascii?Q?4V8btTF/zRemS8MdbpV4JnpqkJ387maz1SHkG1cDNNtLL2ocwPkeeZeUejLA?=
+ =?us-ascii?Q?OtrX3kazT16kLY75FuV+7dxZ9oFroQVpenSJiWHqwqvD8t6pENDiad2P7nl3?=
+ =?us-ascii?Q?Pg5Iv/sxcVLnE5TNpNGvDTAstDdJcWI0xxmpfJJ1VyODH0T+ot6o3oY6ERfs?=
+ =?us-ascii?Q?AMsguEs9dziP/JgXLVtb5qGvGnC5fdbzaxDcdDgqCnvrtAgflmfSnhl5LgTW?=
+ =?us-ascii?Q?M6pj3EANa7NmlccFBcBFZGBTwVrKGVBz7m3OWBV1HLrC8IXmpLm/yvpalCBN?=
+ =?us-ascii?Q?nXbSWdYHL+Nh8lLzfQfG5W9qztV9dDukiIBOxFXFWobv/9Kp2iWC2CAH3zVx?=
+ =?us-ascii?Q?Y3QZV/NThq7fZTJqOnVH/sVsFsVrepKATZ5Rayw3JX/cq7LmZiCzMhb6e4pK?=
+ =?us-ascii?Q?hKusN4zUD8pQa92gryv+Rl2Z3hOE73oeNfTUtS4JHU8M+vzHkahZWm755E8Y?=
+ =?us-ascii?Q?Sk2/mr1G7iWh7SxwyNsMggkv5/bEqXIVdJ0khv4ZVegnH/IyzBLdyKTXoia9?=
+ =?us-ascii?Q?gQx1BfUS1WGGTS8ohPEHdG1Y5tHrHv8/5+O9ZhJs5JfUsz+GINW+iGy7wgNY?=
+ =?us-ascii?Q?KRotalGfjj2NgwHt5ci1Rkc+cwicaZkw5l7ltZWGS+MPYqX0VRXuk7SKuELJ?=
+ =?us-ascii?Q?1oPmCZV1Zb/8pvhBV/jjVcN9uB7FbLQmLvlOf+t62hbpA4NYeu8/AcWjmu4Y?=
+ =?us-ascii?Q?OlTSXbBEHE4E1SW1iv2OwQODoiPLvlLoqVqS27nNAlChEa/gzAbyezrvDUhO?=
+ =?us-ascii?Q?KkRen9SP0hJQJsv8Uu3bj+YI0BQtsB/L+lk3subd7/f+CHWCsWm5dYGYSVp/?=
+ =?us-ascii?Q?oGZYe1knw5S38VSJx3AlpmkRCCXVJLclqOk9b1DEQKdWAjv0M2cu9+6l8bwh?=
+ =?us-ascii?Q?Gho/729gpavRI3+Fix2c9GwtXAkt9DGJW+hSYXPhynKlOlcO4fEDaUDvGCkv?=
+ =?us-ascii?Q?s9q8BjoauP/9ApvYmWU4TYNfEfDfA0CVVgHNuxQpNBnhvFn10wjug7Xaqf6D?=
+ =?us-ascii?Q?xE94w5w4GoBRwfvBgyHm+NET803i0EvYDMENb44v+r1Jeigbupe4YUJ2oDvd?=
+ =?us-ascii?Q?TYVXo35qU3AOdsp5PWLt5P5iMk1vAWlV4MTiMNeTbGd60ZX0riiF3GjHHMw4?=
+ =?us-ascii?Q?yfNcxKfEeb/NycuB0VYlN96I7XYp9x1orQTZBrI2eeZzDq8lnZ+OLvpb+omo?=
+ =?us-ascii?Q?Nr8Wry8fRwwB2XqthcwCSMSVbv8+U1YsnXYHgQwEJwcGaHV7TVXfYKgW9wFW?=
+ =?us-ascii?Q?28bs3yjgeclHnImC2SZRrtwbmJsnZM/MgQr482bBbx/LvwibK2gUL7G/979N?=
+ =?us-ascii?Q?gl8loETmkLlXawdXSuGr98nrtwOzw+pKi/X3a3yER/6MutRRH1Jdqwpi9MVC?=
+ =?us-ascii?Q?jw7ynW7SaeXk61o5TG5MkojkVjJ7uoWAQKEZkvwD?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba853279-2a7e-4939-48d7-08dd5d5ae4c7
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR03MB10396.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 09:31:52.4735
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +D5RcMMmlL6grww4zAPz9neuyRQL2xgBSh0dfo2tjv0QdMeOD+qT7nXbVzUtDxAD8r2c4eztKzZzhUHTOar+Lw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR03MB10443
 
-On Fri, Mar 07, 2025 at 12:57:35AM +0000, Pratyush Yadav wrote:
-> The File Descriptor Box (FDBox) is a mechanism for userspace to name
-> file descriptors and give them over to the kernel to hold. They can
-> later be retrieved by passing in the same name.
-> 
-> The primary purpose of FDBox is to be used with Kexec Handover (KHO).
-> There are many kinds anonymous file descriptors in the kernel like
-> memfd, guest_memfd, iommufd, etc. that would be useful to be preserved
-> using KHO. To be able to do that, there needs to be a mechanism to label
-> FDs that allows userspace to set the label before doing KHO and to use
-> the label to map them back after KHO. FDBox achieves that purpose by
-> exposing a miscdevice which exposes ioctls to label and transfer FDs
-> between the kernel and userspace. FDBox is not intended to work with any
-> generic file descriptor. Support for each kind of FDs must be explicitly
-> enabled.
+The MT9M114 supports the different slew rates (0 to 7) on the output pads.
+At the moment, this is hardcoded to 7 (the fastest rate).
+The user might want to change this values due to EMC requirements.
 
-This makes no sense as a generic concept. If you want to restore shmem
-and possibly anonymous inodes files via KHO then tailor the solution to
-shmem and anon inodes but don't make this generic infrastructure. This
-has zero chances to cover generic files.
+Add the 'slew-rate' property to the MT9M114 DT-bindings for selecting
+the desired slew rate.
 
-As soon as you're dealing with non-kernel internal mounts that are not
-guaranteed to always be there or something that depends on superblock or
-mount specific information that can change you're already screwed. This
-will end up a giant mess. This is not supportable or maintainable.
+Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
+---
+ .../devicetree/bindings/media/i2c/onnn,mt9m114.yaml      | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-And struct file should have zero to do with this KHO stuff. It doesn't
-need to carry new operations and it doesn't need to waste precious space
-for any of this.
+diff --git a/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml b/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml
+index f6b87892068a..a89f740214f7 100644
+--- a/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml
+@@ -70,6 +70,15 @@ properties:
+           - bus-type
+           - link-frequencies
+ 
++  slew-rate:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Slew rate ot the output pads DOUT[7:0], LINE_VALID, FRAME_VALID and
++      PIXCLK. Higher values imply steeper voltage-flanks on the pads.
++    minimum: 0
++    maximum: 7
++    default: 7
++
+ required:
+   - compatible
+   - reg
+-- 
+2.34.1
 
-> 
-> While the primary purpose of FDBox is to be used with KHO, it does not
-> explicitly require CONFIG_KEXEC_HANDOVER, since it can be used without
-> KHO, simply as a way to preserve or transfer FDs when userspace exits.
-
-This use-case is covered with systemd's fdstore and it's available to
-unprivileged userspace. Stashing arbitrary file descriptors in the
-kernel in this way isn't a good idea.
-
-> 
-> Co-developed-by: Alexander Graf <graf@amazon.com>
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
-> ---
-> 
-> Notes:
->     In a real live-update environment, it would likely make more sense to
->     have a way of passing a hint to the kernel that KHO is about to happen
->     and it should start preparing. Having as much state serialized as
->     possible before the KHO freeze would help reduce downtime. An FDBox
->     operation, say FDBOX_PREPARE_FD that can give the signal to prepare
->     before actually being put in the box and sealed. I have not added
->     something like that yet for simplicity sake.
->
->  MAINTAINERS                |   8 +
->  drivers/misc/Kconfig       |   7 +
->  drivers/misc/Makefile      |   1 +
->  drivers/misc/fdbox.c       | 758 +++++++++++++++++++++++++++++++++++++
->  include/linux/fdbox.h      | 119 ++++++
->  include/linux/fs.h         |   7 +
->  include/linux/miscdevice.h |   1 +
->  include/uapi/linux/fdbox.h |  61 +++
->  8 files changed, 962 insertions(+)
->  create mode 100644 drivers/misc/fdbox.c
->  create mode 100644 include/linux/fdbox.h
->  create mode 100644 include/uapi/linux/fdbox.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 82c2ef421c000..d329d3e5514c5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8862,6 +8862,14 @@ F:	include/scsi/libfc.h
->  F:	include/scsi/libfcoe.h
->  F:	include/uapi/scsi/fc/
->  
-> +FDBOX
-> +M:	Pratyush Yadav <pratyush@kernel.org>
-> +L:	linux-fsdevel@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/misc/fdbox.c
-> +F:	include/linux/fdbox.h
-> +F:	include/uapi/linux/fdbox.h
-> +
->  FILE LOCKING (flock() and fcntl()/lockf())
->  M:	Jeff Layton <jlayton@kernel.org>
->  M:	Chuck Lever <chuck.lever@oracle.com>
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 56bc72c7ce4a9..6fee70c9479c4 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -632,6 +632,13 @@ config MCHP_LAN966X_PCI
->  	    - lan966x-miim (MDIO_MSCC_MIIM)
->  	    - lan966x-switch (LAN966X_SWITCH)
->  
-> +config FDBOX
-> +	bool "File Descriptor Box device to persist fds"
-> +	help
-> +	  Add a new /dev/fdbox directory that allows user space to preserve specific
-> +	  types of file descritors when user space exits. Also preserves the same
-> +	  types of file descriptors across kexec when KHO is enabled.
-> +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index 545aad06d0885..59a398dcfcd64 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -75,3 +75,4 @@ lan966x-pci-objs		:= lan966x_pci.o
->  lan966x-pci-objs		+= lan966x_pci.dtbo.o
->  obj-$(CONFIG_MCHP_LAN966X_PCI)	+= lan966x-pci.o
->  obj-y				+= keba/
-> +obj-$(CONFIG_FDBOX)		+= fdbox.o
-> diff --git a/drivers/misc/fdbox.c b/drivers/misc/fdbox.c
-> new file mode 100644
-> index 0000000000000..a8f6574e2c25f
-> --- /dev/null
-> +++ b/drivers/misc/fdbox.c
-> @@ -0,0 +1,758 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * fdbox.c - framework to preserve file descriptors across
-> + *           process lifetime and kexec
-> + *
-> + * Copyright (C) 2024-2025 Amazon.com Inc. or its affiliates.
-> + *
-> + * Author: Pratyush Yadav <ptyadav@amazon.de>
-> + * Author: Alexander Graf <graf@amazon.com>
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/device.h>
-> +#include <linux/anon_inodes.h>
-> +#include <linux/cdev.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/fdtable.h>
-> +#include <linux/file.h>
-> +#include <linux/kexec.h>
-> +#include <linux/kexec_handover.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/fdbox.h>
-> +
-> +static struct miscdevice fdbox_dev;
-> +
-> +static struct {
-> +	struct class			*class;
-> +	dev_t				box_devt;
-> +	struct xarray			box_list;
-> +	struct xarray			handlers;
-> +	struct rw_semaphore		recover_sem;
-> +	bool				recover_done;
-> +} priv = {
-> +	.box_list = XARRAY_INIT(fdbox.box_list, XA_FLAGS_ALLOC),
-> +	.handlers = XARRAY_INIT(fdbox.handlers, XA_FLAGS_ALLOC),
-> +	.recover_sem = __RWSEM_INITIALIZER(priv.recover_sem),
-> +};
-> +
-> +struct fdbox_handler {
-> +	const char *compatible;
-> +	struct file *(*fn)(const void *fdt, int offset);
-> +};
-> +
-> +static struct fdbox *fdbox_remove_box(char *name)
-> +{
-> +	struct xarray *boxlist = &priv.box_list;
-> +	unsigned long box_idx;
-> +	struct fdbox *box;
-> +
-> +	xa_lock(boxlist);
-> +	xa_for_each(boxlist, box_idx, box) {
-> +		if (!strcmp(box->name, name)) {
-> +			__xa_erase(boxlist, box_idx);
-> +			break;
-> +		}
-> +	}
-> +	xa_unlock(boxlist);
-> +
-> +	return box;
-> +}
-> +
-> +static struct fdbox_fd *fdbox_remove_fd(struct fdbox *box, char *name)
-> +{
-> +	struct xarray *fdlist = &box->fd_list;
-> +	struct fdbox_fd *box_fd;
-> +	unsigned long idx;
-> +
-> +	xa_lock(fdlist);
-> +	xa_for_each(fdlist, idx, box_fd) {
-> +		if (!strncmp(box_fd->name, name, sizeof(box_fd->name))) {
-> +			__xa_erase(fdlist, idx);
-> +			break;
-> +		}
-> +	}
-> +	xa_unlock(fdlist);
-> +
-> +	return box_fd;
-> +}
-> +
-> +/* Must be called with box->rwsem held. */
-> +static struct fdbox_fd *fdbox_put_file(struct fdbox *box, const char *name,
-> +				       struct file *file)
-> +{
-> +	struct fdbox_fd *box_fd __free(kfree) = NULL, *cmp;
-> +	struct xarray *fdlist = &box->fd_list;
-> +	unsigned long idx;
-> +	u32 newid;
-> +	int ret;
-> +
-> +	/* Only files that set f_fdbox_op are allowed in the box. */
-> +	if (!file->f_fdbox_op)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +
-> +	box_fd = kzalloc(sizeof(*box_fd), GFP_KERNEL);
-> +	if (!box_fd)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	if (strscpy_pad(box_fd->name, name, sizeof(box_fd->name)) < 0)
-> +		/* Name got truncated. This means the name is not NUL-terminated. */
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	box_fd->file = file;
-> +	box_fd->box = box;
-> +
-> +	xa_lock(fdlist);
-> +	xa_for_each(fdlist, idx, cmp) {
-> +		/* Look for name collisions. */
-> +		if (!strcmp(box_fd->name, cmp->name)) {
-> +			xa_unlock(fdlist);
-> +			return ERR_PTR(-EEXIST);
-> +		}
-> +	}
-> +
-> +	ret = __xa_alloc(fdlist, &newid, box_fd, xa_limit_32b, GFP_KERNEL);
-> +	xa_unlock(fdlist);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return_ptr(box_fd);
-> +}
-> +
-> +static long fdbox_put_fd(struct fdbox *box, unsigned long arg)
-> +{
-> +	struct fdbox_put_fd put_fd;
-> +	struct fdbox_fd *box_fd;
-> +	struct file *file;
-> +	int ret;
-> +
-> +	if (copy_from_user(&put_fd, (void __user *)arg, sizeof(put_fd)))
-> +		return -EFAULT;
-> +
-> +	guard(rwsem_read)(&box->rwsem);
-> +
-> +	if (box->sealed)
-> +		return -EBUSY;
-> +
-> +	file = fget_raw(put_fd.fd);
-> +	if (!file)
-> +		return -EINVAL;
-> +
-> +	box_fd = fdbox_put_file(box, put_fd.name, file);
-> +	if (IS_ERR(box_fd)) {
-> +		fput(file);
-> +		return PTR_ERR(box_fd);
-> +	}
-> +
-> +	ret = close_fd(put_fd.fd);
-> +	if (ret) {
-> +		struct fdbox_fd *del;
-> +
-> +		del = fdbox_remove_fd(box, put_fd.name);
-> +		/*
-> +		 * If we fail to remove from list, it means someone else took
-> +		 * the FD out. In that case, they own the refcount of the file
-> +		 * now.
-> +		 */
-> +		if (del == box_fd)
-> +			fput(file);
-
-This is a racy mess. Why would adding a file to an fdbox be coupled with
-closing it concpetually? The caller should close the file descriptor
-itself and not do this close_fd() here in the kernel.
-
-> +
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static long fdbox_seal(struct fdbox *box)
-> +{
-> +	struct fdbox_fd *box_fd;
-> +	unsigned long idx;
-> +	int ret;
-> +
-> +	guard(rwsem_write)(&box->rwsem);
-> +
-> +	if (box->sealed)
-> +		return -EBUSY;
-> +
-> +	xa_for_each(&box->fd_list, idx, box_fd) {
-> +		const struct fdbox_file_ops *fdbox_ops = box_fd->file->f_fdbox_op;
-> +
-> +		if (fdbox_ops && fdbox_ops->seal) {
-> +			ret = fdbox_ops->seal(box);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	box->sealed = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static long fdbox_unseal(struct fdbox *box)
-> +{
-> +	struct fdbox_fd *box_fd;
-> +	unsigned long idx;
-> +	int ret;
-> +
-> +	guard(rwsem_write)(&box->rwsem);
-> +
-> +	if (!box->sealed)
-> +		return -EBUSY;
-> +
-> +	xa_for_each(&box->fd_list, idx, box_fd) {
-> +		const struct fdbox_file_ops *fdbox_ops = box_fd->file->f_fdbox_op;
-> +
-> +		if (fdbox_ops && fdbox_ops->seal) {
-> +			ret = fdbox_ops->seal(box);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	box->sealed = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static long fdbox_get_fd(struct fdbox *box, unsigned long arg)
-> +{
-> +	struct fdbox_get_fd get_fd;
-> +	struct fdbox_fd *box_fd;
-> +	int fd;
-> +
-> +	guard(rwsem_read)(&box->rwsem);
-> +
-> +	if (box->sealed)
-> +		return -EBUSY;
-> +
-> +	if (copy_from_user(&get_fd, (void __user *)arg, sizeof(get_fd)))
-> +		return -EFAULT;
-> +
-> +	if (get_fd.flags)
-> +		return -EINVAL;
-> +
-> +	fd = get_unused_fd_flags(0);
-> +	if (fd < 0)
-> +		return fd;
-> +
-> +	box_fd = fdbox_remove_fd(box, get_fd.name);
-> +	if (!box_fd) {
-> +		put_unused_fd(fd);
-> +		return -ENOENT;
-> +	}
-> +
-> +	fd_install(fd, box_fd->file);
-> +	kfree(box_fd);
-> +	return fd;
-> +}
-> +
-> +static long box_fops_unl_ioctl(struct file *filep,
-> +			       unsigned int cmd, unsigned long arg)
-> +{
-> +	struct fdbox *box = filep->private_data;
-> +	long ret = -EINVAL;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-> +
-> +	switch (cmd) {
-> +	case FDBOX_PUT_FD:
-> +		ret = fdbox_put_fd(box, arg);
-> +		break;
-> +	case FDBOX_UNSEAL:
-> +		ret = fdbox_unseal(box);
-> +		break;
-> +	case FDBOX_SEAL:
-> +		ret = fdbox_seal(box);
-> +		break;
-> +	case FDBOX_GET_FD:
-> +		ret = fdbox_get_fd(box, arg);
-> +		break;
-
-How does userspace know what file descriptors are in this fdbox if only
-put and get are present? Userspace just remembers the names and
-otherwise it simply leaks files that no one remembered?
-
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int box_fops_open(struct inode *inode, struct file *filep)
-> +{
-> +	struct fdbox *box = container_of(inode->i_cdev, struct fdbox, cdev);
-> +
-> +	filep->private_data = box;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations box_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.unlocked_ioctl	= box_fops_unl_ioctl,
-> +	.compat_ioctl	= compat_ptr_ioctl,
-> +	.open		= box_fops_open,
-> +};
-> +
-> +static void fdbox_device_release(struct device *dev)
-> +{
-> +	struct fdbox *box = container_of(dev, struct fdbox, dev);
-> +	struct xarray *fdlist = &box->fd_list;
-> +	struct fdbox_fd *box_fd;
-> +	unsigned long idx;
-> +
-> +	unregister_chrdev_region(box->dev.devt, 1);
-> +
-> +	xa_for_each(fdlist, idx, box_fd) {
-> +		xa_erase(fdlist, idx);
-> +		fput(box_fd->file);
-> +		kfree(box_fd);
-> +	}
-> +
-> +	xa_destroy(fdlist);
-> +	kfree(box);
-> +}
-> +
-> +static struct fdbox *_fdbox_create_box(const char *name)
-> +{
-> +	struct fdbox *box;
-> +	int ret = 0;
-> +	u32 id;
-> +
-> +	box = kzalloc(sizeof(*box), GFP_KERNEL);
-> +	if (!box)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	xa_init_flags(&box->fd_list, XA_FLAGS_ALLOC);
-> +	xa_init_flags(&box->pending_fds, XA_FLAGS_ALLOC);
-> +	init_rwsem(&box->rwsem);
-> +
-> +	if (strscpy_pad(box->name, name, sizeof(box->name)) < 0) {
-> +		/* Name got truncated. This means the name is not NUL-terminated. */
-> +		kfree(box);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	dev_set_name(&box->dev, "fdbox/%s", name);
-> +
-> +	ret = alloc_chrdev_region(&box->dev.devt, 0, 1, name);
-> +	if (ret) {
-> +		kfree(box);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	box->dev.release = fdbox_device_release;
-> +	device_initialize(&box->dev);
-> +
-> +	cdev_init(&box->cdev, &box_fops);
-> +	box->cdev.owner = THIS_MODULE;
-> +	kobject_set_name(&box->cdev.kobj, "fdbox/%s", name);
-> +
-> +	ret = cdev_device_add(&box->cdev, &box->dev);
-> +	if (ret)
-> +		goto err_dev;
-> +
-> +	ret = xa_alloc(&priv.box_list, &id, box, xa_limit_32b, GFP_KERNEL);
-> +	if (ret)
-> +		goto err_cdev;
-> +
-> +	return box;
-> +
-> +err_cdev:
-> +	cdev_device_del(&box->cdev, &box->dev);
-> +err_dev:
-> +	/*
-> +	 * This should free the box and chrdev region via
-> +	 * fdbox_device_release().
-> +	 */
-> +	put_device(&box->dev);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static long fdbox_create_box(unsigned long arg)
-> +{
-> +	struct fdbox_create_box create_box;
-> +
-> +	if (copy_from_user(&create_box, (void __user *)arg, sizeof(create_box)))
-> +		return -EFAULT;
-> +
-> +	if (create_box.flags)
-> +		return -EINVAL;
-> +
-> +	return PTR_ERR_OR_ZERO(_fdbox_create_box(create_box.name));
-> +}
-> +
-> +static void _fdbox_delete_box(struct fdbox *box)
-> +{
-> +	cdev_device_del(&box->cdev, &box->dev);
-> +	unregister_chrdev_region(box->dev.devt, 1);
-> +	put_device(&box->dev);
-> +}
-> +
-> +static long fdbox_delete_box(unsigned long arg)
-> +{
-> +	struct fdbox_delete_box delete_box;
-> +	struct fdbox *box;
-> +
-> +	if (copy_from_user(&delete_box, (void __user *)arg, sizeof(delete_box)))
-> +		return -EFAULT;
-> +
-> +	if (delete_box.flags)
-> +		return -EINVAL;
-> +
-> +	box = fdbox_remove_box(delete_box.name);
-> +	if (!box)
-> +		return -ENOENT;
-> +
-> +	_fdbox_delete_box(box);
-> +	return 0;
-> +}
-> +
-> +static long fdbox_fops_unl_ioctl(struct file *filep,
-> +				 unsigned int cmd, unsigned long arg)
-> +{
-> +	long ret = -EINVAL;
-> +
-> +	switch (cmd) {
-> +	case FDBOX_CREATE_BOX:
-> +		ret = fdbox_create_box(arg);
-> +		break;
-> +	case FDBOX_DELETE_BOX:
-> +		ret = fdbox_delete_box(arg);
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct file_operations fdbox_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.unlocked_ioctl	= fdbox_fops_unl_ioctl,
-> +	.compat_ioctl	= compat_ptr_ioctl,
-> +};
-> +
-> +static struct miscdevice fdbox_dev = {
-> +	.minor = FDBOX_MINOR,
-> +	.name = "fdbox",
-> +	.fops = &fdbox_fops,
-> +	.nodename = "fdbox/fdbox",
-> +	.mode = 0600,
-> +};
-> +
-> +static char *fdbox_devnode(const struct device *dev, umode_t *mode)
-> +{
-> +	char *ret = kasprintf(GFP_KERNEL, "fdbox/%s", dev_name(dev));
-> +	return ret;
-> +}
-> +
-> +static int fdbox_kho_write_fds(void *fdt, struct fdbox *box)
-> +{
-> +	struct fdbox_fd *box_fd;
-> +	struct file *file;
-> +	unsigned long idx;
-> +	int err = 0;
-> +
-> +	xa_for_each(&box->fd_list, idx, box_fd) {
-> +		file = box_fd->file;
-> +
-> +		if (!file->f_fdbox_op->kho_write) {
-> +			pr_info("box '%s' FD '%s' has no KHO method. It won't be saved across kexec\n",
-> +				box->name, box_fd->name);
-> +			continue;
-> +		}
-> +
-> +		err = fdt_begin_node(fdt, box_fd->name);
-> +		if (err) {
-> +			pr_err("failed to begin node for box '%s' FD '%s'\n",
-> +			       box->name, box_fd->name);
-> +			return err;
-> +		}
-> +
-> +		inode_lock(file_inode(file));
-> +		err = file->f_fdbox_op->kho_write(box_fd, fdt);
-> +		inode_unlock(file_inode(file));
-> +		if (err) {
-> +			pr_err("kho_write failed for box '%s' FD '%s': %d\n",
-> +			       box->name, box_fd->name, err);
-> +			return err;
-> +		}
-> +
-> +		err = fdt_end_node(fdt);
-> +		if (err) {
-> +			/* TODO: This leaks all pages reserved by kho_write(). */
-> +			pr_err("failed to end node for box '%s' FD '%s'\n",
-> +			       box->name, box_fd->name);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +static int fdbox_kho_write_boxes(void *fdt)
-> +{
-> +	static const char compatible[] = "fdbox,box-v1";
-> +	struct fdbox *box;
-> +	unsigned long idx;
-> +	int err = 0;
-> +
-> +	xa_for_each(&priv.box_list, idx, box) {
-> +		if (!box->sealed)
-> +			continue;
-> +
-> +		err |= fdt_begin_node(fdt, box->name);
-> +		err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
-> +		err |= fdbox_kho_write_fds(fdt, box);
-> +		err |= fdt_end_node(fdt);
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +static int fdbox_kho_notifier(struct notifier_block *self,
-> +			      unsigned long cmd,
-> +			      void *v)
-> +{
-> +	static const char compatible[] = "fdbox-v1";
-> +	void *fdt = v;
-> +	int err = 0;
-> +
-> +	switch (cmd) {
-> +	case KEXEC_KHO_ABORT:
-> +		return NOTIFY_DONE;
-> +	case KEXEC_KHO_DUMP:
-> +		/* Handled below */
-> +		break;
-> +	default:
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	err |= fdt_begin_node(fdt, "fdbox");
-> +	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
-> +	err |= fdbox_kho_write_boxes(fdt);
-> +	err |= fdt_end_node(fdt);
-> +
-> +	return err ? NOTIFY_BAD : NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block fdbox_kho_nb = {
-> +	.notifier_call = fdbox_kho_notifier,
-> +};
-> +
-> +static void fdbox_recover_fd(const void *fdt, int offset, struct fdbox *box,
-> +			     struct file *(*fn)(const void *fdt, int offset))
-> +{
-> +	struct fdbox_fd *box_fd;
-> +	struct file *file;
-> +	const char *name;
-> +
-> +	name = fdt_get_name(fdt, offset, NULL);
-> +	if (!name) {
-> +		pr_err("no name in FDT for FD at offset %d\n", offset);
-> +		return;
-> +	}
-> +
-> +	file = fn(fdt, offset);
-> +	if (!file)
-> +		return;
-> +
-> +	scoped_guard(rwsem_read, &box->rwsem) {
-> +		box_fd = fdbox_put_file(box, name, file);
-> +		if (IS_ERR(box_fd)) {
-> +			pr_err("failed to put fd '%s' into box '%s': %ld\n",
-> +			       box->name, name, PTR_ERR(box_fd));
-> +			fput(file);
-> +			return;
-> +		}
-> +	}
-> +}
-> +
-> +static void fdbox_kho_recover(void)
-> +{
-> +	const void *fdt = kho_get_fdt();
-> +	const char *path = "/fdbox";
-> +	int off, box, fd;
-> +	int err;
-> +
-> +	/* Not a KHO boot */
-> +	if (!fdt)
-> +		return;
-> +
-> +	/*
-> +	 * When adding handlers this is taken as read. Taking it as write here
-> +	 * ensures no handlers get added while nodes are being processed,
-> +	 * eliminating the race of a handler getting added after its node is
-> +	 * processed, but before the whole recover is done.
-> +	 */
-> +	guard(rwsem_write)(&priv.recover_sem);
-> +
-> +	off = fdt_path_offset(fdt, path);
-> +	if (off < 0) {
-> +		pr_debug("could not find '%s' in DT", path);
-> +		return;
-> +	}
-> +
-> +	err = fdt_node_check_compatible(fdt, off, "fdbox-v1");
-> +	if (err) {
-> +		pr_err("invalid top level compatible\n");
-> +		return;
-> +	}
-> +
-> +	fdt_for_each_subnode(box, fdt, off) {
-> +		struct fdbox *new_box;
-> +
-> +		err = fdt_node_check_compatible(fdt, box, "fdbox,box-v1");
-> +		if (err) {
-> +			pr_err("invalid compatible for box '%s'\n",
-> +			       fdt_get_name(fdt, box, NULL));
-> +			continue;
-> +		}
-> +
-> +		new_box = _fdbox_create_box(fdt_get_name(fdt, box, NULL));
-> +		if (IS_ERR(new_box)) {
-> +			pr_warn("could not create box '%s'\n",
-> +				fdt_get_name(fdt, box, NULL));
-> +			continue;
-> +		}
-> +
-> +		fdt_for_each_subnode(fd, fdt, box) {
-> +			struct fdbox_handler *handler;
-> +			const char *compatible;
-> +			unsigned long idx;
-> +
-> +			compatible = fdt_getprop(fdt, fd, "compatible", NULL);
-> +			if (!compatible) {
-> +				pr_warn("failed to get compatible for FD '%s'. Skipping.\n",
-> +					fdt_get_name(fdt, fd, NULL));
-> +				continue;
-> +			}
-> +
-> +			xa_for_each(&priv.handlers, idx, handler) {
-> +				if (!strcmp(handler->compatible, compatible))
-> +					break;
-> +			}
-> +
-> +			if (handler) {
-> +				fdbox_recover_fd(fdt, fd, new_box, handler->fn);
-> +			} else {
-> +				u32 id;
-> +
-> +				pr_debug("found no handler for compatible %s. Queueing for later.\n",
-> +					 compatible);
-> +
-> +				if (xa_alloc(&new_box->pending_fds, &id,
-> +					     xa_mk_value(fd), xa_limit_32b,
-> +					     GFP_KERNEL)) {
-> +					pr_warn("failed to queue pending FD '%s' to list\n",
-> +						fdt_get_name(fdt, fd, NULL));
-> +				}
-> +			}
-> +		}
-> +
-> +		new_box->sealed = true;
-> +	}
-> +
-> +	priv.recover_done = true;
-> +}
-> +
-> +static void fdbox_recover_pending(struct fdbox_handler *handler)
-> +{
-> +	const void *fdt = kho_get_fdt();
-> +	unsigned long bid, pid;
-> +	struct fdbox *box;
-> +	void *pending;
-> +
-> +	if (WARN_ON(!fdt))
-> +		return;
-> +
-> +	xa_for_each(&priv.box_list, bid, box) {
-> +		xa_for_each(&box->pending_fds, pid, pending) {
-> +			int off = xa_to_value(pending);
-> +
-> +			if (fdt_node_check_compatible(fdt, off, handler->compatible) == 0) {
-> +				fdbox_recover_fd(fdt, off, box, handler->fn);
-> +				xa_erase(&box->pending_fds, pid);
-> +			}
-> +		}
-> +	}
-> +}
-> +
-> +int fdbox_register_handler(const char *compatible,
-> +			   struct file *(*fn)(const void *fdt, int offset))
-> +{
-> +	struct xarray *handlers = &priv.handlers;
-> +	struct fdbox_handler *handler, *cmp;
-> +	unsigned long idx;
-> +	int ret;
-> +	u32 id;
-> +
-> +	/* See comment in fdbox_kho_recover(). */
-> +	guard(rwsem_read)(&priv.recover_sem);
-> +
-> +	handler = kmalloc(sizeof(*handler), GFP_KERNEL);
-> +	if (!handler)
-> +		return -ENOMEM;
-> +
-> +	handler->compatible = compatible;
-> +	handler->fn = fn;
-> +
-> +	xa_lock(handlers);
-> +	xa_for_each(handlers, idx, cmp) {
-> +		if (!strcmp(cmp->compatible, compatible)) {
-> +			xa_unlock(handlers);
-> +			kfree(handler);
-> +			return -EEXIST;
-> +		}
-> +	}
-> +
-> +	ret = __xa_alloc(handlers, &id, handler, xa_limit_32b, GFP_KERNEL);
-> +	xa_unlock(handlers);
-> +	if (ret) {
-> +		kfree(handler);
-> +		return ret;
-> +	}
-> +
-> +	if (priv.recover_done)
-> +		fdbox_recover_pending(handler);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init fdbox_init(void)
-> +{
-> +	int ret = 0;
-> +
-> +	/* /dev/fdbox/$NAME */
-> +	priv.class = class_create("fdbox");
-> +	if (IS_ERR(priv.class))
-> +		return PTR_ERR(priv.class);
-> +
-> +	priv.class->devnode = fdbox_devnode;
-> +
-> +	ret = alloc_chrdev_region(&priv.box_devt, 0, 1, "fdbox");
-> +	if (ret)
-> +		goto err_class;
-> +
-> +	ret = misc_register(&fdbox_dev);
-> +	if (ret) {
-> +		pr_err("fdbox: misc device register failed\n");
-> +		goto err_chrdev;
-> +	}
-> +
-> +	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER)) {
-> +		register_kho_notifier(&fdbox_kho_nb);
-> +		fdbox_kho_recover();
-> +	}
-> +
-> +	return 0;
-> +
-> +err_chrdev:
-> +	unregister_chrdev_region(priv.box_devt, 1);
-> +	priv.box_devt = 0;
-> +err_class:
-> +	class_destroy(priv.class);
-> +	priv.class = NULL;
-> +	return ret;
-> +}
-> +module_init(fdbox_init);
-> diff --git a/include/linux/fdbox.h b/include/linux/fdbox.h
-> new file mode 100644
-> index 0000000000000..0bc18742940f5
-> --- /dev/null
-> +++ b/include/linux/fdbox.h
-> @@ -0,0 +1,119 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2024-2025 Amazon.com Inc. or its affiliates.
-> + *
-> + * Author: Pratyush Yadav <ptyadav@amazon.de>
-> + * Author: Alexander Graf <graf@amazon.com>
-> + */
-> +#ifndef _LINUX_FDBOX_H
-> +#define _LINUX_FDBOX_H
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/list.h>
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
-> +#include <uapi/linux/fdbox.h>
-> +
-> +/**
-> + * struct fdbox - A box of FDs.
-> + * @name: Name of the box. Must be unique.
-> + * @rwsem: Used to ensure exclusive access to the box during SEAL/UNSEAL
-> + *         operations.
-> + * @dev: Backing device for the character device.
-> + * @cdev: Character device which accepts ioctls from userspace.
-> + * @fd_list: List of FDs in the box.
-> + * @sealed: Whether the box is sealed or not.
-> + */
-> +struct fdbox {
-> +	char				name[FDBOX_NAME_LEN];
-> +	/*
-> +	 * Taken as read when non-exclusive access is needed and the box can be
-> +	 * in mutable state. For example, the GET_FD and PUT_FD operations use
-> +	 * it as read when adding or removing FDs from the box.
-> +	 *
-> +	 * Taken as write when exclusive access is needed and the box should be
-> +	 * in a stable, non-mutable state. For example, the SEAL and UNSEAL
-> +	 * operations use it as write because they need the list of FDs to be
-> +	 * stable.
-> +	 */
-> +	struct rw_semaphore		rwsem;
-> +	struct device			dev;
-> +	struct cdev			cdev;
-> +	struct xarray			fd_list;
-> +	struct xarray			pending_fds;
-> +	bool				sealed;
-> +};
-> +
-> +/**
-> + * struct fdbox_fd - An FD in a box.
-> + * @name: Name of the FD. Must be unique in the box.
-> + * @file: Underlying file for the FD.
-> + * @flags: Box flags. Currently, no flags are allowed.
-> + * @box: The box to which this FD belongs.
-> + */
-> +struct fdbox_fd {
-> +	char				name[FDBOX_NAME_LEN];
-> +	struct file			*file;
-> +	int				flags;
-> +	struct fdbox			*box;
-> +};
-> +
-> +/**
-> + * struct fdbox_file_ops - operations for files that can be put into a fdbox.
-> + */
-> +struct fdbox_file_ops {
-> +	/**
-> +	 * @kho_write: write fd to KHO FDT.
-> +	 *
-> +	 * box_fd: Box FD to be serialized.
-> +	 *
-> +	 * fdt: KHO FDT
-> +	 *
-> +	 * This is called during KHO activation phase to serialize all data
-> +	 * needed for a FD to be preserved across a KHO.
-> +	 *
-> +	 * Returns: 0 on success, -errno on failure. Error here causes KHO
-> +	 * activation failure.
-> +	 */
-> +	int (*kho_write)(struct fdbox_fd *box_fd, void *fdt);
-> +	/**
-> +	 * @seal: seal the box
-> +	 *
-> +	 * box: Box which is going to be sealed.
-> +	 *
-> +	 * This can be set if a file has a dependency on other files. At seal
-> +	 * time, all the FDs in the box can be inspected to ensure all the
-> +	 * dependencies are met.
-> +	 */
-> +	int (*seal)(struct fdbox *box);
-> +	/**
-> +	 * @unseal: unseal the box
-> +	 *
-> +	 * box: Box which is going to be sealed.
-> +	 *
-> +	 * The opposite of seal. This can be set if a file has a dependency on
-> +	 * other files. At unseal time, all the FDs in the box can be inspected
-> +	 * to ensure all the dependencies are met. This can help ensure all
-> +	 * necessary FDs made it through after a KHO for example.
-> +	 */
-> +	int (*unseal)(struct fdbox *box);
-> +};
-> +
-> +/**
-> + * fdbox_register_handler - register a handler for recovering Box FDs after KHO.
-> + * @compatible: compatible string in the KHO FDT node.
-> + * @handler: function to parse the FDT at offset 'offset'.
-> + *
-> + * After KHO, the FDs in the KHO FDT must be deserialized by the underlying
-> + * modules or file systems. Since module initialization can be in any order,
-> + * including after FDBox has been initialized, handler registration allows
-> + * modules to queue their parsing functions, and FDBox will execute them when it
-> + * can.
-> + *
-> + * Returns: 0 on success, -errno otherwise.
-> + */
-> +int fdbox_register_handler(const char *compatible,
-> +			   struct file *(*handler)(const void *fdt, int offset));
-> +#endif /* _LINUX_FDBOX_H */
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index be3ad155ec9f7..7d710a5e09b5b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -81,6 +81,9 @@ struct fs_context;
->  struct fs_parameter_spec;
->  struct fileattr;
->  struct iomap_ops;
-> +struct fdbox;
-> +struct fdbox_fd;
-> +struct fdbox_file_ops;
->  
->  extern void __init inode_init(void);
->  extern void __init inode_init_early(void);
-> @@ -1078,6 +1081,7 @@ static inline int ra_has_index(struct file_ra_state *ra, pgoff_t index)
->   * @f_llist: work queue entrypoint
->   * @f_ra: file's readahead state
->   * @f_freeptr: Pointer used by SLAB_TYPESAFE_BY_RCU file cache (don't touch.)
-> + * @f_fdbox_op: FDBOX operations
->   */
->  struct file {
->  	file_ref_t			f_ref;
-> @@ -1116,6 +1120,9 @@ struct file {
->  		freeptr_t		f_freeptr;
->  	};
->  	/* --- cacheline 3 boundary (192 bytes) --- */
-> +#ifdef CONFIG_FDBOX
-> +	const struct fdbox_file_ops	*f_fdbox_op;
-> +#endif
-
-I've shrunk struct file significantly over the last kernel releases
-removing useless member and gave it a new refcount mechanism to increase
-performance.
-
-This is now taking 8 free bytes for this a very special-purpose thing.
-Those 8 bytes should be used for stuff that is widely useful. So that
-already makes me go "no-way".
-
-struct file shouldn't have to know about any of this stuff. Just
-recognize the type of file by its struct file_operations or a lot of
-other ways and then infer the fdbox ops from that.
-
->  } __randomize_layout
->    __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
->  
-> diff --git a/include/linux/miscdevice.h b/include/linux/miscdevice.h
-> index 69e110c2b86a9..fedb873c04453 100644
-> --- a/include/linux/miscdevice.h
-> +++ b/include/linux/miscdevice.h
-> @@ -71,6 +71,7 @@
->  #define USERIO_MINOR		240
->  #define VHOST_VSOCK_MINOR	241
->  #define RFKILL_MINOR		242
-> +#define FDBOX_MINOR		243
->  #define MISC_DYNAMIC_MINOR	255
->  
->  struct device;
-> diff --git a/include/uapi/linux/fdbox.h b/include/uapi/linux/fdbox.h
-> new file mode 100644
-> index 0000000000000..577ba33b908fd
-> --- /dev/null
-> +++ b/include/uapi/linux/fdbox.h
-> @@ -0,0 +1,61 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This file contains definitions and structures for fdbox ioctls.
-> + *
-> + * Copyright (C) 2024-2025 Amazon.com Inc. or its affiliates.
-> + *
-> + * Author: Pratyush Yadav <ptyadav@amazon.de>
-> + * Author: Alexander Graf <graf@amazon.com>
-> + */
-> +#ifndef _UAPI_LINUX_FDBOX_H
-> +#define _UAPI_LINUX_FDBOX_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/ioctl.h>
-> +
-> +#define FDBOX_NAME_LEN			256
-> +
-> +#define FDBOX_TYPE	('.')
-> +#define FDBOX_BASE	0
-> +
-> +/* Ioctls on /dev/fdbox/fdbox */
-> +
-> +/* Create a box. */
-> +#define FDBOX_CREATE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 0)
-> +struct fdbox_create_box {
-> +	__u64 flags;
-> +	__u8 name[FDBOX_NAME_LEN];
-> +};
-> +
-> +/* Delete a box. */
-> +#define FDBOX_DELETE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 1)
-> +struct fdbox_delete_box {
-> +	__u64 flags;
-> +	__u8 name[FDBOX_NAME_LEN];
-> +};
-> +
-> +/* Ioctls on /dev/fdbox/$BOXNAME */
-> +
-> +/* Put FD into box. This unmaps the FD from the calling process. */
-> +#define FDBOX_PUT_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 2)
-> +struct fdbox_put_fd {
-> +	__u64 flags;
-> +	__u32 fd;
-> +	__u32 pad;
-> +	__u8 name[FDBOX_NAME_LEN];
-> +};
-> +
-> +/* Get the FD from box. This maps the FD into the calling process. */
-> +#define FDBOX_GET_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 3)
-> +struct fdbox_get_fd {
-> +	__u64 flags;
-> +	__u32 pad;
-> +	__u8 name[FDBOX_NAME_LEN];
-> +};
-> +
-> +/* Seal the box. After this, no FDs can be put in or taken out of the box. */
-> +#define FDBOX_SEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 4)
-> +/* Unseal the box. Opposite of seal. */
-> +#define FDBOX_UNSEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 5)
-> +
-> +#endif /* _UAPI_LINUX_FDBOX_H */
-> -- 
-> 2.47.1
-> 
