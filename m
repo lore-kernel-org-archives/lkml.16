@@ -1,125 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131B819E999
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BF615382E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339267; cv=none; b=kNQNLySMhvohYfSuv5vQmM0FTJrsm7ztiKItdFYTrZ/FlVmIfwbocKm3fv0vklBHBjkgJU7ykdIg1eMfjuhqhfLuN6kUaefZQiOc2Qhwr6M2om528RDuBvdUNE7Z1VISobjzZCa8QdPAVA/jAtSK9GYZdB3qzr/tzbcY96cqPSQ=
+	t=1741339306; cv=none; b=ND97C3wEFmoqWK/cml/GrG/2t0VUh8hT85g1ii6jXx50HbCpRYLYFtJmMZNtzwqObkYDdL59+rgwLwU/MFVIb/EW0g4q9ngSf0XXhA54uZI64SuNRzKTslCoRODqPmNHGvJ/vjP8iupOuRSTfI1wAkhH/Z60Yv5JuDCS3P3CdRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339267; c=relaxed/simple;
-	bh=4UgdeaJoN8VD95IS/kgDks7wzVslreoPHSE1jOsiMP4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RxSFPzhilwQuVn9tLEInCKUxbSL3PbcF2iDWeSV2sa1wB6KrgYPdhKA9TZXlq1E2hM4EEczxwcFRFIzwNHgKpdS03BABSPZb87CYtVx/glEnj8hMh5q9APd6DE5dKy4hSamB4qjqR+L5NAvY1FwwYyYHOnC4dFQLmhani47755g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1dwYROUq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8poSsgS5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1dwYROUq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8poSsgS5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1741339306; c=relaxed/simple;
+	bh=k/khH1ryQXKSIvefrNe8eYtkSHApJZW2VJgcTdYfhw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mC5Cgm5UatCNwYIIJqYLL33Yaw7Juo+YlYc0XJsBwLe1Vc+/mG8uJIv8fKS8dNTjv3n6d4We9oW8t3w0WXAhmaRuxpJw8BBiRWQQs3Bmz8+f8aZ/MBjnkG5K3fbeXbdaPWQUAyxEDthpWzq2bPKWVN+MfpCdaF/u3KOtD1egVEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/RIq1Eu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1dwYROUq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8poSsgS5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1dwYROUq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8poSsgS5"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 2AADC21197;
-	Fri,  7 Mar 2025 09:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741339262; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=kqxqcPqwKkwzQqSoeNGsuK4t8y7YgkAyzT+CFhOL+Xw=;
-	b=1dwYROUq+tvV2eJNdDehJTD3S8Mg8iIqQHJ3ioPN3AVogznUpSCpO6ZtH+oWL066noalfX
-	xg+qa+17RdjGoPBv2Pls58PMi7cK/6MQdyAFSNLRZoZ/IFL7DWvg5WSXUFX0vxTrStjWE1
-	/P0J1aTftRCxUhkU7SRASBcnmS+sqHk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741339262;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=kqxqcPqwKkwzQqSoeNGsuK4t8y7YgkAyzT+CFhOL+Xw=;
-	b=8poSsgS5heeqVir9dYeGzPbKeDduyiKEb0mhfyqn3tEnpjtzE2cIw5cYlsY95p9/fWLD3D
-	Wkoh/BSRAoPrgRBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741339262; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=kqxqcPqwKkwzQqSoeNGsuK4t8y7YgkAyzT+CFhOL+Xw=;
-	b=1dwYROUq+tvV2eJNdDehJTD3S8Mg8iIqQHJ3ioPN3AVogznUpSCpO6ZtH+oWL066noalfX
-	xg+qa+17RdjGoPBv2Pls58PMi7cK/6MQdyAFSNLRZoZ/IFL7DWvg5WSXUFX0vxTrStjWE1
-	/P0J1aTftRCxUhkU7SRASBcnmS+sqHk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741339262;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=kqxqcPqwKkwzQqSoeNGsuK4t8y7YgkAyzT+CFhOL+Xw=;
-	b=8poSsgS5heeqVir9dYeGzPbKeDduyiKEb0mhfyqn3tEnpjtzE2cIw5cYlsY95p9/fWLD3D
-	Wkoh/BSRAoPrgRBw==
-From: Michal Suchanek <msuchanek@suse.de>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Michal Suchanek <msuchanek@suse.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/boot: Fix build with gcc 15
-Date: Fri,  7 Mar 2025 10:20:52 +0100
-Message-ID: <20250307092055.21986-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/RIq1Eu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C97CC4CED1;
+	Fri,  7 Mar 2025 09:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741339305;
+	bh=k/khH1ryQXKSIvefrNe8eYtkSHApJZW2VJgcTdYfhw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q/RIq1EuWapouQCW0+FS6XC48+tSCmoLsqixjIJfKUjFh0c437fXFpDJb+CKW4cJS
+	 F8i28U31KrjtrWGjuFSE6gm8Zx/yU5YvmzZfMROx6LnM2HIJO/PxM5xULI5X5X1npL
+	 hJyrw1wa9HWkRWSV4jDmt2RkUy2Tr0V9cE/1K1AKAZOJoIDXcE4IKa65I5vdxD+jNY
+	 64pR0jkaYGJtZaKGPVnGLapoTNkaNGKuN6lDLbLXl/8VHM9FHK6GXTrWr9zTngy+Ch
+	 R5tm+naC0Iz8WZGqt9wlhBpARYH+3TkWSP2hhgdSPkoqUWA94E6YiiS9JHeSIAdhaV
+	 xhKMVf0/B2k2Q==
+Date: Fri, 7 Mar 2025 11:21:40 +0200
+From: Oded Gabbay <ogabbay@kernel.org>
+To: "Avizrat, Yaron" <yaron.avizrat@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Ofir Bitton <obitton@habana.ai>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+	"jgg@nvidia.com" <jgg@nvidia.com>, koby.elbaz@intel.com,
+	konstantin.sinyuk@intel.com
+Subject: Re: [PATCH 1/1] MAINTAINERS: Change habanalabs maintainer
+Message-ID: <Z8q6pCmCnVCCvBJK@GABBAY.>
+References: <20240729121718.540489-1-obitton@habana.ai>
+ <20240729121718.540489-2-obitton@habana.ai>
+ <dc139f06-3f5a-4216-93c2-1e8b3b9c27ba@intel.com>
+ <87cyevy9k0.fsf@intel.com>
+ <f543ec81-1092-4700-b695-c4126f122444@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,kernel.org,fjasle.eu,google.com,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <f543ec81-1092-4700-b695-c4126f122444@intel.com>
 
-Similar to x86 the ppc boot code does not build with GCC 15.
-
-Copy the fix from
-commit ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- arch/powerpc/boot/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 1ff6ad4f6cd2..e6b35699c049 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -33,6 +33,7 @@ else
- endif
- 
- ifdef CONFIG_PPC64_BOOT_WRAPPER
-+BOOTTARGETFLAGS	+= -std=gnu11
- BOOTTARGETFLAGS	+= -m64
- BOOTTARGETFLAGS	+= -mabi=elfv2
- ifdef CONFIG_PPC64_ELF_ABI_V2
--- 
-2.47.1
+On Thu, Mar 06, 2025 at 03:51:24PM +0200, Avizrat, Yaron wrote:
+>
+> On 05/03/2025 13:57, Jani Nikula wrote:
+> > On Wed, 05 Mar 2025, "Avizrat, Yaron" <yaron.avizrat@intel.com> wrote:
+> >> On 29/07/2024 15:17, Ofir Bitton wrote:
+> >>> I will be leaving Intel soon, Yaron Avizrat will take the role
+> >>> of habanalabs driver maintainer.
+> >>>
+> >>> Signed-off-by: Ofir Bitton <obitton@habana.ai>
+> >>> ---
+> >>>  MAINTAINERS | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/MAINTAINERS b/MAINTAINERS
+> >>> index ed2d2dbcec81..a4b36590061e 100644
+> >>> --- a/MAINTAINERS
+> >>> +++ b/MAINTAINERS
+> >>> @@ -9599,7 +9599,7 @@ S:	Maintained
+> >>>  F:	block/partitions/efi.*
+> >>>
+> >>>  HABANALABS PCI DRIVER
+> >>> -M:	Ofir Bitton <obitton@habana.ai>
+> >>> +M:	Yaron Avizrat <yaron.avizrat@intel.com>
+> >>>  L:	dri-devel@lists.freedesktop.org
+> >>>  S:	Supported
+> >>>  C:	irc://irc.oftc.net/dri-devel
+> >> Acked-by: Yaron Avizrat <yaron.avizrat@intel.com>
+> >>
+> >> Apologies for the long silence — it’s been a challenging period with
+> >> the Habanalabs-Intel merger, but we're back and ready to continue
+> >> contributing.
+> >>
+> >> We'll be moving forward with our roadmap — upstreaming the latest
+> >> HabanaLabs driver, including recent changes and full support for the
+> >> entire GaudiX series.
+> >>
+> >> To support this effort, Koby Elbaz and Konstantin Sinyuk will join me
+> >> as co-maintainers on a regular basis.
+> > Should they be added as maintainers in the MAINTAINERS entry too?
+> >
+> > Are you going to pick this up and apply to the Habanalabs repo, and send
+> > a pull request with it? Or how do you propose to proceed?
+> >
+> >
+> > BR,
+> > Jani.
+> >
+>
+> Yes, in a later patch, they would be added as maintainers in the MAINTAINERS entry too.
+> Regarding your second question, we should start with merging Ofir's initial patch.
+> Any additional/upcoming changes will be initially merged into the official HabanaLabs repo as you mentioned above.
+>
+> Regards,
+> Yaron
+>
+Acked-by: Oded Gabbay <ogabbay@kernel.org>
 
