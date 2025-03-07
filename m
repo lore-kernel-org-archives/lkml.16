@@ -1,449 +1,208 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C98213E87;
-	Fri,  7 Mar 2025 10:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEC0215187;
+	Fri,  7 Mar 2025 10:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741342699; cv=none; b=aCW6ziprcBa/EvNXHs9g/sjqqu5Gdb8vcaS02K0fFLwqjkIz6ajpO5gLFw+zwvGCp7WjSbzXsgxOS1o9VbRTjob4HTVghxw8FH39KTiLEwR65QCclEETb+8nLLB3WnoGNAVwQMrTm5O+BQBhJI3jW4qSK9v9cRBdWQdjFEjrnuw=
+	t=1741342703; cv=none; b=V4KZ17YVuD0XrZcUB0p0D01h877cp5nOcecB+pUgaIbS21gXV8zWEWjCPKh/3Sc+oMEqZQG+WEDLZrkoRuwKZc65VNkkR8jZiAFXXXh/vecjLl+/0kEougMWHbfpTxVbb+ZYlAFWTm2hEVKMemYF9CR1TQDvemYWAsViyHXIs7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741342699; c=relaxed/simple;
-	bh=THNub4dW2r1h3XFBnOhkiBo9skIxEl99UaN11q092KI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZFUux5o2yLAxZdKhAZXNtJa2s4zeWLMqqEVzqYisSaT4TpnBbeZW3snA/q+s+E5rnsOU0jeyk/dyC1Nnxu25hyTJK5RA32jHXZUOPRDZx38+RnqkNmU8QmAgkqhjUbIbSf4N2MTbclT9B3iIBfJr/bzyaPdEaspf35qn6vZBYzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nfS9TtC9; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741342703; c=relaxed/simple;
+	bh=gNsKwdbFSuabCqKH8ccREYgS407FI4XzDzED37AEbfA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WPQkOgHVVXk1r9N2gXuVFkodte8HJ/ibHyEVYhLW4Sjk6mmjfkN9gYNwN9ri1ntzPD1bpjVSiCJsJcLlZ1sOUEsRYX//1TdyTRIaV6nuJBl34FJGan6AYc8nin0L8fwIaPR9y7n9vLDz+q3GbMAl75nxqaTmmyCBXc0RsDOGZAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHuhVvlO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfS9TtC9"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-390f69f8083so1432687f8f.0;
-        Fri, 07 Mar 2025 02:18:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741342695; x=1741947495; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=brGJ0++22o4t57ItnfNx9mwtlw0zh9uLExgnV00v8+M=;
-        b=nfS9TtC9shnpdu9pGgjdMLWVbTQy71/zLUfwxYM/dCJOJC/gNj362aiietG1PKbQ+G
-         9b7C8RvO/psojOXHRRLSAQXtjM1byQN53pG4jQgKFFx6amzUFkGgi3nbtnlF/jtkM73/
-         c0XQmF5uQDFoX5xX4xmS0Z8NRO42dyQ8CR3Ogk1FOiuEsbwQ9MX22kD/saDzElNSvKP7
-         ToNNj2hrIc1vmxU9y3OZ+NZ9zZUjcEBjeOtZz5niS07nDt1CI5+A39IrczaYlBe22Hrt
-         aSAU+ZKV4wRMcsUy1uqUVx0E0Eyh5Ix87ayBDe7wAq1dke0rj3ysI7oCXVy0j+WlvGS4
-         YCMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741342695; x=1741947495;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=brGJ0++22o4t57ItnfNx9mwtlw0zh9uLExgnV00v8+M=;
-        b=EfG1IaZBDWQ+Z6baa8K3fBlE/AqnKtc/9/Y8XslmlCnoFzphYkKSimZDuYI3caibrM
-         N/3qGMtOVDgZ3oCggv+zCnEFlbPJYjMm8SORKl7M76sqPFr7wgYWfFdK8NYkL8Mc4667
-         ozS8nr3IEu74eV3LU/GSAWoexdpmM/taBUWnaFJVA2Wgdihmld4oPvGsgDcRVo9pEjad
-         NF7A460+d5+4o5upqVAqsDIKW6yuGSSzz4F9y4/RsP5x4IlNzRuDBfJ9M4BdCb7Xd3+j
-         MqqQ3A29IHnPRrEAgiZ9VvFYWnZldq6l6QjiA2dj2ONphPsyn13Cw4Np5uRfhSmjM5Np
-         A+Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8VGi1Js2Lgc4t5U2TNW7n/6W3veNLu1vITH58jBx1TqZOp5BtnlPnbjdQNtwbovrHjT5aNI7d8OMgGH7F@vger.kernel.org, AJvYcCVDSWCyNIpSFGFloP+kNsNiDRK6fa1zB+Sb7TIwVLoIyMbqqWbitMrJEJ334WSd0jV9O0lg4pAfSdiT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIy3YDL+pDnyyhStOOVg3+lST3gAApzzqa9mDORLmMpDuhLiVd
-	FtV1Pi0MKrei1ODwXBU16BTcltOapjP7o54uCdlgJgFqIxV0LN3v
-X-Gm-Gg: ASbGnct1Wb92SxDq5wUJVcwjOJ4fbHl18Kgq7MZv09hAiQu4xmYFCATtap0XOddPzfp
-	J+Z29q0BvO9tZDrFm339OG6LLdWXnJ1Degqr5Cf/37hpfUjg3USPMMDfaJ4zQB8mvXXGmUKRaiE
-	swHvupUGL9qzFfgM140/Q7gAHpVbt/B4n9WXrGmGyJHDzrDlUfwnd0BQiU3G5S84p8eTrZJO8ir
-	UOtW6yeouCrxlvAO3oTl6sVbnbpLDsw4txJfSx8YNq6KF4CBU/tYiCYIWpFgEGvM7sZqT4JX8uN
-	FRDy86Kg8huGKxTTk/40PMw+cHB5ELHEu/1iH+8TZAh8ZBISD0ABZK2fIEBKGSThyx2ht8n66Ep
-	kXIZLPozdMtu6127WoNSAjm0=
-X-Google-Smtp-Source: AGHT+IE9lUI6KVxoDMo3xKo5g7N1PqJTOlIV+7j66eLIltbvNUJfTvQ7+Yxsj8nXHgBmQ0fwpI6xkA==
-X-Received: by 2002:a5d:648b:0:b0:38d:badf:9df5 with SMTP id ffacd0b85a97d-39132d1fc83mr1434684f8f.17.1741342694709;
-        Fri, 07 Mar 2025 02:18:14 -0800 (PST)
-Received: from ernest.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c103aa5sm4900262f8f.94.2025.03.07.02.18.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 02:18:14 -0800 (PST)
-From: ernestvanhoecke@gmail.com
-X-Google-Original-From: ernest.vanhoecke@toradex.com
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v2 2/2] ARM: dts: apalis/colibri-imx6: Add support for v1.2
-Date: Fri,  7 Mar 2025 11:17:49 +0100
-Message-ID: <20250307101758.27943-3-ernest.vanhoecke@toradex.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250307101758.27943-1-ernest.vanhoecke@toradex.com>
-References: <20250307101758.27943-1-ernest.vanhoecke@toradex.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHuhVvlO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31FD6C4CEEC;
+	Fri,  7 Mar 2025 10:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741342703;
+	bh=gNsKwdbFSuabCqKH8ccREYgS407FI4XzDzED37AEbfA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YHuhVvlOkFMFagYRPdJyIPlUDEL/SZ9sEBoZAE5stK8eFK3wKsVmG4nYH5P9Mtcrg
+	 8SL/aViFI2KR7Bk5QNnUZ2/Gf7QiH6E3lggDYbgmashec/vN1TcxgXyX150NohcvQ4
+	 bBqgcdWxVU7uKy4UaqaXClpECJBxO0bqI/wmjxsUQk8j488cstInSu5UruvcSJ+WFQ
+	 TzzC8WMNMtdN1+x7MXURfqdhWJ4hPRFBrQzjzJyumoz1W1OFNWTbEnxfDkEkv/kWDA
+	 ZrWUuogs1Pm5PwxTToOkgEIXiyKR88hA9eKy2bVapsz+hiQwuWW9yLI7R0FDu6i/fH
+	 vJLyLdw1RpJIA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Fri, 07 Mar 2025 11:11:53 +0100
+Subject: [PATCH v10 08/13] rust: hrtimer: implement `UnsafeHrTimerPointer`
+ for `Pin<&mut T>`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250307-hrtimer-v3-v6-12-rc2-v10-8-0cf7e9491da4@kernel.org>
+References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org>
+In-Reply-To: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
+ Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4542; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=gNsKwdbFSuabCqKH8ccREYgS407FI4XzDzED37AEbfA=;
+ b=kA0DAAgB4bgaPnkoY3cByyZiAGfKxn2h5J6NdXwPYESfjh5fSCV/8zKwaUY2tfd++y/WzSTtp
+ okCMwQAAQgAHRYhBBLB+UdWv3wqFdbAEuG4Gj55KGN3BQJnysZ9AAoJEOG4Gj55KGN3YQkQAMcC
+ x4Gj/QtjopDPjfRtszw8ZsrtfeO1ziUgtxmAM072F1tfVm3dg2FIXWJNFT9P9tc/znXFnUq6CRK
+ EsH7de2bDgn2ZXjOyKOViyf0HQBgRnqslX7nKsqMl1j54eoUpnAXV5RrK9SEsbBEVkDebMw52xc
+ AVHXDX9/PrrrmSkP71B2GTxlDTlUIuVTe5d2fCv3PJUdKK0VlX4U+6V8ZCzhu1IzZG6isaxgU8j
+ co2ySoofBtF5G8Ghwdn8nh5Jn1SgFSVR6NDfdgZlUZx2n1MtWpYwHMm7eqMzkR6E/KWs17V2veb
+ 4MKI+bN9pUN2dRPHNxBiaVIJ5x2NCTVfVbwwe1GoWRya5o24FUSIXCcrs17Lju6ZoHPFDHbY68E
+ N51iO4QhYxPVLy1Rj07D5xuSuWiRum8WkSTQZMWi1xGH8R2/O6Qm0nF7uN+H0YKa44bOMfPXDWB
+ KA5+rHl/RgahSFEvkn6uZd19CcjfbgoAZ942RsoNJaUREj1bNRS/6mdJilKrPCMLWUBBVFaGqH6
+ DVQTIYLUirVIdGioBo1dUT/hPGa21R8rw1d/A9fc8nIUW+KbiS/O4fFUQOZdeSVs5L2XqRBfx6+
+ brHJBGePfc22VjsJzjxvzXwFcGAJgKBDiuXLM75w3zPZyEZtr/ZRLUShdz4hWj0yhhtTVaJ6Qc8
+ 08rOU
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Allow pinned mutable references to structs that contain a `HrTimer` node to
+be scheduled with the `hrtimer` subsystem.
 
-Apalis/Colibri iMX6 V1.2 replaced the STMPE811 ADC/touch controller,
-which is EOL, with the TLA2024 ADC and AD7879 touch controller.
-
-Accurately describe the new hardware.
-
-v1.1 of these SoMs is still described by the following DTSI files:
-imx6qdl-apalis.dtsi
-imx6qdl-colibri.dtsi
-
-v1.2 is now supported by a DTSI that modifies v1.1:
-imx6qdl-apalis-v1.2.dtsi
-imx6qdl-colibri-v1.2.dtsi
-
-For each carrier board using these modules, a new DTS file was added
-that includes the v1.1 DTS and modifies it with this v1.2 DTSI.
-
-The original DTS can be used for modules up to and including v1.1.
-
-Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
-v2: Fixed the "From" field
-v1: https://lore.kernel.org/all/20250227170556.589668-3-ernest.vanhoecke@toradex.com/
----
- arch/arm/boot/dts/nxp/imx/Makefile            |  9 +++
- .../dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts | 11 ++++
- .../nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts   | 11 ++++
- .../nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts   | 11 ++++
- .../dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts  | 11 ++++
- .../nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts   | 11 ++++
- .../dts/nxp/imx/imx6q-apalis-v1.2-eval.dts    | 11 ++++
- .../nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts  | 11 ++++
- .../nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts  | 11 ++++
- .../dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts   | 11 ++++
- .../boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi | 57 +++++++++++++++++++
- .../dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi     | 57 +++++++++++++++++++
- 12 files changed, 222 insertions(+)
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi
+ rust/kernel/time/hrtimer.rs         |   2 +
+ rust/kernel/time/hrtimer/pin_mut.rs | 101 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 103 insertions(+)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
-index 39a153536d2a..81b6a96e28da 100644
---- a/arch/arm/boot/dts/nxp/imx/Makefile
-+++ b/arch/arm/boot/dts/nxp/imx/Makefile
-@@ -69,6 +69,10 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-colibri-eval-v3.dtb \
- 	imx6dl-colibri-iris.dtb \
- 	imx6dl-colibri-iris-v2.dtb \
-+	imx6dl-colibri-v1.2-aster.dtb \
-+	imx6dl-colibri-v1.2-eval-v3.dtb \
-+	imx6dl-colibri-v1.2-iris.dtb \
-+	imx6dl-colibri-v1.2-iris-v2.dtb \
- 	imx6dl-cubox-i.dtb \
- 	imx6dl-cubox-i-emmc-som-v15.dtb \
- 	imx6dl-cubox-i-som-v15.dtb \
-@@ -158,6 +162,11 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-apalis-ixora.dtb \
- 	imx6q-apalis-ixora-v1.1.dtb \
- 	imx6q-apalis-ixora-v1.2.dtb \
-+	imx6q-apalis-v1.2-eval.dtb \
-+	imx6q-apalis-v1.2-eval-v1.2.dtb \
-+	imx6q-apalis-v1.2-ixora.dtb \
-+	imx6q-apalis-v1.2-ixora-v1.1.dtb \
-+	imx6q-apalis-v1.2-ixora-v1.2.dtb \
- 	imx6q-apf6dev.dtb \
- 	imx6q-arm2.dtb \
- 	imx6q-b450v3.dtb \
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index 2ca56397eade..d2791fd624b7 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -441,3 +441,5 @@ unsafe fn timer_container_of(ptr: *mut $crate::time::hrtimer::HrTimer<$timer_typ
+ pub use arc::ArcHrTimerHandle;
+ mod pin;
+ pub use pin::PinHrTimerHandle;
++mod pin_mut;
++pub use pin_mut::PinMutHrTimerHandle;
+diff --git a/rust/kernel/time/hrtimer/pin_mut.rs b/rust/kernel/time/hrtimer/pin_mut.rs
 new file mode 100644
-index 000000000000..44c78c07f431
+index 000000000000..4f4a9e9602d8
 --- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
++++ b/rust/kernel/time/hrtimer/pin_mut.rs
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+/dts-v1/;
++use super::HasHrTimer;
++use super::HrTimer;
++use super::HrTimerCallback;
++use super::HrTimerHandle;
++use super::RawHrTimerCallback;
++use super::UnsafeHrTimerPointer;
++use crate::time::Ktime;
++use core::pin::Pin;
 +
-+#include "imx6dl-colibri-aster.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
++/// A handle for a `Pin<&mut HasHrTimer>`. When the handle exists, the timer might
++/// be running.
++pub struct PinMutHrTimerHandle<'a, T>
++where
++    T: HasHrTimer<T>,
++{
++    pub(crate) inner: Pin<&'a mut T>,
++}
 +
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Aster Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts
-new file mode 100644
-index 000000000000..93fd0af53a3c
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
++// SAFETY: We cancel the timer when the handle is dropped. The implementation of
++// the `cancel` method will block if the timer handler is running.
++unsafe impl<'a, T> HrTimerHandle for PinMutHrTimerHandle<'a, T>
++where
++    T: HasHrTimer<T>,
++{
++    fn cancel(&mut self) -> bool {
++        // SAFETY: We are not moving out of `self` or handing out mutable
++        // references to `self`.
++        let self_ptr = unsafe { self.inner.as_mut().get_unchecked_mut() as *mut T };
 +
-+/dts-v1/;
++        // SAFETY: As we got `self_ptr` from a reference above, it must point to
++        // a valid `T`.
++        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
 +
-+#include "imx6dl-colibri-eval-v3.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
++        // SAFETY: As `timer_ptr` is derived from a reference, it must point to
++        // a valid and initialized `HrTimer`.
++        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
++    }
++}
 +
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Evaluation Board V3";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts
-new file mode 100644
-index 000000000000..92d41fc9a13f
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
++impl<'a, T> Drop for PinMutHrTimerHandle<'a, T>
++where
++    T: HasHrTimer<T>,
++{
++    fn drop(&mut self) {
++        self.cancel();
++    }
++}
 +
-+/dts-v1/;
++// SAFETY: We capture the lifetime of `Self` when we create a
++// `PinMutHrTimerHandle`, so `Self` will outlive the handle.
++unsafe impl<'a, T> UnsafeHrTimerPointer for Pin<&'a mut T>
++where
++    T: Send + Sync,
++    T: HasHrTimer<T>,
++    T: HrTimerCallback<Pointer<'a> = Self>,
++    Pin<&'a mut T>: RawHrTimerCallback<CallbackTarget<'a> = Self>,
++{
++    type TimerHandle = PinMutHrTimerHandle<'a, T>;
 +
-+#include "imx6dl-colibri-iris-v2.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
++    unsafe fn start(self, expires: Ktime) -> Self::TimerHandle {
++        // Cast to pointer
++        let self_ptr: *const T = <Self as core::ops::Deref>::deref(&self);
 +
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Iris V2 Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts
-new file mode 100644
-index 000000000000..c8957948c887
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
++        // SAFETY:
++        //  - As we derive `self_ptr` from a reference above, it must point to a
++        //    valid `T`.
++        //  - We keep `self` alive by wrapping it in a handle below.
++        unsafe { T::start(self_ptr, expires) };
 +
-+/dts-v1/;
++        PinMutHrTimerHandle { inner: self }
++    }
++}
 +
-+#include "imx6dl-colibri-iris.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
++impl<'a, T> RawHrTimerCallback for Pin<&'a mut T>
++where
++    T: HasHrTimer<T>,
++    T: HrTimerCallback<Pointer<'a> = Self>,
++{
++    type CallbackTarget<'b> = Self;
 +
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Iris Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts
-new file mode 100644
-index 000000000000..908dab57fd87
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
++    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
++        // `HrTimer` is `repr(C)`
++        let timer_ptr = ptr as *mut HrTimer<T>;
 +
-+/dts-v1/;
++        // SAFETY: By the safety requirement of this function, `timer_ptr`
++        // points to a `HrTimer<T>` contained in an `T`.
++        let receiver_ptr = unsafe { T::timer_container_of(timer_ptr) };
 +
-+#include "imx6q-apalis-eval-v1.2.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
++        // SAFETY: By the safety requirement of this function, `timer_ptr`
++        // points to a `HrTimer<T>` contained in an `T`.
++        let receiver_ref = unsafe { &mut *receiver_ptr };
 +
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Apalis Evaluation Board v1.2";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts
-new file mode 100644
-index 000000000000..5463d4127382
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
++        // SAFETY: `receiver_ref` only exists as pinned, so it is safe to pin it
++        // here.
++        let receiver_pin = unsafe { Pin::new_unchecked(receiver_ref) };
 +
-+/dts-v1/;
-+
-+#include "imx6q-apalis-eval.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Apalis Evaluation Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts
-new file mode 100644
-index 000000000000..84eabf81ba84
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-ixora-v1.1.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Ixora Carrier Board V1.1";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts
-new file mode 100644
-index 000000000000..d7cfab4de457
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-ixora-v1.2.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Ixora Carrier Board V1.2";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts
-new file mode 100644
-index 000000000000..189b074e31ce
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-ixora.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Ixora Carrier Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi
-new file mode 100644
-index 000000000000..83fa04fc9f18
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+&i2c2 {
-+	/delete-node/ stmpe811@41;
-+
-+	ad7879_ts: touchscreen@2c {
-+		compatible = "adi,ad7879-1";
-+		reg = <0x2c>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touch_int>;
-+		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio4>;
-+		touchscreen-max-pressure = <4096>;
-+		adi,resistance-plate-x = <120>;
-+		adi,first-conversion-delay = /bits/ 8 <3>;
-+		adi,acquisition-time = /bits/ 8 <1>;
-+		adi,median-filter-size = /bits/ 8 <2>;
-+		adi,averaging = /bits/ 8 <1>;
-+		adi,conversion-interval = /bits/ 8 <255>;
-+	};
-+
-+	tla2024_adc: adc@49 {
-+		compatible = "ti,tla2024";
-+		reg = <0x49>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* Apalis AN1_ADC0 */
-+		channel@4 {
-+			reg = <4>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Apalis AN1_ADC1 */
-+		channel@5 {
-+			reg = <5>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Apalis AN1_ADC2 */
-+		channel@6 {
-+			reg = <6>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Apalis AN1_TSWIP_ADC3 */
-+		channel@7 {
-+			reg = <7>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi
-new file mode 100644
-index 000000000000..d11bf911b728
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+&i2c2 {
-+	/delete-node/ stmpe811@41;
-+
-+	ad7879_ts: touchscreen@2c {
-+		compatible = "adi,ad7879-1";
-+		reg = <0x2c>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touch_int>;
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio6>;
-+		touchscreen-max-pressure = <4096>;
-+		adi,resistance-plate-x = <120>;
-+		adi,first-conversion-delay = /bits/ 8 <3>;
-+		adi,acquisition-time = /bits/ 8 <1>;
-+		adi,median-filter-size = /bits/ 8 <2>;
-+		adi,averaging = /bits/ 8 <1>;
-+		adi,conversion-interval = /bits/ 8 <255>;
-+	};
-+
-+	tla2024_adc: adc@49 {
-+		compatible = "ti,tla2024";
-+		reg = <0x49>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* Colibri AIN0 */
-+		channel@4 {
-+			reg = <4>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Colibri AIN1 */
-+		channel@5 {
-+			reg = <5>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Colibri AIN2 */
-+		channel@6 {
-+			reg = <6>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Colibri AIN3 */
-+		channel@7 {
-+			reg = <7>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+	};
-+};
++        T::run(receiver_pin).into_c()
++    }
++}
+
 -- 
-2.43.0
+2.47.0
+
 
