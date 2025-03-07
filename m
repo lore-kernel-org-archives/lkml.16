@@ -1,63 +1,63 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A267F2153DE;
-	Fri,  7 Mar 2025 11:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B0B216394;
+	Fri,  7 Mar 2025 11:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741345720; cv=none; b=a81jclQY3s330jOANhfDAWK17cz7oq+r0TZqrcVr/rJnSez6kzJQ9RYzY3RV/KvRUNkF1gRpfV18rMSWtbgVRHdk0EEFCxjDfSTBG8wWE+6fl8IqCH0XHyve3c9+1BGrCc+vaHt+irkW/08dAZgm8KFkY406++Gbg4POyQeCaf4=
+	t=1741345725; cv=none; b=js/ZMygex1W2bPUnn9iUZkmjREJJ/CncTg4O1ww78BN4SeOBfp22JAN4N4fmzOJ8ketJYM7jOgvbnNb28VHTcVgqX967IjHqPqIrsZosdEgj6dlkquupNG4p+wu9FQYjo60OGImpaD50yHUgCia1E3oFO9D6kynJaS4kcr70Ra4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741345720; c=relaxed/simple;
-	bh=7EWHV9dXU2kG/xafKevv9SzG5SSqBdCFZI3L654ZQDs=;
+	s=arc-20240116; t=1741345725; c=relaxed/simple;
+	bh=nWi1w82ZlChughw2atxEeA1HOxW2EcSlkpcjamzBmkA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rJo0KycVdBYYMQm13ScGeJ/QQz/65ErtCvrYfiV0Ovu1xPP+SdkyFVm8qJKA0kiEkuuxS8u+YyicRvLi4P9LP2d+fE+2RmtbB1O0WtR5ir2qHd2PMvqzi7BNCtFvmsCk5kxPEU+ORveT1sOu4LNEQHPBJnwSwnX+6rV6b/FfMOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RTN+pnXZ; arc=none smtp.client-ip=209.85.167.54
+	 MIME-Version; b=W6eSk19BPgLi1fGUhdcyCdRHzv7p5l9o7R369VfWsaHbwpMfQ46EwZ+1mud6LjkM2SOuHTxiWPcgcep9jbgzfKR3zHJJvi19CSoX8qIwxdGPuCseIJmLRdXS+OVrLhKg2SIx4AzGWqyX5MngYegosf+EN2TpYOP4y68qqPG6wSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EcHIiHYS; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTN+pnXZ"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5494cb8c2e7so1870261e87.0;
-        Fri, 07 Mar 2025 03:08:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcHIiHYS"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549946c5346so351444e87.2;
+        Fri, 07 Mar 2025 03:08:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741345717; x=1741950517; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741345722; x=1741950522; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QE3/EOD24kfqjSTHkaz9KRGvlEanB1hF966k3hECCPg=;
-        b=RTN+pnXZELpGE/BUdfQWqC+71/XQveuvXeqJ8uxPbrF8cGfO5JCZWJj31oVYPbS/Xm
-         Klty46VmRGMtujvlr6NQMHuu/TwrNcf3MjyDhcXut32p402Wp7cub1cj4dhA09KuW9+4
-         DdpDCzwc5DE6VEiO/QdbhsTW4WhKuOzggjF3sAU9gq9lThIDBtqLAMMlNufo8g7FLXKh
-         H0lTJK1L/JdBtfYeGE55dRvuUknBB5r8R7WnJqf2dpw/fm/36AfqODnhkCujFounHVE/
-         hOj0ScwnwEyUk/pf2zNe8a66hYo072R6CpGapm9YWDkqvu8mDL2DQdzoL3NsjWcdBSIQ
-         zmAw==
+        bh=SZBUDcLiga65o3ONmY3eoTnwBjqCQOBm6Uo217lnuaM=;
+        b=EcHIiHYSfCw3n6d7fq8lhSRBopNtJpuy2MBrkzILk4CIE+h0CcRPr9gTe1HHuD393O
+         +vc9/ivdRzmIbPc+QPTAVvVLzx1c1vGB4j23PRU1jKsf899k0pRTqpzbzk8lZ6uuO/VL
+         LutFfl0WND0gxuHzUbKRXU24bG0Ef99sjSzteJMyKzygSEqu/o3mpPdE1vO6mVfk39fD
+         fNcWdckuZs51cK1xb8ut08lfRYkytqcJ6RKgd9vWgheKTmEddeG9HfeMmjQkjeyQ7Jfd
+         hzi4WZPINtbNKX6gxuoe66B/BQHJicl6eYMuFsGGQlgTP+bW70v6kpJbNO1168uT0dmF
+         jhIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741345717; x=1741950517;
+        d=1e100.net; s=20230601; t=1741345722; x=1741950522;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QE3/EOD24kfqjSTHkaz9KRGvlEanB1hF966k3hECCPg=;
-        b=PWTxOiSWIFNK8sO2G/UUJGw9N8Hq5ZN+0tNN1qq43hovPICx/Gfire9jiBJFQ9azL9
-         dyWpWeQ+TCrkxQDFwiWwEs6KW5TdzC4VQgYYDeWOs6XSB/mDo6/Fb5l0bJJuXJvGrglV
-         BMeuAgEP1iYmS+fZh2vvlDd92IW4qv4tTkcVknhHi61h/jeSBUGKlpHMThnJhqR3RKr/
-         Rp+NkFUJdhuKVRgPFv6YFIVnIo2pI/JnBqOU/iV5yrAX6ySHQOPH+h7oJfa+EnBsq4Cj
-         hYKQMQ2h/oDHWtD36gP2llUspRjXOlfiuO9M4sQyp86+H6UwYDs5f+SMGmeXEaaWiq94
-         QGWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvdOrX9jHdR/uBeZXCeIiesWaLpVrcGZ45y8nWm9aBIAumRd9vsVNyNfW82BQpDbFdClvFvS7IXTNv0ug=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+fG45IUhGBIveqdkFYZN2ykt9uBH7uoOpc6LCYsz6044qYO95
-	OWWwsehrOGc8NDd1L12o0XG6ZaD1W0z4gKvrbRctTS61r9OFFBDOspzEEg==
-X-Gm-Gg: ASbGncuG0k56WDHjOCGk0XCZw1Tlz9Gc5Ma3mXRV3VId94yfKobEJS5Ob7U8X4Fdk4y
-	fk2qRqcw9rQ0prmspocoPQS+E2TvPCZVp6u7/3WbNSslNA4kUqplL55XSrSrE0zUULWX+IM8wCw
-	DqwJm4ScQv4EYN5PfPCNKOcDSrJHs1v8/LozGwJeNb31LOTu5qjY3c24dILlmBZUrjwwN06zBFk
-	mmu7WXvqxUSy7aeVQVV47PXvrwoMaPF9I01+hKyGD8XiIWvG9c3cQcDINB/lnhJjaeNfJsy0qj4
-	ePKqffxK3E5pAk6/dpNkZEIMbUHa3hrEHB/v4QtPmiMgAY/rjjIvmAmsSSoCkUzimBwC7Eh9wXv
-	lTM0Hkz7YDYNHrNzLKQuclw==
-X-Google-Smtp-Source: AGHT+IE08HRwi5zEAOrxjSmh0hF4NwG0alA2vND812imDj4F+QH8VbA/puyLUNVeEErub3tHh6+9Jw==
-X-Received: by 2002:a05:6512:118a:b0:549:5b54:2c77 with SMTP id 2adb3069b0e04-54990eaa9e3mr941912e87.32.1741345716393;
-        Fri, 07 Mar 2025 03:08:36 -0800 (PST)
+        bh=SZBUDcLiga65o3ONmY3eoTnwBjqCQOBm6Uo217lnuaM=;
+        b=pZYstDdf+GIbYFWaSKuIC/WHT3HHqpsd7OLmuN1yPV9/+9zWlS1aRb8FwY3EcBg1dJ
+         Jsn9IRSx98kROlfc7+7Pbx44xKvU5vcMUHNFWB2pvLWP28jJtR1miHQBQ4HNqf7tzSAz
+         ORHoIOxLRgwdspgmbav18OghXNgoC4Zbip0NNLCGI8ojEt1nK2MVJEAkUx1WQsJBXpXy
+         8stkcxXGzTKjPDmtrmpb2BZxL+bmtZap6vqUJD5eTivYHEsERbjG+b5rXiEPcb4EC8Xn
+         V6tnfh2QWlT+vzgz7jFbGIDnTp/yENpBzoOK1MSOQ2q5duJOfSx65q8zUVr1/tDNH096
+         ODgw==
+X-Forwarded-Encrypted: i=1; AJvYcCULuezlp9WvqPgFnOzIoUeVi8bxwoZtC7Pr8pHFB4o7Sp8nt+ojkroCRTAh8LQCPDHYMJJl5R6u+SV5gsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZOg6QnC4ZZLe0Jn72gHEIsc2FMkMDJUKchp7RAlFdk8kykHUC
+	DS/GQK/dTG+ENK2apUNJLGaWy1wVZzwmpKfOwSfkXJ6HoiCmkzTYMZoCmw==
+X-Gm-Gg: ASbGncsvlkCsAuJFYEsk0DD07KgHe8qwb9vUeEAIRvErGzyaa+gY8ghRfynplHYxmLi
+	RABgalTlx7Bxtmy+hljTk0FZ/NKhWssyh564037juiztcp4JF3jOvVop9zjEUlpy7t6nNZSKDUa
+	6NJQ3/IPMWUMBHVX4q/LaBwCWSFiiAl3aBzxWOkJdkWgtCUV01TVSzZ+hG34EGnW8cvMQSBq8E1
+	XeBh+YtQ2nH/vDIGOrH8a2d2Qolmd/KgGWbtRyKRwPPs43Cr+fPJfNFOEojqzOysuCM9IU7Siv5
+	N/+fDX2aubw7cBY+TARSQLN4ZJVyeSlur+6n3+6YoDaHpB6MQsasP69o0DFoj/dgbHAxrbrjL//
+	g2ZhPTDIrJ/8zddqcRcI6pw==
+X-Google-Smtp-Source: AGHT+IH0pmG5mntX/CHSlfv4qG5i5KqvwH+6uqJ1o8DOk4THqW5aC9xKMtC/IYhgCK730wYpu9WZGg==
+X-Received: by 2002:a05:6512:39d4:b0:549:39d8:51ef with SMTP id 2adb3069b0e04-54990e29b80mr1027667e87.6.1741345721906;
+        Fri, 07 Mar 2025 03:08:41 -0800 (PST)
 Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b1c2a08sm448920e87.223.2025.03.07.03.08.34
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b1c2a08sm448920e87.223.2025.03.07.03.08.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 03:08:35 -0800 (PST)
+        Fri, 07 Mar 2025 03:08:40 -0800 (PST)
 From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
 To: rust-for-linux@vger.kernel.org,
 	daniel.almeida@collabora.com,
@@ -77,11 +77,10 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Christoph Hellwig <hch@lst.de>,
 	Marek Szyprowski <m.szyprowski@samsung.com>,
 	airlied@redhat.com,
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Subject: [PATCH v13 1/7] rust: error: Add EOVERFLOW
-Date: Fri,  7 Mar 2025 13:06:18 +0200
-Message-ID: <20250307110821.1703422-2-abdiel.janulgue@gmail.com>
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
+Subject: [PATCH v13 3/7] rust: pci: impl AsMut<Device> for pci::Device
+Date: Fri,  7 Mar 2025 13:06:20 +0200
+Message-ID: <20250307110821.1703422-4-abdiel.janulgue@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250307110821.1703422-1-abdiel.janulgue@gmail.com>
 References: <20250307110821.1703422-1-abdiel.janulgue@gmail.com>
@@ -93,29 +92,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Trivial addition for missing EOVERFLOW error. This is used by a
-subsequent patch that might require returning EOVERFLOW as a result
-of `checked_mul`.
+From: Danilo Krummrich <dakr@kernel.org>
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Some device methods require mutable references, since they change the
+underlying struct device without lock protection.
+
+Hence, make it possible to retrieve a mutable reference to a Device from
+a mutable pci::Device.
+
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/error.rs | 1 +
- 1 file changed, 1 insertion(+)
+ rust/kernel/pci.rs | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index f6ecf09cb65f..1e510181432c 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -64,6 +64,7 @@ macro_rules! declare_err {
-     declare_err!(EPIPE, "Broken pipe.");
-     declare_err!(EDOM, "Math argument out of domain of func.");
-     declare_err!(ERANGE, "Math result not representable.");
-+    declare_err!(EOVERFLOW, "Value too large for defined data type.");
-     declare_err!(ERESTARTSYS, "Restart the system call.");
-     declare_err!(ERESTARTNOINTR, "System call was interrupted by a signal and will be restarted.");
-     declare_err!(ERESTARTNOHAND, "Restart if no handler.");
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 4c98b5b9aa1e..141430dac2d5 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -432,3 +432,14 @@ fn as_ref(&self) -> &device::Device {
+         &self.0
+     }
+ }
++
++impl AsMut<device::Device> for Device {
++    fn as_mut(&mut self) -> &mut device::Device {
++        // SAFETY:
++        // - `self.0.as_raw()` is valid by the type invariant of `device::Device`,
++        // - `struct device` is embedded in `struct pci_dev`, hence it is safe to give out a
++        //    mutable reference for `device::Device` if we have a mutable reference to the
++        //    corresponding `pci::Device`.
++        unsafe { &mut *self.0.as_raw().cast() }
++    }
++}
 -- 
 2.43.0
 
