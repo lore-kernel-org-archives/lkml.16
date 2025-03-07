@@ -1,108 +1,122 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28AB985270;
-	Fri,  7 Mar 2025 00:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E353D85270;
+	Fri,  7 Mar 2025 00:57:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741308961; cv=none; b=o7soto3WNJe3FxutdT17TJH9J4AIlXWYFpQPSfDQ6XafotqOGm9X+DHGJBTAJBxzm+YLt8Tki5Zf+8IyicMp3v/0Ng79KE8edey96vYq7AgIV3YC43kNiaz+4+dODmNtId1vtLx0gLUhkG+S+FOsESa7Nok4/0pIevSuP2NLHuM=
+	t=1741309046; cv=none; b=P2crJEMZtT8iCEYiRff8YjbnDS7HaF43MqjJXPeGXHluZqq3whvBR/HZPNxIoOtZCBJARDxmp5d8Q24zrOJ++/owCbCsgvm2bpzGCTf3jpHN1Q0Fz1imUsmqlkknOIya53J6l9sUx6lTNJt1j6mhZXnbSKJ5CZX4UW51rdHgi9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741308961; c=relaxed/simple;
-	bh=7pZqwwAprPyeaMEDZxlPD1LzwzVajGFbBevaf2ksr8s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o85ncvqMcbEP2PcZHKEXNNBzuwv0FNiqfZSYDD344B3LmDFS94Qk5KReRQ+iCwhaO2I0pjsgksV2Q8DGKFyslUCZbGDofY2r7VR4EokpyEA5Y6UBdeIZgeV6A7kedFEG6SOVdoZqZjf/6m7Jt4hqa6bHuvW8M4eLuBw94oq42FU=
+	s=arc-20240116; t=1741309046; c=relaxed/simple;
+	bh=ENbo0gM8IwufCgggenHF+D7xLihjMCy8hfoPc/5Tpz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YGc+JOsN/BCdCn9iRmjyfL0dWJBzwINaybw/E0UXwgbygLJRXVaXzswWXnFUmdTfsH6L4dG0CX5hIDzc77GHiEGrTfSOyyt2oqCEyzFKu0FE3BBdO6K7DGbgb0Z1Okt26cJjG1RjjJem4IIBYS87oZSoQ1MEgfKCBZjySBid+Ro=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CD7F169E;
-	Thu,  6 Mar 2025 16:56:12 -0800 (PST)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19EB63F5A1;
-	Thu,  6 Mar 2025 16:55:57 -0800 (PST)
-Date: Fri, 7 Mar 2025 00:55:55 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51E761BC0;
+	Thu,  6 Mar 2025 16:57:37 -0800 (PST)
+Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3EB83F5A1;
+	Thu,  6 Mar 2025 16:57:22 -0800 (PST)
 From: Andre Przywara <andre.przywara@arm.com>
-To: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Samuel
- Holland <samuel@sholland.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/15] arm64: dts: allwinner: Add Allwinner A523
- .dtsi file
-Message-ID: <20250307005555.2c52199a@minigeek.lan>
-In-Reply-To: <2646028.Lt9SDvczpP@jernej-laptop>
-References: <20250304222309.29385-1-andre.przywara@arm.com>
-	<20250304222309.29385-9-andre.przywara@arm.com>
-	<2646028.Lt9SDvczpP@jernej-laptop>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v3 01/15] dt-bindings: mmc: sunxi: Simplify compatible string listing
+Date: Fri,  7 Mar 2025 00:56:58 +0000
+Message-ID: <20250307005712.16828-2-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.46.3
+In-Reply-To: <20250307005712.16828-1-andre.przywara@arm.com>
+References: <20250307005712.16828-1-andre.przywara@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 05 Mar 2025 19:46:20 +0100
-Jernej =C5=A0krabec <jernej.skrabec@gmail.com> wrote:
+New Allwinner SoCs only occasionally update their MMC IP, leading to many
+pairs of compatible strings, though there are sometimes a number of them
+being compatible with one particular SoC.
 
-Hi,
+Collate the compatible string listing in the binding, to group those
+being compatible together. This makes the list more readable, and allows
+for easier addition of new SoC's MMC devices.
 
-> Dne torek, 4. marec 2025 ob 23:23:02 Srednjeevropski standardni =C4=8Das =
-je Andre Przywara napisal(a):
-> > The Allwinner A523, and its siblings A527 and T527, which share the same
-> > die, are a new family of SoCs introduced in 2023. They features eight
-> > Arm Cortex-A55 cores, and, among the other usual peripherals, a PCIe and
-> > USB 3.0 controller.
-> >=20
-> > Add the basic SoC devicetree .dtsi for the chip, describing the
-> > fundamental peripherals: the cores, GIC, timer, RTC, CCU and pinctrl.
-> > Also some other peripherals are fully compatible with previous IP, so
-> > add the USB and MMC nodes as well.
-> > The other peripherals will be added in the future, once we understand
-> > their compatibility and DT requirements.
-> >=20
-> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > ---
-> >  .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 598 ++++++++++++++++++
-> >  1 file changed, 598 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> >=20
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm6=
-4/boot/dts/allwinner/sun55i-a523.dtsi
-> > new file mode 100644
-> > index 0000000000000..01e662bdf5521
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > @@ -0,0 +1,598 @@
-> > +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> > +// Copyright (C) 2023-2024 Arm Ltd.
-> > +
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../bindings/mmc/allwinner,sun4i-a10-mmc.yaml | 36 ++++++++-----------
+ 1 file changed, 14 insertions(+), 22 deletions(-)
 
- ...
-
-> > +
-> > +			mmc2_pins: mmc2-pins {
-> > +				pins =3D "PC1" ,"PC5", "PC6", "PC8", "PC9",
-> > +				       "PC10", "PC11", "PC13", "PC14", "PC15",
-> > +				       "PC16"; =20
->=20
-> I guess PC0 should be also included, for HS400 capable cards.
-
-Sure, it doesn't conflict with much else (just NAND flash), so that's
-no problem.
-
-> With that fixed:
-> Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-
-Many thanks for that!
-
-Cheers,
-Andre
-
->=20
-> Best regards,
-> Jernej
->=20
+diff --git a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
+index 0ccd632d56200..8e4c77b7e4ab9 100644
+--- a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
++++ b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
+@@ -30,38 +30,30 @@ properties:
+       - const: allwinner,sun50i-a100-emmc
+       - const: allwinner,sun50i-a100-mmc
+       - items:
+-          - const: allwinner,sun8i-a83t-mmc
++          - enum:
++              - allwinner,sun8i-a83t-mmc
++              - allwinner,suniv-f1c100s-mmc
+           - const: allwinner,sun7i-a20-mmc
+       - items:
+-          - const: allwinner,sun8i-r40-emmc
++          - enum:
++              - allwinner,sun8i-r40-emmc
++              - allwinner,sun50i-h5-emmc
++              - allwinner,sun50i-h6-emmc
+           - const: allwinner,sun50i-a64-emmc
+       - items:
+-          - const: allwinner,sun8i-r40-mmc
++          - enum:
++              - allwinner,sun8i-r40-mmc
++              - allwinner,sun50i-h5-mmc
++              - allwinner,sun50i-h6-mmc
+           - const: allwinner,sun50i-a64-mmc
+       - items:
+-          - const: allwinner,sun50i-h5-emmc
+-          - const: allwinner,sun50i-a64-emmc
+-      - items:
+-          - const: allwinner,sun50i-h5-mmc
+-          - const: allwinner,sun50i-a64-mmc
+-      - items:
+-          - const: allwinner,sun50i-h6-emmc
+-          - const: allwinner,sun50i-a64-emmc
+-      - items:
+-          - const: allwinner,sun50i-h6-mmc
+-          - const: allwinner,sun50i-a64-mmc
+-      - items:
+-          - const: allwinner,sun20i-d1-emmc
+-          - const: allwinner,sun50i-a100-emmc
+-      - items:
+-          - const: allwinner,sun50i-h616-emmc
++          - enum:
++              - allwinner,sun20i-d1-emmc
++              - allwinner,sun50i-h616-emmc
+           - const: allwinner,sun50i-a100-emmc
+       - items:
+           - const: allwinner,sun50i-h616-mmc
+           - const: allwinner,sun50i-a100-mmc
+-      - items:
+-          - const: allwinner,suniv-f1c100s-mmc
+-          - const: allwinner,sun7i-a20-mmc
+ 
+   reg:
+     maxItems: 1
+-- 
+2.46.3
 
