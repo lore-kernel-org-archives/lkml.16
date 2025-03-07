@@ -1,227 +1,220 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D2B1DE3DC
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 15:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D731E8336
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 15:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741449249; cv=none; b=THIr5aLf+u7kZDWwVNDm4OeXZB6lT7Ek0KIujykAy1aC16PXHcIQ0y6vCWFnHIsRcTusYC+0Ts4hj71OCme1VvnnV8fW3yBq9M2wMcwrF1TCGePrVDzKpU7JyFnK7M6yiOS63DVBtzHG8NsaOQLhPTrrNxsLqSZqR6v1sfwvqc4=
+	t=1741449254; cv=none; b=SgVByruhNmAnEISRjpO04GvlQ68rxZWtiX0gaDRSE0o5vyYbwY9G9qZxkGrUiMvVaDG9KoA++8fge9LmMnJi6m/seK7VDj4mEFL3wpX37NVABfyAVbzt+DapXaKvvzZ5Uru6/G1VRVHVQ3zlN4bMyhaoGxoaVpkeYBmhThdTurw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741449249; c=relaxed/simple;
-	bh=rMuV6nHCFntzsYto5y3wh+iRvpqtsKuycOOrbtN0JmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=Eivp131fWGkN4AAjOH3brabquQ74xaS7rk04oNzvkBKBJLl6qp4qfKbbCXZeLw8jVzxV9w62tZpvPQuLshMEJzJJqrAB6QdnDuqJ2VFwQwrSXkzBJjaKSiogbOKC6Ig4zFX8QJiNNdZ9BWSno4UDLFMuCZxs9O3Fx1+9EvrSayE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ppHVffR8; arc=none smtp.client-ip=203.254.224.34
+	s=arc-20240116; t=1741449254; c=relaxed/simple;
+	bh=x2Kk7zM0eOg+x2C4vQ/WSq9xOyqsqVq7QtUIFCoh00Q=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=rmz/oocuwooyosh/67T3tqwzc7fOistBrDJ3A/gEv8qAUtmwD1YfuhzbqFreInH0OSp1qfF6YpIa17pogpx+1+H4Scff/saTXx22pxP2dE45YAkSe8k1yVZG9JcEy5F+n+NB8AOmG16oglEBW1Tqw7chpg25QdDpLQ71LsEKLxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=p8tH4Cgy; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ppHVffR8"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250308155359epoutp0413ed96fedd8eaefe6716cbe874f4b06d~q3ttFNt391545715457epoutp04V
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 15:53:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250308155359epoutp0413ed96fedd8eaefe6716cbe874f4b06d~q3ttFNt391545715457epoutp04V
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p8tH4Cgy"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250308155411epoutp032559c27e78e31be8a15874f33c1ec258~q3t4cYdzO1141611416epoutp03N
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 15:54:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250308155411epoutp032559c27e78e31be8a15874f33c1ec258~q3t4cYdzO1141611416epoutp03N
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741449239;
-	bh=KqFr1VhT2FTQnSr3LaaqWnUOVNuACS2W7zCBsK/XyWg=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=ppHVffR8fnb/BCswaIXVwhi13kROZlDPhwqyAu3iatGKZR6X+rvwBkkWSv1OHPVXK
-	 G9Pa9D8tbHnMJoFztCK4J/B6kogUyjp4XHjwJoVTnnWAdNwhlQ2gGPpzIkNO7BsvqX
-	 Pf4Ao6U/xPNmRve0uslePSWRXm91l0VchiwPQxyU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250308155358epcas5p164f2e579cd86ce471b82119a926eb1ee~q3tsaFtGe1115911159epcas5p1p;
-	Sat,  8 Mar 2025 15:53:58 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z974N5YC7z4x9Pp; Sat,  8 Mar
-	2025 15:53:56 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	F7.AD.29212.4186CC76; Sun,  9 Mar 2025 00:53:56 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250307093024epcas5p1e0be921d3f3445c67daf399e451bb203~qe1gjIIBT2800428004epcas5p1Z;
-	Fri,  7 Mar 2025 09:30:24 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250307093024epsmtrp12309fd6dc4c83031d7095f2e2625ec8d~qe1ghSaSe3067930679epsmtrp1C;
-	Fri,  7 Mar 2025 09:30:24 +0000 (GMT)
-X-AuditID: b6c32a50-801fa7000000721c-b7-67cc68143370
+	s=mail20170921; t=1741449251;
+	bh=x2Kk7zM0eOg+x2C4vQ/WSq9xOyqsqVq7QtUIFCoh00Q=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=p8tH4CgyJFH6eqasRyYeM3RAuXuKF/5JGxOiakhX29CtDdG+g8ni1x1kVob47+y42
+	 ho5MrYSAHHwSz+w5q63081gK5gsaxl2Nwsth735NvODZaDjDLviHqIS2r1yfL2mJIx
+	 vnzPdsBlVUqHupzEbH6zMurPdsFb/QcMCWRGkhKo=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250308155409epcas5p31ec0bded70d0235ef1078dad3134d8b0~q3t27g-tx2173221732epcas5p3l;
+	Sat,  8 Mar 2025 15:54:09 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z974b6Tccz4x9Pp; Sat,  8 Mar
+	2025 15:54:07 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2D.91.20052.F186CC76; Sun,  9 Mar 2025 00:54:07 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250307094754epcas5p49b48fe616b8f4cbe880f979fa1341708~qfEyNozm60463904639epcas5p4-;
+	Fri,  7 Mar 2025 09:47:54 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250307094754epsmtrp20a5e1096d994e76a5c86cef66f52243d~qfEyMlfzP2554325543epsmtrp2T;
+	Fri,  7 Mar 2025 09:47:54 +0000 (GMT)
+X-AuditID: b6c32a49-3d20270000004e54-5d-67cc681f2b8f
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	B8.DE.23488.0BCBAC76; Fri,  7 Mar 2025 18:30:24 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250307093022epsmtip26314520fbe088f38ce7c9fb84b185828~qe1eigaFn2162621626epsmtip2G;
-	Fri,  7 Mar 2025 09:30:22 +0000 (GMT)
-From: Varada Pavani <v.pavani@samsung.com>
-To: krzk@kernel.org, aswani.reddy@samsung.com, pankaj.dubey@samsung.com,
-	s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com,
-	mturquette@baylibre.com, sboyd@kernel.org,
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: gost.dev@samsung.com, Varada Pavani <v.pavani@samsung.com>
-Subject: [PATCH v3] clk: samsung: Use samsung CCF common function
-Date: Fri,  7 Mar 2025 14:54:03 +0530
-Message-Id: <20250307092403.19742-1-v.pavani@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAKsWRmVeSWpSXmKPExsWy7bCmlq5Ixpl0g22rtS0ezNvGZnFo81Z2
-	i+tfnrNa3Dywk8ni/PkN7BabHl9jtfjYc4/V4vKuOWwWM87vY7K4eMrVYtHWL+wWh9+0s1r8
-	u7aRxWJD7yt2Bz6P9zda2T02repk89i8pN6jb8sqRo/Pm+QCWKOybTJSE1NSixRS85LzUzLz
-	0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA7lRSKEvMKQUKBSQWFyvp29kU5ZeW
-	pCpk5BeX2CqlFqTkFJgU6BUn5haX5qXr5aWWWBkaGBiZAhUmZGcsmb2HuWChWkXD7seMDYzb
-	FbsYOTkkBEwkDv2/wNLFyMUhJLCHUaL35B92COcTo8TVGQfYQKqEBL4xSux5kgLT8fXvTqii
-	vYwSXZsmMUI4Xxglnvz4zghSxSagJbF66nJWEFtE4AiTxJ8TqSA2s4CdxPqpc5lBbGEBR4mL
-	H2ayg9gsAqoSu49NBIpzcPAKWEpcuFUDsUxeYvWGA8wg8yUE7rFLLL/QzQ6RcJGYseoUE4Qt
-	LPHq+BaouJTEy/42dpA5EgLJEu2fuCHCORKXdq+CKreXOHBlDgtICbOApsT6XfoQYVmJqafW
-	MUFcySfR+/sJVDmvxI55MLaSxM4dE6BsCYmnq9cAw4cdyPaQeB4EMlBIIFbi5/SsCYyysxDG
-	L2BkXMUolVpQnJuemmxaYKibl1oOj6Tk/NxNjOCkpxWwg3H1hr96hxiZOBgPMUpwMCuJ8Kpt
-	P5UuxJuSWFmVWpQfX1Sak1p8iNEUGF4TmaVEk/OBaTevJN7QxNLAxMzMzMTS2MxQSZy3eWdL
-	upBAemJJanZqakFqEUwfEwenVAOT/kqVOT98NP4uDkm4/2Fz2sPOlTm3Xy9XOvHwr7mRfeyL
-	58/vLb0wtfZXrYLMlCLGdVqKS2b7VjbuvnyD80yHnnt0dFrkUlcl5k3OU73srigZq1W81t8+
-	6dOenAtmvbEXFxVteq/0LXX2ZreF9oUu897JVJeLMoqH/fb6/8Nu96kH14xXr/3FW/lj0kmd
-	dt+49kNM19Yqzmqt9FoadvbozOftu9lYOx3MRb4/s7fXK04vfabi/LtTMnUar++e9Z9PXJ9+
-	TyHu59OOIJuNmdtr5x+6xTd/crn5xLcnxDfP9RBoMerPP3eo82D4cbP1DLPXsmuqiLOzRNo3
-	SstFNRWbHJc4Xf69lLP4CcNOpo1aSizFGYmGWsxFxYkA3Nan4gMEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPLMWRmVeSWpSXmKPExsWy7bCSvO6GPafSDY5NE7B4MG8bm8WhzVvZ
-	La5/ec5qcfPATiaL8+c3sFtsenyN1eJjzz1Wi8u75rBZzDi/j8ni4ilXi0Vbv7BbHH7Tzmrx
-	79pGFosNva/YHfg83t9oZffYtKqTzWPzknqPvi2rGD0+b5ILYI3isklJzcksSy3St0vgylgy
-	ew9zwUK1iobdjxkbGLcrdjFyckgImEh8/buTHcQWEtjNKDHpaiJEXEJi57dWZghbWGLlv+dA
-	NVxANZ8YJXoXrwRLsAloSayeupwVJCEicIlJ4sCRJ2CTmAUcJC6efcICYgsLOEpc/DATLM4i
-	oCqx+9hEoGYODl4BS4kLt2ogFshLrN5wgHkCI88CRoZVjJKpBcW56bnJhgWGeanlesWJucWl
-	eel6yfm5mxjBYailsYPx3bcm/UOMTByMhxglOJiVRHjVtp9KF+JNSaysSi3Kjy8qzUktPsQo
-	zcGiJM670jAiXUggPbEkNTs1tSC1CCbLxMEp1cDUUqsuJ+m3MfPq4S+M3z1vnwywvvo/3tRE
-	l9HgYq7y5Z87fi6fPV1XecaVq128gtEuV8zTQydFG/JqMa3v6PoWV6Z0RNE2zrR0HpPO3hvX
-	3vidVz+4+Ff8gldTBfJVs55ePisdIPbcdOb8dzJVUZdtnFIWH29tvHot5Lqj6E/tY7ZfbP98
-	mbavNzFklk9JwQ1Rfcm30hqmRiFLte6d9wq7dOOVdHVBY8mBTenX/lxmPlH4cpI1l4ZAdGfS
-	jsUei6Y9m+CwxTF07cuJG59nZTAu9ZjBf9zqUpgAh4zxs2kH2pc0m7hEv3J6yVzUsXxfw2Hv
-	Kcv85U+smrnK0ob7stGqGfX7pU3jPUTt5psUvLqlxFKckWioxVxUnAgAnn1atbICAAA=
-X-CMS-MailID: 20250307093024epcas5p1e0be921d3f3445c67daf399e451bb203
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2F.E4.18729.9C0CAC76; Fri,  7 Mar 2025 18:47:53 +0900 (KST)
+Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250307094751epsmtip280ce2f05b4121b89120543ee4f99d4b0~qfEvdJFPB3075730757epsmtip2l;
+	Fri,  7 Mar 2025 09:47:51 +0000 (GMT)
+From: "Shradha Todi" <shradha.t@samsung.com>
+To: "'Fan Ni'" <nifan.cxl@gmail.com>
+Cc: =?UTF-8?Q?'Krzysztof_Wilczy=C5=84ski'?= <kw@linux.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+	<manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+	<Jonathan.Cameron@huawei.com>, <a.manzanares@samsung.com>,
+	<pankaj.dubey@samsung.com>, <cassel@kernel.org>, <18255117159@163.com>,
+	<xueshuai@linux.alibaba.com>, <renyu.zj@linux.alibaba.com>,
+	<will@kernel.org>, <mark.rutland@arm.com>
+In-Reply-To: <Z8fSWcR_aXyxmFEZ@debian>
+Subject: RE: [PATCH v7 5/5] Add debugfs based statistical counter support in
+ DWC
+Date: Fri, 7 Mar 2025 15:17:50 +0530
+Message-ID: <075501db8f45$ff6f9620$fe4ec260$@samsung.com>
+Precedence: bulk
+X-Mailing-List: linux-kernel@vger.kernel.org
+List-Id: <linux-kernel.vger.kernel.org>
+List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJfby7SiE0e/TbLvAHLJIl0P7SXpgHkH4XnAk8q5KUB3hA60AHBUHtxAYzlJhAB7JKozgKp5GvQse/7dKA=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxzO6W1vC1pzrQWOxE12fSyIPAptd7sAI5txd4MpmXNLSBxe4Kwl
+	lNumD9kjKowyAkEEpwGqYRYrAoIsRV7KS0AZCCMLDYYBnXM4cYy5ASMwZFtLy8Z/3+873/l9
+	v++c/ASYaAn3F6SyBqRjGTWJe3ObegJfDt6pGlSGZV0Ipey5K3yqpOclyvq5irpXVIVRVQtl
+	fKrGMopTmQUrPMr20yiPGrl1CaeGyvtwyt54g0uZnpu41KQpj0ddffAdh1ptagdUReMCn7Jk
+	PwXUP20tfMo0IaOeLTfgMWL6StV5Hl1bXgvoVvMkn75sM9Km3lkebavJw+mJ0Tacbv1RQU/Z
+	Szh0g/U0XXizBtDzthfjNyekRaoQk4J0AYhN1qSkssooMvZI4huJMnmYJFiioF4hA1gmHUWR
+	B+Ligw+mqp0hyYATjNropOIZvZ4MjY7UaYwGFKDS6A1RJNKmqLVSbYieSdcbWWUIiwyvSsLC
+	wmVO4fE0lWWxi6+dC/94ds7OyQT1knzgJYCEFJbNZvHygbdARNwG8Iu/xrjuYg7Azou9HHex
+	COD8QB93/Uqdfcajagdw6dcnuLuYBrC/oGNNhRP74ZT9OebCYmI3XLJXApcII9q4cCzn/NqB
+	F7EXPn1yhp8PBIJtxLtw8I89Lprr1H/zswV30UJCAW3PUl20kNgK+8um1tpjRBCstMxg7oEC
+	4PLjSp5LLiaS4PAMdEv84N3lAszlColrXrC+zuoJcAA+GFzlu/E2+EvfTQ/2h/O/teNurITV
+	DaWe/mq42GDluPFrsMt+ievywohAWH8r1E2/AC8M3OC4fbfAMytTHrkQtpSv411wYbXNM8J2
+	WH5vhFcESPOGZOYNycwbIpj/d7sMuDVgO9Lq05VIL9NKWJTx338na9JtYG0F9r3VAiYf/h7S
+	DTgC0A2gACPFwr3NA0qRMIX55FOk0yTqjGqk7wYy52sXY/4+yRrnDrGGRIlUESaVy+VSRYRc
+	QvoJs1tNShGhZAwoDSEt0q3f4wi8/DM5ddLAzRNnhbUn76yGb/EtCC++7pdYbesIOeHgi4sj
+	RJ3GoObxk3feaRRadozdz3Uk9c1GHCs2zCxcVQthqObcTCMaHfIbLz32VSebo+lvjWsbfvjn
+	fPPru2VHUmLZvNhTPXkidpOvtHBsE4i+WNWV9mYC+gD5+FIfnYqxlvrKZ3MDv7WUEocMEYr9
+	3sHL4qoY2eHv67cW7URDS48S7p42H9cxLenjA007ciqID69Nf73ydm/3uZz58p4OugRzeDXG
+	cY+OWMfOZkZW/63I+MERuIeNHA69vfS4Im1XULa9oeNgRldRkg2ffh8ao9SfjaPCL33uRx/N
+	is6kD11/75HDQXL1KkayD9PpmX8BI1MvCosEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsWy7bCSvO7JA6fSDR48sbG40v6b3WL6YUWL
+	JU0ZFscmrGC2WPFlJrvFqoXX2Cwaen6zWmx6fI3V4vKuOWwWZ+cdZ7O4snUdi0XLnxYWi7st
+	nawWS69fZLL4u20vo8WirV/YLRY2v2S0+L9nB7tFyx1Ti/c/N7M5iHgsXjGF1WPNvDWMHjtn
+	3WX3WLCp1KPlyFtWj02rOtk87lzbw+ax86Glx5Mr05k8Ni+p9+jbsorR4/MmuQCeKC6blNSc
+	zLLUIn27BK6M86t2Mhc8VK5oWzSZtYHxmUwXIyeHhICJxNorr1lAbCGB3YwSV+4EQMQlJT5f
+	XMcEYQtLrPz3nL2LkQuo5hmjxMWTL1lBEmwCOhJPrvxhBrFFBFQkflxZxghSxCxwgUWia8Fd
+	Voipd5gkJh0wBrE5BdQkXj7vZQexhQUCJH5u6gdrZgFqPvFsIVsXIwcHr4ClxKb3mSBhXgFB
+	iZMzn4AdxyygLdH7sJURxl628DUzxHEKEj+fLmMFaRURSJI4/1oCokRc4ujPHuYJjMKzkEya
+	hWTSLCSTZiFpWcDIsopRMrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIzgNaGnuYNy+6oPe
+	IUYmDsZDjBIczEoivGrbT6UL8aYkVlalFuXHF5XmpBYfYpTmYFES5xV/0ZsiJJCeWJKanZpa
+	kFoEk2Xi4JRqYGp4cYvpRKBbxsXti15M/haQE3swIUPuD0+x0JmExvMnyz6FzvTe1N7l0/Ns
+	8oZTUpVRfHYf/p6xKq+Z150soFEruadlZUSRpGLMw2kPHkxoWaH5T+TDv5Svezx6PTbvSjI7
+	GMbsddc48Ere+gtN+pcdo+/OT73dFlT1zZvNpEZJRHe10I5JHywu/i/Zn6+a9m+91s8WPqsr
+	k39KiQpEvuxQNJklv0/YoXX69BMFB52/9U9e82qOijvfs5X/otw27l00cdmjnJ8pFs8rl2ju
+	cp2Voeh+0+/8igu24n+ztj08Jb7NsNgv9JOTjcCxdv9Xs69uZqr898/qfde9+CifjydL/c4Z
+	aVS0iB/TLYs4vVaJpTgj0VCLuag4EQCVKSVzcgMAAA==
+X-CMS-MailID: 20250307094754epcas5p49b48fe616b8f4cbe880f979fa1341708
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250307093024epcas5p1e0be921d3f3445c67daf399e451bb203
-References: <CGME20250307093024epcas5p1e0be921d3f3445c67daf399e451bb203@epcas5p1.samsung.com>
-Precedence: bulk
-X-Mailing-List: linux-kernel@vger.kernel.org
-List-Id: <linux-kernel.vger.kernel.org>
-List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+X-CMS-RootMailID: 20250221132043epcas5p27fde98558b13b3311cdc467e8f246380
+References: <20250221131548.59616-1-shradha.t@samsung.com>
+	<CGME20250221132043epcas5p27fde98558b13b3311cdc467e8f246380@epcas5p2.samsung.com>
+	<20250221131548.59616-6-shradha.t@samsung.com> <Z8XuuNb6TRevUlHH@debian>
+	<20250303194228.GB1552306@rocinante> <Z8YZEALV71PUkXpF@debian>
+	<061401db8d28$5f0a4b40$1d1ee1c0$@samsung.com> <Z8fSWcR_aXyxmFEZ@debian>
 
-Use samsung CCF function which registers multiple clock providers using
-single function call samsung_cmu_register_clocks().
 
-Signed-off-by: Varada Pavani <v.pavani@samsung.com>
----
 
-Changes in V3:
--Addressed checkpatch warning identified when run with --strict option, as per
-review comment from Krzysztof. Below is the warning from checkpatch.
-"CHECK: Unbalanced braces around else statement"
--Here is the link for V2 https://patchwork.kernel.org/project/linux-clk/patch/20250225131918.50925-2-v.pavani@samsung.com/
-
-Changes in V2:
--No review comments in V1.
-
- drivers/clk/samsung/clk-exynos4.c | 74 ++++++++++++++++++-------------
- 1 file changed, 42 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
-index 16be0c53903c..8fc89bde0d24 100644
---- a/drivers/clk/samsung/clk-exynos4.c
-+++ b/drivers/clk/samsung/clk-exynos4.c
-@@ -1269,6 +1269,45 @@ static const struct samsung_cpu_clock exynos4412_cpu_clks[] __initconst = {
- 		CPUCLK_LAYOUT_E4210, e4412_armclk_d),
- };
- 
-+static const struct samsung_cmu_info cmu_info_exynos4 __initconst = {
-+	.mux_clks		= exynos4_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(exynos4_mux_clks),
-+	.div_clks		= exynos4_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(exynos4_div_clks),
-+	.gate_clks		= exynos4_gate_clks,
-+	.nr_gate_clks		= ARRAY_SIZE(exynos4_gate_clks),
-+	.fixed_factor_clks	= exynos4_fixed_factor_clks,
-+	.nr_fixed_factor_clks	= ARRAY_SIZE(exynos4_fixed_factor_clks),
-+	.fixed_clks	= exynos4_fixed_rate_clks,
-+	.nr_fixed_clks	= ARRAY_SIZE(exynos4_fixed_rate_clks),
-+};
-+
-+static const struct samsung_cmu_info cmu_info_exynos4210 __initconst = {
-+	.mux_clks		= exynos4210_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(exynos4210_mux_clks),
-+	.div_clks		= exynos4210_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(exynos4210_div_clks),
-+	.gate_clks		= exynos4210_gate_clks,
-+	.nr_gate_clks		= ARRAY_SIZE(exynos4210_gate_clks),
-+	.fixed_factor_clks	= exynos4210_fixed_factor_clks,
-+	.nr_fixed_factor_clks	= ARRAY_SIZE(exynos4210_fixed_factor_clks),
-+	.fixed_clks	= exynos4210_fixed_rate_clks,
-+	.nr_fixed_clks	= ARRAY_SIZE(exynos4210_fixed_rate_clks),
-+	.cpu_clks		= exynos4210_cpu_clks,
-+	.nr_cpu_clks		= ARRAY_SIZE(exynos4210_cpu_clks),
-+};
-+
-+static const struct samsung_cmu_info cmu_info_exynos4x12 __initconst = {
-+	.mux_clks		= exynos4x12_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(exynos4x12_mux_clks),
-+	.div_clks		= exynos4x12_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(exynos4x12_div_clks),
-+	.gate_clks		= exynos4x12_gate_clks,
-+	.nr_gate_clks		= ARRAY_SIZE(exynos4x12_gate_clks),
-+	.fixed_factor_clks	= exynos4x12_fixed_factor_clks,
-+	.nr_fixed_factor_clks	= ARRAY_SIZE(exynos4x12_fixed_factor_clks),
-+};
-+
- /* register exynos4 clocks */
- static void __init exynos4_clk_init(struct device_node *np,
- 				    enum exynos4_soc soc)
-@@ -1322,41 +1361,12 @@ static void __init exynos4_clk_init(struct device_node *np,
- 					ARRAY_SIZE(exynos4x12_plls));
- 	}
- 
--	samsung_clk_register_fixed_rate(ctx, exynos4_fixed_rate_clks,
--			ARRAY_SIZE(exynos4_fixed_rate_clks));
--	samsung_clk_register_mux(ctx, exynos4_mux_clks,
--			ARRAY_SIZE(exynos4_mux_clks));
--	samsung_clk_register_div(ctx, exynos4_div_clks,
--			ARRAY_SIZE(exynos4_div_clks));
--	samsung_clk_register_gate(ctx, exynos4_gate_clks,
--			ARRAY_SIZE(exynos4_gate_clks));
--	samsung_clk_register_fixed_factor(ctx, exynos4_fixed_factor_clks,
--			ARRAY_SIZE(exynos4_fixed_factor_clks));
-+	samsung_cmu_register_clocks(ctx, &cmu_info_exynos4);
- 
- 	if (exynos4_soc == EXYNOS4210) {
--		samsung_clk_register_fixed_rate(ctx, exynos4210_fixed_rate_clks,
--			ARRAY_SIZE(exynos4210_fixed_rate_clks));
--		samsung_clk_register_mux(ctx, exynos4210_mux_clks,
--			ARRAY_SIZE(exynos4210_mux_clks));
--		samsung_clk_register_div(ctx, exynos4210_div_clks,
--			ARRAY_SIZE(exynos4210_div_clks));
--		samsung_clk_register_gate(ctx, exynos4210_gate_clks,
--			ARRAY_SIZE(exynos4210_gate_clks));
--		samsung_clk_register_fixed_factor(ctx,
--			exynos4210_fixed_factor_clks,
--			ARRAY_SIZE(exynos4210_fixed_factor_clks));
--		samsung_clk_register_cpu(ctx, exynos4210_cpu_clks,
--				ARRAY_SIZE(exynos4210_cpu_clks));
-+		samsung_cmu_register_clocks(ctx, &cmu_info_exynos4210);
- 	} else {
--		samsung_clk_register_mux(ctx, exynos4x12_mux_clks,
--			ARRAY_SIZE(exynos4x12_mux_clks));
--		samsung_clk_register_div(ctx, exynos4x12_div_clks,
--			ARRAY_SIZE(exynos4x12_div_clks));
--		samsung_clk_register_gate(ctx, exynos4x12_gate_clks,
--			ARRAY_SIZE(exynos4x12_gate_clks));
--		samsung_clk_register_fixed_factor(ctx,
--			exynos4x12_fixed_factor_clks,
--			ARRAY_SIZE(exynos4x12_fixed_factor_clks));
-+		samsung_cmu_register_clocks(ctx, &cmu_info_exynos4x12);
- 		if (soc == EXYNOS4412)
- 			samsung_clk_register_cpu(ctx, exynos4412_cpu_clks,
- 					ARRAY_SIZE(exynos4412_cpu_clks));
--- 
-2.17.1
-
+> -----Original Message-----
+> From: Fan Ni <nifan.cxl=40gmail.com>
+> Sent: 05 March 2025 09:56
+> To: Shradha Todi <shradha.t=40samsung.com>
+> Cc: 'Fan Ni' <nifan.cxl=40gmail.com>; 'Krzysztof Wilczy=C5=84ski'=20<kw=
+=40linux.com>;=20linux-kernel=40vger.kernel.org;=20linux-pci=40vger.kernel.=
+org;=0D=0A>=20linux-arm-kernel=40lists.infradead.org;=20linux-perf-users=40=
+vger.kernel.org;=20manivannan.sadhasivam=40linaro.org;=20lpieralisi=40kerne=
+l.org;=0D=0A>=20robh=40kernel.org;=20bhelgaas=40google.com;=20jingoohan1=40=
+gmail.com;=20Jonathan.Cameron=40huawei.com;=20a.manzanares=40samsung.com;=
+=0D=0A>=20pankaj.dubey=40samsung.com;=20cassel=40kernel.org;=2018255117159=
+=40163.com;=20xueshuai=40linux.alibaba.com;=20renyu.zj=40linux.alibaba.com;=
+=0D=0A>=20will=40kernel.org;=20mark.rutland=40arm.com=0D=0A>=20Subject:=20R=
+e:=20=5BPATCH=20v7=205/5=5D=20Add=20debugfs=20based=20statistical=20counter=
+=20support=20in=20DWC=0D=0A>=20=0D=0A>=20On=20Tue,=20Mar=2004,=202025=20at=
+=2010:40:43PM=20+0530,=20Shradha=20Todi=20wrote:=0D=0A>=20>=0D=0A>=20>=0D=
+=0A>=20>=20>=20-----Original=20Message-----=0D=0A>=20>=20>=20From:=20Fan=20=
+Ni=20<nifan.cxl=40gmail.com>=0D=0A>=20>=20>=20Sent:=2004=20March=202025=200=
+2:33=0D=0A>=20>=20>=20To:=20Krzysztof=20Wilczy=C5=84ski=20<kw=40linux.com>=
+=0D=0A>=20>=20>=20Cc:=20Fan=20Ni=20<nifan.cxl=40gmail.com>;=20Shradha=20Tod=
+i=0D=0A>=20>=20>=20<shradha.t=40samsung.com>;=20linux-kernel=40vger.kernel.=
+org;=20linux-=0D=0A>=20>=20>=20pci=40vger.kernel.org;=20linux-arm-kernel=40=
+lists.infradead.org;=0D=0A>=20>=20>=20linux-perf-users=40vger.kernel.org;=
+=20manivannan.sadhasivam=40linaro.org;=0D=0A>=20>=20>=20lpieralisi=40kernel=
+.org;=20robh=40kernel.org;=20bhelgaas=40google.com;=0D=0A>=20>=20>=20jingoo=
+han1=40gmail.com;=20Jonathan.Cameron=40huawei.com;=0D=0A>=20>=20>=20a.manza=
+nares=40samsung.com;=20pankaj.dubey=40samsung.com;=0D=0A>=20>=20>=20cassel=
+=40kernel.org;=2018255117159=40163.com;=20xueshuai=40linux.alibaba.com;=0D=
+=0A>=20>=20>=20renyu.zj=40linux.alibaba.com;=20will=40kernel.org;=20mark.ru=
+tland=40arm.com=0D=0A>=20>=20>=20Subject:=20Re:=20=5BPATCH=20v7=205/5=5D=20=
+Add=20debugfs=20based=20statistical=20counter=0D=0A>=20>=20>=20support=20in=
+=20DWC=0D=0A>=20>=20>=0D=0A>=20>=20>=20On=20Tue,=20Mar=2004,=202025=20at=20=
+04:42:28AM=20+0900,=20Krzysztof=20Wilczy=C5=84ski=20wrote:=0D=0A>=20>=20>=
+=20>=20Hello,=0D=0A>=20>=20>=20>=0D=0A>=20>=20>=20>=20=5B...=5D=0D=0A>=20>=
+=20>=20>=20>=20>=20+static=20ssize_t=20counter_value_read(struct=20file=20*=
+file,=20char=0D=0A>=20>=20>=20>=20>=20>=20+__user=20*buf,=20size_t=20count,=
+=20loff_t=20*ppos)=20=7B=0D=0A>=20>=20>=20>=20>=20>=20+=09struct=20dwc_pcie=
+_rasdes_priv=20*pdata=20=3D=20file->private_data;=0D=0A>=20>=20>=20>=20>=20=
+>=20+=09struct=20dw_pcie=20*pci=20=3D=20pdata->pci;=0D=0A>=20>=20>=20>=20>=
+=20>=20+=09struct=20dwc_pcie_rasdes_info=20*rinfo=20=3D=20pci->debugfs->ras=
+des_info;=0D=0A>=20>=20>=20>=20>=20>=20+=09char=20debugfs_buf=5BDWC_DEBUGFS=
+_BUF_MAX=5D;=0D=0A>=20>=20>=20>=20>=20>=20+=09ssize_t=20pos;=0D=0A>=20>=20>=
+=20>=20>=20>=20+=09u32=20val;=0D=0A>=20>=20>=20>=20>=20>=20+=0D=0A>=20>=20>=
+=20>=20>=20>=20+=09mutex_lock(&rinfo->reg_event_lock);=0D=0A>=20>=20>=20>=
+=20>=20>=20+=09set_event_number(pdata,=20pci,=20rinfo);=0D=0A>=20>=20>=20>=
+=20>=20>=20+=09val=20=3D=20dw_pcie_readl_dbi(pci,=20rinfo->ras_cap_offset=
+=20+=20RAS_DES_EVENT_COUNTER_DATA_REG);=0D=0A>=20>=20>=20>=20>=20>=20+=09mu=
+tex_unlock(&rinfo->reg_event_lock);=0D=0A>=20>=20>=20>=20>=20>=20+=09pos=20=
+=3D=20scnprintf(debugfs_buf,=20DWC_DEBUGFS_BUF_MAX,=20=22Counter=0D=0A>=20>=
+=20>=20>=20>=20>=20+value:=20%d=5Cn=22,=20val);=0D=0A>=20>=20>=20>=20>=20>=
+=20+=0D=0A>=20>=20>=20>=20>=20>=20+=09return=20simple_read_from_buffer(buf,=
+=20count,=20ppos,=0D=0A>=20>=20>=20>=20>=20>=20+debugfs_buf,=20pos);=20=7D=
+=0D=0A>=20>=20>=20>=20>=0D=0A>=20>=20>=20>=20>=20Do=20we=20need=20to=20chec=
+k=20whether=20the=20counter=20is=20enabled=20or=20not=20for=0D=0A>=20>=20>=
+=20>=20>=20the=20event=20before=20retrieving=20the=20counter=20value?=0D=0A=
+>=20>=20>=20>=0D=0A>=20>=20>=20>=20I=20believe,=20we=20have=20a=20patch=20t=
+hat=20aims=20to=20address,=20have=20a=20look=20at:=0D=0A>=20>=20>=20>=0D=0A=
+>=20>=20>=20>=0D=0A>=20>=20>=20>=20https://lore.kernel.org/linux-pci/202502=
+25171239.19574-1-manivanna=0D=0A>=20>=20>=20>=20n.sa=0D=0A>=20>=20>=20>=20d=
+hasivam=40linaro.org=0D=0A>=20>=20>=0D=0A>=20>=20>=20Maybe=20I=20missed=20s=
+omething,=20that=20seems=20to=20fix=20counter_enable_read(),=20but=20here=
+=20is=20to=20retrieve=20counter=20value.=0D=0A>=20>=20>=20How=20dw_pcie_rea=
+dl_dbi()=20can=20return=20something=20like=20=22Counter=20Disabled=22?=0D=
+=0A>=20>=20>=0D=0A>=20>=20>=20Fan=0D=0A>=20>=0D=0A>=20>=20Hey=20Fan,=0D=0A>=
+=20>=20So=20the=20counter=20value=20will=20show=200=20in=20case=20it=20is=
+=20disabled=20so=20there=20will=0D=0A>=20>=20not=20be=20any=20issues=20as=
+=20per=20say.=20We=20could=20add=20the=20check=20here=20but=20I=20feel=20I=
+=0D=0A>=20>=20have=20already=20exposed=20the=20functionality=20to=20check=
+=20if=20a=20counter=20is=20enabled=20or=20disabled,=20(by=20reading=20the=
+=20counter_enable=20debugfs=20entry)=0D=0A>=20so=20this=20could=20be=20hand=
+led=20in=20user=20space=20to=20only=20read=20the=20counter=20if=20it's=20en=
+abled.=0D=0A>=20Ok.=0D=0A>=20Returning=200=20when=20the=20counter=20is=20di=
+sabled=20makes=20sense=20to=20me.=0D=0A>=20=0D=0A>=20Just=20some=20thought.=
+=0D=0A>=20=0D=0A>=20It=20seems=20natural=20to=20me=20if=20we=20make=20=22co=
+unter_value=22=20only=20visiable=20to=20users=20when=20the=20counter=20is=
+=20enabled.=0D=0A>=20=0D=0A=0D=0AHey=20Fan,=0D=0A=0D=0AThis=20looks=20like=
+=20a=20good=20suggestion=20to=20me.=20I=20have=20implemented=20this=20and=
+=20in=20the=20process=20of=20testing.=20Since=20there=20is=20no=20support=
+=20in=20the=0D=0Adebugfs=20framework=20for=20conditionally=20hiding=20certa=
+in=20files=20from=20user,=20the=20custom=20implementation=20is=20a=20little=
+=20tricky=20and=20will=20need=20some=0D=0Adiscussion=20before=20taking=20in=
+.=20So=20let's=20take=20this=20up=20as=20a=20top=20up=20patch=20and=20live=
+=20with=20returning=200=20when=20the=20counter=20is=20disabled=20for=20now?=
+=0D=0A=0D=0AThanks=20a=20lot=20for=20the=20suggestion.=0D=0AShradha=20=0D=
+=0A=0D=0A>=20Fan=0D=0A>=20>=0D=0A>=20>=20>=20>=0D=0A>=20>=20>=20>=20Thank=
+=20you=21=0D=0A>=20>=20>=20>=0D=0A>=20>=20>=20>=20=09Krzysztof=0D=0A>=20>=
+=0D=0A>=20>=0D=0A=0D=0A
