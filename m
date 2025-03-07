@@ -1,172 +1,264 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC18C1EA7E5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFC31EA7E5
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339249; cv=none; b=uCv8TaZ8Gm7TyXXK34zrFIF8E9UtzpI/VI0V61srfqm1XY31WWGzV/0nJYoV481EiiJVyeCnyoxqmzdn7rlhdQzHZIIAteQx8YWC2ggyk3tRNmIMt0uv4AjMdHZp17hNtigRwYbqnbHZ8dB0ZJr1RJwhkLZqpGNw02FM+yPlL68=
+	t=1741339266; cv=none; b=lV0pAk9kQ/fTVcGZW+vUs6vDPytqdai9ZENZW9wzEzfwF7m0GC7HmPDCP9c55DN43e5K6cQGMyxpIBJ5oHG7iQoJ5Jpm5mposI/ucBTw0atjMUHuhsEsDhb2hRz7uh6QJZ9j/LLChXpnWWWLZYSbEmLIdCiCQuA0BD0JDpUZRJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339249; c=relaxed/simple;
-	bh=EOlxAY75X3y75FmTSYltFrdpLHUb9MhwojT4GfBHpHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q5eK4+8hyQJnRzuYzF1YOHnMqnXhvYTQLQPi1XIyUMY+xkJRWi8c64YKba36UB7KEy9qCA55IJ40BuI20DIQjLjfnGFbmHO+xnktjUDXtxr7sM0FYE8T4noq6K/PfkjjnlQFPOfR9sOL8I/r6DH5NrtNH84+EhIVY1ulV+gi6lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it; spf=pass smtp.mailfrom=4sigma.it; dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b=Q+km1ios; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4sigma.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b="Q+km1ios"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6feab7c5f96so13070077b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 01:20:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=4sigma.it; s=google; t=1741339245; x=1741944045; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=36Mpzl2g2Ql1mD+GBxk6knfh/edalweU17g5lOUxsW8=;
-        b=Q+km1iosgOVCg1c/cVYg0XWToFQVFGoy+wBvwYQP5TBvGeRbpQ0uTCbFRao8YcCJ8M
-         UyDIaHd9KduFS6WGRq5eWiE/UtJbg+eDqY0rh0Lh+YeAPSQwExKxCxwSuEmQM8M2IPpp
-         koRErXQNR96Ixn1JDfRdiWMUE8x5PlUg4Vswk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741339245; x=1741944045;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=36Mpzl2g2Ql1mD+GBxk6knfh/edalweU17g5lOUxsW8=;
-        b=IBVANs90Aj+nRpR60OSkg+LzM7P0h0lBqi/Qqw+9nkwRtFPgFtNdyub2s2tn9HZv1i
-         0FrA9c3YgUa5Rf+airV5ra99RVCVTjaMMVT9eLbgqroZokEIXHWN/zJim8b/xpuBQLYd
-         vn6s+Io4pAV1w+phrSza7o2JesiWRRbGgJ9yIzi0KcAxsfkFxTK3E3XHgWq8OVlnDDQE
-         GeesSdqXYhyeZ4wIpm9bMBH1Q04h6CTL0ENFWB2w70PJdO/chgXKCzgIwPcZc46AoETK
-         WOfuLmZr76seoh4gT5jcj6Qf0e+bCk8NnL897ZFXHJw8C+F8hg4LgPLOfrtghNCtu3qf
-         Su9g==
-X-Forwarded-Encrypted: i=1; AJvYcCV/XTgL+PayVZ48N9rpid4hBr1Oq9+8OgXfNXiIQS4sQTBLwsGhuNo8FEgR9xdiDPCoGkQipaWfHHeBh2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb3JfcGjs2Vq9+9FeVQZd/HDVjQpzODZjJIXimH/AQqxxufOCj
-	EId6iUbAFMXfnGxt0rDvsCRmUroTpwXBfEtBGnxESXvNfyqiEOT0+pOkLnvUEHT1ucHlSLcsjfW
-	kdQqzdO+kOfpGYAlU/FvnutqgvZ9a+u1XHFZEF2suAb1lnjQ43g==
-X-Gm-Gg: ASbGnctIgxVsSJMFKRpyO3OTsct0RU5k5pocXX5i9WHQsvYRmI3K9Rpx1qsBB8EmRXT
-	GJTErI3r0QfDHDMUIMfVukBIDMXgh91kh6jIQwDj451NUWFh6OAafv6CTHPCHYaAel9NDMl5IAg
-	VAd15JPPl4yvzj+WsxrWTWeLP4
-X-Google-Smtp-Source: AGHT+IHHtkHH4bClarTQDPoQzJBWegMQ1mtMdNXXRANxaeOJkqAsFxaY0+fzNWLiByrID1GLClFedxR/3JsQiqYQR4Q=
-X-Received: by 2002:a05:690c:638a:b0:6fd:41e1:83d8 with SMTP id
- 00721157ae682-6febf2b4c1dmr37667517b3.6.1741339245381; Fri, 07 Mar 2025
- 01:20:45 -0800 (PST)
+	s=arc-20240116; t=1741339266; c=relaxed/simple;
+	bh=AQG8ynezKm0HFifj3LTqpYUfHU7uBcfH4i5dDB1Lwio=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gnpWvnQBkDCbtwhhNeW2G9C1GGsYZnfByiOyqy4yQ9foXiOfqHYP8G4HfcZ7/beqnYqf+MWZp1SPrTDqaLLr+zcisCRclCp/DcLfDnBKWwkNtF8IlzmnPmhU2r+5I6hKWHWCju7cohl01q+ZlNv5e6UYsGK4IEs1VKaJLnBBI9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 451521477;
+	Fri,  7 Mar 2025 01:21:16 -0800 (PST)
+Received: from [10.162.42.6] (a077893.blr.arm.com [10.162.42.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03DC93F66E;
+	Fri,  7 Mar 2025 01:20:59 -0800 (PST)
+Message-ID: <c3dddb6f-dce1-45a6-b5f1-1fd247c510ab@arm.com>
+Date: Fri, 7 Mar 2025 14:50:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303132124.52811-2-s.seva@4sigma.it> <Z8nDzyVO596rW0Mf@lore-desk>
-In-Reply-To: <Z8nDzyVO596rW0Mf@lore-desk>
-From: Silvano Seva <s.seva@4sigma.it>
-Date: Fri, 7 Mar 2025 10:20:34 +0100
-X-Gm-Features: AQ5f1JqmBKwjE_TVrDfV6pHyPYuuWGyYdwJGFXT_yavn6fnYiy4Nyw8ICQE4AUs
-Message-ID: <CALKJsrqc__ZeLoZ5V+hBxVMU+Crpv_YG0KM69N1CXuHc_rM-FQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: fix possible lockup during FIFO read
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: a.greco@4sigma.it, Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, 
-	"open list:ST LSM6DSx IMU IIO DRIVER" <linux-iio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Define PTE_SHIFT
+To: Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+ kasan-dev@googlegroups.com
+References: <20250307050851.4034393-1-anshuman.khandual@arm.com>
+ <17931f83-7142-4ca6-8bfe-466ec53b6e2c@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <17931f83-7142-4ca6-8bfe-466ec53b6e2c@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 6, 2025 at 4:48=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.org=
-> wrote:
->
-> > Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
-> > from falling in an infinite loop in case pattern_len is equal to zero a=
-nd
-> > the device FIFO is not empty.
-> >
-> > Signed-off-by: Silvano Seva <s.seva@4sigma.it>
-> > ---
-> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/i=
-io/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > index 0a7cd8c1aa33..7f343614f8a5 100644
-> > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > @@ -395,12 +395,17 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw=
-)
-> >       fifo_len =3D (le16_to_cpu(fifo_status) & fifo_diff_mask) *
-> >                  ST_LSM6DSX_CHAN_SIZE;
-> >       fifo_len =3D (fifo_len / pattern_len) * pattern_len;
-> > +     if (!fifo_len)
-> > +             return 0;
->
-> I do not think this check is necessary since if fifo_len is 0 we will not=
- run
-> the for loop, right?
 
-This check is present in the st_lsm6dsx_read_tagged_fifo() function, i
-added it here for consistency. I agree with you that is not strictly
-necessary.
 
->
-> >
-> >       acc_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
-> >       gyro_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
-> >       if (hw->iio_devs[ST_LSM6DSX_ID_EXT0])
-> >               ext_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_EXT0])=
-;
-> >
-> > +     if (!pattern_len)
-> > +             pattern_len =3D ST_LSM6DSX_SAMPLE_SIZE;
->
-> same here, I do not think pattern_len can be 0 since hw->sip must be grea=
-ter
-> than 0 in order to enable the FIFO. Moreover, this check should be some l=
-ines
-> above since we have already divided fifo_len by pattern_len here.
->
+On 3/7/25 14:37, Ryan Roberts wrote:
+> On 07/03/2025 05:08, Anshuman Khandual wrote:
+>> Address bytes shifted with a single 64 bit page table entry (any page table
+>> level) has been always hard coded as 3 (aka 2^3 = 8). Although intuitive it
+>> is not very readable or easy to reason about. Besides it is going to change
+>> with D128, where each 128 bit page table entry will shift address bytes by
+>> 4 (aka 2^4 = 16) instead.
+>>
+>> Let's just formalise this address bytes shift value into a new macro called
+>> PTE_SHIFT establishing a logical abstraction, thus improving readability as
+>> well. This does not cause any functional change.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+>> Cc: Alexander Potapenko <glider@google.com>
+>> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+>> Cc: Dmitry Vyukov <dvyukov@google.com>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: kasan-dev@googlegroups.com
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> 
+> +1 for PTDESC_ORDER
 
-There is a situation causing the subsequent for loop to never
-terminate, hanging the kernel boot process: given a system which
-doesn't have an hardware reset line allowing the kernel to
-re-initialize the IMU hardware, in case of an hot reboot the driver
-probe() function attempts to flush the FIFO, which may contain some
-data, while the hw->sip is zero.
-The complete execution path is the following:
-- call of st_lsm6dsx_probe();
-- allocation of the st_lsm6dsx_hw structure via the devm_kzalloc,
-zero-initializing the sip field;
-- call of st_lsm6dsx_init_device();
-- call of st_lsm6dsx_reset_device();
-- call of st_lsm6dsx_flush_fifo();
-- call of st_lsm6dsx_read_fifo/st_lsm6dsx_read_tagged_fifo via the
-fifo_ops function pointer.
+Alright.
 
-An alternative solution to solve this situation is initializing the
-hw->sip field to a sane default value in either the probe() or
-init_device() function.
+> 
+> Implementation looks good to me so:
+> 
+> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
-> > +
-> >       for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern_l=
-en) {
-> >               err =3D st_lsm6dsx_read_block(hw, ST_LSM6DSX_REG_FIFO_OUT=
-L_ADDR,
-> >                                           hw->buff, pattern_len,
-> > @@ -623,6 +628,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_h=
-w *hw)
-> >       if (!fifo_len)
-> >               return 0;
-> >
-> > +     if (!pattern_len)
-> > +             pattern_len =3D ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
->
-> for the reason above, this is not necessary.
->
-> Regards,
-> Lorenzo
->
-> > +
-> >       for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern_l=
-en) {
-> >               err =3D st_lsm6dsx_read_block(hw,
-> >                                           ST_LSM6DSX_REG_FIFO_OUT_TAG_A=
-DDR,
-> > --
-> > 2.48.1
-> >
+Thanks !
+
+> 
+> one nit below.
+> 
+>> ---
+>> This patch applies on v6.14-rc5
+>>
+>>  arch/arm64/Kconfig                      |  2 +-
+>>  arch/arm64/include/asm/kernel-pgtable.h |  3 ++-
+>>  arch/arm64/include/asm/pgtable-hwdef.h  | 26 +++++++++++++------------
+>>  arch/arm64/kernel/pi/map_range.c        |  2 +-
+>>  arch/arm64/mm/kasan_init.c              |  6 +++---
+>>  5 files changed, 21 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 940343beb3d4..fd3303f2ccda 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -323,7 +323,7 @@ config ARCH_MMAP_RND_BITS_MIN
+>>  	default 18
+>>  
+>>  # max bits determined by the following formula:
+>> -#  VA_BITS - PAGE_SHIFT - 3
+>> +#  VA_BITS - PAGE_SHIFT - PTE_SHIFT
+>>  config ARCH_MMAP_RND_BITS_MAX
+>>  	default 19 if ARM64_VA_BITS=36
+>>  	default 24 if ARM64_VA_BITS=39
+>> diff --git a/arch/arm64/include/asm/kernel-pgtable.h b/arch/arm64/include/asm/kernel-pgtable.h
+>> index fd5a08450b12..7150a7a10f00 100644
+>> --- a/arch/arm64/include/asm/kernel-pgtable.h
+>> +++ b/arch/arm64/include/asm/kernel-pgtable.h
+>> @@ -49,7 +49,8 @@
+>>  	(SPAN_NR_ENTRIES(vstart, vend, shift) + (add))
+>>  
+>>  #define EARLY_LEVEL(lvl, lvls, vstart, vend, add)	\
+>> -	(lvls > lvl ? EARLY_ENTRIES(vstart, vend, SWAPPER_BLOCK_SHIFT + lvl * (PAGE_SHIFT - 3), add) : 0)
+>> +	(lvls > lvl ? EARLY_ENTRIES(vstart, vend, SWAPPER_BLOCK_SHIFT + \
+>> +	lvl * (PAGE_SHIFT - PTE_SHIFT), add) : 0)
+> 
+> nit: not sure what style guide says, but I would indent this continuation an
+> extra level.
+
+IIUC - An indentation is not normally required with a line continuation although
+the starting letter should match the starting letter in the line above but after
+the '(' (if any).
+
+> 
+> Thanks,
+> Ryan
+> 
+>>  
+>>  #define EARLY_PAGES(lvls, vstart, vend, add) (1 	/* PGDIR page */				\
+>>  	+ EARLY_LEVEL(3, (lvls), (vstart), (vend), add) /* each entry needs a next level page table */	\
+>> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+>> index a9136cc551cc..43f98eac7653 100644
+>> --- a/arch/arm64/include/asm/pgtable-hwdef.h
+>> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+>> @@ -7,40 +7,42 @@
+>>  
+>>  #include <asm/memory.h>
+>>  
+>> +#define PTE_SHIFT 3
+>> +
+>>  /*
+>>   * Number of page-table levels required to address 'va_bits' wide
+>>   * address, without section mapping. We resolve the top (va_bits - PAGE_SHIFT)
+>> - * bits with (PAGE_SHIFT - 3) bits at each page table level. Hence:
+>> + * bits with (PAGE_SHIFT - PTE_SHIFT) bits at each page table level. Hence:
+>>   *
+>> - *  levels = DIV_ROUND_UP((va_bits - PAGE_SHIFT), (PAGE_SHIFT - 3))
+>> + *  levels = DIV_ROUND_UP((va_bits - PAGE_SHIFT), (PAGE_SHIFT - PTE_SHIFT))
+>>   *
+>>   * where DIV_ROUND_UP(n, d) => (((n) + (d) - 1) / (d))
+>>   *
+>>   * We cannot include linux/kernel.h which defines DIV_ROUND_UP here
+>>   * due to build issues. So we open code DIV_ROUND_UP here:
+>>   *
+>> - *	((((va_bits) - PAGE_SHIFT) + (PAGE_SHIFT - 3) - 1) / (PAGE_SHIFT - 3))
+>> + *	((((va_bits) - PAGE_SHIFT) + (PAGE_SHIFT - PTE_SHIFT) - 1) / (PAGE_SHIFT - PTE_SHIFT))
+>>   *
+>>   * which gets simplified as :
+>>   */
+>> -#define ARM64_HW_PGTABLE_LEVELS(va_bits) (((va_bits) - 4) / (PAGE_SHIFT - 3))
+>> +#define ARM64_HW_PGTABLE_LEVELS(va_bits) (((va_bits) - PTE_SHIFT - 1) / (PAGE_SHIFT - PTE_SHIFT))
+>>  
+>>  /*
+>>   * Size mapped by an entry at level n ( -1 <= n <= 3)
+>> - * We map (PAGE_SHIFT - 3) at all translation levels and PAGE_SHIFT bits
+>> + * We map (PAGE_SHIFT - PTE_SHIFT) at all translation levels and PAGE_SHIFT bits
+>>   * in the final page. The maximum number of translation levels supported by
+>>   * the architecture is 5. Hence, starting at level n, we have further
+>>   * ((4 - n) - 1) levels of translation excluding the offset within the page.
+>>   * So, the total number of bits mapped by an entry at level n is :
+>>   *
+>> - *  ((4 - n) - 1) * (PAGE_SHIFT - 3) + PAGE_SHIFT
+>> + *  ((4 - n) - 1) * (PAGE_SHIFT - PTE_SHIFT) + PAGE_SHIFT
+>>   *
+>>   * Rearranging it a bit we get :
+>> - *   (4 - n) * (PAGE_SHIFT - 3) + 3
+>> + *   (4 - n) * (PAGE_SHIFT - PTE_SHIFT) + PTE_SHIFT
+>>   */
+>> -#define ARM64_HW_PGTABLE_LEVEL_SHIFT(n)	((PAGE_SHIFT - 3) * (4 - (n)) + 3)
+>> +#define ARM64_HW_PGTABLE_LEVEL_SHIFT(n)	((PAGE_SHIFT - PTE_SHIFT) * (4 - (n)) + PTE_SHIFT)
+>>  
+>> -#define PTRS_PER_PTE		(1 << (PAGE_SHIFT - 3))
+>> +#define PTRS_PER_PTE		(1 << (PAGE_SHIFT - PTE_SHIFT))
+>>  
+>>  /*
+>>   * PMD_SHIFT determines the size a level 2 page table entry can map.
+>> @@ -49,7 +51,7 @@
+>>  #define PMD_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(2)
+>>  #define PMD_SIZE		(_AC(1, UL) << PMD_SHIFT)
+>>  #define PMD_MASK		(~(PMD_SIZE-1))
+>> -#define PTRS_PER_PMD		(1 << (PAGE_SHIFT - 3))
+>> +#define PTRS_PER_PMD		(1 << (PAGE_SHIFT - PTE_SHIFT))
+>>  #endif
+>>  
+>>  /*
+>> @@ -59,14 +61,14 @@
+>>  #define PUD_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(1)
+>>  #define PUD_SIZE		(_AC(1, UL) << PUD_SHIFT)
+>>  #define PUD_MASK		(~(PUD_SIZE-1))
+>> -#define PTRS_PER_PUD		(1 << (PAGE_SHIFT - 3))
+>> +#define PTRS_PER_PUD		(1 << (PAGE_SHIFT - PTE_SHIFT))
+>>  #endif
+>>  
+>>  #if CONFIG_PGTABLE_LEVELS > 4
+>>  #define P4D_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(0)
+>>  #define P4D_SIZE		(_AC(1, UL) << P4D_SHIFT)
+>>  #define P4D_MASK		(~(P4D_SIZE-1))
+>> -#define PTRS_PER_P4D		(1 << (PAGE_SHIFT - 3))
+>> +#define PTRS_PER_P4D		(1 << (PAGE_SHIFT - PTE_SHIFT))
+>>  #endif
+>>  
+>>  /*
+>> diff --git a/arch/arm64/kernel/pi/map_range.c b/arch/arm64/kernel/pi/map_range.c
+>> index 2b69e3beeef8..3530a5427f57 100644
+>> --- a/arch/arm64/kernel/pi/map_range.c
+>> +++ b/arch/arm64/kernel/pi/map_range.c
+>> @@ -31,7 +31,7 @@ void __init map_range(u64 *pte, u64 start, u64 end, u64 pa, pgprot_t prot,
+>>  {
+>>  	u64 cmask = (level == 3) ? CONT_PTE_SIZE - 1 : U64_MAX;
+>>  	pteval_t protval = pgprot_val(prot) & ~PTE_TYPE_MASK;
+>> -	int lshift = (3 - level) * (PAGE_SHIFT - 3);
+>> +	int lshift = (3 - level) * (PAGE_SHIFT - PTE_SHIFT);
+>>  	u64 lmask = (PAGE_SIZE << lshift) - 1;
+>>  
+>>  	start	&= PAGE_MASK;
+>> diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
+>> index b65a29440a0c..90548079b42e 100644
+>> --- a/arch/arm64/mm/kasan_init.c
+>> +++ b/arch/arm64/mm/kasan_init.c
+>> @@ -190,7 +190,7 @@ static void __init kasan_pgd_populate(unsigned long addr, unsigned long end,
+>>   */
+>>  static bool __init root_level_aligned(u64 addr)
+>>  {
+>> -	int shift = (ARM64_HW_PGTABLE_LEVELS(vabits_actual) - 1) * (PAGE_SHIFT - 3);
+>> +	int shift = (ARM64_HW_PGTABLE_LEVELS(vabits_actual) - 1) * (PAGE_SHIFT - PTE_SHIFT);
+>>  
+>>  	return (addr % (PAGE_SIZE << shift)) == 0;
+>>  }
+>> @@ -245,7 +245,7 @@ static int __init root_level_idx(u64 addr)
+>>  	 */
+>>  	u64 vabits = IS_ENABLED(CONFIG_ARM64_64K_PAGES) ? VA_BITS
+>>  							: vabits_actual;
+>> -	int shift = (ARM64_HW_PGTABLE_LEVELS(vabits) - 1) * (PAGE_SHIFT - 3);
+>> +	int shift = (ARM64_HW_PGTABLE_LEVELS(vabits) - 1) * (PAGE_SHIFT - PTE_SHIFT);
+>>  
+>>  	return (addr & ~_PAGE_OFFSET(vabits)) >> (shift + PAGE_SHIFT);
+>>  }
+>> @@ -269,7 +269,7 @@ static void __init clone_next_level(u64 addr, pgd_t *tmp_pg_dir, pud_t *pud)
+>>   */
+>>  static int __init next_level_idx(u64 addr)
+>>  {
+>> -	int shift = (ARM64_HW_PGTABLE_LEVELS(vabits_actual) - 2) * (PAGE_SHIFT - 3);
+>> +	int shift = (ARM64_HW_PGTABLE_LEVELS(vabits_actual) - 2) * (PAGE_SHIFT - PTE_SHIFT);
+>>  
+>>  	return (addr >> (shift + PAGE_SHIFT)) % PTRS_PER_PTE;
+>>  }
+> 
