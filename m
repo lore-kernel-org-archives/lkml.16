@@ -1,151 +1,185 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACC5428136E;
-	Thu,  6 Mar 2025 23:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5961202C44;
+	Fri,  7 Mar 2025 00:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741305533; cv=none; b=NEgM+sevet+PCEM922izbvkqcxHJM34MMqHWB25iHp7e4byX+zIuer9c1Sqjv9EALmesvc+hkePPDIhdxGa8JMD13tCE3QrMapoVFlIg/jDO8lbJUnDxSK+8nX0w8YdFRcHsZ+qlawy0cYyizivO0kTIoAY/PxPA7q8ErPphIJU=
+	t=1741305624; cv=none; b=PLaqLq7eecBluNt+zR9xQMFbhQpucszrwQ5AIJJKGDTdbpoRhOU74jvi3ZE7OkdedSRWmyCT0aCy0q1IrddZmceGZi67nXI45fLDFNsgobjFeJyIcz/KYIkGZIlSMMGfpfE4JJRLPhbK1enxZOMcZeHPqP9iX2fU+DU8HXF5g44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741305533; c=relaxed/simple;
-	bh=Um5IfbD735MZAR0kncrcKD4JbWb8JEH4EMmhAjtc4Lc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lKejGQSGLL7eb/J0x83l6JQ89f+eWAjR2LI9xLJMYQSXAbHWI/pyBP51XvVtZD+P8iXipu9Q4nKJeVVeZxuRvVOfKqRBfjUMKTnW8OYF2mjjSJ/OjfAEgr5OcBSKfum0+u7AuaAO8Z/M6zZZuMMMq3PfhF8OHvQPpz8UJPGPHnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D370169E;
-	Thu,  6 Mar 2025 15:59:04 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4E173F673;
-	Thu,  6 Mar 2025 15:58:49 -0800 (PST)
-From: Andre Przywara <andre.przywara@arm.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 8/8] pinctrl: sunxi: Add support for the secondary A523 GPIO ports
-Date: Thu,  6 Mar 2025 23:58:27 +0000
-Message-ID: <20250306235827.4895-9-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.46.3
-In-Reply-To: <20250306235827.4895-1-andre.przywara@arm.com>
-References: <20250306235827.4895-1-andre.przywara@arm.com>
+	s=arc-20240116; t=1741305624; c=relaxed/simple;
+	bh=iyIR7Lu7scO0az/72iAv4+pIQLty4sEWKIC8oyRDQYo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Id+G5XVYZK/jarBpBH5mYZM8Bx+SK0wo287prNlFVbX7mRH5zCnPeSk1y27QY57g8d305r/GGAMaB1IQxGukGCtPTcnd2SSAZgywKriNu4vuRByD1H1VJBX7QC5Y1IL2Wqwss3Z3IwttO71ADLTz2q7Eoj5zSk8HWDZsunFxtPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTVYQ3F9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTVYQ3F9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1429AC4CEE8;
+	Fri,  7 Mar 2025 00:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741305624;
+	bh=iyIR7Lu7scO0az/72iAv4+pIQLty4sEWKIC8oyRDQYo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UTVYQ3F9vbaj3EcucvysnDwYLL21cUguDxM/YVi5slxSK1pdyHwFVINCY+3YHPblz
+	 4zijPdD93HN0PCux6PUpLs5tExx3Ak1J+7VFt7y6IW9KydEiguDCdXcRQNAs1rcHEG
+	 JX+XOq8Tve1UPIMo0YZluWzI4paM6CxZgfzbRZLwdBHu8HKp4Wesjcdg1MQw/KkIwn
+	 SnPdqz7g+k694FwOUj6ZcxIo35msgdH2dWfYkV0nZqiwMYFnUHreBZymqhRmHClbN8
+	 MDmC33ZwU/ier3Gvk3Sig/qMHEkq4iBAr4CUtx4lnbOhumHD0vMvCRGbpj0j5LcShG
+	 vZ8DeyP3JswSw==
+Received: from [165.225.242.197] (helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tqL8X-00BE7m-EB;
+	Fri, 07 Mar 2025 00:00:22 +0000
+Date: Fri, 07 Mar 2025 00:00:15 +0000
+Message-ID: <87v7sl7lrk.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: 	Oliver Upton <oliver.upton@linux.dev>, Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Christoffer Dall
+	<cdall@cs.columbia.edu>,
+	Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List
+	<linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the kvm-arm tree
+In-Reply-To: <6027e05e03474a87826217ee56f12761@huawei.com>
+References: <20250306164614.4ccb2e9d@canb.auug.org.au>
+	<6027e05e03474a87826217ee56f12761@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 165.225.242.197
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, shameerali.kolothum.thodi@huawei.com, sfr@canb.auug.org.au, cdall@cs.columbia.edu, linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-As most other Allwinner SoCs before, the A523 chip contains a second
-GPIO controller, managing banks PL and PM.
-Use the newly introduced DT based pinctrl driver to describe just the
-generic pinctrl properties, so advertise the number of pins per bank
-and the interrupt capabilities. The actual function/mux assignment is
-taken from the devicetree.
+On Thu, 06 Mar 2025 09:56:32 +0000,
+Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com> wrote:
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Sent: Thursday, March 6, 2025 5:46 AM
+> > To: Christoffer Dall <cdall@cs.columbia.edu>; Marc Zyngier
+> > <maz@kernel.org>
+> > Cc: Oliver Upton <oliver.upton@linux.dev>; Shameerali Kolothum Thodi
+> > <shameerali.kolothum.thodi@huawei.com>; Linux Kernel Mailing List
+> > <linux-kernel@vger.kernel.org>; Linux Next Mailing List <linux-
+> > next@vger.kernel.org>
+> > Subject: linux-next: build failure after merge of the kvm-arm tree
+> > 
+> > Hi all,
+> > 
+> > After merging the kvm-arm tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> > 
+> > drivers/firmware/smccc/kvm_guest.c:58:14: warning: no previous prototype
+> > for 'kvm_arm_target_impl_cpu_init' [-Wmissing-prototypes]
+> >    58 | void  __init kvm_arm_target_impl_cpu_init(void)
+> >       |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/firmware/smccc/kvm_guest.c: In function
+> > 'kvm_arm_target_impl_cpu_init':
+> > drivers/firmware/smccc/kvm_guest.c:89:39: error: invalid application of
+> > 'sizeof' to incomplete type 'struct target_impl_cpu'
+> >    89 |         target = memblock_alloc(sizeof(*target) * max_cpus,
+> > __alignof__(*target));
+> >       |                                       ^
+> > drivers/firmware/smccc/kvm_guest.c:89:62: error: invalid application of
+> > '__alignof__' to incomplete type 'struct target_impl_cpu'
+> >    89 |         target = memblock_alloc(sizeof(*target) * max_cpus,
+> > __alignof__(*target));
+> >       |                                                              ^~~~~~~~~~~
+> > drivers/firmware/smccc/kvm_guest.c:102:23: error: invalid use of undefined
+> > type 'struct target_impl_cpu'
+> >   102 |                 target[i].midr = res.a1;
+> >       |                       ^
+> > drivers/firmware/smccc/kvm_guest.c:102:26: error: invalid use of undefined
+> > type 'struct target_impl_cpu'
+> >   102 |                 target[i].midr = res.a1;
+> >       |                          ^
+> > drivers/firmware/smccc/kvm_guest.c:103:23: error: invalid use of undefined
+> > type 'struct target_impl_cpu'
+> >   103 |                 target[i].revidr = res.a2;
+> >       |                       ^
+> > drivers/firmware/smccc/kvm_guest.c:103:26: error: invalid use of undefined
+> > type 'struct target_impl_cpu'
+> >   103 |                 target[i].revidr = res.a2;
+> >       |                          ^
+> > drivers/firmware/smccc/kvm_guest.c:104:23: error: invalid use of undefined
+> > type 'struct target_impl_cpu'
+> >   104 |                 target[i].aidr = res.a3;
+> >       |                       ^
+> > drivers/firmware/smccc/kvm_guest.c:104:26: error: invalid use of undefined
+> > type 'struct target_impl_cpu'
+> >   104 |                 target[i].aidr = res.a3;
+> >       |                          ^
+> > drivers/firmware/smccc/kvm_guest.c:107:14: error: implicit declaration of
+> > function 'cpu_errata_set_target_impl' [-Wimplicit-function-declaration]
+> >   107 |         if (!cpu_errata_set_target_impl(max_cpus, target)) {
+> >       |              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/firmware/smccc/kvm_guest.c:116:37: error: invalid application of
+> > 'sizeof' to incomplete type 'struct target_impl_cpu'
+> >   116 |         memblock_free(target, sizeof(*target) * max_cpus);
+> >       |                                     ^
+> > 
+> > Caused by commit
+> > 
+> >   86edf6bdcf05 ("smccc/kvm_guest: Enable errata based on implementation
+> > CPUs")
+> > 
+> > I have used the kvm-arm tree from next-20250305 for today.
+> 
+> Thanks for reporting this.
+> 
+> Hmm..kvm_guest.c gets build through HAVE_ARM_SMCCC_DISCOVERY 
+> which is selected by ARM_GIC_V3.
+> 
+> We could limit the kvm_arm_target_impl_cpu_init() to ARM64 to fix this
+> like below as these hypercall is only supported for KVM/ARM64.
+> 
+> Or is there a better way to handle this?
+> 
+> Thanks,
+> Shameer
+> 
+> ---8---
+> diff --git a/drivers/firmware/smccc/kvm_guest.c
+> b/drivers/firmware/smccc/kvm_guest.c
+> index 2f03b582c298..5767aed25cdc 100644
+> --- a/drivers/firmware/smccc/kvm_guest.c
+> +++ b/drivers/firmware/smccc/kvm_guest.c
+> @@ -55,6 +55,7 @@ bool kvm_arm_hyp_service_available(u32 func_id)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_arm_hyp_service_available);
+> 
+> +#ifdef CONFIG_ARM64
+>  void  __init kvm_arm_target_impl_cpu_init(void)
+>  {
+>         int i;
+> @@ -115,3 +116,4 @@ void  __init kvm_arm_target_impl_cpu_init(void)
+>  mem_free:
+>         memblock_free(target, sizeof(*target) * max_cpus);
+>  }
+> +#endif
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
----
- drivers/pinctrl/sunxi/Kconfig                 |  5 ++
- drivers/pinctrl/sunxi/Makefile                |  1 +
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c | 54 +++++++++++++++++++
- 3 files changed, 60 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
+Yeah, that's probably best for now.
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index 0cbe466683650..dc62eba96348e 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -136,4 +136,9 @@ config PINCTRL_SUN55I_A523
- 	default ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN55I_A523_R
-+	bool "Support for the Allwinner A523 R-PIO"
-+	default ARM64 && ARCH_SUNXI
-+	select PINCTRL_SUNXI
-+
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index 4e55508ff7f76..951b3f1e4b4f1 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -28,5 +28,6 @@ obj-$(CONFIG_PINCTRL_SUN50I_H6_R)	+= pinctrl-sun50i-h6-r.o
- obj-$(CONFIG_PINCTRL_SUN50I_H616)	+= pinctrl-sun50i-h616.o
- obj-$(CONFIG_PINCTRL_SUN50I_H616_R)	+= pinctrl-sun50i-h616-r.o
- obj-$(CONFIG_PINCTRL_SUN55I_A523)	+= pinctrl-sun55i-a523.o
-+obj-$(CONFIG_PINCTRL_SUN55I_A523_R)	+= pinctrl-sun55i-a523-r.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80)		+= pinctrl-sun9i-a80.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80_R)	+= pinctrl-sun9i-a80-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-new file mode 100644
-index 0000000000000..69cd2b4ebd7d7
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Allwinner A523 SoC r-pinctrl driver.
-+ *
-+ * Copyright (C) 2024 Arm Ltd.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const u8 a523_r_nr_bank_pins[SUNXI_PINCTRL_MAX_BANKS] =
-+/*	  PL  PM */
-+	{ 14,  6 };
-+
-+static const unsigned int a523_r_irq_bank_map[] = { 0, 1 };
-+
-+static const u8 a523_r_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
-+/*	  PL  PM */
-+	{ 14, 14 };
-+
-+static struct sunxi_pinctrl_desc a523_r_pinctrl_data = {
-+	.irq_banks = ARRAY_SIZE(a523_r_irq_bank_map),
-+	.irq_bank_map = a523_r_irq_bank_map,
-+	.irq_read_needs_mux = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
-+	.pin_base = PL_BASE,
-+};
-+
-+static int a523_r_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_dt_table_init(pdev, a523_r_nr_bank_pins,
-+					   a523_r_irq_bank_muxes,
-+					   &a523_r_pinctrl_data,
-+					   SUNXI_PINCTRL_NEW_REG_LAYOUT);
-+}
-+
-+static const struct of_device_id a523_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun55i-a523-r-pinctrl", },
-+	{}
-+};
-+
-+static struct platform_driver a523_r_pinctrl_driver = {
-+	.probe	= a523_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun55i-a523-r-pinctrl",
-+		.of_match_table	= a523_r_pinctrl_match,
-+	},
-+};
-+builtin_platform_driver(a523_r_pinctrl_driver);
+Oliver, do you mind stashing this on top so that -next can build
+again? We can revisit this and have a better solution down the line.
+
+Thanks,
+
+	M.
+
 -- 
-2.46.3
-
+Without deviation from the norm, progress is not possible.
