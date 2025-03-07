@@ -1,230 +1,129 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA581714B4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 01:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428AB19048F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 01:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741309950; cv=none; b=BwoHbci7F24VLLKb4difqt+59EslATh4sIsL5aAQSXF/gm/LhXLKcK9+8MGXjXpkyzBEZ9gBNVeTKZVD1k+i9A9ZwJwr+el7LtObfaYCuDBLzvFNUnB2BxmEx3mCAfzN3g4ZwAG3CgIX1OuzCy3jLig0ntrcGzvk6ElbCoabB3c=
+	t=1741309957; cv=none; b=rWBnPfE7R7GJKOgJeMOjwBCBrVL0TVuQ9ORbVnEfUKyobBZ/cI+9QaCSej7cReSPzx9hp1EmZI8qYXYWTceq14MN1kiA6RA4SBdfZDT6feEAyI18sCQ+ZMOv37Fsg6sEVmiB53tAhetNu0o0Bo9ZdgebGniLTSNH9bTxA/a7x64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741309950; c=relaxed/simple;
-	bh=O43CjekhpNhqU5hy99CW3Pg6sV7P2M0U4HkhUdlpIoI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M4dIs0mNA4NAerGohpFUpEYNzz/6KnwlnhTxEfINffF9pSReZl04Krg4NycQ+2gJqtxhbL2Nfe0vVZ29L3t91utzRqz10gszLRNcqPVodkSt9gliWen5eig4iGbA9BMLnjNtYxKK7eKQxBqL8GBRPkyN3yXv7+qYwILYYaD9k9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=AuYLTS+j; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1741309957; c=relaxed/simple;
+	bh=i4e1Wq5wULsJ+Sd1+XzXR5DjN2FAixSujA0TvULCFcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNxKqMfHwnhhHvU+tHY27Fbun+cBwKDrQzJB6vR+K+GFrXcpXD6nQagOVkwUreG0OW1enEVJlwAqZJVBO8YVgE0FXiW7QvWbwgUkMDrgnxsqyvRx/ySrph7l4U31vZgNw0dx3Yo8aZELZFGAjyOp0AoRf59e5YeFbuTm5NV2nho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L4Oe3F8S; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="AuYLTS+j"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22355618fd9so24642035ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 17:12:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1741309945; x=1741914745; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kov/5Qi5/eXa3sZew7Uff/swL40CZY7WdNdYduRpGtQ=;
-        b=AuYLTS+jy449um+B57nkmg+yhdv3lzxVzXFWpLvsij3FDJXQcl3+YVdHRLmXRvyneD
-         17OFw/7kC+QScQObKN2Wg1qC8LGpRkRhHJvG1nODAnI+G69UXHgDZSjfrh0oJY2BaoIp
-         UtR3ZjI6ym4fwQPKUeuqFfjWV7gz9kjML8W10=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741309945; x=1741914745;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kov/5Qi5/eXa3sZew7Uff/swL40CZY7WdNdYduRpGtQ=;
-        b=rI33jLx5udU0Y4SY8r/gNrjEJut6OFndBfumAiVcW/8GI/Q618+CU2ANBoJ76A5tPO
-         37zF7HoIgA1bRT8LI1dy1ogv5mUdMsR9Ha1qOsDt5q7NFuWzVSxg7I4UUPWw6zJeWY2J
-         YN+uQjoIWgb7AdFQ3/NjImMnTKbwo+HCHNUGLsVOw5DgdbaXsI/pNPzAPTJGLPBKQz5y
-         +hD6uO5TAp7ge4wgbSoNvM5zx74vk4olmgc6wX0u5jMYzboKOjOTtSC5SOKExKEIz2kO
-         fdpNiQ5AkYcH8Oypn9HrG1hts6RkHOMLa/8mNHfxAYJDeyrca9ExQvYJrTRR1AFDMQjb
-         yiew==
-X-Forwarded-Encrypted: i=1; AJvYcCWhtgx2J4HsrcK6PIWCZKNQ0yDBsRwK9CXKFm0muifaLMMK37AeXAXur963oz/uc6S8LrbqAvbkL3a2f7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgTpWLRSCt+6XCzAcfWbQCqhyIN8GARU9jvjGM4FSO70F6MdbZ
-	wA8HqB1pj9EOWxSIsCUFgmC10VItxcRxDFgDgsdJmyHIwwBmmmcnW8PAacZF4MU=
-X-Gm-Gg: ASbGncvUsS5QjIhD66pki04BTIpw7VJ+DACJDwQ0K5MRGvDnDJqGOcKCWS6fMwDl21k
-	5w7Vb9/8NGNbJfuKgZuBTRbT4M0sV8i1nI6NkZ/pbVDO8jweNl3YIyACBS7QKOk+1qLVXXi674K
-	RqVFOTek+Knpms/X5pwWEcCb7H5u/zRwsyl3Njy3097f6iV9mFMjRauCCI/FfM1MpsPwFKwNvXP
-	8nF3XRd3rzsNl+FYyzrX/NZ0Dusg4QulV113tzOxht9StMabXkvzpP9nmnTQK93RBszrbev2Q/j
-	eS7oW/iLzD6jiBFqLKyiySvT0h9tMt3VjRbIkO9ZR8yqtH/4JO6d
-X-Google-Smtp-Source: AGHT+IHk3rKIVw3xzN+NcT/1jnN7TTEd2BEkiVLbP8IFN0cXRTvNB5nEIsZoYv+ZdmtXYxpnfUvrZA==
-X-Received: by 2002:a17:903:1cf:b0:223:2630:6b82 with SMTP id d9443c01a7336-2242887fe22mr25579105ad.10.1741309945056;
-        Thu, 06 Mar 2025 17:12:25 -0800 (PST)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410abc816sm18749685ad.258.2025.03.06.17.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 17:12:24 -0800 (PST)
-From: Joe Damato <jdamato@fastly.com>
-To: netdev@vger.kernel.org
-Cc: mkarsten@uwaterloo.ca,
-	gerhard@engleder-embedded.com,
-	jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com,
-	kuba@kernel.org,
-	mst@redhat.com,
-	leiyang@redhat.com,
-	Joe Damato <jdamato@fastly.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	virtualization@lists.linux.dev (open list:VIRTIO CORE AND NET DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v6 3/4] virtio-net: Map NAPIs to queues
-Date: Fri,  7 Mar 2025 01:12:11 +0000
-Message-ID: <20250307011215.266806-4-jdamato@fastly.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250307011215.266806-1-jdamato@fastly.com>
-References: <20250307011215.266806-1-jdamato@fastly.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L4Oe3F8S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741309954;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6mdzK/WXp+Lm7i4d9GJMs+rpGzUg0HU1Yazr+QOg/6E=;
+	b=L4Oe3F8SQPK0+qWeLBKuwR7oRsuq8HHovKsNzsotNbcf5xfX3SCRmSgnykzpJVSQOIqWGv
+	1VdYKI6xI0Wu8EvNz3ItbXIfLJUe2Rblu1GY9v1lb8QV0qDaAx09wrAE5SQ3i71voxUl17
+	PXKJBBNuFv15HaKM0YGf6+4pr1Fmvpg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-645-so212BznPymnaZOowrfQvw-1; Thu,
+ 06 Mar 2025 20:12:31 -0500
+X-MC-Unique: so212BznPymnaZOowrfQvw-1
+X-Mimecast-MFC-AGG-ID: so212BznPymnaZOowrfQvw_1741309949
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 75608195608F;
+	Fri,  7 Mar 2025 01:12:29 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.22.58.19])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C35C7300019E;
+	Fri,  7 Mar 2025 01:12:25 +0000 (UTC)
+Date: Thu, 6 Mar 2025 20:12:23 -0500
+From: Richard Guy Briggs <rgb@redhat.com>
+To: Jan Kara <jack@suse.cz>
+Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
+	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+	Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	Eric Paris <eparis@parisplace.org>, Steve Grubb <sgrubb@redhat.com>,
+	Amir Goldstein <amir73il@gmail.com>
+Subject: Re: [PATCH v1 1/2] audit: record fanotify event regardless of
+ presence of rules
+Message-ID: <Z8pH97tbwt7OGj2o@madcap2.tricolour.ca>
+References: <cover.1741210251.git.rgb@redhat.com>
+ <3c2679cb9df8a110e1e21b7f387b77ddfaacc289.1741210251.git.rgb@redhat.com>
+ <aksoenimnsvk4jhxw663spln3pow5x6dys4lbtlfxqtwzwtvs4@yk5ef2tq26l2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aksoenimnsvk4jhxw663spln3pow5x6dys4lbtlfxqtwzwtvs4@yk5ef2tq26l2>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Use netif_queue_set_napi to map NAPIs to queue IDs so that the mapping
-can be accessed by user apps. Note that the netif_queue_set_napi
-currently requires RTNL, so care must be taken to ensure RTNL is held on
-paths where this API might be reached.
+On 2025-03-06 16:06, Jan Kara wrote:
+> On Wed 05-03-25 16:33:19, Richard Guy Briggs wrote:
+> > When no audit rules are in place, fanotify event results are
+> > unconditionally dropped due to an explicit check for the existence of
+> > any audit rules.  Given this is a report from another security
+> > sub-system, allow it to be recorded regardless of the existence of any
+> > audit rules.
+> > 
+> > To test, install and run the fapolicyd daemon with default config.  Then
+> > as an unprivileged user, create and run a very simple binary that should
+> > be denied.  Then check for an event with
+> > 	ausearch -m FANOTIFY -ts recent
+> > 
+> > Link: https://issues.redhat.com/browse/RHEL-1367
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> 
+> I don't know enough about security modules to tell whether this is what
+> admins want or not so that's up to you but:
+> 
+> > -static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
+> > -{
+> > -	if (!audit_dummy_context())
+> > -		__audit_fanotify(response, friar);
+> > -}
+> > -
+> 
+> I think this is going to break compilation with !CONFIG_AUDITSYSCALL &&
+> CONFIG_FANOTIFY?
 
-The paths in the driver where this API can be reached appear to be:
+Why would that break it?  The part of the patch you (prematurely)
+deleted takes care of that.
 
-  - ndo_open, ndo_close, which hold RTNL so no driver change is needed.
-  - rx_pause, rx_resume, tx_pause, tx_resume are reached either via
-    an ethtool ioctl or via XSK - neither path requires a driver change.
-  - power management paths (which call open and close), which have been
-    updated to hold/release RTNL.
+diff --git a/include/linux/audit.h b/include/linux/audit.h
+index 0050ef288ab3..d0c6f23503a1 100644
+--- a/include/linux/audit.h
++++ b/include/linux/audit.h
+@@ -418,7 +418,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
+ extern void __audit_mmap_fd(int fd, int flags);
+ extern void __audit_openat2_how(struct open_how *how);
+ extern void __audit_log_kern_module(char *name);
+-extern void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
++extern void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
+ extern void __audit_tk_injoffset(struct timespec64 offset);
+ extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+ extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
 
-$ ethtool -i ens4 | grep driver
-driver: virtio_net
+> 								Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 
-$ sudo ethtool -L ens4 combined 4
+- RGB
 
-$ ./tools/net/ynl/pyynl/cli.py \
-       --spec Documentation/netlink/specs/netdev.yaml \
-       --dump queue-get --json='{"ifindex": 2}'
-[{'id': 0, 'ifindex': 2, 'napi-id': 8289, 'type': 'rx'},
- {'id': 1, 'ifindex': 2, 'napi-id': 8290, 'type': 'rx'},
- {'id': 2, 'ifindex': 2, 'napi-id': 8291, 'type': 'rx'},
- {'id': 3, 'ifindex': 2, 'napi-id': 8292, 'type': 'rx'},
- {'id': 0, 'ifindex': 2, 'type': 'tx'},
- {'id': 1, 'ifindex': 2, 'type': 'tx'},
- {'id': 2, 'ifindex': 2, 'type': 'tx'},
- {'id': 3, 'ifindex': 2, 'type': 'tx'}]
-
-Note that virtio_net has TX-only NAPIs which do not have NAPI IDs, so
-the lack of 'napi-id' in the above output is expected.
-
-Signed-off-by: Joe Damato <jdamato@fastly.com>
----
- drivers/net/virtio_net.c | 40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index e578885c1093..7bd63a677123 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2823,13 +2823,18 @@ static void virtnet_napi_do_enable(struct virtqueue *vq,
- 
- static void virtnet_napi_enable(struct receive_queue *rq)
- {
-+	struct virtnet_info *vi = rq->vq->vdev->priv;
-+	int qidx = vq2rxq(rq->vq);
-+
- 	virtnet_napi_do_enable(rq->vq, &rq->napi);
-+	netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_RX, &rq->napi);
- }
- 
- static void virtnet_napi_tx_enable(struct send_queue *sq)
- {
- 	struct virtnet_info *vi = sq->vq->vdev->priv;
- 	struct napi_struct *napi = &sq->napi;
-+	int qidx = vq2txq(sq->vq);
- 
- 	if (!napi->weight)
- 		return;
-@@ -2843,20 +2848,28 @@ static void virtnet_napi_tx_enable(struct send_queue *sq)
- 	}
- 
- 	virtnet_napi_do_enable(sq->vq, napi);
-+	netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_TX, napi);
- }
- 
- static void virtnet_napi_tx_disable(struct send_queue *sq)
- {
-+	struct virtnet_info *vi = sq->vq->vdev->priv;
- 	struct napi_struct *napi = &sq->napi;
-+	int qidx = vq2txq(sq->vq);
- 
--	if (napi->weight)
-+	if (napi->weight) {
-+		netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_TX, NULL);
- 		napi_disable(napi);
-+	}
- }
- 
- static void virtnet_napi_disable(struct receive_queue *rq)
- {
-+	struct virtnet_info *vi = rq->vq->vdev->priv;
- 	struct napi_struct *napi = &rq->napi;
-+	int qidx = vq2rxq(rq->vq);
- 
-+	netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_RX, NULL);
- 	napi_disable(napi);
- }
- 
-@@ -2870,9 +2883,23 @@ static void refill_work(struct work_struct *work)
- 	for (i = 0; i < vi->curr_queue_pairs; i++) {
- 		struct receive_queue *rq = &vi->rq[i];
- 
--		virtnet_napi_disable(rq);
-+		/*
-+		 * When queue API support is added in the future and the call
-+		 * below becomes napi_disable_locked, this driver will need to
-+		 * be refactored.
-+		 *
-+		 * One possible solution would be to:
-+		 *   - cancel refill_work with cancel_delayed_work (note:
-+		 *     non-sync)
-+		 *   - cancel refill_work with cancel_delayed_work_sync in
-+		 *     virtnet_remove after the netdev is unregistered
-+		 *   - wrap all of the work in a lock (perhaps the netdev
-+		 *     instance lock)
-+		 *   - check netif_running() and return early to avoid a race
-+		 */
-+		napi_disable(&rq->napi);
- 		still_empty = !try_fill_recv(vi, rq, GFP_KERNEL);
--		virtnet_napi_enable(rq);
-+		virtnet_napi_do_enable(rq->vq, &rq->napi);
- 
- 		/* In theory, this can happen: if we don't get any buffers in
- 		 * we will *never* try to fill again.
-@@ -5650,8 +5677,11 @@ static void virtnet_freeze_down(struct virtio_device *vdev)
- 	netif_tx_lock_bh(vi->dev);
- 	netif_device_detach(vi->dev);
- 	netif_tx_unlock_bh(vi->dev);
--	if (netif_running(vi->dev))
-+	if (netif_running(vi->dev)) {
-+		rtnl_lock();
- 		virtnet_close(vi->dev);
-+		rtnl_unlock();
-+	}
- }
- 
- static int init_vqs(struct virtnet_info *vi);
-@@ -5671,7 +5701,9 @@ static int virtnet_restore_up(struct virtio_device *vdev)
- 	enable_rx_mode_work(vi);
- 
- 	if (netif_running(vi->dev)) {
-+		rtnl_lock();
- 		err = virtnet_open(vi->dev);
-+		rtnl_unlock();
- 		if (err)
- 			return err;
- 	}
--- 
-2.45.2
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+Upstream IRC: SunRaycer
+Voice: +1.613.860 2354 SMS: +1.613.518.6570
 
