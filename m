@@ -1,93 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213CA15B54C;
-	Fri,  7 Mar 2025 05:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDC813C9A3;
+	Fri,  7 Mar 2025 05:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741326181; cv=none; b=QkGvwBoC6cw5u09PbV3cecs44evsAZ8eGi+nYR/MNp3PjQ3jkXpjBYCl3nG4m+CLrW8MJSnOdATnokvdrGe2mFBGazqrpcJuRPtChG/RRchhNPUY2aPZEpLfdgUVDbN56d1y16lwfgg3FBTnKcvUcRBrdOHAk31C1jwh8veNl4o=
+	t=1741326258; cv=none; b=NtWh8pde1tgeZFOnztQ49IVcrLAO3Y7ZtpeJyOU7+hXlQ8sQBsa7FpXtSfHHzZPj8m5XdeelsszbKNNtFXJuQhEI3uzORlsqHkGWBo6yNL5u05tOzJiD+3sY4rqMVa5j5ZQxB7ez86vlWBMNBJcH77vURyQv6+7zR2qGqwFuTL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741326181; c=relaxed/simple;
-	bh=d6P3+GeoANuNR+y6EWdLUIcEG+o+je61v4CL1BkvFVc=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=S+D7pQs7RStrDn/MNjPgGU44f1mQZbOZ2m3Vvdo262m+PLjCLwxg7NSmGWXGYAiu882iFjsnji3ZnuEiWbniZ1PtMYzdtcI2SamDUDvQOaQiPb5tWDkOaVt20dfAIdvulp46u6VTFIDrZp3dTV/KzsURnsO8BnGlWFmVPan2NQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=la4OyzAA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741326258; c=relaxed/simple;
+	bh=ZOHXpr5EjoUdMxd0KS6PI80BQwNm1kjqbbGRIpSFliI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YuLY+MzRx539Ka5hWbyo5amA6ExC47aAwhXyUzL1c6IV12VMHlLKd9xfmMDK4IYwZjRbnoFTPs7kMXs+Dn8yDbGng/6B3xnn/mlsBvsWL0AlfX6BpYr23r+l1i2OMCoXPUkHvkR20VBHCJGBkotjtVh7gcRizCq5h4fB1D6dlEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Gw8AA/zt; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="la4OyzAA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A4E4C4CEE2;
-	Fri,  7 Mar 2025 05:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741326180;
-	bh=d6P3+GeoANuNR+y6EWdLUIcEG+o+je61v4CL1BkvFVc=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=la4OyzAAvaX0xU8H4oPoH4tX6uTSOfYArgPd+EM3TMX6vSxx0dnHyzdAQ3l+Tg00q
-	 riJthLtqHIZltVkxfeUfgLMip24vlO2xaYtIjliAXl8OiwElCwKOV86NYjOYMkZ0kx
-	 4V9Kc/uyKiZNnd4oWNk0HDq8/3v45oypwVJJQeNVuu2CH3R3Iv2C2jc7qlBbdL85Ao
-	 ve/xV/8+EZeFsRhM3/Efl23U32cU38MyJ3igzIdUyslM+O7oOfWa6NaBW+3kVtQ0TN
-	 yo23R7NWCa+trDtUtxKXqBmfzKqVVMWVEQG0Nh8Iw8pXja46OiNu6KReR2VIXpez5C
-	 irF8AcJHYda0Q==
-Date: Thu, 06 Mar 2025 23:42:58 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Gw8AA/zt"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741326252; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=zNNjpjby7OEVOGOuCOx/+9vNU60KKs/GI6CHsj1/Iek=;
+	b=Gw8AA/ztNQ85AetmvGmhWPIWaVv+CguWO4BVFcsMXIVRyM9n9Uva64hjw0b0VsFP5xNl71Y2Yp20zcWpDr7ZwXQTQkOEj4hpx8fePxaOvxSEk1lldv6/rb30NnhN0gr2zzrMBl6QcN/aVjZZ4UxHug+sYGktx5Qph8VJ5Zq1J2A=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQr2xBP_1741326249 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Mar 2025 13:44:10 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: tony.luck@intel.com,
+	bp@alien8.de,
+	peterz@infradead.org,
+	catalin.marinas@arm.com,
+	yazen.ghannam@amd.com,
+	akpm@linux-foundation.org,
+	linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	jpoimboe@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	baolin.wang@linux.alibaba.com,
+	tianruidong@linux.alibaba.com,
+	xueshuai@linux.alibaba.com
+Subject: [PATCH v4 3/3] mm: memory-failure: Enhance comments for return value of memory_failure()
+Date: Fri,  7 Mar 2025 13:44:04 +0800
+Message-ID: <20250307054404.73877-4-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
+References: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Project_Global_Chrome_Upstream_Group@mediatek.com, 
- Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-To: Guangjie Song <guangjie.song@mediatek.com>
-In-Reply-To: <20250307034454.12243-13-guangjie.song@mediatek.com>
-References: <20250307034454.12243-1-guangjie.song@mediatek.com>
- <20250307034454.12243-13-guangjie.song@mediatek.com>
-Message-Id: <174132617868.2934304.16819918690236058573.robh@kernel.org>
-Subject: Re: [PATCH 12/13] dt-bindings: power: mediatek: Add new MT8196
- power domain
+Content-Transfer-Encoding: 8bit
 
+The comments for the return value of memory_failure are not complete,
+supplement the comments.
 
-On Fri, 07 Mar 2025 11:44:36 +0800, Guangjie Song wrote:
-> Add the binding documentation for power domain on MediaTek MT8196.
-> 
-> Signed-off-by: Guangjie Song <guangjie.song@mediatek.com>
-> ---
->  .../mediatek,mt8196-power-controller.yaml     | 74 +++++++++++++++++++
->  include/dt-bindings/power/mt8196-power.h      | 57 ++++++++++++++
->  2 files changed, 131 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/mediatek,mt8196-power-controller.yaml
->  create mode 100644 include/dt-bindings/power/mt8196-power.h
-> 
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Reviewed-by: Jane Chu <jane.chu@oracle.com>
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ mm/memory-failure.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/power/mediatek,mt8196-power-controller.example.dtb: power-controller@1c004000: compatible: ['mediatek,mt8196-scpsys', 'syscon'] is too long
-	from schema $id: http://devicetree.org/schemas/power/mediatek,mt8196-power-controller.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/power/mediatek,mt8196-power-controller.example.dtb: power-controller@1c004000: reg: [[0, 469778432], [0, 4096]] is too long
-	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250307034454.12243-13-guangjie.song@mediatek.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index b037952565be..8649849bcdb4 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -2216,9 +2216,13 @@ static void kill_procs_now(struct page *p, unsigned long pfn, int flags,
+  * Must run in process context (e.g. a work queue) with interrupts
+  * enabled and no spinlocks held.
+  *
+- * Return: 0 for successfully handled the memory error,
+- *         -EOPNOTSUPP for hwpoison_filter() filtered the error event,
+- *         < 0(except -EOPNOTSUPP) on failure.
++ * Return:
++ *   0             - success,
++ *   -ENXIO        - memory not managed by the kernel
++ *   -EOPNOTSUPP   - hwpoison_filter() filtered the error event,
++ *   -EHWPOISON    - the page was already poisoned, potentially
++ *                   kill process,
++ *   other negative values - failure.
+  */
+ int memory_failure(unsigned long pfn, int flags)
+ {
+-- 
+2.39.3
 
