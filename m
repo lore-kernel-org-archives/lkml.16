@@ -1,123 +1,125 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67DB21CC4A;
-	Fri,  7 Mar 2025 20:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C52821CC4A;
+	Fri,  7 Mar 2025 20:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741378242; cv=none; b=K1A9j0EshKLQ444Ixh8DKgK4tyaZv4W/gv27o/h+5mgeWo5mgFxyHLYBECwBGqCcgKQEePCfQLirRjyoWtQFHzBXrUUyOLCVatPCJRP33I2MOTw8j8oyDHRNIo69nAeqrEYCSPYcDNql029GPzqBJsJTv5H9FiPaJS/bpD/A0iI=
+	t=1741378255; cv=none; b=ilNtnEGgcFdTJWrmGmkFsIhed1fPCFzI7v4bvbTRe5TllWJyf8hWYSg6eLC6AviATpTUNWPUUieWCWXJmpDm3DETEsIC2oz1u4gGkWzs9+ea4F5k3TnUhv3ETgUT0tYKi0c4uVLmKEHf8CRP67vrVohCShDV9Y5gfacBuAVQb+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741378242; c=relaxed/simple;
-	bh=z8uaY0FEvDXDyRuTUQIK7YT1It04TyjrpCzzUcauDks=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ERIyRtVGRBShXTUMW6BKbqqehzHe1KYqPk1mBjSQNNUzdsdJxEBLbf7fq1ov6OoXUfD3H1YdMU5YP2EOCBmOm3v+86Rnz0VWihYlxsbfXXSsBVJMgOEwhjQZs3lxnDw30uaPkv8VzTBbzAdJ5wFxIWuteewQv5QFfxTebvQ5W6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=F3IB7iSH; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741378255; c=relaxed/simple;
+	bh=3nSZ2JbAIlV45zJPDKD7cz1iFS7azKXpOcw/9B+Wc7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNoU+1BNp6ac3yraA9FZ0AmPMkkZuFdayqBy+Tnz6c45lMTo2YhWwglwvk5lkZ35qg5BqNJFJ9hvwzaQPsPWz8TqEQTMdlGzBdWxMBRFBgicYB6X2CdfSIUCUjILq6xu0LEDIhfL7gtTvRmVpHxrf5wLBAfK3rast6mj3+w62H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJgd30qO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="F3IB7iSH"
-Received: from [IPv6:::1] ([172.56.209.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 527K79aI409264
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 7 Mar 2025 12:07:10 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 527K79aI409264
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741378034;
-	bh=labYh6dS183ez/ccMGDewAeypbKIJUEZ63NUVodYP9Y=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=F3IB7iSHYEvDT6RxcaTUE+HY1uOaC4VnUwxKdSJcbsJ/VGwP8hnKFJom4bWfM8OtP
-	 AchryuBqXBGLSXDbZ+MsV5uKdxioAoL64EB2Hr82VgdPIiuWZvSICUQIsfj5WGpBgd
-	 KriIaJc3fhV0nS1OF/J9ovKepTrInAm9zRKeY8fu9KnjjC1cA61PvXNcMr8KPpE2Si
-	 6ZtEA98YPUR4DMGJMmEfr7slViCtz+0KmVEla3+d3bqWKNRc+yfSLHHLIoMfgw95oG
-	 SN+4dF7fYBU8DZVgqTjvri3AONNiYtVQqGQhFLjE5E+swQ4mWdQWMCk66SRGgQ/FHU
-	 OiSkGpohg9mHw==
-Date: Fri, 07 Mar 2025 12:07:02 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: David Laight <david.laight.linux@gmail.com>
-CC: Andrew Cooper <andrew.cooper3@citrix.com>,
-        Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
-        akpm@linux-foundation.org, alistair@popple.id.au,
-        andrew+netdev@lunn.ch, andrzej.hajda@intel.com,
-        arend.vanspriel@broadcom.com, awalls@md.metrocast.net, bp@alien8.de,
-        bpf@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211@lists.linux.dev, dave.hansen@linux.intel.com,
-        davem@davemloft.net, dmitry.torokhov@gmail.com,
-        dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
-        edumazet@google.com, eleanor15x@gmail.com, gregkh@linuxfoundation.org,
-        hverkuil@xs4all.nl, jernej.skrabec@gmail.com, jirislaby@kernel.org,
-        jk@ozlabs.org, joel@jms.id.au, johannes@sipsolutions.net,
-        jonas@kwiboo.se, jserv@ccns.ncku.edu.tw, kuba@kernel.org,
-        linux-fsi@lists.ozlabs.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux@rasmusvillemoes.dk,
-        louis.peens@corigine.com, maarten.lankhorst@linux.intel.com,
-        mchehab@kernel.org, mingo@redhat.com, miquel.raynal@bootlin.com,
-        mripard@kernel.org, neil.armstrong@linaro.org, netdev@vger.kernel.org,
-        oss-drivers@corigine.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, rfoss@kernel.org, richard@nod.at,
-        simona@ffwll.ch, tglx@linutronix.de, tzimmermann@suse.de,
-        vigneshr@ti.com, visitorckw@gmail.com, x86@kernel.org,
-        yury.norov@gmail.com
-Subject: Re: [PATCH v3 00/16] Introduce and use generic parity16/32/64 helper
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250307195310.58abff8c@pumpkin>
-References: <4732F6F6-1D41-4E3F-BE24-E54489BC699C@zytor.com> <efc2ee9d-5382-457f-b471-f3c44b81a190@citrix.com> <5A790652-1B22-4D13-AAC5-5D9931E90903@zytor.com> <20250307195310.58abff8c@pumpkin>
-Message-ID: <EB85C3C1-8A0D-4CB9-B501-BFEABDF3E977@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJgd30qO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F93DC4CED1;
+	Fri,  7 Mar 2025 20:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741378254;
+	bh=3nSZ2JbAIlV45zJPDKD7cz1iFS7azKXpOcw/9B+Wc7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TJgd30qOSyXEM7mIsT2K4/fd6oyvFM0crtMoGhc0OlKMUnx1gUXwqYxR/x1c0YrnQ
+	 kQ4AisB7J9AzfaG3wKdKZCJtwzHLA/DcRDnKw3Q82VD9hsbqygWosSlCyjz6GlGguP
+	 VMREfYj2uFOCdOgsaEcjNMS/+bvCP8WJQSBL/pI0/kh+mJmAFaTLwV8T8LeKJCeNZx
+	 4dIs8o2YaqLslu23yA1kCYSZKHv9EiKmRyD/6aOf1ZQlQKoIlgtmSJHMC2rTGzSoU7
+	 DAgQoWgjOdN2lCLv0XoSfkP75FtnMWyfUs2Q3qbEGDPaZuEFEQtOISGdHziTDKjyhI
+	 1ze7QJ7J5QvKA==
+Date: Fri, 7 Mar 2025 17:10:51 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
+	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v2 0/3] Support .gnu_debugdata for symbols in perf
+Message-ID: <Z8tSyzcHF2V7Lofx@x1>
+References: <20250220185512.3357820-1-stephen.s.brennan@oracle.com>
+ <Z7-QZKNT4Cc8lspM@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7-QZKNT4Cc8lspM@google.com>
 
-On March 7, 2025 11:53:10 AM PST, David Laight <david=2Elaight=2Elinux@gmai=
-l=2Ecom> wrote:
->On Fri, 07 Mar 2025 11:30:35 -0800
->"H=2E Peter Anvin" <hpa@zytor=2Ecom> wrote:
->
->> On March 7, 2025 10:49:56 AM PST, Andrew Cooper <andrew=2Ecooper3@citri=
-x=2Ecom> wrote:
->> >> (int)true most definitely is guaranteed to be 1=2E =20
->> >
->> >That's not technically correct any more=2E
->> >
->> >GCC has introduced hardened bools that intentionally have bit patterns
->> >other than 0 and 1=2E
->> >
->> >https://gcc=2Egnu=2Eorg/gcc-14/changes=2Ehtml
->> >
->> >~Andrew =20
->>=20
->> Bit patterns in memory maybe (not that I can see the Linux kernel using=
- them) but
->> for compiler-generated conversations that's still a given, or the manag=
-er isn't C
->> or anything even remotely like it=2E
->>=20
->
->The whole idea of 'bool' is pretty much broken by design=2E
->The underlying problem is that values other than 'true' and 'false' can
->always get into 'bool' variables=2E
->
->Once that has happened it is all fubar=2E
->
->Trying to sanitise a value with (say):
->int f(bool v)
->{
->	return (int)v & 1;
->}   =20
->just doesn't work (see https://www=2Egodbolt=2Eorg/z/MEndP3q9j)
->
->I really don't see how using (say) 0xaa and 0x55 helps=2E
->What happens if the value is wrong? a trap or exception?, good luck recov=
-ering
->from that=2E
->
->	David
+On Wed, Feb 26, 2025 at 02:06:28PM -0800, Namhyung Kim wrote:
+> On Thu, Feb 20, 2025 at 10:55:08AM -0800, Stephen Brennan wrote:
+> > Hello all,
+> > 
+> > This series adds the ability to read symbols from the ".gnu_debugdata" section,
+> > an LZMA-compressed embedded ELF file which is supposed to contain additional ELF
+> > symbols. This is something that Fedora implemented (as "MiniDebuginfo" [1]).
+> > There are more details in v1. I've tested it with binaries that have
+> > .gnu_debugdata, and I've also ensured that the build & runtime work when LZMA is
+> > disabled.
+> > 
+> > [1]: https://fedoraproject.org/wiki/Features/MiniDebugInfo
+> > 
+> > Changes since v1:
+> > * Reuses the existing LZMA decompression helpers, rather than implementing a
+> >   new LZMA decompression loop. This does involve creating a temporary file, but
+> >   I think that actually makes things cleaner, since now the symsrc has a file
+> >   descriptor to close, rather than adding a new pointer that needs freeing.
+> > * I did also remove the pr_debug() for the case where there is no
+> >   ".gnu_debugdata" section. That's not really an error worth logging, that's
+> >   just normal operation.
+> > * I added a pr_debug() for the case where we successfully load .gnu_debugdata
+> >   so that it's easier to determine whether it gets used in tests.
+> 
+> Thanks, it'd be nice if anyone with a Fedora box could test this.
 
-Did you just discover GIGO?
+I'm trying to go thru this, testing with/without LZMA so that we can
+show the difference in symbol resolution, etc, but I've now stumbled on
+something that predates this, namely trying to build with NO_LZMA=1
+isn't disabling it:
+
+⬢ [acme@toolbox perf-tools-next]$ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir /tmp/build/$(basename $PWD)/ ; make NO_LZMA=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
+make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+  BUILD:   Doing 'make -j28' parallel build
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ on  ]
+...                             libcapstone: [ on  ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+<SNIP>
+
+
+⬢ [acme@toolbox perf-tools-next]$ ldd ~/bin/perf | grep lzma
+	liblzma.so.5 => /lib64/liblzma.so.5 (0x00007f77ac879000)
+⬢ [acme@toolbox perf-tools-next]$
+
+my hunch is that some other feature needs lzma support and ignores the
+explicit NO_LZMA=1 on the make command line when it should really be
+disabling whatever features needs it, not overriding the cmd line
+request.
+
+I'm trying to investigate.
+
+- Arnaldo
