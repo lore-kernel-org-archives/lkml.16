@@ -1,227 +1,133 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2076.outbound.protection.outlook.com [40.107.95.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4BA1465B4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 02:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741315064; cv=fail; b=ejU9FtJf9i85TUnucuLaWquAv2a9mw77QDeIW+TZxec9Vxfp3qw1FjCm7QqtF8TbIWeN4zzpwFW8bCD99qoY0koaKA+RMaiuz4GVrDQKcRyVh9Uj397IpbZEqO6E31zLhKzWmbSoNph8IsbU7R4R9laWK6GIvPo5ELLz/a5ViLk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741315064; c=relaxed/simple;
-	bh=KznXFk47V84JXurHmFDy89MoS7kqWpq3g99G505n7to=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=t3rW41SrUvezUiMA8o++xgxITbek5K7idvwK/fWcv3Nbpf1LO8KnOpQaTSlq30UyoUiu+wydzNDmDAp75D0GxcTBYKbLfd/3Yxtbp0pHs9towWEbZT0mZcbcDedONRQk8enm6rUQgDZUrU56fJQikQ2dk20qFrrfb9cVPs5iWgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ddBA3uQT; arc=fail smtp.client-ip=40.107.95.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4746F17A597
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 02:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741315155; cv=none; b=UeK6nSTQG4ZkCGvvnXD89WR0x4C+H/52c5byjcRQb3zAnpUTfENhWwRj0mBv5nVRj6+L2S0RH3Q7eVOBhgYA82J8SVmV0mcKgqb1/r8eS/L4upon5Nn5FlnL+DME0POPa1k+Fx7SMdhoL0i0CCgnVgD+xNdbr4VTS+HaETJlBSM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741315155; c=relaxed/simple;
+	bh=NWyOZGvVp70tlGmdZEWQ8sDHjKT8tk+xY/WeZhdeWww=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=kFagtPgvIz36eNVteipafPoZhN8Qs5RCaOhC+AR2pt/hpLzoyToSWECzC2islaP7wp1Xq+dqwxCW+3uVUIILgQt1CXSfA2KT/wLVW+C6UfECW6SJiH/otdAlyImupMQttulLlUCfqYSb5fX3KCOaY+a9JIkAXm9YVk1+78TJKNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yFDY55Ng; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ddBA3uQT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y2RKW76N1QNgB2dzulBjwdxP+42dItpUsUAzC55o4VqGL0ZtFsg4jJIml5Uxzeb7W01jBoM750HAG712c6ZrpEo9m/FxaFqexPxNWHdsvsOuDXjund8soDlgi5xiN3cwkg+ajt/JOOsxq82PLkOioMsldhZEoswmmPQv+1zZgNI0JugQwvFa6+A4ndin1PIfQIHsJntETul9izmZceTf4ekFi+JEPtPI2jeu5y4LgVgdxFBrlfEvzf881bm65dfteb1zwiaF1CFXsRRlk6zKNPF4XXGm9aXKv6vPLX7mEIuO2xMr/AiWm9jDLcCLa34oh091PFmfiBdnDexQmxCmlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yWddirDP24ADT5JJyUVjf7hh9JNXlCo9pMdnAeuqZlE=;
- b=mbImVFJQQLmPwAtjHX7sTK4224OBvH8k2ARNbBvlxE8ZdqEVFF8jf7CZMeBp20VFo3aYirQdYdys0vVT33p3OWpMYBqRs1Z0sVHIrBn2Jy5DqXtdDpS4j11/ITJEJhPPpNjVJHomKgA7BmcuRo61OkWNYE1HpuZTorOOksniPeSOinAqjXQY+PHmZo7cZD05nGJY5LDpgVPESdzLfqgygbbasivFF2XuMSV+shRU70gB8B2QRHI56+pRaxn0Tf4iRCAu14XNCFEixUo6YZv1OQ0xBtd5z4CHXs5QlrqCKCm5/txE5m7qBpL0gLRcJuHvaydPO5tPF+xZ/0Mf8MflXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yWddirDP24ADT5JJyUVjf7hh9JNXlCo9pMdnAeuqZlE=;
- b=ddBA3uQTL+H/jeiB5MQ7J6MNUV0HL5IDleShlxsKgxd/S77Al0fcjfYkX6g5f7PtiXtXLazoxP6yhnDRwwaj2M2HsRPzBWNbGi9qzbjEY7OZSWbinw6gxLtqW6Vmmcnn8qiMB9glSe0S+p334rnnUnncjpRUbCP2lFHpZgzc4ZyMVov+Jp6i/3yk+oekvmnAlTz7vKEjOoHVZrBZGs7HJ7kju/ylCkEIfOEYFEl4mrCsjrQQPteqEUVrt3nT/2iNRi2YFtpoY6Xe5gEVJ+MUrKXOG9pkxO4wXdGlvYBhlJRRj/8q2EgBMy7psHfbJmHPOaUhuszxJG3lNU5MOIzmhQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
- DM4PR12MB6448.namprd12.prod.outlook.com (2603:10b6:8:8a::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.17; Fri, 7 Mar 2025 02:37:39 +0000
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2%5]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
- 02:37:39 +0000
-Message-ID: <f6f98abb-0d4c-4e41-8c83-a3ab919a8fbe@nvidia.com>
-Date: Thu, 6 Mar 2025 18:37:36 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 47/49] fs/resctrl: Remove unnecessary includes
-To: James Morse <james.morse@arm.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>
-References: <20250228195913.24895-1-james.morse@arm.com>
- <20250228195913.24895-48-james.morse@arm.com>
-Content-Language: en-US
-From: Fenghua Yu <fenghuay@nvidia.com>
-In-Reply-To: <20250228195913.24895-48-james.morse@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR07CA0051.namprd07.prod.outlook.com
- (2603:10b6:a03:60::28) To DM6PR12MB2667.namprd12.prod.outlook.com
- (2603:10b6:5:42::28)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yFDY55Ng"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fe8c5dbdb0so2543104a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 18:39:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741315153; x=1741919953; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3YwLtUBA2a3eR+2CmuTfmd2aWCIaAduMpkYNneVBrdI=;
+        b=yFDY55NgMDe32bLT7ObWKOtwsj5/86Nukgsy+NUtrDx/UKSXDh+e07wFdeGuJ9bEk9
+         2bKXYl8rf8NcP+1SyYaQ54QgoDfR7T8RYqYoXZ9hjV7mB0YRFdA+hduNyfcvlZvD8VO2
+         +vz9v8O/HkGCvDgixozWx13y9iLIeJAAWIbTsgRUZ3SqSIVYQsMur+Ympqa69pj18gae
+         4WB1l3nUNKb7Fl0wIQ6H65012144gCzZg/0gs2i+TwvecVr5PTboAXzDWcwIOoVYy2to
+         9tZa937c/XaWuxh87Iqv0fvaidRakPNbT4rZszJBCuV+LmRVbIxPzz757i/tZQt93pwQ
+         F+Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741315153; x=1741919953;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3YwLtUBA2a3eR+2CmuTfmd2aWCIaAduMpkYNneVBrdI=;
+        b=lrIoCERuePX33GbzKKKGGeIf+H0Ibc6QzzbkqYT7ybl6lx0+qFqV2q0GbWzqllnZia
+         Q5+WJnJAqnByGLeCcX79+uz8BmqhyYU4NtaAXIHgP9UQjhmBne0bETUchuUaSX3yvWeu
+         xsW4Kbu8XJoyy4d8WwiVPJQoC8GXwYNZEaMEcHLLumP9Ver0AqnIGf+cso0+wTisLZal
+         /yJR6XPDZySr+WVwBfgPW6+DeLrxYzvR/bXcjTHd6AR7Cmt9SSZEfdRIdfsS1P2eqfzj
+         PrJavp3gO2QW3tU3YBbiiFe7X2I2V/Jo106fX9JBxcGAVcuMflWPTAGzLwfcY47gcAu7
+         +8kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFuryuq/Ht2RT9dG8PAGcEFEPFGebUDgA3vfO+hbljmKAEhhXom9q1kC5LrF/VJKaCAAyRsdf5GSaqi1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBQxsuSb/IUQcme6PK0qQRosBazQnGTPefdW4xnmjpBmWTPSil
+	Kp5RcNSAKgR74xTvvXYC/5+iJT5yTYtionHqYQ23kzYy4OQzOehwQYrrB+LtUdtDaue01Pz5pGD
+	/9iTGTg==
+X-Google-Smtp-Source: AGHT+IEolkiQSfDAoU+Ce7TybWwf7ay09+pwJfxEWHQ2tK3T/2E4vteMlcQkSfh9pSvQr98fCC9jXru0BD5F
+X-Received: from pjbqj3.prod.google.com ([2002:a17:90b:28c3:b0:2fc:2959:b397])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:180b:b0:2ff:5357:1c7f
+ with SMTP id 98e67ed59e1d1-2ff7cf3d0bfmr2290224a91.30.1741315153549; Thu, 06
+ Mar 2025 18:39:13 -0800 (PST)
+Date: Thu,  6 Mar 2025 18:39:03 -0800
+In-Reply-To: <20250307023906.1135613-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|DM4PR12MB6448:EE_
-X-MS-Office365-Filtering-Correlation-Id: 14f71ac1-8df7-4140-d6f2-08dd5d210724
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q3BkYkk4T1JieENtblc2bDgvL25CM2UzYU1idDNEQzRWSXF5b21UVWI1RVJJ?=
- =?utf-8?B?MGJpa2g5OG5rYlJnZjFydmxyblRpTzdvSGNHS2FtamZsUzdDc1lZeGJSNFZs?=
- =?utf-8?B?UnBYcy95di9QZkI2TFAvdXhLYlBlY09DQWtZU2RFOTlKZy9mcG5LY21RT0Nk?=
- =?utf-8?B?RmpuZjdHSXRGTjBuL0dpazZnejcydlF2MG9GNk44bHZVTUd6ZEcyTHd4T1FJ?=
- =?utf-8?B?Tm5GTWg0dnFaRmVpNXppREdQYWZLZWJ6bE1FYnk3Sk5xa3p0QjU4T2VqeS9s?=
- =?utf-8?B?YUtmQklKcVF1SkdOd3o2MFFaNVVPWHczMVgxcGk3UGd2MVdHOTFielhQM1Ey?=
- =?utf-8?B?K0hWQ0xwWmUycDRGM2NLNWZGWUtobm9pVlhQblZZVnhPYm55OG9XVDBXZGhD?=
- =?utf-8?B?TTlSRUJVeGowK1V0MEFHTmRtTDliTnVQQW9EMHRlYzJYYnEreG5kL1ZsNjVL?=
- =?utf-8?B?VGhvVHh6VTlIYTRPOW9LcUJLQ001YzdUOXdHaXdKV1FVSXFOMTVJVENoaG1L?=
- =?utf-8?B?bFBkK0kzWVlpRFJmM2wzT2thZEFIendRczFnaGNFREg3eWVWM1ZHZ2E2L0dy?=
- =?utf-8?B?RGp4Y2tIN3pRUzJYRE94dDQrcmtYaE5mZFRRNlF0eFlSYkQrY3V6ZFNFOFF6?=
- =?utf-8?B?TnNPaXd4VE5vMG5YMitQWWFGaEZRUGhhYkNQMzNjWVZnU3J3Z0ZtQ2Fna2lu?=
- =?utf-8?B?Sk9MUWU0eDIrZzU5bitRcExWVWlNTGdxVmJQV0Z4bEdMVzl3YTEzSnVBbmt4?=
- =?utf-8?B?eDB5TXhBUTV4RVFramRSTDczeVk5TG4xZ0pibTh0blltV3ZCQTF1ekxCNVRP?=
- =?utf-8?B?cWJxOVlGWVl5NUU4eVpOTGVJT0NDYWhMVmpFQUJzcWowY0phTlh0T3Z5QXNn?=
- =?utf-8?B?VTAyK2JzQ2VZbThQdDkrTHRTTlJ5b0RHZG95aXRWMW43NjFpODZEa0V1bnIx?=
- =?utf-8?B?WXZxbzlYWjFrV3JBYmRxWVJnQkUrVzd3NXFpZlQ1WDcrQUY1K1hSbFl6alc3?=
- =?utf-8?B?bFU4OWpZWEh5dDlVN3VrRzJ0a2RLc0FZOWdKa2FzcGdoREhJaFB6T0lnU2F6?=
- =?utf-8?B?NXVITkxQTkhJM1lpd1Q2SC9tSy9rQjZDU2RQakhGalhvRkgwNVlXLzFFbTBL?=
- =?utf-8?B?VUE2K1RGTmhZNjEzMjZ2TVNyeFd3UmdSZmlKbDlyVFdnQ0ducDk1cSsrcXMr?=
- =?utf-8?B?UHVla3lJUWtxamhEc2E0T3NiZHhiMHBLcjk5NzdLeUcyWkxNcEdndzMzWUpF?=
- =?utf-8?B?NTJJZEtJR1FLd1dQZ0FtODZvM3VYNytjOFgxQmZ1bFBwVXFSUENLUWZoWnVi?=
- =?utf-8?B?MTRSRUY3cjVFNVFkMlRXUlh1QXV5S3RNUEFzOFFiMFhESXV3UlBCNXl5dkJ5?=
- =?utf-8?B?S3loRlU4TDh2S2NRUGhpYk9xNGp6OEs0UCt0aGdyaXpkQTRqQ0RzYktsTW5U?=
- =?utf-8?B?aUh4T1J2bjRrakRVcDJjb00reUxRcUttaVJpVHBqdVpzRzBiWXhWOHh3NWE3?=
- =?utf-8?B?T0MzNk1HQjFYTCt0NTdKLzdFNFhsTWRNTlowNUkxa3RaYmpoWlNYUTRmcDdD?=
- =?utf-8?B?RG9KOHZMZWozdjVJNVpqQzJoVHUzcGJCTlV1Vkx3d2EvN3NGMGsxd201cm02?=
- =?utf-8?B?UFlsakNneFBFazk2c3J5cmNMWmdwVE9QRUNtMVJYN2gxcmg4aEpob3R6a3lU?=
- =?utf-8?B?cjF4ZllnWHNGbWNtbUR6TTdTNUR5ZTZBTjVyR0cwdFlyV3hheVJoMHpVb2hG?=
- =?utf-8?B?OEJ6ZS9nMlg5TEZ0elArcGN5bUxXeUUzd1RTTGlISFJDdml0Zi9DWUVMUmcv?=
- =?utf-8?B?OHJCcjRONmxyUnBSV1ZSYUR3eHlZUjRjdHRFYlBCd1NzQ3pQcDFXM29GeURM?=
- =?utf-8?Q?FlLGsoOs8Ll0W?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WlJTS21URUNOaEViTkRxV2NJLzZCOXFEc0tZd09WSFZLZ0FtMVVCRHJyRWlK?=
- =?utf-8?B?UUE0Z1I0S2tRQnc2dFhpQ1VxQi9xS3NUNWtLQk9tcURLMkZwZ3BHWTJKOFV5?=
- =?utf-8?B?TkQ3ekFlUW9JQzdlU25CZVgvNlJReCtHTnd2YklOQTI2Z3hTRko4MCtZQmpV?=
- =?utf-8?B?WjdtTTBEQlprNWFjaDJUK3F4SVVBMW5OY081UWpWOUFoUUUwK2ltOUtiSkw2?=
- =?utf-8?B?UDVHWVZzeHEvWmpiVGdlQ2JhK2YwcjF2cEkxbkZkVnFybm4zYmNKRjZVdnpE?=
- =?utf-8?B?cDNvR2pINmNPcFJvNGUzdnNhUlI5TlF1dHNHa3lVNDcrOENSZytwOHdQZ0Vy?=
- =?utf-8?B?Vm1qcUszbjR6TmVySktEdlVvQzR4cjVqTGJqbDBYK0pZcTErTGU4UHBaSE4w?=
- =?utf-8?B?Q1o3N1RQUGQzK2dNdXgxaGYwTGZoTHBSazdxblk5LzAwRHpXYWozaEJwOWtT?=
- =?utf-8?B?UEV3cHBQTWpxdWJVT2toazVhWHRLS3FwUzY4RTVyakVGMlIxbW1mOUxsQWx1?=
- =?utf-8?B?R0Q0TnMvaTZodnFJQnlsVWNBLzljSFd4YmxZeDVpbVlpU0Q4S3VOQ0ppY1B4?=
- =?utf-8?B?bmw0dk5SVjdYUUJoSVZmbkJPZEdIMWJkaEJFb3FrRzE3VlBWY2pMbzM5dU50?=
- =?utf-8?B?SlBlT3EwczhaTEVFWjR3c1IzTi9hbmQ3b09oOWhqT1M3Y2RnRUdRU1BFclVz?=
- =?utf-8?B?dGM1R3hkZjhuSW5lU2t0a2tSMkF4TDMvK2xLZHlmRUUzLzNQWllvQ3NLY3Nu?=
- =?utf-8?B?eFlCem5ONWpLRCtrQ3FnemRCNjZsTTZaU1Y4b1ltTkFNMzdGUmxnektOQ1Bu?=
- =?utf-8?B?cFhISlljOEkzMlEzTzlRWTAwakU3T3pjZDg5eEpiQ0JINTQvanBvZEFLUksr?=
- =?utf-8?B?bEtCd1RUZFp5bE1icUlRSzRPYXJOYk9yMmpmSnRUWXFuWkZGcnFnbGpMK05L?=
- =?utf-8?B?SnY5RnVuR0FrWmhuWitUUUE1Q3EySGlpWU0rU1gzeEp4MDQvMkFtem5rMVMy?=
- =?utf-8?B?TTFBODErbmtiRFNxVkI2K1ZQNGd2S1lxN0RERy9zN2FIem1mN1hBRGdvWXFu?=
- =?utf-8?B?ZlVjYXNLdWpWNE1Oc3hnclkrWnFOa0VXeG1iVmpFMEFMZThpWkNJMXFSK2lX?=
- =?utf-8?B?dU1YekxxQzlyL2xwSU8vNkRjbjAyYXFaK29BZmpwWHAxaU5xQmVGK2FpNW9n?=
- =?utf-8?B?VW1FUkxwVGpzcFRXdHUwa0wxaVp0MHcxcCthdy9XRkV4dEZrcHVWTE9tYi8v?=
- =?utf-8?B?Zm41TitaZEs2dWs0VzVoNHNsVjlGaWVUVXdjclEvYWtGMGc0Y0xaM1NTZUJH?=
- =?utf-8?B?L0pGUjRrZTRYY1h6RmJQUlY2SHVnalBWZXQrUWtkZ2Fab2Jxcm80Rkd0VTNV?=
- =?utf-8?B?WkdBbFZub1IwTkpqOUFPR3NRcnNTWHROKzJ1RnZmYWZSdEJXY2FyMHlndVBD?=
- =?utf-8?B?Ry9wd1Q0M0JwNGxYT1AzSVRQY05IN1ZtRlVRcWJBbUpYdHNmSXBEbkdkb2ZP?=
- =?utf-8?B?ckk4ekYyeGUxbmxIWE05aGo5SG43Z1VOTFdzT05vVDNuN2U2UXgrenV0a2Uz?=
- =?utf-8?B?cFJDZW9ldlF2NjRGQVJxT3R4NENFZ2xTcThmZC81VnVXMUVncEVuSXlZRXNu?=
- =?utf-8?B?YzZFbmxaL3cvV2d0cGFOR3MwdStNaVZxbjdYT1EvTGlhN0FYSVJ3NFJ0NVIz?=
- =?utf-8?B?WWQydUVXemdQQWNSQ0dtaFNBczVhZ0l3NmZhbGN3U3ZvT3F2REVQRGhtSkR6?=
- =?utf-8?B?a1BTVlM3MzdUcE9pdkhLbWpYcDNYZjBSNyt3UHZKdkl0TmZVSmZlWjg3YnVS?=
- =?utf-8?B?NHYvZGFsMEhrbmlPMzVGQlZaSjd2R2dZVXBjOHIweWdzUGlyOUt0N1NzYW1X?=
- =?utf-8?B?OFZXa3cyWWVodGhBaS9PVXJXMmFiM2hzNzF5a3p2VjU3RmIzTS9hZEMzbUwx?=
- =?utf-8?B?YnpFMTRxa2N1alh1QVhueHJGTkhoN1kzOXh5VE40VWUyZnAzc2ltU1lVVXpG?=
- =?utf-8?B?RmVXa3N6L0ZxRkFkOGU0ZStkMUd1MXNWQVR5UjJOQWNvMWRZdUQ0Y29NbVBM?=
- =?utf-8?B?dFRwellrN0VRWkxmV2NDQ1daazNEVmp5NjJLVUtpU0Z6anIyejJNUVhub2dz?=
- =?utf-8?Q?9EGCvn1qAAq3dbXO37qgaBYfP?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14f71ac1-8df7-4140-d6f2-08dd5d210724
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 02:37:39.3596
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wPpAGol6zfZqXNv1qAmTvi8pG+SSyx/22uPsc5a4PBAouQBRk0l6kTCDr/+wCxqMwDk5eVYQpTDBv7mVBZugDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6448
+Mime-Version: 1.0
+References: <20250307023906.1135613-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250307023906.1135613-2-irogers@google.com>
+Subject: [PATCH v2 2/5] perf x86/topdown: Fix topdown leader sampling test
+ error on hybrid
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Andi Kleen <ak@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, James,
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-On 2/28/25 11:59, James Morse wrote:
-> When splitting and moving the resctrl code to live in fs/resctrl and
-> arch/x86, some code was duplicated. This was done to keep the parser
-> in the script that does the moving simple. These extra includes are
+When running topdown leader smapling test on Intel hybrid platforms,
+such as LNL/ARL, we see the below error.
 
-As for "parser in the script", my concern is people may forget or don't 
-know the context of the python script in the future and get confused 
-when reading this patch.
+Topdown leader sampling test
+Topdown leader sampling [Failed topdown events not reordered correctly]
 
-Is it possible to merge this patch into patch 45 which introduces the 
-macros? It simplify the patch set and avoid future confuse?
+It indciates the below command fails.
 
-> harmless on x86.
->
-> Remove them to allow other architectures to start using fs/resctrl.
->
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
-> Changes since v6:
->   * This patch is new.
-> ---
->   fs/resctrl/monitor.c     | 2 --
->   fs/resctrl/pseudo_lock.c | 1 -
->   2 files changed, 3 deletions(-)
->
-> diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-> index d37324f9f95f..3fe21dcf0fde 100644
-> --- a/fs/resctrl/monitor.c
-> +++ b/fs/resctrl/monitor.c
-> @@ -23,8 +23,6 @@
->   #include <linux/sizes.h>
->   #include <linux/slab.h>
->   
-> -#include <asm/cpu_device_id.h>
-> -
->   #include "internal.h"
->   
->   #define CREATE_TRACE_POINTS
-> diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
-> index d26cc1a2a84a..3bee26b8c07d 100644
-> --- a/fs/resctrl/pseudo_lock.c
-> +++ b/fs/resctrl/pseudo_lock.c
-> @@ -27,7 +27,6 @@
->   #include <asm/cpu_device_id.h>
->   #include <asm/perf_event.h>
->   
-> -#include "../../events/perf_event.h" /* For X86_CONFIG() */
->   #include "internal.h"
->   
->   /*
+perf record -o "${perfdata}" -e "{instructions,slots,topdown-retiring}:S" true
 
-Thanks.
+The root cause is that perf tool creats a perf event for each PMU type
+if it can create.
 
--Fenghua
+As for this command, there would be 5 perf events created,
+cpu_atom/instructions/,cpu_atom/topdown_retiring/,
+cpu_core/slots/,cpu_core/instructions/,cpu_core/topdown-retiring/
+
+For these 5 events, the 2 cpu_atom events are in a group and the other 3
+cpu_core events are in another group.
+
+When arch_topdown_sample_read() traverses all these 5 events, events
+cpu_atom/instructions/ and cpu_core/slots/ don't have a same group
+leade, and then return false directly and lead to cpu_core/slots/ event
+is used to sample and this is not allowed by PMU driver.
+
+It's a overkill to return false directly if "evsel->core.leader !=
+ leader->core.leader" since there could be multiple groups in the event
+list.
+
+Just "continue" instead of "return false" to fix this issue.
+
+Fixes: 1e53e9d1787b ("perf x86/topdown: Correct leader selection with sample_read enabled")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Tested-by: Thomas Falcon <thomas.falcon@intel.com>
+Tested-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/x86/util/topdown.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+index f63747d0abdf..d1c654839049 100644
+--- a/tools/perf/arch/x86/util/topdown.c
++++ b/tools/perf/arch/x86/util/topdown.c
+@@ -81,7 +81,7 @@ bool arch_topdown_sample_read(struct evsel *leader)
+ 	 */
+ 	evlist__for_each_entry(leader->evlist, evsel) {
+ 		if (evsel->core.leader != leader->core.leader)
+-			return false;
++			continue;
+ 		if (evsel != leader && arch_is_topdown_metrics(evsel))
+ 			return true;
+ 	}
+-- 
+2.49.0.rc0.332.g42c0ae87b1-goog
 
