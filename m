@@ -1,139 +1,164 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6316DDC1
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 03:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB9818DB30
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 04:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741319891; cv=none; b=H21tKXrSmRXQEBR+fP60Pk6NljkgMDDO1CJNtxjwaSyU4EyU/IssJksIsWjFBtyaKnR8+/3j4EIp9ssiS175zHNCsJepjPIXIYkqIhjX77WUA1NkKEN9IJvc4DE+Yw2bpBOZSsyw1l//JkA+HrzOQX90JpEIF34Ar/hyU3jLVNk=
+	t=1741320005; cv=none; b=sRYI2sJfVpFCdhYswqp2S474dSWy33EUXh8Nk7oFwW++d15LUibWD114h1T2w2p8R2GGz0ZjBT8qjMACOAC54qcfC+zFtB9RrKmRptTkJcEkaMtlWh1Ko1ltTBvpf30O5FAjlk0/4mmcAWHR+HN4TVGvhutxufdk+twZ/9f1lHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741319891; c=relaxed/simple;
-	bh=+RleQoGymkd13ThubWy655TdvbAZQ4Bn5KStcAnaXtk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5xvGfgnHFPCovjN6MC+cn+RopLd/wjL3KDQEbcnGHsyao2wKn5Q0hVRgwilBEYqKkloOM2mzClNDnowBZoZMe45Va52c4DtQWO5DkRE1R1vmFEhOKI4QKckNvKSV8b2Klul9P3+fPme1QB/sB9xLISDfWTiz4qWuxkiyWJmxtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vbWXsk3L; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741320005; c=relaxed/simple;
+	bh=/EJHP+8TfDAtSkvGsyq8r00JUKNY7IZDhYhYCIDTFlg=;
+	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
+	 Content-Type:References; b=Ju1nvkJe2rhN1EBsF/8vlbjoMDombmBAigO9TcUus8LypkPqrX7byCk+QaapxCDP0pFat8iRTV7rCnh7jeORp3E2DgmAROpdcJfC5/2WGsM+ZZZMdak68iXPBzWSBw14iBF3dc+9MmxbNhErp1f9wJOz7cmdPKnAaJ49YS3TrrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qmwgxtF0; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vbWXsk3L"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-548430564d9so1535101e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 19:58:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741319887; x=1741924687; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uEBF7q7djaNS5nAjrGOiMY9ClFLfelskzs9woxu33aM=;
-        b=vbWXsk3LTvM0FnxEWn/MsaIbrXxUMO6qDLDkuIEeQ5/vJYyHdXiF9+6ER+HYVUKPn5
-         jJIeaGKze6dXFmqHaJ60iQeh4g9IpJNxvr7H+cBAHI3E8CVEXJIJjMyJS5IwrOKvnzLH
-         vp16w+DJnN5E1TW1m9NGrJI1unJO3XKPGI+ca2afi8Q4GckliAKQIkQJGGJv4wK0wKhZ
-         XFnz1iDZpD+OHrSsEIK8i2H77UVR96JBFkU27bVSGpSsSo/07TXvqUD4sIi9t6mfMfXW
-         kU+pwy6xLldu//HPdKLi/EGsztE1H35NECk4vTaToYJr4QxmCPqe2xlNKkFi6JD/nRP8
-         kOzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741319887; x=1741924687;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uEBF7q7djaNS5nAjrGOiMY9ClFLfelskzs9woxu33aM=;
-        b=uqOaFhTpMtR+diSNMDvGG8E6KrJ+py0FpKTwCC9sAVMZrff0RHMgEo7F8ohjkdEAzf
-         TgToEcJHCz4rsY0XUxORZEvYa7T9t5lM8uNhDr72FC3oQWaa7WdIlntr45C6XVkJeczR
-         2waBo+gzGjVE5+onJ5wi+LqxMSFsfx7jnoV/iWBHeQeu4Q7RlbDIMcLYJtwXGDrigUkA
-         AoaJHpGx0MTsZSwnd0vqN23Ys04PD8dMHgXzOHIls2ZDFNNmBcJ6ONdmrGPSbeIyMK6f
-         5Rh9coZzgsrDB1wxQAa35i1B2IsRK1wWXsq1QO8OfP9UNQXLxNFX+h2EA/0ntRbTErso
-         9W8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVxnDSddcveAfwhsA+I27eeCd44grAsNZVfILpzbb4K3ofyEQ4WDYlRt9r3IyJP/91oMtpJXQygQSwK5Q4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ0J/IQ9aeJA8t79Pdk3zTDb+1pS1AAfvYClxwgX8CPxvkjGla
-	3gDHlLAh8raEXxqSMQOOESzk1A6sXduN2qpEB9j4Yhwj2N1NEPEPh3sfjBij4ls=
-X-Gm-Gg: ASbGncunasBUtW0Ehk7OoA+O2dicJZd8GsQTYVwa994hmVWAdKdgFKGuQOa0EBAAN0q
-	iKd4Bhb0NBr/fc4AkCDpcCBwUnrIR2Ew45KrnfDk8d7uoaPNufmOz15Q9rPjt7qcWUOBtuunyPS
-	rlW522Z32qfsWcZ5FokvIZ3CqqJvAWIHtlXtfKOB9cifWUrfvFtFxhfkOaAjIFq8iWfJkgM2UtE
-	37qgtwXkkj7vNTICg5fqnT9UgpR7L11wGZCOyBo62Q3sgYt7Ns0KzeYzUYRpbyVRX0CLOkD8Z8a
-	Y8zi10rkXH6SU9bCLssEEw+3Q+0OwaU4EcNiziPqKAFtIIn0sKU3WI+gVqlesse+yEHkeRT4xtC
-	SfT0aGjGeICSM9D/PZgQK4KwY
-X-Google-Smtp-Source: AGHT+IGOFCkKLZ1UQh2TRUPs+Eu6QCFBBW9AoVDPv1C752stT+7E5xh4IuWYrNCXRm/wPrkUfsK6hg==
-X-Received: by 2002:a05:6512:118a:b0:549:6759:3982 with SMTP id 2adb3069b0e04-54990eac875mr558887e87.37.1741319887522;
-        Thu, 06 Mar 2025 19:58:07 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b0bd0absm365580e87.157.2025.03.06.19.58.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 19:58:06 -0800 (PST)
-Date: Fri, 7 Mar 2025 05:58:04 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/dpu: Adjust CDM_MUX to support CWB PINGPONG
-Message-ID: <7wqtrfc24j7irouintg3h3fh337maziqjxcxcvxuvltdohqc7c@ai6zm6tidqgo>
-References: <20250305-cdm-cwb-mux-fix-v1-1-16148ca6e4d2@quicinc.com>
- <vjufkcrkungrwy7w4pxzsac57ilzk2dt3eeypzy6pna2z5ocxg@uf237ixu6kqq>
- <b125d75f-eb71-469b-808e-3078f2f7e266@quicinc.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qmwgxtF0"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250307035959epoutp0224f4f55ccef85a081356db3fab6a3d67~qaVBl2bft2637926379epoutp02G
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 03:59:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250307035959epoutp0224f4f55ccef85a081356db3fab6a3d67~qaVBl2bft2637926379epoutp02G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741319999;
+	bh=LzTQRzJ1HeapOI4JPtLfPUdsHjeO+Cq77SQ6lp2CbFM=;
+	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+	b=qmwgxtF05wg6kEGgv1SHGt5mVGxQIaDtBVfp/805BRsvK1q0g31Vs/7iagw85H9sn
+	 WxqBC7uulCjjIbqKLYLdBQ91hzq+2aN7c6j92cw3rC8Ac3VR5fwnu3nxvS8hw1+JZL
+	 sv3G+3bJZt9UO0tC+dDM7ewI56+RDNCjWefwXwk4=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250307035959epcas5p44d3562a116c24c9a9f1f3305c3197fc5~qaVBGt9jN1240212402epcas5p4f;
+	Fri,  7 Mar 2025 03:59:59 +0000 (GMT)
+X-AuditID: b6c32a4a-c1fda70000004ddd-74-67ca6f3f0db4
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	18.E7.19933.F3F6AC76; Fri,  7 Mar 2025 12:59:59 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b125d75f-eb71-469b-808e-3078f2f7e266@quicinc.com>
+Mime-Version: 1.0
+Subject: RE: [PATCH 2/2] NFSD: fix race between nfsd registration and
+ exports_proc
+Reply-To: maninder1.s@samsung.com
+Sender: Maninder Singh <maninder1.s@samsung.com>
+From: Maninder Singh <maninder1.s@samsung.com>
+To: Jeff Layton <jlayton@kernel.org>, "chuck.lever@oracle.com"
+	<chuck.lever@oracle.com>, "neilb@suse.de" <neilb@suse.de>,
+	"okorniev@redhat.com" <okorniev@redhat.com>, "Dai.Ngo@oracle.com"
+	<Dai.Ngo@oracle.com>, "tom@talpey.com" <tom@talpey.com>,
+	"lorenzo@kernel.org" <lorenzo@kernel.org>
+CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chung-Ki Woo
+	<chungki0201.woo@samsung.com>, Shubham Rana <s9.rana@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20250307032948epcms5p5280f36a460ef7a4def620096699a1df2@epcms5p5>
+Date: Fri, 07 Mar 2025 08:59:48 +0530
+X-CMS-MailID: 20250307032948epcms5p5280f36a460ef7a4def620096699a1df2
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7bCmuq59/ql0g0fzxCz+333OZHH6+xV2
+	i/mLNrNZ/Fy2it3i8q45bBYXDpxmtehbPYvRYu/8BhaLSc8+sVt8f3yJ0eLUr1NMDtwem1Z1
+	snl8fHqLxeP9vqtsHn1bVjF6bD5d7XH5yRVGj8+b5ALYo7hsUlJzMstSi/TtErgyZvesZin4
+	J1yxa0svcwPjNYEuRk4OCQETiWXnbjF1MXJxCAnsZpT4uP8QcxcjBwevgKDE3x3CIDXCAiES
+	t44eYQOxhQQUJS7MWMMIUiIsYCDxa6sGSJhNQE9i1a49LCBjRASWMUns//CeGcRhFjjHKPFs
+	4hN2iGW8EjPan7JA2NIS25dvZQSxOQU8JC50/mCCiItK3Fz9lh3Gfn9sPiOELSLReu8sM4Qt
+	KPHg526ouIzE6s29UDOrJZ6+PscGslhCoIVRYt9umCJzifVLVoEN5RXwlfj7+wwriM0ioCrR
+	e/M9C8g3EgIuEjd+qYGEmQXkJba/nQMOB2YBTYn1u/QhpshKTD21jgmihE+i9/cTJpi3dsyD
+	sVUlWm5uYIV58fPHj1CneUi07jjJBgnnn4wSsy/dYJzAqDALEdSzkGyehbB5ASPzKkbJ1ILi
+	3PTUYtMCo7zUcr3ixNzi0rx0veT83E2M4BSl5bWD8eGDD3qHGJk4GA8xSnAwK4nwCm4+mS7E
+	m5JYWZValB9fVJqTWnyIUZqDRUmct3lnS7qQQHpiSWp2ampBahFMlomDU6qBiUWHuVfM6pzr
+	eVepyvWLlOfnyujeyHhrqnCDz4rrp9lvAaVkjznG0ZtFNXyLtjP6+4QFCHE8Z+MRynAM27TK
+	dv3vV9HzC7c91a5uaNj4ypd3Syfz9X+GjnG5z0+dfLxCmCv95Mfwvw86DLLa8rTavv0N/Zgx
+	9/Iew55ds09/P/kgf5u46kUh25+PQpbr6Rbnsr77F3li9Tw3jzdWjd+ahFUvBZlm9a0rnPWr
+	/rj6gvt27YcS60J5Luu2NKb1tSmeWTlL/NLn93slEmZu+9r8Q/z/MS6njT5/HdwdDTOmPmRf
+	7xjbrjSF8f75cNGwSI5vXtltX740RL5at80kK4DvsJVZH/uSY8eDiovV2aYqsRRnJBpqMRcV
+	JwIAMVpi/8ADAAA=
+X-CMS-RootMailID: 20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f
+References: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
+	<20250306092007.1419237-1-maninder1.s@samsung.com>
+	<20250306092007.1419237-2-maninder1.s@samsung.com>
+	<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcms5p5>
 
-On Thu, Mar 06, 2025 at 11:33:46AM -0800, Abhinav Kumar wrote:
-> 
-> 
-> On 3/5/2025 10:44 PM, Dmitry Baryshkov wrote:
-> > On Wed, Mar 05, 2025 at 07:16:51PM -0800, Jessica Zhang wrote:
-> > > Similar to WB_MUX, CDM_MUX also needs to be adjusted to support
-> > > dedicated CWB PINGPONGs
-> > > 
-> > > Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-> > > ---
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_cdm.c | 4 +++-
-> > >   1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_cdm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_cdm.c
-> > > index ae1534c49ae0..3f88c3641d4a 100644
-> > > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_cdm.c
-> > > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_cdm.c
-> > > @@ -214,7 +214,9 @@ static void dpu_hw_cdm_bind_pingpong_blk(struct dpu_hw_cdm *ctx, const enum dpu_
-> > >   	mux_cfg = DPU_REG_READ(c, CDM_MUX);
-> > >   	mux_cfg &= ~0xf;
-> > > -	if (pp)
-> > > +	if (pp >= PINGPONG_CWB_0)
-> > > +		mux_cfg |= 0xd;
+Hi,
+
+> > As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
+> > and cleanup by remove_proc_entry() at last of exit_nfsd.
 > > 
-> > Shouldn't it be 0xb for PINGPONG_CWB_2 and 3?
+> > Which causes kernel OOPs if there is race between below 2 operations:
+> > (i) exportfs -r
+> > (ii) mount -t nfsd none /proc/fs/nfsd
 > > 
-> 
-> No, this register CDM_MUX can take only 0xd for CWB PPs.
-> 
-> 0xb is not listed as a valid value at all.
-
-Thanks for the confirmation.
-
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-
-> 
-> > > +	else if (pp)
-> > >   		mux_cfg |= (pp - PINGPONG_0) & 0x7;
-> > >   	else
-> > >   		mux_cfg |= 0xf;
-> > > 
-> > > ---
-> > > base-commit: 6d3175a72cc07e90f81fb35841048a8a9b5134cb
-> > > change-id: 20250305-cdm-cwb-mux-fix-69ed5297d4f7
-> > > 
-> > > Best regards,
-> > > -- 
-> > > Jessica Zhang <quic_jesszhan@quicinc.com>
-> > > 
+> > for 5.4 kernel ARM64:
 > > 
+> > CPU 1:
+> > el1_irq+0xbc/0x180
+> > arch_counter_get_cntvct+0x14/0x18
+> > running_clock+0xc/0x18
+> > preempt_count_add+0x88/0x110
+> > prep_new_page+0xb0/0x220
+> > get_page_from_freelist+0x2d8/0x1778
+> > __alloc_pages_nodemask+0x15c/0xef0
+> > __vmalloc_node_range+0x28c/0x478
+> > __vmalloc_node_flags_caller+0x8c/0xb0
+> > kvmalloc_node+0x88/0xe0
+> > nfsd_init_net+0x6c/0x108 [nfsd]
+> > ops_init+0x44/0x170
+> > register_pernet_operations+0x114/0x270
+> > register_pernet_subsys+0x34/0x50
+> > init_nfsd+0xa8/0x718 [nfsd]
+> > do_one_initcall+0x54/0x2e0
+> > 
+> > CPU 2 :
+> > Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+> > 
+> > PC is at : exports_net_open+0x50/0x68 [nfsd]
+> > 
+> > Call trace:
+> > exports_net_open+0x50/0x68 [nfsd]
+> > exports_proc_open+0x2c/0x38 [nfsd]
+> > proc_reg_open+0xb8/0x198
+> > do_dentry_open+0x1c4/0x418
+> > vfs_open+0x38/0x48
+> > path_openat+0x28c/0xf18
+> > do_filp_open+0x70/0xe8
+> > do_sys_open+0x154/0x248
+
+
+
+> To make sure I understand, the race is that sometimes the exports
+> interface gets created before the net namespace is set up, and then
+> that causes GPFs when exports_net_open tries to access the nfsd_net?
 > 
 
--- 
-With best wishes
-Dmitry
+
+Yes, Sometime at time of module init this happened as I shared state of 2 CPUs at
+time of crash.
+and sometimes it occurs when module was unloading and user space was accessing it.
+
+So I though interface to user shall be exported late during init and clean up early.
+But what is actual position for that I was not sure, So I moved to last at time of init
+and first at time of clean up.
+
+And originally at time of 4.13 kernel this cleanup was the first thing to do in exit time.
+but with time to fixing other issues, its position got changed.
+
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=027690c75e8fd91b60a634d31c4891a6e39d45bd
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=bd5ae9288d6451bd346a1b4a59d4fe7e62ba29b7
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=6f6f84aa215f7b6665ccbb937db50860f9ec2989
+
+Which caused this kernel OOPs I think.
+
+Thanks,
+Maninder Singh
