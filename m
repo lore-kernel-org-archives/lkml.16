@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BD421C162
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 16:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B74218E85
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 16:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741366178; cv=none; b=j4lY5vGi50h8k2oOhAF/VhCy89vkICJpfp0obuYPF9MDhz/MVzR492MUM8anAEF1fWyFTyIhErs/6jnQR+dhjXZvx4VhNlaG/LgAE1PgopmeFz6V1Ra6mV5QTJ+tEfiWpIr+9yf/BAtsMjS8iE29aCwJls/2bIquF6aCV1FGyoU=
+	t=1741366178; cv=none; b=BrbZg7jDshSJDGqwWnnGKvQPo2SrQLN6bKqndnVteZCJv1mxxkaC2keQKxzUGe4Ijl+KfGwIaB50V2qiRMkLff7Vs0mzBtR9V0cK2D4f5c1QNDzDn0R4H0dB52xWNcg0LrW7GJqMTSVPBU0joOr0Aj2iLuq8gYtGtcneWWeO9a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741366178; c=relaxed/simple;
-	bh=3zKerw+xf/udcMkOec1vA/suDV000JAl4RHUmIao5AU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fMGlQV2LprhoB0QgcLwZJ0M82wsap93bwzW/1ECxYxqbE3AkgY0Km+V1rH5UCfhsQV7R5iip/+icfmp9MD1jm3vCQF8fxdWlB5rKuLDpgIFv7/M0ORV1wjgBc8DlYp7Ky+v5xO12y0faLfh1b3kDjz6RXuxDtKtPc0ihWE4MiTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYfy6tC+; arc=none smtp.client-ip=10.30.226.201
+	bh=YVrzd+IXmf9EiRC/v/odDZpblRQr8mxNU5vz6S8KECo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=awjnW6h1unqaNzk4WnrDK1EA2yGV+eAHQ/JkDp4t5DY/vNQo0WTxRe6An/fBGaxOSDxH+1V2bHozHMPApvLPw+K9H3gi0tRYlYT/GgOY4t2wpl1v0xf1W49C8r3x1URtq2p1TAr0BhhQhx7Uv1fmTK8H/Ua+hb1Yvhccl52s9KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BoQvgaac; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYfy6tC+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A888C4CEE8;
-	Fri,  7 Mar 2025 16:49:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BoQvgaac"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CD48FC4CED1;
+	Fri,  7 Mar 2025 16:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741366178;
-	bh=3zKerw+xf/udcMkOec1vA/suDV000JAl4RHUmIao5AU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BYfy6tC+qk7FNvnm3/TA8h/eX2zW9F5AXEdKvVVfHDgOZ+lII1FNFKc1w6/V6sG9m
-	 JIbvQlf4/0chMrzoGZ17x+52fcHh8GWpgelFzWfn4wQ/NKnxRQMs/zKdojFBCeqk+j
-	 PrY/LpuqOvZj42KYesFcWG3yTsFxzHudQzxazSfklB/R4h2mafQYplLmXjYUdV0XDN
-	 N10i092SJuwT9wDqAAVY3v8i6uTqQIVoP2EoV0MmxX8TCa60CWqJd1l9T8DEMDFBQW
-	 gE/ZQ6Vs7w5F0HZ4GMfj7aLKdb4sckmC+znnVIHuAh8pDITFOfKxKdLhcPTY7PqGho
-	 TcgNgqmJumR/Q==
+	s=k20201202; t=1741366177;
+	bh=YVrzd+IXmf9EiRC/v/odDZpblRQr8mxNU5vz6S8KECo=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=BoQvgaacfJjUKq98N2WYIp/L3ir7FtYHSV17NSBkjDw3NkYVE01ad/JnMWdRiYjtJ
+	 d68pVNJdK/38bUQspRsLNldAVhtpp61VpUXsxRfTADho4ZZ7rgQLbTH8fVUq3+6+O6
+	 t6xYp9Gqcn+6cqX4AIj5JaNoUoimOVhTrZMmYco8bcqdzfS6beeK8MtcV9m7UfICNH
+	 HDpE51tGTgwDimbbTp4gPajDN4vs8q/LTXrBBi+IQbhMT+xePzHSd3dJ88i/olP3FO
+	 45RyMg8Ar8LoHk+92h4WpD0n1XGWarvxw4zIYrEl4M6IP7Pxez0wh2A4TLb13/gon4
+	 MFk9WybYXYmEQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11335C28B23;
-	Fri,  7 Mar 2025 16:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C133CC19F32;
+	Fri,  7 Mar 2025 16:49:37 +0000 (UTC)
 From: Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org>
-Date: Sat, 08 Mar 2025 01:48:51 +0900
-Subject: [PATCH v6 4/7] drm/i915: Convert REG_GENMASK*() to fixed-width
- GENMASK_U*()
+Subject: [PATCH v6 0/7] bits: Fixed-type GENMASK_U*() and BIT_U*()
+Date: Sat, 08 Mar 2025 01:48:47 +0900
+Message-Id: <20250308-fixed-type-genmasks-v6-0-f59315e73c29@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +39,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250308-fixed-type-genmasks-v6-4-f59315e73c29@wanadoo.fr>
-References: <20250308-fixed-type-genmasks-v6-0-f59315e73c29@wanadoo.fr>
-In-Reply-To: <20250308-fixed-type-genmasks-v6-0-f59315e73c29@wanadoo.fr>
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAG8jy2cC/23OTWrDMBCG4asErTtG1n+zyj1KFoo0ikVjKUiu0
+ xB890othRay/GDm4X2QiiViJfvdgxRcY405taFedsRNNp0Rom+bMMokZcxAiJ/oYblfEc6YZlv
+ fKxg/Will4AINaZ/Xgv2sq2/HtkPJMyxTQftrCcqooVpINg5Sa6oVjHD5cLYOHmdb3BQPMS14G
+ VyeOznFuuRy/+5cRYd/kjiVT5NWARRGo7l3PijN+OFmk/U5D6GQ3rTKv4h6jsiGnITg+Ordyar
+ /yLZtX2xDHpw/AQAA
+X-Change-ID: 20250228-fixed-type-genmasks-8d1a555f34e8
 To: Yury Norov <yury.norov@gmail.com>, 
  Lucas De Marchi <lucas.demarchi@intel.com>, 
  Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
@@ -57,16 +59,16 @@ Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
  David Laight <David.Laight@ACULAB.COM>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Jani Nikula <jani.nikula@intel.com>, 
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+ Jani Nikula <jani.nikula@intel.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5472;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5833;
  i=mailhol.vincent@wanadoo.fr; h=from:subject:message-id;
- bh=lkeOgx/QWbsgnQ119CFfyqfh9hkq3NjKg3QYd/j7I4w=;
- b=owGbwMvMwCV2McXO4Xp97WbG02pJDOmnlSduzRO6PXFRxNULQXYa09ivmt79G/h1U8p+B57AY
- rdl32eUdZSyMIhxMciKKbIsK+fkVugo9A479NcSZg4rE8gQBi5OAZiIZwnDfw/dGxfDch+qf9Fa
- e2X/+/52wVX/mELWdKvUGDCvaFRxOMrwTz3rZpO2jJPkqa8rr4Yu8n/FM6XnWmjNa6bM6Ks/7h3
- w5gIA
+ bh=YVrzd+IXmf9EiRC/v/odDZpblRQr8mxNU5vz6S8KECo=;
+ b=owGbwMvMwCV2McXO4Xp97WbG02pJDOmnlVt3qopGFdkpOt+fWLbi0iThoAev0qo3GG82rdrB8
+ Zj7+ZpVHaUsDGJcDLJiiizLyjm5FToKvcMO/bWEmcPKBDKEgYtTACZSJ8rwiyl97xSvHas3Op9d
+ fnj+6Xupp60Y3WYcnXPtz6bwqUUnu6sZGTZssrm76fqsQoeqyWl8yXav7s3La3Zd/qS8bbvHnWl
+ 5v1kB
 X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp;
  fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
 X-Endpoint-Received: by B4 Relay for mailhol.vincent@wanadoo.fr/default
@@ -74,166 +76,165 @@ X-Endpoint-Received: by B4 Relay for mailhol.vincent@wanadoo.fr/default
 X-Original-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 Reply-To: mailhol.vincent@wanadoo.fr
 
-From: Lucas De Marchi <lucas.demarchi@intel.com>
+Introduce some fixed width variant of the GENMASK() and the BIT()
+macros in bits.h. Note that the main goal is not to get the correct
+type, but rather to enforce more checks at compile time. For example:
 
-Now that include/linux/bits.h implements fixed-width GENMASK_U*(), use
-them to implement the i915/xe specific macros. Converting each driver
-to use the generic macros are left for later, when/if other
-driver-specific macros are also generalized.
+  GENMASK_U16(16, 0)
 
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+will raise a build bug.
+
+This series is a continuation of:
+
+  https://lore.kernel.org/intel-xe/20240208074521.577076-1-lucas.demarchi@intel.com
+
+from Lucas De Marchi. Above series is one year old. I really think
+that this was a good idea and I do not want this series to die. So I
+am volunteering to revive it.
+
+Meanwhile, many changes occurred in bits.h. The most significant
+change is that __GENMASK() was moved to the uapi headers.
+
+In v4 and onward, I introduce one big change: split the definition of
+the asm and non-asm GENMASK(). I think this is controversial.
+Especially, Yury commented that he did not want such split. So I
+initially implemented a first draft in which both the asm and non-asm
+version would rely on the same helper macro, i.e. adding this:
+
+  #define __GENMASK_TYPE(t, w, h, l)			\
+  	(((t)~_ULL(0) - ((t)1 << (l)) + 1) &		\
+  	 ((t)~_ULL(0) >> (w - 1 - (h))))
+    
+to uapi/bits.h. And then, the different GENMASK()s would look like
+this:
+
+  #define __GENMASK(h, l) __GENMASK_TYPE(unsigned long, __BITS_PER_LONG, h, l)
+    
+and so on.
+    
+I implemented it, and the final result looks quite ugly. Not only do
+we need to manually provide the width each time, the biggest concern
+is that adding this to the uapi is asking for trouble. Who knows how
+people are going to use this? And once it is in the uapi, there is
+virtually no way back.
+
+Adding to this, that macro can not even be generalized to u128
+integers, whereas after the split, it is.
+
+Finally, I do not think it makes sense to expose the fixed width
+variants to the asm. The fixed width integers type are a C
+concept. For asm, the long and long long variants seems sufficient.
+
+And so, after implementing both, the asm and non-asm split seems way
+more clean and I think this is the best compromise. Let me know what
+you think :)
+
+As requested, here are the bloat-o-meter stats:
+
+  $ ./scripts/bloat-o-meter vmlinux_before.o vmlinux_after.o 
+  add/remove: 0/0 grow/shrink: 4/2 up/down: 5/-4 (1)
+  Function                                     old     new   delta
+  intel_psr_invalidate                         666     668      +2
+  mst_stream_compute_config                   1652    1653      +1
+  intel_psr_flush                              977     978      +1
+  intel_dp_compute_link_config                1327    1328      +1
+  cfg80211_inform_bss_data                    5109    5108      -1
+  intel_drrs_activate                          379     376      -3
+  Total: Before=22723481, After=22723482, chg +0.00%
+
+(done with GCC 12.4.1 on an x86_64 defconfig)
+
+--
+2.43.0
+
 ---
-Changelog:
+Changes from v5:
 
-  v5 -> v6:
+  - Update the cover letter message. I was still refering to
+    GENMASK_t() instead of GENMASK_TYPE().
 
-    - No changes.
+  - Add a comment in the cover letter to explain that a common
+    GENMASK_TYPE() for C and asm wouldn't allow to generate the u128
+    variant.
 
-  v4 -> v5:
+  - Restore the comment saying that BUILD_BUG_ON() is not available in
+    asm code.
 
-    - Add braket to macro names in patch description,
-      e.g. 'REG_GENMASK*' -> 'REG_GENMASK*()'
+  - Add a FIXME message to highlight the absence of the asm GENMASK*()
+    unit tests.
 
-  v3 -> v4:
+  - Use git's histogram diff algorithm
 
-    - Remove the prefixes in macro parameters,
-      e.g. 'REG_GENMASK(__high, __low)' -> 'REG_GENMASK(high, low)'
+  - Link to v5: https://lore.kernel.org/r/20250306-fixed-type-genmasks-v5-0-b443e9dcba63@wanadoo.fr
+
+Changes from v4:
+
+  - Rebase on https://github.com/norov/linux/tree/bitmap-for-next
+
+  - Rename GENMASK_t() to GENMASK_TYPE()
+
+  - First patch of v4 (the typo fix 'init128' -> 'int128') is removed
+    because it was resent separately in:
+    https://lore.kernel.org/all/20250305-fix_init128_typo-v1-1-cbe5b8e54e7d@wanadoo.fr
+
+  - Replace the (t)~ULL(0) by type_max(t). This way, GENMASK_TYPE()
+    can now be used to generate GENMASK_U128().
+
+  - Get rid of the unsigned int cast for the U8 and U16 variants.
+
+  - Add the BIT_TYPE() helper macro.
+
+  - Link to v4: https://lore.kernel.org/r/20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr
+
+Changes from v3:
+
+  - Rebase on v6.14-rc5
+
+  - Fix a typo in GENMASK_U128() comment.
+
+  - Split the asm and non-asm definition of 
+
+  - Replace ~0ULL by ~ULL(0)
+
+  - Since v3, __GENMASK() was moved to the uapi and people started
+    using directly. Introduce GENMASK_t() instead.
+
+  - Link to v3: https://lore.kernel.org/intel-xe/20240208074521.577076-1-lucas.demarchi@intel.com
+
+Changes from v2:
+
+  - Document both in commit message and code about the strict type
+    checking and give examples how it´d break with invalid params.
+
+  - Link to v2: https://lore.kernel.org/intel-xe/20240124050205.3646390-1-lucas.demarchi@intel.com
+
+Link to v1: https://lore.kernel.org/intel-xe/20230509051403.2748545-1-lucas.demarchi@intel.com
+
 ---
+Lucas De Marchi (3):
+      bits: introduce fixed-type BIT_U*()
+      drm/i915: Convert REG_GENMASK*() to fixed-width GENMASK_U*()
+      test_bits: add tests for GENMASK_U*()
+
+Vincent Mailhol (3):
+      bits: split the definition of the asm and non-asm GENMASK()
+      test_bits: add tests for __GENMASK() and __GENMASK_ULL()
+      test_bits: add tests for BIT_U*()
+
+Yury Norov (1):
+      bits: introduce fixed-type genmasks
+
  drivers/gpu/drm/i915/i915_reg_defs.h | 108 ++++-------------------------------
- 1 file changed, 11 insertions(+), 97 deletions(-)
+ include/linux/bitops.h               |   1 -
+ include/linux/bits.h                 |  91 ++++++++++++++++++++---------
+ lib/test_bits.c                      |  49 ++++++++++++++++
+ 4 files changed, 124 insertions(+), 125 deletions(-)
+---
+base-commit: 0312e94abe484b9ee58c32d2f8ba177e04955b35
+change-id: 20250228-fixed-type-genmasks-8d1a555f34e8
 
-diff --git a/drivers/gpu/drm/i915/i915_reg_defs.h b/drivers/gpu/drm/i915/i915_reg_defs.h
-index e251bcc0c89f5710125bc70f07851b2cb978c89c..39e5ed9511174b8757b9201bff735fa362651b34 100644
---- a/drivers/gpu/drm/i915/i915_reg_defs.h
-+++ b/drivers/gpu/drm/i915/i915_reg_defs.h
-@@ -9,76 +9,19 @@
- #include <linux/bitfield.h>
- #include <linux/bits.h>
- 
--/**
-- * REG_BIT() - Prepare a u32 bit value
-- * @__n: 0-based bit number
-- *
-- * Local wrapper for BIT() to force u32, with compile time checks.
-- *
-- * @return: Value with bit @__n set.
-+/*
-+ * Wrappers over the generic BIT_* and GENMASK_* implementations,
-+ * for compatibility reasons with previous implementation
-  */
--#define REG_BIT(__n)							\
--	((u32)(BIT(__n) +						\
--	       BUILD_BUG_ON_ZERO(__is_constexpr(__n) &&		\
--				 ((__n) < 0 || (__n) > 31))))
-+#define REG_GENMASK(high, low)		GENMASK_U32(high, low)
-+#define REG_GENMASK64(high, low)	GENMASK_U64(high, low)
-+#define REG_GENMASK16(high, low)	GENMASK_U16(high, low)
-+#define REG_GENMASK8(high, low)		GENMASK_U8(high, low)
- 
--/**
-- * REG_BIT8() - Prepare a u8 bit value
-- * @__n: 0-based bit number
-- *
-- * Local wrapper for BIT() to force u8, with compile time checks.
-- *
-- * @return: Value with bit @__n set.
-- */
--#define REG_BIT8(__n)                                                   \
--	((u8)(BIT(__n) +                                                \
--	       BUILD_BUG_ON_ZERO(__is_constexpr(__n) &&         \
--				 ((__n) < 0 || (__n) > 7))))
--
--/**
-- * REG_GENMASK() - Prepare a continuous u32 bitmask
-- * @__high: 0-based high bit
-- * @__low: 0-based low bit
-- *
-- * Local wrapper for GENMASK() to force u32, with compile time checks.
-- *
-- * @return: Continuous bitmask from @__high to @__low, inclusive.
-- */
--#define REG_GENMASK(__high, __low)					\
--	((u32)(GENMASK(__high, __low) +					\
--	       BUILD_BUG_ON_ZERO(__is_constexpr(__high) &&	\
--				 __is_constexpr(__low) &&		\
--				 ((__low) < 0 || (__high) > 31 || (__low) > (__high)))))
--
--/**
-- * REG_GENMASK64() - Prepare a continuous u64 bitmask
-- * @__high: 0-based high bit
-- * @__low: 0-based low bit
-- *
-- * Local wrapper for GENMASK_ULL() to force u64, with compile time checks.
-- *
-- * @return: Continuous bitmask from @__high to @__low, inclusive.
-- */
--#define REG_GENMASK64(__high, __low)					\
--	((u64)(GENMASK_ULL(__high, __low) +				\
--	       BUILD_BUG_ON_ZERO(__is_constexpr(__high) &&		\
--				 __is_constexpr(__low) &&		\
--				 ((__low) < 0 || (__high) > 63 || (__low) > (__high)))))
--
--/**
-- * REG_GENMASK8() - Prepare a continuous u8 bitmask
-- * @__high: 0-based high bit
-- * @__low: 0-based low bit
-- *
-- * Local wrapper for GENMASK() to force u8, with compile time checks.
-- *
-- * @return: Continuous bitmask from @__high to @__low, inclusive.
-- */
--#define REG_GENMASK8(__high, __low)                                     \
--	((u8)(GENMASK(__high, __low) +                                  \
--	       BUILD_BUG_ON_ZERO(__is_constexpr(__high) &&      \
--				 __is_constexpr(__low) &&               \
--				 ((__low) < 0 || (__high) > 7 || (__low) > (__high)))))
-+#define REG_BIT(n)			BIT_U32(n)
-+#define REG_BIT64(n)			BIT_U64(n)
-+#define REG_BIT16(n)			BIT_U16(n)
-+#define REG_BIT8(n)			BIT_U8(n)
- 
- /*
-  * Local integer constant expression version of is_power_of_2().
-@@ -143,35 +86,6 @@
-  */
- #define REG_FIELD_GET64(__mask, __val)	((u64)FIELD_GET(__mask, __val))
- 
--/**
-- * REG_BIT16() - Prepare a u16 bit value
-- * @__n: 0-based bit number
-- *
-- * Local wrapper for BIT() to force u16, with compile time
-- * checks.
-- *
-- * @return: Value with bit @__n set.
-- */
--#define REG_BIT16(__n)                                                   \
--	((u16)(BIT(__n) +                                                \
--	       BUILD_BUG_ON_ZERO(__is_constexpr(__n) &&         \
--				 ((__n) < 0 || (__n) > 15))))
--
--/**
-- * REG_GENMASK16() - Prepare a continuous u8 bitmask
-- * @__high: 0-based high bit
-- * @__low: 0-based low bit
-- *
-- * Local wrapper for GENMASK() to force u16, with compile time
-- * checks.
-- *
-- * @return: Continuous bitmask from @__high to @__low, inclusive.
-- */
--#define REG_GENMASK16(__high, __low)                                     \
--	((u16)(GENMASK(__high, __low) +                                  \
--	       BUILD_BUG_ON_ZERO(__is_constexpr(__high) &&      \
--				 __is_constexpr(__low) &&               \
--				 ((__low) < 0 || (__high) > 15 || (__low) > (__high)))))
- 
- /**
-  * REG_FIELD_PREP16() - Prepare a u16 bitfield value
-
+Best regards,
 -- 
-2.45.3
+Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
 
