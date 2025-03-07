@@ -1,291 +1,153 @@
-Received: from sonic308-15.consmr.mail.ne1.yahoo.com (sonic308-15.consmr.mail.ne1.yahoo.com [66.163.187.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36A824292C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 18:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.187.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D742417D3;
+	Fri,  7 Mar 2025 18:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741372742; cv=none; b=LgNcNrIv3koMlLqTqzL1+cvkoxcymiG8M7Ma41vpZozMMlCbEPeP6MI+j+LC8XYxcEJsdb+VDVuGgEspQR1fS8SCX7OXs277hKinj+VVSVY9mGSuxvRZK7gUu2Sb8cLAc71Ra5pFiTYg3Ohy36/8fMfTIZZUFtaMGyBEBp2Btio=
+	t=1741372766; cv=none; b=fI8HQt9Rsd2KXBYqI2Ox30SPY5IEuyOUQye63k1wutQSzTa5i3z8NW9VXJnqvQs2BjfOKQbqlDKpfrkLPbMFOanLeByr/XwSfvlNtgUhsou3DR1m7SBDK67B1ahHETUhYNg05AVjhvB/6gKD3ftxloSdG+HAh4+y3ybk/PkUIjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741372742; c=relaxed/simple;
-	bh=Af5KTKsQk6wc/oG/z+DaiMXKAfgl5ohzN1roqLwBscM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t2vTxB5xsgVA3jP2KKwj6G3S5cMNnx5f2vQ4PaxlxpFK/nyzFMoj3xXiWZjUNoghDC6C5cvmw0Qa7/AiwmI4ynlTz3U+PHVS+kTvMb6GGvosjxafT3U4sjefKi8y01S0u7nyKxW7rnxr2rgAePtygme1AzkI3t0zXEmTkwl0Deg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=pAY1XrLm; arc=none smtp.client-ip=66.163.187.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	s=arc-20240116; t=1741372766; c=relaxed/simple;
+	bh=qU6KijlFXoR98S5pulEIQzkadZEZV8Z0TBnXBxmBuu8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IgV+KN2iAESctAHW+qDFC3Yjr1ZzBDQX6gsTRAVIQX8yXUTRuydljmHJa1j2MmU3v6CQZBZrUyuMDWrUWHysKVAEylb8ZN/BBcqKgPmaVLwwR8CqZRNvuKPgJpygvKg1aqIOndrFPp9uswcQ+a1qtewlYxZDJ6I0tkCLFtwpWfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNBq7+OZ; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="pAY1XrLm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741372733; bh=iDZEMDZr9QVsP0Bv/S7z/KogfWoghwIPZsAMo/z1I/k=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=pAY1XrLmpfx3QxouD5iRx0O1IxmuPW6mz8+baxrAJNKlrhdCT4EueOnxtC/4C1ctfV5CdMeNlEp35k604qinNj3EmU7rsJjV8+3YaZnY0cNpnbQ4MEFiQiwuRpRKO5gvVgynsi4RyVlpmk+FK5A5Lz/VUK1EuFS1L0CpDEZItetyIZJWOs+EW+KkbzRzrA2qVsgw6WeoyLa3npXOSwr7uvPLiz7oh0tc1SvolUQMlhVNpkAmQ7CZvTrjgw6dIiBUVFget9kZicdXMa4CenQXQZ3FlmcStG5BWXRLQ9KSLg2/KPd1Zh5q/f+ibwU5OtTO/ZMRF8mTQSAhm8EisCSr7g==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741372733; bh=pzsphi5EXunbdnc1UQqrYL4cpJOC3DADG7Q6rr3f+8I=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=Iltak5ECk8Baab9l9ZaO5qePykGBxGihs7jPzwJNk7yaeFelB85vucXW3ts3JSOW+Yby83bGem7ZmDMUPJQQ8dzh3jt35Gh29GCOL1zrZED+WS6NrgCcwaax4MGFlBWy08kBA6zBYBmi2a6zy/20EmrSgAC9HFgvq4IPx+snzrXIcmx50g06OKd9Ng5KnEFqkAl2kI2alSiVaWGMUc8bc3CpX76peJP35Vkp8VtHEK1wWExr6bLAB+QRZQ+OcuOkdugL5/DzytbVKwhsH+dC1aD2uNxEO6WQgudO1tTXnCKwGZEUSdvXmh6LJo3e+1Sr1pCHUSeuY00pwifCHKXsPw==
-X-YMail-OSG: LAOhvpAVM1nNrTQgoiW_qKhfudkMofd.zcl4Wp9CDFz8hWB4WuCz.yblbLoRiwm
- 6sjOzB8exRqbj.M_A5snF12xeML7bpbA1aQLxb3F1yAtt4LP2q57MzT0bVuZxbv_YEgdR26FPQPE
- mkh8Tn7LSflVS99UDqHJ4eM0TmPu7nixId15DVzeWIKdY87fPp5dLB2U917lD9GeLtCELc5IvPQ_
- 8ZiwmVVBiLitScmmXwPrxQsFu5F7t9lctCKFGOLUhGEyYs.YTYcTI_gexe20yIe8_Zo04hDVJ_Bt
- _TL_rzEhZBelUFazZhVJABMGfFZ1cY9XZeeIkkFwyN23ZuQcyR7fVP_Y8lcnCWyLXkAaQiJPy6Se
- ZYIyXTLx92G8yHCrLjXcnCg4jpJ9o.Rp5xtvQwN5qVZg4_uTylBPXDKkKZOBiz6fETcTJ9puQ8gD
- KvhaV_lPZRIBeOd9zoPkcsvHnZzjW63uOpwS7VB.Eo0KGNQ9AaiH8AIiBND6bsJ7viwY1YHyp2a0
- xCKEFbrhx0gUC.CpTW8xXrO9DYElSCgWRSlJHoAP5Uta.qVcoyzIu7Du5oeRdYJAy.1.giz6iVia
- Rrs9xSRG1dwv_e2EgRahHzJAz53tZ7WMiAYu8hxo8wq1OKV6mgwP7UsexasDHX8YeTz7rqF_K3_1
- zUb0RTeNex7oygDFJPvjMN_0EJpai8tUoVASdR0BEzAWTiStdMZUmhWZdsktLulOW3ejPT6UnkFr
- .uPSXxOqogft29_x3AylrN_xSDtzuEC.3liW7V1WcJ1vt.oYtVJpl8Kf9BFMB7hGReyJWh6woVkH
- 80FUWW3fcYdhDPsrYVBclOEsxbiX0m1HoN9RQipAqoBnP.mpWaHVwYn7qQkEbnAS0N2VEhYrTl2i
- H7WgrbuNcpDyfuX6qT2lZg.oZy4e4MbqTla5lqrbOpsG859dMBum7GSGwEgQjXOB5QGYzsHB9nAK
- c0UwCNEi8cfs0GcXZXc4TLSAwGU8G3yUtAvqa59OjAKquxjP_alDvUGlw_B3dOzpNrv9vK.i6YMW
- hcdjQHo.Sv_QLVWya.IORV8goJJe1rPpkqG1Jx4rXU8jbNVzbaRkdgty4uJe6nrCb9wSgkhtu6p_
- Qqb9MAOv_PX7TijTtNhrfH.3kJvvFucUYDPGz.PzhgtaQfSw8kCEbQzwbaCqnxopgxR2aM4nkHjR
- JBXufXnFTTKp69qxIrhVYXxjRU6lGIYDpPyS4z4pCnDMMF5DaO4zMSC5WCrvLIn6ZylW1.ls1Lhs
- 4Bwoq9VdG1c6t3KVNoMUY7TTpnsejWjR.zsnBhVWs.43QdqHqA4D_2vgbmiPjvoHjAwNzq4iPYi_
- pF7LYBg2GJqm5Ov.Yb70Y7VdNM4B1FgiPyp1or4B8j9km5XNfZxmuG2hj3CwE.J.i.GjbITIqFSX
- 5XhgpKaDm6nafWmuU9VvhbkL9Q5cHDUvTehLDXivFJuYAVq7YqQQztu.6lqm845Bqyhdgdg4icR4
- 990Hbst6KDeGMS7eVHg6GwIdwwANNUdfcy1lxSBVLC6_9i6GDpt0TEQivhF_mm1ULCnLyS7M1eoO
- vruZJoR3Nih6mVE1Nz5E6B0pb3AzcPziW2MPJpty.Oui0AKOca.kCLlSdB7CfzYZDgwE1ATHtSBd
- R1AhZRD9xlEPxJlO_pdsTam9Xi0Dy0n0zumsiO2FXdBswAKONlBg28SQxeNiT63m7RxUT4BpzOqa
- sEm.u8OvNH6GXhhLuD4qNIy94sJaoFIgaysxh_alcPnMGJ1KFwn.75HdMaQH7Y9kGw838._eJBH.
- F5opfmLMQQ5MhgFxm.MMMfztBMEkQkpNDa1HI2da2fok0qKF2cHQyrbbI02YsUctqTZ7.vHc6cNl
- aSULoVh8MGfAz6PgEBjd0T8rxm3tu5lnKLOYj8A4UeJsBXynZ.jafSXdFx3JMSQHWFb6SuI5RN4z
- BHi1H7gQD1u0RG40dItG3yXqJcqZJH4JbGRKngNrnf6zHfikqZ5kjGm_FPiJ7DP.KVMv.T3oT775
- MI4LcB1Mj.5jC7Q_iMByGU2xVEem9nLLmLIBOIPcgwSPbHcG.ZqfbM1aJx8hiAeLmPOEfzmR7YFg
- 1r.IF2fhuz3a7xsTXdVbda2TjV1QGyYIdSc3fyMGwZc2uuH5v1iDEmttSZhKBwklUS.liKcICTG3
- vNCcA4FhpIS6FfFe.C4nMG1sAHmwDe52IrZuFP5CQgQAZnTsTgzx1wmpzdpyZ_6Rnj48HFvktqnt
- fkR7oUwUlK9wcQB0K3FGEJON.w2x7LLvjHzhGIgYWqFBoy70hQnzqpTSHley8uZxLwOR11E2oXmw
- 1EZ8a5NqB.WVtWzZhdklhaNLu.Tqn
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: ca76bb5f-cb09-40e6-835a-00d5b7889725
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Fri, 7 Mar 2025 18:38:53 +0000
-Received: by hermes--production-gq1-7d5f4447dd-mxg2z (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 84a3ec74d8bfe114e53660abafd57a8a;
-          Fri, 07 Mar 2025 18:38:50 +0000 (UTC)
-From: Casey Schaufler <casey@schaufler-ca.com>
-To: casey@schaufler-ca.com,
-	paul@paul-moore.com,
-	eparis@redhat.com,
-	linux-security-module@vger.kernel.org,
-	audit@vger.kernel.org
-Cc: jmorris@namei.org,
-	serge@hallyn.com,
-	keescook@chromium.org,
-	john.johansen@canonical.com,
-	penguin-kernel@i-love.sakura.ne.jp,
-	stephen.smalley.work@gmail.com,
-	linux-kernel@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: [PATCH v2 4/6] Audit: Add record for multiple task security contexts
-Date: Fri,  7 Mar 2025 10:36:59 -0800
-Message-ID: <20250307183701.16970-5-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250307183701.16970-1-casey@schaufler-ca.com>
-References: <20250307183701.16970-1-casey@schaufler-ca.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNBq7+OZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741372765; x=1772908765;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qU6KijlFXoR98S5pulEIQzkadZEZV8Z0TBnXBxmBuu8=;
+  b=dNBq7+OZ/aPY5ZgOnocmF7ofJKWF8u7TmfWH5gF/ISrz/M1mSdwkaQNf
+   oTsAX4VKqUEFF55T5kkpM0lDPRUlOYw9mDVglz9m2CsGJRDp1/1MZMZ53
+   0HezCm0Oql6YUWaIZR0Prdz1zLRKD/PB1QtURBeiFfArR9tDCokpztlVP
+   8QeNLrYuUvfBW3mGJJn6KvPQN84fZsE0/Lci92ebQI7/zMFz3Z2dFtz/g
+   bRKgrIhS8vSAWP6v2Na7RK9MaepPWWG+DzjKt8lDFwp6SyhIgaD879PAo
+   g5+iREEKz9JRRj66rWpI5+f00M2/Q5lvzIAiw2o9aL1J/bbU6mATziE/Z
+   Q==;
+X-CSE-ConnectionGUID: 58uY+RgmSY+3YcsTvpqJbg==
+X-CSE-MsgGUID: NEOs++VwQs2qo0McxQ53UA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53072692"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="53072692"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:39:24 -0800
+X-CSE-ConnectionGUID: ru1BalfMQ0ue0IcmsKwSpw==
+X-CSE-MsgGUID: QlkwuRuuT3+yDy+4eLZTEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="124317362"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.132]) ([10.125.110.132])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:39:23 -0800
+Message-ID: <74e49413-dd1a-4577-818f-b5b21b2a2b7e@intel.com>
+Date: Fri, 7 Mar 2025 10:39:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 08/10] x86/fpu/xstate: Add CET supervisor xfeature
+ support
+To: Chao Gao <chao.gao@intel.com>, tglx@linutronix.de, x86@kernel.org,
+ seanjc@google.com, pbonzini@redhat.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: peterz@infradead.org, rick.p.edgecombe@intel.com,
+ weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de,
+ Maxim Levitsky <mlevitsk@redhat.com>
+References: <20250307164123.1613414-1-chao.gao@intel.com>
+ <20250307164123.1613414-9-chao.gao@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250307164123.1613414-9-chao.gao@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Create a new audit record AUDIT_MAC_TASK_CONTEXTS.
-An example of the MAC_TASK_CONTEXTS (1423) record is:
+On 3/7/25 08:41, Chao Gao wrote:
+> From: Yang Weijiang <weijiang.yang@intel.com>
+> 
+> To support CET virtualization, KVM needs the kernel to save/restore CET
+> supervisor xstate in guest FPUs when switching between guest and host
+> FPUs.
+> 
+> Add CET supervisor xstate (i.e., XFEATURE_CET_KERNEL) support. Both the
+> guest FPU and the kernel FPU will allocate memory for the new xstate.
+> For the guest FPU, the xstate remains unused until the upcoming CET
+> virtualization is added to KVM. For the kernel FPU, the xstate is unused
+> until CET_S is enabled within the kernel.
+> 
+> Note CET_S may or may not be enabled within the kernel, so always
+> allocating memory for XFEATURE_CET_KERNEL could potentially waste some
+> XSAVE buffer space. If necessary, this issue can be addressed by making
+> XFEATURE_CET_KERNEL a guest-only feature.
 
-    type=MAC_TASK_CONTEXTS[1423]
-    msg=audit(1600880931.832:113)
-    subj_apparmor=unconfined
-    subj_smack=_
+I feel like these changelogs are long but say very little.
 
-When an audit event includes a AUDIT_MAC_TASK_CONTEXTS record
-the "subj=" field in other records in the event will be "subj=?".
-An AUDIT_MAC_TASK_CONTEXTS record is supplied when the system has
-multiple security modules that may make access decisions based
-on a subject security context.
+This patch *WASTES* resources. Granted, it's only for a single patch,
+but it's totally not obvious.
 
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
----
- include/linux/lsm_hooks.h  |  1 +
- include/linux/security.h   |  1 +
- include/uapi/linux/audit.h |  1 +
- kernel/audit.c             | 45 ++++++++++++++++++++++++++++++++------
- security/apparmor/lsm.c    |  1 +
- security/bpf/hooks.c       |  1 +
- security/security.c        |  3 +++
- security/selinux/hooks.c   |  1 +
- security/smack/smack_lsm.c |  1 +
- 9 files changed, 48 insertions(+), 7 deletions(-)
+Could you work on tightening down the changelog, please?
 
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 090d1d3e19fe..e4d303ab1f20 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -81,6 +81,7 @@ struct lsm_static_calls_table {
- struct lsm_id {
- 	const char *name;
- 	u64 id;
-+	bool subjctx;
- };
- 
- /*
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 540894695c4b..79a9bf4a7cdd 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -168,6 +168,7 @@ struct lsm_prop {
- 
- extern const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1];
- extern u32 lsm_active_cnt;
-+extern u32 lsm_subjctx_cnt;
- extern const struct lsm_id *lsm_idlist[];
- 
- /* These functions are in security/commoncap.c */
-diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-index d9a069b4a775..5ebb5d80363d 100644
---- a/include/uapi/linux/audit.h
-+++ b/include/uapi/linux/audit.h
-@@ -146,6 +146,7 @@
- #define AUDIT_IPE_ACCESS	1420	/* IPE denial or grant */
- #define AUDIT_IPE_CONFIG_CHANGE	1421	/* IPE config change */
- #define AUDIT_IPE_POLICY_LOAD	1422	/* IPE policy load */
-+#define AUDIT_MAC_TASK_CONTEXTS	1423	/* Multiple LSM task contexts */
- 
- #define AUDIT_FIRST_KERN_ANOM_MSG   1700
- #define AUDIT_LAST_KERN_ANOM_MSG    1799
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 293364bba961..59eaf69ee8ac 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -54,6 +54,7 @@
- #include <net/netlink.h>
- #include <linux/skbuff.h>
- #include <linux/security.h>
-+#include <linux/lsm_hooks.h>
- #include <linux/freezer.h>
- #include <linux/pid_namespace.h>
- #include <net/netns/generic.h>
-@@ -2241,21 +2242,51 @@ int audit_log_task_context(struct audit_buffer *ab)
- {
- 	struct lsm_prop prop;
- 	struct lsm_context ctx;
-+	bool space = false;
- 	int error;
-+	int i;
- 
- 	security_current_getlsmprop_subj(&prop);
- 	if (!lsmprop_is_set(&prop))
- 		return 0;
- 
--	error = security_lsmprop_to_secctx(&prop, &ctx, LSM_ID_UNDEF);
--	if (error < 0) {
--		if (error != -EINVAL)
--			goto error_path;
-+	if (lsm_subjctx_cnt < 2) {
-+		error = security_lsmprop_to_secctx(&prop, &ctx, LSM_ID_UNDEF);
-+		if (error < 0) {
-+			if (error != -EINVAL)
-+				goto error_path;
-+			return 0;
-+		}
-+		audit_log_format(ab, " subj=%s", ctx.context);
-+		security_release_secctx(&ctx);
- 		return 0;
- 	}
--
--	audit_log_format(ab, " subj=%s", ctx.context);
--	security_release_secctx(&ctx);
-+	/* Multiple LSMs provide contexts. Include an aux record. */
-+	audit_log_format(ab, " subj=?");
-+	error = audit_buffer_aux_new(ab, AUDIT_MAC_TASK_CONTEXTS);
-+	if (error)
-+		goto error_path;
-+
-+	for (i = 0; i < lsm_active_cnt; i++) {
-+		if (!lsm_idlist[i]->subjctx)
-+			continue;
-+		error = security_lsmprop_to_secctx(&prop, &ctx,
-+						   lsm_idlist[i]->id);
-+		if (error < 0) {
-+			if (error == -EOPNOTSUPP)
-+				continue;
-+			audit_log_format(ab, "%ssubj_%s=?", space ? " " : "",
-+					 lsm_idlist[i]->name);
-+			if (error != -EINVAL)
-+				audit_panic("error in audit_log_task_context");
-+		} else {
-+			audit_log_format(ab, "%ssubj_%s=%s", space ? " " : "",
-+					 lsm_idlist[i]->name, ctx.context);
-+			security_release_secctx(&ctx);
-+		}
-+		space = true;
-+	}
-+	audit_buffer_aux_end(ab);
- 	return 0;
- 
- error_path:
-diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-index 9b6c2f157f83..17ec93a8d3fc 100644
---- a/security/apparmor/lsm.c
-+++ b/security/apparmor/lsm.c
-@@ -1427,6 +1427,7 @@ struct lsm_blob_sizes apparmor_blob_sizes __ro_after_init = {
- static const struct lsm_id apparmor_lsmid = {
- 	.name = "apparmor",
- 	.id = LSM_ID_APPARMOR,
-+	.subjctx = true,
- };
- 
- static struct security_hook_list apparmor_hooks[] __ro_after_init = {
-diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
-index db759025abe1..aaaa1227ce13 100644
---- a/security/bpf/hooks.c
-+++ b/security/bpf/hooks.c
-@@ -18,6 +18,7 @@ static struct security_hook_list bpf_lsm_hooks[] __ro_after_init = {
- static const struct lsm_id bpf_lsmid = {
- 	.name = "bpf",
- 	.id = LSM_ID_BPF,
-+	.subjctx = false, /* property exists, but will not be used */
- };
- 
- static int __init bpf_lsm_init(void)
-diff --git a/security/security.c b/security/security.c
-index 55f9c7ad3f89..8450cc5f82d5 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -320,6 +320,7 @@ static void __init initialize_lsm(struct lsm_info *lsm)
-  * Current index to use while initializing the lsm id list.
-  */
- u32 lsm_active_cnt __ro_after_init;
-+u32 lsm_subjctx_cnt __ro_after_init;
- const struct lsm_id *lsm_idlist[MAX_LSM_COUNT];
- 
- /* Populate ordered LSMs list from comma-separated LSM name list. */
-@@ -626,6 +627,8 @@ void __init security_add_hooks(struct security_hook_list *hooks, int count,
- 		if (lsm_active_cnt >= MAX_LSM_COUNT)
- 			panic("%s Too many LSMs registered.\n", __func__);
- 		lsm_idlist[lsm_active_cnt++] = lsmid;
-+		if (lsmid->subjctx)
-+			lsm_subjctx_cnt++;
- 	}
- 
- 	for (i = 0; i < count; i++) {
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 7b867dfec88b..1e2e1545eb2e 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -7142,6 +7142,7 @@ static int selinux_uring_cmd(struct io_uring_cmd *ioucmd)
- static const struct lsm_id selinux_lsmid = {
- 	.name = "selinux",
- 	.id = LSM_ID_SELINUX,
-+	.subjctx = true,
- };
- 
- /*
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 239773cdcdcf..75bd62fe1513 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -5057,6 +5057,7 @@ struct lsm_blob_sizes smack_blob_sizes __ro_after_init = {
- static const struct lsm_id smack_lsmid = {
- 	.name = "smack",
- 	.id = LSM_ID_SMACK,
-+	.subjctx = true,
- };
- 
- static struct security_hook_list smack_hooks[] __ro_after_init = {
--- 
-2.47.0
+> --- a/arch/x86/kernel/fpu/xstate.c
+> +++ b/arch/x86/kernel/fpu/xstate.c
+> @@ -55,7 +55,7 @@ static const char *xfeature_names[] =
+>  	"Protection Keys User registers",
+>  	"PASID state",
+>  	"Control-flow User registers",
+> -	"Control-flow Kernel registers (unused)",
+> +	"Control-flow Kernel registers",
 
+This should probably be:
+
+> +	"Control-flow Kernel registers (KVM only)",
+
+or something similar for now. XFEATURE_CET_KERNEL is *VERY* different
+from all of the other features and it's silly to pretend that it's the same.
