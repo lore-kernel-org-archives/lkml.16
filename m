@@ -1,104 +1,144 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEF5204C2A;
-	Fri,  7 Mar 2025 09:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341540; cv=pass; b=ajbW1dw6TMFPCeQJ/atwmy5MgT6Dv+lasq7LHeBrtKXstquoww0J58FXp8NWICChyHy9m1d0+8vfd/Fh4TgYZgi7Rbqe1StgQ/CCOenjuSBexgY+eNYe2SAYA52BkY6mTOVGjrliiHUuiXbsfSqPT0YC+6FIKK5X5ttVD4XI4QE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341540; c=relaxed/simple;
-	bh=sh0lyBC+9zQydcsp6rYm1YiuA10rQP0OryKOargKp64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qjaPYVhHz7mkZKH0JFX6Ciy+fvyRCVDYU8+bipalySWeihTMRCepiZfZ7IvHFx5thwkVgbguTbRIesj6NuNPV+dllBXUJWPcJWh1irC4tGPQQtPioiQSfUH6IpdHLT2e2OjjR5xbBzVD+Gdy7euX/cJLHsmhx/+6kxanCq8TT5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=YHysda3A; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0FA20C47E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741341552; cv=none; b=migQLOpyETM6f0zLTXeuYlyRakxcw3Bl3N/X27kTkv0f/DYWng7Na5BNCU5pPKmBDxslTGWnTXHbgathXXGc4ZpMg2DKuqi0fqCyppemZhxFQi2L1B+cZNDNI8YP0yGabYo3n07qHZxar3yJwN6849ccyHvzbcXKSeMV6h2MG9A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741341552; c=relaxed/simple;
+	bh=EkRBKBECXHAhX3EBNWnlfL6BlhPB8bTEBVpL3643OmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TFGMPqnE5JwIhlwtKjG/UIapz4hXJWEYo57c4dzOs0srY73eZ+tPUt8UZ+qv3hRL30UBwEzXMKdOML5t3QX9YdHgSuW+U7GN7n9K3znJ2E+BscPiZuMAzKGVKBzEhsPBWcI/yfe1jyneuahxZpn7a9DHva09MewZ1h5VwVZPS4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSfOBFKl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="YHysda3A"
-ARC-Seal: i=1; a=rsa-sha256; t=1741341500; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Z/PR+U4MA9bcDqOgjLzb9aFLSqOfjQCNLN9CWXAeqCSaQ2wexkyxP1Bg/xD0fmk8RquwWyFiArD1B3UiqE6iMXVnW0hOKgSKOfNSoAQ7i813gQ0JRMIYg6WGxknxMtOD7rLnAWQBM9LWalrtEwE1AUWt1bi4+pu17mNed8EyYb4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741341500; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Sd6Z99EJ8ZfYhr95vBuuNjDtXLH/fo9bgS3ZF5FRe+A=; 
-	b=Qpm3aURsAO+MlocU75G0A8cgylgrCbRoof3nsZVioW00rCGtdvFtOkxb0Zo7WVk0HduFlADq+lK3HqVMdKEetK1JNFes7+ErPFf+Sqf6gI+FLG1s/IqdhmyB7APaBA43BVR8JxIBG/nza1zVBNPQUJS9G8STIDAD2GZ0s5+5UL0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741341500;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Sd6Z99EJ8ZfYhr95vBuuNjDtXLH/fo9bgS3ZF5FRe+A=;
-	b=YHysda3AUKg7FgH3xrjjMNnd/QXtAkN7B6bo8cAoMMwJY15V3jJuq1aiK+6+6CiF
-	s8++XPd6/7Q7/zbieDWC6pTp8jK8u/U1Mj3yAnCBOQDOD8lpjR58007bAdKrqLz9k3t
-	j/M2fjCiBh4+PgCjsVqhunTNhuwUajm8YR3Fyry4=
-Received: by mx.zohomail.com with SMTPS id 174134149797959.40961357397384;
-	Fri, 7 Mar 2025 01:58:17 -0800 (PST)
-Message-ID: <64f8d179-9d0a-47ca-872c-aa92e44e7772@collabora.com>
-Date: Fri, 7 Mar 2025 12:58:13 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSfOBFKl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568E9C4CED1;
+	Fri,  7 Mar 2025 09:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741341551;
+	bh=EkRBKBECXHAhX3EBNWnlfL6BlhPB8bTEBVpL3643OmQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PSfOBFKlybeJAIMXUXMaGIaLOIZMp6R2VxP335RmZYRwv2T85l98foYuf99qJk+VT
+	 oXPs0mJdiQYUqR62/1dWriXdrgWShcWBVbO8YIafBUnMaZsnOpsGoc4vEMFaLZayYu
+	 c/+4fyiI4dEA0hOfHITIbFetgqrFHQiht7X+ECbIrPoeSmjdeRUJTvZlEPfh6nKNbb
+	 lC93HGW1JhhtyBrM6KYQ9ec5NIsZyA9XHj4oqx2xinJe7ObAstBQbBGryyIlf1gfwc
+	 a/rcJhhB4olOuXVrx97y2vasZ9smp/ossWPK6YDzYWs9fThayCypjI3ToEFOCUZO/e
+	 Cvie2EWCRVYDw==
+Date: Fri, 7 Mar 2025 10:59:08 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: =?utf-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>, 
+	hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com, 
+	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, airlied@gmail.com, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/14] drm/vkms: Allow to configure device
+Message-ID: <20250307-cyber-rooster-of-democracy-4f072c@houat>
+References: <20250218101214.5790-1-jose.exposito89@gmail.com>
+ <36c37aae-244f-48f8-8f88-c46b58a9e8b1@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] media: platform: synopsys: hdmirx: Fix compilation on
- 32bit arches
-To: Hans Verkuil <hverkuil@xs4all.nl>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- jose.abreu@synopsys.com, nelson.costa@synopsys.com,
- shawn.wen@rock-chips.com, nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
- Tim Surber <me@timsurber.de>
-References: <20250307092113.646831-1-dmitry.osipenko@collabora.com>
- <8cb4af0d-935a-4305-a204-9c2f187e0593@xs4all.nl>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <8cb4af0d-935a-4305-a204-9c2f187e0593@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yh2yaizjyak5cyxz"
+Content-Disposition: inline
+In-Reply-To: <36c37aae-244f-48f8-8f88-c46b58a9e8b1@bootlin.com>
 
-On 3/7/25 12:54, Hans Verkuil wrote:
-> Hi Dmitry,
-> 
-> On 07/03/2025 10:21, Dmitry Osipenko wrote:
->> The pixelclock is specified as 64bit integer and for this driver it
->> won't be above 600MHz. Fix the 64bit division of the pixclock for 32bit
->> kernel builds.
->>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202503070743.WnRxStlk-lkp@intel.com/
->> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->> ---
->>  drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
->> index 4d42da7255f3..7e342bbde967 100644
->> --- a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
->> +++ b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
->> @@ -291,7 +291,7 @@ static void hdmirx_get_timings(struct snps_hdmirx_dev *hdmirx_dev,
->>  	hfp = htotal - hact - hs - hbp;
->>  	vfp = vtotal - vact - vs - vbp;
->>  
->> -	fps = (bt->pixelclock + (htotal * vtotal) / 2) / (htotal * vtotal);
->> +	fps = ((u32)bt->pixelclock + (htotal * vtotal) / 2) / (htotal * vtotal);
-> 
-> I just merged:
-> 
-> https://patchwork.linuxtv.org/project/linux-media/patch/20250306-synopsys-hdmirx-fix-64-div-v1-1-dd5ff38bba5e@kernel.org/
-> 
-> So you can either leave that patch in, or provide a patch on top.
 
-Missed that patch you merged. No need to do anything then, thanks!
+--yh2yaizjyak5cyxz
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 00/14] drm/vkms: Allow to configure device
+MIME-Version: 1.0
 
--- 
-Best regards,
-Dmitry
+On Tue, Mar 04, 2025 at 10:43:12AM +0100, Louis Chauvet wrote:
+>=20
+>=20
+> Le 18/02/2025 =E0 11:12, Jos=E9 Exp=F3sito a =E9crit=A0:
+> > Hi everyone,
+> >=20
+> > In preparation for ConfigFS support, a flexible way to configure VKMS d=
+evice(s)
+> > is required.
+> > This series adds the required APIs to create a configuration, the code =
+changes
+> > required to apply it and KUnit test validating the changes.
+> >=20
+> > Louis Chauvet and I are working on ConfigFS support. In this series I t=
+ried to
+> > merge his changes [1] with mine [2].
+> > I kept his Signed-off-by to reflect that, even if I show up as the auth=
+or of
+> > some/most of the patches, this was a joint effort.
+> >=20
+> > I'll send the ConfigFS code [3] and its IGT tests [4] code this week.
+> > Meanwhile, the IGT tests also exercise this series and can be used for
+> > additional test coverage.
+> >=20
+> > Best wishes,
+> > Jos=E9 Exp=F3sito
+>=20
+> Hi all,
+>=20
+> I am trying to apply this series but I am encountering some issues. Most =
+of
+> the patches have the following trailers:
+>=20
+> Co-developed-by: Louis Chauvet
+> Signed-off-by: Louis Chauvet
+> Signed-off-by: Jos=E9 Exposito
+>=20
+> When I use dim b4-shazam, the result is:
+>=20
+> Co-developed-by: Louis Chauvet
+> Signed-off-by: Jos=E9 Exposito
+> Signed-off-by: Louis Chauvet
+>=20
+> However, checkpatch is not happy with this because it removes my
+> Signed-off-by line immediately after Co-developed-by.
+>=20
+> I then tried to add it myself:
+>=20
+> Co-developed-by: Louis Chauvet
+> Signed-off-by: Louis Chauvet
+> Signed-off-by: Jos=E9 Exposito
+> Signed-off-by: Louis Chauvet
+>=20
+> But this time, checkpatch complains that I have my Signed-off-by line twi=
+ce.
+>=20
+> And if I don't add the last Signed-off-by, checkpatch is indeed not happy
+> too:
+>=20
+> Co-developed-by: Louis Chauvet
+> Signed-off-by: Louis Chauvet
+> Signed-off-by: Jos=E9 Exposito
+>=20
+> How should I proceed in this situation? Should I ignore some warnings? If
+> so, what are the expected trailers?
+
+I assume Jose is the author and you're the committer? If so, I guess I'd
+expect the second to be the most relevant, but it's going to suck
+anyway.
+
+I kind of side-stepped the problem and applied the series
+
+Maxime
+
+--yh2yaizjyak5cyxz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ8rDbAAKCRDj7w1vZxhR
+xRZ4AP4ge2eRLQPRRsVuW27iWtiZJmRFuccllGYc6hclk0qJMAEArkiqKbv0LXNh
+pQ58jzkqXxd6orr5kUflvYQyRv+uogc=
+=GH1m
+-----END PGP SIGNATURE-----
+
+--yh2yaizjyak5cyxz--
