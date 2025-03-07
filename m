@@ -1,96 +1,81 @@
-Received: from out-16.pe-a.jellyfish.systems (out-16.pe-a.jellyfish.systems [198.54.127.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BC121E091;
-	Fri,  7 Mar 2025 15:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FE4220683
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360203; cv=none; b=ClVo/p+XNBQ4HpSt/44gwx1n5hHGV3Zz8lNoiTsMh5nOXR9qACAuDVk8V49ExjutgD9hHIcJsHyqbhtqn2nLHzXk6oFhmdxSwDsXdAGE10mMCdEwD93lUMAraG6XHSOCCc7EPEYHKaJ+KcKgknWPG9vwGiUcf8fE5zeTHI/jbIU=
+	t=1741360215; cv=none; b=WCGOMibbWhqNdB+Ymd3bs++cp+wprddx4yPF14fMcEmhbSFLykpNkeWBPu4TVtDcQFt4LP3yNG6ZtRUT3gchmadr/o9p1f3UrzvYExrPsmnvpqGeY2+c+jqhJ7soInicdfIo9pLpGGLNV6BZ/njtie5mM/wvSGIPcMTb1MV1uas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360203; c=relaxed/simple;
-	bh=ihHvQIx2ztyg1h3yxcaLwTKJXChieyv6DV25l6QnD90=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UESl9QDyPLWUCjDaRNLVY6tQ9WVmm6pShmLryK+zC0OwlkpM4hvAe51hFuDW11mj7TuFDBrPPu0dxOd78LpczkrIxBdy/5y/bswTOYER5dMOuvBRSUs4YBOfp8SuyBP3g2U38I5sWy99Sriq/Tc/r8Le4BzYdDSsyKMLwwTWIS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=qhy2KiDD; arc=none smtp.client-ip=198.54.127.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
+	s=arc-20240116; t=1741360215; c=relaxed/simple;
+	bh=6BdE3BOmpc0hWHpiv/1U3xCx/f6RR9FEN5UM+tYYQew=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OdjNvaGGrxNaQUntQtbEDnO29PB6TPoVeTee/eOkwTiPJ6tYgTn04ODB3PIOR3z8pESaTQlHhVv7GUG4o61qJTYtfh9+MW+jmo0DgQWgrmETnLepQILGSGqfTM6ucFvTPkj3ZMBNN7OJASk1VMuFNIBZAhP7s7WzNNsYO/8+UyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=KDrkAndT; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="qhy2KiDD"
-Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
-	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4Z8V030r8Wz4xR1;
-	Fri, 07 Mar 2025 15:02:59 +0000 (UTC)
-Received: from MTA-09.privateemail.com (unknown [10.50.14.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4Z8V023W0Pz2Sd0Q;
-	Fri,  7 Mar 2025 10:02:58 -0500 (EST)
-Received: from mta-09.privateemail.com (localhost [127.0.0.1])
-	by mta-09.privateemail.com (Postfix) with ESMTP id 4Z8V022587z3hhS5;
-	Fri,  7 Mar 2025 10:02:58 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
-	s=default; t=1741359778;
-	bh=ihHvQIx2ztyg1h3yxcaLwTKJXChieyv6DV25l6QnD90=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qhy2KiDDFvcqu+ixtgYPQY02OQ6Scwnhg48qe5Myk4QwVy1TCma8BfhzfNa7i3gXP
-	 ppkLwvL7igfCrEIBTdA3DnuMJkPEvcxCE2vdJ87GdqWDZUmYbMPoaGF9KO8l3HCOIh
-	 n5OMKsMIAU+6OshNBhzmIRWvrW3kXBAANolwEQciHg53ZuFZh2OVZQ0jr5teKGS+3q
-	 V6S2fSQbA9c1MeEzKZW/ZoUhDqlm4QfQSEg4sLG6jS3I9sD9/TjC3Y4f4RSaOLntk1
-	 5SzYmXRQYmxt/63wv5NbQIJsA0Y248UeM25ZLFs+uFtm4HwRSkc7Wy3OQDKt622/3m
-	 SbrImQE35mpKQ==
-Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
-	by mta-09.privateemail.com (Postfix) with ESMTPA;
-	Fri,  7 Mar 2025 10:02:43 -0500 (EST)
-From: Sam Winchenbach <sam.winchenbach@framepointer.org>
-To: linux-kernel@vger.kernel.org
-Cc: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	antoniu.miclaus@analog.com,
-	jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sam.winchenbach@framepointer.org,
-	bpellegrino@arka.org
-Subject: [PATCH v6 2/6] iio: filter: admv8818: fix band 4, state 15
-Date: Fri,  7 Mar 2025 10:02:12 -0500
-Message-ID: <20250307150216.374643-2-sam.winchenbach@framepointer.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
-References: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="KDrkAndT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=BuJf+DWtLBBhZh38ItBtEvDGGJVgmVqlp/Eo3nFZtyM=; b=KDrkAndTkH7QTO69oufln1sMwf
+	nDDWW0PxU6tSdOjTNI5oj/WBO3TzCvdH9Ooy6PIfsyEhQbPLi8TA4E0EWFWx7C1dgUCfG48xewoBo
+	Dz0hRxL/00GvSZQldeRG2cm9H3HaSa1VIYBSRnQ7cb5XDE/Scmol6GHeFqAsariXTp3yfwpbFODpA
+	SgeywavZUGedinBPeHjqztGFNNFMuF/fVz7FI26+NlEjINJcWUAD89w5JItiEWL7BM6T0anx+qdoI
+	QUjhdXQSWROB7DwLNd5A5lCpy4aNqDMTeJNxhqJ4VVwEJAwNjpQ+KRmQcgsSUYyLM98CzdZc0v6L5
+	Lfnqq8ow==;
+Received: from 179-125-91-70-dinamico.pombonet.net.br ([179.125.91.70] helo=[192.168.67.187])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tqYrH-005OEr-VB; Fri, 07 Mar 2025 15:39:34 +0100
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Subject: [PATCH v2 0/2] char: misc: improve test and dynamic allocation
+Date: Fri, 07 Mar 2025 11:39:26 -0300
+Message-Id: <20250307-misc-dynrange-v2-0-6fe19032ef76@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB4Fy2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDYwNz3dzM4mTdlMq8IrBkiqlJsqVRommqsaGlElBPQVFqWmYF2Lzo2Np
+ aAAp9OjRfAAAA
+X-Change-ID: 20250307-misc-dynrange-d54c92a5e319
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+ Dirk VanDerMerwe <dirk.vandermerwe@sophos.com>, 
+ Vimal Agrawal <vimal.agrawal@sophos.com>, linux-kernel@vger.kernel.org, 
+ Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+X-Mailer: b4 0.14.2
 
-Corrects the upper range of LPF Band 4 from 18.5 GHz to 18.85 GHz per
-the ADMV8818 datasheet
+This includes a change that prevents dynamic allocation from using a minor
+number that belongs to the historically static reserved range, which is
+still used by some drivers.
 
-Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
-Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
+It also improves the test, including a lot of corner cases, specially ones
+that would fail before past fixes.
+
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
 ---
- drivers/iio/filter/admv8818.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thadeu Lima de Souza Cascardo (2):
+      char: misc: restrict the dynamic range to exclude reserved minors
+      char: misc: add test cases
 
-diff --git a/drivers/iio/filter/admv8818.c b/drivers/iio/filter/admv8818.c
-index 848baa6e3bbf..8f563a426232 100644
---- a/drivers/iio/filter/admv8818.c
-+++ b/drivers/iio/filter/admv8818.c
-@@ -103,7 +103,7 @@ static const unsigned long long freq_range_lpf[4][2] = {
- 	{2050000000ULL, 3850000000ULL},
- 	{3350000000ULL, 7250000000ULL},
- 	{7000000000, 13000000000},
--	{12550000000, 18500000000}
-+	{12550000000, 18850000000}
- };
- 
- static const struct regmap_config admv8818_regmap_config = {
+ drivers/char/misc.c             |   9 +-
+ drivers/misc/misc_minor_kunit.c | 509 +++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 509 insertions(+), 9 deletions(-)
+---
+base-commit: 2397d61ee45cddb8f3bd3a3a9840ef0f0b5aa843
+change-id: 20250307-misc-dynrange-d54c92a5e319
+
+Best regards,
 -- 
-2.48.1
+Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
 
