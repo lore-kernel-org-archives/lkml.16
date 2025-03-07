@@ -1,103 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB739221DA8;
-	Fri,  7 Mar 2025 16:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C6121E086
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 16:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741363216; cv=none; b=Smq1XO/NX0r5F0GCnnSQhitXV4A7coBrTsaSp8Rg6WaufcYsci/mZUp6xRvUyFObAomdNyGQzDm9jgySzs/IHMvskrm1Rl6hHUysihuXqpoYn/r3JMU7GF51YTu2tEeIK6vhkv71UUja80tg6ht//Jon8Lln4JIynDfqFNiulBg=
+	t=1741363265; cv=none; b=pBHExzHFyjELcq1TRScGgb2V2HuCf2H9Qcj4H/xXwwSXs9LFfDgRfWS8KOQdjtUR84oEEbAoMFpQL074y666qu54Gl3fiN6DrZkzP3lgWuS8T6UPlY0u0MdoPm0ahUKaqCpVcn/jvlc2HCyG0BR5DhZ8FbApwRLYMi7zSIOfuX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741363216; c=relaxed/simple;
-	bh=VudDSmr/bb26uUnWCE5q6tgUy6/4HJohTadUBLtnWlg=;
+	s=arc-20240116; t=1741363265; c=relaxed/simple;
+	bh=nfaBHRI0nmgDdOpIx0FIBplOt0pS/eaTFzN7nuHrHao=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXds4j/0L1A2tDnKYVFXqmrexSfPuIR6rMa3xxqfe8c/A3OIAr6bKXQfzCIz1V3JZADSmMYtUIeTU7XGX7PLmHS7eFPEXevm4XsQrnKnaz3q19RHjHSWl9Vl6hN2xi0xxPh8TB5+FCCpGl29p1yswgnOuaCR7zDfl0nYeT0Zz1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7m9z5+o; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksTw+ePwgcRdanEKwjP/AxEM3e7H7nZXvwru9qdZHDgMAMEIB4fAOCKPo9cVdwFZn53OJxY9cu0lhXr4V5afDq4ZyUYbRvWg37lY4UbsIIcMTZ5MzT5ocEN/2vUy92riNn0Xwy0UfFJ19UjphA+iq/AGqOMoEaitK5JV1+dd0lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ai4zWkgu; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7m9z5+o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941D0C4CED1;
-	Fri,  7 Mar 2025 16:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741363216;
-	bh=VudDSmr/bb26uUnWCE5q6tgUy6/4HJohTadUBLtnWlg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7m9z5+oBQ4j+RHzsUYpANvSdOj0ewonqIUOZq59qBiEMPWqBy8o0f0gj6zQErJn0
-	 IpenFHbf1LcClkHvDElPusOdjXEJmlOHKhxgr4HRHUqzPuPYeYgo1tJmaXX/xDzlTD
-	 Xir+wclpoXzgmqdMVK/Qej1vmsS3oSaRsbBdjYMQSeghRcWbzPUyPkG9SlkuhVzyma
-	 e7rb8CAfjhuWEOT6hAyHScVM7WxB6ZCc1gBUQaN5WsjgHBvtrJTCIfs7fjJNZSa2Am
-	 C9auxav2wOoqU14lUxrXXKZQE7lW/GixZsjJZRrnWY9Teu45tdKmg8MQ2xdAKl4maZ
-	 eKMohi2cBB3LA==
-Date: Fri, 7 Mar 2025 16:00:12 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	"open list:IRQCHIP DRIVERS" <linux-kernel@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	imx@lists.linux.dev
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: fsl,irqsteer: Add
- i.MX94 support
-Message-ID: <20250307-jitters-hatchling-169243ef6a26@spud>
-References: <20250306170810.239489-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ai4zWkgu"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-390edaee0cfso1425323f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 08:01:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741363262; x=1741968062; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=B0Iktfq0DR02GmBsXbOGq/r2zfQq6D1ECaT1ooK1s1o=;
+        b=Ai4zWkguneRMqyM+IDIQL+AQLGqc5QxE84IuSiAxUfAPmL/pNHgANgKLhUxCmA7Nkf
+         8X+CCVJr+SibjZRgzYi1hA/SXZfpePJt5/8merDRSJhMOqDzPysLtoXPHbnhv5YEtQBg
+         xqZdSresTQiTXPHyYNW5ekDNFABjoUHtpfCzMvjSY9+gdAoNMwcY/IMB0H9S/cnlL1vf
+         SkJgrTk7qR1HqItH1XIz/6i7SFmkL/FeaXxQHu3vcaPf8PzG00j9dmHOaZQuJzPiNQ5J
+         3HAwWBVhMQhk27/98CnS8QERVDUqZxJp2KOJ/1KAjTDiS2Sstqm53KKoxbnaQDUhIay8
+         NH2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741363262; x=1741968062;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B0Iktfq0DR02GmBsXbOGq/r2zfQq6D1ECaT1ooK1s1o=;
+        b=RMBtohDNfwg3ZqNInFPhlVMMBG+L7pNg0xIHIP4Uslog/Cl1jCtuR3qPaOyZUtWaBu
+         nD5TNp5QboL4r//GoNERxE1qBISTRxtcI0h0PYw9FzDC7Ef6wbE/1mhA/rPW51cEbDpt
+         ffJZEqn/SFKNIQVE3mkdq+xdxWBf40pBqvqCVfzR+b9ePLYD2PzlaUe7ToopCQOLh68h
+         GrsdjnAtWTsceASBpBQ9kLcNcWONfG2cDc95U0HsWMxI+dvScev3l1u+IBGRj2Z+QtcB
+         l7wdP4ESweUTFA+asua8g95E8GrlaZ96sF0rSSCejE1ZuJExt1zft8c41kawS7KTZg9y
+         Ruwg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7f8Yxa47GO5HIYByKRIIcKsJCyIs0d+97XVw/XJBgLe4g0CNQ4kCS+rCgJgFEZSYhY9fdaYZA4SyCxk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn/0SlS76BnRPRYMlmsmi5Hfa4qyCbxSdK6twUd3g+5lifOspc
+	CSK/rpnsFeqfGs1+/gPnTm8efHWkz4X4wvEp0sKh0no3vZ+0aBPVC3r3umaD4i4=
+X-Gm-Gg: ASbGncsdb41Qx1hina0JL/uPRx3bFlvq8RQBKcf/3SiJkYOO0QbV/lfsmZOgm81Ji/U
+	AdIiHfYF7SYxLi8FEg69sn4aSb3KyYj3FU8mG6TI84Ldy/VaeXB01RZpeHJUeQHOSaE3DkHe1YT
+	cDpXRxh4zoGkXi5ycHNOt5I7ul3nXoXn8c9lVnXb674WxG+IHbYiUGQrLd5bTMHEPm/blYmi3Q1
+	QuC+kuFHisEC/v6vwMC3Z8MlCdJvV4jc1RPUy/iNuLj7nQxNBN+olWrk6Xiiia+Ij3I5y7VwoYz
+	wX4PfpNNuGlsTPPGKd92PjOkLightRecMWb8Z8kcL/bwmPc=
+X-Google-Smtp-Source: AGHT+IGwC5RdI2D2x8Mf/1yhLk8SnYyj3NhjKRRM+PHR4SpMZigqBSsZD7IJQFmATNxMAv0Q3Kbu9Q==
+X-Received: by 2002:a05:6000:4185:b0:38d:e572:4dc2 with SMTP id ffacd0b85a97d-39132d98d2cmr2269618f8f.40.1741363260299;
+        Fri, 07 Mar 2025 08:01:00 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd8da473sm54801455e9.18.2025.03.07.08.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 08:00:59 -0800 (PST)
+Date: Fri, 7 Mar 2025 17:00:58 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Arpitha Raghunandan <98.arpi@gmail.com>,
+	David Gow <davidgow@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v5 1/3] printf: convert self-test to KUnit
+Message-ID: <Z8sYOm4qovtdOSI7@pathway.suse.cz>
+References: <20250221-printf-kunit-convert-v5-0-5db840301730@gmail.com>
+ <20250221-printf-kunit-convert-v5-1-5db840301730@gmail.com>
+ <Z8mUH0comOCpycpK@pathway.suse.cz>
+ <CAJ-ks9nFSzRXFauavzSWhvhr2Rou7qqkWi_LZ=4e1Tyr4_bn3g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YyfNEs8L1pvicd3h"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250306170810.239489-1-Frank.Li@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ-ks9nFSzRXFauavzSWhvhr2Rou7qqkWi_LZ=4e1Tyr4_bn3g@mail.gmail.com>
 
+On Thu 2025-03-06 09:25:43, Tamir Duberstein wrote:
+> On Thu, Mar 6, 2025 at 7:25 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > On Fri 2025-02-21 15:34:30, Tamir Duberstein wrote:
+> > > Convert the printf() self-test to a KUnit test.
+> > >
+> > > In the interest of keeping the patch reasonably-sized this doesn't
+> > > refactor the tests into proper parameterized tests - it's all one big
+> > > test case.
+> > >
+> > > --- a/lib/test_printf.c
+> > > +++ b/lib/tests/printf_kunit.c
+> > > @@ -57,52 +58,50 @@ do_test(int bufsize, const char *expect, int elen,
+> > >       va_end(aq);
+> > >
+> > >       if (ret != elen) {
+> > > -             pr_warn("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d\n",
+> > > +             tc_fail("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d",
+> >
+> > 1. It looks a bit strange that the 1st patch replaces pr_warn() with
+> >    tc_fail() which hides KUNIT_FAIL().
+> >
+> >    And the 2nd patch replaces tc_fail() with KUNIT_FAIL().
+> >
+> >    It looks like a non-necessary churn.
+> >
+> >    It would be better to avoid the temporary "tc_fail" and swith to
+> >    KUNIT_FAIL() already in this patch.
+> >
+> >    I did not find any comment about this in the earier versions of the
+> >    patchset.
+> >
+> >    Is it just a result of the evolution of the patchset or
+> >    is there any motivation for this?
+> 
+> The motivation was to keep the width of the macro the same in this
+> first patch for ease of review, particularly in the 7 instances where
+> the invocation wraps to a second line. If you prefer I go straight to
+> KUNIT_FAIL, I can make that change.
 
---YyfNEs8L1pvicd3h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see. It might have been useful when the patch removed the trailing '\n'.
+But you are going to add it back. So there won't be any hidden change.
+So I would prefer to go straight to KUNIT_FAIL().
 
-On Thu, Mar 06, 2025 at 12:08:10PM -0500, Frank Li wrote:
-> Add compatible string "fsl,imx94-irqsteer" for the i.MX94 chip, which is
-> backward compatible with "fsl,imx-irqsteer".
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > @@ -842,13 +836,15 @@ test_pointer(void)
+> > >       fourcc_pointer();
+> > >  }
+> > >
+> > > -static void __init selftest(void)
+> > > +static void printf_test(struct kunit *test)
+> > >  {
+> > >       alloced_buffer = kmalloc(BUF_SIZE + 2*PAD_SIZE, GFP_KERNEL);
+> > >       if (!alloced_buffer)
+> > >               return;
+> >
+> > I would use here:
+> >
+> >         KUNIT_ASSERT_NOT_NULL(test, alloced_buffer);
+> >
+> > And move the same change for the other kmalloc() location from
+> > the 2nd patch.
+> 
+> I didn't do that here because I was trying to keep this patch as small
+> as possible, and I wrote that in the commit message.
+> 
+> As for using KUNIT_ASSERT_NOT_NULL here, that would have to change
+> back to an error return in the 2nd patch because this code moves into
+> `suite_init`, which is called with `struct kunit_suite` rather than
+> `struct kunit_test`, and KUnit assertion macros do not work with the
+> former (and for good reason, because failures in suite setup cannot be
+> attributed to a particular test case).
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+I see. KUNIT_ASSERT_NOT_NULL() can't be used in the .suite_exit() callback.
 
-> ---
->  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml   | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,i=
-rqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,i=
-rqsteer.yaml
-> index 6076ddf56bb5a..c49688be10581 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer=
-=2Eyaml
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer=
-=2Eyaml
-> @@ -19,6 +19,7 @@ properties:
->                - fsl,imx8mp-irqsteer
->                - fsl,imx8qm-irqsteer
->                - fsl,imx8qxp-irqsteer
-> +              - fsl,imx94-irqsteer
->            - const: fsl,imx-irqsteer
-> =20
->    reg:
-> --=20
-> 2.34.1
->=20
+> So I'd prefer to leave this as is.
 
---YyfNEs8L1pvicd3h
-Content-Type: application/pgp-signature; name="signature.asc"
+I agree to leave this as is.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8sYDAAKCRB4tDGHoIJi
-0qTZAP4nOT4nsBqJLVYalDInc5xXbYf2tE0A/46xWYBGQOwdXAEAwA2s+yiN7fwr
-9gWOeRaS7KWUj3WkMJOayiHtDh7EtAg=
-=E2+9
------END PGP SIGNATURE-----
-
---YyfNEs8L1pvicd3h--
+Best Regards,
+Petr
