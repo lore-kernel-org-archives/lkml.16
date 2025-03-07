@@ -1,133 +1,273 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CC01A5B8C;
-	Fri,  7 Mar 2025 20:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C0E1A5B8C;
+	Fri,  7 Mar 2025 20:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741378395; cv=none; b=mKqzYy3+ixVsWwmFX7XVCjLfbAaKcwx6fgRjCSuHU/+w9AzezDDpDz0z/ZQCCk0YyUX9Stcp4F788Pw6kcGBFcDVU/g/hJqd+RPhMiJsunjjT2TeL7ngISES8XP8xKk5bEfAf/Sljl/go6yw1mMNnHysH0KyFB8oqHk1hojuJGk=
+	t=1741378406; cv=none; b=L5S9Rs+LFqJgupSYWkTNM8N2/qMacmhjYTcRgT1urOQVf/ksNPDbgMdCZEmaflU1mhSXhY1jnpGMHiLGYnBML3SJnaxvzx4+MadpS69tA1Bsfn9+m6Ck2HgCKPLOn6xBZLiUYiMEZhkeD4+Xy5zHgUgzevjpW2bBlrTy8UDyk94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741378395; c=relaxed/simple;
-	bh=i4tXWbK2Su3es/UUrOMUUWCh7h0iXBpxDBqUtqDrJ+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UxzArgQffKeJzuf6wxfNrmFhwEmzxvFk5+do8LxBUN5/OpnNVP8Nj5FOl6wnEukUCz+LTom8Mx4L8k1Ep7z08G2X21P+15sALFQz223gxU812K0hK/ct/RfLx0eyeJNQ3muBCb659fptzNw2k7qJH187E5tewI0v2vXf4/biw7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cRi42CuO; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741378406; c=relaxed/simple;
+	bh=M2FARmcsZStMQDjL0QcDCzPZDc8Ui0yVPkCpiS0euQ8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fI/g1zveYzjgL3ClpxwCO3vVq2C8eUGCBFlbbFkFz/qoZNHfRZHCP51vmGp4KoPtSlLWIjfnCvu0LaootG11yTmWCQCyAaCTcWw60+SQ1qcSgCU7NeEJ8eHTpTLtYkzT1GQQvLrQMfglN61RBTitmZJEN3qzvTu/zobNhcPiM8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxD2zVRS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cRi42CuO"
-Date: Fri, 7 Mar 2025 12:12:55 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741378381;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YljDuPqUyrSKj1qY6CTlyxawJAoX4glZcEt/JKL20jE=;
-	b=cRi42CuORB2PT/6TuaBDeboPqIk1v1v+grz2MHaj4U6p5d4n8CFV1S3qgY+8frY05pdVhN
-	Sf+vXMzBmP1jsidnwGDqehrbtzS0KMNx1xt2mwVMeA66NIUE6gUdCdO6BVtVI5ufuf4mPQ
-	JU/fYuTQ/0fd6LbVAuRTsa/vx0qT6mc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	JP Kobryn <inwardvessel@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [RFC PATCH] memcg: net: improve charging of incoming network
- traffic
-Message-ID: <dpnv6luzeby3wni3jlcv2utgx4ozfp5zl3zfnhn2shv3q4iejz@sbex7f6azcpc>
-References: <20250307055936.3988572-1-shakeel.butt@linux.dev>
- <Z8tMB4i_hBLaSZS1@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxD2zVRS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 877CCC4CED1;
+	Fri,  7 Mar 2025 20:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741378406;
+	bh=M2FARmcsZStMQDjL0QcDCzPZDc8Ui0yVPkCpiS0euQ8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=DxD2zVRSjSbe0i7xtUtODsrv9P39bYOyWwnpEsWUCGVujfmi9Dd1X0NvNMnM4hsrw
+	 qLMIhBlX82HEoyhm0Z5fvgRHaRaYxzUfXop7xs4EtPwUuaop/yIP4FhJYZ7nl2ilE8
+	 wkqV+2q36WppiE6AFkp/EoIUNcZi4ENIlMyLT0tmPs0QWEcSNLtyawHauVUvCihzGg
+	 PHHZPK1rayH8eMn97CgmYqnQn4UP2M/lSALZ5cvG2OTPO8HZ/pHSdPGtb0QXKeQgch
+	 +cgrEKyzqQ2QGGf1ySA9Dynov+PsIfM+/ld7B+n49x4hiA2RqBuyiB/YxK99RVJIQE
+	 0iXywE+dDHSCA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,  "Guangbo
+ Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
+ Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
+ <tamird@gmail.com>,  "Markus Elfring" <Markus.Elfring@web.de>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 10/13] rust: hrtimer: implement `HrTimerPointer` for
+ `Pin<Box<T>>`
+In-Reply-To: <D8A3THTBK4SK.3LI57W1VI580J@proton.me> (Benno Lossin's message of
+	"Fri, 07 Mar 2025 14:29:58 +0000")
+References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org>
+	<20250307-hrtimer-v3-v6-12-rc2-v10-10-0cf7e9491da4@kernel.org>
+	<xfHjwuMWnL16ZsoPZa788aqaVAj2E57dGCkenefxU1HFxGOtCTWHdPNc2nPOF_osnruq4qsvkAFoQZFwzxMyZA==@protonmail.internalid>
+	<D8A2DAP4JOOK.PC50NH7JGIM2@proton.me> <87bjud3po0.fsf@kernel.org>
+	<iEFqFgdHr-qWv7gFkDccjbUrujKQzXbIzmC8grlTfXmOx7FwjNLXaDf4l6AbRR6uIIUJz6Hf7PupXYL0vBwNPQ==@protonmail.internalid>
+	<D8A3THTBK4SK.3LI57W1VI580J@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 07 Mar 2025 16:33:56 +0100
+Message-ID: <87cyes3lej.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8tMB4i_hBLaSZS1@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On Fri, Mar 07, 2025 at 07:41:59PM +0000, Yosry Ahmed wrote:
-> On Thu, Mar 06, 2025 at 09:59:36PM -0800, Shakeel Butt wrote:
-> > Memory cgroup accounting is expensive and to reduce the cost, the kernel
-> > maintains per-cpu charge cache for a single memcg. So, if a charge
-> > request comes for a different memcg, the kernel will flush the old
-> > memcg's charge cache and then charge the newer memcg a fixed amount (64
-> > pages), subtracts the charge request amount and stores the remaining in
-> > the per-cpu charge cache for the newer memcg.
-> > 
-> > This mechanism is based on the assumption that the kernel, for locality,
-> > keep a process on a CPU for long period of time and most of the charge
-> > requests from that process will be served by that CPU's local charge
-> > cache.
-> > 
-> > However this assumption breaks down for incoming network traffic in a
-> > multi-tenant machine. We are in the process of running multiple
-> > workloads on a single machine and if such workloads are network heavy,
-> > we are seeing very high network memory accounting cost. We have observed
-> > multiple CPUs spending almost 100% of their time in net_rx_action and
-> > almost all of that time is spent in memcg accounting of the network
-> > traffic.
-> > 
-> > More precisely, net_rx_action is serving packets from multiple workloads
-> > and is observing/serving mix of packets of these workloads. The memcg
-> > switch of per-cpu cache is very expensive and we are observing a lot of
-> > memcg switches on the machine. Almost all the time is being spent on
-> > charging new memcg and flushing older memcg cache. So, definitely we
-> > need per-cpu cache that support multiple memcgs for this scenario.
-> 
-> We've internally faced a different situation on machines with a large
-> number of CPUs where the mod_memcg_state(MEMCG_SOCK) call in
-> mem_cgroup_[un]charge_skmem() causes latency due to high contention on
-> the atomic update in memcg_rstat_updated().
+"Benno Lossin" <benno.lossin@proton.me> writes:
 
-Interesting. At Meta, we are not seeing the latency issue due to
-memcg_rstat_updated() but it is one of most expensive function in our
-fleet and optimizing it is in our plan.
+> On Fri Mar 7, 2025 at 3:01 PM CET, Andreas Hindborg wrote:
+>> "Benno Lossin" <benno.lossin@proton.me> writes:
+>>
+>>> On Fri Mar 7, 2025 at 11:11 AM CET, Andreas Hindborg wrote:
+>>>> Allow `Pin<Box<T>>` to be the target of a timer callback.
+>>>>
+>>>> Acked-by: Frederic Weisbecker <frederic@kernel.org>
+>>>> Reviewed-by: Lyude Paul <lyude@redhat.com>
+>>>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>>>> ---
+>>>>  rust/kernel/time/hrtimer.rs      |   3 ++
+>>>>  rust/kernel/time/hrtimer/tbox.rs | 109 +++++++++++++++++++++++++++++++++++++++
+>>>>  2 files changed, 112 insertions(+)
+>>>>
+>>>> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+>>>> index d2791fd624b7..991d37b0524a 100644
+>>>> --- a/rust/kernel/time/hrtimer.rs
+>>>> +++ b/rust/kernel/time/hrtimer.rs
+>>>> @@ -443,3 +443,6 @@ unsafe fn timer_container_of(ptr: *mut $crate::time::hrtimer::HrTimer<$timer_typ
+>>>>  pub use pin::PinHrTimerHandle;
+>>>>  mod pin_mut;
+>>>>  pub use pin_mut::PinMutHrTimerHandle;
+>>>> +// `box` is a reserved keyword, so prefix with `t` for timer
+>>>> +mod tbox;
+>>>> +pub use tbox::BoxHrTimerHandle;
+>>>> diff --git a/rust/kernel/time/hrtimer/tbox.rs b/rust/kernel/time/hrtimer/tbox.rs
+>>>> new file mode 100644
+>>>> index 000000000000..a3b2ed849050
+>>>> --- /dev/null
+>>>> +++ b/rust/kernel/time/hrtimer/tbox.rs
+>>>> @@ -0,0 +1,109 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +
+>>>> +use super::HasHrTimer;
+>>>> +use super::HrTimer;
+>>>> +use super::HrTimerCallback;
+>>>> +use super::HrTimerHandle;
+>>>> +use super::HrTimerPointer;
+>>>> +use super::RawHrTimerCallback;
+>>>> +use crate::prelude::*;
+>>>> +use crate::time::Ktime;
+>>>> +use core::mem::ManuallyDrop;
+>>>> +use core::ptr::NonNull;
+>>>> +
+>>>> +/// A handle for a [`Box<HasHrTimer<T>>`] returned by a call to
+>>>> +/// [`HrTimerPointer::start`].
+>>>> +pub struct BoxHrTimerHandle<T, A>
+>>>
+>>> Should this type implement `Send` and `Sync` depending on `T`?
+>>
+>> Yes. In practice `T` will always be `Send` and `Sync` because of bounds
+>> on other traits.
+>>
+>> I don't think we have to require `T: Sync`, because the handle does not ever
+>> create shared references to the underlying `T`?
+>
+> Oh I meant to do:
+>
+>     unsafe impl<T: Send + Sync, A> Send for BoxHrTimerHandle<T, A> {}
+>
+> But since you don't have it, it might be unnecessary.
+>
+>>>> +where
+>>>> +    T: HasHrTimer<T>,
+>>>> +    A: crate::alloc::Allocator,
+>>>> +{
+>>>> +    pub(crate) inner: NonNull<T>,
+>>>> +    _p: core::marker::PhantomData<A>,
+>>>> +}
+>>>> +
+>>>> +// SAFETY: We implement drop below, and we cancel the timer in the drop
+>>>> +// implementation.
+>>>> +unsafe impl<T, A> HrTimerHandle for BoxHrTimerHandle<T, A>
+>>>> +where
+>>>> +    T: HasHrTimer<T>,
+>>>> +    A: crate::alloc::Allocator,
+>>>> +{
+>>>> +    fn cancel(&mut self) -> bool {
+>>>> +        // SAFETY: As we obtained `self.inner` from a valid reference when we
+>>>> +        // created `self`, it must point to a valid `T`.
+>>>> +        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self.inner.as_ptr()) };
+>>>> +
+>>>> +        // SAFETY: As `timer_ptr` points into `T` and `T` is valid, `timer_ptr`
+>>>> +        // must point to a valid `HrTimer` instance.
+>>>> +        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
+>>>> +    }
+>>>> +}
+>>>> +
+>>>> +impl<T, A> Drop for BoxHrTimerHandle<T, A>
+>>>> +where
+>>>> +    T: HasHrTimer<T>,
+>>>> +    A: crate::alloc::Allocator,
+>>>> +{
+>>>> +    fn drop(&mut self) {
+>>>> +        self.cancel();
+>>>> +        // SAFETY: `self.inner` came from a `Box::into_raw` call
+>>>
+>>> Please add this as an invariant to `Self`.
+>>
+>> OK.
+>>
+>>>
+>>>> +        drop(unsafe { Box::<T, A>::from_raw(self.inner.as_ptr()) })
+>>>> +    }
+>>>> +}
+>>>> +
+>>>> +impl<T, A> HrTimerPointer for Pin<Box<T, A>>
+>>>> +where
+>>>> +    T: 'static,
+>>>> +    T: Send + Sync,
+>>>> +    T: HasHrTimer<T>,
+>>>> +    T: for<'a> HrTimerCallback<Pointer<'a> = Pin<Box<T, A>>>,
+>>>> +    Pin<Box<T, A>>: for<'a> RawHrTimerCallback<CallbackTarget<'a> = Pin<&'a T>>,
+>>>
+>>> I don't think this is necessary.
+>>
+>> Should I remove it? I feel like it communicates intent.
+>
+> What intent?
+>
+>>>> +    A: crate::alloc::Allocator,
+>>>> +{
+>>>> +    type TimerHandle = BoxHrTimerHandle<T, A>;
+>>>> +
+>>>> +    fn start(self, expires: Ktime) -> Self::TimerHandle {
+>>>> +        // SAFETY:
+>>>> +        //  - We will not move out of this box during timer callback (we pass an
+>>>> +        //    immutable reference to the callback).
+>>>> +        //  - `Box::into_raw` is guaranteed to return a valid pointer.
+>>>> +        let inner =
+>>>> +            unsafe { NonNull::new_unchecked(Box::into_raw(Pin::into_inner_unchecked(self))) };
+>>>> +
+>>>> +        // SAFETY:
+>>>> +        //  - We keep `self` alive by wrapping it in a handle below.
+>>>> +        //  - Since we generate the pointer passed to `start` from a valid
+>>>> +        //    reference, it is a valid pointer.
+>>>> +        unsafe { T::start(inner.as_ptr(), expires) };
+>>>> +
+>>>> +        BoxHrTimerHandle {
+>>>> +            inner,
+>>>> +            _p: core::marker::PhantomData,
+>>>> +        }
+>>>> +    }
+>>>> +}
+>>>> +
+>>>> +impl<T, A> RawHrTimerCallback for Pin<Box<T, A>>
+>>>> +where
+>>>> +    T: 'static,
+>>>> +    T: HasHrTimer<T>,
+>>>> +    T: for<'a> HrTimerCallback<Pointer<'a> = Pin<Box<T, A>>>,
+>>>> +    A: crate::alloc::Allocator,
+>>>> +{
+>>>> +    type CallbackTarget<'a> = Pin<&'a T>;
+>>>
+>>> Why isn't this `Pin<&'a mut T>`?
+>>
+>> I don't think it matters much? There can be no other mutable references
+>> while the callback is running, so why not a shared ref?
+>
+> IIUC there can be no references to the value, since the user used a
+> `Pin<Box<T>>` to schedule the timer.
+>
+> I thought it might make sense to give a pinned mutable reference, since
+> you explicitly implement the `RawHrTimerCallback` for `Pin<&mut T>`.
+> Which made me believe one sometimes needs to modify the `T` from the
+> callback.
+>
+> Since we're able to do that when the user used a `Box`, I think we
+> should just do it.
 
-> 
-> In this case, networking performs a lot of charge/uncharge operations,
-> but because we count the absolute magnitude updates in
-> memcg_rstat_updated(), we reach the threshold quickly. In practice, a
-> lot of these updates cancel each other out so the net change in the
-> stats may not be that large.
-> 
-> However, not using the absolute value of the updates could cause stat
-> updates of irrelevant stats with opposite polarity to cancel out,
-> potentially delaying stat updates.
-> 
-> I wonder if we can leverage the batching introduced here to fix this
-> problem as well. For example, if the charging in
-> mem_cgroup_[un]charge_skmem() is satisfied from this catch, can we avoid
-> mod_memcg_state() and only update the stats once at the end of batching?
-> 
-> IIUC the current implementation only covers the RX path, so it will
-> reduce the number of calls to mod_memcg_state(), but it won't prevent
-> charge/uncharge operations from raising the update counter
-> unnecessarily. I wonder if the scope of the batching could be increased
-> so that both TX and RX use the same cache, and charge/uncharge
-> operations cancel out completely in terms of stat updates.
-> 
-> WDYT?
+I see your point, I will change it.
 
-JP (CCed) is currently working on collecting data from our fleet to find
-the hotest memcg stats i.e. with the most updates. I think the early
-data show MEMCG_SOCK and MEMCG_KMEM are among the hot ones. JP has
-couple of ideas to improve the situation here which he will experiment
-with and share in due time.
+>
+>>>> +
+>>>> +    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
+>>>> +        // `HrTimer` is `repr(C)`
+>>>> +        let timer_ptr = ptr.cast::<super::HrTimer<T>>();
+>>>> +
+>>>> +        // SAFETY: By C API contract `ptr` is the pointer we passed when
+>>>> +        // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
+>>>> +        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
+>>>> +
+>>>> +        // SAFETY: We called `Box::into_raw` when we queued the timer.
+>>>> +        let tbox = ManuallyDrop::new(Box::into_pin(unsafe { Box::<T, A>::from_raw(data_ptr) }));
+>>>
+>>> Since you turn this into a reference below and never run the drop, why
+>>> not turn the pointer directly into a reference?
+>>
+>> You mean replace with `unsafe {&*data_ptr};`? I guess that could work,
+>> but it hinges on `Box` being transparent which is more subtle than going
+>> through the API.
+>
+> I think that's cleaner. Also why does that rely on `Box` being
+> transparent?
 
-Regarding batching for TX and RX, my intention is to keep the charge
-batching general purpose but I think the batching the MEMCG_SOCK for
-networking with a scoping API can be done and seems like a good idea. I
-will do that in the followup.
+I did not think of `Box::into_raw` as returning a pointer to the
+underlying `T`, but looking at the signature, it does. I thought it was
+returning a pointer to a `Box`.
 
-Thanks for taking a look.
+I will change it as you suggest.
+
+
+Best regards,
+Andreas Hindborg
+
 
 
 
