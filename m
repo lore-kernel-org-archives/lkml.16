@@ -1,214 +1,106 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EAA1624F7;
-	Fri,  7 Mar 2025 03:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519A41CFBC
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 03:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741316865; cv=none; b=TIF5zOmQ/7LnD5g8WP9aXIWhjzC9e7MjDxAAjSSBtezogbxiv3W8R/oakDXQAEigRhiO0GBRIqdGcIqo7knj/OMhlgNpdHLOT4SMbtPJtKwHtcQg2L6FElNI3o6A1JjNDJwANnfwqUnWzYU/E4kDW3fBqNqJv0ZhVDfGT8ON6UQ=
+	t=1741316921; cv=none; b=IkgLsfC3PFHEHFZ9+woxgUb93TjuLosIn7ZjFdUxVLSJbh5iOtGgGkYvb8OcqaPPMxUeaVHBb90V+WHwcTSKDoqXxje0pWB31j9x2Xct4rK816hCPcHHaAjpQ6kFps2L7c4K3GEgzpowOlCZSjOT5jMpfsLnJz/IcKyZuPgBOuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741316865; c=relaxed/simple;
-	bh=E/SBvHj4/jKEsnpkdEh6swg/eZaV0lU9NEKUu9PWnRY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kPR3eG2kjxNGhiEK8E7WXA66L6vD8Dn9AQac6DJtG5YsQfPOCUn0Ckr20jtqFaWXGFnTPo7GXUD2aCXHFYv5cRq5XT10CcWH7KwHeC6MwClwiGfInxhJirK4uM9CS8EHoo/FoFrtBYJVHO8sENJq62KH4stEDtL9J+J/LQ+kZgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z89jJ0wgZz4f3khL;
-	Fri,  7 Mar 2025 10:49:08 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4E8421A058E;
-	Fri,  7 Mar 2025 10:49:30 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgBHq1+4XspnJXgRFw--.21185S3;
-	Fri, 07 Mar 2025 10:49:30 +0800 (CST)
-Message-ID: <5b3864c3-bcfd-4f45-b427-224d32aca478@huaweicloud.com>
-Date: Fri, 7 Mar 2025 10:49:28 +0800
+	s=arc-20240116; t=1741316921; c=relaxed/simple;
+	bh=DcLJ9aKimVNyrW/43nsjmeGTwBj8U+eyVkMor5z0OH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vn9aadX2BpZq5cPwxpWAoq7EcX5nOFf3ODzEt2bj98EskVLZbQtxA9uFxRQH4s2wPJZlc6Bpvw7wIchk4Hv2gz/nhGlRryPwSZjq1rAI4kcTSRElScGyW6VIE6/8bUvLw3t+YOUZxD7ptuZHSdVJel/b3ahYhp845cfA8Cc5uvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aVkCZG2D; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aVkCZG2D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741316919; x=1772852919;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DcLJ9aKimVNyrW/43nsjmeGTwBj8U+eyVkMor5z0OH0=;
+  b=aVkCZG2DevpG8JhaJV75ZEFrc0J/n5atqb7tyEJMR/ygxC2aSndFonEI
+   QcBreTctw1nNJEVGEiM4JdSQm0N07RG8wXrHiq5pXvjfZTbXb1oZdpDfq
+   N2Guc5GkMyafaaOui7niWWL3q5tTXgUh+auYfxKgd4moO36GGWln1E4Yk
+   MurS67dSCWQ960762KMk8yv4zDuL2AxNf+HVucocLXltfzqZ6sYj+Ey/Q
+   W6fdJeWLFoBtLVBswa3T8c3B/GmU/FqpdnHqOhRDHq/PvRYy2YdkG1Gex
+   9Kiu4IkA5KomO6VtLRytp2QPMYN2cCx9UayqOyxCkVtUQJQeydP/dyXoQ
+   w==;
+X-CSE-ConnectionGUID: n1RVVMEhRgiEo1Lld35qgg==
+X-CSE-MsgGUID: oNJy5RLfTgKFd5DT5UPYKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="52996201"
+X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
+   d="scan'208";a="52996201"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 19:08:39 -0800
+X-CSE-ConnectionGUID: NYB16Ma0QrSPRJ6pD9Bw5g==
+X-CSE-MsgGUID: UPRbNo95TJeuYJ1WV0owAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="119130707"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 06 Mar 2025 19:08:35 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tqO4d-000O7i-2r;
+	Fri, 07 Mar 2025 03:08:31 +0000
+Date: Fri, 7 Mar 2025 11:07:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
+	akpm@linux-foundation.org, urezki@gmail.com, hch@infradead.org,
+	dmitry.osipenko@collabora.com, jfalempe@redhat.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Ryosuke Yasuoka <ryasuoka@redhat.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-mm@kvack.org
+Subject: Re: [PATCH drm-next 2/2] drm/virtio: Use atomic_vmap to work
+ drm_panic in GUI
+Message-ID: <202503071022.q1pg7suf-lkp@intel.com>
+References: <20250305152555.318159-3-ryasuoka@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if
- journal is destroying
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>,
- linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>,
- linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>
-References: <cover.1741270780.git.ojaswin@linux.ibm.com>
- <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBHq1+4XspnJXgRFw--.21185S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWryUCrWkGFWUuFykXF18Zrb_yoW7Jr4fpr
-	Z8A3WvyrWjvw1Duw4xWF40qFWjg3WvkFyxKwnruw1xt398twn2qFy8tF1YyFWUXrZ5G3W8
-	ZF4jy397Gw1a9rDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305152555.318159-3-ryasuoka@redhat.com>
 
-On 2025/3/6 22:28, Ojaswin Mujoo wrote:
-> Presently we always BUG_ON if trying to start a transaction on a journal marked
-> with JBD2_UNMOUNT, since this should never happen. However, while ltp running
-> stress tests, it was observed that in case of some error handling paths, it is
-> possible for update_super_work to start a transaction after the journal is
-> destroyed eg:
-> 
-> (umount)
-> ext4_kill_sb
->   kill_block_super
->     generic_shutdown_super
->       sync_filesystem /* commits all txns */
->       evict_inodes
->         /* might start a new txn */
->       ext4_put_super
-> 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
->         jbd2_journal_destroy
->           journal_kill_thread
->             journal->j_flags |= JBD2_UNMOUNT;
->           jbd2_journal_commit_transaction
->             jbd2_journal_get_descriptor_buffer
->               jbd2_journal_bmap
->                 ext4_journal_bmap
->                   ext4_map_blocks
->                     ...
->                     ext4_inode_error
->                       ext4_handle_error
->                         schedule_work(&sbi->s_sb_upd_work)
-> 
->                                                /* work queue kicks in */
->                                                update_super_work
->                                                  jbd2_journal_start
->                                                    start_this_handle
->                                                      BUG_ON(journal->j_flags &
->                                                             JBD2_UNMOUNT)
-> 
-> Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
-> destroying only do a journaled (and deferred) update of sb if this flag is not
-> set. Otherwise, just fallback to an un-journaled commit.
-> 
-> We set sbi->s_journal_destroying = true only after all the FS updates are done
-> during ext4_put_super() (except a running transaction that will get commited
-> during jbd2_journal_destroy()). After this point, it is safe to commit the sb
-> outside the journal as it won't race with a journaled update (refer
-> 2d01ddc86606).
-> 
-> Also, we don't need a similar check in ext4_grp_locked_error since it is only
-> called from mballoc and AFAICT it would be always valid to schedule work here.
-> 
-> Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
-> Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-> ---
->  fs/ext4/ext4.h      | 2 ++
->  fs/ext4/ext4_jbd2.h | 8 ++++++++
->  fs/ext4/super.c     | 4 +++-
->  3 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 2b7d781bfcad..d48e93bd5690 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
->  	 */
->  	struct work_struct s_sb_upd_work;
->  
-> +	bool s_journal_destorying;
-> +
->  	/* Atomic write unit values in bytes */
->  	unsigned int s_awu_min;
->  	unsigned int s_awu_max;
-> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> index 9b3c9df02a39..6bd3ca84410d 100644
-> --- a/fs/ext4/ext4_jbd2.h
-> +++ b/fs/ext4/ext4_jbd2.h
-> @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
->  {
->  	int err = 0;
->  
-> +	/*
-> +	 * At this point all pending FS updates should be done except a possible
-> +	 * running transaction (which will commit in jbd2_journal_destroy). It
-> +	 * is now safe for any new errors to directly commit superblock rather
-> +	 * than going via journal.
-> +	 */
-> +	sbi->s_journal_destorying = true;
-> +
+Hi Ryosuke,
 
-Hi, Ojaswin!
+kernel test robot noticed the following build errors:
 
-I'm afraid you still need to flush the superblock update work here,
-otherwise I guess the race condition you mentioned in v1 could still
-occur.
+[auto build test ERROR on e21cba704714c301d04c5fd37a693734b623872a]
 
- ext4_put_super()
-  flush_work(&sbi->s_sb_upd_work)
+url:    https://github.com/intel-lab-lkp/linux/commits/Ryosuke-Yasuoka/vmalloc-Add-atomic_vmap/20250305-232918
+base:   e21cba704714c301d04c5fd37a693734b623872a
+patch link:    https://lore.kernel.org/r/20250305152555.318159-3-ryasuoka%40redhat.com
+patch subject: [PATCH drm-next 2/2] drm/virtio: Use atomic_vmap to work drm_panic in GUI
+config: i386-buildonly-randconfig-003-20250306 (https://download.01.org/0day-ci/archive/20250307/202503071022.q1pg7suf-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250307/202503071022.q1pg7suf-lkp@intel.com/reproduce)
 
-                    **kjournald2**
-                    jbd2_journal_commit_transaction()
-                    ...
-                    ext4_inode_error()
-                      /* JBD2_UNMOUNT not set */
-                      schedule_work(s_sb_upd_work)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503071022.q1pg7suf-lkp@intel.com/
 
-                                  **workqueue**
-                                   update_super_work
-                                   /* s_journal_destorying is not set */
-                            	   if (journal && !s_journal_destorying)
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-  ext4_journal_destroy()
-   /* set s_journal_destorying */
-   sbi->s_journal_destorying = true;
-   jbd2_journal_destroy()
-    journal->j_flags |= JBD2_UNMOUNT;
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
+ERROR: modpost: "drm_gem_atomic_get_pages" [drivers/gpu/drm/drm_shmem_helper.ko] undefined!
+ERROR: modpost: "atomic_vmap" [drivers/gpu/drm/drm_shmem_helper.ko] undefined!
+>> ERROR: modpost: "drm_gem_shmem_atomic_vmap" [drivers/gpu/drm/virtio/virtio-gpu.ko] undefined!
 
-                                       jbd2_journal_start()
-                                        start_this_handle()
-                                          BUG_ON(JBD2_UNMOUNT)
-
-Thanks,
-Yi.
-
->  	err = jbd2_journal_destroy(journal);
->  	sbi->s_journal = NULL;
->  
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 8ad664d47806..31552cf0519a 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
->  		 * constraints, it may not be safe to do it right here so we
->  		 * defer superblock flushing to a workqueue.
->  		 */
-> -		if (continue_fs && journal)
-> +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
->  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
->  		else
->  			ext4_commit_super(sb);
-> @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
->  	spin_lock_init(&sbi->s_error_lock);
->  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
->  
-> +	sbi->s_journal_destorying = false;
-> +
->  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
->  	if (err)
->  		goto failed_mount3;
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
