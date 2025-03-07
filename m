@@ -1,146 +1,186 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9CA219317
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070EA2E822;
+	Fri,  7 Mar 2025 15:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361931; cv=none; b=LV/ReDlsHCBTc+IHdLNjYTYQgLtdc3iSNfI/grsAtEmdlLR/CtTR+iUvdHXBCjGR25Kn4pX7OX5It7Pqt92e21WSAxejjJb6Ps1YfB+eASjZLe1RdLm0epS9qMHGwRCkG+sVdcBsBKsIUl9FKs8NmWWsRa+UWXt+Clym27Meup0=
+	t=1741361983; cv=none; b=q+uw04nUn8isn5bTRR4zkxhQhtUcSC7F4uPBHBIJJAZd4PyE/UkY2DBTFeKbw+Xzvic6MJ24/a4fgiqvVkJ+2zBlaewXQ7uF1weOk0B2T89xRG5Ld2nzkVU8hrzaEw28/Bm2zTgLBxA40LqPUiSmvgkjyCfrkjx8R7f3m2ecpm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361931; c=relaxed/simple;
-	bh=A85fo7gKkXaPFa9FkJlgwJCdrqDwnB5ccjXo2X/wlzk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DgwMfu15RDnVXbNnkGMSb2tVJ123350L2Yp7RF1fkirYJ8B9aE9CqNGgqN51L3zSiqN9Mmaa9IIKEbi7weABQo49WxiKHM+uLFl47AVogW1ctHv9Fvb6GDcgz0yb7DZsBi4RFuAAQlM0Vwk47DiDTrEr0KVl5T0D2ZsrNzY49bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zx0F+qlZ; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zx0F+qlZ"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso2532984a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:38:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741361928; x=1741966728; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=42vX3c5eYK6+PT3iK03vkSK6URE9IJeYdbtn09gB3H8=;
-        b=Zx0F+qlZvCYwkS1Lokis7EEvQUcZ9uPwx9GRd3f0jK/afgKDUUqY0iRcDBSfaRz+jF
-         kMcjfOlZyQt7o0qHYEFPP07SrtVaJKc+L2rnfo5Q+MvFToCS+Sv7IMFHI28uBtfnAowr
-         DYMTpbOW6N7b97QlJrKBPybHGRjRSS2tETeBKy+lYNCL4HsMbKuxvRtCjykl6a/8dw0E
-         iKqm4was9PDMlZIU8gAODsKD7LgiJgIiycFGCvDJFXxgvBrN05Y1EysziO+5+oxo7JO6
-         lKKNpoaykDekPq1LXExuy3FbMOM12JTGziaYuyJJ/8RnltdkWIOwEZ29wWLb7+EFJnh8
-         aHmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741361928; x=1741966728;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=42vX3c5eYK6+PT3iK03vkSK6URE9IJeYdbtn09gB3H8=;
-        b=R/GmEpHYgj56fxadOUSa+fZLcXDdrOicFQ+7iSXqGVM3sTXYSD96m2qaCJbzDCVzjd
-         lH53g2yMuLdbFlKoMIWj51ZOziyBOF6licYZUhZxv7BOv32wS7+jXq2/vhQoG0LIPG35
-         hC2IUjEH56s8jCtV2oNgrjk8vOIbRuXo6z1gG0V/boKdZlSYRQ6VerGfUH9oZHMiSkDH
-         vR53gJ9n9wx8ZkXsrso01KnsPhfJxfRStjVsv5QTLIC6oKgRDsjBsG3LHBWD1zl9a7Sh
-         Tx1eUXmNiyZ3UlQJ6NiZGdZswl1ZCNS5dK4lN9yCMTZpFiNb5v2scvnp+CrlS8GhGr3k
-         L9Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCXred5dSZ0NFYVC4FpaW5DnxLWqde3t0M6riO2P3nD1ts1Tr7B7VFWZfIrgZrSLuGJKWsxhcf+xUVHShZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ1bhMa+OYVkWfF2AZgV8+ejuD05rq9q9aIVKxBmsQ+MOWbd9i
-	HAaDsrM8PGphwFg5TIqvMTpJkoVMtkA5HKfaqGgXMGbO/aAGx/Mf4x4ASZ8hlb4=
-X-Gm-Gg: ASbGncsCURRcklKeOorlo4YaJbqihB6d92M6s3eRgmU6dXIrc7LMJzzzcjrGPvgSip8
-	UzJbVx4f7Nkq/2VLhlbcr5o3vVXW9q4N6tv7vcn/SDZEPL6FSFjRoCUNMyWezO6PithyjmWZ9mB
-	Fk+aYMT97QnN1UkzheI59Px30UUHX5HggopO0/mKCPjztA/P+zbdlmbmMGydqg/+NlzTmibg809
-	MtLpAszyVsDcrojFKNIndOTfgJIYVxSSgRhD/T/n467KGpBIIhJ88O5dpafDJE/apU8bt8yHJa/
-	I74LpumJ4W0qWkq0etylWlwHt/2e3e85UKcxBgY+mCewMt1RVANLFw==
-X-Google-Smtp-Source: AGHT+IFl1WF2/BmG5TpHqJMFXAy3oe958ZC0g+bU1yWwbSxiPj/UEP5KIcg9WYGq23IB0sHLCiTQ7Q==
-X-Received: by 2002:a17:907:7293:b0:ac1:ecb0:ca98 with SMTP id a640c23a62f3a-ac22cd6e4ecmr937582966b.26.1741361927638;
-        Fri, 07 Mar 2025 07:38:47 -0800 (PST)
-Received: from [192.168.0.14] ([79.115.63.206])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac23943883csm295717866b.12.2025.03.07.07.38.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 07:38:47 -0800 (PST)
-Message-ID: <9004166e-5535-4024-8114-9fdb217407bb@linaro.org>
-Date: Fri, 7 Mar 2025 15:38:45 +0000
+	s=arc-20240116; t=1741361983; c=relaxed/simple;
+	bh=8RcfGscKVHD+0qW2v6R4G9+bU4Ps2LgpB1Gbudf2mnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Mx3Zgz18wBhXb4Q33agetih0lCHP42OIqk4CIyAzY3RTlYeFhBobjth0SRg0uDTQ/RE5RMjX+kMDMIY+PB0Sn6HrQwkI/j6hc33Zhhdp6GqTKVL5usxV+9m2c+qYaQc2qGmJYmZ3K5snWW7FH86lnxG1Zs9HFT7noW9kleuJL3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E53EC4CED1;
+	Fri,  7 Mar 2025 15:39:41 +0000 (UTC)
+Date: Fri, 7 Mar 2025 10:39:41 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Uday Shankar
+ <ushankar@purestorage.com>, Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] scripts/tracing: Remove scripts/tracing/draw_functrace.py
+Message-ID: <20250307103941.070654e7@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/21] mtd: spinand: Use more specific naming for the
- reset op
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Santhosh Kumar K <s-k6@ti.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
- <20250307-winbond-6-14-rc1-octal-v1-1-45c1e074ad74@bootlin.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20250307-winbond-6-14-rc1-octal-v1-1-45c1e074ad74@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
+The draw_functrace.py hasn't worked in years. There's better ways to
+accomplish the same thing (via libtracefs). Remove it.
 
-On 3/7/25 3:08 PM, Miquel Raynal wrote:
-> SPI operations have been initially described through macros implicitly
-> implying the use of a single SPI SDR bus. Macros for supporting dual and
-> quad I/O transfers have been added on top, generally inspired by vendor
-> vendor naming, followed by DTR operations. Soon we might see octal
-> and even octal DTR operations as well (including the opcode byte).
-> 
-> Let's clarify what the macro really means by describing the expected bus
-> topology in the reset macro name.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/mtd/nand/spi/core.c | 2 +-
->  include/linux/mtd/spinand.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-> index 7a578f3522be93d30a9132cf01831515db77ae38..ea6b48242ad4a4e51c713907ce5cc55022cdb569 100644
-> --- a/drivers/mtd/nand/spi/core.c
-> +++ b/drivers/mtd/nand/spi/core.c
-> @@ -586,7 +586,7 @@ static int spinand_read_id_op(struct spinand_device *spinand, u8 naddr,
->  
->  static int spinand_reset_op(struct spinand_device *spinand)
->  {
-> -	struct spi_mem_op op = SPINAND_RESET_OP;
-> +	struct spi_mem_op op = SPINAND_RESET_1S_0_0_OP;
->  	int ret;
->  
->  	ret = spi_mem_exec_op(spinand->spimem, &op);
-> diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-> index 0da8a1c7740ef5cbbdb2a74858465136638224f4..4f47adbe4566d7813ffd8fbfaddd1a85d88d0208 100644
-> --- a/include/linux/mtd/spinand.h
-> +++ b/include/linux/mtd/spinand.h
-> @@ -20,7 +20,7 @@
->   * Standard SPI NAND flash operations
->   */
->  
-> -#define SPINAND_RESET_OP						\
-> +#define SPINAND_RESET_1S_0_0_OP						\
-Hi, Miquel,
+Link: https://lore.kernel.org/linux-trace-kernel/20250210-debuginfo-v1-1-368feb58292a@purestorage.com/
 
-Have you seen any reset op with address or data? If not, I'm not really
-sure whether we shall change the name for these basic operations.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ scripts/tracing/draw_functrace.py | 129 ------------------------------
+ 1 file changed, 129 deletions(-)
+ delete mode 100755 scripts/tracing/draw_functrace.py
 
-Changing them to 1S-0-0 may also indicate that there are resets with
-address or data fields, which I find confusing.
-
-I think the change is good for reads and writes. I'll check further in
-the series and let you know.
-
-Cheers,
-ta
-
-
->  	SPI_MEM_OP(SPI_MEM_OP_CMD(0xff, 1),				\
->  		   SPI_MEM_OP_NO_ADDR,					\
->  		   SPI_MEM_OP_NO_DUMMY,					\
-> 
+diff --git a/scripts/tracing/draw_functrace.py b/scripts/tracing/draw_functrace.py
+deleted file mode 100755
+index 42fa87300941..000000000000
+--- a/scripts/tracing/draw_functrace.py
++++ /dev/null
+@@ -1,129 +0,0 @@
+-#!/usr/bin/env python
+-# SPDX-License-Identifier: GPL-2.0-only
+-
+-"""
+-Copyright 2008 (c) Frederic Weisbecker <fweisbec@gmail.com>
+-
+-This script parses a trace provided by the function tracer in
+-kernel/trace/trace_functions.c
+-The resulted trace is processed into a tree to produce a more human
+-view of the call stack by drawing textual but hierarchical tree of
+-calls. Only the functions's names and the call time are provided.
+-
+-Usage:
+-	Be sure that you have CONFIG_FUNCTION_TRACER
+-	# mount -t tracefs nodev /sys/kernel/tracing
+-	# echo function > /sys/kernel/tracing/current_tracer
+-	$ cat /sys/kernel/tracing/trace_pipe > ~/raw_trace_func
+-	Wait some times but not too much, the script is a bit slow.
+-	Break the pipe (Ctrl + Z)
+-	$ scripts/tracing/draw_functrace.py < ~/raw_trace_func > draw_functrace
+-	Then you have your drawn trace in draw_functrace
+-"""
+-
+-
+-import sys, re
+-
+-class CallTree:
+-	""" This class provides a tree representation of the functions
+-		call stack. If a function has no parent in the kernel (interrupt,
+-		syscall, kernel thread...) then it is attached to a virtual parent
+-		called ROOT.
+-	"""
+-	ROOT = None
+-
+-	def __init__(self, func, time = None, parent = None):
+-		self._func = func
+-		self._time = time
+-		if parent is None:
+-			self._parent = CallTree.ROOT
+-		else:
+-			self._parent = parent
+-		self._children = []
+-
+-	def calls(self, func, calltime):
+-		""" If a function calls another one, call this method to insert it
+-			into the tree at the appropriate place.
+-			@return: A reference to the newly created child node.
+-		"""
+-		child = CallTree(func, calltime, self)
+-		self._children.append(child)
+-		return child
+-
+-	def getParent(self, func):
+-		""" Retrieve the last parent of the current node that
+-			has the name given by func. If this function is not
+-			on a parent, then create it as new child of root
+-			@return: A reference to the parent.
+-		"""
+-		tree = self
+-		while tree != CallTree.ROOT and tree._func != func:
+-			tree = tree._parent
+-		if tree == CallTree.ROOT:
+-			child = CallTree.ROOT.calls(func, None)
+-			return child
+-		return tree
+-
+-	def __repr__(self):
+-		return self.__toString("", True)
+-
+-	def __toString(self, branch, lastChild):
+-		if self._time is not None:
+-			s = "%s----%s (%s)\n" % (branch, self._func, self._time)
+-		else:
+-			s = "%s----%s\n" % (branch, self._func)
+-
+-		i = 0
+-		if lastChild:
+-			branch = branch[:-1] + " "
+-		while i < len(self._children):
+-			if i != len(self._children) - 1:
+-				s += "%s" % self._children[i].__toString(branch +\
+-								"    |", False)
+-			else:
+-				s += "%s" % self._children[i].__toString(branch +\
+-								"    |", True)
+-			i += 1
+-		return s
+-
+-class BrokenLineException(Exception):
+-	"""If the last line is not complete because of the pipe breakage,
+-	   we want to stop the processing and ignore this line.
+-	"""
+-	pass
+-
+-class CommentLineException(Exception):
+-	""" If the line is a comment (as in the beginning of the trace file),
+-	    just ignore it.
+-	"""
+-	pass
+-
+-
+-def parseLine(line):
+-	line = line.strip()
+-	if line.startswith("#"):
+-		raise CommentLineException
+-	m = re.match("[^]]+?\\] +([a-z.]+) +([0-9.]+): (\\w+) <-(\\w+)", line)
+-	if m is None:
+-		raise BrokenLineException
+-	return (m.group(2), m.group(3), m.group(4))
+-
+-
+-def main():
+-	CallTree.ROOT = CallTree("Root (Nowhere)", None, None)
+-	tree = CallTree.ROOT
+-
+-	for line in sys.stdin:
+-		try:
+-			calltime, callee, caller = parseLine(line)
+-		except BrokenLineException:
+-			break
+-		except CommentLineException:
+-			continue
+-		tree = tree.getParent(caller)
+-		tree = tree.calls(callee, calltime)
+-
+-	print(CallTree.ROOT)
+-
+-if __name__ == "__main__":
+-	main()
+-- 
+2.47.2
 
