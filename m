@@ -1,76 +1,73 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D21F3D6D;
-	Fri,  7 Mar 2025 06:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D82618FDBE;
+	Fri,  7 Mar 2025 06:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741329297; cv=none; b=TIiyV6EUZCqS2H61MiZQfJuPd1MwXo749P0yLWTpmC2Jg643ooB7lpdSSIs11hcD70pPGAim/dk7Mm74H/t7d3KawP3ijizOslN53yb6ttL49JNFeAMwwdGk/DI+6IcdyZqPI5KQO8Hz7diGjyTeP9Hq92L7KUALvM0LxqoAErc=
+	t=1741329304; cv=none; b=RRNF3mhfq2J0TJIyysrvcBcGERCa07iiUZkDntCi9BpxHw3MNxr5FXxDT0oHstj4wh1MuPzYIMqfB9EKzV5/gH4+JGG6SngVqxqT7ELjFAXqldqRVsdViquGeFsUM9Z4ZRyg0oDEwFB9ZwQXQiMpO+iRtgNlJPQFE21tCcWG8tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741329297; c=relaxed/simple;
-	bh=7tFCBj0t+q7N6pp1MopSr0dJ891vRBAOpXnZ2pdThSk=;
+	s=arc-20240116; t=1741329304; c=relaxed/simple;
+	bh=D0GUM9vwdTZADtSV9LFCdv8+sJcUQRqRldlU0zdH/Uo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mmb9uIZYmummw63RqYfd2C7ShS2OMcDoixsbfn5vpzvK/LkAG8FVx3axmF4bYMK0YpeV4R4w1V5F62/h2YAKL7QjyKXMlFfEc4ghQkrVycXmW/3xk6+WwREqEGnqOvJ6Ds0dK+7btalPegCOZIirbfXhZqxSOIb9KO4V9njQQ3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sKrDz/RK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eOWVk8vComdqVx7g928WCqv8piuxg/4M5T0aWBcnwJ1m6hCuQOVWnJoBuyQFhrw870ztoqd6EBT9+jFpq0P1wE12CERco//EJrWRRjs5t6S/nSEZAUW9r/dpOfMKdhD9nzhaFsKDONYa0tF2x9xjhCY32m9YAaIYeM8mpmh1qi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=I7ZlE6PW; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=0oEXldot; arc=none smtp.client-ip=155.254.16.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sKrDz/RK"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526KZjs4022133;
-	Fri, 7 Mar 2025 06:34:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=z4aUnM4cVOQONzJ2q3GRhNlPZAUo9q
-	V2N1/iTW5LOTE=; b=sKrDz/RKcCd8KdtgEQCSdafhlvTdlW4CoqF/YMSQi5airM
-	bJV2GsirIx9+9lnu3FbJCBUOXOApK7YQ2gRJmO3nmO71F5LMy1P4s0+v0qwu3hQj
-	4lgHActYmJ5/qrnyIyndYyPCa5z9OOtu89lcL7ii06xblaFMO00x4MUGFIv+nlOP
-	pzG33m6tOP95/qn9qLaylgAZYTKXPOVHysj/FAQP79qOceMK+VLaJKiHq47QOuHg
-	SeCaPIKYLm123ih5NVFBXEUBxkwMfcp4sRZtjgahumqX0mw8F/Xk/dwa3p+t6vG5
-	5rJBno6PXkz0oCLiiYYEuXeBl7bInnJ+zFMscgBQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457jvpa4sw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 06:34:35 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5276UfI0006862;
-	Fri, 7 Mar 2025 06:34:35 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457jvpa4st-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 06:34:35 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5275lLrv013776;
-	Fri, 7 Mar 2025 06:34:34 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2m55mn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 06:34:34 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5276YWdj58851594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Mar 2025 06:34:32 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B7FEC2004B;
-	Fri,  7 Mar 2025 06:34:32 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 194E320043;
-	Fri,  7 Mar 2025 06:34:31 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.215.108])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  7 Mar 2025 06:34:30 +0000 (GMT)
-Date: Fri, 7 Mar 2025 12:04:26 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>,
-        linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>,
-        linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
-Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if
- journal is destroying
-Message-ID: <Z8qTciy49b7LSHqr@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <cover.1741270780.git.ojaswin@linux.ibm.com>
- <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
- <5b3864c3-bcfd-4f45-b427-224d32aca478@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="I7ZlE6PW";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="0oEXldot"
+Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
+	by bayard.4d2.org (Postfix) with ESMTP id D22E4EC59F6;
+	Thu, 06 Mar 2025 22:35:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1741329300; bh=D0GUM9vwdTZADtSV9LFCdv8+sJcUQRqRldlU0zdH/Uo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I7ZlE6PWaawE93M3WiN3Ctu8ZMkfFbWmBZcco7iFTg2miH6Nb7t6zuDELQwrLhCJ/
+	 KQUC1xnD5eXMMcdGsH0BnfKU0iTikfafXQm5phKMnv8ujrxJJv2je7vgEUTLIK16i7
+	 MZ4T8ScsTeFhJ9bdjed/nGuJ14yUCIxq4hPjpq1Jk5D1hJXwCmcgUQMFI5YndozlFd
+	 iokjC9YfGJ4zXAFrykQXpdaTc7VwSpsiNLzzTdsNOd5e7pbqRJwiJCpPhmZu9Q3c2P
+	 61GykHhV9N7DDtEKqWYpNUy5cAc4I+f1aVOIHDWxQcoe5EdgrKhoHdoBfdbTDXjXYI
+	 TVWt77h5BEhPA==
+X-Virus-Scanned: amavisd-new at 4d2.org
+Received: from bayard.4d2.org ([127.0.0.1])
+ by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id ZVSd8SIkaOAx; Thu,  6 Mar 2025 22:34:57 -0800 (PST)
+Received: from ketchup (unknown [183.217.80.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: heylenay@4d2.org)
+	by bayard.4d2.org (Postfix) with ESMTPSA id 1F74EEC59F2;
+	Thu, 06 Mar 2025 22:34:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1741329297; bh=D0GUM9vwdTZADtSV9LFCdv8+sJcUQRqRldlU0zdH/Uo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0oEXldotZARGvdAvlWurLFHbM4qjHDcFLotl2vSXHITGYzNoDq/oWYl67NBfdFL5M
+	 mW7FREbGrtIrLlKHdHKTsYxw97Bi8T0R0a2q2+P4cicA5l5zl4SCMg5Y8Re6+//8t3
+	 KShp/r8nOMlFxEv09O6jNtAs+SfXb7QyUzQzV1fTwkuhdOgA3WkXJb+NFRKKNRkrPN
+	 EmKPs/0fUmUWYg1EitGOvAk9q6MdJ0nw3ccBi8eE8pzOmByj3FEEsrIB4f/vxdcG7y
+	 qPVlyWLu9zsqltQLnvs9GVst9O9IrAytpK+/Evs6AUsD6UxFgTkS0v7TpLOtdAek4Q
+	 oxDApqq2bPxJw==
+Date: Fri, 7 Mar 2025 06:34:47 +0000
+From: Haylen Chu <heylenay@4d2.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Haylen Chu <heylenay@outlook.com>, linux-riscv@lists.infradead.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, spacemit@lists.linux.dev,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Chen Wang <unicornxdotw@foxmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
+Subject: Re: [PATCH v5 2/5] dt-bindings: clock: spacemit: Add spacemit,k1-pll
+Message-ID: <Z8qTh1zRJTjYNCtz@ketchup>
+References: <20250306175750.22480-2-heylenay@4d2.org>
+ <20250306175750.22480-4-heylenay@4d2.org>
+ <20250307002943-GYA64516@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,180 +76,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b3864c3-bcfd-4f45-b427-224d32aca478@huaweicloud.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: F5IwWDNVtYslrRNU_Rtp0BohzsHmm5xH
-X-Proofpoint-GUID: UmpvnQmW9Lfrnv8R-J41R0zjgfSiyYjW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_02,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 malwarescore=0 clxscore=1015 adultscore=0
- mlxscore=0 impostorscore=0 priorityscore=1501 phishscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503070044
+In-Reply-To: <20250307002943-GYA64516@gentoo>
 
-On Fri, Mar 07, 2025 at 10:49:28AM +0800, Zhang Yi wrote:
-> On 2025/3/6 22:28, Ojaswin Mujoo wrote:
-> > Presently we always BUG_ON if trying to start a transaction on a journal marked
-> > with JBD2_UNMOUNT, since this should never happen. However, while ltp running
-> > stress tests, it was observed that in case of some error handling paths, it is
-> > possible for update_super_work to start a transaction after the journal is
-> > destroyed eg:
+On Fri, Mar 07, 2025 at 12:29:43AM +0000, Yixun Lan wrote:
+> Hi Haylen:
+> 
+> On 17:57 Thu 06 Mar     , Haylen Chu wrote:
+> > Add definition for the PLL found on Spacemit K1 SoC, which takes the
+> > external 24MHz oscillator as input and generates clocks in various
+> > frequencies for the system.
 > > 
-> > (umount)
-> > ext4_kill_sb
-> >   kill_block_super
-> >     generic_shutdown_super
-> >       sync_filesystem /* commits all txns */
-> >       evict_inodes
-> >         /* might start a new txn */
-> >       ext4_put_super
-> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
-> >         jbd2_journal_destroy
-> >           journal_kill_thread
-> >             journal->j_flags |= JBD2_UNMOUNT;
-> >           jbd2_journal_commit_transaction
-> >             jbd2_journal_get_descriptor_buffer
-> >               jbd2_journal_bmap
-> >                 ext4_journal_bmap
-> >                   ext4_map_blocks
-> >                     ...
-> >                     ext4_inode_error
-> >                       ext4_handle_error
-> >                         schedule_work(&sbi->s_sb_upd_work)
-> > 
-> >                                                /* work queue kicks in */
-> >                                                update_super_work
-> >                                                  jbd2_journal_start
-> >                                                    start_this_handle
-> >                                                      BUG_ON(journal->j_flags &
-> >                                                             JBD2_UNMOUNT)
-> > 
-> > Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
-> > destroying only do a journaled (and deferred) update of sb if this flag is not
-> > set. Otherwise, just fallback to an un-journaled commit.
-> > 
-> > We set sbi->s_journal_destroying = true only after all the FS updates are done
-> > during ext4_put_super() (except a running transaction that will get commited
-> > during jbd2_journal_destroy()). After this point, it is safe to commit the sb
-> > outside the journal as it won't race with a journaled update (refer
-> > 2d01ddc86606).
-> > 
-> > Also, we don't need a similar check in ext4_grp_locked_error since it is only
-> > called from mballoc and AFAICT it would be always valid to schedule work here.
-> > 
-> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
-> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
-> > Suggested-by: Jan Kara <jack@suse.cz>
-> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> > Signed-off-by: Haylen Chu <heylenay@4d2.org>
 > > ---
-> >  fs/ext4/ext4.h      | 2 ++
-> >  fs/ext4/ext4_jbd2.h | 8 ++++++++
-> >  fs/ext4/super.c     | 4 +++-
-> >  3 files changed, 13 insertions(+), 1 deletion(-)
+> >  .../bindings/clock/spacemit,k1-pll.yaml       | 50 +++++++++++++++++++
+> >  include/dt-bindings/clock/spacemit,k1-ccu.h   | 37 ++++++++++++++
+> >  2 files changed, 87 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
 > > 
-> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> > index 2b7d781bfcad..d48e93bd5690 100644
-> > --- a/fs/ext4/ext4.h
-> > +++ b/fs/ext4/ext4.h
-> > @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
-> >  	 */
-> >  	struct work_struct s_sb_upd_work;
-> >  
-> > +	bool s_journal_destorying;
+> > diff --git a/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml b/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
+> > new file mode 100644
+> > index 000000000000..23d7aa1bc573
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
+> > @@ -0,0 +1,50 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/spacemit,k1-pll.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> >  	/* Atomic write unit values in bytes */
-> >  	unsigned int s_awu_min;
-> >  	unsigned int s_awu_max;
-> > diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> > index 9b3c9df02a39..6bd3ca84410d 100644
-> > --- a/fs/ext4/ext4_jbd2.h
-> > +++ b/fs/ext4/ext4_jbd2.h
-> > @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
-> >  {
-> >  	int err = 0;
-> >  
-> > +	/*
-> > +	 * At this point all pending FS updates should be done except a possible
-> > +	 * running transaction (which will commit in jbd2_journal_destroy). It
-> > +	 * is now safe for any new errors to directly commit superblock rather
-> > +	 * than going via journal.
-> > +	 */
-> > +	sbi->s_journal_destorying = true;
+> > +title: Spacemit K1 PLL
 > > +
-> 
-> Hi, Ojaswin!
-> 
-> I'm afraid you still need to flush the superblock update work here,
-> otherwise I guess the race condition you mentioned in v1 could still
-> occur.
-> 
->  ext4_put_super()
->   flush_work(&sbi->s_sb_upd_work)
-> 
->                     **kjournald2**
->                     jbd2_journal_commit_transaction()
->                     ...
->                     ext4_inode_error()
->                       /* JBD2_UNMOUNT not set */
->                       schedule_work(s_sb_upd_work)
-> 
->                                   **workqueue**
->                                    update_super_work
->                                    /* s_journal_destorying is not set */
->                             	   if (journal && !s_journal_destorying)
-> 
->   ext4_journal_destroy()
->    /* set s_journal_destorying */
->    sbi->s_journal_destorying = true;
->    jbd2_journal_destroy()
->     journal->j_flags |= JBD2_UNMOUNT;
-> 
->                                        jbd2_journal_start()
->                                         start_this_handle()
->                                           BUG_ON(JBD2_UNMOUNT)
-> 
-> Thanks,
-> Yi.
-Hi Yi,
-
-Yes you are right, somehow missed this edge case :(
-
-Alright then, we have to move out sbi->s_journal_destroying outside the
-helper. Just wondering if I should still let it be in
-ext4_journal_destroy and just add an extra s_journal_destroying = false
-before schedule_work(s_sb_upd_work), because it makes sense.
-
-Okay let me give it some thought but thanks for pointing this out!
-
-Regards,
-ojaswin
-
-> 
-> >  	err = jbd2_journal_destroy(journal);
-> >  	sbi->s_journal = NULL;
-> >  
-> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> > index 8ad664d47806..31552cf0519a 100644
-> > --- a/fs/ext4/super.c
-> > +++ b/fs/ext4/super.c
-> > @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
-> >  		 * constraints, it may not be safe to do it right here so we
-> >  		 * defer superblock flushing to a workqueue.
-> >  		 */
-> > -		if (continue_fs && journal)
-> > +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
-> >  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
-> >  		else
-> >  			ext4_commit_super(sb);
-> > @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
-> >  	spin_lock_init(&sbi->s_error_lock);
-> >  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
-> >  
-> > +	sbi->s_journal_destorying = false;
+> > +maintainers:
+> > +  - Haylen Chu <heylenay@4d2.org>
 > > +
-> >  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
-> >  	if (err)
-> >  		goto failed_mount3;
-> 
+> > +properties:
+> > +  compatible:
+> > +    const: spacemit,k1-pll
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    description: External 24MHz oscillator
+> > +
+> > +  spacemit,mpmu:
+> how about naming it as "spacemit,mpmu-syscon" explicitly?
+> to indicate this is a syscon phandle, it's more readable
+
+It's okay but I'm not sure whether this helps a lot... will wait for the
+maintainer to decide the name.
+
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      Phandle to the "Main PMU (MPMU)" syscon. It is used to check PLL
+> > +      lock status.
+> > +
+> > +  "#clock-cells":
+> > +    const: 1
+> > +    description:
+> > +      See <dt-bindings/clock/spacemit,k1-ccu.h> for valid indices.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - spacemit,mpmu
+> > +  - "#clock-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    clock-controller@d4090000 {
+> > +        compatible = "spacemit,k1-pll";
+> > +        reg = <0xd4090000 0x1000>;
+> > +        clocks = <&vctcxo_24m>;
+> > +        spacemit,mpmu = <&sysctl_mpmu>;
+> > +        #clock-cells = <1>;
+> > +    };
+> -- 
+
+...
+
+> Yixun Lan (dlan)
+> Gentoo Linux Developer
+> GPG Key ID AABEFD55
+
+Best regards,
+Haylen Chu
