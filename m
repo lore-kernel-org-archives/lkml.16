@@ -1,123 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF59D241687;
-	Fri,  7 Mar 2025 17:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9151224336D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741370007; cv=none; b=I2IChbsj1WqaU5FSonjPfc+TLui2LHv4A72CrL+TUh2/qxSL6Wk6GeJ7oQaTfvzZck7IzVSvCFAYYih02itFDPUQzgSzrAEUhabFBwcrzFkb737Sziw+QADv3lQqeqNjGLEiSWCTzZMhwXIN4iMQnyVh+4jsSrXoRZjrotXM044=
+	t=1741370011; cv=none; b=UeGjkqXgZcOf8Sx7j2qvCc2Wig7ccd4DrQWHCR3AfudEmn5shBjAF5kOyo86yLITBn/CLlGZ/4oTowutsGQSot/Bzsli8SNljjqT/RPFWVpnMaZux0TJjOYjaI8jQ3n0aDNpny/sxA5pAmyg9kyM3dJjM9+bYgTvp4lpGv9k0nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741370007; c=relaxed/simple;
-	bh=j4Ip7lOWqcQq1v30J925duXlSFntcRlSiHL6jOgt5qg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CEKdjq7d7LkeaHwr4e4b6q2lP5DjUtJL3jI46rTqAo6AMxPDpCSWRf8hyncPK0DyF8E71rBdvC1uxYnwrCS72YT7g3uxaETOOb2pe8zzuCqznJ+ZdK+c68zUUBF6uuiZb+J/lTOc1z/KFmS/2aRrWeVQhb6l9it34ja1nnomVWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MacXl12p; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MacXl12p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741370005; x=1772906005;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=j4Ip7lOWqcQq1v30J925duXlSFntcRlSiHL6jOgt5qg=;
-  b=MacXl12p9oXm8H9nmWDmV7RCxJg1vZPT7md5JobvERO2cknCGLzWbtB1
-   iT0oEsDik295+ZMazUhMa0OnLoVLV8LBH6MAUumqKP6Y8jDqRZTZO5d8K
-   3Iz6QGOBUZwImmBjf+/mK2Ba3CIlVGxsfacBUAKyE+gtjPUyh24bM96D4
-   wlqEATD0CWAciP3L/3dgzw3bLfMt9wRTyKpRfVi5XSrNAAKlWeDNFROU+
-   glEwLb2/nPZuFa5xpJLv//tMUOgbNOR7HXnT9w4Da1YGg39dJ86dIOtZp
-   30V3ALgGdTJBL/lOh66xEPKQRqsAvpL1DwCVXKoBs+mCl9djf4ab/gwC7
-   A==;
-X-CSE-ConnectionGUID: g33Tp+a0RT2xgSxaIOwhwQ==
-X-CSE-MsgGUID: 5NGCnXkQQIiH5T6lmlvssw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42463012"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="42463012"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:53:18 -0800
-X-CSE-ConnectionGUID: 3hSEaVzlRh+JfdVeO9tNiw==
-X-CSE-MsgGUID: uZpkLxUhQvuMmz6dIM3wug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="124473652"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.132]) ([10.125.110.132])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:53:17 -0800
-Message-ID: <4e18ddd0-a122-449b-bbbd-aeed3475a324@intel.com>
-Date: Fri, 7 Mar 2025 09:53:40 -0800
+	s=arc-20240116; t=1741370011; c=relaxed/simple;
+	bh=uGp2XOYaAoeUpb/9b5BbIParJDTxLmqRE1Kf/2le0gE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMe1GEjRD6IHo31BMvJrWUQQu6vdeKb1elX7IiGUaMGYBhbGNPqaNgRUEhQw4wHBCsKALFpJPabmSTgUmUCLvOczvVGATA+M8ne8PSXO8D1yABdtUJZc7VoiQgb7ici9k9e+XE8qzsc976Ntp+rvKDywFH0W1sJX28qQ3g1LA7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1tqbsk-0007Ns-8T; Fri, 07 Mar 2025 18:53:10 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1tqbsj-004Wj2-1G;
+	Fri, 07 Mar 2025 18:53:09 +0100
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1tqbsj-000Zmp-0n;
+	Fri, 07 Mar 2025 18:53:09 +0100
+Date: Fri, 7 Mar 2025 18:53:09 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Daniel Baluta <daniel.baluta@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/3] ASoC: dt-bindings: support imx95's CM7 core
+Message-ID: <20250307175309.od3grjzr63dxp6ec@pengutronix.de>
+References: <20250211225808.3050-1-laurentiumihalcea111@gmail.com>
+ <20250211225808.3050-2-laurentiumihalcea111@gmail.com>
+ <20250212093610.x4ixrackmn3u2xrf@pengutronix.de>
+ <CAEnQRZBeQdnC+K92+Udb5awTmom10YHHNt7Ld-pYK4A1i8sr3Q@mail.gmail.com>
+ <d66996eb-f49b-448b-9743-d19a3c3eba52@sirena.org.uk>
+ <e45411df-1b8b-4f21-878d-d52e1112e62d@gmail.com>
+ <20250213064724.kbmxsk5szpxwclj6@pengutronix.de>
+ <88584d8f-e1cd-4b56-8906-461e1e6d9cc9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/10] x86/fpu/xstate: Correct guest fpstate size
- calculation
-To: Chao Gao <chao.gao@intel.com>, tglx@linutronix.de, x86@kernel.org,
- seanjc@google.com, pbonzini@redhat.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: peterz@infradead.org, rick.p.edgecombe@intel.com,
- weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de
-References: <20250307164123.1613414-1-chao.gao@intel.com>
- <20250307164123.1613414-5-chao.gao@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250307164123.1613414-5-chao.gao@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88584d8f-e1cd-4b56-8906-461e1e6d9cc9@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 3/7/25 08:41, Chao Gao wrote:
-> Note that this issue does not cause any functional problems because the
-> guest fpstate is allocated using vmalloc(), which aligns the size to a
-> full page, providing enough space for all existing supervisor components.
-> On Emerald Rapids CPUs, the guest fpstate after this correction is ~2880
-> bytes.
+On 25-03-04, Laurentiu Mihalcea wrote:
+> On 2/13/2025 8:47 AM, Marco Felsch wrote:
+> > Hi Laurentiu, Daniel,
+> >
+> > On 25-02-12, Laurentiu Mihalcea wrote:
+> >> On 2/12/2025 2:38 PM, Mark Brown wrote:
+> >>> On Wed, Feb 12, 2025 at 12:11:49PM +0200, Daniel Baluta wrote:
+> >>>> On Wed, Feb 12, 2025 at 11:38 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> >>>>> On 25-02-11, Laurentiu Mihalcea wrote:
+> >>>>>> +    const: fsl,imx95-cm7-sof
+> >>>>> Albeit Krzysztof already add his Reviewed-by, can I ask why we need to
+> >>>>> add the -sof suffix instead of -audio or so? SOF is a software project
+> >>>>> but you can clearly run different software on the audio-copro as well.
+> >>>> Sure you can run a different software project on the audio DSP but
+> >>>> you will need a way to distinguish between the different projects.
+> >>>> There might be different mailbox, memory configurations. So you will  need
+> >>>> to invent another suffix specific to the new project.
+> >>>> We can make  const: fsl,imx95-cm7-audio as the one used with SOF
+> >>>> and think about a different name later for when another project will
+> >>>> want to use the DSP.
+> >>> I think the point here was that the DT should stay the same even if the
+> >>> DSP firwmare changes, just as how changing the main OS shouldn't affect
+> >>> the DT.
+> >> It's rather unfortunate but based on the experience from the 8 series
+> >> (imx8qm, imx8qxp, imx8mp), the programming model can differ quite
+> >> a bit (e.g: remoteproc vs SOF) even if the core is the same (i.e: DSP core).
+> >>
+> >> The different programming models also required different DT configurations
+> >> (e.g: dif. mboxes as Daniel mentioned, some extra properties (i.e: reg-names), etc...)
+> >>
+> >> The "-sof" suffix was chosen here instead of the more generic "-audio" (or whatever else
+> >> alternative) because the DT configuration is specific to SOF's programming model. Other
+> >> audio applications running on the same core may have dif. configurations (e.g: use
+> >> DTCM/ITCM for memory instead of DDR, dif. mbox count, etc...). I suppose this kind of thing
+> >> is bound to happen to some degree since the DT node doesn't just describe the CM7 core
+> >> (but, rather, it also encompasses information on the memory, mboxes, etc. used)
+> >> but perhaps I'm wrong?
+> > Time will tell if there will be any other user except for SOF for the
+> > DSP but and this is what I wanted to point out: the DTS should abstract
+> > the HW. IMHO The CM7-Audio node should contain all properties required
+> > to turn power and reset the core (e.g. clocks, reset, pm-domains). I get
+> > your point regarding different configs but please have a look at
+> > mt8183-kukui.dtsi. Here the rpmsg config is a subnode of the actual
+> > system-control-proc. This makes much more sense to me since the HW part
+> > is part of the generic core-node and all the software config goes into a
+> > separate subnode.
+> >
+> > Regards,
+> >   Marco
+> 
+> I understand your point but we're dealing with 2 different programming
+> models here: SOF and remoteproc as opposed to just remoteproc as it's
+> the case for Mediatek.
 
-How about we move up the fpstate pointers at allocation time so they
-just scrape the end of the vmalloc buffer? Basically, move the
-page-alignment padding to the beginning of the first page instead of the
-end of the last page.
+The idea is exactly to decouple the CM7 HW config from the
+software/firmware running on it and this is what MediaTek did.
+
+Of course they are only interested in teh RPMsg part but this approach
+could be used to decouple the HW and the FW part which is your use-case
+(different FWs running on the CM7).
+
+> Going for a similar approach would also mean quite a bit of software
+> changes as we'd need to factor out the common bits (most importantly here:
+> core operations like start/stop) and placing them in a common driver. 
+
+Exactly but shouldn't be to hard to implement. Of course it is more work
+than just adapting the compatible.
+
+> This is not trivial and I'm not sure it's worth the effort right now
+> given that:
+> 
+>     1) The current way we model the hardware inside the DT is not exactly inaccurate.
+>     The core does physically use those memory regions, mailboxes, etc.
+> 
+>     2) Whatever we do, the information in the DT will still depend on the programming model.
+>     It's just that you're placing it in a child node, instead of the parent, which is arguably not that
+>     big of an improvement?
+
+The benefit is to have different configs in place and a board can choose
+between them, e.g.:
+
+	sof_cpu: cm7-cpu@80000000 {
+		compatible = "fsl,imx95-cm7";
+		reg = <0x0 0x80000000 0x0 0x6100000>;
+		reg-names = "sram";
+		clocks = <...>;
+		resets = <...>;
+		access-controllers = <...>;
+
+		firmware-name = "nxp/foo";
+		firmware-config = <&cm7_sof>;
+
+		cm7_sof: cm7-sof {
+			compatible = "fsl,imx95-sof";
+			memory-region = <&adma_res>;
+			memory-region-names = "dma";
+			mboxes = <&mu7 2 0>, <&mu7 2 1>, <&mu7 3 0>, <&mu7 3 1>;
+			mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
+
+			cpu: port {
+				cpu_ep: endpoint {
+					remote-endpoint = <&codec_ep>;
+				};
+			};
+		};
+
+		cm7_rpmsg: cm7-rpmsg {
+			compatible = "fsl,imx95-rpmsg";
+		};
+
+		cm7_foo: cm7-foo {
+			compatible = "fsl,imx95-foo";
+		};
+	};
+
+I get your point and I'm not against your patchset. Just IMHO the above
+example would make more sense to me since the CM7 hardware handling
+(en-/disable/access/reset/clock) can be done by a common driver and must
+not be done by each subsystem driver: sof, rpmsg, etc. Also the since
+the driver would be common it could be reused by other CoProcessors
+within the system as well since there are now more and more CoProcessors
+on a SoC.
+
+Regards,
+  Marco
