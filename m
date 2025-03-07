@@ -1,99 +1,168 @@
-Received: from mx0a-00300601.pphosted.com (mx0a-00300601.pphosted.com [148.163.146.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8C224A079;
-	Fri,  7 Mar 2025 18:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.146.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479142459FB;
+	Fri,  7 Mar 2025 18:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741373671; cv=none; b=A+gyxnTCwDKSKhU8eEqPy6ER0gr9qiv1S3B7vM+HXtn/60YPvvrcMnvbjFNGOTWF/K1te255RjtY3JRJn1FPfzTF2noSnyL3dj4+iX99a+CekCMYIoQGS+BIQlVUecHYxnReA+o0uDvifMdi4wmUrdH0oC02kN6hXNFvO22x2yw=
+	t=1741373698; cv=none; b=Vi3audpSJGvCjUCVlyj0LVSgsvWSm53p3Dup6XKmsVyxLkt00rvDr0wVCziZxp5tpOhQu6w8jV8ZmPFDVjimZX0c+ixDrK9A/oO2pRIqJUNCBaCJgtqtrnKgPHWS70sa9CxHUYXpNXiiDNYtygIbJ8oJBkUiGpT8a+ibcTL9Lp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741373671; c=relaxed/simple;
-	bh=oq5xy01+AXvyb6eiVxbLm+lZNHabk0wkUBGp91reAVc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZkkYyp2hL4ybxkvRRQeFxfQw6MSIq0Rqku+mDXrkQ6YRsCF67MQW3l8jZHLei1qC3Hu6mtHn+gpMJiz0f8ta6TV8KGevjI4sHKvokDnwQOMLaa8LE8S+QC4ajWvk0DAnwG/b2kULWDxLBsOd3OjNrA8QL0dbKYU3+X25v9oAe6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com; spf=pass smtp.mailfrom=ni.com; dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b=QT2WukPJ; arc=none smtp.client-ip=148.163.146.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ni.com
+	s=arc-20240116; t=1741373698; c=relaxed/simple;
+	bh=A1hzyzX2gwYPUPzTsAzIqU0ZPHdzSA6DM3y210R7dIk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ri67Xhi14Sm2DeleK/CQlYpPODTNk9+u1ysN4dJGwxY3Jg2Hk4uc5PE0ZsXZEgF0liwkwMH9wRxzLxPWHKrGJg+peZDNfSP5EzuWFqXqFpWFHP2sNqKU1SWEAR2YnXaU6hngEE2mYYFTk10MTWQxccrI97akYfkD1o4KV8nksLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAJksGt9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b="QT2WukPJ"
-Received: from pps.filterd (m0359308.ppops.net [127.0.0.1])
-	by mx0b-00300601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 527GpBcT029929;
-	Fri, 7 Mar 2025 17:45:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ni.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=PPS11142024;
-	 bh=oq5xy01+AXvyb6eiVxbLm+lZNHabk0wkUBGp91reAVc=; b=QT2WukPJ2Hs5
-	emKakF/TdlTAeb8hLwjl+CYDb2s1I+yu++5xPDwuiuxov8D1LcDlXQ1/gs4TpxFR
-	2HPhR5hCKX3pd4YFjZw1hYvqZbO7/UI0SBsIXAr2g8YN3ZAJt6yeqHoNnkxHvJhc
-	sYOjgNkSj1VPmL0+fInvc/Gtsl9UBiN8uaq1m6KPSYt9FbQPIX19Y1uU9ghy24xd
-	oV/2hBFiVjUsC9uyphCerDJJJeB0pTwRZCbFC1RHOOfNH7jc3oux2fHyCBvMuNkz
-	zVX51gIWkQOIksuov6sx7YS52Wn9Vc681SPUDMViljFYekQYQMsWA3Futg2i5TKY
-	BLmqsFzlyQ==
-Received: from us-aus-excas-p1.ni.corp.natinst.com ([130.164.94.73])
-	by mx0b-00300601.pphosted.com (PPS) with ESMTPS id 4584p8grd2-7
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 17:45:48 +0000 (GMT)
-Received: from us-aus-excas-p1.ni.corp.natinst.com (130.164.68.17) by
- us-aus-excas-p1.ni.corp.natinst.com (130.164.68.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 7 Mar 2025 11:45:45 -0600
-Received: from ershephe-ubuntu.amer.corp.natinst.com (172.18.68.32) by
- us-aus-excas-p1.ni.corp.natinst.com (130.164.68.17) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Fri, 7 Mar 2025 11:45:45 -0600
-From: Erick Shepherd <erick.shepherd@ni.com>
-To: <adrian.hunter@intel.com>
-CC: <andy-ld.lu@mediatek.com>, <avri.altman@wdc.com>, <cw9316.lee@samsung.com>,
-        <dsimic@manjaro.org>, <erick.shepherd@ni.com>, <keita.aihara@sony.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <quic_jjohnson@quicinc.com>, <ricardo@marliere.net>,
-        <ulf.hansson@linaro.org>, <victor.shih@genesyslogic.com.tw>,
-        <wsa+renesas@sang-engineering.com>
-Subject: Re: [RFC PATCH V2 2/2] mmc: allow card to disable tuning
-Date: Fri, 7 Mar 2025 11:45:45 -0600
-Message-ID: <20250307174545.1288682-1-erick.shepherd@ni.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <9e34fea2-6bdd-4673-a75d-837d9b793c3d@intel.com>
-References: <9e34fea2-6bdd-4673-a75d-837d9b793c3d@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAJksGt9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 233A3C4CED1;
+	Fri,  7 Mar 2025 18:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741373698;
+	bh=A1hzyzX2gwYPUPzTsAzIqU0ZPHdzSA6DM3y210R7dIk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=JAJksGt9HFaMvVKhk05lUfdM/thbcWKDfGg60hHxtaNqpCBVufvjBykA7KJgu8wR/
+	 uY8bBE+D+xxTVSTprl/USMEULwpaf/Ux4FtDT2klOPycIeDiVQ5Vbdf2IG1LXU6k6A
+	 U1R3HFaDQHqDtXcI4WTGIu48ZSJriiFNJpcu5zmAjEtIOmAHOfYMfEX8v7oFJmksF/
+	 q3DaP2Lak9B0q9Gbui7RfDIojAiil4c8LYqYzi5Vz0aW9y1+JhNa5B1nbOtF97xnCr
+	 gdIFMr5KAz4QI/4ebdiBBCGiBO6pffvCSiIKWxKtESXPIIzl9bATjeluXg25sPJ9Si
+	 aIahk0EXVGQPQ==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf2513a2dso16661951fa.0;
+        Fri, 07 Mar 2025 10:54:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUU2GHHO94ONd39BSyxUk2nZNnVewhkeY35kFbhJ5yEQrbE2xxLdpHW9TdFgLXOE+vPf+Pxg95jPfj6u/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAE0TOtQ0cASNOREn5VExU00l/mJ/IrtEW3QMHImRXGyqCFX+b
+	tBM9RqcWYzENXZx1Yw9TO2eRU+0EcyC34r5FoOadh97I5oXhu5KF6dBQ190BmM+yBz965ZvbwuL
+	E8Sv1YKznytIyW+uuJcVtPi3Zj4k=
+X-Google-Smtp-Source: AGHT+IGobzWZZjQf8EsgGAX/Rno6nPlMxbZ8WwDAHCshVEV4wF5D7pC3DIDWityzVC2/E4DTVm0cQ8mNqgLiySUNnL8=
+X-Received: by 2002:a05:6512:3da3:b0:545:6fa:bf5f with SMTP id
+ 2adb3069b0e04-54990e2bbd8mr1509102e87.2.1741373696796; Fri, 07 Mar 2025
+ 10:54:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250224132132.1765115-6-ardb+git@google.com> <CAMj1kXHamiZ8u4YO9FnrWhpcotUkAusDF_db_5H2qaVD85qmVA@mail.gmail.com>
+In-Reply-To: <CAMj1kXHamiZ8u4YO9FnrWhpcotUkAusDF_db_5H2qaVD85qmVA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 8 Mar 2025 03:54:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATLf2iXNGi-UKRg=+PRRqgmxry5QQnQ4GUNsuVmDBAnmw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jr9sTgHhTNx_izbjyV6zevV8ooGYcQ_pewlwvwGtKvROwXdXWv-VRUVTAg
+Message-ID: <CAK7LNATLf2iXNGi-UKRg=+PRRqgmxry5QQnQ4GUNsuVmDBAnmw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] x86/build: Get rid of vmlinux postlink step
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-kbuild@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-Proofpoint-GUID: ewpqn5bGYgAo8mxZXzxg--z0XCKdR418
-X-Proofpoint-ORIG-GUID: ewpqn5bGYgAo8mxZXzxg--z0XCKdR418
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_06,2025-03-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 mlxlogscore=913
- mlxscore=0 clxscore=1015 suspectscore=0 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503070132
 
-> Sorry for the slow reply.=0D
-=0D
-> I would expect if there was a general problem with DDR50 SD cards,=0D
-> it would have come to light before now.=0D
-=0D
-> Does the card work with any other host controllers with linux?=0D
-=0D
-> If it is specific to a particular kind of card, a card quirk=0D
-> could be added, say MMC_QUIRK_BROKEN_DDR50_TUNING=0D
-=0D
-No worries. I have not tested this with other host controllers but=0D
-can try to get something set up. This issue has only appeared on=0D
-one particular SD card model for us so I would not be surprised if=0D
-the I/O errors we see on subsequent tune requests are specific to this=0D
-card. I can put together a solution using the card quirk you suggested=0D
-if you think that is the best way forward.=0D
-=0D
-My fix is currently spread across two commits, one to return the error=0D
-code thrown by the tune request timing out, which prevents the card from=0D
-retuning, and this one that prevents the initial card tuning if it has=0D
-already failed. Should both parts be controlled by the new card quirk?=0D
-=0D
-Regards,=0D
-Erick=
+On Fri, Mar 7, 2025 at 1:47=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wro=
+te:
+>
+> On Mon, 24 Feb 2025 at 14:21, Ard Biesheuvel <ardb+git@google.com> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Kbuild supports an architecture specific Makefile.postlink file that is
+> > invoked for the vmlinux target after it has been built. This Makefile
+> > takes 'vmlinux' (which has just been built) as the target, and mangles
+> > the file and/or constructs other intermediate artifacts from it.
+> >
+> > This violates the general philosophy of Make, which is based on rules
+> > and dependencies, and artifacts that are rebuilt only when any of their
+> > dependencies have been updated.
+> >
+> > Instead, the different incarnations of vmlinux that are consumed by
+> > different stages of the build should be emitted as distinct files, wher=
+e
+> > rules and dependencies are used to define one in terms of the other.
+
+
+In my understanding, the build rule of vmlinux is atomic
+because vmlinux embeds a timestamp and a build version.
+
+Now, you are splitting it into two stages.
+
+vmlinux.unstripped (this includes timestamp and the build version)
+  --(cmd_strip_relocs)-->  vmlinux
+
+
+When cmd_strip_relocs is changed, only vmlinux is updated.
+This changes the content of vmlinux, but its timestamp and build version
+remain the same.
+
+So, I am not sure if this is the right direction.
+
+
+You can see more steps for updating vmlinux.
+Do you believe the build rule should be further split into
+more fine-grained stages?
+
+For example,
+
+vmlinux.pre-sort  (this includes timestamp and the build version)
+   --(scripts/sortable)-->
+vmlinux.unstripped
+   --(cmd_strip_relocs)-->
+vmlinux
+
+But, again, even when sorttable is changed,
+the timestamp and the build version remain the same.
+
+
+Yeah, arch/*/Makefile.postlink is a crap
+where arch maintainers build a fence
+and start whatever they want to do.
+
+If they completely disappear, I would love it.
+
+However, this seems a partial clean-up
+within the scope you are interested in.
+(more specifically your motivation is because Linus pointed out
+a failure in arch/x86/Makefile.postlink deleted vmlinux)
+
+
+
+
+
+
+> > This also works around an error observed here [0], where vmlinux is
+> > deleted by Make because a subsequent step that consumes it as input
+> > throws an error.
+> >
+> > So refactor the vmlinux shell scripts and build rules so that
+> > architectures that rely on --emit-relocs to construct vmlinux with
+> > static relocations preserved will get a separate vmlinux.unstripped fil=
+e
+> > carrying those relocations. This removes the need for an imperative
+> > postlink step, given that any rules that depend on the unstripped
+> > vmlinux can now simply depend on vmlinux.unstripped, rather than inject
+> > a build step into Makefile.postlink
+> >
+> > S390 should be able to do the same. MIPS and RISC-V perform some
+> > post-build checks on vmlinux, which is reasonable in principle for a
+> > postlink step, although deleting vmlinux when the check fails is equall=
+y
+> > unhelpful.
+> >
+> > [0] https://lore.kernel.org/all/Z5ARucnUgqjwBnrp@gmail.com/T/#m731ed020=
+6949fc3f39fcc8a7b82fe348a8fc80c4
+> >
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> >
+> > Ard Biesheuvel (4):
+> >   Kbuild/link-vmlinux.sh: Make output file name configurable
+> >   Kbuild: Introduce Kconfig symbol for linking vmlinux with relocations
+> >   Kbuild: Create intermediate vmlinux build with relocations preserved
+> >   x86: Get rid of Makefile.postlink
+> >
+>
+> Ping?
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
