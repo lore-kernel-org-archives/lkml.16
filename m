@@ -1,29 +1,28 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from out199-8.us.a.mail.aliyun.com (out199-8.us.a.mail.aliyun.com [47.90.199.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6E5192B9D;
-	Fri,  7 Mar 2025 05:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0752192B81;
+	Fri,  7 Mar 2025 05:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741326262; cv=none; b=ZIxRwr0QvSt1DSVt8yrHcPL8GAE5ivFWBqMmSyCiS2c4qFcqkEK5Ckni+Nd83Of0sV7HM22c1u8XZhHu2f1R2I0msah4zhSqO7Xf2HbX5tsq1OcxTz4FNQJbJLfawk6XK3dPMHExSC5Bt6hmKetHsLkEfsxHDONvztq6Bttza8s=
+	t=1741326269; cv=none; b=cGfqpK5qSpHhoI/tdOXMT6Gq1OZ83FZ81KtKZ9DRCEI5dU4daThgAOZgL7w75tCZKO+d90qArj2wIPB8Wu3YObDn95xX9mYr9gweUf4qiKKxuKTxO/q3WzRrYbnpqunotsStkV+CaHrH6riofBQ6iJcS/Ik7bCP9o37ylFlKVTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741326262; c=relaxed/simple;
-	bh=Qn3607PEd4rgNFGHCX1pH0bq692oMU+4TUJpZvRnhvo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h4bP8z08iKlIGdAXY6niSDXxAS7TInDSh2mtYkJcm9lgfW02s2jyOhgmBQpZHY8dogvvC6ypBpz0fdp1Yxm4OubcL5zGnCoE9GlbOAzicXgJ5WaT0zAjwDS5tjHK9BpbS1/0cerykwJg1ea1Vvtln8y52zggZS3VbYclGs19bRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QJBa8aoY; arc=none smtp.client-ip=115.124.30.97
+	s=arc-20240116; t=1741326269; c=relaxed/simple;
+	bh=yXnROeWdVkdZ6a/ZcyHCFNldlCOsNtasLoVeFiGHuXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fETzz3JvmzWMFrDKnab2KfwEC2KpYqGV0jRz2o5cFTcP+0yNK5sXiBOV3lCpH+IJArWTVFs8/vrykqUs7w02vWVNNS5fL7Gk9ZQDKvBAp9ksLqKfEgM4m4dIkBrZ9rzGuT+C7jU/BReo9ul3FQmPvz3UnVKC6k+KMVsrUH2SWts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=D+5xGKdN; arc=none smtp.client-ip=47.90.199.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QJBa8aoY"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="D+5xGKdN"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1741326251; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=0Z4b4sITWeCYSe6qVPzMI52ddHUIEkqBypCvt4Knc4I=;
-	b=QJBa8aoYdWoMJD5S7VdQyG+hRonsZl0mVcJ3/iKiY2gcfuYmQ+CBC/ewQSCBe6UvQo9e6ewC21iFAl+Ziqf0XqGpIoQdnNSNWum2GeXgQDVS3oIrgM6Z4q1KcmudiQASfQbVibzIKexa8IvOp7W1igRLmsfnAU4d4cx2RRIB8Nw=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQr2xB5_1741326248 cluster:ay36)
+	t=1741326248; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=m8mTAaekKYGlBWk1X9tvWoctARjdc8dOZZ3LVeDO+eg=;
+	b=D+5xGKdN4rLjukIQWsPe+5kv+6ksPwuYRcKXh6NWHLhFobgRIdonYsYhQTMHRVJL6qhkTn71WtvNwD63jZ4ynuQq0KaUq2N0XO88l52gsQYgIbGLnvtbHyKWNM6e1LTJ8GUDTiJfeCsFMx+dnneju/OCdS20IzAkIf+SgtdselM=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQr2xA5_1741326245 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 07 Mar 2025 13:44:09 +0800
+          Fri, 07 Mar 2025 13:44:06 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: tony.luck@intel.com,
 	bp@alien8.de,
@@ -45,12 +44,10 @@ Cc: tglx@linutronix.de,
 	baolin.wang@linux.alibaba.com,
 	tianruidong@linux.alibaba.com,
 	xueshuai@linux.alibaba.com
-Subject: [PATCH v4 2/3] mm/hwpoison: Do not send SIGBUS to processes with recovered clean pages
-Date: Fri,  7 Mar 2025 13:44:03 +0800
-Message-ID: <20250307054404.73877-3-xueshuai@linux.alibaba.com>
+Subject: [PATCH v4 0/3] mm/hwpoison: Fix regressions in memory failure handling
+Date: Fri,  7 Mar 2025 13:44:01 +0800
+Message-ID: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
-References: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,12 +56,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+changes since v3:
+- drop the out-date version per Tony
+
+changes since v2:
+- drop debug error message for non-fatal case per Borislav's strong objections
+- rewrite cover letter by amending MCE and CMCI race background from Tony[1]
+- rewrite commit log
+- use is_copy_from_user() to determine copy-from-user context per Peter
+- keep comments of in kill_me_maybe() per Catalin 
+- add ack-by tag for patch 3 from Miaohe Lin
+- Link: https://lore.kernel.org/lkml/20250217063335.22257-1-xueshuai@linux.alibaba.com/T/#m4d87f152a67e26f2aabb4cdf81e451a1e4c70094
+
+changes singce v1:
+- Patch 1: Fix cur_sev and sev type to `int` per Tony
+- Patch 4: Fix return value to 0 for clean pages per Miaohe
+- Patch 5: pick return value comments of memory-failure()
+
+## 1. What am I trying to do:
+
+This patch resolves two critical regressions related to memory failure
+handling that have appeared in the upstream kernel since version 5.17, as
+compared to 5.10 LTS.
+
+    - copyin case: poison found in user page while kernel copying from user space
+    - instr case: poison found while instruction fetching in user space
+
+## 2. What is the expected outcome and why
+
+- For copyin case:
+
+Kernel can recover from poison found where kernel is doing get_user() or
+copy_from_user() if those places get an error return and the kernel return
+-EFAULT to the process instead of crashing. More specifily, MCE handler
+checks the fixup handler type to decide whether an in kernel #MC can be
+recovered.  When EX_TYPE_UACCESS is found, the PC jumps to recovery code
+specified in _ASM_EXTABLE_FAULT() and return a -EFAULT to user space.
+
+- For instr case:
+
+If a poison found while instruction fetching in user space, full recovery is
+possible. User process takes #PF, Linux allocates a new page and fills by
+reading from storage.
+
+
+## 3. What actually happens and why
+
+- For copyin case: kernel panic since v5.17
+
+Commit 4c132d1d844a ("x86/futex: Remove .fixup usage") introduced a new extable
+fixup type, EX_TYPE_EFAULT_REG, and later patches updated the extable fixup
+type for copy-from-user operations, changing it from EX_TYPE_UACCESS to
+EX_TYPE_EFAULT_REG. It breaks previous EX_TYPE_UACCESS handling when posion
+found in get_user() or copy_from_user().
+
+- For instr case: user process is killed by a SIGBUS signal due to #CMCI and #MCE race
+
 When an uncorrected memory error is consumed there is a race between the
 CMCI from the memory controller reporting an uncorrected error with a UCNA
 signature, and the core reporting and SRAR signature machine check when the
 data is about to be consumed.
 
-- Background: why *UN*corrected errors tied to *C*MCI in Intel platform [1]
+### Background: why *UN*corrected errors tied to *C*MCI in Intel platform [1]
 
 Prior to Icelake memory controllers reported patrol scrub events that
 detected a previously unseen uncorrected error in memory by signaling a
@@ -80,7 +133,7 @@ changed to #CMCI. Just to add to the confusion, Linux does take an action
 (in uc_decode_notifier()) to try to offline the page despite the UC*NA*
 signature name.
 
-- Background: why #CMCI and #MCE race when poison is consuming in Intel platform [1]
+### Background: why #CMCI and #MCE race when poison is consuming in Intel platform [1]
 
 Having decided that CMCI/UCNA is the best action for patrol scrub errors,
 the memory controller uses it for reads too. But the memory controller is
@@ -100,7 +153,8 @@ controller is delivered before the core is committed to the instruction
 reading address A, so the interrupt is taken, and Linux offlines the page
 (marking it as poison).
 
-- Why user process is killed for instr case
+
+## Why user process is killed for instr case
 
 Commit 046545a661af ("mm/hwpoison: fix error page recovered but reported
 "not recovered"") tries to fix noise message "Memory error not recovered"
@@ -108,67 +162,45 @@ and skips duplicate SIGBUSs due to the race. But it also introduced a bug
 that kill_accessing_process() return -EHWPOISON for instr case, as result,
 kill_me_maybe() send a SIGBUS to user process.
 
-If the CMCI wins that race, the page is marked poisoned when
-uc_decode_notifier() calls memory_failure(). For dirty pages,
-memory_failure() invokes try_to_unmap() with the TTU_HWPOISON flag,
-converting the PTE to a hwpoison entry. As a result,
-kill_accessing_process():
+# 4. The fix, in my opinion, should be:
 
-- call walk_page_range() and return 1 regardless of whether
-  try_to_unmap() succeeds or fails,
-- call kill_proc() to make sure a SIGBUS is sent
-- return -EHWPOISON to indicate that SIGBUS is already sent to the
-  process and kill_me_maybe() doesn't have to send it again.
+- For copyin case:
 
-However, for clean pages, the TTU_HWPOISON flag is cleared, leaving the
-PTE unchanged and not converted to a hwpoison entry. Conversely, for
-clean pages where PTE entries are not marked as hwpoison,
-kill_accessing_process() returns -EFAULT, causing kill_me_maybe() to
-send a SIGBUS.
+The key point is whether the error context is in a read from user
+memory. We do not care about the ex-type if we know its a MOV
+reading from userspace.
 
-Console log looks like this:
+is_copy_from_user() return true when both of the following two checks are
+true:
 
-    Memory failure: 0x827ca68: corrupted page was clean: dropped without side effects
-    Memory failure: 0x827ca68: recovery action for clean LRU page: Recovered
-    Memory failure: 0x827ca68: already hardware poisoned
-    mce: Memory error not recovered
+    - the current instruction is copy
+    - source address is user memory
 
-To fix it, return 0 for "corrupted page was clean", preventing an
-unnecessary SIGBUS to user process.
+If copy_user is true, we set
 
-[1] https://lore.kernel.org/lkml/20250217063335.22257-1-xueshuai@linux.alibaba.com/T/#mba94f1305b3009dd340ce4114d3221fe810d1871
-Fixes: 046545a661af ("mm/hwpoison: fix error page recovered but reported "not recovered"")
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: stable@vger.kernel.org
----
- mm/memory-failure.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 995a15eb67e2..b037952565be 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -881,12 +881,17 @@ static int kill_accessing_process(struct task_struct *p, unsigned long pfn,
- 	mmap_read_lock(p->mm);
- 	ret = walk_page_range(p->mm, 0, TASK_SIZE, &hwpoison_walk_ops,
- 			      (void *)&priv);
-+	/*
-+	 * ret = 1 when CMCI wins, regardless of whether try_to_unmap()
-+	 * succeeds or fails, then kill the process with SIGBUS.
-+	 * ret = 0 when poison page is a clean page and it's dropped, no
-+	 * SIGBUS is needed.
-+	 */
- 	if (ret == 1 && priv.tk.addr)
- 		kill_proc(&priv.tk, pfn, flags);
--	else
--		ret = 0;
- 	mmap_read_unlock(p->mm);
--	return ret > 0 ? -EHWPOISON : -EFAULT;
-+
-+	return ret > 0 ? -EHWPOISON : 0;
- }
- 
- /*
+Then do_machine_check() will try fixup_exception() first.
+
+- For instr case: let kill_accessing_process() return 0 to prevent a SIGBUS.
+
+- For patch 3:
+
+The return value of memory_failure() is quite important while discussed
+instr case regression with Tony and Miaohe for patch 4, so add comment
+about the return value.
+
+Shuai Xue (3):
+  x86/mce: Use is_copy_from_user() to determine copy-from-user context
+  mm/hwpoison: Do not send SIGBUS to processes with recovered clean
+    pages
+  mm: memory-failure: Enhance comments for return value of
+    memory_failure()
+
+ arch/x86/kernel/cpu/mce/severity.c | 11 +++++------
+ mm/memory-failure.c                | 21 +++++++++++++++------
+ 2 files changed, 20 insertions(+), 12 deletions(-)
+
 -- 
 2.39.3
 
