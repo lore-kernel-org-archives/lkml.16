@@ -1,90 +1,115 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0682015382E;
-	Fri,  7 Mar 2025 09:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8990E20D4E0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339972; cv=none; b=qSoAhIcucWLXJ2iUdkuI08UpaIuyZ05k0+daXcG93Ir3bWW7ZR1pltI747QhLoX17Ze1N1diHbvey/gI6oqCFxO2drRxLQOmJrjWB71RG3uf9J8E4eXPQyW4QdH/3yDVtZG2/1yYwV1JF/uxPq7RGlhbUYu3/cStNoxurMVdgnE=
+	t=1741339998; cv=none; b=j3+6OQV7YFNkEt0sG3sV4U3IvE8DFsUQ+cc2xw9iqJkrw91M/9XShKZV9r5R0W7JJEQrKorqHW2+vKFCXANMT7JkBAzGSerMW/pFgNv2UxdaPbXQ9o1QDEhiaVnM7b0o/A8bZpDGMmeZQ+LdO5a/9kY2vG9xz9mv33vLyr/xflM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339972; c=relaxed/simple;
-	bh=kUGNhKndVnG4lvy0lWi69O4G6X3wRJgHqMdT0byLlYc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rCCjRtofDP6379liJbQkmbFAe8jTW7o0JxNcfWp9bTO2BVMb+ZgGBh+taulSZhtfrjq6Q2j1k1sBKxwITyEhsE3ehWxnt+Ic6ScDFPYcphRPmwrEJhPCPwGUZ4uC4Pm+7qNndMnQ/FTIuhIQx3Q3qCFJNATDBmtYzFikT2NbrEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=lwfzFAp+; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1741339998; c=relaxed/simple;
+	bh=f6+JfLU/1QFiRs0zJLu13R4ni0sWGfII1CyAkkteBPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDEzxMdH8GQ7zSa2k/9NlLxhfu/UViQZHaKEgQpRCMTMlAD6CpFHvvRDR6KM5fn5T8x5fjINdRpo1Rd4zC++RYQdGN+fwMDE1yy4Ku6uOgaKEiICHDguTOkfNcJ2lDNVTXy51wSpnyXLOVO/MSfIbYMNRlUlObeCpBX24hJCAm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tuoEXp4M; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="lwfzFAp+"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1tqU4T-0032It-7r; Fri, 07 Mar 2025 10:32:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
-	bh=I6WduNgDa6X5BJ/G54SlQLFV0rIsjm0NYn74kwGYfC4=; b=lwfzFAp++zSl/XVJsfmLsgAb7b
-	rMO4Kh38ac0I6Ab0OhU0JPnLpcW5I1oNrMnwGwPXWAQw8Rvf5b1QCyodGeykF6W9WVremiubCW9Qk
-	8j5ZhQOM2oA3tl3LFuSUAvQ+5x2ybKTtu54pNSGxXoXmmlXG4BmQlFjVcuJiUNbRBYeNH3Azylo8i
-	oXMZvtllBUWdbosyzX2XzQGWFNYV7vFm8YkZCMTZk9cNO0p1oWpMxZymLEFS68ZIUzdJ2OYVzZ4pO
-	bch9zFw7um2YBOFSiR83u8fciR7qKwN4dV/WqYENXZMZ1EhAZJtlOqqgyNNN1qcTvyLKq+SV19wek
-	ihOJwMHQ==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1tqU4S-0002Qc-Ls; Fri, 07 Mar 2025 10:32:44 +0100
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1tqU4C-0064FB-VN; Fri, 07 Mar 2025 10:32:29 +0100
-Message-ID: <7e3ccc22-0028-4cb6-829f-67d93cb5c14e@rbox.co>
-Date: Fri, 7 Mar 2025 10:32:27 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tuoEXp4M"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5ea062471so54342a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 01:33:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741339994; x=1741944794; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fU0HHdQ1hyz6Oi/pxgyRXXgGFlp0DgTNlBw/r19mLUE=;
+        b=tuoEXp4MCXqWFa33f111JLpTrEcuR0hQ3u7Hli6VAsKF9HK22gpN1o5QTYlGbVK1xt
+         CTEH7U7AWV3sRBBhx7/0S3BUjV0JLdYBjGlaJ/6m/wk0PmaA132L/rceatLF+aGxBBvD
+         2Wfc4exbDizDs8aCSOftuvqaWJlXbP8WUpg3ZzokiTyJ1gmKqtN8jcs5vbgBSzwkXQhr
+         8lQ2CC3PT02tJfzgLQsC8l7y+SDW+PGYeebXE35nOQQ4N3emfxtR/XqhWPTRYKgaYNqN
+         vDGhhuXiZkNoyrO2iNJ274EohjgJ6zNSVYuTSf8+bXlq4RgyosAO0RJKjXjXQEYw8qlb
+         CrcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741339994; x=1741944794;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fU0HHdQ1hyz6Oi/pxgyRXXgGFlp0DgTNlBw/r19mLUE=;
+        b=svGEzS6mzhW2SCkie1Q+cYTonPSQqIFdYoi6XYKnskSd5F29pnss67W2AKnNlxOJvJ
+         B9AhCuwt8MRL2batskBAMhYTvvDL30UJbBMQ4Iae2dqO/6ols4PFRhFfQL8DD9l+/agk
+         2TbCm6PF01dIX4eAN7ozs9QV9SkM8kboA0JUhPSIQo4vVR4yjYAGoglAEtyA+qI/bdYI
+         K3jPR8TYBn4fBTd9tAJ3xO20g0nUoaZKo4DbvsIRWwLV4ryaSh3kND0MJUw0C1bQ88XB
+         9t39m0YGGWgys9UK0lpufwN8J12pt/LWTDJxboDGjXUpqmeMroFNtO587hd/gMFtOo3k
+         iSZA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2hTbyo0Nin2+O6Aj5VT+j6dL8FwKh9dlfm7PBk1TWnyQeFlcuWHi8Sjein/a+nEdAWrvHUuwlzhmvbU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw08pxkS7eybVvqjyyUhYGk3L9vn32Nv2qrZOTptt6PzKHluGhB
+	fnBsnKAQSaA1ui7kdU2latU2C6lwpQ6PfI7hjv8GIg/LYYG00/Ta56MHm3w3FTk=
+X-Gm-Gg: ASbGnctRQhjzhAXEYC2dqDsX/NwHj7px2aYLQXyIuH7rPjrUn/eFTvy/CdGVxdg9B48
+	UM1jmXcXRKr9iFZ1sncwpi9xlRkevl6QrsX9aWUTaVWfK9OPqS0iR3+ufplcx1tDDuggAVCDmB5
+	ynugdC8Gqr672Uu0qzxChj3O7CfJSPOAq9jlPC/z82ABpT5G5JvE1aV2VuBkYAqQQVP9/DyN1sU
+	hr9xFig5b9BoeTzohMVfUN3MZmiMesX5JosstE7Z7p2JTde6ZM2n8C1WaHqa2jEAT/kJzWO+fOa
+	AdPG6juyjInt+VhlNsmtU0+U22IUm/lr4Q6ivcvSklgWDvcrg5V01f1XSxQ=
+X-Google-Smtp-Source: AGHT+IEAJGcNFFbHug7ITx5iMdjawlkckyUu9cdR2GxHKINK8WVBM4YprSaxysEv0Z5OJYbITLcdkQ==
+X-Received: by 2002:a05:6402:51c9:b0:5e5:e17f:22fc with SMTP id 4fb4d7f45d1cf-5e5e22ae3c4mr1030915a12.2.1741339993683;
+        Fri, 07 Mar 2025 01:33:13 -0800 (PST)
+Received: from krzk-bin.. ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c74a82ecsm2275091a12.37.2025.03.07.01.33.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 01:33:13 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Daniel Golle <daniel@makrotopia.org>,
+	Aurelien Jarno <aurelien@aurel32.net>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2] dt-bindings: rng: rockchip,rk3588-rng: Drop unnecessary status from example
+Date: Fri,  7 Mar 2025 10:33:09 +0100
+Message-ID: <20250307093309.44950-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Michal Luczaj <mhal@rbox.co>
-Subject: Re: [PATCH net-next 2/2] vsock/test: Add test for null ptr deref when
- transport changes
-To: Luigi Leonardi <leonardi@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250306-test_vsock-v1-0-0320b5accf92@redhat.com>
- <20250306-test_vsock-v1-2-0320b5accf92@redhat.com>
-Content-Language: pl-PL, en-GB
-In-Reply-To: <20250306-test_vsock-v1-2-0320b5accf92@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/6/25 17:09, Luigi Leonardi wrote:
-> Add a new test to ensure that when the transport changes a null pointer
-> dereference does not occur[1].
-> 
-> Note that this test does not fail, but it may hang on the client side if
-> it triggers a kernel oops.
-> 
-> This works by creating a socket, trying to connect to a server, and then
-> executing a second connect operation on the same socket but to a
-> different CID (0). This triggers a transport change. If the connect
-> operation is interrupted by a signal, this could cause a null-ptr-deref.
-> 
-> Since this bug is non-deterministic, we need to try several times. It
-> is safe to assume that the bug will show up within the timeout period.
-> 
-> If there is a G2H transport loaded in the system, the bug is not
-> triggered and this test will always pass.
-> 
-> [1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
-> 
-> Suggested-by: Michal Luczaj <mhal@rbox.co>
-> Signed-off-by: Luigi Leonardi <leonardi@redhat.com>
-> ---
+Device nodes are enabled by default, so no need for 'status = "okay"' in
+the DTS example.
 
-I think the credit should be given to Hyunwoo Kim, not me.
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks though,
-Michal
+---
+
+Changes in v2:
+1. Drop unnecessary full stop in subject prefix after ':'.
+2. Add Rb tag.
+---
+ Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
+index 757967212f55..ca71b400bcae 100644
+--- a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
++++ b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
+@@ -53,7 +53,6 @@ examples:
+         interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
+         clocks = <&scmi_clk SCMI_HCLK_SECURE_NS>;
+         resets = <&scmi_reset SCMI_SRST_H_TRNG_NS>;
+-        status = "okay";
+       };
+     };
+ 
+-- 
+2.43.0
+
