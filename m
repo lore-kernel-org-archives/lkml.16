@@ -1,135 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AACD21A92F;
-	Fri,  7 Mar 2025 15:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285FF21A92F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360980; cv=none; b=NrVZ3QlicQo5iv5fBQCrBKastJ2P6pRsmyYeYvQTj2BUkuz5X7bFge1ZAwK8QpFKWWlEQ0zawwocsADsvyCcwFdC26IZxnydFZCkey7g3/UqnFoQY5XEvzJkvuB6S3mnEYHxhR/PC0VgNK996sdcl3UcWTEvFg6nZN52lfJuch4=
+	t=1741361042; cv=none; b=brHsWa5V4Su6HRnbYurMenZ1brKRjxPfqbi18C1Pz8oD+VcZGI1pBwbwQL6secYOpV/evhAqBm85mgfQ0Q5J2w81nHolawSkeuupPbKtawEItEpRNnTkTCXthx0gqQfh42/u0Qwn2CGThnWNXxVjMd/vYW+MyIjw1SlA0/QJoGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360980; c=relaxed/simple;
-	bh=nX1/pU7TSCnRWYxhHN5kx+BN0QERdP2/4x697C+DygQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OTrxXFpfzTyj3Q5tDnkqc02+n/T3S2xVbcMML8u+EbMeSqLbPH4QlTvs1j9j6oiTIlHWPxkYyVGKnRRavnxhTJjgIyRrntx/lb+JHFPGMNn5kWCMFrdoAEARaMvVaJcbT9Doaf9aefTVik7BFmmC9r8ky3F5q5sJk37Am31P6jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAprxW0h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741361042; c=relaxed/simple;
+	bh=5Ddx+q/c8SbHR5ZT9xmJ6bE9u8Ymk7ZsCh7+4xJviHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sp9iJP+04peoKEn/2wrVu5HkvmeH8/YeGAp1clZ/VYZr909WNoDPtgVmvKLlSBRHR8ero+xFVIhCK5d1pxdRLl2ymZO/PIuVZDWtd1DVGfIO56ZXgUb6YltMwJOLkQQEs6XHLZfhX7fzY6eIKxSKW/+0ugelvLe1unAe1ELpMD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ieGIXdj5; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAprxW0h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B328C4CEE3;
-	Fri,  7 Mar 2025 15:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741360979;
-	bh=nX1/pU7TSCnRWYxhHN5kx+BN0QERdP2/4x697C+DygQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vAprxW0h0THyeM0Bo5m9h1wNbDxgVDuV6UuXaRtUXY+CTFxsAymhQe+kIGwB1MxGQ
-	 R5XxDvVT5vuM0UHjDhh2lG8QiP463rflCce4wSBgLZwbXi51F6FLXU+uRaxFSBWk5O
-	 QTtd0s5V8/HOT6h9NTGVcCv8Pc1hrQEw9bj/pxOMNwW3RSW43kk6dY/TKBBTeMKgVt
-	 2PaA4ze+qtFbHiOSFwgMMzro+xuxgAe1iruA32xWhgpafx7FplLRaCxiY5vKUCmI0F
-	 i+wSyCfBgjIBJ+wt0u2s4fn4RK/I0QvmXwC4m9o17RrL1R7EZgMEFhJE2GuoILU8X8
-	 kVafuxQfMUjaQ==
-Message-ID: <a4f94987-90d1-4966-a95d-8a2b15c77996@kernel.org>
-Date: Fri, 7 Mar 2025 16:22:50 +0100
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ieGIXdj5"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8fc176825so12005376d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:24:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741361040; x=1741965840; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bQDpIx1LDvx0gmjHl2Xaz7imPvceKHnW6AENwjXSx4c=;
+        b=ieGIXdj51gCe/pxJ48hZUboCeQrIJ8vJDBp7Bc52ENUyD0CayeSVkl40lUYLjibZou
+         nGqhHYUHFziGL16GuhKEld7GXGF2V4LyZAq70idH3UyNb64RndbEovjC75iEkXSWeMfz
+         M+Ksk7sGGKtLVvv9fsktX75bz9ygqba3XUPijXkQ6Ao9FmNtpUnlfJ0dDCLitpV2KX/G
+         X+uzKEP0AVYeT13RE1ve2tXilVktPH9LAOHNW5/A/T6iMCgpH9WJBvzSZ0XQsNw+7Yt3
+         SEE/Qom0BCHiiHTxKjNQTC3skjEYdeJZKxIrr+waIpikdqo9sSlYBe62BLexPs4C8CHj
+         WVnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741361040; x=1741965840;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bQDpIx1LDvx0gmjHl2Xaz7imPvceKHnW6AENwjXSx4c=;
+        b=GyqBN2GwEGIE7JIKmnYFLqYf3tS3FT+1QTJ+AFxzoQoWb382V6OkjgFkVGF2JWvGuK
+         xJrqHvGliev3R33cQrC+1/qeTcNJj+l6gVBFgwQv9eXF/mI0ySOMpqXe6AOFmAZ+HfFM
+         WiXPF/j1P1gvEduRHx/FIbx+Nk0F7o12SRNSiNme0tmxiTQjkpEUHgv2yE/N72yEXMRO
+         eoUt8pXyWr3awcRZmM+f1V0jq8lltSfifPhhfx1LE02HrUN5DLA1wQ9yrNYEh7/z96xU
+         RUznIjqdgbhJ7mZGjJgAG87Uoysw5lgRUB0BpuA9OS3tOdQq5mnrmf3thAxO5c/Trma+
+         CV9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUdrsinaFIKl0J8NfkjIuj+xL2BMyPha5chV7BQq/ggHSwKoP7kDXWLdj1u70rIqoSQCk73o/aMm3vKNEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+ZK3VDy+07nubyEa+KiEq90ryedP0gyHP6ln9rn/EhulXtTOe
+	gI3dlpsMfm9T0lB9VXJUH3DOfR8gN/z5F9E8XyAFrMziHvDeGvOKk6d/qCTsQyc=
+X-Gm-Gg: ASbGncsE2DZ1iX7BvxxVs8CksWEDsROBpiMOYtHMq9H8DqCx0saGrEl2W3E8oXyRNdH
+	38ST1QQe5FiTQPuPmannJdWuKc545sMeUJhEcigrFFyC/BcMyDWW+3+JBJ6fRkm9zLgX4td+aC5
+	Vt4kKyIDCJ89fMI2+mjP2WO+rWzF9s2oZwiFpYyV+ZEdP43ahqSTcA1lE7Cy/5u9j979fCHuiTT
+	Vt++ylyIOJ5NL7q6XBscyKjm5JUY8cgS09EDPQqjhztPvQMjQTSj9fhoBB/QRDwJmbjJe5cDVhx
+	GY/VShXX+ork3KpZtR95Z/+8O1aD+8vDeVtg91sFyfDGAclXbCXFDd4uN5caRApXSofPlKA2iRF
+	oCZR3dhduW36aVC3Z9DibGO48q4w=
+X-Google-Smtp-Source: AGHT+IH76rdNmbl5bYxxi2Ntlx+Q9KC5d6ItHMqrKmo47yrPqKQ+dtsj3ZlBapDNCUyzNnFJZtFvHA==
+X-Received: by 2002:ad4:5aaf:0:b0:6e8:ea29:fdd1 with SMTP id 6a1803df08f44-6e9005d4500mr51843746d6.3.1741361040000;
+        Fri, 07 Mar 2025 07:24:00 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f707bf64sm20530746d6.2.2025.03.07.07.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 07:23:59 -0800 (PST)
+Date: Fri, 7 Mar 2025 10:23:57 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com, kernel_team@skhynix.com,
+	honggyu.kim@sk.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH 4/4] mm/mempolicy: Fix memory leaks in
+ mempolicy_sysfs_init()
+Message-ID: <Z8sPjdXmFGO9-y7D@gourry-fedora-PF4VCD3F>
+References: <20250307063534.540-1-rakie.kim@sk.com>
+ <20250307063534.540-5-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/14] ASoC: mediatek: mt8196: add common interface for
- mt8196 DAI driver
-To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-References: <20250307124841.23777-1-darren.ye@mediatek.com>
- <20250307124841.23777-5-darren.ye@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250307124841.23777-5-darren.ye@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307063534.540-5-rakie.kim@sk.com>
 
-On 07/03/2025 13:47, Darren.Ye wrote:
-> From: Darren Ye <darren.ye@mediatek.com>
-> 
-> Implement sample rate conversion and set private data for mt8196.
-> 
-> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
-> ---
->  .../soc/mediatek/mt8196/mt8196-afe-control.c  | 109 ++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-control.c
-> 
-> diff --git a/sound/soc/mediatek/mt8196/mt8196-afe-control.c b/sound/soc/mediatek/mt8196/mt8196-afe-control.c
-> new file mode 100644
-> index 000000000000..bb85f4ad8585
-> --- /dev/null
-> +++ b/sound/soc/mediatek/mt8196/mt8196-afe-control.c
-> @@ -0,0 +1,109 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  MediaTek ALSA SoC Audio Control
-> + *
-> + *  Copyright (c) 2024 MediaTek Inc.
-> + *  Author: Darren Ye <darren.ye@mediatek.com>
-> + */
-> +
-> +#include "mt8196-afe-common.h"
-> +#include <linux/pm_runtime.h>
-> +
-> +unsigned int mt8196_general_rate_transform(struct device *dev,
-> +					   unsigned int rate)
-These are not static, so you miss header for all of these changes.
+On Fri, Mar 07, 2025 at 03:35:33PM +0900, Rakie Kim wrote:
+> Improper cleanup of sysfs attributes caused kobject and memory leaks when
+> initialization failed or nodes were removed.
+>
 
-Best regards,
-Krzysztof
+Is this fixing something in your patch set or fixing something in the
+current upstream code?  If in the current patch set, roll this into the
+patch that causes it.
+
+If this is fixing something upstream, I recommend submitting this
+separately to stable and rebasing on top of it.
+
+~Gregory
