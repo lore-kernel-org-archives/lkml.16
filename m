@@ -1,182 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward202b.mail.yandex.net (forward202b.mail.yandex.net [178.154.239.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AEC21ABC3;
-	Fri,  7 Mar 2025 14:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76F11922EF
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741358455; cv=none; b=dc/1t77VICnvjTw/yGRSgXwz+2LRY37lVaCfMg4cULSVPd5W7q7seP4HvJR3HXOLO3z0Ijc91yTrlTUvLYyFz0doUiCaA+WV2kB5KsQdjG9za6atfrVBQ0lVlB0TLA+xg8JeadZhowxJym6bsqSoY4IkPAsaHMc6Qxrf8MnaEvs=
+	t=1741358499; cv=none; b=VMGjWCqkpD1cB4bQ1a03/HN5Tu5ds42UQe2B/bMMxeDJ2n5aGB1sF1NislyXHAiQYJw1RPfYOOYDpYUo383oc8cdSupyJsjTQA5ILp/Xg4imL0alhe+E1oqU5shIjDBfQhFSdghjxZbIpBpPYMSWrpaZTeTmonnxY9Q1Lxshzmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741358455; c=relaxed/simple;
-	bh=gqX4hzoJ+7QuIXnn42nyeKsoGFR9a03BNc0pBhEEqDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSAKRi9wkZLB6s9AUdB9rZX2V6fisgM9k75qO60LA1rfPvHtmVQQiR9CFOfmUWybolkNfXYWfQiXVDQLj9QWomTajaNFRQdxahkBstrWo9l+QnzGIUjsKVwgvk4GD8ZpFGr8xx8i+QHNgcoAqYf4CEydLf26xIvsMU9t9YooTjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3fs8try; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741358499; c=relaxed/simple;
+	bh=9/YOTw+hwlAppabGdlW1lcCBKvn6z3aahdbUZH9TUDI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HrMTkyJeNke1SI/PWeGb0scTAKTGv5RTQjJNYonRcg9TEV7yF73urld2EZECdkHRjWncaeEIj+A6nqVq6b2/szU6lZxVQZDSgu3huCTlSuvHFaxs/n/ITxa3XUx3BWJWqpuajVzPPoX5Kof8+sF/7CaDuM71Qi3cVvnpDTjzgJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Z02gXctY; arc=none smtp.client-ip=178.154.239.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3fs8try"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06349C4CED1;
-	Fri,  7 Mar 2025 14:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741358455;
-	bh=gqX4hzoJ+7QuIXnn42nyeKsoGFR9a03BNc0pBhEEqDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e3fs8tryLeCeqoR6gkGGpggRU0Apu4sSNSVQi1oBZYBUmSsMmRzNqowPnkJt7SFiw
-	 JK2A5vZDvMSaG0oWWahrDnrv1v1i+X+xB/OGEN0q/KuO/mI+8fN+EMoLLdsiaPkZfN
-	 V6FZKXEWHP8Xiu7nmXcGWQBqhnoLClWjHc5dL7ZBFiQIaSTARiIyOjUqNVIID1P6za
-	 rpJWtwep+Hn/tPbCoNilLIpWVh+3dLR5Lhrs2P/rUt14NlPj3xz4nRH+GOtEaWiBuK
-	 wIum5IhwbMYES5Mid/CC9/Xd6LIqoggx1SUaXwxYFv7SoJ7KiCKpONAcY6QQhQdrQu
-	 IzMcyQ4w8hQwg==
-Date: Fri, 7 Mar 2025 15:40:52 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Silvano Seva <s.seva@4sigma.it>
-Cc: a.greco@4sigma.it, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"open list:ST LSM6DSx IMU IIO DRIVER" <linux-iio@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: fix possible lockup during FIFO
- read
-Message-ID: <Z8sFdGG4bDyALrsi@lore-desk>
-References: <20250303132124.52811-2-s.seva@4sigma.it>
- <Z8nDzyVO596rW0Mf@lore-desk>
- <CALKJsrqc__ZeLoZ5V+hBxVMU+Crpv_YG0KM69N1CXuHc_rM-FQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Z02gXctY"
+Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
+	by forward202b.mail.yandex.net (Yandex) with ESMTPS id AA1E564D5A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:35:16 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1e:3990:0:640:808c:0])
+	by forward102b.mail.yandex.net (Yandex) with ESMTPS id BFF3060D8C;
+	Fri,  7 Mar 2025 17:35:08 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 0ZnwD2MLoSw0-vZ61V53i;
+	Fri, 07 Mar 2025 17:35:08 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1741358108; bh=8GeJNa6VgiFIh/C+Y/1mk9oen77NnBJDUbFFTfIyHuE=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=Z02gXctYbnuUHb0I7qaIZ4qtq9rEp9swVGI3+DiBUfZ+nlwb6jQr4EG36XSF1HEDz
+	 wOXNy+5hoD0bz0Az19LccEKlnjELGv4OxD7k0N7d3TlRI4CS6kWrlyKokOqD5OeFV0
+	 vPvGR75YFOrZhAI1wQneBAkF3H0NB5A0FyqSwBmE=
+Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Andrey Tsygunka <aitsygunka@yandex.ru>
+To: markus.elfring@web.de
+Cc: aitsygunka@yandex.ru,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH v2] misc: sram: Fix NULL pointer dereference in sram_probe
+Date: Fri,  7 Mar 2025 17:34:42 +0300
+Message-Id: <20250307143442.4125844-1-aitsygunka@yandex.ru>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <84969aba-67ba-4990-9065-6b55ce26ff92@web.de>
+References: <84969aba-67ba-4990-9065-6b55ce26ff92@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oUCIrKhfoEupLwpQ"
-Content-Disposition: inline
-In-Reply-To: <CALKJsrqc__ZeLoZ5V+hBxVMU+Crpv_YG0KM69N1CXuHc_rM-FQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+Add a check for the return value from platform_get_resource() call
+to be NULL.
 
---oUCIrKhfoEupLwpQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If the passed device-tree contains a node for sram-device
+without a specified '<reg>' property value, for example:
 
-> On Thu, Mar 6, 2025 at 4:48=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.o=
-rg> wrote:
-> >
-> > > Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
-> > > from falling in an infinite loop in case pattern_len is equal to zero=
- and
-> > > the device FIFO is not empty.
-> > >
-> > > Signed-off-by: Silvano Seva <s.seva@4sigma.it>
-> > > ---
-> > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers=
-/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > > index 0a7cd8c1aa33..7f343614f8a5 100644
-> > > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > > @@ -395,12 +395,17 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *=
-hw)
-> > >       fifo_len =3D (le16_to_cpu(fifo_status) & fifo_diff_mask) *
-> > >                  ST_LSM6DSX_CHAN_SIZE;
-> > >       fifo_len =3D (fifo_len / pattern_len) * pattern_len;
-> > > +     if (!fifo_len)
-> > > +             return 0;
-> >
-> > I do not think this check is necessary since if fifo_len is 0 we will n=
-ot run
-> > the for loop, right?
->=20
-> This check is present in the st_lsm6dsx_read_tagged_fifo() function, i
-> added it here for consistency. I agree with you that is not strictly
-> necessary.
->=20
-> >
-> > >
-> > >       acc_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
-> > >       gyro_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
-> > >       if (hw->iio_devs[ST_LSM6DSX_ID_EXT0])
-> > >               ext_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_EXT0=
-]);
-> > >
-> > > +     if (!pattern_len)
-> > > +             pattern_len =3D ST_LSM6DSX_SAMPLE_SIZE;
-> >
-> > same here, I do not think pattern_len can be 0 since hw->sip must be gr=
-eater
-> > than 0 in order to enable the FIFO. Moreover, this check should be some=
- lines
-> > above since we have already divided fifo_len by pattern_len here.
-> >
->=20
-> There is a situation causing the subsequent for loop to never
-> terminate, hanging the kernel boot process: given a system which
-> doesn't have an hardware reset line allowing the kernel to
-> re-initialize the IMU hardware, in case of an hot reboot the driver
-> probe() function attempts to flush the FIFO, which may contain some
-> data, while the hw->sip is zero.
-> The complete execution path is the following:
-> - call of st_lsm6dsx_probe();
-> - allocation of the st_lsm6dsx_hw structure via the devm_kzalloc,
-> zero-initializing the sip field;
-> - call of st_lsm6dsx_init_device();
-> - call of st_lsm6dsx_reset_device();
-> - call of st_lsm6dsx_flush_fifo();
-> - call of st_lsm6dsx_read_fifo/st_lsm6dsx_read_tagged_fifo via the
-> fifo_ops function pointer.
+    sram: sram@5c0000000 {
+        compatible = "nvidia,tegra186-sysram";
+    };
 
-ack, I can see the issue now, thx for pointing this out. I should we should=
- set
-pattern_len to ST_LSM6DSX_SAMPLE_SIZE or ST_LSM6DSX_TAGGED_SAMPLE_SIZE if i=
-t is
-0. Can you please move the check before updating fifo_len in
-st_lsm6dsx_read_fifo()?
+and the of_device_id[] '.data' element contains a sram_config*
+with '.map_only_reserved = true' property, we get the error:
 
-Regards,
-Lorenzo
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.1.96 #1
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+  sram_probe+0x134/0xd30
+  platform_probe+0x94/0x130
+  really_probe+0x124/0x580
+  __driver_probe_device+0xd0/0x1f0
+  driver_probe_device+0x50/0x1c0
+  __device_attach_driver+0x140/0x220
+  bus_for_each_drv+0xbc/0x130
+  __device_attach+0xec/0x2c0
+  device_initial_probe+0x24/0x40
+  bus_probe_device+0xd8/0xe0
+  device_add+0x67c/0xc80
+  of_device_add+0x58/0x80
+  of_platform_device_create_pdata+0xd0/0x1b0
+  of_platform_bus_create+0x27c/0x6f0
+  of_platform_populate+0xac/0x1d0
+  of_platform_default_populate_init+0x10c/0x130
+  do_one_initcall+0xdc/0x510
+  kernel_init_freeable+0x43c/0x4d8
+  kernel_init+0x2c/0x1e0
+  ret_from_fork+0x10/0x20
 
->=20
-> An alternative solution to solve this situation is initializing the
-> hw->sip field to a sane default value in either the probe() or
-> init_device() function.
->=20
-> > > +
-> > >       for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern=
-_len) {
-> > >               err =3D st_lsm6dsx_read_block(hw, ST_LSM6DSX_REG_FIFO_O=
-UTL_ADDR,
-> > >                                           hw->buff, pattern_len,
-> > > @@ -623,6 +628,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx=
-_hw *hw)
-> > >       if (!fifo_len)
-> > >               return 0;
-> > >
-> > > +     if (!pattern_len)
-> > > +             pattern_len =3D ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
-> >
-> > for the reason above, this is not necessary.
-> >
-> > Regards,
-> > Lorenzo
-> >
-> > > +
-> > >       for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern=
-_len) {
-> > >               err =3D st_lsm6dsx_read_block(hw,
-> > >                                           ST_LSM6DSX_REG_FIFO_OUT_TAG=
-_ADDR,
-> > > --
-> > > 2.48.1
-> > >
+Fixes: 444b0111f3bc ("misc: sram: use devm_platform_ioremap_resource_wc()")
+Signed-off-by: Andrey Tsygunka <aitsygunka@yandex.ru>
+---
+v2: Description changed based on comments from Markus Elfring 
+at https://lore.kernel.org/linux-kernel/84969aba-67ba-4990-9065-6b55ce26ff92@web.de/,
+added tag 'Fixes', removed useless information from backtrace.
 
---oUCIrKhfoEupLwpQ
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/misc/sram.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+index e5069882457e..c8ba8ebd4364 100644
+--- a/drivers/misc/sram.c
++++ b/drivers/misc/sram.c
+@@ -410,8 +410,13 @@ static int sram_probe(struct platform_device *pdev)
+ 	if (IS_ERR(clk))
+ 		return PTR_ERR(clk);
+ 
+-	ret = sram_reserve_regions(sram,
+-			platform_get_resource(pdev, IORESOURCE_MEM, 0));
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (unlikely(res == NULL)) {
++		dev_err(&pdev->dev, "invalid resource\n");
++		return -EINVAL;
++	}
++
++	ret = sram_reserve_regions(sram, res);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.25.1
 
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ8sFdAAKCRA6cBh0uS2t
-rKn+AQD6DYrrbcyM5r9RwPVBgWd6ZHejDs4Bc4gvn+vJU7JNygEA+YKCHSuJ2RKX
-D4s0eQ3y/D/VFULCAElOvu1tjuJNYQw=
-=fTxQ
------END PGP SIGNATURE-----
-
---oUCIrKhfoEupLwpQ--
