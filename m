@@ -1,55 +1,55 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585961891A9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 02:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2DD18DB3A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 02:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741315158; cv=none; b=q/PDwJDbVkpYZ+z2Gq1jG8+mA8LgL83Bb5W6gWqLPf7aD4m62qbs0H2aO0361q8Mp11t5G5x16Qm6WSQMFV9d/qwnk0Z7mIen6VwTlF6KhbXv3MtTubMRZExBvkXLq/00YIscPTubwASaOMDYDR2ONhKfQOtRmFhU+lKkYw96RE=
+	t=1741315161; cv=none; b=Y8xb4QX6a0Js6KNGukdmenxWTvmaz1U29pxNKAquqBnYwt7Txhd5WtqRJ8FZ5zbO5Eo+NMd2F5u8mXLZhxDMpEpm7kWhtzX/6EDA+dh5tlPJclPwSGmOirgl0nS3cdJO1U1rvr0h809xVAyuc7y8/NM4kphzR9vptD2hD4nbbxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741315158; c=relaxed/simple;
-	bh=F3s3liOiszNRKh+IGM77OFI5rtCSCy0pnnGAdXuo7hE=;
+	s=arc-20240116; t=1741315161; c=relaxed/simple;
+	bh=moyH7ngutvI28A8PW36UdjVAW7IUQjv1VshIvFSOH9M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=eR2WrVe5lwakjdZW9iXwQf/LKuVeSesUCDTDST53C1SyQ3aR4pe7INsklGCt/eiYaxWmOc+SzmHsAbVXu02OvnbzupsqobWJXQtUe20ClPzkga7rDRdC2dd5+erdmEpbwvfvy5DJl4I/yTwhPSBsCH5hw86SlWsjo7y/Fj6B4Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WprpxhQn; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=hgTdA7CCDr6q8B9ifuFn1ljH1NBxMy5VoziC9si4jktBPi0XaUW7z0F/R0wlUoVVYZD7AA4m+QtyV7wUH1GUp6xQHi6pJMLXio8Py04z6ERFdGa3F0JBGiyptGBNH1Y6neLbtIvhPt9dqMe+YAPQOAoP5N19KnUWj9gg5qz3GFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2A+4PaDv; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WprpxhQn"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fe8c5dbdb0so2543143a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 18:39:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2A+4PaDv"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so2554652a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 18:39:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741315155; x=1741919955; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1741315159; x=1741919959; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9r1pEzREl2UeUw5kyh9Mo6aZcKi+y0eZFdoOEN6jsvQ=;
-        b=WprpxhQnygbpwtiwPAFEvHaSNwvM+J+RabmcuDDLzlejXBEZte1uijziHlqF2DQ41Y
-         Tn48XRoG5YB2woGuhvbIX+gZEvowDSERVdAnYpGVrzErKDju18sa25ltVg5iXAUq2qzR
-         bIkknTBikUr17pkteaaKwdNnK30BZoYDWs7scGDHKSTYjxz6rOtU4+L6BUPpAI+rhqHG
-         rYO0Qvr3vSIkpHBQuqUVsP1aTV+5ddBODZfHRE7QrMk9E7hx5ueA1rpXtGHS0dZXlQjO
-         8tYKIaLqAmWH4s8WFXVLP6Zgz5/8VeNnMUhCdw0B0B5NoGYkVe74mXkJcHmmOVFBWehR
-         I3Bg==
+        bh=2OrnONqIHmdQK0sEBinAUX8Um88M0UBcNTM3o5mqNKY=;
+        b=2A+4PaDvf8yGcoY+VgPUH6emxj6cosPyk7tEIjbTHXYMgne41nl3YoKwm0EE+oxUBB
+         9hOcIkw5eODO8/ouIOajiwRjZ23D3jE2WCNf6SzpMqdlHWlUSQljLLvpybAz4duf/fF6
+         7OS207bp22HrdQDHzZfUxGtArPw6hGe9Hun6XEuG27PXwnLUNq7acgAhi7l6X1R3dtLD
+         8GaxFgTYI/QlyOUrcBgTsT9D/3yZYaLjDpmI6lBeQgJtC1QwD4IQqrzCk7LrzZk5z3Mp
+         Nsisx/H7qqwi2nvBPhMVtiN7vMjQiIPKrpKRx1kr5qnWnTlU8HGIQV8FvSqBPcVPYx19
+         EsvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741315155; x=1741919955;
+        d=1e100.net; s=20230601; t=1741315159; x=1741919959;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9r1pEzREl2UeUw5kyh9Mo6aZcKi+y0eZFdoOEN6jsvQ=;
-        b=nY2KxllAbH6TYqMOFoBBUkm2T6272LAfw9KYOTDOtOWKn+ZJgqwRtZSi8vU+sgyiGL
-         1lt1NA4uciy4o6bvqMLH2JyDfaSemyY7vh8diA2xbvAzMpSMR+jugEr89HNcI4Fabx5P
-         mLyAuhVvoHB1RbagCnzuWta/RxqLvoZiqcSDBLPBBhVNFWovU7yfyaL+wvJICsb3QmT3
-         axfFk+oekunJdNp/AS3xZb6NFZJTnlKzMO4ZsWGty3PfIEtCd3eqwlCyFeplKE5Jwfu2
-         QcFGi3CKuFtXdbxjdib6wOjU6y7n83hFio6X/2pD7hlEMPRHuNkcU7YqJZhsAE13YbWy
-         LmDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfnlEWPeG+Ouh3Qhwp5fe/sDLg279cDNCwjoe2tJWv5fgV5wucEOrH4nF3HfeSMGWl7xa/t8Di7ST9u0c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzScxst1OHZqo7ywqMHyKUST+RIxCrZdR20DIGDabFLxHJqWhkg
-	4+UTCDPL+R4bbCpWnnYfEAf2irMPPOhsA5u3L0Vs99eQYAl3LDzQFUC2MNfGgUGHmKeg2kcd0Fd
-	3QukfJA==
-X-Google-Smtp-Source: AGHT+IFB0Jz96EghCYT9ApTLDpOc/vAwaOVYpvQQQH8OlnfZ6TncP/9f8f1tEe0CjITrBDqQDN3C7rY6NhKW
-X-Received: from pjbqx8.prod.google.com ([2002:a17:90b:3e48:b0:2f9:e05f:187f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38cd:b0:2ee:741c:e9f4
- with SMTP id 98e67ed59e1d1-2ff7ce8e5dfmr2673067a91.11.1741315155485; Thu, 06
- Mar 2025 18:39:15 -0800 (PST)
-Date: Thu,  6 Mar 2025 18:39:04 -0800
+        bh=2OrnONqIHmdQK0sEBinAUX8Um88M0UBcNTM3o5mqNKY=;
+        b=CkJX69HxNAlYsV9oh5OP1vUTpp3ZV6NWyLe6LU5+YjcSON8B66Q6Ncg41l0Fb43oy0
+         aVDe2r17TEesyar8INAqT8NGB1/rtO+tJ/HyM/pMzG0nlsseTvQTkL5AYJJV/wJ/xfP7
+         4lCHJba4rKi8NxGSj2Q4sN1C4mKdd3W0Ya4ai/SZzbKrIIG9gx92DfOFVytdPKooXNJf
+         0WKll1IU0eVyjlBV21F4gMzU3aiP8a4kzGtM4Pt3O6JynlKnfyrgXVUwkRyAWMyhUIq7
+         z8rxEI9ADGRBWXfdmCiu8AY6X8MYeeUH9YZle4XWKgVS5bsN2fgP1ZjSTyM56VdguOLE
+         V8tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmwM/eucl788NxRsnTeHNflj6tFMZUX5aQW4+aaGxyNqqMVmrzUwv4fWs8zMhpACDbAqbKZsk7uLI6Trw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiwDvjA034DkhyYoNOTOLubZ25gJQZJVaS68K1Gu2Fireqe0+W
+	zOxob6yBh8Kkf2+vJi2vS/lCShYYOoLqr3aJhFRx4FMK/yDhstjgEqrH3FH8q0E0I7RIWgvbNb/
+	j3XsGGg==
+X-Google-Smtp-Source: AGHT+IGpKFW3TRJDv127bUtQQfrc+gkgABkcfIUBjfPLAIwuYuyTBMkqGIUvfMdPI2lKVeuL+RI4BKT/kgF3
+X-Received: from pji13.prod.google.com ([2002:a17:90b:3fcd:b0:2ff:4ba2:f3a5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d605:b0:2f9:cf97:56ac
+ with SMTP id 98e67ed59e1d1-2ff7cd3ebcfmr3198108a91.0.1741315159127; Thu, 06
+ Mar 2025 18:39:19 -0800 (PST)
+Date: Thu,  6 Mar 2025 18:39:06 -0800
 In-Reply-To: <20250307023906.1135613-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250307023906.1135613-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-Message-ID: <20250307023906.1135613-3-irogers@google.com>
-Subject: [PATCH v2 3/5] perf parse-events: Corrections to topdown sorting
+Message-ID: <20250307023906.1135613-5-irogers@google.com>
+Subject: [PATCH v2 5/5] perf test stat: Additional topdown grouping tests
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,260 +73,119 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In the case of '{instructions,slots},faults,topdown-retiring' the
-first event that must be grouped, slots, is ignored causing the
-topdown-retiring event not to be adjacent to the group it needs to be
-inserted into. Don't ignore the group members when computing the
-force_grouped_index.
+Add a loop and helper function to avoid repetition, the loop uses
+arrays so switch the shell to bash. Add additional topdown group tests
+where a topdown event needs to be moved beyond others and the slots
+event isn't first in the target group. This replicates issues that
+occur on hybrid systems where the other events are for the cpu_atom
+PMU. Test with both PMU and software events. Place the slots event
+later in the event list.
 
-Make the force_grouped_index be for the leader of the group it is
-within and always use it first rather than a group leader index so
-that topdown events may be sorted from one group into another.
-
-As the PMU name comparison applies to moving events in the same group
-ensure the name ordering is always respected.
-
-Change the group splitting logic to not group if there are no other
-topdown events and to fix cases where the force group leader wasn't
-being grouped with the other members of its group.
-
-Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Closes: https://lore.kernel.org/lkml/20250224083306.71813-2-dapeng1.mi@linux.intel.com/
-Closes: https://lore.kernel.org/lkml/f7e4f7e8-748c-4ec7-9088-0e844392c11a@linux.intel.com/
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/evlist.c |  15 ++--
- tools/perf/util/parse-events.c    | 145 ++++++++++++++++++++----------
- 2 files changed, 105 insertions(+), 55 deletions(-)
+ tools/perf/tests/shell/stat.sh | 83 +++++++++++++++++++---------------
+ 1 file changed, 47 insertions(+), 36 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index 447a734e591c..ed205d1b207d 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -76,12 +76,15 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- 		 * topdown metrics events are already in same group with slots
- 		 * event, do nothing.
- 		 */
--		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs) &&
--		    lhs->core.leader != rhs->core.leader)
--			return -1;
--		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
--		    lhs->core.leader != rhs->core.leader)
--			return 1;
-+		if (lhs->core.leader != rhs->core.leader) {
-+			bool lhs_topdown = arch_is_topdown_metrics(lhs);
-+			bool rhs_topdown = arch_is_topdown_metrics(rhs);
-+
-+			if (lhs_topdown && !rhs_topdown)
-+				return -1;
-+			if (!lhs_topdown && rhs_topdown)
-+				return 1;
-+		}
- 	}
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index 68323d636fb7..8a100a7f2dc1 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # perf stat tests
+ # SPDX-License-Identifier: GPL-2.0
  
- 	/* Retire latency event should not be group leader*/
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 35e48fe56dfa..5152fd5a6ead 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1980,48 +1980,55 @@ static int evlist__cmp(void *_fg_idx, const struct list_head *l, const struct li
- 	int *force_grouped_idx = _fg_idx;
- 	int lhs_sort_idx, rhs_sort_idx, ret;
- 	const char *lhs_pmu_name, *rhs_pmu_name;
--	bool lhs_has_group, rhs_has_group;
- 
- 	/*
--	 * First sort by grouping/leader. Read the leader idx only if the evsel
--	 * is part of a group, by default ungrouped events will be sorted
--	 * relative to grouped events based on where the first ungrouped event
--	 * occurs. If both events don't have a group we want to fall-through to
--	 * the arch specific sorting, that can reorder and fix things like
--	 * Intel's topdown events.
-+	 * Get the indexes of the 2 events to sort. If the events are
-+	 * in groups then the leader's index is used otherwise the
-+	 * event's index is used. An index may be forced for events that
-+	 * must be in the same group, namely Intel topdown events.
- 	 */
--	if (lhs_core->leader != lhs_core || lhs_core->nr_members > 1) {
--		lhs_has_group = true;
--		lhs_sort_idx = lhs_core->leader->idx;
-+	if (*force_grouped_idx != -1 && arch_evsel__must_be_in_group(lhs)) {
-+		lhs_sort_idx = *force_grouped_idx;
- 	} else {
--		lhs_has_group = false;
--		lhs_sort_idx = *force_grouped_idx != -1 && arch_evsel__must_be_in_group(lhs)
--			? *force_grouped_idx
--			: lhs_core->idx;
--	}
--	if (rhs_core->leader != rhs_core || rhs_core->nr_members > 1) {
--		rhs_has_group = true;
--		rhs_sort_idx = rhs_core->leader->idx;
-+		bool lhs_has_group = lhs_core->leader != lhs_core || lhs_core->nr_members > 1;
-+
-+		lhs_sort_idx = lhs_has_group ? lhs_core->leader->idx : lhs_core->idx;
-+	}
-+	if (*force_grouped_idx != -1 && arch_evsel__must_be_in_group(rhs)) {
-+		rhs_sort_idx = *force_grouped_idx;
- 	} else {
--		rhs_has_group = false;
--		rhs_sort_idx = *force_grouped_idx != -1 && arch_evsel__must_be_in_group(rhs)
--			? *force_grouped_idx
--			: rhs_core->idx;
-+		bool rhs_has_group = rhs_core->leader != rhs_core || rhs_core->nr_members > 1;
-+
-+		rhs_sort_idx = rhs_has_group ? rhs_core->leader->idx : rhs_core->idx;
- 	}
- 
-+	/* If the indices differ then respect the insertion order. */
- 	if (lhs_sort_idx != rhs_sort_idx)
- 		return lhs_sort_idx - rhs_sort_idx;
- 
--	/* Group by PMU if there is a group. Groups can't span PMUs. */
--	if (lhs_has_group && rhs_has_group) {
--		lhs_pmu_name = lhs->group_pmu_name;
--		rhs_pmu_name = rhs->group_pmu_name;
--		ret = strcmp(lhs_pmu_name, rhs_pmu_name);
--		if (ret)
--			return ret;
--	}
-+	/*
-+	 * Ignoring forcing, lhs_sort_idx == rhs_sort_idx so lhs and rhs should
-+	 * be in the same group. Events in the same group need to be ordered by
-+	 * their grouping PMU name as the group will be broken to ensure only
-+	 * events on the same PMU are programmed together.
-+	 *
-+	 * With forcing the lhs_sort_idx == rhs_sort_idx shows that one or both
-+	 * events are being forced to be at force_group_index. If only one event
-+	 * is being forced then the other event is the group leader of the group
-+	 * we're trying to force the event into. Ensure for the force grouped
-+	 * case that the PMU name ordering is also respected.
-+	 */
-+	lhs_pmu_name = lhs->group_pmu_name;
-+	rhs_pmu_name = rhs->group_pmu_name;
-+	ret = strcmp(lhs_pmu_name, rhs_pmu_name);
-+	if (ret)
-+		return ret;
- 
--	/* Architecture specific sorting. */
-+	/*
-+	 * Architecture specific sorting, by default sort events in the same
-+	 * group with the same PMU by their insertion index. On Intel topdown
-+	 * constraints must be adhered to - slots first, etc.
-+	 */
- 	return arch_evlist__cmp(lhs, rhs);
+@@ -67,43 +67,54 @@ test_topdown_groups() {
+     echo "Topdown event group test [Skipped event parsing failed]"
+     return
+   fi
+-  if perf stat -e '{slots,topdown-retiring}' true 2>&1 | grep -E -q "<not supported>"
+-  then
+-    echo "Topdown event group test [Failed events not supported]"
+-    err=1
+-    return
+-  fi
+-  if perf stat -e 'instructions,topdown-retiring,slots' true 2>&1 | grep -E -q "<not supported>"
+-  then
+-    echo "Topdown event group test [Failed slots not reordered first in no-group case]"
+-    err=1
+-    return
+-  fi
+-  if perf stat -e '{instructions,topdown-retiring,slots}' true 2>&1 | grep -E -q "<not supported>"
+-  then
+-    echo "Topdown event group test [Failed slots not reordered first in single group case]"
+-    err=1
+-    return
+-  fi
+-  if perf stat -e '{instructions,slots},topdown-retiring' true 2>&1 | grep -E -q "<not supported>"
+-  then
+-    echo "Topdown event group test [Failed topdown metrics event not move into slots group]"
+-    err=1
+-    return
+-  fi
+-  if perf stat -e '{instructions,slots},{topdown-retiring}' true 2>&1 | grep -E -q "<not supported>"
+-  then
+-    echo "Topdown event group test [Failed topdown metrics group not merge into slots group]"
+-    err=1
+-    return
+-  fi
+-  if perf stat -e '{instructions,r400,r8000}' true 2>&1 | grep -E -q "<not supported>"
++  td_err=0
++  do_topdown_group_test() {
++    events=$1
++    failure=$2
++    if perf stat -e "$events" true 2>&1 | grep -E -q "<not supported>"
++    then
++      echo "Topdown event group test [Failed $failure for '$events']"
++      td_err=1
++      return
++    fi
++  }
++  do_topdown_group_test "{slots,topdown-retiring}" "events not supported"
++  do_topdown_group_test "{instructions,r400,r8000}" "raw format slots not reordered first"
++  filler_events=("instructions" "cycles"
++                 "context-switches" "faults")
++  for ((i = 0; i < ${#filler_events[@]}; i+=2))
++  do
++    filler1=${filler_events[i]}
++    filler2=${filler_events[i+1]}
++    do_topdown_group_test "$filler1,topdown-retiring,slots" \
++      "slots not reordered first in no-group case"
++    do_topdown_group_test "slots,$filler1,topdown-retiring" \
++      "topdown metrics event not reordered in no-group case"
++    do_topdown_group_test "{$filler1,topdown-retiring,slots}" \
++      "slots not reordered first in single group case"
++    do_topdown_group_test "{$filler1,slots},topdown-retiring" \
++      "topdown metrics event not move into slots group"
++    do_topdown_group_test "topdown-retiring,{$filler1,slots}" \
++      "topdown metrics event not move into slots group last"
++    do_topdown_group_test "{$filler1,slots},{topdown-retiring}" \
++      "topdown metrics group not merge into slots group"
++    do_topdown_group_test "{topdown-retiring},{$filler1,slots}" \
++      "topdown metrics group not merge into slots group last"
++    do_topdown_group_test "{$filler1,slots},$filler2,topdown-retiring" \
++      "non-adjacent topdown metrics group not move into slots group"
++    do_topdown_group_test "$filler2,topdown-retiring,{$filler1,slots}" \
++      "non-adjacent topdown metrics group not move into slots group last"
++    do_topdown_group_test "{$filler1,slots},{$filler2,topdown-retiring}" \
++      "metrics group not merge into slots group"
++    do_topdown_group_test "{$filler1,topdown-retiring},{$filler2,slots}" \
++      "metrics group not merge into slots group last"
++  done
++  if test "$td_err" -eq 0
+   then
+-    echo "Topdown event group test [Failed raw format slots not reordered first]"
+-    err=1
+-    return
++    echo "Topdown event group test [Success]"
++  else
++    err="$td_err"
+   fi
+-  echo "Topdown event group test [Success]"
  }
  
-@@ -2030,9 +2037,11 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	int idx = 0, force_grouped_idx = -1;
- 	struct evsel *pos, *cur_leader = NULL;
- 	struct perf_evsel *cur_leaders_grp = NULL;
--	bool idx_changed = false, cur_leader_force_grouped = false;
-+	bool idx_changed = false;
- 	int orig_num_leaders = 0, num_leaders = 0;
- 	int ret;
-+	struct evsel *force_grouped_leader = NULL;
-+	bool last_event_was_forced_leader = false;
- 
- 	/*
- 	 * Compute index to insert ungrouped events at. Place them where the
-@@ -2055,10 +2064,13 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		 */
- 		pos->core.idx = idx++;
- 
--		/* Remember an index to sort all forced grouped events together to. */
--		if (force_grouped_idx == -1 && pos == pos_leader && pos->core.nr_members < 2 &&
--		    arch_evsel__must_be_in_group(pos))
--			force_grouped_idx = pos->core.idx;
-+		/*
-+		 * Remember an index to sort all forced grouped events
-+		 * together to. Use the group leader as some events
-+		 * must appear first within the group.
-+		 */
-+		if (force_grouped_idx == -1 && arch_evsel__must_be_in_group(pos))
-+			force_grouped_idx = pos_leader->core.idx;
- 	}
- 
- 	/* Sort events. */
-@@ -2086,31 +2098,66 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		 * Set the group leader respecting the given groupings and that
- 		 * groups can't span PMUs.
- 		 */
--		if (!cur_leader)
-+		if (!cur_leader) {
- 			cur_leader = pos;
-+			cur_leaders_grp = &pos->core;
-+			if (pos_force_grouped)
-+				force_grouped_leader = pos;
-+		}
- 
- 		cur_leader_pmu_name = cur_leader->group_pmu_name;
--		if ((cur_leaders_grp != pos->core.leader &&
--		     (!pos_force_grouped || !cur_leader_force_grouped)) ||
--		    strcmp(cur_leader_pmu_name, pos_pmu_name)) {
--			/* Event is for a different group/PMU than last. */
-+		if (strcmp(cur_leader_pmu_name, pos_pmu_name)) {
-+			/* PMU changed so the group/leader must change. */
- 			cur_leader = pos;
--			/*
--			 * Remember the leader's group before it is overwritten,
--			 * so that later events match as being in the same
--			 * group.
--			 */
- 			cur_leaders_grp = pos->core.leader;
-+			if (pos_force_grouped && force_grouped_leader == NULL)
-+				force_grouped_leader = pos;
-+		} else if (cur_leaders_grp != pos->core.leader) {
-+			bool split_even_if_last_leader_was_forced = true;
-+
- 			/*
--			 * Avoid forcing events into groups with events that
--			 * don't need to be in the group.
-+			 * Event is for a different group. If the last event was
-+			 * the forced group leader then subsequent group events
-+			 * and forced events should be in the same group. If
-+			 * there are no other forced group events then the
-+			 * forced group leader wasn't really being forced into a
-+			 * group, it just set arch_evsel__must_be_in_group, and
-+			 * we don't want the group to split here.
- 			 */
--			cur_leader_force_grouped = pos_force_grouped;
-+			if (force_grouped_idx != -1 && last_event_was_forced_leader) {
-+				struct evsel *pos2 = pos;
-+				/*
-+				 * Search the whole list as the group leaders
-+				 * aren't currently valid.
-+				 */
-+				list_for_each_entry_continue(pos2, list, core.node) {
-+					if (pos->core.leader == pos2->core.leader &&
-+					    arch_evsel__must_be_in_group(pos2)) {
-+						split_even_if_last_leader_was_forced = false;
-+						break;
-+					}
-+				}
-+			}
-+			if (!last_event_was_forced_leader || split_even_if_last_leader_was_forced) {
-+				if (pos_force_grouped) {
-+					if (force_grouped_leader) {
-+						cur_leader = force_grouped_leader;
-+						cur_leaders_grp = force_grouped_leader->core.leader;
-+					} else {
-+						cur_leader = force_grouped_leader = pos;
-+						cur_leaders_grp = &pos->core;
-+					}
-+				} else {
-+					cur_leader = pos;
-+					cur_leaders_grp = pos->core.leader;
-+				}
-+			}
- 		}
- 		if (pos_leader != cur_leader) {
- 			/* The leader changed so update it. */
- 			evsel__set_leader(pos, cur_leader);
- 		}
-+		last_event_was_forced_leader = (force_grouped_leader == pos);
- 	}
- 	list_for_each_entry(pos, list, core.node) {
- 		struct evsel *pos_leader = evsel__leader(pos);
+ test_topdown_weak_groups() {
 -- 
 2.49.0.rc0.332.g42c0ae87b1-goog
 
