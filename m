@@ -1,103 +1,352 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38CB21C173
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA3217583;
+	Fri,  7 Mar 2025 15:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360524; cv=none; b=gDVYxMcXqBJqWkHa0pW2ChPXG5hMTfUVfkf1kWSd1dShZl7f/m45UsgDHvw66UA916HWwMkHwbzLR2UXi9jMxPBx+R4eAcKbYHVLnK3LX0b2G1lwZj7hXHp//u3PFtmvydw5y2lyeKrxWXkRORSHd6NByln+ce/WCaU8bizbep0=
+	t=1741360544; cv=none; b=AdQwlF81hNY0gKbhMC6JdAPX4Ugv2nQ16PmgBdoNS/C67tCQ+3qqoL8haGjq2fYJeSN3OBIsR9egPN9eOkeQ25xX8PArS0mS2bdf5Nekhj+GGgu5HhdBdUHQFNJ3LTluZFcEt6lVatcUxdcPTGcdLL7LZtlivJm/R4qdN8GgKh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360524; c=relaxed/simple;
-	bh=Jyg0BlNEVONMN3/qpK5whDdVuZ36nVAtfOMd2YynnAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ipIzyGA2BUEnpOIWStkOCph+2vXKLJO7e9RQuuU06gMJlDPPfQa7ugz+3N/81zSh1OpeOPD8GtOCGtAzA10JJjMxKwk3DJ9k67QnGIC6TEBnYHZAE+cduNT3KWLJZJIgE7VBP6pRSQwWHjpf5hQrHwDJA+hRO1dAfAmn3nXKPGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=dCSrvI9+; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
+	s=arc-20240116; t=1741360544; c=relaxed/simple;
+	bh=H8n13blks6nrv7/hlDAzfpW6fo6pnvJRhIVCn9BJ3jc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q9rPG3cAatc2R5s7FEuWAMsMZqxfAG4qOTFH15p0E32RPYIiBx3EjguDuzDceVQPC12x35XRR7a88zV+yjVxcaug8rQmbW7t4M0xgI+wcrwsLRWKiZcsBlRWU86v7qhVB1WsfodHej43FXvBGV1w+2B6EEI/ZgSBnf300cpyh4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZvVLK8we; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="dCSrvI9+"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d2b6ed8128so9960115ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:15:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1741360520; x=1741965320; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FNhnQrGFa2eZSGaA05d8tH8yb8bigPtWKz7iWwlz8ks=;
-        b=dCSrvI9+JxYTPle6B1IbN6y1LQdb5a5c7gdl+F0xu0+1sY4oQNPl64+q3aMY+uiAAm
-         JrKEzfevb68ZM+G7Ai1McBP3r7JzgEqGzoNa8PlkUk1hDuW8ebLwjwquRCjr4881V04+
-         aRmzR6k7/91M2cKz+rOMxuBn9yCdI5AmzwmoU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741360520; x=1741965320;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FNhnQrGFa2eZSGaA05d8tH8yb8bigPtWKz7iWwlz8ks=;
-        b=bJUwb3day7gsIVirsT7ZXQsxNuG/g12c+4bS4I7W7CQCoZyRPINN9KmkemxYwn0gHg
-         /w0PgFKacGYCWQg6v4G0nb88uXqLn5dG/X6JDV/sjzH+mBtfXtXI8Q6jqK2mvfh6ZFVv
-         7RNNBUZ0v/kqMIUjnut1AXxLeC8t/F3ZJ98MUjcshs5EHYh9rD26Rt+u2ELGqR/uasa/
-         xD5GF37oCAmiMX2Lsx6cB/mk6YpPP3609QixSE7iq9wpdJqu9A8bc8O4NKeZcHMRQvFz
-         72cvmRq9jwwpZlx4Wc/GxgNxvNrlcCCVeooSNUuPgtWg2eHoB3Rhu7oPEn9fJzUDpfrM
-         avqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKI/LI3+w9I88lQQ19hF4WmHBO4qgjga9yeOPc6xCGHVjQ7vYWSsB5fQd1W8x9aeXnHU14auqZmN55UT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt0QjsFZxCChXv12aXB5rmiFuvIgavgU+ogQvLFZaYhXYaj3hB
-	8CVLxAA7liurNfHhgw+k43++JBTNHUD1Z45Q49XABlaRX2Rg3+xthIS4cTKcOA==
-X-Gm-Gg: ASbGncvvZ3vl4a1oNdrJcn3TYCNMciLW75ZnT9htV5q2RD7D54/SzG4JVTUylRJxKDN
-	bK0HVGaib3FyL6koEgXGh65k3b2KRmc45g4t2EG7PeqQp800KAOalPpkLgHZp6gZroz56wbkThf
-	x+AfMnFg1YnJ+EzQsxAd8JD/KZYP4XOxc+pFNoqUEM4j/b+xILED4yFcMzfY+7c+UWul6BR27/Z
-	J+zP+Sp1MuhhUnwbkt6uq8rm1hiJHpweg9gAeGG/I4vTKffLZWwP9oUjqrkLgFXFlZHZP8sdCQ/
-	0SH7ba0zUEh0dYq008H7eAxGqc9ewNoZbcbbKyqH2YUsjupbfPR5r2Z6ozVeOQ==
-X-Google-Smtp-Source: AGHT+IGJMJxSyE4UNVIY3LX2S7nhf3Y5lt2eLGH38VXXHHpoq/52h36JCsBDp/RY5WFAtMDkWXBzow==
-X-Received: by 2002:a05:6e02:1a84:b0:3d3:f72c:8fd8 with SMTP id e9e14a558f8ab-3d4419b2bb9mr42285385ab.6.1741360519989;
-        Fri, 07 Mar 2025 07:15:19 -0800 (PST)
-Received: from fedora64.linuxtx.org ([72.42.103.70])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d43b599080sm8399705ab.60.2025.03.07.07.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 07:15:19 -0800 (PST)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-Date: Fri, 7 Mar 2025 08:15:17 -0700
-From: Justin Forbes <jforbes@fedoraproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.13 000/154] 6.13.6-rc2 review
-Message-ID: <Z8sNhU27IirlaPn3@fedora64.linuxtx.org>
-References: <20250306151416.469067667@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZvVLK8we"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111A7C4CED1;
+	Fri,  7 Mar 2025 15:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741360543;
+	bh=H8n13blks6nrv7/hlDAzfpW6fo6pnvJRhIVCn9BJ3jc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZvVLK8weXD5lfjpk3JJDmKzcgvbIiQEjcP5RhNsRPDcz7HsGDiUO4zB+b46CKJi0h
+	 OHECjDmW+r2aMgu4AawEnbs4hO72yXTLwx7z5oCmYfl5hTz9rb1CKTLS3shdY05R72
+	 q0ii4qENMKF+N+FnLDpGu3IA0qFK6hPU7Bh3IXgu1pVkfwCS3zXReRf1pbbvhMR3UQ
+	 Mg7VdJ/bU5ZiV955EdoO/Gm4d4UL4woEcS4+OEQLd82WlIEEu5hqVU1KBDx5q2IC/s
+	 4uPu3dQoXyJzMBlDbZhEAgXIoNCJmSNOEp7Oyh3RT7SCc73FrKkcPBGOk+ElOYllv6
+	 AQz40N+a2ssyQ==
+Message-ID: <cfd05cd7-4541-476f-aafd-9e3239d88048@kernel.org>
+Date: Fri, 7 Mar 2025 16:15:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306151416.469067667@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/14] dt-bindings: mediatek: mt8196: add audio AFE
+ document
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20250307124841.23777-1-darren.ye@mediatek.com>
+ <20250307124841.23777-13-darren.ye@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250307124841.23777-13-darren.ye@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 06, 2025 at 04:21:02PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.6 release.
-> There are 154 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 07/03/2025 13:47, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
 > 
-> Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
-> Anything received after that time might be too late.
+> Add mt8196 audio AFE document.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.6-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
 
-Tested rc2 against the Fedora build system (aarch64, ppc64le, s390x,
-x86_64), and boot tested x86_64. No regressions noted.
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
+> ---
+>  .../bindings/sound/mediatek,mt8196-afe.yaml   | 259 ++++++++++++++++++
+>  1 file changed, 259 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+> new file mode 100644
+> index 000000000000..59f8fdf3167c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+> @@ -0,0 +1,259 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/mediatek,mt8196-afe.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek Audio Front End PCM controller for MT8196
+> +
+> +maintainers:
+> +  - Darren Ye <darren.ye@mediatek.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8196-afe-pcm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    items:
+> +      - description: audio hopping clock
+> +      - description: audio f26m clock
+> +      - description: audio ul0 adc clock
+> +      - description: audio ul0 adc hires clock
+> +      - description: audio ul1 adc clock
+> +      - description: audio ul1 adc hires clock
+> +      - description: audio apll1 clock
+> +      - description: audio apll2 clock
+> +      - description: audio apll tuner1 clock
+> +      - description: audio apll tuner2 clock
+> +      - description: vlp mux audio int
+> +      - description: vlp mux aud engen1
+> +      - description: vlp mux aud engen2
+> +      - description: vlp mux audio h
+> +      - description: vlp clock 26m
+> +      - description: ck mainpll d4 d4
+> +      - description: ck mux aud 1
+> +      - description: ck apll1
+> +      - description: ck mux aud 2
+> +      - description: ck apll2
+> +      - description: ck apll1 d4
+> +      - description: ck apll2 d4
+> +      - description: ck i2sin0 m sel
+> +      - description: ck i2sin1 m sel
+> +      - description: ck fmi2s m sel
+> +      - description: ck tdmout m sel
+> +      - description: ck apll12 div i2sin0
+> +      - description: ck apll12 div i2sin1
+> +      - description: ck apll12 div fmi2s
+> +      - description: ck apll12 div tdmout m
+> +      - description: ck apll12 div tdmout b
+> +      - description: ck adsp sel
+> +      - description: ck clock 26m
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aud_hopping_clk
+
+Look how other bindings call it. s/_clk//
+
+> +      - const: aud_f26m_clk
+> +      - const: aud_ul0_adc_clk
+> +      - const: aud_ul0_adc_hires_clk
+> +      - const: aud_ul1_adc_clk
+> +      - const: aud_ul1_adc_hires_clk
+> +      - const: aud_apll1_clk
+> +      - const: aud_apll2_clk
+> +      - const: aud_apll_tuner1_clk
+> +      - const: aud_apll_tuner2_clk
+> +      - const: vlp_mux_audio_int
+> +      - const: vlp_mux_aud_eng1
+> +      - const: vlp_mux_aud_eng2
+> +      - const: vlp_mux_audio_h
+> +      - const: vlp_clk26m_clk
+> +      - const: ck_mainpll_d4_d4
+
+What does ck stand for? You should name and explain the clocks based on
+this block, not the source.
+
+
+> +      - const: ck_mux_aud_1
+> +      - const: ck_apll1_ck
+> +      - const: ck_mux_aud_2
+> +      - const: ck_apll2_ck
+> +      - const: ck_apll1_d4
+> +      - const: ck_apll2_d4
+> +      - const: ck_i2sin0_m_sel
+> +      - const: ck_i2sin1_m_sel
+> +      - const: ck_fmi2s_m_sel
+> +      - const: ck_tdmout_m_sel
+> +      - const: ck_apll12_div_i2sin0
+> +      - const: ck_apll12_div_i2sin1
+> +      - const: ck_apll12_div_fmi2s
+> +      - const: ck_apll12_div_tdmout_m
+> +      - const: ck_apll12_div_tdmout_b
+> +      - const: ck_adsp_sel
+> +      - const: ck_clk26m_clk
+
+s/ck//
+s/clk// and this goes probably first. Look at other bindings.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  cksys:
+
+Again, open existing bindings.
+
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to the cksys clock controller.
+
+This tell me not much. Why do you need it?
+
+Drop redundant 'Phandle to' and explain how it is used.
+
+> +
+> +  vlpcksys:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to the vlpcksys clock controller.
+
+No, because you keep encoding clock information via non-clock API.
+
+> +
+> +  memory-region:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+Drop, see other bindings.
+
+
+> +    description: Phandle to the reserved memory region for AFE DMA.
+> +
+> +  pinctrl-names:
+
+Drop
+
+> +    items:
+> +      - const: default
+> +
+> +  pinctrl-0:
+
+Drop
+
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to the pin control group for default state.
+> +
+> +  mediatek,etdm-out-ch:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Number of ETDM output channels.
+> +    enum: [2]
+
+That's pointless.
+
+> +
+> +  mediatek,etdm-in-ch:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Number of ETDM input channels.
+> +    enum: [2]
+> +
+> +  mediatek,etdm-out-sync:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: ETDM output synchronization.
+> +    enum: [0, 1]
+> +
+> +  mediatek,etdm-in-sync:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: ETDM input synchronization.
+> +    enum: [0, 1]
+> +
+> +  mediatek,etdm-ip-mode:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: ETDM IP mode.
+> +    enum: [0, 1]
+
+Drop all above properties or explain why they make any sense in the
+terms of board configuration.
+
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - power-domains
+> +  - cksys
+> +  - vlpcksys
+> +  - memory-region
+
+> +  - pinctrl-names
+> +  - pinctrl-0
+
+Why?
+
+> +  - mediatek,etdm-out-ch
+> +  - mediatek,etdm-in-ch
+> +  - mediatek,etdm-out-sync
+> +  - mediatek,etdm-in-sync
+> +  - mediatek,etdm-ip-mode
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/mt8196-clk.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/power/mt8196-power.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        afe: mt8196-afe-pcm@1a110000 {
+
+Again... look at other bindings.
+
+
+Best regards,
+Krzysztof
