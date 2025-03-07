@@ -1,72 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B421F23E229
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 18:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A5A1A7AF7;
+	Fri,  7 Mar 2025 18:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741371057; cv=none; b=qEo74080Okq467YajgSA8LBE5gjvTaxnV7XrI/46jvpSgECa0hBi3XlWnqdeG5PG8c3qNVGT9tOL/eUj37ToTg0nWTERMTkgKRIdXF+Ucu+QVddHMbqOMGuoeDhClomXRtP1hFjzkWPtl09dPkTyVf9kCfSMR+ut3INdZNZKnNA=
+	t=1741371160; cv=none; b=Q+hyPWexkKMzytD613ZOeLiM/TsgzBFvwvPEXPGwPtcz3/TeLmgQyHCJMA76jKou1C1q1HW3ZCZG4NYb/c19egrSlJ0lP6FcQhytpNp+Pt5hpamhhvs3DY0UPEFxPgelPDvaCli4Kf2bAO0sz7bfCpwWoRdOrpOYnAOf67MKF3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741371057; c=relaxed/simple;
-	bh=rsgVaSryA23Jr0XcgqAG14znT/gNWQguaNRK/HSoM2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QkNgYEM+bGpOWXC3zOP4QR1oWAbppAlfgB8cUdY5ZCdhsqDrQrJJr7uw8HjTCfVFCbNl43T3z7LWuonjGLdGCSKvoyHoYRKyYqFH6cY2i0Q/O484ONWAgaq4TV93NWLmtKZcN2Ohf3JL+SPQWBo8Te0RFcnidV8cg/Zz6ZDrgAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9gXcsQO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741371160; c=relaxed/simple;
+	bh=NAWLZyERU1mrVLoBZ/xNqI1pIF9+w43e2HDxORnVkHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GHWx48ErSDcDh+QXusIk/0lXAoO7XwueP1iVCsNgsrAJp/DL/VXWqCDwpsvzBqKLgMMn9s+Vs5a0z98qxUBz7HX6LLp1RFXZbqOJDO8jUlNgBsqksSfkpkH4xLctbOxalketQ59WxkmQyBTuJ2urAhHS5jQhlv6MS6XphLwzHe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kfOgPVr5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9gXcsQO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 050F0C4CED1;
-	Fri,  7 Mar 2025 18:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741371056;
-	bh=rsgVaSryA23Jr0XcgqAG14znT/gNWQguaNRK/HSoM2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T9gXcsQOqAUv0v+GnpZPswM8n+wx71RcC1ayl5S0P9swqsa2dmugS1PmbYweL+ENF
-	 IqyaWbyaJgYODB/e036Uip4rIRqumTBAkRE0MZ/tdxv0xlNWQ6UWsoHblmhtkXwaVc
-	 0arlCZ4U0YhCWf1Rmi+/sPjkhx8jWvR+oLdiTkVSwbMYY4Uj1BJD1CEQE9E11CmHUO
-	 stOOJTgaZy7XgxYN3AsacueoPilGGS+iOG1VGgg1twImsU97d2CGJgcGifGaXZdXR7
-	 bMzcDGyF7lfm8IaXiWADKcaOPP/SAbLUc3GJquree7eOCSBhPuhwgl4m7/noYlAM9E
-	 Ru2G/bTkmU/pQ==
-Date: Fri, 7 Mar 2025 18:10:54 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: disalbe nat_bits by default
-Message-ID: <Z8s2rmqauwCGJb9v@google.com>
-References: <20250307031838.19164-1-chao@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kfOgPVr5"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CAD852038F37;
+	Fri,  7 Mar 2025 10:06:47 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CAD852038F37
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741370808;
+	bh=fkpzWS7kKQxS7iHBM5+/9vLioYcucl4kL46RR98FB2o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kfOgPVr5LJFN2ld3861YnCyoXBzp+thWEeMvJ+YweMjJBiArD9U7tYwudHEyeNoat
+	 igt1898SeJwvGyscPq6VaPbrQalQZt8Xwoxkv4MYmortZR1uJCXtyOKomZaHk/Sq4b
+	 ZHHPwTwLAQWLTYwV6XCRICP5BGc3MKiHJftH/nzw=
+Message-ID: <efb43459-4136-43cd-adac-2179d9985e9d@linux.microsoft.com>
+Date: Fri, 7 Mar 2025 10:06:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307031838.19164-1-chao@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/10] Drivers: hv: Introduce mshv_root module to
+ expose /dev/mshv to VMMs
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, mhklinux@outlook.com, decui@microsoft.com,
+ catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
+ arnd@arndb.de, jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+ ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
+ gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
+ muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
+ lenb@kernel.org, corbet@lwn.net
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
+ <f332b77a-940f-4007-a44a-de64878d5201@linux.microsoft.com>
+ <Z8ncFkwzxi9qJFD3@liuwe-devbox-debian-v2>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <Z8ncFkwzxi9qJFD3@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I meant let's support it conservatively if someone needs to enable
-in other platform.
 
-On 03/07, Chao Yu wrote:
-> Let's disable nat_bits by default.
+
+On 3/6/2025 9:32 AM, Wei Liu wrote:
+> On Thu, Feb 27, 2025 at 10:50:30AM -0800, Roman Kisel wrote:
+
+[...]
+
+>> 2. Scheduling. Here, there is the mature KVM and Xen code to find
+>>     inspiration in. Xen being the Type 1 hypervisor should likely be
+>>     closer to MSHV in my understanding.
 > 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/node.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Yes and no.
 > 
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index 56873c41436e..3148d9e44e7f 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -3286,6 +3286,9 @@ static int init_node_manager(struct f2fs_sb_info *sbi)
->  	if (!nm_i->nat_bitmap)
->  		return -ENOMEM;
->  
-> +	/* disable nat_bits feature by default */
-> +	disable_nat_bits(sbi, true);
-> +
->  	err = __get_nat_bitmaps(sbi);
->  	if (err)
->  		return err;
-> -- 
-> 2.40.1
+> When a hypervisor-based scheduler (either classic or core) is used, the
+> scheduling model is the same as Xen. In this model, the hypervisor makes
+> the scheduling decisions.
+> 
+> There is a second scheduler model. In that model, the hypervisor
+> delegates scheduling to the Linux kernel. The Linux scheduler makes the
+> scheduling decisions. It is similar to KVM.
+> 
+> We support both. Which model to use largely depends on the workload and
+> the desired behaviors of the system.
+> 
+> This is purely informational in case people wonder why the run vp
+> function branches off to two different code paths.
+> 
+
+Thanks, now I understand that better :)
+
+[...]
+
+>> -- 
+>> Thank you,
+>> Roman
+>>
+
+-- 
+Thank you,
+Roman
+
