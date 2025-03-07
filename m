@@ -1,297 +1,495 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E545A1E1E0B;
-	Fri,  7 Mar 2025 16:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4504C23BF9B;
+	Fri,  7 Mar 2025 16:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741364744; cv=none; b=KN1CG68NryOCveoQJyyTZJz8ql8zxKG+Km72KJ2iilrFkcl/faUZl44lOFnSYb7sUBOPK/0e3BMRQXZTVc1pH/dBGQWi6B3/Kzc6mRb5f2tTRwYVaZ5gQbq2Qi6zs4hB2rBWnR6ruwLkSkzM15CSU64PJCI3HXUwzkQsleymdDo=
+	t=1741364748; cv=none; b=r8qexeeJ8eZLVy+TKFL1CZHDF+8TGYIL+pyUbbpaxI4uDI98wM2PUvLi1Fu1KXI+/DcAyv2GCBWtqq8D3U3dYflFMmIVgdwz/0OkMBkvZPHnYlVGUABwTM+gM1Vr/VcKNHb2PdMC3IpknYr16gHmh+YB8aQM8Rt3ynYI5Rjh0uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741364744; c=relaxed/simple;
-	bh=giPxlOl7TDridoBWV8RecilAZ2Za0fOPCa3TpMO7LiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KPC49r5V/7pSDronRtiSMxMfO3rBeGcUvo7rUfnJ8DeqwNQP8KoA+c64kow+qITuo9hXfP4Abyr4b5BUvRINOJPhpsRIL2KM6kVpIBk9ce5eDvSWTOHpuEpItDrk4R12v2acT6duZle30dum+vmX4SSrsqhZptLomBwaTBIyqiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XV7mfH7o; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741364748; c=relaxed/simple;
+	bh=UsZV0AolD/+FccDLn/0xyXNKUx4B8DSaspUvvDCME64=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cdesv2v5WcJH8TMBKDnr0CA0rWaPu4j2cCfxCIEJE56UHF7+ee8+WEz8kfWVjFIr4mekWvGjaFXAMFYBhVujtUQhg+zu/ll+hiRjKttliN2pQOR6Gp84NjEyWOMudWAU5j3Qo1YkzX1aXBgheoZrwE1E+ALjzpxt9AyErI5YVoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=e9c8haZj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV7mfH7o"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso7386121fa.0;
-        Fri, 07 Mar 2025 08:25:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741364741; x=1741969541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GniiXwrf8dME3pfrOSLg2j3Gf/5JWPlw9dqX608bhBE=;
-        b=XV7mfH7ou5I4Hqoz0gLwOI8/fk3z/ofLrfQUw/8aOr3k/VTA7Td3Bj+2XdeDpZzFUJ
-         p9EsnTiCxhGzm8b0TmjC40OWwVmU4Rd8xOrm3ETjMPGKUDxuJ+6lkJ+sj6+MAKaObhFB
-         fnW4YMt8qLdy9CrWL1gFGwzQi7IylQCQm/NlwUWo61vtHQ4K5I+p9LiwMrHfAp5BvvAf
-         pfLnRoaHzjbie2Sj1s7ZDUC3BFJHK6MI4OOGfIPROQWlzXLbx0dIkgh3EAxAEtdZtO8h
-         EEnZb1Ud836dNE1t2XQyjIhONPoyzxwXFgCJpZUvZrBv5OJyG3qkja1t8OueNGwkA+GD
-         pBOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741364741; x=1741969541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GniiXwrf8dME3pfrOSLg2j3Gf/5JWPlw9dqX608bhBE=;
-        b=lKOpwj8mc7APzr8wYYVuQPZ/nW8OmrM6EGRKnG4CefR33Ns904TUrccAw3Xwjq4ndn
-         l3UI72z+ZmENJyQsagmatju+ProH2yOnd+kwNRXMP5QRs8PJe6p695Cuftzh/+Fb5kTK
-         BKWYCY5jRSGP3KzGUcLDGti6shvCMC5DXUkwWMB/axPqekeRqzLnQYR9LN1uaaJ8sfYZ
-         tfKIZbaWNPIMtzYgM7TSxg27soT8n6Q3a341gxKYeB0Vc6XewriFyLf6ACzSltO2dYLn
-         ljQB6Czu/3Kpn/mreb9IaEVrKC2guHc5MSh2yKOiwp3T3U31BpE8e8G2O1nldP3/8axv
-         6leQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1dgg3xyAegf/JD8nBqMw8GQzMQxn1dgcfEeXkhNL87PAxOUuWmZDBFmOFBzkTHsmK7UfImCIjpZ5L3EU0qs0p@vger.kernel.org, AJvYcCUMVJfPC7vI9/q59oj925FNw8VuGjF5MDGyznEaxHj3VF1x5+POGjydCK16k44TtJzi9PRS9YPkfofz7GPi@vger.kernel.org, AJvYcCXj5RnNz+tJwOkydW3+ZHLb8hbEK0zsb4pfkWWtUAsKgv3Ctf0YRJ1Vo/lj9ECdLahTPI9Iyc8wZ1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2VDWah46X+/pNnIaP9ZdNKYP3CZ7QModzxHaaQw3C/XCAetMN
-	ckAPAHyZ/w1NdJl7BdJso+/y0jypS8Maj2fPyK2dN0CTZ7h0MLVYO+NlzWX1c06vUuR1iQ62LYD
-	bMmkVYOmHnfbNjrkqGnn52fxWx4Y=
-X-Gm-Gg: ASbGncvKOQ+yEt3+g5ybtbJVJQyyn+0W3fxQbHbJesyjpMClmdf8al0QiT9hjZZjsCr
-	k+AIqycuBVRCaShJwfWboNXWHIH9RRlEO9KaEfGn0txDzhZJgzpwuH9Dl78bDaqPN/44HrIs9gD
-	u3/+yl1iNZS4o8q3mHvV3qafJP6jL2PCOEcC8jbQoG6FepWrzyGNNeg5C2tR4p
-X-Google-Smtp-Source: AGHT+IEVB3KglQh/9Sn2MMnIIn4pSiWyREt2/PrZgQihsBRdaIE1s+RXe6lakVpGzZy3kRntdwBmJuURZ+hTf4hVYmI=
-X-Received: by 2002:a2e:bc16:0:b0:30b:ca48:1089 with SMTP id
- 38308e7fff4ca-30bf44ed6f9mr12793991fa.2.1741364740761; Fri, 07 Mar 2025
- 08:25:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="e9c8haZj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB75C4CEE2;
+	Fri,  7 Mar 2025 16:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741364748;
+	bh=UsZV0AolD/+FccDLn/0xyXNKUx4B8DSaspUvvDCME64=;
+	h=From:To:Cc:Subject:Date:From;
+	b=e9c8haZjj8e/VVTFtOZ4zmQR3r+1vW4apm+sgrpcQUpR4WHx7Ge7U1hXWyvQv/l1t
+	 Uo0+HRfDX9D9Es3Je9314WyqYUKtxPaQ66b2aU0KjWaZmc6Lk9XJ/2XQV2OlA7rM4z
+	 UjtWCmStTPYAqlcN/emHjQpcsrASRTPAvr2muZ4o=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	torvalds@linux-foundation.org,
+	stable@vger.kernel.org
+Cc: lwn@lwn.net,
+	jslaby@suse.cz,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 6.6.81
+Date: Fri,  7 Mar 2025 17:25:42 +0100
+Message-ID: <2025030719-constrain-tinderbox-0271@gregkh>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221-printf-kunit-convert-v5-0-5db840301730@gmail.com>
- <20250221-printf-kunit-convert-v5-2-5db840301730@gmail.com> <Z8scO-LsAWxdYIfJ@pathway.suse.cz>
-In-Reply-To: <Z8scO-LsAWxdYIfJ@pathway.suse.cz>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 7 Mar 2025 11:25:04 -0500
-X-Gm-Features: AQ5f1JpnB54iyHb2NlPpIPbsEeQBbd1J-Q5YzDRd9TuRGbggczJShE8KVb5vftU
-Message-ID: <CAJ-ks9mb5pz4KWN_N-wd0k932bfhSjQuFEsXDrBxj9+RHSNWGA@mail.gmail.com>
-Subject: Re: crng init: was: Re: [PATCH v5 2/3] printf: break kunit into test cases
-To: Petr Mladek <pmladek@suse.com>
-Cc: Arpitha Raghunandan <98.arpi@gmail.com>, David Gow <davidgow@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 7, 2025 at 11:18=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
->
-> On Fri 2025-02-21 15:34:31, Tamir Duberstein wrote:
-> > Move all tests into `printf_test_cases`. This gives us nicer output in
-> > the event of a failure.
-> >
-> > Combine `plain_format` and `plain_hash` into `hash_pointer` since
-> > they're testing the same scenario.
-> >
-> > --- a/lib/tests/printf_kunit.c
-> > +++ b/lib/tests/printf_kunit.c
-> > @@ -178,7 +179,7 @@ test_number(void)
-> >  }
-> >
-> >  static void
-> > -test_string(void)
-> > +test_string(struct kunit *kunittest)
-> >  {
-> >       test("", "%s%.0s", "", "123");
-> >       test("ABCD|abc|123", "%s|%.3s|%.*s", "ABCD", "abcdef", 3, "123456=
-");
-> > @@ -215,29 +216,6 @@ test_string(void)
-> >  #define ZEROS "00000000"     /* hex 32 zero bits */
-> >  #define ONES "ffffffff"              /* hex 32 one bits */
-> >
-> > -static int
-> > -plain_format(void)
-> > -{
-> > -     char buf[PLAIN_BUF_SIZE];
-> > -     int nchars;
-> > -
-> > -     nchars =3D snprintf(buf, PLAIN_BUF_SIZE, "%p", PTR);
-> > -
-> > -     if (nchars !=3D PTR_WIDTH)
-> > -             return -1;
-> > -
-> > -     if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) =3D=3D 0) {
-> > -             kunit_warn(kunittest, "crng possibly not yet initialized.=
- plain 'p' buffer contains \"%s\"",
-> > -                     PTR_VAL_NO_CRNG);
-> > -             return 0;
-> > -     }
-> > -
-> > -     if (strncmp(buf, ZEROS, strlen(ZEROS)) !=3D 0)
-> > -             return -1;
-> > -
-> > -     return 0;
-> > -}
-> > -
-> >  #else
-> >
-> >  #define PTR_WIDTH 8
-> > @@ -247,89 +225,44 @@ plain_format(void)
-> >  #define ZEROS ""
-> >  #define ONES ""
-> >
-> > -static int
-> > -plain_format(void)
-> > -{
-> > -     /* Format is implicitly tested for 32 bit machines by plain_hash(=
-) */
-> > -     return 0;
-> > -}
-> > -
-> >  #endif       /* BITS_PER_LONG =3D=3D 64 */
-> >
-> > -static int
-> > -plain_hash_to_buffer(const void *p, char *buf, size_t len)
-> > +static void
-> > +plain_hash_to_buffer(struct kunit *kunittest, const void *p, char *buf=
-, size_t len)
-> >  {
-> > -     int nchars;
-> > -
-> > -     nchars =3D snprintf(buf, len, "%p", p);
-> > -
-> > -     if (nchars !=3D PTR_WIDTH)
-> > -             return -1;
-> > +     KUNIT_ASSERT_EQ(kunittest, snprintf(buf, len, "%p", p), PTR_WIDTH=
-);
-> >
-> >       if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) =3D=3D 0) {
-> >               kunit_warn(kunittest, "crng possibly not yet initialized.=
- plain 'p' buffer contains \"%s\"",
-> >                       PTR_VAL_NO_CRNG);
-> > -             return 0;
->
-> I have simulated the not-yet-initialized crng and got:
->
-> [   80.109760] printf_kunit: module verification failed: signature and/or=
- required key missing - tainting kernel
-> [   80.114218] KTAP version 1
-> [   80.114743] 1..1
-> [   80.116124]     KTAP version 1
-> [   80.116752]     # Subtest: printf
-> [   80.117239]     # module: printf_kunit
-> [   80.117256]     1..28
-> [   80.120924]     ok 1 test_basic
-> [   80.121495]     ok 2 test_number
-> [   80.122741]     ok 3 test_string
-> [   80.123498]     # hash_pointer: crng possibly not yet initialized. pla=
-in 'p' buffer contains "(____ptrval____)"
-> [   80.124044]     # hash_pointer: EXPECTATION FAILED at lib/tests/printf=
-_kunit.c:256
->                    Expected buf =3D=3D "00000000", but
->                        buf =3D=3D
->                        <28><5f><5f><5f><5f><70><74><72>
->                        "00000000" =3D=3D
->                        <30><30><30><30><30><30><30><30>
-> [   80.125888]     not ok 4 hash_pointer
-> [   80.129831]     ok 5 null_pointer
-> [   80.130253]     ok 6 error_pointer
-> [   80.131221]     # invalid_pointer: crng possibly not yet initialized. =
-plain 'p' buffer contains "(____ptrval____)"
-> [   80.132168]     ok 7 invalid_pointer
-> [   80.135149]     ok 8 symbol_ptr
-> [   80.136016]     ok 9 kernel_ptr
-> [   80.136868]     ok 10 struct_resource
-> [   80.137768]     ok 11 struct_range
-> [   80.138613]     ok 12 addr
-> [   80.139370]     ok 13 escaped_str
-> [   80.140054]     ok 14 hex_string
-> [   80.140601]     ok 15 mac
-> [   80.141162]     ok 16 ip4
-> [   80.141670]     ok 17 ip6
-> [   80.142221]     ok 18 uuid
-> [   80.143090]     ok 19 dentry
-> [   80.143963]     ok 20 struct_va_format
-> [   80.144523]     ok 21 time_and_date
-> [   80.145043]     ok 22 struct_clk
-> [   80.145589]     ok 23 bitmap
-> [   80.146087]     ok 24 netdev_features
-> [   80.146572]     ok 25 flags
-> [   80.146980]     # errptr: crng possibly not yet initialized. plain 'p'=
- buffer contains "(____ptrval____)"
-> [   80.147412]     ok 26 errptr
-> [   80.148548]     ok 27 fwnode_pointer
-> [   80.149086]     ok 28 fourcc_pointer
-> [   80.149090]     # printf: ran 448 tests
-> [   80.149099] # printf: pass:27 fail:1 skip:0 total:28
-> [   80.149102] # Totals: pass:27 fail:1 skip:0 total:28
-> [   80.149106] not ok 1 printf
->
-> =3D> One test failed even though vspritf() worked as expected.
->
->    The "EXPECTATION FAILED" message was a bit tricky because
->    it printed "<28><5f><5f><5f><5f><70><74><72>" instead of "(____ptrval_=
-___)".
->
->    Two tests succeeded even after a warning message which would make peop=
-le
->    to investigate it.
->
-> I suggest to rather skip the test in this case. Something like:
->
->         if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) =3D=3D 0) {
->                 kunit_skip(kunittest,
->                            "crng possibly not yet initialized. plain 'p' =
-buffer contains \"%s\"\n",
->                            PTR_VAL_NO_CRNG);
->         }
->
->
-> It produces:
->
-> [  140.555055] KTAP version 1
-> [  140.555413] 1..1
-> [  140.555796]     KTAP version 1
-> [  140.556115]     # Subtest: printf
-> [  140.556450]     # module: printf_kunit
-> [  140.556459]     1..28
-> [  140.557757]     ok 1 test_basic
-> [  140.558072]     ok 2 test_number
-> [  140.558693]     ok 3 test_string
-> [  140.559278]     ok 4 hash_pointer # SKIP crng possibly not yet initial=
-ized. plain 'p' buffer contains "(____ptrval____)"
-> [  140.560949]     ok 5 null_pointer
-> [  140.561257]     ok 6 error_pointer
-> [  140.561880]     ok 7 invalid_pointer # SKIP crng possibly not yet init=
-ialized. plain 'p' buffer contains "(____ptrval____)"
-> [  140.564159]     ok 8 symbol_ptr
-> [  140.565248]     ok 9 kernel_ptr
-> [  140.566346]     ok 10 struct_resource
-> [  140.567642]     ok 11 struct_range
-> [  140.569141]     ok 12 addr
-> [  140.570395]     ok 13 escaped_str
-> [  140.571407]     ok 14 hex_string
-> [  140.572337]     ok 15 mac
-> [  140.573572]     ok 16 ip4
-> [  140.574712]     ok 17 ip6
-> [  140.575743]     ok 18 uuid
-> [  140.577164]     ok 19 dentry
-> [  140.578248]     ok 20 struct_va_format
-> [  140.579400]     ok 21 time_and_date
-> [  140.580507]     ok 22 struct_clk
-> [  140.581706]     ok 23 bitmap
-> [  140.582739]     ok 24 netdev_features
-> [  140.583808]     ok 25 flags
-> [  140.585274]     ok 26 errptr # SKIP crng possibly not yet initialized.=
- plain 'p' buffer contains "(____ptrval____)"
-> [  140.588403]     ok 27 fwnode_pointer
-> [  140.592141]     ok 28 fourcc_pointer
-> [  140.592758]     # printf: ran 408 tests
-> [  140.593219] # printf: pass:25 fail:0 skip:3 total:28
-> [  140.593706] # Totals: pass:25 fail:0 skip:3 total:28
-> [  140.594280] ok 1 printf
->
-> Best Regards,
-> Petr
+I'm announcing the release of the 6.6.81 kernel.
 
-Thanks for testing! I didn't know how to do that. Changed to
-kunit_skip as you suggested.
+All users, EXCEPT i386 systems, of the 6.6 kernel series must upgrade.
+
+Note, the i386 arch is currently broken, please wait for the next
+release before you upgrade.
+
+The updated 6.6.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.6.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Documentation/admin-guide/kernel-parameters.txt       |    5 
+ Makefile                                              |    2 
+ arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi       |    5 
+ arch/riscv/include/asm/futex.h                        |    2 
+ arch/riscv/include/asm/kvm_host.h                     |    8 
+ arch/riscv/kernel/signal.c                            |    6 
+ arch/riscv/kvm/vcpu.c                                 |   48 -
+ arch/riscv/kvm/vcpu_sbi.c                             |    7 
+ arch/riscv/kvm/vcpu_sbi_hsm.c                         |   45 -
+ arch/riscv/kvm/vcpu_sbi_replace.c                     |   15 
+ arch/x86/Kconfig                                      |   26 
+ arch/x86/events/core.c                                |    2 
+ arch/x86/include/asm/apic.h                           |    5 
+ arch/x86/include/asm/cpu.h                            |   20 
+ arch/x86/include/asm/microcode.h                      |   16 
+ arch/x86/kernel/apic/apic_flat_64.c                   |    2 
+ arch/x86/kernel/apic/ipi.c                            |    8 
+ arch/x86/kernel/apic/x2apic_cluster.c                 |    1 
+ arch/x86/kernel/apic/x2apic_phys.c                    |    1 
+ arch/x86/kernel/cpu/common.c                          |   12 
+ arch/x86/kernel/cpu/cyrix.c                           |    4 
+ arch/x86/kernel/cpu/microcode/amd.c                   |  636 +++++++++++-----
+ arch/x86/kernel/cpu/microcode/amd_shas.c              |  444 +++++++++++
+ arch/x86/kernel/cpu/microcode/core.c                  |  685 +++++++++++-------
+ arch/x86/kernel/cpu/microcode/intel.c                 |  670 +++++------------
+ arch/x86/kernel/cpu/microcode/internal.h              |   49 -
+ arch/x86/kernel/head32.c                              |    3 
+ arch/x86/kernel/head_32.S                             |   10 
+ arch/x86/kernel/nmi.c                                 |    9 
+ arch/x86/kernel/smpboot.c                             |   12 
+ drivers/firmware/cirrus/cs_dsp.c                      |   24 
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c |   14 
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_psr.c |    3 
+ drivers/gpu/drm/amd/pm/legacy-dpm/kv_dpm.c            |   25 
+ drivers/gpu/drm/amd/pm/legacy-dpm/legacy_dpm.c        |    8 
+ drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c            |   26 
+ drivers/i2c/busses/i2c-ls2x.c                         |   16 
+ drivers/i2c/busses/i2c-npcm7xx.c                      |    7 
+ drivers/idle/intel_idle.c                             |    4 
+ drivers/infiniband/core/sysfs.c                       |    4 
+ drivers/infiniband/core/uverbs_std_types_device.c     |    3 
+ drivers/infiniband/core/verbs.c                       |    3 
+ drivers/infiniband/hw/mana/main.c                     |    2 
+ drivers/infiniband/hw/mlx5/ah.c                       |    3 
+ drivers/infiniband/hw/mlx5/counters.c                 |    8 
+ drivers/infiniband/hw/mlx5/qp.c                       |   10 
+ drivers/infiniband/hw/mlx5/qp.h                       |    1 
+ drivers/net/ethernet/cadence/macb.h                   |    2 
+ drivers/net/ethernet/cadence/macb_main.c              |   12 
+ drivers/net/ethernet/freescale/enetc/enetc.c          |  100 +-
+ drivers/net/ethernet/google/gve/gve.h                 |   10 
+ drivers/net/ethernet/google/gve/gve_main.c            |    6 
+ drivers/net/ethernet/intel/ice/ice.h                  |    1 
+ drivers/net/ethernet/intel/ice/ice_common.c           |   71 +
+ drivers/net/ethernet/intel/ice/ice_devids.h           |   10 
+ drivers/net/ethernet/intel/ice/ice_ethtool_fdir.c     |   24 
+ drivers/net/ethernet/intel/ice/ice_hw_autogen.h       |   55 +
+ drivers/net/ethernet/intel/ice/ice_lib.c              |    3 
+ drivers/net/ethernet/intel/ice/ice_main.c             |   37 
+ drivers/net/ethernet/intel/ice/ice_sriov.c            |    4 
+ drivers/net/ethernet/intel/ice/ice_type.h             |    3 
+ drivers/net/ethernet/intel/ice/ice_vf_lib.c           |   34 
+ drivers/net/ethernet/intel/ice/ice_vf_lib_private.h   |    1 
+ drivers/net/ethernet/intel/ice/ice_vf_mbx.c           |   32 
+ drivers/net/ethernet/intel/ice/ice_vf_mbx.h           |    9 
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c         |    8 
+ drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c    |   29 
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c        |    2 
+ drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c     |    2 
+ drivers/net/ethernet/ti/icssg/icss_iep.c              |   35 
+ drivers/net/ipvlan/ipvlan_core.c                      |   24 
+ drivers/net/loopback.c                                |   14 
+ drivers/net/usb/gl620a.c                              |    4 
+ drivers/phy/rockchip/phy-rockchip-naneng-combphy.c    |    5 
+ drivers/phy/samsung/phy-exynos5-usbdrd.c              |   12 
+ drivers/phy/tegra/xusb-tegra186.c                     |   11 
+ drivers/platform/x86/intel/ifs/load.c                 |    8 
+ drivers/scsi/scsi_lib.c                               |   14 
+ drivers/ufs/core/ufs_bsg.c                            |    6 
+ drivers/ufs/core/ufshcd-priv.h                        |    5 
+ drivers/ufs/core/ufshcd.c                             |  122 ++-
+ fs/afs/cell.c                                         |    1 
+ fs/afs/internal.h                                     |   23 
+ fs/afs/server.c                                       |    1 
+ fs/afs/server_list.c                                  |  114 ++
+ fs/afs/vl_alias.c                                     |    2 
+ fs/afs/volume.c                                       |   36 
+ fs/overlayfs/copy_up.c                                |    2 
+ include/asm-generic/vmlinux.lds.h                     |    2 
+ include/linux/rcuref.h                                |    9 
+ include/linux/sunrpc/sched.h                          |   17 
+ include/net/dst.h                                     |    9 
+ include/net/ip.h                                      |    5 
+ include/net/route.h                                   |    5 
+ include/rdma/ib_verbs.h                               |    2 
+ include/trace/events/icmp.h                           |   67 +
+ include/trace/events/sunrpc.h                         |    3 
+ include/uapi/rdma/ib_user_ioctl_verbs.h               |    3 
+ include/ufs/ufs.h                                     |   13 
+ include/ufs/ufshcd.h                                  |    4 
+ io_uring/net.c                                        |    4 
+ kernel/events/core.c                                  |   31 
+ kernel/events/uprobes.c                               |    5 
+ kernel/sched/core.c                                   |    2 
+ kernel/trace/ftrace.c                                 |   27 
+ kernel/trace/trace_events_hist.c                      |   30 
+ lib/rcuref.c                                          |    5 
+ net/bluetooth/l2cap_core.c                            |    9 
+ net/bridge/br_netfilter_hooks.c                       |    8 
+ net/core/gro.c                                        |    1 
+ net/core/skbuff.c                                     |    2 
+ net/core/sysctl_net_core.c                            |    3 
+ net/ipv4/icmp.c                                       |   24 
+ net/ipv4/ip_options.c                                 |    3 
+ net/ipv4/tcp_minisocks.c                              |   10 
+ net/ipv6/ip6_tunnel.c                                 |    4 
+ net/ipv6/rpl_iptunnel.c                               |   58 -
+ net/ipv6/seg6_iptunnel.c                              |   97 +-
+ net/mptcp/pm_netlink.c                                |    5 
+ net/mptcp/subflow.c                                   |   15 
+ net/rxrpc/rxperf.c                                    |   12 
+ net/sunrpc/cache.c                                    |   10 
+ net/sunrpc/sched.c                                    |    2 
+ net/sunrpc/xprtsock.c                                 |   10 
+ sound/pci/hda/patch_realtek.c                         |   32 
+ sound/soc/codecs/es8328.c                             |   15 
+ sound/usb/midi.c                                      |    2 
+ sound/usb/quirks.c                                    |    1 
+ tools/testing/selftests/rseq/rseq-riscv-bits.h        |    6 
+ tools/testing/selftests/rseq/rseq-riscv.h             |    2 
+ tools/tracing/rtla/src/timerlat_hist.c                |    2 
+ tools/tracing/rtla/src/timerlat_top.c                 |    2 
+ 132 files changed, 2867 insertions(+), 1524 deletions(-)
+
+Adrien Vergé (1):
+      ALSA: hda/realtek: Fix microphone regression on ASUS N705UD
+
+Andreas Schwab (1):
+      riscv/futex: sign extend compare value in atomic cmpxchg
+
+Andrew Jones (3):
+      riscv: KVM: Fix hart suspend status check
+      riscv: KVM: Fix SBI IPI error generation
+      riscv: KVM: Fix SBI TIME error generation
+
+Ard Biesheuvel (1):
+      vmlinux.lds: Ensure that const vars with relocations are mapped R/O
+
+Arnd Bergmann (1):
+      sunrpc: suppress warnings for unused procfs functions
+
+Arthur Simchaev (1):
+      scsi: ufs: core: bsg: Fix crash when arpmb command fails
+
+Ashok Raj (1):
+      x86/microcode/intel: Rip out mixed stepping support for Intel CPUs
+
+Avri Altman (2):
+      scsi: ufs: core: Introduce ufshcd_has_pending_tasks()
+      scsi: ufs: core: Prepare to introduce a new clock_gating lock
+
+BH Hsieh (1):
+      phy: tegra: xusb: reset VBUS & ID OVERRIDE
+
+Bart Van Assche (2):
+      scsi: ufs: core: Fix ufshcd_is_ufs_dev_busy() and ufshcd_eh_timed_out()
+      scsi: ufs: core: Start the RTC update work later
+
+Bean Huo (2):
+      scsi: ufs: core: Add ufshcd_is_ufs_dev_busy()
+      scsi: ufs: core: Add UFS RTC support
+
+Benjamin Coddington (1):
+      SUNRPC: Handle -ETIMEDOUT return from tlshd
+
+Binbin Zhou (1):
+      i2c: ls2x: Fix frequency division register access
+
+Borislav Petkov (1):
+      x86/microcode/AMD: Use the family,model,stepping encoded in the patch ID
+
+Borislav Petkov (AMD) (11):
+      x86/microcode: Rework early revisions reporting
+      x86/microcode/intel: Set new revision only after a successful update
+      x86/microcode/AMD: Pay attention to the stepping dynamically
+      x86/microcode/AMD: Split load_microcode_amd()
+      x86/microcode/AMD: Flush patch buffer mapping after application
+      x86/microcode/AMD: Have __apply_microcode_amd() return bool
+      x86/microcode/AMD: Merge early_apply_microcode() into its single callsite
+      x86/microcode/AMD: Get rid of the _load_microcode_amd() forward declaration
+      x86/microcode/AMD: Add get_patch_level()
+      x86/microcode/AMD: Load only SHA256-checksummed patches
+      x86/microcode/AMD: Fix a -Wsometimes-uninitialized clang false positive
+
+Breno Leitao (1):
+      perf/core: Add RCU read lock protection to perf_iterate_ctx()
+
+Chang S. Bae (1):
+      x86/microcode/intel: Remove unnecessary cache writeback and invalidation
+
+Chukun Pan (1):
+      phy: rockchip: naneng-combphy: compatible reset with old DT
+
+David Howells (3):
+      rxrpc: rxperf: Fix missing decoding of terminal magic cookie
+      afs: Make it possible to find the volumes that are using a server
+      afs: Fix the server_list to unuse a displaced server rather than putting it
+
+Diogo Ivo (1):
+      net: ti: icss-iep: Remove spinlock-based synchronization
+
+Dmitry Panchenko (1):
+      ALSA: usb-audio: Re-add sample rate quirk for Pioneer DJM-900NXS2
+
+Eric Dumazet (1):
+      ipvlan: ensure network headers are in skb linear part
+
+Greg Kroah-Hartman (1):
+      Linux 6.6.81
+
+Guillaume Nault (3):
+      ipv4: Convert icmp_route_lookup() to dscp_t.
+      ipv4: Convert ip_route_input() to dscp_t.
+      ipvlan: Prepare ipvlan_process_v4_outbound() to future .flowi4_tos conversion.
+
+Harshal Chaudhari (1):
+      net: mvpp2: cls: Fixed Non IP flow, with vlan tag flow defination.
+
+Ido Schimmel (4):
+      net: loopback: Avoid sending IP packets without an Ethernet header
+      ipv4: icmp: Pass full DS field to ip_route_input()
+      ipv4: icmp: Unmask upper DSCP bits in icmp_route_lookup()
+      ipvlan: Unmask upper DSCP bits in ipvlan_process_v4_outbound()
+
+Jiri Slaby (SUSE) (1):
+      net: set the minimum for net_hotdata.netdev_budget_usecs
+
+Joshua Washington (1):
+      gve: set xdp redirect target only when it is available
+
+Justin Iurman (5):
+      include: net: add static inline dst_dev_overhead() to dst.h
+      net: ipv6: seg6_iptunnel: mitigate 2-realloc issue
+      net: ipv6: fix dst ref loop on input in seg6 lwt
+      net: ipv6: rpl_iptunnel: mitigate 2-realloc issue
+      net: ipv6: fix dst ref loop on input in rpl lwt
+
+Kan Liang (2):
+      perf/x86: Fix low freqency setting issue
+      perf/core: Fix low freq setting via IOC_PERIOD
+
+Kaustabh Chakraborty (1):
+      phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and SSC_REFCLKSEL masks in refclk
+
+Konstantin Taranov (1):
+      RDMA/mana_ib: Allocate PAGE aligned doorbell index
+
+Luiz Augusto von Dentz (1):
+      Bluetooth: L2CAP: Fix L2CAP_ECRED_CONN_RSP response
+
+Lukasz Czechowski (1):
+      arm64: dts: rockchip: Disable DMA for uart5 on px30-ringneck
+
+Luo Gengkun (1):
+      perf/core: Order the PMU list to fix warning about unordered pmu_ctx_list
+
+Manivannan Sadhasivam (1):
+      scsi: ufs: core: Cancel RTC work during ufshcd_remove()
+
+Marcin Szycik (1):
+      ice: Fix deinitializing VF in error path
+
+Mark Zhang (1):
+      IB/mlx5: Set and get correct qp_num for a DCT QP
+
+Matthieu Baerts (NGI0) (1):
+      mptcp: reset when MPTCP opts are dropped after join
+
+Meghana Malladi (1):
+      net: ti: icss-iep: Reject perout generation request
+
+Mohammad Heib (1):
+      net: Clear old fragment checksum value in napi_reuse_skb
+
+Nicolas Frattaroli (1):
+      ASoC: es8328: fix route from DAC to output
+
+Nikita Zhandarovich (1):
+      usbnet: gl620a: fix endpoint checking in genelink_bind()
+
+Nikolay Borisov (2):
+      x86/microcode/AMD: Return bool from find_blobs_in_containers()
+      x86/microcode/AMD: Make __verify_patch_size() return bool
+
+Nikolay Kuratov (1):
+      ftrace: Avoid potential division by zero in function_stat_show()
+
+Or Har-Toov (1):
+      IB/core: Add support for XDR link speed
+
+Paolo Abeni (1):
+      mptcp: always handle address removal under msk socket lock
+
+Patrisious Haddad (2):
+      RDMA/mlx5: Fix AH static rate parsing
+      RDMA/mlx5: Fix bind QP error cleanup flow
+
+Paul Greenwalt (2):
+      ice: Add E830 device IDs, MAC type and registers
+      ice: add E830 HW VF mailbox message limit support
+
+Pavel Begunkov (1):
+      io_uring/net: save msg_control for compat
+
+Peilin He (1):
+      net/ipv4: add tracepoint for icmp_send
+
+Peter Wang (2):
+      scsi: ufs: core: Fix deadlock during RTC update
+      scsi: ufs: core: Fix another deadlock during RTC update
+
+Philo Lu (1):
+      ipvs: Always clear ipvs_property flag in skb_scrub_packet()
+
+Richard Fitzgerald (1):
+      firmware: cs_dsp: Remove async regmap writes
+
+Roman Li (1):
+      drm/amd/display: Fix HPD after gpu reset
+
+Russell Senior (1):
+      x86/CPU: Fix warm boot hang regression on AMD SC1100 SoC systems
+
+Sean Anderson (1):
+      net: cadence: macb: Synchronize stats calculations
+
+Shay Drory (1):
+      net/mlx5: IRQ, Fix null string in debug print
+
+Stafford Horne (1):
+      rseq/selftests: Fix riscv rseq_offset_deref_addv inline asm
+
+Stefan Binding (1):
+      ALSA: hda/realtek: Add quirks for ASUS ROG 2023 models
+
+Stephen Brennan (1):
+      SUNRPC: convert RPC_TASK_* constants to enum
+
+Steven Rostedt (1):
+      tracing: Fix bad hist from corrupting named_triggers list
+
+Takashi Iwai (2):
+      ALSA: usb-audio: Avoid dropping MIDI events at closing multiple ports
+      ALSA: hda/realtek: Fix wrong mic setup for ASUS VivoBook 15
+
+Thomas Gleixner (34):
+      rcuref: Plug slowpath race in rcuref_put()
+      sched/core: Prevent rescheduling when interrupts are disabled
+      intel_idle: Handle older CPUs, which stop the TSC in deeper C states, correctly
+      x86/microcode/32: Move early loading after paging enable
+      x86/microcode/intel: Simplify scan_microcode()
+      x86/microcode/intel: Simplify and rename generic_load_microcode()
+      x86/microcode/intel: Cleanup code further
+      x86/microcode/intel: Simplify early loading
+      x86/microcode/intel: Save the microcode only after a successful late-load
+      x86/microcode/intel: Switch to kvmalloc()
+      x86/microcode/intel: Unify microcode apply() functions
+      x86/microcode/intel: Rework intel_cpu_collect_info()
+      x86/microcode/intel: Reuse intel_cpu_collect_info()
+      x86/microcode/intel: Rework intel_find_matching_signature()
+      x86/microcode: Remove pointless apply() invocation
+      x86/microcode/amd: Use correct per CPU ucode_cpu_info
+      x86/microcode/amd: Cache builtin microcode too
+      x86/microcode/amd: Cache builtin/initrd microcode early
+      x86/microcode/amd: Use cached microcode for AP load
+      x86/microcode: Mop up early loading leftovers
+      x86/microcode: Get rid of the schedule work indirection
+      x86/microcode: Clean up mc_cpu_down_prep()
+      x86/microcode: Handle "nosmt" correctly
+      x86/microcode: Clarify the late load logic
+      x86/microcode: Sanitize __wait_for_cpus()
+      x86/microcode: Add per CPU result state
+      x86/microcode: Add per CPU control field
+      x86/microcode: Provide new control functions
+      x86/microcode: Replace the all-in-one rendevous handler
+      x86/microcode: Rendezvous and load in NMI
+      x86/microcode: Protect against instrumentation
+      x86/apic: Provide apic_force_nmi_on_cpu()
+      x86/microcode: Handle "offline" CPUs correctly
+      x86/microcode: Prepare for minimal revision check
+
+Tom Chung (1):
+      drm/amd/display: Disable PSR-SU on eDP panels
+
+Tomas Glozar (4):
+      Revert "rtla/timerlat_top: Set OSNOISE_WORKLOAD for kernel threads"
+      Revert "rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel threads"
+      rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel threads
+      rtla/timerlat_top: Set OSNOISE_WORKLOAD for kernel threads
+
+Tong Tiangen (1):
+      uprobes: Reject the shared zeropage in uprobe_write_opcode()
+
+Trond Myklebust (1):
+      SUNRPC: Prevent looping due to rpc_signal_task() races
+
+Tyrone Ting (1):
+      i2c: npcm: disable interrupt enable bit before devm_request_irq
+
+Vasiliy Kovalev (1):
+      ovl: fix UAF in ovl_dentry_update_reval by moving dput() in ovl_link_up
+
+Wang Hai (1):
+      tcp: Defer ts_recent changes until req is owned
+
+Wei Fang (5):
+      net: enetc: fix the off-by-one issue in enetc_map_tx_buffs()
+      net: enetc: keep track of correct Tx BD count in enetc_map_tx_tso_buffs()
+      net: enetc: update UDP checksum when updating originTimestamp field
+      net: enetc: correct the xdp_tx statistics
+      net: enetc: fix the off-by-one issue in enetc_map_tx_tso_buffs()
+
+Ye Bin (1):
+      scsi: core: Clear driver private data when retrying request
+
+Yong-Xuan Wang (2):
+      RISCV: KVM: Introduce mp_state_lock to avoid lock inversion
+      riscv: signal: fix signal frame size
+
+chr[] (1):
+      amdgpu/pm/legacy: fix suspend/resume issues
+
