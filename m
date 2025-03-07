@@ -1,69 +1,65 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from out-10.pe-a.jellyfish.systems (out-10.pe-a.jellyfish.systems [198.54.127.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B684621D3C2;
-	Fri,  7 Mar 2025 15:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434B121CC5A;
+	Fri,  7 Mar 2025 15:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741359831; cv=none; b=QuImsDmOaJua/tyRk4eTtwzrfxOsSJel/45c804t0ocZkenHdOrUXtmaoGNEazfEaZOU26bzf2xjQwZq2eno2Qz7i78ZxL4oRT8gpdPYRWcegcCGPm94w5B4wBkDETLVVHTc3egjFguKU+eJPhVg0MEFM6s7yzdQTp4Ixj9z4vw=
+	t=1741359844; cv=none; b=PN7J2olRZ10XPi3Fj73syip7/ncI7kZ73Ru5N+5Bm1caIHr3X1+K+OdCYt9muyYd2wLaSpj06usKoRDMYucSENw1hXZyNtjXlCOo/OpFbecnbi279Mty0iw+zRFL3ou1As/fT574cXSGPTV9LNuaZbIrtQFESdZ08K+MBqEHVFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741359831; c=relaxed/simple;
-	bh=JWnX24bQXGvbdkcSpP8hZ14PW+ptSaxnMNvypsvsyfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h0JmEXwuATGAfJwORNXm+FU4No5AZp2RkzamrlMzttFEj+fwT1zGKqp7iSyo+UHPITgNY8ETBoVgiVyujuqTQAKKO684kUO7Df8IHylbtW87JWQw4BCmKwT9gDlywgbQi2iuWTU1ODQYWfgpUzKI0y0++MikPAE97gK4q9F5r6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qo8sgSCh; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741359844; c=relaxed/simple;
+	bh=LgaKgJu/MCtJHok+RAh9Dc2Wuk1pWqxI2QVLD4SvM7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cXyYK24iiSwcR8HpVRnkOc2pF8bteYvO8FbqjbvXmqFxy5O50t5tTsjikRNvBSAt0wliNc7qtb2fYDzSYEFTqcTm3dXtiBsG/1I0ycnx0r3TFM2ehz3+GhVoJ7Gp1c/Dtxe399VgmaafR4q6cy9IGA8iPUq2XUEGDTAnAcRwOP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=nmLZo5pC; arc=none smtp.client-ip=198.54.127.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qo8sgSCh"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2234e4b079cso35130535ad.1;
-        Fri, 07 Mar 2025 07:03:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741359829; x=1741964629; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjltdXPvzAGYWJCjNCh7/tJsigIQN9ooLcu9BagrtF8=;
-        b=Qo8sgSCh/Ri2cEcjiIZpfYyfbrMm7vQdoVHOkK5NbUWoimAq28ItOBS8iZ/XfjzFut
-         JGF2fs1TWe3jx9B4GsXtygrv93yTkzYrbUVsHKeoAqJTGL6AjlePqM7j5R4fZKTFgQwQ
-         AHQGqpA3hOBO8x9DftsjzHoOobti0brx5mxPTr0li9l0VoXqh/GdHGazlCwaiPbRaxaq
-         fLxSk85zV8o8THkS6O8LQR3SN53rVHLIe0qmEe1C0NmUNumrOFD51gXzfaSdm726tR5N
-         h+UIjlhdJh167vJb4W/Gk2e1TcWmVtRSkb51xZCFhiVY5CBTlStXJAof2kNF2py4FjO4
-         abqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741359829; x=1741964629;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mjltdXPvzAGYWJCjNCh7/tJsigIQN9ooLcu9BagrtF8=;
-        b=eoWmFfwuwzx0X+GT/AwadM4ujcguQkOIM8jfzfZwp/9b8+fPEsU2Qep/znQtYesyBU
-         FzqHKlqoOcnbV9B20khXZvtKey6ygjZZsp1z4VTlm5NbyUI5HJoA/ZJ/VstZ9yyDOIZ3
-         VV20Xgb6lsRpjvdzNESmKHUrtxvLZ7Sz7bx0m0yt9CQPpghXsE90WMOr8SHrYWTfUImk
-         lwLGYt7RMFSfvBVjeCoksFY5P21Q4hrskyRRV+dQKcTeCEdJpPVM60ueG/qgVBIlacEx
-         h+/eKzMjKQXr0C/tkrqKecpd+4Cap9ZPxL8cm8R0YG4r4CK2CqdR1JlYwIv/X0dxPeLi
-         /Ojw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX/fi/pVeauI3sHN2B+vIRq13aM+FSYmDWCVI1C9xARoveJQOHLiPOZTCDggcqORLloE10kVGNmXaHk+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvmNV8HIhYfSwbTnrMG01v394CgyALjasOB5J6WR7+d/OuJffn
-	hbDm1QUQruiSno6QRnVVgdZ1NSzJI/UZZKM475mh2H/HJcoTV2NhpLMfbg==
-X-Gm-Gg: ASbGncs9fkHiHQXlH6GBiSvKwfi1LQwukTjdtTrHj2TmYCYtZzTILKiFFdtZh0k3E6F
-	r2ioGx4bbYGWep6NQx66lxBvUjQIBGksxLhbrjfBdLZVMSebseic5gNj2rrd5c+/4v1qv+lxS/z
-	2xgPKhgy3tt/45/6QpfUWAfAr233lDiUFo2DU9/kdN6leO+cX4DEbm5THloX+1I/ByuyAdA0J8W
-	S1vbWyH4dA6EkdIvOsQhoymia5Gae20rvIVHbcVjwJLg1hDe3ObX3KagS8px60qHO89VC4JXZLC
-	gb3IeFXYt5ogWYtSj+5cBEsKMtFI5nQRouOS9wXftYo9cpx4ftoY/oQiyg==
-X-Google-Smtp-Source: AGHT+IEWDM76vDq+sGetR3TYHlWMMUUHGBnS2ETD1Absx3BChqLC/jgHSoWtZYIjx/0SwmgYZ74fSA==
-X-Received: by 2002:a17:902:ecc1:b0:224:1e77:1a8b with SMTP id d9443c01a7336-22428c0d609mr50555265ad.51.1741359828739;
-        Fri, 07 Mar 2025 07:03:48 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7fad8sm30961195ad.119.2025.03.07.07.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 07:03:48 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon fixes for v6.14-rc6
-Date: Fri,  7 Mar 2025 07:03:47 -0800
-Message-ID: <20250307150347.3784204-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="nmLZo5pC"
+Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
+	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4Z8V1B1XHNz9ty5;
+	Fri, 07 Mar 2025 15:03:58 +0000 (UTC)
+Received: from MTA-09.privateemail.com (unknown [10.50.14.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4Z8V1B0Phvz2Sd0V;
+	Fri,  7 Mar 2025 10:03:58 -0500 (EST)
+Received: from mta-09.privateemail.com (localhost [127.0.0.1])
+	by mta-09.privateemail.com (Postfix) with ESMTP id 4Z8V1968Hwz3hhSx;
+	Fri,  7 Mar 2025 10:03:57 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
+	s=default; t=1741359837;
+	bh=LgaKgJu/MCtJHok+RAh9Dc2Wuk1pWqxI2QVLD4SvM7k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nmLZo5pCsWh4xxu5P+WuJXO3tgG/1dRDJ7XbwvAePFGCJo0zpDZAi5io0nEYUY9P8
+	 sfXKf9sfJwR0Uh7n3kaUB6mmR2vVi+hBHSD6iHErVNASkKwMjqjiI9ngVtIUnCRT3d
+	 cX5vcIY/nk9zdCTbtZyGx1YvH33pD3hq4XrVOaGtL6D+/D8Cg4i8MEmxoOWQyYAt5+
+	 x+H69i++FfE6Enmy8OQVPh4zTDLdccg0fes3cPK1Lx606HdvtK7TXDSyK5ohuconFA
+	 BEG8MWcPTOzGYFzZm3wVf0MYdlzykwV5+rIP5+2cz9BAZg4ezskw8ufY/dOaIxsUoF
+	 Z5xCyRZKoc/0A==
+Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
+	by mta-09.privateemail.com (Postfix) with ESMTPA;
+	Fri,  7 Mar 2025 10:03:43 -0500 (EST)
+From: Sam Winchenbach <sam.winchenbach@framepointer.org>
+To: linux-kernel@vger.kernel.org
+Cc: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	antoniu.miclaus@analog.com,
+	jic23@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sam.winchenbach@framepointer.org,
+	bpellegrino@arka.org
+Subject: [PATCH v6 6/6] iio: filter: admv8818: Support frequencies >= 2^32
+Date: Fri,  7 Mar 2025 10:02:16 -0500
+Message-ID: <20250307150216.374643-6-sam.winchenbach@framepointer.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
+References: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,61 +67,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-Hi Linus,
+From: Brian Pellegrino <bpellegrino@arka.org>
 
-Please pull hwmon fixes for Linux v6.14-rc6 from signed tag:
+This patch allows writing u64 values to the ADMV8818's high and low-pass
+filter frequencies. It includes the following changes:
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v6.14-rc6
+- Rejects negative frequencies in admv8818_write_raw.
+- Adds a write_raw_get_fmt function to admv8818's iio_info, returning
+  IIO_VAL_INT_64 for the high and low-pass filter 3dB frequency channels.
 
-Thanks,
-Guenter
-------
+Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
+Signed-off-by: Brian Pellegrino <bpellegrino@arka.org>
+Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
+---
+ drivers/iio/filter/admv8818.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-The following changes since commit d082ecbc71e9e0bf49883ee4afd435a77a5101b6:
+diff --git a/drivers/iio/filter/admv8818.c b/drivers/iio/filter/admv8818.c
+index e9602bfd4af7..9785533d0cdd 100644
+--- a/drivers/iio/filter/admv8818.c
++++ b/drivers/iio/filter/admv8818.c
+@@ -402,6 +402,19 @@ static int admv8818_read_lpf_freq(struct admv8818_state *st, u64 *lpf_freq)
+ 	return ret;
+ }
+ 
++static int admv8818_write_raw_get_fmt(struct iio_dev *indio_dev,
++								struct iio_chan_spec const *chan,
++								long mask)
++{
++	switch (mask) {
++	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
++	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
++		return IIO_VAL_INT_64;
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int admv8818_write_raw(struct iio_dev *indio_dev,
+ 			      struct iio_chan_spec const *chan,
+ 			      int val, int val2, long info)
+@@ -410,6 +423,9 @@ static int admv8818_write_raw(struct iio_dev *indio_dev,
+ 
+ 	u64 freq = ((u64)val2 << 32 | (u32)val);
+ 
++	if ((s64)freq < 0)
++		return -EINVAL;
++
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+ 		return admv8818_lpf_select(st, freq);
+@@ -571,6 +587,7 @@ static int admv8818_set_mode(struct iio_dev *indio_dev,
+ 
+ static const struct iio_info admv8818_info = {
+ 	.write_raw = admv8818_write_raw,
++	.write_raw_get_fmt = admv8818_write_raw_get_fmt,
+ 	.read_raw = admv8818_read_raw,
+ 	.debugfs_reg_access = &admv8818_reg_access,
+ };
+-- 
+2.48.1
 
-  Linux 6.14-rc4 (2025-02-23 12:32:57 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v6.14-rc6
-
-for you to fetch changes up to 10fce7ebe888fa8c97eee7e317a47e7603e5e78d:
-
-  hwmon: fix a NULL vs IS_ERR_OR_NULL() check in xgene_hwmon_probe() (2025-03-03 06:04:34 -0800)
-
-----------------------------------------------------------------
-hwmon fixes for v6.14-rc6
-
-- xgene-hwmon: Fix a NULL vs IS_ERR_OR_NULL() check
-
-- ad7314: Return error if leading zero bits are non-zero
-
-- ntc_thermistor: Update/fix the ncpXXxh103 sensor table
-
-- pmbus: Initialise page count in pmbus_identify()
-
-- peci/dimmtemp: Di not provide fake threshold data
-
-----------------------------------------------------------------
-Erik Schumacher (1):
-      hwmon: (ad7314) Validate leading zero bits and return error
-
-Maud Spierings (1):
-      hwmon: (ntc_thermistor) Fix the ncpXXxh103 sensor table
-
-Paul Fertser (1):
-      hwmon: (peci/dimmtemp) Do not provide fake thresholds data
-
-Titus Rwantare (1):
-      hwmon: (pmbus) Initialise page count in pmbus_identify()
-
-Xinghuo Chen (1):
-      hwmon: fix a NULL vs IS_ERR_OR_NULL() check in xgene_hwmon_probe()
-
- drivers/hwmon/ad7314.c         | 10 +++++++
- drivers/hwmon/ntc_thermistor.c | 66 +++++++++++++++++++++---------------------
- drivers/hwmon/peci/dimmtemp.c  | 10 +++----
- drivers/hwmon/pmbus/pmbus.c    |  2 ++
- drivers/hwmon/xgene-hwmon.c    |  2 +-
- 5 files changed, 50 insertions(+), 40 deletions(-)
