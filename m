@@ -1,122 +1,68 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AE318CBFB;
-	Fri,  7 Mar 2025 03:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32EC19047A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 03:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741317558; cv=none; b=BsmbO/saWfIxXJxwQGbl6Qs6xUoRkLoGqwvpI9nB5vzqsKglh5Z3Dl92MnlIfUvJS+KqhOOCzR1Nj4fOAmGE/GYgmCPGjGJAB7P7rga7jPs5KpdDm8Gnrs8PIoGFw2wfTV4h931kQf9jA9i5f1LWLxS0K5vv44wSt2zsJHtBNbo=
+	t=1741317562; cv=none; b=op6aLe/L+j+v5AMF3rOoPv1LUpj8aEuRbNxVd19nXl905lhA6pMpvAHyf2Wbq7rew2ov2eTx3RZUFJvodC6/JvocIg6+jKy5a69ex2jQThKFwJxM947+m5Ttkcbc8R0QH5UDzgiKEM/dWs1qSbMtMRAg9/fPx+s4fsnBWBZm4EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741317558; c=relaxed/simple;
-	bh=/6oi7wSIJIu9yoaKPqaE7fOmrgWjLaHaF4QZAeiYf64=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XOJHlbeGPrzzwMM6HGIvfb4+RKB62XZNTNM3pOt3fyGpZtl8ZOc2kr/4hvDUC1d/b5JYpC8DmYqAx8rDEvY7ILMdL+8jHu51v+REI4cNOhqP2VHJ6RxY7qhlVq3gC+oVaRUcu1J6FsBgTf5DrWov+yPPmxHhe7XCokw6qtlUv2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ph8XvFOe; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741317562; c=relaxed/simple;
+	bh=/keky7JufEKUaL6kOFuuqPbL6o9BiIYlwIBW/tfOt24=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MtqwN1jbEnTFGWxwk8tWpFYlox2g9zuwaTE+Yrv44Gest/Thl2SDiya/FYjqsgdTXBL5WNN1U/kYW8RfSm9pjqRqu9ZJs4iPMFOyxIXMqIgzOQd7AOxhDWmOKM5oDsQRwgBog/r8oHzLp0Eet2Buprzw+EHWEn3e8V3ifZDVlAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Odh0RDbV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ph8XvFOe"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2234e4b079cso24615105ad.1;
-        Thu, 06 Mar 2025 19:19:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741317556; x=1741922356; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g0DK/lZwUbq7evCxhu6vzBF9behgLjjOobAObHJFVgo=;
-        b=Ph8XvFOeelnEDwOfNCzXnLjBhf8+sGxjfkRDw0lp4G1FM9eSrtTNvVlQBX2FwaBJO1
-         xhNXduF1kSsmA+2za9t3yhunucRVD5brx/jrSjSNHOWxA72WRvfT9/1nN+37yB5QmY5Y
-         KEEVIn6iCf6scceot2ysrqz6UVzGNvUmTL53VHUCcwBKiujcrTJQLmJoFdnMDctQXVef
-         n0EDqFGc2e7rgfENXEOXvaIuD0QY/VehQJGmiEbwDBgeGnlvAWmmlGgk7sw4c6PtESVo
-         FezNH1qg2u+zIRAKuNZqg62UY/fxiOhDipGtMVMXWe5aAg77eoguiHxKFE9BZYgz9AmG
-         ee+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741317556; x=1741922356;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g0DK/lZwUbq7evCxhu6vzBF9behgLjjOobAObHJFVgo=;
-        b=b2pqT7k1W2VJrHFs5k/1vvNzsd/rUQYO5gnpQbAkA1xgkjUgS9AdE3VcH6zCbaEoQi
-         oVHO+zbmdui4bJVyqgkKFvIBFz0sRP9gkF/t7riyByCvPKlnAG/eAQx8yd++4UpJXTuJ
-         /33X5NecHBnOGYo4sKBVsF7diTcjN9poDGLJpcuM/6XSmMCf62PQ9dq6v2B8bmNQLxyo
-         Fma7L+R93SxOqp89RtLBMdNhGkjQX5KAzgJ1w632naSndZlERgmVbXRUmBO/MDsFfxe/
-         fRcZ1G84LSewKgLx9IWeWbBPkaycnJ49uVoUeudkoUg3BKIl6nV9XYJyMYtyMCRUJsJn
-         JmLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLu6XBPXeHdqB2oayQuCSIarR/HKXY84x7HZQNOCxpVHLC7qgt1MA8v0seC+BiPQNsX9lUMzNS8aYTp9lmR726@vger.kernel.org, AJvYcCXrRQxhIjYe+6YHg1GblZa/d3rrYeOt/vvbdznK9pmkqgHCaBMC2wRusD0zl2H0W4jdesHnL9Gknz3EksU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw50zkCgoftcDcbT9xJwYR8yDjdEVRydxhvMhv8N/XXSGBaXzB8
-	ktARM4s+jgWXfoD/cUIuuZ/7bAlmxI9EYPLzk2cUMJby3brctaa9a2ksQLbZkI8Q4A==
-X-Gm-Gg: ASbGncvM6zFpOf5fuO+Kw82D4j3a5wIUd/7n0rCqnS4t2HTBpZI9aH3U0KoD9D1sG5F
-	kgso5FgzCZch2s4ej6ZtiLWff6iTYyg3MgDqSiQKjLc0gXo7aDNomXTSaEf5Plc1mC51d6eM3UR
-	QX+1vayXFQwnk4Bj2/EIU+odJLtIP3QTJdkvHXyq2n+ZDNmKhUYzljm6CNbypR2tjZ3B/3P6MEL
-	1NbOt7XQdUWG9K4xyg3veY840jjox4FVOs9uaJxTQP9tza+ikc7/JgBDah9PeLl1Yw/mnI84oe1
-	6vk8Dm5gXo/GXJ7oHYlBnNk9LTy1B2Qz69dnW7WJlrh8IgL0Dx2AQWcVTdZ0E9xC
-X-Google-Smtp-Source: AGHT+IH+ZDw0vly2IOyYkYtErzzTuxnj+SAqAwUEg7zi6SXNoZLp37GC+HhxjMBwtVZeqnKva9kTlA==
-X-Received: by 2002:a17:902:f686:b0:224:1ec0:8a1d with SMTP id d9443c01a7336-22428ab535bmr25997165ad.30.1741317555631;
-        Thu, 06 Mar 2025 19:19:15 -0800 (PST)
-Received: from fedora.dns.podman ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109dd5e2sm20013165ad.15.2025.03.06.19.19.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 19:19:15 -0800 (PST)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Jianbo Liu <jianbol@nvidia.com>,
-	Jarod Wilson <jarod@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Odh0RDbV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4A7BC4CEE7;
+	Fri,  7 Mar 2025 03:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741317561;
+	bh=/keky7JufEKUaL6kOFuuqPbL6o9BiIYlwIBW/tfOt24=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Odh0RDbVygEDWWz4gVFH7MXY0pbnnggxgqYHPiefWQsNHmnMIln4n7vtO1QaufaYQ
+	 hFqyeIpwVICnJpBCVEBCuoSRVg+hgKg5CvUq4tzqEOovrpJTrjfK6ujWvkhdgnPD9V
+	 luZC2zyQJd0MXY0WTBk1nuQOVMp8vCdOtw7dwr8/XhcnnE7bfD3dkVSOrXBjwxt8KD
+	 xLZKA7KezNLy6e1y6eS4HTi2fyUgBRSt0fCUlaD8Adt1BoKJjgVdjoahI4LoNVG2Nd
+	 LiCh/fs3WKlVUWognS7rB3U2C0cB3PkI5cyFK3+89YXNXtKv02lqeyHcW4E9Sh9cYx
+	 gp6jE92VI2VQQ==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCHv5 net 0/3] bond: fix xfrm offload issues
-Date: Fri,  7 Mar 2025 03:19:00 +0000
-Message-ID: <20250307031903.223973-1-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] f2fs: disalbe nat_bits by default
+Date: Fri,  7 Mar 2025 11:18:38 +0800
+Message-Id: <20250307031838.19164-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The first patch fixes the incorrect locks using in bond driver.
-The second patch fixes the xfrm offload feature during setup active-backup
-mode. The third patch add a ipsec offload testing.
+Let's disable nat_bits by default.
 
-v5: use list_for_each_entry_safe() when del item in list (Nikolay Aleksandrov)
-    do not call spin_lock_bh in sleep function xdo_dev_state_free (Nikolay Aleksandrov)
-    set xso.real_dev = NULL to avoid __xfrm_state_delete() is called in parallel()  (Cosmin Ratiu)
-    remove spin lock in bond_ipsec_add_sa_all() as it doesn't resolve the race condition.
-v4: hold xs->lock for bond_ipsec_{del, add}_sa_all (Cosmin Ratiu)
-    use the defer helpers in lib.sh for selftest (Petr Machata)
-v3: move the ipsec deletion to bond_ipsec_free_sa (Cosmin Ratiu)
-v2: do not turn carrier on if bond change link failed (Nikolay Aleksandrov)
-    move the mutex lock to a work queue (Cosmin Ratiu)
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/node.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Hangbin Liu (3):
-  bonding: fix calling sleeping function in spin lock and some race
-    conditions
-  bonding: fix xfrm offload feature setup on active-backup mode
-  selftests: bonding: add ipsec offload test
-
- drivers/net/bonding/bond_main.c               |  71 +++++---
- drivers/net/bonding/bond_netlink.c            |  16 +-
- include/net/bonding.h                         |   1 +
- .../selftests/drivers/net/bonding/Makefile    |   3 +-
- .../drivers/net/bonding/bond_ipsec_offload.sh | 154 ++++++++++++++++++
- .../selftests/drivers/net/bonding/config      |   4 +
- 6 files changed, 222 insertions(+), 27 deletions(-)
- create mode 100755 tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
-
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 56873c41436e..3148d9e44e7f 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -3286,6 +3286,9 @@ static int init_node_manager(struct f2fs_sb_info *sbi)
+ 	if (!nm_i->nat_bitmap)
+ 		return -ENOMEM;
+ 
++	/* disable nat_bits feature by default */
++	disable_nat_bits(sbi, true);
++
+ 	err = __get_nat_bitmaps(sbi);
+ 	if (err)
+ 		return err;
 -- 
-2.46.0
+2.40.1
 
