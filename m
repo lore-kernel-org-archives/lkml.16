@@ -1,84 +1,75 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF96218AB4;
-	Fri,  7 Mar 2025 15:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAE8218AB4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360038; cv=none; b=asBDkyZ1EkcMzwOK4AEjP/yxqQP8KjKvWO42lQn7zr7waLo9tpGQkWS9yURCH103d+q/3bSbljA6dUzlODDUzC7L2ZEVCoWYUb97YNJ5uu/+ItiC1mMq9UU3ki6zDl8F9k7plJtoM/ZuF5sQETDeSFclGopreX9XLEAs467dzHk=
+	t=1741360084; cv=none; b=MoB9ArxQ9XKD8hdicsSTNHaVTlEctwerCuij+L+vCRlPegD7yQm5sUJf9IT7b6Zl5jK0yZ7BGe9vUDQXpGkP3sPqFmfkBSSdXx4uqgqeRa2I13rm8XE9JLAThKUL+8aHJ8BdGhohE0Pk0rhD7kfpHbjkS0APQl45fvac2/47SDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360038; c=relaxed/simple;
-	bh=k2RsuBJenczQo70HERB+LmBalKEDkzEizBCy+Q/+BJQ=;
+	s=arc-20240116; t=1741360084; c=relaxed/simple;
+	bh=1J/ql49X6Ezkg4wdoqe/stSQpbv40JqkSw4Ir5aIPhY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GHe2CYccpEukiQXKzZxlZurEGVC8s1C8QkC7cUSI/BNoDBEKuHEqNKvK4C2LD+6iVsNVavj6M3q7E4wfshADAls166t73JmQrASrUG0QiEfaqLQamTTQhjIIzL02EncKWnHD9af5uHanGfZ/ToqFlPOaN9LIEv/tMFUjWnD3m/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=yW0AcufO; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=IT3sV9gdqcpqExsZotM0/JdZ3qaVfPj46DsLbkqg/MdPlI2q/kj2YO7ZqA5VRdiCflXIFCZDwJZU1X3sdbeW/iuL6rHRHmDv4r7MGp7oZXQzmZI6IBn1BYZowTIU91cCXsBqYJBKNDDF74v8LrOpF/P8o6mJjVK1q1Fj5qYrrXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=uiEhg4Vh; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yW0AcufO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+YoQ2bMScfM3XAjlW+ut1pe8WVSp2EYOFx87rsgzN5k=; b=yW0AcufOGRYzmpgjGUgGNmg/0F
-	56qmo0oQ6Pdz6e0J5QHj/u774MNjQpmgTkNm+4Z8BViLIV96x9aPBHpaG529Rn9Y9cYfKboGR2qfX
-	1wNc3hnNoSARSM4ggrltwjCJJfa61gsC3vk5Nb2/f7d1VqjEMsOr2WEEa6T4QXBsqulZlf/fIfABR
-	r390rRxnArS/qTzhbLk5afn2oiPQRawCCjC9QIBgjvYNE/j/QUzUzUnx86lj365Vo0vpxJzlanMxA
-	w+GBPP64swpFjcRItYcpFUsgWldeODSnI6aEXLNBJuhpPKTMAb47O43gsDJkOTqmGIGNlD2AP20O3
-	mMjClxuQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34076)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tqZHh-0007ZK-2W;
-	Fri, 07 Mar 2025 15:06:45 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tqZHX-0007uI-2E;
-	Fri, 07 Mar 2025 15:06:35 +0000
-Date: Fri, 7 Mar 2025 15:06:35 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	"Jan Petrous (OSS)" <jan.petrous@oss.nxp.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Vladimir Oltean <olteanv@gmail.com>, Furong Xu <0x1207@gmail.com>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
-	Lothar Rubusch <l.rubusch@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH net-next v7 4/4] net: stmmac: Add glue layer for Sophgo
- SG2044 SoC
-Message-ID: <Z8sLeyixPzH60mJ_@shell.armlinux.org.uk>
-References: <20250307011623.440792-1-inochiama@gmail.com>
- <20250307011623.440792-5-inochiama@gmail.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="uiEhg4Vh"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8fb8ad525so14632906d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:08:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741360081; x=1741964881; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AwqxWi0iWrXCwX2xmbnqF8uYYDlpSjPvCpbbjIDyPjI=;
+        b=uiEhg4Vh+cuKuMTS1wVogHyUCw1yYJaYICFxWueOIA75qwwYhbZSzYIlc974eQADes
+         ah/pUzaewDasoYOu2yOe2/qiBK7Ey2cG2SE0E53nPB1Fi4sZfWXmilm9WrLHN1NrG2vK
+         gW/OKtUfiW61Ws6UX1EHX6fES3yQ4qRFX4vAjlBqZH4r3H0z+N7/SuS90xgdgESu2lEx
+         /5kdniPycdZYURDiWMI1jRCAFvt5Pos82/qUUJlYP6/YanDsbJxymf6dt2cbX/eZoI8j
+         SmEkkf5et7RglReZQb3omNT76peaE61ro+dhiLJhBs531kHs2uefQV5GA2DCVnEEX3c5
+         1Uyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741360081; x=1741964881;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AwqxWi0iWrXCwX2xmbnqF8uYYDlpSjPvCpbbjIDyPjI=;
+        b=RBUtbChrvOfVkr1xYWRYXVwHrksPPUslDp+c3VtiuntT5wBiJbokOKhtQhG4V7s0Q2
+         1bA3Q8IuOOHFuB7P6SbFhz0FoLafhBFfg1CodVgb3Q7z6Q9wG0vk6ETniH/jVUqEDz3y
+         PC/xyuaRkySNHZXSL+HzqZAxzxG8djAypST9DJS8vIyULsa4I9nky/a73pQUnZXvGM4j
+         d8xYtSuF2eFuawzijlvCVVC+0e5lkAT7dqU2JoWFKsWsGbNkv1oSsA5OEtCXq7nI6j6c
+         ogV34/jxf+GvoerZsn4vjgzjSIZv1+h4+mIlcCQ6tPRK90+ZUWFla7HERzSJrbyNtG1V
+         g11w==
+X-Forwarded-Encrypted: i=1; AJvYcCWakN/1WysUDt7X2JAM9e13JD0pWiJ+9ZFoIOAStz16ugStwHJxIZCl9qfAXSwpoDQW/kwnkdeZbrPumV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7bZbh1fpfIFXcLjuUfnGQGFWULhIrzmCJfhURfpUBi5m8dzby
+	d3d42wz5z3gEccBGyYVIGv4A99uFGVWgwFe9EB+MUrHfKwR1Uo3Ai/oWG7LFGu8=
+X-Gm-Gg: ASbGncvA7oAn/AfqW04ykRdlULXnGI39MEAGF+6VWYkGmYqSllUDuvaaB8TZqmnzkjc
+	tjXKcXCI4CVZ2KVrRCQBIcLxx8fch8JyN4hdQHu3xplhUT9z8wJl8NIQGExzEckirB3X4jAIL6h
+	FDM+Gt+tT8PHLN4EwKyccY/Mn4Bu20QQSWOw5FZ7f674uNrkX6VkFUMgUshZ1/uHcuC0Kg06Fwe
+	ZP64cc5xNCdIcovKsX/kgex1iMUj4/kbTMEQ9BqiKF2zdvai9BjBAwPEXSshmin8rIsImJ7r5iO
+	UWyUPQOdF5TmDrPScLI43LHOu1EHuBZCUy3au3kNBJtwA9SXSi4y0X+O+XWhkaxHDjaQXrPYrhA
+	toc8QS9iIgvl8RDO0NT+8TOlnivE=
+X-Google-Smtp-Source: AGHT+IHFXN/P02s1v98zyEbqxwhlOPUAeqTTE2dEMUqC5SvXHpnKWulc9lagDpP21FJm9Hmt5sZqBQ==
+X-Received: by 2002:a05:6214:daa:b0:6e6:646e:a0f8 with SMTP id 6a1803df08f44-6e9005f899emr45138866d6.16.1741360081484;
+        Fri, 07 Mar 2025 07:08:01 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f70a447asm20414876d6.54.2025.03.07.07.08.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 07:08:01 -0800 (PST)
+Date: Fri, 7 Mar 2025 10:07:58 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
+Message-ID: <Z8sLznxBkJHWeTvQ@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
+ <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
+ <570b18f4-3790-4e57-8d80-a5301e5d8af2@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,18 +78,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250307011623.440792-5-inochiama@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <570b18f4-3790-4e57-8d80-a5301e5d8af2@fujitsu.com>
 
-On Fri, Mar 07, 2025 at 09:16:17AM +0800, Inochi Amaoto wrote:
-> Adds Sophgo dwmac driver support on the Sophgo SG2044 SoC.
+On Fri, Mar 07, 2025 at 12:57:18AM +0000, Zhijian Li (Fujitsu) wrote:
+> > In section 2, I referenced a simple device-to-decoder mapping:
+> > 
+> >      root    ---  decoder0.0   -- Root Port Decoder
+> >       |               |
+> >     port1    ---  decoder1.0   -- Host Bridge Decoder
+> >       |               |
+> >    endpoint0 ---  decoder2.0   -- Endpoint Decoder
 > 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> Here, I noticed something that differs slightly from my understanding:
+> "root --- decoder0.0 -- Root Port Decoder."
+> 
+>  From the perspective of the Linux Driver, decoder0.0 usually refers to
+> associated a CFMWs. Moreover, according to Spec r3.1 Table 8-22 CXL HDM Decoder Capability,
+> the CXL Root Port (also known as R in the table) is not permitted to implement
+> the HDM decoder.
+> 
+> If I have misunderstood something, please let me know.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+You're indeed right that in the spec it says root ports do not have
+decoder capability.  What we have here may be some jumbling of CXL
+spec languange and Linux CXL driver language.
 
-Thanks!
+The decoder0.0 is a `root decoder`.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+The `root_port` is a logical construct belonging to the CXL root
+
+struct cxl_root {
+        struct cxl_port port;  <--- root_port
+}
+
+
+A root_decoder is added to the CXL drivers `root_port` when
+we parse the cfmws:
+
+static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+                             struct cxl_cfmws_context *ctx)
+{
+...
+        struct cxl_root_decoder *cxlrd __free(put_cxlrd) =
+                cxl_root_decoder_alloc(root_port, ways);
+...
+}
+
+
+And the `root_port` is a port with downstream ports - which are
+presumably the host bridges
+
+
+static int cxl_acpi_probe(struct platform_device *pdev)
+{
+        cxl_root = devm_cxl_add_root(host, &acpi_root_ops);
+        ^^^^^^^^ - Create "The CXL Root"
+
+        root_port = &cxl_root->port;
+        ^^^^^^^^^ - The Root's "Port"
+
+        rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+                              add_host_bridge_dport);
+        ^^^^^^^^^ - Add host bridges "downstream" of The Root's "Port"
+        ...
+        ctx = (struct cxl_cfmws_context) {
+                .dev = host,
+                .root_port = root_port,
+                .cxl_res = cxl_res,
+        };
+        rc = acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, cxl_parse_cfmws, &ctx);
+        ^^^^^^^^^ - Add "root decoders" to The Root's "Port"
+}
+
+
+If we look at what a root decoder is defined as in cxl/cxl.h:
+
+ * struct cxl_root_decoder - Static platform CXL address decoder
+
+
+So this is just some semantic confusion - and the reality is the driver
+simply refers to the first device in the fabric as "The Root", and every
+device has "A Port", and so the "Root Port" just means it's the Root's
+"Port" not a "CXL Specification Root Port".
+
+Whatever the case, from the snippets above, you can see the CFMWS adds 1
+"root decoder" per CFMWS - which makes sense, as a CFMWS can describe
+multi-host-bridge interleave - i.e. whatever the actual root device is
+must be upstream of the host bridges themselves.
+
+~Gregory
