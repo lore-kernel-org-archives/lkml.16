@@ -1,114 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C92192B77;
-	Fri,  7 Mar 2025 13:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0CD21A436;
+	Fri,  7 Mar 2025 13:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741353207; cv=none; b=IHSrbsVDsTSkJPK3Ey9p1EsnsGJH9CYfOPX2+ekFs3yjrD6yZyY+FUbSODB9Yg3aFBC/tLFVd+yLY85tb5M/uJYuq/tfoPfVHNQ5l/n0xZCZB0nEjJKhxiaLaRU15vk0blbrOeVvICkjrz3QkFcpM/kNBta2ankJzYbQ1KZu6j4=
+	t=1741353208; cv=none; b=Mwr4ygpw8G29xJJ9oZL2F1kwANpBL/PaZW3JUjt3Zx9SbufVIwLM32FlSb9ze5jVQkgfUWU1i7lr/gUG3tQfe+bW6+kZOLYK5mK4yOWHxntX6Ka+j16vaIemr5kAMUjFspb+PdwSn1qpzqw9Ve4H9r9h3mx9Yr38Nl7SagGOdJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741353207; c=relaxed/simple;
-	bh=RPQMkL/j7UK28Z/9RAmWA5qfPlPR6W8B8k+/akQmqmE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nPiPEz+eRjWvHov1mYDiRYgMG1FAlraE6PIP/Y6sKESDBc4gy1JHXT8v+Lr9PziBStdpS6BMyEtGsrxBWfqVGeB8M1LRXg8ZBfD2B+srSmdgWIgqqIvCmoiwB8aWGWDv4aWP/2R5+Qr7Dm4vpoOBFZZWdCPPCzDMB0spggYPpog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eIVoFEaC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741353208; c=relaxed/simple;
+	bh=yse6HLeSO1NJH+GpzkEtzrWTo+s5HQhw1DSwCupPSwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a2CgiMCg6CqX7mWV5+cwGrjVjDsasIClYUD7MIuAEMzvwQLlbuedaetSAI1PfF/O9XptjmnjQwD3CLTNmF/GWqVLMsYkgmhRdzPQI23aaBVKpaGYibWYjXfDSB0QXQFvubtu55nD/5PyCadMh/+BpWExGAkr3bP4MN2ySRFIBKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=timUFPbV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eIVoFEaC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741353205; x=1772889205;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=RPQMkL/j7UK28Z/9RAmWA5qfPlPR6W8B8k+/akQmqmE=;
-  b=eIVoFEaCWQT40PTDovmbHuEjE3rhb2H9X9GgK+R6IkB/k4jyc4QbpX3c
-   0iBgtQxB117h4P0LldmHeGTaZx9yWUk4qtuERXRZyMgVhDqsrxFiv1ixM
-   aGxIp1KtObfjaV2InTC5sqGTB09wgrfXMCJZJkqlqbIqD5Q5uHVYkZGx/
-   iIXciI2aML22gPuAXEsDyCoeQXPKy2ZTo1FMQ8cfuodkItchzl+choWyR
-   M1c6v1SKtURDabhAuBd1Nd8Q0jFKN2QLrz97/G9g07cvQLHcUj2O8rygZ
-   BfJGLOrxzKraHFLyrKTlzz4elTpmk3UQNn/pihfNQ5SabHh21ApejoMXd
-   g==;
-X-CSE-ConnectionGUID: nQuuTYdgS/StS8o9w03b5w==
-X-CSE-MsgGUID: R6uvbvozSXyzVcyZVMAV8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53788739"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="53788739"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 05:13:24 -0800
-X-CSE-ConnectionGUID: nIhPzr/oTcS+usKtZFoamw==
-X-CSE-MsgGUID: Xi40Or4KRxWxyQv7SvNNBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="119148446"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.120])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 05:13:22 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 7 Mar 2025 15:13:19 +0200 (EET)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC PATCH 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-In-Reply-To: <Z8qvo0_tuSbwwyIY@wunner.de>
-Message-ID: <adfcd6ad-5672-f941-5a0f-076ecb1dbb0e@linux.intel.com>
-References: <20250304135108.2599-1-ilpo.jarvinen@linux.intel.com> <Z8qvo0_tuSbwwyIY@wunner.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="timUFPbV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60496C4CEE5;
+	Fri,  7 Mar 2025 13:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741353207;
+	bh=yse6HLeSO1NJH+GpzkEtzrWTo+s5HQhw1DSwCupPSwo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=timUFPbVHfjS8X4Ql2wgr2962zbQix+9K3vOeOmF74aR5/u5/LqXa+qgSDhkfP2GE
+	 5eLvGr6GaQMJ/xxelR8nzvn8xjtQQ2SSwen/Ba0bDCiQDpUo0SkMOogEfnt4SQ/Qev
+	 +Ii6wx2Io6fSoRSf3NHEYthlH1auXyrXSpBxIWw076N4Me001dKKQJEezCqjpWVfCy
+	 AlnMfSbJeHiPPkMW+pBV/uI9NMdYwWtcojJLR7QPZIvY14GGGAxhDZLMVZug2i15Nk
+	 H9LBcq+TqAjx6s2D50eO7KVGuFRpda8kQtF9HcrMF2zEfhOrvAt9axqRs1ewCLRAuv
+	 rWScXl+b6qw0w==
+Date: Fri, 7 Mar 2025 13:13:22 +0000
+From: Simon Horman <horms@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Amerigo Wang <amwang@redhat.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net v2] netpoll: hold rcu read lock in
+ __netpoll_send_skb()
+Message-ID: <20250307131322.GG3666230@kernel.org>
+References: <20250306-netpoll_rcu_v2-v2-1-bc4f5c51742a@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2007978352-1741353199=:984"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306-netpoll_rcu_v2-v2-1-bc4f5c51742a@debian.org>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Mar 06, 2025 at 05:16:18AM -0800, Breno Leitao wrote:
+> The function __netpoll_send_skb() is being invoked without holding the
+> RCU read lock. This oversight triggers a warning message when
+> CONFIG_PROVE_RCU_LIST is enabled:
+> 
+> 	net/core/netpoll.c:330 suspicious rcu_dereference_check() usage!
+> 
+> 	 netpoll_send_skb
+> 	 netpoll_send_udp
+> 	 write_ext_msg
+> 	 console_flush_all
+> 	 console_unlock
+> 	 vprintk_emit
+> 
+> To prevent npinfo from disappearing unexpectedly, ensure that
+> __netpoll_send_skb() is protected with the RCU read lock.
+> 
+> Fixes: 2899656b494dcd1 ("netpoll: take rcu_read_lock_bh() in netpoll_send_skb_on_dev()")
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+> Changes in v2:
+> - Use rcu_read_lock() instead of guard() as normal people do (Jakub).
+> - Link to v1: https://lore.kernel.org/r/20250303-netpoll_rcu_v2-v1-1-6b34d8a01fa2@debian.org
 
---8323328-2007978352-1741353199=:984
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Nice that we can be normal :)
 
-On Fri, 7 Mar 2025, Lukas Wunner wrote:
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-> On Tue, Mar 04, 2025 at 03:51:08PM +0200, Ilpo J=E4rvinen wrote:
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -5564,6 +5564,33 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORK=
-S, 0x0144, quirk_no_ext_tags);
-> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0420, quirk_no_ex=
-t_tags);
-> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ex=
-t_tags);
-> > =20
-> > +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
-> > +{
-> > +=09struct pci_host_bridge *bridge =3D pci_find_host_bridge(pdev->bus);
-> > +=09u32 linkcap;
-> > +
-> > +=09if (!bridge)
-> > +=09=09return;
->=20
-> I note that in a lot of places where pci_find_host_bridge() is called,
-> no NULL pointer check is performed.  So omitting it would appear
-> to be safe.
->=20
-> The quirk is x86-specific, so compiling it into the kernel on other
-> arches creates unnecessary bloat.  Avoid by moving to arch/x86/pci/fixup.=
-c.
->=20
-> There should definitely be a multi-line code comment above the function
-> explaining what defect this works around (slower performance apparently),
-> and also link to the PDF document.
+> ---
+>  net/core/netpoll.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/core/netpoll.c b/net/core/netpoll.c
+> index 62b4041aae1ae..0ab722d95a2df 100644
+> --- a/net/core/netpoll.c
+> +++ b/net/core/netpoll.c
+> @@ -319,6 +319,7 @@ static int netpoll_owner_active(struct net_device *dev)
+>  static netdev_tx_t __netpoll_send_skb(struct netpoll *np, struct sk_buff *skb)
+>  {
+>  	netdev_tx_t status = NETDEV_TX_BUSY;
+> +	netdev_tx_t ret = NET_XMIT_DROP;
+>  	struct net_device *dev;
+>  	unsigned long tries;
+>  	/* It is up to the caller to keep npinfo alive. */
+> @@ -327,11 +328,12 @@ static netdev_tx_t __netpoll_send_skb(struct netpoll *np, struct sk_buff *skb)
+>  	lockdep_assert_irqs_disabled();
+>  
+>  	dev = np->dev;
+> +	rcu_read_lock();
+>  	npinfo = rcu_dereference_bh(dev->npinfo);
+>  
+>  	if (!npinfo || !netif_running(dev) || !netif_device_present(dev)) {
+>  		dev_kfree_skb_irq(skb);
+> -		return NET_XMIT_DROP;
 
-I'll do those in v2. Thanks for the comments.
+nit: I would have set ret here rather than as part of it's declaration,
+     to avoid it being set twice in the non-error case.
 
-> BTW the PDF document says "Intel Confidential", I'm wondering why this
-> has been made public without stripping the confidentiality marker...
+     But as this function is doing quite a lot, and moreover the compiler
+     probably has it's own ideas, I don' think this is a big deal.
 
-We're apparently also not supposed to "finalize a design with this=20
-information". :-)
-
---=20
- i.
-
---8323328-2007978352-1741353199=:984--
+> +		goto out;
+>  	}
+>  
+>  	/* don't get messages out of order, and no recursion */
+> @@ -370,7 +372,10 @@ static netdev_tx_t __netpoll_send_skb(struct netpoll *np, struct sk_buff *skb)
+>  		skb_queue_tail(&npinfo->txq, skb);
+>  		schedule_delayed_work(&npinfo->tx_work,0);
+>  	}
+> -	return NETDEV_TX_OK;
+> +	ret = NETDEV_TX_OK;
+> +out:
+> +	rcu_read_unlock();
+> +	return ret;
+>  }
+>  
+>  netdev_tx_t netpoll_send_skb(struct netpoll *np, struct sk_buff *skb)
+> 
+> ---
+> base-commit: 848e076317446f9c663771ddec142d7c2eb4cb43
+> change-id: 20250303-netpoll_rcu_v2-fed72eb0cb83
+> 
+> Best regards,
+> -- 
+> Breno Leitao <leitao@debian.org>
+> 
