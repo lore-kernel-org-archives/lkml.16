@@ -1,175 +1,140 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935D221CC54;
-	Fri,  7 Mar 2025 15:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07E621CC63
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360293; cv=none; b=LOgVQ32THdTdiJW/X4VGaMC5d4eIDIQeqVMZT1Ia2DKuZu8SdHbGELnQcvxguQ59iQXu/eXk5y6d85cg542vdlikPCnH1vqNqylxn/BgC87ETtWuxjtJJe5VF4OnTu2sVo9DKtw+uik4nzZlSYC3BbaDdQVRJZDIkXcnN59Al0o=
+	t=1741360325; cv=none; b=WBNxvxPl6IRERN02BnO8Hi4Hl+OuMHhEYm0s6Nzj9wD+zS40iRm8hM4kHzOAeOby4STKY1LBoAL6Eh8XeTps/uYFLWzbeF9QZL8AolQyEfe4JW0DMo8xeNa4cOlrbEVrehcOX6dLOMMNgMyGc9Lrf2NoXlQ5lePsGYeCutUVS5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360293; c=relaxed/simple;
-	bh=68PYA1EofC70Yl9+ZYYWiPFB1L+1AgWZwF/BIm3DqIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nMBNZdcvACGz2G4QCj9iaRDdP6LHQdCCifI7hrSJ9BvIf063Eqsm8A5XJ3B0K0snXeFL7/8NxGenHCe0G/HiuBRbpII+MPadfSo2FsmddjzkvxJyTFgxnrzlOJxhpbPZvMswXGtMXZ2sTWSEMy7xrmCUedySl1C5xUumE+NeIdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ciNWFTMf; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741360325; c=relaxed/simple;
+	bh=C9tM5TuLfhlgQvLUFBgkKrvHur7nfMZAswXEQogvyso=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Xkk/of+9WYeb34yadY50Vf4ru+T8L7wPGd61to6xoAHA4hhYNfrXb9BLlwkYF21sTGnvLJk95clToaMugbd4jnryBpv0dl1dsdxctR490EI1A2jVR/5hIZgPdScJXaRoEKSd4tqNDhRpNledH0qSi5qJuc+woXLm3TjqGUbyML4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eZjbfzL1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ciNWFTMf"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223fb0f619dso40036225ad.1;
-        Fri, 07 Mar 2025 07:11:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741360291; x=1741965091; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Z0smMQNuibFTABZ6w1NkSzGMBPcRi3Tk4bDjmrxiWek=;
-        b=ciNWFTMfK2AKyH+0KifL7CKVCX0AOjNUra7V5iruX44CeXaqGlUPq3fkJAVnSyOA8m
-         I+NgdZEw0E46Bc9fPDpwzUPoWIXXlrRY4KmrDM10uUGEu9WnChZ5BfpDPzdQwTwsrcLC
-         k/NdbAyciEF8dZtxC8r1txZyy3b2OvqxukNdYcwhstgfYHO4iEbOmz6FTL+l+17dwzZq
-         dQJDwBrcEmE8tOSxmp0GWbuha3RjdfhrqcGHqj7KocALAPr8PtCFUrNKHIgrIC0A4rfA
-         twTnXR3ZP23GrlXs6tGULCLNUOGq5Aks/rFaWcuymNdlahsB9a90q/2A3hZT9SX1amZW
-         d1Tw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eZjbfzL1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741360322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U3S/y/ILHmIHApB88hRzIwz+jtFgRApUnIcM4kDcX/4=;
+	b=eZjbfzL1vP53CI0D5hGHZ5amGfi/+6J5Shwx0q6tLsA/gfDFEUP3Wxs96YJaQdkzt8hdlO
+	VaZhiHEOJCSgPibDhr6HmtkRXJ0vrN3x25+OZQkrNLe/wHdh6HUIQ+3pZ3iU5cLmsSdu7b
+	/HJGpSBbJwol+VgvcUrK2srSNskGmic=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-522-IKWlySv6PD6XDR5jrgbvAg-1; Fri, 07 Mar 2025 10:12:01 -0500
+X-MC-Unique: IKWlySv6PD6XDR5jrgbvAg-1
+X-Mimecast-MFC-AGG-ID: IKWlySv6PD6XDR5jrgbvAg_1741360321
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c3b53373f7so512791185a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:12:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741360291; x=1741965091;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1741360320; x=1741965120;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z0smMQNuibFTABZ6w1NkSzGMBPcRi3Tk4bDjmrxiWek=;
-        b=Xb6hffvZ1QyA+qKTAc2qOLRF7JLC5WKPzKUNdtysi2ZX5iZf5CX1m/kh7kgEoEqQFU
-         i1LHRjlMhMny60uiwwERqgTV8Pt3Cm3TkIRQHaml2rmHkzduqCH9IhdkvzI8qS1F9Dcn
-         vvbFyGKY3AUiX8csyh3EadxUkxNyzsfJ31ZumiGYcht4ma0V60XzLPYf8ZcCnVd6E04g
-         q279iJM52CUqhlL92++JnbgDG1xPuyUkYPtGk2yUd72jxVYPLS6qw74xyQ5asydIJkjS
-         kMuWyn/kTvR7aj25IPUxtv5gJGWC3pmUV/FTrE49bOVjOuUGjSsKWT1ng/5qcD4svVzb
-         huZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmlcUEPD/ZMEk83fNT7FGZN7P6XnF7uqRI2tNNkuvfnroBgSKXQ7NXwhrnU7X4lEwleNJTBGkh7Aj1@vger.kernel.org, AJvYcCVnxH9bTPmYVyohiNUwzt952JA9uDGOB19ccv/hSkV31Hbpgk4cXZtG4oa5xJjdB26NGm+ZG2DbCSV8hUXs@vger.kernel.org, AJvYcCWf0B7OyzIqFtST1Q9PP8HTj2T93smDfCNl5E1j9PDvf4T3BVEYdkXZs3w32OyvJpSYIdneq6nNg/9xpQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3KOJk4hJ3pAb5EGRsFqKRuj25lujdsEHqSsa6S+Q1XIgvEnad
-	KR/feZpFwltS//BcHWuT/CISWTgo0oH4CSWdNXUE6BoM9DRzcxRz
-X-Gm-Gg: ASbGncuusJ7qpIvKdwAtkehJ9Aeq+an1euwAZn5eDNzHr2ynpXbnoH6oKkCWhJP17iK
-	d00NbLp1qN7ToZ1yXSkLjDznXGdL2UaS1P5Z+Vcx1w31kW/8iBuVGwuJSRVSxqvwN/gQEnntpI/
-	2LGtRVQcB2FzTMJLGJhCzpdHqn4HP6A9H0gPTHhcM/STWKzVyprBniC4ZYRWtN+KwZeeLDNgP+n
-	qtAlwTakpHeeHFTa3ycLCwvzwQiGR9qkTT1hUjUuz7a+Uv8+PYOj8J8HS0sCqB8eNy1NLDxHmju
-	oBR5tr1ipT/Tx/DVQTYmDoCTArmZo+tvdUZzp6O4QnSeZPlcF9KA3g==
-X-Google-Smtp-Source: AGHT+IHrwpXL0L5f6em3IgAisRt8eToY4WUgHZ+JzvFiYSU/OoqGtox7zmG/M0KzUZdedDUwYqS0Jw==
-X-Received: by 2002:a17:903:32ce:b0:224:1074:63af with SMTP id d9443c01a7336-22428bdb76amr63670315ad.34.1741360290644;
-        Fri, 07 Mar 2025 07:11:30 -0800 (PST)
-Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22410a907adsm31000575ad.160.2025.03.07.07.11.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 07:11:29 -0800 (PST)
-Date: Fri, 7 Mar 2025 12:12:22 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
-	dlechner@baylibre.com, jonath4nns@gmail.com
-Subject: Re: [PATCH v4 17/17] iio: adc: ad7768-1: add low pass -3dB cutoff
- attribute
-Message-ID: <Z8sM1uW7pxJVmVN6@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <2aa347a97e7ea974951609b0bdf81cad0b21b993.1741268122.git.Jonathan.Santos@analog.com>
+        bh=U3S/y/ILHmIHApB88hRzIwz+jtFgRApUnIcM4kDcX/4=;
+        b=rOxx24VTcVOeg1WbC0aJWRemB/bLtotAhvHMkjVLkMhEAZ7ZWzyI5Gg2lqfB/DkIBr
+         0WJT8Fgda2yBzzMvZXh9r8aBQuMvGB9xv9sOKRBjhZFm4t0rMJhokdCPIwgFRJdAeCsc
+         pkh7gkONP9lRn15vzTc/T9WoiJFzWNK0PyikIwb8KUEM8dGAgLELlQ0FXTyBv/KkfZx2
+         Kb4S43XT87Y3NB+BT+RAA6G4I/3Lkk4nuYP3PYsLLEK90xTs4B2/D9i4b52hGfIvIl6j
+         IWM4v6sy7XiWgBYRcqhFi9nxPy+CguMS+IslhT1yYd9SQLEURhwyR979EROpNLa7qGUi
+         DyQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWoy22Ykw4vdqXScN2zRw6rICZKqiE3Jv1CA29X8yqt1f863K+qDwhqSTLfdD/MZtyjvOMUuj5cJNwdv4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7IdVaR9pkN81JSLzpYguOqhgNrIBXY92bwhfMEa6sJrHZ3pJh
+	9njuMktdYXy8TUbB9twFzDGx+nj30lQKjKHS19HMlOynIsGeGFW/d+7qoeEFS2oYr+49tdpSIKH
+	RIEeVy0XOZI5oQ/kioKyPHGxHRKwVgo2dAbEPL+OrqUou0HM34/Gowd63c9B6pvTxyOgNWg==
+X-Gm-Gg: ASbGncu971RqLufBm0DDdcJqzSJgecoLlatmSu6YwzuWNLqdoOLif2irgc0ZfLYz2eG
+	wKfofu6uPHICg15XKc4Pb7+znH8+R3hPGG9qvX5Fi18U3CQUefgAzvD3jmYQta7ym6HWMjylcf7
+	cT9lWLfPfR+Ko1zda+Eu2YuYx7kC3DgcKqYcRwlJMR5lMiHuk4my9Xue9i/JasIyjVvCH9eGLf0
+	eottTNTf096Nr9/8VqTC71MxpoiRdCzqKNL26d6dq2tZmscN44ypPJjCM0ZfBBstC1eXNPXE2O3
+	WOn8Oim9uf56F7P710sXceeSVTujrqZ0KgF8wM1y6k70ArJPxiPjjDfe5fI=
+X-Received: by 2002:a05:620a:261f:b0:7c3:e457:853c with SMTP id af79cd13be357-7c4e61ed4a1mr577216785a.50.1741360320187;
+        Fri, 07 Mar 2025 07:12:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHKuw12OwEB6WB4+HUUfMD0cI7kHe8YYf7PqXIevfwUmXERTDQ2AcnR+rdUrcLqQxyKvb/9YA==
+X-Received: by 2002:a05:620a:261f:b0:7c3:e457:853c with SMTP id af79cd13be357-7c4e61ed4a1mr577213785a.50.1741360319918;
+        Fri, 07 Mar 2025 07:11:59 -0800 (PST)
+Received: from ?IPV6:2601:188:c100:5710:627d:9ff:fe85:9ade? ([2601:188:c100:5710:627d:9ff:fe85:9ade])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3e533a1a1sm254283185a.6.2025.03.07.07.11.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 07:11:59 -0800 (PST)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <eafef3d6-c5ce-435e-850c-60f780500b2e@redhat.com>
+Date: Fri, 7 Mar 2025 10:11:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2aa347a97e7ea974951609b0bdf81cad0b21b993.1741268122.git.Jonathan.Santos@analog.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/8] sched/topology: Wrappers for sched_domains_mutex
+To: Juri Lelli <juri.lelli@redhat.com>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Qais Yousef <qyousef@layalina.io>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Swapnil Sapkal <swapnil.sapkal@amd.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Phil Auld <pauld@redhat.com>,
+ luca.abeni@santannapisa.it, tommaso.cucinotta@santannapisa.it,
+ Jon Hunter <jonathanh@nvidia.com>
+References: <20250306141016.268313-1-juri.lelli@redhat.com>
+ <20250306141016.268313-3-juri.lelli@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20250306141016.268313-3-juri.lelli@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Looks good. Minor comment inline.
-
-On 03/06, Jonathan Santos wrote:
-> Ad7768-1 has a different -3db frequency multiplier depending on
-> the filter type configured. The cutoff frequency also varies according
-> to the current ODR.
-> 
-> Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-> the user which bandwidth is being allowed depending on the filter
-> configurations.
-> 
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+On 3/6/25 9:10 AM, Juri Lelli wrote:
+> Create wrappers for sched_domains_mutex so that it can transparently be
+> used on both CONFIG_SMP and !CONFIG_SMP, as some function will need to
+> do.
+>
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Fixes: 53916d5fd3c0 ("sched/deadline: Check bandwidth overflow earlier for hotplug")
+> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
 > ---
-
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-
-> v4 Changes:
-> * None
-> 
-> v3 Changes:
-> * None
-> 
-> v2 Changes:
-> * New patch in v2.
+> v1 -> v2: Remove wrappers for the !SMP case as all users are not defined
+>            either in that case
 > ---
->  drivers/iio/adc/ad7768-1.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index 664d0b535340..9ba00e9089bd 100644
-> --- a/drivers/iio/adc/ad7768-1.c
-> +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -150,6 +150,17 @@ enum ad7768_scan_type {
->  	AD7768_SCAN_TYPE_HIGH_SPEED,
->  };
->  
-> +/*
-> + * -3dB cutoff frequency multipliers (relative to ODR) for
-> + * each filter type. Values are multiplied by 1000.
-> + */
-> +static const int ad7768_filter_3db_odr_multiplier[] = {
-> +	[AD7768_FILTER_SINC5] = 204,
-> +	[AD7768_FILTER_SINC3] = 261,
-> +	[AD7768_FILTER_SINC3_REJ60] = 261,
+>   include/linux/sched.h   |  2 ++
+>   kernel/cgroup/cpuset.c  |  4 ++--
+>   kernel/sched/core.c     |  4 ++--
+>   kernel/sched/debug.c    |  8 ++++----
+>   kernel/sched/topology.c | 12 ++++++++++--
+>   5 files changed, 20 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 9632e3318e0d..d5f8c161d852 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -383,6 +383,8 @@ enum uclamp_id {
+>   extern struct root_domain def_root_domain;
+>   extern struct mutex sched_domains_mutex;
+>   #endif
+> +extern void sched_domains_mutex_lock(void);
+> +extern void sched_domains_mutex_unlock(void);
 
-Are these constants from ADAQ7768-1 datasheet?
-There it says "the sinc3 filter has a −3 dB bandwidth of 0.2617 × ODR."
-If so, maybe use 262 as SINC3 multiplier?
+As discussed in the other thread, move the 
+sched_domains_mutex_{lock/unlock}{} inside the "#if CONFIG_SMP" block 
+and define the else part so that it can be used in code block that will 
+also be compiled in the !CONFIG_SMP case.
 
-> +	[AD7768_FILTER_WIDEBAND] = 433,
-> +};
-> +
->  static const int ad7768_mclk_div_rates[4] = {
->  	16, 8, 4, 2,
->  };
-> @@ -228,7 +239,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
->  		.type = IIO_VOLTAGE,
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
->  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
-> -					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-> +					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-> +					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
->  		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
->  		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
->  		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-> @@ -762,7 +774,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
->  {
->  	struct ad7768_state *st = iio_priv(indio_dev);
->  	const struct iio_scan_type *scan_type;
-> -	int scale_uv, ret;
-> +	int scale_uv, ret, temp;
->  
->  	scan_type = iio_get_current_scan_type(indio_dev, chan);
->  	if (IS_ERR(scan_type))
-> @@ -802,6 +814,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->  		*val = st->oversampling_ratio;
->  
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-> +		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-> +		*val = DIV_ROUND_CLOSEST(temp, 1000);
-> +
->  		return IIO_VAL_INT;
->  	}
->  
-> -- 
-> 2.34.1
-> 
+Other than that, the rest looks good to me.
+
+Cheers,
+Longman
+
