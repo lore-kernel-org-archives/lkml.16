@@ -1,81 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D7B258CD7
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 22:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E847E9;
+	Fri,  7 Mar 2025 22:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741387327; cv=none; b=RzL4csPDV4E/O5VX3QGX4kzI2SgZqwnZSRRxTDurjZZs7ZeJuOliVt5URaySyqpxGWbArvuJQz5dSV5eauGvTQbSz8TF7cOfqe4nIhbR33n6gkcKSH+0BvzVH8q4Co2b9trfPi98Wh0pKzhPMRkUAbdd3jx/+LrlvWejbIZ8eUQ=
+	t=1741387404; cv=none; b=qXHLWzFefrd+IjzSf7Rf95Qslh61cUvyC368FW5F3sqd0P2z9SoI8u0xiqb9JqbC9GWK4PqHvpkppPIfITeH8ndhynZYvCbqz2VOV+KPb6GafwUmgDAZVEqrYFSWC0mYzlBsOJDsWtKUSsIqsgvxNW4qsZM+gcLuaz8fpWLlQU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741387327; c=relaxed/simple;
-	bh=QbJVwK7yIplBFiKYa4/igotSC0EWBBnFNF1lNEacZeU=;
+	s=arc-20240116; t=1741387404; c=relaxed/simple;
+	bh=SpRi4bW9b7f2WOAmR4QL3sXdG09NLH85WA9+lbQk0Z0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhXoKo2VWa/qreJ4iJdhv1YTudvNmWA98ezcadRIC51leUKOIhYexXbGda5dF0rK7ScpNhyzwlhcC04BHIyaeV8easiC3+Wt4jVAF7vngL6RqXfPepSY2p+coECj0Rh+v3UYdrU+sRJHob+w/8kVgUOM8WjsTS1tuN4Agz+HfRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cw+7BQBe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jydoNj8B0PdRvmztKAkYTMila5cXWyS6C2qZupAfx1X6mtwQcSenz+219QNCIqFNgtY96lBUVkhs7ibixq6GEAuff1NpKV+SuUUTu8eG2URfdO4AAOt7M7pyP/Rlj0t0Rub1mBzJ75DVSizYLhZqbZUFVQeU5xTiGv/+dcU5YOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2TIeNlL; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cw+7BQBe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741387324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lDGwdwGPb9qTBerw8cjE5pk2Lbp1bTzvxl+acBBp6AM=;
-	b=Cw+7BQBeIRV6hSU9SJNp3frQqIp9mToKd4KCasYHetCaBzKvLDigFzTTHXKCB1NSBWmQXR
-	qZuNJON8Ly4vHfEJfWFWkWOj2wyJXRsz1TDDUtp3tUrO7zUDyeZaxCJbiNl1WVavEMIrEe
-	K0jVHnd+3JA1DD0oBbdFr0aZA0SLDQk=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-502-gLg_K2pMNe22Ulk216Kckg-1; Fri, 07 Mar 2025 17:42:03 -0500
-X-MC-Unique: gLg_K2pMNe22Ulk216Kckg-1
-X-Mimecast-MFC-AGG-ID: gLg_K2pMNe22Ulk216Kckg_1741387323
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4751b401c37so43841681cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 14:42:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2TIeNlL"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so2350220a12.3;
+        Fri, 07 Mar 2025 14:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741387401; x=1741992201; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WGJDZD2iZLfw/9kPMmyPtBM6Rn/+J3bPJlTz0L3sgKY=;
+        b=D2TIeNlL7pTna8SyzE1iVZ3/v9u2U+vk2J7f1YHqapLHEsQPCRjZ7ij3ZLVYiW+f2J
+         Ys8oBzIG7RE/v1pMAvkE8I4S99xVALXte3SAw/U7tti0a2dVrlMTBe6ERv/QKIYtx8E6
+         ef7xnwGoMXIw+BEAnN1ULIpOW5/Omq+nN4x6ic6BjQZrEFyk7ZlOmFNKSrbJFJzSXwz5
+         19lVBzKq5LYlxD1C0OsKblK6n67MFKbqSb2y6bAALJL2OgpHW8rcvlTftax4BC+X6i4I
+         fcS9UwguZXTPdFYEaNLyShdkuR7jnkGQDX3qmxkAgXthnFjZqia+wtIHOPub4hC7zG0n
+         8L6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741387323; x=1741992123;
+        d=1e100.net; s=20230601; t=1741387401; x=1741992201;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lDGwdwGPb9qTBerw8cjE5pk2Lbp1bTzvxl+acBBp6AM=;
-        b=q7HC8exnIPnm/kJUY41QELs1NqBGyuMt4MvTRtOefanNJHm/vs8UF9SuFMOWXmFFcq
-         E1Kz3BcbWMgQaRubmSbKWVegws0LaURgamd8JoubiFuB5BxwTuM0bWUhOlQj8z+RvBxB
-         RRsJY0yVr+aN3KB6bsvOc+akHdA7Ny0JuBzGrRwmgDiVaUILrj7FvKD0luP31E7jyZll
-         aUJKxCC5CuDyd6w1p2TpMJaOBjTJ9SztZI8Uk6KmM/9lxmkfknhDoiZ/1n8HzDec/pC3
-         B0Z7Zc79IWNGCZJz4rZmbGz/O/0bDlUihmLdEfYmYI7mBM+tPC+sIknhXpgMzk8xOxP+
-         WYjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXs261IBP1cUYTZLDC6TXMVfJmPEYedglbwl8tZJrYUrsYGdAcoQIiBr+Atv4HEQvaC3mkY8krenK1+5pw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4TIWbO9zS7TSwIQt0+0slUwLZb1sK1daovFbbUlNvWBtvHgrS
-	m6zA/b4dWqCHpG4hL3yloKGpnh1tuuFUwg6MIJMIyTvZZBO+9340uPkXFT/BHbrWmcaJU2bRpQ5
-	/SUaQCVawQbrm87Wj3O+VA/CCyznrEYQnn2GaxL/5hOV2sZc/DxVVViSnMVq9pg==
-X-Gm-Gg: ASbGncszFBSpLucd+S3qhxO2sVuHZg36T3laO7Umk1hXO6ky+SBiaRiQpZAwVzyWjKk
-	ddykIkPUPJudb8sY9qt5VhBUfoH3yCssL6iSNJiE+HBYoh+LPZ8PpJWAG2fx3cJjiqdAuIJWpcL
-	cgSr0Czf/3lF71LYxJ2a1zo/TYOoGCAGHEKervwNNefQ669NdI2YF/0SlmCaHXDO304KNv6lH0I
-	FVBekFs71w2wlFmaPRnZ0LJB5wiVheJ+w+3Bu/Q45/ISpt08VEgbxN3ucZbqEG0zmXQl0tDCKoZ
-	71GdyV0=
-X-Received: by 2002:a05:622a:5e8b:b0:476:6215:eafc with SMTP id d75a77b69052e-476621612ecmr15952151cf.22.1741387322982;
-        Fri, 07 Mar 2025 14:42:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGR8lVl/s+4EWWT/wvvD3qNU2PvGL5/xU3ZWoqR1iKynkdv5g8/8qA4/93Pss+bseIKro2zWw==
-X-Received: by 2002:a05:622a:5e8b:b0:476:6215:eafc with SMTP id d75a77b69052e-476621612ecmr15952001cf.22.1741387322707;
-        Fri, 07 Mar 2025 14:42:02 -0800 (PST)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4751d96f525sm25205451cf.21.2025.03.07.14.42.00
+        bh=WGJDZD2iZLfw/9kPMmyPtBM6Rn/+J3bPJlTz0L3sgKY=;
+        b=bS1ieY2xluM0oFRU3t8Kt2gGQitG4YRU3fge6eQDiNlZN+Fu4cnb4lhKn6l9nEavpW
+         yRV7CZjjrSTSn8MWQ8wuz9liP1yD+KVG78Za2musef21EUYiapEQrEmWgBBqRds9qrB/
+         5I3nZsQsl+KC+Fcdk1DeO1BM9QVBbzJCqQvUvjMTPSixVAHcePDRcoz/UUIZEGcsMyho
+         TN3pZJC/WmoupgATnFsDFWlTehIkmHeSRPha94okDtTr53Nxpve/H5JX6q9c2ufJt6yL
+         PLvFU0zajFbtinU4ximfE7mL3C0XC6WmULmXblznxBT0abByWH4PUVM4F27BfAy6fuTu
+         q/0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVSIVY7c5QXAn7uhmepAxG4lUiP5ENH6CJgjTOnS0idlCU/cRuy96RNW6hP4dDD3897TD/rzcTaX3C86saO@vger.kernel.org, AJvYcCWKI5C3dfaOV6eXx7DS+0+vlj4JNlwk+5wrwGw17UabOr29vcf+g14gHGa4JdUYygHsJBF/VXXT1z9i1FDT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdmpF8WouFLvppryleozaSlZUh+wsQWDu/TsHzQwhDA+3+jxUs
+	N5wO3HOoQ9HJwboobB7dTaMphNbeQUiXNzxssGrl8XHmkyPqWq5JjS5vhw==
+X-Gm-Gg: ASbGnct8oU2vQfplr5I7bXPcSlIqgeCXmgvkSleHUIXIkP/gNuaYfhALdcWkIuO1m02
+	hj2Qw4kqLl0IoT2GJydJjw+p16yN065CcZ8luf7zmH51WvR/hR6iLG7RFJzUxvfQr7pQvIE86pA
+	pRv/7gnXGQFk3eT7cW+tnz0D9cUFxZ/dg8DwUUfKKyav8EOFkCXZG3ZRsJ95bBjKZEoUDeY+Y8A
+	TzkFapYSE6r2wzghd0y+OO/Etg0mCbyXb+8sU5jiRvs3wlUsNBev4CG9Wdy4DGwP6zicnY+ZIlI
+	5njUQUDsSpsnsrICbIe/KR52N8vl69E8haEJLOUWgc8wLDwKpWgb+N6K2S4E
+X-Google-Smtp-Source: AGHT+IGqOCxNFn8sRBQioaDAX8QiHOdR5qvp9BopGimBKxwXyrgCDutjsxmFS4qGRe946P8Y104ehQ==
+X-Received: by 2002:a05:6402:4310:b0:5e5:c1c4:c2ca with SMTP id 4fb4d7f45d1cf-5e5e24eb43fmr5955245a12.29.1741387401001;
+        Fri, 07 Mar 2025 14:43:21 -0800 (PST)
+Received: from f (cst-prg-95-226.cust.vodafone.cz. [46.135.95.226])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c733f8aasm3094900a12.5.2025.03.07.14.43.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 14:42:01 -0800 (PST)
-Date: Fri, 7 Mar 2025 17:41:58 -0500
-From: Peter Xu <peterx@redhat.com>
-To: jimsiak <jimsiak@cslab.ece.ntua.gr>
-Cc: Jinjiang Tu <tujinjiang@huawei.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-	linux-mm@kvack.org, wangkefeng.wang@huawei.com
-Subject: Re: Using userfaultfd with KVM's async page fault handling causes
- processes to hung waiting for mmap_lock to be released
-Message-ID: <Z8t2Np8fOM9jWmuu@x1.local>
-References: <79375b71-db2e-3e66-346b-254c90d915e2@cslab.ece.ntua.gr>
- <20250307072133.3522652-1-tujinjiang@huawei.com>
- <46ac83f7-d3e0-b667-7352-d853938c9fc9@huawei.com>
- <dee238e365f3727ab16d6685e186c53c@cslab.ece.ntua.gr>
+        Fri, 07 Mar 2025 14:43:20 -0800 (PST)
+Date: Fri, 7 Mar 2025 23:43:13 +0100
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	David Howells <dhowells@redhat.com>, Oleg Nesterov <oleg@redhat.com>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/pipe.c: simplify tmp_page handling
+Message-ID: <aznlwadluqn3hpkmoe5zhsrpsybsif5wagoouhmevjwndigado@k4lbztlu23wf>
+References: <20250307221004.1115255-1-linux@rasmusvillemoes.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,38 +73,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <dee238e365f3727ab16d6685e186c53c@cslab.ece.ntua.gr>
+In-Reply-To: <20250307221004.1115255-1-linux@rasmusvillemoes.dk>
 
-On Fri, Mar 07, 2025 at 03:11:09PM +0200, jimsiak wrote:
-> Hi,
+On Fri, Mar 07, 2025 at 11:10:04PM +0100, Rasmus Villemoes wrote:
+> Assigning the newly allocated page to pipe->tmp_page, only to
+> unconditionally clear ->tmp_page a little later, seems somewhat odd.
 > 
-> From my side, I managed to avoid the freezing of processes with the
-> following change in function userfaultfd_release() in file fs/userfaultfd.c
-> (https://elixir.bootlin.com/linux/v5.13/source/fs/userfaultfd.c#L842):
+> It made sense prior to commit a194dfe6e6f6 ("pipe: Rearrange sequence
+> in pipe_write() to preallocate slot"), when a user copy was done
+> between the allocation and the buf->page = page assignment, and a
+> failure there would then just leave the pipe's one-element page cache
+> populated. Now, the same purpose is served by the page being inserted
+> as a size-0 buffer, and the next write attempting to merge with that
+> buffer.
 > 
-> I moved the following command from line 851:
-> WRITE_ONCE(ctx->released, true);
-> (https://elixir.bootlin.com/linux/v5.13/source/fs/userfaultfd.c#L851)
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  fs/pipe.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> to line 905, that is exactly before the functions returns 0.
-> 
-> That simple workaround worked for my use case but I am far from sure that is
-> a correct/sufficient fix for the problem at hand.
+> diff --git a/fs/pipe.c b/fs/pipe.c
+> index 4d0799e4e719..097400cce241 100644
+> --- a/fs/pipe.c
+> +++ b/fs/pipe.c
+> @@ -508,13 +508,14 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+>  			struct page *page = pipe->tmp_page;
+>  			int copied;
+>  
+> -			if (!page) {
+> +			if (page) {
+> +				pipe->tmp_page = NULL;
+> +			} else {
+>  				page = alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
+>  				if (unlikely(!page)) {
+>  					ret = ret ? : -ENOMEM;
+>  					break;
+>  				}
+> -				pipe->tmp_page = page;
+>  			}
+>  
+>  			/* Allocate a slot in the ring in advance and attach an
+> @@ -534,7 +535,6 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+>  				buf->flags = PIPE_BUF_FLAG_PACKET;
+>  			else
+>  				buf->flags = PIPE_BUF_FLAG_CAN_MERGE;
+> -			pipe->tmp_page = NULL;
+>  
+>  			copied = copy_page_from_iter(page, 0, PAGE_SIZE, from);
+>  			if (unlikely(copied < PAGE_SIZE && iov_iter_count(from))) {
 
-Updating the field after userfaultfd_ctx_put() might mean UAF, afaict.
+This bit got reworked in https://lore.kernel.org/all/20250303230409.452687-3-mjguzik@gmail.com/
 
-Maybe it's possible to remove ctx->released but only rely on the mmap write
-lock.  However that'll need some closer look and more thoughts.
-
-To me, the more straightforward way to fix it is to use the patch I
-mentioned in the other email:
-
-https://lore.kernel.org/all/ZLmT3BfcmltfFvbq@x1n/
-
-Or does it mean it didn't work at all?
-
-Thanks,
-
--- 
-Peter Xu
-
+I see it is in -next, merged from https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=vfs-6.15.pipe
