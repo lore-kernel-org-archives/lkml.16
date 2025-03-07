@@ -1,111 +1,160 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524FD21B9C1
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 11:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C055121C162;
+	Fri,  7 Mar 2025 11:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741346551; cv=none; b=SWInv5ovS4f6klGaJG1qFU29hIoVOidMEVDhv2+c359QKldW2Xx47DGmNVc+/yn4tA2uvAYx30wdCZp3GRzJF2ljtDdXK4nRoTqk/PMnJ25/gv4laZa5DvmJOjx2dAGkiGZKutnmCPJ2aT7aKNb+WfSsYxCxglhjnrlT9ZhxF0g=
+	t=1741346551; cv=none; b=q2cfiipGyJSjvdOCR6I+KPpnYVIwglDFYQJi4o4PLr4jGMatHeMkAz3EFfNgezoKSR+WB2N4Ce1WwMpRssDpq2xEYJYBz3u82OUEGf6jtQ/mK7KTVbpH8iNxGxHePLu/FflJmd8A8yyatTyEJlOsk6BZ5pU6PtXXmv5vdf3mqbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741346551; c=relaxed/simple;
-	bh=retfJEUproaIVtJ0aph8p5peNEwjzc8GVxcXOdXFmYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yg5FaMYtr6uuvJKDxfHKECsEQ3cJQJPLVQSyUxn6F4y6oVjRokj9U9AMdJzUb0+5Hb9jIfBwH06ESyH4aNbn4ExIRTHr9QRtgqvazkgIRx9f+/25I6gkXzAN9gT4SFtjfB/9xkd3sYY1anIOdZxi8flIfi2cOavdly81H3YJnTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ETBkZftx; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=dESjuBg+hGumzNkeUlXxvAHei8rc1tEbxmLSYyE6cWE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Cwy+crEvdHJqz+kvzfmGfSn5qygflWHDiSLjtvYD0LZW/OqEBonTCQv8xLwCxg63yN+3GiuSFSskG7lkxZmfFIh/OZ7HHDaiQwmrjOsc3JiLdkcqmtx40LF+WSXvaovhr9GfMkPxPUF2zDV4DvdW3lJwHgKNrSYpfZ0upEr5nH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUKVNzSV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ETBkZftx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8EEB6204CF;
-	Fri,  7 Mar 2025 11:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741346542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NxndagyuSyQnITMEU+TwaPzjTPF9RLgN9Xn4fVO+J9w=;
-	b=ETBkZftxNSRbSCpnvNJLgZCm6uYH7wRURKZQ53twEq6VPZdqG0co4DxFgBVVPcF6BJlGvj
-	bk7PB5Df6DrUhFLDgeLxBLR7A3/ZVV2rPzXRI8TTS+NQ+wL+lzhwXSPIGQfcUzpPiSK+BU
-	s1cbWckhlm/xi9DsRcEhCXw40G/3A7vOfn3JHEhr+AE93+4yElMHjMAog7Vx+EsBHlWFrf
-	bee6DHHWKcluIZe0gOIvaEPcYo515jiyku5XJhHEWRxvZlZp++XDi3fzwQsuc/m12TqZp9
-	DeG189CBmwiN0m1y/nlP3+ZZMJ1AZi9cwnaUvr3L2+Sfu5MHaIycBDAVloJMzA==
-Date: Fri, 7 Mar 2025 12:22:17 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm/bridge: imx8qxp-ldb: cleanup return value
-Message-ID: <20250307122217.158b24d6@booty>
-In-Reply-To: <71c44221-b18b-4928-8faf-00893ec4a109@nxp.com>
-References: <20250306-drm-two-ldb-improvements-v1-0-f139d768b92c@bootlin.com>
-	<20250306-drm-two-ldb-improvements-v1-1-f139d768b92c@bootlin.com>
-	<71c44221-b18b-4928-8faf-00893ec4a109@nxp.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUKVNzSV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F7AC4CEE7;
+	Fri,  7 Mar 2025 11:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741346551;
+	bh=dESjuBg+hGumzNkeUlXxvAHei8rc1tEbxmLSYyE6cWE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YUKVNzSVcF8EwsUtMRgboHCivZJMnphrzMoaqEWtA7l9cdBQGSVMFlkFq7rxQ0Unx
+	 9b2z3/9zs/AGsSaWqKdGfm686OYwbkvGSR9yxM+wR6M3kkBYRqRL3ctlbe6U8wjSiS
+	 CnvnmkARfWtQ9Fie/UUhDsz9iKMzBiCbhgWpJEI69gkYVf/G35JU7y0xxVl8xddNDt
+	 ILPDycu5eG1LnRZnMWAQObCYC8FKQ8P7ksxOIvATdGpgTMJtjEixhSYdC56dxao9i6
+	 aPqnEAu8+yt8FkJcqkllT8WDmoJdZaaIpEn8A2XPdVqfzo9Uo3aPIZfONraVy9Ek+O
+	 roepkI6/RJz3g==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 07 Mar 2025 12:21:56 +0100
+Subject: [PATCH net-next 12/15] mptcp: pm: move generic helper at the top
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepvhhitghtohhrrdhlihhusehngihprdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrr
- hhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Message-Id: <20250307-net-next-mptcp-pm-reorg-v1-12-abef20ada03b@kernel.org>
+References: <20250307-net-next-mptcp-pm-reorg-v1-0-abef20ada03b@kernel.org>
+In-Reply-To: <20250307-net-next-mptcp-pm-reorg-v1-0-abef20ada03b@kernel.org>
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2894; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=dESjuBg+hGumzNkeUlXxvAHei8rc1tEbxmLSYyE6cWE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnytbR8OkY2tRzj/VubbFheoMgCev5sY/h0WkVq
+ C08cJSGQ8GJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8rW0QAKCRD2t4JPQmmg
+ c+kEEACzSU8v50e0KPrf2CsCHHR3SyxvIpRoed/6qcjdToV3gzmo4QIQw8YO1BG1cxTPMMEs1Vl
+ gX4+1521wbEo9t865tgr4/R16/2DdOOVsO/Ctppk5KIwktZYvQFt9XxfQ8RT3o//ugFRnJNEwgH
+ rcH4nY+6lKhMR8iFqWP6u9lD1uIt8uoRdDl86n3W5MB43mWEB76rVEP40zKbZuGaHZopa2097Va
+ c1DskFTyJ8x1BOndtW6cvospeFmt3lCQBU7mHxQIjn6mVPjiS/gRIgAETQuz3zS1bM1aE5jLw0+
+ 77C5vijdOkvTQQO085Zh3WlmEVW36GfFT+4GguQeVScntHmEMh652plwlu7hR/UUmMlcRg9vn56
+ p6E9/5hqYOMeouzEsjx5dQIx5zf2+2UtJ6dYNK8kIVsAoPocF3wf5ooGvnfYs5UO0YSfHR2BWoe
+ XQ6pOqeVaH96JttA3upnESIuCkc9zR6fVSwbYQCrA/qf+BQniiIR40PwEauPgwhk1VE9mnuPxpJ
+ 6ZBeK9XaC8rnYzBdDFU7bhUq6ftMuSEIx/5g2C2ZuEq6qwintNBUDKnFXp4llDeyjf+9wZxldt4
+ AS5KX9bmd4qVCS1kxzqCsDkJ2AKV0CZ3bZX5A/wCAlWI74ev2DKqjbxbXt3KYpkNvc8rFLkPCi/
+ EMuUjbdlFgm0wCQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello Liu,
+In prevision to another change importing all generic PM helpers from
+pm_netlink.c to there.
 
-On Fri, 7 Mar 2025 14:42:12 +0800
-Liu Ying <victor.liu@nxp.com> wrote:
+No behavioural changes intended.
 
-> On 03/07/2025, Luca Ceresoli wrote:
-> > 'ret' can only be 0 at this point, being preceded by a 'if (ret) return
-> > ret;'. So return 0 for clarity.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > ---
-> >  drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c b/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
-> > index 7bce2305d676714cdec7ce085cb53b25ce42f8e7..bee1c6002d5f84dc33b6d5dc123726703baa427e 100644
-> > --- a/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
-> > +++ b/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
-> > @@ -665,7 +665,7 @@ static int imx8qxp_ldb_probe(struct platform_device *pdev)
-> >  
-> >  	ldb_add_bridge_helper(ldb, &imx8qxp_ldb_bridge_funcs);
-> >  
-> > -	return ret;
-> > +	return 0;  
-> 
-> I guess this is not the only place across the kernel tree where this cleanup
-> could be done.  So, maybe use some tools to cleanup them all?
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/pm.c | 54 +++++++++++++++++++++++++++---------------------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-I had stumbled upon this as I was doing some changes to this function,
-and needed to understand the code flow. Definitely 'ret 0' would have
-made it  immediately clear that all the code between the last 'if (ret)
-return ret;' and the final 'return ret' is not allowed to fail.
-
-I think this change would (slightly, but still) improve future readers'
-life.
-
-Luca
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index ddf9d0dc6274535b7d061c0c3b3258ec7dc7576c..cd50c5a0c78e83acd469050e177d6ee551f20f61 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -12,6 +12,33 @@
+ #include "mib.h"
+ #include "mptcp_pm_gen.h"
+ 
++/* path manager helpers */
++
++/* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
++ * otherwise allow any matching local/remote pair
++ */
++bool mptcp_pm_addr_families_match(const struct sock *sk,
++				  const struct mptcp_addr_info *loc,
++				  const struct mptcp_addr_info *rem)
++{
++	bool mptcp_is_v4 = sk->sk_family == AF_INET;
++
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	bool loc_is_v4 = loc->family == AF_INET || ipv6_addr_v4mapped(&loc->addr6);
++	bool rem_is_v4 = rem->family == AF_INET || ipv6_addr_v4mapped(&rem->addr6);
++
++	if (mptcp_is_v4)
++		return loc_is_v4 && rem_is_v4;
++
++	if (ipv6_only_sock(sk))
++		return !loc_is_v4 && !rem_is_v4;
++
++	return loc_is_v4 == rem_is_v4;
++#else
++	return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
++#endif
++}
++
+ /* path manager command handlers */
+ 
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+@@ -325,8 +352,6 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+ 	}
+ }
+ 
+-/* path manager helpers */
+-
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 			      unsigned int opt_size, unsigned int remaining,
+ 			      struct mptcp_addr_info *addr, bool *echo,
+@@ -574,31 +599,6 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+ 	}
+ }
+ 
+-/* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
+- * otherwise allow any matching local/remote pair
+- */
+-bool mptcp_pm_addr_families_match(const struct sock *sk,
+-				  const struct mptcp_addr_info *loc,
+-				  const struct mptcp_addr_info *rem)
+-{
+-	bool mptcp_is_v4 = sk->sk_family == AF_INET;
+-
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	bool loc_is_v4 = loc->family == AF_INET || ipv6_addr_v4mapped(&loc->addr6);
+-	bool rem_is_v4 = rem->family == AF_INET || ipv6_addr_v4mapped(&rem->addr6);
+-
+-	if (mptcp_is_v4)
+-		return loc_is_v4 && rem_is_v4;
+-
+-	if (ipv6_only_sock(sk))
+-		return !loc_is_v4 && !rem_is_v4;
+-
+-	return loc_is_v4 == rem_is_v4;
+-#else
+-	return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
+-#endif
+-}
+-
+ void mptcp_pm_worker(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_data *pm = &msk->pm;
 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.48.1
+
