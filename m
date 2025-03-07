@@ -1,108 +1,76 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945211F94C;
-	Fri,  7 Mar 2025 22:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1727C20CCEA
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 22:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741387267; cv=none; b=UqhrlDGHChDB5hxhmYYV3El9ePodY3YzaORqIQTK8IpycTJTOZ0eGXZM4lsima8S+SKZei7CKG4VKLiK1iTVGUOibeTnACKWUFEFSgOZz8OLbLqWQ9DBqsGmaANPi8hAebu0d/M0QBjR3rDP5prmaDXUnV8M7TF0JB68uO8HnOw=
+	t=1741387324; cv=none; b=I2uWiO4YGWFxSdwOF0nd5DBBC6hcOQHdVThld5y0w0pTtRsje8sz06dNEQn8SahqDpL0AaLFV9hQFalbLSi8EJhcaJQE5+brokjRCiVz9b+wLbk13zeFONIpIbfEFBCprMlfCMF5cG4HRKhjCb/cONLs+IUGXhFB0lio2emQlgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741387267; c=relaxed/simple;
-	bh=x3cT5OzrNNP4NxJGS4WJPfkluOsb0nETns4u0Ojzlpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jKG11CFMzEmneAOylCctakWcEI/uinTyP0AGp93paQoRxZAIUts8uEW1GkDTy/WhtqGksUMSUImxjoa/X4NLB6EpqigNU8E2msi+ac9D3/aeaBc1z8eaKC4/eK4YjIlruddGycfynbjZrbwHne86F6yYpH1qE/JTzMsi8gNlyo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eh53VptK; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eh53VptK"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e095d47a25so4313868a12.0;
-        Fri, 07 Mar 2025 14:41:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741387264; x=1741992064; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ggo5IorXSw5yWeu+zzKighXyQFobt6Vs+8/ESBuOkA=;
-        b=eh53VptKVLTpj6ZMjrKy8V93Dfok2z+mDEDL27+eAhA9o11fmHQoufT8izE7JO3Jrg
-         6CueZBfTGE6a48+yhwDF4YP5jI3cS16WfYfFam/bYZym29LxjC5ydTHvLE3h0LnCSW+2
-         7n7by7fnulPdQWqp0LOtw21a2lfzUPQibNgzF2sFiFb/ITh8e732vjsPeXCa8Ohxya5q
-         1nJB8GLvhpvbg9e+ww2C59zpCGwzL/qvpmUXGMsnUsH1TmbPMz14bR6DOvwi8b7mdMZW
-         lJlhYpBFt5b2FHc5NrVFuFFwbVeWg9ky7pvi7rw5c+nKGD2Znb975Z4ZJFoh2IBLlvgB
-         mi8w==
+	s=arc-20240116; t=1741387324; c=relaxed/simple;
+	bh=FIE09kMTKcjOb6IpPw4BV0dkrJbXktb7sivz1hHqVoc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=s3U4D/4cg4tJtIBDBbDkUcBZT0anp0nrh4CV1H2WTVolVMqjpvYartqNiU+74VREXAkg1wkXaDtkvUE0zmTVLQRsGQ6z2MRWmoK6PDKRrAt0s+oKEEuM2aTJsjSmjnBehx6N/gz0daz6yj6R45h68gXTEy75tVHyASYbM8sOcW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b30c95536so14325739f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 14:42:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741387264; x=1741992064;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ggo5IorXSw5yWeu+zzKighXyQFobt6Vs+8/ESBuOkA=;
-        b=OwWfTY8Twg/PD6AucKKY1DJPlXSlRZg90Y8zJh6pUwstlcRnl1cIRSPs0FFkvOeLzz
-         UnHMOmCBEJrGEeOjK261WFYkMKFljXEMyKpbf+Z73vFsx+dqhjb1CuvD/NSEbhcLg9yU
-         NiE1ILMFy3O1mMQMrZsyeu6SFnAbyImsBix4eP4HG75HEOqKMVI7KvuES+3BPxEODvlr
-         E8GKLA29vAWqZxSpSINU8qKBlD84AkENjCrQd/GqtLPNpqIRNqlQwKMaMmt4U4UOV9i6
-         r6TvKET+bMm1sRcCIlZ0UPFIPXaG52SIZbVqZACEqiA/8RQgvEXZkoyrTiY5iutbZbjQ
-         SlyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUW4j6XFc3X70ha1TBU4dFk+xtZmFb4ZpSFnkWeER2soB5yJzZrugu/XTWE9Obhbz0rVsIhI3iS5cg6BslD@vger.kernel.org, AJvYcCV6oVj5y1k7SoEHwaH3b35jcqn4/PUQGpUQ8F2LJPxD4axwHNjnnZZlDpQc2QtSAc0u3th7heKrJNZW1czQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx56V65f8hCHmJPu1SEGK9KRTd6+nMGg5vdu37nU2ZrxQCVU0DG
-	cOSjQo8/pgC4aFC5HflBOAGLuiPzzYLWMjEh4YbggCt1EbNtg5K4
-X-Gm-Gg: ASbGncvCmIkqA58JazgTebIklkJ8hwyES8DUpBSgEK2x93xTu0nvqKZPUxvVSHMvPSn
-	sKUd4RC+/ZAWnkrQskRcEl3JITsbME8xt3pTe0DoulWgFMO37We4aVYhAYjHdKQT2JntBGWG+q7
-	M/ohlUVxd3xV90PqZOB7tuBi2+m9SRz2E6NZcWi+P/nEZCYSQDYWGRwxh6EwaFT1nINwWtobn7G
-	OXSmRgGWRUEhWuOV54Hky0geubqUy2sJ8cDpF8E9IfQvTSHwJahkyjsvUWbJ1JXaIEM0rOD3K7f
-	+DyytSz9pODtwVpo/FvoANA9sFmZH0aVwUUadZnE6KpUTBLgkFOkhjsx04Pf
-X-Google-Smtp-Source: AGHT+IEgPt0sdGguIjjOKmjAkc8jdDmho2fuLjnhwj0zTjlQi24P8aCxYbBIrezeb7UjaRYxX6sSkg==
-X-Received: by 2002:a17:907:9491:b0:abf:8f56:fe76 with SMTP id a640c23a62f3a-ac252b35ac0mr545698466b.25.1741387263600;
-        Fri, 07 Mar 2025 14:41:03 -0800 (PST)
-Received: from f (cst-prg-95-226.cust.vodafone.cz. [46.135.95.226])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239481685sm344141366b.58.2025.03.07.14.41.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 14:41:02 -0800 (PST)
-Date: Fri, 7 Mar 2025 23:40:54 +0100
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	David Howells <dhowells@redhat.com>, Oleg Nesterov <oleg@redhat.com>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/pipe.c: merge if statements with identical conditions
-Message-ID: <wkdxihiolxnzelu57llc7vealuofie3l42clbsn7tqjbvstxqp@a6d74rhrvcla>
-References: <20250307222500.1117662-1-linux@rasmusvillemoes.dk>
+        d=1e100.net; s=20230601; t=1741387322; x=1741992122;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Cha8nI3yHP4ekbqsmtiYifVX6bODFDBdxD8YqobpxI=;
+        b=pfiXbpUxZqLDq5oP8D2LSSKX4KagLWpILqs5MkHmVKxISYJnycdKLW8T2I7nzQli+9
+         V8qavlmw2knVEossj8u74+Wg5nfmctnaEcHNyTlMLlzpnXy/dqBNIio47aER+Tc4TRB1
+         /DLeK+5fEIy1uyxEfrPaiO4lod5RfRqEqSDZ6dLD5m5PTPYalB4WKIOJ4FU7nOqaidTR
+         O5Q8mLBaqiIXVk/o9ib4kX2HPkVz/Q7VZ+ZZET2ORD+gvwcCLTpGsplthNRIffCkhXD2
+         2/TR3lSQij6x4p4ZmolUZ+Q/KX/vJvEkKm3/DRKkowN1SzSPBKzg7tJU67AkcqAXsdXK
+         TehA==
+X-Forwarded-Encrypted: i=1; AJvYcCVohW1IkCqP2Wp+IryafimnKpM5jZdLrSHEBc9rFJGJ9Y9jC2+2L99RM/T/xrF0Yuc8KNKGxJ/Z64lh3l0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNHO6aH0KDp1EN8Bq77jNlfPIJC28gIllziuiddwbbmNzT3bbw
+	3t83/LEXuCogdtIuZQYyGR/TJVOYaUlanXemJRIQfz7ehP0UBcFTNx3eqt+LnsMkMhfnrsyihX9
+	Z5Wrknx4EpkwHAdGMGbl/j4WfJeclCd+GZ+uCYFtDXHO4cJ/GmOQXIaQ=
+X-Google-Smtp-Source: AGHT+IHyFZ5xCG7t++nhjLckAX5gJDHtCBeqTd5EYA9ucH+LjWpniikL2yxT2tKfXWWeuxxwxr6C24DgnBiZLBKHtcYesS7J6gZl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250307222500.1117662-1-linux@rasmusvillemoes.dk>
+X-Received: by 2002:a05:6e02:174b:b0:3d4:2a4e:1272 with SMTP id
+ e9e14a558f8ab-3d441a46c62mr66847485ab.19.1741387322248; Fri, 07 Mar 2025
+ 14:42:02 -0800 (PST)
+Date: Fri, 07 Mar 2025 14:42:02 -0800
+In-Reply-To: <67a4eae3.050a0220.65602.0001.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67cb763a.050a0220.d8275.0226.GAE@google.com>
+Subject: Re: [syzbot] [mm?] [bcachefs?] KASAN: slab-use-after-free Read in list_lru_del
+From: syzbot <syzbot+6663075ddb9be85fa6e5@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, hughd@google.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 07, 2025 at 11:25:00PM +0100, Rasmus Villemoes wrote:
-> As 'head' is not updated after head+1 is assigned to pipe->head, the
-> condition being tested here is exactly the same as in the big if
-> statement just above. Merge the two bodies.
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->  fs/pipe.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index 097400cce241..27385e3e5417 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -547,10 +547,8 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
->  
->  			if (!iov_iter_count(from))
->  				break;
-> -		}
-> -
-> -		if (!pipe_full(head, pipe->tail, pipe->max_usage))
->  			continue;
-> +		}
->  
->  		/* Wait for buffer space to become available. */
->  		if ((filp->f_flags & O_NONBLOCK) ||
+syzbot has bisected this issue to:
 
-I already posted this :)
+commit 14152654805256d760315ec24e414363bfa19a06
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Mon Nov 25 05:21:27 2024 +0000
 
-It is hanging out in the vfs trees (and -next), see
-https://lore.kernel.org/linux-fsdevel/20250303230409.452687-2-mjguzik@gmail.com/
+    bcachefs: Bad btree roots are now autofix
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=108d43a8580000
+start commit:   03d38806a902 Merge tag 'thermal-6.14-rc5' of git://git.ker..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=128d43a8580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=148d43a8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
+dashboard link: https://syzkaller.appspot.com/bug?extid=6663075ddb9be85fa6e5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=104d2864580000
+
+Reported-by: syzbot+6663075ddb9be85fa6e5@syzkaller.appspotmail.com
+Fixes: 141526548052 ("bcachefs: Bad btree roots are now autofix")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
