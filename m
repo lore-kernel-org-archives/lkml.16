@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA412512E1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D352512DB
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 19:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741374898; cv=none; b=Rw/6aoMoxR3Zuaw+mQ8DEG+MOKFassgY0Wqo3ePhEJh3gGsw9sFO5tcz8/4Lgu2QTRUtihqL/RxTllKpPNF+I2P/SkR/vwRHwhwH8zd8BVxamdPpPHV+SEye9puAenIKNGk3nYidiAK1zUxGjozG4ntTgmNzNMGBdjtobe0R1r0=
+	t=1741374898; cv=none; b=BieGgVk/dkV4Wiy2YtrO7GaBQvw8Y8Efl69besQF/UBGyRx/PkoK8M6JV+8DJxnLOQz069YdsuZJopQ4OyMFi2a0yITkGmhyyjCjgaJ/YFuHqfYspd8f9qa37y4bK9llOD836rxEj8iyyKoDIIV1+gBAqqTy4KjPlwGy0mxI/dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741374898; c=relaxed/simple;
-	bh=VNVwBUg9DLb/+TaZToRj4L6G17tMKOtxkr5IyNsYATU=;
+	bh=Oy1d1NtjIuq8rVPzyJSOrQ/KFfdLC18cbst4NO1Tvbg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L3Etp6a1sZQvaY8GOwyWQeTLdvTRTkdWQZTT/VxZdvopOEO7cDokrQ58SQh5bq/y9aWsqFU+URw1dWjAvxiHip7EzlVhMz9JkUQD8RdgsWF4hh0ms+Dy6NyO0dYDZLzDfj9pw7xeL18sKw63OBuiXPYlg+9XiNDw0ThKh0IyNjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DO8+upvK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ED+iWh4NM+JOtJiQHAXtJdZW001RhMNOryQw/OH5Y75+DZSZDNXt5pYMLjTZApBerxfyVwAvr0nYj35CNNWk4ZVoZoBSvBlWkubP5V5vXtkYkZMxAK8n6CeAE8523LJvGLS1Nb5suxaIpIgWTDkyT0yCjwiYRxvJpUYh6JTDCn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqY+jjLJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DO8+upvK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFC71C4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqY+jjLJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDEC7C4CEEF;
 	Fri,  7 Mar 2025 19:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741374897;
-	bh=VNVwBUg9DLb/+TaZToRj4L6G17tMKOtxkr5IyNsYATU=;
+	bh=Oy1d1NtjIuq8rVPzyJSOrQ/KFfdLC18cbst4NO1Tvbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DO8+upvKpdj1XjGnfL+q0bhszRi+bVr7lP3Q5GvjKOHK914PuHAsZ4NXRhR0vnFI8
-	 tHJtphCstCxvje8hr/q9PVVDmcvhPMCTdOzi7xhEZTce0rb5zSykVIQPOmUPbbZtS/
-	 JKcRvDBaZZueg6KR5V5D8c7CfBtuFESyy5Ut/jXHh5B8YONcIgkj5JXu6fxGNIsmyj
-	 Ej2MwwuPdDV85kuErOaeWOQooedwRfpvoflvV3nBBpN/qZnl1W1Xg6sh6Tce9Cla99
-	 plhu6FFrE7TTxhkaYxptO4d81Dt8hvQUTYBFjPGKbQmG2UvIV2yd6S0DFajxR+BxlS
-	 GPUemy/LD9AsQ==
+	b=JqY+jjLJBVi0eF1lChMfI/A8VGCYCoH6b68xFCSmP3HdMHo3foCHbkIzo4WMFKZtd
+	 H1R7o9LxX79Iwq5eptjv+/HY6ausbt4pKiQIrFXfYA4eQqakhMFL6fyxW8fB55se+L
+	 iSBvpYN18Yxu2dCxmp2RA5OpyoPKmFAcfGGFp4iw/ncXqKB77OfFeP+WK4+R1mhB7k
+	 nL+I4rKLVnAsJ/r8I1MxZwWrf8U4YKMGnpxEhGLBMWmoMeFzDUI7S1X8W5eqyTYbIB
+	 QL0bGomwKrFFgJzVNB5kHfAD9JzNY8MBEp/t8r0uejFvR4Wla8cdSsfAJV7udRGfnU
+	 VmyZSMUJ/uMtw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tqd9r-0000000BQmN-2xvP;
-	Fri, 07 Mar 2025 20:14:55 +0100
+	id 1tqd9r-0000000BQnB-4ApZ;
+	Fri, 07 Mar 2025 20:14:56 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
 	"Michael S . Tsirkin" <mst@redhat.com>
@@ -42,9 +42,9 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
 	Ani Sinha <anisinha@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 03/20] tests/acpi: virt: update HEST file with its current data
-Date: Fri,  7 Mar 2025 20:14:32 +0100
-Message-ID: <d8018aae7fb35b7f7882ff590676568fbf2fb2d6.1741374594.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v8 14/20] tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
+Date: Fri,  7 Mar 2025 20:14:43 +0100
+Message-ID: <c6076e020bc6ee896ea5451583b8b63d9bbaaf24.1741374594.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741374594.git.mchehab+huawei@kernel.org>
 References: <cover.1741374594.git.mchehab+huawei@kernel.org>
@@ -57,34 +57,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that HEST table is checked for aarch64, add the current
-firmware file.
+We'll be adding a new GED device for HEST GPIO notification and
+increasing the number of entries at the HEST table.
+
+Blocklist testing HEST and DSDT tables until such changes
+are completed.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Acked-by: Igor Mammedov <imammedo@redhat.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- tests/data/acpi/aarch64/virt/HEST           | Bin 0 -> 132 bytes
- tests/qtest/bios-tables-test-allowed-diff.h |   1 -
- 2 files changed, 1 deletion(-)
-
-diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
-index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..4c5d8c5b5da5b3241f93cd0839e94272bf6b1486 100644
-GIT binary patch
-literal 132
-zcmeZp4Gw8xU|?W;<mB({5v<@85#X$#prF9Wz`y`vgJ=-uVqjqS|DS;o#%Ew*U|?_n
-dk++-~7#J8hWI!Yi09DHYRr~Kh1c1x}0RY>66afGL
-
-literal 0
-HcmV?d00001
+ tests/qtest/bios-tables-test-allowed-diff.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index 39901c58d647..dfb8523c8bf4 100644
+index dfb8523c8bf4..0a1a26543ba2 100644
 --- a/tests/qtest/bios-tables-test-allowed-diff.h
 +++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1,2 +1 @@
+@@ -1 +1,7 @@
  /* List of comma-separated changed AML files to ignore */
--"tests/data/acpi/aarch64/virt/HEST",
++"tests/data/acpi/aarch64/virt/HEST",
++"tests/data/acpi/aarch64/virt/DSDT",
++"tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt",
++"tests/data/acpi/aarch64/virt/DSDT.memhp",
++"tests/data/acpi/aarch64/virt/DSDT.pxb",
++"tests/data/acpi/aarch64/virt/DSDT.topology",
 -- 
 2.48.1
 
