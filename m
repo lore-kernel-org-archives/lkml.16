@@ -1,85 +1,94 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4B520E00D;
-	Fri,  7 Mar 2025 13:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1D1219EAB
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741353976; cv=none; b=OCMQbFCtdDwDNurTi7uehEVBN8PvgD2V8nu5yN9rV18597YsNA1kyTbYxLgwMsSXQNjBa8nIA2FlrC9W14JPEBl8b8DZ3jUDdtoRjYzRjeOpxn/3hip0lB7CpjqGsq14T3pZ5CToH4ILGBSOQHmGxkuP3w2g0LfZQnHWMmzbFNw=
+	t=1741353981; cv=none; b=CJlJUocoZv7AReQmexF0q4c4ziuHJKc90rHNHpCAtE2bvPNzq46lF/0j8gLzp1O4fWVZZdIc4I89L72l//vs+yu93duXT7GnS/p2Wz8SrMdoxPOjXz6rBA4hSxLj1u+enpWiTj02lcBOlXamKQpJIcoDVSGB6AQmLW85/K5Isjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741353976; c=relaxed/simple;
-	bh=I1DgXJAugaRvo5oHawhY6fpJ1+WEdBWElcFLSX6rCKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EjqtwteRoH824yDY8ZahDkPAALQIHfAnm9svTbPpDT6qgPt5ujJnowfKgPL8OFOvpZXW586dkMdGRyPSHVd8TRr4K/Ku7mJ9PP3u9nkuMrsWcDq08vUdXTTdPKHeEht7o7ZFCHbi98H04n22p2WmAU+TftrkfJ1DIah4P82wa48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=JGPn4/aV; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1741353981; c=relaxed/simple;
+	bh=i/Nd47neKspIbrpCGTysdhYwJN/jpzlkct1vJ8I0ugw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Pyv05sSe7UGKXe3f2LuLXeBFafS/6umsxjNh11VM717cIa7HwnfPoC0Yq1/7vviokatBvBq9WPbCNV9+yrO1/Z7KlXJn9wdnUK+ORqjWp2o3Yedex3vzPIBzufByzpCHGkqgjDdY+qxsDsWht4oAlE0YswGf0lBSqeHUSXFmTbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lMDNUjQH; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JGPn4/aV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=1yXC3Xb/MwcJsrS6HKxPIosX6qAp8S61W2EzWPVkdLs=; b=JGPn4/aVIXPXE7o/ElfV+U26Co
-	UETfL8Rcs2Wq+/+AgkMbywLJM/iE9EIiTTj34gqwImUs3UE1zT/XZeEMzktenZwlNEvt1J4v4hOUT
-	AzI2q/m+ksf9wvg9aGH026Z0T1LP+nR46y9kMHn7QV3nq3rygJ2JVVOOkIZ3WG7w9Lv8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tqXiA-0039Aa-GR; Fri, 07 Mar 2025 14:25:58 +0100
-Date: Fri, 7 Mar 2025 14:25:58 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yao Zi <ziyao@disroot.org>,
-	linux-rockchip@lists.infradead.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] arm64: dts: rockchip: Enable Ethernet controller on
- Radxa E20C
-Message-ID: <c7fe0371-76bc-4cb4-ade8-e22112c1475d@lunn.ch>
-References: <20250306221402.1704196-1-jonas@kwiboo.se>
- <20250306221402.1704196-5-jonas@kwiboo.se>
- <e0e8fa5e-07a2-4f4f-80b9-ddb2332c27ea@lunn.ch>
- <cbd6d3ee-8ad1-443f-9506-e28240ffb09e@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lMDNUjQH"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43bd0586b86so13025975e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 05:26:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741353978; x=1741958778; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sK8tKr89R3hEy8Nz4X9L555xpgSDTxpTa0yPlA5H/0k=;
+        b=lMDNUjQH/kpEAmmjdYvFYDqkRbM1NIrQlcR5+e5MqHsQljPYfXE3MkRYx/ISzTy5+v
+         vmpWGlpyfdkKwZSlwO+CISTc/NcXSixYw5s9G8cU/BDH9a9toYOk2NxOQLXcGroP9sc0
+         fy/1bx/3cvjMD7X0dTMeM+0dnNsDPiP7XCwW8qv/1JfT0RTVj/MJ22sg71nBUM93V4sy
+         dxZfl2BRnDOyJTQW6RsZ4uxhZgqOJYpqIrfPVHVXh9LKpcbKOEa+7AaF2owx/l0ELvfd
+         pScMDbLPPO8XOCk0VF7/4x4EFsrqfX5Bk6RhyG1lLpFlMc9CW4LwDNvHBhE4tGjLC+mZ
+         e7uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741353978; x=1741958778;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sK8tKr89R3hEy8Nz4X9L555xpgSDTxpTa0yPlA5H/0k=;
+        b=qhOY/+Y2PfPkXcRIuvZ5aN6a76mGCNLEjR+xXvBVafFq1SJbvbtNTp40Ywdc1JDXru
+         pFWJOulxAqQlOAXpdvelIyKyR4onY2hvIqiy2wurQFJSQ+7psLn3LD7nV6hsjPgOdi2U
+         ijDaJCi6VN6DrGsB8GVVuZb04Qx7oM9Y2aSYRUfVa/ySMRnbMAGC/OO/MJMtoBCbMlPY
+         Kjf0SOMR1JSDCWFS4CN5+s4DTW+2Qe4lflYH2BkbFbpoSEeuFRvS5gNs/XZvgzaFBvfQ
+         c05PSU3NmPgLb+WXJ9Lj6KfUDzI9ET4ALCPPL7vppl64ra6/7IssuS8AHI7DvUvTiK/D
+         /IEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPVadnt4GsawC1n9ry+wDXBOeM/FqhubjaPeW/BjAEuRduxU+5EQPkyeWlnesHSCIxOYSyklDga7VKN0o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykE6w5CUapBhBT9VYu+HPt+gx3pA7hA3XAojsf9QpMGsDnI8OA
+	zar3UK5LZlLynD9zw1H5WFm40vnWMAxZtSNflS0gSPv/16/m7czPE8qT0ESpFKgyN91Jy8X5vsR
+	yfMQnmCOtGIPloA==
+X-Google-Smtp-Source: AGHT+IHD2hPdViwRHmZBv75Fs8RZCsKFOeBeHbYroGDlwM5dRIq4MeJ+VqXbFaA1Sy6Oi5WcvmL7+mxRBt3lsKs=
+X-Received: from wmbfl19.prod.google.com ([2002:a05:600c:b93:b0:43b:cfc3:aabb])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4750:b0:439:9828:c434 with SMTP id 5b1f17b1804b1-43c60ae9832mr21207035e9.20.1741353977854;
+ Fri, 07 Mar 2025 05:26:17 -0800 (PST)
+Date: Fri, 7 Mar 2025 13:26:14 +0000
+In-Reply-To: <20250307131401.638820-2-trintaeoitogc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbd6d3ee-8ad1-443f-9506-e28240ffb09e@kwiboo.se>
+Mime-Version: 1.0
+References: <20250307131401.638820-1-trintaeoitogc@gmail.com> <20250307131401.638820-2-trintaeoitogc@gmail.com>
+Message-ID: <Z8rz9nrY7Yj1Z2hP@google.com>
+Subject: Re: [PATCH V7 1/2] rust: module: change author to an array
+From: Alice Ryhl <aliceryhl@google.com>
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, apw@canonical.com, 
+	arnd@arndb.de, aswinunni01@gmail.com, axboe@kernel.dk, benno.lossin@proton.me, 
+	bhelgaas@google.com, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
+	dakr@kernel.org, dwaipayanray1@gmail.com, ethan.twardy@gmail.com, 
+	fujita.tomonori@gmail.com, gary@garyguo.net, gregkh@linuxfoundation.org, 
+	joe@perches.com, lukas.bulwahn@gmail.com, ojeda@kernel.org, 
+	pbonzini@redhat.com, tmgross@umich.edu, walmeida@microsoft.com, 
+	charmitro@posteo.net, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Mar 07, 2025 at 10:16:08AM +0100, Jonas Karlman wrote:
-> Hi Andrew,
+On Fri, Mar 07, 2025 at 10:14:00AM -0300, Guilherme Giacomo Simoes wrote:
+> In the module! macro, the author field is currently of type String.
+> Since modules can have multiple authors, this limitation prevents
+> specifying more than one.
+> Change the author field to Option<Vec<String>> to allow creating modules
+> with multiple authors. Additionally, rename the field from author to
+> authors to make it explicit that it can refer to multiple authors.  In
+> modules that use the author field, update its value to an array of
+> strings, and also rename it from author to authors.
 > 
-> On 2025-03-06 23:49, Andrew Lunn wrote:
-> >> +&mdio1 {
-> >> +	rgmii_phy: ethernet-phy@1 {
-> >> +		compatible = "ethernet-phy-ieee802.3-c22";
-> > 
-> > The compatible is not needed. That is the default.
-> 
-> Interesting, however I rather be explicit to not cause any issue for
-> U-Boot or any other user of the device trees beside Linux kernel.
+> Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Link: https://github.com/Rust-for-Linux/linux/issues/244
+> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
 
-O.K.  But any system using Linux .dts files should be happy with no
-compatible, since that is how the majority are. Because PHYs have ID
-registers, generally there is no need for a compatible. The only time
-you do need a compatible is:
+I believe I reviewed this on the previous version. Did you forget to
+pick up my tag, or did you change something in this patch that requires
+a re-review?
 
-* The ID registers are wrong
-* The ID registers cannot be read, chicken/egg problems the driver needs to solve
-* The Clause 22 address space is not implemented and you need to indicate C45
-  should be used to get the ID registers.
-
-None of this is specific to Linux.
-
-	Andrew
+Alice
