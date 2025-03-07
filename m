@@ -1,134 +1,254 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775DB241114;
-	Fri,  7 Mar 2025 17:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B0C23BD11
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741369398; cv=none; b=FeODeu2Jx5An6d21/vhozXvFAVHEpuNt5uSWHcMguJ+AKOsZ+tKC/ALJ5vQ1p1rJCUE1JRs4abgpZlZGM2rasI/ievCAX5bhJFkPkpsnRuqleBMtRj2QG2exOXvb9Uf2Y1yAVtvLjRRHZau2ITQ2aYZ3ouPwVeIsVhSb+ThOLSM=
+	t=1741369425; cv=none; b=Yyr0XqeRJ7vEZ1Gk7WjzOaJpFFh1RjJxIdj1Jz8yqL1p2uvY7QaqaUVhakH8w7/CcaFuwKUUHnxNQHscDicA6auG3jZdohtpdFK6KjbYhMjJe+E9iALXbp57Fvu525OTLmBeTG4RMFTg7fFrU+nsNcUcVHmyVeVHj88/OPAApf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741369398; c=relaxed/simple;
-	bh=Lw1nmb2v0Yj3bxOV+QZJBEEVt/+s6xuWrvoi0UoUrXM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LY9GrkJE+FGX/2u+FAYPuX93WxuT3TPdkUsaQ9C8zPHx5zF6DOBXfNFjymcYtleDPFLfZoMLw+NRPQxi8uY6zF2zHvU+JZ/TD2ZF7B3lfNcrNAP9pUjIOl7BG2f1qInL2hA3oZdSipwPFZ5xIlV8K2tD3mxnHrTyLiYpYQmm43c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kn4uxx+8; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741369425; c=relaxed/simple;
+	bh=60vohEiMEApZR4nLnfno/LrXHhbOoJAKQwBR7WhFeDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sBX38JnIfvyueDO0cziZvC+CJd8Jj8AZSZhI7sPEPj2VmxASAnPdsA0pJ2ORPFBukxVwfnyn8B5PQMBjwOdNrhMukNrcC+McXwQTOsMMW6GZ41Scp5TpvzZql5ZJ8f6yS50M6SPj3anShMzmgiLqKLCkfEHzS6u+XqYnEgcDouo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cpR9H4gD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kn4uxx+8"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-307325f2436so20985631fa.0;
-        Fri, 07 Mar 2025 09:43:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741369394; x=1741974194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xpmu3Gvgb/KEU4Sda/9nJtOsIbbAseer/tFW7MRAm30=;
-        b=kn4uxx+84EQrkr/KR5bEZw8T+d9RBZSQZZzRMuC4fx/HeiWyCy2naCmVlOzugal3vf
-         n70WkQCOF5pN3iVIhIyaLKJcQ4TqytqkJftDswhjDyAjnq7uyG0pL7gJo8Zs20Hl2jt1
-         /WW4u5kM4ZqGmAppK6Ev09D3E+bZW8JH4TlAiFB5K0nOiXFJrO72h+RqnQVnAeUtEesI
-         4CxIKpM3U1QdC0CXUqqzPdPIMPLUB/LUkLnbyPvoMu00U92BlMdHndMDBXUwD+n1wKkR
-         wBIxV0i7gr1Y389z2J9MgAyZBDjR7h6HNGdNUjq6EOBd7gXZV6GlubK0ZDYOiQZzHKhF
-         1y+Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cpR9H4gD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741369422;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ssD53hVxTYei45HA/qWDyDYoSrpwLT2aETtzN0PpbiY=;
+	b=cpR9H4gDXUqw0zIvb/ABrrDSPnjPgnajBJb7YZhkNbnPt2pvSQdY+FPwVU3gyQGz671bGy
+	4qTK9zA7tMvLToMC455a/BpHJS3hFvKuickzvH4Xyq6LaniVV9mcS2v5SkakWaVLVLNfpU
+	dK1MqIZsIwDTAdaTY0D6Ufri9m56+9w=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-475-koU54AjUMRWeheEK4kpNnA-1; Fri, 07 Mar 2025 12:43:38 -0500
+X-MC-Unique: koU54AjUMRWeheEK4kpNnA-1
+X-Mimecast-MFC-AGG-ID: koU54AjUMRWeheEK4kpNnA_1741369418
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39131f2bbe5so580626f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 09:43:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741369394; x=1741974194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xpmu3Gvgb/KEU4Sda/9nJtOsIbbAseer/tFW7MRAm30=;
-        b=aWxByVppdc51Ve/Xt1iIljG9iFTN8yG0MW8iBv+xMVhYaI7o7GpwUi9pGxu97qcDbs
-         hcTh/gxBAY8JgA3RtfVzzrhNP2b52cRvfeRg2m2UTvIx2zUy78p/IGWvBjrtiGdH6oFl
-         lFPLOQV6Fa7sWKcmjUVHnq9zU0Io6I1flHV+8ws9pI6NSuE6DDrfnIaCDhlzDnFBmDPt
-         bJamWtpJf04JyAlMRH198JyGhlfjRbv76zJY/f8n8jkSWiQzigrghh0Ejm5iVCGcDoWn
-         Fj9PNtAq1QfHWYWhoc9AZ+RQyFRz7OBhHGLG8MtFa/3LPSKxIXvAY4bdHzSn5Ua88bp9
-         pgSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeon+w1GcLHSCzNdSlg6GJaT0YYYTdBWuu0bTILEYOzYX6b9zNCNBUiRweMmBZc0jedHkoMnBfRJAlT8TjbmhL@vger.kernel.org, AJvYcCUoZNh1/GyhIostk2ITA0LoBwlKUm0pqtqaDMyYfKDb8RXQj35I3mvt0Iwm2EIAp+9cVtLj/sH3t7wjSVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCNw+kYX8w+wMWzkYsdMMlAM0IMEhwbGQYGmf8kxwwstEQciaT
-	6yePOXaAP+ZD7CU0z+S09QTlv8ldE7OanIRhtuSdsruy/WjrcPMIbJdKnEMNY4pULn5Vwvf0Eb6
-	c8ebAeoC2Z9ZnP6x9PhO25fcMdJU=
-X-Gm-Gg: ASbGnctsfT4dw/w+DVdrO86KvveYJFsYXZrpl8IhI9nh6FHbSoakbcn86VU4jyG8acs
-	vgM1XRlDqJZdrKXaFBJC4xGD1Z5BA9KK3ja3Y2kEtGOT0ai7sbp41XCG3ViypP6rCpJRPYvMbAa
-	LfxKfIhnzE2du4PNGYNYqmNvNZ6ec5Nv6+Grt79deX/KNp9dh4690Zt5ytJbUv
-X-Google-Smtp-Source: AGHT+IGNE+s/WfCFPmFb4azPDrp6Ep6m4DzvtThcdQnGQ8oYJv4In1m3Li/HSQtD0h1GwQ0dx6rOpSPlli/LEIWCFUk=
-X-Received: by 2002:a05:651c:19a4:b0:30b:abe6:4bb0 with SMTP id
- 38308e7fff4ca-30bf451abf5mr17878641fa.13.1741369394123; Fri, 07 Mar 2025
- 09:43:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741369417; x=1741974217;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ssD53hVxTYei45HA/qWDyDYoSrpwLT2aETtzN0PpbiY=;
+        b=OZtMpZbWa6OvvfpFPZqFMufsGWRjOxVyVfJjdRuUGY6tiIO4CkQBNXBQfshPqD+mZ9
+         QTeio1e7YEZnymBH1phWlt11HGL1nNB1ZoTBztnyhf6h9zoEbiT3e6Eaw6Adk8Kgzrvg
+         PV4zCPK8q9M72dl7yufKq4/avqq8nfIiYcnJu3PU+pT9y9jx9HODmuwMuYhvzF7zSAoS
+         pVQ/jwGJgSBrOMR8q9186dE4V2Eo1ehAiqSdn/PP2TnDOZXhvZ2wUfPoZzklrKMWsxLP
+         HHKSTYmtTVSUj+qr1VKuqRK19LZ5AbbjIWlSYBL7BV9xirMEriRXyNw+Z9NnaOJY3ql0
+         xyJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVNVuyExKkuVw60AD7j+R/5LZkWUhdTDQ9F8EsZVYFqdVQ/cmYJ0Jh4C0PMimxOjKHB45mqwK5kbaItv0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/0Pu0oCRD7ubAiowKrPAhTyE78cexxK4jnoBO36alaJBGV2oC
+	iwYYWd7xqYltl48TfoRwbE0OQoPnxDL/D809tQYrOEXDc3QL5jzQef0WuvXJLy1lGj132zZG3rl
+	eBB3b/fm6Z0FoX3zDKhoV9Tsn0wA3aKmXprYuizK/FUBHPWCxtSJiwEdyi9wASA==
+X-Gm-Gg: ASbGncu8yOc+MaDszDjV7BpiaZ7EQjC0hqhagkXP56Kic1pnulvOUBYSnbULIGyqcah
+	rniTShmBitaKnISQQSXjuX60OW7mM4atBmHQabk1UTxH7/tHaVi98e4U23DpTZ/A7B2KxCKPQcz
+	0UucJOlrljtldPKnDIOFnM6DbD4fM3BU+AHjT5tpjTEanlU+2MA0P4em5k+/I7keyQMV7hZ8/Ec
+	U07v/8XQ193agB9+mXx547+zpPKbsbGO26bf9Y6mgdTMZBZPqvDEEUvZ7hs1FVta98Xsk+iAKoG
+	3DP1xvtLiKy/Rv4o8juhbfdkRCdOHhGjpfp1WDNQ04al2XicNK4HfHS2J4R+EE+OSwMLQ8Dt1nJ
+	HXswVwGpaJJKKvR9Exmo+AUD8jQZIZdT8V7ue5Q==
+X-Received: by 2002:a05:6000:18a3:b0:391:2e19:9ab with SMTP id ffacd0b85a97d-39132da8e5dmr2428199f8f.47.1741369417619;
+        Fri, 07 Mar 2025 09:43:37 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGltnvAubGl1bA54vpc9cRsNvD8yx49qAt0cTcAw9YyB1BLXfs2F8swCZL5LZ0PFPmKZTZsHg==
+X-Received: by 2002:a05:6000:18a3:b0:391:2e19:9ab with SMTP id ffacd0b85a97d-39132da8e5dmr2428184f8f.47.1741369417165;
+        Fri, 07 Mar 2025 09:43:37 -0800 (PST)
+Received: from ?IPV6:2003:cb:c721:7400:ab0b:9ceb:d2:6a17? (p200300cbc7217400ab0b9ceb00d26a17.dip0.t-ipconnect.de. [2003:cb:c721:7400:ab0b:9ceb:d2:6a17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfddcsm6079481f8f.35.2025.03.07.09.43.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 09:43:35 -0800 (PST)
+Message-ID: <ba694acd-07b7-4f28-828a-19bf4c803ca0@redhat.com>
+Date: Fri, 7 Mar 2025 18:43:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-scanf-kunit-convert-v9-0-b98820fa39ff@gmail.com>
- <20250307-scanf-kunit-convert-v9-5-b98820fa39ff@gmail.com>
- <Z8suJdZsLYPYF34t@smile.fi.intel.com> <Z8svbdT779qxfXuk@smile.fi.intel.com>
-In-Reply-To: <Z8svbdT779qxfXuk@smile.fi.intel.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 7 Mar 2025 12:42:35 -0500
-X-Gm-Features: AQ5f1Jp7RU2gmPYms0G_AXDCTB9f6fphgxlud1fG4O9DYc1x04owURciYIdEq5s
-Message-ID: <CAJ-ks9=QPkYX1HN6g1g=_F+a2B5+NHyE-ybtVaveK4JvtgFhVQ@mail.gmail.com>
-Subject: Re: [PATCH v9 5/6] scanf: tidy header `#include`s
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm/madvise: Always set ptes via arch helpers
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Oscar Salvador <osalvador@suse.de>
+References: <20250307123307.262298-1-ryan.roberts@arm.com>
+ <dbdeb4d7-f7b9-4b10-ada3-c2d37e915f6d@lucifer.local>
+ <03997253-0717-4ecb-8ac8-4a7ba49481a3@arm.com>
+ <3653c47f-f21a-493e-bcc4-956b99b6c501@lucifer.local>
+ <2308a4d0-273e-4cf8-9c9f-3008c42b6d18@arm.com>
+ <d9cd67d7-f322-4131-a080-f7db9bf0f1fc@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <d9cd67d7-f322-4131-a080-f7db9bf0f1fc@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 7, 2025 at 12:40=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Mar 07, 2025 at 07:34:29PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 07, 2025 at 06:27:38AM -0500, Tamir Duberstein wrote:
->
-> ...
->
-> > >  #include <kunit/test.h>
-> >
-> > + array_size.h
-> >
-> > >  #include <linux/bitops.h>
->
-> > + bug.h // BUILD_BUG_ON()
->
-> Actually if it's only BUILD_BUG_ON(), then we better use build_bug.h.
->
-> > + errno.h // actually asm/errno.h, but in C code the linux/* will suffi=
-ce
-> >
-> > > -#include <linux/kernel.h>
-> >
-> > This was used like a "proxy" header to a lot, see around.
-> >
-> > >  #include <linux/module.h>
-> > >  #include <linux/overflow.h>
-> > >  #include <linux/prandom.h>
-> > >  #include <linux/slab.h>
-> > > -#include <linux/string.h>
-> > > +#include <linux/sprintf.h>
-> >
-> > + types.h // u32, __scanf, ...
->
-> ...
->
-> > Note,the above I made based on the context of your changes, I haven't c=
-hecked
-> > the resulting file in full, please do it yourself.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+>> It's certainly not read-only in general. Just having a quick look to verify, the
+>> very first callback I landed on was clear_refs_pte_range(), which implements
+>> .pmd_entry to clear the softdirty and access flags from a leaf pmd or from all
+>> the child ptes.
+> 
+> Yup sorry I misspoke, working some long hours atm so forgive me :) what I meant
+> to say is that we either read or modify existing.
+> 
+> And yes users do do potentially crazy things and yada yada.
+> 
+> David and I have spoken quite a few times about implementing generic page
+> table code that could help abstract a lot of things, and it feels like this
+> logic could all be rejigged in some fashion as to prevent the kind of
+> 'everybody does their own handler' logic.q
 
-If it's easier to take this series without this patch, please do so --
-my tools aren't giving me any help with IWYU and I'm not familiar
-enough with the kernel to do a thorough manual job. As this is not
-core to the goals of this series, I'd prefer not to hold it up over
-it.
+Oscar is currently prototyping a new pt walker that will batch entries 
+(e.g., folio ranges, pte none ares), and not use indirect calls. The 
+primary focus will will read-traversal, but nothing speaks against 
+modifications (likely helpers for installing pte_none()->marker could be 
+handy, and just creating page tables if we hit pmd_none() etc.).
 
-Thanks.
+Not sure yet how many use cases we can cover with the initial approach. 
+But the idea is to start with something that works for many cases, to 
+then gradually improve it.
 
-Tamir
+
+> 
+> I guess I felt it was more _dangerous_ as you are establishing _new_
+> mappings here, with the page tables being constructed for you up to the PTE
+> level.
+> 
+> And wanted to 'lock things down' somewhat.
+> 
+> But indeed, all this cries out for a need for a more generalised, robust
+> interface that handles some of what the downstream users of this are doing.
+> 
+>>
+>>>
+>>> When setting things are a little different, I'd rather not open up things to a
+>>> user being able to do *whatever*, but rather limit to the smallest scope
+>>> possible for installing the PTE.
+>>
+>> Understandable, but personally I think it will lead to potential misunderstandings:
+>>
+>>   - it will get copy/pasted as an example of how to set a pte (which is wrong;
+>> you have to use set_pte_at()/set_ptes()). There is currently only a single other
+>> case of direct dereferencing a pte to set it (in write_protect_page()).
+> 
+> Yeah, at least renaming the param could help, as 'ptep' implies you really
+> do have a pointer to the page table entry.
+> 
+> If we didn't return an error we could just return the PTE value or
+> something... hm.
+> 
+>>
+>>   - new users of .install_pte may assume (like I did) that the passed in ptep is
+>> pointing to the pgtable and they will manipulate it with arch helpers. arm64
+>> arch helpers all assume they are only ever passed pointers into pgtable memory.
+>> It will end horribly if that is not the case.
+> 
+> It will end very horribly indeed :P or perhaps with more of a fizzle than
+> anticipated...
+
+Yes, I'm hoping we can avoid new users with the old api ... :)
+
+> 
+>>
+>>>
+>>> And also of course, it allows us to _mandate_ that set_pte_at() is used so we do
+>>> the right thing re: arches :)
+>>>
+>>> I could have named the parameter better though, in guard_install_pte_entry()
+>>> would be better to have called it 'new_pte' or something.
+>>
+>> I'd suggest at least describing this in the documentation in pagewalk.h. Or
+>> better yet, you could make the pte the return value for the function. Then it is
+>> clear because you have no pointer. You'd lose the error code but the only user
+>> of this currently can't fail anyway.
+> 
+> Haha and here you make the same point I did above... great minds :)
+> 
+> I mean yeah returning a pte would make it clearer what you're doing, but
+> then it makes it different from every other callback... but this already is
+> different :)
+> 
+> I do very much want the ability to return an error value to stop the walk
+> (if you return >0 you can indicate to caller that a non-error stop occurred
+> for instance, something I use on the reading side).
+> 
+> But we do need to improve this one way or another, at the very least the
+> documentation/comments.
+> 
+> David - any thoughts?
+
+Maybe document "don't use this until we have something better" :D
+
+
+> 
+> I'm not necessarily against just making this consitent, but I like this
+> property of us controlling what happens instead of just giving a pointer
+> into the page table - the principle of exposing the least possible.
+> 
+> ANWYAY, I will add to my ever expanding whiteboard TODO list [literally the
+> only todo that work for me] to look at this, will definitely improve docs
+> at very least.
+
+Maybe we can talk at LSF/MM about this. I assume Oscar might be 
+partially covering that in his hugetlb talk.
+
+-- 
+Cheers,
+
+David / dhildenb
+
