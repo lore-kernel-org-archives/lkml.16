@@ -1,65 +1,25 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C96821A427
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEE63EBE;
+	Fri,  7 Mar 2025 13:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741354893; cv=none; b=S7sWjVQAHJfdcbjzY9hQKSqRCowxAoy/UqRz9qiMWWY/+mTL2n2ioDMVIB0mI5bc7fsEIJCTp6SWJYnDHjrG6qA2pKKSexXMSWHY2Ha1MnMuKlsx2WOA4H4rYLc5pU1rTn7w7GYOfrV2QPZuwmfv1E/dX10HBXk7/7FeOTqeW5w=
+	t=1741354939; cv=none; b=soz9DbUTswpVxzAz+1CjRrmbk3VUWrgIj1ovyBOF1rAraFlQT3ule556XCd0osHS0K7kJYzl7vPGTr69r1zsGbJkbewC4to1T+SajUdK8IxYJDab8+yky6bcd9bN6keu5VY2SeJyPYrj14R+PC+fV8brruJrcGrv4rvoIw/ESUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741354893; c=relaxed/simple;
-	bh=PHpi5XvyBqc7RYjd0LNOqS4ffTkxrcCU6DJ5Q+d7Jhk=;
+	s=arc-20240116; t=1741354939; c=relaxed/simple;
+	bh=Q81dlDq1ruIEwRIRX5DraIRa9T4BWccpcCxweDZRP9c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vDUciCCpWdIBh55sfKOS6oitKrngioYRZx6hxLHhRLsR0l4dfhZ8UGaQ6l630+rvHMS2s6MfZhTeqpIwtDzdbcvDLVL+dxYKBmAX7va9zgIeVoz8IYc4x6EHsC7TShfu2SbnJfh5RmGDa9ktpRKCg92SvwbavSdOIxXPlN1yLaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jwjdlpw8; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jwjdlpw8"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bbb440520so21153405e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 05:41:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741354890; x=1741959690; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wnpq90gndb3rdffDLSBDxvMtInTzFta2IqlE4IcQ4L8=;
-        b=Jwjdlpw8SjVy1qcU7SyalcLvmMK8PkSzjUFBc1u49TDrTrPdF5SXLDV2Hovi0H0Afe
-         L/n27LEQY50aiXlfE9N+PXCAnqa7U1qSP1ZYb3wioAEFhBitiZh3LjuCKlKyFuHjV+JI
-         6xV+LPxJUXrETQ8dfVXLuoSp9q1TC7DKzxp+SnbN9fS2HgSvgnno2pX3vxw6K3kg5t2l
-         LEMxo8mL7IEyWcLU3uWUk1Ow4xbIDsolxRlHuTd8sO/xP1OAcl4/76aD+Da4aNgYaRr0
-         Vy3u4SHTmF71weuNnCXP5vh4QO9y9kNuBb3k74jXk0s5E/+icl0bZSTgTPRwB4rOJ7s8
-         tYKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741354890; x=1741959690;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wnpq90gndb3rdffDLSBDxvMtInTzFta2IqlE4IcQ4L8=;
-        b=Hm5dx7C4gp5LaYqa550VZ40yT0vcRdqQB43Jzi6xcSj/kYdG8n+lHoIMzopdWRwDlu
-         G8Ua1FVmeZo7qKLJqFDWVJANoQSXJu2h3OuZqiWxg0rq/uOCNUoYCbFPGnTMcOrSa1aP
-         hvYX3g8WD9lKG4EfzesT3HzescjpKjkALzCjwhgE25Mk8hgbRZgbAhLrQnK7mqIFtzJl
-         zu8+w9iTjKnya5hYV3X/ncf7+vIzVEQvhA5xTsvT/5MakKRfBhh/pEpeoc9mfi/j4BOU
-         kHNKKN8ySfVEPfiQ/6CTkkkw2z8V54x104BDrBueFkXWygAANZcNU8wHaGUMPNRs2Wrw
-         kvCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVimgtBMM2JXJo8hZphwtxf+sQlhGhTZheLV3T/b7AFwIif0WnSp7lJkZwZB7EYIJw7UAvI4279TLRpIR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCNnhZGgSWOpD/Q4VdphVHkykk1avyrgxcnFoT/vUTtWzaYWDK
-	UdvJT0y4gFTXfqVQc2Y53bmcxfP47vK0U7rLagsMsDlyEZ0FoKltwYV/Oz2QEfA=
-X-Gm-Gg: ASbGncsW2WpFyto4+7exXAZu5vzWcouYzqlyi4gi2lplH05Qhapkk01KyL+T4h8ZJ6O
-	i/sQYgQn/l1M5l4qmPh9sXuQPakD++ip7Y1LRW4pNg/2ylqxRFuJ4wINlOivq8kguNLodxzHxqB
-	CA4xUSwavSprugYql0rxrBaqodxZECaJQvkhDcupy+YJ/XY1tfjDt/aOibSLvlBvI9z/n00GKOJ
-	IgCRIT5Ny+VCDsCpjbVWxpySGT/1kGT/VrIoocVQNsZc7JyW+FIrByBFI2whij9tKFHxa29WyX+
-	3FIgyDIlAipe0MZLdOogXBylVxmJxlJk7vB5/S2ByWdSoTJPz+8NgbzQiID+Qep0ilP9q5IOWeB
-	PnrvkRZn2
-X-Google-Smtp-Source: AGHT+IG/uWf+UVgof5cubqjmo0ExDC6v6Ne493gTgOgXTmGEXD7gtw3zrQaW4WAMMzpMlDe7ybkJHQ==
-X-Received: by 2002:a05:600c:524d:b0:439:86fb:7325 with SMTP id 5b1f17b1804b1-43c60231b64mr34423495e9.31.1741354890121;
-        Fri, 07 Mar 2025 05:41:30 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43bd4293250sm80876855e9.16.2025.03.07.05.41.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 05:41:29 -0800 (PST)
-Message-ID: <21ea3de4-ca42-4576-a4ec-b89b3e2a2ac9@linaro.org>
-Date: Fri, 7 Mar 2025 14:41:29 +0100
+	 In-Reply-To:Content-Type; b=huA1tSi8JYEfCqRzlMI8RXHAoPRTGmHUYLDavfW7ThSyOFnjBJSJwsWbnQ4J6G4R1Sz22azsu5xNR1GBWMXYmgUVw7IMRh8Uu239LId4ODNDlq/sRdFuyvmtmmTusCRVf5n5GdtUXXelL5lfM+EOXQ6u0aS+km4oZ9UupknB1Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 831931477;
+	Fri,  7 Mar 2025 05:42:28 -0800 (PST)
+Received: from [10.57.84.99] (unknown [10.57.84.99])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F17883F66E;
+	Fri,  7 Mar 2025 05:42:14 -0800 (PST)
+Message-ID: <03997253-0717-4ecb-8ac8-4a7ba49481a3@arm.com>
+Date: Fri, 7 Mar 2025 13:42:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,59 +27,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clocksource: timer-sp804: Fix read_current_timer() issue
- when clock source is not registered
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- stephen eta zhou <stephen.eta.zhou@outlook.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <BYAPR12MB3205C9C87EB560CA0CC4984BD5FB2@BYAPR12MB3205.namprd12.prod.outlook.com>
- <198fe423-e797-4a82-a509-ee06ca05466e@linaro.org>
- <e6cda34e-f363-4fae-897f-f4deb7c6bddc@kernel.org>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <e6cda34e-f363-4fae-897f-f4deb7c6bddc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v1] mm/madvise: Always set ptes via arch helpers
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250307123307.262298-1-ryan.roberts@arm.com>
+ <dbdeb4d7-f7b9-4b10-ada3-c2d37e915f6d@lucifer.local>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <dbdeb4d7-f7b9-4b10-ada3-c2d37e915f6d@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-Hi Krzysztof,
-
-On 07/03/2025 12:17, Krzysztof Kozlowski wrote:
-> On 07/03/2025 09:10, Daniel Lezcano wrote:
+On 07/03/2025 13:04, Lorenzo Stoakes wrote:
+> On Fri, Mar 07, 2025 at 12:33:06PM +0000, Ryan Roberts wrote:
+>> Instead of writing a pte directly into the table, use the set_pte_at()
+>> helper, which gives the arch visibility of the change.
 >>
->> Hi Stephen,
+>> In this instance we are guaranteed that the pte was originally none and
+>> is being modified to a not-present pte, so there was unlikely to be a
+>> bug in practice (at least not on arm64). But it's bad practice to write
+>> the page table memory directly without arch involvement.
 >>
->> thanks for the proposed fix
+>> Cc: <stable@vger.kernel.org>
+>> Fixes: 662df3e5c376 ("mm: madvise: implement lightweight guard page mechanism")
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  mm/madvise.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> On 21/02/2025 04:46, stephen eta zhou wrote:
->>> Hi daniel
->>>
->>> While debugging on the vexpress-v2p-ca9 platform, I discovered that the read_current_timer API wasn't functioning correctly. The issue was that the SP804 driver lacked ARM32 support and did not register read_current_timer. To add ARM32 compatibility, I’ve submitted this patch. Without it, using SP804 as the timer on ARM32 causes issues with boot_init_stack_canary when inserting the canary value into the interrupt stack, and also affects entropy generation and collection, resulting in incorrect rdseed values.
+>> diff --git a/mm/madvise.c b/mm/madvise.c
+>> index 388dc289b5d1..6170f4acc14f 100644
+>> --- a/mm/madvise.c
+>> +++ b/mm/madvise.c
+>> @@ -1101,7 +1101,7 @@ static int guard_install_set_pte(unsigned long addr, unsigned long next,
+>>  	unsigned long *nr_pages = (unsigned long *)walk->private;
 >>
->> It is better to put that information in the changelog and provide a
->> fixed format of the patch description.
-> Daniel,
+>>  	/* Simply install a PTE marker, this causes segfault on access. */
+>> -	*ptep = make_pte_marker(PTE_MARKER_GUARD);
+>> +	set_pte_at(walk->mm, addr, ptep, make_pte_marker(PTE_MARKER_GUARD));
 > 
-> In case you actually consider applying this - some of the patches or
-> their descriptions were generated by sort of AI tools, thus approach
-> with caution.
+> I agree with you, but I think perhaps the arg name here is misleading :) If
+> you look at mm/pagewalk.c and specifically, in walk_pte_range_inner():
 > 
-> It was already pointed out that patches might be a garbage output of AI.
-> Also they were not tested, even though what is claimed here "debugging
-> on ...".
+> 		if (ops->install_pte && pte_none(ptep_get(pte))) {
+> 			pte_t new_pte;
+> 
+> 			err = ops->install_pte(addr, addr + PAGE_SIZE, &new_pte,
+> 					       walk);
+> 			if (err)
+> 				break;
+> 
+> 			set_pte_at(walk->mm, addr, pte, new_pte);
+> 
+> 			...
+> 		}
+> 
+> So the ptep being assigned here is a stack value, new_pte, which we simply
+> assign to, and _then_ the page walker code handles the set_pte_at() for us.
+> 
+> So we are indeed doing the right thing here, just in a different place :P
 
-Oh! Thanks for letting me know that, I appreciate
+Ahh my bad. In that case, please ignore the patch.
 
-I'll pay double attention to the patches.
+But out of interest, why are you doing it like this? I find it a bit confusing
+as all the other ops (e.g. pte_entry()) work directly on the pgtable's pte
+without the intermediate.
 
-Thanks
+Thanks,
+Ryan
 
-   -- Daniel
+> 
+>>  	(*nr_pages)++;
+>>
+>>  	return 0;
+>> --
+>> 2.43.0
+>>
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
