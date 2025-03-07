@@ -1,115 +1,186 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D081925AC;
-	Fri,  7 Mar 2025 11:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44402153CF;
+	Fri,  7 Mar 2025 11:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741345432; cv=none; b=T9WHr/7J0WrQFaluetJrcbpVTnDFIXwzWqbXDmYCSCJWlp59v0yCLSRVuq+IyNytzul2NcD9Lsra3MYafdbiG2LOLWltK+tzt1hWwX5h4oCBRHpSrTqvam7ewCgbtPoYZ3bhNFAWjji1+2GoP4vRkfc9x3RoJ4IJQ1cmsdChEPE=
+	t=1741345569; cv=none; b=bPJwXhCLW/4LFr3QHmVAvAyG8zlhu/StbVYjANbLtOhEzNNNIxYTl3p0s3YARirhgK+oazUFPa8vHwNqqTuxRmOq1pT+RYZ9tSQhN+Q49eYpe8Sa4TYItgJYuFI2Z8XGXm7C44222GbLDiyuulsPAhtK0J3+k25f5I6CdtYlEYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741345432; c=relaxed/simple;
-	bh=pzjFzK1eLmN7NkZe7es86B7QKp3hIAs0x8XnRYMwGpU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CbzB9UxJPmAGs2VfGOip/13GKK68s5rv4ccUHPugt1CwmlWkhn0M4gveAtP9C+F4RXiMpi56lQmyaqUAWAbSzyCR9tjSq+oZZjSkiqlNsHUNQHqKU+wK3sSBMXRjC5StzI6D3gnxkWl7+qBAjYpJpGAWqF2XxqP4wUQB03ux6ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GDFN9sxH; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1741345569; c=relaxed/simple;
+	bh=Y3c1xaFBNvjdfM7CmJTWCACE1BdwUW+rsUdX+Am+YJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fwg/SNtG4dU4/geQaK8C93YqdCIcA8Uobunvqd/Ap6M+GG/rKfPFK4TYnhTg1m/hRaenLoSqrVHFgFaeedyxftSmBOZcMxG4iou2anAjXA/x0H2Mebo9X+SUih2Fd7wD1RODb7Ljz27NXEXeZRD5iSZ2KOZkMqpM1rGTB3khJr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HMYohYSS; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDFN9sxH"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43bdc607c3fso10335285e9.3;
-        Fri, 07 Mar 2025 03:03:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMYohYSS"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30762598511so18881571fa.0;
+        Fri, 07 Mar 2025 03:06:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741345429; x=1741950229; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gpotCte8H4PC7hGvjJ+k1ZIol1Rkv0hHrJYEaQxCJ6Y=;
-        b=GDFN9sxHD363h0Urtv9PLpBTtgf7BRQl2vIncmcWHLlxK8eqUyOxGe05qO9IxINKjt
-         fKW8v3woffxBulBMgHm3ZYBvHJOq0iIU8swYt2SOQdCrJQ44i2dSHboV9bYU5p4gQdnO
-         rhvAxgV1PXtMsKlvRCdyrN4tUDhwpzY3k/w3ucySdb57M9PvfxBJIpR/SmQe9RKjd0fl
-         H5Y7nuXsbkNJeSmnYF72GidDo8gilGTA8LkNWsGLm9X/M+8yFaM5Bof13kC3JLUUGt+5
-         O61qadkKEmUNszqrYMTUc0Z1gA5ofiG8+dxmyZOMh/W8NoSP4jb3sgXV3QkhmbiY63jS
-         rGlQ==
+        d=gmail.com; s=20230601; t=1741345566; x=1741950366; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O6/lu0PuWFwtxqE9OCkmTvscVopIwEhxKjBzyZRwrA0=;
+        b=HMYohYSSWHqMj0SMltkJrErWrnFvG+tK9EGInYbARqMFCMjNtrugxCOBcNj0JVPUaW
+         k+5MZoEZzwArbpb9jfHC2gJzRJeZ0NwsdvebtNhpGzKijNTr2n6GB/Hf5CDqa7c8D+Im
+         PdVPfywh8z3avYp3YIfDkU8Gemou1ktiVjAuqOA+P+J5s0ezLPE4qFgi96Ah6gMov/+9
+         bzCYMnV5yAJqfln5iaRXoiAxzww115UiDj5aeiqflrU04ppCu5C17U8vOaJnK61DpvBX
+         uZ8vkcV01fU5gToJ8RVJmVZqIhNJm89LuzYFXjpuK9J5KnLaFUgpzd1y1n82Z1VKVAhr
+         phRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741345429; x=1741950229;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gpotCte8H4PC7hGvjJ+k1ZIol1Rkv0hHrJYEaQxCJ6Y=;
-        b=R8gYi9lDyM8H1HQ823GqbseR6l6Hyh4rsZHPjSHl51fZPxL0M64vwnrpJGq2QNxxPE
-         pYktV3wY8Zp4p0LjCl9XXwHIJw0JfFhwy2yR7OrfsQGqJbIJrS7MZPLpBiDIKLM3mojT
-         J7gsq1w09LaoGm+EhbTwKm9G+aRlhfQmiy1be5oRpFH6xyp/TAvqjlxI8yfSrXP3yxby
-         AqnmJgMOLcVYUHk5hRxg5XOI1SRlyvjkeVWZUjjXm4FMWmJG61R267dyoVY6V6iOGMh/
-         z3mcIjkIwY2YlhBUM948epXtk3Mr/0Z9QO8IiDLJ/ABsXHxFqTuVGF1g5N56WP7csAmW
-         GKfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIPlWFQVqgMbXFRX5KRn6gA5YRcA+s4jY4UsLFZ+sneJEsGMr6cLB8g0lZko9QJy7wGeb0+u1S@vger.kernel.org, AJvYcCXc3RBJ+yFRbzzJ9dL5p/TcFRs8xQX9xHgiCipoOjgJe55CHP3lZcHBt1XM76uFalIbBDzBht9i8wXRCIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWfOmq0BHQxaOrOE60oXJnqGUbCTYfbUHyCPNdHXyS0vq0o5Sa
-	HOcd0XlXtbexcsODE8LZBRJhwKjl840b8+cCGD+NUxVNI5Sd2n4=
-X-Gm-Gg: ASbGncsRJ8008uB0uakB7lgq6xTQkyc1gP+eQy/YRKcZpht/YREDoLqkCNSeAVM6xbc
-	jF6G6XTBnS0hFgIDuhkXEt7D3MOIzSaNjsm9Xxtqg0g/OWOGQ1iLm1dtyYLND2iPDav58PzjQCz
-	yKFJt1wAAQRbQHifGdAtQ5IoPpMZsB0oYJqpWjorrB7TtYKPmNReyRaf5OIWUCblIU36rZ8emfo
-	U9JlfNbthJCPShJcqp5kKoOtArByx3gQDYhBHhfAVVMvZF2SF1wgEfDr7p2RBROD5O5KfsvZsZI
-	1N5A5mfxKLESQiXpLQYEZDV7bdU635RDAbaV36RS88SM
-X-Google-Smtp-Source: AGHT+IEHSVkCVjCtHLyZDimSRoBR6Awi60yFRDLb8q1oMuE9nsLyv1iPrBcITJfvZYX/8JUJYfxlww==
-X-Received: by 2002:a05:600c:524d:b0:439:84ba:5773 with SMTP id 5b1f17b1804b1-43c6871c50fmr21332895e9.31.1741345428437;
-        Fri, 07 Mar 2025 03:03:48 -0800 (PST)
-Received: from phoenix.rocket.internal ([2a12:26c0:2101:6702::14])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e4065sm5074863f8f.62.2025.03.07.03.03.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 03:03:48 -0800 (PST)
-From: Rui Salvaterra <rsalvaterra@gmail.com>
-To: muhammad.husaini.zulkifli@intel.com,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com
-Cc: edumazet@google.com,
-	kuba@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Rui Salvaterra <rsalvaterra@gmail.com>
-Subject: [PATCH] igc: enable HW VLAN insertion/stripping by default
-Date: Fri,  7 Mar 2025 11:02:39 +0000
-Message-ID: <20250307110339.13788-1-rsalvaterra@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1741345566; x=1741950366;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O6/lu0PuWFwtxqE9OCkmTvscVopIwEhxKjBzyZRwrA0=;
+        b=OW0X8Dmh7pdr6QwEc33OVckGhfc7f5TB/sERQpIgCHMo78bDoj1WDnHinSlGfBX6e6
+         sd9JYZbFeSF3LGIu+NeFJpnFl6JW0HngHsgaM158tHUTGeFetXoEpx7w0EzaYq+8LnQ4
+         Sq496QYva9SOkxYE8Iu8EFi0GVEYnsBHGTS0QN7TmKBIhTio4jK1BgfjP0pN/lLEEFZF
+         ax0XLIOpdxn4W9Vo0bx0yFpXpFmroJoQiHwoFGvIgGKIg5kSIMrtVMPzDWiCBxApH61l
+         lHyXaie6bqv2LIH/L3/K70Of4B3lztcrIcWxBCKgD6J85n2j05BVq6rSCqTeYDQN6PiV
+         j2+w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+E8TUkcix6dR4WbE7osfweJ1kr8iwpSEp/WhL9xf6ydyAnOmId7h/Ta9IwZGXd0pSovaeA7RRdTighjctXA4=@vger.kernel.org, AJvYcCXyja1wxpsUetYMCXjr0jJdixnEm17SX7uBM5/HsHF0JmdEbbcRSABgTjbmLC15Uw22cnY3mpqUmkEhxzM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuSrNfitjEkOHmewMH29GD2qGYR9v2MltPqbYew0bzhnPV/j8d
+	bQLZQWlU+SbO/AEGI2ePkTWwvonOdAm8hQ8PUwOaETMHrgPskzbV0kyQJ0dt19MJy2e4tUqlIF4
+	qoFXVLf4BAt9c5/At49+o115XS0k=
+X-Gm-Gg: ASbGncs1EUSO3c2iibF1VTO1tnI/vWjKtR2JYebqAxVK+jA1d2FTCsX45wo/sVN4I+4
+	/FYfoBfaITC/vmTtolCI4F/ObwcNw/Ma1kBWofyolYqKiu0r01NDTupakJJc7qAl7c80zpZcLoy
+	+XfQnkmS6G0Yp1k1s9NJCxd/2zrYg51BSrQTvsfneWI6SQTdy0aP+3xhNtKHVV
+X-Google-Smtp-Source: AGHT+IFJxg6rADFBRb55qm7qbREgXVMaA/SWCf0d9xcf6hqoz84f8DFI7T6UPF89zZo8LKwCp15hSsTp6xYmokxzlDc=
+X-Received: by 2002:a2e:be9f:0:b0:30b:ba06:b6f9 with SMTP id
+ 38308e7fff4ca-30bf463b68fmr9089911fa.26.1741345565293; Fri, 07 Mar 2025
+ 03:06:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <6-mv8ahCblqal1f_T1RcVPPPb6QEedsAXlhmcyCNC-lnvAj1USOInn0YNogItuEdy_KthnPdFDElN1F6A9ncwA==@protonmail.internalid>
+ <20250210-rust-analyzer-macros-core-dep-v3-1-45eb4836f218@gmail.com> <874j055csy.fsf@kernel.org>
+In-Reply-To: <874j055csy.fsf@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 7 Mar 2025 06:05:29 -0500
+X-Gm-Features: AQ5f1Jr6-m0eAV9GPSpncHM1zoCrIjknINxPjzXii3DP0sMK3uIQjcf4Vr7NWp8
+Message-ID: <CAJ-ks9mofNbtGqoYBummkfxZ+zrmEHg5P6viVwwgs9-BuNGbZg@mail.gmail.com>
+Subject: Re: [PATCH v3] scripts: generate_rust_analyzer.py: add missing macros deps
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Boris-Chengbiao Zhou <bobo1239@web.de>, Fiona Behrens <me@kloenk.dev>, 
+	Kees Cook <kees@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chayim Refael Friedman <chayimfr@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is enabled by default in other Intel drivers I've checked (e1000, e1000e,
-iavf, igb and ice). Fixes an out-of-the-box performance issue when running
-OpenWrt on typical mini-PCs with igc-supported Ethernet controllers and 802.1Q
-VLAN configurations, as ethtool isn't part of the default packages and sane
-defaults are expected.
+On Fri, Mar 7, 2025 at 5:57=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+> "Tamir Duberstein" <tamird@gmail.com> writes:
+>
+> > The macros crate has depended on std and proc_macro since its
+> > introduction in commit 1fbde52bde73 ("rust: add `macros` crate"). These
+> > dependencies were omitted from commit 8c4555ccc55c ("scripts: add
+> > `generate_rust_analyzer.py`") resulting in missing go-to-definition and
+> > autocomplete, and false-positive warnings emitted from rust-analyzer
+> > such as:
+> >
+> >   [{
+> >       "resource": "/Users/tamird/src/linux/rust/macros/module.rs",
+> >       "owner": "_generated_diagnostic_collection_name_#1",
+> >       "code": {
+> >               "value": "non_snake_case",
+> >               "target": {
+> >                       "$mid": 1,
+> >                       "path": "/rustc/",
+> >                       "scheme": "https",
+> >                       "authority": "doc.rust-lang.org",
+> >                       "query": "search=3Dnon_snake_case"
+> >               }
+> >       },
+> >       "severity": 4,
+> >       "message": "Variable `None` should have snake_case name, e.g. `no=
+ne`",
+> >       "source": "rust-analyzer",
+> >       "startLineNumber": 123,
+> >       "startColumn": 17,
+> >       "endLineNumber": 123,
+> >       "endColumn": 21
+> >   }]
+> >
+> > Add the missing dependencies to improve the developer experience.
+> >
+> > Fixes: 8c4555ccc55c ("scripts: add `generate_rust_analyzer.py`")
+> > Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> > Suggested-by: Chayim Refael Friedman <chayimfr@gmail.com>
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> > Changes in v3:
+> > - Avoid shuffling compilter_builtins; it is not needed for RA support.
+> > - Align more closely with the long-term solution:
+> >   https://lore.kernel.org/all/20250209-rust-analyzer-host-v1-0-a2286a2a=
+2fa3@gmail.com/.
+> > - Link to v2: https://lore.kernel.org/r/20250209-rust-analyzer-macros-c=
+ore-dep-v2-1-897338344d16@gmail.com
+> >
+> > Changes in v2:
+> > - Change macros deps from [core] to [std, proc_macro], improving
+> >   autocomplete and go-to-definition.
+> > - Remove Wedson Almeida Filho <wedsonaf@google.com> from cc; email
+> >   bounced.
+> > - Link to v1: https://lore.kernel.org/r/20250209-rust-analyzer-macros-c=
+ore-dep-v1-1-5ebeb3eb60a9@gmail.com
+> > ---
+> >  scripts/generate_rust_analyzer.py | 30 +++++++++++++++++++++---------
+> >  1 file changed, 21 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_=
+analyzer.py
+> > index aa8ea1a4dbe5..1394baa5ee9e 100755
+> > --- a/scripts/generate_rust_analyzer.py
+> > +++ b/scripts/generate_rust_analyzer.py
+> > @@ -57,14 +57,26 @@ def generate_crates(srctree, objtree, sysroot_src, =
+external_src, cfgs):
+> >          crates_indexes[display_name] =3D len(crates)
+> >          crates.append(crate)
+> >
+> > -    # First, the ones in `rust/` since they are a bit special.
+> > -    append_crate(
+> > -        "core",
+> > -        sysroot_src / "core" / "src" / "lib.rs",
+> > -        [],
+> > -        cfg=3Dcrates_cfgs.get("core", []),
+> > -        is_workspace_member=3DFalse,
+> > -    )
+> > +    def append_sysroot_crate(
+> > +        display_name,
+> > +        deps,
+> > +        cfg=3D[],
+> > +    ):
+> > +        return append_crate(
+>
+> Why the `return` here?
 
-In my specific case, with an Intel N100-based machine with four I226-V Ethernet
-controllers, my upload performance increased from under 30 Mb/s to the expected
-~1 Gb/s.
+It's in anticipation of this follow up patch
 
-Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
----
+https://lore.kernel.org/all/20250209-rust-analyzer-host-v1-2-a2286a2a2fa3@g=
+mail.com/
 
-This patch cost me two afternoons of network debugging, last weekend. Is there
-any plausible reason why VLAN acceleration wasn't enabled by default for this
-driver, specifically?
+where the return value is used to identify the crate. I developed the
+two in parallel so I added this return to reduce overall churn.
 
- drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+> Otherwise looks good to me.
+>
+> I never had any errors as described above, but I can confirm that go to
+> definition in `macros` for items in `proc_macro` work with this patch
+> applied. It does not work prior to applying the patch.
+>
+>
+> Tested-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 84307bb7313e..6fef763239bc 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -7049,6 +7049,9 @@ static int igc_probe(struct pci_dev *pdev,
- 	netdev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
- 			       NETDEV_XDP_ACT_XSK_ZEROCOPY;
- 
-+	/* enable hardware VLAN insertion/stripping by default */
-+	netdev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
-+
- 	/* MTU range: 68 - 9216 */
- 	netdev->min_mtu = ETH_MIN_MTU;
- 	netdev->max_mtu = MAX_STD_JUMBO_FRAME_SIZE;
--- 
-2.48.1
-
+Thanks!
