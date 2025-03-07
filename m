@@ -1,127 +1,130 @@
-Received: from forward202b.mail.yandex.net (forward202b.mail.yandex.net [178.154.239.155])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76F11922EF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.155
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741358499; cv=none; b=VMGjWCqkpD1cB4bQ1a03/HN5Tu5ds42UQe2B/bMMxeDJ2n5aGB1sF1NislyXHAiQYJw1RPfYOOYDpYUo383oc8cdSupyJsjTQA5ILp/Xg4imL0alhe+E1oqU5shIjDBfQhFSdghjxZbIpBpPYMSWrpaZTeTmonnxY9Q1Lxshzmg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741358499; c=relaxed/simple;
-	bh=9/YOTw+hwlAppabGdlW1lcCBKvn6z3aahdbUZH9TUDI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HrMTkyJeNke1SI/PWeGb0scTAKTGv5RTQjJNYonRcg9TEV7yF73urld2EZECdkHRjWncaeEIj+A6nqVq6b2/szU6lZxVQZDSgu3huCTlSuvHFaxs/n/ITxa3XUx3BWJWqpuajVzPPoX5Kof8+sF/7CaDuM71Qi3cVvnpDTjzgJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Z02gXctY; arc=none smtp.client-ip=178.154.239.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9A51922EF
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741358601; cv=pass; b=lc6vyGQYkBoE1JHGWOknZi+opYOkqbg91h7RBmuM1o4vo3zt7PuWSdt8UqVvEKmOXOLLZJsKqMi/NYj3PX7HZ/c57u4iHGEDOUocovZRfl/8bJ9STNcZ1A6en7xHd/wxHOwdiRTeSPwE83C7SP6hzbEG/2RJw/xcI12vhUt0xwg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741358601; c=relaxed/simple;
+	bh=UArpH/BQ2txTNingrYF0M4Aw/62qn9SCtGfpxaY+toU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Se0gtrX/AeYWwVl5J/TDzvFEz8SMM4oxjXRDXlIecUBk0r3eMXEck+QBtfHsQGzrlo2pyKwUNCkQuqjvucS34+M151sADiTGyJTGO0bA7BCoQ97RVFUJbPz4OcP5Ktc2fjhfwzQsbw2zm4biIGmI2pG54qINUgcSyaQo5MOeyIM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=H5qbbPjt; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Z02gXctY"
-Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
-	by forward202b.mail.yandex.net (Yandex) with ESMTPS id AA1E564D5A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:35:16 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1e:3990:0:640:808c:0])
-	by forward102b.mail.yandex.net (Yandex) with ESMTPS id BFF3060D8C;
-	Fri,  7 Mar 2025 17:35:08 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 0ZnwD2MLoSw0-vZ61V53i;
-	Fri, 07 Mar 2025 17:35:08 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1741358108; bh=8GeJNa6VgiFIh/C+Y/1mk9oen77NnBJDUbFFTfIyHuE=;
-	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=Z02gXctYbnuUHb0I7qaIZ4qtq9rEp9swVGI3+DiBUfZ+nlwb6jQr4EG36XSF1HEDz
-	 wOXNy+5hoD0bz0Az19LccEKlnjELGv4OxD7k0N7d3TlRI4CS6kWrlyKokOqD5OeFV0
-	 vPvGR75YFOrZhAI1wQneBAkF3H0NB5A0FyqSwBmE=
-Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Andrey Tsygunka <aitsygunka@yandex.ru>
-To: markus.elfring@web.de
-Cc: aitsygunka@yandex.ru,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH v2] misc: sram: Fix NULL pointer dereference in sram_probe
-Date: Fri,  7 Mar 2025 17:34:42 +0300
-Message-Id: <20250307143442.4125844-1-aitsygunka@yandex.ru>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <84969aba-67ba-4990-9065-6b55ce26ff92@web.de>
-References: <84969aba-67ba-4990-9065-6b55ce26ff92@web.de>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="H5qbbPjt"
+ARC-Seal: i=1; a=rsa-sha256; t=1741358583; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=H2fVjMOkffjiXvmG9xCg+vJ5+D2gXdLKyb+3nVIx0w7Y8oc/NQA+Npd4YdcAU2cjvYW9oayBTFAzGg6zemDQU+AbbTVcJM5UIGt/LwDUTVBifVBC08l3do0L9gw6S9P/Op5wFeiCpQvcsCOA3yZdjOXaRlpxqMmAaJMxHrrJcIw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1741358583; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CdJvEDvfRKKZ2s8djvWjkSeJlfVd33yZekSI5wpoUVk=; 
+	b=Dz090sNog6EqHV8IaoNTUYJKv0JBoUOGmWYUmzITILdLgQLtzf4dbVz6hnrBnuzfZePfFWi+Uv/cDKvL7APjWgB5Egx7eb+Ck7rgZXu01yCBZnV/i9rdXOPZ7BBxm/zQGgudDy9uhMnMsGZScrckNFGm0RH5SeerOgewitqRuUY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741358583;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=CdJvEDvfRKKZ2s8djvWjkSeJlfVd33yZekSI5wpoUVk=;
+	b=H5qbbPjtjkWxP1tT0TTm2M2feba/uGdT1fZWNQK3uC1iJMkfsdR3R3R6dY24QyF2
+	vl5lPEZiHaum/w20nvD7KzwRC2aFM0WJOueqKR+hhdp9IMIw+S8FNxSOm9zOU1KxkXe
+	4Tc7WB4wPQn483lML/NIH98xhfcmeBWwnsk0ILcU=
+Received: by mx.zohomail.com with SMTPS id 1741358581890942.2723624374091;
+	Fri, 7 Mar 2025 06:43:01 -0800 (PST)
+Message-ID: <46456505-0267-4274-a8e4-35c6ece420e5@collabora.com>
+Date: Fri, 7 Mar 2025 11:42:56 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/4] drm/panfrost: Support ARM_64_LPAE_S1 page table
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ robh@kernel.org, steven.price@arm.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch
+References: <20250226183043.140773-1-ariel.dalessandro@collabora.com>
+ <20250226183043.140773-4-ariel.dalessandro@collabora.com>
+ <20250227093030.1a45b4b7@collabora.com>
+Content-Language: en-US
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+In-Reply-To: <20250227093030.1a45b4b7@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Add a check for the return value from platform_get_resource() call
-to be NULL.
+Boris,
 
-If the passed device-tree contains a node for sram-device
-without a specified '<reg>' property value, for example:
+On 2/27/25 5:30 AM, Boris Brezillon wrote:
+> On Wed, 26 Feb 2025 15:30:42 -0300
+> Ariel D'Alessandro <ariel.dalessandro@collabora.com> wrote:
+> 
+>> Bifrost MMUs support AArch64 4kB granule specification. However,
+>> panfrost only enables MMU in legacy mode, despite the presence of the
+>> HW_FEATURE_AARCH64_MMU feature flag.
+>>
+>> This commit adds support to use page tables according to AArch64 4kB
+>> granule specification. This feature is enabled conditionally based on
+>> the GPU model's HW_FEATURE_AARCH64_MMU feature flag.
+>>
+>> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+>> ---
+>>   drivers/gpu/drm/panfrost/panfrost_device.h |   1 +
+>>   drivers/gpu/drm/panfrost/panfrost_mmu.c    | 118 +++++++++++++++++----
+>>   drivers/gpu/drm/panfrost/panfrost_regs.h   |  29 +++++
+>>   3 files changed, 128 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+>> index cffcb0ac7c11..dea252f43c58 100644
+>> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+>> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+>> @@ -153,6 +153,7 @@ struct panfrost_device {
+>>   };
+>>   
+>>   struct panfrost_mmu {
+>> +	void (*enable)(struct panfrost_device *pfdev, struct panfrost_mmu *mmu);
+> 
+> The enable sequence is the same, it's just the transtab, memattr and
+> transcfg values that differ depending on the format, so let's prepare
+> them at panfrost_mmu init time, and cache them here.
 
-    sram: sram@5c0000000 {
-        compatible = "nvidia,tegra186-sysram";
-    };
+Agreed. AFAICS, this would be:
 
-and the of_device_id[] '.data' element contains a sram_config*
-with '.map_only_reserved = true' property, we get the error:
+Add the following to struct panfrost_mmu:
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.1.96 #1
-Hardware name: linux,dummy-virt (DT)
-Call trace:
-  sram_probe+0x134/0xd30
-  platform_probe+0x94/0x130
-  really_probe+0x124/0x580
-  __driver_probe_device+0xd0/0x1f0
-  driver_probe_device+0x50/0x1c0
-  __device_attach_driver+0x140/0x220
-  bus_for_each_drv+0xbc/0x130
-  __device_attach+0xec/0x2c0
-  device_initial_probe+0x24/0x40
-  bus_probe_device+0xd8/0xe0
-  device_add+0x67c/0xc80
-  of_device_add+0x58/0x80
-  of_platform_device_create_pdata+0xd0/0x1b0
-  of_platform_bus_create+0x27c/0x6f0
-  of_platform_populate+0xac/0x1d0
-  of_platform_default_populate_init+0x10c/0x130
-  do_one_initcall+0xdc/0x510
-  kernel_init_freeable+0x43c/0x4d8
-  kernel_init+0x2c/0x1e0
-  ret_from_fork+0x10/0x20
+struct {
+	u64 transtab;
+	u64 memattr;
+	u64 transcfg;
+} cfg;
 
-Fixes: 444b0111f3bc ("misc: sram: use devm_platform_ioremap_resource_wc()")
-Signed-off-by: Andrey Tsygunka <aitsygunka@yandex.ru>
----
-v2: Description changed based on comments from Markus Elfring 
-at https://lore.kernel.org/linux-kernel/84969aba-67ba-4990-9065-6b55ce26ff92@web.de/,
-added tag 'Fixes', removed useless information from backtrace.
+and have it initialized in panfrost_mmu_ctx_create().
 
- drivers/misc/sram.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+For consistency, we should do this for both modes MALI_LPAE and 
+AARCH64_4K. As for the MALI_LPAE case, I'd move out the initialization 
+done in drivers/iommu/io-pgtable-arm.c for:
 
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index e5069882457e..c8ba8ebd4364 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -410,8 +410,13 @@ static int sram_probe(struct platform_device *pdev)
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
- 
--	ret = sram_reserve_regions(sram,
--			platform_get_resource(pdev, IORESOURCE_MEM, 0));
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (unlikely(res == NULL)) {
-+		dev_err(&pdev->dev, "invalid resource\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = sram_reserve_regions(sram, res);
- 	if (ret)
- 		return ret;
- 
+struct {
+	u64     transtab;
+	u64     memattr;
+} arm_mali_lpae_cfg;
+
+I'll send a proposal for this in the next patchset v1.
+
+Thanks!
+
 -- 
-2.25.1
+Ariel D'Alessandro
+Software Engineer
+
+Collabora Ltd.
+Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
+Registered in England & Wales, no. 5513718
 
