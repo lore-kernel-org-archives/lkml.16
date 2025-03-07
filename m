@@ -1,175 +1,137 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A290C634EC
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 10:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86392634EC
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 10:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741344085; cv=none; b=hNhYkefn0E1mhc6CxKeNbAyzL6HKxvkZlDdttR9ajnLt4LSY26ZdiPJYZei3V9O+5xYS7i4dlZcq96t8gjJIrCQFjgSEwSyb6z0iy3DHRRGGGNRN15WBwJmRms+oUbidSipDPfMW4yUL0vrPM+A6DJVjOIpQQytREOv7URCEBAA=
+	t=1741344145; cv=none; b=ISEEWhCYZpptymXaSIKJ23IEqWQJ+lWz6VS+KmkmuAgh1jtQx3BM5JJv3G8pl3EX25rWsK2YAHL3WUxqPV1Jhjwt2mmtVyI3KpARXncWjAprpTBw4fLCNuhi1vsjvagv/LxVMOpwfK4CNbiB0/8INV5YSl3WLb7XipPuDtqO0a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741344085; c=relaxed/simple;
-	bh=LU1zHWsQdlRuJry/0Hz32hq5J7fCvpPq6TF7F8LRdAY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ac++J8WRFUIhKGFqB/PvX/3fRY7eSubWlzFdKNtuVOGif26Kusoi4wpK4VhO2Td0+m5F/OqIrsHiuR+jLtmEkASA5SVIkPRcP+yVmyRAYwkSSi+8+RwxEzb363+Xs1rjgdrPQ4+fuKSTSqgJmVjtqAPENpD9Ajl5b2v7BR+DfMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Z8Mq84pBLz17NhM;
-	Fri,  7 Mar 2025 18:24:52 +0800 (CST)
-Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id A4DCC1402CA;
-	Fri,  7 Mar 2025 18:24:18 +0800 (CST)
-Received: from localhost.huawei.com (10.169.71.169) by
- kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 7 Mar 2025 18:24:17 +0800
-From: Yongbang Shi <shiyongbang@huawei.com>
-To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>
-CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
-	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 drm-dp 5/9] drm/hisilicon/hibmc: Getting connector info and EDID by using AUX channel
-Date: Fri, 7 Mar 2025 18:16:36 +0800
-Message-ID: <20250307101640.4003229-6-shiyongbang@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250307101640.4003229-1-shiyongbang@huawei.com>
-References: <20250307101640.4003229-1-shiyongbang@huawei.com>
+	s=arc-20240116; t=1741344145; c=relaxed/simple;
+	bh=lsavoPaGmfl7xBe3eGeyegwuQTehNQkXPIt3HPhhJAw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nYU0Ra4BYBR/ozRgAi8ReUrpwndu/1cUqK/TYZfIAMVWY2aUb9EQcQPmHIQxPDypQm5ZSsuAPr5nyvZMnNKTUFt1UFyucW21WMAASY71difSrf24nKaZNMrWSAJZBlHVVrfIeQxHDK23KABBEAVZQPEQ9YQ8ULTvzAja/INWDz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AbrUSoQk; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AbrUSoQk"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6fcf90d09c6so14933677b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 02:42:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741344142; x=1741948942; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rT9XBL4gaIH5wTfFP7ZDqQbyPhjMUoycaEEEpfHomFE=;
+        b=AbrUSoQk6nhlWFqO4asokVbEHik6sxhxTXBMehcD48PPi+kiZ+QoMj89UqyX7uGJqn
+         rox/zaobznu8VGNUgQi8tX6lzq87JapVbrrWnYIpiUeq3DeNNmRy4rPbXtKk1stnx7/D
+         lhol3BWGiEoTAW8u+58noZaHj3mP5ogjQ6/orsrCyR44hr28qd+7ay6ZffuRBMGpkteN
+         TMrMU10f2+/CfUMCMQagngKpeN3BUixY3A6QIVGxvPOGNp4Ue6wJRJmZ9loaf8zPxQUo
+         jTI2Cy0+qzSTynAPbIDpXqrQt9A2XV9xF8LbItcFpCbjdlj0skD37bgLAhgUNK3ZyGKQ
+         fFAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741344142; x=1741948942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rT9XBL4gaIH5wTfFP7ZDqQbyPhjMUoycaEEEpfHomFE=;
+        b=WPFlWYmAB/qGdq/yUIiQSRbIaHbw6viBULQkWSAztRHQiiSTWBMZNZSAvsz8tkv+yI
+         B3HDXX0s+glAR8mNlhjy7PU1VtI8xQKskzN9g9sez4YOr4K1LxjwcHGxiDjzPKmHBRAh
+         GR3qFVL2iMv2ythujxwIMV+H8Ipog1GQXrDl3T+6M1TXUEB9oh9wn0JtYFBjFozi6ebk
+         x3+69PKgcrlzKM9dap0aM4jXiA8rzGgViSBm3uld7HmdvxmkhRfYPMF+c3S9+tgCHKB7
+         imRaC4uXtHcAks5aCtCaFP9J7GoinqfTnnCOBDwxGBEkVRGfbYrxHw6c9kzBTDPJRZwv
+         532A==
+X-Forwarded-Encrypted: i=1; AJvYcCULCWYNhKqiACubgBmqcYzf9nbOgK4BOcOxKO//k0h7lR41HsvRc4pGxTqx1fVs0QQlnd22t4oTUFNk1DE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzns+GyCeLvh1ezsz0SfwOG8uhAi9Hvfaj/esmzyKAP/oGTb85l
+	F2yC4kFSI8/WK+z5LGLBd0S/3lMRznS0RNvTwkrhrpJZ1l2MFU7P2yK5y4m6oFerO/QhT6MyFKc
+	hnYYvnANVDb+AYwEpIijL1OkwbX4tOFAT0JF7Ag==
+X-Gm-Gg: ASbGncvto+NiK+rPmDIS53QvGKqtxKtNBggs5laqbOyNrW6d+6Z6fAv9AsfgQh9xhHb
+	WXT88zHg8uIhXPSty4Oj4qq+gC5QTcbAeuEjaYR1o1alRFwt0d9fDNAKkRBn9aYgA8NOGcXWJ9I
+	CpvQp462d7UPheZr44ZFW1KYn8GA==
+X-Google-Smtp-Source: AGHT+IHXG/0/hShmRUvQAKC9AHfln9CojQ/qyZWB4omLmQIq0J2ete1izlY+85xW6NmBXSV/D95xXORrnvizdPCA3uM=
+X-Received: by 2002:a05:690c:b15:b0:6f7:9f95:d916 with SMTP id
+ 00721157ae682-6febea564cfmr43081107b3.16.1741344142511; Fri, 07 Mar 2025
+ 02:42:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd500013.china.huawei.com (7.221.188.12)
+References: <20250306113549.796524-1-ulf.hansson@linaro.org>
+ <20250306113549.796524-3-ulf.hansson@linaro.org> <CAJZ5v0hF_am9DsuwEUmmgpUp=1ZuAG8fdjYfQ5XxFmS_Y1pMog@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hF_am9DsuwEUmmgpUp=1ZuAG8fdjYfQ5XxFmS_Y1pMog@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 7 Mar 2025 11:41:46 +0100
+X-Gm-Features: AQ5f1JqZoOcwKfjkiNxmTrOdstASOHx5S-JbLRg16VovAosUluf6_t-OvA7HKso
+Message-ID: <CAPDyKFphQS4x68f-rHHkhG8w7b6UJcE32v0u-XApicn1pPARXw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PM: s2idle: Avoid holding the s2idle_lock when
+ calling pm_wakeup_pending()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-pm@vger.kernel.org, Len Brown <len.brown@intel.com>, 
+	Pavel Machek <pavel@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Baihan Li <libaihan@huawei.com>
+On Thu, 6 Mar 2025 at 14:18, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Mar 6, 2025 at 12:36=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.o=
+rg> wrote:
+> >
+> > There's no reason to hold the s2idle_lock longer than necessary. Let's
+> > instead acquire it when really needed in s2idle_enter().
+> >
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >  kernel/power/suspend.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> > index e7aca4e40561..ca09f26cbf4e 100644
+> > --- a/kernel/power/suspend.c
+> > +++ b/kernel/power/suspend.c
+> > @@ -91,10 +91,10 @@ static void s2idle_enter(void)
+> >  {
+> >         trace_suspend_resume(TPS("machine_suspend"), PM_SUSPEND_TO_IDLE=
+, true);
+> >
+> > -       raw_spin_lock_irq(&s2idle_lock);
+>
+> This is to prevent missing a wakeup event when pm_system_wakeup() runs
+> at this point on a different CPU.
+>
+> If you move the locking, it may run as a whole between the
+> pm_wakeup_pending() check below and the s2idle_state update, so the
+> wakeup event will be missed.
 
-Add registering drm_aux and use it to get connector edid with drm
-functions. Add ddc channel in connector initialization to put drm_aux
-in drm_connector. And also add detect callback to detect connector
-befored call connector_get_modes.
+Of course, you are right! Thanks for clarifying!
 
-Signed-off-by: Baihan Li <libaihan@huawei.com>
-Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
-ChangeLog:
-v2 -> v3:
-  - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
-v1 -> v2:
-  - deleting type conversion, suggested by Dmitry Baryshkov.
-  - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  3 +-
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    | 33 ++++++++++++++++---
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  5 +++
- 3 files changed, 35 insertions(+), 6 deletions(-)
+>
+> With the locking in place, the pm_abort_suspend update in
+> pm_system_wakeup() may still happen at any time, but the code under
+> the lock in s2idle_wake() after it can only run before the lock is
+> acquired above or after it is released.
+>
+> If s2idle_wake() in pm_system_wakeup() runs before the
+> raw_spin_lock_irq() above, the pm_wakeup_pending() check below will
+> notice the pm_abort_suspend set and return true, so the suspend will
+> be aborted (and the pm_abort_suspend update in pm_system_wakeup()
+> cannot be reordered entirely after the s2idle_wake() call because of
+> the locking there).
+>
+> Now, if s2idle_wake() in pm_system_wakeup() runs after the
+> raw_spin_unlock_irq() below, it will notice the s2idle_state change
+> and it will update it to S2IDLE_STATE_WAKE, so the suspend will be
+> aborted.
+>
+> I guess it would have helped if there had been a comment describing this =
+...
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-index ded9e7ce887a..e0bb9b14d9d8 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-@@ -161,7 +161,8 @@ void hibmc_dp_aux_init(struct hibmc_dp *dp)
- 				 HIBMC_DP_MIN_PULSE_NUM);
- 
- 	dp->aux.transfer = hibmc_dp_aux_xfer;
--	dp->aux.is_remote = 0;
-+	dp->aux.name = kasprintf(GFP_KERNEL, "HIBMC DRM dp aux");
-+	dp->aux.drm_dev = dp->drm_dev;
- 	drm_dp_aux_init(&dp->aux);
- 	dp->dp_dev->aux = &dp->aux;
- }
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-index 603d6b198a54..1cb9c32f9ef0 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-@@ -15,25 +15,48 @@
- 
- static int hibmc_dp_connector_get_modes(struct drm_connector *connector)
- {
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
-+	const struct drm_edid *drm_edid;
- 	int count;
- 
--	count = drm_add_modes_noedid(connector, connector->dev->mode_config.max_width,
--				     connector->dev->mode_config.max_height);
--	drm_set_preferred_mode(connector, 1024, 768); // temporary implementation
-+	drm_edid = drm_edid_read_ddc(connector, &dp->aux.ddc);
-+
-+	drm_edid_connector_update(connector, drm_edid);
-+
-+	count = drm_edid_connector_add_modes(connector);
-+
-+	drm_edid_free(drm_edid);
- 
- 	return count;
- }
- 
- static const struct drm_connector_helper_funcs hibmc_dp_conn_helper_funcs = {
- 	.get_modes = hibmc_dp_connector_get_modes,
-+	.detect_ctx = drm_connector_helper_detect_from_ddc,
- };
- 
-+static int hibmc_dp_late_register(struct drm_connector *connector)
-+{
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
-+
-+	return drm_dp_aux_register(&dp->aux);
-+}
-+
-+static void hibmc_dp_early_unregister(struct drm_connector *connector)
-+{
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
-+
-+	drm_dp_aux_unregister(&dp->aux);
-+}
-+
- static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
- 	.reset = drm_atomic_helper_connector_reset,
- 	.fill_modes = drm_helper_probe_single_connector_modes,
- 	.destroy = drm_connector_cleanup,
- 	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+	.late_register = hibmc_dp_late_register,
-+	.early_unregister = hibmc_dp_early_unregister,
- };
- 
- static inline int hibmc_dp_prepare(struct hibmc_dp *dp, struct drm_display_mode *mode)
-@@ -103,8 +126,8 @@ int hibmc_dp_init(struct hibmc_drm_private *priv)
- 
- 	drm_encoder_helper_add(encoder, &hibmc_dp_encoder_helper_funcs);
- 
--	ret = drm_connector_init(dev, connector, &hibmc_dp_conn_funcs,
--				 DRM_MODE_CONNECTOR_DisplayPort);
-+	ret = drm_connector_init_with_ddc(dev, connector, &hibmc_dp_conn_funcs,
-+					  DRM_MODE_CONNECTOR_DisplayPort, &dp->aux.ddc);
- 	if (ret) {
- 		drm_err(dev, "init dp connector failed: %d\n", ret);
- 		return ret;
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index d982f1e4b958..3ddd71aada66 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -47,6 +47,11 @@ static inline struct hibmc_vdac *to_hibmc_vdac(struct drm_connector *connector)
- 	return container_of(connector, struct hibmc_vdac, connector);
- }
- 
-+static inline struct hibmc_dp *to_hibmc_dp(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct hibmc_dp, connector);
-+}
-+
- static inline struct hibmc_drm_private *to_hibmc_drm_private(struct drm_device *dev)
- {
- 	return container_of(dev, struct hibmc_drm_private, dev);
--- 
-2.33.0
+Yes, I can send a patch adding a small comment about it, if you think
+it makes sense?
 
+[...]
+
+Kind regards
+Uffe
