@@ -1,169 +1,106 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAE8218AB4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152F8218AB4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360084; cv=none; b=MoB9ArxQ9XKD8hdicsSTNHaVTlEctwerCuij+L+vCRlPegD7yQm5sUJf9IT7b6Zl5jK0yZ7BGe9vUDQXpGkP3sPqFmfkBSSdXx4uqgqeRa2I13rm8XE9JLAThKUL+8aHJ8BdGhohE0Pk0rhD7kfpHbjkS0APQl45fvac2/47SDc=
+	t=1741360117; cv=none; b=JdcgbS7OKlFUKbOmK6QRZHktx/tZ0DMyUZI5sThMl/wqd2j9YatfBygIlY4ULdjPMca0j2nplo6uvKx7z3uvHE9ZxG6IMA7n9OlDQkuC27ICE9uVCQNjq1+Zq/O6UrGGTUHQk7VwItV0cLfTYPjfpi3vtRAJYWWfgbHe9ZO8QIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360084; c=relaxed/simple;
-	bh=1J/ql49X6Ezkg4wdoqe/stSQpbv40JqkSw4Ir5aIPhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IT3sV9gdqcpqExsZotM0/JdZ3qaVfPj46DsLbkqg/MdPlI2q/kj2YO7ZqA5VRdiCflXIFCZDwJZU1X3sdbeW/iuL6rHRHmDv4r7MGp7oZXQzmZI6IBn1BYZowTIU91cCXsBqYJBKNDDF74v8LrOpF/P8o6mJjVK1q1Fj5qYrrXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=uiEhg4Vh; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1741360117; c=relaxed/simple;
+	bh=IQ+7PisUYEhv4I69UVc5TjzXxPmGq6eBtCrqhISQc0I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=l+JiETbnF+lBj+GVHwdKn20q7JXk5qQvFNeA8TXmcO+0mVqQK44rmOna2fFw0MM8DMfkVCI62xOXd9cbwdDyyy3dqEcRstGybr7+79Q2Cl7CIfGden+v+8tTdAoHS5CGwVKD/OfTxp+Q2DdQC+8c/bNf0moBCcPy4EjLgLKvT60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ov/sWBec; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="uiEhg4Vh"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8fb8ad525so14632906d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:08:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741360081; x=1741964881; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AwqxWi0iWrXCwX2xmbnqF8uYYDlpSjPvCpbbjIDyPjI=;
-        b=uiEhg4Vh+cuKuMTS1wVogHyUCw1yYJaYICFxWueOIA75qwwYhbZSzYIlc974eQADes
-         ah/pUzaewDasoYOu2yOe2/qiBK7Ey2cG2SE0E53nPB1Fi4sZfWXmilm9WrLHN1NrG2vK
-         gW/OKtUfiW61Ws6UX1EHX6fES3yQ4qRFX4vAjlBqZH4r3H0z+N7/SuS90xgdgESu2lEx
-         /5kdniPycdZYURDiWMI1jRCAFvt5Pos82/qUUJlYP6/YanDsbJxymf6dt2cbX/eZoI8j
-         SmEkkf5et7RglReZQb3omNT76peaE61ro+dhiLJhBs531kHs2uefQV5GA2DCVnEEX3c5
-         1Uyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741360081; x=1741964881;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AwqxWi0iWrXCwX2xmbnqF8uYYDlpSjPvCpbbjIDyPjI=;
-        b=RBUtbChrvOfVkr1xYWRYXVwHrksPPUslDp+c3VtiuntT5wBiJbokOKhtQhG4V7s0Q2
-         1bA3Q8IuOOHFuB7P6SbFhz0FoLafhBFfg1CodVgb3Q7z6Q9wG0vk6ETniH/jVUqEDz3y
-         PC/xyuaRkySNHZXSL+HzqZAxzxG8djAypST9DJS8vIyULsa4I9nky/a73pQUnZXvGM4j
-         d8xYtSuF2eFuawzijlvCVVC+0e5lkAT7dqU2JoWFKsWsGbNkv1oSsA5OEtCXq7nI6j6c
-         ogV34/jxf+GvoerZsn4vjgzjSIZv1+h4+mIlcCQ6tPRK90+ZUWFla7HERzSJrbyNtG1V
-         g11w==
-X-Forwarded-Encrypted: i=1; AJvYcCWakN/1WysUDt7X2JAM9e13JD0pWiJ+9ZFoIOAStz16ugStwHJxIZCl9qfAXSwpoDQW/kwnkdeZbrPumV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7bZbh1fpfIFXcLjuUfnGQGFWULhIrzmCJfhURfpUBi5m8dzby
-	d3d42wz5z3gEccBGyYVIGv4A99uFGVWgwFe9EB+MUrHfKwR1Uo3Ai/oWG7LFGu8=
-X-Gm-Gg: ASbGncvA7oAn/AfqW04ykRdlULXnGI39MEAGF+6VWYkGmYqSllUDuvaaB8TZqmnzkjc
-	tjXKcXCI4CVZ2KVrRCQBIcLxx8fch8JyN4hdQHu3xplhUT9z8wJl8NIQGExzEckirB3X4jAIL6h
-	FDM+Gt+tT8PHLN4EwKyccY/Mn4Bu20QQSWOw5FZ7f674uNrkX6VkFUMgUshZ1/uHcuC0Kg06Fwe
-	ZP64cc5xNCdIcovKsX/kgex1iMUj4/kbTMEQ9BqiKF2zdvai9BjBAwPEXSshmin8rIsImJ7r5iO
-	UWyUPQOdF5TmDrPScLI43LHOu1EHuBZCUy3au3kNBJtwA9SXSi4y0X+O+XWhkaxHDjaQXrPYrhA
-	toc8QS9iIgvl8RDO0NT+8TOlnivE=
-X-Google-Smtp-Source: AGHT+IHFXN/P02s1v98zyEbqxwhlOPUAeqTTE2dEMUqC5SvXHpnKWulc9lagDpP21FJm9Hmt5sZqBQ==
-X-Received: by 2002:a05:6214:daa:b0:6e6:646e:a0f8 with SMTP id 6a1803df08f44-6e9005f899emr45138866d6.16.1741360081484;
-        Fri, 07 Mar 2025 07:08:01 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f70a447asm20414876d6.54.2025.03.07.07.08.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 07:08:01 -0800 (PST)
-Date: Fri, 7 Mar 2025 10:07:58 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
-Message-ID: <Z8sLznxBkJHWeTvQ@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
- <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
- <570b18f4-3790-4e57-8d80-a5301e5d8af2@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ov/sWBec"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C2BA644333;
+	Fri,  7 Mar 2025 15:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741360114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DbeuAA1oxIHGLbIDFWP6h/ZS0xV/naUYJvq/oPOZHSQ=;
+	b=Ov/sWBecFyAM2ysG+a4hiXmRrEBRdrNOyCIWq/oT5ztNQXEhs1VxhkEvUPHUmd0lMVJdvQ
+	hFJpJoEcUtmXmzU+E5LsHqNwRC9RFMsYoQVlEzrXqLnPynwGqzJYxOeKlmTI+bHtvpRFRa
+	CXr28nCK5YyWMGdSKEOxRa9gjFv1VccOgujkFzbjl1vg0QKkWMAA5x3W+BWOWJ+Be5jyXS
+	SotQ8ubHx1p015m8DkJIIyzu/vAvjne7m5QSocdN+42vfP4TQhWzIp+xLqqMAW7ekf2Xg1
+	Yxj7JrmO7XoG8RtAnEX96BVK2DlplBlMeXn770AcMIrWUayeeSF/l/QYTcjMtQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Date: Fri, 07 Mar 2025 16:08:21 +0100
+Subject: [PATCH 02/21] mtd: spinand: Use more specific naming for the write
+ enable/disable op
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <570b18f4-3790-4e57-8d80-a5301e5d8af2@fujitsu.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250307-winbond-6-14-rc1-octal-v1-2-45c1e074ad74@bootlin.com>
+References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
+In-Reply-To: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
+To: Richard Weinberger <richard@nod.at>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Santhosh Kumar K <s-k6@ti.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtleekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelgfehvdduieefieeikeffgffggfdttdeugeffieetheeuleelfeehffdtffetveenucfkphepledvrddukeegrddutdekrddujeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledvrddukeegrddutdekrddujeeipdhhvghloheplgduledvrdduieekrddurddutdeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehtuhguohhrrdgrmhgsrghruhhssehlihhnrghrohdrohhrghdprhgtphhtthhopehmihgthhgrvghlseifrghllhgvrdgttgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthhlihhnv
+ desfihinhgsohhnugdrtghomhdprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, Mar 07, 2025 at 12:57:18AM +0000, Zhijian Li (Fujitsu) wrote:
-> > In section 2, I referenced a simple device-to-decoder mapping:
-> > 
-> >      root    ---  decoder0.0   -- Root Port Decoder
-> >       |               |
-> >     port1    ---  decoder1.0   -- Host Bridge Decoder
-> >       |               |
-> >    endpoint0 ---  decoder2.0   -- Endpoint Decoder
-> 
-> Here, I noticed something that differs slightly from my understanding:
-> "root --- decoder0.0 -- Root Port Decoder."
-> 
->  From the perspective of the Linux Driver, decoder0.0 usually refers to
-> associated a CFMWs. Moreover, according to Spec r3.1 Table 8-22 CXL HDM Decoder Capability,
-> the CXL Root Port (also known as R in the table) is not permitted to implement
-> the HDM decoder.
-> 
-> If I have misunderstood something, please let me know.
+SPI operations have been initially described through macros implicitly
+implying the use of a single SPI SDR bus. Macros for supporting dual and
+quad I/O transfers have been added on top, generally inspired by vendor
+naming, followed by DTR operations. Soon we might see octal
+and even octal DTR operations as well (including the opcode byte).
 
-You're indeed right that in the spec it says root ports do not have
-decoder capability.  What we have here may be some jumbling of CXL
-spec languange and Linux CXL driver language.
+Let's clarify what the macro really means by describing the expected bus
+topology in the write enable/disable macro names.
 
-The decoder0.0 is a `root decoder`.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/mtd/nand/spi/core.c | 2 +-
+ include/linux/mtd/spinand.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-The `root_port` is a logical construct belonging to the CXL root
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index ea6b48242ad4a4e51c713907ce5cc55022cdb569..bbf0048104aac86e90b0706793db8503c8fc2a3b 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -362,7 +362,7 @@ static void spinand_ondie_ecc_save_status(struct nand_device *nand, u8 status)
+ 
+ static int spinand_write_enable_op(struct spinand_device *spinand)
+ {
+-	struct spi_mem_op op = SPINAND_WR_EN_DIS_OP(true);
++	struct spi_mem_op op = SPINAND_WR_EN_DIS_1S_0_0_OP(true);
+ 
+ 	return spi_mem_exec_op(spinand->spimem, &op);
+ }
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index 4f47adbe4566d7813ffd8fbfaddd1a85d88d0208..0d2f92d0746e8079e46bac9402ddd22d3d2a86bf 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -26,7 +26,7 @@
+ 		   SPI_MEM_OP_NO_DUMMY,					\
+ 		   SPI_MEM_OP_NO_DATA)
+ 
+-#define SPINAND_WR_EN_DIS_OP(enable)					\
++#define SPINAND_WR_EN_DIS_1S_0_0_OP(enable)				\
+ 	SPI_MEM_OP(SPI_MEM_OP_CMD((enable) ? 0x06 : 0x04, 1),		\
+ 		   SPI_MEM_OP_NO_ADDR,					\
+ 		   SPI_MEM_OP_NO_DUMMY,					\
 
-struct cxl_root {
-        struct cxl_port port;  <--- root_port
-}
+-- 
+2.48.1
 
-
-A root_decoder is added to the CXL drivers `root_port` when
-we parse the cfmws:
-
-static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
-                             struct cxl_cfmws_context *ctx)
-{
-...
-        struct cxl_root_decoder *cxlrd __free(put_cxlrd) =
-                cxl_root_decoder_alloc(root_port, ways);
-...
-}
-
-
-And the `root_port` is a port with downstream ports - which are
-presumably the host bridges
-
-
-static int cxl_acpi_probe(struct platform_device *pdev)
-{
-        cxl_root = devm_cxl_add_root(host, &acpi_root_ops);
-        ^^^^^^^^ - Create "The CXL Root"
-
-        root_port = &cxl_root->port;
-        ^^^^^^^^^ - The Root's "Port"
-
-        rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
-                              add_host_bridge_dport);
-        ^^^^^^^^^ - Add host bridges "downstream" of The Root's "Port"
-        ...
-        ctx = (struct cxl_cfmws_context) {
-                .dev = host,
-                .root_port = root_port,
-                .cxl_res = cxl_res,
-        };
-        rc = acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, cxl_parse_cfmws, &ctx);
-        ^^^^^^^^^ - Add "root decoders" to The Root's "Port"
-}
-
-
-If we look at what a root decoder is defined as in cxl/cxl.h:
-
- * struct cxl_root_decoder - Static platform CXL address decoder
-
-
-So this is just some semantic confusion - and the reality is the driver
-simply refers to the first device in the fabric as "The Root", and every
-device has "A Port", and so the "Root Port" just means it's the Root's
-"Port" not a "CXL Specification Root Port".
-
-Whatever the case, from the snippets above, you can see the CFMWS adds 1
-"root decoder" per CFMWS - which makes sense, as a CFMWS can describe
-multi-host-bridge interleave - i.e. whatever the actual root device is
-must be upstream of the host bridges themselves.
-
-~Gregory
