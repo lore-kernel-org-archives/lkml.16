@@ -1,519 +1,314 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021111.outbound.protection.outlook.com [52.101.129.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9546C18785D;
-	Fri,  7 Mar 2025 02:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741315618; cv=none; b=epCuTgQKO4LnQg+ZHSVUmDDEwum+gfiANo2b6Qn1ZE1mJfDaHURFhdg1zaGXVbetsXpDWMsLphKZhRhl0B6kjnBi6hrk51zUdMsAniIWDmPtGa1Jons2AteNMVhJnfDf6Qy18Kns9bp0xNL7yDcuq/qFpVwrKcy+RIpvNb1ZhQI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741315618; c=relaxed/simple;
-	bh=PDOx0j31h8/h9Hw5Hq2e6EjlX2+2KHTQdpJa0b3m/ls=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tjic8livGaJp0PgaQMjCVuaaYLGHSW1kCx1sGRkUkasbWYeZrOUEnfB4vq4jqVFmIYxqMmDS5oVlzVB5+iIpQS68bZdwXfL7F3bZq/uKBrK5lhJ7MJP3pUFVHpKpzYtuk4Yb/ZqKB66bssSQxm3q+SimptNh177UP/iBKhkh9Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJnGMVQy; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BAE322A;
+	Fri,  7 Mar 2025 02:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.111
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741315701; cv=fail; b=kXyNhU58DnfcV5p75WdO+pVAlXcRH9kXP3OqkP/AmqR4Bp6EhwNBDeMXhEBwDTKrGbqvKfj64bUt7zrYSUTRTpgDBUqppKVVyIeZsfcGenK/cMry4p86uscRk2bOwryA1H568KPA6yeazYU5sX8NtZnWegZds5KrZ/tLFsZ0G/8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741315701; c=relaxed/simple;
+	bh=udCNzI2MRnZGhz3fs7ESUxCep3PmP/3URP3mu6TB2OI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nh2RGJQNZzgZYdjs3vusyg1DPLDQebHHeoAO9FJD8j9j1Qq79XFj47xFnn9peJY+OI9ywx+6qx8oFvpP8ioMnu3ESetAe/Xdc8+AH/pJ/R+ZKEOA3gfpVu1yjc9Evk38erq/5d1XK/6Dp63GS+p7jt+NOfVjTSa8WBxqeMKyniI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=L5gtQwkT; arc=fail smtp.client-ip=52.101.129.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJnGMVQy"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223378e2b0dso20191695ad.0;
-        Thu, 06 Mar 2025 18:46:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741315615; x=1741920415; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e2QEuerNx36Ve8h38j5UuGqNQVWgLdwOZn9+FhlFR/8=;
-        b=KJnGMVQySLQNYuUurlTbZPqZFPhwqP2feM0HcVVA2t4XIQGkJpTzh/ZIa7xaCwgoZ3
-         HPfuPlKaDpptaQ8cZCISgU0UrQstl13g7P7yYUnIFZie5oQ2RLvT8QRSuITPkR8UKNgf
-         N1v/fwsLfoGZ/GzLY/5sgLr2Xiyu8NaOovtf4VgMof5c/IGx5Az8Tel1xEVTzMDqgsN1
-         dwY3EHjPteGNb1BseLnRMoWo0/FccHz1Zm4fNx5jAQwg5cYL0u/TCH0XfHMSRoQh/XdD
-         j3UJXGFPndgYNGP+C26GUV7wa3m9WRgAYOnUW0O/nGspvmrGBmZqi1D9OG5qMhUXJnl4
-         Zi0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741315615; x=1741920415;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e2QEuerNx36Ve8h38j5UuGqNQVWgLdwOZn9+FhlFR/8=;
-        b=X74ltF4Jtxmblc2enl4Ihv1wkzVHpDGA6fP1etmEfOAgjhUZYh6q3J0zKgE6gF91K3
-         9mFphwYfiTecwAiHc8NVTK3Bx/58yp0JVoEd6smdxiE35Mwaa4GS66wWP+9VGkpKqj+1
-         XChYkjaEEZqmRfyaC1ZKrtXqR0w5bAYQDG8BBinl2ppgtXTV926HDcu5kNS0HZBWNvhZ
-         k7ztWRWbojKer7iQISDd67uwGX8Fjgu5KFWA0ifL+bl1/SdXD71iyHuThSiVwe3ta896
-         XM8NzGpwccr8+Mh6ZE+kODQ+r+peSRrM2fQwoaQfefHcclhqaGXYKxYoV3pZkH3/f5bI
-         DXrg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7zh4402s9iPK2Zl9xpus8x7/FPxw3p42OQ0MSDVkED+MHQGs+Y5lyV6CWsSQyeHnxbOzQEYS0ql/Nog==@vger.kernel.org, AJvYcCWHAtGh2J0lRUYuEWZ4AZ2wKH6MXoEXjsHX/ScL//4BfbWSHU+vMZ/RaLryVmPxAT3xVJFE3p8fKDpOjsR5@vger.kernel.org, AJvYcCWTVNbn6WXGed6KcLhpzfgx+/d1TWfvicMA7WLS26BW7cNAL0SXu7CxEwrZfGwc+QWFjKuFqaVZwtwJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFY4bZlze4ZvfYvt/FocmOJaC1CN32UnlxUMDzQbrIzKG9iCTA
-	78f+TAvSz/pL4pmCVjneMlpdT8il9AlIX5VLrGC1Eh+QnS920/LJ
-X-Gm-Gg: ASbGnctaLzUnzGD18IuSmw73QnvCLyS5BnE2NOZh9HAT2irjsuk409rD3J+AJgoP/JG
-	kj04sbhA036ZREfIecwscnLYauDW0e1RB8qB5mDgu/ZBY9oQSjv7ORBryq9vZtfMDAimJo7NKd5
-	VQZMZL71k+VC49r+X8gjeDDyhB3KXjUszIYwxTw31ew9H794TqOT+TgA3VTHtFzGlU6unw66CrY
-	kv8B3xDZpc7x69D47OaCCDMX1q7l8/yb5fu7cM1qNp5ZQcRs7Y9jW1nfC5jcAsPJNHTXi2EELb3
-	Qr2VXBlzg9Dxx5uJ/Ve87llTFe6ErKMvt3B132A=
-X-Google-Smtp-Source: AGHT+IGGCWc+C20JLK/YSYbgDhPc0LYuDsVUjJzrJtp+CZGL5bkrHLd/Z6KMIm2ETKyJ3Rm5TOz4rg==
-X-Received: by 2002:a17:902:da82:b0:224:1eab:97b2 with SMTP id d9443c01a7336-22428c120a4mr23605895ad.53.1741315615452;
-        Thu, 06 Mar 2025 18:46:55 -0800 (PST)
-Received: from debian ([2601:646:8f03:9fee:e44d:748a:50ed:471f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a91c43sm19629325ad.183.2025.03.06.18.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 18:46:54 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 6 Mar 2025 18:46:38 -0800
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, bp@alien8.de,
-	tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
-	mchehab@kernel.org, leo.duran@amd.com, Yazen.Ghannam@amd.com,
-	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
-	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
-	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
-	gthelen@google.com, wschwartz@amperecomputing.com,
-	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
-	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
-	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
-	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
-	linuxarm@huawei.com
-Subject: Re: [PATCH 3/8] cxl/memfeature: Add CXL memory device ECS control
- feature
-Message-ID: <Z8peDpw-9P00Peer@debian>
-References: <20250227223816.2036-1-shiju.jose@huawei.com>
- <20250227223816.2036-4-shiju.jose@huawei.com>
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="L5gtQwkT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QhZAafRQ3gm7FP/+Z6xIRrepC5zYGWY39WzNI+pO/GJS6/4oul4Cp37iSjwMui5v0L9QVqSt9d3E/HFrbfZgb5YwP+b4GWu0kyMOENNxiq3+gGeR1+YIETyc/wUy43fqNdkXIwdu74fj58KA8pBb1rJTRN8zW6f/TZkiXkWuofPMo5E+sQOxbvTYfnoqzVpmGomvdF+olyS1QQ+nd8IIbhAeT6Db2mox0XNY72dFca6GsXl7L0kSXjPIRDvQ4OwG1/GXw5L3/oGgkHIdhelvnU8jj1iEsrEZNLJD/iOjixt8HXsLALhaTPXRlOWo2XAhBcUe0SO++C41DzAOpFULVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dlzijiw5nh1PlQ7C3JgDaFh3UOzj9I0GGiXntbg1SaY=;
+ b=n5pMRGRWLcfDTjnAM07/ZWVTsWJFJ3iCYNssKYh7flG66u6Q1R+DefsWYLz6lGmGSw7Tq3qMnNAozMpaF/toR2UxjYEexvkf25G8U4w1m1wXLjoVmcZSR4KkuV+9bBH578pW2SKSNFV3W2aGpoH7zx/HDKE4t9h+cT/x/yoRBbBX/dq/dNh4otwp5qBRhe4c4hcS3rzlJhSfcYvoEUl5DpOyY0V/Eko1MCQmObQaGyvjp7QXEYD+ZrMfWDkw14hzAxLbDR05qiU3IWJfWAdFHuiiZKM4XdEd60H0e+AD/kca/QveDtzG6Z2NsHq5IHOt6sZhpTAGErZ1/ARhdhT7KQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dlzijiw5nh1PlQ7C3JgDaFh3UOzj9I0GGiXntbg1SaY=;
+ b=L5gtQwkT40bGitRSiO4xjko/wYJbu68rl13IeRgN6LzOzkpH6yr0sapxN0CzIt6V35UXwB8fL16bxi7M+gwAxL68NxtdpIiCN/x3eMNZQGBcGY21JEJydV/ZbKxoLDSZK38JvPiz+nw8O2ky3r9UsepQPdjTGfxNr7xKQdl9v2MaTtQq5LDAQ0+6irZp00AvPoebroYo7tmeJFsbNwXgC8kAfz7Q1fFoUrAPhzN6W9O9KAUyf2JZa0p4ghefqHUQwKomxWQ2JVviGvWtSPHPNtW3tVP4pbmGcfO7EL5QecldcMFnOm/diqfY5VSnQxH33sttzEoI4KCKxQdT88s3ag==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from PUZPR03MB7135.apcprd03.prod.outlook.com (2603:1096:301:113::15)
+ by TYZPR03MB7954.apcprd03.prod.outlook.com (2603:1096:400:465::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Fri, 7 Mar
+ 2025 02:48:15 +0000
+Received: from PUZPR03MB7135.apcprd03.prod.outlook.com
+ ([fe80::ecac:a387:36d8:144d]) by PUZPR03MB7135.apcprd03.prod.outlook.com
+ ([fe80::ecac:a387:36d8:144d%7]) with mapi id 15.20.8489.025; Fri, 7 Mar 2025
+ 02:48:14 +0000
+Message-ID: <26292ce9-7644-4a8f-8817-045cf6dd87b0@amlogic.com>
+Date: Fri, 7 Mar 2025 10:48:10 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] ASoC: meson: s4: Add s4 tocodec driver
+To: Jerome Brunet <jbrunet@baylibre.com>,
+ jiebing chen via B4 Relay <devnull+jiebing.chen.amlogic.com@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+ jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com
+References: <20250228-audio_drvier-v3-0-dbfd30507e4c@amlogic.com>
+ <20250228-audio_drvier-v3-5-dbfd30507e4c@amlogic.com>
+ <1jfrjq5ews.fsf@starbuckisacylon.baylibre.com>
+From: Jiebing Chen <jiebing.chen@amlogic.com>
+In-Reply-To: <1jfrjq5ews.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SGAP274CA0015.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::27)
+ To PUZPR03MB7135.apcprd03.prod.outlook.com (2603:1096:301:113::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227223816.2036-4-shiju.jose@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PUZPR03MB7135:EE_|TYZPR03MB7954:EE_
+X-MS-Office365-Filtering-Correlation-Id: e49ee605-6251-4d12-67d2-08dd5d2281ee
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ejhTVGRZeS9EcWxacWdyMFR0ZHVlL0hmbEo5anJ6OU81SUpFZDNsUDN0QjBM?=
+ =?utf-8?B?QlF1dXNJNS9GWVhCeTN1aHdSbllTTExVbjhpdWQ1Nm5qdFZXRWY1ZmpPOWty?=
+ =?utf-8?B?aFVpcVgzSTdUb3pndWQ5ZC92MEJjNXk3Sm45ZVk5cFlxRW9Mcjl1WElraEhZ?=
+ =?utf-8?B?cHcvTVcrRE5rbWV4amVkOUdEZHdBVE5VWVNJdDE5T2dPYlF2MnlURHVnVmRr?=
+ =?utf-8?B?a0I5TUVYNklDTkxRUXEyMC80a0NySFJ6U2UxOXFOdDVPRnNkUWxtVytOa3Vt?=
+ =?utf-8?B?V1hORis5TzdscEtxRU4xTlFjUUUxVmNtaStTa283amtRdjNUWVJTdS9VQm9r?=
+ =?utf-8?B?KzA0NWpFTUhXL3h3QWpNRzU2alhybldPREZoNjdPV3FmOGk4TTR0dWhXZWp0?=
+ =?utf-8?B?dUJEMkRVSS83REVMZzk0eEcwVzhFRkFKS1hVV0hTdzlreVFOcUhtdVQ0OXB4?=
+ =?utf-8?B?cFNjU1M4Szg3Ui9rZW51cUprSTZnVUxocGppdnZqbUdNYmJXMjFIT3h1LzB2?=
+ =?utf-8?B?RVdhcTFCdFFqdnNYbDk5WTNlN2pSU2JCbDEvTmtXVVJrRjlVVDZmZzl0NW5o?=
+ =?utf-8?B?UEFkTGFxT0QybjlhcnF4M2ZHUU15MUFnaWFEVGUwb1RTM0ZVb2JhRm9BVW1T?=
+ =?utf-8?B?bmF0b2NIZTJFa0NJRXBDVXVMU2VuMTd3eVBQY3RQZlE3TVdyWTBydWRyRWRD?=
+ =?utf-8?B?Vmg3aDhUb3NUcGMyeTYzaHVQR1pPenZuaE5XanR4RE43UXRPUVNBYVlJRnQ5?=
+ =?utf-8?B?aE41ekhCRUpZVXA3ekMzb2txeVo2WGFDa0llTm9iMkFlMXh6TDhCNkFKZzgx?=
+ =?utf-8?B?WDA5VVBhOWxZdS91SEVhTFlwb1dlSzNWanJEYjMvcUxRQnVXNE9IeVBRai9o?=
+ =?utf-8?B?NTZzYkdRNHpKa0ZoSHdXcG1YS0dkdFFCbXZobkQ2QWN4ckxhVno4WG11SHJR?=
+ =?utf-8?B?UlE2ZGlvaDgybW9yQ2FXT3FmTjc5N0FiNVY3WHAvdEF3WU9Sc0VoOE1lc2M2?=
+ =?utf-8?B?UWw5VVJRdEl4Sy80UjI4MlNSNFAvS2o4c3hDeVNyQ1dhbDh1enFhdnErNU9H?=
+ =?utf-8?B?RHVSMFlsYmU2MzFZSGY4MDZmeG9rdDVES1NpcDNYM3JUV3prNU4zNlhJOHdH?=
+ =?utf-8?B?d1U0NjYrTmVMQjdiaGNSWnd2OTQ2WVNJU3lVRlNUc1ZndkxyN1hqajgrTE9i?=
+ =?utf-8?B?YW5Tb2tPWCticEg0OEh6YkxIeXdVcHkxMUo5U3ZRM3RyQUVTSDVsdzhUcHlk?=
+ =?utf-8?B?WkROT1VpM1JJbEtXN1R1Ykp5NWNjZm1XZkpCQi9mcGZMYUMySThVdytteTV0?=
+ =?utf-8?B?Sldkek5OcUNzQi9TcVhyVWJNWGc0TWlSRkhqcHE0NmdJSDdoUUEzOExrYmx0?=
+ =?utf-8?B?SGVKdmh6NnN3Q1NQZXc2b09odFMrenZ0UDNiT1BYampQL1VGT2xFVUQ2M0Jw?=
+ =?utf-8?B?Wjh2Y1gzRFovNlArN3M2bXdyc2dVZXFOUkNhem1xMWFoZ0QyazVnSElZeUhF?=
+ =?utf-8?B?bzArOGFhZFRuSlI0NVVaNDk4bUk4ZHdEeU9YbG1wMVp1MHhvVDgxME5hcXVm?=
+ =?utf-8?B?UzNNTWJYSXRYMEIvZTdvejZmZkhLTEFXcU1GY1lIb3hhZmFwcHZqblFRYkdo?=
+ =?utf-8?B?KzVnN1kwRFNVNXF1ZTFYWlo1QlEzb0NuT0RGc0J2MXJsN0JvaU1weVJyV204?=
+ =?utf-8?B?Q2ttQU1zVktpUDJBdVB3SVQ2MXFGZDhrTG54UGc2eTRVQ1J4RFk5aUNzbkpO?=
+ =?utf-8?B?NFNmaTEyZUZ6WDF6MnFSK09mb3AvSjhRTkdRMmRrMFNhQXdMQnVGclp4SFB3?=
+ =?utf-8?B?U2VXeFFub2Y0RFM3ODZUL0Q4Si9nbUhscVNLK2pUcmxGVmpham56YXlEN1Yx?=
+ =?utf-8?Q?9uweGIAE/ZFHK?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR03MB7135.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cGNPT016dnJyNGtjOEh2djF3dUpzT1BjaDVZa3JaOWJqN2kzQTVJT2d6bUFz?=
+ =?utf-8?B?WGEyTlNET1kyV0FQWENETUNnK0Jqck9qTTZyL1RmemRmcG50THZ0U0plQ1lG?=
+ =?utf-8?B?eHZIcXFyL0xacjNQSW8yL3I5Rk5YaTFRY21QV3hzUlJ3ZUEyVGp3eE9iYzJq?=
+ =?utf-8?B?N3EwaDVOYTRSS21UTktqS2E0UU1lREpMMFNlZ0x3NmpPWEpkTFdodzNSL0Jz?=
+ =?utf-8?B?RDZYTHR3TW9KRWtGZnhIZjhoWGRkdHlEU0ZSMHpoOG5HOVFHbHBjbGxVMTBh?=
+ =?utf-8?B?RC9zMG9KN1NZTXRjR1JpMzR1cXluY2JtQTN5bWRPRXhLQVVGRkQyL1dQVFdB?=
+ =?utf-8?B?aGFsdGRmc2FFcktSQTh2REhpWDZLNWpSa29OejAxNG5Senh6cDc2U01FUFRr?=
+ =?utf-8?B?cHIvb2dyZzZOWjhSNGFLbk54ZnFRc055dGNFK3NPbTNjMndtaDZCN1hXNnUy?=
+ =?utf-8?B?VjR3V295SnJ6R2RUMGNBRnQ5SUtNVG5hWjNlK3hoL3l1enFCb0xKeFNCNnZi?=
+ =?utf-8?B?eTJvaEliZmdVN0pzQk84Wng2Q2Z1a2VZVXpCcmcrdkZseENsaGZ5d2E2V3ZV?=
+ =?utf-8?B?ZVJvMmhhN1hNZUJLOWo3YUNPWmFlN3ZKWk01a2VFQ2ZYbXVzdnZ6RThzOGxu?=
+ =?utf-8?B?djdTZHcyM1YzcmJmZWE5anR1TzJOVXpwNDNUL0c1K3VXeVArY3MzWVZaUmFE?=
+ =?utf-8?B?T0VyOHg3Z0FmeG4rZTBrY0ZUajNXT0NoT1QvRHhzUmIrS3BpQlpZcnpNQ0Fa?=
+ =?utf-8?B?cmtXaXFpNWdGdEFPTWJTTnM1YSsyVWd2NnV4SzRGTy83WUxwMmx0TGxKbUMv?=
+ =?utf-8?B?SHk3VThJb29lVmw5QW5iQm9ld1JQWXdxMXdLNUJhaVArUkY2NmI1RzJrNGlW?=
+ =?utf-8?B?RWRxRlF2MGZuS0VMKzJiNVpOYmpWQjQ1dXlvcFpVc0lhRTIvbXZ5MkxiQ1E2?=
+ =?utf-8?B?bmVvNlpxU1BQMjdzRSs2ZElHMHJFclBNWmVOQkhJeTZLZEJPakY0Ny9SYzJK?=
+ =?utf-8?B?V3JjbVduem9sb0tMdHd2d3JRVzRoSVdQU3JuT3VsWTIybW5CTXpzMjhwZGhT?=
+ =?utf-8?B?L2JoQzk0cjRlOUtqSGtDTmtuNnBjSlI4YjNQMmk0SkhHMnlaelNjQjdSTlRP?=
+ =?utf-8?B?WjREYW5INE1iTjh2U0d3U1lNQTFnWEhGWUlFOVNQNEhkSi9zUzh0ejRKK2Rk?=
+ =?utf-8?B?MEdHRjNIajg3b3RjcjZESDM2MGVtL3pLQXBHUitWSlhCOUF5TlcvQ0N3R1R4?=
+ =?utf-8?B?cGpLVWhXbzJxZEVXMXRpVGtnNWcvdzNzZXV2VHR0TFBzWHJ2NjN5WmczZEpE?=
+ =?utf-8?B?Q24vWlNhT0xUUDdTZ2JmTzFKYmFLRjVzNGxnb0NFR3BxRkNGODU4bjRFa29T?=
+ =?utf-8?B?b1dVY2dxbVlDOElRa2Y4eHIrWjJWbk4rUEN6WnRsZmpNSWVjZitoR0R2bzJJ?=
+ =?utf-8?B?SVVWa3VvTjhERTArdzZQeUVGWmEyK0NQSnVKL1FkbGtwa3UyR0g2TTVGSDhp?=
+ =?utf-8?B?RldlZkJrczg1aFZjNW01NGF5eUUvZGFnT3ZvbG01NlJDSnRtMm0ra1hjWkpI?=
+ =?utf-8?B?a3RrbmlPcVZUMWZLNm1adGVyNzVqSkhXMzlpTExnVUNiaDdSZE1rOGdreXdo?=
+ =?utf-8?B?Mm5IcEwwd0ZCY0tia085aGswSlFyTnRkOTB1bUg4SVJKNHdwZUg1WmkrVEhQ?=
+ =?utf-8?B?cXdZbzM1L1hSZVNJaG5vMjZsU0w4Ty9MODdpdWkxOERKMmxIT3Y1QkNnOEQy?=
+ =?utf-8?B?UDM3UGdEOWJNVlozTUhleDhwamN0Y2lpYmd6OGlRV1FRYnRJMlFIMlQxaTRy?=
+ =?utf-8?B?ZFJjUjMxb2hjaVF6aFhSbVhwZkNHeWljNHJGTWFLcE9EeW9EQi9oaFp3M0tT?=
+ =?utf-8?B?alVvdGVqeC92aXkwZlUxeVJ4Umo3TUorem9oWW9kUlZiam8yUHd0MDBnZG9O?=
+ =?utf-8?B?Q3EyU1hzUW95NzkzNE5ONEt2MHg2VUw2QTYwVUlwS0NzKzF3YVI5UkRuSXZl?=
+ =?utf-8?B?MG82MmFBQW5lVDU5VUJKWjYwdXY3OTlwQkdjeWJRRXI3eG40dVJYa3lRV2Vz?=
+ =?utf-8?B?SnpadUp2RVNoRkIrQzc0aUF6bWZWUDhuSUR5NUx1bWlkaFhaU1lyQVdTQ3dO?=
+ =?utf-8?B?eWVlSFB6bVRUL2xBZ3JGN01obkF6cGlMY1dNR0lEcnlhUld4ZDllNWJqd0VI?=
+ =?utf-8?B?VFE9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e49ee605-6251-4d12-67d2-08dd5d2281ee
+X-MS-Exchange-CrossTenant-AuthSource: PUZPR03MB7135.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 02:48:14.8867
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bQ6HXmWhrhlxHKNGwEP4gn2QlsglrpoTIDjmxZDgmqn1uDCiHCWUEfpc13wZmkNfwTNZCb5sd/JXn27+pPJZzKYqfvVUes8A2UZ1vRNYDnQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB7954
 
-On Thu, Feb 27, 2025 at 10:38:10PM +0000, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> CXL spec 3.2 section 8.2.10.9.11.2 describes the DDR5 ECS (Error Check
-> Scrub) control feature.
-> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-> Specification (JESD79-5) and allows the DRAM to internally read, correct
-> single-bit errors, and write back corrected data bits to the DRAM array
-> while providing transparency to error counts.
-> 
-> The ECS control allows the requester to change the log entry type, the ECS
-> threshold count (provided the request falls within the limits specified in
-> DDR5 mode registers), switch between codeword mode and row count mode, and
-> reset the ECS counter.
-> 
-> Register with EDAC device driver, which retrieves the ECS attribute
-> descriptors from the EDAC ECS and exposes the ECS control attributes to
-> userspace via sysfs. For example, the ECS control for the memory media FRU0
-> in CXL mem0 device is located at /sys/bus/edac/devices/cxl_mem0/ecs_fru0/
-> 
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+在 2025/3/6 23:58, Jerome Brunet 写道:
+> [ EXTERNAL EMAIL ]
+>
+> On Fri 28 Feb 2025 at 16:04, jiebing chen via B4 Relay <devnull+jiebing.chen.amlogic.com@kernel.org> wrote:
+>
+>> From: jiebing chen <jiebing.chen@amlogic.com>
+>>
+>> S4 tocodec support 8 lane to input, It need to enable
+>> bclk and mclk control bit when work
+>>
+>> Signed-off-by: jiebing chen <jiebing.chen@amlogic.com>
+>> ---
+>>   sound/soc/meson/g12a-toacodec.c | 51 +++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 51 insertions(+)
+>>
+>> diff --git a/sound/soc/meson/g12a-toacodec.c b/sound/soc/meson/g12a-toacodec.c
+>> index 531bb8707a3ec4c47814d6a0676d5c62c705da75..41eef9980059285275f0189a06469fc694775955 100644
+>> --- a/sound/soc/meson/g12a-toacodec.c
+>> +++ b/sound/soc/meson/g12a-toacodec.c
+>> @@ -41,6 +41,9 @@
+>>   #define  CTRL0_BCLK_SEL_LSB          4
+>>   #define  CTRL0_MCLK_SEL                      GENMASK(2, 0)
+>>
+>> +#define CTRL0_BCLK_ENABLE_SHIFT              30
+>> +#define CTRL0_MCLK_ENABLE_SHIFT              29
+>> +
+>>   #define TOACODEC_OUT_CHMAX           2
+>>
+>>   struct g12a_toacodec {
+>> @@ -129,6 +132,10 @@ static const struct snd_kcontrol_new g12a_toacodec_out_enable =
+>>        SOC_DAPM_SINGLE_AUTODISABLE("Switch", TOACODEC_CTRL0,
+>>                                    CTRL0_ENABLE_SHIFT, 1, 0);
+>>
+>> +static const struct snd_kcontrol_new s4_toacodec_clk_enable =
+>> +     SOC_DAPM_DOUBLE("Switch", TOACODEC_CTRL0,
+>> +                     CTRL0_BCLK_ENABLE_SHIFT, CTRL0_MCLK_ENABLE_SHIFT, 1, 0);
+>> +
+>>   static const struct snd_soc_dapm_widget g12a_toacodec_widgets[] = {
+>>        SND_SOC_DAPM_MUX("SRC", SND_SOC_NOPM, 0, 0,
+>>                         &g12a_toacodec_mux),
+>> @@ -143,6 +150,15 @@ static const struct snd_soc_dapm_widget sm1_toacodec_widgets[] = {
+>>                            &g12a_toacodec_out_enable),
+>>   };
+>>
+>> +static const struct snd_soc_dapm_widget s4_toacodec_widgets[] = {
+>> +     SND_SOC_DAPM_MUX("SRC", SND_SOC_NOPM, 0, 0,
+>> +                      &sm1_toacodec_mux),
+>> +     SND_SOC_DAPM_SWITCH("OUT EN", SND_SOC_NOPM, 0, 0,
+>> +                         &g12a_toacodec_out_enable),
+>> +     SND_SOC_DAPM_SWITCH("CLK EN", SND_SOC_NOPM, 0, 0,
+>> +                         &s4_toacodec_clk_enable),
+> I don't see a reason for the user to control that.
+>
+> A user controls if the component is enable or not, and possibly select
+> the lane ... but that's it
+>
+> You could have to flipped automatically which dapm when the component is
+> powered, that would make a lot more sense.
 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/cxl/Kconfig            |   1 +
->  drivers/cxl/core/memfeatures.c | 355 ++++++++++++++++++++++++++++++++-
->  2 files changed, 355 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index b83bdb30b702..94321f5bed77 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -119,6 +119,7 @@ config CXL_RAS_FEATURES
->  	depends on CXL_FEATURES
->  	depends on EDAC=y || (CXL_BUS=m && EDAC=m)
->  	depends on EDAC_SCRUB
-> +	depends on EDAC_ECS
->  	help
->  	  The CXL memory RAS feature control is optional and allows host to
->  	  control the RAS features configurations of CXL Type 3 devices.
-> diff --git a/drivers/cxl/core/memfeatures.c b/drivers/cxl/core/memfeatures.c
-> index 7a5c0645a07e..253930051e87 100644
-> --- a/drivers/cxl/core/memfeatures.c
-> +++ b/drivers/cxl/core/memfeatures.c
-> @@ -19,7 +19,7 @@
->  #include <cxlmem.h>
->  #include "core.h"
->  
-> -#define CXL_DEV_NUM_RAS_FEATURES	1
-> +#define CXL_DEV_NUM_RAS_FEATURES	2
->  #define CXL_DEV_HOUR_IN_SECS	3600
->  
->  #define CXL_DEV_NAME_LEN	128
-> @@ -428,6 +428,352 @@ static int cxl_region_scrub_init(struct cxl_region *cxlr,
->  	return 0;
->  }
->  
-> +/*
-> + * CXL DDR5 ECS control definitions.
-> + */
-> +struct cxl_ecs_context {
-> +	u16 num_media_frus;
-> +	u16 get_feat_size;
-> +	u16 set_feat_size;
-> +	u8 get_version;
-> +	u8 set_version;
-> +	u16 effects;
-> +	struct cxl_memdev *cxlmd;
-> +};
-> +
-> +enum {
-> +	CXL_ECS_PARAM_LOG_ENTRY_TYPE,
-> +	CXL_ECS_PARAM_THRESHOLD,
-> +	CXL_ECS_PARAM_MODE,
-> +	CXL_ECS_PARAM_RESET_COUNTER,
-> +};
-> +
-> +#define CXL_ECS_LOG_ENTRY_TYPE_MASK	GENMASK(1, 0)
-> +#define CXL_ECS_REALTIME_REPORT_CAP_MASK	BIT(0)
-> +#define CXL_ECS_THRESHOLD_COUNT_MASK	GENMASK(2, 0)
-> +#define CXL_ECS_COUNT_MODE_MASK	BIT(3)
-> +#define CXL_ECS_RESET_COUNTER_MASK	BIT(4)
-> +#define CXL_ECS_RESET_COUNTER	1
-> +
-> +enum {
-> +	ECS_THRESHOLD_256 = 256,
-> +	ECS_THRESHOLD_1024 = 1024,
-> +	ECS_THRESHOLD_4096 = 4096,
-> +};
-> +
-> +enum {
-> +	ECS_THRESHOLD_IDX_256 = 3,
-> +	ECS_THRESHOLD_IDX_1024 = 4,
-> +	ECS_THRESHOLD_IDX_4096 = 5,
-> +};
-> +
-> +static const u16 ecs_supp_threshold[] = {
-> +	[ECS_THRESHOLD_IDX_256] = 256,
-> +	[ECS_THRESHOLD_IDX_1024] = 1024,
-> +	[ECS_THRESHOLD_IDX_4096] = 4096,
-> +};
-> +
-> +enum {
-> +	ECS_LOG_ENTRY_TYPE_DRAM = 0x0,
-> +	ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU = 0x1,
-> +};
-> +
-> +enum cxl_ecs_count_mode {
-> +	ECS_MODE_COUNTS_ROWS = 0,
-> +	ECS_MODE_COUNTS_CODEWORDS = 1,
-> +};
-> +
-> +/**
-> + * struct cxl_ecs_params - CXL memory DDR5 ECS parameter data structure.
-> + * @threshold: ECS threshold count per GB of memory cells.
-> + * @log_entry_type: ECS log entry type, per DRAM or per memory media FRU.
-> + * @reset_counter: [IN] reset ECC counter to default value.
-> + * @count_mode: codeword/row count mode
-> + *		0 : ECS counts rows with errors
-> + *		1 : ECS counts codeword with errors
-> + */
-> +struct cxl_ecs_params {
-> +	u16 threshold;
-> +	u8 log_entry_type;
-> +	u8 reset_counter;
-> +	enum cxl_ecs_count_mode count_mode;
-> +};
-> +
-> +/*
-> + * See CXL spec rev 3.2 @8.2.10.9.11.2 Table 8-225 DDR5 ECS Control Feature
-> + * Readable Attributes.
-> + */
-> +struct cxl_ecs_fru_rd_attrs {
-> +	u8 ecs_cap;
-> +	__le16 ecs_config;
-> +	u8 ecs_flags;
-> +}  __packed;
-> +
-> +struct cxl_ecs_rd_attrs {
-> +	u8 ecs_log_cap;
-> +	struct cxl_ecs_fru_rd_attrs fru_attrs[];
-> +}  __packed;
-> +
-> +/*
-> + * See CXL spec rev 3.2 @8.2.10.9.11.2 Table 8-226 DDR5 ECS Control Feature
-> + * Writable Attributes.
-> + */
-> +struct cxl_ecs_fru_wr_attrs {
-> +	__le16 ecs_config;
-> +} __packed;
-> +
-> +struct cxl_ecs_wr_attrs {
-> +	u8 ecs_log_cap;
-> +	struct cxl_ecs_fru_wr_attrs fru_attrs[];
-> +}  __packed;
-> +
-> +/*
-> + * CXL DDR5 ECS control functions.
-> + */
-> +static int cxl_mem_ecs_get_attrs(struct device *dev,
-> +				 struct cxl_ecs_context *cxl_ecs_ctx,
-> +				 int fru_id, struct cxl_ecs_params *params)
-> +{
-> +	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-> +	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
-> +	struct cxl_ecs_fru_rd_attrs *fru_rd_attrs;
-> +	size_t rd_data_size;
-> +	u8 threshold_index;
-> +	size_t data_size;
-> +	u16 ecs_config;
-> +
-> +	rd_data_size = cxl_ecs_ctx->get_feat_size;
-> +
-> +	struct cxl_ecs_rd_attrs *rd_attrs __free(kvfree) =
-> +		kvzalloc(rd_data_size, GFP_KERNEL);
-> +	if (!rd_attrs)
-> +		return -ENOMEM;
-> +
-> +	params->log_entry_type = 0;
-> +	params->threshold = 0;
-> +	params->count_mode = 0;
-> +	data_size = cxl_get_feature(cxl_mbox, &CXL_FEAT_ECS_UUID,
-> +				    CXL_GET_FEAT_SEL_CURRENT_VALUE,
-> +				    rd_attrs, rd_data_size, 0, NULL);
-> +	if (!data_size)
-> +		return -EIO;
-> +
-> +	fru_rd_attrs = rd_attrs->fru_attrs;
-> +	params->log_entry_type = FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK,
-> +					   rd_attrs->ecs_log_cap);
-> +	ecs_config = le16_to_cpu(fru_rd_attrs[fru_id].ecs_config);
-> +	threshold_index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +				    ecs_config);
-> +	params->threshold = ecs_supp_threshold[threshold_index];
-> +	params->count_mode = FIELD_GET(CXL_ECS_COUNT_MODE_MASK,
-> +				       ecs_config);
-> +	return 0;
-> +}
-> +
-> +static int cxl_mem_ecs_set_attrs(struct device *dev,
-> +				 struct cxl_ecs_context *cxl_ecs_ctx,
-> +				 int fru_id, struct cxl_ecs_params *params,
-> +				 u8 param_type)
-> +{
-> +	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-> +	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
-> +	struct cxl_ecs_fru_rd_attrs *fru_rd_attrs;
-> +	struct cxl_ecs_fru_wr_attrs *fru_wr_attrs;
-> +	size_t rd_data_size, wr_data_size;
-> +	u16 num_media_frus, count;
-> +	size_t data_size;
-> +	u16 ecs_config;
-> +
-> +	num_media_frus = cxl_ecs_ctx->num_media_frus;
-> +	rd_data_size = cxl_ecs_ctx->get_feat_size;
-> +	wr_data_size = cxl_ecs_ctx->set_feat_size;
-> +	struct cxl_ecs_rd_attrs *rd_attrs __free(kvfree) =
-> +		kvzalloc(rd_data_size, GFP_KERNEL);
-> +	if (!rd_attrs)
-> +		return -ENOMEM;
-> +
-> +	data_size = cxl_get_feature(cxl_mbox, &CXL_FEAT_ECS_UUID,
-> +				    CXL_GET_FEAT_SEL_CURRENT_VALUE,
-> +				    rd_attrs, rd_data_size, 0, NULL);
-> +	if (!data_size)
-> +		return -EIO;
-> +
-> +	struct cxl_ecs_wr_attrs *wr_attrs __free(kvfree) =
-> +					kvzalloc(wr_data_size, GFP_KERNEL);
-> +	if (!wr_attrs)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * Fill writable attributes from the current attributes read
-> +	 * for all the media FRUs.
-> +	 */
-> +	fru_rd_attrs = rd_attrs->fru_attrs;
-> +	fru_wr_attrs = wr_attrs->fru_attrs;
-> +	wr_attrs->ecs_log_cap = rd_attrs->ecs_log_cap;
-> +	for (count = 0; count < num_media_frus; count++)
-> +		fru_wr_attrs[count].ecs_config = fru_rd_attrs[count].ecs_config;
-> +
-> +	/*
-> +	 * Fill attribute to be set for the media FRU
-> +	 */
-> +	ecs_config = le16_to_cpu(fru_rd_attrs[fru_id].ecs_config);
-> +	switch (param_type) {
-> +	case CXL_ECS_PARAM_LOG_ENTRY_TYPE:
-> +		if (params->log_entry_type != ECS_LOG_ENTRY_TYPE_DRAM &&
-> +		    params->log_entry_type != ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU)
-> +			return -EINVAL;
-> +
-> +		wr_attrs->ecs_log_cap = FIELD_PREP(CXL_ECS_LOG_ENTRY_TYPE_MASK,
-> +						   params->log_entry_type);
-> +		break;
-> +	case CXL_ECS_PARAM_THRESHOLD:
-> +		ecs_config &= ~CXL_ECS_THRESHOLD_COUNT_MASK;
-> +		switch (params->threshold) {
-> +		case ECS_THRESHOLD_256:
-> +			ecs_config |= FIELD_PREP(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +						 ECS_THRESHOLD_IDX_256);
-> +			break;
-> +		case ECS_THRESHOLD_1024:
-> +			ecs_config |= FIELD_PREP(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +						 ECS_THRESHOLD_IDX_1024);
-> +			break;
-> +		case ECS_THRESHOLD_4096:
-> +			ecs_config |= FIELD_PREP(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +						 ECS_THRESHOLD_IDX_4096);
-> +			break;
-> +		default:
-> +			dev_dbg(dev,
-> +				"Invalid CXL ECS scrub threshold count(%d) to set\n",
-> +				params->threshold);
-> +			dev_dbg(dev,
-> +				"Supported scrub threshold counts: %u, %u, %u\n",
-> +				ECS_THRESHOLD_256, ECS_THRESHOLD_1024, ECS_THRESHOLD_4096);
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case CXL_ECS_PARAM_MODE:
-> +		if (params->count_mode != ECS_MODE_COUNTS_ROWS &&
-> +		    params->count_mode != ECS_MODE_COUNTS_CODEWORDS) {
-> +			dev_dbg(dev,
-> +				"Invalid CXL ECS scrub mode(%d) to set\n",
-> +				params->count_mode);
-> +			dev_dbg(dev,
-> +				"Supported ECS Modes: 0: ECS counts rows with errors,"
-> +				" 1: ECS counts codewords with errors\n");
-> +			return -EINVAL;
-> +		}
-> +		ecs_config &= ~CXL_ECS_COUNT_MODE_MASK;
-> +		ecs_config |= FIELD_PREP(CXL_ECS_COUNT_MODE_MASK, params->count_mode);
-> +		break;
-> +	case CXL_ECS_PARAM_RESET_COUNTER:
-> +		if (params->reset_counter != CXL_ECS_RESET_COUNTER)
-> +			return -EINVAL;
-> +
-> +		ecs_config &= ~CXL_ECS_RESET_COUNTER_MASK;
-> +		ecs_config |= FIELD_PREP(CXL_ECS_RESET_COUNTER_MASK, params->reset_counter);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	fru_wr_attrs[fru_id].ecs_config = cpu_to_le16(ecs_config);
-> +
-> +	return cxl_set_feature(cxl_mbox, &CXL_FEAT_ECS_UUID,
-> +			       cxl_ecs_ctx->set_version,
-> +			       wr_attrs, wr_data_size,
-> +			       CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET,
-> +			       0, NULL);
-> +}
-> +
-> +#define CXL_ECS_GET_ATTR(attrib)						\
-> +static int cxl_ecs_get_##attrib(struct device *dev, void *drv_data,		\
-> +				int fru_id, u32 *val)				\
-> +{										\
-> +	struct cxl_ecs_context *ctx = drv_data;					\
-> +	struct cxl_ecs_params params;						\
-> +	int ret;								\
-> +										\
-> +	ret = cxl_mem_ecs_get_attrs(dev, ctx, fru_id, &params);			\
-> +	if (ret)								\
-> +		return ret;							\
-> +										\
-> +	*val = params.attrib;							\
-> +										\
-> +	return 0;								\
-> +}
-> +
-> +CXL_ECS_GET_ATTR(log_entry_type)
-> +CXL_ECS_GET_ATTR(count_mode)
-> +CXL_ECS_GET_ATTR(threshold)
-> +
-> +#define CXL_ECS_SET_ATTR(attrib, param_type)						\
-> +static int cxl_ecs_set_##attrib(struct device *dev, void *drv_data,			\
-> +				int fru_id, u32 val)					\
-> +{											\
-> +	struct cxl_ecs_context *ctx = drv_data;						\
-> +	struct cxl_ecs_params params = {						\
-> +		.attrib = val,								\
-> +	};										\
-> +											\
-> +	return cxl_mem_ecs_set_attrs(dev, ctx, fru_id, &params, (param_type));		\
-> +}
-> +CXL_ECS_SET_ATTR(log_entry_type, CXL_ECS_PARAM_LOG_ENTRY_TYPE)
-> +CXL_ECS_SET_ATTR(count_mode, CXL_ECS_PARAM_MODE)
-> +CXL_ECS_SET_ATTR(reset_counter, CXL_ECS_PARAM_RESET_COUNTER)
-> +CXL_ECS_SET_ATTR(threshold, CXL_ECS_PARAM_THRESHOLD)
-> +
-> +static const struct edac_ecs_ops cxl_ecs_ops = {
-> +	.get_log_entry_type = cxl_ecs_get_log_entry_type,
-> +	.set_log_entry_type = cxl_ecs_set_log_entry_type,
-> +	.get_mode = cxl_ecs_get_count_mode,
-> +	.set_mode = cxl_ecs_set_count_mode,
-> +	.reset = cxl_ecs_set_reset_counter,
-> +	.get_threshold = cxl_ecs_get_threshold,
-> +	.set_threshold = cxl_ecs_set_threshold,
-> +};
-> +
-> +static int cxl_memdev_ecs_init(struct cxl_memdev *cxlmd,
-> +			       struct edac_dev_feature *ras_feature)
-> +{
-> +	struct cxl_ecs_context *cxl_ecs_ctx;
-> +	struct cxl_feat_entry *feat_entry;
-> +	int num_media_frus;
-> +
-> +	feat_entry = cxl_get_feature_entry(cxlmd->cxlds, &CXL_FEAT_ECS_UUID);
-> +	if (IS_ERR(feat_entry))
-> +		return -EOPNOTSUPP;
-> +
-> +	if (!(le32_to_cpu(feat_entry->flags) & CXL_FEATURE_F_CHANGEABLE))
-> +		return -EOPNOTSUPP;
-> +
-> +	num_media_frus = (le16_to_cpu(feat_entry->get_feat_size) -
-> +			  sizeof(struct cxl_ecs_rd_attrs)) /
-> +			  sizeof(struct cxl_ecs_fru_rd_attrs);
-> +	if (!num_media_frus)
-> +		return -EOPNOTSUPP;
-> +
-> +	cxl_ecs_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ecs_ctx),
-> +				   GFP_KERNEL);
-> +	if (!cxl_ecs_ctx)
-> +		return -ENOMEM;
-> +
-> +	*cxl_ecs_ctx = (struct cxl_ecs_context) {
-> +		.get_feat_size = le16_to_cpu(feat_entry->get_feat_size),
-> +		.set_feat_size = le16_to_cpu(feat_entry->set_feat_size),
-> +		.get_version = feat_entry->get_feat_ver,
-> +		.set_version = feat_entry->set_feat_ver,
-> +		.effects = le16_to_cpu(feat_entry->effects),
-> +		.num_media_frus = num_media_frus,
-> +		.cxlmd = cxlmd,
-> +	};
-> +
-> +	ras_feature->ft_type = RAS_FEAT_ECS;
-> +	ras_feature->ecs_ops = &cxl_ecs_ops;
-> +	ras_feature->ctx = cxl_ecs_ctx;
-> +	ras_feature->ecs_info.num_media_frus = num_media_frus;
-> +
-> +	return 0;
-> +}
-> +
->  int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
->  {
->  	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
-> @@ -444,6 +790,13 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
->  	if (rc != -EOPNOTSUPP)
->  		num_ras_features++;
->  
-> +	rc = cxl_memdev_ecs_init(cxlmd, &ras_features[num_ras_features]);
-> +	if (rc < 0 && rc != -EOPNOTSUPP)
-> +		return rc;
-> +
-> +	if (rc != -EOPNOTSUPP)
-> +		num_ras_features++;
-> +
->  	snprintf(cxl_dev_name, sizeof(cxl_dev_name), "%s_%s",
->  		 "cxl", dev_name(&cxlmd->dev));
->  
-> -- 
-> 2.43.0
-> 
+Hi,Jerome
+
+Thank you for your suggestion. Can we design it as a supply widget for 
+tocodec bclk and mclk control?
+
+when dapm poweron, and supply widget power on, Users do not have to 
+operate additional Kcontrols
+
+>
+>> +};
+>> +
+>>   static int g12a_toacodec_input_hw_params(struct snd_pcm_substream *substream,
+>>                                         struct snd_pcm_hw_params *params,
+>>                                         struct snd_soc_dai *dai)
+>> @@ -228,6 +244,15 @@ static const struct snd_soc_dapm_route g12a_toacodec_routes[] = {
+>>        { "OUT Capture", NULL, "OUT EN" },
+>>   };
+>>
+>> +static const struct snd_soc_dapm_route s4_toacodec_routes[] = {
+>> +     { "SRC", "I2S A", "IN A Playback" },
+>> +     { "SRC", "I2S B", "IN B Playback" },
+>> +     { "SRC", "I2S C", "IN C Playback" },
+>> +     { "OUT EN", "Switch", "SRC" },
+>> +     { "CLK EN", "Switch", "OUT EN" },
+>> +     { "OUT Capture", NULL, "CLK EN" },
+>> +};
+>> +
+>>   static const struct snd_kcontrol_new g12a_toacodec_controls[] = {
+>>        SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 3, 0),
+>>   };
+>> @@ -236,6 +261,10 @@ static const struct snd_kcontrol_new sm1_toacodec_controls[] = {
+>>        SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1, 3, 0),
+>>   };
+>>
+>> +static const struct snd_kcontrol_new s4_toacodec_controls[] = {
+>> +     SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1, 7, 0),
+>> +};
+>> +
+>>   static const struct snd_soc_component_driver g12a_toacodec_component_drv = {
+>>        .probe                  = g12a_toacodec_component_probe,
+>>        .controls               = g12a_toacodec_controls,
+>> @@ -258,6 +287,17 @@ static const struct snd_soc_component_driver sm1_toacodec_component_drv = {
+>>        .endianness             = 1,
+>>   };
+>>
+>> +static const struct snd_soc_component_driver s4_toacodec_component_drv = {
+>> +     .probe                  = sm1_toacodec_component_probe,
+>> +     .controls               = s4_toacodec_controls,
+>> +     .num_controls           = ARRAY_SIZE(s4_toacodec_controls),
+>> +     .dapm_widgets           = s4_toacodec_widgets,
+>> +     .num_dapm_widgets       = ARRAY_SIZE(s4_toacodec_widgets),
+>> +     .dapm_routes            = s4_toacodec_routes,
+>> +     .num_dapm_routes        = ARRAY_SIZE(s4_toacodec_routes),
+>> +     .endianness             = 1,
+>> +};
+>> +
+>>   static const struct regmap_config g12a_toacodec_regmap_cfg = {
+>>        .reg_bits       = 32,
+>>        .val_bits       = 32,
+>> @@ -278,6 +318,13 @@ static const struct g12a_toacodec_match_data sm1_toacodec_match_data = {
+>>        .field_bclk_sel = REG_FIELD(TOACODEC_CTRL0, 4, 6),
+>>   };
+>>
+>> +static const struct g12a_toacodec_match_data s4_toacodec_match_data = {
+>> +     .component_drv  = &s4_toacodec_component_drv,
+>> +     .field_dat_sel  = REG_FIELD(TOACODEC_CTRL0, 19, 20),
+>> +     .field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, 12, 14),
+>> +     .field_bclk_sel = REG_FIELD(TOACODEC_CTRL0, 4, 6),
+>> +};
+>> +
+>>   static const struct of_device_id g12a_toacodec_of_match[] = {
+>>        {
+>>                .compatible = "amlogic,g12a-toacodec",
+>> @@ -287,6 +334,10 @@ static const struct of_device_id g12a_toacodec_of_match[] = {
+>>                .compatible = "amlogic,sm1-toacodec",
+>>                .data = &sm1_toacodec_match_data,
+>>        },
+>> +     {
+>> +             .compatible = "amlogic,s4-toacodec",
+>> +             .data = &s4_toacodec_match_data,
+>> +     },
+>>        {}
+>>   };
+>>   MODULE_DEVICE_TABLE(of, g12a_toacodec_of_match);
+> --
+> Jerome
