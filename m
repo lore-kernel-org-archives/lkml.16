@@ -1,134 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686F61A5B9E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E5D1A5B9E;
+	Fri,  7 Mar 2025 08:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741337746; cv=none; b=DRAiLnCDg7U0G8lLBbCvb8A0uO4CU8OaXMIXqiFC8ZmOZdHvZZgFvd3Aap7ZPUdJVL//yT78XDKHo2TlFKAnqkpfO2+q+U/gqE6stlk1M8kTqjjSinvEhyaZ7XYlwaB6tSPMqYuBwLeVV3/ivbFhUEAxI47rYgbnHq04d78fVjY=
+	t=1741337825; cv=none; b=VS6NvzvCcoa25nSXDW0Wy2c4sdUYnQMj+sBPeBDcBYqwtf/VSXeff+MamTg/fmpf44rF6Kfn4j0Ypq3/wQ3PesyiJ/pQmwcq6DBa15l3Mk+NxbPmxOr/yyb5kbjV+Kls7l1vG8L5LUo+qGbaPFVa6yuAdCFnE9qVjUKHniZqgpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741337746; c=relaxed/simple;
-	bh=2CWoKZ+Dk6UUm88Dli/o0sfnoDA1GxgsKa0rzI8+CaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohunLQV5udzFiY7Cwq4JklSWcBlcIBjhRUtHRfIY8nUqhAuT80TKOAgrpTaNo4xNhPgEdC9Bg3NUf69ADxTPPHvzTs59VPENW2X4TSKWq8vNas2VzV+yA4/dEaZUpdUvaRA4wZqPGKK/rcs0MaNlZgQI/cy2ssv6+DCkrBItA0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xgx7NzoE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741337825; c=relaxed/simple;
+	bh=GdvVVcDXx825xwHiDeenmFGVQv+cy7j7wXByGy3GLRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NCQgEej2VXPxHahIobkHnRm7833yR5ssKKaGMtx4BmIcxnURCEgKD7uUvrQVWZuTNkso+ZGcGm3G7oNOrFjFlPyntXwDmlHHHpV5do7P53P5RZ1CVSJP9AuUm+2O6HXPZlqLgqynNMCtcbdkyMrD5PlZGDP5EwBCa9L6LV6G8k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8DCTYdo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xgx7NzoE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741337743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1QIM+wyv0gROGtwfPUwZvYBsQhvwoC9PYEBEonKSvsg=;
-	b=Xgx7NzoEZWGB3iIvMDR9arYGAjB8w745EsoBlxZYQfUhDN6MWQMdMVGWVA85ddpl9PBel1
-	dBEfYWRy8QP5DVgKUZJY9x1ALGWYTBlvIKt/KPvYvTuJBvEVoo8RMAjI1HvXq1vBDmQz3b
-	+hAvHtyGzpMs57TQeP5p5RCDWR9i0xw=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495-7y8uXxEUM0WYWvtXkTlTMg-1; Fri, 07 Mar 2025 03:55:40 -0500
-X-MC-Unique: 7y8uXxEUM0WYWvtXkTlTMg-1
-X-Mimecast-MFC-AGG-ID: 7y8uXxEUM0WYWvtXkTlTMg_1741337739
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c0b3cd4cbcso196789985a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 00:55:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741337739; x=1741942539;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1QIM+wyv0gROGtwfPUwZvYBsQhvwoC9PYEBEonKSvsg=;
-        b=BVYJU5NnimOLU+odjwbxAXD03t+HDdHatS28AbQMDpeF5T5994WV69yCaN109CX/QE
-         U6VswUjTt+OzqaJXSNvPqE9R5NfKqTmnGeGmlVcocQjxb5PZOMUnlNFNzGiCVzhDrptX
-         KtAzs7okon5ONF19UeRaMq24Rm7Lwh17sGDo8XfJONjvjSclG66XJZRr6HwZh+8pjaC1
-         hEnVGTK8f+USqrkHqy8hyiRWm0weHxKusSyZKESvzxUDj6q+5aBc1poLULG9iGdlEGG6
-         u6nM5u+eo5H1mVI7jTG2PApiZGHXKReUwK0jjH+zlAXwHdqLQU6cV2Ris81DkzYzDcG0
-         GdzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvlrO71RvdMKBCYowr1xxXALGiULi6GccArDQwGvmApwarbyJMtr31+AKlx6EKM2/UOn1JHpSbMtZ7zKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM8ZH8WM/ezI4pJmpKD9XUdQql1TEFLGG3UwuOu0gXF8qYaBmu
-	sjQ76EqJi5N6kJMvZCLyh7MhZ77UlRp0n8gBxph2u9ogLsrwKhLwcZWYE34fKe7gdHwMq5YPJx/
-	PfuNs0GPTPKvBfLeGu8c0DktIyFouDM4CRsGOkaLSLusj9llQpc5n+FRjEu9XZg==
-X-Gm-Gg: ASbGncuzrAcrJhdMKKtjjCnz3cc5j2JAfyG3wE73TxnHWT2BJqm+zlF7CJAxE4BS2jy
-	8IL4jMTEbQvXqjVsZe96BwByBQHgVBA/F4tAn9cdDgZWgPpUpYUvDqDtmG4M60yeOp+KVZuU9Cu
-	K1IUqRLtHfyNUm7OLQTYaOEvGidFQRfmZaOVVOvZtad+xo9YAI/AzRWcUDNfOdps50jQcYwN+4a
-	aATe31GcZNabHIQFeZ/sccoDBWPncd3WcVLaYfUppiJ/e02vv6AtBgx/D+gjN6XauUCHBV+tsBZ
-	AHDX2itY8PxCt86QLe54N0ME1X7d/2sJX1xRpK+z5i2+eNIZM5x0mlxFDGQAsiYI8HBsD7OBcSu
-	09eNQ
-X-Received: by 2002:a05:620a:4c8a:b0:7c5:2d2b:cb86 with SMTP id af79cd13be357-7c52d2bcbb2mr205474385a.0.1741337739606;
-        Fri, 07 Mar 2025 00:55:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHww7UXZ1RBcCgbdg2KQFtdXnpLpXG2tZZKDTBX8GjXkK8AKIaubLCurkep0FAft3+Ybt0qfw==
-X-Received: by 2002:a05:620a:4c8a:b0:7c5:2d2b:cb86 with SMTP id af79cd13be357-7c52d2bcbb2mr205472285a.0.1741337739354;
-        Fri, 07 Mar 2025 00:55:39 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb (host-89-240-117-139.as13285.net. [89.240.117.139])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f70a4485sm17385426d6.53.2025.03.07.00.55.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 00:55:38 -0800 (PST)
-Date: Fri, 7 Mar 2025 08:55:33 +0000
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Phil Auld <pauld@redhat.com>, luca.abeni@santannapisa.it,
-	tommaso.cucinotta@santannapisa.it,
-	Jon Hunter <jonathanh@nvidia.com>, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] sched/deadline: Generalize unique visiting of
- root domains
-Message-ID: <Z8q0hQAHLlYxuHBY@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250306141016.268313-1-juri.lelli@redhat.com>
- <20250306141016.268313-4-juri.lelli@redhat.com>
- <885de7ad-f168-4826-b96d-bb136ee30333@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8DCTYdo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B75C4CED1;
+	Fri,  7 Mar 2025 08:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741337824;
+	bh=GdvVVcDXx825xwHiDeenmFGVQv+cy7j7wXByGy3GLRA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Q8DCTYdo+Xi9+P2rH/JhJ2Z8naxSK1QwDzwMWmhO2epqAOBNa+SZOA8OsM+jdzVgt
+	 8rQx8cHWBr6hpVTUDYj5u+99BIQ2ga6pSgyon6ACNHyFBy6fD/JaUCkDG6XkSI/cDi
+	 5Zb0gOt/oVIPUj0LozoFvBhCTR5v83aNNmV5q06Ppl2QaAZpuAVrP9z+n7q2LbQAEu
+	 veaTzYie9lg55aNKqGSkqLWajDVlwhoIcOrMCSFsnrKZkT8RmXkIQUHmQAyW2NkPSn
+	 FRIu0yStlp8hO9dXQIydoMGnGrfkK7trduXY7lv4nHs13LZpGsJLSNAp+6eqGor7rE
+	 UqaiDwUlLqt8g==
+Message-ID: <f8e2091b-52dc-4b7a-b781-84588dd6b1ba@kernel.org>
+Date: Fri, 7 Mar 2025 09:56:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <885de7ad-f168-4826-b96d-bb136ee30333@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: reset: Add Armada8K reset controller
+To: Wilson Ding <dingwei@marvell.com>, "Rob Herring (Arm)" <robh@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, Sanghoon Lee <salee@marvell.com>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ Geethasowjanya Akula <gakula@marvell.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "andrew@lunn.ch" <andrew@lunn.ch>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>,
+ "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+References: <20250227192536.2426490-1-dingwei@marvell.com>
+ <20250227192536.2426490-2-dingwei@marvell.com>
+ <174068786548.161165.4348563654300627455.robh@kernel.org>
+ <BY3PR18MB467346EB1FA7CEF0A3300350A7CD2@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <d2929546-27de-4893-a611-dd4a3bca1a64@kernel.org>
+ <BY3PR18MB46734A2425361D8BE83E4282A7D52@BY3PR18MB4673.namprd18.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <BY3PR18MB46734A2425361D8BE83E4282A7D52@BY3PR18MB4673.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 07/03/25 11:06, Shrikanth Hegde wrote:
+On 07/03/2025 01:03, Wilson Ding wrote:
+>> reset.example.dts
+>>>   DTC [C]
+>>> Documentation/devicetree/bindings/reset/marvell,armada8k-reset.example
+>>> .dtb
+>>>
+>>
+>> That's a bit odd but anyway warning is correct: you cannot have such
+>> compatibles alone.
 > 
+> I understand I need to add one compatible here to resolve the
+> warning. However, as we agreed, we keep the sud-nodes while
+> there will be no new compatibles in parent node. So how shall
+> I avoid this warning?
 > 
-> On 3/6/25 19:40, Juri Lelli wrote:
-> > Bandwidth checks and updates that work on root domains currently employ
-> > a cookie mechanism for efficiency. This mechanism is very much tied to
-> > when root domains are first created and initialized.
-> > 
-> > Generalize the cookie mechanism so that it can be used also later at
-> > runtime while updating root domains. Also, additionally guard it with
-> > sched_domains_mutex, since domains need to be stable while updating them
-> > (and it will be required for further dynamic changes).
-> > 
-> > Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> > Fixes: 53916d5fd3c0 ("sched/deadline: Check bandwidth overflow earlier for hotplug")
-> > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> If we do want to add a compatible in parent node, what should
+> be used for the compatible name? I think the most suitable name
+> would be something like "marvell,cp110-system-controller0".
 
-...
+I don't know. I don't work in Marvell, I know nothing about Marvell
+Armada and I was not involved in any Armada SoCs.
 
-> > @@ -3192,7 +3195,7 @@ int sched_dl_global_validate(void)
-> >   	for_each_possible_cpu(cpu) {
+Read your datasheet and come up with some reasonable name based on
+datasheet. Why do you ask people who do not have datasheet?
+
+> However, it was already taken for in Armada clock controller to
+> be compatible for legacy dt.
 > 
-> This has been changed in 14672f059d83f591afb2ee1fff56858efe055e5a to online
-> CPUs. So patch didn't apply cleanly to me.
+> https://lore.kernel.org/all/bb21ee9acc55efac884450ff710049b99b27f8bf.1496328934.git-series.gregory.clement@free-electrons.com/
+
+I don't understand what it means.
+
 > 
+> This is something about 8 years ago. I wonder if we do need to
+> have the backward compatibility for the field devices at that
+> time. Can we drop it now?
 
-I based the set on Linus' tree (base commit in the cover letter) as it
-is modifying both sched and cgroup bits. Your fix hasn't yet be merged
-into Linus' I believe.
+Drop what? You need to keep ABI.
 
-Thanks,
-Juri
-
+> 
+>     syscon0: system-controller@440000 {
+>         compatible = "marvell,cp110-system-controller0",
+>                                 "syscon", "simple-mfd";
+>         reg = <0x440000 0x2000>;
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+> 
+>         swrst: reset-controller@268 {
+>             compatible = "marvell,armada8k-reset";
+>             reg = <0x268 0x4>;
+>             #reset-cells = <1>;
+>         };
+>     };
+> 
+Best regards,
+Krzysztof
