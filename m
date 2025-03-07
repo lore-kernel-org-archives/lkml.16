@@ -1,91 +1,185 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27235219A8D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F0821CA1A;
+	Fri,  7 Mar 2025 15:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741362319; cv=none; b=W3PaZw84md0TUcD9GlCrGsA5qcAMGDv0Ho67Xb7XkhokYGsAKhSk4MgtuULfI09CavckfclDxz/xhTJMM+6KtCNYqSnWeZr45c1f+knCoGfM7u9rxaIA7gtRiZ7oZeUZx+mkdQ700Nu+CzzNUsXb7TNwv+w8EDsWBUDbR28AO80=
+	t=1741362348; cv=none; b=YjFZnmsjXd9wp/7zB1j3ClBzGrmrH9DYilQ+ta2HjXttMaGO7HFQ31K5FozzSBerCECBVZHKZR0d7g4XSeK1RuRfOG6UvZ7Dc9qRNpGHuUJ4ukbx3Jb/W/V7vENn/908B1U2pxHCLx02+K8u09+VZtcBftLVsBT49zUArkmOsy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741362319; c=relaxed/simple;
-	bh=lFokjgXN66NU6UY7FiQpAAplCEXLV6xOpR6rSfWxUO0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TKNuz1pTgaUV7wZRdJ/UOngsOp6luugvBjXm59oXL9q0nUGRI8dcEmmIiJB0nRaYDpzvnmT3wY3MYRYmQzEYeUB+gDOHhRYJNlAYZSVUNC+WdRiVEsQ3DyVj+kGmvDoDIOYcC35p0r0cn7c5H4UEgaz8C4jBJ/4uDdZC8bhipo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gd5HiUh2; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741362348; c=relaxed/simple;
+	bh=ZpBOqPvPpg4k+GwFKkbvTJnOE4LZ2+Rh5edulRy7JRQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cf1HwSF4NjLnzWEULcliKrH6UaA9cO77WZn2jM05DhkuyC4FsYVI46KVF2Cm5gdto9mjUJFQl1Yb9o5a/O977ABr5Nt9flikhhS6E+DGi3AwriRNpN7VVQe2r5JkEY/ykV6ly/WNMl0MbSI3tj0o7odYKiYIHF/aOxG7AJmCids=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StclEmU6; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gd5HiUh2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7DDBA443B4;
-	Fri,  7 Mar 2025 15:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741362310;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6OjuWZXi6cWhgssI2+VsPPFlins6SAB/6GLoccrMh4c=;
-	b=gd5HiUh2uWuQrp2x1ZoVKEQF8UqNMs7UrM8oYx9boARoxCDMuFGa9hYTkoYypch+e3fhf3
-	LB8i1kNLhzTOwkeWxJ+kXoY7gA1Vkvh1zCwI8G4aDdnBnjDPgWsQfyoy5raQMx48he/MvG
-	4WQTa3jO01616/0wA6AaxBU698Ys7qiqYSgJYcmTF43Djchk1BmPP3ZX1ExpkdfFOqfsAa
-	1fvBDFiJm5CHpf7TpJIBZAT3PI9rtEW+r8xtaXl8cQdtEXPmV7UlSth9anaEbgWqxJKhjG
-	q60D7nh01Mr2n8nNXKPbrDLAff6wcnT+nIgdtsDci81sdoVEGawJwHWeOoz6JQ==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  Santhosh Kumar K <s-k6@ti.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <michael@walle.cc>,  Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>,  Steam Lin <stlin2@winbond.com>,
-  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/21] mtd: spinand: Use more specific naming for the
- reset op
-In-Reply-To: <9004166e-5535-4024-8114-9fdb217407bb@linaro.org> (Tudor
-	Ambarus's message of "Fri, 7 Mar 2025 15:38:45 +0000")
-References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
-	<20250307-winbond-6-14-rc1-octal-v1-1-45c1e074ad74@bootlin.com>
-	<9004166e-5535-4024-8114-9fdb217407bb@linaro.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 07 Mar 2025 16:45:02 +0100
-Message-ID: <87v7skrgjl.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StclEmU6"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso404154866b.3;
+        Fri, 07 Mar 2025 07:45:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741362344; x=1741967144; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cTClkgx+OHCu7CHEL4QgdX7j7z63TsB2DtVNGQ6gRoQ=;
+        b=StclEmU62JCYl6gd7ULS5RX83XPi68TKRBqRVgyXQjY1GW4vcuux+Y+sv4UZa+k8lp
+         7fH1ysDHk4vUr5SlhaW02L3WrKS5tXpcFayE57EIfVua16Ye/g2n1S0NEPP0bKX9dO7T
+         GWTxsUXLH0ZNi3X5glE19+PnvqRk24aCUERXVDNq8VZ/O23sa1JgkmKkqpKSiS/JhMHU
+         CEbMAaPQkd4prQOL4vLPway149aktYcd3QLmh/0PRKna3QQTlbWK2U39pf0fNOcaNPw8
+         FyUcn1Pp99UFeMvsqx7Vvzsd2kCST7qjkC+5ztWxa8SlMEkIbI6VAiGjabFJG84HG1wz
+         V+GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741362344; x=1741967144;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cTClkgx+OHCu7CHEL4QgdX7j7z63TsB2DtVNGQ6gRoQ=;
+        b=VNVsApru0TYThRY9VS8av9bso4xFADAlHozw9MINhXPnmZz7ahshYjcLHVJiXo1Nn9
+         aJXCpVk6zLWkhg2WMZByxE0allYfW72L/YtrOhytDu72pXPPXSccn224WHvPrRmiB/kG
+         MV9hRBi2gq5FvdVccNOj12IHv0UTx+nHDivXVXF471ZD2nSOWKbuIAkmWhSkfAisAHd+
+         5yqWzcCH4Ek8gFJ72LrvBNWZtU1C6uUqiswDGABPn23p/wiU4opwecXlUFA2YKUhTr3A
+         kvGdU5mq+aodeHrCIllzAz3ZqbT1NfNTnUssxTT63Z1oWofPUWHMUn8/Gy2ttvXwugV6
+         J6Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCVU2hEvKy7RqMmrKhMFj0xV7XEVOoWOVCFUTkOo4az8eAZeUNy/YGjw87RmOJVjuItL5Euek+V+vHnn2Ws=@vger.kernel.org, AJvYcCVrIxro871RqiK+p7dO1czDnUOSjQ6xCAiR1S0hPF2oSaQz8V+7KxYubgJaTzMYMKQq4eA3ObSt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbHWVsl5vVFFeHuh7q7ygOngYXB1QqqAMAdcMWO8/4gJfX8n5M
+	89/L/xbQ4WtII9YZCXOt5lry/SmAQ7VhBUcngY6lTJJa6CWF/vg2DllmFOi1H8ieDCTA5tz7NSY
+	oSNZMr9VBMGjXJuGePhrrmNYS+oBqrwU9/rG1Xtm/
+X-Gm-Gg: ASbGnct1oZ3//HcqOx2qLwqjtRglGMivBzGEHMceRi3/RLmJDcJoLc1x6qIGZiu/rGy
+	rR+cPMVDp/wLPKRDmvXH4pA21jrd4H3MMiX8M277VeD4G+qw1Yz8ba9i3cG4VsoLTV7yr+auMrS
+	6R0Lk7Fii2Q83giMrcfHKLAWr1
+X-Google-Smtp-Source: AGHT+IFlypVhoPatyG1S41ARRN9VafZA5suTA50Nl4KHnRzPgisegFr5nMPXUcbEavl64mUeZqkyzMjq0vmoau6IOKc=
+X-Received: by 2002:a17:907:82a3:b0:abf:5dd3:bb29 with SMTP id
+ a640c23a62f3a-ac25264fab8mr354322566b.15.1741362344149; Fri, 07 Mar 2025
+ 07:45:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddutdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledvrddukeegrddutdekrddujeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrddutdekrddujeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehtuhguohhrrdgrmhgsrghruhhssehlihhnrghrohdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepshdqkheisehtihdrtghomhdprhgtphhtthhopehprhgrthihuhhshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhitghhrggvlhesfigrlhhlvgdrtggtp
- dhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepshhtlhhinhdvseifihhnsghonhgurdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
+References: <CAMpRfLORiuJOgUmpmjgCC1LZC1Kp0KFzPGXd9KQZELtr35P+eQ@mail.gmail.com>
+ <2025030559-radiated-reviver-eebb@gregkh> <CAMpRfLMQ=rWBpYCaco5X4Sh1ecHuiqa91TwsBo6m2MA_UMKM+g@mail.gmail.com>
+ <CAMpRfLMakzeazr91DBVyZQnin7y6L9RB+sPFb59U1QZvY3+KBQ@mail.gmail.com> <2025030718-dwindle-degrading-94d3@gregkh>
+In-Reply-To: <2025030718-dwindle-degrading-94d3@gregkh>
+From: =?UTF-8?Q?Se=C3=AFfane_Idouchach?= <seifane53@gmail.com>
+Date: Fri, 7 Mar 2025 23:45:27 +0800
+X-Gm-Features: AQ5f1JrD13VtvoNkOtbz2uR8YGz8hRWTTp6AyKcLBEqS-dprw-ibk2WnFv0PJks
+Message-ID: <CAMpRfLPLJA4TaJQCeYfn5XRFnVdqJ36yv-1LL7o=kjYOAj9u1Q@mail.gmail.com>
+Subject: Re: [REGRESSION] Long boot times due to USB enumeration
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: dirk.behme@de.bosch.com, rafael@kernel.org, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Tudor,
+> That is a totally different change, I think you have something odd here
+> as these bisection points are very confusing.
 
->> -#define SPINAND_RESET_OP						\
->> +#define SPINAND_RESET_1S_0_0_OP						\
-> Hi, Miquel,
->
-> Have you seen any reset op with address or data? If not, I'm not really
-> sure whether we shall change the name for these basic operations.
->
-> Changing them to 1S-0-0 may also indicate that there are resets with
-> address or data fields, which I find confusing.
->
-> I think the change is good for reads and writes. I'll check further in
-> the series and let you know.
+I can only agree. I was skeptical that reverting this commit would fix
+the issue but it does.
 
-I want to rename this macro for two reasons:
-- We might see in the near future the addition of 8D-0-0 ops (I plan on
-  working on it).
-- I would like some kind of harmony among these macros.
+> I think you have a mix of problems here.  Let's fix up all of those
+> error messages in the log first.  Dan's fix has nothing to do with that
+> at all, once the USB bus connection stuff is resolved, then it should be
+> ok.
 
-Now, whether is should be named like I proposed or just
-SPINAND_RESET_OP_1S, I have no strong preference and I can change that
-in an upcoming version.
+Are you suggesting you want to fix those messages ? I am sorry if I
+was not clear before, those messages are always present even on a
+"good" build.
+The issue is that on a "bad" build they hold back the boot process
+from continuing. USB functionality is never affected.
 
-Which one would you prefer?
+> As that xhci commit you point at is showing an issue, are you sure that
+> you are properly building the right xhci driver into the system?  Do you
+> have a Renesas xhci controller?  What is the output of 'lspci'?
 
-Cheers,
-Miqu=C3=A8l
+I am building with a config based on my current distribution, Arch
+Linux, with olddefconfig. A quick grep for the values found in the
+commit returns the following :
+CONFIG_USB_XHCI_PCI=y
+CONFIG_USB_XHCI_PCI_RENESAS=m
+
+lspci as requested:
+00:00.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse Root Complex [1022:1480]
+00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse IOMMU [1022:1481]
+00:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+00:01.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse GPP Bridge [1022:1483]
+00:01.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse GPP Bridge [1022:1483]
+00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+00:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse GPP Bridge [1022:1483]
+00:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+00:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+00:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+00:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
+00:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+00:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
+00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus
+Controller [1022:790b] (rev 61)
+00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC
+Bridge [1022:790e] (rev 51)
+00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 0 [1022:1440]
+00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 1 [1022:1441]
+00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 2 [1022:1442]
+00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 3 [1022:1443]
+00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 4 [1022:1444]
+00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 5 [1022:1445]
+00:18.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 6 [1022:1446]
+00:18.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Matisse/Vermeer Data Fabric: Device 18h; Function 7 [1022:1447]
+01:00.0 Non-Volatile memory controller [0108]: Kingston Technology
+Company, Inc. A2000 NVMe SSD [SM2263EN] [2646:2263] (rev 03)
+02:00.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] 500
+Series Chipset USB 3.1 XHCI Controller [1022:43ee]
+02:00.1 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD] 500
+Series Chipset SATA Controller [1022:43eb]
+02:00.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] 500
+Series Chipset Switch Upstream Port [1022:43e9]
+03:00.0 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:43ea]
+03:09.0 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:43ea]
+04:00.0 Ethernet controller [0200]: Intel Corporation 82599ES
+10-Gigabit SFI/SFP+ Network Connection [8086:10fb] (rev 01)
+2a:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+RTL8125 2.5GbE Controller [10ec:8125] (rev 05)
+2b:00.0 VGA compatible controller [0300]: NVIDIA Corporation TU106
+[GeForce RTX 2070 Rev. A] [10de:1f07] (rev a1)
+2b:00.1 Audio device [0403]: NVIDIA Corporation TU106 High Definition
+Audio Controller [10de:10f9] (rev a1)
+2b:00.2 USB controller [0c03]: NVIDIA Corporation TU106 USB 3.1 Host
+Controller [10de:1ada] (rev a1)
+2b:00.3 Serial bus controller [0c80]: NVIDIA Corporation TU106 USB
+Type-C UCSI Controller [10de:1adb] (rev a1)
+2c:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices,
+Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
+2d:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices,
+Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
+2d:00.1 Encryption controller [1080]: Advanced Micro Devices, Inc.
+[AMD] Starship/Matisse Cryptographic Coprocessor PSPCPP [1022:1486]
+2d:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD]
+Matisse USB 3.0 Host Controller [1022:149c]
+2d:00.4 Audio device [0403]: Advanced Micro Devices, Inc. [AMD]
+Starship/Matisse HD Audio Controller [1022:1487]
+
+Thanks for your time
