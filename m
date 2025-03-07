@@ -1,85 +1,149 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604A52517B4;
-	Fri,  7 Mar 2025 19:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB80824FC03;
+	Fri,  7 Mar 2025 19:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741375149; cv=none; b=R5q7jUy1dOnl8MGcqUnYYBND7cg33U+cuI4ID1MOORcEsWg7oOSB5UxwZOslFaDdlQLwGFvsK8GY/vqYHWVy3XVmHU9m2Ck01ZICDdPeipWDNedetTlPpfvyoDww2FAsuyZri6CAjEGHSv8w+JAisRGy+bIxBTvFMcW+P/5CrRs=
+	t=1741375189; cv=none; b=bBPu1Xk/8n44iJ1CwPfGerO+sd4ci46p0KFOAiQr2iALgHWXe9jjeG2GB2euWf7p1scjLs8x6cwLmjlp0+/lVzi/AZgkgRkTWbL+L14ln1FvZ2hhbDkSkHv5FpiwCQw9qP4Yn5DUAoGDLPyLpVhvczjLfwgy61/7ClQijLua8n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741375149; c=relaxed/simple;
-	bh=3o4gKXJDIHgmAvWpcDkkYgG9LXNWEgidJjvzU10kvm0=;
+	s=arc-20240116; t=1741375189; c=relaxed/simple;
+	bh=lWohW1lK5/1oJ/E8ckkRCgfaedm9zAHAHPnzlFJse9c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eRI/xYuvAALGDYMq5uf2+YlfLd2eG039j8uxDjSyRKNIKkJWm1NCOG1+UYDGugavp/wtbDwu4IKl/PhILFXjA8fsfjqdlCgLCDMnQx6kVXmRo8FV6HXLzj0sqv5+n2YF7qcxV+BljClViabOEM0/3Fafm9YkwhrA03F8G4VZegg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Lz/gbSs8; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=mBNIAadjlyGdXorS7iye14a1xu4n0S2RRNLJ9XaNEbHJXccOb80/owrlfnDZFNm8eaoUPLpfzil7ORwNJ88JpSOauT/Bs7XrtLcWzPyRgn1ozasGzDaOIlxj2rVTzcKk8qjjQtjcIcpbrgLVBjXM0ZkBMaBENgUgzDqEVtbF4BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YXNuixpY; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Lz/gbSs8"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6B72E40E015D;
-	Fri,  7 Mar 2025 19:19:03 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zvYFGKxcmHP9; Fri,  7 Mar 2025 19:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741375139; bh=JNCKMRJVqSwAHC0eoKKiW3t/AjtW80g4cyMSaZyXr7I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lz/gbSs8i/be7YUZvbfZrizPx/0fB3D1JN1GguQu/qZ7PBchjwhJk2U+4gfZXWN0O
-	 3phFen6jb0118eiFdR4J5rKYbSshtIO5LwQ6Hr5gkrQpoy1/O5/iLFVkE4iMudyK3x
-	 deotLNimnpqCcoj24Qwxg+EkUTsmbrP+r5/aYYalLqK7fys1G4ifmE9A7Exq6XU8y0
-	 RspaCvlSTMIeBVQxs9FGIVm3bdgMp+c9zudViFHHOORqVkU/5d/nncpgDTYIHYIqJh
-	 bvsn5NFASR81fVQ7b7NHn/Q3IQEHUBAaZayfRuJO6YbSOEo+0tajNO2wqPDuKqY6mz
-	 JOWavsoDIU2IQ1SXIKJZRmw681t9h4/6dphx8YssCYUUFhhMQ/N//6uYNj+udQ8xb/
-	 gfTt9vxdZsfXJclVsX1z5ED+64MrogUFVobkIlZjmZqJdwD+lLd+Okycv0bIZRtorJ
-	 apjD/IeWSejDKHBxd+g6Smu42MAOWdD93stnkrQJAyNM8AgxCvS4HFByYMwVMaA8Xn
-	 D7Qvdwz/QyU3YvI87YO0OljR8RCAi2k4/NuEx3y/8PnDTZj4cCvIB9MO2kYIGJOI7k
-	 GVrg0PJ6Rc4ioJ7jAredqpHdre32KEWpPJgm63O58AxPXtSDeK4TVfXJe4vp+eBRsT
-	 6VVL1qdrxZ5uD+KN8dkMm6ow=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6C0B40E016E;
-	Fri,  7 Mar 2025 19:18:39 +0000 (UTC)
-Date: Fri, 7 Mar 2025 20:18:32 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, will@kernel.org,
-	peterz@infradead.org, yury.norov@gmail.com,
-	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com,
-	sraithal@amd.com, philip.li@intel.com
-Subject: Re: [PATCH v7 0/4] x86/cpufeatures: Automatically generate required
- and disabled feature masks
-Message-ID: <20250307191832.GAZ8tGiKty2K-cl1LC@fat_crate.local>
-References: <20250305184725.3341760-1-xin@zytor.com>
- <4b44eaec-2c45-4a68-80c5-6a8c0905b1ab@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YXNuixpY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741375187; x=1772911187;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lWohW1lK5/1oJ/E8ckkRCgfaedm9zAHAHPnzlFJse9c=;
+  b=YXNuixpYDKlmanDTBmjWP2bRVI3W7+suQ01y6CcBiN0eeggig9r8dxWg
+   7RfXyjVLduEji/xArpC+BynyRCDDewvdwgptmK3MRGMw3pDFcbGeINLZF
+   eCxBV0Lf99knCSOr3AAjTzZ9lh/hTQti8285sqshVKeAx90BhqusrMq4J
+   WKz8Dmf69iC4fxpAhYJWiYIbvXX5MqVc8+0a2IdZYFOJG8961Xt7rfd4p
+   DnTiOFAgiKu+P2WsHE4CXG9TvNNj5io+tvgeTwD+OhJHF9dW9MGNu66DQ
+   wvj83BOo01dHtdlKrgIYzgaNB8aT2idVvBaJ0+yWxSETGTPzC0c9nCGUY
+   Q==;
+X-CSE-ConnectionGUID: ve7o6fAIQCaSUttKnRyKNg==
+X-CSE-MsgGUID: XhRJyq1gQbWwlMNTUYBz3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42315416"
+X-IronPort-AV: E=Sophos;i="6.14,230,1736841600"; 
+   d="scan'208";a="42315416"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 11:19:46 -0800
+X-CSE-ConnectionGUID: CfyhsuotQIeGhCi5YnLAaA==
+X-CSE-MsgGUID: ze8qhkRFRD+Y3Nyxiz0cpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="156621322"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.159])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 11:19:44 -0800
+Date: Fri, 7 Mar 2025 11:19:43 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
+	Vilas.Sridharan@amd.com, linux-edac@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
+	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
+	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
+	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
+	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
+	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
+	duenwen@google.com, gthelen@google.com,
+	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
+	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
+	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
+	wanghuiqiang@huawei.com, linuxarm@huawei.com
+Subject: Re: [PATCH 1/8] cxl: Add helper function to retrieve a feature entry
+Message-ID: <Z8tGz33l9vDzuJLy@aschofie-mobl2.lan>
+References: <20250227223816.2036-1-shiju.jose@huawei.com>
+ <20250227223816.2036-2-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4b44eaec-2c45-4a68-80c5-6a8c0905b1ab@zytor.com>
+In-Reply-To: <20250227223816.2036-2-shiju.jose@huawei.com>
 
-On Fri, Mar 07, 2025 at 10:28:56AM -0800, Xin Li wrote:
-> I guess I don't have to rebase on the latest tip/master and resend it?
+On Thu, Feb 27, 2025 at 10:38:08PM +0000, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Add helper function to retrieve a feature entry from the supported
+> features list, if supported.
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  drivers/cxl/core/core.h     |  2 ++
+>  drivers/cxl/core/features.c | 20 ++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 3d3b00835446..6c83f6f18122 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -120,6 +120,8 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
+>  int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port);
+>  
+>  #ifdef CONFIG_CXL_FEATURES
+> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
+> +					     const uuid_t *feat_uuid);
+>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		       enum cxl_get_feat_selection selection,
+>  		       void *feat_out, size_t feat_out_size, u16 offset,
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 048ba4fc3538..c822fb4a8c33 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -203,6 +203,26 @@ int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_features, "CXL");
+>  
+> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
+> +					     const uuid_t *feat_uuid)
+> +{
+> +	struct cxl_features_state *cxlfs = to_cxlfs(cxlds);
+> +	struct cxl_feat_entry *feat_entry;
+> +	int count;
+> +
+> +	/*
+> +	 * Retrieve the feature entry from the supported features list,
+> +	 * if the feature is supported.
+> +	 */
+> +	feat_entry = cxlfs->entries->ent;
 
-No, you don't need to do anything for now. The patch tetris pleasure is all
-mine. I'll ask you to test once stuff is ready.
+Do we need some NULL checking here on cxlfs, entries
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
+> +	for (count = 0; count < cxlfs->entries->num_features; count++, feat_entry++) {
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Was num_features previously validated? 
+
+> +		if (uuid_equal(&feat_entry->uuid, feat_uuid))
+> +			return feat_entry;
+> +	}
+> +
+> +	return ERR_PTR(-ENOENT);
+
+Why not just return NULL?
+
+
+> +}
+> +
+>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		       enum cxl_get_feat_selection selection,
+>  		       void *feat_out, size_t feat_out_size, u16 offset,
+> -- 
+> 2.43.0
+> 
