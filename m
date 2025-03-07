@@ -1,93 +1,71 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECAC19DF8B;
-	Fri,  7 Mar 2025 07:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46F01A314C;
+	Fri,  7 Mar 2025 07:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741332410; cv=none; b=Hzh/OclQRFG6PyEQVGGYlBCMrYq5ggdvUy9ulIPGnHYiDI4dPeazLvE/aXESOseu37PowwFwlISsYm2VCW+3AA0YbEMJ+SuajUk19XfgjuM/+Pf64rAGHiiAEoCNd174lHDq/pDWtG8ZEAlB/0uXFkQxNb30oCk5Km3Cxy2/LGc=
+	t=1741332546; cv=none; b=VNJ0At+WCPaFsM178TRo34ly3xggmjBG8SmNGsH6Wnjv4wmueY64LZOs35BIn2GYdZC6PQt403z6b7S/yB3rV+xJPm8ldSBzVH8SQnzP95oXvZOOeuKvCjh4ojEDXj10GFPrapq5UJCa3FB4guFaI0DH4lhZA1L8P/KXi/UKICE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741332410; c=relaxed/simple;
-	bh=rHjEprSJcpdEoMkrk4oD6J2HzcQmBbR3rYUXuMkEysQ=;
+	s=arc-20240116; t=1741332546; c=relaxed/simple;
+	bh=2QV4HyitRVqMFXPW4Hi7wniqOCXjn7Z/b1mVwIcEbs4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ouqMmJZ/bcwV0KDor3uPd8vsoLkExIThGBnd0z94MWzyrI3RRKf2NCWFnjCvTAmVAi/iJp2ET9nIbVv8gKiUZidDc0RdstPVYUslnerFTRWpMuHXcXGx1WjRkKyZnY66ru6G2yFuv3UMnwfi+0pENmCUKvfRgykKy2wa/spjDVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=VTs6f9J+; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=htA5eIuUMF7F9V/gcSPf83nPychhWe3GaMMbNQ3HMHfQrJNdEnbE1qd3i/OH99xMH9rUXoHJi9ntlh4vG4VyIiAs6GQGydV6tcHsTmFUahUkg1bKRHJVpXG2+1x/pPDazJFzeaUtCcFAfQPS/LFwK8HXj15O2Sa55dR24mTpBKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWklyrBs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="VTs6f9J+"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id B8CAB25C59;
-	Fri,  7 Mar 2025 08:26:45 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id BRtfGReBau6t; Fri,  7 Mar 2025 08:26:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1741332405; bh=rHjEprSJcpdEoMkrk4oD6J2HzcQmBbR3rYUXuMkEysQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VTs6f9J+r5YfaSr5Jn0gvzobij5DBiIy9KofBPO53N4hhVw3aFrZj9clRqkXitNB1
-	 En4gLWWEnyFH4YYL8zI2C8Ld7j3kT9RZy79gfdz/xukvE7mKW2A01vK/5TB1dziu9x
-	 /5T5md/c5AunmxsKjQ6+UI7gF3Le8eoDyB2fMjNCGct489+992/RHVpjzSxp+2VYGh
-	 S8Y0lROUVenasXWr3tBXWwJm4pQ5ttBg0wCSdhmzil5blWtORZUdZ/BfLB8NEsakck
-	 xfBukjJaIIJ2fuZasUnh9XvORSFoK8CnjyF7TB2YNXdc/g7EpIiNAdfKey0UsZH9uA
-	 mpbAAp1gtCZUA==
-Date: Fri, 7 Mar 2025 07:26:23 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Chukun Pan <amadeus@jmu.edu.cn>, jonas@kwiboo.se
-Cc: conor+dt@kernel.org, cristian.ciocaltea@collabora.com,
-	detlev.casanova@collabora.com, devicetree@vger.kernel.org,
-	heiko@sntech.de, krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 8/8] arm64: dts: rockchip: Enable SD-card interface on
- Radxa E20C
-Message-ID: <Z8qfn-OTgopD8YMO@pie>
-References: <5a0a7ce1-1dfb-4d19-8a1e-0d89d177f5b8@kwiboo.se>
- <20250307071020.756277-1-amadeus@jmu.edu.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWklyrBs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C8DC4CED1;
+	Fri,  7 Mar 2025 07:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741332545;
+	bh=2QV4HyitRVqMFXPW4Hi7wniqOCXjn7Z/b1mVwIcEbs4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WWklyrBsCLgsFwE4UpYcmgzEcle2ZjJQEOQhpnkw5nX0m//baSpQhvwAlVWxTum4d
+	 vAQ8gJ8WV3oNddWIKGgM5ZocxhTUnnzawLDhUJGSTzDfPQVr2eSljSGBw6TQk2Ss7p
+	 PIx1D0w249ZsHFvtVVIq/qVcCbQawwBToLy+l4DPZIaWCJ3i3X3xufgoQ5sxxA/ZuE
+	 YFoy+wE6ZV9y40CTDBA/JWdaWO2QnhUrqiMKUv8d5WF6OubfcChH/LsZCykOoAalZF
+	 VVnDCjcl1pEI12NF/r+xd2+1DSQpp8lwNPFG8nWpjNIozwRuRQxP0x9YmjQXF+LwDS
+	 oyw6Iw+1tATmQ==
+Date: Fri, 7 Mar 2025 08:29:01 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Guangjie Song <guangjie.song@mediatek.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Richard Cochran <richardcochran@gmail.com>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, netdev@vger.kernel.org, 
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH 06/26] dt-bindings: clock: mediatek: Add new MT8196 clock
+Message-ID: <20250307-mindful-raspberry-cow-c112ce@krzk-bin>
+References: <20250307032942.10447-1-guangjie.song@mediatek.com>
+ <20250307032942.10447-7-guangjie.song@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250307071020.756277-1-amadeus@jmu.edu.cn>
+In-Reply-To: <20250307032942.10447-7-guangjie.song@mediatek.com>
 
-On Fri, Mar 07, 2025 at 03:10:20PM +0800, Chukun Pan wrote:
-> Hi,
+On Fri, Mar 07, 2025 at 11:27:02AM +0800, Guangjie Song wrote:
+> Add the new binding documentation for system clock and functional clock
+> on Mediatek MT8196.
 > 
-> > On the E20C the sdmmc controller is routed to a microSD card slot mainly
-> > intended for use with microSD-cards and should normally not need SDIO.
-> > 
-> > What card/adapter do you have inserted in the microSD card slot that
-> > requires use of SDIO instead of just SD or MMC? What is the use case you
-> > have that requires removal of no-sdio on E20C?
-> 
-> I inserted an sdio wifi module (via sdcard adapter) for testing.
-> Just out of curiosity :)
+> Signed-off-by: Guangjie Song <guangjie.song@mediatek.com>
+> ---
+>  .../bindings/clock/mediatek,mt8196-clock.yaml |   66 +
+>  .../clock/mediatek,mt8196-sys-clock.yaml      |   63 +
+>  include/dt-bindings/clock/mt8196-clk.h        | 1503 +++++++++++++++++
 
-I doubt whether the module actually works, they usually require more
-pins than a simple SDIO bus to function. Additionally, it really doesn't
-sound like a real use case for me.
+Filename matching binding, so mediatek,mt8196-clock.h
 
-Have you tried transferring some data? The log you showed only indicates
-the controller doesn't bail out or freeze when encountering SDIO command
-sequences during initialization, but cannot prove the controller is
-really in a good state and could transfer as normal.
-
-Again, connecting SDIO WiFi modules to a SDcard slot doesn't seem an
-usual case for me. I'll change my mind to keep SDIO sequence disabled if
-you didn't get the module really working but only observed the
-initialization didn't fail,
-
-> Thanks,
-> Chukun
-> 
-> -- 
-> 2.25.1
-> 
+I would not even dream about people testing patches before sending
+them...
 
 Best regards,
-Yao Zi
+Krzysztof
+
