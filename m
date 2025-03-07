@@ -1,93 +1,104 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0404120C49E;
-	Fri,  7 Mar 2025 11:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3815221767C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 11:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741346989; cv=none; b=QIOhBXbHosj/TSE809siDWij0QhvZimKCyc0/b0Q86hnz5e3WoI8uLv6P6eTzCjsa8XMhD2i4ETzyyyqvPC0dzQ5HSYdSh4y3T13cAMu3LhuhojyOPD087t8xgpXLmn7dUXNEGtPt1opL5QB5lcUjoRflXkGtABj3d/kTyYm5L8=
+	t=1741347004; cv=none; b=pr/Tr/Ul/xfEh+/L8AXsT4KFtQrjcA9PWpYbUYrAtoFwYMAd0ryf/HbbsrR4+6JyMpM5LlVk4OyayjSSq2OKFaufTpf7o74j80l9FCAf3bbxoku+E/1zur3pSB7VDfTpPWzDKoPAQHK3EBqHv6p3xtXBZcQhsGqmWQS9iY6eNA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741346989; c=relaxed/simple;
-	bh=WkCxgnFYvFujFRMpZOJasVbjW5B9RnepoADsBQ+01hw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iavuStV2h6KMim3Ix5KFL1LRPBSAZOChH1JobH1frIw7VgmrFVhRVXLjTkNDp2TlYCt+sBddVI0ZWs4c+bwi5mmxHN26zgEoOF44FWcGR5D2Ynihw04JWZvnjlCvVmP4ROG0DNy+4msxft3DkMNzSapi/CtmSBkZYcEJoO+acGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=q8mcuh8p; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
+	s=arc-20240116; t=1741347004; c=relaxed/simple;
+	bh=3xFqsfmNyph+Xl2XdVJUArNLkdZCz7c3+dVcIqg96Eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCH0wU0dRVHiQhPo/2KXloYW2PAM5K5ihGGv9Vr3LHF7lCygqpk5CNTfbyEmi/trBVgoXGIEaI+gdkM7iVeuEUK2QmzM7HJFS6nMUQCAOEYOxWGpVDS/7U938O7xPNDqcfSVZvURVWMOP9Cy+iKF/aEY9NSwdZYflXBPgZKOUNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2+Si6LE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="q8mcuh8p"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2+Si6LE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741347001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ojp02tMMlaCOgsrJPucLz0Hwm5Y00WT/jYhUO+/vuWg=;
+	b=A2+Si6LERySpnxNo+aNxP1qHXrEiJkKA2RKBBA+20B+SF8KnVaw1iLQfbDr4MZlpE4+7Ai
+	nl5RO4Nj4xeVzcAV0LtQKR+qwLlgyVJGU/XZMlyyVBfggWFt9CITilOzhqmtF0HwzfAVVW
+	SiEakOTAfNmFgAMwGdLaDzte69P60II=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-zEl5gvgUMmq14HrDIZkdEg-1; Fri,
+ 07 Mar 2025 06:29:58 -0500
+X-MC-Unique: zEl5gvgUMmq14HrDIZkdEg-1
+X-Mimecast-MFC-AGG-ID: zEl5gvgUMmq14HrDIZkdEg_1741346997
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: marcan@marcan.st)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 3854C447C6;
-	Fri,  7 Mar 2025 11:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-	t=1741346440; bh=WkCxgnFYvFujFRMpZOJasVbjW5B9RnepoADsBQ+01hw=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=q8mcuh8pkZlvAP3cXTIfj9IrDH3WpsylC0KiGdFLtoGoBpo2tRFcVZFn/GjFeLeed
-	 xUp5izj+iMo7THXQX4CAwe6NoQgAI4grm48wrNVWKcG6mLIb/ShunVu2BNNSgSLLpd
-	 AVZ0xcj6sEVzyjKWO9OyKjueNcezZmCySRpJJ6lIpMu/ikvNKsWB2X0K7UGNP8a3ca
-	 pOSrSePk9KH2nS9X5gkGz4fILSwpW2vemT8MGMyFEtXuRXqIAa1BlMaj1ftye4fXEZ
-	 poJQIQ5LVbwufSkZEun3tP44gxRIMyng9ErW+hPuYJY5YVo9BjM6R63Q0B9bdJOX90
-	 f6jNogm148Jfg==
-Message-ID: <239cbc8a-9886-4ebc-865c-762bb807276c@marcan.st>
-Date: Fri, 7 Mar 2025 20:20:37 +0900
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0328E19560AB;
+	Fri,  7 Mar 2025 11:29:57 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.108])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id BA49B1801751;
+	Fri,  7 Mar 2025 11:29:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  7 Mar 2025 12:29:26 +0100 (CET)
+Date: Fri, 7 Mar 2025 12:29:21 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
+ full
+Message-ID: <20250307112920.GB5963@redhat.com>
+References: <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com>
+ <20250228143049.GA17761@redhat.com>
+ <20250228163347.GB17761@redhat.com>
+ <20250304050644.2983-1-hdanton@sina.com>
+ <20250304102934.2999-1-hdanton@sina.com>
+ <20250304233501.3019-1-hdanton@sina.com>
+ <20250305045617.3038-1-hdanton@sina.com>
+ <20250305224648.3058-1-hdanton@sina.com>
+ <20250307060827.3083-1-hdanton@sina.com>
+ <20250307104654.3100-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [bcachefs?] general protection fault in proc_sys_compare
-To: syzbot <syzbot+4364ec1693041cad20de@syzkaller.appspotmail.com>,
- broonie@kernel.org, joel.granados@kernel.org, kees@kernel.org,
- kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-References: <67ca5dd0.050a0220.15b4b9.0076.GAE@google.com>
-From: Hector Martin <marcan@marcan.st>
-Content-Language: en-US
-In-Reply-To: <67ca5dd0.050a0220.15b4b9.0076.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307104654.3100-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 2025/03/07 11:45, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    b91872c56940 Merge tag 'dmaengine-fix-6.14' of git://git.k..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1485e8b7980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4364ec1693041cad20de
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149d55a8580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/4b855669df70/disk-b91872c5.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/e44f3c546271/vmlinux-b91872c5.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/b106e670346a/bzImage-b91872c5.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/68b26fa478ee/mount_0.gz
-> 
-> The issue was bisected to:
-> 
-> commit 579cd64b9df8a60284ec3422be919c362de40e41
-> Author: Hector Martin <marcan@marcan.st>
-> Date:   Sat Feb 8 00:54:35 2025 +0000
-> 
->     ASoC: tas2770: Fix volume scale
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14aa03a8580000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=16aa03a8580000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12aa03a8580000
-[...]
+On 03/07, Hillf Danton wrote:
+>
+> On Fri, 7 Mar 2025 11:54:56 +0530 K Prateek Nayak <kprateek.nayak@amd.com>
+> >> step-03
+> >> 	task-118766 new reader
+> >> 	makes pipe empty
+> >
+> >Reader seeing a pipe full should wake up a writer allowing 118768 to
+> >wakeup again and fill the pipe. Am I missing something?
+> >
+> Good catch, but that wakeup was cut off [2,3]
+>
+> [2] https://lore.kernel.org/lkml/20250304123457.GA25281@redhat.com/
+> [3] https://lore.kernel.org/all/20250210114039.GA3588@redhat.com/
 
-This is a bad bisect. Not sure what the appropriate syzbot action is in
-this case.
+Why do you think
 
-- Hector
+	[PATCH v2 1/1] pipe: change pipe_write() to never add a zero-sized buffer
+	https://lore.kernel.org/all/20250210114039.GA3588@redhat.com/
+
+can make any difference ???
+
+Where do you think a zero-sized buffer with ->len == 0 can come from?
+
+Oleg.
 
