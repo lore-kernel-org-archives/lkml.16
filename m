@@ -1,137 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C26818BB9C;
-	Fri,  7 Mar 2025 16:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E9224394B;
+	Fri,  7 Mar 2025 16:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741365559; cv=none; b=IUweV7CiGNSjeitPx1C1JxIwCU8Q4I8wi/4NOxMVAkv2J1jtP+wcyGJLcVWsX569+W3twCzHEzQ0dlOfjiwQdw9t39pZqzPk6Kyuyo5OOzg5kaCb4YJdx78kJxybGgWNf7evx/OWV5xvtR/0NjgcQekMVR0SMY9MNSuJq6CXA58=
+	t=1741365560; cv=none; b=hDDJudWgm+IR9LKPHtVZOUe7AYmz1VgPK65L/yxRZHDIfeJgAykHG+tspjL/7uWYXNdgedaU1Ibh3Voas0RskzYOjGhKo9dzEzU0NQWAFAE+CbKcLn4NRE7J0YLgcUj5CIX/y77EWw4zVmqqXYO1XhPknJX1Gao/zBb2btC6f9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741365559; c=relaxed/simple;
-	bh=JMJwJmvvDb2gSkAc1Vt7kalSklLNxXgohGfolGvkY+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bfSaS5UiT7wfkV1Pduk35IRo5P4wj8zcXt49vDGuOodH4I8mHWH1zc/Qu/7SLyT2QARRYYOTgOOaLAj8J/8uxe8TvgCOdivfotVli4sql/C1svUf1sSiipf82WIqdkNa9qczrixUeVXZZHj0dbMjrBnWwwFB7uEP7Zs/mh2Ba/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJtcXpnw; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741365560; c=relaxed/simple;
+	bh=mj8HNa4tB4btRP0QMutMC9u6X27Sph7ff1QsvL0G+98=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=iFtyd+a1oVX0dJIsY26zmnpsGTBiR6TGJpitSjrmoYM1D/PoJjyjRhQnXCzbMj2WT7MOOGRNM6U3aA67A1sg7fpwEhTksvyALm3RIjdqySVdVnvuTp//dBKS28DuT+Q0UK12+woGZJgS/cpgLXhO9F4ICdjeGaTdIOYDUzKSyKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxojAVdI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJtcXpnw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741365557; x=1772901557;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JMJwJmvvDb2gSkAc1Vt7kalSklLNxXgohGfolGvkY+A=;
-  b=aJtcXpnw3cMpVoalaZeVKMFn+Pe155xyxYrAV17VsghxAJ6rixyqunve
-   lxRi5FUt+JBapAvCXw5EPk0ZODu/hvKFmx5Q/Mem7ZG3UDlt+zKliEE6c
-   ERWdr1HP9U60OtPXa4Fo3wLfl8zHpZbhDoA8ZMnq+PlRSUCk/GyY9oadj
-   MqtI1fuTrvFv3nprN9mmGgMI+i2ySeeN00mzjhgTeQZU36h0tZxmS8193
-   YF7gg6aPpXqvxZYk3BrOpFOj020aewg5v/oHPCS6BfIlOmf0dql51dTNM
-   GtNw1VxekPFLs5WH5vA9djtsWsl0F6mDA1amjSbhT7IOGdDNnkeasXbhQ
-   w==;
-X-CSE-ConnectionGUID: lrqum1phRSKJDxm/RfRwsg==
-X-CSE-MsgGUID: 7P6+aEtcTGqLBmR6lfZc+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46344452"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="46344452"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 08:39:17 -0800
-X-CSE-ConnectionGUID: VRrK0471SkWl1obg/F7eCw==
-X-CSE-MsgGUID: MtO4oQ/CT+qI993fd3DPtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="124397986"
-Received: from spr.sh.intel.com ([10.239.53.19])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 08:39:14 -0800
-From: Chao Gao <chao.gao@intel.com>
-To: chao.gao@intel.com,
-	tglx@linutronix.de,
-	dave.hansen@intel.com,
-	x86@kernel.org,
-	seanjc@google.com,
-	pbonzini@redhat.com,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: peterz@infradead.org,
-	rick.p.edgecombe@intel.com,
-	weijiang.yang@intel.com,
-	john.allen@amd.com,
-	bp@alien8.de,
-	Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH v3 07/10] x86/fpu/xstate: Initialize guest fpstate with fpu_guest_config
-Date: Sat,  8 Mar 2025 00:41:20 +0800
-Message-ID: <20250307164123.1613414-8-chao.gao@intel.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250307164123.1613414-1-chao.gao@intel.com>
-References: <20250307164123.1613414-1-chao.gao@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxojAVdI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2858C4CEE2;
+	Fri,  7 Mar 2025 16:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741365560;
+	bh=mj8HNa4tB4btRP0QMutMC9u6X27Sph7ff1QsvL0G+98=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=BxojAVdI/xVUpTcp5ntWty/Ewi3UiZNzaLXlgQ1CA5IrsGxvRTlc2bO36rGNV493o
+	 dNdw+BQlzdAHgKdyTrp81QiIsi6duQLQQ47QioI61pIDK7dA46eLWEtEdVfNZS467g
+	 aOxaUJCIdoEQxNKCOOYkhds9nDxl+RnMoS3/cvyyTwyqrfK2rrfcF1Hiqe+TNC0cbu
+	 9X+tVhJnpHWCfCF5VxTX+Wo5CVdPndXrFsCFHNYzVbHKcPG3Bub9/Bfpx1OVURXHdj
+	 sSLsTWQQNET5Z1344L48n07FfZSHweXKsbbFKYV6k/ObppxxmZhP/YzJF47da8zhdm
+	 UU05cNfLvrJtA==
+Date: Fri, 7 Mar 2025 10:39:18 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC PATCH 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Message-ID: <20250307163918.GA410256@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef29ceb3-9aa6-f4ca-014e-3f005a9b4beb@linux.intel.com>
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+On Fri, Mar 07, 2025 at 03:06:31PM +0200, Ilpo Järvinen wrote:
+> On Tue, 4 Mar 2025, Bjorn Helgaas wrote:
+> > On Tue, Mar 04, 2025 at 03:51:08PM +0200, Ilpo Järvinen wrote:
+> > > Disallow Extended Tags and Max Read Request Size (MRRS) larger than
+> > > 128B for devices under Xeon 6 Root Ports if the Root Port is bifurcated
+> > > to x2. Also, 10-Bit Tag Requester should be disallowed for device
+> > > underneath these Root Ports but there is currently no 10-Bit Tag
+> > > support in the kernel.
+> > > 
+> > > The normal path that writes MRRS is through
+> > > pcie_bus_configure_settings() -> pcie_bus_configure_set() ->
+> > > pcie_write_mrrs() and contains a few early returns that are based on
+> > > the value of pcie_bus_config. Overriding such checks with the host
+> > > bridge flag check on each level seems messy. Thus, simply ensure MRRS
+> > > is always written in pci_configure_device() if a device requiring the
+> > > quirk is detected.
+> > 
+> > This is kind of weird.  It's apparently not an erratum in the sense
+> > that something doesn't *work*, just something for "optimized PCIe
+> > performance"?
+> > 
+> > What are we supposed to do with this?  Add similar quirks for every
+> > random PCI controller?  Scratching my head about what this means for
+> > the future.
+> > 
+> > What bad things happen if we *don't* do this?  Is this something we
+> > could/should rely on BIOS to configure for us?
+> 
+> Even if BIOS configures this (I'm under impression they already do, I 
+> had problem in finding a configuration in our lab on which this patch
+> had some effect). But my kernel was built with CONFIG_PCIE_BUS_DEFAULT, if 
+> I set that to CONFIG_PCIE_BUS_PERFORMANCE, what BIOS did will be 
+> overwritten.
 
-Use fpu_guest_cfg to initialize the guest fpstate and the guest FPU pseduo
-container.
-
-The user_* fields remain unchanged for compatibility with KVM uAPIs.
-
-Inline the logic of __fpstate_reset() to directly utilize fpu_guest_cfg.
-
-Note fpu_guest_cfg and fpu_kernel_cfg remain the same for now. So there
-is no functional change.
-
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
----
- arch/x86/kernel/fpu/core.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index d7ae684adbad..9cb800918b6d 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -194,8 +194,6 @@ void fpu_reset_from_exception_fixup(void)
- }
- 
- #if IS_ENABLED(CONFIG_KVM)
--static void __fpstate_reset(struct fpstate *fpstate, u64 xfd);
--
- static void fpu_lock_guest_permissions(struct fpu_guest *gfpu)
- {
- 	struct fpu_state_perm *fpuperm;
-@@ -219,19 +217,22 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
- 	struct fpstate *fpstate;
- 	unsigned int size;
- 
--	size = fpu_kernel_cfg.default_size + ALIGN(offsetof(struct fpstate, regs), 64);
-+	size = fpu_guest_cfg.default_size + ALIGN(offsetof(struct fpstate, regs), 64);
-+
- 	fpstate = vzalloc(size);
- 	if (!fpstate)
- 		return false;
- 
--	/* Leave xfd to 0 (the reset value defined by spec) */
--	__fpstate_reset(fpstate, 0);
-+	fpstate->size		= fpu_guest_cfg.default_size;
-+	fpstate->xfeatures	= fpu_guest_cfg.default_features;
-+	fpstate->user_size	= fpu_user_cfg.default_size;
-+	fpstate->user_xfeatures	= fpu_user_cfg.default_features;
- 	fpstate_init_user(fpstate);
- 	fpstate->is_valloc	= true;
- 	fpstate->is_guest	= true;
- 
- 	gfpu->fpstate		= fpstate;
--	gfpu->xfeatures		= fpu_kernel_cfg.default_features;
-+	gfpu->xfeatures		= fpu_guest_cfg.default_features;
- 
- 	/*
- 	 * KVM sets the FP+SSE bits in the XSAVE header when copying FPU state
--- 
-2.46.1
-
+I despise those CONFIG_PCIE_BUS_* options, but have never managed to
+get rid of them.  Unfortunate that something named "*_PERFORMANCE"
+will apparently result in *worse* performance in this respect.
