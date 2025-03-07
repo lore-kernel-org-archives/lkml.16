@@ -1,200 +1,119 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CE320E713;
-	Fri,  7 Mar 2025 12:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EE621ABC9;
+	Fri,  7 Mar 2025 12:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741351746; cv=none; b=VWi+tU1F5zsORLmjJHtQIWeqnJqzrgdIRoamX+F+K3X0GYsSAbGZCrOJpLNge3aDW31+rC8hSP8pH26cB2aZWGe8K5Jqvv3NeiyChiC/58wWP9QYZ+pU97TvZ4KhW0cZMZBRemhO56xVdFrbh08JFMRZLZDFGyjHG6ppjwJLYRg=
+	t=1741351750; cv=none; b=k0T3Y+SGQvTLSkWx0CnEihQsgPkZz7V3PPMPsC3GGoEr89/dBXfD2/SjQ/keiNkKG0CQZGvIIEJnh58Vi8FAAvv84hsgbIjL+4dEkw5mhVwAMtP8HhOb1QzQZmZmQq2jBPOpkH3aVVuYH2XiOf2zemUdXNMf5iQWoXRmppye9jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741351746; c=relaxed/simple;
-	bh=nxW8gV48YW5n/O/O9pjGH+DjJKmvdmlG+4UYrYasoBk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y73YzrXeMzI/1Fs4/cMo41mMSqqNARrkMfV1YKK8rzmviXyA0MBsYPTEIeCwG3NSURg2h94AJj7ZPoNsgAmFnL/v1ne4CMRSP4pDhl/+Ru3/qYNF4sbyULh659eHPcAEpxfJxDhqHZqReFnEUMMNqrJi1KL5GpitqU/iwAQO1tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ZECAXa76; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1741351750; c=relaxed/simple;
+	bh=3W8+PXmFf+vfNSA0B4k7RZ7X8c6vyGTNNd3pjI3VyVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=auPa4Qj+WSbfS1/vj37YjJGcJDcWM+k/V/bu/lsqw5IdRKrIzJSMUr0fb/FohnP7H6eL8SpwC/7kxtIQAdA9K9Oip2ZMHegFNKLwdmhT7oWFollg0CNQvpyGrmaGqgCfJ7N4ejFlAoP2Wm4jy3KGMPcE4upKO923GZxO+g32IHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrpxYXCs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZECAXa76"
-X-UUID: 8866db1efb5211efaae1fd9735fae912-20250307
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3YKZgSoMuTXktamYFQTdo3ZV/YxOMNDKsaOxZk019Kc=;
-	b=ZECAXa767BcFHiJMBToLMtyuqrBSeeXcyRVCVfJRCpiTsRWbMsq0JnHx9yI7Okg46OPTkfnsjxhmmzcHwOyknDpV8FqMBZdyt6sunjMp7RZ3QQjV/Gtf3tyDidpzJLcBk56FbbKTtgYWpMqoaiUS7rhYRU1+wY9sow/XU5sJQ6k=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:45c339c5-c85e-4b99-844c-7315d05bb0b0,IP:0,UR
-	L:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:0753168c-f5b8-47d5-8cf3-b68fe7530c9a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:1,
-	IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
-	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 8866db1efb5211efaae1fd9735fae912-20250307
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
-	(envelope-from <darren.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 464746380; Fri, 07 Mar 2025 20:48:56 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 7 Mar 2025 20:48:55 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Fri, 7 Mar 2025 20:48:54 +0800
-From: Darren.Ye <darren.ye@mediatek.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
-	<darren.ye@mediatek.com>
-Subject: [PATCH 04/14] ASoC: mediatek: mt8196: add common interface for mt8196 DAI driver
-Date: Fri, 7 Mar 2025 20:47:30 +0800
-Message-ID: <20250307124841.23777-5-darren.ye@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250307124841.23777-1-darren.ye@mediatek.com>
-References: <20250307124841.23777-1-darren.ye@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrpxYXCs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B953C4CEE7;
+	Fri,  7 Mar 2025 12:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741351749;
+	bh=3W8+PXmFf+vfNSA0B4k7RZ7X8c6vyGTNNd3pjI3VyVM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=jrpxYXCsE/Eaj6GJ9dvPBSkVz3zJgHeOa8z8l5IzqX7Bd8vaVS4qA1Ei8dzfsXynE
+	 zqXLmt2kaV0Kau3pTe+qnkkJRkz55mQV4PP6Pj9mM1TuYQG8BXUXcnStKrBkcLu0Bt
+	 9iroej4WZid2e8pktnOZfUyqrMf8AltG6WWmCCt1kRkJiPuxi9Nt5KNBe84Nu+NOEh
+	 L9UfjHD2H9AwIeKyXg5IVjDnfy3olMn65j5QQVLdVZII+gpktGcMocA1+mBzmQYmAO
+	 +CVrmEVpeH0XXItlgMHEq7aXENiEVjsug0szmE67nisPW+wYGW+X6hP5eVFS7+eC9C
+	 091/khfcm0L6g==
+Message-ID: <2090b241-8780-4897-b898-4c55e4f80028@kernel.org>
+Date: Fri, 7 Mar 2025 13:49:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ARM64: dts: imx8mp-evk: add ecspi2 support
+To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+ "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250306222359.797855-1-Frank.Li@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250306222359.797855-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Darren Ye <darren.ye@mediatek.com>
+On 06/03/2025 23:23, Frank Li wrote:
+> +&ecspi2 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	num-cs = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi2 &pinctrl_ecspi2_cs>;
+> +	cs-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +
+> +	spidev1: spi@0 {
+> +		compatible = "rohm,dh2228fv";
 
-Implement sample rate conversion and set private data for mt8196.
+NAK, not true. You do not have there DH2228FV.
 
-Signed-off-by: Darren Ye <darren.ye@mediatek.com>
----
- .../soc/mediatek/mt8196/mt8196-afe-control.c  | 109 ++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-control.c
+Stop sending blindly your downstream commits.
 
-diff --git a/sound/soc/mediatek/mt8196/mt8196-afe-control.c b/sound/soc/mediatek/mt8196/mt8196-afe-control.c
-new file mode 100644
-index 000000000000..bb85f4ad8585
---- /dev/null
-+++ b/sound/soc/mediatek/mt8196/mt8196-afe-control.c
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  MediaTek ALSA SoC Audio Control
-+ *
-+ *  Copyright (c) 2024 MediaTek Inc.
-+ *  Author: Darren Ye <darren.ye@mediatek.com>
-+ */
-+
-+#include "mt8196-afe-common.h"
-+#include <linux/pm_runtime.h>
-+
-+unsigned int mt8196_general_rate_transform(struct device *dev,
-+					   unsigned int rate)
-+{
-+	switch (rate) {
-+	case 8000:
-+		return MTK_AFE_IPM2P0_RATE_8K;
-+	case 11025:
-+		return MTK_AFE_IPM2P0_RATE_11K;
-+	case 12000:
-+		return MTK_AFE_IPM2P0_RATE_12K;
-+	case 16000:
-+		return MTK_AFE_IPM2P0_RATE_16K;
-+	case 22050:
-+		return MTK_AFE_IPM2P0_RATE_22K;
-+	case 24000:
-+		return MTK_AFE_IPM2P0_RATE_24K;
-+	case 32000:
-+		return MTK_AFE_IPM2P0_RATE_32K;
-+	case 44100:
-+		return MTK_AFE_IPM2P0_RATE_44K;
-+	case 48000:
-+		return MTK_AFE_IPM2P0_RATE_48K;
-+	case 88200:
-+		return MTK_AFE_IPM2P0_RATE_88K;
-+	case 96000:
-+		return MTK_AFE_IPM2P0_RATE_96K;
-+	case 176400:
-+		return MTK_AFE_IPM2P0_RATE_176K;
-+	case 192000:
-+		return MTK_AFE_IPM2P0_RATE_192K;
-+	/* not support 260K */
-+	case 352800:
-+		return MTK_AFE_IPM2P0_RATE_352K;
-+	case 384000:
-+		return MTK_AFE_IPM2P0_RATE_384K;
-+	default:
-+		dev_info(dev, "%s(), rate %u invalid, use %d!!!\n",
-+			 __func__,
-+			 rate, MTK_AFE_IPM2P0_RATE_48K);
-+		return MTK_AFE_IPM2P0_RATE_48K;
-+	}
-+}
-+
-+static unsigned int pcm_rate_transform(struct device *dev,
-+				       unsigned int rate)
-+{
-+	switch (rate) {
-+	case 8000:
-+		return MTK_AFE_PCM_RATE_8K;
-+	case 16000:
-+		return MTK_AFE_PCM_RATE_16K;
-+	case 32000:
-+		return MTK_AFE_PCM_RATE_32K;
-+	case 48000:
-+		return MTK_AFE_PCM_RATE_48K;
-+	default:
-+		dev_info(dev, "%s(), rate %u invalid, use %d!!!\n",
-+			 __func__,
-+			 rate, MTK_AFE_PCM_RATE_32K);
-+		return MTK_AFE_PCM_RATE_32K;
-+	}
-+}
-+
-+unsigned int mt8196_rate_transform(struct device *dev,
-+				   unsigned int rate, int aud_blk)
-+{
-+	switch (aud_blk) {
-+	case MT8196_DAI_PCM_0:
-+	case MT8196_DAI_PCM_1:
-+		return pcm_rate_transform(dev, rate);
-+	default:
-+		return mt8196_general_rate_transform(dev, rate);
-+	}
-+}
-+
-+int mt8196_dai_set_priv(struct mtk_base_afe *afe, int id,
-+			int priv_size, const void *priv_data)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	void *temp_data;
-+
-+	temp_data = devm_kzalloc(afe->dev,
-+				 priv_size,
-+				 GFP_KERNEL);
-+	if (!temp_data)
-+		return -ENOMEM;
-+
-+	if (priv_data)
-+		memcpy(temp_data, priv_data, priv_size);
-+
-+	if (id >= MT8196_DAI_NUM || id < 0)
-+		return -EINVAL;
-+
-+	afe_priv->dai_priv[id] = temp_data;
-+
-+	return 0;
-+}
-+
--- 
-2.45.2
-
+Best regards,
+Krzysztof
