@@ -1,226 +1,194 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF311E1DEE;
-	Fri,  7 Mar 2025 09:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82D51DACB8;
+	Fri,  7 Mar 2025 09:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341000; cv=none; b=ogsvcBQpRKv7Y0V1rhEUbyrAh9qb5voYUVd/FdEvVadXhmIUE+g7Ktwddc6Py970a1dlE3TuwpuWunkUAnFcIseTQvGCg24JvAJLLIaFV+CYFNTyvey+8hhvU49DGwcpcJn9F5UuiiRPSd3yK6k2jKgdQEQ1cFld2JjqlzR31I8=
+	t=1741341027; cv=none; b=RMUMdK2RZjaHHxpPzYXekoHh0i2U+gaGvPCUP5csIEIAI7qLp6moeYmMNL9KHmE6y9TVGzW/GVwLzn6VB32MqtLMW38ZdHvvop9Uxheg1YMKJbwk0ze8qHOK3sswxox8FDgVeRRGq4fxF9kIKCt4s0STR70Uvd5caageLT79ZRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341000; c=relaxed/simple;
-	bh=ChCpk2prk2Z6MDm9CmuUwucH7ojnVNF4Xb7Hq1r7Rvo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b6njnKSKETkLPQm3URg4bgiW1HCxsD8TEt0RDOyfGQVFIO9Sjt5c47LEDXA9SSUU2P2Q2Lgk7G4mdOg0v2T301C3qHj48X/qykO2Qm2NBBf5qPSqg7KdLPkFO5UyGyFgzXjVU+Sw7t4+IPHc4yEY77ZPbMuv640bm8q1InoyOIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z8LY91mghzvWqv;
-	Fri,  7 Mar 2025 17:27:41 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9849B140157;
-	Fri,  7 Mar 2025 17:31:29 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 7 Mar 2025 17:31:29 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <zhangkun09@huawei.com>, <liuyonglong@huawei.com>,
-	<fanghaiqing@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>, Alexander
- Lobakin <aleksander.lobakin@intel.com>, Robin Murphy <robin.murphy@arm.com>,
-	Alexander Duyck <alexander.duyck@gmail.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Gaurav Batra <gbatra@linux.ibm.com>, Matthew
- Rosato <mjrosato@linux.ibm.com>, IOMMU <iommu@lists.linux.dev>, MM
-	<linux-mm@kvack.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
-	<daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, <netdev@vger.kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-Subject: [PATCH net-next v11 0/4] fix the DMA API misuse problem for page_pool
-Date: Fri, 7 Mar 2025 17:23:51 +0800
-Message-ID: <20250307092356.638242-1-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1741341027; c=relaxed/simple;
+	bh=v3XPh/i9gJzfFogPfFd2VWXUphI0PZZDx976fbGrcuM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=haQGDfqDELPURD39L1lFrQHF0aVzbycu3wN8zkehy65APNluWpUORi0GzIiSLUXVY+TssnIc4TKiTnajfym2zb2YYpAQRhrIPpUtBLr5NuR9Y6Mo6wrD6OqYC8EL+MlIr2C0n2/PV0KSOrK9eXw6lF5QTHeGrImktJP/NEKX7g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=ErCxTPZU; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="ErCxTPZU"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1741341017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X+v6m2gMUALt/DSU6yD9ZupV909qVVDvbIZQSohGMX0=;
+	b=ErCxTPZUdZTWeOVfbb0DTXyJp7VEFz9TR5Ocb6D/0yk6vfgB0KyjJ3aP2/kvlp7tc/zZF3
+	hw/j7FEookgzhvP/SqO0U3R96haRnyYp5qlG2wHlksPJz3O32ib9QHiaMPjvNX90KflbUB
+	gbjiWqWclKJbFiT6d4JHf+BlxhXqP7cCPn6xMTKjPVH2gwoFPQoEP2dtgHToDDhO7D5jVV
+	N9MWsY9oCncB2t4iQaQQPRUyTWxIR1NUfklli7xlQTnINhrCU0vk/PV+pv3MlO2Dyfg7eg
+	zIdPGlb2OHxqgES9ai0T4awz/I4eOC49tFj7aLSUp95Rei68yq86DK4tuV2U1w==
+Date: Fri, 07 Mar 2025 10:50:16 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ heiko@sntech.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] docs: dt-bindings: Specify ordering for properties
+ within groups
+In-Reply-To: <20250307-logical-nimble-okapi-3ba081@krzk-bin>
+References: <7276139ea1f4a5f4db48c77f536a3638492e6c2f.1741321984.git.dsimic@manjaro.org>
+ <20250307-logical-nimble-okapi-3ba081@krzk-bin>
+Message-ID: <0df01d9863f72df3bebff1868f010954@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-This patchset fix the dma API misuse problem as below:
-Networking driver with page_pool support may hand over page
-still with dma mapping to network stack and try to reuse that
-page after network stack is done with it and passes it back
-to page_pool to avoid the penalty of dma mapping/unmapping.
-With all the caching in the network stack, some pages may be
-held in the network stack without returning to the page_pool
-soon enough, and with VF disable causing the driver unbound,
-the page_pool does not stop the driver from doing it's
-unbounding work, instead page_pool uses workqueue to check
-if there is some pages coming back from the network stack
-periodically, if there is any, it will do the dma unmmapping
-related cleanup work.
+Hello Krzysztof,
 
-As mentioned in [1], attempting DMA unmaps after the driver
-has already unbound may leak resources or at worst corrupt
-memory. Fundamentally, the page pool code cannot allow DMA
-mappings to outlive the driver they belong to.
+On 2025-03-07 10:28, Krzysztof Kozlowski wrote:
+> On Fri, Mar 07, 2025 at 05:33:37AM +0100, Dragan Simic wrote:
+>> When it comes to ordering of the individual properties inside each 
+>> property
+>> group, applying natural sort order to multi-digit numbers [1] found 
+>> inside
+>> the property names can result in more logical and more usable property 
+>> lists,
+>> similarly to what's already the case with the alpha-numerical ordering 
+>> of
+>> the nodes without unit addresses.
+>> 
+>> Let's have this clearly specified in the DTS coding style, together 
+>> with
+>> a brief description of the natural sort order for those readers who 
+>> aren't
+>> familiar with it already.  Also expand the provided node example a 
+>> bit, to
+>> actually show the results of applying natural sort order.
+>> 
+>> Applying strict alpha-numerical ordering can result in property lists 
+>> that
+>> are suboptimal from the usability standpoint.  For the provided 
+>> example,
+>> which stems from a real-world DT, [2][3][4] applying strict 
+>> alpha-numerical
+>> ordering produces the following undesirable result:
+> 
+> BTW, your entire commit msg still has incorrect wrapping. Please use
+> standard editors which understand Git commit msg style (which I believe
+> is equal to Linux submitting patches).
 
-By using the 'struct page_pool_item' referenced by page->pp_item,
-page_pool is not only able to keep track of the inflight page to
-do dma unmmaping if some pages are still handled in networking
-stack when page_pool_destroy() is called, and networking stack is
-also able to find the page_pool owning the page when returning
-pages back into page_pool:
-1. When a page is added to the page_pool, an item is deleted from
-   pool->hold_items and set the 'pp_netmem' pointing to that page
-   and set item->state and item->pp_netmem accordingly in order to
-   keep track of that page, refill from pool->release_items when
-   pool->hold_items is empty or use the item from pool->slow_items
-   when fast items run out.
-2. When a page is released from the page_pool, it is able to tell
-   which page_pool this page belongs to by masking off the lower
-   bits of the pointer to page_pool_item *item, as the 'struct
-   page_pool_item_block' is stored in the top of a struct page.
-   And after clearing the pp_item->state', the item for the
-   released page is added back to pool->release_items so that it
-   can be reused for new pages or just free it when it is from the
-   pool->slow_items.
-3. When page_pool_destroy() is called, item->state is used to tell
-   if a specific item is being used/dma mapped or not by scanning
-   all the item blocks in pool->item_blocks, then item->netmem can
-   be used to do the dma unmmaping if the corresponding inflight
-   page is dma mapped.
+Sorry, but what makes the wrapping wrong?  I wrap patch descriptions
+at or well before 78 columns, which I belive is the desired way to do
+so.  The longest line in this patch description is 77 characters long,
+which is still below 78 characters.
 
-From the below performance data, the overhead is not so obvious
-due to performance variations in arm64 server and less than 1
-ns in x86 server for time_bench_page_pool01_fast_path() and
-time_bench_page_pool02_ptr_ring, and there is about 10~20ns
-overhead for time_bench_page_pool03_slow(), see more detail in
-[2].
+Also, please note that I don't "just use" some random editor, but I use
+a highly customized Vim setup, in which I over time wrote about 46 KB
+of Vimscript code in my ~/.vimrc, all by hand.  I've even contributed
+smaller patches to Vim.
 
-arm64 server:
-Before this patchset:
-              fast_path              ptr_ring            slow
-1.         31.171 ns               60.980 ns          164.917 ns
-2.         28.824 ns               60.891 ns          170.241 ns
-3.         14.236 ns               60.583 ns          164.355 ns
+>>   vdd-0v9-supply = <&board_vreg1>;
+>>   vdd-12v-supply = <&board_vreg3>;
+>>   vdd-1v8-supply = <&board_vreg4>;
+>>   vdd-3v3-supply = <&board_vreg2>;
+>> 
+>> Having the properties sorted in natural order by their associated 
+>> voltages
+>> is more logical, more usable, and a bit more consistent.
+>> 
+>> [1] https://en.wikipedia.org/wiki/Natural_sort_order
+>> [2] 
+>> https://lore.kernel.org/linux-rockchip/b39cfd7490d8194f053bf3971f13a43472d1769e.1740941097.git.dsimic@manjaro.org/
+>> [3] 
+>> https://lore.kernel.org/linux-rockchip/174104113599.8946.16805724674396090918.b4-ty@sntech.de/
+>> [4] 
+>> https://lore.kernel.org/linux-rockchip/757afa87255212dfa5abf4c0e31deb08@manjaro.org/
+>> 
+>> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+>> ---
+>> 
+>> Notes:
+>>     Changes in v3:
+>>       - Rewrote the part of the changes that describes natural sort 
+>> order
+>>         and its relation to "standard" alpha-numerical ordering, to 
+>> make
+>>         it more understandable, as suggested by Krzysztof [6]
+>>       - Slightly expanded the patch description, to clarify the 
+>> additional
+>>         goal of explaining the natural sort order briefly
+>> 
+>>     Changes in v2:
+>>       - Changed the additions to the coding style to specify natural 
+>> sort
+>>         order, which avoids amibguity, as suggested by Krzysztof [5]
+>>       - Adjusted and expanded the patch description appropriately, 
+>> together
+>>         with including one more reference for the natural sort order
+>> 
+>>     Link to v1: 
+>> https://lore.kernel.org/linux-kernel/09d6f2fc111b3d6e58987336944f93ec36b65118.1741071107.git.dsimic@manjaro.org/T/#u
+>>     Link to v2: 
+>> https://lore.kernel.org/linux-kernel/47c51c10098f089e52fb14c5c5527611dc8daf32.1741164239.git.dsimic@manjaro.org/T/#u
+>> 
+>>     [5] 
+>> https://lore.kernel.org/linux-kernel/20250305-defiant-serious-newt-b7c5ea@krzk-bin/
+>>     [6] 
+>> https://lore.kernel.org/linux-kernel/20250306-dexterous-goshawk-of-aptitude-e4f1f6@krzk-bin/
+>> 
+>>  .../devicetree/bindings/dts-coding-style.rst       | 14 
+>> +++++++++++++-
+>>  1 file changed, 13 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/dts-coding-style.rst 
+>> b/Documentation/devicetree/bindings/dts-coding-style.rst
+>> index 8a68331075a0..7d183c1ade74 100644
+>> --- a/Documentation/devicetree/bindings/dts-coding-style.rst
+>> +++ b/Documentation/devicetree/bindings/dts-coding-style.rst
+>> @@ -133,6 +133,15 @@ The above-described ordering follows this 
+>> approach:
+>>  3. Status is the last information to annotate that device node is or 
+>> is not
+>>     finished (board resources are needed).
+>> 
+>> +The above-described ordering specifies the preferred ordering of 
+>> property
+>> +groups, while the individual properties inside each group shall use 
+>> natural
+>> +sort order by the property name.
+> 
+> I guess you sent it after my today's reply. Full stop, done. Such
+> trivial thing as sorting should have one line. Three lines is already
+> longish, but fine, especially that it can be one line.
+> 
+> "Properties within each of above groups should use natural sort order."
 
-With patchset:
-6.         26.163 ns               53.781 ns          189.450 ns
-7.         26.189 ns               53.798 ns          189.466 ns
+If you insist that the brief sentence you provided is to be used,
+I can live with it, but I have to note that it could be improved
+from the style and grammar viewpoints.
 
-X86 server:
-| Test name  |Cycles |   1-5 |    | Nanosec |    1-5 |        |      % |
-| (tasklet_*)|Before | After |diff|  Before |  After |   diff | change |
-|------------+-------+-------+----+---------+--------+--------+--------|
-| fast_path  |    19 |    19 |   0|   5.399 |  5.492 |  0.093 |    1.7 |
-| ptr_ring   |    54 |    57 |   3|  15.090 | 15.849 |  0.759 |    5.0 |
-| slow       |   238 |   284 |  46|  66.134 | 78.909 | 12.775 |   19.3 |
+Could we, please, settle on using the version I proposed above,
+together with dropping the additional description, visible below?
 
-And about 16 bytes of memory is also needed for each page_pool owned
-page to fix the dma API misuse problem
+>> +
+>> +The natural sort order differs from alpha-numerical ordering only by 
+>> treating
+>> +any single- and multi-digit numbers found inside the property names 
+>> atomically,
+>> +and by taking their actual numerical values and comparing those 
+>> values between
+>> +themselves to determine the order of property names.
+> 
+> 8 lines is 8 times too long.
 
-1. https://lore.kernel.org/lkml/8067f204-1380-4d37-8ffd-007fc6f26738@kernel.org/T/
-2. https://lore.kernel.org/all/f558df7a-d983-4fc5-8358-faf251994d23@kernel.org/
-
-CC: Alexander Lobakin <aleksander.lobakin@intel.com>
-CC: Robin Murphy <robin.murphy@arm.com>
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Gaurav Batra <gbatra@linux.ibm.com>
-CC: Matthew Rosato <mjrosato@linux.ibm.com>
-CC: IOMMU <iommu@lists.linux.dev>
-CC: MM <linux-mm@kvack.org>
-
-Change log:
-V11:
-  1. Rebase on the latest net-next.
-  2. Fix two compiler errors reported by Jakub and Simon.
-  3. Change to use __acquire() and __release() to avoid 'context
-     imbalance' warning.
-
-V10:
-  1. Add nl API to dump item memory usage.
-  2. Use __acquires() and __releases() to avoid 'context imbalance'
-     warning.
-
-V9.
-  1. Drop the fix of a possible time window problem for NPAI recycling.
-  2. Add design description for the fix in patch 2.
-
-V8:
-  1. Drop last 3 patch as it causes observable performance degradation
-     for x86 system.
-  2. Remove rcu read lock in page_pool_napi_local().
-  3. Renaming item function more consistently.
-
-V7:
-  1. Fix a used-after-free bug reported by KASAN as mentioned by Jakub.
-  2. Fix the 'netmem' variable not setting up correctly bug as mentioned
-     by Simon.
-
-V6:
-  1. Repost based on latest net-next.
-  2. Rename page_pool_to_pp() to page_pool_get_pp().
-
-V5:
-  1. Support unlimit inflight pages.
-  2. Add some optimization to avoid the overhead of fixing bug.
-
-V4:
-  1. use scanning to do the unmapping
-  2. spilt dma sync skipping into separate patch
-
-V3:
-  1. Target net-next tree instead of net tree.
-  2. Narrow the rcu lock as the discussion in v2.
-  3. Check the ummapping cnt against the inflight cnt.
-
-V2:
-  1. Add a item_full stat.
-  2. Use container_of() for page_pool_to_pp().
-
-Yunsheng Lin (4):
-  page_pool: introduce page_pool_get_pp() API
-  page_pool: fix IOMMU crash when driver has already unbound
-  page_pool: support unlimited number of inflight pages
-  page_pool: skip dma sync operation for inflight pages
-
- Documentation/netlink/specs/netdev.yaml       |  16 +
- drivers/net/ethernet/freescale/fec_main.c     |   8 +-
- .../ethernet/google/gve/gve_buffer_mgmt_dqo.c |   2 +-
- drivers/net/ethernet/intel/iavf/iavf_txrx.c   |   6 +-
- drivers/net/ethernet/intel/idpf/idpf_txrx.c   |  14 +-
- drivers/net/ethernet/intel/libeth/rx.c        |   2 +-
- .../marvell/octeontx2/nic/otx2_txrx.c         |   2 +-
- .../net/ethernet/mellanox/mlx5/core/en/xdp.c  |   3 +-
- drivers/net/netdevsim/netdev.c                |   6 +-
- drivers/net/wireless/mediatek/mt76/mt76.h     |   2 +-
- include/linux/mm_types.h                      |   2 +-
- include/linux/skbuff.h                        |   1 +
- include/net/libeth/rx.h                       |   3 +-
- include/net/netmem.h                          |  31 +-
- include/net/page_pool/helpers.h               |  15 +
- include/net/page_pool/memory_provider.h       |   2 +-
- include/net/page_pool/types.h                 |  46 +-
- include/uapi/linux/netdev.h                   |   2 +
- net/core/devmem.c                             |   6 +-
- net/core/netmem_priv.h                        |   5 +-
- net/core/page_pool.c                          | 426 ++++++++++++++++--
- net/core/page_pool_priv.h                     |  12 +-
- net/core/page_pool_user.c                     |  39 +-
- tools/include/uapi/linux/netdev.h             |   2 +
- tools/net/ynl/samples/page-pool.c             |  11 +
- 25 files changed, 576 insertions(+), 88 deletions(-)
-
--- 
-2.33.0
-
+Alright, I'll drop that additional description.  I can agree that it
+might be seen as redundant.
