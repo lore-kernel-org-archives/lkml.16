@@ -1,44 +1,73 @@
-Received: from mail114-241.sinamail.sina.com.cn (mail114-241.sinamail.sina.com.cn [218.30.114.241])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C18192B7F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 06:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.241
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403C5194C77
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 06:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741327733; cv=none; b=gh9S7Jr9uK2Qg/9A3SUDB5TVCOsR29H8ZIEy99/xQtKb+S5BPk98WRTYVYz6lTI3tw+8cNE9DbKlkatJhtsXzc5epMH117yw5Ak2BPWcDeJPQypphvb9svhPzMi30K8T7iA8o6p69DhtHu8oV7zTWROoj+Ce35xMZ30d59bJHZQ=
+	t=1741327938; cv=none; b=ejWzoGS3/sPj4Y+sNBP034na0RozSBM4EpVutsSX0Jfh2a/qu+wdMboQLtfg6LaGdQWc0P+nlOK92YNZxpdM6K26P8yxIgY5f76pGDz3g3gsoFGQkBIoIsomV52GBJ9Xhp4QwNrQmMI1JYDkj4rBQAy4jbtsxtozKKfbt9tOHVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741327733; c=relaxed/simple;
-	bh=T2QkG4EZej3NuePHZ+cAjBoD70+eX/KlMVHwBiryygw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hJ8J5W5SZzRFJN1MYRpL90hXyWYk4dfRBVh+sAxBjM0oOHJXvUQsr9ZcBTBILBQpa878EF4l+Nj/gpDmiWHjC/8ak9Fno3kYtRO5sCKmAfqSVuLbNKjqjjoMF86QIdCmSZzNKFoPs6jKZV0V/wV0XQyKtsBsvxUxI0t/4JS+b7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.241
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.50.28])
-	by sina.com (10.185.250.23) with ESMTP
-	id 67CA8D64000021D4; Fri, 7 Mar 2025 14:08:38 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 4079398913364
-X-SMAIL-UIID: D44F113D61CE430ABCB960723B7B6BCE-20250307-140838-1
-From: Hillf Danton <hdanton@sina.com>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-Date: Fri,  7 Mar 2025 14:08:26 +0800
-Message-ID: <20250307060827.3083-1-hdanton@sina.com>
-In-Reply-To: <20250306093021.GA19868@redhat.com>
-References: <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com> <20250227211229.GD25639@redhat.com> <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com> <20250228143049.GA17761@redhat.com> <20250228163347.GB17761@redhat.com> <20250304050644.2983-1-hdanton@sina.com> <20250304102934.2999-1-hdanton@sina.com> <20250304233501.3019-1-hdanton@sina.com> <20250305045617.3038-1-hdanton@sina.com> <20250305224648.3058-1-hdanton@sina.com>
+	s=arc-20240116; t=1741327938; c=relaxed/simple;
+	bh=SUfC7KfOALJ5wxmePH27qRlLAbIWKbJNM73jMjKempA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RkOPs4lVXHDU4Ay6OQdw+Il3MpQfJTf2XLaB6418U2C0iP+MDhMlR4vv0pXQaMTBb9ogmHCJ911mWpvQj3sHeAaeLQLB9ZL5WHL/wqe49726IkZdoFbIA64M0HkK9fBX8tv1zLwYlYzeb/RYTwnTClQoCnC41tUJ5zzlOL9p0Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7yZBrPw; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7yZBrPw"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso683602a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 22:12:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741327935; x=1741932735; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dyG25qKRa4ECc4XnSGWcWGpn3t3HI2LhpRSGp5OKczg=;
+        b=D7yZBrPwC8GUKJfg/izFkBWA5JKRiY7tMMVBvcjpfsyewhH3Tlu5TWnfpKEcRFxyWv
+         e7bwkLLjgror43G6kT7xXWM/mZzt+3ITrI68GpucuZF3FrNzWt5W0T0oP/YbNneQHsjX
+         GIOVrx0aO7EtYfNwFuoJeQmJ18iolpa2YE2eweV9GVfIX2YW4wpPr1LXXLsQf4PHYXAJ
+         brifCG5Zwdxs0C5PBPgxmiTP4Qva6kJqsfLZ1NE4XHLSnZamMN8RUxPHd517fVtYXOm6
+         eD3ffdFxN11X4et1tWrEH1F4cSl/kwDTXokAhqWc6pe2J3/P+FmNGYF1S6olcFmGnyfF
+         h1NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741327935; x=1741932735;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dyG25qKRa4ECc4XnSGWcWGpn3t3HI2LhpRSGp5OKczg=;
+        b=CxEd4zTa5PTmd03D9d+OLVijqMMT8MoF/wXkO4gXm78st8/iiJs94VxkwxPlqqhkFB
+         x13YDwIu+8xwdNxy4dPz78tEr19PQbtVfhoNF5Jn9SgthbqJrg8rcGUbXV/f+Y+FWtL4
+         /uqGBmTuGT5Qf5AVuMX3ceCkPNJZAo3j3RzaGeSobWIBI0Jtp9OS7l/hpS0atH45o/yO
+         K5OqaZXMy+ZF+30FNQ+OUvYWI8A7rTpZdNq3k3ZonBFM/1IcaFWmykhaTclUUxFy9yGM
+         FmJugfl7JskIllfSQ45sdbnRTEj9hZkoW4hubEsJknLr4ch2kU+fpFRTVU07yiJ1YDrL
+         iHyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdPCliQCEm5wiajFbCM+OEkiNWZRGcxaYqZ9UZ95JDt+U+X9VzfzxvyerezpgqsmGtvtEzOz2ecrVooPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNZCHKUqWhCp3ZgVaJdc9LoP38qWxT2lz6PjcSekznl8bgBvfa
+	B6i0EpfgdC5pkQtzluMi8RzmDZp/T2SwY+7go5vHwEGN/SnGcE8=
+X-Gm-Gg: ASbGnctv6UStHrUuWxoMTJa7zCD6i3YL2qaViM7DqDRLZUkUYLE27CKB2VNyEkoJfcx
+	E6bowZp/wyLLYPvEDwQ2fgEvsA9f42x6Bq5vF2JknL/ZvNOy0fE6WK5IAkA5lrKVholsZilpLIr
+	Hnw8a6VO/bB+3oAbS33gJhv0LxfOrRDweHjdVOTEP25wk0nd5dUKrofBvEX2SG+poTp+q633h5x
+	Lu2BfpE8sw7rmgXCXzUTEg5t8Gxk5SiqkthHsDcjZNW7f1mUjTirHvSphTolOYH4WjbVrlr7rdd
+	UkaFFPv8hSOjTtE5wnO7BYC9v2fSV7JXKfcB3zzW6EJcHmlxCQckFLFL
+X-Google-Smtp-Source: AGHT+IFfs/8FTfsbkybk8G4LIOP0nCJV5Du4CrPbI9l1E84oUsLvwRWcih0iTDX1ePMBQBgkMZ+qig==
+X-Received: by 2002:a05:6402:4021:b0:5e5:e78a:c500 with SMTP id 4fb4d7f45d1cf-5e5e78aca9fmr3350967a12.12.1741327935313;
+        Thu, 06 Mar 2025 22:12:15 -0800 (PST)
+Received: from localhost.localdomain ([178.172.147.62])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac23988bdd8sm216824166b.138.2025.03.06.22.12.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 22:12:14 -0800 (PST)
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-kernel@vger.kernel.org,
+	Alexey Dobriyan <adobriyan@gmail.com>
+Subject: [PATCH 1/4] x86/asm: inline constant inputs in rdpkru(), wrpkru()
+Date: Fri,  7 Mar 2025 09:12:00 +0300
+Message-ID: <20250307061203.3281-1-adobriyan@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,68 +76,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 6 Mar 2025 10:30:21 +0100 Oleg Nesterov <oleg@redhat.com>
-> On 03/06, Hillf Danton wrote:
-> > On Wed, 5 Mar 2025 12:44:34 +0100 Oleg Nesterov <oleg@redhat.com>
-> > > On 03/05, Hillf Danton wrote:
-> > > > See the loop in  ___wait_event(),
-> > > >
-> > > > 	for (;;) {
-> > > > 		prepare_to_wait_event();
-> > > >
-> > > > 		// flip
-> > > > 		if (condition)
-> > > > 			break;
-> > > >
-> > > > 		schedule();
-> > > > 	}
-> > > >
-> > > > After wakeup, waiter will sleep again if condition flips false on the waker
-> > > > side before waiter checks condition, even if condition is atomic, no?
-> > >
-> > > Yes, but in this case pipe_full() == true is correct, this writer can
-> > > safely sleep.
-> > >
-> > No, because no reader is woken up before sleep to make pipe not full.
-> 
-> Why the reader should be woken before this writer sleeps? Why the reader
-> should be woken at all in this case (when pipe is full again) ?
-> 
-"to make pipe not full" failed to prevent you asking questions like this one.
+Put immediate values directly into registers deleting dummy variables.
 
-> We certainly can't understand each other.
-> 
-> Could your picture the exact scenario/sequence which can hang?
-> 
-If you think the scenario in commit 3d252160b818 [1] is correct, check
-the following one.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
+ arch/x86/include/asm/special_insns.h | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-step-00
-	pipe->head = 36
-	pipe->tail = 36
-	after 3d252160b818
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 21ce480658b1..494a1aa19f05 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -79,7 +79,6 @@ void native_write_cr4(unsigned long val);
+ #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+ static inline u32 rdpkru(void)
+ {
+-	u32 ecx = 0;
+ 	u32 edx, pkru;
+ 
+ 	/*
+@@ -88,20 +87,18 @@ static inline u32 rdpkru(void)
+ 	 */
+ 	asm volatile(".byte 0x0f,0x01,0xee\n\t"
+ 		     : "=a" (pkru), "=d" (edx)
+-		     : "c" (ecx));
++		     : "c" (0));
+ 	return pkru;
+ }
+ 
+ static inline void wrpkru(u32 pkru)
+ {
+-	u32 ecx = 0, edx = 0;
+-
+ 	/*
+ 	 * "wrpkru" instruction.  Loads contents in EAX to PKRU,
+ 	 * requires that ecx = edx = 0.
+ 	 */
+ 	asm volatile(".byte 0x0f,0x01,0xef\n\t"
+-		     : : "a" (pkru), "c"(ecx), "d"(edx));
++		     : : "a" (pkru), "c" (0), "d" (0));
+ }
+ 
+ #else
+-- 
+2.45.3
 
-step-01
-	task-118762 writer
-	pipe->head++;
-	wakes up task-118740 and task-118768
-
-step-02
-	task-118768 writer
-	makes pipe full;
-	sleeps without waking up any reader as
-	pipe was not empty after step-01
-
-step-03
-	task-118766 new reader
-	makes pipe empty
-	sleeps
-
-step-04
-	task-118740 reader
-	sleeps as pipe is empty
-
-[ Tasks 118740 and 118768 can then indefinitely wait on each other. ]
-
-
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/pipe.c?id=3d252160b818045f3a152b13756f6f37ca34639d
