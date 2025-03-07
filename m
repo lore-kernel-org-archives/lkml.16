@@ -1,154 +1,119 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1050D2405F2
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283C023CEF9
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741369329; cv=none; b=jOk7prJX2n/ZNIF/kziqHnQl+S4cfNHn8ImhWKepZQ8pTb1heLJQCSzto+TK5r0lq6qI02UmYZpB2PxT1lpql0eZyu6W3KK7WFzjtLT8KcXZ+jWgoyEqGjSZ9OFhTi+CGKH+Z/5mFmdhSpOvWLax2FxZUpQQoR2JJND3rQtKkc0=
+	t=1741369388; cv=none; b=rAPmX9gvscFhBYWCfSh3Ojm/wgAPB74mUN0JSTULARW2zV0irthCXqOF0+GL3N+4FlBno/Q3YmLtWQNA7/Z4t0M6zCwNtZ/19Bga8WhrR+ySXJ96jZPZ/Fg54jM5rPWvSszj22idB1VEmX+HUVdjMyGYJ5WV2F/0lnylxEtS9Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741369329; c=relaxed/simple;
-	bh=KQS1zGojMtlyo5Lhl62aadLOweiXB7BrdSEtxARRf9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jW2y1DhVN52FxC3QuQI5tGuj+JkMGjoCK/saKyx1QkIO18xv/ydHIq3xhhyEbTjnMsghbkGEIyh8w2RMfnuF89dMI+C4j3enrwitR+ul1KygW1kKLgP5z03WPiUjGwMylBIyiuncukP6s22A/8z/hYtzAo9m5P2REP7XRbkZdGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B7NE4oXp; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741369388; c=relaxed/simple;
+	bh=+kt9trydWppjyLTS1v06E/6kn1cAIhEtv++sHef4MMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1D/fb9jXdlbB5njjv9ARnFn0iGle3CuEHu6rmBi/Wp4U5jEBDGtxeP3TxBotAawVSk/KEejesfPVXVPNFd9Z2ou923oWrRr+p2a52gS+5FjRPiE4a0ZZOIWrod7wiLkax0J2Xs0Tr4GJEmlbFaR/T+3PL7t6Yow0Go0vcC8XsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FRQ4nIZv; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B7NE4oXp"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac25520a289so172189166b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 09:42:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741369326; x=1741974126; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=87LLRJ6QEN8pKjPcs70n3/W5zmSE0p6Cob9Wz2RQEBw=;
-        b=B7NE4oXpj/yoUiPs8+YVU3eJC1OWK6bnx3B86Ir77M//PbPqFjZzrmt8x2qXdG7BM2
-         fk/BLrKx8iczf5n+P0h8YrvzaPdL5ALMOUBCux6wdPZJGunBrS6c2a/ZeQRGWqh3yQx7
-         nCkvDHx/tGJ0fD+MQsmPaMXP4mh/D90JorgBdtRgVnN0zz3TtzVZ5BRN8yzd2JCVcdpb
-         PoKPSsPigrf6IjbCKyueT5UKmd7053NXuNw98/tzTVwzm3YBtw5HKJIXFtgeZusKXbnl
-         ls2lm0akhpGQhz/vEN2e8OFYSFBaP7vGsEhLGOPF6GStT2N2I3Qu03oyO2JJfLSlavGO
-         0dvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741369326; x=1741974126;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=87LLRJ6QEN8pKjPcs70n3/W5zmSE0p6Cob9Wz2RQEBw=;
-        b=mx7ICXrwtkf2YYaXDznnVcc/w+IdfBGisEe4A4p9SZhaqsZbtn93vQ2DixXDRIIiHC
-         VyZVKehcRpHsVaqSD8NYOguI3Xt4AurfxGN3QBJU3FxZRTc81TJQlEYEY7NNQ1HDHsLs
-         Y01oSzJvLs7i5EijPNnXbRo3Rs9O2MAkM7wubNzJhmbpEVWTunN8p8hmMgurLdetMLVc
-         VjBt84Lg8U8GViLVylx7eopKJW2Iy7CSd63nucSIat0aMJkZUR3oAfwHL/8ZgQB5118p
-         AHJpA4XLCwZlyFNbJaljtR+4TuMwkARG8n4By3BwCgeSMQTybhlO1wD7gUmBc5nFEcBz
-         C1dA==
-X-Gm-Message-State: AOJu0YwssPt7x8NxpyizMrob7IoNqT706qeQp37sUX/4lUKJz3bsp3xJ
-	ZupjEHw48jy04E3whVL705VspPHB9kbKRmZzTN+y5oQr5JiLGSAQG78uLNW4Q8I=
-X-Gm-Gg: ASbGncuA2DGCl7OIW5elSE5hETHvPrDou+xQEIc3q0nowPPLFAfMgHGo2Xpymlbbg1j
-	SsEHGRek67pKT2LY/3imbNcpakFs7IISrXV0tfdRVjHNusIgxxJFdSSPydAc+xkz9lcev+ayuaA
-	Zx7+0cHE3c/WYtoQChGDDshQCw5HxcsXapRKHFsUBN/xpc0VMYuotBfmcnMSykKOpZ3heljzvRG
-	GrqjIqEN43kpw945IuxNk5yYfdh5fvF0E/xSjFpdL1P07dxIF4lymHiUSYibWgG8yJbEOqOFPxE
-	M8sWmeoRgamjezgnEOC0z25ElQy6knaEmW9cD+9lJ0jf9vKAhM2D2NMHcFFZ/Fk=
-X-Google-Smtp-Source: AGHT+IGf62tDN8mXFcenEaMR6BHaYRH620Q4sbEACg4krU437G/4p/+4UlaCgrWyCIlJS29OT9t8kA==
-X-Received: by 2002:a17:906:d552:b0:ac1:ea29:4e63 with SMTP id a640c23a62f3a-ac252a866b6mr423637566b.26.1741369326129;
-        Fri, 07 Mar 2025 09:42:06 -0800 (PST)
-Received: from [192.168.68.113] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac23973a733sm304374366b.112.2025.03.07.09.42.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 09:42:05 -0800 (PST)
-Message-ID: <1167c489-92cb-440e-a2c0-4f47190de5ac@linaro.org>
-Date: Fri, 7 Mar 2025 17:42:05 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FRQ4nIZv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741369388; x=1772905388;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+kt9trydWppjyLTS1v06E/6kn1cAIhEtv++sHef4MMw=;
+  b=FRQ4nIZvgyA8eVYQP4kquE1MmPUOitUF8vnMLzWJanZXfWbV61nJ2LF3
+   5Jve5O/2DhASZQ1hpdV13YxrBNSFpApTRBjGPQWas5yWRvQo1VZqgd22S
+   LCAf9KnOHSjwbtRPCpWYiYnYJkoeayjTZZIHi89Ka4tK0qo9L42/0j5ly
+   rdiGbfIxEfr+68AkSIXb2MlfgXQJgBUl0aOz2Y+GC4zbLmDpxuu18unZE
+   RvepCFrgf5YHQccLiR4RubT0js6TP5k6nDWe7gi+zFRQwWQLFglLBLpcK
+   TBROfIWgnLG0VnwE4qqHIzmpYD9gI7sLs+8faUQIuYK34fUYonehUZBym
+   g==;
+X-CSE-ConnectionGUID: 9NvIMCWsQ9qLpUsq18pHqg==
+X-CSE-MsgGUID: UYauZrlLSTOz50AT9MH/wA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42461693"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="42461693"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:43:07 -0800
+X-CSE-ConnectionGUID: RlVyw6roQzWlw+azXoMNUg==
+X-CSE-MsgGUID: 8HzF3/4YSjGNPswqX4cnMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="120083673"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:43:02 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tqbis-00000000TVI-4BqQ;
+	Fri, 07 Mar 2025 19:42:59 +0200
+Date: Fri, 7 Mar 2025 19:42:58 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: mailhol.vincent@wanadoo.fr
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	David Laight <David.Laight@aculab.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v6 1/7] bits: split the definition of the asm and non-asm
+ GENMASK()
+Message-ID: <Z8swIt7fqpVAp2P8@smile.fi.intel.com>
+References: <20250308-fixed-type-genmasks-v6-0-f59315e73c29@wanadoo.fr>
+ <20250308-fixed-type-genmasks-v6-1-f59315e73c29@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] nvmem: core: add nvmem_cell_size()
-To: Jennifer Berringer <jberring@redhat.com>,
- Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20250228180326.256058-1-jberring@redhat.com>
- <20250228180326.256058-2-jberring@redhat.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20250228180326.256058-2-jberring@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250308-fixed-type-genmasks-v6-1-f59315e73c29@wanadoo.fr>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Jennifer,
+On Sat, Mar 08, 2025 at 01:48:48AM +0900, Vincent Mailhol via B4 Relay wrote:
+> From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> 
+> In an upcoming change, GENMASK() and its friends will indirectly
+> depend on sizeof() which is not available in asm.
+> 
+> Instead of adding further complexity to __GENMASK() to make it work
+> for both asm and non asm, just split the definition of the two
+> variants.
 
-On 28/02/2025 18:03, Jennifer Berringer wrote:
-> This function allows nvmem consumers to know the size of an nvmem cell
-> before calling nvmem_cell_write() or nvmem_cell_read(), which is helpful
-> for drivers that may need to handle devices with different cell sizes.
-> 
-> Signed-off-by: Jennifer Berringer <jberring@redhat.com>
-> ---
->   drivers/nvmem/core.c           | 18 ++++++++++++++++++
->   include/linux/nvmem-consumer.h |  6 ++++++
->   2 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index d6494dfc20a7..4d0cbd20da48 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -1624,6 +1624,24 @@ void nvmem_cell_put(struct nvmem_cell *cell)
->   }
->   EXPORT_SYMBOL_GPL(nvmem_cell_put);
->   
-> +/**
-> + * nvmem_cell_size() - Get nvmem cell size in bytes.
-> + *
-> + * @cell: nvmem cell.
-> + *
-> + * Return: size of the nvmem cell.
+...
+
+> -/*
+> - * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+> - * disable the input check if that is the case.
+> - */
+
+> +/*
+> + * BUILD_BUG_ON_ZERO() is not available in h files included from asm files, so
+> + * no input checks in assembly.
 > + */
-> +size_t nvmem_cell_size(struct nvmem_cell *cell)
-> +{
-> +	struct nvmem_cell_entry *entry = cell->entry;
-> +
-> +	if (!entry)
-> +		return 0;
-> +
-> +	return entry->bytes;
-> +}
-> +EXPORT_SYMBOL_GPL(nvmem_cell_size);
-> +
 
-There is a similar patch on the list, could you take a look and see if 
-that is usable in power reset driver.
+In case of a new version I would reformat this as
 
-https://lore.kernel.org/lkml/20250306093900.2199442-3-o.rempel@pengutronix.de/T/#m97bbb1870d7140661894a4e806a695e563588524
+/*
+ * BUILD_BUG_ON_ZERO() is not available in h files included from asm files,
+ * so no input checks in assembly.
+ */
+
+It makes easier to review the changes and see that the first line is kept
+the same.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
---srini
->   static void nvmem_shift_read_buffer_in_place(struct nvmem_cell_entry *cell, void *buf)
->   {
->   	u8 *p, *b;
-> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-> index 34c0e58dfa26..a2020527d2d3 100644
-> --- a/include/linux/nvmem-consumer.h
-> +++ b/include/linux/nvmem-consumer.h
-> @@ -54,6 +54,7 @@ struct nvmem_cell *nvmem_cell_get(struct device *dev, const char *id);
->   struct nvmem_cell *devm_nvmem_cell_get(struct device *dev, const char *id);
->   void nvmem_cell_put(struct nvmem_cell *cell);
->   void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
-> +size_t nvmem_cell_size(struct nvmem_cell *cell);
->   void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len);
->   int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len);
->   int nvmem_cell_read_u8(struct device *dev, const char *cell_id, u8 *val);
-> @@ -117,6 +118,11 @@ static inline void nvmem_cell_put(struct nvmem_cell *cell)
->   {
->   }
->   
-> +static inline size_t nvmem_cell_size(struct nvmem_cell *cell)
-> +{
-> +	return 0;
-> +}
-> +
->   static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
->   {
->   	return ERR_PTR(-EOPNOTSUPP);
