@@ -1,44 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027E316DED0;
-	Fri,  7 Mar 2025 10:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8B516DED0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 10:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741343051; cv=none; b=DZJOEemBySoYC6UL0JntSsE6R/wW36EXdfmKwxT2+LfoxC2cbmjjWQINOW5A3WMTTnb1PXoS2c1i9u2YJdrNNgyTRBWiRKpOa+2AQY+pMM323hC3yFhDC1WJtsg8qrFcJI29y0NeDKOO7S6CqOoZVekJXF+ks1cXatrUEVmCCrY=
+	t=1741343059; cv=none; b=UMTSkbg2qFi9K/whmDHw1KFHyo9bV4UKQItW/gt3F4HiM85H3gAFsMEo3W3R70pqVabT5c3YPE5kDs6miXcIOLfcX6YonOi7yFH5YEwmQxiMF7EqSttFIE617rtMVB2ZaX6+4MfGnElcjwWlMDkOkYu2hDwkf6bymDbpBveOkXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741343051; c=relaxed/simple;
-	bh=2Dw4ZzZnDmhCYD8Y3MnylO37nujICIb8mg2uubPBiu4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SlPlHUX/6x9IZRzl7H3qtHM7q6OiSXvRuukv6GwxJExqeIckKn1OZa/5n3xj5GH355GM6Ux8v1lBNEwL4nxyA1DUm6PoQ46jzE2mXY02iLQnftY2yY1DROVTpcwfR2JJLbFn4vmf9ZZHmIyZdBxbIi7izdPW4ziTYAmyx5J5XSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrMSHBYO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrMSHBYO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACEDC4CED1;
-	Fri,  7 Mar 2025 10:24:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741343050;
-	bh=2Dw4ZzZnDmhCYD8Y3MnylO37nujICIb8mg2uubPBiu4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IrMSHBYOZYJEIiItrKzY86ihEbeitO2VuC+IAcSLeixPBVQWfMKJpMQJq5JqW+s9H
-	 gzvhkD8xzIN5y3LOUMMkchDngZbx2s9tQ1/BsCs9ZnfuaBux4kGJ3ecjFsK57Jh+KJ
-	 XGoziZ6pnVjyQ0DCaakSQlY3FqIjVb3bF9xPkqWuWuH1/QC0gggguJu+NqywzZ3KSK
-	 XuCGF0KaIVkzFBNPzgJfYP2My7SQJBj9WI6KOcSPUiSSiUkXgbvGX1/I6YKq1pAHpK
-	 IHQTMxp/7L9PEcaiJkCfSGD4+6yj5SVyLVmlpKc7sluGCnB4WnTXgG69yPtQBH2nHo
-	 AQziHmOYgUF+g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Dingxian Wen <shawn.wen@rock-chips.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-media@vger.kernel.org,
-	kernel@collabora.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: platform: synopsys: use div_u64() for 64-bit division
-Date: Fri,  7 Mar 2025 11:23:56 +0100
-Message-Id: <20250307102405.56313-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1741343059; c=relaxed/simple;
+	bh=uIrY/uHZQnshD3ssY0ld4pSstRyuTmqxgYfVy7q3r/I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tSl0t60kqwuUjLvfM1PJJeYc8Kw+6D3Xduwj/G8q8GteC0q6LhZU5WI0TIROUvoHVgMugz8XQhuBmig2dduurP/dmyxM0tNNgjj9OF178klzw2MCS5xeli87Eq3QEKZ3QvL1p033rAoFcRtcLzqqADjxMk8oPzHi4SnaZWxB+yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z8MmT4Lv5z1R6Hq;
+	Fri,  7 Mar 2025 18:22:33 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 86D5914025A;
+	Fri,  7 Mar 2025 18:24:12 +0800 (CST)
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 7 Mar 2025 18:24:11 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 drm-dp 0/9] Add HPD, getting EDID, colorbar features in DP function
+Date: Fri, 7 Mar 2025 18:16:31 +0800
+Message-ID: <20250307101640.4003229-1-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,59 +43,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Baihan Li <libaihan@huawei.com>
 
-One open-coded division causes a link failure on 32-bit architectures:
-
-ld.lld-21: error: undefined symbol: __aeabi_uldivmod
->>> referenced by snps_hdmirx.c
->>>               drivers/media/platform/synopsys/hdmirx/snps_hdmirx.o:(hdmirx_query_dv_timings) in archive vmlinux.a
-
-Another one uses do_div() with a temporary variable.
-
-Change both to use div_u64() to avoid the link failure and improve
-readability.
-
-Fixes: 7b59b132ad43 ("media: platform: synopsys: Add support for HDMI input driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+To support DP HPD, edid printing, and colorbar display features based on
+the Hisislcon DP devices. 
 ---
- drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ChangeLog:
+v4 -> v5:
+  - add commit log about hibmc_kms_init(), suggested by Dmitry Baryshkov.
+  - fix the format of block comments, suggested by Dmitry Baryshkov.
+  - add hibmc_dp_get_serdes_rate_cfg() to correct transferring serdes cfg.
+  - separate the vga part commit, suggested by Dmitry Baryshkov.
+  - remove pci_disable_msi() in hibmc_unload()
+v3 -> v4:
+  - fix the serdes cfg in hibmc_dp_serdes_set_tx_cfg(), suggested by Dmitry Baryshkov.
+  - move the dp serdes registers to dp_reg.h, suggested by Dmitry Baryshkov.
+  - add comments for if-statement of dp_init(), suggested by Dmitry Baryshkov.
+  - fix the comment log to imperative sentence, suggested by Dmitry Baryshkov.
+  - add comments in hibmc_control_write(), suggested by Dmitry Baryshkov.
+  - add link reset of rates and lanes in pre link training process, suggested by Dmitry Baryshkov.
+  - add vdac detect and connected/disconnected status to enable HPD process, suggested by Dmitry Baryshkov.
+  - remove a drm_client, suggested by Dmitry Baryshkov.
+  - fix build errors reported by kernel test robot <lkp@intel.com>
+    Closes: https://lore.kernel.org/oe-kbuild-all/202502231304.BCzV4Y8D-lkp@intel.com/
+v2 -> v3:
+  - restructuring the header p_reg.h, suggested by Dmitry Baryshkov.
+  - add commit log about dp serdes, suggested by Dmitry Baryshkov.
+  - return value in hibmc_dp_serdes_init(), suggested by Dmitry Baryshkov.
+  - add static const in the array of serdes_tx_cfg[], suggested by Dmitry Baryshkov.
+  - change drm_warn to drm_dbg_dp, suggested by Dmitry Baryshkov.
+  - add explanations about dp serdes macros, suggested by Dmitry Baryshkov.
+  - change commit to an imperative sentence, suggested by Dmitry Baryshkov.
+  - put HIBMC_DP_HOST_SERDES_CTRL in dp_serdes.h, suggested by Dmitry Baryshkov.
+  - split the patch into two parts, suggested by Dmitry Baryshkov.
+  - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
+  - rewrite the commit log, suggested by Dmitry Baryshkov.
+  - move colorbar debugfs entry to this patch, suggested by Dmitry Baryshkov.
+  - change binary format to integer format, suggested by Dmitry Baryshkov.
+  - remove mdelay(100) hpd function in ISR, suggested by Dmitry Baryshkov.
+  - remove enble_display in ISR, suggested by Dmitry Baryshkov.
+  - change drm_kms_helper_connector_hotplug_event() to
+    drm_connector_helper_hpd_irq_event(), suggested by Dmitry Baryshkov.
+  - move macros to dp_reg.h, suggested by Dmitry Baryshkov.
+  - remove struct irqs, suggested by Dmitry Baryshkov.
+  - split this patch into two parts, suggested by Dmitry Baryshkov.
+v1 -> v2:
+  - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
+  - changing all names of dp phy to dp serdes.
+  - deleting type conversion, suggested by Dmitry Baryshkov.
+  - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
+  - add colorbar introduction in commit, suggested by Dmitry Baryshkov.
+  - deleting edid decoder and its debugfs, suggested by Dmitry Baryshkov.
+  - using debugfs_init() callback, suggested by Dmitry Baryshkov.
+  - splittting colorbar and debugfs in different patches, suggested by Dmitry Baryshkov.
+  - optimizing the description in commit message, suggested by Dmitry Baryshkov.
+  - add mdelay(100) comments, suggested by Dmitry Baryshkov.
+  - deleting display enable in hpd event, suggested by Dmitry Baryshkov.
+---
 
-diff --git a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-index 4ffc86ad6c35..438536d88c7f 100644
---- a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-+++ b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-@@ -296,7 +296,7 @@ static void hdmirx_get_timings(struct snps_hdmirx_dev *hdmirx_dev,
- 	hfp = htotal - hact - hs - hbp;
- 	vfp = vtotal - vact - vs - vbp;
- 
--	fps = (bt->pixelclock + (htotal * vtotal) / 2) / (htotal * vtotal);
-+	fps = div_u64(bt->pixelclock + (htotal * vtotal) / 2, htotal * vtotal);
- 	bt->width = hact;
- 	bt->height = vact;
- 	bt->hfrontporch = hfp;
-@@ -396,7 +396,7 @@ static int hdmirx_get_detected_timings(struct snps_hdmirx_dev *hdmirx_dev,
- 	u32 val, tmdsqpclk_freq, pix_clk;
- 	unsigned int num_retries = 0;
- 	u32 field_type, deframer_st;
--	u64 tmp_data, tmds_clk;
-+	u64 tmds_clk;
- 	bool is_dvi_mode;
- 	int ret;
- 
-@@ -418,9 +418,7 @@ static int hdmirx_get_detected_timings(struct snps_hdmirx_dev *hdmirx_dev,
- 
- 	tmdsqpclk_freq = hdmirx_readl(hdmirx_dev, CMU_TMDSQPCLK_FREQ);
- 	tmds_clk = tmdsqpclk_freq * 4 * 1000;
--	tmp_data = tmds_clk * 24;
--	do_div(tmp_data, hdmirx_dev->color_depth);
--	pix_clk = tmp_data;
-+	pix_clk = div_u64(tmds_clk * 24, hdmirx_dev->color_depth);
- 	bt->pixelclock = pix_clk;
- 
- 	if (hdmirx_dev->pix_fmt == HDMIRX_YUV420)
+Baihan Li (9):
+  drm/hisilicon/hibmc: Restructuring the header dp_reg.h
+  drm/hisilicon/hibmc: Add dp serdes cfg to adjust serdes rate, voltage
+    and pre-emphasis
+  drm/hisilicon/hibmc: Add dp serdes cfg in dp process
+  drm/hisilicon/hibmc: Refactor the member of drm_aux in struct hibmc_dp
+  drm/hisilicon/hibmc: Getting connector info and EDID by using AUX
+    channel
+  drm/hisilicon/hibmc: Add colorbar-cfg feature and its debugfs file
+  drm/hisilicon/hibmc: Enable this hot plug detect of irq feature
+  drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
+  drm/hisilicon/hibmc: Add vga connector detect functions
+
+ drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  16 ++-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  10 +-
+ .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |   2 +
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  91 +++++++++++-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  36 +++++
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  |  97 +++++++++----
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   | 130 +++++++++++++-----
+ .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.c    |  71 ++++++++++
+ .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 104 ++++++++++++++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |  67 ++++++++-
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  87 +++++++++---
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  12 ++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c  |   3 +
+ 14 files changed, 627 insertions(+), 102 deletions(-)
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+
 -- 
-2.39.5
+2.33.0
 
