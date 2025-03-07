@@ -1,211 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164422586C4;
-	Fri,  7 Mar 2025 21:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F17240611;
+	Fri,  7 Mar 2025 21:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741383706; cv=none; b=IFj/Fl4Zc09YwJ19s4xDkaYBDwA0Z5wMT4dzvd/SgqlMHuiR9bqPH5PWtyL3CZBtjSOo7N1nbqiFYEmtQ0aeOZaWtH42Ov3w2ZC3QfcL46EIxbnuiVxfIzV62XmBslvtLhl0En1fVzaHkZ2lSJTuQmvDINH7k/7NQJ1VHsa3Zac=
+	t=1741383831; cv=none; b=HqYYAsAX5+7VIHiF6VSCqkIUHDV+CuvbUK7SUjeDJitopSBv71JweGYaRY2FuhiGfCZkjURCHEZDKuGfMCXKdeKe48/Dhk98089ImJko8CFowCZjhNSSqAzDWgxjBpVzlAv5DV8XVuZ+B6q42NuVOkZMpDkgh60bWCblos5RPBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741383706; c=relaxed/simple;
-	bh=39rjeFhd5rDBchJ7XrlQK09N9GOwtaFo3/g2FBx3D+g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=svBO5V+FFDyE6BzeFaufX64uE9oYDsHmwFZi46DZSs0O7AukwQjSKEDKMyV4NCJbdn2xbIXLgOMBQTGpFPQrWg4xYOhBDgnwVduZPFJgC//jxZ3uMwzlMBcXBCHksJCWk5nwZVcjiibH5Uf0itekjGtYcDOCXCFUG0bnRZZ6HaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gi9fJvxo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741383831; c=relaxed/simple;
+	bh=ei7KxIb2sC6XawpE3OxNGmRRTY7xrpGWkiDH1HcKS0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TwnxNlTqYJYM5c4P+bv4YLkaOLq6cLV+l76xHef0Y4x1mgFUCMnGgR+4IYaPEcN2XGMMCPUtVemX6NNg7ZwytdXgs6NG6u7jDqDTLavXQI9FapA7zQKl1dllOOV5+v+6ec4wLhColGXmnEwvOEu1oA0qQjRkHpc/1ct8PGY8dMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aA14wcZM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gi9fJvxo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F3A5C4CED1;
-	Fri,  7 Mar 2025 21:41:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aA14wcZM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FD52C4CED1;
+	Fri,  7 Mar 2025 21:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741383705;
-	bh=39rjeFhd5rDBchJ7XrlQK09N9GOwtaFo3/g2FBx3D+g=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gi9fJvxo0DjRN8llww8mewVdDC5QQXA29UVKAngnXgjxMGkE3K/UDWuwIihnwoeDf
-	 kLxHmLfDnaYKWUjLKe5xW8DTDGKwqd7bGQAlGOkqQBQCd32JMfKsyQs2uQfR5KIxKi
-	 PBDpFZQI53I+v1U1c5590t9glTBWqrPTfqJ+ZEkjiy7l3+kbpoiI0EhZjp7taIq0XL
-	 lnePnvDdwdFuF4maPvhTIQ3nEnlPQvylmrJejsPtlhIZc+U8q++Xxve78NdV0+aJ5H
-	 wEIcQ3XsdMbvgEq793wkHpOP7Ssmgzew+NZRd9ePFnFGgPqN7bfp65oTC1W4PvPR6w
-	 p8yOBmgwy4LuA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 07 Mar 2025 22:38:48 +0100
-Subject: [PATCH v11 07/13] rust: hrtimer: implement `UnsafeHrTimerPointer`
- for `Pin<&T>`
+	s=k20201202; t=1741383830;
+	bh=ei7KxIb2sC6XawpE3OxNGmRRTY7xrpGWkiDH1HcKS0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aA14wcZMLqSOy1IX8iaMCXoD/EhuX+Vw2dgo2aBbS5Wlsa0lhIIRp4k/oJwyY6mlC
+	 gOZ4/FiAGUyThXjPhVFJBWgZNg2X6J4YrLSYXMKFovhPNyQzwGippMSQUKeBDpK/84
+	 m0Gp1V1qIKQCg5iT9nZZI4+1MRqomBKm8VKowD7ONt8VYPwAmstoCvakrRcgF2AjRE
+	 Wm0K2oI/xj3JjWvRRlevvEAnqLWeDdTqaAcILTrop93+tyYsZ/cKdN8yfwMykml3Xp
+	 i9k+T5DzMz+Q449ZMrTMOpzmhY+St3Z5Np7pBH2so3B7fxLfjCnjjWYZ0lymUz/Gv+
+	 ULzX3vCqhcuVg==
+Date: Fri, 7 Mar 2025 15:43:49 -0600
+From: Rob Herring <robh@kernel.org>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/13] dt-bindings: clock: Add cpg for the Renesas
+ RZ/T2H SoC
+Message-ID: <20250307214349.GA655306-robh@kernel.org>
+References: <20250306152451.2356762-1-thierry.bultel.yh@bp.renesas.com>
+ <20250306152451.2356762-3-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250307-hrtimer-v3-v6-12-rc2-v11-7-7934aefd6993@kernel.org>
-References: <20250307-hrtimer-v3-v6-12-rc2-v11-0-7934aefd6993@kernel.org>
-In-Reply-To: <20250307-hrtimer-v3-v6-12-rc2-v11-0-7934aefd6993@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
- Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, 
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4516; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=39rjeFhd5rDBchJ7XrlQK09N9GOwtaFo3/g2FBx3D+g=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBny2dvuXVIiwjg7SYPJcDZnDgzm4T09G/7qqV4Q
- yBkowivVIWJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ8tnbwAKCRDhuBo+eShj
- dxIDD/9DKr4PsXs/ydaCBCDdosM99NwIJT1ooSJ2vkU6xqNrU+fvqKlKClYOizzOTgr6ZoHJjOh
- p2c6sTjYeJj2SJdUAmkpBz8hBVDiRIb7n5glR4cNdVQbJ/1KC1c8T351YSXtxftjOg719XGs0ue
- hcNY2hq5rjdUhIc79pGlsczctyPOAoGbMQ8TdHyUiRh/sQAPKS8ZAb+qeYEs0pTouUhZfNrbpxG
- zP0x+W2DmOvFmM20jAIsaUzsrYpxfaFArMHitC177MIZNyHYQve5W/NnE2D0VbcAylg4YesgKUS
- 5s4YhppNqwTWAvpx7aNP4JF7oZP92u/Tdc34zVPK0wnYymLBaqxc79kLtM95Fde724Dnow7mlVR
- 7RmrJWuCbLWtiI9jFrQLjxnKE+muoSXmYA+MyaAsUtBQJ6Smj2OXoi4YKZZM3lMmE9Jfl3f+o7o
- 6hO1PpDmamNqmYkllVtAE99bqgK+LLnLmZpv68XCohOpPnWdlCDVjZjOlL96QZnxMSEJBI6OCNx
- uTD2sBruW13ne45MVEhFgoRaBGsgwlOUYXQ2Bv6fUI7eB63DMD3uMIC1pppXDcSKwmwXpmOzLyN
- R6WE0sTf5X4MTxxmoDoOnLGsr5jHVIRlP5ltBpHklPn84zo1mjmXxN0uJevmkKC78DwRuO7XSdd
- V8YUvGx4KZHhuDg==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306152451.2356762-3-thierry.bultel.yh@bp.renesas.com>
 
-Allow pinned references to structs that contain a `HrTimer` node to be
-scheduled with the `hrtimer` subsystem.
+On Thu, Mar 06, 2025 at 04:24:36PM +0100, Thierry Bultel wrote:
+> Document RZ/T2H (a.k.a r9a09g077) cpg-mssr (Clock Pulse Generator) binding.
+> 
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+> Changes v3->v4:
+>   - Handle maxItems and clocks names properly in schema. 
+> ---
+>  .../bindings/clock/renesas,cpg-mssr.yaml      | 56 +++++++++++++------
+>  .../clock/renesas,r9a09g077-cpg-mssr.h        | 49 ++++++++++++++++
+>  2 files changed, 89 insertions(+), 16 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+> index 77ce3615c65a..acbb555a064e 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+> @@ -52,9 +52,10 @@ properties:
+>        - renesas,r8a779f0-cpg-mssr # R-Car S4-8
+>        - renesas,r8a779g0-cpg-mssr # R-Car V4H
+>        - renesas,r8a779h0-cpg-mssr # R-Car V4M
+> +      - renesas,r9a09g077-cpg-mssr # RZ/T2H
+>  
+>    reg:
+> -    maxItems: 1
 
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/time/hrtimer.rs     |   2 +
- rust/kernel/time/hrtimer/pin.rs | 104 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 106 insertions(+)
+Keep constraints at the top-level:
 
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 8eae2d10b6a5..fee8e44447ee 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -431,3 +431,5 @@ unsafe fn timer_container_of(
- 
- mod arc;
- pub use arc::ArcHrTimerHandle;
-+mod pin;
-+pub use pin::PinHrTimerHandle;
-diff --git a/rust/kernel/time/hrtimer/pin.rs b/rust/kernel/time/hrtimer/pin.rs
-new file mode 100644
-index 000000000000..215afbad23dd
---- /dev/null
-+++ b/rust/kernel/time/hrtimer/pin.rs
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+use super::HasHrTimer;
-+use super::HrTimer;
-+use super::HrTimerCallback;
-+use super::HrTimerHandle;
-+use super::RawHrTimerCallback;
-+use super::UnsafeHrTimerPointer;
-+use crate::time::Ktime;
-+use core::pin::Pin;
-+
-+/// A handle for a `Pin<&HasHrTimer>`. When the handle exists, the timer might be
-+/// running.
-+pub struct PinHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    pub(crate) inner: Pin<&'a T>,
-+}
-+
-+// SAFETY: We cancel the timer when the handle is dropped. The implementation of
-+// the `cancel` method will block if the timer handler is running.
-+unsafe impl<'a, T> HrTimerHandle for PinHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    fn cancel(&mut self) -> bool {
-+        let self_ptr: *const T = self.inner.get_ref();
-+
-+        // SAFETY: As we got `self_ptr` from a reference above, it must point to
-+        // a valid `T`.
-+        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
-+
-+        // SAFETY: As `timer_ptr` is derived from a reference, it must point to
-+        // a valid and initialized `HrTimer`.
-+        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
-+    }
-+}
-+
-+impl<'a, T> Drop for PinHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    fn drop(&mut self) {
-+        self.cancel();
-+    }
-+}
-+
-+// SAFETY: We capture the lifetime of `Self` when we create a `PinHrTimerHandle`,
-+// so `Self` will outlive the handle.
-+unsafe impl<'a, T> UnsafeHrTimerPointer for Pin<&'a T>
-+where
-+    T: Send + Sync,
-+    T: HasHrTimer<T>,
-+    T: HrTimerCallback<Pointer<'a> = Self>,
-+{
-+    type TimerHandle = PinHrTimerHandle<'a, T>;
-+
-+    unsafe fn start(self, expires: Ktime) -> Self::TimerHandle {
-+        // Cast to pointer
-+        let self_ptr: *const T = self.get_ref();
-+
-+        // SAFETY:
-+        //  - As we derive `self_ptr` from a reference above, it must point to a
-+        //    valid `T`.
-+        //  - We keep `self` alive by wrapping it in a handle below.
-+        unsafe { T::start(self_ptr, expires) };
-+
-+        PinHrTimerHandle { inner: self }
-+    }
-+}
-+
-+impl<'a, T> RawHrTimerCallback for Pin<&'a T>
-+where
-+    T: HasHrTimer<T>,
-+    T: HrTimerCallback<Pointer<'a> = Self>,
-+{
-+    type CallbackTarget<'b> = Self;
-+
-+    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
-+        // `HrTimer` is `repr(C)`
-+        let timer_ptr = ptr as *mut HrTimer<T>;
-+
-+        // SAFETY: By the safety requirement of this function, `timer_ptr`
-+        // points to a `HrTimer<T>` contained in an `T`.
-+        let receiver_ptr = unsafe { T::timer_container_of(timer_ptr) };
-+
-+        // SAFETY:
-+        //  - By the safety requirement of this function, `timer_ptr`
-+        //    points to a `HrTimer<T>` contained in an `T`.
-+        //  - As per he safety requirements of the trait `HrTimerHandle`, the
-+        //    `PinHrTimerHandle` associated with this timer is guaranteed to be
-+        //    alive until this method returns. As the handle borrows from `T`,
-+        //    `T` is also guaranteed to be alive for the duration of this
-+        //    function.
-+        let receiver_ref = unsafe { &*receiver_ptr };
-+
-+        // SAFETY: `receiver_ref` only exists as pinned, so it is safe to pin it
-+        // here.
-+        let receiver_pin = unsafe { Pin::new_unchecked(receiver_ref) };
-+
-+        T::run(receiver_pin).into_c()
-+    }
-+}
+minItems: 1
+maxItems: 2
 
--- 
-2.47.0
+> +    description: Registers base address
 
+Don't need generic descriptions of common properties.
 
+>  
+>    clocks:
+>      minItems: 1
+> @@ -63,11 +64,6 @@ properties:
+>    clock-names:
+>      minItems: 1
+>      maxItems: 2
+> -    items:
+> -      enum:
+> -        - extal     # All
+> -        - extalr    # Most R-Car Gen3 and RZ/G2
+> -        - usb_extal # Most R-Car Gen2 and RZ/G1
+>  
+>    '#clock-cells':
+>      description: |
+> @@ -92,16 +88,6 @@ properties:
+>        the datasheet.
+>      const: 1
+>  
+> -if:
+> -  not:
+> -    properties:
+> -      compatible:
+> -        items:
+> -          enum:
+> -            - renesas,r7s9210-cpg-mssr
+> -then:
+> -  required:
+> -    - '#reset-cells'
+>  
+>  required:
+>    - compatible
+> @@ -113,6 +99,44 @@ required:
+>  
+>  additionalProperties: false
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,r9a09g077-cpg-mssr
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +          maxItems: 2
+
+With the above, you only need minItems.
+
+> +        clock-names:
+> +          items:
+> +            - const: extal
+> +            - const: loco
+> +    else:
+> +      properties:
+> +        reg:
+> +          minItems: 1
+> +          maxItems: 1
+
+And only maxItems here.
+
+> +        clock-names:
+> +          items:
+> +            enum:
+> +              - extal     # All
+> +              - extalr    # Most R-Car Gen3 and RZ/G2
+> +              - usb_extal # Most R-Car Gen2 and RZ/G1
+> +
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            items:
+> +              enum:
+> +                - renesas,r7s9210-cpg-mssr
+> +    then:
+> +      required:
+> +        - '#reset-cells'
+> +
+>  examples:
+>    - |
+>      cpg: clock-controller@e6150000 {
