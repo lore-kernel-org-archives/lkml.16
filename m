@@ -1,272 +1,218 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670D03D6D;
-	Fri,  7 Mar 2025 06:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741329221; cv=none; b=JSWr2r/v4SUmVBJjeLptQx10NEiF/uqiwCLPn50wyVhFGksjkxBzC8Ybcip2/Vfz3tNZyLlbgZC3eBHpLygzZINP3YEd8sbgq6t4oHGni3fjD2oYfLS2cm13cskZFxC6e/ZJa71KwSp+dTDmLGAxl+OpdJdwWaI60Cc4UVq3kPI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741329221; c=relaxed/simple;
-	bh=ZekPPtsk1ScZpqNWJqDXN+JNyvlvIbWBAK2GZKubP5k=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ra4vULYxikVisez4vNPe8DmUvHXSCrOSAVwng/IdZquhda8/U6cZmpEkVmbReguqYrPzOUGURMDg2Yc30lJEyXMCSs0QQQNdt3iKeZq1oZSj+ntO2i5i72XUc3rUnPjvpEIOD2lbsqnWnSBRQULgUVjaTqm4ydIzeSmqbB/dueM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DbhYTEP0; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B865719048F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 06:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741329236; cv=fail; b=m3pdVCbluKxcv4u1UxUngx86i8Ws5D1xrvfjzIYTVdt/NSISqM4UXbFE+H6urwbGiZv7VRfQEhcGrPkW+bG4T9LSuXfqlFUpk6JK25egam8nTUv+UA+nmAJu77a30FYQlEJ7SYgi9lPVtNBMgvEd0MAjeDVHH2OobxVcD8Fjlj4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741329236; c=relaxed/simple;
+	bh=pSI4yWwjAUU29ufuiNwQN6QZ+IpJdeUC1ciRsO0OMzc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=iTTJzJlCtEOYE6MlqfjjmmBlmr4/h6JHsqSqEKvtnE76eqyN/wwQtq6IpEWZaX7G4X2CN3lw5ZtUFdp17SXeP9oS5tE/oSuC9Ep3eOHBGlxFrnv0N41JR8kxZciIw7lh0gElu2y7riKVRSfd4RMFSSEJxIfX+80gQ1wKsGjizo4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HT77r8Yg; arc=fail smtp.client-ip=40.107.20.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DbhYTEP0"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526KdJ8b003771;
-	Fri, 7 Mar 2025 06:33:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2ZGwll
-	Zz5/kLVNOFNLkWjcldANwCssBAkYGRgFt9ndo=; b=DbhYTEP0qhE4RxVNLaMr/W
-	0Tx7ovHVTon5OaHc48seP9QgeFF3cZlpnvfiyvjw8YlTdbd8P9WmisK0aUIa9yf4
-	5Gv40SrEtiG84sqPZ5wILbJzCqmW8S77PxZqHOxQ5+B6kU6yVkqZ3O9gwj2Pgr3v
-	8CH4ogWyf/EiAesxQbRBThBY5UlKaaMsUKbCbgPJ8HNFgIC6Ns7FCLrdbw/STE5L
-	NtTLGOs0+0hiuQi9xIryIrcEvYtEcKaEt2WrHk96cC81pqhfP0Svc9v+yfjT/NOm
-	QasGcFtd1JIaFScuceineX0cHt1LtNOmrgDacDdijPor7PODPj2eqnuKx4vfJ+Cg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457jx024w2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 06:33:09 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5276X8dA002152;
-	Fri, 7 Mar 2025 06:33:08 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457jx024vy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 06:33:08 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5273ptcA025012;
-	Fri, 7 Mar 2025 06:33:07 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 454f92cs7e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 06:33:07 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5276X6n941484648
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Mar 2025 06:33:06 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2BD4920043;
-	Fri,  7 Mar 2025 06:33:06 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C787020040;
-	Fri,  7 Mar 2025 06:33:01 +0000 (GMT)
-Received: from [9.124.218.213] (unknown [9.124.218.213])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Mar 2025 06:33:01 +0000 (GMT)
-Message-ID: <2926c843-62e6-419b-a045-e49bdd0b0b97@linux.ibm.com>
-Date: Fri, 7 Mar 2025 12:03:01 +0530
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HT77r8Yg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PGNK1oz6CA/Y3hHFNRw08PkrR0dAPT+x4DDi52pquiiUm3FgfIYJx16XCpSwMt5U4mZINoh5f1LhdYC31alVtRQyD5jy17Yo6/7CRj7TAFHez91UYLMG7moZxu6txFJgJX14dmKmLc4okgaGq7egHFN12tgeb3BitWZhQAwuT7Kc5r3cxWHQDmF32Ttj8V4P+PT1uKY85aPn2FpqwNmYAv2NEEjg2sJzb9RqolwfkMyUlanHS4UD3BVJKR+z2diDopRR2ZhkWo5rJcx5RI7RHPl2CLp++Nv0bZhGmED68ge4BFIC2aAjVvLzi9C50Lxn7bmC8vvf2K8i3I2BHqCGwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V/E8mim6nrECFgpb1jn5jC5h1Nau+pzpgDfPanxCz5c=;
+ b=yescgmvQpYGkttE7T7YMozQ2d9JCL05YZi/yeNbv0teErpThWqXrGkYT8c7mszImVP4VO69gxpVwijeoydJJs9Rossg4urh5iSQAQlWBuhhi4M27K3l1EDxqNPJjWcrrUc1VZ7tVwdllr0ahqYMfsdsHOBWyorVv3WJ9N+jyULsNazu4x9mxI2/TU097mpGCrCYDEPemK3azAP43aR8UfrS/fniS+PRXmWRfNJFw/hxx68v9o3Ugxjn4dvHkYN3J4BYwcInSPoHVhL9OUZ05LxkuCEaCC/bLBforP4qk6USuWHNTf0UJvyRqmnHHvzCXdCLd55vC28ePYj9UV7edvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V/E8mim6nrECFgpb1jn5jC5h1Nau+pzpgDfPanxCz5c=;
+ b=HT77r8YggPxJwiheElSSLIvsej6IJ+YF1zBEOUw7v8zh+N1MLLCuIrq3D5yyfpZZHvxVYPiicM8tj7mpR+YEiQtym8Vi2qK/3S/4teOZcuwZfPDsY/lKpbMHYFYne+5nkrdqFez/m2sd6iIFCwR84SHfv3OhpMD0hZxbu7moieRv/Sw9n+uK/9B6Fu1cZ3tscJO2mscuATMomiFPZjqWTQEbxskUvH68zbAGm2Vjn5mBODHNIG/MPKdhDBTs4hqtv9DhxfPKaDt+V2lFWguj/i/ytfuu5zKmK5wjO+6cd7XieD1+mwmQLtq0xrzFSyNlt57hIfN4awPa4guwk0eKTg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AS5PR04MB9972.eurprd04.prod.outlook.com (2603:10a6:20b:682::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Fri, 7 Mar
+ 2025 06:33:52 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%4]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
+ 06:33:52 +0000
+Message-ID: <5cf48c2a-40b2-470f-aadb-0710acd37084@nxp.com>
+Date: Fri, 7 Mar 2025 14:35:03 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/bridge: fsl-ldb: make warning message more
+ informative
+To: Frank Li <Frank.li@nxp.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250306-drm-two-ldb-improvements-v1-0-f139d768b92c@bootlin.com>
+ <20250306-drm-two-ldb-improvements-v1-2-f139d768b92c@bootlin.com>
+ <Z8nizEsd0QbYgsI/@lizhi-Precision-Tower-5810>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <Z8nizEsd0QbYgsI/@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR02CA0003.apcprd02.prod.outlook.com
+ (2603:1096:4:194::13) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [PATCH v2 4/8] sched/deadline: Rebuild root domain accounting
- after every update
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>,
-        Qais Yousef <qyousef@layalina.io>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Swapnil Sapkal <swapnil.sapkal@amd.com>, cgroups@vger.kernel.org,
-        Phil Auld <pauld@redhat.com>, luca.abeni@santannapisa.it,
-        linux-kernel@vger.kernel.org, tommaso.cucinotta@santannapisa.it,
-        Jon Hunter <jonathanh@nvidia.com>
-References: <20250306141016.268313-1-juri.lelli@redhat.com>
- <20250306141016.268313-5-juri.lelli@redhat.com>
-Content-Language: en-US
-In-Reply-To: <20250306141016.268313-5-juri.lelli@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: WiGCthaIkkcdAAhbRu_qw1VZaJElO8hh
-X-Proofpoint-ORIG-GUID: WA-lyjapa09EPcq-i9zLOMdLbhhdoowZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_02,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 clxscore=1015 malwarescore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503070044
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS5PR04MB9972:EE_
+X-MS-Office365-Filtering-Correlation-Id: 342c8bf5-3a8e-4ad1-212e-08dd5d4206d8
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?ejlleFN1bTNSMENyb3ErMFF0RkJ3WVI2M1cxUDhwTTdoR3ZJanpwZHl3S3ZJ?=
+ =?utf-8?B?cHpZZTN5aVkxbVAyREt3MXZ4Qnh0b2R3WSsrVzZzeHg4cTlOclZZeGtsNmo2?=
+ =?utf-8?B?UEZwdFFwUzBGb2NyaEt3a3NaUVVGaVJiSkxBSTlvVG45RHdjSVlFR3E5ZnN3?=
+ =?utf-8?B?STdFVm92eko1TmZOWWFZdTQ4VVRWK1d5RHRDNEZVKzZDS3pUZlJiYmxrQnRu?=
+ =?utf-8?B?bkhXQ2o3NHYyNkVaTCtzRHE2TTQvOE4rbDZEVHJ2TnRQZFkvV2RHWjZPRWRG?=
+ =?utf-8?B?ZWEySXVxRmY3LzhtaVR4Z1k1TU1jeGg4UjAwRnZMRUQ2UU5jNm5kZ0J3S3NQ?=
+ =?utf-8?B?UlczbUt5RzRKNGh5OWtTZUVEV2srcXhqYVlBVFJRREZORUwyelRJR1FDTVZZ?=
+ =?utf-8?B?U3c2UTc3bk1SYUd5bUtXb2tSdkNtVWRRUGg4S3ROcTBYOUcrKzU0a0Uyb3B4?=
+ =?utf-8?B?NFg5ZVZBWTloVkZLeUtqL1djaXVyV3g0Y282aEdPMHAvdEo3RnJacWpGaS96?=
+ =?utf-8?B?ejZJMjZEa053UnRmaSs4TnM1UGI0MkZta0M2MXZqZElaaHJsNVVYRkRLNXRH?=
+ =?utf-8?B?UjlWb05GQnBkKzM0dXphdkxKZWx6eHRrLzlScSs3TitRVkhNRXBySEJCQ0hS?=
+ =?utf-8?B?aFFzVDhXVTdXR0pXOE9DRkx0MG5GSVV2MzlVbXQ4VTlRc1V2MjMrZkNRSXYz?=
+ =?utf-8?B?UHhOOCt6c3NKdWp2Lzc5MDkyMGYzMzFKNGlWSkh4VVduL2EvZTh1U2pZSlJP?=
+ =?utf-8?B?TUFoWHlxOFdVc1RZWlZDY2ZNL21BQ2xOZTJqc2QwNE5aWUM2clFPb1RKMHg1?=
+ =?utf-8?B?TDhnVW5xR2JHbkE4R3ZDRkYwTThsaEtFNzNLSWk0d25LZ3BtZVhQOG1uTTlY?=
+ =?utf-8?B?c2ZnT0FydnJxVWpZakszLzNDQXBVdjZIdnJOVVlKU0hKaWNsMFNEdUF4OU9o?=
+ =?utf-8?B?ZUdxRU8vRWMxTTJwcXV6ZDAzdVMwMnk2UkQ0aFVTUnE1SXB3YTlVVGNkb3JL?=
+ =?utf-8?B?Qnc3WVdNd25LSVhabnNLZHlyV2VkT0pLc1dOWElTTkRzYVVXb1hWTmMxS3A5?=
+ =?utf-8?B?UGJDQTNhNGZaNWVIRTBKT25lRlVYOUFkUm14K1VlN2VNam8vc0grYUQ1RnZh?=
+ =?utf-8?B?RXdjMkxtb2dlV240cVVCa2ErNmN6RGc4ZDBkOWRKZlFmYjgvbHZ5a3Vrcml5?=
+ =?utf-8?B?b0FtaVJSMmNidlRZYm5IQTQxdjFyMFN5ZUNWZHNWYnlTbDVaWlRvRnpmN2FR?=
+ =?utf-8?B?SlFUeHlINE4veWY0VkFya25SSzJ1MHZPSURLUVdsS3lJRkdnMnBITTk4VDA1?=
+ =?utf-8?B?bFNiOS9SVFE0N2ZqR3RHNGk1dk1Cb2UrUXY3OTVINXhiazlRNGczdDV1VW03?=
+ =?utf-8?B?MXV1UUJmVU1rcEp1eVh5M0cvRkJBdVNwN3NEOVo3bmQ3VU1aZ2tGS3gxT3Fw?=
+ =?utf-8?B?ZmVPc1hiVWVxcmdqeTJ2WEZTTDgyaTkwRkMxczdDVjZ2a3V1cW9vLzRkbENP?=
+ =?utf-8?B?T3dlc2VmcU1uL1U5cnBTS0VDaXZoaHo5UHRKeFYwNTduMEdnSDhJdklMc1V6?=
+ =?utf-8?B?eXB0aTVyMHZjMUdNUEdVSEpyUkJkYjRRTjdVV2NDYlRTRmpxamdOcTdDQ3JS?=
+ =?utf-8?B?SjlPbmkzamFUTk5KSlJHNEE4dm1YQTZZZ0tWMUtjRlB0THdmamwxWTVVSVQy?=
+ =?utf-8?B?MW5sN3haRGFRM0htakJ2a1RxNHo3UjdYcW9PTW1UTUFTZmtvUEtuaTdlVVR0?=
+ =?utf-8?B?TkNnZjQrQlZHeWlqekR0UUtXUnpkeE9sb203bFN4YTRhekhZaEJIc1ZnWVhB?=
+ =?utf-8?B?K21SRDBUb2loYWNGdGFCVzBzamVXc01xcmZhUmtqRTVGdzVoYWtHaG03MmFr?=
+ =?utf-8?Q?gkzjGTotBiDLg?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?d1hiSFNubEllazJkbnl2bFhGekk0ZzY1cUpBWkZnT0xFUERPNlZiQVhYTmhZ?=
+ =?utf-8?B?UnprcmZsRUxGbUdZdVlmcmEwRjZyQkxITXhiemw4bytmWDZQWUpkSkdaSlRU?=
+ =?utf-8?B?clNuZW9SSEtBWXgwZWVWSVJkRXNxMW5iNW1kRnY3YzJpazN6aTQ5ck5JcW1Z?=
+ =?utf-8?B?TFU0ekpCSG1MQlFNUDluZXViU2FYNHBBMnRiRU5UMmxnYm5XSU1HNVNEY3pE?=
+ =?utf-8?B?SzNadHlOaVpoU1Y4ajcwZlZyT2czZVphdmFWSUhSbE5yVFdIQU9MSDdHejJm?=
+ =?utf-8?B?Qm11dVZJczhlRWpQUHpzcVdreGlyZjRFOVNkTm10SzIrYmxsUENSWWt0SEc4?=
+ =?utf-8?B?S2lGOHd3QTNFYzRLa0RDNmxHaS9OcHNHdzlUdFdDVDZaK0JyV1grU2pvcmRy?=
+ =?utf-8?B?bXJGNDlYeEhFYVArZ2F0dVVvdHQwVnJVWndHNFFmVURESjRzeG81bHE0N09Z?=
+ =?utf-8?B?L2U4MW13Z3g5R04wbmJmNytoREovWldWMWlTV3BFVkM2djQ1SkpGRmRhVWgz?=
+ =?utf-8?B?enpDYnd3N2xWZDV3QThIQzVSWU5SV1JpbVA4Q002MCs4VXowREJrNEdlWTkw?=
+ =?utf-8?B?M2tFeHhpWnJrQjNPNk1TcVpVQndrbnQ4ZGtTL2plN09QaDRnZjhCMEU2c21q?=
+ =?utf-8?B?RG8rVXg0cXBzMVo5Y2JVWTEycUhGa05kcFA5RERtSXVoSUFnOWZNZG4zQmJT?=
+ =?utf-8?B?bWVOWFp4YTVNcm1RbU1FUEt1ZGZyUXhPbGpoUVpocTlIZUw0M3hPUE5FZllr?=
+ =?utf-8?B?TDhJZXBPL0NTRnZLbXFlR0RoK0xyTUhiZmJocXc5aS8rWjhhQ0RBSFVDMTlv?=
+ =?utf-8?B?Q3FVd0ZoY1VldktPb3ZXWDlVT2lxME0wT1hnQWF1eGd4Qi9oa3Vac2VlSmNO?=
+ =?utf-8?B?WEZsY1ZxN2JKNmpSWnowTjZNUFlTVHhUcmx1c1Q3ZzZPbGlvc0JrREZjWEJy?=
+ =?utf-8?B?ZERXTWkwYzdic2l2KzMxdGlkVUlaUnkrcEk4aGhuVkQ2V05xT0FIb3AxcHZR?=
+ =?utf-8?B?dGtEK0NITnRoY2p0TWFBK2pWdUFNUENEbHBkMnhaNitDbmF4QXBydlJPd1hU?=
+ =?utf-8?B?SmRmeXNBemhRY0w5OTNxQWpoNDQxSCtaMHN1UjZiS3A4OVVhM1dwWlhVcUMw?=
+ =?utf-8?B?Uy9pU0ZwV2QvcFNmUG5xREVmd3g2UjJjV0FORHgvYlNHRjU5K2ZrYkNPemZt?=
+ =?utf-8?B?eHB0aytRZVJvRUI0TlFqVzlCcTkybEhxc0pWNG9jd0lDVDFrcXZkclpJOUpF?=
+ =?utf-8?B?SUZOSVY0UG5SdldPczBld2F5bkgweUdEcUd3RkZxMGNCZzd3VnlTdFpqTVcz?=
+ =?utf-8?B?elU4bVR0czIyZ250bDBCR1Q2N21zQ1dCeHJabmo4bmxRK3NVUHVTaW9yTmZP?=
+ =?utf-8?B?RXF2bnNnRjlQVXlpNkRsMjY0TE1Cbks0MlA0SXB3eURtRUprN3JGTVBPNFJL?=
+ =?utf-8?B?TVEzVDg5RCtibHFqeFJ2NFhReDV4S1dVbUp1WVAzTVRZMlZmYndvUEFuSEJQ?=
+ =?utf-8?B?dlk2ZGlZL3d5MWRvZHJ3U1FidnFteVVkc01hcDhWS2lUNDlsanU3emxZS1hU?=
+ =?utf-8?B?ZTlycmVYZlNTTXJya1NsbmpnSjc2NjBpR3VJbkQ3RzNwWlRoTkE2c0p4b3FE?=
+ =?utf-8?B?by9TMTY4aGZzekZZZ1oyVFJwT041WjAzQy9xR0JGR3AyR1pEWUhFNUZhNXN3?=
+ =?utf-8?B?TXVIT3o1d3F6K3RScm1abktQVnpudzJpMmQyS3Ntc1VsVG05RjY2QlprdnVN?=
+ =?utf-8?B?NXAxb1BiOUpHYzhRVUNaQnA5aE9KdGRZV1B1UUNWUEpxN2VUZUxPRGQzQ3hF?=
+ =?utf-8?B?dmhRSWdycWowYXUwMVNmbkFxcjNCNFBNdE9LV0g4S0t3Ym1oTWI0UE8wMlNB?=
+ =?utf-8?B?Y2QxUTA2ampEVjdqN3JaZk5leTR5R3RsbFZ2Q1JtVUJ5WlhwWURoajJWeEht?=
+ =?utf-8?B?WFVFUDVieGo1cVZmeGsxR0ZmNGVrQmRkYWFwZVhEUTBzUjhlTytVL3d0MWMw?=
+ =?utf-8?B?MlRDZUZubUdrZDlTWmFOTTJNSGh5QnR0bnNQQ0NCMkNkSEg0SE8yOXluTFZF?=
+ =?utf-8?B?WHo1UElscENrd3RTR1dJajRWUXIzZ1VybGkwSHRaTS9ZMlRsb25lSXRMZ1ZT?=
+ =?utf-8?Q?VCrLt53w4TxHGEYAwd+rDiCtY?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 342c8bf5-3a8e-4ad1-212e-08dd5d4206d8
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 06:33:52.1773
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QFza2WX67BrUOHPEieXVUeK6gYT6CH43YLgLWhdUqKaeZiPC2UIrcDwVOdGa290XHqbFf1OmLSw6p4FAlN1fXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9972
 
-Hi Juri.
-
-On 3/6/25 19:40, Juri Lelli wrote:
-> Rebuilding of root domains accounting information (total_bw) is
-> currently broken on some cases, e.g. suspend/resume on aarch64. Problem
-> is that the way we keep track of domain changes and try to add bandwidth
-> back is convoluted and fragile.
+On 03/07/2025, Frank Li wrote:
+> On Thu, Mar 06, 2025 at 06:28:41PM +0100, Luca Ceresoli wrote:
+>> This warning notifies a clock was set to an inaccurate value. Modify the
+>> string to also show the clock name.
+>>
+>> While doing that also rewrap the entire function call.
+>>
+>> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>> ---
+>>  drivers/gpu/drm/bridge/fsl-ldb.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
+>> index 0fc8a14fd80062248a43b8b93272101a7ca6158a..c7c899a9644bb827845fb3fe96a9695d79a91474 100644
+>> --- a/drivers/gpu/drm/bridge/fsl-ldb.c
+>> +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
+>> @@ -181,9 +181,9 @@ static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
+>>
+>>  	configured_link_freq = clk_get_rate(fsl_ldb->clk);
+>>  	if (configured_link_freq != requested_link_freq)
+>> -		dev_warn(fsl_ldb->dev, "Configured LDB clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
+>> -			 configured_link_freq,
+>> -			 requested_link_freq);
+>> +		dev_warn(fsl_ldb->dev,
+>> +			 "Configured %pC clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
+>> +			 fsl_ldb->clk, configured_link_freq, requested_link_freq);
 > 
-> Fix it by simplify things by making sure bandwidth accounting is cleared
-> and completely restored after root domains changes (after root domains
-> are again stable).
+> commit message said show clock name, but %p is for pointer value. Are sure
+> it show clock name?
+
+%pC prints clock name.  Please see Documentation/core-api/printk-formats.rst.
+
 > 
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Fixes: 53916d5fd3c0 ("sched/deadline: Check bandwidth overflow earlier for hotplug")
-> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-> ---
->   include/linux/sched/deadline.h |  4 ++++
->   include/linux/sched/topology.h |  2 ++
->   kernel/cgroup/cpuset.c         | 16 +++++++++-------
->   kernel/sched/deadline.c        | 16 ++++++++++------
->   kernel/sched/topology.c        |  1 +
->   5 files changed, 26 insertions(+), 13 deletions(-)
+> Frank
 > 
-> diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
-> index 6ec578600b24..a780068aa1a5 100644
-> --- a/include/linux/sched/deadline.h
-> +++ b/include/linux/sched/deadline.h
-> @@ -34,6 +34,10 @@ static inline bool dl_time_before(u64 a, u64 b)
->   struct root_domain;
->   extern void dl_add_task_root_domain(struct task_struct *p);
->   extern void dl_clear_root_domain(struct root_domain *rd);
-> +extern void dl_clear_root_domain_cpu(int cpu);
-> +
-> +extern u64 dl_cookie;
-> +extern bool dl_bw_visited(int cpu, u64 gen);
+>>
+>>  	clk_prepare_enable(fsl_ldb->clk);
+>>
+>>
+>> --
+>> 2.48.1
+>>
 
-Is this needed? There is same declaration outside of CONFIG_SMP done in 
-patch 3/8.
-
->   
->   #endif /* CONFIG_SMP */
->   
-> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-> index 7f3dbafe1817..1622232bd08b 100644
-> --- a/include/linux/sched/topology.h
-> +++ b/include/linux/sched/topology.h
-> @@ -166,6 +166,8 @@ static inline struct cpumask *sched_domain_span(struct sched_domain *sd)
->   	return to_cpumask(sd->span);
->   }
->   
-> +extern void dl_rebuild_rd_accounting(void);
-> +
->   extern void partition_sched_domains_locked(int ndoms_new,
->   					   cpumask_var_t doms_new[],
->   					   struct sched_domain_attr *dattr_new);
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index f87526edb2a4..f66b2aefdc04 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -954,10 +954,12 @@ static void dl_update_tasks_root_domain(struct cpuset *cs)
->   	css_task_iter_end(&it);
->   }
->   
-> -static void dl_rebuild_rd_accounting(void)
-> +void dl_rebuild_rd_accounting(void)
->   {
->   	struct cpuset *cs = NULL;
->   	struct cgroup_subsys_state *pos_css;
-> +	int cpu;
-> +	u64 cookie = ++dl_cookie;
->   
->   	lockdep_assert_held(&cpuset_mutex);
->   	lockdep_assert_cpus_held();
-> @@ -965,11 +967,12 @@ static void dl_rebuild_rd_accounting(void)
->   
->   	rcu_read_lock();
->   
-> -	/*
-> -	 * Clear default root domain DL accounting, it will be computed again
-> -	 * if a task belongs to it.
-> -	 */
-> -	dl_clear_root_domain(&def_root_domain);
-> +	for_each_possible_cpu(cpu) {
-> +		if (dl_bw_visited(cpu, cookie))
-> +			continue;
-> +
-> +		dl_clear_root_domain_cpu(cpu);
-> +	}
->   
->   	cpuset_for_each_descendant_pre(cs, pos_css, &top_cpuset) {
->   
-> @@ -996,7 +999,6 @@ partition_and_rebuild_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
->   {
->   	sched_domains_mutex_lock();
->   	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
-> -	dl_rebuild_rd_accounting();
->   	sched_domains_mutex_unlock();
->   }
->   
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 339434271cba..17b040c92885 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -166,7 +166,7 @@ static inline unsigned long dl_bw_capacity(int i)
->   	}
->   }
->   
-> -static inline bool dl_bw_visited(int cpu, u64 cookie)
-> +bool dl_bw_visited(int cpu, u64 cookie)
->   {
->   	struct root_domain *rd = cpu_rq(cpu)->rd;
->   
-> @@ -207,7 +207,7 @@ static inline unsigned long dl_bw_capacity(int i)
->   	return SCHED_CAPACITY_SCALE;
->   }
->   
-> -static inline bool dl_bw_visited(int cpu, u64 cookie)
-> +bool dl_bw_visited(int cpu, u64 cookie)
->   {
->   	return false;
->   }
-> @@ -2981,18 +2981,22 @@ void dl_clear_root_domain(struct root_domain *rd)
->   	rd->dl_bw.total_bw = 0;
->   
->   	/*
-> -	 * dl_server bandwidth is only restored when CPUs are attached to root
-> -	 * domains (after domains are created or CPUs moved back to the
-> -	 * default root doamin).
-> +	 * dl_servers are not tasks. Since dl_add_task_root_domanin ignores
-
-s/dl_add_task_root_domanin/dl_add_task_root_domain
-
-> +	 * them, we need to account for them here explicitly.
->   	 */
->   	for_each_cpu(i, rd->span) {
->   		struct sched_dl_entity *dl_se = &cpu_rq(i)->fair_server;
->   
->   		if (dl_server(dl_se) && cpu_active(i))
-> -			rd->dl_bw.total_bw += dl_se->dl_bw;
-> +			__dl_add(&rd->dl_bw, dl_se->dl_bw, dl_bw_cpus(i));
->   	}
->   }
->   
-> +void dl_clear_root_domain_cpu(int cpu)
-> +{
-> +	dl_clear_root_domain(cpu_rq(cpu)->rd);
-> +}
-> +
->   #endif /* CONFIG_SMP */
->   
->   static void switched_from_dl(struct rq *rq, struct task_struct *p)
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 44093339761c..363ad268a25b 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -2791,6 +2791,7 @@ void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
->   	ndoms_cur = ndoms_new;
->   
->   	update_sched_domain_debugfs();
-> +	dl_rebuild_rd_accounting();
->   }
->   
->   /*
-
+-- 
+Regards,
+Liu Ying
