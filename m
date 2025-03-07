@@ -1,95 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661A1255E58;
-	Fri,  7 Mar 2025 19:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55054250BF8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 19:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741376245; cv=none; b=jisMhbIrzDhJQZoOUULRl0AfTaO5f664JB/gYb7xzUHvRbKeq5R0qooSfom7VsYuxmrlarJq8AT8CuM80KGfbhsqRrmQzUF6/brgd/gUVyU8i7ZjE5tlMLhX19Z2cfPmCOoKXKupDGoYU77aKkcIB0N5vY2S9ssssDa+Ac7+hXQ=
+	t=1741376300; cv=none; b=HnkLgcSOR6fhEDkJjttr9W6nVDA/6X1GNFc0e6GOKqJ/cBvx5Y5TGNt0PTLU2QyqVK8A0EB3fRVwOR+oKQasNL6FcAZ8utc12ikbc8Fr8iBW+uKK/pqq3TqTTQdmbxy4DXXibGouMdyNVy1dc6tRBtActVkokIzou/XJCNH/9Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741376245; c=relaxed/simple;
-	bh=gdJJj0Y+vIMQxl2pF/V+JeYln0YLxtYpZd3GhmHEoMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tmv7EP3rU6XqaRIvU7lAfguNiuPcM562VIpCm2q2SKVIqUJyDTC6yLtK4Q0EE0wl7HisCdua8J8h/y0V8Xr1bPxMf4sGftYV+R+FEQS7JWHPZRUEiwmnKlxpxqCe+owgnuNWmJLDFrbwAlqnHpa1wWT6HvfHaawTj4JqBA8qoC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cW+40b7p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741376300; c=relaxed/simple;
+	bh=/3hNA2Uo+0p5qHAkZX40MS4jjODKDMpTpstTj+3Vgc8=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=gvySvIMWtAlVUCpHM29HvJ6re76G9zR4qasLSuPO7MCX9CQGe3Qxub4eMrt4OLfmSXaRW1NPHX/i6J/zHCRf0FuWNeWE8Apjg1o08cBQp60bIDT3snCN7y+sUP4uc/NmYN8mg71KrqyM47YtIQ84lBhxt1AF3ppCbw4XSnxJEqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ezTlkzZC; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cW+40b7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1235C4CED1;
-	Fri,  7 Mar 2025 19:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741376244;
-	bh=gdJJj0Y+vIMQxl2pF/V+JeYln0YLxtYpZd3GhmHEoMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cW+40b7p32mLKFSwQhsZH6rP9RxyzfSQuk2cWhW6r7FcrXqRf7t+1NavLAixHCDG4
-	 tof9vEYVEcENkLBBLXtmlDBX+SDWmcOYBOHaDYh08VYLXBxIjXD0MkSGyY1caOWHex
-	 gqYREeYkVZ4FeBdglamBrrGdm3WTfLcNxQUA2aEREznnWqs0Ig19i1yFHKsTCdaFAa
-	 Md1jAQLl3quoOYRr9qd+foB2MFdHcY2uo966ZYZ+X7uYPIqbEnJH6dcAThUvU7o4nD
-	 YKqmoB5xskRqBVoPlBQTpvNJ7xJ9K5SEC6vZWKt4Swc61UgoQyMO3JQWvlOKkgPxSB
-	 QQv1xCH3VauFg==
-Date: Fri, 7 Mar 2025 21:37:19 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: ross.philipson@oracle.com
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	ardb@kernel.org, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
-	ebiederm@xmission.com, dwmw2@infradead.org,
-	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
-	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v12 04/19] x86: Secure Launch main header file
-Message-ID: <Z8tK704hkyoZZc7_@kernel.org>
-References: <20241219194216.152839-1-ross.philipson@oracle.com>
- <20241219194216.152839-5-ross.philipson@oracle.com>
- <Z8qFdeM8YEck2j1C@kernel.org>
- <d2adb4c4-b03f-4fbd-81c2-1cd017ed2822@oracle.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ezTlkzZC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=XGauN/Z8AN/QXf9GVlFLc0lHdL7IyFuvPpvwm9DWHWc=; b=ezTlkzZC+ggW5Cln5xhjC7Szxm
+	d99VFVMZWJDNnAWgc8xKEHCjxTR+far+1Q5NuEuevKdeaWEzBeZsrFqujTYFrfG4ECqaj/bPNhuRp
+	Bs/af6CokatXlxfeNU3KLQc6B5jKZUUgAAmMqPIi4cNbWuJpxLpbvDvkI+yr+pLJd58Sm3RWrHBrl
+	/ZZ5O/wTaDXJbJhW7t8FJ2SlymvfJ+EU9wgwrGxxY3B+M8H7g9bPG+1FaYJK9nrYiiVF00kLUQseZ
+	+RCOnRbHPkzgSXqWY1RYAGnGa1z7Yk7om3sz5/2OGkMJfCF7c5ctoNsZbTnaF/2ZwxEmHHXwuKLOt
+	uU1Unh5Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tqdWP-0000000EKgJ-33V3;
+	Fri, 07 Mar 2025 19:38:13 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 055CF30031C; Fri,  7 Mar 2025 20:38:13 +0100 (CET)
+Message-ID: <20250307193305.486326750@infradead.org>
+User-Agent: quilt/0.66
+Date: Fri, 07 Mar 2025 20:33:05 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: mingo@kernel.org,
+ ravi.bangoria@amd.com,
+ lucas.demarchi@intel.com
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ acme@kernel.org,
+ namhyung@kernel.org,
+ mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org,
+ irogers@google.com,
+ adrian.hunter@intel.com,
+ kan.liang@linux.intel.com
+Subject: [PATCH v3 0/7] perf: Make perf_pmu_unregister() usable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2adb4c4-b03f-4fbd-81c2-1cd017ed2822@oracle.com>
 
-On Fri, Mar 07, 2025 at 11:25:20AM -0800, ross.philipson@oracle.com wrote:
-> On 3/6/25 9:34 PM, 'Jarkko Sakkinen' via trenchboot-devel wrote:
-> > On Thu, Dec 19, 2024 at 11:42:01AM -0800, Ross Philipson wrote:
-> > > Introduce the main Secure Launch header file used in the early SL stub
-> > > and the early setup code.
-> > 
-> > Just would need a *short* description of what slaunch.h holds. I guess
-> > it holds Intel TXT micro-arhitectural data structures? Anything else?
-> 
-> Later it will contain data strutures etc. to support other architectures
-> like AMD and Arm64.
-> 
-> > 
-> > This helps e.g. reviewers to skip some but still keep on track what a
-> > patch contains (and return back to it when necessary).
-> 
-> Yes we can make it clearer what is in this header file.
+Hi!
 
-As per code changes I did spend two hours reading them just to make sure
-that I can understand the TPM specific code changes, and also that they
-make total sense to me.
+Much smaller this time because Ingo merged a whole lot of the preperatory
+patches, thanks!
 
-Therefore I've put a lot the nagging is around documentation and
-definitions. I really could not find anything in the source code that I
-could pinpoint being absolutely wrong.
+This appears to survive a few hours of perf_fuzzer combined with tinypmu testcase.
 
-This really needs just now the stamp from tip maintainers. As per TPM
-changes they do have my blessing (no need for reviewed-by's as they
-have SOB already). I hereby also give permission to pull TPM changes
-through tip tree...
+Patches also at:
 
-> Thanks
-> Ross
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/pmu-unregister
 
-BR, Jarkko
