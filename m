@@ -1,206 +1,220 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C581522EE5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD6539ACC;
+	Fri,  7 Mar 2025 13:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741353377; cv=none; b=jhSspSxqjXxpAyn0KxUp2SYKFJjTBG2dtQlcV7xV+QGpEcFfol85JV+sYZ9cWfSl0/3KCDo6qVh1vjgbJlNs+lIiAEnxt6OktJGyUptKTEQuxebnHdM0S9HQyHyqAnC2k6kAR7ZYL6cW9Sa1QImN0525PHtysZPjvSi7D7Js2UY=
+	t=1741353400; cv=none; b=ZVBAkeZrST6cPSOAmFcNce8P/K1xV75BDoU9FjVfQODZrGmfTxZFtV4VwxHhuG6X/pfFy/JxeI8ImWSnzc63Fz1km1GgNsABLBI4KJUFY0+W5RptBVAXnCiDEuQmNNXtfE6issSwJECGU4XufpY8Pu9mHeVqeQSiOgZk9L8FfvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741353377; c=relaxed/simple;
-	bh=hZd3zDcuxytIUObsUdBqQhBZTsjVdEjxbPyYWVGizxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MDXTN90sIZ9uTh8LF6rWP4lTbbZGkFKU9v2SYTji3lU2i4VBYyUUaTm9pcbYbOkWyapX+hW+w+5LUY1HjN0A9gW9PMWWbXwdlXSBfqcXC4nEtJCBrNdlXRtPCa7DJCYtn55RXGtkzYMkLMMG9EDf5x9G70GCPBGN54ex70E63B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=IKBfRCS2; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1741353400; c=relaxed/simple;
+	bh=wUTCKQdFRduQqpYphO7bDmBlHds/Fl4g1FtGtN00RRM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aA/IQIJEPg/0raGB22K1us89393mdQTKAzff+gzP2G10C88LbeL0WwWCX17Yf3lMYSN8W6uUVJ8m0znHu7gX6f/QkA5S60ZHrPDZo18393O6i4OoleF4I4rHL8l1cpI1wYYQGK5bXGGsvQop2vvt4JjzhWxZ5WvQajIJaV3P/gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+cEAmQe; arc=none smtp.client-ip=209.85.216.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="IKBfRCS2"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abec8b750ebso318121866b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 05:16:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+cEAmQe"
+Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-2ff69365e1dso2733178a91.3;
+        Fri, 07 Mar 2025 05:16:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1741353374; x=1741958174; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G8f2sytBVf6nQXJURXlsjCA27TJ+V7rR1VMxVWEgKQo=;
-        b=IKBfRCS25RgsaMG+RpWdIleHTlPsb3HpseRv+dFAFIz63jsLJhI2aQsZfXJExGgGzK
-         voPXh1ocK24qkuc5yJVu4HuATJrnwveUVTIkU3uGbELLFpSChXbi/nbOrEWXt5Kagt7K
-         7emXw1fQAd2AM9TYE4Ee8aNKFocpuDHuu95Ek=
+        d=gmail.com; s=20230601; t=1741353398; x=1741958198; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gMvbXHKHSCisZxL639THXPR5iE2SKt/8fGdQQfWVyFU=;
+        b=S+cEAmQeELMbAT9YGvxHfeHnGB/cAPj60c8ScACgTsmoTYg+i8QbGQUUegatvsy4HG
+         Wu1AxeCu+qs5c3ZJGem43Hxi6Uq226VPVvHwkmZrxTwWitRaRJhmDeN48dDffD3yMlKn
+         l/KcO30J6RCEBSqi5sH6xegXhD3pwZpuYm9MUc+NqBQ2c2cw28LY37vl4F0zYHD+BwwC
+         wefCLPaa019DN1F11TTp02HUPVfux0ufXARtrycbERiL5UxqKoaswTK6uJJOaWPk8lD/
+         Bbi58q5tPf9uiEO3ZFVBZso63vSQg+AEm3X61/WbCAHZQSZXoMpChBnAwMUcV2EE50oR
+         zbAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741353374; x=1741958174;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G8f2sytBVf6nQXJURXlsjCA27TJ+V7rR1VMxVWEgKQo=;
-        b=ht6OraQJMQYhFM8r9rMN9D+kJailfnLhfW8KwLw0Es8BQh1XPs0ExyUQo8wAIAMk3g
-         0tS/+/Irucs+C4kOr7HVRlnZFX6ViRM5/dCNKPYYZTo7Kx18tuW3jGo6lfQ8ePrT1dUR
-         yqplDUagqGuwvSpfCA/JibUfrUlZ9UGSY5yqY6811O29RdfP+HXjhlb7Nvj9GB7ZsxUJ
-         ib4miiAigFz0fV9hJoNsnS6cHbES+fL4SNZjw9z1Dg1X/c6rehZbbTu562BTBFB/qYOO
-         9HBM2YCCJ9o2x5/XJomUXA65J268VlrvF29ngxZqjOldmT2ngOz9UDPqgUG51oiOoE+Q
-         Lvqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlJsDUm0sbTS3xJdNPGAco8nK1i7ZZCaZwZZm4+FZ/Jg5cdw+my2iscxkOiQmVDqfRJwdWxmba3HAWFuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJjRpl3VBKgF7tqRt7U1JlwvLYOPe38YhYGyi5pWIhTwqnWjUV
-	llSgclNNG++799wknOgc4oO9NlOorIcosof9cRzPRKHN7o8G05sZu9Hc7FZtlO8=
-X-Gm-Gg: ASbGncue1p1WBa+11P+FX4+Q5vTNA8klg6TrQqmFE3J9xPFFw2LEzgi0aHYcTaf6nTb
-	NSGz3/nEXS0udVpGQSDPmkYE5wGCh9EgYhu+KpRLJF/oy5fMWsC99J1zH7ga/BHGSF9Mw23flE0
-	EmdQNLbpJsJz8QGV8LQJXnRiivfbxa8SSdjnc4rE4743HEelqWPKIf4R9+iDQswzRy/j0yHo7cg
-	ib+1lgxyftr6wQRFc4eWPKZmiLyLuQKbx7FMMZT4mM/cCfBpYuyXDMhsqqA6dg2y2b3YYFoG3Nl
-	6FKDgPBlfSh8dse82RiPXU0jkioyRnxaQH+3ik8Dr/0ch5f7IKoV3MDm
-X-Google-Smtp-Source: AGHT+IEBr6qwJM6+7eURCpwowuxB3sHU4SE5NlnG84DUfQ8ELCKEuO9h6jhEzjJAVdDNsT77fkD+OA==
-X-Received: by 2002:a17:907:1b16:b0:ac2:1c64:b0a with SMTP id a640c23a62f3a-ac252a8827cmr340387366b.14.1741353373823;
-        Fri, 07 Mar 2025 05:16:13 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac23988af19sm278685266b.136.2025.03.07.05.16.12
+        d=1e100.net; s=20230601; t=1741353398; x=1741958198;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gMvbXHKHSCisZxL639THXPR5iE2SKt/8fGdQQfWVyFU=;
+        b=RSNxs73SRVUKyaxtfR5ggGTwRdEmMSZE50gR5KySN/LoW78ENujyPB6QzuMFIq41uv
+         T6XGNskBxj6JW+0oZCHgcnt4wQ649Yt28Z/ONJeuIh9WFnuaC9yuDdfZqm/4rJ1IC51F
+         9Fh3pZbzHptDF6fULWH56ddkEtGwtFR014eFEtGJIyVZO0pVIyOHR6V0MrYDwcWGoy+S
+         xZkPlqIOh7cBOIl5hO5LmKbIG3054NvNsxZ0QeniDR6cidlX4DXuUUSWB+pVhR2Rm3Q8
+         drALF64Ec/jWG8+EofCDTyUvlAGoIDB6u9ZElM4YHrZrA8nRGRJE6Sf76eLF1CJaAhBl
+         YfyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUm2d2Bwbu5CZRjyStE7m2r30MhCKvSbd84eN6g2iL77XSgcyaJdwKoGGydKZuQwoELZLOGG7KOBqde@vger.kernel.org, AJvYcCX2yE4DzZcJzHltjuKnGJRhYrNdYFRyXpThyEgh/rBGL3U4o401qrsmNAQ5UPxlFECbtC3Mt/VpL66i@vger.kernel.org, AJvYcCXrWsZkmhQCZ5MjzNHBmE6vQUNB8W1YiLtXeZLpdzEHgTjwcAl/jPBgnUoPOH1AlYg1Dv6hSp0CdfglThaz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxahxAO4Pf6ylO1/UYaaKjd71jr9ki3nwvV7HoWlkwUbu0AztR
+	8+umT2OaeIh+TW6xaLZILRwY7mA/6YO7ppbE/PfvIPVPXTJbYSfyhSG5qwC9qBqvCTv2
+X-Gm-Gg: ASbGncvTBIhaPOCunklK4PZ25grS+cY2nHET5F+SVweytqvkOnO/TEEu5FcGVGVzVwu
+	o1P+1PrTSGsTq8J5TWiO8FLOuW0n3qB3diNq6/z7isI451inTURoOTQRJOQcturcYjpea6lI2wB
+	KySFUz3htThQKj0ttvl49w2453z6Z0ucjKKDcfz1uygeFtrq0wOG2F0YfVoOVS0mBx59tJT3+OA
+	FUHeRI/uYIOt2FrFWAnD0PUBTxqJforVTMZYEWy/XA1F9bwCZeuRX4WVPmGS/BdxAFX2sg6sCWz
+	GUCfQB/Bb84mzrmioOamyby7Fcte
+X-Google-Smtp-Source: AGHT+IGuZdlA+BS6H0fs1GCOn7IAPiD3AnSb1clZZH8wjlj+5zl7SMB+jNl9tmfBcw4YKqPpDlpEWA==
+X-Received: by 2002:a17:90b:4c44:b0:2ee:f80c:6889 with SMTP id 98e67ed59e1d1-2ff7cf22f41mr6030863a91.33.1741353398529;
+        Fri, 07 Mar 2025 05:16:38 -0800 (PST)
+Received: from [127.0.1.1] ([2602:f919:106::1b8])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff693f7cebsm2984589a91.45.2025.03.07.05.16.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 05:16:13 -0800 (PST)
-Date: Fri, 7 Mar 2025 14:16:11 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>, aliceryhl@google.com,
-	robin.murphy@arm.com, daniel.almeida@collabora.com,
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v12 2/3] rust: add dma coherent allocator abstraction.
-Message-ID: <Z8rxm-BHldKqEwyp@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@nvidia.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>, aliceryhl@google.com,
-	robin.murphy@arm.com, daniel.almeida@collabora.com,
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-References: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
- <20250224115007.2072043-3-abdiel.janulgue@gmail.com>
- <20250305174118.GA351188@nvidia.com>
- <Z8mlAxsszdOH-ow8@cassiopeiae>
- <Z8m9j3SwWHqaCTXo@phenom.ffwll.local>
- <20250306160907.GF354511@nvidia.com>
- <Z8qzP3CR8Quhp87Z@pollux>
- <20250307124809.GL354511@nvidia.com>
+        Fri, 07 Mar 2025 05:16:38 -0800 (PST)
+From: Troy Mitchell <troymitchell988@gmail.com>
+Subject: [PATCH v6 0/2] riscv: spacemit: add i2c support to K1 SoC
+Date: Fri, 07 Mar 2025 21:13:45 +0800
+Message-Id: <20250307-k1-i2c-master-v6-0-34f17d2dae1c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307124809.GL354511@nvidia.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAArxymcC/5WQwU6EMBCGX4VwtpvpTFsKJ1/AmzfjoZRBGpdFC
+ xI3m313C2qWcDEe/0y+L//8l3zkGHjMq+ySR57DGIZTCuYuy33nTi8sQpNyjoBKAknxKkVAL3o
+ 3ThxFy0Vb1NB4LilPzFvkNnyuvqfnlNs49GLqIruNBS1oQoQDKYOWhBSPcTg/hMl3fDyW1t6/9
+ C4cD37of5yR3z9StelbfGtWZYsRDJqlF0hRuzF40UxCOkeSmWvfYDXrxZNuLJKzD1OVWS6x9LV
+ WhlmhL52RDarWsQEDmksmWSJplS9fdGGchnheR5rVWmH9RKLe7TErAQJaarS1hsjUm1cW00wbW
+ uKepkRrAF0XaVIEu6fxRv9rxRWWG1hqKLQkdZBKlUrbv2n9S2sgoH1xnYqjbFpfuKZlKrb09Xr
+ 9AnrL1lVnAgAA
+X-Change-ID: 20241031-k1-i2c-master-fe7f7b0dce93
+To: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Troy Mitchell <troymitchell988@gmail.com>
+Cc: linux-riscv@lists.infradead.org, linux-i2c@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741353244; l=5452;
+ i=troymitchell988@gmail.com; h=from:subject:message-id;
+ bh=wUTCKQdFRduQqpYphO7bDmBlHds/Fl4g1FtGtN00RRM=;
+ b=JTxhTRL0Z2JT2mTJnFDUsLORpQFRZ623+XTqU/OxWEMqkF9l/h17XSR0kmCtSf+4Efb33GUZX
+ bfzatGA3bDjAFacQVFyBPOpdODYLRkGGrmV3ZV35qZyhrHnaYL8PjrY
+X-Developer-Key: i=troymitchell988@gmail.com; a=ed25519;
+ pk=2spEMGBd/Wkpd36N1aD9KFWOk0aHrhVxZQt+jxLXVC0=
 
-On Fri, Mar 07, 2025 at 08:48:09AM -0400, Jason Gunthorpe wrote:
-> On Fri, Mar 07, 2025 at 09:50:07AM +0100, Danilo Krummrich wrote:
-> > > Technically it is unsafe and oopsable to call the allocation API as
-> > > well on a device that has no driver. This issue is also ignored in
-> > > these bindings and cannot be solved with revoke.
-> > 
-> > This is correct, and I am well aware of it. I brought this up once when working
-> > on the initial device / driver, devres and I/O abstractions.
-> 
-> Yes it is also incorrect to call any devm function on an unprobed
-> driver.
+Hi all,
 
-You can, devm groups nest, and I think by default (might misremember)
-there's 3:
+This patch implements I2C driver for the SpacemiT K1 SoC,
+providing basic support for I2C read/write communication which
+compatible with standard I2C bus specifications.
 
-- probe/remove i.e. driver bound lifetime
-- up to device_del in case you've called devm outside of a driver being
-  bound.
-- Final kref_put on the device.
+In this version, the driver defaults to use fast-speed-mode and
+interrupts for transmission, and does not support DMA, high-speed mode, or FIFO.
 
-For added fun, you can create your own nested groups within this and nuke
-them as needed. component.c does some of that, which is why I regretfully
-know about this stuff.
+The docs of I2C can be found here, in chapter 16.1 I2C [1]
 
-> > It's on my list to make the creation of the Devres container fallible in this
-> > aspect, which would prevent this issue.
-> 
-> I expect that will require new locking.
-> 
-> > > The actual critical region extends into the HW itself, it is not
-> > > simple to model this with a pure SW construct of bracketing some
-> > > allocation. You need to bracket the *entire lifecycle* of the
-> > > dma_addr_t that has been returned and passed into HW, until the
-> > > dma_addr_t is removed from HW.
-> > 
-> > Devres callbacks run after remove(). It's the drivers job to stop operating the
-> > device latest in remove(). Which means that the design is correct.
-> 
-> It could be the drivers job to unmap the dma as well if you take that
-> logic.
-> 
-> You still didn't answer the question, what is the critical region of
-> the DevRes for a dma_alloc_coherent() actually going to protect?
-> 
-> You also have to urgently fix the synchronize_rcu() repitition of you
-> plan to do this.
-> 
-> > Now, you ask for a step further, i.e. make it that we can enforce that a driver
-> > actually stopped the device in remove().
-> 
-> So where do you draw the line on bugs Rust should prevent and bugs
-> Rust requires the programmer to fix?
-> 
-> Allow UAF from forgetting to shutdown DMA, but try to mitigate UAF
-> from failing to call a dma unmap function. It is the *very same*
-> driver bug: incorrect shutdown of DMA activity.
-> 
-> I said this for MMIO, and I say it more strongly here. The correct
-> thing is to throw a warning if the driver has malfunctioned and leaked
-> a DMA Mapping. This indicates a driver bug. Silently fixing the issue
-> does nothing to help driver writers make correct drivers. It may even
-> confuse authors as to what their responsiblities are since so much is
-> handled "magically".
+Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf#part5 [1]
+---
+Change in v6:
+- Patch #1:
+        - Give a brief clock description and a clear clock name
+        - Changed the clock numbers in the example to match those
+          in the mainline clock driver
+- Patch #2:
+        - Fix incorrect comments in macro definitions
+        - Fix code style
+        - Merge `spacemit_i2c_xfer_core` into `spacemit_i2c_xfer`
+        - Remove `reset` and `enable_irq` before each transfer
+          and place `reset` in the probe function.
+        - SPACEMIT_I2C_GET_ERR -> SPACEMIT_I2C_SR_ERR
+        - spacemit_i2c_recover_bus_busy -> spacemit_i2c_wait_bus_busy
+        - Support standard mode
+Link to v5:
+https://lore.kernel.org/all/20250303-k1-i2c-master-v5-0-21dfc7adfe37@gmail.com/
 
-I think thus far the guideline is that software uaf should be impossible.
-So calling dma_* functions on deleted devices should not be doable (or
-result in runtime failures on the rust side).
+Change in v5:
+- Patch #1:
+        - Add `clock-names` property
+        - Modify the clock property into two
+- Patch #2:
+        - Enable the APB clock
+        - Fix comment and code styles
+        - Fix typo and drop unnecessary description in Kconfig
+        - Prefix all macro definitions with SPACEMIT_
+        - Rename `spacemit_i2c_bus_reset` to `spacemit_i2c_conditionally_reset_bus`
+        - Remove all `unlikely` and `likely`
+        - Remove unused register and bit macros
+        - Remove the "err" field, as it only contains a subset of the status field
+        - Retrieve `clock-frequency` from the device tree instead of using a macro
+        - Use a local variable to track the current message
+        - Use `i2c->read` to represent read and write statuses instead of `i2c->dir`
+Link to v4:
+https://lore.kernel.org/all/20241125-k1-i2c-master-v4-0-0f3d5886336b@gmail.com/
 
-I think for the actual hw uaf if you leak dma_addr_t that are unmapped in
-hw device tables that would need to be outside of the scope of what rust
-can prevent. Simply because rust doesn't know about how the hw works.
+Change in v4:
+- Patch #1:
+	- Change the default value of clock-frequency from 100000 to
+	  400000. This is to correspond to the driver's default value.
+	- Drop the minimum of clock-frequency
+	- Modify the description of clock-frequency
+- Patch #2:
+	- Drop the `inline` qualifier from the `spacemit_i2c_xfer_core` function
+	- Drop the initialization of `ret` to 0 in `spacemit_i2c_xfer_core` function
+	- Drop useless wrap
+Link to v3:
+https://lore.kernel.org/all/20241112-k1-i2c-master-v3-0-5005b70dc208@gmail.com/
 
-Wrt magically cleaning up, that is generally the preferred rust approach
-with the Drop trait. But there are special traits where you _must_
-manually clean up an object with a call that consumes its reference, and
-the compiler will fail if you just leak a reference somewhere because it
-knows it's not allowed to automatically drop that object. So both patterns
-are possible, but rust has a very strong preference for the automagic
-approach, unlike C. So there will be somewhat of a style different here in
-what a native-feeling api looks like in C or rust.
+Change in v3:
+- Patch #1:
+	- Change the maxItems of reg from 2 to 1 in properties
+	- Modify reg in dts example
+	- Changed the enum selection for clock-frequency to a range,
+	  setting a minimum value of 1 and a maximum value of 3,300,000.
+- Patch #2:
+	- Drop unused judgement in `spacemit_i2c_xfer_msg`
+	- Fix the dangling else warning in `spacemit_i2c_is_last_msg`
+	- Fix the error check for `i2c->base`
+	- Modify Kconfig dependencies
+Link to v2:
+https://lore.kernel.org/all/20241028053220.346283-1-TroyMitchell988@gmail.com/
 
-> > Having that said, it doesn't need to be an "all or nothing", let's catch the
-> > ones we can actually catch.
-> 
-> Well, that's refreshing. Maybe it would be nice to have an agreed
-> binding design policy on what is wortwhile to catch with runtime
-> overhead and what is not.
+Change in v2:
+- Patch #1:
+	- Change the maxItems of reg from 1 to 2 in properties
+	- Change 'i2c' to 'I2C' in the commit message.
+	- Drop fifo-disable property
+	- Drop alias in dts example
+	- Move `unevaluatedProperties` after `required:` block
+- Patch #2:
+	- Alphabetize Makefile and Kconfig
+	- Change `.remove_new` to `.remove` in `struct platform_driver`
+	- Change `dev_alert` to `dev_warn_ratelimited` in `spacemit_i2c_bus_reset`
+	- Change `spacemit_i2c_read/write_reg` to `read/writel`
+	- Change `spacemit_i2c_dt_match` to `spacemit_i2c_of_match`
+	- Clean up code flow
+	- Fix unnecessary line wraps
+	- Move `spacemit_i2c_handle_err` to a suitable location
+	- Modify Kconfig dependencies
+	- Use `PTR_ERR(i2c->base)` directly as the `dev_err_probe` parameter instead of
+	  the intermediate variable
+Link to v1:
+https://lore.kernel.org/all/20241015075134.1449458-1-TroyMitchell988@gmail.com/
 
-Yeah clarifying this stuff is probably a good idea.
+---
+Troy Mitchell (2):
+      dt-bindings: i2c: spacemit: add support for K1 SoC
+      i2c: spacemit: add support for SpacemiT K1 SoC
 
-Cheers, Sima
+ .../devicetree/bindings/i2c/spacemit,k1-i2c.yaml   |  61 +++
+ drivers/i2c/busses/Kconfig                         |  17 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-k1.c                        | 601 +++++++++++++++++++++
+ 4 files changed, 680 insertions(+)
+---
+base-commit: 8e929cb546ee42c9a61d24fae60605e9e3192354
+change-id: 20241031-k1-i2c-master-fe7f7b0dce93
+prerequisite-change-id: 20240626-k1-01-basic-dt-1aa31eeebcd2:v5
+prerequisite-patch-id: 47dcf6861f7d434d25855b379e6d7ef4ce369c9c
+prerequisite-patch-id: 77787fe82911923aff15ccf565e8fa451538c3a6
+prerequisite-patch-id: b0bdb1742d96c5738f05262c3b0059102761390b
+prerequisite-patch-id: 3927d39d8d77e35d5bfe53d9950da574ff8f2054
+prerequisite-patch-id: a98039136a4796252a6029e474f03906f2541643
+prerequisite-patch-id: c95f6dc0547a2a63a76e3cba0cf5c623b212b4e6
+prerequisite-patch-id: 66e750e438ee959ddc2a6f0650814a2d8c989139
+prerequisite-patch-id: 29a0fd8c36c1a4340f0d0b68a4c34d2b8abfb1ab
+prerequisite-patch-id: 0bdfff661c33c380d1cf00a6c68688e05f88c0b3
+prerequisite-patch-id: 99f15718e0bfbb7ed1a96dfa19f35841b004dae9
+
+Best regards,
 -- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Troy Mitchell <troymitchell988@gmail.com>
+
