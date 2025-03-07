@@ -1,114 +1,98 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22671A8F60;
-	Fri,  7 Mar 2025 09:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC4A1E1DFA;
+	Fri,  7 Mar 2025 09:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741338773; cv=none; b=j7pNuTV3fevLbFvXaD5Z+T7ZkvIDPusKNcUzCxF0TS68mRr4aJASLWnHJjstgN3GeTa004vDywjHjqrYaoBRTRhr/+RTKEj3Y5/ywrF+ZVdMevavEcngEU9w75DjWLFzidSRyAoz6ObQKFFlUbiLqt051uHIigiD+RwK+bSisbg=
+	t=1741338785; cv=none; b=g+NDBYPoCq1xkg9rntPHdBttfsbxpruBHBuhg3oHme+Q16rMRgBF68aNvLusR7VidiscpABbU0dbNWA33M2wTuLkCuvHiiM+u8C92676NyPsy13/8DKeD40ShUU4iXBEu/v1Cv5P297HiZkm+SKh7e+4QUImmAJN/K8iGMmH9uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741338773; c=relaxed/simple;
-	bh=SI7/zfo5ZeW1S7cwDCksy4BuoO+WtxO6HWfPQp20Qec=;
-	h=To:Cc:Message-ID:From:Subject:Date; b=A9CiBngo56uWQASA+/BcPgjBZIU/PCsP2SliZdV8KXwIRkuJjajSDHo3fTs2JkEjm04ppl57VkVFIdHoJMtWqJxXRpXHJd2CSJCrh1bvH0EYVSW7CwkKQqWDJ+l8zBnDJNegAwcQBlwQ8kG2H31lm3IxfM1HlHs9qy8hHne0/fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PrZzu2Tm; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1741338785; c=relaxed/simple;
+	bh=JqkWFYEADorTubWP1yeQ1voh1B4gQ71VaWSI2tAoP7E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uR/vfzupanYH8NVGP9D5Gtp8pLw3MD8aAHxePaIRKIbN+9959RhkB6WDAqk4tnWKjl6JSUqjOzvwpDZAC0smzpbx5VPCO9mxch/XdklV2cYChmL+Vu/9rXN02P+izC5h//125CKYI2ti2uECf6+Il/8bXPeeb7xKica7LCLWE3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DTwqFwJV; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PrZzu2Tm"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id E6162114010A;
-	Fri,  7 Mar 2025 04:12:49 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Fri, 07 Mar 2025 04:12:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:message-id:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1741338769; x=1741425169; bh=hg3PLU/0C0HunaKuqzKlrTLma1Fo
-	k3lK/tApVH6mYfQ=; b=PrZzu2TmVZzHwRZMKfKbOy3jtmB7DIBbdVm7Jsv/BwOp
-	FjXDLjWijBZG65WRlzfKdX7mjWuHZaMNHVVo51d5LLV3gclEK0EfcL6IhYhz7mcb
-	bY1KZ/wC0R4wqZg2HGh+lIgSDHwQ9ygfMznmKB9hAIDjn1ZLssGrvn59IzOZNMOh
-	jfymPWlunWBvmD7i6fhlXeBUoIZ1t3Owfn4YPwEr+2Ek5xnPz2ujN5MD3bmXEd7I
-	79Gf8Cuk/1r4qsr+URN9aZRNsj0JtC5uhg1oc+vx4Zmlcp6Ce+y21ANsoOgM4VSF
-	yKq3FbSHovCbMpX5c0DeCnSI6kF4HluVn9JJqXdSWA==
-X-ME-Sender: <xms:kbjKZ0laZAw_DfXw_Ax4hIsjzEO52Bnwseiuxp_lTgBtPO5Nv2jcTA>
-    <xme:kbjKZz0jGkHdTKwA83nx7E9kubZae_B87dyfPZa3qtcALPU--pfot3YjXxieAw5Ec
-    BUawVDnxsxjBW7KT5k>
-X-ME-Received: <xmr:kbjKZyonZo1gpzJyhz4G7p3KXiJtlvWpqwVvljS-kKdZ3goc_WBdiUtDbOUQDjbXFaiBzJqwrIYUFvnkHaX1RP2D20TlijMULLU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtvdekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepvfevkffhufffsedttdertddttddtnecuhfhr
-    ohhmpefhihhnnhcuvfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrdhorh
-    hgqeenucggtffrrghtthgvrhhnpefgheduvdegffektdehjeejhfekieelleffgffgjeff
-    hfffueefgefhvdevudegtdenucffohhmrghinhephhgvrggurdhssgenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfthhhrghinheslhhinhhu
-    gidqmheikehkrdhorhhgpdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuth
-    dprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthho
-    pehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuh
-    igqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:kbjKZwnVSccfYx3he3o3jtcVXBtcm2thVSsuO5s4g_kZsjLSFSgTuw>
-    <xmx:kbjKZy2PZZ7PJyGMCTuOvfFLc4M8EMtqQPMK1__XSOV79-T5HlqlWw>
-    <xmx:kbjKZ3sAQzQtC8j8bufK7unYyfLDpgUtquNswau4ngPrNqsTtEGsHQ>
-    <xmx:kbjKZ-VH9wCx1M5z1vfAByKu-xJPVNqqwv4pkXy4mk4L4AyjAbQTBQ>
-    <xmx:kbjKZ3zaXrYUoLoP5FKU-TJZwYd3_CdtSvCrplvW5y9l83P8-5YdHu0Q>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Mar 2025 04:12:47 -0500 (EST)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: stable@vger.kernel.org,
-    linux-m68k@lists.linux-m68k.org,
-    linux-kernel@vger.kernel.org
-Message-ID: <c03e60ce451e4ccdf12830192080be4262b31b89.1741338535.git.fthain@linux-m68k.org>
-From: Finn Thain <fthain@linux-m68k.org>
-Subject: [PATCH] m68k: Fix lost column on framebuffer debug console
-Date: Fri, 07 Mar 2025 20:08:55 +1100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DTwqFwJV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 12897441A1;
+	Fri,  7 Mar 2025 09:13:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741338781;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=r2nUahvPJphx+fjhhy8XOftJr/a/W/nh42oanoB00PY=;
+	b=DTwqFwJV6pe2MykMc/kVHrNS8dRyg/4v/9twueriSuUCZOPGIW9oC1Yzs/jljq/Vu8JLAj
+	l3onUBcB5Mb8gWcubzyI9crJ1hXOwedUBDBV9vzWB4IkDpP43KDDizEaIZgnWeQqjSceKp
+	ySm3f/oLJADJ04p4pReV4f0FMdxmNGoAZFQ+8b+iqCR8xQeA7GoVHUYa65c7+MLaXpt0YQ
+	1Bs7zCbI7oGh41OpxnJtpqWR3AfVRNy4W5igen6HMASllarRMT54+lIorb+7tbbZu2/XLn
+	x2mjc+BxdzqfJT8iy7hIoS+yYm/muTEhOaAMtH76HaVKHVp8dZXfq5SIGK+4ZA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net v2] net: ethtool: tsinfo: Fix dump command
+Date: Fri,  7 Mar 2025 10:12:55 +0100
+Message-Id: <20250307091255.463559-1-kory.maincent@bootlin.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgedugedvkeelhfehfeeuieeigeetgeetuedugeetuddvveffieekgfejkefgudeknecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeektdhfheemgegulegvmeejugehsgemjeeggeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemkedtfhehmeegugelvgemjeguhegsmeejgeegfedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtrddrpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhgrughimhdrfhgvughorhgvnhhkoheslhhinhhugidruggvvhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: kory.maincent@bootlin.com
 
-When long lines are sent to the debug console on the framebuffer, the
-right-most column is lost. Fix this by subtracting 1 from the column
-count before comparing it with console_struct_cur_column, as the latter
-counts from zero.
+Fix missing initialization of ts_info->phc_index in the dump command,
+which could cause a netdev interface to incorrectly display a PTP provider
+at index 0 instead of "none".
+Fix it by initializing the phc_index to -1.
 
-Linewrap is handled with a recursive call to console_putc, but this
-alters the console_struct_cur_row global. Store the old value before
-calling console_putc, so the right-most character gets rendered on the
-correct line.
+In the same time, restore missing initialization of ts_info.cmd for the
+IOCTL case, as it was before the transition from ethnl_default_dumpit to
+custom ethnl_tsinfo_dumpit.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+Also, remove unnecessary zeroing of ts_info, as it is embedded within
+reply_data, which is fully zeroed two lines earlier.
+
+Fixes: b9e3f7dc9ed95 ("net: ethtool: tsinfo: Enhance tsinfo to support several hwtstamp by net topology")
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
- arch/m68k/kernel/head.S | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/m68k/kernel/head.S b/arch/m68k/kernel/head.S
-index 852255cf60de..9c60047764d0 100644
---- a/arch/m68k/kernel/head.S
-+++ b/arch/m68k/kernel/head.S
-@@ -3583,11 +3583,16 @@ L(console_not_home):
- 	movel	%a0@(Lconsole_struct_cur_column),%d0
- 	addql	#1,%a0@(Lconsole_struct_cur_column)
- 	movel	%a0@(Lconsole_struct_num_columns),%d1
-+	subil	#1,%d1
- 	cmpl	%d1,%d0
- 	jcs	1f
--	console_putc	#'\n'	/* recursion is OK! */
-+	/*	recursion will alter console_struct so load d1 register first */
-+	movel	%a0@(Lconsole_struct_cur_row),%d1
-+	console_putc	#'\n'
-+	jmp	2f
- 1:
- 	movel	%a0@(Lconsole_struct_cur_row),%d1
-+2:
+Change in v2:
+- Remove useless zeroed of ts_info.
+---
+ net/ethtool/tsinfo.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/ethtool/tsinfo.c b/net/ethtool/tsinfo.c
+index 691be6c445b38..ad3866c5a902b 100644
+--- a/net/ethtool/tsinfo.c
++++ b/net/ethtool/tsinfo.c
+@@ -290,7 +290,8 @@ static void *ethnl_tsinfo_prepare_dump(struct sk_buff *skb,
+ 	reply_data = ctx->reply_data;
+ 	memset(reply_data, 0, sizeof(*reply_data));
+ 	reply_data->base.dev = dev;
+-	memset(&reply_data->ts_info, 0, sizeof(reply_data->ts_info));
++	reply_data->ts_info.cmd = ETHTOOL_GET_TS_INFO;
++	reply_data->ts_info.phc_index = -1;
  
- 	/*
- 	 *	At this point we make a shift in register usage
+ 	return ehdr;
+ }
 -- 
-2.45.3
+2.34.1
 
