@@ -1,168 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72F821D010
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9CA219317
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361882; cv=none; b=dD2sLHJXtXq0KT7v2qTzSGr+H2k/Q0vESIHBFNTTq1rIFeKy+YpNWQo9rFySfFwqdLMgx8zir5nhGtX6uhocESZvHQaI0vk14GJDQxBnNVW1H8/YBRP/hkgvhptrIOf9PR1yOnlw5MlxmW5pbkrdGYbe1WEqN6tDDNBgkbFN8/Q=
+	t=1741361931; cv=none; b=LV/ReDlsHCBTc+IHdLNjYTYQgLtdc3iSNfI/grsAtEmdlLR/CtTR+iUvdHXBCjGR25Kn4pX7OX5It7Pqt92e21WSAxejjJb6Ps1YfB+eASjZLe1RdLm0epS9qMHGwRCkG+sVdcBsBKsIUl9FKs8NmWWsRa+UWXt+Clym27Meup0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361882; c=relaxed/simple;
-	bh=UaKgYKgRNweERNpL0sYd2eYOjEHfRdISZiNE+9EOqdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orcJkp53+TPtWVLbK3p0e2K+yHV/b5SAn9Dvpe9907vgZ3mOoILA5AT3UZ3+Jiu5z3Hpp0QmxQmMZR8NV4SJhS392mb3nvWcTo/6OF/Bf7den95ITgzXYgHi3dvTK+MwlIJBDrcQDDCOZrZsutkUNCxEFZPKwvddWLOMfkhbAdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RF9uQAcS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741361931; c=relaxed/simple;
+	bh=A85fo7gKkXaPFa9FkJlgwJCdrqDwnB5ccjXo2X/wlzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DgwMfu15RDnVXbNnkGMSb2tVJ123350L2Yp7RF1fkirYJ8B9aE9CqNGgqN51L3zSiqN9Mmaa9IIKEbi7weABQo49WxiKHM+uLFl47AVogW1ctHv9Fvb6GDcgz0yb7DZsBi4RFuAAQlM0Vwk47DiDTrEr0KVl5T0D2ZsrNzY49bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zx0F+qlZ; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RF9uQAcS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741361879;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uCEnBg90XzFtM7VUQEX7isG0VF2FTRraT+UhcAxtG0U=;
-	b=RF9uQAcSKZxf85Z6ImZCGnjT033M2BIC6Hy1Dq2NVfkylAuGtIF3NUdKXiz2H7U5IoqFef
-	pvgRXUfftdl1rad5FDe2OtdEQ8zqXQF50CwS+w74CsOlZMTTcvw2mqZ84USIn7pDy69Fln
-	IDVJwqFJ6Gu0FqtF9wxycbO52bHrBek=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-158-7LMlY-cRM9uAUGloWRfU_g-1; Fri, 07 Mar 2025 10:37:58 -0500
-X-MC-Unique: 7LMlY-cRM9uAUGloWRfU_g-1
-X-Mimecast-MFC-AGG-ID: 7LMlY-cRM9uAUGloWRfU_g_1741361877
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39131851046so457398f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:37:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zx0F+qlZ"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso2532984a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:38:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741361928; x=1741966728; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=42vX3c5eYK6+PT3iK03vkSK6URE9IJeYdbtn09gB3H8=;
+        b=Zx0F+qlZvCYwkS1Lokis7EEvQUcZ9uPwx9GRd3f0jK/afgKDUUqY0iRcDBSfaRz+jF
+         kMcjfOlZyQt7o0qHYEFPP07SrtVaJKc+L2rnfo5Q+MvFToCS+Sv7IMFHI28uBtfnAowr
+         DYMTpbOW6N7b97QlJrKBPybHGRjRSS2tETeBKy+lYNCL4HsMbKuxvRtCjykl6a/8dw0E
+         iKqm4was9PDMlZIU8gAODsKD7LgiJgIiycFGCvDJFXxgvBrN05Y1EysziO+5+oxo7JO6
+         lKKNpoaykDekPq1LXExuy3FbMOM12JTGziaYuyJJ/8RnltdkWIOwEZ29wWLb7+EFJnh8
+         aHmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741361877; x=1741966677;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uCEnBg90XzFtM7VUQEX7isG0VF2FTRraT+UhcAxtG0U=;
-        b=hO1yE6ImTzeNWQnm85FXV3AY4i+QcoKSyEv9qYbrscYj6z+RPREHfuEm0U8oFPJKuE
-         x0SP2YMvlf41ib+Qk0zE8pHiphktUFFyShJ0PY5b3clkFB3EKfKTT6ZW6xi5u9bJ9zXm
-         39VT3f7c0if/BAVE67mFON0bIMQxgYjF+RAr9RsQpHWDAZ/CvzVU4lRf+8T+WISomPRp
-         aEU5BANmaAujZyQ2DsJoGcJBjTkGwiBZedFfiYPuGarYwRkGO3VzgfmMz6bbBn0iIWFt
-         LvY3UkilKG7Qt2wGvLsThnowuOAn5e1zEmpF7xMGaaObiin4r+pW7R9vRtV6TCewOp/y
-         clYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUONKvyWRIOYvzazwaU7tF3Od7md43ramuQswmQd1MQUAUYpnC8prPSk5EAntGiYPhxuaF+5Ij/t25ZRgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWeQH7zFZ66L+DLnNcoVqIsPqvoGUkpGx7rYszvsUMpMkpu/gH
-	plrtASW91iy4jTN0z8yM3A4nQeFCG1fdB89LsiEi2CrbgNEyWPOwF10IME582kRdLxP2gfZr9sQ
-	4r6NsnhkdPrcXuk6pkIJjthgQvu7MAoc7A9u0I4R/zPafEAy5CguJjiiKfUvb2g==
-X-Gm-Gg: ASbGnctEDln4HM2m7rBsTLuHqb+LMnawYfePo+oMKq/oWMS38OVUCp3EWWmYeuLB9b1
-	sDVxwRz97CqawrBBV4vW9AGOcwD5OUt9BHP9WOBGssGecCBStRlJ91gpXzhlHG5gk0YOdfDtjIY
-	ZI51HImNtpI2a4ypS7RhJfKuplmT1pp5Qg+KUEHKDfQdDy23GcZeWV1PNXPDmChTQZjnEi0357I
-	N90eN5LU1SazuPZGhhQSfS/TAKiMYTNxyZn4RMHUaJwlRyxMmXCMZdGG+psPt95Z0rzwfkfBNyq
-	nELBngBr8Gf2GjHtPmsqsrUkoiJrtzjyRC2lonXHs5PcY957zVBr2sCy/ED9YkKU
-X-Received: by 2002:a05:6000:1fa1:b0:390:d6b0:b89 with SMTP id ffacd0b85a97d-39132da91b9mr2467064f8f.50.1741361876991;
-        Fri, 07 Mar 2025 07:37:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGIJMvm5xV/SzBS3SsEtyfC9KwyMaXW507M9hj1kZ3KsK4zYX0qBeDOTEmMi3doGmekM7Y1Mg==
-X-Received: by 2002:a05:6000:1fa1:b0:390:d6b0:b89 with SMTP id ffacd0b85a97d-39132da91b9mr2467028f8f.50.1741361876487;
-        Fri, 07 Mar 2025 07:37:56 -0800 (PST)
-Received: from sgarzare-redhat (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd9470e2sm54526185e9.33.2025.03.07.07.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 07:37:56 -0800 (PST)
-Date: Fri, 7 Mar 2025 16:37:53 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Thomas Gleixner <tglx@linutronix.de>, 
-	Claudio Carvalho <cclaudio@linux.ibm.com>, Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org, 
-	Dov Murik <dovmurik@linux.ibm.com>, linux-coco@lists.linux.dev, 
-	Dionna Glaze <dionnaglaze@google.com>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>, linux-integrity@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC PATCH v2 3/6] tpm: add send_recv() ops in tpm_class_ops
-Message-ID: <tjo335oq47ogyobxzlopuxwqzto6gzm4gezqs6umphndehothu@5u4hqukop36i>
-References: <20250228170720.144739-1-sgarzare@redhat.com>
- <20250228170720.144739-4-sgarzare@redhat.com>
- <Z8Jmps6AF_geaHUw@kernel.org>
- <3p5erujbhxw7ozdnfpmresv3dqdh2xszolv6mh4khkagoy3wit@ow5qht4keh4h>
- <0e156883acf95d31b9358831550d6d675e3ce4ff.camel@kernel.org>
- <Z8dg46Mj81Q9Z0WV@kernel.org>
- <jkr5z4thb55gs2jcmtcfipgg6p7z6ikhr6etd6l3nqpf723hf7@3fns3z5cjqk4>
- <Z8oehuPVMXbgjAxz@kernel.org>
+        d=1e100.net; s=20230601; t=1741361928; x=1741966728;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=42vX3c5eYK6+PT3iK03vkSK6URE9IJeYdbtn09gB3H8=;
+        b=R/GmEpHYgj56fxadOUSa+fZLcXDdrOicFQ+7iSXqGVM3sTXYSD96m2qaCJbzDCVzjd
+         lH53g2yMuLdbFlKoMIWj51ZOziyBOF6licYZUhZxv7BOv32wS7+jXq2/vhQoG0LIPG35
+         hC2IUjEH56s8jCtV2oNgrjk8vOIbRuXo6z1gG0V/boKdZlSYRQ6VerGfUH9oZHMiSkDH
+         vR53gJ9n9wx8ZkXsrso01KnsPhfJxfRStjVsv5QTLIC6oKgRDsjBsG3LHBWD1zl9a7Sh
+         Tx1eUXmNiyZ3UlQJ6NiZGdZswl1ZCNS5dK4lN9yCMTZpFiNb5v2scvnp+CrlS8GhGr3k
+         L9Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCXred5dSZ0NFYVC4FpaW5DnxLWqde3t0M6riO2P3nD1ts1Tr7B7VFWZfIrgZrSLuGJKWsxhcf+xUVHShZU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ1bhMa+OYVkWfF2AZgV8+ejuD05rq9q9aIVKxBmsQ+MOWbd9i
+	HAaDsrM8PGphwFg5TIqvMTpJkoVMtkA5HKfaqGgXMGbO/aAGx/Mf4x4ASZ8hlb4=
+X-Gm-Gg: ASbGncsCURRcklKeOorlo4YaJbqihB6d92M6s3eRgmU6dXIrc7LMJzzzcjrGPvgSip8
+	UzJbVx4f7Nkq/2VLhlbcr5o3vVXW9q4N6tv7vcn/SDZEPL6FSFjRoCUNMyWezO6PithyjmWZ9mB
+	Fk+aYMT97QnN1UkzheI59Px30UUHX5HggopO0/mKCPjztA/P+zbdlmbmMGydqg/+NlzTmibg809
+	MtLpAszyVsDcrojFKNIndOTfgJIYVxSSgRhD/T/n467KGpBIIhJ88O5dpafDJE/apU8bt8yHJa/
+	I74LpumJ4W0qWkq0etylWlwHt/2e3e85UKcxBgY+mCewMt1RVANLFw==
+X-Google-Smtp-Source: AGHT+IFl1WF2/BmG5TpHqJMFXAy3oe958ZC0g+bU1yWwbSxiPj/UEP5KIcg9WYGq23IB0sHLCiTQ7Q==
+X-Received: by 2002:a17:907:7293:b0:ac1:ecb0:ca98 with SMTP id a640c23a62f3a-ac22cd6e4ecmr937582966b.26.1741361927638;
+        Fri, 07 Mar 2025 07:38:47 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.206])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac23943883csm295717866b.12.2025.03.07.07.38.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 07:38:47 -0800 (PST)
+Message-ID: <9004166e-5535-4024-8114-9fdb217407bb@linaro.org>
+Date: Fri, 7 Mar 2025 15:38:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z8oehuPVMXbgjAxz@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/21] mtd: spinand: Use more specific naming for the
+ reset op
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Santhosh Kumar K <s-k6@ti.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
+ <20250307-winbond-6-14-rc1-octal-v1-1-45c1e074ad74@bootlin.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250307-winbond-6-14-rc1-octal-v1-1-45c1e074ad74@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 07, 2025 at 12:15:34AM +0200, Jarkko Sakkinen wrote:
->On Wed, Mar 05, 2025 at 10:04:25AM +0100, Stefano Garzarella wrote:
->> On Tue, Mar 04, 2025 at 10:21:55PM +0200, Jarkko Sakkinen wrote:
->> > On Tue, Mar 04, 2025 at 06:56:02PM +0200, Jarkko Sakkinen wrote:
->> > > On Mon, 2025-03-03 at 17:21 +0100, Stefano Garzarella wrote:
->> > > > On Sat, Mar 01, 2025 at 03:45:10AM +0200, Jarkko Sakkinen wrote:
->> > > > > On Fri, Feb 28, 2025 at 06:07:17PM +0100, Stefano Garzarella wrote:
->> > > > > > +	int (*send_recv)(struct tpm_chip *chip, u8 *buf, size_t
->> > > > > > buf_len,
->> > > > > > +			 size_t to_send);
->> > > > >
->> > > > > Please describe the meaning and purpose of to_send.
->> > > >
->> > > > Sure, I'll add in the commit description.
->> > >
->> > > It's always a command, right? So better be more concerete than
->> > > "to_send", e.g. "cmd_len".
->>
->> Right!
->>
->> > >
->> > > I'd do instead:
->> > >
->> > > if (!chip->send)
->> > > 	goto out_recv;
->> > >
->> > > And change recv into:
->> > >
->> > > int (*recv)(struct tpm_chip *chip, u8 *buf, size_t buf_len,
->> > > 	    cmd_len);
->> >
->> > I think I went here over the top, and *if* we need a new callback
->> > putting send_recv would be fine. Only thing I'd take from this is to
->> > rename to_len as cmd_len.
->>
->> Got it.
->>
->> >
->> > However, I don't think there are strong enough reasons to add complexity
->> > to the callback interface with the basis of this single driver. You
->> > should deal with this internally inside the driver instead.
->> >
->> > So do something along the lines of, e.g.:
->> >
->> > 1. Create dummy send() copying the command to internal
->> >   buffer.
->> > 2. Create ->status() returning zero, and set req_complete_mask and
->> >   req_complete_val to zero.
->> > 3. Performan transaction in recv().
->> >
->> > How you split send_recv() between send() and recv() is up to you. This
->> > was merely showing that we don't need send_recv() desperately.
->>
->> We did something similar in v1 [1], but instead of your point 2, we just set
->> `chip->flags |= TPM_CHIP_FLAG_IRQ;` in the probe() after we allocated the
->> chip.
->>
->> Jason suggested the send_recv() ops [2], which I liked, but if you prefer to
->> avoid that, I can restore what we did in v1 and replace the
->> TPM_CHIP_FLAG_IRQ hack with your point 2 (or use TPM_CHIP_FLAG_IRQ if you
->> think it is fine).
->>
->> @Jarkko, @Jason, I don't have a strong preference about it, so your choice
->> :-)
->
->I'd say, unless you have actual identified blocker, please go with
->a driver where the complexity is managed within the driver.
 
-Yep, got it ;-)
 
-Thanks,
-Stefano
+On 3/7/25 3:08 PM, Miquel Raynal wrote:
+> SPI operations have been initially described through macros implicitly
+> implying the use of a single SPI SDR bus. Macros for supporting dual and
+> quad I/O transfers have been added on top, generally inspired by vendor
+> vendor naming, followed by DTR operations. Soon we might see octal
+> and even octal DTR operations as well (including the opcode byte).
+> 
+> Let's clarify what the macro really means by describing the expected bus
+> topology in the reset macro name.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/mtd/nand/spi/core.c | 2 +-
+>  include/linux/mtd/spinand.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+> index 7a578f3522be93d30a9132cf01831515db77ae38..ea6b48242ad4a4e51c713907ce5cc55022cdb569 100644
+> --- a/drivers/mtd/nand/spi/core.c
+> +++ b/drivers/mtd/nand/spi/core.c
+> @@ -586,7 +586,7 @@ static int spinand_read_id_op(struct spinand_device *spinand, u8 naddr,
+>  
+>  static int spinand_reset_op(struct spinand_device *spinand)
+>  {
+> -	struct spi_mem_op op = SPINAND_RESET_OP;
+> +	struct spi_mem_op op = SPINAND_RESET_1S_0_0_OP;
+>  	int ret;
+>  
+>  	ret = spi_mem_exec_op(spinand->spimem, &op);
+> diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+> index 0da8a1c7740ef5cbbdb2a74858465136638224f4..4f47adbe4566d7813ffd8fbfaddd1a85d88d0208 100644
+> --- a/include/linux/mtd/spinand.h
+> +++ b/include/linux/mtd/spinand.h
+> @@ -20,7 +20,7 @@
+>   * Standard SPI NAND flash operations
+>   */
+>  
+> -#define SPINAND_RESET_OP						\
+> +#define SPINAND_RESET_1S_0_0_OP						\
+Hi, Miquel,
+
+Have you seen any reset op with address or data? If not, I'm not really
+sure whether we shall change the name for these basic operations.
+
+Changing them to 1S-0-0 may also indicate that there are resets with
+address or data fields, which I find confusing.
+
+I think the change is good for reads and writes. I'll check further in
+the series and let you know.
+
+Cheers,
+ta
+
+
+>  	SPI_MEM_OP(SPI_MEM_OP_CMD(0xff, 1),				\
+>  		   SPI_MEM_OP_NO_ADDR,					\
+>  		   SPI_MEM_OP_NO_DUMMY,					\
+> 
 
