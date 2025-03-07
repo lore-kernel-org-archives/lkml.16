@@ -1,101 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0418D18DB32
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 18:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3B418DB32;
+	Fri,  7 Mar 2025 18:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741370925; cv=none; b=XzCBNhABlz0MOe0lFj6w8DUxRQ/rj17rvsVFskERgNj6LTu2YFENIM2AtywYfl2HlfCtUZEAhXPmk9rwe2iGwQAxU74zulrVp1xv3M2/L0NzyGegdXabapNdVFFyZGNsCO7hd4SUgExLCtO7Jo7cnD2mErJjol96lKoCiYEkpLY=
+	t=1741370998; cv=none; b=WEsj0lHZwUwln15F01DDj4rz9TRcPyobmkXMJ/XXDvMcfmjJSdlGldszfHSlrtZgVS0DgY+9r3wv+XJZ5sBTNi/9t51vnQ7llh6E6EF7kGHZeyCP7+jy/ND7J+xt7heyEBiGYF2FDDsOPCBlQuJvboWH377aqebcZflHiYXOAdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741370925; c=relaxed/simple;
-	bh=LZnI5p8xIDvueq3e9u19eadPmK04KRDX31Qbc8+mNZs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oGUqk/Jqv72zGIGgFJzOx/jvsmACYlXSYwL7y4PHtjIAIBJJvwGGbtUMiThx+O48AV7EZJuzL3tw/88YHDn+5jd/RxvcdeoUh4v6UfyBsgHRj5BK+oT1AyQPyYDACv8Wi4BGN0orhiV9/MA/qa9SYlqVRhUTT33cRA9KmNg6OIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A60EF1A2D;
-	Fri,  7 Mar 2025 10:08:54 -0800 (PST)
-Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7E493F66E;
-	Fri,  7 Mar 2025 10:08:35 -0800 (PST)
-Message-ID: <c064e0d4-e120-4921-a226-db0ec5ac409c@arm.com>
-Date: Fri, 7 Mar 2025 18:08:32 +0000
+	s=arc-20240116; t=1741370998; c=relaxed/simple;
+	bh=yIGYZx1ZawUngkZDVnTe+TS6p4jPyDNyFfsqtIuamsM=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=U1+2emHnnqjYAVEXiVbBNCFgw/k8rLP+TlNJR8quUMTzQZdcowE+PyvsAPlipl0tnQHjUq4DWdZwXsNxTV9Px7sqT5ZZE/gTMbOVPGWXgcv/+WoSy64PldubOu3A0Wp+bUf9ZUxlBEHQPFRUvM/MRzG3zliy2bdqU5Ti4mFTMJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Glz3toXy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Glz3toXy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4BBC4CED1;
+	Fri,  7 Mar 2025 18:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741370998;
+	bh=yIGYZx1ZawUngkZDVnTe+TS6p4jPyDNyFfsqtIuamsM=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=Glz3toXyxMUJ8tc0IYag0/Wnuzdt6yE/H2K/IkVDmvfVDoygIKUPGqA+nlq2EMb5q
+	 mJL4gfCmRQoF5weKBIfT74BQAwrNSA+5B3h2WnHjJXigcIX1XaHR7FDxfguebZVozK
+	 cVLUiDZdF8oW8ymH/Zwgvo7KuDARuJxknldHpFPekr7mWYSH6cAC/4nKoG0JoLpmNp
+	 /9GNpsjSUKSm+fEST7DitmlPnIGo1tUyDIGPtExMhY2Ydmc3sxWZmg0PW30kcpdgQt
+	 tckuJdl9/ZIR6NLf0MgxH3vsUl0ddwINhfq0r1jsLaZENTQoq3utTgUWsr+b0Ky1CG
+	 uUGBCRPJ5KJzw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20250305191931.604764-1-irogers@google.com>
+References: <20250305191931.604764-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf test: Fix leak in "Synthesize attr update"
+ test
+Message-Id: <174137099760.213280.16871864951265396512.b4-ty@kernel.org>
+Date: Fri, 07 Mar 2025 10:09:57 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 08/49] x86/resctrl: Generate default_ctrl instead of
- sharing it
-To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com,
- Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
-References: <20250228195913.24895-1-james.morse@arm.com>
- <20250228195913.24895-9-james.morse@arm.com>
- <ab7becca-7a14-44d2-b0e3-1b12655c8be1@intel.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <ab7becca-7a14-44d2-b0e3-1b12655c8be1@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Hi Reinette,
-
-On 07/03/2025 04:33, Reinette Chatre wrote:
-> On 2/28/25 11:58 AM, James Morse wrote:
->> The struct rdt_resource default_ctrl is used by both the architecture
->> code for resetting the hardware controls, and sometimes by the
->> filesystem code as the default value for the schema, unless the
->> bandwidth software controller is in use.
->>
->> Having the default exposed by the architecture code causes unnecessary
->> duplication for each architecture as the default value must be specified,
->> but can be derived from other schema properties. Now that the
->> maximum bandwidth is explicitly described, resctrl can derive the default
->> value from the schema format and the other resource properties.
-
->> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
->> index 4504a12efc97..5280a2819760 100644
->> --- a/arch/x86/kernel/cpu/resctrl/core.c
->> +++ b/arch/x86/kernel/cpu/resctrl/core.c
->> @@ -143,7 +143,10 @@ static inline void cache_alloc_hsw_probe(void)
->>  {
->>  	struct rdt_hw_resource *hw_res = &rdt_resources_all[RDT_RESOURCE_L3];
->>  	struct rdt_resource *r  = &hw_res->r_resctrl;
->> -	u64 max_cbm = BIT_ULL_MASK(20) - 1, l3_cbm_0;
->> +	u64 max_cbm, l3_cbm_0;
->> +
->> +	r->cache.cbm_len = 20;
->> +	max_cbm = resctrl_get_default_ctrl(r);
->>  
->>  	if (wrmsrl_safe(MSR_IA32_L3_CBM_BASE, max_cbm))
->>  		return;
+On Wed, 05 Mar 2025 11:19:31 -0800, Ian Rogers wrote:
+> The own_cpus map variable may be non-NULL and hold a reference, in
+> particular on hybrid machines. Do a put before overwriting the
+> variable to avoid a memory leak.
 > 
-> It is unclear to me why this architecture code continues to use
-> resctrl_get_default_ctrl() while you switched away from it in the other
-> architecture code.
-> As resctrl_get_default_ctrl() is "intended for callers that don't know
-> or care what the format is" [1], here it clearly is required to be a
-> bitmask. Using resctrl_get_default_ctrl() here also seems to contradict
-> your argument for not using it in cbm_validate(). [1]
+> 
+Applied to perf-tools-next, thanks!
 
-Sure, I'll drop this hunk on the same reasoning.
+Best regards,
+Namhyung
 
 
-Thanks,
-
-James
