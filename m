@@ -1,39 +1,39 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C424121ABC3
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76ABC21A457
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741355387; cv=none; b=ZuU1MIM+DKRLRPp04WZjV8aslQDT8kalJNryl8MpSQ0ju9JkEXrLHe1Es0zukBybFtaxAbghcZKwFDe20y31WaPkGh6AsOJao7kPYOmIn8lkkIn9ItFoh5H+kgV6AMdUbipe3iIDbAb5mRaMCbKJ2YEH7VW17hXxeh51QxsbmKY=
+	t=1741355388; cv=none; b=uM4//2bHUTHJGINahLXrypSOPffcNFvE3T41oCGpLPMARERPWUTtbrPAmYFN7CJ3hO2lz47ZkLh44jn4wi80N0Md9LPORExk/FjkMBSKWWf5urY9TGaM8IP35iHxabDAZ4H+WUFuLnsvm4FcVLO7oPzUpmXmeNu/XgR55EHHQiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741355387; c=relaxed/simple;
-	bh=6/9dePklkamGE2mIb0m9BJD4GTgSdC+9+BIK/NkFMw4=;
+	s=arc-20240116; t=1741355388; c=relaxed/simple;
+	bh=InaRiDUojOac4guj1Yr+eepxCQXdYBLxgKV1QnPhPGc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o51LO/pkWiHbfafg25giRd+WqbF8RnaXRgD0MSezSxROG+HIHgqone8Zq3nLqs8eugROUubAj4Fzu/gZYbH9uXRiuN4Fj1otj4BuYQwf6xIFa/1PtxYBgENqrnRlmT4A4kp1dGWY3zPV/oP7JFkL8TItsF9lcEfXZuVWU296OAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PcEi05Wk; arc=none smtp.client-ip=95.215.58.179
+	 MIME-Version; b=FLRfB830pziYqlTnWh8cJ2ZjtK8tuS1xj4Bxix3wuvKr2Hdc6tWk5SBIPB3D61EN/4boPy6Fu32dByD9+Kuebi3iLxcLj89EWIiYqaI6OQAj+UOYY9zYLTFxbW3IdkEM/iqrenM7hEshI4hVRrTMvugmOoXp/uRTI+CiDMW4zAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=laysMbSC; arc=none smtp.client-ip=95.215.58.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PcEi05Wk"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="laysMbSC"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741355382;
+	t=1741355384;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DdISwa6vH5Zc+6gigrn+eRpFYfzF0XduhqRKofHcLvo=;
-	b=PcEi05Wkd5VwVMLybQnLfJe8dPQDxc5/fAEeBjcFpP5lMz0eu9fY7Z5FnBHaaQAHZM6RX5
-	8pBtz3kxUZK4jnYM3hmtMz4cK5WqYmLib0v97a0oZaBvw95lT7AxhkaoxKFdbMQehKbd9Z
-	RC1YbZsILToDhHH24N/QD1qDykHcb/s=
+	bh=HQZ/tKmcgdmcTNJfV9yVK+/0PpX1kq2uk26+/6rks2M=;
+	b=laysMbSCva2OK953UNbnga084ukzXwuxisGIjtVp3dmqH+TIHS/mjh6ANu1R4TeOr8zA1f
+	Ao2KFIXRt0DcjXPkUZudAAjYjXzu2TEnPu57ugqgOfP1jgqioV5LisMf1hcohoHC1Gy4ac
+	Q93rEAOtiHSJNXqwGiBzvmjUkiioeew=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-bcachefs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 3/7] bcachefs: Make sure c->vfs_sb is set before starting fs
-Date: Fri,  7 Mar 2025 08:49:27 -0500
-Message-ID: <20250307134933.1033872-4-kent.overstreet@linux.dev>
+Subject: [PATCH 5/7] bcachefs: Fix btree_node_scan io_ref handling
+Date: Fri,  7 Mar 2025 08:49:29 -0500
+Message-ID: <20250307134933.1033872-6-kent.overstreet@linux.dev>
 In-Reply-To: <20250307134933.1033872-1-kent.overstreet@linux.dev>
 References: <20250307134933.1033872-1-kent.overstreet@linux.dev>
 Precedence: bulk
@@ -45,43 +45,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This is necessary for the new blk_holder_ops, which want the vfs
-super_block available for synchronization.
+This was completely fubar; it's now simplified a bit as well.
+Note that for_each_online_member() takes and releases io_refs as it
+iterates, so we need to release that if we break.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- fs/bcachefs/fs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/bcachefs/btree_node_scan.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-index 2c011a465588..459ca8259fc0 100644
---- a/fs/bcachefs/fs.c
-+++ b/fs/bcachefs/fs.c
-@@ -2218,9 +2218,10 @@ static int bch2_fs_get_tree(struct fs_context *fc)
+diff --git a/fs/bcachefs/btree_node_scan.c b/fs/bcachefs/btree_node_scan.c
+index fb73ec77c099..678161321e42 100644
+--- a/fs/bcachefs/btree_node_scan.c
++++ b/fs/bcachefs/btree_node_scan.c
+@@ -270,7 +270,7 @@ static int read_btree_nodes_worker(void *p)
+ err:
+ 	bio_put(bio);
+ 	free_page((unsigned long) buf);
+-	percpu_ref_get(&ca->io_ref);
++	percpu_ref_put(&ca->io_ref);
+ 	closure_put(w->cl);
+ 	kfree(w);
+ 	return 0;
+@@ -289,29 +289,28 @@ static int read_btree_nodes(struct find_btree_nodes *f)
+ 			continue;
  
- 	bch2_opts_apply(&c->opts, opts);
+ 		struct find_btree_nodes_worker *w = kmalloc(sizeof(*w), GFP_KERNEL);
+-		struct task_struct *t;
+-
+ 		if (!w) {
+ 			percpu_ref_put(&ca->io_ref);
+ 			ret = -ENOMEM;
+ 			goto err;
+ 		}
  
--	ret = bch2_fs_start(c);
--	if (ret)
--		goto err_stop_fs;
-+	/*
-+	 * need to initialise sb and set c->vfs_sb _before_ starting fs,
-+	 * for blk_holder_ops
-+	 */
+-		percpu_ref_get(&ca->io_ref);
+-		closure_get(&cl);
+ 		w->cl		= &cl;
+ 		w->f		= f;
+ 		w->ca		= ca;
  
- 	sb = sget(fc->fs_type, NULL, bch2_set_super, fc->sb_flags|SB_NOSEC, c);
- 	ret = PTR_ERR_OR_ZERO(sb);
-@@ -2282,6 +2283,10 @@ static int bch2_fs_get_tree(struct fs_context *fc)
- 
- 	sb->s_shrink->seeks = 0;
- 
-+	ret = bch2_fs_start(c);
-+	if (ret)
-+		goto err_put_super;
+-		t = kthread_run(read_btree_nodes_worker, w, "read_btree_nodes/%s", ca->name);
++		struct task_struct *t = kthread_create(read_btree_nodes_worker, w, "read_btree_nodes/%s", ca->name);
+ 		ret = PTR_ERR_OR_ZERO(t);
+ 		if (ret) {
+ 			percpu_ref_put(&ca->io_ref);
+-			closure_put(&cl);
+-			f->ret = ret;
+-			bch_err(c, "error starting kthread: %i", ret);
++			kfree(w);
++			bch_err_msg(c, ret, "starting kthread");
+ 			break;
+ 		}
 +
- 	vinode = bch2_vfs_inode_get(c, BCACHEFS_ROOT_SUBVOL_INUM);
- 	ret = PTR_ERR_OR_ZERO(vinode);
- 	bch_err_msg(c, ret, "mounting: error getting root inode");
++		closure_get(&cl);
++		percpu_ref_get(&ca->io_ref);
++		wake_up_process(t);
+ 	}
+ err:
+ 	closure_sync(&cl);
 -- 
 2.47.2
 
