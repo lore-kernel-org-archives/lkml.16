@@ -1,132 +1,193 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055E520E033;
-	Fri,  7 Mar 2025 10:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385DC213E8A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 10:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741342698; cv=none; b=WeueDwyvQg7bunrC/lOTNNlepDnbGG2M06yq7pawoyz5poEjSXq1wAIksHvkbh3IT6DYG7wbXs2YcYvQFoCAmUTqjDM79MPbxLlaP4nmqmoT1rGtogU6DpOeYdzId8LHAf1RM+ww/2Rbc9Z0udaLC6fWMkHCU5XSOMoHImu0N6s=
+	t=1741342699; cv=none; b=NI+K+zs/Pu0gkix1RW5ed/Cb1haoCNBjqu7eK4JQUERQLt4BT27bCj3vZXJBetY2/pWYxJ7YztUlPlB4IsSMOYB8LA4VrGxYuj8ylWXU5TySnDnuHyDf07K8fUPo020AFp2RlvCJZB3qwuLBuoLbtpAeGzTPQuE0lfjQQni5W3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741342698; c=relaxed/simple;
-	bh=Hrpk3fM2ToSeRY6ZSJ5LgTGAbZEfHue5uXU35dGs0RY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LBgdNPc9+9nlejcQHun0liQIM5CzhO0Wcp6WtJayeW6dnZv/IDHZb4XgkmO9F+qK0MK16upPy1zv/W4nbyZTHY/jad6dv6w65FyodQbERv5XJx8mrM/iady0jmo+r7xwxKQ8Ohx9pGbZKN4Dl4luaQFcsutCOB8mdnfAOsGZPOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvGsjnF4; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741342699; c=relaxed/simple;
+	bh=A2ngPlxsViHeU++f/T0fHfvoDhTTkba+2oBbb7Nj+nI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vCk3dRpv2mJmlZ37bqMhcVVVsbTyisGb8vkdZHnDhPCcfYMVklacL8eGeID4d0R8SO/2byPd4ISxTx9Cka+iKMDrmyjR+P70VpUHxfhIsnUoIUko+y6pGINUc2SA1iOwp8R32mqxprtPQdHUR8AavjDy82jluIEST9zzUl8IFjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=eiLb2h4g; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvGsjnF4"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43bd732fd27so14198415e9.0;
-        Fri, 07 Mar 2025 02:18:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="eiLb2h4g"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-391342fc0b5so655575f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 02:18:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741342693; x=1741947493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FalLckkLy2c4ipBkbA3HgidqaPtgkZG/OVl2zJ65m2Q=;
-        b=JvGsjnF4H+IxdOrRhb3+yQsJ4UMjW7fLyxfKBOX4jTwXqRGMc62UxPSU8Z4RVq+vdF
-         d8hyBfeQcPKItA5Z9+HKq0XBtef77LRB8TN5+dA2yAZDINjTVuN8rJjWnEbSnHICzbcY
-         Y+wmnm/qzswiOodAjguwllwUKogiv/48VC1B/nNYWPlBLbu3812j3+18U5JI0coO2mkz
-         uSKHafjz/0AjXGCWud1DI7NEXq4jgUGunzskktBF8a2cs+G41CJvf9DAODM2s2ngjoLP
-         nq5OQOQFuagOWwZfqDdsLTFZeSL9Bo9Qql0kLC5mLxewDAEPx8VG3dyG4TGbOIMQs2WV
-         xmww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741342693; x=1741947493;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=ffwll.ch; s=google; t=1741342695; x=1741947495; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FalLckkLy2c4ipBkbA3HgidqaPtgkZG/OVl2zJ65m2Q=;
-        b=VTF0etwqqJnAswuZ4pQdFSk4EMFr9iTmiTv52I90Xvnwpu8ByjmHWvP1IomkfOhbSA
-         M/nUcibxnkfEqPL335KTnzdpbfXJlq5JMPciLyGYzwk0MOYzthm9fpasWfSJwmpM+X+S
-         1OiqE2DyyA+me32FFSCi49f/4NpHRuDUutVdPYnmBE8/XR2AN/Ecxic7WjTv7l1lY2Xy
-         KXWFqVwfjEF6fKM+MCYc3obp8WWFtcX4ilhhHnthDFkONg2LWCuU//zrLGT1I0VLmjO5
-         45t01a3UtAp5JJcKLn2+9EYy3WN0Rc7H4JrVD5lc+quQyrab6Z9uJt/kec8sPRxwLeRz
-         zJIw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3T3rSQwnAZ1lVd/AtbgcWwz248y909p0YhLIKVmLVXVUWeBE/Pn9aPpYwlK8ikfbryzeOyhha5T3E@vger.kernel.org, AJvYcCWrfDfE+gkQ3s6MQLEL7Dulbx+i1otGlelRFC7TZatZ6ER8+boa0Voe/x6BboJpyAk8/0aZP15D1145/WKY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy077add+jSBzBOxYsfZQE0S8ac5JupeZLAupytQcNMtCQFsTX
-	9LbJ1AAu8U38a2pcY2nf+ZtTlZ84BAXDCfA6foOuj/wF9s9/Bk+m
-X-Gm-Gg: ASbGncsKzk26rWs/OIEjStRPjJ45Szf/9wGPvbllJf3CIqth6IPlbrYTshIaTLU6ugw
-	PYzyP+kiQ7jqstURHOOzHjU+iH0VJ+VDRm7bCbxpOTVxgtbqfZMpYiW3g6c0kzJsZtI3hVD1aHu
-	Axm1WEdHGzlnlClDsnGeKAC9MOe+jFTSpC7X9PkHUvHpntle1oMS2/5mv+NEfztS2KZE3elWpIQ
-	W2msBCc1mEcgqDcR3pUvmhiCiFEay4DT8lTuB8yfhv5VbD1zeykSaL629DsGkPltKNdTF6WC88i
-	xdGtdw6WFTAIUjEGDxFPzKLYYEB8zX0KQPJK1fo1ylu5pmwrwFfa0OqnQviuqpuu3nTxnaZlKHa
-	eddeLiOrmiySMNawGcQhsas8=
-X-Google-Smtp-Source: AGHT+IHI4qarjn6okL8fiFQY3ltBC2yY6DhIkGRizLqTlNjxjx9HKfSflu8OqxGOPt8PeQnTelbnew==
-X-Received: by 2002:a05:6000:402a:b0:391:2dea:c9a5 with SMTP id ffacd0b85a97d-39132d6b61cmr1665637f8f.20.1741342693057;
-        Fri, 07 Mar 2025 02:18:13 -0800 (PST)
-Received: from ernest.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c103aa5sm4900262f8f.94.2025.03.07.02.18.12
+        bh=eriVuZyAjeW4XZxzbs/VYx0wmamknYVQrCt+Q1+FUXw=;
+        b=eiLb2h4gjukf5j52+npr3KDym6bccOdn0JdH3it+D9rbhYFyBwGhz5Z9+pASCnjQRA
+         tZVIl5lx2Z+DxbLn2vh/J0Tkmh53BJvEdIXpKYNzoySYWkaGaDPCX5sJtFDs/vll6Q57
+         KfQ62JeHmX085MjHboJ4HzlUMkb+k8KBhdZ14=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741342695; x=1741947495;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eriVuZyAjeW4XZxzbs/VYx0wmamknYVQrCt+Q1+FUXw=;
+        b=YJ8X660tdlV2/q8Uuge1i8xxkDjyg7yxiz3+QYd56pFwIBcirP+AyIMIv3dTYQNSR8
+         DicGMDZUJjJIGbXjCX4E3dTimfjmsSQ1VDErKvNbQFA9CRghZNv/d2SB2aahwGqJiUYA
+         QcbZ7m+we0G43hd3rKHnTCj5A7CkS+o1xqut9dKas0qIqn/apr73ahgsTBaImqsqML49
+         0wMW4R7MmwdrNF+CmPeQx3WU84js1tHN597lbcX7kR/tSmSuXPXhpl4UOPOzbblxmuSW
+         grb46EEPPIJySMx1SOSPz6ogwxxoP57HjyOYAMcmWlvbPyeAZO7RmY9+rlESHjolCpic
+         hUdA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnqI4LPIVgRpL0YpxVin9FrZxbKIBuCgTbac3HEBUt6lVxfJsLe4p/NSbTK93tE12GNk0m9hs1Vd54ApU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY5rbKxIfqmVLAtomnL4iApnQGLiEAOGLoXBVERLbRZzFibbUC
+	0sTT8EgeuiZTwbAcLRBkAi38Hx6NllvJ2sLevM7QaN0p46GDpO6pSsD7GbFh5Mc=
+X-Gm-Gg: ASbGncsPrDwHFwDHyN1gAFolabDFPXI+JuoZW9S0jEeMvqYKNXCUx1O+QlJaUACylpd
+	AZx5/Byv9V/vkFfkI0AqM4ooQd4/iIer0A0ANR/gYuPrU6NOwMHaW7+hbW3fE8Evrd/eJ5zA5cD
+	Ej1sehEN8q3fTZW5bpVc6q7zMPmPLSyChGTRNdwyu1Ggpaw39d5Lx4jP+11eXeLQ3GLsWJEgi33
+	WOAQ/CahJH5QYB7wsitMKED2p+qfb2NNebK9DtSjWLUlBo8hS2/p0LI/dcOlKBVTstUQRnHxty7
+	tYHMSP89oPHvxqNLofEiZl85cJlAxR3GMXsrBtOPu7tQzasWmcMrQ8Bi
+X-Google-Smtp-Source: AGHT+IEAZISqACsxvEE8pMsJbbIN/kzp1kRyxcTMswdSMukChQqkklpQTvMwVWdtKsOw5sLVVDQLwg==
+X-Received: by 2002:a5d:584f:0:b0:391:2e7:67ff with SMTP id ffacd0b85a97d-39132d090fbmr2149096f8f.10.1741342695383;
+        Fri, 07 Mar 2025 02:18:15 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfcdasm4798966f8f.23.2025.03.07.02.18.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 02:18:12 -0800 (PST)
-From: ernestvanhoecke@gmail.com
-X-Google-Original-From: ernest.vanhoecke@toradex.com
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v2 1/2] ARM: dts: apalis/colibri-imx6: Enable STMPE811 TS
-Date: Fri,  7 Mar 2025 11:17:48 +0100
-Message-ID: <20250307101758.27943-2-ernest.vanhoecke@toradex.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250307101758.27943-1-ernest.vanhoecke@toradex.com>
-References: <20250307101758.27943-1-ernest.vanhoecke@toradex.com>
+        Fri, 07 Mar 2025 02:18:14 -0800 (PST)
+Date: Fri, 7 Mar 2025 11:18:12 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>, aliceryhl@google.com,
+	robin.murphy@arm.com, daniel.almeida@collabora.com,
+	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v12 2/3] rust: add dma coherent allocator abstraction.
+Message-ID: <Z8rH5D5S7QzyJo1D@phenom.ffwll.local>
+Mail-Followup-To: Danilo Krummrich <dakr@kernel.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>, aliceryhl@google.com,
+	robin.murphy@arm.com, daniel.almeida@collabora.com,
+	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+References: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
+ <20250224115007.2072043-3-abdiel.janulgue@gmail.com>
+ <20250305174118.GA351188@nvidia.com>
+ <Z8mlAxsszdOH-ow8@cassiopeiae>
+ <Z8m9j3SwWHqaCTXo@phenom.ffwll.local>
+ <20250306160907.GF354511@nvidia.com>
+ <Z8qzP3CR8Quhp87Z@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8qzP3CR8Quhp87Z@pollux>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+On Fri, Mar 07, 2025 at 09:50:07AM +0100, Danilo Krummrich wrote:
+> On Thu, Mar 06, 2025 at 12:09:07PM -0400, Jason Gunthorpe wrote:
+> > On Thu, Mar 06, 2025 at 04:21:51PM +0100, Simona Vetter wrote:
+> > > > >  > a device with no driver bound should not be passed to the DMA API,
+> > > > >  > much less a dead device that's already been removed from its parent
+> > > > >  > bus.
+> > > > 
+> > > > Thanks for bringing this up!
+> > > > 
+> > > > I assume that's because of potential iommu mappings, the memory itself should
+> > > > not be critical.
+> > 
+> > There is a lot of state tied to the struct device lifecycle that the
+> > DMA API and iommu implicitly manages. It is not just iommu mappings.
+> > 
+> > It is incorrect to view the struct device as a simple refcount object
+> > where holding the refcount means it is alive and safe to use. There
+> > are three broad substates (No Driver, Driver Attached, Zombie) that
+> > the struct device can be in that are relevant.
+> > 
+> > Technically it is unsafe and oopsable to call the allocation API as
+> > well on a device that has no driver. This issue is also ignored in
+> > these bindings and cannot be solved with revoke.
+> 
+> This is correct, and I am well aware of it. I brought this up once when working
+> on the initial device / driver, devres and I/O abstractions.
+> 
+> It's on my list to make the creation of the Devres container fallible in this
+> aspect, which would prevent this issue.
+> 
+> For now it's probably not too critical; we never hand out device references
+> before probe(). The only source of error is when a driver tries to create new
+> device resources after the device has been unbound.
+> 
+> > IOW I do not belive you can create bindings here that are truely safe
+> > without also teaching rust to understand the concept of a scope
+> > guaranteed to be within a probed driver's lifetime.
+> > 
+> > > > > Also note that any HW configured to do DMA must be halted before the
+> > > > > free is allowed otherwise it is a UAF bug. It is worth mentioning that
+> > > > > in the documentation.
+> > > > 
+> > > > Agreed, makes sense to document. For embedding the CoherentAllocation into
+> > > > Devres this shouldn't be an issue, since a driver must stop operating the device
+> > > > in remove() by definition.
+> > >
+> > > I think for basic driver allocations that you just need to run the device
+> > > stuffing it all into devres is ok. 
+> > 
+> > What exactly will this revokable critical region protect?
+> > 
+> > The actual critical region extends into the HW itself, it is not
+> > simple to model this with a pure SW construct of bracketing some
+> > allocation. You need to bracket the *entire lifecycle* of the
+> > dma_addr_t that has been returned and passed into HW, until the
+> > dma_addr_t is removed from HW.
+> 
+> Devres callbacks run after remove(). It's the drivers job to stop operating the
+> device latest in remove(). Which means that the design is correct.
+> 
+> Now, you ask for a step further, i.e. make it that we can enforce that a driver
+> actually stopped the device in remove().
+> 
+> But that's just impossible, because obviously no one else than the driver knows
+> the semantics of the devicei; it's the whole purpose of the driver. So, this is
+> one of the exceptions where just have to trust the driver doing the correct
+> thing.
 
-Enable the STMPE811 touchscreen in the SOM dtsi files. The STMPE811 is
-part of the SOM. It's self contained within it, therefore, disabling it
-is not the correct default behavior.
+In general it's impossible, but I think for specific cases like pci we can
+enforce that bus mastering/interrupt generation/whatever else might cause
+havoc is force-disabled after ->remove finishes. For platform devices this
+is more annoying, but then it's much harder to physically yank a platform
+devices. So I'm less worried about that being a practical concern there.
 
-Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
-v2: Fixed the "From" field
-v1: https://lore.kernel.org/all/20250227170556.589668-2-ernest.vanhoecke@toradex.com/
----
- arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi  | 1 -
- arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi | 1 -
- 2 files changed, 2 deletions(-)
+> Having that said, it doesn't need to be an "all or nothing", let's catch the
+> ones we can actually catch.
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
-index dffab5aa8b9c..23913f18586c 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
-@@ -664,7 +664,6 @@ stmpe_ts: stmpe_touchscreen {
- 			st,settling = <3>;
- 			/* 5 ms touch detect interrupt delay */
- 			st,touch-det-delay = <5>;
--			status = "disabled";
- 		};
- 
- 		stmpe_adc: stmpe_adc {
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi
-index 9f33419c260b..9a9f9764dc65 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi
-@@ -588,7 +588,6 @@ stmpe_ts: stmpe_touchscreen {
- 			st,settling = <3>;
- 			/* 5 ms touch detect interrupt delay */
- 			st,touch-det-delay = <5>;
--			status = "disabled";
- 		};
- 
- 		stmpe_adc: stmpe_adc {
+Yeah, agreed.
+-Sima
 -- 
-2.43.0
-
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
