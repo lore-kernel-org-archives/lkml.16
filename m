@@ -1,92 +1,89 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160211FCD1F;
-	Fri,  7 Mar 2025 09:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339366; cv=pass; b=dHlIFQKyxor9kniY6tg5uDLKURLEYy0iZTg28wQjX0XHwV+PqWM6QhjMMiwZTZCYJPWJqZUUeiQUPfhDTNoawhEO0lqyVrnNSVhqSTP7wHi81kSLmUzIjut6qJ3sruDrZFFCn1EftANH7u28I2byS0oStSCOE0HP6u7TYFQcoOs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339366; c=relaxed/simple;
-	bh=mK+RomwHnhzCyg7EefZ9r/iooekiTCi6TK57RFBmuVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jGC4DMXaMjX+OwjALYAZl9tVoprJKDz3mXoM4ZCFI/W/TTuKhKAzpBXDlqv9zLdtMMVIk/bwHkzdoRv2s5WT2+n9juQzDzCTV2k9PbqPRY+pEcNcy8hviygN/HcyFLPbeyxWhk77z7W+0uH/Sib2OtETi1zgkPZXkhFGhpujJwE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=fFtXPVvz; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875B71F94C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741339564; cv=none; b=l81O+VjMtTLNRVDpNo4qDwLU1gW6c5iWDsiNarDEAoVTK9LQqQDKCf2NYIKZA04rksTOJ/1YzLA1sYR8LiVdVWjAAVem4dmljXjWDVrlZzlKghaAGrRYY8F+BJXY9oi5a6ECoGUOAHuUsAn1bgaUnhDE3mGrCwerOM8cVJv5pNg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741339564; c=relaxed/simple;
+	bh=lQaPnTMrNhYTA3wyfboQpWCi5jJ+nnpfBr+z980m1/4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FH0CyluPFILAS9b8ouLs6RoHyjg3nvUG6K5GKablWK/Hxvvmez/iPXiflMltPE28m0wkWEAPGHstTrqYUd0vD8QCRl4MljHsr/ePuzNNbWPyHSKB1t8pRgKJ2MsrNTBgnpik8A3BBkP0A7SshVYak8aweS9d7rfj3oYiMk8Dn7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ouHuDhUH; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="fFtXPVvz"
-ARC-Seal: i=1; a=rsa-sha256; t=1741339329; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Y5374y2wA258tjYrBfxl6aKXWd0geSJuM/buyfdqp5Mln6e6g8L3cWfTVZEHl7lmhf2sJD81yCB+ycgmIO9jx/MbT3Q5uQplRcmVPOJaq7mSHdsd8ztZNjoZTWdJtt0VqtsMcPf/aqsn6WJwpQuP+gNzcGNOO13LAvC++/RDZD8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741339329; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TUsHy9uRDl2OIKrdZbuHC8Lrx8G+Tx5xIuuGpSk8lqo=; 
-	b=FGCfzyP/861bMEa+B6uguhqqJy92WrPfCfjpV6SHKHlRa7i+sC40Jyk7HwEuDrG1HrvYYPvFKXQbPb1UQnZ4kEDZaZI37hZFpLiLQFZbImVnnqY/M73psY9EHKF1OTsaaIK7IVJwA6nFV7GpwWrW5UPqfi7gnBvHmuNfBelj+QQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741339329;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=TUsHy9uRDl2OIKrdZbuHC8Lrx8G+Tx5xIuuGpSk8lqo=;
-	b=fFtXPVvzfYP/iRf2zkLDTFsPJWPTxBmSAqkzQDugGPqh/dadTRhc9p8vjn8AYXIm
-	5mP84Lfs3l9H2TU2xyo5xq58WACBajvOh/VgUC5wvJvM/i1OWTlRKMarEuEC4kFlCQ0
-	eX8jVP0d0xOvxVP3rTYtjfoU+bhWWgqEi4Yst4kY=
-Received: by mx.zohomail.com with SMTPS id 1741339326900299.3151948531463;
-	Fri, 7 Mar 2025 01:22:06 -0800 (PST)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	jose.abreu@synopsys.com,
-	nelson.costa@synopsys.com,
-	shawn.wen@rock-chips.com,
-	nicolas.dufresne@collabora.com,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Tim Surber <me@timsurber.de>
-Subject: [PATCH v1] media: platform: synopsys: hdmirx: Fix compilation on 32bit arches
-Date: Fri,  7 Mar 2025 12:21:13 +0300
-Message-ID: <20250307092113.646831-1-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ouHuDhUH"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so1634482e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 01:26:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741339559; x=1741944359; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lQaPnTMrNhYTA3wyfboQpWCi5jJ+nnpfBr+z980m1/4=;
+        b=ouHuDhUHSMb12TdkwLZpuKT8FZKNwbAx4npHvyArljYQfE1XGGPcozIY/gvpa4jgYz
+         M5jtjmArFYlsOocQZEUrQ+NJ4/FXHXecbTsb/opyuy+tQ6OwjTMXUHKFHx6/eN6nc5g4
+         kLreoqE715zp4mIInTcSywSg6WHNVBl1dKnsPIZCe6hVXWL36YVz8S0iFF6wjcsKWMvB
+         3uPZyTU/8LntyDwesu4widE1hdU6VdM97weyvkf/rrggIwV0O4c9I3nAvinma9MdZkmr
+         GvyPrjcApq7mCBBlLKFH9IT9+KvB815YwVPvPJUEYRwgBhaWOepWjcIs3O6yraOY54nD
+         B4uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741339559; x=1741944359;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQaPnTMrNhYTA3wyfboQpWCi5jJ+nnpfBr+z980m1/4=;
+        b=XALOYCbQTWY2W5bBhO5RzBJ8zWVdnNC+PO+EOaf/1IfT/akGnPMgSMrLX0SQpou7jS
+         bTD/EqMLjjJ91kIZbZmlpoW9bUi8bmP5dIIaNWaeViTCJwk5+rG2br2RmfPmamcmklKg
+         YEiEel/nQobHIyGCqeoGllB0Zw4mbFa7XZdvGPme5IYwCppPpsAwqNZimcb/tMEBD5rG
+         w9X7o1enxYVm5vUUw7EIP4VHMEXeETLOzr9cK25VejiHVfUo3wB3d+0SUbG22LVe0t2o
+         TUucsoQI4nBYDAGaAaJON+WF0xxdcQTUaoTcyO4idtcaNCoMeX+xBKKHkVol4wrMYQvW
+         884A==
+X-Forwarded-Encrypted: i=1; AJvYcCWhuzNCIl7ooa1pkdAjPmJaNjOB/kLvnITrl/HwehuB7ic95j+s24EHcWweQlfkpcJqWRmVlu9vRTMM1cs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqipeUj1n3DGCMaYbxlYLx+LioUvyDmCHuXG90W/CTa4l+g7ny
+	BMvBhFNyFUk0iuM3ow4i40itCg+pDctZGUzWy7iALAvtou79N8u7nzaWK1uaz9JkqraKHuTX0nP
+	9FminT4M716kHkw99bRnZSBfSMgiVFH2wWcaEyg==
+X-Gm-Gg: ASbGncuDBAP3RBYblcFrjR+D3+MaEj9M7j+ETZh1LN4PUsmC2+CMuO+EPoa0IcyOHww
+	JgOevKFf30d5QWASwHAnWNCmHBhhb0IDsrZcIUVoi3UsGJXLJJyzkSh5uZuvt4tzaOYkx8BAp96
+	gv6+udM3iVHVvML1X8jOTph31TiQ==
+X-Google-Smtp-Source: AGHT+IGTMFg4rHCTu6ttxl0Mr+bTUADbHsG+rzinRECLP3rop37VYukVmNbikYkvL3gcLQNvGyPZVOEAOsxdj/JgNGM=
+X-Received: by 2002:a05:6512:398a:b0:545:4cb:b25d with SMTP id
+ 2adb3069b0e04-54990e5d965mr764732e87.13.1741339559573; Fri, 07 Mar 2025
+ 01:25:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+References: <20250305102540.2815-1-hanchunchao@inspur.com>
+In-Reply-To: <20250305102540.2815-1-hanchunchao@inspur.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 7 Mar 2025 10:25:48 +0100
+X-Gm-Features: AQ5f1JrjUjFMK8KGTJ2kXkFBNIlWquflwX47xXJyI38Ro8Xernzfe-B_XkKBVe8
+Message-ID: <CACRpkdbv0f+JjLoWRYO45BOskFtUh7FYnHEKamapvqvhSdezyg@mail.gmail.com>
+Subject: Re: [PATCH] drm: pl111: fix inconsistent indenting warning
+To: Charles Han <hanchunchao@inspur.com>
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pixelclock is specified as 64bit integer and for this driver it
-won't be above 600MHz. Fix the 64bit division of the pixclock for 32bit
-kernel builds.
+On Wed, Mar 5, 2025 at 11:25=E2=80=AFAM Charles Han <hanchunchao@inspur.com=
+> wrote:
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503070743.WnRxStlk-lkp@intel.com/
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
----
- drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Fix below inconsistent indenting smatch warning.
+> smatch warnings:
+> drivers/gpu/drm/pl111/pl111_versatile.c:504 pl111_versatile_init() warn: =
+inconsistent indenting
+>
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
 
-diff --git a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-index 4d42da7255f3..7e342bbde967 100644
---- a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-+++ b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-@@ -291,7 +291,7 @@ static void hdmirx_get_timings(struct snps_hdmirx_dev *hdmirx_dev,
- 	hfp = htotal - hact - hs - hbp;
- 	vfp = vtotal - vact - vs - vbp;
- 
--	fps = (bt->pixelclock + (htotal * vtotal) / 2) / (htotal * vtotal);
-+	fps = ((u32)bt->pixelclock + (htotal * vtotal) / 2) / (htotal * vtotal);
- 	bt->width = hact;
- 	bt->height = vact;
- 	bt->hfrontporch = hfp;
--- 
-2.48.1
+Patch applied!
 
+Yours,
+Linus Walleij
