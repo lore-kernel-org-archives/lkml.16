@@ -1,111 +1,110 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C8518DF65;
-	Fri,  7 Mar 2025 14:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741356396; cv=pass; b=pBgaS9tSPdH5zs3qjs72FkBI1qUTINcjK6a3w+DZSI1ZxNdLRNQsn00zKep1JBNzUneyGf2h0nXgWPsHd1t+tJqeXp6Vcuer8uhHFmfeoHzsU/UQ1O22qyMT2jKzuEVGpZu3qwJqqWgBI3i7JHhNxhAz1kHtCcYl8MfrDz60CFM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741356396; c=relaxed/simple;
-	bh=ykdhXmylYh6z/rNdao/fGKzQPI3z2XmS1ESDJTS7TYQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QGQiIX2zO3ezoyJiUS/o1x6WiTTwwug645zoFo+5NrKnCaJMCPE5xBMQBjEeiNTa2/JO7/JWo9vVpDMjHMe+FFlcYeJeEgqW/AvP1PT5zI3IGIWGMoKp5rvv5qerUXiperkO40i6p4BboCeBcK1FwfjWezQQDXXRCUHC0AiR2OU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=k4LLpH1x; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB4818DF65
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741356402; cv=none; b=mXQP2RL/qxybo3x/YsOGJCRPPjHjA9G7HslTgklBl51pjNhlI2MMHsn0d9RRixQMH6KqBEvpsBVNKGM1xW2cwI48l3aONL/6Den5Qvf/RRbiIC4Ta/c1qdKk+WR/cnbhDXJp36DlsnTTUxtUYe9gplJiJzINscyrVZc4DR+dTNY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741356402; c=relaxed/simple;
+	bh=imVyh6k1rb/XZNJVY9COulfZL4IKvp42PjLpgWwlSBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0Zh0lT4rzKIMe9xO2GvM0/MUcqZLWBr2qbKKvDAUIPDj+ptW5ce6ox/J3htrygUWjUoBeD/+obEOD/0PEaqsqeJhntxhmNel9WlScGZFfiiS6r08lUpcdWi95Vn0d4FVZxFWeSy11fZ2YtwDi4TAelZaBfjSbSDoTvoKyfYKQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=MHwg6mD5; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="k4LLpH1x"
-ARC-Seal: i=1; a=rsa-sha256; t=1741356358; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RUSqeTjX0/f+vSCIJFG7Ivi/H9ExZZOTIGsH8b/7NgnDNY+UPVZ7ECjWzwOuDI3RzpTfQqmbZSAsfna/nJrzgxqNHi9CItEF9nS40fA67K5OyjyabwmfpK9um35EBQjHtXoOmHIdnjUaDBCCDMC8yAzHg++9XIkIh6wtiClIxik=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741356358; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FP+ifasHniIC8neSq6VwSq5ZsIenCwU36aCvQ3EbV9k=; 
-	b=M4EErEyApvaCAnFL5c92n1M0wMYZ4/LNdYQL/JjFfVIWr1+oWZ7LWHG91M7LH/wdakw0O6B/Z6DdW1CFhUYSU8YrcdcDdi/S/B33oM+ZFqVbEURJgvl8Ve4JwYi+DVhf5OMbdwCpJiS1Sj2d8rpDnz9ZN6y3eCQFi/Cx2aen930=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741356358;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=FP+ifasHniIC8neSq6VwSq5ZsIenCwU36aCvQ3EbV9k=;
-	b=k4LLpH1xLhH5D3H7h2upAramGsfkMWDuPKZ9FZ0XGVS9QKMQsdQP0bKN4azcuUGk
-	pMfBCbFEZtyQaxyMl/XEFyBtH0id4McTIUQZz/KeSYcNbJQotbnjO7wP5JrTi+oGXgB
-	95fO8bj46v0ezvai2ZHpniitwdl6VAtoA17B70u4=
-Received: by mx.zohomail.com with SMTPS id 1741356356876241.9419093370691;
-	Fri, 7 Mar 2025 06:05:56 -0800 (PST)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Daniel Golle <daniel@makrotopia.org>,
- Aurelien Jarno <aurelien@aurel32.net>, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>, linux-crypto@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject:
- Re: [PATCH v2] dt-bindings: rng: rockchip,rk3588-rng: Drop unnecessary status
- from example
-Date: Fri, 07 Mar 2025 15:05:50 +0100
-Message-ID: <5417098.31r3eYUQgx@workhorse>
-In-Reply-To: <20250307093309.44950-1-krzysztof.kozlowski@linaro.org>
-References: <20250307093309.44950-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="MHwg6mD5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=UBQ6q3i2ePjT2i8U7tBuzMQdDLItSqljC2sOjafdBNw=; b=MHwg6mD546FqX8Qj
+	TTP1dLVNaTx/Us4Jukg/gkx3CPbq9+KmF18KUfEyNmQARN+9/JlkGWgYJ/vydPZsvCMCrqwYTDjG1
+	yWPWAei5PZFGyapLmjmB9VIyCypdeDm/SIjSn6d8Qw+fyNNNKNBBn/AxPIZi6dfa+oWVnWZT1UxAG
+	sucV4PDp3n+rMZH8mvQO/6al7/VEhUdjVKLekXH5+KWg55EVrmMAEVVnuxCbYOVa/fv8NbEd/hkAy
+	GNrdja++lzROCpZDPNbBiHzRXQoJYPuzpmqo1qzhOrWogkE59ADqBe5qO0p1hWzvhzHL5mhaW8LFZ
+	M6uvPM+z3/DTLgJvJQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1tqYLQ-003Phw-2S;
+	Fri, 07 Mar 2025 14:06:32 +0000
+Date: Fri, 7 Mar 2025 14:06:32 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/gma500: Remove unused mrst_clock_funcs
+Message-ID: <Z8r9aE0mtb9_R0p8@gallifrey>
+References: <20250306155155.212599-1-linux@treblig.org>
+ <CAMeQTsaNfQJ=OgWXwQ2bAxa1xbbQxAWDYEcokQ3VJE_EApPbzQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMeQTsaNfQJ=OgWXwQ2bAxa1xbbQxAWDYEcokQ3VJE_EApPbzQ@mail.gmail.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 14:06:22 up 303 days,  1:20,  1 user,  load average: 0.03, 0.01,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Friday, 7 March 2025 10:33:09 Central European Standard Time Krzysztof 
-Kozlowski wrote:
-> Device nodes are enabled by default, so no need for 'status = "okay"' in
-> the DTS example.
+* Patrik Jakobsson (patrik.r.jakobsson@gmail.com) wrote:
+> On Thu, Mar 6, 2025 at 4:52 PM <linux@treblig.org> wrote:
+> >
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> >
+> > The mrst_clock_funcs const was added in 2013 by
+> > commit ac6113ebb70d ("drm/gma500/mrst: Add SDVO clock calculation")
+> > and commented as 'Not used yet'.
+> >
+> > It's not been used since, so remove it.
+> > The helper functions it points to are still used elsewhere.
+> >
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 > 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Applied to drm-misc-next
+
+Thanks!
+
+Dave
+
+> Thanks
 > 
-> ---
 > 
-> Changes in v2:
-> 1. Drop unnecessary full stop in subject prefix after ':'.
-> 2. Add Rb tag.
-> ---
->  Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml index
-> 757967212f55..ca71b400bcae 100644
-> --- a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> +++ b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> @@ -53,7 +53,6 @@ examples:
->          interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
->          clocks = <&scmi_clk SCMI_HCLK_SECURE_NS>;
->          resets = <&scmi_reset SCMI_SRST_H_TRNG_NS>;
-> -        status = "okay";
->        };
->      };
-
-Hi,
-
-is there the possibility we could make dtschema as invoked by `make 
-dt_binding_check W=1` (or W=2) add a warning for examples that have disabled 
-or explicitly listed status properties when not needed? Or is this something 
-better handled in, say, checkpatch.pl?
-
-The question arises because dumb mistakes by me like this should ideally be 
-caught before they waste precious maintainer time.
-
-If it's best handled in dtschema, I can look into working on that so you guys 
-don't have to do even more work due to me.
-
-Cheers,
-Nicolas Frattaroli
-
-
+> > ---
+> > v2
+> >   commit message fixed to use correct struct name, and add
+> >   note about the functions used still being used.
+> >
+> >  drivers/gpu/drm/gma500/oaktrail_crtc.c | 7 -------
+> >  1 file changed, 7 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> > index de8ccfe9890f..ea9b41af0867 100644
+> > --- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> > +++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+> > @@ -658,10 +658,3 @@ const struct drm_crtc_helper_funcs oaktrail_helper_funcs = {
+> >         .prepare = gma_crtc_prepare,
+> >         .commit = gma_crtc_commit,
+> >  };
+> > -
+> > -/* Not used yet */
+> > -const struct gma_clock_funcs mrst_clock_funcs = {
+> > -       .clock = mrst_lvds_clock,
+> > -       .limit = mrst_limit,
+> > -       .pll_is_valid = gma_pll_is_valid,
+> > -};
+> > --
+> > 2.48.1
+> >
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
