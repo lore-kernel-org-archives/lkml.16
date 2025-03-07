@@ -1,337 +1,168 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F20C1990C3
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 05:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5561E18DB3A;
+	Fri,  7 Mar 2025 06:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741327187; cv=none; b=UgdbWQMtsHF29ZDFf1mcH5CQpmY+Ni9uIi6x55FFoPylbiKwnOXhJ496pwiDfoRZ/4Y0ZqKDrx251EnH32V9qPAn07oSkYdQ+4kroTcEdlxqwPdIRo6tk6XjRyPDadU+qfgCUpmqWrmtBmhtdTMlyKQHcOSm8ldp4prrux4HJIY=
+	t=1741327390; cv=none; b=TCPjLTSpRSyeaLd7qpILmJreaVuXypXHjnfwOkw89bvY9STlQ+AfupQSM07WIHecUJVJJpvU08YJIe97hXnu0keo7S5jwOJdLYoEFXcNDhp6y0j321On+J1rUxqsvctvw7Z7YvYGjTkVexGslB5MaFgBnVBCTTg/NSug1ospY+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741327187; c=relaxed/simple;
-	bh=wwmac+s+ESlIyXNfnNVtMPr0GhgEwFZOhY1IMJmPMZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OPgkMcIasXH9bjKAHFSg7Gx2jlYIIjpYKltqMG4ds1mYmxONP+VwbUo7cXpcyE7ef1OgE7c9xv5OPIZEuSYEI8G/2JCB7hJ1bcrLnFwELp3joe6ZXVaSZj0b0MoF9ty0nxs+Ci6n7SM30pspDCTCGwrN9lv34WI4+RmctOrkZzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y23GtGUH; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741327390; c=relaxed/simple;
+	bh=H9/9iw+MtmTGUA6JxjWjRTXe37ve/NEutXIDWZgeW0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d2g4pG456rwrkYLo73O/Z6n2/GZJ7PBDZLQlvonIQJx47AeL9K0vDkKUZaHPNR2VFZshF+el+nbG4/4oHcjEfkfOh+5s9OEalVacjW4eEdEDlmIFVihMg8KpU0bvfS+SimSgtn9DEBXwNTDLkCo1JRQl3R38zg+UDmtRTBB0Wm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fezFV1Sq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y23GtGUH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741327181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7I8JlXAk7XOW8Ec0KDXoqsOGAqhiP+woZaSK8OFzW+A=;
-	b=Y23GtGUH7snKv5PLNOK1WbMqZLI09sdw345e87VF5yfzvB/zAhflbUQmQTPf8N2U71HX42
-	9iJ6OfxCBiKqGj8MEFCfnZc1JK4oC8B6AgkVL4L3HLXDrcT8fwDx3t+wBPGe8HsbMpY1Ot
-	ecJDGe8A2vtpgskccGCGs0JM/0SsYNM=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [RFC PATCH] memcg: net: improve charging of incoming network traffic
-Date: Thu,  6 Mar 2025 21:59:36 -0800
-Message-ID: <20250307055936.3988572-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fezFV1Sq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55C54C4CED1;
+	Fri,  7 Mar 2025 06:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741327389;
+	bh=H9/9iw+MtmTGUA6JxjWjRTXe37ve/NEutXIDWZgeW0I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fezFV1SqR2MU0mr5aihjxXNZ+fnTPJYdQjBa/Y4GIxd1zGk4i53blmvIZGisusNUu
+	 KzNqhVU9pdJ97nkaSOnbl/31u9JSWxEH8gxE8mh47gpdRCdi6m5SA6JxdTSKvB2yxO
+	 4skEFnhYSRlzA4slM8Kqn9WQMBXGgHgQKi9MJ9hn6YLu6z5jYG2S1Gpq3876IKRCoa
+	 XCt5C8lrdgRnzcQnOHOMLdIwwrIlmv44wvvIgV+eHnskc9dSbaegAfprgGXgayx9NK
+	 wZ/H2kysb7HdY/x0i1+uaVydxC/2ZiU5XZEENPG22sFwjNWdRvEqLCCO/Ca8jGicba
+	 5BErlFpJf+b+w==
+Date: Thu, 6 Mar 2025 22:03:07 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf report: Fix memory leaks in the hierarchy mode
+Message-ID: <Z8qMG9cdrSmL3xhe@google.com>
+References: <20250306075147.195435-1-namhyung@kernel.org>
+ <20250306075147.195435-2-namhyung@kernel.org>
+ <CAP-5=fW=Gs2ATy8DhcZFjGP5tcEemoZp9q=voFV8HRisY9ki7w@mail.gmail.com>
+ <Z8nWNBKuYc0x-sN8@google.com>
+ <Z8pTaVN1uEqjrgRb@google.com>
+ <CAP-5=fV1UCF3D9rrNzMbH8CNP-UAAS13TAjm_0-3rZSLD_+PdQ@mail.gmail.com>
+ <Z8qBzTvjQmwldwcD@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <Z8qBzTvjQmwldwcD@google.com>
 
-Memory cgroup accounting is expensive and to reduce the cost, the kernel
-maintains per-cpu charge cache for a single memcg. So, if a charge
-request comes for a different memcg, the kernel will flush the old
-memcg's charge cache and then charge the newer memcg a fixed amount (64
-pages), subtracts the charge request amount and stores the remaining in
-the per-cpu charge cache for the newer memcg.
+On Thu, Mar 06, 2025 at 09:19:09PM -0800, Namhyung Kim wrote:
+> On Thu, Mar 06, 2025 at 08:50:46PM -0800, Ian Rogers wrote:
+> > On Thu, Mar 6, 2025 at 6:01 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Thu, Mar 06, 2025 at 09:07:00AM -0800, Namhyung Kim wrote:
+> > > > Hi Ian,
+> > > >
+> > > > On Thu, Mar 06, 2025 at 08:55:05AM -0800, Ian Rogers wrote:
+> > > > > On Wed, Mar 5, 2025 at 11:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >
+> > > > > > Ian told me that there are many memory leaks in the hierarchy mode.  I
+> > > > > > can easily reproduce it with the follwing command.
+> > > > > >
+> > > > > >   $ make DEBUG=1 EXTRA_CFLAGS=-fsanitize=leak
+> > > > > >
+> > > > > >   $ perf record --latency -g -- ./perf test -w thloop
+> > > > > >
+> > > > > >   $ perf report -H --stdio
+> > > > > >   ...
+> > > > > >   Indirect leak of 168 byte(s) in 21 object(s) allocated from:
+> > > > > >       #0 0x7f3414c16c65 in malloc ../../../../src/libsanitizer/lsan/lsan_interceptors.cpp:75
+> > > > > >       #1 0x55ed3602346e in map__get util/map.h:189
+> > > > > >       #2 0x55ed36024cc4 in hist_entry__init util/hist.c:476
+> > > > > >       #3 0x55ed36025208 in hist_entry__new util/hist.c:588
+> > > > > >       #4 0x55ed36027c05 in hierarchy_insert_entry util/hist.c:1587
+> > > > > >       #5 0x55ed36027e2e in hists__hierarchy_insert_entry util/hist.c:1638
+> > > > > >       #6 0x55ed36027fa4 in hists__collapse_insert_entry util/hist.c:1685
+> > > > > >       #7 0x55ed360283e8 in hists__collapse_resort util/hist.c:1776
+> > > > > >       #8 0x55ed35de0323 in report__collapse_hists /home/namhyung/project/linux/tools/perf/builtin-report.c:735
+> > > > > >       #9 0x55ed35de15b4 in __cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1119
+> > > > > >       #10 0x55ed35de43dc in cmd_report /home/namhyung/project/linux/tools/perf/builtin-report.c:1867
+> > > > > >       #11 0x55ed35e66767 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:351
+> > > > > >       #12 0x55ed35e66a0e in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:404
+> > > > > >       #13 0x55ed35e66b67 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:448
+> > > > > >       #14 0x55ed35e66eb0 in main /home/namhyung/project/linux/tools/perf/perf.c:556
+> > > > > >       #15 0x7f340ac33d67 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+> > > > > >   ...
+> > > > > >
+> > > > > >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
+> > > > > >   93
+> > > > > >
+> > > > > > I found that hist_entry__delete() missed to release child entries in the
+> > > > > > hierarchy tree (hroot_{in,out}).  It needs to iterate the child entries
+> > > > > > and call hist_entry__delete() recursively.
+> > > > > >
+> > > > > > After this change:
+> > > > > >
+> > > > > >   $ perf report -H --stdio 2>&1 | grep -c '^Indirect leak'
+> > > > > >   0
+> > > > > >
+> > > > > > Reported-by: Ian Rogers <irogers@google.com>
+> > > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > > > > ---
+> > > > > >  tools/perf/util/hist.c | 9 +++++++++
+> > > > > >  1 file changed, 9 insertions(+)
+> > > > > >
+> > > > > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > > > > > index fbf131aeae7ffe9b..bbc6a299b5106c3b 100644
+> > > > > > --- a/tools/perf/util/hist.c
+> > > > > > +++ b/tools/perf/util/hist.c
+> > > > > > @@ -1385,6 +1385,15 @@ void hist_entry__delete(struct hist_entry *he)
+> > > > > >  {
+> > > > > >         struct hist_entry_ops *ops = he->ops;
+> > > > > >
+> > > > > > +       while (!RB_EMPTY_ROOT(&he->hroot_out.rb_root)) {
+> > > > > > +               struct rb_node *node = rb_first(&he->hroot_out.rb_root);
+> > > > > > +               struct hist_entry *child = rb_entry(node, struct hist_entry, rb_node);
+> > > > > > +
+> > > > > > +               rb_erase_init(node, &he->hroot_out.rb_root);
+> > > > > > +
+> > > > > > +               hist_entry__delete(child);
+> > > > > > +       }
+> > > > >
+> > > > > Thanks for the fix! A nit, iterating the rbtree of N nodes and calling
+> > > > > erase on the first entry, an O(log N) operation, means this is a O(N *
+> > > > > log N). rbtree.h has rbtree_postorder_for_each_entry_safe:
+> > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/linux/rbtree.h?h=perf-tools-next#n81
+> > > > > ```
+> > > > >  * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_root of
+> > > > >  * given type allowing the backing memory of @pos to be invalidated
+> > > > > ```
+> > > > > which is O(N). I think this code would be better something like:
+> > > > > ```
+> > > > > struct hist_entry *pos, *tmp;
+> > > > > rbtree_postorder_for_each_entry_safe(pos, tmp, he->hroot_out.rb_root, rb_node)
+> > > > >         hist_entry__delete(pos);
+> > > > > ```
+> > > >
+> > > > Thanks for your review!  I was wondering if there's something like this.
+> > > > Will update with that.
+> > >
+> > > I found that the following comments:
+> > >
+> > >  * Note, however, that it cannot handle other modifications that re-order the
+> > >  * rbtree it is iterating over. This includes calling rb_erase() on @pos, as
+> > >  * rb_erase() may rebalance the tree, causing us to miss some nodes.
+> > >
+> > > So I cannot use this here.
+> > 
+> > I thought the tree is no longer in use after the hist_entry__delete,
+> > so you don't need to maintain the child/parent pointers as everything
+> > is going to get freed. Here is what I think is a similar use:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_stat.c#n51
+> 
+> Oh, I see.  So it should not call rb_erase().  Will check again.
 
-This mechanism is based on the assumption that the kernel, for locality,
-keep a process on a CPU for long period of time and most of the charge
-requests from that process will be served by that CPU's local charge
-cache.
+It works!  Will send v2 soon.
 
-However this assumption breaks down for incoming network traffic in a
-multi-tenant machine. We are in the process of running multiple
-workloads on a single machine and if such workloads are network heavy,
-we are seeing very high network memory accounting cost. We have observed
-multiple CPUs spending almost 100% of their time in net_rx_action and
-almost all of that time is spent in memcg accounting of the network
-traffic.
-
-More precisely, net_rx_action is serving packets from multiple workloads
-and is observing/serving mix of packets of these workloads. The memcg
-switch of per-cpu cache is very expensive and we are observing a lot of
-memcg switches on the machine. Almost all the time is being spent on
-charging new memcg and flushing older memcg cache. So, definitely we
-need per-cpu cache that support multiple memcgs for this scenario.
-
-This prototype implements a network specific scope based memcg charge
-cache that supports holding charge for multiple memcgs. However this is
-not the final design and I wanted to start the conversation on this
-topic with some open questions below:
-
-1. Should we keep existing per-cpu single memcg cache?
-2. Should we have a network specific solution similar to this prototype
-   or more general solution?
-3. If we decide to have multi memcg charge cache, what should be the
-   size? Should it be dynamic or static?
-4. Do we really care about performance (throughput) in PREEMPT_RT?
-
-Let me give my opinion on these questions:
-
-A1. We definitely need to evolve the per-cpu charge cache. I am not
-    happy with the irq disabling for memcg charging and stats code. I am
-    planning to move towards two set of stocks, one for in_task() and
-    the other for !in_task() (similar to active_memcg handling) and with
-    that remove the irq disabling from the charge path. In the followup
-    I want to expand this to the obj stocks as well and also remove the
-    irq disabling from that.
-
-A2. I think we need a general solution as I suspect kvfree_rcu_bulk()
-    might be in a similar situation. However I think we can definitely
-    use network specific knowledge to further improve network memory
-    charging. For example, we know kernel uses GFP_ATOMIC for charging
-    incoming traffic which always succeeds. We can exploit this
-    knowledge to further improve network charging throughput.
-
-A3. Here I think we need to start simple and make it more sophisticated
-    as we see more data from production/field from multiple places. This
-    can become complicated very easily. For example the evict policy for
-    memcg charge cache.
-
-A4. I don't think PREEMPT_RT is about throughput but it cares about
-    latency but these memcg charge caches are about throughput. In
-    addition PREEMPT_RT has made memcg code a lot messier (IMO). IMO the
-    PREEMPT_RT kernel should just skip all per-cpu memcg caches
-    including objcg ones and that would make code much simpler.
-
-That is my take and I would really like opinions and suggestions from
-others. BTW I want to resolve this issue asap as this is becoming a
-blocker for multi-tenancy for us.
-
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- include/linux/memcontrol.h | 37 +++++++++++++++++
- mm/memcontrol.c            | 83 ++++++++++++++++++++++++++++++++++++++
- net/core/dev.c             |  4 ++
- 3 files changed, 124 insertions(+)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 57664e2a8fb7..3aa22b0261be 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1617,6 +1617,30 @@ extern struct static_key_false memcg_sockets_enabled_key;
- #define mem_cgroup_sockets_enabled static_branch_unlikely(&memcg_sockets_enabled_key)
- void mem_cgroup_sk_alloc(struct sock *sk);
- void mem_cgroup_sk_free(struct sock *sk);
-+
-+struct memcg_skmem_batch {
-+	int size;
-+	struct mem_cgroup *memcg[MEMCG_CHARGE_BATCH];
-+	unsigned int nr_pages[MEMCG_CHARGE_BATCH];
-+};
-+
-+void __mem_cgroup_batch_charge_skmem_begin(struct memcg_skmem_batch *batch);
-+void __mem_cgroup_batch_charge_skmem_end(struct memcg_skmem_batch *batch);
-+
-+static inline void mem_cgroup_batch_charge_skmem_begin(struct memcg_skmem_batch *batch)
-+{
-+	if (cgroup_subsys_on_dfl(memory_cgrp_subsys) &&
-+	   mem_cgroup_sockets_enabled)
-+		__mem_cgroup_batch_charge_skmem_begin(batch);
-+}
-+
-+static inline void mem_cgroup_batch_charge_skmem_end(struct memcg_skmem_batch *batch)
-+{
-+	if (cgroup_subsys_on_dfl(memory_cgrp_subsys) &&
-+	   mem_cgroup_sockets_enabled)
-+		__mem_cgroup_batch_charge_skmem_end(batch);
-+}
-+
- static inline bool mem_cgroup_under_socket_pressure(struct mem_cgroup *memcg)
- {
- #ifdef CONFIG_MEMCG_V1
-@@ -1638,6 +1662,19 @@ void reparent_shrinker_deferred(struct mem_cgroup *memcg);
- #define mem_cgroup_sockets_enabled 0
- static inline void mem_cgroup_sk_alloc(struct sock *sk) { };
- static inline void mem_cgroup_sk_free(struct sock *sk) { };
-+
-+struct memcg_skmem_batch {};
-+
-+static inline void mem_cgroup_batch_charge_skmem_begin(
-+					struct memcg_skmem_batch *batch)
-+{
-+}
-+
-+static inline void mem_cgroup_batch_charge_skmem_end(
-+					struct memcg_skmem_batch *batch)
-+{
-+}
-+
- static inline bool mem_cgroup_under_socket_pressure(struct mem_cgroup *memcg)
- {
- 	return false;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 709b16057048..3afca4d055b3 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -88,6 +88,7 @@ EXPORT_PER_CPU_SYMBOL_GPL(int_active_memcg);
- 
- /* Socket memory accounting disabled? */
- static bool cgroup_memory_nosocket __ro_after_init;
-+DEFINE_PER_CPU(struct memcg_skmem_batch *, int_skmem_batch);
- 
- /* Kernel memory accounting disabled? */
- static bool cgroup_memory_nokmem __ro_after_init;
-@@ -1775,6 +1776,57 @@ static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock);
- static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
- 				     struct mem_cgroup *root_memcg);
- 
-+static inline bool consume_batch_stock(struct mem_cgroup *memcg,
-+				       unsigned int nr_pages)
-+{
-+	int i;
-+	struct memcg_skmem_batch *batch;
-+
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) || in_task() ||
-+	    !this_cpu_read(int_skmem_batch))
-+		return false;
-+
-+	batch = this_cpu_read(int_skmem_batch);
-+	for (i = 0; i < batch->size; ++i) {
-+		if (batch->memcg[i] == memcg) {
-+			if (nr_pages <= batch->nr_pages[i]) {
-+				batch->nr_pages[i] -= nr_pages;
-+				return true;
-+			}
-+			return false;
-+		}
-+	}
-+	return false;
-+}
-+
-+static inline bool refill_stock_batch(struct mem_cgroup *memcg,
-+				      unsigned int nr_pages)
-+{
-+	int i;
-+	struct memcg_skmem_batch *batch;
-+
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) || in_task() ||
-+	    !this_cpu_read(int_skmem_batch))
-+		return false;
-+
-+	batch = this_cpu_read(int_skmem_batch);
-+	for (i = 0; i < batch->size; ++i) {
-+		if (memcg == batch->memcg[i]) {
-+			batch->nr_pages[i] += nr_pages;
-+			return true;
-+		}
-+	}
-+
-+	if (i == MEMCG_CHARGE_BATCH)
-+		return false;
-+
-+	/* i == batch->size */
-+	batch->memcg[i] = memcg;
-+	batch->nr_pages[i] = nr_pages;
-+	batch->size++;
-+	return true;
-+}
-+
- /**
-  * consume_stock: Try to consume stocked charge on this cpu.
-  * @memcg: memcg to consume from.
-@@ -1795,6 +1847,9 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
- 	unsigned long flags;
- 	bool ret = false;
- 
-+	if (consume_batch_stock(memcg, nr_pages))
-+		return true;
-+
- 	if (nr_pages > MEMCG_CHARGE_BATCH)
- 		return ret;
- 
-@@ -1887,6 +1942,9 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
- {
- 	unsigned long flags;
- 
-+	if (refill_stock_batch(memcg, nr_pages))
-+		return;
-+
- 	if (!localtry_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
- 		/*
- 		 * In case of unlikely failure to lock percpu stock_lock
-@@ -4894,6 +4952,31 @@ void mem_cgroup_sk_free(struct sock *sk)
- 		css_put(&sk->sk_memcg->css);
- }
- 
-+void __mem_cgroup_batch_charge_skmem_begin(struct memcg_skmem_batch *batch)
-+{
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) || in_task() ||
-+	    this_cpu_read(int_skmem_batch))
-+		return;
-+
-+	this_cpu_write(int_skmem_batch, batch);
-+}
-+
-+void __mem_cgroup_batch_charge_skmem_end(struct memcg_skmem_batch *batch)
-+{
-+	int i;
-+
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) || in_task() ||
-+	    batch != this_cpu_read(int_skmem_batch))
-+		return;
-+
-+	this_cpu_write(int_skmem_batch, NULL);
-+	for (i = 0; i < batch->size; ++i) {
-+		if (batch->nr_pages[i])
-+			page_counter_uncharge(&batch->memcg[i]->memory,
-+					      batch->nr_pages[i]);
-+	}
-+}
-+
- /**
-  * mem_cgroup_charge_skmem - charge socket memory
-  * @memcg: memcg to charge
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 0eba6e4f8ccb..846305d019c6 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -7484,9 +7484,12 @@ static __latent_entropy void net_rx_action(void)
- 		usecs_to_jiffies(READ_ONCE(net_hotdata.netdev_budget_usecs));
- 	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	int budget = READ_ONCE(net_hotdata.netdev_budget);
-+	struct memcg_skmem_batch batch = {};
- 	LIST_HEAD(list);
- 	LIST_HEAD(repoll);
- 
-+	mem_cgroup_batch_charge_skmem_begin(&batch);
-+
- 	bpf_net_ctx = bpf_net_ctx_set(&__bpf_net_ctx);
- start:
- 	sd->in_net_rx_action = true;
-@@ -7542,6 +7545,7 @@ static __latent_entropy void net_rx_action(void)
- 	net_rps_action_and_irq_enable(sd);
- end:
- 	bpf_net_ctx_clear(bpf_net_ctx);
-+	mem_cgroup_batch_charge_skmem_end(&batch);
- }
- 
- struct netdev_adjacent {
--- 
-2.43.5
+Thanks,
+Namhyung
 
