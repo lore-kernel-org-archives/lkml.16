@@ -1,77 +1,93 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F501EBFE6;
-	Fri,  7 Mar 2025 23:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230DA1EBFE6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 23:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741388551; cv=none; b=gR4HhB0MirhZowXHja1q/Y1vL+g2h1072pEo/m9Uait3sDxALKZWlCc3VdNFsykqKgsMRF1EgL7ASvsTIcu/Rj1t/ouq5kwTtPtKdZ0AM5ifo+YH4TZH6FnOjHXz2gp7kNkuc2wU7GyFhswHBFNAPM4vwIrp33nj+mODaAq+U3U=
+	t=1741388628; cv=none; b=Fb4QVOoykQV43D2jbrf7ACej7QG3nN0j2ELmCAbbLQm4G5U9hzJHroFCwLSoBQ/nF2eFVvb6JFsSdhwxR3aGBQvthlieR/Z0hmF1+MkpYXv9y+7tlMhQ4/KDIEQhsPqDFuJ9FMSAdu5lRjbLLvjRiv7rWR6Vp652FJ2m+/n8rxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741388551; c=relaxed/simple;
-	bh=mdMVobuWepIr7PV03x7xbJHm7C/7keEOmWcHH70aAcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ousHqFLuovtUED5KiJzPd8LZOe3u3p0HQ7L04aIdIeP083gMGDsf4G9BUb0nIOXHc8Jh+nYZQ1vf2/2MGM0CQIETQ11f7mLVRFz7i9Mmh+F3KHs2SzxQcRunU073i3Yew6uPm00JvD6ZIJ5kiHcRUGIRRsu0CKbnzAm6Z8R5VQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=F7v69lV1; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1741388628; c=relaxed/simple;
+	bh=eOeoPHHhOecDDOaLcxlv3LqvTCf2AZDIMmiBVHjkJ10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lt29RcUAt5ZIbQq4pB8UIiFckvPjAJq1UIpg3qv0wWQsW8QUmkZ3WYAZ8fvRUMfd0+EuisiAEFMGpIsAHRNULkfTBCzUQ9hfkhuNy+kZBnImd4A4kmZZ0HDV7dBZeZW0Wfd/t2uDJuPX2xdoLZGSLxUeyFDwOE+BVUMcqB4DAj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kf17KF7c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="F7v69lV1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=nqjQmn5zuk4Kwr62lIq32KHD5DpJuH6RLBYrL+pZlHA=; b=F7v69lV1camihRet
-	BEi7CVqtRE/GMGTZhLkw47xmKG1pwuPPUT074TETZ0YxB/o9UNJXC5afdJXirFLKEE5HmXQZGnrGa
-	DntZEaBVqGH3iavPcq/zSQRvQSCpxunGSvMNOTi0Qozz+JsysXARVQCIAPHTuSk22sb+6l5Jro+FI
-	TZz2MvJhPJF/4eJbRGHuoeLtDwOHG19rSslapHz2qoBynbOZt9U7bo1V2wX0obYwZpDW3wEYtTQst
-	Y8Yr5c9Ud0DxSNUoGRrb+d/gAWN1NOPy4Vilf4hpf3ZYZphVPwBHKf1vt2Q62n1R2b/blqmURXnnN
-	IeKabVeW+2Z/XfUlTg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tqgi3-003XFb-2A;
-	Fri, 07 Mar 2025 23:02:27 +0000
-From: linux@treblig.org
-To: sre@kernel.org,
-	linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 3/3] power: supply: Remove unused set_charged method
-Date: Fri,  7 Mar 2025 23:02:25 +0000
-Message-ID: <20250307230225.128775-4-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250307230225.128775-1-linux@treblig.org>
-References: <20250307230225.128775-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kf17KF7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F571C4CEE5;
+	Fri,  7 Mar 2025 23:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741388627;
+	bh=eOeoPHHhOecDDOaLcxlv3LqvTCf2AZDIMmiBVHjkJ10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kf17KF7cfebveOhha6ljUmsdmxK7riPcLcAxEbmN9dErUst1LwSQZWgBiMmFeUmJP
+	 Zrtca0saI2d2cDaZGu2P2SWBTLRRUgVPcUVk4UdTRzkenOLZje58+F6YUzWSdxiPxQ
+	 CwkklJ1axuRDVVIub/yL8tBy1gUOtftIrqUPRtO4lvkKqwPubwacLYhdEYKWynUQfs
+	 FGGpezoPDbtRKwKI1BU+5LHkXaylxs7l/1aLlbBVfTFcdRg6Fa+oWfsguaYoAryra8
+	 nPau4YIY0FfmhiYrsw/BXBtpRW9i48iYaBl1j4fTkia8URDOlExnumouV7gVpcrjAi
+	 Jr2PQ3ZMHbziA==
+Date: Sat, 8 Mar 2025 00:03:44 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Benjamin Segall <bsegall@google.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrey Vagin <avagin@openvz.org>,
+	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [patch V2 08/17] posix-timers: Rework timer removal
+Message-ID: <Z8t7UJUd9SLT0Ytj@pavilion.home>
+References: <20250302185753.311903554@linutronix.de>
+ <20250302193627.416552300@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250302193627.416552300@linutronix.de>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Le Sun, Mar 02, 2025 at 08:36:56PM +0100, Thomas Gleixner a écrit :
+> --- a/include/linux/posix-timers.h
+> +++ b/include/linux/posix-timers.h
+> @@ -240,6 +240,13 @@ static inline void posixtimer_sigqueue_p
+>  
+>  	posixtimer_putref(tmr);
+>  }
+> +
+> +static inline bool posixtimer_valid(const struct k_itimer *timer)
+> +{
+> +	unsigned long val = (unsigned long)timer->it_signal;
+> +
+> +	return !(val & 0x1UL);
+> +}
+>  #else  /* CONFIG_POSIX_TIMERS */
+>  static inline void posixtimer_sigqueue_getref(struct sigqueue *q) { }
+>  static inline void posixtimer_sigqueue_putref(struct sigqueue *q) { }
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2092,7 +2092,7 @@ static inline void posixtimer_sig_ignore
+>  	 * from a non-periodic timer, then just drop the reference
+>  	 * count. Otherwise queue it on the ignored list.
+>  	 */
+> -	if (tmr->it_signal && tmr->it_sig_periodic)
+> +	if (posixtimer_valid(tmr) && tmr->it_sig_periodic)
+>  		hlist_add_head(&tmr->ignored_list, &tsk->signal->ignored_posix_timers);
+>  	else
+>  		posixtimer_putref(tmr);
+> --- a/kernel/time/posix-timers.c
+> +++ b/kernel/time/posix-timers.c
+> @@ -279,7 +279,7 @@ static bool __posixtimer_deliver_signal(
+>  	 * since the signal was queued. In either case, don't rearm and
+>  	 * drop the signal.
+>  	 */
+> -	if (timr->it_signal_seq != timr->it_sigqueue_seq || WARN_ON_ONCE(!timr->it_signal))
+> +	if (timr->it_signal_seq != timr->it_sigqueue_seq || !posixtimer_valid(timr))
 
-The previous patches in this series removed the only caller
-and only setter of this method.
+Hmm, should it still warn here? ie: WARN_ON_ONCE(!posixtimer_valid(timr)) ?
 
-Remove it.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- include/linux/power_supply.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 5afc5946eb03..92da3deba342 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -274,7 +274,6 @@ struct power_supply_desc {
- 	int (*property_is_writeable)(struct power_supply *psy,
- 				     enum power_supply_property psp);
- 	void (*external_power_changed)(struct power_supply *psy);
--	void (*set_charged)(struct power_supply *psy);
- 
- 	/*
- 	 * Set if thermal zone should not be created for this power supply.
--- 
-2.48.1
-
+Thanks.
