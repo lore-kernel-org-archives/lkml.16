@@ -1,122 +1,175 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2048.outbound.protection.outlook.com [40.107.220.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372D51624EA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 01:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741311420; cv=none; b=pgLCrey+zNB2974Lp9zdYxF5Vwt2tepiXm/8NE72C/MQYAlrP1EL9dWPGqKN3qcaQTEu0hr7F5pJN5bf7ey4x8loVq/wlGvqaKuiVfz/FBedUpDnqLJfn4uWDEidbL83jAB93y9mgX0l7BgLaxmW1rA8acS8hIvUgOpBHgQT2dY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741311420; c=relaxed/simple;
-	bh=hynBK5ci0mmenefSpa3rf+UPEFKEMucX8dvETFHdGtw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JSMupWDVzvlXUR8HZIIS5QR63SgAcmZyy8BbCMHqg6kPtqTDouGl+OQZ9OefAyqT+QTcxq0Euasux2EuETVUmb0be454LgvMqg+/X2aiBua7TdKdnNzDvfHbOzKiImWqw/hwlqeQtOS6ojFBoQtpIV/qTL4mn4lB76VC/1szoRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ndvuv/39; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361C76BB5B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 01:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741311460; cv=fail; b=tHFl6aqz3EYP+lUpo27rXzeCsqkm4eUVtKlVMT1qJoniDYBmo8YHO+wZjjMWXLltjhT9za+sMnkS4FzzztVRicaj9C3vZ9DD7nO0Wy2zrGhq2iDKrA+yKkf84kpOOeFT8VU0TzaXl+39QMfV5OP71bRScq8IYRYnXFFdhI3RHAo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741311460; c=relaxed/simple;
+	bh=2QeT1vjQgY6/6wnq96yhq03ZUC7zdiCnMiT0vHeRwfE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xd21lCFPx0p0EcWw8PbLSBRVLA99Tk/vbSCbzuCHQxcHIh/lJ+ru/tLjgDBdXnkmcNehXbQWs0A9dDDqgJFKCnzh/oMhOLZ5ZfZD2jFS3oIDiPqAdweLCml8De5mDuBVoUNu2S4J2RGr1d4TCqgIYP188UBQVLLBz2zPEnwsFl4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yB5r9No/; arc=fail smtp.client-ip=40.107.220.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndvuv/39"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff80290debso168165a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 17:36:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741311418; x=1741916218; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wTriowciTheXks21K11k33c3PkgL7Rz/DhFB55dadmc=;
-        b=ndvuv/39WWqVZAG8Vg1CLV4OH16/y+MAsXFUjMNzqIX63KBdwQZ7D25zIMMsZbsDFw
-         mvf0AAbXh/GDl7Utov9+daEOa3iFNKjdgdcwLf4FILG1rLXFCLI03V1I1HBO+I704VgS
-         dUsbFayUrO8ALR5NfpvwWH+nkwE4wgK7Ag03Gs/n74a3APZVXTLk64KOeaHLktcaJRaI
-         iTFS1x1lrq79coFYPdQwiaJzPswTf63Jrrkk346Z1etFnUwRXFSkJAeEfFxL48l7oGKz
-         hSRtpjs7kOtAvapPArZll5T4EMPVJNdNn+xKMghJfpTBc4vEte8SSYF3k0KpEqA+yf7F
-         vhug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741311418; x=1741916218;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wTriowciTheXks21K11k33c3PkgL7Rz/DhFB55dadmc=;
-        b=BJbHMH4H1dpcjVOeIDDQmh8oeVPiLNMNpqOI7LkG69Z1SN5IEMyeWaDgfly1FR+9ov
-         8fpfMSFeUuUceaEIGQM/w5uMDNm3p4Mju3eap3rIXW5I2pzLiTtaKEW/wtACkAn9iwxs
-         v9tdRiJEUykX8adxT+304LYEKVHXArnnm/0TLLigwWV5NbBV8lt+uh7NVEK9Ljb3MuwD
-         h+tWQDnL3mKuDBFGCtzE2ZvzmocqV7lHgOgI6qwycG6iMVsJ2lAnlDQF4+3DqopqZ+qx
-         JX8jw1YvsmGidjfmV2nzxlJdIAbQk8j/WpSesYT7i6lFum6oPnwoVvO+7I+H3eIE2Hc8
-         5RSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWR8YcCl8uHN4IdFP8I+U6db1bzGNd7e9ZdgfFMtrjb2ECwN7GTcAUSAlhv5GzyoRC+cDEdkDsARkaScTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK6qtkg30uU1cFfqsg/jcbbZ/UYTodVuBlYrI9k96tFwB7j+UP
-	ezPb5asP2iqZE2ZQWstky+GM5WdViLh/NekXbvfFQCRA6cj4lAgwEY193lpbnN9no1mIaMXyQ4u
-	Vd73px6EFo6uRjqtHACDXMRnEJ2I=
-X-Gm-Gg: ASbGncuQFa8CaZs2EtYeEYimnR2ZXohdgW6shL2go9UMjYUa0A8AJ5OJMqISzvmvki7
-	00+4J7sRTrkL+9lkzLR0IaR63KDglHEDePyajAnzdXYSmMBciLD9w+rHiK/1gC0eFnpQFm62tQ7
-	QJqbJcY9H1b8XBtuCiGreWsD5xGA==
-X-Google-Smtp-Source: AGHT+IFDfqoK0c45wa683mLaBwbf1LPe7kKFeArIjt249Z6gX5cNqXAvG0FCrWjvLJ9XhVoyZ28PVRZzl088uXIRi14=
-X-Received: by 2002:a17:90b:4c:b0:2ff:6a5f:9b39 with SMTP id
- 98e67ed59e1d1-2ff7ce844b6mr2717613a91.18.1741311418271; Thu, 06 Mar 2025
- 17:36:58 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yB5r9No/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IxW2YO5Qz9+00yeOE7tW0TikFIEZaTb0pjDWQEsoOd+1veJ7WQjZgBg8BX1i0vcvINEUD6l9usdVKNdGPTCphBiF3m9Py3It+sO9XSdsDX6tfMETvi1a9gIhkYXVGpkhBSH9hkoWFzWX3bFoiDI9CCpCD6ORHSZFqoL1uULA9sv+FpMBM5eHjSzDZZoyuMM3vA5Oh9htqt8C21OnFJntg7oJ8IeWgQDp8wmitpk/m3BDw4Ojw6WMjSgyf+8YDFtH5lBS39JA/yasxiUIEk/O4czU+ndLw8L0YNwyHKi/nifVRGvPxjLSyN4twPoLigNCoyKotm6nMo+u86g8ZHsT0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xNV+q9wJCK1OCo5VCm+z/orQIJMnWAXrpYHGe2YgTGQ=;
+ b=WczLXSY3V53zbVckmaAHwqJtmLSFULaclawPf6hKOMV549VOwHDxNwa278HTj3cZJlfF8/QHEco1IwfkvVSBBHyCEaYWG8zpFBhejTRmLIJrJLxsWoOEaaX5m6hPxtLaE5dTjTMKNxzmSUHtnqn67t2aKeMenhaySCNrzFRnmdJ1sKVtwQnm1AehObCH5v/HelPSXH+fV0pJIPdniiPbXIOe6q7Sqcym44vtgo83s7U/D00fl5RGG3JWyFNe0MZ7jtWTCkAHemx5zi68xX0Z1/F1nvLkKdzOjud4auxG6a2Oy5xEWUKLhVu9Ew5TtP1UYDrANbxV0J4qgn4XDvJWnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xNV+q9wJCK1OCo5VCm+z/orQIJMnWAXrpYHGe2YgTGQ=;
+ b=yB5r9No/meF+O6mS4bR43gui5EPjZYI5mCuj8tLkjQVlTGvDnNIB5VBdvJDETqacGGSQa5Fp3SaTKl3Q+8sfdoBfmb/TgUCz/2QNLWUJD5Q4hyn3m2Upbojq/v5jrtAlqjb9yCB+pM1XOLgpMg+tnL0xWGUbABDM1rzjwxZRRm0=
+Received: from MW4PR03CA0007.namprd03.prod.outlook.com (2603:10b6:303:8f::12)
+ by CH1PPFC596BECF8.namprd12.prod.outlook.com (2603:10b6:61f:fc00::621) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Fri, 7 Mar
+ 2025 01:37:33 +0000
+Received: from SJ1PEPF00001CDF.namprd05.prod.outlook.com
+ (2603:10b6:303:8f:cafe::d6) by MW4PR03CA0007.outlook.office365.com
+ (2603:10b6:303:8f::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Fri,
+ 7 Mar 2025 01:37:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CDF.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.15 via Frontend Transport; Fri, 7 Mar 2025 01:37:33 +0000
+Received: from aiemdee.l.aik.id.au (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Mar
+ 2025 19:37:25 -0600
+From: Alexey Kardashevskiy <aik@amd.com>
+To: <x86@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	"Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Tom Lendacky
+	<thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>, Ard Biesheuvel
+	<ardb@kernel.org>, Pavan Kumar Paluri <papaluri@amd.com>, Ashish Kalra
+	<ashish.kalra@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, Michael Roth
+	<michael.roth@amd.com>, Kevin Loughlin <kevinloughlin@google.com>,
+	"Kuppuswamy Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Brijesh Singh <brijesh.singh@amd.com>, Liam Merwick
+	<liam.merwick@oracle.com>, "Alexey Kardashevskiy" <aik@amd.com>
+Subject: [PATCH 0/2] x86/sev: Rework SNP Guest Request to fix race
+Date: Fri, 7 Mar 2025 12:36:58 +1100
+Message-ID: <20250307013700.437505-1-aik@amd.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211063028.382169-1-linchengming884@gmail.com>
- <20250211063028.382169-2-linchengming884@gmail.com> <e5458a0e-528f-44ec-a0f0-543472ad3b85@linaro.org>
- <bb9f8a80-4662-4ab1-b9ad-6899977c3827@linaro.org> <CAAyq3SamyhtCkd47939dKWCZN3ejaDvM6EJzwizWVqhNW=27bA@mail.gmail.com>
- <d674f1bc-b596-46d5-b56d-1e2fb509c684@linaro.org>
-In-Reply-To: <d674f1bc-b596-46d5-b56d-1e2fb509c684@linaro.org>
-From: Cheng Ming Lin <linchengming884@gmail.com>
-Date: Fri, 7 Mar 2025 09:32:10 +0800
-X-Gm-Features: AQ5f1Jrxq-TXvrmL_cFEaNENEQcXUM3LYse8-YyMWE0akxocxyXKUPEQwjwkMIQ
-Message-ID: <CAAyq3Sb3Qt-uhb+zvUpFWhv6gqq+umAYe3nhpiCDH=7=g8u78g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] mtd: spi-nor: macronix: Add post_sfdp fixups for
- Quad Input Page Program
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: pratyush@kernel.org, mwalle@kernel.org, miquel.raynal@bootlin.com, 
-	richard@nod.at, vigneshr@ti.com, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, alvinzhou@mxic.com.tw, leoyu@mxic.com.tw, 
-	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDF:EE_|CH1PPFC596BECF8:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d182531-f476-461a-3772-08dd5d18a1d7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?g1OlXuc//86VOfuv0gBdE0cGNGKYmTsYTnfJTpj69lRgH244Kq5qlztMCfdh?=
+ =?us-ascii?Q?BWVNMp0MzLqaBIF5tn0CeQXtUtG9CsOZKHhI75ssm3oeu+B6WK2lgEmt+/lq?=
+ =?us-ascii?Q?WcS9pLzmdPUouC710EF0E5/7N/hbDpzfaHSFRz47sGuKwd2mW+FwrdohN4Y9?=
+ =?us-ascii?Q?611VVlFm/ZRPfmRNrB5awKbI2EPZ9bZj6HncCDhBzOSg3HDZ9PPcUUgb7syd?=
+ =?us-ascii?Q?/5EGwe87cZoGDY4ng2AT2rjF/5K3gsrurWlyITAaXO6mrCTkh5zx0cTKt4En?=
+ =?us-ascii?Q?TfXftPtiQ5pRy4dstnX5rJYRCbIBEtxauETXLti+bzDubnl/ol1IntInKebV?=
+ =?us-ascii?Q?GlMK4BnZRXcLAYG2T6ptl2mY4AJLl2oCHbJLRsX9G6QDbp9j5KpdguJ4Rxdj?=
+ =?us-ascii?Q?M7EnJ/MYZwFij4Og64bzUxsulGiBaiahiP+YLyG5h53Q6Q1GR3XWt8tPQIxo?=
+ =?us-ascii?Q?Ni9JeKYqYcBmU7L4vgPwdLMayg8BE7EBzm6HSxQ3+JXbUXs08S0TxbFKlI7l?=
+ =?us-ascii?Q?zp9/JSyXBskTOY9pzTSJvnqYHxcQGB5unYzWU6SlBFXWy5NIoPCqkq2wdaCx?=
+ =?us-ascii?Q?+wUq32wcrCGn1Eeaw1BXH7eANCcsGGSYbcq4j9KpxUi96bRb/uuPMNFPaIk5?=
+ =?us-ascii?Q?i0WhfyScXa05KB5yTDUS/qWXp5tj5o3mE+7gDPY18ggjxeeTRsBpqc9/ZQuM?=
+ =?us-ascii?Q?y8mbFLsU6v49oM8qdRv7kXlXcj6rjerns8Jpq2HCScrdgEVo+s7fuTWGt790?=
+ =?us-ascii?Q?TdSI0WO4d/VEX+Q971W6QWLVSpzvfPQAvsWSZJsKJ4z/T3qw/1faZ4eQRv3t?=
+ =?us-ascii?Q?GtB7EnLE09pBU5y+CFGQDe079Q2s+GqYiVNyKRome6kBYU6SUZIxNjBOOgg7?=
+ =?us-ascii?Q?1Ajua5uPcDc5N7SN4T/wnUL7ncfZdVQX/Cvwl6kvGEQTq1GfnFdoN+G56CKx?=
+ =?us-ascii?Q?Lc7s+DPPbmL3MT2lDO5ndEQzjobXAglpWXBR4GqEQm6AIyDlY2oEr7v/KrH8?=
+ =?us-ascii?Q?WRZtVzInTT4D7iVyOAB0cFifwVcvmwlG7PHtH71PlGGeNcVMAA9MbSrs8Bk0?=
+ =?us-ascii?Q?vdRPURBO3WpvsUttpqZDv7P+LhfQhPQ6Ul/Ccaw6I+qqWiPPqkJF6quBEOMv?=
+ =?us-ascii?Q?Cn9bfT1jLM6o8YwN54BAay9Avjfare98Ue2MYjtelmhnUIUy1Xw3xKNvlMEy?=
+ =?us-ascii?Q?e14UJQMVw8moRvQ5eABq/UMvZmPRUBtrcfcFsBryPPqN4Qtxa9gwuX1bW1Pp?=
+ =?us-ascii?Q?FJPWsr1SAT5rqQh+7A4i1NdReJYT8hIhD9h2Jx0pm0DMqO2YHulfW0udxVV1?=
+ =?us-ascii?Q?u6svmUdAsZHZ2eueAZ6T1YFOTykFXRV8KUP9sF3gUxYZ1CbFlEXdDIsTZDux?=
+ =?us-ascii?Q?H1tbKneTJhraDv3OivOPp7WoQsZqHbhTi0Z0L/lsGqYJHAHtD7iFtPBdKyT8?=
+ =?us-ascii?Q?T0TGk/aQIArDqnqyAetPI/wd2cSdpB9q2EcqYxEl39T9N+VLyb0xPCMFrZUK?=
+ =?us-ascii?Q?FfN4xys5z3y/Tm0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 01:37:33.0750
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d182531-f476-461a-3772-08dd5d18a1d7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CDF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFC596BECF8
 
-Hi Tudor,
+Guest Request is a mechanism for a SNP VM to talk to the PSP described
+in the GHCB spec. GHCB allows one request in flight at the time and
+there is a mutex for it: msnp_cmd_mutex. Unfortunaty series of events
+led to use of shared data outside of this mutex area and recent commit
+ae596615d93d ("virt: sev-guest: Reduce the scope of SNP command
+mutex") broke it.
 
-Tudor Ambarus <tudor.ambarus@linaro.org> =E6=96=BC 2025=E5=B9=B43=E6=9C=886=
-=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:42=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
->
->
-> On 3/6/25 11:39 AM, Cheng Ming Lin wrote:
-> > Hi Tudor,
-> >
-> > Tudor Ambarus <tudor.ambarus@linaro.org> =E6=96=BC 2025=E5=B9=B43=E6=9C=
-=886=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:01=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> >>
-> >>
-> >>
-> >> On 2/11/25 7:20 AM, Tudor Ambarus wrote:
-> >>> On 2/11/25 6:30 AM, Cheng Ming Lin wrote:
-> >>>>              .fixup_flags =3D SPI_NOR_4B_OPCODES,
-> >>>> +            .fixups =3D &macronix_qpp4b_fixups,
-> >>> For your next patch that'll drop the redundant flash info fields, you
-> >>> can drop SPI_NOR_4B_OPCODES as well if these flashes define the 4bait
-> >>> sfdp table.
-> >>
-> >> Any plan in doing this, please?
-> >
-> > Sorry for the late reply.
-> >
-> > This matter is currently in progress. Since collecting all the chips
-> > will take some more time, the project has been delayed. Once I
-> > have all the chips, I will start the verification process immediately.
-> > Thanks for the reminder.
-> >
->
-> Thanks, Cheng. Switching them one by one is fine too.
+The shared data includes:
 
-Got it, no problem. I will start the verification with the
-chips I have on hand.
+- request structures in snp_guest_dev which was not a problem when
+they were introduced as they were put on stack but db10cb9b5746
+("virt: sevguest: Fix passing a stack buffer as a scatterlist target")
+moved them to snp_guest_dev so they became shared but there was
+a mutex so it was ok (not anymore);
 
-Thanks,
-Cheng Ming Lin
+- data pages and the number of them in Extended Guest Request.
+
+So here are 2 patches. Reverting ae596615d93d is not an easy option as
+the code developed far enough (the mutex moved and secure TSC now
+calls the PSP too) to make it rather large.
+
+
+This is based on sha1
+277255aa69e5 Ingo Molnar "Merge branch into tip/master: 'x86/sev'".
+
+Please comment. Thanks.
+
+
+
+Alexey Kardashevskiy (1):
+  virt: sev-guest: Move SNP Guest Request data pages handling under
+    snp_cmd_mutex
+
+Nikunj A Dadhania (1):
+  virt: sev-guest: Allocate request data dynamically
+
+ arch/x86/include/asm/sev.h              |  6 +-
+ arch/x86/coco/sev/core.c                | 23 +++-----
+ drivers/virt/coco/sev-guest/sev-guest.c | 58 +++++++++++++++-----
+ 3 files changed, 54 insertions(+), 33 deletions(-)
+
+-- 
+2.47.1
+
