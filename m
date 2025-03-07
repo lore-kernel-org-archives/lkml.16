@@ -1,105 +1,160 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAFEE191461;
-	Fri,  7 Mar 2025 09:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5641A8F97;
+	Fri,  7 Mar 2025 09:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741340387; cv=none; b=j7PlX/xqwcoxySoILHbG4hsLVO9AZinzfV+vf+33C8Ci+oFFLnnCGjFHPQ7rK8vs+TeJ65h06aOIGVQy+ol2Mx0J0t0ZIAc/p+Vj6nSZPtfKfBIr+arX16LbO6Y/04kOa5qqw+8QKCszn2u/HxUJ59mbOZO/ziiumsVTRlDAAQ4=
+	t=1741340492; cv=none; b=RFG9b4k9da65RdauouB8ggfGXSpYMBkXElxRz/hEssRaKo/JziAxOSuhWXb6IylxfhYN1u49VLuWw9XYaoOwBR6Xh/Ai2L0yuobU5jcsfv4qzwOz1EOcmkcib6mD6MHhnl95lPbb+53D3zP7CFzWUzwhpqUmmunsXiC1Ks2LcvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741340387; c=relaxed/simple;
-	bh=erzpsiMOtlrYBxd+7HW4avLKiPxeS/41DggWsa42pHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jRiGyx78pJhCSTGlOtEwtNFSnqweU7zZ3kI+vo01jS3AaFE8rPhQ4X/QUey2o+Szx7BZ2igeS36cG9UJ4bkGVJkuLE7dc/HXBkkcDbLtMhmhhN3RP1sse3lbVGfDvFDR5tLSh7WfcCeTHQR00cTT51CvZe/oGapKt4rqZim8dm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5C37150C;
-	Fri,  7 Mar 2025 01:39:56 -0800 (PST)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE8603F66E;
-	Fri,  7 Mar 2025 01:39:42 -0800 (PST)
-Date: Fri, 7 Mar 2025 09:39:34 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] firmware: arm_scmi: Balance device refcount when
- destroying devices
-Message-ID: <Z8q-1jOng_nYP445@pluto>
-References: <20250306185447.2039336-1-cristian.marussi@arm.com>
- <Z8q9l0vDTLpbo8UR@google.com>
+	s=arc-20240116; t=1741340492; c=relaxed/simple;
+	bh=sHnV9GEozz+Opv61zRjqJ4zv0AEgNaF9oXU1zOBaCs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ndrwAd1fq7Tsl7riwMoA7E/TYOw/91KKBiHw8TrW5ntAe3r89CEiJrCIsb2RaPziauW74h0qYI1CJ1ZwluBRT7mHQ/B3XozrtKFfms8QfQ9/P+ZkjxsjWd5RjR3UMDbrVSDB2uEAReCvP3Wk0J9vcoiKQmHtrXChmT4NvNW29k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z8LQ532WYz1R6Dn;
+	Fri,  7 Mar 2025 17:21:33 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 59CC61402CE;
+	Fri,  7 Mar 2025 17:23:12 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 7 Mar 2025 17:23:11 +0800
+Message-ID: <180818a1-b906-4a0b-89d3-34cb71cc26c9@huawei.com>
+Date: Fri, 7 Mar 2025 17:23:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8q9l0vDTLpbo8UR@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
+ only NULL elements
+To: NeilBrown <neilb@suse.de>
+CC: Qu Wenruo <wqu@suse.com>, Yishai Hadas <yishaih@nvidia.com>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum
+	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>, Josef
+ Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Gao Xiang
+	<xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>,
+	Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+	<anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton
+	<jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Luiz Capitulino
+	<luizcap@redhat.com>, Mel Gorman <mgorman@techsingularity.net>, Dave Chinner
+	<david@fromorbit.com>, <kvm@vger.kernel.org>,
+	<virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-mm@kvack.org>, <netdev@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>
+References: <> <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
+ <174129565467.33508.7106343513316364028@noble.neil.brown.name>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <174129565467.33508.7106343513316364028@noble.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-On Fri, Mar 07, 2025 at 09:34:15AM +0000, Alice Ryhl wrote:
-> On Thu, Mar 06, 2025 at 06:54:47PM +0000, Cristian Marussi wrote:
-> > Using device_find_child() to lookup the proper SCMI device to destroy
-> > causes an unbalance in device refcount, since device_find_child() calls an
-> > implicit get_device(): this, in turns, inhibits the call of the provided
-> > release methods upon devices destruction.
-> > 
-> > As a consequence, one of the structures that is not freed properly upon
-> > destruction is the internal struct device_private dev->p populated by the
-> > drivers subsystem core.
-> > 
-> > KMemleak detects this situation since loading/unloding some SCMI driver
-> > causes related devices to be created/destroyed without calling any
-> > device_release method.
-> > 
-> > unreferenced object 0xffff00000f583800 (size 512):
-> >   comm "insmod", pid 227, jiffies 4294912190
-> >   hex dump (first 32 bytes):
-> >     00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-> >     ff ff ff ff ff ff ff ff 60 36 1d 8a 00 80 ff ff  ........`6......
-> >   backtrace (crc 114e2eed):
-> >     kmemleak_alloc+0xbc/0xd8
-> >     __kmalloc_cache_noprof+0x2dc/0x398
-> >     device_add+0x954/0x12d0
-> >     device_register+0x28/0x40
-> >     __scmi_device_create.part.0+0x1bc/0x380
-> >     scmi_device_create+0x2d0/0x390
-> >     scmi_create_protocol_devices+0x74/0xf8
-> >     scmi_device_request_notifier+0x1f8/0x2a8
-> >     notifier_call_chain+0x110/0x3b0
-> >     blocking_notifier_call_chain+0x70/0xb0
-> >     scmi_driver_register+0x350/0x7f0
-> >     0xffff80000a3b3038
-> >     do_one_initcall+0x12c/0x730
-> >     do_init_module+0x1dc/0x640
-> >     load_module+0x4b20/0x5b70
-> >     init_module_from_file+0xec/0x158
-> > 
-> > $ ./scripts/faddr2line ./vmlinux device_add+0x954/0x12d0
-> > device_add+0x954/0x12d0:
-> > kmalloc_noprof at include/linux/slab.h:901
-> > (inlined by) kzalloc_noprof at include/linux/slab.h:1037
-> > (inlined by) device_private_init at drivers/base/core.c:3510
-> > (inlined by) device_add at drivers/base/core.c:3561
-> > 
-> > Balance device refcount by issuing a put_device() on devices found via
-> > device_find_child().
-> > 
-> > Reported-by: Alice Ryhl <aliceryhl@google.com>
-> > Closes: https://lore.kernel.org/linux-arm-kernel/Z8nK3uFkspy61yjP@arm.com/T/#mc1f73a0ea5e41014fa145147b7b839fc988ada8f
-> > CC: Sudeep Holla <sudeep.holla@arm.com>
-> > CC: Catalin Marinas <catalin.marinas@arm.com>
-> > Fixes: d4f9dddd21f3 ("firmware: arm_scmi: Add dynamic scmi devices creation")
-> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+On 2025/3/7 5:14, NeilBrown wrote:
+> On Thu, 06 Mar 2025, Yunsheng Lin wrote:
+>> On 2025/3/6 7:41, NeilBrown wrote:
+>>> On Wed, 05 Mar 2025, Yunsheng Lin wrote:
+>>>>
+>>>> For the existing btrfs and sunrpc case, I am agreed that there
+>>>> might be valid use cases too, we just need to discuss how to
+>>>> meet the requirements of different use cases using simpler, more
+>>>> unified and effective APIs.
+>>>
+>>> We don't need "more unified".
+>>
+>> What I meant about 'more unified' is how to avoid duplicated code as
+>> much as possible for two different interfaces with similar‌ functionality.
+>>
+>> The best way I tried to avoid duplicated code as much as possible is
+>> to defragment the page_array before calling the alloc_pages_bulk()
+>> for the use case of btrfs and sunrpc so that alloc_pages_bulk() can
+>> be removed of the assumption populating only NULL elements, so that
+>> the API is simpler and more efficient.
+>>
+>>>
+>>> If there are genuinely two different use cases with clearly different
+>>> needs - even if only slightly different - then it is acceptable to have
+>>> two different interfaces.  Be sure to choose names which emphasise the
+>>> differences.
+>>
+>> The best name I can come up with for the use case of btrfs and sunrpc
+>> is something like alloc_pages_bulk_refill(), any better suggestion about
+>> the naming?
 > 
-> I was not able to reproduce the memory leak after applying this patch.
+> I think alloc_pages_bulk_refill() is a good name.
 > 
-> Tested-by: Alice Ryhl <aliceryhl@google.com>
+> So:
+> - alloc_pages_bulk() would be given an uninitialised array of page
+>   pointers and a required count and would return the number of pages
+>   that were allocated
+> - alloc_pages_bulk_refill() would be given an initialised array of page
+>   pointers some of which might be NULL.  It would attempt to allocate
+>   pages for the non-NULL pointers and return the total number of
 
-Thanks a lot for testing (and for the report) !
+You meant 'NULL pointers' instead of 'non-NULL pointers' above?
 
-Cristian
+>   allocated pages in the array - just like the current
+>   alloc_pages_bulk().
 
+I guess 'the total number of allocated pages in the array ' include
+the pages which are already in the array before calling the above
+API?
+
+I guess it is worth mentioning that the current alloc_pages_bulk()
+may return different value with the same size of arrays, but with
+different layout of the same number of NULL pointers.
+For the same size of arrays with different layout for the NULL pointer
+below('*' indicate NULL pointer), and suppose buddy allocator is only
+able to allocate two pages:
+1. P**P*P: will return 4.
+2. P*PP**: will return 5.
+
+If the new API do the page defragmentation, then it will always return
+the same value for different layout of the same number of NULL pointers.
+I guess the new one is the more perfered behavior as it provides a more
+defined semantic.
+
+> 
+> sunrpc could usefully use both of these interfaces.
+> 
+> alloc_pages_bulk() could be implemented by initialising the array and
+> then calling alloc_pages_bulk_refill().  Or alloc_pages_bulk_refill()
+> could be implemented by compacting the pages and then calling
+> alloc_pages_bulk().
+> If we could duplicate the code and have two similar but different
+> functions.
+> 
+> The documentation for _refill() should make it clear that the pages
+> might get re-ordered.
+
+Does 'the pages might get re-ordered' mean defragmenting the page_array?
+If yes, it makes sense to make it clear.
+
+> 
+> Having looked at some of the callers I agree that the current interface
+> is not ideal for many of them, and that providing a simpler interface
+> would help.
+
++1
+
+> 
+> Thanks,
+> NeilBrown
