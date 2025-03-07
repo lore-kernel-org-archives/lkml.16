@@ -1,241 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256AD21018A;
-	Fri,  7 Mar 2025 10:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B68213249;
+	Fri,  7 Mar 2025 10:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741342687; cv=none; b=ZiCON1dQ3lDpt8CNTVo6sRk27HsojLaGdf5SvwYUAy+EiBO04Ztgz3BI08zqa/7ixQJO+y/mLB8MDTlvwkfd8t0DzRniQVBb1VNy8doRKa4OCpjVXNexe4L38ZfNRDraeuVTlWhqUDBChtuTYsxCrzv28lMTaWH2X3hSI4J+LV4=
+	t=1741342689; cv=none; b=Oqd4Uz2JpbDOkqWGTOaoxbmlUV7zhHlviv68EvTtF/WSPordDx3wr8zKrawWWcO4zWq2VmOs+xr4w75MrSuFoqR7YNwan3+Av69nV+cS8Yp8Tw40DfCzGRcDmcc2tOSmt9zMwNws5SSOsJyMjmLTp+JmKhveWA3SBFfOW4Wbf2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741342687; c=relaxed/simple;
-	bh=ABhGBikH9BCW0TLtmE6DMbgMrWsR5JvOtiwNDeB6gPw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aZMDMwLEejdWXAjCnuseh2wvkjJhoDrUOm/5yHwPnTnqDmjF076bJyow2jCRcS9/OimAZzNB9wkmKPam9jKjF4bWRTPg8XNfbCvNXpiZKR+lqxG/nm07eRbi7h93P+jDonkRxQF7gB2OTUQTQDjpzbT2K4gSu+ME91dcjF1vjtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifN9keS7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741342689; c=relaxed/simple;
+	bh=VuUdpkHlmMFr7mbOhennh+/tErc6Jkpp5XmmJqVRPSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R3j0rb3/iznb5E16Qd2XJAoPHXBNm7J07oVBAchYX+78QRgu72rYsjYOfStkvoy6IFgafgHXIn3PqO7px1giGgIFZoFVJADgIAQn5X2Hp5wsMsoglsvaihaQKqLuGmhcWyUwCVOOgQN60Z/4A7zo7en57Tp2Z+2KDLm5fBjrqO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J4N8GxbI; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifN9keS7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C4C8C4CED1;
-	Fri,  7 Mar 2025 10:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741342686;
-	bh=ABhGBikH9BCW0TLtmE6DMbgMrWsR5JvOtiwNDeB6gPw=;
-	h=From:Subject:Date:To:Cc:From;
-	b=ifN9keS7r1dCImkvt2UXPzk3zYkE/yhO8/hKA3JALWQMELONrox5b1RFkDpySZOTA
-	 OwICFXN+Oqzu/gzf56rZTDayM2i+j2qRTORXxGok1n0+noCUTeaq5kLS/2Xq8fvMuX
-	 XNbvvQKIC2w/CRmaZm0Sg+wTmydm74j6AAvQXSeB6z3v7JXAEDeWOSnvmq2iio+Sk3
-	 NPOSJBcKo5gVDRhkxqAAvF36oLteLvd8PoDOrgFkS7tJWH28i9Sf5oEKshaiZZ1qX1
-	 Vh/aSfeLyo7zxP+m97yzpIp5olmiGSLAONJWdhb6HiAisEIZKuM1kHgEZQfdSd7aEf
-	 hEtjBHPiNZb5w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Subject: [PATCH v10 00/13] hrtimer Rust API
-Date: Fri, 07 Mar 2025 11:11:45 +0100
-Message-Id: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4N8GxbI"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39127512371so1035854f8f.0;
+        Fri, 07 Mar 2025 02:18:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741342686; x=1741947486; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3zujwTDTSnOftF9d4bbs2FCsfJL0He6fFCsD1C9TNw=;
+        b=J4N8GxbILYqfAZe1jkJlc2HqsbtBw048yA7x0etI0XsYomeBQgLssRT3zTNeSpuzlE
+         aImQfcOb+3O+Xgw38unUVwkN40hdebihLOVj69X4kUETpvGee+lSOPjB/e+J7L71YTlM
+         jXpO/INPR1M/jBNz78cGhoiTOTAp1jkOP01aIoTfxxAWijw1K5cRl8LuzTr38Gr+jEwM
+         cTvmk/OIF6Db+buY5KZqulEq3oAM2rVicL0XfeeYHdh45sg7B986fWSkiGzvaYbwBclV
+         Fbp4d3IEBLrAsz/kbgBiC4BfFky5jRn5SFK2Y2Nyza4JxcB2UYTyNyc+5Z9mB9hi0nNC
+         RoOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741342686; x=1741947486;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R3zujwTDTSnOftF9d4bbs2FCsfJL0He6fFCsD1C9TNw=;
+        b=OplpikSc6sa9/kKkH7S34yyWsdx2ayluYgol8QTds3Q8hWGq6HVXq2Lmyri069l9R2
+         YTmWbm342qROu7BWap5q2MM535+gJnjHIvz0eA/v3FVGgB4lAgkNGz/GOKJMBFCARdLD
+         CMM1nKCMeTVWGYMMNPx9F/fc5t0tmEsAPD49FXBgiHMwARv2ytZsNGq9+prW05hY+L5C
+         AdlZJE7vynpJm+HzZr12eb6oqjfBNMfxuavgQSAbRrNRyygMGoRBSBdjSTl5oPh+Tilr
+         64XYuLY5OSMYrC5EwZ/6JLNLjN5S8ovOCiVxVM0bTVUa6R0fdNoNQyVmwsexfTzwp/eh
+         sGHw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3afQUH6m7JHA024MMewo9YNTUGhhcsFG4AMsK7wUQAKw+LS94clt7iYYWUx66BPZtbZkKDlcJWxDC@vger.kernel.org, AJvYcCXyHMFla59A7VArduuDen6lh0099S/x34ZzvDS0/Spb0hdcQ3SWr8NvPje4Xas2RXH2pXco5yIJkqEZHNMz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/bN7vlR217gXAql+HBxsu851w7zBbli6BMiDWn3QJXAJS3YFu
+	u3mOetIFdvGBhDOq+Zxum6HSVfyt/3W7LQovVml86MloUo/XdIj7
+X-Gm-Gg: ASbGnctPVv2AKxMlR0Am9cQOoF/gFih9zj2KAGc9+Mp7Z7bU4mLziMY7S3apZCg17V5
+	JpmI6fJdGEyw1Ae8vyPo+psxu87ZVi95jCIGDx4U5eYHbuz0yFeBrc8gD3hMO1boRa23Eb9I02Y
+	ahH4550QyTohCf/KTt8pf+w7fd0vcOiWCzMxN6f5Yn04FZjdYdESudb/w+Jv+v2Kx/pQtiUd8W+
+	F7cJrsBoS1Smkc8LnrB0ov3/IIaJfOBzDhFvE7NnK5BsuD/mY9KVqztJ6zYYA3a0iaQd6EOgaml
+	ZCHvGMwhqvHpquFKIB3MuonGOJAPm5m4/1hRv5QDTBSpscc2eO2z8c9g3yZkBlse8MX36mDcvrL
+	4kxjsxmmU+Co9aL8GQHd/qTY=
+X-Google-Smtp-Source: AGHT+IGm5hWJ5tWDkJ/PuMrlbEjX8ZelRicivEZmMFKj0WGovJlJZMjjCvPcqwJRfFTKZqrD3ik87A==
+X-Received: by 2002:a5d:5f89:0:b0:390:f9d0:5e3 with SMTP id ffacd0b85a97d-39132d671b9mr1522906f8f.1.1741342686055;
+        Fri, 07 Mar 2025 02:18:06 -0800 (PST)
+Received: from ernest.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c103aa5sm4900262f8f.94.2025.03.07.02.18.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 02:18:05 -0800 (PST)
+From: ernestvanhoecke@gmail.com
+X-Google-Original-From: ernest.vanhoecke@toradex.com
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: [PATCH v2 0/2] ARM: dts: apalis/colibri-imx6: Add support for v1.2
+Date: Fri,  7 Mar 2025 11:17:47 +0100
+Message-ID: <20250307101758.27943-1-ernest.vanhoecke@toradex.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGHGymcC/3XSzW7bMAwH8FcJfJ4MkZIoqae+R7GDPuhG6Oy0s
- mtsKPruUxK0yeD5JhL4/0SA/OhmroXn7uHw0VVey1xOUytA/jh06RimZxYlt0aHEjVIsOJYlzJ
- yFasSKwlAURMKBJMTRSAfh65FXysP5ffFffrZ6mOZl1P9c/lmhXP3AkqNRnpNSvdISFYLENNYH
- kdewvwaEvf5pTvnV7xlPFhEtMr3gN6hNS0U+mOZcjzV58cXrhP/6tvzmlTfyf3xWyGF8cGaFKP
- WOWwUfVNQ0o6im0IpuqTIKnK4UcydsjuLaUpUOqEMCVO0G4W+FCMB5I5CTRksZCMHIP2fWexNQ
- al2FNsUcB60tmiU9xvF3SngdhTXFO0y5yjBcFQbxd8pqHcUf95RzCoOMjGl9I/yeT26ym/v7Ya
- X6+V1Mcws0mkcy/JwQAk6eRMGTsyKLaWggyFvKHhFjAqdGqSJDfv8CznjHqsYAwAA
-X-Change-ID: 20241017-hrtimer-v3-v6-12-rc2-215dc6b169bf
-To: Miguel Ojeda <ojeda@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
- Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, 
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7548; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=ABhGBikH9BCW0TLtmE6DMbgMrWsR5JvOtiwNDeB6gPw=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnysZy9oNu5RD5GxyCRQRQqc7AkJuPZ22o1C5WT
- GAKCkI2532JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ8rGcgAKCRDhuBo+eShj
- d1ujEACEwnJ/aD2jFO6tvnVKpX9Gj0AdtYWQ2jgxffjEJgMrm/j032h0A0N0KyqzF3ZYhvcFKBf
- mQ+e7lyAxVIEYg5OCup2qvcTkPj6eCJppEwq6N6Cde+sm147ySfcgi/DIJAc6lbAEkOJceKNw0b
- wgcYmLvwsswIj6AjwmYofGZnI475lW/vg50wa4MZeev5JswakG8qVqPefSGL0iSCp1Ps1P1nIIX
- Xc0/vro4Hs0fWDKrvsQcW/OEhB0DcqxbJ/64SzOLa9PQaHFDmO+NI5lrxPCST2OtgCWTXxf6Cmx
- X6+iUWsIOYAGRL9bQ63Jxms37Kq/uMuL3WapKlbPemKgYpdsAqm6lpvovI9hci4bD2X/yCHWKqq
- ghwiqOSoJWzoLh7jZTXoa7LmXL6WnB8Q6U4lUU9DRHRD/hVHI7lex8419nG9yIfATu5AieU5gVh
- 5xsaIG2tgEmXwfYAJGnE9vu/05NOlEdrnK7amltKClocdYnfXJ1clzHJtc4Rq2LUWw19U3qEB7r
- qMOiJ3/RCVhUWn8sP7953l6qHR+Qb6662j8RflB1lgNogX7MyZfN+DRWcy+dZVbjc5qGIJR6u8N
- v5yFEwhz9W5e/vG8Oy1P7sFfeDqHYe+JrzccrwMLbYu2eoIujNE9W61fZkTKy3niacgiHyb373m
- kH6Dc9Mo51ugMmA==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Transfer-Encoding: 8bit
 
-Add support for using the `hrtimer` subsystem from Rust code.
+From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
-Add support for timer mode and clock source configuration during timer
-initialization. Do not add examples and functionality to execute closures at
-timer expiration , as these depend on either atomics [3] or `SpinLockIrq` [4],
-which are still being worked on.
+Apalis/Colibri iMX6 V1.2 replaced the STMPE811 ADC/touch controller,
+which is EOL, with the TLA2024 ADC and AD7879 touch controller.
 
-This series is a dependency for unmerged features of the Rust null block driver
-[1], and for rkvms [2].
+Accurately describe the new hardware.
 
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/a.hindborg/linux.git/log/?h=rnull-v6.11-rc2 [1]
-Link: https://gitlab.freedesktop.org/lyudess/linux/-/tree/rvkms-wip [2]
-Link: https://lore.kernel.org/rust-for-linux/20240612223025.1158537-1-boqun.feng@gmail.com/ [3]
-Link: https://lore.kernel.org/rust-for-linux/20240916213025.477225-1-lyude@redhat.com/ [4]
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
-Changes in v10:
-- Use imperative language for all commit messages.
-- Spelling and grammar fixes for documentation.
-- Consistently use `this` as argument name for functions taking a pointer to
-  `Self`.
-- Correct module documentation describing states.
-- Derive some standard traits for configuration enums.
-- Rephrase documentation for function that refrain from crating references.
-- Use "has returned" rather than "has finished executing" when describing
-  handler termination.
-- Simplify documentation of `HrTimer::cancel`.
-- Fix a documentation bug in the description of `Sync` requirement for
-  `HrTimerPointer`.
-- Consistently use the wording "contains" about types that contain another type.
-- Remove `OFFSET` from `HasHrTimer`.
-- Use direct mapping for enumerations where applicable.
-- Remove `RUST_HRTIMER` kconfig.
-- Add Frederic Weisbecker and Lyude Paul as reviewers.
-- Add Thomas Gleixner and Anna-Maria Behnsen as reviewers.
-- Change `ClockSource` to `ClockId` and move to `time` module.
-- Add scm tree to maintainer entry.
-- Add a note about effects of timer operations concurrent with cancel operation.
-- Update documentation for CLOCK_REALTIME and CLOCK_TAI.
-- Link to v9: https://lore.kernel.org/r/20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org
+v1.1 of these SoMs is still described by the following DTSI files:
+imx6qdl-apalis.dtsi
+imx6qdl-colibri.dtsi
 
-Changes in v9:
-- Hide `From` conversions for opaque enums.
-- Add kconfig entry for rust hrtimer API.
-- Move `CallbackTargetParameter` to `RawHrTimerPointer`
-- Shorten first paragraphs for clock source descriptions.
-- Link `HrTimerHandle::cancel` in docs.
-- Clarify exclusive/shared access to callback parameter in docs.
-- Improve documentation for functions that avoid creating references.
-- Expand safety requirement for `HasHrTimer::start`.
-- Update module level documentation and diagram.
-- Use `NonNull` to store pointer in BoxHrTimerHandle.
-- Add a note to `HrTimerHandle` safety requirement.
-- Link to v8: https://lore.kernel.org/r/20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org
+The STMPE811 touchscreen controller is no longer disabled by default.
+The STMPE811 is self contained within the SoM, therefore, disabling it
+is not the correct default behavior.
 
-Changes in v8:
-- Publicly expose timer handles.
-- Link to v7: https://lore.kernel.org/r/20250203-hrtimer-v3-v6-12-rc2-v7-0-189144725399@kernel.org
+v1.2 is now supported by a DTSI that modifies v1.1:
+imx6qdl-apalis-v1.2.dtsi
+imx6qdl-colibri-v1.2.dtsi
 
-Changes in v7:
-- fix a typo in commit message for "rust: time: Add Ktime::from_ns()"
-- fix a typo in safety comment in `HrTimer::new`
-- fix a typo in `HrTimer::raw_cancel`
-- fix a typo in the vocabulary
-- fix a typo in `HrTimerCallback` docs
-- refactor module documentation
-- add an ascii state diagram to module documentation
-- specify reason for adding `Arc::as_ptr`'
-- change `boxed` to `this` in `Box::into_pin`
-- change `from_ns` to `from_nanos` to align with std
-- imporove safety comment for `impl Send for HrTimer`
-- remove useless paragraph in docs for `HrTimerPointer`
-- rephrase docs for `HrTimerPointer::TimerHandle`
-- update docs for `HrTimerCallback::CallbackTarget`
-- explain how users should use safe functions for cancelling a timer
-- rename generics for consistency
-- remove a note about storing mode in `HrTimer` - this is still required
-- rebase on v6.14-rc1
-- Link to v6: https://lore.kernel.org/r/20250110-hrtimer-v3-v6-12-rc2-v6-0-f71d50f16482@kernel.org
+For each carrier board using these modules, a new DTS file was added
+that includes the v1.1 DTS and modifies it with this v1.2 DTSI.
 
-Changes in v6:
-- prefix all hrtimer related type names with `Hr`
-- add a few links for type names in the documentation
-- Link to v5: https://lore.kernel.org/r/20241217-hrtimer-v3-v6-12-rc2-v5-0-b34c20ac2cb7@kernel.org
+The original DTS can be used for modules up to and including v1.1.
 
-Changes in v5:
-- Fix a typo in `impl_has_timer`
-- Implement `Box::into_pin` in terms of `impl From<Box> for Pin<Box>`
-- Link to v4: https://lore.kernel.org/r/20241206-hrtimer-v3-v6-12-rc2-v4-0-6cb8c3673682@kernel.org
+v2: Fixed the "From" field
+v1: https://lore.kernel.org/all/20250227170556.589668-1-ernest.vanhoecke@toradex.com/
 
-Changes in v4:
-- rebase on v6.13-rc1 and adapt to kernel `Box`
-- add a missing safety comment to `hrtimer::start`
-- use `hrtimer_setup`
-- fix a build issue when `bindings::hrtimer_restart` is signed
-- fix a memory leak where box was not destroyed
-- fix a documentation typo
-- remove `as` coercion at multiple locations
-- use fully qualified syntax when invoking `deref`
-- move `hrtimer` into `time` module
-- Link to v3: https://lore.kernel.org/r/20241017-hrtimer-v3-v6-12-rc2-v3-0-59a75cbb44da@kernel.org
+Ernest Van Hoecke (2):
+  ARM: dts: apalis/colibri-imx6: Enable STMPE811 TS
+  ARM: dts: apalis/colibri-imx6: Add support for v1.2
 
-Changes in v3:
-- support timer mode selection
-- support clock source selection
-- eliminate `Arc::clone_from_raw` in favor of using `ArcBorrow`
-- make `Arc::as_ptr` an associated method
-- update safety requirement for `ArcBorrow::from_raw`
-- remove examples (pending `SpinLockIrq` and `CondVar` patches)
-- remove `start_function` (v2 `schedule_function`, pending `SpinLockIrq` and `CondVar` patches)
-- change function naming from schedule/armed to start/running
-- add vocabulary to documentation
-- update safety comment in `Arc::as_ptr`
-- Link to v2: https://lore.kernel.org/r/20240917222739.1298275-1-a.hindborg@kernel.org
+ arch/arm/boot/dts/nxp/imx/Makefile            |  9 +++
+ .../dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts | 11 ++++
+ .../nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts   | 11 ++++
+ .../nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts   | 11 ++++
+ .../dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts  | 11 ++++
+ .../nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts   | 11 ++++
+ .../dts/nxp/imx/imx6q-apalis-v1.2-eval.dts    | 11 ++++
+ .../nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts  | 11 ++++
+ .../nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts  | 11 ++++
+ .../dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts   | 11 ++++
+ .../boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi | 57 +++++++++++++++++++
+ arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi |  1 -
+ .../dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi     | 57 +++++++++++++++++++
+ .../arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi |  1 -
+ 14 files changed, 222 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi
 
-Changes in v2:
-- use a handle to own the timer callback target
-- add ability to for callback to reschedule timer
-- improve `impl_has_timer` to allow generics
-- add support for stack allocated timers
-- add support for scheduling closures
-- use `Ktime` for setting expiration
-- use `CondVar` instead of `AtomicBool` in examples
-- rebase on 6.11
-- improve documentation
-- Link to v1: https://lore.kernel.org/r/20240425094634.262674-1-nmi@metaspace.dk
-
----
-Andreas Hindborg (13):
-      rust: hrtimer: introduce hrtimer support
-      rust: sync: add `Arc::as_ptr`
-      rust: hrtimer: implement `HrTimerPointer` for `Arc`
-      rust: hrtimer: allow timer restart from timer handler
-      rust: hrtimer: add `UnsafeHrTimerPointer`
-      rust: hrtimer: add `hrtimer::ScopedHrTimerPointer`
-      rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&T>`
-      rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&mut T>`
-      rust: alloc: add `Box::into_pin`
-      rust: hrtimer: implement `HrTimerPointer` for `Pin<Box<T>>`
-      rust: hrtimer: add `HrTimerMode`
-      rust: hrtimer: add clocksource selection through `ClockId`
-      rust: hrtimer: add maintainer entry
-
- MAINTAINERS                         |  15 ++
- rust/kernel/alloc/kbox.rs           |   6 +
- rust/kernel/sync/arc.rs             |  13 +-
- rust/kernel/time.rs                 |  68 +++++
- rust/kernel/time/hrtimer.rs         | 525 ++++++++++++++++++++++++++++++++++++
- rust/kernel/time/hrtimer/arc.rs     |  92 +++++++
- rust/kernel/time/hrtimer/pin.rs     |  99 +++++++
- rust/kernel/time/hrtimer/pin_mut.rs | 101 +++++++
- rust/kernel/time/hrtimer/tbox.rs    | 109 ++++++++
- 9 files changed, 1026 insertions(+), 2 deletions(-)
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20241017-hrtimer-v3-v6-12-rc2-215dc6b169bf
-
-Best regards,
 -- 
-Andreas Hindborg <a.hindborg@kernel.org>
-
+2.43.0
 
