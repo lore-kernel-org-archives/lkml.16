@@ -1,93 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A34041E1DEE;
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB4FC207A10;
 	Fri,  7 Mar 2025 09:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341038; cv=none; b=EpZurrutJJvZv9dzilhZaR61squ1JcHs5WJ7/UipW7tIuShdRWvHksx8uxv5PR3V7gzUaYeDz7KsfyZiAh3qlxrRTmrndUxiUtuqEClVlhHjgzFzw9WPwmgHtfqHCz5xYqV540TP5a5hCB4HiZidWN4NmwKlwfDcn96TMMtGLP4=
+	t=1741341037; cv=none; b=SIKUDtX/KSEwbOEQagn+CJr9P6mrAc8me5ysE4w8/IwJ9X7cxKaXM2vYrI9CqkHBL7ffcg1yH73Gs8Wzz5CavQiSLtbyGWa0ojUpuV7yqQ9+8yc/ZgN9D+nsoFhwzmeA3a/okrFZUfvAsjvRK099N0QUYosUET15pWOlyymZ5EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341038; c=relaxed/simple;
-	bh=d3agI50q2xWFJ5p1wa9JH4JwPRcj3aWovddGpnxeI40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJMhhqM5ESgjXK//p5s4bJDy0+rNcGlHnKEhhGcbxCbp3i0/pKwuLmdcgoUNfjXPu2U9jaD2z9IMPtp6hfRQ/PT5pL6Xflp+u3IRgUPQTtyBsPnQnGihZg4FqNyc8dvR3h1UBlhNlHcBcp9XRA8sYV3Ei0E5HmsyqBFYYfygyII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A661150C;
-	Fri,  7 Mar 2025 01:50:45 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCEF93F66E;
-	Fri,  7 Mar 2025 01:50:29 -0800 (PST)
-Date: Fri, 7 Mar 2025 09:50:26 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: <rafael@kernel.org>, <daniel.lezcano@linaro.org>,
-	<lpieralisi@kernel.org>, <ulf.hansson@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>, <james.morse@arm.com>,
-	<d-gole@ti.com>, <anup@brainfault.org>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<imx@lists.linux.dev>, <khilman@baylibre.com>,
-	<quic_tingweiz@quicinc.com>, <quic_yuanjiey@quicinc.com>
-Subject: Re: [PATCH v4] cpuidle: Init cpuidle only for present CPUs
-Message-ID: <Z8rBYuDiIyo8y6HT@bogus>
-References: <20250307080303.2660506-1-ping.bai@nxp.com>
+	s=arc-20240116; t=1741341037; c=relaxed/simple;
+	bh=Pp6d5BKF+pheNNOvupojLHj4T//vHMr36YBOcZFJl2k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nqtvvfTc5YcJiFp4InnjzBMm3ERp2Pd1cinFBDng6XPZFo/nNeYexTAYCHxtr2vYlNLcU/TXcyIZdqQxMQ13Ef9H9n29G4FLdS59vciJ5Z9MWzX+C0UPs2jcHovtHRyPuZkJjN2SnW2ikR5OnLzkeBccEXi3LT4Ki/66H9mg+S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AePwnvq+; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AePwnvq+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=uoqTP
+	MhXIqedMWASNYsYxuw9FI9yzczKTakxe0eccvg=; b=AePwnvq+2t/H/qNoazB+f
+	dw2HgS+1tpm6AO/NBY0PBvn0wMdYXMfvtjqqXRZdvLmqOeM3HbbQS15bkPsWdGI4
+	NHlkmosM39DcNt7HxhHvTuHh01ctrM4AF2vvvBnjXNxY402UJAmyDVGlzJGFI4v3
+	zEuoJMvM0leL29aw/yVv+I=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDnb_xBwcpncjlNCA--.49226S4;
+	Fri, 07 Mar 2025 17:49:55 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: shshaikh@marvell.com,
+	manishc@marvell.com,
+	GR-Linux-NIC-Dev@marvell.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	sucheta.chakraborty@qlogic.com,
+	rajesh.borundia@qlogic.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haoxiang Li <haoxiang_li2024@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH net v3] qlcnic: fix memory leak issues in qlcnic_sriov_common.c
+Date: Fri,  7 Mar 2025 17:49:52 +0800
+Message-Id: <20250307094952.14874-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307080303.2660506-1-ping.bai@nxp.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgDnb_xBwcpncjlNCA--.49226S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw4kAF45ury5Ww43tr15CFg_yoW8tF4rpF
+	43Za45Wr95JF1jkws5Zw10kr90k3yqy34DWF9xW393u34jyr4fGw1UAwnIgFWjyrZ5WFy8
+	trn8Z3W5XFn8A3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pimhF7UUUUU=
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqAkJbmfKu+WTIwAAsF
 
-On Fri, Mar 07, 2025 at 04:03:03PM +0800, Jacky Bai wrote:
-> for_each_possible_cpu() is currently used to initialize cpuidle
-> in below cpuidle drivers:
->   drivers/cpuidle/cpuidle-arm.c
->   drivers/cpuidle/cpuidle-big_little.c
->   drivers/cpuidle/cpuidle-psci.c
->   drivers/cpuidle/cpuidle-riscv-sbi.c
-> 
-> However, in cpu_dev_register_generic(), for_each_present_cpu()
-> is used to register CPU devices which means the CPU devices are
-> only registered for present CPUs and not all possible CPUs.
-> 
-> With nosmp or maxcpus=0, only the boot CPU is present, lead
-> to the failure:
-> 
->   |  Failed to register cpuidle device for cpu1
-> 
-> Then rollback to cancel all CPUs' cpuidle registration.
-> 
-> Change for_each_possible_cpu() to for_each_present_cpu() in the
-> above cpuidle drivers to ensure it only registers cpuidle devices
-> for CPUs that are actually present.
-> 
-> Fixes: b0c69e1214bc ("drivers: base: Use present CPUs in GENERIC_CPU_DEVICES")
-> Reviewed-by: Dhruva Gole <d-gole@ti.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Tested-by: Yuanjie Yang <quic_yuanjiey@quicinc.com>
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> ---
->  - v4 changes:
->   - add changes for other cpuidle driver that has the similar issue
->     as cpuidle-pcsi driver.
-> 
->  - v3 changes:
->   - improve the changelog as suggested by Sudeep
-> ---
->  drivers/cpuidle/cpuidle-arm.c        | 8 ++++----
->  drivers/cpuidle/cpuidle-big_little.c | 2 +-
->  drivers/cpuidle/cpuidle-psci.c       | 4 ++--
->  drivers/cpuidle/cpuidle-riscv-sbi.c  | 4 ++--
+Add qlcnic_sriov_free_vlans() in qlcnic_sriov_alloc_vlans() if
+any sriov_vlans fails to be allocated.
+Add qlcnic_sriov_free_vlans() to free the memory allocated by
+qlcnic_sriov_alloc_vlans() if "sriov->allowed_vlans" fails to
+be allocated.
 
+Fixes: 91b7282b613d ("qlcnic: Support VLAN id config.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+---
+Changes in v3:
+- Handle allocation errors in qlcnic_sriov_alloc_vlans()
+- Modify the patch title and description.
+There's one more thing I'm confused about: I'm not sure if the fixes-tag
+is correct, because I noticed that the two modifications correspond to
+different commits. Should I split them into two separate patch submissions? Thanks, Paolo!
+Changes in v2:
+- Add qlcnic_sriov_free_vlans() if qlcnic_sriov_alloc_vlans() fails.
+- Modify the patch description.
+vf_info was allocated by kcalloc, no need to do more checks cause
+kfree(NULL) is safe. Thanks, Paolo! 
+---
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Why have you spared drivers/cpuidle/cpuidle-qcom-spm.c ? IIUC the issue
-exists there as well.
-
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
+index f9dd50152b1e..28d24d59efb8 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
+@@ -454,8 +454,10 @@ static int qlcnic_sriov_set_guest_vlan_mode(struct qlcnic_adapter *adapter,
+ 
+ 	num_vlans = sriov->num_allowed_vlans;
+ 	sriov->allowed_vlans = kcalloc(num_vlans, sizeof(u16), GFP_KERNEL);
+-	if (!sriov->allowed_vlans)
++	if (!sriov->allowed_vlans) {
++		qlcnic_sriov_free_vlans(adapter);
+ 		return -ENOMEM;
++	}
+ 
+ 	vlans = (u16 *)&cmd->rsp.arg[3];
+ 	for (i = 0; i < num_vlans; i++)
+@@ -2167,8 +2169,10 @@ int qlcnic_sriov_alloc_vlans(struct qlcnic_adapter *adapter)
+ 		vf = &sriov->vf_info[i];
+ 		vf->sriov_vlans = kcalloc(sriov->num_allowed_vlans,
+ 					  sizeof(*vf->sriov_vlans), GFP_KERNEL);
+-		if (!vf->sriov_vlans)
++		if (!vf->sriov_vlans) {
++			qlcnic_sriov_free_vlans(adapter);
+ 			return -ENOMEM;
++		}
+ 	}
+ 
+ 	return 0;
 -- 
-Regards,
-Sudeep
+2.25.1
+
