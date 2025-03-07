@@ -1,84 +1,133 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650BD2561DC;
-	Fri,  7 Mar 2025 20:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CC01A5B8C;
+	Fri,  7 Mar 2025 20:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741378301; cv=none; b=b5EYu2nyQFSZi4IyseedP398NJrhiW/pJqWW1tv54qduKO8HeYVikyIeVtl5hvahUTm/InY/Ay+xOicHojH/uiJwP7LVJNGNv9TGDt+/gW27cuz8SlU4y5XMgNGk+boJI/RxPue2s/I8coeSeNTIzTDulxKsIiM6J1S1VKF0+14=
+	t=1741378395; cv=none; b=mKqzYy3+ixVsWwmFX7XVCjLfbAaKcwx6fgRjCSuHU/+w9AzezDDpDz0z/ZQCCk0YyUX9Stcp4F788Pw6kcGBFcDVU/g/hJqd+RPhMiJsunjjT2TeL7ngISES8XP8xKk5bEfAf/Sljl/go6yw1mMNnHysH0KyFB8oqHk1hojuJGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741378301; c=relaxed/simple;
-	bh=kvUDm8am0hSMA2w3XwH8qyN8rQp+p+otQyAY+cG40dU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qXYeGZ74eSkWYpL+zCAbK8kA+MkMZ2N3D4cvz9TUdlMilU4sXKtFFB2hZueA6Ru2RGzPPWfSWkeMW3cWABLB3EMOxxZ5oSpiOEv9cU/fF8FG2ihTneqEyaDxh8B47LHc20aJeROByTNmupYM0PaL1R/lt8/dZpmjE5r2M6eEnpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JooKpY1U; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741378395; c=relaxed/simple;
+	bh=i4tXWbK2Su3es/UUrOMUUWCh7h0iXBpxDBqUtqDrJ+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UxzArgQffKeJzuf6wxfNrmFhwEmzxvFk5+do8LxBUN5/OpnNVP8Nj5FOl6wnEukUCz+LTom8Mx4L8k1Ep7z08G2X21P+15sALFQz223gxU812K0hK/ct/RfLx0eyeJNQ3muBCb659fptzNw2k7qJH187E5tewI0v2vXf4/biw7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cRi42CuO; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JooKpY1U"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6fda22908d9so17202607b3.1;
-        Fri, 07 Mar 2025 12:11:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741378299; x=1741983099; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fl996EB/BPN5hEnQtgwscpPDmaZ06UU290EobaQCcK4=;
-        b=JooKpY1UikjsqgSwEq1z/8i8Fh2puW/gP27hM3xbCZ+FaTLDOsKPRMNzTInetOE/X9
-         al/xezAdNjsU5sM2VVCTDB+YeBTpmpHCDuMFtasZKV4qXDN1Io4pb5eOv+uSrtvv7uOq
-         OFgvCvr8HQrQAGr0kUU34V9RFtV3oMME7LnLr2w+UU0ZGynYkZQDXc1ldIiKwQfYC/BE
-         lfLqf8LmJ+kJwVgU8UfOjfXiyFjdyVbSeCVA5YDPq7d3yL3aTfBy6+Fz/2FdG8d/opGT
-         WfBVPevdrvxcc8WgGQ9OaUAjn6zR9vwe2egwWfIJ+dOyHpBt7EdjoDWQmukrnO7oiSqf
-         33Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741378299; x=1741983099;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Fl996EB/BPN5hEnQtgwscpPDmaZ06UU290EobaQCcK4=;
-        b=d/7G+YwiV0OLrqpWSVXZ6APHPfclMri8sut6ENSbuXPy9ckr8aI6+ZorijFautphup
-         dyzfwJpd54qryR0BvvRQLa80xsKjIiOqgpPkATiP8wW1ljXpJ88kGDGh/sQi3yVwnA7a
-         NcUE180gdg9TK3knGlsPoQndFMQUwPlcx7z6KGXf+JgyfwXpGgz6wFLdh9OuV2ZtkOsl
-         KGDgMsiezM2HXjLPPZDlffaQ1TMr516QWbBqTN9lNom2zN4NSxXKg/a6y3S5LgfbQg/v
-         PVB3XYl2EDF+k9GbQZN8c9b4qhpWyXczT+7Ak+ESoEr+Hlop7U7eFsa8CeI3uJNHANz6
-         LUCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLWI+31z/6k9d1fUuXAIU9mIDWzDlgdi73+TiCgObS/mIcNW9wIJdWuHDsWDGJhUfnnBFPFsvSHZWKqPOi3Ts=@vger.kernel.org, AJvYcCXmmCS0WWC4koWPhcPscPcKBrZUoGL4MS4dBCIek1Po3PbYkl8Dt6mFEf+DuYSYijjjsYW9mgZLZIWnGZiO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEOy5ELO6TRjqc36jXbfHLBOLNk5e8BvFwn6QfNzOtL0mLe+cC
-	eLgny9YATLR7a9FXcAbN/pINTrOU0ejNeJorZf18vIVDwC2ODN380N2W2FTYW7tu/TViJReOi+W
-	hWwrMF/M5FcT7Qt/a3ADW5jbZEwg=
-X-Gm-Gg: ASbGncvDa0Y9rtNU6KZbxbDqTQC4PsteWmOqdVyAIRlOu4br67DBSSesG8etokaRlL8
-	leF6rkQxqFt7M+LjHrEKmLam2Z2wT9Bj0ptGqFBhS0wW1rKnOYFFd7ccqt6M0pmM3qwy7g5qK1m
-	k45/HAa6jSHWkxcx0A9SzMXp+3LrY=
-X-Google-Smtp-Source: AGHT+IG4pG20Yrepe041wDSG8GJC3NZSymhx3boOCHZlIMGASclrEFPEzLQZrlRc2a50xWaYhD2crUw3xuwpdrKBiYM=
-X-Received: by 2002:a05:690c:67c7:b0:6f9:b12b:8943 with SMTP id
- 00721157ae682-6febf2f3a9bmr72669737b3.19.1741378299319; Fri, 07 Mar 2025
- 12:11:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cRi42CuO"
+Date: Fri, 7 Mar 2025 12:12:55 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741378381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YljDuPqUyrSKj1qY6CTlyxawJAoX4glZcEt/JKL20jE=;
+	b=cRi42CuORB2PT/6TuaBDeboPqIk1v1v+grz2MHaj4U6p5d4n8CFV1S3qgY+8frY05pdVhN
+	Sf+vXMzBmP1jsidnwGDqehrbtzS0KMNx1xt2mwVMeA66NIUE6gUdCdO6BVtVI5ufuf4mPQ
+	JU/fYuTQ/0fd6LbVAuRTsa/vx0qT6mc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	JP Kobryn <inwardvessel@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, linux-mm@kvack.org, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [RFC PATCH] memcg: net: improve charging of incoming network
+ traffic
+Message-ID: <dpnv6luzeby3wni3jlcv2utgx4ozfp5zl3zfnhn2shv3q4iejz@sbex7f6azcpc>
+References: <20250307055936.3988572-1-shakeel.butt@linux.dev>
+ <Z8tMB4i_hBLaSZS1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <14a845e8-54d0-45f8-b8b9-927609d92ede@stanley.mountain>
-In-Reply-To: <14a845e8-54d0-45f8-b8b9-927609d92ede@stanley.mountain>
-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Date: Fri, 7 Mar 2025 21:11:28 +0100
-X-Gm-Features: AQ5f1JpZohgGftYZeUPmd7mjaK_v2MjyriIGwTdsUOZcHqxqIzREXd76VJK0afk
-Message-ID: <CAMT+MTSHT92Q=Xm62zfDgTnR0MEw5gKEk1rmvmrQSbXgQbww_w@mail.gmail.com>
-Subject: Re: [PATCH next] drm: adp: Fix NULL vs IS_ERR() check in adp_plane_new()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Janne Grunau <j@jannau.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Neal Gompa <neal@gompa.dev>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8tMB4i_hBLaSZS1@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 7 Mar 2025 at 10:31, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> The __drmm_universal_plane_alloc() function doesn't return NULL, it
-> returns error pointers.  Update the check to match.
->
-> Fixes: 332122eba628 ("drm: adp: Add Apple Display Pipe driver")
+On Fri, Mar 07, 2025 at 07:41:59PM +0000, Yosry Ahmed wrote:
+> On Thu, Mar 06, 2025 at 09:59:36PM -0800, Shakeel Butt wrote:
+> > Memory cgroup accounting is expensive and to reduce the cost, the kernel
+> > maintains per-cpu charge cache for a single memcg. So, if a charge
+> > request comes for a different memcg, the kernel will flush the old
+> > memcg's charge cache and then charge the newer memcg a fixed amount (64
+> > pages), subtracts the charge request amount and stores the remaining in
+> > the per-cpu charge cache for the newer memcg.
+> > 
+> > This mechanism is based on the assumption that the kernel, for locality,
+> > keep a process on a CPU for long period of time and most of the charge
+> > requests from that process will be served by that CPU's local charge
+> > cache.
+> > 
+> > However this assumption breaks down for incoming network traffic in a
+> > multi-tenant machine. We are in the process of running multiple
+> > workloads on a single machine and if such workloads are network heavy,
+> > we are seeing very high network memory accounting cost. We have observed
+> > multiple CPUs spending almost 100% of their time in net_rx_action and
+> > almost all of that time is spent in memcg accounting of the network
+> > traffic.
+> > 
+> > More precisely, net_rx_action is serving packets from multiple workloads
+> > and is observing/serving mix of packets of these workloads. The memcg
+> > switch of per-cpu cache is very expensive and we are observing a lot of
+> > memcg switches on the machine. Almost all the time is being spent on
+> > charging new memcg and flushing older memcg cache. So, definitely we
+> > need per-cpu cache that support multiple memcgs for this scenario.
+> 
+> We've internally faced a different situation on machines with a large
+> number of CPUs where the mod_memcg_state(MEMCG_SOCK) call in
+> mem_cgroup_[un]charge_skmem() causes latency due to high contention on
+> the atomic update in memcg_rstat_updated().
 
-Acked-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Interesting. At Meta, we are not seeing the latency issue due to
+memcg_rstat_updated() but it is one of most expensive function in our
+fleet and optimizing it is in our plan.
+
+> 
+> In this case, networking performs a lot of charge/uncharge operations,
+> but because we count the absolute magnitude updates in
+> memcg_rstat_updated(), we reach the threshold quickly. In practice, a
+> lot of these updates cancel each other out so the net change in the
+> stats may not be that large.
+> 
+> However, not using the absolute value of the updates could cause stat
+> updates of irrelevant stats with opposite polarity to cancel out,
+> potentially delaying stat updates.
+> 
+> I wonder if we can leverage the batching introduced here to fix this
+> problem as well. For example, if the charging in
+> mem_cgroup_[un]charge_skmem() is satisfied from this catch, can we avoid
+> mod_memcg_state() and only update the stats once at the end of batching?
+> 
+> IIUC the current implementation only covers the RX path, so it will
+> reduce the number of calls to mod_memcg_state(), but it won't prevent
+> charge/uncharge operations from raising the update counter
+> unnecessarily. I wonder if the scope of the batching could be increased
+> so that both TX and RX use the same cache, and charge/uncharge
+> operations cancel out completely in terms of stat updates.
+> 
+> WDYT?
+
+JP (CCed) is currently working on collecting data from our fleet to find
+the hotest memcg stats i.e. with the most updates. I think the early
+data show MEMCG_SOCK and MEMCG_KMEM are among the hot ones. JP has
+couple of ideas to improve the situation here which he will experiment
+with and share in due time.
+
+Regarding batching for TX and RX, my intention is to keep the charge
+batching general purpose but I think the batching the MEMCG_SOCK for
+networking with a scoping API can be done and seems like a good idea. I
+will do that in the followup.
+
+Thanks for taking a look.
+
+
+
