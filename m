@@ -1,63 +1,90 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0E339ACC;
-	Fri,  7 Mar 2025 13:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E221E868;
+	Fri,  7 Mar 2025 13:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741353803; cv=none; b=XG/g7aMiJANcPBSSDcG9Y9YNGYH2FdTbBFOYJaZZcEIPXZJLVLNE4dBUUumM8Jl6BaqmEokp1eECYZoX2cJscRRmCZ8d+r+2/HRXtDLVuGTaCavScTw3l319i5RILfSWDHQfuoBwcLCiXIzx6Sp33PUGXJ718yyRiDrNSTE2oUU=
+	t=1741353849; cv=none; b=B5byQHoGCBVIOQ/sw471ZSVWoi6GlYIQ3W8rq/FIPvc60UEnqB0/Knu3P7Luhnuya+LV3qe8xk5X0ruBfXlYABbYRg9m246gOcnWA7dQAy8AgVQu+la3yDQF+BYb+4o1cyhN2HXwQB4LmVXD6lPo+R6z+5hXRW0+Vh66+SkjnrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741353803; c=relaxed/simple;
-	bh=4WxMkD6CWyChQWUEG9Os74cWrdBRR9i/mnauP29FhQA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vFMcIbufijHHrtnvVsqUvWCXbdWc1Q1GaSY3V2020O6kDusLDSGTsCrvRHLZSDCB/lzzgmOn2DH4He5AnRrOyfPICitA8QevysvznIeB6ZBOmGETyLD13Jq1KTDezS0puaJHR65ak70b/jzVp1SBfGVaTzCRC2xqCUfiKhEBxjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OVtHNwYT; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1741353849; c=relaxed/simple;
+	bh=9OCou/LxbyRarhdBQeea7UlQ71nAsQw9C80k68D611o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rrB1ppbw0AwLwH/agD0+lnK7B0KgefUSHWmbvI0a3CNHbJjAwCq/vtqYzNlv04Omv6llYr1AupYkDCnSMcQLOLmgiThOqhTxQjatmQYh/XVkqPPN/nnhgv/CudvjlQ+tzRJHb79DyYsLPl7t6XQEXurE6rWgPT2R1tmUU675LRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfuiCWPm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OVtHNwYT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741353800; x=1741613000;
-	bh=4WxMkD6CWyChQWUEG9Os74cWrdBRR9i/mnauP29FhQA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=OVtHNwYTOnfPsM5SvBMF8K8nqWh2pTMDquHO8MEK+SNTE2q4odDI5WQ/Q6G7shTp1
-	 GZGJy4/xHWlZto/RLuWVxkRzQgMePqqwOy6sSgNmslLN24gIkkn/tb6eeTVgPt8hcX
-	 AaAMRVVqp/7nSpL+pv2g0RAE808bO3JyQvk8yX+/Oj7+/j9Sx8qDa6E+VsXq0nbRxQ
-	 kAs2JSAMCgkSmbmz7ll/LmcnzMtG1GjsTbc/x/nPPAl1L16YSzNSCLcfq52zwXubfl
-	 kCKHb8xiRJU6Jo0ljgsKhK+UI6O91fWgF1a8xE1d3HK7vK7bWi25xA6i7Hyz+B7z3+
-	 HOzxvD2TWce/w==
-Date: Fri, 07 Mar 2025 13:23:15 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 12/13] rust: hrtimer: add clocksource selection through `ClockId`
-Message-ID: <D8A2EFIWWJI6.YSGD4KNNDYFX@proton.me>
-In-Reply-To: <20250307-hrtimer-v3-v6-12-rc2-v10-12-0cf7e9491da4@kernel.org>
-References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org> <20250307-hrtimer-v3-v6-12-rc2-v10-12-0cf7e9491da4@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 2b7d2f67b764e6bff4b81e640caa986fcc2b35ef
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfuiCWPm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 340D7C4CED1;
+	Fri,  7 Mar 2025 13:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741353848;
+	bh=9OCou/LxbyRarhdBQeea7UlQ71nAsQw9C80k68D611o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gfuiCWPm2uKw/bA0VZBhF8DvMN4wC3kmsCCSkVg3wQWJ5U7R+GXJRPSD1cOCy5zQu
+	 F0tv3C5Or9FtqrXicOro/2LlUsst/NGLfQlses9yin2wxMXfg61LWcx+L1tVWyZg+F
+	 KYTF+LiktZxrE2nYFfE/aPFyxVbGp9V7K/wHEyUOZCNoJXRZZ4hxQHICr1fLowvAFR
+	 arY7ZGqbHCcAS8i8srEL3Uvn1n+q7pnB4ItpQ+5S9baEFZfC1vzO01fosU9R5WZT94
+	 KC/ePncWmhWoe2bcsomh0P5zxsMOYFhpaRKRFHHJDZs+lUTJtp7PCJX8vGRS/njkvT
+	 Q77DT+ikKhvzw==
+Date: Fri, 7 Mar 2025 13:24:03 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Patrice CHOTARD <patrice.chotard@foss.st.com>
+Cc: Charles Han <hanchunchao@inspur.com>, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, linux-spi@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: stm32: Fix a NULL vs IS_ERR() bug
+Message-ID: <Z8rzc8suhKPr5SHV@finisterre.sirena.org.uk>
+References: <20250307032530.116837-1-hanchunchao@inspur.com>
+ <dfd831ec-e004-4132-94f0-3bdc755907cd@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fKhienEiuUGd3VD1"
+Content-Disposition: inline
+In-Reply-To: <dfd831ec-e004-4132-94f0-3bdc755907cd@foss.st.com>
+X-Cookie: Editing is a rewording activity.
+
+
+--fKhienEiuUGd3VD1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri Mar 7, 2025 at 11:11 AM CET, Andreas Hindborg wrote:
-> Allow selecting a clock source for timers by passing a `ClockId`
-> variant to `HrTimer::new`.
->
-> Acked-by: Frederic Weisbecker <frederic@kernel.org>
-> Reviewed-by: Lyude Paul <lyude@redhat.com>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+On Fri, Mar 07, 2025 at 09:59:42AM +0100, Patrice CHOTARD wrote:
+> On 3/7/25 04:25, Charles Han wrote:
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > The devm_ioremap() function doesn't return error pointers, it may
+> > returns NULL.  Update the error checking to match.
 
----
-Cheers,
-Benno
+> No need to copy/paste other contributor's patch by just swapping some=20
+> words in title/commit message.
 
+> This fix has already sent By Dan Carpenter and merged.
+
+No idea if it applies here or not but since a lot of Dan's work is based
+on static checker results it's quite common to see duplicates of his
+patches when someone else runs the same or similar checkers - I think
+all the people running these checkers are aware this happens but often
+figure it's easier to send the duplicates than to check -next.
+
+--fKhienEiuUGd3VD1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfK83AACgkQJNaLcl1U
+h9C6DAf/SppwraYcs3hm+tA8JgynoM6XNXFnzcupDCDn8T1COBVOwH2vXjv1IxaL
+NtNktXiNdmlS4s1gVJK/xhlNTf24sa+SCj4AiRZd7gVhM/3ajKo/ONnUzTnBsmhi
+QdzADx/vYjhHj1kLjG9srDIs5nDtP1lCfcUimCxhu57dZHzEiT4yDSnrQfYZNKva
+lvKvTckBdBrDfDmzSAOV9BHmHOZdeeGsmbjpHXXaao2Q5VhpdYO+HG6lds7TzPWw
+KJJROXJwjT8hsdstk/n7PyT5C183z/8l9D9Mj0qPqF4Dzd0LfdMig3eTJz/E2Lvd
+Okl9rsg7Lkrf0YNo52PA0NMbLNgFKg==
+=YO1O
+-----END PGP SIGNATURE-----
+
+--fKhienEiuUGd3VD1--
