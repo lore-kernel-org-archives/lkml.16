@@ -1,99 +1,102 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A2E168B1;
-	Fri,  7 Mar 2025 09:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E211E1DEA
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741338501; cv=none; b=YUeBYxUHfMAxFBfq45QgkoWiYpmDYwqWA7sIG5IxaehKcBYU+rgafnsJjmerjnbbFEWShf9FoXyqrrTGkhCHo3HhmQi6/txe7jrYKYsMsGtCp4mnPNCzd150kPo8yBb40Mm5dmei4SfXmLnUWERw17ekYF6r1NxkJykSsfFFPRQ=
+	t=1741338543; cv=none; b=WKYTsFBuj0yOS5BPMYJ2U4NqkhGHcVbXCTvTPSxycMTycWhsnBI9on825zMqonNB8LqIXqyB25mmM8CfvpLeWN10Va8eO8ghlT9uKjE0I3hl7apegBVAGoAXK6DBWBj9V+41rbTVDjntj3haNOGe2n146UJdlSSnGztE1PIqwio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741338501; c=relaxed/simple;
-	bh=jOsiZoxoFzlTIhij6u4HaEvVq0vQLmO2U5xEqzBcz7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HRvRu39w6kJH5R15byFgJ7FqGlvbpLYYM86gzyak4koeFfIOuxX3jnKTRQb6XPlS5MLrOBTA6ygfmOHH9o2yeBS2h9Ti14dSwaMKeYGKoWK2N2V51PrP5jcta8s50m8TUgCYtq6DlYB7eMmuNymch1k6LadcGaYF0lZL9kUWjF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kgfoQ6Zy; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kgfoQ6Zy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 339EE42FF4;
-	Fri,  7 Mar 2025 09:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741338493;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CxdZ0Ku1n71J8CTAjlvJAGWeCY/e13LyHsQRhYqRe0Y=;
-	b=kgfoQ6ZyI+B/x+wq5Xp0AXdaDaVcelUCNuzcnSS1tKniUx2KBPqb1T5Pj5MhIBrd1sLTDC
-	vBVTSuJgtvq4dC/PhKM8a3GxkNAuVH37CgzcP16eQDhGbyGNk8WyriXq7kJBQ5S3buyvTS
-	xpI6Y2FeuFYhop44Wk9Caf+/vGkVirrpHFOsq+4txB1CRYfoqCk1srdlj7X9zZxwAdIth7
-	ySXkzIhlXNI2v/G1GwyfwJcq9uX0MhNgk5r9AWjOrK/A6nezD9CqOib+t4ppSrmmscs93M
-	hOqPyNt08DegzFnODAAY8sMZRrSqxfTtUltJzmRDeqeNvqd4CsiMnIkfAzEQjQ==
-Date: Fri, 7 Mar 2025 10:08:09 +0100
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
- <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
- <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
- Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 02/12] net: pse-pd: Add support for
- reporting events
-Message-ID: <20250307100809.3de6db1e@kmaincent-XPS-13-7390>
-In-Reply-To: <20250306174345.51a1d56d@kernel.org>
-References: <20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com>
-	<20250304-feature_poe_port_prio-v6-2-3dc0c5ebaf32@bootlin.com>
-	<20250306174345.51a1d56d@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741338543; c=relaxed/simple;
+	bh=2jgWG9QbwNaLnCAQWNSdI3o+GvnyRoUpqPGzbjTm2y4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mb82KkLd8TE9OtU3YPdinQWEvGK8G7H6XQKw5Y2u99RYs9/F/xKlvBwL78pC7uMh4dZbkLr4rHXGeBWoss6nvwj3w6wplOI5C05x8SbrR/AJk4PFvdqtfKxr1qp/1+cJ3TVnKsFHQVLN/HU4IiSCnNXbdUbqXARr8nrhAKyiPvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1F71A43147;
+	Fri,  7 Mar 2025 09:08:56 +0000 (UTC)
+Message-ID: <d76f62d5-b461-4bff-baa7-62d0eabbf2cd@ghiti.fr>
+Date: Fri, 7 Mar 2025 10:08:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [resend PATCH] riscv: fix memory leakage in
+ process_accumulated_relocations
+To: laokz <zhangkai@iscas.ac.cn>, Walmsley <paul.walmsley@sifive.com>,
+ Dabbelt <palmer@dabbelt.com>, Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+References: <a9058ac757636e4f5160a0bd11abeb3c111fc9a5.camel@iscas.ac.cn>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <a9058ac757636e4f5160a0bd11abeb3c111fc9a5.camel@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtvdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeektdhfheemgegulegvmeejugehsgemjeeggeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemkedtfhehmeegugelvgemjeguhegsmeejgeegfedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehordhrvghmphgvlhesphgvn
- hhguhhtrhhonhhigidruggvpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtvdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepuefffedvleetleetjefhjeehudejteetvedtvddvtdfhieetffelvdffgefgieeinecuffhomhgrihhnpehinhhfrhgruggvrggurdhorhhgnecukfhppeeghedrudeftddrvdefkedrudekfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeghedrudeftddrvdefkedrudekfedphhgvlhhopegludelvddrudeikedrheehrdduheefngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepiihhrghnghhkrghisehishgtrghsrdgrtgdrtghnpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhto
+ heplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-On Thu, 6 Mar 2025 17:43:45 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
+Hi Kai,
 
-> On Tue, 04 Mar 2025 11:18:51 +0100 Kory Maincent wrote:
-> > +      -
-> > +        name: events
-> > +        type: u32 =20
->=20
-> type: uint
-> enum: your-enum-name
->=20
-> and you need to define the events like eg. c33-pse-ext-state
-> in the "definitions" section
+On 16/11/2024 13:07, laokz wrote:
+> Sorry for last weird email.
+> ---
+>
+> When module relocation is done, process_accumulated_relocations()
+> frees all dynamic allocated memory. rel_head_iter->rel_entry is
+> missed to free that kmemleak might report:
+>
+> unreferenced object 0xffffffd880c5fc40 (size 16):
+>    comm "insmod", pid 1101, jiffies 4295045138
+>    hex dump (first 16 bytes):
+>      e0 c0 f5 87 d8 ff ff ff 60 c5 f5 87 d8 ff ff ff  ........`.......
+>    backtrace (crc d2ecb20c):
+>      [<00000000b01655f6>] kmalloc_trace_noprof+0x268/0x2f6
+>      [<000000006dc0067a>]
+> add_relocation_to_accumulate.constprop.0+0xf2/0x1aa
+>      [<00000000e1b29a36>] apply_relocate_add+0x13c/0x36e
+>      [<000000007543f1fb>] load_module+0x5c6/0x83e
+>      [<00000000abce12e8>] init_module_from_file+0x74/0xaa
+>      [<0000000049413e3d>] idempotent_init_module+0x116/0x22e
+>      [<00000000f9b98b85>] __riscv_sys_finit_module+0x62/0xae
+>
+> Signed-off-by: Kai Zhang <zhangkai@iscas.ac.cn>
+> ---
+>   arch/riscv/kernel/module.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+> index 1cd461f3d87..f8c3c4b47dc 100644
+> --- a/arch/riscv/kernel/module.c
+> +++ b/arch/riscv/kernel/module.c
+> @@ -643,6 +643,7 @@ process_accumulated_relocations(struct module *me,
+>                          }
+>                          reloc_handlers[curr_type].accumulate_handler(
+>                                  me, location, buffer);
+> +                       kfree(rel_head_iter->rel_entry);
+>                          kfree(rel_head_iter);
+>                  }
+>                  kfree(bucket_iter);
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-Oh indeed, I forgot to use enum in the specs. Thanks for spotting it.
-=20
-> BTW I was hoping you'd CC hwmon etc. Did you forget or some
-> of the CCed individuals are representing other subsystems?
 
-I have Cced Regulator maintainers Mark and Liam. hwmon are not related the
-regulator events.
+This patch is not relevant anymore since commit 03f0b548537f ("riscv: 
+module: remove relocation_head rel_entry member allocation") which 
+turned the dynamic allocation of rel_entry into a static allocation.
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Thanks anyway Kai, that was a good catch.
+
+Alex
+
