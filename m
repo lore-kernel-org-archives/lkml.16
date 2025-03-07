@@ -1,42 +1,35 @@
-Received: from out28-67.mail.aliyun.com (out28-67.mail.aliyun.com [115.124.28.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E5185931
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 01:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F67685931;
+	Fri,  7 Mar 2025 01:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741312765; cv=none; b=qUsTbyR7Ui4mf/X1iFP9Ye+of+CIxIL6C6924rjeHnA/m7/sv2RG/yTjjClmVQRT1+W8C466EkpP8l6rEBDQHA7VMbc9s2g55bERRpMymZ3Y0ATwzc8N5EZu0e7t2MK21G20ls93Hnj3uscP0DOe4PelNM/Ca2E1ZwHNhelmkUA=
+	t=1741312799; cv=none; b=uTYDn9FizYOIMO/wNdlMkorE60j8uCy4XH38eWBRa3+g8dofD1YLe6YqMRdhevVhvhgHA8lrjAF7UKMMF8dao49j9W9iPd74AXqLTk/sPnScurUVqlAu4i/q6mrPw2v//0WAFELsJj4wFd7CUtpnVXr2ng9djMwFDToaD6eXF2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741312765; c=relaxed/simple;
-	bh=ceAxW0wcpCgaPLr4vhaECO1Q+DYRORbjOyasSwcXyMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sBkGgcILLxRFtnNnUol82sViy/CWqV/lJzXSUR6BNWmjce2iMwqaeaaB9gmZzkwoINJqat58fxEW6pPXVrawGZA+4GAu2LbwS3LONeyNgDUgxQk9b7qR6RM7QEjyNF0hg8kdbts5fFfd3vJwgDTtIh4g53gtFPrOTeaDWUkHAGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pascal-lab.net; spf=pass smtp.mailfrom=pascal-lab.net; dkim=pass (1024-bit key) header.d=pascal-lab.net header.i=@pascal-lab.net header.b=U9ncMhyc; arc=none smtp.client-ip=115.124.28.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pascal-lab.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pascal-lab.net
+	s=arc-20240116; t=1741312799; c=relaxed/simple;
+	bh=ulj+vhipmfz34qioaiFLWEsQ+Aq8r+/RSLJ+tVnvt0o=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=tBo8NKaw81NeEYu05/o05yvfMweRqw8ROVEYPNfLmiRzHmmAsf0LtR33UHmEvjXVx4u42FSWfF1scgaLpAXzJCB5H4WLQY36MR4fo656SGU4XO+6XMmtZ4ppB//v+LgLGKGVzGODsbi42se+junOYanH5UcWu4fhXDBbUNbFIH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5Pqh2+p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pascal-lab.net header.i=@pascal-lab.net header.b="U9ncMhyc"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=pascal-lab.net; s=default;
-	t=1741312759; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=eAGkuDLEsX76lQqIfTyLCBObjDcJx0xLHtbT0UI2peU=;
-	b=U9ncMhycXSKouzrRXz+i7R5AqpBbYdHtjsvV06Beh3LKjuWOFSXzNfuQNZc9BlEAoFTpNW33dd+W0DvYcdeGtABzt+OvU1gWFBLV3aonSSReMfXJd/e/F1KbuhHNJzqR86uj9pvwG8FJIw6wfTGCqPBL7N5PI5kq/7IrgnK75f4=
-Received: from archlinux.nju.edu.cn(mailfrom:yujundong@pascal-lab.net fp:SMTPD_---.bmZnPeR_1741312441 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Mar 2025 09:54:02 +0800
-From: Yujun Dong <yujundong@pascal-lab.net>
-To: mingo@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com,
-	yujundong@pascal-lab.net
-Subject: Re: [PATCH] cpuidle, sched: Use smp_mb__after_atomic() in current_clr_polling()
-Date: Fri,  7 Mar 2025 09:53:44 +0800
-Message-ID: <20250306164217.3028977-1-yujundong@pascal-lab.net>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <Z740eIZcK31DQETq@gmail.com>
-References: <Z740eIZcK31DQETq@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5Pqh2+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A711CC4CEE0;
+	Fri,  7 Mar 2025 01:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741312798;
+	bh=ulj+vhipmfz34qioaiFLWEsQ+Aq8r+/RSLJ+tVnvt0o=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=N5Pqh2+p2XL+6S6QKqbBBqoLPRvmmAuyO2i2szgqMImDiNdWeONioiCzTmsjTGmbC
+	 p29GZY9lV/Sg8SCvBoMQ0jMdDb9OR9hHUCb33rY+7J/T8xw9g7CLNfBw/5GOty0e+S
+	 FHCvX3YqkXdI2Otl2KWLtwn/RrNNwlhN3fHNOCPP8dIPZYAM+mHxn9caHI2vXVooyv
+	 GkpZbZgtmEEJR0OPd76Td8BaX5/Lg6EBGih4lYPhqoRJdsYK6DToQNcaPEA9RUghYH
+	 NZaSzn/mLkpjIsh2OuHdfbRAP4z8R19sFhPnUjmDxH+zMJKeCW3Tv6VUIWB12PvPZx
+	 VBDA0x//a+Y6g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34917380CFF6;
+	Fri,  7 Mar 2025 02:00:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,115 +37,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250307015344.rYWnc_IjWWdrCBBOBB0VRfUq59ED9qPdMaPauWzibxQ@z>
+Subject: Re: [PATCH net-next v4 0/2] Add perout configuration support in IEP
+ driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174131283199.1853786.11033321360799820644.git-patchwork-notify@kernel.org>
+Date: Fri, 07 Mar 2025 02:00:31 +0000
+References: <20250304105753.1552159-1-m-malladi@ti.com>
+In-Reply-To: <20250304105753.1552159-1-m-malladi@ti.com>
+To: Meghana Malladi <m-malladi@ti.com>
+Cc: javier.carrasco.cruz@gmail.com, diogo.ivo@siemens.com, horms@kernel.org,
+ richardcochran@gmail.com, pabeni@redhat.com, kuba@kernel.org,
+ edumazet@google.com, davem@davemloft.net, andrew+netdev@lunn.ch,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, srk@ti.com, vigneshr@ti.com,
+ rogerq@kernel.org, danishanwar@ti.com
 
-Hi Ingo, 
+Hello:
 
-* Ingo Molnar <mingo@kernel.org> wrote:
->
-> [ Sorry about the belated reply, found this in my TODO pile ... ]
->
-> * Yujun Dong <yujundong@pascal-lab.net> wrote:
->
->> In architectures that use the polling bit, current_clr_polling() employs
->> smp_mb() to ensure that the clearing of the polling bit is visible to
->> other cores before checking TIF_NEED_RESCHED.
->>
->> However, smp_mb() can be costly. Given that clear_bit() is an atomic
->> operation, replacing smp_mb() with smp_mb__after_atomic() is appropriate.
->>
->> Many architectures implement smp_mb__after_atomic() as a lighter-weight
->> barrier compared to smp_mb(), leading to performance improvements.
->> For instance, on x86, smp_mb__after_atomic() is a no-op. This change
->> eliminates a smp_mb() instruction in the cpuidle wake-up path, saving
->> several CPU cycles and thereby reducing wake-up latency.
->>
->> Architectures that do not use the polling bit will retain the original
->> smp_mb() behavior to ensure that existing dependencies remain unaffected.
->>
->> Signed-off-by: Yujun Dong <yujundong@pascal-lab.net>
->> ---
->>  include/linux/sched/idle.h | 23 ++++++++++++++++-------
->>  1 file changed, 16 insertions(+), 7 deletions(-)
->>
->> diff --git a/include/linux/sched/idle.h b/include/linux/sched/idle.h
->> index e670ac282333..439f6029d3b9 100644
->> --- a/include/linux/sched/idle.h
->> +++ b/include/linux/sched/idle.h
->> @@ -79,6 +79,21 @@ static __always_inline bool __must_check current_clr_polling_and_test(void)
->>  	return unlikely(tif_need_resched());
->>  }
->>  
->> +static __always_inline void current_clr_polling(void)
->> +{
->> +	__current_clr_polling();
->> +
->> +	/*
->> +	 * Ensure we check TIF_NEED_RESCHED after we clear the polling bit.
->> +	 * Once the bit is cleared, we'll get IPIs with every new
->> +	 * TIF_NEED_RESCHED and the IPI handler, scheduler_ipi(), will also
->> +	 * fold.
->> +	 */
->> +	smp_mb__after_atomic(); /* paired with resched_curr() */
->> +
->> +	preempt_fold_need_resched();
->> +}
->> +
->>  #else
->>  static inline void __current_set_polling(void) { }
->>  static inline void __current_clr_polling(void) { }
->> @@ -91,21 +106,15 @@ static inline bool __must_check current_clr_polling_and_test(void)
->>  {
->>  	return unlikely(tif_need_resched());
->>  }
->> -#endif
->>  
->>  static __always_inline void current_clr_polling(void)
->>  {
->>  	__current_clr_polling();
->>  
->> -	/*
->> -	 * Ensure we check TIF_NEED_RESCHED after we clear the polling bit.
->> -	 * Once the bit is cleared, we'll get IPIs with every new
->> -	 * TIF_NEED_RESCHED and the IPI handler, scheduler_ipi(), will also
->> -	 * fold.
->> -	 */
->>  	smp_mb(); /* paired with resched_curr() */
->
-> So this part is weird: you remove the comment that justifies the 
-> smp_mb(), but you leave the smp_mb() in place. Why?
->
-> Thanks,
->
-> 	Ingo
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Thanks for pointing that out. The comment removal in the non-polling
-branch was intentional, but my original explanation was unclear. Let
-me rephrase:
+On Tue, 4 Mar 2025 16:27:51 +0530 you wrote:
+> IEP driver supported both perout and pps signal generation
+> but perout feature is faulty with half-cooked support
+> due to some missing configuration. Hence perout feature is
+> removed as a bug fix. This patch series adds back this feature
+> which configures perout signal based on the arguments passed
+> by the perout request.
+> 
+> [...]
 
-Polling architectures (with the TIF_POLLING flag):
-1. __current_clr_polling() performs atomic ops -> 
-Use smp_mb__after_atomic()
-2. Keep original "clear polling bit" comment as it directly explains
-the barrier's purpose.
+Here is the summary with links:
+  - [net-next,v4,1/2] net: ti: icss-iep: Add pwidth configuration for perout signal
+    https://git.kernel.org/netdev/net-next/c/e5b456a14215
+  - [net-next,v4,2/2] net: ti: icss-iep: Add phase offset configuration for perout signal
+    https://git.kernel.org/netdev/net-next/c/220cb1be647a
 
-Non-polling architectures (#else branch):
-1. __current_clr_polling() is a no-op -> Original comment about
-"clearing the bit" becomes misleading.
-2. However, the smp_mb() must remain to preserve pre-existing memory
-ordering guarantees. And explicitly documenting it requires new
-wording to avoid confusion.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Proposed approaches:
-Option A: Add a comment for non-polling smp_mb() like "Paired with
-resched_curr(), as per pre-existing memory ordering guarantees"
-Option B: Leave code as-is (no comment) and elaborate in the commit
-message: "For non-polling architectures, retain smp_mb() to avoid
-subtle regressions, while intentionally omitting the bit-specific
-comment that no longer applies."
 
-Which direction would you consider most maintainable? Your insight
-would be greatly appreciated.
-
-Best regards,
-Yujun
