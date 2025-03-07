@@ -1,38 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F01F7346F;
-	Fri,  7 Mar 2025 06:59:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8619738382;
+	Fri,  7 Mar 2025 07:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741330775; cv=none; b=UzG8yNzRHy67Q4udGzoXBZ8+ip/HG//TxEVeGNQ76/Jag4HOvhJv9BHPNOoE/IAe0QN0VxIlAIy2trX+KGzBhVFpCa7Eq31kXr9t+YkBoJ6C/cgir4KHjH3Tmqb/2X0V4tE8ahH6RGCsdaccAIOLVdtBNEI1tF2DAAn1yTkEcl4=
+	t=1741330846; cv=none; b=uvf0RfKq7U/+9+ahSlO4Zhpp30U5kXfzWQMgM9HGnnIvOK1dxPX4wcz/0uhf6DYXQpypjxAR9RkJKuBjdjLpNIYHidHwx0eQxB48u6FRTnwra9MuPdKmtCiuyaWk5DBncJvDHPZLwt8Io203Ycc7S2t5VYoBd7WCAUH1mZc6pIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741330775; c=relaxed/simple;
-	bh=0PBL0VFDxdx8N7YeUikHBNJ/ULAH10Yn+J6F9Dd5bMk=;
+	s=arc-20240116; t=1741330846; c=relaxed/simple;
+	bh=LonDAILnsW0FisfkrmXT+YWTMRZbfLb6bNdSOs+YmcA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYgqgKuy/+7luSxW+dpzCIgcBOjox56tFLwaogDftbw3AsB5XH+NXL2emmg0v3beA5RzE8hp+xfwfVGoT+rgq+ZQk7BdauEyrRIACy9/oDeJU6ALTV+3C1h+82q5tUzQm5wEO7tDdDJI/siwiwym5wIu6/97qkS3Pbl1MZ3j3Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GSytPwV4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=inCVRe4alSU5eQbpSzlqTULrG4dlYvVP69ZjTQd+4M/Ja/9fAjn7RY1o1ADI8VaDj0Fca0jltkBew7sVHpuFPDXKWoBxjX9DBHr8EvpqS1ag7rWPo/P6a1LijVKlfoYbMdzx2kzM6T+FbprJIavhIZc/CgCdtH++DERpK/rEIpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJcamyGR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GSytPwV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B51C4CED1;
-	Fri,  7 Mar 2025 06:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741330773;
-	bh=0PBL0VFDxdx8N7YeUikHBNJ/ULAH10Yn+J6F9Dd5bMk=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJcamyGR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255A1C4CED1;
+	Fri,  7 Mar 2025 07:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741330846;
+	bh=LonDAILnsW0FisfkrmXT+YWTMRZbfLb6bNdSOs+YmcA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GSytPwV4H72JLlDgmZ3LeRIOj759VJsVDUYnGnTVOcGah6wR0U8kCSXAYCmFGydfe
-	 wFx/5q6+bOMK8wUgmEaNMeKAgFXDUj1ysCtki0DWe5y4/b252csYj6d5+rd0yov70t
-	 ohzSu1qsrqz3N7Vt5uTjQslKQCrU4XZTsqQk2ZyQ=
-Date: Fri, 7 Mar 2025 07:58:18 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Sherry Sun <sherry.sun@nxp.com>
-Cc: jirislaby@kernel.org, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	shenwei.wang@nxp.com
-Subject: Re: [PATCH] tty: serial: lpuart: only disable CTS instead of
- overwriting the whole UARTMODIR register
-Message-ID: <2025030705-carrousel-hamstring-81c6@gregkh>
-References: <20250307065446.1122482-1-sherry.sun@nxp.com>
+	b=bJcamyGRemF0nmD8ymN/7Y76ADOIlDMzFsQvf/RbLxCFkNDBbwzLL7gwQSzQYhz/b
+	 DuH0/iIzKBIk6ldssluyh22o9Bb7ULvWEeRIVSIV8wNcAjSrNCabfw1LD4fcDs/F+4
+	 gP1lDV4rmDl2fxdGD8+FpVL8ZdzEVHV6qLkfZVRtTaFc7+AIR59RTTYyuEO0ia1yWV
+	 n1FhoeoRAS976Ien+z3ar3FBpDMz1SZLtXbf+L1BxwI6oEbFp07NmTP5kimS/7JwUI
+	 AZDvPvRvpWX2K6SPkp5ah1aDgdrGthBUgPOhCgIQeo8krlHtZZn/VJG59ONJceYdL6
+	 NnLoSgYOr+vMA==
+Date: Fri, 7 Mar 2025 09:00:41 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+	ardb@kernel.org, mjg59@srcf.ucam.org,
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+	ebiederm@xmission.com, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v12 09/19] x86: Secure Launch kernel early boot stub
+Message-ID: <Z8qZmWhSdxCCU_Fm@kernel.org>
+References: <20241219194216.152839-1-ross.philipson@oracle.com>
+ <20241219194216.152839-10-ross.philipson@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,47 +54,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250307065446.1122482-1-sherry.sun@nxp.com>
+In-Reply-To: <20241219194216.152839-10-ross.philipson@oracle.com>
 
-On Fri, Mar 07, 2025 at 02:54:46PM +0800, Sherry Sun wrote:
-> No need to overwrite the whole UARTMODIR register before waiting the
-> transmit engine complete, actually our target here is only to disable
-> CTS flow control to avoid the dirty data in TX FIFO may block the
-> transmit engine complete.
-> Also delete the following duplicate CTS disable configuration.
+On Thu, Dec 19, 2024 at 11:42:06AM -0800, Ross Philipson wrote:
+> The Secure Launch (SL) stub provides the entry point for Intel TXT (and
+> later AMD SKINIT) to vector to during the late launch. The symbol
+
+Does "to vector to" translate into to jump into during late launch? :-)
+
+Given the complicated topic in the first place I'd use as down to
+earth language as I possibly could where it can be used.
+
+
+
+> sl_stub_entry is that entry point and its offset into the kernel is
+> conveyed to the launching code using the MLE (Measured Launch
+> Environment) header in the structure named mle_header. The offset of the
+> MLE header is set in the kernel_info. The routine sl_stub contains the
+> very early late launch setup code responsible for setting up the basic
+> environment to allow the normal kernel startup_32 code to proceed. It is
+> also responsible for properly waking and handling the APs on Intel
+> platforms. The routine sl_main which runs after entering 64b mode is
+> responsible for measuring configuration and module information before
+> it is used like the boot params, the kernel command line, the TXT heap,
+> an external initramfs, etc.
 > 
-> Fixes: d5a2e0834364 ("tty: serial: lpuart: disable flow control while waiting for the transmit engine to complete")
-> Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
-> ---
->  drivers/tty/serial/fsl_lpuart.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 
-Hi,
+Otherwise this is looking somewhat decent!
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+BR, Jarkko
