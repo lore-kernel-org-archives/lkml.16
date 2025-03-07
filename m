@@ -1,165 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DAF1A3162;
-	Fri,  7 Mar 2025 08:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7BA1A3162
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741335045; cv=none; b=F4gr78vx2omwcqI1YJCXF5mgUwhMPSPZ8YyOe0CEwdqRPTJcqEXHkaUHXnA+f4Q51+6yjUz0JXxzkf/vsY0SLc6AdionzIM++tKQsR02pdyBt56DkodQJghd0D2oWEljUPGXOjep7ozzm3Kw36zXkrTOnM66wFjwq5CSnaWYNMg=
+	t=1741335061; cv=none; b=hurRKdhWoWjNea9eifAPHe6JjVaHk3a23+8lI36KMzPpbKIHqCdSg5im4x11Wg9Q/Q658ZTp84Imac2YbigGBxwfWzsfesfPnw2czm7jdU0ShhJRyWDxwK8h3vxIgVXagLaafp7ttfp/c5bYHFT+zkj0xBGGWxQJintdcepUDs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741335045; c=relaxed/simple;
-	bh=URLvfZPIO/9wF/AIwa4diqOpjxozMES4CwNf3nm8kuM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uAsm24FguOasox6RXmMz99HHBS6Fpxsm/X5eigYF52yCet2KybiWIrYCu0G5U6c3IlG2hcQjXV6J1Gft2Al9zjqa3RlPP2nS7/Bj/UbDJIaNpZAHbT6zHoTCELCuv5zbvszeMuIUqPak5Y2SjkYT0cKHkm8+bZmm5av9h7sXC3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5CeVRMx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741335061; c=relaxed/simple;
+	bh=nGnmSZMvzzXj/JyVXyljLmmrQBwjG+ZBrxM491q1p+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jy8ZvIJwXEholN7pSAhZC44ri6rJuxm8I1BDX+omhnPiAh1CCyWuKL/3hferLEnDnKbFrG12mrpTK92J1tAu7b7Stft9amXCkRivkjnwf7Dg4ufiry8u5b80sUVT2FWldw7FoEwqwO0cZHK+2jpWQs5A01m0DlYjuBZFVmzmQNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LGTdJB3G; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5CeVRMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E51BCC4CED1;
-	Fri,  7 Mar 2025 08:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741335044;
-	bh=URLvfZPIO/9wF/AIwa4diqOpjxozMES4CwNf3nm8kuM=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=X5CeVRMxtL3Zh2pS2Z69+ZuMwboz7Y+JH9GZE9uLGQ34RXXif3v7uZ4FUpz6c5SDq
-	 cbLgP2UFJXQd2hHxO1fRKon6YNzztZNhBNwMZf8UgfWnKtRY+c4XqaTYqKeoX+aGtV
-	 Pn5BywL0hrEw0aYjCHcPB4WHtb1rFxUPjfxBl+q//CMPlGJ8z4Dtnp0zenlfqAUwdq
-	 bIRcgVz91kmaJ2Brb4o3M6AC46mvgWmwx66ywfAsS5ekcOQqkxESJegL9z7uyvWCR5
-	 qsBxaUT09IPz0K6eax+fLd5iXYOEkieRpVuF1QJ07RyWiUd1bA8jn0Trkrs1N+zLMI
-	 mem6oar5EztPg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26B3C19F32;
-	Fri,  7 Mar 2025 08:10:44 +0000 (UTC)
-From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Fri, 07 Mar 2025 09:10:43 +0100
-Subject: [PATCH v2] hwmon: (ntc_thermistor) return error instead of
- clipping on OOB
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGTdJB3G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741335058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mVfWQB0NQ+MbimPhvRavFkJGs3945QyRHOG2gnewxc8=;
+	b=LGTdJB3GL0IIfQfARK5WgUX29Q1EAIR1o4N2jHC0RfUhyu0PLck25grp/eY/HE8SBGQRys
+	uxA0aO5Do8yuNHMTDZOrAtOm5ghYXCaRiVfw2ouJP+LlcxbET5miwHb2mA33lCB5CHVWZR
+	pAoTd/zJgBuhnumYf8xX2MRvZUrj5sM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-498-XzBf-10tOwCi7BJJIoWUYg-1; Fri, 07 Mar 2025 03:10:56 -0500
+X-MC-Unique: XzBf-10tOwCi7BJJIoWUYg-1
+X-Mimecast-MFC-AGG-ID: XzBf-10tOwCi7BJJIoWUYg_1741335055
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39135d31ca4so125521f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 00:10:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741335055; x=1741939855;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mVfWQB0NQ+MbimPhvRavFkJGs3945QyRHOG2gnewxc8=;
+        b=R2C4yvDq9qo2HzQxPd+MSYHgl+vn2fEOEEqtynh/QLryPwO2GHkMMk9gFbfy7ukg0w
+         uSxejBbcCHXzLpq3sh3XajKWrvwje97BFsJbg8UAy9CDaxUc6ZJMhccIMds9Q+KIIqqQ
+         wZ55y5eDSHttRP60SkxYe2xTT+ekIG0ZqiBvG/uzXwL5JdYuAy1zC3SCYnJm/nhA6crW
+         TGxABPS1SF2VsNg2u64BGLAXs3EWJnacb264CbjAVN/NneBrnPepTVBIylm/fgH+VdeC
+         Db+gFVNc4SrYp5GUwSSygCfM9yfINBYMgSqujLUopKL5375fYgSnf/j4UJVbjNujyBtX
+         DScw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxmmJD6e1z27XApQm0eUvMMZ41IYEK5JtrqG4r+LiemIdFZbMEExAiSluB/6S15DV8YQ/yVIhlXC/j0iY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8n1qtVQiOiOJoG44+2qjIl5XSn3e9o1J0K8d6dGuDRW5deH/u
+	kfoUvctCcUE5MeGT5880q+M9ePrP4gqugLHdFmI0B5x7UXiVGCApopOC5dYZPgmHVnpB63iU2sw
+	SZtWeHsydP3+OAitF8Sx9TOegyZnBkZonP9f40X6w4wiGWeKfpGLZzODFSe9R4w==
+X-Gm-Gg: ASbGnctVTUu6ri6gQnCB9A/B3uMnaVdzF0P+6SgLfQRVE2w8qUmJhD9Fm1VkOq0tgI1
+	B8bo4UjIa4vut/X62wsUiFBIlFJRFlvX8nj032kUui4yeFXtSbnqrlZxcK7dVBnPgeY1BPLazyY
+	E2xBnPm9CSi9G2ziI9MH6CP2BKl6QeSlkBqHDbl0k+C5mAdLKmyzrwun62SggzacB3Lvv753PL1
+	qOUtpnvZRWOWoc0aIQbZGbXYexsCBpnHmBRg1Y4xQvq7F1dBWMjRoe13zrRp7I9p6csMU5H8UZG
+	CDu9sWG6QMu1sok/FXPPCZbLTKTqvJWIkgwMhXi4lddCQazAOdiwR8fgcRxvLJL+Wfp/+BSw7hB
+	QQbd4Wyfusys1TU67qFbYl71IDlM58LmrliNLhA==
+X-Received: by 2002:a05:6000:1fa9:b0:390:f9e0:f0d0 with SMTP id ffacd0b85a97d-39132026f40mr1610104f8f.6.1741335055430;
+        Fri, 07 Mar 2025 00:10:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH2hm+zGObhlUKR0rZFQq8y9c7sla/GE6/dcqjXIzrKlU1Y4X8O4R9N1msf3h3U8Fmgkl4U2g==
+X-Received: by 2002:a05:6000:1fa9:b0:390:f9e0:f0d0 with SMTP id ffacd0b85a97d-39132026f40mr1610086f8f.6.1741335055049;
+        Fri, 07 Mar 2025 00:10:55 -0800 (PST)
+Received: from ?IPV6:2003:cb:c721:7400:ab0b:9ceb:d2:6a17? (p200300cbc7217400ab0b9ceb00d26a17.dip0.t-ipconnect.de. [2003:cb:c721:7400:ab0b:9ceb:d2:6a17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c103290sm4461424f8f.87.2025.03.07.00.10.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 00:10:54 -0800 (PST)
+Message-ID: <264e859c-820f-4001-b5b7-d4011fcbc192@redhat.com>
+Date: Fri, 7 Mar 2025 09:10:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] mm: page_ext: add an iteration API for page
+ extensions
+To: Luiz Capitulino <luizcap@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, yuzhao@google.com, pasha.tatashin@soleen.com
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, muchun.song@linux.dev
+References: <cover.1741301089.git.luizcap@redhat.com>
+ <a45893880b7e1601082d39d2c5c8b50bcc096305.1741301089.git.luizcap@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <a45893880b7e1601082d39d2c5c8b50bcc096305.1741301089.git.luizcap@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250307-ntc_oob-v2-1-bba2d32b1a8e@gocontroll.com>
-X-B4-Tracking: v=1; b=H4sIAAKqymcC/2XMQQrCMBCF4auUWRtJxsamrryHFDFp2g7UjCShK
- KV3N3br8n88vhWSj+QTXKoVol8oEYcSeKjATY8wekF9aUCJWp5kLUJ2d2YrDGJttUXdmAHK+xX
- 9QO9dunWlJ0qZ42eHF/Vb/41FCSXOUvambbFuTH8d2XHIkef56PgJ3bZtX5VBvkGjAAAA
-X-Change-ID: 20250304-ntc_oob-8224b5b2578f
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Maud Spierings <maudspierings@gocontroll.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741335044; l=3813;
- i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=o+bGurIEIvfpijwa571BSTS14S66EL4hGI9UjZk9MNc=;
- b=zuQaTIXFRK7dEK3cYl2uaLR9Bby1DgSdcLktCsuTSSKiIoIKmPZpQuCMpjtdy9u7slpDFtBhS
- Au0vt17FoXLCR+SW+DDPzO0wrI+iU9pImstc4Gf9u4X6SuK7SJIJ08P
-X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
- pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
-X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
- with auth_id=341
-X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
-Reply-To: maudspierings@gocontroll.com
 
-From: Maud Spierings <maudspierings@gocontroll.com>
 
-When the ntc is reading Out Of Bounds instead of clipping to the nearest
-limit (min/max) return -ENODATA. This prevents malfunctioning sensors
-from sending a device into a shutdown loop due to a critical trip.
+> +++ b/mm/page_ext.c
+> @@ -507,6 +507,19 @@ void __meminit pgdat_page_ext_init(struct pglist_data *pgdat)
+>   
+>   #endif
+>   
+> +/**
+> + * page_ext_lookup() - Lookup a page extension for a PFN.
+> + * @pfn: PFN of the page we're interested in.
+> + *
+> + * Must be called with RCU read lock taken and @pfn must be valid.
+> + *
+> + * Return: NULL if no page_ext exists for this page.
+> + */
+> +struct page_ext *page_ext_lookup(unsigned long pfn)
+> +{
+> +	return lookup_page_ext(pfn_to_page(pfn));
+> +}
+> +
+>   /**
+>    * page_ext_get() - Get the extended information for a page.
+>    * @page: The page we're interested in.
 
-This implementation will only work for ntc type thermistors if a ptc
-type is to be implemented the min/max ohm calculation must be adjusted
-to take that into account.
+As discussed offline, getting rid of lookup_page_ext() can be done later 
+as a cleanup.
 
-Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
----
-This patch is a continuation of another discussion [1]. I felt like it
-should be a new patch, not a v2 as this is a very different change.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Currently the only feedback this provides to the user is when they
-manually try to read the temperature and it returns the error. I have
-added a simple printk to these error points to see how spammy it gets
-and this is the result:
-
-dmesg | grep hwmon
-[    4.982682] hwmon: sensor out of bounds
-[    5.249758] hwmon: sensor out of bounds
-[    5.633729] hwmon: sensor out of bounds
-[    6.215285] hwmon: sensor out of bounds
-[    7.073882] hwmon: sensor out of bounds
-[    7.486620] hwmon: sensor out of bounds
-[    8.833765] hwmon: sensor out of bounds
-[   10.785969] hwmon: sensor out of bounds
-[   13.793722] hwmon: sensor out of bounds
-[   16.761124] hwmon: sensor out of bounds
-[   17.889706] hwmon: sensor out of bounds
-[   25.057715] hwmon: sensor out of bounds
-[   35.041725] hwmon: sensor out of bounds
-[   50.110346] hwmon: sensor out of bounds
-[   72.945283] hwmon: sensor out of bounds
-[  105.712619] hwmon: sensor out of bounds
-[  154.863976] hwmon: sensor out of bounds
-[  164.937104] hwmon: sensor out of bounds
-[  228.590909] hwmon: sensor out of bounds
-[  315.365777] hwmon: sensor out of bounds
-[  464.718403] hwmon: sensor out of bounds
-[  615.079123] hwmon: sensor out of bounds
-[  764.496780] hwmon: sensor out of bounds
-
-This is with polling-delay set to 1000, it seems to rate-limit itself?
-I feel like it would be nice to eventually have at least some notice in
-dmesg where you can see that a sensor is misbehaving, perhaps this
-should be done in the thermal-zone or something higher up.
-
-[1]: https://lore.kernel.org/all/20250304-ntc_min_max-v1-1-b08e70e56459@gocontroll.com/
----
-Changes in v2:
-- Drop the check and comment at the end of get_ohm_of_thermistor()
-- Link to v1: https://lore.kernel.org/r/20250304-ntc_oob-v1-1-600d8992478d@gocontroll.com
----
- drivers/hwmon/ntc_thermistor.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
-index 0d29c8f97ba7c2f264588b6309b91ca494012ad6..d34db0e595e9cb4249d23244ea68a01949892469 100644
---- a/drivers/hwmon/ntc_thermistor.c
-+++ b/drivers/hwmon/ntc_thermistor.c
-@@ -387,12 +387,9 @@ static int get_ohm_of_thermistor(struct ntc_data *data, unsigned int uv)
- 	puo = data->pullup_ohm;
- 	pdo = data->pulldown_ohm;
- 
--	if (uv == 0)
--		return (data->connect == NTC_CONNECTED_POSITIVE) ?
--			INT_MAX : 0;
--	if (uv >= puv)
--		return (data->connect == NTC_CONNECTED_POSITIVE) ?
--			0 : INT_MAX;
-+	/* faulty adc value */
-+	if (uv == 0 || uv >= puv)
-+		return -ENODATA;
- 
- 	if (data->connect == NTC_CONNECTED_POSITIVE && puo == 0)
- 		n = div_u64(pdo * (puv - uv), uv);
-@@ -404,8 +401,10 @@ static int get_ohm_of_thermistor(struct ntc_data *data, unsigned int uv)
- 	else
- 		n = div64_u64_safe(pdo * puo * uv, pdo * (puv - uv) - puo * uv);
- 
--	if (n > INT_MAX)
--		n = INT_MAX;
-+	/* sensor out of bounds */
-+	if (n > data->comp[0].ohm || n < data->comp[data->n_comp-1].ohm)
-+		return -ENODATA;
-+
- 	return n;
- }
- 
-
----
-base-commit: 20d5c66e1810e6e8805ec0d01373afb2dba9f51a
-change-id: 20250304-ntc_oob-8224b5b2578f
-
-Best regards,
 -- 
-Maud Spierings <maudspierings@gocontroll.com>
+Cheers,
 
+David / dhildenb
 
