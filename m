@@ -1,120 +1,216 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B2E1C84B5;
-	Fri,  7 Mar 2025 10:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7CE1C84B5;
+	Fri,  7 Mar 2025 10:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341850; cv=none; b=Ii0IgSnac1uyNyf8UkiXONOADUkj76S4wJS3mVpQ//NBr9690i0bX8JzixdwrQiqN7cv//f4d8s2gyFP/ExEWolQR/VptCzwK0GsC/s3MfW5+2mzjS7FTx9OFnjlliGYQ0RPuQxVDYwS6glLTgdvt+7B11wnITWRnZ0JBP3re54=
+	t=1741341858; cv=none; b=jrbl6sIL/VZpJXCi+W1ByC38GH3WBiNkfxiVCyiZKrdRBOHel14Kt07az2bRlpD0h+0bsIujilhLmbjLkOLWeoDeekB007WBjWr+qhYMuf/EpJfd/oVglciLj7P4jWXnAabLLYBdfc0V6wPAF39mJ1E3S8cTqOWUkZdyJzMenGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341850; c=relaxed/simple;
-	bh=MixtkC6Vdu2RyKm+p1WrB24RizzWnzxsKFc9VRWYl1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqyGQSX59ZUuPJVMRLs6/z1BaaYeD/4MvXAzN0lZBVIrMvyphq4i4sfCpyXlJkguBJg0/ugdEmjUJgqr6dz0ubGEMJKQis+6mD9Yh8mW9m8jWnFywpedLAE6cj8ezFAcvZR4Ue8q6QhGZ4vBG8Ri9jfJuJsTwLgjyKPHd8P5iQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C04F2150C;
-	Fri,  7 Mar 2025 02:04:20 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 123553F66E;
-	Fri,  7 Mar 2025 02:04:04 -0800 (PST)
-Date: Fri, 7 Mar 2025 10:04:02 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: "rafael@kernel.org" <rafael@kernel.org>,
-	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"d-gole@ti.com" <d-gole@ti.com>,
-	"anup@brainfault.org" <anup@brainfault.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"khilman@baylibre.com" <khilman@baylibre.com>,
-	"quic_tingweiz@quicinc.com" <quic_tingweiz@quicinc.com>,
-	"quic_yuanjiey@quicinc.com" <quic_yuanjiey@quicinc.com>
-Subject: Re: [PATCH v4] cpuidle: Init cpuidle only for present CPUs
-Message-ID: <Z8rEkgYoThJAJdPV@bogus>
-References: <20250307080303.2660506-1-ping.bai@nxp.com>
- <Z8rBYuDiIyo8y6HT@bogus>
- <AS8PR04MB86425B7CEE7443F822A2DBCA87D52@AS8PR04MB8642.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1741341858; c=relaxed/simple;
+	bh=vUYJIpzrPPNsd45VqzFVWUJNCTyAKU0dXIDQudSDGKU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j+KbHRlvLW64syfBSxr7w7CDuz4dFsCmYd5SQQOx9+JeM+a0Vy03BlzofGbFaCQCvgXxCtcaC6uSdaRL3Ga7vnBge3bbGLLMYm11tAcadIX0teJVCX+VuuspRsprtK2D6OhkE4h7sJ36iHnwruGpIUl0F6y34TdOFORIz+k3ve0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=L2Wdp+g8; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="L2Wdp+g8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1741341853; x=1741601053;
+	bh=2Zpu6E3/Y16UltqXkAaLIudQV1ASZITnWKAwSutW1Y8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=L2Wdp+g8AQLlqdlfTxkjFb+QkKuQ8r4HpikKK7oR615X7CAkQCIG0r0+rWJgdawSa
+	 iZ2D9DuOgAwiVdg7S3/o2E1o9jMsQPOu4Re5/m6mR7AJWt9gq8QoaLqVUWnGO3Isf9
+	 /cMlGga2GqW0AyJG+BElasQN7F2wY9uz2rfzNBCRDAz2TZ7zOrR/MVz7DQwiNqPkNj
+	 aSpCFH0OMf+PgH+CtgVdLKeByHLZkvz1EypDSnVRMUMbHUa0vPN1WYSlq0V0miCXFs
+	 ISTSEv8rUHEFyHgtS3PBjtrGzNEnCe/dPE0ib4PizNg5Xcb3hjd45bWZ6Nd2cMEWdJ
+	 bADZod7BjhJ/Q==
+Date: Fri, 07 Mar 2025 10:04:09 +0000
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
+Subject: [PATCH v5 1/4] rust: types: Add Ownable/Owned types
+Message-ID: <20250307-unique-ref-v5-1-bffeb633277e@pm.me>
+In-Reply-To: <20250307-unique-ref-v5-0-bffeb633277e@pm.me>
+References: <20250307-unique-ref-v5-0-bffeb633277e@pm.me>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 2fb0fc540ab07853945857e8c687b233bec6e4ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AS8PR04MB86425B7CEE7443F822A2DBCA87D52@AS8PR04MB8642.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 07, 2025 at 10:02:14AM +0000, Jacky Bai wrote:
-> Hi Sudeep,
-> 
-> > Subject: Re: [PATCH v4] cpuidle: Init cpuidle only for present CPUs
-> > 
-> > On Fri, Mar 07, 2025 at 04:03:03PM +0800, Jacky Bai wrote:
-> > > for_each_possible_cpu() is currently used to initialize cpuidle in
-> > > below cpuidle drivers:
-> > >   drivers/cpuidle/cpuidle-arm.c
-> > >   drivers/cpuidle/cpuidle-big_little.c
-> > >   drivers/cpuidle/cpuidle-psci.c
-> > >   drivers/cpuidle/cpuidle-riscv-sbi.c
-> > >
-> > > However, in cpu_dev_register_generic(), for_each_present_cpu() is used
-> > > to register CPU devices which means the CPU devices are only
-> > > registered for present CPUs and not all possible CPUs.
-> > >
-> > > With nosmp or maxcpus=0, only the boot CPU is present, lead to the
-> > > failure:
-> > >
-> > >   |  Failed to register cpuidle device for cpu1
-> > >
-> > > Then rollback to cancel all CPUs' cpuidle registration.
-> > >
-> > > Change for_each_possible_cpu() to for_each_present_cpu() in the above
-> > > cpuidle drivers to ensure it only registers cpuidle devices for CPUs
-> > > that are actually present.
-> > >
-> > > Fixes: b0c69e1214bc ("drivers: base: Use present CPUs in
-> > > GENERIC_CPU_DEVICES")
-> > > Reviewed-by: Dhruva Gole <d-gole@ti.com>
-> > > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > Tested-by: Yuanjie Yang <quic_yuanjiey@quicinc.com>
-> > > Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> > > ---
-> > >  - v4 changes:
-> > >   - add changes for other cpuidle driver that has the similar issue
-> > >     as cpuidle-pcsi driver.
-> > >
-> > >  - v3 changes:
-> > >   - improve the changelog as suggested by Sudeep
-> > > ---
-> > >  drivers/cpuidle/cpuidle-arm.c        | 8 ++++----
-> > >  drivers/cpuidle/cpuidle-big_little.c | 2 +-
-> > >  drivers/cpuidle/cpuidle-psci.c       | 4 ++--
-> > >  drivers/cpuidle/cpuidle-riscv-sbi.c  | 4 ++--
-> > 
-> > 
-> > Why have you spared drivers/cpuidle/cpuidle-qcom-spm.c ? IIUC the issue
-> > exists there as well.
-> > 
-> 
-> For qcom-spm driver, it has below code logic to handle no cpu device case, and
-> no rollback to cancel the whole cpuidle registration. So I just leave it as it is.
-> Do we need to update it?
-> 
-> for_each_possible_cpu(cpu) {
->         ret = spm_cpuidle_register(&pdev->dev, cpu);
+From: Asahi Lina <lina@asahilina.net>
 
-Did you look into this function ?
+By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
+C FFI) type that *may* be owned by Rust, but need not be. Unlike
+AlwaysRefCounted, this mechanism expects the reference to be unique
+within Rust, and does not allow cloning.
 
--- 
-Regards,
-Sudeep
+Conceptually, this is similar to a KBox<T>, except that it delegates
+resource management to the T instead of using a generic allocator.
+
+Signed-off-by: Asahi Lina <lina@asahilina.net>
+---
+ rust/kernel/types.rs | 110 +++++++++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 110 insertions(+)
+
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 55ddd50e8aaa075ac33d5f1088a7f72df05f74f4..0cae5ba6607f0a86d2f0e3494f9=
+56f6daad78067 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -551,6 +551,116 @@ fn drop(&mut self) {
+     }
+ }
+=20
++/// Types that may be owned by Rust code or borrowed, but have a lifetime =
+managed by C code.
++///
++/// It allows such types to define their own custom destructor function to=
+ be called when
++/// a Rust-owned reference is dropped.
++///
++/// This is usually implemented by wrappers to existing structures on the =
+C side of the code.
++///
++/// # Safety
++///
++/// Implementers must ensure that any objects borrowed directly as `&T` st=
+ay alive for the duration
++/// of the lifetime, and that any objects owned by Rust as `Owned<T>`) sta=
+y alive while that owned
++/// reference exists, until the [`Ownable::release()`] trait method is cal=
+led.
++pub unsafe trait Ownable {
++    /// Releases the object (frees it or returns it to foreign ownership).
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that the object is no longer referenced after =
+this call.
++    unsafe fn release(this: NonNull<Self>);
++}
++
++/// A subtrait of Ownable that asserts that an `Owned<T>` Rust reference i=
+s not only unique
++/// within Rust and keeps the `T` alive, but also guarantees that the C co=
+de follows the
++/// usual mutable reference requirements. That is, the kernel will never m=
+utate the
++/// `T` (excluding internal mutability that follows the usual rules) while=
+ Rust owns it.
++///
++/// When this type is implemented for an [`Ownable`] type, it allows `Owne=
+d<T>` to be
++/// dereferenced into a &mut T.
++///
++/// # Safety
++///
++/// Implementers must ensure that the kernel never mutates the underlying =
+type while
++/// Rust owns it.
++pub unsafe trait OwnableMut: Ownable {}
++
++/// An owned reference to an ownable kernel object.
++///
++/// The object is automatically freed or released when an instance of [`Ow=
+ned`] is
++/// dropped.
++///
++/// # Invariants
++///
++/// The pointer stored in `ptr` is non-null and valid for the lifetime of =
+the [`Owned`] instance.
++pub struct Owned<T: Ownable> {
++    ptr: NonNull<T>,
++    _p: PhantomData<T>,
++}
++
++// SAFETY: It is safe to send `Owned<T>` to another thread when the underl=
+ying `T` is `Send` because
++// it effectively means sending a unique `&mut T` pointer (which is safe b=
+ecause `T` is `Send`).
++unsafe impl<T: Ownable + Send> Send for Owned<T> {}
++
++// SAFETY: It is safe to send `&Owned<T>` to another thread when the under=
+lying `T` is `Sync`
++// because it effectively means sharing `&T` (which is safe because `T` is=
+ `Sync`).
++unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
++
++impl<T: Ownable> Owned<T> {
++    /// Creates a new instance of [`Owned`].
++    ///
++    /// It takes over ownership of the underlying object.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that the underlying object is acquired and can=
+ be considered owned by
++    /// Rust.
++    pub(crate) unsafe fn from_raw(ptr: NonNull<T>) -> Self {
++        // INVARIANT: The safety requirements guarantee that the new insta=
+nce now owns the
++        // reference.
++        Self {
++            ptr,
++            _p: PhantomData,
++        }
++    }
++
++    /// Consumes the `Owned`, returning a raw pointer.
++    ///
++    /// This function does not actually relinquish ownership of the object=
+.
++    /// After calling this function, the caller is responsible for ownersh=
+ip previously managed
++    /// by the `Owned`.
++    #[allow(dead_code)]
++    pub(crate) fn into_raw(me: Self) -> NonNull<T> {
++        ManuallyDrop::new(me).ptr
++    }
++}
++
++impl<T: Ownable> Deref for Owned<T> {
++    type Target =3D T;
++
++    fn deref(&self) -> &Self::Target {
++        // SAFETY: The type invariants guarantee that the object is valid.
++        unsafe { self.ptr.as_ref() }
++    }
++}
++
++impl<T: Ownable + OwnableMut> DerefMut for Owned<T> {
++    fn deref_mut(&mut self) -> &mut Self::Target {
++        // SAFETY: The type invariants guarantee that the object is valid,
++        // and that we can safely return a mutable reference to it.
++        unsafe { self.ptr.as_mut() }
++    }
++}
++
++impl<T: Ownable> Drop for Owned<T> {
++    fn drop(&mut self) {
++        // SAFETY: The type invariants guarantee that the `Owned` owns the=
+ object we're about to
++        // release.
++        unsafe { T::release(self.ptr) };
++    }
++}
++
+ /// A sum type that always holds either a value of type `L` or `R`.
+ ///
+ /// # Examples
+
+--=20
+2.48.1
+
+
