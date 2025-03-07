@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5B23D6D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC58433EC;
 	Fri,  7 Mar 2025 00:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741306371; cv=none; b=lDdWcmSdIHVdDeTIYOXWXXQhAeyC4zUClNN7PaibI6wQxz5plcFnlA9yiIx920txGoCvlDvS9UYgrpcVnS2h7ulimrA+Wuc6lqdZylKLtSk47breoHekGrzh6e+HHehYHilN6p85ngbCtLlby0KlkoIn9GmNGHm/odtoCDXcvNs=
+	t=1741306371; cv=none; b=HrSXsc2dbaBbYTQ1+vMiKL0lOMLyn7pWKX0cHfohMysJOtDRS+IWUyve6YiM65N2D3iJmSvmXCPiAZa+AVWOCQ/r1qBsheEMp12/682bOg2A+drJxZfv5DsOgHPMi+86o1U6G1hN4324mtdcG1pd6s6UFsHPKC0bQ0pK3zaFoJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741306371; c=relaxed/simple;
-	bh=oMm/im6g2Yvfce+8abOgBvZ5Ddw906iLXRtF4jDWO64=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EqIDxTYikIDBaX/c0CaoI0ppG52GZwRMUXFEtU1QB4mttMhKrbANHrk/Z3GSqVvlVy/vBKNB7kEoCzpDO/kDoLTh9iEJJCzabp5a64QpDlEnpFcFUKfRWTOATfmvaAB6eAoW2tGnLn2z/UjfaQc+C3NXUer0j1vVfQF/JxTOY1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8wUFWOq; arc=none smtp.client-ip=10.30.226.201
+	bh=oo71VY1McPM8/140gIhN/hZPHJcdcpEwgl7m7nF3O78=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=EbSKjuKrddRXBIF3pJUHYgXjCmaWg5XGBeob+2GXLPdVMXww7D1rHOdFZAFvcHvjfBmCaR2AfWfaDokhuKfqXwUOyS5ULvDvDSSnngfveYKvZ2wtfaMTD5jkc5FetNxpti/73onDXypUIdQGb8dEO6hjYcwM3V3yO6mrwzE5Ao8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBxRK5fn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8wUFWOq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D253C4CEE0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBxRK5fn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 74A3AC4CEEB;
 	Fri,  7 Mar 2025 00:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741306371;
-	bh=oMm/im6g2Yvfce+8abOgBvZ5Ddw906iLXRtF4jDWO64=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=D8wUFWOqHhG6XsWFwxSj97N81Ez/lf2x75+lYfHXN551OUauXAdjoY7hWpFb5n2QQ
-	 +z3qsnoAknKdqknBwAnTABacFSONYvkUwkrYSMb7aAQExU6EKGXNC2IE1mGgYQRV4Z
-	 NU6X3zWO5+jMm4wthg5oZ2Ux9T0rjzVzOne2gqTSUJyReT/wWqqcGmUWJlULGTSx4K
-	 RWcLEJlikQQYQVz8dWEa+Sw9qeqSWJawYp40NEL5OY7+4pPu+DxQ5bJvEOJ5QnIx5j
-	 oLtaQFfzSTNg1lB8nRK+nY5mBLUSKVB17LYxouhSCX3Mu9nOUEHNLQqAut/K30oKbi
-	 hfSiYQbq5OkcA==
+	bh=oo71VY1McPM8/140gIhN/hZPHJcdcpEwgl7m7nF3O78=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=oBxRK5fne1mPwGVzleuDUztkY+X7h8YXa+uxfladU/8YEMMPSTv8x7r/whmtuKKgo
+	 zYNFaxOGqpou/r3bl0f67i39OKYD3KyFvero/vzlBTCVszieRcsDzGWxtFnZgA14UV
+	 o3SuGijIdgUaq2lZbgq0y+sFVZg+UWWSqEuuKtLYOHunJIVo44QZgJacVQRJMEpFpe
+	 LQZ8ueMT1rw1YZPnSN7Vu40A+EgrifkfN8NuZn6ToON3a/aQFhAwiLZa9G9O0TCZeD
+	 ehhvrDl0NtVHVh2KCGEeI+alUsLPVXkJwxKszy8xioMzPQN792mtLalvUWL4x6cGf6
+	 151M7Q2vD4fRg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1514BC282EC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA74C28B23;
 	Fri,  7 Mar 2025 00:12:51 +0000 (UTC)
 From: Satish Kharat via B4 Relay <devnull+satishkh.cisco.com@kernel.org>
-Subject: [PATCH net-next v3 0/8] enic: enable 32, 64 byte cqes and get max
- rx/tx ring size from hw
-Date: Thu, 06 Mar 2025 19:15:21 -0500
-Message-Id: <20250306-enic_cleanup_and_ext_cq-v3-0-92bc165344cf@cisco.com>
+Date: Thu, 06 Mar 2025 19:15:24 -0500
+Subject: [PATCH net-next v3 3/8] enic: enic rq extended cq defines
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJk6ymcC/3XNyw7CIBAF0F9pWIsB+kJX/ocxhMfUkihUqKSm6
- b9LcKEblzd37pkVRQgWIjpWKwqQbLTe5VDvKqRH6a6ArckZMcJawijH4KwW+gbSPSchnRGwzEI
- /8JDLjitlgPQor6cAg12KfEYOZuzyIbrkZrRx9uFVXiZa+o/O+r96ophgXdNmOLScMqVO2kbt9
- 9rfi5nY16lJ899h2eEtJw3raiMN/3W2bXsD3TGw6hABAAA=
-X-Change-ID: 20250218-enic_cleanup_and_ext_cq-f21868bbde07
+Message-Id: <20250306-enic_cleanup_and_ext_cq-v3-3-92bc165344cf@cisco.com>
+References: <20250306-enic_cleanup_and_ext_cq-v3-0-92bc165344cf@cisco.com>
+In-Reply-To: <20250306-enic_cleanup_and_ext_cq-v3-0-92bc165344cf@cisco.com>
 To: Christian Benvenuti <benve@cisco.com>, 
  Andrew Lunn <andrew+netdev@lunn.ch>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -54,11 +51,11 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Satish Kharat <satishkh@cisco.com>, Nelson Escobar <neescoba@cisco.com>, 
  John Daley <johndale@cisco.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741306525; l=2637;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741306525; l=4129;
  i=satishkh@cisco.com; s=20250226; h=from:subject:message-id;
- bh=oMm/im6g2Yvfce+8abOgBvZ5Ddw906iLXRtF4jDWO64=;
- b=wHygnFa9kJOQE+tEfDwwUdI4pFBTj3RodmqhwOh85poUiK+DCVsBbccAsj9bjwyi6pBDsSvnA
- AH3zHPjqcRUArdsYL73ltsLFgRoXBcSm7p6dUanAhilkGrKoZ6tSJjO
+ bh=lCdejaRbYIFkRngxAAsLt06YyI38y1e/5BxDAW6GFew=;
+ b=3Dxv3R0Zy/UhbcMK65CliRw0sfVUjFR0RyHB/NDN6hmZhCHvRROSuamiKYzJm5pnvGnHx3NZS
+ MRjhF9txuulCj+cTGYN3d8/8S/Tjcae5Dr9nwEOQoSgzgk3QDmJKwFq
 X-Developer-Key: i=satishkh@cisco.com; a=ed25519;
  pk=lkxzORFYn5ejiy0kzcsfkpGoXZDcnHMc4n3YK7jJnJo=
 X-Endpoint-Received: by B4 Relay for satishkh@cisco.com/20250226 with
@@ -66,62 +63,128 @@ X-Endpoint-Received: by B4 Relay for satishkh@cisco.com/20250226 with
 X-Original-From: Satish Kharat <satishkh@cisco.com>
 Reply-To: satishkh@cisco.com
 
-This series enables using the max rx and tx ring sizes read from hw.
-For newer hw that can be up to 16k entries. This requires bigger
-completion entries for rx queues. This series enables the use of the
-32 and 64 byte completion queues entries for enic rx queues on
-supported hw versions. This is in addition to the exiting (default)
-16 byte rx cqes.
+From: Satish Kharat <satishkh@cisco.com>
 
+Adds the defines for 32 and 64 byte receive queue completion queue
+descriptors.
+Adds devcmd define to get rq cq descriptor size/s supported by hw.
+
+Co-developed-by: Nelson Escobar <neescoba@cisco.com>
+Signed-off-by: Nelson Escobar <neescoba@cisco.com>
+Co-developed-by: John Daley <johndale@cisco.com>
+Signed-off-by: John Daley <johndale@cisco.com>
 Signed-off-by: Satish Kharat <satishkh@cisco.com>
 ---
-Changes in v3:
-- Minor: commit message header reformat for some commits
-- Link to v2: https://lore.kernel.org/r/20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com
+ drivers/net/ethernet/cisco/enic/cq_enet_desc.h | 56 ++++++++++++++++++++++++++
+ drivers/net/ethernet/cisco/enic/vnic_devcmd.h  | 19 +++++++++
+ 2 files changed, 75 insertions(+)
 
-Changes in v2:
-- Added net-next to the subject line.
-- Removed inlines from function defs in .c file.
-- Fixed function local variable style issues.
-- Added couple of helper functions to common code.
-- Fixed checkpatch errors and warnings.
-- Link to v1: https://lore.kernel.org/r/20250227-enic_cleanup_and_ext_cq-v1-0-c314f95812bb@cisco.com
+diff --git a/drivers/net/ethernet/cisco/enic/cq_enet_desc.h b/drivers/net/ethernet/cisco/enic/cq_enet_desc.h
+index 6abc134d07032a737c8b3d2987e3c7a4b8191991..809a3f30b87f78285414990a2a42c9a30a8662c6 100644
+--- a/drivers/net/ethernet/cisco/enic/cq_enet_desc.h
++++ b/drivers/net/ethernet/cisco/enic/cq_enet_desc.h
+@@ -24,6 +24,23 @@ static inline void cq_enet_wq_desc_dec(struct cq_enet_wq_desc *desc,
+ 		color, q_number, completed_index);
+ }
+ 
++/*
++ * Defines and Capabilities for CMD_CQ_ENTRY_SIZE_SET
++ */
++#define VNIC_RQ_ALL (~0ULL)
++
++#define VNIC_RQ_CQ_ENTRY_SIZE_16 0
++#define VNIC_RQ_CQ_ENTRY_SIZE_32 1
++#define VNIC_RQ_CQ_ENTRY_SIZE_64 2
++
++#define VNIC_RQ_CQ_ENTRY_SIZE_16_CAPABLE BIT(VNIC_RQ_CQ_ENTRY_SIZE_16)
++#define VNIC_RQ_CQ_ENTRY_SIZE_32_CAPABLE BIT(VNIC_RQ_CQ_ENTRY_SIZE_32)
++#define VNIC_RQ_CQ_ENTRY_SIZE_64_CAPABLE BIT(VNIC_RQ_CQ_ENTRY_SIZE_64)
++
++#define VNIC_RQ_CQ_ENTRY_SIZE_ALL_BIT  (VNIC_RQ_CQ_ENTRY_SIZE_16_CAPABLE | \
++					VNIC_RQ_CQ_ENTRY_SIZE_32_CAPABLE | \
++					VNIC_RQ_CQ_ENTRY_SIZE_64_CAPABLE)
++
+ /* Completion queue descriptor: Ethernet receive queue, 16B */
+ struct cq_enet_rq_desc {
+ 	__le16 completed_index_flags;
+@@ -36,6 +53,45 @@ struct cq_enet_rq_desc {
+ 	u8 type_color;
+ };
+ 
++/* Completion queue descriptor: Ethernet receive queue, 32B */
++struct cq_enet_rq_desc_32 {
++	__le16 completed_index_flags;
++	__le16 q_number_rss_type_flags;
++	__le32 rss_hash;
++	__le16 bytes_written_flags;
++	__le16 vlan;
++	__le16 checksum_fcoe;
++	u8 flags;
++	u8 fetch_index_flags;
++	__le32 time_stamp;
++	__le16 time_stamp2;
++	__le16 pie_info;
++	__le32 pie_info2;
++	__le16 pie_info3;
++	u8 pie_info4;
++	u8 type_color;
++};
++
++/* Completion queue descriptor: Ethernet receive queue, 64B */
++struct cq_enet_rq_desc_64 {
++	__le16 completed_index_flags;
++	__le16 q_number_rss_type_flags;
++	__le32 rss_hash;
++	__le16 bytes_written_flags;
++	__le16 vlan;
++	__le16 checksum_fcoe;
++	u8 flags;
++	u8 fetch_index_flags;
++	__le32 time_stamp;
++	__le16 time_stamp2;
++	__le16 pie_info;
++	__le32 pie_info2;
++	__le16 pie_info3;
++	u8 pie_info4;
++	u8 reserved[32];
++	u8 type_color;
++};
++
+ #define CQ_ENET_RQ_DESC_FLAGS_INGRESS_PORT          (0x1 << 12)
+ #define CQ_ENET_RQ_DESC_FLAGS_FCOE                  (0x1 << 13)
+ #define CQ_ENET_RQ_DESC_FLAGS_EOP                   (0x1 << 14)
+diff --git a/drivers/net/ethernet/cisco/enic/vnic_devcmd.h b/drivers/net/ethernet/cisco/enic/vnic_devcmd.h
+index db56d778877a73b0ef2adf59120cbc57999732ee..605ef17f967e4a7d62738b776bf4dbfdf172ba2a 100644
+--- a/drivers/net/ethernet/cisco/enic/vnic_devcmd.h
++++ b/drivers/net/ethernet/cisco/enic/vnic_devcmd.h
+@@ -436,6 +436,25 @@ enum vnic_devcmd_cmd {
+ 	 * in: (u16) a2 = unsigned short int port information
+ 	 */
+ 	CMD_OVERLAY_OFFLOAD_CFG = _CMDC(_CMD_DIR_WRITE, _CMD_VTYPE_ENET, 73),
++
++	/*
++	 * Set extended CQ field in MREGS of RQ (or all RQs)
++	 * for given vNIC
++	 * in: (u64) a0 = RQ selection (VNIC_RQ_ALL for all RQs)
++	 *     (u32) a1 = CQ entry size
++	 *         VNIC_RQ_CQ_ENTRY_SIZE_16 --> 16 bytes
++	 *         VNIC_RQ_CQ_ENTRY_SIZE_32 --> 32 bytes
++	 *         VNIC_RQ_CQ_ENTRY_SIZE_64 --> 64 bytes
++	 *
++	 * Capability query:
++	 * out: (u32) a0 = errno, 0:valid cmd
++	 *      (u32) a1 = value consisting of supported entries
++	 *         bit 0: 16 bytes
++	 *         bit 1: 32 bytes
++	 *         bit 2: 64 bytes
++	 */
++	CMD_CQ_ENTRY_SIZE_SET = _CMDC(_CMD_DIR_WRITE, _CMD_VTYPE_ENET, 90),
++
+ };
+ 
+ /* CMD_ENABLE2 flags */
 
----
-Satish Kharat (8):
-      enic: Move function from header file to c file
-      enic: enic rq code reorg
-      enic: enic rq extended cq defines
-      enic: enable rq extended cq support
-      enic: remove unused function cq_enet_wq_desc_dec
-      enic: added enic_wq.c and enic_wq.h
-      enic: cleanup of enic wq request completion path
-      enic: get max rq & wq entries supported by hw, 16K queues
-
- drivers/net/ethernet/cisco/enic/Makefile       |   2 +-
- drivers/net/ethernet/cisco/enic/cq_desc.h      |  25 +--
- drivers/net/ethernet/cisco/enic/cq_enet_desc.h | 142 ++++++---------
- drivers/net/ethernet/cisco/enic/enic.h         |  13 ++
- drivers/net/ethernet/cisco/enic/enic_ethtool.c |  12 +-
- drivers/net/ethernet/cisco/enic/enic_main.c    |  69 ++-----
- drivers/net/ethernet/cisco/enic/enic_res.c     |  87 +++++++--
- drivers/net/ethernet/cisco/enic/enic_res.h     |  11 +-
- drivers/net/ethernet/cisco/enic/enic_rq.c      | 240 ++++++++++++++++++++++---
- drivers/net/ethernet/cisco/enic/enic_rq.h      |   6 +-
- drivers/net/ethernet/cisco/enic/enic_wq.c      | 117 ++++++++++++
- drivers/net/ethernet/cisco/enic/enic_wq.h      |   7 +
- drivers/net/ethernet/cisco/enic/vnic_cq.h      |  45 +----
- drivers/net/ethernet/cisco/enic/vnic_devcmd.h  |  19 ++
- drivers/net/ethernet/cisco/enic/vnic_enet.h    |   5 +
- drivers/net/ethernet/cisco/enic/vnic_rq.h      |   2 +-
- drivers/net/ethernet/cisco/enic/vnic_wq.h      |   2 +-
- 17 files changed, 545 insertions(+), 259 deletions(-)
----
-base-commit: de7a88b639d488607352a270ef2e052c4442b1b3
-change-id: 20250218-enic_cleanup_and_ext_cq-f21868bbde07
-
-Best regards,
 -- 
-Satish Kharat <satishkh@cisco.com>
+2.48.1
 
 
