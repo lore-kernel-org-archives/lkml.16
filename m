@@ -1,56 +1,56 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27814156C72;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD2015575C;
 	Fri,  7 Mar 2025 00:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741309122; cv=none; b=CBbhoqnv0mQdE43aUpNRFJMkxJtPgqtLV1bgZihoKn0Od+nIZxTL2sndtxn+rILpJrV511QnPZxTQ/npAmE53v7m0cBK0UfB4cUGxfTJoVOVYo3oj4+0tkyqglzsxOqH0LnZKN3WjGoqqJbBVeW/sXiS/OjTnE/BRXUajMk3vyg=
+	t=1741309121; cv=none; b=Y2DZYeJHC8iUywY2SBVRhUrclcb72+OshlGn9KE+RRbt+lc25YYdCc7ce8tXGqj+y6OSRVsMzm+QtHBqrwaI0P/SwKJOZz5Zc99016VgQ7ii8vz/RkGsc8EjeG6O7H1Aiwjxy1sXQWL7JAvSAQxOgkfu2oEk/ra3UCYE5LmLGQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741309122; c=relaxed/simple;
-	bh=CUemmUBXCoody8wnnAm1qD67Ji2foJlGPZcw3CxU16Y=;
+	s=arc-20240116; t=1741309121; c=relaxed/simple;
+	bh=sSKw8GZ/kVfCKmy78Nbmbwe4LJmPA9c+Q0hFr078t3I=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQgkTtnSm0PiKt3QoVYtjQQHUlKD2h2+9Aaefx1evK+U7p+swN/m2G2yptXQ+Q7ixq82bm+dF0APL7bWvwFO5fHEgsYIyqqr1M0H+cXGQf+BXaFGkoo1oSLNI2Ux/RhyNOZ3X+n0XmOQcaPD8y/8MryxHGIA4yrSZAOgFCWkDNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=B6BnT2tx; arc=none smtp.client-ip=72.21.196.25
+	 MIME-Version:Content-Type; b=cofIRfWYrx9YWs0Wvo334caoAtSYm2PFk0ztGm4Ugiolka7WZ/MNmc6IrLNgrtY8lSqVEFZmz2fufePgIfjjngwslxm8emu2lhGOLejMA5TgwkTpTS6xYBqX6V6ZT5I5xLpqsrI1W8GMHRrsI6S4a9UbFnjwZtoykw847QV2lZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=Klrjf5ll; arc=none smtp.client-ip=52.119.213.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="B6BnT2tx"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="Klrjf5ll"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1741309120; x=1772845120;
+  t=1741309121; x=1772845121;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=sQqXLYiJ1VVGRN+jOJACYXz/EcfmdNuv7Pcm+0ImUEs=;
-  b=B6BnT2txDN5b7FwxaN0IL5vQOMpcwU63wgr2Ucfhp4AbhdEytd6dsJ43
-   GRjHZoPPwsTdbXhueWmjO/odEK9Ui9fKmll5e7yXYyI4Q4G/h472FFDmL
-   AZ9wHdJDtW1pAAu/tGxr9J+fxd0BrEJBwsG/3tzS7l7RZnCnAmzri77Qu
-   w=;
+  bh=c17Kf0Er2P2sLGN5x8xcm8SJt/PbgebI9se/WEG3Bh0=;
+  b=Klrjf5llwW92xMo4+kBglbMlHheb9eEe/FW7xyP55kK/uXkXgxwLrYNk
+   qkEQfHuvytP7f/phCETXGtmHvd8wokr0nqrsGYCajSK1Itxt/ow+EB6PU
+   kTb7GZ/EUeBMLBBSou6vepAZL5hunPHx6Km5U3jnqLCf4OIlKEFmXRqJl
+   U=;
 X-IronPort-AV: E=Sophos;i="6.14,227,1736812800"; 
-   d="scan'208";a="472783393"
+   d="scan'208";a="72017059"
 Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 00:58:35 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:32828]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.40.101:2525] with esmtp (Farcaster)
- id 6f9afba4-0449-4880-b8c4-e10c02a9ebe8; Fri, 7 Mar 2025 00:58:34 +0000 (UTC)
-X-Farcaster-Flow-ID: 6f9afba4-0449-4880-b8c4-e10c02a9ebe8
-Received: from EX19D020UWA003.ant.amazon.com (10.13.138.254) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 00:58:36 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:64899]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.58.39:2525] with esmtp (Farcaster)
+ id cb54e298-4a3c-4851-97b6-2bac0b19c9ca; Fri, 7 Mar 2025 00:58:34 +0000 (UTC)
+X-Farcaster-Flow-ID: cb54e298-4a3c-4851-97b6-2bac0b19c9ca
+Received: from EX19D020UWA004.ant.amazon.com (10.13.138.231) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
  Fri, 7 Mar 2025 00:58:34 +0000
-Received: from EX19MTAUWB002.ant.amazon.com (10.250.64.231) by
- EX19D020UWA003.ant.amazon.com (10.13.138.254) with Microsoft SMTP Server
+Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
+ EX19D020UWA004.ant.amazon.com (10.13.138.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
  Fri, 7 Mar 2025 00:58:34 +0000
-Received: from email-imr-corp-prod-pdx-all-2c-475d797d.us-west-2.amazon.com
- (10.25.36.214) by mail-relay.amazon.com (10.250.64.228) with Microsoft SMTP
+Received: from email-imr-corp-prod-iad-all-1a-f1af3bd3.us-east-1.amazon.com
+ (10.25.36.214) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 00:58:34 +0000
+ 15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 00:58:33 +0000
 Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
-	by email-imr-corp-prod-pdx-all-2c-475d797d.us-west-2.amazon.com (Postfix) with ESMTP id DAA12A5F81;
+	by email-imr-corp-prod-iad-all-1a-f1af3bd3.us-east-1.amazon.com (Postfix) with ESMTP id 463AE40235;
 	Fri,  7 Mar 2025 00:58:33 +0000 (UTC)
 Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id 13BED4FF9; Fri,  7 Mar 2025 00:58:33 +0000 (UTC)
+	id 05EB84FDD; Fri,  7 Mar 2025 00:58:33 +0000 (UTC)
 From: Pratyush Yadav <ptyadav@amazon.de>
 To: <linux-kernel@vger.kernel.org>
 CC: Pratyush Yadav <ptyadav@amazon.de>, Jonathan Corbet <corbet@lwn.net>,
@@ -67,9 +67,9 @@ CC: Pratyush Yadav <ptyadav@amazon.de>, Jonathan Corbet <corbet@lwn.net>,
  Yang" <richard.weiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
 	<linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
 	<linux-mm@kvack.org>, <kexec@lists.infradead.org>
-Subject: [RFC PATCH 5/5] mm/memfd: allow preserving FD over FDBOX + KHO
-Date: Fri, 7 Mar 2025 00:57:39 +0000
-Message-ID: <20250307005830.65293-6-ptyadav@amazon.de>
+Subject: [RFC PATCH 2/5] misc: add documentation for FDBox
+Date: Fri, 7 Mar 2025 00:57:36 +0000
+Message-ID: <20250307005830.65293-3-ptyadav@amazon.de>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250307005830.65293-1-ptyadav@amazon.de>
 References: <20250307005830.65293-1-ptyadav@amazon.de>
@@ -82,198 +82,314 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-For applications with a large amount of memory that takes time to
-rebuild, reboots to consume kernel upgrades can be very expensive. FDBox
-allows preserving file descriptors over kexec using KHO. Combining that
-with memfd gives those applications reboot-persistent memory that they
-can use to quickly save and reconstruct that state.
+With FDBox in place, add documentation that describes what it is and how
+it is used, along with its UAPI and in-kernel API.
 
-While memfd is backed by either hugetlbfs or shmem, currently only
-support on shmem is added for this. Allow saving and restoring shmem FDs
-over FDBOX + KHO.
-
-The memfd FDT node itself does not contain much information. It just
-creates a subnode and passes it over to shmem to do its thing. Similar
-behaviour is followed on the restore side.
-
-Since there are now two paths of getting a shmem file, refactor the file
-setup into its own function called memfd_setup_file(). It sets up the
-file flags, mode, etc., and sets fdbox ops if enabled.
+Since the document refers to KHO, add a reference tag in kho/index.rst.
 
 Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
 ---
- mm/memfd.c | 128 ++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 116 insertions(+), 12 deletions(-)
+ Documentation/filesystems/locking.rst |  21 +++
+ Documentation/kho/fdbox.rst           | 224 ++++++++++++++++++++++++++
+ Documentation/kho/index.rst           |   3 +
+ MAINTAINERS                           |   1 +
+ 4 files changed, 249 insertions(+)
+ create mode 100644 Documentation/kho/fdbox.rst
 
-diff --git a/mm/memfd.c b/mm/memfd.c
-index 37f7be57c2f50..1c32e66197f6d 100644
---- a/mm/memfd.c
-+++ b/mm/memfd.c
-@@ -7,6 +7,8 @@
-  * This file is released under the GPL.
-  */
+diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+index d20a32b77b60f..5526833faf79a 100644
+--- a/Documentation/filesystems/locking.rst
++++ b/Documentation/filesystems/locking.rst
+@@ -607,6 +607,27 @@ used. To block changes to file contents via a memory mapping during the
+ operation, the filesystem must take mapping->invalidate_lock to coordinate
+ with ->page_mkwrite.
  
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++fdbox_file_ops
++==============
 +
- #include <linux/fs.h>
- #include <linux/vfs.h>
- #include <linux/pagemap.h>
-@@ -19,8 +21,12 @@
- #include <linux/shmem_fs.h>
- #include <linux/memfd.h>
- #include <linux/pid_namespace.h>
-+#include <linux/fdbox.h>
-+#include <linux/libfdt.h>
- #include <uapi/linux/memfd.h>
++prototypes::
++
++	int (*kho_write)(struct fdbox_fd *box_fd, void *fdt);
++	int (*seal)(struct fdbox *box);
++	int (*unseal)(struct fdbox *box);
++
++
++locking rules:
++	all may block
++
++==============	==================================================
++ops		i_rwsem(box_fd->file->f_inode)
++==============	==================================================
++kho_write:	exclusive
++seal:		no
++unseal:		no
++==============	==================================================
++
+ dquot_operations
+ ================
  
-+static const struct fdbox_file_ops memfd_fdbox_fops;
+diff --git a/Documentation/kho/fdbox.rst b/Documentation/kho/fdbox.rst
+new file mode 100644
+index 0000000000000..44a3f5cdf1efb
+--- /dev/null
++++ b/Documentation/kho/fdbox.rst
+@@ -0,0 +1,224 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
 +
- /*
-  * We need a tag: a new tag would expand every xa_node by 8 bytes,
-  * so reuse a tag which we firmly believe is never set or cleared on tmpfs
-@@ -418,21 +424,10 @@ static char *alloc_name(const char __user *uname)
- 	return ERR_PTR(error);
- }
++===========================
++File Descriptor Box (FDBox)
++===========================
++
++:Author: Pratyush Yadav
++
++Introduction
++============
++
++The File Descriptor Box (FDBox) is a mechanism for userspace to name file
++descriptors and give them over to the kernel to hold. They can later be
++retrieved by passing in the same name.
++
++The primary purpose of FDBox is to be used with :ref:`kho`. There are many kinds
++anonymous file descriptors in the kernel like memfd, guest_memfd, iommufd, etc.
++that would be useful to be preserved using KHO. To be able to do that, there
++needs to be a mechanism to label FDs that allows userspace to set the label
++before doing KHO and to use the label to map them back after KHO. FDBox achieves
++that purpose by exposing a miscdevice which exposes ioctls to label and transfer
++FDs between the kernel and userspace. FDBox is not intended to work with any
++generic file descriptor. Support for each kind of FDs must be explicitly
++enabled.
++
++FDBox can be enabled by setting the ``CONFIG_FDBOX`` option to ``y``. While the
++primary purpose of FDBox is to be used with KHO, it does not explicitly require
++``CONFIG_KEXEC_HANDOVER``, since it can be used without KHO, simply as a way to
++preserve or transfer FDs when userspace exits.
++
++Concepts
++========
++
++Box
++---
++
++The box is a container for FDs. Boxes are identified by their name, which must
++be unique. Userspace can put FDs in the box using the ``FDBOX_PUT_FD``
++operation, and take them out of the box using the ``FDBOX_GET_FD`` operation.
++Once all the required FDs are put into the box, it can be sealed to make it
++ready for shipping. This can be done by the ``FDBOX_SEAL`` operation. The seal
++operation notifies each FD in the box. If any of the FDs have a dependency on
++another, this gives them an opportunity to ensure all dependencies are met, or
++fail the seal if not. Once a box is sealed, no FDs can be added or removed from
++the box until it is unsealed. Only sealed boxes are transported to a new kernel
++via KHO. The box can be unsealed by the ``FDBOX_UNSEAL`` operation. This is the
++opposite of seal. It also notifies each FD in the box to ensure all dependencies
++are met. This can be useful in case some FDs fail to be restored after KHO.
++
++Box FD
++------
++
++The Box FD is a FD that is currently in a box. It is identified by its name,
++which must be unique in the box it belongs to. The Box FD is created when a FD
++is put into a box by using the ``FDBOX_PUT_FD`` operation. This operation
++removes the FD from the calling task. The FD can be restored by passing the
++unique name to the ``FDBOX_GET_FD`` operation.
++
++FDBox control device
++--------------------
++
++This is the ``/dev/fdbox/fdbox`` device. A box can be created using the
++``FDBOX_CREATE_BOX`` operation on the device. A box can be removed using the
++``FDBOX_DELETE_BOX`` operation.
++
++UAPI
++====
++
++FDBOX_NAME_LEN
++--------------
++
++.. code-block:: c
++
++    #define FDBOX_NAME_LEN			256
++
++Maximum length of the name of a Box or Box FD.
++
++Ioctls on /dev/fdbox/fdbox
++--------------------------
++
++FDBOX_CREATE_BOX
++~~~~~~~~~~~~~~~~
++
++.. code-block:: c
++
++    #define FDBOX_CREATE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 0)
++    struct fdbox_create_box {
++    	__u64 flags;
++    	__u8 name[FDBOX_NAME_LEN];
++    };
++
++Create a box.
++
++After this returns, the box is available at ``/dev/fdbox/<name>``.
++
++``name``
++    The name of the box to be created. Must be unique.
++
++``flags``
++    Flags to the operation. Currently, no flags are defined.
++
++Returns:
++    0 on success, -1 on error, with errno set.
++
++FDBOX_DELETE_BOX
++~~~~~~~~~~~~~~~~
++
++.. code-block:: c
++
++    #define FDBOX_DELETE_BOX	_IO(FDBOX_TYPE, FDBOX_BASE + 1)
++    struct fdbox_delete_box {
++    	__u64 flags;
++    	__u8 name[FDBOX_NAME_LEN];
++    };
++
++Delete a box.
++
++After this returns, the box is no longer available at ``/dev/fdbox/<name>``.
++
++``name``
++    The name of the box to be deleted.
++
++``flags``
++    Flags to the operation. Currently, no flags are defined.
++
++Returns:
++    0 on success, -1 on error, with errno set.
++
++Ioctls on /dev/fdbox/<boxname>
++------------------------------
++
++These must be performed on the ``/dev/fdbox/<boxname>`` device.
++
++FDBX_PUT_FD
++~~~~~~~~~~~
++
++.. code-block:: c
++
++    #define FDBOX_PUT_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 2)
++    struct fdbox_put_fd {
++    	__u64 flags;
++    	__u32 fd;
++    	__u32 pad;
++    	__u8 name[FDBOX_NAME_LEN];
++    };
++
++
++Put FD into the box.
++
++After this returns, ``fd`` is removed from the task and can no longer be used by
++it.
++
++``name``
++    The name of the FD.
++
++``fd``
++    The file descriptor number to be
++
++``flags``
++    Flags to the operation. Currently, no flags are defined.
++
++Returns:
++    0 on success, -1 on error, with errno set.
++
++FDBX_GET_FD
++~~~~~~~~~~~
++
++.. code-block:: c
++
++    #define FDBOX_GET_FD	_IO(FDBOX_TYPE, FDBOX_BASE + 3)
++    struct fdbox_get_fd {
++    	__u64 flags;
++    	__u8 name[FDBOX_NAME_LEN];
++    };
++
++Get an FD from the box.
++
++After this returns, the FD identified by ``name`` is mapped into the task and is
++available for use.
++
++``name``
++    The name of the FD to get.
++
++``flags``
++    Flags to the operation. Currently, no flags are defined.
++
++Returns:
++    FD number on success, -1 on error with errno set.
++
++FDBOX_SEAL
++~~~~~~~~~~
++
++.. code-block:: c
++
++    #define FDBOX_SEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 4)
++
++Seal the box.
++
++Gives the kernel an opportunity to ensure all dependencies are met in the box.
++After this returns, the box is sealed and FDs can no longer be added or removed
++from it. A box must be sealed for it to be transported across KHO.
++
++Returns:
++    0 on success, -1 on error with errno set.
++
++FDBOX_UNSEAL
++~~~~~~~~~~~~
++
++.. code-block:: c
++
++    #define FDBOX_UNSEAL	_IO(FDBOX_TYPE, FDBOX_BASE + 5)
++
++Unseal the box.
++
++Gives the kernel an opportunity to ensure all dependencies are met in the box,
++and in case of KHO, no FDs have been lost in transit.
++
++Returns:
++    0 on success, -1 on error with errno set.
++
++Kernel functions and structures
++===============================
++
++.. kernel-doc:: include/linux/fdbox.h
+diff --git a/Documentation/kho/index.rst b/Documentation/kho/index.rst
+index 5e7eeeca8520f..051513b956075 100644
+--- a/Documentation/kho/index.rst
++++ b/Documentation/kho/index.rst
+@@ -1,5 +1,7 @@
+ .. SPDX-License-Identifier: GPL-2.0-or-later
  
--static struct file *alloc_file(const char *name, unsigned int flags)
-+static void memfd_setup_file(struct file *file, unsigned int flags)
- {
- 	unsigned int *file_seals;
--	struct file *file;
++.. _kho:
++
+ ========================
+ Kexec Handover Subsystem
+ ========================
+@@ -9,6 +11,7 @@ Kexec Handover Subsystem
  
--	if (flags & MFD_HUGETLB) {
--		file = hugetlb_file_setup(name, 0, VM_NORESERVE,
--					HUGETLB_ANONHUGE_INODE,
--					(flags >> MFD_HUGE_SHIFT) &
--					MFD_HUGE_MASK);
--	} else {
--		file = shmem_file_setup(name, 0, VM_NORESERVE);
--	}
--	if (IS_ERR(file))
--		return file;
- 	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
- 	file->f_flags |= O_LARGEFILE;
+    concepts
+    usage
++   fdbox
  
-@@ -452,6 +447,27 @@ static struct file *alloc_file(const char *name, unsigned int flags)
- 			*file_seals &= ~F_SEAL_SEAL;
- 	}
+ .. only::  subproject and html
  
-+#if defined(CONFIG_FDBOX) && defined(CONFIG_KEXEC_HANDOVER)
-+	file->f_fdbox_op = &memfd_fdbox_fops;
-+#endif
-+}
-+
-+static struct file *alloc_file(const char *name, unsigned int flags)
-+{
-+	struct file *file;
-+
-+	if (flags & MFD_HUGETLB) {
-+		file = hugetlb_file_setup(name, 0, VM_NORESERVE,
-+					  HUGETLB_ANONHUGE_INODE,
-+					  (flags >> MFD_HUGE_SHIFT) &
-+					  MFD_HUGE_MASK);
-+	} else {
-+		file = shmem_file_setup(name, 0, VM_NORESERVE);
-+	}
-+	if (IS_ERR(file))
-+		return file;
-+
-+	memfd_setup_file(file, flags);
- 	return file;
- }
- 
-@@ -493,3 +509,91 @@ SYSCALL_DEFINE2(memfd_create,
- 	kfree(name);
- 	return error;
- }
-+
-+#if defined(CONFIG_FDBOX) && defined(CONFIG_KEXEC_HANDOVER)
-+static const char memfd_fdbox_compatible[] = "fdbox,memfd-v1";
-+
-+static struct file *memfd_fdbox_kho_recover(const void *fdt, int offset)
-+{
-+	struct file *file;
-+	int ret, subnode;
-+
-+	ret = fdt_node_check_compatible(fdt, offset, memfd_fdbox_compatible);
-+	if (ret) {
-+		pr_err("kho: invalid compatible\n");
-+		return NULL;
-+	}
-+
-+	/* Make sure there is exactly one subnode. */
-+	subnode = fdt_first_subnode(fdt, offset);
-+	if (subnode < 0) {
-+		pr_err("kho: no subnode for underlying storage found!\n");
-+		return NULL;
-+	}
-+	if (fdt_next_subnode(fdt, subnode) >= 0) {
-+		pr_err("kho: too many subnodes. Expected only 1.\n");
-+		return NULL;
-+	}
-+
-+	if (is_node_shmem(fdt, subnode)) {
-+		file = shmem_fdbox_kho_recover(fdt, subnode);
-+		if (!file)
-+			return NULL;
-+
-+		memfd_setup_file(file, 0);
-+		return file;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int memfd_fdbox_kho_write(struct fdbox_fd *box_fd, void *fdt)
-+{
-+	int ret = 0;
-+
-+	ret |= fdt_property(fdt, "compatible", memfd_fdbox_compatible,
-+			    sizeof(memfd_fdbox_compatible));
-+
-+	/* TODO: Track seals on the file as well. */
-+
-+	ret |= fdt_begin_node(fdt, "");
-+	if (ret) {
-+		pr_err("kho: failed to set up memfd node\n");
-+		return -EINVAL;
-+	}
-+
-+	if (shmem_file(box_fd->file))
-+		ret = shmem_fdbox_kho_write(box_fd, fdt);
-+	else
-+		/* TODO: HugeTLB support. */
-+		ret = -EOPNOTSUPP;
-+
-+	if (ret)
-+		return ret;
-+
-+	ret = fdt_end_node(fdt);
-+	if (ret) {
-+		pr_err("kho: failed to end memfd node!\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct fdbox_file_ops memfd_fdbox_fops = {
-+	.kho_write = memfd_fdbox_kho_write,
-+};
-+
-+static int __init memfd_fdbox_init(void)
-+{
-+	int error;
-+
-+	error = fdbox_register_handler(memfd_fdbox_compatible,
-+				       memfd_fdbox_kho_recover);
-+	if (error)
-+		pr_err("Could not register fdbox handler: %d\n", error);
-+
-+	return 0;
-+}
-+late_initcall(memfd_fdbox_init);
-+#endif /* CONFIG_FDBOX && CONFIG_KEXEC_HANDOVER */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d329d3e5514c5..135427582e60f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8866,6 +8866,7 @@ FDBOX
+ M:	Pratyush Yadav <pratyush@kernel.org>
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Maintained
++F:	Documentation/kho/fdbox.rst
+ F:	drivers/misc/fdbox.c
+ F:	include/linux/fdbox.h
+ F:	include/uapi/linux/fdbox.h
 -- 
 2.47.1
 
