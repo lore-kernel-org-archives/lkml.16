@@ -1,119 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34786192D68
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39E916EB4C;
+	Fri,  7 Mar 2025 14:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741359135; cv=none; b=Jq4vi2Knf5Ebw2SIoiOG6kkjbbFblmvnYIn3RAN7T3iyFZ+6uW0vs8+oVQ7Qk6M1D6WjHXVz7iGUWozh5Mb0k8JOqcg7LqDeHP2UzkwRY3TaabscEx0h4GOn4vqnzx8CcBavR3Kunr63//scgNBky3TlleC1OIpmpdVy2VxjcVg=
+	t=1741359173; cv=none; b=KKa2/jmebfLgHWNd2D/NDPUXyAh/zYoJYKmkdWfO2msHU9BmURMmjNGKQ/YSeyGxfQPXUStgZeyMXWqtY6tlt0aUzE9BlrHsN7hjPbhSlRCfcTy7cqUJWc6C3xWAtDxs32iU1uwaCPSMXLs+VQUVvjQmIW4Xbt6prSyZQIUikvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741359135; c=relaxed/simple;
-	bh=gkim01leCLkscIEVRTyqshEj98uVAAJKqAisacjpMwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hF5NJy0UAxVk7MLnlqzxoHY8ELceauF9jfZy4Rq4/Sb7/ga529BjvT1nijthZ03PsQvx1m7gOTqM3CIUV5bysXdHebLlpGl1/RB71FuA14Hcls4R/3A+MSgfjk7PEqgKUTPVtRel4DP0tqD5Bi+tXMzaoeHkhUjgWtvS3Anges8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JYFDFkCd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741359173; c=relaxed/simple;
+	bh=ow/CxyCveehpyi+AMsvz13Db0iERxnsb0LBD0S8iRdg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=tK480kp23JywZe4W1N2eAb2CZG+jJ2Yz2KlYOZEAhoOSgkR67O/z9RgVgPCmjXiPktZG/8vDrKNBYJvW6qoUzodXsfLKPRvfgmSTmUlz7T8drtO0kIl3k2SHdT9M2kfpjWnSlWxa3rigDbxkbof0J1J0RXeSX+O8Txfglu+MOxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ITqqkU4U; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JYFDFkCd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741359133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bOV1/NR0uZQx/Nlqn4EmktpOgzyfwXnxmkg+11MiUZc=;
-	b=JYFDFkCdD1iZJHVIZdqdJtBQaXra8U9iiH+u7bsWcFQRSRrPRZTFTGOGaakdpbggK7Uzxw
-	f0Gzl7TwR/FoPIcDhrNnUd2BgRqpSBuYoe7s56RZ+S64Xft5JdPTBJDJlJLobwcIra/58D
-	JFm/zMMVc8MYzTpAYGsJJiN0eqccWQY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-321-h6ldjJstNZySD3fReAmTRw-1; Fri,
- 07 Mar 2025 09:52:08 -0500
-X-MC-Unique: h6ldjJstNZySD3fReAmTRw-1
-X-Mimecast-MFC-AGG-ID: h6ldjJstNZySD3fReAmTRw_1741359125
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BAD46180AF6B;
-	Fri,  7 Mar 2025 14:52:03 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.108])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DD2F618001E9;
-	Fri,  7 Mar 2025 14:51:57 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri,  7 Mar 2025 15:51:32 +0100 (CET)
-Date: Fri, 7 Mar 2025 15:51:25 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jan Kara <jack@suse.cz>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Rasmus Villemoes <ravi@prevas.dk>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: Re: [PATCH v2 1/4] fs/pipe: Limit the slots in pipe_resize_ring()
-Message-ID: <20250307145125.GE5963@redhat.com>
-References: <20250307052919.34542-1-kprateek.nayak@amd.com>
- <20250307052919.34542-2-kprateek.nayak@amd.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ITqqkU4U"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 527EqIST276923
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 7 Mar 2025 06:52:19 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 527EqIST276923
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741359140;
+	bh=wDm8ZBbwVf2xYgmRDmNQakZ/Sl2xnVeRQQQ12ZxMGDc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ITqqkU4UCxrbH2IhHojAkxPV/8OVvKQTwilKlWGevMczC+sDdwItvUbrlhr8embGE
+	 7bGwcg5a6p6TdaMC91MqWbKO5yU56KXQvB/SouzEz0jdoKpELmzl0l1HVSYf/pMvzs
+	 YmaVeViFXu6BQ9B2Su9F5G7luQ2QYJgcfpiZV0H1nbw+MmCNp+TF34tH+m2n6+hyyY
+	 vwEUIlGEuv/CWvecdQ6eQcq9wX5gn6TopRMMxxWeqLYtnGtDxMumf7sZwWHT2iHo5Z
+	 4r5JEgl3XUBy7f/vtjVO46dKBRp6rwAFNl8v9buFd+qHNKVfx7kZCGhy5yk2MhMK8J
+	 GonkC2gLUpsMw==
+Date: Fri, 07 Mar 2025 06:52:17 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ard Biesheuvel <ardb@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>
+CC: Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] x86/efi: Add a mechanism for embedding SBAT section
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMj1kXHQydeGHTa3Jd-ZByMntdqRp4f74ow6Uc0GLwjmejCSbw@mail.gmail.com>
+References: <20250305101744.1706803-1-vkuznets@redhat.com> <CAMj1kXF-c46Bdw_cmLK-TckxukefqkpAYkOhg3jzfvW6YucDog@mail.gmail.com> <63vy4xc4mpm5tttdqz5vfzwyriqlminjdiffrbuamxcubmpuur@nxszi7xzxa6a> <CAMj1kXHQydeGHTa3Jd-ZByMntdqRp4f74ow6Uc0GLwjmejCSbw@mail.gmail.com>
+Message-ID: <885FB3F6-B085-45DE-9710-10563322B61A@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307052919.34542-2-kprateek.nayak@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 03/07, K Prateek Nayak wrote:
+On March 7, 2025 6:15:27 AM PST, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
+>On Fri, 7 Mar 2025 at 14:29, Gerd Hoffmann <kraxel@redhat=2Ecom> wrote:
+>>
+>>   Hi,
+>>
+>> > > This patch suggests a different approach: instead of defining SBAT
+>> > > information, provide a mechanism for downstream kernel builders (di=
+stros)
+>> > > to include their own SBAT data=2E
+>> >
+>> > Why does this require a mechanism in the upstream kernel at all?
+>>
+>> To avoid every distro re-inventing the wheel?
+>>
 >
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -1271,6 +1271,10 @@ int pipe_resize_ring(struct pipe_inode_info *pipe, unsigned int nr_slots)
->  	struct pipe_buffer *bufs;
->  	unsigned int head, tail, mask, n;
+>Fair enough=2E
 >
-> +	/* nr_slots larger than limits of pipe->{head,tail} */
-> +	if (unlikely(nr_slots > (pipe_index_t)-1u))
-> +		return -EINVAL;
+>> > > - CRC32 must be at the end of the file=2E
+>> >
+>> > We never cared about the CRC32 before with signed EFI images, which
+>> > gets clobbered when the image is signed=2E Why should we start caring
+>> > about it now?
+>>
+>> I have some blurry memories on having seen this crc32 discussion
+>> before =2E=2E=2E
+>>
+>> The crc32 is not clobbered=2E  The signature is simply appended and
+>> wouldn't overwrite the crc32=2E  But if software expects to find that
+>> crc32 in the last four bytes of the file then yes, that assumption does
+>> not hold any more for signed kernel binaries=2E
+>>
+>
+>The crc32 is a CRC over the entire bzImage=2E Whether or not it lives at
+>the end is irrelevant, as signing the bzImage will necessarily [*]
+>break the CRC, and subsequently regenerating the CRC will invalidate
+>the signature=2E (The CRC lives at the end because that is the easiest
+>way to generate an image whose checksum including the CRC itself is
+>~0=2E However, there are also other ways to achieve this)
+>
+>> Who uses that crc32 and how?  If it is useless anyway, can we just drop
+>> it upstream?
+>>
+>
+>I tried but hpa objected to that=2E [0]
+>
+>> > Please don't create a special case for x86 again - iff this needs to
+>> > be in upstream (which I am not convinced about) it needs to be
+>> > implemented for all architectures=2E
+>>
+>> Well, x86 *is* the special case=2E  Everybody else just uses zboot=2E
+>>
+>> But, yes, when this RfC patch discussion comes to the conclusion that
+>> this is useful to have upstream the plan is to do this for zboot too
+>> so all architectures are covered=2E
+>>
+>
+>Good=2E
+>
+>> > So I'd like to understand better what is preventing you from appendin=
+g
+>> > a PE/COFF section on an arbitrary bzImage (or EFI zboot image)=2E
+>>
+>> Well, assuming it is safe to ignore the crc32 as per above discussion
+>> then nothing really=2E  It should be possible to do this as part of the
+>> signing process instead=2E  That leaves the "not re-inventing the wheel=
+"
+>> aspect of this on the table=2E
+>>
+>
+>[*] While it is feasible to generate an image that checksums to ~0 and
+>is signed for UEFI secure boot (details in [0]), I seriously doubt
+>that we should bother=2E Not even hpa's own bootloader 'syslinux' cares
+>about the CRC-32, and given that all signed distro kernels that have
+>been in circulation since they started signing them have corrupted
+>CRCs, there is really no need to start caring about that now=2E
+>
+>If there is a need to maintain this upstream, we can host the tools
+>but I don't see a reason to integrate this with the bzImage build as
+>this patch proposes=2E
+>
+>
+>
+>
+>
+>[0] https://lore=2Ekernel=2Eorg/all/20230818134422=2E380032-1-ardb@kernel=
+=2Eorg/T/#m3d3c7b62045072090c49706295a1fc9aa6a5e349
 
-The whole series look "obviously" good to me,
+I don't remember who it was that asked for the CRC32 long ago=2E It wasn't=
+ for Syslinux; it was for an embedded boot loader which didn't have a file =
+system=2E=20
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+I don't know what would break, and it is obviously a mess that the signing=
+ protocol didn't take that into consideration, but that is water under the =
+bridge, too=2E
 
--------------------------------------------------------------------------------
-But damn ;) lets look at round_pipe_size(),
-
-	unsigned int round_pipe_size(unsigned int size)
-	{
-		if (size > (1U << 31))
-			return 0;
-
-		/* Minimum pipe size, as required by POSIX */
-		if (size < PAGE_SIZE)
-			return PAGE_SIZE;
-
-		return roundup_pow_of_two(size);
-	}
-
-it is a bit silly to allow the maximum size == 1U << 31 in pipe_set_size()
-or (more importantly) in /proc/sys/fs/pipe-max-size, and then nack nr_slots
-in pipe_resize_ring().
-
-So perhaps this check should go into round_pipe_size() ? Although I can't
-suggest a simple/clear check without unnecesary restrictions for the case
-when pipe_index_t is u16.
-
-pipe_resize_ring() has another caller, watch_queue_set_size(), but it has
-its own hard limits...
-
-Oleg.
+We could try zeroing out the CRC field and see if anyone screams=2E=2E=2E
 
