@@ -1,122 +1,93 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90226217709
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 11:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0404120C49E;
+	Fri,  7 Mar 2025 11:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741346899; cv=none; b=QpqULLC0pgWIRUVC6ThCjznY+/hktC4YwuqejUzDkK6xz5TJNGbh/WNN8H9tBH2P/6Ju7SARWTE8aIu4FYKUCF/ktrI1zMLX3N40lp6zllMvKuGMBqglnyoFUrfFkWyn8DZFAJVWp7a3rcf3nA9UWH3rhk+ogUzUWOkbDvRXxqM=
+	t=1741346989; cv=none; b=QIOhBXbHosj/TSE809siDWij0QhvZimKCyc0/b0Q86hnz5e3WoI8uLv6P6eTzCjsa8XMhD2i4ETzyyyqvPC0dzQ5HSYdSh4y3T13cAMu3LhuhojyOPD087t8xgpXLmn7dUXNEGtPt1opL5QB5lcUjoRflXkGtABj3d/kTyYm5L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741346899; c=relaxed/simple;
-	bh=77bK4Zp/TbJCp4MDtt6BamPlf5APkGCXJN1UMIG44Hw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cOn9AzEPfqimEQumCR0qYaWMTu0e/47uFUHsm3SRCiDaObdMHSWVApf3TWWMrDqGT9GV3iLNa5B5ltBFju2ghtrpcCvHgDxpO4XqCl8nLfC1tRshLNv21u/dCe2wktIFCprdrrABIvOe2zrOsvUcu2Z8oqYnB4fcVbUuzDRJHF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jTKeeARZ; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741346989; c=relaxed/simple;
+	bh=WkCxgnFYvFujFRMpZOJasVbjW5B9RnepoADsBQ+01hw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iavuStV2h6KMim3Ix5KFL1LRPBSAZOChH1JobH1frIw7VgmrFVhRVXLjTkNDp2TlYCt+sBddVI0ZWs4c+bwi5mmxHN26zgEoOF44FWcGR5D2Ynihw04JWZvnjlCvVmP4ROG0DNy+4msxft3DkMNzSapi/CtmSBkZYcEJoO+acGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=q8mcuh8p; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jTKeeARZ"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-223a7065ff8so2440895ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 03:28:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741346896; x=1741951696; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2KHuSHjoctZDpRbteDuBYEVJTRxTt8Y9MylCsxslIVY=;
-        b=jTKeeARZ+bslbWFsD97aEFoRpd3SqFTHIvLlPCYh/OWWxpUdWfW/WncupTBctMd1ME
-         zbmA2dGyBK6qs2gUhtl5Smk9M1Uc+qWlqpvFtd/41xpfEs2UZDlXXZ1BhsgGzPXRN1md
-         t3LycwxvDj1sO2F4uhnHG5zbfKTyVBnButv12EsUGIb/DToYzCBQ68I6jRutYSU797Qa
-         Y1iHZmaoWjcPZOZAZW74HCNZPUdeqtyYobyUaKuYxfZ4Q8Art9amBCU/ecHaxkq5b5pZ
-         ehbieWMyNiOI5IuVZrz9dtQCqSUUBx1Cxa5gwKpXgqOBadcCDGfVSlrO6RMECIEVgBAq
-         644Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741346896; x=1741951696;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2KHuSHjoctZDpRbteDuBYEVJTRxTt8Y9MylCsxslIVY=;
-        b=jWeV2s+oUesxI5Tm9esJItmdWblGnvPl6g6arGDViFWX2P+mxnG8m0tYulQEluEBFj
-         tRRw1rQz56l4qVd9TEdiqp1GBdqPU/yEg+j7IQWvyePqhtDXfWaNBVvWg7hsHeLXeD8o
-         7u92eZYDc4o4v2fKzQ4X/sVzbNVMKKKVBcpNOQWp/SgG8yxy0kSs4jg3RjBY9NW5q7Hr
-         +wUwSggKvRCuLLesW1abln8ALwKfoPmfZ3GWt6kBmYHdqYhPIinSg/r2U9zbnRKNMy9O
-         MjFLORl19e9SCt6I3A14NbMWLeRpmyNZkwPELbKbsTZfBULQgmw879teKMdP3iWV5t+c
-         r7wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/GuO5Ucg34S/Sq20EF09UGFEjnKqwEd8J4Zrl3fSeTYIVuBpJZ6Qv8YUN0uFfPEpjpTvMgqaYraNq6M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvFssjm4f+zM0+YrVGH0c2x+88cQ+ahXsPct0YOWE7qnEk7SUl
-	f8vdPCYfcNARcCwaFx6AEClnu8/pX5I5UNDchCJpcRQd4XE9Z2DhxXh93lDIgWI=
-X-Gm-Gg: ASbGnctQX+Qs7+RPcV60RLvCt8EItwW++ekiTn+Rj6iNOWO9JRR+gAnuZV3Dxj09BCI
-	ZWppt9284KuvIfLaotRPM4XNgtHNuVlUzHbZ4A3V/Y3ct4tF4gIb5jLadZQ8Jz7uWLy5qJ3Q/qa
-	TRmbLby7k8JnO6cgwJDDVO9iUZ9eo+PGZpVcyYL1wQyMpuPVNK6LsIZFqhKAFwnHj+A+5cSSuK9
-	5Eix6FTosbT8MlGQ9cGyw/sKNsXmqkqex46ijNltjX+2mQitxP4pQsft3bBmYLnMFFLI6GCcBY5
-	HoWETpf38Q769aPdj54vfa32A8P4CmwZa6XBmIuIj8rQwA==
-X-Google-Smtp-Source: AGHT+IEvps1aGNeyDSEfmuS/2kZ/UIoJVeC4FQ3bEv/wYy7E3JSdL5e5iwjVJ47HjPenjvhwUyieNg==
-X-Received: by 2002:a05:6a20:3943:b0:1f3:289e:36d9 with SMTP id adf61e73a8af0-1f544c98c99mr5849762637.40.1741346895822;
-        Fri, 07 Mar 2025 03:28:15 -0800 (PST)
-Received: from localhost ([122.172.84.15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736984f7281sm3085274b3a.94.2025.03.07.03.28.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 03:28:15 -0800 (PST)
-Date: Fri, 7 Mar 2025 16:58:12 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, linux-doc@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH V2 1/2] cpumask: Fix kernel-doc formatting errors in
- cpumask.h
-Message-ID: <20250307112812.3la74kiomyqbzhk5@vireshk-i7>
-References: <cover.1741332579.git.viresh.kumar@linaro.org>
- <f4ad81150eaa00b43c161f0d1f811f8ecfe21889.1741332579.git.viresh.kumar@linaro.org>
- <e3637b13-1f51-445b-8d9d-bd53a691eca3@gmail.com>
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="q8mcuh8p"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 3854C447C6;
+	Fri,  7 Mar 2025 11:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1741346440; bh=WkCxgnFYvFujFRMpZOJasVbjW5B9RnepoADsBQ+01hw=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=q8mcuh8pkZlvAP3cXTIfj9IrDH3WpsylC0KiGdFLtoGoBpo2tRFcVZFn/GjFeLeed
+	 xUp5izj+iMo7THXQX4CAwe6NoQgAI4grm48wrNVWKcG6mLIb/ShunVu2BNNSgSLLpd
+	 AVZ0xcj6sEVzyjKWO9OyKjueNcezZmCySRpJJ6lIpMu/ikvNKsWB2X0K7UGNP8a3ca
+	 pOSrSePk9KH2nS9X5gkGz4fILSwpW2vemT8MGMyFEtXuRXqIAa1BlMaj1ftye4fXEZ
+	 poJQIQ5LVbwufSkZEun3tP44gxRIMyng9ErW+hPuYJY5YVo9BjM6R63Q0B9bdJOX90
+	 f6jNogm148Jfg==
+Message-ID: <239cbc8a-9886-4ebc-865c-762bb807276c@marcan.st>
+Date: Fri, 7 Mar 2025 20:20:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3637b13-1f51-445b-8d9d-bd53a691eca3@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [bcachefs?] general protection fault in proc_sys_compare
+To: syzbot <syzbot+4364ec1693041cad20de@syzkaller.appspotmail.com>,
+ broonie@kernel.org, joel.granados@kernel.org, kees@kernel.org,
+ kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <67ca5dd0.050a0220.15b4b9.0076.GAE@google.com>
+From: Hector Martin <marcan@marcan.st>
+Content-Language: en-US
+In-Reply-To: <67ca5dd0.050a0220.15b4b9.0076.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 07-03-25, 19:57, Akira Yokosawa wrote:
-> Didn't come up in your diff, but you need additional changes shown below:
+On 2025/03/07 11:45, syzbot wrote:
+> Hello,
 > 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index 656d2208467e..a6c1961cc535 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-> @@ -285,10 +285,10 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
->  }
->  
->  /**
-> - * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
-> - *                        @n+1. If nothing found, wrap around and start from
-> + * cpumask_next_and_wrap - get the next cpu in *@src1p & *@src2p, starting from
-> + *                        @n+ 1. If nothing found, wrap around and start from
->   *                        the beginning
-> - * @n: the cpu prior to the place to search (i.e. search starts from @n+1)
-> + * @n: the cpu prior to the place to search (i.e. search starts from @n +1)
->   * @src1p: the first cpumask pointer
->   * @src2p: the second cpumask pointer
->   *
-> @@ -306,9 +306,9 @@ unsigned int cpumask_next_and_wrap(int n, const struct cpumask *src1p,
->  }
->  
->  /**
-> - * cpumask_next_wrap - get the next cpu in *src, starting from @n+1. If nothing
-> + * cpumask_next_wrap - get the next cpu in *@src, starting from @n +1. If nothing
->   *                    found, wrap around and start from the beginning
-> - * @n: the cpu prior to the place to search (i.e. search starts from @n+1)
-> + * @n: the cpu prior to the place to search (i.e. search starts from @n +1)
->   * @src: cpumask pointer
->   *
->   * Return: next set bit, wrapped if needed, or >= nr_cpu_ids if @src is empty.
+> syzbot found the following issue on:
+> 
+> HEAD commit:    b91872c56940 Merge tag 'dmaengine-fix-6.14' of git://git.k..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1485e8b7980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4364ec1693041cad20de
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149d55a8580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/4b855669df70/disk-b91872c5.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/e44f3c546271/vmlinux-b91872c5.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/b106e670346a/bzImage-b91872c5.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/68b26fa478ee/mount_0.gz
+> 
+> The issue was bisected to:
+> 
+> commit 579cd64b9df8a60284ec3422be919c362de40e41
+> Author: Hector Martin <marcan@marcan.st>
+> Date:   Sat Feb 8 00:54:35 2025 +0000
+> 
+>     ASoC: tas2770: Fix volume scale
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14aa03a8580000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=16aa03a8580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12aa03a8580000
+[...]
 
-How did you find these ? I only looked for build warnings / errors earlier (with
-make htmldocs). Anything else I should be doing to find these issues ?
+This is a bad bisect. Not sure what the appropriate syzbot action is in
+this case.
 
-Thanks for your help Akira.
+- Hector
 
--- 
-viresh
