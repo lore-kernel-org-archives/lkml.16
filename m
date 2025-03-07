@@ -1,102 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AD221CC7B;
-	Fri,  7 Mar 2025 16:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2925F1607A4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 16:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741365134; cv=none; b=it6Sqgvi9rehKFgd3uSZS6DG/hUFua/P2blKbdXMG5nfxBDuLdNC+V71IMK2/edDqtYGpZNxkkRVXPU94S1P40b2IQb94jax8wvOKHXtByAG9lBHCg75+KXPeItBaEnkgJBc+SFo/HDE+M7yhB93PE3KE7sQyQitSIEeJjlmMA8=
+	t=1741365153; cv=none; b=YGI4fjPaRQiBeb5IfWwVuNNP3JgnrAvJsnaULlbwSQjflJEHKdlnI+0GDoP6zvJSO4U97oZ9uFzvUu8WOas2Bx6YZldN23kQamvJeXtrUWJquc0w2hnzaFxGWRsX2+quBTdvNqtg3KDjH1uZ9dFPyQDrF6BuRdOQycuPZuGAp+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741365134; c=relaxed/simple;
-	bh=Sm2u4lkW9WmjbUbfrUxh0xjfgPJJFZa6w+NyuKr9lJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bOocashLy8/TvayiJFVSEz0LBL+co4xTjaoqYyj78ZGLLxIBvYEOKxn1RELB8wNZ8wQ8tOGj2/EAS1vB+m2y1oXBtcn1CGz/YY6+zmTGxH7+s+K6beEhKXV2kbX6iVngIzioAcZn/2oCgIG3Hrbo6KqHT3SG0Ngj6ziI7rEm7co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gb8wy99Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741365153; c=relaxed/simple;
+	bh=xaiQsJdBQxlDeOtm+4O7NGV7vcMhAxgto+N2EHIhGcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NVgpibp8BubHcbCAgvwUVUkZlcfHTxZtnknWFoiODgpzxdqT0q8HiqMpLB+bZmiqEGVwp0/BdpJgj5sNuvq25LytQ3DtGlrXcXYRX3MB/kE8d+MuF8r8wJO9lb0chgnDok7sRESedaczwvmWKR0Y4A4k2Hm/Wgh4IJaisKM0k9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vyKWQTtb; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gb8wy99Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4084AC4CED1;
-	Fri,  7 Mar 2025 16:32:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741365133;
-	bh=Sm2u4lkW9WmjbUbfrUxh0xjfgPJJFZa6w+NyuKr9lJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gb8wy99Qc6kqeeXN0aV5hFK0czGJZEoZK70atA8Arhc9mN247Fr0CgGSYZbK7BwuA
-	 rX4UxHHouy1ukcLy9zX/I8JtmRsN02BUw3op93sTEaqaZTV9RNDgPacO5FhrbISqSV
-	 Bn07pK6wchQO/8/IKk1JoWHvaaoyEVzwd6mxAQ6rSstQyZKp90Xap1XdvtSNKDCZ3o
-	 OKGpsTrxn/LeIlFY5zLadLScHy3UmjBhwQJwFJq5mdgLRVBYFe0xntaWUn9B0Xma+q
-	 hg7INV2MtqXhJcoZBMkpzz99TuHZq99x2Ga6Wf6mPbjhUQVe8LgiglY6Mj4g+hh9Tk
-	 xFGCHeKjljABA==
-Date: Fri, 7 Mar 2025 18:32:08 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Thomas Gleixner <tglx@linutronix.de>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>, linux-coco@lists.linux.dev,
-	Dionna Glaze <dionnaglaze@google.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC PATCH v2 3/6] tpm: add send_recv() ops in tpm_class_ops
-Message-ID: <Z8sfiDEhsG6RATiQ@kernel.org>
-References: <20250228170720.144739-1-sgarzare@redhat.com>
- <20250228170720.144739-4-sgarzare@redhat.com>
- <Z8Jmps6AF_geaHUw@kernel.org>
- <3p5erujbhxw7ozdnfpmresv3dqdh2xszolv6mh4khkagoy3wit@ow5qht4keh4h>
- <0e156883acf95d31b9358831550d6d675e3ce4ff.camel@kernel.org>
- <Z8dg46Mj81Q9Z0WV@kernel.org>
- <jkr5z4thb55gs2jcmtcfipgg6p7z6ikhr6etd6l3nqpf723hf7@3fns3z5cjqk4>
- <20250305190229.GC354403@ziepe.ca>
- <Z8oZLqn4p2-AWQbz@kernel.org>
- <fgxwcfm6fctdsjnzdbf3ecxss453dir3pgaqio7bzazjj5qotj@mdi6wtuzorvn>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vyKWQTtb"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-85add1c48d9so52206139f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 08:32:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1741365151; x=1741969951; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yxZG4GvpT+foDYYOqA5R+bdl7vVryacA7OvSQ2kb2w8=;
+        b=vyKWQTtbd+945VUGfTn6XAMQm/6HQ368a4Tj1GmAbPPrQIKUSy5VPauOL1P/JqKwsw
+         wrvSvXpPDmCBEwpu4Ys8ioo84qayGxXnWaRuCF5Ji6ZjQ2IXZ6mPH9GghKDzjYIHP86q
+         H3pS2bbupyf2c73WUD0nDRp1zhXEEEdHvTOpq3atvXSFxySqaFaVO10gcjAUZ1qzK3tN
+         d7TugjBBhF6J57AItd5uIhbIonefOjvl2WHj2ZzAOo9vYy9eVeUxwuIV8mSqw5HFuS9h
+         LkPvDd1C5I9bLkAmVqnlaaoYSubpeOegb8IQbRbHqVSPX0HC1aIZ4q7E52VidnLfK9yA
+         WN/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741365151; x=1741969951;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yxZG4GvpT+foDYYOqA5R+bdl7vVryacA7OvSQ2kb2w8=;
+        b=ewPTMJ6OcNRlZbFNQF0E0yb9FMJS/maOeatqESuTn8hG/m1G1kenOP5Bf/suY0LLnq
+         CZ9JR/ZYda7vG3Tng4QWjXfINZdGUc8aYvRqJSp2CdwBNIyxwbwY0WIu4m/eFAXf7kE+
+         jZ7qeQTwJh7N3P4Z9DjoTuUjtIYeYWKhCfTIFaORvVlIfNFqRl/1pPlhrb05aQKdRTuH
+         LxrQNQda3r6x/T5+023/yqVAnqLrsNItQOCuIcjLqcHyfafJJKadclfU2ybpl8PIQz0j
+         w75aRk3ORGgGfPrGxr8m1vTqfe43gPv5BSQU+NyVMOZR8izZsg1RKXZSv73TaTP2FL1M
+         SwxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwVeuUtxgqe3D97L5W33m9K13nK+W0aKOd4EE177vLbsohsbfDSBu0XAfs1N00bPITa7BJ2J0pBOFrpRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDZqrX5OOXud0qyFx6Q6kQnXhwfY1jv5xfglPL3SYHHc4opomc
+	bb/BkCkfogeiPxPUQLsLLgkXa3YDcK0gJMLjlEhVddo4l68hG0ul9OM30h76cng=
+X-Gm-Gg: ASbGncu8qUfBPYrZ7puKBH6QZt7wMyO2nVRFMH0sbkpHoBHXkJJRWttcs6wBNu42oXL
+	v5b4GOuvke0uou+4xmczHVf2Z6AUQVSPhyIX7KNT9EpjPwLN2/eIbhqD0LmFQNLSGAzvnjQkiiq
+	TfE9BT2OiWC0d9HDOuhKre8XsBTV/nkHzJvbYW5TuEaS7RpQI4B7671ZGuwqZVrbaCpScHMSah8
+	MxupC2pKgARV1tJ5f2RJiyPYV869SYJus7PG48AywNnUICo3NhD5wwv7SFob3kennpjNmILSA0U
+	AKgxZsGOOtIJG9ObMtyY59hrv8YHi6PgqgQlHr6T
+X-Google-Smtp-Source: AGHT+IHrkCLjuVHj+BJlje4EuU1N2OofbZGNyuXaZNfL0mggj9MLt+HfmyCGFOKlxxG5IOS/M2005w==
+X-Received: by 2002:a05:6602:3a09:b0:855:cca0:ed2c with SMTP id ca18e2360f4ac-85b1d0d5b8dmr500795539f.10.1741365151234;
+        Fri, 07 Mar 2025 08:32:31 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f20a06a6a7sm995329173.134.2025.03.07.08.32.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 08:32:30 -0800 (PST)
+Message-ID: <5a0ddd31-8df1-40d7-8104-30aa89a35286@kernel.dk>
+Date: Fri, 7 Mar 2025 09:32:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fgxwcfm6fctdsjnzdbf3ecxss453dir3pgaqio7bzazjj5qotj@mdi6wtuzorvn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: support filename refcount without atomics
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ io-uring@vger.kernel.org, audit@vger.kernel.org
+References: <20250307161155.760949-1-mjguzik@gmail.com>
+ <fa3bbf2c-8079-4bdf-b106-a0641069080b@kernel.dk>
+ <CAGudoHGina_OHsbP_oz5UAtXKoKQqhv-tB6Ok63rRQHThPuy+Q@mail.gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CAGudoHGina_OHsbP_oz5UAtXKoKQqhv-tB6Ok63rRQHThPuy+Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 07, 2025 at 04:37:12PM +0100, Stefano Garzarella wrote:
-> On Thu, Mar 06, 2025 at 11:52:46PM +0200, Jarkko Sakkinen wrote:
-> > On Wed, Mar 05, 2025 at 03:02:29PM -0400, Jason Gunthorpe wrote:
-> > > On Wed, Mar 05, 2025 at 10:04:25AM +0100, Stefano Garzarella wrote:
-> > > > Jason suggested the send_recv() ops [2], which I liked, but if you prefer to
-> > > > avoid that, I can restore what we did in v1 and replace the
-> > > > TPM_CHIP_FLAG_IRQ hack with your point 2 (or use TPM_CHIP_FLAG_IRQ if you
-> > > > think it is fine).
-> > > 
-> > > I think it is a pretty notable simplification for the driver as it
-> > > does not need to implement send, status, req_canceled and more ops.
-> > > 
-> > > Given the small LOC on the core side I'd call that simplification a
-> > > win..
-> > 
-> > I'm sorry to disagree with you on this but adding a callback for
-> > one leaf driver is not what I would call "a win" :-)
+On 3/7/25 9:25 AM, Mateusz Guzik wrote:
+> On Fri, Mar 7, 2025 at 5:18?PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>>> +static inline void makeatomicname(struct filename *name)
+>>> +{
+>>> +     VFS_BUG_ON(IS_ERR_OR_NULL(name));
+>>> +     /*
+>>> +      * The name can legitimately already be atomic if it was cached by audit.
+>>> +      * If switching the refcount to atomic, we need not to know we are the
+>>> +      * only non-atomic user.
+>>> +      */
+>>> +     VFS_BUG_ON(name->owner != current && !name->is_atomic);
+>>> +     /*
+>>> +      * Don't bother branching, this is a store to an already dirtied cacheline.
+>>> +      */
+>>> +     name->is_atomic = true;
+>>> +}
+>>
+>> Should this not depend on audit being enabled? io_uring without audit is
+>> fine.
+>>
 > 
-> IIUC in the ftpm driver (tpm_ftpm_tee.c) we could also use send_recv() and
-> save a memcpy() to a temporally buffer (pvt_data->resp_buf) and also that 4k
-> buffer allocated with the private data of the driver.
-> 
-> BTW if you agree, for now I'll do something similar of what we do in the
-> ftpm driver (which would be what Jarkko recommended - status() returns 0,
-> .req_complete_mask = 0, .req_complete_val = 0) and we can discuss
-> send_recv() in a new series where I can include changes for the ftpm driver
-> too, to see whether it makes sense or not.
-> 
-> WDYT?
+> I thought about it, but then I got worried about transitions from
+> disabled to enabled -- will they suddenly start looking here? Should
+> this test for audit_enabled, audit_dummy_context() or something else?
+> I did not want to bother analyzing this.
 
-Yeah, that would work. Althought not related to this callback interface
-per se, also tpm-dev-common.c is one example (in a way).
+Let me take a look at it, the markings for when to switch atomic are not
+accurate - it only really needs to happen for offload situations only,
+and if audit is enabled and tracking. So I think we can great improve
+upon this patch.
 
-> 
-> Thanks,
-> Stefano
+> I'll note though this would be an optimization on top of the current
+> code, so I don't think it *blocks* the patch.
 
-BR, Jarkko
+Let's not go with something half-done if we can get it right the first
+time.
+
+-- 
+Jens Axboe
