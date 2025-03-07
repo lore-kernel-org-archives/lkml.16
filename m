@@ -1,326 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7674217B500;
-	Fri,  7 Mar 2025 19:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1B617B500
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 19:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741374338; cv=none; b=oN2Tvi84121d0CJ65e2dbOn3Y30HiVkmOI768GT0cHGpHSJdQGWhGRlyGQy9HWH/Q5tTz45FT5HJveM8srV74deE1h9rn3L7FW7sjxUXFwxWHW+50jtGrrylDoLu7KgrWL90LsP+DoZR9adbBfRAvJaQOPWLn+VJ2KnLg2JQnYg=
+	t=1741374374; cv=none; b=u7ANWSeLjHbbm9OxFngQMtMW2HOTfxTY766crVLBGfoj4y2nDGUwKM1U/7fbauZuvsvh87lojzQtbluBw0jMkFwjtT/jCUJUCsTh7R9QkCVXyQOEiCtoT0dPGIYYIFpCUkbpTCILKek7SK4rflllBH28yHUKK6yo8iZ4HnPYndQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741374338; c=relaxed/simple;
-	bh=TccBvvz4v+KCdOZdoPQHj5/c1x9IAkR8auB8LpNiN7s=;
+	s=arc-20240116; t=1741374374; c=relaxed/simple;
+	bh=KQcgaJCiBtQ/TxcW6jMDnPp3L1mrguFcs+VmCvfwuXA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qs1KIJ2s0MA8FtGjbhY06qjeEGNf5k+/ORtHKtU+NKoqe4cWWvhUX3IeCpjQu2KwF9u1RJHCxrNIUGdmVm2vnPBMk9t1xQP3LZlNgaARuUMn5dxBnf42WYP25Z0Z2Kd4W+8qvxJG5SzU+PVFMV2TKlix9CSI3aJm7UBPxPoPfPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuxXF+6K; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuxXF+6K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F120BC4CEE2;
-	Fri,  7 Mar 2025 19:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741374338;
-	bh=TccBvvz4v+KCdOZdoPQHj5/c1x9IAkR8auB8LpNiN7s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZuxXF+6KFtjVah2Xz0tAjBbb1ZVUq2PQKpBeUjPXXKUGqXnyaS8uLf1RxKE85JVBT
-	 Xrja3GzMg1o/j47yYUOuo8l3CXrpCyBa7SmPU5ydxZbHTEyeSH+2R7yCECQT4Knb9O
-	 BVDLXyhR90fCw2m0UFRH3AZE35XE7kSP+VQOCTyiN/qTnIiW+OVSGHNp4cJ+on9gVh
-	 HohgdzwKOrrOCcEYgx+a7MKVLE4pOolCVV34lKugt0MQn8v3zMt8mR4BdMEv+pfQh/
-	 OcRX4cGpKs77HeN7MN6aQ8UA9Xq3T13DajrPyxPttj52HN5ctSQu3LnOfKkBLhIDmZ
-	 VFw2l48dpjFhg==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bfca745c7so4391821fa.0;
-        Fri, 07 Mar 2025 11:05:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWjryOr65rniLDlKn5V+EW/Sn5Y6otpk2u1PWAkJ/DR1sUqwCqvHLH20K7t2yuH6rhIGNi0zqaRX/9tLMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpMG35+OpzLCl53hmQyfv47ywbTniJaed1RdhtMaIVkhbiPLAO
-	0ZxHSLEFQsdZHHu2zz1sJsCav8TUE4q2YyCXKNGS2P3/s/FtQfRlqSioxtNPo84nS31cZ90hl0q
-	1tuNw9dm4DqrtmPD/Glm6vigZPBQ=
-X-Google-Smtp-Source: AGHT+IF0ErMw/KYHCi8EpFKyjzBeH4kl+y1EKTUmtHvr71zHZundRQZjXzzG0cII1VcUlAoQn07ByEvmQesETKya8Ao=
-X-Received: by 2002:a05:651c:39e:b0:30b:efa5:69c3 with SMTP id
- 38308e7fff4ca-30bf4550e90mr11200001fa.22.1741374336521; Fri, 07 Mar 2025
- 11:05:36 -0800 (PST)
+	 To:Cc:Content-Type; b=ISpNLYlcGyV/mTWT8m/MoogYPRv/Dqbji9G8rjvo6AWMMslv4LwVfJmSqWJSEkSig4I4MQcwTgHsQovjvXsIfN0hxrjhamTIrDpOoGKGAx/QIFg1+B10+JpL9wfd+9eI8PV/S23ydlrT4M7rrLqdH/DTuvP+ewpfefgBYGcTFzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c08b14baa9so206623085a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 11:06:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741374370; x=1741979170;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d1kmiGF7uO1vlI4RGhEH0NGmlztmEAIUcGva+o+3j30=;
+        b=fpDcTnPiLAUVahkI10uwnS53XbIoU2CMwEnTTyvsGrPQ5u896Qh5FHanIMUPCR2OUw
+         Z0MsvvdQTSg0ZSt8OQQuVlj/Ov/cKtdk/ygMIiehQB9s+MBjPHmCacZlAbYSSgGWKSis
+         EayZ/EMq3bCaL4qpg+711enqxCvvTx5NReYVE6RKsECbsfHefLEYcThvw38AIeTj6267
+         kUZLNgwXdQ8rM4kD7DHa92E0RL0HOTToqtLbSqLzxIGFyFL2PGQVXSq2kgc5HdRAQ4rE
+         VlP43iD/nHPx9lI6n4DAcCmOAFhOKmFjbguz2XbbEPIcTdal/SkPwCTJvuRswZQe2X/5
+         Q7Jg==
+X-Gm-Message-State: AOJu0YzhZtp98VNsnnII3TzaMZ6G0XN/+SnVYuW82Y2dHh0mMbnXCUuW
+	p2nkyDMsDPBOTNbMNp/qgS7OFwyNAlvz2mtr9KmbKrrLiAkhCDZ+jEqzrSCkNC0=
+X-Gm-Gg: ASbGncvkIcJuAF9fuN33ciVfdZWeeznLJOjykIw5+j+o93DddWJHOI4GVKBuDTZjWOk
+	0hgABPOd24v4c6Qsa86c+UfUcoYxgcBmghkOgyYuvD+2UnROgCZ771GuKIM2jrO2r/uTY3o+b+9
+	iFDuozBTA77EEF1qvxFuCA9TEr9kS0mcuhRyTgWs1dwQ/UBp7cNhuyWVmikHyi82vRRRZRvOi2x
+	+wfNqMD+Or4hG38XJSTiIFoYMl4fVIFD4gYD8ngst2wR49m9xO2stP82CQonV1Bi795GuZmdul1
+	gmTP6QocJOJ86ljpHUwR71KtaIWrtvFtAsmeRy/zT49h4NjDzhvQfheIaAiJu+QVex6Ds/VcHM7
+	a7nfgYbrb394=
+X-Google-Smtp-Source: AGHT+IE+QVj00PxhjOgJn3N3JLGD+xUH6eGBoGSrDi5+jZ6D8xjDSqPld8QSZVci8IrAmLWJn50ffQ==
+X-Received: by 2002:a05:620a:2609:b0:7c0:9df3:a0d7 with SMTP id af79cd13be357-7c4e61763aamr644358385a.41.1741374369663;
+        Fri, 07 Mar 2025 11:06:09 -0800 (PST)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4751d9a3e02sm23269461cf.37.2025.03.07.11.06.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 11:06:09 -0800 (PST)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c3d1664ed5so269891685a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 11:06:09 -0800 (PST)
+X-Received: by 2002:a05:620a:2855:b0:7c3:c13f:ae04 with SMTP id
+ af79cd13be357-7c4e61763dcmr883907685a.36.1741374368990; Fri, 07 Mar 2025
+ 11:06:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224132132.1765115-6-ardb+git@google.com> <20250224132132.1765115-9-ardb+git@google.com>
-In-Reply-To: <20250224132132.1765115-9-ardb+git@google.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 8 Mar 2025 04:04:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATGEK+2=QXzE61YuzaMbZwS5JOVSFxhtCLWqfmt2QwFMA@mail.gmail.com>
-X-Gm-Features: AQ5f1JpUHVlcqarxcFH-dMrGmc9qWN1zNx_sSzc-K0V1MdQ9M67NGDzhzwIBTCU
-Message-ID: <CAK7LNATGEK+2=QXzE61YuzaMbZwS5JOVSFxhtCLWqfmt2QwFMA@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/4] Kbuild: Create intermediate vmlinux build with
- relocations preserved
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-kbuild@vger.kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>
+References: <20250224173010.219024-1-andriy.shevchenko@linux.intel.com>
+ <20250224173010.219024-2-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdWBGb5AXv8Ch3XhPPHc0CVYHf31tx1Feh87OU5MDUCdPQ@mail.gmail.com>
+ <Z8slexKyo7VFkSKW@smile.fi.intel.com> <CAMuHMdVmg=kuPWCN6rRTxP1LSZFtK=gagd0x092kxzif8Tav2Q@mail.gmail.com>
+ <Z8tBnq-j7gKrzlpk@smile.fi.intel.com>
+In-Reply-To: <Z8tBnq-j7gKrzlpk@smile.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 7 Mar 2025 20:05:56 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWeFhqf-A-71pCZ+eFMh+ibGudMwiE5hPrdkfCYwVXHCA@mail.gmail.com>
+X-Gm-Features: AQ5f1JrQEvhAt4IqUMeWu0-h08uB-wRDF7FxywhqQS0iiAUXiXsK145uwgWA3fA
+Message-ID: <CAMuHMdWeFhqf-A-71pCZ+eFMh+ibGudMwiE5hPrdkfCYwVXHCA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/7] auxdisplay: charlcd: Partially revert "Move hwidth
+ and bwidth to struct hd44780_common"
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Willy Tarreau <willy@haproxy.com>, 
+	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 10:22=E2=80=AFPM Ard Biesheuvel <ardb+git@google.co=
-m> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> The imperative paradigm used to build vmlinux, extract some info from it
-> or perform some checks on it, and subsequently modify it again goes
-> against the declarative paradigm that is usually employed for defining
-> make rules.
->
-> In particular, the Makefile.postlink files that consume their input via
-> an output rule result in some dodgy logic in the decompressor makefiles
-> for RISC-V and x86, given that the vmlinux.relocs input file needed to
-> generate the arch-specific relocation tables may not exist or be out of
-> date, but cannot be constructed using the ordinary Make dependency based
-> rules, because the info needs to be extracted while vmlinux is in its
-> ephemeral, non-stripped form.
->
-> So instead, for architectures that require the static relocations that
-> are emitted into vmlinux when passing --emit-relocs to the linker, and
-> are subsequently stripped out again, introduce an intermediate vmlinux
-> target called vmlinux.unstripped, and organize the reset of the build
-> logic accordingly:
->
-> - vmlinux.unstripped is created only once, and not updated again
-> - build rules under arch/*/boot can depend on vmlinux.unstripped without
->   running the risk of the data disappearing or being out of date
-> - the final vmlinux generated by the build is not bloated with static
->   relocations that are never needed again after the build completes.
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
+Hi Andy,
 
-I already expressed my concern in the cover-letter.
+On Fri, 7 Mar 2025 at 19:57, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Fri, Mar 07, 2025 at 07:14:02PM +0100, Geert Uytterhoeven wrote:
+> > On Fri, 7 Mar 2025 at 17:57, Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Fri, Mar 07, 2025 at 10:03:31AM +0100, Geert Uytterhoeven wrote:
+> > > > On Mon, 24 Feb 2025 at 18:30, Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > The commit 2545c1c948a6 ("auxdisplay: Move hwidth and bwidth to struct
+> > > >
+> > > > s/The commit/Commit/
+> > >
+> > > Why? We know that we are talking about the very specific commit.
+> >
+> > You can have a noun with or without an article:
+>
+> This is not so simple :-), esp. if a noun is a weekday or a toponym.
+>
+> >   - "a commit": an unspecified commit,
+> >   - "the commit": a specific commit, specified by context.
+> >   - "commit 1234abcd": a specific commit, specified by what follows.
+> >
+> > > My English is not native I would appreciate a link to a material to study
+> > > the case you pointed out.
+> >
+> > Neither is mine, but the use of articles is similar in English and Dutch.
+> > (I am aware your mother tongue does not have articles ;-)
+> >
+> > I found plenty of articles explaining cases 1 and 2.
+> > Case 3 can be considered equivalent to "Mount Everest" in
+> > https://learnenglish.britishcouncil.org/grammar/a1-a2-grammar/articles-the-or-no-article
+>
+> Okay, so you actually think that the hash and the title can be considered as
+> "name of a place". Hmm... I don't think it applies here. It's not a place.
+> Moreover some places require "the" article.
 
-Other than that, there are some nits:
+Only if they are a region, not if they are a country (yes, that's
+unrelated here).
 
- - You need to update .gitignore to ignore vmlinux.unstripped
-  and the 'clean' target to clean up vmlinux.unstripped.
+> Here https://www.butte.edu/departments/cas/tipsheets/grammar/articles.html,
+> for example, the sentence "The 2003 federal budget" sounds to me closer to
+> our case. Every year there is a federal budget, but we explicitly point out
+> to one and reader knows what is this. The same with the commit.
+>
+> Sorry, but I am still not convinced.
 
-- cmd_strip_relocs can be moved to scripts/Makefile.vmlinux
-  from scripts/Makefile.lib
+In "The 2003 federal budget", both "2003" and "federal" are adjectives.
+In "commit 1234abcd", "1234abcd" is a name.
 
+Cfr. "King Charles".  "The King Charles" would be used only when
+putting a very special emphasis on "king".
 
+Gr{oetje,eeting}s,
 
+                        Geert
 
->  arch/mips/Makefile.postlink  |  2 +-
->  arch/riscv/Makefile.postlink | 11 +--------
->  arch/riscv/boot/Makefile     |  5 +---
->  arch/s390/Makefile.postlink  |  4 +---
->  arch/x86/Makefile.postlink   |  8 +++----
->  scripts/Makefile.lib         |  2 +-
->  scripts/Makefile.vmlinux     | 25 ++++++++++++++------
->  7 files changed, 26 insertions(+), 31 deletions(-)
->
-> diff --git a/arch/mips/Makefile.postlink b/arch/mips/Makefile.postlink
-> index 6cfdc149d3bc..ea0add7d56b2 100644
-> --- a/arch/mips/Makefile.postlink
-> +++ b/arch/mips/Makefile.postlink
-> @@ -22,7 +22,7 @@ quiet_cmd_relocs =3D RELOCS  $@
->
->  # `@true` prevents complaint when there is nothing to be done
->
-> -vmlinux: FORCE
-> +vmlinux vmlinux.unstripped: FORCE
->         @true
->  ifeq ($(CONFIG_CPU_LOONGSON3_WORKAROUNDS),y)
->         $(call if_changed,ls3_llsc)
-> diff --git a/arch/riscv/Makefile.postlink b/arch/riscv/Makefile.postlink
-> index 6b0580949b6a..0e4cf8ad2f14 100644
-> --- a/arch/riscv/Makefile.postlink
-> +++ b/arch/riscv/Makefile.postlink
-> @@ -10,26 +10,17 @@ __archpost:
->
->  -include include/config/auto.conf
->  include $(srctree)/scripts/Kbuild.include
-> -include $(srctree)/scripts/Makefile.lib
->
->  quiet_cmd_relocs_check =3D CHKREL  $@
->  cmd_relocs_check =3D                                                    =
- \
->         $(CONFIG_SHELL) $(srctree)/arch/riscv/tools/relocs_check.sh "$(OB=
-JDUMP)" "$(NM)" "$@"
->
-> -ifdef CONFIG_RELOCATABLE
-> -quiet_cmd_cp_vmlinux_relocs =3D CPREL   vmlinux.relocs
-> -cmd_cp_vmlinux_relocs =3D cp vmlinux vmlinux.relocs
-> -
-> -endif
-> -
->  # `@true` prevents complaint when there is nothing to be done
->
-> -vmlinux: FORCE
-> +vmlinux vmlinux.unstripped: FORCE
->         @true
->  ifdef CONFIG_RELOCATABLE
->         $(call if_changed,relocs_check)
-> -       $(call if_changed,cp_vmlinux_relocs)
-> -       $(call if_changed,strip_relocs)
->  endif
->
->  clean:
-> diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
-> index b25d524ce5eb..bfc3d0b75b9b 100644
-> --- a/arch/riscv/boot/Makefile
-> +++ b/arch/riscv/boot/Makefile
-> @@ -32,10 +32,7 @@ $(obj)/xipImage: vmlinux FORCE
->  endif
->
->  ifdef CONFIG_RELOCATABLE
-> -vmlinux.relocs: vmlinux
-> -       @ (! [ -f vmlinux.relocs ] && echo "vmlinux.relocs can't be found=
-, please remove vmlinux and try again") || true
-> -
-> -$(obj)/Image: vmlinux.relocs FORCE
-> +$(obj)/Image: vmlinux.unstripped FORCE
->  else
->  $(obj)/Image: vmlinux FORCE
->  endif
-> diff --git a/arch/s390/Makefile.postlink b/arch/s390/Makefile.postlink
-> index 1ae5478cd6ac..c2b737500a91 100644
-> --- a/arch/s390/Makefile.postlink
-> +++ b/arch/s390/Makefile.postlink
-> @@ -11,7 +11,6 @@ __archpost:
->
->  -include include/config/auto.conf
->  include $(srctree)/scripts/Kbuild.include
-> -include $(srctree)/scripts/Makefile.lib
->
->  CMD_RELOCS=3Darch/s390/tools/relocs
->  OUT_RELOCS =3D arch/s390/boot
-> @@ -20,9 +19,8 @@ quiet_cmd_relocs =3D RELOCS  $(OUT_RELOCS)/relocs.S
->         mkdir -p $(OUT_RELOCS); \
->         $(CMD_RELOCS) $@ > $(OUT_RELOCS)/relocs.S
->
-> -vmlinux: FORCE
-> +vmlinux.unstripped: FORCE
->         $(call cmd,relocs)
-> -       $(call cmd,strip_relocs)
->
->  clean:
->         @rm -f $(OUT_RELOCS)/relocs.S
-> diff --git a/arch/x86/Makefile.postlink b/arch/x86/Makefile.postlink
-> index 8b8a68162c94..445fce66630f 100644
-> --- a/arch/x86/Makefile.postlink
-> +++ b/arch/x86/Makefile.postlink
-> @@ -11,23 +11,21 @@ __archpost:
->
->  -include include/config/auto.conf
->  include $(srctree)/scripts/Kbuild.include
-> -include $(srctree)/scripts/Makefile.lib
->
->  CMD_RELOCS =3D arch/x86/tools/relocs
->  OUT_RELOCS =3D arch/x86/boot/compressed
-> -quiet_cmd_relocs =3D RELOCS  $(OUT_RELOCS)/$@.relocs
-> +quiet_cmd_relocs =3D RELOCS  $(OUT_RELOCS)/vmlinux.relocs
->        cmd_relocs =3D \
->         mkdir -p $(OUT_RELOCS); \
-> -       $(CMD_RELOCS) $@ > $(OUT_RELOCS)/$@.relocs; \
-> +       $(CMD_RELOCS) $@ > $(OUT_RELOCS)/vmlinux.relocs; \
->         $(CMD_RELOCS) --abs-relocs $@
->
->  # `@true` prevents complaint when there is nothing to be done
->
-> -vmlinux: FORCE
-> +vmlinux vmlinux.unstripped: FORCE
->         @true
->  ifeq ($(CONFIG_X86_NEED_RELOCS),y)
->         $(call cmd,relocs)
-> -       $(call cmd,strip_relocs)
->  endif
->
->  clean:
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index cad20f0e66ee..7a023f17a21d 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -377,7 +377,7 @@ quiet_cmd_objcopy =3D OBJCOPY $@
->  cmd_objcopy =3D $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
->
->  quiet_cmd_strip_relocs =3D RSTRIP  $@
-> -cmd_strip_relocs =3D $(OBJCOPY) --remove-section=3D'.rel*' $@
-> +cmd_strip_relocs =3D $(OBJCOPY) --remove-section=3D'.rel*' $< $@
->
->  # Gzip
->  # ----------------------------------------------------------------------=
------
-> diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-> index 3523ce3ce3dc..1e3ea8e4b4b0 100644
-> --- a/scripts/Makefile.vmlinux
-> +++ b/scripts/Makefile.vmlinux
-> @@ -9,6 +9,17 @@ include $(srctree)/scripts/Makefile.lib
->
->  targets :=3D
->
-> +ifdef CONFIG_ARCH_VMLINUX_NEEDS_RELOCS
-> +vmlinux-final :=3D vmlinux.unstripped
-> +
-> +vmlinux: $(vmlinux-final) FORCE
-> +       $(call if_changed,strip_relocs)
-> +
-> +targets +=3D vmlinux
-> +else
-> +vmlinux-final :=3D vmlinux
-> +endif
-> +
->  %.o: %.c FORCE
->         $(call if_changed_rule,cc_o_c)
->
-> @@ -47,7 +58,7 @@ targets +=3D .builtin-dtbs-list
->
->  ifdef CONFIG_GENERIC_BUILTIN_DTB
->  targets +=3D .builtin-dtbs.S .builtin-dtbs.o
-> -vmlinux: .builtin-dtbs.o
-> +$(vmlinux-final): .builtin-dtbs.o
->  endif
->
->  # vmlinux
-> @@ -55,11 +66,11 @@ endif
->
->  ifdef CONFIG_MODULES
->  targets +=3D .vmlinux.export.o
-> -vmlinux: .vmlinux.export.o
-> +$(vmlinux-final): .vmlinux.export.o
->  endif
->
->  ifdef CONFIG_ARCH_WANTS_PRE_LINK_VMLINUX
-> -vmlinux: arch/$(SRCARCH)/tools/vmlinux.arch.o
-> +$(vmlinux-final): arch/$(SRCARCH)/tools/vmlinux.arch.o
->
->  arch/$(SRCARCH)/tools/vmlinux.arch.o: vmlinux.o FORCE
->         $(Q)$(MAKE) $(build)=3Darch/$(SRCARCH)/tools $@
-> @@ -72,11 +83,11 @@ cmd_link_vmlinux =3D                                 =
-                 \
->         $< "$(LD)" "$(KBUILD_LDFLAGS)" "$(LDFLAGS_vmlinux)" "$@";       \
->         $(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
->
-> -targets +=3D vmlinux
-> -vmlinux: scripts/link-vmlinux.sh vmlinux.o $(KBUILD_LDS) FORCE
-> +targets +=3D $(vmlinux-final)
-> +$(vmlinux-final): scripts/link-vmlinux.sh vmlinux.o $(KBUILD_LDS) FORCE
->         +$(call if_changed_dep,link_vmlinux)
->  ifdef CONFIG_DEBUG_INFO_BTF
-> -vmlinux: $(RESOLVE_BTFIDS)
-> +$(vmlinux-final): $(RESOLVE_BTFIDS)
->  endif
->
->  # module.builtin.ranges
-> @@ -92,7 +103,7 @@ modules.builtin.ranges: $(srctree)/scripts/generate_bu=
-iltin_ranges.awk \
->                         modules.builtin vmlinux.map vmlinux.o.map FORCE
->         $(call if_changed,modules_builtin_ranges)
->
-> -vmlinux.map: vmlinux
-> +vmlinux.map: $(vmlinux-final)
->         @:
->
->  endif
-> --
-> 2.48.1.601.g30ceb7b040-goog
->
->
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
---=20
-Best Regards
-Masahiro Yamada
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
