@@ -1,59 +1,58 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98CA20B7FD;
-	Fri,  7 Mar 2025 10:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB8A20D507;
+	Fri,  7 Mar 2025 10:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741343795; cv=none; b=iBX0H2JcvwcYuSdOjh7N0IyTmrYZWX0KqfdLCT5FkuXcsMhpSrNY0l5wKh7Rf+3XorOk/Gvmidifq03mDx7xWBC7raIIhl0oi/cKcf35m06+mkxj/wuX8+D+yyaCC4Tkd0L4ZjNXt2pex3JsHZWVqIfRJdB07FcNlY9y7/Rz7Iw=
+	t=1741343820; cv=none; b=WusjKWGQRWjPwgfEMRTPxk9aXsQ58vt3e6zzrd19zsU67Mk0nOHRRPGCMcSJw9ukfIVUnwp0PDSKQZyr0M5J2bQt39XAIj5D6BQ6BEiwlpwRiFa0QQEIgYOJRFatXFDowXyIMnS+TEsQ+rWcJhTCUOLE5aXG4yr/jLagh/T2ZFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741343795; c=relaxed/simple;
-	bh=IoATmkm/Rjb3OeLxwhR108Qn/R1lDRmF3eQ5DLhG/Yk=;
+	s=arc-20240116; t=1741343820; c=relaxed/simple;
+	bh=NxGKOzJhH0syB/5UESiHYjZElY5LVqIHIR57niTMWic=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nu/+5HATLcPtcBJXqfs5UntCK2vQynC3MVANC7LraDMyX1mV+vektC+Z2k6smOt5vjcP5OkcWkUm0mwQ1b7O6FKMquOfvOp9TzE1p6pDZICK+yFgIPsg+8unAV5fxqzX1m4DxnguqBpVEYgc9oY9q4HyIODQazfPq0xh1TQsRyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XT4wEqAv; arc=none smtp.client-ip=198.47.23.235
+	 MIME-Version:Content-Type; b=t25TGWDLuyTUWUNFeAelsqqjJNyak7teyWhM620Qd+BfYeHjuhmheSSbfwICJyrr6cOeKaOaTpr5RyMHtBInrdFWznZMSBQrIqpEgeRwm0VBuN6zk8v3hdXR7MJcoqbQxUxcwgM7/BVsKDhRPkTQb18NfM/KBo5VubmhrpGaWj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RgBVVqVg; arc=none smtp.client-ip=198.47.19.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XT4wEqAv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RgBVVqVg"
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 527AaLnA344561
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 527AakJR3942632
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 7 Mar 2025 04:36:21 -0600
+	Fri, 7 Mar 2025 04:36:46 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741343781;
-	bh=Gv5g3lJSEQAWXZM3XwaU06yz84+apKewnJfFnIBLU0s=;
+	s=ti-com-17Q1; t=1741343806;
+	bh=/q/4BzWAkO+zh9PIsVSkrHOjIySSifAyOimM8ksoJNM=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=XT4wEqAvYJ83Njy8ZFvObjrXbTRKqkZcg9fsmzPXtw9k9ZGe2iayo+Tv9VDDtajmK
-	 u4udPtHZP0dCjwMdsksZLqgE+kOJLhgYNQyWjgJFk1c19VisxZpnMykEVmRYJG/oI4
-	 pCWzcH2EU8DXFXneMjK4bTYMjU9PxugKErgok/YA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 527AaLNs029394;
-	Fri, 7 Mar 2025 04:36:21 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+	b=RgBVVqVgcvK/Nii3mcdbyFJ86WQJZs6WZZYiHykmh9RuaLfH5KWoOJfnclNADCM1N
+	 U9OsSZbW6sHY3XqqpmKmsjpg3atje4+Of5hv3/XPAi8VbMpVv0bKHRkJz6pFP7PE4B
+	 awZQ4hsP7p6RCupDTlppHCeKxmsoN2NexubF5v68=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 527AakT9029556;
+	Fri, 7 Mar 2025 04:36:46 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
- Mar 2025 04:36:21 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2025 04:36:45 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 7 Mar 2025 04:36:21 -0600
+ Frontend Transport; Fri, 7 Mar 2025 04:36:45 -0600
 Received: from uda0132425.dhcp.ti.com (dhcp-10-24-69-250.dhcp.ti.com [10.24.69.250])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 527AaH3S021509;
-	Fri, 7 Mar 2025 04:36:18 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 527Aaf28021789;
+	Fri, 7 Mar 2025 04:36:42 -0600
 From: Vignesh Raghavendra <vigneshr@ti.com>
 To: <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vaishnav Achath <vaishnav.a@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
-        <jai.luthra@linux.dev>, <y-abhilashchandra@ti.com>
-Subject: Re: [PATCH 0/5] Add J722S CSI support
-Date: Fri, 7 Mar 2025 16:06:15 +0530
-Message-ID: <174133309362.1072814.5440404016847301624.b4-ty@ti.com>
+        <conor+dt@kernel.org>, Wadim Egorov <w.egorov@phytec.de>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
+Subject: Re: [PATCH v2 1/5] arm64: dts: ti: k3-am62x-phyboard-lyra: Add boot phase tags
+Date: Fri, 7 Mar 2025 16:06:36 +0530
+Message-ID: <174133309362.1072814.1438889304366712802.b4-ty@ti.com>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250218185452.600797-1-vaishnav.a@ti.com>
-References: <20250218185452.600797-1-vaishnav.a@ti.com>
+In-Reply-To: <20250305085537.3976579-1-w.egorov@phytec.de>
+References: <20250305085537.3976579-1-w.egorov@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,33 +63,32 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Vaishnav Achath,
+Hi Wadim Egorov,
 
-On Wed, 19 Feb 2025 00:24:47 +0530, Vaishnav Achath wrote:
-> This series adds support for CSI2RX capture on J722S EVM
-> and enables IMX219 and OV5640 overlays to enables
-> 4 sensors on EVM, this provides a reference for a user to
-> enable a different sensor on any of the ports.
+On Wed, 05 Mar 2025 09:55:33 +0100, Wadim Egorov wrote:
+> The bootph-all and bootph-pre-ram tags were introduced in dt-schema
+> (dtschema/schemas/bootph.yaml) to define node usage across different
+> boot phases.
 > 
-> Test logs:
-> IMX219: https://gist.github.com/vaishnavachath/60cc2ef257601f27f28a315f8cf669c4
-> OV5640: https://gist.github.com/vaishnavachath/648202286d4d34d4d25f7c8c9db8b8bd
+> Add boot phase tags to all required nodes to ensure boot support from
+> all sources, including UART, USB (DFU), Ethernet, uSD card, eMMC, and
+> OSPI NOR Flash.
 > 
 > [...]
 
 I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/5] arm64: dts: ti: k3-j722s-main: Add BCDMA CSI overrides
-      commit: fb1b230bf9c45f5d6579dc329c2aafcd1263b70a
-[2/5] arm64: dts: ti: k3-j722s-main: Add CSI2RX nodes
-      commit: 8fea4519f625e6c1b05078f2ecea252b7b28b06e
-[3/5] arm64: dts: ti: k3-j722s-evm: Add camera peripherals
-      commit: ce553288ad2368f0d27e47b39a23121a825a2b33
-[4/5] arm64: dts: ti: k3-j722s-evm: Add overlay for quad IMX219
-      commit: c24ccb1cd77fb44087b2f7008d99626796b33ca4
-[5/5] arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI OV5640
-      commit: 938806652b0a3c90d67e7137c91708d06940b03d
+[1/5] arm64: dts: ti: k3-am62x-phyboard-lyra: Add boot phase tags
+      commit: c2d18ec0ea4ce9d6d8be5a1a9b266f57a40b5e24
+[2/5] arm64: dts: ti: k3-am62a-phycore-som: Add boot phase tags
+      commit: a5965ee0107a37ca4c73f05f06f55dad759572d2
+[3/5] arm64: dts: ti: k3-am642-phyboard-electra: Add boot phase tags
+      commit: a9c8485cd13cdffee5bdcda6b625f678900994c4
+[4/5] arm64: dts: ti: k3-am642-phyboard-electra: Reorder properties per DTS coding style
+      commit: 61a12b5a9923e4beec5595fed3b9c3d5c0c25c32
+[5/5] arm64: dts: ti: k3-am62a-phycore-som: Reorder properties per DTS coding style
+      commit: a89d3f47b09c793d0454350739ee8695ff30fb5c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
