@@ -1,133 +1,212 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2062.outbound.protection.outlook.com [40.107.22.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD993D6D;
-	Fri,  7 Mar 2025 06:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741329069; cv=none; b=b0xGbXiFn6PegLPjZPov+/OeDK/S5//aC2D0Q5/E4j+tc2rAepGJd+62GHOPYInA1PwUgCr1qpvhDtSw2TLdlKJbi1ROg+z+JAikT63FrRAGSicJ/uZzS3E2WTf0qXMB8/FOr2Wx7/1INzZsMg/wYM6fVJO4ZeBaQMXBnENbKkM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741329069; c=relaxed/simple;
-	bh=QbIBN2cYPALHuwk835VmCHT20olGGIRk7Frt+363LtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HTzKkozrZtRw458vwmNh8GZUE/sRmrQCnzgFZW0iZIeIFRAyqUK+BclZNjF97a39/9cVi1juxANh9Dq97yaU0wD2ZoB/MlwnUyuwM3NnUk3axGNG779BzU6K69m19NsnUodKIZ64QkrcFzGzVZcT1LAz9k5ZRThxTvnlqzc36jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=hVUK7HEt; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=USo9iDYe; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B0819006F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 06:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741329150; cv=fail; b=E1kX7t1N48b9GmTTp67rxTYgnZvcB9iNHuLsXcBH7nZeIfbAMw/Aiz6gDC0kWeVIxv8n79MZkA1BwX3phkMEBdczECr+OZzD8x3qY1jOkqQS2l65uT00HLb0G1HxS8xuaEOhCMAaeVwdnNDuAelnQTWfiNNb5lVJjtqllBpS3OU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741329150; c=relaxed/simple;
+	bh=CEcJJ7OyTHUIJpHCuB2sHOPmWA+RQBRlMRCRjSNDexA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=EuOtlK9Z5g3OnWDfQLSKO2J4uyfrsNOEgtR2/p0U9xz+uuA3xqc79qXOi2z8c7yzro4luxvVNsxpJwEjRkZHrwLSrREP25symWhv7N+AuWMrWkIGTau9Lq0lpHhR+U7hE1FWplt7s/Phi7RdclEaFdEi4IF8GrlTmSDwAjVoCwI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Yulqrtdy; arc=fail smtp.client-ip=40.107.22.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="hVUK7HEt";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="USo9iDYe"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id CAB9DEC59F6;
-	Thu, 06 Mar 2025 22:31:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1741329066; bh=QbIBN2cYPALHuwk835VmCHT20olGGIRk7Frt+363LtE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hVUK7HEtvyH9RopctGa+q2nO7DTlF9WKs9Unk0B/X3OxmZNCKihro9qCRi0I9YcnH
-	 ITlNedSZ7jknmpMmXoQrI4ahi780ANE2CkTVnKTjhOa9TM6ODAk3gWRst++HUEzg24
-	 S9VisYglRLgF5tC7OCH/0blS/kyt6tOo1TculZzVhLaDXRlRp1QMVrOfv5nmCbvjop
-	 EHxdf7MNTnEBrVvE/UmpzYDRBolpzh0+27mwGw31eS8ARZDzWvIA57Cv67bkfgdAoE
-	 qngjcZJhmbNTNqujtBug4O9cyIdFPxecDa2IjiY2Pd5mmkIzAvPBP2odjyFa21KvW7
-	 7VQhHSadBkIyw==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id bcNtAdR40R4T; Thu,  6 Mar 2025 22:31:05 -0800 (PST)
-Received: from ketchup (unknown [183.217.80.218])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id 50050EC59F2;
-	Thu, 06 Mar 2025 22:31:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1741329065; bh=QbIBN2cYPALHuwk835VmCHT20olGGIRk7Frt+363LtE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=USo9iDYeupLGfhOfG/Enc2OxgvBUZCQztffyffTK/ZZWiDR6ERox6qdaCVLQxQ7ny
-	 ufyGH5rczv27cihJuHg8bn2M7trtL6rFmNQa6IDC3KNx+1oYctVoopbX/d+xBAA8qv
-	 WqyRNcsDKDFiTPtt1JNfWL+GrnN2uJCTNCQPNX1b2S5uAhqvfWqx3aD3XLlfHMWP97
-	 f3Qo3zvh7TxenaWjGW/GHop8gR7sCZ0GHfvn/yUBE/VDqODpp54/2uKsg83O8OX0Qj
-	 aFH2aE4AcgAinbPoe++nkM5mPfBSo2tNntRcsFLnjd7Tdr6mDezcR58MEL4QX5I24f
-	 0fRroYRc+Dbxw==
-Date: Fri, 7 Mar 2025 06:30:52 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haylen Chu <heylenay@outlook.com>, Yixun Lan <dlan@gentoo.org>
-Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
-	Chen Wang <unicornxdotw@foxmail.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
-Subject: Re: [PATCH v5 4/5] clk: spacemit: k1: Add TWSI8 bus and function
- clocks
-Message-ID: <Z8qSnBc4dmR3ftOz@ketchup>
-References: <20250306175750.22480-2-heylenay@4d2.org>
- <20250306175750.22480-6-heylenay@4d2.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Yulqrtdy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YK8UZYjfmEOiUla2KYMeZO7X2vJGHPMDq79lLOBuvOIWAUXiaFL6TNP+pL4oGPJwDFaazVgBFTbdIo3z9cTA8LAP2aM1UJJ1rRDXQ4ONyHp5GNej6ikgUQLP0MQpeq41NVpacl0WOVc1gz1Dh22XkHeABCA2xV5vKeYgSCrft6li66DKE08MVz9eaMDQQiR9Kk81SZnZCa1/u4YhrggnuvUfBbcmzt/splfBHQ3E2ATSk8DdqQrMzpMq/7HZhauWHS7Lyy4PvjIqAONFDYdc7RUpbOYJSAQYJoK4nxrp5PaiO4sIUnhuHzt2oMK6/1n6OGRbQzkmfQwvgP4jyt7P/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ry20+r04sphzoiaaJTb3EB2Hrifw18CbXXy2cx7GHzI=;
+ b=MA1T2r/BTGpGckV04jJZOoKq1gUXC+2uhFPMH5qUx+/CUVf+eoZPifrX4eGIgV5Hul7UX2eKDzk+xFJfU7etsfil3iRoFZNNE1Hsi7Asz4Q3iQh+LamSNOCOtx5X2H7AtRUYboaOTSBmT8dzHSExE2andgOzFFFCdiIUGvRPDYdSA//9ZsIzic2RhP7a3vK236Cp40joO1Xitdf6y5BGct6oFjiPweWCLFGKT0t9TG0x8ACVI1qFiwBqsqQ8NcWMPUctpNt9vki43xulwl6zjoSpEOkVdoARaV86pdoy6xO1J751NXbxMLTzyD5MrH6Rxe33yOoLYICFdyP7b44iPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ry20+r04sphzoiaaJTb3EB2Hrifw18CbXXy2cx7GHzI=;
+ b=Yulqrtdy9MKwh6XeZauVzniVKcPa++Em9WC5Q6EHLuJjNIOqruFes/nadwV+BvRS2V5zdQLq9jbcP05PTAy8oNPThv88DUDyBEQrwVTIWAL8QuqhsjwHooVo6HbnpmI/qahu8Tns/IRVDQpTX5Yq1yW7o03vdS/Yebmroldkymo889EAzEaVzf31rcqQS8dqH6erZOFE41DxpUS6Dg29HtVIM3r1/K+JFDgrvoawvix+XgxnpKssv4nznshmWNTFtq91/ts0wgu6JV0b0nj6M7v6DEMHEPIIrRyNZl0OcoFhiAKjzDfUQr38DIH7rKjrPJjH08PzzQ+lU2erPf/oJQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AS5PR04MB9972.eurprd04.prod.outlook.com (2603:10a6:20b:682::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Fri, 7 Mar
+ 2025 06:32:25 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%4]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
+ 06:32:25 +0000
+Message-ID: <f8df2b5e-b005-4ada-8108-159b2b94a72e@nxp.com>
+Date: Fri, 7 Mar 2025 14:33:37 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/bridge: fsl-ldb: make warning message more
+ informative
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250306-drm-two-ldb-improvements-v1-0-f139d768b92c@bootlin.com>
+ <20250306-drm-two-ldb-improvements-v1-2-f139d768b92c@bootlin.com>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20250306-drm-two-ldb-improvements-v1-2-f139d768b92c@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR02CA0013.apcprd02.prod.outlook.com
+ (2603:1096:4:194::21) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306175750.22480-6-heylenay@4d2.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS5PR04MB9972:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6c37c6f8-68c4-4d8d-62e0-08dd5d41d2dd
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?WHdIM0d3YmJSNXg3VTQ1RVk3R21YQ1VBTzZXWHIxUnB3NTMwZnF1UFpaRFVH?=
+ =?utf-8?B?WCtRbzlDckMwbzIxSEg5MVFqV2RFbFdTR2FheU5UdXhvVGM3cmJMRVl4US9I?=
+ =?utf-8?B?TUlQQ2c0VDlacUlhOTFKLzRyeHJvZUFzd1JIa2JSRzhLamhTQnA4dVBrbXUz?=
+ =?utf-8?B?NVo4OW0yV21hclI4ekRib0dIVlpyMTUvMUZpeGxOOG1GV0oyeXpHK2prNThr?=
+ =?utf-8?B?N1VrelRxT0hDVE81Q1BvUmZWQ3cvenlESXlpRmVpQU5taFIvdjE0U3Y4Y0Q3?=
+ =?utf-8?B?NzQvenUyVWxjRFczMURZaWdmbmIzemZRdmhRcVU2bFplRG8vTWNYZHVuRnB1?=
+ =?utf-8?B?dUF2TGdwLzBMakFDeUt3MEZHMk9xaUZZVk9IbnpsZjhLdVkxd1d4aDU1SlVh?=
+ =?utf-8?B?ejJtVjRjeGE4VDNvWVdDQVRFVHYrcERLUnU2OGhmMnZlRmxLRG5OVFhyNE53?=
+ =?utf-8?B?RnRWQlJFUnVJSUlid3VSeFZsSzNuT2dTcitOYkZpcU1DcGpOSlcrUkllVHhu?=
+ =?utf-8?B?YmZTaDNHUnBXbSt3aVNDZWdnZW92MU90WndqVjhCdjF0SmdqMTEyeWpBY2Rx?=
+ =?utf-8?B?S29wUjJNNjBqRlZUcWYwakdWN2sxenUyZi9mMjErb2RtTkt3OEFnTTNuSmwz?=
+ =?utf-8?B?V2RIQnhZZzFXNmxuSVJJNUVza0ljN3p3OEFRckFmY2NpcXR4ejBHRkpIQUxq?=
+ =?utf-8?B?b3JkN2RkOXZ5dWxsZWtYcGIzWXpWZDZZQXU5VkZra0hGdHRzR0VGOGREMTJm?=
+ =?utf-8?B?WEEwK3M4WTdHMHI3eE5MZys4M1d4ZUZ2ZjdrYWRXaHNoZDN1Ukk0NkNVNGtn?=
+ =?utf-8?B?LzlLRFVQTkc1RldYT0kxR2wrKzZ5VW9rcHN2bUYvd0EycE5DKzJSeGROa3Rp?=
+ =?utf-8?B?Ui82TkJjZDB6UWFsRnBmR2JsVlJKa0s0ZXJIUGJESmtEblk1Wlgydm1VdnA5?=
+ =?utf-8?B?Z3BQVUMzOUtEbGhvY0FDWkxiL1RyeEt4amZienFBVXNWVHVKVnlkSnlhUTZ5?=
+ =?utf-8?B?SzVDSEs4VE5vOHJWYmp6OTVyRTBpNVN5aEVEaExlZ0EwdTU2UndBeENtbVpZ?=
+ =?utf-8?B?S0lWMDBvZ3dxVi9OZGJuaFc4V1JKdmQrYUwrTUdHNTdSOUNKOWMxUmpDRWtt?=
+ =?utf-8?B?L3Njb2xKbjJlV0wzZExGTTNkNG9vUnZ2T3hGdWJuR3dMSnVvckN0ZStjRGU5?=
+ =?utf-8?B?OCtyY2Nzekt0MGdlWDBMditwVjRLVDdPOWxWbnJpdDFTc2VoSUxiUy96QzRj?=
+ =?utf-8?B?YU1tWkZqQ2V6aG9WaDhvYVE5ZzRmQ1FsSzhWcitybkl1WHk1NFJSdk1YSUVo?=
+ =?utf-8?B?OEVia3dPdHpnd3hsbTkyWmoyU0dxaFFSdWlIWWdiUUFjQmZ5MW8yN2JWU2FG?=
+ =?utf-8?B?QndQM0J6aUVWdU5KbGl4US9EWlQzcWtlaTJ5UVBmdHlJRmU5WmRHdkg2NGN1?=
+ =?utf-8?B?eE05R20xVUVpSmhzSnhoUmh4YlNlc0N5MjAyNmZjL0NRVFlWZG1WejEyU21p?=
+ =?utf-8?B?b0pQRHowRm1hMXgrUjJTUHl0VW5ITUJkUXByazRRcnY0YktXdWpDb09aaGFj?=
+ =?utf-8?B?ckk4bWY3Rlgvak9seHRvZ2EwWnhrTlhYWU9LamU5anJkZk5Gck1FODl3SmhJ?=
+ =?utf-8?B?TnJWRWt2b2kwb05lYTVVdTlpcnNzTFVLeDhzeXZjRGQwWGtiSk41Vmpwbld5?=
+ =?utf-8?B?c3duejRCSzJsSkVXZ21TV3ZhTzdvTGIvajhzdFgvdEpzbFNlNElBNDZLYXN3?=
+ =?utf-8?B?V3ZiRVB1V1FGOWJ1Y3g3aUhDN1VJd0g3cWg5bzZkQ1djVzY2RFlwYzJETHpo?=
+ =?utf-8?B?SzlKb2phTkYvM0JUQ3duUms4NTdxRTVnT1VJZ0c5bW9HOWgwM1owYXZDSzda?=
+ =?utf-8?B?M3N4NGRsUjJGTWMxNGEzcTI5REVxazdCWGxMMUVWeml3MEE9PQ==?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?UW1PWVVoN21HOVB5TzZFdEZ4RVhucHZqcGNNUVpwM0hxNkhSVDc3U2RBUDlw?=
+ =?utf-8?B?UkxiYjQrZDJrbFNtQ1JzVXRGZEZ1bmFmdUE4RUZPZnJEZ1NOKy9VdkludE56?=
+ =?utf-8?B?SE5sV21SZTk5MU51RmJtNVRGWnNJMmovNDF3WFdGc24zYWxGY3ltNHpabGdI?=
+ =?utf-8?B?c1FPalM4bjhjWlNMa25jeUx1U1F2NUVRc1lMNGlKL2ZGdEI0UWZGUkdneUIr?=
+ =?utf-8?B?Zm5YZTJIQkhkRlJLUUpVbGNKaU5EcUljbGtxVWVnT0N0MlVIa2lYWC85eVlR?=
+ =?utf-8?B?cU10aHdkbVM0dGkvSEVIYjQ0aGxZOUJLTU1CRnVNUFpWSGZoZEt6S04yeE5U?=
+ =?utf-8?B?NDIrZGUzWVUvbnhnb1VsU1lGWmVacjhPdVRPQi8xaFlNS2hyY1BYMlJBeERM?=
+ =?utf-8?B?d21vYkhrSU9rNkxwQWNRem1pSnZrTkx1VGtMVEVISzhOZml1Vk0zblROUkRu?=
+ =?utf-8?B?cCtxbTFIU3VLMjdkd0JzZkdUczZBOEJCTDBQZWFFWjlxK1N4L1h3UUl6K1gx?=
+ =?utf-8?B?c0Y1WjBXR3VHQW12cTJLYUp1ZzZ1RzNoK09lajVuTmtmWTNEdURXaGZnV0dm?=
+ =?utf-8?B?bW9BN0RDRU41ZDFRaTBTb3h0MkZreXRmNFZZZTdvU1BPVWx6U3lNVkdVOWgr?=
+ =?utf-8?B?RHlNRHY0cHlGNGZuakFjV2hrL0d1aTRCNGxXcEMrQndpa3ZzZW9PQktZc2NM?=
+ =?utf-8?B?UGx1WGNncGRxeFBjK0V1TFFTVW9ZVmRKNkxmaFBJVnB5QUNrcm5KNGVoeXg3?=
+ =?utf-8?B?ZjFRbG9nL1BJWmxBWnUwQkhvaXZHb1pYbEpjSjg5SmhMbmxJdjQzckZTVmor?=
+ =?utf-8?B?MjY5VVY2aG5LYnFYMmRNWmdkYU5uM0FYT0ZuemY0VFBRRERaeDhBSkd2N09a?=
+ =?utf-8?B?czBmNXNnVVcxVUpMZzlVY0RuNWpxUW5VRFZ3TDJ6UlNWeHd4eW5VemFScThr?=
+ =?utf-8?B?emQ5RXBhYWtlK1B4Ung2djZGakdoU21lY3hZNTNUaGkxd3IwMDhobkNURitN?=
+ =?utf-8?B?YU1weWloVE1jWDJVS3ZJQXpRSlJXU0Z2dTh0SG9aRzlmaHNWbjdwMENBNFNN?=
+ =?utf-8?B?aXpDNFZzL0pTTkhHVTdpODZiUEFNemlqNWk1ZTJpdHhxMWFQSVRha1NTU1FZ?=
+ =?utf-8?B?WUo3bUZJeTBGUWZueEtZNkMrNXBRamNDai9BVUtEQWV4NFpMZm5aR1JLdEpr?=
+ =?utf-8?B?NWZUck5XdUVwZHZxRzM4VlVkdC9VQlBLcEkxWm1UMCtOclUvZHBCNGRnNXVk?=
+ =?utf-8?B?eHZrMnJqSlFFcjUvbTk2Z2xxQytSOCtFb1ZjTnUySDkxR084TWpPYnVSMjlN?=
+ =?utf-8?B?OEM0OHJaMEdvYWhYV2dUa21YckdsU0VRZUlJTjdmdG0vQk50cHhFZlkzYkxk?=
+ =?utf-8?B?VXU0Z0l3QnM5MjZBcmRPMXZIRUI0UXpWd3E2cHBLNldJZlFHcDM1enlVZEZF?=
+ =?utf-8?B?RGVmNWVXeVpKcmtpRjVmSFl5MWF2WVU5c0QrcnJ3VFVSQU9rMGxzTWFjdm1r?=
+ =?utf-8?B?ODM2Z1JoSUdXYWhxRjUzb00vbU5UcVY5MU5sSDY2bUpDU1M1VWhUdkN0ZGd6?=
+ =?utf-8?B?dGxHMEtxTWJsYm5PN0VHQlhCQmZPSjRQbjhvVFBqUmhXbDBWMmdxWk1GZmZS?=
+ =?utf-8?B?Z3NUUFB4RU9odkE5VXlyR1RxS21IeStKVFA0Tkw1cmRuVE9XR2NzQXFsaE1T?=
+ =?utf-8?B?OTJ2RS9mRkVCTUtYSVZhZWRaSEVEbURTNk4vMTBHSzNoK2RQbEpTaEVZZkxJ?=
+ =?utf-8?B?dFFLOWwwdTVSZUErUzczZU9aN1psSWhhZlF1Y01wQ0NTdGkzTGErVHJFdDlV?=
+ =?utf-8?B?QmJsU0pJQzM3OVYvTDJacTFLWFNHY1J1dnFrT21SNE1CUHNIaGkwak1aRWI4?=
+ =?utf-8?B?cVVsenB2Z29WWU9zUVhTSnQ1ZldUY3pCRWdxSngxYXdXaUlmZ0w2UFZDaS9r?=
+ =?utf-8?B?RjZCejZvUlVYSTQ5dUhXQ1QwRFlXMFJWVjJvY1gxeDd0ZGtTZVhXWEROTnFM?=
+ =?utf-8?B?QmFNaXAxcTVmdjY5cGlKYnVtUk1SMTA4TUhndWRyVnp3Sk9Ienk2d200WmNB?=
+ =?utf-8?B?bGlhM0N2clZNZXlpMXcwaVRNc0lVNC90VGVCdHkreGh5aWphSFBXc042Y3Y0?=
+ =?utf-8?Q?uV5c4LelxNI+UTtQvkGGnjZVS?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c37c6f8-68c4-4d8d-62e0-08dd5d41d2dd
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 06:32:25.0226
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K24V+tQiXFILriBj3mhnfgpHPaSIdSoQ9xhAl8e2yvFtxHZGF0oTPIxdAhyX2Z7bpv0JyIwwias9gkDG2Y228w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9972
 
-On Thu, Mar 06, 2025 at 05:57:50PM +0000, Haylen Chu wrote:
-> The control register for TWSI8 clocks, APBC_TWSI8_CLK_RST, contains mux
-> selection bits, reset assertion bit and enable bits for function and bus
-> clocks. It has a quirk that reading always results in zero.
+On 03/07/2025, Luca Ceresoli wrote:
+> This warning notifies a clock was set to an inaccurate value. Modify the
+> string to also show the clock name.
 > 
-> As a workaround, let's hardcode the mux value as zero to select
-> pll1_d78_31p5 as parent and treat twsi8_clk as a gate, whose enable mask
-> is combined from the real bus and function clocks to avoid the
-> write-only register being shared between two clk_hws, in which case
-> updates of one clk_hw zero the other's bits.
+> While doing that also rewrap the entire function call.
 > 
-> With a 1:1 factor serving as placeholder for the bus clock, the I2C-8
-> controller could be brought up, which is essential for boards attaching
-> power-management chips to it.
-> 
-> Signed-off-by: Haylen Chu <heylenay@4d2.org>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 > ---
->  drivers/clk/spacemit/ccu-k1.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/gpu/drm/bridge/fsl-ldb.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
-> index 5974a0a1b5f6..44db48ae7131 100644
-> --- a/drivers/clk/spacemit/ccu-k1.c
-> +++ b/drivers/clk/spacemit/ccu-k1.c
-> @@ -558,6 +558,10 @@ static CCU_MUX_GATE_DEFINE(twsi7_clk, twsi_parents,
->  			   APBC_TWSI7_CLK_RST,
->  			   4, 3, BIT(1),
->  			   0);
-> +static CCU_GATE_DEFINE(twsi8_clk, CCU_PARENT_HW(pll1_d78_31p5),
-> +		       APBC_TWSI8_CLK_RST,
-> +		       BIT(1) | BIT(0),
-> +		       0);
+> diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
+> index 0fc8a14fd80062248a43b8b93272101a7ca6158a..c7c899a9644bb827845fb3fe96a9695d79a91474 100644
+> --- a/drivers/gpu/drm/bridge/fsl-ldb.c
+> +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
+> @@ -181,9 +181,9 @@ static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
 >  
->  static const struct clk_parent_data timer_parents[] = {
->  	CCU_PARENT_HW(pll1_d192_12p8),
-> @@ -795,6 +799,8 @@ static CCU_GATE_DEFINE(twsi7_bus_clk, CCU_PARENT_HW(apb_clk),
->  		       APBC_TWSI7_CLK_RST,
->  		       BIT(0),
->  		       0);
-> +static CCU_FACTOR_DEFINE(twsi8_bus_clk, CCU_PARENT_HW(apb_clk),
-> +			 1, 1);
+>  	configured_link_freq = clk_get_rate(fsl_ldb->clk);
+>  	if (configured_link_freq != requested_link_freq)
+> -		dev_warn(fsl_ldb->dev, "Configured LDB clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
+> -			 configured_link_freq,
+> -			 requested_link_freq);
+> +		dev_warn(fsl_ldb->dev,
+> +			 "Configured %pC clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
+> +			 fsl_ldb->clk, configured_link_freq, requested_link_freq);
+
+Though this slightly changes the warning message userspace sees, I guess it is
+acceptable.
+
+Does it make sense to s/%pC/%pCn/ so that the clock name is printed in lower
+case instead of upper case, since it seems that all i.MX specific clock names
+are in lower case?
+
 >  
->  static CCU_GATE_DEFINE(timers1_bus_clk, CCU_PARENT_HW(apb_clk),
->  		       APBC_TIMERS1_CLK_RST,
-> -- 
-> 2.48.1
+>  	clk_prepare_enable(fsl_ldb->clk);
+>  
 > 
 
-Oops, I don't split out the twsi8-related definitions completely from
-PATCH 3, causing building errors with only PATCH 3 applied. Will fix it
-in the next version.
-
-Best regards,
-Haylen Chu
+-- 
+Regards,
+Liu Ying
