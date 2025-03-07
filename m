@@ -1,59 +1,59 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193DD1474DA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 01:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A772188CB1
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 01:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741309946; cv=none; b=JlKZJj+E2jAYu3frvE7mZBXjzXG3/ba+YeonOeTPUL6f/YW8OKUxswYHEprTSkLcWGCr1uNgnb9qUospk1n8QdR8nnfh5ODpWabvIcrffbbWsuxsBxpIccceZWWJSj0YLPixWnf31oAvRSf0z4K2yC77y5ZK9TQONuypPyTO0pg=
+	t=1741309949; cv=none; b=YeiXm904IKxZmmOb5hfa0XBtD+4JVzVoRK2AeLZIRmWcLeGrIuyPuhzxhjrRjKVWR/U9w+PyRZ3vkzxXh6O+4akH3kIOKD7+F6FRg55syqOnPD8nU5JIrTvLmgr7bZHoC9+ihJCWf6BhFn/bWVVqlYWs261KIYFE/XEBoXgUiGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741309946; c=relaxed/simple;
-	bh=yAvpgVVKv0qwVx/BcaJPPk6io7i8uqUMf303YSpg6Bc=;
+	s=arc-20240116; t=1741309949; c=relaxed/simple;
+	bh=NRQvfEmcLOdbXMa3vkDoUqv3L83HRqj8sSJXVTmzeH4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YFmuWWP2udkit743F6dAdF6jKgy/7wt9ejy4BlT/aQrbbt9DTWOcWYTGNowRCw9MsQa2aufSV2KE2zBGWR2kH31aRGmzDZvLdmiYjQYFsNTmVEkA2lheiAyijW27ZMOvQTwgxM9m+zMNg8nKvZE5bOwfPr56POyr8fB0uW0CSY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=uXXbd7Ux; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=fPOPKrjNLFdFUQECmUFOfmnyR1IZxs/CxCKyHSo1k4pcElf4d7ZlzFzJ1rw0UTWkiP1a2IY4Tpl7gc933js7xnrthVIjDElfbNOZUVP1C56Upxy70DmkwPqKRn0dnB0q3KIfP7KGLf+Hb/setMquwf79XOdUKDrwew8HR4x4Urk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=IpeKEemI; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="uXXbd7Ux"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224100e9a5cso24308505ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 17:12:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="IpeKEemI"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2234e5347e2so24927975ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 17:12:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1741309943; x=1741914743; darn=vger.kernel.org;
+        d=fastly.com; s=google; t=1741309947; x=1741914747; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kvwTo73+IFY77/cYaIXsS2w5RqkSonWsueWTF0kXS/4=;
-        b=uXXbd7Uxc0itPUE7M83fbS3D+/GaNswUO4C3yB7UDqCf7Kmx09SJyAuDcJ2GXpFSPc
-         hbN6f6CENPJEKIGrWjmZ9szhZ3NoFPqsawtTA5wbQ4qV5O279iQWCj1vHC1ssFqiWt/6
-         SgjfyUhqjNhQE8sqBNMzVc4vXIu2lAlO0XJhk=
+        bh=UXXMV7POf8zFLVgsmU4lqm240SOUGeBUlbPBBPUwDdE=;
+        b=IpeKEemISXj8LM8F4+azipgqCDQIoWZO3WOO9dCpSsKymcU3CsKSadAZb3s8CpYxgj
+         TUKz2BFrJsF9riuu69GT7d7YaurN0owT2jm4+Rb/MklWggf4fCc61SUL4lJ4sYgFa5UU
+         zna0omr+SSTI9fp0JOJPRAsyH1vmOhh6kJZOY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741309943; x=1741914743;
+        d=1e100.net; s=20230601; t=1741309947; x=1741914747;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kvwTo73+IFY77/cYaIXsS2w5RqkSonWsueWTF0kXS/4=;
-        b=fnt8Bq/ixjReMmjIaq5rHTgwxwYj8bUKqbXY9tV0y84Y9cusF1gUOI8yrITj7PX5QQ
-         DHtRfmu6Y77yw9PvpizE3fNYFGmoajSgwnQbSzcxyhC5q8NV8OOa517inQfVD2w8fyqz
-         q4AO0pBC/6fW6Yq35G7mbA3LrNm6LcdMChAoRPMU0AWS7iG8e20qZqgXMg49M/spqGuC
-         jFFLdKGGBvtg4Detif2ZYDIMB4oWZJgdl50Fbbgp9Hq51wrGe2NWlQ/c23axB2ZN9srm
-         b25sT2fCn5ijl5HC0NKd+kLcHdwnATicPoH7vlXVP0Kc6RE881MxlbBFh/GIaBC3LzPr
-         URGg==
-X-Forwarded-Encrypted: i=1; AJvYcCW93PSSqjCoN2dJBwCOv447Bm0SGbzuRh1hH37I7sIMoqiuKsboHrhxOpPujYsmAhgfT47zWDjn01a94ZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLtURHutRrsSxfuzNsWdQDaWZN+OID+C5OOeA3wTAzM0Reuzh8
-	zRbNeEu4IZq/kn2qFl0wyDzvaQ+fWpgRjtXB5I7VRdOay6IdYQOj24kgwKjsN+E=
-X-Gm-Gg: ASbGncvLOnnkFKiOcpNmkShzK7R3q5b3W2L/yXS+4v6Y0gnRsUOx1I+Ny/cPAHU1klY
-	W+2K9/JI5N3ytB6CVh+kYkf84EXqKx9Z1TPEZHU6gz9aQaPWw2GJ7gq+5suMlZU2APvY0RwM3cE
-	yJBriaZaSumiKHF6L0mIDPusRsW5h8Xhz6z9uJsSwh8LOqitfeaYBMVKZH9ofxRK0XpM69auIm+
-	EmGign9ZZrPqisBqxIjyFmXW6u0Q6kkvytiz1S4ePmzODR1FxSxo8nudNtVqsqQY+xCrjJHhwm2
-	0dFxgB3Ot2HsYue4MBgDqjV+Tws6aAhE4boFxa6bBMJ2PBhJmCjw
-X-Google-Smtp-Source: AGHT+IGoI+aPJvj7yY+4BLZ2+twYf/oT3+TiRwVbnShK0v7noTjCRMsILjhJFgqCavzprURMi0Wvnw==
-X-Received: by 2002:a17:902:e810:b0:223:432b:593d with SMTP id d9443c01a7336-22428c07537mr25062635ad.42.1741309943342;
-        Thu, 06 Mar 2025 17:12:23 -0800 (PST)
+        bh=UXXMV7POf8zFLVgsmU4lqm240SOUGeBUlbPBBPUwDdE=;
+        b=uCXYtj5JtjXWyJwaRCkFu97zniBIQvXBOTBF4leQIGHyNPeDSwXMBueArqCMbRsaD6
+         T1vLNJG03QUPpC9CEQ0x7wVNcY2e9kDf2AGPm66JotCLmGPhRC9IyNh4a+W6y+NVp/ah
+         QdJv7F7Cd7lIWZqqYVPE0A3gP+Q6VkOiIS7Au9gZlJtqt6WeNQUKsROFuah/hCRUdfw4
+         M7FTSZGmvrJ04OkWVz0JZqhC+HF77LdZM1tXlU5YvYh5VSvmb3VymGM73/BpBKjX96s3
+         l+lf5pftiWaK4uAubYElR3+5pMdCQK+1cqb+g5Pw/c3UKILN9i6GsNP+kwEpwxGWHa2l
+         TMxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXv4IR84eNK7vOM7fA7Nn/qybZsoCYAf4kRNgcoB5PSBUIQktRBDsixjbfYln2XosGyOmv+LXw7s8levhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySoG+0h1Y7UAoayvS9lhMvPpnxR+vq1abISf7a5Gv9345VE9Ec
+	yPJMgByKqWyd792BPyci+HxmEmc9SEwVNQPOtorOABd4MiPzAWT0S0UTQ4D5aCk=
+X-Gm-Gg: ASbGnctvK7CfB0cExAbKG1zp7YB1woefj7wFEG1Ke/uj876C4MQMDqsE2Og1wmPk+/5
+	BoHdFIYc7YxHV5ZDMM2mKzOlR2cEprVH5LGVpJc1vaKWzSuI8N+4MpDbeZ0JHcnMJ7fVY3I1Oey
+	nhtvXwdLrQQaC/oLp8M9uSbGn/DTspOQiC13+jJNnbLSdiKphUVaRnPMUHrVKQ9Hm/aja5gTFVc
+	39WS3Iunw00upG55rnBCxOCAnQ6c/3SnQRMpMSCP27O4Smx2whdPKSe1TPvib21n6xf3NpAnjZC
+	nZEfgn57WH40sky6q8pTa7hNEHu2cLmwsZBMtEq2XhO9t4zuB1gF
+X-Google-Smtp-Source: AGHT+IFK3bB+IzKnnw66OCX8SvIqCP/r2HrOrRFyFYXEFX5hk5hRRIZRcJqImQVh7tFSujAdQgGJ9A==
+X-Received: by 2002:a17:903:32c6:b0:224:13c0:58e3 with SMTP id d9443c01a7336-22428bf1976mr19677025ad.51.1741309946772;
+        Thu, 06 Mar 2025 17:12:26 -0800 (PST)
 Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410abc816sm18749685ad.258.2025.03.06.17.12.22
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410abc816sm18749685ad.258.2025.03.06.17.12.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 17:12:22 -0800 (PST)
+        Thu, 06 Mar 2025 17:12:26 -0800 (PST)
 From: Joe Damato <jdamato@fastly.com>
 To: netdev@vger.kernel.org
 Cc: mkarsten@uwaterloo.ca,
@@ -71,9 +71,9 @@ Cc: mkarsten@uwaterloo.ca,
 	Paolo Abeni <pabeni@redhat.com>,
 	virtualization@lists.linux.dev (open list:VIRTIO CORE AND NET DRIVERS),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v6 2/4] virtio-net: Refactor napi_disable paths
-Date: Fri,  7 Mar 2025 01:12:10 +0000
-Message-ID: <20250307011215.266806-3-jdamato@fastly.com>
+Subject: [PATCH net-next v6 4/4] virtio_net: Use persistent NAPI config
+Date: Fri,  7 Mar 2025 01:12:12 +0000
+Message-ID: <20250307011215.266806-5-jdamato@fastly.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250307011215.266806-1-jdamato@fastly.com>
 References: <20250307011215.266806-1-jdamato@fastly.com>
@@ -85,93 +85,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Create virtnet_napi_disable helper and refactor virtnet_napi_tx_disable
-to take a struct send_queue.
+Use persistent NAPI config so that NAPI IDs are not renumbered as queue
+counts change.
+
+$ sudo ethtool -l ens4  | tail -5 | egrep -i '(current|combined)'
+Current hardware settings:
+Combined:       4
+
+$ ./tools/net/ynl/pyynl/cli.py \
+    --spec Documentation/netlink/specs/netdev.yaml \
+    --dump queue-get --json='{"ifindex": 2}'
+[{'id': 0, 'ifindex': 2, 'napi-id': 8193, 'type': 'rx'},
+ {'id': 1, 'ifindex': 2, 'napi-id': 8194, 'type': 'rx'},
+ {'id': 2, 'ifindex': 2, 'napi-id': 8195, 'type': 'rx'},
+ {'id': 3, 'ifindex': 2, 'napi-id': 8196, 'type': 'rx'},
+ {'id': 0, 'ifindex': 2, 'type': 'tx'},
+ {'id': 1, 'ifindex': 2, 'type': 'tx'},
+ {'id': 2, 'ifindex': 2, 'type': 'tx'},
+ {'id': 3, 'ifindex': 2, 'type': 'tx'}]
+
+Now adjust the queue count, note that the NAPI IDs are not renumbered:
+
+$ sudo ethtool -L ens4 combined 1
+$ ./tools/net/ynl/pyynl/cli.py \
+    --spec Documentation/netlink/specs/netdev.yaml \
+    --dump queue-get --json='{"ifindex": 2}'
+[{'id': 0, 'ifindex': 2, 'napi-id': 8193, 'type': 'rx'},
+ {'id': 0, 'ifindex': 2, 'type': 'tx'}]
+
+$ sudo ethtool -L ens4 combined 8
+$ ./tools/net/ynl/pyynl/cli.py \
+    --spec Documentation/netlink/specs/netdev.yaml \
+    --dump queue-get --json='{"ifindex": 2}'
+[{'id': 0, 'ifindex': 2, 'napi-id': 8193, 'type': 'rx'},
+ {'id': 1, 'ifindex': 2, 'napi-id': 8194, 'type': 'rx'},
+ {'id': 2, 'ifindex': 2, 'napi-id': 8195, 'type': 'rx'},
+ {'id': 3, 'ifindex': 2, 'napi-id': 8196, 'type': 'rx'},
+ {'id': 4, 'ifindex': 2, 'napi-id': 8197, 'type': 'rx'},
+ {'id': 5, 'ifindex': 2, 'napi-id': 8198, 'type': 'rx'},
+ {'id': 6, 'ifindex': 2, 'napi-id': 8199, 'type': 'rx'},
+ {'id': 7, 'ifindex': 2, 'napi-id': 8200, 'type': 'rx'},
+ [...]
 
 Signed-off-by: Joe Damato <jdamato@fastly.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
 Acked-by: Jason Wang <jasowang@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 Tested-by: Lei Yang <leiyang@redhat.com>
 ---
- drivers/net/virtio_net.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ drivers/net/virtio_net.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 133b004c7a9a..e578885c1093 100644
+index 7bd63a677123..34cec2b11b74 100644
 --- a/drivers/net/virtio_net.c
 +++ b/drivers/net/virtio_net.c
-@@ -2845,12 +2845,21 @@ static void virtnet_napi_tx_enable(struct send_queue *sq)
- 	virtnet_napi_do_enable(sq->vq, napi);
- }
- 
--static void virtnet_napi_tx_disable(struct napi_struct *napi)
-+static void virtnet_napi_tx_disable(struct send_queue *sq)
- {
-+	struct napi_struct *napi = &sq->napi;
-+
- 	if (napi->weight)
- 		napi_disable(napi);
- }
- 
-+static void virtnet_napi_disable(struct receive_queue *rq)
-+{
-+	struct napi_struct *napi = &rq->napi;
-+
-+	napi_disable(napi);
-+}
-+
- static void refill_work(struct work_struct *work)
- {
- 	struct virtnet_info *vi =
-@@ -2861,7 +2870,7 @@ static void refill_work(struct work_struct *work)
- 	for (i = 0; i < vi->curr_queue_pairs; i++) {
- 		struct receive_queue *rq = &vi->rq[i];
- 
--		napi_disable(&rq->napi);
-+		virtnet_napi_disable(rq);
- 		still_empty = !try_fill_recv(vi, rq, GFP_KERNEL);
- 		virtnet_napi_enable(rq);
- 
-@@ -3060,8 +3069,8 @@ static int virtnet_poll(struct napi_struct *napi, int budget)
- 
- static void virtnet_disable_queue_pair(struct virtnet_info *vi, int qp_index)
- {
--	virtnet_napi_tx_disable(&vi->sq[qp_index].napi);
--	napi_disable(&vi->rq[qp_index].napi);
-+	virtnet_napi_tx_disable(&vi->sq[qp_index]);
-+	virtnet_napi_disable(&vi->rq[qp_index]);
- 	xdp_rxq_info_unreg(&vi->rq[qp_index].xdp_rxq);
- }
- 
-@@ -3333,7 +3342,7 @@ static void virtnet_rx_pause(struct virtnet_info *vi, struct receive_queue *rq)
- 	bool running = netif_running(vi->dev);
- 
- 	if (running) {
--		napi_disable(&rq->napi);
-+		virtnet_napi_disable(rq);
- 		virtnet_cancel_dim(vi, &rq->dim);
- 	}
- }
-@@ -3375,7 +3384,7 @@ static void virtnet_tx_pause(struct virtnet_info *vi, struct send_queue *sq)
- 	qindex = sq - vi->sq;
- 
- 	if (running)
--		virtnet_napi_tx_disable(&sq->napi);
-+		virtnet_napi_tx_disable(sq);
- 
- 	txq = netdev_get_tx_queue(vi->dev, qindex);
- 
-@@ -5952,8 +5961,8 @@ static int virtnet_xdp_set(struct net_device *dev, struct bpf_prog *prog,
- 	/* Make sure NAPI is not using any XDP TX queues for RX. */
- 	if (netif_running(dev)) {
- 		for (i = 0; i < vi->max_queue_pairs; i++) {
--			napi_disable(&vi->rq[i].napi);
--			virtnet_napi_tx_disable(&vi->sq[i].napi);
-+			virtnet_napi_disable(&vi->rq[i]);
-+			virtnet_napi_tx_disable(&vi->sq[i]);
- 		}
- 	}
- 
+@@ -6455,8 +6455,9 @@ static int virtnet_alloc_queues(struct virtnet_info *vi)
+ 	INIT_DELAYED_WORK(&vi->refill, refill_work);
+ 	for (i = 0; i < vi->max_queue_pairs; i++) {
+ 		vi->rq[i].pages = NULL;
+-		netif_napi_add_weight(vi->dev, &vi->rq[i].napi, virtnet_poll,
+-				      napi_weight);
++		netif_napi_add_config(vi->dev, &vi->rq[i].napi, virtnet_poll,
++				      i);
++		vi->rq[i].napi.weight = napi_weight;
+ 		netif_napi_add_tx_weight(vi->dev, &vi->sq[i].napi,
+ 					 virtnet_poll_tx,
+ 					 napi_tx ? napi_weight : 0);
 -- 
 2.45.2
 
