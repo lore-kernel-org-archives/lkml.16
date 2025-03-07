@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8375D21CC4A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A438F2405EC;
 	Fri,  7 Mar 2025 20:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741378141; cv=none; b=RZcNxAbQeU/fFbDs3Raxj8Uw97qmWoqhGAEagEVJirJ/lRNgnlCtyn+JuvHTtAxlPYGAf5i/Zyq7G5Ah0ejROEMG7+MZJhFtFYsRmp41Pz6VsxuIxgMngxnXDT8sAh4Vm52NMUOx3T68/XPvqGT0yNSm/XlcwGxMdmx7VZvbtgo=
+	t=1741378141; cv=none; b=o86wvkZ66LXppNN1sDXJmchc6vvepIT1OgCNfouVaG01BCNMRofDGh6Was2TVWmvdOKUbAt0xMmrtXWha42GOKnecePzK9BC1KqIW/pXt3fbqQIqHFHvCwJJXjLCcc+PbnkKfszjnvgjPe9CP2d3Vi4cKdvPJ7zN+1cS3JmdmDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741378141; c=relaxed/simple;
-	bh=cM/qjyW3YYkGvJv2WanJxVFUzfyRY1WJF2GoYePp3pQ=;
+	bh=M8b67bSpkXpNwrWbVgdymEb+uCIjAyGK7SXteTWS2zk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hrqGsFgBAfXEnEExjZJLo2/5PShEaQQ5chsmOR3uBXToqQOcnJR/qLyNn8STHRNKwk+wNBuElJr3u+D3y04a8g1GaZX4q/NcIFeoQScyaUWRETvsI5INaLYeCoXLVxVSc0Ypx1yW9gSjJN3oRTGv2pwnrkIkGHXLuM6N6SWmReg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pAwcrnKt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=t/yaeRXFJQ3eNGHT7CLdQl+MVKHNeLk31Nu7ZvtT0QDgp/jatWLhN90e6/zar+oEh7r3dg+R7IjFyr60LUhwZYIHvEn792+1Rx6aJEEQ6PROSHfAYPhuKAN6i82Ylwx+3ukbwGjxGaxdmsZAN6v6X2XCL3GWxQsKeRnbOeJsnnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJdBP/0E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pAwcrnKt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 58459C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJdBP/0E"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7F625C4CEEC;
 	Fri,  7 Mar 2025 20:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741378141;
-	bh=cM/qjyW3YYkGvJv2WanJxVFUzfyRY1WJF2GoYePp3pQ=;
+	bh=M8b67bSpkXpNwrWbVgdymEb+uCIjAyGK7SXteTWS2zk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=pAwcrnKtrhwfBsEwlZ4xdJdn5DjHh4g9yNET6Lkyzk6O94h1dt2nXPW3Zlyr/x60D
-	 o2RRrK00hZfFxzYDC8Hw9P8wTXNZV2n5Opj/rIuYS2wsTTeF8I3zpJvBnyOzHew2P+
-	 LpTv6wP7+NYpT/noR+fyav3Rz9jUIgJKmP9n/cbKoF1bR3Jb5gIQjXRE6pvPbJ0Jq8
-	 0C1df3HKo8Pq/AiwCC4vGAIFP+51bOLXucw3xjFLVGMCxt8QAqRVePmlPeyjdhPSr0
-	 /DjayjWWl/eQJRCfW5Y08t2k9fO7FHLI0jAcPv8x2ntVp4f++kuVkaNFhdpYsEYSfl
-	 fv7KbCM0mixYw==
+	b=aJdBP/0EGFLE40JwXHiGleIF4BrjuBnxUJby1qfuVA5l+lIWMtlZQqtpMkD7JiflY
+	 K+9y2BlPHIit//+z5KpaiZfBkFcAjppdBhVgY/AezvTAwFaLKo7FPTZwk1gnMAgNYn
+	 7oEjE0dknGbJApQN5F23aGcZtpYt2FuxAqN4Sf71i03sL5buPd3I7oZSiB2OnnvxcW
+	 KxJRzvmSw6+ptxbTXLCDiqeGm0n4pQJ64MYbNAd8d1MzNbP5FIdoUlmh+9Wbf0B9k8
+	 WG+8ix/Oc8VmfoYjJQjuzTYjCj3Y3AtpXF90sT1CLuon2uuI/LQ7CjZ0/5cxfgLGZ1
+	 TWKI/u4nx2ydg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E094C28B27;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FCFC28B23;
 	Fri,  7 Mar 2025 20:09:01 +0000 (UTC)
 From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
-Date: Fri, 07 Mar 2025 21:08:59 +0100
-Subject: [PATCH v2 1/3] dt-bindings: spmi: Add Apple SPMI controller
+Date: Fri, 07 Mar 2025 21:09:01 +0100
+Subject: [PATCH v2 3/3] arm64: dts: apple: Add SPMI controller nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250307-spmi-v2-1-eccdb06afb99@gmail.com>
+Message-Id: <20250307-spmi-v2-3-eccdb06afb99@gmail.com>
 References: <20250307-spmi-v2-0-eccdb06afb99@gmail.com>
 In-Reply-To: <20250307-spmi-v2-0-eccdb06afb99@gmail.com>
 To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
@@ -49,13 +49,14 @@ To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
  Conor Dooley <conor+dt@kernel.org>
 Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>
+ Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+ Nick Chan <towinchenmi@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741378140; l=2380;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741378140; l=2656;
  i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
- bh=42A1Zt2nvcW4/B1VtjKrwbVfufeFdTVKin8on6KgoN8=;
- b=ZGFLsAhcZjp+II8lxt6aHhHoP4xpMbAQhaV8uZk9gbYv3wo+c8nfhcIFUIJeuQ1rZ+Dt84E/H
- EDyXTAvYYprAPJS6SnlHj0C/w8URuJksc4dgdwLGW7+2Rct5L8Tz+Nw
+ bh=vAy3qAJvENlWfH+6RnDDlx2HQlH2MYFllFghIMOrbEU=;
+ b=MClImYe6YJJM14dS7aEJlgncn9cez8m0s5vjVl604WH60T+4pOqVUAgjY5+lfzVcMvNK9C2Aw
+ q5cItAiy1W2AJB7A6XeKCJRtrzrjD6SOIUqko8dXi/Z8Du9mlH82qiT
 X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
  pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
 X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
@@ -65,82 +66,78 @@ Reply-To: fnkl.kernel@gmail.com
 
 From: Sasha Finkelstein <fnkl.kernel@gmail.com>
 
-Add bindings for the SPMI controller present on most Apple SoCs
+Add device tree entries for the SPMI controller
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Nick Chan <towinchenmi@gmail.com>
 Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 ---
- .../devicetree/bindings/spmi/apple,spmi.yaml       | 49 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 50 insertions(+)
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi | 7 +++++++
+ arch/arm64/boot/dts/apple/t8103.dtsi      | 8 ++++++++
+ arch/arm64/boot/dts/apple/t8112.dtsi      | 7 +++++++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spmi/apple,spmi.yaml b/Documentation/devicetree/bindings/spmi/apple,spmi.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..16bd7eb2b7af2c0b176f0e5b1970f4670af691da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spmi/apple,spmi.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spmi/apple,spmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+index b1c875e692c8fb9c0af46a23568a7b0cd720141b..d544a35c8af414c583d38b040e1aa753902f1c93 100644
+--- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
++++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+@@ -53,6 +53,13 @@ wdt: watchdog@2922b0000 {
+ 		interrupts = <AIC_IRQ 0 631 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
++	nub_spmi0: spmi@2920a1300 {
++		compatible = "apple,t6000-spmi", "apple,spmi";
++		reg = <0x2 0x920a1300 0x0 0x100>;
++		#address-cells = <2>;
++		#size-cells = <0>;
++	};
 +
-+title: Apple SPMI controller
+ 	sio_dart_0: iommu@39b004000 {
+ 		compatible = "apple,t6000-dart";
+ 		reg = <0x3 0x9b004000 0x0 0x4000>;
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index 9b0dad6b618444ac6b1c9735c50cccfc3965f947..0f03dc808cf7c6b7d71afc79dd29d368f957f979 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -11,6 +11,7 @@
+ #include <dt-bindings/interrupt-controller/apple-aic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pinctrl/apple.h>
++#include <dt-bindings/spmi/spmi.h>
+ 
+ / {
+ 	compatible = "apple,t8103", "apple,arm-platform";
+@@ -604,6 +605,13 @@ pcie_pins: pcie-pins {
+ 			};
+ 		};
+ 
++		nub_spmi: spmi@23d0d9300 {
++			compatible = "apple,t8103-spmi", "apple,spmi";
++			reg = <0x2 0x3d0d9300 0x0 0x100>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++		};
 +
-+maintainers:
-+  - Sasha Finkelstein <fnkl.kernel@gmail.com>
+ 		pinctrl_nub: pinctrl@23d1f0000 {
+ 			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
+ 			reg = <0x2 0x3d1f0000 0x0 0x4000>;
+diff --git a/arch/arm64/boot/dts/apple/t8112.dtsi b/arch/arm64/boot/dts/apple/t8112.dtsi
+index 1666e6ab250bc0be9b8318e3c8fc903ccd3f3760..fecf70eba255c668757e2edfe25a4e9e7c0d0bad 100644
+--- a/arch/arm64/boot/dts/apple/t8112.dtsi
++++ b/arch/arm64/boot/dts/apple/t8112.dtsi
+@@ -641,6 +641,13 @@ pcie_pins: pcie-pins {
+ 			};
+ 		};
+ 
++		nub_spmi: spmi@23d714000 {
++			compatible = "apple,t8112-spmi", "apple,spmi";
++			reg = <0x2 0x3d714000 0x0 0x100>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++		};
 +
-+description: A SPMI controller present on most Apple SoCs
-+
-+allOf:
-+  - $ref: spmi.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - apple,t8103-spmi
-+          - apple,t6000-spmi
-+          - apple,t8112-spmi
-+      - const: apple,spmi
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/spmi/spmi.h>
-+
-+    spmi@920a1300 {
-+        compatible = "apple,t6000-spmi", "apple,spmi";
-+        reg = <0x920a1300 0x100>;
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+
-+        pmic@f {
-+            reg = <0xf SPMI_USID>;
-+            /* PMIC-specific properties */
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8e0736dc2ee0e33544fa373a4978b7dae18c040c..271ff8110df83c2d4fe7fbbfffc0a72259460bc5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2236,6 +2236,7 @@ F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
- F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
- F:	Documentation/devicetree/bindings/power/apple*
- F:	Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
-+F:	Documentation/devicetree/bindings/spmi/apple,spmi.yaml
- F:	Documentation/devicetree/bindings/watchdog/apple,wdt.yaml
- F:	arch/arm64/boot/dts/apple/
- F:	drivers/bluetooth/hci_bcm4377.c
+ 		pinctrl_nub: pinctrl@23d1f0000 {
+ 			compatible = "apple,t8112-pinctrl", "apple,pinctrl";
+ 			reg = <0x2 0x3d1f0000 0x0 0x4000>;
 
 -- 
 2.48.1
