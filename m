@@ -1,138 +1,113 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C360217653;
-	Fri,  7 Mar 2025 11:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244E5217664
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 11:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741346253; cv=none; b=osRm2lp7DeKNSjW+LqWY/vJp6JHOIRDG+c1tkkmApAHmUJ/w1id5zw+et6RnrN6msIPBfHfCxs8orWnEGKOWFllE8WZNYejMhFuH8XtzBznz486ifKWbhqE9rPwXaGO5oMC1/d41ramrs7br2/Dx30IJHgx5P9YGx4fu5JaldAo=
+	t=1741346289; cv=none; b=Uy6oTOnbbBcl1NErXc0QdYFrHft6eM7l/KAK+jMMfXoF+XKx4dGRIYI1rYKUoZYhHj0S1KFWgeVMvwl6gCZanabVmO6IMK079H1EI2UIob0klgTwlv1sQB8W1ON2IfxOODxV3uqvmw3zCGd9/4lKEnwMHyj1yssKPqJdDUdev3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741346253; c=relaxed/simple;
-	bh=QY00a3rngmsVxLQDZ3rhfcfy8+4hGUDyLxDK2MVdQBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u6j8zF1xT8VFwJkuI5CBXvff49g4brXAyf0N0yc43w1IQUJ4WqcAN1CfWS5Vn3y89vV2fkStuA5F9BClcxaYEyrg6yaSDK4O2Z9OfC23WbMesr/QbTOPI6uyvecpDXtddF1fShxEbjBOM6WY0yLtE5D/Wu2TvNoNrk+nJPJ70A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J08eV7ap; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741346289; c=relaxed/simple;
+	bh=aV2N+gi/KxHt+cRDpHyCOE0yhPBLPVwL0fDQFadQGrA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=H+UJyvNxHDKXcMb70m8lLcRS0SEhunEs+jfotnMlweCjE05BkAqSzJbelgGVWyERySOBXGqQYgv6zzkNFhez3r+34+rdYsLwrndrj5xmZipynfZysanccWF0lsbNw7s62tl+eSOXXkU6n20C8i7cnua7h1XOB2ucXtI2iuDjOHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3MIPP2AX; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J08eV7ap"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22185cddbffso53482995ad.1;
-        Fri, 07 Mar 2025 03:17:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3MIPP2AX"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-438e180821aso7620895e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 03:18:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741346251; x=1741951051; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9WDU/0AiPCuXExkzik2v+BtrRa6yZzdzICrZw+6l4Ag=;
-        b=J08eV7apyRp/7zr2li9x1dsc0j4wTXDGWQFhJd7rINalz6N+2/2fItP+fFU0wPRmQZ
-         AKe88xcpsI+tLHhjGQk8ox0+xjugYPasuvcdwZpc2sY7A7swk1UFXxtUhonEs/387T3O
-         vKqmpffJSWXll9A64odVCUReG0MYGRBHZCP3ghK7yGv4DwdDtG8c/dQ429QZYd5WPTH0
-         1vrF1p1I3uGcZximeDHlVHfuhug01nuWYMZhZaapaSPQKTaVAGX8cenZH1eiuZwWEkep
-         99s5SdWzA3+zRJJOoWaSo58pwyLNYlPDqHoX4uqgBCo83plWkxiASaD1aSOpxLGkyCSt
-         yvyg==
+        d=google.com; s=20230601; t=1741346285; x=1741951085; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TRLcibLkNuqSJ4oebIn+gemASecItzRG6bVok0DbXQU=;
+        b=3MIPP2AX2vIYsuJIas+Gh5KZpF6cCii+B1pUVtXMTuXN1flHEEfuoCxT/IOB1JBsN8
+         ayUhEM1evvircbk80utUiTVtua2lOM9qt12jPsCe6pwDMZQzxUIonMCE0erLB+jfn2mJ
+         9cStgYJ3oTRSQRJaXB2/7ICxbokzKa7Txs+eTo7UjTGNiuzmYr/KgJkaLPTcAinCpIef
+         0Wufb87AvU7/2zpGqblv9/jJChA2dmQWLuwBWHeO0VO3Yp9FFGrHdB2y8vT/BKwtw+vn
+         OD01FdjIwKQRsXGh3WrvPB8ri1IbUS5hL1obV1kTXlH2YbQL79c8K3f/ZweTXUE1O6Oo
+         Kc9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741346251; x=1741951051;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9WDU/0AiPCuXExkzik2v+BtrRa6yZzdzICrZw+6l4Ag=;
-        b=lXfpbVLX84suJkZ2jQDlhnMjonHcLZaUW7ESIx4LVFGs+9DWUC7WcNKEGrQlRCIObo
-         lWhL8V7xi2+BXMLZIc49tyqePmeWD+aDy5ZHHLNCs9JgYhZfiF+oeTq6c1eyb/vjm/ps
-         Sv5VJEH52ZjiCvBq0k1d5eTCFQeLRA/gdRoYy6w1HZi8E81ngzH2IgnDiTWKdASEQGzP
-         NIDZznQvG5mS/KQu2eXU9iQvpEriVYgqp9C0vlFQgXbszSmSEtIqIgwcgygTD/TJ18sq
-         rRqAj7Ns1GcXRRSA3+giHTZuQdvB50m+/fy7TnMCyuRIW7xvXOaqSjv0V0gy5X60Dgc7
-         SvWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVV9XKJFTHIxsqq225Ta0S+mIR4QtcyFyZAlC9U8cmzAm9AsWohfPnAS8UXkmHKPyYjgqwTI1c2C+E=@vger.kernel.org, AJvYcCVbCVFE51irR2nJisNXwrfzGmOsVB0+JS1VdSmejykK+M89mtnN12ciofW/O8qSL3FVBpIFaY4m3liombjV@vger.kernel.org
-X-Gm-Message-State: AOJu0YybXBplsZj9DTfcZuqAQwWSFs/vAi2NHe3ayzjUcVKa/rOD6Zst
-	J37FnOxjwT4YTNkQZEUpN5Mn4N8UsVpC8VzflfBBoeFVQyG4847O
-X-Gm-Gg: ASbGnctalOWPnE/eNIwtVyLFPQsWJKcD/S3UAQj+J4LBSzXA6SKdi6SuVBVIA4l+nCX
-	w8jmsLvecteOA/V2G0JMWdkVMsGKk8xPAJnbdjLtWW4gEjgcJiY8BJRopjpoxp287XTVRZ3TWKf
-	ylvMpgM6g3vyuOwd0fbtw5bkQo1AJ1lXlmCz7d8p+uE2RDpVmV5MXSnRRqirwKSD4A3rFndaKHI
-	g4XHWHqpXcPmjOlfQ7Loj1eaB27Oc4jUpbB0bLL1y8v3XV2DdD2rUyMhzi2U2K7TOtgVjhPX1qb
-	XjN03ePJkPEyYSu+MHEd6jNFHWOnKz/HrSb3nlPU1Up1K2U9a7Lx0GaCYGSCGR4um4jNGAVlMYO
-	eEsl+CieO15A5Li4=
-X-Google-Smtp-Source: AGHT+IGLMqL97eIZaqRXzhmsR4cnq0XXC/PM8jbkeUNyeHsw1h0hQd26hi42sAz14nYj3gGZ9el5iQ==
-X-Received: by 2002:a05:6a00:3d52:b0:736:9f2e:1357 with SMTP id d2e1a72fcca58-736a97e4239mr4650047b3a.12.1741346251281;
-        Fri, 07 Mar 2025 03:17:31 -0800 (PST)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73698514f4dsm2971364b3a.124.2025.03.07.03.17.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 03:17:30 -0800 (PST)
-Message-ID: <e3637b13-1f51-445b-8d9d-bd53a691eca3@gmail.com>
-Date: Fri, 7 Mar 2025 19:57:54 +0900
+        d=1e100.net; s=20230601; t=1741346285; x=1741951085;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TRLcibLkNuqSJ4oebIn+gemASecItzRG6bVok0DbXQU=;
+        b=rrh2/S3ZkdrmoAxq1xW6bCw21fqKfCbX7Ny19eZE9x+tTxkQJjIWBsHS9emX8UN07C
+         UzJzFyfhkulul6TSz5VDgrwImN+jjGKdHLClVuIKAb0z0ILSGYSVELuMPwQMBFyWN0Hw
+         tji3KmFSTEcLcOOwQP1EorOdu2gJI2bg2z/4PzdMIEygAneNtc7VAxBMRm85NPku9NbR
+         AawRCHcbB78K1JgVyt0QRIbkOd08sbyd8Zy5EV17vkB1ZC9zFm6r8waRiT5EgPyrfXnD
+         FxASFaLQYWd3DannCXaQ3W1feNn/cRdLiOas3IkBOz9yFgw9JYelPO453AVUGPeC0VqI
+         1BRw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8FIRcMtiERnT6prtb2oII7OG+xSmlVwn3kuTgsEUwGv1QgrHZfHHZoGUowWH2BIbuIzBYGYeiwtam6dY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkYo+zbmdWCOQcjlsRx8ryxzitd3vY9MRKrWwvQ1mVxcuVnpIF
+	vCvnlFyJpx/2ssIMhCmYTgx8eAxRBCkN5HuyUwxXT6uQlYFY3aCSrOhCxOl0CZWWHR4r2gl6XrI
+	s6k1pSseqz4ddnw==
+X-Google-Smtp-Source: AGHT+IHnzb2nOCmp6+c+syQ1hYMjFz5XWhAo+dQvq2xXAHc19m9MS1tNxCTMGHGXg0ybwWZMPJp/Okj0I4a8moc=
+X-Received: from wmbgw6.prod.google.com ([2002:a05:600c:8506:b0:43b:d732:fc79])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4ecb:b0:439:99d1:d4a4 with SMTP id 5b1f17b1804b1-43c601e1873mr20865475e9.18.1741346285547;
+ Fri, 07 Mar 2025 03:18:05 -0800 (PST)
+Date: Fri, 7 Mar 2025 11:18:03 +0000
+In-Reply-To: <20250307110821.1703422-4-abdiel.janulgue@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/2] cpumask: Fix kernel-doc formatting errors in
- cpumask.h
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, linux-doc@vger.kernel.org,
- Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
- Akira Yokosawa <akiyks@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Yury Norov <yury.norov@gmail.com>
-References: <cover.1741332579.git.viresh.kumar@linaro.org>
- <f4ad81150eaa00b43c161f0d1f811f8ecfe21889.1741332579.git.viresh.kumar@linaro.org>
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <f4ad81150eaa00b43c161f0d1f811f8ecfe21889.1741332579.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250307110821.1703422-1-abdiel.janulgue@gmail.com> <20250307110821.1703422-4-abdiel.janulgue@gmail.com>
+Message-ID: <Z8rV6y5GLgovaWdN@google.com>
+Subject: Re: [PATCH v13 3/7] rust: pci: impl AsMut<Device> for pci::Device
+From: Alice Ryhl <aliceryhl@google.com>
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, daniel.almeida@collabora.com, 
+	dakr@kernel.org, robin.murphy@arm.com, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Valentin Obst <kernel@valentinobst.de>, open list <linux-kernel@vger.kernel.org>, 
+	Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com, 
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Content-Type: text/plain; charset="utf-8"
 
-Hi again, 
-
-Viresh Kumar wrote:
-> This fixes various kernel-doc formatting errors in cpumask.h:
+On Fri, Mar 07, 2025 at 01:06:20PM +0200, Abdiel Janulgue wrote:
+> From: Danilo Krummrich <dakr@kernel.org>
 > 
-> - WARNING: Inline literal start-string without end-string.
-> - ERROR: Unexpected indentation.
-> - ERROR: Unknown target name: "gfp".
+> Some device methods require mutable references, since they change the
+> underlying struct device without lock protection.
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Hence, make it possible to retrieve a mutable reference to a Device from
+> a mutable pci::Device.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
->  include/linux/cpumask.h | 65 +++++++++++++++++++++--------------------
->  1 file changed, 34 insertions(+), 31 deletions(-)
+>  rust/kernel/pci.rs | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index 4c98b5b9aa1e..141430dac2d5 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -432,3 +432,14 @@ fn as_ref(&self) -> &device::Device {
+>          &self.0
+>      }
+>  }
+> +
+> +impl AsMut<device::Device> for Device {
+> +    fn as_mut(&mut self) -> &mut device::Device {
+> +        // SAFETY:
+> +        // - `self.0.as_raw()` is valid by the type invariant of `device::Device`,
+> +        // - `struct device` is embedded in `struct pci_dev`, hence it is safe to give out a
+> +        //    mutable reference for `device::Device` if we have a mutable reference to the
+> +        //    corresponding `pci::Device`.
+> +        unsafe { &mut *self.0.as_raw().cast() }
+> +    }
+> +}
 
-Didn't come up in your diff, but you need additional changes shown below:
+This makes it possible to call `mem::swap` on two devices, which I doubt
+is allowed.
 
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 656d2208467e..a6c1961cc535 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -285,10 +285,10 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
- }
- 
- /**
-- * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
-- *                        @n+1. If nothing found, wrap around and start from
-+ * cpumask_next_and_wrap - get the next cpu in *@src1p & *@src2p, starting from
-+ *                        @n+ 1. If nothing found, wrap around and start from
-  *                        the beginning
-- * @n: the cpu prior to the place to search (i.e. search starts from @n+1)
-+ * @n: the cpu prior to the place to search (i.e. search starts from @n +1)
-  * @src1p: the first cpumask pointer
-  * @src2p: the second cpumask pointer
-  *
-@@ -306,9 +306,9 @@ unsigned int cpumask_next_and_wrap(int n, const struct cpumask *src1p,
- }
- 
- /**
-- * cpumask_next_wrap - get the next cpu in *src, starting from @n+1. If nothing
-+ * cpumask_next_wrap - get the next cpu in *@src, starting from @n +1. If nothing
-  *                    found, wrap around and start from the beginning
-- * @n: the cpu prior to the place to search (i.e. search starts from @n+1)
-+ * @n: the cpu prior to the place to search (i.e. search starts from @n +1)
-  * @src: cpumask pointer
-  *
-  * Return: next set bit, wrapped if needed, or >= nr_cpu_ids if @src is empty.
-
-Feel free to squash into your 1/2.
-My R-b tag still stands.
-
-        Thanks, Akira
-
+Alice
