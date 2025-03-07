@@ -1,419 +1,104 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BBC23FC55;
-	Fri,  7 Mar 2025 17:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A232940D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741368441; cv=none; b=kJ04/znnucqGP1tqvH1eOqd3ftEAxlg3Jlae+Eup7w0fRa1ImnVzQGsqKCDxBK7I7eFLrz9MS8BWljtCkbykMAD9WzoCcAiT9ny7NUGuinr3v2/k6au3RtWpMBAjin6/y71LHVHQNSb5F0nsD5pzUwTNJGN23ShTDjxl+JNvTaM=
+	t=1741368484; cv=none; b=p9N1uGDZnZkSnBzl3Y8g86VflkDABL3OO0hZI9Z3En1Sx7b4kYPO79bjRresJS1tHSqeb4NlGrYJok+tznX8EErXdM9nU/FuUfEhfxCR8wE7blxYSuMy7rNYnTKEyR3tzvCh5nSAM5qoqObmMaBRTjNxeHbTTKY9/PUXvoW7LQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741368441; c=relaxed/simple;
-	bh=W34giGH60auhG6xXjCRLhUSv+FITjmzxYrJMMW/f5c0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oMgShU5Ublzi+pxTj8vUMeP7yV1C5roOlfsuR7MK65+V0sHLBqnzHnmycZQIDuk61jBXcACsEbt4RwfhKK1cK1TvwrFphpzoLvS3fZWDDIjRX3+0Is+RvAEIwT9y99GjanKfjB4NqyQLnafjTFfLXqH6BkFeorHoaKn3C+ACFuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e/obKVQs; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e/obKVQs"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5279XLBp012008;
-	Fri, 7 Mar 2025 17:26:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=7hMYYBxyAOhgExIURKYxx5rzYnbrcj
-	oF6LgssckJcRE=; b=e/obKVQscFMNzUFecNSGLxUWyEEkzrPYxcDxV3W/YEclgg
-	eTpvpBNoC+yJgG9Ktu/Dga0rjA+ZA2HB5y/lJENjQdvV8O8o1+yc8DdRooYsTpBG
-	xaKlq4vQ4CK6knuj3RRePbLA5zfR34sB077jwZaVsJ4L/Jv49yz1gWlJUR8Jc5aH
-	u/CY8OsKKIpIDGDVwfuuW6gujja0DMzqnVyqKFokvCAlJzrIhCWlLjM9Njq9CKoC
-	Hkh2JFPVF7MFwxftChxTe38LtyQznrmBmMALrwRTszSXBhr/dTo/UjaRY/IxPu30
-	wHnYnRXlW1XhlC7bqyqpM+56LL83YznjPnbgGWMQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457k45d998-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 17:26:58 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 527HQv7h005792;
-	Fri, 7 Mar 2025 17:26:57 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457k45d987-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 17:26:57 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 527FoCpE008929;
-	Fri, 7 Mar 2025 17:26:44 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454cy006fc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 17:26:44 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 527HQgvf56230316
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Mar 2025 17:26:42 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 527932004E;
-	Fri,  7 Mar 2025 17:26:42 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 906AD20040;
-	Fri,  7 Mar 2025 17:26:36 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.22.73])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  7 Mar 2025 17:26:35 +0000 (GMT)
-Date: Fri, 7 Mar 2025 22:56:31 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>,
-        linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>,
-        linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
-Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if
- journal is destroying
-Message-ID: <Z8ssR7BtBVP1zif2@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <cover.1741270780.git.ojaswin@linux.ibm.com>
- <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
- <5b3864c3-bcfd-4f45-b427-224d32aca478@huaweicloud.com>
- <Z8qTciy49b7LSHqr@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
- <Z8qqna0BEDT5ZD82@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
- <e9e92601-53bc-42a2-b428-e61bff6153c5@huaweicloud.com>
- <Z8rKAsmIuBlOo4T1@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
- <e3172770-9b39-4105-966f-faf64a6b6515@huaweicloud.com>
+	s=arc-20240116; t=1741368484; c=relaxed/simple;
+	bh=upJQ5mjymofgpXkz41INvuAsthQFAND/YR305XX1Jlg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RRziKK2uPolXHg5LB89RvstIi3ps0SqnwRy5BO/eZgWgrVXooOcuU95ADs7t45jfCfbs6syjA/PBz8dO8T1C4xHD2JtsN6xA1ldayxl+Z0sxDCoHnEj5LDEmRPEuCkaiP/fZmBi+6yfhG38dAWFkxzDLWUJhfadAZEhlmyeYi/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d43b460962so33589585ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 09:28:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741368481; x=1741973281;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KiVJKCgKzBlcHXwJoqOsA0A8HPvoZj8TKdObe42sP98=;
+        b=F7Ou0OjfwQ80VzWHjSWX/42xErTWEPwcNUZCoZMm+yM9UmtMJ0IMRsz9a3kxWLP9rf
+         kq5H51GRcr9mDyVgCmqSnh+DPFA2Y6NL13dK3Rl/i8aVfWG+19yhz3viDtCjbVBnw9Ga
+         4tIaFLqCKYxc/MR4MjpudbiVAk1mX+d3nqq6L52YsZF5+xD8O+WI3lXbtqxm0gROnOpT
+         K0N/fZoF+kVhidyF3WyvMuUUBCvlEBMiXFy79JCsp9huZcdAshhlRpWlRNO+eGifnO0E
+         3zWMxeiLdOHfsZchBtjRASBiv5zS4gkOek7poo9/zgecKoX56QB9JnjBt6mvwILyJkV1
+         YS8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWtLhKlEk6WLZxADOF9o54LBEAaCZcZZLS69tdC0zq3Q1ECggm5QZddf532EdTUds9voLh8btGok74p20M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoDiH038NXSnzTFgMm/WI1aVW/lNR4uW8sNngJzrkjiZ5bO5Jf
+	j9gRlOQhdH3kczeWGQM5lfIDJDIBLSPTKhOb9x9BJMYHBAH7fXkCUh5cBMI42Gx87xdXHe5Ji9L
+	XhpR1wlg/vC2iSHhTOAwcAoi6jqPgS92+jEonzyCtYNgZbq55idzaOvg=
+X-Google-Smtp-Source: AGHT+IF6wDU9ZKWQ//+3hPY1GgjgX/QLT4u1UJyPfYraBrReiPZDYyOP7z+VuKE2DTqKQ1xfke8tVU6gVUM1gVkS9bmM3wzhvvJZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3172770-9b39-4105-966f-faf64a6b6515@huaweicloud.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 2SUi_pdD47PfsEGdbyuQibv5IInrQkL3
-X-Proofpoint-GUID: oRzORxLyDENn70VKxq_bDX0OGcFV0s3G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_06,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503070130
+X-Received: by 2002:a05:6e02:180d:b0:3d4:3aba:954a with SMTP id
+ e9e14a558f8ab-3d4419fef78mr57414785ab.15.1741368481737; Fri, 07 Mar 2025
+ 09:28:01 -0800 (PST)
+Date: Fri, 07 Mar 2025 09:28:01 -0800
+In-Reply-To: <67972800-CD21-4A3E-B4E5-0FDFD7B83D44@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67cb2ca1.050a0220.15b4b9.0084.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Read in __bch2_bkey_unpack_key
+From: syzbot <syzbot+b9d9de2aa46b1bbe575a@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 07, 2025 at 08:36:08PM +0800, Zhang Yi wrote:
-> On 2025/3/7 18:27, Ojaswin Mujoo wrote:
-> > On Fri, Mar 07, 2025 at 04:43:24PM +0800, Zhang Yi wrote:
-> >> On 2025/3/7 16:13, Ojaswin Mujoo wrote:
-> >>> On Fri, Mar 07, 2025 at 12:04:26PM +0530, Ojaswin Mujoo wrote:
-> >>>> On Fri, Mar 07, 2025 at 10:49:28AM +0800, Zhang Yi wrote:
-> >>>>> On 2025/3/6 22:28, Ojaswin Mujoo wrote:
-> >>>>>> Presently we always BUG_ON if trying to start a transaction on a journal marked
-> >>>>>> with JBD2_UNMOUNT, since this should never happen. However, while ltp running
-> >>>>>> stress tests, it was observed that in case of some error handling paths, it is
-> >>>>>> possible for update_super_work to start a transaction after the journal is
-> >>>>>> destroyed eg:
-> >>>>>>
-> >>>>>> (umount)
-> >>>>>> ext4_kill_sb
-> >>>>>>   kill_block_super
-> >>>>>>     generic_shutdown_super
-> >>>>>>       sync_filesystem /* commits all txns */
-> >>>>>>       evict_inodes
-> >>>>>>         /* might start a new txn */
-> >>>>>>       ext4_put_super
-> >>>>>> 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
-> >>>>>>         jbd2_journal_destroy
-> >>>>>>           journal_kill_thread
-> >>>>>>             journal->j_flags |= JBD2_UNMOUNT;
-> >>>>>>           jbd2_journal_commit_transaction
-> >>>>>>             jbd2_journal_get_descriptor_buffer
-> >>>>>>               jbd2_journal_bmap
-> >>>>>>                 ext4_journal_bmap
-> >>>>>>                   ext4_map_blocks
-> >>>>>>                     ...
-> >>>>>>                     ext4_inode_error
-> >>>>>>                       ext4_handle_error
-> >>>>>>                         schedule_work(&sbi->s_sb_upd_work)
-> >>>>>>
-> >>>>>>                                                /* work queue kicks in */
-> >>>>>>                                                update_super_work
-> >>>>>>                                                  jbd2_journal_start
-> >>>>>>                                                    start_this_handle
-> >>>>>>                                                      BUG_ON(journal->j_flags &
-> >>>>>>                                                             JBD2_UNMOUNT)
-> >>>>>>
-> >>>>>> Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
-> >>>>>> destroying only do a journaled (and deferred) update of sb if this flag is not
-> >>>>>> set. Otherwise, just fallback to an un-journaled commit.
-> >>>>>>
-> >>>>>> We set sbi->s_journal_destroying = true only after all the FS updates are done
-> >>>>>> during ext4_put_super() (except a running transaction that will get commited
-> >>>>>> during jbd2_journal_destroy()). After this point, it is safe to commit the sb
-> >>>>>> outside the journal as it won't race with a journaled update (refer
-> >>>>>> 2d01ddc86606).
-> >>>>>>
-> >>>>>> Also, we don't need a similar check in ext4_grp_locked_error since it is only
-> >>>>>> called from mballoc and AFAICT it would be always valid to schedule work here.
-> >>>>>>
-> >>>>>> Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
-> >>>>>> Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
-> >>>>>> Suggested-by: Jan Kara <jack@suse.cz>
-> >>>>>> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-> >>>>>> ---
-> >>>>>>  fs/ext4/ext4.h      | 2 ++
-> >>>>>>  fs/ext4/ext4_jbd2.h | 8 ++++++++
-> >>>>>>  fs/ext4/super.c     | 4 +++-
-> >>>>>>  3 files changed, 13 insertions(+), 1 deletion(-)
-> >>>>>>
-> >>>>>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> >>>>>> index 2b7d781bfcad..d48e93bd5690 100644
-> >>>>>> --- a/fs/ext4/ext4.h
-> >>>>>> +++ b/fs/ext4/ext4.h
-> >>>>>> @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
-> >>>>>>  	 */
-> >>>>>>  	struct work_struct s_sb_upd_work;
-> >>>>>>  
-> >>>>>> +	bool s_journal_destorying;
-> >>>>>> +
-> >>>>>>  	/* Atomic write unit values in bytes */
-> >>>>>>  	unsigned int s_awu_min;
-> >>>>>>  	unsigned int s_awu_max;
-> >>>>>> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> >>>>>> index 9b3c9df02a39..6bd3ca84410d 100644
-> >>>>>> --- a/fs/ext4/ext4_jbd2.h
-> >>>>>> +++ b/fs/ext4/ext4_jbd2.h
-> >>>>>> @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
-> >>>>>>  {
-> >>>>>>  	int err = 0;
-> >>>>>>  
-> >>>>>> +	/*
-> >>>>>> +	 * At this point all pending FS updates should be done except a possible
-> >>>>>> +	 * running transaction (which will commit in jbd2_journal_destroy). It
-> >>>>>> +	 * is now safe for any new errors to directly commit superblock rather
-> >>>>>> +	 * than going via journal.
-> >>>>>> +	 */
-> >>>>>> +	sbi->s_journal_destorying = true;
-> >>>>>> +
-> >>>>>
-> >>>>> Hi, Ojaswin!
-> >>>>>
-> >>>>> I'm afraid you still need to flush the superblock update work here,
-> >>>>> otherwise I guess the race condition you mentioned in v1 could still
-> >>>>> occur.
-> >>>>>
-> >>>>>  ext4_put_super()
-> >>>>>   flush_work(&sbi->s_sb_upd_work)
-> >>>>>
-> >>>>>                     **kjournald2**
-> >>>>>                     jbd2_journal_commit_transaction()
-> >>>>>                     ...
-> >>>>>                     ext4_inode_error()
-> >>>>>                       /* JBD2_UNMOUNT not set */
-> >>>>>                       schedule_work(s_sb_upd_work)
-> >>>>>
-> >>>>>                                   **workqueue**
-> >>>>>                                    update_super_work
-> >>>>>                                    /* s_journal_destorying is not set */
-> >>>>>                             	   if (journal && !s_journal_destorying)
-> >>>>>
-> >>>>>   ext4_journal_destroy()
-> >>>>>    /* set s_journal_destorying */
-> >>>>>    sbi->s_journal_destorying = true;
-> >>>>>    jbd2_journal_destroy()
-> >>>>>     journal->j_flags |= JBD2_UNMOUNT;
-> >>>>>
-> >>>>>                                        jbd2_journal_start()
-> >>>>>                                         start_this_handle()
-> >>>>>                                           BUG_ON(JBD2_UNMOUNT)
-> >>>>>
-> >>>>> Thanks,
-> >>>>> Yi.
-> >>>> Hi Yi,
-> >>>>
-> >>>> Yes you are right, somehow missed this edge case :(
-> >>>>
-> >>>> Alright then, we have to move out sbi->s_journal_destroying outside the
-> >>>> helper. Just wondering if I should still let it be in
-> >>>> ext4_journal_destroy and just add an extra s_journal_destroying = false
-> >>>> before schedule_work(s_sb_upd_work), because it makes sense.
-> >>>>
-> >>>> Okay let me give it some thought but thanks for pointing this out!
-> >>>>
-> >>>> Regards,
-> >>>> ojaswin
-> >>>
-> >>> Okay so thinking about it a bit more, I see you also suggested to flush
-> >>> the work after marking sbi->s_journal_destroying. But will that solve
-> >>> it?
-> >>>
-> >>>   ext4_put_super()
-> >>>    flush_work(&sbi->s_sb_upd_work)
-> >>>  
-> >>>                      **kjournald2**
-> >>>                      jbd2_journal_commit_transaction()
-> >>>                      ...
-> >>>                      ext4_inode_error()
-> >>>                        /* JBD2_UNMOUNT not set */
-> >>>                        schedule_work(s_sb_upd_work)
-> >>>  
-> >>>                                     **workqueue**
-> >>>                                     update_super_work
-> >>>                                     /* s_journal_destorying is not set */
-> >>>                              	      if (journal && !s_journal_destorying)
-> >>>  
-> >>>    ext4_journal_destroy()
-> >>>     /* set s_journal_destorying */
-> >>>     sbi->s_journal_destorying = true;
-> >>>     flush_work(&sbi->s_sb_upd_work)
-> >>>                                       schedule_work()
-> >>                                         ^^^^^^^^^^^^^^^
-> >>                                         where does this come from?
-> >>
-> >> After this flush_work, we can guarantee that the running s_sb_upd_work
-> >> finishes before we set JBD2_UNMOUNT. Additionally, the journal will
-> >> not commit transaction or call schedule_work() again because it has
-> >> been aborted due to the previous error. Am I missing something?
-> >>
-> >> Thanks,
-> >> Yi.
-> > 
-> > Hmm, so I am thinking of a corner case in ext4_handle_error() where 
-> > 
-> >  if(journal && !is_journal_destroying) 
-> > 
-> > is computed but schedule_work() not called yet, which is possible cause
-> > the cmp followed by jump is not atomic in nature. If the schedule_work
-> > is only called after we have done the flush then we end up with this:
-> > 
-> >                               	      if (journal && !s_journal_destorying)
-> >     ext4_journal_destroy()
-> >      /* set s_journal_destorying */
-> >      sbi->s_journal_destorying = true;
-> >      flush_work(&sbi->s_sb_upd_work)
-> >                                        schedule_work()
-> > 
-> > Which is possible IMO, although the window is tiny.
-> 
-> Yeah, right!
-> Sorry for misread the location where you add the "!s_journal_destorying"
-> check, the graph I provided was in update_super_work(), which was wrong.
+Hello,
 
-Oh right, I also misread your trace but yes as discussed, even 
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in bch2_trans_put
 
-    sbi->s_journal_destorying = true;
-		flush_work()
-    jbd2_journal_destroy()
+------------[ cut here ]------------
+btree trans held srcu lock (delaying memory reclaim) for 11 seconds
+WARNING: CPU: 0 PID: 37 at fs/bcachefs/btree_iter.c:3202 check_srcu_held_too_long fs/bcachefs/btree_iter.c:3200 [inline]
+WARNING: CPU: 0 PID: 37 at fs/bcachefs/btree_iter.c:3202 bch2_trans_put+0xe36/0x1020 fs/bcachefs/btree_iter.c:3457
+Modules linked in:
+CPU: 0 UID: 0 PID: 37 Comm: kworker/0:1H Not tainted 6.14.0-rc1-syzkaller-g47e4e14a59ec #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: bcachefs_btree_io btree_node_write_work
+RIP: 0010:check_srcu_held_too_long fs/bcachefs/btree_iter.c:3200 [inline]
+RIP: 0010:bch2_trans_put+0xe36/0x1020 fs/bcachefs/btree_iter.c:3457
+Code: 1c 24 48 c1 eb 02 48 b9 c3 f5 28 5c 8f c2 f5 28 48 89 d8 48 f7 e1 48 c1 ea 02 48 c7 c7 40 3f 72 8c 48 89 d6 e8 6b 71 32 fd 90 <0f> 0b 90 90 e9 63 f8 ff ff e8 fc a9 72 fd 90 0f 0b 90 e9 a6 f8 ff
+RSP: 0018:ffffc90000587910 EFLAGS: 00010246
+RAX: f68e1852cb63db00 RBX: 0000000000000121 RCX: ffff88801e220000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 00000000ffffce37 R08: ffffffff81817d12 R09: 1ffff11003f8519a
+R10: dffffc0000000000 R11: ffffed1003f8519b R12: ffff88804f04c088
+R13: 1ffff11009e09811 R14: ffff88804f04c042 R15: 1ffff11009e09808
+FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd96e77d538 CR3: 0000000012314000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ btree_node_write_work+0xa91/0xbb0 fs/bcachefs/btree_io.c:2098
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
-doesn't work.
 
-> The right one should be:
-> 
->  ext4_put_super()
->   flush_work(&sbi->s_sb_upd_work)
-> 
->                     **kjournald2**
->                     jbd2_journal_commit_transaction()
->                     ...
->                     ext4_inode_error()
->                       /* s_journal_destorying is not set */
->                       if (journal && !s_journal_destorying)
->                         (schedule_work(s_sb_upd_work))  //can be here
-> 
->   ext4_journal_destroy()
->    /* set s_journal_destorying */
->    sbi->s_journal_destorying = true;
->    jbd2_journal_destroy()
->     journal->j_flags |= JBD2_UNMOUNT;
-> 
->                         (schedule_work(s_sb_upd_work))  //also can be here
-> 
->                                   **workqueue**
->                                    update_super_work()
->                                    journal = sbi->s_journal //get journal
->     kfree(journal)
->                                      jbd2_journal_start(journal) //journal UAF
->                                        start_this_handle()
->                                          BUG_ON(JBD2_UNMOUNT) //bugon here
-> 
-> 
-> So there are two problems here, the first one is the 'journal' UAF,
-> the second one is triggering JBD2_UNMOUNT flag BUGON.
+Tested on:
 
-Indeed, there's a possible UAF here as well.
+commit:         47e4e14a bcachefs: Fix b->written overflow
+git tree:       https://github.com/alanskind/bcachefs
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b843a8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a4389e017863e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=b9d9de2aa46b1bbe575a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-> 
-> >>>
-> >>> As for the fix, how about we do something like this:
-> >>>
-> >>>   ext4_put_super()
-> >>>
-> >>>    flush_work(&sbi->s_sb_upd_work)
-> >>>    destroy_workqueue(sbi->rsv_conversion_wq);
-> >>>
-> >>>    ext4_journal_destroy()
-> >>>     /* set s_journal_destorying */
-> >>>     sbi->s_journal_destorying = true;
-> >>>
-> >>>    /* trigger a commit and wait for it to complete */
-> >>>
-> >>>     flush_work(&sbi->s_sb_upd_work)
-> >>>
-> >>>     jbd2_journal_destroy()
-> >>>      journal->j_flags |= JBD2_UNMOUNT;
-> >>>  
-> >>>                                         jbd2_journal_start()
-> >>>                                          start_this_handle()
-> >>>                                            BUG_ON(JBD2_UNMOUNT)
-> >>>
-> >>> Still giving this codepath some thought but seems like this might just
-> >>> be enough to fix the race. Thoughts on this?
-> >>>
-> 
-> I think this solution should work, the forced commit and flush_work()
-> should ensure that the last transaction is committed and that the
-> potential work is done.
-> 
-> Besides, the s_journal_destorying flag is set and check concurrently
-> now, so we need WRITE_ONCE() and READ_ONCE() for it. Besides, what
-> about adding a new flag into sbi->s_mount_state instead of adding
-> new s_journal_destorying?
-
-Right, that makes sence. I will incorporate these changes in the next 
-revision.
-
-Thanks for the review,
-ojaswin
-
-> 
-> Thanks,
-> Yi.
-> 
-> >>>
-> >>>>>
-> >>>>>>  	err = jbd2_journal_destroy(journal);
-> >>>>>>  	sbi->s_journal = NULL;
-> >>>>>>  
-> >>>>>> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> >>>>>> index 8ad664d47806..31552cf0519a 100644
-> >>>>>> --- a/fs/ext4/super.c
-> >>>>>> +++ b/fs/ext4/super.c
-> >>>>>> @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
-> >>>>>>  		 * constraints, it may not be safe to do it right here so we
-> >>>>>>  		 * defer superblock flushing to a workqueue.
-> >>>>>>  		 */
-> >>>>>> -		if (continue_fs && journal)
-> >>>>>> +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
-> >>>>>>  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
-> >>>>>>  		else
-> >>>>>>  			ext4_commit_super(sb);
-> >>>>>> @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
-> >>>>>>  	spin_lock_init(&sbi->s_error_lock);
-> >>>>>>  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
-> >>>>>>  
-> >>>>>> +	sbi->s_journal_destorying = false;
-> >>>>>> +
-> >>>>>>  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
-> >>>>>>  	if (err)
-> >>>>>>  		goto failed_mount3;
-> >>>>>
-> >>>
-> >>
-> > 
-> 
+Note: no patches were applied.
