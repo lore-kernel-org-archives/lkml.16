@@ -1,57 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5C6218AD4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE0121D5A0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741369704; cv=none; b=p0rTtGYx1G2b/Vc3XWnvgLhPn5Ztdm5uuufdgJd1/ncPSyfrEWxblx247yqnMkWhvVt+op/yOD0iBM7GDLAyBWwFrK3ORqCncK0ju1jHKfKN8yazMqfdgbqEwG1hu244AmSv50lGNNc2N7rpbPP6yR5Q1DFQC37GkvFu4CeQLzI=
+	t=1741369721; cv=none; b=sQ/pzrptatWk82ANt+l+4yXXufnXSVlCsS16XKZ2OLm0y1W6MNkMHwgkc2eo4WvKzZuUSEy+qhOQhwVsnR+i/8f79yEqv9vQWwipMsXDkTTDHuLpmk57nrISMC69m08w05vTyt/jRAkqLwIeoXh41Dn+qn2l4vjxTz0ODGmncf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741369704; c=relaxed/simple;
-	bh=B8llukmjpnYTZeJDVBXphW31+bV8O5TYaK3otj6LuiY=;
+	s=arc-20240116; t=1741369721; c=relaxed/simple;
+	bh=L8kvjfaDQkCeD4u3QssJJBc2Nta4inNjIuURRBFJoZg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DxGzojNxe7tK0UGNw9Fh+N+hS0NhaDITjbMZVFc1fPS/+mVlRXR1oXMIf0R9HGaZ8LpH/cPWxeXyOx7bdIWWtTy7pad+oelUHamYCqsL1nHkjXdcheaZz20IjbACe/x0BFr3zSYDCeDMixrhOcSLbTQX8GjGIlIUaNLYP3YSsHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AMO7dmMT; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tmOOkHX4l+rLAbkKk/IQdKKDwofYyHx+wOMxK/lQ2Abq9MLMhKRWC0Rg72/wJI3Q80O9Zft/9G28PAjvNyuE1ixnIMTsLm+nidlOyOoVArlKfyxDjDZi5mvZ3ws3ruZnM3Zcccycn9RTnd4BZ7W7NnQn/EKphSpzbJR4mnGpR1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V+ZhrvSr; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMO7dmMT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741369703; x=1772905703;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=B8llukmjpnYTZeJDVBXphW31+bV8O5TYaK3otj6LuiY=;
-  b=AMO7dmMTk8oDRSVMXx+kZX4TrmSK1esAYRHvSBoEoR4leZm3hg9Oa7xv
-   Zy0LuLR2Rgl80hbhW/le12CZ+794SagQstg1OC5vbw7lrhp8a9Rds31Gr
-   wCSd5APLPDnZW6hapKQiSCBRy3XDTwOaVo1agoryflRLbd6uVhopfJ+cd
-   Nb/C9dbLu3hTrC8Dqw8KyCu3l2CXQZfRO33SaXhkdkELznyOiOkYlrm1A
-   pwtFYMrN8fV2e7i7D/i1KLYlSOzxfsDdsUffw6HEJznqIQw5tU9srWfQo
-   4ecJJvFnz3j8VbrJKpUyVdDE5zi8ynimvF+Xkvbspyz/S4bRGWDzy9K90
-   w==;
-X-CSE-ConnectionGUID: sTxS2M7yQOmK1xXPJYyp+w==
-X-CSE-MsgGUID: 2kqMYcOmSKaDErv+uyc72g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46208129"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="46208129"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:48:22 -0800
-X-CSE-ConnectionGUID: CuEhmC5tQfedXFcSOLBxtg==
-X-CSE-MsgGUID: k3JJJ6D/SCi+V3YKyNBjoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="119908613"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:48:06 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tqbnl-00000000TZX-33Lr;
-	Fri, 07 Mar 2025 19:48:01 +0200
-Date: Fri, 7 Mar 2025 19:48:01 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: mailhol.vincent@wanadoo.fr
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+ZhrvSr"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2234bec7192so12956285ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 09:48:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741369719; x=1741974519; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lRufdviAnmuT6DteRbLHEBa+gV4tGFtrU2SoznIeeXg=;
+        b=V+ZhrvSrAWp/ClK8DFhwKJNlNg4iZTNu0hkl7LkEyCn3xEBFHLNwsd0+Kh16GKRVhJ
+         7g419moBF3XBLjjKWJ9ETHmjVln+zpS+lwMB2R3qlPoLKARUyMhBdQs+WLjlOVDAmXB7
+         PiQdk99pz4/nmmL6vmP3kJ1MxMsMpnJAQZcDgUKTY2dVQRSl1wq/FktFuq9w4S1WSHEQ
+         K9AHSSLg7D9+QZ6fmcQX+Z+zjT4tJUGpNktZVLTwM35zWq1BS5yVF7Udgr8Dfi2A1ASS
+         oM96gCOZwgITGlRXiTtzi+5rjQY0TqY0Drc1Z2kwycYRUnilxv09KkHH6y2W3TC0E67K
+         OAkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741369719; x=1741974519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lRufdviAnmuT6DteRbLHEBa+gV4tGFtrU2SoznIeeXg=;
+        b=XFyrEG152tdGt87W14ubV6fppO4XXTOqEYjI1raVKl+elQu8ErkUxfeuaV99b2fmIG
+         Nlw8Mp3dKoiYNTi1lyW3ElIOXb4afr7YY6huU6q2QOuIdk044NqmVthmeImyAegF7BkH
+         dVxv0RhgqjmyPqas9+YhuE3brG1aJ2RCQqyTelRlN6eIei6T4ovrT7KtgRNprSc78jCu
+         pDCKgBe8zCd/8/rN6dY88HxqtyaY4nhyT3ABTIy2YRWThscSgAL//vac8N+zEn3k1Ba2
+         qSmwk/OSOt1W2Cy6/WYoPWhuI47DbOSUWGYItZxBIcjolO7f3R5W15jj2N+3u08DoCij
+         AViQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsEaEA0S5VDY81H2nHcNRbTIOpnQqw+UuQWRKo8ozsuHbGQUScaBO7/AO3ZjDceueNzjoi9WoFPUkBWXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL14LPd+Fey+aNC9IDKliz7E6yGDLQT6HHUKhZaWHtYv4fsg7H
+	D7KUuLGAqI3PJd/gtcIQSDQpZ5V+oYox6HZOU0XrznmMfMkHthu6
+X-Gm-Gg: ASbGncu4KNybRsZ/U7fzSfsPTHxOjSxa9f8m6lOOhEoMztWFWPcJoXfUqC7WCR3j2s5
+	T5JMpmITemsZAvYwYJvZFCPkVsUWihOwK9LZ46V1EUq4y1HDCUieeEU+tXfG8FtG91kHI3ZUnax
+	YFbIVorUePEZ3YQOzboepGPviMt3halAaHiOwhSO5d5ZATNtfDvqAJYOySmaGMRLO337sHbgenT
+	dELQL70j4IU7pgBnhXBPDbjY3cAMm3hD4ZmNkA2H8JFsfFC4Az9sx1X0jnccEK0Vu3M8o9bFPob
+	Bij0ncfrKxc4VEhJpXFH4fJbgkiscN8nnCN96AxAKR5h
+X-Google-Smtp-Source: AGHT+IEjZU9p4DHsi8ki85oRnVlIV3neE5cWyioPrK7kaRY8hlLWs1+CZSrq8Ll4+I1znDxUmj29qA==
+X-Received: by 2002:a05:6a21:10c:b0:1f3:44de:6190 with SMTP id adf61e73a8af0-1f544c93787mr9937505637.36.1741369718923;
+        Fri, 07 Mar 2025 09:48:38 -0800 (PST)
+Received: from localhost ([216.228.125.130])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af2810be5aesm2821781a12.34.2025.03.07.09.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 09:48:38 -0800 (PST)
+Date: Fri, 7 Mar 2025 12:48:36 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: mailhol.vincent@wanadoo.fr, Lucas De Marchi <lucas.demarchi@intel.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Jani Nikula <jani.nikula@linux.intel.com>,
 	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
@@ -65,10 +73,11 @@ Cc: Yury Norov <yury.norov@gmail.com>,
 	David Laight <David.Laight@aculab.com>,
 	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [PATCH v6 3/7] bits: introduce fixed-type BIT_U*()
-Message-ID: <Z8sxUTR-5j5XmZnO@smile.fi.intel.com>
+Subject: Re: [PATCH v6 0/7] bits: Fixed-type GENMASK_U*() and BIT_U*()
+Message-ID: <Z8sxdOjk3LksG9ky@thinkpad>
 References: <20250308-fixed-type-genmasks-v6-0-f59315e73c29@wanadoo.fr>
- <20250308-fixed-type-genmasks-v6-3-f59315e73c29@wanadoo.fr>
+ <Z8sqSpKZzfolKm8Q@thinkpad>
+ <Z8swXUGf9rtTHw1o@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,36 +86,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250308-fixed-type-genmasks-v6-3-f59315e73c29@wanadoo.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <Z8swXUGf9rtTHw1o@smile.fi.intel.com>
 
-On Sat, Mar 08, 2025 at 01:48:50AM +0900, Vincent Mailhol via B4 Relay wrote:
-> From: Lucas De Marchi <lucas.demarchi@intel.com>
+On Fri, Mar 07, 2025 at 07:43:57PM +0200, Andy Shevchenko wrote:
+> On Fri, Mar 07, 2025 at 12:18:02PM -0500, Yury Norov wrote:
+> > No rush, please allow your reviewers a week or two before submitting
+> > a new iteration unless you want to disregard the previous version for
+> > some reason, of course. This will not get into the upcoming merge
+> > window, anyways.
+> > 
+> > So, what should I do? Go through the v5 and all discussions in there,
+> > or just jump on this?
 > 
-> Implement fixed-type BIT_U*() to help drivers add stricter checks,
-> like it was done for GENMASK_U*().
+> There is also question to you. Are we going to leave with U128 variants or is
+> it subject to remove? If the latter, can you issue a formal patch?
 
-...
-
->  /*
->   * Missing asm support
->   *
-> - * GENMASK_U*() depends on BITS_PER_TYPE() which relies on sizeof(),
-> - * something not available in asm. Nethertheless, fixed width integers
-> - * is a C concept. Assembly code can rely on the long and long long
-> - * versions instead.
-> + * GENMASK_U*() and BIT_U*() depend on BITS_PER_TYPE() which relies on
-> + * sizeof(), something not available in asm. Nethertheless, fixed
-> + * width integers is a C concept. Assembly code can rely on the long
-> + * and long long versions instead.
->   */
-
-I don't like this hunk. You just introduced a message which is rewritten
-completely in the immediate followup. Can you come up in a better text
-here and/or there so it will give only + LoCs (or minimizes - to 1:ish)?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I asked Anshuman about it as he's the only person interested in it. Will wait
+for a _usual_ few weeks for reply before making any conclusions. If you know
+anyone relevant in ARM or everywhere else, feel free to loop them.
