@@ -1,441 +1,371 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460962940D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741368925; cv=fail; b=CpkqO+TEL2+etEjbDHQDIisgr5JY+w0XGw8e8E1HBF6l/xFReEig36n7MIvPQ8fsksKMpMlo3544Vy8HRZztidLkDQuyyqw9CkPSdBMhjzGiUdB40CXSsd5jqst9Xe9nNJ2q7STsQTLTKYFhrafdsGzHfjpa5E0FDEhuUtEpEOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741368925; c=relaxed/simple;
-	bh=DeGt8P94wYx8Ot8N6hJ/qYIAOoTuUAI0BEg5W2BrAUg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sUSB0kGV2Z+xidNPyrlloKBbxO+fOgyx+rS5btFvdbzTayX9P7T+WYQAQvkv9RzKtcB11IymdOo7L8cREOAlkM7G2g+QAsBWGwD9OyqGUfxAzYJpfdFN4KXZhhYj47zNhXXPhJ44PdXc28ZpstEd41yh42eJjY88AAzsTb470SI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SLpmP2nL; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32A02940D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741368972; cv=none; b=M/gmnYV+8tFBhQ8ZWuS4aZylVO2nI11CGL4Tz1m3yTxy8bU4IslCCUWHMNDsngYt1KNo8dBOPodj1mtvWMvRV1AGh2gcArRgLrr9zJkoa93hTx8Y+adz1cy358EZ1kVOSqGLCNIZW88xAYKo19XUpNF6MRrv9GvecD3WcxmyVfw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741368972; c=relaxed/simple;
+	bh=Mj4I71vmGcViF0pS0YuRQq3nWpdZq7aHhc2Qk5J3d40=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G6xJqdt8EdGT+BtfaIIDA5DBwLAJfp7CffbNoVoF4xqYwuUzHzkpCQvgZLjm64MyDJcNyR9IP66OXWC5IymbkY3Ulv2aGti5BsWq8qEoJUMumJALVcJCYRD7acYfzq0qJRekKfKlFU9jouhXl6+nPJwTHNbqTD4Fs9Oc0ffg/5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jPb4kpFX; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SLpmP2nL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741368923; x=1772904923;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=DeGt8P94wYx8Ot8N6hJ/qYIAOoTuUAI0BEg5W2BrAUg=;
-  b=SLpmP2nLyrH733RCGI9sg9V5AR1RHWXWJX1oIL0gyIHMYm5q/rne3bT3
-   OP22h8ez9ihCbiMecfykxImhv9dj0DvuN6fMlczQD7dNeYBhLL03Id00A
-   F8tVrzpEZu9teTqfbceIJ4KzsyuqNUtIz4Afuka3IcGQgfxaTCNs1ognT
-   5KH2dqs2qTDYLk/pqBoYSjWgNymwzzOwbV3dVvpQOtyCipy2ptmMselq3
-   25G/QN4bNQGKKYYuT1bx2l4jH+EUCjdUIuu0TrZoICWnTKn2BQIi8Pz9o
-   Cwb2R0Bf//olIjaFQ6ovF3ow/HjVdNHmp5+NhK6uqO60IM0YtihpkGqSW
-   A==;
-X-CSE-ConnectionGUID: LvLDL8OJQcKWoxroH6VOqQ==
-X-CSE-MsgGUID: EjPY0t03Qfi8XzOKhT5scg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53062639"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="53062639"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:35:22 -0800
-X-CSE-ConnectionGUID: kGHQ8JQDQby0fzCr7NJnqA==
-X-CSE-MsgGUID: f7BWbLFWQTWYIg3EV7JEAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="142620990"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Mar 2025 09:35:22 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 7 Mar 2025 09:35:21 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 09:35:21 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 7 Mar 2025 09:35:19 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cCxGsTkKutkwM5DIudZZiZopdotCGR/N+PYOYQuqQ5Ag2MVkFyI0LYUHAysOR3ZxODyC7sdchmekBBoaCsNjjrumyfx1b8nem4xH4m4Jbp5kfJkuKMRwq5ZuFDPiomulcJx6WcTZuUl7Nqby7vncx2sZKD4qHGHjPKNIYG6PQKZiLjlraXxdGiGNaKdaUX3VJHoprQUPmFjPkiTuO/UJN4XH+wPV21ZqfGO9ZzCRqLJOcq1g13X26xXdSqSUwqMw1VHfSVfSVTeFIVZlRBWkj7Wq0ukuIVfJs7kHuH2E4qsDixGWzViHOJPNXuMMsforyOdFDrKkWCsOo09tvzgPdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o0PCTLQoo2kQIR/UQ3LvznHM3xyGhXnaZbOtp1ozpFM=;
- b=cgt13rxkxMP6XXoMb5M0igg8MAyDsdi8hi01ytT6+GXYiHvNKXZWU/ZCQrHss/ZSmENmD95cP3jxkK0XOFMgyHwMp0CXgh8+m4n8QPjZ2GdO2qNlQfU9Ow9NoDkk4RopLQSO2DMZKRMURuyLtU4gA9j+lRoJrrBmaAz7JhzY0nEcXh6opEhTNmx2Mdb2OVs9GJBykf5+F2N5H8/tCgxLG/9l1065NCy+Oc9Q1olGkJ5kdwU09Dv3CgVUDWiMiHcppCLgFkpb6uW8/+GI3fcwW+ecf7tKpiDdrDSRHZpuXSz8hme51yjZ13Oz+MG2jxkjFA2S7XPjroKr8TOB+ne6qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
- by PH7PR11MB6650.namprd11.prod.outlook.com (2603:10b6:510:1a8::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Fri, 7 Mar
- 2025 17:34:32 +0000
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332%3]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
- 17:34:32 +0000
-Date: Fri, 7 Mar 2025 09:35:39 -0800
-From: Matthew Brost <matthew.brost@intel.com>
-To: <phasta@kernel.org>
-CC: Danilo Krummrich <dakr@kernel.org>, Christian =?iso-8859-1?Q?K=F6nig?=
-	<ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 3/3] drm/sched: Update timedout_job()'s documentation
-Message-ID: <Z8sua9ySbefnb/JD@lstrano-desk.jf.intel.com>
-References: <20250305130551.136682-2-phasta@kernel.org>
- <20250305130551.136682-5-phasta@kernel.org>
- <Z8oMSWulN0mF43aB@lstrano-desk.jf.intel.com>
- <0ff8b5ddce856a7d9f5ffbabcb220e345b2dcfaa.camel@mailbox.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ff8b5ddce856a7d9f5ffbabcb220e345b2dcfaa.camel@mailbox.org>
-X-ClientProxiedBy: MW4PR04CA0110.namprd04.prod.outlook.com
- (2603:10b6:303:83::25) To PH7PR11MB6522.namprd11.prod.outlook.com
- (2603:10b6:510:212::12)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jPb4kpFX"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240aad70f2so1215ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 09:36:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741368970; x=1741973770; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tMEdet0PWL/MVZ4rPjZVDjuPrMML8ZWDlWINUqqcvE4=;
+        b=jPb4kpFXrXlUWLRKlOkfWxaju+mvfQjk5sSe5tKDKoGTibFzQFyx6QQjViOIHkj6TY
+         BIOYyrGqPBSC7B+8KhDfUKBsf0arkbSjv1HOugR9k+6TzqK7CoBOezrLLePxzcLU+vMh
+         002Mbslgtb0vqpE+Z/Z8caw2mRv4GAWAKbGMPeCktrrYm0ELHD0OtKOkA9Nh0Up7OmT+
+         rUosblkWoz7eDay8zyY0I0eYEY840sZ3Puwg9JaS9XAos+D3bVnWyUpBjAmrKjE3jr3E
+         WNVcNV9pBMQMkxA7qFEZY2OVNhIl9o4BtkNU5+8vJDyMIB1TmbxVVY2i3pjyidEOp0p7
+         fxQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741368970; x=1741973770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tMEdet0PWL/MVZ4rPjZVDjuPrMML8ZWDlWINUqqcvE4=;
+        b=QNm/bptFQeQXKy/sKPROiLNXbq8Cj8EwmMEhBTJ22bOZNaLQn21T/olCZ5cTHwzUM/
+         C+n3uSsCAXp8Qk5K7SH0c8HM0hvLb6YXDsljJyV8q0FueKczgXB/HjbZ65aBK8de8WtK
+         UjISmzJL9KAsVv3RKAHzsSO+jVgMkS8JTfdQsWMK/w8iY0Lh8rBzdaaKMh1aBSVLkCz4
+         GFXgV9IUlgnRkkkQfoGFhzibDx9Q6wroqKbfIa+x4VSp7weqcfK+c/FdIKv4XW52tYwK
+         kNJIfYQKSHyWEIIhezaPDxVGBDTYS09f+9BhHG57+UcgLhQv4nv0AwANsy5PQL9fl5Gd
+         nMiw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnba4SnbwypYteerIqJetB3WVpI/G2unbGqeD/8J1Hj9X2xBufRcKA5nuld+HSGEXTbEbP7/0VJJyqbMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFMt6t5PWWv+aKvDzPYjQAVN6YGIeDJ8AgJF8E1GriW+DYam+D
+	vd8p4nY78oPNKxuwWRD/Olunt2PpSOjGL2lGA1VXhDnY5xeZqnKDz9iW63XwTHwPCSSwFElROme
+	Ked3JfyZZFem9Xj7LUwFX/txJMxqmRzMAcKGe
+X-Gm-Gg: ASbGnctuLKnQ/dOZlD1pA5DbH3Kn8MxpJDokFTTRv53yeP8WHOVhqEZuP1HlzNHY+wv
+	8TufRfuZsNdsd19SfolkwgR7seEX37TRy7ZBKW1VDxpbWIStvQv0LQkvK70MuI/k6FcPyXs/NMw
+	Ivn3Dv+nDcTu01fUOJnzzKgfrPqmI=
+X-Google-Smtp-Source: AGHT+IEq/ZSpGchbW6QkUEuvQtmGiuTU9hScEXfCaoH9cjYsbUB6FJ9XKRYhHxs9lBIsysXSUvWnKN7svpPRZY44sHk=
+X-Received: by 2002:a17:902:e5c1:b0:216:27f5:9dd7 with SMTP id
+ d9443c01a7336-22434a42e02mr971865ad.11.1741368969927; Fri, 07 Mar 2025
+ 09:36:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|PH7PR11MB6650:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35ff36bd-abcf-4467-0ceb-08dd5d9e523b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?MHQ1Tk50LzRJNTBzU1JOdmtibWJMZndKTDJPaVB5dDJ3Y3JDdVhzNmMzZnJs?=
- =?utf-8?B?R3E1eGNsa2craVlsd1J4eFZBaVJOa0QzQkplT2NIY1FIaDJvM2UzNWRuVUUw?=
- =?utf-8?B?TDBHbXBRLy8xeVVJVVI2dGJwbnBkdDlvNDdoVitUTmRXODY5WFphMGFha1g1?=
- =?utf-8?B?d2wwWm5LeTBFMG5zaTVDTEpTYlpwb1R5QlVwMXlJdkUzbVNKcmg5bFZOTEhB?=
- =?utf-8?B?MUpHS0pLQ2xKd1Nwd3lKK3ErRnhheDU4TDlYUjJEdldCa1J3aC9lOXByNmkx?=
- =?utf-8?B?R1hoL2VGakV5MERGamV1U2RtckxNS0FzYkhKaERQd2pVREgwajd6MnpHZFln?=
- =?utf-8?B?cDByMTU1aUY0S21pNjNKWVJaZ21CM0krTzArMktVY24waHN0UWE2S3VrQWdH?=
- =?utf-8?B?eFd2ckx5ZDdYNmc4bmZkVWlQNXJMYjZHTC84NFdtSFU0bUd6dTdjaTVWa0l4?=
- =?utf-8?B?VlJzckRxb3F5c0hEU21ObHRsWTFvallSVm4ycjVWR3puamJqZXdPZTlnbEVs?=
- =?utf-8?B?WUtXbVAxRGNvTXptSTZyRFErQkJqWTR3VkpyT0JLVE9vREhYZkIveGZ1WE1D?=
- =?utf-8?B?QUZvRXFBZ2ZKSjVYakV0dWhNWTh0dlZESnpKZXBYaVQ5NGRlKzJ6TGpZQTE2?=
- =?utf-8?B?WVVtc0RZc09reXY0alVXT0VDaVpwYS9oQ2lmK1kydnJqajh4QmtlV0JvL2Rh?=
- =?utf-8?B?ditSTU5zOWhiVnpOUUlGbFdQUVBjVW9wQW9DRHU3ZFBJMHpqb2Q4ZElKNlNk?=
- =?utf-8?B?RjBiYlVCR2JVWEpqYlhGU0hIN05FT1VmNHNuSkxrbThVcTZ5VTZMMkNPdDFE?=
- =?utf-8?B?NFdQZGFPc1hpc2hDS3RrU3VjTDE5dWNHOXJKK0FsTVl0VkYrYnlyUVAxREJS?=
- =?utf-8?B?cGE4U1dleTh6VXk0OGhHLzhITllJcnk4SWdNTUMwMU01RExoN3VtVDhuZVFp?=
- =?utf-8?B?MkkvWDgvU3hyK1FRa1NwTW1nVVEreW5JdENoQ2VNdytTbmxuYVJTaFNtMjdH?=
- =?utf-8?B?aUNINWpJcENKcDc1eXZ2c3ZTTUhDei9jRkFLNTN5U0FkLzdPL0ptY3RQakRW?=
- =?utf-8?B?Kzc3amp6ZUdpa2dYTDN3Q0RyNjE4ajUrS3o1eDVGbVQybmF5VDkvNVA5NmRE?=
- =?utf-8?B?SDc5d2N0RklGTnNkdmI3QThnOXZ2dkpaSmNpUzg1WWdySUNTRXZjSXZOcXVD?=
- =?utf-8?B?cmZ1YU05WXJ2OC9aZzBHM3NENHhKS25ob0Y1T2I3bk42dEQ0eCtZOTFJTEdN?=
- =?utf-8?B?czdUVGlIRTZkbmxJYkJrUHhaWEk1OGxaTUZ0SnRJOVFNQVZZc1IwMzB5cjlY?=
- =?utf-8?B?YWxwSUlGamRkOUNiSTVIU1JwdFVaOElXWU52dXdsYXpvdUgrMHpRWlRROVJ6?=
- =?utf-8?B?OG92bWVzbXlnZ1BLb0NVd2RaaC9jZnVVbG5LUW1SemNQcHd5bnR1anp6V2t0?=
- =?utf-8?B?NlZqa09XWVVUSTlYZGVXb29lU1ZQYWJKWjdjRVZkQkJOWm51NUltY1Bpdjh5?=
- =?utf-8?B?cE5nSTZkRldSR2s5SEpUd3k2VlRTd2dVSGEvTFJPMW9PK0c0WWpDNUtFMU1m?=
- =?utf-8?B?QlgwL0gzbmZaSzl0YVZhY3UvVUZiZzdObmpjTzI4KzdwcmFTUnIrUktpQ3dZ?=
- =?utf-8?B?ekoya0lWUzM4U1lDRDZBcEx4V0RWMlp3V3B3d3o5bFZ2SHdaRzdQMGFZeXpy?=
- =?utf-8?B?bDBRUklZUzdYazl5bXZUbFAyYnN0ZklSMzd3aklqMStMd0NMMVNoM05xZ0pC?=
- =?utf-8?B?dytkWXN5Mms4VVNCWDdkZUJiQ2pHUjF0Yzg4eHQyUDg3YnFXKzhPbUN2WWZt?=
- =?utf-8?B?ak15U0k5MGVBa1AyaVRBWWh0VjA3VTlENm9xZ1BHU0FCVms4MVBzM3ZTbEt5?=
- =?utf-8?Q?qWswehzJ84eSS?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cllDTm5DM1RjUnIxTnBsY3VGZGtzU3RuVEVyS3Nzc2V6QW5LLzFFZnJyRVAw?=
- =?utf-8?B?SGltRXlNamZuQ3c5WUV4MnBjVzUyaTZScFFRbmtJRjR5ZjlXa1pJbDZheVU4?=
- =?utf-8?B?QlJtOFJNbFhLcWRtVG1NK3F0M2NDZjZzcWJ4Z1VLU1FKZHk2UlRJOEhiOEZV?=
- =?utf-8?B?REJjUWhzWEV2R2RrUkt0RTg1OXkyYUY5S09PNnZHbUxhMFh6UVY1RnhjNkwy?=
- =?utf-8?B?c1FPcXFBWC9XQW1PMW90WmV4bEk0WkM4YmZhUkhzeU5tT2hIQWtuVHNrWHZu?=
- =?utf-8?B?REZnTnh3bGJEUXVQUE5MTkhLVnJSWkVld2lzZGNxbExISUFpVkFsNTlHZXMz?=
- =?utf-8?B?NUpTOEZWMjNuMDlRYmdBYk92elh2SW1HU09iN2ZwWHRYL1NYYUlkdWlxOU93?=
- =?utf-8?B?OXNKbGU2M0VHVjM1TmZTdnNUNGxFWDhKRktSYkFKT0EvVGVSbFZoZ09Tem0v?=
- =?utf-8?B?SFNwL1JnN0JrUGxYSXJFZytpS094Qldsc2lmNFZ1bzNCVFFud2k4QzVmV1BW?=
- =?utf-8?B?OXhvMFN1UkpLTk1yb3VXOGhXRmMrKzdxMGsyeVd6QWxjQnRUaGpxM0Nmckp1?=
- =?utf-8?B?RTJadEJVTEdLNWxQQXhZV3YrS0k3OUdZZzlhUjVNV2hGMm5YeVVvdUxxTU1u?=
- =?utf-8?B?bEpsUGhTS1JCZDNIWS9RbHR3OXdBS043NSt4ODUxcFBlYU10RnE4QzJ5OXYv?=
- =?utf-8?B?VW9FaENvNVBodkJHbUp6WjF2VFZHZ1hpVTR0dFF0WDE4S0VhVnlnbTlOSko0?=
- =?utf-8?B?MzNMZzBRdzVNNy94L05yWkRvY0dYNWVZanNKaWljb1ZFNXFSaTdzVjJ0OS9C?=
- =?utf-8?B?MnNyaHRzM0tZeTN6c1BxeCtxL3FWT1p0QUo4WWx3WmhwOVQ5OFVsbVlFelBp?=
- =?utf-8?B?ZGxOQWM4amZKR3oxeFRCUzVFZVZoaWpFeUFhU05Nd0lHa1lrdXQ0V2FQNmJG?=
- =?utf-8?B?WFo0TVdSVjVPcURDemdQMkwzUEI0SUIvTWJCMFFCc241dEtLN1k4MW5zZ1gx?=
- =?utf-8?B?SWFwNis3QUMrSFNMWmljYU54WURYR1hqL1ZRV0pLYTBzVUcyZmpDTzFLdjBW?=
- =?utf-8?B?NWJiTFhNQzhZQUpsWG5PQ0V1K0xDYjVualh4dTN5WWkzNmV0L0U4c3dGK0My?=
- =?utf-8?B?NC81Y2ZXVC9WZnZNTlVrWHJ3ZEJnVXVLQWt4NTk5UjN4ajZFRExxOUl1RlAz?=
- =?utf-8?B?RmZzQVN1N0g3R2I0N21hMEQzSFpoWlFhOG1saHVNUWo5Mm9uMEdBVFpVRDNn?=
- =?utf-8?B?eW95VlFaL2MydXFDYU9DVFBhL29jYko4UlRJWFNGcjI3UERUeVJuUjArRFlo?=
- =?utf-8?B?TWJsMXFxa1piM0cxYXJBUi92M0JLcEpDL2s5RmQ2azVqL2RwYmpVcitZSTkw?=
- =?utf-8?B?bFIweEJHL0RJQVBJMmdMZE4rVzBlMXRYRVNEQ0F1VkpBSmF4c2dQS3YycC83?=
- =?utf-8?B?RE4rT3Q2azVCalBkMHlKM1RuS1NYZkt6eDFYaExLSXpISm9IV0xLM2VCUWd3?=
- =?utf-8?B?aDJOV2VwZzFFbm1iakVwUmhLclFtRWFxdWREN0RSUkFZKzVsNUVZc094Q3lu?=
- =?utf-8?B?SlFDZ0lEUWFrWUxTWFhsK29rZW1TZS9DR3cxNVcycFcvR2RWVUJUMWhZaTJU?=
- =?utf-8?B?TVRxVG5xR1ZFb1l1Q2NLOFFsQnNFcFY1VFNNbXJNcStzYnFDL2Vxa2tRVkcy?=
- =?utf-8?B?cUpzRExnSnhVbjdXVlJWM01UMjRrWjk2ZVB6RjRMaVpNcFROQm1Sc1VSaE05?=
- =?utf-8?B?c2U4a3VrRjFDZ1QwWmhFNUlTR3lvQWNXYTAzbGVCcWVuWERDQU9ubzRXTUFm?=
- =?utf-8?B?RktleXFQanFHaW84NVJRc2hnOUJzK2dxbTZmR05vZFJ6cHhoRWJuOEJrcmdB?=
- =?utf-8?B?UVplOXBZTlhlb1ZCOUw1WkR3VGJoQW9KZTFIeHFZa3Y3U3dUc1VXR1lCSXlP?=
- =?utf-8?B?SUJJWm5oRVdkc2R0M01Ib25aMzNZSFNUQ0xXN1paUkdMelE2ZGN1cDhXcTlM?=
- =?utf-8?B?TnhaaHBCNmZ0ZE4zYmFzSjZReStVUFRDeCtoZEkzRmhQUW1DUWpMak51TXJ6?=
- =?utf-8?B?L1ArdGtwU0JLV2NzbW1ucWtwMzRSMDZTd2FRYm92a1BXR1BoNVNQeGZlQUFX?=
- =?utf-8?B?UUpLNzdybVJieVJ0a09uaVlEU3kvdmp5Zm5nZ3lZc0JadkNRMnU5bWt1Ky8v?=
- =?utf-8?B?NGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35ff36bd-abcf-4467-0ceb-08dd5d9e523b
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 17:34:32.3952
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: awLWKOaOojWODyZ/Men+5gcHFuNyDX4by/Nynzww9DWrMG2xYqhb1YhgrfIKU5LqgE043biUZLMJIuVrhB0/bQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6650
-X-OriginatorOrg: intel.com
+References: <20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org>
+ <20250304-james-perf-hybrid-list-v1-2-a363ffac283c@linaro.org>
+ <CAP-5=fX+aSDLMDL3DMNCQ4tDuhaZPv-L6OgfOso3q5wf7anoGg@mail.gmail.com> <12da919e-5674-4b12-a51d-ed767cc0b1ac@linaro.org>
+In-Reply-To: <12da919e-5674-4b12-a51d-ed767cc0b1ac@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 7 Mar 2025 09:35:58 -0800
+X-Gm-Features: AQ5f1JpN3gZ_WNTTyzjs3l5NZ7XIwS4pn2agGlXg0KjzWSDb9xxl6tCUCJrs1U0
+Message-ID: <CAP-5=fWVw499hZ7WM7A+vUmxALX7M-kYXoEehQkv-fh6qHOoOg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf list: Collapse similar events across PMUs
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 07, 2025 at 10:37:04AM +0100, Philipp Stanner wrote:
-> On Thu, 2025-03-06 at 12:57 -0800, Matthew Brost wrote:
-> > On Wed, Mar 05, 2025 at 02:05:52PM +0100, Philipp Stanner wrote:
-> > > drm_sched_backend_ops.timedout_job()'s documentation is outdated.
-> > > It
-> > > mentions the deprecated function drm_sched_resubmit_jobs().
-> > > Furthermore,
-> > > it does not point out the important distinction between hardware
-> > > and
-> > > firmware schedulers.
-> > > 
-> > > Since firmware schedulers typically only use one entity per
-> > > scheduler,
-> > > timeout handling is significantly more simple because the entity
-> > > the
-> > > faulted job came from can just be killed without affecting innocent
-> > > processes.
-> > > 
-> > > Update the documentation with that distinction and other details.
-> > > 
-> > > Reformat the docstring to work to a unified style with the other
-> > > handles.
-> > > 
-> > 
-> > Looks really good, one suggestion.
-> 
-> Already merged. But I'm working already on the TODO and could address
-> your feedback in that followup.
-> 
-> Of course, would also be great if you could provide a proposal in a
-> patch? :)
-> 
-> > 
-> > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> > > ---
-> > >  include/drm/gpu_scheduler.h | 78 ++++++++++++++++++++++-----------
-> > > ----
-> > >  1 file changed, 47 insertions(+), 31 deletions(-)
-> > > 
-> > > diff --git a/include/drm/gpu_scheduler.h
-> > > b/include/drm/gpu_scheduler.h
-> > > index 6381baae8024..1a7e377d4cbb 100644
-> > > --- a/include/drm/gpu_scheduler.h
-> > > +++ b/include/drm/gpu_scheduler.h
-> > > @@ -383,8 +383,15 @@ struct drm_sched_job {
-> > >  	struct xarray			dependencies;
-> > >  };
-> > >  
-> > > +/**
-> > > + * enum drm_gpu_sched_stat - the scheduler's status
-> > > + *
-> > > + * @DRM_GPU_SCHED_STAT_NONE: Reserved. Do not use.
-> > > + * @DRM_GPU_SCHED_STAT_NOMINAL: Operation succeeded.
-> > > + * @DRM_GPU_SCHED_STAT_ENODEV: Error: Device is not available
-> > > anymore.
-> > > + */
-> > >  enum drm_gpu_sched_stat {
-> > > -	DRM_GPU_SCHED_STAT_NONE, /* Reserve 0 */
-> > > +	DRM_GPU_SCHED_STAT_NONE,
-> > >  	DRM_GPU_SCHED_STAT_NOMINAL,
-> > >  	DRM_GPU_SCHED_STAT_ENODEV,
-> > >  };
-> > > @@ -447,43 +454,52 @@ struct drm_sched_backend_ops {
-> > >  	 * @timedout_job: Called when a job has taken too long to
-> > > execute,
-> > >  	 * to trigger GPU recovery.
-> > >  	 *
-> > > -	 * This method is called in a workqueue context.
-> > > +	 * @sched_job: The job that has timed out
-> > >  	 *
-> > > -	 * Drivers typically issue a reset to recover from GPU
-> > > hangs, and this
-> > > -	 * procedure usually follows the following workflow:
-> > > +	 * Drivers typically issue a reset to recover from GPU
-> > > hangs.
-> > > +	 * This procedure looks very different depending on
-> > > whether a firmware
-> > > +	 * or a hardware scheduler is being used.
-> > >  	 *
-> > > -	 * 1. Stop the scheduler using drm_sched_stop(). This will
-> > > park the
-> > > -	 *    scheduler thread and cancel the timeout work,
-> > > guaranteeing that
-> > > -	 *    nothing is queued while we reset the hardware queue
-> > > -	 * 2. Try to gracefully stop non-faulty jobs (optional)
-> > > -	 * 3. Issue a GPU reset (driver-specific)
-> > > -	 * 4. Re-submit jobs using drm_sched_resubmit_jobs()
-> > > -	 * 5. Restart the scheduler using drm_sched_start(). At
-> > > that point, new
-> > > -	 *    jobs can be queued, and the scheduler thread is
-> > > unblocked
-> > > +	 * For a FIRMWARE SCHEDULER, each ring has one scheduler,
-> > > and each
-> > > +	 * scheduler has one entity. Hence, the steps taken
-> > > typically look as
-> > > +	 * follows:
-> > > +	 *
-> > > +	 * 1. Stop the scheduler using drm_sched_stop(). This will
-> > > pause the
-> > > +	 *    scheduler workqueues and cancel the timeout work,
-> > > guaranteeing
-> > > +	 *    that nothing is queued while the ring is being
-> > > removed.
-> > > +	 * 2. Remove the ring. The firmware will make sure that
-> > > the
-> > > +	 *    corresponding parts of the hardware are resetted,
-> > > and that other
-> > > +	 *    rings are not impacted.
-> > > +	 * 3. Kill the entity and the associated scheduler.
-> > 
-> > Xe doesn't do step 3.
-> > 
-> > It does:
-> > - Ban entity / scheduler so futures submissions are a NOP. This would
-> > be
-> >   submissions with unmet dependencies. Submission at the IOCTL are
-> >   disallowed 
-> > - Signal all job's fences on the pending list
-> > - Restart scheduler so free_job() is naturally called
-> > 
-> > I'm unsure if this how other firmware schedulers do this, but it
-> > seems
-> > to work quite well in Xe.
-
-Missed this part of the reply.
-
-> 
-> Alright, so if I interpret this correctly you do that to avoid our
-> infamous memory leaks. That makes sense.
+On Fri, Mar 7, 2025 at 6:08=E2=80=AFAM James Clark <james.clark@linaro.org>=
+ wrote:
 >
+>
+>
+> On 05/03/2025 9:40 pm, Ian Rogers wrote:
+> > On Tue, Mar 4, 2025 at 5:50=E2=80=AFAM James Clark <james.clark@linaro.=
+org> wrote:
+> >>
+> >> Instead of showing multiple line items with the same event name and
+> >> description, show a single line and concatenate all PMUs that this
+> >> event can belong to.
+> >>
+> >> Don't do it for json output. Machine readable output doesn't need to b=
+e
+> >> minimized, and changing the "Unit" field to a list type would break
+> >> backwards compatibility.
+> >>
+> >> Before:
+> >>   $ perf list -v
+> >>   ...
+> >>   br_indirect_spec
+> >>         [Branch speculatively executed,indirect branch. Unit: armv8_co=
+rtex_a53]
+> >>   br_indirect_spec
+> >>         [Branch speculatively executed,indirect branch. Unit: armv8_co=
+rtex_a57]
+> >>
+> >> After:
+> >>
+> >>   $ perf list -v
+> >>   ...
+> >>   br_indirect_spec
+> >>         [Branch speculatively executed,indirect branch. Unit: armv8_co=
+rtex_a53,armv8_cortex_a57]
+> >>
+> >> Signed-off-by: James Clark <james.clark@linaro.org>
+> >> ---
+> >>   tools/perf/builtin-list.c      |  2 ++
+> >>   tools/perf/util/pmus.c         | 75 ++++++++++++++++++++++++++++++++=
++++++-----
+> >>   tools/perf/util/print-events.h |  1 +
+> >>   3 files changed, 70 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> >> index fed482adb039..aacd7beae2a0 100644
+> >> --- a/tools/perf/builtin-list.c
+> >> +++ b/tools/perf/builtin-list.c
+> >> @@ -516,6 +516,7 @@ int cmd_list(int argc, const char **argv)
+> >>                  .print_event =3D default_print_event,
+> >>                  .print_metric =3D default_print_metric,
+> >>                  .skip_duplicate_pmus =3D default_skip_duplicate_pmus,
+> >> +               .collapse_events =3D true
+> >
+> > So collapse_events is put in the callbacks but isn't a callback. I
+> > think skipping duplicates and collapsing are the same thing, I'd
+> > prefer it if there weren't two terms for the same thing. If you prefer
+> > collapsing as a name then default_skip_duplicate_pmus can be
+> > default_collapse_pmus.
+> >
+>
+> I can use the existing callback and rename it. That does have the effect
+> of disabling this behavior in verbose mode which may be useful or may be
+> unexpected to some people. But it seems pretty 50/50 so fewer callbacks
+> are probably better.
+>
+> >>          };
+> >>          const char *cputype =3D NULL;
+> >>          const char *unit_name =3D NULL;
+> >> @@ -574,6 +575,7 @@ int cmd_list(int argc, const char **argv)
+> >>                          .print_event =3D json_print_event,
+> >>                          .print_metric =3D json_print_metric,
+> >>                          .skip_duplicate_pmus =3D json_skip_duplicate_=
+pmus,
+> >> +                       .collapse_events =3D false
+> >>                  };
+> >>                  ps =3D &json_ps;
+> >>          } else {
+> >> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> >> index 4d60bac2d2b9..cb1b14ade25b 100644
+> >> --- a/tools/perf/util/pmus.c
+> >> +++ b/tools/perf/util/pmus.c
+> >> @@ -453,17 +453,50 @@ static int cmp_sevent(const void *a, const void =
+*b)
+> >>          /* Order by PMU name. */
+> >>          if (as->pmu =3D=3D bs->pmu)
+> >>                  return 0;
+> >> -       return strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
+> >> +       ret =3D strcmp(as->pmu_name ?: "", bs->pmu_name ?: "");
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       /* Order by remaining displayed fields for purposes of dedupli=
+cation later */
+> >> +       ret =3D strcmp(as->scale_unit ?: "", bs->scale_unit ?: "");
+> >> +       if (ret)
+> >> +               return ret;
+> >> +       ret =3D !!as->deprecated - !!bs->deprecated;
+> >> +       if (ret)
+> >> +               return ret;
+> >> +       ret =3D strcmp(as->desc ?: "", bs->desc ?: "");
+> >> +       if (ret)
+> >> +               return ret;
+> >> +       return strcmp(as->long_desc ?: "", bs->long_desc ?: "");
+> >>   }
+> >>
+> >> -static bool pmu_alias_is_duplicate(struct sevent *a, struct sevent *b=
+)
+> >> +enum dup_type {
+> >> +       UNIQUE,
+> >> +       DUPLICATE,
+> >> +       SAME_TEXT
+> >> +};
+> >> +
+> >> +static enum dup_type pmu_alias_duplicate_type(struct sevent *a, struc=
+t sevent *b)
+> >>   {
+> >>          /* Different names -> never duplicates */
+> >>          if (strcmp(a->name ?: "//", b->name ?: "//"))
+> >> -               return false;
+> >> +               return UNIQUE;
+> >> +
+> >> +       /* Duplicate PMU name and event name -> hide completely */
+> >> +       if (strcmp(a->pmu_name, b->pmu_name) =3D=3D 0)
+> >> +               return DUPLICATE;
+> >> +
+> >> +       /* Any other different display text -> not duplicate */
+> >> +       if (strcmp(a->topic ?: "", b->topic ?: "") ||
+> >> +           strcmp(a->scale_unit ?: "", b->scale_unit ?: "") ||
+> >> +           a->deprecated !=3D b->deprecated ||
+> >> +           strcmp(a->desc ?: "", b->desc ?: "") ||
+> >> +           strcmp(a->long_desc ?: "", b->long_desc ?: "")) {
+> >> +               return UNIQUE;
+> >> +       }
+> >>
+> >> -       /* Don't remove duplicates for different PMUs */
+> >> -       return strcmp(a->pmu_name, b->pmu_name) =3D=3D 0;
+> >> +       /* Same display text but different PMU -> collapse */
+> >> +       return SAME_TEXT;
+> >>   }
+> >>
+> >>   struct events_callback_state {
+> >> @@ -501,6 +534,21 @@ static int perf_pmus__print_pmu_events__callback(=
+void *vstate,
+> >>          return 0;
+> >>   }
+> >>
+> >> +static void concat_pmu_names(char *pmu_names, size_t size, const char=
+ *a, const char *b)
+> >> +{
+> >> +       size_t len =3D strlen(pmu_names);
+> >> +       size_t added;
+> >> +
+> >> +       if (len)
+> >> +               added =3D snprintf(pmu_names + len, size - len, ",%s",=
+ b);
+> >> +       else
+> >> +               added =3D snprintf(pmu_names, size, "%s,%s", a, b);
+> >> +
+> >> +       /* Truncate with ... */
+> >> +       if (added > 0 && added + len >=3D size)
+> >> +               sprintf(pmu_names + size - 4, "...");
+> >> +}
+> >> +
+> >>   void perf_pmus__print_pmu_events(const struct print_callbacks *print=
+_cb, void *print_state)
+> >>   {
+> >>          struct perf_pmu *pmu;
+> >> @@ -510,6 +558,7 @@ void perf_pmus__print_pmu_events(const struct prin=
+t_callbacks *print_cb, void *p
+> >>          struct events_callback_state state;
+> >>          bool skip_duplicate_pmus =3D print_cb->skip_duplicate_pmus(pr=
+int_state);
+> >>          struct perf_pmu *(*scan_fn)(struct perf_pmu *);
+> >> +       char pmu_names[128] =3D {0};
+> >>
+> >>          if (skip_duplicate_pmus)
+> >>                  scan_fn =3D perf_pmus__scan_skip_duplicates;
+> >> @@ -539,12 +588,21 @@ void perf_pmus__print_pmu_events(const struct pr=
+int_callbacks *print_cb, void *p
+> >>          qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+> >>          for (int j =3D 0; j < len; j++) {
+> >>                  /* Skip duplicates */
+> >> -               if (j < len - 1 && pmu_alias_is_duplicate(&aliases[j],=
+ &aliases[j + 1]))
+> >> -                       goto free;
+> >> +               if (j < len - 1) {
+> >> +                       enum dup_type dt =3D pmu_alias_duplicate_type(=
+&aliases[j], &aliases[j + 1]);
+> >> +
+> >> +                       if (dt =3D=3D DUPLICATE) {
+> >> +                               goto free;
+> >> +                       } else if (print_cb->collapse_events && dt =3D=
+=3D SAME_TEXT) {
+> >> +                               concat_pmu_names(pmu_names, sizeof(pmu=
+_names),
+> >> +                                                aliases[j].pmu_name, =
+aliases[j+1].pmu_name);
+> >> +                               goto free;
+> >> +                       }
+> >> +               }
+> >
+> > I think a label called 'free' is a little unfortunate given the
+> > function called free.
+> > When I did things with sevent I was bringing over previous `perf list`
+> > code mainly so that the perf list output before and after the changes
+> > was identical. I wonder if this logic would be better placed in the
+> > callback like default_print_event which already maintains state
+> > (last_topic) to optionally print different things. This may better
+> > encapsulate the behavior rather than the logic being in the PMU code.
+> >
+>
+> Yeah I can have a look at putting it in one of the callbacks. But in the
+> end builtin-list.c is the only user of perf_pmus__print_pmu_events()
+> anyway so makes you wonder if the whole thing can be moved to
+> builtin-list and open coded without the callbackyness.
 
-Yes.
- 
-> The memory leaks are documented in drm_sched_fini()'s docu, but it
-> could make sense to mention them here, too.
-> 
+I wanted to hide some of the innards of pmus, so I think that's the
+reason it is as it is. The whole `sevent` was pre-existing and
+maintained so that the output was the same.
 
-The jobs in Xe ref count the scheduler so we never call drm_sched_fini
-until jobs in the pending list and dependency queues has made called
-free_job().
+> >>
+> >>                  print_cb->print_event(print_state,
+> >>                                  aliases[j].topic,
+> >> -                               aliases[j].pmu_name,
+> >> +                               pmu_names[0] ? pmu_names : aliases[j].=
+pmu_name,
+> >>                                  aliases[j].name,
+> >>                                  aliases[j].alias,
+> >>                                  aliases[j].scale_unit,
+> >> @@ -553,6 +611,7 @@ void perf_pmus__print_pmu_events(const struct prin=
+t_callbacks *print_cb, void *p
+> >>                                  aliases[j].desc,
+> >>                                  aliases[j].long_desc,
+> >>                                  aliases[j].encoding_desc);
+> >
+> > The encoding_desc will have a PMU with the suffix removed as per
+> > skipping duplicates:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1954
+> > So I think something like:
+> > ```
+> >    br_mis_pred_retired
+> >         [Instruction architecturally executed,mispredicted branch. Unit=
+:
+> >          armv9_cortex_a510,armv9_cortex_a710]
+> > ```
+> > Would have an encoding of `armv9_cortex_a510/.../` without the a710
+> > encoding being present. That said, I'm not sure anyone cares :-)
+> >
+> > Thanks,
+> > Ian
+> >
+>
+> Ah, in that case I'll disable it for --detailed as well as --json. I
+> could compare encoding_desc in pmu_alias_duplicate_type() but they'll
+> always be different because of the PMU name, so there's no point. And
+> displaying multiple encoding_descs would be fiddly too.
 
-> … thinking about it, we probably actually have to rephrase this line.
-> Just tearing down entity & sched makes those leaks very likely. Argh.
-> 
-> Nouveau, also a firmware scheduler, has effectively a copy of the
-> pending_list and also ensures that all fences get signalled. Only once
-> that copy of the pending list is empty it calls into drm_sched_fini().
-> Take a look at nouveau_sched.c if you want, the code is quite
-> straightforward.
-> 
+So I'd like not to have the encoding_desc removed. It is useful for
+debugging.. I meant by people not caring that the format of that
+string is under specified, so the PMU name not being 100% accurate
+likely doesn't affect people.
 
-Same idea in Xe I think we just directly access the pending access list.
-Let me look at what Nouveau is doing before posting an updated doc here
-patch.
+Thanks,
+Ian
 
-Matt
 
-> P.
-> 
-> > 
-> > Matt
-> > 
-> > > +	 *
-> > > +	 *
-> > > +	 * For a HARDWARE SCHEDULER, a scheduler instance
-> > > schedules jobs from
-> > > +	 * one or more entities to one ring. This implies that all
-> > > entities
-> > > +	 * associated with the affected scheduler cannot be torn
-> > > down, because
-> > > +	 * this would effectively also affect innocent userspace
-> > > processes which
-> > > +	 * did not submit faulty jobs (for example).
-> > > +	 *
-> > > +	 * Consequently, the procedure to recover with a hardware
-> > > scheduler
-> > > +	 * should look like this:
-> > > +	 *
-> > > +	 * 1. Stop all schedulers impacted by the reset using
-> > > drm_sched_stop().
-> > > +	 * 2. Kill the entity the faulty job stems from.
-> > > +	 * 3. Issue a GPU reset on all faulty rings (driver-
-> > > specific).
-> > > +	 * 4. Re-submit jobs on all schedulers impacted by re-
-> > > submitting them to
-> > > +	 *    the entities which are still alive.
-> > > +	 * 5. Restart all schedulers that were stopped in step #1
-> > > using
-> > > +	 *    drm_sched_start().
-> > >  	 *
-> > >  	 * Note that some GPUs have distinct hardware queues but
-> > > need to reset
-> > >  	 * the GPU globally, which requires extra synchronization
-> > > between the
-> > > -	 * timeout handler of the different &drm_gpu_scheduler.
-> > > One way to
-> > > -	 * achieve this synchronization is to create an ordered
-> > > workqueue
-> > > -	 * (using alloc_ordered_workqueue()) at the driver level,
-> > > and pass this
-> > > -	 * queue to drm_sched_init(), to guarantee that timeout
-> > > handlers are
-> > > -	 * executed sequentially. The above workflow needs to be
-> > > slightly
-> > > -	 * adjusted in that case:
-> > > +	 * timeout handlers of different schedulers. One way to
-> > > achieve this
-> > > +	 * synchronization is to create an ordered workqueue
-> > > (using
-> > > +	 * alloc_ordered_workqueue()) at the driver level, and
-> > > pass this queue
-> > > +	 * as drm_sched_init()'s @timeout_wq parameter. This will
-> > > guarantee
-> > > +	 * that timeout handlers are executed sequentially.
-> > >  	 *
-> > > -	 * 1. Stop all schedulers impacted by the reset using
-> > > drm_sched_stop()
-> > > -	 * 2. Try to gracefully stop non-faulty jobs on all queues
-> > > impacted by
-> > > -	 *    the reset (optional)
-> > > -	 * 3. Issue a GPU reset on all faulty queues (driver-
-> > > specific)
-> > > -	 * 4. Re-submit jobs on all schedulers impacted by the
-> > > reset using
-> > > -	 *    drm_sched_resubmit_jobs()
-> > > -	 * 5. Restart all schedulers that were stopped in step #1
-> > > using
-> > > -	 *    drm_sched_start()
-> > > +	 * Return: The scheduler's status, defined by &enum
-> > > drm_gpu_sched_stat
-> > >  	 *
-> > > -	 * Return DRM_GPU_SCHED_STAT_NOMINAL, when all is normal,
-> > > -	 * and the underlying driver has started or completed
-> > > recovery.
-> > > -	 *
-> > > -	 * Return DRM_GPU_SCHED_STAT_ENODEV, if the device is no
-> > > longer
-> > > -	 * available, i.e. has been unplugged.
-> > >  	 */
-> > >  	enum drm_gpu_sched_stat (*timedout_job)(struct
-> > > drm_sched_job *sched_job);
-> > >  
-> > > -- 
-> > > 2.48.1
-> > > 
-> 
+> >> +               pmu_names[0] =3D '\0';
+> >>   free:
+> >>                  zfree(&aliases[j].name);
+> >>                  zfree(&aliases[j].alias);
+> >> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-ev=
+ents.h
+> >> index 445efa1636c1..e91f9f830a2a 100644
+> >> --- a/tools/perf/util/print-events.h
+> >> +++ b/tools/perf/util/print-events.h
+> >> @@ -27,6 +27,7 @@ struct print_callbacks {
+> >>                          const char *threshold,
+> >>                          const char *unit);
+> >>          bool (*skip_duplicate_pmus)(void *print_state);
+> >> +       bool collapse_events;
+> >>   };
+> >>
+> >>   /** Print all events, the default when no options are specified. */
+> >>
+> >> --
+> >> 2.34.1
+> >>
+>
