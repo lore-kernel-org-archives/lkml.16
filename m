@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B72215F49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C9F2505C4
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 19:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741374898; cv=none; b=LrCgkqCh6nvwrw8vcQjyFyRP3RvEWCLr7uWELCS+ywTOdiYpguNxmSY2Zycms7d7vGCyIqsrGynyz/PBui5R1cmqJgt9DL1rxm76b/U683donoqCEJXCPoYN4tP4wKbXPdRoh5V46ep2aT9MTY18/L2AVeDI//cBdkJm9+Sl+Io=
+	t=1741374898; cv=none; b=CXgqo+4Q+9BG4GH6NlfkCNO+/9ZFoQTV6pobseRlvv2o70nYl41o3B8ajep3M7B6u38lP8tDX8IloUjK6fDIc4lVEpOWBGmmA2UwWm+u9beI9o238AfUoY2XrERhuqIm5YgMrcZq9u4ZYDiS941U0kL77yvjN3uGlf2d2wQDGBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741374898; c=relaxed/simple;
-	bh=PiuWIkSjCkUR5cKMYl3R483tUjOwqr3t/DK02cU26Gg=;
+	bh=LvlI96l+YbIl5MsIJDnbtQxU7YniO+B5OBQkHO2lJqA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iseIDeEVFleQ3OiaYmmUHyhQjev1qNOdmf08+alHTkgkhfPOvKrJmO1WZqua/ZQHgJsQ0jwRO052jk2LOEZoUT8xjFkC7NdrheoB1qYOnTU98jrnexJRuu/s7qO12LGYI6p+y4F/mfIBWbCka4W9YRekjM1acqCyNos+JpiSqZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pp5argeY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HOslX2h2Nx5x53aNnPywdUA5rFSjqciAhoEdHPmvpaeq+MzDg3otVjUp126ynSHgr4bpnBtOh7oalqrbVRvpVEUHBq0VCR4+kjK809WhDPzagbBzfIncm4hh6u85mdZd589m1FHPtwYY+AixkMpefvYHQdPB8WWBdaCjKbg6r1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbt/xoxZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pp5argeY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F14C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbt/xoxZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84B6C4CEEA;
 	Fri,  7 Mar 2025 19:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741374897;
-	bh=PiuWIkSjCkUR5cKMYl3R483tUjOwqr3t/DK02cU26Gg=;
+	bh=LvlI96l+YbIl5MsIJDnbtQxU7YniO+B5OBQkHO2lJqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pp5argeY6gJF6uC3gVRWpspPSQaqNvcL8jvFPV/zQD23sAZV+d66FbRbGbTcffRff
-	 r8OgzEF3UP8VvOkOBzHTq14j8VTuqRvVE3zJ3wuluYHHx7VKJ/Ww0XvEABMCezAsRF
-	 CGteiz+/7Ky/e410qWVcoWMug+FZiymTVpCrQJiSADA1BaR5R5TYbvxZEU1psyGJ2m
-	 Gv0I+jl9GgKKoK3Wggru5ubWei6mouZwD6wRUiQnNxAYRiuAGpApsxsJaSksMNmSYD
-	 TmZvGxhxMWtOGWRgtAIB0yjm9SLbqlUSXyJ1VobE5W3WUb5M4Yt9XuvOVYNKRvA1b8
-	 ERxH807d/Qfkg==
+	b=cbt/xoxZQCzmWvuaKadzoWUZ6b+stlN+VllunKJ3ScaANDLd5HZLleyJbaRLUZ9X5
+	 8f2zTWtjEAa5stb15RzSVU+88KHcGy4J4+Zoy+J15xLWnX9TO7/v7G4Nn0oqx6ANzB
+	 g5CAvn14JzHSInSCXz/pusb34wVqTzDC+NTVJxmquCE8w4R5e31roNqjZUFEyPbyC6
+	 +4epYM0QPNnG4FUVJsHUHOCgpkhsrV78t67nDWj7wJ4CpkFKkL1DmdS/t9wsRFsOnK
+	 gCYIOzxQdp/JRcGz7mtJDbiisky1Z3ZiWjghdE1AC1ptwVYXu0QJTjgVwjz0Pvg2q4
+	 n86V6m4fDC4vw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tqd9r-0000000BQmE-2jsu;
+	id 1tqd9r-0000000BQmv-3kKe;
 	Fri, 07 Mar 2025 20:14:55 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -41,10 +41,11 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	"Gavin Shan" <gshan@redhat.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
 	Ani Sinha <anisinha@redhat.com>,
+	Dongjiu Geng <gengdongjiu1@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 01/20] tests/acpi: virt: add an empty HEST file
-Date: Fri,  7 Mar 2025 20:14:30 +0100
-Message-ID: <7b2e37814081c237c5cd3fca55ce08d57049aa9c.1741374594.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v8 10/20] acpi/ghes: add a notifier to notify when error data is ready
+Date: Fri,  7 Mar 2025 20:14:39 +0100
+Message-ID: <af2bb6dd484aca8fd8baf29200cf2a04e365befe.1741374594.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741374594.git.mchehab+huawei@kernel.org>
 References: <cover.1741374594.git.mchehab+huawei@kernel.org>
@@ -57,30 +58,55 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Such file will be used to track HEST table changes.
-
-For now, disallow HEST table check until we update it to the
-current data.
+Some error injection notify methods are async, like GPIO
+notify. Add a notifier to be used when the error record is
+ready to be sent to the guest OS.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Acked-by: Igor Mammedov <imammedo@redhat.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Igor Mammedov <imammedo@redhat.com>
 ---
- tests/data/acpi/aarch64/virt/HEST           | 0
- tests/qtest/bios-tables-test-allowed-diff.h | 1 +
- 2 files changed, 1 insertion(+)
- create mode 100644 tests/data/acpi/aarch64/virt/HEST
+ hw/acpi/ghes.c         | 5 ++++-
+ include/hw/acpi/ghes.h | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
-new file mode 100644
-index 000000000000..e69de29bb2d1
-diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index dfb8523c8bf4..39901c58d647 100644
---- a/tests/qtest/bios-tables-test-allowed-diff.h
-+++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1 +1,2 @@
- /* List of comma-separated changed AML files to ignore */
-+"tests/data/acpi/aarch64/virt/HEST",
+diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
+index f49d0d628fc4..0135ac844bcf 100644
+--- a/hw/acpi/ghes.c
++++ b/hw/acpi/ghes.c
+@@ -510,6 +510,9 @@ static void get_ghes_source_offsets(uint16_t source_id,
+     *read_ack_start_addr = le64_to_cpu(*read_ack_start_addr);
+ }
+ 
++NotifierList acpi_generic_error_notifiers =
++    NOTIFIER_LIST_INITIALIZER(error_device_notifiers);
++
+ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+                              uint16_t source_id, Error **errp)
+ {
+@@ -550,7 +553,7 @@ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+     /* Write the generic error data entry into guest memory */
+     cpu_physical_memory_write(cper_addr, cper, len);
+ 
+-    return;
++    notifier_list_notify(&acpi_generic_error_notifiers, NULL);
+ }
+ 
+ int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
+diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
+index 8c4b08433760..390943e46d99 100644
+--- a/include/hw/acpi/ghes.h
++++ b/include/hw/acpi/ghes.h
+@@ -24,6 +24,9 @@
+ 
+ #include "hw/acpi/bios-linker-loader.h"
+ #include "qapi/error.h"
++#include "qemu/notify.h"
++
++extern NotifierList acpi_generic_error_notifiers;
+ 
+ /*
+  * Values for Hardware Error Notification Type field
 -- 
 2.48.1
 
