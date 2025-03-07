@@ -1,140 +1,175 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B5023CEF9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 16:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6366323BD12;
+	Fri,  7 Mar 2025 16:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741365510; cv=none; b=hndKojVy3laXI6rSBMcKYzQGLL75E8J9POxa1l/5J8DAr4mhjdbH/p6WwnuyrjqxgJ4c9tbI9GMx7wTmqzlHq3R8EOPT4FMkVZiNn6ngsVRfANb/924VNWqcsL728Gw2gjL1kXAC6jzdCBLWdNyPCdCuTncRVSNLwmuAXDzYwYE=
+	t=1741365535; cv=none; b=TyL/hbS0q8jTpIMsvK0MqwfgoCb0qeByIuslZ5EbTeeC+KVbVMhoYmdpS2+ggPrS/PVNcN0GBaskeBTDdAKsyzVuKFJWrhAKocCi6+aZAkX5lYd0gI5FTL2VjzaM34W3C0UdtiiovYW1t0/iw5H9LPUPy1+E22+XPywlWe5lldQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741365510; c=relaxed/simple;
-	bh=pPXL/isy15to+99HM9MMDlj0lOJ6uynPfv29x606Wag=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fw/q3VWLx+XiouCIoWmvJ/LabNkK4RtSZGqxxU36NaO0Hq08GjTRZO2+PTIkj3SQF2Kwb9265BBwNo8UcxIRgEtpL9JDWhqdqL2fl7pcCqshkuRD5uzUQbjwWjMeLNnMq+gInqXtyoHXI8P2nC5HRuUREjXe6PGgje8xsJigMi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=XR34Bs0h; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1741365535; c=relaxed/simple;
+	bh=1VVRkZJh2auY7okOk/XeHGyOC8ItgKpelHUDvZ4TgRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QzydIXwUd7iacfoFzcW6jV8SyKKiguEGMVJaI5AdpKdCmQWcIuN8OJzknovsCloJS0wq7J4hBxWZsm3oFtt9Yx5FsyVWjIUKZhWNo4pvQdrjW/D7mJXJ/iDz4ZHACreQ4IqJG3aFexz3Uq8hM/5PqGbcNuCAZflAznF601aXWtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KUi3BXLI; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="XR34Bs0h"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85afd2b911aso57734139f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 08:38:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1741365508; x=1741970308; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ybA+5EEmFKNdJ63NMrvySBU5slBwFK6pu41iL70gnsg=;
-        b=XR34Bs0h1PKgl1OahOyZZ9+5H1kBG+znbnAWm91pwVH3hOp2VM2XzUn2IK2fLqDDLu
-         YIHqusyI/TjUSTuZNc7P9eIjynvFIlCViqlq6ZDO9QVxlIEkzZTLYXTvrJ8we9EdUrgj
-         jfxPNYgfnHmub0MjrnzQjznxQYXaZFgM4j/G/tbi4rhN1lAM//X3NGk9osZlPn0d6UyM
-         jWQNFEYMtZ0zdDSVRhIL/GTUMeaimEOxbhgy1lbQNgmfIps3ejyXImRSd4hqPAo3D4Mw
-         ZeJrb1Y8RdfsBkrzFjt2Ss6FBOjhhF25iuLDKLgwfd9aAmgtf6UDS2okN71qb/f5WQ4K
-         CFMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741365508; x=1741970308;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ybA+5EEmFKNdJ63NMrvySBU5slBwFK6pu41iL70gnsg=;
-        b=MLtRAzipemGAgg/gpuGU34/3+wG3qEk/nI3xlmrWgNwIBl2qSEtcLhgGv0tEwNf6Ld
-         YahUAXVWpM0XIvXhoDL/tHXk8UgLNYMPLIs5PYV5jemOjBOZasm62Jw0dS49LM8hRz9A
-         uEtjUqRKYc9ksz1yXs/Fqgwa7BG/+xnYhSt6DseoECyjdOHRQt6dpLnixRWaRl7g1aL8
-         wahTzafoTrMpB5kgzENSUhe/KE9j8Zjuug3DBv/lBRGc9OY/KJobAhw5InVMh2HZGWRO
-         JWxA3LgWnOfoIMDP8az8cSYiaJb2yLXKB0HJ2Xa1OMqa8U9WXaV7P6DsUXkXuHs8Z+oh
-         +KZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXk6HEgYZGpEf251Yx2GkWd4kEuE83qmHPGA+j8olRmVNiFVNyn+USAoVHWeL6pHX2oDJaEcX+N18V1Luc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWzBjTIIH5B1o6ggI6nBNunBV9V4GGSqKCf6wBRKxkY56tVa8j
-	ypdHL91wMsHjQ8Wu4rUCeu38pdDPw26OsFQYP9IKfmlf/ErIcDSBnN58iPvER9E=
-X-Gm-Gg: ASbGncuK9lgJltyjBscVsOLVplbvau4q+Fq6RTD9M6QyROYOUVU8w9L97Qv8ESPJO2z
-	g87B0VQtEjGElSB4CSoLCY8Y5nqpf4dNgD2M+2RMkebsoDfGfC40I0fGI0lf3r0HB5/r/PBPInR
-	4IDmSpFkBtMyu7jC+ACHZWQxkHkS8dvBwu0LQW0ui1QTGbBY2Q/+8Fn7/y8bxBrVEFsnCdiBOYg
-	/mpPqLyOPK9HGKacPcQHB+crVjratnTK+5aKVbed901pSq1fSkKwooQjgif1RW/TSO5ozW4LTCb
-	36rPxzCTaUHgWf91j4jVnwLmcsW/GLF8i7FEy4rw
-X-Google-Smtp-Source: AGHT+IFXnu+ZVuExRLXAMFL77qJU20P86s6MIkDCRS8MHKyVaXM1QMQX4366yYXTzscbD6IJMPtNRA==
-X-Received: by 2002:a05:6602:4c8e:b0:85a:f8e6:d6c3 with SMTP id ca18e2360f4ac-85b1d125756mr460052839f.9.1741365507842;
-        Fri, 07 Mar 2025 08:38:27 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f209e15545sm1022343173.41.2025.03.07.08.38.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 08:38:27 -0800 (PST)
-Message-ID: <ccfd73e6-7681-4c76-bdc6-7dd7e053e078@kernel.dk>
-Date: Fri, 7 Mar 2025 09:38:25 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KUi3BXLI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741365533; x=1772901533;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1VVRkZJh2auY7okOk/XeHGyOC8ItgKpelHUDvZ4TgRM=;
+  b=KUi3BXLI76cIgpCJyo5T9a2nfxuqN46oggh4qfw2Sfxoe38A2S2pJ1h8
+   1sX2QgJhGXZ++EzK1YTT+Un4ID0oRrWIOe1w1goqxxXlkPA5PgEx2LCmk
+   xdx+xFalWcl8Tdw/9rcAjUdx4u3usWMsUyQwZMwT4qT3g99JhGH6y75u6
+   dA7QuWYIIq2CLFwUhQAEdvZZyxjLhWUpMd75jwR2o2mrIv79N7W3nwdL+
+   Dojhn+GiUayEySupVngXv1srecvQypxSdBuoNZDJm3XtidIPEVozQ4EoW
+   +nSvPKPSQRtPrwbPdi7+Mw3dC2E0Hq+ecLelZiRmc7+d8qSYBjovTYz9t
+   w==;
+X-CSE-ConnectionGUID: cwxABDVaTBeFvLr+dG2I4w==
+X-CSE-MsgGUID: JFGcHi8hSR6h2suQ55RmNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46344342"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="46344342"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 08:38:53 -0800
+X-CSE-ConnectionGUID: flIP6gWkTsibwbluGtV6hw==
+X-CSE-MsgGUID: Ese1Mqt/RpuMPpxzQIj1ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="124397938"
+Received: from spr.sh.intel.com ([10.239.53.19])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 08:38:49 -0800
+From: Chao Gao <chao.gao@intel.com>
+To: chao.gao@intel.com,
+	tglx@linutronix.de,
+	dave.hansen@intel.com,
+	x86@kernel.org,
+	seanjc@google.com,
+	pbonzini@redhat.com,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: peterz@infradead.org,
+	rick.p.edgecombe@intel.com,
+	weijiang.yang@intel.com,
+	john.allen@amd.com,
+	bp@alien8.de
+Subject: [PATCH v3 00/10] Introduce CET supervisor state support
+Date: Sat,  8 Mar 2025 00:41:13 +0800
+Message-ID: <20250307164123.1613414-1-chao.gao@intel.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs: support filename refcount without atomics
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- io-uring@vger.kernel.org, audit@vger.kernel.org
-References: <20250307161155.760949-1-mjguzik@gmail.com>
- <fa3bbf2c-8079-4bdf-b106-a0641069080b@kernel.dk>
- <CAGudoHGina_OHsbP_oz5UAtXKoKQqhv-tB6Ok63rRQHThPuy+Q@mail.gmail.com>
- <5a0ddd31-8df1-40d7-8104-30aa89a35286@kernel.dk>
- <CAGudoHFE8D4itzs=DC14cJpRo-SNqJTz7J4g5B0VsjrNuE0_pA@mail.gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CAGudoHFE8D4itzs=DC14cJpRo-SNqJTz7J4g5B0VsjrNuE0_pA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/7/25 9:35 AM, Mateusz Guzik wrote:
-> On Fri, Mar 7, 2025 at 5:32?PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 3/7/25 9:25 AM, Mateusz Guzik wrote:
->>> On Fri, Mar 7, 2025 at 5:18?PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>
->>>>> +static inline void makeatomicname(struct filename *name)
->>>>> +{
->>>>> +     VFS_BUG_ON(IS_ERR_OR_NULL(name));
->>>>> +     /*
->>>>> +      * The name can legitimately already be atomic if it was cached by audit.
->>>>> +      * If switching the refcount to atomic, we need not to know we are the
->>>>> +      * only non-atomic user.
->>>>> +      */
->>>>> +     VFS_BUG_ON(name->owner != current && !name->is_atomic);
->>>>> +     /*
->>>>> +      * Don't bother branching, this is a store to an already dirtied cacheline.
->>>>> +      */
->>>>> +     name->is_atomic = true;
->>>>> +}
->>>>
->>>> Should this not depend on audit being enabled? io_uring without audit is
->>>> fine.
->>>>
->>>
->>> I thought about it, but then I got worried about transitions from
->>> disabled to enabled -- will they suddenly start looking here? Should
->>> this test for audit_enabled, audit_dummy_context() or something else?
->>> I did not want to bother analyzing this.
->>
->> Let me take a look at it, the markings for when to switch atomic are not
->> accurate - it only really needs to happen for offload situations only,
->> and if audit is enabled and tracking. So I think we can great improve
->> upon this patch.
->>
-> 
-> I aimed for this to be a NOP for io_uring, so to speak, specifically
-> because I could not be arsed to deal with audit.
+==Changelog==
+v2->v3:
+ - reorder patches to add fpu_guest_cfg first and then introduce dynamic kernel
+   feature concept (Dave)
+ - Revise changelog for all patches except the first and the last one (Dave)
+ - Split up patches that do multiple things into separate patches.
+ - collect tags for patch 1
 
-Hah I hear ya... But right now it seems to mark it atomic for any of the
-fs based ops, which is not really necessary.
+v1->v2:
+ - rebase onto the latest kvm-x86/next
+ - Add performance data to the cover-letter
+ - v1: https://lore.kernel.org/kvm/73802bff-833c-4233-9a5b-88af0d062c82@intel.com/
 
->>> I'll note though this would be an optimization on top of the current
->>> code, so I don't think it *blocks* the patch.
->>
->> Let's not go with something half-done if we can get it right the first
->> time.
->>
-> 
-> Since you volunteered to sort this out, I'll be happy to wait.
+==Background==
 
-I'll take a look start next week, don't think it should be too bad. You
-already did 90% of the work.
+This series spins off from CET KVM virtualization enabling series [1].
+The purpose is to get these preparation work resolved ahead of KVM part
+landing. There was a discussion about introducing CET supervisor state
+support [2] [3].
+
+CET supervisor state, i.e., IA32_PL{0,1,2}_SSP, are xsave-managed MSRs,
+it can be enabled via IA32_XSS[bit 12]. KVM relies on host side CET
+supervisor state support to fully enable guest CET MSR contents storage.
+The benefits are: 1) No need to manually save/restore the 3 MSRs when
+vCPU fpu context is sched in/out. 2) Omit manually swapping the three
+MSRs at VM-Exit/VM-Entry for guest/host. 3) Make guest CET user/supervisor
+states managed in a consistent manner within host kernel FPU framework.
+
+==Solution==
+
+This series tries to:
+1) Fix existing issue regarding enabling guest supervisor states support.
+2) Add CET supervisor state support in core kernel.
+3) Introduce new FPU config for guest fpstate setup.
+
+With the preparation work landed, for guest fpstate, we have xstate_bv[12]
+== xcomp_bv[12] == 1 and CET supervisor state is saved/reloaded when
+xsaves/xrstors executes on guest fpstate.
+For non-guest/normal fpstate, we have xstate_bv[12] == xcomp_bv[12] == 0,
+then HW can optimize xsaves/xrstors operations.
+
+==Performance==
+
+We measured context-switching performance with the benchmark [4] in following
+three cases.
+
+case 1: the baseline. i.e., this series isn't applied
+case 2: baseline + this series. CET-S space is allocated for guest fpu only.
+case 3: baseline + allocate CET-S space for all tasks. Hardware init
+        optimization avoids writing out CET-S space on each XSAVES.
+
+the data are as follows
+
+case |IA32_XSS[12] | Space | RFBM[12] | Drop%	
+-----+-------------+-------+----------+------
+  1  |	   0	   | None  |	0     |  0.0%
+  2  |	   1	   | None  |	0     |  0.2%
+  3  |	   1	   | 24B?  |	1     |  0.2%
+
+Case 2 and 3 have no difference in performnace. But case 2 is preferred because
+it can save 24B of CET-S space for all non-vCPU threads with just a one-line
+change:
+
++	fpu_kernel_cfg.default_features &= ~XFEATURE_MASK_KERNEL_DYNAMIC;
+
+fpu_guest_cfg has its own merits. Regardless of the approach we take, using
+different FPU configuration settings for the guest and the kernel improves
+readability, decouples them from each other, and arguably enhances
+extensibility.
+
+[1]: https://lore.kernel.org/all/20240219074733.122080-1-weijiang.yang@intel.com/
+[2]: https://lore.kernel.org/all/ZM1jV3UPL0AMpVDI@google.com/
+[3]: https://lore.kernel.org/all/2597a87b-1248-b8ce-ce60-94074bc67ea4@intel.com/
+[4]: https://github.com/antonblanchard/will-it-scale/blob/master/tests/context_switch1.c
+
+
+
+Chao Gao (2):
+  x86/fpu/xstate: Drop @perm from guest pseudo FPU container
+  x86/fpu/xstate: Correct xfeatures cache in guest pseudo fpu container
+
+Sean Christopherson (1):
+  x86/fpu/xstate: Always preserve non-user xfeatures/flags in
+    __state_perm
+
+Yang Weijiang (7):
+  x86/fpu/xstate: Correct guest fpstate size calculation
+  x86/fpu/xstate: Introduce guest FPU configuration
+  x86/fpu/xstate: Initialize guest perm with fpu_guest_cfg
+  x86/fpu/xstate: Initialize guest fpstate with fpu_guest_config
+  x86/fpu/xstate: Add CET supervisor xfeature support
+  x86/fpu/xstate: Introduce XFEATURE_MASK_KERNEL_DYNAMIC xfeature set
+  x86/fpu/xstate: Warn if CET supervisor state is detected in normal
+    fpstate
+
+ arch/x86/include/asm/fpu/types.h  | 31 +++++++++++++++------------
+ arch/x86/include/asm/fpu/xstate.h | 11 ++++++----
+ arch/x86/kernel/fpu/core.c        | 34 +++++++++++++++++-------------
+ arch/x86/kernel/fpu/xstate.c      | 35 ++++++++++++++++++++++++-------
+ arch/x86/kernel/fpu/xstate.h      |  2 ++
+ 5 files changed, 74 insertions(+), 39 deletions(-)
 
 -- 
-Jens Axboe
+2.46.1
+
