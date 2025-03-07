@@ -1,312 +1,217 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013035.outbound.protection.outlook.com [52.101.67.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4DA21D3E0;
-	Fri,  7 Mar 2025 15:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361574; cv=fail; b=Wdw7YQv1PPWS2s0UqjiFT9Uvqe+sEStEZr/+ks3h30iYqFEtKAtIjX5pQ0UAWxIorrDvND0c1SAX42Dz3bCikY1BtUoeOF6pTGiCel3f6A9cB6wlm7rB5a+D1ezB99W3NlNraD5v5R6DZvDpFYVzzrbTOuAZMUe/l0H0EMEuz0E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361574; c=relaxed/simple;
-	bh=hiw1nL6VlVUnguCuav0wCBHDyHJBCCFwKWfe2K7hu5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dAJsjOaURqeKBVIWqW5gUer0a2UwkzAvYQxYIDkt+QWGTB3O3+KY5DlpXwdlswTEZfHylhnY5lUHzzZhZLQyx2FuOi6CR0OZtsiEnf8kuNNEgBnb/BbGwTS+UBo9pLvoS/1ppgT/38KSumWR3XFtVNmu1tdFTOlvD8BoFv6lzwo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DYx0ceUO; arc=fail smtp.client-ip=52.101.67.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1035521ABD2;
+	Fri,  7 Mar 2025 15:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741361593; cv=none; b=aeGh1FtpIG8aVRMyZ82Raef2UF3o/0Uj9LlsPcLzh1YbqWsfkOecKjFs0rwf0tFUsjoVDrDqgDWjbw1pVVJnkXub8ZacwaR1m/Mw+jdcGbljwrto4hwlHJGyIk3N1YKfyAJa/mSfbGzRAvS/qOdiVRyO7bi8nP0bo1Or2hW06rE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741361593; c=relaxed/simple;
+	bh=T8pm9fzwyKtv3TmcyIBDRu8FWKQO9PkFtQpCXZzkH5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sNmXMj2eqF+8JrjplndbcMn7uKoKCU2lU8pN5Ql96FdM/Kb3M5JJLyzqwojixPT3jqIJq9xfiW6FuA5VK5AeLQvTp3MMgXBJYNpyELLLs8phaZ/U4+FPvAghW/82zm60+ZbaE00H3K/A8Ed1Cjk3OTOMCe/nASsN/29cUdXRk08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUObU9qs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DYx0ceUO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jCpLHIBcxO1NcTqznDJyrkk5fVCPbxrWgX+huZ8ajnLDRzRXOZiHYEO9fQy+Wt5l++WSPZjqC/PA3AEIqATit6lGx9h+HJBaygtAUjdaPI+MgLDYVQBjYEYX0zMqCfhrDsBxnvxb+w5eXRNWRI/u+f+8j7LE/eNzSVVgVEDzkDwl4x1Yv3524Wc4H7Tyfmhq0g5QKwC+OgYvFQuL+0go70y4ef3DAVKH60dj8Ad6wy3IW/dpg1tbvwgY6FndRCPRXuxxIfIx3ViT2TSpLAFZw86yKiMKUbZmm/ROEo7SeO0J+gv2a1G3+XtjFEUi30Bk35onMT1Dq0SUtZJAqg+3cA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jOQlXyzhtHsrVIFymgPKClWNdiOOU+3Pu+dBbv/8Oyg=;
- b=ug3bNBvtmc0CKv3n2aI9XTXMmestp+aPzL700wllJh9jw/BxLCsyjoJUlpqKHHb/eLUx8lRSe281idxeGA04X2c+ljjJmsujf3pNStHfwXBBekYhwKms+ujyq/mysU8Z2qSrcdjdTzlYWhW4PGFNrzXtKx6P4PU4p4pCRT2x/6yx49B5CYFxHjyfsCx8R4ByCx/KO6OBf5V7KO1niGNloV6MunY2j8/pejg2+7lEr7DVy8J5+09F5QhDJBnYFlzOSnIW3IxpU0YpzHlq2aG2Npjzts/sYgNcOJdd692V3QD30jXRNHzsp5X4jmna5dVO6v09z0n2NRG/HSlZRhF+4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jOQlXyzhtHsrVIFymgPKClWNdiOOU+3Pu+dBbv/8Oyg=;
- b=DYx0ceUOSI0/QBdl7aHQoeRZebNEOuyaF7ZlpBYyIRMOxqQp1LBkrzKPGZK3yUfn3LtucEUrDkPXVEe5vf+dnfcxLjg2IB7m1GPdrY0asZk2UbEIBn9d5h3UiPewjbZ/3QJXH0gdWafw2QkLhw3sfiNW/nCybS0K7m3+NbqnYASDDr7okoy6EqNsNuQRalvR9htjefT/qojdZG6chFtHkwIF4EOx8dkZbllr1Dt5XpNQgzedFBg70emYpGFqG/zfKCItAX2qKYnATXiQkYitGfJhZcQs3ZjCGMs0Pmi+bx3/njWgypE1uk5bshZOBBNgrHJuSZxNMzUqvSuGGNoqjA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM7PR04MB7128.eurprd04.prod.outlook.com (2603:10a6:20b:11c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Fri, 7 Mar
- 2025 15:32:48 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
- 15:32:48 +0000
-Date: Fri, 7 Mar 2025 10:32:39 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v9 3/7] PCI: Add parent_bus_offset to resource_entry
-Message-ID: <Z8sRl1c//SZXKhB+@lizhi-Precision-Tower-5810>
-References: <Z8YlySM6Xtr0beo1@lizhi-Precision-Tower-5810>
- <20250304175010.GA207565@bhelgaas>
- <Z8d6qpNaL4eJRQI1@lizhi-Precision-Tower-5810>
- <Z8d96Qbggv117LlO@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8d96Qbggv117LlO@lizhi-Precision-Tower-5810>
-X-ClientProxiedBy: BYAPR11CA0077.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::18) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUObU9qs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD04C4CED1;
+	Fri,  7 Mar 2025 15:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741361592;
+	bh=T8pm9fzwyKtv3TmcyIBDRu8FWKQO9PkFtQpCXZzkH5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZUObU9qsjd1SooeVdUfrrJl9fVYTuXf+V439lXM1M7u0b5lKvuIMBf/hNgn3h1cZ4
+	 wtohVxDmaoJOxnGSx3co3YI7J3bR9OmrleAurHNVvvFApz7SPumbRu06wbccHRPw9C
+	 kWAoR5ZN3YcxKvCx416ezcBICJGp8I4SCzzt0WfedBtFKqX5fkqF4wRGVRNabQm0qg
+	 DT5qoI699jnzTOO0ne+jj0Z/ZGrQY2S1jojvv40kjy13z0jY1zYwvdBIn4CD5mLC60
+	 uesnhPB79pTv8GIMKAiCvAfh5HFBcnskvV9dxt6EUO/v5uje+7FJpHp1AxJWR16Koa
+	 g/znbMB1M8rng==
+Date: Fri, 7 Mar 2025 15:33:05 +0000
+From: Conor Dooley <conor@kernel.org>
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: "geert+renesas@glider.be" <geert+renesas@glider.be>,
+	"magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+	"mturquette@baylibre.com" <mturquette@baylibre.com>,
+	"sboyd@kernel.org" <sboyd@kernel.org>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+	"rui.zhang@intel.com" <rui.zhang@intel.com>,
+	"lukasz.luba@arm.com" <lukasz.luba@arm.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"john.madieu@gmail.com" <john.madieu@gmail.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v2 3/7] dt-bindings: thermal: r9a09g047-tsu: Document the
+ TSU unit
+Message-ID: <20250307-everyone-ragweed-e05a10a9646b@spud>
+References: <20250227122453.30480-1-john.madieu.xa@bp.renesas.com>
+ <20250227122453.30480-4-john.madieu.xa@bp.renesas.com>
+ <20250228-shampoo-uprising-44ae0d3bd68b@spud>
+ <OSBPR01MB2775DFC184F78E9FB50F28FFFFD52@OSBPR01MB2775.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB7128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93e8fba4-6496-441a-6f0d-08dd5d8d50df
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?x6fvXlindH/ilyWA9QjBf/TdIqp9gy94vUhgv0rhCGp9myZlzr/Ktu6/383d?=
- =?us-ascii?Q?6AU6ZpY+YLZZe6dCvG4GRk7qvhgfsyELgg97u8aifxbwbUSEk12UNT27XRxj?=
- =?us-ascii?Q?FnwevayIXABYGf3BKPvkodHYTh8ABinMH3dpqa+4L+u/IOv1Xz4QcZADERaT?=
- =?us-ascii?Q?zx4aLO29ZqIiz068nCAn20eDyniwlgyrzjmV+y1xX4ZxTMypmVjeNWmXHP3t?=
- =?us-ascii?Q?LCUklX5vIK7YiwSOU6dj3IYOT7MbqJWI6ugy6aQYEck3DFEkF0Gx1DL+gdmq?=
- =?us-ascii?Q?G/w0+L3fpQNZ+9iM4AL9Exf0oPYy5wMwNFB3NbEQnNDAyeJ14sGdSV0BBRHp?=
- =?us-ascii?Q?KwWy+d0EvxIGrlE+qsW/WkuFqdPpBxofmxVa9EtEDucpWZ1YKmeVyRUEXwHc?=
- =?us-ascii?Q?5zpamQBthloUUh2NYVhskYmmR4WgaCo+RCRUWWkwSSeCBWs53pMxBfsrGC2R?=
- =?us-ascii?Q?fv9D0Il7hlK2bdhjTNaYwXYmOR+yw3AvKWvigIsfWBUSmhlTTrTPuwiQRQyI?=
- =?us-ascii?Q?0kh/hZ8X+a8m0SqWoAeBexKpr85adWeHdxLC/bM+r6SyElKX/b2izmq7jTXz?=
- =?us-ascii?Q?sJW9VqXw2nIU4m9Lpkuv4V3j/ZEpNntVo8RtQdVDHZETxgTugbKZ98B+zZpV?=
- =?us-ascii?Q?FjcS/SbryTkWeWwyKTVwTkaGlIAc/qmrbhnH34fX+XyNRGobtiOvVrFr4QeU?=
- =?us-ascii?Q?AtMNLoci0wqRuJ9FhAwHex7IedIYxkzXVvPRBGsBIVKwlMyKkArjxSyvI7Vd?=
- =?us-ascii?Q?nj7XKN8BPTGKr+zuY160FnNRA0flBGDffZ3XPsndaZe63R1rrEOeQ+Ss/yuZ?=
- =?us-ascii?Q?jpmYaElQ3e69ku0hmq7wz9Rf8YzE3XHK+TZZVOLYs+UKaHZLl1PcOf6fV07C?=
- =?us-ascii?Q?KRumKT9iikTY5dzxe35ThGLvv6ILGUfiwsoCYe7NF0m9U6EaNcqrt6qLVhxi?=
- =?us-ascii?Q?cpF8K1OB6nCX1dvJ6qDLv2iGQpO1xtfjJAfT1lseOVQt0UmlZrR/0o3RrsND?=
- =?us-ascii?Q?G/NuGHnikwtVxnJoKzu5UPbg5K98wvoTLWa+xlKwhKqZeNG1XaBHGGMCP609?=
- =?us-ascii?Q?KDXrzqIS2/XoFk/RkpqXGrH2ooVLNQXduhitDUnbre4s4aYW4vUZwcTanLo8?=
- =?us-ascii?Q?YD5CZrNs2d4CzjTwrcraJ4o1JafiNs6r7wGSXEm9lkOcBojMP++HyjdTRSUH?=
- =?us-ascii?Q?M/OVfVxOFwobwdmkIN3DjEBEEpBa0x1h31JsP2KV6oBInfA2PT29V2ToeMpk?=
- =?us-ascii?Q?4FagA9+IG+nbFkKxKKQDS9ZyKrOHJer1H4nMhJrpslCjXRN6lM/1aNq864D8?=
- =?us-ascii?Q?cH5PZEHzZTma1Lt7/p+2WXMd8oqTPTN7YTFs6xxkWHiGqe3xXJIC95ZWoorA?=
- =?us-ascii?Q?ug7BIQIn6Dge49nLavKugkda1IYx2xoMAipjY+ISYRMtdciuF8VofFhS5knB?=
- =?us-ascii?Q?17pAG1LYN9WESB+GpDaMZDL0eDe5QpVh?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?M+ieyhrylqb91jEISVtZtRpkNCUpWfXNjWo5ei3KndHh9vQ9mOFhSC7fpHsg?=
- =?us-ascii?Q?/W9J3VyiXtgUGBjuO1476jk7CRUH/NdfQO8zsQBBo5nSSk1B1z5nIRxdI4kl?=
- =?us-ascii?Q?K1zLDHIxVF4mQ/5Mpcil1o1tWlw4i8zy2tve3Fa5C6BTIPDKryscDobqhnE/?=
- =?us-ascii?Q?U0kTSPiwBPLadwPxzlSlokWXiZY43D5IMUbB5MzrSvj65RqBsmSxlJxr9aGP?=
- =?us-ascii?Q?v6cw6gWLm7OnMRX4cOSnbpTdAVM6I4tgyijvmpOoNeysbZwA/zTLTJm0mFq+?=
- =?us-ascii?Q?cPtNLBUaiZvHaSCTtQRk6HPw/pckFUwDEZgSyiKKrJt+8tMloNNNMZEPBqeu?=
- =?us-ascii?Q?pL8xAKynxyvKbBO00+PbypNbh5nZTrLd7A932BbUGTWujE6jNPhmWHp6sIqC?=
- =?us-ascii?Q?nZ5MzmIB7zH4B9mBlts5ZqQVAchtSg1bxneS7vqOY2XbFO7eGMNbGkGTYVYt?=
- =?us-ascii?Q?jUN7O5bBT0bHQ/SRXErjB63H17AubT+dx/EE7+DPGJSRbqma9lpgvELpWrcV?=
- =?us-ascii?Q?A6QUEJVMOwcGhuIBA8f2V6skQRkAtqt2oUmsfSnqOXxVZGR59kGfmZgyhLIZ?=
- =?us-ascii?Q?MJ8mmlKcNSSYtISSeLzl7WGjr7vYJaAJjcrezaEWQ45EshDHlvnnk6vIbLAw?=
- =?us-ascii?Q?UlCtVnUYmy+IlNgkr0NUQK8Kja4LJaJQ7I5zfPpm5CZwvmLC7++12805qeon?=
- =?us-ascii?Q?DOi7TIPMqmfiztJ9haQmAh1FvtE6NsL1V2gH6tD60zI1JVs1wgtPGnHTrPfU?=
- =?us-ascii?Q?LMEmQkkbq9vajINLNRCYmRpcf9jd9nXR/65n03mYdEJ40rgzZBkxmIyM96fn?=
- =?us-ascii?Q?KTtkvZgYFRuzY7/NSEDMufRkfo2NJ1iPH5sin8k+iiO43UxgjPWUBTcfc0qA?=
- =?us-ascii?Q?N4QYIpVXn/q6OojsphBgUFHoJ85UE1drecmQFu0GFmcNcnOQJ+Vf+oO2zdg8?=
- =?us-ascii?Q?UkM8YPshXrc/9KGvHi0ez3TUVFDfjyhzYxKD+he1jQenNJb1R9Tanb2Z2atW?=
- =?us-ascii?Q?0+sUmJDGQtu8lrGkQHzt7gXD6n1p6zDTAoHD6eqNUeLBA19jD+iz634GEIbr?=
- =?us-ascii?Q?qaRFh/YEkK27OlfwmAll6SB2KsD0tdxMLdYtVpy6BHCYRPgmn222NNaftFUR?=
- =?us-ascii?Q?TwgaJeRkisQtLUqrF9wP2Ov9sk2kGDnOFOFyE0hcyUFLXwS1Sh0dL8jagDXb?=
- =?us-ascii?Q?9yCs9+oO8aE9WztBBJI25uLKGlCRnOquODNBZtbasL/OO0H7GtTPHJQg3F9e?=
- =?us-ascii?Q?Te4GB6CMlw7yc827MNv5FrgqFeS3l0V1AQYoW+gKVkis4WTm7T4/QJ23TzMf?=
- =?us-ascii?Q?6zL+Fm9uqC28QEJ1/KmWTooaRV4uQckavQRUQRMPKDWyyPEOyji/wZpptxRG?=
- =?us-ascii?Q?Z8lWW+7FC+ozCE7aSy93hfDaWbBwWnpy6ALO7+21vy8EwPiwz6X9NxdqUy9V?=
- =?us-ascii?Q?fw81BnVQjyWGf9ie+dRQSi5WnOxFrAJulsY4W3i29SFp9F5zfUQi0FM39LcX?=
- =?us-ascii?Q?tP2nyJWqH5TFRhQ6fcguP/2evD6VzR/Y4mwQHFARazDkCvDfJNze6qm5pDw9?=
- =?us-ascii?Q?46sXxdQdfVAFVx0iCeD9C2Ni203iK42euPmWe8Zy?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93e8fba4-6496-441a-6f0d-08dd5d8d50df
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 15:32:48.6840
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fPwP82bg1tBT3WyLIV7QTSqxeFYT1Srw6FLCYVicQ9ebKYc63xckpqYlUJtc7+pz2i/6/KlW04avTL9nZ9FA+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7128
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aWY9G/uo86esg184"
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB2775DFC184F78E9FB50F28FFFFD52@OSBPR01MB2775.jpnprd01.prod.outlook.com>
 
-On Tue, Mar 04, 2025 at 05:25:45PM -0500, Frank Li wrote:
-> On Tue, Mar 04, 2025 at 05:11:54PM -0500, Frank Li wrote:
-> > On Tue, Mar 04, 2025 at 11:50:10AM -0600, Bjorn Helgaas wrote:
-> > > On Mon, Mar 03, 2025 at 04:57:29PM -0500, Frank Li wrote:
-> > > > On Wed, Feb 26, 2025 at 06:23:26PM -0600, Bjorn Helgaas wrote:
-> > > > > On Tue, Jan 28, 2025 at 05:07:36PM -0500, Frank Li wrote:
-> > > > > > Introduce `parent_bus_offset` in `resource_entry` and a new API,
-> > > > > > `pci_add_resource_parent_bus_offset()`, to provide necessary information
-> > > > > > for PCI controllers with address translation units.
-> > > > > >
-> > > > > > Typical PCI data flow involves:
-> > > > > >   CPU (CPU address) -> Bus Fabric (Intermediate address) ->
-> > > > > >   PCI Controller (PCI bus address) -> PCI Bus.
-> > > > > >
-> > > > > > While most bus fabrics preserve address consistency, some modify addresses
-> > > > > > to intermediate values. The `parent_bus_offset` enables PCI controllers to
-> > > > > > translate these intermediate addresses correctly to PCI bus addresses.
-> > > > > >
-> > > > > > Pave the road to remove hardcoded cpu_addr_fixup() and similar patterns in
-> > > > > > PCI controller drivers.
-> > > > > > ...
-> > > > >
-> > > > > > +++ b/drivers/pci/of.c
-> > > > > > @@ -402,7 +402,17 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
-> > > > > >  			res->flags &= ~IORESOURCE_MEM_64;
-> > > > > >  		}
-> > > > > >
-> > > > > > -		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
-> > > > > > +		/*
-> > > > > > +		 * IORESOURCE_IO res->start is io space start address.
-> > > > > > +		 * IORESOURCE_MEM res->start is cpu start address, which is the
-> > > > > > +		 * same as range.cpu_addr.
-> > > > > > +		 *
-> > > > > > +		 * Use (range.cpu_addr - range.parent_bus_addr) to align both
-> > > > > > +		 * IO and MEM's parent_bus_offset always offset to cpu address.
-> > > > > > +		 */
-> > > > > > +
-> > > > > > +		pci_add_resource_parent_bus_offset(resources, res, res->start - range.pci_addr,
-> > > > > > +						   range.cpu_addr - range.parent_bus_addr);
-> > > > >
-> > > > > I don't know exactly where it needs to go, but I think we can call
-> > > > > .cpu_addr_fixup() once at startup on the base of the region.  This
-> > > > > will tell us the offset that applies to the entire region, i.e.,
-> > > > > parent_bus_offset.
-> > > > >
-> > > > > Then we can remove all the .cpu_addr_fixup() calls in
-> > > > > cdns_pcie_host_init_address_translation(),
-> > > > > cdns_pcie_set_outbound_region(), and dw_pcie_prog_outbound_atu().
-> > > > >
-> > > > > Until we can get rid of all the .cpu_addr_fixup() implementations,
-> > > > > We'll still have that single call at startup (I guess once for cadence
-> > > > > and another for designware), but it should simplify the current
-> > > > > callers quite a bit.
-> > > >
-> > > > I don't think it can simple code. cdns_pcie_set_outbound_region() and
-> > > > dw_pcie_prog_outbound_atu() are called by EP functions, which have not use
-> > > > "resource" to manage outbound windows.
-> > >
-> > > Let's ignore cadence for now.  I don't think we need to solve that
-> > > until later.
-> > >
-> > > dw_pcie_prog_outbound_atu() is called by:
-> > >
-> > >   - dw_pcie_other_conf_map_bus(): atu.parent_bus_addr = pp->cfg0_base
-> > >
-> > >     I think dw_pcie_host_init() can set pp->cfg0_base with the correct
-> > >     intermediate address, either via the the of_property_read_reg() or
-> > >     .cpu_addr_fixup().
->
-> And chicken and egg problem here for artpec6_pcie_cpu_addr_fixup(), which
-> need cfg0_base. But try to use .cpu_addr_fixup() to get cfg0_base's
-> intermediate address.
 
-Bjorn:
-	Do you have chance to check my reply? some dwc platform driver
-.cpu_addr_fixup() implement have dependence with old initilize sequency.
+--aWY9G/uo86esg184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Can I use original method? If change each driver's .cpu_addr_fixup()
-implement, it will involve more risk, even more than directly clean it as
-my RFC patch.
+On Fri, Mar 07, 2025 at 03:14:05PM +0000, John Madieu wrote:
+> Hi Conor,
+>=20
+> Thanks for your review!
+>=20
+> > -----Original Message-----
+> > From: Conor Dooley <conor@kernel.org>
+> > Sent: Friday, February 28, 2025 8:03 PM
+> > To: John Madieu <john.madieu.xa@bp.renesas.com>
+> > Subject: Re: [PATCH v2 3/7] dt-bindings: thermal: r9a09g047-tsu: Docume=
+nt
+> > the TSU unit
+> >=20
+> > On Thu, Feb 27, 2025 at 01:24:39PM +0100, John Madieu wrote:
+> > > The Renesas RZ/G3E SoC includes a Thermal Sensor Unit (TSU) block
+> > > designed to measure the junction temperature. The device provides
+> > > real-time temperature measurements for thermal management, utilizing a
+> > > single dedicated channel (channel 1) for temperature sensing.
+> > >
+> > > Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> > > ---
+> > > v1 -> v2:
+> > >  * Fix reg property specifier to get rid of yamlint warnings
+> > >  * Fix IRQ name to reflect TSU expectations
+> > >
+> > >  .../thermal/renesas,r9a09g047-tsu.yaml        | 123 ++++++++++++++++=
+++
+> > >  1 file changed, 123 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+> > > b/Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+> > > new file mode 100644
+> > > index 000000000000..e786561ddbe3
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.
+> > > +++ yaml
+> > > @@ -0,0 +1,123 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id:
+> > > +http://devicetree.org/schemas/thermal/renesas,r9a09g047-tsu.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Renesas RZ/G3E Temperature Sensor Unit (TSU)
+> > > +
+> > > +maintainers:
+> > > +  - John Madieu <john.madieu.xa@bp.renesas.com>
+> > > +
+> > > +description:
+> > > +  The Temperature Sensor Unit (TSU) is an integrated thermal sensor
+> > > +that
+> > > +  monitors the chip temperature on the Renesas RZ/G3E SoC. The TSU
+> > > +provides
+> > > +  real-time temperature measurements for thermal management.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: renesas,r9a09g047-tsu
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  resets:
+> > > +    maxItems: 1
+> > > +
+> > > +  power-domains:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    description: |
+> > > +      Interrupt specifiers for the TSU:
+> > > +      - S12TSUADI1: Conversion complete interrupt signal (pulse)
+> > > +      - S12TSUADCMPI1: Comparison result interrupt signal (level)
+> > > +
+> > > +  interrupt-names:
+> > > +    items:
+> > > +      - const: adi
+> > > +      - const: adcmpi
+> > > +
+> > > +  "#thermal-sensor-cells":
+> > > +    const: 0
+> > > +
+> > > +  renesas,tsu-calibration-sys:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: |
+> > > +      Phandle to the system controller (sys) that contains the TSU
+> > > +      calibration values used for temperature calculations.
+> > > +
+> > > +  renesas,tsu-operating-mode:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    enum: [0, 1]
+> > > +    description: |
+> > > +      TSU operating mode:
+> > > +      0: Mode 0 - Conversion started by software
+> > > +      1: Mode 1 - Conversion started by ELC trigger
+> >=20
+> > Can you make this "software" and "elc" or something please, unless peop=
+le
+> > will genuinely find "0" and 1" to be more informative.
+> > And why doesn't the property have a default?
+>=20
+> Sorry for miss-specifying.
+> ELC is an external event trigger. May be should I specify it like that ?
 
-Frank
->
-> Frank
->
-> > >
-> > >     If dw_pcie_host_init() does this, then we don't need
-> > >     .cpu_addr_fixup() in dw_pcie_prog_outbound_atu().
-> > >
-> > >   - dw_pcie_rd_other_conf(): atu.parent_bus_addr = pp->io_base
-> > >
-> > >     Similarly, dw_pcie_host_init() should be able to set pp->io_base
-> > >     to the intermediate address, so we don't need .cpu_addr_fixup() in
-> > >     dw_pcie_prog_outbound_atu().
-> >
-> > I found some driver's cpu_addr_fixup()'s implement depend on the
-> > initilize sequence.
-> >
-> > for example:
-> > 	pcie-artpec6.c
-> >
-> > static u64 artpec6_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
-> > {
-> >         struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
-> >         struct dw_pcie_rp *pp = &pci->pp;
-> >         struct dw_pcie_ep *ep = &pci->ep;
-> >
-> >         switch (artpec6_pcie->mode) {
-> >         case DW_PCIE_RC_TYPE:
-> >                 return cpu_addr - pp->cfg0_base;
-> >         case DW_PCIE_EP_TYPE:
-> >                 return cpu_addr - ep->phys_base;
-> >         default:
-> >                 dev_err(pci->dev, "UNKNOWN device type\n");
-> >         }
-> >         return cpu_addr;
-> > }
-> >
-> > This implement require *cfg0_base* and *phys_base*, pp/ep, need set before
-> > call artpec6_pcie_cpu_addr_fixup().
-> >
-> > static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
-> > {
-> >         struct dw_pcie_rp *pp = &pci->pp;
-> >
-> >         return cpu_addr & ~pp->io_base;
-> > }
-> >
-> > this one require *io_base* and *pp* need be set before call
-> > visconti_pcie_cpu_addr_fixup()
-> >
-> > Because I have not such hardware platform, it is not trivial change and
-> > it is hard to involve bugs.
-> >
-> > If move .cpu_addr_fixup() too early, it will cause kernel dump.
-> >
-> > I suggest keep current overall sequent and try to clean up these driver's
-> > cpu_addr_fixup() firstly.
-> >
-> > Frank
-> >
-> > >
-> > >   - dw_pcie_iatu_setup(): atu.parent_bus_addr = entry->res->start
-> > >
-> > >     Here "entry" iterates through bridge->windows, and we should be
-> > >     able to set entry->parent_bus_offset at init-time, using
-> > >     .cpu_addr_fixup() if necessary, so we can apply that offset
-> > >     unconditionally, regardless of use_parent_dt_ranges, and we won't
-> > >     need .cpu_addr_fixup() in dw_pcie_prog_outbound_atu().
-> > >
-> > >   - dw_pcie_pme_turn_off:
-> > >     atu.parent_bus_addr = pci->pp.msg_res->start - pci->pp.msg_parent_bus_offset
-> > >
-> > >     This should be the same as dw_pcie_iatu_setup() since
-> > >     msg_parent_bus_offset comes from the window iteration in
-> > >     dw_pcie_host_request_msg_tlp_res().  As long as the windows have
-> > >     the correct parent_bus_offset at init-time, we should be all set.
+If "elc trigger" is meaningful to people using hte device (IOW, it
+matches datasheet wording) then that's fine I think.
+
+> To make sure I got your point, do you mean specifying a default value in
+> bindings ?
+
+The property doesn't actually need to be required, it could easily have
+a default (say software) and only be set in the case of using the elc
+trigger - which brings you to Rob's comment that it can just be a
+boolean, setting the property if elc and leaving it out of software.
+
+Rob's other comment was
+
+| Who/what decides the mode? If a user is going to want to change this,=20
+| then it should be a runtime control, not a DT property.
+
+which I think needs an answer ;)
+
+--aWY9G/uo86esg184
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8sRsQAKCRB4tDGHoIJi
+0ioIAP0R4s3zFK5NRjcsBtyJZDB/M7Q2SCqtsT6CE2fAYWOOsgD/UCmd1Aqqudy+
+R+Wg5p4BqNSch5uuEQ1JlX9CAR0TwgM=
+=rZ5t
+-----END PGP SIGNATURE-----
+
+--aWY9G/uo86esg184--
