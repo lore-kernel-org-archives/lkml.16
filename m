@@ -1,87 +1,76 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5499F8BE5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79438BE5;
+	Fri,  7 Mar 2025 14:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741358853; cv=none; b=IsaPBzohhjeiSsD3ZKSz8S7DZtiQwqQWJqDGFPsqNg4GSjLw5Soz5/ourYz7zwhy4rfHLAeQSbegKGEZkx0ZXyJkHW/IhQBo6RTDPxGCnJ/s13KHr1WnAyYKeIZRMYaDnRKTMVwfJ3VhCBtKjSjhpMhIDZwRPk1HKhg+MLBM0iI=
+	t=1741358906; cv=none; b=TaFUC5ntItqNEzmnbIF9fX6LpMDErzd8+YMb1R0bDXdHCQ/aG9ocom/Iouu8ZvB1gbOABEy2D3KtRYDhru7eF3vgYtfqu8Ak/8TOw6cR3adHC2S2nYbh8TXabZyx82Syy1yX3RnStQewhaAJE7MrKGOHcaop8a6LEWOlxhWjNf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741358853; c=relaxed/simple;
-	bh=Gcw117duv8recEN1dqJRNyL3cWrsr+wn49dHddV6FrQ=;
+	s=arc-20240116; t=1741358906; c=relaxed/simple;
+	bh=M2OkvnNxpvzS165+JIvvwSlevm5ozmXGBdo6NJjOt2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KwDkWL8TzH3gu2vep+VwGdFEXB1XLQYPgUBe9xqJyMKiMoBVlPaJFzHSeihJhbi8Bisy477ex99R94JVHZFYONIsy/Ho/qpU+sRWHRRHKmZXKa29r/LfhRS3zg/ocZ10yxU4uBiv3ld3cHjzXqgfzkfl9+CEov2z/bsOI00gW94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p89e8Vs2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lRACKNHA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XGzuTsY6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lklopRZF; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+OLeKf0ZEUGUQI1XRIf87tevylAP+PT/83Wwhd6GXu4u8BX7fuXBXzht/L5cxzFqB5U9kGDhDnfU12M/tWi6ha0jOufGURkyy9/4UV4ErPfRy2ipkCyEDYEmto6Y5M2dbmB5+QPjapWkJBqO06QOUqLOjd+WYejWIE4L6BXWOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzaxJD32; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p89e8Vs2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lRACKNHA";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XGzuTsY6";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lklopRZF"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9AC941F395;
-	Fri,  7 Mar 2025 14:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741358849; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3e0QAGzyMycCbFd6B+5fqZyw6K7Uq5wm7ushJR/f5Y=;
-	b=p89e8Vs2POw8H9ao/jx5slB/pophAmIlhL0naiE+25jguenqZ1HJ7gk3Jm5u35pDoK5w8C
-	gl7VRA1BkBiJrHWBP+GxEq2Dx2ItTY7PbQo86wNzhGwsutkyjixbNImHFODVV8fii+ax9n
-	EyAuQMVPzO4VT3zQxNoCT1a3/dtekgs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741358849;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3e0QAGzyMycCbFd6B+5fqZyw6K7Uq5wm7ushJR/f5Y=;
-	b=lRACKNHAPTpgQRNsvSrf2xEFztkZlnxGBAVAjWT8IvgJRoFRsNEsPaYGl6HktpkdaA6K0V
-	pW7PykZgAieHEKAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741358848; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3e0QAGzyMycCbFd6B+5fqZyw6K7Uq5wm7ushJR/f5Y=;
-	b=XGzuTsY6IWmI3NXFw1cZKSnsmuzD+QWzn7L+njmbTru81fvRqSF4eWoJxwTPBvYFz8rJhC
-	ISZbq18iXWSsGhweQz6jqL0QoKclmtmlYNDklaqaoFML/nOLDFaHqBcBecffgLZRScfJun
-	ceOrsojuttOxFr+p5OZUqaVL3iAp1Pg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741358848;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3e0QAGzyMycCbFd6B+5fqZyw6K7Uq5wm7ushJR/f5Y=;
-	b=lklopRZFtsxRfgj0e23BtpElXr6wU5nRUP8gVcFqh1+eBoWJWgDm0UjTANTtXRDFOKWJa/
-	Dl39lJX4UoewqPBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8FEAC13939;
-	Fri,  7 Mar 2025 14:47:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /VoGIwAHy2cxMgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 07 Mar 2025 14:47:28 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 570B0A089C; Fri,  7 Mar 2025 15:47:28 +0100 (CET)
-Date: Fri, 7 Mar 2025 15:47:28 +0100
-From: Jan Kara <jack@suse.cz>
-To: sunliming@linux.dev
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	kees@kernel.org, ebiederm@xmission.com, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, sunliming@kylinos.cn, 
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] fs: binfmt_elf_efpic: fix variable set but not used
- warning
-Message-ID: <a555rynwidxdyj7s3oswpmcnkqu57jv3wsk5qwfg5zz6m55na3@n53ssiekfch4>
-References: <20250307061128.2999222-1-sunliming@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzaxJD32"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22334203781so58691845ad.0;
+        Fri, 07 Mar 2025 06:48:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741358904; x=1741963704; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ioh5SQLz7gpii5kUXtkklEFD5Pb6kb4fEtFbn053urw=;
+        b=LzaxJD32+UkUgrCdNoMhRm+GABvA+07kuOQsr47l+x/2h6jXUDRLYKDkpfu6YxTtl0
+         tY2WFq+RfEGB6+l+sudMN8pwQqDQD9KE2OS8KvZb0+edTDe45V1igHMNEhXupNYs8czE
+         TjaBO18dBkvtpp/p+N89paWi7UbGsLLFV5BoJdlZyJY6CKWmGv5eqpzukVyKgAmD29ag
+         E+fyasH/yM8vwhY9MetJyTnKnNpeGXLsMpm6pEuM892zJjcpEJusSju4kkcBezcVz93E
+         1GMUucg+nrDc/fIFPgAsxNnJcMTLOClhwX/U1C4wAWE0ewXF820l/8ADPrsqbj/Tqks3
+         gQ0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741358904; x=1741963704;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ioh5SQLz7gpii5kUXtkklEFD5Pb6kb4fEtFbn053urw=;
+        b=SyfinIGAsVwkZEj+G8qsrL+snNWFAjywL2qBuCrQNIRViAkXkWuqT2fdSfzzYoqY+m
+         HoG/GoQ2JLnMMwCWS8yK+QuiPZOkAsOxqxmFf7HVpKRTPh2isWe1AVsTHif2f7MPU3Q7
+         XaQXMRvyMpVvO9AvrXaqCFFFwylSeQdaWeATxtg5nZbI69k9DcoJJa3HF8JcZF6SifOi
+         szLnjQ9Uyj8W8Xe5+4rZ6ozbiKtzQFJgUEW3S4Yf+2TfyjV4ROWA+dvgBV4A7t9jQN8z
+         jTgNUJaIhOnDAyG74zpodRI7WHB1kHE9cPikBUP9M86vUtK28eIHL8uSBcTfmZvnrI22
+         ZzpA==
+X-Forwarded-Encrypted: i=1; AJvYcCUA+e7eguWyZ2sXHjTNMHfFEQt+qnrxjmOA7iE/SMyotDHJ1cxPucq8ZccyebDojBNFXNywlOdqASIn@vger.kernel.org, AJvYcCUYqv5HcJ7F2EIVxUnzYq4tofmCyXgPSsuhNYcspZebOUU+hjXvM7ohxYwNLQby8ekVUoOX/EcRw3EIyprB@vger.kernel.org, AJvYcCXlhpVR2WyJMapR1BEHRD4rt3qzQM6gv+9ZaY0Ked8C5eYnONUP1K+TWQ9XlR+dvraed73XM3MLYOoxMA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3mNU9nQTpVjj+x1mDLIUyQrwnabQxJxyLbvCHpm6kJsbh7mq7
+	LPOYsF4PTE1n4fLMHfAcEaPEjOCdnw7FOgn0g6e7/atcXRnKeuEF
+X-Gm-Gg: ASbGncupXqB6KtbK/HT3Bcfk/XphrU3ssKyUcpusWTaICJ/Lx2NhPvqqNIDkGu8QKl2
+	dBNBfJfKSBA6B59TM6OhqaQ0kaQHyMGcs1QhNopom2UwK53Mb8vN+FH53omLqIgG0X/szoBeNIh
+	xAF2fO6pORyaHOM4DIl35YRJ9qLFc27dzHBlvFGdGcb+097sXz6qvJQXWwSAj6MI3+8osewUfS9
+	yhqbB28TMuMFY/01e4gKt5C5mfRMP7lCFX5FhIvcUq5U+TVz6Y5dTlbkWm6dwCm7kFrzjyjojLv
+	hqcqI0KNxhRGvB9W39vNwWiYv/P9gKD5bVAu+JgJv9mT0s/8p52ESw==
+X-Google-Smtp-Source: AGHT+IHRcx0iwE4iShkhV9lEkg6KwfBUXIIAw+cZOq0H8/XJhguouoeDBfKO+SVgxCD51qwrQMXK2A==
+X-Received: by 2002:a05:6a00:1816:b0:732:706c:c4ff with SMTP id d2e1a72fcca58-73693f731b2mr13179089b3a.7.1741358903972;
+        Fri, 07 Mar 2025 06:48:23 -0800 (PST)
+Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7369824402bsm3299375b3a.49.2025.03.07.06.48.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 06:48:23 -0800 (PST)
+Date: Fri, 7 Mar 2025 11:49:16 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+	dlechner@baylibre.com, jonath4nns@gmail.com
+Subject: Re: [PATCH v4 15/17] iio: adc: ad7768-1: replace manual attribute
+ declaration
+Message-ID: <Z8sHbNJcxtlAJHn7@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <6d429bf18851e9e423e90252d351db550b2da536.1741268122.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,82 +79,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250307061128.2999222-1-sunliming@linux.dev>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,intel.com:email,suse.cz:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <6d429bf18851e9e423e90252d351db550b2da536.1741268122.git.Jonathan.Santos@analog.com>
 
-On Fri 07-03-25 14:11:28, sunliming@linux.dev wrote:
-> From: sunliming <sunliming@kylinos.cn>
+On 03/06, Jonathan Santos wrote:
+> Use read_avail callback from struct iio_info to replace the manual
+> declaration of sampling_frequency_available attribute.
 > 
-> Fix below kernel warning:
-> fs/binfmt_elf_fdpic.c:1024:52: warning: variable 'excess1' set but not
-> used [-Wunused-but-set-variable]
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: sunliming <sunliming@kylinos.cn>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 
-The extra ifdef is not pretty but I guess it's better. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
 > ---
->  fs/binfmt_elf_fdpic.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> v4 Changes:
+> * Added ad7768_fill_samp_freq_tbl() helper function.
+> * Sampling frequency table is precomputed at probe.
 > 
-> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-> index e3cf2801cd64..bed13ee8bfec 100644
-> --- a/fs/binfmt_elf_fdpic.c
-> +++ b/fs/binfmt_elf_fdpic.c
-> @@ -1024,8 +1024,11 @@ static int elf_fdpic_map_file_by_direct_mmap(struct elf_fdpic_params *params,
->  	/* deal with each load segment separately */
->  	phdr = params->phdrs;
->  	for (loop = 0; loop < params->hdr.e_phnum; loop++, phdr++) {
-> -		unsigned long maddr, disp, excess, excess1;
-> +		unsigned long maddr, disp, excess;
->  		int prot = 0, flags;
-> +#ifdef CONFIG_MMU
-> +		unsigned long excess1;
-> +#endif
+> v3 Changes:
+> * New patch in v3.
+> ---
+>  drivers/iio/adc/ad7768-1.c | 63 +++++++++++++++++++-------------------
+>  1 file changed, 31 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> index c48d3e0af985..0bdf2ae903c6 100644
+> --- a/drivers/iio/adc/ad7768-1.c
+> +++ b/drivers/iio/adc/ad7768-1.c
+> @@ -187,6 +187,7 @@ static const struct iio_chan_spec ad7768_channels[] = {
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+>  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+>  		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+>  		.indexed = 1,
+>  		.channel = 0,
+>  		.scan_index = 0,
+> @@ -208,6 +209,7 @@ struct ad7768_state {
+>  	unsigned int mclk_freq;
+>  	unsigned int dec_rate;
+>  	unsigned int samp_freq;
+> +	unsigned int samp_freq_avail[ARRAY_SIZE(ad7768_clk_config)];
+>  	struct completion completion;
+>  	struct iio_trigger *trig;
+>  	struct gpio_desc *gpio_sync_in;
+> @@ -306,6 +308,15 @@ static int ad7768_send_sync_pulse(struct ad7768_state *st)
+>  	return 0;
+>  }
 >  
->  		if (phdr->p_type != PT_LOAD)
->  			continue;
-> @@ -1120,9 +1123,9 @@ static int elf_fdpic_map_file_by_direct_mmap(struct elf_fdpic_params *params,
->  		 *   extant in the file
->  		 */
->  		excess = phdr->p_memsz - phdr->p_filesz;
-> -		excess1 = PAGE_SIZE - ((maddr + phdr->p_filesz) & ~PAGE_MASK);
+> +static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad7768_clk_config); i++)
+> +		st->samp_freq_avail[i] = DIV_ROUND_CLOSEST(st->mclk_freq,
+> +							   ad7768_clk_config[i].clk_div);
+> +}
+> +
+>  static int ad7768_set_mode(struct ad7768_state *st,
+>  			   enum ad7768_conv_mode mode)
+>  {
+> @@ -566,28 +577,6 @@ static int ad7768_set_freq(struct ad7768_state *st,
+>  	return 0;
+>  }
 >  
->  #ifdef CONFIG_MMU
-> +		excess1 = PAGE_SIZE - ((maddr + phdr->p_filesz) & ~PAGE_MASK);
->  		if (excess > excess1) {
->  			unsigned long xaddr = maddr + phdr->p_filesz + excess1;
->  			unsigned long xmaddr;
+> -static ssize_t ad7768_sampling_freq_avail(struct device *dev,
+> -					  struct device_attribute *attr,
+> -					  char *buf)
+> -{
+> -	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> -	struct ad7768_state *st = iio_priv(indio_dev);
+> -	unsigned int freq;
+> -	int i, len = 0;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(ad7768_clk_config); i++) {
+> -		freq = DIV_ROUND_CLOSEST(st->mclk_freq,
+> -					 ad7768_clk_config[i].clk_div);
+> -		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ", freq);
+> -	}
+> -
+> -	buf[len - 1] = '\n';
+> -
+> -	return len;
+> -}
+> -
+> -static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(ad7768_sampling_freq_avail);
+> -
+>  static int ad7768_read_raw(struct iio_dev *indio_dev,
+>  			   struct iio_chan_spec const *chan,
+>  			   int *val, int *val2, long info)
+> @@ -635,6 +624,24 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
+>  	return -EINVAL;
+>  }
+>  
+> +static int ad7768_read_avail(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     const int **vals, int *type, int *length,
+> +			     long info)
+> +{
+> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*vals = (int *)st->samp_freq_avail;
+> +		*length = ARRAY_SIZE(ad7768_clk_config);
+> +		*type = IIO_VAL_INT;
+> +		return IIO_AVAIL_LIST;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  static int ad7768_write_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *chan,
+>  			    int val, int val2, long info)
+> @@ -657,15 +664,6 @@ static int ad7768_read_label(struct iio_dev *indio_dev,
+>  	return sprintf(label, "%s\n", st->labels[chan->channel]);
+>  }
+>  
+> -static struct attribute *ad7768_attributes[] = {
+> -	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+> -	NULL
+> -};
+> -
+> -static const struct attribute_group ad7768_group = {
+> -	.attrs = ad7768_attributes,
+> -};
+> -
+>  static int ad7768_get_current_scan_type(const struct iio_dev *indio_dev,
+>  					const struct iio_chan_spec *chan)
+>  {
+> @@ -676,8 +674,8 @@ static int ad7768_get_current_scan_type(const struct iio_dev *indio_dev,
+>  }
+>  
+>  static const struct iio_info ad7768_info = {
+> -	.attrs = &ad7768_group,
+>  	.read_raw = &ad7768_read_raw,
+> +	.read_avail = &ad7768_read_avail,
+>  	.write_raw = &ad7768_write_raw,
+>  	.read_label = ad7768_read_label,
+>  	.get_current_scan_type = &ad7768_get_current_scan_type,
+> @@ -1134,6 +1132,7 @@ static int ad7768_probe(struct spi_device *spi)
+>  		return PTR_ERR(st->mclk);
+>  
+>  	st->mclk_freq = clk_get_rate(st->mclk);
+> +	ad7768_fill_samp_freq_tbl(st);
+>  
+>  	indio_dev->channels = ad7768_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(ad7768_channels);
 > -- 
-> 2.25.1
+> 2.34.1
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
