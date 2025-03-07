@@ -1,103 +1,89 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014BA21C166
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8DA218AB4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741359991; cv=none; b=D1fbKwcxeOjzkvRMg0zEWesKG31tw6gXP81fxFFlD5IOZcpnhtJHX2r6/bor1fLOBvPcyFGF00QUXq/o/7LHWPV1xqJTFHqB9l6xUA8SwlDxxdF777GZQEEq9iKhD0tZC7hXpeaJ03nYoVpkZVmuIqwx9ZGaPoDEKCA/88730Wk=
+	t=1741360031; cv=none; b=MTxx8Jwo0meOutw6vInDIG3URJEHII2T88GSoW94t5OMMnIpc//3OSlXnqg2XcSGiMtRr+owvIo+NleGG2wdN4P1r1lSnOgrJ4Ob3JNgkfDCwEOzhDsXT/jGgbB0llyT3NUhViBfz/LNXgVw1ucqYiytMRL8Antcz0SEf6YzL4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741359991; c=relaxed/simple;
-	bh=9Y/Y73m9zuvLRA6vGtkNTS7BPX54Zx9NPuwy9xoTbQo=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=m79GHlrQ8V0m1r3gbWPAH/8RcNWz6JqoWvu9lGqikc9DoWq4M56Okx+wsQS8tvi/nithiIvtn15pnR0LYidnqXAZ17BCOpN2/K+MaEqsiizvjBT3rLckWnpt4TJK8s8hDS5NmgLu1hol88liNV20bdxu4ZofgTY4uZHe61HxNPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wxd9Q4Ml; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741360031; c=relaxed/simple;
+	bh=K81qHcFj6LyfMm5ZG4lzsBZ76BNWPEyWlv/v9Xx/4oo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D0ehCA7kGFVLpDLrmKspaVqqMN5ctZafUOn8uoZhyki+UQWdiY/yqwz3A4mEouZ5oQ2uVd2sZoYEs4sVKTsGz35XrgTxjVw/Z52J6t4phhbGPZ6eLepwTcVPE1KjtoztrQtJzMUbX67DVYXFbLfa84Oj2EMlu/8lWdC6mfAxMAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nfWt7KhR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gBlER4Vn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wxd9Q4Ml"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912387cf48so63369f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:06:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741359988; x=1741964788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iArDif38+fZWZHkgSuOxfgSy+rEDqBvDc+u/YR4aXK4=;
-        b=Wxd9Q4MlVmNFiwwtrfqzzFBBOnHB7G46pBet8K0p9sePNyrr6/7UwxCZQQEV7OlTuO
-         qR83GWnJ7XYmaK/ecey4kFtw0xG/+H70Xq9jZoXcDeU8SFH5OFyR46M7ep0RFez4Dc1w
-         pZKHEX7BxLg5kNIkmyASxTi89/lr5hEMDZkCpXDFHlB1Eqgfd33DSVoGxRDECSfFZtTN
-         xVHMABYa7cj5GLnUjb+TujiurC+PNun83ubzA1DINnvS7aMWh/N//TNXUfSWmWL8zBv+
-         RJjq4hvbwr1SWz//MwkvsiSbCu4hIYFRnrbOdlCEmmnkKzQaqeEKf9E1sef9q67rRwzR
-         oekQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741359988; x=1741964788;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iArDif38+fZWZHkgSuOxfgSy+rEDqBvDc+u/YR4aXK4=;
-        b=LdaXCX5JhAQsKc+i3QzfiVuQPt1CW7Rh5dmTuid418lfYlyoB2WfgmWVclRQKp/Bqc
-         MghoRj3K4CFHFV3fLUmNOC93tTBH11TZ7qhn2nINiifZIMuJparHuApt6fscE8wzvt8T
-         tjaZHvGs5J88IPnysEBXu1Lm2K9o+izKsTtu7lpB3mo+ijND45CJxWHVuHu1rEZE/ud4
-         Z+jpQC/ZtFPa2vMABj7xzMuzREk57Jh5o7+4AkJMMBrM6LQ4CVfKnXZcUMTVmqhnT+lG
-         GfMak56v7OP9xZLyZaNh+5vUIwf67Xgv30oDOYOkOdmIdp3fkM8G/BHAV554pfnlUJ9F
-         47Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWml7zxlx4Yr9h5cVgaBis+XJtCs9XQEpJhxFUp33Befd4/PFVo3xOxzAHCQ/ZPk7Yvo3JBhQHza2elbZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/k+8rmkASt7BgoQGk7R1l4RXsa5+ZjM7Z6pg/YKoj/czxh7It
-	K6nsIitVI39rzkTCzvAjQw1Zlg0sMhO7amd4KaXjQp7Nz0IibUSnMyu12pAE3vg=
-X-Gm-Gg: ASbGncsx1nLwavPhB6kWk2iL3EqR5SunMy6zNoalP3zoVkFi5/Ky7ojkDRIdgGK0Pel
-	JtpMvm3pmt8IzG6VpQLG3VzKEsU8A1yi2A902elmpfburUVLKNlosn8aUMNN8/L8z38IGicS44t
-	NwUDuHtZtvUXZTWDbhuuKssKnZ3ZXjEbsKZEAY5iRtMxKc8mrUDYGbslmqUfpOdBHACpYrHPNeY
-	qvM9npEPRmMlqIZacBssoXIHsY8DGbPjxqAd1eB++c2cEh8JiPUPjF+AW2SFSKzbRWoHw2cOKPY
-	eYlG0pJLYg532M4gJ5yMbl/4B7SiSMkpxC4Pqtz39QTUF2ZOwObM+5lTOVwv
-X-Google-Smtp-Source: AGHT+IEepjQ7imgYoD7q4HWijAiTHHIHKB+RaF8r7Ya6WdH9B4Go9g4Q6bd0zl6386Q12ZEaV7KLTg==
-X-Received: by 2002:a5d:5f92:0:b0:38f:2b3c:569e with SMTP id ffacd0b85a97d-3913a8b4205mr53814f8f.11.1741359988167;
-        Fri, 07 Mar 2025 07:06:28 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.206.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e4065sm5694633f8f.62.2025.03.07.07.06.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 07:06:27 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- linux-fsd@tesla.com, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250219085726.70824-1-krzysztof.kozlowski@linaro.org>
-References: <20250219085726.70824-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 1/2] arm64: dts: exynos: gs101: Change labels to
- lower-case
-Message-Id: <174135998630.202917.16887190642980215810.b4-ty@linaro.org>
-Date: Fri, 07 Mar 2025 16:06:26 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nfWt7KhR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gBlER4Vn"
+Date: Fri, 7 Mar 2025 16:07:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741360028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T4OXppOUTNWbHeKmQNaA4fWquj1UNfzSqj7kwRoiD6Y=;
+	b=nfWt7KhRFQ3ME/0F4O3+ADqmO7g01JvYbadQYxyEcZYQUYmn5jdeLDllYbz4eTjNLN2QyT
+	7VgxZ2BfTNV113JT8eLbBYHiuY5B4nFmthRBvHAnDSSvgB81aCSTmll/mfB4x92IkJ2BxC
+	IzA7jNx39KvZvmNi0fAiTDcDmyYekDiPfM2LD+Oi0euL7fZ1rxZt2gpSyjkT6dQnlNF9IP
+	X1zAOi6CQlEKpD9ghHN5uioQKEjd92uTv441+vuJPhX55Gaxt9jXS97Lr6Sb1jvMph6miR
+	KEA0CUuBOwXjFFATyBIIwG4nn/wpqDHIV7+tiG2H5hjXy1QFKlJnPDzzcnEp3A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741360028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T4OXppOUTNWbHeKmQNaA4fWquj1UNfzSqj7kwRoiD6Y=;
+	b=gBlER4VnRTO8k/GMM7Q8cO2TK04eVOOB87mzZh8BvAdhgrd2RBiMWHzVUzg+566VNfvq7g
+	EnCs6amj75r50zBQ==
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org,
+	John Ogness <john.ogness@linutronix.de>, x86-cpuid@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 10/12] tools/x86/kcpuid: Update bitfields to
+ x86-cpuid-db v2.0
+Message-ID: <Z8sLmGf2L4mszUEp@lx-t490>
+References: <20250306205000.227399-1-darwi@linutronix.de>
+ <20250306205000.227399-11-darwi@linutronix.de>
+ <C7684E03-36E0-4D58-B6F0-78F4DB82D737@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <C7684E03-36E0-4D58-B6F0-78F4DB82D737@zytor.com>
 
+On Thu, 06 Mar 2025, H. Peter Anvin wrote:
+>
+> Leaf 3h was not unique to Transmeta.
+>
 
-On Wed, 19 Feb 2025 09:57:25 +0100, Krzysztof Kozlowski wrote:
-> DTS coding style expects labels to be lowercase.  No functional impact.
-> Verified with comparing decompiled DTB (dtx_diff and fdtdump+diff).
-> 
-> 
+Thanks, I missed that Pentium III can provide leaf 0x3 as well.
 
-Applied, thanks!
+It seems that leaf 0x3's format differs between Intel and Transmeta.  On
+Intel, PSN is at ECX:EDX, while on Transmeta, the PSN is at EAX:EBX, and
+ECX:EDX on non-evaluation models provide the rest. [*]
 
-[1/2] arm64: dts: exynos: gs101: Change labels to lower-case
-      https://git.kernel.org/krzk/linux/c/73fd2bb607387a77b2dde43a2c47db2b71c65a96
-[2/2] arm64: dts: tesla: Change labels to lower-case
-      https://git.kernel.org/krzk/linux/c/056106b030b73c7d53749469bd1cdbc89b4d2daf
+Unfortunately, so far, x86-cpuid-db does not support having a CPUID
+bitfield with different interpretations across vendors.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Given that Linux force disables PSN at early boot, I'll just remove that
+leaf from the database — for now.  (Time wise, finishing the new
+linux/arch/x86/ CPUID data model for mainline submission is a much higher
+priority.)
 
+All the best,
+Ahmed
+
+[*] "Processor Recognition", Transmeta Corporation, 2002/05/07.
