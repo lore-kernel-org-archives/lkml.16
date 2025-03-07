@@ -1,148 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44718168B1;
-	Fri,  7 Mar 2025 02:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7E61624E0;
+	Fri,  7 Mar 2025 02:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741313935; cv=none; b=o9E9nJlJoUDNtH80epLs6cahnC5oWb1nmXgSELyf8H8v9tX57nr2yyqDnMu2ekCDFxwo3mi/4MGb4sb0GceYtrHFnZMPaq8gLSAfujZJRoP2FvcJAhldN5e9ZoPZFdzDFPvx0rQ0hVULPvFwzStpFhVUjLDHfRTpNanuvdGH2B4=
+	t=1741313958; cv=none; b=YP4YhDVlrloJN+ufRMbihWrEux8XAbC/7NOfFm+1SQXxhNax9l+DiHJFxRcs0CWaoEu/qGOOL4R+8IqYXyd4P9dJ6E12HQsHtc2sSPT3hSwWw3PUFYy74HGqsQ9MBbCrpfDIHipkIkOu5Rcylhv1sWzhRdTmKcIgNkNHyQEndRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741313935; c=relaxed/simple;
-	bh=BBNjOQP4CmwaTxuMkTvDmx+aoMhLUR9wQq+c3rEV3ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQA6Jli8Z+JWj3RLgZx0CDif/M+E//hZNDaKG0pgiRr3xJc35jswFWZHMTlTEgfabFcDqOb1YxqxN0tPpc2xyVhqAyTW1gUKbJQi2v+tVFSeg395CbwdRQKDwqirdeQE/TDH8w7OmIPP7s5iIlL1Mf9deZgWA5yQfXmTStGJrns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L+Ue42MS; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L+Ue42MS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741313933; x=1772849933;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BBNjOQP4CmwaTxuMkTvDmx+aoMhLUR9wQq+c3rEV3ww=;
-  b=L+Ue42MScfb2d0wyOHYljdx62XtmQCyvo/UO+42JwGPW3YYk0F1E2DyR
-   ggcigOL7a/xPj69xVcjCjSH/4wxnzhRl3Xy4BPvwW5O3VomfJfIzsVZVK
-   vqbOD+SoqlOZtYw4ZBnBAVw2H2YTn9zwn7em0f7cet3awzOhMGKt8ldbi
-   RPdodCKmDMwnD3jjRwVYaTIWbZXEbJ0GSCyInHnZsqmT2H+ToQMCBuJ2J
-   /oHO0vQzyYaFSmAmOz3dZWRNWa0XoXsNCjWF3YGT2VO/jf0xwyIcqkOe+
-   sf3fCCMZZfalUQaJiS3aV3ZpuWiqsdMSv9U2/eQgTmRsvpaCAHkfljJ7T
-   Q==;
-X-CSE-ConnectionGUID: dH17PXiWTGOnOnf7wr19Tg==
-X-CSE-MsgGUID: ydnFBydiTtW6JXgjABRVZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="29934717"
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="29934717"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 18:18:53 -0800
-X-CSE-ConnectionGUID: JKkJIdLWS3aHKIzOWwTvEg==
-X-CSE-MsgGUID: pKiglwHkQFuC3tt+rfvhrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
-   d="scan'208";a="124122710"
-Received: from ylan1-mobl.amr.corp.intel.com (HELO desk) ([10.125.145.179])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 18:18:53 -0800
-Date: Thu, 6 Mar 2025 18:18:52 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v7 4/4] x86/rfds: Exclude P-only parts from the RFDS affected
- list
-Message-ID: <20250306-add-cpu-type-v7-4-f903fb022fd4@linux.intel.com>
-X-Mailer: b4 0.14.1
-References: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
+	s=arc-20240116; t=1741313958; c=relaxed/simple;
+	bh=FGi/1apNx15Za9JRlWcziIb/iIghphK92spwdswLCVQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UwTH42G4+s5fjY6gEO+yMoqSiz9vGG9nx1hQCVziZSn4aaSagtu5rOQ3mWy0+LKR/gL91y9+plIlFfbyJrzK+5wVL+LY2mtt6CNN5kgAXTLBnh9xkOyX1XTKHX1hkKl/HGCcHaKbc0qiyqglD44aUh5Fg5z3gq0flqbu3D9JboE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowAAHDm6FV8pnsGkMEw--.19544S2;
+	Fri, 07 Mar 2025 10:18:51 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH net v3] net/mlx5: handle errors in mlx5_chains_create_table()
+Date: Fri,  7 Mar 2025 10:18:20 +0800
+Message-ID: <20250307021820.2646-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAAHDm6FV8pnsGkMEw--.19544S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF17XFyfCw1xGryxXF1UWrg_yoW8Xr13pF
+	43AryDWrZ8A348X34UZrWFq34rua1kKa4j9Fs3K3yfZwnrXanrAF1rG34akw1jkryUG39x
+	tFn8A3WUZFZxCFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+	628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUOA2fKT08r5wAAsl
 
-The affected CPU table (cpu_vuln_blacklist) marks Alderlake and Raptorlake
-P-only parts affected by RFDS. This is not true because only E-cores are
-affected by RFDS. With the current family/model matching it is not possible
-to differentiate the unaffected parts, as the affected and unaffected
-hybrid variants have the same model number.
+In mlx5_chains_create_table(), the return value of mlx5_get_fdb_sub_ns()
+and mlx5_get_flow_namespace() must be checked to prevent NULL pointer
+dereferences. If either function fails, the function should log error
+message with mlx5_core_warn() and return error pointer.
 
-Add a cpu-type match as well for such parts so as to exclude P-only parts
-being marked as affected.
-
-Note, family/model and cpu-type enumeration could be inaccurate in
-virtualized environments. In a guest affected status is decided by RFDS_NO
-and RFDS_CLEAR bits exposed by VMMs.
-
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Fixes: 39ac237ce009 ("net/mlx5: E-Switch, Refactor chains and priorities")
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 ---
- Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst | 8 --------
- arch/x86/kernel/cpu/common.c                                 | 7 +++++--
- 2 files changed, 5 insertions(+), 10 deletions(-)
+[v1]->[v2]: Add Fixes tag and branch target. Change return value.
+[v2]->[v3]: Change Fixes tag. Move change history.
+---
+ drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst b/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
-index 0585d02b9a6c..ad15417d39f9 100644
---- a/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
-+++ b/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
-@@ -29,14 +29,6 @@ Below is the list of affected Intel processors [#f1]_:
-    RAPTORLAKE_S            06_BFH
-    ===================  ============
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c
+index a80ecb672f33..711d14dea248 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_chains.c
+@@ -196,6 +196,11 @@ mlx5_chains_create_table(struct mlx5_fs_chains *chains,
+ 		ns = mlx5_get_flow_namespace(chains->dev, chains->ns);
+ 	}
  
--As an exception to this table, Intel Xeon E family parts ALDERLAKE(06_97H) and
--RAPTORLAKE(06_B7H) codenamed Catlow are not affected. They are reported as
--vulnerable in Linux because they share the same family/model with an affected
--part. Unlike their affected counterparts, they do not enumerate RFDS_CLEAR or
--CPUID.HYBRID. This information could be used to distinguish between the
--affected and unaffected parts, but it is deemed not worth adding complexity as
--the reporting is fixed automatically when these parts enumerate RFDS_NO.
--
- Mitigation
- ==========
- Intel released a microcode update that enables software to clear sensitive
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 5f81c553e733..92fe56c40238 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1203,6 +1203,9 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
- #define VULNBL_INTEL_STEPS(vfm, max_stepping, issues)		   \
- 	X86_MATCH_VFM_STEPS(vfm, X86_STEP_MIN, max_stepping, issues)
- 
-+#define VULNBL_INTEL_TYPE(vfm, cpu_type, issues)	\
-+	X86_MATCH_VFM_CPU_TYPE(vfm, INTEL_CPU_TYPE_##cpu_type, issues)
++	if (!ns) {
++		mlx5_core_warn(chains->dev, "Failed to get flow namespace\n");
++		return ERR_PTR(-EOPNOTSUPP);
++	}
 +
- #define VULNBL_AMD(family, blacklist)		\
- 	VULNBL(AMD, family, X86_MODEL_ANY, blacklist)
- 
-@@ -1251,9 +1254,9 @@ static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
- 	VULNBL_INTEL_STEPS(INTEL_TIGERLAKE,	     X86_STEP_MAX,	GDS),
- 	VULNBL_INTEL_STEPS(INTEL_LAKEFIELD,	     X86_STEP_MAX,	MMIO | MMIO_SBDS | RETBLEED),
- 	VULNBL_INTEL_STEPS(INTEL_ROCKETLAKE,	     X86_STEP_MAX,	MMIO | RETBLEED | GDS),
--	VULNBL_INTEL_STEPS(INTEL_ALDERLAKE,	     X86_STEP_MAX,	RFDS),
-+	VULNBL_INTEL_TYPE(INTEL_ALDERLAKE,		     ATOM,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_ALDERLAKE_L,	     X86_STEP_MAX,	RFDS),
--	VULNBL_INTEL_STEPS(INTEL_RAPTORLAKE,	     X86_STEP_MAX,	RFDS),
-+	VULNBL_INTEL_TYPE(INTEL_RAPTORLAKE,		     ATOM,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_RAPTORLAKE_P,	     X86_STEP_MAX,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_RAPTORLAKE_S,	     X86_STEP_MAX,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_ATOM_GRACEMONT,     X86_STEP_MAX,	RFDS),
-
+ 	ft_attr.autogroup.num_reserved_entries = 2;
+ 	ft_attr.autogroup.max_num_groups = chains->group_num;
+ 	ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
 -- 
-2.34.1
-
+2.42.0.windows.2
 
