@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278E01E1DF1;
-	Fri,  7 Mar 2025 21:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39C31A23B0;
+	Fri,  7 Mar 2025 21:47:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741383921; cv=none; b=hz5Pw6oSPx3JiYlfOB13b5s9yE7HgAPg2NEZaOv9ZvLhUO7NnTLmjHs5P1Y0Z1PMM3ih7xjq2PKahE9Uk+ueTxpuedzwKsaKOdlOgu4PzgY+ZBwEw0E4tLQPrqgALB9KLd1qsLObvc/A2Ol1SUozpqWXJO86PAvufIAwQKgxqbM=
+	t=1741384061; cv=none; b=NInKWJkKU1YXSB1IdzKpOPz2as8jZXDLUHQAda/3/YXbryi8oX9Y7v+qCeBj3dd1DIXZXuN8PNOnkrgXeXlTsN2bAom0STj9FHZTQhbJx7K+a5m7O+NDqIMmLpNATM7rdGD2T2h6p4BH+zXjTIiv4BfDfclnVRHljf2BL+sr4yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741383921; c=relaxed/simple;
-	bh=exvCaQAecMG84V7ugK1HP+4nSWq8HFjLuH8XlyQhdkM=;
+	s=arc-20240116; t=1741384061; c=relaxed/simple;
+	bh=PgozwpVvDw4x6kQAljVRZ/c6g7ZLJ2jt4q+YmNhYcYs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kksFctStgkQNyHSaGPkW69+cWJCBey2ZiuIMRIg8srmsAUe8dqeJsxLvtKGyzcL+okMcwyLiCGjLcxqQRu8p3nuyixXykbfrsI1jbHbCAHuFYROh/rhVH/1ZH0JWEiCFPNEdoCLbEs49QvwT94+s/pl7vIBAf2oZULv+T8g0bZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7KKr860; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YvCmBHRPwDpPoJuWCnK5tXVPYnqKTEGAok5UbRwrqiyNy+NcvPHcl94FKD6iEMZrqvdsVIKdQNK54v+0vp+X4SSe0yWqaDxoa8JwOKChXSEUcBZZzs2kcrZuVI4hJNM6g9mYl/2U8i4hy3Med/xzcxDZg9YYQnxc8BuEyiImavQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABFCTAkC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7KKr860"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A609C4CED1;
-	Fri,  7 Mar 2025 21:45:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABFCTAkC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74122C4CED1;
+	Fri,  7 Mar 2025 21:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741383920;
-	bh=exvCaQAecMG84V7ugK1HP+4nSWq8HFjLuH8XlyQhdkM=;
+	s=k20201202; t=1741384060;
+	bh=PgozwpVvDw4x6kQAljVRZ/c6g7ZLJ2jt4q+YmNhYcYs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m7KKr860b0jKBtRjU4K37jmpsjRIKBnvlMODn5HA2ang5Ax1ONMTJh3rgNZVNHFu3
-	 xq/YZOgNtpl0e5RlSKvRe9UvVqyrujV29zpfGFQ20U1exRIPHJP1LujZy38v/dov60
-	 qpiynHfPP5g2vDsBM5sNWxljo/uhuXbi6tu1Lmk67kxNss11Ry27js+i80/h3u+BF2
-	 K8pT/bY6dvyfoyWNmWejwZpTLYlceF7C0hjxof+JwGWtLZHB726v4fBWBKp2PtU9nX
-	 iEqGEHTlD3jCSU3efMwzbb5T/UZxic+2ZzzTGaAEBRLrRb8ymUMEFckyXFNUBPmeva
-	 tE7wQtG10ndsA==
-Date: Fri, 7 Mar 2025 15:45:18 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: geert@linux-m68k.org, linux-renesas-soc@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	devicetree@vger.kernel.org, paul.barker.ct@bp.renesas.com,
-	linux-kernel@vger.kernel.org, thierry.bultel@linatsea.fr
-Subject: Re: [PATCH v4 03/13] dt-bindings: serial: Add compatible for Renesas
- RZ/T2H SoC in sci
-Message-ID: <174138391846.660308.3115874488734848744.robh@kernel.org>
-References: <20250306152451.2356762-1-thierry.bultel.yh@bp.renesas.com>
- <20250306152451.2356762-4-thierry.bultel.yh@bp.renesas.com>
+	b=ABFCTAkCYJGDl7FT/DQX1FAtSH/kxO34MMqrkJWriQ/XiHRvGlyrvhNCEYYOw4Kwc
+	 pAoDJx/I0fmQQoUdmubibw67HoOrTYK7Yi2iZfKIDNNO4QvQWMaxh6AZAjyfRVpzY6
+	 BvsOgKcTl0+ct+tyl5HJ0vtFaz4zEAwvR6mQ3QNEFRgMMCMelE74JDdpj3Srx5S1CA
+	 8WFjIu1M8gnuHczMjRVGEgtYuhjb6lN/LLqIbo4RZelseSE+XOVlceePJChzCc5HJM
+	 lgZcuHK+EnbrCo9xPTNH7z+vZPernPPsD6qo/2e8bOyR+FjsVZxL5X0z6h57p4o5kP
+	 akC34nyieVQDA==
+Date: Fri, 7 Mar 2025 22:47:34 +0100
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
+Message-ID: <20250307214734.GA2871848@ax162>
+References: <20250303214929.work.499-kees@kernel.org>
+ <174111064321.3934933.4843198067758331073.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,26 +49,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250306152451.2356762-4-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <174111064321.3934933.4843198067758331073.b4-ty@kernel.org>
 
-
-On Thu, 06 Mar 2025 16:24:37 +0100, Thierry Bultel wrote:
-> The SCI of RZ/T2H SoC (a.k.a r9a09g077), as a lot
-> of similarities with other Renesas SoC like G2L, G3S, V2L;
-> However, it has a different set of registers, and in addition to serial,
-> this IP also supports SCIe (encoder), SmartCard, i2c and spi.
-> This is why the 'renesas,sci' fallback for generic SCI does not apply for it.
+On Tue, Mar 04, 2025 at 09:50:44AM -0800, Kees Cook wrote:
+> On Mon, 03 Mar 2025 13:49:37 -0800, Kees Cook wrote:
+> > The i386 regparm bug exposed with FORTIFY_SOURCE with Clang was fixed
+> > in Clang 16[1].
+> > 
+> > 
 > 
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
-> Changes v3->v4:
->   - Added more details in commit description about why renesas,sci
->     does not apply.
->   - Removed uart-has-rtscts for !rzsci.
-> ----
->  .../bindings/serial/renesas,sci.yaml          | 63 ++++++++++++-------
->  1 file changed, 39 insertions(+), 24 deletions(-)
+> Applied to for-next/hardening, thanks!
 > 
+> [1/1] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
+>       https://git.kernel.org/kees/c/3e5820429980
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Turns out this is actually incomplete based on my testing, I see the
+following warnings with ARCH=i386 allmodconfig with all supported clang
+versions:
 
+  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy-lit.c
+  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy.c
+
+We also need to drop '-ffreestanding' from arch/x86/Makefile (which Nick
+has mentioned in [1]). Time to revive [2]? :) or just do it in this
+patch, since it sounds like there was no regression with GCC?
+
+[1]: https://github.com/ClangBuiltLinux/linux/issues/1583#issuecomment-1123016466
+[2]: https://lore.kernel.org/20200817220212.338670-5-ndesaulniers@google.com/
+
+Cheers,
+Nathan
