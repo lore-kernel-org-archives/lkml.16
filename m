@@ -1,125 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421DE2192F6;
-	Fri,  7 Mar 2025 12:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A67714A4F9
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 12:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741351304; cv=none; b=Zik28Jiu+OM33jvZgUo6sFrBq/ZG+tYtEyha5NjvGPcRcJzhZj4bcVCpRHSK5gAI4NzbaiwchcuQSo/H83PqG4H9IEOdixpNoMNLCFEx+BiNpSa90P4sL1dFGemTAxXuKf6i2o3FWd5heISr+W/DplMFpW740a2c3QaCZnA53Ao=
+	t=1741351412; cv=none; b=uHc6rNBUkgkBRJ1+59kiyePsy7qOrj8fExjKSSUIxZE6GRtwprS1o09arYt25OwpLj/oAEB46innkGgh5a+3xG5GA8sYCLomYE0UNFEWzcToHFz+UO1p/t4xaCP9XYtSKnc+sYQn11cRO49+SyKkDNPtaPdaO3uGH+QGMm6f3Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741351304; c=relaxed/simple;
-	bh=l2rzz0wip4MQkGxJ5wsAg/4zacNmQ7VcCbwkXPm1c/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AjEY2FbQQlBR8/nGjhMdCnf7wG26nLfJHjiDuJ9DaZa7j1og5oH3ojf6EYXwJquU+nisPTbZhCjSOlcYWF0Koo4bv9JkcwlMyHoZ2pM6zsGg5AYhlVkz1nlx36DGBc2cmMo2Q/DIktTtUfa7AeDO4nIXk5jRxsXePwwzDGOW6GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9FcE8v1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741351412; c=relaxed/simple;
+	bh=7VmanMlSY+AL4R5Gl2+izLNwqisKICSmKSHCP61d7X4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=l061qzJKE6QfEFVkNB5hBKWxSJpIJ2sNuiVS52xWSfjc/mNTcU/OL/+TWiiaWSGKKASS/OUPJbGztl+xu0n6LslzrHyovObfi5CSY+YZ4BnXI+MPihN+aYmVuJjsSC9mY3eKxGR4QBCtUD8bVIGRULLSMBj4VNADEu46sb9tBfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0GVy30Oe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EZw4mupL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9FcE8v1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C07DC4CED1;
-	Fri,  7 Mar 2025 12:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741351303;
-	bh=l2rzz0wip4MQkGxJ5wsAg/4zacNmQ7VcCbwkXPm1c/U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z9FcE8v1NMCcmi0cp8tpLTenryP4/jT5o6FSKGll/qlYuma26qdp1LDBGQqbu6Kch
-	 CPNRiE2bfjzocpqauwdGXz2OhFM9d8GJTVAAFGl6SeWuiGJVazF0pKGO0gTvCZmozE
-	 tEGRKyuErEiBgMklP7Wo7lNGX9wWAbvXWonBCFyOR+/z/otvm5lqFDl8ZfW2nGf09c
-	 J8pHlKdZE1aX+7Xjoy43mKmh2cJi7C9Y/m0iPDJGkTz8pCqqA9PRUjDaGkCk+/0PSb
-	 mRP40MPq2ZL2el9v81znEyDOBM04kQR83klhzE2asTChpJ2vRbzDOu8EDDb8RchsaJ
-	 tiOLXTIsA7r1A==
-Message-ID: <f9779027-63cf-4cb7-8399-1f3f1843c900@kernel.org>
-Date: Fri, 7 Mar 2025 13:41:38 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0GVy30Oe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EZw4mupL"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741351408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hiWhhFFiguC06XDLj0xZWCAnw46+uSzsqCLVXGy3bqM=;
+	b=0GVy30OeGXpmtADuBX35FXO0zSDxLiaJZjaKxvGp0OIeeH7Nk6kvJrVFBuOjdTTNt4Pn6+
+	hKODrW2wUH427dTmnDDCTUbK9ZjfU7TnkcTF5troe574orvLiZD1AAu1dUQTWhiuDRHf38
+	oOh6buwzKFDkp1mm1HK57nJC9IsWO+1TxfO7PppDFLAk2db9r9KE5Ya272mjqYxr4Vd0ux
+	YsADF1tKUioZgMzn9/TV2f74df0whDuIeOWWjE3WMHotqbdnBHFtUabHbkhHuzjO4zIPRJ
+	ShXX4anigtReAMKuc47smAGxkgVXWuCp0zlT3i7n8IFzHEEF530wqqxKGL8lFQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741351408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hiWhhFFiguC06XDLj0xZWCAnw46+uSzsqCLVXGy3bqM=;
+	b=EZw4mupLSQoxdrmdJyKguJYM0IdXY4LGBr4sw13RIDOKd3FHeLpIiWGA6wv9jg90jsIPtN
+	QdCiUpD+BBXsKqDA==
+Date: Fri, 07 Mar 2025 13:43:23 +0100
+Subject: [PATCH v2] tools/nolibc: don't use asm/ UAPI headers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] docs: dt-bindings: Specify ordering for properties
- within groups
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- heiko@sntech.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <7276139ea1f4a5f4db48c77f536a3638492e6c2f.1741321984.git.dsimic@manjaro.org>
- <20250307-logical-nimble-okapi-3ba081@krzk-bin>
- <0df01d9863f72df3bebff1868f010954@manjaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <0df01d9863f72df3bebff1868f010954@manjaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250307-nolibc-asm-headers-v2-1-e2a734f25d22@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAOrpymcC/32NQQ6CMBBFr0Jm7ZgyDUJceQ/CotKpTIKtaZFgS
+ O9u5QAu30v++zskjsIJrtUOkVdJEnwBOlUwTsY/GMUWBlLUKK0a9GGW+4gmPXFiYzkm1C11dHG
+ mc9pBGb4iO9mOaD8UniQtIX6Oj7X+2b+5tcYaHalGW3bE3N5m8e8lBi/b2TIMOecvg1mQ6rgAA
+ AA=
+X-Change-ID: 20250305-nolibc-asm-headers-372826fa8f3f
+To: Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741351407; l=2634;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=7VmanMlSY+AL4R5Gl2+izLNwqisKICSmKSHCP61d7X4=;
+ b=v3GgKbG6q81UqOVdqDDElEK2JG3g5bwXd+gDyipgRc9MKaXCdglIP9IJ1iw4ZLklnZxSS8NvU
+ zh+lkoAv6x9A1vE1HanxFwFLAAhE6f9sVtYZDSimT26+y961L3QC2h9
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On 07/03/2025 10:50, Dragan Simic wrote:
->>> Applying strict alpha-numerical ordering can result in property lists 
->>> that
->>> are suboptimal from the usability standpoint.  For the provided 
->>> example,
->>> which stems from a real-world DT, [2][3][4] applying strict 
->>> alpha-numerical
->>> ordering produces the following undesirable result:
->>
->> BTW, your entire commit msg still has incorrect wrapping. Please use
->> standard editors which understand Git commit msg style (which I believe
->> is equal to Linux submitting patches).
-> 
-> Sorry, but what makes the wrapping wrong?  I wrap patch descriptions
-> at or well before 78 columns, which I belive is the desired way to do
-> so.  The longest line in this patch description is 77 characters long,
-> which is still below 78 characters.
+The asm/ and asm-generic/ namespaces are implementation details of the UAPI
+headers and not meant for direct usage.
 
-Because it is not correct. Read submitting patches. Run checkpatch.
+Use the equivalent headers from the linux/ namespace instead.
 
-> 
-> Also, please note that I don't "just use" some random editor, but I use
-> a highly customized Vim setup, in which I over time wrote about 46 KB
-> of Vimscript code in my ~/.vimrc, all by hand.  I've even contributed
-> smaller patches to Vim.
+While at it also drop the duplicate include of linux/signal.h from sys.h.
 
-OK, so not random, but incorrectly configured. Different tools, same result.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Avoid duplicate '#include <linux/signal.h>'
+- Link to v1: https://lore.kernel.org/r/20250305-nolibc-asm-headers-v1-1-f2053def2ee7@linutronix.de
+---
+ tools/include/nolibc/arch-s390.h | 4 ++--
+ tools/include/nolibc/errno.h     | 2 +-
+ tools/include/nolibc/sys.h       | 9 ++++-----
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
+diff --git a/tools/include/nolibc/arch-s390.h b/tools/include/nolibc/arch-s390.h
+index acfee7e9d5e2bb65718cb947110d2c5e1cdeba9b..df4c3cc713accd45551e07e1f02d3638e49e300e 100644
+--- a/tools/include/nolibc/arch-s390.h
++++ b/tools/include/nolibc/arch-s390.h
+@@ -5,8 +5,8 @@
+ 
+ #ifndef _NOLIBC_ARCH_S390_H
+ #define _NOLIBC_ARCH_S390_H
+-#include <asm/signal.h>
+-#include <asm/unistd.h>
++#include <linux/signal.h>
++#include <linux/unistd.h>
+ 
+ #include "compiler.h"
+ #include "crt.h"
+diff --git a/tools/include/nolibc/errno.h b/tools/include/nolibc/errno.h
+index a44486ff047745bc9bcf9748c3e5074213430f80..1d8d8033e8ff766ee4b3cf7efdb741d4208db04e 100644
+--- a/tools/include/nolibc/errno.h
++++ b/tools/include/nolibc/errno.h
+@@ -7,7 +7,7 @@
+ #ifndef _NOLIBC_ERRNO_H
+ #define _NOLIBC_ERRNO_H
+ 
+-#include <asm/errno.h>
++#include <linux/errno.h>
+ 
+ #ifndef NOLIBC_IGNORE_ERRNO
+ #define SET_ERRNO(v) do { errno = (v); } while (0)
+diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
+index 5d8adc7785759d2ef9316d70979740b16756dab1..08c1c074bec89a27e53e5d461a3ebbf71ec323d1 100644
+--- a/tools/include/nolibc/sys.h
++++ b/tools/include/nolibc/sys.h
+@@ -10,10 +10,10 @@
+ #include "std.h"
+ 
+ /* system includes */
+-#include <asm/unistd.h>
+-#include <asm/signal.h>  /* for SIGCHLD */
+-#include <asm/ioctls.h>
+-#include <asm/mman.h>
++#include <linux/unistd.h>
++#include <linux/signal.h>  /* for SIGCHLD */
++#include <linux/termios.h>
++#include <linux/mman.h>
+ #include <linux/fs.h>
+ #include <linux/loop.h>
+ #include <linux/time.h>
+@@ -23,7 +23,6 @@
+ #include <linux/prctl.h>
+ #include <linux/resource.h>
+ #include <linux/utsname.h>
+-#include <linux/signal.h>
+ 
+ #include "arch.h"
+ #include "errno.h"
+
+---
+base-commit: a782d45c867ca92edc50e54715a71124bec1dd11
+change-id: 20250305-nolibc-asm-headers-372826fa8f3f
 
 Best regards,
-Krzysztof
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
