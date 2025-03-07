@@ -1,98 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE48A219A94;
-	Fri,  7 Mar 2025 13:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9792022EE5;
+	Fri,  7 Mar 2025 13:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741354036; cv=none; b=qO9EZ1g8DatqlBeOHnKoA14VBGpGCwmiCJ8lm+kFD2B84lCXwTJWSEVYUcMcq86ROwCIF+KLihgSxHIzXQYPg4gAhoeuImgNsRcvl/Is5lcbC8njZAkz1jhtG2Q47eYva5ntzzGmWopB2RyjbkvtX0fBH4lN86Ht1+CfRQ77x+s=
+	t=1741354057; cv=none; b=QOQg8WoR13KznI6XROFVMrklU5EWJ2dOZ7muF1wFof5l4E94Q3vbQ4yEGtSlM1XD/twgbKtEVsNA2AyRuu3CcacrWrI9nCuowV9eNBgWQZWVYqPUYQzOm5DmbN0v0xAP7Pv90qgn/TM3ptG3ZAgg9N4aFDf5ldGzInIHDVf4d+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741354036; c=relaxed/simple;
-	bh=kxF+meGrN+Y9nPfgY7RbqYnONmGGuWPNBl9Jkuv/GYQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GBvNNt6RrcmzMiGIUgipmjwDjYvBpTjOedL/5DbV8kol7X/+z0Hv+wEFpxc3OLj7QXmlu7ECgy7pvML9g8PI3567f0MGcGGqG4Erzj8ygCfrN+DApupchq+f/7bB2XAb17B/tIl95f09Tp9CUchdcADyGrqHaycqZXC7Nml9mR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D67A51424;
-	Fri,  7 Mar 2025 05:27:25 -0800 (PST)
-Received: from e129166.arm.com (unknown [10.57.84.65])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D18E13F66E;
-	Fri,  7 Mar 2025 05:27:11 -0800 (PST)
-From: Lukasz Luba <lukasz.luba@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	rafael@kernel.org,
-	daniel.lezcano@linaro.org
-Cc: lukasz.luba@arm.com,
-	rui.zhang@intel.com,
-	srinivas.pandruvada@linux.intel.com,
-	jeson.gao@unisoc.com
-Subject: [RESEND][PATCH] power: energy_model: Rework the depends on for CONFIG_ENERGY_MODEL
-Date: Fri,  7 Mar 2025 13:23:49 +0000
-Message-ID: <20250307132649.4056210-1-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1741354057; c=relaxed/simple;
+	bh=+1BxnVPnlbnWFOP/941TLdbyOO8GpUZPJukzn1Ej/VE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sNlmMLjPkF7T9WvDAlCSIwiHc8Jp7jrfZhB3KRRCb7eCs73eugGERaCaIY1cINADTxslYs0BqCbSXMsDbV/4fBbeAIN3bliJAybsl2AgkY9EyNc/syfEefWsHy8OiVtgWHbYeG5Uworb/cR5a/wV2bjhVJdeK8qBsAzu6ZedkqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=guCNpJzf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="guCNpJzf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B792CC4CED1;
+	Fri,  7 Mar 2025 13:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741354057;
+	bh=+1BxnVPnlbnWFOP/941TLdbyOO8GpUZPJukzn1Ej/VE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=guCNpJzfg3ekr8SJ9IRY8SoonhzlS6nHWYm278SjVHI51tLfCrFUXaNYMYnX79jbf
+	 uzG6vDkvKKilibUoGHGDRV/q2XCpg27O5QAjwAy6dHR/4EF2QWaMOpKa3C0Jn77c9H
+	 k5qv8JfwgX+7xFAeeAkSz266ROI1HdmckM392j4bZRF46smEwGreMpI2QeMdp0lh+m
+	 d92q8VErSQUhJYXk104FeRLhAcv/qclUuelYdK6TbUdaCRBgMWzWdViAFLGQXvNIpS
+	 LuW7BpjbGfOHDStUlGxkaPMVTE20NEF3Wjqhyh/3lcuEgFo2zLN5LEZTCI9PKEIIKB
+	 3JRvJ0OkdITGg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,  "Guangbo
+ Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
+ Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
+ <tamird@gmail.com>,  "Markus Elfring" <Markus.Elfring@web.de>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 03/13] rust: hrtimer: implement `HrTimerPointer` for
+ `Arc`
+In-Reply-To: <D8A1Z043VPGR.2OBGSBH1ALUL6@proton.me> (Benno Lossin's message of
+	"Fri, 07 Mar 2025 13:03:06 +0000")
+References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org>
+	<20250307-hrtimer-v3-v6-12-rc2-v10-3-0cf7e9491da4@kernel.org>
+	<b-T-Yv_oexMXaKG9kNNfbYz-Qaw1XhJw-VHerSPFp_sIMoztNyAj94_rH-uNYeG-Hc5WANUivDJW9WLmfZZHwA==@protonmail.internalid>
+	<D8A1Z043VPGR.2OBGSBH1ALUL6@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 07 Mar 2025 14:27:28 +0100
+Message-ID: <87senp3r9b.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Jeson Gao <jeson.gao@unisoc.com>
+"Benno Lossin" <benno.lossin@proton.me> writes:
 
-Now not only CPUs can use energy efficiency models, but GPUs
-can also use. On the other hand, even with only one CPU, we can also
-use energy_model to align control in thermal.
-So remove the dependence of SMP, and add the DEVFREQ.
+> On Fri Mar 7, 2025 at 11:11 AM CET, Andreas Hindborg wrote:
+>> +impl<T> HrTimerPointer for Arc<T>
+>> +where
+>> +    T: 'static,
+>> +    T: Send + Sync,
+>> +    T: HasHrTimer<T>,
+>> +    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
+>> +    Arc<T>: for<'a> RawHrTimerCallback<CallbackTarget<'a> = ArcBorrow<'a, T>>,
+>
+> I don't understand why you need this bound here.
 
-Signed-off-by: Jeson Gao <jeson.gao@unisoc.com>
-[Added missing SMP config option in DTPM_CPU dependency]
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
+This impl is applicable only when `Arc<T> has an implementation of
+`RawTimerCallback` where CallbackTarget<'a> = ArcBorrow<'a, T>. I don't
+want the impl to be available if that is not the case.
 
-Hi Rafael,
+It's just an additional check.
 
-This fixes the issue in the former patch with the DTMP_CPU
-implicit build dependencies on SMP.
-The original patch can be found here [1] (the one that you had to revert).
+>
+>> +{
+>> +    type TimerHandle = ArcHrTimerHandle<T>;
+>> +
+>> +    fn start(self, expires: Ktime) -> ArcHrTimerHandle<T> {
+>> +        // SAFETY:
+>> +        //  - We keep `self` alive by wrapping it in a handle below.
+>> +        //  - Since we generate the pointer passed to `start` from a valid
+>> +        //    reference, it is a valid pointer.
+>> +        unsafe { T::start(Arc::as_ptr(&self), expires) };
+>> +        ArcHrTimerHandle { inner: self }
+>> +    }
+>> +}
+>> +
+>> +impl<T> RawHrTimerCallback for Arc<T>
+>> +where
+>> +    T: 'static,
+>> +    T: HasHrTimer<T>,
+>> +    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
+>> +{
+>> +    type CallbackTarget<'a> = ArcBorrow<'a, T>;
+>> +
+>> +    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
+>> +        // `HrTimer` is `repr(C)`
+>> +        let timer_ptr = ptr.cast::<super::HrTimer<T>>();
+>> +
+>> +        // SAFETY: By C API contract `ptr` is the pointer we passed when
+>> +        // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
+>> +        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
+>> +
+>> +        // SAFETY: `data_ptr` points to the `T` that was used to queue the
+>> +        // timer. This `T` is contained in an `Arc`.
+>
+> You're not justifying all safety requirements of `ArcBorrow::from_raw`.
 
-Regards,
-Lukasz Luba
+How is this:
 
-[1] https://lore.kernel.org/lkml/20241219091109.10050-1-xuewen.yan@unisoc.com/
+        // SAFETY:
+        //  - `data_ptr` is derived form the pointer to the `T` that was used to
+        //    queue the timer.
+        //  - The `ArcTimerHandle` associated with this timer is guaranteed to
+        //    be alive for the duration of the lifetime of `receiver`, so the
+        //    refcount of the underlying `Arc` is guaranteed to be nonzero for
+        //    the duration.
+        //  - We own one refcount in the `ArcTimerHandle` associted with this
+        //    timer, so it is not possible to get a `UniqueArc` to this
+        //    allocation from other `Arc` clones.
 
 
- drivers/powercap/Kconfig | 2 +-
- kernel/power/Kconfig     | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+Best regards,
+Andreas Hindborg
 
-diff --git a/drivers/powercap/Kconfig b/drivers/powercap/Kconfig
-index 69ef8d081c98b..03c4c796d9931 100644
---- a/drivers/powercap/Kconfig
-+++ b/drivers/powercap/Kconfig
-@@ -82,7 +82,7 @@ config DTPM
- 
- config DTPM_CPU
- 	bool "Add CPU power capping based on the energy model"
--	depends on DTPM && ENERGY_MODEL
-+	depends on DTPM && ENERGY_MODEL && SMP
- 	help
- 	  This enables support for CPU power limitation based on
- 	  energy model.
-diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-index ca947ed32e3dd..54a6236800194 100644
---- a/kernel/power/Kconfig
-+++ b/kernel/power/Kconfig
-@@ -380,8 +380,7 @@ config CPU_PM
- 
- config ENERGY_MODEL
- 	bool "Energy Model for devices with DVFS (CPUs, GPUs, etc)"
--	depends on SMP
--	depends on CPU_FREQ
-+	depends on CPU_FREQ || PM_DEVFREQ
- 	help
- 	  Several subsystems (thermal and/or the task scheduler for example)
- 	  can leverage information about the energy consumed by devices to
--- 
-2.48.1
 
