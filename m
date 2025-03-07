@@ -1,225 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic313-15.consmr.mail.ne1.yahoo.com (sonic313-15.consmr.mail.ne1.yahoo.com [66.163.185.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DE82417C3;
-	Fri,  7 Mar 2025 18:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741373073; cv=fail; b=nrlPNLl/IIsMhvgS3BJsLRnzPJOSJkaeGOdv5kFnilwVrNmpLvHkok8CwDhRMnKg2c6lzvG/IFbVp0gs0eXMtYdIWQUKF2etouSf00qD0/CAYvkYcHE1m/e0pQ2WFRwxOd0kIBpZwfTanZceV7AhtMlMwtOAz4VruiG56+A7uF0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741373073; c=relaxed/simple;
-	bh=4+wqBPZPY+6UkzSTeyUztmgu4na3iurQhX6HXkWukBU=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RyIyzISdvowiqRZjkIPxaO2CwlxjMmxFAE0pI2rRVAqvEBAXy5cRLjnCjbS7CFwzwlUPObdvUYKrIIBuHopZv6heFleu6FIp5PR+pvt9tBF5nz9aPI1IN0+gKVv0XtwkJov3p8RKuSuJ//NGR4G0XvMwvIB/A1yADkTp9m03G2k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SAooB1bN; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D70B199FDE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 18:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.185.38
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741373238; cv=none; b=tBAY7UA6+42jHo4E7DlQ0Z0yxvUA505H/ATFSeFihBQrgst9TwTN9W3rlSvEt5JOB1RPrQCDl6ruxzOJOUV+lMWVIRFuQpuNqZKo0AUq2yeQi4S3ggLMyte6I5IxXqFfiyznVMsPzlxU2x1a14iD/psBUQ/yg4aLZKfH/6/oUQY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741373238; c=relaxed/simple;
+	bh=zz3uBk48+7no25j+Ns24PzVLZrTPAcWmGdELG9brV9I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=knbMwWZJ8zT3GXNvXfjhZR4nfcO9ktN1145l20hk1NRB+/P66PRzT4p6kxI5yd1Tu/2tgcyfwSU2i5ptM8Aw459+drWK73aB69YxaZdrU55flov/mukTvhhlXbxRS/kbfHvXOMpoVagnVk5YWrl38GWLJ5GNJ+5lVi6jb36NPj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=JW0AK+zL; arc=none smtp.client-ip=66.163.185.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SAooB1bN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741373072; x=1772909072;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4+wqBPZPY+6UkzSTeyUztmgu4na3iurQhX6HXkWukBU=;
-  b=SAooB1bNHZZdbqBy9tOReq1r1tqkvRz5uahH5SaKSR16BI1veTpWQ0DY
-   QYZYnDO+20Q3Mc94LBd9fMOKVzgzwkCiQAf3X7AqqSQTNDo8jb7t/IKhU
-   /N0eYF2mirZIkXdBnR4Ytib6cu5sKfVKrg3SaY2kpPaIQR2MhjS92nQOy
-   PmiyILXLnTJSyJLAPEZXzKBAaDizSBZcxNzVYqhztI1diWCokRAILaRpy
-   eoYc8soKdDSsGppQln7jtLouhRR6LmZ6a2RzML4XC26cssk5nM0+GOpnB
-   dJaxa1iKV6HqWadGrIN0URlkxp94baIrudY7p4sWsLRKEGa2uve/Dfgxa
-   w==;
-X-CSE-ConnectionGUID: ugJe+HT6TFqtr2RgUodNtw==
-X-CSE-MsgGUID: GiaxgXl4RK+B613k6Fa7AA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42312441"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="42312441"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:44:30 -0800
-X-CSE-ConnectionGUID: 6yMOeNZwQ0Wfo4bDAI5F0w==
-X-CSE-MsgGUID: BwckMkZHRMmgiVh93oOZ8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="119147557"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:44:30 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 7 Mar 2025 10:44:29 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 10:44:29 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 7 Mar 2025 10:44:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qyLc/8g24mTrRP9RgepUwogJkFl4x8U4eXw4Kb5ESNHmcZ5pkH/13kbe332R4Wybq1NRVlYifEAy9+QZSQmJZt4WKvTFzcraCvVE7hmflzJ4E/dp4jTS+TOLVjGOG+O242+BICRWC2ins8EYXlAvlP3QHTtW/P9763dNtb6j9g4kTiLVkhwsa+DF9huZu6vbc5tholWCbeEP5yFkPgVIXcqFH4W/v9LODw1VsNsrmthiwfzGSbl3on7qRH8jzTT5MOKfZiGYj7pvAGLWDliWcBROL8fmqGdLLCc1XRFIZQjrfcsrmYF23WaXfoyJL3R7xKk9FzaXsaF5Rgi/01aVbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cmY9a7M+66B/D1RlbZfRLlhy/mEUe0NIqYkFFSkN5DQ=;
- b=DB4Ug1+GLSkST9Q8I9xGgYVkhX8CBQRAA4cDHL/x4bgodX7SqXKIZRZto0fsGOe9EaHryYMYh6mUOBzW2e7sQ7fVGVf/nEHoGDXYBdcssJSWSUd5hR3oGJdnYoKp8noqya0gksFxXMdIgexcKkmSq9G7zv+YCpmquuZQoJC2sh2OeRLi46PC0I9+DwHXVoSlPtEXzKinnVrsYSb5TCZzZFBbt1P8TRR5hZiHyXpqi/ChPge52DLzTPwoLX4kirq42oAGLDe/v0uIkFAQoO2f+PO+/dIcC1k/5s8QOBkGeGNfvXPOh4ThavnUKjjBYLVhF81alq9ubjcooqjVMYPm1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3605.namprd11.prod.outlook.com (2603:10b6:a03:f5::33)
- by BL1PR11MB5222.namprd11.prod.outlook.com (2603:10b6:208:313::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.22; Fri, 7 Mar
- 2025 18:44:26 +0000
-Received: from BYAPR11MB3605.namprd11.prod.outlook.com
- ([fe80::1c0:cc01:1bf0:fb89]) by BYAPR11MB3605.namprd11.prod.outlook.com
- ([fe80::1c0:cc01:1bf0:fb89%4]) with mapi id 15.20.8489.025; Fri, 7 Mar 2025
- 18:44:26 +0000
-Message-ID: <4030ee60-b607-4ddf-99d9-5348a741f7d5@intel.com>
-Date: Fri, 7 Mar 2025 20:44:17 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH V2 2/2] mmc: allow card to disable tuning
-To: Erick Shepherd <erick.shepherd@ni.com>
-CC: <andy-ld.lu@mediatek.com>, <avri.altman@wdc.com>,
-	<cw9316.lee@samsung.com>, <dsimic@manjaro.org>, <keita.aihara@sony.com>,
-	<linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-	<quic_jjohnson@quicinc.com>, <ricardo@marliere.net>,
-	<ulf.hansson@linaro.org>, <victor.shih@genesyslogic.com.tw>,
-	<wsa+renesas@sang-engineering.com>
-References: <9e34fea2-6bdd-4673-a75d-837d9b793c3d@intel.com>
- <20250307174545.1288682-1-erick.shepherd@ni.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20250307174545.1288682-1-erick.shepherd@ni.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MI0P293CA0011.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:44::11) To BYAPR11MB3605.namprd11.prod.outlook.com
- (2603:10b6:a03:f5::33)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="JW0AK+zL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741373236; bh=dR6sLeIF6x2BIfs1xnT3U5+B1dmWz+hDD8EKB1ZIw3c=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=JW0AK+zLCffOsqkQN/3VH3Xguv9R2HSkhMkNlYYnQfBi4sNqAJEtMm2wxt66WrVnVqetNiBNKU53m9N7x8qWzQ7WXIe9W3RSgGSTSEwKvyXCTXq7aJQQvfNjxN15Do23vZLDXFRxeEOTi5RumK8eZLPzQUlToO10QxGIVOwH6BqykaHyk9uu08mbqJgGG+cZFa6wsHUa1jsBFDOtxZNNA+iAM6aXOCi5tXqgGEoQJV4pSpRdItCbFPCTGQXmkyXHLOCK2qoXoO/TmbmlYEl7UPSWM/0blUtaotLvY4jzl6HvzQO7h6DUyQCH3zWz9DgTMuThS/iljJ1lkc2XujNFSA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741373236; bh=wLj0L1ttOYxtl91TgYtvENeBsK3UAXYLueSEP0NsA14=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=DHPhQ550X2or5pIEpsvSOeOMWhVyHqL2Rk9rbyimAgWdAkePPdbmAb6bh8mSMCwV5UDdSrTCL9krlzmipFfWa4gpdb+h79P8GXQjv7IlyAxhh+gnDUHiVvqoBlxTmTxtC1btfJ1fH/3Wp3iLdL8L7Z5Rp6pe5oYiF/cKfVq7AsyLPoaM4Vthu4njqRy+ato7y/RI365tObGK8Wh1rEHum39cr4d1IJ7sE5va7DeZ+Urp++p6HwzdT84gWaRAmvqRZJVDAGQhZeHrHcrB9czJY6a0DqlZ9lnYzzh5NwA0TPSp8WaPFD+elANIVsfptpV2rPAMNU72yVO+Jry95mcK/g==
+X-YMail-OSG: fiDnTWsVM1n8p45s0EHmwAEbkem6XNTjPuFp3Zrm_5MKw3_HGV29AJwdKdwjIJo
+ IaIn7o1IsE3sf4en7wqgjYrZOjUv8tzW.5xPU6htXL9pP8tT1t13IqH9QF.9v7gkAk9UGaIWlGW0
+ dyaHLGGxgeXxQOW.2Hln3bnkljYiO4S5qDma1GD5afMIgufm7sR3kUoVkrrH4NR0EVVnfZdi0Q5w
+ dR1GQlPQtnqCsA1FDpG6t5L3JZS87NOR1maWdCTb_jMpBImAXIyS1luPiL60vgpwOGbC0_wKI0z5
+ 2gdJUmU8qyh3M4aBdaVeyLSdFcgbnw3MwnDSP6XZHEPmII8dIGGJw27s5jR48OSaTSPfSZHbTvk7
+ iEwzi.UkpZ_N.dAefv6f6qb2W337QusD.VSnbQnM6ND_kKZQaQ4yGdQgZuqcs6lG7dM9n4635KiU
+ TKSQl8Qsx9sc.bGCc20FsE1vt.YGga5vovwEBScTThBda9dZSMLcaNqsKcHVMTuC.R0agZAgtC6C
+ kmhayd4Sirh.1vx3hd2anAXctO_Qzz5lsWIHDrJHABNmmZXkk9vDrfmY80bx7UX5pK5G3evUzYx5
+ rYPyzmwJRY2Ko3plooof35Ezc80w6NwXkf7Q2FXEO._GhfhWMHRZuerU9bYYOErc6R3imbJ8xFuj
+ 5iwA0XhLeob7YIcTRdOUIsICJclQoxMCFX13THTkOJIHCip5medoA93.MF7zGKL2.8rC5YXsByFu
+ MhdwhqyI8UAz3Sduj21piVeZ_.6sIu4Ez8osBA6HDDxcmnqr5Y8gFHn2Lnfzz4EH1fdnre3.s6Rv
+ 42EN5YDb3VptkBdaTb9hUq30phVocxMafvL.2FeMC3KOtD6PBeDVhr_iWb4KDyeGp_mmS.SWUOm6
+ G7kn49jBOSXW59YXflRczK5z2AmW.N3oPBhIhFSk6EFVOK_YJC5rbvGV56s6X55a_p88qfaqYgvy
+ Sn5j.6oirqc3.J3i4nkxKm27OhxvE7MRKePbSxqL2cdly.OhQc5pfCdVqhO13mnZfFG.rjgADA_p
+ Obazzn_YpX_pM.BVLH2BeLK8QdTJD.80yM9d1j0w0L0wugiT8nLI29RMzbIzG8Bre1Y8DUDpeYl0
+ TYIkrueOlj2KeoUmSq4ughcFwVPuUHMeYwTrFGVz2LQ0Hvduar4Pwp_k6aZMoU4kfzuTCZ8zJ2CB
+ L9bG3DPrlKt0.fCN1VQuAlYFIvhKClOcvYSUr.QxeT0.mhtRWozdC19Fq4nyWD7qZPJX37wC5Ccs
+ 13fWD64QnggBpwxERMLsmHyJqJ5uFwjv7LGNp2SXzAK6bfOtbx6XxCq_zUYZt_m6olRQ1.F__JJn
+ ZKNNABNxs5ujnDEe_8Tv3dM7ACWDANf.55wgVqCDFirWzhVbY7WZIELKvabmvzY7E8tSb2HpLVvd
+ Tacu8Zr29FKbHLfZUq4r9tKXvzlFGjk48SmKVO4SUFPgY32kRs7a6kXBBDgBeVmQhdtWbI3jhYiV
+ 7EjvJCjWt3OPCFHrCcPsvgNbYGfGFu0jgxCHIqCSIo66qjiKkfzaMZl4DN4KL0trN_maByiN8lsC
+ owFNtspFy5raBu.LQByFD8WAslq7hLApgiRRGtBIR_RF8lzH5ChZpLmiF6Y0SQ2ra3l3AhM_jdr7
+ ZmINSXne3z4Dea.5ULVyvc1w3GwhJ6KUofoS.O1GaIcDySNiMn4FVPIfOEPoSvvvObJ.1cJx7p9i
+ gU3nHjMhY0gCKfPXuPJ4yhSbgFrM_BV9rIYoNwpfdoQen8cmP6V9Fg9gUeXKnGwYLYbrHlJXpuMa
+ 7wH4.TZTy_sVgsP1ieabGD17l0e_DA6s1oo1RFGnrlgzTzZi3c4tNbqzAfF6tYds534NQs8lim4M
+ 7rOB5QvT56ecMrUr_SRW3XLipRhKeoxOClre00QxTX7qkxLIpcQcUaEx4gLm2KsTvGJ2gJzI8BEZ
+ fIG8lOjP9ic0DL4DR53LptOMW18vdb3D9eeuAT8UqVGfUHsjO_EV04XWJMJeqZTzWSYOBawG0BGD
+ BlP6J5atJI.6s6dkITkAz.01hRBDsgKczjTU0LaariXLIJ6F6BmahoBJ06V__AxB.OeI4aXuGhjR
+ usOgLMBqFJWBIKjUdISBig0omF.bm6x3mpG4ECaLKimqN4Omm_P7IrqmotRvEhGhkYfIKU4bOgfh
+ g6MLYWJgbXDC1OS4WtGp9N0vDb_psixdrUTj2YU_JM2MwZJwzXEtrvlVhc63ooXTSaUwPUpojxEx
+ tz3TiLBrOdeXnBLOepibYvIVEar26fUDv3c_4Oo5AsCTtq2RwCzEmhrlBKluDCt90uGWVUi2hiG2
+ zspYSjUluTsi3uGDlWAtk74k-
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: fb54d543-40b2-4d78-bd7f-e5e71d482f8a
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Fri, 7 Mar 2025 18:47:16 +0000
+Received: by hermes--production-gq1-7d5f4447dd-9qjv2 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9e6d6a2ea591e1dd2da3497c747300b1;
+          Fri, 07 Mar 2025 18:37:06 +0000 (UTC)
+From: Casey Schaufler <casey@schaufler-ca.com>
+To: casey@schaufler-ca.com,
+	paul@paul-moore.com,
+	eparis@redhat.com,
+	linux-security-module@vger.kernel.org,
+	audit@vger.kernel.org
+Cc: jmorris@namei.org,
+	serge@hallyn.com,
+	keescook@chromium.org,
+	john.johansen@canonical.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	stephen.smalley.work@gmail.com,
+	linux-kernel@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: [PATCH v2 0/6] Audit: Records for multiple security contexts
+Date: Fri,  7 Mar 2025 10:36:55 -0800
+Message-ID: <20250307183701.16970-1-casey@schaufler-ca.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3605:EE_|BL1PR11MB5222:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e0a8c6a-4a62-41d0-fd57-08dd5da8161a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Yy9RYWc5N3QxMHFNZEhrQ1VvN3l3czBJbVFUVThHOFpjWGhLTCt2OTdubm1n?=
- =?utf-8?B?ZXVTUzJyRnp1RW1mY0JLVGw4OTNPWWNTMkM2LzFJQW1WZEMrZU4rbzFwSTE5?=
- =?utf-8?B?R3dnUG52K2FCSUxnQ0xUVHRFTlBLMy9LcWVwWHJBNEVaVzVaMDVhRTFnMDEy?=
- =?utf-8?B?YnFiSU1QTzk1Y2Y2ZXF4MlN4WTV2dzBmL29IeWVwYU0rMXNKUEFSOEttdVlo?=
- =?utf-8?B?cnpnUmpLK3pBME41MzVTU200dk42cEprcmpNR2VkUGF2UDhEN3U3QkVzd01L?=
- =?utf-8?B?YlBTclhZUTNrM1dxN3NVWTRrOUJoWkwrSUU2SUs1dExMVmF6dGkzd0o1Z0FS?=
- =?utf-8?B?bmV4SUV3RzZ4RERPaGlRcDJTN1U1UktYVzdqcHBjMFBGdVVjSTFncFVSdlBV?=
- =?utf-8?B?Q3dnSDlZZXVuR0ROUFUzTWNzTnU0WlNDQVVtR2JiZ0ZLak9NU2luTGpqU09I?=
- =?utf-8?B?TWpkM3FDOUtKVUlSK2F2ZDZJczVVYkFVVDhhc3ozY3hrQmlmY2FZQU9OL2U1?=
- =?utf-8?B?RTgvdEQ3VmJDT05KQmppSTVVV1hvOVc5SDUwSFJqTDJ4YnNpanNwU3AyWkJx?=
- =?utf-8?B?OExaa2lVRjFFWkNuRC9NdThBWUdRaU9UUWdPcURDRHpSZGVPNVNsb1RSd2c0?=
- =?utf-8?B?SVgvK0FPNlpJb2JWd1BHVDJQaVRsaFFkTUFtNGd6bk5nUHBPeWVER0N5STlz?=
- =?utf-8?B?NzBrREZzSXJZcmNkMGVVVjdkb2RhMUdqbGJxNkFXT3V1aldKQ2UwVkpUTHc3?=
- =?utf-8?B?ZFJpSjYyanBqUlZHOGJxT0ZSME44UWQ2ZEYrTko3ZnZpOGxXQkg4b0R3dFhC?=
- =?utf-8?B?WUtYYjltdDJjM2VQbEtWWTUwTVVHTUJCNmczd29meTRlM0Q0RjlzMDgrTVda?=
- =?utf-8?B?UkRUaHl3SHVFWGRLT3VLbGtxY2dDNThNZ2hsUGRyeEJjUzVxbVBWK2pUaHlh?=
- =?utf-8?B?a0tnUkJuNmRiMmREd3RPMTYyUnVQeWdsU0tVYnZCMWFNMWcwUUpaYkxsODdX?=
- =?utf-8?B?WHBGTmhTaXdGdUUwYnN4YXpLaGdYR2FPOExBK1FCL1dNS3hJMUU5NGZGTEhw?=
- =?utf-8?B?WU1EcnFsdE1VbFJLTjJhZDJGZnNwTHVacVVDQm13cGNYT0pOTTZnU3UxcXda?=
- =?utf-8?B?ZlFuT1FGVG90NEVzem5YZjJMMlFoMy9wT1krYTFYOEVKSU5MdGtWSkRqMGJE?=
- =?utf-8?B?am9BNk80RlMzZGRRL281aUg2MFJhd1BPREhvbFZ1dzVnRE1FSEdha3A4Z0ha?=
- =?utf-8?B?aWpTSlpUVmg2SFBoRExBMnkzUEk1eDhac001S1IxU2V4Ykc5OXNCT3pFclR6?=
- =?utf-8?B?bjhZTHFPNjExSWpRUmtMYWJlLzNZN0Q5MzA0c2lDREdaUkt6ZzZFVFFhWEpF?=
- =?utf-8?B?bkZkV01yRnFKTTd3MHpvaElGTE40RzRuRWxDckFZQzZSL1B6RVY0Mms3NTlJ?=
- =?utf-8?B?VDc4d1FPUC9ialg0T2M1dEs4UFRubXJ4OFNzQThldTFybVFBdlRKZjVHL2dt?=
- =?utf-8?B?MGd3R3MrWTNzQmlyWTBRVStQUThUcnhIbXEzdHUwcVNjbFJoS3ozUEg2TGFZ?=
- =?utf-8?B?d0RVNy8wZGlwNnJEZjFrSlArOS81bU5rMjRFTWZyYlRoVzMrNGNWeExxRTdC?=
- =?utf-8?B?aG9kdXdycnBpMjNHdEduTU9WQm02djlLV3NJUG5xd2RmSnJBMVEwMjl4Rno5?=
- =?utf-8?B?RUo2RmZkOHRobmNBQWkxMUJtMXhJTkdrd1grVDFERnlKL0ZPdUlzZkVJUlNC?=
- =?utf-8?B?WkxuRUJwTWdYYnFnSjc2czQvZTBVY3M5bERqMW9NZ2JnK1FBcmlGS0NkUVl4?=
- =?utf-8?Q?Y9zcGsyF69p48i6yJ1WnCu5Ha1px9sexXTHmw=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TjhNTHAyVWk5Y3dyOEVaN3dZcTZvSmFjUGRxRmlwRUVpWVpBZ3RqbVRycFVx?=
- =?utf-8?B?Nis4NFlodVErQWdmRmFOOXNHNkp0OGxYTCthZ3B2ZEhUUng2aHcvdUFMZXV5?=
- =?utf-8?B?TUNFemJKNElWczNBeGFMaTVqbmsvb0JkaWF1cWtjdEZmclpONFpsTmorTFEx?=
- =?utf-8?B?UW1xNG96aXNHbytxd2VmM1dVSFlFOEVJK1R1dGFoblMydkxOS1FFR3RRdnBE?=
- =?utf-8?B?UkFVWVJVME52TnVxWVpFNUl4WUNGTnBvOEtRUXU0MjUvb1Zxa084U0JZcmlQ?=
- =?utf-8?B?b0tjc2dFdFJiUGEvTkZ0N24xSURhWUZLM2JzalFRV1hBR3g5bFg0VjlWSW45?=
- =?utf-8?B?ZG84R2hEWmNieHIyVWJpR0xxaXl0dGlNV1FVbnBxQUYvV0FyN25tWDM5S2F6?=
- =?utf-8?B?RHVSdHVVeGtUT3o4Wi92SXgzT3FCNTMzWXFyN0xlOEg4Wmpzb3lkRlVLRDFt?=
- =?utf-8?B?TjR6VkJqVkkza0JrUTFUK1hDSXJvSGU5Q1JBczU4azNFOWNiM2szczJqN2ZY?=
- =?utf-8?B?THVKYTFtcm0wTFZtTDJPN0lSQ01kSm0vY0RycnA2MjhoMExRTXFXNWsrN09i?=
- =?utf-8?B?ZGtZZGx2VUV6YlZrN2lUblNzdHc1VlNseTliZFlsT1hNSDMyaW1TWktCUDBu?=
- =?utf-8?B?N3BWbllmWjZ5TW9RNGxNbG9KMkFqYUp3dnN2ZmlZUFRTSkliSkZoT05wTkdS?=
- =?utf-8?B?QStacFl6UDJBTU45djNEVkY1aWdVZEhadm1nMnEwRUVMTHFwL3ZETWNsUUpj?=
- =?utf-8?B?SnR0cmduQ2prbDQ5am9zQTFpT0tMR0paYTJMcGRsbDN1dDhCa29HQ0lTTUhE?=
- =?utf-8?B?c2d1QS9pOEY5UEs3WEdTQWFUc3hBOHVNZ25Gd082TEljNHpXa29uRUZhKzJG?=
- =?utf-8?B?elZKYTNkaGEzbG8rdEpETnR0a0dJSndlYXhHVS8yd3NYd29CZTlWVWV5VGhH?=
- =?utf-8?B?UjgwYXpPblk1Zlpka05EVE43SlF5RWNwUitYOXlaLzNnSlBZczRnSE9lM0ZE?=
- =?utf-8?B?bk9lZXVSMlRwek5nS2NKMnJaK1I2L2lVd2hkdld3SlU5UUVJanVtK1kxdFRJ?=
- =?utf-8?B?VDNlR3JpTDVYSWlBWDZzUDJHMmZYc01BTUEweXNCcWxWbGNVczhTY2NlZkU1?=
- =?utf-8?B?bjgxVklPbmxFWFVMQ25yUzRUVXdOa3Q3Sm1HNWJ4MWtKMWlIN2hWTkRMRlp5?=
- =?utf-8?B?Nitqa2Jad3lPMUZvMC9QMkhWUmthUG1tZDFUQVpFY1h5SmdPZnFnV2t2NnlL?=
- =?utf-8?B?ellKbnltR2d4Q1dUZmdMYXdwUEpkZDlpcTMyd3V0Ykp6OEtMUHVqSVdCZWJB?=
- =?utf-8?B?MVlQeGF4ZTViN3BpQzhRbUppMXcvYXdqNFduU1g0Lzdmb1ZxeG1DLzFMNG16?=
- =?utf-8?B?UGZRRkJVbTIrekZmOEYwZzdyUzY2Z0tLeXJTVktnbndNODY0NXZKa2p6Qmlp?=
- =?utf-8?B?MGovcFc2RXZQU3JBUXdNM3NKcE5pR05FeXFpT2lIWll1Z0hqYWI2VUMwOXMx?=
- =?utf-8?B?RWdOZTVKYUx4YVRmM3FQS2dVMW41eEhkN2kyL3NGTEFRc1F5TjVjY1M3eWJS?=
- =?utf-8?B?em14cVJYV205QWMrdE9UL0l1VHU2TkRWRWRqNytxaXhiNlZkWWJNVWxkTmR6?=
- =?utf-8?B?bW54cU50eERqdXU3ejlnWVc4RE0xVFNPOStqbnpOb3k3MUJja0tUODdobzlB?=
- =?utf-8?B?QzVRaVZhSlIvWGhYOVJpT2JjekVnMlR6KzBkZ0dQdSt5bGs1U2V1NGJqcG8x?=
- =?utf-8?B?MFc4VmprWlJiK2FvQ2U4SnJCQzdoL1U2VVdBQlBRdlZjb21BdVRPdlNGY2FI?=
- =?utf-8?B?MUVFZUFFWkgzSko2aHJWMFlaeERNNUtJNjZDVnRwZXR1MFJZVnk1bjUxdytw?=
- =?utf-8?B?aVoxN1o2NjFjZ2F2UXdDOEF3RmE1cnNqakJoa0MrVFptczk0cU54YTdaQVBI?=
- =?utf-8?B?dmV4aGw2RndNK1hRMldjTHVxSzU4Z29QYlloOXdlanVWTkUvcURHek9BWENG?=
- =?utf-8?B?R1Q2bGZ1dDR6b2ZaV0c3NnpKaVFFQVkyNGdEK3lUc1Era2NSaUMveWVIaSts?=
- =?utf-8?B?UDdPUVFtSHJBWHFOL1hDK1Q4MDZxb1NKUTBpd3liajdDNld3TlpaZVNsSlo5?=
- =?utf-8?B?WERXQ2lSOWJvTnZFTVJFYkFXNndnL0xaaWx1M0VkZ2hFYy9yancwZlRSaCtx?=
- =?utf-8?B?Y1E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e0a8c6a-4a62-41d0-fd57-08dd5da8161a
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3605.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 18:44:26.6378
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uwFORYnWta1qmULjQUEGFyF3v9m6guCNL7r63G6LLS8Oy+TJX6Pwh+DVcRrwgpH8Tt+4CVJ2PhLTCkwR46AUnQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5222
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+References: <20250307183701.16970-1-casey.ref@schaufler-ca.com>
 
-On 7/03/25 19:45, Erick Shepherd wrote:
->> Sorry for the slow reply.
-> 
->> I would expect if there was a general problem with DDR50 SD cards,
->> it would have come to light before now.
-> 
->> Does the card work with any other host controllers with linux?
-> 
->> If it is specific to a particular kind of card, a card quirk
->> could be added, say MMC_QUIRK_BROKEN_DDR50_TUNING
-> 
-> No worries. I have not tested this with other host controllers but
-> can try to get something set up. This issue has only appeared on
-> one particular SD card model for us so I would not be surprised if
-> the I/O errors we see on subsequent tune requests are specific to this
-> card. I can put together a solution using the card quirk you suggested
-> if you think that is the best way forward.
-> 
-> My fix is currently spread across two commits, one to return the error
-> code thrown by the tune request timing out, which prevents the card from
-> retuning, and this one that prevents the initial card tuning if it has
-> already failed. Should both parts be controlled by the new card quirk?
+The Linux audit system includes LSM based security "context" information
+in its events. Historically, only one LSM that uses security contexts can
+be active on a system. One of the few obsticles to allowing multiple LSM
+support is the inability to report more than one security context in an
+audit event. This patchset provides a mechanism to provide supplimental
+records containing more than one security context for subjects and
+objects. 
+  
+The mechanism for reporting multiple security contexts inspired
+considerable discussion. It would have been possible to add multiple
+contexts to existing records using sophisticated formatting. This would
+have significant backward compatibility issues, and require additional
+parsing in user space code. Adding new records for an event that contain
+the contexts is more in keeping with the way audit events have been
+constructed in the past.
+ 
+Only audit events associated with system calls have required multiple
+records prior to this. Mechanism has been added allowing any event
+to be composed of multiple records. This should make it easier to
+add information to existing audit events without breaking backward
+compatability.
+ 
+v2:
+Maintain separate counts for LSMs using subject contexts and object
+contexts. AppArmor uses the former but not the latter.
+Correct error handling in object record creation.
 
-Does it tuning at all?  Maybe MMC_QUIRK_NO_UHS_DDR50_TUNING is a better
-name, then at the top of mmc_execute_tuning()
+https://github.com/cschaufler/lsm-stacking#audit-records-multiple-contexts-v2
 
-	if ((card->quirks & MMC_QUIRK_NO_UHS_DDR50_TUNING) &&
-	    host->ios->timing == MMC_TIMING_UHS_DDR50)
-		return 0;
+Casey Schaufler (6):
+  Audit: Create audit_stamp structure
+  Audit: Allow multiple records in an audit_buffer
+  LSM: security_lsmblob_to_secctx module selection
+  Audit: Add record for multiple task security contexts
+  Audit: multiple subject lsm values for netlabel
+  Audit: Add record for multiple object contexts
+
+ include/linux/audit.h        |  13 ++
+ include/linux/lsm_hooks.h    |   4 +
+ include/linux/security.h     |   8 +-
+ include/uapi/linux/audit.h   |   2 +
+ kernel/audit.c               | 235 +++++++++++++++++++++++++++++------
+ kernel/audit.h               |  13 +-
+ kernel/auditsc.c             |  65 +++-------
+ net/netlabel/netlabel_user.c |   8 +-
+ security/apparmor/lsm.c      |   1 +
+ security/bpf/hooks.c         |   1 +
+ security/security.c          |  19 ++-
+ security/selinux/hooks.c     |   2 +
+ security/smack/smack_lsm.c   |   2 +
+ 13 files changed, 274 insertions(+), 99 deletions(-)
+
+-- 
+2.47.0
 
