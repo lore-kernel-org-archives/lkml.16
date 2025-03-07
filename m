@@ -1,128 +1,161 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7781621ABD2
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 11:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191C82185A8;
+	Fri,  7 Mar 2025 11:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741346546; cv=none; b=gOh2CNu3WSjYhm5pZCDfmdht5kC5EtzFNbsxj4YUNY4i2qQa9grZv56hYLQGQUMt7HEF3Bw9aGJpHtjMAbKUOb0VWQDzvuS0M/ci0/dDBpUZCxQIZrsRIs8/5UNCy3o2lT994nvA2xmQiF/KOUODezujIFn3YXFRC+w0BkglWoI=
+	t=1741346549; cv=none; b=IPV5PzCAe+4ykz+afzyajoJRxhnYcdhcmJmpmXkOuQLp++6USgzW3Cf7sli9BTtKcm29yqh2tJqfHCMp0lUYOuVrsdpJ0wVJmQ7b4qI6SEseJo/BNQchGonXIDMQ6lhzwhLRhW+mS9gMclC2o8nbOhfYBOOkA0PGmg3PtEtk/tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741346546; c=relaxed/simple;
-	bh=07Y53SvaN4HyareOuoHQiwP6ciMkkFkpWBEWCYPiweY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UwVoXNW+VrIa6fNgFGvHSOxXjGOeJq+9TdORE2vprgTf+eLulSTbJUb1MTpyX3fIGUMnHz68DkE79X6WdXJDgxPrl2YFPTkd0sWL0IOfuve2v7HR9cwvyfWeTK0HGWBBOgqU1xqWPDBzUiLNvowdSjqTopzrhbc6yAaXLJqM4KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kaY9Rr8s; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741346549; c=relaxed/simple;
+	bh=PPfK/VTRkAcax3nPDPEwX4l6GH97+UW8KyR5jOc+9S4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=D6Osg1C2xvj6dUWAfCselpxArGeEE3+n1iSmWUdZS+GR8VSnJnG/dVKM+0GZMNYsWaMNqDK1YzxoP1JGcoDMFd1iXO/dv+4OM4oMCTP7rVVxXBoRlyvO6ALSqG7FmMeH6axLExED9hDH1cGlDQblIet0ah287OzmJScNyxsjfJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmKM1U7x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kaY9Rr8s"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B4A29432BF;
-	Fri,  7 Mar 2025 11:22:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741346536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qcuD7NlNDZd+xhVem/Y+o+z4MWg9gjtRsouOtv13Y6A=;
-	b=kaY9Rr8s/iRCbvx0GX0icDjID8GQ0lANAxP8yEtn+4eQQIvzjVU+NSkHQOFUFzuzJOtfTL
-	GAmi3h7PM7njnuuWRVxOpB7KVzL6ytdr1lVgbNkFB+HV9MKENMy7bO33KObvVOq97MXB3Y
-	iDKjjRbqR4Zh2LBH/iNV8WdrViBm3wc9kOlXUVGQ2vn90LRQe3EwhqUs7/RJxQwMvWofon
-	MLNahYoNEwETYmW8y4lpsAjsJz/1X0aoK8me0BW5Mzdl9kYHFF3YIUZADuuyYdDcvKIBci
-	Wt6L0z0Ke9qm18BVKX7Ohjf/4YoajG/JoJBfD7qiU/zsO2WI+FGhainZs7xh3Q==
-Date: Fri, 7 Mar 2025 12:22:12 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] drm/bridge: fsl-ldb: make warning message more
- informative
-Message-ID: <20250307122212.18252ca6@booty>
-In-Reply-To: <f8df2b5e-b005-4ada-8108-159b2b94a72e@nxp.com>
-References: <20250306-drm-two-ldb-improvements-v1-0-f139d768b92c@bootlin.com>
-	<20250306-drm-two-ldb-improvements-v1-2-f139d768b92c@bootlin.com>
-	<f8df2b5e-b005-4ada-8108-159b2b94a72e@nxp.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmKM1U7x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D48C4CEEB;
+	Fri,  7 Mar 2025 11:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741346548;
+	bh=PPfK/VTRkAcax3nPDPEwX4l6GH97+UW8KyR5jOc+9S4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=JmKM1U7xfpZgUQggswqwdorAkuuo1MV+D8H39awZEA4fXnrqeA6bVwx6mYc4OJ9bv
+	 aC6DW4v1xUD40iTauZXaCPbdp0j+9TSt2SJFPfdXzIqZZDNlRQsdgmOuJIfdUQ8jA2
+	 h3ZtWT+UWr2PcoEG534L+Q3qwtSn3zlJvwcbNaqNEtMqg5+bHID3KBh4nrId0OuQ8J
+	 vT4u5NRz6G4h+VCk7t1GCT1VozinoRvhZc5kllaLXBVrdAerRSDAa8b+Ayg49RSUkL
+	 Iv/Rvo0fydX+1PCSoqyD1c9Wqml3AyOxP8RWEP/oTyW0ewrH6cfcYue4qMgPo1zfU4
+	 twDN0BgOkzoOQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 07 Mar 2025 12:21:55 +0100
+Subject: [PATCH net-next 11/15] mptcp: pm: export mptcp_remote_address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeeltdeljeeftdetgeeuuedvheffffekleehkeevhfdttefgleeutdfhkeehkeeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmpdhkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopehvihgtthhorhdrlhhiuhesnhigphdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhms
- hhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Message-Id: <20250307-net-next-mptcp-pm-reorg-v1-11-abef20ada03b@kernel.org>
+References: <20250307-net-next-mptcp-pm-reorg-v1-0-abef20ada03b@kernel.org>
+In-Reply-To: <20250307-net-next-mptcp-pm-reorg-v1-0-abef20ada03b@kernel.org>
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3712; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=PPfK/VTRkAcax3nPDPEwX4l6GH97+UW8KyR5jOc+9S4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnytbReDcaDbzaenv1ywRZUO5jj0GBmySsSDLpk
+ KDnPMbUCE2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8rW0QAKCRD2t4JPQmmg
+ c9CoEACz6J2MxYSou0i9QaCm8sbwaL7SxYxD3gOnNfbitAxzfap8VyDThN0AWYc3PcKqDSnDUhR
+ AstOk+8Ec8z3gfcyV50Kl+9C+Fg03fVWlsVqPI8uCmbr01Ha6aDjiRkzn5yh5XAqSKy/ZWzZ1xv
+ sbQIRDQitzAI6riXBtma8bZSLjRzjIFaXRkVGsQH1OhRInvOhwQg09oFVDGTLaZhSucQPX/2DgU
+ UdVF4uQBga7iMsXs3UTUrozTxmlmmSI66NBOJlaoSrSXlBkXst1yvkVGVoWLEMBoqPhQCU0WIA4
+ tvxSAFHYg2W5C2XJUHgXRISZ0iany8tVgMQkM6fcm/fPKCrGJsS6/wz/z7zOSt8dEuoJ+1fLPku
+ OZg44WB3QAZ59XRAddWGs/C6aYViZ8BzIzRlj+yYwVfxxXJMTTi8jUZsd4Q7fd4DUWxEyCvpJ8o
+ b7gUjDJJgTUuRtgzmcEZQM/pvJAdXHoSY1v4k6nI9WBSUSuNM0lYt1TRHojUVXgQD5OthGqtAmA
+ mKhCIvGhb05bD7Ztg4ruFpsUqf5K7SCP+DVuqRxCmXs8J4tdkexmgtliISm6eMvqasT5pxKh6L+
+ cWZuGdV9QFxxlwQQdQizCMO+YS/2Izpy7ZckkCEC0iR2Cga0x3WobDXgoz9dKxZBqFZSouuecuv
+ s/p7QkVwRkw9rqQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello Liu,
+In a following commit, the 'remote_address' helper will need to be used
+from different files.
 
-thanks for your reviews.
+It is then exported, and prefixed with 'mptcp_', similar to
+'mptcp_local_address'.
 
-On Fri, 7 Mar 2025 14:33:37 +0800
-Liu Ying <victor.liu@nxp.com> wrote:
+No behavioural changes intended.
 
-> On 03/07/2025, Luca Ceresoli wrote:
-> > This warning notifies a clock was set to an inaccurate value. Modify the
-> > string to also show the clock name.
-> > 
-> > While doing that also rewrap the entire function call.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > ---
-> >  drivers/gpu/drm/bridge/fsl-ldb.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
-> > index 0fc8a14fd80062248a43b8b93272101a7ca6158a..c7c899a9644bb827845fb3fe96a9695d79a91474 100644
-> > --- a/drivers/gpu/drm/bridge/fsl-ldb.c
-> > +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
-> > @@ -181,9 +181,9 @@ static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
-> >  
-> >  	configured_link_freq = clk_get_rate(fsl_ldb->clk);
-> >  	if (configured_link_freq != requested_link_freq)
-> > -		dev_warn(fsl_ldb->dev, "Configured LDB clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
-> > -			 configured_link_freq,
-> > -			 requested_link_freq);
-> > +		dev_warn(fsl_ldb->dev,
-> > +			 "Configured %pC clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
-> > +			 fsl_ldb->clk, configured_link_freq, requested_link_freq);  
-> 
-> Though this slightly changes the warning message userspace sees, I guess it is
-> acceptable.
-> 
-> Does it make sense to s/%pC/%pCn/ so that the clock name is printed in lower
-> case instead of upper case, since it seems that all i.MX specific clock names
-> are in lower case?
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/pm_netlink.c | 14 +++++++-------
+ net/mptcp/protocol.h   |  5 ++++-
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
-%pC and %pCn print the same string, as I just discovered at
-https://elixir.bootlin.com/linux/v6.14-rc5/source/lib/vsprintf.c#L1972
-
-I've pondering for a moment about whether we should document %pC and
-%pCn produce the same output or rather %pCn. I decided to try the
-latter and just sent a patch to do it [0].
-
-FYI in my case the printed value is (with both %pC and %pCn)
-"32ec0000.blk-ctrl:bridge@5c".
-
-[0] https://lore.kernel.org/20250307-vsprintf-pcn-v1-0-df0b2ccf610f@bootlin.com
-
-Luca
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 37986208b9c0aac48d9a7b29fb37e11e947f0d66..27b8daf3bc3ff550b61fc9fdbd6f728804ea43bf 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -94,8 +94,8 @@ void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *
+ #endif
+ }
+ 
+-static void remote_address(const struct sock_common *skc,
+-			   struct mptcp_addr_info *addr)
++void mptcp_remote_address(const struct sock_common *skc,
++			  struct mptcp_addr_info *addr)
+ {
+ 	addr->family = skc->skc_family;
+ 	addr->port = skc->skc_dport;
+@@ -138,7 +138,7 @@ static bool lookup_subflow_by_daddr(const struct list_head *list,
+ 		      (TCPF_ESTABLISHED | TCPF_SYN_SENT | TCPF_SYN_RECV)))
+ 			continue;
+ 
+-		remote_address((struct sock_common *)ssk, &cur);
++		mptcp_remote_address((struct sock_common *)ssk, &cur);
+ 		if (mptcp_addresses_equal(&cur, daddr, daddr->port))
+ 			return true;
+ 	}
+@@ -428,7 +428,7 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
+ 	int i = 0;
+ 
+ 	subflows_max = mptcp_pm_get_subflows_max(msk);
+-	remote_address((struct sock_common *)sk, &remote);
++	mptcp_remote_address((struct sock_common *)sk, &remote);
+ 
+ 	/* Non-fullmesh endpoint, fill in the single entry
+ 	 * corresponding to the primary MPC subflow remote address
+@@ -455,7 +455,7 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
+ 
+ 		mptcp_for_each_subflow(msk, subflow) {
+ 			ssk = mptcp_subflow_tcp_sock(subflow);
+-			remote_address((struct sock_common *)ssk, &addrs[i]);
++			mptcp_remote_address((struct sock_common *)ssk, &addrs[i]);
+ 			addrs[i].id = READ_ONCE(subflow->remote_id);
+ 			if (deny_id0 && !addrs[i].id)
+ 				continue;
+@@ -777,7 +777,7 @@ bool mptcp_pm_is_init_remote_addr(struct mptcp_sock *msk,
+ {
+ 	struct mptcp_addr_info mpc_remote;
+ 
+-	remote_address((struct sock_common *)msk, &mpc_remote);
++	mptcp_remote_address((struct sock_common *)msk, &mpc_remote);
+ 	return mptcp_addresses_equal(&mpc_remote, remote, remote->port);
+ }
+ 
+@@ -826,7 +826,7 @@ int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
+ 			continue;
+ 
+ 		if (rem && rem->family != AF_UNSPEC) {
+-			remote_address((struct sock_common *)ssk, &remote);
++			mptcp_remote_address((struct sock_common *)ssk, &remote);
+ 			if (!mptcp_addresses_equal(&remote, rem, rem->port))
+ 				continue;
+ 		}
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d4725b32aa567806ebf720347ecae80e22169828..f66c3d28333fc6abe4ea285207fdc0b78dbea9d8 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -724,7 +724,10 @@ void mptcp_set_state(struct sock *sk, int state);
+ 
+ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+ 			   const struct mptcp_addr_info *b, bool use_port);
+-void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
++void mptcp_local_address(const struct sock_common *skc,
++			 struct mptcp_addr_info *addr);
++void mptcp_remote_address(const struct sock_common *skc,
++			  struct mptcp_addr_info *addr);
+ 
+ /* called with sk socket lock held */
+ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_pm_local *local,
 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.48.1
+
