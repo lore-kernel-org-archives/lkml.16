@@ -1,119 +1,163 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A2ADDC5;
-	Fri,  7 Mar 2025 03:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08279DDC5;
+	Fri,  7 Mar 2025 03:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741318300; cv=none; b=DjH+qHMBHCvpZmB6Gyfrf9PHmlYIANoz5g0Q0vL4t7jakvP5dp9LM0a9Lf9IriDNuygtUIJUzNLGPSGtRSGKO1lQ0U945PRKRnYStwKQKWuYign0IQrdbupdK83Oc6/CwkQOEeIUQbQ3wQkFMFD2D1tTg2o0jRZ6XWjji6Z2t3A=
+	t=1741318354; cv=none; b=tBdyWOSYNXotbgG/PD0DMrgPBYxRFtdNTxu5KqDWDj333JdzYXhEoD7psO8Oo9FyTSu8hVcbMyx5ozrzAF9GOedehixRLc+ZY5yCjD8j3TtAatDgaM9TxPs8aiywRzPcHLOPkGjwO/gpV+j6X9dpLLd9/dgqDVFSM+KDv7bWimw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741318300; c=relaxed/simple;
-	bh=gCOOcyBomA8ym/MPB9dZ8uybUtzLM0QMJZ7UNpi5h38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmBdQ522RlKwI8kJ78m/lGOgFhUwBQ0LFiLTy8Wq1NivnA4WbqLI7l+/J6MskBjRGIO7E2SwzP48asC0DJMpBHC5OYqjzUKjO9VklXqLXm1agfYTvI4te0RiPco1SZsXbxAJh7GzLZrKqgniUaEpZvLWpDAwlFDAisJt2ifOgbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bDYWWlNq; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741318354; c=relaxed/simple;
+	bh=JgXvI8eby/pVJCPI3OtXr1NPnBv+rXku4TbyF2UNnt8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QqUaL+SPiTj0r3RJfRqUdIkATQwvE0ZTsv0Ht3pRZIDZvy1VosAzH3ckQoElacjmmwXA157IqBfWuslSqT95GD6UJF/7NiI2txIwPmfMQgxeBT08QRdIbbQpbMKb+ai+zsJew1AfRwYgynVSak90xSnUuISvtB9+nofQPFJkfV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=fS9JxuYS; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDYWWlNq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-224191d92e4so20172255ad.3;
-        Thu, 06 Mar 2025 19:31:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741318298; x=1741923098; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=POmXH3RB5AOdcM4iy/V5RM3jxDeeDKhoQuC/nTf0CE8=;
-        b=bDYWWlNq+OENoc/6JKnjsCaD+RL7a3lGRL5Nvbe9B7CWU1guT3bFX4jbY22KQlQ1xK
-         jE4CFUk4+fieCPEQ/apb1t7ucfMWCLuLGHNV/abA6tzxiszamO7B7BqRdfVDYP654JJ5
-         US38J1s7t3yqgsBajMT9qdi/+Uiq6l1TYloxJ/CHNeOhJy+4siFppsnJf8oYubsqy5Mq
-         iMnq1W5C3VQ2U96bE5Krv7WfUhEfQwcq2zRtqDteS1sk2lV0uSPYY9R/jSqlUm9JRmmR
-         NDakgQXz4mzKW/B2wS+z5NstyllHGime6pHhno6cQcgX78a+8b+nWPbts28+upZ2OvcX
-         RB9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741318298; x=1741923098;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=POmXH3RB5AOdcM4iy/V5RM3jxDeeDKhoQuC/nTf0CE8=;
-        b=HMhJgHoJ4II+7t23fiGHz4cQdc25VwxqIETdtx4wj2ZmZLHaUlKoOP4XzDW5v9UeBj
-         RIQcro7+mHnSRx7DowiRWc2Vil8ctiaUgdkLCabVnKBPwIeIkPqzOvrBZ4B9dtxqr+v+
-         5EZus5oB4l0ikgbnDCU1bdanghYAfe0CdaA48QyVNMjAyBZ/IEZOG9Z2SpGJcTtfTG0C
-         lIx8oFSdQA/+SF9CbvO6ZY7im+xdh0TbgdbVih7C4FilaGkSSvELtz2R0YUWshkKTMfe
-         xnzNBg5SE6TzBvcUkAJqVRpT1jCqeuk90vEi3AbgGbJCm5OFeEStBzkov+J0Fmr2K2rx
-         aM4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUs60QRQg1cceMl5J1EKcXuL7hlZg2VzrtRsH8V4xJSbBQe0xoYxXn8m4we19vB6rAxHqf1pLYPucQh/kt6@vger.kernel.org, AJvYcCV5798TPgj9GhaBKq8x6wrjMyEU8uHFzjA62r0QNQtKSV3a1NECbnHJDCBKUm2eJAaC/SvU0XvEHNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXKnvCZ1PLOJK5kaf/IX6qbdhAurRo7jtzW886R65YNWJu8yy/
-	wbk6jYw6sx02D28wJIrY6KmNwqIieJubxC/fBmFAqc+KB6qI/nqbBLZ1OUihUQ0=
-X-Gm-Gg: ASbGncuyLBSEZ1dTapMJfETfLZcd+osiO1NiGodadScTtXocQZ4f168FXUhMDHyjh63
-	SUvfdm5qKGqRWw+JQ3ufCoPjuOrT5TDwmRXnjfAAbaBL7Vr9eMo3tiyscr9HjcEfsYnqv0TNHeN
-	Ky8BSo53bwgW+Nk8D8TzB/id7xM1ux/zJai6GTKoUNCCKKMJWdRNFiQxYqhUfvBT42q+ag4k6FL
-	C+w6oFI969VCCvqP/AosgA8VqvtQFQ8kYwpG/88FSH2AYG4BqLAT0SIgYetlClk0pcZxOQAqAO0
-	xSkj24KIKIVtZZZhPpYcfQhpHZeGXm4QvNmKIoxoba8tgxEadKj93zk=
-X-Google-Smtp-Source: AGHT+IGkebL+fF1LPcEVxoOTh8Md9lfPjHNCFJiq4bU7ai9wRrrBoKSjgRruULMi73fEeTWoN6quYQ==
-X-Received: by 2002:a17:902:e5d2:b0:224:160d:3f5b with SMTP id d9443c01a7336-22428c1169cmr29142615ad.49.1741318298523;
-        Thu, 06 Mar 2025 19:31:38 -0800 (PST)
-Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-224109fee78sm20022575ad.105.2025.03.06.19.31.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 19:31:37 -0800 (PST)
-Date: Fri, 7 Mar 2025 00:32:30 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Saalim Quadri <danascape@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-	gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [RFC]: Getting ADIS16203 out of staging
-Message-ID: <Z8pozuvS1a3sa039@debian-BULLSEYE-live-builder-AMD64>
-References: <20250306002645.1555569-1-danascape@gmail.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fS9JxuYS"
+X-UUID: ca3e8e2cfb0411ef8eb9c36241bbb6fb-20250307
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=5frJAB9y8a+BiVXJdjweEmbFcW3Z5pKKgyZuRvk20D0=;
+	b=fS9JxuYS0cWAjniF/aYx04gIMbRgUecBUrtMREHZ/ffQYNDxBcEf+XinHL9GzranUl5hBFOWSUXnVviVU4TVDP6PZtCqIIdSYVxvgFw+QM3J6UDHoXKZ6fEu4iv7ZIH7ImWfvCgNwjvv7tUaXuVq+T+YZl7dmxdAmmuGoOwd5Yw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:e7b909c0-bf0f-4ee5-a0fb-7c59aa875745,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:f226cc49-a527-43d8-8af6-bc8b32d9f5e9,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: ca3e8e2cfb0411ef8eb9c36241bbb6fb-20250307
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+	(envelope-from <guangjie.song@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1685896031; Fri, 07 Mar 2025 11:32:26 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 7 Mar 2025 11:32:25 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Fri, 7 Mar 2025 11:32:24 +0800
+From: Guangjie Song <guangjie.song@mediatek.com>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Richard Cochran
+	<richardcochran@gmail.com>
+CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <netdev@vger.kernel.org>, Guangjie Song
+	<guangjie.song@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH 00/26] clk: mediatek: Add MT8196 clock support
+Date: Fri, 7 Mar 2025 11:26:56 +0800
+Message-ID: <20250307032942.10447-1-guangjie.song@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306002645.1555569-1-danascape@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Saalim,
+This series is based on linux-next, tag: next-20250306.
 
-On 03/06, Saalim Quadri wrote:
-> ADIS16203 and ADIS16201 are very similar in functionality whilst the
-> major difference between the accuracy in ADIS16201, I wonder if they
-> can be merged together into single driver, whilst also implementing
-> platform_device support in them.
-> 
-From quick datasheet comparison, yes, I think the drivers could be merged.
+Changes:
+- Update clock driver for MT8196
+- Add MT8196 clock support
 
-> I want to work on this, provided some opinions for me to work with
-> or to have a separate driver for both of them.
+Guangjie Song (26):
+  clk: mediatek: Add defines for vote
+  clk: mediatek: Support voting for pll
+  clk: mediatek: Support voting for mux
+  clk: mediatek: Support voting for gate
+  clk: mediatek: Add gate ops without disable
+  dt-bindings: clock: mediatek: Add new MT8196 clock
+  clk: mediatek: Add MT8196 apmixedsys clock support
+  clk: mediatek: Add MT8196 apmixedsys_gp2 clock support
+  clk: mediatek: Add MT8196 topckgen clock support
+  clk: mediatek: Add MT8196 topckgen2 clock support
+  clk: mediatek: Add MT8196 vlpckgen clock support
+  clk: mediatek: Add MT8196 peripheral clock support
+  clk: mediatek: Add MT8196 adsp clock support
+  clk: mediatek: Add MT8196 i2c clock support
+  clk: mediatek: Add MT8196 mcu clock support
+  clk: mediatek: Add MT8196 mdpsys clock support
+  clk: mediatek: Add MT8196 mfg clock support
+  clk: mediatek: Add MT8196 disp0 clock support
+  clk: mediatek: Add MT8196 disp1 clock support
+  clk: mediatek: Add MT8196 disp-ao clock support
+  clk: mediatek: Add MT8196 ovl0 clock support
+  clk: mediatek: Add MT8196 ovl1 clock support
+  clk: mediatek: Add MT8196 pextpsys clock support
+  clk: mediatek: Add MT8196 ufssys clock support
+  clk: mediatek: Add MT8196 vdecsys clock support
+  clk: mediatek: Add MT8196 vencsys clock support
 
-I often look at two things when assessing if two or more devices can be
-supported by the same driver, the protocol and internal register structure. For
-IIO devices, the protocol is usually I2C or SPI. Though, even between devices of
-same protocol, there may be differences on how the data is structured in
-read/write commands. Also, if internal registers have very different addresses
-or meanings, it makes it harder to reuse code because the configuration
-procedure for each distinct design/device will tend to require specific
-handling.
+ .../bindings/clock/mediatek,mt8196-clock.yaml |   66 +
+ .../clock/mediatek,mt8196-sys-clock.yaml      |   63 +
+ drivers/clk/mediatek/Kconfig                  |   78 +
+ drivers/clk/mediatek/Makefile                 |   14 +
+ drivers/clk/mediatek/clk-gate.c               |  236 ++-
+ drivers/clk/mediatek/clk-gate.h               |    6 +
+ drivers/clk/mediatek/clk-mt8196-adsp.c        |  291 ++++
+ drivers/clk/mediatek/clk-mt8196-apmixedsys.c  |  146 ++
+ .../clk/mediatek/clk-mt8196-apmixedsys_gp2.c  |  154 ++
+ drivers/clk/mediatek/clk-mt8196-disp0.c       |  247 +++
+ drivers/clk/mediatek/clk-mt8196-disp1.c       |  260 +++
+ .../clk/mediatek/clk-mt8196-imp_iic_wrap.c    |  211 +++
+ drivers/clk/mediatek/clk-mt8196-mcu.c         |  167 ++
+ drivers/clk/mediatek/clk-mt8196-mdpsys.c      |  357 ++++
+ drivers/clk/mediatek/clk-mt8196-mfg.c         |  143 ++
+ drivers/clk/mediatek/clk-mt8196-ovl0.c        |  256 +++
+ drivers/clk/mediatek/clk-mt8196-ovl1.c        |  255 +++
+ drivers/clk/mediatek/clk-mt8196-peri_ao.c     |  218 +++
+ drivers/clk/mediatek/clk-mt8196-pextp.c       |  162 ++
+ drivers/clk/mediatek/clk-mt8196-topckgen.c    | 1373 +++++++++++++++
+ drivers/clk/mediatek/clk-mt8196-topckgen2.c   |  701 ++++++++
+ drivers/clk/mediatek/clk-mt8196-ufs_ao.c      |  107 ++
+ drivers/clk/mediatek/clk-mt8196-vdec.c        |  449 +++++
+ drivers/clk/mediatek/clk-mt8196-vdisp_ao.c    |  100 ++
+ drivers/clk/mediatek/clk-mt8196-venc.c        |  413 +++++
+ drivers/clk/mediatek/clk-mt8196-vlpckgen.c    |  777 +++++++++
+ drivers/clk/mediatek/clk-mtk.h                |   10 +
+ drivers/clk/mediatek/clk-mux.c                |  198 ++-
+ drivers/clk/mediatek/clk-mux.h                |   79 +
+ drivers/clk/mediatek/clk-pll.c                |   51 +-
+ drivers/clk/mediatek/clk-pll.h                |    5 +
+ include/dt-bindings/clock/mt8196-clk.h        | 1503 +++++++++++++++++
+ 32 files changed, 9086 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8196-clock.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8196-sys-clock.yaml
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-adsp.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-apmixedsys.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-apmixedsys_gp2.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-disp0.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-disp1.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-imp_iic_wrap.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-mcu.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-mdpsys.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-mfg.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-ovl0.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-ovl1.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-peri_ao.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-pextp.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-topckgen.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-topckgen2.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-ufs_ao.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-vdec.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-vdisp_ao.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-venc.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-vlpckgen.c
+ create mode 100644 include/dt-bindings/clock/mt8196-clk.h
 
-That said, ADIS16201 and ADIS16203 SPI read/write commands seem to be the same,
-and ADIS16203 registers seem to be a subset of ADIS16201's. That's why I think
-it may be worth merging the drivers. I didn't read the datasheets thoroughly,
-though.
+-- 
+2.45.2
 
-> 
-> I see that there has been some discussion regarding the same at [1].
-> 
-> [1]: https://lore.kernel.org/linux-iio/20230124094450.0000272b@Huawei.com
-
-Git tends to rename/move files when we move a file from one directory to another.
-IIRC, Jonathan prefers the drivers to be completely removed from staging to then
-be added under iio directory to sort of make it clearer that something is
-being added to official (not staging) IIO drivers. To accomplish that, we
-use --no-renames flag (e.g. git format-patch --no-renames ...).
-
-> 
-> Sincerely,
-> Saalim Quadri
-> 
