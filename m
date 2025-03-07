@@ -1,122 +1,84 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F2421767D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 12:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D738218E99
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 12:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741350320; cv=none; b=lfuzKnL/3fUPJHy7xn/xg4IM4z/UqZnfVt1GJdEmNjeyqxvSGNIRt481RAZ9WQu0ONAMg89JfJi8W74lDRDKc1ondW3wA6n7nvSWk4FkK5JrhSbf2uim5HNG/sglKFmgOcnjHe3DKTphrdb7+n6D9kn7tefMDXe+TeoQvmVXDpY=
+	t=1741350330; cv=none; b=YOe7ayTih4EH4DO1N6WX56PYK37VypDtPLfxM9oX8YqeE65j5OyX9SesYbSk302gc6JyfMjRWQPfJ/9blx602+iilKbNRv4gWV89wyMR6llWUtwPi6xjSbAUKTZh9aqOMB4bwsLMxsvtCL+etWIHg48CkU9en3Ob/ImxNCbmk3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741350320; c=relaxed/simple;
-	bh=cWtcLtZgpaH/BcPDoH4lq4uUZE4PyN6b3+uskMHMYW0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y8SIPnKpRXeXT8ZbW634FL5nNu4Anm0z/QYI4qtVVB4eqS24NJEd4yu+nyfp2KJYU3RyZvZR9p39/xdIUaC+fh7iyZd8tIsZ9d0jEwwF+jvUL8fBzv351ybsnHAy595qh9EdZ3jhU8k9I/scW3/vPKj1f7sFEFLGYuWBxSHARak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=oPhHG8xY; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	s=arc-20240116; t=1741350330; c=relaxed/simple;
+	bh=xI8knybLezYjJtgoCWfbOC/GevpO0GqbS04MWnM1+6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Sl+zegxOPhuzTfBehfGJ9v+z+H71pvmowmFHHvQKa5SvzBTqfoq/pZ4bkuSOAj1Wa98dftEEb+IYkPGiSJe3uPfhZXz5mg2KloW4kQ9jeM5I3E+RY4BpAFjsZR8IOW7Ko5MdxtLTGvb1ATcImp3wEmltKCIB8kYH7qp6g99NZUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HI7aHCn3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="oPhHG8xY"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso2825971a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 04:25:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl.com; s=google; t=1741350317; x=1741955117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fDU3rB3lwTDhzbpDMnrAAgHgs/LQWtd52vWgHpI2VSI=;
-        b=oPhHG8xYH2ADeWUJKhE++2F063+/AUZGT/1zCgbheDMdTkeJpdKpIqwRrLNUhIP1pz
-         i6m3enEzt4OOaTmZDkBNZj5IbtoyPfIZlTxIZ1zaODv93Ou8yYUNdARVq3xpysbiUTnY
-         ZiSvBp7AT4otsCHGw1aKsLA5fpeSAmKJZFBmo3rI1SAOqZdo0bh3eLOhvMTYtkGNxE0n
-         ++4Kft6wJQc5ifXcpagqOBislwk3hOuPYHcGaW5aNbi2H+wIg6yXqN/p/CTqGEarlSO4
-         t56InySi0W5gNAx5OxvPu+YrcPlFwEznE06wqoz/OmyiZceZviomeM5dERqr06LN/xPO
-         TGsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741350317; x=1741955117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fDU3rB3lwTDhzbpDMnrAAgHgs/LQWtd52vWgHpI2VSI=;
-        b=oANRPpc/+h8MytbBrXexLeZHLLVaXIUh9MRXMmsdX/6+WK7jUDlPK3wKeDkfutmSSn
-         JTwM7jIzrFHkhryhNhyfdT3I3D+2tzztu/MzeTfvO390SUew3kMVkgQ5MdulFHrzSdTk
-         57XSBohUDCq0Ptqh+UK/t6HKGNKGjmqd8peoGtgOOxZ1Ru5ZZ3Z+NQBHkKuWoUJ2elYX
-         3TgS4C0MrmrL7/259Q3DP1fSv5BoDICmn6oGHm2inIvlDEMKPjtgEJbA0g4QQX+19UCz
-         tB+Qrwsc/CJ5Y/6Vj+aa6N9NasKlEKQMKu9WDM1CPJJlc4ZFJL+/YX1q6IWRgiUGSDFC
-         O7kw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFkDHCU4cAXHFwdk+OSL04qi0WsWlViKeqoasIMjgUDUZWARuc5SZYgiuUKxt3PKevutUna7H0Fb950Wg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8zPAQvAS/UM7+e2IpNxRV0hP0ktAaKkSY/UadmCw9LJY7gRem
-	KhN09q6pY/7r91rBlDGgh3MgqJknjPFRUVFPHNhIjiWMY0M5LBk8nDVvME1CjBtDzquvfsROI34
-	x2KhwZbDsjyZX2565qsYELHGGkVO8G6rhKXYu7w==
-X-Gm-Gg: ASbGncsEQlyTcFMtmJehHZ3i7O250BzT+YDOcMqpiOHXICTRsh6LHJpDSMXsMO6nHBY
-	Ni56mOoH2SlGaQhzN3PcVL65xpRMondXMaej90Ale++VEp4eZ2XTptx8+ticusu8a6QTmM7ZTms
-	7ygVEwAbFNgofcz0DH956QDzik+w==
-X-Google-Smtp-Source: AGHT+IGIGXETSpV0breS5/h5u0O7Kue3nNAf0M2JvAyRjW//VoTRE04GF88gdeHWev8c3/TxvH+ghyGuEq0/lEZFOuk=
-X-Received: by 2002:a17:90b:3ecb:b0:2fe:6942:370e with SMTP id
- 98e67ed59e1d1-2ff7ce70a09mr5339946a91.7.1741350316997; Fri, 07 Mar 2025
- 04:25:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HI7aHCn3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772B5C4CED1;
+	Fri,  7 Mar 2025 12:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741350329;
+	bh=xI8knybLezYjJtgoCWfbOC/GevpO0GqbS04MWnM1+6c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=HI7aHCn3PFVzVYothDmkEFxDsgZDMHloB6Q1XlIEoKygD7NCZKzmJkUoDfid3wsrO
+	 hm2PK5WEy00z0MSdQ04p0TJ7ZrquXFWdzBWi8YUv+ILkSdoWUfZRf3sB7K+zS3D79+
+	 D+W8xNKFSCRxYGGiEyTJ0lRXH3kE0RBc/xF2teWy5nWmc8+IeZgEwn7UdX9maCYM1y
+	 WL5+TrrVnCxaRlCc8/R3laICJAswaQ0KyIZZ3sChk6nAvuitRPX5nef5mqfWZjacbc
+	 EaJB1csFKkLS2TBW9Nxrxjtxi2wMHuM9YA0sbifNFEKw5NWk1C+VUCnxh6sw03gvLe
+	 fURKxIeC+gIzQ==
+Date: Fri, 7 Mar 2025 13:25:23 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [GIT PULL] scheduler fixes
+Message-ID: <Z8rls13KRGROvcZ7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306151416.469067667@linuxfoundation.org>
-In-Reply-To: <20250306151416.469067667@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Fri, 7 Mar 2025 21:25:00 +0900
-X-Gm-Features: AQ5f1JrjYvBGN-wb9TdEeE7hFb2s31KStFO0Mmp9jf2eKZUcyW3LZfYCdYbFDbc
-Message-ID: <CAKL4bV623WMkm3dXFKhd-84yVDCCxxCJK9g_zAE6_ign9=2m4g@mail.gmail.com>
-Subject: Re: [PATCH 6.13 000/154] 6.13.6-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Greg
+Linus,
 
-On Fri, Mar 7, 2025 at 12:21=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.13.6 release.
-> There are 154 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.13.6-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.13.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Please pull the latest sched/urgent Git tree from:
 
-6.13.6-rc2 tested.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2025-03-07
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
+   # HEAD: b1536481c81fb604074da799e4f2d2038a1663f7 sched/rt: Update limit of sched_rt sysctl in documentation
 
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+Miscellaneous scheduler fixes:
 
-[    0.000000] Linux version 6.13.6-rc2rv-g3244959bfa6b
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.2.1 20250207, GNU ld (GNU
-Binutils) 2.44) #1 SMP PREEMPT_DYNAMIC Fri Mar  7 20:34:19 JST 2025
+ - Fix deadline scheduler sysctl parameter setting bug
+ - Fix RT scheduler sysctl parameter setting bug
+ - Fix possible memory corruption in child_cfs_rq_on_list()
 
-Thanks
+ Thanks,
 
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+	Ingo
+
+------------------>
+Shrikanth Hegde (2):
+      sched/deadline: Use online cpus for validating runtime
+      sched/rt: Update limit of sched_rt sysctl in documentation
+
+Zecheng Li (1):
+      sched/fair: Fix potential memory corruption in child_cfs_rq_on_list
+
+
+ Documentation/scheduler/sched-rt-group.rst | 3 +++
+ kernel/sched/deadline.c                    | 2 +-
+ kernel/sched/fair.c                        | 6 ++++--
+ 3 files changed, 8 insertions(+), 3 deletions(-)
