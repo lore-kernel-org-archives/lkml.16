@@ -1,56 +1,42 @@
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530127F9;
-	Fri,  7 Mar 2025 09:31:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C28320C473;
+	Fri,  7 Mar 2025 09:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339898; cv=none; b=mUVK2pE4sWAGkrafgeEgse6aX3MW+jlQRjTMp6AIOmu5c4Yr70unX4M0G+RiiMZu3tOC9E1gihtw1RSHgvNKTmdu3fqXYF70y2riyIKyQzIiIWfoXBuV1fozZ86FPGzYM8J8IqfxLn9XQ77Z2ZAfFc3BJe+Ma1/xKh3DNVGPoXM=
+	t=1741339904; cv=none; b=RCtG547o3ohgOITLw38mkd6rm4KFOkDvK8fOXm99w9/Atq1V0X83WfU6wCJ/2Yt9WrsnHSk9NfTUyY/oRRh/sheyUqVDKEWnQthuUd8hvtHZSUN5ZKubbj6ukbH3YrLnJRkbBHVzJTMZZ8lgj9njFmyicOrxLytQhYmxNYDBe6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339898; c=relaxed/simple;
-	bh=yzaC9DK+TravIDqKBPeANySgIJJN4djBrOa1E7X6IPw=;
+	s=arc-20240116; t=1741339904; c=relaxed/simple;
+	bh=W93mt+sM0X4m0TqKHxGA4Y3XEKeg50E+goWTI9einMI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bmsDJ/Lcso338bc1nrRZM85pE5NjU+YRMXV4jp1/a2yFuiSws59xBi43/bJUR6W4wHhSYXkRJ8YoE06hvA9DkiJc8sYebGt1lQ42xBG5MZ1Tf4DL686SIYgsWoGenJzmvS7yTiCEylfyrrPjuGrM7xRao3OytxKG2Uhc4YyDmOU=
+	 MIME-Version:Content-Type; b=RzyheQ8YpowL984pcMnENeC8uvUd0QwtcUeVrRncqMG1PiUgLaJdVe1MRQy1eQtlKIcRaJ3eNnkcnwORMZCiAHzczMZktz57eAJsOuRI6EPtpdixvDKedytuv+FGxYV+51rH2Pe7l9put6nRT3uktTVRv/182F59A8whCu3sfLA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z8LWv4KVczyRsP;
-	Fri,  7 Mar 2025 17:26:35 +0800 (CST)
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z8LYM6MPVzvWm2;
+	Fri,  7 Mar 2025 17:27:51 +0800 (CST)
 Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 944AF18006C;
-	Fri,  7 Mar 2025 17:31:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4493C1800B2;
+	Fri,  7 Mar 2025 17:31:40 +0800 (CST)
 Received: from localhost.localdomain (10.90.30.45) by
  dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 7 Mar 2025 17:31:32 +0800
+ 15.2.1544.11; Fri, 7 Mar 2025 17:31:39 +0800
 From: Yunsheng Lin <linyunsheng@huawei.com>
 To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
 CC: <zhangkun09@huawei.com>, <liuyonglong@huawei.com>,
-	<fanghaiqing@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>, Wei Fang
-	<wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang
-	<xiaoning.wang@nxp.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet
-	<edumazet@google.com>, Jeroen de Borst <jeroendb@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>, Alexei Starovoitov
-	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard
- Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Saeed
- Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Tariq Toukan
-	<tariqt@nvidia.com>, Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi
-	<lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen
-	<shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Johannes Berg
-	<johannes@sipsolutions.net>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Simon
- Horman <horms@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	<imx@lists.linux.dev>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <intel-wired-lan@lists.osuosl.org>,
-	<bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-wireless@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-Subject: [PATCH net-next v11 1/4] page_pool: introduce page_pool_get_pp() API
-Date: Fri, 7 Mar 2025 17:23:52 +0800
-Message-ID: <20250307092356.638242-2-linyunsheng@huawei.com>
+	<fanghaiqing@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>, Robin Murphy
+	<robin.murphy@arm.com>, Alexander Duyck <alexander.duyck@gmail.com>, IOMMU
+	<iommu@lists.linux.dev>, Donald Hunter <donald.hunter@gmail.com>, Eric
+ Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas
+	<ilias.apalodimas@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v11 3/4] page_pool: support unlimited number of inflight pages
+Date: Fri, 7 Mar 2025 17:23:54 +0800
+Message-ID: <20250307092356.638242-4-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250307092356.638242-1-linyunsheng@huawei.com>
 References: <20250307092356.638242-1-linyunsheng@huawei.com>
@@ -65,235 +51,419 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggpemf200006.china.huawei.com (7.185.36.61)
 
-Introduce page_pool_get_pp() API to avoid caller accessing
-page->pp directly, in order to make the following patch more
-reviewable as the following patch will change page->pp to
-page->pp_item to fix the DMA API misuse problem.
+Currently a fixed size of pre-allocated memory is used to
+keep track of the inflight pages, in order to use the DMA
+API correctly.
 
+As mentioned [1], the number of inflight pages can be up to
+73203 depending on the use cases. Allocate memory dynamically
+to keep track of the inflight pages when pre-allocated memory
+runs out.
+
+The overhead of using dynamic memory allocation is about 10ns~
+20ns, which causes 5%~10% performance degradation for the test
+case of time_bench_page_pool03_slow() in [2].
+
+1. https://lore.kernel.org/all/b8b7818a-e44b-45f5-91c2-d5eceaa5dd5b@kernel.org/
+2. https://github.com/netoptimizer/prototype-kernel
+CC: Robin Murphy <robin.murphy@arm.com>
+CC: Alexander Duyck <alexander.duyck@gmail.com>
+CC: IOMMU <iommu@lists.linux.dev>
+Fixes: f71fec47c2df ("page_pool: make sure struct device is stable")
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- drivers/net/ethernet/freescale/fec_main.c          |  8 +++++---
- .../net/ethernet/google/gve/gve_buffer_mgmt_dqo.c  |  2 +-
- drivers/net/ethernet/intel/iavf/iavf_txrx.c        |  6 ++++--
- drivers/net/ethernet/intel/idpf/idpf_txrx.c        | 14 +++++++++-----
- drivers/net/ethernet/intel/libeth/rx.c             |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c   |  3 ++-
- drivers/net/netdevsim/netdev.c                     |  6 ++++--
- drivers/net/wireless/mediatek/mt76/mt76.h          |  2 +-
- include/net/libeth/rx.h                            |  3 ++-
- include/net/page_pool/helpers.h                    |  5 +++++
- 10 files changed, 34 insertions(+), 17 deletions(-)
+ Documentation/netlink/specs/netdev.yaml | 16 +++++
+ include/net/page_pool/types.h           | 10 ++++
+ include/uapi/linux/netdev.h             |  2 +
+ net/core/page_pool.c                    | 79 ++++++++++++++++++++++++-
+ net/core/page_pool_priv.h               |  2 +
+ net/core/page_pool_user.c               | 39 ++++++++++--
+ tools/include/uapi/linux/netdev.h       |  2 +
+ tools/net/ynl/samples/page-pool.c       | 11 ++++
+ 8 files changed, 156 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index a86cfebedaa8..4ade1553557a 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1038,7 +1038,8 @@ static void fec_enet_bd_init(struct net_device *dev)
- 				struct page *page = txq->tx_buf[i].buf_p;
- 
- 				if (page)
--					page_pool_put_page(page->pp, page, 0, false);
-+					page_pool_put_page(page_pool_get_pp(page),
-+							   page, 0, false);
- 			}
- 
- 			txq->tx_buf[i].buf_p = NULL;
-@@ -1576,7 +1577,7 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id, int budget)
- 			xdp_return_frame_rx_napi(xdpf);
- 		} else { /* recycle pages of XDP_TX frames */
- 			/* The dma_sync_size = 0 as XDP_TX has already synced DMA for_device */
--			page_pool_put_page(page->pp, page, 0, true);
-+			page_pool_put_page(page_pool_get_pp(page), page, 0, true);
- 		}
- 
- 		txq->tx_buf[index].buf_p = NULL;
-@@ -3343,7 +3344,8 @@ static void fec_enet_free_buffers(struct net_device *ndev)
- 			} else {
- 				struct page *page = txq->tx_buf[i].buf_p;
- 
--				page_pool_put_page(page->pp, page, 0, false);
-+				page_pool_put_page(page_pool_get_pp(page),
-+						   page, 0, false);
- 			}
- 
- 			txq->tx_buf[i].buf_p = NULL;
-diff --git a/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c b/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
-index 403f0f335ba6..87422b8828ff 100644
---- a/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
-+++ b/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
-@@ -210,7 +210,7 @@ void gve_free_to_page_pool(struct gve_rx_ring *rx,
- 	if (!page)
- 		return;
- 
--	page_pool_put_full_page(page->pp, page, allow_direct);
-+	page_pool_put_full_page(page_pool_get_pp(page), page, allow_direct);
- 	buf_state->page_info.page = NULL;
- }
- 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.c b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-index 422312b8b54a..72f17eaac277 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-@@ -1197,7 +1197,8 @@ static void iavf_add_rx_frag(struct sk_buff *skb,
- 			     const struct libeth_fqe *rx_buffer,
- 			     unsigned int size)
- {
--	u32 hr = rx_buffer->page->pp->p.offset;
-+	struct page_pool *pool = page_pool_get_pp(rx_buffer->page);
-+	u32 hr = pool->p.offset;
- 
- 	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buffer->page,
- 			rx_buffer->offset + hr, size, rx_buffer->truesize);
-@@ -1214,7 +1215,8 @@ static void iavf_add_rx_frag(struct sk_buff *skb,
- static struct sk_buff *iavf_build_skb(const struct libeth_fqe *rx_buffer,
- 				      unsigned int size)
- {
--	u32 hr = rx_buffer->page->pp->p.offset;
-+	struct page_pool *pool = page_pool_get_pp(rx_buffer->page);
-+	u32 hr = pool->p.offset;
- 	struct sk_buff *skb;
- 	void *va;
- 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-index bdf52cef3891..0ce77a5559aa 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-@@ -385,7 +385,8 @@ static void idpf_rx_page_rel(struct libeth_fqe *rx_buf)
- 	if (unlikely(!rx_buf->page))
- 		return;
- 
--	page_pool_put_full_page(rx_buf->page->pp, rx_buf->page, false);
-+	page_pool_put_full_page(page_pool_get_pp(rx_buf->page), rx_buf->page,
-+				false);
- 
- 	rx_buf->page = NULL;
- 	rx_buf->offset = 0;
-@@ -3096,7 +3097,8 @@ idpf_rx_process_skb_fields(struct idpf_rx_queue *rxq, struct sk_buff *skb,
- void idpf_rx_add_frag(struct idpf_rx_buf *rx_buf, struct sk_buff *skb,
- 		      unsigned int size)
- {
--	u32 hr = rx_buf->page->pp->p.offset;
-+	struct page_pool *pool = page_pool_get_pp(rx_buf->page);
-+	u32 hr = pool->p.offset;
- 
- 	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buf->page,
- 			rx_buf->offset + hr, size, rx_buf->truesize);
-@@ -3128,8 +3130,10 @@ static u32 idpf_rx_hsplit_wa(const struct libeth_fqe *hdr,
- 	if (!libeth_rx_sync_for_cpu(buf, copy))
- 		return 0;
- 
--	dst = page_address(hdr->page) + hdr->offset + hdr->page->pp->p.offset;
--	src = page_address(buf->page) + buf->offset + buf->page->pp->p.offset;
-+	dst = page_address(hdr->page) + hdr->offset +
-+		page_pool_get_pp(hdr->page)->p.offset;
-+	src = page_address(buf->page) + buf->offset +
-+		page_pool_get_pp(buf->page)->p.offset;
- 	memcpy(dst, src, LARGEST_ALIGN(copy));
- 
- 	buf->offset += copy;
-@@ -3147,7 +3151,7 @@ static u32 idpf_rx_hsplit_wa(const struct libeth_fqe *hdr,
+diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
+index 36f1152bfac3..f312da29be44 100644
+--- a/Documentation/netlink/specs/netdev.yaml
++++ b/Documentation/netlink/specs/netdev.yaml
+@@ -183,6 +183,20 @@ attribute-sets:
+         doc: io-uring memory provider information.
+         type: nest
+         nested-attributes: io-uring-provider-info
++      -
++        name: item_mem_resident
++        type: uint
++        doc: |
++          Amount of actual memory allocated to track inflight pages.
++          memory fragmentation ratio for item memory can be calculated
++          using item_mem_resident / item_mem_used.
++      -
++        name: item_mem_used
++        type: uint
++        doc: |
++          Amount of actual memory used to track inflight pages.
++          memory fragmentation ratio for item memory can be calculated
++          using item_mem_resident / item_mem_used.
+   -
+     name: page-pool-info
+     subset-of: page-pool
+@@ -602,6 +616,8 @@ operations:
+             - detach-time
+             - dmabuf
+             - io-uring
++            - item_mem_resident
++            - item_mem_used
+       dump:
+         reply: *pp-reply
+       config-cond: page-pool
+diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.h
+index c131e2725e9a..c8c47ca67f4b 100644
+--- a/include/net/page_pool/types.h
++++ b/include/net/page_pool/types.h
+@@ -103,6 +103,7 @@ struct page_pool_params {
+  * @waive:	pages obtained from the ptr ring that cannot be added to
+  *		the cache due to a NUMA mismatch
+  * @item_fast_empty: pre-allocated item cache is empty
++ * @item_slow_failed: failed to allocate memory for item_block
   */
- struct sk_buff *idpf_rx_build_skb(const struct libeth_fqe *buf, u32 size)
- {
--	u32 hr = buf->page->pp->p.offset;
-+	u32 hr = page_pool_get_pp(buf->page)->p.offset;
- 	struct sk_buff *skb;
- 	void *va;
+ struct page_pool_alloc_stats {
+ 	u64 fast;
+@@ -112,6 +113,7 @@ struct page_pool_alloc_stats {
+ 	u64 refill;
+ 	u64 waive;
+ 	u64 item_fast_empty;
++	u64 item_slow_failed;
+ };
  
-diff --git a/drivers/net/ethernet/intel/libeth/rx.c b/drivers/net/ethernet/intel/libeth/rx.c
-index 66d1d23b8ad2..8de0c3a3b146 100644
---- a/drivers/net/ethernet/intel/libeth/rx.c
-+++ b/drivers/net/ethernet/intel/libeth/rx.c
-@@ -207,7 +207,7 @@ EXPORT_SYMBOL_NS_GPL(libeth_rx_fq_destroy, "LIBETH");
+ /**
+@@ -159,9 +161,16 @@ struct page_pool_item {
+ struct page_pool_item_block {
+ 	struct page_pool *pp;
+ 	struct list_head list;
++	unsigned int flags;
++	refcount_t ref;
+ 	struct page_pool_item items[];
+ };
+ 
++struct page_pool_slow_item {
++	struct page_pool_item_block *block;
++	unsigned int next_to_use;
++};
++
+ /* Ensure the offset of 'pp' field for both 'page_pool_item_block' and
+  * 'netmem_item_block' are the same.
   */
- void libeth_rx_recycle_slow(struct page *page)
- {
--	page_pool_recycle_direct(page->pp, page);
-+	page_pool_recycle_direct(page_pool_get_pp(page), page);
- }
- EXPORT_SYMBOL_NS_GPL(libeth_rx_recycle_slow, "LIBETH");
+@@ -191,6 +200,7 @@ struct page_pool {
+ 	int cpuid;
+ 	u32 pages_state_hold_cnt;
+ 	struct llist_head hold_items;
++	struct page_pool_slow_item slow_items;
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-index 6f3094a479e1..b6bee95db994 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
-@@ -709,7 +709,8 @@ static void mlx5e_free_xdpsq_desc(struct mlx5e_xdpsq *sq,
- 				/* No need to check ((page->pp_magic & ~0x3UL) == PP_SIGNATURE)
- 				 * as we know this is a page_pool page.
- 				 */
--				page_pool_recycle_direct(page->pp, page);
-+				page_pool_recycle_direct(page_pool_get_pp(page),
-+							 page);
- 			} while (++n < num);
+ 	bool has_init_callback:1;	/* slow::init_callback is set */
+ 	bool dma_map:1;			/* Perform DMA mapping */
+diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
+index 7600bf62dbdf..9309cbfeb8d2 100644
+--- a/include/uapi/linux/netdev.h
++++ b/include/uapi/linux/netdev.h
+@@ -103,6 +103,8 @@ enum {
+ 	NETDEV_A_PAGE_POOL_DETACH_TIME,
+ 	NETDEV_A_PAGE_POOL_DMABUF,
+ 	NETDEV_A_PAGE_POOL_IO_URING,
++	NETDEV_A_PAGE_POOL_ITEM_MEM_RESIDENT,
++	NETDEV_A_PAGE_POOL_ITEM_MEM_USED,
  
- 			break;
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index 54d03b0628d2..769fbea8ccf0 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -847,7 +847,8 @@ nsim_pp_hold_write(struct file *file, const char __user *data,
- 		if (!ns->page)
- 			ret = -ENOMEM;
- 	} else {
--		page_pool_put_full_page(ns->page->pp, ns->page, false);
-+		page_pool_put_full_page(page_pool_get_pp(ns->page), ns->page,
-+					false);
- 		ns->page = NULL;
+ 	__NETDEV_A_PAGE_POOL_MAX,
+ 	NETDEV_A_PAGE_POOL_MAX = (__NETDEV_A_PAGE_POOL_MAX - 1)
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 5dc823157328..dbac9d4b9ea8 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -64,6 +64,7 @@ static const char pp_stats[][ETH_GSTRING_LEN] = {
+ 	"rx_pp_alloc_refill",
+ 	"rx_pp_alloc_waive",
+ 	"rx_pp_alloc_item_fast_empty",
++	"rx_pp_alloc_item_slow_failed",
+ 	"rx_pp_recycle_cached",
+ 	"rx_pp_recycle_cache_full",
+ 	"rx_pp_recycle_ring",
+@@ -98,6 +99,7 @@ bool page_pool_get_stats(const struct page_pool *pool,
+ 	stats->alloc_stats.refill += pool->alloc_stats.refill;
+ 	stats->alloc_stats.waive += pool->alloc_stats.waive;
+ 	stats->alloc_stats.item_fast_empty += pool->alloc_stats.item_fast_empty;
++	stats->alloc_stats.item_slow_failed += pool->alloc_stats.item_slow_failed;
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		const struct page_pool_recycle_stats *pcpu =
+@@ -144,6 +146,7 @@ u64 *page_pool_ethtool_stats_get(u64 *data, const void *stats)
+ 	*data++ = pool_stats->alloc_stats.refill;
+ 	*data++ = pool_stats->alloc_stats.waive;
+ 	*data++ = pool_stats->alloc_stats.item_fast_empty;
++	*data++ = pool_stats->alloc_stats.item_slow_failed;
+ 	*data++ = pool_stats->recycle_stats.cached;
+ 	*data++ = pool_stats->recycle_stats.cache_full;
+ 	*data++ = pool_stats->recycle_stats.ring;
+@@ -434,6 +437,7 @@ static void page_pool_item_uninit(struct page_pool *pool)
+ 					 struct page_pool_item_block,
+ 					 list);
+ 		list_del(&block->list);
++		WARN_ON(refcount_read(&block->ref));
+ 		put_page(virt_to_page(block));
  	}
- 
-@@ -1059,7 +1060,8 @@ void nsim_destroy(struct netdevsim *ns)
- 
- 	/* Put this intentionally late to exercise the orphaning path */
- 	if (ns->page) {
--		page_pool_put_full_page(ns->page->pp, ns->page, false);
-+		page_pool_put_full_page(page_pool_get_pp(ns->page), ns->page,
-+					false);
- 		ns->page = NULL;
- 	}
- 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
-index 132148f7b107..11a88ecf8533 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -1777,7 +1777,7 @@ static inline void mt76_put_page_pool_buf(void *buf, bool allow_direct)
- {
- 	struct page *page = virt_to_head_page(buf);
- 
--	page_pool_put_full_page(page->pp, page, allow_direct);
-+	page_pool_put_full_page(page_pool_get_pp(page), page, allow_direct);
+ }
+@@ -517,10 +521,42 @@ static struct page_pool_item *page_pool_fast_item_alloc(struct page_pool *pool)
+ 	return llist_entry(first, struct page_pool_item, lentry);
  }
  
- static inline void *
-diff --git a/include/net/libeth/rx.h b/include/net/libeth/rx.h
-index ab05024be518..2a3991d5b7c0 100644
---- a/include/net/libeth/rx.h
-+++ b/include/net/libeth/rx.h
-@@ -137,7 +137,8 @@ static inline bool libeth_rx_sync_for_cpu(const struct libeth_fqe *fqe,
- 		return false;
- 	}
- 
--	page_pool_dma_sync_for_cpu(page->pp, page, fqe->offset, len);
-+	page_pool_dma_sync_for_cpu(page_pool_get_pp(page), page, fqe->offset,
-+				   len);
- 
- 	return true;
- }
-diff --git a/include/net/page_pool/helpers.h b/include/net/page_pool/helpers.h
-index 582a3d00cbe2..ab91911af215 100644
---- a/include/net/page_pool/helpers.h
-+++ b/include/net/page_pool/helpers.h
-@@ -83,6 +83,11 @@ static inline u64 *page_pool_ethtool_stats_get(u64 *data, const void *stats)
- }
- #endif
- 
-+static inline struct page_pool *page_pool_get_pp(struct page *page)
++static struct page_pool_item *page_pool_slow_item_alloc(struct page_pool *pool)
 +{
-+	return page->pp;
++	if (unlikely(!pool->slow_items.block ||
++		     pool->slow_items.next_to_use >= ITEMS_PER_PAGE)) {
++		struct page_pool_item_block *block;
++		struct page *page;
++
++		page = alloc_pages_node(pool->p.nid, GFP_ATOMIC | __GFP_NOWARN |
++					__GFP_ZERO, 0);
++		if (!page) {
++			alloc_stat_inc(pool, item_slow_failed);
++			return NULL;
++		}
++
++		block = page_address(page);
++		block->pp = pool;
++		block->flags |= PAGE_POOL_SLOW_ITEM_BLOCK_BIT;
++		refcount_set(&block->ref, ITEMS_PER_PAGE);
++		pool->slow_items.block = block;
++		pool->slow_items.next_to_use = 0;
++
++		spin_lock_bh(&pool->item_lock);
++		list_add(&block->list, &pool->item_blocks);
++		spin_unlock_bh(&pool->item_lock);
++	}
++
++	return &pool->slow_items.block->items[pool->slow_items.next_to_use++];
 +}
 +
+ static bool page_pool_set_item_info(struct page_pool *pool, netmem_ref netmem)
+ {
+ 	struct page_pool_item *item = page_pool_fast_item_alloc(pool);
+ 
++	if (unlikely(!item))
++		item = page_pool_slow_item_alloc(pool);
++
+ 	if (likely(item)) {
+ 		item->pp_netmem = netmem;
+ 		page_pool_item_set_used(item);
+@@ -530,6 +566,37 @@ static bool page_pool_set_item_info(struct page_pool *pool, netmem_ref netmem)
+ 	return !!item;
+ }
+ 
++static void __page_pool_slow_item_free(struct page_pool *pool,
++				       struct page_pool_item_block *block)
++{
++	spin_lock_bh(&pool->item_lock);
++	list_del(&block->list);
++	spin_unlock_bh(&pool->item_lock);
++
++	put_page(virt_to_page(block));
++}
++
++static void page_pool_slow_item_drain(struct page_pool *pool)
++{
++	struct page_pool_item_block *block = pool->slow_items.block;
++
++	if (!block || pool->slow_items.next_to_use >= ITEMS_PER_PAGE)
++		return;
++
++	if (refcount_sub_and_test(ITEMS_PER_PAGE - pool->slow_items.next_to_use,
++				  &block->ref))
++		__page_pool_slow_item_free(pool, block);
++}
++
++static void page_pool_slow_item_free(struct page_pool *pool,
++				     struct page_pool_item_block *block)
++{
++	if (likely(!refcount_dec_and_test(&block->ref)))
++		return;
++
++	__page_pool_slow_item_free(pool, block);
++}
++
+ static void page_pool_fast_item_free(struct page_pool *pool,
+ 				     struct page_pool_item *item)
+ {
+@@ -539,13 +606,22 @@ static void page_pool_fast_item_free(struct page_pool *pool,
+ static void page_pool_clear_item_info(struct page_pool *pool, netmem_ref netmem)
+ {
+ 	struct page_pool_item *item = netmem_get_pp_item(netmem);
++	struct page_pool_item_block *block;
+ 
+ 	DEBUG_NET_WARN_ON_ONCE(item->pp_netmem != netmem);
+ 	DEBUG_NET_WARN_ON_ONCE(page_pool_item_is_mapped(item));
+ 	DEBUG_NET_WARN_ON_ONCE(!page_pool_item_is_used(item));
+ 	page_pool_item_clear_used(item);
+ 	netmem_set_pp_item(netmem, NULL);
+-	page_pool_fast_item_free(pool, item);
++
++	block = page_pool_item_to_block(item);
++	if (likely(!(block->flags & PAGE_POOL_SLOW_ITEM_BLOCK_BIT))) {
++		DEBUG_NET_WARN_ON_ONCE(refcount_read(&block->ref));
++		page_pool_fast_item_free(pool, item);
++		return;
++	}
++
++	page_pool_slow_item_free(pool, block);
+ }
+ 
  /**
-  * page_pool_dev_alloc_pages() - allocate a page.
-  * @pool:	pool from which to allocate
+@@ -1393,6 +1469,7 @@ void page_pool_destroy(struct page_pool *pool)
+ 
+ 	page_pool_disable_direct_recycling(pool);
+ 	page_pool_free_frag(pool);
++	page_pool_slow_item_drain(pool);
+ 
+ 	if (!page_pool_release(pool))
+ 		return;
+diff --git a/net/core/page_pool_priv.h b/net/core/page_pool_priv.h
+index a5df5ab14ead..37adfc766c12 100644
+--- a/net/core/page_pool_priv.h
++++ b/net/core/page_pool_priv.h
+@@ -7,6 +7,8 @@
+ 
+ #include "netmem_priv.h"
+ 
++#define PAGE_POOL_SLOW_ITEM_BLOCK_BIT		BIT(0)
++
+ extern struct mutex page_pools_lock;
+ 
+ s32 page_pool_inflight(const struct page_pool *pool, bool strict);
+diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
+index c82a95beceff..0dc0090257ae 100644
+--- a/net/core/page_pool_user.c
++++ b/net/core/page_pool_user.c
+@@ -33,7 +33,7 @@ DEFINE_MUTEX(page_pools_lock);
+  *    - user.list: unhashed, netdev: unknown
+  */
+ 
+-typedef int (*pp_nl_fill_cb)(struct sk_buff *rsp, const struct page_pool *pool,
++typedef int (*pp_nl_fill_cb)(struct sk_buff *rsp, struct page_pool *pool,
+ 			     const struct genl_info *info);
+ 
+ static int
+@@ -111,7 +111,7 @@ netdev_nl_page_pool_get_dump(struct sk_buff *skb, struct netlink_callback *cb,
+ }
+ 
+ static int
+-page_pool_nl_stats_fill(struct sk_buff *rsp, const struct page_pool *pool,
++page_pool_nl_stats_fill(struct sk_buff *rsp, struct page_pool *pool,
+ 			const struct genl_info *info)
+ {
+ #ifdef CONFIG_PAGE_POOL_STATS
+@@ -212,8 +212,36 @@ int netdev_nl_page_pool_stats_get_dumpit(struct sk_buff *skb,
+ 	return netdev_nl_page_pool_get_dump(skb, cb, page_pool_nl_stats_fill);
+ }
+ 
++static int page_pool_nl_fill_item_mem_info(struct page_pool *pool,
++					   struct sk_buff *rsp)
++{
++	struct page_pool_item_block *block;
++	size_t resident = 0, used = 0;
++	int err;
++
++	spin_lock_bh(&pool->item_lock);
++
++	list_for_each_entry(block, &pool->item_blocks, list) {
++		resident += PAGE_SIZE;
++
++		if (block->flags & PAGE_POOL_SLOW_ITEM_BLOCK_BIT)
++			used += (PAGE_SIZE - sizeof(struct page_pool_item) *
++				 refcount_read(&block->ref));
++		else
++			used += PAGE_SIZE;
++	}
++
++	spin_unlock_bh(&pool->item_lock);
++
++	err = nla_put_uint(rsp, NETDEV_A_PAGE_POOL_ITEM_MEM_RESIDENT, resident);
++	if (err)
++		return err;
++
++	return nla_put_uint(rsp, NETDEV_A_PAGE_POOL_ITEM_MEM_USED, used);
++}
++
+ static int
+-page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
++page_pool_nl_fill(struct sk_buff *rsp, struct page_pool *pool,
+ 		  const struct genl_info *info)
+ {
+ 	size_t inflight, refsz;
+@@ -251,6 +279,9 @@ page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
+ 	if (pool->mp_ops && pool->mp_ops->nl_fill(pool->mp_priv, rsp, NULL))
+ 		goto err_cancel;
+ 
++	if (page_pool_nl_fill_item_mem_info(pool, rsp))
++		goto err_cancel;
++
+ 	genlmsg_end(rsp, hdr);
+ 
+ 	return 0;
+@@ -259,7 +290,7 @@ page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
+ 	return -EMSGSIZE;
+ }
+ 
+-static void netdev_nl_page_pool_event(const struct page_pool *pool, u32 cmd)
++static void netdev_nl_page_pool_event(struct page_pool *pool, u32 cmd)
+ {
+ 	struct genl_info info;
+ 	struct sk_buff *ntf;
+diff --git a/tools/include/uapi/linux/netdev.h b/tools/include/uapi/linux/netdev.h
+index 7600bf62dbdf..9309cbfeb8d2 100644
+--- a/tools/include/uapi/linux/netdev.h
++++ b/tools/include/uapi/linux/netdev.h
+@@ -103,6 +103,8 @@ enum {
+ 	NETDEV_A_PAGE_POOL_DETACH_TIME,
+ 	NETDEV_A_PAGE_POOL_DMABUF,
+ 	NETDEV_A_PAGE_POOL_IO_URING,
++	NETDEV_A_PAGE_POOL_ITEM_MEM_RESIDENT,
++	NETDEV_A_PAGE_POOL_ITEM_MEM_USED,
+ 
+ 	__NETDEV_A_PAGE_POOL_MAX,
+ 	NETDEV_A_PAGE_POOL_MAX = (__NETDEV_A_PAGE_POOL_MAX - 1)
+diff --git a/tools/net/ynl/samples/page-pool.c b/tools/net/ynl/samples/page-pool.c
+index e5d521320fbf..57fc3cf0a65c 100644
+--- a/tools/net/ynl/samples/page-pool.c
++++ b/tools/net/ynl/samples/page-pool.c
+@@ -16,6 +16,7 @@ struct stat {
+ 	struct {
+ 		unsigned int cnt;
+ 		size_t refs, bytes;
++		size_t item_mem_resident, item_mem_used;
+ 	} live[2];
+ 
+ 	size_t alloc_slow, alloc_fast, recycle_ring, recycle_cache;
+@@ -52,6 +53,12 @@ static void count(struct stat *s, unsigned int l,
+ 		s->live[l].refs += pp->inflight;
+ 	if (pp->_present.inflight_mem)
+ 		s->live[l].bytes += pp->inflight_mem;
++
++	if (pp->_present.item_mem_resident)
++		s->live[l].item_mem_resident += pp->item_mem_resident;
++
++	if (pp->_present.item_mem_used)
++		s->live[l].item_mem_used += pp->item_mem_used;
+ }
+ 
+ int main(int argc, char **argv)
+@@ -135,6 +142,10 @@ int main(int argc, char **argv)
+ 		printf("\t\trecycling: %.1lf%% (alloc: %zu:%zu recycle: %zu:%zu)\n",
+ 		       recycle, s->alloc_slow, s->alloc_fast,
+ 		       s->recycle_ring, s->recycle_cache);
++
++		printf("\t\titem_mem_resident: %zu item_mem_used: %zu (item_mem_resident: %zu item_mem_used: %zu)\n",
++		       s->live[1].item_mem_resident, s->live[1].item_mem_used,
++		       s->live[0].item_mem_resident, s->live[0].item_mem_used);
+ 	}
+ 
+ 	ynl_sock_destroy(ys);
 -- 
 2.33.0
 
