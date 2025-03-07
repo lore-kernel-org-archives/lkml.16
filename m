@@ -1,129 +1,165 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0271A255C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B08C19E971
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741337271; cv=none; b=L+Z9Js4qAbzzzOUC050qZyukz0DqnlIXifJJEpuD+fC7lGlpaO9TNQNtI5D512X6wYQPmYVj1WSowYhN0ehKmXULkl67kgQd8azmsDZMA1t1HytMZhMu7XOJOqj1bbXHQ6i5p508PArmLIw4xCu53H7X7tqeNm2X/+pkidizwGI=
+	t=1741337281; cv=none; b=u5mt2nTKGdg6KNsu+Ozv03rfKxaqBhteAicJsf0oSSvEguaBmxbW682jaytK+9IgZ8wXBORe+rm2wI2OvPEH7hBj0yb1n/t+jtEWQ8chU/yqr1k5nfo9FwulE9K4E1CXpzDsW1YNRC57zdS0I5H80O6ayU59PYwQOWQvXOx23Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741337271; c=relaxed/simple;
-	bh=1klQmpUuK3tpkUPnhlarREZmlq+0v1VMdGLEMIYqCk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4kV9WTCANIwMZcBx8aEVmNOZKxCuwCexeLWR+V8XPr4tMIcPcV0FjEDRShI7Q+iDw2DBNb5G1vHBOksyOCsH5ba+w16ySvddzeMYrzDYhRTaYltBJLnX3757vX/XSq17TnSNptfXzzfVxfMeLP5OtZlVOq39jxJ+5medKKXJ0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o40S2uN1; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741337281; c=relaxed/simple;
+	bh=stm8J5gXFKeg0kDXqkjFf2m6eLexUCdtvHC4jHfKAJ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lr8McSgp3BE3DcbRuLqDPngqfsLFSfPIvUbqhM32yGFZ1MnazeYX98R29rAeBvNuMbB1thUORuCzDjXb51RbCLy1K/kMAJFWMUZvTOQiVNGsZhsaDGfRc+mJ/EJ+08rIkQP2LhQFgKQjpWfb7XHcqclaecWuueL5Zsb17Wp5Kc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UEafKVHp; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o40S2uN1"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30b9b1979b9so17779871fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 00:47:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741337268; x=1741942068; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LcV1MZ5e0X4Au7sgZSdAJMfYoBCfZQzOt7NC7B6Xb5o=;
-        b=o40S2uN1UD4snsy1yMtLQ9aX0HoTHUsEC+4WNc+zoiie9OSmSC9NVvwhuJedncdKAc
-         htJ1Oe9u3okimtRLAv3M6umbLrwvd8BV586IHDtfs3yd+CfCuccOc36nZ19qEnOGHfdM
-         4mT+scV9S63ywTmTRcTiKWfuBjKhUIO7BUtgByvTF99Q9QrKzwm3BGaK6EkO4MJmhTOm
-         /9AC6AqGW9oHHlpvP9e3lyK0rh9aviATAw5KUpPqsUHZm4Q6cHA9/giF8ySNG0Uju5Vj
-         cQ0tHhjvrbjwuk2tICQ53z6FvTa7XKY+f8TLzwamjl79/JW/5i3nfrAzyHI+3hWxWU9z
-         FZdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741337268; x=1741942068;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LcV1MZ5e0X4Au7sgZSdAJMfYoBCfZQzOt7NC7B6Xb5o=;
-        b=QlWfCLrbpC5xdqFeAODINp5+AxZEBs2+H4BHUSDqobO5VA8xzRpQGoV72blQPuLzI2
-         +dFVQR7OoegWI9urOU/lNDIU/Q0ixA6AlBflUqpD0YUAjXV1T9Ce7nUowyL87vMMCcQo
-         klnLMTJpdYbazxqFkPbXTc5pyB90iFQn841riYQCHVy/rHo8efTRTJ5rLAHphSFy0T/R
-         PiqY0XvZZBRe5vBfj/Inbfu/wHutihqMAR3mfohhRxhm1nv16VeDmAHofhAbnoneuNQg
-         Bh4Kwcd0KbpL6mOrWoNqNYgR7IOlsaWBsk+FC7xb9qDYwS3jcUJ34gopR8aUhjofUOWF
-         XS0w==
-X-Forwarded-Encrypted: i=1; AJvYcCW521wTCVZhTYEUOlfucmtdS8oNCrSzl67ShGdu/zPKRQDchddXGZUdxnOHuCBcvlsP3KiTHw8swlfvCHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8l2/dsBeox71Ul5G0vgdOW96kmbU264yJjYlTKUuECARgc2m3
-	KbBTzjgafECtTA/6iMtoDPmpBPAupcXKPhgCqEbxMPGsTVPDurH4aGViwYMI6qw=
-X-Gm-Gg: ASbGncv+ZEu7vqH2u5GTYZISamGfxgLe+BtXgvtd5mXXP8gih+1OuBsd2KqBs/G/Wn2
-	002StCADzazvwzRKk3xy/PUkd2vuTPWpT6oNOC5ZseXKndVoRHiGBqfAuo2/4XIsUZzR9ze/APO
-	sHirpvf89+3UCLrl9QtBa90LUGIvDb08rLCBxciR75Pv3/dDSXucmn/5qV8BwCMWOEo5IgpfITg
-	04w+imNiEwMUXNuqBVbxluszYKV0Exb0j8EaG0nwevQwZGG3Tw2FX6Sixsn0U9TyCDhrEeuYJWY
-	CtIchCWIsfoeKfFtzoiAYYG8B6y2j9dnOO/3gy8WpbAiKJCwrLPRM+NKlDRPjpmyeI7JLfd7NCq
-	ExXDtAVdiceVkSIXNDk0l4nIu
-X-Google-Smtp-Source: AGHT+IEiTwEYJTrTPyGNimhSVQS4rhsKdEBaz+K9T/k8At9auSzopeTRHY7N/xxUYxj35p79+k7uWg==
-X-Received: by 2002:a2e:838a:0:b0:306:501:4772 with SMTP id 38308e7fff4ca-30bf4613cd7mr7319681fa.37.1741337267601;
-        Fri, 07 Mar 2025 00:47:47 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30be98d0897sm4763021fa.2.2025.03.07.00.47.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 00:47:46 -0800 (PST)
-Date: Fri, 7 Mar 2025 10:47:43 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jagadeesh Kona <quic_jkona@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
-	Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, 
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] clk: qcom: common: Manage rpm, configure PLLs &
- AON clks in really probe
-Message-ID: <vmxwmunmlknwp7elhp5zayoraccunxw5fex2hse2w4nwhuxzu5@atbcrfp2jgdm>
-References: <20250306-videocc-pll-multi-pd-voting-v2-0-0cd00612bc0e@quicinc.com>
- <20250306-videocc-pll-multi-pd-voting-v2-3-0cd00612bc0e@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UEafKVHp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741337280; x=1772873280;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=stm8J5gXFKeg0kDXqkjFf2m6eLexUCdtvHC4jHfKAJ0=;
+  b=UEafKVHpbv7S9AyFCrWlzt1YSZGiipN8+qh6jVtiUUwwNpKUTnKs0jc7
+   vprzwtIcdAVpmTBeJCQm0R8FF8i+5qniVN7ar5RiU8k6Di3NuWsCcuXmM
+   OPyQbhzxhVlGPDRLG6N+8gl2e5NcUOi6TyDgNhLPVbRWwO62XpVDHH1d6
+   ZqjtAboYTkce6sSE8FtK86RWOX3Zd2OeT2xEaM8d/sijlaHPiHLOFgyFA
+   xPBb+WzFgAX8eR9ZhJE2HrTLp/HVDdRnp1JLDWyBmKtUXsfyj46CY9qDN
+   0ENYVAMxcPwOdmdXvwyMVPAsucYHSSIXFFLs99R4jcHsoR6YU6VQ8InNM
+   g==;
+X-CSE-ConnectionGUID: 8hHZNZ2KTEarRWy3oxoFdw==
+X-CSE-MsgGUID: IMXSGq/4Tv6fvYTMlSnUFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53769252"
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="53769252"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 00:44:34 -0800
+X-CSE-ConnectionGUID: oGr4x6h7SmuAvUGno+g93w==
+X-CSE-MsgGUID: DiqR7WcBTBW1JLx2QHUJ8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="119447799"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 07 Mar 2025 00:44:30 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id CE7751FC; Fri, 07 Mar 2025 10:44:28 +0200 (EET)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: akpm@linux-foundation.org,
+	ebiederm@xmission.com,
+	bhe@redhat.com
+Cc: dave.hansen@intel.com,
+	x86@kernel.org,
+	kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	rick.p.edgecombe@intel.com,
+	Yan Zhao <yan.y.zhao@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ashish Kalra <Ashish.Kalra@amd.com>,
+	Jianxiong Gao <jxgao@google.com>
+Subject: [PATCHv3] kexec_core: Accept unaccepted kexec segments' destination addresses
+Date: Fri,  7 Mar 2025 10:44:11 +0200
+Message-ID: <20250307084411.2150367-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306-videocc-pll-multi-pd-voting-v2-3-0cd00612bc0e@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 06, 2025 at 02:25:35PM +0530, Jagadeesh Kona wrote:
-> Add support for runtime power management, PLL configuration and enabling
-> critical clocks in qcom_cc_really_probe() to commonize the clock
-> controller probe.
+From: Yan Zhao <yan.y.zhao@intel.com>
 
-Please split this into two commits: one for the runtime PM and another
-one for clock configuration, because ...
+The UEFI Specification version 2.9 introduces the concept of memory
+acceptance: some Virtual Machine platforms, such as Intel TDX or AMD
+SEV-SNP, require memory to be accepted before it can be used by the
+guest.
 
-> 
-> The runtime power management is not required for all clock controllers,
-> hence handle the rpm based on use_rpm flag in clock controller descriptor.
-> Also the power domains need to be kept enabled during pll configuration,
-> hence attach all required power domains prior to calling get_sync() on the
-> device.
-> 
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
->  drivers/clk/qcom/common.c | 45 ++++++++++++++++++++++++++++++++++++---------
->  drivers/clk/qcom/common.h | 16 ++++++++++++++++
->  2 files changed, 52 insertions(+), 9 deletions(-)
+Accepting memory is expensive. The memory must be allocated by the VMM
+and then brought to a known safe state: cache must be flushed, memory
+must be zeroed with the guest's encryption key, and associated metadata
+must be manipulated. These operations must be performed from a trusted
+environment (firmware or TDX module). Switching context to and from it
+also takes time.
 
-[...]
+This cost adds up. On large confidential VMs, memory acceptance alone
+can take minutes. It is better to delay memory acceptance until the
+memory is actually needed.
 
-> +
-> +	for (i = 0; i < desc->num_plls; i++)
-> +		qcom_cc_clk_pll_configure(desc->plls[i], regmap);
-> +
-> +	for (i = 0 ; i < desc->num_clks_cfg; i++)
-> +		regmap_update_bits(regmap, clks_cfg[i].offset,
-> +				   clks_cfg[i].mask, clks_cfg[i].mask);
-> +
+The kernel accepts memory when it is allocated from buddy allocator for
+the first time. This reduces boot time and decreases memory overhead as
+the VMM can allocate memory as needed.
 
-... just calling regmap_update_bits() looks like a step backwards. In
-the past several years we got several sensible wrappers and helpers. I
-suggest having a callback instead of a fixed 'update bits' table.
+It does not work when the guest attempts to kexec into a new kernel.
 
->  	reset = &cc->reset;
->  	reset->rcdev.of_node = dev->of_node;
->  	reset->rcdev.ops = &qcom_reset_ops;
+The kexec segments' destination addresses are not allocated by the buddy
+allocator. Instead, they are searched from normal system RAM (top-down or
+bottom-up) and exclude driver-managed memory, ACPI, persistent, and
+reserved memory. Unaccepted memory is normal system RAM from kernel
+point of view and kexec can place segments there.
 
-The RPM part is fine with me.
+Kexec bypasses the code path in buddy allocator where memory gets
+accepted and it leads to a crash when kexec accesses segments' memory.
 
+Accept the destination addresses during the kexec load, immediately after
+they pass sanity checks. This ensures the code is located in a common place
+shared by both the kexec_load and kexec_file_load system calls.
+
+This will not conflict with the accounting in try_to_accept_memory_one()
+since the accounting is set during kernel boot and decremented when pages
+are moved to the freelists. There is no harm in invoking accept_memory() on
+a page before making it available to the buddy allocator.
+
+No need to worry about re-accepting memory since accept_memory() checks the
+unaccepted bitmap before accepting a memory page.
+
+Although a user may perform kexec loading without ever triggering the jump,
+it doesn't impact much since kexec loading is not in a performance-critical
+path. Additionally, the destination addresses are always searched and found
+in the same location on a given system.
+
+Changes to the destination address searching logic to locate only memory in
+either unaccepted or accepted status are unnecessary and complicated.
+
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+[ kirill: Update the commit message ]
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Jianxiong Gao <jxgao@google.com>
+---
+ v3:
+   - Update the commit message and retest the patch.
+
+ kernel/kexec_core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0bdc1686154..9a2095216f4f 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -210,6 +210,16 @@ int sanity_check_segment_list(struct kimage *image)
+ 	}
+ #endif
+ 
++	/*
++	 * The destination addresses are searched from system RAM rather than
++	 * being allocated from the buddy allocator, so they are not guaranteed
++	 * to be accepted by the current kernel.  Accept the destination
++	 * addresses before kexec swaps their content with the segments' source
++	 * pages to avoid accessing memory before it is accepted.
++	 */
++	for (i = 0; i < nr_segments; i++)
++		accept_memory(image->segment[i].mem, image->segment[i].memsz);
++
+ 	return 0;
+ }
+ 
 -- 
-With best wishes
-Dmitry
+2.47.2
+
