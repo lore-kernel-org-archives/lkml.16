@@ -1,171 +1,95 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0A6241691;
-	Fri,  7 Mar 2025 19:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661A1255E58;
+	Fri,  7 Mar 2025 19:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741376225; cv=none; b=uTrnD7dcj8jkxrKoaV/uGt1OuoxBJpzaEiLGweYnHNJfxiaEwvUW6ybFRwBQC/G0CI/wm0E7eTTgqQ41IU9A7nB8eltq5NvANdce2TsKb7SY+H8kYhvM51JFi/OIN8qW37abRFWXIqTGMllMkuQOI1KU4/FNYBuuItc9KUpMabw=
+	t=1741376245; cv=none; b=jisMhbIrzDhJQZoOUULRl0AfTaO5f664JB/gYb7xzUHvRbKeq5R0qooSfom7VsYuxmrlarJq8AT8CuM80KGfbhsqRrmQzUF6/brgd/gUVyU8i7ZjE5tlMLhX19Z2cfPmCOoKXKupDGoYU77aKkcIB0N5vY2S9ssssDa+Ac7+hXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741376225; c=relaxed/simple;
-	bh=lGOlEUKYMEj4dil0Op2XWbTDHNW0cDTVOQuuf8NM8P8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=JleE7uEo4JlabypfKvFneOyyudRt/Tt6SG7R63UXwhPwWu50x9faOYJPMcRQpdHrL/uh31cxwL9X7gDDlfZEMBR9SigEtCR56ZIUHJdid4cHIxELG943VzYN5/iyV62Us9tnImW2H6wafNb1opGqIZrSBMvGkOZ8HSFNIn3Rq4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=JpM4cAI/; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741376245; c=relaxed/simple;
+	bh=gdJJj0Y+vIMQxl2pF/V+JeYln0YLxtYpZd3GhmHEoMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tmv7EP3rU6XqaRIvU7lAfguNiuPcM562VIpCm2q2SKVIqUJyDTC6yLtK4Q0EE0wl7HisCdua8J8h/y0V8Xr1bPxMf4sGftYV+R+FEQS7JWHPZRUEiwmnKlxpxqCe+owgnuNWmJLDFrbwAlqnHpa1wWT6HvfHaawTj4JqBA8qoC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cW+40b7p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JpM4cAI/"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 527JXgtA396336
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 7 Mar 2025 11:33:43 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 527JXgtA396336
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741376026;
-	bh=Rba/iYpx+v1WUJY9TbQtNNXz3bzAixuum4cy0AAzIQ8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=JpM4cAI/6OO4nOvQdC38mdUbpbB1lWPHBSF4ljFw2qA3FLC4pjNg+SSz3ep6OIzF7
-	 WYl+0db+AhekbzgxwomC3ymIRs5j71mlLZtD2iw8tO5cOhAoYMQ4MbYIxxObh+RsB1
-	 GUcEWcPFEboLGkCpDZbKwA820RTWL1qGA26P0tk+SNSZddRBNxaRNIo9I6OO/l2PS1
-	 suoEHlGlNSslZA0RrcNHi/ZRxh3u7yF1UBB/uL9NLK/IuoZSDmbFqv5gKyuDiKqw3E
-	 CP62OwczhWCynLtrpzDYfzi+I/IgCMQrBEruwEEHJe0dh0Owv8tBZshia4KmpgLZct
-	 MdGqjzEQfz58Q==
-Date: Fri, 07 Mar 2025 11:33:40 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Yury Norov <yury.norov@gmail.com>
-CC: Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-        Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
-        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
-        hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-        johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org, alistair@popple.id.au,
-        linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-        brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-        Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH v3 01/16] bitops: Change parity8() return type to bool
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z8tJNt83uVBca0cj@thinkpad>
-References: <20250306162541.2633025-1-visitorckw@gmail.com> <20250306162541.2633025-2-visitorckw@gmail.com> <9d4b77da-18c5-4551-ae94-a2b9fe78489a@kernel.org> <Z8ra0s9uRoS35brb@gmail.com> <a4040c78-8765-425e-a44e-c374dfc02a9c@kernel.org> <Z8ri5h-nvNXNp6NB@gmail.com> <04AA7852-2D68-4B3F-9AA7-51AA57E3D23D@zytor.com> <Z8tJNt83uVBca0cj@thinkpad>
-Message-ID: <783456A8-67F9-47DD-AB15-914622A921CD@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cW+40b7p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1235C4CED1;
+	Fri,  7 Mar 2025 19:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741376244;
+	bh=gdJJj0Y+vIMQxl2pF/V+JeYln0YLxtYpZd3GhmHEoMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cW+40b7p32mLKFSwQhsZH6rP9RxyzfSQuk2cWhW6r7FcrXqRf7t+1NavLAixHCDG4
+	 tof9vEYVEcENkLBBLXtmlDBX+SDWmcOYBOHaDYh08VYLXBxIjXD0MkSGyY1caOWHex
+	 gqYREeYkVZ4FeBdglamBrrGdm3WTfLcNxQUA2aEREznnWqs0Ig19i1yFHKsTCdaFAa
+	 Md1jAQLl3quoOYRr9qd+foB2MFdHcY2uo966ZYZ+X7uYPIqbEnJH6dcAThUvU7o4nD
+	 YKqmoB5xskRqBVoPlBQTpvNJ7xJ9K5SEC6vZWKt4Swc61UgoQyMO3JQWvlOKkgPxSB
+	 QQv1xCH3VauFg==
+Date: Fri, 7 Mar 2025 21:37:19 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: ross.philipson@oracle.com
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+	ardb@kernel.org, mjg59@srcf.ucam.org,
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+	ebiederm@xmission.com, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v12 04/19] x86: Secure Launch main header file
+Message-ID: <Z8tK704hkyoZZc7_@kernel.org>
+References: <20241219194216.152839-1-ross.philipson@oracle.com>
+ <20241219194216.152839-5-ross.philipson@oracle.com>
+ <Z8qFdeM8YEck2j1C@kernel.org>
+ <d2adb4c4-b03f-4fbd-81c2-1cd017ed2822@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2adb4c4-b03f-4fbd-81c2-1cd017ed2822@oracle.com>
 
-On March 7, 2025 11:30:08 AM PST, Yury Norov <yury=2Enorov@gmail=2Ecom> wro=
-te:
->On Fri, Mar 07, 2025 at 04:14:34AM -0800, H=2E Peter Anvin wrote:
->> On March 7, 2025 4:13:26 AM PST, Ingo Molnar <mingo@kernel=2Eorg> wrote=
-:
->> >
->> >* Jiri Slaby <jirislaby@kernel=2Eorg> wrote:
->> >
->> >> On 07=2E 03=2E 25, 12:38, Ingo Molnar wrote:
->> >> >=20
->> >> > * Jiri Slaby <jirislaby@kernel=2Eorg> wrote:
->> >> >=20
->> >> > > On 06=2E 03=2E 25, 17:25, Kuan-Wei Chiu wrote:
->> >> > > > Change return type to bool for better clarity=2E Update the ke=
-rnel doc
->> >> > > > comment accordingly, including fixing "@value" to "@val" and a=
-djusting
->> >> > > > examples=2E Also mark the function with __attribute_const__ to=
- allow
->> >> > > > potential compiler optimizations=2E
->> >> > > >=20
->> >> > > > Co-developed-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->> >> > > > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->> >> > > > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail=2Ecom>
->> >> > > > ---
->> >> > > >    include/linux/bitops=2Eh | 10 +++++-----
->> >> > > >    1 file changed, 5 insertions(+), 5 deletions(-)
->> >> > > >=20
->> >> > > > diff --git a/include/linux/bitops=2Eh b/include/linux/bitops=
-=2Eh
->> >> > > > index c1cb53cf2f0f=2E=2E44e5765b8bec 100644
->> >> > > > --- a/include/linux/bitops=2Eh
->> >> > > > +++ b/include/linux/bitops=2Eh
->> >> > > > @@ -231,26 +231,26 @@ static inline int get_count_order_long(u=
-nsigned long l)
->> >> > > >    /**
->> >> > > >     * parity8 - get the parity of an u8 value
->> >> > > > - * @value: the value to be examined
->> >> > > > + * @val: the value to be examined
->> >> > > >     *
->> >> > > >     * Determine the parity of the u8 argument=2E
->> >> > > >     *
->> >> > > >     * Returns:
->> >> > > > - * 0 for even parity, 1 for odd parity
->> >> > > > + * false for even parity, true for odd parity
->> >> > >=20
->> >> > > This occurs somehow inverted to me=2E When something is in parit=
-y means that
->> >> > > it has equal number of 1s and 0s=2E I=2Ee=2E return true for eve=
-n distribution=2E
->> >> > > Dunno what others think? Or perhaps this should be dubbed odd_pa=
-rity() when
->> >> > > bool is returned? Then you'd return true for odd=2E
->> >> >=20
->> >> > OTOH:
->> >> >=20
->> >> >   - '0' is an even number and is returned for even parity,
->> >> >   - '1' is an odd  number and is returned for odd  parity=2E
->> >>=20
->> >> Yes, that used to make sense for me=2E For bool/true/false, it no lo=
-nger does=2E
->> >> But as I wrote, it might be only me=2E=2E=2E
->> >
->> >No strong opinion on this from me either, I'd guess existing practice=
-=20
->> >with other parity functions should probably control=2E (If a coherent=
-=20
->> >praxis exists=2E)=2E
->> >
->> >Thanks,
->> >
->> >	Ingo
->>=20
->> Instead of "bool" think of it as "bit" and it makes more sense
->
->So, to help people thinking that way we can introduce a corresponding
->type:
->        typedef unsigned _BitInt(1) u1;
->
->It already works for clang, and GCC is going to adopt it with std=3Dc23=
-=2E
->We can make u1 an alias to bool for GCC for a while=2E If you guys like
->it, I can send a patch=2E
->
->For clang it prints quite a nice overflow warning:
->
->tst=2Ec:59:9: warning: implicit conversion from 'int' to 'u1' (aka 'unsig=
-ned _BitInt(1)') changes value from 2 to 0 [-Wconstant-conversion]
->   59 |         u1 r =3D 2;
->      |            ~   ^
->
->Thanks,
->Yury
+On Fri, Mar 07, 2025 at 11:25:20AM -0800, ross.philipson@oracle.com wrote:
+> On 3/6/25 9:34 PM, 'Jarkko Sakkinen' via trenchboot-devel wrote:
+> > On Thu, Dec 19, 2024 at 11:42:01AM -0800, Ross Philipson wrote:
+> > > Introduce the main Secure Launch header file used in the early SL stub
+> > > and the early setup code.
+> > 
+> > Just would need a *short* description of what slaunch.h holds. I guess
+> > it holds Intel TXT micro-arhitectural data structures? Anything else?
+> 
+> Later it will contain data strutures etc. to support other architectures
+> like AMD and Arm64.
+> 
+> > 
+> > This helps e.g. reviewers to skip some but still keep on track what a
+> > patch contains (and return back to it when necessary).
+> 
+> Yes we can make it clearer what is in this header file.
 
-No, for a whole bunch of reasons=2E
+As per code changes I did spend two hours reading them just to make sure
+that I can understand the TPM specific code changes, and also that they
+make total sense to me.
+
+Therefore I've put a lot the nagging is around documentation and
+definitions. I really could not find anything in the source code that I
+could pinpoint being absolutely wrong.
+
+This really needs just now the stamp from tip maintainers. As per TPM
+changes they do have my blessing (no need for reviewed-by's as they
+have SOB already). I hereby also give permission to pull TPM changes
+through tip tree...
+
+> Thanks
+> Ross
+
+BR, Jarkko
