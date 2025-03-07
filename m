@@ -1,110 +1,115 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F33221540
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AFB221556
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360230; cv=none; b=X/foeTO0rYD2rSfNBi+14O/D0zWCVH6k0rhQHTGyWn6pQGjRpr4SkH7EmTbboYjhowYKnaFQgPa6miuqe1gTCGIEUk7as6iG87n76QHVaayNwbcZS1OT09AMzGj79yBO5kUc3FI3BiztkgzTK2CQEjxq1F6OjoiVKMLO4HTtvXI=
+	t=1741360248; cv=none; b=dX1j055ctBnsR2x5WK0hfavVsoprmNSmQ6kPth+bsvTz5wsbGw24PSJ8NvVeanaGMfgUq9htd2xGhXJAuD+MMxuJCOcdeVgz8p8eYPwRXVkna7Mx5fFU5VwErFE1LTwIofe6w0ucbL0O+ibvdZdTzqwjqXUXsC/I9pkgXXFTG8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360230; c=relaxed/simple;
-	bh=TfY6Uuj22tNIZcd+AxAVBfz6b5qDljEdJ6Z4kV5QMNY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eQzGSKCvUgr9iCHy6dwfj1FbIcY5tgYwjH2irmeuLSUGPypTW4J2UvcxQvdGi3gErcvz7IbLUdlnoStB9Dz1XXww+h36mAAkCTgZhObf32TeGAQr46p6cvD9OFpXd7Ms/M2W8CC/0n/DdwBL/5co2KkiZ2ebtwIL2l43zGNicxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=enjYFyD4; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1741360248; c=relaxed/simple;
+	bh=7vPM66wrqA8ItOal1m7QS909J6dZMJbGOzOQwE8gVyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YjJ4gHwFEY8uQYEDv5h0tLGzKLl2oXsZ6C0JjMlnQpZHFTpKBjRCixf3X+SE/3695zC+0BbH+0CFwOAcK+1NQTm8Fbrj0o5AA90HbJI5CCD5wQW8hM9KLMw1jzZDbMO9bcKWSC88Ef+t3TlK74HiiAZgkKVG2KXq1+VdviiFqxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uWjUvTN6; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="enjYFyD4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=X1vRuwxBIZSJcxbIazD+ATemJLeoDYr5JM5IaYT4lGQ=; b=enjYFyD4PSSL539zcfI3RJ8aOc
-	BlEwjte4o15XHSllqCAhJ4FYzAeJbeZty+oA6Em/tlIcWJKpk8PoYhBOKq1HbQhcOpNVYKG8RVRnM
-	YPX9aV+1Jo02LcoBPjB+ie/Ad+AXZYWpuCOLLdHQsFlRqr5qVfF9W+hpiuaqiXG8cznMiUxcvBnGP
-	+5Q/U202IYkqtAOykVPCF/3YjD26r4wvGRgtEXGrbwBsSHjcJghyIkcPMfVkEHIboEWzQVbuKGdtp
-	u14cl+/0Kf7D7CujzUGnl3LZhZa07wziO+rG8VuY21eGpaZooy1jya821ZOz6w4qCilxDCa+gdm52
-	OkMEar4A==;
-Received: from 179-125-91-70-dinamico.pombonet.net.br ([179.125.91.70] helo=[192.168.67.187])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tqYrK-005OEr-PL; Fri, 07 Mar 2025 15:39:36 +0100
-From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Date: Fri, 07 Mar 2025 11:39:27 -0300
-Subject: [PATCH v2 1/2] char: misc: restrict the dynamic range to exclude
- reserved minors
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uWjUvTN6"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5fe8759153dso739018eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:10:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741360246; x=1741965046; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GaMH1NOSXXEyX+4I+PnYIXnBgRaLQ5ST8GTB4hff2uQ=;
+        b=uWjUvTN6EX4c+P6aUMdpQ43KsDrmqLeNu4sCncwPyem00Z1g+HI/xWEBkr4dFJdHpK
+         TNH0hXx0f3UoH43rXHSDalHKIXhUHAC3ENvuawUDmEus0ME5Xub6k9ZGTHGYrCIXPhrX
+         89wAD6qQsx0sS9L3mwOHeQg0PE0ZPNktI0SWmt9BZek3zMTGVFdUDs9V5PPKsPDP8Lt5
+         0Q3CtQlbPPa7a9N2dFgnArlZ/85+krAiwR6eFfidcqh8KJScz3g9hkivLPdwGkye3LTE
+         lYYnUm45dF+wNyEBujgUNWIXn8AjDMak/HwScGunaYFpyrOsRWcJN/VPoYycb2cZ2MlD
+         x27A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741360246; x=1741965046;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GaMH1NOSXXEyX+4I+PnYIXnBgRaLQ5ST8GTB4hff2uQ=;
+        b=KnDmuuQU+sZf5vm11VNaqXMZQAdt7Z2Vg706zVK9rjPFVpLo7lqXO2LWNJvDKa1paT
+         ROc6B2EEvRbDzKMFeByD1TWt4/oq/8OVypHHRzO7r4PweI+q8QiYN4P6dkFxuvAA11Xz
+         J2hjrX7g+9iyA/cuOl3EhapmvESU2uKZ1AjjdJifXXhHJD91rM2syPszR6cXcjStYreC
+         XyKzBVM03IHZ20kwHIKhbV+wHTCr6RbWGrA10Bc/L5hLvxTM8athvZO8QQZahvHBilIH
+         eT2G6byUTgbTjewUV2QwMld0Pu1yr6d+diajeiuCorpxcPCL4IgckWbYmHY/RcOqDOd9
+         7Ndg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJvpS9aSH2O18XcYnWIedBg9bzkrrk8fl8N0n19DkYftH3BPN2ko6BO5KiT1P5iPWkihC6ZJl0rZnbZ30=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAZ/FDmxEBbYJViMWQhdzkFH6gMtK1p4yAteYE1LhTEFi6jwdQ
+	voEXOTKeQvEfxX2nZG0AZXkba5adKXBus4Vfwbo2hagWZucnp9FEgrrzAdwbKek4Qjr79KXrD+L
+	zVeZkG+GemD0lwITefPf2gN9S4hi7h1IGZ6dnUA==
+X-Gm-Gg: ASbGncsdOis3aozCZezaSDtSy/0c4b4TSyi5nQy9ek6Ig7VoAhoMXtl89IWcKGENEvS
+	vqwc20Xh+07kgQWb9TIwCjZy0y6bXEQ2/ClGfGvNxh8SGH5zrn69InsiJ/5/R73qlCPp29bQkqj
+	Dniby7+OYEymAvzaYjwvh0wukKFw0=
+X-Google-Smtp-Source: AGHT+IGmSI6uKhyqp0Lz6umulak1/qdCrknOZ1BwGtVXVr7Hw1ALnj7JKNyxJ8z0WKOu5JKZrR6BgmZGuCc1usZ1pxU=
+X-Received: by 2002:a4a:ec46:0:b0:5fc:f3b8:78c2 with SMTP id
+ 006d021491bc7-6004aaf90aemr2063696eaf.3.1741360244995; Fri, 07 Mar 2025
+ 07:10:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250307-misc-dynrange-v2-1-6fe19032ef76@igalia.com>
-References: <20250307-misc-dynrange-v2-0-6fe19032ef76@igalia.com>
-In-Reply-To: <20250307-misc-dynrange-v2-0-6fe19032ef76@igalia.com>
-To: Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
- Dirk VanDerMerwe <dirk.vandermerwe@sophos.com>, 
- Vimal Agrawal <vimal.agrawal@sophos.com>, linux-kernel@vger.kernel.org, 
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-X-Mailer: b4 0.14.2
+References: <20250226220414.343659-1-peter.griffin@linaro.org>
+ <20250226220414.343659-5-peter.griffin@linaro.org> <20250305024020.GC20133@sol.localdomain>
+In-Reply-To: <20250305024020.GC20133@sol.localdomain>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Fri, 7 Mar 2025 15:10:33 +0000
+X-Gm-Features: AQ5f1JrG484DP9qv6Qb4pGd14bkBMzxvaPSxEwh5c_p71wnvCQXfRvFkoiXZo_U
+Message-ID: <CADrjBPpju3MmZbNy1uaPzAWTWrmNHx0nT+03DmkM3p5qFEUHdA@mail.gmail.com>
+Subject: Re: [PATCH 4/6] scsi: ufs: exynos: Enable PRDT pre-fetching with UFSHCD_CAP_CRYPTO
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: alim.akhtar@samsung.com, James.Bottomley@hansenpartnership.com, 
+	martin.petersen@oracle.com, krzk@kernel.org, linux-scsi@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, willmcvicker@google.com, 
+	tudor.ambarus@linaro.org, andre.draszik@linaro.org, bvanassche@acm.org, 
+	kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 
-When this was first reported [1], the possibility of having sufficient
-number of dynamic misc devices was theoretical, in the case of dlm driver.
-In practice, its userspace never created more than one device.
+Hi Eric,
 
-What we know from commit ab760791c0cf ("char: misc: Increase the maximum
-number of dynamic misc devices to 1048448"), is that the miscdevice
-interface has been used for allocating more than the single-shot devices it
-was designed for. And it is not only coresight_tmc, but many other drivers
-are able to create multiple devices.
+Thanks for your review feedback.
 
-On systems like the ones described in the above commit, it is certain that
-the dynamic allocation will allocate certain reserved minor numbers,
-leading to failures when a later driver tries to claim its reserved number.
+On Wed, 5 Mar 2025 at 02:40, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Wed, Feb 26, 2025 at 10:04:12PM +0000, Peter Griffin wrote:
+> > PRDT_PREFETCH_ENABLE[31] bit should be set when desctype field of
+> > fmpsecurity0 register is type2 (double file encryption) or type3
+> > (file and disk excryption). Setting this bit enables PRDT
+> > pre-fetching on both TXPRDT and RXPRDT.
+> >
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+>
+> I assume you mean that desctype 3 provides "support for file and disk
+> encryption"?
 
-Instead of excluding the historically statically allocated range from
-dynamic allocation, restrict the latter to minors above 255.
+Yes, the PRDT_PREFETCH_ENABLE description in the commit message I
+copied from the datasheet. But I can re-word it like you suggest if
+you think that it's clearer? I notice now there is also a typo with
+the word 'encryption' which I can also fix.
 
-Since commit ab760791c0cf ("char: misc: Increase the maximum number of
-dynamic misc devices to 1048448") has been applied, such range is already
-possible. And given such devices already need to be dynamically created,
-there should be no systems where this might become a problem.
+This patch came about whilst comparing UFS SFR register dumps of
+upstream and downstream drivers. I noticed that PRDT_PREFETCH_ENABLE
+is enabled downstream but not upstream, and after checking the
+datasheet description it seemed like we should set this if
+exynos_ufs_fmp_init() completed and set CFG_DESCTYPE_3.
 
-[1] https://lore.kernel.org/all/1257813017-28598-3-git-send-email-cascardo@holoscopio.com/
+> The driver does use desctype 3, but it only uses the "file
+> encryption".  So this confused me a bit.  (BTW, in FMP terminology, "file
+> encryption" seems to mean "use the key provided in the I/O request", and "disk
+> encryption" seems to mean "use some key the firmware provided somehow".  They
+> can be cascaded, and the intended use cases are clearly file and disk encryption
+> respectively, but they don't necessarily have to be used that way.)
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
----
- drivers/char/misc.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+Thanks for the additional context :)
 
-diff --git a/drivers/char/misc.c b/drivers/char/misc.c
-index f7dd455dd0dd3c7c9956e772b5ab8bd83a67a4a6..6a7f4f2f8d1227747a74be567bdc420a9e97f8f2 100644
---- a/drivers/char/misc.c
-+++ b/drivers/char/misc.c
-@@ -69,13 +69,8 @@ static int misc_minor_alloc(int minor)
- 
- 	if (minor == MISC_DYNAMIC_MINOR) {
- 		/* allocate free id */
--		ret = ida_alloc_max(&misc_minors_ida, DYNAMIC_MINORS - 1, GFP_KERNEL);
--		if (ret >= 0) {
--			ret = DYNAMIC_MINORS - ret - 1;
--		} else {
--			ret = ida_alloc_range(&misc_minors_ida, MISC_DYNAMIC_MINOR + 1,
--					      MINORMASK, GFP_KERNEL);
--		}
-+		ret = ida_alloc_range(&misc_minors_ida, MISC_DYNAMIC_MINOR + 1,
-+				      MINORMASK, GFP_KERNEL);
- 	} else {
- 		/* specific minor, check if it is in dynamic or misc dynamic range  */
- 		if (minor < DYNAMIC_MINORS) {
-
--- 
-2.47.2
-
+Peter
