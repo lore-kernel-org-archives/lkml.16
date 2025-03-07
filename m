@@ -1,121 +1,230 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5330954F8C;
-	Fri,  7 Mar 2025 02:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA753168B1;
+	Fri,  7 Mar 2025 02:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741314051; cv=none; b=VfTDM0m/bed8NPh1rvins9FPb4smiatWiP4lljfNw3IJKEjXdqWc3OEe0HafjyKqXDqMGvteokd+dA2R1MyemlaKvBMcU1mZAzGPVEc8u2zNEsMJFeorMTCruDsAasZHmNWA5qm5vd7GK0wjMAF4MAt+aTsdNwx2z2Qd8wdEsZo=
+	t=1741314080; cv=none; b=amDV8Gxhe/ZC2pfQgwEfSIoK8nxVWa1ZIMykD+Drkc3X+KEgPV+cDF/iOzv7W/SBSlH+txXbn/eicoB5/DFMnK8Ly5bKDRFJn2NUVjd7n2pFNvQeLW6PQ66zU1YFvpp/dhRiVjp49YRfxTKap0Y+2xktka+f4c8cDVVt/1hzBHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741314051; c=relaxed/simple;
-	bh=+6tLDls9EW0FXKL38bYFqrjcRNcCPuJlju4ebK2g2rQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZhlpbHmk32YpxNtQm9kkynH6H0KKfMthlrolhlEJSfb7V0zfvZkUBNfuIrzNJ+s4AA3iHcdjlycik1hVnwToFObXGrjlTg6b4MDTXXe3Y61aoycCI3BV9RuIptB8nFuzNNxyW1j1M8Neq/pGo571m++ozlF4jquzy2Dfy2TTiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAnL2vxV8pnbl5XBw--.55623S2;
-	Fri, 07 Mar 2025 10:20:33 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBXW4fwV8pnU589AA--.4347S2;
-	Fri, 07 Mar 2025 10:20:32 +0800 (CST)
-Date: Fri, 7 Mar 2025 10:20:31 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Gregory Price <gourry@gourry.net>
-Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0: ACPI and Linux Resources
-Message-ID: <Z8pX786s+1DQIMDy@phytium.com.cn>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
- <Z8j8bZ5TS+gDV8+M@phytium.com.cn>
- <Z8nWobZXQwhtE1nK@gourry-fedora-PF4VCD3F>
+	s=arc-20240116; t=1741314080; c=relaxed/simple;
+	bh=BBEBYRaX4iivMDtFeuB0fpDDijYVt1nDdJnaHGZcCtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OBmDC0PGxjWaAXIsvYgB2PIX0dNhvHNTFne7HGEr/BGQedAAW11ARdDM0I5NrN9aXRzYdyeVPqvQvUynSapepUB06qXlJVomeyzSy1uuDpnywfX/vEN83VLuhr1QgaZtTZlh5ngk3GLm4S0UjfBBVpj+nUsyeqU6wl+/l4l82wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=lHoyVKUv; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lHoyVKUv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1741314073;
+	bh=zDdouoow9I6nvRsRmSJs1XQAIO7qs3JLGeFiPqXzhFs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=lHoyVKUvBQwEn00jQjSu0fe/DJGaf2gwHDJXpS25Opo5FlbWO0Ls/K3SZY4MU6aCv
+	 q9JNxhoOLEMgVZqaqVEiXx9yGQj28m8aDLQxhoePZ9bzMQjH49dGYk7sOZn1dH/l2M
+	 Uwgw/0tBcETKMiCLO/H83g7glSFFvj5S2Y3bgICshQaZ5vpJ0atMY+SiaIRCMbNUAj
+	 aDArN2KIeMA9x9bqbDu7J1bKc2oaA/gk1cya+JRkOa1stj9+xH0G4D/w1AcC8MJhJU
+	 dTuGJ7YBaVD8g5dNnBhVzMLTy0EWupVhUmQuATNcbE8pJUQ8DLqAl7P4Krc5d0+k3S
+	 5Qssr6KjDgslg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z89550GBTz4wd0;
+	Fri,  7 Mar 2025 13:21:12 +1100 (AEDT)
+Date: Fri, 7 Mar 2025 13:21:12 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Lucas De Marchi <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0?=
+ =?UTF-8?B?csO2bQ==?= <thomas.hellstrom@linux.intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Alistair Popple <apopple@nvidia.com>, Balbir Singh <balbirs@nvidia.com>,
+ Matthew Brost <matthew.brost@intel.com>, DRM XE List
+ <intel-xe@lists.freedesktop.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the drm-xe tree
+Message-ID: <20250307132112.18b6ce90@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z8nWobZXQwhtE1nK@gourry-fedora-PF4VCD3F>
-X-CM-TRANSID:AQAAfwBXW4fwV8pnU589AA--.4347S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQABAWfIrdcBhQBJsZ
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxGw4xXr1rJrW5Zw4rZr4kXrb_yoW5Gw18pr
-	WDKF92kFs8try7CFn2gw42g34FyFWvkFWUJryFgrWUGF98ur1Fqr4rKF1q9Fyxur4UAF1j
-	v3yktw13Xa4Y9aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: multipart/signed; boundary="Sig_/FGUZsOrf9LTYww5Fp946HPy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, Mar 06, 2025 at 12:08:49PM -0500, Gregory Price wrote:
-> On Thu, Mar 06, 2025 at 09:37:49AM +0800, Yuquan Wang wrote:
-> > On Wed, Mar 05, 2025 at 05:20:52PM -0500, Gregory Price wrote:
-> 
-> First, thank you for bringing this up, this is exactly the type of
-> ambiguiuty i was hoping others would contribute.  It's difficult to
-> figure out if the ACPI tables are "Correct", if there's unimplemented
-> features, or we're doing something wrong - because some of this is
-> undocumented theory of operation.
-> 
-Thank you for your patience in replying my questions. :)
-> > > ==================
-> > > NUMA node creation
-> > > ===================
-> > > NUMA nodes are *NOT* hot-pluggable.  All *POSSIBLE* NUMA nodes are
-> > > identified at `__init` time, more specifically during `mm_init`.
-> > > 
-> > > What this means is that the CEDT and SRAT must contain sufficient
-> > > `proximity domain` information for linux to identify how many NUMA
-> > > nodes are required (and what memory regions to associate with them).
-> > > 
-> > Condition:
-> > 1) A UMA/NUMA system that SRAT is absence, but it keeps CEDT.CFMWS
-> > 2）Enable CONFIG_ACPI_NUMA
-> > 
-> > Results:
-> > 1) acpi_numa_init: the fake_pxm will be 0 and send to acpi_parse_cfmws()
-> > 2）If dynamically create cxl ram region, the cxl memory would be assigned
-> > to node0 rather than a fake new node.
-> >
-> 
-> This is very interesting.  Can I ask a few questions:
-> 
-> 1) is this real hardware or a VM?
-Qemu VM (arm64 virt).
-> 2) By `dynamic creation` you mean leveraging cxl-cli (ndctl)?
-Yes. After boot, I used "cxl create-region". 
-> 2a) Is the BIOS programming decoders, or are you programming the
->     decoder after boot?
-Program the decoder after boot. It seems like currently bios for qemu could
-not programm cxl both on x86(q35) and arm64(virt). I am trying to find a
-cxl-enable bios for qemu virt to do some test.
-> 
-> 
-> > Confusions:
-> > 1) Does CXL memory usage require a numa system with SRAT? As you
-> > mentioned in SRAT section: 
-> > 
-> > "This table is technically optional, but for performance information
-> > to be enumerated by linux it must be present."
-> > 
-> > Hence, as I understand it, it seems a bug in kernel.
-> >
-> 
-> It's hard to say if this is a bug yet.  It's either a bug, or your
-> system should have an SRAT to describe what the BIOS has done.
-> 
-> > 2) If it is a bug, could  we forbid this situation by adding fake_pxm
-> > check and returning error in acpi_numa_init()?
-> > 
-> 
-> > 3）If not,  maybe we can add some kernel logic to allow create these fake
-> > nodes on a system without SRAT?
-> > 
-> 
-> I think we should at least provide a warning (if the SRAT is expected
-> but missing) - but lets get some more information first.
-> 
-> ~Gregory
+--Sig_/FGUZsOrf9LTYww5Fp946HPy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
+
+After merging the drm-xe tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+In file included from include/linux/kernel.h:22,
+                 from include/linux/cpumask.h:11,
+                 from arch/x86/include/asm/paravirt.h:21,
+                 from arch/x86/include/asm/irqflags.h:80,
+                 from include/linux/irqflags.h:18,
+                 from include/linux/spinlock.h:59,
+                 from include/linux/mmzone.h:8,
+                 from include/linux/gfp.h:7,
+                 from include/linux/mm.h:7,
+                 from include/linux/pagemap.h:8,
+                 from include/drm/ttm/ttm_tt.h:30,
+                 from drivers/gpu/drm/xe/xe_bo.h:9,
+                 from drivers/gpu/drm/xe/xe_svm.c:6:
+drivers/gpu/drm/xe/xe_svm.c: In function 'page_to_vr':
+drivers/gpu/drm/xe/xe_svm.c:344:33: error: 'struct page' has no member name=
+d 'pgmap'
+  344 |         return container_of(page->pgmap, struct xe_vram_region, pag=
+emap);
+      |                                 ^~
+include/linux/container_of.h:19:33: note: in definition of macro 'container=
+_of'
+   19 |         void *__mptr =3D (void *)(ptr);                            =
+       \
+      |                                 ^~~
+In file included from include/linux/init.h:5,
+                 from include/linux/printk.h:6,
+                 from include/asm-generic/bug.h:22,
+                 from arch/x86/include/asm/bug.h:99,
+                 from include/linux/bug.h:5,
+                 from include/linux/mmdebug.h:5,
+                 from include/linux/mm.h:6:
+drivers/gpu/drm/xe/xe_svm.c:344:33: error: 'struct page' has no member name=
+d 'pgmap'
+  344 |         return container_of(page->pgmap, struct xe_vram_region, pag=
+emap);
+      |                                 ^~
+include/linux/build_bug.h:78:56: note: in definition of macro '__static_ass=
+ert'
+   78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+      |                                                        ^~~~
+include/linux/container_of.h:20:9: note: in expansion of macro 'static_asse=
+rt'
+   20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||  =
+     \
+      |         ^~~~~~~~~~~~~
+include/linux/container_of.h:20:23: note: in expansion of macro '__same_typ=
+e'
+   20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||  =
+     \
+      |                       ^~~~~~~~~~~
+drivers/gpu/drm/xe/xe_svm.c:344:16: note: in expansion of macro 'container_=
+of'
+  344 |         return container_of(page->pgmap, struct xe_vram_region, pag=
+emap);
+      |                ^~~~~~~~~~~~
+drivers/gpu/drm/xe/xe_svm.c:344:33: error: 'struct page' has no member name=
+d 'pgmap'
+  344 |         return container_of(page->pgmap, struct xe_vram_region, pag=
+emap);
+      |                                 ^~
+include/linux/build_bug.h:78:56: note: in definition of macro '__static_ass=
+ert'
+   78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+      |                                                        ^~~~
+include/linux/container_of.h:20:9: note: in expansion of macro 'static_asse=
+rt'
+   20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||  =
+     \
+      |         ^~~~~~~~~~~~~
+include/linux/container_of.h:21:23: note: in expansion of macro '__same_typ=
+e'
+   21 |                       __same_type(*(ptr), void),                   =
+     \
+      |                       ^~~~~~~~~~~
+drivers/gpu/drm/xe/xe_svm.c:344:16: note: in expansion of macro 'container_=
+of'
+  344 |         return container_of(page->pgmap, struct xe_vram_region, pag=
+emap);
+      |                ^~~~~~~~~~~~
+include/linux/compiler_types.h:483:27: error: expression in static assertio=
+n is not an integer
+  483 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), t=
+ypeof(b))
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:78:56: note: in definition of macro '__static_ass=
+ert'
+   78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+      |                                                        ^~~~
+include/linux/container_of.h:20:9: note: in expansion of macro 'static_asse=
+rt'
+   20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||  =
+     \
+      |         ^~~~~~~~~~~~~
+include/linux/container_of.h:20:23: note: in expansion of macro '__same_typ=
+e'
+   20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||  =
+     \
+      |                       ^~~~~~~~~~~
+drivers/gpu/drm/xe/xe_svm.c:344:16: note: in expansion of macro 'container_=
+of'
+  344 |         return container_of(page->pgmap, struct xe_vram_region, pag=
+emap);
+      |                ^~~~~~~~~~~~
+
+Caused by commit
+
+  11bbe0d9aa96 ("drm/xe: Add drm_pagemap ops to SVM")
+
+interacting with commit
+
+  089b22f60a0f ("mm: allow compound zone device pages")
+
+from the mm-unstable branch of the mm tree.
+
+I have applied the following merge fix patch for today
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 7 Mar 2025 13:14:37 +1100
+Subject: [PATCH] fixup for "drm/xe: Add drm_pagemap ops to SVM"
+
+  089b22f60a0f ("mm: allow compound zone device pages")
+
+from the mm-unstable branch of the mm tree.
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/xe/xe_svm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/xe/xe_svm.c b/drivers/gpu/drm/xe/xe_svm.c
+index 516898e99b26..3e829c87d7b4 100644
+--- a/drivers/gpu/drm/xe/xe_svm.c
++++ b/drivers/gpu/drm/xe/xe_svm.c
+@@ -341,7 +341,7 @@ static void xe_svm_garbage_collector_work_func(struct w=
+ork_struct *w)
+=20
+ static struct xe_vram_region *page_to_vr(struct page *page)
+ {
+-	return container_of(page->pgmap, struct xe_vram_region, pagemap);
++	return container_of(page_pgmap(page), struct xe_vram_region, pagemap);
+ }
+=20
+ static struct xe_tile *vr_to_tile(struct xe_vram_region *vr)
+--=20
+2.45.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FGUZsOrf9LTYww5Fp946HPy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfKWBgACgkQAVBC80lX
+0GzDgAgAmwJ9ID661PffVUPQVaP4Hf6NpT32Da1QKSsqEQZ+3y71xxEqg52AGHOm
+UY7jksc0A4olQO4IIrdN25bdq8U3QiLmU7cjwAGRttgpzNWc86XDpSfMnUdUQ+Xq
+XjI/nlWhc6Uos1URICVL3cimh3bTizsGL05vWLEOMpqrS6tgwR+PuWiCcapRBCzw
+G5j7brcrIlryoGbeQ5H70EP4hMbr/6dDVEKgnFtqXm0tLGSZwGkBdayuZNo97teY
++D3+QyZNYc/PU3tBaeAYN8bJiNjYS+Dre9bgx4SwXsRAG1YKZIvSqdhNoE4uwdor
+Bfzi9v3DcSgx0r6GPAkKbBZdo/Abiw==
+=cFBe
+-----END PGP SIGNATURE-----
+
+--Sig_/FGUZsOrf9LTYww5Fp946HPy--
