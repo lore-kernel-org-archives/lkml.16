@@ -1,113 +1,124 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD9225485E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 19:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB7424FC1F;
+	Fri,  7 Mar 2025 19:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741376541; cv=none; b=D+fSSeREOdp221dgF4pSw3pG5CazRKcgC40ACj3rWiK4e0vSpQoPy4AtqGftW5jtgG6peJm0Luc6mMFrPtWozdioK7vEhb3rLFfvb/XUym43tdBHb4RLT2cJrY/JXedQDqIVURiEW0X2soU83tqDj1Ntd+EeyMEAFBKId7t7J1o=
+	t=1741376570; cv=none; b=Y51Y8S4hHEGRDWqnCIsnieduoPg1kuioa2+Gs9enQCqkKAg0p8OIna4cci6J8NTmHveyi9hgvnlKtvQArMXdbCM9A+UF21npTXSOIKGiQxnLrDglh+bKbg4uXBVYWH3OabRC/JZipufdayWDL6RSRRJgBIMaibH47Hl5rKXczxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741376541; c=relaxed/simple;
-	bh=OZkliL2bYezi7a2we+4OxPKOzQpAk3iSHqbABO6VJ4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BFaEJuizMgyOHK3zHgXIlk728P0iY0M5YjHk90rXK0G8gKGTF514gnnuAfIlIVqM2Tx/4FgSUV99pOqyKTdxsTO55cihExf2zEcPdHXjr2b99y8UaC7NfSQoK5ibimyNbFnLjcyUs4nF8grRzQ/eR06MAVf5rxCoLUEJM2U1crQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IWdkuHeR; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741376570; c=relaxed/simple;
+	bh=bntwyWnrMdWDSe4vnVdSyZBMiRO/ZRUZNY4KsjH/rsE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gS4XwikVhhpH6CqUOniwndyfBEFsq81mUgiwERUNUVn8UA+7jAJb5gun7bVTHzGFhSPtGIU86uS7cCmQSfwQZ0sfNt9nxtH5DmOiCvmP5xIQfTxCQNlZpoJKoPWFTLH5qJqRJjlrKFORC5siMCbFoOmj4yqfvvFpbwd7hhkgVNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=nUstl2fO; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IWdkuHeR"
-Date: Fri, 7 Mar 2025 19:41:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741376525;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hUfk1/2NcSfPN/tpPfLTglczAj9VxtvTU3Ogyf9VQss=;
-	b=IWdkuHeRMDC+9wNq0Lo0/O/5kMk6BYVu38wbtXm8ScUXAhZyee1hoE9gApdp7k2fHqLaEa
-	lSJIMUsgS+5avUY2z2QStbB7g6TAtfdGW26DdBIJvqBW7FbfDuySpBvMwgW+pR60vCGAUR
-	kaRdKLxXImqEfy4bcU+uXr24hZsNnsU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [RFC PATCH] memcg: net: improve charging of incoming network
- traffic
-Message-ID: <Z8tMB4i_hBLaSZS1@google.com>
-References: <20250307055936.3988572-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="nUstl2fO"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
+ id bd548913f5f0793d; Fri, 7 Mar 2025 20:42:45 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 581269A0BFB;
+	Fri,  7 Mar 2025 20:42:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1741376565;
+	bh=bntwyWnrMdWDSe4vnVdSyZBMiRO/ZRUZNY4KsjH/rsE=;
+	h=From:Subject:Date;
+	b=nUstl2fOjsDJTZ3H1jC9w8CqcwhArq6Q7ElmCXlnurofh79vYmjWSCpuXf+Cl3eyE
+	 HtsbNujM4Vd4zy47Oagr9/5f89lDF98oOtOqubO0vrBxtbv6uoB+wTfYGDimO950rk
+	 84FrT2zAVPl8IaYSdMAH6vNKhUAH28SFl5xk1KajlmFMVCvyAtxtsRaqx7sKEG6ud3
+	 lTq4TH941JmYHRFo4DLaYd52gPYAgDRHT9F3uGi02YTuC1eqMMI+ifKq2y8mJo9als
+	 /vI5MRI3V7dnxVvQqt+KOHbGztaLt1N2wdB99wbSwRxmg2nX+vtG8qOPyyeITqRqZG
+	 5r+O52ybKq21A==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Morten Rasmussen <morten.rasmussen@arm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ Pierre Gondois <pierre.gondois@arm.com>,
+ Christian Loehle <christian.loehle@arm.com>
+Subject:
+ [RFC][PATCH v0.3 0/6] cpufreq: intel_pstate: Enable EAS on hybrid platforms
+ without SMT - alternative
+Date: Fri, 07 Mar 2025 20:12:11 +0100
+Message-ID: <22640172.EfDdHjke4D@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307055936.3988572-1-shakeel.butt@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudduheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=11 Fuz1=11 Fuz2=11
 
-On Thu, Mar 06, 2025 at 09:59:36PM -0800, Shakeel Butt wrote:
-> Memory cgroup accounting is expensive and to reduce the cost, the kernel
-> maintains per-cpu charge cache for a single memcg. So, if a charge
-> request comes for a different memcg, the kernel will flush the old
-> memcg's charge cache and then charge the newer memcg a fixed amount (64
-> pages), subtracts the charge request amount and stores the remaining in
-> the per-cpu charge cache for the newer memcg.
-> 
-> This mechanism is based on the assumption that the kernel, for locality,
-> keep a process on a CPU for long period of time and most of the charge
-> requests from that process will be served by that CPU's local charge
-> cache.
-> 
-> However this assumption breaks down for incoming network traffic in a
-> multi-tenant machine. We are in the process of running multiple
-> workloads on a single machine and if such workloads are network heavy,
-> we are seeing very high network memory accounting cost. We have observed
-> multiple CPUs spending almost 100% of their time in net_rx_action and
-> almost all of that time is spent in memcg accounting of the network
-> traffic.
-> 
-> More precisely, net_rx_action is serving packets from multiple workloads
-> and is observing/serving mix of packets of these workloads. The memcg
-> switch of per-cpu cache is very expensive and we are observing a lot of
-> memcg switches on the machine. Almost all the time is being spent on
-> charging new memcg and flushing older memcg cache. So, definitely we
-> need per-cpu cache that support multiple memcgs for this scenario.
+Hi Everyone,
 
-We've internally faced a different situation on machines with a large
-number of CPUs where the mod_memcg_state(MEMCG_SOCK) call in
-mem_cgroup_[un]charge_skmem() causes latency due to high contention on
-the atomic update in memcg_rstat_updated().
+This is a new take on the "EAS for intel_pstate" work:
 
-In this case, networking performs a lot of charge/uncharge operations,
-but because we count the absolute magnitude updates in
-memcg_rstat_updated(), we reach the threshold quickly. In practice, a
-lot of these updates cancel each other out so the net change in the
-stats may not be that large.
+https://lore.kernel.org/linux-pm/5861970.DvuYhMxLoT@rjwysocki.net/
 
-However, not using the absolute value of the updates could cause stat
-updates of irrelevant stats with opposite polarity to cancel out,
-potentially delaying stat updates.
+with refreshed preparatory patches and a revised energy model design.
 
-I wonder if we can leverage the batching introduced here to fix this
-problem as well. For example, if the charging in
-mem_cgroup_[un]charge_skmem() is satisfied from this catch, can we avoid
-mod_memcg_state() and only update the stats once at the end of batching?
+The following paragraph from the original cover letter still applies:
 
-IIUC the current implementation only covers the RX path, so it will
-reduce the number of calls to mod_memcg_state(), but it won't prevent
-charge/uncharge operations from raising the update counter
-unnecessarily. I wonder if the scope of the batching could be increased
-so that both TX and RX use the same cache, and charge/uncharge
-operations cancel out completely in terms of stat updates.
+"The underlying observation is that on the platforms targeted by these changes,
+Lunar Lake at the time of this writing, the "small" CPUs (E-cores), when run at
+the same performance level, are always more energy-efficient than the "big" or
+"performance" CPUs (P-cores).  This means that, regardless of the scale-
+invariant utilization of a task, as long as there is enough spare capacity on
+E-cores, the relative cost of running it there is always lower."
 
-WDYT?
+However, this time perf domains are registered per CPU and in addition to the
+primary cost component, which is related to the CPU type, there is a small
+component proportional to performance whose role is to help balance the load
+between CPUs of the same type.
+
+This is done to avoid migrating tasks too much between CPUs of the same type,
+especially between E-cores, which has been observed in tests of the previous
+iteration of this work.
+
+The expected effect is still that the CPUs of the "low-cost" type will be
+preferred so long as there is enough spare capacity on any of them.
+
+The first two patches in the series rearrange cpufreq checks related to EAS so
+that sched_is_eas_possible() doesn't have to access cpufreq internals directly
+and patch [3/6] changes those checks to also allow EAS to be used with cpufreq
+drivers that implement internal governors (like intel_pstate).
+
+Patches [4-5/6] deal with the Energy Model code.  Patch [4/6] simply rearranges
+it so as to allow the next patch to be simpler and patch [5/6] adds a function
+that's used in the last patch.
+
+Patch [6/6] is the actual intel_pstate modification which now is significantly
+simpler than before because it doesn't need to track the type of each CPU
+directly in order to put into the right perf domain.
+
+Please refer to the individual patch changelogs for details.
+
+For easier access, the series is available on the experimental/intel_pstate/eas-take2
+branch in linux-pm.git:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+experimental/intel_pstate/eas-take2
+
+or
+
+https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=experimental/intel_pstate/eas-take2
+
+Thanks!
+
+
+
