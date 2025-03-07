@@ -1,101 +1,159 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59DE21ABB6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21EE518DF65;
+	Fri,  7 Mar 2025 14:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741358002; cv=none; b=Lezo2vBZjWZlPkOx2ySbhil4188JI7gt5WqSCKq5Ep1mgcz3DIXMpZuaxtDZ4YX0ukxVTLBGWTF81VRHluEbF1Nmld6wl7QvOFcGTISyjSw7OAU/F4SGEXlSxVT3x8YZv8X5GiaRSomHqwwOlOjZcaywxuQeu/TMm1NKO/pWi9U=
+	t=1741358120; cv=none; b=raYMGwcf9yMxtD+zEx4Djxqjp0ki3/2e/w8bjbptvoRYqgp3R7YINuNE2xX8SZAzzGXmVJAyDxYuygJgBiNBL1cO/cKgrxYgMq8AKteSjFcIqQ6IZSyzCdFqCTE+wveaGOapqluippbE/JeDsxtlq/4pY4QqfKvUXkl9/ZB16+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741358002; c=relaxed/simple;
-	bh=Ah4V9gXkZcRUGClC4NNQfVikJonjsRQKb6mmES319Ls=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pMP4CWhyrkWKnezABM9cAfxxET1Au17yYgIFe0LDKxJbL9dTuLABDgs42T64M294MlCf75dZTD7SnBe6WNJAO8ACCPgCdFLLjx1R96PtCX+qJv2KoDtK1KtqD4BK0+9pFeArxqG9ujGr18TlXMDz1bYefKJwjUyWxdJUJZ9vYd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HNHn2sH4; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HNHn2sH4"
-Date: Fri, 7 Mar 2025 09:33:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741357997;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pjl4DWZrTPv6Tr4FNOs316geaz13POhQ8HdzhOPafp4=;
-	b=HNHn2sH4TmKROiCNrlgy55VVMpv0UiAHVP0vg32Y3CS2ja80qLsGIH4VdDN9iDe/zIguTc
-	PEDWTMHpSa0EfPUotQQzJp1KT0hBG1F23NqBN26eVa4ivdYBAlrjOnyFq/yT/pKsIHdQce
-	E+3G/SgFM6ZbO42nj6arUVVkNFZe69A=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Hector Martin <marcan@marcan.st>, 
-	syzbot <syzbot+4364ec1693041cad20de@syzkaller.appspotmail.com>, broonie@kernel.org, joel.granados@kernel.org, kees@kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bcachefs?] general protection fault in proc_sys_compare
-Message-ID: <a5avbx7c6pilz4bnp3iv7ivuxtth7udo6ypepemhumsxvuawrw@qa7kec5sxyhp>
-References: <67ca5dd0.050a0220.15b4b9.0076.GAE@google.com>
- <239cbc8a-9886-4ebc-865c-762bb807276c@marcan.st>
- <ph6whomevsnlsndjuewjxaxi6ngezbnlmv2hmutlygrdu37k3w@k57yfx76ptih>
- <20250307133126.GA8837@mit.edu>
+	s=arc-20240116; t=1741358120; c=relaxed/simple;
+	bh=7Vf0Y705dKsymaGrvDkZTnEO2pehEA545N3LsrhjSUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JXJHO8RTw3FoB50CZ8SQaz4C5VC9wqku3u0tOjZE2g4dihjxQSCSXIJr3OBElrso2mx65uJexKAcmlDSkma5+1HnKSJ+2+wohz8jHZ4NV+UCvpR19HRCixpqD1zS3iixUU3tJqx9sYkAbcELpOa3pqfCbX+hogGoZkL5igp+j5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 845D01424;
+	Fri,  7 Mar 2025 06:35:27 -0800 (PST)
+Received: from [10.57.84.99] (unknown [10.57.84.99])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0082E3F66E;
+	Fri,  7 Mar 2025 06:35:13 -0800 (PST)
+Message-ID: <2308a4d0-273e-4cf8-9c9f-3008c42b6d18@arm.com>
+Date: Fri, 7 Mar 2025 14:35:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307133126.GA8837@mit.edu>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm/madvise: Always set ptes via arch helpers
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250307123307.262298-1-ryan.roberts@arm.com>
+ <dbdeb4d7-f7b9-4b10-ada3-c2d37e915f6d@lucifer.local>
+ <03997253-0717-4ecb-8ac8-4a7ba49481a3@arm.com>
+ <3653c47f-f21a-493e-bcc4-956b99b6c501@lucifer.local>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <3653c47f-f21a-493e-bcc4-956b99b6c501@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 07, 2025 at 08:31:26AM -0500, Theodore Ts'o wrote:
-> On Fri, Mar 07, 2025 at 06:51:23AM -0500, Kent Overstreet wrote:
-> > 
-> > Better bisection algorithm? Standand bisect does really badly when fed
-> > noisy data, but it wouldn't be hard to fix that: after N successive
-> > passes or fails, which is unlikely because bisect tests are coinflips,
-> > backtrack and gather more data in the part of the commit history where
-> > you don't have much.
+On 07/03/2025 13:59, Lorenzo Stoakes wrote:
+> On Fri, Mar 07, 2025 at 01:42:13PM +0000, Ryan Roberts wrote:
+>> On 07/03/2025 13:04, Lorenzo Stoakes wrote:
+>>> On Fri, Mar 07, 2025 at 12:33:06PM +0000, Ryan Roberts wrote:
+>>>> Instead of writing a pte directly into the table, use the set_pte_at()
+>>>> helper, which gives the arch visibility of the change.
+>>>>
+>>>> In this instance we are guaranteed that the pte was originally none and
+>>>> is being modified to a not-present pte, so there was unlikely to be a
+>>>> bug in practice (at least not on arm64). But it's bad practice to write
+>>>> the page table memory directly without arch involvement.
+>>>>
+>>>> Cc: <stable@vger.kernel.org>
+>>>> Fixes: 662df3e5c376 ("mm: madvise: implement lightweight guard page mechanism")
+>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>> ---
+>>>>  mm/madvise.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/madvise.c b/mm/madvise.c
+>>>> index 388dc289b5d1..6170f4acc14f 100644
+>>>> --- a/mm/madvise.c
+>>>> +++ b/mm/madvise.c
+>>>> @@ -1101,7 +1101,7 @@ static int guard_install_set_pte(unsigned long addr, unsigned long next,
+>>>>  	unsigned long *nr_pages = (unsigned long *)walk->private;
+>>>>
+>>>>  	/* Simply install a PTE marker, this causes segfault on access. */
+>>>> -	*ptep = make_pte_marker(PTE_MARKER_GUARD);
+>>>> +	set_pte_at(walk->mm, addr, ptep, make_pte_marker(PTE_MARKER_GUARD));
+>>>
+>>> I agree with you, but I think perhaps the arg name here is misleading :) If
+>>> you look at mm/pagewalk.c and specifically, in walk_pte_range_inner():
+>>>
+>>> 		if (ops->install_pte && pte_none(ptep_get(pte))) {
+>>> 			pte_t new_pte;
+>>>
+>>> 			err = ops->install_pte(addr, addr + PAGE_SIZE, &new_pte,
+>>> 					       walk);
+>>> 			if (err)
+>>> 				break;
+>>>
+>>> 			set_pte_at(walk->mm, addr, pte, new_pte);
+>>>
+>>> 			...
+>>> 		}
+>>>
+>>> So the ptep being assigned here is a stack value, new_pte, which we simply
+>>> assign to, and _then_ the page walker code handles the set_pte_at() for us.
+>>>
+>>> So we are indeed doing the right thing here, just in a different place :P
+>>
+>> Ahh my bad. In that case, please ignore the patch.
+>>
+>> But out of interest, why are you doing it like this? I find it a bit confusing
+>> as all the other ops (e.g. pte_entry()) work directly on the pgtable's pte
+>> without the intermediate.
 > 
-> My general approach when handling some test failure is to try running
-> the reproducer 5-10 times on the original commit where the failure was
-> detected, to see if the reproducer is reliable.  Once it's been
-> established whether the failure reproduces 100% of the time, or some
-> fraction of the time, say 25% of the time, then we can estalbish how
-> times we should try running the reproducer before we can conclude the
-> that a particular commit is "good" --- and the first time we detect a
-> failure, we can declare the commit is "bad", even if it happens on the
-> 2nd out of the 25 tries that we might need to run a test if it is
-> particularly flaky.
+> In those cases it's read-only, the data's already there, you can just go ahead
+> and manipulate it (and would expect to be able to do so).
 
-That does sound like a nice trick. I think we'd probably want both
-approaches though, I've seen cases where a test starts out failing
-perhasp 5% of the time and then jumps up to 40% later on - some other
-behavioural change makes your race or what have you easier to hit.
-
-Really what we're trying to do is determine the shape of an unknown
-function sampling; we hope it's just a single stepwise change
-but if not we need to keep gathering more data until we get a clear
-enough picture (and we need a way to present that data, too).
+It's certainly not read-only in general. Just having a quick look to verify, the
+very first callback I landed on was clear_refs_pte_range(), which implements
+.pmd_entry to clear the softdirty and access flags from a leaf pmd or from all
+the child ptes.
 
 > 
-> Maybe this is something Syzbot could implement?
+> When setting things are a little different, I'd rather not open up things to a
+> user being able to do *whatever*, but rather limit to the smallest scope
+> possible for installing the PTE.
 
-Wouldn't it be better to have it in 'git bisect'?
+Understandable, but personally I think it will lead to potential misunderstandings:
 
-> And if someone is familiar with the Go language, patches to implement
-> this in gce-xfstests's ltm server would be great!  It's something I've
-> wanted to do, but I haven't gotten around to implementing it yet so it
-> can be fully automated.  Right now, ltm's git branch watcher reruns
-> any failing test 5 times, so I get an idea of whether a failure is
-> flaky or not.  I'll then manually run a potentially flaky test 30
-> times, and based on how reliable or flaky the test failure happens to
-> be, I then tell gce-xfstests to do a bisect running each test N times,
-> without having it stop once the test fails.  It wasts a bit of test
-> resources, but since it doesn't block my personal time (results land
-> in my inbox when the bisect completes), it hasn't risen to the top of
-> my todo list.
+ - it will get copy/pasted as an example of how to set a pte (which is wrong;
+you have to use set_pte_at()/set_ptes()). There is currently only a single other
+case of direct dereferencing a pte to set it (in write_protect_page()).
 
-If only we had interns and grad students for this sort of thing :)
+ - new users of .install_pte may assume (like I did) that the passed in ptep is
+pointing to the pgtable and they will manipulate it with arch helpers. arm64
+arch helpers all assume they are only ever passed pointers into pgtable memory.
+It will end horribly if that is not the case.
+
+> 
+> And also of course, it allows us to _mandate_ that set_pte_at() is used so we do
+> the right thing re: arches :)
+> 
+> I could have named the parameter better though, in guard_install_pte_entry()
+> would be better to have called it 'new_pte' or something.
+
+I'd suggest at least describing this in the documentation in pagewalk.h. Or
+better yet, you could make the pte the return value for the function. Then it is
+clear because you have no pointer. You'd lose the error code but the only user
+of this currently can't fail anyway.
+
+Anyway, just my 2 pence.
+
+Thanks,
+Ryan
+
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>>
+>>>>  	(*nr_pages)++;
+>>>>
+>>>>  	return 0;
+>>>> --
+>>>> 2.43.0
+>>>>
+>>
+> 
+> Thanks for looking at this by the way, obviously I appreciate your point in
+> chasing up cases like this as endeavoured to do the right thing here, albeit
+> abstracted away :)
+
