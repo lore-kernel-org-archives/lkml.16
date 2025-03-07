@@ -1,224 +1,74 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BCB21C16A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4243210A1F;
+	Fri,  7 Mar 2025 14:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741357048; cv=none; b=X+BjX3X8w+AtBBk+J600TDxRX5+zTkRxci6HECYozEXHwLjCZvf0EdMIsgA9e960iQiQKuqiKvPNWkbbvWxY+60F6EfYBfZ9r8pAoOrj/H5sF3HWgi12OZo2cYbz6/aFlIHQ4vuyivMIbwMYcAjS+DsA9eSVSYX+9hpLnuFIiEs=
+	t=1741357099; cv=none; b=Cxd60MlzRJmBEFHnfoMBKxFsFOOu3iax+RIe/zQtImTbxZjTJStZCgJSof+9y8isl8Udeb3i8TCPyESq0L1rmLw6cJXsouMhrTWs9qaQrXyS1b08IKHlon5ZYiOvTc+FwDvEa5Pmr5zZqe3QxC9Ai0NxK8vPwc+23V6NK2w0fHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741357048; c=relaxed/simple;
-	bh=qcmNYIDfA+pW4+IYn4jJnQES1wyn5oAU5tJlDI6SNI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MA6mRZkfTnWoyEWEb3VemRwgEqdktrG11qus6bxjOqM1s6x6JB4U6JxTvKYstvrNsbv9NzVUZokzfrvOI/qk7TnmOmPzYaQTUeV47UrAPMhBjJbvagZ7byR+7UIq0WDNXS1jmhHFo4JWEardTT7+oaJ0AuVZSs5LpSP3+qHK2bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=os8p1b9x; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741357099; c=relaxed/simple;
+	bh=CaYpY4vbIxytc/5j/MsKL6cyDxxha5GvlS4uEkQ4TI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Llciou2Jh64jdy1DflsrvTTS3/1Re16LqdvOeWwCQEid/OH2nSTHlWoBATSU8dsLl7JmztM7wjsP2BMo2X0w83RyMySDCiAStY4UdRqWOrW/ukTk1g4QMGycsxBizI0i6y+0TjLE6l73rViPHNzk0gMjjc/MZW7i7EU8PSAm9UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=G8heCVhF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="os8p1b9x"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43bdc607c16so14853155e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 06:17:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741357045; x=1741961845; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sPPfmGqMcw+FMxvKDCPOdbfmb7wwE6+oyjDmZFYMjSM=;
-        b=os8p1b9xMhvK02wC2jNil7a5lA1r7LhTWX0DIafToCEryisEv3Qey+CT4t7I5OA40g
-         WiogFBmpToSAiKI6G8/CGQIiUXpYH0Hr+Zk2nTc4OA9GJhxNh9GdGiyOecLCcGc/uKaV
-         9H7B9HcmQv9a29X/pyau6F2Z1jYFWm2DoFK7o/RbT6UKHo/wp5+68fkaLY6gQSXVf+M/
-         4a4YPieHlwo6tcvYy4c9nccWq8O1XAXIlI8SA9E4G4mTMZT/+BAWg1ik/rYPD5W4yfsF
-         hW2nHEP/Jobj7xbHQzNooNV9XVhBbSV/Ik0wsL/s5mLGSfuXkN3W/YdDQH/kopn6RcBj
-         jdkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741357045; x=1741961845;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sPPfmGqMcw+FMxvKDCPOdbfmb7wwE6+oyjDmZFYMjSM=;
-        b=I8ClmUuKRbaOhGszx/CBT1dE+iXVbY1WigV2q+zn1p4Lhx7LDKz9zQfPbYGHzFHfcW
-         EUyGJVk5yQV3asRvrqlN94iZwMX/bZuxnvD3cPb0XOBfNLfj03KP3rtRcWovVrcphXpR
-         YPgpvueVm3g0E5qyJXDY6eo9g5qaAdefJgIyUrrxd8hZikBsnQiZzY4RvIV77ciiLJIB
-         r/mKjqpjeFL260YbNkjo0it8w45o3Lsxwx9ure9zJgiDlVxQeSyF21UkZjjuBJIP2lUe
-         mXyc4JHWKdtZEcamViWJcKlisko4he7f6/5B7iVaK6T8YwAshIf4NRnFY2Dhy0ThHTVB
-         EggQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7XAXWH3U3Q+W9TAvu9+FZWiWgFueOboEPxgZvsoRbHwFV8Fs1OWO22hZJpRUzeYEYkqn+o5W/H1oa+NY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuoxuVi+9/kZufNp7eKWozzMWeGmQhoCQWotAdQzB3dJSEEGUx
-	Uw48kc+9B7RUkEvNVPCW5+qp3u0aG0fuAagcBwuFs0XaItUb1lXYwvnkEKnJsOU=
-X-Gm-Gg: ASbGncuWKNLBn/uuy6abdTiEb1rUuRQMTufRqgdSVTZ232W3sultiFbhnqGgxd+2ZXU
-	hDZ+eAyeD1Hc4u2hEoYf6H2PGBR9jayR1EHB8PfFGHApJWTf794FKJeG2dUqxighEM2QgApeehQ
-	fxUhvKqlWn/5dtrf23kfGPe0J3wr51284MBEO3j/5zmdqVKgje2Or7HyjH5Kdt1ZZ+gKOVX0xDM
-	V3czHeDSk2BZHAeSjjQEXLPH20Ys131j2tAwvPQ+a7yBitacGs2n4W1epKMJUgQOUfje7n0ZATX
-	zFv/bH/YJyVL28QY4HpaeI+FzO+a+2aHmABBODXkDc8gaN/xVfUq6Q==
-X-Google-Smtp-Source: AGHT+IHpoNeJ9Jwip1Cdx5uUKipi0qqCHgMLrkGZ0Er+W7OmX2RBd8j0bEQTdafbhn91KFoC0mlOmQ==
-X-Received: by 2002:a05:600c:3b1e:b0:43b:c94d:e1e2 with SMTP id 5b1f17b1804b1-43c5a6355aamr22142215e9.25.1741357044717;
-        Fri, 07 Mar 2025 06:17:24 -0800 (PST)
-Received: from [192.168.1.247] ([145.224.67.152])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd831719sm55298865e9.0.2025.03.07.06.17.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Mar 2025 06:17:24 -0800 (PST)
-Message-ID: <80432f35-e865-4186-8b92-26b25279e150@linaro.org>
-Date: Fri, 7 Mar 2025 14:17:22 +0000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="G8heCVhF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C072C4CED1;
+	Fri,  7 Mar 2025 14:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741357098;
+	bh=CaYpY4vbIxytc/5j/MsKL6cyDxxha5GvlS4uEkQ4TI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G8heCVhFrq417GF/9/ysmdQ+ijEASWM7cP8Fk7kzKO5HysRX/O60TCoX8UL8pA3HS
+	 vU1OS1qmyGvn2N25ECkFvonYmXQRB2pPKX/jJNdVw8ITTfQ0xrN5sBea0ee3Rafqbx
+	 Xf1tytOQrKfWmxWoKoJbmEsj8EP3TEK/gRTKG7Lc=
+Date: Fri, 7 Mar 2025 15:18:15 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, daniel.almeida@collabora.com,
+	dakr@kernel.org, robin.murphy@arm.com, aliceryhl@google.com,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v13 3/7] rust: pci: impl AsMut<Device> for pci::Device
+Message-ID: <2025030747-caramel-blade-4b8a@gregkh>
+References: <20250307110821.1703422-1-abdiel.janulgue@gmail.com>
+ <20250307110821.1703422-4-abdiel.janulgue@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] perf tools: About encodings of legacy event names
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>
-References: <Z7Z5kv75BMML2A1q@google.com>
- <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
- <Z7yJ0Vpub6JeQyYo@x1>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <Z7yJ0Vpub6JeQyYo@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307110821.1703422-4-abdiel.janulgue@gmail.com>
 
+On Fri, Mar 07, 2025 at 01:06:20PM +0200, Abdiel Janulgue wrote:
+> From: Danilo Krummrich <dakr@kernel.org>
+> 
+> Some device methods require mutable references, since they change the
+> underlying struct device without lock protection.
+> 
+> Hence, make it possible to retrieve a mutable reference to a Device from
+> a mutable pci::Device.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
 
+Note, you can't forward on a patch from someone else without also
+signing off on it.  Please read the DCO for what this means and why.
 
-On 24/02/2025 3:01 pm, Arnaldo Carvalho de Melo wrote:
-> On Wed, Feb 19, 2025 at 10:37:33PM -0800, Ian Rogers wrote:
->> On Wed, Feb 19, 2025 at 4:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>> Ian and I have been discussing the behaviors of event encodings and it's
->>> hard to find a point so far that we can agree on.  So I'd like to hear
->>> your opinion to resolve this.  If you happen to have some time, you can
->>> follow the thread here:
-> 
->>> https://lore.kernel.org/linux-perf-users/20250109222109.567031-5-irogers@google.com/#r
-> 
->>> Basically there are some events that were defined in the perf ABI.
-> 
->>>    PERF_COUNT_HW_CPU_CYCLES, PERF_COUNT_HW_INSTRUCTIONS, ...
-> 
->>> So perf tools use those (legacy) encodings with the matching names like
->>> "cycles" (or "cpu-cycles"), "instructions", etc.
-> 
->>> On the another hand, it has wildcard matching for event names in PMUs so
->>> that users can conveniently use events without specifying PMU names.
->>> For example, "event1" would expand to "pmuX/event1/", "pmuY/event1/", etc
->>> as long as the PMUs have the event in sysfs or JSON.
-> 
->>> And there are platforms where "cycles" event is defined in a (core) PMU
->>> (like "blah/cycles") and the event has a different behavior than the
->>> legacy encoding.  Then it has to choose which encoding is better for the
->>> given name.  But it's a general issue for the legacy event names.
-> 
-> So we pick the "legacy" one, as always, and the one that is in a PMU
-> needs to have its pmu name specified, no?
-> 
->>>    Q. what should it do with "cycles"?
->>>    -----------------------------------
->>>    1. just use the legacy encoding (PERF_COUNT_HW_CPU_CYCLES).
-> 
-> Right
-> 
->>>    2. expand to (possibly multiple) PMU events (like "cpu/cycles/") and
->>>       use the encoding defined there.
-> 
-> Nope
-> 
->>> I think the #1 is the current behavior.  The upside is it's simple and
->>> intuitive.  But it's different than other names and can make confusion.
->>> Users should use the full name ("cpu/cycles/") if they need sysfs one.
-> 
-> Right
->   
->> So the code keeps changing, for example, the removal of BPF events. I
-> 
-> Humm, this seems like a different discussion.
-> 
->> think the important change and the thing that has brought us here is
->> the addition of what Intel call hybrid and ARM call BIG.little. ARM
-> 
-> Right, the support for hybrid systems brought lots of problems, most
-> people didn't have access to such systems and thus couldn't test
-> patches, so the attempt was to keep the existing code working as it had
-> been while allowing for the support for the new hybrid systems.
-> 
-> As more people get access to hybrid systems we started noticing problems
-> and working on fixing it, you did a lot of work in this area, highly
-> appreciated.
-> 
->> have got architectural events and so the same event encoding on BIG
->> and little cores. On x86 the e-core (atom) and p-cores have different
->> event encodings. In the original hybrid work, pushed on for the launch
->> of Alderlake and reviewed by Jiri and Arnaldo with no involvement from
->> me, Intel wanted the event names to work transparently. So a cycles
-> 
-> Without access to such systems, yes, see above.
-> 
->> event would be gathered on the e-core and p-core with a command line
->> option to merge the legacy event cycles on both cores. To be specific
->> the expected behavior of:
->> $ perf (stat|record) -e cycles ...
->> would be as if:
->> $ perf (stat|record) -e cpu_atom/cycles/,cpu_core/cycles/ ...
-> 
-> Yes, and if somebody wants to profile in just one of those core types,
-> just specify the "cpu_atom" or "cpu_core" to have it fully specified.
->   
->> An unfortunate thing in the hybrid code was that it was hardcoded to
->> PMU names of cpu_atom and cpu_core, but what to do for metrics? The
-> 
-> Yeah, metrics IIRC came before hybrid systems.
-> 
->> original proposal was that metrics would have a PMU name and all names
->> would be relative to that, but what about uncore events? What about
->> metrics that refer to other metrics? A decision was made to not to
->> have PMUs implicitly in metrics and the events in the metric would
->> match those given to perf's -e command line. This also greatly
->> simplifies testing events when creating a metric.
-> 
->> I set about rewriting the hybrid code not to use hard coded PMU names
->> but to discover core PMUs at runtime. This was to make the metric and
->> event parsing code as generic as possible, but this had an unintended
->> consequence. ARM's core PMU had previously not been seen as handling
->> legacy events like cycles, and appeared as an uncore PMU. When there
-> 
->> are both legacy and sysfs/json events then previously the legacy
->> events had priority. This broke events like cycles on Apple M
->> processors where the legacy events were broken and the sysfs ones not.
->> Yes this is a driver bug, but everybody told me a change in behavior
->> of the tool was needed to fix it, that fix was to make sysfs/json
->> events have priority over legacy events. I prioritized fixing event
->> parsing when a PMU was specified but given "cycles" means
->> "cpu_atom/cycles/ and cpu_core/cycles/" for hybrid, why would the
->> prioritization be different without a PMU specified?
->   
->> I knew of this tech debt and separately RISC-V was also interested to
->> have sysfs/json be the priority so that the legacy to config encoding
->> could exist more in the perf tool than the PMU driver. I'm a SIG
-> 
-> I saw them saying that supporting PERF_TYPE_HARDWARE counters was ok as
-> they didn't want to break the perf tooling workflow, no?
-> 
+thanks,
 
-Doesn't most of the discussion stem from this particular point? I also 
-understood it that way, that risc-v folks agreed it was better to 
-support these to make all existing software work, not just Perf.
-
-Maybe one issue was calling them 'legacy' events in the first place, and 
-I'm not sure if there is complete consensus that these are legacy. Can't 
-they continue be the short easy list of events likely to be common 
-across platforms? If there is an issue with some of them being wrong in 
-some places we can move forward from that by making sure new platforms 
-do it right, rather than changing the logic for everyone to fix that bug.
-
-For the argument that Google prefers to use the sysfs events because of 
-these differences, I don't think there is anything preventing that kind 
-of use today? Or at least not for the main priority flip proposed, but 
-maybe there are some smaller adjacent bugs that can be fixed up separately.
-
-Thanks
-James
-
+greg k-h
