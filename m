@@ -1,429 +1,233 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE282101F2;
-	Fri,  7 Mar 2025 17:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D4F101F2
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741369529; cv=none; b=FoMRheM2tvVtLBlFVnwZJKHHzjWn1SyMKDsgpoN1TCMnMr4eZlBQF0Fe74ka9NbjavipPApYTA+QEaav0fdFtQ73U2aSg3W4uVSAPM1OHdvY61kqRD2uDD7ozhFHMNdW0UVaGtwB2hiZQ75IMBmo8BpDu5YHSrDE39Ff/ViPEC0=
+	t=1741369576; cv=none; b=HkQkkW0mCqyhsB3ixry3hHiTZ5eOMH/JWiWKZLDHrI7YZWd407rOO37/pH1ORXn2IbUp/Fvdlka6CBbxPexN07lWWh32YWpTffG7sGG1Zi62fTm9k47FGl2km1X9GOTz15qXk+u7CK/Vk3EP969MdT940UcaBmlBX3CZtDrg1bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741369529; c=relaxed/simple;
-	bh=fTgYjtBd1Y5aX/PHcHjCJgi2ne1A4KC5VYoU0LfES3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GRpCKMA8AI7dH0+mvPOfAjd/UstWqm3oQYcRDE4TllGvBJkwHpqHC2a1Qxx7NklyVd9v9h9GFTD1qY3b22rSWEvvUv5T/DfMft6SqCsGoRt0qti+XMOsQZ1INSZf0YwPctYPPpxnCVB6z53IYviSg7M0KOif0Jd7QBY3z4Dq6J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j/ciEqze; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741369576; c=relaxed/simple;
+	bh=Ck64soIjBUbbI8eQv8uM0301JaHYNiwENDn9InlDS7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DZTWhlXX4ODKLUZwJEFHNOPpoZhAp7m87OAoIJFlSxeE6H4ppLKVjkwcQMgLgyeeE7OHAm4PnLmNMjnVYMlCESG1GD79k+Q316pH60CobMEWpICZGkLSo0mZaZQqAcWTsCfrdspU3KEjjJbF6mPLleyu0z2ByaEC3avMuOCVVug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SN0WZZdb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/ciEqze"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so1183518a12.1;
-        Fri, 07 Mar 2025 09:45:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741369526; x=1741974326; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T2bV+93GEFpn3KE1wY4bHFWSGsAPF8+R+4qoLLnnUFE=;
-        b=j/ciEqzesTAllvPkQJYG0dUyEXTwUzi8L0lkH46u10uTHPv0erRLLrKAW4AVInLHxC
-         +WD8iWyeroI7G6GkPLiSgaBOzT4WQ0rypLr0ToSrZggiJn606b0pasNP6nxz4i7KUFfp
-         f6XaNtlKNK4kA81r0b4bFiemUS/NPQpKoLeLroQlZ6opFLp+CCOS3R86o7qAVXFcs6tu
-         opL4NiKQyXJkebJzQEm3yWewdQG2Lrvjcz41pRxbVTZhFl0rT+eDSQf7HH70ZOQuOx05
-         WKe3IY7n6StZMantPkjqWhKl7K8r6t1w8reQrgvmfh3zfDc2PKlPabjTgAFA/3nzu9MK
-         dIrQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SN0WZZdb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741369573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=s0d46d85j/SCNs/mf2/DYy+Wd/1PTHrrROSv3cRDEGE=;
+	b=SN0WZZdbe6wbSU+MPK3SV/8n1ZBVW/Z//WvTGXUqsLhjs7aBdvUZ5VtpiMviQodSfB0jyB
+	hnEtYf4wv2puOhnSu/gwr2JOduDasGch4/i+X63+9IcxRbj9fF/qOhMQ4TKxgrqS1paIxC
+	6MhUr1QDODjMfykW8Z5BX50VNDP69Qc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-349-1KkvDovyPCKPw0H5sdI8oQ-1; Fri, 07 Mar 2025 12:46:11 -0500
+X-MC-Unique: 1KkvDovyPCKPw0H5sdI8oQ-1
+X-Mimecast-MFC-AGG-ID: 1KkvDovyPCKPw0H5sdI8oQ_1741369570
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912b54611dso1303041f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 09:46:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741369526; x=1741974326;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T2bV+93GEFpn3KE1wY4bHFWSGsAPF8+R+4qoLLnnUFE=;
-        b=JjtRLUUYHVC/LN0Z+WwZN55vCGlaDN4gS5j9ybHaVBW6EXwH5h8b6ibw7Dkgn99js7
-         FrysWg4Kcfo+GMAKBgSMb1AFqdL7MTKol6w26c+svFG2P7bKBnYxJqZp2T5Zhe7xx020
-         d+ilqS9/AWhpPsupKR5/X3powUby2+qPJ0UoEB54FUlbY1qTVoDLOzAC3gw902CRwI3C
-         N57Mx/NllvoMLvsS6DnddHKW7DdfqT10jNvLWs/+fJDbR4u6Ezigl+ZewhL/Y05BRJK4
-         rg9w7u/aerExnvKhRCbkj41AciQCNDwFeGwc4f2W/XDzWRG0yTvrV0V366M6jq93uUFm
-         XIDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWtugyK3D8NyK7Bij59kA+SPmYUnXvQLSH0jYQIKvKgMpuFtsbb7ovdQP1aqkzeoRZYTcMDe2S+ySSXQNJ@vger.kernel.org, AJvYcCXBU30IDDAvEM2UTpHS92oBHuVMsv4KRIIucTCmzCbWjCN+cV3Sm01YN6MkZMttCRnSroMn1QVnzIhgGPkp@vger.kernel.org, AJvYcCXi3emxudBIcvwmOuyFQr1NQS8GTDG937X0qfYsIGoRj/VRtWmuciW3sXAky5XMY1onFCeWKsgqLnyP@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtZaF/EELshPkM0LYfTmFDS4skyINnhCTsOq8ux3wQLCyyMTRe
-	ZZ+0i6iiS1M8wnupVb1UWUkYzHD1JoLJy0cIOj10kEGAu37kOthjMj6MXZgZMfD6ejmW8fTOY4b
-	eMNURAaKmqM/tzjCE7ZA1maVR4i0=
-X-Gm-Gg: ASbGncusUpWQVWFbr6pZIXZRYrYesSVtZZV7lf4c4dly0ZkWx3H41JmxfQ3U0LVaEXJ
-	c5LAAX1gDuvHPCvYxrUkT0E9kmTrYo2dbnR4tyMD8+jEsuqpTYcVSunVb7ezUWrNxLUnUin8s7q
-	WG4lar82QjvCcgwPoFaX22hGUdpA==
-X-Google-Smtp-Source: AGHT+IEmBRmko4QLwkLRaQOt5FhmEtxUggnufhBEEq70Dk25RmdOR/ZshO5S87xM2JoNs1YaRyM17eG15eURqooW9k8=
-X-Received: by 2002:a05:6402:2683:b0:5e5:c847:1a56 with SMTP id
- 4fb4d7f45d1cf-5e5e22bd1b6mr10312024a12.10.1741369525381; Fri, 07 Mar 2025
- 09:45:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741369570; x=1741974370;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s0d46d85j/SCNs/mf2/DYy+Wd/1PTHrrROSv3cRDEGE=;
+        b=wGAQgUvUuz8VIbXy8p+TRcJm1aQJe2pIoX9OsbpVC6Qvj8LqeMwsYzB2R4YNTcjtAb
+         2uTefL4e+0uzqoGynatcywxeb8lq8cuUlLPSNfJXHKgX/SmHV9hKjIjZz1tdF4nCFW8W
+         y/Jb0RooT92dhO5/+trKbTnU/Gsm0URUNHRWR9bPJd0F08WFE3jVJz8GBKlunI+Sht9B
+         nRgq4m8fFijeW+uAPE3xnGkVdTxw2RokQLKO7gW0BjRzuYDCpuQrV3VGyVCfPYXQw/ub
+         vdxIXso62yrUfvlJt02u0WVrWrwkPoN/wDugncN63YKWx90ZXYjk0gXF7o5Bx4tOsL4q
+         R+kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUa9aewSdarRVdoRunFbQovCjvHhoH2ECQGub33F/W7/PbLfeE1tkFEK/CkF1i+twZn+fzrnnJhNlih1cU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqSteEW8BKeEODItmv8n/5bPsBGISZmjCTwojoDOuErzZUUqhV
+	mSW/9KlC4A6tZiz6PCtKaQr/dsrBGZB4cxWFCgexJF/vFwYl3MRmUp1/r6TCN1qUzfqD1SGzoN3
+	dxP5oYLVrGUY487a/q/a0nQCCEm8PMs4nk6iEQBRQ0WISJB3oloHXHbTC9m5btf9LVToCtO1ZGu
+	8=
+X-Gm-Gg: ASbGncuFVcDi3ZWI5o0u8ghCfj+07r9WcjgZUEUgPsvxPfhOqg/o+xiCKX/yypTWaR5
+	KBvvXHx3weOKI8LClOOySRQ3dfo4jkIMtja/w2xEmLX4WaGjHbmKSB/ty2pWjnFhfPS+Inxs0zY
+	LCqOXWmAanquG03rx8cfbHmqCQuyU4BDIHNbkClJKesuEr0QxAN6NJKu4UJA+GvyT2tcDzb6zHf
+	kPXhkTjF3XZNB8DKdq8oPDGN+MOxsMkzGV2e0Ffr+uSeq0uWYi+VHrNp9Z0xqL36L3MR7WXvewG
+	CHPmrcZepTpxxLOxhyAyiEceun4/OVk9M/xviVzDD0MPLQJPeQfJGqPIoBKhPSAUhw5Xx/gu8lm
+	Wp7Hu5IWjz8XPKtea8DCGoLyMRHYx/NMFWzK+sg==
+X-Received: by 2002:a05:6000:1542:b0:38d:d0ea:b04c with SMTP id ffacd0b85a97d-39132dacdddmr3472055f8f.38.1741369570335;
+        Fri, 07 Mar 2025 09:46:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEay378VfGx6HjrKKEru31t3Xw9A5Kakd8fIT8HXoafjGBKv2vfMbbU/t5rI7i224hxbdeqqg==
+X-Received: by 2002:a05:6000:1542:b0:38d:d0ea:b04c with SMTP id ffacd0b85a97d-39132dacdddmr3472030f8f.38.1741369569920;
+        Fri, 07 Mar 2025 09:46:09 -0800 (PST)
+Received: from ?IPV6:2003:cb:c721:7400:ab0b:9ceb:d2:6a17? (p200300cbc7217400ab0b9ceb00d26a17.dip0.t-ipconnect.de. [2003:cb:c721:7400:ab0b:9ceb:d2:6a17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfb16sm5971728f8f.29.2025.03.07.09.46.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 09:46:09 -0800 (PST)
+Message-ID: <72fd6f77-736f-4b38-b541-f5027925660c@redhat.com>
+Date: Fri, 7 Mar 2025 18:46:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67a487f7.050a0220.19061f.05fc.GAE@google.com> <67c4881e.050a0220.1dee4d.0054.GAE@google.com>
- <7ehxrhbvehlrjwvrduoxsao5k3x4aw275patsb3krkwuq573yv@o2hskrfawbnc>
- <CAOQ4uxjf5H_vj-swF7wEvUkPobEuxs2q6jfO9jFsx4pqxtJMMg@mail.gmail.com>
- <20250304161509.GA4047943@perftesting> <CAOQ4uxj0cN-sUN=EE0+9tRhMFFrWLQ0T_i0fprwNRr92Hire6Q@mail.gmail.com>
- <20250304203657.GA4063187@perftesting> <CAOQ4uxihyR8u5c0T8q85ySNgp4U1T0MMSR=+vv3HWNFcvezRPQ@mail.gmail.com>
- <20250307154614.GA59451@perftesting> <CAOQ4uxizF1qGpC3+m47Y5C_NSMa84vbBRj6xg7_uS-BTJF0Ycw@mail.gmail.com>
-In-Reply-To: <CAOQ4uxizF1qGpC3+m47Y5C_NSMa84vbBRj6xg7_uS-BTJF0Ycw@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 7 Mar 2025 18:45:13 +0100
-X-Gm-Features: AQ5f1JofUmv1iYpL1FGdwCjrdhgnQ4Cw6QHEOjLqZc--7F_SrO3COjsDQQLVPw8
-Message-ID: <CAOQ4uxht4zLKegu==cg4rs-GmL3p-bfYZt_sXNu+yxwTccSM4g@mail.gmail.com>
-Subject: Re: [syzbot] [xfs?] WARNING in fsnotify_file_area_perm
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: Jan Kara <jack@suse.cz>, 
-	syzbot <syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com>, 
-	akpm@linux-foundation.org, axboe@kernel.dk, brauner@kernel.org, 
-	cem@kernel.org, chandan.babu@oracle.com, djwong@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/8] mm/huge_memory: add two new (not yet used)
+ functions for folio_split()
+To: Zi Yan <ziy@nvidia.com>
+Cc: Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, Yang Shi <yang@os.amperecomputing.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Yu Zhao <yuzhao@google.com>, John Hubbard <jhubbard@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kairui Song <kasong@tencent.com>, Liu Shixin <liushixin2@huawei.com>
+References: <20250226210032.2044041-1-ziy@nvidia.com>
+ <20250226210032.2044041-3-ziy@nvidia.com>
+ <2fae27fe-6e2e-3587-4b68-072118d80cf8@google.com>
+ <FB1376C8-E0AD-40CE-BDE8-AF9269EA68CC@nvidia.com>
+ <238c28cb-ce1c-40f5-ec9e-82c5312f0947@google.com>
+ <43642DB0-17E5-4B3E-9095-665806FE38C5@nvidia.com>
+ <4a9f102a-60db-475a-a933-975edb2fb1dd@redhat.com>
+ <3E7D36DB-287A-4CC5-9C1C-0E9A35A95B1D@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <3E7D36DB-287A-4CC5-9C1C-0E9A35A95B1D@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 7, 2025 at 5:07=E2=80=AFPM Amir Goldstein <amir73il@gmail.com> =
-wrote:
->
-> On Fri, Mar 7, 2025 at 4:46=E2=80=AFPM Josef Bacik <josef@toxicpanda.com>=
- wrote:
-> >
-> > On Tue, Mar 04, 2025 at 10:13:39PM +0100, Amir Goldstein wrote:
-> > > On Tue, Mar 4, 2025 at 9:37=E2=80=AFPM Josef Bacik <josef@toxicpanda.=
-com> wrote:
-> > > >
-> > > > On Tue, Mar 04, 2025 at 09:27:20PM +0100, Amir Goldstein wrote:
-> > > > > On Tue, Mar 4, 2025 at 5:15=E2=80=AFPM Josef Bacik <josef@toxicpa=
-nda.com> wrote:
-> > > > > >
-> > > > > > On Tue, Mar 04, 2025 at 04:09:16PM +0100, Amir Goldstein wrote:
-> > > > > > > On Tue, Mar 4, 2025 at 12:06=E2=80=AFPM Jan Kara <jack@suse.c=
-z> wrote:
-> > > > > > > >
-> > > > > > > > Josef, Amir,
-> > > > > > > >
-> > > > > > > > this is indeed an interesting case:
-> > > > > > > >
-> > > > > > > > On Sun 02-03-25 08:32:30, syzbot wrote:
-> > > > > > > > > syzbot has found a reproducer for the following issue on:
-> > > > > > > > ...
-> > > > > > > > > ------------[ cut here ]------------
-> > > > > > > > > WARNING: CPU: 1 PID: 6440 at ./include/linux/fsnotify.h:1=
-45 fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
-> > > > > > > > > Modules linked in:
-> > > > > > > > > CPU: 1 UID: 0 PID: 6440 Comm: syz-executor370 Not tainted=
- 6.14.0-rc4-syzkaller-ge056da87c780 #0
-> > > > > > > > > Hardware name: Google Google Compute Engine/Google Comput=
-e Engine, BIOS Google 12/27/2024
-> > > > > > > > > pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTY=
-PE=3D--)
-> > > > > > > > > pc : fsnotify_file_area_perm+0x20c/0x25c include/linux/fs=
-notify.h:145
-> > > > > > > > > lr : fsnotify_file_area_perm+0x20c/0x25c include/linux/fs=
-notify.h:145
-> > > > > > > > > sp : ffff8000a42569d0
-> > > > > > > > > x29: ffff8000a42569d0 x28: ffff0000dcec1b48 x27: ffff0000=
-d68a1708
-> > > > > > > > > x26: ffff0000d68a16c0 x25: dfff800000000000 x24: 00000000=
-00008000
-> > > > > > > > > x23: 0000000000000001 x22: ffff8000a4256b00 x21: 00000000=
-00001000
-> > > > > > > > > x20: 0000000000000010 x19: ffff0000d68a16c0 x18: ffff8000=
-a42566e0
-> > > > > > > > > x17: 000000000000e388 x16: ffff800080466c24 x15: 00000000=
-00000001
-> > > > > > > > > x14: 1fffe0001b31513c x13: 0000000000000000 x12: 00000000=
-00000000
-> > > > > > > > > x11: 0000000000000001 x10: 0000000000ff0100 x9 : 00000000=
-00000000
-> > > > > > > > > x8 : ffff0000c6d98000 x7 : 0000000000000000 x6 : 00000000=
-00000000
-> > > > > > > > > x5 : 0000000000000020 x4 : 0000000000000000 x3 : 00000000=
-00001000
-> > > > > > > > > x2 : ffff8000a4256b00 x1 : 0000000000000001 x0 : 00000000=
-00000000
-> > > > > > > > > Call trace:
-> > > > > > > > >  fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnoti=
-fy.h:145 (P)
-> > > > > > > > >  filemap_fault+0x12b0/0x1518 mm/filemap.c:3509
-> > > > > > > > >  xfs_filemap_fault+0xc4/0x194 fs/xfs/xfs_file.c:1543
-> > > > > > > > >  __do_fault+0xf8/0x498 mm/memory.c:4988
-> > > > > > > > >  do_read_fault mm/memory.c:5403 [inline]
-> > > > > > > > >  do_fault mm/memory.c:5537 [inline]
-> > > > > > > > >  do_pte_missing mm/memory.c:4058 [inline]
-> > > > > > > > >  handle_pte_fault+0x3504/0x57b0 mm/memory.c:5900
-> > > > > > > > >  __handle_mm_fault mm/memory.c:6043 [inline]
-> > > > > > > > >  handle_mm_fault+0xfa8/0x188c mm/memory.c:6212
-> > > > > > > > >  do_page_fault+0x570/0x10a8 arch/arm64/mm/fault.c:690
-> > > > > > > > >  do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:78=
-3
-> > > > > > > > >  do_mem_abort+0x74/0x200 arch/arm64/mm/fault.c:919
-> > > > > > > > >  el1_abort+0x3c/0x5c arch/arm64/kernel/entry-common.c:432
-> > > > > > > > >  el1h_64_sync_handler+0x60/0xcc arch/arm64/kernel/entry-c=
-ommon.c:510
-> > > > > > > > >  el1h_64_sync+0x6c/0x70 arch/arm64/kernel/entry.S:595
-> > > > > > > > >  __uaccess_mask_ptr arch/arm64/include/asm/uaccess.h:169 =
-[inline] (P)
-> > > > > > > > >  fault_in_readable+0x168/0x310 mm/gup.c:2234 (P)
-> > > > > > > > >  fault_in_iov_iter_readable+0x1dc/0x22c lib/iov_iter.c:94
-> > > > > > > > >  iomap_write_iter fs/iomap/buffered-io.c:950 [inline]
-> > > > > > > > >  iomap_file_buffered_write+0x490/0xd54 fs/iomap/buffered-=
-io.c:1039
-> > > > > > > > >  xfs_file_buffered_write+0x2dc/0xac8 fs/xfs/xfs_file.c:79=
-2
-> > > > > > > > >  xfs_file_write_iter+0x2c4/0x6ac fs/xfs/xfs_file.c:881
-> > > > > > > > >  new_sync_write fs/read_write.c:586 [inline]
-> > > > > > > > >  vfs_write+0x704/0xa9c fs/read_write.c:679
-> > > > > > > >
-> > > > > > > > The backtrace actually explains it all. We had a buffered w=
-rite whose
-> > > > > > > > buffer was mmapped file on a filesystem with an HSM mark. N=
-ow the prefaulting
-> > > > > > > > of the buffer happens already (quite deep) under the filesy=
-stem freeze
-> > > > > > > > protection (obtained in vfs_write()) which breaks assumptio=
-ns of HSM code
-> > > > > > > > and introduces potential deadlock of HSM handler in userspa=
-ce with filesystem
-> > > > > > > > freezing. So we need to think how to deal with this case...
-> > > > > > >
-> > > > > > > Ouch. It's like the splice mess all over again.
-> > > > > > > Except we do not really care to make this use case work with =
-HSM
-> > > > > > > in the sense that we do not care to have to fill in the mmape=
-d file content
-> > > > > > > in this corner case - we just need to let HSM fail the access=
- if content is
-> > > > > > > not available.
-> > > > > > >
-> > > > > > > If you remember, in one of my very early version of pre-conte=
-nt events,
-> > > > > > > the pre-content event (or maybe it was FAN_ACCESS_PERM itself=
-)
-> > > > > > > carried a flag (I think it was called FAN_PRE_VFS) to communi=
-cate to
-> > > > > > > HSM service if it was safe to write to fs in the context of e=
-vent handling.
-> > > > > > >
-> > > > > > > At the moment, I cannot think of any elegant way out of this =
-use case
-> > > > > > > except annotating the event from fault_in_readable() as "unsa=
-fe-for-write".
-> > > > > > > This will relax the debugging code assertion and notify the H=
-SM service
-> > > > > > > (via an event flag) that it can ALLOW/DENY, but it cannot fil=
-l the file.
-> > > > > > > Maybe we can reuse the FAN_ACCESS_PERM event to communicate
-> > > > > > > this case to HSM service.
-> > > > > > >
-> > > > > > > WDYT?
-> > > > > >
-> > > > > > I think that mmap was a mistake.
-> > > > >
-> > > > > What do you mean?
-> > > > > Isn't the fault hook required for your large executables use case=
-?
-> > > >
-> > > > I mean the mmap syscall was a mistake ;).
-> > > >
-> > >
-> > > ah :)
-> > >
-> > > > >
-> > > > > >
-> > > > > > Is there a way to tell if we're currently in a path that is und=
-er fsfreeze
-> > > > > > protection?
-> > > > >
-> > > > > Not at the moment.
-> > > > > At the moment, file_write_not_started() is not a reliable check
-> > > > > (has false positives) without CONFIG_LOCKDEP.
-> > > > >
-> > >
-> > > One very ugly solution is to require CONFIG_LOCKDEP for
-> > > pre-content events.
-> > >
-> > > > > > Just denying this case would be a simpler short term solution w=
-hile
-> > > > > > we come up with a long term solution. I think your solution is =
-fine, but I'd be
-> > > > > > just as happy with a simpler "this isn't allowed" solution. Tha=
-nks,
-> > > > >
-> > > > > Yeh, I don't mind that, but it's a bit of an overkill considering=
- that
-> > > > > file with no content may in fact be rare.
-> > > >
-> > > > Agreed, I'm fine with your solution.
-> > >
-> > > Well, my "solution" was quite hand-wavy - it did not really say how t=
-o
-> > > propagate the fact that faults initiated from fault_in_readable().
-> > > Do you guys have any ideas for a simple solution?
-> >
-> > Sorry I've been elbow deep in helping getting our machine replacements =
-working
-> > faster.
-> >
-> > I've been thnking about this, it's not like we can carry context from t=
-he reason
-> > we are faulting in, at least not simply, so I think the best thing to d=
-o is
-> > either
-> >
-> > 1) Emit a precontent event at mmap() time for the whole file, since rea=
-lly all I
-> > care about is faulting at exec time, and then we can just skip the prec=
-ontent
-> > event if we're not exec.
->
-> Sorry, not that familiar with exec code. Do you mean to issue pre-content
-> for page fault only if memory is mapped executable or is there another wa=
-y
-> of knowing that we are in exec context?
->
-> If the former, then syzbot will catch up with us and write a buffer which=
- is
-> mapped readable and exec.
->
-> >
-> > 2) Revert the page fault stuff, put back your thing to fault the whole =
-file, and
-> > wait until we think of a better way to deal with this.
-> >
-> > Obviously I'd prefer not #2, but I'd really, really rather not chuck al=
-l of HSM
-> > because my page fault thing is silly.  I'll carry what I need internall=
-y while
-> > we figure out what to do upstream.  #1 doesn't seem bad, but I haven't =
-thought
-> > about it that hard.  Thanks,
-> >
->
-> So I started to test this patch, but I may be doing something very
-> terribly wrong
-> with this. Q: What is this something that is terribly wrong?
->
->
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 2788df98080f8..a8822b44d4967 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3033,13 +3033,27 @@ static inline void file_start_write(struct file *=
-file)
->         if (!S_ISREG(file_inode(file)->i_mode))
->                 return;
->         sb_start_write(file_inode(file)->i_sb);
-> +       /*
-> +        * Prevent fault-in user pages that may call HSM hooks with
-> +        * sb_writers held.
-> +        */
-> +       if (unlikely(FMODE_FSNOTIFY_HSM(file->f_mode)))
-> +               pagefault_disable();
->  }
->
->  static inline bool file_start_write_trylock(struct file *file)
->  {
->         if (!S_ISREG(file_inode(file)->i_mode))
->                 return true;
-> -       return sb_start_write_trylock(file_inode(file)->i_sb);
-> +       if (!sb_start_write_trylock(file_inode(file)->i_sb))
-> +               return false;
-> +       /*
-> +        * Prevent fault-in user pages that may call HSM hooks with
-> +        * sb_writers held.
-> +        */
-> +       if (unlikely(FMODE_FSNOTIFY_HSM(file->f_mode)))
-> +               pagefault_disable();
-> +       return true;
->  }
->
->  /**
-> @@ -3053,6 +3067,8 @@ static inline void file_end_write(struct file *file=
-)
->         if (!S_ISREG(file_inode(file)->i_mode))
->                 return;
->         sb_end_write(file_inode(file)->i_sb);
-> +       if (unlikely(FMODE_FSNOTIFY_HSM(file->f_mode)))
-> +               pagefault_enable();
->  }
+On 06.03.25 17:27, Zi Yan wrote:
+> On 6 Mar 2025, at 4:19, David Hildenbrand wrote:
+> 
+>> On 05.03.25 22:08, Zi Yan wrote:
+>>> On 5 Mar 2025, at 15:50, Hugh Dickins wrote:
+>>>
+>>>> On Wed, 5 Mar 2025, Zi Yan wrote:
+>>>>> On 4 Mar 2025, at 6:49, Hugh Dickins wrote:
+>>>>>>
+>>>>>> I think (might be wrong, I'm in a rush) my mods are all to this
+>>>>>> "add two new (not yet used) functions for folio_split()" patch:
+>>>>>> please merge them in if you agree.
+>>>>>>
+>>>>>> 1. From source inspection, it looks like a folio_set_order() was missed.
+>>>>>
+>>>>> Actually no. folio_set_order(folio, new_order) is called multiple times
+>>>>> in the for loop above. It is duplicated but not missing.
+>>>>
+>>>> I was about to disagree with you, when at last I saw that, yes,
+>>>> it is doing that on "folio" at the time of setting up "new_folio".
+>>>>
+>>>> That is confusing: in all other respects, that loop is reading folio
+>>>> to set up new_folio.  Do you have a reason for doing it there?
+>>>
+>>> No. I agree your fix is better. Just point out folio_set_order() should
+>>> not trigger a bug.
+>>>
+>>>>
+>>>> The transient "nested folio" situation is anomalous either way.
+>>>> I'd certainly prefer it to be done at the point where you
+>>>> ClearPageCompound when !new_order; but if you think there's an issue
+>>>> with racing isolate_migratepages_block() or something like that, which
+>>>> your current placement handles better, then please add a line of comment
+>>>> both where you do it and where I expected to find it - thanks.
+>>>
+>>> Sure. I will use your patch unless I find some racing issue.
+>>>
+>>>>
+>>>> (Historically, there was quite a lot of difficulty in getting the order
+>>>> of events in __split_huge_page_tail() to be safe: I wonder whether we
+>>>> shall see a crop of new weird bugs from these changes. I note that your
+>>>> loops advance forwards, whereas the old ones went backwards: but I don't
+>>>> have anything to say you're wrong.  I think it's mainly a matter of how
+>>>> the first tail or two gets handled: which might be why you want to
+>>>> folio_set_order(folio, new_order) at the earliest opportunity.)
+>>>
+>>> I am worried about that too. In addition, in __split_huge_page_tail(),
+>>> page refcount is restored right after new tail folio split is done,
+>>> whereas I needed to delay them until all new after-split folios
+>>> are done, since non-uniform split is iterative and only the after-split
+>>> folios NOT containing the split_at page will be released. These
+>>> folios are locked and frozen after __split_folio_to_order() like
+>>> the original folio. Maybe because there are more such locked frozen
+>>> folios than before?
+>>
+>> What's the general concern here?
+>>
+>> A frozen folio cannot be referenced and consequently not trusted. For example, if we want to speculatively lookup a folio in the pagecache and find it to be frozen, we'll have to spin (retry) until we find a folio that is unfrozen.
+>>
+>> While a folio has a refcount of 0, there are no guarantees. It could change its size, it could be freed + reallocated (changed mapping etc) ...
+>>
+>> So whoever wants to grab a speculative reference -- using folio_try_get() -- must re-verify folio properties after grabbing the speculative reference succeeded. Including whether it is small/large, number of pages, mapping, ...
+>>
+>> The important part is to unfreeze a folio only once it was fully prepared (e.g., order set, compound pages links to head set up etc).
+>>
+>> I am not sure if the sequence in which you process folios during a split matters here when doing a split: only that, whatever new folio  is unfrozen, is properly initialized.
+> 
+> Got it. Thanks for the confirmation.
+> 
+> My worry came from that after I rebased on mm-everything-2025-03-05-03-54,
+> which does not have folio_split() patches, I see a crash saying a buddy
+> page is hit in __split_folio_to_order(). It turns out that I did not
+> add the changes from your “mm: let _folio_nr_pages overlay memcg_data in
+> first tail page” patch. With that fixed, no crash is observed so far.
 
-One thing that is wrong is that this is checking if the written file
-is marked for
-pre-content events, not the input buffer mmaped file.
+Ah that makes sense. Yes, it must look like in my original v3 that was 
+based on your patches. (now it's the other way around :) )
 
-What we would have needed here is a check of
-  unlikely(fsnotify_sb_has_priority_watchers(sb,
-                                                FSNOTIFY_PRIO_PRE_CONTENT))=
-)
+-- 
+Cheers,
 
-But Linus will not like that...
+David / dhildenb
 
-Do we even care about optimizing the pre-content hooks of sporadic files
-that are not marked for pre-content events when there are pre-content
-watches on the filesystem?
-
-I think all of our use cases mark the sb for pre-content events anyway
-and do not care about a bit of overhead for non-marked files.
-If that is the case we can do away with the extra optimization
-and then the changes above will really solve the issue.
-
-I've squashed the followup change to the fsnotify-fixes branch.
-
-One thing that this patch does not address is aio and io_uring,
-but the comment above fault_in_iov_iter_readable() says:
-   " ...For async buffered writes the assumption is that the user
-   " page has already been faulted in.
-
-IDK. Let me know what you think.
-
-Thanks,
-Amir.
-
---- a/fs/notify/fsnotify.c
-+++ b/fs/notify/fsnotify.c
-@@ -652,7 +652,6 @@ void file_set_fsnotify_mode_from_watchers(struct file *=
-file)
- {
-        struct dentry *dentry =3D file->f_path.dentry, *parent;
-        struct super_block *sb =3D dentry->d_sb;
--       __u32 mnt_mask, p_mask;
-
-        /* Is it a file opened by fanotify? */
-        if (FMODE_FSNOTIFY_NONE(file->f_mode))
-@@ -681,30 +680,10 @@ void file_set_fsnotify_mode_from_watchers(struct
-file *file)
-        }
-
-        /*
--        * OK, there are some pre-content watchers. Check if anybody is
--        * watching for pre-content events on *this* file.
-+        * OK, there are some pre-content watchers on this fs, so
-+        * Enable pre-content events.
-         */
--       mnt_mask =3D READ_ONCE(real_mount(file->f_path.mnt)->mnt_fsnotify_m=
-ask);
--       if (unlikely(fsnotify_object_watched(d_inode(dentry), mnt_mask,
--                                    FSNOTIFY_PRE_CONTENT_EVENTS))) {
--               /* Enable pre-content events */
--               file_set_fsnotify_mode(file, 0);
--               return;
--       }
--
--       /* Is parent watching for pre-content events on this file? */
--       if (dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED) {
--               parent =3D dget_parent(dentry);
--               p_mask =3D fsnotify_inode_watches_children(d_inode(parent))=
-;
--               dput(parent);
--               if (p_mask & FSNOTIFY_PRE_CONTENT_EVENTS) {
--                       /* Enable pre-content events */
--                       file_set_fsnotify_mode(file, 0);
--                       return;
--               }
--       }
--       /* Nobody watching for pre-content events from this file */
--       file_set_fsnotify_mode(file, FMODE_NONOTIFY | FMODE_NONOTIFY_PERM);
-+       file_set_fsnotify_mode(file, 0);
- }
- #endif
