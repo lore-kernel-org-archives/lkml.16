@@ -1,188 +1,142 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650DF21A451
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957D12185B4;
+	Fri,  7 Mar 2025 13:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741353236; cv=none; b=A2FzSswG9i06QyA8KkxXQrfJvyGOTsx6k2lGt/oHejWAhqnZUC/rQfJpZor4dd0OTrx+3nDGf96PwRzYZiiOJ8+afDM+ZZqx/fMxZglJcIYb5jI6DU5K90Xa3mgRu5MC5W0unDFki53BCigE+cITiaDtIouRpk0req+VCzCGui4=
+	t=1741353262; cv=none; b=MXSqtz3tZrbxBmBwXZdLk8elndnOalTZfScaZlayFBFAtowtWE8JyD4r6Kj8PbD1Oh7nOo/wpmmPQuVbUCSmt20iKJpUlgNUFdJDY0AqHtQw+6n3HxhZIZMxaNfafACt3kT8QPSauMI1PsSYd+SF9hTHwetMvHhhPMVjOHHWbHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741353236; c=relaxed/simple;
-	bh=HDEhaHuPewSpiRG7U5iiiutyWevnX9rWtyV9/LS3zxI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=C9hZzZD5rf/kRQ8kDipL5eR4Pcfp/M0TuFOSlMAYs2yKnu6lxqDLIiaK6duzODkE1PZiV/CW4xKHxXcAlgvbafF0yS42/zsqG0XKpVzuVeCBwz8Knmcy5kez5RkN7NeUOv/zKK3/hy8AL3DocUNSu8rawx/S3ialdQoz94IVh/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hcAhH0B4; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741353262; c=relaxed/simple;
+	bh=HVQpQD7mRalUwlfUljUFNbq0Wfu1Q0G9cSUuBltua1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bs7Zf5TNMLGwv3fEdf2aOsiEhVeMCUjH8RT6OMyxarFOO2pLj1LmaCvY4eJygHr+AzlwHP1Bdwxthg6WJBkaZCkQ3ogxOjAu0rMgGsu1DrlQfUbdp+FRGgD3nh6Tl4oDpSI+hoNXakQxnPfWVX7bHNth7P7wDfcuB77VHE09Q7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P1+7x8xp; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hcAhH0B4"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 527DDS0p237451
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 7 Mar 2025 05:13:29 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 527DDS0p237451
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741353209;
-	bh=iaTkxDBCZ5V/IhHlwyZkZzK8j/J/8RUvbNBgrlF/qCQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=hcAhH0B4FFKmoBjBnIXmdcDnD7fD08nXTCGmKqenGZRoiFS1q+fL+eFNue+q8naWw
-	 QFr58zbNXPEdJtwd+y1EDlCjDdJ3vANNHehP6VLmnYbe8/DbG3NHMOzrZUzHc2yKFS
-	 e36VkRLEC3cAyH5hxMOGxpe5O/6LrXEndpkMqhSryXNKAUq44Ow+LOszHoI8/FYXqq
-	 oh9JuSK0vAXvf/Yp4lnZToETnGlov8grlfx92tYQ3fnPBaouFUXbbGlln55Ih5w3Tg
-	 4qYEshh2NRZroJuyprOKCmvOLMeyn17Q2QlCm70R+FaZi8XgRq0Pu7eZu2FcxpzDA0
-	 JqJXBn+rZG1fw==
-Date: Fri, 07 Mar 2025 05:13:26 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-CC: x86@kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/boot=3A_Do_not_test_if_AC?=
- =?US-ASCII?Q?_and_ID_eflags_are_changeable_on_x86=5F64?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAFULd4aMkxYp6L=grE7TrvvfdX7gTGOTAJgojJ=mjHfDLJ=kVQ@mail.gmail.com>
-References: <20250307091022.181136-1-ubizjak@gmail.com> <DC668A65-3173-4A0C-BF78-1CECF60D300B@zytor.com> <CAFULd4aMkxYp6L=grE7TrvvfdX7gTGOTAJgojJ=mjHfDLJ=kVQ@mail.gmail.com>
-Message-ID: <E3E112F8-CC41-4933-9FEC-B53D6A0AFA7A@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1+7x8xp"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff04f36fd2so3269181a91.1;
+        Fri, 07 Mar 2025 05:14:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741353260; x=1741958060; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qI1/fQe9Cksv1NwjSQmSqAPnCNeVSEDaeiSFIVAD0ZU=;
+        b=P1+7x8xpMBI0XNYfk5IQau+pRatOiTtrzxicfI9aqlMCGf0Dt4555Gbmc3xcAJPZpt
+         CJyTppUvjF+IV4Rm93hWz/797SdI8F9iwnHvhk4K3xfIKr2Ymwi8nLauSW6zVoWQJhO4
+         WKZOlGvnE4RPB5HHfUD0GF4FRyjcXCWtZATeEn5FdTJw83uzwk9xImQDRL2MnuKx8OhH
+         H5w2fuVVQKksTQNGu7al5Y+5FItkrUBlVMdKtqCJLCkJIdRngBrMBcwLRU+xAf/dtsrg
+         aTJa6ha/DSWX0aPzesBUR3oTF7X3J42PqylHTZJOz+/8WCwno0VmbObWvvEJi3EyXBGY
+         r8gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741353260; x=1741958060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qI1/fQe9Cksv1NwjSQmSqAPnCNeVSEDaeiSFIVAD0ZU=;
+        b=SOlFf5XSIgWtsU1hYiTZ+UKxS2DyS6zm9kW5MvhDtqSzTBS6hWrF+ZIXa6s+N6tI2u
+         i5Eir23/ci/Njb6iQp6LJ/bRlOymofRi+uWm1S3vPdBrPoc2qceqK/ynez3TNvcob50h
+         PNnDrPhVTocENreB5xbavYBJOH1RyqdDa9L2Yml8Egrph9WkdtCM0Zvtzt79Ht7DVWjD
+         0wkztu6OUCrPcwBn08VwAzXlnwZu/D7wVIAK0cM9uxvscgk/O2dYKTpxskIvXE6UObK6
+         bovnnpUkx7qmce3RIXaumWtFtrTLNMiQpeBWVNpPlkbiByVPgnPQJsp069rApEpYv6+C
+         CY/g==
+X-Forwarded-Encrypted: i=1; AJvYcCX6YGouH7WphIcLUY+Yp25ZdT9V+cz4H6MQdrtv/8RvA154x8uoKtP9WDiGP15tJsiOwDVGwz391QpfrRY=@vger.kernel.org, AJvYcCX9svSebNv/0uK6hV+Yv1aO4pwRtkOqWCMHf5dFyAw0jUsMAxptoJepoXNzIKUqn3hrjy1zldUKYVxgkCtsl9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzB0DXy/wTHWGjI32I546AYRwndWMmyYMG7N66MaZAPb+MhOKDy
+	760yS6Rld3bUt0TVME2948Mo4iViWbMleVhBcCwoIqqmBXwQPsV1
+X-Gm-Gg: ASbGncstu0emNfivrGSd+oF79EvkMOuiI0FsX370nAlNKKS+DUW6flYSko165kKDHOx
+	0KbgqUYhJi7a8L2t8bHmwH7SJc0TVPFU+RJQ37g297f2w8skvKgPhtJan3VfcVeOVmJtAhv7ZDq
+	toBO50TNiaZp8o++yqR4ZM8tYiv8NuIwvn11soNGn0jmI9kB7/Tdcah7kBwVi7VkDeYPx65Zb0C
+	dJiKkZla7A2b2ItTtR7wHEWz/n5wJXbt00wUk0G8h4nFLax1ccrWO2mXHfCkI2Kb2cWByVPvQ3x
+	sXoEA144ZkR96Rnf7Nw7YHAtwjxTO3VMYsdq4Ww+Z2y3DO/CGIPS
+X-Google-Smtp-Source: AGHT+IHl1PlmnZhr7l8HvQERQ2NSfb8Vk1Fc+YfHkH7F6ARMT3yyLXYIzUllT4RPzzmmphfNIOzDbw==
+X-Received: by 2002:a17:90b:1d8e:b0:2ee:f19b:86e5 with SMTP id 98e67ed59e1d1-2ff7ce6fd4amr6105166a91.14.1741353259519;
+        Fri, 07 Mar 2025 05:14:19 -0800 (PST)
+Received: from linuxsimoes.. ([187.120.156.44])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff693e7358sm2965708a91.30.2025.03.07.05.14.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 05:14:19 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	apw@canonical.com,
+	arnd@arndb.de,
+	aswinunni01@gmail.com,
+	axboe@kernel.dk,
+	benno.lossin@proton.me,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	dwaipayanray1@gmail.com,
+	ethan.twardy@gmail.com,
+	fujita.tomonori@gmail.com,
+	gary@garyguo.net,
+	gregkh@linuxfoundation.org,
+	joe@perches.com,
+	lukas.bulwahn@gmail.com,
+	ojeda@kernel.org,
+	pbonzini@redhat.com,
+	tmgross@umich.edu,
+	walmeida@microsoft.com,
+	charmitro@posteo.net
+Cc: trintaeoitogc@gmail.com,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V7 0/2] author field in module! macro should be a array
+Date: Fri,  7 Mar 2025 10:13:59 -0300
+Message-Id: <20250307131401.638820-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On March 7, 2025 4:15:42 AM PST, Uros Bizjak <ubizjak@gmail=2Ecom> wrote:
->On Fri, Mar 7, 2025 at 12:58=E2=80=AFPM H=2E Peter Anvin <hpa@zytor=2Ecom=
-> wrote:
->>
->> On March 7, 2025 1:10:03 AM PST, Uros Bizjak <ubizjak@gmail=2Ecom> wrot=
-e:
->> >The test for the changeabitily of AC and ID eflags is used to
->> >distinguish between i386 and i486 processors (AC) and to test
->> >for cpuid instruction support (ID)=2E
->> >
->> >Skip these tests on x86_64 processors as they always supports cpuid=2E
->> >
->> >Also change the return type of has_eflag() to bool=2E
->> >
->> >Signed-off-by: Uros Bizjak <ubizjak@gmail=2Ecom>
->> >Cc: Thomas Gleixner <tglx@linutronix=2Ede>
->> >Cc: Ingo Molnar <mingo@kernel=2Eorg>
->> >Cc: Borislav Petkov <bp@alien8=2Ede>
->> >Cc: Dave Hansen <dave=2Ehansen@linux=2Eintel=2Ecom>
->> >Cc: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
->> >---
->> > arch/x86/boot/cpuflags=2Ec | 26 +++++++++-----------------
->> > arch/x86/boot/cpuflags=2Eh |  6 +++++-
->> > 2 files changed, 14 insertions(+), 18 deletions(-)
->> >
->> >diff --git a/arch/x86/boot/cpuflags=2Ec b/arch/x86/boot/cpuflags=2Ec
->> >index d75237ba7ce9=2E=2E2150a016176f 100644
->> >--- a/arch/x86/boot/cpuflags=2Ec
->> >+++ b/arch/x86/boot/cpuflags=2Ec
->> >@@ -29,40 +29,32 @@ static int has_fpu(void)
->> >       return fsw =3D=3D 0 && (fcw & 0x103f) =3D=3D 0x003f;
->> > }
->> >
->> >+#ifdef CONFIG_X86_32
->> > /*
->> >  * For building the 16-bit code we want to explicitly specify 32-bit
->> >  * push/pop operations, rather than just saying 'pushf' or 'popf' and
->> >- * letting the compiler choose=2E But this is also included from the
->> >- * compressed/ directory where it may be 64-bit code, and thus needs
->> >- * to be 'pushfq' or 'popfq' in that case=2E
->> >+ * letting the compiler choose=2E
->> >  */
->> >-#ifdef __x86_64__
->> >-#define PUSHF "pushfq"
->> >-#define POPF "popfq"
->> >-#else
->> >-#define PUSHF "pushfl"
->> >-#define POPF "popfl"
->> >-#endif
->> >-
->> >-int has_eflag(unsigned long mask)
->> >+bool has_eflag(unsigned long mask)
->> > {
->> >       unsigned long f0, f1;
->> >
->> >-      asm volatile(PUSHF "    \n\t"
->> >-                   PUSHF "    \n\t"
->> >+      asm volatile("pushfl    \n\t"
->> >+                   "pushfl    \n\t"
->> >                    "pop %0    \n\t"
->> >                    "mov %0,%1 \n\t"
->> >                    "xor %2,%1 \n\t"
->> >                    "push %1   \n\t"
->> >-                   POPF "     \n\t"
->> >-                   PUSHF "    \n\t"
->> >+                   "popfl     \n\t"
->> >+                   "pushfl    \n\t"
->> >                    "pop %1    \n\t"
->> >-                   POPF
->> >+                   "popfl"
->> >                    : "=3D&r" (f0), "=3D&r" (f1)
->> >                    : "ri" (mask));
->> >
->> >       return !!((f0^f1) & mask);
->> > }
->> >+#endif
->> >
->> > void cpuid_count(u32 id, u32 count, u32 *a, u32 *b, u32 *c, u32 *d)
->> > {
->> >diff --git a/arch/x86/boot/cpuflags=2Eh b/arch/x86/boot/cpuflags=2Eh
->> >index fdcc2aa4c3c4=2E=2Ea398d9204ad0 100644
->> >--- a/arch/x86/boot/cpuflags=2Eh
->> >+++ b/arch/x86/boot/cpuflags=2Eh
->> >@@ -15,7 +15,11 @@ struct cpu_features {
->> > extern struct cpu_features cpu;
->> > extern u32 cpu_vendor[3];
->> >
->> >-int has_eflag(unsigned long mask);
->> >+#ifdef CONFIG_X86_32
->> >+bool has_eflag(unsigned long mask);
->> >+#else
->> >+static inline bool has_eflag(unsigned long mask) { return true; }
->> >+#endif
->> > void get_cpuflags(void);
->> > void cpuid_count(u32 id, u32 count, u32 *a, u32 *b, u32 *c, u32 *d);
->> > bool has_cpuflag(int flag);
->>
->> PUSF et al =E2=86=92 pushf
->>
->> The -l and -q suffixes have been optional for a long time=2E
->
->No, not in this case=2E Please see the comment:
->
->/*
->* For building the 16-bit code we want to explicitly specify 32-bit
->* push/pop operations, rather than just saying 'pushf' or 'popf' and
->* letting the compiler choose=2E
->*/
->
->We are building 16-bit code here, and we want PUSHFL, the one with
->operand size prefix 0x66=2E
->
->Please consider the following code:
->
->    =2Ecode16
->    pushf
->    pushfl
->
->as -o push=2Eo push=2Es
->
->objdump -dr -Mdata16 push=2Eo
->
->0000000000000000 <=2Etext>:
->  0:   9c                      pushf
->  1:   66 9c                   pushfl
->
->Uros=2E
->
+In the module! macro, the author field is currently of type String.
+Since modules can have multiple authors, this limitation prevents
+specifying more than one.
 
-*plonk* I should have remembered (=2Ecode16gcc is different then =2Ecode16=
- though=2E) I wrote the damned things after all=2E=2E=2E
+- Change the author field to Option<Vec<String>> to allow creating
+  modules with multiple authors.
+
+- rename the field from author to authors to make it explicit that it
+  can refer to multiple authors.
+
+- In modules that use the author field, update its value to an array of
+  strings, and also rename it from author to authors.
+
+- Change the checkpatch.pl to find poorly formatted arrays in the macro
+  module!
+
+---
+V7 changes
+- Add in checkpatch a check for vertical arrays not align
+---
+
+Guilherme Giacomo Simoes (2):
+  rust: module: change author to an array
+  checkpatch: check format of Vec<String> in modules
+
+ drivers/block/rnull.rs               |  2 +-
+ drivers/net/phy/ax88796b_rust.rs     |  2 +-
+ drivers/net/phy/qt2025.rs            |  2 +-
+ rust/kernel/net/phy.rs               |  4 +-
+ rust/kernel/pci.rs                   |  2 +-
+ rust/kernel/platform.rs              |  2 +-
+ rust/macros/lib.rs                   |  6 +--
+ rust/macros/module.rs                | 12 ++---
+ samples/rust/rust_driver_faux.rs     |  2 +-
+ samples/rust/rust_driver_pci.rs      |  2 +-
+ samples/rust/rust_driver_platform.rs |  2 +-
+ samples/rust/rust_minimal.rs         |  2 +-
+ samples/rust/rust_misc_device.rs     |  2 +-
+ samples/rust/rust_print_main.rs      |  2 +-
+ scripts/checkpatch.pl                | 67 ++++++++++++++++++++++++++++
+ 15 files changed, 90 insertions(+), 21 deletions(-)
+
+-- 
+2.34.1
+
