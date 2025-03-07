@@ -1,206 +1,291 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2056.outbound.protection.outlook.com [40.107.104.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7319D1A727D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 14:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741359182; cv=none; b=ZTWkARHUd3yTFYiqkMp+SLAbw3iCD6ONMKS9q8Im63Sfm6MhtsFZ0KmWgEV9+/s1xcAw+SihyWI98qYeZxxDgfgXdgxmliA96Mm6l+eCjIQ+gs9P96S8N5UuYg5W7yTnY+2a59JiVDnVBYN97OpWmo1WRd+LCQLnx3W2Zi3SlFQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741359182; c=relaxed/simple;
-	bh=qU+VfyYXwmKMWMDbkLHUItkYOPu1I84ijbbgQdEIubs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7FfMdcbT60LILsSVLH2M3+T9X6alNmxmDrYv/j6+euoAPULNU9JZw1gI2Q4QBjSWZ46CmpT5sCiUjMxgmVXajri/USTDH9zwjj8EJSH2Mz3lfTq1m/Aai3K7DbB5XBVnFRSWJR7tVeU3afu+4IV+cvcUyJBCAss3Kv7kz4bGn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=u2bxbasN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UPZOzrsy; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=u2bxbasN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UPZOzrsy; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8B771747;
+	Fri,  7 Mar 2025 14:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741359282; cv=fail; b=RdEwWcPnwLP2LzaOT6IpXjZj5h8j0+bF8gxGTh8XeRJ5U6n9XE4PVXaFiDUAq0oKqh22VGi5Q6pQ17lv2B3NKA3SKxTs6pAQCEJax7uFtIQT6qvD39e1EX6HPGD3xyd8PRu2GEcCfhjBMtWZSxpH7xFjfb3MpIvAIjDO9GXmKZA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741359282; c=relaxed/simple;
+	bh=1MOvp73et9HZhq1qg3KiNBuBkuH7wPsk88ZjujPywCg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bRZaNYQ0DkPAMLF7yIvs+NDGakhCYv+MSDlwvQcJn8iPDWDO/dkHyvuPVSOo2mSr7uQ/ul5P2LwGNVvUIjMvVWEUrhsKPXwNlPxsjXRZU/SuIJ3acfgmvNgTfs06F+cktOowO53IJqy3NRZfjGZ03RVo2aB9fLyhOi/dLl/YNJk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YhzaBEt3; arc=fail smtp.client-ip=40.107.104.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="u2bxbasN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UPZOzrsy";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="u2bxbasN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UPZOzrsy"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6EC0321184;
-	Fri,  7 Mar 2025 14:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741359178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jPWvXYPnJ7Y6KzwiEJ9cDFOBL04knKlm29X0NRAGEZQ=;
-	b=u2bxbasNmAxvzEVRkno+U5TtSq+Eb+8aaSlEptJ2GHxcyGQ5wQss1nq/xo36a/FMywpK2u
-	kLqYuXP3NblG0OP3DPjVlhzVj5ynDpPEJLnURtHqm+ApIj5FVKAR+BkLq0OGAK/cB0okEZ
-	A4QG28AiXsS0Ry9ZfsFyJ1anpWBBRgA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741359178;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jPWvXYPnJ7Y6KzwiEJ9cDFOBL04knKlm29X0NRAGEZQ=;
-	b=UPZOzrsyfcj/WQ+Rp80iCUI0RZjiqVLBk4iyHPcJqaddA7wbvZH4Ru01U7F9SAmZPeQO8F
-	GSjddpvjF90V0TBg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=u2bxbasN;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=UPZOzrsy
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741359178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jPWvXYPnJ7Y6KzwiEJ9cDFOBL04knKlm29X0NRAGEZQ=;
-	b=u2bxbasNmAxvzEVRkno+U5TtSq+Eb+8aaSlEptJ2GHxcyGQ5wQss1nq/xo36a/FMywpK2u
-	kLqYuXP3NblG0OP3DPjVlhzVj5ynDpPEJLnURtHqm+ApIj5FVKAR+BkLq0OGAK/cB0okEZ
-	A4QG28AiXsS0Ry9ZfsFyJ1anpWBBRgA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741359178;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jPWvXYPnJ7Y6KzwiEJ9cDFOBL04knKlm29X0NRAGEZQ=;
-	b=UPZOzrsyfcj/WQ+Rp80iCUI0RZjiqVLBk4iyHPcJqaddA7wbvZH4Ru01U7F9SAmZPeQO8F
-	GSjddpvjF90V0TBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 66A4413939;
-	Fri,  7 Mar 2025 14:52:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 51MMGUoIy2f0MwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 07 Mar 2025 14:52:58 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 23421A089C; Fri,  7 Mar 2025 15:52:58 +0100 (CET)
-Date: Fri, 7 Mar 2025 15:52:58 +0100
-From: Jan Kara <jack@suse.cz>
-To: Richard Guy Briggs <rgb@redhat.com>
-Cc: Jan Kara <jack@suse.cz>, 
-	Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-fsdevel@vger.kernel.org, Linux Kernel Audit Mailing List <audit@vger.kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@parisplace.org>, 
-	Steve Grubb <sgrubb@redhat.com>, Amir Goldstein <amir73il@gmail.com>
-Subject: Re: [PATCH v1 1/2] audit: record fanotify event regardless of
- presence of rules
-Message-ID: <jhvf3n4fnzsnj7opxooqblmpnuhvqhcg366y47p5u44dg4tm3i@snmc3msdcoiv>
-References: <cover.1741210251.git.rgb@redhat.com>
- <3c2679cb9df8a110e1e21b7f387b77ddfaacc289.1741210251.git.rgb@redhat.com>
- <aksoenimnsvk4jhxw663spln3pow5x6dys4lbtlfxqtwzwtvs4@yk5ef2tq26l2>
- <Z8pH97tbwt7OGj2o@madcap2.tricolour.ca>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YhzaBEt3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OmFzTFmca7Oq6avp1bKg/o48Zh0ebL/S0thCGly7PpunSU9lPW2GiMosj4pcY0TnUajfyqbX7EG1TFJ3bzwwFSJed0IfriMB7JhGoYXMAki5ne+iEZG2nqnFTHWmW5aIOm/R43KLdZV+gj+Sz8fjKVrE9ZtuOIjSyx1DNg1vAejAUPFj5rq4yBUOJQFrHAJPdQ9uoWiPBaSmiFjO/9s2KH9suxNnAluYammHJtSDjSvpbcb1gjhKIzjjT26D11QR+HH8zY7985/Zq08HF9NurQ71Sc66h78Qqe4rVCvlVqKXdnPkPbdxxjghizVnOjqMKuFyYr/ml/iHgLoNOUwWOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OOZT9ACCIXTZeWBzoFzxF/jWtPg0jUQ2U1wCLx+nOUA=;
+ b=guRe+IXVVpSpQNilwCOb4VN/xPmyeQg47JC0g043jXybeU+SEhWC6uSxEktn4ky0b3FjQDkLnGm5gXgpAHIzJ9V3J/MNwerFS/+YiuiXi14umInutcbsYSBLiLU/d/5xPis0MNj7I+JcwnGjrYqdYFXeesL2ejuiaEDeTAn04BPq14VD5QjsI7qEpOjW5FU7PPbITo7Z9CkFxEy1tVE0y45LV5sEvKbf54Ku4b70W6OJMr+hd1wkMw0f5UWMznI+w3NNZtuRLscVDwqaIaTdLLPDzgQYhTq5FaJypZiGdimPwtdfNBS74lgyXOEMUqkjT5vAgJX7xROgC3iVT9teyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OOZT9ACCIXTZeWBzoFzxF/jWtPg0jUQ2U1wCLx+nOUA=;
+ b=YhzaBEt3d6RkCJcTtXV/yQgTGjcVfG6AxpYwEB0+DvLfzdU/uzTrwmuEUVTDE7e5Hyhkf+sFuk2HYMZ9GgeHX51oGPJViNTGQfntamf6wkqM/cYG919DSlSFwEU/aGuCCe1M/iDl/+5NEd0yqAKdUaS7KKwJ1cR8hqUE2VIXFqbtYaz4L2FWBpnA0NAgI4P9pMC0rqfpIRbSyBpuR8rXcoAHrEeptTDh5tp9zpW3Zsl/kABkizTOeISYGWJh5BMQm+YlcumjN88sY9uzVrDaKfL4ff6BmlLGmUep+q0106cw/pQM0MrkE3/L2oGxg/ixlDxjnTHRGme0XjrSckKwpA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8642.eurprd04.prod.outlook.com (2603:10a6:20b:429::24)
+ by VI1PR04MB9908.eurprd04.prod.outlook.com (2603:10a6:800:1d0::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Fri, 7 Mar
+ 2025 14:54:36 +0000
+Received: from AS8PR04MB8642.eurprd04.prod.outlook.com
+ ([fe80::50d3:c32a:2a83:34bb]) by AS8PR04MB8642.eurprd04.prod.outlook.com
+ ([fe80::50d3:c32a:2a83:34bb%7]) with mapi id 15.20.8511.019; Fri, 7 Mar 2025
+ 14:54:36 +0000
+From: Jacky Bai <ping.bai@nxp.com>
+To: rafael@kernel.org,
+	daniel.lezcano@linaro.org,
+	lpieralisi@kernel.org,
+	sudeep.holla@arm.com,
+	ulf.hansson@linaro.org,
+	james.morse@arm.com,
+	d-gole@ti.com,
+	anup@brainfault.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	imx@lists.linux.dev,
+	khilman@baylibre.com,
+	quic_tingweiz@quicinc.com,
+	quic_yuanjiey@quicinc.com
+Subject: [PATCH v5] cpuidle: Init cpuidle only for present CPUs
+Date: Fri,  7 Mar 2025 22:55:47 +0800
+Message-Id: <20250307145547.2784821-1-ping.bai@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0038.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::15) To AS8PR04MB8642.eurprd04.prod.outlook.com
+ (2603:10a6:20b:429::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8pH97tbwt7OGj2o@madcap2.tricolour.ca>
-X-Rspamd-Queue-Id: 6EC0321184
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	FREEMAIL_CC(0.00)[suse.cz,lists.linux-audit.osci.io,vger.kernel.org,paul-moore.com,parisplace.org,redhat.com,gmail.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8642:EE_|VI1PR04MB9908:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a27993e-4d49-4ebd-6d01-08dd5d87faa7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nbcMkQmfqr8YHFkuR0VWcCKaAiKEXlbHeuiQODt4T+/skYx68AlLsZnwfCdf?=
+ =?us-ascii?Q?+f1eb6FYcMykFbpIOX73fXiObBvRNMnUAVH6jfSGlq2hzE1agyyUe8dPlrmH?=
+ =?us-ascii?Q?6lBDgusZto4UEiFzjUR2UdaCT/LnKoDwqkg/DOmsLg47X6uWDIXGGg/GQhqS?=
+ =?us-ascii?Q?LaFTo8tDsy0vOmrQ5ZIdhuqSaOylFd+X5R9utKJx7UG0Kh6m45GLwX356Qxd?=
+ =?us-ascii?Q?DomjkEHezTya9xiC9EeDJimNdRK9pFOKz2gvGrZcat2hFTqheob69ieWK+HN?=
+ =?us-ascii?Q?7uAqMYT6ssTeOj5QSajN05bidF/pf095tuhkHvAiP1hOaSjAhJjZTTTBIg6G?=
+ =?us-ascii?Q?lglQacTHUf1z9FC8ZuTA5uxrvT7gXapmT6uUYw18NmXcndQAVbAEXxRPMYfN?=
+ =?us-ascii?Q?8VxMA3es03gkCbWRDmCAD7F8QrZ1DpKuplYr7gnq8yyvoAt4JbSQ/wtnBujT?=
+ =?us-ascii?Q?A0nDBvSAS+fMLdFe4KywjrmXjVkfs5rn9fSbQTBeMc+3DNpq2PwO5BhirAuT?=
+ =?us-ascii?Q?C7E23JWBoTU4fZbcyPpm63j7UnrQPOjwNSiSfwUThrU913EwhV8OHGdttgSN?=
+ =?us-ascii?Q?BzdyzQ24hMedgTaNtEqDgM/f5gjcTc+/RnVydM/wa6Z7Dh+XzcXtx+kiEp+o?=
+ =?us-ascii?Q?9p/Psmvb/bs1iM+ozIBAXsf+3Ged0Bt3j+vRmiOoWWOYSWz2qZUU0sGBjdSc?=
+ =?us-ascii?Q?g7PLUEcSmJ4pilvkYeymC33VqtxTRjz1hmORNvitc+IDd6soSuecg0qKszLY?=
+ =?us-ascii?Q?2R9oNWfQ7BtgPjXWP0jrtvN8MUaOV40Rs5p/2r7oT724NmQ4ISXmseaWAJhT?=
+ =?us-ascii?Q?d3pUUeIpsEKOKZzioVboQU58nlVkF8MpAWCAL3IcnRFLRHf+aBJx5PvHCQiT?=
+ =?us-ascii?Q?5Z1uF6urLiZ46tjrF09m23NBsP3WnyVHHXEQv7XMcs6bI/UhW9AwWPdoTwQk?=
+ =?us-ascii?Q?iLN447SpOFSA0Yh299rNfrq0WaC+1vnbJR2+aBTCdDYPnk8IpToZjwX8EYAe?=
+ =?us-ascii?Q?jbBWQEk/0R2tfMAY9fHOeM7lklVGdk5IX1Lt/obpTBfz87Oq+/7RZFEuoFX3?=
+ =?us-ascii?Q?8qUzk6U0vF3Gky1r/Q07FC3X+/cWtvqwIJcKDHwCxkW6509eviaAN1COYpTC?=
+ =?us-ascii?Q?H2Dg5dxL9QG4HvbapCAqwLGfQd5qFIZpdgbsZPNJvhmdWX0I3twpLhQuDcQw?=
+ =?us-ascii?Q?Ke1OHO+1VnUBRlBadYFUB1taHBIzdDt6Enc9yUvzTf8ej/A0yN8Wb9NrFw9v?=
+ =?us-ascii?Q?mPmVYj6157xQTq/MWs3Qf7IRPvNFFC6fkqLrQDX3alPnXRvxyX+dqwd2MmFn?=
+ =?us-ascii?Q?e4jNaBA8AxJI82bFv/u5zTkWN/2LJd/8MRSWnNViGCgPNl5BPu+sA0Ik31gt?=
+ =?us-ascii?Q?PJBg5j9vx4zgV+P2rxwlZd7DaPuOQXkmKvx/AD0Yb77sxyqgQDoQyJfgC4MU?=
+ =?us-ascii?Q?FZxxcqnkD0sxfK1f9eNCy8b6wnQNDB1OJPz8rKP2DJHcDbbuZ/IZ1w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?GV8Zk4a9FPMYfKwvbdXfGFzqWHMSQhnjuzpSayC9AEpv3AA7zIebxSJbkKIn?=
+ =?us-ascii?Q?o43ZH2MHfORw3jEmI5aJQBgh4qFkbT016Kmd6apdqdLXmpdYWYerFaVhoVoD?=
+ =?us-ascii?Q?/9uVqV+5NPRYrsCBpoEpk4cq8Zg8bbKMVqOrVW5ACfbPoz/ccedwybT6HetG?=
+ =?us-ascii?Q?JZBimWyw1x3OITe04mQjOEYxh5214wV1Xx1xjexGZwztEG34DhDPoGLBdOBO?=
+ =?us-ascii?Q?GDKtvh5CHnVXdraDLVCAwkeU0hHpN0E+j3jGy/jJnAUZzC8J1I+S1Blt5c+P?=
+ =?us-ascii?Q?0RsN2VcNOndnUPR40VHdU4O0cqMs3K/UdFmeHEtOtt8J3PYGnysxdCYDVxCp?=
+ =?us-ascii?Q?4NEBsT4USzcKeub1QrhVVQcRA5TvjAeBDLLkjFwlU42kEs4F2wibe9jh81lU?=
+ =?us-ascii?Q?J+jcAtpsosQFFnvVyYljGQoXhJploGgv26j294pV0swC1jZIb9uqpHKcx816?=
+ =?us-ascii?Q?JrOYY0kEC+5a8Ej8hZCAwQdflzRRoh+1ACJCkSZvIFiY1d3FbHj8HY4CwrOR?=
+ =?us-ascii?Q?wY28CqKXRjwoFfeXX5jBR9srU7lgIqHP4j9oxFqM7sJWG5RgHdBJdWUoUFw1?=
+ =?us-ascii?Q?94NDLJDZFkdiU73fy+Hd1x+6tDFnyHKbNWSd7sxE3uDYhwHwNuuxGpij3h11?=
+ =?us-ascii?Q?ZWYHhmCu368p1wbBd2K8fwscQ5eKDdB1U5/6Syy6ta7EBFYdeGlIrHEgzFiw?=
+ =?us-ascii?Q?F4jMq5euVWJBXaPfjSfm0wxx/6Ukar+kbM/bOZUibBNxAMFsAd0h8CQgWn6T?=
+ =?us-ascii?Q?8lbL5OhpzfCXBaBv7BR2khDteLL/CFyYVjJzULmFSymsV5PAWkFeJ51GHDjQ?=
+ =?us-ascii?Q?mhl7gOPF8GOzFVSZWVvyxWem6VaypzuGqYf+mGjdyPl8AKpV0JYEdPsMsm2z?=
+ =?us-ascii?Q?PlmoeY+qpq57WmPDhqFI4dtaQ3UQncW/xqeSNsvnAZi3stXvzT0LNRVF6e7W?=
+ =?us-ascii?Q?Og2cHBOmShswk8fdHNGdmQ3Kk6/ME6NaRt1gc5wUXnov7pnIU4ewgl08n2lj?=
+ =?us-ascii?Q?ADSHUbUhNSa3hegVwbKj5QYMCDD6Ljlp2ndj7sB+VxwvOaZLdKH6Gu5OA/mf?=
+ =?us-ascii?Q?aKuDa8dJivTC+GBfyNZbNSYWL3cI4fWkCaUmdjOcCpwQm3fLaqmvJSGjBsv/?=
+ =?us-ascii?Q?7T0aiF3gFQDRoibIFqKMEQrfAIW9CXg7ya37/8rybbn/XQYOlr9BM2hqVXM0?=
+ =?us-ascii?Q?+Bx9kxjjBxSEmEmHfcWxVOfrOzVKx32Ef5lAGy36th1PS/GEIyXm0CpeV9oB?=
+ =?us-ascii?Q?J1bsmeLV7bVV3gDuFjEBgQmY0sSOdWG6QIw2tbw2hc5sWIR0gDBWDDUV6hMo?=
+ =?us-ascii?Q?6qQfkqG/LG9pdertMWXm6TtghdQlYEBjYGIGgyXIwrfgoPAr9GS8kIoGvNBz?=
+ =?us-ascii?Q?CvMDpSQyFgZ8IRjSUF/BWQhzFGiu73+ztQOaD6Frmtg3hZZSXWgaoGuhnEFQ?=
+ =?us-ascii?Q?nE+n/Woj2nbONqa7VuAPiWAnEUII2+OTiHbZKzrXwEzIWpXOOT2RAmZmuL9O?=
+ =?us-ascii?Q?NctYb7WZRJOjuOr26/CEE9qTCGSiy/06xFQDg8YGcW6Pr3hwqtnr0QzzFndR?=
+ =?us-ascii?Q?oKNuO4h/1Y8txWakMPJ8jw9HRBbRFHLcFhd+rDZC?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a27993e-4d49-4ebd-6d01-08dd5d87faa7
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 14:54:36.7693
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gsPu1cpxXoHLbsd1ImHLVxGJsEmWfBBW36dmUVTMl438yIiyze3Hai+v/CWuJGMhcKrffOtA/C2O+iPwVXRZfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9908
 
-On Thu 06-03-25 20:12:23, Richard Guy Briggs wrote:
-> On 2025-03-06 16:06, Jan Kara wrote:
-> > On Wed 05-03-25 16:33:19, Richard Guy Briggs wrote:
-> > > When no audit rules are in place, fanotify event results are
-> > > unconditionally dropped due to an explicit check for the existence of
-> > > any audit rules.  Given this is a report from another security
-> > > sub-system, allow it to be recorded regardless of the existence of any
-> > > audit rules.
-> > > 
-> > > To test, install and run the fapolicyd daemon with default config.  Then
-> > > as an unprivileged user, create and run a very simple binary that should
-> > > be denied.  Then check for an event with
-> > > 	ausearch -m FANOTIFY -ts recent
-> > > 
-> > > Link: https://issues.redhat.com/browse/RHEL-1367
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > 
-> > I don't know enough about security modules to tell whether this is what
-> > admins want or not so that's up to you but:
-> > 
-> > > -static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
-> > > -{
-> > > -	if (!audit_dummy_context())
-> > > -		__audit_fanotify(response, friar);
-> > > -}
-> > > -
-> > 
-> > I think this is going to break compilation with !CONFIG_AUDITSYSCALL &&
-> > CONFIG_FANOTIFY?
-> 
-> Why would that break it?  The part of the patch you (prematurely)
-> deleted takes care of that.
+for_each_possible_cpu() is currently used to initialize cpuidle
+in below cpuidle drivers:
+  drivers/cpuidle/cpuidle-arm.c
+  drivers/cpuidle/cpuidle-big_little.c
+  drivers/cpuidle/cpuidle-psci.c
+  drivers/cpuidle/cpuidle-qcom-spm.c
+  drivers/cpuidle/cpuidle-riscv-sbi.c
 
-So I'm failing to see how it takes care of that when with
-!CONFIG_AUDITSYSCALL kernel/auditsc.c does not get compiled into the kernel.
-So what does provide the implementation of audit_fanotify() in that case?
-I think you need to provide empty audit_fanotify() inline wrapper for that
-case...
+However, in cpu_dev_register_generic(), for_each_present_cpu()
+is used to register CPU devices which means the CPU devices are
+only registered for present CPUs and not all possible CPUs.
 
-								Honza
+With nosmp or maxcpus=0, only the boot CPU is present, lead
+to the failure:
 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 0050ef288ab3..d0c6f23503a1 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -418,7 +418,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
->  extern void __audit_mmap_fd(int fd, int flags);
->  extern void __audit_openat2_how(struct open_how *how);
->  extern void __audit_log_kern_module(char *name);
-> -extern void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
-> +extern void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
->  extern void __audit_tk_injoffset(struct timespec64 offset);
->  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
->  extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-> 
-> > 								Honza
-> > -- 
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
-> 
-> - RGB
-> 
-> --
-> Richard Guy Briggs <rgb@redhat.com>
-> Sr. S/W Engineer, Kernel Security, Base Operating Systems
-> Remote, Ottawa, Red Hat Canada
-> Upstream IRC: SunRaycer
-> Voice: +1.613.860 2354 SMS: +1.613.518.6570
-> 
+  |  Failed to register cpuidle device for cpu1
+
+Then rollback to cancel all CPUs' cpuidle registration.
+
+Change for_each_possible_cpu() to for_each_present_cpu() in the
+above cpuidle drivers to ensure it only registers cpuidle devices
+for CPUs that are actually present.
+
+Fixes: b0c69e1214bc ("drivers: base: Use present CPUs in GENERIC_CPU_DEVICES")
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Tested-by: Yuanjie Yang <quic_yuanjiey@quicinc.com>
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+---
+ - v5 changes:
+   - add changes for cpuidle-qcom-spm
+
+ - v4 changes:
+  - add changes for other cpuidle driver that has the similar issue
+    as cpuidle-pcsi driver.
+
+ - v3 changes:
+  - improve the changelog as suggested by Sudeep
+---
+ drivers/cpuidle/cpuidle-arm.c        | 8 ++++----
+ drivers/cpuidle/cpuidle-big_little.c | 2 +-
+ drivers/cpuidle/cpuidle-psci.c       | 4 ++--
+ drivers/cpuidle/cpuidle-qcom-spm.c   | 2 +-
+ drivers/cpuidle/cpuidle-riscv-sbi.c  | 4 ++--
+ 5 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
+index caba6f4bb1b7..e044fefdb816 100644
+--- a/drivers/cpuidle/cpuidle-arm.c
++++ b/drivers/cpuidle/cpuidle-arm.c
+@@ -137,9 +137,9 @@ static int __init arm_idle_init_cpu(int cpu)
+ /*
+  * arm_idle_init - Initializes arm cpuidle driver
+  *
+- * Initializes arm cpuidle driver for all CPUs, if any CPU fails
+- * to register cpuidle driver then rollback to cancel all CPUs
+- * registration.
++ * Initializes arm cpuidle driver for all present CPUs, if any
++ * CPU fails to register cpuidle driver then rollback to cancel
++ * all CPUs registration.
+  */
+ static int __init arm_idle_init(void)
+ {
+@@ -147,7 +147,7 @@ static int __init arm_idle_init(void)
+ 	struct cpuidle_driver *drv;
+ 	struct cpuidle_device *dev;
+ 
+-	for_each_possible_cpu(cpu) {
++	for_each_present_cpu(cpu) {
+ 		ret = arm_idle_init_cpu(cpu);
+ 		if (ret)
+ 			goto out_fail;
+diff --git a/drivers/cpuidle/cpuidle-big_little.c b/drivers/cpuidle/cpuidle-big_little.c
+index 74972deda0ea..4abba42fcc31 100644
+--- a/drivers/cpuidle/cpuidle-big_little.c
++++ b/drivers/cpuidle/cpuidle-big_little.c
+@@ -148,7 +148,7 @@ static int __init bl_idle_driver_init(struct cpuidle_driver *drv, int part_id)
+ 	if (!cpumask)
+ 		return -ENOMEM;
+ 
+-	for_each_possible_cpu(cpu)
++	for_each_present_cpu(cpu)
+ 		if (smp_cpuid_part(cpu) == part_id)
+ 			cpumask_set_cpu(cpu, cpumask);
+ 
+diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+index dd8d776d6e39..b46a83f5ffe4 100644
+--- a/drivers/cpuidle/cpuidle-psci.c
++++ b/drivers/cpuidle/cpuidle-psci.c
+@@ -403,7 +403,7 @@ static int psci_idle_init_cpu(struct device *dev, int cpu)
+ /*
+  * psci_idle_probe - Initializes PSCI cpuidle driver
+  *
+- * Initializes PSCI cpuidle driver for all CPUs, if any CPU fails
++ * Initializes PSCI cpuidle driver for all present CPUs, if any CPU fails
+  * to register cpuidle driver then rollback to cancel all CPUs
+  * registration.
+  */
+@@ -413,7 +413,7 @@ static int psci_cpuidle_probe(struct platform_device *pdev)
+ 	struct cpuidle_driver *drv;
+ 	struct cpuidle_device *dev;
+ 
+-	for_each_possible_cpu(cpu) {
++	for_each_present_cpu(cpu) {
+ 		ret = psci_idle_init_cpu(&pdev->dev, cpu);
+ 		if (ret)
+ 			goto out_fail;
+diff --git a/drivers/cpuidle/cpuidle-qcom-spm.c b/drivers/cpuidle/cpuidle-qcom-spm.c
+index 3ab240e0e122..5f386761b156 100644
+--- a/drivers/cpuidle/cpuidle-qcom-spm.c
++++ b/drivers/cpuidle/cpuidle-qcom-spm.c
+@@ -135,7 +135,7 @@ static int spm_cpuidle_drv_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return dev_err_probe(&pdev->dev, ret, "set warm boot addr failed");
+ 
+-	for_each_possible_cpu(cpu) {
++	for_each_present_cpu(cpu) {
+ 		ret = spm_cpuidle_register(&pdev->dev, cpu);
+ 		if (ret && ret != -ENODEV) {
+ 			dev_err(&pdev->dev,
+diff --git a/drivers/cpuidle/cpuidle-riscv-sbi.c b/drivers/cpuidle/cpuidle-riscv-sbi.c
+index 0c92a628bbd4..0fe1ece9fbdc 100644
+--- a/drivers/cpuidle/cpuidle-riscv-sbi.c
++++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
+@@ -529,8 +529,8 @@ static int sbi_cpuidle_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
+-	/* Initialize CPU idle driver for each CPU */
+-	for_each_possible_cpu(cpu) {
++	/* Initialize CPU idle driver for each present CPU */
++	for_each_present_cpu(cpu) {
+ 		ret = sbi_cpuidle_init_cpu(&pdev->dev, cpu);
+ 		if (ret) {
+ 			pr_debug("HART%ld: idle driver init failed\n",
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
