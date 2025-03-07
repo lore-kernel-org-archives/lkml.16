@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B292459F6;
-	Fri,  7 Mar 2025 21:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6377C257449;
+	Fri,  7 Mar 2025 21:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741383669; cv=none; b=iPhjpmUtdMPilk32BSvOo35V4mILpYLqtNSReJcM999g6E2X+I8Su0/itYblWE6p9A/EWH4XCLByVnIP5JtLHZTu57svDpfblCEPAX3/xSFl2YvjWvXBRbgXlLsFd218BmO/DNLE+1C1etPlyZMGsOIwrJs1mQpweg73diEmPT4=
+	t=1741383674; cv=none; b=pMr1LMdVd7OD/FEUD+Erhb2eb4f8eWw7BcL2BauIcyU/wV4kV6YeKuANt1fe1uIQ4HwpE1UcKY7tXMLjqp7NUczAP/grwve1EFn4pPOO1WCPtebZkYt0wRpMM9iihsNcrsag5yMEWnTDB2sJljBcSln6M+Sp1hXON+EpmiLhh+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741383669; c=relaxed/simple;
-	bh=6qkooi3B1u/j+X2E8Y+Wol50H//30QxUSdGcR9hM7AA=;
+	s=arc-20240116; t=1741383674; c=relaxed/simple;
+	bh=PkP7dWERrpIqA772sTetspuSqId5QckTq9VZHzXUEeE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WizCHsgICP3mM+xpov6P9t/ifWISPj6wS8p0leza3egLLfEK1FmPiE295+3YUqPV76EKuHzoiH8KuaEwrOAqKzVsAYl5oMR7918i5SzJIO2f/1nxwR/vKZBOh4XQ/32fL9HhbOI3dymRg0S9xiU7qBW5omrOwmJk9Cl1qy1fqNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fF7Zqs+z; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=jm5AlF0bXlUp6AjR11XoetCuOdqoEcjkWKo1DNT68dx6Q1LWsebBbkg3kHBydL/aiy4sRrulVQeqB1jFFdtT1HhDwXnAqt4Ceu1+nT+zj+CKzxeRMW0fVQzwyss6iyP3BOqUhCKRjbF1TMINs166KFnssMBCzbwBrBQnziU6oZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6uBesRz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fF7Zqs+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEFFCC4CEEC;
-	Fri,  7 Mar 2025 21:41:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6uBesRz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B162C4CED1;
+	Fri,  7 Mar 2025 21:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741383668;
-	bh=6qkooi3B1u/j+X2E8Y+Wol50H//30QxUSdGcR9hM7AA=;
+	s=k20201202; t=1741383673;
+	bh=PkP7dWERrpIqA772sTetspuSqId5QckTq9VZHzXUEeE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fF7Zqs+z1pSrwnOCAu6klnOakr8F3Xaa0wsWzuGPxACnASfgam0eK47gPeEgUilKJ
-	 GjJazRgesbaCbANBiTzdRFd6Ta6LVeSGxxK1rirtF+XGZFNjjS0VKuh3kSx/2fz2J3
-	 7WHEKN27wDhlR15oBBjJEDcE5eYzOw2hyCxdQgKAjbyHfjOvaIyYGLCyUfY8l+hZvr
-	 cDCc2gPH515rIr1QX5VRxJE7/OdNXxPaTB30vdIZpv+B7SksMLjbLpnnYywzJQu93y
-	 ukP3UM2r7Ujg3zKBPVlRNdir353bW0Cq/hchhztgiR+s0ilQMKixCxxfugRvCXCtVg
-	 mcz9jDpSV7esg==
+	b=m6uBesRzzdwmjLaqdFSdUyrC2aXHmz1yxKyKsJK5/uXSlbR+KQQlguQZxnHO2kc0r
+	 BhjzUFfICW4Ed35xqCoc4xIJdTFLwKCD+FEKxLoMaFeRkceru1Wybcx5ShoRJfW4os
+	 ytBUw/He3/Vm8Umg7WD16J45PXQqv9bPpbwAkP6vpb93LirMPR1tANsgGsIpxiZFId
+	 oqr/zkTluSbx2ON2+zNNob9gXOsxDKvpKMJ1LsPHI1e/9vqlfZNXfv8FQEBcvMeMjY
+	 90kqd2nv5K1bcSSIwvO3mXzLtbvHpnIGwYZiQq0y5Uaq4ExLEzA2jyi2afDkB7Lkkw
+	 Yf19UTe6RttaQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 07 Mar 2025 22:38:53 +0100
-Subject: [PATCH v11 12/13] rust: hrtimer: add clocksource selection through
- `ClockId`
+Date: Fri, 07 Mar 2025 22:38:44 +0100
+Subject: [PATCH v11 03/13] rust: hrtimer: implement `HrTimerPointer` for
+ `Arc`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,8 +37,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250307-hrtimer-v3-v6-12-rc2-v11-12-7934aefd6993@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250307-hrtimer-v3-v6-12-rc2-v11-3-7934aefd6993@kernel.org>
 References: <20250307-hrtimer-v3-v6-12-rc2-v11-0-7934aefd6993@kernel.org>
 In-Reply-To: <20250307-hrtimer-v3-v6-12-rc2-v11-0-7934aefd6993@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>, 
@@ -56,139 +56,161 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
  rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5570; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=6qkooi3B1u/j+X2E8Y+Wol50H//30QxUSdGcR9hM7AA=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBny2d0koMifcrJGDJ28KxAtRgJOQiY1BpIucpKF
- 0msesDdAxyJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ8tndAAKCRDhuBo+eShj
- d7xZD/9WxngKNtWco6FWPM5P7cTkC3sLIg6C2SbmANOFExx/kF6QyVtvC1XoOpUcaa4XXNt+dFd
- N1WCQDA3/AF0Co+hRPXqEm9N3tvTn1ARpuKf9ru/ZAtId0MKYV5NPjAnpWOu/xMMQWegkH8URl4
- k7na1x3BlvUvik1NHtsIpX31AupDGSufi4SnF4Oi6IScON2rzatRMAkdWQOQuigWw3BZX22ppHq
- k5Rc/Yc5G9QCaYfASTMYtfzHAFu9vS2XQUV7B0qkRwMG+OiMqLSVFe3QtVrrWocmpeDCnsee8ur
- DJgsrAdEPJl2oHssbdoJHpw2iKqLxrz1hwiGIFkfzzJgP0xqPxDXWSQjOKnM9rH3YjnhdoAULJs
- cPQjKM/KiNarNQ+f+h8cLAm2kBVlDcac5JsJXchpTfwWH72zN+g9mwHlGrQFqtJKg0JcAsVlVmw
- hp+l2p9e7DGGEx2UXooQNPiMGRrGTG68I5styv6+XVDDG5l6ozQkg9sQ2IaPMoVbdadwe8x0zeO
- Z2ixL1UZ8FmagIrXWQEl8BhwXt4x6idfxmg+y8fVcCuR7XNQUocqJAP5CatrDu6HmpaJzvXDX8N
- u0Rdqwbxvu8xY25NnKCexaRh1z44AeCNOmrDYtfjdIBcScyLBS1n1WrdiAWxWQnqpCGgt2rY0Ch
- 97cbL5pFRkTSE1A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4837; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=PkP7dWERrpIqA772sTetspuSqId5QckTq9VZHzXUEeE=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBny2drZ+70NdG0bF2k9lywAloYOgmJ4cFbKhCvI
+ IvmnmZBJx2JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ8tnawAKCRDhuBo+eShj
+ dwXMD/0duRqTwqgvlCF44xsP2rKTxy8Ef/mBN5GZzmL/0EbOTjIXIDaCQRZG/pbbsbcPuQenVds
+ uWV/GdkGTpbECtQtp6Y46sQJbvLsGQX8x61mpsqffr8eAp/HZBbylUTcb9/WBslXfXiMl6QylYv
+ +tTdWIZrBk5v83fXtcmigywGt8vSfb396IE2H350z9bzfZgXt+3oMXranbJfAcXGR3IMVVtTDPl
+ qNXA6zwinwuTvibOdo64y9ypwp0B2lHxviPdkUteeF5kbrryXckAL355N7DqMja+w4aVLbJ0Edd
+ WJ9ACi1fNgTcPyIQIAJFY5vf5NjSQ8npIOcIuwYqDPcSiYAWtttQ9GdjmjF6H66zsfEKKQV91AL
+ URW4kGR4kVr6bgKFaRLXf9TDhS5YUqC51FU/tJHISgJDR0uYkjt4nSGvAAjbiL4Fyg6B4bETuWU
+ 7WCCXuQHnkHTRyrCWi3nE7goH2CloabDxj5/rEwH1mLbC0c/YnHoxOgvJVR3+vjumaoTmRQzANx
+ TdkP3T7CB1sb7op7JlPfUGFLVpnEdR5Nnf8be2CD/dWd3H9X+4ppKJ5zMSGA7RzhVRwA30bZjHv
+ 2fakWtWN45AmwIweWq6Jl8cHMflyCXaDMg5U15UL7jfS9fqK39jiIUdu6+ujR2QwnUcFSl6h7Rt
+ QKXuWyA4cJD2LmQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Allow selecting a clock source for timers by passing a `ClockId`
-variant to `HrTimer::new`.
+Allow the use of intrusive `hrtimer` fields in structs that are managed by
+an `Arc` by implementing `HrTimerPointer` and `RawTimerCallbck` for `Arc`.
 
 Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Reviewed-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/time.rs         | 66 +++++++++++++++++++++++++++++++++++++++++++++
- rust/kernel/time/hrtimer.rs |  5 ++--
- 2 files changed, 69 insertions(+), 2 deletions(-)
+ rust/kernel/time/hrtimer.rs     |   4 +-
+ rust/kernel/time/hrtimer/arc.rs | 102 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 105 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index fab1dadfa589..f509cb0eb71e 100644
---- a/rust/kernel/time.rs
-+++ b/rust/kernel/time.rs
-@@ -83,3 +83,69 @@ fn sub(self, other: Ktime) -> Ktime {
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index dc64cef96dd4..f69a8483d21f 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -150,7 +150,6 @@ unsafe fn raw_get(this: *const Self) -> *mut bindings::hrtimer {
+     /// # Safety
+     ///
+     /// `this` must point to a valid `Self`.
+-    #[allow(dead_code)]
+     pub(crate) unsafe fn raw_cancel(this: *const Self) -> bool {
+         // SAFETY: `this` points to an allocation of at least `HrTimer` size.
+         let c_timer_ptr = unsafe { HrTimer::raw_get(this) };
+@@ -349,3 +348,6 @@ unsafe fn timer_container_of(
          }
      }
  }
 +
-+/// An identifier for a clock. Used when specifying clock sources.
-+///
-+///
-+/// Selection of the clock depends on the use case. In some cases the usage of a
-+/// particular clock is mandatory, e.g. in network protocols, filesystems.In other
-+/// cases the user of the clock has to decide which clock is best suited for the
-+/// purpose. In most scenarios clock [`ClockId::Monotonic`] is the best choice as it
-+/// provides a accurate monotonic notion of time (leap second smearing ignored).
-+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
-+#[repr(u32)]
-+pub enum ClockId {
-+    /// A settable system-wide clock that measures real (i.e., wall-clock) time.
-+    ///
-+    /// Setting this clock requires appropriate privileges. This clock is
-+    /// affected by discontinuous jumps in the system time (e.g., if the system
-+    /// administrator manually changes the clock), and by frequency adjustments
-+    /// performed by NTP and similar applications via adjtime(3), adjtimex(2),
-+    /// clock_adjtime(2), and ntp_adjtime(3). This clock normally counts the
-+    /// number of seconds since 1970-01-01 00:00:00 Coordinated Universal Time
-+    /// (UTC) except that it ignores leap seconds; near a leap second it may be
-+    /// adjusted by leap second smearing to stay roughly in sync with UTC. Leap
-+    /// second smearing applies frequency adjustments to the clock to speed up
-+    /// or slow down the clock to account for the leap second without
-+    /// discontinuities in the clock. If leap second smearing is not applied,
-+    /// the clock will experience discontinuity around leap second adjustment.
-+    RealTime = bindings::CLOCK_REALTIME,
-+    /// A monotonically increasing clock.
-+    ///
-+    /// A nonsettable system-wide clock that represents monotonic time since—as
-+    /// described by POSIX—"some unspecified point in the past". On Linux, that
-+    /// point corresponds to the number of seconds that the system has been
-+    /// running since it was booted.
-+    ///
-+    /// The CLOCK_MONOTONIC clock is not affected by discontinuous jumps in the
-+    /// CLOCK_REAL (e.g., if the system administrator manually changes the
-+    /// clock), but is affected by frequency adjustments. This clock does not
-+    /// count time that the system is suspended.
-+    Monotonic = bindings::CLOCK_MONOTONIC,
-+    /// A monotonic that ticks while system is suspended.
-+    ///
-+    /// A nonsettable system-wide clock that is identical to CLOCK_MONOTONIC,
-+    /// except that it also includes any time that the system is suspended. This
-+    /// allows applications to get a suspend-aware monotonic clock without
-+    /// having to deal with the complications of CLOCK_REALTIME, which may have
-+    /// discontinuities if the time is changed using settimeofday(2) or similar.
-+    BootTime = bindings::CLOCK_BOOTTIME,
-+    /// International Atomic Time.
-+    ///
-+    /// A system-wide clock derived from wall-clock time but counting leap seconds.
-+    ///
-+    /// This clock is coupled to CLOCK_REALTIME and will be set when CLOCK_REALTIME is
-+    /// set, or when the offset to CLOCK_REALTIME is changed via adjtimex(2). This
-+    /// usually happens during boot and **should** not happen during normal operations.
-+    /// However, if NTP or another application adjusts CLOCK_REALTIME by leap second
-+    /// smearing, this clock will not be precise during leap second smearing.
-+    ///
-+    /// The acronym TAI refers to International Atomic Time.
-+    TAI = bindings::CLOCK_TAI,
++mod arc;
++pub use arc::ArcHrTimerHandle;
+diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
+new file mode 100644
+index 000000000000..fe3cb869bc9b
+--- /dev/null
++++ b/rust/kernel/time/hrtimer/arc.rs
+@@ -0,0 +1,102 @@
++// SPDX-License-Identifier: GPL-2.0
++
++use super::HasHrTimer;
++use super::HrTimer;
++use super::HrTimerCallback;
++use super::HrTimerHandle;
++use super::HrTimerPointer;
++use super::RawHrTimerCallback;
++use crate::sync::Arc;
++use crate::sync::ArcBorrow;
++use crate::time::Ktime;
++
++/// A handle for an `Arc<HasHrTimer<T>>` returned by a call to
++/// [`HrTimerPointer::start`].
++pub struct ArcHrTimerHandle<T>
++where
++    T: HasHrTimer<T>,
++{
++    pub(crate) inner: Arc<T>,
 +}
 +
-+impl ClockId {
-+    fn into_c(self) -> bindings::clockid_t {
-+        self as bindings::clockid_t
++// SAFETY: We implement drop below, and we cancel the timer in the drop
++// implementation.
++unsafe impl<T> HrTimerHandle for ArcHrTimerHandle<T>
++where
++    T: HasHrTimer<T>,
++{
++    fn cancel(&mut self) -> bool {
++        let self_ptr = Arc::as_ptr(&self.inner);
++
++        // SAFETY: As we obtained `self_ptr` from a valid reference above, it
++        // must point to a valid `T`.
++        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
++
++        // SAFETY: As `timer_ptr` points into `T` and `T` is valid, `timer_ptr`
++        // must point to a valid `HrTimer` instance.
++        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
 +    }
 +}
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 2b7ab112e187..a75df68bbda9 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -67,6 +67,7 @@
- //! A `restart` operation on a timer in the **stopped** state is equivalent to a
- //! `start` operation.
- 
-+use super::ClockId;
- use crate::{init::PinInit, prelude::*, time::Ktime, types::Opaque};
- use core::marker::PhantomData;
- 
-@@ -94,7 +95,7 @@ unsafe impl<T> Sync for HrTimer<T> {}
- 
- impl<T> HrTimer<T> {
-     /// Return an initializer for a new timer instance.
--    pub fn new(mode: HrTimerMode) -> impl PinInit<Self>
-+    pub fn new(mode: HrTimerMode, clock: ClockId) -> impl PinInit<Self>
-     where
-         T: HrTimerCallback,
-     {
-@@ -108,7 +109,7 @@ pub fn new(mode: HrTimerMode) -> impl PinInit<Self>
-                     bindings::hrtimer_setup(
-                         place,
-                         Some(T::Pointer::run),
--                        bindings::CLOCK_MONOTONIC as i32,
-+                        clock.into_c(),
-                         mode.into_c(),
-                     );
-                 }
++
++impl<T> Drop for ArcHrTimerHandle<T>
++where
++    T: HasHrTimer<T>,
++{
++    fn drop(&mut self) {
++        self.cancel();
++    }
++}
++
++impl<T> HrTimerPointer for Arc<T>
++where
++    T: 'static,
++    T: Send + Sync,
++    T: HasHrTimer<T>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
++{
++    type TimerHandle = ArcHrTimerHandle<T>;
++
++    fn start(self, expires: Ktime) -> ArcHrTimerHandle<T> {
++        // SAFETY:
++        //  - We keep `self` alive by wrapping it in a handle below.
++        //  - Since we generate the pointer passed to `start` from a valid
++        //    reference, it is a valid pointer.
++        unsafe { T::start(Arc::as_ptr(&self), expires) };
++        ArcHrTimerHandle { inner: self }
++    }
++}
++
++impl<T> RawHrTimerCallback for Arc<T>
++where
++    T: 'static,
++    T: HasHrTimer<T>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
++{
++    type CallbackTarget<'a> = ArcBorrow<'a, T>;
++
++    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
++        // `HrTimer` is `repr(C)`
++        let timer_ptr = ptr.cast::<super::HrTimer<T>>();
++
++        // SAFETY: By C API contract `ptr` is the pointer we passed when
++        // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
++        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
++
++        // SAFETY:
++        //  - `data_ptr` is derived form the pointer to the `T` that was used to
++        //    queue the timer.
++        //  - As per the safety requirement for the trait `HrTimerHandle`, the
++        //    `ArcTimerHandle` associated with this timer is guaranteed to be
++        //    alive for the duration of the lifetime of `receiver`, so the
++        //    refcount of the underlying `Arc` is guaranteed to be nonzero for
++        //    the duration.
++        //  - We own one refcount in the `ArcTimerHandle` associated with this
++        //    timer, so it is not possible to get a `UniqueArc` to this
++        //    allocation from other `Arc` clones.
++        let receiver = unsafe { ArcBorrow::from_raw(data_ptr) };
++
++        T::run(receiver);
++
++        bindings::hrtimer_restart_HRTIMER_NORESTART
++    }
++}
 
 -- 
 2.47.0
