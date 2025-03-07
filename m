@@ -1,174 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99F53FF1;
-	Fri,  7 Mar 2025 00:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78083B67A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 00:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741308029; cv=none; b=olBXbZhlB9NkLPx4E6NL4Knr6Cjtui3eTE94K54J5DrUByo9w4ClBwCfhO76KvjieLXgh3Y5tDvPjRJu3KjsqElDA5uKJyRTdPgFNViolR9u5QFhTOCpuypWXwk/yDGi8qY9W+ypA1GHK0dQgUBlzYL/ez9cKy6HxkiTXIWqvq0=
+	t=1741308043; cv=none; b=V9CAzjose1nXqXyjreCrgLYZKHlrOulR6MG1i5sQvvI8Ew4wpUvQCSBiMd/G/FrUtXX+xjiD0YuoMIjnbNfTHncjKVvP0yO1fcn8lpL43JYX8uVNBNjZ00u49UjiuXp4RNclQD7g0WpJLlGgh06FYTyG+kamZ8pYcyQmYwLvpdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741308029; c=relaxed/simple;
-	bh=IZganfmTRVMXt6EEXPVKrpk3xnwBL7hHFlCNXq/YLrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g1asYPvBx5Y9xKRlB9/vsb1MOM70jlOfKdGnnaDOfSNfxFH7rR6fmnDKXspPwC9Ru0SIPx655/GgVBU++d4FN7L3Moryhw/jcaX+t72u3uiQbEm0/1oxv4VZfOU+hH+YCeQVp22uy6JN8gBKvkm+RL5j+lc//T+8iYENqEDqsa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSL53wta; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741308043; c=relaxed/simple;
+	bh=4zuSsUUERQZ9XH2UW70V6n8vrmAslZnhgabwAuZZDgg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uzfwYmSA/ya7bIX86z10QZ8wML7Yd07IgcF0caY+rLe/ADrl6Lr0ADWGh/Ez1uu8jFfkpjk0WlFtkvW+hduZqTIO+m/JB3G+c09TEbMJw5kPc9fAIs+YaCSQA/6RbuGd9kZxwCljFGSKX0VHDwNAPZ2/CbCNjphKJT6I2oOGcQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IhjGqL6U; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSL53wta"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8609C4CEE0;
-	Fri,  7 Mar 2025 00:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741308028;
-	bh=IZganfmTRVMXt6EEXPVKrpk3xnwBL7hHFlCNXq/YLrU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uSL53wtaUNnzPbWmULzgpAyojYCLykCC1Eg7r1AInX2hFthJGHXzp8isoUe9qZSRQ
-	 iD1KIGsa6Dlrk0xQfkRb0FkwBGDgoj7TKCMzte+0bzllzZ6ObaoIj2Au2G4lsCC7It
-	 M7q60K/rAPJCyfB9lgrVy7PWGWUdilEAVpoiY/rGKnu9cCdoHhrFUbJbUrZlSl0cKL
-	 DUery0nkfwCHX/QSlizBvpiVUuZ+fuCn51H2OH9f03nXOylLfolcLuN5lPH76Ev744
-	 1ahdInhyqqHW2opZJS0rnq2xEt2QfA4CSHsbqNl/LpSNWSYw6Sno1BGffBFObwfSVz
-	 0Om/z4vaFqOhw==
-Date: Thu, 6 Mar 2025 16:40:26 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Jakub Brnak <jbrnak@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
-	mpetlan@redhat.com, tglozar@redhat.com,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] perf tests probe_vfs_getname: Skip if no suitable line
- detected
-Message-ID: <Z8pAep0GJsMFTyEi@google.com>
-References: <20250304163015.969720-1-jbrnak@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IhjGqL6U"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so1867311a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 16:40:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741308041; x=1741912841; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WzHFLEGlreZuEa57C28rn0nXYZoBE6nT+YTkqlDXLgs=;
+        b=IhjGqL6UlPSfhrlf6fTaWhEksAbFzU6rIApgAQNN911sYJ5Tq8TRn69Eh4HzfFG6JQ
+         fdz085QQNkoO/fIK7UlXjRIwi6qpMgtxLbTLFsFBrP9FA8qOOc6B/awJ2NKHLxgkyAQL
+         iftlZjWG/d16GvMIaYJd90k30zfvLjhZc5SRn1XW/3OqZfe1mOy1ECtNTVf2evRtomlb
+         R+kEg6dJXAGrpIaW6DuUeBDAU3Y3LPuHqG8Sd0uwI14YRnHNXhb+bTLauivnvGtBB//R
+         1aloPM5oMxL4yAXuGgIAtJsZuVGUWUKSxuAjNuZ1LKRF/TEdsEwrWgt6nH9TTFlxEVr+
+         B7hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741308041; x=1741912841;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WzHFLEGlreZuEa57C28rn0nXYZoBE6nT+YTkqlDXLgs=;
+        b=eG+4JcILfguuAM+++jo+B5BQO45wfsytlZN5VO7nVCEmIVdtKRL4RNqfalNKPOFMXJ
+         seBSi2JDcwkRH4hxmvm/P0yqCdr9VFsZJTpBmXWo9vgkPFGSrXjoDCbKATRxX0kcndVo
+         c+flYYAm7M5crvh71qjdEP3wK26y7a6nNHKJ64jeOKoewh8it8MHT+7Cd+ATL4cmS++k
+         xDqCBueAg3YrE3pDEJXzBEfTSuTUTTkbvcR6DENgB/QiFbiWDoiMpb2kGpnHqxc8d+W+
+         J5U/va4c1wnoqXZuj1MMsxHnJpqM4qeghpmHxFapspdoZgFThStCAIZsiA7jBO6HsuQS
+         CUxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTE8dzeP7drFrbQEYN5j79M0qa1M2N81gu8uHCXauqal4vLGvjk/Ncvh9yByWl2xM4URzN+1epSA+znMc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN3lFzFl0NQ2dOlnyPEgEdw2OisUQc4ngAYg8w7z9Y5zD5nIbI
+	w+mhc6S9++Ytu4qsAWkIGQ5hNdK3d/9giAroC1Yqyi5DAjhs2BIxWJSJDDziKk37NFDkooKRzVk
+	oYE2Zkq9J3KpxXaSEg+dj1g==
+X-Google-Smtp-Source: AGHT+IFjChsg8yoBFuWkq2ap+0QJibh5WB1FJmaACH3X+wlU6TnGAPchFEbPc7uluS9gcFVC8HQZXTstB8NO548Aog==
+X-Received: from pjbsv15.prod.google.com ([2002:a17:90b:538f:b0:2fc:11a0:c549])
+ (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:4b11:b0:2fe:955d:cdb1 with SMTP id 98e67ed59e1d1-2ff7cef99b6mr1767094a91.23.1741308040737;
+ Thu, 06 Mar 2025 16:40:40 -0800 (PST)
+Date: Fri,  7 Mar 2025 00:39:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250304163015.969720-1-jbrnak@redhat.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250307003905.601175-1-hramamurthy@google.com>
+Subject: [PATCH net-next] gve: convert to use netmem for DQO RDA mode
+From: Harshitha Ramamurthy <hramamurthy@google.com>
+To: netdev@vger.kernel.org
+Cc: jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	pkaligineedi@google.com, shailend@google.com, willemb@google.com, 
+	ziweixiao@google.com, jacob.e.keller@intel.com, linux-kernel@vger.kernel.org, 
+	Mina Almasry <almasrymina@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Cc-ing Masami,
+To add netmem support to the gve driver, add a union
+to the struct gve_rx_slot_page_info. netmem_ref is used for
+DQO queue format's raw DMA addressing(RDA) mode. The struct
+page is retained for other usecases.
 
-On Tue, Mar 04, 2025 at 05:30:15PM +0100, Jakub Brnak wrote:
-> In some cases when calling function add_probe_vfs_getname, line number
-> can't be detected by perf probe -L getname_flags:
-> 
->   78         atomic_set(&result->refcnt, 1);
-> 
-> 	     // one of the following lines should have line number
-> 	     // but sometimes it does not because of optimization
-> 	     result->uptr = filename;
->              result->aname = NULL;
-> 
->   81         audit_getname(result);
-> 
-> To prevent false failures, skip the affected tests
-> if no suitable line numbers can be detected.
-> 
-> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
-> ---
->  tools/perf/tests/shell/lib/probe_vfs_getname.sh           | 8 +++++++-
->  tools/perf/tests/shell/probe_vfs_getname.sh               | 8 +++++++-
->  tools/perf/tests/shell/record+script_probe_vfs_getname.sh | 8 +++++++-
->  tools/perf/tests/shell/trace+probe_vfs_getname.sh         | 8 +++++++-
->  4 files changed, 28 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 5c33ec7a5a63..89f72a4c818c 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -19,8 +19,14 @@ add_probe_vfs_getname() {
->  			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
->  			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
->  		fi
-> +
-> +		if [ -z "$line" ] ; then
-> +			echo "Could not find probeable line"
-> +			return 2
-> +		fi
-> +
->  		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
-> -		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-> +		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
->  	fi
->  }
->  
-> diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-> index 0c5aacc446b3..9e99647fc61a 100755
-> --- a/tools/perf/tests/shell/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-> @@ -12,7 +12,13 @@ skip_if_no_perf_probe || exit 2
->  # shellcheck source=lib/probe_vfs_getname.sh
->  . "$(dirname $0)"/lib/probe_vfs_getname.sh
->  
-> -add_probe_vfs_getname || skip_if_no_debuginfo
-> +add_probe_vfs_getname
->  err=$?
-> +
-> +if [[ $err -ne 0 && $err -ne 2 ]]; then
+Then, switch to using relevant netmem helper functions for
+page pool and skb frag management.
 
-Shouldn't it be equal to 1?
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+---
+ drivers/net/ethernet/google/gve/gve.h         |  8 ++++-
+ .../ethernet/google/gve/gve_buffer_mgmt_dqo.c | 27 ++++++++-------
+ drivers/net/ethernet/google/gve/gve_rx_dqo.c  | 34 ++++++++++++++-----
+ 3 files changed, 47 insertions(+), 22 deletions(-)
 
-  if [ $err -eq 1 ];then
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 216d6e157bef..483c43bab3a9 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -105,7 +105,13 @@ struct gve_rx_desc_queue {
+ 
+ /* The page info for a single slot in the RX data queue */
+ struct gve_rx_slot_page_info {
+-	struct page *page;
++	/* netmem is used for DQO RDA mode
++	 * page is used in all other modes
++	 */
++	union {
++		struct page *page;
++		netmem_ref netmem;
++	};
+ 	void *page_address;
+ 	u32 page_offset; /* offset to write to in page */
+ 	unsigned int buf_size;
+diff --git a/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c b/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
+index 403f0f335ba6..af84cb88f828 100644
+--- a/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
++++ b/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
+@@ -205,32 +205,33 @@ void gve_free_to_page_pool(struct gve_rx_ring *rx,
+ 			   struct gve_rx_buf_state_dqo *buf_state,
+ 			   bool allow_direct)
+ {
+-	struct page *page = buf_state->page_info.page;
++	netmem_ref netmem = buf_state->page_info.netmem;
+ 
+-	if (!page)
++	if (!netmem)
+ 		return;
+ 
+-	page_pool_put_full_page(page->pp, page, allow_direct);
+-	buf_state->page_info.page = NULL;
++	page_pool_put_full_netmem(netmem_get_pp(netmem), netmem, allow_direct);
++	buf_state->page_info.netmem = 0;
+ }
+ 
+ static int gve_alloc_from_page_pool(struct gve_rx_ring *rx,
+ 				    struct gve_rx_buf_state_dqo *buf_state)
+ {
+ 	struct gve_priv *priv = rx->gve;
+-	struct page *page;
++	netmem_ref netmem;
+ 
+ 	buf_state->page_info.buf_size = priv->data_buffer_size_dqo;
+-	page = page_pool_alloc(rx->dqo.page_pool,
+-			       &buf_state->page_info.page_offset,
+-			       &buf_state->page_info.buf_size, GFP_ATOMIC);
++	netmem = page_pool_alloc_netmem(rx->dqo.page_pool,
++					&buf_state->page_info.page_offset,
++					&buf_state->page_info.buf_size,
++					GFP_ATOMIC);
+ 
+-	if (!page)
++	if (!netmem)
+ 		return -ENOMEM;
+ 
+-	buf_state->page_info.page = page;
+-	buf_state->page_info.page_address = page_address(page);
+-	buf_state->addr = page_pool_get_dma_addr(page);
++	buf_state->page_info.netmem = netmem;
++	buf_state->page_info.page_address = netmem_address(netmem);
++	buf_state->addr = page_pool_get_dma_addr_netmem(netmem);
+ 
+ 	return 0;
+ }
+@@ -269,7 +270,7 @@ void gve_reuse_buffer(struct gve_rx_ring *rx,
+ 		      struct gve_rx_buf_state_dqo *buf_state)
+ {
+ 	if (rx->dqo.page_pool) {
+-		buf_state->page_info.page = NULL;
++		buf_state->page_info.netmem = 0;
+ 		gve_free_buf_state(rx, buf_state);
+ 	} else {
+ 		gve_dec_pagecnt_bias(&buf_state->page_info);
+diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
+index f0674a443567..856ade0c209f 100644
+--- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
++++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
+@@ -476,6 +476,24 @@ static int gve_rx_copy_ondemand(struct gve_rx_ring *rx,
+ 	return 0;
+ }
+ 
++static void gve_skb_add_rx_frag(struct gve_rx_ring *rx,
++				struct gve_rx_buf_state_dqo *buf_state,
++				int num_frags, u16 buf_len)
++{
++	if (rx->dqo.page_pool) {
++		skb_add_rx_frag_netmem(rx->ctx.skb_tail, num_frags,
++				       buf_state->page_info.netmem,
++				       buf_state->page_info.page_offset,
++				       buf_len,
++				       buf_state->page_info.buf_size);
++	} else {
++		skb_add_rx_frag(rx->ctx.skb_tail, num_frags,
++				buf_state->page_info.page,
++				buf_state->page_info.page_offset,
++				buf_len, buf_state->page_info.buf_size);
++	}
++}
++
+ /* Chains multi skbs for single rx packet.
+  * Returns 0 if buffer is appended, -1 otherwise.
+  */
+@@ -513,10 +531,7 @@ static int gve_rx_append_frags(struct napi_struct *napi,
+ 	if (gve_rx_should_trigger_copy_ondemand(rx))
+ 		return gve_rx_copy_ondemand(rx, buf_state, buf_len);
+ 
+-	skb_add_rx_frag(rx->ctx.skb_tail, num_frags,
+-			buf_state->page_info.page,
+-			buf_state->page_info.page_offset,
+-			buf_len, buf_state->page_info.buf_size);
++	gve_skb_add_rx_frag(rx, buf_state, num_frags, buf_len);
+ 	gve_reuse_buffer(rx, buf_state);
+ 	return 0;
+ }
+@@ -561,7 +576,12 @@ static int gve_rx_dqo(struct napi_struct *napi, struct gve_rx_ring *rx,
+ 	/* Page might have not been used for awhile and was likely last written
+ 	 * by a different thread.
+ 	 */
+-	prefetch(buf_state->page_info.page);
++	if (rx->dqo.page_pool) {
++		if (!netmem_is_net_iov(buf_state->page_info.netmem))
++			prefetch(netmem_to_page(buf_state->page_info.netmem));
++	} else {
++		prefetch(buf_state->page_info.page);
++	}
+ 
+ 	/* Copy the header into the skb in the case of header split */
+ 	if (hsplit) {
+@@ -632,9 +652,7 @@ static int gve_rx_dqo(struct napi_struct *napi, struct gve_rx_ring *rx,
+ 	if (rx->dqo.page_pool)
+ 		skb_mark_for_recycle(rx->ctx.skb_head);
+ 
+-	skb_add_rx_frag(rx->ctx.skb_head, 0, buf_state->page_info.page,
+-			buf_state->page_info.page_offset, buf_len,
+-			buf_state->page_info.buf_size);
++	gve_skb_add_rx_frag(rx, buf_state, 0, buf_len);
+ 	gve_reuse_buffer(rx, buf_state);
+ 	return 0;
+ 
+-- 
+2.49.0.rc0.332.g42c0ae87b1-goog
 
-> +    skip_if_no_debuginfo
-> +    err=$?
-> +fi
-
-Hmm.. probably better to call skip_if_no_debuginfo first so that it can
-skip to call cleanup_probe_vfs_getname.
-
-Thanks,
-Namhyung
-
-> +
->  cleanup_probe_vfs_getname
->  exit $err
-> diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> index 5940fdc1df37..2724adc23e8f 100755
-> --- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-> @@ -34,8 +34,14 @@ perf_script_filenames() {
->  	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
->  }
->  
-> -add_probe_vfs_getname || skip_if_no_debuginfo
-> +add_probe_vfs_getname
->  err=$?
-> +
-> +if [[ $err -ne 0 && $err -ne 2 ]]; then
-> +    skip_if_no_debuginfo
-> +    err=$?
-> +fi
-> +
->  if [ $err -ne 0 ] ; then
->  	exit $err
->  fi
-> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> index 708a13f00635..f5cc59225cf1 100755
-> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-> @@ -25,8 +25,14 @@ trace_open_vfs_getname() {
->  }
->  
->  
-> -add_probe_vfs_getname || skip_if_no_debuginfo
-> +add_probe_vfs_getname
->  err=$?
-> +
-> +if [[ $err -ne 0 && $err -ne 2 ]]; then
-> +    skip_if_no_debuginfo
-> +    err=$?
-> +fi
-> +
->  if [ $err -ne 0 ] ; then
->  	exit $err
->  fi
-> -- 
-> 2.48.1
-> 
