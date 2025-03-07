@@ -1,148 +1,152 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC4E21767C;
-	Fri,  7 Mar 2025 11:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E796C20764E;
+	Fri,  7 Mar 2025 11:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741347607; cv=none; b=Q2dtAJxy+kK6sjvjXBL4ALEN+BSJBx7IJnUjRUlMuwu8KqBAlxNT8vrKRMk/Y5wOPYOUtJisA5K6eLehYWIklvJ3st7Yf/WhurcEj/6fM7mG7jhODjh/XLqz4DBmLPpVa9ROz6O2d01DRTQHK51fT8yDKYV6UVouKi7VQxdca+w=
+	t=1741347637; cv=none; b=X2We93V53x15U9RWL9JXuy33wL2+oRSAJMyRFOdVgBV0i/2x9aqdC2iaoOdAbiGo/JAF04g+atxn3FhTuzIjMXkXkE3C+5FJOF5Eicdle4E8lBGpyajT5SAXheviQmcQL/5ig9XAl2edEkYA7twG7bTzpRv842HcuCs7OFoS2AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741347607; c=relaxed/simple;
-	bh=RdXGeUksPX5nBK/Nql891UU9+VHLyZXp5Jp77NwC/lM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IB9p3AhczKJJnUGQ2DGi7l1kQysRwZynawcDobuG6SSoiRwa6ZTIoa/j7Wiez4PX1RIjN9+CUBE9jB08EjniqW/YowWx91kcFqzkZqZXlzX0ERWagkMqLEO9xGt+kAW/Wq0a3XKTK3qw60N/mvlcGcfgDfsJkiRZ5TiHJPira+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lKjjt++J; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1741347637; c=relaxed/simple;
+	bh=I9Ix3U0W41expU7X/Dm9VIv651I61ZHx/8rqhJrlFys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CG4I62PTEUcnOKbPQCbj8sZhv0xM2s4Y/iUC59Cws0We1BpatuiExVS/FOddSMye/GLF7OkIdAfQZOSGTj8dfFYaLpmeG5V3TRcNagL49vyV7xz6YM3m4BgSBIe/+0dtIqC5RQOUQwndNHkyS8sRtuZmxQFebSDgEaI0/YZkOjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PDh0OMzU; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lKjjt++J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qJd8io4yNDJMwXhLW9Dt8G+ZqODy5u6PCGa0y547CXU=; b=lKjjt++J+HBCgfVI9IYXcazi5Q
-	72CTIpHnw6xOivdf9EBin4omOJsOOKakaGp2XCz3wfinSdS7UNgYuW31GA9rk5cpvCNrqMmxikhnq
-	QT2g4ezgHGZZgNCHMTE+RIx+c9dQiqtQ1W9HiKyHoGKjuM4jFsS6zOwRTGiV6beHFyVT45uukbja/
-	rRAR5rJ2tmeqT+mz/r+LZPNTydv1KZwuz2FFnrKHDgcXmS6Uq5PIejr6RyvyKx8EiEsCBwq/lqoMG
-	3AI7by4DSf4Y0t65jFGhZ6pXkttWOOYJxsERUsvbt+vTrpRaC6fJRrdsWBR+H1fDSTlyBi2HaIghT
-	Sk5UKx/w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tqW3Y-0000000CMER-1YFt;
-	Fri, 07 Mar 2025 11:39:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A392D30031C; Fri,  7 Mar 2025 12:39:55 +0100 (CET)
-Date: Fri, 7 Mar 2025 12:39:55 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, Ryo Takakura <ryotkkr98@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, x86@kernel.org
-Subject: Re: [tip: locking/core] lockdep: Fix wait context check on softirq
- for PREEMPT_RT
-Message-ID: <20250307113955.GK16878@noisy.programming.kicks-ass.net>
-References: <20250118054900.18639-1-ryotkkr98@gmail.com>
- <174102791921.14745.9525905092448169732.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDh0OMzU"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2241053582dso2690655ad.1;
+        Fri, 07 Mar 2025 03:40:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741347635; x=1741952435; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8UqIfgpaGc5zJjDWkkoCZZvtajjxdMIfBLrEowvjIPg=;
+        b=PDh0OMzUHRFNyp9exWivwI/VjjxXiO0HueliZEknNojBMteEvXULqh6BpMyCP81Bvu
+         1GbyN9hY+XqYPPCxS+eUApc8wgw9cuTHo7MGe4IMtGCwH3v4M5gi7L30wuS2H5xoRDqS
+         +PwpZ6VTKs0RYIdk7haFdayh2x2LUSjLv8sUCbnI8YGVdDzh8LInyISkZIv9ch6R79Th
+         50+J9W9wJaW3f2/oGMjh+BPwqtaeAxycsXGZvJUZ4HmmV7lwdqpTS/DGvJYGii4DtGWF
+         wtFPQZxGOeZw0Q4sfBWQ64LQoKUN6zIJsBtYAQZIJnds2y7Woqui7p9BxXa70cjllTky
+         43Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741347635; x=1741952435;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8UqIfgpaGc5zJjDWkkoCZZvtajjxdMIfBLrEowvjIPg=;
+        b=ciTNY2JCavnT2LjaRtGGZ+ojEhgAugXKtf5r09A4tAb3h4FNCOCqHErbptQrHAdKAt
+         1XeOWnfPsHTlmvST84kuAX7ExqY1x3a/LJspMF6Yug+jiKMiuq1dnzsOWp8v53dzbDCz
+         8zOfWF1SPlsAmweUB+iQa8K3cgOQK7bayfMDvUsQ4nkHvvHq5WXdQOW/C15ZgEBimNFj
+         McdGtwaR/Mi8ou0UZaX7Mms6/6TBqEECcfMb57NaFfRfNafiLuoI+qTAZfDwCtdyKozw
+         jY9JBNzuopupyoLvpUSUUnWyWRyd3+so+JvguzrCioTuxrFvaeGf0oalsi2sjZVT0uIo
+         dWeA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5hO4w+smaRgAYU5ueRfndbQIfHu2rRyk9yyGP9+X1lwznC3uyCYGxwQ6EL3ApoUz8IT5XNMVhZBz/GevX@vger.kernel.org, AJvYcCXXGHlM05A60V4Xcgvf9ba2Btmc4lCLje7Yg8iUF2QSOic8lvxlwmvfQxKXa4bo4OSIDgCcLQJ1BWw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM030USy3Hwe/ZTL45krCycs/yxu3DoXKi37dEZWKtlNkvj9vl
+	h+bgRlmmhh2r1abXLITzsZtkXtHgFMPshp1spYp0gyYOAdzBr4Aj
+X-Gm-Gg: ASbGncuokfQnRTpVsNA7worWKYKoZ6U9TKJM+A4ElIHo9zN7jjtmgStJH3otUJ3ONsE
+	sCM0MqP1D1MRLmLIJ1aaJZ04e5wAOeEtxvYpomPEn6NV9uFFFmE2281PCk83WJPOLtEK4yeMnc1
+	Rqzt6if0WIaGJNIQtQ0cllzCpPcInfcqf1i4FX7Dj23osUKUvIt7oQkgUNSkHVu4oAijScCCvwi
+	/7MqQjlci3ca2uw0t1iIb7Y8uZO0UwxCjxO6tTmXEZB1yNpINocN+gtUq+u+kfJZZTj8K6nSwFg
+	l3kudU6ZVsTxHXxBjTWKzr/7aC+lDImhVfEBz5z/nR2dBDBjKTtdkpRcdMHyu+6F3ei6fhfu8Ua
+	47RfTZ5PTf7ie0+M=
+X-Google-Smtp-Source: AGHT+IHAQFCRCwe2R0RBVbabIC9mKCCEvLPEC7/LRCTgcq+4UsG7X8fmuRaJ2R6NSsPISjXf/BTVgg==
+X-Received: by 2002:a17:902:ce0a:b0:216:2bd7:1c4a with SMTP id d9443c01a7336-224289945b0mr52457245ad.26.1741347635027;
+        Fri, 07 Mar 2025 03:40:35 -0800 (PST)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7f8b6sm27893455ad.136.2025.03.07.03.40.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 03:40:34 -0800 (PST)
+Message-ID: <f4ee5a3b-8d1e-4d6a-bafa-c8d4d376f388@gmail.com>
+Date: Fri, 7 Mar 2025 20:20:58 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174102791921.14745.9525905092448169732.tip-bot2@tip-bot2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 1/2] cpumask: Fix kernel-doc formatting errors in
+ cpumask.h
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, linux-doc@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Yury Norov <yury.norov@gmail.com>, Akira Yokosawa <akiyks@gmail.com>
+References: <cover.1741332579.git.viresh.kumar@linaro.org>
+ <f4ad81150eaa00b43c161f0d1f811f8ecfe21889.1741332579.git.viresh.kumar@linaro.org>
+ <e3637b13-1f51-445b-8d9d-bd53a691eca3@gmail.com>
+ <20250307112812.3la74kiomyqbzhk5@vireshk-i7>
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <20250307112812.3la74kiomyqbzhk5@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 03, 2025 at 06:51:59PM -0000, tip-bot2 for Ryo Takakura wrote:
-> The following commit has been merged into the locking/core branch of tip:
+Viresh Kumar wrote:
+> On 07-03-25, 19:57, Akira Yokosawa wrote:
+>> Didn't come up in your diff, but you need additional changes shown below:
+>>
+>> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+>> index 656d2208467e..a6c1961cc535 100644
+>> --- a/include/linux/cpumask.h
+>> +++ b/include/linux/cpumask.h
+>> @@ -285,10 +285,10 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
+>>  }
+>>  
+>>  /**
+>> - * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
+>> - *                        @n+1. If nothing found, wrap around and start from
+>> + * cpumask_next_and_wrap - get the next cpu in *@src1p & *@src2p, starting from
+>> + *                        @n+ 1. If nothing found, wrap around and start from
+>>   *                        the beginning
+>> - * @n: the cpu prior to the place to search (i.e. search starts from @n+1)
+>> + * @n: the cpu prior to the place to search (i.e. search starts from @n +1)
+>>   * @src1p: the first cpumask pointer
+>>   * @src2p: the second cpumask pointer
+>>   *
+>> @@ -306,9 +306,9 @@ unsigned int cpumask_next_and_wrap(int n, const struct cpumask *src1p,
+>>  }
+>>  
+>>  /**
+>> - * cpumask_next_wrap - get the next cpu in *src, starting from @n+1. If nothing
+>> + * cpumask_next_wrap - get the next cpu in *@src, starting from @n +1. If nothing
+>>   *                    found, wrap around and start from the beginning
+>> - * @n: the cpu prior to the place to search (i.e. search starts from @n+1)
+>> + * @n: the cpu prior to the place to search (i.e. search starts from @n +1)
+>>   * @src: cpumask pointer
+>>   *
+>>   * Return: next set bit, wrapped if needed, or >= nr_cpu_ids if @src is empty.
 > 
-> Commit-ID:     8a9d677a395703ef9075c91dd04066be8a553405
-> Gitweb:        https://git.kernel.org/tip/8a9d677a395703ef9075c91dd04066be8a553405
-> Author:        Ryo Takakura <ryotkkr98@gmail.com>
-> AuthorDate:    Sat, 18 Jan 2025 14:49:00 +09:00
-> Committer:     Boqun Feng <boqun.feng@gmail.com>
-> CommitterDate: Sun, 23 Feb 2025 18:24:46 -08:00
+> How did you find these ? I only looked for build warnings / errors earlier (with
+> make htmldocs).   Anything else I should be doing to find these issues ?
+
+Well, you need to see the rendered html pages in your browser. :-)
+
+Or, look into the rst output from
+   "scripts/kernel-doc -rst <file with kernel-doc comments>",
+and see if it makes sense as reStructuredText.
+
+It seems to me there are very few people actually do it ...
+
+But I fat-fingered in the above diff.
+
+>> @@ -285,10 +285,10 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
+>>  }
+>>  
+>>  /**
+>> - * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
+>> - *                        @n+1. If nothing found, wrap around and start from
+>> + * cpumask_next_and_wrap - get the next cpu in *@src1p & *@src2p, starting from
+>> + *                        @n+ 1. If nothing found, wrap around and start from
+        Obviously, should be  @n +1.
+
+>>   *                        the beginning
+
 > 
-> lockdep: Fix wait context check on softirq for PREEMPT_RT
-> 
-> Since commit 0c1d7a2c2d32 ("lockdep: Remove softirq accounting on
-> PREEMPT_RT."), the wait context test for mutex usage within
-> "in softirq context" fails as it references @softirq_context.
-> 
-> [    0.184549]   | wait context tests |
-> [    0.184549]   --------------------------------------------------------------------------
-> [    0.184549]                                  | rcu  | raw  | spin |mutex |
-> [    0.184549]   --------------------------------------------------------------------------
-> [    0.184550]                in hardirq context:  ok  |  ok  |  ok  |  ok  |
-> [    0.185083] in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
-> [    0.185606]                in softirq context:  ok  |  ok  |  ok  |FAILED|
-> 
-> As a fix, add lockdep map for BH disabled section. This fixes the
-> issue by letting us catch cases when local_bh_disable() gets called
-> with preemption disabled where local_lock doesn't get acquired.
-> In the case of "in softirq context" selftest, local_bh_disable() was
-> being called with preemption disable as it's early in the boot.
-> 
-> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Link: https://lore.kernel.org/r/20250118054900.18639-1-ryotkkr98@gmail.com
+> Thanks for your help Akira.
+>
 
-This commit is causing:
+You are welcome.
 
-[    7.184373] NET: Registered PF_INET6 protocol family
-[    7.196129] =============================
-[    7.196129] [ BUG: Invalid wait context ]
-[    7.196129] 6.14.0-rc5-00547-g67de62470d82-dirty #629 Not tainted
-[    7.196129] -----------------------------
-[    7.196129] swapper/0/1 is trying to lock:
-[    7.196129] ffffffff83312108 (pcpu_alloc_mutex){+.+.}-{4:4}, at: pcpu_alloc_noprof+0x818/0xc20
-[    7.196129] other info that might help us debug this:
-[    7.196129] context-{5:5}
-[    7.238009] ata7.00: ATA-8: ST91000640NS, SN03, max UDMA/133
-[    7.196129] 3 locks held by swapper/0/1:
-[    7.196129]  #0: ffffffff834414d0 (pernet_ops_rwsem){+.+.}-{4:4}, at: register_netdevice_notifier+0x1a/0x120
-[    7.196129]  #1: ffffffff83442988 (rtnl_mutex){+.+.}-{4:4}, at: register_netdevice_notifier+0x1f/0x120
-[    7.196129]  #2: ffffffff8324c740 (local_bh){.+.+}-{1:3}, at: dev_mc_add+0x39/0xb0
-[    7.196129] stack backtrace:
-[    7.196129] CPU: 31 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc5-00547-g67de62470d82-dirty #629
-[    7.196129] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
-[    7.196129] Call Trace:
-[    7.196129]  <TASK>
-[    7.196129]  dump_stack_lvl+0x57/0x80
-[    7.196129]  __lock_acquire+0xd72/0x17d0
-[    7.196129]  ? ret_from_fork_asm+0x1a/0x30
-[    7.196129]  lock_acquire+0xcd/0x2f0
-[    7.196129]  ? pcpu_alloc_noprof+0x818/0xc20
-[    7.196129]  __mutex_lock+0xa4/0x820
-[    7.196129]  ? pcpu_alloc_noprof+0x818/0xc20
-[    7.196129]  ? pcpu_alloc_noprof+0x818/0xc20
-[    7.196129]  ? lock_acquire+0xcd/0x2f0
-[    7.239989]  ? pcpu_alloc_noprof+0x818/0xc20
-[    7.239990]  pcpu_alloc_noprof+0x818/0xc20
-[    7.239993]  ? lockdep_hardirqs_on+0x74/0x110
-[    7.239996]  ? neigh_parms_alloc+0xed/0x160
-[    7.240001]  ? neigh_parms_alloc+0xed/0x160
-[    7.240005]  ipv6_add_dev+0x154/0x520
-[    7.240005]  addrconf_notify+0x2de/0x8b0
-[    7.240005]  ? register_netdevice_notifier+0x1f/0x120
-[    7.240005]  ? lock_acquire+0xdd/0x2f0
-[    7.240005]  call_netdevice_register_net_notifiers+0x5b/0x100
-[    7.240005]  register_netdevice_notifier+0x87/0x120
-[    7.240005]  addrconf_init+0xa5/0x150
-[    7.240005]  inet6_init+0x1f3/0x3b0
-[    7.240005]  ? __pfx_inet6_init+0x10/0x10
-[    7.240005]  do_one_initcall+0x53/0x2b0
-[    7.240005]  ? rcu_is_watching+0xd/0x40
-[    7.240005]  kernel_init_freeable+0x23f/0x280
-[    7.240005]  ? __pfx_kernel_init+0x10/0x10
-[    7.240005]  kernel_init+0x16/0x130
-[    7.240005]  ret_from_fork+0x2d/0x50
-[    7.240005]  ? __pfx_kernel_init+0x10/0x10
-[    7.240005]  ret_from_fork_asm+0x1a/0x30
-[    7.240005]  </TASK>
-
-And some other weirdness for bpetkov:
-
-  https://lkml.kernel.org/r/20250306122413.GBZ8mT7Z61Tmgnh5Y9@fat_crate.local
-
-
-I suspect you missed a release somewhere.
