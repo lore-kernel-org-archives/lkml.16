@@ -1,322 +1,199 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1545028E8;
-	Fri,  7 Mar 2025 08:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E14D1ACED9
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741335537; cv=none; b=LTGle40JVL7RHMPFTuvOHMyUc06XnHrArP4uWYUojAfU/QMfpdxLYm5+00oQYHDnVq/zRJk/HdAekiVacnWw6smmi59LwNxgNBpDtJGGyDUt/G42/W8zBu6QCp5xtJzvvU7yeLi7AEY6Yg6MkWRT3omObARYbpWZKwHnYDHGnhk=
+	t=1741335539; cv=none; b=Qkq3EbNoDGwT8s6LsFKoB/mZ0MWB7wcn4khwklVH+iVG4Vu1KF7Nsuwdk8qyYqsFbQhcjCAL9jUTsLCav8pNFCTcEwZRebUOjtD/VAHcDqqDhyNFCxjJwFiqD6RZ9IhwGJuRlJXknoHQScA/5Y5ttwmp4ozXcwSYFQW+GQf4kkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741335537; c=relaxed/simple;
-	bh=EQu91PFSTOJkCVily/hsBtf/K0QHqZLxoHM4zw3Xtcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMA32uhd/+kzrx55LObaRUVY/GW5H7LdAR1duh6h+5lz1mcoXIM6aTvYmqhBYmnGio0hEcYBfSEe9s1SYLUY2BcI493CRsysYfTVKEE7gU7Rd3hcxY3G4oXkwF7TpERwtHSuYUI4Zd6MwmGoKtn9aWE+OpYUR/0lXVPifqA7aeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hcwRSY0h; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1741335539; c=relaxed/simple;
+	bh=nkNGMzzXdKLEMBuLY8GWMsqHKcKWqKD7ifdwtaZlYHw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QWlOSNyzrPb/BYQV2a3bjcA6+tY07+j0Qw3CbRDIQm0iDrORjsTqpqlJhpnctpZfog5WAi1SGq+P/jUqnHb8H2tgCrRDnAmt8wBE7SGvCUVEFxB6vzMmHENoZJW9UiOfCbR9SbhfJ9gXCuUYKlR+FItNPNNO7Q9L/HpvKtV+lTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lTqn8ejM; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hcwRSY0h"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5273kUxb018167;
-	Fri, 7 Mar 2025 08:13:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=wWX4iOtIn++CL1/dN1ikn1W0GKoVqF
-	nMSuZKWBu6Yjk=; b=hcwRSY0hxyfTGhNQOYV1ZDa7K3SCyYbPuY6efo/aUKeu0t
-	cab6yklBTMOM267mNjctDGDERO5rj8Em34Isq/GEVeWL9u4+NIDIaY51XA0KExSk
-	QI92yPWEtC7wAAEEfNwi71UsluCvcPMdIf0BvUenoyKXKTtFxBno7y/K6IdgUF4d
-	QGq7fxgkvtaBiCyYs3aeHRnyzr12YJr0hMdHRiiBp6ePxvGOa/ndNcK3wV/W3XJ7
-	I1ZueadOZn2Y7EbbmisZfruu5ZjDZyfhDqYS14lFg0G7DjTWQBCPgtz6wWnm6I/O
-	AFe1Z/Jzm0G3WC8Rw/Snylns/oXmyYD5s+FUqv1g==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457s6a11xe-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lTqn8ejM"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52785Lnn005975;
+	Fri, 7 Mar 2025 08:18:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=HUlocG
+	2RnMX3+bo8rgZyFOe49j+CvldyoNogv34PoiA=; b=lTqn8ejMsy7P94bTmHyxXj
+	e1I8DRmSmNAQUno5Qj6gA7VrKgMCXorx31kXfAYQDG70jbWTeaFJu7na+GhK2Jui
+	QUQFnJXOvxQfG+5B+AtY2oUUkxvLmS1ydCGJA9f0qeGV5NqgywHwF7Bb3K1OZMYU
+	f+9+gz/RNojIm7bI2rug/CNs+VNFiLrBqKReavO0Dk1kuHP6qx0vHOHOK4oNiLsh
+	K0RnoOMh0q42MMCWZKOjo3yVLMKuFiaZHgenuzCBg+BvzC2pXTOxRU7tXJsMkhva
+	mZrrimI3zmAiMTEGzRnkVn8ZpWdEZv6ix11/h1THsYpt3BY42JBr9ACTW1x62tcQ
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457br2wab9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 08:13:33 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5278DW6N021407;
-	Fri, 7 Mar 2025 08:13:32 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457s6a11xb-1
+	Fri, 07 Mar 2025 08:18:45 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5275cKcD013724;
+	Fri, 7 Mar 2025 08:18:44 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2m5jq4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 08:13:32 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5275Qufp020845;
-	Fri, 7 Mar 2025 08:13:31 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djnwn59-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 08:13:31 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5278DTt034079250
+	Fri, 07 Mar 2025 08:18:44 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5278Ih9a31916604
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Mar 2025 08:13:29 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 174902004B;
-	Fri,  7 Mar 2025 08:13:29 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DE58C20040;
-	Fri,  7 Mar 2025 08:13:24 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.215.108])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  7 Mar 2025 08:13:24 +0000 (GMT)
-Date: Fri, 7 Mar 2025 13:43:17 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>,
-        linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>,
-        linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
-Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if
- journal is destroying
-Message-ID: <Z8qqna0BEDT5ZD82@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <cover.1741270780.git.ojaswin@linux.ibm.com>
- <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
- <5b3864c3-bcfd-4f45-b427-224d32aca478@huaweicloud.com>
- <Z8qTciy49b7LSHqr@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+	Fri, 7 Mar 2025 08:18:43 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F24E58054;
+	Fri,  7 Mar 2025 08:18:43 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BEA6F5805F;
+	Fri,  7 Mar 2025 08:18:41 +0000 (GMT)
+Received: from [9.61.252.177] (unknown [9.61.252.177])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Mar 2025 08:18:41 +0000 (GMT)
+Message-ID: <b52834e9-6611-46a0-b036-42f6e9fa202c@linux.ibm.com>
+Date: Fri, 7 Mar 2025 13:48:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8qTciy49b7LSHqr@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: PowerPC: sleftests/powerpc fails to compile linux-next
+Content-Language: en-GB
+To: Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <3267ea6e-5a1a-4752-96ef-8351c912d386@linux.ibm.com>
+ <7d61512d-6dd1-4c09-b408-67bc16340237@linux.ibm.com>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <7d61512d-6dd1-4c09-b408-67bc16340237@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sWclsEj-3K1brhaAJQvK2jO5vCDgp3Du
-X-Proofpoint-ORIG-GUID: Z1rgOkNFOI0NQ87xIczrhCSVFodudDaL
+X-Proofpoint-GUID: h7aksYgr8NicgkMHYgcbHg6AcDX-CQFr
+X-Proofpoint-ORIG-GUID: h7aksYgr8NicgkMHYgcbHg6AcDX-CQFr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-07_03,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 adultscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503070057
-
-On Fri, Mar 07, 2025 at 12:04:26PM +0530, Ojaswin Mujoo wrote:
-> On Fri, Mar 07, 2025 at 10:49:28AM +0800, Zhang Yi wrote:
-> > On 2025/3/6 22:28, Ojaswin Mujoo wrote:
-> > > Presently we always BUG_ON if trying to start a transaction on a journal marked
-> > > with JBD2_UNMOUNT, since this should never happen. However, while ltp running
-> > > stress tests, it was observed that in case of some error handling paths, it is
-> > > possible for update_super_work to start a transaction after the journal is
-> > > destroyed eg:
-> > > 
-> > > (umount)
-> > > ext4_kill_sb
-> > >   kill_block_super
-> > >     generic_shutdown_super
-> > >       sync_filesystem /* commits all txns */
-> > >       evict_inodes
-> > >         /* might start a new txn */
-> > >       ext4_put_super
-> > > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
-> > >         jbd2_journal_destroy
-> > >           journal_kill_thread
-> > >             journal->j_flags |= JBD2_UNMOUNT;
-> > >           jbd2_journal_commit_transaction
-> > >             jbd2_journal_get_descriptor_buffer
-> > >               jbd2_journal_bmap
-> > >                 ext4_journal_bmap
-> > >                   ext4_map_blocks
-> > >                     ...
-> > >                     ext4_inode_error
-> > >                       ext4_handle_error
-> > >                         schedule_work(&sbi->s_sb_upd_work)
-> > > 
-> > >                                                /* work queue kicks in */
-> > >                                                update_super_work
-> > >                                                  jbd2_journal_start
-> > >                                                    start_this_handle
-> > >                                                      BUG_ON(journal->j_flags &
-> > >                                                             JBD2_UNMOUNT)
-> > > 
-> > > Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
-> > > destroying only do a journaled (and deferred) update of sb if this flag is not
-> > > set. Otherwise, just fallback to an un-journaled commit.
-> > > 
-> > > We set sbi->s_journal_destroying = true only after all the FS updates are done
-> > > during ext4_put_super() (except a running transaction that will get commited
-> > > during jbd2_journal_destroy()). After this point, it is safe to commit the sb
-> > > outside the journal as it won't race with a journaled update (refer
-> > > 2d01ddc86606).
-> > > 
-> > > Also, we don't need a similar check in ext4_grp_locked_error since it is only
-> > > called from mballoc and AFAICT it would be always valid to schedule work here.
-> > > 
-> > > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
-> > > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
-> > > Suggested-by: Jan Kara <jack@suse.cz>
-> > > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-> > > ---
-> > >  fs/ext4/ext4.h      | 2 ++
-> > >  fs/ext4/ext4_jbd2.h | 8 ++++++++
-> > >  fs/ext4/super.c     | 4 +++-
-> > >  3 files changed, 13 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> > > index 2b7d781bfcad..d48e93bd5690 100644
-> > > --- a/fs/ext4/ext4.h
-> > > +++ b/fs/ext4/ext4.h
-> > > @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
-> > >  	 */
-> > >  	struct work_struct s_sb_upd_work;
-> > >  
-> > > +	bool s_journal_destorying;
-> > > +
-> > >  	/* Atomic write unit values in bytes */
-> > >  	unsigned int s_awu_min;
-> > >  	unsigned int s_awu_max;
-> > > diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> > > index 9b3c9df02a39..6bd3ca84410d 100644
-> > > --- a/fs/ext4/ext4_jbd2.h
-> > > +++ b/fs/ext4/ext4_jbd2.h
-> > > @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
-> > >  {
-> > >  	int err = 0;
-> > >  
-> > > +	/*
-> > > +	 * At this point all pending FS updates should be done except a possible
-> > > +	 * running transaction (which will commit in jbd2_journal_destroy). It
-> > > +	 * is now safe for any new errors to directly commit superblock rather
-> > > +	 * than going via journal.
-> > > +	 */
-> > > +	sbi->s_journal_destorying = true;
-> > > +
-> > 
-> > Hi, Ojaswin!
-> > 
-> > I'm afraid you still need to flush the superblock update work here,
-> > otherwise I guess the race condition you mentioned in v1 could still
-> > occur.
-> > 
-> >  ext4_put_super()
-> >   flush_work(&sbi->s_sb_upd_work)
-> > 
-> >                     **kjournald2**
-> >                     jbd2_journal_commit_transaction()
-> >                     ...
-> >                     ext4_inode_error()
-> >                       /* JBD2_UNMOUNT not set */
-> >                       schedule_work(s_sb_upd_work)
-> > 
-> >                                   **workqueue**
-> >                                    update_super_work
-> >                                    /* s_journal_destorying is not set */
-> >                             	   if (journal && !s_journal_destorying)
-> > 
-> >   ext4_journal_destroy()
-> >    /* set s_journal_destorying */
-> >    sbi->s_journal_destorying = true;
-> >    jbd2_journal_destroy()
-> >     journal->j_flags |= JBD2_UNMOUNT;
-> > 
-> >                                        jbd2_journal_start()
-> >                                         start_this_handle()
-> >                                           BUG_ON(JBD2_UNMOUNT)
-> > 
-> > Thanks,
-> > Yi.
-> Hi Yi,
-> 
-> Yes you are right, somehow missed this edge case :(
-> 
-> Alright then, we have to move out sbi->s_journal_destroying outside the
-> helper. Just wondering if I should still let it be in
-> ext4_journal_destroy and just add an extra s_journal_destroying = false
-> before schedule_work(s_sb_upd_work), because it makes sense.
-> 
-> Okay let me give it some thought but thanks for pointing this out!
-> 
-> Regards,
-> ojaswin
-
-Okay so thinking about it a bit more, I see you also suggested to flush
-the work after marking sbi->s_journal_destroying. But will that solve
-it?
-
-  ext4_put_super()
-   flush_work(&sbi->s_sb_upd_work)
- 
-                     **kjournald2**
-                     jbd2_journal_commit_transaction()
-                     ...
-                     ext4_inode_error()
-                       /* JBD2_UNMOUNT not set */
-                       schedule_work(s_sb_upd_work)
- 
-                                    **workqueue**
-                                    update_super_work
-                                    /* s_journal_destorying is not set */
-                             	      if (journal && !s_journal_destorying)
- 
-   ext4_journal_destroy()
-    /* set s_journal_destorying */
-    sbi->s_journal_destorying = true;
-    flush_work(&sbi->s_sb_upd_work)
-                                      schedule_work()
-    jbd2_journal_destroy()
-     journal->j_flags |= JBD2_UNMOUNT;
- 
-                                        jbd2_journal_start()
-                                         start_this_handle()
-                                           BUG_ON(JBD2_UNMOUNT)
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ spamscore=0 priorityscore=1501 bulkscore=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 suspectscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503070057
 
 
-Seems like these edge cases keep sprouting up :)
+On 07/03/25 12:32 pm, Madhavan Srinivasan wrote:
+>
+> On 3/6/25 10:30 PM, Venkat Rao Bagalkote wrote:
+>> Greetings!!
+>>
+>> I see selftests/powerpc fails to compile on next-20250306.
+>>
+>> This error has been introduced in next-20250218. Make is successful on next-20250217.
+>>
+>>
+>> Attached is the .config used.
+>>
+>>
+>> If you fix this, please add below tag.
+>>
+>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>
+>>
+>> Errors:
+>>
+>> make -C powerpc/
+>> make: Entering directory '/root/venkat/linux-next/tools/testing/selftests/powerpc'
+>> Makefile:60: warning: overriding recipe for target 'emit_tests'
+>> ../lib.mk:182: warning: ignoring old recipe for target 'emit_tests'
+>> BUILD_TARGET=/root/venkat/linux-next/tools/testing/selftests/powerpc/alignment; mkdir -p $BUILD_TARGET; make OUTPUT=$BUILD_TARGET -k -C alignment all
+>> make[1]: Nothing to be done for 'all'.
+>> BUILD_TARGET=/root/venkat/linux-next/tools/testing/selftests/powerpc/benchmarks; mkdir -p $BUILD_TARGET; make OUTPUT=$BUILD_TARGET -k -C benchmarks all
+>> make[1]: Nothing to be done for 'all'.
+>> BUILD_TARGET=/root/venkat/linux-next/tools/testing/selftests/powerpc/cache_shape; mkdir -p $BUILD_TARGET; make OUTPUT=$BUILD_TARGET -k -C cache_shape all
+>> make[1]: Nothing to be done for 'all'.
+>> BUILD_TARGET=/root/venkat/linux-next/tools/testing/selftests/powerpc/copyloops; mkdir -p $BUILD_TARGET; make OUTPUT=$BUILD_TARGET -k -C copyloops all
+>> make[1]: Nothing to be done for 'all'.
+>> BUILD_TARGET=/root/venkat/linux-next/tools/testing/selftests/powerpc/dexcr; mkdir -p $BUILD_TARGET; make OUTPUT=$BUILD_TARGET -k -C dexcr all
+>> make[1]: Nothing to be done for 'all'.
+>> BUILD_TARGET=/root/venkat/linux-next/tools/testing/selftests/powerpc/dscr; mkdir -p $BUILD_TARGET; make OUTPUT=$BUILD_TARGET -k -C dscr all
+>> make[1]: Nothing to be done for 'all'.
+>> BUILD_TARGET=/root/venkat/linux-next/tools/testing/selftests/powerpc/mm; mkdir -p $BUILD_TARGET; make OUTPUT=$BUILD_TARGET -k -C mm all
+>>    CC       pkey_exec_prot
+>> In file included from pkey_exec_prot.c:18:
+>> /root/venkat/linux-next/tools/testing/selftests/powerpc/include/pkeys.h: In function ‘pkeys_unsupported’:
+>> /root/venkat/linux-next/tools/testing/selftests/powerpc/include/pkeys.h:96:34: error: ‘PKEY_UNRESTRICTED’ undeclared (first use in this function)
+>>     96 |         pkey = sys_pkey_alloc(0, PKEY_UNRESTRICTED);
+>>        |                                  ^~~~~~~~~~~~~~~~~
+> Commit 6d61527d931ba ('mm/pkey: Add PKEY_UNRESTRICTED macro') added a macro PKEY_UNRESTRICTED to handle implicit literal
+> value of 0x0 (which is "unrestricted"). belore patch add the same to powerpc/mm selftest.
+>
+> Can you try with this patch to check whether it fixes the build break for you
+>
+>
+> diff --git a/tools/testing/selftests/powerpc/include/pkeys.h b/tools/testing/selftests/powerpc/include/pkeys.h
+> index c6d4063dd4f6..d6deb6ffa1b9 100644
+> --- a/tools/testing/selftests/powerpc/include/pkeys.h
+> +++ b/tools/testing/selftests/powerpc/include/pkeys.h
+> @@ -24,6 +24,9 @@
+>   #undef PKEY_DISABLE_EXECUTE
+>   #define PKEY_DISABLE_EXECUTE   0x4
+>   
+> +#undef PKEY_UNRESTRICTED
+> +#define PKEY_UNRESTRICTED      0x0
+> +
+>   /* Older versions of libc do not define this */
+>   #ifndef SEGV_PKUERR
+>   #define SEGV_PKUERR    4
+>
+>
+> Maddy
 
-As for the fix, how about we do something like this:
+/Responding to all/
 
-  ext4_put_super()
+/
+/
 
-   flush_work(&sbi->s_sb_upd_work)
-   destroy_workqueue(sbi->rsv_conversion_wq);
+Tested with the above patch and it fixes the issue.
 
-   ext4_journal_destroy()
-    /* set s_journal_destorying */
-    sbi->s_journal_destorying = true;
+Please add below tag.
 
-   /* trigger a commit and wait for it to complete */
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
-    flush_work(&sbi->s_sb_upd_work)
-
-    jbd2_journal_destroy()
-     journal->j_flags |= JBD2_UNMOUNT;
- 
-                                        jbd2_journal_start()
-                                         start_this_handle()
-                                           BUG_ON(JBD2_UNMOUNT)
-
-Still giving this codepath some thought but seems like this might just
-be enough to fix the race. Thoughts on this?
 
 Regards,
-ojaswin
 
-> > 
-> > >  	err = jbd2_journal_destroy(journal);
-> > >  	sbi->s_journal = NULL;
-> > >  
-> > > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> > > index 8ad664d47806..31552cf0519a 100644
-> > > --- a/fs/ext4/super.c
-> > > +++ b/fs/ext4/super.c
-> > > @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
-> > >  		 * constraints, it may not be safe to do it right here so we
-> > >  		 * defer superblock flushing to a workqueue.
-> > >  		 */
-> > > -		if (continue_fs && journal)
-> > > +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
-> > >  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
-> > >  		else
-> > >  			ext4_commit_super(sb);
-> > > @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
-> > >  	spin_lock_init(&sbi->s_error_lock);
-> > >  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
-> > >  
-> > > +	sbi->s_journal_destorying = false;
-> > > +
-> > >  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
-> > >  	if (err)
-> > >  		goto failed_mount3;
-> > 
+Venkat.
+
+>
+>
+>> /root/venkat/linux-next/tools/testing/selftests/powerpc/include/pkeys.h:96:34: note: each undeclared identifier is reported only once for each function it appears in
+>> pkey_exec_prot.c: In function ‘segv_handler’:
+>> pkey_exec_prot.c:75:53: error: ‘PKEY_UNRESTRICTED’ undeclared (first use in this function)
+>>     75 |                         pkey_set_rights(fault_pkey, PKEY_UNRESTRICTED);
+>>        | ^~~~~~~~~~~~~~~~~
+>> make[1]: *** [../../lib.mk:222: /root/venkat/linux-next/tools/testing/selftests/powerpc/mm/pkey_exec_prot] Error 1
+>>    CC       pkey_siginfo
+>> In file included from pkey_siginfo.c:22:
+>> /root/venkat/linux-next/tools/testing/selftests/powerpc/include/pkeys.h: In function ‘pkeys_unsupported’:
+>> /root/venkat/linux-next/tools/testing/selftests/powerpc/include/pkeys.h:96:34: error: ‘PKEY_UNRESTRICTED’ undeclared (first use in this function)
+>>     96 |         pkey = sys_pkey_alloc(0, PKEY_UNRESTRICTED);
+>>        |                                  ^~~~~~~~~~~~~~~~~
+>> /root/venkat/linux-next/tools/testing/selftests/powerpc/include/pkeys.h:96:34: note: each undeclared identifier is reported only once for each function it appears in
+>> pkey_siginfo.c: In function ‘segv_handler’:
+>> pkey_siginfo.c:86:39: error: ‘PKEY_UNRESTRICTED’ undeclared (first use in this function)
+>>     86 |                 pkey_set_rights(pkey, PKEY_UNRESTRICTED);
+>>        |                                       ^~~~~~~~~~~~~~~~~
+>> make[1]: *** [../../lib.mk:222: /root/venkat/linux-next/tools/testing/selftests/powerpc/mm/pkey_siginfo] Error 1
+>> make[1]: Target 'all' not remade because of errors.
+>> make: *** [Makefile:40: mm] Error 2
+>> make: Leaving directory '/root/venkat/linux-next/tools/testing/selftests/powerpc'
+>>
+>>
+>> Regards,
+>>
+>> Venkat.
