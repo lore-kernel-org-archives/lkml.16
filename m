@@ -1,113 +1,120 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B8221ADC1;
-	Fri,  7 Mar 2025 13:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5E821ABA6;
+	Fri,  7 Mar 2025 13:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741355547; cv=none; b=A1upV9ZYEF3sz9bXaIHtkfjrL9rFtPQPbPbn3OE++gCxXe37XpeiEAwTuVBGBQBd9/qrciFVTvtPUZ1Qi8P3o43olS66Sl/D+F6xM6Y24qXGlfuyIvfDHmODeGbWe+b3sVSgWEPWLQwqCHRjPwE8hKcNGD6suKxxotu1n6jiSwY=
+	t=1741355579; cv=none; b=kIaNtR8rw2VEFW9XGnyDr4Y9G2MYJsH5m5+TBKGdfWfSbp/rO5EioRRfUXS7+t9ByfRShhDLap3xG6D0NYICDl0c+obSTH3hVYZZvLDplbLg8plsNTDCEJdoRU2yRJLaQyKwam17Bao9uUdGINJGXYGEECGhzzlVisB8SaLiNcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741355547; c=relaxed/simple;
-	bh=29lY7GfFGvGCLaxOLAFeaKEnprybrIf65ur29KZxkw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gkVtjU5sZHEpWED1WsP36pvvr9PglpI4tIqY68qaVSTfubH8w9LU3EO6l/7IEARZpdQcDCd6XqB2zP6iLOxIfLn7OHeT6Sm51SCdW75o2gptQ58e/LpP7WTZ8Hq8x261iAqIG628yc6K+B7UU4qlJ7M+cqtt3CLIImrHdMgKf/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=e8cnS3UN; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1741355579; c=relaxed/simple;
+	bh=O7Wl/QJmeufCW8/KBuYCP7hJKBM5Bs/OWab/pCxh8is=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MoIe392EX8MjGfBpMdrEgpmaySLfnlL6H79chOsLxpEkn94lYG9eS/LeP/o2FG3B6p8tZCubTyHDqSBYPms3LRfX67fRHAdiLJJ80N/bCmstPtSYeM1muGqOUgmQXJ378Z0pjHFKSTPCsFJPFepdEPAtx067//WtIGalph/kTk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=V4QIcte+; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="e8cnS3UN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Jkx3f0giLdjTBdslQHfz5NRis+vzSJwwRoYIVdv9lsw=; b=e8cnS3UN7dYibdwZ10jktHczPl
-	15tNwuQTBmqZxPOFXUGY3q8Duy5ddpk38Qib02oSsht9MK2oX5AptZAgwEA9B1jg+uY+ba3jmmfRV
-	Iwy2s/rrSlUreWt0RCJ3OIDtvrPV2LbkSoO8BkpiBBk6Qx5P8pFRE/JF7Ku1h9vodFnI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tqY7Z-0039Yt-LO; Fri, 07 Mar 2025 14:52:13 +0100
-Date: Fri, 7 Mar 2025 14:52:13 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Wadim Egorov <w.egorov@phytec.de>, netdev@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 1/3] net: stmmac: dwmac-rk: Use DELAY_ENABLE macro for
- RK3328
-Message-ID: <f5f397bb-476a-429a-9d1e-1c1a9beb8f89@lunn.ch>
-References: <20250306203858.1677595-1-jonas@kwiboo.se>
- <20250306203858.1677595-2-jonas@kwiboo.se>
- <d6b15dc2-f6b2-4703-a4da-07618eaed4db@lunn.ch>
- <624f2474-9a39-46a3-a6e5-f9966471bf3d@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="V4QIcte+"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 0D15E1F91C;
+	Fri,  7 Mar 2025 14:52:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1741355568;
+	bh=SYSgGzv3Y/Vggc6YYeKPxI6ae5Adem+OvWetoQaX484=; h=From:To:Subject;
+	b=V4QIcte+z9iErOEUsA30NKkv40xe+yLdKiwHbHmuKhVhPHKJbl8Ff636iwhMGpIBI
+	 XdgpkdRpaA8hV0NOeSd1RY2Oa4Q4fIt5eTL/q4Z9TUaE7GwSKpeOAl32lb9FyHNpQb
+	 oZmI1Od8/eqDH9M/wRxIdR80fB0/g3ducwdUsmR9tXtFnRfBpbutkb1V9qRbBgqWsJ
+	 cLptVcE0WsUt/vl4E7f8QqHLEaHAqUVhVLajqAxQruj2mAgl+oyh435NbraU50I4/W
+	 3DGvNat+8hnHmJwsGma2xoLYA8TtVB55ymxMBhytDTvr6/I/TTfA37D4Gbq6U7bNbK
+	 VQBvYUn/V4zIw==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	patches@opensource.cirrus.com
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] ASoC: wm8904: Add DMIC and DRC support
+Date: Fri,  7 Mar 2025 14:52:39 +0100
+Message-Id: <20250307135244.100443-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <624f2474-9a39-46a3-a6e5-f9966471bf3d@kwiboo.se>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 07, 2025 at 12:28:42AM +0100, Jonas Karlman wrote:
-> Hi Andrew,
-> 
-> On 2025-03-06 23:25, Andrew Lunn wrote:
-> > On Thu, Mar 06, 2025 at 08:38:52PM +0000, Jonas Karlman wrote:
-> >> Support for Rockchip RK3328 GMAC and addition of the DELAY_ENABLE macro
-> >> was merged in the same merge window. This resulted in RK3328 not being
-> >> converted to use the new DELAY_ENABLE macro.
-> >>
-> >> Change to use the DELAY_ENABLE macro to help disable MAC delay when
-> >> RGMII_ID/RXID/TXID is used.
-> >>
-> >> Fixes: eaf70ad14cbb ("net: stmmac: dwmac-rk: Add handling for RGMII_ID/RXID/TXID")
-> > 
-> > Please add a description of the broken behaviour. How would i know i
-> > need this fix? What would i see?
-> 
-> Based on my layman testing I have not seen any real broken behaviour
-> with current enablement of a zero rx/tx MAC delay for RGMII_ID/RXID/TXID.
-> 
-> The driver ops is called with a rx/tx_delay=0 for RGMII_ID/RXID/TXID
-> modes, what the MAC does with enable=true and rx/tx_delay=0 is unclear
-> to me.
-> 
-> > 
-> > We also need to be careful with backwards compatibility. Is there the
-> > potential for double bugs cancelling each other out? A board which has
-> > the wrong phy-mode in DT, but because of this bug, the wrong register
-> > is written and it actually works because of reset defaults?
-> 
-> To my knowledge this should have very limited effect, however I am no
-> network expert and after doing very basic testing on several different
-> rk3328/rk3566/rk3568/rk3588 I could not see any real affect with/without
-> this change.
-> 
-> The use of Fixes-tag was more to have a reference to the commit that
-> first should have used the DELAY_ENABLE macro.
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+This patch series adds DMIC and DRC support to the WM8904 driver, a new
+of_ helper is added to simplify the driver code.
 
-  It must either fix a real bug that bothers people or just add a device ID.
+DRC functionality is added in the same patch series to provide the
+necessary dynamic range control to make DMIC support useful.
 
-It does not sound like this meets the stable requirements. Plus there
-is the potential for breakage. So i suggest you drop the Fixes: tag
-and we merge this via net-next.
+The WM8904 supports digital microphones on two of its inputs:
+IN1L/DMICDAT1 and IN1R/DMICDAT2. These two inputs can either be
+connected to an ADC or to the DMIC system. There is an ADC for each
+line, and only one DMIC block. This DMIC block is either connected to
+DMICDAT1 or to DMICDAT2. One DMIC data line supports two digital
+microphones via time multiplexing.
 
-Please take a look at:
+The pin's functionality is decided during hardware design (IN1L vs
+DMICDAT1 and IN1R vs DMICDAT2). This is reflected in the Device Tree.
 
-https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+If one line is analog and one is DMIC, we need to be able to switch
+between ADC and DMIC at runtime. The DMIC source is known from the
+Device Tree. If both are DMIC inputs, we need to be able to switch the
+DMIC source. There is no need to switch between ADC and DMIC at runtime.
 
-    Andrew
+Therefore, kcontrols are dynamically added by the driver depending on
+its Device Tree configuration.
 
----
-pw-bot: cr
+This is a heavy rework of a previous patch series provided by Alifer
+Moraes and Pierluigi Passaro,
+https://lore.kernel.org/lkml/20220307141041.27538-1-alifer.m@variscite.com.
+
+v3:
+ * Fixed DT binding to conform to the DT schema properly.
+ * Renamed "wlf,retune-mobile-cfg-rates" to "wlf,retune-mobile-cfg-hz", it is now a standard unit suffix property.
+
+v2: https://lore.kernel.org/all/20250224155500.52462-1-francesco@dolcini.it/
+ * Fixed a bug in wm8904_parse_retune_cfg_from_of()
+ * Added full usage example of the three ReTune Mobile config properties in the
+   DT binding.
+ * Improved the DAPM routing:
+   * Only add IN1L/IN1R routes to ADCL/ADCR conditionally depending on which
+     DMIC is in use.
+   * Do not connect PGAs to ADC when they are not needed.
+   * Keep the mux between ADC/DMIC even when two DMICs are used, as the IN1
+     pins share a mux with IN2 and IN3 and the ADC could still be used for
+     them.
+
+v1: https://lore.kernel.org/all/20250206163152.423199-1-francesco@dolcini.it/
+
+Ernest Van Hoecke (5):
+  of: Add of_property_read_u16_index
+  ASoC: wm8904: Don't touch GPIO configs set to 0xFFFF
+  ASoC: dt-bindings: wm8904: Add DMIC, GPIO, MIC and EQ support
+  ASoC: wm8904: get platform data from DT
+  ASoC: wm8904: add DMIC support
+
+ .../devicetree/bindings/sound/wlf,wm8904.yaml | 116 +++++++
+ drivers/of/property.c                         |  33 ++
+ include/linux/of.h                            |   9 +
+ include/sound/wm8904.h                        |   3 +
+ sound/soc/codecs/wm8904.c                     | 317 +++++++++++++++++-
+ 5 files changed, 471 insertions(+), 7 deletions(-)
+
+-- 
+2.39.5
+
