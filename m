@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6080419006F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64750190482;
 	Fri,  7 Mar 2025 04:19:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741321158; cv=none; b=hmlZDQiqJn3F7UnKlz9F855BMBOA72TiijeXoWjll0S8hxNLEp+UmPdzOhDCZvvH9SATRD9twmvhJbD+WS88BKeRes94CLmUeXlJNJzydd8C3ezVugtTEFhaw+LDyd20TQCnfN/2aihn9do9ipciAOR6NbWBFuKjduHVMSRZpIk=
+	t=1741321158; cv=none; b=DsYvKDP+qOA8AaTk4VS4o77IKkQchB93R44sSx9pgZ6ERBAkZ/lpUaeBc1dGMNdeIQxLNW5uh+oqh7qgXhWGzUKTgrIep57q5zyJ5GwrNVB4XpZ5TOuf7jDUJv68yruIEIXAe3UEgV1KZ9+Aj25kEVCcUHp00Uf/SQbJwNhL0wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741321158; c=relaxed/simple;
-	bh=swXPVnzWC/FlvTAyt5YU2bLA06oGPklYrKEuppMNs8o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FL6xDRnwheBZ7mmu9jBB1WuaCNsBCFvNzow/SKL3jInr2iX9KzuWIuRc/5k57o0t+gQ78KhUTjfWiBAhVjZu09ey/v3kD5mHFzyA8avMUzRblhzS1IdhWNH1e7kVSevFCKn6ti1q9kIE4RJuMIL3MYMQdEfEDMOxTYeRFfmpiNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rz5g9Vap; arc=none smtp.client-ip=10.30.226.201
+	bh=HdpOnS7Eic+UbYPCcALNkxTU2FKSqjORHtZap9XlbFA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I8ybzPFbnC58JTcrefAFUpivCKqQI0uSby2/xPa/x1rNvUKwgX4cUkiKTgAbwo2gpXu2Hlft8nAVH4JbniJOWLOlwZ7u1kSff7I7AVDBIfrZO2KTgxCnEPG9qRLhKCCZ1+gjZTiOPjTuXQNSxY+zE6vKGUUs10swhl0u+VHfets=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpGqn/ZZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rz5g9Vap"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2590C4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpGqn/ZZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA624C4CEE2;
 	Fri,  7 Mar 2025 04:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741321158;
-	bh=swXPVnzWC/FlvTAyt5YU2bLA06oGPklYrKEuppMNs8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rz5g9VapbAqgPoWzPySZOL58XXVRoeHavg1WXOye8yXU1N6VuzaO3vXbfB8TaoZbh
-	 6NyLEaX19Ma/qNr3DfUtH41cSs1c+uEGRUqWL4zWaiPPpmefI+5ETXFGyZMQ7NdiL9
-	 rNf6PoOeWb+QmEU8OcAavFkJTbGO2oXe7EyJvon7HE1BSwONh8+3x+6q3VAOaIX7sY
-	 6QMoDoAe+RundJIXlXlECBOfNH+MoC/nTfotQjFf3pTc/ooWoXW8+f4hndvv3QdYih
-	 FdkUtWXLTwoR6k+y6WuDuYwL2nVjhseCB3UHE9fh68xS8Hx8TubzHkfRjPrLIMdB9a
-	 Ij2QFKSBI9aCw==
+	s=k20201202; t=1741321157;
+	bh=HdpOnS7Eic+UbYPCcALNkxTU2FKSqjORHtZap9XlbFA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rpGqn/ZZuVMd8802YF2u3CrReKTKLsliU+NXkgcbV+AGrn8xiN7OEu6SPojhjCHDT
+	 NNmk1S7H8fASwn4j1JJTfp7Ui5a9QnrmQ5b8q8kMRu4iH3QGPcG029YFGHUNi7XfUa
+	 tAO0jX8MF0Loo7tJGsIe+3p8jqwxjs2w+dQ/TFAAJ7ZGWDykFQ/22OBwyDHsEVlw6C
+	 BHjMCZZ44yPux6+9C4h8Q2PkhFxBa38udR+Zxg55a+eQ+b12uUpU0REpzu/SvKDaNw
+	 ufjU9+pXAFLjKMhCo1cH37EFESnTkXvg5YRAD2qClUtuLbaK1I0tFwD2slIidlEW28
+	 OPpMFoctyEMQQ==
 From: Kees Cook <kees@kernel.org>
 To: Justin Stitt <justinstitt@google.com>
 Cc: Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Marco Elver <elver@google.com>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	linux-kbuild@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Hao Luo <haoluo@google.com>,
@@ -51,71 +47,55 @@ Cc: Kees Cook <kees@kernel.org>,
 	Jan Hendrik Farr <kernel@jfarr.cc>,
 	Alexander Lobakin <aleksander.lobakin@intel.com>,
 	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-kbuild@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH 2/3] ubsan/overflow: Enable pattern exclusions
-Date: Thu,  6 Mar 2025 20:19:10 -0800
-Message-Id: <20250307041914.937329-2-kees@kernel.org>
+Subject: [PATCH 0/3] ubsan/overflow: Enable pattern exclusions
+Date: Thu,  6 Mar 2025 20:19:08 -0800
+Message-Id: <20250307040948.work.791-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250307040948.work.791-kees@kernel.org>
-References: <20250307040948.work.791-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2094; i=kees@kernel.org; h=from:subject; bh=swXPVnzWC/FlvTAyt5YU2bLA06oGPklYrKEuppMNs8o=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmnivdFn5JrOxe5UsvST1KT0T7/Z9y/CeZXXiyc2sBj8 qlu7n+tjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgImYiTH899uitEkySfFFhPd5 Twe+z+sZfp7XnD/3eSUL01tGu5u+tgy/mFlqc12+iT/Jfya++uLdam6eJ5l3xSeqvl3FGcJdEHy YFQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1304; i=kees@kernel.org; h=from:subject:message-id; bh=HdpOnS7Eic+UbYPCcALNkxTU2FKSqjORHtZap9XlbFA=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmnivc9WDdJnPdalex1RaudYX/mSYtfr5ZaxpWtqjyt9 5P6wfmiHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNRTWJk2Ls3+nLnp+qNm3pd i7/l+q32Xp9lKsT2w+HqrwYGvp+pKxkZznY7Kx+w8zbRv2vpHFciXPDncomFpWdCpd20INdqyTU cAA==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-To make integer wrap-around mitigation actually useful, the associated
-sanitizers must not instrument cases where the wrap-around is explicitly
-defined (e.g. "-2UL"), being tested for (e.g. "if (a + b < a)"), or
-where it has no impact on code flow (e.g. "while (var--)"). Enable
-pattern exclusions for the integer wrap sanitizers.
+Hi,
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Marco Elver <elver@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: linux-kbuild@vger.kernel.org
-Cc: kasan-dev@googlegroups.com
-Cc: linux-hardening@vger.kernel.org
----
- lib/Kconfig.ubsan      | 1 +
- scripts/Makefile.ubsan | 1 +
- 2 files changed, 2 insertions(+)
+This brings Linux's integer overflow mitigation integration up to the
+current set of features available in Clang for handling things sanely
+(i.e. pattern exclusions). While this isn't over yet, it puts all the
+infrastructure in place to continue keeping up to date with current
+Clang development. The next step is to add support for the coming
+canonical wrapping and non-wrapping types[1].
 
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 63e5622010e0..888c2e72c586 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -120,6 +120,7 @@ config UBSAN_INTEGER_WRAP
- 	bool "Perform checking for integer arithmetic wrap-around"
- 	default UBSAN
- 	depends on !COMPILE_TEST
-+	depends on $(cc-option,-fsanitize-undefined-ignore-overflow-pattern=all)
- 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
- 	depends on $(cc-option,-fsanitize=unsigned-integer-overflow)
- 	depends on $(cc-option,-fsanitize=implicit-signed-integer-truncation)
-diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-index 4fad9afed24c..233379c193a7 100644
---- a/scripts/Makefile.ubsan
-+++ b/scripts/Makefile.ubsan
-@@ -15,6 +15,7 @@ ubsan-cflags-$(CONFIG_UBSAN_TRAP)		+= $(call cc-option,-fsanitize-trap=undefined
- export CFLAGS_UBSAN := $(ubsan-cflags-y)
- 
- ubsan-integer-wrap-cflags-$(CONFIG_UBSAN_INTEGER_WRAP)     +=	\
-+	-fsanitize-undefined-ignore-overflow-pattern=all	\
- 	-fsanitize=signed-integer-overflow			\
- 	-fsanitize=unsigned-integer-overflow			\
- 	-fsanitize=implicit-signed-integer-truncation		\
+-Kees
+
+[1] https://discourse.llvm.org/t/rfc-clang-canonical-wrapping-and-non-wrapping-types/84356
+
+Kees Cook (3):
+  ubsan/overflow: Rework integer overflow sanitizer option to turn on
+    everything
+  ubsan/overflow: Enable pattern exclusions
+  ubsan/overflow: Enable ignorelist parsing and add type filter
+
+ include/linux/compiler_types.h  |  2 +-
+ kernel/configs/hardening.config |  2 +-
+ lib/Kconfig.ubsan               | 25 +++++++++++++------------
+ lib/test_ubsan.c                | 18 ++++++++++++++----
+ lib/ubsan.c                     | 28 ++++++++++++++++++++++++++--
+ lib/ubsan.h                     |  8 ++++++++
+ scripts/Makefile.lib            |  4 ++--
+ scripts/Makefile.ubsan          | 10 ++++++++--
+ scripts/integer-wrap-ignore.scl |  3 +++
+ 9 files changed, 76 insertions(+), 24 deletions(-)
+ create mode 100644 scripts/integer-wrap-ignore.scl
+
 -- 
 2.34.1
 
