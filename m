@@ -1,54 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E1225569
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020835028C
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 00:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741308327; cv=none; b=DZI02O/oKw/sJ5Uck5FkRQHJ0dkpH48vvC/9xG9hhplIrRi/FtMa4TmUtkwQyzSICuWuFPo1Fqh4OOr1K0C8xYSZHgm+iJ9AJek2sPGOAQlEhzTSZgeEL7FFtz+6ZAi3MSuFjDVoNKFwPkddPEIxknvAQLd/9AQyvfu23Tzf2t0=
+	t=1741308328; cv=none; b=LFoSSnQBM+QE8IW2xdEPNDjubmZ4TFmJK/mJIj4ke1FRFxYFYFM7AFhMD42aK/OxqzYZoSSbhEF00LDIIoMQjUFFLyIw08PYSj16AwHQu6/ZfUtrDjDqkuay4Ua+YgsmU9qk0vJSvwoa9EPCtU8tLaf1M55u+SmIYtDPZFo4B+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741308327; c=relaxed/simple;
-	bh=vzUvP9jLe+7RApDJrgJ9sz0SYLCrqsOQC7nJERMOcWo=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=KIlhLVqoSFq9M4MPrL5xLwEpc6/tOejMElqHAqtU430uh80bBLj6jaGHBb2pWY4S3QR3qZYDl21lM2ZDlX/hYGjaj8yUfz9vI3/SZGxOcte7gdCsxCNrSQ35POBvS6d+z/uU8eIwkJeyHsqYURvjjc0qyjmTZMkpSzGdGk36mXQ=
+	s=arc-20240116; t=1741308328; c=relaxed/simple;
+	bh=ODGu1KUtq6L6OsCmFCgd4AbKUDCB2rn6ttG57ujgYYM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=cHDTFVv4/0463VoeKhgNhhXnkGIze21TxE38hsMUOnIIgb2TXBSH3IaYOd+D6hhD9GvJuVSdxa52BeMzaa+WIbqEQepGooxZYr2BSEID2oW6rgEN8XT05bmRzZtFE6Jp4Q2PIHItsQgPqGRJfnSAwe8GM/b7eU1kUupONithKaE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46253C4CEE0;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E087C4CEED;
 	Fri,  7 Mar 2025 00:45:27 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tqLqA-0000000059C-2Spf;
-	Thu, 06 Mar 2025 19:45:26 -0500
-Message-ID: <20250307004511.688485107@goodmis.org>
+	id 1tqLqB-000000005Ag-0QhA;
+	Thu, 06 Mar 2025 19:45:27 -0500
+Message-ID: <20250307004526.954574184@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 06 Mar 2025 19:45:11 -0500
+Date: Thu, 06 Mar 2025 19:45:14 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 0/3] tracing: Updates for v6.15
+Subject: [for-next][PATCH 3/3] tracing: Update MAINTAINERS file to include tracepoint.c
+References: <20250307004511.688485107@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace/for-next
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Head SHA1: d4ae5070733b114b9431a49c9640437f5e8b2ec5
+Updates to the tracepoint.c file should not only be Cc'd to LKML, but also
+to linux-trace-kernel@vger.kernel.org. But because it is not listed in the
+MAINTAINERS file, it does not get added.
+
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/20250304103724.174ecb36@gandalf.local.home
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4ff26fa94895..c203aa4225b0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24063,6 +24063,7 @@ F:	fs/tracefs/
+ F:	include/linux/trace*.h
+ F:	include/trace/
+ F:	kernel/trace/
++F:	kernel/tracepoint.c
+ F:	scripts/tracing/
+ F:	tools/testing/selftests/ftrace/
+ 
+-- 
+2.47.2
 
 
-Christophe JAILLET (1):
-      tracing/user_events: Slightly simplify user_seq_show()
-
-Steven Rostedt (1):
-      tracing: Update MAINTAINERS file to include tracepoint.c
-
-Thomas Weißschuh (1):
-      tracing/user_events: Don't use %pK through printk
-
-----
- MAINTAINERS                      | 1 +
- kernel/trace/trace_events_user.c | 7 ++-----
- 2 files changed, 3 insertions(+), 5 deletions(-)
