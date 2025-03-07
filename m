@@ -1,50 +1,49 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E179186607
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84839186607
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741335764; cv=none; b=pXC2Q7BOP86IeQjQTU6pg79la95SVehmq/JatWin6+PEBcinOM5w8+33eRgKuayB7Rym6/40lRrc3Gh+xdHyE5CGhLJjvsUFSP07MdLzn9Ji7OgcwzFaJfZDoTr6gzgKQc0jbXqjQHykaHHuX/zaFAZIcwjB4CNQvjKSlWkF+z0=
+	t=1741335793; cv=none; b=upHjD3muAZ1zwMeR0BfDwRdNc5XmiATYKRfsDJZxMKnm++pWXjvJ3lhDFB1JgrDDBmIPvwOd3O4Ex4e0VgtuntMOrWy6SWDoiMZgm99L+7TxHkfLyBucKgBNZymo/E14k4GxgSlOpcQ4LmcJyL6jwuWCXrdAQgBjoNDm6CkPIT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741335764; c=relaxed/simple;
-	bh=WwokADQwoB6/27mEXv+drkcP5cM8HPpvh5R2RnDMhSU=;
+	s=arc-20240116; t=1741335793; c=relaxed/simple;
+	bh=VYXYH3Nursl7YH5mZTgIbp1tBPkKvkIol1KbKrK0QGA=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MRss5QbpGpbiI9TZm1BaRORH/3MmfHXoo73llb6JtuMVAodEPzuO4NDG80c+GqH2Rb5tVjW5VEkA7KklWtSG14QFbjyxyw5DgCYhUbOwNeKJZcBo5YVz4LgP2TYlBafIO3v3sBQOsCRYrAdNlvWZhYPNVwQ1vM008YlrXpjDjn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=d7TLp2+t; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version:Content-Type; b=BsWgLE3AMAdyWbHUonAl1fks0t7RoO3w3gyWpWqtm1ULUiJuLyGKPor3YYknsFDSs11yT3zZMiYF4SVz3oW6WE0ijCGc/Qv+DUSi9bh1FRp7BoNuhZpAZxRBN6cnh3zD1AqQfR23QaPxZnYS6lsKwTvZAJDR6R9tjqjRGqCUVhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a+JqrXkz; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="d7TLp2+t"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3C98D443C4;
-	Fri,  7 Mar 2025 08:22:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a+JqrXkz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9397F4434F;
+	Fri,  7 Mar 2025 08:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741335760;
+	t=1741335782;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WwokADQwoB6/27mEXv+drkcP5cM8HPpvh5R2RnDMhSU=;
-	b=d7TLp2+tZrbmUG2iBgUYdDsQSDHPhwgBK9RLv48OoZ1h8hiPBfZS5WEwQyYxyVj49nD7wc
-	mgOWOTVAmjDrYTW4nYK/J02zA0zaQhTfSj8wIz7O92CtJpX6OTXvkRFdwr5wYwiRjUErVi
-	8GteliTw+2v0BwKNRBM2eHSlZQv+MEM3ejrX6IYmLznGCFKZWOOJkQ01/zNr+rWOzWyQcP
-	+JIQoqGsMpXAavJUZ+iqrsuln+zCjBjeSEWDrFb6B7qox5exjuuM1C2y0UpxsUmjD+3RPZ
-	b2yqctP6/+4LfRmoI8EmquCw8EpWyLCtkYBY19G5eU/Ebck92iiXj6YKpvel0w==
+	bh=VYXYH3Nursl7YH5mZTgIbp1tBPkKvkIol1KbKrK0QGA=;
+	b=a+JqrXkzg6T7EjzBwlU+bGU7X4W5BxVKF6hGKXyh38sfXQbEqL/LqemJgg3IFPD1A37i0G
+	aYPUtdGJfuKZGz54sUeAiO1shUmMHXX7am3ocUyjvd1jgSoFEpKitO1Lf95pPz4+NS6MBI
+	83DxVkWTVNai1phbOLrrFtrdyQ7kXDQx2d/arXlZaesj0z3w9WevNLCt1DmTPFKT6pGAR3
+	TEVOw6ZpxXZCoaZLHXMnOW/6wVidGcHWtisxcrwQe8XeaUcoqWsuBsTeU/xl/p42ORq4lf
+	Qvm4w6fy59ynVrgcGevgxNV+4MeCmZyGZaEJ5mmB7SdVM/yNyNkR09nhTEXMiw==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>
 Cc: Pratyush Yadav <pratyush@kernel.org>,  Michael Walle
  <mwalle@kernel.org>,  Richard Weinberger <richard@nod.at>,  Vignesh
  Raghavendra <vigneshr@ti.com>,  linux-mtd@lists.infradead.org,
   linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mtd: spi-nor: explicitly include
- <linux/mod_devicetable.h>
-In-Reply-To: <20250307-spi-nor-headers-cleanup-v1-2-c186a9511c1e@linaro.org>
-	(Tudor Ambarus's message of "Fri, 07 Mar 2025 09:09:06 +0200")
+Subject: Re: [PATCH 3/3] mtd: spi-nor: drop unused <linux/of_platform.h>
+In-Reply-To: <20250307-spi-nor-headers-cleanup-v1-3-c186a9511c1e@linaro.org>
+	(Tudor Ambarus's message of "Fri, 07 Mar 2025 09:09:07 +0200")
 References: <20250307-spi-nor-headers-cleanup-v1-0-c186a9511c1e@linaro.org>
-	<20250307-spi-nor-headers-cleanup-v1-2-c186a9511c1e@linaro.org>
+	<20250307-spi-nor-headers-cleanup-v1-3-c186a9511c1e@linaro.org>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 07 Mar 2025 09:22:37 +0100
-Message-ID: <875xkltfle.fsf@bootlin.com>
+Date: Fri, 07 Mar 2025 09:23:00 +0100
+Message-ID: <87wmd1s10b.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,20 +58,15 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtudejucetufdoteggode
  hhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hello Tudor,
-
-On 07/03/2025 at 09:09:06 +02, Tudor Ambarus <tudor.ambarus@linaro.org> wro=
+On 07/03/2025 at 09:09:07 +02, Tudor Ambarus <tudor.ambarus@linaro.org> wro=
 te:
 
-> The core driver is using 'struct of_device_id' and relies on implicit
-> inclusion of <linux/mod_devicetable.h>, which comes from
-> <linux/of_platform.h>.
+> There's nothing used in the SPI NOR core from <linux/of_platform.h>,
+> drop the header inclusion.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-It is actually included from of.h now (since patch 1) and I wonder
-whether there is a need for it to be included explicitly. As a user it
-feels like "of.h" should already include whatever is needed for us (and
-it's the case). Looking at the numbers, about 25% of the drivers do
-include it explicitly. But either ways I'm fine.
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Thanks,
 Miqu=C3=A8l
