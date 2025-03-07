@@ -1,149 +1,105 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A4C101F2;
-	Fri,  7 Mar 2025 15:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B376101F2;
+	Fri,  7 Mar 2025 15:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361371; cv=none; b=prTrNJs4Nb9kJI/9e8Am5iyvlF9bM1BsNjlO0AIhY90DYZhEBqj8qLCeZLOvLvXfn+2c99t61LZmPitymVYH2osuEe4I1jCsShk89hLjYP65Dr3iMdozymYw9O9LbKkXg5B6rjpqLjAz3fwtnoRUOtDOVKmqUZlom3IYjiXr314=
+	t=1741361381; cv=none; b=XmNA9n+v3lVI04XEx4dEWETA+x2PFG9kZrsD0QSKXmbXTHsq0VJjJV/XEnypOAYLTrqOZId8A5EBkGyg+gIaHTeweikXr/drWHDw9DnNK9U1+tGWZ+oapReYvqO2cZ5RgZL+TmSoZaHOyjqA4TXXGolg/mcejILhGwn6Kc97p24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361371; c=relaxed/simple;
-	bh=IQGBIqRB4GzYAQ/tDFR+0LkWEAzC++ZVR1ooYLXKi7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oswP1zt/tvvfvx2OTk18YH+EQN+g2AO65nyU7GAlGI+kHHuFK+l48z7OTQHin7SY7qM6MIG/qsflFG+lEvN3ghgGljBJ7+dIXzxuLntbWKE/De836ZzQ3+ehjFaH/nPYqzg7tORHuwdpeloWXJjexs4BPCbBC8mkK+7IEQZnwCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qKQQC8sC; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741361381; c=relaxed/simple;
+	bh=OVYgn7sTdg7b2Qz2oqIeNU3hmx4tLKKNi4bak4KlLCo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fVq/zmOl7mVjksoXe+KkNR3mmnjnaPT6Sqh7tHM36Ft3jd5J9Jf9BBZSRIXNB5pdRhsWcfthg0NBz14gwzzF4d1GtjePca7GtMYACg3LAUiKEwySK9KL4e2KgaT4t/WdUYpkmlMWQOvuntBvCP8AW/P28ggNFyc96HNTzZ3yhm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQX20m4h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qKQQC8sC"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 527E3AWH028905;
-	Fri, 7 Mar 2025 15:28:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=Y0KvhWxi6k4smjT1a6uHtK0WLe6VaK
-	HOV2hSoWFI5bI=; b=qKQQC8sCg9pR0Rgf2U4SjNR+davwX5FjEufMomgRsB00fg
-	zyRoTfxYxXh4Y8vuiZOJjrJtRUBqHxyVXsqcdfStADiDsVoEhvGXke2IzKBOI/hb
-	WiESqINaMWZlctFARnqnvnWiPTNBO/qTgrLVOx+veNXvwWI6SMXfFRzUxY07Dh9Y
-	p4E9rDCnukHT+Y6EVG26BlOZ16mHO3x7KhgMU6qM64BlKcUlVNv2REetqaorOfxE
-	Hv9tuR0tLZlF0MsbPIllc5+326ZsUeYtZPM3HYRousN2gYIQuhJdn4OFhBw8Ldam
-	BqYL6oneEKifef2Z24hvK1SLIU1JVnxU0/X7HqUg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45827p8e9e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 15:28:26 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 527FOGZe009112;
-	Fri, 7 Mar 2025 15:28:26 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45827p8e9b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 15:28:25 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 527CW0hk013724;
-	Fri, 7 Mar 2025 15:28:24 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2m7eh2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 15:28:24 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 527FSKc034669078
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Mar 2025 15:28:20 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4BC592004D;
-	Fri,  7 Mar 2025 15:28:20 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6CBC420040;
-	Fri,  7 Mar 2025 15:28:17 +0000 (GMT)
-Received: from osiris (unknown [9.171.2.237])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  7 Mar 2025 15:28:17 +0000 (GMT)
-Date: Fri, 7 Mar 2025 16:28:15 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-        Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 07/13] s390: make setup_zero_pages() use memblock
-Message-ID: <20250307152815.9880Gbd-hca@linux.ibm.com>
-References: <20250306185124.3147510-1-rppt@kernel.org>
- <20250306185124.3147510-8-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQX20m4h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85462C4AF0B;
+	Fri,  7 Mar 2025 15:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741361380;
+	bh=OVYgn7sTdg7b2Qz2oqIeNU3hmx4tLKKNi4bak4KlLCo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qQX20m4hYFuSwC4GAie0bewLjjfEykwE0M9+fbEJCyx2MJzBkSF3vuwqhsK0dCqCb
+	 FA9GVEHLfOHLqkxxA37je7p7+rox8dYX5yVRvBlqLTB9sJjCLg7/mk7rf9YGnTtwNg
+	 /heVySwAzPMCuAbFFlQ0ej8IPPwWIgj+10L2tTE/ufuv7uyaC8yBb0l19Ys/H4V0zZ
+	 VhwIDRlAToE2lfedi29k/O6EIy+rnRoR5vRuP1YrW43wftFSRKIShuGwRBSIa89a+d
+	 BveNCGNnTSvtHJllC8lu6SCAYwBjjzJpSM8Mv/uywOroWevyzYZ1DgdMM5c9dm4ZBm
+	 hKL/IMM0xvTeQ==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-543d8badc30so2269350e87.0;
+        Fri, 07 Mar 2025 07:29:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWTZq0HEYrH8oRyfMWnGO8dMZjCZojq9mNdmozH8hxXyJzlW4qFOBjs1hy4/vD6wrDC8NxpTFtZhKQkkD0d@vger.kernel.org, AJvYcCXEtJPz82/Xm+k3xDftJqF7u/31cbmHaecF+5lxpmksnk3nT+aGcjUj95MojPANXE3S1+xcQJbX8IU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxPdiGzptcodDdzMyQzacH94rFGH6PjYbRXTC7v9mcDcBj07Yu
+	Heav6q7yScsMT5fMEuWiPTDK6oGHOCJvIYIgP+wq2dheQjBn8qC7F7O3MLva3PKadGNb/9Gq+4c
+	Hz7FqvcMiYPLtek3anEYllOLbe/A=
+X-Google-Smtp-Source: AGHT+IHi7AAipiWJZbWUnrNEZ+MjSumx8myk6hE639Fbe7pVnBcNlelHiWjF+IhiWl74QBDImhUMcsQDjsuq+NrhS/8=
+X-Received: by 2002:a05:6512:39c7:b0:545:54b:6a05 with SMTP id
+ 2adb3069b0e04-549910b7c1bmr1849388e87.45.1741361378837; Fri, 07 Mar 2025
+ 07:29:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306185124.3147510-8-rppt@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: A6EZhWyKm6a7TATSJL5pnfOrX3P29DY0
-X-Proofpoint-GUID: Cc95RTw9axkwgZElLQM4IM54NfQR-ck-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_06,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 clxscore=1011 spamscore=0 mlxlogscore=334
- malwarescore=0 lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503070115
+References: <20250305101744.1706803-1-vkuznets@redhat.com> <CAMj1kXF-c46Bdw_cmLK-TckxukefqkpAYkOhg3jzfvW6YucDog@mail.gmail.com>
+ <63vy4xc4mpm5tttdqz5vfzwyriqlminjdiffrbuamxcubmpuur@nxszi7xzxa6a>
+ <CAMj1kXHQydeGHTa3Jd-ZByMntdqRp4f74ow6Uc0GLwjmejCSbw@mail.gmail.com> <885FB3F6-B085-45DE-9710-10563322B61A@zytor.com>
+In-Reply-To: <885FB3F6-B085-45DE-9710-10563322B61A@zytor.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 7 Mar 2025 16:29:27 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXF7Qs=9COU63k8651uEtSh9soOHddSo=Dqdn1kHTuuzoA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp4AgXJchgu2kQ_4krEgLZap1qJbPvt_J4Xw9sczpM3dEWa9AM7PMnp-nw
+Message-ID: <CAMj1kXF7Qs=9COU63k8651uEtSh9soOHddSo=Dqdn1kHTuuzoA@mail.gmail.com>
+Subject: Re: [PATCH RFC] x86/efi: Add a mechanism for embedding SBAT section
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Gerd Hoffmann <kraxel@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org, 
+	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, 
+	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, 
+	Luca Boccassi <bluca@debian.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Matthew Garrett <mjg59@srcf.ucam.org>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 06, 2025 at 08:51:17PM +0200, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> Allocating the zero pages from memblock is simpler because the memory is
-> already reserved.
-> 
-> This will also help with pulling out memblock_free_all() to the generic
-> code and reducing code duplication in arch::mem_init().
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/s390/mm/init.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
+On Fri, 7 Mar 2025 at 15:52, H. Peter Anvin <hpa@zytor.com> wrote:
+>
+> On March 7, 2025 6:15:27 AM PST, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >On Fri, 7 Mar 2025 at 14:29, Gerd Hoffmann <kraxel@redhat.com> wrote:
+> >>
+...
+> >> The crc32 is not clobbered.  The signature is simply appended and
+> >> wouldn't overwrite the crc32.  But if software expects to find that
+> >> crc32 in the last four bytes of the file then yes, that assumption does
+> >> not hold any more for signed kernel binaries.
+> >>
+> >
+> >The crc32 is a CRC over the entire bzImage. Whether or not it lives at
+> >the end is irrelevant, as signing the bzImage will necessarily [*]
+> >break the CRC, and subsequently regenerating the CRC will invalidate
+> >the signature. (The CRC lives at the end because that is the easiest
+> >way to generate an image whose checksum including the CRC itself is
+> >~0. However, there are also other ways to achieve this)
+> >
+> >> Who uses that crc32 and how?  If it is useless anyway, can we just drop
+> >> it upstream?
+> >>
+> >
+> >I tried but hpa objected to that. [0]
+> >
+...
+>
+> I don't remember who it was that asked for the CRC32 long ago. It wasn't for Syslinux; it was for an embedded boot loader which didn't have a file system.
+>
+> I don't know what would break, and it is obviously a mess that the signing protocol didn't take that into consideration, but that is water under the bridge, too.
+>
+> We could try zeroing out the CRC field and see if anyone screams...
+>
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-
-> -	empty_zero_page = __get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
-> +	empty_zero_page = (unsigned long)memblock_alloc(PAGE_SIZE << order, order);
->  	if (!empty_zero_page)
->  		panic("Out of memory in setup_zero_pages");
-
-This could have been converted to memblock_alloc_or_panic(), but I
-guess this can also be done at a later point in time.
+If dropping the CRC is on the table, we might also consider my
+original patch, which gets rid of the build tool entirely, given the
+fact that generating the CRC is the only thing it is still used for.
+(Either change can easily be reverted anyway)
