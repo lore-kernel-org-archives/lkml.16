@@ -1,110 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cosmicgizmosystems.com (cosmicgizmosystems.com [63.249.102.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C61198E91;
-	Fri,  7 Mar 2025 04:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58981C27;
+	Fri,  7 Mar 2025 05:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741323383; cv=none; b=NChm4V2/yxd7+mR9+ISYfx0VYmX/0b4Q6Ldunl772XX8MpHCsSrwG9/Tuwiqmk7S/n4Mki/vsYkPFtr7SS3aSfflwFxnH1r70YtaFU1IV1nFqPyGtCQVFEGhI4K05Rc14RKgPuzkoSDm00TpgBTiq9wifof337ofgguT2hzFJSU=
+	t=1741323752; cv=none; b=Kn/Ennbvl+D2aZvj23sXSro2bjP6yFT2JKLiYuuXmey8GWN3mOC0QNHoGDSwrwYpT9rnnogxfqFDk8fdKg7aBgxeZgNnmv/G0sMVqYMg3u1nFLxBSAsT/yl7Uk8QvOC497y4vreCACaMdGVfqLsAR1UOouhhzui+D5ukMhjq7G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741323383; c=relaxed/simple;
-	bh=lU0xPSeb2W3+KMU7avhrqWblfI5x+HwkWjStULy0+TU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mFFoU7/8k/lZ4Ye6Yxy5/VRQKbjnN7iitC+fIsO8hvPe3WbeyCu9okuzR8NwPZgHXXnybcgJ2ReLfgiwXJxRkvDRmDJEKfN/X52K33wCjsfomgJzKIBsexBF+GMUy8hazvvUdf8iA0Ys5OmzOzqPWHKDt3kzDeekA4pDpxb2k9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0xt8ZTN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0xt8ZTN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724FCC4CEE7;
-	Fri,  7 Mar 2025 04:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741323382;
-	bh=lU0xPSeb2W3+KMU7avhrqWblfI5x+HwkWjStULy0+TU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P0xt8ZTNML6YSIhGhj8aXQYJeyADhpfrZhPlfS9PPMmiFE6/uXxlwQ+2fyIYYgR1s
-	 iLrqwZ+hxKGuogW0Iaj/UsjCXoOqkcnkL6hXzAM4PLgQuaZxoZt3A8eLDoJGGnOXpr
-	 +yxmxIqQ0kQxyOYRi20glaqGn/nV3bxVv9JfJhWGNI6zNZ5lef0JA2JyyYLS8Y1qQe
-	 EBuRkubR3WIWlIrhx8+DUhRR78dHUIp+NkxUbS5gPC3YQ0FcuLG7e2Fl93g9O7By8v
-	 lQkH2gRqb1tlD9u/d4xJyKsEqycsENS9/go5vdmG64kMh10R1BsxRlZTIC72lYtF/V
-	 Ydr3HcelG/K7Q==
-From: Dmitry Baryshkov <lumag@kernel.org>
-To: Rob Clark <robdclark@gmail.com>,
-	quic_abhinavk@quicinc.com,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Simona Vetter <simona@ffwll.ch>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	quic_ebharadw@quicinc.com,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
+	s=arc-20240116; t=1741323752; c=relaxed/simple;
+	bh=Zo3xPSerTkoI1tokLWdOrJC6QxrtBXMex6Fy9lgq5xk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SXclrp6WVSuECHlimpSq9Md6s9KkwwPlqa7g94bNaFxc9dLn4zwSpWTjxsMyJeAo5dks5Z4qRkjof6wIqwO9iVvgwlNSau1gpirB3VYWuptCjrqvyf1HOJat5ikUmIXv3ysCxS3IjrPA9HKQ4e/zqVXb1pnsBM+Adw4q7Sh8KQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
+Received: from terrys-Precision-M4600.hsd1.wa.comcast.net (c-71-63-147-217.hsd1.wa.comcast.net [71.63.147.217])
+	by host11.cruzio.com (Postfix) with ESMTPSA id 8A4B2274BD23;
+	Thu,  6 Mar 2025 20:56:06 -0800 (PST)
+From: Terry Junge <linuxhid@cosmicgizmosystems.com>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Terry Junge <linuxhid@cosmicgizmosystems.com>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Rob Clark <robdclark@chromium.org>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH v6 00/14] drm/msm/dpu: Add Concurrent Writeback Support for DPU 10.x+
-Date: Fri,  7 Mar 2025 06:55:51 +0200
-Message-Id: <174132271320.1132259.9112655347714862323.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
-References: <20250214-concurrent-wb-v6-0-a44c293cf422@quicinc.com>
+	linux-hardening@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	lvc-project@linuxtesting.org,
+	syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH v1] HID: usbhid: Eliminate recurrent out-of-bounds bug in usbhid_parse()
+Date: Thu,  6 Mar 2025 20:54:43 -0800
+Message-ID: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Update struct hid_descriptor to better reflect the mandatory and
+optional parts of the HID Descriptor as per USB HID 1.11 specification.
+Note: the kernel currently does not parse any optional HID class
+descriptors, only the mandatory report descriptor.
 
+Update all references to member element desc[0] to rpt_desc.
 
-On Fri, 14 Feb 2025 16:14:23 -0800, Jessica Zhang wrote:
-> DPU supports a single writeback session running concurrently with primary
-> display when the CWB mux is configured properly. This series enables
-> clone mode for DPU driver and adds support for programming the CWB mux
-> in cases where the hardware has dedicated CWB pingpong blocks. Currently,
-> the CWB hardware blocks have only been added to the SM8650
-> hardware catalog and only DSI has been exposed as a possible_clone of WB.
-> 
-> [...]
+Add test to verify bLength and bNumDescriptors values are valid.
 
-Applied, thanks!
+Replace the for loop with direct access to the mandatory HID class
+descriptor member for the report descriptor. This eliminates the
+possibility of getting an out-of-bounds fault.
 
-[01/14] drm/msm/dpu: fill CRTC resources in dpu_crtc.c
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/17666e764f38
-[02/14] drm/msm/dpu: move resource allocation to CRTC
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/1ce69c265a53
-[03/14] drm/msm/dpu: switch RM to use crtc_id rather than enc_id for allocation
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/cae6a13a71f7
-[04/14] drm/msm/dpu: Add CWB to msm_display_topology
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/2ea34682263b
-[05/14] drm/msm/dpu: Require modeset if clone mode status changes
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/20972609d12c
-[06/14] drm/msm/dpu: Fail atomic_check if multiple outputs request CDM block
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/f1f0379e9dd5
-[07/14] drm/msm/dpu: Reserve resources for CWB
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/5008375443ed
-[08/14] drm/msm/dpu: Configure CWB in writeback encoder
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/dd331404ac7c
-[09/14] drm/msm/dpu: Support CWB in dpu_hw_ctl
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/0f3801d666fe
-[10/14] drm/msm/dpu: Adjust writeback phys encoder setup for CWB
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/3371005e28e8
-[11/14] drm/msm/dpu: Start frame done timer after encoder kickoff
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/95bbde1d0d07
-[12/14] drm/msm/dpu: Skip trigger flush and start for CWB
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/8144d17a81d9
-[13/14] drm/msm/dpu: Reorder encoder kickoff for CWB
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/ad06972d5365
-[14/14] drm/msm/dpu: Set possible clones for all encoders
-        https://gitlab.freedesktop.org/lumag/msm/-/commit/e8cd8224a307
+Add a warning message if the HID descriptor contains any unsupported
+optional HID class descriptors.
 
-Best regards,
+Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
+Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
+Cc: stable@vger.kernel.org
+Signed-off-by: Terry Junge <linuxhid@cosmicgizmosystems.com>
+---
+v1: Remove unnecessary for loop searching for the report descriptor size.
+base-commit: 58c9bf3363e596d744f56616d407278ef5f97f5a
+
+P.S. This is an alternative to the solution proposed by Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Link: https://lore.kernel.org/all/20250131151600.410242-1-n.zhandarovich@fintech.ru/
+
+ include/linux/hid.h                 |  3 ++-
+ drivers/usb/gadget/function/f_hid.c | 12 ++++++------
+ drivers/hid/hid-hyperv.c            |  4 ++--
+ drivers/hid/usbhid/hid-core.c       | 25 ++++++++++++++-----------
+ 4 files changed, 24 insertions(+), 20 deletions(-)
+
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index cdc0dc13c87f..7abc8c74bdd5 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -738,8 +738,9 @@ struct hid_descriptor {
+ 	__le16 bcdHID;
+ 	__u8  bCountryCode;
+ 	__u8  bNumDescriptors;
++	struct hid_class_descriptor rpt_desc;
+ 
+-	struct hid_class_descriptor desc[1];
++	struct hid_class_descriptor opt_descs[];
+ } __attribute__ ((packed));
+ 
+ #define HID_DEVICE(b, g, ven, prod)					\
+diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
+index 740311c4fa24..c7a05f842745 100644
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -144,8 +144,8 @@ static struct hid_descriptor hidg_desc = {
+ 	.bcdHID				= cpu_to_le16(0x0101),
+ 	.bCountryCode			= 0x00,
+ 	.bNumDescriptors		= 0x1,
+-	/*.desc[0].bDescriptorType	= DYNAMIC */
+-	/*.desc[0].wDescriptorLenght	= DYNAMIC */
++	/*.rpt_desc.bDescriptorType	= DYNAMIC */
++	/*.rpt_desc.wDescriptorLength	= DYNAMIC */
+ };
+ 
+ /* Super-Speed Support */
+@@ -939,8 +939,8 @@ static int hidg_setup(struct usb_function *f,
+ 			struct hid_descriptor hidg_desc_copy = hidg_desc;
+ 
+ 			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
+-			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
+-			hidg_desc_copy.desc[0].wDescriptorLength =
++			hidg_desc_copy.rpt_desc.bDescriptorType = HID_DT_REPORT;
++			hidg_desc_copy.rpt_desc.wDescriptorLength =
+ 				cpu_to_le16(hidg->report_desc_length);
+ 
+ 			length = min_t(unsigned short, length,
+@@ -1210,8 +1210,8 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
+ 	 * We can use hidg_desc struct here but we should not relay
+ 	 * that its content won't change after returning from this function.
+ 	 */
+-	hidg_desc.desc[0].bDescriptorType = HID_DT_REPORT;
+-	hidg_desc.desc[0].wDescriptorLength =
++	hidg_desc.rpt_desc.bDescriptorType = HID_DT_REPORT;
++	hidg_desc.rpt_desc.wDescriptorLength =
+ 		cpu_to_le16(hidg->report_desc_length);
+ 
+ 	hidg_hs_in_ep_desc.bEndpointAddress =
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index 0fb210e40a41..9eafff0b6ea4 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -192,7 +192,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
+ 		goto cleanup;
+ 
+ 	input_device->report_desc_size = le16_to_cpu(
+-					desc->desc[0].wDescriptorLength);
++					desc->rpt_desc.wDescriptorLength);
+ 	if (input_device->report_desc_size == 0) {
+ 		input_device->dev_info_status = -EINVAL;
+ 		goto cleanup;
+@@ -210,7 +210,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
+ 
+ 	memcpy(input_device->report_desc,
+ 	       ((unsigned char *)desc) + desc->bLength,
+-	       le16_to_cpu(desc->desc[0].wDescriptorLength));
++	       le16_to_cpu(desc->rpt_desc.wDescriptorLength));
+ 
+ 	/* Send the ack */
+ 	memset(&ack, 0, sizeof(struct mousevsc_prt_msg));
+diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+index a6eb6fe6130d..e668143b559d 100644
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -983,12 +983,11 @@ static int usbhid_parse(struct hid_device *hid)
+ 	struct usb_host_interface *interface = intf->cur_altsetting;
+ 	struct usb_device *dev = interface_to_usbdev (intf);
+ 	struct hid_descriptor *hdesc;
++	struct hid_class_descriptor *hcdesc;
+ 	u32 quirks = 0;
+ 	unsigned int rsize = 0;
+ 	char *rdesc;
+-	int ret, n;
+-	int num_descriptors;
+-	size_t offset = offsetof(struct hid_descriptor, desc);
++	int ret;
+ 
+ 	quirks = hid_lookup_quirk(hid);
+ 
+@@ -1010,20 +1009,19 @@ static int usbhid_parse(struct hid_device *hid)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
+-		dbg_hid("hid descriptor is too short\n");
++	if (!hdesc->bNumDescriptors ||
++	    hdesc->bLength != sizeof(*hdesc) +
++			      (hdesc->bNumDescriptors - 1) * sizeof(*hcdesc)) {
++		dbg_hid("hid descriptor invalid, bLen=%hhu bNum=%hhu\n",
++			hdesc->bLength, hdesc->bNumDescriptors);
+ 		return -EINVAL;
+ 	}
+ 
+ 	hid->version = le16_to_cpu(hdesc->bcdHID);
+ 	hid->country = hdesc->bCountryCode;
+ 
+-	num_descriptors = min_t(int, hdesc->bNumDescriptors,
+-	       (hdesc->bLength - offset) / sizeof(struct hid_class_descriptor));
+-
+-	for (n = 0; n < num_descriptors; n++)
+-		if (hdesc->desc[n].bDescriptorType == HID_DT_REPORT)
+-			rsize = le16_to_cpu(hdesc->desc[n].wDescriptorLength);
++	if (hdesc->rpt_desc.bDescriptorType == HID_DT_REPORT)
++		rsize = le16_to_cpu(hdesc->rpt_desc.wDescriptorLength);
+ 
+ 	if (!rsize || rsize > HID_MAX_DESCRIPTOR_SIZE) {
+ 		dbg_hid("weird size of report descriptor (%u)\n", rsize);
+@@ -1051,6 +1049,11 @@ static int usbhid_parse(struct hid_device *hid)
+ 		goto err;
+ 	}
+ 
++	if (hdesc->bNumDescriptors > 1)
++		hid_warn(intf,
++			"%hhu unsupported optional hid class descriptors\n",
++			hdesc->bNumDescriptors - 1);
++
+ 	hid->quirks |= quirks;
+ 
+ 	return 0;
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.43.0
+
