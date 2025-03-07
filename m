@@ -1,349 +1,202 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6874190696;
-	Fri,  7 Mar 2025 06:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741329541; cv=none; b=Y8Q0CnAv3T86Q7xMPABGjcc3CrVzBk1uOyjTpPsaPtAvP+tv2HFEg1jow+ItxyVVKB3NgDK/JHM9VVnfFoYstBcr10b8TmPGzXQWH94QXWttpaY1jOSowAlQJDi/RbHV6EciaucE0PxJpY4S4T8qKH/Ez+pdy0LZtZukqYIu4cY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741329541; c=relaxed/simple;
-	bh=j5S41y2WLEyf1bFjeQjq+NFRzyc7zq1WtTXEsqQglEA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g4thEz/0i2bm3PFvV5NMwkGP6cqUu4xU5HlKtMoiKRPfeVkLbXvd/2xCae9pihEvglHQ1ZcJkQr11fR2fOcxf0Hsv9D1bV44D51fm/S08qkzJavxCCAAb8HF9FhHjOWDUGEkDBUaTJm433rFlFu1eT0bT68wFtO1iXEOwD0aFe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F10B150C;
-	Thu,  6 Mar 2025 22:39:09 -0800 (PST)
-Received: from [10.174.36.161] (unknown [10.174.36.161])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E97D13F66E;
-	Thu,  6 Mar 2025 22:38:44 -0800 (PST)
-Message-ID: <b246b91b-4b4f-4582-ad3b-8b3adde834e2@arm.com>
-Date: Fri, 7 Mar 2025 12:08:41 +0530
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2049.outbound.protection.outlook.com [40.107.21.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8037A1946A1
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 06:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741329668; cv=fail; b=uqIvCwesOQDnzvbUEBnB6/mYnSU8WXaRZfp+b1jigJLyn840ZqhrnIf73D1Lzqg1y/ILBLsFJ2f6Bb/gKVIsQMTisTG16qm2oL+H2/mLpgH/IPjB1JySZUJrXKfZf3GLwZkn/AqgXkSCrqP9+xiirpj2Xy86Mkn5vu6AvTlVQ3M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741329668; c=relaxed/simple;
+	bh=DpLnzkGGIterVKKFaFqHeMyXY/tAIUULbAjqb2bX0LA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=A1SnhR8tOiDd9+AwLZQwSKP7f7Gsr7/CmNirSRd7Zrr1cLbkwCgUix7LqqVJnqiVwwrSPtCZqj3Jt7IW8a1WiUL+T+vcyXvLsKsGnQhApNNefOPztDPFfoJGXfyDAYDM/awznSmAb6qf8hm4mZz6ccISYPanyN4I1ZRD8uCcXPs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GbUvrXfm; arc=fail smtp.client-ip=40.107.21.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GbUvrXfm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UYU+ASEAHp1Yv2JgAh5Y45JvDbKJh5sFOjCZwsxpWbMGOTi5t9ulnFCmaKsk9dmhoipIzgasNRea/09XKV7DbdFF0tvwCRWV2UVMHvFrCRAMoQUeufsQ4/a2JrPhuMq4nvgz8fuHqEroIldb7GpzYtD/s/gteyFN0C/0kvXlL3vd/H4NiS19DT+dvdurUj61Cvctv9AvLfB5PNcxR7Ap6G04ir79TddBSUp85v/ZgDvZ80BNvtqEcG+NWV1KbRUeZUV4SA+/heg2jLZLGTne64a7EMcwnBD1fsQWDQP/WdWJzc35QpGv/aYDgvWXZntuZ4Rg7rtwhGh9IRc2AOZ3vA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r/7veqbCImslTTTClGmuV0vBhIx7ZfNwR0pKtToxJ/o=;
+ b=UPMdjS7TmuUo33zwyCPiFfibSE3w0cbltHNO8BE/qjtxfghCMw9grROJ/6lZRAz/TP+XsaW87bAPBybbg9544ZjpRmR7KSK7GwcHvk5yrbtJM6+yQtzW/223BYM0N4GJFK3LPuRN9DM1bAg1tA6nKmmvDbfrg3laZPkyZ7A2Reoimmvref4KmyuOj6rOwJi9uy0GpBf0ljRPRu45SF5f0hcOzQVkUSlEvKNy4tcx7wDf1k6nn9ZQQw5ck3DfmpEsLeUSFKkSOU+TlVvaFRBmlvBfyEP92Q18fSYFDiFlG7cwt46FvCi9dmDn4V9PnweuoM6WmAfWHphm35tglFJuwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r/7veqbCImslTTTClGmuV0vBhIx7ZfNwR0pKtToxJ/o=;
+ b=GbUvrXfmpZlKA8K4ZCMvGRBFz2YeSbDR6/z8B0/IPTznudWlnD1gyub41bWpNYf3jZFgW5DvF0aM2qmRQXCDkm22Uy+dLj7/MaHws33Ztovcf6+fmhJIgOK0GecR6uY+iMXf3QyeV/o5+JMObx/Vg9GiEoC8BQmws4d84eJzhCFFJl3IrlLv+dFnFOj+eCNwTnvfl3qthruBkbfyOgeH3erlzVlpOvyYMsFDq1+cptNIb5FJZCNvrFlYXHjHMsPr/iTSbw4mBfqh2hq+wvgpAKvevOEpJ7Wx1p5vq+Syju5fTF8cvKsZ3KaJOfMivZ9W/Ppj89Mrnmsd+dxKNAyNdw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AS5PR04MB9769.eurprd04.prod.outlook.com (2603:10a6:20b:679::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.20; Fri, 7 Mar
+ 2025 06:41:02 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%4]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
+ 06:41:02 +0000
+Message-ID: <71c44221-b18b-4928-8faf-00893ec4a109@nxp.com>
+Date: Fri, 7 Mar 2025 14:42:12 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] drm/bridge: imx8qxp-ldb: cleanup return value
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250306-drm-two-ldb-improvements-v1-0-f139d768b92c@bootlin.com>
+ <20250306-drm-two-ldb-improvements-v1-1-f139d768b92c@bootlin.com>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20250306-drm-two-ldb-improvements-v1-1-f139d768b92c@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR06CA0016.apcprd06.prod.outlook.com
+ (2603:1096:4:186::22) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 7/9] khugepaged: add mTHP support
-To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
- dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
- jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
- hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
- peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ziy@nvidia.com, jglisse@google.com, surenb@google.com,
- vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
- jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
- kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
- raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
- audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, tiwai@suse.de
-References: <20250211003028.213461-1-npache@redhat.com>
- <20250211003028.213461-8-npache@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20250211003028.213461-8-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS5PR04MB9769:EE_
+X-MS-Office365-Filtering-Correlation-Id: 144254fa-67b1-49b5-c7da-08dd5d430734
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?VWtJM2N1YVN5bkllVlcrWFA3b0ducmFBSzJFdjM3RVQ4T1dnVCs1V3hrdUJt?=
+ =?utf-8?B?NE10RFo3RnZWL1NJcXA4UkFRbU1hYkZzNytKQlhrMUVsd1NmQm1WemtRd0tH?=
+ =?utf-8?B?SUdqdE5vbnJEaFBVVUljWGo2Qlg3WlpEdFlDanRHSkJRdGRaOERXMzVYM1hU?=
+ =?utf-8?B?ZUZUbHBIL0tCM0xFODFEY1c0ay9QejVEZTNxUFZhSmNxOUpIS0hHRlFUUXA0?=
+ =?utf-8?B?UlNpYUloaEQ4OEhHYlNyME1tTzJTWW9LS3V5ZVE5RjVodzhtc3pFSXFaSkt4?=
+ =?utf-8?B?ejl1czJILzgvZ29WRlhwVkZPOEtiTVpQNmNGT21jMFRRUDVXaFo5RnIvZUt1?=
+ =?utf-8?B?NElVY2UvbWl2YlBwVTBnNksvNEs1b2F3MDh1QnBybTNXdURtYldwdGxmVkJC?=
+ =?utf-8?B?REFNeUZEbW9CMjNoZlI1ckxPSnJJS3FIQjBWa3JRRCtQLzNBaUR2cWxJQU8w?=
+ =?utf-8?B?ZEZ6SnZPVUgraGZtemw0SklIV1NORjdFMVcwV1ptd3JhdUp0cnpMVEpTYWto?=
+ =?utf-8?B?YUx2Q0NCVmg0bGJ4N0tJTy9nNWRqMlI2SCtIY21vOEtIejFyR3RURXBMWGhj?=
+ =?utf-8?B?K20wY29pbFkya3d5NnU2NXhVaFVoays5Vml6a2NINjlrNytUU2tBK0ZiN2gr?=
+ =?utf-8?B?b3RiQ3VCdjcrSStzc2pyTFdSaHpLRndjTUJ0TGN4N1krdEJsN0MvM3c1UUFP?=
+ =?utf-8?B?eWZtRVNxTXJyb1pwNml1dlZiQW95RHRxckxPNlVPOVM4ZFRIZjNpQnU0WDdH?=
+ =?utf-8?B?dHh4QlhxVUpYeFhiNkJRTVRLMElmNk5oRTFqaVRlYmFJckFJSzlKVElUQ3Q3?=
+ =?utf-8?B?aDd0dlM2Yk1sQ3l1Y2x6N0NNWnFnV2hwaExvSGdoY2hyNk5JWWh3WGNmOVJE?=
+ =?utf-8?B?ejFLNTYybG40d25tQXIvbmUyMTdZbm9XRkpQcXkvVFhmOW5JRVdkbXRCNW15?=
+ =?utf-8?B?cDlhNnJOU2E0MTBHdURXdWJPd2pWQmxlcy9McGR2NEgyYThYSzZrck5ab3kr?=
+ =?utf-8?B?YVVHSGh6cjhZTzVONTJvd2VEYTBTa3lKZVlxUWhIQ3lGODBNV0hkSVZnanp4?=
+ =?utf-8?B?a3lNeFV3ZkwyQ0ZyUUxLTk9wV3gwL1g2L08vWTl1TFhJdys4dFQvbmsycFBp?=
+ =?utf-8?B?VXlTa1o4T0oxVDFoTE42Y1BWU0g2clVEVXpyN09lVmpsTmZaSWhqZlp6QTBp?=
+ =?utf-8?B?dHZGVHJjU0U5Q2ZsbHAxcnlHRFJYNkNxRWRpeTV5Mk5hUEs1YURUL2p5NnlV?=
+ =?utf-8?B?SExJZ3h5ckNWRnZudnZuVlkzUUxTa3BjSUFJN29FYkZrMmlhM2llZWYveXVx?=
+ =?utf-8?B?YWRxTnM5bXJUOWZ2SllOK1g0bld5blBoSWcwTDlkTllTRXh6eGJBakgvT2Nv?=
+ =?utf-8?B?ZXBydUNPV0VSdFVPR0Y5ekJ4NTBPZ1g2emhIdnNRTFoxZjZPNlZaTjM4bTRs?=
+ =?utf-8?B?bzFvSEFQV0RqLzRuZHlxdlpJaTNZK3dBbUZUbzlJeU4wMHowa1VYTUtSaERB?=
+ =?utf-8?B?OHZCZ3lPNno2VDY5SlRqbE5SaGVzakc5eFA0dk5NSGE0NjZadmgrd0l3bURE?=
+ =?utf-8?B?b2h6M2FOY3pwZk9PNm0rNkpIOU9VQjlsNVg2VlFvZHE4NlVVWmk3MXgzZzNw?=
+ =?utf-8?B?RnVZaVJvdkFXclVZaGwzMllNRWgyNVVINk82YXdiWGRmcEl6OHVKejhpNWxk?=
+ =?utf-8?B?R3dSaVVJbVRyZkhXdEhxdDBmTXBnZnF4NzQ1K0V0L0lXK0xJU1ViUndUZE8x?=
+ =?utf-8?B?a3VzTmZreGZSUzdZVmZkRURlQ0JIUTJEWkRzVklCMDA0UUZmOTgzc3g2ZVJQ?=
+ =?utf-8?B?LzFWUmhvQXlRRVB5MHl0dS9oTjNiOE5BVkxKdng4S0JXcEZ1WmxQMWpNOXF4?=
+ =?utf-8?B?dzJrWktWZ0laS0JoUnFmR0JWSVZoenRMQW1saXdUWG9keGRvbzlTcEljNE9s?=
+ =?utf-8?Q?/1LVbUIw8KQ=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?ZlkxeVlJSkZna2J5ejJSeUIyTDdlaUprM0ZVd3NzbnlFbklUdnFsaHc3R3ZL?=
+ =?utf-8?B?NTcxejVXTjNKM3ZGeE01Nm92TlNFTVRBRVFWbVBzWDBSS1VWVlI2ZkdQSWZG?=
+ =?utf-8?B?b0dOb0JXUHdoNWU1d20wOTh0SDhGbXZwUWs2dmhKTW1VUjV2Yk5EMFBSZ2Vj?=
+ =?utf-8?B?ZENVc3dvN1orY2o2MHFTWTlHYmNrSGR4aWN3YTBma0dqYVM3aGd6Qjdiakla?=
+ =?utf-8?B?bUdUVFdaWTBkTkIwQytVZGgxVTFOUlN3ckFkMWNZNm1LdDVYUE8yZWdHTlpT?=
+ =?utf-8?B?ZU5zbnVJTmwxVUhJNTdBbnd3b1hjR1FOMTBjcEZuN0crOVF0MEN6MzZEWkFh?=
+ =?utf-8?B?aFB4WkJYQXJNZDhSNS9FU0VoVU1ucXZrUXRycm1vRHFjeG5YamRHTTdNWUdQ?=
+ =?utf-8?B?L1pwT0RLaFBPSE1DTm5mV2dwU2EyenNNUUcxeVU4THVLdnlTazdVV1R0TjJt?=
+ =?utf-8?B?N2lrdXdXdFB6WWtRZDJXaUYrUXM1RzJUZURZRDFGTEFWMlQzZEV2VE00QjE1?=
+ =?utf-8?B?YmJYaGJmUGFITUk0UnhmZmF0MDJHYW1xN1UwQXVmWnhGWkhIQW9pd0NrMjNm?=
+ =?utf-8?B?VzJHUUVlTHp5eThodjJoN2UyeUhXZmtPd01RdTloMW5BVFh5TFAzQXhtQkMv?=
+ =?utf-8?B?bzIwR0hhOTZxS2trRGkyTmtsRkVFQWFDWTFhSGd4Y3FDcUNVelNzMy9xR3BT?=
+ =?utf-8?B?NFVmSmF3T0NHTS9Wa3FEUnlDS1JjRmF3VEt1WVFxSlJLeUFoQjBoWDNqSXZH?=
+ =?utf-8?B?ejEwYnhydkhtOXowelIxbjROQjJ3RmhwZ2tNRVNzMC9pbEN3bk00dlhoU0hB?=
+ =?utf-8?B?K2JzSGNhUFJFOWw0TmVIenpzem5Cc0FKd0gwbDNROWRqd0FLdFdHMWxzZ2xM?=
+ =?utf-8?B?RUpBS0gyTHhQY1pETmpwU0RSMzFINk1XcmlqL2N2aCtZU0ZaYVF6bVFTOHMr?=
+ =?utf-8?B?ZGZZN21CYnFOWGxzdXcxSHdwSnllUkxXeXd0WjZjVXJpajZjWUxuUGpLTERi?=
+ =?utf-8?B?ZzZKYWdyV08rVFJ6UkI1dTB6R2pNcFZMLy8xMUlWd0JWdjRQSHczNUJKRlNW?=
+ =?utf-8?B?WWE1eEtFeTF4Wi84cUFycFlaSkFZcG45cnZPd3psSEhNaU9HVUVlSW5FZHcz?=
+ =?utf-8?B?cDY3clFTbkE1eGZNYW5HQlFueC9JcXlBQTlIdGhCN2FtYUJiamRpTFExK3Ez?=
+ =?utf-8?B?T2tYTXJob0F1dTJKT3MwdHBCUndRdFREc1Jwck0zSmF1TlArcU1mM1ovb2N2?=
+ =?utf-8?B?NWI3UGxXZmVQNEI1M09OSGZ3N2RPNEFkSkZoZDdlaFpmMGdGdEpGTitPQTNT?=
+ =?utf-8?B?bjIzSDdGRU1IbERlbnkyY0QxVk5uVjhhV0ZETHNVVjI4VmpXQlgzaWtOc1F4?=
+ =?utf-8?B?SllOZ2lsUTJQZGhVYTY3UEVnOW14TGxhclI4N3hrTXhzajUzMjhtZEhMNU5p?=
+ =?utf-8?B?MTFvWnFML0owdjAyNnVSR2pGNUpWZmNnNjRFMjJ6ZW5wT29aMXlxbFE1V3Mr?=
+ =?utf-8?B?bW1QUVRlNy9TSDJIMlZJQUJBaSthWWRRMHNzM2hRd29LR0FFVHRmd0x3TjFO?=
+ =?utf-8?B?ME1vSlVZdjVVU05CQzlyRjlZYWhtaG9EdW5Xc0pZejdpeVF0MStQRGRXamVJ?=
+ =?utf-8?B?ZkQ5YmI3VEpPbXcrTlNRVkJSQUJWTnJsTk5oQTlYSGhrWnlsK003YTIrL3ZV?=
+ =?utf-8?B?dEp2dHlaQmQyMGIrRTNGMU1hMksxMXg0YnpRQ1FMUGQxU21aVFJRbTIydkpH?=
+ =?utf-8?B?ZUdrN3dsRVdUYmNyc0czNVc1c2tMMmtvZWJ3aFA0Y28wa2ZGcmtUa1FCWWRy?=
+ =?utf-8?B?NkE1NmdzTE1xcUpYQ0dxN3NmWnNaU2lBaWJiVEVlQm4xbFJiVDVNOHNFM2Y2?=
+ =?utf-8?B?UFE1QXZyMC9FWm15WHRYZk9UVzhxaTVhOTk2a0ltVFpMbUdWQVQ5b2lxNjM2?=
+ =?utf-8?B?WGF5d3YzajZUQXQ2VkllZ3B3dUt4VHFqek10L2wyNXFMeUg2WnNPNktFUzlZ?=
+ =?utf-8?B?UUx5SVR2bTYwQkFTZ3dHYTRXVnFoSGhJWERsc21ZUDZZOFp5dm1xbFp5UExW?=
+ =?utf-8?B?VXNwK29PVm5ieWpLa1g5NC80eGZDZGRZamtETkR4ZUZHYWIrMFZMUTYrTFhM?=
+ =?utf-8?Q?qMUlYT1gDZg8Y+lp+UZLJK3S2?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 144254fa-67b1-49b5-c7da-08dd5d430734
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 06:41:02.4486
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 40ABHjzvq5szHhIxOQ0Grm4sS2Ch/s5QhSB5cfj5z7l4eZBpdpLi772EPhLWa/MHYDg6UTRhWZ87h7MzOKso4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9769
 
-
-
-On 11/02/25 6:00 am, Nico Pache wrote:
-> Introduce the ability for khugepaged to collapse to different mTHP sizes.
-> While scanning a PMD range for potential collapse candidates, keep track
-> of pages in MIN_MTHP_ORDER chunks via a bitmap. Each bit represents a
-> utilized region of order MIN_MTHP_ORDER ptes. We remove the restriction
-> of max_ptes_none during the scan phase so we dont bailout early and miss
-> potential mTHP candidates.
+On 03/07/2025, Luca Ceresoli wrote:
+> 'ret' can only be 0 at this point, being preceded by a 'if (ret) return
+> ret;'. So return 0 for clarity.
 > 
-> After the scan is complete we will perform binary recursion on the
-> bitmap to determine which mTHP size would be most efficient to collapse
-> to. max_ptes_none will be scaled by the attempted collapse order to
-> determine how full a THP must be to be eligible.
-> 
-> If a mTHP collapse is attempted, but contains swapped out, or shared
-> pages, we dont perform the collapse.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 > ---
->   mm/khugepaged.c | 122 ++++++++++++++++++++++++++++++++----------------
->   1 file changed, 83 insertions(+), 39 deletions(-)
+>  drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index c8048d9ec7fb..cd310989725b 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1127,13 +1127,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   {
->   	LIST_HEAD(compound_pagelist);
->   	pmd_t *pmd, _pmd;
-> -	pte_t *pte;
-> +	pte_t *pte, mthp_pte;
->   	pgtable_t pgtable;
->   	struct folio *folio;
->   	spinlock_t *pmd_ptl, *pte_ptl;
->   	int result = SCAN_FAIL;
->   	struct vm_area_struct *vma;
->   	struct mmu_notifier_range range;
-> +	unsigned long _address = address + offset * PAGE_SIZE;
->   	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
->   
->   	/*
-> @@ -1148,12 +1149,13 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   		*mmap_locked = false;
->   	}
->   
-> -	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
-> +	result = alloc_charge_folio(&folio, mm, cc, order);
->   	if (result != SCAN_SUCCEED)
->   		goto out_nolock;
->   
->   	mmap_read_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
-> +	*mmap_locked = true;
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
->   	if (result != SCAN_SUCCEED) {
->   		mmap_read_unlock(mm);
->   		goto out_nolock;
-> @@ -1171,13 +1173,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   		 * released when it fails. So we jump out_nolock directly in
->   		 * that case.  Continuing to collapse causes inconsistency.
->   		 */
-> -		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
-> -				referenced, HPAGE_PMD_ORDER);
-> +		result = __collapse_huge_page_swapin(mm, vma, _address, pmd,
-> +				referenced, order);
->   		if (result != SCAN_SUCCEED)
->   			goto out_nolock;
->   	}
->   
->   	mmap_read_unlock(mm);
-> +	*mmap_locked = false;
->   	/*
->   	 * Prevent all access to pagetables with the exception of
->   	 * gup_fast later handled by the ptep_clear_flush and the VM
-> @@ -1187,7 +1190,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	 * mmap_lock.
->   	 */
->   	mmap_write_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
->   	if (result != SCAN_SUCCEED)
->   		goto out_up_write;
->   	/* check if the pmd is still valid */
-> @@ -1198,11 +1201,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	vma_start_write(vma);
->   	anon_vma_lock_write(vma->anon_vma);
->   
-> -	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
-> -				address + HPAGE_PMD_SIZE);
-> +	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address,
-> +				_address + (PAGE_SIZE << order));
->   	mmu_notifier_invalidate_range_start(&range);
->   
->   	pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
-> +
->   	/*
->   	 * This removes any huge TLB entry from the CPU so we won't allow
->   	 * huge and small TLB entries for the same virtual address to
-> @@ -1216,10 +1220,10 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	mmu_notifier_invalidate_range_end(&range);
->   	tlb_remove_table_sync_one();
->   
-> -	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
-> +	pte = pte_offset_map_lock(mm, &_pmd, _address, &pte_ptl);
->   	if (pte) {
-> -		result = __collapse_huge_page_isolate(vma, address, pte, cc,
-> -					&compound_pagelist, HPAGE_PMD_ORDER);
-> +		result = __collapse_huge_page_isolate(vma, _address, pte, cc,
-> +					&compound_pagelist, order);
->   		spin_unlock(pte_ptl);
->   	} else {
->   		result = SCAN_PMD_NULL;
-> @@ -1248,8 +1252,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	anon_vma_unlock_write(vma->anon_vma);
->   
->   	result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
-> -					   vma, address, pte_ptl,
-> -					   &compound_pagelist, HPAGE_PMD_ORDER);
-> +					   vma, _address, pte_ptl,
-> +					   &compound_pagelist, order);
->   	pte_unmap(pte);
->   	if (unlikely(result != SCAN_SUCCEED))
->   		goto out_up_write;
-> @@ -1260,20 +1264,37 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	 * write.
->   	 */
->   	__folio_mark_uptodate(folio);
-> -	pgtable = pmd_pgtable(_pmd);
-> -
-> -	_pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
-> -	_pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> -
-> -	spin_lock(pmd_ptl);
-> -	BUG_ON(!pmd_none(*pmd));
-> -	folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
-> -	folio_add_lru_vma(folio, vma);
-> -	pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> -	set_pmd_at(mm, address, pmd, _pmd);
-> -	update_mmu_cache_pmd(vma, address, pmd);
-> -	deferred_split_folio(folio, false);
-> -	spin_unlock(pmd_ptl);
-> +	if (order == HPAGE_PMD_ORDER) {
-> +		pgtable = pmd_pgtable(_pmd);
-> +		_pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
-> +		_pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> +
-> +		spin_lock(pmd_ptl);
-> +		BUG_ON(!pmd_none(*pmd));
-> +		folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
-> +		folio_add_lru_vma(folio, vma);
-> +		pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> +		set_pmd_at(mm, address, pmd, _pmd);
-> +		update_mmu_cache_pmd(vma, address, pmd);
-> +		deferred_split_folio(folio, false);
-> +		spin_unlock(pmd_ptl);
-> +	} else { //mTHP
-> +		mthp_pte = mk_pte(&folio->page, vma->vm_page_prot);
-> +		mthp_pte = maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
-> +
-> +		spin_lock(pmd_ptl);
+> diff --git a/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c b/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
+> index 7bce2305d676714cdec7ce085cb53b25ce42f8e7..bee1c6002d5f84dc33b6d5dc123726703baa427e 100644
+> --- a/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
+> +++ b/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
+> @@ -665,7 +665,7 @@ static int imx8qxp_ldb_probe(struct platform_device *pdev)
+>  
+>  	ldb_add_bridge_helper(ldb, &imx8qxp_ldb_bridge_funcs);
+>  
+> -	return ret;
+> +	return 0;
 
-Please add a BUG_ON(!pmd_none(*pmd)) here. I hit this a lot of times 
-when I was generalizing for VMA size.
+I guess this is not the only place across the kernel tree where this cleanup
+could be done.  So, maybe use some tools to cleanup them all?
 
-> +		folio_ref_add(folio, (1 << order) - 1);
-> +		folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
-> +		folio_add_lru_vma(folio, vma);
-> +		spin_lock(pte_ptl);
-> +		set_ptes(vma->vm_mm, _address, pte, mthp_pte, (1 << order));
-> +		update_mmu_cache_range(NULL, vma, _address, pte, (1 << order));
-> +		spin_unlock(pte_ptl);
-> +		smp_wmb(); /* make pte visible before pmd */
-> +		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
-> +		deferred_split_folio(folio, false);
-> +		spin_unlock(pmd_ptl);
-> +	}
->   
->   	folio = NULL;
->   
-> @@ -1353,21 +1374,27 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->   {
->   	pmd_t *pmd;
->   	pte_t *pte, *_pte;
-> +	int i;
->   	int result = SCAN_FAIL, referenced = 0;
->   	int none_or_zero = 0, shared = 0;
->   	struct page *page = NULL;
->   	struct folio *folio = NULL;
->   	unsigned long _address;
-> +	unsigned long enabled_orders;
->   	spinlock_t *ptl;
->   	int node = NUMA_NO_NODE, unmapped = 0;
->   	bool writable = false;
-> -
-> +	int chunk_none_count = 0;
-> +	int scaled_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - MIN_MTHP_ORDER);
-> +	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
->   	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
->   
->   	result = find_pmd_or_thp_or_none(mm, address, &pmd);
->   	if (result != SCAN_SUCCEED)
->   		goto out;
->   
-> +	bitmap_zero(cc->mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
-> +	bitmap_zero(cc->mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
->   	memset(cc->node_load, 0, sizeof(cc->node_load));
->   	nodes_clear(cc->alloc_nmask);
->   	pte = pte_offset_map_lock(mm, pmd, address, &ptl);
-> @@ -1376,8 +1403,12 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->   		goto out;
->   	}
->   
-> -	for (_address = address, _pte = pte; _pte < pte + HPAGE_PMD_NR;
-> -	     _pte++, _address += PAGE_SIZE) {
-> +	for (i = 0; i < HPAGE_PMD_NR; i++) {
-> +		if (i % MIN_MTHP_NR == 0)
-> +			chunk_none_count = 0;
-> +
-> +		_pte = pte + i;
-> +		_address = address + i * PAGE_SIZE;
->   		pte_t pteval = ptep_get(_pte);
->   		if (is_swap_pte(pteval)) {
->   			++unmapped;
-> @@ -1400,16 +1431,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->   			}
->   		}
->   		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
-> +			++chunk_none_count;
->   			++none_or_zero;
-> -			if (!userfaultfd_armed(vma) &&
-> -			    (!cc->is_khugepaged ||
-> -			     none_or_zero <= khugepaged_max_ptes_none)) {
-> -				continue;
-> -			} else {
-> +			if (userfaultfd_armed(vma)) {
->   				result = SCAN_EXCEED_NONE_PTE;
->   				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
->   				goto out_unmap;
->   			}
-> +			continue;
->   		}
->   		if (pte_uffd_wp(pteval)) {
->   			/*
-> @@ -1500,7 +1529,16 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->   		     folio_test_referenced(folio) || mmu_notifier_test_young(vma->vm_mm,
->   								     address)))
->   			referenced++;
-> +
-> +		/*
-> +		 * we are reading in MIN_MTHP_NR page chunks. if there are no empty
-> +		 * pages keep track of it in the bitmap for mTHP collapsing.
-> +		 */
-> +		if (chunk_none_count < scaled_none &&
-> +			(i + 1) % MIN_MTHP_NR == 0)
-> +			bitmap_set(cc->mthp_bitmap, i / MIN_MTHP_NR, 1);
->   	}
-> +
->   	if (!writable) {
->   		result = SCAN_PAGE_RO;
->   	} else if (cc->is_khugepaged &&
-> @@ -1513,10 +1551,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->   out_unmap:
->   	pte_unmap_unlock(pte, ptl);
->   	if (result == SCAN_SUCCEED) {
-> -		result = collapse_huge_page(mm, address, referenced,
-> -					    unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
-> -		/* collapse_huge_page will return with the mmap_lock released */
-> -		*mmap_locked = false;
-> +		enabled_orders = thp_vma_allowable_orders(vma, vma->vm_flags,
-> +			tva_flags, THP_ORDERS_ALL_ANON);
-> +		result = khugepaged_scan_bitmap(mm, address, referenced, unmapped, cc,
-> +			       mmap_locked, enabled_orders);
-> +		if (result > 0)
-> +			result = SCAN_SUCCEED;
-> +		else
-> +			result = SCAN_FAIL;
->   	}
->   out:
->   	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
-> @@ -2476,11 +2518,13 @@ static int khugepaged_collapse_single_pmd(unsigned long addr, struct mm_struct *
->   			fput(file);
->   			if (result == SCAN_PTE_MAPPED_HUGEPAGE) {
->   				mmap_read_lock(mm);
-> +				*mmap_locked = true;
->   				if (khugepaged_test_exit_or_disable(mm))
->   					goto end;
->   				result = collapse_pte_mapped_thp(mm, addr,
->   								 !cc->is_khugepaged);
->   				mmap_read_unlock(mm);
-> +				*mmap_locked = false;
->   			}
->   		} else {
->   			result = khugepaged_scan_pmd(mm, vma, addr,
+>  }
+>  
+>  static void imx8qxp_ldb_remove(struct platform_device *pdev)
+> 
 
+-- 
+Regards,
+Liu Ying
