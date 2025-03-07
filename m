@@ -1,137 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8352020551E;
-	Fri,  7 Mar 2025 09:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05891A314C;
+	Fri,  7 Mar 2025 09:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339740; cv=none; b=oH3H2DJc/j/2suJHJ6bLZXnPz25Eg4rS284w4PjgKR512fE1ztwGondEXYDP4RZwq0+8ZfcySyONiGp8FyPL7yUgJXQRhcN+pUsfB93nADAG4kstptliUVc5irZDydHRYUhQczgjWtcPSUAzWdAXOl1RYcuhaMqqHE/S716eyfs=
+	t=1741339765; cv=none; b=FyBL/R0XWVMrHNs/nIU68Pd80U2HMjHyRbfnx5ij0HZVRDF24mCpQmPwSJe22jGHe1DBHD7GtzDiDJkC9e+t8EsL+yevBdU8C2T5MTczEBURW0NwAouXyLsniWWnSWq7DNyouCBrjotZ+H9SklajXtJRwq/GflqczBn3+9fhCAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339740; c=relaxed/simple;
-	bh=tuDzms1c08aaCrllft0fOlV2NkLbo4xq5O/5uzKY6M4=;
+	s=arc-20240116; t=1741339765; c=relaxed/simple;
+	bh=7Bfh7k5UFdmVJJ49J0KDeGRQEWeJgvMMCfSW/OTRfHM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUAwcGfDV7zZSz9Zr41lmgTwbrFd2a4MGH3dr/OtaGwCx9Ot88kHOU+DdsUIK5PSC0cgo14KaDlGRrMMk+YLIuVj9Q2Z5kiPfCgPUVJEziUzwghafi3iqOg7G2IVvGNAhrdZg/0Po1QJEeq8Q1od/lXlZR0b48nOxaV2uRpkNZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACQHOJD9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqjSNloDusTHNJ4J8OVMjpezSPuIihBm5ZHY320qMlwg0K2StBwoUPwDgTnDsK2mkT6YYw+NOSraeNt1ayfbNDzBGrIzzqKQKwNvJ+UdvPuOBHOoj5W+I3/o21C6k6ktSoJ5v0ZF8Ll3qTEqw5xIfGF/c53OcSd/u1ZRMmzYwyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=cRHA9YOt; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACQHOJD9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33507C4CED1;
-	Fri,  7 Mar 2025 09:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741339739;
-	bh=tuDzms1c08aaCrllft0fOlV2NkLbo4xq5O/5uzKY6M4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ACQHOJD9bN90viiTY9SufDegsBVusbO9zg8+V4AbLjviH78OHUVfsLvp8K9GPBbtR
-	 X9EjZTNZ30m2yAs0d8MClY9Vwdhq76D5BkM9txjQnTn5t2fxOYczYWH378TeTav+RH
-	 Gpe0x3WC2UOjzHZE1/6GeAIbNALbnFwViDAfe7wH230U6xvyqqA54VnLDKGTutL1R8
-	 44DDSfn0L5kWvpREV1Ac/FYmlGryipRmhVD3RznfMxQ0NqkeD74ZiV3Or3l5+Sy4CC
-	 45FgsOcudPTxx/Y7i+U6JWmJawVzAyoGLFa8UsLHao0Rk4zcEznlIpoAitko6C0QIc
-	 ikuAKLkXKoZhw==
-Date: Fri, 7 Mar 2025 10:28:53 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	heiko@sntech.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] docs: dt-bindings: Specify ordering for properties
- within groups
-Message-ID: <20250307-logical-nimble-okapi-3ba081@krzk-bin>
-References: <7276139ea1f4a5f4db48c77f536a3638492e6c2f.1741321984.git.dsimic@manjaro.org>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="cRHA9YOt"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 2FE081F93A;
+	Fri,  7 Mar 2025 10:29:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1741339759;
+	bh=GoOiJhY8rRPZ1FkH1+d35YRgNoOiXclww2mKrX+grYU=;
+	h=Received:From:To:Subject;
+	b=cRHA9YOtsK8T9ZERn8VJgDzgCNizecLxpfsGZl1vaxUvfO7AT7NN1vHTkDP+wY+4w
+	 FVTD4YnTsiVTrSH/wrFuwqWQnhphWwJBLmmcAFgQ1coazjDfMkO8QCdq1bk6fIvvTI
+	 YM+6eEaMBYHYfk/kjbuAJcTr4e6he2UnkG0DupH42rXHA2OuJYES3wBJlqoExQJ/sQ
+	 yA3IzvmWY/6yoMVq3lZQFmTVIhNd+NLJUlIjhtpefN0q5C6RolcwNT4AliaC6ywzRQ
+	 pt/URsyPkYcjAcRg6WlNrr4OIpGnzWakZvdPdbjPIroCXrCXfI15JF0KpPIw9h4lFs
+	 Lwcb/RUOywG7w==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id CF8567F934; Fri,  7 Mar 2025 10:29:18 +0100 (CET)
+Date: Fri, 7 Mar 2025 10:29:18 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Kalle Valo <kvalo@kernel.org>, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH] wifi: mwifiex: Constify struct mwifiex_if_ops
+Message-ID: <Z8q8bleeyyavuNeA@gaggiata.pivistrello.it>
+References: <03d524b72f20a0302e4de5e0ebdc20ab69469dec.1737308889.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7276139ea1f4a5f4db48c77f536a3638492e6c2f.1741321984.git.dsimic@manjaro.org>
+In-Reply-To: <03d524b72f20a0302e4de5e0ebdc20ab69469dec.1737308889.git.christophe.jaillet@wanadoo.fr>
 
-On Fri, Mar 07, 2025 at 05:33:37AM +0100, Dragan Simic wrote:
-> When it comes to ordering of the individual properties inside each property
-> group, applying natural sort order to multi-digit numbers [1] found inside
-> the property names can result in more logical and more usable property lists,
-> similarly to what's already the case with the alpha-numerical ordering of
-> the nodes without unit addresses.
+On Sun, Jan 19, 2025 at 06:48:39PM +0100, Christophe JAILLET wrote:
+> 'struct mwifiex_if_ops' are not modified in these drivers.
 > 
-> Let's have this clearly specified in the DTS coding style, together with
-> a brief description of the natural sort order for those readers who aren't
-> familiar with it already.  Also expand the provided node example a bit, to
-> actually show the results of applying natural sort order.
+> Constifying these structures moves some data to a read-only section, so
+> increase overall security, especially when the structure holds some
+> function pointers.
 > 
-> Applying strict alpha-numerical ordering can result in property lists that
-> are suboptimal from the usability standpoint.  For the provided example,
-> which stems from a real-world DT, [2][3][4] applying strict alpha-numerical
-> ordering produces the following undesirable result:
+> On a x86_64, with allmodconfig, as an example:
+> Before:
+> ======
+>    text	   data	    bss	    dec	    hex	filename
+>   61439	   4367	     32	  65838	  1012e	drivers/net/wireless/marvell/mwifiex/pcie.o
+> 
+> After:
+> =====
+>    text	   data	    bss	    dec	    hex	filename
+>   61699	   4127	     32	  65858	  10142	drivers/net/wireless/marvell/mwifiex/pcie.o
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-BTW, your entire commit msg still has incorrect wrapping. Please use
-standard editors which understand Git commit msg style (which I believe
-is equal to Linux submitting patches).
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-> 
->   vdd-0v9-supply = <&board_vreg1>;
->   vdd-12v-supply = <&board_vreg3>;
->   vdd-1v8-supply = <&board_vreg4>;
->   vdd-3v3-supply = <&board_vreg2>;
-> 
-> Having the properties sorted in natural order by their associated voltages
-> is more logical, more usable, and a bit more consistent.
-> 
-> [1] https://en.wikipedia.org/wiki/Natural_sort_order
-> [2] https://lore.kernel.org/linux-rockchip/b39cfd7490d8194f053bf3971f13a43472d1769e.1740941097.git.dsimic@manjaro.org/
-> [3] https://lore.kernel.org/linux-rockchip/174104113599.8946.16805724674396090918.b4-ty@sntech.de/
-> [4] https://lore.kernel.org/linux-rockchip/757afa87255212dfa5abf4c0e31deb08@manjaro.org/
-> 
-> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
-> ---
-> 
-> Notes:
->     Changes in v3:
->       - Rewrote the part of the changes that describes natural sort order
->         and its relation to "standard" alpha-numerical ordering, to make
->         it more understandable, as suggested by Krzysztof [6]
->       - Slightly expanded the patch description, to clarify the additional
->         goal of explaining the natural sort order briefly
->     
->     Changes in v2:
->       - Changed the additions to the coding style to specify natural sort
->         order, which avoids amibguity, as suggested by Krzysztof [5]
->       - Adjusted and expanded the patch description appropriately, together
->         with including one more reference for the natural sort order
->     
->     Link to v1: https://lore.kernel.org/linux-kernel/09d6f2fc111b3d6e58987336944f93ec36b65118.1741071107.git.dsimic@manjaro.org/T/#u
->     Link to v2: https://lore.kernel.org/linux-kernel/47c51c10098f089e52fb14c5c5527611dc8daf32.1741164239.git.dsimic@manjaro.org/T/#u
->     
->     [5] https://lore.kernel.org/linux-kernel/20250305-defiant-serious-newt-b7c5ea@krzk-bin/
->     [6] https://lore.kernel.org/linux-kernel/20250306-dexterous-goshawk-of-aptitude-e4f1f6@krzk-bin/
-> 
->  .../devicetree/bindings/dts-coding-style.rst       | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dts-coding-style.rst b/Documentation/devicetree/bindings/dts-coding-style.rst
-> index 8a68331075a0..7d183c1ade74 100644
-> --- a/Documentation/devicetree/bindings/dts-coding-style.rst
-> +++ b/Documentation/devicetree/bindings/dts-coding-style.rst
-> @@ -133,6 +133,15 @@ The above-described ordering follows this approach:
->  3. Status is the last information to annotate that device node is or is not
->     finished (board resources are needed).
->  
-> +The above-described ordering specifies the preferred ordering of property
-> +groups, while the individual properties inside each group shall use natural
-> +sort order by the property name.
+> Compile tested-only.
+I did also a brief smoke test on 88W8997, and the driver just probe fines.
 
-I guess you sent it after my today's reply. Full stop, done. Such
-trivial thing as sorting should have one line. Three lines is already
-longish, but fine, especially that it can be one line.
-
-"Properties within each of above groups should use natural sort order."
-
-> +
-> +The natural sort order differs from alpha-numerical ordering only by treating
-> +any single- and multi-digit numbers found inside the property names atomically,
-> +and by taking their actual numerical values and comparing those values between
-> +themselves to determine the order of property names.
-
-8 lines is 8 times too long.
-
-Best regards,
-Krzysztof
+Tested-by: Francesco Dolcini <francesco.dolcini@toradex.com> # Verdin iMX8MM - 88W8997
 
