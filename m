@@ -1,102 +1,182 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ACC21ADC5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D00721ABA6;
+	Fri,  7 Mar 2025 13:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741355470; cv=none; b=aWfVVOFDZ6zAbonLcgdpLo6WxlzINyTNTRS/5SkEbXb0RLEWZtP5yuFiga4iViebhkivct3n9mToKJDz58aXIzWziUC4hqG580kA35DsjxlPJXvqFuj/VFYP4fvG3UrwDkZEeiwn+h3YQTGC7VWL5ubNDZ3D+EZnl/VY7mt6aCo=
+	t=1741355500; cv=none; b=JZxe0Q57i8dXvTt/TD7a3FXKoEoTlfPJkNOAu2zwPRFqFbKJ0+HocXMf8dbUGJJJKhj+z5A72m5BRzKPfJiixWHIHQUFfxpoyJsw4RqdHepLSv3PUXXER+0TvXalUnpnf0QPt+Vo47G7GGC7oKOEe1CVBzH5712V8inwYPNbXYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741355470; c=relaxed/simple;
-	bh=yvJGPy1VFx0K6jKPXutCOnVSEUIflxIglSHngdnZmic=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KWK5zuzFTZ/3J21vtVqOsfZYVQQVJp1KdVuDuByJT7CcL3Uba9Kx4ajQdrJDS2wOpE3ccl0kKE6dT/Cf4Xnvg8OttaZMPXF5axeQ1yRuSICTUdz0yfBkUxjVdCPeyCGjt52gpJnjg5459gbMj9ytKw096ThoOEFfU5Uh2Sb++yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=bWKpYtaL; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1741355500; c=relaxed/simple;
+	bh=P92GJowE3+xop7nioIlnBSiVvcN8Lu72zS16CGODbKw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ek7dBbc1VB1afpCNDBoUYjIjA9x9ERkIwhEi4h9tYNy7WoRtK34DnJc2weBkDeQp1aVjBOQ5tp3tujcT7yNdgVFkq9OLQ6XcF4h5xpLt3cyEKP9QTdM1RJdQl2MG+UYgTE/byxi35CfgvgpajJrhP79FciFe4fiU8yck8BxvoWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e4kO8eNT; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="bWKpYtaL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=ng65oqhcvbczrlbale3hstnoua.protonmail; t=1741355466; x=1741614666;
-	bh=tElGIhgf67HZvxIrD/1jG0VGn45wzGBOfP+OypacSoI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=bWKpYtaLOS0cuUusKzEF0DYrNOt3VY7fPZC96UtaMNUh6X/NjaTtCGum/W7TPV2CN
-	 w1pO3DASrvTDy/7l8488XC4Wa8radCDXOB1cpV3TDSDiZH+HMUVF9SSQXSUsRRi62P
-	 n1L9UHc/2tcW3d5cMJa/N/2orJNr1RsABZP1YBYxGu78UpEYdISS7aSMtCD58AMSSk
-	 rSbrKd9Jltp/UYNO1znSoBlf8MrVwbC3syTjRhccw2hK7nx/wc4qWp4a9geWtvr15X
-	 hJbEtvBNf887EEf4AtekdvTiTfwEkFZSIBQNuZ0jhkJHCUkpwBNldM0SuFIbvbwjae
-	 QgmS4mRa7Ra5Q==
-Date: Fri, 07 Mar 2025 13:51:01 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 07/13] rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&T>`
-Message-ID: <D8A2ZPH3TSGK.IZ41SSRCL37@proton.me>
-In-Reply-To: <87msdx3qsg.fsf@kernel.org>
-References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org> <20250307-hrtimer-v3-v6-12-rc2-v10-7-0cf7e9491da4@kernel.org> <6-QyjoxR_6TYuJVEXwdFAZrhFz52ZDU_4-r64epTLFpOAMc3jM_REWS-v_7TzdcgYmq1j74UmTnhYW5HdT98bQ==@protonmail.internalid> <D8A25UNDIJHK.216EX6YG4EJ6E@proton.me> <87msdx3qsg.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 97d428098d5b074b9a1647e0d6fec250d09e913c
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4kO8eNT"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so3400817a91.3;
+        Fri, 07 Mar 2025 05:51:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741355498; x=1741960298; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GsYXGuW9uswGocW86oiWeIN4F7hDphJu+gAUcgsVqKc=;
+        b=e4kO8eNTyWKGQC4Gr3N944KHw3m4eazWQ9N5ZGJT6vnbsEVZhbl23KlYgdTNckzb67
+         K3ZRLQ3piNmWT1fbdppoQ47WXqCip5Wb+JET6XMoPZP104A4Hsd3e7SXRUdoD4h3gJpu
+         7W56f0cT9HxSWEW0FpuxHBEeV5eeLq/BncMTWP5cfuZ54XRq+TBkHTPt53hdfuy/rfaK
+         dISY9jdQN76KYRGcyMVNUDUWeNw0XVqHDjEQZNjYkrkgqVr02nj36c3q0oKO4Ucx+rJT
+         SRv3hM/2VgWuTvdmIVaWAyVrgmOsqaQ1LCXFaGolUwNvaqnOD/IIHrQTXUObW7CqYGzn
+         KHRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741355498; x=1741960298;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GsYXGuW9uswGocW86oiWeIN4F7hDphJu+gAUcgsVqKc=;
+        b=Frs1RXPL3Ou+cM7jmB/rcb9G/opl7fzmyWJuQZTyEMkDHiMleiqQwtUkulMFC5TQqM
+         E9ddZTZhpIhuHpDarJrb+uF7UsuIyK9PAWsYPtHPxykcU4JKSLMnHtFmpfj0eG8tk0Gf
+         4pO5wX4ygCdQp7kHBbFvcDdQvIiEvdnxlBSrISvN7ZHZWsKYA2t3LRhai2gxM2H149qb
+         7gwdxUC00qFc6UB6atGyOTNl1m0zOZP2iaevgW2SXleXk/DepPlV0uKiqk98UOQnI8TL
+         OEpeCZZYyic8FxLxMGBlU/1TT0Ypq0D+EOEKz3XbNgx5wvol9xmCr0eOubsfixqfPzQH
+         nbMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWG0o2QiLfUiGxk0cCeoS+NYeYpdiQr1Y7ozFG7u9alZPqh3EbLmLeH5dhRHBVb2L5MAV2rs/1vDQ4R@vger.kernel.org, AJvYcCX/EpofVely2XnqF3QnkOWzU1IVh1Qfi44NTyORolBszxB/qMYTxBmAcvNrHcYz+cpvgKrx53KcjAtmKw==@vger.kernel.org, AJvYcCXvFcqtaNniZoBbXU+vKB9blGylv9660sZxBxjKu1ZCvTLUXSyRoBY6Fo5w8zxzwGRffKFGjueCNsoR/AIh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG4M//lPRMew+QY5VWj8bWjjnwnf7UzcWGh1+Ak8W2v9WtjHyt
+	xoX/o1Up5A0gqX04W2RmJZhyF2e5eSisWZiGe/oAUjryLYQOTTB4
+X-Gm-Gg: ASbGncupIxJz8rluu0QzPM5b1C3reKQhUzAvYpUK5xb0SQF+q5onJsA1ksH6Rwi+xvA
+	WkveOaK8fLQpqCH1qOR0ucD+VE5ckmLvaOsP1ac4MCFpFCJ8gA8QzmDi4WigmF4PegM27jrCZgP
+	g0ogUQ2hlfYM/s6JPqmjhJcPTaNLKKuiIoBus7FWlZR4NDitvrOo172nS6F9uu6Jq5Guiq2m8it
+	O2+589JrZNsK+PYMZ6GdH/9R7ryD2IyzUPwjOL+UvTwn4tnrcKjylFmsEvvF3nqGC5zqwAL92Dn
+	pxo2OdAds9x/ofCzHxRma1liKT6IQoiDyPI9XMIT4KZ7RMfju5e/qw==
+X-Google-Smtp-Source: AGHT+IG111djafDJeUEZJzxG4Q6hK3LuycWp707Rg+oLSJoKZFiWESbFt8TBFWsdR/+ya+3HFFV8Ow==
+X-Received: by 2002:a17:90a:d2c6:b0:2ff:6608:78e2 with SMTP id 98e67ed59e1d1-2ff7cea99b3mr6342874a91.16.1741355498482;
+        Fri, 07 Mar 2025 05:51:38 -0800 (PST)
+Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2ff693e73b9sm3033124a91.38.2025.03.07.05.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 05:51:37 -0800 (PST)
+Date: Fri, 7 Mar 2025 10:52:31 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
+	lgirdwood@gmail.com, broonie@kernel.org, dlechner@baylibre.com,
+	jonath4nns@gmail.com
+Subject: Re: [PATCH v4 10/17] iio: adc: ad7768-1: Move buffer allocation to a
+ separate function
+Message-ID: <Z8r6H40mTKO_QF9Y@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <d078cdcf3a8bdd60ec3b9b6822e9705bf3f98bfa.1741268122.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d078cdcf3a8bdd60ec3b9b6822e9705bf3f98bfa.1741268122.git.Jonathan.Santos@analog.com>
 
-On Fri Mar 7, 2025 at 2:37 PM CET, Andreas Hindborg wrote:
-> "Benno Lossin" <benno.lossin@proton.me> writes:
->> On Fri Mar 7, 2025 at 11:11 AM CET, Andreas Hindborg wrote:
->>> +impl<'a, T> RawHrTimerCallback for Pin<&'a T>
->>> +where
->>> +    T: HasHrTimer<T>,
->>> +    T: HrTimerCallback<Pointer<'a> =3D Self>,
->>> +{
->>> +    type CallbackTarget<'b> =3D Self;
->>> +
->>> +    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings:=
-:hrtimer_restart {
->>> +        // `HrTimer` is `repr(C)`
->>> +        let timer_ptr =3D ptr as *mut HrTimer<T>;
->>> +
->>> +        // SAFETY: By the safety requirement of this function, `timer_=
-ptr`
->>> +        // points to a `HrTimer<T>` contained in an `T`.
->>> +        let receiver_ptr =3D unsafe { T::timer_container_of(timer_ptr)=
- };
->>> +
->>> +        // SAFETY: By the safety requirement of this function, `timer_=
-ptr`
->>> +        // points to a `HrTimer<T>` contained in an `T`.
->>
->> This justification seems wrong it talks about `HrTimer<T>`, but here we
->> have a `*const T`... Also see [1] (I am mainly interested in your
->> justification for the lifetime).
->>
->> [1]: https://doc.rust-lang.org/std/ptr/index.html#pointer-to-reference-c=
-onversion
->
-> How is this:
->
->         // SAFETY:
->         //  - By the safety requirement of this function, `timer_ptr`
->         //    points to a `HrTimer<T>` contained in an `T`.
->         //  - The `PinHrTimerHandle` associated with this timer is guaran=
-teed to
->         //    be alive until this method returns. As the handle borrows f=
-rom
->         //    `T`, `T` is also guaranteed to be alive for the duration of=
- this
->         //    function.
+On 03/06, Jonathan Santos wrote:
+> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> 
+> This change moves the buffer allocation in a separate function, making
+> space for adding another type of iio buffer if needed.
+> 
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
+LGTM
 
-Sounds good, if you can also explain (probably somewhere else, as every
-`RawHrTimerCallback` implementer will rely on this) why the handle lives
-for the duration of the callback.
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
----
-Cheers,
-Benno
-
+> v4 Changes:
+> * None.
+> 
+> v3 Changes:
+> * Added missing SoB.
+> 
+> v2 Changes:
+> * Interrupt and completion moved out from ad7768_triggered_buffer_alloc(). 
+> ---
+>  drivers/iio/adc/ad7768-1.c | 44 ++++++++++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> index 86f44d28c478..e88e9431bb7a 100644
+> --- a/drivers/iio/adc/ad7768-1.c
+> +++ b/drivers/iio/adc/ad7768-1.c
+> @@ -619,6 +619,31 @@ static int ad7768_set_channel_label(struct iio_dev *indio_dev,
+>  	return 0;
+>  }
+>  
+> +static int ad7768_triggered_buffer_alloc(struct iio_dev *indio_dev)
+> +{
+> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	st->trig = devm_iio_trigger_alloc(indio_dev->dev.parent, "%s-dev%d",
+> +					  indio_dev->name,
+> +					  iio_device_id(indio_dev));
+> +	if (!st->trig)
+> +		return -ENOMEM;
+> +
+> +	st->trig->ops = &ad7768_trigger_ops;
+> +	iio_trigger_set_drvdata(st->trig, indio_dev);
+> +	ret = devm_iio_trigger_register(indio_dev->dev.parent, st->trig);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->trig = iio_trigger_get(st->trig);
+> +
+> +	return devm_iio_triggered_buffer_setup(indio_dev->dev.parent, indio_dev,
+> +					       &iio_pollfunc_store_time,
+> +					       &ad7768_trigger_handler,
+> +					       &ad7768_buffer_ops);
+> +}
+> +
+>  static int ad7768_probe(struct spi_device *spi)
+>  {
+>  	struct ad7768_state *st;
+> @@ -689,20 +714,6 @@ static int ad7768_probe(struct spi_device *spi)
+>  		return ret;
+>  	}
+>  
+> -	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-dev%d",
+> -					  indio_dev->name,
+> -					  iio_device_id(indio_dev));
+> -	if (!st->trig)
+> -		return -ENOMEM;
+> -
+> -	st->trig->ops = &ad7768_trigger_ops;
+> -	iio_trigger_set_drvdata(st->trig, indio_dev);
+> -	ret = devm_iio_trigger_register(&spi->dev, st->trig);
+> -	if (ret)
+> -		return ret;
+> -
+> -	indio_dev->trig = iio_trigger_get(st->trig);
+> -
+>  	init_completion(&st->completion);
+>  
+>  	ret = ad7768_set_channel_label(indio_dev, ARRAY_SIZE(ad7768_channels));
+> @@ -716,10 +727,7 @@ static int ad7768_probe(struct spi_device *spi)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> -					      &iio_pollfunc_store_time,
+> -					      &ad7768_trigger_handler,
+> -					      &ad7768_buffer_ops);
+> +	ret = ad7768_triggered_buffer_alloc(indio_dev);
+>  	if (ret)
+>  		return ret;
+>  
+> -- 
+> 2.34.1
+> 
