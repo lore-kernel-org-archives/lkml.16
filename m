@@ -1,130 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60421607A4;
-	Fri,  7 Mar 2025 18:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C671607A4;
+	Fri,  7 Mar 2025 18:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741370796; cv=none; b=T5YGEzaH1urCCdObMWY5Hz49YKr7gC9/yOt1rYxHnf+GK4uh0fLNVPkhN4ha7g1uYF7Jnu9fGJlfUl6tbHuUb4N8VgFo+I8mNG/f3YxPxC40MVKrPRPp4ZNVflnE5Ov3hl7iIoY69fgF6OHG9dQQbUoNy80IL5nzUKLyTOtdfzk=
+	t=1741370830; cv=none; b=DuNIzM/ANiWKnAv/Ho1iBQ4GAaTuC+cH+UxsEaFRZScOAkcazWVuUoG2v7zhmLmYRl+tVaalxfeqzWCYYGstYFY51GUbj27WV35smySuyQRVayFrnbR7rfXTvrUMmD3GJbaUahizpB5dsEdT7X/Q0N3aKnigvdLrBXPbOE3xsDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741370796; c=relaxed/simple;
-	bh=/LNeyTo1Lsx5XsFAdGiPxDkCOZ6LU1NL1TFIHWBBD8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mkJd/fBJg8zX28xdMUcBB5ep3jbb/nCpm2v6ZsoAICVXYkFnw0Oq+/M1KZuPp94sxhvG3zaqrHZflNuvdyjZr3yqZxL3gjGolWxhvQv0E5wuruBSV7WI1MxXNP15fmlP0qa9HQP3UnUCDJF+LazXZvxiUW3xNuGNjtGrhW1VQv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ccv3WhIH; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741370830; c=relaxed/simple;
+	bh=PCBLZbxeORQk+gg5YOjCD6ldtBvJ/+2v4ImdaMUnWgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pmWHk8W+mLNPP3SV16TdTulkJ7GeIs51TmaYrAtz8ANVZ/xqKSjnjKotX61JJ8wUtoYAIbiAOsnFSNOlPEbFN8il0hIKZASWYh7qfIlTv9zeyuFrjAIZQyT3OTjlw1dl8X1iCVkofxRWNRXvn/ZQHGzncX+qdIvsFcPubmDyzek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IxLHrpdg; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ccv3WhIH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741370795; x=1772906795;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/LNeyTo1Lsx5XsFAdGiPxDkCOZ6LU1NL1TFIHWBBD8o=;
-  b=Ccv3WhIHu+bq05nJp9slTZ8nHzExcILyVx80kUpAAsFqL/PiEdT4pX7k
-   N8oQ59ZNAcUizJIpOeLBLn6iUcwqJFPZh6mcX5WyVNqh/bE35b/xTlz9N
-   +XZkcHeCUoAwGYThEQR/GM8GeA7GGYvwzU8k62N+KadjTv4ONkWZOeYmy
-   VKOnOZD/faQNUfXALHyC6bE+RpW0S+8N8fmjCb4JwNS6MlT/hebLXEEbi
-   x3aSYY8uF6YJj/nc232Xy4Pq077AK2Z/EWWS4z8rUs/8ruc4vDpB6l4VU
-   RpETGIuOV8GrVJGgEGLrFlK4KmHpDX36akbskZDtBuYt06VAvqlcPCGVW
-   A==;
-X-CSE-ConnectionGUID: st9SMvM6RQ61ciZYCrsEEg==
-X-CSE-MsgGUID: pBiC9xYWQWaJG9zqYaG4gg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42629927"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="42629927"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:06:34 -0800
-X-CSE-ConnectionGUID: uhEHW7HqSmSgYdgBm3bTOQ==
-X-CSE-MsgGUID: Nzo/yW6HQHG22mJ9x4SJbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="150339325"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.132]) ([10.125.110.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:06:33 -0800
-Message-ID: <cde2e31a-af2b-4236-a5b7-e1119c62b4a5@intel.com>
-Date: Fri, 7 Mar 2025 10:06:56 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxLHrpdg"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac25313ea37so220996466b.1;
+        Fri, 07 Mar 2025 10:07:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741370827; x=1741975627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8wkOomTGttoakawgqhoO+GpdOmml5a28PHZWdVY9aEg=;
+        b=IxLHrpdg2f02pmksqXYVyJ3V8ag8KfHsraLw+xDi3YGe4pcfF9DkRcd9Hopa+WKNeM
+         g6y1fVU/83zCZ8UUWNRGNjtQ96HzRVY/g7tKLmsYxoT7e1napRO9GueDtJMiDSjup0wH
+         6gueklHmbY517i00DhG+2epTELlXBRXnN9m8DYcRzwMZ59YMFZp1mvlhS55EKfwJYRPm
+         NtzqdOrKwaNmEI9SW+cMzzM/QzgBlUT0MM96252wX7D54sXwTWbbbKX2sirPmrRY3/Xc
+         ZHzbufvS70ivJyPf94pxthc27r9xHWoFulXwnwuY5Oa1xFOhSegppwLloijG0iXqeAow
+         SAjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741370827; x=1741975627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8wkOomTGttoakawgqhoO+GpdOmml5a28PHZWdVY9aEg=;
+        b=TnLkdQPCszAKkbDWMRkx31vbBnvouWKwKMi5aCl7MOVPQCaSUewfj1g2eW5RqhsCIl
+         xfbDtXnqYuFbNmLbct7cVD6GhvpTrQLR6Q1MOw0oMgP6wScaujo8Yqd3o06395XAe7pH
+         oDkgQ3owPA8ysvwIRB96pxlyeZux8kjWh+GUF56P8tNQQwuZD+rJQ9/EY/tRaOhxGqS3
+         40HX1qkPNgPdF/9MHWojjXWDSwOZfFdfxDM7ObaTmDZHHHOqo5tKNN2AJC5tLRNOgYLQ
+         ikVPORUFVFpiQ812CUyBv50pQUhgtitWV/XnSkhp7QlBR6sCsE6PpssnwmaD8BXdn03X
+         JlcA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Lzpj7cGc3oDHzckPdH6D3oSbkIqSwdbZe2HniSm0Ih83WV2GR/8n4jy1nZlxziLk3k3l+YVw@vger.kernel.org, AJvYcCW9M9GbLabGUbfaZCuKChN0ulrbKozqbh3ya8FPEjL53X1rDaioUZYEyURVfQJ7w1o4bc/5MCh937+Pd5U=@vger.kernel.org, AJvYcCXRt6qPqi5DHVFyl69Hv6MhtUb0wKvF7HIFLWVs1/CNUuEQQPt9zx5yupiyqv4nRynydWscgCZ0pfVo9wHLkJWpHGetXg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtAR0QMxPaNqGAIm5SYBzcz5eacSjKzqjnMX8dUcMoaCuetRrD
+	af2qPdoP0gkgd1lOLA0cJ/hMYTAh3rZIsQSpXH3X4iNkjI1CLD5Ouq9MG4GQketDqh5Vs/E0FN6
+	OoF2ERDomFxdQZYCKYk7TtYU23Io=
+X-Gm-Gg: ASbGncuOge9ExTGCb+yuZcjy3vaxD2EcMsV/KjgAKLVJRpE1TudfNCEvfruPqNZDM4d
+	ujEYRE6LJ1LtLvRy0+csSaGzIaNnktFppdb1SnYqpkVdR9//wWl1OUMWY1cJ4p4YvDbuwV5HPrv
+	6LtlAvvoXu3ky92fg3CclqIiKCcBgO
+X-Google-Smtp-Source: AGHT+IFBf7glgDcgWmZiKnDmmcF21bxMSuMDhbcpDZPMMBRIr6Vb+pd9XoZN62iofvl9sTrgCJwFci7pDGa5B6mFURE=
+X-Received: by 2002:a17:907:a193:b0:abf:51b7:6071 with SMTP id
+ a640c23a62f3a-ac2525f212emr392804766b.13.1741370826759; Fri, 07 Mar 2025
+ 10:07:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/10] x86/fpu/xstate: Introduce guest FPU
- configuration
-To: Chao Gao <chao.gao@intel.com>, tglx@linutronix.de, x86@kernel.org,
- seanjc@google.com, pbonzini@redhat.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: peterz@infradead.org, rick.p.edgecombe@intel.com,
- weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de,
- Maxim Levitsky <mlevitsk@redhat.com>
-References: <20250307164123.1613414-1-chao.gao@intel.com>
- <20250307164123.1613414-6-chao.gao@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250307164123.1613414-6-chao.gao@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
+ <20250227121522.1802832-6-yong.liang.choong@linux.intel.com>
+ <Z8lLm9Ze9VAx3cE_@surfacebook.localdomain> <601c88fb-8ec8-4866-a45d-f28dea6d9625@linux.intel.com>
+ <CAHp75VeOKbAsvSuf5+VQnGFmUcN92TNnR2eF1+70h3PjaMdMqA@mail.gmail.com>
+ <d7c0094e-7fd3-4113-8d00-91b7a83ffd1f@linux.intel.com> <257769403908de3ac6271059e1febee88654fbdc.camel@linux.intel.com>
+ <19b78790-d4d3-45db-9b1f-fbe40f8ed795@linux.intel.com>
+In-Reply-To: <19b78790-d4d3-45db-9b1f-fbe40f8ed795@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 7 Mar 2025 20:06:30 +0200
+X-Gm-Features: AQ5f1JoeMb52MrYyvd86gAym0UFqsglYSq0MjE2RDPOAAk4Ejr9eExmge1UjnS8
+Message-ID: <CAHp75VcXtwe3zutnZUDNXBPe1qgwP+GbBF9KSFHOPioEvSk3Pw@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 5/6] net: stmmac: configure SerDes according
+ to the interface mode
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: david.e.box@linux.intel.com, Simon Horman <horms@kernel.org>, 
+	Jose Abreu <joabreu@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/7/25 08:41, Chao Gao wrote:
-> +	fpu_guest_cfg.max_features = fpu_kernel_cfg.max_features;
-> +	fpu_guest_cfg.default_features = fpu_guest_cfg.max_features;
-> +	fpu_guest_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
+On Fri, Mar 7, 2025 at 7:28=E2=80=AFAM Choong Yong Liang
+<yong.liang.choong@linux.intel.com> wrote:
+> On 7/3/2025 4:52 am, David E. Box wrote:
+> > On Thu, 2025-03-06 at 20:56 +0800, Choong Yong Liang wrote:
+> >> On 6/3/2025 5:05 pm, Andy Shevchenko wrote:
+> >>> On Thu, Mar 6, 2025 at 10:39=E2=80=AFAM Choong Yong Liang
+> >>> <yong.liang.choong@linux.intel.com> wrote:
+> >>>> On 6/3/2025 3:15 pm, Andy Shevchenko wrote:
+> >>>>> Thu, Feb 27, 2025 at 08:15:21PM +0800, Choong Yong Liang kirjoitti:
 
-Is just copying and pasting the 'fpu_kernel_cfg' initialization really
-the best way to explain what's going on?
+...
 
-Let's say you just did:
+> >>>>>> config DWMAC_INTEL
+> >>>>>>        default X86
+> >>>>>>        depends on X86 && STMMAC_ETH && PCI
+> >>>>>>        depends on COMMON_CLK
+> >>>>>> +    depends on ACPI
+> >>>>> Stray and unexplained change. Please, fix it. We don't need the
+> >>>>> dependencies
+> >>>>> which are not realised in the compile time.
+> >>>> The dependency on ACPI is necessary because the intel_pmc_ipc.h head=
+er
+> >>>> relies on ACPI functionality to interact with the Intel PMC.
+> >>> So, that header has to be fixed as ACPI here is really unneeded
+> >>> dependency for the cases when somebody (for whatever reasons) want to
+> >>> build a kernel without ACPI support but with the driver enabled for
+> >>> let's say PCI device.
 
-	fpu_guest_cfg = fpu_kernel_cfg;
+> >> Thank you for your feedback, Andy.
+> >> I appreciate your insights regarding the ACPI dependency.
+> >> The intel_pmc_ipc.h header is under the ownership of David E Box, who
+> >> focuses on the platform code, while my focus is on the netdev.
+> >>
+> >> if you could kindly look into making the ACPI dependency optional in t=
+he
+> >> intel_pmc_ipc.h header, it would be greatly appreciated.
+> >> I am more than willing to provide any support necessary to ensure a sm=
+ooth
+> >> resolution.
+> >
+> > Choong you only need put the function under a #if CONFIG_ACPI block and=
+ provide
+> > an alternative that returns an error when the code is not build. Like t=
+his,
+> >
+> > #if CONFIG_ACPI
+> > static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc=
+_ipc_rbuf
+> > *rbuf)
+> > {
+> >     ...
+> > }
+> > #else
+> > static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc=
+_ipc_rbuf
+> > *rbuf) { return -ENODEV; }
+> > #endif
+> >
+> >> This patch series has already been accepted, but we recognize the
+> >> importance of addressing this issue in the next patch series for upstr=
+eam.
+> >> Our goal is to ensure that the driver can be compiled and function
+> >> correctly in both ACPI and non-ACPI environments.
+> >>
+> >> Thank you both for your understanding and collaboration.
 
-?
+> The current ACPI dependency for the config DWMAC_INTEL is necessary,
 
-That would explicitly tell the reader that they're equal.
+I can argue on this. The driver worked without problems on the cases I
+explained, so the dependency introduced very recently and only for a
+subset of the cases. What you probably wanted to say is that "the
+dependency is needed to avoid compilation errors in CONFIG_ACPI=3Dn
+cases since the used API doesn't (yet) provide the necessary stubs".
+With that being assumed I agree.
 
+> but I
+> agree on making it optional.
+>
+> Implementing the suggestion from David using the "#if CONFIG_ACPI" approa=
+ch
+> would address your concern about users who need to build a kernel without
+> ACPI support.
+>
+> If you are okay with this approach, then I will submit the solution for
+> upstream.
 
+Yes, please do it as the ACPI dependency brings a few hundreds of
+kilobytes into the kernel with a lot of possible unneeded stuff.
+
+--=20
+With Best Regards,
+Andy Shevchenko
