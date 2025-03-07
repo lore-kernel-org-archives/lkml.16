@@ -1,130 +1,93 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220441A239E;
-	Fri,  7 Mar 2025 10:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C134B1A239E;
+	Fri,  7 Mar 2025 10:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741343937; cv=none; b=AIB56nXcLBKSAkOjaTRHGKFvo0pF71R5kub6wkL35p17GbNZIqKoW5p2yzRC9xcSmErUmj3mrxix+SDuEWjaVZOuZnSacg8swmvE0Hio91Leti0XxVDL3WD+JGMJvjadEK4YqVjb4CRzBtPlRp2Jpm3wVIRPT/Y6CgVIj0QDxB8=
+	t=1741343960; cv=none; b=dXEWUyHds4dURgFCd2tXlEVT/AGsOQAf30Eo9B7NFhkcjkfYj5RB1iZQj45TRHAaAbNsAWBgUOOW/l45+RvbO/3RnQm23/V36EczPUyrrV7wOYvAG/QvJuFPbz1cLLC2UelHNOjIMyyfrJY5BFLT9BbdIn1uLPB2zdQUAHVydVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741343937; c=relaxed/simple;
-	bh=KBjfkwRvGCUyvFil1J8pzURsrNfhG9wF/ffzDqhupJA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=i4BrrGamlHs1a4v1xxdafwgIpsQmEEs0MvCmDpa00JNPLu1h1VogIAcUv0cM29hMXIGLWTt6dXPjmXJCAYmymgzCvQd1xxjWV+HMd4g+dtR1j24TgomI96++/M8akgPuZ6ZR9VXCiLABW4MAtZJDKsp8MUudM+4SFuBvJN4dDAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iq+fSDAs; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741343960; c=relaxed/simple;
+	bh=99wAVcYRjJq/6/DqsC5mahdq+/vz2vQmHA/zE8ELOBM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HngLIDc2S3HJNHZNV8detsDpV0rwy+kjPI7tKmcLuqlcKN6ADdINeXbd76b7X75EIsWM/M9zL1JAqM6v2WKA2DsZ/clH2xHk9x4Kik2iHUMZ5V6GFki04JxSWSeV+gHOL3/a/ZQMFImUhE37Aqyi0CFJQ5RnqNWs4FX+95ye3NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TpGJq7Z/; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iq+fSDAs"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bc6a6aaf7so13054565e9.2;
-        Fri, 07 Mar 2025 02:38:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741343934; x=1741948734; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KBjfkwRvGCUyvFil1J8pzURsrNfhG9wF/ffzDqhupJA=;
-        b=Iq+fSDAs6F0LtZnFNme30f+57EjZXJRwxOrjGWyWbTpkzw2ysl4G5IR8mWyvSnJZQe
-         TDHfGhj7Bj5Asttf87cWLzE8CXEP4/KzJiu9B2j7pAWpMzyjUS03n+dZTjtEsszIMPTB
-         IecUHqZnrdl9DuARvhErSRtIlFz/KKMaP1LIM1Aiba1JUTfyWvhQEU5EiWq5BYc6YfRR
-         9CHBoCFFSPmS+eADmaUkkSM/8Gjkc7KPvmG7GoJonOm85Del5/fWW1Sf8xnW9KjVSOWs
-         UtIrr7k5nbnJlcleksuMUAhMw6vM8kO+R58K+eia4LM6szJSNZD29kDCc0SGwVl5RZM3
-         QV5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741343934; x=1741948734;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KBjfkwRvGCUyvFil1J8pzURsrNfhG9wF/ffzDqhupJA=;
-        b=YdjyfgZWy2V10uQGwXti58psKF1ArR2IH117sWffFk8aGTtU0geo5/vGXgbhtQ/il9
-         a4uWEB8zgHjS7x0QPkebja+vceKjMyEsgo3AIetXVUTj9K2cpp5RU4YER7z4DLSNf/gr
-         9yLpRZp4Azd4OqcvO4vEnTTDtXsU3q9V+ontU7LO5BkdgDNElKG9mJBS/DTKjJ+kEtGp
-         gd5qq0HLr/lFPl7G/3y4d0AwiTqqndL+/TF1K95Bmbg1Ph37qqqEUsMffUiju5mdEiCP
-         hyBEHe4AW86Zn0VRYMMRk5z1Mb+dG8fHE3vYGH2wpVwUt+GtlwhDi9E3FFcA0IOh0CGU
-         C+WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0zdTw7Pk4PHiRBu1JwIobk/mLD9/A+Gdxpw/EfaALSiCE6wgIZGz+aDllRuOGFbH4v254n8ktmsJP0A==@vger.kernel.org, AJvYcCWoKNkxtbVdX4Ejv5Fqr+k06XxJrT/cUfR6xhzyAzC06ehJiPboh4zztqNZvOf+/N1lRbax0EDZb/09ZL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyra+Fppc3bbUMPtbyEyHINh/rJE+6x5zgwtIPiySSJ79gPeDSy
-	ElsGAQzPVcv2/YhKeJrxeYrY78+TG0LpCT65M5Wr8QaQeLp/Ke8J
-X-Gm-Gg: ASbGncudqToUSbQQkZ5WrC5Oy0InGgqQVVl+4TI0Lzbp2xiJgurH0pw7MVDMzY1VjFw
-	iAarJZJ4Wid/Pb3kd65LxP6wxKfjuimqGM6hlhBuih0ARRzr5QDJjyPumnVh9vJJBtz2fZswC4j
-	L8X7n1rjMI7hukBKjjQ1lVaXnDodpu+lhuiE++l0aGsFlHsT7qcMSsfpmv3j+Nqx7qM3n577Jlq
-	M3hGPeh0ZRg/TJmGiX2GC21Xc6y62SSeoTejf8wUexR54A4PhNQHgp4PBbRrJRPNn3TGuXQxPoh
-	iZpmfQvCHGU1LV33d1zLK9cc7jtjCtQcRZRenUQ1uhjZ4lU=
-X-Google-Smtp-Source: AGHT+IEorkdXayPImRPZQsK1R9xIBDq7GWAblWS2lMHO3O/4fE4WLPdorUwZSgvvZskGaZ02RyApBg==
-X-Received: by 2002:a05:600c:3546:b0:43b:cc73:2528 with SMTP id 5b1f17b1804b1-43c5a62a5f8mr17687435e9.20.1741343933990;
-        Fri, 07 Mar 2025 02:38:53 -0800 (PST)
-Received: from [10.176.235.56] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd4352e29sm76442125e9.32.2025.03.07.02.38.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 02:38:53 -0800 (PST)
-Message-ID: <7c6042974071699f9e5a85a4592d75a6a8c5ce4f.camel@gmail.com>
-Subject: Re: [PATCH] ufs: core: bsg: Add hibern8 enter/exit to
- ufshcd_send_bsg_uic_cmd
-From: Bean Huo <huobean@gmail.com>
-To: Arthur Simchaev <Arthur.Simchaev@sandisk.com>, 
- "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
- "quic_mapa@quicinc.com" <quic_mapa@quicinc.com>,  "quic_cang@quicinc.com"
- <quic_cang@quicinc.com>
-Cc: Avri Altman <Avri.Altman@sandisk.com>, Avi Shchislowski
-	 <Avi.Shchislowski@sandisk.com>, "linux-scsi@vger.kernel.org"
-	 <linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>, "bvanassche@acm.org" <bvanassche@acm.org>
-Date: Fri, 07 Mar 2025 11:38:52 +0100
-In-Reply-To: <SA2PR16MB42515681881747A6B5C83352F4D52@SA2PR16MB4251.namprd16.prod.outlook.com>
-References: <20250304114652.210395-1-arthur.simchaev@sandisk.com>
-	 <bd2e01d8b33413655a4215221c910eaf2cdf6461.camel@gmail.com>
-	 <SA2PR16MB42515681881747A6B5C83352F4D52@SA2PR16MB4251.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TpGJq7Z/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741343959; x=1772879959;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=99wAVcYRjJq/6/DqsC5mahdq+/vz2vQmHA/zE8ELOBM=;
+  b=TpGJq7Z/EC0AHVMXbLjn/8rit5vDP3j8ALpHH30l364DEb4nmFWD73Bg
+   mY0cf2Z4ZfiKJ+S/oI5j/MOcJYgAla2A3f5GaPXmMYAc5VezWBmW8xdEN
+   STFRlcyqsgquwQHw8QTQggH11XQybBKOrki6T0qLmhEXCqFHeIcd1sJdW
+   Hfb6p7BJe/sJUSwlQ92kOji7EeASzmP+k+n3v7EU6X6PbN7qQT/2fg01T
+   JUl7IpgsaPgSysWYgObNFeHDrptGxI6nuHPhEcmSVlxF8HfnyuH8er8Cr
+   CRtj+uoCNG1yHTZky4kSM9xpNCDTVsxEo7pvZ6EFDrn38/ocSxRZDbcwi
+   Q==;
+X-CSE-ConnectionGUID: vLca3PQTS2mMGxy3GaPTVA==
+X-CSE-MsgGUID: 32Z+F4pcQuuVhaTYsNLH4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="29968927"
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="29968927"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:39:16 -0800
+X-CSE-ConnectionGUID: /IWgKA95TnOML6Ea/6JBrg==
+X-CSE-MsgGUID: cWCzXnrgSpi4Y+wll4CEfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="142520112"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.120])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:39:14 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hdegoede@redhat.com, sre@kernel.org, Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250305053009.378609-1-W_Armin@gmx.de>
+References: <20250305053009.378609-1-W_Armin@gmx.de>
+Subject: Re: [PATCH 0/3] platform/x86: dell-ddv: Rework battery temperature
+ handling
+Message-Id: <174134395033.2047.10351866706866482165.b4-ty@linux.intel.com>
+Date: Fri, 07 Mar 2025 12:39:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Fri, 2025-03-07 at 09:18 +0000, Arthur Simchaev wrote:
->=20
->=20
-> > -----Original Message-----
-> > From: Bean Huo <huobean@gmail.com>
-> > Sent: Thursday, March 6, 2025 2:50 PM
-> > To: Arthur Simchaev <Arthur.Simchaev@sandisk.com>;
-> > martin.petersen@oracle.com; quic_mapa@quicinc.com;
-> > quic_cang@quicinc.com
-> > Cc: Avri Altman <Avri.Altman@sandisk.com>; Avi Shchislowski
-> > <Avi.Shchislowski@sandisk.com>; linux-scsi@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; bvanassche@acm.org
-> > Subject: Re: [PATCH] ufs: core: bsg: Add hibern8 enter/exit to
-> > ufshcd_send_bsg_uic_cmd
-> >=20
-> >=20
-> > Arthur,
-> >=20
-> > At present, we lack a user-space tool to initiate eye monitor
-> > measurements.
-> > Additionally, opening a channel for users in user land to send MP
-> > commands
-> > seems unsafe.
-> >=20
-> >=20
-> > Kind regards,
-> > Bean
-> >=20
->=20
-> Hi Bean.
->=20
-> Actually,=C2=A0 the EOM tool was published two months ago
-> See the mail from Can Guo. The patch simply extends the UIC debugging
-> functionality from user space.
-> I think it is quite safe to use hibern8 functionality for debugging
-> purposes.
->=20
-> Regards
-> Arthur
+On Wed, 05 Mar 2025 06:30:06 +0100, Armin Wolf wrote:
 
-Great, we will work on that.
+> This patch series reworks the handling of the battery temperature
+> inside the dell-wmi-ddv driver.
+> 
+> The first patch fixes an issue inside the calculation formula for
+> the temperature value that resulted in strange temperature values
+> like 29.1 degrees celcius.
+> 
+> [...]
 
-Kind regards,
-Bean
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/3] platform/x86: dell-ddv: Fix temperature calculation
+      commit: 7a248294a3145bc65eb0d8980a0a8edbb1b92db4
+[2/3] platform/x86: dell-ddv: Use devm_battery_hook_register
+      commit: 8dc3f0161e35d6ceb12de4a70cbed593e5b0583f
+[3/3] platform/x86: dell-ddv: Use the power supply extension mechanism
+      commit: 99923a0df7852311fa3d01eaddb430c958780143
+
+--
+ i.
+
