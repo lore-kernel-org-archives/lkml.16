@@ -1,119 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1E8221565;
-	Fri,  7 Mar 2025 15:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935D221CC54;
+	Fri,  7 Mar 2025 15:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360249; cv=none; b=mbiEnE5cZzAh2Kft+IPoVwYHfDO74zzBSSiuYkn5vDiu/J43AC37/4ofjrygsBNnVJaQ1hIlP5OeMnL3BXp8WITrysYboO3tIFvW2aqEtkr5ntAhTzMZWb4Arip9XJn6sr60NvWse2cXn8b1jwTKNUyKqWuexKjNFMzo4SEU3Vc=
+	t=1741360293; cv=none; b=LOgVQ32THdTdiJW/X4VGaMC5d4eIDIQeqVMZT1Ia2DKuZu8SdHbGELnQcvxguQ59iQXu/eXk5y6d85cg542vdlikPCnH1vqNqylxn/BgC87ETtWuxjtJJe5VF4OnTu2sVo9DKtw+uik4nzZlSYC3BbaDdQVRJZDIkXcnN59Al0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360249; c=relaxed/simple;
-	bh=SorLb/yESkB+YPPgRtN1w+OBH2IdMbCLeWiut7PXYKM=;
+	s=arc-20240116; t=1741360293; c=relaxed/simple;
+	bh=68PYA1EofC70Yl9+ZYYWiPFB1L+1AgWZwF/BIm3DqIU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ud5+BJyKyidUSpjl7Oj6l0ftNi9xyyINFcLvJ1mObOoWodArDXFQP8CVwqTk4Wub5kpeodA/HtKAN4bZA2aLkaOISDb1lSpDOQOQ78C4/Xy0B76bCw4lL4rvZafVlGWhE/AVCVQzQ0/UwdaTIAQ0pvPFVS/gek6LEcv/ahtdAno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1CYXnJT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMBNZdcvACGz2G4QCj9iaRDdP6LHQdCCifI7hrSJ9BvIf063Eqsm8A5XJ3B0K0snXeFL7/8NxGenHCe0G/HiuBRbpII+MPadfSo2FsmddjzkvxJyTFgxnrzlOJxhpbPZvMswXGtMXZ2sTWSEMy7xrmCUedySl1C5xUumE+NeIdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ciNWFTMf; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1CYXnJT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88462C4CEE8;
-	Fri,  7 Mar 2025 15:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741360248;
-	bh=SorLb/yESkB+YPPgRtN1w+OBH2IdMbCLeWiut7PXYKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a1CYXnJTKwSwXIMQ3G2Mwntd3JYUwHmR3ZmMpv50tcbi5eq8HakiK+l6bahRrG9dP
-	 lMT9RM7+leU4jjQQsQxedvONkxhjbtnYLDPW0aRPh6FmUzmuvNZOVWulHufm9CvJnF
-	 VCq9XmmFtM2DjaSpKNKUOwYUqR+OOcsTtrAtn0AlypFs9z+D2OCV1Mnh7kiwcFrOcV
-	 k8t0I8M2exv60z83ufE/B8CneL0gRDWKc4HUDUomLnaptrBTJWpukJufYFe2mBMxvx
-	 Or42O7GUV0ZG3fkFLjeFq9IUVV+LC3thvfo0TmGeFRs7ASdVOmL5ZIm/ByEsBrtRNP
-	 7xD3POLJgwLmg==
-Date: Fri, 7 Mar 2025 12:10:42 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>
-Subject: Re: [RFC] perf tools: About encodings of legacy event names
-Message-ID: <Z8sMcta0zTWeOso4@x1>
-References: <Z7Z5kv75BMML2A1q@google.com>
- <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
- <Z7yJ0Vpub6JeQyYo@x1>
- <80432f35-e865-4186-8b92-26b25279e150@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ciNWFTMf"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223fb0f619dso40036225ad.1;
+        Fri, 07 Mar 2025 07:11:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741360291; x=1741965091; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Z0smMQNuibFTABZ6w1NkSzGMBPcRi3Tk4bDjmrxiWek=;
+        b=ciNWFTMfK2AKyH+0KifL7CKVCX0AOjNUra7V5iruX44CeXaqGlUPq3fkJAVnSyOA8m
+         I+NgdZEw0E46Bc9fPDpwzUPoWIXXlrRY4KmrDM10uUGEu9WnChZ5BfpDPzdQwTwsrcLC
+         k/NdbAyciEF8dZtxC8r1txZyy3b2OvqxukNdYcwhstgfYHO4iEbOmz6FTL+l+17dwzZq
+         dQJDwBrcEmE8tOSxmp0GWbuha3RjdfhrqcGHqj7KocALAPr8PtCFUrNKHIgrIC0A4rfA
+         twTnXR3ZP23GrlXs6tGULCLNUOGq5Aks/rFaWcuymNdlahsB9a90q/2A3hZT9SX1amZW
+         d1Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741360291; x=1741965091;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z0smMQNuibFTABZ6w1NkSzGMBPcRi3Tk4bDjmrxiWek=;
+        b=Xb6hffvZ1QyA+qKTAc2qOLRF7JLC5WKPzKUNdtysi2ZX5iZf5CX1m/kh7kgEoEqQFU
+         i1LHRjlMhMny60uiwwERqgTV8Pt3Cm3TkIRQHaml2rmHkzduqCH9IhdkvzI8qS1F9Dcn
+         vvbFyGKY3AUiX8csyh3EadxUkxNyzsfJ31ZumiGYcht4ma0V60XzLPYf8ZcCnVd6E04g
+         q279iJM52CUqhlL92++JnbgDG1xPuyUkYPtGk2yUd72jxVYPLS6qw74xyQ5asydIJkjS
+         kMuWyn/kTvR7aj25IPUxtv5gJGWC3pmUV/FTrE49bOVjOuUGjSsKWT1ng/5qcD4svVzb
+         huZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmlcUEPD/ZMEk83fNT7FGZN7P6XnF7uqRI2tNNkuvfnroBgSKXQ7NXwhrnU7X4lEwleNJTBGkh7Aj1@vger.kernel.org, AJvYcCVnxH9bTPmYVyohiNUwzt952JA9uDGOB19ccv/hSkV31Hbpgk4cXZtG4oa5xJjdB26NGm+ZG2DbCSV8hUXs@vger.kernel.org, AJvYcCWf0B7OyzIqFtST1Q9PP8HTj2T93smDfCNl5E1j9PDvf4T3BVEYdkXZs3w32OyvJpSYIdneq6nNg/9xpQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3KOJk4hJ3pAb5EGRsFqKRuj25lujdsEHqSsa6S+Q1XIgvEnad
+	KR/feZpFwltS//BcHWuT/CISWTgo0oH4CSWdNXUE6BoM9DRzcxRz
+X-Gm-Gg: ASbGncuusJ7qpIvKdwAtkehJ9Aeq+an1euwAZn5eDNzHr2ynpXbnoH6oKkCWhJP17iK
+	d00NbLp1qN7ToZ1yXSkLjDznXGdL2UaS1P5Z+Vcx1w31kW/8iBuVGwuJSRVSxqvwN/gQEnntpI/
+	2LGtRVQcB2FzTMJLGJhCzpdHqn4HP6A9H0gPTHhcM/STWKzVyprBniC4ZYRWtN+KwZeeLDNgP+n
+	qtAlwTakpHeeHFTa3ycLCwvzwQiGR9qkTT1hUjUuz7a+Uv8+PYOj8J8HS0sCqB8eNy1NLDxHmju
+	oBR5tr1ipT/Tx/DVQTYmDoCTArmZo+tvdUZzp6O4QnSeZPlcF9KA3g==
+X-Google-Smtp-Source: AGHT+IHrwpXL0L5f6em3IgAisRt8eToY4WUgHZ+JzvFiYSU/OoqGtox7zmG/M0KzUZdedDUwYqS0Jw==
+X-Received: by 2002:a17:903:32ce:b0:224:1074:63af with SMTP id d9443c01a7336-22428bdb76amr63670315ad.34.1741360290644;
+        Fri, 07 Mar 2025 07:11:30 -0800 (PST)
+Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22410a907adsm31000575ad.160.2025.03.07.07.11.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 07:11:29 -0800 (PST)
+Date: Fri, 7 Mar 2025 12:12:22 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+	dlechner@baylibre.com, jonath4nns@gmail.com
+Subject: Re: [PATCH v4 17/17] iio: adc: ad7768-1: add low pass -3dB cutoff
+ attribute
+Message-ID: <Z8sM1uW7pxJVmVN6@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <2aa347a97e7ea974951609b0bdf81cad0b21b993.1741268122.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <80432f35-e865-4186-8b92-26b25279e150@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2aa347a97e7ea974951609b0bdf81cad0b21b993.1741268122.git.Jonathan.Santos@analog.com>
 
-On Fri, Mar 07, 2025 at 02:17:22PM +0000, James Clark wrote:
-> On 24/02/2025 3:01 pm, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Feb 19, 2025 at 10:37:33PM -0800, Ian Rogers wrote:
-> > > I knew of this tech debt and separately RISC-V was also interested to
-> > > have sysfs/json be the priority so that the legacy to config encoding
-> > > could exist more in the perf tool than the PMU driver. I'm a SIG
- 
-> > I saw them saying that supporting PERF_TYPE_HARDWARE counters was ok as
-> > they didn't want to break the perf tooling workflow, no?
- 
-> Doesn't most of the discussion stem from this particular point? I also
-> understood it that way, that risc-v folks agreed it was better to support
-> these to make all existing software work, not just Perf.
+Looks good. Minor comment inline.
 
-That is my understanding, and I agree with them and with you.
- 
-> Maybe one issue was calling them 'legacy' events in the first place, and I'm
-> not sure if there is complete consensus that these are legacy.
+On 03/06, Jonathan Santos wrote:
+> Ad7768-1 has a different -3db frequency multiplier depending on
+> the filter type configured. The cutoff frequency also varies according
+> to the current ODR.
+> 
+> Add a readonly low pass -3dB frequency cutoff attribute to clarify to
+> the user which bandwidth is being allowed depending on the filter
+> configurations.
+> 
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
 
-I don't see them as "legacy".
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
-> Can't they continue be the short easy list of events likely to be common across
-> platforms?
+> v4 Changes:
+> * None
+> 
+> v3 Changes:
+> * None
+> 
+> v2 Changes:
+> * New patch in v2.
+> ---
+>  drivers/iio/adc/ad7768-1.c | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> index 664d0b535340..9ba00e9089bd 100644
+> --- a/drivers/iio/adc/ad7768-1.c
+> +++ b/drivers/iio/adc/ad7768-1.c
+> @@ -150,6 +150,17 @@ enum ad7768_scan_type {
+>  	AD7768_SCAN_TYPE_HIGH_SPEED,
+>  };
+>  
+> +/*
+> + * -3dB cutoff frequency multipliers (relative to ODR) for
+> + * each filter type. Values are multiplied by 1000.
+> + */
+> +static const int ad7768_filter_3db_odr_multiplier[] = {
+> +	[AD7768_FILTER_SINC5] = 204,
+> +	[AD7768_FILTER_SINC3] = 261,
+> +	[AD7768_FILTER_SINC3_REJ60] = 261,
 
-That is my understanding of the original intent, yes.
+Are these constants from ADAQ7768-1 datasheet?
+There it says "the sinc3 filter has a −3 dB bandwidth of 0.2617 × ODR."
+If so, maybe use 262 as SINC3 multiplier?
 
-A first approximation, those who want to dig deeper, well, learn more
-about the architecture, learn about the extensive support for
-vendor/JSON events, sysfs ones, how to properly configure them taking
-advantage of the high level of flexibility both perf, the tool and perf
-the kernel subsystem allows them to be used, in groups, leader sampling,
-multiplexing or not, etc.
-
-But lots of developers seem to be OK with just the default events or
-using those aliases for expected events across architectures, sometimes
-specifying :ppp as a hint that if there are more precise events in this
-architecture, please use them, for instance.
-
-> If there is an issue with some of them being wrong in some places
-> we can move forward from that by making sure new platforms do it right,
-
-And adding special case for broken things when we know that some event
-named "cycles" shouldn't be used for sampling, for instance.
-
-> rather than changing the logic for everyone to fix that bug.
-
-Right. And again, if something doesn't work for a while in some
-architecture, its just a matter of specifying the name of the event in
-full form, with the PMU prefix, etc.
- 
-> For the argument that Google prefers to use the sysfs events because of
-> these differences, I don't think there is anything preventing that kind of
-> use today?
-
-Indeed.
-
-> Or at least not for the main priority flip proposed, but maybe
-> there are some smaller adjacent bugs that can be fixed up separately.
-
-Yes, and work in this area is greatly appreciated.
-
-- Arnaldo
+> +	[AD7768_FILTER_WIDEBAND] = 433,
+> +};
+> +
+>  static const int ad7768_mclk_div_rates[4] = {
+>  	16, 8, 4, 2,
+>  };
+> @@ -228,7 +239,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
+>  		.type = IIO_VOLTAGE,
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+>  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
+> -					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+> +					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
+> +					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+>  		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+>  		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+>  		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> @@ -762,7 +774,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
+>  {
+>  	struct ad7768_state *st = iio_priv(indio_dev);
+>  	const struct iio_scan_type *scan_type;
+> -	int scale_uv, ret;
+> +	int scale_uv, ret, temp;
+>  
+>  	scan_type = iio_get_current_scan_type(indio_dev, chan);
+>  	if (IS_ERR(scan_type))
+> @@ -802,6 +814,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val = st->oversampling_ratio;
+>  
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
+> +		*val = DIV_ROUND_CLOSEST(temp, 1000);
+> +
+>  		return IIO_VAL_INT;
+>  	}
+>  
+> -- 
+> 2.34.1
+> 
