@@ -1,53 +1,59 @@
-Received: from out199-8.us.a.mail.aliyun.com (out199-8.us.a.mail.aliyun.com [47.90.199.8])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0752192B81;
-	Fri,  7 Mar 2025 05:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F97D4A21
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 05:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741326269; cv=none; b=cGfqpK5qSpHhoI/tdOXMT6Gq1OZ83FZ81KtKZ9DRCEI5dU4daThgAOZgL7w75tCZKO+d90qArj2wIPB8Wu3YObDn95xX9mYr9gweUf4qiKKxuKTxO/q3WzRrYbnpqunotsStkV+CaHrH6riofBQ6iJcS/Ik7bCP9o37ylFlKVTw=
+	t=1741326327; cv=none; b=pQ40XKSU3KW6/mMRgRPH5pNSgtJygXTP3PelvTIPkwhJPf4W0/UDzYAGcSfiNrjj86PsCkyXgq+n957lqJd67XALPqJbra4UIFmRJN0CG9jVX1GicmS/KhOgzN4V5ADSxC3YrO2Pn1ck+VyAWU075KMJgzsa26ZEWEhOcBfnodw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741326269; c=relaxed/simple;
-	bh=yXnROeWdVkdZ6a/ZcyHCFNldlCOsNtasLoVeFiGHuXY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fETzz3JvmzWMFrDKnab2KfwEC2KpYqGV0jRz2o5cFTcP+0yNK5sXiBOV3lCpH+IJArWTVFs8/vrykqUs7w02vWVNNS5fL7Gk9ZQDKvBAp9ksLqKfEgM4m4dIkBrZ9rzGuT+C7jU/BReo9ul3FQmPvz3UnVKC6k+KMVsrUH2SWts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=D+5xGKdN; arc=none smtp.client-ip=47.90.199.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1741326327; c=relaxed/simple;
+	bh=FrPFJOi5cvGEKY4s2nV7EyjhGWXJ99ekvAiQeCBRjvc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DWrpITfRgQPEk0auyglF+v1SaWY7882Xy40kquWc9gpZedfO5TsnshgaH4rkO8AueQQwxJb7dC6rs8li+rIdOmPMSoTdyoKBB0DYeYKmk5Pm/qNVrVEjDFlmYgv49hzO5C8rAIbeoXMK7LnSVfwIHdnQG5u5zndzNGbZDtvnNhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=uOjyGJgk; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="D+5xGKdN"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741326248; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=m8mTAaekKYGlBWk1X9tvWoctARjdc8dOZZ3LVeDO+eg=;
-	b=D+5xGKdN4rLjukIQWsPe+5kv+6ksPwuYRcKXh6NWHLhFobgRIdonYsYhQTMHRVJL6qhkTn71WtvNwD63jZ4ynuQq0KaUq2N0XO88l52gsQYgIbGLnvtbHyKWNM6e1LTJ8GUDTiJfeCsFMx+dnneju/OCdS20IzAkIf+SgtdselM=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQr2xA5_1741326245 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Mar 2025 13:44:06 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: tony.luck@intel.com,
-	bp@alien8.de,
-	peterz@infradead.org,
-	catalin.marinas@arm.com,
-	yazen.ghannam@amd.com,
-	akpm@linux-foundation.org,
-	linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com
-Cc: tglx@linutronix.de,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	jpoimboe@kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	baolin.wang@linux.alibaba.com,
-	tianruidong@linux.alibaba.com,
-	xueshuai@linux.alibaba.com
-Subject: [PATCH v4 0/3] mm/hwpoison: Fix regressions in memory failure handling
-Date: Fri,  7 Mar 2025 13:44:01 +0800
-Message-ID: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uOjyGJgk"
+X-UUID: 5ae3d56afb1711ef8eb9c36241bbb6fb-20250307
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=sb9MNp7gIFnjf4puevqUWTv9bTnAa3A6ErG94WVlhYc=;
+	b=uOjyGJgkU2vTgU9aaxr5SIKnt1JAPVDefpRFX0lBZOfC2vjiXHbZEhf8GQbooiyelQkLdmi2T16re8ehWYh5P9JA6d/8r4MjD45mbtSPpvkKGJ6C3momeieje3G1kgAQUhoxboF/AbRk2RkJ1K8yhkljQwd+2wWLalNKGtmF4W8=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:c5ee9363-f073-4767-b4fe-46df21ea50a5,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:244c09c6-16da-468a-87f7-8ca8d6b3b9f7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 5ae3d56afb1711ef8eb9c36241bbb6fb-20250307
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+	(envelope-from <xueqi.zhang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1863938294; Fri, 07 Mar 2025 13:45:19 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 7 Mar 2025 13:45:18 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Fri, 7 Mar 2025 13:45:18 +0800
+From: Xueqi Zhang <xueqi.zhang@mediatek.com>
+To: Yong Wu <yong.wu@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Xueqi Zhang
+	<xueqi.zhang@mediatek.com>
+Subject: [PATCH] memory: mtk-smi: Add ostd setting for mt8192
+Date: Fri, 7 Mar 2025 13:45:08 +0800
+Message-ID: <20250307054515.23455-1-xueqi.zhang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,152 +61,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-changes since v3:
-- drop the out-date version per Tony
+Add initial ostd setting for mt8192. All the settings come from DE.
+These settings help adjust Multimedia HW's bandwidth limits to achieve
+a balanced bandwidth requirement.
+Without this, the VENC HW work abnormal while stress testing.
 
-changes since v2:
-- drop debug error message for non-fatal case per Borislav's strong objections
-- rewrite cover letter by amending MCE and CMCI race background from Tony[1]
-- rewrite commit log
-- use is_copy_from_user() to determine copy-from-user context per Peter
-- keep comments of in kill_me_maybe() per Catalin 
-- add ack-by tag for patch 3 from Miaohe Lin
-- Link: https://lore.kernel.org/lkml/20250217063335.22257-1-xueshuai@linux.alibaba.com/T/#m4d87f152a67e26f2aabb4cdf81e451a1e4c70094
+Fixes: 02c02ddce427 ("memory: mtk-smi: Add mt8192 support")
+Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
+---
+ drivers/memory/mtk-smi.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-changes singce v1:
-- Patch 1: Fix cur_sev and sev type to `int` per Tony
-- Patch 4: Fix return value to 0 for clean pages per Miaohe
-- Patch 5: pick return value comments of memory-failure()
-
-## 1. What am I trying to do:
-
-This patch resolves two critical regressions related to memory failure
-handling that have appeared in the upstream kernel since version 5.17, as
-compared to 5.10 LTS.
-
-    - copyin case: poison found in user page while kernel copying from user space
-    - instr case: poison found while instruction fetching in user space
-
-## 2. What is the expected outcome and why
-
-- For copyin case:
-
-Kernel can recover from poison found where kernel is doing get_user() or
-copy_from_user() if those places get an error return and the kernel return
--EFAULT to the process instead of crashing. More specifily, MCE handler
-checks the fixup handler type to decide whether an in kernel #MC can be
-recovered.  When EX_TYPE_UACCESS is found, the PC jumps to recovery code
-specified in _ASM_EXTABLE_FAULT() and return a -EFAULT to user space.
-
-- For instr case:
-
-If a poison found while instruction fetching in user space, full recovery is
-possible. User process takes #PF, Linux allocates a new page and fills by
-reading from storage.
-
-
-## 3. What actually happens and why
-
-- For copyin case: kernel panic since v5.17
-
-Commit 4c132d1d844a ("x86/futex: Remove .fixup usage") introduced a new extable
-fixup type, EX_TYPE_EFAULT_REG, and later patches updated the extable fixup
-type for copy-from-user operations, changing it from EX_TYPE_UACCESS to
-EX_TYPE_EFAULT_REG. It breaks previous EX_TYPE_UACCESS handling when posion
-found in get_user() or copy_from_user().
-
-- For instr case: user process is killed by a SIGBUS signal due to #CMCI and #MCE race
-
-When an uncorrected memory error is consumed there is a race between the
-CMCI from the memory controller reporting an uncorrected error with a UCNA
-signature, and the core reporting and SRAR signature machine check when the
-data is about to be consumed.
-
-### Background: why *UN*corrected errors tied to *C*MCI in Intel platform [1]
-
-Prior to Icelake memory controllers reported patrol scrub events that
-detected a previously unseen uncorrected error in memory by signaling a
-broadcast machine check with an SRAO (Software Recoverable Action Optional)
-signature in the machine check bank. This was overkill because it's not an
-urgent problem that no core is on the verge of consuming that bad data.
-It's also found that multi SRAO UCE may cause nested MCE interrupts and
-finally become an IERR.
-
-Hence, Intel downgrades the machine check bank signature of patrol
-scrub from SRAO to UCNA (Uncorrected, No Action required), and signal
-changed to #CMCI. Just to add to the confusion, Linux does take an action
-(in uc_decode_notifier()) to try to offline the page despite the UC*NA*
-signature name.
-
-### Background: why #CMCI and #MCE race when poison is consuming in Intel platform [1]
-
-Having decided that CMCI/UCNA is the best action for patrol scrub errors,
-the memory controller uses it for reads too. But the memory controller is
-executing asynchronously from the core, and can't tell the difference
-between a "real" read and a speculative read. So it will do CMCI/UCNA if an
-error is found in any read.
-
-Thus:
-
-1) Core is clever and thinks address A is needed soon, issues a speculative read.
-2) Core finds it is going to use address A soon after sending the read request
-3) The CMCI from the memory controller is in a race with MCE from the core
-   that will soon try to retire the load from address A.
-
-Quite often (because speculation has got better) the CMCI from the memory
-controller is delivered before the core is committed to the instruction
-reading address A, so the interrupt is taken, and Linux offlines the page
-(marking it as poison).
-
-
-## Why user process is killed for instr case
-
-Commit 046545a661af ("mm/hwpoison: fix error page recovered but reported
-"not recovered"") tries to fix noise message "Memory error not recovered"
-and skips duplicate SIGBUSs due to the race. But it also introduced a bug
-that kill_accessing_process() return -EHWPOISON for instr case, as result,
-kill_me_maybe() send a SIGBUS to user process.
-
-# 4. The fix, in my opinion, should be:
-
-- For copyin case:
-
-The key point is whether the error context is in a read from user
-memory. We do not care about the ex-type if we know its a MOV
-reading from userspace.
-
-is_copy_from_user() return true when both of the following two checks are
-true:
-
-    - the current instruction is copy
-    - source address is user memory
-
-If copy_user is true, we set
-
-m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
-
-Then do_machine_check() will try fixup_exception() first.
-
-- For instr case: let kill_accessing_process() return 0 to prevent a SIGBUS.
-
-- For patch 3:
-
-The return value of memory_failure() is quite important while discussed
-instr case regression with Tony and Miaohe for patch 4, so add comment
-about the return value.
-
-Shuai Xue (3):
-  x86/mce: Use is_copy_from_user() to determine copy-from-user context
-  mm/hwpoison: Do not send SIGBUS to processes with recovered clean
-    pages
-  mm: memory-failure: Enhance comments for return value of
-    memory_failure()
-
- arch/x86/kernel/cpu/mce/severity.c | 11 +++++------
- mm/memory-failure.c                | 21 +++++++++++++++------
- 2 files changed, 20 insertions(+), 12 deletions(-)
-
+diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+index 5710348f72f6..a8f5467d6b31 100644
+--- a/drivers/memory/mtk-smi.c
++++ b/drivers/memory/mtk-smi.c
+@@ -332,6 +332,38 @@ static const u8 mtk_smi_larb_mt8188_ostd[][SMI_LARB_PORT_NR_MAX] = {
+ 	[25] = {0x01},
+ };
+ 
++static const u8 mtk_smi_larb_mt8192_ostd[][SMI_LARB_PORT_NR_MAX] = {
++	[0] = {0x2, 0x2, 0x28, 0xa, 0xc, 0x28,},
++	[1] = {0x2, 0x2, 0x18, 0x18, 0x18, 0xa, 0xc, 0x28,},
++	[2] = {0x5, 0x5, 0x5, 0x5, 0x1,},
++	[3] = {},
++	[4] = {0x28, 0x19, 0xb, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x4, 0x1,},
++	[5] = {0x1, 0x1, 0x4, 0x1, 0x1, 0x1, 0x1, 0x16,},
++	[6] = {},
++	[7] = {0x1, 0x3, 0x2, 0x1, 0x1, 0x5, 0x2, 0x12, 0x13, 0x4, 0x4, 0x1,
++	       0x4, 0x2, 0x1,},
++	[8] = {},
++	[9] = {0xa, 0x7, 0xf, 0x8, 0x1, 0x8, 0x9, 0x3, 0x3, 0x6, 0x7, 0x4,
++	       0xa, 0x3, 0x4, 0xe, 0x1, 0x7, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1,
++	       0x1, 0x1, 0x1, 0x1, 0x1,},
++	[10] = {},
++	[11] = {0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1,
++		0x1, 0x1, 0x1, 0xe, 0x1, 0x7, 0x8, 0x7, 0x7, 0x1, 0x6, 0x2,
++		0xf, 0x8, 0x1, 0x1, 0x1,},
++	[12] = {},
++	[13] = {0x2, 0xc, 0xc, 0xe, 0x6, 0x6, 0x6, 0x6, 0x6, 0x12, 0x6, 0x28,
++		0x2, 0xc, 0xc, 0x28, 0x12, 0x6,},
++	[14] = {},
++	[15] = {0x28, 0x14, 0x2, 0xc, 0x18, 0x4, 0x28, 0x14, 0x4, 0x4, 0x4, 0x2,
++		0x4, 0x2, 0x8, 0x4, 0x4,},
++	[16] = {0x28, 0x14, 0x2, 0xc, 0x18, 0x4, 0x28, 0x14, 0x4, 0x4, 0x4, 0x2,
++		0x4, 0x2, 0x8, 0x4, 0x4,},
++	[17] = {0x28, 0x14, 0x2, 0xc, 0x18, 0x4, 0x28, 0x14, 0x4, 0x4, 0x4, 0x2,
++		0x4, 0x2, 0x8, 0x4, 0x4,},
++	[18] = {0x2, 0x2, 0x4, 0x2,},
++	[19] = {0x9, 0x9, 0x5, 0x5, 0x1, 0x1,},
++};
++
+ static const u8 mtk_smi_larb_mt8195_ostd[][SMI_LARB_PORT_NR_MAX] = {
+ 	[0] = {0x0a, 0xc, 0x22, 0x22, 0x01, 0x0a,}, /* larb0 */
+ 	[1] = {0x0a, 0xc, 0x22, 0x22, 0x01, 0x0a,}, /* larb1 */
+@@ -427,6 +459,7 @@ static const struct mtk_smi_larb_gen mtk_smi_larb_mt8188 = {
+ 
+ static const struct mtk_smi_larb_gen mtk_smi_larb_mt8192 = {
+ 	.config_port                = mtk_smi_larb_config_port_gen2_general,
++	.ostd			    = mtk_smi_larb_mt8192_ostd,
+ };
+ 
+ static const struct mtk_smi_larb_gen mtk_smi_larb_mt8195 = {
 -- 
-2.39.3
+2.46.0
 
