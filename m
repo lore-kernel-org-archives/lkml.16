@@ -1,141 +1,224 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A711AA1D9;
-	Fri,  7 Mar 2025 21:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75D921AA1D9;
+	Fri,  7 Mar 2025 21:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741383250; cv=none; b=qSofLSfRXXBfdXkve6HfmNYMXunFIuYupY1nDXXLnA3WEd48dJ0D/rKC/7VvxHKf3ap/vemgxXMLoUD2AUfWLG7k3ILpW3I70GcAALFNfCFaXtW1+pU5m9Fvl3WbepKOSa/0720ARfu/DHCzpcymb86ajGVPZ78eDCWmRTfWMA8=
+	t=1741383429; cv=none; b=QpctzgZzQnUat0i9rMNnTkIbkAGUbmqxI1C/Lt1AaqBBnf30Pq8QfvuFcvgN3i+pC5aQ3i2NkuvnA95aT1NRgEGBFz3K8wA7ldFLXTt3VkHjVle0KuqERqVy1v8E4vWnMgvX1TlOhEmqKxAcMZc9fRB+XfZtf1iL5ucoxEfOyUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741383250; c=relaxed/simple;
-	bh=iKD2hfqpK3i4DHA3EEG9DcONp3f7uz5jm6h+RrK8dZo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mdcrkzodutPvsY38CzdyK0Qbm7s/xcruk32TIsVAhXaNUF0YiTL2/n8ufj4FtNSvmfmhNWeOYifJE2vABCvVRifqzO+fiXE5T2fMJqw3ibkvtzDcdeL/9rYUqaaBZDVTIlqw9BnSxl9fKWSSoskA5qrHD5zZzYJPidIK5VtCr54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bs3lMYc5; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741383429; c=relaxed/simple;
+	bh=6+fPZruWoV00X+dzjwJA3wJmJj0K4I2p13a8yFKwAWI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nVdBYkZRlRP3gdE5FhyJBuj99gdwJDTGmo/Q5JYl6tvHXh/kzrtryvWClNsvUgJovjhhMqzKEcwMDFz2lS2wBq0of6nR4CKts8W30PcIgmK06XnktfIpEvtQJZ1fgNtkkgAMbte5MSQGJ8g3G7CDxGwmaGpXDxBUZazmJjyJxXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ri9FeBsd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs3lMYc5"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-216513f8104so4803735ad.2;
-        Fri, 07 Mar 2025 13:34:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741383248; x=1741988048; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2kEgsNWjuBG1Rlp30GfVSxF9HcCJGvmeB0AXoL2Q2Fk=;
-        b=bs3lMYc5efpmlKPqcOMoZl5VdZo61/iysOeQOpRNta9gmZNxQjs1nq9KrfalnKOg+Y
-         3fcYH1VNft3j/4fXRBydF67Sk2OMT1LWA7O1Pk9FLP+lwUKd09OMC/N3aQ/X1zQjER8S
-         93GY9QACSHMSJ5RchssyMv15qpCouuJvBN5Y4Z6Kwvg8hYPTr0osoll5WN277sOpGYuw
-         2YSYiWtAVg+6TkjjRD2hUrByJkLoSTs4IE2VvXqYMuyHwOnO5Tx7IvOu1aXC0AWvO8HC
-         RjxKHdl8u08JSGCa7KwveBxEXpit4gx2OnkG718t+i+/irlD1YLuLH8O7P9BWNO01HSr
-         T9kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741383248; x=1741988048;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2kEgsNWjuBG1Rlp30GfVSxF9HcCJGvmeB0AXoL2Q2Fk=;
-        b=rfvxCM4iZwxM1SCuVvtB7te68RXMr/IaJeZMgtOGeUhktymYJXRVbq1/KgjIe1lTwP
-         k+qEJdjcoJqrlOg+Ko2OHOF/kDEAZq2MZlPrjh58V2964ba7jk+BNvBTUuwOPLcuFwjr
-         m7C645CvNVayoaRk2zhRZ6f26XFXHEWrR4o4i+XyPfen0IzCOcCtXxlSXSbc5TdSylYT
-         JVQe9dFuoSj9u0q9dpYSAvjLJjsFvMby1UH4nGFUcV61JFvVPgG3pBtkso0o5S8Bu7bq
-         9A4ShJXYSRIrUGr0i7tU/3p+RXKckh8eV6K7P6hlG8bKCPb2pb0vnngB0zWWjOAFXZuZ
-         4WZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVMI4zx3SlVNeWdTTqv3IGt1v0ijGMivkMPFw8bnrOLQWxh3aHImSrmYnuga5jd3Lj2ExB+evRWEq6gKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHINYFji13zoi8Kn70wvRqEdXgi7tRIvuvGKXmTRQSgX65CcFD
-	IeG5ek3Wp/ZLcUZKrxLo+yQvWnjKd2bLMPc4Z2bD7dh1F5CnJTP5
-X-Gm-Gg: ASbGnct4JWgJ9OMb3UqsZySgB2AO1Z821etaFcNnZKlDiKsu3lp3tozohzHuvWsOvkM
-	MVWmGfRwxUURGMMXwghu4Pjk9ElVqY+/UyZkfpE2a8elfTrvG//+nRYKZaNTple6bNfrzLOSGFQ
-	RPnnY3GRlje/IE77ndaV9Ht6lZwMzO9r1xGsNziHVJtTWCeeGBjuT6hKG3xEmpRzAJfiE/mJX0C
-	q47skx76RfEOUnNEAeEqVCfcsp1KZ4p28XPxc9tj2e15NxrjT4EKW0el+zmarfcFgWKYh5AxMDH
-	uISPx5AY5Q4xqhLb/dckip7NZmrBVpM3rH3p0pVXawT3f8OqkL8yTA==
-X-Google-Smtp-Source: AGHT+IFpIbghEXYNTZOtEUyaPvCuWT9aVCtfenazq4IYK1FK4TvSByQAcE96AIcnA1tH6mC80jw8QQ==
-X-Received: by 2002:a05:6a20:6f93:b0:1f3:329a:db7e with SMTP id adf61e73a8af0-1f5583f0511mr266453637.10.1741383248120;
-        Fri, 07 Mar 2025 13:34:08 -0800 (PST)
-Received: from localhost ([2409:40f2:1049:75fb:98f4:7f2a:9f11:7927])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af50b2d4c9fsm1465985a12.76.2025.03.07.13.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 13:34:07 -0800 (PST)
-From: Navon John Lukose <navonjohnlukose@gmail.com>
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Navon John Lukose <navonjohnlukose@gmail.com>
-Subject: [PATCH] ALSA: hda/realtek: Add mute LED quirk for HP Pavilion x360 14-dy1xxx
-Date: Sat,  8 Mar 2025 03:03:19 +0530
-Message-ID: <20250307213319.35507-1-navonjohnlukose@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ri9FeBsd"
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0A4072038F3B;
+	Fri,  7 Mar 2025 13:37:06 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A4072038F3B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741383426;
+	bh=AQn5ANn8sPdQThZDb40ZlQuiCV58eIp0gfyjJ434Q7Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ri9FeBsdG2ROc74ZZVyndfL8/sgWlsUjKGFmQR0ft2q7cEBE5djWuwF6Ww5NkMOaa
+	 O8OXBrORBWvVyXpqCzrNeWmckkZbq8mL9EZ0fXEJd47nUue5TWp9E35X5SwB6miF2f
+	 CGgKsRXHGQy2tjtOS98IBThSjmzM1p9VmGwbcf0U=
+Message-ID: <7f689725-f676-4465-974d-ca2477d445f7@linux.microsoft.com>
+Date: Fri, 7 Mar 2025 13:36:48 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/10] arm64/hyperv: Add some missing functions to
+ arm64
+To: Michael Kelley <mhklinux@outlook.com>,
+ Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
+ <arnd@arndb.de>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
+ "Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
+ "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
+ "muislam@microsoft.com" <muislam@microsoft.com>,
+ "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
+ "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
+ <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-4-git-send-email-nunodasneves@linux.microsoft.com>
+ <5f3d660d-fe2e-4ac1-94a7-66d6c8ffe579@linux.microsoft.com>
+ <2fee888a-4f81-40aa-9545-617a49a7fb30@linux.microsoft.com>
+ <SN6PR02MB41579F4147561B96A2C1C057D4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41579F4147561B96A2C1C057D4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add a fixup to enable the mute LED on HP Pavilion x360 Convertible
-14-dy1xxx with ALC295 codec. The appropriate coefficient index and bits
-were identified through a brute-force method, as detailed in
-https://bbs.archlinux.org/viewtopic.php?pid=2079504#p2079504.
+On 3/6/2025 11:05 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, February 27, 2025 4:21 PM
+>>
+>> On 2/26/2025 9:56 PM, Easwar Hariharan wrote:
+>>> On 2/26/2025 3:07 PM, Nuno Das Neves wrote:
+>>>> These non-nested msr and fast hypercall functions are present in x86,
+>>>> but they must be available in both architetures for the root partition
+>>>
+>>> nit: *architectures*
+>>>
+>>>
+>> Thanks!
+>>
+>>>> driver code.
+>>>>
+>>>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>>>> ---
+>>>>  arch/arm64/hyperv/hv_core.c       | 17 +++++++++++++++++
+>>>>  arch/arm64/include/asm/mshyperv.h | 12 ++++++++++++
+>>>>  include/asm-generic/mshyperv.h    |  2 ++
+>>>>  3 files changed, 31 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
+>>>> index 69004f619c57..e33a9e3c366a 100644
+>>>> --- a/arch/arm64/hyperv/hv_core.c
+>>>> +++ b/arch/arm64/hyperv/hv_core.c
+>>>> @@ -53,6 +53,23 @@ u64 hv_do_fast_hypercall8(u16 code, u64 input)
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(hv_do_fast_hypercall8);
+>>>>
+>>>> +/*
+>>>> + * hv_do_fast_hypercall16 -- Invoke the specified hypercall
+>>>> + * with arguments in registers instead of physical memory.
+>>>> + * Avoids the overhead of virt_to_phys for simple hypercalls.
+>>>> + */
+>>>> +u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
+>>>> +{
+>>>> +	struct arm_smccc_res	res;
+>>>> +	u64			control;
+>>>> +
+>>>> +	control = (u64)code | HV_HYPERCALL_FAST_BIT;
+>>>> +
+>>>> +	arm_smccc_1_1_hvc(HV_FUNC_ID, control, input1, input2, &res);
+>>>> +	return res.a0;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(hv_do_fast_hypercall16);
+>>>> +
+>>>
+>>> I'd like this to have been in arch/arm64/include/asm/mshyperv.h like its x86
+>>> counterpart, but that's just my personal liking of symmetry. I see why it's here
+>>> with its slow and 8-byte brethren.
+>>>
+>> Good point, I don't see a good reason this can't be in the header.
+> 
+> I was trying to remember if there was some reason I originally put
+> hv_do_hypercall() and hv_do_fast_hypercall8() in the .c file instead of
+> the header like on x86. But I don't remember a reason. During
+> development, the code changed several times, and there might have
+> been a reason that didn't persistent in the version that was finally
+> accepted upstream.
+> 
+> My only comment is that hv_do_hypercall() and the 8 and 16 "fast"
+> versions should probably stay together one place on the arm64 side,
+> even if it doesn't match x86.
+> 
 
-Signed-off-by: Navon John Lukose <navonjohnlukose@gmail.com>
----
- sound/pci/hda/patch_realtek.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+I think I'll just keep them together here for now then. They
+could be moved to the header in future if it seems worth doing.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index d2a1f836d..a84857a3c 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4790,6 +4790,21 @@ static void alc236_fixup_hp_coef_micmute_led(struct hda_codec *codec,
- 	}
- }
- 
-+static void alc295_fixup_hp_mute_led_coefbit11(struct hda_codec *codec,
-+				const struct hda_fixup *fix, int action)
-+{
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
-+		spec->mute_led_polarity = 0;
-+		spec->mute_led_coef.idx = 0xb;
-+		spec->mute_led_coef.mask = 3 << 3;
-+		spec->mute_led_coef.on = 1 << 3;
-+		spec->mute_led_coef.off = 1 << 4;
-+		snd_hda_gen_add_mute_led_cdev(codec, coef_mute_led_set);
-+	}
-+}
-+
- static void alc285_fixup_hp_mute_led(struct hda_codec *codec,
- 				const struct hda_fixup *fix, int action)
- {
-@@ -7656,6 +7671,7 @@ enum {
- 	ALC290_FIXUP_MONO_SPEAKERS_HSJACK,
- 	ALC290_FIXUP_SUBWOOFER,
- 	ALC290_FIXUP_SUBWOOFER_HSJACK,
-+	ALC295_FIXUP_HP_MUTE_LED_COEFBIT11,
- 	ALC269_FIXUP_THINKPAD_ACPI,
- 	ALC269_FIXUP_LENOVO_XPAD_ACPI,
- 	ALC269_FIXUP_DMIC_THINKPAD_ACPI,
-@@ -9401,6 +9417,10 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC283_FIXUP_INT_MIC,
- 	},
-+	[ALC295_FIXUP_HP_MUTE_LED_COEFBIT11] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc295_fixup_hp_mute_led_coefbit11,
-+	},
- 	[ALC298_FIXUP_SAMSUNG_AMP] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc298_fixup_samsung_amp,
-@@ -10451,6 +10471,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x8519, "HP Spectre x360 15-df0xxx", ALC285_FIXUP_HP_SPECTRE_X360),
- 	SND_PCI_QUIRK(0x103c, 0x8537, "HP ProBook 440 G6", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
-+	SND_PCI_QUIRK(0x103c, 0x85c6, "HP Pavilion x360 Convertible 14-dy1xxx", ALC295_FIXUP_HP_MUTE_LED_COEFBIT11),
- 	SND_PCI_QUIRK(0x103c, 0x85de, "HP Envy x360 13-ar0xxx", ALC285_FIXUP_HP_ENVY_X360),
- 	SND_PCI_QUIRK(0x103c, 0x860f, "HP ZBook 15 G6", ALC285_FIXUP_HP_GPIO_AMP_INIT),
- 	SND_PCI_QUIRK(0x103c, 0x861f, "HP Elite Dragonfly G1", ALC285_FIXUP_HP_GPIO_AMP_INIT),
--- 
-2.48.1
+>>
+>>>>  /*
+>>>>   * Set a single VP register to a 64-bit value.
+>>>>   */
+>>>> diff --git a/arch/arm64/include/asm/mshyperv.h
+>> b/arch/arm64/include/asm/mshyperv.h
+>>>> index 2e2f83bafcfb..2a900ba00622 100644
+>>>> --- a/arch/arm64/include/asm/mshyperv.h
+>>>> +++ b/arch/arm64/include/asm/mshyperv.h
+>>>> @@ -40,6 +40,18 @@ static inline u64 hv_get_msr(unsigned int reg)
+>>>>  	return hv_get_vpreg(reg);
+>>>>  }
+>>>>
+>>>> +/*
+>>>> + * Nested is not supported on arm64
+>>>> + */
+>>>> +static inline void hv_set_non_nested_msr(unsigned int reg, u64 value)
+>>>> +{
+>>>> +	hv_set_msr(reg, value);
+>>>> +}
+>>>
+>>> empty line preferred here, also reported by checkpatch
+>>>
+>> Good point, missed that one...
+>>
+>>>> +static inline u64 hv_get_non_nested_msr(unsigned int reg)
+>>>> +{
+>>>> +	return hv_get_msr(reg);
+>>>> +}
+>>>> +
+>>>>  /* SMCCC hypercall parameters */
+>>>>  #define HV_SMCCC_FUNC_NUMBER	1
+>>>>  #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
+>>>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>>>> index c020d5d0ec2a..258034dfd829 100644
+>>>> --- a/include/asm-generic/mshyperv.h
+>>>> +++ b/include/asm-generic/mshyperv.h
+>>>> @@ -72,6 +72,8 @@ extern void * __percpu *hyperv_pcpu_output_arg;
+>>>>
+>>>>  extern u64 hv_do_hypercall(u64 control, void *inputaddr, void *outputaddr);
+>>>>  extern u64 hv_do_fast_hypercall8(u16 control, u64 input8);
+>>>> +extern u64 hv_do_fast_hypercall16(u16 control, u64 input1, u64 input2);
+>>>> +
+>>>
+>>> checkpatch warns against putting externs in header files, and FWIW, if
+>> hv_do_fast_hypercall16()
+>>> for arm64 were in arch/arm64/include/asm/mshyperv.h like its x86 counterpart, you
+>> probably
+>>> wouldn't need this?
+>>>
+>> Yes I wondered about that warning. That's true, if I just put it in the arm64 header
+>> then this won't be needed at all, so I might just do that!
+> 
+> I always thought the checkpatch warning was simply that "extern" on a function
+> declaration is superfluous. You can omit "extern" and nothing changes. Of
+> course, the same is not true for data items.
+> Good point, I think I'll clean up these "extern"s in the next version.
+
+Nuno
+
+> Michael
+> 
+>>
+>>>>  bool hv_isolation_type_snp(void);
+>>>>  bool hv_isolation_type_tdx(void);
+>>>>
+> 
 
