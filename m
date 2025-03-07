@@ -1,122 +1,118 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E5623F27B;
-	Fri,  7 Mar 2025 17:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C7923F296
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741367286; cv=none; b=VvuPjPXKWD/QITdad6jV7WSpYW8f+OgCfN04horXg5iGU/9ZJFANXc9TN57CC47hIqPJSn3mqj8JRK1NgspMxbDIMpRtWAxMgt9MzGAQjbIh4rbEaez1Mbc137A+4G4aPW8/kxbWwU8wbvx0lHbKsxL1Bb3FfuZUlcvS2Txo5U8=
+	t=1741367330; cv=none; b=f4BdRGPFebgfvtpWNZITa3+9mkCy1WcL/FQ3n8kAKsF1yj5++rJf7snTcGI1Wi888AZu78uSVFbzLX+yZne9RcCH5iqLqbE7FRqL6Nqw8uZk8+bDYXZaHYRbnV905TbM3BG36De3nVPkrhcS3YTz6H6aZYPwqRq8HhLec8EzSkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741367286; c=relaxed/simple;
-	bh=ktD0lf4VCt8loLbqFUJC6GSfTQihnec3zJXK/iURr6A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ak6ZMnUSsF9+syvtrpg0OeOIhJlfzAnZ74bksKzMc0Kxu0L4QwmE9pE8N/VasAzGuT6VKhQuogrXYmBnxwTq7i5tUmQwIOG7VEL22K7CF3T0OmGfBFjly6Hy/CvQCNeE1fxRw5zdkzy0tXx33dskNZpsbt40z/DeHLrCTlf7lA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AlQBeuFJ; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741367330; c=relaxed/simple;
+	bh=SgC1G2rgGhFPge6rJs+RnqahXw9tJ3WgcDvbjDF2Jlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uxSEQIvZOST38fN+icu8YvJ6GeLRXCZsTbpiKOFc+VewYKzfs2AEll9qD2YefRETJz1WnHUtJbI1KIJKVXjMFOZWS8Msy3cnzkmW9W+kYxqXOKgUKKY7weh8+IUkw+G64jya32xPqef9sGcTmz1sGRaBay140HtyP3GD0IhX7MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UofD/Yor; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlQBeuFJ"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bfca745c7so3254461fa.0;
-        Fri, 07 Mar 2025 09:08:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741367283; x=1741972083; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B2z35a1t91F/ztrHrZrqBq5HOZTDmQp+qlaW/KuybsE=;
-        b=AlQBeuFJeHzHlm0opl7lNanah59ugI8if0q9wr3WFthhH9c11ElC/WJVifhFSe+72D
-         E9y627jsLnQ+n9NRCS3HGev8/sPDhCIltawnuM4XQF8wdauh/oRRp/SZz623shIP4qmF
-         F5UrbvDVm/eJUFJlG6pEy2QsVhpWydXkCxqr/NCt//Wst3XBqbBHNGFKB12+tsgL/1m7
-         XlA7WUJ418zLRR3NxgMLOLhTmq6WKnrEN/GZe6owJuMqnyf5tDHlFlIs45NmT0moPua5
-         qJN69yz9c1ZqQtJKjkMJRjps+hgRr4geOrpNYfRObJnIIzgqpe+QUR+nMppIAhadopPa
-         tmFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741367283; x=1741972083;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B2z35a1t91F/ztrHrZrqBq5HOZTDmQp+qlaW/KuybsE=;
-        b=vvSj1IVmjDCf8lNlZhOITwdjVuXq4EZMuJ1krC0cUQu80oNlho7l4YDda95gScyU0K
-         rEZ86UClU4X1POyUr4aZl3Zc/mxHzi1c2GGVvWPK5WGfgXmCgmfARoBxTDerfX009WkC
-         31h2/rL2L8yrYxPZ1Fog0sseDicV+SeHizIzKv7oEchu+xePk3ia7JnDpaGzgDPBWTHn
-         UAJ4CAD4AULeScKKy+3k1T0bwyS0lvQvV1ib24Tl75W6BdyRItbTLR2kqClKeLNB8xvW
-         JfquR5H5+z71btBMwynz1D6IJYLhvgIUeNV5anhvZ8dp4HLLvDb0spoIl7E7y3dRjnTh
-         Pjdg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+IAqwCmRRkCneEak7mHOCU2+ElAPYV01bhM/HxqIJvZj36g8RDTq3gCOtNM1E0Wmm928OQCYHqnw7/zzVOLY=@vger.kernel.org, AJvYcCUQmMH4A8X3a3Z9hkq2Nzf8H0/g4Oz5Pu3v5QL+gOfzNAu4cRt74zsDagmOjpbhVdCqsWPp99Xwdz3q7lLJ@vger.kernel.org, AJvYcCW7rLMkXrE5iHNzGrNx1uTXCGJrjIdCnAjL4ZYZTdzkRVMMcsJRB7aCC0HwL9H3gj4R1fwSUy9ODqYko25lGmnA@vger.kernel.org, AJvYcCX1qSDyQsm9LJvthzvLLUzXUZc+NJFBAdQc/o2nfFUvNjc/iV7GGuWhKWZ0EyYsO1W0xg9807r7wjIa@vger.kernel.org, AJvYcCXOEFWAhmoPJwstr5WEdoklTIysbCOnqSfIveI2ZK+f0oQbd3L0NCKNqjFPqOImIMVBtRdI3TsJ5HIzRRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrAIKcH3zBK8XdVnyDU3eFm1fqIBl4QD8XwrkCVWqpvi/nmHMa
-	IqMHztd+YawhstQM+YRIBLkmLq8NBS7iMW0mTnIAq+x+DBNMAgsV6LsNA3NfxOBFnMWsMaVae8I
-	USyoypDrHav4+GYpvnw/Na1Oi5Zo=
-X-Gm-Gg: ASbGncsNhpX1rBf81ehgtRZ7G3axYu1Rku2iLP4jRN9ckG6pZL7jVcoubRFNnruUu2N
-	xQGbuOHh/oyxTcy94Mcz+Q16BIlCMrj7sPnOHorwkesY14CRs/NP6Y8moRwR3CwPNQJ1VlfWFwL
-	forsPQWZL0uVIrpt63MYsSJYutWKNpQjZnT2ZsqrPQU9Sy489t1N8tyjaQaso=
-X-Google-Smtp-Source: AGHT+IEq1zBlCLTvD9Joq/2N4uxjKzwl7s93oMz25ye2VpU7/QOtZYqRLJEKrwIecdcUaIFqV+9Xr/d9AjKundnQBhY=
-X-Received: by 2002:a05:651c:410a:b0:30b:addf:70b8 with SMTP id
- 38308e7fff4ca-30bf4633e92mr13099841fa.34.1741367283068; Fri, 07 Mar 2025
- 09:08:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UofD/Yor"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741367330; x=1772903330;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SgC1G2rgGhFPge6rJs+RnqahXw9tJ3WgcDvbjDF2Jlw=;
+  b=UofD/YoruiC50M10vFXd39aZLBLSn9QMvgWzANLz9JRFyiua6yDSyLYw
+   uJ9x8s1jxpTbMh/IUa/6x2of/SumdmGVwv79wjtVSD6YNSp/RhlEsTbwF
+   2cvk3jpskDbxD6Rqgvbaoqx0LyteoNeYd/CiGNIoOIPO3XYEdd3AJm3b6
+   vsxQtocoPfzMdsf/Upi+Vzql1G5DbDH+bLKndWuNINyDecH7lMNeCak75
+   c0px460r5K1SFqDJh2ti49nvijUjCXJA+k5v8RO3k5dFNp6ocQsQfTbBT
+   0IbkldKLz2WqGs8dtQqw2+/pQd9iwqca2sABKboHizZ7lBoncYLqdDmyi
+   A==;
+X-CSE-ConnectionGUID: CEs4xFnTTz69gPdaOOESKQ==
+X-CSE-MsgGUID: gzZ1waemRC+eTQAlc6LLgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46202768"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="46202768"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:08:35 -0800
+X-CSE-ConnectionGUID: IeKRue+KQ3CCF2ZY6U8kRQ==
+X-CSE-MsgGUID: kNaOZSoKQwybA4GABZblOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="123967263"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:08:32 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tqbBV-00000000T0N-1sCo;
+	Fri, 07 Mar 2025 19:08:29 +0200
+Date: Fri, 7 Mar 2025 19:08:29 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org, Willy Tarreau <willy@haproxy.com>,
+	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
+Subject: Re: [PATCH v1 6/7] auxdisplay: hd44780: Call charlcd_alloc() from
+ hd44780_common_alloc()
+Message-ID: <Z8soDV0U2LG2KX9J@smile.fi.intel.com>
+References: <20250224173010.219024-1-andriy.shevchenko@linux.intel.com>
+ <20250224173010.219024-7-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdXP1=7YJzYp=_WJsqx2mtBYcwAjpOGK2_9SH+r4w6v2Ug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-ptr-as-ptr-v1-1-582d06514c98@gmail.com>
- <D8A6YVP8B1UB.38AHIB0LMO85Y@proton.me> <D8A73PQELZV8.24M3P13CM0062@proton.me>
-In-Reply-To: <D8A73PQELZV8.24M3P13CM0062@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 7 Mar 2025 12:07:26 -0500
-X-Gm-Features: AQ5f1JrxaVyre9LG6qt0PJ6ougYb2AugTCfJPbcVEr_g1HFErh4RfnVy3bsTxKo
-Message-ID: <CAJ-ks9m1o=uAeXYGvsM9KF3tAdf2GDTLghQCPCYAiLNV945Dcw@mail.gmail.com>
-Subject: Re: [PATCH] rust: enable `clippy::ptr_as_ptr` lint
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXP1=7YJzYp=_WJsqx2mtBYcwAjpOGK2_9SH+r4w6v2Ug@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Mar 7, 2025 at 12:04=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Fri Mar 7, 2025 at 5:58 PM CET, Benno Lossin wrote:
-> > On Fri Mar 7, 2025 at 5:41 PM CET, Tamir Duberstein wrote:
-> >> In Rust 1.51.0, Clippy introduced the `ignored_unit_patterns` lint [1]=
-:
+On Fri, Mar 07, 2025 at 10:14:48AM +0100, Geert Uytterhoeven wrote:
+> On Mon, 24 Feb 2025 at 18:30, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > HD44780 APIs are operate on struct charlcd object. Moreover, the current users
+> 
+> s/are/all/
+> s/object/objects/
+> 
+> > always call charlcd_alloc() and hd44780_common_alloc(). Make the latter call
+> > the former, so eliminate the additional allocation, make it consistent with
+> 
+> either s/make/making/, or s/make/to make/
+> 
+> > the rest of API and avoid duplication.
 > >
-> > You link to the `ptr_as_ptr` lint though, is this a typo?
-> >
-> >>> Though `as` casts between raw pointers are not terrible,
-> >>> `pointer::cast` is safer because it cannot accidentally change the
-> >>> pointer's mutability, nor cast the pointer to other types like `usize=
-`.
-> >>
-> >> There are a few classes of changes required:
-> >> - Modules generated by bindgen are marked
-> >>   `#[allow(clippy::ptr_as_ptr)]`.
-> >> - Inferred casts (` as _`) are replaced with `.cast()`.
-> >> - Ascribed casts (` as *... T`) are replaced with `.cast::<T>()`.
-> >> - Multistep casts from references (` as *const _ as *const T`) are
-> >>   replaced with `let x: *const _ =3D &x;` and `.cast()` or `.cast::<T>=
-()`
-> >>   according to the previous rules. The intermediate `let` binding is
-> >>   required because `(x as *const _).cast::<T>()` results in inference
-> >>   failure.
-> >> - Native literal C strings are replaced with `c_str!().as_char_ptr()`.
-> >
-> > These all seem very nice, thanks! I think it would also be a good idea
-> > to enable `ptr_cast_constness` [1], since those are the other kind of
-> > `as` usage that we should be doing via `cast_mut`/`cast_const`.
->
-> I didn't mean to make this sound like you *have* to do the work. If you
-> find the time and want to do it, then great, otherwise we can turn this
-> into a good-first-issue :)
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> As the code looks correct to me:
+> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-No worries, I will give it a go.
+Thanks I have corrected all grammar issues in the commit messages except one in
+the first patch which I do not understand.
+
+...
+
+> While I like the general idea, there are two things in the API I do
+> not like:
+>   1. The function is called "hd44780_common_alloc()", but returns
+>      a pointer to a different struct type than the name suggests,
+>   2. The real "struct hd44780_common" must be obtained by the caller
+>      from charlcd.drvdata, which is of type "void *", i.e. unsafe.
+> 
+> What about changing it to e.g.?
+> 
+>     struct hd44780_common *hd44780_common_alloc(struct charlcd **lcd)
+> 
+> so you can return pointers to both structs?
+
+I don't like this prototype as it seems and feels confusing. Also note,
+the APIs are using struct charlcd while being in the hd44780 namespace.
+perhaps better to rename the function to hd44780_common_and_lcd_alloc()?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
