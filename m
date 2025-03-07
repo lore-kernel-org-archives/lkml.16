@@ -1,254 +1,205 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2065.outbound.protection.outlook.com [40.107.20.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCEB157A48;
-	Fri,  7 Mar 2025 08:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741334557; cv=none; b=s3rFK1y1fN/VWRUz+TTGq4lQrQF5VyngcSXUUrqANyLuzJF6yE8hMLJegoU/KzmA4BSHPRyvR0x4+Oi3m16V03VJsPUPLyahOiCrRv80/lwcY3lEajK8AvZpO3GHVX27yxokD8auDrgjOCQHlur4+RueAiE7QTKWU825enfZUF8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741334557; c=relaxed/simple;
-	bh=WSBnNsN62tVBmykCsASSx55WWbKVE14cT7N79EfL/Go=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Sg+XuSGyc9pUqQ5bypiLNYb8NXXNqe+moVGFyKAyk8Oq1+j09dR9dRiyH1A0K86S9Np2e+uZ2Fpkd/CA3g2SBpKg4yK6De00QHO/B+Ts/ZRoe64NOwtO1dqitcv2w4folZjZiaFtn/ZJ8IKB1n6tHISQhcM6/WmlbSAA/plvWj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aS/l8of6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9EeTCHHS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DE3157A48;
+	Fri,  7 Mar 2025 08:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741334839; cv=fail; b=Add0CkHGXuqRQ+0P4vt19WVVzp9Z+2efzBPWQW+D7FfTfegbcO1iD0hFlZ5kHRV83A95XFbITbphZBptmaj9ndFdziyxJqOtKgFnidDfyv3jKdQffBmVPxhA4U+AlXmOmNA3oOtq7MmboX1rc7/MNsNzsQP8dQkL1bvZScePEAY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741334839; c=relaxed/simple;
+	bh=d+liYDq3T8qFkMlz9VNl/lI0B9wUQS28qrEAbr/cn6w=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=sLMQfb64PcBwApOA7Y0Sl0Q2encNzdVSj2XlxmEIeIeHPSRaccV3od6GgE32hzWOtIxrCg/owI9AS29FKCIM7TUj1x43e2sIEf0zBxbpzpCO/j240UuxYnZ2ZVtuT2Z24CK6KAk9hfaLjbLYi24FJTUJuqt8S2dnYrSKnMi6CV0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Z6xEkUDf; arc=fail smtp.client-ip=40.107.20.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aS/l8of6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9EeTCHHS"
-Date: Fri, 07 Mar 2025 08:02:25 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741334554;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4pMY46EuTIkzzojfwD7frFWYrlhvpbsKJkxR2OyT3sI=;
-	b=aS/l8of6xZzW6xeHPYa7g2kPG1X/SX045b02rJuGc4+ZlYn8z6QQiq0t1dywVYd/SdPzjS
-	pgt5lM0TDZ8VEXibiEqy8qAHiL8CFrg/Moy+JuiwWaXec21GJBuBRzYsuHbtgii3UCk1Je
-	FI8WwDqqEv/X+D6G8dl3OIMONI6qB7z4p6sGC1bHVRC9jiN2R8c7PdUhP865dizxca5OQP
-	AfhdA21h1rd5dLYqyv+z2pXo0V4hql4W3YV14ynx/dBHhj9T1M5NYyavYfjyikaeoFDgqP
-	u1JZU5USIbWUBkZzn8DwJK4ZxvqEd9w5xAbOrQT6AaM73f45lwVo0x5Q4xMUNw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741334554;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4pMY46EuTIkzzojfwD7frFWYrlhvpbsKJkxR2OyT3sI=;
-	b=9EeTCHHSOzVBqs5pPvzezUBajXT2YIgY1r83reHX0TzjsPvE3+1H4AAcH9WeuHn77lPfwD
-	rbyQjGEA4YlqpsAA==
-From: "tip-bot2 for Andre Przywara" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/drivers] irqchip/sunxi-nmi: Support Allwinner A523 NMI controller
-Cc: Andre Przywara <andre.przywara@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250307005712.16828-7-andre.przywara@arm.com>
-References: <20250307005712.16828-7-andre.przywara@arm.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z6xEkUDf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KEK5G+nxowMvczdd5v7pl7VNlI1RuB65E2/WEyYvvlB6tqyc+ADfmam3b31IjSGoJ30JBmqTulS1wFeQVlcooS4fP1KpVl3zeYPJOQguodpzvjKGh9C3IuTypNdT5dS7Kw/mcVk2sfdKmdkSoVGhDSXiwNwvCLIH9vY2G3iPsRufO0a3fbsz1cbX5pJrFujdyhlunC0/u50QzC0/9t/kL5Hoj9egV0orwrIzU8yqwh1Yva1s6MJyJoGjWhLRBogF4t0Z9w+RlOJyJjV7FoBquTJtRQvsIee1RN6HexNjlcRKQhc2LJCMMWKgsulA4gWrHhpgV5yRZKxHzdYDma/3Mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8WmoSbAO9h2bdUx83N9vgNjgMZJBB9TwtYZhip/ymRE=;
+ b=LhcV0vKnhV+vPcGPlpLfIBg2ALV480JNIt7MjsNdGAXnFQvtTx4dQANg6YA4W1CxooaX6MN3fKUa+mFdBFIatDQzauAYeXdfQCyLx1YOm7xWz8QuWeSktQrHniRdY4noo2NoBldrxnZpCtPfSHFdoxclL66zGnVH6ZidciXHmvZmiXj8ABXB/RY4V2xluHw39yZ6IHSR1vzg4/4oe5eb3GcsZaP5V6gCwb7QSFCAHwdPU6ss+26+XUUitnW4Wuswtjvu3s8jEsZwDctAo5xJnzhy6ukh//7avDi/PcxdT/gRV87TnEZmC9u2pX+iSu/IowZgr8GwYEMfgTzViTxjoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8WmoSbAO9h2bdUx83N9vgNjgMZJBB9TwtYZhip/ymRE=;
+ b=Z6xEkUDf+EiwzG8/yZpwNefEW0qZZBxZgjsGq9dHpQq7RSsKsNbfEu7Q8Zyh3Qfu7Qmu0a9fczCoG7EZ5tXYyTWHtMIqETx3O+uRTI81Bq1SeJ/pIFTiW7aE34KlnLKQqE+h6lHmVFzxmGpWEWyWVlCkbThf8BFzstgWdHzCymteAeD08YKk0u3Q3p65BOiwOazx0bndxukIp/2R8tdjM1x3z4VTnClZYbVHoItHUIIuCt0oAQgDpLn0ty7yogV/A4AWIUeOfcOMZT+ORu/9hboU4G9UVcPEEqRlhSV+IaXs0rMI0p8W9Exv3H16ey8301lzP+LXMgGWiiSsuF56qA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
+ by GV1PR04MB9150.eurprd04.prod.outlook.com (2603:10a6:150:25::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Fri, 7 Mar
+ 2025 08:07:13 +0000
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299%4]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
+ 08:07:12 +0000
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amitkumar.karwar@nxp.com,
+	neeraj.sanjaykale@nxp.com
+Subject: [PATCH v1] Bluetooth: btnxpuart: Fix compile errors due to BTNXPUART
+Date: Fri,  7 Mar 2025 13:39:07 +0530
+Message-Id: <20250307080907.218398-1-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR01CA0084.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:10e::25) To AS4PR04MB9692.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174133454592.14745.4937015305906176856.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|GV1PR04MB9150:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c18d031-9c7d-4a1d-fdd1-08dd5d4f10f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8o1zyXnl9pIhCN+/bmA81D+X4/r63tXi16QlrPvPs0inT5opOeMa40UfTB2Q?=
+ =?us-ascii?Q?9UgZat4xk+mDNEuKECcRTgSw7JSexFhryKGGSqaJBF8yWG/QfXmcZFda0kOa?=
+ =?us-ascii?Q?1rUBMHxgiM1xIEWyXU+N63GTWxRhU3zXzTN2Ibo40xh2j+qED7mz7NPCycu3?=
+ =?us-ascii?Q?EL4ez+p4424VXQFp4UICggl+BwQfMD+0aEnfC2lPdbkDtyPhzXyR4u0LQF56?=
+ =?us-ascii?Q?nhLLZ3UlJ9WtAK36IB5ry0lG0UgPycoPuYqmGw5CzzyJ4V/hrwjSZtPShvrI?=
+ =?us-ascii?Q?FFbFZuKDG8eR1uBEqAsDx2MO5YEbycmmHMR2CUCf86bmY3GMHcCLzF4+gdpW?=
+ =?us-ascii?Q?0HbqK5I4saEliTZmwnWnHRxZBo1XVR0W2OPli4PUBrktVBHs+I4/GZnXjrX7?=
+ =?us-ascii?Q?I3moaX4xg/KQc4YUumMp75fxR+wgIIC+aUO+BNCLkd132P2AbxNFKlO0RlKf?=
+ =?us-ascii?Q?E9ms4fwd9lK/tUWtdkfsIdWIVg8BXJUVTG92+lvzGtj87Q7uf7InYFhKiBJp?=
+ =?us-ascii?Q?+jUwIAlgMBkzWUDI4mYaGKaAMgbcCg87Ynzyn/2kSiQI44DltoJ55DWxi7Xu?=
+ =?us-ascii?Q?ws2e2kn8QuFt81C52VTdgbjcZcAbAwaSO3tKfrr25nyBHK4h/NeIxU9LkrNs?=
+ =?us-ascii?Q?bgdZyg87F+iW1lvhQzGWO/SQbKk6kVG6q94PxHCBJP2RuZlNciPicwWDNq8/?=
+ =?us-ascii?Q?OMYNhyQVfiUDA/ifGT/7SAHce4MCZAeur6FdKLBamyJUFPufO6WOlrpVqnFQ?=
+ =?us-ascii?Q?wy7KQqqMSTpRbpVf2I56lwxrSYXfApvkgGKrUP5EV+aZJwfIiz27RhwO+Wed?=
+ =?us-ascii?Q?FVb+1Kd0sk07nXaYVxeRx4/fIhZShmuqksRzCZLHzdhZPtM9TIoLNvbgiLSi?=
+ =?us-ascii?Q?TWAKsfFJxqfba7MBtfzUOMvynojtYf72zaxPjISfIf2CxJijqCY+CT62QRMd?=
+ =?us-ascii?Q?7IfC7N1g0QhGzoSydEWxn6TUaSPti7OVZ64KtzQ8dC/E+zkpbR994ebcPim5?=
+ =?us-ascii?Q?aZL52ypY7mInck2oiao/+moG24MMgDrk0wl8XSVey39R1zxU+IDRQmmUYmfy?=
+ =?us-ascii?Q?/ip4SLMNQ/MNwruOevA2G3KX6oV7ztTZqIWONhRYPkTPyu0wSPIS7ouPibxO?=
+ =?us-ascii?Q?jbvMcU/oZfvalKK11ChGdPpALttPmB+VRQaPMvvDWMmltZDXELsHfS/cEb9D?=
+ =?us-ascii?Q?tEJJXXrOEzeNdSnm7NorB3SToKSob9zzoXkY6ZoOEEFrm/zroRCjXcJ84X2j?=
+ =?us-ascii?Q?2lnIjHLcSeDZ9KUEYQNiyV3BCpQo/AC75NNxG4Y+L+S2bwcSDe51eLt/irHk?=
+ =?us-ascii?Q?JI1VrcwqSLOFMYB0nrnppZAvQkS+T7BWFNzQjq4+I5GDPh+zimdBCgYgtjBJ?=
+ =?us-ascii?Q?ZBfBV9RxLRdDTwvHMa4ZcAuV2tihpJwkl6/wR0izDJJeOO256ljDR9OVauey?=
+ =?us-ascii?Q?RZ+rMYx2UEuUbLjRP88PVAJLTI1FzJ2IakbIagolCNlm772eyffzAQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dzA72aasKnOPWtvksJ/k/AWSxqtF1ZhzedlES2De2XmMyPHEioAIReSdlTwv?=
+ =?us-ascii?Q?d6YX4LCQRmXzWQPWwAqSSr3DyGy7sQUJ6LCmcuxKDVLHPZv6xuf/PTT7Q+bo?=
+ =?us-ascii?Q?5+5IMAqBWWsuKfvkPA4cjKUBUnNGpg3SIgPNQZVz+vq+IJ2VVi1Jnl+JsRMN?=
+ =?us-ascii?Q?beAXlC8ReMbC2naCiPEgNIlUYe+SZrSMKxYPXTnw38VrdGT/CrHdz4f/JRU6?=
+ =?us-ascii?Q?Ob8jSdUJ/axJHcA0fVwhvEaIhnPdurdb56ibxvFKL6kLMjOiQlL5MPmz3Lfb?=
+ =?us-ascii?Q?b3B0T6/qtsOxuYGIFSo8ZjSrhv8boAcJHYqupHvNWsBJQ14E2XerRsUdZJF8?=
+ =?us-ascii?Q?GOZi54kMELmh1nzmGDXf3RS1bxndfk5QIT2t6UFX7Ukls0fInLjYhgR83+QB?=
+ =?us-ascii?Q?pRsLg2K1pI7A/oMLK1sKrRp120rho0LHz9mP0C5LnB2U+ILi10hAqDs4rkPu?=
+ =?us-ascii?Q?ZGfFGdSmCDPHtrCokE3mIUEq8dSGsdgVIbJzCzlqYGHeMKF0C6MAJbcdkZpz?=
+ =?us-ascii?Q?AI4fqcQ4AnhxjW0qvUpOTQpcfo/CQ1HIo0fpatY2VDhn674QWPN36fAO60YU?=
+ =?us-ascii?Q?jf6qhHMj4izz7w1Gvnki6tj06IAjJVDp5X/LMxdDMtCXuNrwkcfm1YB08VPN?=
+ =?us-ascii?Q?onhKcUP5hVpag62WvEw5VdrqQ4hvT/lgdOznHpzxikNZyYNQhMhXv/SafIta?=
+ =?us-ascii?Q?be6grSzs1EBY0kLZ3qHKWdkH7//z6h3F6QkzxUdz6vSfS27fb03VThslX4dq?=
+ =?us-ascii?Q?FWCXn0+qkfqRS2cTEqTiwv9qHBvUfwCDiE8gP8DWteuWpB8s3d3GsVjwcllB?=
+ =?us-ascii?Q?5axsypMhLW2/zZfLYnz1rleID7RTGBKTHy84Nk5X3kyyPzzzhYscNpiiu3mn?=
+ =?us-ascii?Q?mWcfSvnZWW6FEQetezTve3f6IS6XS0TK36fUa0Wm5Sr9ZlZSH5zRx4mpr+Un?=
+ =?us-ascii?Q?qpWTy5HY+0jHbPY6KOYsWqfopyNholUp1HS834uKQTdfS1ssHFz4pJu79rDm?=
+ =?us-ascii?Q?DiZ6+RWndD08x1rAIZtcxnsLUxLexxBA/pW7YfhpBBA7fkjQPBn6VMh7stfx?=
+ =?us-ascii?Q?nnKYgdbQy+mgqTj5Bf9XhWk3TffowMEsEBRB/ZW2cXN1dSYCqfKkH4xXZbfN?=
+ =?us-ascii?Q?YljjE4Kxc2I6yUyHjzKyQJRCc1x2lNg/OzG7lCnwtTMCyBuCPM9Z9p+s6rWx?=
+ =?us-ascii?Q?fZ8Kaobq/ygOZshNgOTEJo5wktm8Q83bhD3XuWsb9EmQFn/soZ8hNjNV69R6?=
+ =?us-ascii?Q?LXhpSwENnYm/puTO7iTGuIbkB0EYVFJt0DX5lscqmYP3I9pmi0Vx9fPE32/N?=
+ =?us-ascii?Q?dHU6Ecmnf6wNVBAnmpzhAP1lu5EDiy8t7Yh0dFQIZxXS0ryzQtDbxX6C9UnX?=
+ =?us-ascii?Q?BPPXBrFjAKqplv1URkuq69Doh+8UFgrKCLE+jVLfD/E0IM/5GlZMgz0JCIGC?=
+ =?us-ascii?Q?ynKNEGBVjPAtar936bG+W+SiKrxVPkKVja+zi3JPp55rXxG6vTr+VJlQvo5D?=
+ =?us-ascii?Q?5EelyMA9t1SGIgPlw6bUV45a1regbZf6IWGdPjELmsXq3c1NviE+Z2yT6ikp?=
+ =?us-ascii?Q?zogpqlpk1O59aj9UkuCqnzXOMD75MBzI1au4BaxC9bdUYLU76/oclYXJRzpa?=
+ =?us-ascii?Q?6g=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c18d031-9c7d-4a1d-fdd1-08dd5d4f10f1
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 08:07:12.7485
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /LfEgB1seXHNp+c6c5DhEQwLlmm5qoy9YiaqIL0eHrc6CqvaDqhgkXQwjJ+cwB/gw2hhIQgcMeWi8efVp0DqAdmCRQAwC/XTbqYnqoqVv9w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9150
 
-The following commit has been merged into the irq/drivers branch of tip:
+This fixes compilation errors seen due to merging recent patches.
 
-Commit-ID:     922ac17c7b47fd0345690046a396f7e324dc733e
-Gitweb:        https://git.kernel.org/tip/922ac17c7b47fd0345690046a396f7e324dc733e
-Author:        Andre Przywara <andre.przywara@arm.com>
-AuthorDate:    Fri, 07 Mar 2025 00:57:03 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 07 Mar 2025 08:39:03 +01:00
+hdev->cmd_timeout was recently renamed to hdev->reset in following
+commit:
+commit f07d478090b0 ("Bluetooth: Get rid of cmd_timeout and use the reset
+callback")
 
-irqchip/sunxi-nmi: Support Allwinner A523 NMI controller
+Renamed nxp_cmd_timeout() to nxp_reset() accordingly.
 
-The NMI controller in the Allwinner A523 is almost compatible to the
-previous versions of this IP, but requires the extra bit 31 to be set in
-the enable register to actually report the NMI.
+In latest master, the check for "local-bd-address" device property seems
+to be missing. Added the missing code in the patch.
 
-Add a mask to allow such an enable bit to be specified, and add this to
-the per-SoC data structure. As this struct was just for different register
-offsets so far, it was consequently named "reg_offs", which is now no
-longer applicable, so rename this to the more generic "data" on the way,
-and move the existing offsets into a struct of its own.
-
-Also add the respective Allwinner A523 compatible string, and set bit 31
-in its enable mask, to add support for this SoC.
-
-[ tglx: Mop up some coding style along with it ]
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250307005712.16828-7-andre.przywara@arm.com
-
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202503070951.EcxRrnHK-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202503071045.5Ac2pLEW-lkp@intel.com/
 ---
- drivers/irqchip/irq-sunxi-nmi.c | 85 ++++++++++++++++++--------------
- 1 file changed, 50 insertions(+), 35 deletions(-)
+ drivers/bluetooth/btnxpuart.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-sunxi-nmi.c b/drivers/irqchip/irq-sunxi-nmi.c
-index 0b43121..01b0d83 100644
---- a/drivers/irqchip/irq-sunxi-nmi.c
-+++ b/drivers/irqchip/irq-sunxi-nmi.c
-@@ -48,32 +48,41 @@ enum {
- 	SUNXI_SRC_TYPE_EDGE_RISING,
- };
+diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+index abe2ccd92604..b3454227c7c6 100644
+--- a/drivers/bluetooth/btnxpuart.c
++++ b/drivers/bluetooth/btnxpuart.c
+@@ -1318,8 +1318,8 @@ static int nxp_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+ 	/* BD address can be assigned only after first reset command. */
+ 	err = __hci_cmd_sync_status(hdev, HCI_OP_RESET, 0, NULL, HCI_INIT_TIMEOUT);
+ 	if (err) {
+-		bt_dev_err(hdev, "Reset before setting local-bd-addr failed (%ld)",
+-			   PTR_ERR(skb));
++		bt_dev_err(hdev, "Reset before setting local-bd-addr failed (%d)",
++			   err);
+ 		return err;
+ 	}
  
--struct sunxi_sc_nmi_reg_offs {
--	u32 ctrl;
--	u32 pend;
--	u32 enable;
-+struct sunxi_sc_nmi_data {
-+	struct {
-+		u32	ctrl;
-+		u32	pend;
-+		u32	enable;
-+	} reg_offs;
-+	u32		enable_val;
- };
+@@ -1422,7 +1422,7 @@ static bool nxp_wakeup(struct hci_dev *hdev)
+ 	return false;
+ }
  
--static const struct sunxi_sc_nmi_reg_offs sun6i_reg_offs __initconst = {
--	.ctrl	= SUN6I_NMI_CTRL,
--	.pend	= SUN6I_NMI_PENDING,
--	.enable	= SUN6I_NMI_ENABLE,
-+static const struct sunxi_sc_nmi_data sun6i_data __initconst = {
-+	.reg_offs.ctrl		= SUN6I_NMI_CTRL,
-+	.reg_offs.pend		= SUN6I_NMI_PENDING,
-+	.reg_offs.enable	= SUN6I_NMI_ENABLE,
- };
+-static void nxp_cmd_timeout(struct hci_dev *hdev)
++static void nxp_reset(struct hci_dev *hdev)
+ {
+ 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
  
--static const struct sunxi_sc_nmi_reg_offs sun7i_reg_offs __initconst = {
--	.ctrl	= SUN7I_NMI_CTRL,
--	.pend	= SUN7I_NMI_PENDING,
--	.enable	= SUN7I_NMI_ENABLE,
-+static const struct sunxi_sc_nmi_data sun7i_data __initconst = {
-+	.reg_offs.ctrl		= SUN7I_NMI_CTRL,
-+	.reg_offs.pend		= SUN7I_NMI_PENDING,
-+	.reg_offs.enable	= SUN7I_NMI_ENABLE,
- };
+@@ -1721,9 +1721,15 @@ static int nxp_serdev_probe(struct serdev_device *serdev)
+ 	hdev->shutdown = nxp_shutdown;
+ 	hdev->wakeup = nxp_wakeup;
+ 	hdev->set_bdaddr = nxp_set_bdaddr;
+-	hdev->cmd_timeout = nxp_cmd_timeout;
++	hdev->reset = nxp_reset;
+ 	SET_HCIDEV_DEV(hdev, &serdev->dev);
  
--static const struct sunxi_sc_nmi_reg_offs sun9i_reg_offs __initconst = {
--	.ctrl	= SUN9I_NMI_CTRL,
--	.pend	= SUN9I_NMI_PENDING,
--	.enable	= SUN9I_NMI_ENABLE,
-+static const struct sunxi_sc_nmi_data sun9i_data __initconst = {
-+	.reg_offs.ctrl		= SUN9I_NMI_CTRL,
-+	.reg_offs.pend		= SUN9I_NMI_PENDING,
-+	.reg_offs.enable	= SUN9I_NMI_ENABLE,
- };
- 
--static inline void sunxi_sc_nmi_write(struct irq_chip_generic *gc, u32 off,
--				      u32 val)
-+static const struct sunxi_sc_nmi_data sun55i_a523_data __initconst = {
-+	.reg_offs.ctrl		= SUN9I_NMI_CTRL,
-+	.reg_offs.pend		= SUN9I_NMI_PENDING,
-+	.reg_offs.enable	= SUN9I_NMI_ENABLE,
-+	.enable_val		= BIT(31),
-+};
++	device_property_read_u8_array(&nxpdev->serdev->dev,
++				      "local-bd-address",
++				      (u8 *)&ba, sizeof(ba));
++	if (bacmp(&ba, BDADDR_ANY))
++		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
 +
-+static inline void sunxi_sc_nmi_write(struct irq_chip_generic *gc, u32 off, u32 val)
- {
- 	irq_reg_writel(gc, val, off);
- }
-@@ -143,15 +152,13 @@ static int sunxi_sc_nmi_set_type(struct irq_data *data, unsigned int flow_type)
- }
- 
- static int __init sunxi_sc_nmi_irq_init(struct device_node *node,
--					const struct sunxi_sc_nmi_reg_offs *reg_offs)
-+					const struct sunxi_sc_nmi_data *data)
- {
--	struct irq_domain *domain;
-+	unsigned int irq, clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
- 	struct irq_chip_generic *gc;
--	unsigned int irq;
--	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct irq_domain *domain;
- 	int ret;
- 
--
- 	domain = irq_domain_add_linear(node, 1, &irq_generic_chip_ops, NULL);
- 	if (!domain) {
- 		pr_err("Could not register interrupt domain.\n");
-@@ -186,27 +193,28 @@ static int __init sunxi_sc_nmi_irq_init(struct device_node *node,
- 	gc->chip_types[0].chip.irq_unmask	= irq_gc_mask_set_bit;
- 	gc->chip_types[0].chip.irq_eoi		= irq_gc_ack_set_bit;
- 	gc->chip_types[0].chip.irq_set_type	= sunxi_sc_nmi_set_type;
--	gc->chip_types[0].chip.flags		= IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED |
-+	gc->chip_types[0].chip.flags		= IRQCHIP_EOI_THREADED |
-+						  IRQCHIP_EOI_IF_HANDLED |
- 						  IRQCHIP_SKIP_SET_WAKE;
--	gc->chip_types[0].regs.ack		= reg_offs->pend;
--	gc->chip_types[0].regs.mask		= reg_offs->enable;
--	gc->chip_types[0].regs.type		= reg_offs->ctrl;
-+	gc->chip_types[0].regs.ack		= data->reg_offs.pend;
-+	gc->chip_types[0].regs.mask		= data->reg_offs.enable;
-+	gc->chip_types[0].regs.type		= data->reg_offs.ctrl;
- 
- 	gc->chip_types[1].type			= IRQ_TYPE_EDGE_BOTH;
- 	gc->chip_types[1].chip.irq_ack		= irq_gc_ack_set_bit;
- 	gc->chip_types[1].chip.irq_mask		= irq_gc_mask_clr_bit;
- 	gc->chip_types[1].chip.irq_unmask	= irq_gc_mask_set_bit;
- 	gc->chip_types[1].chip.irq_set_type	= sunxi_sc_nmi_set_type;
--	gc->chip_types[1].regs.ack		= reg_offs->pend;
--	gc->chip_types[1].regs.mask		= reg_offs->enable;
--	gc->chip_types[1].regs.type		= reg_offs->ctrl;
-+	gc->chip_types[1].regs.ack		= data->reg_offs.pend;
-+	gc->chip_types[1].regs.mask		= data->reg_offs.enable;
-+	gc->chip_types[1].regs.type		= data->reg_offs.ctrl;
- 	gc->chip_types[1].handler		= handle_edge_irq;
- 
- 	/* Disable any active interrupts */
--	sunxi_sc_nmi_write(gc, reg_offs->enable, 0);
-+	sunxi_sc_nmi_write(gc, data->reg_offs.enable, data->enable_val);
- 
- 	/* Clear any pending NMI interrupts */
--	sunxi_sc_nmi_write(gc, reg_offs->pend, SUNXI_NMI_IRQ_BIT);
-+	sunxi_sc_nmi_write(gc, data->reg_offs.pend, SUNXI_NMI_IRQ_BIT);
- 
- 	irq_set_chained_handler_and_data(irq, sunxi_sc_nmi_handle_irq, domain);
- 
-@@ -221,20 +229,27 @@ fail_irqd_remove:
- static int __init sun6i_sc_nmi_irq_init(struct device_node *node,
- 					struct device_node *parent)
- {
--	return sunxi_sc_nmi_irq_init(node, &sun6i_reg_offs);
-+	return sunxi_sc_nmi_irq_init(node, &sun6i_data);
- }
- IRQCHIP_DECLARE(sun6i_sc_nmi, "allwinner,sun6i-a31-sc-nmi", sun6i_sc_nmi_irq_init);
- 
- static int __init sun7i_sc_nmi_irq_init(struct device_node *node,
- 					struct device_node *parent)
- {
--	return sunxi_sc_nmi_irq_init(node, &sun7i_reg_offs);
-+	return sunxi_sc_nmi_irq_init(node, &sun7i_data);
- }
- IRQCHIP_DECLARE(sun7i_sc_nmi, "allwinner,sun7i-a20-sc-nmi", sun7i_sc_nmi_irq_init);
- 
- static int __init sun9i_nmi_irq_init(struct device_node *node,
- 				     struct device_node *parent)
- {
--	return sunxi_sc_nmi_irq_init(node, &sun9i_reg_offs);
-+	return sunxi_sc_nmi_irq_init(node, &sun9i_data);
- }
- IRQCHIP_DECLARE(sun9i_nmi, "allwinner,sun9i-a80-nmi", sun9i_nmi_irq_init);
-+
-+static int __init sun55i_nmi_irq_init(struct device_node *node,
-+				      struct device_node *parent)
-+{
-+	return sunxi_sc_nmi_irq_init(node, &sun55i_a523_data);
-+}
-+IRQCHIP_DECLARE(sun55i_nmi, "allwinner,sun55i-a523-nmi", sun55i_nmi_irq_init);
+ 	if (hci_register_dev(hdev) < 0) {
+ 		dev_err(&serdev->dev, "Can't register HCI device\n");
+ 		goto probe_fail;
+-- 
+2.25.1
+
