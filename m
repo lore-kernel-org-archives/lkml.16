@@ -1,75 +1,86 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D9924889A;
-	Fri,  7 Mar 2025 19:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B72215F49
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 19:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741374884; cv=none; b=VMvMcK6KkIT88TxgefzzDP/qI0xz2UPunyHDoh3XjMyIC+QfFurtFDKa1wKhXDN+R9hANKhkQrpTLf/iEvmwOrmBDXvNFOYgvOIQAoPmu51v+F0drciDzMQskwJ7kXnY3/30dmtD3iO2HUHWJPIDSOBpHhwFgzS1Po+O3PaqpOE=
+	t=1741374898; cv=none; b=LrCgkqCh6nvwrw8vcQjyFyRP3RvEWCLr7uWELCS+ywTOdiYpguNxmSY2Zycms7d7vGCyIqsrGynyz/PBui5R1cmqJgt9DL1rxm76b/U683donoqCEJXCPoYN4tP4wKbXPdRoh5V46ep2aT9MTY18/L2AVeDI//cBdkJm9+Sl+Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741374884; c=relaxed/simple;
-	bh=ut1jCbJ6TAMfhzfDmj7s2D6RvkNTw+JPeEdsVYj8q6U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=OaI+q7Rvrgk/SuVvSXSqt07D7+H+mreWvz3LprHOW+/KLNddPXTuAuigPPMdc/xoCEcSFaIjhwSEgOOw9rJ0Q4wF6WaYWMNfwO2luEqM5CulNGsq2WHahKEDvj0gjR5G4XjGsgXYrg452fdL/uhX8KHVdMAdnzmDH+rxF4paOq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MoW+4SGr; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1741374898; c=relaxed/simple;
+	bh=PiuWIkSjCkUR5cKMYl3R483tUjOwqr3t/DK02cU26Gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iseIDeEVFleQ3OiaYmmUHyhQjev1qNOdmf08+alHTkgkhfPOvKrJmO1WZqua/ZQHgJsQ0jwRO052jk2LOEZoUT8xjFkC7NdrheoB1qYOnTU98jrnexJRuu/s7qO12LGYI6p+y4F/mfIBWbCka4W9YRekjM1acqCyNos+JpiSqZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pp5argeY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MoW+4SGr"
-Received: by linux.microsoft.com (Postfix, from userid 1158)
-	id 90FA32038F37; Fri,  7 Mar 2025 11:14:41 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 90FA32038F37
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741374881;
-	bh=jT5flJtW+Sx+B3QqUFbgWhGSYtG6eziGnR2ghVcK3QY=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pp5argeY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F14C4CEE7;
+	Fri,  7 Mar 2025 19:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741374897;
+	bh=PiuWIkSjCkUR5cKMYl3R483tUjOwqr3t/DK02cU26Gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MoW+4SGr4qwDajmdbdybgWCY5GrtYkn4uB5w5pdBzdT3eFRDbayCGSeDBQ0yBbNVj
-	 bVQo5fsp/EI5tkrgp4OhsCrKaJU9DD8s2OAuJgVqFc+h3CmZdXHFES7xuJbHcEzejX
-	 LrWNI6zmYdv0UTYa3nKjqkFFdlBsEKFEv/q7J7So=
-From: Hardik Garg <hargar@linux.microsoft.com>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org
-Subject: Re: [PATCH 6.12 000/148] 6.12.18-rc2 review
-Date: Fri,  7 Mar 2025 11:14:41 -0800
-Message-Id: <1741374881-19155-1-git-send-email-hargar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <20250306151415.047855127@linuxfoundation.org>
-References: <20250306151415.047855127@linuxfoundation.org>
+	b=pp5argeY6gJF6uC3gVRWpspPSQaqNvcL8jvFPV/zQD23sAZV+d66FbRbGbTcffRff
+	 r8OgzEF3UP8VvOkOBzHTq14j8VTuqRvVE3zJ3wuluYHHx7VKJ/Ww0XvEABMCezAsRF
+	 CGteiz+/7Ky/e410qWVcoWMug+FZiymTVpCrQJiSADA1BaR5R5TYbvxZEU1psyGJ2m
+	 Gv0I+jl9GgKKoK3Wggru5ubWei6mouZwD6wRUiQnNxAYRiuAGpApsxsJaSksMNmSYD
+	 TmZvGxhxMWtOGWRgtAIB0yjm9SLbqlUSXyJ1VobE5W3WUb5M4Yt9XuvOVYNKRvA1b8
+	 ERxH807d/Qfkg==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.1)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1tqd9r-0000000BQmE-2jsu;
+	Fri, 07 Mar 2025 20:14:55 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	qemu-arm@nongnu.org,
+	qemu-devel@nongnu.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Gavin Shan" <gshan@redhat.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Ani Sinha <anisinha@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 01/20] tests/acpi: virt: add an empty HEST file
+Date: Fri,  7 Mar 2025 20:14:30 +0100
+Message-ID: <7b2e37814081c237c5cd3fca55ce08d57049aa9c.1741374594.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1741374594.git.mchehab+huawei@kernel.org>
+References: <cover.1741374594.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The kernel, bpf tool, perf tool, and kselftest builds fine for v6.12.18-rc2 on x86 and arm64 Azure VM.
+Such file will be used to track HEST table changes.
 
-Kernel binary size for x86 build:
-text      data      bss      dec       hex      filename
-27755354  17713522  6397952  51866828  3176ccc  vmlinux
+For now, disallow HEST table check until we update it to the
+current data.
 
-Kernel binary size for arm64 build:
-text      data      bss      dec       hex      filename
-36390288  14996757  1052816  52439861  3202b35  vmlinux
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Acked-by: Igor Mammedov <imammedo@redhat.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ tests/data/acpi/aarch64/virt/HEST           | 0
+ tests/qtest/bios-tables-test-allowed-diff.h | 1 +
+ 2 files changed, 1 insertion(+)
+ create mode 100644 tests/data/acpi/aarch64/virt/HEST
 
+diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index dfb8523c8bf4..39901c58d647 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1 +1,2 @@
+ /* List of comma-separated changed AML files to ignore */
++"tests/data/acpi/aarch64/virt/HEST",
+-- 
+2.48.1
 
-Tested-by: Hardik Garg <hargar@linux.microsoft.com>
-
-
-
-
-Thanks,
-Hardik
