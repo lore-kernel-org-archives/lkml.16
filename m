@@ -1,269 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D35218AD4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8C1101F2;
+	Fri,  7 Mar 2025 17:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741369614; cv=none; b=HU60HFPU4PbfVDrqiVIuq3goiADNSIt7vGK1IwYWag0oV2YuNtjPxj816CLZKcP4PJlG79KODnW06p2wzZDkyY2q9AXKcsuj0oxaQScHs93uI+hLJQ12MoRYO3243k+p8S1abzOXANkNJTdN2nNFXMh59oHliCwwHYZ0incoQ5g=
+	t=1741369684; cv=none; b=sOp+mfziSm8fGxFTrtWY2jmkt5bROZ5QOmmWXXB8aXlnC2XSirJFTN10wspEdUJWpx5QA4TDtfJ5wn7+klIFav2Y/XW1RkPTQRWkNCJthzrjUBrjKnRtC6qZbRzNGwLRt/yJBawaukkiGrac2lR1ADJ1sRyEDt85x663NmcgwaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741369614; c=relaxed/simple;
-	bh=rr6rG35T+U9XH1VQ+tZpBfJBPzWQiMlS00hamAESYr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FrYiWyNZ/M3jSICngfVsPsG13DxcOY/o2NRxHntt4zv9ioE1VRNzj11rEoOJJS4AVp2ITytmN1Myvd22cRPuoBfj69H6i2wQiaPr3Q2dyfmXz9bjza71G9EveT6Wn4VrjVivhUfpg/+/R9LDxiiYsGSXns8PJcIws1lRA9OX9nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQAF0v2j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741369684; c=relaxed/simple;
+	bh=BRYvGOYoVAG7ZCD4UoxIXpumY//+iHw9kM5fXVdayNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mrDekExKO2j3Ku7+mw09RUh1BKfpPemncbAoePis7JqqtiGgNh98/w28vno3ert6b86P32IToaa8O1Xj4cT8aaJcP6MHB16zlsrMVud2b5qo0VkcTMumnQ3ChSm9Df+4iLJF67lct6FtACGFYHK8GCmJvTNIG1aB9ZTdZ5w5Y98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtYjCpyq; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQAF0v2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAAAAC4CED1;
-	Fri,  7 Mar 2025 17:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741369614;
-	bh=rr6rG35T+U9XH1VQ+tZpBfJBPzWQiMlS00hamAESYr8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BQAF0v2jxW7PjcH6Q5pBpo71I3hg9a9v+y0EbwZ78SO6ZZB/fOPCYHmED+bxFg9Ek
-	 QSQfvdeaw1YaHBxbmhrGetD6qkfMaor6AB6s3Q3ioKXl8cnyG5B/6V8oV765NhqUSg
-	 VNqN8tdQ2ujAcbRyeJ1LcOOlw9NDjhaFHMhaydZMJESNwxcfPJEd5UYp2uZAgqbEra
-	 cQuTMH7z4weYcRbxPw2LYDRKFqWFPeQ9cu1q8Vc2XwEL44WPcbFCXZPR2jSdmsJ0o2
-	 qQLV+UK5L64nbk2rYhGu3xQOWDVyPZdIDl8IuaEO3Er3zdM+oRBR1kaLHBBnjLuZbo
-	 BPCtKB5FizF/g==
-Date: Fri, 7 Mar 2025 18:46:51 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Doug Anderson <dianders@chromium.org>, 
-	Michael Trimarchi <michael@amarulasolutions.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Tejas Vipin <tejasvipin76@gmail.com>
-Subject: Re: [PATCH] drm/panel/synaptics-r63353: Use _multi variants
-Message-ID: <20250307-happy-jasmine-raccoon-c6226c@houat>
-References: <20250305-mipi-synaptic-1-v1-1-92017cd19ef6@redhat.com>
- <20250306-clever-lime-tanuki-e2fc43@houat>
- <CAN9Xe3SDyC47HWww1eH63aZOiM-WF9BGxztM3yh9bf6ORuY7VA@mail.gmail.com>
- <20250306-brave-wonderful-sambar-3d0bc5@houat>
- <CAD=FV=XZJjNpzUgvGog0pFGwqUR09SocYFEk5355eptbK_gjqA@mail.gmail.com>
- <CAN9Xe3TEYjfjDcaCL7MOUBMu5Uq0ifN36=jRumtDX7pQ0FsK3g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtYjCpyq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741369683; x=1772905683;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BRYvGOYoVAG7ZCD4UoxIXpumY//+iHw9kM5fXVdayNI=;
+  b=NtYjCpyqRHwlrO7StDMjhO3pOM3V/1Z6lLx6BEfSgZ68dghzY8fCq7xD
+   +O6Ql68aKxcz8g/OKj1Le6J2AiMZe6Allh5LoF97spLmi2lX+VfUjof9y
+   GTxw9mshodG3yAWyinxct+ZtCeTU4Xpav9zyUox7CXpRaXyj414uB0efe
+   PbTPvmsgb+XYan3X0P1GQyPzN+eTE4X2sGrmTjVCOTJCDawCGRWfyiCSM
+   sjybES+cuUwZ/ITGNY/n5tHqyalOVQgOpOcVOeHtqurFSraVYnYj4w/IV
+   Mo8Z3XL/OY4g2oNbGlEfSow6NP/C5JZi/ZhJHZoiUn7j2pKcLdkucMjDH
+   g==;
+X-CSE-ConnectionGUID: oSJtiKOYQXOks0Tc48yg9Q==
+X-CSE-MsgGUID: nFQ7Y+KKSCiry/ki6gUzkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42340495"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="42340495"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:48:02 -0800
+X-CSE-ConnectionGUID: TZdrfbneQtu9EXZ+xHdONA==
+X-CSE-MsgGUID: Iw8BcEqtSaSpuPYVlJpOvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="123982301"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.132]) ([10.125.110.132])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:48:01 -0800
+Message-ID: <8f94cb20-68a3-48ca-ae4d-c6609d63e30a@intel.com>
+Date: Fri, 7 Mar 2025 09:48:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gg5hyn5372yljeqf"
-Content-Disposition: inline
-In-Reply-To: <CAN9Xe3TEYjfjDcaCL7MOUBMu5Uq0ifN36=jRumtDX7pQ0FsK3g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/10] x86/fpu/xstate: Correct xfeatures cache in guest
+ pseudo fpu container
+To: Chao Gao <chao.gao@intel.com>, tglx@linutronix.de, x86@kernel.org,
+ seanjc@google.com, pbonzini@redhat.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: peterz@infradead.org, rick.p.edgecombe@intel.com,
+ weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de
+References: <20250307164123.1613414-1-chao.gao@intel.com>
+ <20250307164123.1613414-4-chao.gao@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250307164123.1613414-4-chao.gao@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 3/7/25 08:41, Chao Gao wrote:
+> The xfeatures field in struct fpu_guest is designed to track the enabled
+> xfeatures for guest FPUs. However, during allocation in
+> fpu_alloc_guest_fpstate(), gfpu->xfeatures is initialized to
+> fpu_user_cfg.default_features, while the corresponding
+> fpstate->xfeatures is set to fpu_kernel_cfg.default_features
+> 
+> Correct the mismatch to avoid confusion.
+> 
+> Note this mismatch does not cause any functional issues. The
+> gfpu->xfeatures is checked in fpu_enable_guest_xfd_features() to
+> verify if XFD features are already enabled:
+> 
+> 	xfeatures &= ~guest_fpu->xfeatures;
+> 	if (!xfeatures)
+> 		return 0;
+> 
+> It gets updated in fpstate_realloc() after enabling some XFD features:
+> 
+> 	guest_fpu->xfeatures |= xfeatures;
+> 
+> So, backport is not needed.
 
---gg5hyn5372yljeqf
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/panel/synaptics-r63353: Use _multi variants
-MIME-Version: 1.0
+I don't have any great suggestions for improving this, but I just don't
+seem to find this changelog compelling. I can't put my finger on it, though.
 
-On Thu, Mar 06, 2025 at 02:12:14PM -0500, Anusha Srivatsa wrote:
-> On Thu, Mar 6, 2025 at 12:54=E2=80=AFPM Doug Anderson <dianders@chromium.=
-org> wrote:
-> > On Thu, Mar 6, 2025 at 9:20=E2=80=AFAM Maxime Ripard <mripard@kernel.or=
-g> wrote:
-> > >
-> > > On Thu, Mar 06, 2025 at 10:08:24AM -0500, Anusha Srivatsa wrote:
-> > > > On Thu, Mar 6, 2025 at 4:31=E2=80=AFAM Maxime Ripard <mripard@kerne=
-l.org>
-> > wrote:
-> > > >
-> > > > > Hi Anusha,
-> > > > >
-> > > > > On Wed, Mar 05, 2025 at 07:01:41PM -0500, Anusha Srivatsa wrote:
-> > > > > > Move away from using deprecated API and use _multi
-> > > > > > variants if available. Use mipi_dsi_msleep()
-> > > > > > and mipi_dsi_usleep_range() instead of msleep()
-> > > > > > and usleep_range() respectively.
-> > > > > >
-> > > > > > Used Coccinelle to find the multiple occurences.
-> > > > > > SmPl patch:
-> > > > > > @rule@
-> > > > > > identifier dsi_var;
-> > > > > > identifier r;
-> > > > > > identifier func;
-> > > > > > type t;
-> > > > > > position p;
-> > > > > > expression dsi_device;
-> > > > > > expression list es;
-> > > > > > @@
-> > > > > > t func(...) {
-> > > > > > ...
-> > > > > > struct mipi_dsi_device *dsi_var =3D dsi_device;
-> > > > > > +struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi_var };
-> > > > > > <+...
-> > > > > > (
-> > > > > > -mipi_dsi_dcs_write_seq(dsi_var,es)@p;
-> > > > > > +mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
-> > > > > > |
-> > > > > > -mipi_dsi_generic_write_seq(dsi_var,es)@p;
-> > > > > > +mipi_dsi_generic_write_seq_multi(&dsi_ctx,es);
-> > > > > > |
-> > > > > > -mipi_dsi_generic_write(dsi_var,es)@p;
-> > > > > > +mipi_dsi_generic_write_multi(&dsi_ctx,es);
-> > > > > > |
-> > > > > > -r =3D mipi_dsi_dcs_nop(dsi_var)@p;
-> > > > > > +mipi_dsi_dcs_nop_multi(&dsi_ctx);
-> > > > > > |
-> > > > > > ....rest of API
-> > > > > > ..
-> > > > > > )
-> > > > > > -if(r < 0) {
-> > > > > > -...
-> > > > > > -}
-> > > > > > ...+>
-> > > > >
-> > > > > The point of sending a single patch was to review the coccinelle
-> > script,
-> > > > > so you must put the entire script you used here.
-> > > >
-> > > > I was actually thinking of sending patches per driver this time aro=
-und
-> > > > since Tejas also seems to be looking into similar parts....Thoughts?
-> > >
-> > > Not really?
-> > >
-> > > The point of doing it with one driver was to make sure the coccinelle
-> > > script was fine before rolling it to other drivers. And actually, it
-> > > doesn't really matter: the whole point of putting the script in the
-> > > commit log is to be able to review and document the script you used. =
-If
-> > > you're not going to put the one you used, it's kind of pointless.
-> >
-> > Personally, I don't have any interest in reviewing the coccinelle
-> > script so I don't need it and, from my point of view, you could just
-> > remove it from the patch description (or point to it indirectly or
-> > something). I'll review each patch on its own merits. I am a bit
-> > curious if you ended up fully generating this patch with a coccinelle
-> > script or if you used a coccinelle script to start and then had to
-> > manually tweak the patch after. Actually, I guess I'll take it back.
-> > If you manage to fully generate conversions for all the panels with a
-> > single cocinelle script, I would love to take a glance at your full
-> > script just to satisfy my curiosity for how you handled everything
-> > properly. :-P
-> >
->=20
-> managed to get all conversions other than the usleep_range() and mslee()
-> because I was trying to replace them with mipi_dsi_* variants only in
-> functions that I was  touching and not each and every occurrence. Didnt
-> spend enough time to get the script smart enough to do that and did only
-> usleep() and msleep change manually. Here goes the script:
->=20
-> @rule_1@
-> identifier dsi_var;
-> expression dsi_device;
-> expression list es;
-> @@
-> struct mipi_dsi_device *dsi_var =3D dsi_device;
-> +struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi_var };
-> <+...
-> -mipi_dsi_dcs_write_seq(dsi_var,es);
-> +mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
-> ...+>
->=20
-> //rule_2
-> @@
-> expression list es;
-> identifier jdi;
-> @@
-> static int jdi_write_dcdc_registers(struct jdi_panel *jdi)
-> {
-> +struct mipi_dsi_multi_context dsi_ctx1 =3D { .dsi =3D jdi->link1 };
-> +struct mipi_dsi_multi_context dsi_ctx2 =3D { .dsi =3D jdi->link2 };
-> <+...
-> -mipi_dsi_generic_write_seq(jdi->link1,es);
-> +mipi_dsi_generic_write_seq_multi(&dsi_ctx1,es);
-> -mipi_dsi_generic_write_seq(jdi->link2,es);
-> +mipi_dsi_generic_write_seq_multi(&dsi_ctx2,es);
-> ...+>
-> }
-> @rule_3@
-> identifier dsi_var;
-> identifier r;
-> identifier func;
-> type t;
-> position p;
-> expression dsi_device;
-> expression list es;
-> @@
-> t func(...) {
-> ...
-> struct mipi_dsi_device *dsi_var =3D dsi_device;
-> +struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi_var };
-> <+...
-> (
-> -r =3D mipi_dsi_dcs_nop(dsi_var)@p;
-> +mipi_dsi_dcs_nop_multi(&dsi_ctx);
-> |
-> -r =3D mipi_dsi_dcs_exit_sleep_mode(dsi_var)@p;
-> +mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-> |
-> -r =3D mipi_dsi_dcs_enter_sleep_mode(dsi_var)@p;
-> +mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-> |
-> |
-> -r =3D mipi_dsi_dcs_write_buffer(dsi_var,es)@p;
-> +mipi_dsi_dcs_write_buffer_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_set_display_off(dsi_var,es)@p;
-> +mipi_dsi_dcs_set_display_off_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_compression_mode_ext(dsi_var,es)@p;
-> +mipi_dsi_compression_mode_ext_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_compression_mode(dsi_var,es)@p;
-> +mipi_dsi_compression_mode_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_picture_parameter_set(dsi_var,es)@p;
-> +mipi_dsi_picture_parameter_set_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_set_display_on(dsi_var,es)@p;
-> +mipi_dsi_dcs_set_display_on_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_set_tear_on(dsi_var)@p;
-> +mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx);
-> |
-> -r =3D mipi_dsi_turn_on_peripheral(dsi_var)@p;
-> +mipi_dsi_turn_on_peripheral_multi(&dsi_ctx);
-> |
-> -r =3D mipi_dsi_dcs_soft_reset(dsi_var)@p;
-> +mipi_dsi_dcs_soft_reset_multi(&dsi_ctx);
-> |
-> -r =3D mipi_dsi_dcs_set_display_brightness(dsi_var,es)@p;
-> +mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_set_pixel_format(dsi_var,es)@p;
-> +mipi_dsi_dcs_set_pixel_format_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_set_column_address(dsi_var,es)@p;
-> +mipi_dsi_dcs_set_column_address_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_set_page_address(dsi_var,es)@p;
-> +mipi_dsi_dcs_set_page_address_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_set_tear_scanline(dsi_var,es)@p;
-> +mipi_dsi_dcs_set_tear_scanline_multi(&dsi_ctx,es);
-> )
-
-You're not matching on msleep because it doesn't return anything, and
-here you're expecting a return value. You need to make 'r =3D' optional.
-
-Maxime
-
---gg5hyn5372yljeqf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ8sxCgAKCRDj7w1vZxhR
-xRXuAP9DekV7twDQLlm6Kf8ZqgdZDhzutwJfQqxSZTs/ypio5gEAmOleoGM88xvy
-s3WWLN4L8gJDqXGhVNqK3S6m2gTFdgg=
-=rYgT
------END PGP SIGNATURE-----
-
---gg5hyn5372yljeqf--
+I think I'd find it more convincing if you argued what the *CORRECT*
+value is and why rather than just arguing for consistency with a random
+value. I also don't get the pivot over the XFD for explaining why it is
+harmless. XFD isn't even used in most cases, so I'd find a justification
+separate from XFD more compelling.
