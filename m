@@ -1,103 +1,102 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F2520AF8E;
-	Fri,  7 Mar 2025 09:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741340240; cv=pass; b=Q2kmUazO69ey6noWARE0mPiu5h+QiAcg03VsJw6Re03EXxucfepFnwL5ChvLnyVWB1s+2U1sylYPhNbKDcKZmCxnUq6ypJyUcxoq8un7XrZGa+0wK0L3ggwjNqAW8d3SZL7Oc6+GlKt+FP4wixXvRBS0PAHqw7k7UY8pSgqBYK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741340240; c=relaxed/simple;
-	bh=pv53MAeGjoiFQqNXLiXE3et0/Lq/9AMSnZ1akEuS9fY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uyjcpJGrKHjOEFWOCsHZrDArKCNaW1QZCAgDyrhmNREWMHSwiEFIcQ27PqSDm928ucJ6ABWn/JehL9WXNK3b3IISSI9gQAP16t00TUO6TYO7ZxO35tsxtfThOVOwXJUcxKtsKDiJaurqpGO6NAH3ASFBJxIQROCsSo2z2Rzk1rs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Isuo3D/7; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6770F1AA7BF;
+	Fri,  7 Mar 2025 09:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741340339; cv=none; b=lZbvEaKOR6WnsoAKsztZj40fVXTlJOksFGkn/x1kneSfik4c2UA/3QXd+7BhlN+cpjFHaTAW6Pn3OOAr+OFNUjKqWj3+vQAClxMdd9PoDZ2ZVuxfDYCx7qTYfc0S8PWg065CNvxJKz5Z6vpdGsjT/zcEehtnWmWpHZcDLpZL1aA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741340339; c=relaxed/simple;
+	bh=rLs1wzqH52S/8SS8AdvefAUT8BlMKmSH93vnAmNwPS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a0kgLJdSbbAgu2/I3fn0mBrmVkJx320giIM3sfrXs67Nnel1abo4+u5qCLDHUHzrI06C1i0ht8yA+U5knEL8bQjkhCtuDyo+Wywg82nWlPPWg5WkLtvZIMAWu7pEXDJsfhuWzqe7/qMILceH9SBX8eASuB+6tSTXqqxQPaRIC4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XjK9BYyj; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Isuo3D/7"
-ARC-Seal: i=1; a=rsa-sha256; t=1741340213; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=LYn6GIfaYZWzF9ZNCaSaO5N4jS556vayGz8aDkSwTRms0GvGo0Dq2PfFKzTi4X+hNufsEJofnDDbprWO4vZt4477W5PqRDlQ1V0NLjcSrdRU7aFqgSYBC92bzshh3CnERcTb0fGTcyU31HpRXcCikeWutfltVtnHdclSpj+z+QI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741340213; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=d/Gjk0QUCFk/jfd1542mqf2c43lGASS+o4NBP40gzk8=; 
-	b=RILGbO9cZBPbbM6hWcg0/gXSlG+onA91RFRf5wDZAdE0fepPAu/wbt8825YDEPu8wEpPVB8nwY8GdPEClm07SUpSvLiH2kza2wUU4aUudJYa9cGzMk9+5uGNNywXxrBGo0l0h5obOPSo49ycUtkvmI3yud32L6+KNTqK+fBcBl0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741340213;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=d/Gjk0QUCFk/jfd1542mqf2c43lGASS+o4NBP40gzk8=;
-	b=Isuo3D/7EwZDxPar3A4xxpmP6m0I2xSx/rpw+WYoYyQ3J9+uwhaw9Xup3U8W7p3v
-	W//U8EYMVsMAj0CH1uSKaSWWB5RUEcqLPY5eZUrVh0oAe6jYSevGD/BtSp7WDX6d4uH
-	TRFIpsm6UusxdNLGLt2lk+eUXjwtipcJzFhf/mRQ=
-Received: by mx.zohomail.com with SMTPS id 1741340210750445.0809904130947;
-	Fri, 7 Mar 2025 01:36:50 -0800 (PST)
-Message-ID: <54d5eef8-66a9-44aa-9e9b-0324d6fee46d@collabora.com>
-Date: Fri, 7 Mar 2025 12:36:47 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjK9BYyj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741340337; x=1772876337;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rLs1wzqH52S/8SS8AdvefAUT8BlMKmSH93vnAmNwPS0=;
+  b=XjK9BYyjLmjuPlQ/q/CiYeSt8/nNghiIlw1+NnAa7uS1YKIC6Dmar7Gy
+   VIYeymI8Jiw15mOAzUfbz9dTytVd9en/kv8xOyUh38rm/mQckyML7JDWU
+   52dWqsYkphq4LTGG9SWGFrfo/bDjJuFo/j+ymWHcV2RNXtKHBhDA0afgD
+   oiC+UVdj7QQ1Pm9D5s5sJZVwAUIZXD09Ev/c34rD5KRr9yIxNKljPSOwO
+   7xcX4lq5Jusl09FVP3+ZgUFf1MrxEgM4IhiMLtDSQtAW4t9J4u2e6j9sI
+   gC5an/bmNfxrRgppeD01p0AM6Ie5wI6pNnOFTIq5Zyfk6cZOTj/wp3eLp
+   g==;
+X-CSE-ConnectionGUID: cJYimkFdSXWvJ+LDJGLWig==
+X-CSE-MsgGUID: RSMkRsIZQ/6xlyGGq4W0qg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46161764"
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="46161764"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 01:38:57 -0800
+X-CSE-ConnectionGUID: kGyra7qNQN2eoeVm9SqYaw==
+X-CSE-MsgGUID: xgQLYtAcTSmA84/tKBk4Iw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="124371050"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 07 Mar 2025 01:38:54 -0800
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tqUAO-0000Eh-1j;
+	Fri, 07 Mar 2025 09:38:52 +0000
+Date: Fri, 7 Mar 2025 17:38:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jiayi Li <lijiayi@kylinos.cn>, gregkh@linuxfoundation.org,
+	stern@rowland.harvard.edu, stefan.eichenberger@toradex.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, jiayi_dec@163.com,
+	Jiayi Li <lijiayi@kylinos.cn>
+Subject: Re: [PATCH v1] usb: core: Add boot delay for DH34 board in restore
+ mode
+Message-ID: <202503071748.Paav3L6j-lkp@intel.com>
+References: <20250306061749.1502029-1-lijiayi@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] media: synopsys: hdmirx: Fix signedness bug in
- hdmirx_parse_dt()
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Shreeya Patel <shreeya.patel@collabora.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans Verkuil <hverkuil@xs4all.nl>, Dingxian Wen <shawn.wen@rock-chips.com>,
- linux-media@vger.kernel.org, kernel@collabora.com,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <7ec94789-305c-4de4-b477-c0eb839170e5@stanley.mountain>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <7ec94789-305c-4de4-b477-c0eb839170e5@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306061749.1502029-1-lijiayi@kylinos.cn>
 
-On 3/7/25 12:30, Dan Carpenter wrote:
-> The num_clks is set this way:
-> 
-> 	hdmirx_dev->num_clks = devm_clk_bulk_get_all(dev, &hdmirx_dev->clks);
->         if (hdmirx_dev->num_clks < 1)
->                 return -ENODEV;
-> 
-> The devm_clk_bulk_get_all() function returns negative error codes so the
-> hdmirx_dev->num_cks variable needs to be signed for the error handling to
-> work.
-> 
-> Fixes: 7b59b132ad43 ("media: platform: synopsys: Add support for HDMI input driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-> index 4ffc86ad6c35..e0d3fed87a92 100644
-> --- a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-> +++ b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
-> @@ -154,7 +154,7 @@ struct snps_hdmirx_dev {
->  	bool hpd_trigger_level_high;
->  	bool tmds_clk_ratio;
->  	bool plugged;
-> -	u32 num_clks;
-> +	int num_clks;
->  	u32 edid_blocks_written;
->  	u32 cur_fmt_fourcc;
->  	u32 color_depth;
+Hi Jiayi,
 
-Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+kernel test robot noticed the following build errors:
 
-Would be also good to return the original error code. There is no need
-to check for the < 1 clock, it should be the < 0 check. Can be done in a
-separate patch later. Thanks for the fix!
+[auto build test ERROR on usb/usb-testing]
+[also build test ERROR on usb/usb-next usb/usb-linus linus/master v6.14-rc5 next-20250306]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jiayi-Li/usb-core-Add-boot-delay-for-DH34-board-in-restore-mode/20250306-141857
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+patch link:    https://lore.kernel.org/r/20250306061749.1502029-1-lijiayi%40kylinos.cn
+patch subject: [PATCH v1] usb: core: Add boot delay for DH34 board in restore mode
+config: arm64-randconfig-002-20250307 (https://download.01.org/0day-ci/archive/20250307/202503071748.Paav3L6j-lkp@intel.com/config)
+compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250307/202503071748.Paav3L6j-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503071748.Paav3L6j-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/exportfs/exportfs.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/zlib_inflate/zlib_inflate.o
+>> ERROR: modpost: "saved_command_line" [drivers/usb/core/usbcore.ko] undefined!
 
 -- 
-Best regards,
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
