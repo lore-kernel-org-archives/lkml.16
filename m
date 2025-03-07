@@ -1,93 +1,153 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77A41F94C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 22:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7DE257AFC
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 22:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741386697; cv=none; b=KuBuw6VPNJcvJ5NXCqHXjug9VJBsSIOUlH7Blpll2jJC3YWA46VPpYzCiUGqpwzfLH7E2F6KP6SB4Hl8ggxxLZtdjM7lQWuKs5UUXbUDRh0qtqvyThgjYWfpPZOU7aBamRGj5y4tXBlCE4e/vo0WnIWM4n5x5pP2TcAda0PgBcs=
+	t=1741386700; cv=none; b=jArBpy+Rbd1pVZhbaCG3DLyzxeycV2GCNfUg6DxzdRRCvowcdOb0LN8/HmQZCalcqdQnbfLeqqfbs7iRtwRR20hMYTP+34/7r1bzh8M2YRAbz3U6UDl/DfhivGjT41PSUDxfDoxnUa2Q4jiS/hgMJwgPBYeiQjCwd6WGky/Z81M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741386697; c=relaxed/simple;
-	bh=rNJ9nZlJ+oBImadkrPL6xsFIFNfUe2GHUs774Gk1R5E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=CQ9Gl4XCXnB7UafBHMEaXy7rPKZgJtSKpbDJLxuIouLmimWEZ1bHmkp2NUolQAiuwpcy2NMCwo/o3k18U7Pqh27lyLzGIipCuL2vWeMi3AAZaCd5OADGMl5vOgrkx9s8WSk1FhXUMbZIlv7xlD58bPNvbu28FnF1tefgrAI4F50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RkEdM4Uj; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741386700; c=relaxed/simple;
+	bh=nZGk6mfExWAHXyq0mprCBSGfLZIliOmAUPxja8XuxLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgAc+L5bz/X6hRnfi1/Ki+ThnwE2pJP+FEjZTrfKSqGCyKcdQ62EwHP6ylIYjWt+tU0JK9nRslsAop1FYoan/IMKCGMmORfW/2V/tPos3rvUcUXijnahvGNfsbZ0BCI8AVUpTsyU4gz194zmMhY9GLXM7wsE89sDhL8aFn27isc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YEyr3Ktr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RkEdM4Uj"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-60018b29f51so1472870eaf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 14:31:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741386695; x=1741991495; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Tfwi5cmYZugDAUbt7FLDSmFz1JdoO1VkIU3HxB488p8=;
-        b=RkEdM4UjOb7uqVcCxCLshFGWf6Tw/axCpHMKnYn5zMKBgOZbyAomIp2AwRHg7rxFst
-         rtSnWpz2/NbC2KtEx8E9uAF4VobFJ7kHvkvye5CllltG7Gv7SuvgaBTkqy1iAJcgacns
-         fuWixsh9SsfJ5tg2rvv+pOyka8OZwsvK3fLaPMcx/XfO1kNEihcZdOG9jQNzW84swyfY
-         W/hWHlfYPSolYo1fa66T2chMkaMi7EQySuF5HyfwBaiV4bJTEh4Xx7GPwLFqya7zNVeZ
-         qrXIE/r5ZwQePt42BrR8RX803xzlfVP1iyF4I6exn6KsOH0WCng+qwi4dj0k6tzKVrRt
-         05kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741386695; x=1741991495;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Tfwi5cmYZugDAUbt7FLDSmFz1JdoO1VkIU3HxB488p8=;
-        b=f/KB6sRpTdZdiqHE/vblXlXxi0JsV7+pKGSDkwhvC/lolu0spB/J6sSXpiDKtaA6hQ
-         0idOzHQShpnrzWqf07sshiLHBJ8cCG7SlKT5Raspuq/QVpcTecySsUoCAJyYStjSvllc
-         Vgv5JZ6fYXHWBJCpn5NfnUOZv8GyPcDshm1b+JVRgUSmDNgx8NnfzmZXU4J2K9vBUvqi
-         isfEaSJJv7aQ7uSiQSaGMu/rfdkouror/bRHNUgGPiSr4RuZ6JmXLgnHor2C1PtzaAnc
-         j6JIkZwate9PHULhCVyxaK+rfMCXsVVz2Efq4DqvE9F9wHnXstF6FRUdKC8D6wYHmY0U
-         zPXA==
-X-Gm-Message-State: AOJu0YxtXs26M0g5PKcYlJPEoBNG2W3XmuPVNDtXPof0kXVZM02McyQD
-	UqHOMFtn2DOaadEnRIZhP+iwfKDxAz+AdC2KeIczFR9jyyxXbqz+3KeWVQ7I5dthCjHC2qteAzu
-	2I9F82jB18igfE7cZlYw4einJIkDqlNcFKf93yrN9vP2NzhNdJjY6ACo=
-X-Gm-Gg: ASbGncsca2zbjaFOp0avFgnS7lV9xNNC5SQzhYAlRHFd5/tdLbMi28AIpf7/XoL6cNk
-	V45FSwOOtqQlDoOuMyY2vbvHKSIHeOg2lTGTxvLmOWe5aXqIV4VPW+1l05TH0cZDLdkGvhrgCYk
-	KTEmdJ1n9ty4McgBfZTkLxQBQ=
-X-Google-Smtp-Source: AGHT+IHwm2CWZoU3ndQNXuMkc9t527wygvUVuMC+4iTLmvuipXDDb8zMhyI4UFxTAlD7OdHQF72VPJvHfR6DjONiJ3Q=
-X-Received: by 2002:a05:6870:89a9:b0:297:683:8b5b with SMTP id
- 586e51a60fabf-2c281fcb13dmr697251fac.10.1741386694627; Fri, 07 Mar 2025
- 14:31:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YEyr3Ktr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741386697;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sV7vvuO22v8uBl/5aRjBBU/B50QkuFj7vsyvnziHuTE=;
+	b=YEyr3Ktr9iQW0V/Cjp016s7Z6dYVOHufYGYRdnxBb2fv9KorbMnDsNB4vcvFRx8iDxTAzC
+	0jI6QADMxX7pCkM0Vj13pH/e9ZeXkzL5/l9uav2pEq75UN/QWEIkNQ/QsMO4Mif+nSZdGy
+	Uy43Q2sHcNlPaD6tKXwjYH0Y8RHjVaE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-655-x-Bv2qhWPamQcyY_046LPw-1; Fri,
+ 07 Mar 2025 17:31:01 -0500
+X-MC-Unique: x-Bv2qhWPamQcyY_046LPw-1
+X-Mimecast-MFC-AGG-ID: x-Bv2qhWPamQcyY_046LPw_1741386659
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A828419560B3;
+	Fri,  7 Mar 2025 22:30:58 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.108])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E00E5180174F;
+	Fri,  7 Mar 2025 22:30:52 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  7 Mar 2025 23:30:27 +0100 (CET)
+Date: Fri, 7 Mar 2025 23:30:20 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Rasmus Villemoes <ravi@prevas.dk>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>
+Subject: Re: [PATCH v2 1/4] fs/pipe: Limit the slots in pipe_resize_ring()
+Message-ID: <20250307223020.GA28762@redhat.com>
+References: <20250307052919.34542-1-kprateek.nayak@amd.com>
+ <20250307052919.34542-2-kprateek.nayak@amd.com>
+ <20250307145125.GE5963@redhat.com>
+ <7cbc5845-e890-4bf5-9488-cd2496642f7e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: enh <enh@google.com>
-Date: Fri, 7 Mar 2025 17:31:23 -0500
-X-Gm-Features: AQ5f1Jr5EzBuqeM8LqRrqDm_nBE_xSa-__P7DpEMAfYiZvBF8lUn2LbtpM9E6_U
-Message-ID: <CAJgzZoqz2Ev0WEDYR_etKKf7q61Jfw8SiMJ_1DFxNaEHM=DPhA@mail.gmail.com>
-Subject: PID_MAX_LIMIT
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7cbc5845-e890-4bf5-9488-cd2496642f7e@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-i was clarifying the clock_getcpuclockid() and pthread_getcpuclockid()
-code in Android's libc because the bit-twiddling always confuses
-people (and the kernel header macros aren't in uapi), and noticed that
-neither the libc nor the kernel side of the code checks that (pid <<
-3) fits in the clockid_t.
+On 03/07, K Prateek Nayak wrote:
+>
+> On 3/7/2025 8:21 PM, Oleg Nesterov wrote:
+> >On 03/07, K Prateek Nayak wrote:
+> >>
+> >>--- a/fs/pipe.c
+> >>+++ b/fs/pipe.c
+> >>@@ -1271,6 +1271,10 @@ int pipe_resize_ring(struct pipe_inode_info *pipe, unsigned int nr_slots)
+> >>  	struct pipe_buffer *bufs;
+> >>  	unsigned int head, tail, mask, n;
+> >>
+> >>+	/* nr_slots larger than limits of pipe->{head,tail} */
+> >>+	if (unlikely(nr_slots > (pipe_index_t)-1u))
+> >>+		return -EINVAL;
+> >
+> >The whole series look "obviously" good to me,
+> >
+> >Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-it looks like we're fine because the limit is 4 million thanks to the
-code below, but the warning in the comment about the FUTEX_TID_MASK
-should probably also warn about this even-lower CPUCLOCK_PID()-induced
-limit? (which is one bit less than 32-3 bits unless a cast to unsigned
-gets added so we don't accidentally sign-extend the highest pids to
-negative values when extracting them from clockid_t values...)
+So, in case it wasn't clear, you could safely ignore everything else below ;)
 
-/*
- * This controls the default maximum pid allocated to a process
- */
-#define PID_MAX_DEFAULT (IS_ENABLED(CONFIG_BASE_SMALL) ? 0x1000 : 0x8000)
+> >pipe_resize_ring() has another caller, watch_queue_set_size(), but it has
+> >its own hard limits...
+>
+> "nr_notes" for watch queues cannot cross 512 so we should be covered there.
 
-/*
- * A maximum of 4 million PIDs should be enough for a while.
- * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
- */
-#define PID_MAX_LIMIT (IS_ENABLED(CONFIG_BASE_SMALL) ? PAGE_SIZE * 8 : \
-    (sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+Yes, yes, this is what I meant,
 
-i can send a patch if you'd like but (a) i assume gmail will mangle it
-and (b) one-line comments seem like the kind of thing the file's
-maintainers would have strong opinions on anyway.
+> As for round_pipe_size(), we can do:
+>
+> diff --git a/fs/pipe.c b/fs/pipe.c
+> index ce1af7592780..f82098aaa510 100644
+> --- a/fs/pipe.c
+> +++ b/fs/pipe.c
+> @@ -1253,6 +1253,8 @@ const struct file_operations pipefifo_fops = {
+>   */
+>  unsigned int round_pipe_size(unsigned int size)
+>  {
+> +	unsigned int max_slots;
+> +
+>  	if (size > (1U << 31))
+>  		return 0;
+> @@ -1260,7 +1262,14 @@ unsigned int round_pipe_size(unsigned int size)
+>  	if (size < PAGE_SIZE)
+>  		return PAGE_SIZE;
+> -	return roundup_pow_of_two(size);
+> +	size = roundup_pow_of_two(size);
+> +	max_slots = size >> PAGE_SHIFT;
+> +
+> +	/* Max slots cannot be covered pipe->{head,tail} limits */
+> +	if (max_slots > (pipe_index_t)-1U)
+> +		return 0;
+
+Sure, this will work, but still it doesn't look clear/clean to me.
+But no, no, I don't blame your suggestion.
+
+To me, round_pipe_size() looks confusing with or without the changes we
+discuss. Why does it use "1U << 31" as a maximum size? OK, this is because
+that "1 << 31" is the maximum power-of-2 which can fit into u32.
+
+But, even if this code assumes that pipe->head/tail are u32, why this
+restriction? Most probably I missed something, but I don't understand.
+
+> Since pipe_resize_ring() can be called without actually looking at
+> "pipe_max_size"
+
+Again, only if the caller is watch_queue_set_size(), but it has its own
+hard limit.
+
+So. I won't argue either way. Whatever looks better to you. My ack
+still stands.
+
+Sorry for (yet another) confusing and almost off-topic email from me.
+
+Oleg.
+
