@@ -1,229 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5EE194C8B;
-	Fri,  7 Mar 2025 10:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741342645; cv=fail; b=Rro0auOlFkoSk8xqFuv5prDX6eZPf2EOrdjnCuTR2Cfc2wlDIgbQcTAwflNfgXUX2tjznX2XBkiNkLktpapQZV2gF+akwGLtr+YSIH/1JvPe29E/mUOkL0+edj6lqHX4GtDzLiBhzomaM3Vr2WPc4NtVL1s0ENKlc+LGs1Ji+mI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741342645; c=relaxed/simple;
-	bh=USbouJxURg+a1XqfgWQPvmIFe7BtjUbF8sic1FaJ5jI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=JjOTFL9kvvl0fn+1St5Yln78weXFr7jYeDjrypnh79O0DumhfActEatVCqgd6hodshOQrxwc5KyEZNQh513f0cHevnW3IVuTntDN6yozSAXD4JBZiCG6GpsGJCjnIm1DH649zlAoux7cI/imiiX4Qx+W2IdfbOdpn6xNPVEUBsc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E85wyBHx; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFD316DED0;
+	Fri,  7 Mar 2025 10:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741342662; cv=none; b=RnS4LU9RP1g/Esc3WnGzZbTa6NinTIwEFzWeV4Wfno6dsNCTzIZ73wqnZvwn9soUPTpC323BohdYu/U7EZDXafcP/zUMYH6VZvMwwbXUfZNJYY9k0/cwANUOZSpjoCasClvUxUTwzQnGbLFtmydMqLrUhXmjBk/aKTTC6v28hXI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741342662; c=relaxed/simple;
+	bh=1Vq1rpCX8kQrR4gFhW87Me9AbRSCjpBro5aw8HsYISE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UNqXfntDppgLUB9Q7JW2Z4zwVbgBRQ5LLVZTUIYMW/wIJqYK0O1yhNv46PNYhdA84+38BQwy7NTtM7+ZUQQhTEzu5PA+E7kyquARQ3MPO6YhSKrNuom4RCodtZXA2Uc+0+HEPnpo+0hhFPz7AHQclOD49CVM1L18WE/W7K6TIKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOdXl3SP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E85wyBHx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741342643; x=1772878643;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=USbouJxURg+a1XqfgWQPvmIFe7BtjUbF8sic1FaJ5jI=;
-  b=E85wyBHxlGGHqxPK9I4EMjyVVirNcp1efcKbHXQjk7YYOdJimZXAEHBG
-   jhoqjemDc1sM0+QcuqtboXnA5mF6amx26fwJ8AUlQMF3cxGnOjYUaoQyC
-   EE9UQJRrqTOAOAkynGHRW2Yn3noySC6rQa3rwjqkJZz5USrhrHTWRGX8T
-   RXwzxYpuHQzHoOBhuyWSFLeA/qSczTImpdUTKTTa1+RVKUkB+QME9gjGV
-   b+R2FLECfCsDGaSgibHFfYcpxnV9Fv9iy3nT+M3B4awzY8p98XlNcVHMM
-   c9NZ7sRvVj8RA4iEclKz7YQ30nJnzFnpzOK2zt5W5+F/Tskfu2cYziQiB
-   A==;
-X-CSE-ConnectionGUID: MgYtzqxCSXeeIO3B1HW9/A==
-X-CSE-MsgGUID: Cykde41VTBWLAL3lS7sPuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42299117"
-X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="42299117"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:17:23 -0800
-X-CSE-ConnectionGUID: X9/2JmSlShqz+eDKgtettQ==
-X-CSE-MsgGUID: KjZ1fiNzTOqOsnkrkqbJzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="119214625"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:17:22 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 7 Mar 2025 02:17:22 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 02:17:22 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 7 Mar 2025 02:17:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bFqw2LSdc8gTxRlf1hv08MQkuAQ4KnRo7tG3aVGB/peoDQzQ3gkKTlwLZ22zvQj7IwFSO/fQhShdDucjvFZpI5btUA+JsAMCNBTz/9Ujc4fx9i7hYpZ5ogYIBb2vSAwJL5ryCaQV+14W6x0zsxB5x15ZLlMdjMoQhR7exao2aEuQ4sxFzvznbqsQ4/2f8QKeWz6+ByZeOxlpA1noKZeuO6JawTxTX1oHglj8SpeFoTshT7SMTvD84BSPHXssCfMbYzuq77V/RqETLaESHtkh9iQa44sXRKuXligV7q7nHequnbUfopLKMsR/oIce5JBbq8UMke7qjdv8ZmtJEi3Exg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BbWxpcs7PiP2hjIUQZdl+C+94ogdb7MfF8PTlj00jZU=;
- b=CipsJpSYFMkMcIWph5i8bRgnF73fLFizFNrqWNu2rJsdWcUe46X4cCU2HSpDQc82CKrB3hJtAAsZELfgbncKsshuzKE2ZW+2iY0+4XzeLhXLx89iLIk4Xos5USpbYJ9UC92Zal1cg7mH9xUqZKLGzr5wzVfKSlnoyVj5+pLwTrVwsqN+GkvOP0q0/ykCfL6XTRjPi1ohAOrIJ9wetg8uZdssz+2HzssPzEJso6tzveAyhyF8gRJXEVv2Qt5i3XCqtRvbX0Iy/+5wr8JHFa5qZCINPqS+Hrow5FsYqkEQM/YBdYbDSwH2MEmm5zsd3Lj2pd4CZoPVT3mDiDLH2pjnww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
- CY5PR11MB6163.namprd11.prod.outlook.com (2603:10b6:930:28::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.19; Fri, 7 Mar 2025 10:17:18 +0000
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca]) by DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca%3]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
- 10:17:18 +0000
-Date: Fri, 7 Mar 2025 11:17:11 +0100
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-CC: <intel-wired-lan@lists.osuosl.org>, Michal Kubiak
-	<michal.kubiak@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, "Przemek
- Kitszel" <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Alexei
- Starovoitov" <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	"Jesper Dangaard Brouer" <hawk@kernel.org>, John Fastabend
-	<john.fastabend@gmail.com>, Simon Horman <horms@kernel.org>,
-	<bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 05/16] idpf: fix Rx descriptor ready check
- barrier in splitq
-Message-ID: <Z8rHp046ELv2wrac@boxer>
-References: <20250305162132.1106080-1-aleksander.lobakin@intel.com>
- <20250305162132.1106080-6-aleksander.lobakin@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250305162132.1106080-6-aleksander.lobakin@intel.com>
-X-ClientProxiedBy: VI1PR02CA0060.eurprd02.prod.outlook.com
- (2603:10a6:802:14::31) To DM4PR11MB6117.namprd11.prod.outlook.com
- (2603:10b6:8:b3::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOdXl3SP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AE2C4CED1;
+	Fri,  7 Mar 2025 10:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741342660;
+	bh=1Vq1rpCX8kQrR4gFhW87Me9AbRSCjpBro5aw8HsYISE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=BOdXl3SPSi3KuFviQcHoWlndch6XoyelxBIrANN0Yprxu8PwytyI+WO8ss7vdULAv
+	 EbRSAHgPyTrQyrT/08GKkqU/NmnG01n6Y2m6oa9zzwUbNpjqfVIX1ObX2RrysVfsM5
+	 NV9Ph9MQaLz9TGvKc1dpwS1ro6FvUO+9Kup2f2ERcdGBpMqNKiSxbSeBmBmECXxJ8c
+	 DHX3LQAo6rDk5whYSjEmgqK6m3T6ea9f2SnuoSNnj0au9WYlGenSEcPvToiY6x4uOa
+	 7hTpnszU3dqol12nWOvneAsSWE4q1h49J/H/+N/JB8e9Vhi1cFXZiAu3k/64CxhSuu
+	 6CSLwITjEasXA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Fri, 07 Mar 2025 11:11:48 +0100
+Subject: [PATCH v10 03/13] rust: hrtimer: implement `HrTimerPointer` for
+ `Arc`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|CY5PR11MB6163:EE_
-X-MS-Office365-Filtering-Correlation-Id: f2e208ae-11b5-4979-5d54-08dd5d613dd7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?6taZbRr/xABrk6cZeFbosPfDnc/znpaxDDxIMDamk/QK3cicxTGoXThjagv4?=
- =?us-ascii?Q?a2Vl+6f0AyTCRqfaVuw0jpGAATJGXSHj9JVzEycKYeodjxKKkbCMmz0176de?=
- =?us-ascii?Q?InutowFNO2MjpPMzf+g9x257Lo//0yScUxiF461i4mRtz6HPE80W+5J45gBb?=
- =?us-ascii?Q?b3DbIAIxcQuUX89UbdAxIWUUn9GYPTWsCoS7YD8D18sgObAKKz9BSkhlACuB?=
- =?us-ascii?Q?D13Q0qrytQ3OdVE4BIZ7iBReY6r/oXq2LpgMgn0Yrda3RfcidpHDG/BRTl6w?=
- =?us-ascii?Q?5fkcM/3CADHZhOrEdmRUs3/cjzIrKgI0C56tbjY6eCtO7bLruGoOQC6l3vst?=
- =?us-ascii?Q?k72ye47hFeAEao10GuJ9BXvj6h8F0N11IuFD+i5Q82sTbTdk80c+n3qRszcn?=
- =?us-ascii?Q?MDTaM9+d6bii0LhUOjtVRhcRM9ixqmSHswNl4sABo6fDqnBKt4Wq8bm6Ttj+?=
- =?us-ascii?Q?Dw7bILqR7JmZ9BfTuk/xAfidxX+lo4jBRi1quRh4ulRhUp+hUaA+ZJ689cU3?=
- =?us-ascii?Q?PB0fyyOnCN6Luopjngf35+egZk1RzlqzJ5fPSf2FA78xam8pcSVXatHoh3N4?=
- =?us-ascii?Q?9YhoewH9lAECbLSMu12VVPk4Gr6Dem792Xr/9kgkNSbyhE2KC0JpAi3d+14b?=
- =?us-ascii?Q?89VIt09hcFLfeC3bdW40TaJlh4rCSQwfa+rL+IPlXapevHCtMLpo98NqgCzf?=
- =?us-ascii?Q?Uqdz5t3oYtu83/D5022m82PjxTlxxK48xAmkrTVHGFkegWHtf5n9yq4FALhz?=
- =?us-ascii?Q?ss2Su3jkAY1BULYJt2904e2CZO7t+FJX+s7P8wDYw/mVSVsxcdKLn4Pu75PM?=
- =?us-ascii?Q?qMyasHEhG+e647YV84XhCFtja+kkNi9uxD5v9ZbAb1ua/hpy9KhrPb5EwjAz?=
- =?us-ascii?Q?miMwbZX93NvJ2UKhfKsAjSdXAiJ6bkLN7XFzHUwA2VNMpRhdIjbfXjAyrDOc?=
- =?us-ascii?Q?3ppQWTa7/gB83r9g0BUfgkR2Oa5GJaIu+jOO6qRNQUbe40V9RulWq7NnlUHm?=
- =?us-ascii?Q?LLLcTIs/ptGsg3vKsPBvjKCdpqYFLss8M1LSwvrToO26e0Epa5SeeeicTs/z?=
- =?us-ascii?Q?D1WOoxsSqe/bPX9YrALAp+yT8Fke6I+ALNDAyEW29XVCB37PsXflY3tSJQXW?=
- =?us-ascii?Q?U1IbY8t1jb9UvpQidnrAGuF+swF2T4ZFG+ieeIh1P+u26LkrWE8uRQX+JcL1?=
- =?us-ascii?Q?R7E7wwk0ctE8aN7DTtz+cBI7loqX7ppbUps5atsi/vz/qZdpHlaDEPW4LGzt?=
- =?us-ascii?Q?+6izi7vD3Op3xEht9EjSAsL+n2xDebPMJ3CV0wOcfkmSbgdBh7YhpD5902OB?=
- =?us-ascii?Q?M67uscEO1AmzfzbKmXcjW1uQI2D5KrSh6eUt3Uc/iuSWJz2ds5sGdiEGEefj?=
- =?us-ascii?Q?Wnm+vyvMIlZ/n4FTiJH7Lk4cHg/E?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dolS2nS9cE8JHLxPgJKL00lrce8lmrtLosJDSNXhJgwtUGDnvmk7Yy39+vg7?=
- =?us-ascii?Q?bEb2Sfi6cMcdGl9pNBiAkXr1BjPRYMbFXcPhi1CnRE7K56DWLGUc0Mbly9Dq?=
- =?us-ascii?Q?63bdnUWR1j7kEC9vmv/XB1QEpeaNnxwbrEDp7RWzlsr5QRzY3cyJi7muzV7w?=
- =?us-ascii?Q?3cChUlcGzqeF3bZB7+3mn9oqwimX3k2l19RbouXVX9pl5lcvLwFeugJ9nAVM?=
- =?us-ascii?Q?Xd5JxOHuC66bgHWSz2xmFfqyJ/8WR1jO+gilcccNDYwUsLY2OGjWLjxBmcyn?=
- =?us-ascii?Q?VGFgt9VE7AhusH/5oEO7IRShs/eZv6hKWuxI+qhJVj3dQEZYL9dJmQ4YjogQ?=
- =?us-ascii?Q?ht7iicX4wv1CxrXNxFNli3zPtP1/mWkXMWdZa0nT16GRDWuEMBv+mzZr7Wyu?=
- =?us-ascii?Q?p4FXGzQ0l9Mr6rC9vYEEZXM/9pFL3/UvaPnAEjYkuFPRb+ZDPsyKDcqIcM/p?=
- =?us-ascii?Q?4obWXA6H7rDuvApP9iE5tCNZxI445oTObweWW71b6VDgXq20pYEb1Uf4BAnw?=
- =?us-ascii?Q?80HFsGmd3+5ER6FMyQe2zt+o8gj4/UmVWW6R/2p/QBzzRL67R9Sm1CX2d4mn?=
- =?us-ascii?Q?9JTp+qxbY8aUmAHfC32DDtOkWJkMG/LGOq5bLdd9s9KF8iCPkFMSqw/DW8Lv?=
- =?us-ascii?Q?rRBwBXmvSDja3Xk87IT2JoxgC9taDqjvNUp1mnLLECbhGcoNoH2cc/d0S1K2?=
- =?us-ascii?Q?UISPkhCDp0Q/UdiswI11qGuEpKgtChPWswjd9ajJa+0XEwGXTaxli/cpF4vd?=
- =?us-ascii?Q?nKwijOl0hWx3HATozeAfg8iBF78JFr0v3CldZtftSsW5yOesysd6RQX8FD/G?=
- =?us-ascii?Q?caeJQ0LNVYLEsYiux9wiwRaVZW1cly99drRzFYxHaSWr2r7tYPW1f+v2H4Qw?=
- =?us-ascii?Q?vHJevqzfOn3w4Z4vrrT9bAIIGfcuz+IlvU3HNZ8z54Klwn9fQi4mdKzJUEbM?=
- =?us-ascii?Q?lzx7RONI1hDhj0j+5XG6kLRhAe6H/TX5nehm5BLYvmboq6AWWetGGBlSMlr8?=
- =?us-ascii?Q?eitI1zxXDHYxTYKlrvuCjzHCJBuj4FhbMD4+QFL782O+I4ffn8LxCbvheofG?=
- =?us-ascii?Q?34JjUy5oCWQYOSih3h0pDFECpNZJgqhJ/b76Qu+a6oWiAj2yQe+K8Km+KKPV?=
- =?us-ascii?Q?DpBcPBIm1bQaNsU4+BAY1YLdo/g74w0jbpQybd4VslW4rvuvtCkZkEBEqI4E?=
- =?us-ascii?Q?e+dfZwthhnMLUre+zWhwVx5CkSLgYOPC7tnqvrcrm9qnPWa5sKPwqOF8R2kE?=
- =?us-ascii?Q?Ml97Lj01f6kcm7D6qWDyhCle8zyKjOZNI+AGqciiCqpIG4opjQGHGTyigaFC?=
- =?us-ascii?Q?ACqIutdCjoxeUtfsCI0wkWiNS4sRGh3B4B+qElQfKG8gRpK3oaRSqCn3o53z?=
- =?us-ascii?Q?Z1kwb3iTc8LPj9oxdvdGZSZIjNkJFUELpXTuq830qVFoDTHQQ6OWpLVY6p3T?=
- =?us-ascii?Q?SrnaAZ95wVreZXiHBpFHijgz6JVe1luepWfbHbHqinwTl8sDOrzSIJUuU4sq?=
- =?us-ascii?Q?aMAGgY44olsZxIgFH39J92aGJi3/YI7b8FqdsfPp6tlkbcNUGcVSt9IICvo6?=
- =?us-ascii?Q?a2V97XjR74g274qBUXt7DnKtSLDCN5njjj/GF8X2jkpChoMC4J01Zp1sX2LV?=
- =?us-ascii?Q?QA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2e208ae-11b5-4979-5d54-08dd5d613dd7
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 10:17:18.8355
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SjOBGwLigk1qiiE/OPwRfWUUVZC50v7uKYsDfRXmWVd9oXBqLU7lMJ6Yqo4AcRPNq5aqrg4N4ot9sCxeDEnckbo8s7XPWqwDr4u8UfxVKRo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6163
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250307-hrtimer-v3-v6-12-rc2-v10-3-0cf7e9491da4@kernel.org>
+References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org>
+In-Reply-To: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
+ Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4405; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=1Vq1rpCX8kQrR4gFhW87Me9AbRSCjpBro5aw8HsYISE=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnysZ4ZiCmJizeyd9VlTBCqDq0v74Wjyl5L6Nte
+ WEpFgy2FQWJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ8rGeAAKCRDhuBo+eShj
+ d176EAC92okuQDZSk1XM7+G38udeqBTDvkqmdMdhkB266PMkaSfIz9Iz2bxZ6PAXnnZTt1IKuBA
+ IqGZ6I5Gy8LWLxWom6gwmXsRJ2zazZ1WwSkGtJrGYsD2AiA0Pc3+y5c7PsbQv/2r4UUo7+lcFwW
+ 8DkIWS2DGZsglM9uCp05zVVXpX1RJSLciHgBE1TI+UIHyU8pRjOqUGHHX+m4Sszv9ZRlEYgzWuu
+ ugQAiVFrWKZsE5NMbfFaEeecfuHHSNTH/lLCg5w/Nsz97pU/pdyFY1weHHJQdYKbJEwuEXlndSV
+ rATv5xqzZAVuRTKgcisdbxIJeP7OM0apvIEW4W0pcKXkmKLQiAz2/KmU6u07g9uF3GoRLkj446Y
+ a8XMqBnwWkewEsyGh3JZfebXILgM5SwvtxFDUved5TIOYRln4bfAdmiJrcyLCt2jQQCyVCvmTw2
+ oascio9OeCCSW66kBdTfuhb1UXALNKKYbyTtJPzhhMtahcgrZxg72EayNfdJtIEBIQkIe6ZOfp4
+ qjOUTP8lx68JqmBxN/hzkE1E6gcT7lgyhd99OmNcs3oG5UMBnNX4fdaGacvR16mB2d5wD3b1hDm
+ g8CgzNRjlCPt+4DApHIBNmN6fUBd+qt/5CkCwPWzDUGpo+gBy1oI7gFWkqsuuEjxoTovV8RHA8E
+ X9zAnASZAEBwQ7A==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-On Wed, Mar 05, 2025 at 05:21:21PM +0100, Alexander Lobakin wrote:
-> No idea what the current barrier position was meant for. At that point,
-> nothing is read from the descriptor, only the pointer to the actual one
-> is fetched.
-> The correct barrier usage here is after the generation check, so that
-> only the first qword is read if the descriptor is not yet ready and we
-> need to stop polling. Debatable on coherent DMA as the Rx descriptor
-> size is <= cacheline size, but anyway, the current barrier position
-> only makes the codegen worse.
+Allow the use of intrusive `hrtimer` fields in structs that are managed by
+an `Arc` by implementing `HrTimerPointer` and `RawTimerCallbck` for `Arc`.
 
-Makes sense:
-Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ rust/kernel/time/hrtimer.rs     |  4 +-
+ rust/kernel/time/hrtimer/arc.rs | 94 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 97 insertions(+), 1 deletion(-)
 
-But you know the process... :P fixes should go to -net.
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index 7d7d490f8b6f..bb46602a7749 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -150,7 +150,6 @@ unsafe fn raw_get(this: *const Self) -> *mut bindings::hrtimer {
+     /// # Safety
+     ///
+     /// `this` must point to a valid `Self`.
+-    #[allow(dead_code)]
+     pub(crate) unsafe fn raw_cancel(this: *const Self) -> bool {
+         // SAFETY: `this` points to an allocation of at least `HrTimer` size.
+         let c_timer_ptr = unsafe { HrTimer::raw_get(this) };
+@@ -357,3 +356,6 @@ unsafe fn timer_container_of(ptr: *mut $crate::time::hrtimer::HrTimer<$timer_typ
+         }
+     }
+ }
++
++mod arc;
++pub use arc::ArcHrTimerHandle;
+diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
+new file mode 100644
+index 000000000000..5c916489fc13
+--- /dev/null
++++ b/rust/kernel/time/hrtimer/arc.rs
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0
++
++use super::HasHrTimer;
++use super::HrTimer;
++use super::HrTimerCallback;
++use super::HrTimerHandle;
++use super::HrTimerPointer;
++use super::RawHrTimerCallback;
++use crate::sync::Arc;
++use crate::sync::ArcBorrow;
++use crate::time::Ktime;
++
++/// A handle for an `Arc<HasHrTimer<T>>` returned by a call to
++/// [`HrTimerPointer::start`].
++pub struct ArcHrTimerHandle<T>
++where
++    T: HasHrTimer<T>,
++{
++    pub(crate) inner: Arc<T>,
++}
++
++// SAFETY: We implement drop below, and we cancel the timer in the drop
++// implementation.
++unsafe impl<T> HrTimerHandle for ArcHrTimerHandle<T>
++where
++    T: HasHrTimer<T>,
++{
++    fn cancel(&mut self) -> bool {
++        let self_ptr = Arc::as_ptr(&self.inner);
++
++        // SAFETY: As we obtained `self_ptr` from a valid reference above, it
++        // must point to a valid `T`.
++        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
++
++        // SAFETY: As `timer_ptr` points into `T` and `T` is valid, `timer_ptr`
++        // must point to a valid `HrTimer` instance.
++        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
++    }
++}
++
++impl<T> Drop for ArcHrTimerHandle<T>
++where
++    T: HasHrTimer<T>,
++{
++    fn drop(&mut self) {
++        self.cancel();
++    }
++}
++
++impl<T> HrTimerPointer for Arc<T>
++where
++    T: 'static,
++    T: Send + Sync,
++    T: HasHrTimer<T>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
++    Arc<T>: for<'a> RawHrTimerCallback<CallbackTarget<'a> = ArcBorrow<'a, T>>,
++{
++    type TimerHandle = ArcHrTimerHandle<T>;
++
++    fn start(self, expires: Ktime) -> ArcHrTimerHandle<T> {
++        // SAFETY:
++        //  - We keep `self` alive by wrapping it in a handle below.
++        //  - Since we generate the pointer passed to `start` from a valid
++        //    reference, it is a valid pointer.
++        unsafe { T::start(Arc::as_ptr(&self), expires) };
++        ArcHrTimerHandle { inner: self }
++    }
++}
++
++impl<T> RawHrTimerCallback for Arc<T>
++where
++    T: 'static,
++    T: HasHrTimer<T>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
++{
++    type CallbackTarget<'a> = ArcBorrow<'a, T>;
++
++    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
++        // `HrTimer` is `repr(C)`
++        let timer_ptr = ptr.cast::<super::HrTimer<T>>();
++
++        // SAFETY: By C API contract `ptr` is the pointer we passed when
++        // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
++        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
++
++        // SAFETY: `data_ptr` points to the `T` that was used to queue the
++        // timer. This `T` is contained in an `Arc`.
++        let receiver = unsafe { ArcBorrow::from_raw(data_ptr) };
++
++        T::run(receiver);
++
++        bindings::hrtimer_restart_HRTIMER_NORESTART
++    }
++}
 
-> 
-> Fixes: 3a8845af66ed ("idpf: add RX splitq napi poll support")
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> ---
->  drivers/net/ethernet/intel/idpf/idpf_txrx.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-> index 6254806c2072..c15833928ea1 100644
-> --- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-> +++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-> @@ -3232,18 +3232,14 @@ static int idpf_rx_splitq_clean(struct idpf_rx_queue *rxq, int budget)
->  		/* get the Rx desc from Rx queue based on 'next_to_clean' */
->  		rx_desc = &rxq->rx[ntc].flex_adv_nic_3_wb;
->  
-> -		/* This memory barrier is needed to keep us from reading
-> -		 * any other fields out of the rx_desc
-> -		 */
-> -		dma_rmb();
-> -
->  		/* if the descriptor isn't done, no work yet to do */
->  		gen_id = le16_get_bits(rx_desc->pktlen_gen_bufq_id,
->  				       VIRTCHNL2_RX_FLEX_DESC_ADV_GEN_M);
-> -
->  		if (idpf_queue_has(GEN_CHK, rxq) != gen_id)
->  			break;
->  
-> +		dma_rmb();
-> +
->  		rxdid = FIELD_GET(VIRTCHNL2_RX_FLEX_DESC_ADV_RXDID_M,
->  				  rx_desc->rxdid_ucast);
->  		if (rxdid != VIRTCHNL2_RXDID_2_FLEX_SPLITQ) {
-> -- 
-> 2.48.1
-> 
+-- 
+2.47.0
+
+
