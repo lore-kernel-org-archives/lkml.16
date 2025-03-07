@@ -1,162 +1,232 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2061.outbound.protection.outlook.com [40.107.22.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE89A19CC05
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 10:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741342038; cv=none; b=HI3PKmTzye0rDoikoKTZA53aokqpxqG7lP/p3uoVnUvMkNUavJv5Luz3wQxGcLlmTxZpndpUEujZG4PkFDcYlR91nTQmEZER4FuDR4z8eh7DP0ElaTOqYZMcHpfURBLTXV4LTTD6A6AwypX+w/keaWmnmCajzFC8DsvO7yltWp4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741342038; c=relaxed/simple;
-	bh=9CYg+Qp7lU8kNLTx2Bw5MXxd5kgzHi9PQLQC6SyEclI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ALvOtCrKlFFsqjJloraHCpzhJJpsJGvfdpLXff6n8KH8kfBquIltC4/8aBNaucRFVU3kpKhVDp7Nv2+KfJD7MT6Jmee+PepcKINnsDkdhvRcEZ51V9x3iTMQtZFEJw10yqOwtRtSWA58rrBglzmYNVJkd+R2wp3Z8NiR/UKi0j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ShlAUEZS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC2C20CCCD;
+	Fri,  7 Mar 2025 10:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741342255; cv=fail; b=YrJk5T6Yqz79HE4gedCA0dtlljnguF+rowk816BNu/AB4lGUAbNox6NZI6rcLwarcNkhaUXNzUPiFg7hzxG9l6xSsKFndfTQ9bboe1kruLkFcau1x/+JxyX7ObfUsnUyN7R0cSf7gy75HMcIPzi7TJyFyw8UPc+Zw1YJ7GzUQw0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741342255; c=relaxed/simple;
+	bh=41H1o0zx9VjinbDlai4D9r43S5S/hQ2Ln3W90FDbZ/I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=re0unuKIxBnNtVs3xVqBbPbwngnnDAvPlxoMo5LFX6miDm2W031A5Xx5BhSiMXiOIrhmvanrYIIQWW+Miv7UgenEdSAA69bEF6LweQlNWE8EULeluq2GSUbL9GmgkhgG/rXdpSg4Ypb7HRRDSWADXMxOFScS26gdru+G7vdxyR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KCzNt062; arc=fail smtp.client-ip=40.107.22.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ShlAUEZS"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52784BTx011804;
-	Fri, 7 Mar 2025 10:06:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=P5Y9iRYBc9+d0/TmKunKD0K+iQDXvFTQydolB02uE+M=; b=ShlAUEZSjFIB
-	h/nKzvrzvt1yeasVSaOg/TwYTGUu7cDWs2cTdytPgQoCMscc6mDb9ftYPCmhEYAv
-	HpSg48Z21mDM6z9PIFOQY7E9JbtK3uwZK2fIeTw5TJ90BYmRpQarm+NPrBs0NFxj
-	RsjLvgx4s7YHFPdxvlX7+ac/j6P5RO9C2vBWpyw+g1C5YrnA60I73VjEwuKFJh1d
-	5WBcp00Zj5OzDHN82sB1+sj69uuI2T4VDIAyCX/lyVUKlVwcDCqAyKVwDHhV9DCr
-	1I57AOBbpCGs6/vrFRL1Bi9rtIibKtmrTzjY8AyAzrKXGfU9yEyOyQSoVKHk/tmb
-	7JM0LW1lng==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457k45b1pc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 10:06:27 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 527A6Re5004689;
-	Fri, 7 Mar 2025 10:06:27 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457k45b1p7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 10:06:27 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5278FYBa025026;
-	Fri, 7 Mar 2025 10:06:26 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 454f92dmbs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 10:06:26 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 527A6OsO27919060
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Mar 2025 10:06:24 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7180D58056;
-	Fri,  7 Mar 2025 10:06:24 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 69EB958067;
-	Fri,  7 Mar 2025 10:06:15 +0000 (GMT)
-Received: from [9.43.47.115] (unknown [9.43.47.115])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Mar 2025 10:06:15 +0000 (GMT)
-Message-ID: <5291cd17-cdf5-4d66-8109-be27a4d2048a@linux.ibm.com>
-Date: Fri, 7 Mar 2025 15:36:13 +0530
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KCzNt062"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y3E+ahmO7+LfIb2LUPFGXxzBqJUayrxV9ocFP+wgCt1ByjXvxGxXwKZFbAZWAVVrGrtn8CvhH6jDhZxhLJIExqRl42fC813kosWDhYow9bu2gSzJKgvxkqQmQWT4OtegnFmuCTSVCarPaxP8PICW13Qgcls1WCyL+xp5m/kWBfE7e60N9vq5mlJMTivZ/+lElP3OF2w66DiUJQUSjEPieTtFv+y9oadIpgdNL48jBAoYXjpLhF8NB82pf/fSR/RWbnVPvd8bjC99ikWnTukwBrXW+292nXaJieNAzQPsCJ904VKmZIztYsofhos6ulvmcccNdfueCInl8FPXL1opRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1ya6HZAYQcqRbYFvGThCbCZe2yKbmSsTePP8UQLATyI=;
+ b=SEoC1EnE7LagMRHY+kEaDHEWR9dqjNUlvPGDHikkBGBbzwyp0lwEz3VuOgqI8M9Cm/Im2kks09LxSTFRc9ik5jPCOJuavJcZZxPmA/Kol3+LBzPI5y7BeYCN0hqyxfeP/0OYBD2iV8jK7oQTIY01P7Q6xypARTVBgcujZTbW7kVwD87DkxNkQNvQxW6FK6cxOVLyABgFFkaw9cUZayjt6ZCJ2s7zrMhMr8DyPPb6knByIm8h4tQmHx84Ks3RAOQHHhuVCvLU/4tqm3dx9PIN7NLW+MfAwwYzYSADJVJzhgANScyJj7QAfSUQsgqIGE9j7JIFMB7bLf3uw9Jy/dfAKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ya6HZAYQcqRbYFvGThCbCZe2yKbmSsTePP8UQLATyI=;
+ b=KCzNt062+cJ38H66sC5uRIW4dfDkjmjjuicvFBf0+sBjQtuBZ0svCMYBzije2vKMKIH+viUeqSs+VV+9hk/bLWL8KQV/H2I3V7JLjGm5LUWAhECwZb4RTqnkJLLl7kee0WWWVzCYjtev9H45XQfQ2RYUDG3n94HO15miZb6fNu4R/GHirlkqLwVbl/i4sDGnzI+Cr8rmGn33pZbaELHIxDaugZy6g4PfAnYTp6F24RfZqITvzUDh9uKcPHEtq0AxRo00EWd5woAL0hJu3U1e6KpNByxwwxkKMbUyVlNYKzbgWvcHjc/nh4zogp9YOai8eQNlsLlkCJGyH6KQ8A4fJA==
+Received: from AS8PR04MB8642.eurprd04.prod.outlook.com (2603:10a6:20b:429::24)
+ by DB9PR04MB9723.eurprd04.prod.outlook.com (2603:10a6:10:4ce::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.20; Fri, 7 Mar
+ 2025 10:10:50 +0000
+Received: from AS8PR04MB8642.eurprd04.prod.outlook.com
+ ([fe80::50d3:c32a:2a83:34bb]) by AS8PR04MB8642.eurprd04.prod.outlook.com
+ ([fe80::50d3:c32a:2a83:34bb%7]) with mapi id 15.20.8511.019; Fri, 7 Mar 2025
+ 10:10:50 +0000
+From: Jacky Bai <ping.bai@nxp.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+CC: "rafael@kernel.org" <rafael@kernel.org>, "daniel.lezcano@linaro.org"
+	<daniel.lezcano@linaro.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "james.morse@arm.com"
+	<james.morse@arm.com>, "d-gole@ti.com" <d-gole@ti.com>, "anup@brainfault.org"
+	<anup@brainfault.org>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>, "aou@eecs.berkeley.edu"
+	<aou@eecs.berkeley.edu>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "khilman@baylibre.com" <khilman@baylibre.com>,
+	"quic_tingweiz@quicinc.com" <quic_tingweiz@quicinc.com>,
+	"quic_yuanjiey@quicinc.com" <quic_yuanjiey@quicinc.com>
+Subject: RE: [PATCH v4] cpuidle: Init cpuidle only for present CPUs
+Thread-Topic: [PATCH v4] cpuidle: Init cpuidle only for present CPUs
+Thread-Index: AQHbjzc48QAeOzv5L02tuSUugwb8UbNnbkUAgAAAI3CAAAOqAIAAACvA
+Date: Fri, 7 Mar 2025 10:10:50 +0000
+Message-ID:
+ <AS8PR04MB86425524495B3FEF19F32E6B87D52@AS8PR04MB8642.eurprd04.prod.outlook.com>
+References: <20250307080303.2660506-1-ping.bai@nxp.com>
+ <Z8rBYuDiIyo8y6HT@bogus>
+ <AS8PR04MB86425B7CEE7443F822A2DBCA87D52@AS8PR04MB8642.eurprd04.prod.outlook.com>
+ <Z8rEkgYoThJAJdPV@bogus>
+In-Reply-To: <Z8rEkgYoThJAJdPV@bogus>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8642:EE_|DB9PR04MB9723:EE_
+x-ms-office365-filtering-correlation-id: 03c2feb5-1f88-43ca-979c-08dd5d60566e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?0hMl5HA8+u0O3DavDQGgX7+qEpk4b8KGuFsKC1TF3PANAO/X2hlh9yeyeY64?=
+ =?us-ascii?Q?46ZYsxPQy7EzSqFBPcEFyKonrWF5gxYLLBnwjqsT8v5KrYwk+TYoTp4BQSTf?=
+ =?us-ascii?Q?3BMzZhnJNVTcobSfGrBw1ilg/5dKv5bQNsVWuLx7CCl+466pzih558P6Sg7t?=
+ =?us-ascii?Q?sxS/qKMfc+gexczDudiZ/S/Uc4KtOSmCSyFnGKdEn+4eZzCOPuQMhf2nQjjb?=
+ =?us-ascii?Q?86ESgwveztMFWEGvpm/sZ8++OIURF4hG5Th1WOVp12NRvkRjNjax4UxMDypn?=
+ =?us-ascii?Q?AAsPd0txuMHi2NLHXvqsmhI9syb/d0LufUn0AtlCyID0yzBFipIc9dtL1HQf?=
+ =?us-ascii?Q?WTUkCpqdFRXsxc51dXh7H0/9tJ30ej7WCm+VOsBBNQfK55uf5Zlp1Wx+IZWH?=
+ =?us-ascii?Q?WJLfnzRKs8YwJP7Mn13x19YSwIaoIXzbcGN1WBZQfVB6SOLE0AGejeRbj3KZ?=
+ =?us-ascii?Q?5o5BmMg/SEnQHyAdqMI7spdPIpiykXef4Dfrv/VU77BswbfaPEDLoZNYFKl+?=
+ =?us-ascii?Q?g10stsqpg19NS6NUOqgjU4+LflZXFoZUMdGUmExTo/g8amT5ZotXAkU3Zw4C?=
+ =?us-ascii?Q?a/ToJaszDCv1RoT+TuFW85/UIASEmAzlutINVGn+xMYmsnbUfSQAv/9TQjxh?=
+ =?us-ascii?Q?s2TJjmn5cJAD51/uYvQ40QqhTnbdpZ2G+avVokQ4qJjJqVUwkQMxBCHAebJH?=
+ =?us-ascii?Q?JVSoXH3MokF+0y51gQ5wMbNLOUf7plaMi6aTvUcu28rLgZa+AE0YSqxj2E0q?=
+ =?us-ascii?Q?9JEIkPq5o3NI21Cw+l4i7ikQmJDXbfo6h9ChkEhXkWCM4VGa6hhRD35xFW80?=
+ =?us-ascii?Q?dfjb6YKo07tDhL14MnD5t/aVA5tsF0MREehfAPu5aH+n8h4NyFDfPNWiec+F?=
+ =?us-ascii?Q?I8DGiidUYVXflnAtRgNjSNI0tUJxGVGlCSRsu3yy5FH+ecouRof2mMiNC8KZ?=
+ =?us-ascii?Q?LfaGbASrEN4LGKM8PTUXK5oE9InmK41VdER6HYqy72+0MwjpPSW+Irvax1lG?=
+ =?us-ascii?Q?9Ag+jtVXva8Lvb1X5YXMZU1V/8xKOmbJE6TcZI5RWH/2Vtg8Hgns3kOs313/?=
+ =?us-ascii?Q?EfjoCxx0a8yvtnYkgnLE7MBzf3Ay7UHAeoexAE46DbRx4amH2X80qVyaN11H?=
+ =?us-ascii?Q?ExTV/w3bhWGxurkmQQacWplUbVmtEt7bkCk9fUNWw21PcsBYS0dKLqFjoe02?=
+ =?us-ascii?Q?w/mrsWgWJITOTcyUXNOqehJrXl1j09JL6k+UHwvmRSHRnW8+Vw5VKgDiOVhg?=
+ =?us-ascii?Q?7Inn+hg9xvgxKy20PIrhsmy870IHx4K47/72czaM5cgss5hQWf0QTtm9VjY/?=
+ =?us-ascii?Q?dTCiUxE4tmRXP3IeGLpnPta1gNKGTo/qT5lI/A0nhGgXkufFjytiF2QZLgKg?=
+ =?us-ascii?Q?/gk+l3G2a9nHHRbXIsUgCO/WMGW+4Vpx1fG5Owy2SZj3kLCU/2Dd2hlGUc9D?=
+ =?us-ascii?Q?4oCEn7dxcJyA3qkEuOW446To+oUhyDdw?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?E6vYFsphWUoU0Z9bRZMEqyat67EtguYx1grI7IxDzD9GQrst0H2zRsinrqmd?=
+ =?us-ascii?Q?6eB+fiJQGH7MxkWiwd8Gpc7oMmlvYmeG8bRBX9DoaJOW7zoq8wyqTISRxR5O?=
+ =?us-ascii?Q?H0NAhzuzS2CO8ZUXSgMBE/d9QP+g2cw1SAU3erDWDEaVitR68wnc0qpbkBOj?=
+ =?us-ascii?Q?gao9pWKFy3KMAIkVMMTXY5H4GuuULeXaIfbqG9XZUWtfDFZ8Q8ULIbm6bo99?=
+ =?us-ascii?Q?blXoqtMSdAPtm35iLatmRtDXn6eQG93xO3FUtKPu9MCYcvl3GzuqzrZDd4Pg?=
+ =?us-ascii?Q?nPuMX/Mo+/N1ivkSZBJO4wTF8Kg3BoNuOuJNpvWP4afXrwtZeC75+weVw5fc?=
+ =?us-ascii?Q?S4yvgKb8sk1zbsyM4+zj+EC59ILmORNm+ziaT7x6/hPVlq0perZdw4A48WmI?=
+ =?us-ascii?Q?tgpHIElwN0PdEs2eR37XIV0c4l4CiC/ECuqjB+FQSzKRjSAVLySYVfokLT4s?=
+ =?us-ascii?Q?aNg5wzbdmDmubnKaPgsi8XuXqtpgthkLFmSC1Yrtqy01Snvwwgjk/nHkYn4C?=
+ =?us-ascii?Q?oW7CMl2LyoWZrNWMK4bDedqQ45jcX3BHe7o+4VFsSiVuVNlCGoykvivM86wq?=
+ =?us-ascii?Q?JfWgjv/+o6lRMnNcX2aNMVhn382AsXv4kFBLxBLiRKyKEi20ce9NUQyqdVsu?=
+ =?us-ascii?Q?Iss5mUutyzxthpEXATrBX3xhcrvrx9u31UlIyhky5vz2l3pqxV2F4I1D7lxm?=
+ =?us-ascii?Q?dyFVazloa2g/OwQCU0XPuDlFCyaO4B1ysEXnufSIXHC0xNAq0w/NF5gR9b4m?=
+ =?us-ascii?Q?/maVPEfP4p8nEraURIVlyobCjSCSQ8FmwDCm5DuyEjyShl1pbd6mwBrUqLPi?=
+ =?us-ascii?Q?R0kT4KgixJUYD/hengLNU6/PxBD3F21XV4fEpeQ4eu2iBGgINYs2gh2tkyUa?=
+ =?us-ascii?Q?fPhgvcTiLha+zyVoBmtI17mMf83ZkuX4Rg2eoj1Vt+1Y1rrgLBQHluf6ro6u?=
+ =?us-ascii?Q?DKck7Qab3MLA0MC2GVqMzpiIFDjtknRGI195+ira0Ej6ha8GbqVdnfSNint/?=
+ =?us-ascii?Q?EaoPqroiNEU8h17YHGIll6SReMV/MPPJOOB1l0Vq3ejOIz59gH5tMRRMJnVh?=
+ =?us-ascii?Q?w2uT/4d4YOyXPilrxhKYIs1F4Wx5zSOrKNjEy1oULH69shTf8Xw4GMXgnGCn?=
+ =?us-ascii?Q?W2EZktF968cO6WJDfryhHLtU5wLG5G81iMiZBRrAyYQ86Tfv/YrZTNC5cQ9b?=
+ =?us-ascii?Q?sjIjC6u0XwBH+qBanl5kmO3dSRN+e03ofyzqY07NzqeB0LDBkL7NqmTjlL1B?=
+ =?us-ascii?Q?7lO4lBNeATVXPVqfLHNqUXo7V3DpoIAOtEF5kQ540AWyTzOivYzgcqiUzsVv?=
+ =?us-ascii?Q?vZJSExdpQl7QG5+HzhlmM4bQXcOgbLA2USPtY21elabTiviDcKpckxdcKNcb?=
+ =?us-ascii?Q?CTRco3e1fAq+qRxOlk66xR+ZMZceSpAVXcfpPt3oRs/hzbiZRQs+HLwfIBVD?=
+ =?us-ascii?Q?19CdtJ5DPy9MRhkPlm+GMEuFk+FMd4Z7iYYnlnPQe2P7avszscYSE4LKafHO?=
+ =?us-ascii?Q?1Rs4dBmxl6eQeIIR55/HAR8fwUUdENn8xfiQCDxeObRONgmIjLat9UHW3Ps0?=
+ =?us-ascii?Q?bSn9yxzr1piZOo3FGpY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] Improving topology_span_sane
-To: Steve Wahl <steve.wahl@hpe.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org, Naman Jain <namjain@linux.microsoft.com>,
-        Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
-        srivatsa@csail.mit.edu, Michael Kelley <mhklinux@outlook.com>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
-        K Prateek Nayak
- <kprateek.nayak@amd.com>,
-        Vishal Chourasia <vishalc@linux.ibm.com>, samir <samir@linux.ibm.com>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20250304160844.75373-1-steve.wahl@hpe.com>
-Content-Language: en-US
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Reply-To: 20250304160844.75373-1-steve.wahl@hpe.com
-In-Reply-To: <20250304160844.75373-1-steve.wahl@hpe.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: DPCFXUVyqZ0hws5HqTPRZBepD_4NOKa8
-X-Proofpoint-GUID: c-8Eq-73TaN2WwUmGwOLvs_VlHYICJO5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_04,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- mlxlogscore=774 mlxscore=0 adultscore=0 clxscore=1011 impostorscore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503070071
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03c2feb5-1f88-43ca-979c-08dd5d60566e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2025 10:10:50.4763
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wWjGssMQFo7zCYlZdA2AHQ9xzIyFCxYq/VVdbzaYDFOhTMowqnNk/U+sgk3Q3BtMMjK3UvlfXnITQwCUt2i2GQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9723
 
-Hi Steve,
+> Subject: Re: [PATCH v4] cpuidle: Init cpuidle only for present CPUs
+>=20
+> On Fri, Mar 07, 2025 at 10:02:14AM +0000, Jacky Bai wrote:
+> > Hi Sudeep,
+> >
+> > > Subject: Re: [PATCH v4] cpuidle: Init cpuidle only for present CPUs
+> > >
+> > > On Fri, Mar 07, 2025 at 04:03:03PM +0800, Jacky Bai wrote:
+> > > > for_each_possible_cpu() is currently used to initialize cpuidle in
+> > > > below cpuidle drivers:
+> > > >   drivers/cpuidle/cpuidle-arm.c
+> > > >   drivers/cpuidle/cpuidle-big_little.c
+> > > >   drivers/cpuidle/cpuidle-psci.c
+> > > >   drivers/cpuidle/cpuidle-riscv-sbi.c
+> > > >
+> > > > However, in cpu_dev_register_generic(), for_each_present_cpu() is
+> > > > used to register CPU devices which means the CPU devices are only
+> > > > registered for present CPUs and not all possible CPUs.
+> > > >
+> > > > With nosmp or maxcpus=3D0, only the boot CPU is present, lead to th=
+e
+> > > > failure:
+> > > >
+> > > >   |  Failed to register cpuidle device for cpu1
+> > > >
+> > > > Then rollback to cancel all CPUs' cpuidle registration.
+> > > >
+> > > > Change for_each_possible_cpu() to for_each_present_cpu() in the
+> > > > above cpuidle drivers to ensure it only registers cpuidle devices
+> > > > for CPUs that are actually present.
+> > > >
+> > > > Fixes: b0c69e1214bc ("drivers: base: Use present CPUs in
+> > > > GENERIC_CPU_DEVICES")
+> > > > Reviewed-by: Dhruva Gole <d-gole@ti.com>
+> > > > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > Tested-by: Yuanjie Yang <quic_yuanjiey@quicinc.com>
+> > > > Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> > > > ---
+> > > >  - v4 changes:
+> > > >   - add changes for other cpuidle driver that has the similar issue
+> > > >     as cpuidle-pcsi driver.
+> > > >
+> > > >  - v3 changes:
+> > > >   - improve the changelog as suggested by Sudeep
+> > > > ---
+> > > >  drivers/cpuidle/cpuidle-arm.c        | 8 ++++----
+> > > >  drivers/cpuidle/cpuidle-big_little.c | 2 +-
+> > > >  drivers/cpuidle/cpuidle-psci.c       | 4 ++--
+> > > >  drivers/cpuidle/cpuidle-riscv-sbi.c  | 4 ++--
+> > >
+> > >
+> > > Why have you spared drivers/cpuidle/cpuidle-qcom-spm.c ? IIUC the
+> > > issue exists there as well.
+> > >
+> >
+> > For qcom-spm driver, it has below code logic to handle no cpu device
+> > case, and no rollback to cancel the whole cpuidle registration. So I ju=
+st leave
+> it as it is.
+> > Do we need to update it?
+> >
+> > for_each_possible_cpu(cpu) {
+> >         ret =3D spm_cpuidle_register(&pdev->dev, cpu);
+>=20
+> Did you look into this function ?
 
-On 04/03/25 21:38, Steve Wahl wrote:
-> toplogy_span_sane() has an O(N^2) algorithm that takes an inordinate
-> amount of time on systems with a large number of cpus.
-> 
-> The first patch in this series replaces the algorithm used with a O(N)
-> method that should exactly duplicate the previous code's results.
-> 
-> The second patch simplifies the first, taking a similar amount of time
-> to run, but potentially has different results than previous code under
-> situations believed to not truly exist, like a CPU not being included
-> in its own span.
+Yes, at the very beginning of this function it will check if the cpu device
+is available, if not, directly return -ENODEV, something I misunderstood?
 
-I have reviewed the proposed approach for the topology sanity check and
-it looks good to me.
-
-I have also tested the patch on a Power10 system with 12 cores (96 CPUs).
-The average CPU hotplug latency decreased by around 10%.
-
-Therefore,
-
-Reviewed-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-
-Thanks,
-Madadi Vineeth Reddy
-
-> 
-> Version 1:
->   * Original patch
-> 
-> Version 2:
-> 
->   * Adopted simplifications from K Prateek Nayak,and fixed use of
->     num_possible_cpus().
-> 
-> Version 3:
-> 
->   * Undid the simplifications from version 2 when noticed that results
->     could differ from original code; kept num_possible_cpus() fix.
-> 
-> Version 4:
-> 
->   * Turned the patch into a series of 2, the second re-introduces the
->     simplifications, and includes further simplification suggested by
->     Valentin Schneider in the discussion for Version 2.
-> 
-> Steve Wahl (2):
->   sched/topology: improve topology_span_sane speed
->   sched/topology: Refinement to topology_span_sane speedup
-> 
->  kernel/sched/topology.c | 73 +++++++++++++++++++++++++++--------------
->  1 file changed, 48 insertions(+), 25 deletions(-)
-> 
-
+BR
+>=20
+> --
+> Regards,
+> Sudeep
