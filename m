@@ -1,149 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015F320CCD3;
-	Fri,  7 Mar 2025 10:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA5520C000;
+	Fri,  7 Mar 2025 10:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341616; cv=none; b=CggCDNyyn/aVEx5rjRv2rB5cW8JJf3bDSiWTRItUUfoIkdtQC6BhtvGkRz+oAFjnlYNnIzS+9dNz7/3xuEA3ExaEeM0DusQjhgosXHDsPKjNQtt7YqrohoPJ87cY0025HGZ9iWIylf4YFKWwUHUNNC326N7rSosTjSy+fjC24U0=
+	t=1741341624; cv=none; b=qqj/iyjhILyhUSxhiiKzehJF37wLExJ8eKlEacHlrCJ8tt/dcc+dht8j9eMLO3CONiWC8IIyn96vLlNtbyxajQ+CaZFw2zCwiAvPLobjMCGnTz5w1mdG3MKRbdLFBKucAViV+Jh7Oy35odxA2Zb3DwhyEwnrR820IQ41IX48tL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341616; c=relaxed/simple;
-	bh=mOFf7JEY2xGc/lYu7abXxp5IEcE/c+c1U8ngnx9z+Bs=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=BnRr3pQZiUYrxyit0NJGtSUyaKBY2kkidtp+NFn3BhYvDi13nJuLonWHbjCKEq4Knwc4dxBqki6uJTWQhEyOGnqqqqKdMuuEItp/Rqs6bc2/tO9kUcF9VTLqXcPHOb3NSRpnaa+XG5+pzs8iqAanWWZv3AmHuh3RsUDTYMAcNIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T+Z6jvjV; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+Z6jvjV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741341615; x=1772877615;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mOFf7JEY2xGc/lYu7abXxp5IEcE/c+c1U8ngnx9z+Bs=;
-  b=T+Z6jvjVdAh5tcK4i/u0WJqMbZ9yJ1irssypIix0/rX9vWI/gEfW5bdA
-   KbCK1OSuARLjdYH7XhMikGvXMTTvlkkT1c1Q71mOwdSN8MMUhj34HsyK4
-   xS8I0mZPFJ54vR0dfYs4Xgr/5/zN7HHXb/DyjXV7xw52pTUESlhCvRoLK
-   GyYHYhED1JojpruCBMidCVKB9+GOcX/peRjdqluNWohrAsqBrRRKY38X5
-   ewas1DGq+sMazwVLyp7KXiSS5h+zntMJxvGr9ufuDO+MXljvSsoAYMZ+M
-   SsQywmLRkrYYgmZYDrNWQpQvfMaYpKgNmYPCsdyZ+aXMf8NSoHldoLnpy
-   w==;
-X-CSE-ConnectionGUID: mlFbde8ATBGUkcdcNzIONg==
-X-CSE-MsgGUID: zweZwJxjQ3W1bo4YTs/jHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46163495"
-X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="46163495"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:00:15 -0800
-X-CSE-ConnectionGUID: X6LSaZ3tTBGqh2x4tXsqpw==
-X-CSE-MsgGUID: Te3pCXqERG2YBqfFWtS5kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
-   d="scan'208";a="124374586"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.120])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:00:12 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Fri, 07 Mar 2025 11:58:21 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.14-4
-Message-ID: <pdx86-pr-20250307115821-1780710253@linux.intel.com>
+	s=arc-20240116; t=1741341624; c=relaxed/simple;
+	bh=ExNEzbE0kj5w02IFGodwiFqK8I2Ad82PnSevrzYOBA8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fHjSakmT4nq4mWsSESmJAoGuKgBu/pgVznzAGWjmO4dWasDYTAp6qPi2L/a8CCCHl3fXsvpacUu2YSCajCTd+17w9nxoUz2rUHlIUWt2CHZjyae7vqsom2eIbIbow/PS1jbEV6P5bi1jGu6S2teFC/wjk9xHpKtZ/OiAWI17uXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:3300:467f:62a0:f2ba:1721])
+	by smtp.qiye.163.com (Hmail) with ESMTP id d586ba78;
+	Fri, 7 Mar 2025 18:00:11 +0800 (GMT+08:00)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Yao Zi <ziyao@disroot.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH v3 0/1] arm64: dts: rockchip: enable SCMI clk for RK3528 SoC
+Date: Fri,  7 Mar 2025 18:00:07 +0800
+Message-Id: <20250307100008.789129-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHh5NVkkYQ05ISU0fTE5CS1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtLQUhIS0tBT01MHUFNSRpLQR1JGRpBSkxJSllXWRYaDx
+	IVHRRZQVlPS0hVSktISk5MTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a95700c562a03a2kunmd586ba78
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6P006Sxw5CzJILjZRNyo2OAo6
+	Pk0wCTZVSlVKTE9KSE9KTUpJTUhDVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0tBSEhLS0FPTUwdQU1JGktBHUkZGkFKTElKWVdZCAFZQUJKTzcG
 
-Hi Linus,
+Same as RK3568, RK3528 uses SCMI clk instead of standard ARMCLK.
+Add SCMI clk for CPU, GPU and RNG will also use it.
 
-Here is a platform-drivers-x86 fixes PR for v6.14.
+dmesg:
+[    0.061333] scmi_core: SCMI protocol bus registered
+[    0.125780] scmi_protocol scmi_dev.1: Enabled polling mode TX channel - prot_id:16
+[    0.126628] arm-scmi firmware:scmi: SCMI Notifications - Core Enabled.
+[    0.127233] arm-scmi firmware:scmi: SCMI Protocol v2.0 'rockchip:' Firmware version 0x0
 
-Fixes and new HW support:
+CPU frequency: ~# mhz
+count=611657 us50=19994 us250=99945 diff=79951 cpu_MHz=1530.080
 
- - amd/pmf:
+Changes in v3:
+  Remove unnecessary assigned-clocks
 
-     - Initialize 'cb_mutex'
+Changes in v2:
+  Change sram to reserved-memory
 
-     - Support for new version of PMF-TA
+Chukun Pan (1):
+  arm64: dts: rockchip: enable SCMI clk for RK3528 SoC
 
- - intel-hid: Fix volume buttons on Microsoft Surface Go 4 tablet
+Chukun Pan (1):
+  arm64: dts: rockchip: enable SCMI clk for RK3528 SoC
 
- - intel/vsec: Add Diamond Rapids support
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi | 31 ++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
- - thinkpad_acpi: Add battery quirk for ThinkPad X131e
+-- 
+2.25.1
 
-Regards, i.
-
-
-The following changes since commit b3e127dacad60a384c92baafdc74f1508bf7dd47:
-
-  platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver (2025-02-12 13:49:37 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-4
-
-for you to fetch changes up to 376a8c2a144397d9cf2a67d403dd64f4a7ff9104:
-
-  platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA (2025-03-05 13:33:42 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.14-4
-
-Fixes and new HW support:
-
- - amd/pmf:
-
-     - Initialize 'cb_mutex'
-
-     - Support for new version of PMF-TA
-
- - intel-hid: Fix volume buttons on Microsoft Surface Go 4 tablet
-
- - intel/vsec: Add Diamond Rapids support
-
- - thinkpad_acpi: Add battery quirk for ThinkPad X131e
-
-The following is an automated shortlog grouped by driver:
-
-amd/pmf:
- -  Initialize and clean up `cb_mutex`
- -  Propagate PMF-TA return codes
- -  Update PMF Driver for Compatibility with new PMF-TA
-
-intel-hid:
- -  fix volume buttons on Microsoft Surface Go 4 tablet
-
-intel/vsec:
- -  Add Diamond Rapids support
-
-thinkpad_acpi:
- -  Add battery quirk for ThinkPad X131e
-
-----------------------------------------------------------------
-David E. Box (1):
-      platform/x86/intel/vsec: Add Diamond Rapids support
-
-Dmitry Panchenko (1):
-      platform/x86: intel-hid: fix volume buttons on Microsoft Surface Go 4 tablet
-
-Mario Limonciello (1):
-      platform/x86/amd/pmf: Initialize and clean up `cb_mutex`
-
-Mingcong Bai (1):
-      platform/x86: thinkpad_acpi: Add battery quirk for ThinkPad X131e
-
-Shyam Sundar S K (2):
-      platform/x86/amd/pmf: Propagate PMF-TA return codes
-      platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA
-
- drivers/platform/x86/amd/pmf/core.c   |  2 ++
- drivers/platform/x86/amd/pmf/pmf.h    |  5 +++-
- drivers/platform/x86/amd/pmf/tee-if.c | 52 +++++++++++++++++++++++++----------
- drivers/platform/x86/intel/hid.c      |  7 +++++
- drivers/platform/x86/intel/vsec.c     |  7 +++++
- drivers/platform/x86/thinkpad_acpi.c  |  1 +
- 6 files changed, 58 insertions(+), 16 deletions(-)
