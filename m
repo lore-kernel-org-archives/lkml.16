@@ -1,70 +1,65 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from out-16.pe-a.jellyfish.systems (out-16.pe-a.jellyfish.systems [198.54.127.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0B421D59B
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BC121E091;
+	Fri,  7 Mar 2025 15:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360188; cv=none; b=PEQMZnJrBV03bk04pJY/jAB1WgSGIxk9rI53Wf74zUSpgOLxqiEqoduJ3s6IJ0ie3zXmwZ52OW88WJHjMJ+CvAUl1pix7X4hXTDx4Mb5Qogjb3wxXoNTGH+lopz1sQAOubeipaULFGEMrtB3+HGx1z1g+iHRgaWIrBFysiGt54A=
+	t=1741360203; cv=none; b=ClVo/p+XNBQ4HpSt/44gwx1n5hHGV3Zz8lNoiTsMh5nOXR9qACAuDVk8V49ExjutgD9hHIcJsHyqbhtqn2nLHzXk6oFhmdxSwDsXdAGE10mMCdEwD93lUMAraG6XHSOCCc7EPEYHKaJ+KcKgknWPG9vwGiUcf8fE5zeTHI/jbIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360188; c=relaxed/simple;
-	bh=gE6FGCV28DwkTHBBOESRmnTDsWzJHMdNw/Oj97QoaiM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e4zRT7znJ5WKnIWPNQSgYF06ugyfpH+tGRNZzTk+loEEKAEvWsMpYZ5rg8/goJF6zr0i9iHEAT6f/WHfvDhz7KfSav5+HGG4rOUVfKbX8QL6I+A/z7Apioi2inxu5ugUsJpUIv75oWrlIe/mN8trQxgJgl76DyPNxu2WNfw3UuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=kEnnOKjR; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
+	s=arc-20240116; t=1741360203; c=relaxed/simple;
+	bh=ihHvQIx2ztyg1h3yxcaLwTKJXChieyv6DV25l6QnD90=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UESl9QDyPLWUCjDaRNLVY6tQ9WVmm6pShmLryK+zC0OwlkpM4hvAe51hFuDW11mj7TuFDBrPPu0dxOd78LpczkrIxBdy/5y/bswTOYER5dMOuvBRSUs4YBOfp8SuyBP3g2U38I5sWy99Sriq/Tc/r8Le4BzYdDSsyKMLwwTWIS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=qhy2KiDD; arc=none smtp.client-ip=198.54.127.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="kEnnOKjR"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39129017bbbso865073f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:09:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1741360185; x=1741964985; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BP9EZa+ZXL6z9j+n7AY1mhAuXOFT2kVu+uBWLrEP2JQ=;
-        b=kEnnOKjRVDJkPhTH4NAr02m0uIFW40H0+iQBKyvXSykYEoy3j9Q1Hecgq5l0jipCCy
-         mBIcYvvK4ka1jHl51nPY/lYpMi8tI8+iHeHvTM27u+F0mohPwJMc4AwBxtCn9WjOUSVM
-         3QW9XS2CbcKbedb4V1knjAnuUVmAqPIJGCAo3GGKYIpl9FS0ENHQF8SZXI8nmOZ+PAX/
-         bvhl2G67nnPymVBNIH40iP7iYpsN74ieOrTNf0YVsw1meyB4F52GyGhdG06sYPTMXklm
-         +WXSr5FiCNmjVjwpiBFTcyhl2m0eYWFcOoxg1zMrey594RfnwyhNevlfUQxvYBL+3z6y
-         EpKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741360185; x=1741964985;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BP9EZa+ZXL6z9j+n7AY1mhAuXOFT2kVu+uBWLrEP2JQ=;
-        b=QtdMQ3M8LiiQtE0g5gzwAFYTnE/StU2lun6bnUBtqsghlv/JFvXEhIhDY8ufIoH3/F
-         6ziCqgu/mUa5EZsaN62AylsVDvVd70TWbus+ubZLDBMLH+e9N7sOuIZGf/yKCy9BNAqj
-         rBGUXcfpsc4XSwtiul2VfiPaESdUOeM26QJcDF6TtnvdC5HtTewY2uYHKB06Efm5bLgq
-         7g8CbGpziItycXvyWeQGMscdloaNjGkPPsXYCud6ztGH6eDs1J0Rk/ZZv0B+2FYt7u/O
-         qfgt6dX8nyM873KGqYy5G6XsSkUxEdu4nUI6W5Veiq0Vb5gy/FOvWHbJ2nSoKurzFm0k
-         KbMA==
-X-Gm-Message-State: AOJu0YzQ61IH4FD6ue9cFe37uSiOpcpQFV/3nJz1mbvRnb3Gr4F1Q2oF
-	CIOCo7VqqOgCRG/sfis11oogSam0WGRhAZxtLcSzDnDh7QdrKZB3vErORaW7Qn8=
-X-Gm-Gg: ASbGnctUbL9x8AkN6mprW+fjZaIq7qi9ijTvpcJA36a221yc+fOK1rSB6RNMwvUJ2bh
-	dWqTgb4WfPvhlYm2lDtNyyZULHF5Hgc6588aRiS06jxBnGqbVoy2eMs62otHic72crgMhW3Gu8s
-	iA7FVWXYFH+NQ5KFm/xUtNkw0uLp7NGO7n2Pg1N1PIFQzK0cECgWX3fdke6wNUOMccAHlaMczq5
-	OHrpjDbdM3Z5XbLM8ZWzPhgVkXR3aVTQNzOvTWepSWXHAXicFPzCoI6siGT0dby6NHD1qZbwd7S
-	u7vmuBY0yNFwXpZTVD0ddVj9QuVrunvjPLBdFGkQI3be1LYy
-X-Google-Smtp-Source: AGHT+IFk6NYRxZEBXy3AmEUNEKnHoFzQmS/X6I0jyvaiFDvAd5Hny94unW35ookz2eoEpTTH6nqtPw==
-X-Received: by 2002:a5d:5f8f:0:b0:391:2e31:c7e8 with SMTP id ffacd0b85a97d-39132d66e3dmr2518912f8f.2.1741360184367;
-        Fri, 07 Mar 2025 07:09:44 -0800 (PST)
-Received: from matt-Precision-5490.. ([2a09:bac1:28e0:840::179:137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e2b6asm5703574f8f.66.2025.03.07.07.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 07:09:43 -0800 (PST)
-From: Matt Fleming <matt@readmodwrite.com>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@cloudflare.com,
-	Matt Fleming <mfleming@cloudflare.com>
-Subject: [PATCH] kbuild: Add KDEB_COMPRESS_LEVEL to control compression level
-Date: Fri,  7 Mar 2025 15:09:40 +0000
-Message-Id: <20250307150940.1309703-1-matt@readmodwrite.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="qhy2KiDD"
+Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
+	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4Z8V030r8Wz4xR1;
+	Fri, 07 Mar 2025 15:02:59 +0000 (UTC)
+Received: from MTA-09.privateemail.com (unknown [10.50.14.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4Z8V023W0Pz2Sd0Q;
+	Fri,  7 Mar 2025 10:02:58 -0500 (EST)
+Received: from mta-09.privateemail.com (localhost [127.0.0.1])
+	by mta-09.privateemail.com (Postfix) with ESMTP id 4Z8V022587z3hhS5;
+	Fri,  7 Mar 2025 10:02:58 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
+	s=default; t=1741359778;
+	bh=ihHvQIx2ztyg1h3yxcaLwTKJXChieyv6DV25l6QnD90=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qhy2KiDDFvcqu+ixtgYPQY02OQ6Scwnhg48qe5Myk4QwVy1TCma8BfhzfNa7i3gXP
+	 ppkLwvL7igfCrEIBTdA3DnuMJkPEvcxCE2vdJ87GdqWDZUmYbMPoaGF9KO8l3HCOIh
+	 n5OMKsMIAU+6OshNBhzmIRWvrW3kXBAANolwEQciHg53ZuFZh2OVZQ0jr5teKGS+3q
+	 V6S2fSQbA9c1MeEzKZW/ZoUhDqlm4QfQSEg4sLG6jS3I9sD9/TjC3Y4f4RSaOLntk1
+	 5SzYmXRQYmxt/63wv5NbQIJsA0Y248UeM25ZLFs+uFtm4HwRSkc7Wy3OQDKt622/3m
+	 SbrImQE35mpKQ==
+Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
+	by mta-09.privateemail.com (Postfix) with ESMTPA;
+	Fri,  7 Mar 2025 10:02:43 -0500 (EST)
+From: Sam Winchenbach <sam.winchenbach@framepointer.org>
+To: linux-kernel@vger.kernel.org
+Cc: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	antoniu.miclaus@analog.com,
+	jic23@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sam.winchenbach@framepointer.org,
+	bpellegrino@arka.org
+Subject: [PATCH v6 2/6] iio: filter: admv8818: fix band 4, state 15
+Date: Fri,  7 Mar 2025 10:02:12 -0500
+Message-ID: <20250307150216.374643-2-sam.winchenbach@framepointer.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
+References: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,43 +67,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-From: Matt Fleming <mfleming@cloudflare.com>
+Corrects the upper range of LPF Band 4 from 18.5 GHz to 18.85 GHz per
+the ADMV8818 datasheet
 
-Give users more control to tradeoff compression time vs compressed size
-when building debian packages with a new KDEB_COMPRESS_LEVEL option.
-
-Here are some examples of using KDEB_COMPRESS=xz with
-KDEB_COMPRESS_LEVEL=1 through to KDEB_COMPRESS_LEVEL=6 with the
-bindeb-pkg target:
-
-  Level Time to compress Compressed size (bytes)
-  ----- ---------------- -----------------------
-      1        0m36.771s               476909176
-      2        0m40.335s               474832644
-      3        0m43.635s               473845600
-      4        1m13.839s               472260012
-      5        1m18.657s               464442676
-      6        1m20.658s               464355000
-
-Signed-off-by: Matt Fleming <mfleming@cloudflare.com>
+Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
+Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
 ---
- scripts/package/debian/rules | 2 +-
+ drivers/iio/filter/admv8818.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/package/debian/rules b/scripts/package/debian/rules
-index ca07243bd5cd..616ecf1d4d1b 100755
---- a/scripts/package/debian/rules
-+++ b/scripts/package/debian/rules
-@@ -52,7 +52,7 @@ define binary
- 	$(Q)dh_fixperms $(DH_OPTIONS)
- 	$(Q)dh_gencontrol $(DH_OPTIONS) -- -f$(call mk-files,$@)
- 	$(Q)dh_md5sums $(DH_OPTIONS)
--	$(Q)dh_builddeb $(DH_OPTIONS) -- $(addprefix -Z,$(KDEB_COMPRESS))
-+	$(Q)dh_builddeb $(DH_OPTIONS) -- $(addprefix -Z,$(KDEB_COMPRESS)) $(addprefix -z,$(KDEB_COMPRESS_LEVEL))
- endef
+diff --git a/drivers/iio/filter/admv8818.c b/drivers/iio/filter/admv8818.c
+index 848baa6e3bbf..8f563a426232 100644
+--- a/drivers/iio/filter/admv8818.c
++++ b/drivers/iio/filter/admv8818.c
+@@ -103,7 +103,7 @@ static const unsigned long long freq_range_lpf[4][2] = {
+ 	{2050000000ULL, 3850000000ULL},
+ 	{3350000000ULL, 7250000000ULL},
+ 	{7000000000, 13000000000},
+-	{12550000000, 18500000000}
++	{12550000000, 18850000000}
+ };
  
- .PHONY: $(binary-targets)
+ static const struct regmap_config admv8818_regmap_config = {
 -- 
-2.34.1
+2.48.1
 
