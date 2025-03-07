@@ -1,143 +1,204 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116142153D3;
-	Fri,  7 Mar 2025 11:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DB9215168;
+	Fri,  7 Mar 2025 11:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741345709; cv=none; b=nLlwFVyO5pWpfAkZmbi6U4l6EpB2QlQNgLc/420APbz3bljWWvcDeHiaD4AX/lp2zToFfFyobONfthAmHPZiJ5N5Nw/1QStqP3G/H4b2Rg8w9mAoIaf5VwVyiHqoipxMlrcMwi0Vao1pHfl+rysSlnMQW0eoMACIV4kA/g8vy6s=
+	t=1741345718; cv=none; b=Nww6/GrTKD7l52JqAzkniqcFEUQvTZAFZmRbybAC/L5v/rZN1Xzovwtbj3jEgea3xbMZKpmkibjQFw/FRd2Hob0Q4nOxAhxzxyZYV/334LhCo1poaWoAJAI9TDVIKXkzqwA654hnaqelqMmsn9TU5ZILnfFcf8no1Ehh4xUuDz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741345709; c=relaxed/simple;
-	bh=VgW3oYvxnD57zUq6xnI82C8naLB3ZHqDjGh+sNjydUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GiboeWvuLnLTyKUCgRQeOyzWZsE5JeqTdSIG/ybk91ZyI5Ez6wNZ1jvjxskNYQgWFMh9Am6XCmx+cf+7Zl+BHYweMdDrrNPhuudFWU/D/3ZE0UbmqsV0VwzIyAstvzr+4/yrWj9E/ujVfaRSrM1rOzyfid7SdnvB2gwlpSIJCtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nJ7UdORU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741345718; c=relaxed/simple;
+	bh=jMCtgMty8Xj5S+wgAPSjJqGBcyOB8F6TpYrMc2l1nJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dyGwty81knv9EDgOCB4GTzSEGzhMvUplmQoa7AK1jxOwCNFt8rRfgkP2QT+b310zHv5SbIdDaL9fNHocVPrBdQDvkn6nnNYA7LA9XAHAMqlJc18BLA7in5Z2YcazgSbH3nfPBBFYIIe5LGFgeCrD+mdvv+cW1A972CvDWTskS94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tgm5ESy1; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nJ7UdORU"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526LPifB005558;
-	Fri, 7 Mar 2025 11:08:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+go61785zjwrUQrxqmEcs32W7+BvfgTwGw5PZ1AAdu4=; b=nJ7UdORUEbS/hC5C
-	vmFC6+ZDnVy74QonukOIg6tFfkSqS+VFE3vmDBzFZU92dDhMbg/0DPMXtxlKR453
-	jmZ7TthQd/ucb78guzkoe6IDf5RYRsGIsDVStmgM9Ch3nA7aEzf25OyyD38CBwwD
-	06ddA35CYTfvDW3+r79cM5awtS4ejrEV/vHzhdspdTs2+uOTwY/XdxOI8Tsj3Cov
-	4+1k/cY0V4W9msRHY5jmxUJWlQrf+HCHh6JphCpPLdKCgIPsljK7vnhicvehmZ9B
-	njA/9YFcPpg7MJMHhdpDKZRiVh8aRi6PpKbew7AN5u1HluWOnLl4s+Qcj0XJaOvN
-	/tn/iw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4571sdcvx0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 11:08:21 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 527B8Lts016953
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Mar 2025 11:08:21 GMT
-Received: from [10.253.12.50] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Mar 2025
- 03:08:19 -0800
-Message-ID: <bc187777-588c-4fa0-ba8c-847e91c78d43@quicinc.com>
-Date: Fri, 7 Mar 2025 19:08:16 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tgm5ESy1"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so2086472e87.1;
+        Fri, 07 Mar 2025 03:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741345715; x=1741950515; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=goq+Rv5UchdtTKanUxqHPoTKyKgnqXI7XzQqTTMH450=;
+        b=Tgm5ESy11riRpJtt8/F8eKIonVM3BeYJPkWrhL5s7yX5O+dXg1M2fdmU1jn0TPvULC
+         r6qdUy6DnVINfOZ7yS7e+WtXE5xArZ6Avd7i0iiBXwj9Si6UjKpl6Ce1J+qiGGMiP1td
+         WGzHhY1d4blcQ3BLKy3HraGbYQvneb0q6EoJz4bhkVg0v1q0Ifr9Bk8qa9gLORbT6Eh8
+         avADio5rOCany/U+GTg+GPax2IuJfRdE90JljnjnophWnbenOo5xmldZtfGJNK44eJvT
+         OSV+cUaQI+aU4XAKcN9AAe5Ra96pYsQj8zCCmHIQcdCCHLcID0PftGsOoXTQrz7b1JIN
+         PVUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741345715; x=1741950515;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=goq+Rv5UchdtTKanUxqHPoTKyKgnqXI7XzQqTTMH450=;
+        b=V+dq4Nr0pC1Zv2S4JG4aQ/hOZ8DG22HOGpBr8Bn9E4dYmP3/gyh5XUEalWMOSgvguw
+         /UKSNmt9331niQsygjBKnGQe4VXrB+jkaLvr/o7aabttX4baRQ+HR7d7SgkzRBVGZNVs
+         t8C7thbXH3VSKnwTu/pcZvRMaQyGnnnaDNZSY3Ia6S+f78YCi6W5bX1W7Zog21iE6JgW
+         09Xs8K6EIViYJPqu2/+3/VW2JfE8yudC4DUDmzbUs+havodUXcnej8+8S5YKmhNvcS5+
+         wx246jK7vOME1C4hDYS4DRf/BPznmUk+XSXcSkAHCEREYnP3KLujGqck3mdcdvwexrMJ
+         292Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWM7zNb1rrAUTKhSfxwciTpBU6qzbY+LLq3ZRLPQtm8lko1zM4tH6nCvKW5UoNrT4Y3pKuyoRKwAmbSIMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp8+05c2SUkHsH7Nqm37BDzsuTGkRaaYMuQ9ApN2+P0x4zYhZo
+	OGB7WCVGyvT60hEHJJkZz47FZUzE/5jDlifx/U4Doe/hNJZvDdnSFKD69Q==
+X-Gm-Gg: ASbGncv5FgB6OYhXiAymAQm1gTlRpePbxxWP2kaxoEJQw+fVZNB6M/uxfrifxIvpdsi
+	l7Px5QZLo6MRIo1podeLJ8Qb//Vz0vA3B/v0xO8yjloZyS9k5WlmDXaQCbBm4Bea5x2uoHc0o6P
+	9Oubn6gwE54Pvo02vjYJpzOFQ5StcCGd5w/fpOS44is2c8e1Ex0P7hdqLkQx8zYyE0S5eJaGDo/
+	hgTyH1BxUiQBu8KVPNku+ZxnhYSQ/D5WO4xBnMRUzo+3/4tAzxQRiY4ElfWo80jzjnoslCN7mgK
+	T/xsnthR0TeTG2tvjufU46o+jmhaibkKJCmGaDXcYLUwpvpKun71yl/gpeW99GYCFBpGBR1DOMr
+	MSEcEmwya0sC2G+W4u6JE6g==
+X-Google-Smtp-Source: AGHT+IHivXfHpJ/MkL3ckqcRz7Dp1glsJZvC43jbwp51OZ0izhWjLDTusmZgB0CbVNeM12vJynXOpw==
+X-Received: by 2002:a05:6512:224f:b0:549:9078:dd4a with SMTP id 2adb3069b0e04-54990e5e0f7mr929157e87.14.1741345714361;
+        Fri, 07 Mar 2025 03:08:34 -0800 (PST)
+Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b1c2a08sm448920e87.223.2025.03.07.03.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 03:08:33 -0800 (PST)
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+To: rust-for-linux@vger.kernel.org,
+	daniel.almeida@collabora.com,
+	dakr@kernel.org,
+	robin.murphy@arm.com,
+	aliceryhl@google.com
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	linux-kernel@vger.kernel.org (open list),
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	airlied@redhat.com,
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Subject: [PATCH v13 0/7] rust: add dma coherent allocator abstraction
+Date: Fri,  7 Mar 2025 13:06:17 +0200
+Message-ID: <20250307110821.1703422-1-abdiel.janulgue@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH ath-next 2/2] wifi: ath11k: fix HTC rx insufficient length
-To: Johan Hovold <johan@kernel.org>
-CC: <quic_jjohnson@quicinc.com>, <ath11k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250307040848.3822788-1-quic_miaoqing@quicinc.com>
- <20250307040848.3822788-3-quic_miaoqing@quicinc.com>
- <Z8qzjeUE1L5GxFq_@hovoldconsulting.com>
-Content-Language: en-US
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
-In-Reply-To: <Z8qzjeUE1L5GxFq_@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: HTFPGlBMDjDbhu9lqYcd18_wn5AVqmjS
-X-Authority-Analysis: v=2.4 cv=W6PCVQWk c=1 sm=1 tr=0 ts=67cad3a5 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=ljC56ufXeZy0Try5qlsA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: HTFPGlBMDjDbhu9lqYcd18_wn5AVqmjS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_04,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 clxscore=1011 impostorscore=0 spamscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 suspectscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503070080
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This series adds the rust bindings for the dma coherent allocator which
+is needed for nova-core[0]. For v13, the biggest change is to move out
+the as_slice and write helpers for later discussion. The object is also
+now wrapped in Devres to explicitly tie it to the lifetime of the
+device[1]. This is tested on a Nvidia GA104 GPU device using PoC code
+which parses and loads the GSP firmware via DMA.
+
+Changes sinve v12:
+- Move out the contentious functions: as_slice, as_slice_mut, and write
+  for later discussion as a separate patch. Make write unsafe as well.
+  Remove skip_drop, use volatile r/w for field_read and field_write
+  (Alice Ryhl, et al.).
+- Documentation improvements, use markdown for intra-doc links
+  (Miguel Ojeda).
+- Move dma addressing capabilities to a separate patch within device.rs
+  (Andreas Hindborg).
+- Add a simple driver to excercise the basics of the api (Danilo).
+- Link to v12: https://lore.kernel.org/lkml/20250224115007.2072043-1-abdiel.janulgue@gmail.com/
+
+Changes since v11:
+- Ensure robust handling for potential pointer arithmetic overflows
+  in bounds checking (Petr Tesařík).
+- Add dma mask helpers (Daniel Almeida).
+- Clarification in the safety aspects of the as_slice/as_slice_mut API,
+  Use ManuallyDrop trait as a replacement for into_parts(),
+  Add dma_read!/dma_write! helper macros (Alice Ryhl).
+
+Changes since v10:
+- rename read() to as_slice() (Boqun Feng)
+- Do a bitwise copy of ARef<Device> in into_parts() when returning the
+  device reference (Alice Ryhl).
+
+Changes since v9:
+- Use ARef<Device> in the constructor arguments, docs clarification avoid
+  manually dropping the refcount for the device in into_parts(), use
+  add() instead of wrapping_add() in the pointer arithmetic for performance
+  (Alice Ryhl).
+
+Changes since v8:
+- Add MAINTAINERS entry
+- Fix build issues due to switch from core::ffi to crate:ffi in bindgen.
+- Ensure the wrapped attribute is non-pub in struct Attrs, declare it 
+  #[repr(transparent)] as well (Daniel Sedlak)
+
+Changes since v7:
+- Remove cpu_buf() and cpu_buf_mut() as exporting a r/w interface via
+  a slice is undefined behaviour due to slice's requirement that the
+  underlying pointer should not be modified (Alice Ryhl, Robin Murphy).
+- Reintroduce r/w helpers instead which includes proper safety
+  invariants (Daniel Almeida).
+
+Changes since v6:
+- Include the dma_attrs in the constructor, use alloc::Flags as inpiration
+
+Changes since v5:
+- Remove unnecessary lifetime annotation when returning the CPU buffer.
+
+Changes since v4:
+- Documentation and example fixes, use Markdown formatting (Miguel Ojeda).
+- Discard read()/write() helpers to remove bound on Copy and fix overhead
+  (Daniel Almeida).
+- Improve error-handling in the constructor block (Andreas Hindborg).
+
+Changes since v3:
+- Reject ZST types by checking the type size in the constructor in
+  addition to requiring FromBytes/AsBytes traits for the type (Alice Ryhl).
+
+Changes since v2:
+- Fixed missing header for generating the bindings.
+
+Changes since v1:
+- Fix missing info in commit log where EOVERFLOW is used.
+- Restrict the dma coherent allocator to numeric types for now for valid
+  behaviour (Daniel Almeida).
+- Build slice dynamically.
+
+[0] https://lore.kernel.org/lkml/20250131220432.17717-1-dakr@kernel.org/
+[1] https://lore.kernel.org/lkml/20250305174118.GA351188@nvidia.com/
+
+Abdiel Janulgue (6):
+  rust: error: Add EOVERFLOW
+  rust: add dma coherent allocator abstraction.
+  rust: device: add dma addressing capabilities
+  samples: rust: add Rust dma test sample driver
+  MAINTAINERS: add entry for Rust dma mapping helpers device driver API
+  rust: dma: add as_slice/write functions for CoherentAllocation
+
+Danilo Krummrich (1):
+  rust: pci: impl AsMut<Device> for pci::Device
+
+ MAINTAINERS                     |  12 +
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/dma.c              |   8 +
+ rust/helpers/helpers.c          |   1 +
+ rust/kernel/device.rs           |  29 ++
+ rust/kernel/dma.rs              | 464 ++++++++++++++++++++++++++++++++
+ rust/kernel/error.rs            |   1 +
+ rust/kernel/lib.rs              |   1 +
+ rust/kernel/pci.rs              |  11 +
+ samples/rust/Kconfig            |  11 +
+ samples/rust/Makefile           |   1 +
+ samples/rust/rust_dma.rs        | 104 +++++++
+ 12 files changed, 644 insertions(+)
+ create mode 100644 rust/helpers/dma.c
+ create mode 100644 rust/kernel/dma.rs
+ create mode 100644 samples/rust/rust_dma.rs
 
 
-
-On 3/7/2025 4:51 PM, Johan Hovold wrote:
-> Hi Miaoqing,
-> 
-> and thanks a lot for looking into this.
-> 
-> On Fri, Mar 07, 2025 at 12:08:48PM +0800, Miaoqing Pan wrote:
->> A relatively unusual race condition occurs between host software
->> and hardware, where the host sees the updated destination ring head
->> pointer before the hardware updates the corresponding descriptor.
->> When this situation occurs, the length of the descriptor returns 0.
-> 
-> Can you explain how this race comes about?
-> 
-> I worry that you may just be papering over a driver or firmware bug here
-> so it would be good to understand how the host can see the updated
-> pointer before the descriptor.
-> 
-The entire process is handled by hardware, and host software just to 
-read the status, so it should be a limitation of the hardware.
-
-> Also do you have any suggestions for how to reproduce this more easily?
-> Some users of the X13s (aarch64) hit this very frequently, while I've
-> only seen it a few times. At least one user hit this consistently when
-> roaming, and another mentioned seeing this while driving his car with
-> the laptop on (and presumably seeing a lot of APs go by).
-> 
-
-We reproduced with below setup on IoT device, usually takes a few hours 
-to several days to reproduce it.
-  - Run TCP downlink traffic (iperf)
-  - Run bluetooth bredr scan (bluetoothctl/power on/scan bredr)
-
-
->> The current error handling method is to increment descriptor tail
->> pointer by 1, but 'sw_index' is not updated, causing descriptor and
->> skb to not correspond one-to-one, resulting in the following error:
->>
->> ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1488, expected 1492
->> ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, expected 1484
->>
->> To address this problem, temporarily skip processing the current
->> descriptor and handle it again next time. However, to prevent this
->> descriptor from continuously returning 0, use skb cb to set a flag.
->> If the length returns 0 again, this descriptor will be discarded.
->>
->> Tested-on: QCA6698AQ hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
-> 
-> Please also include:
-> 
-> Reported-by: Johan Hovold <johan+linaro@kernel.org>
-> 
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218623
->> Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
-> 
-> Johan
-
-Thanks for reporting, will update in next version.
-
+base-commit: 6ad64bf91728502fe8a4d1419c0a3e4fd323f503
+-- 
+2.43.0
 
