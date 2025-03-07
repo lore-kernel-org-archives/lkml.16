@@ -1,251 +1,429 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB6023F27A;
-	Fri,  7 Mar 2025 17:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741367180; cv=none; b=t8AQJCSWTKKzNiYqC0eMQVMOOoH1MEtRn3m1qh6+4VuDxGZzgtg8q/gmumYtXaaGLhHt5Pa6LQ5La6lh5OO/9/wr357+tHJ8sB+LO5MnGJqz0xZgjZXUxLgr9JyG8psTJNZu4HrvflHWWfVvltCKy3sS3k/MmWsXTHZj+e6cAoI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741367180; c=relaxed/simple;
-	bh=lUni9ATZBCXsxkhR4R4RQw/z2NPis/NDqTz0VPhxcbs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=P0UpJdRnIk84qBa6DhCjiws2VDphBIzS8NVW9GWmhGfgaLa+zKQrp7PF7iqc0vQuBkauPkkGZGtQYHJTJB4bk5qMvilN2/nX82qvF+TxvxtzlSl0LonzXJisPK9u6TTBeMNroINA47fEskcnuy2Rqt7W24SR6rjjcP+rENNo3Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gqPlhOrT; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3EA219A8D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 17:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741367220; cv=fail; b=eUfnpTid3q/XbpGHWSoEPeeUmwK4G2x9Zu4hAfqojeGR6iHaGrc8bRw1Ym8ujgR2ELYQPWoSsyTaHnxW330Kggb52kqTKxjJl2yGdo8WPk0qGO6CagJ840A3fgwutk6WZk23DWJhuXbnAbD+g37IHvsTwpTc0uR+XdyIs9VwvUc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741367220; c=relaxed/simple;
+	bh=6fCMi8JFwnA1Yn0PE4O38TsDUa+IAa/kA418RXMiNCg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lG9elCX/Y/1w1sV2ymYWIMxYXv4I6JeFcjMzdxkaKKmxCotU8+kefWn8UUTp1VlRsCiFwmc3gCbAMr0/YHa33COAMqzl0qbmM8KM70Trbg9P+XUgPy/B+YZuyb7/naIFw2urZC2rh48aXzsJDbVfKUCIlj/YKuRITtt0/jnvb1g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=co7fJkVe; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqPlhOrT"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22334203781so62678245ad.0;
-        Fri, 07 Mar 2025 09:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741367178; x=1741971978; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kAAXyXTItzF2WU7cmxe1b1WSqxvCINsOGqpMs4jawGc=;
-        b=gqPlhOrTyaDKnjxroDsL7qCgFSGK8DUctDsH159j2ClyeZ4PTxt7cgy0PL6DB4fMDG
-         HVFa5Ew4s2whQoDcolzpHee0ZvuuataHS/poy+k75jyApsza2wHvb/+kc9vTridWNN17
-         KhX+yb1qCNMx3WKTYul68yv/fEGq1wQSIJbkJpB+0vT7JPeSacW5s4Ql51dnMDkEnRjp
-         iHJ92ftLjZE0VpFlgZDLSkP+Vnkg+CsXhlOv5BbFt5MyJS9gc3KbSXHccotVbPxvEW2f
-         exHFURGB2n+tnfECoUURyfDAEM/dH7HNOirOu7T+tJFe+q3yL+PIRRPGtf2dAAQMza9g
-         JUiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741367178; x=1741971978;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kAAXyXTItzF2WU7cmxe1b1WSqxvCINsOGqpMs4jawGc=;
-        b=NfzWjlEOpFBzeDpkT/6d7hlSrLMdKz2MyNIeLaJj9SxCpbvxysxBgqCJXlr13QgLgZ
-         GK2dYsWLOBENqRxK5Gtw0rIT3TIzyuP/z+fdeelUP3E4Ltz/GYH3/kgQ7PD0KIh5Uyxg
-         c5MiS80BJLYwx+X/MZAKS4i+a5lQfQL+00gjxYNGeSK//450h7FA76Oqf5Q6Rt1pURxm
-         yf+QBDgmaeuIO+R78FJc7ayTFWn24Sxf2hofK6AqSx7urviPMVCknVdSryOCGAGGY9w4
-         s0zYn4NqSabxTNcyDO0XLrdx8Ua8uLjKg/QdF8q5UU73/QERDsRzqx7cB6E4LsE7LFGh
-         mFJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgCSKx63cb31yMhNSZj6C3PT9Hy9K8WaSi/Qnp5Pc0k159pvbX+WtYB1ot7lYlluBI+DtsmlwGv5XJUVD8@vger.kernel.org, AJvYcCXWnRrrpRSlzOaBf6YKKenxOZhM0ZnV9eMQ703wbJQmeDUH/DXhOKxjZyAEp8C1YEDNJBR6Ng4ibybOYAdUqQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZbrkheUHW8RzaBKst75+q+aQDkB8M3nRTvgFl9Ids2Y+iMbeG
-	+C7kXYwlmigkwjsGB9JkyOBeKhkdMu+A/zo/Ie+Guoodf99m+EZW
-X-Gm-Gg: ASbGncv9hefiEJsNma8YYe9wI/vQg/24I6Nx4ZInOrHUGTaaEa05g/emwlne6/qjuFJ
-	b6sbO18uzO9WrW4Y0V4h7eXXuYXG1413KBnlPdO9SX5Ii4xKne7beBCJo00d03C+SIT/9T2FMSl
-	srORm67paz1ByLt12obTVHd4ZydAc2jcycni0RbkVj63J0R4z7eIAz/Wi8k3xiosVSwG6wFx6WR
-	4sOEhhub34JjNJ2QG8QZRRhQkRRrqcNP+1Uk1PO4Tm+kgGKK4CrHYgv9B7xd4LClrRW0akSl8ov
-	TvciC9Q4fweWffYj6TF3jsrDRgYB
-X-Google-Smtp-Source: AGHT+IGyY2KyjgH96JMvRfAw4Wk47r1awXhS9XJcEQcm/uTcRH18NaCiOzu8PbrHQrqb7Wz87PQefA==
-X-Received: by 2002:a05:6a00:3188:b0:736:b400:b58f with SMTP id d2e1a72fcca58-736bbe1307amr430566b3a.0.1741367177913;
-        Fri, 07 Mar 2025 09:06:17 -0800 (PST)
-Received: from smtpclient.apple ([2402:d0c0:11:86::1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736bb5fcd68sm210682b3a.135.2025.03.07.09.06.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Mar 2025 09:06:17 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="co7fJkVe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741367218; x=1772903218;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=6fCMi8JFwnA1Yn0PE4O38TsDUa+IAa/kA418RXMiNCg=;
+  b=co7fJkVeeT4PVWTSHHQm9ZHqtGlNSmWwlV9Lm4mBXhj6MGb007CKkDuM
+   ZxrjCABn2RD6p9DEpUvGD/bZeXyvl4Tg5zWyCIk4GXQh9ZQhviI2smtpc
+   zVGG+UaoRHiCzA26EpLK5u+upOeO6sb40wHWpqO7gcoKihyqn5HEzTEh8
+   OQZJwXQWeyawU+5GPTcb5v7sWHq9iRkW+3lsRZYp7TPYuurh0PEEMl7LT
+   xV9K4ZYhKXfFdhyJSFVEl3rRW5i1//l7T84IC6OXyb+j/+0U41plabUCM
+   J4E6iy5MOCUF2OTA6eW0KhyMDPr4qo/pFifEQ4UkdYejDeJ9GNX/KDSxQ
+   g==;
+X-CSE-ConnectionGUID: FZkx367MR76cXz3w0bzQdg==
+X-CSE-MsgGUID: 62JqV1ZvRgqWh4VrYfnNHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42131702"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="42131702"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:06:56 -0800
+X-CSE-ConnectionGUID: TRRIcN8lS5q/cSN0BRHipA==
+X-CSE-MsgGUID: 8DXuXMmiQ5Kh+S5f9LGONA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="124290013"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 09:06:56 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 7 Mar 2025 09:06:54 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 7 Mar 2025 09:06:54 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 7 Mar 2025 09:06:11 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wOgU/E4IXF6blh3+DZr9IKZsNq5i0Gm0Q6CPgPxcFjKGotx5HOTIBtrtXfuaDKZ5c53oFKzQkufY/AN7/24zZ1Y4BF49yWqWzh7JuR2yKOSg40kdM3bTpnfYkfbzvQ6mzn7jPa9YZp3NOoMR3iNeTXCiK5wXYQJxdbc6g5zrrAdbYBYhcXSEcj1rNSXqXoLwLal08s1Dr8Ns86GwSc6OZqH5SHqetu8PCwIjy9cpLe+e2ncnXPOEsedx5b3bHqeS7y3nePf1NYEPB1toV6JEJfwzYEWFj9ygfGgkcf1uoChLIJ4ooL0HSoKD+GRLCoZadTzB4ECXXWoaaDcXwQgtKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QUps7IMX2ZUeIg0lpN1c3evqye+zIVAaqPbugEEWOAw=;
+ b=DGtY/eSl9KktqkSbk/eRuPSEEmSteP1SgNnIzaTe/S+oK7JfsxLudH8cmhZUUgdJix+hLhNLabPNyGEMiDbx9pp7Pt8QezEVdGTlGGzhcri11vAYgJD9LELnDZwlmhUarrQZT11Ba/q8xNQUCw5zGPBs/kY5BjugtY7tzPzHTjaWw4YQUX9K+hJwzsQKJEyRtwkMrMtEnkMMAVP+bGnLDUCOIWqOT56vUwsamqdd0oMGUHd3tybkk5AfayuywU4hnxls+2S8SR7PFDH761r16dd5PdAa4GVDNe32ZFBUca/bKB2QyvocQa2NmzEI9JZGUnHct6kJQQGqb03LrhJLbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by MW4PR11MB6935.namprd11.prod.outlook.com (2603:10b6:303:228::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Fri, 7 Mar
+ 2025 17:06:05 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%3]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
+ 17:06:05 +0000
+Date: Fri, 7 Mar 2025 09:07:12 -0800
+From: Matthew Brost <matthew.brost@intel.com>
+To: <phasta@kernel.org>
+CC: Danilo Krummrich <dakr@kernel.org>, Christian =?iso-8859-1?Q?K=F6nig?=
+	<ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 3/3] drm/sched: Update timedout_job()'s documentation
+Message-ID: <Z8snwOx7C7jzkt70@lstrano-desk.jf.intel.com>
+References: <20250305130551.136682-2-phasta@kernel.org>
+ <20250305130551.136682-5-phasta@kernel.org>
+ <Z8oMSWulN0mF43aB@lstrano-desk.jf.intel.com>
+ <0ff8b5ddce856a7d9f5ffbabcb220e345b2dcfaa.camel@mailbox.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0ff8b5ddce856a7d9f5ffbabcb220e345b2dcfaa.camel@mailbox.org>
+X-ClientProxiedBy: MW2PR2101CA0004.namprd21.prod.outlook.com
+ (2603:10b6:302:1::17) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Read in
- __bch2_bkey_unpack_key
-From: Alan Huang <mmpgouride@gmail.com>
-In-Reply-To: <67c9e207.050a0220.15b4b9.004c.GAE@google.com>
-Date: Sat, 8 Mar 2025 01:06:02 +0800
-Cc: kent.overstreet@linux.dev,
- linux-bcachefs@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <67972800-CD21-4A3E-B4E5-0FDFD7B83D44@gmail.com>
-References: <67c9e207.050a0220.15b4b9.004c.GAE@google.com>
-To: syzbot <syzbot+b9d9de2aa46b1bbe575a@syzkaller.appspotmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|MW4PR11MB6935:EE_
+X-MS-Office365-Filtering-Correlation-Id: 537c62bd-5922-4446-ed10-08dd5d9a58c1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?MU5namVyNHhrVkxsUWJVbGN0aHlWMkt0WTUzZElTcHlHeEJ1SmpIOHhoS1JW?=
+ =?utf-8?B?N0MvVUx1K1gyRUUxSHhIdVlGNUFNZkxXang5YkZoSUhtdVJOOFpWNzNNYmYr?=
+ =?utf-8?B?bExObHdLbVpMRWxVb3JJeXFGV3VDOVZiS1o3eGpLL3NwYktWTmxaZG40WjJX?=
+ =?utf-8?B?Q3dLUmd3Sm00Mm12OC9RRURCMEZUeGZ6VEhneVFCZjkrd2gwMDZNcU1rUjhR?=
+ =?utf-8?B?UEU2VkI5UHYyZmFqMDVtVERNMSsvR3RBR0RwTjhVR1J2ZE5rTXpCdnV1YUpF?=
+ =?utf-8?B?ZU9JV2JySGZUSEZtaC9XYU9JSkNLbFQ2VzJEN1FZVHdoNHNFbis0QktnTjNS?=
+ =?utf-8?B?Ym02Rjk4aUFrTERQY2JrSTBmQXR3aVdwVDVwL1FKMFdBc1NaVldrV2ZSa1Vh?=
+ =?utf-8?B?cUlGUXhoUXhBY1IxMDZDUi9JNERCN0pNTHp5NU04N1E0cjlHOExIaE5YblNQ?=
+ =?utf-8?B?bWJRUkhkak4vanJaT3E3emZoZFJxZ3BGWFBObWJzMStDamd3UElpeU5PblR5?=
+ =?utf-8?B?di9pM1VROTlTdE4yNmQ5ajhmN01LT01aSGNOWlZHd0JER0FBblppNHhaSXBU?=
+ =?utf-8?B?Q2RGRW1yYzBuSXBUak84ay9ScThUMVBWcGpHV29zMmxra3YwYmc0cmhuY0FK?=
+ =?utf-8?B?Ulc5Ti9JcFR1dnhsMnZ5Yk0zVThpd3pJNW1mUmNpTHhDalphK0dWeDZnQWJG?=
+ =?utf-8?B?UUkzSFBNK3Z2MHNESUhabG1UdVlTb2RKbzl0ME5yNk5RQjRuN29iV3BCS0FQ?=
+ =?utf-8?B?YjNFaU8vMFlZTjh1Y29LYjJzQWJDNXVQU0dCSm90RkMzSlBrL2VydjB3cHRN?=
+ =?utf-8?B?b1NxU0YxOGp6VHVSRlNJN0FEYUpUUGo5MVdHNWhteFFkU2k5TjBpTnhnTkF2?=
+ =?utf-8?B?Z2lXa2dGUXEraWVidG1STERKWlNpcVRPdDFjQ1ExTFo0ZnFaaHlRcEluMTNM?=
+ =?utf-8?B?RkxrUXlpaDdmQzFDbWZVTnlnTGdYTmZGZHhuK0J1OGVoVnc1WHpjeCs5QnhZ?=
+ =?utf-8?B?VlI5WURMYTdMdkNiVmlNRlFxMlA0OXBnL2dZdUpLbDhwT1RCUXlqbXJPNVJK?=
+ =?utf-8?B?bVNtZEVieGo0QWxUWEJ2SCswT1Vtei9hN1F3SHdFdHB6Tm52MWp4azBqYjNz?=
+ =?utf-8?B?TnFDMTRURS90YzB1RmxoVTBlRVFaOE45bFI1NWtBSnVyUmdyb0Zlc2hsYTN2?=
+ =?utf-8?B?SGJPZzhVUmJqQVIzWjZ5bzc5SkxPaW9zVVBXNldLdG13Sys4YWZKcUlWdEF2?=
+ =?utf-8?B?cU5Hb2s0ZVBZY0ZpZmp0NC95ZTBZVlF3VGNsSWFCTElUMDhaeEcwL3NVYUpL?=
+ =?utf-8?B?VEZROWxaUmpjNXAzc1NEK04zYm8wWTA2Q0dWcS8zc0hENW5tdFVEU2dLU2pu?=
+ =?utf-8?B?c2I5U2tuMDl6WFdHWnR3NXRUZGxpODdiWjRLMFBqSjhtbXluREY2SEM2Z0h0?=
+ =?utf-8?B?ZElETHRpbDNpdzhWTUswTDNMb1NTMkxUbCtVa0Rzbzh6VERsSWlnY1JCVzNC?=
+ =?utf-8?B?UEpaSVJ0S2syK1N1YlN1NENtbkJpRG44dE8rb2VCd282a2RUazZ4U1NKOHds?=
+ =?utf-8?B?QjZ5Q0QzK1IyZTlFYk55LzVJZk1oWHIyeGQyQkVWdWhLTTQ3UC9BaVh0KzdM?=
+ =?utf-8?B?Y1pvcGpRa2JpRHFqWkI3L21TL01EKy9zcXBJd0tiSmVaMWppTU9yNlpCcGxi?=
+ =?utf-8?B?cEZVWXRBZ0NEQVRESVl6U0xPS3VyTmM4THgwR0N2RFN3Rm1uMGVqQWJzNEsz?=
+ =?utf-8?B?RTNjM2U3REx5TlhiKys5VlE2R0F5K1RSK3RvSlZyZU5lOU02YW93eGRDRzBr?=
+ =?utf-8?B?RU5tNWVmZUZpQW9vWGdNOTlONjhNQU0ySjZXbmdTeUVOT3pXNDEzaXB4VjBh?=
+ =?utf-8?Q?ig6u3d2V3rBP3?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cWJ3b1dQT3dBZlprK1oyUmEySmNkdkI2WEtwdjhYMlpkZmw1TkdRajQwcTVk?=
+ =?utf-8?B?OExmWm9rSS9mMUttWTBvRllNTjVrTnY2YzM2WUVkTGJDcWxydEtRZ2hlSFNp?=
+ =?utf-8?B?SUFCU011S0tzTEt5dG9SMFB1V1VUVXlKT09aZkt2L3hNS3hrbDZCSkFqUThC?=
+ =?utf-8?B?WUV1dTY4NEVRUnJkQzErY21OVEZadWo0OUVZQmdKWmdnRlU0RHR2TVNSQXlU?=
+ =?utf-8?B?SmZEN2plNURFMDByZ1BBSWQ0RVQ3UnV3MmFBZmtNakJyMkNvMGtLeDhLM211?=
+ =?utf-8?B?bm02YTBSUDY0VnRKcTcyTE9BYXZvcmFMeTN3dnBFSGpoSGpRL1MzVE5PdWxp?=
+ =?utf-8?B?ODhOZU5DWjNTaWE1S1krZnJTYWcrWmhXUm9nS29ULzR6c1hWSWZtaU9saFV5?=
+ =?utf-8?B?ZWd3R3ZYNE4wSUlYV1FETGcvM1BYWXkweSsxbjlWV3h0NGh1WU1jNlpDK2hx?=
+ =?utf-8?B?KzNLNjdCQ1l3VExyRWswY3RoSy9iNUE0QXpoNENtcmZzYmhHR0hUQy8wMFFp?=
+ =?utf-8?B?Q0pOQnQvTldoZ091N3BzZjNNaFYvTTVQbmhsU3FIVTlieWc3bGZ1U09MTzBn?=
+ =?utf-8?B?dFlVMlIreGlDVk4yeHNKWkhZdUF2Zmllbm5lQW9qNXlueDVqZ3JhdkZ6THRX?=
+ =?utf-8?B?dXVHUW9yeW9CR294RTkzV3ZZT1FFNWxvRjBiNnFCeDN3MVZWODB5ODlTNldH?=
+ =?utf-8?B?cGZZcDlOVEhFVWx5ckQzQlBsQXJ4czV6M1dmWGpQZGVoMVF2RFpJWGlJNUtW?=
+ =?utf-8?B?MTZISURLd0JocVRFY1pLRlJWRk5wSVlpUE11K2tHVHVsd3RuUitGdzVkNVdk?=
+ =?utf-8?B?RTFFMXhCZzVjb2xRY2xoVDJ4dHM5VzZIZ0xKU2ZHQ3JyaDd3ZG52ZE1RT3pZ?=
+ =?utf-8?B?U2xQTWU1QklyTlpzd2x2MkJOTm5nYy9TMkpDRFUyZ1prOGJwT0JyU1BtT01v?=
+ =?utf-8?B?ZFR0bVRiMStvOEpCNGtBMUtla2JNb0FvengwWHlJVXVaa3B0anpNaHc3dDVs?=
+ =?utf-8?B?ekgzS3FKRzhHeDdVV1RJdmdpOWt5NjVzMmNwQWhaT0tMVEpwTWlmTTZGYWF1?=
+ =?utf-8?B?NWM4ZHpIYm9TZ1l1V3Fyb040MWRIMmFlVWkveVlUNnl3S2RaWlNyM1kyTzBZ?=
+ =?utf-8?B?bG5zd1hsU2ZqNHUwZ1Q5Q0NNcnFiTER6cFN4bzVWOGJvak1qT0pLRGRhdXJP?=
+ =?utf-8?B?Z0ZsaC80WGpya3BuV3ZLK05HcXdTYVNrYmxUVFJxUWw5Rkx2TzhlK0JITEFv?=
+ =?utf-8?B?c2UwUzBTeUIvR0NidkRseVUrUExaWmJDQTRNYURRVC9VRnpIR2Q1MU0yL0M0?=
+ =?utf-8?B?M2syY2hCUkFYMlhWbzAzcVhWQ1pTOVJ1Z2N5V2lndGZUTmlna3ZDVVB6TEl6?=
+ =?utf-8?B?RHB3Uk9LVkREYlI4YlpyenpSMFJTUkpCckJhSXBCSXAwN2lHOFRlTGRUcDRT?=
+ =?utf-8?B?Y3p2K2UxNXBSYTkrRlQ4c0lVUXRNdEdRcnhUaTBWSVFMQTFhNXlYQmwwMXN6?=
+ =?utf-8?B?YmFSOEtMcE1LcFJFczJBY2JSbmVacWFmWGRyYmFUQ01yQTRHUno1WjRHeEdX?=
+ =?utf-8?B?SVZzOTVXU2Z5VVdWOHlvUi9IdzZzUEZ6ajMvU0hoZ2hScm9tQldRSDRzWUlZ?=
+ =?utf-8?B?NldBSjBuVHVnNDZMY2FnckdNY285QURHUGpKQ3hXNzZpVEhIVHYyc1lyYmo0?=
+ =?utf-8?B?Zzc0b2lCOTdpeUtWaWxEbmNNQTdqTmtNcHJKY0t5ZVI0bGJrSmpEa1haZDFW?=
+ =?utf-8?B?QjJDRE1KZkN3eHlMTDYzWlhzTDRzVHFSS1oxd050dzEvNkFRd2kvY1VCc2tz?=
+ =?utf-8?B?eGszUnhmSm9YaE44VjBWb1AxZWpIUHJISWlNMXVobHZGRmkyUkorODJpNEZD?=
+ =?utf-8?B?MWRyRjZsT3JhYVVoMHhKS05ySnNiN2wrOWp0ZU9VSzJEUkl6NnRqRHcrUVY2?=
+ =?utf-8?B?RUorTUs4dEFRTzBHczhCSXpRSFlIdUpvYzVQOUV1cGR5bzh5TGtaNDRZV1Yx?=
+ =?utf-8?B?ZVY0QjVKSzZaT2ExS3NoSGxGaHNzbzhRcGhmOGF3Tm5aRG51SGxrZHJNVm5X?=
+ =?utf-8?B?WXBuTGtLRjZndW8vNExZUmRTenRzb0J6MERPQnV1MDhrdm42ZUFjNFpaU1FV?=
+ =?utf-8?B?TzNhMzMydEF2R3d1SkdZMTQ2Vzk2Nms1ZmJVb1lyckRRUi9yWXBwOWJlRXE2?=
+ =?utf-8?B?cEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 537c62bd-5922-4446-ed10-08dd5d9a58c1
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 17:06:05.3926
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SHKrNaCGZXU9Htt5uvlq2aUjIvi9BHQrLwyihU8D0ptkBq/BLgy5qm7qLcUU7c3vWTejW1TyhzoLU2nwSUDGhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6935
+X-OriginatorOrg: intel.com
 
-On Mar 7, 2025, at 01:57, syzbot =
-<syzbot+b9d9de2aa46b1bbe575a@syzkaller.appspotmail.com> wrote:
->=20
-> Hello,
->=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    99fa936e8e4f Merge tag 'affs-6.14-rc5-tag' of =
-git://git.ke..
-> git tree:       upstream
-> console output: =
-https://syzkaller.appspot.com/x/log.txt?x=3D11f08078580000
-> kernel config:  =
-https://syzkaller.appspot.com/x/.config?x=3D2040405600e83619
-> dashboard link: =
-https://syzkaller.appspot.com/bug?extid=3Db9d9de2aa46b1bbe575a
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for =
-Debian) 2.40
-> syz repro:      =
-https://syzkaller.appspot.com/x/repro.syz?x=3D13b69464580000
-> C reproducer:   =
-https://syzkaller.appspot.com/x/repro.c?x=3D15f08078580000
->=20
-> Downloadable assets:
-> disk image (non-bootable): =
-https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_dis=
-k-99fa936e.raw.xz
-> vmlinux: =
-https://storage.googleapis.com/syzbot-assets/ef04f83d96f6/vmlinux-99fa936e=
-.xz
-> kernel image: =
-https://storage.googleapis.com/syzbot-assets/583a7eea5c8e/bzImage-99fa936e=
-.xz
-> mounted in repro: =
-https://storage.googleapis.com/syzbot-assets/4d401321a7e1/mount_6.gz
->=20
-> IMPORTANT: if you fix the issue, please add the following tag to the =
-commit:
-> Reported-by: syzbot+b9d9de2aa46b1bbe575a@syzkaller.appspotmail.com
->=20
->  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq c6c25c03258c59c5 =
-written 48 min_key 0:36028797018963968:0 durability: 1 ptr: 0:27:0 gen 0 =
-=20
->  node offset 8/48 bset u64s 2088 bset byte offset 360: bad k->u64s 0 =
-(min 3 max 253), fixing
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KASAN: slab-out-of-bounds in unpack_state_init =
-fs/bcachefs/bkey.c:151 [inline]
-> BUG: KASAN: slab-out-of-bounds in __bch2_bkey_unpack_key+0x66/0xdd0 =
-fs/bcachefs/bkey.c:269
-> Read of size 8 at addr ffff888053574140 by task kworker/0:1H/36
->=20
-> CPU: 0 UID: 0 PID: 36 Comm: kworker/0:1H Not tainted =
-6.14.0-rc5-syzkaller-00013-g99fa936e8e4f #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS =
-1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: bcachefs_btree_read_complete btree_node_read_work
-> Call Trace:
-> <TASK>
-> __dump_stack lib/dump_stack.c:94 [inline]
-> dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
-> print_address_description mm/kasan/report.c:408 [inline]
-> print_report+0x16e/0x5b0 mm/kasan/report.c:521
-> kasan_report+0x143/0x180 mm/kasan/report.c:634
-> unpack_state_init fs/bcachefs/bkey.c:151 [inline]
-> __bch2_bkey_unpack_key+0x66/0xdd0 fs/bcachefs/bkey.c:269
-> __bkey_unpack_key_format_checked fs/bcachefs/bkey.h:407 [inline]
-> __bkey_unpack_key fs/bcachefs/bkey.h:426 [inline]
-> __bkey_disassemble fs/bcachefs/bkey.h:477 [inline]
-> bkey_packed_valid+0x21e/0x6c0 fs/bcachefs/btree_io.c:875
-> validate_bset_keys+0xeb5/0x1af0 fs/bcachefs/btree_io.c:987
-> bch2_btree_node_read_done+0x2298/0x6180 fs/bcachefs/btree_io.c:1164
-> btree_node_read_work+0x6dc/0x1380 fs/bcachefs/btree_io.c:1358
-> process_one_work kernel/workqueue.c:3238 [inline]
-> process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
-> worker_thread+0x870/0xd30 kernel/workqueue.c:3400
-> kthread+0x7a9/0x920 kernel/kthread.c:464
-> ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-> ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> </TASK>
->=20
-> Last potentially related work creation:
-> ------------[ cut here ]------------
-> pool index 16319 out of bounds (797) for stack id 9a6c3fc0
-> WARNING: CPU: 0 PID: 36 at lib/stackdepot.c:452 =
-depot_fetch_stack+0x86/0xc0 lib/stackdepot.c:451
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 36 Comm: kworker/0:1H Not tainted =
-6.14.0-rc5-syzkaller-00013-g99fa936e8e4f #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS =
-1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: bcachefs_btree_read_complete btree_node_read_work
-> RIP: 0010:depot_fetch_stack+0x86/0xc0 lib/stackdepot.c:451
-> Code: 83 7c 18 1c 00 74 38 48 01 d8 eb 24 90 0f 0b 90 44 39 f5 72 ca =
-90 48 c7 c7 63 fc 3a 8e 89 ee 44 89 f2 89 d9 e8 ab e2 53 fc 90 <0f> 0b =
-90 90 31 c0 5b 41 5e 5d c3 cc cc cc cc 90 0f 0b 90 eb ef 90
-> RSP: 0000:ffffc90000576d08 EFLAGS: 00010046
-> RAX: a98b856e26fe2600 RBX: 000000009a6c3fc0 RCX: ffff88801e00c880
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000003fbf R08: ffffffff81817e32 R09: 1ffff11003f8519a
-> R10: dffffc0000000000 R11: ffffed1003f8519b R12: ffff888053574140
-> R13: ffffea00014d5d00 R14: 000000000000031d R15: ffffc90000576de0
-> FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) =
-knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fabca6ea000 CR3: 0000000012240000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
-> <TASK>
-> stack_depot_fetch lib/stackdepot.c:714 [inline]
-> stack_depot_print+0x16/0x50 lib/stackdepot.c:752
-> kasan_print_aux_stacks+0x38/0x70 mm/kasan/report_generic.c:199
-> describe_object_stacks mm/kasan/report.c:347 [inline]
-> describe_object mm/kasan/report.c:353 [inline]
-> print_address_description mm/kasan/report.c:412 [inline]
-> print_report+0x22b/0x5b0 mm/kasan/report.c:521
-> kasan_report+0x143/0x180 mm/kasan/report.c:634
-> unpack_state_init fs/bcachefs/bkey.c:151 [inline]
-> __bch2_bkey_unpack_key+0x66/0xdd0 fs/bcachefs/bkey.c:269
-> __bkey_unpack_key_format_checked fs/bcachefs/bkey.h:407 [inline]
-> __bkey_unpack_key fs/bcachefs/bkey.h:426 [inline]
-> __bkey_disassemble fs/bcachefs/bkey.h:477 [inline]
-> bkey_packed_valid+0x21e/0x6c0 fs/bcachefs/btree_io.c:875
-> validate_bset_keys+0xeb5/0x1af0 fs/bcachefs/btree_io.c:987
-> bch2_btree_node_read_done+0x2298/0x6180 fs/bcachefs/btree_io.c:1164
-> btree_node_read_work+0x6dc/0x1380 fs/bcachefs/btree_io.c:1358
-> process_one_work kernel/workqueue.c:3238 [inline]
-> process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
-> worker_thread+0x870/0xd30 kernel/workqueue.c:3400
-> kthread+0x7a9/0x920 kernel/kthread.c:464
-> ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-> ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> </TASK>
->=20
->=20
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->=20
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->=20
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->=20
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before =
-testing.
->=20
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->=20
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->=20
-> If you want to undo deduplication, reply with:
-> #syz undup
->=20
+On Fri, Mar 07, 2025 at 10:37:04AM +0100, Philipp Stanner wrote:
+> On Thu, 2025-03-06 at 12:57 -0800, Matthew Brost wrote:
+> > On Wed, Mar 05, 2025 at 02:05:52PM +0100, Philipp Stanner wrote:
+> > > drm_sched_backend_ops.timedout_job()'s documentation is outdated.
+> > > It
+> > > mentions the deprecated function drm_sched_resubmit_jobs().
+> > > Furthermore,
+> > > it does not point out the important distinction between hardware
+> > > and
+> > > firmware schedulers.
+> > > 
+> > > Since firmware schedulers typically only use one entity per
+> > > scheduler,
+> > > timeout handling is significantly more simple because the entity
+> > > the
+> > > faulted job came from can just be killed without affecting innocent
+> > > processes.
+> > > 
+> > > Update the documentation with that distinction and other details.
+> > > 
+> > > Reformat the docstring to work to a unified style with the other
+> > > handles.
+> > > 
+> > 
+> > Looks really good, one suggestion.
+> 
+> Already merged. But I'm working already on the TODO and could address
+> your feedback in that followup.
+> 
+> Of course, would also be great if you could provide a proposal in a
+> patch? :)
+> 
 
-#syz test: https://github.com/alanskind/bcachefs =
-47e4e14a59ecffbec0025733f1980d23b1a7c7ef
+I can post something. Let me try to get something out today.
 
+Matt
 
+> > 
+
+> > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > > ---
+> > >  include/drm/gpu_scheduler.h | 78 ++++++++++++++++++++++-----------
+> > > ----
+> > >  1 file changed, 47 insertions(+), 31 deletions(-)
+> > > 
+> > > diff --git a/include/drm/gpu_scheduler.h
+> > > b/include/drm/gpu_scheduler.h
+> > > index 6381baae8024..1a7e377d4cbb 100644
+> > > --- a/include/drm/gpu_scheduler.h
+> > > +++ b/include/drm/gpu_scheduler.h
+> > > @@ -383,8 +383,15 @@ struct drm_sched_job {
+> > >  	struct xarray			dependencies;
+> > >  };
+> > >  
+> > > +/**
+> > > + * enum drm_gpu_sched_stat - the scheduler's status
+> > > + *
+> > > + * @DRM_GPU_SCHED_STAT_NONE: Reserved. Do not use.
+> > > + * @DRM_GPU_SCHED_STAT_NOMINAL: Operation succeeded.
+> > > + * @DRM_GPU_SCHED_STAT_ENODEV: Error: Device is not available
+> > > anymore.
+> > > + */
+> > >  enum drm_gpu_sched_stat {
+> > > -	DRM_GPU_SCHED_STAT_NONE, /* Reserve 0 */
+> > > +	DRM_GPU_SCHED_STAT_NONE,
+> > >  	DRM_GPU_SCHED_STAT_NOMINAL,
+> > >  	DRM_GPU_SCHED_STAT_ENODEV,
+> > >  };
+> > > @@ -447,43 +454,52 @@ struct drm_sched_backend_ops {
+> > >  	 * @timedout_job: Called when a job has taken too long to
+> > > execute,
+> > >  	 * to trigger GPU recovery.
+> > >  	 *
+> > > -	 * This method is called in a workqueue context.
+> > > +	 * @sched_job: The job that has timed out
+> > >  	 *
+> > > -	 * Drivers typically issue a reset to recover from GPU
+> > > hangs, and this
+> > > -	 * procedure usually follows the following workflow:
+> > > +	 * Drivers typically issue a reset to recover from GPU
+> > > hangs.
+> > > +	 * This procedure looks very different depending on
+> > > whether a firmware
+> > > +	 * or a hardware scheduler is being used.
+> > >  	 *
+> > > -	 * 1. Stop the scheduler using drm_sched_stop(). This will
+> > > park the
+> > > -	 *    scheduler thread and cancel the timeout work,
+> > > guaranteeing that
+> > > -	 *    nothing is queued while we reset the hardware queue
+> > > -	 * 2. Try to gracefully stop non-faulty jobs (optional)
+> > > -	 * 3. Issue a GPU reset (driver-specific)
+> > > -	 * 4. Re-submit jobs using drm_sched_resubmit_jobs()
+> > > -	 * 5. Restart the scheduler using drm_sched_start(). At
+> > > that point, new
+> > > -	 *    jobs can be queued, and the scheduler thread is
+> > > unblocked
+> > > +	 * For a FIRMWARE SCHEDULER, each ring has one scheduler,
+> > > and each
+> > > +	 * scheduler has one entity. Hence, the steps taken
+> > > typically look as
+> > > +	 * follows:
+> > > +	 *
+> > > +	 * 1. Stop the scheduler using drm_sched_stop(). This will
+> > > pause the
+> > > +	 *    scheduler workqueues and cancel the timeout work,
+> > > guaranteeing
+> > > +	 *    that nothing is queued while the ring is being
+> > > removed.
+> > > +	 * 2. Remove the ring. The firmware will make sure that
+> > > the
+> > > +	 *    corresponding parts of the hardware are resetted,
+> > > and that other
+> > > +	 *    rings are not impacted.
+> > > +	 * 3. Kill the entity and the associated scheduler.
+> > 
+> > Xe doesn't do step 3.
+> > 
+> > It does:
+> > - Ban entity / scheduler so futures submissions are a NOP. This would
+> > be
+> >   submissions with unmet dependencies. Submission at the IOCTL are
+> >   disallowed 
+> > - Signal all job's fences on the pending list
+> > - Restart scheduler so free_job() is naturally called
+> > 
+> > I'm unsure if this how other firmware schedulers do this, but it
+> > seems
+> > to work quite well in Xe.
+> 
+> Alright, so if I interpret this correctly you do that to avoid our
+> infamous memory leaks. That makes sense.
+> 
+> The memory leaks are documented in drm_sched_fini()'s docu, but it
+> could make sense to mention them here, too.
+> 
+> … thinking about it, we probably actually have to rephrase this line.
+> Just tearing down entity & sched makes those leaks very likely. Argh.
+> 
+> Nouveau, also a firmware scheduler, has effectively a copy of the
+> pending_list and also ensures that all fences get signalled. Only once
+> that copy of the pending list is empty it calls into drm_sched_fini().
+> Take a look at nouveau_sched.c if you want, the code is quite
+> straightforward.
+> 
+> P.
+> 
+> > 
+> > Matt
+> > 
+> > > +	 *
+> > > +	 *
+> > > +	 * For a HARDWARE SCHEDULER, a scheduler instance
+> > > schedules jobs from
+> > > +	 * one or more entities to one ring. This implies that all
+> > > entities
+> > > +	 * associated with the affected scheduler cannot be torn
+> > > down, because
+> > > +	 * this would effectively also affect innocent userspace
+> > > processes which
+> > > +	 * did not submit faulty jobs (for example).
+> > > +	 *
+> > > +	 * Consequently, the procedure to recover with a hardware
+> > > scheduler
+> > > +	 * should look like this:
+> > > +	 *
+> > > +	 * 1. Stop all schedulers impacted by the reset using
+> > > drm_sched_stop().
+> > > +	 * 2. Kill the entity the faulty job stems from.
+> > > +	 * 3. Issue a GPU reset on all faulty rings (driver-
+> > > specific).
+> > > +	 * 4. Re-submit jobs on all schedulers impacted by re-
+> > > submitting them to
+> > > +	 *    the entities which are still alive.
+> > > +	 * 5. Restart all schedulers that were stopped in step #1
+> > > using
+> > > +	 *    drm_sched_start().
+> > >  	 *
+> > >  	 * Note that some GPUs have distinct hardware queues but
+> > > need to reset
+> > >  	 * the GPU globally, which requires extra synchronization
+> > > between the
+> > > -	 * timeout handler of the different &drm_gpu_scheduler.
+> > > One way to
+> > > -	 * achieve this synchronization is to create an ordered
+> > > workqueue
+> > > -	 * (using alloc_ordered_workqueue()) at the driver level,
+> > > and pass this
+> > > -	 * queue to drm_sched_init(), to guarantee that timeout
+> > > handlers are
+> > > -	 * executed sequentially. The above workflow needs to be
+> > > slightly
+> > > -	 * adjusted in that case:
+> > > +	 * timeout handlers of different schedulers. One way to
+> > > achieve this
+> > > +	 * synchronization is to create an ordered workqueue
+> > > (using
+> > > +	 * alloc_ordered_workqueue()) at the driver level, and
+> > > pass this queue
+> > > +	 * as drm_sched_init()'s @timeout_wq parameter. This will
+> > > guarantee
+> > > +	 * that timeout handlers are executed sequentially.
+> > >  	 *
+> > > -	 * 1. Stop all schedulers impacted by the reset using
+> > > drm_sched_stop()
+> > > -	 * 2. Try to gracefully stop non-faulty jobs on all queues
+> > > impacted by
+> > > -	 *    the reset (optional)
+> > > -	 * 3. Issue a GPU reset on all faulty queues (driver-
+> > > specific)
+> > > -	 * 4. Re-submit jobs on all schedulers impacted by the
+> > > reset using
+> > > -	 *    drm_sched_resubmit_jobs()
+> > > -	 * 5. Restart all schedulers that were stopped in step #1
+> > > using
+> > > -	 *    drm_sched_start()
+> > > +	 * Return: The scheduler's status, defined by &enum
+> > > drm_gpu_sched_stat
+> > >  	 *
+> > > -	 * Return DRM_GPU_SCHED_STAT_NOMINAL, when all is normal,
+> > > -	 * and the underlying driver has started or completed
+> > > recovery.
+> > > -	 *
+> > > -	 * Return DRM_GPU_SCHED_STAT_ENODEV, if the device is no
+> > > longer
+> > > -	 * available, i.e. has been unplugged.
+> > >  	 */
+> > >  	enum drm_gpu_sched_stat (*timedout_job)(struct
+> > > drm_sched_job *sched_job);
+> > >  
+> > > -- 
+> > > 2.48.1
+> > > 
+> 
