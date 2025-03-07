@@ -1,208 +1,184 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D4B1AF4C1;
-	Fri,  7 Mar 2025 08:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8D328E8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 08:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741335125; cv=none; b=Dqo/JyIfvN8jZVUpOO+op4RqdludwD+3BWeSTz+40hiPOWKNhWAeXKCgRVVLvYA/YtI/1dsO/1hxr+Bgq7QasYzj6mkxkut+qruzBp7SeUaKDYkMeKODh9RApKrLRg5T2vfSoKUqbtYTfSslQBeVnObMj5P6uldTHFmE6zXevaQ=
+	t=1741335212; cv=none; b=Fhw3Fy/pjIsaIEzt2b1WweOMIi+XFk7AjiSgJQqsvMYGzF9pIa1GnyK2P77NxRXZnSzx2CPivSoV3b37O1va9zEO4sSm0uqykkg60KXCfwoozQGjaHqTUHWYtABkPhXgUwFXzzZWKLpJJLMqHOTIKjQ0gQStceHBai9r5PflBW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741335125; c=relaxed/simple;
-	bh=h2dntkUfJwrH+lw/QJ0+nzuKV9TZKuuQO2N0lnGhcyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VnCifeJx+NDmMJvW3MjoxGNY/6jlTR1k+++GSV8kvUn/pQMn6XAHz654aJq7w2w8oV38M2hPuxBazkiydW7w7Awrp3LQHYLZJk7NzrmuimysQSsaKDsCAqIsNxU1Ec65xc6IflqNy5+1bW0eqvIl4oi+bfL9EFiv+ks0EPqzoz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eCAYhKEm; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741335212; c=relaxed/simple;
+	bh=ECs6qqv5g+PaozPsZTL0Bl8Y4neLxLgQXeHYIwD24p0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gpnwh8EOfAIwzE5chDQYLF9iEeob02Yp3v6/m8qNt8iTMKqOIHjDKarcFY2/xAhDlIAl005oCHn34l8BVKHKYXI8hyOB2I9SpNNJJbJmOgdzEdh0fWjNrOqO33gQql2vSC1vnsNPN32fHrDgbFm9BfOm8pFqtq+PIry/livdxcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jBYQKk87; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCAYhKEm"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22185cddbffso51337455ad.1;
-        Fri, 07 Mar 2025 00:12:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741335123; x=1741939923; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ds7fuOTnZNbrJDQsh2xBXZIeviEl9UGP1bWdlRctqzo=;
-        b=eCAYhKEmROLUsn2ftt8g3UMwUZ8IaXyl6PUvVur+zgkN5Goi1k+oNM09pqgGJI6ABt
-         2PMfoVQSVLAukrBf2MUShZ0iO7sI6dw2nB04a6YkkIuyKWmDJu9l9QUqJlzogTppySMY
-         2jrgWuN3OjbrrrDaITU/nftDOtyZUeTVrJMxV24GYkTcN1lfVOpo+xP4CP8dE5ekI870
-         Yvypw947647UHEd+oovGBU0/h1sTqHYYiwFy70yMDN/f+dtJJh3IEisfj7DRYPImLWQe
-         gTst2nc1XAUi2zLLaS0f4QP353/pPH0CFttmUZo7Tl8Hn0HPlvQnxAJHPhUBgWsz5KgQ
-         B0Dw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jBYQKk87"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741335209;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QO4aHW/EIqvVozmspxL85e+uicH6KLzd8n0qPmV6aaE=;
+	b=jBYQKk8746Gor/ygTadJMH6m/wYsvnQbIWwzhjT07g/oWrsQw8mplIq2JAiORmQz+wQjVL
+	z640vA287G8Jhk4ft6hWrlS96VqxzkasdH28BAOrZuRzX3C1AdL8jMs1JnU12VWEtW52DV
+	sQmIksNmOmApXRZickW8vAGrATDCrTw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-472-CWtUr09LPLutPBDl0XPPkA-1; Fri, 07 Mar 2025 03:13:28 -0500
+X-MC-Unique: CWtUr09LPLutPBDl0XPPkA-1
+X-Mimecast-MFC-AGG-ID: CWtUr09LPLutPBDl0XPPkA_1741335207
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4388eee7073so13266445e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 00:13:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741335123; x=1741939923;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ds7fuOTnZNbrJDQsh2xBXZIeviEl9UGP1bWdlRctqzo=;
-        b=nwEvrXrN+EGC0Ut3mYD85NuGI6zDUxEGHvLyzIuNiDXV1u3CAAYwt5w5H6DOvuUOdu
-         X2xRyU634dCQMIRi4vy6C7kwUlC/NH1Vxt+pi/4/rDxal+mrUKK0tpih0pBAC174/fR3
-         u04sn8dHnfkQHWNIkni24YhgPOTqC2xL8NE4H4UxQVhzBsDyZjQevqlPRfvQXk9qUXne
-         PXxFjeoUNPwR4rk7s7KjjASkdXP9+LAadcFKqOLDlAnS+X8ZDKVc6AVepPMEvgqlDo/7
-         /PYJSYM43MuqPFoeVpaEWYH1rKCix4RHJwL9qW1F/pPlxnT+fHhT7ojSaWgA8Vb0Jdeb
-         S/9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWIdsnVIuoMlKYMSu/+Vni7j/JAkHW8W+txQBwd//OdGuhp38fUeiAnqrGiObGYi0X48bDsEzjo13RlmJljVhu7@vger.kernel.org, AJvYcCWlY46WG85EdfScqTMqvz6mn2+TsKO1eIs3j/ZKCBMLOnPMPConlE86nhhqQx0JlVLlc5SGtQZInqrDS2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGbWhMRxMXOKht+ehlWoqye+JjoAfkFfKvEvFUeYLBaww1m0li
-	eHJpYl/uKSVT2QFJqrAL596az0oiLT2d5v2yOZxQYpMQ7wm3gwhiqBB/6WAFBnlMcA==
-X-Gm-Gg: ASbGncstL/Kt5xmSiBVsKz0ieunnp3vPdFJWbflDEZZi3QRKD916RlXuMEgOHJYtAE5
-	LdlB/zVMeFWtYHX40+/4BY8S2F9Ocd96er4tiDX0Fs9sKlMt6b4zzNZY7MRILiI2PL3peqGolW9
-	0DHDMPIlK/BGsJpOgo8nJ7F0e5T+A5734Rhuxj6xsm/Hc6b5WFwX8rMy6Ar+r17faKNUTAOnhA8
-	YOx8R1CxY4yU0b6eZvQlaqVMQuMlYyujv4B+N5KCvV/lwSfIjgz4LcsaxltNJyIL/uvCI2GrXNX
-	y06PIUOYXVDvZx2SyPpeU4Z0pIQARiQ8x9M1xkkzrIoPzeHawQ==
-X-Google-Smtp-Source: AGHT+IFwyjX98PyfsGqDZjhho4Zw+j+tB2qDBue3Q0SpOHzeqFKmlbr1OMQ9XTcDRVh3XdNjOIsQLg==
-X-Received: by 2002:a05:6a00:2fc4:b0:727:39a4:30cc with SMTP id d2e1a72fcca58-73693e294dcmr8118261b3a.1.1741335122689;
-        Fri, 07 Mar 2025 00:12:02 -0800 (PST)
-Received: from fedora ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736984f81b3sm2623744b3a.118.2025.03.07.00.11.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 00:12:02 -0800 (PST)
-Date: Fri, 7 Mar 2025 08:11:55 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Nikolay Aleksandrov <razor@blackwall.org>
-Cc: netdev@vger.kernel.org, Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>, Jianbo Liu <jianbol@nvidia.com>,
-	Jarod Wilson <jarod@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>, Petr Machata <petrm@nvidia.com>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv5 net 1/3] bonding: fix calling sleeping function in spin
- lock and some race conditions
-Message-ID: <Z8qqS9IlRAMYIqXb@fedora>
-References: <20250307031903.223973-1-liuhangbin@gmail.com>
- <20250307031903.223973-2-liuhangbin@gmail.com>
- <6dd52efd-3367-4a77-8e7b-7f73096bcb3f@blackwall.org>
+        d=1e100.net; s=20230601; t=1741335207; x=1741940007;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QO4aHW/EIqvVozmspxL85e+uicH6KLzd8n0qPmV6aaE=;
+        b=tn6NhAnzOAkF9xpY1xAQfClhmqddp1ca2EotbebjdsMpde2iEzJv2WKzZC4rHipSZg
+         qgGzalzVCGjo61HD4w1ZVnRi3uZD28d39SuJj9jt+7SX2KJfnAa4p3EUIv3n4vTWJdBU
+         VXZ+U2NKijIi1uMiZb2shI/9tCnoS3cbLvLy+t/iu3EVXrUM81rfR7miszzD8RJKFcj8
+         p6zkB6gsUVqdixEDvyOjRJwgR8CSKOXLI5of0kzYbuZ1n7Z2SQfNJyQ3HAx1L6GKEz1G
+         SOXwM6Xfd841lUVgmNHg8w+HmJ2HzfZJmNuwIEeboaXD8yA3bXazeAZfvgY+wfVQKrWn
+         eWPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBuqm27GDQGsLbP+ffuLzerSOwJq+CTTmAQtVaWk/mmNOLT9+921Fx+2IVKswmZTXeLOjUd2R8kEKoyxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLvCOJj+jeVsnoFI25Krs2YUIi77JUeTOnn1HdLhDdzJ17Mei1
+	q3DeFL0vw9cJdo6uEROkk/8daPofMYtiUDJ/QdFcRI4dmzGoX0SJEb0qQbFNn9C1Jr15JojXfxk
+	nOaSCHZThiMSQHh21kDEGMhyb+gat5ZbFm8N6Pu1QCkfA8PhfL7F9lqIWzbaPrw==
+X-Gm-Gg: ASbGnctwoBXsCUGSVoE9RKKlU2VlHEm6fkfzgvLc+Aw8TIk6aN7ulE/e77NNiEVz7oF
+	EFkvQRXXYOPtEwM0Rsz20++6+hOlYu4X67UvMzV0uqvU59bpUnNyZ+lrIMK2zJM0C1iWOJftuH/
+	EhrD6Bvt2zExhE1T75O27q/7NOjLln5/gWPFkA7eWqT9mZJfpBUWPCfo9q7TaqGNjNZcdltLuOG
+	6IsqCHQKGaMP7GwDEqweUaKeMb47Zng0w5tVQkuujNLufEjFbT1IyBbJBiJimBM05Hu+WQIP78g
+	OOFBq1YJ1+NHjsSSXTfl4/UD6mbKGVMfS967wCKJGDYCTPFgjNvWgwppiBDIq3psTd7wIfxc4kL
+	nTHbgwV/Af9Op2cxOq4nSF6AVphRPOq3S5lM0Vw==
+X-Received: by 2002:a05:6000:144b:b0:38d:d166:d44 with SMTP id ffacd0b85a97d-3912985366amr5097585f8f.23.1741335207036;
+        Fri, 07 Mar 2025 00:13:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFbLoB9vEQuEUrUCb7OUKaNWOamOIwJBx/fzl0cgU09bEmozCG1yHUEdYjg+atR68mZx7vIeA==
+X-Received: by 2002:a05:6000:144b:b0:38d:d166:d44 with SMTP id ffacd0b85a97d-3912985366amr5097570f8f.23.1741335206665;
+        Fri, 07 Mar 2025 00:13:26 -0800 (PST)
+Received: from ?IPV6:2003:cb:c721:7400:ab0b:9ceb:d2:6a17? (p200300cbc7217400ab0b9ceb00d26a17.dip0.t-ipconnect.de. [2003:cb:c721:7400:ab0b:9ceb:d2:6a17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd94913fsm42822315e9.37.2025.03.07.00.13.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 00:13:26 -0800 (PST)
+Message-ID: <90c8183e-d5bb-4460-8c93-ab9bbe977d66@redhat.com>
+Date: Fri, 7 Mar 2025 09:13:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6dd52efd-3367-4a77-8e7b-7f73096bcb3f@blackwall.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] mm: page_owner: use new iteration API
+To: Luiz Capitulino <luizcap@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, yuzhao@google.com, pasha.tatashin@soleen.com
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, muchun.song@linux.dev
+References: <cover.1741301089.git.luizcap@redhat.com>
+ <93c80b040960fa2ebab4a9729073f77a30649862.1741301089.git.luizcap@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <93c80b040960fa2ebab4a9729073f77a30649862.1741301089.git.luizcap@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Nikolay,
-On Fri, Mar 07, 2025 at 09:42:49AM +0200, Nikolay Aleksandrov wrote:
-> On 3/7/25 05:19, Hangbin Liu wrote:
-> > The fixed commit placed mutex_lock() inside spin_lock_bh(), which triggers
-> > a warning:
-> > 
-> >   BUG: sleeping function called from invalid context at...
-> > 
-> > Fix this by moving the IPsec deletion operation to bond_ipsec_free_sa,
-> > which is not held by spin_lock_bh().
-> > 
-> > Additionally, there are also some race conditions as bond_ipsec_del_sa_all()
-> > and __xfrm_state_delete could running in parallel without any lock.
-> > e.g.
-> > 
-> >   bond_ipsec_del_sa_all()            __xfrm_state_delete()
-> >     - .xdo_dev_state_delete            - bond_ipsec_del_sa()
-> >     - .xdo_dev_state_free                - .xdo_dev_state_delete()
-> >                                        - bond_ipsec_free_sa()
-> >   bond active_slave changes              - .xdo_dev_state_free()
-> > 
-> >   bond_ipsec_add_sa_all()
-> >     - ipsec->xs->xso.real_dev = real_dev;
-> >     - xdo_dev_state_add
-> > 
-> > To fix this, let's add xs->lock during bond_ipsec_del_sa_all(), and delete
-> > the IPsec list when the XFRM state is DEAD, which could prevent
-> > xdo_dev_state_free() from being triggered again in bond_ipsec_free_sa().
-> > 
-> > In bond_ipsec_add_sa(), if .xdo_dev_state_add() failed, the xso.real_dev
-> > is set without clean. Which will cause trouble if __xfrm_state_delete is
-> > called at the same time. Reset the xso.real_dev to NULL if state add failed.
-> > 
-> > Despite the above fixes, there are still races in bond_ipsec_add_sa()
-> > and bond_ipsec_add_sa_all(). If __xfrm_state_delete() is called immediately
-> > after we set the xso.real_dev and before .xdo_dev_state_add() is finished,
-> > like
-> > 
-> >   ipsec->xs->xso.real_dev = real_dev;
-> >                                        __xfrm_state_delete
-> >                                          - bond_ipsec_del_sa()
-> >                                            - .xdo_dev_state_delete()
-> >                                          - bond_ipsec_free_sa()
-> >                                            - .xdo_dev_state_free()
-> >   .xdo_dev_state_add()
-> > 
-> > But there is no good solution yet. So I just added a FIXME note in here
-> > and hope we can fix it in future.
-> > 
-> > Fixes: 2aeeef906d5a ("bonding: change ipsec_lock from spin lock to mutex")
-> > Reported-by: Jakub Kicinski <kuba@kernel.org>
-> > Closes: https://lore.kernel.org/netdev/20241212062734.182a0164@kernel.org
-> > Suggested-by: Cosmin Ratiu <cratiu@nvidia.com>
-> > Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-> > ---
-> >  drivers/net/bonding/bond_main.c | 69 ++++++++++++++++++++++++---------
-> >  1 file changed, 51 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-> > index e45bba240cbc..dd3d0d41d98f 100644
-> > --- a/drivers/net/bonding/bond_main.c
-> > +++ b/drivers/net/bonding/bond_main.c
-> > @@ -506,6 +506,7 @@ static int bond_ipsec_add_sa(struct xfrm_state *xs,
-> >  		list_add(&ipsec->list, &bond->ipsec_list);
-> >  		mutex_unlock(&bond->ipsec_lock);
-> >  	} else {
-> > +		xs->xso.real_dev = NULL;
-> >  		kfree(ipsec);
-> >  	}
-> >  out:
-> > @@ -541,7 +542,15 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
-> >  		if (ipsec->xs->xso.real_dev == real_dev)
-> >  			continue;
-> >  
-> > +		/* Skip dead xfrm states, they'll be freed later. */
-> > +		if (ipsec->xs->km.state == XFRM_STATE_DEAD)
-> > +			continue;
+On 06.03.25 23:44, Luiz Capitulino wrote:
+> The page_ext_next() function assumes that page extension objects for a
+> page order allocation always reside in the same memory section, which
+> may not be true and could lead to crashes. Use the new page_ext
+> iteration API instead.
 > 
-> As we commented earlier, reading this state without x->lock is wrong.
-
-But even we add the lock, like
-
-		spin_lock_bh(&ipsec->xs->lock);
-		if (ipsec->xs->km.state == XFRM_STATE_DEAD) {
-			spin_unlock_bh(&ipsec->xs->lock);
-			continue;
-		}
-
-We still may got the race condition. Like the following note said.
-So I just leave it as the current status. But I can add the spin lock
-if you insist.
-
-> > +
-> >  		ipsec->xs->xso.real_dev = real_dev;
-> > +		/* FIXME: there is a race that before .xdo_dev_state_add()
-> > +		 * is called, the __xfrm_state_delete() is called in parallel,
-> > +		 * which will call .xdo_dev_state_delete() and xdo_dev_state_free()
-> > +		 */
-> >  		if (real_dev->xfrmdev_ops->xdo_dev_state_add(ipsec->xs, NULL)) {
-> >  			slave_warn(bond_dev, real_dev, "%s: failed to add SA\n", __func__);
-> >  			ipsec->xs->xso.real_dev = NULL;
-> [snip]
+> Fixes: cf54f310d0d3 ("mm/hugetlb: use __GFP_COMP for gigantic folios")
+> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
+> ---
+>   mm/page_owner.c | 84 +++++++++++++++++++++++--------------------------
+>   1 file changed, 39 insertions(+), 45 deletions(-)
 > 
-> TBH, keeping buggy code with a comment doesn't sound good to me. I'd rather remove this
-> support than tell people "good luck, it might crash". It's better to be safe until a
-> correct design is in place which takes care of these issues.
+> diff --git a/mm/page_owner.c b/mm/page_owner.c
+> index 2d6360eaccbb6..65adc66582d82 100644
+> --- a/mm/page_owner.c
+> +++ b/mm/page_owner.c
+> @@ -229,17 +229,19 @@ static void dec_stack_record_count(depot_stack_handle_t handle,
+>   			handle);
+>   }
+>   
+> -static inline void __update_page_owner_handle(struct page_ext *page_ext,
+> +static inline void __update_page_owner_handle(struct page *page,
+>   					      depot_stack_handle_t handle,
+>   					      unsigned short order,
+>   					      gfp_t gfp_mask,
+>   					      short last_migrate_reason, u64 ts_nsec,
+>   					      pid_t pid, pid_t tgid, char *comm)
+>   {
+> -	int i;
+> +	struct page_ext_iter iter;
+> +	struct page_ext *page_ext;
+>   	struct page_owner *page_owner;
+>   
+> -	for (i = 0; i < (1 << order); i++) {
+> +	rcu_read_lock();
+> +	for_each_page_ext(page, 1 << order, page_ext, iter) {
 
-I agree it's not a good experience to let users using an unstable feature.
-But this is a race condition, although we don't have a good fix yet.
+I realize that we could get rid of all the temporary
+page_ext variables and simply operate on iter.page_ext.
 
-On the other hand, I think we can't remove a feature people is using, can we?
-What I can do is try fix the issues as my best.
+If that makes sense, it could be done as a cleanup on top later. Thanks 
+Luiz!
 
-By the way, I started this patch because my patch 2/3 is blocked by the
-selftest results from patch 3/3...
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Thanks
-Hangbin
+-- 
+Cheers,
+
+David / dhildenb
+
