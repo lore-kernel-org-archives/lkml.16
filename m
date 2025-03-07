@@ -1,218 +1,258 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B865719048F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 06:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741329236; cv=fail; b=m3pdVCbluKxcv4u1UxUngx86i8Ws5D1xrvfjzIYTVdt/NSISqM4UXbFE+H6urwbGiZv7VRfQEhcGrPkW+bG4T9LSuXfqlFUpk6JK25egam8nTUv+UA+nmAJu77a30FYQlEJ7SYgi9lPVtNBMgvEd0MAjeDVHH2OobxVcD8Fjlj4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741329236; c=relaxed/simple;
-	bh=pSI4yWwjAUU29ufuiNwQN6QZ+IpJdeUC1ciRsO0OMzc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=iTTJzJlCtEOYE6MlqfjjmmBlmr4/h6JHsqSqEKvtnE76eqyN/wwQtq6IpEWZaX7G4X2CN3lw5ZtUFdp17SXeP9oS5tE/oSuC9Ep3eOHBGlxFrnv0N41JR8kxZciIw7lh0gElu2y7riKVRSfd4RMFSSEJxIfX+80gQ1wKsGjizo4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HT77r8Yg; arc=fail smtp.client-ip=40.107.20.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D21F3D6D;
+	Fri,  7 Mar 2025 06:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741329297; cv=none; b=TIiyV6EUZCqS2H61MiZQfJuPd1MwXo749P0yLWTpmC2Jg643ooB7lpdSSIs11hcD70pPGAim/dk7Mm74H/t7d3KawP3ijizOslN53yb6ttL49JNFeAMwwdGk/DI+6IcdyZqPI5KQO8Hz7diGjyTeP9Hq92L7KUALvM0LxqoAErc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741329297; c=relaxed/simple;
+	bh=7tFCBj0t+q7N6pp1MopSr0dJ891vRBAOpXnZ2pdThSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mmb9uIZYmummw63RqYfd2C7ShS2OMcDoixsbfn5vpzvK/LkAG8FVx3axmF4bYMK0YpeV4R4w1V5F62/h2YAKL7QjyKXMlFfEc4ghQkrVycXmW/3xk6+WwREqEGnqOvJ6Ds0dK+7btalPegCOZIirbfXhZqxSOIb9KO4V9njQQ3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sKrDz/RK; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HT77r8Yg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PGNK1oz6CA/Y3hHFNRw08PkrR0dAPT+x4DDi52pquiiUm3FgfIYJx16XCpSwMt5U4mZINoh5f1LhdYC31alVtRQyD5jy17Yo6/7CRj7TAFHez91UYLMG7moZxu6txFJgJX14dmKmLc4okgaGq7egHFN12tgeb3BitWZhQAwuT7Kc5r3cxWHQDmF32Ttj8V4P+PT1uKY85aPn2FpqwNmYAv2NEEjg2sJzb9RqolwfkMyUlanHS4UD3BVJKR+z2diDopRR2ZhkWo5rJcx5RI7RHPl2CLp++Nv0bZhGmED68ge4BFIC2aAjVvLzi9C50Lxn7bmC8vvf2K8i3I2BHqCGwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V/E8mim6nrECFgpb1jn5jC5h1Nau+pzpgDfPanxCz5c=;
- b=yescgmvQpYGkttE7T7YMozQ2d9JCL05YZi/yeNbv0teErpThWqXrGkYT8c7mszImVP4VO69gxpVwijeoydJJs9Rossg4urh5iSQAQlWBuhhi4M27K3l1EDxqNPJjWcrrUc1VZ7tVwdllr0ahqYMfsdsHOBWyorVv3WJ9N+jyULsNazu4x9mxI2/TU097mpGCrCYDEPemK3azAP43aR8UfrS/fniS+PRXmWRfNJFw/hxx68v9o3Ugxjn4dvHkYN3J4BYwcInSPoHVhL9OUZ05LxkuCEaCC/bLBforP4qk6USuWHNTf0UJvyRqmnHHvzCXdCLd55vC28ePYj9UV7edvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V/E8mim6nrECFgpb1jn5jC5h1Nau+pzpgDfPanxCz5c=;
- b=HT77r8YggPxJwiheElSSLIvsej6IJ+YF1zBEOUw7v8zh+N1MLLCuIrq3D5yyfpZZHvxVYPiicM8tj7mpR+YEiQtym8Vi2qK/3S/4teOZcuwZfPDsY/lKpbMHYFYne+5nkrdqFez/m2sd6iIFCwR84SHfv3OhpMD0hZxbu7moieRv/Sw9n+uK/9B6Fu1cZ3tscJO2mscuATMomiFPZjqWTQEbxskUvH68zbAGm2Vjn5mBODHNIG/MPKdhDBTs4hqtv9DhxfPKaDt+V2lFWguj/i/ytfuu5zKmK5wjO+6cd7XieD1+mwmQLtq0xrzFSyNlt57hIfN4awPa4guwk0eKTg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by AS5PR04MB9972.eurprd04.prod.outlook.com (2603:10a6:20b:682::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Fri, 7 Mar
- 2025 06:33:52 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%4]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
- 06:33:52 +0000
-Message-ID: <5cf48c2a-40b2-470f-aadb-0710acd37084@nxp.com>
-Date: Fri, 7 Mar 2025 14:35:03 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/bridge: fsl-ldb: make warning message more
- informative
-To: Frank Li <Frank.li@nxp.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250306-drm-two-ldb-improvements-v1-0-f139d768b92c@bootlin.com>
- <20250306-drm-two-ldb-improvements-v1-2-f139d768b92c@bootlin.com>
- <Z8nizEsd0QbYgsI/@lizhi-Precision-Tower-5810>
-From: Liu Ying <victor.liu@nxp.com>
-Content-Language: en-US
-In-Reply-To: <Z8nizEsd0QbYgsI/@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR02CA0003.apcprd02.prod.outlook.com
- (2603:1096:4:194::13) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sKrDz/RK"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526KZjs4022133;
+	Fri, 7 Mar 2025 06:34:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=z4aUnM4cVOQONzJ2q3GRhNlPZAUo9q
+	V2N1/iTW5LOTE=; b=sKrDz/RKcCd8KdtgEQCSdafhlvTdlW4CoqF/YMSQi5airM
+	bJV2GsirIx9+9lnu3FbJCBUOXOApK7YQ2gRJmO3nmO71F5LMy1P4s0+v0qwu3hQj
+	4lgHActYmJ5/qrnyIyndYyPCa5z9OOtu89lcL7ii06xblaFMO00x4MUGFIv+nlOP
+	pzG33m6tOP95/qn9qLaylgAZYTKXPOVHysj/FAQP79qOceMK+VLaJKiHq47QOuHg
+	SeCaPIKYLm123ih5NVFBXEUBxkwMfcp4sRZtjgahumqX0mw8F/Xk/dwa3p+t6vG5
+	5rJBno6PXkz0oCLiiYYEuXeBl7bInnJ+zFMscgBQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457jvpa4sw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Mar 2025 06:34:35 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5276UfI0006862;
+	Fri, 7 Mar 2025 06:34:35 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457jvpa4st-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Mar 2025 06:34:35 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5275lLrv013776;
+	Fri, 7 Mar 2025 06:34:34 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2m55mn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Mar 2025 06:34:34 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5276YWdj58851594
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Mar 2025 06:34:32 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B7FEC2004B;
+	Fri,  7 Mar 2025 06:34:32 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 194E320043;
+	Fri,  7 Mar 2025 06:34:31 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.215.108])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  7 Mar 2025 06:34:30 +0000 (GMT)
+Date: Fri, 7 Mar 2025 12:04:26 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>,
+        linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>,
+        linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
+Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if
+ journal is destroying
+Message-ID: <Z8qTciy49b7LSHqr@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <cover.1741270780.git.ojaswin@linux.ibm.com>
+ <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
+ <5b3864c3-bcfd-4f45-b427-224d32aca478@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS5PR04MB9972:EE_
-X-MS-Office365-Filtering-Correlation-Id: 342c8bf5-3a8e-4ad1-212e-08dd5d4206d8
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?ejlleFN1bTNSMENyb3ErMFF0RkJ3WVI2M1cxUDhwTTdoR3ZJanpwZHl3S3ZJ?=
- =?utf-8?B?cHpZZTN5aVkxbVAyREt3MXZ4Qnh0b2R3WSsrVzZzeHg4cTlOclZZeGtsNmo2?=
- =?utf-8?B?UEZwdFFwUzBGb2NyaEt3a3NaUVVGaVJiSkxBSTlvVG45RHdjSVlFR3E5ZnN3?=
- =?utf-8?B?STdFVm92eko1TmZOWWFZdTQ4VVRWK1d5RHRDNEZVKzZDS3pUZlJiYmxrQnRu?=
- =?utf-8?B?bkhXQ2o3NHYyNkVaTCtzRHE2TTQvOE4rbDZEVHJ2TnRQZFkvV2RHWjZPRWRG?=
- =?utf-8?B?ZWEySXVxRmY3LzhtaVR4Z1k1TU1jeGg4UjAwRnZMRUQ2UU5jNm5kZ0J3S3NQ?=
- =?utf-8?B?UlczbUt5RzRKNGh5OWtTZUVEV2srcXhqYVlBVFJRREZORUwyelRJR1FDTVZZ?=
- =?utf-8?B?U3c2UTc3bk1SYUd5bUtXb2tSdkNtVWRRUGg4S3ROcTBYOUcrKzU0a0Uyb3B4?=
- =?utf-8?B?NFg5ZVZBWTloVkZLeUtqL1djaXVyV3g0Y282aEdPMHAvdEo3RnJacWpGaS96?=
- =?utf-8?B?ejZJMjZEa053UnRmaSs4TnM1UGI0MkZta0M2MXZqZElaaHJsNVVYRkRLNXRH?=
- =?utf-8?B?UjlWb05GQnBkKzM0dXphdkxKZWx6eHRrLzlScSs3TitRVkhNRXBySEJCQ0hS?=
- =?utf-8?B?aFFzVDhXVTdXR0pXOE9DRkx0MG5GSVV2MzlVbXQ4VTlRc1V2MjMrZkNRSXYz?=
- =?utf-8?B?UHhOOCt6c3NKdWp2Lzc5MDkyMGYzMzFKNGlWSkh4VVduL2EvZTh1U2pZSlJP?=
- =?utf-8?B?TUFoWHlxOFdVc1RZWlZDY2ZNL21BQ2xOZTJqc2QwNE5aWUM2clFPb1RKMHg1?=
- =?utf-8?B?TDhnVW5xR2JHbkE4R3ZDRkYwTThsaEtFNzNLSWk0d25LZ3BtZVhQOG1uTTlY?=
- =?utf-8?B?c2ZnT0FydnJxVWpZakszLzNDQXBVdjZIdnJOVVlKU0hKaWNsMFNEdUF4OU9o?=
- =?utf-8?B?ZUdxRU8vRWMxTTJwcXV6ZDAzdVMwMnk2UkQ0aFVTUnE1SXB3YTlVVGNkb3JL?=
- =?utf-8?B?Qnc3WVdNd25LSVhabnNLZHlyV2VkT0pLc1dOWElTTkRzYVVXb1hWTmMxS3A5?=
- =?utf-8?B?UGJDQTNhNGZaNWVIRTBKT25lRlVYOUFkUm14K1VlN2VNam8vc0grYUQ1RnZh?=
- =?utf-8?B?RXdjMkxtb2dlV240cVVCa2ErNmN6RGc4ZDBkOWRKZlFmYjgvbHZ5a3Vrcml5?=
- =?utf-8?B?b0FtaVJSMmNidlRZYm5IQTQxdjFyMFN5ZUNWZHNWYnlTbDVaWlRvRnpmN2FR?=
- =?utf-8?B?SlFUeHlINE4veWY0VkFya25SSzJ1MHZPSURLUVdsS3lJRkdnMnBITTk4VDA1?=
- =?utf-8?B?bFNiOS9SVFE0N2ZqR3RHNGk1dk1Cb2UrUXY3OTVINXhiazlRNGczdDV1VW03?=
- =?utf-8?B?MXV1UUJmVU1rcEp1eVh5M0cvRkJBdVNwN3NEOVo3bmQ3VU1aZ2tGS3gxT3Fw?=
- =?utf-8?B?ZmVPc1hiVWVxcmdqeTJ2WEZTTDgyaTkwRkMxczdDVjZ2a3V1cW9vLzRkbENP?=
- =?utf-8?B?T3dlc2VmcU1uL1U5cnBTS0VDaXZoaHo5UHRKeFYwNTduMEdnSDhJdklMc1V6?=
- =?utf-8?B?eXB0aTVyMHZjMUdNUEdVSEpyUkJkYjRRTjdVV2NDYlRTRmpxamdOcTdDQ3JS?=
- =?utf-8?B?SjlPbmkzamFUTk5KSlJHNEE4dm1YQTZZZ0tWMUtjRlB0THdmamwxWTVVSVQy?=
- =?utf-8?B?MW5sN3haRGFRM0htakJ2a1RxNHo3UjdYcW9PTW1UTUFTZmtvUEtuaTdlVVR0?=
- =?utf-8?B?TkNnZjQrQlZHeWlqekR0UUtXUnpkeE9sb203bFN4YTRhekhZaEJIc1ZnWVhB?=
- =?utf-8?B?K21SRDBUb2loYWNGdGFCVzBzamVXc01xcmZhUmtqRTVGdzVoYWtHaG03MmFr?=
- =?utf-8?Q?gkzjGTotBiDLg?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?d1hiSFNubEllazJkbnl2bFhGekk0ZzY1cUpBWkZnT0xFUERPNlZiQVhYTmhZ?=
- =?utf-8?B?UnprcmZsRUxGbUdZdVlmcmEwRjZyQkxITXhiemw4bytmWDZQWUpkSkdaSlRU?=
- =?utf-8?B?clNuZW9SSEtBWXgwZWVWSVJkRXNxMW5iNW1kRnY3YzJpazN6aTQ5ck5JcW1Z?=
- =?utf-8?B?TFU0ekpCSG1MQlFNUDluZXViU2FYNHBBMnRiRU5UMmxnYm5XSU1HNVNEY3pE?=
- =?utf-8?B?SzNadHlOaVpoU1Y4ajcwZlZyT2czZVphdmFWSUhSbE5yVFdIQU9MSDdHejJm?=
- =?utf-8?B?Qm11dVZJczhlRWpQUHpzcVdreGlyZjRFOVNkTm10SzIrYmxsUENSWWt0SEc4?=
- =?utf-8?B?S2lGOHd3QTNFYzRLa0RDNmxHaS9OcHNHdzlUdFdDVDZaK0JyV1grU2pvcmRy?=
- =?utf-8?B?bXJGNDlYeEhFYVArZ2F0dVVvdHQwVnJVWndHNFFmVURESjRzeG81bHE0N09Z?=
- =?utf-8?B?L2U4MW13Z3g5R04wbmJmNytoREovWldWMWlTV3BFVkM2djQ1SkpGRmRhVWgz?=
- =?utf-8?B?enpDYnd3N2xWZDV3QThIQzVSWU5SV1JpbVA4Q002MCs4VXowREJrNEdlWTkw?=
- =?utf-8?B?M2tFeHhpWnJrQjNPNk1TcVpVQndrbnQ4ZGtTL2plN09QaDRnZjhCMEU2c21q?=
- =?utf-8?B?RG8rVXg0cXBzMVo5Y2JVWTEycUhGa05kcFA5RERtSXVoSUFnOWZNZG4zQmJT?=
- =?utf-8?B?bWVOWFp4YTVNcm1RbU1FUEt1ZGZyUXhPbGpoUVpocTlIZUw0M3hPUE5FZllr?=
- =?utf-8?B?TDhJZXBPL0NTRnZLbXFlR0RoK0xyTUhiZmJocXc5aS8rWjhhQ0RBSFVDMTlv?=
- =?utf-8?B?Q3FVd0ZoY1VldktPb3ZXWDlVT2lxME0wT1hnQWF1eGd4Qi9oa3Vac2VlSmNO?=
- =?utf-8?B?WEZsY1ZxN2JKNmpSWnowTjZNUFlTVHhUcmx1c1Q3ZzZPbGlvc0JrREZjWEJy?=
- =?utf-8?B?ZERXTWkwYzdic2l2KzMxdGlkVUlaUnkrcEk4aGhuVkQ2V05xT0FIb3AxcHZR?=
- =?utf-8?B?dGtEK0NITnRoY2p0TWFBK2pWdUFNUENEbHBkMnhaNitDbmF4QXBydlJPd1hU?=
- =?utf-8?B?SmRmeXNBemhRY0w5OTNxQWpoNDQxSCtaMHN1UjZiS3A4OVVhM1dwWlhVcUMw?=
- =?utf-8?B?Uy9pU0ZwV2QvcFNmUG5xREVmd3g2UjJjV0FORHgvYlNHRjU5K2ZrYkNPemZt?=
- =?utf-8?B?eHB0aytRZVJvRUI0TlFqVzlCcTkybEhxc0pWNG9jd0lDVDFrcXZkclpJOUpF?=
- =?utf-8?B?SUZOSVY0UG5SdldPczBld2F5bkgweUdEcUd3RkZxMGNCZzd3VnlTdFpqTVcz?=
- =?utf-8?B?elU4bVR0czIyZ250bDBCR1Q2N21zQ1dCeHJabmo4bmxRK3NVUHVTaW9yTmZP?=
- =?utf-8?B?RXF2bnNnRjlQVXlpNkRsMjY0TE1Cbks0MlA0SXB3eURtRUprN3JGTVBPNFJL?=
- =?utf-8?B?TVEzVDg5RCtibHFqeFJ2NFhReDV4S1dVbUp1WVAzTVRZMlZmYndvUEFuSEJQ?=
- =?utf-8?B?dlk2ZGlZL3d5MWRvZHJ3U1FidnFteVVkc01hcDhWS2lUNDlsanU3emxZS1hU?=
- =?utf-8?B?ZTlycmVYZlNTTXJya1NsbmpnSjc2NjBpR3VJbkQ3RzNwWlRoTkE2c0p4b3FE?=
- =?utf-8?B?by9TMTY4aGZzekZZZ1oyVFJwT041WjAzQy9xR0JGR3AyR1pEWUhFNUZhNXN3?=
- =?utf-8?B?TXVIT3o1d3F6K3RScm1abktQVnpudzJpMmQyS3Ntc1VsVG05RjY2QlprdnVN?=
- =?utf-8?B?NXAxb1BiOUpHYzhRVUNaQnA5aE9KdGRZV1B1UUNWUEpxN2VUZUxPRGQzQ3hF?=
- =?utf-8?B?dmhRSWdycWowYXUwMVNmbkFxcjNCNFBNdE9LV0g4S0t3Ym1oTWI0UE8wMlNB?=
- =?utf-8?B?Y2QxUTA2ampEVjdqN3JaZk5leTR5R3RsbFZ2Q1JtVUJ5WlhwWURoajJWeEht?=
- =?utf-8?B?WFVFUDVieGo1cVZmeGsxR0ZmNGVrQmRkYWFwZVhEUTBzUjhlTytVL3d0MWMw?=
- =?utf-8?B?MlRDZUZubUdrZDlTWmFOTTJNSGh5QnR0bnNQQ0NCMkNkSEg0SE8yOXluTFZF?=
- =?utf-8?B?WHo1UElscENrd3RTR1dJajRWUXIzZ1VybGkwSHRaTS9ZMlRsb25lSXRMZ1ZT?=
- =?utf-8?Q?VCrLt53w4TxHGEYAwd+rDiCtY?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 342c8bf5-3a8e-4ad1-212e-08dd5d4206d8
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 06:33:52.1773
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QFza2WX67BrUOHPEieXVUeK6gYT6CH43YLgLWhdUqKaeZiPC2UIrcDwVOdGa290XHqbFf1OmLSw6p4FAlN1fXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9972
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b3864c3-bcfd-4f45-b427-224d32aca478@huaweicloud.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: F5IwWDNVtYslrRNU_Rtp0BohzsHmm5xH
+X-Proofpoint-GUID: UmpvnQmW9Lfrnv8R-J41R0zjgfSiyYjW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-07_02,2025-03-06_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 malwarescore=0 clxscore=1015 adultscore=0
+ mlxscore=0 impostorscore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503070044
 
-On 03/07/2025, Frank Li wrote:
-> On Thu, Mar 06, 2025 at 06:28:41PM +0100, Luca Ceresoli wrote:
->> This warning notifies a clock was set to an inaccurate value. Modify the
->> string to also show the clock name.
->>
->> While doing that also rewrap the entire function call.
->>
->> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->> ---
->>  drivers/gpu/drm/bridge/fsl-ldb.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
->> index 0fc8a14fd80062248a43b8b93272101a7ca6158a..c7c899a9644bb827845fb3fe96a9695d79a91474 100644
->> --- a/drivers/gpu/drm/bridge/fsl-ldb.c
->> +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
->> @@ -181,9 +181,9 @@ static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
->>
->>  	configured_link_freq = clk_get_rate(fsl_ldb->clk);
->>  	if (configured_link_freq != requested_link_freq)
->> -		dev_warn(fsl_ldb->dev, "Configured LDB clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
->> -			 configured_link_freq,
->> -			 requested_link_freq);
->> +		dev_warn(fsl_ldb->dev,
->> +			 "Configured %pC clock (%lu Hz) does not match requested LVDS clock: %lu Hz\n",
->> +			 fsl_ldb->clk, configured_link_freq, requested_link_freq);
+On Fri, Mar 07, 2025 at 10:49:28AM +0800, Zhang Yi wrote:
+> On 2025/3/6 22:28, Ojaswin Mujoo wrote:
+> > Presently we always BUG_ON if trying to start a transaction on a journal marked
+> > with JBD2_UNMOUNT, since this should never happen. However, while ltp running
+> > stress tests, it was observed that in case of some error handling paths, it is
+> > possible for update_super_work to start a transaction after the journal is
+> > destroyed eg:
+> > 
+> > (umount)
+> > ext4_kill_sb
+> >   kill_block_super
+> >     generic_shutdown_super
+> >       sync_filesystem /* commits all txns */
+> >       evict_inodes
+> >         /* might start a new txn */
+> >       ext4_put_super
+> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+> >         jbd2_journal_destroy
+> >           journal_kill_thread
+> >             journal->j_flags |= JBD2_UNMOUNT;
+> >           jbd2_journal_commit_transaction
+> >             jbd2_journal_get_descriptor_buffer
+> >               jbd2_journal_bmap
+> >                 ext4_journal_bmap
+> >                   ext4_map_blocks
+> >                     ...
+> >                     ext4_inode_error
+> >                       ext4_handle_error
+> >                         schedule_work(&sbi->s_sb_upd_work)
+> > 
+> >                                                /* work queue kicks in */
+> >                                                update_super_work
+> >                                                  jbd2_journal_start
+> >                                                    start_this_handle
+> >                                                      BUG_ON(journal->j_flags &
+> >                                                             JBD2_UNMOUNT)
+> > 
+> > Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
+> > destroying only do a journaled (and deferred) update of sb if this flag is not
+> > set. Otherwise, just fallback to an un-journaled commit.
+> > 
+> > We set sbi->s_journal_destroying = true only after all the FS updates are done
+> > during ext4_put_super() (except a running transaction that will get commited
+> > during jbd2_journal_destroy()). After this point, it is safe to commit the sb
+> > outside the journal as it won't race with a journaled update (refer
+> > 2d01ddc86606).
+> > 
+> > Also, we don't need a similar check in ext4_grp_locked_error since it is only
+> > called from mballoc and AFAICT it would be always valid to schedule work here.
+> > 
+> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+> > Suggested-by: Jan Kara <jack@suse.cz>
+> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> > ---
+> >  fs/ext4/ext4.h      | 2 ++
+> >  fs/ext4/ext4_jbd2.h | 8 ++++++++
+> >  fs/ext4/super.c     | 4 +++-
+> >  3 files changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > index 2b7d781bfcad..d48e93bd5690 100644
+> > --- a/fs/ext4/ext4.h
+> > +++ b/fs/ext4/ext4.h
+> > @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
+> >  	 */
+> >  	struct work_struct s_sb_upd_work;
+> >  
+> > +	bool s_journal_destorying;
+> > +
+> >  	/* Atomic write unit values in bytes */
+> >  	unsigned int s_awu_min;
+> >  	unsigned int s_awu_max;
+> > diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
+> > index 9b3c9df02a39..6bd3ca84410d 100644
+> > --- a/fs/ext4/ext4_jbd2.h
+> > +++ b/fs/ext4/ext4_jbd2.h
+> > @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
+> >  {
+> >  	int err = 0;
+> >  
+> > +	/*
+> > +	 * At this point all pending FS updates should be done except a possible
+> > +	 * running transaction (which will commit in jbd2_journal_destroy). It
+> > +	 * is now safe for any new errors to directly commit superblock rather
+> > +	 * than going via journal.
+> > +	 */
+> > +	sbi->s_journal_destorying = true;
+> > +
 > 
-> commit message said show clock name, but %p is for pointer value. Are sure
-> it show clock name?
-
-%pC prints clock name.  Please see Documentation/core-api/printk-formats.rst.
-
+> Hi, Ojaswin!
 > 
-> Frank
+> I'm afraid you still need to flush the superblock update work here,
+> otherwise I guess the race condition you mentioned in v1 could still
+> occur.
 > 
->>
->>  	clk_prepare_enable(fsl_ldb->clk);
->>
->>
->> --
->> 2.48.1
->>
+>  ext4_put_super()
+>   flush_work(&sbi->s_sb_upd_work)
+> 
+>                     **kjournald2**
+>                     jbd2_journal_commit_transaction()
+>                     ...
+>                     ext4_inode_error()
+>                       /* JBD2_UNMOUNT not set */
+>                       schedule_work(s_sb_upd_work)
+> 
+>                                   **workqueue**
+>                                    update_super_work
+>                                    /* s_journal_destorying is not set */
+>                             	   if (journal && !s_journal_destorying)
+> 
+>   ext4_journal_destroy()
+>    /* set s_journal_destorying */
+>    sbi->s_journal_destorying = true;
+>    jbd2_journal_destroy()
+>     journal->j_flags |= JBD2_UNMOUNT;
+> 
+>                                        jbd2_journal_start()
+>                                         start_this_handle()
+>                                           BUG_ON(JBD2_UNMOUNT)
+> 
+> Thanks,
+> Yi.
+Hi Yi,
 
--- 
+Yes you are right, somehow missed this edge case :(
+
+Alright then, we have to move out sbi->s_journal_destroying outside the
+helper. Just wondering if I should still let it be in
+ext4_journal_destroy and just add an extra s_journal_destroying = false
+before schedule_work(s_sb_upd_work), because it makes sense.
+
+Okay let me give it some thought but thanks for pointing this out!
+
 Regards,
-Liu Ying
+ojaswin
+
+> 
+> >  	err = jbd2_journal_destroy(journal);
+> >  	sbi->s_journal = NULL;
+> >  
+> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > index 8ad664d47806..31552cf0519a 100644
+> > --- a/fs/ext4/super.c
+> > +++ b/fs/ext4/super.c
+> > @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
+> >  		 * constraints, it may not be safe to do it right here so we
+> >  		 * defer superblock flushing to a workqueue.
+> >  		 */
+> > -		if (continue_fs && journal)
+> > +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
+> >  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
+> >  		else
+> >  			ext4_commit_super(sb);
+> > @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+> >  	spin_lock_init(&sbi->s_error_lock);
+> >  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
+> >  
+> > +	sbi->s_journal_destorying = false;
+> > +
+> >  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
+> >  	if (err)
+> >  		goto failed_mount3;
+> 
