@@ -1,101 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2CB1AD41F;
-	Fri,  7 Mar 2025 06:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEB61A0731;
+	Fri,  7 Mar 2025 06:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741328720; cv=none; b=EC7BSVIuL9K8yUYD0XiIOVkFChbD5+Ru99hd2DJyA1LpzCkMCzGUJR3X/qj0z157M91C/m75Bd3slgPhgNHiBigr9wzRkDsIo3o7/17LtZA0egmARw6K9hrDdxfPkWW6awQUqLk7zyTuGQOCnwWTCVb+6WjF9CqpmPgCt2g/AWc=
+	t=1741328727; cv=none; b=DWrjMgz0p6E9TqJYJhEicdzm6s6tsHPMToyI+wdGSjjL6znbScacDKaBedKVMPEp56zD5lsIVmTqOpLfT3MKtLvKLG61tezOv7CURhwLUAeay8av6CXfOIVNz+j4JM51CrfXHGosGdJrVKvbaNB/RPWGD1OIx+z6rS4BQKvB/kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741328720; c=relaxed/simple;
-	bh=AF3zl1+3FmKibEn7/QOSbKUdjP/4OElMD03QmbV+0OA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LhIXTadDDm1sfHng/FgoRioD+GmpqwdmtMrTmU/RGWRg2qJM9JbbcsbijI2Eqp6wnzxGCBTaS4a7h0NIeUWKip+CeKSX1QfNzfsK56RS9bX73q2gSJNkIY7E2j0Z8J8jHUbOroMDfaw3QXfFL39shicnin4PfymPiheCoTsBsk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVNWmUcj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741328727; c=relaxed/simple;
+	bh=IaXFjppS/IoB+IJ+M/BVXjFLMyZOrjULwzmXC5Zs3oQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sjqq3W2KNyG+nw/1ok3nIXc08vvqlnA56TlB/fb2Q4v37a4q8Rd1kCMdLPA0WK0q0+JZhu8Y37k4TcjbOZXp7ZSjIpigSl8QeHhnxpiqYsddY/xIR78RglkL2wkSTc4sivVUBMXxMaMGcFb/zNo23Pxtox/4aZ5vJN6fpd+2K7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4vQ7two; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVNWmUcj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54A88C4CEEA;
-	Fri,  7 Mar 2025 06:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741328718;
-	bh=AF3zl1+3FmKibEn7/QOSbKUdjP/4OElMD03QmbV+0OA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NVNWmUcjMZmGp4yR1hKCdWcuzmbDRihO4EAht1fDtP9oknIizerW8vCOa2OyySi3r
-	 QKq1UyUIG2ujIkRo065FRVnRi7lIT/fc+SJDbxmHzVtJEClmsA0UnsUGygI5m05RKI
-	 HJ1M2xUgtP2TSZXse4PFiFfTbJVS//wuqd8vIizVhv7LnCzNs6nAkIGf7NEQOl69Al
-	 qKeuLOR4UZ5/iJfDmkg50X5lJ/0qBCQ7GIqKEeAaHtswQit3tqVxCkQIOkBx/XjVxh
-	 673YR0rAcF13t5QzFelv1UWVg6429xbZe8t0gaz6tv7HuaTalKbGYwhVQuhGxXq9nZ
-	 PqhsBrc1NnX0A==
-From: Dmitry Baryshkov <lumag@kernel.org>
-Date: Fri, 07 Mar 2025 08:24:56 +0200
-Subject: [PATCH v3 8/8] drm/msm/dpu: drop now-unused condition for
- has_legacy_ctls
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4vQ7two"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c3d1664ed5so181489585a.2;
+        Thu, 06 Mar 2025 22:25:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741328724; x=1741933524; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DE4RgttB+ObeTGoRY2FNPNi0ZuWCnd0LsJTM8WKCSPE=;
+        b=P4vQ7twoUHQPmt+m/8VaumAE86PX0xxhzx51Yy3GLM5vqYn1D0mUjNWqiaZZ/sFBXC
+         r73r+JInHMoo1MCgSqyhTehGgAgdQagPkeGhJfPeBNn+mklWXLIOgj4Gpigi5bVZgf6S
+         W1NJbcxT3WWZ3bSb/+q/bQm0CBmUrbFtQIT6rF4R41/l4a83J1EgCiw3zFdQRYQfxtM2
+         gjcgd9vO/KBEkEsRehhyiXgv3pSBdylzFYjYgIOlo3H11gl9krdQV88mUB219G0YwatL
+         rNmSQ+c/HYkbnsL7PcG6zQHrvD/MGFIEMkafAkKql9nN6JNVWlGfaUUsTWbYWn6o78gC
+         r6VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741328724; x=1741933524;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DE4RgttB+ObeTGoRY2FNPNi0ZuWCnd0LsJTM8WKCSPE=;
+        b=lh+FsdFbGvNU2GGMqEnL2ER4ZEq2aEDbLnQKBobuO8d7MGC8Isf5pJfAcxHZHnKGEQ
+         v7L1Xw16LZXKqk4gzBWLlPsHyFyZsbszbRinDC3OhqgZjICspg/mkt+BqN+hxmeNUXoD
+         XB3Uj+I93aFSTHI5JKYr7udjsDeDsGVRwSJhl80esugeptuMT8SkgThsQIT9t0ZxH1cs
+         YDNbUORV+jmlHEIklKdM3IaG7hs9qVHbV7XTQOUV3ptYTpYnmhmnXLVHdNv34OUmZ9T7
+         3L9oJPjU2CQMKYt4MTE8VuNJmcTTSgTzgq1bSZ53iey1uxOHRsTWqjZbw93iQd6DgntP
+         73kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnLXNowdW4ulG4TIBS5Y5xqsam+l/2ghqrGy9lVH6BZCwwtPNViEDMTXtEyOthchC0P/q+1ayE@vger.kernel.org, AJvYcCVLU76/PVR+Gl9OouQ4ARF3P4NZjH+7DgtnXXE4hZQJ03Yb0RH4qv4LoNpwRjbmsr7Rzq9lNXM+Y2Q3PMJD@vger.kernel.org, AJvYcCVfgfRMqFuYN/Hs+nxerAjsbYWgj8QsRvq2kk7xjV+dECmvJAh/pPH4joZYGwbbTVNQ0mU5m59bJ8vH@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmNydzGMxm7JHhuzjHeUXooysgKS9HVlEU5+4RHlJu+ZelXHpO
+	PW6paWcrCRJ0GHG02fDMiPx5QfqVxEdd6ADPBd7/LtkmXo9cGD9t
+X-Gm-Gg: ASbGncsPgmqGiQLev/GSzOVaxO3SCCkIaoHv+2hG6TNwQ9Pn2k9FIg9vzHj9ALCTRzq
+	DYQnPmI/V279u5kLDzcJnbiroAqTksVAheSsoetPDKrcFSyNrMaIuUw7+GCG4ThlP4NRVeKl1st
+	JoDGh/SHsRSLEXFUEAKVUTv7PNs1FZmHuVP0EICHrRcE1qYt145omM5UzQPvRWBLMtCcGvjODZn
+	zG6U1xM+HSGEtrL0Abts/e9liG++mux9z0vBJ2/xRMRZaUd9bT3sMexNylCiId3GKq5T/g5+BbC
+	+mFRGZuaMsAerCA6BBF7
+X-Google-Smtp-Source: AGHT+IEvDoykmlC42OAIJsi/QLfT+x2fU7js07z1lL9fYKp71NWDuSXyrrw0QsqRokKnLcIZ4rtbYA==
+X-Received: by 2002:a05:620a:2787:b0:7c3:c199:c3b0 with SMTP id af79cd13be357-7c4e610578fmr376275485a.32.1741328724151;
+        Thu, 06 Mar 2025 22:25:24 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c3e533a0e8sm200339585a.9.2025.03.06.22.25.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 22:25:23 -0800 (PST)
+Date: Fri, 7 Mar 2025 14:25:19 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Richard Cochran <richardcochran@gmail.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH v3 0/2] clk: sophgo: add SG2044 clock controller support
+Message-ID: <gyww3drj2eez2bl3y5ikxy7mqpqpif7cktd3espqs4ve5srjpk@u6h5nzmtkmrb>
+References: <20250226232320.93791-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250307-dpu-active-ctl-v3-8-5d20655f10ca@linaro.org>
-References: <20250307-dpu-active-ctl-v3-0-5d20655f10ca@linaro.org>
-In-Reply-To: <20250307-dpu-active-ctl-v3-0-5d20655f10ca@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1293;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=ZJQfVL2u4VLDEzUOjMo39hljcpjLahCFYCRsgXyDRmA=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnypE1yrtWX3xCYRYx1ZvpKfNuxSjI3TqtdorJY
- Xwo5LuIbXaJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ8qRNQAKCRCLPIo+Aiko
- 1Y5oCACxrnDt4RHInE5qYZQOS7Yfg2KFXB99dPyXHoPvVCAeCuxMNrnXLdRIuMXk3V9ffq3qRQh
- 9C2GhKbH6x6iUpA8CqKyOhGrgyK5pjiUAQB2lVQF85Y2Tf/XV1KsVceGZw3xqqP/6VMDXXs11R+
- q/zJ5WMdZvZIpdrvtbetOQITH1Z6I0IE00DgR6jyiCRqE7iBLENLsAHU0jfJeoK3caKmjK0LFZM
- PhXZCdHzLwZzvXOwURoOz4zIEu22NpKUCv3z7WQPrTg4QfLhq0cZ9dX4YroRR0XeMaFtVV27cCn
- EZ8iyNI2V8jzddau3hXEe+dgmeOhjbS2DNhmATa1bIZV70yq
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226232320.93791-1-inochiama@gmail.com>
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Thu, Feb 27, 2025 at 07:23:17AM +0800, Inochi Amaoto wrote:
+> The clock controller of SG2044 provides multiple clocks for various
+> IPs on the SoC, including PLL, mux, div and gates. As the PLL and
+> div have obvious changed and do not fit the framework of SG2042,
+> a new implement is provided to handle these.
+> 
+> Changed from v2:
+> 1. Applied Chen Wang' tag
+> 2. patch 2: fix author mail infomation
+> 
+> Changed from v1:
+> 1. patch 1: Applied Krzysztof's tag
+> 2. patch 2: Fix the build warning from bot.
+> 
+> Inochi Amaoto (2):
+>   dt-bindings: clock: sophgo: add clock controller for SG2044
+>   clk: sophgo: Add clock controller support for SG2044 SoC
+> 
+>  .../bindings/clock/sophgo,sg2044-clk.yaml     |   40 +
+>  drivers/clk/sophgo/Kconfig                    |   11 +
+>  drivers/clk/sophgo/Makefile                   |    1 +
+>  drivers/clk/sophgo/clk-sg2044.c               | 2271 +++++++++++++++++
+>  drivers/clk/sophgo/clk-sg2044.h               |   62 +
+>  include/dt-bindings/clock/sophgo,sg2044-clk.h |  170 ++
+>  6 files changed, 2555 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sophgo,sg2044-clk.yaml
+>  create mode 100644 drivers/clk/sophgo/clk-sg2044.c
+>  create mode 100644 drivers/clk/sophgo/clk-sg2044.h
+>  create mode 100644 include/dt-bindings/clock/sophgo,sg2044-clk.h
+> 
+> --
+> 2.48.1
+> 
 
-Now as we have dropped the DPU_CTL_SPLIT_DISPLAY from DPU >= 5.0
-configuration, drop the rm->has_legacy_ctl condition which short-cutted
-the check for those platforms.
+If there is no comments anymore, I will collect these patch and send
+a PR to Stephen at rc6 to see whether he will accept it.
 
-Suggested-by: Marijn Suijten <marijn.suijten@somainline.org>
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
-
-Note, it is imposible to reoder commits in any other sensible way. The
-DPU_CTL_SPLIT_DISPLAY can not be dropped before the patch that enables
-single-CTL support.
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-index c72b968d58a65960605456e752278def2a21df7b..2e296f79cba1437470eeb30900a650f6f4e334b6 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-@@ -466,8 +466,7 @@ static int _dpu_rm_reserve_ctls(
- 
- 		DPU_DEBUG("ctl %d caps 0x%lX\n", j + CTL_0, features);
- 
--		if (rm->has_legacy_ctls &&
--		    needs_split_display != has_split_display)
-+		if (needs_split_display != has_split_display)
- 			continue;
- 
- 		ctl_idx[i] = j;
-
--- 
-2.39.5
-
+Regards,
+Inochi
