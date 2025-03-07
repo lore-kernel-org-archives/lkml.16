@@ -1,62 +1,95 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DD8186607;
-	Fri,  7 Mar 2025 08:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA8D1A5B86;
+	Fri,  7 Mar 2025 08:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741335842; cv=none; b=BSZoc8uFJ1d+V5ykcWXqdj7WhbcUb3OXNZ5Y/CEygorp4iz3z23DNbef9fzr50eBMhr0Ux8/l95mnHaG5Zl5Mof74tA/xpNnIABLR5zrHMBPhURDlHecYvn//TGecNax07/XYgQeuE6v+H+OzMGTIJTS/0blasdi2vuL4mvyfLE=
+	t=1741336011; cv=none; b=VmsIhHSuEKT72J2mPRaIDzD9mBuP45jwQZE33K3de8KEl33JpeqYyxXJUXdL6mQpztSj5YLnelfrEGy9hBJnuTLYkR3yYQ/jG9QHk8TmXuJPhxdPK3ZCGRkGni/f8m/GXQztQDju/O6Frp93bGg3Nbp7vWDIm5/udm8sM3ze7c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741335842; c=relaxed/simple;
-	bh=s3l2q/Nnz6wU5N/cVTEMEy94ENTsGRsCboHxSTZ9wZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=I0YIejasmA2aYzXg3CutEKnK52KHGQx3sibOqxssHtoc7hPdwx4IpXTbcM6awKtD4UzXimhV4puOTCCK6YmuMiWuBBbwFhkegkAtnRWK2ga3pzQtz+Gz5QaGULdbUrrkM5El4BEMbsZ+ndJ8MVE3CGhXGl+5RAwkCV087M5fYiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Z8JjY6Tn9z9wQH;
-	Fri,  7 Mar 2025 16:04:49 +0800 (CST)
-Received: from kwepemo200002.china.huawei.com (unknown [7.202.195.209])
-	by mail.maildlp.com (Postfix) with ESMTPS id B08E21800EB;
-	Fri,  7 Mar 2025 16:07:58 +0800 (CST)
-Received: from [10.174.179.13] (10.174.179.13) by
- kwepemo200002.china.huawei.com (7.202.195.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 7 Mar 2025 16:07:57 +0800
-Message-ID: <46ac83f7-d3e0-b667-7352-d853938c9fc9@huawei.com>
-Date: Fri, 7 Mar 2025 16:07:57 +0800
+	s=arc-20240116; t=1741336011; c=relaxed/simple;
+	bh=4g4KFVEllHF9Fzyk30OF0hRqc9JoCbYtjKmWSqDx7uI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rGQYf9xhm7QHkMBsENKsZN7UTVM7knXjnJ5Ngr+Q0S3mkzWK5cv6pOIKDfuKzw+AQoKvhonIHu0BTatiOOXKCTuvN4fabxCw7T84iPGNfQPY1uuk64RT46Fv9rSDHPOqBkd3rd6klWkuesGsP8Jk0yYZPOm/P/+r1B2ziySV+Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MUy9Ewf3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MUy9Ewf3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78902C4CED1;
+	Fri,  7 Mar 2025 08:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741336010;
+	bh=4g4KFVEllHF9Fzyk30OF0hRqc9JoCbYtjKmWSqDx7uI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MUy9Ewf3tVuuvEuoi4JjxRnHfFDBBZ8agqsMeht/L3IHHDfmSNPi0UcsbLnezXZxm
+	 gICDgiLTQMxGAwN2+xp1MhFsfCf5CnUY6LOjVJEHwxiKwbN8zbNrNTLCLSqt61c2wD
+	 PF9YNGMMQ4DILHADeaTzVndOBQuO82CVSjjF4UJf6U6fmYzN53Hki4xhfMIbEKFs/X
+	 BPR8yGXVrX6vXPSeSeDKo7eVscXnAgDTJ7d3DvqQlBkPSoU3bE1MsU9vh9ba0gMUqF
+	 CWkvb8SPDaPFJb4sHYjPfNqslI17euLFM9qRWgBokn7/9AlaM0N6Aw8LQRhw806TZs
+	 KrlUrV+tyxZmQ==
+Date: Fri, 7 Mar 2025 09:26:46 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Haylen Chu <heylenay@4d2.org>
+Cc: Yixun Lan <dlan@gentoo.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Haylen Chu <heylenay@outlook.com>, linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, spacemit@lists.linux.dev, 
+	Inochi Amaoto <inochiama@outlook.com>, Chen Wang <unicornxdotw@foxmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
+Subject: Re: [PATCH v5 3/5] clk: spacemit: Add clock support for Spacemit K1
+ SoC
+Message-ID: <20250307-impossible-fine-panther-38c66b@krzk-bin>
+References: <20250306175750.22480-2-heylenay@4d2.org>
+ <20250306175750.22480-5-heylenay@4d2.org>
+ <20250307005149-GYA66361@gentoo>
+ <Z8qVOssDHaVDQmLY@ketchup>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: Using userfaultfd with KVM's async page fault handling causes
- processes to hung waiting for mmap_lock to be released
-To: <jimsiak@cslab.ece.ntua.gr>, <peterx@redhat.com>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<viro@zeniv.linux.org.uk>, <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
-References: <79375b71-db2e-3e66-346b-254c90d915e2@cslab.ece.ntua.gr>
- <20250307072133.3522652-1-tujinjiang@huawei.com>
-From: Jinjiang Tu <tujinjiang@huawei.com>
-In-Reply-To: <20250307072133.3522652-1-tujinjiang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemo200002.china.huawei.com (7.202.195.209)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z8qVOssDHaVDQmLY@ketchup>
 
-cc Peter Xu
+On Fri, Mar 07, 2025 at 06:42:02AM +0000, Haylen Chu wrote:
+> > > +static int k1_ccu_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct regmap *base_regmap, *lock_regmap = NULL;
+> > > +	struct device *dev = &pdev->dev;
+> > > +	int ret;
+> > > +
+> > > +	base_regmap = device_node_to_regmap(dev->of_node);
+> > > +	if (IS_ERR(base_regmap))
+> > > +		return dev_err_probe(dev, PTR_ERR(base_regmap),
+> > > +				     "failed to get regmap\n");
+> > > +
+> > > +	if (of_device_is_compatible(dev->of_node, "spacemit,k1-pll")) {
+> > ..
+> > > +		struct device_node *mpmu = of_parse_phandle(dev->of_node,
+> > > +							    "spacemit,mpmu", 0);
+> > > +		if (!mpmu)
+> > > +			return dev_err_probe(dev, -ENODEV,
+> > > +					     "Cannot parse MPMU region\n");
+> > > +
+> > > +		lock_regmap = device_node_to_regmap(mpmu);
+> > > +		of_node_put(mpmu);
+> > > +
+> > you can simplify above with syscon_regmap_lookup_by_phandle(), which
+> > would save a few lines
+> > 
+> > or further, just call syscon_regmap_lookup_by_compatible()? then
+> > won't be necessary to introduce the "spacemit,mpmu" property..
+> > 
+> 
+> These syscon_* functions differ a little from device_node_to_regmap():
+> they get and enable the first item in "clocks" property when
+> instantiating a regmap, which isn't desired for a clock controller.
 
-在 2025/3/7 15:21, Jinjiang Tu 写道:
-> Hi,
->
-> I encountered the same issue too. In my scenario, GUP is called by mlockall()
-> syscall.
->
-> Is there a solution to fix it?
->
-> Thanks.
->
+Yes. And mpmu is not a syscon, so it would be inaccurate or even wrong
+API to use.
+
+Best regards,
+Krzysztof
+
