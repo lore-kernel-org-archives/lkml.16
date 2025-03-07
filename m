@@ -1,132 +1,108 @@
-Received: from out-10.pe-a.jellyfish.systems (out-10.pe-a.jellyfish.systems [198.54.127.74])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434B121CC5A;
-	Fri,  7 Mar 2025 15:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8550421CC52
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741359844; cv=none; b=PN7J2olRZ10XPi3Fj73syip7/ncI7kZ73Ru5N+5Bm1caIHr3X1+K+OdCYt9muyYd2wLaSpj06usKoRDMYucSENw1hXZyNtjXlCOo/OpFbecnbi279Mty0iw+zRFL3ou1As/fT574cXSGPTV9LNuaZbIrtQFESdZ08K+MBqEHVFw=
+	t=1741359851; cv=none; b=Z0g/gHMa39gIvJwH2e8klWXsyB6bDtsL3ileIg/Z8uNjMBTBo1x7pxO5dd/uqrOrPhog/E0l6MU970qni2xeZvqnVWiz/kxZAMCIPLQfhjCb21vpZhnSxSliZH3NFKoe1qXOMi00kcUaW/BBRSqnA0Glu07ZEZ9vODc2bROwJpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741359844; c=relaxed/simple;
-	bh=LgaKgJu/MCtJHok+RAh9Dc2Wuk1pWqxI2QVLD4SvM7k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cXyYK24iiSwcR8HpVRnkOc2pF8bteYvO8FbqjbvXmqFxy5O50t5tTsjikRNvBSAt0wliNc7qtb2fYDzSYEFTqcTm3dXtiBsG/1I0ycnx0r3TFM2ehz3+GhVoJ7Gp1c/Dtxe399VgmaafR4q6cy9IGA8iPUq2XUEGDTAnAcRwOP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=nmLZo5pC; arc=none smtp.client-ip=198.54.127.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
+	s=arc-20240116; t=1741359851; c=relaxed/simple;
+	bh=e8ChYfB2JWMNrEuzMXT2LNRFntJeGVEoJBRw50gUiNI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=FDGtN2dvPJY6afk8mVDUQwDZFHySw/demPrwtKNwUQ+vbYw8+wiktTBYTQo3q/QHZemFU8WjgLZhiIE3dn1sLf6QSGT0WxNuw1kwtODTOEaGxxJBTseJDitAzh5kENUxvowZsQzOHvBrWPuCS+RAwUYqZeCq8Vfvw9VIdPvJmxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G/twAOnT; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="nmLZo5pC"
-Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
-	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4Z8V1B1XHNz9ty5;
-	Fri, 07 Mar 2025 15:03:58 +0000 (UTC)
-Received: from MTA-09.privateemail.com (unknown [10.50.14.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4Z8V1B0Phvz2Sd0V;
-	Fri,  7 Mar 2025 10:03:58 -0500 (EST)
-Received: from mta-09.privateemail.com (localhost [127.0.0.1])
-	by mta-09.privateemail.com (Postfix) with ESMTP id 4Z8V1968Hwz3hhSx;
-	Fri,  7 Mar 2025 10:03:57 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
-	s=default; t=1741359837;
-	bh=LgaKgJu/MCtJHok+RAh9Dc2Wuk1pWqxI2QVLD4SvM7k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nmLZo5pCsWh4xxu5P+WuJXO3tgG/1dRDJ7XbwvAePFGCJo0zpDZAi5io0nEYUY9P8
-	 sfXKf9sfJwR0Uh7n3kaUB6mmR2vVi+hBHSD6iHErVNASkKwMjqjiI9ngVtIUnCRT3d
-	 cX5vcIY/nk9zdCTbtZyGx1YvH33pD3hq4XrVOaGtL6D+/D8Cg4i8MEmxoOWQyYAt5+
-	 x+H69i++FfE6Enmy8OQVPh4zTDLdccg0fes3cPK1Lx606HdvtK7TXDSyK5ohuconFA
-	 BEG8MWcPTOzGYFzZm3wVf0MYdlzykwV5+rIP5+2cz9BAZg4ezskw8ufY/dOaIxsUoF
-	 Z5xCyRZKoc/0A==
-Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
-	by mta-09.privateemail.com (Postfix) with ESMTPA;
-	Fri,  7 Mar 2025 10:03:43 -0500 (EST)
-From: Sam Winchenbach <sam.winchenbach@framepointer.org>
-To: linux-kernel@vger.kernel.org
-Cc: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	antoniu.miclaus@analog.com,
-	jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sam.winchenbach@framepointer.org,
-	bpellegrino@arka.org
-Subject: [PATCH v6 6/6] iio: filter: admv8818: Support frequencies >= 2^32
-Date: Fri,  7 Mar 2025 10:02:16 -0500
-Message-ID: <20250307150216.374643-6-sam.winchenbach@framepointer.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
-References: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G/twAOnT"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394944f161so2093295e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:04:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741359848; x=1741964648; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ELG0oVhA+BqzmcxJHQfLXvm4d36xTv4jodb57FoDL0=;
+        b=G/twAOnTT7g4uD9xrW0acvPGkyTePwmSQhe3wVuG/IckVaOy1J0SyVWQc4/dLe1zfY
+         QXV+bm2D1uIlA/iyp1Tp4BnhKrbmf4Ia64sDNlnoH4yq3hPU//BYZ3BNyzRsa4gJ4WFR
+         23EswCJ+CkM1f1FcsyDnq0iZTQFc43wFdkKcQteRgV5YRuG5M+xkwX7u9dbTfn5dHk+T
+         bNbX8JvLglBIfLCw27178Z/azg4GvuWGGa6ct+JO3QYpc3KFCHAck/tA/gFN6BPMQm9y
+         MZNpiyiNtWnPuCPoJrWuGGFMgX3jqbl/WXTH6LJPBzj0/YCo/2dizxBuKRsuVXxfW4Ks
+         CHow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741359848; x=1741964648;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3ELG0oVhA+BqzmcxJHQfLXvm4d36xTv4jodb57FoDL0=;
+        b=NdrQSVBsYWAia2vpBPcfBFbe9CsVVhSUmiUsWLHXjOhF6FEAXjjAqlRWfmjpmpc5GT
+         jRRX26hrwDBrxtQRnNJW2057glQWmDyBc8uI+JwugMGEIMAPSwcXCaYmOv9KeJjS48eV
+         HYO+Mdu1yzFvh0CL9uwf2+T6pDN+mSx+SRanq+Crh4aMa9L/gCFRkDHHx0CDCSZRKRHi
+         fLFggpuqcwD21xpYpqvaXQogSTOP/Z+oif01wpXKBMimzziYPO6pwKiA6AGbQwIe0H4K
+         sCB/Bkvf9+4o2zLiGn5EdOAHrXXQ5i7L/BOj+oEG964ZoNk6ajFKihwQS62l6V+p5OBc
+         VBCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Mynnse6uDVoQi4ZUqAXqbTlZZPR6R7aytZkw5Oao3tHJTeNqSXAJr18+0h9H3m6+jTYeq9YivNzitPo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzksi2UKuHDubfm9k/A52twk1KlZe6X/VZjARm4QnApyNb2KSn9
+	SDH8rMxTu0qU7NdV5hDAvC6lMP/hu3MwTdcR5wX+97JfJca0xJ/b0wnfNoCxyzI=
+X-Gm-Gg: ASbGncs+/XGbW4QzeMQrtg2p/iR1z3igOjnIUynwn3B56/17nXMzOf5yYBhvEIq1zCh
+	KozSkqC31RN5HbqCQCbmma70bWnW6+TAosDtMNGXp/INrF4NeZPtX0ZDQNdYsy+y5hWybT2f4iS
+	/wypAW2Uz3ioPvLmDqI6gbgxusJ1mKQXBXFGqsleG5qhQ75xAWIhmkWt0Ixdu6qkyR/D6zhbFh5
+	iVbSiPBTHnMJ8BttQ+8ulFKDr6DRQeflIQkWeEPxzTPO/QxIWUh2jb/CGo8pFQQqd+BBhWRvKNh
+	HoLIHEdTgakhcd8cHrEY9aOxnw8i+yvGq8X2etKjDN3wD2ALa+Sjjq4MksJ7
+X-Google-Smtp-Source: AGHT+IGeiraKGeEqa9VGhWaeeNF9N+Kf66ORaln0VM6PqpULNSWjc+LqFVea7mhvmFHlhfc4guuJvQ==
+X-Received: by 2002:a5d:584b:0:b0:385:de67:229e with SMTP id ffacd0b85a97d-3913a8aeefbmr51698f8f.11.1741359847652;
+        Fri, 07 Mar 2025 07:04:07 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfa52sm5444573f8f.21.2025.03.07.07.04.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 07:04:07 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Sam Protsenko <semen.protsenko@linaro.org>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250305-clk-samsung-headers-cleanup-v2-0-ea1ae8e9e2bf@linaro.org>
+References: <20250305-clk-samsung-headers-cleanup-v2-0-ea1ae8e9e2bf@linaro.org>
+Subject: Re: [PATCH v2 0/2] clk: samsung: Two header cleanups
+Message-Id: <174135984582.202251.7619477733984588971.b4-ty@linaro.org>
+Date: Fri, 07 Mar 2025 16:04:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-From: Brian Pellegrino <bpellegrino@arka.org>
 
-This patch allows writing u64 values to the ADMV8818's high and low-pass
-filter frequencies. It includes the following changes:
+On Wed, 05 Mar 2025 21:03:42 +0100, Krzysztof Kozlowski wrote:
+> Changes in v2:
+> - mod_devicetable.h: also clk.c, clk.h, clk-exynos4.c,
+>   clk-exynos5-subcmu.c, clk-exynos2200.c and clk-exynos7870.c (Tudor)
+> - cleanup: clk-exynos2200.c and clk-exynos7870.c (Tudor)
+> - Rb tags
+> - Link to v1: https://lore.kernel.org/r/20250304-clk-samsung-headers-cleanup-v1-0-81718e38246e@linaro.org
+> 
+> [...]
 
-- Rejects negative frequencies in admv8818_write_raw.
-- Adds a write_raw_get_fmt function to admv8818's iio_info, returning
-  IIO_VAL_INT_64 for the high and low-pass filter 3dB frequency channels.
+Applied, thanks!
 
-Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
-Signed-off-by: Brian Pellegrino <bpellegrino@arka.org>
-Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
----
- drivers/iio/filter/admv8818.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+[1/2] clk: samsung: Add missing mod_devicetable.h header
+      https://git.kernel.org/krzk/linux/c/f32f5b0ec0f6eec0186de0607ab12f9cb1ecab73
+[2/2] clk: samsung: Drop unused clk.h and of.h headers
+      https://git.kernel.org/krzk/linux/c/017bbc922a09630579ff7b5b314fb186b8c0efcf
 
-diff --git a/drivers/iio/filter/admv8818.c b/drivers/iio/filter/admv8818.c
-index e9602bfd4af7..9785533d0cdd 100644
---- a/drivers/iio/filter/admv8818.c
-+++ b/drivers/iio/filter/admv8818.c
-@@ -402,6 +402,19 @@ static int admv8818_read_lpf_freq(struct admv8818_state *st, u64 *lpf_freq)
- 	return ret;
- }
- 
-+static int admv8818_write_raw_get_fmt(struct iio_dev *indio_dev,
-+								struct iio_chan_spec const *chan,
-+								long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
-+		return IIO_VAL_INT_64;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static int admv8818_write_raw(struct iio_dev *indio_dev,
- 			      struct iio_chan_spec const *chan,
- 			      int val, int val2, long info)
-@@ -410,6 +423,9 @@ static int admv8818_write_raw(struct iio_dev *indio_dev,
- 
- 	u64 freq = ((u64)val2 << 32 | (u32)val);
- 
-+	if ((s64)freq < 0)
-+		return -EINVAL;
-+
- 	switch (info) {
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
- 		return admv8818_lpf_select(st, freq);
-@@ -571,6 +587,7 @@ static int admv8818_set_mode(struct iio_dev *indio_dev,
- 
- static const struct iio_info admv8818_info = {
- 	.write_raw = admv8818_write_raw,
-+	.write_raw_get_fmt = admv8818_write_raw_get_fmt,
- 	.read_raw = admv8818_read_raw,
- 	.debugfs_reg_access = &admv8818_reg_access,
- };
+Best regards,
 -- 
-2.48.1
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
