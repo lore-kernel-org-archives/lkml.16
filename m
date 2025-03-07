@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAAD1AF4C1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3F51E1DF0;
 	Fri,  7 Mar 2025 08:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741337364; cv=none; b=Div8yYsgvykFcB0QsfzjZImDtuz5gu1lBavvzI7aRu/Acmv4QI2NgpwyCtTUq85IF832QpX1VfWw/cg3sMdWbwsGcf4M7kUdP3zDjt1ukc0Y1KIGMhMvK1D4OVvWYELqzQs40cX0NilqS9CSI5lS/ERoW1M6bBGUK2jWfb6Rh3c=
+	t=1741337364; cv=none; b=DqUztiBAc0aKzu06xNd0LtfTE6ElwIF7EqmlJYdsJxTx6CtO+jN0SvCavgHLVpDuICKrotUKcNipRkBwb/6xRPiwOq38u0E2p3pjVoqrJvxWLJTZCoETwM8zuq4R0fVpquuuDp9k2X9LfghSEE7lqEFRg9DIeywJixhpKH2HklQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741337364; c=relaxed/simple;
-	bh=qch7huQ3IX9eDJtDp+CrMjmAYNzCX1pjwyDdnZ1GCVg=;
+	bh=nihZMnrVDd7TJRXIuYb/tP7cMRc4zru34Wv/fPSdlu8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k6aerFOUgExfuMoA9SQL77JbSIbvd71q07ssqoNUZmtZ14vi0Eggfoeyz44mG0JQxEzL+j8u6pUoyvcMjhlrORUVc3eI6Vf9nmDzQggNARIM/iNnldSBjh6M4R7Xgd1dlX22D6ATnxZcEpQ3MO7QmxfYfTQ6BBZ1exminVb3e0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zi7H9JPC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=nXoH3wmKgvruf5O6JeYWVBxAG9RZGCdmufkVltYEWlqCsZ9OVNwK4CH87x5rGcwLKOlnmuUEkWeG0GDWecKavGexkiG66pgMJCc2NDyoQxNtWafKxxD7W6yCXbeLiKV5L4Gj3b8e3CT0Uu5SQgtDqUJIgoZkGm1ysGc6qzjHl5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qkWJ0Xx6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zi7H9JPC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3FDFDC4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qkWJ0Xx6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 29963C4CED1;
 	Fri,  7 Mar 2025 08:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741337364;
-	bh=qch7huQ3IX9eDJtDp+CrMjmAYNzCX1pjwyDdnZ1GCVg=;
+	bh=nihZMnrVDd7TJRXIuYb/tP7cMRc4zru34Wv/fPSdlu8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Zi7H9JPCDjJ5Ac5aAZKNKsImdQr2gdY5re8VfABBsgBG+/rPzmv6GMaxckMdHLai/
-	 0xckpejhiDrIv5E0yvc6JFR1aJerkjvaXjdGSX6I+ZKmpEjOW8cheMVnX0eB9zEuVB
-	 xatOyWXFZ6r5Da002XEDj/RlaJWdUzXNfrMh8othjN0MQ5oDpyxhIVe1ej1+AH4ozV
-	 KZ/M8JsGXqnoPiSMRHWYnJr5cGx+B4sfzTV9MtKbCQfXcZLiDmlqInEeqv8HWiKk/w
-	 9tpgyfvG/YJSqDKlYeyk7ZvusWrnzhpT4DkieNNg0GUNfQqsv+pPYCPzNoXhQmDL+5
-	 XjWmk1L6isGwQ==
+	b=qkWJ0Xx6lFCGYcbgqSPnBDdYk1/MLKXeJWCxowuFML76xmbH2ZOdyIabuZ1ul875X
+	 stpwHhw5HCnQ88y/bCIdp4g0+9twqCyHzMXn5YkeUg7woeXyzF/yMw/8h8niFNHoPp
+	 oFWMfS1oLUV2Uu3S9xNg9/pIWFgMR0csXDoFmdA3yz29BAJw2nMakWP5p8ytg1ipi8
+	 EAp6wk7jbc/kKbuSV52SfeGfl3Bk8rTWbjXZsxqPpuATY35s6NbEpjGtlZwWscgVgs
+	 htkonqj7R1VhOeh6rdyI9ItV6T3vFLRKWb3FA29uscEJeTQPThls86SMdhD6YBeH0J
+	 hngmDwcbqpzug==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3329EC19F32;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1403FC282D0;
 	Fri,  7 Mar 2025 08:49:24 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Fri, 07 Mar 2025 16:49:24 +0800
-Subject: [PATCH v4 3/4] arm64: dts: Add gpio_intc node for Amlogic A4 SoCs
+Date: Fri, 07 Mar 2025 16:49:22 +0800
+Subject: [PATCH v4 1/4] dt-bindings: interrupt-controller: Add support for
+ Amlogic A4 and A5 SoCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250307-irqchip-gpio-a4-a5-v4-3-d03a9424151b@amlogic.com>
+Message-Id: <20250307-irqchip-gpio-a4-a5-v4-1-d03a9424151b@amlogic.com>
 References: <20250307-irqchip-gpio-a4-a5-v4-0-d03a9424151b@amlogic.com>
 In-Reply-To: <20250307-irqchip-gpio-a4-a5-v4-0-d03a9424151b@amlogic.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
@@ -54,11 +55,11 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
  Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741337362; l=1190;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741337362; l=1746;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=QC+CPrCwcCU8cBlAO137f57knOzl0UVfLJyIMFfXkFY=;
- b=iPjGdLjBPkH/6V3/Ark9JaIDbrnouhnUzHlf3P/khl326TBP1cMImeMfbVuFXLjG1FO3yo+tj
- R5hR/xBNh4hBB8wxERLKMAwUWIJT0Zgkn8w/p3PdL6x/VlKSTCFb/UL
+ bh=xKF/9ztq9L+jNut2ufcUJxWS/0WXkNy4prgakjvZ2cY=;
+ b=OR8fxCTg1IY7uojg5DIL8MhPQP8C/gDZ6JeRHuYUrFPAw96ZC7hGynk4ZYFcnep0hI0KGxqap
+ dmmXaYAAiHmDOqwbdpmmJfzZ/9esuVEw3gsfG9oyjWUWebYGpY2ps88
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -68,43 +69,58 @@ Reply-To: xianwei.zhao@amlogic.com
 
 From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Add GPIO interrupt controller device.
+Update dt-binding document for GPIO interrupt controller
+of Amlogic A4 and A5 SoCs
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ .../interrupt-controller/amlogic,meson-gpio-intc.yaml | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
-index efba8565af3c..fa80fa365f13 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
-@@ -51,6 +51,25 @@ pwrc: power-controller {
- };
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+index a93744763787..3d60d9e9e208 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+@@ -35,6 +35,9 @@ properties:
+               - amlogic,meson-sm1-gpio-intc
+               - amlogic,meson-a1-gpio-intc
+               - amlogic,meson-s4-gpio-intc
++              - amlogic,a4-gpio-intc
++              - amlogic,a4-gpio-ao-intc
++              - amlogic,a5-gpio-intc
+               - amlogic,c3-gpio-intc
+               - amlogic,t7-gpio-intc
+           - const: amlogic,meson-gpio-intc
+@@ -49,7 +52,7 @@ properties:
  
- &apb {
-+	gpio_intc: interrupt-controller@4080 {
-+		compatible = "amlogic,a4-gpio-intc",
-+			     "amlogic,meson-gpio-intc";
-+		reg = <0x0 0x4080 0x0 0x20>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		amlogic,channel-interrupts =
-+			<10 11 12 13 14 15 16 17 18 19 20 21>;
-+	};
+   amlogic,channel-interrupts:
+     description: Array with the upstream hwirq numbers
+-    minItems: 8
++    minItems: 2
+     maxItems: 12
+     $ref: /schemas/types.yaml#/definitions/uint32-array
+ 
+@@ -60,6 +63,20 @@ required:
+   - "#interrupt-cells"
+   - amlogic,channel-interrupts
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        const: amlogic,a4-gpio-ao-intc
++then:
++  properties:
++    amlogic,channel-interrupts:
++      maxItems: 2
++else:
++  properties:
++    amlogic,channel-interrupts:
++      minItems: 8
 +
-+	gpio_ao_intc: interrupt-controller@8e72c {
-+		compatible = "amlogic,a4-gpio-ao-intc",
-+			     "amlogic,meson-gpio-intc";
-+		reg = <0x0 0x8e72c 0x0 0x0c>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		amlogic,channel-interrupts = <140 141>;
-+	};
-+
- 	periphs_pinctrl: pinctrl {
- 		compatible = "amlogic,pinctrl-a4";
- 		#address-cells = <2>;
+ additionalProperties: false
+ 
+ examples:
 
 -- 
 2.37.1
