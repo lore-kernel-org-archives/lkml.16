@@ -1,253 +1,238 @@
-Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F50242917
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 18:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C80715382E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 18:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741373243; cv=none; b=RpLMgK9iFmZ56bpDNue+rzfx4WOj0dhDkE6dmE9t2e9y3zyeNF/I0EnaBmHkc3B3AyJX+4x9JLNL9MfKNWS/sf94FWz2l48x0NTaUY/8dhKE+wMbfxSIGLDGbe4bLEsqO9zGtVCLBCBwaxeTYb46V5oXEY5M4On/TsuVv4jCIVQ=
+	t=1741373294; cv=none; b=HNsF93H+jE4/doQH89PpUOGa6BI5kdKEfiipAluU1KfgJecC9+QEcZ2MVM9Id1myDjWZUebKRomHMoDKJfef2bfGgqwplvmdLYCU27nzAA6mDJF0TTWpnn/z2wHTH2zNY29EcZFjf3Dr0WphCUBCmv1LURVfZrXNYp3VR6Kc+e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741373243; c=relaxed/simple;
-	bh=bf1+QbpcbSVah0/h8uBb3DCVF+GdYtB5ASLxPrihG7A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T7NFF7Fjm0V3/1a05XodsLxUIYSpomfYb+5sv2fGEoo1DMRAvMAPpkcfdpSdfm9GSQkDEsgvTKNJxFwguu3tvppAMA1MFAxZ4+Roujob0vqt2tagRwSF/UvmSciYci0XmT2cjsI8529JDSW9RBX8YYkIy9GjXyrwyz1m0QoQax0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=CnJic7IA; arc=none smtp.client-ip=66.163.188.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	s=arc-20240116; t=1741373294; c=relaxed/simple;
+	bh=GTfNNZvLCbOPBoM0Ai0WgtMz65rUH5c7i6UB1UGWT7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qAZYmNeKBJV1lXoY2OHW2W+z7FUbBz6ybG+ax24AQnTIuHcx7fWZY93TjiishuI6VYyvMAD9fdfcQeYwRb4QRrU5AML/6r8JRlIRWP33J2a89gsWmAhqN76UhqmbG926k/irtMu4v3cVTgL+NKgZPqpIN0aTojJSuKANW58ng+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XPkXkgBp; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="CnJic7IA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741373240; bh=azN7Kk9YErwtWuqymGLMrPgHPFYKiUq/drMMdKqTQgM=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=CnJic7IAT7mRj07sxdbuvaXQoUt5IFtbZZQ6QYqSCaRM8emQu653VU94h89ssNvPokMoSF+bYd3GnaLdFiBu8y3gxJuN9zbKjm34to+y3FL8SvzV+u1h82qa6XfsvijmkUr1r4t02ikRBEJuP46cvqZP1AEZ6foJkrWAy+FmRqiVQK1SS5Ta9EMmyZdNx0F0mOlCwnc0XdMIDuHBbpimxUxO1Q/o+pqPNBlhpWyOIiyuscnxFZjQ7P9/TE33Qbc+S1iO8bIj9ubiVMWTt1/+pE1BgbU2FdKjvB++X8He3EUGfd4sNPJhmDCM55OreFy8IC7qhnWhnDifoD4OXd7MbA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741373240; bh=OVPXo/gnZnc6400DGd8Qt55XMCYRMVzBmqanD//ci7F=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=X+ldoHMwGxLK6B0FtOdlbGNRuWxE3HiLhGo9kwgGWrss201U7WGueidON0twhaEYMajcnqT6qgPXsHokCDFcVy5ISF0gdDGhliCp4oIjsT9P6m76yO6GnlEkC1ZSDtnNWqJMIiJ2dKpRK5Ntz9sE8yed0fYdRmW0gR6K5k+0BF6Cc4nw2goFdNY8r66gHeR3JSRlKR+FdDjzUdbuvbT5EKeR/HXnu1ajhwr1pAoNV64xFOxE9MpQl2maX+I51bLErj6FvE3JbjZd0E5VzxbNo+LVBZNHcSVXIy8Q4P5M2Q7NbFiuaFO5qsHmyGVxf/My7urc985PKygKxtU8tKsQUg==
-X-YMail-OSG: sodVNuwVM1nIIpzBOdI2aquWxNcSw17J9YDkAJypoaHFNRlW8ZXFw60VFV03BZh
- P3fTkGn0Me06EkYTBC_bZJ2BNt5JbOB2ggAChV043f5dyP84Bp.xWeSERNT6v3D4venGmz5wTLOl
- xx3u.w5cZEfJQIGxZbO3wFs6.OfzXM.M9yMZ8Itf6b1dO.gf.by3Ty5Uw8ETXk0OBM_UCY9pzZjf
- DsZYfDekfxE26XvBEfpGRkLiZBbKhF.nKw1caJenSBZEguNnv0Ktph5qrCJHjdqvL0KBgBvkJMt3
- hZMBVDmFIPHpPIYruYxM5AVftrGPb69kjjcgiSHZ6Iz1I7ksSIrY9ufZvoXvWu2ab01IPxcWJHcr
- p3Ykh6WcQyj8TEGx1E5TvLeMZvxAw1qOKpJbjNp3j3cBrfOOVKP5pHcGWYisnwn65IzQdWwq2G72
- wkW1sbMMrH1UtEcVGFBNzAeXm5H6OZvwE1jH.cSDgewCyoFo3wH0fxRieENOc_TLxm2vwrGJWjEe
- m3FuGavirEO9bShs76cT858PeN83lX.qAt1EDQ1n8oMG4zZ9DDgKYKmVbB1wuZbqRZ71BrcbsbFS
- QGNLymFI5KeaV5Y7K2O8DBwMBmiAKEM2oVKiivFy19GcACB70gZf0Tk123OQV1315rNfskJZTzjY
- AU7hnaAdaIZUUNVr8cn8z_xCy1AkKShLO7koLeuaoADlX36rM2izwieN6Y3QPiNqZwyd_SNI1dkv
- ZTvjgCa1RsJVch0kTkebzkGfQbiZ6UnC8locjOb4y8OgocsYiw4DRME3MDmCle.c4nU7vItYK3va
- gG3iOarmoGnxHx.fa9jWMoMguYv3wSoS3MmwaoPltOAWTjfk9Tyf.YgC2BOVN97HsnprFf8YFCsZ
- NodX5TWWcRfNFaSqDYzhKfmZvYs_1h331m4_watSDvtEMslG74TFTWGFWY.lnHLZU3gNjAVWm28P
- KcEbt9ILd0qJUHrt6ouYIacVx1arHsWD.xT50OSVrcxHOBj79vAraAA2oR8.tsUvGwP3GzfWpouN
- G64Fc3WIAUzz9o_Rof9tI5y40p2lhWsY0wRZuDRKb8nuUD.dEKSsenqAVZN2jiqaFku6Gm7cpe1y
- HbCHcecpPqlx0m0kkyfHueu_DM57x4v1OPRuT8U1cv5BGPpzKnLjQrJWTYp3aCReolYnbixarMHz
- FPZKnBECIiJHRIZFXE2PDDf1ag9ljHgl9ycGK4pJM7nIPKk39UTrtcaztuLu_iB6zhonnxhFmS1r
- 9odvaf1iod2XsrJ2lcLpMaBnHeKb5PIJoM.jENQWNXxwCXzDLuz_nkdHUcQxfS1DFW4uE9uZ5CTj
- GNmyU.NA5s7HGJ5nhQNautVCiZiuco6O72AqDLVbZsKlffpeeCQnWbvv4MBFEv5BavS3si7nsnct
- 19IMfHJckK0cfu7ZNGjQx3o.Vru.3iGvn1lDQs_dAaP0CURto7Xr0IVrDijmB2X1E0DXu.CtE5T1
- 7iWL9suQP2fHahA_plJc7MZH1C0nkk1ikXXo0xNKQO70uAzR8tF7SLFozYxGWLhaQhEyveReOoJ3
- hA8IbrgEdFrftWZElNP1ljBF22BtG73UeBE2UVm_dpHuvf..22dqb5YKakrdZmQ5fDToDbMrsHiB
- gf2.4jaIhhaBUw6GK1tk7FAExQthESMhYsJXQtHUhwoXAzsJ4NswwpsOlF0hog94ERdrZAaSdEVx
- do9nLrBRs8wc4pfxcP1U.5YGKF.xLkaqgl4jy7tWbf4v0jBPQVFSytIQhpWiuZFn7Dt6z8xwKqxR
- 6aUGgTlM4qbqRQoa_vVLh5F3hGULrSJ3yFrma50OCmrARp37jxN7YHgAUqSx5bPDmiWr5tdwlTFi
- 0DmoIpKic7D_aOK_W8ecWDEY8ugtwEhEUehFUQ3rOPOrBxsVbXUdz700LyIB0Y9AOCespGOSMDUo
- WhekrVCycwr0lRDPXT.AYunFtLtw3oYUn9exD.N8aZsbvCVglXjonYUmhQ9OermDwVq0BqvHfN3m
- QeBy.buEIc8BSjMeuW5bAkFY2qF0y8FRt6d01ARutQ9ABl7L.z.6P_pne.S3v4hyX_t6qXJmcICW
- r0RJ.kOVTdFPsUrLwDgubX.S0VJwVEPoF3_vLZ68UaGZSBaypx.DKIupuQ_Z34MIBUzapSbmH32F
- m0N8tveOza7gQlQPCmG7Mart_ptzJQ3XfGVKWMim.lqqzuuRq9oceZiMcYjHagkehDR9ibauu3nV
- Fn3f4qtpjpFRnSuDqa_7EP3pXU.b7glhlPS0OCjoG754If6lvdsho
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: eac63fb3-8e16-4dd8-b4ed-5160a93bfede
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Fri, 7 Mar 2025 18:47:20 +0000
-Received: by hermes--production-gq1-7d5f4447dd-9qjv2 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9e6d6a2ea591e1dd2da3497c747300b1;
-          Fri, 07 Mar 2025 18:37:07 +0000 (UTC)
-From: Casey Schaufler <casey@schaufler-ca.com>
-To: casey@schaufler-ca.com,
-	paul@paul-moore.com,
-	eparis@redhat.com,
-	linux-security-module@vger.kernel.org,
-	audit@vger.kernel.org
-Cc: jmorris@namei.org,
-	serge@hallyn.com,
-	keescook@chromium.org,
-	john.johansen@canonical.com,
-	penguin-kernel@i-love.sakura.ne.jp,
-	stephen.smalley.work@gmail.com,
-	linux-kernel@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: [PATCH v2 1/6] Audit: Create audit_stamp structure
-Date: Fri,  7 Mar 2025 10:36:56 -0800
-Message-ID: <20250307183701.16970-2-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250307183701.16970-1-casey@schaufler-ca.com>
-References: <20250307183701.16970-1-casey@schaufler-ca.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPkXkgBp"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-223a0da61easo12515ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 10:48:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741373292; x=1741978092; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hnnBLiHSipCquEBENm80tx5p5tMfaLtXbkHcXLPFAjU=;
+        b=XPkXkgBpG2Z/bl6TqPHaytNlT1VMOl4x5jpQBvxyz8CBz3WUEZb5/elJHjKYjRMQ87
+         sfnMLzQJwtcUqO2PhXCVQnp9d/Vrbj0mUhQyVMeW8MDqpnH9079IP7VMd4bpemw2iLsj
+         HRDZWHVIWtYKNHdjmpB/+3SbOsd4oqJ55XAmo7R/CLjxQ6n0JEUgxx0ry9OrqhImowzW
+         vZk25VWt3RJidaN5GopH6dya26Bw1jXvC/0WLywzHvQDbngBA8/pssjiHhJGoIt7s0z4
+         a7YeUyzEqW/KrQ+h4xX9a3if/gbxDsXyz7fjndyy9Q3w/g6RRe62ysebX2BGoBLg3SG8
+         lXrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741373292; x=1741978092;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hnnBLiHSipCquEBENm80tx5p5tMfaLtXbkHcXLPFAjU=;
+        b=wLY0zhNfEvT4YdviRaE8f4p7ha5YZOsBOd+HVY2INGaU07XUh6aitMiLI5UtMhcZwk
+         4natfGZwvibA+34aN15/1w72UleQnM9A9ml3BxvRo0vgFhNEQAPEmEv/JvceaNmN2ep0
+         jWNuWszdaOBLgKWq6CYYiOTbPOCXWFi+U+MCPIM8GZqpPqifV6Q63hzBTlrWMjN8HzsM
+         27XsnLwESEGwc6/cKsaOobXlHfhlY0HFcMC4gF8+ABxfuDRIdpPt56IoJ9Ebps4G1GEj
+         /Ch9Y6AAXoFDKYkck0Y6BYetSYJbCG+o2PhBD6r+1nDinOsquflumdtkxtbHqJHxs3PS
+         O1+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXcTczr/pt8x6FLB5wM+Z84+uazFjcP27O80YGivP0zc2DJ9eSWEIVM5b1GCElBqwpP4MlkQT29JuEj2go=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvJ/NKnDkgB9J7EL32kHpjoYdbPIuyTSwh5kElb+UZaoH+Bkmf
+	rXZZ0X2gAFqUlemESL5TtszSejPRvq1M6B8E85+lpWQzBllYsC1NuVz1uAwAseTwNSGRekrGNPs
+	bDAabiZlXYQ406+dSvbyXawmz9xYgc3BM8kma
+X-Gm-Gg: ASbGnctmL1SHzPR2AcheBDHBZXv3pny7AivC2nAjXuoykFooNXTMa+GiXWcfr2p1tp/
+	0fzvNYuQuX49CVPU7/eZxmT2N1Xmr3U+u9OI/A+q7Ohj9FlQEqvFpc8Mue2w2rnZ4P+umV3NmBH
+	QVvMS0fbZW/W6laOCZWI73nFL5mzI=
+X-Google-Smtp-Source: AGHT+IGdT5nE+QHbJpWHzcC0wNB5abK8RgakHQzBWpxs8Ndj2pR7WbNhCjKOLLaAbeK/qow+V4wBDpPUYk2l/+ePmXg=
+X-Received: by 2002:a17:902:ccc8:b0:215:42a3:e844 with SMTP id
+ d9443c01a7336-22434b5433emr1163905ad.17.1741373291454; Fri, 07 Mar 2025
+ 10:48:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Z7Z5kv75BMML2A1q@google.com> <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
+ <Z7yJ0Vpub6JeQyYo@x1> <80432f35-e865-4186-8b92-26b25279e150@linaro.org> <Z8sMcta0zTWeOso4@x1>
+In-Reply-To: <Z8sMcta0zTWeOso4@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 7 Mar 2025 10:48:00 -0800
+X-Gm-Features: AQ5f1Jq6zGKtLrcNss-uzScSqLCab5P5rfBJprgge4TMGFWgurWy9LXP2biOgVw
+Message-ID: <CAP-5=fWytO4QkxQEu02RxTM51dtqtDXnT517tdiAe79LidT6Ww@mail.gmail.com>
+Subject: Re: [RFC] perf tools: About encodings of legacy event names
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
+	linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace the timestamp and serial number pair used in audit records
-with a structure containing the two elements.
+On Fri, Mar 7, 2025 at 7:10=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Fri, Mar 07, 2025 at 02:17:22PM +0000, James Clark wrote:
+> > On 24/02/2025 3:01 pm, Arnaldo Carvalho de Melo wrote:
+> > > On Wed, Feb 19, 2025 at 10:37:33PM -0800, Ian Rogers wrote:
+> > > > I knew of this tech debt and separately RISC-V was also interested =
+to
+> > > > have sysfs/json be the priority so that the legacy to config encodi=
+ng
+> > > > could exist more in the perf tool than the PMU driver. I'm a SIG
+>
+> > > I saw them saying that supporting PERF_TYPE_HARDWARE counters was ok =
+as
+> > > they didn't want to break the perf tooling workflow, no?
+>
+> > Doesn't most of the discussion stem from this particular point? I also
+> > understood it that way, that risc-v folks agreed it was better to suppo=
+rt
+> > these to make all existing software work, not just Perf.
+>
+> That is my understanding, and I agree with them and with you.
 
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
----
- kernel/audit.c   | 17 +++++++++--------
- kernel/audit.h   | 13 +++++++++----
- kernel/auditsc.c | 22 +++++++++-------------
- 3 files changed, 27 insertions(+), 25 deletions(-)
+This is describing what RISC-V have been forced into doing:
+1) to support non-perf tooling,
+2) because the perf is inconsistent in priority with legacy and
+sysfs/json events.
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 5f5bf85bcc90..2a567f667528 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1833,11 +1833,11 @@ unsigned int audit_serial(void)
- }
- 
- static inline void audit_get_stamp(struct audit_context *ctx,
--				   struct timespec64 *t, unsigned int *serial)
-+				   struct audit_stamp *stamp)
- {
--	if (!ctx || !auditsc_get_stamp(ctx, t, serial)) {
--		ktime_get_coarse_real_ts64(t);
--		*serial = audit_serial();
-+	if (!ctx || !auditsc_get_stamp(ctx, stamp)) {
-+		ktime_get_coarse_real_ts64(&stamp->ctime);
-+		stamp->serial = audit_serial();
- 	}
- }
- 
-@@ -1860,8 +1860,7 @@ struct audit_buffer *audit_log_start(struct audit_context *ctx, gfp_t gfp_mask,
- 				     int type)
- {
- 	struct audit_buffer *ab;
--	struct timespec64 t;
--	unsigned int serial;
-+	struct audit_stamp stamp;
- 
- 	if (audit_initialized != AUDIT_INITIALIZED)
- 		return NULL;
-@@ -1916,12 +1915,14 @@ struct audit_buffer *audit_log_start(struct audit_context *ctx, gfp_t gfp_mask,
- 		return NULL;
- 	}
- 
--	audit_get_stamp(ab->ctx, &t, &serial);
-+	audit_get_stamp(ab->ctx, &stamp);
- 	/* cancel dummy context to enable supporting records */
- 	if (ctx)
- 		ctx->dummy = 0;
- 	audit_log_format(ab, "audit(%llu.%03lu:%u): ",
--			 (unsigned long long)t.tv_sec, t.tv_nsec/1000000, serial);
-+			 (unsigned long long)stamp.ctime.tv_sec,
-+			 stamp.ctime.tv_nsec/1000000,
-+			 stamp.serial);
- 
- 	return ab;
- }
-diff --git a/kernel/audit.h b/kernel/audit.h
-index 0211cb307d30..4d6dd2588f9b 100644
---- a/kernel/audit.h
-+++ b/kernel/audit.h
-@@ -99,6 +99,12 @@ struct audit_proctitle {
- 	char	*value;	/* the cmdline field */
- };
- 
-+/* A timestamp/serial pair to identify an event */
-+struct audit_stamp {
-+	struct timespec64	ctime;	/* time of syscall entry */
-+	unsigned int		serial;	/* serial number for record */
-+};
-+
- /* The per-task audit context. */
- struct audit_context {
- 	int		    dummy;	/* must be the first element */
-@@ -108,10 +114,9 @@ struct audit_context {
- 		AUDIT_CTX_URING,	/* in use by io_uring */
- 	} context;
- 	enum audit_state    state, current_state;
--	unsigned int	    serial;     /* serial number for record */
-+	struct audit_stamp  stamp;	/* event identifier */
- 	int		    major;      /* syscall number */
- 	int		    uring_op;   /* uring operation */
--	struct timespec64   ctime;      /* time of syscall entry */
- 	unsigned long	    argv[4];    /* syscall arguments */
- 	long		    return_code;/* syscall return code */
- 	u64		    prio;
-@@ -263,7 +268,7 @@ extern void audit_put_tty(struct tty_struct *tty);
- extern unsigned int audit_serial(void);
- #ifdef CONFIG_AUDITSYSCALL
- extern int auditsc_get_stamp(struct audit_context *ctx,
--			      struct timespec64 *t, unsigned int *serial);
-+			     struct audit_stamp *stamp);
- 
- extern void audit_put_watch(struct audit_watch *watch);
- extern void audit_get_watch(struct audit_watch *watch);
-@@ -304,7 +309,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
- 				struct audit_context *ctx);
- extern struct list_head *audit_killed_trees(void);
- #else /* CONFIG_AUDITSYSCALL */
--#define auditsc_get_stamp(c, t, s) 0
-+#define auditsc_get_stamp(c, s) 0
- #define audit_put_watch(w) do { } while (0)
- #define audit_get_watch(w) do { } while (0)
- #define audit_to_watch(k, p, l, o) (-EINVAL)
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 9c853cde9abe..2ec3a0d85447 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -994,10 +994,10 @@ static void audit_reset_context(struct audit_context *ctx)
- 	 */
- 
- 	ctx->current_state = ctx->state;
--	ctx->serial = 0;
-+	ctx->stamp.serial = 0;
- 	ctx->major = 0;
- 	ctx->uring_op = 0;
--	ctx->ctime = (struct timespec64){ .tv_sec = 0, .tv_nsec = 0 };
-+	ctx->stamp.ctime = (struct timespec64){ .tv_sec = 0, .tv_nsec = 0 };
- 	memset(ctx->argv, 0, sizeof(ctx->argv));
- 	ctx->return_code = 0;
- 	ctx->prio = (ctx->state == AUDIT_STATE_RECORD ? ~0ULL : 0);
-@@ -1917,7 +1917,7 @@ void __audit_uring_entry(u8 op)
- 
- 	ctx->context = AUDIT_CTX_URING;
- 	ctx->current_state = ctx->state;
--	ktime_get_coarse_real_ts64(&ctx->ctime);
-+	ktime_get_coarse_real_ts64(&ctx->stamp.ctime);
- }
- 
- /**
-@@ -2039,7 +2039,7 @@ void __audit_syscall_entry(int major, unsigned long a1, unsigned long a2,
- 	context->argv[3]    = a4;
- 	context->context = AUDIT_CTX_SYSCALL;
- 	context->current_state  = state;
--	ktime_get_coarse_real_ts64(&context->ctime);
-+	ktime_get_coarse_real_ts64(&context->stamp.ctime);
- }
- 
- /**
-@@ -2510,21 +2510,17 @@ EXPORT_SYMBOL_GPL(__audit_inode_child);
- /**
-  * auditsc_get_stamp - get local copies of audit_context values
-  * @ctx: audit_context for the task
-- * @t: timespec64 to store time recorded in the audit_context
-- * @serial: serial value that is recorded in the audit_context
-+ * @stamp: timestamp to record
-  *
-  * Also sets the context as auditable.
-  */
--int auditsc_get_stamp(struct audit_context *ctx,
--		       struct timespec64 *t, unsigned int *serial)
-+int auditsc_get_stamp(struct audit_context *ctx, struct audit_stamp *stamp)
- {
- 	if (ctx->context == AUDIT_CTX_UNUSED)
- 		return 0;
--	if (!ctx->serial)
--		ctx->serial = audit_serial();
--	t->tv_sec  = ctx->ctime.tv_sec;
--	t->tv_nsec = ctx->ctime.tv_nsec;
--	*serial    = ctx->serial;
-+	if (!ctx->stamp.serial)
-+		ctx->stamp.serial = audit_serial();
-+	*stamp = ctx->stamp;
- 	if (!ctx->prio) {
- 		ctx->prio = 1;
- 		ctx->current_state = AUDIT_STATE_RECORD;
--- 
-2.47.0
+Their preference has been to move these problems into the tool not the
+PMU driver. What you are saying here is to ignore their preference.
+I've already quoted them in this thread saying this, but this keeps
+being ignored. Here is my previous message:
+https://lore.kernel.org/lkml/CAP-5=3DfXSgpZaAgickZSWgjt-2iTWK7FFZc65_HG3Qhr=
+Tg1mtBw@mail.gmail.com/
 
+> > Maybe one issue was calling them 'legacy' events in the first place, an=
+d I'm
+> > not sure if there is complete consensus that these are legacy.
+>
+> I don't see them as "legacy".
+
+So let me say this is really distracting from the intent in the
+series. The series is:
+1) trying to clean up wild carding ambiguity - not making it dependent
+on the name of the event being parsed, the behavior of `cpu_cycles`
+matches that of `cpu-cycles`
+2) trying to make the legacy vs sysfs/json prioritization consistent -
+making it so that `cpu_core/instructions/` encoding matches
+`instructions` as we display both of these as cpu_core/instructions/
+and it is confusing to a user that different encodings were used. We
+also pattern match perf_event_attr config values in places like:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/arch/x86/util/topdown.c?h=3Dperf-tools-next#n38
+so >1 config for the same event means such pattern matching needs to
+consider all cases.
+
+There is now a  "Make Legacy Events Great Again" (MLEGA) effort that
+is standing in the way of clean up work. As already stated but
+repeating, why is MLEGA a bad thing:
+1) legacy events lack descriptions and are open for interpretation.
+For example, do the events include counts for things done
+speculatively?
+2) it is unneeded. Vendors can choose to name events the same name in
+sysfs and json. ARM are achieving pretty much all of the same thing
+with architecture standard events but in their use they will have
+appropriate event descriptions for each model giving all the caveats
+for the event. When something is common we can encode it in the common
+json we don't need legacy events for this:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/arch/common/common?h=3Dperf-tools-next
+3) LLC doesn't mean L2, it nearly always means L3, the event names
+have become obsolete and confusing. More MLEGA means more of this.
+4) PMUs have only ever supported a subset of the legacy events. We
+have to make use of legacy events in `perf stat` not fail when they
+are implicitly added as default events and via the -ddd options.
+5) multiple encodings/PMU types for the same thing complicates things
+like topdown event ordering, that is a kernel/PMU restriction, and
+metric event deduplication.
+6) legacy events are broken on ARM Apple-M and have been broken on Juno boa=
+rds.
+7) architectures trying to push complexity into user land (RISC-V) are
+being forced to push it into the kernel/driver.
+
+Is MLEGA relevant here? Well if you want legacy events to be >
+sysfs/json then yes. For wild carding I don't see why MLEGA cares. Do
+I want to push on MLEGA? No, and I think the reasons above are why it
+hasn't happened in over 10 years.
+
+> > Can't they continue be the short easy list of events likely to be commo=
+n across
+> > platforms?
+>
+> That is my understanding of the original intent, yes.
+>
+> A first approximation, those who want to dig deeper, well, learn more
+> about the architecture, learn about the extensive support for
+> vendor/JSON events, sysfs ones, how to properly configure them taking
+> advantage of the high level of flexibility both perf, the tool and perf
+> the kernel subsystem allows them to be used, in groups, leader sampling,
+> multiplexing or not, etc.
+>
+> But lots of developers seem to be OK with just the default events or
+> using those aliases for expected events across architectures, sometimes
+> specifying :ppp as a hint that if there are more precise events in this
+> architecture, please use them, for instance.
+
+When and where have I said that I don't want to support events like
+instructions and cycles? See above, consistent wild carding and the
+encoding priority are the only issues here.
+
+> > If there is an issue with some of them being wrong in some places
+> > we can move forward from that by making sure new platforms do it right,
+>
+> And adding special case for broken things when we know that some event
+> named "cycles" shouldn't be used for sampling, for instance.
+
+What is this? A new framework for special casing PMUs and events,
+where we're maintaining lists of broken PMUs and changing encodings?
+And tooling like event sorting, metrics, is all supposed to just work
+with this? Are we going to write json for this? Who is writing/testing
+it for Apple-M?
+
+Special cases should be the exception and not an expected norm.
+
+> > rather than changing the logic for everyone to fix that bug.
+>
+> Right. And again, if something doesn't work for a while in some
+> architecture, its just a matter of specifying the name of the event in
+> full form, with the PMU prefix, etc.
+
+So MLEGA would like sysfs/json when they are broken? This is just
+silly, if something is broken we should just not use it. Having 2 ways
+of stating something and expecting different behaviors from them is
+clearly brittle.
+
+> > For the argument that Google prefers to use the sysfs events because of
+> > these differences, I don't think there is anything preventing that kind=
+ of
+> > use today?
+>
+> Indeed.
+
+I explained that in the context of why legacy events are wrong. I've
+repeated it above. This is not addressing the issues of wild carding
+and the encoding priority.
+
+> > Or at least not for the main priority flip proposed, but maybe
+> > there are some smaller adjacent bugs that can be fixed up separately.
+>
+> Yes, and work in this area is greatly appreciated.
+
+I don't know what your proposals are and to my eyes none of them have
+ever existed, no one has created them in over 10 years.
+I am trying to fix wild carding and the encoding priority.
+Bike shedding on MLEGA, please can we move it to a separate email thread.
+
+Thanks,
+Ian
