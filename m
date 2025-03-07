@@ -1,39 +1,40 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB7424FC1F;
-	Fri,  7 Mar 2025 19:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6B4183CB0;
+	Fri,  7 Mar 2025 19:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741376570; cv=none; b=Y51Y8S4hHEGRDWqnCIsnieduoPg1kuioa2+Gs9enQCqkKAg0p8OIna4cci6J8NTmHveyi9hgvnlKtvQArMXdbCM9A+UF21npTXSOIKGiQxnLrDglh+bKbg4uXBVYWH3OabRC/JZipufdayWDL6RSRRJgBIMaibH47Hl5rKXczxY=
+	t=1741376571; cv=none; b=iPoXC7qRi3/koYuqtkcL+ff2oKckZXT3ix2abAOPF+noCQD2ZCzysfD8FVIYVTGbzroDnQfDU5dQS+CIZ5pBzYh8DSeiHdOLZ8w+dlT5cDPf5ldnkdr3SWuneiLgggT09aXamijvBS3Y6CdHTLowhgbsOfndR+jX8UepPaMtfgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741376570; c=relaxed/simple;
-	bh=bntwyWnrMdWDSe4vnVdSyZBMiRO/ZRUZNY4KsjH/rsE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gS4XwikVhhpH6CqUOniwndyfBEFsq81mUgiwERUNUVn8UA+7jAJb5gun7bVTHzGFhSPtGIU86uS7cCmQSfwQZ0sfNt9nxtH5DmOiCvmP5xIQfTxCQNlZpoJKoPWFTLH5qJqRJjlrKFORC5siMCbFoOmj4yqfvvFpbwd7hhkgVNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=nUstl2fO; arc=none smtp.client-ip=79.96.170.134
+	s=arc-20240116; t=1741376571; c=relaxed/simple;
+	bh=jSPlM41dWFTbPXF7V5lCIMCIGH9Lb5+mtbSwIByMCl0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cR2AzoxQKCkpDSuqvLJbYueu+LoXP9xdUCPTlsup4f30Rji4NIRORaGScXuUsJmQuBhSUYTpQN4+Qet9sOpxpEgMs44l9hU2MDnVy8A/JYbIUvhG004iXdOvreH0q9vYiL7yLcaxZGbNYyjC0LlsvVuZts4RbHJe1E9g3gAHn0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=eQLSakU8; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="nUstl2fO"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="eQLSakU8"
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
- id bd548913f5f0793d; Fri, 7 Mar 2025 20:42:45 +0100
+ id f32e28ba78c6fdc3; Fri, 7 Mar 2025 20:42:41 +0100
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 581269A0BFB;
-	Fri,  7 Mar 2025 20:42:45 +0100 (CET)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id A53B59A0BFB;
+	Fri,  7 Mar 2025 20:42:40 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1741376565;
-	bh=bntwyWnrMdWDSe4vnVdSyZBMiRO/ZRUZNY4KsjH/rsE=;
+	s=dkim; t=1741376561;
+	bh=jSPlM41dWFTbPXF7V5lCIMCIGH9Lb5+mtbSwIByMCl0=;
 	h=From:Subject:Date;
-	b=nUstl2fOjsDJTZ3H1jC9w8CqcwhArq6Q7ElmCXlnurofh79vYmjWSCpuXf+Cl3eyE
-	 HtsbNujM4Vd4zy47Oagr9/5f89lDF98oOtOqubO0vrBxtbv6uoB+wTfYGDimO950rk
-	 84FrT2zAVPl8IaYSdMAH6vNKhUAH28SFl5xk1KajlmFMVCvyAtxtsRaqx7sKEG6ud3
-	 lTq4TH941JmYHRFo4DLaYd52gPYAgDRHT9F3uGi02YTuC1eqMMI+ifKq2y8mJo9als
-	 /vI5MRI3V7dnxVvQqt+KOHbGztaLt1N2wdB99wbSwRxmg2nX+vtG8qOPyyeITqRqZG
-	 5r+O52ybKq21A==
+	b=eQLSakU86HKhbNp0rrOsCLm8V04zzVHJU6+vfHK4TlXD7aZNSgGUtQ88U2MO6qH8I
+	 7nch8+tnET/wdRgC0gt0GsDvMY3wWqFiI8gT0nZ0dot+zLlR7wKPLi+27Q8nd/vcB9
+	 vpZX3qqcS1MyJKHrwuOEnKiYVD2SG2TF1QAG8qo1LPKAJTEnz3mvh0I0SnwB4Y6W5E
+	 Ge8TFAWuI3jRNQT3gJyoUKB47e5E2AcXGby8CNcxpAC0LH8dBE/oNZIR8uG6qwvpPb
+	 CXzskM671AgeV3eOyMWpkYR+oyre06A6zDXuEtJlK9v3T1He/4eXUHck2h05thscXD
+	 Wffvm7kRPqYTg==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux PM <linux-pm@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
@@ -44,12 +45,13 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
  Vincent Guittot <vincent.guittot@linaro.org>,
  Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
  Pierre Gondois <pierre.gondois@arm.com>,
- Christian Loehle <christian.loehle@arm.com>
-Subject:
- [RFC][PATCH v0.3 0/6] cpufreq: intel_pstate: Enable EAS on hybrid platforms
- without SMT - alternative
-Date: Fri, 07 Mar 2025 20:12:11 +0100
-Message-ID: <22640172.EfDdHjke4D@rjwysocki.net>
+ Christian Loehle <christian.loehle@arm.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [RFC][PATCH v0.3 5/6] PM: EM: Introduce em_adjust_cpu_capacity()
+Date: Fri, 07 Mar 2025 20:39:34 +0100
+Message-ID: <2446858.NG923GbCHz@rjwysocki.net>
+In-Reply-To: <22640172.EfDdHjke4D@rjwysocki.net>
+References: <22640172.EfDdHjke4D@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,64 +63,97 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 195.136.19.94
 X-CLIENT-HOSTNAME: 195.136.19.94
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudduheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=11 Fuz1=11 Fuz2=11
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudduheegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehsrhhinhhivhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
 
-Hi Everyone,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-This is a new take on the "EAS for intel_pstate" work:
+Add a function for updating the Energy Model for a CPU after its
+capacity has changed, which subsequently will be used by the
+intel_pstate driver.
 
-https://lore.kernel.org/linux-pm/5861970.DvuYhMxLoT@rjwysocki.net/
+An EM_PERF_DOMAIN_ARTIFICIAL check is added to em_adjust_new_capacity()
+to prevent it from calling em_compute_costs() for an "artificial" perf
+domain with a NULL cb parameter which would cause it to crash.
 
-with refreshed preparatory patches and a revised energy model design.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-The following paragraph from the original cover letter still applies:
+Note that this function is needed because the performance level values
+in the EM "state" table need to be adjusted on CPU capacity changes.  In
+the intel_pstate case the cost values associated with them don't change
+because they are artificial anyway, so replacing the entire table just
+in order to update the performance level values is a bit wasteful, but
+it seems to be an exception (in the other cases when the CPU capacity
+changes, the cost values change too AFAICS).
 
-"The underlying observation is that on the platforms targeted by these changes,
-Lunar Lake at the time of this writing, the "small" CPUs (E-cores), when run at
-the same performance level, are always more energy-efficient than the "big" or
-"performance" CPUs (P-cores).  This means that, regardless of the scale-
-invariant utilization of a task, as long as there is enough spare capacity on
-E-cores, the relative cost of running it there is always lower."
+---
+ include/linux/energy_model.h |    2 ++
+ kernel/power/energy_model.c  |   28 ++++++++++++++++++++++++----
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
-However, this time perf domains are registered per CPU and in addition to the
-primary cost component, which is related to the CPU type, there is a small
-component proportional to performance whose role is to help balance the load
-between CPUs of the same type.
-
-This is done to avoid migrating tasks too much between CPUs of the same type,
-especially between E-cores, which has been observed in tests of the previous
-iteration of this work.
-
-The expected effect is still that the CPUs of the "low-cost" type will be
-preferred so long as there is enough spare capacity on any of them.
-
-The first two patches in the series rearrange cpufreq checks related to EAS so
-that sched_is_eas_possible() doesn't have to access cpufreq internals directly
-and patch [3/6] changes those checks to also allow EAS to be used with cpufreq
-drivers that implement internal governors (like intel_pstate).
-
-Patches [4-5/6] deal with the Energy Model code.  Patch [4/6] simply rearranges
-it so as to allow the next patch to be simpler and patch [5/6] adds a function
-that's used in the last patch.
-
-Patch [6/6] is the actual intel_pstate modification which now is significantly
-simpler than before because it doesn't need to track the type of each CPU
-directly in order to put into the right perf domain.
-
-Please refer to the individual patch changelogs for details.
-
-For easier access, the series is available on the experimental/intel_pstate/eas-take2
-branch in linux-pm.git:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-experimental/intel_pstate/eas-take2
-
-or
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=experimental/intel_pstate/eas-take2
-
-Thanks!
+--- a/include/linux/energy_model.h
++++ b/include/linux/energy_model.h
+@@ -179,6 +179,7 @@
+ int em_dev_update_chip_binning(struct device *dev);
+ int em_update_performance_limits(struct em_perf_domain *pd,
+ 		unsigned long freq_min_khz, unsigned long freq_max_khz);
++void em_adjust_cpu_capacity(unsigned int cpu);
+ void em_rebuild_sched_domains(void);
+ 
+ /**
+@@ -405,6 +406,7 @@
+ {
+ 	return -EINVAL;
+ }
++void em_adjust_cpu_capacity(unsigned int cpu) {}
+ static inline void em_rebuild_sched_domains(void) {}
+ #endif
+ 
+--- a/kernel/power/energy_model.c
++++ b/kernel/power/energy_model.c
+@@ -698,10 +698,12 @@
+ {
+ 	int ret;
+ 
+-	ret = em_compute_costs(dev, em_table->state, NULL, pd->nr_perf_states,
+-			       pd->flags);
+-	if (ret)
+-		goto free_em_table;
++	if (!(pd->flags & EM_PERF_DOMAIN_ARTIFICIAL)) {
++		ret = em_compute_costs(dev, em_table->state, NULL,
++				       pd->nr_perf_states, pd->flags);
++		if (ret)
++			goto free_em_table;
++	}
+ 
+ 	ret = em_dev_update_perf_domain(dev, em_table);
+ 	if (ret)
+@@ -751,6 +753,24 @@
+ 	em_recalc_and_update(dev, pd, em_table);
+ }
+ 
++/**
++ * em_adjust_cpu_capacity() - Adjust the EM for a CPU after a capacity update.
++ * @cpu: Target CPU.
++ *
++ * Adjust the existing EM for @cpu after a capacity update under the assumption
++ * that the capacity has been updated in the same way for all of the CPUs in
++ * the same perf domain.
++ */
++void em_adjust_cpu_capacity(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
++	struct em_perf_domain *pd;
++
++	pd = em_pd_get(dev);
++	if (pd)
++		em_adjust_new_capacity(cpu, dev, pd);
++}
++
+ static void em_check_capacity_update(void)
+ {
+ 	cpumask_var_t cpu_done_mask;
 
 
 
