@@ -1,96 +1,110 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176CB21CA1A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ADE21ADBA
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 13:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741355393; cv=none; b=pG+S0H1t214RICi+R8ckB0yWBYaTI6ez+cH3FVchbCEJQq5lRSoSdJUfLNyCZMDsXZj96TMTBwqp+immYeP33Q2Eu4X+vI/M3k1RAoQ3VONDQ4aISrhPu+3FXY+RyatNkeOHEEMDMhOsjUjXPgvySRQG0uu1xOPkpRF8/NVWbs8=
+	t=1741355395; cv=none; b=WbvYJyTAOEIThK07ozmrxTa2g1/EtGAfMGT0vJ84DX7HQQvQy6nz0oLdk3sGleb3HVL6Mox1hUsV5v5KC3Xp68ttmJgiX9AttPYzRNGpJo6UWejSqjwquLuiRvtmQqvoxDORlzqcnoXq7feOpNDkwcOSjlcSXc3EwUk3PcbBMv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741355393; c=relaxed/simple;
-	bh=JjXVgfl4z2OzE6D7Il8Bs32DEv8QhkgN5BubGGf159s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LxLajQa3qltcQB4PQPm2qTa7FxBz/+N0JpPHU4gxG0tMWy863KXGldtdoP0tuaF+/+c61XFhILSQLtfp+RZiTrQcd3ldEx6chOG/C4UP/fXjer37x+F/rx41Zvrr5AmTcHcj9UUrwbRFqgmF9KWomoIuA7f5Fbgf1MS43ze3vZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=asCGPA5Y; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741355395; c=relaxed/simple;
+	bh=yW9/4dLSersMO4DNHldQci8zupCYVd7u26yzS3h3m0o=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SFXLDj9jLK0JeldL8iG7s9iHFTS/do3muBbTjNX8awNp5Aq9pE0TBrdWz88rzFEcnTT/cGCglE54Xa+BaiMo6nNRunyKgMtnjrXWnz+pYtdD7MIt9Iylcy7k5Z6ozws0eF4zskUnOSm7pFytXjEcEwcyiIVPsF7fb0ModfUfpGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=mWBD89Ur; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="asCGPA5Y"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741355380;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3ji2IkkcmXjR0mZGki7gGaLPjSa8LMyofwipW+tIfP8=;
-	b=asCGPA5YCSan70df+CMuf6QOaR+mHcaZgP82o6SYIC8ZqVorlv0/rmRtT/kG08es9ZQZHP
-	/GK5+SCmE3LTBImWp5yolUJt7I00lxg0+cadZ1d3nsUvx7ML5ibiLe9xuBq9c1cw2u3HW8
-	TMVbPL5iPnZV1IRqwsYVovk+ni6whZ0=
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 0/7] blk_holder_ops, freeze/thaw
-Date: Fri,  7 Mar 2025 08:49:24 -0500
-Message-ID: <20250307134933.1033872-1-kent.overstreet@linux.dev>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="mWBD89Ur"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=6fptnopq2ffptbx2q4fbd7bngq.protonmail; t=1741355389; x=1741614589;
+	bh=EEYoYNAuUuPoPs1W8X1jIbMyhvVpA6cLe6iGvpj1uPg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=mWBD89UrSunFxSSed9piHZRVnTVTQbSfHGj68T4nj05bbQwvR4DgIxFkpHzZ/J6Zt
+	 Q1kHAQezzzYRAFj6jIH+35y9OadKXgOuHlSefrTqaS9YfNxMWMge7w3fXunyCjD1yR
+	 90sIhMEiMhSHMyQv4KJUjHXihlyonOYxW6ZYYwKwjoI1LsCJaVU6ZePMpLR4Ez+sRy
+	 dO07ivR/bO690AQwCmNLOmVxjEP54qsiauNBQ9SyhFw7aYmrSJnuIDnD3/CRtY6ZiH
+	 ke30h7hELhG3moZxZR+uFvWWTO5Ig1MoOeCpfDdiZDPTzjte18xw82Zu7DCBeuRAzY
+	 hBX0mCFcydjBA==
+Date: Fri, 07 Mar 2025 13:49:43 +0000
+To: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 08/13] rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&mut T>`
+Message-ID: <D8A2YP4GF2XL.2MN17TTXW6GM1@proton.me>
+In-Reply-To: <20250307-hrtimer-v3-v6-12-rc2-v10-8-0cf7e9491da4@kernel.org>
+References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org> <20250307-hrtimer-v3-v6-12-rc2-v10-8-0cf7e9491da4@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 1f35bcd8df090977494af4ce67698d317ace72b0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Until now, it turns out bcachefs has been lacking freeze/thaw support,
-which is important for hibernate.
+On Fri Mar 7, 2025 at 11:11 AM CET, Andreas Hindborg wrote:
+> Allow pinned mutable references to structs that contain a `HrTimer` node =
+to
+> be scheduled with the `hrtimer` subsystem.
+>
+> Acked-by: Frederic Weisbecker <frederic@kernel.org>
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+>  rust/kernel/time/hrtimer.rs         |   2 +
+>  rust/kernel/time/hrtimer/pin_mut.rs | 101 ++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 103 insertions(+)
+>
+> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+> index 2ca56397eade..d2791fd624b7 100644
+> --- a/rust/kernel/time/hrtimer.rs
+> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -441,3 +441,5 @@ unsafe fn timer_container_of(ptr: *mut $crate::time::=
+hrtimer::HrTimer<$timer_typ
+>  pub use arc::ArcHrTimerHandle;
+>  mod pin;
+>  pub use pin::PinHrTimerHandle;
+> +mod pin_mut;
+> +pub use pin_mut::PinMutHrTimerHandle;
+> diff --git a/rust/kernel/time/hrtimer/pin_mut.rs b/rust/kernel/time/hrtim=
+er/pin_mut.rs
+> new file mode 100644
+> index 000000000000..4f4a9e9602d8
+> --- /dev/null
+> +++ b/rust/kernel/time/hrtimer/pin_mut.rs
+> @@ -0,0 +1,101 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +use super::HasHrTimer;
+> +use super::HrTimer;
+> +use super::HrTimerCallback;
+> +use super::HrTimerHandle;
+> +use super::RawHrTimerCallback;
+> +use super::UnsafeHrTimerPointer;
+> +use crate::time::Ktime;
+> +use core::pin::Pin;
+> +
+> +/// A handle for a `Pin<&mut HasHrTimer>`. When the handle exists, the t=
+imer might
+> +/// be running.
+> +pub struct PinMutHrTimerHandle<'a, T>
+> +where
+> +    T: HasHrTimer<T>,
+> +{
+> +    pub(crate) inner: Pin<&'a mut T>,
 
-We thought we had freeze/thaw support, but it turns out that when
-.freeze_fs and .unfreeze_fs were implemented in super_operations, they
-were never being called - those functions are only called from the
-blk_holder callbacks, and the engineer implementing them never thought
-to check that.
+I just noticed, if `T: Unpin`, this is unsound in combination with you
+creating another `Pin<&mut T>` reference below for the callback, since
+then we have two `&mut T` pointing to the same value. So you should
+store a raw pointer instead.
 
-So - there's a lesson here, and this is why I keep harping on testing.
-It's not enough to just fire off the automated test suite and call it a
-day, you do have to put actual thought into checking that your code is
-behaving as expected :)
-
-It turns out the method we were originally talking about for freeze/thaw
-of just using our existing read-only/read-write paths doesn't work, for
-reasons that I neglected to remember when hooking up blk_holder_ops
-(locking and conflicting state management, I assume), so we need to
-block IOs at a lower level - which conveniently we can do with our
-existing per-device IO references.
-
-This patchset also implements the other blk holder ops - the big one
-being mark_dead, which now offlines a single device from the filesystem
-if possible (leaving the filesystem read-write), or if not possible to
-run in degraded mode, sets the entire filesystem read only.
-
-Kent Overstreet (7):
-  fs: export invalidate_inodes()
-  bcachefs: Stash a pointer to the filesystem for blk_holder_ops
-  bcachefs: Make sure c->vfs_sb is set before starting fs
-  bcachefs: Implement blk_holder_ops
-  bcachefs: Fix btree_node_scan io_ref handling
-  bcachefs: bch2_dev_get_ioref() may now sleep
-  bcachefs: Implement freeze/thaw
-
- fs/bcachefs/bcachefs.h        |   3 +
- fs/bcachefs/btree_node_scan.c |  17 ++-
- fs/bcachefs/fs.c              |  11 +-
- fs/bcachefs/journal_io.c      |   7 +-
- fs/bcachefs/sb-members.c      |  49 +++++++++
- fs/bcachefs/sb-members.h      |  18 +---
- fs/bcachefs/super-io.c        |   5 +-
- fs/bcachefs/super.c           | 191 +++++++++++++++++++++++++++++++++-
- fs/bcachefs/super.h           |   2 +
- fs/bcachefs/super_types.h     |   8 +-
- fs/inode.c                    |   1 +
- fs/internal.h                 |   1 -
- include/linux/fs.h            |   1 +
- 13 files changed, 272 insertions(+), 42 deletions(-)
-
--- 
-2.47.2
+---
+Cheers,
+Benno
 
