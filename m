@@ -1,163 +1,227 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2069.outbound.protection.outlook.com [40.107.249.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B24C253B67
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 19:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741375192; cv=none; b=Rx5JzZltd7mX/nervdOoAJPmSr+8OpfW3xrgiQRAR1aLbPX4JSoSLD3dcGL/jVUsa4NVA3bJR/HZD71tgJ0oUTjccAU8FmXnWh3wOfNHEdZjH5YusJtNsofM9tcVM2f8NgzWoWqlml7aHj4xPK7lgj1ge/7lwr4L0j0g6mzCUw4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741375192; c=relaxed/simple;
-	bh=g4MqkEHiB7Hh07+p3G9AYFM2M8BQsXqZ/GWxguZs4Jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sw4Muasp8BU4M8m6zCxcVDvnUKRKl9TUUl+X1ppBojUIsvPcN1riTyDOo0Z5xUINGx8EglMJA9PUTTyOrC2yZQ7X+q7plw+B5W0o6+oEpgtx1V/xeQT6CltIoR60ROw4v4RMz9eT95EQUFdHtXE+Cb8MdVmJqu3TEsQgQP5f2EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dqi/KrB5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195D921A45A;
+	Fri,  7 Mar 2025 19:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741375196; cv=fail; b=aExc3YMhK2kVu87YlEEguOS8nWSCsb3tQLwLLVOPSLUQ2gHRuTtuNRqyLGQD13v5uukdN4meA8lWSvorzvCJNn9fKsQzRWynrXY3nLBIBLb5/qLDYiocvetHT8DNU5zb2IGdbLnzLeXY91yd9Fle6UoNRKPCSC+WDRn2eBpynnE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741375196; c=relaxed/simple;
+	bh=OTrotL7llf1ioHpxlkZ/mTDFk4HjnHo7c48m8MhAi6k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VM2xDDIk/4qleFyXiFjNEnwm5TFnVkZwm28rSvN6Bx4xW225Pob5YuocEpG0KBQ9q+D7Kl2x0G1SXDr6Zzg5AdJDluK58vpBaqg8ykKEbu9DT46jeGAOjVwSGQN6mPLEoxtL7XsX4qtulIG8TKjp+GEuh8oLPevUa20cjpNg4Z8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=aIBxtp2Y; arc=fail smtp.client-ip=40.107.249.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dqi/KrB5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741375188;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nrPsYGhY2ctGgSCoMFqFX1XHzK6SWuV8/qZ7voczswo=;
-	b=dqi/KrB5ftxd8Vfdq+342YcnhdzY37LFdw/EX9BrHqdmWlIoUIB7BhenpI8W1fHBHfmb3L
-	wkOg4muZ++ZMWs1qoSO+oiSvC3203jYdc8DK86RLB+nMx2uE1F+qVXJCjcyN1kbuLlGyej
-	VwZ5PVX4rQvOBPL6k6J/2mHHRNQ+v1M=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-fHWpz0DVMHiW_mwF1wewHQ-1; Fri,
- 07 Mar 2025 14:19:45 -0500
-X-MC-Unique: fHWpz0DVMHiW_mwF1wewHQ-1
-X-Mimecast-MFC-AGG-ID: fHWpz0DVMHiW_mwF1wewHQ_1741375184
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AE68B1955BC9;
-	Fri,  7 Mar 2025 19:19:43 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.22.58.19])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF3161955DCE;
-	Fri,  7 Mar 2025 19:19:40 +0000 (UTC)
-Date: Fri, 7 Mar 2025 14:19:38 -0500
-From: Richard Guy Briggs <rgb@redhat.com>
-To: Jan Kara <jack@suse.cz>
-Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
-	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-	Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	Eric Paris <eparis@parisplace.org>, Steve Grubb <sgrubb@redhat.com>,
-	Amir Goldstein <amir73il@gmail.com>
-Subject: Re: [PATCH v1 1/2] audit: record fanotify event regardless of
- presence of rules
-Message-ID: <Z8tGyiUzX6p+2vpp@madcap2.tricolour.ca>
-References: <cover.1741210251.git.rgb@redhat.com>
- <3c2679cb9df8a110e1e21b7f387b77ddfaacc289.1741210251.git.rgb@redhat.com>
- <aksoenimnsvk4jhxw663spln3pow5x6dys4lbtlfxqtwzwtvs4@yk5ef2tq26l2>
- <Z8pH97tbwt7OGj2o@madcap2.tricolour.ca>
- <jhvf3n4fnzsnj7opxooqblmpnuhvqhcg366y47p5u44dg4tm3i@snmc3msdcoiv>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="aIBxtp2Y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UDGIyhf9p4Xjnt7YWi8yaNUr9mRGbpYs7Or3BiNNT7CGOX43XvcqoKlUgJQ4x+7YPeIrc8rQvWei7Chr+FuQZEYvmPzBf+tj1RQAyXWbspj1kdxvTYdq31IeE9kdW6bJFzoz1B5dmyp2hkjhsQrMVGIBeUh6U3D0rapqd6JyJ6GGfLIlb/zj6GFCWxLGotQ6D2zk7+euSek3URvaSIje+KXzsN6xITgegdFa+CMurV1SD7a3eWxXUV1ocxVMIXSbaKaWnqxjdp0gCaRyNVly5TGLZBURF1G4xgUeZDVlCcbjunn1jvq3QLzLMUR3FfM6I3+uT79oygMNhl1+3UuRIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sprhuhyy2bS9kSsqy4uiktgbvl0OrVigMNh95iF5RyY=;
+ b=jeDN7wEPBbRnQrCRbZpFHtWNNhmvY0glBsj6C484kL4dnTIzDWvHlWfdMrAKWq9O7MCctyMZ6lRFcs1o2P9NfsjgZYHC7VwGbB8H80N0rR2LP4gLjVVXsCcGOypdzJspIyQs5eUnQMLHx0e48eS7qO5SbqDA2vtJlzGh6kQRPv11HWIpAnTyupSioCEAhwPwEG2KHo76BjVz+Qhcciu8fqh25Ahk7DzXFMXZJzthjRC30MPMZFymv+PxtB78VHFfW4q93KJ7a0rAPejJUJVgPpH0WBRgO9yk2Rg2jPAIQp9D6fPlzxhdOPvG0e/4+9SFYmzjUgq3zLEfe3dyLdfx+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sprhuhyy2bS9kSsqy4uiktgbvl0OrVigMNh95iF5RyY=;
+ b=aIBxtp2Y34bkHiJWUqy+5iWTNwGH6V/SJInU9eBsXFLlIgOVYXSxV76sNdzWdz8JkZc8+qc2Eg3xf9u1dh52XiBCXsmAi08Z3kbQ+jfKZggcPbCzB3FsLX8/IEF5P1p5PKBW1qKwQZVK6O9KMoMCBo/S8SlqdORgEAZB6gtnjndxR6qub6m9GXuakoMp7v8PUdsAMGSjQvpFeunA4Ich6uhIKz69gWq2IMtiaERNikg8xnVNnHNhYHWExfSMx01r936A5bHW/0Ydpu5G7zmoxP9aSX1fLFWMuCqpp/DIswoJsLmUwT6svJsiu4d/6rH1zCoTydD8snK55gMHEt2xxQ==
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by GV1PR04MB10918.eurprd04.prod.outlook.com (2603:10a6:150:207::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.24; Fri, 7 Mar
+ 2025 19:19:48 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612%5]) with mapi id 15.20.8511.017; Fri, 7 Mar 2025
+ 19:19:48 +0000
+From: Shenwei Wang <shenwei.wang@nxp.com>
+To: Sherry Sun <sherry.sun@nxp.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "jirislaby@kernel.org" <jirislaby@kernel.org>
+CC: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [PATCH] tty: serial: fsl_lpuart: disable transmitter before
+ changing RS485 related registers
+Thread-Topic: [PATCH] tty: serial: fsl_lpuart: disable transmitter before
+ changing RS485 related registers
+Thread-Index: AQHbjwdrI17dbdYUjEGgjdmD4rfiRLNoB41A
+Date: Fri, 7 Mar 2025 19:19:48 +0000
+Message-ID:
+ <PAXPR04MB91855AF296383041F5FD502389D52@PAXPR04MB9185.eurprd04.prod.outlook.com>
+References: <20250307021950.1000221-1-sherry.sun@nxp.com>
+In-Reply-To: <20250307021950.1000221-1-sherry.sun@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB9185:EE_|GV1PR04MB10918:EE_
+x-ms-office365-filtering-correlation-id: e0ae5159-ab6f-4c65-dfad-08dd5dad06fa
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|366016|1800799024|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?lsDl6z7smejErYYawNJCeFyoUxfo9pksIh2N7eC4+upZFuhiMg/eM7XyOiy4?=
+ =?us-ascii?Q?28Mw2mZXQDyyAlL2AL5jn3TB/0NgTyISQcznvSwnhJhHoE45xw7ubmqdto3W?=
+ =?us-ascii?Q?HuuSIoK2gZxacAAjGy2Yo4XlRccMmyLpRfzDifJ5wD5Qb0IkzBpG8tbret2k?=
+ =?us-ascii?Q?JB1M6OVQfSrsUrxvkPhFWXpLNRjcVUhfcluawNZ8pQKgOma6YRe//0xsDU1v?=
+ =?us-ascii?Q?jOCKe8tESaBaIXsXaxdRw0qwYTtdqHeH/nQpdwH3pWshfb/BhXE/PS2leXJh?=
+ =?us-ascii?Q?zVvw4u9FsM+j6uTO2hR8lT88V/omZ5WI7bDm1dsw93sTykpxRWKMNqQOD5ER?=
+ =?us-ascii?Q?mmpWsceqodoaTjV21bo1dpNc4hH0dW/Zw50z8iDua+u/6g8HS101muK/W6RG?=
+ =?us-ascii?Q?JPyUgqxj7MI79bY5axWkHqwNqpJeFNWQWuut0WTP6j3jQyL410ehNl1AS4u2?=
+ =?us-ascii?Q?6G1v4dwUtU3NGqAahbMLZCpw88Tl565eK5MoG+zkXVgpYgZWnxhfqSsP1sTa?=
+ =?us-ascii?Q?224A5Vqi5ui2iRaaQBYlcrLhSDMWLpM/So6GcwkSyxWO2187gX4TVQQ5tpGI?=
+ =?us-ascii?Q?VcYRVFMd68QlZDHJZl1LCdLc9jvinLDG8nH3zx1ApFWKlZ6n3/lTq4VAYfHB?=
+ =?us-ascii?Q?SO0bcDX3r5me7rqRdyxhEj04iqIAX/MJwceqZ7G5MYhoiuzSll3H1UHaEdry?=
+ =?us-ascii?Q?UDTxvviWr8V1hUhTstyxKPz8Ip7WsnflMY2uiBNmFtloZGHNpIoCCUxISXwg?=
+ =?us-ascii?Q?hYgcZGMoQ6ar40Gr4FcGAP+83c2pIOEb44QmfAeMloYA/Ljy7zlcp4bonfwa?=
+ =?us-ascii?Q?tkevcr3vXvhTHL44DevGOBeAAooz73xVkM+Mz6s3SVcBUPvaROXwSBhrAtnR?=
+ =?us-ascii?Q?9KMsro/O8XpdXO+c1DcY+rfLXaWoGRLJHz6KV5Ja3im2ALRy2q/Cx4+sjsW1?=
+ =?us-ascii?Q?7oJwV+64rNgbfunkUpgUdnVozrM4BQbOf98oULwHxaXDhHrxddqEEPgregJ5?=
+ =?us-ascii?Q?EEDCq37ovPu8Fkehx31vg9ypi7Uix1QOCAgXkVynI6yR1LW/FtY3rz+VaW9c?=
+ =?us-ascii?Q?Ix602+YzQqvAsJY2gvDJHOVk96BBrWui91U6aYWkMeMvnKQwSyjfwgOo/gP5?=
+ =?us-ascii?Q?YwIYOZ9vD/2f0tlaiX7i7I2kT1I79xv/aj/ukydT2+R2jQf3iZ4o7u6Wt5vZ?=
+ =?us-ascii?Q?qMXVtmUyEjNodT6qhZW3fylkTyhB36ORwWv30jnIs0j6PevVff/Ml5mG+817?=
+ =?us-ascii?Q?mC2BOhS08nHiKfRO6XFtZoY15jo1gH9+lyCxe9TexJth4sdpPGlDGwzTiHTL?=
+ =?us-ascii?Q?VK9cG1uALJJKFSlHschIPH1ihkWYkNGvTYR7DTau+KQfO1JKkfvXzVC+acl2?=
+ =?us-ascii?Q?JRJML5IbcrNpZKYhjvcthGBh1NidpUNM1THjIfHnjDDQnmmAAalaBbVdNnvJ?=
+ =?us-ascii?Q?qvxP7IV5RALLbePMC4gsQtdICqf9rg2B?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?C4JxTaYf2oPuloyAw+3731JzPeLbGDDHtau0bBVG8uE0YKDCsUJq6k5uxSWG?=
+ =?us-ascii?Q?4WVJ1pM9K2HnBeCFmz2XTzi4FAL7G06XVjPvUO3rp4ysTwlrNCJPCQnuLqN8?=
+ =?us-ascii?Q?46Z8nWikOYUJ3nNj2k9RtiAJxbsv890tYo78lAuqZFtEDAQsreMSITCK1Yih?=
+ =?us-ascii?Q?h2jXKqUMDBu+F5iRt4aPq7OW1Odh97zvb7E3hN4Fzx6TYpuojBa6mr2V+Egn?=
+ =?us-ascii?Q?9NYTDXUCmUStqhqX/ypiEtIzCXnAlCkJjlLz1B27n3AL9CXbNd10S6iYvGO8?=
+ =?us-ascii?Q?ljJ0mO5TW8hqS0OmTrkiE4ycqdNyvYE7qJDEb9lAIyzjcnkrC/yNi7P4aVAo?=
+ =?us-ascii?Q?RQ4QLZUcZ9K09IIgIlLrFJWNttsPzjqaDHv3B7NHCq1L9PPf+mGVFDKJzBIS?=
+ =?us-ascii?Q?FjbWmqV857XNeuKEF5NBAOkuDMsceGF4Cwo9a5JI1g7HxS3///vXBPsgm8Hu?=
+ =?us-ascii?Q?Y+NaT+34ruOba72EORMJsg2wsTJDaqe2tTExOdx7Y3wEB3zG+CLrxAQDeA+1?=
+ =?us-ascii?Q?OV/hH7LMkHGmFIZDXLerIT6fTJdQXKJkoQRBHOIRUtNnbcJ5/Wt2S3lIVHFl?=
+ =?us-ascii?Q?g87w4M7lTRxRDZU/ItBnDhmxWmPwlZBNaTzATJI09C+jeW0CvMLmJEH79eV9?=
+ =?us-ascii?Q?4dH7wng1p6NSOfi6fKEpCz6CdPMt/S0IK+jzKn7fT63iYpBMnGttU4U1bQaT?=
+ =?us-ascii?Q?SyEOG25u7mbc0ay2XCh3KVROZEc6GzReYcw3ff3JPZk4xJan30WIwWlbPkbI?=
+ =?us-ascii?Q?jeVv6eddPGAy0RFqx9gwdhZMUidFpfhygM7WGHfb7rqFLwaMRnrKaPOGgin+?=
+ =?us-ascii?Q?M34VoQrAi5jcD0xVcyZB3Hzrq2IwOMnjoF0K83ZZFm/90QjcIHmc8udU/m2D?=
+ =?us-ascii?Q?z5p3YbYoX7RLpjHfe2yCoQ1T7znRXQk9sp8Oh0ZthNlFFob6kQhrg51Fy76L?=
+ =?us-ascii?Q?IC2TB8An2SwQ8oLGw6Tucx8sH1lqZFoaCbYinOd7wBs865ncYY8uO4oaaikL?=
+ =?us-ascii?Q?0V0CAahinXyhLp49sDeQv8BwPCsIbZzlYCe3J9iWjzDFaR1y6d4eZUbleARN?=
+ =?us-ascii?Q?eanuTC4HCHFYF4g9j0S7Z6OSpycvjmk1jK+wI/9oS9AXS0BJTurMG6l7H8rw?=
+ =?us-ascii?Q?jqckoCfzHH46OLeLfjfKLER7oYUCu99WAHC9sxU4t8x4uBOW4Ugctq19N11r?=
+ =?us-ascii?Q?mdF9SOVYdtYZuilGBMAEDogczEfAtZUoK5QJcRi6IBBQRgd2Etpy7z0pynB2?=
+ =?us-ascii?Q?Wdse0be1YT/db7qe/c2uII6Ii8Kjlj/P4yN6WDmITdQ4RKnSxff3Krk/c93o?=
+ =?us-ascii?Q?fHDpgnLbtkB5thd43EJ4PocZkK5dnc4Y+S3OZtBPs9gjekFtCWeDoh7ibokJ?=
+ =?us-ascii?Q?2K3mnm7aNpG+KZEdH5utGzGfGI5yh1cvBpe7n1pXNqQve3hPV3XAdHmNyjS4?=
+ =?us-ascii?Q?rGdJ9iIpWqdanWDq7lZp91s9UUPLrnSczbAMr0bbqLKIqpJc/2Qq2HOwOUTu?=
+ =?us-ascii?Q?f/GriV0ueXIvnCmYDGls+eaipdLNviA7O+QrfDmsM3EXPvN+Xy98XYqUgD0N?=
+ =?us-ascii?Q?HRI7V2wLOC1phXdTjeFjn0jZH2C+BUch+weID5nW?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jhvf3n4fnzsnj7opxooqblmpnuhvqhcg366y47p5u44dg4tm3i@snmc3msdcoiv>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0ae5159-ab6f-4c65-dfad-08dd5dad06fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2025 19:19:48.4268
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +rJxi+WrqmN2IEw/ACrpJtybDIIcjKoxr9MGi6d1Y3F6RWrActtEd7JCH1jkIVbFmgfmH4hDJyA9XNl3cZZdDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10918
 
-On 2025-03-07 15:52, Jan Kara wrote:
-> On Thu 06-03-25 20:12:23, Richard Guy Briggs wrote:
-> > On 2025-03-06 16:06, Jan Kara wrote:
-> > > On Wed 05-03-25 16:33:19, Richard Guy Briggs wrote:
-> > > > When no audit rules are in place, fanotify event results are
-> > > > unconditionally dropped due to an explicit check for the existence of
-> > > > any audit rules.  Given this is a report from another security
-> > > > sub-system, allow it to be recorded regardless of the existence of any
-> > > > audit rules.
-> > > > 
-> > > > To test, install and run the fapolicyd daemon with default config.  Then
-> > > > as an unprivileged user, create and run a very simple binary that should
-> > > > be denied.  Then check for an event with
-> > > > 	ausearch -m FANOTIFY -ts recent
-> > > > 
-> > > > Link: https://issues.redhat.com/browse/RHEL-1367
-> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > 
-> > > I don't know enough about security modules to tell whether this is what
-> > > admins want or not so that's up to you but:
-> > > 
-> > > > -static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
-> > > > -{
-> > > > -	if (!audit_dummy_context())
-> > > > -		__audit_fanotify(response, friar);
-> > > > -}
-> > > > -
-> > > 
-> > > I think this is going to break compilation with !CONFIG_AUDITSYSCALL &&
-> > > CONFIG_FANOTIFY?
-> > 
-> > Why would that break it?  The part of the patch you (prematurely)
-> > deleted takes care of that.
-> 
-> So I'm failing to see how it takes care of that when with
-> !CONFIG_AUDITSYSCALL kernel/auditsc.c does not get compiled into the kernel.
-> So what does provide the implementation of audit_fanotify() in that case?
-> I think you need to provide empty audit_fanotify() inline wrapper for that
-> case...
 
-I'm sorry, I responded too quickly without thinking about your question,
-my mistake.  It isn't the prototype that was changed in the
-CONFIG_SYSCALL case that is relevant in that case.
 
-There was already in existance in the !CONFIG_AUDITSYSCALL case the
-inline wrapper to do that job:
+> -----Original Message-----
+> From: Sherry Sun <sherry.sun@nxp.com>
+> Sent: Thursday, March 6, 2025 8:20 PM
+> To: gregkh@linuxfoundation.org; jirislaby@kernel.org
+> Cc: linux-serial@vger.kernel.org; linux-kernel@vger.kernel.org;
+> imx@lists.linux.dev; Shenwei Wang <shenwei.wang@nxp.com>
+> Subject: [PATCH] tty: serial: fsl_lpuart: disable transmitter before chan=
+ging RS485
+> related registers
+>=20
+> According to the LPUART reference manual, TXRTSE and TXRTSPOL of MODIR
+> register only can be changed when the transmitter is disabled.
+> So disable the transmitter before changing RS485 related registers and re=
+-enable
+> it after the change is done.
+>=20
+> Fixes: 67b01837861c ("tty: serial: lpuart: Add RS485 support for 32-bit u=
+art
+> flavour")
+> Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> ---
+>  drivers/tty/serial/fsl_lpuart.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpu=
+art.c index
+> 91d02c55c470..4dc2f3e2b8e0 100644
+> --- a/drivers/tty/serial/fsl_lpuart.c
+> +++ b/drivers/tty/serial/fsl_lpuart.c
+> @@ -1484,6 +1484,16 @@ static int lpuart32_config_rs485(struct uart_port
+> *port, struct ktermios *termio
+>=20
+>  	unsigned long modem =3D lpuart32_read(&sport->port, UARTMODIR)
+>  				& ~(UARTMODIR_TXRTSPOL |
+> UARTMODIR_TXRTSE);
+> +	u32 ctrl;
+> +
+> +	/* TXRTSE and TXRTSPOL only can be changed when transmitter is
+> disabled. */
+> +	ctrl =3D lpuart32_read(&sport->port, UARTCTRL);
+> +	if (ctrl & UARTCTRL_TE) {
+> +		/* wait transmit engin complete */
+> +		lpuart32_wait_bit_set(&sport->port, UARTSTAT, UARTSTAT_TC);
+> +		lpuart32_write(&sport->port, ctrl & ~UARTCTRL_TE,
+> UARTCTRL);
 
-	static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
-	{ }
+Since there may be a delay between writing to the register and the UARTCTRL=
+_TE bit actually=20
+changing to 0, we should poll the UARTCTRL register and verify that UARTCTR=
+L_TE has really=20
+become 0 before proceeding. Otherwise, subsequent operations would still ex=
+ecute while the
+UARTCTRL_TE bit remains in the status of 1, which is not the intention of t=
+his patch.
 
-Did I understand correctly this time and does this answer your question?
+Thanks,
+Shenwei
 
-But you do cause me to notice the case that these notifications will be
-dropped when CONFIG_AUDIT && !CONFIG_AUDITSYSCALL.
-
-Thanks for persisting.
-
-> 								Honza
-> 
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 0050ef288ab3..d0c6f23503a1 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -418,7 +418,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
-> >  extern void __audit_mmap_fd(int fd, int flags);
-> >  extern void __audit_openat2_how(struct open_how *how);
-> >  extern void __audit_log_kern_module(char *name);
-> > -extern void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
-> > +extern void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
-> >  extern void __audit_tk_injoffset(struct timespec64 offset);
-> >  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
-> >  extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-> > 
-> > > -- 
-> > > Jan Kara <jack@suse.com>
-> > > SUSE Labs, CR
-> > 
-> > - RGB
-> > 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-Upstream IRC: SunRaycer
-Voice: +1.613.860 2354 SMS: +1.613.518.6570
+> +	}
+> +
+>  	lpuart32_write(&sport->port, modem, UARTMODIR);
+>=20
+>  	if (rs485->flags & SER_RS485_ENABLED) { @@ -1503,6 +1513,10 @@
+> static int lpuart32_config_rs485(struct uart_port *port, struct ktermios =
+*termio
+>  	}
+>=20
+>  	lpuart32_write(&sport->port, modem, UARTMODIR);
+> +
+> +	if (ctrl & UARTCTRL_TE)
+> +		lpuart32_write(&sport->port, ctrl, UARTCTRL);
+> +
+>  	return 0;
+>  }
+>=20
+> --
+> 2.34.1
 
