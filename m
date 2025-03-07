@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B70664C6;
-	Fri,  7 Mar 2025 17:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBCB23E35E;
+	Fri,  7 Mar 2025 17:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741367447; cv=none; b=Juc5OHzmMk/GkZbqLk/BPPuXQ2U/U4Qu6jhtKCGQcGDHJJkKZxXHNHSqR3kH/pQ/zZMbnAFq9MO+t2dO8MJy6uriyvJuc6TupWooz9Fi3WaZ5bfFDigp5tvcSq0GfaQU0sO6exJ/fAWtYfX+gCuXdEtnlgf9Ra/AuesmiQL/XTc=
+	t=1741367559; cv=none; b=UojIrcykq8cJDx7GUwHkAmVUwQTNlbNXkXDY7oE/SbbeHEjHOJTEwqRJjxZ+ln0FddWKNmAUj5OcdpgiDFlhjS6jbaM14TapXHWAR4Hw4PpL48ra+MYwT3eGmhCJBe/A37atpQnBeeWJXuDWP77jTKwIa4M3ltnbEsTmUN21+vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741367447; c=relaxed/simple;
-	bh=UtUjan0RBifzMrQyhjYYw/jNSvvuZGdyk0P9I9WQxxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OMtUEkQ0m7tCBvmK/q8pxK3rZywJ74XWELcSjBKScp1D9jC1tLmXZJPEU7gu1uxDpH0kT5wwTZHOyGf8YY3h2FzHFtQSCXsKPZWrp9T8htFv/Vc75Ubc1nPYmHAwLnsveu+CD7UfOg0+feFgGz2sDDjU+4X6zWYuhaYJQ4mTtTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmrN/363; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741367559; c=relaxed/simple;
+	bh=vc9W2PPHFjBogq36NXiLeq1XT509RZs91JP+ttvuR4w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=B6Z6AB7rcApmxuct4Awp1fnhBr4XcT49ieYV40kOfmcRd59kTWaOftZOLVdUTYHsBEik/ZEy7q1+pGhF6CtzSMJVBj13WB2zO9dd95N+NsyifBclRcUHi9iM8fzuxkxooFcCxPV8qKgIEZp2lgp5y30IPG0VP/yqS/PPyZSSEqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsGws+3d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmrN/363"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03858C4CED1;
-	Fri,  7 Mar 2025 17:10:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsGws+3d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664A5C4CEE2;
+	Fri,  7 Mar 2025 17:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741367447;
-	bh=UtUjan0RBifzMrQyhjYYw/jNSvvuZGdyk0P9I9WQxxw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lmrN/363ujfmOxvtujwFBeoer1iOLthL+joB6VqC3ZIbLJCZaCurL3ldEmo7+nCCI
-	 N6hToW3FUCrEtkFIv/+8Y/xktLXr+gCOZoWRMTNM1Lkv3UaACNILH6fAyCjJMaZfKe
-	 NzUsHWivVACoBBuiw3i/gFPcX1IMhrF1/b29IXLyfcGhYkBr/Xrre7w0cROOHX8+DC
-	 eXW1+SAn/Ox5nI5Hv4BYH6HqgNSgx9kFka8G9LcXvk3CAuQBKNEIPrD82ruj/RKJbN
-	 64lIuhNV+6MrCMx02nVsuqYMiwlPnQtuK29TGu7SP+vSj3GGfk3JiLLs0JYOxEzHoD
-	 9pdtYyvQ6G+cw==
+	s=k20201202; t=1741367558;
+	bh=vc9W2PPHFjBogq36NXiLeq1XT509RZs91JP+ttvuR4w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RsGws+3dUeKVCxWLoesHt/hNW/SKXzLlFoBnGpBfUQ3LCNLravsv6YL3iRQIO9RcV
+	 NCby+tUnIwTMEzqhg9PMo5ZAVLs4VXF5e4icLPg9/PXdp/C29vnfszpSfOYQW3Hmeu
+	 qnuLrS3vcjxqCemY1ypVEj+UsSQgH5YdmS5xyjW5QwinffwFPwQuVnLBNQKjL7bKUL
+	 4vlzqY6qx8vbTZlK/UXzedktZDAAQCdgWin7OKGtrqMIrfaXDH50gn6fyf+JvU2ZmN
+	 1PeDiRWAWGw+ErWXDZgpjacf0kgd2NZPfJdPfSrOTaMSIQGoCVmg7tGuN2pP63gbLC
+	 xKf3ZsLP44t+Q==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1tqbDh-000000001te-2RhM;
-	Fri, 07 Mar 2025 18:10:45 +0100
+	id 1tqbFV-000000001x7-14qc;
+	Fri, 07 Mar 2025 18:12:37 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konradybcio@kernel.org>
@@ -39,10 +40,12 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] arm64: dts: qcom: sc8280xp-crd: add support for volume-up key
-Date: Fri,  7 Mar 2025 18:10:36 +0100
-Message-ID: <20250307171036.7276-1-johan+linaro@kernel.org>
+Subject: [PATCH 1/2] arm64: dts: qcom: x1e80100-crd: add support for volume-up key
+Date: Fri,  7 Mar 2025 18:12:21 +0100
+Message-ID: <20250307171222.7470-2-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.45.3
+In-Reply-To: <20250307171222.7470-1-johan+linaro@kernel.org>
+References: <20250307171222.7470-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,49 +61,48 @@ can also be used to wake up from deep suspend states (CX shutdown).
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sc8280xp-crd.dts | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm64/boot/dts/qcom/x1-crd.dtsi | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
-index 75adaa19d1c3..8badf7f49b95 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
-@@ -37,6 +37,20 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/arch/arm64/boot/dts/qcom/x1-crd.dtsi b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+index 296b41409ad1..0b62fdc85478 100644
+--- a/arch/arm64/boot/dts/qcom/x1-crd.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+@@ -52,9 +52,16 @@ chosen {
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
  
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&kypd_vol_up_n>;
-+		pinctrl-names = "default";
-+
+-		pinctrl-0 = <&hall_int_n_default>;
++		pinctrl-0 = <&hall_int_n_default>, <&kypd_vol_up_n>;
+ 		pinctrl-names = "default";
+ 
 +		key-vol-up {
 +			label = "volume_up";
-+			gpios = <&pmc8280_1_gpios 6 GPIO_ACTIVE_LOW>;
++			gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_VOLUMEUP>;
 +			wakeup-source;
 +		};
-+	};
 +
- 	pmic-glink {
- 		compatible = "qcom,sc8280xp-pmic-glink", "qcom,pmic-glink";
+ 		switch-lid {
+ 			gpios = <&tlmm 92 GPIO_ACTIVE_LOW>;
+ 			linux,input-type = <EV_SW>;
+@@ -876,6 +883,16 @@ &pcie6a_phy {
+ 	status = "okay";
+ };
  
-@@ -885,6 +899,14 @@ edp_bl_reg_en: edp-bl-reg-en-state {
- 		function = "normal";
- 	};
- 
++&pm8550_gpios {
 +	kypd_vol_up_n: kypd-vol-up-n-state {
 +		pins = "gpio6";
 +		function = "normal";
-+		power-source = <0>; /* 3.3 V */
++		power-source = <1>; /* 1.8 V */
 +		bias-pull-up;
 +		input-enable;
 +	};
++};
 +
+ &pm8550ve_8_gpios {
  	misc_3p3_reg_en: misc-3p3-reg-en-state {
- 		pins = "gpio2";
- 		function = "normal";
+ 		pins = "gpio6";
 -- 
 2.45.3
 
