@@ -1,96 +1,134 @@
-Received: from out-16.pe-a.jellyfish.systems (out-16.pe-a.jellyfish.systems [198.54.127.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB471218591;
-	Fri,  7 Mar 2025 15:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A8F21CA1F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741359796; cv=none; b=jj+6a8Xenq1S+5emIsNu5bjBSeSndoML5GQVC/w5+NVmRxrFWrsljW0SNxJzzcohCqK9VYcaBh0NIn1Oyaxsmn8LWhxhK/rQFZmMul4G/TL0P7q7WDYbvGCRYGW/AJvFYKo8qybysvUY26IQdRYa16b5QV4ekm7oqLHtlAvlhDI=
+	t=1741359803; cv=none; b=XiQYda2RpQJX+c1TDjOoxzcQnud5uW4pNnaP+WxyfKukELbVCuMken67iGJFj7ncULqBpwzbzX2ZR4whdDPbMcfD2l5wAISFMY5UtXQbUgPiwiiZpEc5v6hCTY5+xhpyNI0DDtRH0Px6mG0uwUCB33FF4lQSlkSYEb93N8zt870=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741359796; c=relaxed/simple;
-	bh=mVTw6WI2Lz7Orwo/Jz6R+IAedXd3s0R/r2B5TMDZmsc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pRgxft5vnwAe1vcKzloNu9zwKP5LoZV+fX7O0VbRm7a0bBbsFOumj03cbKb5iEc4Xaxp5+3y8kDl8z9azvk0drOJOvvAhtNaRAGCialvgvr8ocJsf583TJUDWrwnf58KAYc1CikqK0wygygth6cbDHBqUY1j1c1D4YY7HB0fk98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=TrwCnQTF; arc=none smtp.client-ip=198.54.127.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
+	s=arc-20240116; t=1741359803; c=relaxed/simple;
+	bh=ClXgnNB8s9sls8sH6ohCBtkUa60dce5RsindDE59v7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rTqw5Yo/NqcP+RnzAjUyNgkOyZWyA4GzD5oT/O2KPpe01RBtKYzdbyvh6/4vhLfryVcwiG6CsB5yFA7PHP3iskF5JMXeNLK3KkmnYGxYf/NIX3GxCXpV9dKceCiXbiM1SWdqSJ8jiy3UitqWGznS0bNK4e72G430ptzuAcsE0y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lIB2qU9h; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="TrwCnQTF"
-Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
-	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4Z8V0K3BKWz4xR2;
-	Fri, 07 Mar 2025 15:03:13 +0000 (UTC)
-Received: from MTA-09.privateemail.com (unknown [10.50.14.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4Z8V0K2N2Gz2Sd0Q;
-	Fri,  7 Mar 2025 10:03:13 -0500 (EST)
-Received: from mta-09.privateemail.com (localhost [127.0.0.1])
-	by mta-09.privateemail.com (Postfix) with ESMTP id 4Z8V0K10rzz3hhSR;
-	Fri,  7 Mar 2025 10:03:13 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
-	s=default; t=1741359793;
-	bh=mVTw6WI2Lz7Orwo/Jz6R+IAedXd3s0R/r2B5TMDZmsc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TrwCnQTFiL7D0U+lJ0Vhy1YpKtEXOb13pVYepFqhuLRtmnWt9pgmbR6nP65WX7x4d
-	 XDCCbl8+0vTLOIggrAIaDom0KlHiAO/XI66ySn+OQIbkIPYKgIRKxC3NorZ7k2T9EK
-	 U0t87qSQiHaVQbR05OpSQQWFX3+xOGdEvX37Ug9/zdB4kxOa2dFOdtKp3FkVRxJ437
-	 eZ1OaEFgZfCm0w6ZkYr+JM0t6XvgExRK/GbBnfTTAiBPsxXczpcrt9b3BpqxfjQCLj
-	 B/lT2nVDae4I/9zTNwv46ufkpHHQS1Wvm/PkEtjevXE7QEJp6ED0W/stvfp1VZw39Q
-	 mwsdIAxJTDMDQ==
-Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
-	by mta-09.privateemail.com (Postfix) with ESMTPA;
-	Fri,  7 Mar 2025 10:02:58 -0500 (EST)
-From: Sam Winchenbach <sam.winchenbach@framepointer.org>
-To: linux-kernel@vger.kernel.org
-Cc: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	antoniu.miclaus@analog.com,
-	jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sam.winchenbach@framepointer.org,
-	bpellegrino@arka.org
-Subject: [PATCH v6 3/6] iio: filter: admv8818: fix integer overflow
-Date: Fri,  7 Mar 2025 10:02:13 -0500
-Message-ID: <20250307150216.374643-3-sam.winchenbach@framepointer.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
-References: <20250307150216.374643-1-sam.winchenbach@framepointer.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lIB2qU9h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741359802; x=1772895802;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ClXgnNB8s9sls8sH6ohCBtkUa60dce5RsindDE59v7Q=;
+  b=lIB2qU9hi0mzDNtzHsYEoyKjI1gnfxJb0JzMvfPCBycGR5LKfk6dD9Ls
+   1eXqUB0F8CjRsQ9Z3uZTrzRFPy0kH5dL+A2iKk32emwzTXxVPO0FSa6ZR
+   x37jmao/lPar7zhhnO7Sg+mwZDTNis6nmq9auQx4uh+18ZjeODl6kHqZF
+   pTHGHGy8wP4zAls2MAymLRbcBERKAmIoKhjc+87w/JMbtMadSfhxiBJHk
+   kmLVbE7edaOKZp3f1ZnqYnUHWiuVi6FjWS0X12B8Zp2b9Bw1d6csYSLby
+   noFWIsIUkfakKdQGOwE67dS8VMgMPOX7myK83n0or8qIHpPO7Q1rLHeUr
+   A==;
+X-CSE-ConnectionGUID: ATEzcQy0Su6KJwPCGaIEuA==
+X-CSE-MsgGUID: 1BUzcIMXTdO/IhgvKyuGlw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42550745"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="42550745"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 07:03:21 -0800
+X-CSE-ConnectionGUID: rjKDA3kTSi+mH+unG99b2g==
+X-CSE-MsgGUID: 7tikOMWGQUSsecx5fuhUkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="124436070"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.132]) ([10.125.110.132])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 07:03:20 -0800
+Message-ID: <0ade78e7-7a3c-459d-bf1c-f0bb1f24baee@intel.com>
+Date: Fri, 7 Mar 2025 07:03:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 07/12] tools/x86/kcpuid: Add rudimentary CPU vendor
+ detection
+To: "Ahmed S. Darwish" <darwi@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, John Ogness <john.ogness@linutronix.de>,
+ x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+References: <20250306205000.227399-1-darwi@linutronix.de>
+ <20250306205000.227399-8-darwi@linutronix.de>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250306205000.227399-8-darwi@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-HZ_PER_MHZ is only unsigned long. This math overflows, leading to
-incorrect results.
+On 3/6/25 12:49, Ahmed S. Darwish wrote:
+> The kcpuid CSV file will soon be updated with CPUID indices that are only
+> valid for certain CPU vendors, such as Centaur or Transmeta.  Thus,
+> introduce rudimentary x86 vendor detection to kcpuid.
 
-Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
-Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
----
- drivers/iio/filter/admv8818.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Do we really need the vendor detection? For example, look at the end of
+cpuid(1)'s output:
 
-diff --git a/drivers/iio/filter/admv8818.c b/drivers/iio/filter/admv8818.c
-index 8f563a426232..a059282e0251 100644
---- a/drivers/iio/filter/admv8818.c
-+++ b/drivers/iio/filter/admv8818.c
-@@ -154,7 +154,7 @@ static int __admv8818_hpf_select(struct admv8818_state *st, u64 freq)
- 	}
- 
- 	/* Close HPF frequency gap between 12 and 12.5 GHz */
--	if (freq >= 12000 * HZ_PER_MHZ && freq <= 12500 * HZ_PER_MHZ) {
-+	if (freq >= 12000ULL * HZ_PER_MHZ && freq < 12500ULL * HZ_PER_MHZ) {
- 		hpf_band = 3;
- 		hpf_step = 15;
- 	}
--- 
-2.48.1
+   # cpuid -1 --raw
+   ...
+   0x20000000 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000
+edx=0x00000000
+   ...
+   0x80860000 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000
+edx=0x00000000
+   0xc0000000 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000
+edx=0x00000000
 
+It seems to just blindly poke at all of the CPUID regions. There are
+only a handful of these and there's no hard in poking at them other
+than an extra couple of executions of CPUID.
