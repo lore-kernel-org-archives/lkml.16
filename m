@@ -1,146 +1,120 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2C421CA07;
-	Fri,  7 Mar 2025 14:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9208B218EB5;
+	Fri,  7 Mar 2025 14:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741359300; cv=none; b=HTonoD0PMFWf4d7Ur4gZJ3rd3oAb78te6zHD++L/ajEk3yrqHz1JoDC8SzN2FtiHT4FOHykO3Pe0IbSjxQOdTcRnXUKMfLWFW9kOV4cgcRhgv8TWSn6wdjEM2iroQnAPwuJVb6ocSOeOV5UBckuaRXa78w7pxhaT0c9+bWFS78M=
+	t=1741359354; cv=none; b=F10udnrBjWHiE3C6ldW94CUgRcrB0KeKH2zc2bXWIuLwc8XIYyXHdbx1LjUgxR0cmX8acEsBVMa2791NwzosYxZm+oKhtJ+bJhh+EgtjllDn8AGAePYJSwoBtadw2xtLZ8bAgpmG2DgnMDQodRnx5XUX7V6EIQFck4rdcGlDU40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741359300; c=relaxed/simple;
-	bh=emI6dUJHMJ0LxiJUFZ7W0ZLAipq+MHer73PkUg6sWQg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sevQ8ZKLmYNuD9wSlOPgtPuMDFBZxU0xd966mwG2eXRgOZZDd68hfiIWVS9EUT+wDAJXlsC3F+ELHY1BTMQi/7g/YbO/OBmlpkr96QF6svr6eb4RX4i1uqeixlBEl8xM9LyxNoL6H5e/X6S9YjyWXlO8QRUxQPJ5xBcbQp5D4ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PCLTywck; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741359354; c=relaxed/simple;
+	bh=AEII/3Bp+DkFC+pqH8Z8yWTg7GV3BlvLVlnjNJo4RXo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U0YEaMUodFlSscR+iE1rMCvEcepV+baRRq3DOyvCTHz5W4T5xc27jqzhnqh+90ZsdUlm2A7lB6mS6n8i/IFFpfJO3v9co4+AdgsoPM4dXDC9Sqa3fZN3JIOedtoXjzMUYFADagAwbdwzLdBMmUZ8s4JuUmg0w/o+A47y61k6byQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kzHvHABN; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PCLTywck"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 79FB044302;
-	Fri,  7 Mar 2025 14:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741359296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qlcuG6fkQ3ZcASdAzmH1VfD3piEH+PQQoeDSUro/5UA=;
-	b=PCLTywckrPS0OT6tatuRLWqNXfierryuyBVfYUiyO6zX6nO8LzcBnFF2kCDkB6JAJdobsb
-	riqgDOUp5qDwX8jh6M2BkReFlEGHLUT5BHzdlOdAAmNtS16Y7QDWGxDq4BId2bRjAMRUkQ
-	uCQbcQiUWonS05FNK6n/+rWZisJaOJ3AnB6UdZGcYs6e6xkL/4VA5UtRceO/sGqmW9Ur9A
-	VxYOFIeF8sSImTzbOA1C0IrHcDPAZxTnVvrfBVb6ctd848hWPKTG/sUJO78WeLfCUx7wXA
-	ntTORNPukCgpSAQsz+imgo98lKUxaAzsKdqHesT0aEKIj+Yg+i3VXnzkL4wuLQ==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Fri, 07 Mar 2025 15:54:49 +0100
-Subject: [PATCH 3/3] drm/panel: simple: add Tianma P0700WXF1MBAA panel
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kzHvHABN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741359353; x=1772895353;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AEII/3Bp+DkFC+pqH8Z8yWTg7GV3BlvLVlnjNJo4RXo=;
+  b=kzHvHABN/70Oe0jwKEdnGwoMyt9OngwwvOUG2vEX5OKN6HU62S4DCVOo
+   o9wqbyvnErfabttled9kZTjmrSaUVixcfuO68OnItULNo5IMFCOsPsQT/
+   DW8qG5zeyMXDRowmJP5IDqvp6GR+NOXk/N1iMPConm9zP4Fy9bPV7LX0t
+   7SqaNVcPk8FFrRX1iU9QzpV7+CTK25Y16f7QynoA7PCoaTtpqNO4APl3Y
+   RIq35rcX+u9Rbhxe26WvhW0Gx5PrEDpTvJWy7swmV/brQepc3EFuYi2Lp
+   VJ+1g1qrnelJwLhoDIZFcO4LtHEg1KWBcQXC7d5y9qpzk5iYX/DU6d+tx
+   Q==;
+X-CSE-ConnectionGUID: MvDXmG+ISJqqBaKLLTcolg==
+X-CSE-MsgGUID: IQCxl5elSn6p11dWzddgTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="29988003"
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="29988003"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 06:55:42 -0800
+X-CSE-ConnectionGUID: vMMgbUSXTeuJEuzSjYs+mQ==
+X-CSE-MsgGUID: IT2fDP4DQoaZ6LFNJzrgDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
+   d="scan'208";a="119842543"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.132]) ([10.125.110.132])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 06:55:41 -0800
+Message-ID: <2cf9798f-1a89-46e1-b1a4-7deec9cb7e40@intel.com>
+Date: Fri, 7 Mar 2025 06:56:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/microcode/AMD: Fix out-of-bounds on systems with
+ CPU-less NUMA nodes
+To: Florent Revest <revest@chromium.org>, bp@alien8.de,
+ linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, stable@vger.kernel.org
+References: <20250307131243.2703699-1-revest@chromium.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250307131243.2703699-1-revest@chromium.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250307-tianma-p0700wxf1mbaa-v1-3-1c31039a3790@bootlin.com>
-References: <20250307-tianma-p0700wxf1mbaa-v1-0-1c31039a3790@bootlin.com>
-In-Reply-To: <20250307-tianma-p0700wxf1mbaa-v1-0-1c31039a3790@bootlin.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- "Pu, Hui" <Hui.Pu@gehealthcare.com>, dri-devel@lists.freedesktop.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduuddtleehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhivghrrhihrdhrvgguihhnghesghhmrghilhdrtghomhdprhgtphhtt
- hhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Add the Tianma P0700WXF1MBAA 7" 1280x800 LVDS RGB TFT LCD panel.
+On 3/7/25 05:12, Florent Revest wrote:
+>  	for_each_node(nid) {
+> -		cpu = cpumask_first(cpumask_of_node(nid));
+> +		mask = cpumask_of_node(nid);
+> +		if (cpumask_empty(mask))
+> +			continue;
+> +
+> +		cpu = cpumask_first(mask);
 
-Reuse the timings of the TM070JDHG34-00 as they are identical, even though
-they are described differently by the datasheet as noted in the
-comment. Power up/down timing are slightly different, so add a new struct
-panel_desc for that.
-
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 33 +++++++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 9ca88ae83224e306734386dc4ce2d7ef5f6c84f2..4c260abea55200ba8d5dcd8b848e2848d3faeccb 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -4335,10 +4335,10 @@ static const struct panel_desc tianma_tm070jvhg33 = {
- };
- 
- /*
-- * The datasheet computes total blanking as back porch + front porch, not
-- * including sync pulse width. This is for both H and V. To make the total
-- * blanking and period correct, subtract the pulse width from the front
-- * porch.
-+ * The TM070JDHG34-00 datasheet computes total blanking as back porch +
-+ * front porch, not including sync pulse width. This is for both H and
-+ * V. To make the total blanking and period correct, subtract the pulse
-+ * width from the front porch.
-  *
-  * This works well for the Min and Typ values, but for Max values the sync
-  * pulse width is higher than back porch + front porch, so work around that
-@@ -4347,6 +4347,10 @@ static const struct panel_desc tianma_tm070jvhg33 = {
-  *
-  * Exact datasheet values are added as a comment where they differ from the
-  * ones implemented for the above reason.
-+ *
-+ * The P0700WXF1MBAA datasheet is even less detailed, only listing period
-+ * and total blanking time, however the resulting values are the same as
-+ * the TM070JDHG34-00.
-  */
- static const struct display_timing tianma_tm070jdhg34_00_timing = {
- 	.pixelclock = { 68400000, 71900000, 78100000 },
-@@ -4379,6 +4383,24 @@ static const struct panel_desc tianma_tm070jdhg34_00 = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
-+static const struct panel_desc tianma_p0700wxf1mbaa = {
-+	.timings = &tianma_tm070jdhg34_00_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 150, /* 149.76 */
-+		.height = 94, /* 93.60 */
-+	},
-+	.delay = {
-+		.prepare = 18,		/* Tr + Tp1 */
-+		.enable = 152,		/* Tp2 + Tp5 */
-+		.disable = 152,		/* Tp6 + Tp4 */
-+		.unprepare = 120,	/* Tp3 */
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct display_timing tianma_tm070rvhg71_timing = {
- 	.pixelclock = { 27700000, 29200000, 39600000 },
- 	.hactive = { 800, 800, 800 },
-@@ -5155,6 +5177,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "tfc,s9700rtwv43tr-01b",
- 		.data = &tfc_s9700rtwv43tr_01b,
-+	}, {
-+		.compatible = "tianma,p0700wxf1mbaa",
-+		.data = &tianma_p0700wxf1mbaa,
- 	}, {
- 		.compatible = "tianma,tm070jdhg30",
- 		.data = &tianma_tm070jdhg30,
-
--- 
-2.48.1
-
+Would for_each_node_with_cpus() trim this down a bit?
