@@ -1,58 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9E3226D0A;
-	Fri,  7 Mar 2025 16:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D132226D0F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 16:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741363765; cv=none; b=BrLMil1evTv41FfXfy2y0db1AHqexI62zYSvvWO6SuKNIpJkSkOgDJlCyK6jKyTYjKMzJiNf6pZURIQKwoE8dF46mPSw4dtEV3FLwBW+o47NJrfQueo92L99Sg8sudtk2+S5AWQ8BC2JDDu6ZbrPIpG9qIeE1CioiUgJ4+0Imk8=
+	t=1741363772; cv=none; b=Qefs8hZr8AZRAzvtrdeJG5RvXwqDEhlQphJKrjCRp8FtmNs8aX3tSK3ET2BqiMkp8uhS7KfCyOm1JgTClDEqmkq2YtSN+s+IQBTOxLJ7uAn8wFc6koQpQP8y551wtQcSBxzObxAolALAdVyPGbEwYNtgV0srPKn0fZPbF9eo+T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741363765; c=relaxed/simple;
-	bh=OjzgZIrF4I2Usopqifbp/MqmZF5LZWDEmj7w8BfGAOY=;
+	s=arc-20240116; t=1741363772; c=relaxed/simple;
+	bh=a5KFd6sTkQu+/wDgqrPbXGnZ8YsyJMvOLaM7Xl6i9kg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFUGx/uolgfKyTRwlw2Ljr4Y0UcceQVZni+q/vaAuL9HQTQzWlnKEbdJQHRaMA6y4DFslhYScbPH4Zyy9CNDlSj8eC7PzfCmvoOP/Q788/B8IbqxQf0eHtDDMDsbJxdA8+J6aiRBVxOHBMY1bWjq0YW0BKP3hfP36CpC6OieQWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRixdy6/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRixdy6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A03B6C4CED1;
-	Fri,  7 Mar 2025 16:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741363764;
-	bh=OjzgZIrF4I2Usopqifbp/MqmZF5LZWDEmj7w8BfGAOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CRixdy6/AE5PCxS5J+Ug/OE91n6wpvg3310s9xJb3CIlggDDaMfzy2YA0LLJ+wzMK
-	 KFGtabUqbxPWftAGlrA6QpxjyQWW+ahk8AhjFm0mqplp2aYjzcSOHeSWdGqvdtsjWa
-	 5ZO98/8DZC/a1MawaJ8lzVSvRTbr29iqgiQkGjo0VFQnTY/BpXNb8qpVx5QGEER8Pt
-	 yG8lbMSBb1aU8bOym3nEioEKNrn15zHWOWI3z4OOjRi77OdaB2YFDkZQadiKpc7+cS
-	 LbuzBZ+yjaDP12RjnaSRks4/IMqlBUTruFV5YbHfWu6XnsIkh8gMVS+90lt0FOdFpu
-	 bZ0RF+V5CGFGw==
-Date: Fri, 7 Mar 2025 17:09:17 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>, aliceryhl@google.com,
-	robin.murphy@arm.com, daniel.almeida@collabora.com,
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v12 2/3] rust: add dma coherent allocator abstraction.
-Message-ID: <Z8saLZAylcVp89n_@cassiopeiae>
-References: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
- <20250224115007.2072043-3-abdiel.janulgue@gmail.com>
- <20250305174118.GA351188@nvidia.com>
- <Z8mlAxsszdOH-ow8@cassiopeiae>
- <Z8m9j3SwWHqaCTXo@phenom.ffwll.local>
- <20250306160907.GF354511@nvidia.com>
- <Z8qzP3CR8Quhp87Z@pollux>
- <20250307124809.GL354511@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dk8dxaI7SFqBOD53QnBfR6o/2iw4oRlV1VDkhpNpSliThG1bTYHAz1qeQVB63uOy5jnHeZXBQHhUEwbkGozCIhJu7q/Z1a98cAwkMNTVJxyVYEhL09fclrC6IG7jdmpjqfMS/OVoTi7a2BcZZfLfBivolwDbSNbCtWsAvBl5VCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0495C1477;
+	Fri,  7 Mar 2025 08:09:43 -0800 (PST)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 962E43F673;
+	Fri,  7 Mar 2025 08:09:28 -0800 (PST)
+Date: Fri, 7 Mar 2025 16:09:23 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com
+Subject: Re: [PATCH] arm64/mm: Define PTE_SHIFT
+Message-ID: <Z8saM94ixmDNjZzV@J2N7QTR9R3.cambridge.arm.com>
+References: <20250307050851.4034393-1-anshuman.khandual@arm.com>
+ <17931f83-7142-4ca6-8bfe-466ec53b6e2c@arm.com>
+ <c3dddb6f-dce1-45a6-b5f1-1fd247c510ab@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,58 +44,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250307124809.GL354511@nvidia.com>
+In-Reply-To: <c3dddb6f-dce1-45a6-b5f1-1fd247c510ab@arm.com>
 
-On Fri, Mar 07, 2025 at 08:48:09AM -0400, Jason Gunthorpe wrote:
-> On Fri, Mar 07, 2025 at 09:50:07AM +0100, Danilo Krummrich wrote:
-> > > The actual critical region extends into the HW itself, it is not
-> > > simple to model this with a pure SW construct of bracketing some
-> > > allocation. You need to bracket the *entire lifecycle* of the
-> > > dma_addr_t that has been returned and passed into HW, until the
-> > > dma_addr_t is removed from HW.
+On Fri, Mar 07, 2025 at 02:50:56PM +0530, Anshuman Khandual wrote:
+> On 3/7/25 14:37, Ryan Roberts wrote:
+> > On 07/03/2025 05:08, Anshuman Khandual wrote:
+
+> >>  #define EARLY_LEVEL(lvl, lvls, vstart, vend, add)	\
+> >> -	(lvls > lvl ? EARLY_ENTRIES(vstart, vend, SWAPPER_BLOCK_SHIFT + lvl * (PAGE_SHIFT - 3), add) : 0)
+> >> +	(lvls > lvl ? EARLY_ENTRIES(vstart, vend, SWAPPER_BLOCK_SHIFT + \
+> >> +	lvl * (PAGE_SHIFT - PTE_SHIFT), add) : 0)
 > > 
-> > Devres callbacks run after remove(). It's the drivers job to stop operating the
-> > device latest in remove(). Which means that the design is correct.
+> > nit: not sure what style guide says, but I would indent this continuation an
+> > extra level.
 > 
-> It could be the drivers job to unmap the dma as well if you take that
-> logic.
+> IIUC - An indentation is not normally required with a line continuation although
+> the starting letter should match the starting letter in the line above but after
+> the '(' (if any).
 
-I really don't understand what you want: *You* brought up that the
-CoherentAllocation is not allowed to out-live driver unbind.
+Regardless of indenttation, the existing code is fairly hard to read,
+and I reckon it'd be better to split up, e.g.
 
-We agreed and provided a way that solves this. But then you point out the
-unsolvable problem of malicious (or wrongly programmed) hardware and use it to
-question why we then even bother solving the problem you just pointed out, that
-is solvable.
+| /* Number of VA bits resolved by a single translation table level */
+| #define PTDESC_TABLE_SHIFT	(PAGE_SHIFT - PTDESC_ORDER)
+| 
+| #define __EARLY_LEVEL(lvl, vstart, vend, add) \
+| 	EARLY_ENTRIES(vstart, vend, SWAPPER_BLOCK_SHIFT + lvl * PTDESC_TABLE_SHIFT, add)
+| 
+| #define EARLY_LEVEL(lvl, lvls, vstart, vend, add) \
+| 	((lvls) > (lvl) ? __EARLY_LEVEL(lvl, vstart, vend, add) : 0)
 
-So, what do you ask for?
+... and ignoring the use of _SHIFT vs _ORDER, I think that structure is
+far more legible.
 
-> You still didn't answer the question, what is the critical region of
-> the DevRes for a dma_alloc_coherent() actually going to protect?
+With that, we can fold EARLY_ENTRIES() and __EARLY_LEVEL() together and
+move the 'add' into EARLY_LEVEL(), e.g.
 
-Devres, just like in C, ensures that an object can't out-live driver unbind. The
-RCU read side critical section is to revoke access to the then invalid pointer
-of the object.
+| /* Number of VA bits resolved by a single translation table level */
+| #define PTDESC_TABLE_SHIFT	(PAGE_SHIFT - PTDESC_ORDER)
+| 
+| #define EARLY_ENTRIES(lvl, vstart, vend) \
+| 	(SPAN_NR_ENTRIES(vstart, vend, SWAPPER_BLOCK_SHIFT + lvl * PTDESC_TABLE_SHIFT))
+| 
+| #define EARLY_LEVEL(lvl, lvls, vstart, vend, add) \
+| 	((lvls) > (lvl) ? EARLY_ENTRIES(lvl, vstart, vend) + (add) : 0)
 
-C leaves you with an invalid pointer, whereas Rust revokes the access to the
-invalid pointer for safety reasons. The pointer is never written to, except for
-on driver unbind, hence RCU.
+... which I think makes the 'add' a bit easier to understand too.
 
-We discussed all this in other threads already.
-
-> 
-> You also have to urgently fix the synchronize_rcu() repitition of you
-> plan to do this.
-
-I mentioned this a few days ago, and I did not forget it. :-)
-
-> 
-> > Now, you ask for a step further, i.e. make it that we can enforce that a driver
-> > actually stopped the device in remove().
-> 
-> So where do you draw the line on bugs Rust should prevent and bugs
-> Rust requires the programmer to fix?
-
-It should prevent all safety related bug, but the one above is impossible to
-solve, so we have to live with it. But that doesn't mean it's a justification to
-stop preventing bugs we can actually prevent? Do you disagree?
+Mark.
