@@ -1,48 +1,48 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97439197552;
-	Fri,  7 Mar 2025 03:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456781A314E;
+	Fri,  7 Mar 2025 03:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741318371; cv=none; b=tfACWbp/Nk5GcpY16fI16Szh6Ku4Va3gC9Ehz1uLaHS6YbD//K81k7ghqUs1tATo5DEgsQ2OL7yomCsb2MEyrFRvFMl3XLnRAbyDK/iaYeZrziwOTY+NRf4uMvKvvnv2vuxeP06IZIvfyawWr50GW3Le0xUKm5Z3x0hRFXaSzG4=
+	t=1741318376; cv=none; b=ndnaC1j7etVxB/KJxDv8CZnQMWIlR+S/AG9X2uIT4H5WMs4hVovA5r8FXN5Xqqd0nQmfjrKFZ4B7urkl0lGdCEn9dXvpbqpKkOUahXOzsnmA/8XTuoUZj/+UXCzwD4G6wBKtHP2VSDacA5nATY1Kb6hDVXPwyjudHrQd+JxaTGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741318371; c=relaxed/simple;
-	bh=/aKHOGJ6lQeJr+mrhBPbs3Y/KuWWLYoVkFa5QWu4US0=;
+	s=arc-20240116; t=1741318376; c=relaxed/simple;
+	bh=SByWSHzwv9B8UWYOvvm+zxpb8nPYZiHcT3PKoMx8PUI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JLpkJRYfbW5eRifMhZeOpo4BM8mDPFOawZ+XFsUihjfbduWii7yaq8QlUqyE0ebAnYGpwVm7zDMjr09A3/7xcPpQHkuvbx1SlQc9WSsIMjtjL3Kuub8OVU0eOlwGTKCBGzpdhfgXfdFPXRNKkQ6mAkmTAg+0nsNNUbmOVjtt5Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=enU4Ob++; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=h1arFHS9LaEPhYjVYKJP9jLnogfVdlnXH3Fpflb+yGsZ2OL/uAZFUGYuoc0UiYjlvckB5jQdFTdbuAnlTt4hsOundhuLtUKlmJRKSC22twAqSS0ofAbSpkDdEMDrwJQrxKWgJ2YqypJHRMq/jA+jc5KE9BENxu8h+Zm7bMhee90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=j5R6lLIo; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="enU4Ob++"
-X-UUID: d3dbf942fb0411efaae1fd9735fae912-20250307
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="j5R6lLIo"
+X-UUID: d63840b0fb0411ef8eb9c36241bbb6fb-20250307
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=lke6nTx8Kn+xmKD6dSCYG3ajKAm3MT4NJU3X/4qY93E=;
-	b=enU4Ob++gu/SsJJf/zNC+/NGCMjyA5kJhAjyWlYMFNyv3RFt2gSNGoGJeRcn6eDLkoqoQDpXEAwavfD6y0Hy3fPIjGcefQHPsQNkQRXQucvpg7Bmf+s0P/jS3NxN+P369B7f5Ud2v+c4P/os4y4Sjf0Xb8X6xm8mWmm8ozC4stc=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=jMCt0E0Coh53qsaI+t68S2AOrh2oPxT/rPCegbhSZec=;
+	b=j5R6lLIog6vTVOUvG/uOusMu3/WwZ5kOnuowkH7EOTin1AViMlt+sKVZiodg+ALYs3mzZme87m0XK9A9VNKfpFlrvEH8rG/sAQ/YoVK1YOPvobSWaF/6iKWpNYneMk3UE4EmoRUWqfYlYPU1yX8ND7oZXuYqi5W1V170jKdhj3I=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:242f5bba-149b-40fd-895a-5ff009f84d87,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:d427cc49-a527-43d8-8af6-bc8b32d9f5e9,B
+X-CID-O-INFO: VERSION:1.2.1,REQID:03119e2d-2833-4ef7-8216-9c33991ae313,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:2fe307c6-16da-468a-87f7-8ca8d6b3b9f7,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
 	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
 	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: d3dbf942fb0411efaae1fd9735fae912-20250307
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+X-UUID: d63840b0fb0411ef8eb9c36241bbb6fb-20250307
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
 	(envelope-from <guangjie.song@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1227379568; Fri, 07 Mar 2025 11:32:42 +0800
+	with ESMTP id 422085566; Fri, 07 Mar 2025 11:32:46 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ MTKMBS14N2.mediatek.inc (172.21.101.76) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 7 Mar 2025 11:32:41 +0800
+ 15.2.1258.28; Fri, 7 Mar 2025 11:32:44 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Fri, 7 Mar 2025 11:32:40 +0800
+ 15.2.1258.28 via Frontend Transport; Fri, 7 Mar 2025 11:32:44 +0800
 From: Guangjie Song <guangjie.song@mediatek.com>
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
 	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
@@ -55,9 +55,9 @@ CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-mediatek@lists.infradead.org>, <netdev@vger.kernel.org>, Guangjie Song
 	<guangjie.song@mediatek.com>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH 08/26] clk: mediatek: Add MT8196 apmixedsys_gp2 clock support
-Date: Fri, 7 Mar 2025 11:27:04 +0800
-Message-ID: <20250307032942.10447-9-guangjie.song@mediatek.com>
+Subject: [PATCH 12/26] clk: mediatek: Add MT8196 peripheral clock support
+Date: Fri, 7 Mar 2025 11:27:08 +0800
+Message-ID: <20250307032942.10447-13-guangjie.song@mediatek.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250307032942.10447-1-guangjie.song@mediatek.com>
 References: <20250307032942.10447-1-guangjie.song@mediatek.com>
@@ -70,188 +70,253 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add MT8196 apmixedsys_gp2 clock controller which provides pll generated
-from SoC 26m
+Add MT8196 peripheral clock controller which provides clock gate control
+for dma/flashif/msdc/pwm/spi/uart.
 
 Signed-off-by: Guangjie Song <guangjie.song@mediatek.com>
 ---
- drivers/clk/mediatek/Makefile                 |   2 +-
- .../clk/mediatek/clk-mt8196-apmixedsys_gp2.c  | 154 ++++++++++++++++++
- 2 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/mediatek/clk-mt8196-apmixedsys_gp2.c
+ drivers/clk/mediatek/Makefile             |   3 +-
+ drivers/clk/mediatek/clk-mt8196-peri_ao.c | 218 ++++++++++++++++++++++
+ 2 files changed, 220 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-peri_ao.c
 
 diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-index 6144fdce3f9a..247bad396cfb 100644
+index 583e5b9a7d40..c95e45356b78 100644
 --- a/drivers/clk/mediatek/Makefile
 +++ b/drivers/clk/mediatek/Makefile
-@@ -150,7 +150,7 @@ obj-$(CONFIG_COMMON_CLK_MT8195_VDOSYS) += clk-mt8195-vdo0.o clk-mt8195-vdo1.o
- obj-$(CONFIG_COMMON_CLK_MT8195_VENCSYS) += clk-mt8195-venc.o
+@@ -151,7 +151,8 @@ obj-$(CONFIG_COMMON_CLK_MT8195_VENCSYS) += clk-mt8195-venc.o
  obj-$(CONFIG_COMMON_CLK_MT8195_VPPSYS) += clk-mt8195-vpp0.o clk-mt8195-vpp1.o
  obj-$(CONFIG_COMMON_CLK_MT8195_WPESYS) += clk-mt8195-wpe.o
--obj-$(CONFIG_COMMON_CLK_MT8196) += clk-mt8196-apmixedsys.o
-+obj-$(CONFIG_COMMON_CLK_MT8196) += clk-mt8196-apmixedsys.o clk-mt8196-apmixedsys_gp2.o
+ obj-$(CONFIG_COMMON_CLK_MT8196) += clk-mt8196-apmixedsys.o clk-mt8196-apmixedsys_gp2.o \
+-				   clk-mt8196-topckgen.o clk-mt8196-topckgen2.o clk-mt8196-vlpckgen.o
++				   clk-mt8196-topckgen.o clk-mt8196-topckgen2.o clk-mt8196-vlpckgen.o \
++				   clk-mt8196-peri_ao.o
  obj-$(CONFIG_COMMON_CLK_MT8365) += clk-mt8365-apmixedsys.o clk-mt8365.o
  obj-$(CONFIG_COMMON_CLK_MT8365_APU) += clk-mt8365-apu.o
  obj-$(CONFIG_COMMON_CLK_MT8365_CAM) += clk-mt8365-cam.o
-diff --git a/drivers/clk/mediatek/clk-mt8196-apmixedsys_gp2.c b/drivers/clk/mediatek/clk-mt8196-apmixedsys_gp2.c
+diff --git a/drivers/clk/mediatek/clk-mt8196-peri_ao.c b/drivers/clk/mediatek/clk-mt8196-peri_ao.c
 new file mode 100644
-index 000000000000..dc895d103bfe
+index 000000000000..775d77159641
 --- /dev/null
-+++ b/drivers/clk/mediatek/clk-mt8196-apmixedsys_gp2.c
-@@ -0,0 +1,154 @@
++++ b/drivers/clk/mediatek/clk-mt8196-peri_ao.c
+@@ -0,0 +1,218 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (c) 2025 MediaTek Inc.
 + * Author: Guangjie Song <guangjie.song@mediatek.com>
 + */
 +#include <dt-bindings/clock/mt8196-clk.h>
-+#include <linux/clk.h>
++#include <linux/clk-provider.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
 +#include <linux/of_device.h>
 +#include <linux/platform_device.h>
 +
++#include "clk-gate.h"
 +#include "clk-mtk.h"
-+#include "clk-pll.h"
 +
-+/* PLL REG */
-+#define MAINPLL2_CON0	0x250
-+#define MAINPLL2_CON1	0x254
-+#define MAINPLL2_CON2	0x258
-+#define MAINPLL2_CON3	0x25c
-+#define UNIVPLL2_CON0	0x264
-+#define UNIVPLL2_CON1	0x268
-+#define UNIVPLL2_CON2	0x26c
-+#define UNIVPLL2_CON3	0x270
-+#define MMPLL2_CON0	0x278
-+#define MMPLL2_CON1	0x27c
-+#define MMPLL2_CON2	0x280
-+#define MMPLL2_CON3	0x284
-+#define IMGPLL_CON0	0x28c
-+#define IMGPLL_CON1	0x290
-+#define IMGPLL_CON2	0x294
-+#define IMGPLL_CON3	0x298
-+#define TVDPLL1_CON0	0x2a0
-+#define TVDPLL1_CON1	0x2a4
-+#define TVDPLL1_CON2	0x2a8
-+#define TVDPLL1_CON3	0x2ac
-+#define TVDPLL2_CON0	0x2b4
-+#define TVDPLL2_CON1	0x2b8
-+#define TVDPLL2_CON2	0x2bc
-+#define TVDPLL2_CON3	0x2c0
-+#define TVDPLL3_CON0	0x2c8
-+#define TVDPLL3_CON1	0x2cc
-+#define TVDPLL3_CON2	0x2d0
-+#define TVDPLL3_CON3	0x2d4
-+
-+#define MT8196_PLL_FMAX		(3800UL * MHZ)
-+#define MT8196_PLL_FMIN		(1500UL * MHZ)
-+#define MT8196_INTEGER_BITS	8
-+
-+#define PLL_FENC(_id, _name, _reg, _fenc_sta_ofs, _fenc_sta_bit,\
-+		 _flags, _pd_reg, _pd_shift,			\
-+		 _pcw_reg, _pcw_shift, _pcwbits) {		\
-+		.id = _id,					\
-+		.name = _name,					\
-+		.reg = _reg,					\
-+		.fenc_sta_ofs = _fenc_sta_ofs,			\
-+		.fenc_sta_bit = _fenc_sta_bit,			\
-+		.flags = (_flags) | CLK_FENC_ENABLE,		\
-+		.fmax = MT8196_PLL_FMAX,			\
-+		.fmin = MT8196_PLL_FMIN,			\
-+		.pd_reg = _pd_reg,				\
-+		.pd_shift = _pd_shift,				\
-+		.pcw_reg = _pcw_reg,				\
-+		.pcw_shift = _pcw_shift,			\
-+		.pcwbits = _pcwbits,				\
-+		.pcwibits = MT8196_INTEGER_BITS,		\
-+	}
-+
-+static const struct mtk_pll_data apmixed2_plls[] = {
-+	PLL_FENC(CLK_APMIXED2_MAINPLL2, "mainpll2", MAINPLL2_CON0,
-+		 0x03c, 6, 0,
-+		 MAINPLL2_CON1, 24,
-+		 MAINPLL2_CON1, 0, 22),
-+	PLL_FENC(CLK_APMIXED2_UNIVPLL2, "univpll2", UNIVPLL2_CON0,
-+		 0x03c, 5, 0,
-+		 UNIVPLL2_CON1, 24,
-+		 UNIVPLL2_CON1, 0, 22),
-+	PLL_FENC(CLK_APMIXED2_MMPLL2, "mmpll2", MMPLL2_CON0,
-+		 0x03c, 4, 0,
-+		 MMPLL2_CON1, 24,
-+		 MMPLL2_CON1, 0, 22),
-+	PLL_FENC(CLK_APMIXED2_IMGPLL, "imgpll", IMGPLL_CON0,
-+		 0x03c, 3, 0,
-+		 IMGPLL_CON1, 24,
-+		 IMGPLL_CON1, 0, 22),
-+	PLL_FENC(CLK_APMIXED2_TVDPLL1, "tvdpll1", TVDPLL1_CON0,
-+		 0x03c, 2, 0,
-+		 TVDPLL1_CON1, 24,
-+		 TVDPLL1_CON1, 0, 22),
-+	PLL_FENC(CLK_APMIXED2_TVDPLL2, "tvdpll2", TVDPLL2_CON0,
-+		 0x03c, 1, 0,
-+		 TVDPLL2_CON1, 24,
-+		 TVDPLL2_CON1, 0, 22),
-+	PLL_FENC(CLK_APMIXED2_TVDPLL3, "tvdpll3", TVDPLL3_CON0,
-+		 0x03c, 0, 0,
-+		 TVDPLL3_CON1, 24,
-+		 TVDPLL3_CON1, 0, 22),
++static const struct mtk_gate_regs perao0_cg_regs = {
++	.set_ofs = 0x24,
++	.clr_ofs = 0x28,
++	.sta_ofs = 0x10,
 +};
 +
-+static int clk_mt8196_apmixed2_probe(struct platform_device *pdev)
-+{
-+	struct clk_hw_onecell_data *clk_data;
-+	struct device_node *node = pdev->dev.of_node;
-+	int num_plls = ARRAY_SIZE(apmixed2_plls);
-+	int r;
++static const struct mtk_gate_regs perao1_cg_regs = {
++	.set_ofs = 0x2c,
++	.clr_ofs = 0x30,
++	.sta_ofs = 0x14,
++};
 +
-+	clk_data = mtk_alloc_clk_data(num_plls);
-+	if (!clk_data)
-+		return -ENOMEM;
++static const struct mtk_gate_regs perao1_vote_regs = {
++	.set_ofs = 0x0008,
++	.clr_ofs = 0x000c,
++	.sta_ofs = 0x2c04,
++};
 +
-+	r = mtk_clk_register_plls(node, apmixed2_plls, num_plls, clk_data);
-+	if (r) {
-+		mtk_free_clk_data(clk_data);
-+		return r;
++static const struct mtk_gate_regs perao2_cg_regs = {
++	.set_ofs = 0x34,
++	.clr_ofs = 0x38,
++	.sta_ofs = 0x18,
++};
++
++#define GATE_PERAO0(_id, _name, _parent, _shift) {	\
++		.id = _id,				\
++		.name = _name,				\
++		.parent_name = _parent,			\
++		.regs = &perao0_cg_regs,		\
++		.shift = _shift,			\
++		.flags = CLK_OPS_PARENT_ENABLE,		\
++		.ops = &mtk_clk_gate_ops_setclr,	\
 +	}
 +
-+	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
-+	if (r) {
-+		mtk_clk_unregister_plls(apmixed2_plls, num_plls, clk_data);
-+		mtk_free_clk_data(clk_data);
-+		return r;
++#define GATE_PERAO0_V(_id, _name, _parent) {	\
++		.id = _id,			\
++		.name = _name,			\
++		.parent_name = _parent,		\
++		.regs = &cg_regs_dummy,		\
++		.ops = &mtk_clk_dummy_ops,	\
 +	}
 +
-+	return 0;
-+}
++#define GATE_PERAO1(_id, _name, _parent, _shift) {	\
++		.id = _id,				\
++		.name = _name,				\
++		.parent_name = _parent,			\
++		.regs = &perao1_cg_regs,		\
++		.shift = _shift,			\
++		.flags = CLK_OPS_PARENT_ENABLE,		\
++		.ops = &mtk_clk_gate_ops_setclr,	\
++	}
 +
-+static void clk_mt8196_apmixed2_remove(struct platform_device *pdev)
-+{
-+	struct clk_hw_onecell_data *clk_data = platform_get_drvdata(pdev);
-+	struct device_node *node = pdev->dev.of_node;
++#define GATE_PERAO1_V(_id, _name, _parent) {	\
++		.id = _id,			\
++		.name = _name,			\
++		.parent_name = _parent,		\
++		.regs = &cg_regs_dummy,		\
++		.ops = &mtk_clk_dummy_ops,	\
++	}
 +
-+	of_clk_del_provider(node);
-+	mtk_clk_unregister_plls(apmixed2_plls, ARRAY_SIZE(apmixed2_plls), clk_data);
-+	mtk_free_clk_data(clk_data);
-+}
++#define GATE_VOTE_PERAO1(_id, _name, _parent, _shift) {	\
++		.id = _id,				\
++		.name = _name,				\
++		.parent_name = _parent,			\
++		.vote_comp = "vote-regmap",		\
++		.regs = &perao1_cg_regs,		\
++		.vote_regs = &perao1_vote_regs,		\
++		.shift = _shift,			\
++		.ops = &mtk_clk_gate_ops_vote,		\
++		.dma_ops = &mtk_clk_gate_ops_setclr,	\
++		.flags = CLK_USE_VOTE |			\
++			 CLK_OPS_PARENT_ENABLE,		\
++	}
 +
-+static const struct of_device_id of_match_clk_mt8196_apmixed2[] = {
-+	{ .compatible = "mediatek,mt8196-apmixedsys_gp2", },
++#define GATE_PERAO2(_id, _name, _parent, _shift) {	\
++		.id = _id,				\
++		.name = _name,				\
++		.parent_name = _parent,			\
++		.regs = &perao2_cg_regs,		\
++		.shift = _shift,			\
++		.flags = CLK_OPS_PARENT_ENABLE,		\
++		.ops = &mtk_clk_gate_ops_setclr,	\
++	}
++
++#define GATE_PERAO2_V(_id, _name, _parent) {	\
++		.id = _id,			\
++		.name = _name,			\
++		.parent_name = _parent,		\
++		.regs = &cg_regs_dummy,		\
++		.ops = &mtk_clk_dummy_ops,	\
++	}
++
++static const struct mtk_gate perao_clks[] = {
++	/* PERAO0 */
++	GATE_PERAO0(CLK_PERAO_UART0_BCLK, "perao_uart0_bclk", "ck_uart_ck", 0),
++	GATE_PERAO0_V(CLK_PERAO_UART0_BCLK_UART, "perao_uart0_bclk_uart", "perao_uart0_bclk"),
++	GATE_PERAO0(CLK_PERAO_UART1_BCLK, "perao_uart1_bclk", "ck_uart_ck", 1),
++	GATE_PERAO0_V(CLK_PERAO_UART1_BCLK_UART, "perao_uart1_bclk_uart", "perao_uart1_bclk"),
++	GATE_PERAO0(CLK_PERAO_UART2_BCLK, "perao_uart2_bclk", "ck_uart_ck", 2),
++	GATE_PERAO0_V(CLK_PERAO_UART2_BCLK_UART, "perao_uart2_bclk_uart", "perao_uart2_bclk"),
++	GATE_PERAO0(CLK_PERAO_UART3_BCLK, "perao_uart3_bclk", "ck_uart_ck", 3),
++	GATE_PERAO0_V(CLK_PERAO_UART3_BCLK_UART, "perao_uart3_bclk_uart", "perao_uart3_bclk"),
++	GATE_PERAO0(CLK_PERAO_UART4_BCLK, "perao_uart4_bclk", "ck_uart_ck", 4),
++	GATE_PERAO0_V(CLK_PERAO_UART4_BCLK_UART, "perao_uart4_bclk_uart", "perao_uart4_bclk"),
++	GATE_PERAO0(CLK_PERAO_UART5_BCLK, "perao_uart5_bclk", "ck_uart_ck", 5),
++	GATE_PERAO0_V(CLK_PERAO_UART5_BCLK_UART, "perao_uart5_bclk_uart", "perao_uart5_bclk"),
++	GATE_PERAO0(CLK_PERAO_PWM_X16W_HCLK, "perao_pwm_x16w", "ck_p_axi_ck", 12),
++	GATE_PERAO0_V(CLK_PERAO_PWM_X16W_HCLK_PWM, "perao_pwm_x16w_pwm", "perao_pwm_x16w"),
++	GATE_PERAO0(CLK_PERAO_PWM_X16W_BCLK, "perao_pwm_x16w_bclk", "ck_pwm_ck", 13),
++	GATE_PERAO0_V(CLK_PERAO_PWM_X16W_BCLK_PWM, "perao_pwm_x16w_bclk_pwm",
++		      "perao_pwm_x16w_bclk"),
++	GATE_PERAO0(CLK_PERAO_PWM_PWM_BCLK0, "perao_pwm_pwm_bclk0", "ck_pwm_ck", 14),
++	GATE_PERAO0_V(CLK_PERAO_PWM_PWM_BCLK0_PWM, "perao_pwm_pwm_bclk0_pwm",
++		      "perao_pwm_pwm_bclk0"),
++	GATE_PERAO0(CLK_PERAO_PWM_PWM_BCLK1, "perao_pwm_pwm_bclk1", "ck_pwm_ck", 15),
++	GATE_PERAO0_V(CLK_PERAO_PWM_PWM_BCLK1_PWM, "perao_pwm_pwm_bclk1_pwm",
++		      "perao_pwm_pwm_bclk1"),
++	GATE_PERAO0(CLK_PERAO_PWM_PWM_BCLK2, "perao_pwm_pwm_bclk2", "ck_pwm_ck", 16),
++	GATE_PERAO0_V(CLK_PERAO_PWM_PWM_BCLK2_PWM, "perao_pwm_pwm_bclk2_pwm",
++		      "perao_pwm_pwm_bclk2"),
++	GATE_PERAO0(CLK_PERAO_PWM_PWM_BCLK3, "perao_pwm_pwm_bclk3", "ck_pwm_ck", 17),
++	GATE_PERAO0_V(CLK_PERAO_PWM_PWM_BCLK3_PWM, "perao_pwm_pwm_bclk3_pwm",
++		      "perao_pwm_pwm_bclk3"),
++	/* PERAO1 */
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI0_BCLK, "perao_spi0_bclk", "ck_spi0_b_ck", 0),
++	GATE_PERAO1_V(CLK_PERAO_SPI0_BCLK_SPI, "perao_spi0_bclk_spi", "perao_spi0_bclk"),
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI1_BCLK, "perao_spi1_bclk", "ck_spi1_b_ck", 2),
++	GATE_PERAO1_V(CLK_PERAO_SPI1_BCLK_SPI, "perao_spi1_bclk_spi", "perao_spi1_bclk"),
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI2_BCLK, "perao_spi2_bclk", "ck_spi2_b_ck", 3),
++	GATE_PERAO1_V(CLK_PERAO_SPI2_BCLK_SPI, "perao_spi2_bclk_spi", "perao_spi2_bclk"),
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI3_BCLK, "perao_spi3_bclk", "ck_spi3_b_ck", 4),
++	GATE_PERAO1_V(CLK_PERAO_SPI3_BCLK_SPI, "perao_spi3_bclk_spi", "perao_spi3_bclk"),
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI4_BCLK, "perao_spi4_bclk", "ck_spi4_b_ck", 5),
++	GATE_PERAO1_V(CLK_PERAO_SPI4_BCLK_SPI, "perao_spi4_bclk_spi", "perao_spi4_bclk"),
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI5_BCLK, "perao_spi5_bclk", "ck_spi5_b_ck", 6),
++	GATE_PERAO1_V(CLK_PERAO_SPI5_BCLK_SPI, "perao_spi5_bclk_spi", "perao_spi5_bclk"),
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI6_BCLK, "perao_spi6_bclk", "ck_spi6_b_ck", 7),
++	GATE_PERAO1_V(CLK_PERAO_SPI6_BCLK_SPI, "perao_spi6_bclk_spi", "perao_spi6_bclk"),
++	GATE_VOTE_PERAO1(CLK_PERAO_SPI7_BCLK, "perao_spi7_bclk", "ck_spi7_b_ck", 8),
++	GATE_PERAO1_V(CLK_PERAO_SPI7_BCLK_SPI, "perao_spi7_bclk_spi", "perao_spi7_bclk"),
++	GATE_PERAO1(CLK_PERAO_FLASHIF_FLASH, "perao_flashif_flash", "ck_sflash_ck", 18),
++	GATE_PERAO1_V(CLK_PERAO_FLASHIF_FLASH_FLASHIF, "perao_flashif_flash_flashif",
++		      "perao_flashif_flash"),
++	GATE_PERAO1(CLK_PERAO_FLASHIF_27M, "perao_flashif_27m", "ck_sflash_ck", 19),
++	GATE_PERAO1_V(CLK_PERAO_FLASHIF_27M_FLASHIF, "perao_flashif_27m_flashif",
++		      "perao_flashif_27m"),
++	GATE_PERAO1(CLK_PERAO_FLASHIF_DRAM, "perao_flashif_dram", "ck_p_axi_ck", 20),
++	GATE_PERAO1_V(CLK_PERAO_FLASHIF_DRAM_FLASHIF, "perao_flashif_dram_flashif",
++		      "perao_flashif_dram"),
++	GATE_PERAO1(CLK_PERAO_FLASHIF_AXI, "perao_flashif_axi", "ck_p_axi_ck", 21),
++	GATE_PERAO1_V(CLK_PERAO_FLASHIF_AXI_FLASHIF, "perao_flashif_axi_flashif",
++		      "perao_flashif_axi"),
++	GATE_PERAO1(CLK_PERAO_FLASHIF_BCLK, "perao_flashif_bclk", "ck_p_axi_ck", 22),
++	GATE_PERAO1_V(CLK_PERAO_FLASHIF_BCLK_FLASHIF, "perao_flashif_bclk_flashif",
++		      "perao_flashif_bclk"),
++	GATE_PERAO1(CLK_PERAO_AP_DMA_X32W_BCLK, "perao_ap_dma_x32w_bclk", "ck_p_axi_ck", 26),
++	GATE_PERAO1_V(CLK_PERAO_AP_DMA_X32W_BCLK_UART, "perao_ap_dma_x32w_bclk_uart",
++		      "perao_ap_dma_x32w_bclk"),
++	GATE_PERAO1_V(CLK_PERAO_AP_DMA_X32W_BCLK_I2C, "perao_ap_dma_x32w_bclk_i2c",
++		      "perao_ap_dma_x32w_bclk"),
++	/* PERAO2 */
++	GATE_PERAO2(CLK_PERAO_MSDC1_MSDC_SRC, "perao_msdc1_msdc_src", "ck_msdc30_1_ck", 1),
++	GATE_PERAO2_V(CLK_PERAO_MSDC1_MSDC_SRC_MSDC1, "perao_msdc1_msdc_src_msdc1",
++		      "perao_msdc1_msdc_src"),
++	GATE_PERAO2(CLK_PERAO_MSDC1_HCLK, "perao_msdc1", "ck_msdc30_1_ck", 2),
++	GATE_PERAO2_V(CLK_PERAO_MSDC1_HCLK_MSDC1, "perao_msdc1_msdc1", "perao_msdc1"),
++	GATE_PERAO2(CLK_PERAO_MSDC1_AXI, "perao_msdc1_axi", "ck_p_axi_ck", 3),
++	GATE_PERAO2_V(CLK_PERAO_MSDC1_AXI_MSDC1, "perao_msdc1_axi_msdc1", "perao_msdc1_axi"),
++	GATE_PERAO2(CLK_PERAO_MSDC1_HCLK_WRAP, "perao_msdc1_h_wrap", "ck_p_axi_ck", 4),
++	GATE_PERAO2_V(CLK_PERAO_MSDC1_HCLK_WRAP_MSDC1, "perao_msdc1_h_wrap_msdc1",
++		      "perao_msdc1_h_wrap"),
++	GATE_PERAO2(CLK_PERAO_MSDC2_MSDC_SRC, "perao_msdc2_msdc_src", "ck_msdc30_2_ck", 10),
++	GATE_PERAO2_V(CLK_PERAO_MSDC2_MSDC_SRC_MSDC2, "perao_msdc2_msdc_src_msdc2",
++		      "perao_msdc2_msdc_src"),
++	GATE_PERAO2(CLK_PERAO_MSDC2_HCLK, "perao_msdc2", "ck_msdc30_2_ck", 11),
++	GATE_PERAO2_V(CLK_PERAO_MSDC2_HCLK_MSDC2, "perao_msdc2_msdc2", "perao_msdc2"),
++	GATE_PERAO2(CLK_PERAO_MSDC2_AXI, "perao_msdc2_axi", "ck_p_axi_ck", 12),
++	GATE_PERAO2_V(CLK_PERAO_MSDC2_AXI_MSDC2, "perao_msdc2_axi_msdc2", "perao_msdc2_axi"),
++	GATE_PERAO2(CLK_PERAO_MSDC2_HCLK_WRAP, "perao_msdc2_h_wrap", "ck_p_axi_ck", 13),
++	GATE_PERAO2_V(CLK_PERAO_MSDC2_HCLK_WRAP_MSDC2, "perao_msdc2_h_wrap_msdc2",
++		      "perao_msdc2_h_wrap"),
++};
++
++static const struct mtk_clk_desc perao_mcd = {
++	.clks = perao_clks,
++	.num_clks = ARRAY_SIZE(perao_clks),
++};
++
++static const struct of_device_id of_match_clk_mt8196_peri_ao[] = {
++	{ .compatible = "mediatek,mt8196-pericfg_ao", .data = &perao_mcd, },
 +	{ /* sentinel */ }
 +};
 +
-+static struct platform_driver clk_mt8196_apmixed2_drv = {
-+	.probe = clk_mt8196_apmixed2_probe,
-+	.remove = clk_mt8196_apmixed2_remove,
++static struct platform_driver clk_mt8196_peri_ao_drv = {
++	.probe = mtk_clk_simple_probe,
++	.remove = mtk_clk_simple_remove,
 +	.driver = {
-+		.name = "clk-mt8196-apmixed2",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_clk_mt8196_apmixed2,
++		.name = "clk-mt8196-peri_ao",
++		.of_match_table = of_match_clk_mt8196_peri_ao,
 +	},
 +};
 +
-+module_platform_driver(clk_mt8196_apmixed2_drv);
++module_platform_driver(clk_mt8196_peri_ao_drv);
 +MODULE_LICENSE("GPL");
 -- 
 2.45.2
