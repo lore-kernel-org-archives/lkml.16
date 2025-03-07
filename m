@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB6D664C6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC2623ED66;
 	Fri,  7 Mar 2025 17:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741367559; cv=none; b=WH6bvKkV4RurxVFHvRLuHa9AuWQBmhImM3kZk6utJUJX+iYLbFJX5qx3PyV4Y31BOAIkcATZTeS3KkRuq8fxoHpZyZzCEWIVdBVjRPE7vOg/QRom080vJBOFXqgcEDXZfoN7QUEsdz/gSNZJ/ouSSgg2mHg475nC/H4x2qudL8c=
+	t=1741367559; cv=none; b=CSjoHYWVeKPou1/gze6TWR0iKmH0J/pwNOR/MHHYH8smJ7Tt7ut3UA70UGcWVKOaokjdlDW3/qT82sAN35IyhjLHqPzWhgmf6mUwODRGtC+9aTg3oond48hjwt8E4qg9m4d153nsjcAgFlSyRJ71laCsOyCaZi/pn40B5ie2hAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741367559; c=relaxed/simple;
-	bh=DmeybIg5QflF8n4Ai8iwbkFB064CUFl8u7QrxQL9rNQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eVyPhRi4/izM3MG24GLkaRDy92IjOlz9y6at2AJDoOHKO2OKkD09dovRZtaJuDiHitec25Cwgy8M/rz9VWp/t4SZQGpSOQw9vBdTS1emJM7WVldB4XlAfJOft7yvaEpdeN94CHjTq9Htd7NC3r2fCU19xRLzRF/HBaygGS3HR90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKZlJV5C; arc=none smtp.client-ip=10.30.226.201
+	bh=Q/vvrj9UGLHleS9BpAr+5VVP4/OHqMSL80va3MFiSVQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SFfIZC9No6MgTcpSAj/jykluQu7gdzpKYnaLvTLIpGBhR6AQGGt3HVWsEsanwIvxT2r+DTVz21EV7TAoKNCXLs/T0W7KFfq1Rlihp0toeDbz3S2W2UaKChjeOT7Za8uRV2FYdq8f32UNMjIybry9ADBcRI9kwBmC9ZWaiwGWjrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXgbI2H6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKZlJV5C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63E0EC4CED1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXgbI2H6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FE4C4CEE8;
 	Fri,  7 Mar 2025 17:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741367558;
-	bh=DmeybIg5QflF8n4Ai8iwbkFB064CUFl8u7QrxQL9rNQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EKZlJV5C2lkL2hBtRVK6i/mh9nP/4FhB2j3c4BF/0ODDDaxWt8SURgWqDrBogScRi
-	 bqBsz2RLaoOTzLlYtnYn9gTfkhFcBezD5hEgWmmzsc9qUhRq66Kd9lXgouBhyV12MG
-	 O4jA4Tnv01R9Gzl22uNdj+DGBVX1hZpqRGA1nR5sKmrrWG/tZIHWEacy0kUNZ40Uq2
-	 I8y7gDqYAbxWG8FgO3qwIc4htN0Z1GiKzl4DqghccQSfoEwhUmZtNzfZ7jgfHI5GVw
-	 iqApcxsiHPCHr49nPgUDdKl7lm7og7c72LWJwj20Y7+HWTlZmkY/uRskLl7sQQKy7Z
-	 KCKLNuhMEzu3g==
+	bh=Q/vvrj9UGLHleS9BpAr+5VVP4/OHqMSL80va3MFiSVQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PXgbI2H66xdcgoB87/IfDMvXr1xwoNFTWtZOs7PGrADDbs1c3IWa7IjBzaPZE/zn3
+	 ipTSD+XCbtUCMzpaXBRQS5CneXfErZ5Xr+kpK8XWO5kQoDqLSHGVkWDU82EEtyQ+qb
+	 5gjbG7L7NFDZ7gC2c57XKXC3q8B5S8KCxj19h/YvGRNGMxfcQVDvzdHsB1PDyQjnOZ
+	 usObnpEBNk6YJV9tUKupke4EnRQSd/KWw8yFuA09Os80X0z3mdKDrurK2l9twEL3Fv
+	 +rYJdOWljfTEyMGo1FyV6Nqa3kKdNIRHAdiAtlhtJxZHGHGJBN/qrpjFMyEwpuiDo5
+	 abcM9acGYztmQ==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1tqbFV-000000001x5-0bJS;
+	id 1tqbFV-000000001x9-1Ovj;
 	Fri, 07 Mar 2025 18:12:37 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -39,10 +40,12 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 0/2] arm64: dts: qcom: x1e80100-crd: add support for volume-up key
-Date: Fri,  7 Mar 2025 18:12:20 +0100
-Message-ID: <20250307171222.7470-1-johan+linaro@kernel.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: x1e80100-crd: add gpio-keys label for lid switch
+Date: Fri,  7 Mar 2025 18:12:22 +0100
+Message-ID: <20250307171222.7470-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.45.3
+In-Reply-To: <20250307171222.7470-1-johan+linaro@kernel.org>
+References: <20250307171222.7470-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,19 +54,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for the volume-up key on the debug extension board, which
-can also be used as a wakeup source from deep idle states (CX shutdown).
+Add a gpio-keys label for the lid-switch for consistency and to separate
+it from the volume-up key (e.g. in /proc/interrupts).
 
-Johan
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/x1-crd.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Johan Hovold (2):
-  arm64: dts: qcom: x1e80100-crd: add support for volume-up key
-  arm64: dts: qcom: x1e80100-crd: add gpio-keys label for lid switch
-
- arch/arm64/boot/dts/qcom/x1-crd.dtsi | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/x1-crd.dtsi b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+index 0b62fdc85478..fc4ea6be5fd1 100644
+--- a/arch/arm64/boot/dts/qcom/x1-crd.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+@@ -63,6 +63,7 @@ key-vol-up {
+ 		};
+ 
+ 		switch-lid {
++			label = "lid";
+ 			gpios = <&tlmm 92 GPIO_ACTIVE_LOW>;
+ 			linux,input-type = <EV_SW>;
+ 			linux,code = <SW_LID>;
 -- 
 2.45.3
 
