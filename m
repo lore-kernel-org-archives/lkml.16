@@ -1,129 +1,108 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8667DA8C;
-	Fri,  7 Mar 2025 00:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28AB985270;
+	Fri,  7 Mar 2025 00:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741308931; cv=none; b=EWglIu1d5WSkqMwdOkJ5BBbnSnaDcej9uQrqPOeA+hUfZPmjyN5zg5kti2o0A7+BIrYzYLJvQhBathNPinjr3t39j3AXBTHsF/xw3LTSOtm5/LCepfk/2WV/SNBaB3somlIFKNYcJ9ypqxaTVE/PJNX+bQin2KV6dUzq2wMrmdI=
+	t=1741308961; cv=none; b=o7soto3WNJe3FxutdT17TJH9J4AIlXWYFpQPSfDQ6XafotqOGm9X+DHGJBTAJBxzm+YLt8Tki5Zf+8IyicMp3v/0Ng79KE8edey96vYq7AgIV3YC43kNiaz+4+dODmNtId1vtLx0gLUhkG+S+FOsESa7Nok4/0pIevSuP2NLHuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741308931; c=relaxed/simple;
-	bh=6pOZqV2b/3J7xu4+FN43a7eOKtiH1Q/axVqYxOckuUw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tu778N94HcyOzyw+GsKPt4GRLq0PR9j/DxeQlz4KRRn6otzl2PnMH3zfpu82+HzyRtculW6RTWmhmnhi1e7ZMV5pQZz8k1MvySxvFZH/D0BHqizbSOxSA7dbM7v5jmhr3QpfO7vhMBinBdAS2tb+27FA6w55N1CnD+dvquYorPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z875G5wYhz6L5DY;
-	Fri,  7 Mar 2025 08:51:14 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E089F140A08;
-	Fri,  7 Mar 2025 08:55:25 +0800 (CST)
-Received: from localhost (10.48.43.65) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Mar
- 2025 01:55:09 +0100
-Date: Fri, 7 Mar 2025 08:55:07 +0800
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <david@redhat.com>,
-	<Vilas.Sridharan@amd.com>, <linux-edac@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
-	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
-	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
-	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
-	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
-	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
-	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
-	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH 1/8] cxl: Add helper function to retrieve a feature
- entry
-Message-ID: <20250307085445.00005f5d@huawei.com>
-In-Reply-To: <20250227223816.2036-2-shiju.jose@huawei.com>
-References: <20250227223816.2036-1-shiju.jose@huawei.com>
-	<20250227223816.2036-2-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741308961; c=relaxed/simple;
+	bh=7pZqwwAprPyeaMEDZxlPD1LzwzVajGFbBevaf2ksr8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o85ncvqMcbEP2PcZHKEXNNBzuwv0FNiqfZSYDD344B3LmDFS94Qk5KReRQ+iCwhaO2I0pjsgksV2Q8DGKFyslUCZbGDofY2r7VR4EokpyEA5Y6UBdeIZgeV6A7kedFEG6SOVdoZqZjf/6m7Jt4hqa6bHuvW8M4eLuBw94oq42FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CD7F169E;
+	Thu,  6 Mar 2025 16:56:12 -0800 (PST)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19EB63F5A1;
+	Thu,  6 Mar 2025 16:55:57 -0800 (PST)
+Date: Fri, 7 Mar 2025 00:55:55 +0000
+From: Andre Przywara <andre.przywara@arm.com>
+To: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Samuel
+ Holland <samuel@sholland.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/15] arm64: dts: allwinner: Add Allwinner A523
+ .dtsi file
+Message-ID: <20250307005555.2c52199a@minigeek.lan>
+In-Reply-To: <2646028.Lt9SDvczpP@jernej-laptop>
+References: <20250304222309.29385-1-andre.przywara@arm.com>
+	<20250304222309.29385-9-andre.przywara@arm.com>
+	<2646028.Lt9SDvczpP@jernej-laptop>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 27 Feb 2025 22:38:08 +0000
-<shiju.jose@huawei.com> wrote:
+On Wed, 05 Mar 2025 19:46:20 +0100
+Jernej =C5=A0krabec <jernej.skrabec@gmail.com> wrote:
 
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Add helper function to retrieve a feature entry from the supported
-> features list, if supported.
-> 
+Hi,
 
-I think this came from within the core cxl features series
-but got pulled out due to lack of users until this set?
+> Dne torek, 4. marec 2025 ob 23:23:02 Srednjeevropski standardni =C4=8Das =
+je Andre Przywara napisal(a):
+> > The Allwinner A523, and its siblings A527 and T527, which share the same
+> > die, are a new family of SoCs introduced in 2023. They features eight
+> > Arm Cortex-A55 cores, and, among the other usual peripherals, a PCIe and
+> > USB 3.0 controller.
+> >=20
+> > Add the basic SoC devicetree .dtsi for the chip, describing the
+> > fundamental peripherals: the cores, GIC, timer, RTC, CCU and pinctrl.
+> > Also some other peripherals are fully compatible with previous IP, so
+> > add the USB and MMC nodes as well.
+> > The other peripherals will be added in the future, once we understand
+> > their compatibility and DT requirements.
+> >=20
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> >  .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 598 ++++++++++++++++++
+> >  1 file changed, 598 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> >=20
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm6=
+4/boot/dts/allwinner/sun55i-a523.dtsi
+> > new file mode 100644
+> > index 0000000000000..01e662bdf5521
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> > @@ -0,0 +1,598 @@
+> > +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+> > +// Copyright (C) 2023-2024 Arm Ltd.
+> > +
 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Either way it's a trivial and useful helper.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ ...
 
-> ---
->  drivers/cxl/core/core.h     |  2 ++
->  drivers/cxl/core/features.c | 20 ++++++++++++++++++++
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 3d3b00835446..6c83f6f18122 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -120,6 +120,8 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
->  int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port);
->  
->  #ifdef CONFIG_CXL_FEATURES
-> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
-> +					     const uuid_t *feat_uuid);
->  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		       enum cxl_get_feat_selection selection,
->  		       void *feat_out, size_t feat_out_size, u16 offset,
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 048ba4fc3538..c822fb4a8c33 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -203,6 +203,26 @@ int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_features, "CXL");
->  
-> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
-> +					     const uuid_t *feat_uuid)
-> +{
-> +	struct cxl_features_state *cxlfs = to_cxlfs(cxlds);
-> +	struct cxl_feat_entry *feat_entry;
-> +	int count;
-> +
-> +	/*
-> +	 * Retrieve the feature entry from the supported features list,
-> +	 * if the feature is supported.
-> +	 */
-> +	feat_entry = cxlfs->entries->ent;
-> +	for (count = 0; count < cxlfs->entries->num_features; count++, feat_entry++) {
-> +		if (uuid_equal(&feat_entry->uuid, feat_uuid))
-> +			return feat_entry;
-> +	}
-> +
-> +	return ERR_PTR(-ENOENT);
-> +}
-> +
->  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		       enum cxl_get_feat_selection selection,
->  		       void *feat_out, size_t feat_out_size, u16 offset,
+> > +
+> > +			mmc2_pins: mmc2-pins {
+> > +				pins =3D "PC1" ,"PC5", "PC6", "PC8", "PC9",
+> > +				       "PC10", "PC11", "PC13", "PC14", "PC15",
+> > +				       "PC16"; =20
+>=20
+> I guess PC0 should be also included, for HS400 capable cards.
+
+Sure, it doesn't conflict with much else (just NAND flash), so that's
+no problem.
+
+> With that fixed:
+> Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+
+Many thanks for that!
+
+Cheers,
+Andre
+
+>=20
+> Best regards,
+> Jernej
+>=20
 
