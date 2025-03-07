@@ -1,93 +1,107 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D27202C42;
-	Fri,  7 Mar 2025 09:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7C420298A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 09:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741339779; cv=none; b=JLx/DFgIHg0zowm4OPf421TLYsKU107op30MjFKHqixTt8aAOYSC7z9VDrKgVtGQwXaXn1+MtQObb0UhI/mIjVET0DminxmOmXZ14BB4fDKgVuDQC/kM1fJiiAJRihQj/14h1UVGvxWri7R8OCrx+dlwEnrMczVFTkJ80w9+/Bo=
+	t=1741339787; cv=none; b=cfk66OyV0NN6NtBVPrc88J2Rl73tSNeOWm+WljZ8w5+fbWLNWTSYG0hs05C23nXL2tj12OVO0qezW1stfFh5BYC4BcCE4FSBtbCQZwtdH4tvTB08bAYrqTuizUHkVSxe7OT35DwhoqiXGemyMVxN71tQUC2rkH/IxZEEKDGOiCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741339779; c=relaxed/simple;
-	bh=G1lCccy/OszgdLNgqruHVs1sxATd6Zr72E+2mhbDyfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P4qkzqzKQ2EOdfkaHE97HgsTTs/GpbvCAW0Uj2akN7n7wVb2Vgwjak1LSrrcJ2pr8YQ3uFfp8FWKMutozo+mNdzq+fJLitb9FRNL5L2qNmnfeE89jdK5QVMt9nSmMkTQQv6fIWLGPuTvW1ABTJl/PERxyU9uSqdXcwjFgum0zF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=MfBYfJcD; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741339787; c=relaxed/simple;
+	bh=OA/7Qe5aEekqV7T4SN23N+UJLdSmv9Rkedt7UYvoflg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dfiU1K8V5hLSYHxO+AwLbhmQRkmykjLG6kLd3I5k8ujdd/ukNlCavSRV8rBR7rqK5k3DzedpoDv+lkci4k+rP//QcyM0umDrzPq5YtcGy5f4OuKg1Ai11O6VDUnMTh58Uw1v2ldupx7Z/0W/YfU982Opy+khLVoB//yWgTEjB6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ed9Eyaul; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="MfBYfJcD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=D2F6Zdb1CkSBitSIoiyY8ywRdELphgvUiwPTl0y2m+g=; b=MfBYfJcDOUJ7bmp4dok8wEmuaJ
-	s+yyx3IlEJGd4KThHeWy3pAxTHVErNEA+3t9rrrGyHhIC1iQ+ZefIqjYk7FknH3oKX1GjF2gY3WLT
-	+lUHpZPwe7d2cLz5xeEN6MiYDqzmLU124SaDix8I1yDz9h/nJOWkU25hJB96NDIOe/KL7D9WeUZyy
-	pKWGJnS728oPVRpb60e1WJAaDeNsSG8y0bj9ocXbmZSCYH+bmYT9X9qsbYhB7GeJxVRUT8u1XNv1+
-	RFFGO32ilew0RNMPDCaMkVYG9KjTO/rZTL7gkmRUNjHbh66yygeEemgVc3gb0CuLZRwoc0wz+6PkS
-	NKUMyvLw==;
-Received: from i53875a38.versanet.de ([83.135.90.56] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tqU0n-0002G6-II; Fri, 07 Mar 2025 10:28:57 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Daniel Golle <daniel@makrotopia.org>,
- Aurelien Jarno <aurelien@aurel32.net>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject:
- Re: [PATCH] dt-bindings: rng: rockchip,rk3588-rng.: Drop unnecessary status
- from example
-Date: Fri, 07 Mar 2025 10:28:55 +0100
-Message-ID: <5865714.DvuYhMxLoT@diego>
-In-Reply-To: <20250307081406.35242-1-krzysztof.kozlowski@linaro.org>
-References: <20250307081406.35242-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ed9Eyaul"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-391211ea598so1063914f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 01:29:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741339783; x=1741944583; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Im6pSo0BzRtrOvminHRm9b1Ao6lE3VOWmMljLzr+YZQ=;
+        b=ed9Eyaulrc3fziPknhdHPMXo4Ya25d0DzW734oud1WnouOoJnoVyPQtU8PU0J6F2oo
+         HsyvM08oKrNZ2st3hTUFpkwTJOCucLiW7MqEyLnxPi6Qjk2IrCwXSh0PG8dTy1oEywwx
+         IHCyPf7RtRiOOqQ09brL3xCmOsPBIvLlqXglLDotRpVTvSu0qDJWDdZSEWzsRzREsM49
+         mVx2+rMijRM+7155yGVyID4DPjflHx57yhbaqaIgrnkpsR7NQPnrZ4WC1WBLVR3/tCg7
+         GoZii6LL4KOHCo3om/FmkqxnZZSZsjAZ8z1r9buVxB58PNTyzBaVRPvZrUEWOyO/C5Tm
+         aFYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741339783; x=1741944583;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Im6pSo0BzRtrOvminHRm9b1Ao6lE3VOWmMljLzr+YZQ=;
+        b=lFf5aIGxe26COvQYyESrne9hEYLmZP07kgWkvhi3TDycz2+QpK7/TofnQojDTF1LRZ
+         JbOl7xCKxD0RFLZWRIxXQIgwrSXtjHgm16kPnwfuhz4xAS+dEbrjzQfnnoTlc485yNul
+         G8JvhjpgqvLd3W/8WdLtp3BmKGeUeZytGgNZCMv4jSkbGOOR4yEYUhs0uE0JwDXEDYGY
+         h/8cbn+nloy8Q+oSp7hyZcVNIizIUuXS2Ull/3vM6uXItpX5bsOm8hJqLoJQXPyAxtW6
+         JIoyEe34rtYlg4pwGxQgivarEJ9XAldiTLviDasPNrhbUCAVIOYqarTPtAz4hT8DPz+o
+         DFDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTnBjJko7NzwmprclKFSoGcpfsI9OcSoO97YBv9WzB7YOTJzryWlhueZD5bdM8nFeSRYatM1rJ/Qf28KQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz32TYOsUO2tpzWqovRf8+xxkjTIZNNNRiTQH/EvvFPotdCSfGz
+	IdwTLXmgEtv4Vk0JPulvlYCea8Ca854GGDvdjoA2PNEJLkBtvLRbfNyT3vPH/FM=
+X-Gm-Gg: ASbGncs7WlUd7SG73J6cyfwmqKsehsjy8zpQBqOb57bBLLApc4shlR4XU2b3Coe5BlP
+	TKanw31ooeTJ2BFPN5UiZbzOYc15VXUdvRaiW9OyjlYty8lBocXLu/5+mpMDZBIdQFZqCvEzKdx
+	gS3Ivv11AW+vGkK1QD0T5yfhscxm81dAjIh5JjDo5unVHAQ9NQaJfmqKGHEMusoKVx6osleWYmL
+	T6emj9eVs12HGnhtvKSZlKgN4R7IYpQ5rEjSzKoYBjm9u7DLJX2zanD5Ho/w2tkx03LKQWv8j5n
+	kLmTYyY0tQO8p1/OvxI8XCtT6L71/+4X2nKk0OV794U4fMl1/Q==
+X-Google-Smtp-Source: AGHT+IG1aeOLiht/Zk+dJWxQiJtrE01AKe/jCJ9h6AR4ika6O/iJj47hJhtKgYXJCT1ozzCGM9Qjxg==
+X-Received: by 2002:a05:6000:2c6:b0:391:31f2:b99e with SMTP id ffacd0b85a97d-39132d1fc45mr1723216f8f.2.1741339783348;
+        Fri, 07 Mar 2025 01:29:43 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912c0e3250sm4783347f8f.61.2025.03.07.01.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 01:29:42 -0800 (PST)
+Date: Fri, 7 Mar 2025 12:29:39 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] drm/msm/dpu: Fix uninitialized variable in
+ dpu_crtc_kickoff_clone_mode()
+Message-ID: <f8ba03dc-0f90-4781-8d54-c16b3251ecb1@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Am Freitag, 7. M=C3=A4rz 2025, 09:14:06 MEZ schrieb Krzysztof Kozlowski:
-> Device nodes are enabled by default, so no need for 'status =3D "okay"' in
-> the DTS example.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+After the loop there is a check for whether "wb_encoder" has been set
+to non-NULL, however it was never set to NULL.  Initialize it to NULL.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: ad06972d5365 ("drm/msm/dpu: Reorder encoder kickoff for CWB")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.ya=
-ml b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> index 757967212f55..ca71b400bcae 100644
-> --- a/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> +++ b/Documentation/devicetree/bindings/rng/rockchip,rk3588-rng.yaml
-> @@ -53,7 +53,6 @@ examples:
->          interrupts =3D <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>;
->          clocks =3D <&scmi_clk SCMI_HCLK_SECURE_NS>;
->          resets =3D <&scmi_reset SCMI_SRST_H_TRNG_NS>;
-> -        status =3D "okay";
->        };
->      };
-> =20
->=20
-
-
-
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index b0a062d6fa3b..ff6f5c5303d4 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -956,7 +956,7 @@ static int _dpu_crtc_wait_for_frame_done(struct drm_crtc *crtc)
+ static int dpu_crtc_kickoff_clone_mode(struct drm_crtc *crtc)
+ {
+ 	struct drm_encoder *encoder;
+-	struct drm_encoder *rt_encoder = NULL, *wb_encoder;
++	struct drm_encoder *rt_encoder = NULL, *wb_encoder = NULL;
+ 	struct dpu_kms *dpu_kms = _dpu_crtc_get_kms(crtc);
+ 
+ 	/* Find encoder for real time display */
+-- 
+2.47.2
 
