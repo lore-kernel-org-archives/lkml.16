@@ -1,95 +1,116 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from out-10.pe-a.jellyfish.systems (out-10.pe-a.jellyfish.systems [198.54.127.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE4421ADC1;
-	Fri,  7 Mar 2025 13:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF8121ABB5;
+	Fri,  7 Mar 2025 13:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741355625; cv=none; b=Aj3SeS7ZjtT/sCB3Ns0ieVuWmqvo6CgpLHjyt9mM8F5/w7via6cPB7tOYV7xZAeOUtdgxPH72YwLFZc4eYcylHPRN4n7FbaxewfN9Wwu2hUk8XtvuXU6uxG/TMeX/nrrygnETRq10tS14v0ivfDPaOkLYKLtfrtH4XeUQEP1ypw=
+	t=1741355704; cv=none; b=QPabEJwBQY81NoA1zNxLSFwCHJVHaoqD2PSb8wwAp5oxpw+g4YnTcRgJjRDhV38XUs+Q6IJ1Pp4gaM4K6OhEvZ4u9x6iFgc7o2ZufEq9qkEuiWEb0iWT0EiYGtNnMZ0zZWeWCGlJGmF+RmWuA0BQ6V7UPgeOkveqiQ3Z0rRdEMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741355625; c=relaxed/simple;
-	bh=ICxiMibbj7/tKhMbuP5/fz3kSyF+kvyKF+wZm6FMOLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ahn7JAZouC1tpiGPpJB2zD5tsDCrIvChYgLU1o8feNQESUIG39im4ZWDXaX+S2u6rQBzVjhapjU9i5wcNTojoUmXkIrPdrTYC3y5smE2d8MDWYmwJuCsuKXNdKfrwlKIX/pwN1iFGKQDPoYeeaEmxpk5xtWRnezJuBz0+WRTu5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6RPpifQ; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741355704; c=relaxed/simple;
+	bh=uc4J9BqTYETHvuZVd/sGNbIUbnh5AJ3E2j0C33V4z/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AsHbDIoSIQKbv+UJ2n/VgEhpzLQAkfFlBWQN1dI8OUUha8CEG0m2O4d8yJsBtn1BM3GAGOQUO3thvEubPs8++eutr/ul4M+JHrczoLWzMvEE5i1AofMijM7PcAvgSpjjKMkE29ZXFfHjcjGh6js82yYn7Y6s1md04ueTvoodnQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=UXygEk/l; arc=none smtp.client-ip=198.54.127.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6RPpifQ"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff7255b8c6so347778a91.0;
-        Fri, 07 Mar 2025 05:53:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741355623; x=1741960423; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ICxiMibbj7/tKhMbuP5/fz3kSyF+kvyKF+wZm6FMOLk=;
-        b=Y6RPpifQFCJeoqs1lc+ka/LdW2wir3vqRuqwv5UYeBakI7h5a3etCPO2aYl/v+WXml
-         Dy39dL8BsQV+jGgI1kvSFN45KeiVuWVXaRN/8LuIImfpHHQ95AmUrd3T7ZLebRbhxFRa
-         LZkU5HY/8wouvYeYFlrveePxN6QJ4WHcugU4K0s6tVJcXCo3dvSJOtwpDeNssaLp+tdn
-         6nAM1dyn67QSoqgT5miMFZyL/XMFa0hOeN8Bt4/DyRlZRtGKpuFQCDgoRYy4XwcIt623
-         ipAf6ePU14BTeXBOdu7AhHPWh/tRQjyJpFXAOmrDmVsExloN4Zr+Vh9ceLqvtVHvJ4df
-         0mnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741355623; x=1741960423;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ICxiMibbj7/tKhMbuP5/fz3kSyF+kvyKF+wZm6FMOLk=;
-        b=LpGHO+t8wFKu3VmN39sRYZqwnTWc0leu7Kp+AmXBNdTFM9QweB3K9XcWwUaT+B269n
-         dhTKmbHTtnTFZ+f2R6aKDCflcM5U2j2YOJiTHOWYiujTpuvttBI453hHFeyo9ZrRSmEp
-         b3E6akYXPHNyvm+UKnO/fiFqmfr9faWx7M+QeHq33bcMLpIBKFqz2De64rF9jQlMT+Cb
-         zGsXUH9UCaJB2VpFqXWXgYS6Wx2OhzdlLyJSaJC66sPjhy2WdWNkkrRc0IOz3htZqtCR
-         p3yuuCtlhqlqGM2qi6gLP77hvxbrP6BPgvFz4znZPh+h06VBL1b7DdOyzGRY2fCsmq7Q
-         nFZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOaH17jMNBkXoQUcn1ga8Xus257VT5jIWucFpr1Fi9VKrWpfXHElxG2cMf9M+A/V8MaNGO9Qo06qY6fCY=@vger.kernel.org, AJvYcCXnnTUsQQVFMoYhb/rcgArE/GqO8rPWLaLFKLB59Btsf0mm3pedkiYZUg1wTJ3Pw/EB18xuCiZJrXAwlaYP1wY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAI8O4JwFiURmQX9mLsy58bGzmJNXaSjR4eiqMZsvbUIiyUv5m
-	2hKEmCaHtDRU3qmQZEpUKVm+iPGCluxkdyf2wq0GRK2DmVDsmNtu8jcuubLCA6uUZEnMfTKUObN
-	iFgaQKZ6WrZbzq96aARtE2WbBsF4=
-X-Gm-Gg: ASbGncvri/MY8JhX9oLwEmS2xvau9JOi1t5eSTo/IMAzXgkJfpXWrhsF56rWPOZr4X9
-	UW9n547bd0XybELANS94pOU/2wE2S6FWalej4lPpIBCq7aFONTS+nldLBPovQPmjt0UmHGTgL5R
-	O64Fg1DV6lSeVrAI/SBj2HWtTnow==
-X-Google-Smtp-Source: AGHT+IFQbcKjUi2+xJZx4EkN+BspY5NHugd3fzYVMpj+dJXJ3xySIPBfObitihnepytnRmP5lK+vkym6p1cjkBcfvvY=
-X-Received: by 2002:a17:90b:3ec9:b0:2fe:b972:a2c3 with SMTP id
- 98e67ed59e1d1-2ff7cd6f5bemr2128991a91.0.1741355623295; Fri, 07 Mar 2025
- 05:53:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="UXygEk/l"
+Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
+	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4Z8SJz2jJdz9tnp;
+	Fri, 07 Mar 2025 13:47:31 +0000 (UTC)
+Received: from MTA-08.privateemail.com (unknown [10.50.14.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4Z8SJz2DVWz2Sd0Q;
+	Fri,  7 Mar 2025 08:47:31 -0500 (EST)
+Received: from mta-08.privateemail.com (localhost [127.0.0.1])
+	by mta-08.privateemail.com (Postfix) with ESMTP id 4Z8SJz0bSmz3hhV2;
+	Fri,  7 Mar 2025 08:47:31 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
+	s=default; t=1741355251;
+	bh=uc4J9BqTYETHvuZVd/sGNbIUbnh5AJ3E2j0C33V4z/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UXygEk/lmB4eI0JQGkG/tdu6xOk8cNUAP6GJx9mou8qte0P44wX/L2yQMHXTLsWZ7
+	 +VcDT5W+fvIHCjn/w+7V8/TYlyNPiCTCcssgbO/NeNlcJm8IkFWNKc2D6yR5MEA6mA
+	 l9bibJ8q5X0hDtLjGuam4p8X8bitNe99r6HkiJuJDQG79X4mTFMzfArxCKuIDhyPm+
+	 4egeQmjF/JSXE0iK3PelL9pNpEJAGsrDSU99GEJVlDgWeFDBQ5D4C1I68bM05Xu1jK
+	 Vpw0YcfGEfrBjVcrzMLLOOT0OhE0ybg3I/jFzDQlRi9fX1VXXli9IcrChwBNrdEURm
+	 k4fDr/q48aVPg==
+Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
+	by mta-08.privateemail.com (Postfix) with ESMTPA;
+	Fri,  7 Mar 2025 08:47:17 -0500 (EST)
+Date: Fri, 7 Mar 2025 08:47:18 -0500
+From: Sam Winchenbach <sam.winchenbach@framepointer.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, antoniu.miclaus@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, bpellegrino@arka.org
+Subject: Re: [PATCH v5 1/6] dt-bindings: iio: filter: Add lpf/hpf freq margins
+Message-ID: <Z8r45sR7uy0b4UEQ@65YTFL3.secure.tethers.com>
+References: <20250306183314.150253-1-sam.winchenbach@framepointer.org>
+ <20250307-handsome-merry-alpaca-17da9f@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-unique-ref-v5-0-bffeb633277e@pm.me> <20250307-unique-ref-v5-4-bffeb633277e@pm.me>
- <CANiq72mYfhuRWkjomb1vOMMPOaxvdS6qjfVLAwxUw6ecdqyh2A@mail.gmail.com> <Z8r0lVu1iwc9GG2t@google.com>
-In-Reply-To: <Z8r0lVu1iwc9GG2t@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 7 Mar 2025 14:53:30 +0100
-X-Gm-Features: AQ5f1JoQTL9Pdvi4rbt5tbARnPPsHx1yP0hj_YtrcqnCuu_AF579F4IENsrqsfE
-Message-ID: <CANiq72ktwWOEBFB=y7xun-CDurwsSRe2_PE6RqGS4OhEyPGFkQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] rust: adding OwnableRefCounted and SimpleOwnableRefCounted
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Oliver Mangold <oliver.mangold@pm.me>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307-handsome-merry-alpaca-17da9f@krzk-bin>
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On Fri, Mar 7, 2025 at 2:28=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
+On Fri, Mar 07, 2025 at 09:34:24AM +0100, Krzysztof Kozlowski wrote:
+> On Thu, Mar 06, 2025 at 01:33:09PM -0500, Sam Winchenbach wrote:
+> > Adds two properties to add a margin when automatically finding the
+> > corner frequencies.
+> > 
+> > Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
+> > ---
+> >  .../bindings/iio/filter/adi,admv8818.yaml     | 23 +++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml b/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
+> > index b77e855bd594..3f9c61547a78 100644
+> > --- a/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
+> > @@ -44,6 +44,27 @@ properties:
+> >    '#clock-cells':
+> >      const: 0
+> >  
+> > +
+> 
+> Unnecessary blank line
+> 
+
+Noted for v6.
+
+> > +  adi,lpf-margin-hz:
+> > +    description:
+> > +      Sets the minimum distance (in Hz) between the fundamental
+> > +      frequency of `rf_in` and the corner frequency of the low-pass, output
+> > +      filter when operatred in 'auto' mode. The selected low-pass corner
+> > +      frequency will be greater than, or equal to, `rf_in` + `lpf-margin-hz`. If
+> > +      not setting is found that satisfies this relationship the filter will be
+> > +      put into 'bypass'.
+> > +    default: 0
+> 
+> hz are 32-bit, not 64-bit, so I think you need:
+> 
+>   default: [0, 0]
+>   minItems: 2
+>   maxItems: 2
 >
-> It's only a warning on older compilers. We could just add this in
-> lib.rs:
->
-> #![allow(unknown_or_malformed_diagnostic_attributes)]
 
-That is OK too, though we would lose the check for typos until we
-upgrade the minimum.
+I think I finally understand - "-hz" is a schema type defined as a uint32. Is that correct? I am really surprised that `dt_binding_check` did not complain about it being 64-bits.  I will update these to `-mhz` and make them uint32 in v6.
 
-Hmm... Since we have nowadays the way to create those conditions
-easily, I think it is fine to do it conditionally.
+Thanks,
+-Sam
 
-Cheers,
-Miguel
+> Best regards,
+> Krzysztof
+> 
