@@ -1,105 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3434B2459FB;
-	Fri,  7 Mar 2025 16:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3415223E35F;
+	Fri,  7 Mar 2025 16:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741365569; cv=none; b=P2h7zJIMDr4elQvPJjgSgNtLESoeKamhiAnarh8MA0bIfupU39vOvbZbjt2Pcy/lDqq21kVpi2rdECSDamY8QVv3hbfwcG1l6IMhAl9Do8j3B9jW7zbsrn3XS14I0CgdKCwsPXAJrYB4c7+E66WiIM4gTv5auuBMUEKVURJq/3Y=
+	t=1741365601; cv=none; b=Pxi4ccDc8QUulnLuWYBxMO8yu8vQJO3sHcO4Jbz9fz8+qNCUvjOYZKuIgYphfYfE8g8YN85YHSWz+3je0ImKMFmnldUMyi8LEk56MkKll9/OMtu4vEJkvL7m7WeAN7IH/toqyqm9NclCFLC3htxHjE8xZ27K8xLgKSaVFI7QTIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741365569; c=relaxed/simple;
-	bh=2hhYjWrJvAfBJ4AhFSf2YTZ4BTSlANboUlb41O46vuY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iSxlp0k/tSkRx3a3U1uvUlrY3R0y87nQiIyoy/U3z0R+lKNuP+H0WY214M8YxDXc9UxVhl+CfSWMyvYJBk5kvUQnFZC+d7IGHAystNdKzNVqEplnqz7okDkDLPHi7VBxokLeIeGBpx+zIB4MBiWrFh3o/tr4OQNqYOANdZ5Ekdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BhHVYdTC; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741365601; c=relaxed/simple;
+	bh=HOeJpd1r+tua3PHtEh6C8x0ozDENLgAh0S3dq7OosLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ld6CH5Ad4Gj3lqR3LJqdD60zRiM6q763k60Si1LLFwSgfEE/4q1zOklM8wq/bhCPKDZiSar4ZldSkXjnpoM2bBtxIxao+WLwI0kYsrlcIl98ICrj2Fp37s16sDjHxbdaSBEwpVBFnVFV5oMn09ZSccwKnqW/HIp+SWdafEjR4WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlA/2tTf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BhHVYdTC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741365568; x=1772901568;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2hhYjWrJvAfBJ4AhFSf2YTZ4BTSlANboUlb41O46vuY=;
-  b=BhHVYdTCMCVQBSihV476A/FuQDfb7GgVTKEp1j/uNrWSlj7uSra6pWZj
-   mgD8vxP8kEuOr51Z5LMMGL0XiFC40o3Fdajvprn/EKXBGZ+HVhjtbZmEJ
-   9oit+bO0gI+DitSuEAD6QlwTa/R8Y2I3zL67EDOv8k1HDwYaJv7RgUbdJ
-   v2tYvrvjLxl9veJLI+xmX5xXI9AMu5IsldJuTjZN5WmbgayRlgZCJlt3r
-   h+qawRQx9mnCF6hJQ1fYc12vivDPiueGd9PRXUeBkctJJX7Q41cwtKkgR
-   zriGjulIWuHny+1rB0ZBhpx6gPJ5koCFJjJk42M51PQ8yfBe9A4dMV+Zt
-   Q==;
-X-CSE-ConnectionGUID: KxzbGAzWRa2x5vNuigVi/Q==
-X-CSE-MsgGUID: 32HUdmtBTxiMI0Uvr0FQBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="46344499"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="46344499"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 08:39:28 -0800
-X-CSE-ConnectionGUID: DTY15gl7SC204CwW+A8v4w==
-X-CSE-MsgGUID: CSlach8FTiStkdZCCd8UmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="124397997"
-Received: from spr.sh.intel.com ([10.239.53.19])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 08:39:25 -0800
-From: Chao Gao <chao.gao@intel.com>
-To: chao.gao@intel.com,
-	tglx@linutronix.de,
-	dave.hansen@intel.com,
-	x86@kernel.org,
-	seanjc@google.com,
-	pbonzini@redhat.com,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: peterz@infradead.org,
-	rick.p.edgecombe@intel.com,
-	weijiang.yang@intel.com,
-	john.allen@amd.com,
-	bp@alien8.de
-Subject: [PATCH v3 10/10] x86/fpu/xstate: Warn if CET supervisor state is detected in normal fpstate
-Date: Sat,  8 Mar 2025 00:41:23 +0800
-Message-ID: <20250307164123.1613414-11-chao.gao@intel.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250307164123.1613414-1-chao.gao@intel.com>
-References: <20250307164123.1613414-1-chao.gao@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlA/2tTf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ADB6C4CED1;
+	Fri,  7 Mar 2025 16:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741365600;
+	bh=HOeJpd1r+tua3PHtEh6C8x0ozDENLgAh0S3dq7OosLc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HlA/2tTf49Drh9dXoRuX4+ksLB0ISVkvOod9RvdmQMyAiFTikLxbVABO5cI+KhZ6+
+	 /yo7hwScdT7/+NiRTQt8gSjN9+h1nXclYB/sy68vJmxmQsS4yg0YyPJU4ld+Cb7O6H
+	 5iiym06QWuGMruMU4kug65VmbU7/QNCL+cdwqmu7YkMuO3iEeLwqvQWUDce66hbt1F
+	 r+4hleY9aa1viPBbcx1WYlg6mZ9ieQufN8m4i9l8l1cPN6jny0xAtq99DawzUCfFLJ
+	 tlRMtH6PEAXztFhtXfPCGDVACS7QoVtoFSe84hzEQbkQAex5AIHjWvyYrFRIy8ksr0
+	 T2d7l4acdNG6w==
+Date: Fri, 7 Mar 2025 08:39:59 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, Meghana Malladi
+ <m-malladi@ti.com>, Diogo Ivo <diogo.ivo@siemens.com>, Lee Trager
+ <lee@trager.us>, Andrew Lunn <andrew+netdev@lunn.ch>, Roger Quadros
+ <rogerq@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Simon Horman
+ <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet
+ <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>, <srk@ti.com>
+Subject: Re: [PATCH net-next v2] net: ti: icssg-prueth: Add ICSSG FW Stats
+Message-ID: <20250307083959.33098949@kernel.org>
+In-Reply-To: <3931a391-3967-4260-a104-4eb313810c0d@ti.com>
+References: <20250305111608.520042-1-danishanwar@ti.com>
+	<20250306165513.541ff46e@kernel.org>
+	<3931a391-3967-4260-a104-4eb313810c0d@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+On Fri, 7 Mar 2025 16:00:40 +0530 MD Danish Anwar wrote:
+> > Thanks for the docs, it looks good. Now, do all of these get included
+> > in the standard stats returned by icssg_ndo_get_stats64 ?
+> > That's the primary source of information for the user regarding packet
+> > loss.  
+> 
+> No, these are not reported via icssg_ndo_get_stats64.
+> 
+> .ndo_get_stats64 populates stats that are part of `struct
+> rtnl_link_stats64`. icssg_ndo_get_stats64 populates those stats wherever
+> applicable. These firmware stats are not same as the ones defined in
+> `icssg_ndo_get_stats64` hence they are not populated. They are not
+> standard stats, they will be dumped by `ethtool -S`. Wherever there is a
+> standard stats, I will make sure it gets dumped from the standard
+> interface instead of `ethtool -S`
+> 
+> Only below stats are included in the standard stats returned by
+> icssg_ndo_get_stats64
+> - rx_packets
+> - rx_bytes
+> - tx_packets
+> - tx_bytes
+> - rx_crc_errors
+> - rx_over_errors
+> - rx_multicast_frames
 
-CET supervisor state bit is __ONLY__ enabled for guest fpstate, i.e.,
-never for normal kernel fpstate. The bit is set when guest FPU config
-is initialized.
+Yes, but if the stats you're adding here relate to packets sent /
+destined to the host which were lost you should include them
+in the aggregate rx_errors / rx_dropped / tx_errors / tx_dropped.
+I understand that there's unlikely to be a 1:1 match with specific
+stats.
 
-For normal fpstate, the bit should have been removed when initializes
-kernel FPU config settings, WARN_ONCE() if kernel detects normal fpstate
-xfeatures contains CET supervisor state bit before xsaves operation.
+> > This gets called by icssg_ndo_get_stats64() which is under RCU   
+> 
+> Yes, this does get called by icssg_ndo_get_stats64(). Apart from that
+> there is a workqueue (`icssg_stats_work_handler`) that calls this API
+> periodically and updates the emac->stats and emac->pa_stats arrays.
+>
+> > protection and nothing else. I don't see any locking here, and  
+> 
+> There is no locking here. I don't think this is related to the patch.
+> The API emac_update_hardware_stats() updates all the stats supported by
+> ICSSG not just standard stats.
 
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
----
- arch/x86/kernel/fpu/xstate.h | 2 ++
- 1 file changed, 2 insertions(+)
+Yes, I'm saying you should send a separate fix, not really related or
+blocking this patch (unless they conflict)
 
-diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
-index aa16f1a1bbcf..3df135a7d8bd 100644
---- a/arch/x86/kernel/fpu/xstate.h
-+++ b/arch/x86/kernel/fpu/xstate.h
-@@ -209,6 +209,8 @@ static inline void os_xsave(struct fpstate *fpstate)
- 	WARN_ON_FPU(!alternatives_patched);
- 	xfd_validate_state(fpstate, mask, false);
- 
-+	WARN_ON_FPU(!fpstate->is_guest && (mask & XFEATURE_MASK_CET_KERNEL));
-+
- 	XSTATE_XSAVE(&fpstate->regs.xsave, lmask, hmask, err);
- 
- 	/* We should never fault when copying to a kernel buffer: */
--- 
-2.46.1
+> > I hope the regmap doesn't sleep. cat /proc/net/dev to test.
+> > You probably need to send some fixes to net.  
+> 
+> I checked cat /proc/net/dev and the stats shown there are not related to
+> the stats I am introducing in this series.
 
+You misunderstood. I pointed that you so you can check on a debug
+kernel if there are any warnings (e.g. something tries to sleep
+since /proc/net/dev read is under RCU lock).
+
+> The fix could be to add a lock in this function, but we have close to 90
+> stats and this function is called not only from icssg_ndo_get_stats64()
+> but from emac_get_ethtool_stats(). The function also gets called
+> periodically (Every 25 Seconds for 1G Link). I think every time locking
+> 90 regmap_reads() could result in performance degradation.
+
+Correctness comes first.
