@@ -1,84 +1,64 @@
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A6E19D8A8;
-	Fri,  7 Mar 2025 14:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2379F21B9C8;
+	Fri,  7 Mar 2025 14:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741356875; cv=none; b=XEanrv4l0hqEjPMXfn8wzMVxvlF6zNKw2JYnqdv4L96zDI4FyxtVLYP6dqQD9WMDmK869EmIWf5235etp3UmwH5Si/o5f17ue2f7+XTjj9fhgCHRXenUTu9kuz78JQcrJElCn8ScNqxv6DOSxzSfwHAIjljjoNSGPnFP8K+V/O0=
+	t=1741356914; cv=none; b=NSAkTXxGV9zmV2My7NNm3F1ok3P+wEXfuVGWdttDzecEWJXw093P7oXiwAlTbE5oj3enbcipOyUbNR9Ezvqyu0XvFAEIb4KNZr1QBxEqz+llprk956heZwCdSKloFguQOcQt1vuNDpZYMPkThRq4XV53LSAUj6+5EBmgPks9pXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741356875; c=relaxed/simple;
-	bh=JuMf/Kv72rI7AK8X9DsnIEf1KkPHWLhdKvwGruCX/fE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ArHfDguP4gOslZsKr4ia+ej+1Y/pag2RYzXp3H7MxCwyqYLyDIU8AfN0mY/6AMDZCOUoQBARdY69qKCz0SDPW3dgXaEGNqof8+BHoljx6212lw7DHe2bP8JZpKpG7cqVhl3bupXNj5jguKBdCymbeL4twOmlSgzPkhJ4aWMY2JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=f+YYg3Gb; arc=none smtp.client-ip=79.135.106.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1741356914; c=relaxed/simple;
+	bh=/QBb/V2Z63Bz9TmEL9zPOtYOwuWhd0fcdp9PQO5qmUk=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oa/FpfoVbAivdbaM+4LCRRAdgZPaPm2MXUY/fnCbXWWnzVmgbpWXOhu3FGa1fzz/l2UNNcLHaRyRJbW5umUDttVa7+nL08KrSspOCF4ecbp1JnjmMpClxUXIr97CYW+jTr2wgpp8qeNb9qu2L3J2X7A76MWPw/44/R5wWFXH+T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=wQzNls8W; arc=none smtp.client-ip=91.227.220.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="f+YYg3Gb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741356871; x=1741616071;
-	bh=JuMf/Kv72rI7AK8X9DsnIEf1KkPHWLhdKvwGruCX/fE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=f+YYg3Gbr2qmi+W1m5ZCW+MYze5V/8yJ7aNwCT32TxStzamBpJJ5ibCsHc3PgEtYQ
-	 BxFnVBpPr5gKSPTsSDsts04JrQ2u81PvRvALacL6OFAB/A8c4e/YkwNMPMuETGtyRJ
-	 yPDDQYYLE/iqQOnf/xznla2BOVwRHXyetHD19Hz/ngtKtLivxPntkBWJFssQCD2ye6
-	 m8CCHQFxmcL1chBkW+UnA6MOMndi5klvVx45ZfGOGjx93xtbqjoyhHx5BRYreE1sBe
-	 8QaLUajK9fUmO7qpYgfmTM8P3LIhzQBvWYlmeKFXLUAOH4NURjdVIrScWfJ+kTU22D
-	 mVe6l7fyUjalw==
-Date: Fri, 07 Mar 2025 14:14:26 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 13/13] rust: hrtimer: add maintainer entry
-Message-ID: <D8A3HMMRKBUB.3MX3FH3JP8XJR@proton.me>
-In-Reply-To: <875xkl3p9s.fsf@kernel.org>
-References: <20250307-hrtimer-v3-v6-12-rc2-v10-0-0cf7e9491da4@kernel.org> <20250307-hrtimer-v3-v6-12-rc2-v10-13-0cf7e9491da4@kernel.org> <yjEvEAnF-Dbg6SaNzJ3fl8hPIP9ZNLn9E3q0DsSw82cD2JiGmg9dluQIu_cBTosDty_24DQ2O_XYA4Xvf5T8Aw==@protonmail.internalid> <D8A2IL07RV9S.6RF7B9326WFL@proton.me> <875xkl3p9s.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: c009b2f142e1a3da55fac18a59b28849603925dc
+	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="wQzNls8W"
+Date: Fri, 7 Mar 2025 15:07:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
+	s=202107; t=1741356442;
+	bh=/QBb/V2Z63Bz9TmEL9zPOtYOwuWhd0fcdp9PQO5qmUk=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To:Cc:Cc:content-type:content-type:date:date:
+	 From:from:in-reply-to:in-reply-to:message-id:mime-version:
+	 mime-version:references:reply-to:Sender:Subject:Subject:To:To;
+	b=wQzNls8W8KbPfhs4Jnb5WM16tL+MKT0DbFYDLqcLNNldTr6wRVXbHglYCXh064Kv4
+	 f8wV5UR65/IWOh8hD7Q9MASWjIWFA3aJdvwj0vOosHLZ7T55nKPrA2PiFh13F6W7/S
+	 TjKK5tk4XNq8hR5oEgFc5g+BWNkI85HhyhrnytiCjwWr132xvW+92nIquBsHTrs4/K
+	 k4vuUEcnMl7K6oIi06yhWaZpU5OPyhh9/5yC1jQL/b/8SZPsfSKF9lK1C66nxcHsO8
+	 tow3fy774xjPZW2zYnG6Okxwv6t9ZRN9u1mvuykr8Vwx/3LX4M9tG+me61gWol4QA2
+	 ztxAfv95o1oVQ==
+From: Markus Reichelt <lkt+2023@mareichelt.com>
+To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.12 000/148] 6.12.18-rc2 review
+Message-ID: <20250307140722.GB2770@pc21.mareichelt.com>
+Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250306151415.047855127@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306151415.047855127@linuxfoundation.org>
 
-On Fri Mar 7, 2025 at 3:10 PM CET, Andreas Hindborg wrote:
-> "Benno Lossin" <benno.lossin@proton.me> writes:
->
->> On Fri Mar 7, 2025 at 11:11 AM CET, Andreas Hindborg wrote:
->>> Add Andreas Hindborg as maintainer for Rust `hrtimer` abstractions. Als=
-o
->>> add Boqun Feng as reviewer.
->>>
->>> Acked-by: Boqun Feng <boqun.feng@gmail.com>
->>> Acked-by: Frederic Weisbecker <frederic@kernel.org>
->>> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
->>
->> I don't recall adding my reviewed by for this patch (I normally don't
->> review MAINTAINERS changes, since there isn't anything to review). And I
->> don't find it in lore, how did this end up here?
->>
->
-> Thanks for spotting this. It looks like I added your tag between v8 and
-> v9, and you are right, your tag for this patch does not appear on lore.
->
-> I had some trouble with b4 being too generous with the tags and I had to
-> revert to manual tagging. I think I messed this one up or did not manage
-> to revert the actions of b4.
+* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-I also had that take place in the past... b4 picking non-existent tags
-or tags from old versions... I always add my tags manually...
+> This is the start of the stable review cycle for the 6.12.18 release.
+> There are 148 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
+> Anything received after that time might be too late.
 
-> I'll remove it.
+Hi Greg
 
-Thanks.
+6.12.18-rc2 compiles, boots and runs here on x86_64 (AMD Ryzen 5 7520U,
+Slackware64-current), no regressions observed.
 
----
-Cheers,
-Benno
-
+Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
