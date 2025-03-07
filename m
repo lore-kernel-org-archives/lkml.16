@@ -1,118 +1,96 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2E62E822;
-	Fri,  7 Mar 2025 15:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7398621D3DF
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 15:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361988; cv=none; b=FiYgyg503eFewtH9vGQdUh6+RTbP17t/e+jZORXAWVAtslPcxutKjUvhGbO3bI3pONd2fRVltIIgk3NaUlAinePN/pWy0/ccWnUX5Q6zlnamoBqC/5T3Pq4UMdwgarovgy5a2AyT5PHG1TN2au9r/17qzWlJvIVvXLzT0zpBMLE=
+	t=1741361989; cv=none; b=qMEZeqQ1XtjePNUIuyRVmXtQAQqkyNqyJs8mh6c4LPdPY37TgL6KlFweYWE4jJh+LY5Lk9CAyBIZS0vH8a7dUVrs/wCwhcO1XhyiTqMEFxcqIU/MAhj2u5rjEyMpfRlMMDPcDK5w+4o1Xyy7HC5+gjcA6BJK3ud1eNKSaZ4W0OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361988; c=relaxed/simple;
-	bh=vPqeNz54Wb9FFR8fdVTjrai7dSJIfvJ57luorzLSyaY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=VinEMF2kKplneM/mqFt4Pg1RwwUxoNVNEv36ZLL22H7UZmmRVI+U0FhKYrKuP3veBase+CI8GT48i0Blj9DApbfd77DajGuUq91eG/2W9CWcTZ6LSVTUqOscE/3imUrmZQJ/62NPYLZumpYPoTbHhaKXBQcGFHKOm+3pgH4hblU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=YuuNbRUQ; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741361989; c=relaxed/simple;
+	bh=cFaihPn015bfDllZvZJrY2c7R0fEEw/M16SbO4kDyrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gdhh1IgsV0bRlpd3q79dwSlyxkniPIMcdV9WfwgvVDAEN0CVNm3jl2qVxGSEHLF0l4BZ3M6uRqnia6EodZ/USIfzL2fkxqzWdDSgffJsGfiKlRuw8ExGSQHpGzpwWzZlRXL8L552R3h0gJ1ThIIz+794CLvJ2iw7m8gzDPxSmJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NUA5GE16; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YuuNbRUQ"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 527FdPKX298223
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 7 Mar 2025 07:39:25 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 527FdPKX298223
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741361966;
-	bh=51/p7Nh9x69EMjvMrY+40a3K4XnNy1F2j71wTDLIWyk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=YuuNbRUQH4U/P7Xe7qlfUFq2faaDsrUEyBkGNILAghwiMg3q/+IBX3hVWhD7VbGs/
-	 7fbLWvNK6cVBdPbt7knIvLKYDM0SFnqeHN4tY6TuCLmg2DGcf/EYF+FkA7SFt0RlSx
-	 6sx8iJa3oopm0xMhZzZhSWX5oFwZKHvCgcsJQ/SH+VEiEOsEOHatMyV9jAXyvZJMYs
-	 J4TE5QNaW9x0bNTYlYwToRHFcAdufvjNkzHrK9H1NYrRKXLKAqM2WOdmC2lXr0QOj3
-	 iV8lP0fBdTBE1xPRg9F9qANo++G8jmDlYOSSEq3R3yppkjwzVeXrqWxrpoYlmN/epD
-	 Ax/KmMEszWFbw==
-Date: Fri, 07 Mar 2025 07:39:22 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-CC: Gerd Hoffmann <kraxel@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Eric Snowberg <eric.snowberg@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] x86/efi: Add a mechanism for embedding SBAT section
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMj1kXF7Qs=9COU63k8651uEtSh9soOHddSo=Dqdn1kHTuuzoA@mail.gmail.com>
-References: <20250305101744.1706803-1-vkuznets@redhat.com> <CAMj1kXF-c46Bdw_cmLK-TckxukefqkpAYkOhg3jzfvW6YucDog@mail.gmail.com> <63vy4xc4mpm5tttdqz5vfzwyriqlminjdiffrbuamxcubmpuur@nxszi7xzxa6a> <CAMj1kXHQydeGHTa3Jd-ZByMntdqRp4f74ow6Uc0GLwjmejCSbw@mail.gmail.com> <885FB3F6-B085-45DE-9710-10563322B61A@zytor.com> <CAMj1kXF7Qs=9COU63k8651uEtSh9soOHddSo=Dqdn1kHTuuzoA@mail.gmail.com>
-Message-ID: <82D253A5-FD13-4530-BC1D-237EF42B9E07@zytor.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NUA5GE16"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-abf4802b242so363016066b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 07:39:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741361985; x=1741966785; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eJnVPeYafZvgHsrO+i6TK6Bs+zps5W9oOYtXQuffALk=;
+        b=NUA5GE16MUGUuYP+485he0gsfBWGJPlHSOQRCYJoQnLWoXR2Yoc32Ah2Xz9Rz7AeUv
+         NacTbN4iz7zbLtiaaCYI/3hs7r45C7axG/Tq5iJt1GCv9hzEGhKJcoWXDn0wxIXcPCVo
+         zSiNzqYlc8cbvr1xRBMxnbeYp8h1r3Mh6xwIRDBK9zY9PhAx9GOCK5M0uvOoQQ4GmNNQ
+         MKeLDgJtol6Bh8gbvGw2VEdjwzZn2+J9q+HbQntxJPjZswsBoX/rUoo1yZARm1HA2VVb
+         5QSR/u9ftibhM5pBH2jfNtIDF+OyPfwbNR8TtAmdXx6SVJUUGu426y1rWXyQyT+foTrn
+         EpBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741361985; x=1741966785;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eJnVPeYafZvgHsrO+i6TK6Bs+zps5W9oOYtXQuffALk=;
+        b=OGyz8yZhocoT/x0CbayC3FtaZ3G8BHqI2RnO731BNjqVnBzkYXOPqUMuyxZBEYbMCE
+         FTIKhCxZgchSiSdiBH7HUiZArTKvMeITNYZ2VLz/ml4/Ouj29ATlLEDJzdFDWmv+j+HI
+         Uf0nl2X5CrLdg72POjOWIXw9HzMNwcSr9OW5I3RM2eG5F9V8cy6yq9QGiCu26PuX6h5n
+         Y/KXBlC4mPDvrfLgmrG9MLg9qGYt8drKm3eEviWMKyArbtkG6OS+U/l4wbTX3DjFCCAf
+         dPJ7Dtf2rnRzQ9DBBPV+n5879ARbd/n7c+NkronwY9idMD6K+/XOVIh5ebI5lhb1lVCY
+         7a6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWOhmO7fG7e+ohtyX80whcSsFKvaRu1n8JNq6EObN0t4ESSLhs8XY2cs5WnGd05iW+CHGX6IYhA5NWGYTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQyyJJq4kAEKf4CJvVfk3g9jsGnSvwfzRyGTNI4RtUtmMwcTWc
+	XBOlAHTv2d7an6qnQBN6imInGerMRbf3x+Q5T5F+DRV4rq+USxAEdz+ccXM3n8M=
+X-Gm-Gg: ASbGncuAbfoMsDhxt5omOcIsnmtP/Q77Q51HO2bqmzKpmTSb2Dsh60q0GwLd9aaP2IA
+	Opy5+9GC4zm3t3xTDnUQiKBl+NSsU8rKFiCHh8dFlbTPrn0bydOJwFUAJD+RyTVkTOMlwGRG+Kz
+	DcvWl525e6KiMZkWdLgoQD5F11uv6fX59b4To0XYHo/xHXxFRu5OWOjgDp8jtW9XzRdSS4TsFfv
+	81J4FfSM8pMxexj2VPcI9rdZv1HMzUWvdaEj+Z+i68TSyB9MeVXgIAp3lIs2HRfB5SRNWy3nYQN
+	NnU416tTKAi1EF0aJvwnyX3/x7tIgUSXKyWZAI2UjVe+9EKJfY+n/A==
+X-Google-Smtp-Source: AGHT+IGuXNtyZP42uxMpXFuXCVaR2WuOwofap6VO1OWEa4yHj33RgMikNGqzDq06MdXQjNJZWtTcvg==
+X-Received: by 2002:a17:906:f593:b0:ac1:db49:99a3 with SMTP id a640c23a62f3a-ac252fc6bdemr449710966b.40.1741361985480;
+        Fri, 07 Mar 2025 07:39:45 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.206])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239488be1sm293181466b.74.2025.03.07.07.39.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Mar 2025 07:39:45 -0800 (PST)
+Message-ID: <80da4df1-cd35-469b-a636-8f405358ef00@linaro.org>
+Date: Fri, 7 Mar 2025 15:39:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/21] mtd: spinand: Use more specific naming for the
+ write enable/disable op
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Santhosh Kumar K <s-k6@ti.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
+ <20250307-winbond-6-14-rc1-octal-v1-2-45c1e074ad74@bootlin.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250307-winbond-6-14-rc1-octal-v1-2-45c1e074ad74@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On March 7, 2025 7:29:27 AM PST, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
->On Fri, 7 Mar 2025 at 15:52, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
->>
->> On March 7, 2025 6:15:27 AM PST, Ard Biesheuvel <ardb@kernel=2Eorg> wro=
-te:
->> >On Fri, 7 Mar 2025 at 14:29, Gerd Hoffmann <kraxel@redhat=2Ecom> wrote=
-:
->> >>
->=2E=2E=2E
->> >> The crc32 is not clobbered=2E  The signature is simply appended and
->> >> wouldn't overwrite the crc32=2E  But if software expects to find tha=
-t
->> >> crc32 in the last four bytes of the file then yes, that assumption d=
-oes
->> >> not hold any more for signed kernel binaries=2E
->> >>
->> >
->> >The crc32 is a CRC over the entire bzImage=2E Whether or not it lives =
-at
->> >the end is irrelevant, as signing the bzImage will necessarily [*]
->> >break the CRC, and subsequently regenerating the CRC will invalidate
->> >the signature=2E (The CRC lives at the end because that is the easiest
->> >way to generate an image whose checksum including the CRC itself is
->> >~0=2E However, there are also other ways to achieve this)
->> >
->> >> Who uses that crc32 and how?  If it is useless anyway, can we just d=
-rop
->> >> it upstream?
->> >>
->> >
->> >I tried but hpa objected to that=2E [0]
->> >
->=2E=2E=2E
->>
->> I don't remember who it was that asked for the CRC32 long ago=2E It was=
-n't for Syslinux; it was for an embedded boot loader which didn't have a fi=
-le system=2E
->>
->> I don't know what would break, and it is obviously a mess that the sign=
-ing protocol didn't take that into consideration, but that is water under t=
-he bridge, too=2E
->>
->> We could try zeroing out the CRC field and see if anyone screams=2E=2E=
-=2E
->>
->
->If dropping the CRC is on the table, we might also consider my
->original patch, which gets rid of the build tool entirely, given the
->fact that generating the CRC is the only thing it is still used for=2E
->(Either change can easily be reverted anyway)
 
-I think it would have to be up to the x86 maintainers, but I would be will=
-ing to test it=2E Perhaps it would be better, though, to make the CRC a bui=
-ld option =E2=80=93 or we make it mutually exclusive with efistub=2E
+
+On 3/7/25 3:08 PM, Miquel Raynal wrote:
+> -#define SPINAND_WR_EN_DIS_OP(enable)					\
+> +#define SPINAND_WR_EN_DIS_1S_0_0_OP(enable)				\
+>  	SPI_MEM_OP(SPI_MEM_OP_CMD((enable) ? 0x06 : 0x04, 1),		\
+>  		   SPI_MEM_OP_NO_ADDR,					\
+>  		   SPI_MEM_OP_NO_DUMMY,					\
+
+here too, I lean towards keeping the name as it was, but maybe others
+can jump in.
