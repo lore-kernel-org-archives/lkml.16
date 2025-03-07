@@ -1,113 +1,115 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B3E192D76
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Mar 2025 05:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6556E28E3F;
+	Fri,  7 Mar 2025 05:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741326545; cv=none; b=iFN3iJqC5LEYucOKOV2L8tlMF+2D5jqljIF/G8ugwHfBwbUuMjg8wL3mpeDVlprBNquBesEiK0iy5Mhxu9hSKxUMFu/UzCp7rqo1FjlmdWGvaaonnQ6cElm/g8HQM912I4v5klMU/nAsCAWcNzwY0be5FiA7MPavzSEwPF6X8VA=
+	t=1741326572; cv=none; b=QuWkTpMohX1SEpEqVToSXervRPt9qFT6A/kR1Ob/Pk5N847+Y5v24yMIrNxkEy4CLapgTg2zRxLgEIu4nGlsxNwiAklzUOjoSS28zXCf/pbSIr+6/zr6eLxKKv/RRVtoENnyWPuJ6ArHNv9IHpx/0WQmj+3K4URyUQ1V9z/4fCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741326545; c=relaxed/simple;
-	bh=cqj6ewJym1miHgUZm8iH3RiovqQFuy/3bRNULbbMasU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LUBhq4ev0uP2Ga91nlk1WxgTtkNolbZruP7vqO3pZfkP19Sx+YW9TdA7gL80yERGh4cArpJ2YSh+zXJCxW7u87gAyiV1fb1DKN9QOBAmhD9f9RDRPaqUwxgoQjyQUH4UqgdtSIJJo9n3BMjY8uIxktX1qu0hTxfQDjCAeO7pYbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NWxqQWM6; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741326572; c=relaxed/simple;
+	bh=P6QAQ54eZulQcij2xqoV0oSuiL2BZq3nrX3IUmugRTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hnYI7E+vcitG45M8HYDtw4hPSZjCZqIl5EeH6TzFsSWLJ/WQ3nW1vM+pvFLBOoMslirovXbjS3XJdi019jjAp774+aWUTy4dSM47lHofh1ulSKBgCPecRi75YNQUhYJIU0MuTYqONWw4Zhj1+HoZcDFfwGQnNtcGolmbItfEda0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=D/v5RpLb; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NWxqQWM6"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30761be8fcfso16154661fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 21:49:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741326542; x=1741931342; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddZoIefzqan5unLa1d6QbkepNMobkeXSFMsHFbEyBPg=;
-        b=NWxqQWM6YG8OVHHmKHX7IVQHC7xeBlj51ltje4EYuxLu5RzF5furpRRIWYpbCzeOmg
-         9x41xRCNLY30pvK05qs9XuhqdtgWukdb8uVR6zdYPz/Il3R4zzSzzypLiIiE5zKNUxRS
-         j1SyRkoExLEblfB/2WHoQe8o8b8sBmYJcy2UCdXULTEOKYLewZOqV1piigT7VrDVXZ51
-         JaYJ+BnCSdhwabeuinA8y/JV0VDr1Own2VmF6/eowK9w01JxgIvffOwraixjsuE4Yx0E
-         mWsfrXDscjYYvkxZsnyR9q8GE3WuNyLCxxhaI9cOmmxUF707shkEVDtbKpJUhrnevUEK
-         CR5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741326542; x=1741931342;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ddZoIefzqan5unLa1d6QbkepNMobkeXSFMsHFbEyBPg=;
-        b=SL8Dm7IxYeZnQz45omyY1y7Ck/n+REnkQMS7AIrp74RTNnap4qGWbVRJozOzxqv/2J
-         Cn89FKMrqIcZwLhNHW6KvJ4AMvg2LubXtPMtoApCsZujxGk9KNhQQ1IZzJ6yD5Y9ByJM
-         tXZ1J1puv4cvxLkqfpt+QmxtMbAVQGTUrIWh1RqI1EUgKeMjC1rZuBVeLLGoiwaZIgwf
-         ljm3SZorrId2WhfUUlePNY9lzG5TmUSBCvCnl2Vnpci/tHbs0wwf42DyJqDo4ynBEn1L
-         SB7Q/45dM3Sfp4nBuCV+vy09G20sX7Xc+hRyz6j158n1Dala/xQxgUGi2mDxcGkROayC
-         H+2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUWvA+ADC5bdghN2dVJIzHP7V8YkaGudBYBYm+b2cLpSSeBWM+TCgjlP6FrmxXVNJ/+7DblkCeqhmFb1wg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOdwmiLZG0i2gy55RbgAqgFE8dOCnRaDuMQb8YJbaXXhCC8LIv
-	h0TadFMh5TecPyRTjEmsn7sF+yAgF8v2nQKM/wazqgNRbTfWrCWF8pJ94M34nzs=
-X-Gm-Gg: ASbGncsWLnrAxcbIRSFkn54XIoE4nT4xRioKkooCgHbrGJT5gMuB8oTECzZYPx59Zb2
-	DdW9n1qeXOtHTjBdSZ141tp4ULzyGsZ1tDBAZhZyua7iAMi9dSOSuY9+TMFaJ+87/Q0Dmq4ghLA
-	xGzCs4OqpIMsZCWaNfhIRXSuCvMOHnnl8a+3cbz9uOf2a8msx5Ls+dpG95EyiXifFhe988RSQdH
-	LEFyrt8T3cfFUjUjf+zpsrBowdBnJl77x5UYRGh1g68EQqx2tMUztj3qeRxJjzcCO8aQZGAxCyT
-	xo2qEbuI1ZDt0oR4qtpK/xRNKLH25DT83L9Fevw2JDhYM9nrlUKlhyAU2FWPWlSPDEXYdlWozPw
-	AXF4fUhE4+ZfPVNo2tk1glCoU
-X-Google-Smtp-Source: AGHT+IEQXgwPTN0zWE14o/eWd+esiKQ+JOKkgZz1V9e0jKN/Xjh/s0kS262qvqbdXkWzD17f+19+eQ==
-X-Received: by 2002:a2e:b88b:0:b0:30b:cceb:1e9a with SMTP id 38308e7fff4ca-30bf451104amr5734371fa.14.1741326541966;
-        Thu, 06 Mar 2025 21:49:01 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30be98ec3f5sm4209511fa.28.2025.03.06.21.48.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 21:49:00 -0800 (PST)
-Date: Fri, 7 Mar 2025 07:48:58 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Robert Foss <rfoss@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Wesley Cheng <quic_wcheng@quicinc.com>, Christian Marangi <ansuelsmth@gmail.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Rohit Agarwal <quic_rohiagar@quicinc.com>, 
-	Kyle Deng <quic_chunkaid@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-arm-msm@vger.kernel.org, iommu@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	linux-usb@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 08/11] arm64: dts: qcom: sc8180x: Rename AOSS_QMP to
- power-management
-Message-ID: <6fqpulpczqnzabdnpckd2rtrcdhxryydhkuou7vdhmsftquckt@wzuoxvhyep5d>
-References: <20250306-topic-dt_bindings_fixups-v1-0-0c84aceb0ef9@oss.qualcomm.com>
- <20250306-topic-dt_bindings_fixups-v1-8-0c84aceb0ef9@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="D/v5RpLb"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741326567; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=PW2KZ+lavZ5umj4nb4wShks/jgrzv4LZ8z+hqADlg6Y=;
+	b=D/v5RpLb76WqB8indMjFaMfUkLmVJEvuHBLQrzMLk7HCaODKfL9xVPXjvBldGEfwVfLQhkaPo6vdsAZfLCct4XW2xPYaxQ+OtML+ZLm94ln3BDTlZXDUovSNL4QoOu5jc9h56lZQyK8N4AQMlSlWwkyKMmqwD3XNweYCJrFa+a0=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQr2xAj_1741326247 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Mar 2025 13:44:07 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: tony.luck@intel.com,
+	bp@alien8.de,
+	peterz@infradead.org,
+	catalin.marinas@arm.com,
+	yazen.ghannam@amd.com,
+	akpm@linux-foundation.org,
+	linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	jpoimboe@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	baolin.wang@linux.alibaba.com,
+	tianruidong@linux.alibaba.com,
+	xueshuai@linux.alibaba.com
+Subject: [PATCH v4 1/3] x86/mce: Use is_copy_from_user() to determine copy-from-user context
+Date: Fri,  7 Mar 2025 13:44:02 +0800
+Message-ID: <20250307054404.73877-2-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
+References: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306-topic-dt_bindings_fixups-v1-8-0c84aceb0ef9@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 06, 2025 at 07:11:20PM +0100, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> The node is currently named power-controller, which requires the device
-> underneath is a power domain provider. Rename it to align with other
-> SoCs and resolve this sort of warnings:
-> 
-> power-controller@c310000: '#power-domain-cells' is a required property
-> 
-> Fixes: 8575f197b077 ("arm64: dts: qcom: Introduce the SC8180x platform")
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/sc8180x.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Commit 4c132d1d844a ("x86/futex: Remove .fixup usage") introduced a new
+extable fixup type, EX_TYPE_EFAULT_REG, and commit 4c132d1d844a
+("x86/futex: Remove .fixup usage") updated the extable fixup type for
+copy-from-user operations, changing it from EX_TYPE_UACCESS to
+EX_TYPE_EFAULT_REG. The error context for copy-from-user operations no
+longer functions as an in-kernel recovery context. Consequently, the error
+context for copy-from-user operations no longer functions as an in-kernel
+recovery context, resulting in kernel panics with the message: "Machine
+check: Data load in unrecoverable area of kernel."
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+The critical aspect is identifying whether the error context involves a
+read from user memory. We do not care about the ex-type if we know its a
+MOV reading from userspace. is_copy_from_user() return true when both of
+the following conditions are met:
 
+    - the current instruction is copy
+    - source address is user memory
+
+So, use is_copy_from_user() to determin if a context is copy user directly.
+
+Fixes: 4c132d1d844a ("x86/futex: Remove .fixup usage")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+ arch/x86/kernel/cpu/mce/severity.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
+index dac4d64dfb2a..2235a7477436 100644
+--- a/arch/x86/kernel/cpu/mce/severity.c
++++ b/arch/x86/kernel/cpu/mce/severity.c
+@@ -300,13 +300,12 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
+ 	copy_user  = is_copy_from_user(regs);
+ 	instrumentation_end();
+ 
+-	switch (fixup_type) {
+-	case EX_TYPE_UACCESS:
+-		if (!copy_user)
+-			return IN_KERNEL;
+-		m->kflags |= MCE_IN_KERNEL_COPYIN;
+-		fallthrough;
++	if (copy_user) {
++		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
++		return IN_KERNEL_RECOV;
++	}
+ 
++	switch (fixup_type) {
+ 	case EX_TYPE_FAULT_MCE_SAFE:
+ 	case EX_TYPE_DEFAULT_MCE_SAFE:
+ 		m->kflags |= MCE_IN_KERNEL_RECOV;
 -- 
-With best wishes
-Dmitry
+2.39.3
+
