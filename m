@@ -1,121 +1,97 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50081204C0E;
-	Sat,  8 Mar 2025 22:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449F57346F
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 22:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741471545; cv=none; b=cPv/BJnIFPyCWdYciL3Ur4mhFFV/s1zyoUKnWHraqVssOus+49C582A28FUNN9p138AOfqrkqSGW04DQxmDn5Kn/fyTlTBJOlhyMWgbJ0wtxI/p/CTa266l6czPFS9ceaGjVx9Q6jOuLbxblvlOniyb8BdIirQBySABkdEcMG8U=
+	t=1741472133; cv=none; b=RuMUh+f6DIBDXV+Q8h8HTUTXm6EoIETGbgy7bg7BKRca6S4lazMWuZT+tnxrEtLs0FTwM4LVeSUoWOX+q19qDA4Ucn0HIG2yx2XanM6SHTB2i91c/RZOVMQdLaw4ZPI/OksTNz/13McZkAJUlbW9fC5AI3wGOvKRDRK+t2oIrro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741471545; c=relaxed/simple;
-	bh=91KDpFnobQlqpXIUPvBSTVqo5BspmzSEeNNLTweH/yw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WmhsgoDwVU8gtR7kWOMI2YeWd9mKLeco2/p1x4eH4OSIBz778TCe6R5GwFrE/MVPoJnQmwMfsFsIQAmrBCczRZ10bNglQ9pZBEIkMdtEOYnMXnWtPwX3hmDWgO3tOVVGpEHtoiwr7qXG1Jz/QOBddN0MLRc3fDNQgLOifEsJBCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gX1oKnki; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gX1oKnki"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e549be93d5eso2676988276.1;
-        Sat, 08 Mar 2025 14:05:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741471542; x=1742076342; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fe5HwiRfeSGS1igHNPHt1KQo9bVNCbcmOjjly6dFFsc=;
-        b=gX1oKnkixB6Cb4nm9wdyN9LxdwwqL+bRDfI3DNu5P98lJhw9NKo7gJM8Blk7jAImzP
-         OKQ14f5HHoUjVKzk/935sa/fpIQCXeaNFGTTj5ua9z4EdpNw14AjnygGNhiOfaRQb7Sn
-         KEImqP9wgLQPaSpmL1zbcKW8uVz3sSkJgmhhD10U4PdBTljt/wzWzgPjKa41FkTkUz1R
-         ZOxQWuEbn0wOBhUxCFFjmtpiPXGcTiCn4dSpgd6MtD5G46RXQha2I5lkKQB3ehD3JgLU
-         CaCjdE6kRNZYPBvIiX4CfrrPxPdsbMyyjOSXI4BGP/o1v0iUKg/Nt7FaOUSU1Bc/3Xdz
-         Suxg==
+	s=arc-20240116; t=1741472133; c=relaxed/simple;
+	bh=Kszz8mtYtFrF7gjWM0v3bUUjJRhMTeWiuQRvVwYSURo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Y6osyUSOkml9lc6HKJ2mnDhJ1AQs9pYwHQ8VzfWBtvh6uLjhAE4La+2PIMTX54qlCeQjHT6ey+cMB2QFYYOyNARtBIQhtLUy9hT7EXsKWUeStZLPxcES9q4fPmbJgud8Q+Na+hsDiza7dBA5OibV3Bom4JX9bj4dAjdGg26gRMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3cfb20d74b5so27761195ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 14:15:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741471542; x=1742076342;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fe5HwiRfeSGS1igHNPHt1KQo9bVNCbcmOjjly6dFFsc=;
-        b=PfVxNdnPEGByEGAKkH6BwbR72A44rtwQN7Yn4miq1ZpVpXOh99XxYLUY/a2EFH+Z2q
-         L+RHWj9djsteDLiadgmwoBlqV+LiLomapvctsGuBrIzgUWi3l6GfcSci4Ije801Zzlwv
-         agMV69HsWuFIuMqqR/UhSCq6jx43/anYGBTydqpQhIjd31YGNaY8wRpKOzkh8ViKP8MR
-         D4IPOuti6c5oWk+GpChVWNcdH8eK+7rJ+Y0ZDh8H/SgwZy7B9eeIXXxl1kok9JOIOALS
-         3YLnpc4whVjKSW05Y0aHFmvb+kKXFsLOiyuBG17FTMgoGWpVOsn9VBZNY2td2vq2TXV3
-         dHAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1NKAeSvEBrXUA1JvsLxT0faBsQklSuBHfquKmi9dhKKYgVUieFh2/GwlTxsr396b/yKffFHu6vgB5jO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVogk/1Oh/ktkosLQSoaAQGbzX5xyfFqJyMhegNRhR7yulX89j
-	bTkAB44BuVufPcnp3+eFxDa7ROcZzJL1GQ3c9pvERPfVOVcoC+b8IHojHJVO
-X-Gm-Gg: ASbGncsKeKyXuF6aD94ua2JmtTqlobSzB+63GaoRTzh1o1DMvT5AgMicLZlp0z+bn+C
-	LsSeMVKHz3GB7vrzxG0GWHwtI9sD0jTcsH3iE8rxwAyKsoB/1am60bA4lZsVKnoyQvLzvzbG0gH
-	D2dVwEeFAHrlIA/qXEfvgbjP0kcu47AA1cA+mKdiBKjJkfkL6ugLZ6bb0iAEeqcsoGeQAVX1SOG
-	0e/ifOK8AhBAZjfY5ZCUvwwuXGTYqarO/x0nW+bIF+U7rZ+b2zapN/mxDLPUcXWoo/95O4lBAE1
-	+jUoZ7Og67ok5FJ4wtL0KfjnE9gtfmMBylwq82uMHbdBMw==
-X-Google-Smtp-Source: AGHT+IEhBa/6/Dctzsb/SCt1oQzGs2l4fal8a6FwOUTsEF6X+R/4eH3+flf9JSVAFlwuOQj8tpHRCw==
-X-Received: by 2002:a05:6902:2291:b0:e5b:12b4:d67 with SMTP id 3f1490d57ef6-e635c136520mr11040934276.11.1741471542147;
-        Sat, 08 Mar 2025 14:05:42 -0800 (PST)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e634b8e8ef6sm1524824276.36.2025.03.08.14.05.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 14:05:41 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Sat, 08 Mar 2025 17:05:29 -0500
-Subject: [PATCH RFC 2/2] platform/x86: alienware-wmi-wmax: Check for AWCC
- support using _UID
+        d=1e100.net; s=20230601; t=1741472131; x=1742076931;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UvzKf+sVK4uQBK0HdKndULW1i5XBUawIXSHX2OP03mk=;
+        b=Vc7g1H8QMXPubek4oftqThZm+/hd5OBjo409UbBG4ifqS5Qh0n08Oyg8/z31rz6im1
+         P1+L1O9cpL3vSjPCRKXFtVsfOL3oUCJz/TGjufDzUCoP+550eIs0E/b3wOPLbC3VAjrG
+         8f2BRhM050IpblQqjamGjwaFTs4bLslLLHodHrw15yP//BYbD1XlSzZGqzy7Or4FfnKE
+         Ywy701wh7FRbxQEvvg3Z9veZVKrc52k0BNPDxqLd17aZ5LncvTfIcFu427jZ/be+YWQV
+         dYC8puNTBzyMwcEzhREQfRQ6Br+3w2pqepUuakb1rgnEXzAi1+z039pVYpaM0l93qzm6
+         ceMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXt5Q+lh7Opdd+JQVWeZ9sH8YxiHKEe72QClnCckqiTKxa6l2tt4jYfcdXpxOsz53H/QGGXDK3e7al9Ql8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZztgufTzyskW21IASfdENDqNBoOsIQnuJm9uOMZVM1tzV6A1Y
+	Mtt77YTO964gYSN2x6xrVRLU2f1vPVyJA0fQsEQgAXq++G2vhdlmaXbLVbHL2LbfUMwAIwVg695
+	dKu1YVvcDcO6FXOme4FDqtkT4UshfM245AZPy2JQwK6rfa4ii5w4VfUU=
+X-Google-Smtp-Source: AGHT+IGymKYXs5JD65mhonbvS022JZmSRMn3vjWy03XHFTHkqWLV3EZ4P//wd9/WI0yd5ES9yFjUv7LAo8mOhffmdzDSWS69AkEy
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250308-awcc-uid-v1-2-6360892d8b95@gmail.com>
-References: <20250308-awcc-uid-v1-0-6360892d8b95@gmail.com>
-In-Reply-To: <20250308-awcc-uid-v1-0-6360892d8b95@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
+X-Received: by 2002:a05:6e02:1aa5:b0:3d3:dcc4:a58e with SMTP id
+ e9e14a558f8ab-3d44196903cmr101807165ab.8.1741472131422; Sat, 08 Mar 2025
+ 14:15:31 -0800 (PST)
+Date: Sat, 08 Mar 2025 14:15:31 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ccc183.050a0220.24a339.009c.GAE@google.com>
+Subject: [syzbot] Monthly input report (Mar 2025)
+From: syzbot <syzbot+list20464a1cac16bade6d05@syzkaller.appspotmail.com>
+To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The WMAX _UID of all devices that support the AWCC is "AWCC". This
-includes the following devices which were manually by reading their ACPI
-tables:
+Hello input maintainers/developers,
 
-  - Dell G16 7630
-  - Dell G5 5505 SE
-  - Alienware m16 R1
-  - Alienware m17 R5 AMD
-  - Alienware x15 R2
-  - Alienware 17 R5
-  - Alienware Aurora R12
-  - Alienware Aurora Ryzen Edition
+This is a 31-day syzbot report for the input subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/input
 
-And possibly many more, if not all devices with this interface.
+During the period, 1 new issues were detected and 1 were fixed.
+In total, 28 issues are still open and 58 have already been fixed.
 
-Add a check for "AWCC" _UID in wmax_wmi_probe() as a last resort test
-for support.
+Some of the still happening issues:
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Ref  Crashes Repro Title
+<1>  1412    Yes   WARNING in cm109_urb_irq_callback/usb_submit_urb
+                   https://syzkaller.appspot.com/bug?extid=2d6d691af5ab4b7e66df
+<2>  996     No    possible deadlock in evdev_pass_values (2)
+                   https://syzkaller.appspot.com/bug?extid=13d3cb2a3dc61e6092f5
+<3>  667     Yes   WARNING: ODEBUG bug in release_nodes
+                   https://syzkaller.appspot.com/bug?extid=624d9e79ec456915d85d
+<4>  631     Yes   WARNING in enable_work
+                   https://syzkaller.appspot.com/bug?extid=7053fbd8757fecbbe492
+<5>  165     Yes   KASAN: stack-out-of-bounds Read in sched_show_task
+                   https://syzkaller.appspot.com/bug?extid=8d2757d62d403b2d9275
+<6>  120     Yes   KASAN: slab-out-of-bounds Read in mcp2221_raw_event
+                   https://syzkaller.appspot.com/bug?extid=52c1a7d3e5b361ccd346
+<7>  47      Yes   WARNING in cm109_input_open/usb_submit_urb (3)
+                   https://syzkaller.appspot.com/bug?extid=ac0f9c4cc1e034160492
+<8>  35      Yes   possible deadlock in uinput_request_submit
+                   https://syzkaller.appspot.com/bug?extid=159077b1355b8cd72757
+<9>  18      No    UBSAN: shift-out-of-bounds in s32ton
+                   https://syzkaller.appspot.com/bug?extid=3fa2af55f15bd21cada9
+<10> 12      Yes   WARNING in bcm5974_start_traffic/usb_submit_urb (2)
+                   https://syzkaller.appspot.com/bug?extid=b064b5599f18f7ebb1e1
+
 ---
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 3 +++
- 1 file changed, 3 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 46d11b200820cdbaa841fc97e33b339fca42104e..529041f419165aa896a5ce49f889e29901d5b80e 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -1422,6 +1422,9 @@ static int wmax_wmi_probe(struct wmi_device *wdev, const void *context)
- 	};
- 	int ret;
- 
-+	if (!awcc && !strncmp(wmidev_get_acpi_device_uid(wdev), "AWCC", 4))
-+		awcc = &generic_quirks;
-+
- 	if (awcc)
- 		ret = alienware_awcc_setup(wdev);
- 	else
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
--- 
-2.48.1
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
+You may send multiple commands in a single email message.
