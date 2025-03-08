@@ -1,33 +1,33 @@
-Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919B6217652
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 18:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28309219E98
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 18:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741459510; cv=none; b=e2XiT0ZC2/IVu4IW+ELAMQFe8DnsBjt7X55xZHBUHaOZ8B+uUdEe0/oehqYwY1pSso1XXjN+GXtZd301NFky7c6/tm34jSg1ICCd4MdHshjgee3/zIIHUvpfniW0huyjDeHpxr5vYNC3A0ZxvoOrPuG6L1iecMkOoau23225WAc=
+	t=1741459516; cv=none; b=dCBC3Fkxtj1WVCev1N7D2SNjr0H9zp0+qry8ze04/X7bctl3Uz8aPaayRJxIvpmxuDTkyB8D/LtIrCqyyMhHb5RrG8UuPUFCtqFbKYXRfzuiKX8fM4ceJpBJcWTxuvhxBiw70Kx6WySMsoLOG7vONxhsqPO9HTXlX+e8raEH+lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741459510; c=relaxed/simple;
-	bh=7cpt9k1ZLpaoZVPQS1W5YzD18ADWhCuTc32JA0fb3Js=;
+	s=arc-20240116; t=1741459516; c=relaxed/simple;
+	bh=9LDxuRU8reoAJoy4A38nJFBJq/kT7oF+bhSaK4+C/3w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cu154QifG+St+aC12yOTUx3IMi+qbbl5KmK/nNRxLv3P6tfryQ2CSPVz3vBmdbS5lbKpBFTREv1ESPoejCT3MysdXeyEZFmTveG3uqqT+Y59OZppSkGVpGCYI8JHb7i4C5U1zFCsZpGdJsEBuh/OBSQ8+gx7CiFQvaWfR5/l72E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=JwinksjP; arc=none smtp.client-ip=84.16.66.168
+	 MIME-Version:Content-Type; b=ducV3/eng8nOQUJL28iSU4z65mR24MCBYh73pmV2fA2+ECNURQFKKHOuoB2Ptghr8nJYW5zNQqFmnyDKEw3KwV/eH3C4Bjz+dTG3U1ZL35poYJPt+mtZgpkjwe4Ry+O0oiFXx2G/WgDkE3K+2de9GKsAhawkdP4LNXsZQV9XyT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=cfPOoDAr; arc=none smtp.client-ip=185.125.25.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="JwinksjP"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Z9Bsr59R8zS5n;
-	Sat,  8 Mar 2025 19:45:04 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="cfPOoDAr"
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Z9Bsz22xdzShN;
+	Sat,  8 Mar 2025 19:45:11 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1741459504;
-	bh=Fldv1rn6sHfI9yybhspBhN5Y364HcxA84Nrn3knPH98=;
+	s=20191114; t=1741459511;
+	bh=7CG5muF+gwo8MsmFi5DT4xu/AZ64anUvZy1IoiAepOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JwinksjPwsH+yBtvX0UpO6KmKi+0zQ/+BZ2yLZNrluySswCbyykLQ6tjx6bVYLcFx
-	 tMHXZpqtRczv0gyNMIAnuYCGEkc0uME3E8OGOnYWmrjdtTUtmuFSCzBKNlMUgCXKva
-	 2yP3p0Bf0Rd1QNAWlBpimYtK/9GnrtXt1Nfbx/wE=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Z9Bsq6pgVzqrM;
-	Sat,  8 Mar 2025 19:45:03 +0100 (CET)
+	b=cfPOoDArctk1RV+L8y67FHJvVoHHaqH9+Ey0scTBc7tAtzs59TxS/ixKZ2KcrOV8V
+	 KeZA5VvXYEV3lkm2NvjjcGIP+Ceb3aGqWYMTYPOJUGsTztaMTWiS77H7KV1xDGzP3h
+	 ha2X1ELgarkqUmt0lgeozSEynopXUKKnxgqSqW1c=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Z9Bsy0DfWzKf2;
+	Sat,  8 Mar 2025 19:45:10 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -58,9 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v6 21/26] selftests/landlock: Add tests for audit flags and domain IDs
-Date: Sat,  8 Mar 2025 19:44:17 +0100
-Message-ID: <20250308184422.2159360-22-mic@digikod.net>
+Subject: [PATCH v6 25/26] selftests/landlock: Add audit tests for filesystem
+Date: Sat,  8 Mar 2025 19:44:21 +0100
+Message-ID: <20250308184422.2159360-26-mic@digikod.net>
 In-Reply-To: <20250308184422.2159360-1-mic@digikod.net>
 References: <20250308184422.2159360-1-mic@digikod.net>
 Precedence: bulk
@@ -73,733 +73,597 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add audit_test.c to check with and without LANDLOCK_RESTRICT_SELF_*
-flags against the two Landlock audit record types:
-AUDIT_LANDLOCK_ACCESS and AUDIT_LANDLOCK_DOMAIN.
+Test all filesystem blockers, including events with several records, and
+record with several blockers:
+- fs.execute
+- fs.write_file
+- fs.read_file
+- fs_read_dir
+- fs.remove_dir
+- fs.remove_file
+- fs.make_char
+- fs.make_dir
+- fs.make_reg
+- fs.make_sock
+- fs.make_fifo
+- fs.make_block
+- fs.make_sym
+- fs.refer
+- fs.truncate
+- fs.ioctl_dev
 
-Check consistency of domain IDs in AUDIT_LANDLOCK_ACCESS and
-AUDIT_LANDLOCK_DOMAIN messages: denied access, domain allocation, and
-domain deallocation.
-
-Tests are run with audit filters to ensure the audit records come from
-the test program.  Moreover, because there can only be one audit
-process, tests would failed if run in parallel.  Because of audit
-limitations, tests can only be run in the initial namespace.
-
-The audit test helpers were inspired by libaudit and
-tools/testing/selftests/net/netfilter/audit_logread.c
+Test coverage for security/landlock is 93.4% of 1407 lines according to
+gcc/gcov-14.
 
 Cc: Günther Noack <gnoack@google.com>
 Cc: Paul Moore <paul@paul-moore.com>
-Cc: Phil Sutter <phil@nwl.cc>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20250308184422.2159360-22-mic@digikod.net
+Link: https://lore.kernel.org/r/20250308184422.2159360-26-mic@digikod.net
 ---
-
-There is a race condition when checking the "domain drop" event on some
-systems.
 
 Changes since v5:
-- Enhance audit_match_record() with an __u64 *domain_id argument set
-  according to the audit logs.
-- Rename audit_fork.flags to audit_flags.signal .
-- Rename variants according to new flags.
-- Check consistency of domain IDs.
-
-Changes since v4:
-- Update with the new landlock_restrict_self()'s flags, the new audit
-  rule types, and message fields.
-- Simplify audit_filter_exe() and audit_init_filter_exe().
-- Test with kill() instead of umount().
-- Test domain deallocation events.
-
-Changes since v3:
-- Improve audit_request() to check Netlink errors and handle multiple
-  replies.
-- Make audit_filter_exe() more generic to handle several audit rule
-  lists.
-- Merge audit_init_state() into audit_init() and create
-  audit_init_with_exe_filter() to handle AUDIT_EXE_LANDLOCK_DENY with an
-  arbitrary path.
-- Add matches_log_dom_info().
-
-Changes since v2:
 - New patch.
 ---
- tools/testing/selftests/landlock/audit.h      | 386 ++++++++++++++++++
- tools/testing/selftests/landlock/audit_test.c | 238 +++++++++++
- tools/testing/selftests/landlock/common.h     |   2 +
- tools/testing/selftests/landlock/config       |   1 +
- 4 files changed, 627 insertions(+)
- create mode 100644 tools/testing/selftests/landlock/audit.h
- create mode 100644 tools/testing/selftests/landlock/audit_test.c
+ tools/testing/selftests/landlock/audit.h   |  39 ++
+ tools/testing/selftests/landlock/common.h  |  16 +
+ tools/testing/selftests/landlock/fs_test.c | 455 +++++++++++++++++++++
+ 3 files changed, 510 insertions(+)
 
 diff --git a/tools/testing/selftests/landlock/audit.h b/tools/testing/selftests/landlock/audit.h
-new file mode 100644
-index 000000000000..b3b3e52e8256
---- /dev/null
+index b3b3e52e8256..d84a88ff6535 100644
+--- a/tools/testing/selftests/landlock/audit.h
 +++ b/tools/testing/selftests/landlock/audit.h
-@@ -0,0 +1,386 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Landlock audit helpers
-+ *
-+ * Copyright © 2024-2025 Microsoft Corporation
-+ */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <linux/audit.h>
-+#include <linux/limits.h>
-+#include <linux/netlink.h>
-+#include <regex.h>
-+#include <stdbool.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/socket.h>
-+
-+#ifndef ARRAY_SIZE
-+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+@@ -22,6 +22,10 @@
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+ #endif
+ 
++#ifndef __maybe_unused
++#define __maybe_unused __attribute__((__unused__))
 +#endif
 +
-+#define REGEX_LANDLOCK_PREFIX "^audit([0-9.:]\\+): domain=\\([0-9a-f]\\+\\)"
-+
-+struct audit_filter {
-+	__u32 record_type;
-+	size_t exe_len;
-+	char exe[PATH_MAX];
-+};
-+
-+struct audit_message {
-+	struct nlmsghdr header;
-+	union {
-+		struct audit_status status;
-+		struct audit_features features;
-+		struct audit_rule_data rule;
-+		struct nlmsgerr err;
-+		char data[PATH_MAX + 200];
-+	};
-+};
-+
-+static int audit_send(const int fd, const struct audit_message *const msg)
+ #define REGEX_LANDLOCK_PREFIX "^audit([0-9.:]\\+): domain=\\([0-9a-f]\\+\\)"
+ 
+ struct audit_filter {
+@@ -188,6 +192,41 @@ static int audit_set_status(int fd, __u32 key, __u32 val)
+ 	return audit_request(fd, &msg, NULL);
+ }
+ 
++/* Returns a pointer to the last filled character of @dst, which is `\0`.  */
++static __maybe_unused char *regex_escape(const char *const src, char *dst,
++					 size_t dst_size)
 +{
-+	struct sockaddr_nl addr = {
-+		.nl_family = AF_NETLINK,
-+	};
-+	int ret;
++	char *d = dst;
 +
-+	do {
-+		ret = sendto(fd, msg, msg->header.nlmsg_len, 0,
-+			     (struct sockaddr *)&addr, sizeof(addr));
-+	} while (ret < 0 && errno == EINTR);
++	for (const char *s = src; *s; s++) {
++		switch (*s) {
++		case '$':
++		case '*':
++		case '.':
++		case '[':
++		case '\\':
++		case ']':
++		case '^':
++			if (d >= dst + dst_size - 2)
++				return (char *)-ENOMEM;
 +
-+	if (ret < 0)
-+		return -errno;
++			*d++ = '\\';
++			*d++ = *s;
++			break;
++		default:
++			if (d >= dst + dst_size - 1)
++				return (char *)-ENOMEM;
 +
-+	if (ret != msg->header.nlmsg_len)
-+		return -E2BIG;
-+
-+	return 0;
-+}
-+
-+static int audit_recv(const int fd, struct audit_message *msg)
-+{
-+	struct sockaddr_nl addr;
-+	socklen_t addrlen = sizeof(addr);
-+	struct audit_message msg_tmp;
-+	int err;
-+
-+	if (!msg)
-+		msg = &msg_tmp;
-+
-+	do {
-+		err = recvfrom(fd, msg, sizeof(*msg), 0,
-+			       (struct sockaddr *)&addr, &addrlen);
-+	} while (err < 0 && errno == EINTR);
-+
-+	if (err < 0)
-+		return -errno;
-+
-+	if (addrlen != sizeof(addr) || addr.nl_pid != 0)
-+		return -EINVAL;
-+
-+	/* Checks Netlink error or end of messages. */
-+	if (msg->header.nlmsg_type == NLMSG_ERROR)
-+		return msg->err.error;
-+
-+	return 0;
-+}
-+
-+static int audit_request(const int fd,
-+			 const struct audit_message *const request,
-+			 struct audit_message *reply)
-+{
-+	struct audit_message msg_tmp;
-+	bool first_reply = true;
-+	int err;
-+
-+	err = audit_send(fd, request);
-+	if (err)
-+		return err;
-+
-+	if (!reply)
-+		reply = &msg_tmp;
-+
-+	do {
-+		if (first_reply)
-+			first_reply = false;
-+		else
-+			reply = &msg_tmp;
-+
-+		err = audit_recv(fd, reply);
-+		if (err)
-+			return err;
-+	} while (reply->header.nlmsg_type != NLMSG_ERROR &&
-+		 reply->err.msg.nlmsg_type != request->header.nlmsg_type);
-+
-+	return reply->err.error;
-+}
-+
-+static int audit_filter_exe(const int audit_fd,
-+			    const struct audit_filter *const filter,
-+			    const __u16 type)
-+{
-+	struct audit_message msg = {
-+		.header = {
-+			.nlmsg_len = NLMSG_SPACE(sizeof(msg.rule)) +
-+				     NLMSG_ALIGN(filter->exe_len),
-+			.nlmsg_type = type,
-+			.nlmsg_flags = NLM_F_REQUEST | NLM_F_ACK,
-+		},
-+		.rule = {
-+			.flags = AUDIT_FILTER_EXCLUDE,
-+			.action = AUDIT_NEVER,
-+			.field_count = 1,
-+			.fields[0] = filter->record_type,
-+			.fieldflags[0] = AUDIT_NOT_EQUAL,
-+			.values[0] = filter->exe_len,
-+			.buflen = filter->exe_len,
-+		}
-+	};
-+
-+	if (filter->record_type != AUDIT_EXE)
-+		return -EINVAL;
-+
-+	memcpy(msg.rule.buf, filter->exe, filter->exe_len);
-+	return audit_request(audit_fd, &msg, NULL);
-+}
-+
-+static int audit_filter_drop(const int audit_fd, const __u16 type)
-+{
-+	struct audit_message msg = {
-+		.header = {
-+			.nlmsg_len = NLMSG_SPACE(sizeof(msg.rule)),
-+			.nlmsg_type = type,
-+			.nlmsg_flags = NLM_F_REQUEST | NLM_F_ACK,
-+		},
-+		.rule = {
-+			.flags = AUDIT_FILTER_EXCLUDE,
-+			.action = AUDIT_NEVER,
-+			.field_count = 1,
-+			.fields[0] = AUDIT_MSGTYPE,
-+			.fieldflags[0] = AUDIT_NOT_EQUAL,
-+			.values[0] = AUDIT_LANDLOCK_DOMAIN,
-+		}
-+	};
-+
-+	return audit_request(audit_fd, &msg, NULL);
-+}
-+
-+static int audit_set_status(int fd, __u32 key, __u32 val)
-+{
-+	const struct audit_message msg = {
-+		.header = {
-+			.nlmsg_len = NLMSG_SPACE(sizeof(msg.status)),
-+			.nlmsg_type = AUDIT_SET,
-+			.nlmsg_flags = NLM_F_REQUEST | NLM_F_ACK,
-+		},
-+		.status = {
-+			.mask = key,
-+			.enabled = key == AUDIT_STATUS_ENABLED ? val : 0,
-+			.pid = key == AUDIT_STATUS_PID ? val : 0,
-+		}
-+	};
-+
-+	return audit_request(fd, &msg, NULL);
-+}
-+
-+/*
-+ * @domain_id: The domain ID extracted from the audit message (if the first part
-+ * of @pattern is REGEX_LANDLOCK_PREFIX).  It is set to 0 if the domain ID is
-+ * not found.
-+ */
-+static int audit_match_record(int audit_fd, const __u16 type,
-+			      const char *const pattern, __u64 *domain_id)
-+{
-+	struct audit_message msg;
-+	int ret, err = 0;
-+	bool matches_record = !type;
-+	regmatch_t matches[2];
-+	regex_t regex;
-+
-+	ret = regcomp(&regex, pattern, 0);
-+	if (ret)
-+		return -EINVAL;
-+
-+	do {
-+		memset(&msg, 0, sizeof(msg));
-+		err = audit_recv(audit_fd, &msg);
-+		if (err)
-+			goto out;
-+
-+		if (msg.header.nlmsg_type == type)
-+			matches_record = true;
-+	} while (!matches_record);
-+
-+	ret = regexec(&regex, msg.data, ARRAY_SIZE(matches), matches, 0);
-+	if (ret) {
-+		printf("DATA: %s\n", msg.data);
-+		printf("ERROR: no match for pattern: %s\n", pattern);
-+		err = -ENOENT;
-+	}
-+
-+	if (domain_id) {
-+		*domain_id = 0;
-+		if (matches[1].rm_so != -1) {
-+			int match_len = matches[1].rm_eo - matches[1].rm_so;
-+			/* The maximal characters of a 2^64 hexadecimal number is 17. */
-+			char dom_id[18];
-+
-+			if (match_len > 0 && match_len < sizeof(dom_id)) {
-+				memcpy(dom_id, msg.data + matches[1].rm_so,
-+				       match_len);
-+				dom_id[match_len] = '\0';
-+				if (domain_id)
-+					*domain_id = strtoull(dom_id, NULL, 16);
-+			}
++			*d++ = *s;
 +		}
 +	}
++	if (d >= dst + dst_size - 1)
++		return (char *)-ENOMEM;
 +
-+out:
-+	regfree(&regex);
-+	return err;
++	*d = '\0';
++	return d;
 +}
 +
-+struct audit_records {
-+	size_t access;
-+	size_t domain;
-+};
-+
-+// TODO: check that audit_fd is valid
-+static void audit_count_records(int audit_fd, struct audit_records *records)
+ /*
+  * @domain_id: The domain ID extracted from the audit message (if the first part
+  * of @pattern is REGEX_LANDLOCK_PREFIX).  It is set to 0 if the domain ID is
+diff --git a/tools/testing/selftests/landlock/common.h b/tools/testing/selftests/landlock/common.h
+index c0a2d0b36217..ddcd8d00aeb3 100644
+--- a/tools/testing/selftests/landlock/common.h
++++ b/tools/testing/selftests/landlock/common.h
+@@ -207,6 +207,22 @@ enforce_ruleset(struct __test_metadata *const _metadata, const int ruleset_fd)
+ 	}
+ }
+ 
++static void __maybe_unused
++drop_access_rights(struct __test_metadata *const _metadata,
++		   const struct landlock_ruleset_attr *const ruleset_attr)
 +{
-+	struct audit_message msg;
++	int ruleset_fd;
 +
-+	records->access = 0;
-+	records->domain = 0;
-+
-+	do {
-+		memset(&msg, 0, sizeof(msg));
-+		if (audit_recv(audit_fd, &msg))
-+			return;
-+
-+		switch (msg.header.nlmsg_type) {
-+		case AUDIT_LANDLOCK_ACCESS:
-+			records->access++;
-+			break;
-+		case AUDIT_LANDLOCK_DOMAIN:
-+			records->domain++;
-+			break;
-+		}
-+	} while (true);
++	ruleset_fd =
++		landlock_create_ruleset(ruleset_attr, sizeof(*ruleset_attr), 0);
++	EXPECT_LE(0, ruleset_fd)
++	{
++		TH_LOG("Failed to create a ruleset: %s", strerror(errno));
++	}
++	enforce_ruleset(_metadata, ruleset_fd);
++	EXPECT_EQ(0, close(ruleset_fd));
 +}
 +
-+static int audit_init(void)
+ struct protocol_variant {
+ 	int domain;
+ 	int type;
+diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
+index aa6f2c1cbec7..873d38efdad7 100644
+--- a/tools/testing/selftests/landlock/fs_test.c
++++ b/tools/testing/selftests/landlock/fs_test.c
+@@ -41,6 +41,7 @@
+ #define _ASM_GENERIC_FCNTL_H
+ #include <linux/fcntl.h>
+ 
++#include "audit.h"
+ #include "common.h"
+ 
+ #ifndef renameat2
+@@ -5554,4 +5555,458 @@ TEST_F_FORK(layout3_fs, release_inodes)
+ 	ASSERT_EQ(EACCES, test_open(TMP_DIR, O_RDONLY));
+ }
+ 
++static int matches_log_fs_extra(struct __test_metadata *const _metadata,
++				int audit_fd, const char *const blockers,
++				const char *const path, const char *const extra)
 +{
-+	const struct timeval tv = {
-+		.tv_usec = 1,
-+	};
-+	int fd, err;
-+
-+	fd = socket(PF_NETLINK, SOCK_RAW, NETLINK_AUDIT);
-+	if (fd < 0)
-+		return -errno;
-+
-+	err = audit_set_status(fd, AUDIT_STATUS_ENABLED, 1);
-+	if (err)
-+		return err;
-+
-+	err = audit_set_status(fd, AUDIT_STATUS_PID, getpid());
-+	if (err)
-+		return err;
-+
-+	/* Sets a timeout for negative tests. */
-+	err = setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-+	if (err)
-+		return -errno;
-+
-+	return fd;
-+}
-+
-+static int audit_init_filter_exe(struct audit_filter *filter, const char *path)
-+{
++	static const char log_template[] = REGEX_LANDLOCK_PREFIX
++		" blockers=fs\\.%s path=\"%s\" dev=\"[^\"]\\+\" ino=[0-9]\\+$";
 +	char *absolute_path = NULL;
++	size_t log_match_remaining = sizeof(log_template) + strlen(blockers) +
++				     PATH_MAX * 2 +
++				     (extra ? strlen(extra) : 0) + 1;
++	char log_match[log_match_remaining];
++	char *log_match_cursor = log_match;
++	size_t chunk_len;
 +
-+	// TODO: Make sure there is no rule already filtering.
-+
-+	filter->record_type = AUDIT_EXE;
-+
-+	if (!path) {
-+		filter->exe_len = readlink("/proc/self/exe", filter->exe,
-+					   sizeof(filter->exe) - 1);
-+		if (filter->exe_len < 0)
-+			return -errno;
-+
-+		return 0;
-+	}
++	chunk_len = snprintf(log_match_cursor, log_match_remaining,
++			     REGEX_LANDLOCK_PREFIX " blockers=%s path=\"",
++			     blockers);
++	if (chunk_len < 0 || chunk_len >= log_match_remaining)
++		return -E2BIG;
 +
 +	absolute_path = realpath(path, NULL);
 +	if (!absolute_path)
 +		return -errno;
 +
-+	/* No need for the terminating NULL byte. */
-+	filter->exe_len = strlen(absolute_path);
-+	if (filter->exe_len > sizeof(filter->exe))
-+		return -E2BIG;
-+
-+	memcpy(filter->exe, absolute_path, filter->exe_len);
++	log_match_remaining -= chunk_len;
++	log_match_cursor += chunk_len;
++	log_match_cursor = regex_escape(absolute_path, log_match_cursor,
++					log_match_remaining);
 +	free(absolute_path);
-+	return 0;
-+}
++	if (log_match_cursor < 0)
++		return (long long)log_match_cursor;
 +
-+static int audit_cleanup(int audit_fd, struct audit_filter *filter)
-+{
-+	struct audit_filter new_filter;
-+
-+	if (audit_fd < 0 || !filter) {
-+		int err;
-+
-+		/*
-+		 * Simulates audit_init_with_exe_filter() when called from
-+		 * FIXTURE_TEARDOWN_PARENT().
-+		 */
-+		audit_fd = audit_init();
-+		if (audit_fd < 0)
-+			return audit_fd;
-+
-+		filter = &new_filter;
-+		err = audit_init_filter_exe(filter, NULL);
-+		if (err)
-+			return err;
-+	}
-+
-+	/* Filters might not be in place. */
-+	audit_filter_exe(audit_fd, filter, AUDIT_DEL_RULE);
-+	audit_filter_drop(audit_fd, AUDIT_DEL_RULE);
-+
-+	/*
-+	 * Because audit_cleanup() might not be called by the test auditd
-+	 * process, it might not be possible to explicitly set it.  Anyway,
-+	 * AUDIT_STATUS_ENABLED will implicitly be set to 0 when the auditd
-+	 * process will exit.
-+	 */
-+	return close(audit_fd);
-+}
-+
-+static int audit_init_with_exe_filter(struct audit_filter *filter)
-+{
-+	int fd, err;
-+
-+	fd = audit_init();
-+	if (fd < 0)
-+		return fd;
-+
-+	err = audit_init_filter_exe(filter, NULL);
-+	if (err)
-+		return err;
-+
-+	err = audit_filter_exe(fd, filter, AUDIT_ADD_RULE);
-+	if (err)
-+		return err;
-+
-+	return fd;
-+}
-diff --git a/tools/testing/selftests/landlock/audit_test.c b/tools/testing/selftests/landlock/audit_test.c
-new file mode 100644
-index 000000000000..09bf74749aeb
---- /dev/null
-+++ b/tools/testing/selftests/landlock/audit_test.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Landlock tests - Audit
-+ *
-+ * Copyright © 2024-2025 Microsoft Corporation
-+ */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <linux/landlock.h>
-+#include <sys/mount.h>
-+#include <sys/prctl.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#include "audit.h"
-+#include "common.h"
-+
-+static int matches_log_domain_allocated(struct __test_metadata *const _metadata,
-+					int audit_fd, __u64 *domain_id)
-+{
-+	return audit_match_record(
-+		audit_fd, AUDIT_LANDLOCK_DOMAIN,
-+		REGEX_LANDLOCK_PREFIX
-+		" status=allocated mode=enforcing pid=[0-9]\\+ uid=[0-9]\\+"
-+		" exe=\"[^\"]\\+\" comm=\"audit_test\"$",
-+		domain_id);
-+}
-+
-+static int
-+matches_log_domain_deallocated(struct __test_metadata *const _metadata,
-+			       int audit_fd, unsigned int num_denials,
-+			       __u64 *domain_id)
-+{
-+	static const char log_template[] = REGEX_LANDLOCK_PREFIX
-+		" status=deallocated denials=%u$";
-+	char log_match[sizeof(log_template) + 10];
-+	int log_match_len;
-+
-+	log_match_len = snprintf(log_match, sizeof(log_match), log_template,
-+				 num_denials);
-+	if (log_match_len > sizeof(log_match))
-+		return -E2BIG;
-+
-+	return audit_match_record(audit_fd, AUDIT_LANDLOCK_DOMAIN, log_match,
-+				  domain_id);
-+}
-+
-+static int matches_log_signal(struct __test_metadata *const _metadata,
-+			      int audit_fd, const pid_t opid, __u64 *domain_id)
-+{
-+	static const char log_template[] = REGEX_LANDLOCK_PREFIX
-+		" blockers=scope\\.signal opid=%d ocomm=\"audit_test\"$";
-+	char log_match[sizeof(log_template) + 10];
-+	int log_match_len;
-+
-+	log_match_len =
-+		snprintf(log_match, sizeof(log_match), log_template, opid);
-+	if (log_match_len > sizeof(log_match))
++	log_match_remaining -= log_match_cursor - log_match;
++	chunk_len = snprintf(log_match_cursor, log_match_remaining,
++			     "\" dev=\"[^\"]\\+\" ino=[0-9]\\+%s$",
++			     extra ?: "");
++	if (chunk_len < 0 || chunk_len >= log_match_remaining)
 +		return -E2BIG;
 +
 +	return audit_match_record(audit_fd, AUDIT_LANDLOCK_ACCESS, log_match,
-+				  domain_id);
++				  NULL);
 +}
 +
-+FIXTURE(audit_flags)
++static int matches_log_fs(struct __test_metadata *const _metadata, int audit_fd,
++			  const char *const blockers, const char *const path)
++{
++	return matches_log_fs_extra(_metadata, audit_fd, blockers, path, NULL);
++}
++
++FIXTURE(audit_layout1)
 +{
 +	struct audit_filter audit_filter;
 +	int audit_fd;
-+	__u64 *domain_id;
 +};
 +
-+FIXTURE_VARIANT(audit_flags)
++FIXTURE_SETUP(audit_layout1)
 +{
-+	const int restrict_flags;
-+};
++	prepare_layout(_metadata);
 +
-+/* clang-format off */
-+FIXTURE_VARIANT_ADD(audit_flags, default) {
-+	/* clang-format on */
-+	.restrict_flags = 0,
-+};
++	create_layout1(_metadata);
 +
-+/* clang-format off */
-+FIXTURE_VARIANT_ADD(audit_flags, same_exec_off) {
-+	/* clang-format on */
-+	.restrict_flags = LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF,
-+};
-+
-+/* clang-format off */
-+FIXTURE_VARIANT_ADD(audit_flags, subdomains_off) {
-+	/* clang-format on */
-+	.restrict_flags = LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF,
-+};
-+
-+/* clang-format off */
-+FIXTURE_VARIANT_ADD(audit_flags, cross_exec_on) {
-+	/* clang-format on */
-+	.restrict_flags = LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON,
-+};
-+
-+FIXTURE_SETUP(audit_flags)
-+{
-+	disable_caps(_metadata);
 +	set_cap(_metadata, CAP_AUDIT_CONTROL);
 +	self->audit_fd = audit_init_with_exe_filter(&self->audit_filter);
-+	EXPECT_LE(0, self->audit_fd)
-+	{
-+		const char *error_msg;
-+
-+		/* kill "$(auditctl -s | sed -ne 's/^pid \([0-9]\+\)$/\1/p')" */
-+		if (self->audit_fd == -EEXIST)
-+			error_msg = "socket already in use (e.g. auditd)";
-+		else
-+			error_msg = strerror(-self->audit_fd);
-+		TH_LOG("Failed to initialize audit: %s", error_msg);
-+	}
-+	clear_cap(_metadata, CAP_AUDIT_CONTROL);
-+
-+	self->domain_id = mmap(NULL, sizeof(*self->domain_id),
-+			       PROT_READ | PROT_WRITE,
-+			       MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-+	ASSERT_NE(MAP_FAILED, self->domain_id);
-+	/* Domain IDs are greater or equal to 2^32. */
-+	*self->domain_id = 1;
++	EXPECT_LE(0, self->audit_fd);
++	drop_caps(_metadata);
 +}
 +
-+FIXTURE_TEARDOWN(audit_flags)
++FIXTURE_TEARDOWN_PARENT(audit_layout1)
 +{
-+	EXPECT_EQ(0, munmap(self->domain_id, sizeof(*self->domain_id)));
++	remove_layout1(_metadata);
 +
-+	set_cap(_metadata, CAP_AUDIT_CONTROL);
-+	EXPECT_EQ(0, audit_cleanup(self->audit_fd, &self->audit_filter));
-+	clear_cap(_metadata, CAP_AUDIT_CONTROL);
++	cleanup_layout(_metadata);
++
++	EXPECT_EQ(0, audit_cleanup(-1, NULL));
 +}
 +
-+TEST_F(audit_flags, signal)
++TEST_F(audit_layout1, execute)
 +{
-+	int status;
-+	pid_t child;
 +	struct audit_records records;
-+	__u64 domain_id_deallocated = 2;
 +
-+	child = fork();
-+	ASSERT_LE(0, child);
-+	if (child == 0) {
-+		const struct landlock_ruleset_attr ruleset_attr = {
-+			.scoped = LANDLOCK_SCOPE_SIGNAL,
-+		};
-+		int ruleset_fd;
++	copy_file(_metadata, bin_true, file1_s1d1);
++	test_execute(_metadata, 0, file1_s1d1);
++	test_check_exec(_metadata, 0, file1_s1d1);
 +
-+		/* Add filesystem restrictions. */
-+		ruleset_fd = landlock_create_ruleset(&ruleset_attr,
-+						     sizeof(ruleset_attr), 0);
-+		ASSERT_LE(0, ruleset_fd);
-+		EXPECT_EQ(0, prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0));
-+		ASSERT_EQ(0, landlock_restrict_self(ruleset_fd,
-+						    variant->restrict_flags));
-+		EXPECT_EQ(0, close(ruleset_fd));
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_EXECUTE,
++			   });
 +
-+		/* First signal checks to test log entries. */
-+		EXPECT_EQ(-1, kill(getppid(), 0));
-+		EXPECT_EQ(EPERM, errno);
++	test_execute(_metadata, EACCES, file1_s1d1);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.execute",
++				    file1_s1d1));
 +
-+		if (variant->restrict_flags &
-+		    LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF) {
-+			EXPECT_EQ(-EAGAIN, matches_log_signal(
-+						   _metadata, self->audit_fd,
-+						   getppid(), self->domain_id));
-+			EXPECT_EQ(*self->domain_id, 1);
-+		} else {
-+			__u64 domain_id_allocated;
++	test_check_exec(_metadata, EACCES, file1_s1d1);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.execute",
++				    file1_s1d1));
 +
-+			EXPECT_EQ(0, matches_log_signal(
-+					     _metadata, self->audit_fd,
-+					     getppid(), self->domain_id));
-+
-+			/* Checks domain information records. */
-+			EXPECT_EQ(0, matches_log_domain_allocated(
-+					     _metadata, self->audit_fd,
-+					     &domain_id_allocated));
-+			EXPECT_NE(*self->domain_id, 1);
-+			EXPECT_NE(*self->domain_id, 0);
-+			EXPECT_EQ(*self->domain_id, domain_id_allocated);
-+		}
-+
-+		/* Second signal checks to test audit_count_records(). */
-+		EXPECT_EQ(-1, kill(getppid(), 0));
-+		EXPECT_EQ(EPERM, errno);
-+
-+		/* Makes sure there is no superfluous logged records. */
-+		audit_count_records(self->audit_fd, &records);
-+		if (variant->restrict_flags &
-+		    LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF) {
-+			EXPECT_EQ(0, records.access);
-+		} else {
-+			EXPECT_EQ(1, records.access);
-+		}
-+		EXPECT_EQ(0, records.domain);
-+
-+		/* Updates filter rules to match the drop record. */
-+		set_cap(_metadata, CAP_AUDIT_CONTROL);
-+		EXPECT_EQ(0, audit_filter_drop(self->audit_fd, AUDIT_ADD_RULE));
-+		EXPECT_EQ(0,
-+			  audit_filter_exe(self->audit_fd, &self->audit_filter,
-+					   AUDIT_DEL_RULE));
-+		clear_cap(_metadata, CAP_AUDIT_CONTROL);
-+
-+		_exit(_metadata->exit_code);
-+		return;
-+	}
-+
-+	ASSERT_EQ(child, waitpid(child, &status, 0));
-+	if (WIFSIGNALED(status) || !WIFEXITED(status) ||
-+	    WEXITSTATUS(status) != EXIT_SUCCESS)
-+		_metadata->exit_code = KSFT_FAIL;
-+
-+	if (variant->restrict_flags &
-+	    LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF) {
-+		EXPECT_EQ(-EAGAIN, matches_log_domain_deallocated(
-+					   _metadata, self->audit_fd, 0,
-+					   &domain_id_deallocated));
-+		EXPECT_EQ(domain_id_deallocated, 2);
-+	} else {
-+		// FIXME: Even if we waited for the child, the following call always
-+		// return -EAGAIN on some environments unless we call sleep(1).
-+		// Any idea how to avoid that?
-+		EXPECT_EQ(0, matches_log_domain_deallocated(
-+				     _metadata, self->audit_fd, 2,
-+				     &domain_id_deallocated));
-+		EXPECT_NE(domain_id_deallocated, 2);
-+		EXPECT_NE(domain_id_deallocated, 0);
-+		EXPECT_EQ(domain_id_deallocated, *self->domain_id);
-+	}
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
 +}
 +
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/landlock/common.h b/tools/testing/selftests/landlock/common.h
-index 6064c9ac0532..fe6ada2c2518 100644
---- a/tools/testing/selftests/landlock/common.h
-+++ b/tools/testing/selftests/landlock/common.h
-@@ -11,6 +11,7 @@
- #include <errno.h>
- #include <linux/securebits.h>
- #include <sys/capability.h>
-+#include <sys/prctl.h>
- #include <sys/socket.h>
- #include <sys/un.h>
- #include <sys/wait.h>
-@@ -37,6 +38,7 @@ static void _init_caps(struct __test_metadata *const _metadata, bool drop_all)
- 	/* Only these three capabilities are useful for the tests. */
- 	const cap_value_t caps[] = {
- 		/* clang-format off */
-+		CAP_AUDIT_CONTROL,
- 		CAP_DAC_OVERRIDE,
- 		CAP_MKNOD,
- 		CAP_NET_ADMIN,
-diff --git a/tools/testing/selftests/landlock/config b/tools/testing/selftests/landlock/config
-index 425de4c20271..8fe9b461b1fd 100644
---- a/tools/testing/selftests/landlock/config
-+++ b/tools/testing/selftests/landlock/config
-@@ -1,4 +1,5 @@
- CONFIG_AF_UNIX_OOB=y
-+CONFIG_AUDIT=y
- CONFIG_CGROUPS=y
- CONFIG_CGROUP_SCHED=y
- CONFIG_INET=y
++TEST_F(audit_layout1, write_file)
++{
++	struct audit_records records;
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_WRITE_FILE,
++			   });
++
++	EXPECT_EQ(EACCES, test_open(file1_s1d1, O_WRONLY));
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd,
++				    "fs\\.write_file", file1_s1d1));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, read_file)
++{
++	struct audit_records records;
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_READ_FILE,
++			   });
++
++	EXPECT_EQ(EACCES, test_open(file1_s1d1, O_RDONLY));
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.read_file",
++				    file1_s1d1));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, read_dir)
++{
++	struct audit_records records;
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_READ_DIR,
++			   });
++
++	EXPECT_EQ(EACCES, test_open(dir_s1d1, O_DIRECTORY));
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.read_dir",
++				    dir_s1d1));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, remove_dir)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++	EXPECT_EQ(0, unlink(file2_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_REMOVE_DIR,
++			   });
++
++	EXPECT_EQ(-1, rmdir(dir_s1d3));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd,
++				    "fs\\.remove_dir", dir_s1d2));
++
++	EXPECT_EQ(-1, unlinkat(AT_FDCWD, dir_s1d3, AT_REMOVEDIR));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd,
++				    "fs\\.remove_dir", dir_s1d2));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
++}
++
++TEST_F(audit_layout1, remove_file)
++{
++	struct audit_records records;
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_REMOVE_FILE,
++			   });
++
++	EXPECT_EQ(-1, unlink(file1_s1d3));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd,
++				    "fs\\.remove_file", dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, make_char)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_CHAR,
++			   });
++
++	EXPECT_EQ(-1, mknod(file1_s1d3, S_IFCHR | 0644, 0));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.make_char",
++				    dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, make_dir)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_DIR,
++			   });
++
++	EXPECT_EQ(-1, mkdir(file1_s1d3, 0755));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.make_dir",
++				    dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, make_reg)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_REG,
++			   });
++
++	EXPECT_EQ(-1, mknod(file1_s1d3, S_IFREG | 0644, 0));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.make_reg",
++				    dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, make_sock)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_SOCK,
++			   });
++
++	EXPECT_EQ(-1, mknod(file1_s1d3, S_IFSOCK | 0644, 0));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.make_sock",
++				    dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, make_fifo)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_FIFO,
++			   });
++
++	EXPECT_EQ(-1, mknod(file1_s1d3, S_IFIFO | 0644, 0));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.make_fifo",
++				    dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, make_block)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_BLOCK,
++			   });
++
++	EXPECT_EQ(-1, mknod(file1_s1d3, S_IFBLK | 0644, 0));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd,
++				    "fs\\.make_block", dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, make_sym)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_SYM,
++			   });
++
++	EXPECT_EQ(-1, symlink("target", file1_s1d3));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.make_sym",
++				    dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++// TODO: Add refer_exchange
++TEST_F(audit_layout1, refer_handled)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata, &(struct landlock_ruleset_attr){
++					      .handled_access_fs =
++						      LANDLOCK_ACCESS_FS_REFER,
++				      });
++
++	EXPECT_EQ(-1, link(file1_s1d1, file1_s1d3));
++	EXPECT_EQ(EXDEV, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.refer",
++				    dir_s1d1));
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.refer",
++				    dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
++}
++
++TEST_F(audit_layout1, refer_make)
++{
++	struct audit_records records;
++
++	EXPECT_EQ(0, unlink(file1_s1d3));
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_MAKE_REG |
++					   LANDLOCK_ACCESS_FS_REFER,
++			   });
++
++	EXPECT_EQ(-1, link(file1_s1d1, file1_s1d3));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.refer",
++				    dir_s1d1));
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd,
++				    "fs\\.make_reg,fs\\.refer", dir_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
++}
++
++TEST_F(audit_layout1, truncate)
++{
++	struct audit_records records;
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_TRUNCATE,
++			   });
++
++	EXPECT_EQ(-1, truncate(file1_s1d3, 0));
++	EXPECT_EQ(EACCES, errno);
++	EXPECT_EQ(0, matches_log_fs(_metadata, self->audit_fd, "fs\\.truncate",
++				    file1_s1d3));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
++TEST_F(audit_layout1, ioctl_dev)
++{
++	struct audit_records records;
++	int fd;
++
++	drop_access_rights(_metadata,
++			   &(struct landlock_ruleset_attr){
++				   .handled_access_fs =
++					   LANDLOCK_ACCESS_FS_IOCTL_DEV,
++			   });
++
++	fd = open("/dev/null", O_RDWR | O_CLOEXEC);
++	ASSERT_LE(0, fd);
++	EXPECT_EQ(EACCES, ioctl_error(_metadata, fd, FIONREAD));
++	EXPECT_EQ(0, matches_log_fs_extra(_metadata, self->audit_fd,
++					  "fs\\.ioctl_dev", "/dev/null",
++					  " ioctlcmd=0x541b"));
++
++	audit_count_records(self->audit_fd, &records);
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(1, records.domain);
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.48.1
 
