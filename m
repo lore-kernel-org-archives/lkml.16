@@ -1,116 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1258374F1
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 11:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB961624F7;
+	Sat,  8 Mar 2025 11:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741432761; cv=none; b=fZaVEt9kcNWIjsMZm5FjvkRivi2ugC9GMXLaDzoLG5nO65pPVDiuomslI5YZvBJSHF/f4GmNWttT1OS+Sbvm/7X6TtuQRwH150D+uSz+dw/LqIWx/T2Bl/5OhsAZFJT+3FZOeoVNFB9ogrvVbunoA2aR2YIiq4mvWyG+RPFDwIc=
+	t=1741433261; cv=none; b=JPytntWe3+nRwRKPZCSO5P93oYav8m93awXzjiXbgEsPQI+RzzKM3dy+AZlS/YTw+nP9oVFvKi1mAsQTW2idqBBXk0+VrqpZdH7RsgPlQ9Se2B4ZGnJzFNIXa08cAuCekYY8MTUjlA/tRFpMfvRU97wzAUaQ1QCV7ogTQm6H9a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741432761; c=relaxed/simple;
-	bh=gU+UcvRVPrP3417Wwe96TRvmgJhmzMPHUdRgX3HUaho=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lQwxZpgFJJp0j/2XtNa8I7J+dGiAWgbbxg6KfL8jLXiQsydLNuIghswZRbtrxandJEdKMWwEDTJ6qa21PVtlHOepZgRztrP9Ed3SVL7/52OiBANmugzFyLNXQ9eQi+s7smzZgZr6ZU95a2/7FgusQYpSi7gIdOtv0hB5HBYlp5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=baDJzKrv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S+SHjGHR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741433261; c=relaxed/simple;
+	bh=77pa/0u+spJdnTck61KtUEn2q1EuxIPaLyUfXm1OYLc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cjHL1nEHbSbo7dmlAdizrPZ/K4zdN8Bvbgfc5M5W4suMzpylfJ4nAEHnj6ulx5Rk5OPg4W+wmyFiwCmo+Tvcrl+PaZ02ACfY1xkjLCzY+FassR1uORcm9+kP9z+lZ94da/wRgJqXLEhD3w3UeNXExGF/qQ6zeHgGh0UUphD64b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=uUfZryQk; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="baDJzKrv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S+SHjGHR"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741432757;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Wwe+Yut1DnOhJnZ/JWqRRJe9rO44j2r7LQI6F1jeF8=;
-	b=baDJzKrvbi8MZyhdOsdplpGcFCulGwNDidt2zWWvMHhroOJXhhMOI7sbcbkLqoVF7PIspt
-	ohk+mGYjhQ+PCu05XQ1tpHd3QSr3U8sv56zy7xPNAc8nYIb7FEKD6569JsQCclFRzdxmXW
-	/lxoNhAtgaMkpvyXrF7xU4PH2B5oZMSntM8Ywb4y8M2CrmeVeJkb3rbonu8UirgJWqstwf
-	TUyBJBLp17pXTBqQ54lyeNYVzSl4NLWFL9PtqPE0c20aW0Zay/kZ1KJFkfohH0D3xR5sqf
-	3IGO0zNVjivWlv6Zd4gXMlUK65TSuwdb6+RL/LSagym0e0raOVqn0BY/wDkTEA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741432757;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Wwe+Yut1DnOhJnZ/JWqRRJe9rO44j2r7LQI6F1jeF8=;
-	b=S+SHjGHRVNAbrSn4vlAlcCUalTnsMY8HyobMiWlhT2I5n5TemkVs4VbcDHnRsN9JCiiNGh
-	0F/hL3yx6XjdTzAg==
-To: Dmitry Vyukov <dvyukov@google.com>, krisman@collabora.com,
- luto@kernel.org, peterz@infradead.org, keescook@chromium.org,
- gregory.price@memverge.com
-Cc: Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] syscall_user_dispatch: Allow allowed range
- wrap-around
-In-Reply-To: <de940218d0a59fd930ec244d87f2375b16a7815a.1740386567.git.dvyukov@google.com>
-References: <cover.1740386567.git.dvyukov@google.com>
- <de940218d0a59fd930ec244d87f2375b16a7815a.1740386567.git.dvyukov@google.com>
-Date: Sat, 08 Mar 2025 12:19:17 +0100
-Message-ID: <87y0xf3h3e.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="uUfZryQk"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741433250; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=r6hK8RRJINhih5PCH8DXk4WruEB7j98b+Guc6p08Ch8=;
+	b=uUfZryQkJLp9monZ8RMRcgu4Yj7WXc9Wn7VOZ8Dwa4D6NCWVZmKI1Lnc9Tw6xNdX2Qr4oVfKTdpYV0HpD9ygr6gpeAIwBAcjSAGOZCdYth4NpG7Si8HIjgn/5hdUJDSS+a33xRm4oMGscArzC0Vw4M9D+OQlUozkE3SGFn2hvtM=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQuhv-O_1741433247 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 08 Mar 2025 19:27:28 +0800
+Message-ID: <0f4dfbde-74a5-451d-8764-cc7767596654@linux.alibaba.com>
+Date: Sat, 8 Mar 2025 19:27:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] x86/mce: Use is_copy_from_user() to determine
+ copy-from-user context
+To: Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "linmiaohe@huawei.com" <linmiaohe@huawei.com>,
+ "nao.horiguchi@gmail.com" <nao.horiguchi@gmail.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+ "tianruidong@linux.alibaba.com" <tianruidong@linux.alibaba.com>
+References: <20250307054404.73877-1-xueshuai@linux.alibaba.com>
+ <20250307054404.73877-2-xueshuai@linux.alibaba.com>
+ <20250307204018.GAZ8tZstt11Y4KFprC@fat_crate.local>
+ <SJ1PR11MB6083654405F2721E5AA0C1F2FCD52@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20250307224645.GKZ8t3VX5a5FhqNyZG@fat_crate.local>
+ <SJ1PR11MB6083223A3175F7A84EC4DDDFFCD52@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20250307232230.GMZ8t_tja324AQqYME@fat_crate.local>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250307232230.GMZ8t_tja324AQqYME@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24 2025 at 09:45, Dmitry Vyukov wrote:
-> There are two possible scenarios for syscall filtering:
->  - having a trusted/allowed range of PCs, and intercepting everything else
->  - or the opposite: a single untrusted/intercepted range and allowing
->    everything else
-> The current implementation only allows the former use case due to
-> allowed range wrap-around check. Allow the latter use case as well
-> by removing the wrap-around check.
-> The latter use case is relevant for any kind of sandboxing scenario,
-> or monitoring behavior of a single library. If a program wants to
-> intercept syscalls for PC range [START, END) then it needs to call:
-> prctl(..., END, -(END-START), ...);
-> which sets a wrap-around range that excludes everything
-> besides [START, END).
 
-That's not really intuitive and the implementation changes the prctl()
-behaviour in a non backwards compatible way.
 
-Can we please keep the current behaviour and have a new mode. Something
-like:
+在 2025/3/8 07:22, Borislav Petkov 写道:
+> On Fri, Mar 07, 2025 at 11:11:26PM +0000, Luck, Tony wrote:
+>> As for "explicit markup" I don't think it would be better to decorate
+>> every get_user() and copy_from_user() with some "this one can
+>> recover from #MC"
+> 
+> I don't mean every function - I mean what we had there with EX_TYPE_UACCESS.
+> That is explicit and unambiguous. Proving that is_copy_from_user() is always
+> correct is a lot harder.
+> 
+>> Note also that "what we had recently" was fragile, broke, and resulted
+>> in this regression.
+> 
+> Because those exception types got renamed? Oh well, that should've been
+> reverted actually but no one involved realized that MCE is using those.
+> 
+> And I'm not saying this is the only way to solve this. We could do something
+> like collecting all addresses on which an MCE can be recoverable, for example.
+> We haven't considered it that important... yet.
+> 
+> Looks like we're going to try this new is_copy_from_user() thing now and then
+> see where it gets us.
+> 
+> So, after the commit message has been fixed:
+> 
+> Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+> 
+> I'm presuming, this is going through akpm...
+> 
 
- # define PR_SYS_DISPATCH_OFF            0
- # define PR_SYS_DISPATCH_ON             1
- # define PR_SYS_DISPATCH_EXCLUSIVE_ON   PR_SYS_DISPATCH_ON
- # define PR_SYS_DISPATCH_INCLUSIVE_ON   2
-
-That keeps the current mode backwards compatible and avoids the oddity of
-
-     prctl(..., END, -(END-START), ...);
-
-i.e. this is clearly and obvious distinguishable for user space:
-
-     prctl(..., PR_SYS_DISPATCH_EXCLUSIVE_ON, END, END - START, ...);
-     prctl(..., PR_SYS_DISPATCH_INCLUSIVE_ON, END, END - START, ...);
-
-Which makes a lot of sense because these two modes are distinctly
-different, no?
-
-PR_SYS_DISPATCH_INCLUSIVE_ON will fail on older kernels and both modes
-have a sanity check. PR_SYS_DISPATCH_INCLUSIVE_ON should at least check
-for a zero length dispatcher region.
-
-Aside of the better user interface this avoids the in_compat_syscall()
-hack. Because then set_syscall_user_dispatch() does the range inversion
-and that works completely independent of compat.
-
-> kernel/entry/syscall_user_dispatch.c | 9 +++------
-> kernel/sys.c                         | 6 ++++++
-> 2 files changed, 9 insertions(+), 6 deletions(-)
-
-This clearly lacks an update of
-
-     Documentation/admin-guide/syscall-user-dispatch.rst
-
-Thanks,
-
-        tglx
+Thanks.
+Shuai
