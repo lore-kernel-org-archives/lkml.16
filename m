@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95BA1B85E4;
-	Sat,  8 Mar 2025 13:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47E41E832D;
+	Sat,  8 Mar 2025 13:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741441508; cv=none; b=gRio4uqb2bKHQzSVxxdiszux8WLYhTAGHmhKvWR/YTi9/ThS2wBRdT5DVKhBWbS/Q/jZZ+jSWPl56y0rI5UtLtUVaBpvUq/uNQGDdh78STU2Uz/dllzidE7FHmUjWWmTJbSPxta0DAJsyYM7zZ4RpXc4sYLJLZR9y0rk3Z7U3Ng=
+	t=1741441509; cv=none; b=PqJ1sy3Sins+CK3vqAn3R2XKLkAxq2BT2XBbOi0C8WP1lTyqf30NyLD7r3uq+IP1yGLWClxR7ED2pG6a9wwSkUpwXGFptv/8+FUohHFVa+2fwMdEaIA2zVRghd866DwtZPyKPYHiLJLG950qWDXdUHPqukdmERQo47/F1vgVSDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741441508; c=relaxed/simple;
-	bh=W4Oo/51/wJgyxMDEDzwNNqandvCVp4f5uW6dNFkmsec=;
+	s=arc-20240116; t=1741441509; c=relaxed/simple;
+	bh=syeurhr32aruv2Jl52eslCKwe0pgyczLqP8fT8mV0po=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=UTgwWmNwHcxwE466WUWvRn5wI9F0iOPtl4paWT/qTQPIVwOAz4HR7mWhuqH/1ecbsx5APmTwUExoP5Pb8BVSSkOM/sACe/2d66zc2N4a5GkNQVB47Aedez96l2JIKwqH0cQPrk1Wztvb9faEvsJtZ9kAnQXRFUylUoxkAqPpEjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dbe7xUuK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2YgjodC8; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=elZwTrrPUJ91SBE5butRYQl9t91V3odkcAcF3nZhOUXcZvBPvMLlfFfM89+q5YbCKfKGAT8kt/16mV2pbsZyoWPeNEn+b8JI1J3VpLLs05jbCfHBflbpPXlYbLuuSuELMSOXQGX7pu6YqD/4OdRtdOPG1f58GFHTCXGA0+Cfc6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rj6MsDal; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wmA2Xj8H; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dbe7xUuK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2YgjodC8"
-Date: Sat, 08 Mar 2025 13:45:04 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rj6MsDal";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wmA2Xj8H"
+Date: Sat, 08 Mar 2025 13:45:05 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1741441505;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=967JvDkrjkNlOvLTi9yYgkajMSnuiWjUld0GQI7yYXQ=;
-	b=dbe7xUuK/xTXtmcQao5N2qF9SiJriR0W0tzg8mGNyccl+YQ09pRNXABnMRG7yY0Potjx7R
-	HYIsgZVEcx3ci21ZuQgowjXmjdNsNNVxQeE2Qlh0jx0CMsO6njbFbtfI5NLwY6HD8VFhR+
-	OK81MnAiflSrP307Cbg9cD+fy0Zxkm3PejdxQ5qRYOA3YRNMAjcf5OUSuAaRm52zMb1iik
-	f5MfJq2yOepytznIkwU+q0ZA8K3wk1oYNulZu8AGY4DPUEXp/7CFrRDydI9k8KMWF1dUSK
-	Wy0M13Sy/O8OlhKe0aR/VoUwlHlxejLDUrSAwUil/914UeMt5QFHTk30Pg7DGA==
+	bh=bxO25XUCGnE8DKA/8sSgYHJ4Q2AjITR5L/EkP2HhzRM=;
+	b=rj6MsDalPSXGROiBiT8IUAbOKXKSr1f0hHdrVWqGFU/NzYeGpGjAD2YM9SZ/KvEfiK105i
+	E+wxz1vTHh61OFrCxZEHnnyZKpb9A8sTYCgAuS16M633DSNAVpb4Bz1Q+9BzyofexWCwy1
+	Uk+KZk85xbAYg/wLWMm8BiaATp4cY6YTUdaRzmNxyS7/qWfaijMJ+vxuHHqiOptSH2RmcE
+	k3PezxV4N2ZqFs7bAauY3gjezFe1/ZlXSKNdIPubsdmwIjnJIjOLfYQl7jurnVYvY5kSlj
+	lelYwJL4afdHJCW2dFy2XdltTC8YZViG5yHCtaVqFw+p1qTEQpaik/HILYjjIw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1741441505;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,26 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=967JvDkrjkNlOvLTi9yYgkajMSnuiWjUld0GQI7yYXQ=;
-	b=2YgjodC8aQsM00Qn4l4I0AfmmtlFCH9ZD6Bsz/erBTT0EaUy79ou/ghTm6Y2lvEsaZKdX4
-	xBROM1y7KfEYybCQ==
-From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
+	bh=bxO25XUCGnE8DKA/8sSgYHJ4Q2AjITR5L/EkP2HhzRM=;
+	b=wmA2Xj8Hbx4cUM/z2g/Xh+lT2+JqlW9yyH1US5BaIpK6PicRyx9zvpjzFyyXV0oU2gbZ5l
+	I/XUO4g4A8KWPFAg==
+From:
+ tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/vdso] vdso: Make vdso_time_data cacheline aligned
-Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
- Nam Cao <namcao@linutronix.de>, thomas.weissschuh@linutronix.de,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250303-vdso-clock-v1-3-c1b5c69a166f@linutronix.de>
-References: <20250303-vdso-clock-v1-3-c1b5c69a166f@linutronix.de>
+Subject: [tip: timers/vdso] arm64: Make asm/cache.h compatible with vDSO
+Cc: thomas.weissschuh@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250303-vdso-clock-v1-2-c1b5c69a166f@linutronix.de>
+References: <20250303-vdso-clock-v1-2-c1b5c69a166f@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174144150476.14745.3291989061852271457.tip-bot2@tip-bot2>
+Message-ID: <174144150526.14745.1686118958467952818.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,55 +67,50 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the timers/vdso branch of tip:
 
-Commit-ID:     fa8152ca221110e14e43040bd442c8140bc2e03c
-Gitweb:        https://git.kernel.org/tip/fa8152ca221110e14e43040bd442c8140bc=
-2e03c
-Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
-AuthorDate:    Mon, 03 Mar 2025 12:11:05 +01:00
+Commit-ID:     b69b47a6b5f67ac1074e0a6baac7f07bdc3dceed
+Gitweb:        https://git.kernel.org/tip/b69b47a6b5f67ac1074e0a6baac7f07bdc3=
+dceed
+Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+AuthorDate:    Mon, 03 Mar 2025 12:11:04 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Sat, 08 Mar 2025 14:37:39 +01:00
 
-vdso: Make vdso_time_data cacheline aligned
+arm64: Make asm/cache.h compatible with vDSO
 
-vdso_time_data is not cacheline aligned at the moment. When instantiating
-an array, the start of the second array member is not cache line aligned.
+asm/cache.h can be used during the vDSO build through vdso/cache.h.
+Not all definitions in it are compatible with the vDSO, especially the
+compat vDSO.
 
-This increases the number of the required cache lines which needs to be
-read when handling e.g. CLOCK_MONOTONIC_RAW, because the data spawns an
-extra cache line if the previous data does not end at a cache line
-boundary.
+Hide the more complex definitions from the vDSO build.
 
-Therefore make struct vdso_time_data cacheline aligned.
-
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250303-vdso-clock-v1-3-c1b5c69a166f@linut=
+Link: https://lore.kernel.org/all/20250303-vdso-clock-v1-2-c1b5c69a166f@linut=
 ronix.de
 
 ---
- include/vdso/datapage.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/cache.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index ed4fb4c..dfd98f9 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -11,6 +11,7 @@
+diff --git a/arch/arm64/include/asm/cache.h b/arch/arm64/include/asm/cache.h
+index 06a4670..99cd654 100644
+--- a/arch/arm64/include/asm/cache.h
++++ b/arch/arm64/include/asm/cache.h
+@@ -35,7 +35,7 @@
+ #define ARCH_DMA_MINALIGN	(128)
+ #define ARCH_KMALLOC_MINALIGN	(8)
 =20
- #include <vdso/align.h>
- #include <vdso/bits.h>
-+#include <vdso/cache.h>
- #include <vdso/clocksource.h>
- #include <vdso/ktime.h>
- #include <vdso/limits.h>
-@@ -126,7 +127,7 @@ struct vdso_time_data {
- 	u32			__unused;
+-#ifndef __ASSEMBLY__
++#if !defined(__ASSEMBLY__) && !defined(BUILD_VDSO)
 =20
- 	struct arch_vdso_time_data arch_data;
--};
-+} ____cacheline_aligned;
+ #include <linux/bitops.h>
+ #include <linux/kasan-enabled.h>
+@@ -118,6 +118,6 @@ static inline u32 __attribute_const__ read_cpuid_effectiv=
+e_cachetype(void)
+ 	return ctr;
+ }
 =20
- /**
-  * struct vdso_rng_data - vdso RNG state information
+-#endif	/* __ASSEMBLY__ */
++#endif /* !defined(__ASSEMBLY__) && !defined(BUILD_VDSO) */
+=20
+ #endif
