@@ -1,93 +1,133 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FD01AA1F4
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 22:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C817A7346F
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 22:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741472243; cv=none; b=W2DRHfJS2XcdqSljt9cvkzSIjo25tPs1Mouf37/VLLr/50ickf3Jq+rKk1C2HI9U475k4nmnqvfvXZljygPbsNWuP/W87GJCx65xBdbED8NCaO2st0H+vP9wOrjyfA+8OUrWW8YIb7IewoccGHR4zwjngFw7gwNdDABibolN4rE=
+	t=1741472282; cv=none; b=NoBhpgdwdIcxKLGpVHAT8kKQV6zk0gYjZmXE/3xbiMXVQgyXHeZvdPJdmwy45JUQfVPulM5cXRZrerJq5mWKEghG29hmt8Pg5LAhrHEDuCIUJLJCSa21H+TsAy+OH1YQkDKfUA7GVQ5BpnfdKgQgziAw6hcc9ppIhc+MuKzvvJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741472243; c=relaxed/simple;
-	bh=VIbf+LpxRASsny0dM7fDcE6Ap5R7QKEGn7yxJ67XwFY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JU10zlQnvTgqcPX63bZYJmeEobVYEtUEm4s13s3otUG7OsD8EqlnJNdg1bdDpCwE++mHlYPPoY1uNQdM0E86O6HuSoC6498aLd360mKSowh6uuZpiEDRPyaViYzsQSpxxkN05r3RRVJJ/tYn2jLuV91CekSncurGeVGiNkZyNHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d2b3882febso24540825ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 14:17:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741472241; x=1742077041;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N7Zk9cB3ZjVYppJmt/zIVvvTzDcjLPcmPA98lMqVoXY=;
-        b=MZVb/5s5dA9HS5lvPFD1Na/hO69/WeefF4CHzOD9caN1+YrBeq1JrT8Iqg/GyQBWta
-         oX3VcLFL/4T0SYgbcR0jH+JBv4spktTIsWZmMRxX4HRbcn7vM0BJ3uO2sCBMsKhZb2YR
-         tlCnd5THkCVAAmxPLvr8K63aAor4TIha5eyOI17QglY1aWAHoSvh/VUFv8dJMHXcHq6I
-         9g9/WwPc/BJ79GPaLBndPiBYknGE3puBo9Y03XbZf6Y34mzy8cy5ffkjeXT76NeHKuVa
-         UZnXE0p76Z3tLuc6m1JY2aypSgZu3q8OeTNbNeeDkaxl6oUo+sqp1EbLG0RbsL/0zvAY
-         Dmgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEvg6i7HPXBkLJE8JEXaQ2pau9RWIRt2NXdEAoLgOC8CkrN6MO+v287M2n+w91dLw2fpSSc+vvxlrLhF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybfrCHcL6TwNe8VoBpgioMWzc9jETMQT6+++O65GAv72foQKMt
-	5YcW4nQDKKtyAxnVyoISFQ6Uz3PDjMEHS9VUfneCOPJwUyML63jF/YAdiA+94s6uDjWzZjbQNnu
-	Fgox5UmScJCyAi7gD6P9n/n/K1i+KVPUym1UaJTh4ssI+TpCoW3xzZis=
-X-Google-Smtp-Source: AGHT+IG4jODR+Cz+704vQP4AW33j/NCHNWn2peiV2QKBCOeMSirU/8gnkop8VMYl7wuNL/D3jnggDiXJ21lIUGyKvzQu0vX0UKmy
+	s=arc-20240116; t=1741472282; c=relaxed/simple;
+	bh=kZv6LxTH/6n2vTyi1JUBq+dNjhqKNCxYk40ly0nOxpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8lPM5BkJo2GiF4cDtkHiCorh9jIunVbxAeTnLBrobk8NwB14T3wx3VuRudY8EPAWL4mglcKOt/C8b3LIdlYpQydiYHhI98Ya3URtumuZSA6aye6cJDNBJn5MDZr/EnDXLneJFcN++vU+OIYEP3XftkGLjeYS2hPI2vx6S8wK1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=OmO4Cfyb; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="OmO4Cfyb"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id 280EC14C2D3;
+	Sat,  8 Mar 2025 23:09:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1741471753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qkRfR5iIp370h0vHcYYkHnqzKAOlLr+Ap7PNgEbI9dQ=;
+	b=OmO4Cfybste8NJsXHK1eL6LkHTRvzadMRu8tTWuUIiN5IHy3YlsjrvzciUgw5JM8Lsp7uD
+	e1icptW5PgNBXaSF6uH01kbYQDmnQT3pe/QvplEpXbnX9Ys9dDvut7naD4vrtNKPDZHaue
+	51YMzar8z+1zHUOXLhUM4VXyr3F+4zZP/KPn5hu91qWjN9ssGgV98QBFUCg2b97H3kzeEN
+	E8R7fHhg6NbF0goNPB3RzF5y+W5YOXmIXUO9gbOswGEC4vmXF5WTzT/yOv828HZ7FKA6b3
+	7UyD8fKi9h7nVzLZmh8JZCHixacbOe26iYbVlRs+ksJKIYQJgqXHO46G50pn/A==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 65d45deb;
+	Sat, 8 Mar 2025 22:09:08 +0000 (UTC)
+Date: Sun, 9 Mar 2025 07:08:53 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Ignacio Encinas <ignacio@iencinas.com>
+Cc: linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Sishuai Gong <sishuai.system@gmail.com>,
+	Marco Elver <elver@google.com>, v9fs@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	syzbot+d69a7cc8c683c2cb7506@syzkaller.appspotmail.com,
+	syzbot+483d6c9b9231ea7e1851@syzkaller.appspotmail.com
+Subject: Re: [PATCH] 9p/trans_fd: mark concurrent read and writes to
+ p9_conn->err
+Message-ID: <Z8y_9b6RFZASviUs@codewreck.org>
+References: <20250308-p9_conn_err_benign_data_race-v1-1-729e57d5832b@iencinas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18ce:b0:3d3:fa69:6763 with SMTP id
- e9e14a558f8ab-3d44194730cmr106170415ab.2.1741472240829; Sat, 08 Mar 2025
- 14:17:20 -0800 (PST)
-Date: Sat, 08 Mar 2025 14:17:20 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ccc1f0.050a0220.14db68.005a.GAE@google.com>
-Subject: [syzbot] Monthly s390 report (Mar 2025)
-From: syzbot <syzbot+list5aa65644226f16002659@syzkaller.appspotmail.com>
-To: agordeev@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250308-p9_conn_err_benign_data_race-v1-1-729e57d5832b@iencinas.com>
 
-Hello s390 maintainers/developers,
+Ignacio Encinas wrote on Sat, Mar 08, 2025 at 06:47:38PM +0100:
+> Writes for the error value of a connection are spinlock-protected inside
+> p9_conn_cancel, but lockless reads are present elsewhere to avoid
+> performing unnecessary work after an error has been met.
+> 
+> Mark the write and lockless reads to make KCSAN happy. Mark the write as
+> exclusive following the recommendation in "Lock-Protected Writes with
+> Lockless Reads" in tools/memory-model/Documentation/access-marking.txt
+> while we are at it.
 
-This is a 31-day syzbot report for the s390 subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/s390
+Thank for looking into it, I wasn't aware this could be enough to please
+the KCSAN gods.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 12 issues are still open and 43 have already been fixed.
+Unfortunately neither have a repro so will be hard to test but I guess
+it can't hurt, so will pick this up after a bit.
 
-Some of the still happening issues:
+> Reported-by: syzbot+d69a7cc8c683c2cb7506@syzkaller.appspotmail.com
+> Reported-by: syzbot+483d6c9b9231ea7e1851@syzkaller.appspotmail.com
+> Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
+> ---
+> Hello! I noticed these syzbot reports that seem to repeat periodically
+> and figured I should send a patch. 
+> 
+> The read-paths look very similar to the one changed here [1]. Perhaps it
+> would make sense to make them the same?
 
-Ref Crashes Repro Title
-<1> 23481   Yes   possible deadlock in smc_switch_to_fallback (2)
-                  https://syzkaller.appspot.com/bug?extid=bef85a6996d1737c1a2f
-<2> 2802    Yes   possible deadlock in smc_vlan_by_tcpsk
-                  https://syzkaller.appspot.com/bug?extid=c75d1de73d3b8b76272f
-<3> 236     Yes   general protection fault in smc_diag_dump_proto
-                  https://syzkaller.appspot.com/bug?extid=f69bfae0a4eb29976e44
-<4> 66      Yes   possible deadlock in smc_release
-                  https://syzkaller.appspot.com/bug?extid=621fd56ba002faba6392
-<5> 44      Yes   general protection fault in __smc_diag_dump (3)
-                  https://syzkaller.appspot.com/bug?extid=271fed3ed6f24600c364
-<6> 12      No    possible deadlock in smc_sendmsg
-                  https://syzkaller.appspot.com/bug?extid=6cc62f8d77a830dba3a7
-<7> 10      No    possible deadlock in smc_shutdown (2)
-                  https://syzkaller.appspot.com/bug?extid=3667d719a932ebc28119
-<8> 2       No    KASAN: slab-use-after-free Read in __pnet_find_base_ndev (2)
-                  https://syzkaller.appspot.com/bug?extid=9c7519dcc554d2511da3
+I've just gone over read/write work and I think overall the logic
+doesn't look too bad as the checks for m->err are just optimizations
+that could be skipped entierly.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+For example, even if read work misses the check and recv some data, the
+p9_tag_lookup is what actually protects the "req", so either cancel
+didn't cancel yet and it'll get two status updates but it's valid
+memory and the refcounting is also correct, or the cancel was finished
+and read won't find the request.
+(I guess one could argue that two status updates could be a problem in
+the p9_client_rpc path, but the data actually has been received and the
+mount is busted anyway so I don't think any bad bug would happen..
+Famous last words, yes)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+Write likewise will just find itself with nothing to do as the list had
+been emptied (and p9_fd_request does check m->err under lock so can't
+add new items)
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+So, sure, they could recheck but I don't see the point; if syzbot is
+happy with this patch I think that's good enough.
 
-You may send multiple commands in a single email message.
+
+> [1] https://lore.kernel.org/all/ZTZtHdqifXlWG8nN@codewreck.org/
+> ---
+>  net/9p/trans_fd.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
+> index 196060dc6138af10e99ad04a76ee36a11f770c65..5458e6530084cabeb01d13e9b9a4b1b8f338e494 100644
+> --- a/net/9p/trans_fd.c
+> +++ b/net/9p/trans_fd.c
+> @@ -194,9 +194,10 @@ static void p9_conn_cancel(struct p9_conn *m, int err)
+>        if (m->err) {
+
+This is under spin lock and I don't see the compiler reordering this
+read and write, but should this also get READ_ONCE?
+
+>                spin_unlock(&m->req_lock);
+>  		return;
+>  	}
+>  
+> -	m->err = err;
+> +	WRITE_ONCE(m->err, err);
+> +	ASSERT_EXCLUSIVE_WRITER(m->err);
+
+Thanks,
+-- 
+Dominique Martinet | Asmadeus
