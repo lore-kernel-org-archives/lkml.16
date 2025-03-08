@@ -1,95 +1,118 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F2518DB2D;
-	Sat,  8 Mar 2025 07:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8B01714C6;
+	Sat,  8 Mar 2025 08:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741420634; cv=none; b=df03Fge7kP87VFyxe7eTq1asmmNr8I3ysQKsM0f9pfXFZjEWfARGGba1I5zh0Cwjwsi/9d4sBeHcEdd0zn2T/BxxuUoShQqBtIrEJw/0f9MaC4QRJrU7L4PW1fJWpj/TJ4Xkt++LfHtOy4VEpSD6Ox5kG5D1uBLvxbl8FJxOf20=
+	t=1741421000; cv=none; b=aoHeEissQlxqaU5av5XcGqTzzIJMMimQ2I2mJUJcHizojuGBpWXtQtw2uJyBqFt76P70YWgpG8+ECjOdQxdOVok9NnbhEKucn8r0S5E8tG4v38s2aKF7a/ko/EHrjyepXK5I44h5Dl1A7NnoJGCaejAERXld5Jf7499HJTPntG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741420634; c=relaxed/simple;
-	bh=Zj3zJcA4uSUYzD3DvV0Arf1ZE/tEBc/rPcPhCxar2JE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pu3aBLUUDuaAImjZ8ZY2b/pg9JesCVQsBW1Tq8gpern4+Q8Jm3yrb5eYpWN9PDz1HvxUW/AO/sGCQE9VTG5TfCBf+VF0AxDXogthlEh3tNtFI8kOrsXhS/lga5Q98jDeDyho0Cuu40zfbhLoPlYNpBI6x7zHggQ/DSwDwkhUmEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FPXocMsQ; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1741421000; c=relaxed/simple;
+	bh=2VwE+gjSVO8aAdTi/KkzJ0K11zKXGmlKPuqCLvDz0rY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=II4FhfAHBxVEU8F213PR489LExI9JvDPyvdbidGp/fyaCAX61kgNAK7o9Br9H+q9veIuVNjdl9FQXXqjWazjzAEr/mwV5V3xIT+aPTDS5Ls0t5Cnyt2Gs7nd4wvYPCxRquqpCCim7ldMucPUbaRVnuGevkA4q2FdQcxULPuVnE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=rEdsjyaS; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FPXocMsQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741420615; x=1742025415; i=markus.elfring@web.de;
-	bh=Zj3zJcA4uSUYzD3DvV0Arf1ZE/tEBc/rPcPhCxar2JE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=FPXocMsQP7BEgGbkQdM9lpBa+Ev1vYv3y2FJ+fcfLNUQEkCiDYDhJwNDD32+rdL0
-	 tX0ch8kdv0P+uZ47cZAEFbqOKCNl5YEJzDjLwzq/UVpIw2mZ0pWhLIJZGICr98Bi3
-	 BT6CKAwzvbXNM1PCjJUoZFR64ltvbZ6p8LDzpJzaFtO5BbuCECKjmbKAmTmrmWXp8
-	 nOdEzWvWnY2D5srKa0Bmp/lrBBx+iDsxGmQvJsVsVfCXztZ41C8xesBjaatkexreF
-	 aYZlQkaYKiFk+YOwyU2rCfiIu5LMpDmdwQiVebwXnuVP5hGW5hXKjrCa2oi49hAnU
-	 rY0SuDm9z2A4ba6KMA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.79]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MDMv4-1u08zR374g-00EbhJ; Sat, 08
- Mar 2025 08:56:55 +0100
-Message-ID: <d2b2716d-b482-467e-9653-9219de40bae8@web.de>
-Date: Sat, 8 Mar 2025 08:56:37 +0100
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rEdsjyaS"
+X-UUID: ab2769c6fbf111efaae1fd9735fae912-20250308
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6nXu7KSD6tf6cobmFDtax1hDH31QEZ+uhW/Em9uGb1k=;
+	b=rEdsjyaSLos9IBJ/dAVag+sofQhuQTkuoF23VCzHwW18WzZSaDBHXGepgm0BF4BW46Z1WG5XZ4uIEzu/ADknGD2xWMaFhT0mWlePM9fwlCZTNJz1tYP4xrpwHhXGQPeWYs0xLyxAJskDtccFtsTeb8yYQzjUaH5qwAFoUjFQpGo=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:ed74171a-98d1-4d99-8340-6a015b18b3af,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:5bf3d749-a527-43d8-8af6-bc8b32d9f5e9,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: ab2769c6fbf111efaae1fd9735fae912-20250308
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <yunfei.dong@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 94889012; Sat, 08 Mar 2025 15:48:04 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N2.mediatek.inc (172.21.101.76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Sat, 8 Mar 2025 15:48:03 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Sat, 8 Mar 2025 15:48:02 +0800
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
+	<nfraprado@collabora.com>, Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
+	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>
+CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
+ Dong <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH v8 0/3] media: mediatek: vcodec: support h264 extend vsi
+Date: Sat, 8 Mar 2025 15:47:54 +0800
+Message-ID: <20250308074802.18929-1-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 1/2] perf report: Use map_symbol__copy() when copying call
- chains
-To: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
-References: <20250307061250.320849-1-namhyung@kernel.org>
- <2719d1d0-6e1c-48fd-b73e-42b78c51b201@web.de> <Z8tudline_-qNJog@google.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <Z8tudline_-qNJog@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:mIU5Uztp5BCv3mSjwgOuclJYhvAlUx4lh0MYp2697qqnxf7D7uJ
- R4JfvKnmGbvH8/CEru2gJBHs5j8A1iJWH5ZRgBMGBaPNTh6fai7sOs8elpGze0nLmoz48+V
- Fu5ofOSgQ0KQQ7hERRAOj6fyaXGvckSOdxPjro3ZzlhKDLZNAdHOl/ZvM7w8yXY9rpaceRb
- gIoKGUoHOgvb4DY5DteTg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:teHOiyEJCCw=;V63J687ciM74R8eO6PJS+pCFeUQ
- LdXczH34h0eUOo5/ReZjj4mYa0AXuGAktQKQ/hmAUICqAnAJ+iFH0upmbZjtLNK4rGc0BlBRX
- 950wyQDILpavC8LDLTc+XkLq9SEW/RpqhVQdXx3xeJ5KUQ+wDq/fWKJIKuudV2kv1GlWjRqQ4
- swPneHAbPHN3GZfWq5bLwUedqg8G5oioVrS/VgBJvLwpCSzEWxOLzWLQT5Z7T+fTeXQzGboc5
- Uh6MnhWeq+qIJ2DTjeJpnMdZTkrBeeU7qsGWwb2BBiUgH1LaWGwp/Ec3dK5ucxbzUA8HxDS4Y
- jBap9p+BniYD79F4PrkqtkxHOGWk4I0HV2BEEJ4DB1Q0rhFjHPzClUuamNZLp4ML0DModN1/J
- 0VKJHBRCMVztKt/24r/Rj/vrT/xyKgeveZTN2kPegFr+51lCT0KiZjL6awCWo0PdiFAd4d1n5
- V+dQ64wGGpc0RF2F1zlnKBiY31IggSzHn3M8pthjIbYLeR4oG/9QeIbd4mlgJZHzRRTCL/yoC
- piHdb/wBjxu6f9Y5QPpJH6y741LQHqu/cyNB02CbNXyxJKjULXt+BDKMGH07AEa4T9IWhh46k
- n9JHbvNrSWD+uvGnUbXM2YV1ThLKZ4IMZyZ7KLnFCnZ3XK7xzMSNoYZ1YzoSGXm18dLOrTbrh
- itELX20rcnzTXEf03jt15ig6S/NH+TGsN9mKyhSjlitoKkfg1uhq64wWqZXTX3puethKsd9DR
- hbO9SzJuVlLVWHOvK6mSw6IaSMsjdwU7IUxTk53VaJf5Fim8oSkmtGbAMZo5KLVrnvMiL8yy5
- akXf8S/eD3UjupFhXCcGZdgXxfYzSK3bWk9hofvm6Yx2tswmlpMV2W5JMny/5gHa2dolqpt9w
- wtOUyZxsv9GcDggsg8uuBx6dXmDbsWLkkK1ysqFXA/eQIlsN/TgzYNuG0BI0coYm7oPLLA7O0
- omrf/oJFf5fc/Tu28Pp/cZDy/QnH2KdjO1yuXV4f228jkVGYOAK5inMWvREIE/jlqy7ljIOyq
- m1DaEM/FNwMfHluAoYqoBKbKtElCSDb4yFNtaFFq7g2bHdBlWJZaGA8AIrCl+WwAezHnjOcuh
- WP8vsAXLjx4iE2Hj9Cqw1vSBrqIhZOUc0ufEJFMFJfBKTlT5g3yFoLtHK+rFrbMbHAk9N8h2e
- I+oWEnpZSeM3i8tk14G21/cLd5be5FMYuK8GCyEyeGeOk7/yIPzancrOQC60TP2oGHMG4zHEB
- ZL+zaGqWjv0wPr4jnmbdtnDGonxlNpjvqHIwtK+Ve4kkJMuyM6sf+ODI8tHwhkobdScp7WbG6
- bwq07ZQ1MoudwGbedtEkMPgFM7aD4ezo5fHk74jGRY1H4jqJUvjS1mZG1xyX3Ito+eKKerqHL
- JGGALJmkCc6mPjXLhVuLFslxuChAtA1l+bOE/zMeEK1AtNX5IiJxngCwLOQb6I+ezZOUP+clJ
- nYjABQg==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-> It's just two patches and they are independent.
+The working buffer address start and end are calculated in kernel
+side currently, the address end can't be calculated if the driver
+only getting the address file handle, not the real physical address.
+Need to send the extended vsi to firmware to calculate the address
+end.
 
-How do you think about to offer the desired changes as single items then
-(without the context of a patch series in this case)?
+Re-construct some interface and add configuration to support extend
+and non extend driver at the same time. Needn't to parse nal info for
+extended architecture.
+---
+compared with v7:
+- fix smatch warning for patch 2
 
-Regards,
-Markus
+compared with v6:
+- fix the coding style for patch 2
+- rewrite commit message for patch 2/3
+
+compared with v5:
+- add some parameters comment for patch 2
+
+compared with v4:
+- rebase this patch series with latest vcodec driver
+
+compared with v3:
+- change code logic with callback to decode for patch 2
+
+compared with v2:
+- squash patch 2/3/4 together
+- re-write commit message for patch 1
+
+compared with v1:
+- combine some pathes together for patch 2
+- re-write patch 4
+---
+Yunfei Dong (3):
+  media: mediatek: vcodec: remove vsi operation in common interface
+  media: mediatek: vcodec: support extended h264 decode
+  media: mediatek: vcodec: add description for vsi struct
+
+ .../vcodec/decoder/mtk_vcodec_dec_drv.h       |   2 +
+ .../decoder/vdec/vdec_h264_req_multi_if.c     | 652 +++++++++++++++---
+ 2 files changed, 562 insertions(+), 92 deletions(-)
+
+-- 
+2.46.0
+
