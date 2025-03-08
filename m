@@ -1,165 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989F51A2632;
-	Sat,  8 Mar 2025 08:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61327190470;
+	Sat,  8 Mar 2025 09:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741424171; cv=none; b=vAfCXhce5LeXuzlC7dDJ/OGVvOAOBrznfxPCTP43r86kmlYmz831xnc5cISiraP9R6PpGVKoMkhs1k4fkistE1x62ZgEE/wns2IT2VmLIWj96rPiNxz5BoXIgx444dGl5zMQUrphEfmhgF3r2TemU1bpZ2R+E1pRbwa9qm+9KoY=
+	t=1741424809; cv=none; b=TOozC6ajYa/jSI3en93ZQajCGEKeOLoteB1VtNdMWDic790vYehirfwbaiZIclDznoyCeebq97H/T6NHsOO1QRWlHzvQFriToIg7MRADD4yXezRgw0R1nkoeXK1jemHlPG1+UIIT3kzmFV4R5QlS1h1DuKi55vE+e/WkTI9V6xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741424171; c=relaxed/simple;
-	bh=4VgkYCgoYtsqJcDFHrQ8pnLz9wmKnHdijePp6ttEMMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiywBP3HZEsAp1w5z4qaDImAz0ezRNUg06KG8rS1KDbgf/b8Pv9pl6kaJhRV7VLHuyTvrQeJDtdAInW/nO3D4QwzQx2D3RLSqAt1JJU4u5Sn8PUmlNn35zoQ+EELkjWAGoCTlKYruQzTXMXV/crbks4m9wLXEjLYXe0UJ20n4iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SXR/I6AU; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741424809; c=relaxed/simple;
+	bh=nfhjE40xxkcPs3x/zKH+iuKpPgn5nQqIk3wcE5A/8bI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lKeQXQTBabj/PvJc6zFN9GfBKMj0V7Xj75FZx2dkTueQB906KRupJq3vVjeNI7Ew9+aQz1CKQcfgRu0SuMumIicoDFjSkC38Are9Bn+N8S1GZUh27RlJNuWlgeT+xW59/PSTG5BQlfQoueOXpWxVqJGjnvHfNRpEhhQ3KqFiW5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2CebwcH; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SXR/I6AU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741424170; x=1772960170;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4VgkYCgoYtsqJcDFHrQ8pnLz9wmKnHdijePp6ttEMMg=;
-  b=SXR/I6AUsknINmcsyqQqUrYfU+GvZDDACFmYYt5Bm+RIPMg2EaEOCJIu
-   I/j4+7iB6rVYDRYbJSJeeF2FS2jInuh9OR9mIwtAWILKBn5jvJmmzc902
-   16whSqTnZJHs3QMBAUxIbmENw+d1Is2Rbt7fs94EzvqmKh2hKWGewD4TA
-   nkfz8N8f+ue4osqHB+Loflpri7+eFu7P4aPVewyDtBNGgdjkXic7TiEul
-   GQWDNWMtt6o4H7C0xXS+sKE9i0+88wR9Ow1/x6MJrZYmy5VeYqcq2hvT1
-   5qRp/hs04Q7B9CytGjC7mKtdqs2p15tGMgjs7rRBw8WRHpaKyzgLWwqOx
-   g==;
-X-CSE-ConnectionGUID: dSK93mgKTMK+y1/sXuItKQ==
-X-CSE-MsgGUID: C59SCixJSOi55E6YgCfdIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11366"; a="46395427"
-X-IronPort-AV: E=Sophos;i="6.14,231,1736841600"; 
-   d="scan'208";a="46395427"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2025 00:56:09 -0800
-X-CSE-ConnectionGUID: prOlML3uTkWwaENRbOkvzQ==
-X-CSE-MsgGUID: 4N6N18olTjev+4xijpH3ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120434605"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 08 Mar 2025 00:56:04 -0800
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tqpyU-0001jE-0K;
-	Sat, 08 Mar 2025 08:56:02 +0000
-Date: Sat, 8 Mar 2025 16:55:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
-	lenb@kernel.org, james.morse@arm.com, tony.luck@intel.com,
-	bp@alien8.de, robert.moore@intel.com, dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com, Benjamin.Cheatham@amd.com,
-	Avadhut.Naik@amd.com, viro@zeniv.linux.org.uk, arnd@arndb.de,
-	ira.weiny@intel.com, dave.jiang@intel.com,
-	sthanneeru.opensrc@micron.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v4 3/9] ACPI: APEI: EINJ: Fix kernel test robot sparse
- warning
-Message-ID: <202503081600.JxR875hh-lkp@intel.com>
-References: <20250306234810.75511-4-zaidal@os.amperecomputing.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2CebwcH"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2400d1c01so447174866b.1;
+        Sat, 08 Mar 2025 01:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741424806; x=1742029606; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nfhjE40xxkcPs3x/zKH+iuKpPgn5nQqIk3wcE5A/8bI=;
+        b=f2CebwcHOHAlkK6Y7H/C98MMH3U6h7nkFYVS7IeOi1j3quoHc/Ua3MxgHcVn8Dd8YY
+         R445xjW7PTfjHrGD2YgFEO7lJYuDmxbJw4rKaMABb43/ltdXxG5e7CcdqO1tNHRdrPhe
+         8FZLxiLg4zfSMMR+5dn0EOw1wmGiHozsL+pvK9v5JUcAA/VwTkGVaPDSv3ds1+22xPmP
+         e2sqerHtDm+sXJKhGPhWJbZye1XiVPw1e30bEUHMjtreg1XrwMscBwGTiRZN1FtxQfMI
+         6QKoZKVDI7l9R9DC5Y045VcHGtA9o6JaAQsu7sbspcruQZOjTgjwZvUhVWEH8zxmfsmW
+         EbEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741424806; x=1742029606;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nfhjE40xxkcPs3x/zKH+iuKpPgn5nQqIk3wcE5A/8bI=;
+        b=GNoBKywarKTvhTg2ilYd/j21DvUugwAyu1Psd6jOCYfHiEMO/dJnvJ3G1sMgJ21dhW
+         eCyYP5SZqR7u0zpchtQQcejFZRF1ZmsQ9MeU0YawodkH8Z3t5zkbi8vbPVfG1kK6+3Ue
+         2dZ4tEqvMLis7lC2gFzRCnsWhYO/LLWVJdhKZDOb2jZd7cWe6p7ebahsPk5quY3nSHk3
+         A8NjABVoN1RdlSHryX2Q39k/E+l2HG7EMJm/2xc4G/rEtt9O3To1qO9U8NJ0hRC1ShPW
+         Oz2lLXo9hFG88UKprtk3pIpN/sJKpyOxmn6IE8WUNTKPJUu0EdQjlvW2p6wiqSR48KVO
+         teyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbzIMxOl5PFWFoDcF9ITaxn+8RvgJxLBxYuQaZpuRp+c+855skei+HnP3SCIwj7HaDe76esC0/wzyEi9w=@vger.kernel.org, AJvYcCX+OXEipzcwpXipLabcnPEZagJa8XUkFAd23390XNMQA5fX6xSH2+m7o7RYHxanGbKd1tciwxVg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH2ctSJ6+ueWHnWW+Ke112QchhxwOWYT5d10VhvhtPqBKoYEIj
+	PlR/n/xjfUdQ3AbryMGIuyKeRW3zGB++KLw/WpblQDUY4UMMhMW3a56w2t02yMNzhiFGoS7z6wK
+	XLT4TVdVny9tA1JL4EGVXzQx8kkw=
+X-Gm-Gg: ASbGncviu5gLhc21uVd6LfgTHvg3uChWCYiqJ7RcUeDPXjnKhDDOtp2Owj3KKQPxZM1
+	MM+OV65QRoL+C9m4LsfLe9tJZ2AJKp+B+Ct5SyoCeOUORESH40E/b0XzR7nvoGYHg2rGWq77q1A
+	+fw97OjDGwiD7w7bedYO3RkOdD
+X-Google-Smtp-Source: AGHT+IHkeM05YvQ3aCsNf4yKtzCuNpIM0jL/QQ2Us5+xQQOxNr0NPQZlyzAQUOEgBpZrXn/lKU5lNudpr9HcScj5mIU=
+X-Received: by 2002:a17:907:9703:b0:ac0:4364:4083 with SMTP id
+ a640c23a62f3a-ac26c55ad33mr318540966b.0.1741424805405; Sat, 08 Mar 2025
+ 01:06:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306234810.75511-4-zaidal@os.amperecomputing.com>
+References: <CAMpRfLORiuJOgUmpmjgCC1LZC1Kp0KFzPGXd9KQZELtr35P+eQ@mail.gmail.com>
+ <2025030559-radiated-reviver-eebb@gregkh> <CAMpRfLMQ=rWBpYCaco5X4Sh1ecHuiqa91TwsBo6m2MA_UMKM+g@mail.gmail.com>
+ <CAMpRfLMakzeazr91DBVyZQnin7y6L9RB+sPFb59U1QZvY3+KBQ@mail.gmail.com>
+ <2025030718-dwindle-degrading-94d3@gregkh> <CAMpRfLPLJA4TaJQCeYfn5XRFnVdqJ36yv-1LL7o=kjYOAj9u1Q@mail.gmail.com>
+In-Reply-To: <CAMpRfLPLJA4TaJQCeYfn5XRFnVdqJ36yv-1LL7o=kjYOAj9u1Q@mail.gmail.com>
+From: =?UTF-8?Q?Se=C3=AFfane_Idouchach?= <seifane53@gmail.com>
+Date: Sat, 8 Mar 2025 17:06:29 +0800
+X-Gm-Features: AQ5f1Jp1hvuPcDaUxTR56G33cLSG2ApeIhs0Aj6N0KUu2izrRwnaakZ21ArTRiA
+Message-ID: <CAMpRfLOmXBFatrp-tuYF=XeruyDLUE=Dk=yxx7N_nHP7NsQ5jA@mail.gmail.com>
+Subject: Re: [REGRESSION] Long boot times due to USB enumeration
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: dirk.behme@de.bosch.com, rafael@kernel.org, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Zaid,
+Some development here,
 
-kernel test robot noticed the following build warnings:
+I noticed today that while applying Dan's patch and reverting the
+"bad" commit resolves the issue, it only does so on a reboot. The boot
+is still slow on a cold boot.
+As you said this might very well be a mix of different issues. It is
+my own fault for not reporting this regression earlier thinking it
+would be fixed.
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge linus/master v6.14-rc5 next-20250307]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+As a sanity check I retested old LTS releases. I find that v6.1 does
+not have the issue on cold boot while v6.6 does. The USB error
+messages are there regardless, they just don't impede on the boot
+process time.
+I am almost 90% positive that those error messages have always been
+present on this system, for what it's worth.
+I have gone through the troubleshooting step of unplugging all USB
+devices and headers and the errors are still present.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Zaid-Alali/ACPICA-Update-values-to-hex-to-follow-ACPI-specs/20250307-075155
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20250306234810.75511-4-zaidal%40os.amperecomputing.com
-patch subject: [PATCH v4 3/9] ACPI: APEI: EINJ: Fix kernel test robot sparse warning
-config: i386-randconfig-063-20250308 (https://download.01.org/0day-ci/archive/20250308/202503081600.JxR875hh-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250308/202503081600.JxR875hh-lkp@intel.com/reproduce)
+If I find the time I might run another bisect between v6.1 and v6.6
+doing cold boots instead of reboots and report back. I am just afraid
+I will just get back to the initial commit reported since this is what
+I first did.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503081600.JxR875hh-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/acpi/apei/einj-core.c:265:32: sparse: sparse: incorrect type in return expression (different address spaces) @@     expected void * @@     got void [noderef] __iomem *[assigned] p @@
-   drivers/acpi/apei/einj-core.c:265:32: sparse:     expected void *
-   drivers/acpi/apei/einj-core.c:265:32: sparse:     got void [noderef] __iomem *[assigned] p
-   drivers/acpi/apei/einj-core.c:280:24: sparse: sparse: incorrect type in return expression (different address spaces) @@     expected void * @@     got void [noderef] __iomem *[assigned] p @@
-   drivers/acpi/apei/einj-core.c:280:24: sparse:     expected void *
-   drivers/acpi/apei/einj-core.c:280:24: sparse:     got void [noderef] __iomem *[assigned] p
->> drivers/acpi/apei/einj-core.c:824:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __iomem *static [toplevel] einj_param @@     got void * @@
-   drivers/acpi/apei/einj-core.c:824:20: sparse:     expected void [noderef] __iomem *static [toplevel] einj_param
-   drivers/acpi/apei/einj-core.c:824:20: sparse:     got void *
-
-vim +265 drivers/acpi/apei/einj-core.c
-
-   235	
-   236	static void *einj_get_parameter_address(void)
-   237	{
-   238		int i;
-   239		u64 pa_v4 = 0, pa_v5 = 0;
-   240		struct acpi_whea_header *entry;
-   241	
-   242		entry = EINJ_TAB_ENTRY(einj_tab);
-   243		for (i = 0; i < einj_tab->entries; i++) {
-   244			if (entry->action == ACPI_EINJ_SET_ERROR_TYPE &&
-   245			    entry->instruction == ACPI_EINJ_WRITE_REGISTER &&
-   246			    entry->register_region.space_id ==
-   247			    ACPI_ADR_SPACE_SYSTEM_MEMORY)
-   248				pa_v4 = get_unaligned(&entry->register_region.address);
-   249			if (entry->action == ACPI_EINJ_SET_ERROR_TYPE_WITH_ADDRESS &&
-   250			    entry->instruction == ACPI_EINJ_WRITE_REGISTER &&
-   251			    entry->register_region.space_id ==
-   252			    ACPI_ADR_SPACE_SYSTEM_MEMORY)
-   253				pa_v5 = get_unaligned(&entry->register_region.address);
-   254			entry++;
-   255		}
-   256		if (pa_v5) {
-   257			struct set_error_type_with_address v5param;
-   258			void __iomem *p;
-   259	
-   260			p = acpi_os_map_iomem(pa_v5, sizeof(v5param));
-   261			if (p) {
-   262				memcpy_fromio(&v5param, p, sizeof(v5param));
-   263				acpi5 = 1;
-   264				check_vendor_extension(pa_v5, &v5param);
- > 265				return p;
-   266			}
-   267		}
-   268		if (param_extension && pa_v4) {
-   269			struct einj_parameter v4param;
-   270			void __iomem *p;
-   271	
-   272			p = acpi_os_map_iomem(pa_v4, sizeof(v4param));
-   273			if (!p)
-   274				return NULL;
-   275			memcpy_fromio(&v4param, p, sizeof(v4param));
-   276			if (v4param.reserved1 || v4param.reserved2) {
-   277				acpi_os_unmap_iomem(p, sizeof(v4param));
-   278				return NULL;
-   279			}
-   280			return p;
-   281		}
-   282	
-   283		return NULL;
-   284	}
-   285	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thank you.
