@@ -1,105 +1,91 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7341B0F0B;
-	Sat,  8 Mar 2025 09:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DE218C32C
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 09:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741426225; cv=none; b=bJOtN9WFru2WBkXCp3s1+Zbgg3dV+pZEnFQ0pH7jbToRCkhCnhKio35MbxxdcoAqKuikFZW1mZP/q8W+kL/V7M9sX95oL+JUAPq5ETtgGvLT8L91h2b/JeBMgMFYyPOaey0EuwnVU7X4DujUq/ooY4We/5Ey9hzvXNw/wSus3x4=
+	t=1741426438; cv=none; b=VdZAF7fmfDWUx+DFqr9GDexcY3ThF/ZRcWMPIyi/Fwd1ScRCeKn0E/0tC/wdJUa7YqyX7esQ6m87O6SZljDSkkHZR30o0AP/yz6Vu6WoGKgLgcV36Qe6VAmeST1nLpVTrClTGtnuWOBgOfzxsaOzXj5KJsc5JmoqEwNPeA+6kdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741426225; c=relaxed/simple;
-	bh=qjtEVgKg7aSCTEEErT7DmK5qkUcB+t4P66ofDG9ntqY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dPGN1jwtc+4U2EySA3KEBtL30J1g8KnJBJnom1SZlNta1gRwgxQsuYmmALAVA3CKmQUePjWpnocNz/mQsZpPMQ149imOyy+6U7UFPAm+hRYjlRBJl++oZ2iJyAgYZFLl3mcaaIk5ovUlArkT3pix7XsHFQCCWihNKZ+R4q3XRTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:3300:217:f42e:f419:35e])
-	by smtp.qiye.163.com (Hmail) with ESMTP id d88bc5ea;
-	Sat, 8 Mar 2025 17:30:13 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 1/1] arm64: dts: rockchip: rk3568: Move PCIe3 MSI to use GIC ITS
-Date: Sat,  8 Mar 2025 17:30:08 +0800
-Message-Id: <20250308093008.568437-2-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250308093008.568437-1-amadeus@jmu.edu.cn>
-References: <20250308093008.568437-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1741426438; c=relaxed/simple;
+	bh=8JRWEPkcbZU8KQBQuODDmLBLljt+c0ZfuR22i+u1KbY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a9QpSbB1XICqT2DK5TuW4bu+RwzsRLKhaYIYqp91uhRvpXhXEPN4FnGJ0d7cNvjAXZ/hXpA6ZGWrp2jBT8RAkrJuQllzJAmvalZn+cMN3uCSKVAD8QKQq8m8or2egxB8c0ZjfMuEIKB08D+htbfiHKSgM8RjQ8x/B2JZu2l9uJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Aj1c93O7; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Aj1c93O7"
+Message-ID: <051c66d5-2751-4dfb-88df-3a4a1f86bb71@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741426424;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PcLw7shfI50Q27EtBRTL5tYuszmcD8BPa3jzuj4PVWg=;
+	b=Aj1c93O7sRk8dZswKp03dAiwaVDyWRxUNH46JEXG7l+hSjozmiJRw5zpy4ygt29cezv+ul
+	STWQ6Hv9r93RqBSByly80mST8NWfh02kVvRubeWM2uu9RhCJPgo7HYrdtIaEYb34NBlrnX
+	4Wbm1UmZIQ7CDJxRI+m8RKrryB8FRyQ=
+Date: Sat, 8 Mar 2025 09:33:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTB5JVkIeGUIYGEhCGUlKQlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtLQUhIS0tBSUpMQR1PSR5BHU9KQkFITh5ZV1kWGg8SFR
-	0UWUFZT0tIVUpLSU9PT0tVSktLVUtZBg++
-X-HM-Tid: 0a95751741d903a2kunmd88bc5ea
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NTY6Gjo5DzJJFCksLyE5MT8f
-	LUwaCgpVSlVKTE9KT0lNSUpIQk5IVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0tBSEhLS0FJSkxBHU9JHkEdT0pCQUhOHllXWQgBWUFKQ0xPNwY+
+Subject: Re: [PATCH net v2] net: ethtool: tsinfo: Fix dump command
+To: Kory Maincent <kory.maincent@bootlin.com>,
+ "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>,
+ Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+References: <20250307091255.463559-1-kory.maincent@bootlin.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250307091255.463559-1-kory.maincent@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Following commit b956c9de9175 ("arm64: dts: rockchip: rk356x: Move
-PCIe MSI to use GIC ITS instead of MBI"), change the PCIe3 controller's
-MSI on rk3568 to use ITS, so that all MSI-X can work properly.
+On 07/03/2025 09:12, Kory Maincent wrote:
+> Fix missing initialization of ts_info->phc_index in the dump command,
+> which could cause a netdev interface to incorrectly display a PTP provider
+> at index 0 instead of "none".
+> Fix it by initializing the phc_index to -1.
+> 
+> In the same time, restore missing initialization of ts_info.cmd for the
+> IOCTL case, as it was before the transition from ethnl_default_dumpit to
+> custom ethnl_tsinfo_dumpit.
+> 
+> Also, remove unnecessary zeroing of ts_info, as it is embedded within
+> reply_data, which is fully zeroed two lines earlier.
+> 
+> Fixes: b9e3f7dc9ed95 ("net: ethtool: tsinfo: Enhance tsinfo to support several hwtstamp by net topology")
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+> 
+> Change in v2:
+> - Remove useless zeroed of ts_info.
+> ---
+>   net/ethtool/tsinfo.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/ethtool/tsinfo.c b/net/ethtool/tsinfo.c
+> index 691be6c445b38..ad3866c5a902b 100644
+> --- a/net/ethtool/tsinfo.c
+> +++ b/net/ethtool/tsinfo.c
+> @@ -290,7 +290,8 @@ static void *ethnl_tsinfo_prepare_dump(struct sk_buff *skb,
+>   	reply_data = ctx->reply_data;
+>   	memset(reply_data, 0, sizeof(*reply_data));
+>   	reply_data->base.dev = dev;
+> -	memset(&reply_data->ts_info, 0, sizeof(reply_data->ts_info));
+> +	reply_data->ts_info.cmd = ETHTOOL_GET_TS_INFO;
+> +	reply_data->ts_info.phc_index = -1;
+>   
+>   	return ehdr;
+>   }
 
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- arch/arm64/boot/dts/rockchip/rk3568.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3568.dtsi b/arch/arm64/boot/dts/rockchip/rk3568.dtsi
-index 695cccbdab0f..e719a3df126c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3568.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3568.dtsi
-@@ -152,7 +152,7 @@ pcie3x1: pcie@fe270000 {
- 		compatible = "rockchip,rk3568-pcie";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
--		bus-range = <0x0 0xf>;
-+		bus-range = <0x10 0x1f>;
- 		clocks = <&cru ACLK_PCIE30X1_MST>, <&cru ACLK_PCIE30X1_SLV>,
- 			 <&cru ACLK_PCIE30X1_DBI>, <&cru PCLK_PCIE30X1>,
- 			 <&cru CLK_PCIE30X1_AUX_NDFT>;
-@@ -175,7 +175,7 @@ pcie3x1: pcie@fe270000 {
- 		num-ib-windows = <6>;
- 		num-ob-windows = <2>;
- 		max-link-speed = <3>;
--		msi-map = <0x0 &gic 0x1000 0x1000>;
-+		msi-map = <0x1000 &its 0x1000 0x1000>;
- 		num-lanes = <1>;
- 		phys = <&pcie30phy>;
- 		phy-names = "pcie-phy";
-@@ -205,7 +205,7 @@ pcie3x2: pcie@fe280000 {
- 		compatible = "rockchip,rk3568-pcie";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
--		bus-range = <0x0 0xf>;
-+		bus-range = <0x20 0x2f>;
- 		clocks = <&cru ACLK_PCIE30X2_MST>, <&cru ACLK_PCIE30X2_SLV>,
- 			 <&cru ACLK_PCIE30X2_DBI>, <&cru PCLK_PCIE30X2>,
- 			 <&cru CLK_PCIE30X2_AUX_NDFT>;
-@@ -228,7 +228,7 @@ pcie3x2: pcie@fe280000 {
- 		num-ib-windows = <6>;
- 		num-ob-windows = <2>;
- 		max-link-speed = <3>;
--		msi-map = <0x0 &gic 0x2000 0x1000>;
-+		msi-map = <0x2000 &its 0x2000 0x1000>;
- 		num-lanes = <2>;
- 		phys = <&pcie30phy>;
- 		phy-names = "pcie-phy";
--- 
-2.25.1
-
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
