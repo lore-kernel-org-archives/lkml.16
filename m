@@ -1,78 +1,158 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F338462
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 09:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B24BE4F
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 09:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741427164; cv=none; b=O30do908CB1Ao7USlqn8NrPjbPFDmEcHXkvuBBrxlCcls8OC+PfA03QBcQX7ezSFlv4ARF+uhFbyMoVQDgj3Huw5E2c3jmKLTcEfDPm3WhJY4N9jlVkD/SugypKs/FwGR4pWtPSGZBmDzdfRZWhxoYgpz6ERtYHT4v5C7ZwhZxQ=
+	t=1741427237; cv=none; b=sChfU/uIp263GedZyIL/1FCJmR8uzkUom2i4pkWru1sL0p8oOh1nqcsATjEhljQT+Wr5zhMmInoFzu0Hs/bsBoyWysaOvdn0cqjaqAVs66jntmUB5bM2VdU2U6o+v7UYAlfxeY6GgyJ3cTYUCKouOUk+Qv4bd/uXO2I2F9/GohE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741427164; c=relaxed/simple;
-	bh=FVlLejdFDbutlkTC1Y2NNLbITDrvuNqRxT+XMWiQ0dY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=XpNU6kPSTgWXk452HVaJpuefzGURmPPf8bxN9NLBMhMpQn7X0MUrmKTWZs6MWd+KwU5wiv+VuYSvv947/U3Xyn0BmfhrrtMmJFZ/+tCAJOtoDkDmrzHiKh093vSICtrAVMN+3xYGXV2ENRMg5x5zHDRdO3imgsjtFet4bU5qHJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b3b781313so6278939f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 01:46:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741427161; x=1742031961;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfAMxlt7hl4XrwSsiM1sMw4spJ1nfH3roCq3hk1GYYM=;
-        b=MIIzxjec0gk3El4/G3LhFPlxqA6fYupA990dzLE4Aj3065TAR+fxtiaxDNjd2zmdLi
-         0GtXyQMlGq+Gp77XeHd2ek8lNztttiAWEsmCoAx+6hCv0tFi5uJ/OVKoD3bGdp0tVDOP
-         gaNntKDoGm+2d5piEhDQS/C3irqKrxeaS5JmHv81j+SvvCp+F4BFDJnunwERR7VLXVOG
-         wmqMekfWYLhGdF7EvKDEAHy56L10eH7hTZG2ODBPjnFiJiQmACtadksf/+w51U9SUBAP
-         O7r4Lf939Ox2u4EroBf/SPQ5JPdxMqB9as2R2c5fALxA99zQHtTwSdb5WzCp58F+LkQW
-         apbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsonz+4mnWkWpfrHlK86jAYoPx1KErokdpL7dOp0DceVFUlNFLWP9X77IwozgkWZBUhNaAxS+yHfQRsi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrRTMKqntLc0lyJDGaVKZEzynuTxLX1px14zo13SVhx2O53Hyc
-	tbOMX76rPBKoDgps+bNzN1Mag9Qgfgh+UjWgPg4ysLPN+Gokyt3/KCcr3jtZcqCLq0US+zFZOAf
-	fQvDugOykVDOKJ4eXv6T3QCXsEJRKwRC+DuRvSNOxISiN8PsvQZjBTFc=
-X-Google-Smtp-Source: AGHT+IHvMAYa79194kZw/IW34l/QUa46VgEuUlYlL9gdZcDd8ttqdUVAXZ3b263TFEj87ZhuXJ63fOR+Blft5SPVzovxf1cuCVe+
+	s=arc-20240116; t=1741427237; c=relaxed/simple;
+	bh=kBJ5fzJuS4XS6xPkBmPOVlmWnL2oKehn+/7J73khbt8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FnX5rnhPLuF/cmDcfByAcRrlakt9FgE27mya7XSYlDuJJhg+BVJ7fGd26nOcgdulYhfl4TDTPBSbCLubI/ZeD+T9oJjwYQKIZnqA2s2M+8Fye/lBMPw1mJAZPoW9NjdodgLKI0KpTca+6m7XUOvSMELafRcNDzUczHqK8tWogCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNiaNpnE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNiaNpnE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4708C4CEE0;
+	Sat,  8 Mar 2025 09:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741427236;
+	bh=kBJ5fzJuS4XS6xPkBmPOVlmWnL2oKehn+/7J73khbt8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cNiaNpnEMytoWcZRiVn759snA9q4Vv811bus0J+0flM/TQzHm4yG9XN2YpJoDWs9i
+	 Mc5kdV+Lc8FAGCnkflRYTrQejjclh9FVHiEguI51FMGHEBCmQOa4XD/qeVgu6cA/Lw
+	 s/lGDBluIWE//2aJhP6jNE35ayiZfmYad8XZSI7vvoE968VSBbkGb8tVRiuuBxvaP9
+	 j2Q+pIlPQYzt3+qHbNKm6oF9GlHI/4sQVAjqzI9B0sfQBww3pRIiiLc7va5IuvvO/p
+	 EVwTWQHlRQd3LrA22x+1zZimB43kErVsO8K2lYdgWtVTaTqHgCV17cDKqLmMTQZ0Uq
+	 aaZQ44y6dWD5w==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] f2fs: control nat_bits feature via mount option
+Date: Sat,  8 Mar 2025 13:18:46 +0800
+Message-Id: <20250308051846.29079-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c549:0:b0:3d4:2306:a875 with SMTP id
- e9e14a558f8ab-3d4418a5d9cmr72973195ab.8.1741427161648; Sat, 08 Mar 2025
- 01:46:01 -0800 (PST)
-Date: Sat, 08 Mar 2025 01:46:01 -0800
-In-Reply-To: <67012223.050a0220.49194.04be.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67cc11d9.050a0220.24a339.0090.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] INFO: task hung in regdb_fw_cb (2)
-From: syzbot <syzbot+aff8125319e0457b4a25@syzkaller.appspotmail.com>
-To: bsegall@google.com, davem@davemloft.net, dietmar.eggemann@arm.com, 
-	edumazet@google.com, johannes@sipsolutions.net, juri.lelli@redhat.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	mgorman@suse.de, mingo@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com, 
-	peterz@infradead.org, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, 
-	vincent.guittot@linaro.org, vschneid@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+Introduce a new mount option "nat_bits" to control nat_bits feature,
+by default nat_bits feature is disabled.
 
-commit 66951e4860d3c688bfa550ea4a19635b57e00eca
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Mon Jan 13 12:50:11 2025 +0000
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ Documentation/filesystems/f2fs.rst |  2 ++
+ fs/f2fs/f2fs.h                     |  1 +
+ fs/f2fs/node.c                     |  3 +++
+ fs/f2fs/super.c                    | 15 +++++++++++++++
+ 4 files changed, 21 insertions(+)
 
-    sched/fair: Fix update_cfs_group() vs DELAY_DEQUEUE
+diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
+index 42f28dbf2410..e15c4275862a 100644
+--- a/Documentation/filesystems/f2fs.rst
++++ b/Documentation/filesystems/f2fs.rst
+@@ -366,6 +366,8 @@ errors=%s		 Specify f2fs behavior on critical errors. This supports modes:
+ 			 pending node write	drop		keep		N/A
+ 			 pending meta write	keep		keep		N/A
+ 			 ====================== =============== =============== ========
++nat_bits		 Enable nat_bits feature to enhance full/empty nat blocks access,
++			 by default it's disabled.
+ ======================== ============================================================
+ 
+ Debugfs Entries
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 8d8917b92b5d..99ded6512d8b 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -115,6 +115,7 @@ extern const char *f2fs_fault_name[FAULT_MAX];
+ #define	F2FS_MOUNT_GC_MERGE		0x02000000
+ #define F2FS_MOUNT_COMPRESS_CACHE	0x04000000
+ #define F2FS_MOUNT_AGE_EXTENT_CACHE	0x08000000
++#define F2FS_MOUNT_NAT_BITS		0x10000000
+ 
+ #define F2FS_OPTION(sbi)	((sbi)->mount_opt)
+ #define clear_opt(sbi, option)	(F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 24085fa8493b..579955c6e03c 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -3278,6 +3278,9 @@ static int init_node_manager(struct f2fs_sb_info *sbi)
+ 	if (!nm_i->nat_bitmap)
+ 		return -ENOMEM;
+ 
++	if (!test_opt(sbi, NAT_BITS))
++		disable_nat_bits(sbi, true);
++
+ 	err = __get_nat_bitmaps(sbi);
+ 	if (err)
+ 		return err;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 079c5d4b60b6..1b8ca7d63afe 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -191,6 +191,7 @@ enum {
+ 	Opt_memory_mode,
+ 	Opt_age_extent_cache,
+ 	Opt_errors,
++	Opt_nat_bits,
+ 	Opt_err,
+ };
+ 
+@@ -270,6 +271,7 @@ static match_table_t f2fs_tokens = {
+ 	{Opt_memory_mode, "memory=%s"},
+ 	{Opt_age_extent_cache, "age_extent_cache"},
+ 	{Opt_errors, "errors=%s"},
++	{Opt_nat_bits, "nat_bits"},
+ 	{Opt_err, NULL},
+ };
+ 
+@@ -1323,6 +1325,9 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+ 			}
+ 			kfree(name);
+ 			break;
++		case Opt_nat_bits:
++			set_opt(sbi, NAT_BITS);
++			break;
+ 		default:
+ 			f2fs_err(sbi, "Unrecognized mount option \"%s\" or missing value",
+ 				 p);
+@@ -2135,6 +2140,9 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
+ 	else if (F2FS_OPTION(sbi).errors == MOUNT_ERRORS_PANIC)
+ 		seq_printf(seq, ",errors=%s", "panic");
+ 
++	if (test_opt(sbi, NAT_BITS))
++		seq_puts(seq, ",nat_bits");
++
+ 	return 0;
+ }
+ 
+@@ -2325,6 +2333,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+ 	bool no_discard = !test_opt(sbi, DISCARD);
+ 	bool no_compress_cache = !test_opt(sbi, COMPRESS_CACHE);
+ 	bool block_unit_discard = f2fs_block_unit_discard(sbi);
++	bool no_nat_bits = !test_opt(sbi, NAT_BITS);
+ #ifdef CONFIG_QUOTA
+ 	int i, j;
+ #endif
+@@ -2453,6 +2462,12 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+ 		goto restore_opts;
+ 	}
+ 
++	if (no_nat_bits == !!test_opt(sbi, NAT_BITS)) {
++		err = -EINVAL;
++		f2fs_warn(sbi, "switch nat_bits option is not allowed");
++		goto restore_opts;
++	}
++
+ 	if ((*flags & SB_RDONLY) && test_opt(sbi, DISABLE_CHECKPOINT)) {
+ 		err = -EINVAL;
+ 		f2fs_warn(sbi, "disabling checkpoint not compatible with read-only");
+-- 
+2.40.1
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13d29878580000
-start commit:   e32cde8d2bd7 Merge tag 'sched_ext-for-6.12-rc1-fixes-1' of..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1b5201b91035a876
-dashboard link: https://syzkaller.appspot.com/bug?extid=aff8125319e0457b4a25
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1561539f980000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: sched/fair: Fix update_cfs_group() vs DELAY_DEQUEUE
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
