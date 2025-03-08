@@ -1,196 +1,182 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520F71B0409;
-	Sat,  8 Mar 2025 10:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07BD1624C0
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 10:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741428044; cv=none; b=VOxeQ4i/IBwxyZFg/bQc2ahbcUa0Unzdl94FwH4qFNdqsja2yTkgcZkC7X/GJRWnNobvsVyJJ1LTbLbFUd3J9Fb4Yf6mmSAELUUT2a89vha7l1ckfOjHrBjFy1mxqstSvZgYT+DlW8PGF8moCuPDVF0bDUNI5YEiIk7UiXohat0=
+	t=1741428146; cv=none; b=egRYcLVTGjIErGDTig2/y9fidb5l9NPcwlQb/VrpuFOLg3XIWCLlcUSx92Qbl1MbFCmEwaDuXE7okGQ0H/UKsbHO7J0nUn5D4FqxPFPp+aWBtC0xDOEjcRUEvjPtU0FfdsoUOKvbxPKUlvJQc0qXIlyqIogNW8pnRdGkWN5zago=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741428044; c=relaxed/simple;
-	bh=hOfMBWl0HtY7p6i1BIV62u5V/ut0F3W96lyz5vF72NQ=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=NlWrW08jFhOGtGFn0n2wraqovfBamZwcIOpXBm54hJCRxjhimERHGw8z2ONVMLhUNb0Q4EDG+roxHeXMTirH5UQJXsPBIy1HnbPBElnsEvZXGvzBZZO2taoUlyKR0OvhMjr6Lqw4gPSoBAMH7AC02q30PRbPN6fBBrqXuE8uojk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUonHkhv; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741428146; c=relaxed/simple;
+	bh=dBQyyL3vL1C2U+hw5avKU2W2uQl0ffo6ReVMWCh8v00=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZrzcoDuBs8uKw4XdKGcHSm9Cr+c2mmzyQhVJ3RXLCiOWVs/4gckWQee0imhp1+kNu2093LR/VByoIzxJVGj7Wxc3yzACQl61pp5vtaMoPidQ0gjS/xW6xdXfW9UavL+50L5IrjAzALSJZVwwqdOe3NuE/9tkZYOKjYpN6INbgVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KsoLRz2Z; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUonHkhv"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fa8ada6662so5771734a91.1;
-        Sat, 08 Mar 2025 02:00:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KsoLRz2Z"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-548430564d9so2902494e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 02:02:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741428042; x=1742032842; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qmuWU+ABDEM7eRP+mmuPtmIx9zAefsZ3TrrNc1V03XM=;
-        b=hUonHkhvg031wVe/GYESFiAW160DehUQuZCBQgNM0apkF7JVfveW03F1r+tknNPjZ+
-         6W5cXYpCxK44Cs6VFR9ubgaRv1C4Rb4q9U8bKlGvLPiffmq9QEeTGobxmNPgONCzbxSL
-         ZizhjAa8L4qjkl4NCuqxpzk5A/RoE+jw7Cm9rp/be/qgS7aURSsmtof63uA/toj02TeL
-         mUKj7cmkRXbUUbLa6rSy9wH5lCZcdml3o/N3PI2wavsW1lFOc5BOdAsBk1KWLsVSJoO1
-         Mlz7VggmPx90TPymEg6S25wj0unQ6s3mijv3IoKb/ry2PHu+DyStzeIELwR2UaVPiXMj
-         I6/A==
+        d=google.com; s=20230601; t=1741428143; x=1742032943; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0iByLy4aSrR5QfjhqE9ehl4b8VA7AQ4/ftXBtZEPWvc=;
+        b=KsoLRz2ZuqhN2jrLBx7UyUsmMr1Q04rAGWr1t+Uy7USRZgDZ1ASg0+9OKyGgBHKj3/
+         NcHSyMgy4HreWWg6tYeUfgIWLUBhK+9EYdAlOcdnj33bFC9anvAoWvdUwAAEOSqeyfjJ
+         /ZzBSN+o8em8rIIDpU/llPYkIt5QOL6BBrHTvJv42f3/jBgw68fQXDfqrSVfA4USZe2n
+         GpIOPo5t3Udvqogz5/U9413PiP7qwMn0/wXN4BU9PLG6dqvYAbQzKuTOtK+T26fUbBym
+         11xRtkhYfamZ0trbCeXU6DAe8ZtN2WG4oMord3eIIbb3eswHEJaQJNQvEzz8bzaKUcI0
+         76YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741428042; x=1742032842;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qmuWU+ABDEM7eRP+mmuPtmIx9zAefsZ3TrrNc1V03XM=;
-        b=VKxKhgA6Vxm2ZLQRc5TErm4GyhBfMzt9kl5FlIZxrTdpyG6Co2w5JNDNhZQF6AfWQC
-         OPboAV/Jn9TdC9x4Ti7/uSQYikCjcuDtEYMgYVvBcT2i67UGfVQA/joHgm/o8vkk7S/h
-         DTGsqly2Pw9wb5PE/C8A7rIMO9KmenOwzzLZAhxJsTAPua/mkNR4wJna4+dJduIT6iTX
-         Lo3AD9hhxAtZ2j+H1MlOJYvr5vzCNUulUarEkXrRlHLiuGqRNCOJGSZoXjf0i1svAqGP
-         lHE52ho5jwFsNwJoWowZ4+r4AH3NvXh3ZfjuRlu+MlSvzv5cNIRX/OJEAxXU8xc+Qc/1
-         9jug==
-X-Forwarded-Encrypted: i=1; AJvYcCUEvU69I0pZMGZLp2hV18+fm+2u5BEk/Hw9GBsZJW0ay4a5Q7QkHezqaXCUFJypFvHYFdQog/+BxILk@vger.kernel.org, AJvYcCUrLJ4xyyEWKi95/R+yVki6oO32CRZtaZ2G+0fICQGNH36jlgftTTNk8djiGBGOuVQD3dz1zJVI19MSbfT1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQnf697w7Q/BIeUVOLe0uql9mjxXXVCu2dudXAqz293vER1fqw
-	cqGgbtcGaM5i4giUGXGdRukXupZ8aX2E95fvaKgGJSMiFc19G3VbwKfNcA==
-X-Gm-Gg: ASbGnctf5W59+0lISGsraiSjtqw77wDTZNgJqiW70dfmr4eVgoRzCL8Oc0IUYsu+QDw
-	A5U4tJLRRCAblwKtKyZtZRHTlW72w1hPti/CrIx+CHS7o/4UFgB0zzrWJTskjV9I+x6zQ7FaUM1
-	nqlCmbIcg0OALjRlCDAfyLA0mXY+yUWSuEaQWzFNCTuukMGJfS9NmuEfHnlk0xOGPi6yOUEzF97
-	egTHm4Q+XfBKzmMRpdV55cUrIar00smIeC17vRDw4/2MH83eMz3Dvl2IxAKHdfqji3IcCzxpNB2
-	v5/4yrZbTHx2IgzKPS6Oj0nWqS90V4OLH1c=
-X-Google-Smtp-Source: AGHT+IGPAJzUf9siyzmCmgkTC9kLKvlPxR154Kyh6/tNf5D6nZlFWTCUZP6hIDD9iyrGuUOK4JT+yQ==
-X-Received: by 2002:a17:90b:2f8f:b0:2ea:7cd5:4ad6 with SMTP id 98e67ed59e1d1-2ff7cf4dde5mr9395444a91.32.1741428042385;
-        Sat, 08 Mar 2025 02:00:42 -0800 (PST)
-Received: from dw-tp ([171.76.82.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e78939dsm6315453a91.29.2025.03.08.02.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 02:00:41 -0800 (PST)
-From: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>, linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>
-Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if journal is destroying
-In-Reply-To: <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
-Date: Sat, 08 Mar 2025 15:25:04 +0530
-Message-ID: <87ldtfhmo7.fsf@gmail.com>
-References: <cover.1741270780.git.ojaswin@linux.ibm.com> <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
+        d=1e100.net; s=20230601; t=1741428143; x=1742032943;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0iByLy4aSrR5QfjhqE9ehl4b8VA7AQ4/ftXBtZEPWvc=;
+        b=Urudv2qhcmQpqOnMf32h0EXuDyL2/hGNJIglLcnq62ojMYBBaSVwDaTuVy0qRLmlca
+         BqmfLXKnNydX3Fj+TqI4rH9LnttxPd/NiJsRfP8NStMIjnTTqk8ztb99iZEHy377RBFE
+         J+CjPP6G7ZTOUvf7mHN+5SHjf6MMBwPeeX11FNA8iQ2jX5frCKOtTHcJ/afR9i9Ci4m5
+         U0wkw52D67mAHo80UWfKC9h5QfJqDHi99reWdskWvRND6Jnnru/Smri7ih2Ub0S6y4Yk
+         hLyigQRCqsihn3tw+0cy9OPrOWTlO1VGH+H6QMAzJXosqRsFpk5+AEZVApLNG0JsDryA
+         knxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzUH2nPF1DccxuFZppgCxhwcdwICQ/irulNO07e/SwQAbVK8N8uJkW5eMDnszEsuj4WX2wJpdn5jZMRxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyprcSdMFqNeRGju2gJTl3y12DfNqdDi6y4ivx53ucxmq1ybgH
+	e2tcSY2x7lKJb5XtZlbImy/j+95zvmJZcRecFFfvFL1Y+ciaJ/5WDHbwc01wInofYSKWK+cAf+I
+	dFrvjf/+v3FPymUA2Lcvb0zi6cHSd7tfaiOnO
+X-Gm-Gg: ASbGncvyb1vzQcx1Lyv/YDRnDxXk9ovVcE/MjkJkllb5+Y4IBdro1OpQhcu4K/Yf0XP
+	cI3IHQbf1Chpkr3LTeUgkGpl6Js6/vvtBsR37dvs9kxwi0PuLg2Yae5UN25SuvVITbt9mUjvLcq
+	+0nBJTsYvSspDcJUQomA44eNDsEhmV6W6atgXl0OaHsL6mewGtYlbM4GwB1+Y=
+X-Google-Smtp-Source: AGHT+IGnJHNIzytVFWJfy8RYeXOpRM/tNm6CZsZEWZPJJRrsa4X6j5gMAWfnhfq9BEgIS7pBNQO+WvWqhtKwQzUXXQY=
+X-Received: by 2002:a05:6512:ad1:b0:549:7d6d:3db6 with SMTP id
+ 2adb3069b0e04-54990e672fbmr2690678e87.23.1741428142738; Sat, 08 Mar 2025
+ 02:02:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1740664852.git.dvyukov@google.com> <e534910c51271eebf4055a92f3b1c5ac998988bc.1740664852.git.dvyukov@google.com>
+In-Reply-To: <e534910c51271eebf4055a92f3b1c5ac998988bc.1740664852.git.dvyukov@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Sat, 8 Mar 2025 11:02:11 +0100
+X-Gm-Features: AQ5f1Jq9J4cnkVBX-EZ1Lgmd2ZIeq0_cd3j6WuKCRtc1QBPwemOAwp8enxxxs4c
+Message-ID: <CACT4Y+bxV-keWg6-NGnA2k039gzMf_9COCe+zQWpcup8bMhToQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] rseq: Make rseq work with protection keys
+To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
+	elver@google.com
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+On Thu, 27 Feb 2025 at 15:03, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> If an application registers rseq, and ever switches to another pkey
+> protection (such that the rseq becomes inaccessible), then any
+> context switch will cause failure in __rseq_handle_notify_resume()
+> attempting to read/write struct rseq and/or rseq_cs. Since context
+> switches are asynchronous and are outside of the application control
+> (not part of the restricted code scope), temporarily switch to
+> pkey value that allows access to the 0 (default) PKEY.
+>
+> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
 
-> Presently we always BUG_ON if trying to start a transaction on a journal marked
-> with JBD2_UNMOUNT, since this should never happen. However, while ltp running
-> stress tests, it was observed that in case of some error handling paths, it is
-> possible for update_super_work to start a transaction after the journal is
-> destroyed eg:
->
-> (umount)
-> ext4_kill_sb
->   kill_block_super
->     generic_shutdown_super
->       sync_filesystem /* commits all txns */
->       evict_inodes
->         /* might start a new txn */
->       ext4_put_super
-> 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
->         jbd2_journal_destroy
->           journal_kill_thread
->             journal->j_flags |= JBD2_UNMOUNT;
->           jbd2_journal_commit_transaction
->             jbd2_journal_get_descriptor_buffer
->               jbd2_journal_bmap
->                 ext4_journal_bmap
->                   ext4_map_blocks
->                     ...
->                     ext4_inode_error
->                       ext4_handle_error
->                         schedule_work(&sbi->s_sb_upd_work)
->
->                                                /* work queue kicks in */
->                                                update_super_work
->                                                  jbd2_journal_start
->                                                    start_this_handle
->                                                      BUG_ON(journal->j_flags &
->                                                             JBD2_UNMOUNT)
->
-> Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
-> destroying only do a journaled (and deferred) update of sb if this flag is not
-> set. Otherwise, just fallback to an un-journaled commit.
->
-> We set sbi->s_journal_destroying = true only after all the FS updates are done
-> during ext4_put_super() (except a running transaction that will get commited
-> during jbd2_journal_destroy()). After this point, it is safe to commit the sb
-> outside the journal as it won't race with a journaled update (refer
-> 2d01ddc86606).
->
-> Also, we don't need a similar check in ext4_grp_locked_error since it is only
-> called from mballoc and AFAICT it would be always valid to schedule work here.
->
-> Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
-> Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Any remaining concerns with this series?
+
+What tree should it go into?
+
 > ---
->  fs/ext4/ext4.h      | 2 ++
->  fs/ext4/ext4_jbd2.h | 8 ++++++++
->  fs/ext4/super.c     | 4 +++-
->  3 files changed, 13 insertions(+), 1 deletion(-)
+> Changes in v6:
+>  - Added a comment to struct rseq with MPK rules
 >
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 2b7d781bfcad..d48e93bd5690 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
->  	 */
->  	struct work_struct s_sb_upd_work;
->  
-> +	bool s_journal_destorying;
-> +
->  	/* Atomic write unit values in bytes */
->  	unsigned int s_awu_min;
->  	unsigned int s_awu_max;
-> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> index 9b3c9df02a39..6bd3ca84410d 100644
-> --- a/fs/ext4/ext4_jbd2.h
-> +++ b/fs/ext4/ext4_jbd2.h
-> @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
+> Changes in v4:
+>  - Added Fixes tag
+>
+> Changes in v3:
+>  - simplify control flow to always enable access to 0 pkey
+>
+> Changes in v2:
+>  - fixed typos and reworded the comment
+> ---
+>  include/uapi/linux/rseq.h |  4 ++++
+>  kernel/rseq.c             | 11 +++++++++++
+>  2 files changed, 15 insertions(+)
+>
+> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+> index c233aae5eac90..019fd248cf749 100644
+> --- a/include/uapi/linux/rseq.h
+> +++ b/include/uapi/linux/rseq.h
+> @@ -58,6 +58,10 @@ struct rseq_cs {
+>   * contained within a single cache-line.
+>   *
+>   * A single struct rseq per thread is allowed.
+> + *
+> + * If struct rseq or struct rseq_cs is used with Memory Protection Keys,
+> + * then the assigned pkey should either be accessible whenever these structs
+> + * are registered/installed, or they should be protected with pkey 0.
+>   */
+>  struct rseq {
+>         /*
+> diff --git a/kernel/rseq.c b/kernel/rseq.c
+> index 2cb16091ec0ae..9d9c976d3b78c 100644
+> --- a/kernel/rseq.c
+> +++ b/kernel/rseq.c
+> @@ -10,6 +10,7 @@
+>
+>  #include <linux/sched.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/pkeys.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/rseq.h>
+>  #include <linux/types.h>
+> @@ -402,11 +403,19 @@ static int rseq_ip_fixup(struct pt_regs *regs)
+>  void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
 >  {
->  	int err = 0;
->  
-> +	/*
-> +	 * At this point all pending FS updates should be done except a possible
-> +	 * running transaction (which will commit in jbd2_journal_destroy). It
-> +	 * is now safe for any new errors to directly commit superblock rather
-> +	 * than going via journal.
-> +	 */
-> +	sbi->s_journal_destorying = true;
-
-This is not correct right. I think what we decided to set this flag
-before we flush the workqueue. So that we don't schedule any new
-work after this flag has been set. At least that is what I understood.
-
-[1]: https://lore.kernel.org/all/87eczc6rlt.fsf@gmail.com/
-
--ritesh
-
-
+>         struct task_struct *t = current;
+> +       pkey_reg_t saved_pkey;
+>         int ret, sig;
+>
+>         if (unlikely(t->flags & PF_EXITING))
+>                 return;
+>
+> +       /*
+> +        * Enable access to the default (0) pkey in case the thread has
+> +        * currently disabled access to it and struct rseq/rseq_cs has
+> +        * 0 pkey assigned (the only supported value for now).
+> +        */
+> +       saved_pkey = enable_zero_pkey_val();
 > +
->  	err = jbd2_journal_destroy(journal);
->  	sbi->s_journal = NULL;
->  
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 8ad664d47806..31552cf0519a 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
->  		 * constraints, it may not be safe to do it right here so we
->  		 * defer superblock flushing to a workqueue.
->  		 */
-> -		if (continue_fs && journal)
-> +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
->  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
->  		else
->  			ext4_commit_super(sb);
-> @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
->  	spin_lock_init(&sbi->s_error_lock);
->  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
->  
-> +	sbi->s_journal_destorying = false;
-> +
->  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
->  	if (err)
->  		goto failed_mount3;
-> -- 
-> 2.48.1
+>         /*
+>          * regs is NULL if and only if the caller is in a syscall path.  Skip
+>          * fixup and leave rseq_cs as is so that rseq_sycall() will detect and
+> @@ -419,9 +428,11 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+>         }
+>         if (unlikely(rseq_update_cpu_node_id(t)))
+>                 goto error;
+> +       write_pkey_val(saved_pkey);
+>         return;
+>
+>  error:
+> +       write_pkey_val(saved_pkey);
+>         sig = ksig ? ksig->sig : 0;
+>         force_sigsegv(sig);
+>  }
+> --
+> 2.48.1.658.g4767266eb4-goog
+>
