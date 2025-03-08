@@ -1,42 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65B11D61AC
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 12:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930451DC994
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 12:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741436500; cv=none; b=ZHF5eEA3+Wm6XJ0OJh7PRIFVW68ezrRTCotimYxy3YbxSltfOGvswMs1VT+sKaEzKd7jZAxLgG5ltlr5A/ufpirE5hk7aY5mpK5qIGbWJn1DLjACrbu/YiwTDzbfLaJEkg483bcwL7K8mkNf4TmLoL8wTntLo0Mkkog3NcCLlIA=
+	t=1741436503; cv=none; b=iiy0fpu6WUK0VkagQfJtas202fppMwS+vAxa2ImQWfsXhYvpS7V84yT0pc18TgM4DcafEPTHGk6O05vPA0YgVYbhjuPsT/jBMplQ6v4zDgwh3ojgxDS6fATuSVrMLIH9P96rSQFETXeQK9vvWC+M39ILzn3kVNeWhhVrXE6IVyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741436500; c=relaxed/simple;
-	bh=MrgqgIZ157jsElaeg3dFAoESeyFXV9vNfZmK9cHxL2A=;
+	s=arc-20240116; t=1741436503; c=relaxed/simple;
+	bh=UbAzCVGg/XvhzHinLmwrAdKcW4kyawxk0cVGJmy3vJg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Izg+TvVgmm6j6FLsfehdTGVpFufZqbOVG+tFFQw6qfLSl99FDTGVUxARgxB6171eiaCEbqmQrQkvMD3d4Va6PLLchUFyrBJrYdTkEqfga0TtYYycMOx3I35Os5VEhST8RnbS4c5TeB4zAj677fPHoRxye3w9sM82f8mS8BH2hUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KBsxvZxe; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=WOOlpkQ7dYG1a9H4qK0DH0h3t5zJjkmOpZwvqA+KIlSn8ur8xFozTuDCB6g0b27WR0AGlCim0l9U0HttqTI5ROBNg9GsKi1WJ8du+W8owlh9KAwVNwsvqUMefj3H4fXG5lrjO4iMh1DqA8Mq7TVUtbQkPf9P7nB3O1QzJcBX3WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Th2XO3yd; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KBsxvZxe"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Th2XO3yd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741436497;
-	bh=MrgqgIZ157jsElaeg3dFAoESeyFXV9vNfZmK9cHxL2A=;
+	s=mail; t=1741436499;
+	bh=UbAzCVGg/XvhzHinLmwrAdKcW4kyawxk0cVGJmy3vJg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KBsxvZxe5BZH0eOrUVtnXUOm9hvk2iQlYpBkJSsUFj0TJYgBQJulDBC7WyX3giykq
-	 X72v8nWZRzYdLgaDQ8ZSzOeExhtGfXA+BzZmTDFl/t0epsrR1QxvySR3KeiyVRzook
-	 BiwqGzzDpqUGs+Eyn47JjMUMlCsWktH8HzmZ1Pqyaz5F7cm+Wvt7dCtqHofvE9sMgp
-	 hRQfLgdlSGzr8EI81Dvu4mtRKtNZIaivo+nlXibOzZpsIH4VgTsHFSqZsFkCjp/+FI
-	 3zmzohvHKJZrMCs7zHXkH7ZngHlLnhxj/F9s8biMT1FP6bhKjPzSieSanhTH4a9eJr
-	 1doPs+c5MBn/Q==
+	b=Th2XO3yd/W5Oq35sRrWtpv12UT18Zd5bmtp+s7K9aUG4PhoJ+Hpw7cq0wiHSWEcty
+	 UUYoz33wx24qTDDCV9H5xHmNfE0IBRjegBaHvJt57ZbOP4y8dHAmkPfbCl/1xFPOum
+	 krMHBAJ1vQYztL6M4IMAexbWee2xo7tzUA8nQvnBxkEHr0k1fE3HaD/yRyppQ8KKC3
+	 SZIk2/bM0THuwvymKDtmS9m1NP0cn2gXeFeIfPESgYsDCvNeclg4mJkeNYvJfXDjlI
+	 go2K3I99yF/sODodTrv7NgyhZOJcn8lHDKUK08KgDH/JW2Qq1/iefjl4Py4ggWqDWn
+	 434yynY/JSmLA==
 Received: from localhost (unknown [84.232.140.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 128CE17E0657;
-	Sat,  8 Mar 2025 13:21:37 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id A71C117E1016;
+	Sat,  8 Mar 2025 13:21:39 +0100 (CET)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Sat, 08 Mar 2025 14:21:15 +0200
-Subject: [PATCH v5 06/12] phy: rockchip: samsung-hdptx: Drop superfluous
- cfgs driver data
+Date: Sat, 08 Mar 2025 14:21:17 +0200
+Subject: [PATCH v5 08/12] phy: rockchip: samsung-hdptx: Setup TMDS char
+ rate via phy_configure_opts_hdmi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250308-phy-sam-hdptx-bpc-v5-6-35087287f9d1@collabora.com>
+Message-Id: <20250308-phy-sam-hdptx-bpc-v5-8-35087287f9d1@collabora.com>
 References: <20250308-phy-sam-hdptx-bpc-v5-0-35087287f9d1@collabora.com>
 In-Reply-To: <20250308-phy-sam-hdptx-bpc-v5-0-35087287f9d1@collabora.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -58,60 +58,131 @@ Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 X-Mailer: b4 0.14.2
 
-The ->cfgs member has been introduced via commit f08d1c085638 ("phy:
-phy-rockchip-samsung-hdptx: Don't use dt aliases to determine phy-id"),
-but it is only used during probe() in order to setup ->phy_id.
+The current workaround to setup the TMDS character rate relies on the
+unconventional usage of phy_set_bus_width().
 
-Use a probe() local variable to store device match data and remove the
-now unnecessary member from struct rk_hdptx_phy.
+Make use of the recently introduced HDMI PHY configuration API to
+properly handle the setup.  The workaround will be dropped as soon as
+the switch has been completed on both ends.
+
+Rename rk_hdptx_phy_verify_config() to rk_hdptx_phy_verify_dp_config()
+and introduce the rk_hdptx_phy_verify_hdmi_config() helper to check the
+HDMI parameters during phy_configure().
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 64 +++++++++++++++++------
+ 1 file changed, 47 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index 06644c3d98d3f8b697fc704704df5acdd3c85bad..2bf525514c1991a1299265d12e1e85f66333c604 100644
+index e58a01bdb3ce82d66acdcb02c06de2816288b574..04c344394cbea89150bc4432cf26530fa9d71678 100644
 --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
 +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -392,10 +392,7 @@ struct rk_hdptx_phy {
- 	struct regmap *regmap;
- 	struct regmap *grf;
+@@ -394,6 +394,7 @@ struct rk_hdptx_phy {
  
--	/* PHY const config */
--	const struct rk_hdptx_phy_cfg *cfgs;
  	int phy_id;
--
  	struct phy *phy;
++	struct phy_configure_opts_hdmi hdmi_cfg;
  	struct clk_bulk_data *clks;
  	int nr_clks;
-@@ -1892,6 +1889,7 @@ static int rk_hdptx_phy_runtime_resume(struct device *dev)
- 
- static int rk_hdptx_phy_probe(struct platform_device *pdev)
+ 	struct reset_control_bulk_data rsts[RST_MAX];
+@@ -1410,20 +1411,24 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
  {
-+	const struct rk_hdptx_phy_cfg *cfgs;
- 	struct phy_provider *phy_provider;
- 	struct device *dev = &pdev->dev;
- 	struct rk_hdptx_phy *hdptx;
-@@ -1910,14 +1908,14 @@ static int rk_hdptx_phy_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(regs),
- 				     "Failed to ioremap resource\n");
+ 	struct rk_hdptx_phy *hdptx = phy_get_drvdata(phy);
+ 	enum phy_mode mode = phy_get_mode(phy);
+-	unsigned long rate;
+ 	int ret, lane;
  
--	hdptx->cfgs = device_get_match_data(dev);
--	if (!hdptx->cfgs)
-+	cfgs = device_get_match_data(dev);
-+	if (!cfgs)
- 		return dev_err_probe(dev, -EINVAL, "missing match data\n");
+-	/*
+-	 * FIXME: Temporary workaround to pass pixel_clk_rate
+-	 * from the HDMI bridge driver until phy_configure_opts_hdmi
+-	 * becomes available in the PHY API.
+-	 */
+-	rate = phy_get_bus_width(hdptx->phy) & 0xfffffff;
+-	rate *= 100;
++	if (mode != PHY_MODE_DP) {
++		if (!hdptx->hdmi_cfg.tmds_char_rate) {
++			/*
++			 * FIXME: Temporary workaround to setup TMDS char rate
++			 * from the RK DW HDMI QP bridge driver.
++			 * Will be removed as soon the switch to the HDMI PHY
++			 * configuration API has been completed on both ends.
++			 */
++			hdptx->hdmi_cfg.tmds_char_rate = phy_get_bus_width(hdptx->phy) & 0xfffffff;
++			hdptx->hdmi_cfg.tmds_char_rate *= 100;
++		}
  
- 	/* find the phy-id from the io address */
- 	hdptx->phy_id = -ENODEV;
--	for (id = 0; id < hdptx->cfgs->num_phys; id++) {
--		if (res->start == hdptx->cfgs->phy_ids[id]) {
-+	for (id = 0; id < cfgs->num_phys; id++) {
-+		if (res->start == cfgs->phy_ids[id]) {
- 			hdptx->phy_id = id;
- 			break;
- 		}
+-	dev_dbg(hdptx->dev, "%s rate=%lu\n", __func__, rate);
++		dev_dbg(hdptx->dev, "%s rate=%llu\n", __func__, hdptx->hdmi_cfg.tmds_char_rate);
++	}
+ 
+-	ret = rk_hdptx_phy_consumer_get(hdptx, rate);
++	ret = rk_hdptx_phy_consumer_get(hdptx, hdptx->hdmi_cfg.tmds_char_rate);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1454,7 +1459,7 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
+ 		regmap_write(hdptx->grf, GRF_HDPTX_CON0,
+ 			     HDPTX_MODE_SEL << 16 | FIELD_PREP(HDPTX_MODE_SEL, 0x0));
+ 
+-		ret = rk_hdptx_ropll_tmds_mode_config(hdptx, rate);
++		ret = rk_hdptx_ropll_tmds_mode_config(hdptx, hdptx->hdmi_cfg.tmds_char_rate);
+ 		if (ret)
+ 			rk_hdptx_phy_consumer_put(hdptx, true);
+ 	}
+@@ -1469,8 +1474,27 @@ static int rk_hdptx_phy_power_off(struct phy *phy)
+ 	return rk_hdptx_phy_consumer_put(hdptx, false);
+ }
+ 
+-static int rk_hdptx_phy_verify_config(struct rk_hdptx_phy *hdptx,
+-				      struct phy_configure_opts_dp *dp)
++static int rk_hdptx_phy_verify_hdmi_config(struct rk_hdptx_phy *hdptx,
++					   struct phy_configure_opts_hdmi *hdmi)
++{
++	int i;
++
++	if (!hdmi->tmds_char_rate || hdmi->tmds_char_rate > HDMI20_MAX_RATE)
++		return -EINVAL;
++
++	for (i = 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
++		if (hdmi->tmds_char_rate == ropll_tmds_cfg[i].rate)
++			break;
++
++	if (i == ARRAY_SIZE(ropll_tmds_cfg) &&
++	    !rk_hdptx_phy_clk_pll_calc(hdmi->tmds_char_rate, NULL))
++		return -EINVAL;
++
++	return 0;
++}
++
++static int rk_hdptx_phy_verify_dp_config(struct rk_hdptx_phy *hdptx,
++					 struct phy_configure_opts_dp *dp)
+ {
+ 	int i;
+ 
+@@ -1730,12 +1754,18 @@ static int rk_hdptx_phy_configure(struct phy *phy, union phy_configure_opts *opt
+ 	enum phy_mode mode = phy_get_mode(phy);
+ 	int ret;
+ 
+-	if (mode != PHY_MODE_DP)
+-		return 0;
++	if (mode != PHY_MODE_DP) {
++		ret = rk_hdptx_phy_verify_hdmi_config(hdptx, &opts->hdmi);
++		if (ret)
++			dev_err(hdptx->dev, "invalid hdmi params for phy configure\n");
++		else
++			hdptx->hdmi_cfg = opts->hdmi;
++		return ret;
++	}
+ 
+-	ret = rk_hdptx_phy_verify_config(hdptx, &opts->dp);
++	ret = rk_hdptx_phy_verify_dp_config(hdptx, &opts->dp);
+ 	if (ret) {
+-		dev_err(hdptx->dev, "invalid params for phy configure\n");
++		dev_err(hdptx->dev, "invalid dp params for phy configure\n");
+ 		return ret;
+ 	}
+ 
 
 -- 
 2.48.1
