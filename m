@@ -1,178 +1,85 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA551E51EF;
-	Sat,  8 Mar 2025 16:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741451682; cv=pass; b=dqfD+GBFDYlMXqqFAxzVxU0G4R4jxlBFoBtHdfMYEV0lCaqyaw19HiXrhE+gKljWmjtGZ5/CSxwpuZV7BU6YamMlgTHVtLJPa6BrMDWnyGDRResSee/65VrKZT7yfQFCDCX+hyVOQNwRDMyjOK6NHABBAxprW7hKjtCUSHB0304=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741451682; c=relaxed/simple;
-	bh=QZ40omMnQEjE+JXg1B5+8JRvEySfzqrCI4ckFb6QspY=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628A61DEFFD;
+	Sat,  8 Mar 2025 16:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741451709; cv=none; b=I00oFtddU0lHycpWnTs+5sPI1b8ljFH05y2Eo7RQPLixiXMDJTSPKkge2+DVavgJOfjtAHIwJLh/ft8706i5/gGMGL7Df4bIAQs+xuZLB2Rr8OpqlaG9MzWxa0jahM/t4MGTrEfnlBpHsHLf1/W3P+1VUaGAVYetlpKIfBcCtDI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741451709; c=relaxed/simple;
+	bh=S2Z87NhoeMoo/yEoL7zGVVamFTgnjPyzS8nkGC5Zaaw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pl0s1vlbDVpvVCCKty/4VFYzK1ZNbqavQwdrprFvlfPjEJyRWXlA0259tbTBEhUem+yQqmgAcVlyzCyNb7miCXMcAki/ruUSz+7Fqf0O7m0GaWrvYF6kgatSjRRDXd6+yNwia6DGMuY8mpdNMXBrEdDzdKgHyFN3N4BidNRjiqk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=B9RMkmJ7; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tuyKD+c+Yc/rPzWlQN5Hq+bNZPAmHAzQ9hIkstLmtUmHuGcuYZ2Rq2s02wUpPD7tnn3yojRvUeHZrDwfllXtCbm2uqgsx4A+hJURz3ccDZ/LneNOkeeUwwKcjKHTdQbcJDMsUaMRNmW4b1cDm2nkLmK2PUZKpiIjq0HwEYGqk1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QYZ/duUf; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="B9RMkmJ7"
-ARC-Seal: i=1; a=rsa-sha256; t=1741451594; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Rfzi5+rYi4NcDFW05tntKY/htN29k8Hhwkq5yCyzXl5hrOKBCg/XgsDmSpyKfu9Srq+wo+bN0gjoitXTlY5IOYD08zUlFQhYwxR1j4a5L7rZ+8JU49AlzN+gQJc0MK4yQ1SQ4v2YHQ/Pbgy7+or9dgapw+FAiX5va2oPRScNUIc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741451594; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=OW81xSgzV1fBuGgf9rWiWPp51pHmz1hWzao7UrnpPhs=; 
-	b=VgTA9ihYfrb9bvBLqmCiAnN9wd5/JXrmK6SetNF2/xpaHSLJXYzuOkTE6STMRg5LifowrmaaI09sESC2ZjRRPNXM68L5qd2NfTAjColl8Rdvy1Yjvez22TxZvOYYdcpdXeEBUxbX7yuk5BYHsywAUVXgfB/eZr1Ff9/K6Q382hY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741451594;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=OW81xSgzV1fBuGgf9rWiWPp51pHmz1hWzao7UrnpPhs=;
-	b=B9RMkmJ7l1WoU4e9j6CQ7iW3B3AULNdi/tMLiEVgcLTsMTPWWOREUmD+v3VNOxyH
-	bJyKm7tHAg1wOCSmPwia7ldtb9qZGlk3z42c/Lv8it2o7HxMoYAdcJgN2Sj2AeRKkaM
-	hLh5PKuKKVS3NSXFsBqmaj99zN5d9AGUeZs9cyJ4=
-Received: by mx.zohomail.com with SMTPS id 174145159345355.16251987069427;
-	Sat, 8 Mar 2025 08:33:13 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id DA823180B9B; Sat, 08 Mar 2025 17:33:05 +0100 (CET)
-Date: Sat, 8 Mar 2025 17:33:05 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Cercueil <paul@crapouillou.net>, 
-	Samuel Holland <samuel@sholland.org>, David Lechner <david@lechnology.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>, Purism Kernel Team <kernel@puri.sm>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/7] usb: common: usb-conn-gpio: switch psy_cfg from
- of_node to fwnode
-Message-ID: <eqfqv2tkfretqzvt74o5dvj5yixkfc3h3my4bhskvhtsrbmtwp@poryvs4oipnp>
-References: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
- <20250225-psy-core-convert-to-fwnode-v1-3-d5e4369936bb@collabora.com>
- <2025022542-recital-ebony-d9b5@gregkh>
- <lhtljyn52wkhotaf2cn6fcj2vqx3dzipv2663kzwtw2tjjlxye@5l3xytkyvocy>
- <2025030845-pectin-facility-a474@gregkh>
- <0401fdf9-7665-40d6-9ec7-7222b2eda866@oss.qualcomm.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QYZ/duUf"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 10BA940E01D1;
+	Sat,  8 Mar 2025 16:35:04 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 6DTev5gIDLn6; Sat,  8 Mar 2025 16:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741451700; bh=wlqqzDLek9tt9qzINaZwwqLM1ULCZb0Yz7fHzSh1E3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QYZ/duUf9SVKDE3Nzie2SWAi3vFCz/DImdZasqJ/D81limFjgiNqkI+BmG/HaTDxc
+	 vk4ygwnggJlzyYMSN5UGAHX0DRsdjyGBO3QEkpJkXNtHi4WNDd6d+tfrBU60AmclQ7
+	 hGmSCBtpmjJIDcTdWfdSaJyMmPzQlDLHRGmkoi0T8B2QIzPkeWGwvKIXaiDwMRUrq/
+	 oB9BtgUeFs/Ls44os6TsFd1dVr0xgQ2RzvXbSfTlvkIB/CnsG+jJu0DcatfRqOpMpJ
+	 P4ld6QqeeR+cxxbd9mhN11hAh3Ja6h14PuH+W0XeQp7eFD+MLWW2JgbPqDx4NcohDQ
+	 sMifoNTcvenIUHmjxEn9ojtdb/QHNQe2s1jSJBxGPFQ45UdQ7HW7lv0wSrkQTaYU37
+	 G73nbwQoihBRGgFL54TnwNCrceS5wfdLlSoIPjnA4nWLj1aLK+uGwkY3Z5dQeTnaA8
+	 RgFpvD8QAsuEPU1GTiEaYgsDIqiqwequDZwAFMoUEBpndEmNuLGMRkfoZETFw3MEr3
+	 qioEZh/+FEv8g2TAtcnSfw5x4xq18S5sKvb8B8Ed2+gW4O3glGOY6TgPceA5dL4K41
+	 6DIQVOD7IGQQt9dNBJkmu0SmuX/z1pm8ES3tk8vQAejNKaDtrZipo++bmgfynxbQsQ
+	 COBd2F4EGjA16UIgAGIhVkF4=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8B19A40E015D;
+	Sat,  8 Mar 2025 16:34:52 +0000 (UTC)
+Date: Sat, 8 Mar 2025 17:34:51 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, nathan@kernel.org, nicolas@fjasle.eu,
+	hpa@zytor.com, sraithal@amd.com
+Subject: Re: [PATCH v1 1/1] kbuild: Add "make headers" to "make help" output
+Message-ID: <20250308163451.GEZ8xxq9WzBeZRBYpl@fat_crate.local>
+References: <20250308040451.585561-1-xin@zytor.com>
+ <20250308103437.GAZ8wdPbFGfhzAi1WU@fat_crate.local>
+ <CAK7LNASytr9fjfv-9Yt5_9MaKkrdKirjoBPqucEAGgM88uxD2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="r2mmt44pwozkdwuy"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0401fdf9-7665-40d6-9ec7-7222b2eda866@oss.qualcomm.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/241.192.19
-X-ZohoMailClient: External
+In-Reply-To: <CAK7LNASytr9fjfv-9Yt5_9MaKkrdKirjoBPqucEAGgM88uxD2w@mail.gmail.com>
 
+On Sun, Mar 09, 2025 at 12:15:21AM +0900, Masahiro Yamada wrote:
+> > It is INSTALL_HDR_PATH too, try:
+> >
+> > make O=/tmp/b/ headers
+> >
+> > for example.
+> 
+> No.   usr/include
 
---r2mmt44pwozkdwuy
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/7] usb: common: usb-conn-gpio: switch psy_cfg from
- of_node to fwnode
-MIME-Version: 1.0
+Yes, ok, "usr/include" is a relative path but it should at least say
+*relative* to the current output directory so that it is perfectly clear.
 
-Hi,
+-- 
+Regards/Gruss,
+    Boris.
 
-On Sat, Mar 08, 2025 at 10:34:45AM +0100, Konrad Dybcio wrote:
-> On 8.03.2025 6:57 AM, Greg Kroah-Hartman wrote:
-> > On Sat, Mar 08, 2025 at 02:10:29AM +0100, Sebastian Reichel wrote:
-> >> On Tue, Feb 25, 2025 at 04:32:50AM +0100, Greg Kroah-Hartman wrote:
-> >>> On Tue, Feb 25, 2025 at 12:21:36AM +0100, Sebastian Reichel wrote:
-> >>>> In order to remove .of_node from the power_supply_config struct,
-> >>>> use .fwnode instead.
-> >>>>
-> >>>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> >>>> ---
-> >>>>  drivers/usb/common/usb-conn-gpio.c | 2 +-
-> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common=
-/usb-conn-gpio.c
-> >>>> index aa710b50791b0282be0a6a26cffdd981b794acaa..1e36be2a28fd5ca5e149=
-5b7923e4d3e25d7cedef 100644
-> >>>> --- a/drivers/usb/common/usb-conn-gpio.c
-> >>>> +++ b/drivers/usb/common/usb-conn-gpio.c
-> >>>> @@ -158,7 +158,7 @@ static int usb_conn_psy_register(struct usb_conn=
-_info *info)
-> >>>>  	struct device *dev =3D info->dev;
-> >>>>  	struct power_supply_desc *desc =3D &info->desc;
-> >>>>  	struct power_supply_config cfg =3D {
-> >>>> -		.of_node =3D dev->of_node,
-> >>>> +		.fwnode =3D dev_fwnode(dev),
-> >>>>  	};
-> >>>> =20
-> >>>>  	desc->name =3D "usb-charger";
-> >>>>
-> >>>> --=20
-> >>>> 2.47.2
-> >>>
-> >>> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>
-> >> Please just merge this patch through the USB tree.
-> >>
-> >> There are no dependencies and I will send a new version for the
-> >> later patches, but they won't make it to 6.15 as I want enough
-> >> time in linux-next for them. This patch is rather simple and
-> >> getting it merged now means we avoid immutable branches or
-> >> merging through the wrong tree in the 6.16 cycle.
-> >=20
-> > Attempting to merge a single patch out of a series is hard with our
-> > current tools, you know that.
-
-Sorry, I did not know your tooling has issues with that. AFAIK most
-maintainers are using b4 nowadays, which makes it really easy. Might
-be I am biased because I mostly work on ARM stuff where series often
-have patches for the driver and the device tree and thus merging
-partial patch series is basically the norm.
-
-> > Please resend just the single patch if you want that applied.
->=20
-> b4 shazam <msgid> -P 3
->=20
-> to apply the third patch (such as this one) in a thread
-> unless you use some other set of tools..
-
-Exactly.
-
-But I can send this patch separately of course.
-
-Greetings,
-
--- Sebastian
-
---r2mmt44pwozkdwuy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmfMcTYACgkQ2O7X88g7
-+prJhg/+P1CLDpcgJzoT2YDB0oM6oosAappPICXcYCwnk+WuTqXqqoOLm99fCqOe
-gmMU3O21cf81ZGOgxQShW468/2rqdEuv3rr8LXuHJeNgROu2XpI2abuus1Gijwep
-1B/xU3aG0IbYKTXnnLrf3h8KEykCdXhxqh+34dYfsOTHFAKcKKDc6yVXcVeEmX9b
-jq1iZ8qyP1+UX6ISMDpQ/2dqoZYoJtG5JEt4iGOqqcS6gNEjVJ4rrY/Qy2lOaj1Q
-ncj9WP7C/Vd/DC0rRD08Fo8UCi5AOJb8zr7mKo6A+1zsf9pIb4eoEp6+JCa0YeOd
-gAhGkx3DAQTxAPoNlpv8NmhyaNM7e0QgOf15BfkMEkAuSbhaqte+0PDKWeLIOU8x
-76uvrykbBefBKgmxzzMnMK4IGIJwMRGSD1Zd1J6b7bwKEFq4SewPQUqR00f7OUmF
-PPVpxhHy+i8nLKJUgYqGDvdBv7fTM4y0daQM5xdjOtkYosB5ACjAApdGnx+e1uT2
-bhelcjLlwl2x5MHsGbLUZaxka/UB8n+BE3FUVE4BlArGpecUgbkcYkiOuKh9lC0a
-BFRZxB99mGLvNwEO+qRie8IA4JUfyzXne9OradEp1LZdufuOuNT3NXYgoeJbiWfm
-Dpnmw2XruBy5CMn7Nl1ke/ESwvBOWoJ7FUme591xZ6w7LvBXmd0=
-=LBxd
------END PGP SIGNATURE-----
-
---r2mmt44pwozkdwuy--
+https://people.kernel.org/tglx/notes-about-netiquette
