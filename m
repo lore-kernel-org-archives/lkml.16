@@ -1,76 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDA7169AE6;
-	Sat,  8 Mar 2025 03:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849BC148857;
+	Sat,  8 Mar 2025 04:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741405831; cv=none; b=rstn4bJuPvdN+BfN/9r6FrgiyWWCy/qDyps+BYJAuobBZhANsL9R4sj3pU8p9kNzjNtxnCpm35ooFNTBIBMDm9zChSCK5nFhlSYXpcitHZggv9QcsFULheN18cyG6n1xRXPOyS5gp3/XiMYKhjDHBsfVRBVdlbkpJOiSyca1vxY=
+	t=1741406408; cv=none; b=u+u1XUJponCCXDW7EQncmTPy/CTU2MHVf9GxodMkaisstXYD2+yOWKy4vfKK8WUBeBd2aDSr4zJh4UnL0UnFFInjtr2rvF7583t5EavxjlcOd+mpMENXHGNDpteFBUbQwKKo7U7wu0JZ9Ubev5FIuEEXUSDjSzkC0T7cr3AfRdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741405831; c=relaxed/simple;
-	bh=thNru/J8O4N9hCvQBln45Ii9nJYq1lZSQziQYfLtouc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o9bqEsXt+mS6n2jgAay/ZCJHf7pZzHFLPBqBGx7nO7pcdMICFrwVx9GmErz4HqqvPesiz1qDKu16yn9Nz6ebTl7Bk2xw4drQkBRxWwSms2mlrHdSAaVyvBOb5QpbnFA0ia/vi2cI8Z5sEEFSa/zR9ArLjCA8kz8Y7EGPwmgHQeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5ucwuau; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741406408; c=relaxed/simple;
+	bh=l90PT/23TcBuQ8NyWBxWVeCbtj0856DbC1B/xjemcEA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=JULHZmydPFDvZqnrvkoMPRWSn9WFYigvPmpRgzk4/IQTgsbqnaa3+QIZptED3KTnIu9O1cKkdCKqtOuesbNKS4hGNpZ+4amSn0jL7soCKZFUMlnCcm2Pb4XEkuhYgh/H7i14EN9dqvoZ81bTFRGz8uL9NKb1QToVeyb7h11m7Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/GztMjN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5ucwuau"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 577DEC4CEE0;
-	Sat,  8 Mar 2025 03:50:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/GztMjN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3053C4CEE0;
+	Sat,  8 Mar 2025 04:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741405831;
-	bh=thNru/J8O4N9hCvQBln45Ii9nJYq1lZSQziQYfLtouc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=T5ucwuauqG1W/nrQFZDbIFfy7Pl86HpD+CcU99Kyipq4gMn1T3pPF+f4zA60B+zL/
-	 Qm36MeyVj0Qrr/18aii0vjRP6Jw4wu8Kt87paitKHx7t8Dsr0yUz+67y80AuU7Ejvt
-	 zwJxD+2dScZV3H2nnvmzKIYug4Q9fzhGB9mzjwNGV0/8GAJ0kEdAfDlRQxo2s9hg8q
-	 up1ppFMrfTP5B4bfyv4U8BoeaY8YuV0ewCHXlJuI5PyYq0i+Gpq36/dssFBifEjylw
-	 aTMGo1tkZxpIatqGzPM2uAI9yl4k9LO1oGAO3EJr8TJJ+pjGdbYnEUbGMAZCsJY378
-	 hMeLhM/JuF1uw==
-Date: Fri, 7 Mar 2025 19:50:29 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
- paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
- davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
- pabeni@redhat.com, leon@kernel.org, longli@microsoft.com,
- ssengar@linux.microsoft.com, linux-rdma@vger.kernel.org,
- daniel@iogearbox.net, john.fastabend@gmail.com, bpf@vger.kernel.org,
- ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
- shradhagupta@linux.microsoft.com, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH net] net: mana: Support holes in device list reply msg
-Message-ID: <20250307195029.1dc74f8e@kernel.org>
-In-Reply-To: <1741211181-6990-1-git-send-email-haiyangz@microsoft.com>
-References: <1741211181-6990-1-git-send-email-haiyangz@microsoft.com>
+	s=k20201202; t=1741406408;
+	bh=l90PT/23TcBuQ8NyWBxWVeCbtj0856DbC1B/xjemcEA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Z/GztMjNsEM+nilrL+yRWfRJWXWyAMp9JgfduH5cVj10Memcj5S+dt/s1cJuFAsjr
+	 38otziIWorCx/pWXbtqIgJKSeK79Hi/rfUvg2BWYnn5arkEnsErElIVrocF5+fAG9w
+	 8zcZuRLkbFDUHwgG7pXwhq+MKL61h6LEzRziwDyZhVoNwMcTj4rFjkGIGdMDGvwwSS
+	 Wd9wMa0vCxOFOkkngQSwlEpLNMIQAMNpD9rAIVq2gpb9hyYqhjHW0/wz75OxuY8M1j
+	 DpqMbc6pAK/L5tXCyxQBJssxxR31IcBxU/0Km7lS10+8dh83zkvq49TytljpeMMWCx
+	 OlFXUiEYd5W8A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE2F2380CFFB;
+	Sat,  8 Mar 2025 04:00:42 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 0/2] net: phy: nxp-c45-tja11xx: add errata for
+ TJA112XA/B
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174140644151.2570715.57630167993884355.git-patchwork-notify@kernel.org>
+Date: Sat, 08 Mar 2025 04:00:41 +0000
+References: <20250304160619.181046-1-andrei.botila@oss.nxp.com>
+In-Reply-To: <20250304160619.181046-1-andrei.botila@oss.nxp.com>
+To: Andrei Botila <andrei.botila@oss.nxp.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, s32@nxp.com,
+ clizzi@redhat.com, aruizrui@redhat.com, eballetb@redhat.com
 
-On Wed,  5 Mar 2025 13:46:21 -0800 Haiyang Zhang wrote:
-> -	for (i = 0; i < max_num_devs; i++) {
-> +	for (i = 0; i < GDMA_DEV_LIST_SIZE &&
-> +		found_dev < resp.num_of_devs; i++) {
+Hello:
 
-unfortunate mis-indent here, it blend with the code.
-checkpatch is right that it should be aligned with opening bracket
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
->  		dev = resp.devs[i];
->  		dev_type = dev.type;
->  
-> +		/* Skip empty devices */
-> +		if (dev.as_uint32 == 0)
-> +			continue;
-> +
-> +		found_dev++;
-> +		dev_info(gc->dev, "Got devidx:%u, type:%u, instance:%u\n", i,
-> +			 dev.type, dev.instance);
+On Tue,  4 Mar 2025 18:06:12 +0200 you wrote:
+> This patch series implements two errata for TJA1120 and TJA1121.
+> 
+> The first errata applicable to both RGMII and SGMII version
+> of TJA1120 and TJA1121 deals with achieving full silicon performance.
+> The workaround in this case is putting the PHY in managed mode and
+> applying a series of PHY writes before the link gest established.
+> 
+> [...]
 
-Are you sure you want to print this info message for each device,
-each time it's probed? Seems pretty noisy. We generally recommend
-printing about _unusual_ things.
+Here is the summary with links:
+  - [net,v2,1/2] net: phy: nxp-c45-tja11xx: add TJA112X PHY configuration errata
+    https://git.kernel.org/netdev/net/c/a07364b39469
+  - [net,v2,2/2] net: phy: nxp-c45-tja11xx: add TJA112XB SGMII PCS restart errata
+    https://git.kernel.org/netdev/net/c/48939523843e
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
