@@ -1,217 +1,122 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AB13D6A
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 00:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F871137E;
+	Sat,  8 Mar 2025 00:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741392085; cv=none; b=k2k4VEUKCYs+zs02oNeF9x/Ri+0khhr0RSqQaVoWhdDBZ6ZMVKjR4B0PXzdSVQBp4niUbApzrsuIZ5jmhf56TF/MLnLQu3FutfG9b1GdGIwGIJ5Caa1QIIMaXsIM8YNpfQGHdWoIJI366RzYgEBAU7jz21ChDqn8Q+1Nll9UvQk=
+	t=1741392096; cv=none; b=FNFKxx0S7HA7HmIGOafTEkmJd5aagRzGyzSNVblI0I22JgdjbTG9JrQC8oVhCti1X855A7BWwQERh1dAXDoHUYaLqNiEB5siEN6sA1WvVeWrJRcQeBYtl/0Xm4hoSs1EEANvrIQA2/1EKJomP2hm5iZBr9eAOt1nGJapT5E6Tyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741392085; c=relaxed/simple;
-	bh=N0eKSeVL7+VRhfKRNDp0NxLIQwmlrCDDLmB0QxzSMug=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZUMcO9YZpMYXuZiI4HMUiUdDSRXID1p4skB78fwvGn/2VMFsZ9SzDu5SWs5rIfYT0QDQbOIclm+zK9pbGCsMH/s8HwN4TgRGFr8D5uMiEmHq6tpOS5sl/MYWRWuO7SSTaOTYB9RMn4Oto9eyWkRfCRly9D5zEB5zQBRCOTiAY1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85adee9bb56so212678839f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 16:01:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741392082; x=1741996882;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zeqWouS+SSFmOzj0vligAq58jwoQW/v1su47nD9czv8=;
-        b=eoUjS1u2smInTxYozMUmupWurJc4KsHAuC+oekxsmZikr29h42vOvwVSduk+eONFjC
-         fpwWWe9IAyh/LRGPXKLZ9WCDf4pAYkijLr3MvvRHBOqa6kFsiCEfgoActbuP6RntRWI8
-         3kbZMcTICLzbZQWlq+DzwFEKn/sSw8YNQ2p07EdexlJ8QjG3KmQXDw/r2Ejo542olgTD
-         Hbuz6dk1x//xhiqXzW9eDzwOm73UZVoWWwL2yAlAw9FrMAuDnBz7X1VN0A+rMtaX4YRo
-         lF7odqX9y/EVfdtDEfw6c4eVpQPwBpNyrqv7xbXvUlE+Oo3BVZniqt+Kgos79XBRZ5HV
-         X44Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVaI2gPRQABdai6sYOcWzUFzklA7lrgsQHhEJc42X02PlsnEh0bjXB0OrC6Xh6rdmPvH9gjAYPzNl6xCxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6C05UVsIKbOwTb7/lR6AVKuEj88V0uVV/GKqwstoC+C1HXHkZ
-	OxyGu2OPkdZ6T/kYXObDnGlGkl/V+w6VJ2jFewDe4Bkv7ZxaE+pzcJayxvi7RU05WxMKOEnEsJp
-	X3xbCUFOQy3eNNilyexeIR9Loto9hW2t16cfdStZ3VBQzSQMBwOhk448=
-X-Google-Smtp-Source: AGHT+IE2RVxAN/LY5wy/Gi9Cg3zFZnJxLg+/g/jvJkGvV7nk6cVSFYhEwL0YOUHJDLjNEV8tUI9rU044HUQ7z4Y8tCdCJAizeq6H
+	s=arc-20240116; t=1741392096; c=relaxed/simple;
+	bh=RxrYJHQ56oEI9BGDiBCfydVzW7XVfkyco8V5ApsDlQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdnUiBv0DY5XOYgyvqL0q8PkSiPpJr0tfnYZPe2Z6dM/qM1VnQmdm2vhB69hYt+8uqcbgg9AjXNPzoKnm6Cjus2tWXPtcQycIofLlZN4KnHzxCCPAkUhFt0oRVEC7huJOKmso4q7T2zvf4OzkBgIGpBfDbQCqqlniMG6vDn0xiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKXLMBNB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKXLMBNB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46537C4CED1;
+	Sat,  8 Mar 2025 00:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741392094;
+	bh=RxrYJHQ56oEI9BGDiBCfydVzW7XVfkyco8V5ApsDlQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tKXLMBNBEG4l/WGTfeUKVbn4j3rdE8gJ6Ilcva4PJSJcslzXv6M6WfGCNgacYUXkn
+	 US65jmiBuIuulxzETgm01TOt7owT/UpNqIBEt5hGmKSmSfEqIe3oTs1ZPs+n0cEt/X
+	 +Iu1yfibj7iPQmzG69qyA845987YQTBDw9GtIJ88kmaZW02/57lSJVWzcBoR2r7nAe
+	 eeP3mRg8Ig5AajMqymimA2WHZycUViBklTfnUGeSXA3DXfbmilQX049h6Vr6eq5dGk
+	 n94JiTWskjViv4kLtGofrhuYO8HJOoRlaeByRmvFEc5si0HWdN2//l9MRk6uKl5+JV
+	 KZ401FLEJF/UA==
+Received: by venus (Postfix, from userid 1000)
+	id 3564A180B97; Sat, 08 Mar 2025 01:01:32 +0100 (CET)
+Date: Sat, 8 Mar 2025 01:01:31 +0100
+From: Sebastian Reichel <sre@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 1/2] arm64: dts: qcom: x1e78100-t14s: Add LCD variant with
+ backlight support
+Message-ID: <lolqokpczxdscvgj6xdfyxblmle3csgzje3fgo4itzspgmeriy@7zzx7hg2zfks>
+References: <20250306090503.724390-1-abel.vesa@linaro.org>
+ <20250306090503.724390-2-abel.vesa@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a83:b0:3d3:f27a:9103 with SMTP id
- e9e14a558f8ab-3d44197137fmr69704715ab.1.1741392081681; Fri, 07 Mar 2025
- 16:01:21 -0800 (PST)
-Date: Fri, 07 Mar 2025 16:01:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67cb88d1.050a0220.d8275.022c.GAE@google.com>
-Subject: [syzbot] [net?] [bcachefs?] KASAN: slab-use-after-free Read in
- ip_skb_dst_mtu (2)
-From: syzbot <syzbot+98d6cedbab2dd7eaa17e@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kent.overstreet@linux.dev, kuba@kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    03d38806a902 Merge tag 'thermal-6.14-rc5' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15952864580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
-dashboard link: https://syzkaller.appspot.com/bug?extid=98d6cedbab2dd7eaa17e
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17952864580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3a7779436438/disk-03d38806.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d7e23add8bc8/vmlinux-03d38806.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b718ff622c01/bzImage-03d38806.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/5b20d0f140ec/mount_0.gz
-
-The issue was bisected to:
-
-commit 14152654805256d760315ec24e414363bfa19a06
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Mon Nov 25 05:21:27 2024 +0000
-
-    bcachefs: Bad btree roots are now autofix
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13c464b7980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=102464b7980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17c464b7980000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+98d6cedbab2dd7eaa17e@syzkaller.appspotmail.com
-Fixes: 141526548052 ("bcachefs: Bad btree roots are now autofix")
-
-==================================================================
-BUG: KASAN: slab-use-after-free in sk_fullsock include/net/sock.h:2787 [inline]
-BUG: KASAN: slab-use-after-free in ip_skb_dst_mtu+0xa42/0xbc0 include/net/ip.h:515
-Read of size 1 at addr ffff88805fe4154a by task kworker/1:2/975
-
-CPU: 1 UID: 0 PID: 975 Comm: kworker/1:2 Not tainted 6.14.0-rc4-syzkaller-00248-g03d38806a902 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: mld mld_dad_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x16e/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- sk_fullsock include/net/sock.h:2787 [inline]
- ip_skb_dst_mtu+0xa42/0xbc0 include/net/ip.h:515
- __ip_finish_output+0x12b/0x400 net/ipv4/ip_output.c:307
- iptunnel_xmit+0x55d/0x9b0 net/ipv4/ip_tunnel_core.c:82
- udp_tunnel_xmit_skb+0x262/0x3b0 net/ipv4/udp_tunnel_core.c:173
- geneve_xmit_skb drivers/net/geneve.c:916 [inline]
- geneve_xmit+0x210e/0x2bf0 drivers/net/geneve.c:1039
- __netdev_start_xmit include/linux/netdevice.h:5151 [inline]
- netdev_start_xmit include/linux/netdevice.h:5160 [inline]
- xmit_one net/core/dev.c:3800 [inline]
- dev_hard_start_xmit+0x27a/0x7d0 net/core/dev.c:3816
- __dev_queue_xmit+0x1b73/0x3f50 net/core/dev.c:4649
- dev_queue_xmit include/linux/netdevice.h:3313 [inline]
- neigh_hh_output include/net/neighbour.h:523 [inline]
- neigh_output include/net/neighbour.h:537 [inline]
- ip6_finish_output2+0x127d/0x17c0 net/ipv6/ip6_output.c:141
- ip6_finish_output+0x41e/0x840 net/ipv6/ip6_output.c:226
- NF_HOOK+0x9e/0x430 include/linux/netfilter.h:314
- mld_sendpack+0x843/0xdb0 net/ipv6/mcast.c:1868
- mld_dad_work+0x44/0x500 net/ipv6/mcast.c:2308
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd30 kernel/workqueue.c:3400
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-Last potentially related work creation:
-------------[ cut here ]------------
-pool index 54431 out of bounds (772) for stack id 8c38d4a0
-WARNING: CPU: 1 PID: 975 at lib/stackdepot.c:452 depot_fetch_stack+0x86/0xc0 lib/stackdepot.c:451
-Modules linked in:
-CPU: 1 UID: 0 PID: 975 Comm: kworker/1:2 Not tainted 6.14.0-rc4-syzkaller-00248-g03d38806a902 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: mld mld_dad_work
-RIP: 0010:depot_fetch_stack+0x86/0xc0 lib/stackdepot.c:451
-Code: 83 7c 18 1c 00 74 38 48 01 d8 eb 24 90 0f 0b 90 44 39 f5 72 ca 90 48 c7 c7 6e af 39 8e 89 ee 44 89 f2 89 d9 e8 fb be 5b fc 90 <0f> 0b 90 90 31 c0 5b 41 5e 5d c3 cc cc cc cc 90 0f 0b 90 eb ef 90
-RSP: 0018:ffffc90003836d28 EFLAGS: 00010046
-RAX: eec25f5fb9356300 RBX: 000000008c38d4a0 RCX: ffff888026575a00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 000000000000d49f R08: ffffffff81817d42 R09: 1ffff110170e519a
-R10: dffffc0000000000 R11: ffffed10170e519b R12: ffff88805fe4154a
-R13: ffffea00017f9000 R14: 0000000000000304 R15: ffffc90003836df8
-FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f086af09000 CR3: 00000000798e8000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- stack_depot_fetch lib/stackdepot.c:714 [inline]
- stack_depot_print+0x16/0x50 lib/stackdepot.c:752
- kasan_print_aux_stacks+0x38/0x70 mm/kasan/report_generic.c:199
- describe_object_stacks mm/kasan/report.c:347 [inline]
- describe_object mm/kasan/report.c:353 [inline]
- print_address_description mm/kasan/report.c:412 [inline]
- print_report+0x22b/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- sk_fullsock include/net/sock.h:2787 [inline]
- ip_skb_dst_mtu+0xa42/0xbc0 include/net/ip.h:515
- __ip_finish_output+0x12b/0x400 net/ipv4/ip_output.c:307
- iptunnel_xmit+0x55d/0x9b0 net/ipv4/ip_tunnel_core.c:82
- udp_tunnel_xmit_skb+0x262/0x3b0 net/ipv4/udp_tunnel_core.c:173
- geneve_xmit_skb drivers/net/geneve.c:916 [inline]
- geneve_xmit+0x210e/0x2bf0 drivers/net/geneve.c:1039
- __netdev_start_xmit include/linux/netdevice.h:5151 [inline]
- netdev_start_xmit include/linux/netdevice.h:5160 [inline]
- xmit_one net/core/dev.c:3800 [inline]
- dev_hard_start_xmit+0x27a/0x7d0 net/core/dev.c:3816
- __dev_queue_xmit+0x1b73/0x3f50 net/core/dev.c:4649
- dev_queue_xmit include/linux/netdevice.h:3313 [inline]
- neigh_hh_output include/net/neighbour.h:523 [inline]
- neigh_output include/net/neighbour.h:537 [inline]
- ip6_finish_output2+0x127d/0x17c0 net/ipv6/ip6_output.c:141
- ip6_finish_output+0x41e/0x840 net/ipv6/ip6_output.c:226
- NF_HOOK+0x9e/0x430 include/linux/netfilter.h:314
- mld_sendpack+0x843/0xdb0 net/ipv6/mcast.c:1868
- mld_dad_work+0x44/0x500 net/ipv6/mcast.c:2308
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd30 kernel/workqueue.c:3400
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="y6zodhuo7ebbvgn4"
+Content-Disposition: inline
+In-Reply-To: <20250306090503.724390-2-abel.vesa@linaro.org>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--y6zodhuo7ebbvgn4
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC 1/2] arm64: dts: qcom: x1e78100-t14s: Add LCD variant with
+ backlight support
+MIME-Version: 1.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Hi,
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+On Thu, Mar 06, 2025 at 11:05:02AM +0200, Abel Vesa wrote:
+> Due to the fact that Lenovo Thinkpad T14s Gen6 is available with both
+> OLED and LCD, the backlight control differs HW-wise. For the LCD variant,
+> the panel's backlight is controlled via one of the PWMs provided by the
+> PMK8550 PMIC. For the OLED variant, the backlight is internal to the
+> panel and therefore it is not described in devicetree.
+>=20
+> For this reason, create a generic dtsi for the T14s by renaming the
+> existing dts. While at it, add a node name to panel and drop the enable
+> gpio and pinctrl properties from the panel node. Then add the LCD variant
+> dts file with the old name and describe all backlight related nodes.
+>=20
+> So the existing dts will now be used for LCD variant while for OLED new
+> dts will be added.
+>=20
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+> [...]
+> +	backlight: backlight {
+> +		compatible =3D "pwm-backlight";
+> +		pwms =3D <&pmk8550_pwm 0 5000000>;
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+I've tried this patch series together with the fix series [0], but
+without the duty cycle calculation change [1]. Instead I changed the
+period from 5000000 to 4266667. With that everything works as
+expected for me.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+[0] https://lore.kernel.org/all/20250305-leds-qcom-lpg-fix-max-pwm-on-hi-re=
+s-v4-0-bfe124a53a9f@linaro.org/
+[1] https://lore.kernel.org/all/20250303-leds-qcom-lpg-compute-pwm-value-us=
+ing-period-v1-1-833e729e3da2@linaro.org/
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+Greetings,
 
-If you want to undo deduplication, reply with:
-#syz undup
+-- Sebastian
+
+--y6zodhuo7ebbvgn4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmfLiNAACgkQ2O7X88g7
++ppf3xAAlXHluicXnkOYso5FoMHezzKxZjWtgPdfvJrO1u9ofgYj2f/Ge6kgRMWP
+1bp5iE3MgKeVdlyx20FZ4fCi+ETG379ozRXgUQULpe3QdW23k/tCzPTZvB0zWnl3
+thkrUn6vJOFUEOIJR7d7J104eT04kvDXAUV+ift/Rvx46p2YrEwT57yktbylYpkt
+2LyX4RM+aHCc7Dux3Am9FZcmRciHUnWsxFt9ZGIzLOU6PiYeo1OIK2j07vvWxNYP
+ReRVZP3dy+HkXIp76BKpvf85Qp827KitUKrHLMTtq5vb/qpyDn00F9WuKgFpm8aw
+qseJhwgyDnSFKri6ZXkJzeIDJbzB/bYlqkJSFNr/n1j6NJuqVWhm+5bMcn0yeGTI
+sNFYKCeER0BrQeiOWXl8wSDR7CFE8WqYibiSkZ9Fuf1UVYF83+gHry9p7amX2u9o
+ArhpXakQtpQCFZqWsWqHyz3KtZdt2EaEVK2qpWCfV7aqmmERHDSYyMqMIDxz/kXR
+0QqJwLOniL/bxCwUjRyXMrQ0AZeDuAT208s7TCcLL1KWdir10MChg6jeRZ/qQ6zS
+Cr8fsFZKzOUwEC8mH6xvZDyJc6rUrn0kSNA9JnsaRleidenAg4r5eVWe05kPRdo3
+QyJuA9h2TPDK05AVHdq1qeA+4tf2BVy7CvAGoZVgIPZAdARbnHQ=
+=tLqZ
+-----END PGP SIGNATURE-----
+
+--y6zodhuo7ebbvgn4--
