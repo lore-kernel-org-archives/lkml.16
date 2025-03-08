@@ -1,62 +1,62 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8849B1B041C
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 09:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30981B0435
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 09:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741426519; cv=none; b=DMo0nsZboayQqSglA+i7iF/+eG3LxajsTlExm1nc0/1Rr53LFbFL6Q84MgffeIxWklkOPVQR9AFlCRvCxKcWRCdBtpX+euch1AjWnE7V0NVy/Y2UH0hU62EhyaerNsv1/pAytq/J2MoORH+SEVQvIAI0YNWHXkdrrLQYz3+6bbI=
+	t=1741426520; cv=none; b=Wg5gcntFF2ytpGgn25IpdYLYGU1HxGxGWlLYyPlucZDOPnPiqczCMdg9mBmYpGiKQTJHHSQXYcO56WtgMn4zulso+N4WsWj/G50onsIul1RVai9BcQdlyGbzS50SU1wDfQ2yF2YRTVW5lPIVMEDrl/3N1EAewYRki3wfqd5tEKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741426519; c=relaxed/simple;
-	bh=MyZk6fSEEAU1j5j19Vgbj0IZIpCkG7MCb8+Wkev9LZ8=;
+	s=arc-20240116; t=1741426520; c=relaxed/simple;
+	bh=4TWWcOGt87pDlGMnt8USRTVtLWmp/L0eOPEnxcJOKNE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TTia1o8etxEpau/udnN0pG1ObSybZAJhL4V8ULWTaffk9V7ugd6dHTUB5P8+IH1cJnIKF58di+CsAm9iyll7QlD9OLahZ/4jPEr/OLJBkbJDHGXdmxBSW5yf/AlHnG7Er+DDcurjvCnMvxBKrj4JZd9uTsEbxkRNsWMTE4HRwTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gr0ZmOmV; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=DUl2iBh9ot+Lf2qoDv/zFKJS4F1HLH08bNJivLmZi+dXWkvAU6ZGbTq/IAHW1neRo6RnhPm+HGf98CZF9PFDAaxKoAWuvYiDBJwxJV7j2RTgBWMuZkoTEJCp0mJSOX2Rh2qm/2NNmSwf6SFsbhdm1d9VYXfVxq2kcHY7SzDrSX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5m9xadJ; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr0ZmOmV"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bd45e4d91so15697755e9.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 01:35:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5m9xadJ"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43bccfa7b89so22328125e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 01:35:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741426516; x=1742031316; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741426517; x=1742031317; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XTYbCZgZ62mscw+fPR883v5qEHUvINwlZxHSBDC1Mqs=;
-        b=gr0ZmOmVvhOwNzFGwzlWr7Ppw7azhfhZC+1cDrDWrJfc/N6G1vztel0jJSPUH3zB/9
-         k0BP05luLld9QaYhqAXpNsVXszJWSSQ67k6Bj4XSRjhI/Vjj+4RsqawfDMhWOzvKh8qo
-         yOM4qUjXzb4w8CEPmYNBKVS9N4VymM703Z7RnyqewpLLZPJ2DfqcNfXj1isM9Qdc4YrF
-         4wa3jeGuopwZcP2HqP5b36sg57/FTyvwN4D+uGmdwYMlJMOMgGQuucK32bkRqStnOpDj
-         lQzMQyTLsNrA9uM7rv5CmkKQ05BQeLaBIxgOzGwPPObqZLYOkzLhZtcSjdtcPeF8eZbL
-         xxZw==
+        bh=egKKaEVuZCvmZpPyEYq1kxS3wPxzdvw1j9Mda8j6VvA=;
+        b=P5m9xadJ8DaXvzYdtRXVqh3DFHppQcVaihmPVOTY2149v7raDRFyNl3wW0EtG/dVbb
+         oaKQ+4WVPVzFw5RuPgMV7uUzVLcV/RFUpIPbovlzCTs8wJtzQtaQWGbrtcAyjvRTKxJJ
+         xJ1bqmAAELg8VP6x2DYHIvKAkxVwFT9axSp3mbkUx8tyjai02bcJASA5UGi/HM3FYcKw
+         R9nBhWzUJT6Qb5W201Io7Vgja8oiODP4bUEeZmJ7LjnTbAyrOEdIhiJNGszJ/o9NAhtl
+         buq3BsOLcl7yUcpIHcod06adHl68fnD9AK/K364p3mXuBpSYL6s3U2VkUbOFavjRcnYC
+         7FRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741426516; x=1742031316;
+        d=1e100.net; s=20230601; t=1741426517; x=1742031317;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XTYbCZgZ62mscw+fPR883v5qEHUvINwlZxHSBDC1Mqs=;
-        b=pj4AeUH9RPRLFWUzShrP1Xe3CJfgKS66ocPrnpeH7qQEXXTdnDSeTrw7khhL5Bvhz4
-         e2fBHidQd2Frzi/AQ7DJ/aOspM1gf4r1rcxT19icDv/AZE6Bh09qaQ628hbgXW4YKLUg
-         p4V0fm3Tcwq1+eJxn+IWri0ZCFq9bmgngCBL0I96bf5hY3v94OZAt+iq6NCdN4HTst5r
-         G+MNGd43kkbMEZT910vLwO9eg46hf+C5WXORSfKO1jXZA91vM1lAe2+2Urlc0DvHOyRj
-         MAS4JoNJS1jbFH5m/+xp2GvmsRZ3h4nxgRJenY++hpdXqsrku5LFqjnF34e4qfh6Utfx
-         Bb8Q==
-X-Gm-Message-State: AOJu0YyF+17xsmLmg7/UzraLEqs69Jj3+9gcK3lIVPCnEKdVv6vM4POh
-	ITw2nm7vJ63vUzI0kr5KUYPqgAXM07zRB7FdWQiqKMTbYmIaUlcnQhiTVA==
-X-Gm-Gg: ASbGnctXTQ5sn/2vCeZPKTkdqwpZNT5BxhAt3Sjzp1GPIFmIRrLl2cA3IB0Ag+Pyfyl
-	rRFHHRkSRjdNELviWvpOUNbONHe2KFmEFOGF/SVUw5BVB07nPmCOr3/lV1qobO8pY/S4W2BjxXs
-	eYJecw1HzUKYwULfcoWYA//u+GZwk2984yB6iXIfhPflG9fn1B/XpA8UIwHcYF6vSM5zvIWhzbO
-	lV+WblIj2Ar4E3V6+o3KS4Bof5v03o5BfTXYTKbkhJTPGkkbgLaNaozlPs6NSFice37KOuX4eWv
-	qma5uCdVRXcmt4g8pdGSI3036zn8LtcQddpmtAyjMfx8B+Fa+1iFe7pDlZGllMbrQR2N42RuKXc
-	yStOB0/jtTop8Aj45XuprUHIYBQ==
-X-Google-Smtp-Source: AGHT+IHnB88p51a4UgLfQucwZzVz+7NxSdJc6jJsqBJrTOvWbxTsKy0T37alVMRdleosV9iswqBCgg==
-X-Received: by 2002:a05:600c:a47:b0:439:9434:4f3b with SMTP id 5b1f17b1804b1-43ce4ad68a2mr14792855e9.8.1741426515603;
-        Sat, 08 Mar 2025 01:35:15 -0800 (PST)
+        bh=egKKaEVuZCvmZpPyEYq1kxS3wPxzdvw1j9Mda8j6VvA=;
+        b=DlbiX41w7GgF1mqAY19/XowJPShEswikC9TcwbOFhCImWwvgQbr/VqI0BuYm16GHZ+
+         dI1zo+xipkDU58ognlqKvQHVq90edhrJiNrKFnsgskZtNo5KBZ0pcBfcMJEyynqSKDHX
+         xK0W5fKkoBbg2VzDlIFSquaYSyrgNPEOdrOKNLL7qbQNNWriBP4VhkV1YbYMNHzn83GD
+         5QQ7H49kOLUWCh/XUQhyWDxgH/jdwBRnIBP0he51+CrButcgy3RVbI45nFYt+mvLfJCQ
+         Iz7KYV+C8hUiVLpniTr+7BgcNVGwiMzqLCSY1SwKu7ztmpgdsjVeodXUoXK5NmU0jwUv
+         hNnQ==
+X-Gm-Message-State: AOJu0Yy/j7mI72QVRuZoxbSAbEP/SsloP4asX4WMwlfANJTqpdFrG6VF
+	EqqtxI3ZKcQ8ecEkbLqBkb388u79m2NI5xWpvh4/DyfsQF8gzvAVREKugQ==
+X-Gm-Gg: ASbGnctMH6VXEDZBTuPy0szYaAxxHclNWfkQDDF+DFwcEWToij3V1j3+C/FwSu2FOcX
+	Nv1QNEIa2yXNlMzBlpwmpl48u7fe88eQThFbjC/Aqpja0DkDWiTWPBr4l2Iv74x/oR3GMqhYbcg
+	G5fhxCro+T1GL750BwoF+X4m4Mqle+1I3NtQdMtsC034lC7kMxhMuh+oGCOaFUf9kaY4AQxpPGF
+	WpSvHN0nAew1ghc1oxbQOKpOS4WBMSlNsIMr4Wqvxw+lrRQV0MQlMRdym6NfJKgCUTcU/ubh7n8
+	TghYOacAQxwCg5jDynPlotLmfDgbh49lN20V9Ad0OECqxyaWbpczmjaUKKM1CFlrRtPWaHkYrK6
+	7i4MvTJiVupRrVaofeM9VIK6C1w==
+X-Google-Smtp-Source: AGHT+IFdwfFvnAY318GElxbu6iJWO7wLPbhjDXVMUjbWTm33nvlc3UO4LXAbbtCyiNTBBEYfWr+Wkg==
+X-Received: by 2002:a05:6000:144d:b0:385:faaa:9d1d with SMTP id ffacd0b85a97d-39132d98bc3mr5135942f8f.35.1741426517172;
+        Sat, 08 Mar 2025 01:35:17 -0800 (PST)
 Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce3f573f6sm15663895e9.0.2025.03.08.01.35.14
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce3f573f6sm15663895e9.0.2025.03.08.01.35.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 01:35:15 -0800 (PST)
+        Sat, 08 Mar 2025 01:35:16 -0800 (PST)
 From: David Laight <david.laight.linux@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>
@@ -68,9 +68,9 @@ Cc: David Laight <david.laight.linux@gmail.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	nnac123@linux.ibm.com,
 	horms@kernel.org
-Subject: [PATCH next 3/8] test_hexdump: Use longer variable names
-Date: Sat,  8 Mar 2025 09:34:47 +0000
-Message-Id: <20250308093452.3742-4-david.laight.linux@gmail.com>
+Subject: [PATCH next 5/8] test_hexdump: Fix sample output if zero bytes requested
+Date: Sat,  8 Mar 2025 09:34:49 +0000
+Message-Id: <20250308093452.3742-6-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250308093452.3742-1-david.laight.linux@gmail.com>
 References: <20250308093452.3742-1-david.laight.linux@gmail.com>
@@ -82,168 +82,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We're not so short of memory space for the compiler symbol table
-that variable names have to be limited to 2 characters.
-Use groupsize and rowsize (not gs and rs).
-There is also no need to copy the function parameters to locals.
-Change test_hexdump_prepare_test() (the function that gernerate the
-sample output) to return the length - saves calculating it separately.
-
-Test reports 'all 1184 tests passed'.
+If 'len' is zero the expected output is an empty string even if
+'ascii' is requested.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
- lib/test_hexdump.c | 81 +++++++++++++++++++++-------------------------
- 1 file changed, 36 insertions(+), 45 deletions(-)
+ lib/test_hexdump.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
-index e142b11c36c6..743ea5c78f9e 100644
+index ed6f0b0a1bb3..07a8cc7e9088 100644
 --- a/lib/test_hexdump.c
 +++ b/lib/test_hexdump.c
-@@ -22,32 +22,30 @@ static const unsigned char data_b[] = {
- static unsigned total_tests __initdata;
- static unsigned failed_tests __initdata;
- 
--static void __init test_hexdump_prepare_test(size_t len, size_t rowsize,
--					     size_t groupsize, char *test,
--					     size_t testlen, bool ascii)
-+static size_t __init test_hexdump_prepare_test(size_t len, size_t rowsize,
-+					       size_t groupsize, char *test,
-+					       size_t testlen, bool ascii)
- {
+@@ -29,6 +29,11 @@ static size_t __init test_hexdump_prepare_test(size_t len, size_t rowsize,
  	char *p;
--	size_t l = len;
--	size_t gs = groupsize, rs = rowsize;
--	size_t bs, i, j;
-+	size_t byteswap, i, j;
+ 	size_t byteswap, i, j;
  
--	if (rs != 16 && rs != 32)
--		rs = 16;
-+	if (rowsize != 16 && rowsize != 32)
-+		rowsize = 16;
++	if (!len) {
++		test[0] = 0;
++		return 0;
++	}
++
+ 	if (rowsize != 16 && rowsize != 32)
+ 		rowsize = 16;
  
--	if (l > rs)
--		l = rs;
-+	if (len > rowsize)
-+		len = rowsize;
- 
--	if (!is_power_of_2(gs) || gs > 8 || (len % gs != 0))
--		gs = 1;
--	bs = IS_ENABLED(CONFIG_CPU_BIG_ENDIAN) ? 0 : gs - 1;
-+	if (!is_power_of_2(groupsize) || groupsize > 8 || (len % groupsize != 0))
-+		groupsize = 1;
-+	byteswap = IS_ENABLED(CONFIG_CPU_BIG_ENDIAN) ? 0 : groupsize - 1;
- 
- 	/* hex dump */
- 	p = test;
--	for (i = 0, j = 0; i < l; i++) {
--		unsigned char b = data_b[i ^ bs];
-+	for (i = 0, j = 0; i < len; i++) {
-+		unsigned char b = data_b[i ^ byteswap];
- 		*p++ = "0123456789abcdef"[b >> 4];
- 		*p++ = "0123456789abcdef"[b & 15];
--		if (++j == gs) {
-+		if (++j == groupsize) {
- 			j = 0;
+@@ -58,8 +63,7 @@ static size_t __init test_hexdump_prepare_test(size_t len, size_t rowsize,
  			*p++ = ' ';
  		}
-@@ -59,15 +57,16 @@ static void __init test_hexdump_prepare_test(size_t len, size_t rowsize,
+ 	}
+-	if (i)
+-		p--;
++	p--;
+ 
+ 	/* ASCII part */
  	if (ascii) {
- 		do {
- 			*p++ = ' ';
--		} while (p < test + rs * 2 + rs / gs + 1);
-+		} while (p < test + rowsize * 2 + rowsize / groupsize + 1);
- 
--		for (i = 0; i < l; i++) {
-+		for (i = 0; i < len; i++) {
- 			unsigned char b = data_b[i];
- 			*p++ = (isascii(b) && isprint(b)) ? b : '.';
- 		}
- 	}
- 
- 	*p = '\0';
-+	return p - test;
- }
- 
- #define TEST_HEXDUMP_BUF_SIZE		(32 * 3 + 2 + 32 + 1)
-@@ -113,44 +112,35 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
- {
- 	char test[TEST_HEXDUMP_BUF_SIZE];
- 	char buf[TEST_HEXDUMP_BUF_SIZE];
--	size_t rs = rowsize, gs = groupsize;
--	size_t ae, he, e, f, r;
--	bool a;
-+	size_t expected;
-+	size_t f, result;
-+	bool ok;
- 
- 	total_tests++;
- 
- 	memset(buf, FILL_CHAR, sizeof(buf));
- 
--	r = hex_dump_to_buffer(data_b, len, rs, gs, buf, buflen, ascii);
-+	result = hex_dump_to_buffer(data_b, len, rowsize, groupsize, buf,
-+				    buflen, ascii);
- 
--	/*
--	 * Caller must provide the data length multiple of groupsize. The
--	 * calculations below are made with that assumption in mind.
--	 */
--	ae = rs * 2 /* hex */ + rs / gs /* spaces */ + 1 /* space */ + len /* ascii */;
--	he = (gs * 2 /* hex */ + 1 /* space */) * len / gs - 1 /* no trailing space */;
-+	/* Test output is generated into a 'long enough' buffer */
-+	expected = test_hexdump_prepare_test(len, rowsize, groupsize, test,
-+					     sizeof(test), ascii);
- 
--	if (ascii)
--		e = ae;
--	else
--		e = he;
--
--	f = min(e + 1, buflen);
--	if (buflen) {
--		test_hexdump_prepare_test(len, rs, gs, test, sizeof(test), ascii);
-+	f = min(expected + 1, buflen);
-+	if (f)
- 		test[f - 1] = '\0';
--	}
- 	memset(test + f, FILL_CHAR, sizeof(test) - f);
- 
--	a = r == e && !memcmp(test, buf, TEST_HEXDUMP_BUF_SIZE);
-+	ok = result == expected && !memcmp(test, buf, TEST_HEXDUMP_BUF_SIZE);
- 
- 	buf[sizeof(buf) - 1] = '\0';
- 
--	if (!a) {
-+	if (!ok) {
- 		pr_err("Len: %zu buflen: %zu strlen: %zu\n",
- 			len, buflen, strnlen(buf, sizeof(buf)));
--		pr_err("Result: %zu '%s'\n", r, buf);
--		pr_err("Expect: %zu '%s'\n", e, test);
-+		pr_err("Result: %zu '%s'\n", result, buf);
-+		pr_err("Expect: %zu '%s'\n", expected, test);
- 		failed_tests++;
- 	}
- }
-@@ -158,13 +148,14 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
- static void __init test_hexdump_overflow_set(size_t buflen, bool ascii)
- {
- 	unsigned int i = 0;
--	size_t rs = get_random_u32_inclusive(1, 2) * 16;
-+	size_t rowsize = get_random_u32_inclusive(1, 2) * 16;
- 
- 	do {
--		size_t gs = 1 << i;
--		size_t len = get_random_u32_below(rs) + gs;
-+		size_t groupsize = 1 << i;
-+		size_t len = get_random_u32_below(rowsize) + groupsize;
- 
--		test_hexdump_overflow(buflen, rounddown(len, gs), rs, gs, ascii);
-+		test_hexdump_overflow(buflen, rounddown(len, groupsize),
-+				      rowsize, groupsize, ascii);
- 	} while (i++ < 3);
- }
- 
 -- 
 2.39.5
 
