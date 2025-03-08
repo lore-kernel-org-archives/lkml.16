@@ -1,43 +1,43 @@
-Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
+Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284491B422A;
-	Sat,  8 Mar 2025 11:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86DB1C5F3F;
+	Sat,  8 Mar 2025 11:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741431916; cv=none; b=kY54N7MaXGjQOL5heJxgK9OL7IECNLrylTj9XwbFAyWBH+dZJTdIuxMJx6gYELDwz3PHKvVcpuydm/nl7xPMCESV2wMv4fErp0xZhJv6YylIgRlJXriCEkJ59DRg5ETwNe6KaFPP8HJMSF7ZIksndQeDTtN6IvThy0f4ygZFYk8=
+	t=1741431921; cv=none; b=WrWkgL/4ciLkl42Mg/0bKJdS3ng6+Yu34Gh9x1fKQH8RGyZfDfYpFer1tYAvpqBRVezoJC1594qXalBiIiLJxEi4JpBTVhw3AG4+d5jq7qFkjemrLg1mI0cCcBioqegI1d8bAxibB01uYh3jCGxOPWh0nAKgb20Uhn+Z4gD6Kqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741431916; c=relaxed/simple;
-	bh=CEwYSGyqEUebfx7MC/cBo5ZPGIFNSvqer3Pj/K+lL4E=;
+	s=arc-20240116; t=1741431921; c=relaxed/simple;
+	bh=t//auXkNA7CWWXjMgHqncFQybRPoRvKrGpTPJjwbwz8=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A34g+xkrDlmYyUBAdmRhaR7bBFS0JBg4RVOYQlK7UGfbHcoNHeQHLKfUbSG5JSY8cNYn94p67Nt/NDz2gHaNGogi/pnANybgRM+DrYsau6/jYmCcMHh6E25yIr1WgNOYgg387XTRbT0qR4MIEtFLk1otdn2cTwvlIa99o7atLGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=aipOcFWl; arc=none smtp.client-ip=79.135.106.30
+	 MIME-Version:Content-Type; b=gylzgWrR4GIguTLgm8KI5OjH70fnQRvoK0Wqp+Z6YTqAGaqWCffFwatHl6sivgQBD7eHNiwUXmwVIs3wWTNXIoq7TDwZE8vXp3b3Cxr15oWD4fREvVB0cxLUPlAyBsBlI5nssTIqYuJXteE6ioLZ/QODvwanZxJPLa+JJDQUj/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=MgCiIW9s; arc=none smtp.client-ip=185.70.40.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="aipOcFWl"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="MgCiIW9s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741431906; x=1741691106;
-	bh=geZn1X5bw+SSGxxAzxEDNn2DqbGfLlgOCL/jnGpZ/5w=;
+	s=protonmail; t=1741431917; x=1741691117;
+	bh=YKDu9abTdC1pFV8eXsGsLjLlywgJYKWwJqxyuw/Qhd0=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=aipOcFWl1SB/Mz4ln0m2yrWN/hbTmGSZ62vilUhjrR3nSd/Bl8MdqLCHDUAZ06KA5
-	 Dlr8Nll1xSaemJukfItc7MnR3OQdRF5aSUm5OC53jVnLMcDT2VDJH8sWjsFuhRLVoz
-	 UqmdG3zv5ZWtw2YI6oBbpuFsMKDfLiTZ5OS0yPK0GAne7T++DU+r/JGG/oZSru5vy7
-	 xw6IXyOSUHfcboroqd8T2Ih0Srj0nv4UArSM8x1MlTbyHRB82h3XpLUs4fk4jnai1G
-	 8Sh96t3dx+KpQEpBpZHr/6vDN7/9FyL2tT8e63muWpc6Q0+Jblo58RsNVmSmHTW3jC
-	 QAGTr3/79RB5Q==
-Date: Sat, 08 Mar 2025 11:05:01 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
+	b=MgCiIW9srkV2oaxE/Wy7fFrtMlaQhfYROHdZmMqZP1jM4xO+aBy1RP9Bh3mU1k1wi
+	 sU9nS2Q4hGf//s84YsgjS8evBjoJlL/FS0oFYB0SfnMyA53uj7m5/zP6UY8v8bJ8NM
+	 Ncw1JnFJpUjOFC7C6XUvlYXW7X/McohnkETky6I153e2rhg/m424uThPPRJw4Wc8Is
+	 8XQZROZ2qUk/j3F3BFEei5ffpzi2b4XYlwSZtLYngobZnId7eEuhUVToHEgA/NWh8t
+	 8Un2qqS09xkBetdISuiniAwhV1wSEJmqPU8H12qDk/Ez0C2P2Ls2LIDekZx+UR1Wbv
+	 ll5ooQyevcbOA==
+Date: Sat, 08 Mar 2025 11:05:12 +0000
+To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
 From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: [PATCH v2 14/22] rust: add pin-init crate build infrastructure
-Message-ID: <20250308110339.2997091-15-benno.lossin@proton.me>
+Cc: Fiona Behrens <me@kloenk.dev>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: [PATCH v2 16/22] rust: pin-init: add `std` and `alloc` support from the user-space version
+Message-ID: <20250308110339.2997091-17-benno.lossin@proton.me>
 In-Reply-To: <20250308110339.2997091-1-benno.lossin@proton.me>
 References: <20250308110339.2997091-1-benno.lossin@proton.me>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: fe75bbdc6d97a60a7d876d803e4012ce894d3d22
+X-Pm-Message-ID: 6e1fdb06ba2b56d70cad1bf5c0bcc602e1af8f50
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,322 +47,326 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-From: Miguel Ojeda <ojeda@kernel.org>
+To synchronize the kernel's version of pin-init with the user-space
+version, introduce support for `std` and `alloc`. While the kernel uses
+neither, the user-space version has to support both. Thus include the
+required `#[cfg]`s and additional code.
 
-Add infrastructure for moving the initialization API to its own crate.
-Covers all make targets such as `rust-analyzer` and `rustdoc`. The tests
-of pin-init are not added to `rusttest`, as they are already tested in
-the user-space repository [1].
-
-Link: https://github.com/Rust-for-Linux/pin-init [1]
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-Co-developed-by: Benno Lossin <benno.lossin@proton.me>
 Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
 Tested-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/Makefile                      | 75 +++++++++++++++++++++++-------
- rust/pin-init/internal/src/_lib.rs |  3 ++
- rust/pin-init/internal/src/lib.rs  |  4 ++
- rust/pin-init/src/_lib.rs          |  5 ++
- scripts/Makefile.build             |  2 +-
- scripts/generate_rust_analyzer.py  | 17 ++++++-
- 6 files changed, 86 insertions(+), 20 deletions(-)
- create mode 100644 rust/pin-init/internal/src/_lib.rs
- create mode 100644 rust/pin-init/src/_lib.rs
+ rust/pin-init/src/__internal.rs |  27 ++++++
+ rust/pin-init/src/alloc.rs      | 158 ++++++++++++++++++++++++++++++++
+ rust/pin-init/src/lib.rs        |  41 +++++++--
+ 3 files changed, 220 insertions(+), 6 deletions(-)
+ create mode 100644 rust/pin-init/src/alloc.rs
 
-diff --git a/rust/Makefile b/rust/Makefile
-index ea3849eb78f6..90310f0620eb 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -12,7 +12,7 @@ obj-$(CONFIG_RUST) +=3D helpers/helpers.o
- CFLAGS_REMOVE_helpers/helpers.o =3D -Wmissing-prototypes -Wmissing-declara=
-tions
+diff --git a/rust/pin-init/src/__internal.rs b/rust/pin-init/src/__internal=
+.rs
+index 8a53f55e1bbf..cac293fd4bec 100644
+--- a/rust/pin-init/src/__internal.rs
++++ b/rust/pin-init/src/__internal.rs
+@@ -189,6 +189,33 @@ pub fn init<E>(self: Pin<&mut Self>, init: impl PinIni=
+t<T, E>) -> Result<Pin<&mu
+     }
+ }
 =20
- always-$(CONFIG_RUST) +=3D bindings/bindings_generated.rs bindings/binding=
-s_helpers_generated.rs
--obj-$(CONFIG_RUST) +=3D bindings.o kernel.o
-+obj-$(CONFIG_RUST) +=3D bindings.o pin_init.o kernel.o
- always-$(CONFIG_RUST) +=3D exports_helpers_generated.h \
-     exports_bindings_generated.h exports_kernel_generated.h
-=20
-@@ -41,7 +41,10 @@ ifdef CONFIG_RUST
- libmacros_name :=3D $(shell MAKEFLAGS=3D $(RUSTC) --print file-names --cra=
-te-name macros --crate-type proc-macro - </dev/null)
- libmacros_extension :=3D $(patsubst libmacros.%,%,$(libmacros_name))
-=20
--always-$(CONFIG_RUST) +=3D $(libmacros_name)
-+libpin_init_internal_name :=3D $(shell MAKEFLAGS=3D $(RUSTC) --print file-=
-names --crate-name pin_init_internal --crate-type proc-macro - </dev/null)
-+libpin_init_internal_extension :=3D $(patsubst libpin_init_internal.%,%,$(=
-libpin_init_internal_name))
++#[test]
++fn stack_init_reuse() {
++    use ::std::{borrow::ToOwned, println, string::String};
++    use core::pin::pin;
 +
-+always-$(CONFIG_RUST) +=3D $(libmacros_name) $(libpin_init_internal_name)
-=20
- # `$(rust_flags)` is passed in case the user added `--sysroot`.
- rustc_sysroot :=3D $(shell MAKEFLAGS=3D $(RUSTC) $(rust_flags) --print sys=
-root)
-@@ -80,7 +83,7 @@ quiet_cmd_rustdoc =3D RUSTDOC $(if $(rustdoc_host),H, ) $=
-<
- # command-like flags to solve the issue. Meanwhile, we use the non-custom =
-case
- # and then retouch the generated files.
- rustdoc: rustdoc-core rustdoc-macros rustdoc-compiler_builtins \
--    rustdoc-kernel
-+    rustdoc-kernel rustdoc-pin_init
- =09$(Q)cp $(srctree)/Documentation/images/logo.svg $(rustdoc_output)/stati=
-c.files/
- =09$(Q)cp $(srctree)/Documentation/images/COPYING-logo $(rustdoc_output)/s=
-tatic.files/
- =09$(Q)find $(rustdoc_output) -name '*.html' -type f -print0 | xargs -0 se=
-d -Ei \
-@@ -110,11 +113,24 @@ rustdoc-compiler_builtins: $(src)/compiler_builtins.r=
-s rustdoc-core FORCE
- rustdoc-ffi: $(src)/ffi.rs rustdoc-core FORCE
- =09+$(call if_changed,rustdoc)
-=20
--rustdoc-kernel: private rustc_target_flags =3D --extern ffi \
-+rustdoc-pin_init_internal: private rustdoc_host =3D yes
-+rustdoc-pin_init_internal: private rustc_target_flags =3D --cfg kernel \
-+    --extern proc_macro --crate-type proc-macro
-+rustdoc-pin_init_internal: $(src)/pin-init/internal/src/_lib.rs FORCE
-+=09+$(call if_changed,rustdoc)
++    #[derive(Debug)]
++    struct Foo {
++        a: usize,
++        b: String,
++    }
++    let mut slot: Pin<&mut StackInit<Foo>> =3D pin!(StackInit::uninit());
++    let value: Result<Pin<&mut Foo>, core::convert::Infallible> =3D
++        slot.as_mut().init(crate::init!(Foo {
++            a: 42,
++            b: "Hello".to_owned(),
++        }));
++    let value =3D value.unwrap();
++    println!("{value:?}");
++    let value: Result<Pin<&mut Foo>, core::convert::Infallible> =3D
++        slot.as_mut().init(crate::init!(Foo {
++            a: 24,
++            b: "world!".to_owned(),
++        }));
++    let value =3D value.unwrap();
++    println!("{value:?}");
++}
 +
-+rustdoc-pin_init: private rustdoc_host =3D yes
-+rustdoc-pin_init: private rustc_target_flags =3D --extern pin_init_interna=
-l \
-+    --extern macros --extern alloc --cfg kernel --cfg feature=3D\"alloc\"
-+rustdoc-pin_init: $(src)/pin-init/src/_lib.rs rustdoc-pin_init_internal \
-+    rustdoc-macros FORCE
-+=09+$(call if_changed,rustdoc)
-+
-+rustdoc-kernel: private rustc_target_flags =3D --extern ffi --extern pin_i=
-nit \
-     --extern build_error --extern macros \
-     --extern bindings --extern uapi
- rustdoc-kernel: $(src)/kernel/lib.rs rustdoc-core rustdoc-ffi rustdoc-macr=
-os \
--    rustdoc-compiler_builtins $(obj)/$(libmacros_name) \
-+    rustdoc-pin_init rustdoc-compiler_builtins $(obj)/$(libmacros_name) \
-     $(obj)/bindings.o FORCE
- =09+$(call if_changed,rustdoc)
-=20
-@@ -139,12 +155,24 @@ rusttestlib-macros: private rustc_test_library_proc =
-=3D yes
- rusttestlib-macros: $(src)/macros/lib.rs FORCE
- =09+$(call if_changed,rustc_test_library)
-=20
-+rusttestlib-pin_init_internal: private rustc_target_flags =3D --cfg kernel=
- \
-+    --extern proc_macro
-+rusttestlib-pin_init_internal: private rustc_test_library_proc =3D yes
-+rusttestlib-pin_init_internal: $(src)/pin-init/internal/src/_lib.rs FORCE
-+=09+$(call if_changed,rustc_test_library)
-+
-+rusttestlib-pin_init: private rustc_target_flags =3D --extern pin_init_int=
-ernal \
-+    --extern macros --cfg kernel
-+rusttestlib-pin_init: $(src)/pin-init/src/_lib.rs rusttestlib-macros \
-+    rusttestlib-pin_init_internal $(obj)/$(libpin_init_internal_name) FORC=
-E
-+=09+$(call if_changed,rustc_test_library)
-+
- rusttestlib-kernel: private rustc_target_flags =3D --extern ffi \
--    --extern build_error --extern macros \
-+    --extern build_error --extern macros --extern pin_init \
-     --extern bindings --extern uapi
--rusttestlib-kernel: $(src)/kernel/lib.rs \
--    rusttestlib-bindings rusttestlib-uapi rusttestlib-build_error \
--    $(obj)/$(libmacros_name) $(obj)/bindings.o FORCE
-+rusttestlib-kernel: $(src)/kernel/lib.rs rusttestlib-bindings rusttestlib-=
-uapi \
-+    rusttestlib-build_error rusttestlib-pin_init $(obj)/$(libmacros_name) =
-\
-+    $(obj)/bindings.o FORCE
- =09+$(call if_changed,rustc_test_library)
-=20
- rusttestlib-bindings: private rustc_target_flags =3D --extern ffi
-@@ -172,8 +200,8 @@ quiet_cmd_rustdoc_test_kernel =3D RUSTDOC TK $<
- =09mkdir -p $(objtree)/$(obj)/test/doctests/kernel; \
- =09OBJTREE=3D$(abspath $(objtree)) \
- =09$(RUSTDOC) --test $(rust_flags) \
--=09=09-L$(objtree)/$(obj) --extern ffi --extern kernel \
--=09=09--extern build_error --extern macros \
-+=09=09-L$(objtree)/$(obj) --extern ffi --extern pin_init \
-+=09=09--extern kernel --extern build_error --extern macros \
- =09=09--extern bindings --extern uapi \
- =09=09--no-run --crate-name kernel -Zunstable-options \
- =09=09--sysroot=3D/dev/null \
-@@ -203,18 +231,18 @@ quiet_cmd_rustc_test =3D $(RUSTC_OR_CLIPPY_QUIET) T  =
-$<
- rusttest: rusttest-macros rusttest-kernel
-=20
- rusttest-macros: private rustc_target_flags =3D --extern proc_macro \
--=09--extern macros --extern kernel
-+=09--extern macros --extern kernel --extern pin_init
- rusttest-macros: private rustdoc_test_target_flags =3D --crate-type proc-m=
-acro
- rusttest-macros: $(src)/macros/lib.rs \
--    rusttestlib-macros rusttestlib-kernel FORCE
-+    rusttestlib-macros rusttestlib-kernel rusttestlib-pin_init FORCE
- =09+$(call if_changed,rustc_test)
- =09+$(call if_changed,rustdoc_test)
-=20
--rusttest-kernel: private rustc_target_flags =3D --extern ffi \
-+rusttest-kernel: private rustc_target_flags =3D --extern ffi --extern pin_=
-init \
-     --extern build_error --extern macros --extern bindings --extern uapi
- rusttest-kernel: $(src)/kernel/lib.rs rusttestlib-ffi rusttestlib-kernel \
-     rusttestlib-build_error rusttestlib-macros rusttestlib-bindings \
--    rusttestlib-uapi FORCE
-+    rusttestlib-uapi rusttestlib-pin_init FORCE
- =09+$(call if_changed,rustc_test)
-=20
- ifdef CONFIG_CC_IS_CLANG
-@@ -361,7 +389,7 @@ $(obj)/exports_kernel_generated.h: $(obj)/kernel.o FORC=
-E
-=20
- quiet_cmd_rustc_procmacro =3D $(RUSTC_OR_CLIPPY_QUIET) P $@
-       cmd_rustc_procmacro =3D \
--=09$(RUSTC_OR_CLIPPY) $(rust_common_flags) \
-+=09$(RUSTC_OR_CLIPPY) $(rust_common_flags) $(rustc_target_flags) \
- =09=09-Clinker-flavor=3Dgcc -Clinker=3D$(HOSTCC) \
- =09=09-Clink-args=3D'$(call escsq,$(KBUILD_PROCMACROLDFLAGS))' \
- =09=09--emit=3Ddep-info=3D$(depfile) --emit=3Dlink=3D$@ --extern proc_macr=
-o \
-@@ -372,6 +400,10 @@ quiet_cmd_rustc_procmacro =3D $(RUSTC_OR_CLIPPY_QUIET)=
- P $@
- $(obj)/$(libmacros_name): $(src)/macros/lib.rs FORCE
- =09+$(call if_changed_dep,rustc_procmacro)
-=20
-+$(obj)/$(libpin_init_internal_name): private rustc_target_flags =3D --cfg =
-kernel
-+$(obj)/$(libpin_init_internal_name): $(src)/pin-init/internal/src/_lib.rs =
-FORCE
-+=09+$(call if_changed_dep,rustc_procmacro)
-+
- quiet_cmd_rustc_library =3D $(if $(skip_clippy),RUSTC,$(RUSTC_OR_CLIPPY_QU=
-IET)) L $@
-       cmd_rustc_library =3D \
- =09OBJTREE=3D$(abspath $(objtree)) \
-@@ -451,6 +483,13 @@ $(obj)/compiler_builtins.o: private rustc_objcopy =3D =
--w -W '__*'
- $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o FORC=
-E
- =09+$(call if_changed_rule,rustc_library)
-=20
-+$(obj)/pin_init.o: private skip_gendwarfksyms =3D 1
-+$(obj)/pin_init.o: private rustc_target_flags =3D --extern pin_init_intern=
-al \
-+    --extern macros --cfg kernel
-+$(obj)/pin_init.o: $(src)/pin-init/src/_lib.rs $(obj)/compiler_builtins.o =
-\
-+    $(obj)/$(libpin_init_internal_name) $(obj)/$(libmacros_name) FORCE
-+=09+$(call if_changed_rule,rustc_library)
-+
- $(obj)/build_error.o: private skip_gendwarfksyms =3D 1
- $(obj)/build_error.o: $(src)/build_error.rs $(obj)/compiler_builtins.o FOR=
-CE
- =09+$(call if_changed_rule,rustc_library)
-@@ -473,9 +512,9 @@ $(obj)/uapi.o: $(src)/uapi/lib.rs \
-     $(obj)/uapi/uapi_generated.rs FORCE
- =09+$(call if_changed_rule,rustc_library)
-=20
--$(obj)/kernel.o: private rustc_target_flags =3D --extern ffi \
-+$(obj)/kernel.o: private rustc_target_flags =3D --extern ffi --extern pin_=
-init \
-     --extern build_error --extern macros --extern bindings --extern uapi
--$(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/build_error.o \
-+$(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/build_error.o $(obj)/pin_init=
-.o \
-     $(obj)/$(libmacros_name) $(obj)/bindings.o $(obj)/uapi.o FORCE
- =09+$(call if_changed_rule,rustc_library)
-=20
-diff --git a/rust/pin-init/internal/src/_lib.rs b/rust/pin-init/internal/sr=
-c/_lib.rs
+ /// When a value of this type is dropped, it drops a `T`.
+ ///
+ /// Can be forgotten to prevent the drop.
+diff --git a/rust/pin-init/src/alloc.rs b/rust/pin-init/src/alloc.rs
 new file mode 100644
-index 000000000000..0874cf04e4cb
+index 000000000000..e16baa3b434e
 --- /dev/null
-+++ b/rust/pin-init/internal/src/_lib.rs
-@@ -0,0 +1,3 @@
++++ b/rust/pin-init/src/alloc.rs
+@@ -0,0 +1,158 @@
 +// SPDX-License-Identifier: Apache-2.0 OR MIT
 +
-+//! Will be removed in a future commit, only exists to prevent compilation=
- errors.
-diff --git a/rust/pin-init/internal/src/lib.rs b/rust/pin-init/internal/src=
-/lib.rs
-index bf66cbee2531..3146da5cc47c 100644
---- a/rust/pin-init/internal/src/lib.rs
-+++ b/rust/pin-init/internal/src/lib.rs
-@@ -1,5 +1,9 @@
- // SPDX-License-Identifier: Apache-2.0 OR MIT
++#[cfg(all(feature =3D "alloc", not(feature =3D "std")))]
++use alloc::{boxed::Box, sync::Arc};
++#[cfg(feature =3D "alloc")]
++use core::alloc::AllocError;
++use core::{mem::MaybeUninit, pin::Pin};
++#[cfg(feature =3D "std")]
++use std::sync::Arc;
++
++#[cfg(not(feature =3D "alloc"))]
++type AllocError =3D core::convert::Infallible;
++
++use crate::{
++    init_from_closure, pin_init_from_closure, InPlaceWrite, Init, PinInit,=
+ ZeroableOption,
++};
++
++pub extern crate alloc;
++
++// SAFETY: All zeros is equivalent to `None` (option layout optimization g=
+uarantee).
++//
++// In this case we are allowed to use `T: ?Sized`, since all zeros is the =
+`None` variant and there
++// is no problem with a VTABLE pointer being null.
++unsafe impl<T: ?Sized> ZeroableOption for Box<T> {}
++
++/// Smart pointer that can initialize memory in-place.
++pub trait InPlaceInit<T>: Sized {
++    /// Use the given pin-initializer to pin-initialize a `T` inside of a =
+new smart pointer of this
++    /// type.
++    ///
++    /// If `T: !Unpin` it will not be able to move afterwards.
++    fn try_pin_init<E>(init: impl PinInit<T, E>) -> Result<Pin<Self>, E>
++    where
++        E: From<AllocError>;
++
++    /// Use the given pin-initializer to pin-initialize a `T` inside of a =
+new smart pointer of this
++    /// type.
++    ///
++    /// If `T: !Unpin` it will not be able to move afterwards.
++    fn pin_init(init: impl PinInit<T>) -> Result<Pin<Self>, AllocError> {
++        // SAFETY: We delegate to `init` and only change the error type.
++        let init =3D unsafe {
++            pin_init_from_closure(|slot| match init.__pinned_init(slot) {
++                Ok(()) =3D> Ok(()),
++                Err(i) =3D> match i {},
++            })
++        };
++        Self::try_pin_init(init)
++    }
++
++    /// Use the given initializer to in-place initialize a `T`.
++    fn try_init<E>(init: impl Init<T, E>) -> Result<Self, E>
++    where
++        E: From<AllocError>;
++
++    /// Use the given initializer to in-place initialize a `T`.
++    fn init(init: impl Init<T>) -> Result<Self, AllocError> {
++        // SAFETY: We delegate to `init` and only change the error type.
++        let init =3D unsafe {
++            init_from_closure(|slot| match init.__init(slot) {
++                Ok(()) =3D> Ok(()),
++                Err(i) =3D> match i {},
++            })
++        };
++        Self::try_init(init)
++    }
++}
++
++#[cfg(feature =3D "alloc")]
++macro_rules! try_new_uninit {
++    ($type:ident) =3D> {
++        $type::try_new_uninit()?
++    };
++}
++#[cfg(all(feature =3D "std", not(feature =3D "alloc")))]
++macro_rules! try_new_uninit {
++    ($type:ident) =3D> {
++        $type::new_uninit()
++    };
++}
++
++impl<T> InPlaceInit<T> for Box<T> {
++    #[inline]
++    fn try_pin_init<E>(init: impl PinInit<T, E>) -> Result<Pin<Self>, E>
++    where
++        E: From<AllocError>,
++    {
++        try_new_uninit!(Box).write_pin_init(init)
++    }
++
++    #[inline]
++    fn try_init<E>(init: impl Init<T, E>) -> Result<Self, E>
++    where
++        E: From<AllocError>,
++    {
++        try_new_uninit!(Box).write_init(init)
++    }
++}
++
++impl<T> InPlaceInit<T> for Arc<T> {
++    #[inline]
++    fn try_pin_init<E>(init: impl PinInit<T, E>) -> Result<Pin<Self>, E>
++    where
++        E: From<AllocError>,
++    {
++        let mut this =3D try_new_uninit!(Arc);
++        let Some(slot) =3D Arc::get_mut(&mut this) else {
++            // SAFETY: the Arc has just been created and has no external r=
+eferences
++            unsafe { core::hint::unreachable_unchecked() }
++        };
++        let slot =3D slot.as_mut_ptr();
++        // SAFETY: When init errors/panics, slot will get deallocated but =
+not dropped,
++        // slot is valid and will not be moved, because we pin it later.
++        unsafe { init.__pinned_init(slot)? };
++        // SAFETY: All fields have been initialized and this is the only `=
+Arc` to that data.
++        Ok(unsafe { Pin::new_unchecked(this.assume_init()) })
++    }
++
++    #[inline]
++    fn try_init<E>(init: impl Init<T, E>) -> Result<Self, E>
++    where
++        E: From<AllocError>,
++    {
++        let mut this =3D try_new_uninit!(Arc);
++        let Some(slot) =3D Arc::get_mut(&mut this) else {
++            // SAFETY: the Arc has just been created and has no external r=
+eferences
++            unsafe { core::hint::unreachable_unchecked() }
++        };
++        let slot =3D slot.as_mut_ptr();
++        // SAFETY: When init errors/panics, slot will get deallocated but =
+not dropped,
++        // slot is valid.
++        unsafe { init.__init(slot)? };
++        // SAFETY: All fields have been initialized.
++        Ok(unsafe { this.assume_init() })
++    }
++}
++
++impl<T> InPlaceWrite<T> for Box<MaybeUninit<T>> {
++    type Initialized =3D Box<T>;
++
++    fn write_init<E>(mut self, init: impl Init<T, E>) -> Result<Self::Init=
+ialized, E> {
++        let slot =3D self.as_mut_ptr();
++        // SAFETY: When init errors/panics, slot will get deallocated but =
+not dropped,
++        // slot is valid.
++        unsafe { init.__init(slot)? };
++        // SAFETY: All fields have been initialized.
++        Ok(unsafe { self.assume_init() })
++    }
++
++    fn write_pin_init<E>(mut self, init: impl PinInit<T, E>) -> Result<Pin=
+<Self::Initialized>, E> {
++        let slot =3D self.as_mut_ptr();
++        // SAFETY: When init errors/panics, slot will get deallocated but =
+not dropped,
++        // slot is valid and will not be moved, because we pin it later.
++        unsafe { init.__pinned_init(slot)? };
++        // SAFETY: All fields have been initialized.
++        Ok(unsafe { self.assume_init() }.into())
++    }
++}
+diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+index 41bfb35c7a2c..58b77a158c34 100644
+--- a/rust/pin-init/src/lib.rs
++++ b/rust/pin-init/src/lib.rs
+@@ -204,8 +204,16 @@
+ //! [structurally pinned fields]:
+ //!     https://doc.rust-lang.org/std/pin/index.html#pinning-is-structural=
+-for-field
+ //! [stack]: crate::stack_pin_init
+-//! [`Arc<T>`]: https://rust.docs.kernel.org/kernel/sync/struct.Arc.html
+-//! [`Box<T>`]: https://rust.docs.kernel.org/kernel/alloc/kbox/struct.Box.=
+html
++#![cfg_attr(
++    kernel,
++    doc =3D "[`Arc<T>`]: https://rust.docs.kernel.org/kernel/sync/struct.A=
+rc.html"
++)]
++#![cfg_attr(
++    kernel,
++    doc =3D "[`Box<T>`]: https://rust.docs.kernel.org/kernel/alloc/kbox/st=
+ruct.Box.html"
++)]
++#![cfg_attr(not(kernel), doc =3D "[`Arc<T>`]: alloc::alloc::sync::Arc")]
++#![cfg_attr(not(kernel), doc =3D "[`Box<T>`]: alloc::alloc::boxed::Box")]
+ //! [`impl PinInit<Foo>`]: PinInit
+ //! [`impl PinInit<T, E>`]: PinInit
+ //! [`impl Init<T, E>`]: Init
+@@ -239,6 +247,11 @@
+ #[doc(hidden)]
+ pub mod macros;
 =20
-+// When fixdep scans this, it will find this string `CONFIG_RUSTC_VERSION_=
-TEXT`
-+// and thus add a dependency on `include/config/RUSTC_VERSION_TEXT`, which=
- is
-+// touched by Kconfig when the version string from the compiler changes.
++#[cfg(any(feature =3D "std", feature =3D "alloc"))]
++mod alloc;
++#[cfg(any(feature =3D "std", feature =3D "alloc"))]
++pub use alloc::InPlaceInit;
 +
- #[allow(missing_docs)]
- #[proc_macro_attribute]
- pub fn pin_data(inner: TokenStream, item: TokenStream) -> TokenStream {
-diff --git a/rust/pin-init/src/_lib.rs b/rust/pin-init/src/_lib.rs
-new file mode 100644
-index 000000000000..e0918fd8e9e7
---- /dev/null
-+++ b/rust/pin-init/src/_lib.rs
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: Apache-2.0 OR MIT
-+
-+//! Will be removed in a future commit, only exists to prevent compilation=
- errors.
-+
-+#![no_std]
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 993708d11874..08b6380933f5 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -237,7 +237,7 @@ rust_common_cmd =3D \
- =09-Zallow-features=3D$(rust_allowed_features) \
- =09-Zcrate-attr=3Dno_std \
- =09-Zcrate-attr=3D'feature($(rust_allowed_features))' \
--=09-Zunstable-options --extern kernel \
-+=09-Zunstable-options --extern pin_init --extern kernel \
- =09--crate-type rlib -L $(objtree)/rust/ \
- =09--crate-name $(basename $(notdir $@)) \
- =09--sysroot=3D/dev/null \
-diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_anal=
-yzer.py
-index aa8ea1a4dbe5..a44a4475d11f 100755
---- a/scripts/generate_rust_analyzer.py
-+++ b/scripts/generate_rust_analyzer.py
-@@ -93,10 +93,25 @@ def generate_crates(srctree, objtree, sysroot_src, exte=
-rnal_src, cfgs):
-     )
-     crates[-1]["env"]["OBJTREE"] =3D str(objtree.resolve(True))
-=20
-+    append_crate(
-+        "pin_init_internal",
-+        srctree / "rust" / "pin-init" / "internal" / "src" / "_lib.rs",
-+        [],
-+        cfg=3D["kernel"],
-+        is_proc_macro=3DTrue,
-+    )
-+
-+    append_crate(
-+        "pin_init",
-+        srctree / "rust" / "pin-init" / "src" / "_lib.rs",
-+        ["core", "pin_init_internal", "macros"],
-+        cfg=3D["kernel"],
-+    )
-+
-     append_crate(
-         "kernel",
-         srctree / "rust" / "kernel" / "lib.rs",
--        ["core", "macros", "build_error", "bindings"],
-+        ["core", "macros", "build_error", "bindings", "pin_init"],
-         cfg=3Dcfg,
-     )
-     crates[-1]["source"] =3D {
+ /// Used to specify the pinning information of the fields of a struct.
+ ///
+ /// This is somewhat similar in purpose as
+@@ -914,8 +927,16 @@ macro_rules! assert_pinned {
+ ///     - `slot` is not partially initialized.
+ /// - while constructing the `T` at `slot` it upholds the pinning invarian=
+ts of `T`.
+ ///
+-/// [`Arc<T>`]: https://rust.docs.kernel.org/kernel/sync/struct.Arc.html
+-/// [`Box<T>`]: https://rust.docs.kernel.org/kernel/alloc/kbox/struct.Box.=
+html
++#[cfg_attr(
++    kernel,
++    doc =3D "[`Arc<T>`]: https://rust.docs.kernel.org/kernel/sync/struct.A=
+rc.html"
++)]
++#[cfg_attr(
++    kernel,
++    doc =3D "[`Box<T>`]: https://rust.docs.kernel.org/kernel/alloc/kbox/st=
+ruct.Box.html"
++)]
++#[cfg_attr(not(kernel), doc =3D "[`Arc<T>`]: alloc::alloc::sync::Arc")]
++#[cfg_attr(not(kernel), doc =3D "[`Box<T>`]: alloc::alloc::boxed::Box")]
+ #[must_use =3D "An initializer must be used in order to create its value."=
+]
+ pub unsafe trait PinInit<T: ?Sized, E =3D Infallible>: Sized {
+     /// Initializes `slot`.
+@@ -1005,8 +1026,16 @@ unsafe fn __pinned_init(self, slot: *mut T) -> Resul=
+t<(), E> {
+ /// Contrary to its supertype [`PinInit<T, E>`] the caller is allowed to
+ /// move the pointee after initialization.
+ ///
+-/// [`Arc<T>`]: https://rust.docs.kernel.org/kernel/sync/struct.Arc.html
+-/// [`Box<T>`]: https://rust.docs.kernel.org/kernel/alloc/kbox/struct.Box.=
+html
++#[cfg_attr(
++    kernel,
++    doc =3D "[`Arc<T>`]: https://rust.docs.kernel.org/kernel/sync/struct.A=
+rc.html"
++)]
++#[cfg_attr(
++    kernel,
++    doc =3D "[`Box<T>`]: https://rust.docs.kernel.org/kernel/alloc/kbox/st=
+ruct.Box.html"
++)]
++#[cfg_attr(not(kernel), doc =3D "[`Arc<T>`]: alloc::alloc::sync::Arc")]
++#[cfg_attr(not(kernel), doc =3D "[`Box<T>`]: alloc::alloc::boxed::Box")]
+ #[must_use =3D "An initializer must be used in order to create its value."=
+]
+ pub unsafe trait Init<T: ?Sized, E =3D Infallible>: PinInit<T, E> {
+     /// Initializes `slot`.
 --=20
 2.47.2
 
