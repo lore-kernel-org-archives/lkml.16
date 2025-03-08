@@ -1,162 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F72D4C70;
-	Sat,  8 Mar 2025 13:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA651BC41;
+	Sat,  8 Mar 2025 13:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741440657; cv=none; b=RrzJ/hZ/hMYXFgV0HnceZIsSLiqIvg446zpOFsIjzAFPAKkOLAHWbkN8XP6pjxQ73v8JLXXgaOYj6pIixlnbGIUn9EOZmxV2ufj66kKtas01FNlNtp+5e5aMB3WiINh1L3C/oMmfkqxzpYPtffGCbXZRENufQQnFo49HGqwKQKg=
+	t=1741440808; cv=none; b=L/ihbVKC1ezTRGDx3HaSAMp3WO5N5Tius7IftNhJKB/HWxjz9NIn/pksAJpXbAL7/0GbnHz+SjdPEiu/CBWsbXM7HP+dVujvYOtzBCYnfx1Ru2mbyrkf4jq6GfKVKcaw3GczsykUvyUbsI321ChynhzrA1/IIPLQKdgqMnCjelA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741440657; c=relaxed/simple;
-	bh=l+KYoPy1W++DpoqS9X+vOEm/qsEB5yFrTh+h6WL1POU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dCx0js9m+trwQiyrCq0XX1SHXyBga6jUJt7xe+5yjsWT4RGsHD+VtBI2qu8q9fOYpV5UkAuXFASNSVSZsfB6z9kIVxi//D4hBlIuNU0Yq85dmaxHljK6rKxha+aPxJM2FGe/HfTch81muMjkBLFA2nNHJTjHRY6rvjHAPaVOsdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HgrE1vSY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741440808; c=relaxed/simple;
+	bh=115Ze+IxI3/vfEm4pnf9cpZTmUZlkDAqgkOYFm8bgM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aLLPPUnZm9Z6KDpe6c+05SQnWP8sQ3EHuepSHQjng0wt72l+0l2kFTSqEF0KviE6rr9muUxvDlS1J53fOXnvYd/rSlzNvoLoYgqZP3uvDhNYD6u0328gOI4wt31Oac3anelbQyMx6WEF5Ke+fBjV+zNh72GbreG0I/HbwwSLSGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CAuEjA+o reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HgrE1vSY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF3CC4CEE0;
-	Sat,  8 Mar 2025 13:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741440656;
-	bh=l+KYoPy1W++DpoqS9X+vOEm/qsEB5yFrTh+h6WL1POU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HgrE1vSYiLu5agPEnuAuy3fdEJVpcyN8Mjq9nuu1/vGuM5nd7kIb/Zfn2Z/EJfSZ7
-	 VxJ1eN/SMHA7qz18h9mpTHnl+x4d5QiUHaXpbSRQpwRmO2LhKEuah3vmbBgEps3Je9
-	 CiLAwA389qbcSz0f3QI3LgmBWlsa9Pda7y5xpjM/VoFwdrFBbS1J9/h8KYTWn7JE/6
-	 Wjr0kO2FpZfioOjRBGmNh6MtlYgmz1Bq7cUPGLk87V/q8yqWtyS6w2R6hfDdhOrfnM
-	 a+hqAHt0bSLfLuD4FNb4XlRoPbjpsmeyfQBjbRsRG85PiCoGY6FSY3weqbeZnHEbY1
-	 +b+fiBwnk4B2Q==
-Date: Sat, 8 Mar 2025 13:30:45 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
- lars@metafoo.de, Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, dlechner@baylibre.com, jonath4nns@gmail.com
-Subject: Re: [PATCH v4 09/17] iio: adc: ad7768-1: Add reset gpio
-Message-ID: <20250308133045.2b3b2f49@jic23-huawei>
-In-Reply-To: <Z8r3sR740CpZfVFr@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
-	<305f0bb4a90aba547de6b46d4c9dcf04a2a4db72.1741268122.git.Jonathan.Santos@analog.com>
-	<Z8r3sR740CpZfVFr@debian-BULLSEYE-live-builder-AMD64>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CAuEjA+o"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B3CF040E015E;
+	Sat,  8 Mar 2025 13:33:23 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fUOTjdyFzZYW; Sat,  8 Mar 2025 13:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741440798; bh=mGUnWVGEljwRD/vFW5lzAbLtqCZsrT5Mor9RAoXgYyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CAuEjA+oufa4li9tDQ0w1Tt+g9NQ2+DCEOZiizHP92xumN76F16HsASw9+eAtvZ4D
+	 ZzSxv0mg09iZzSTaTycYd7JYASUXK9G05+DQmRpC3AXHoaSIEmHBY9bfSzzuBkHyit
+	 SA03K8Egc2lDY/c1OiPBemVPYZTX5z/XNRji4bWoAZhcstXdrN523dAZVtK0pEV9MB
+	 aTlGOguhVs8N2mRdotkvuBYybKADKYpLGE6QSpTc92cJ9M0dRwXCfJ8lg7GzmlvPMK
+	 wfuLdvFDWVRbuRWq3rU3xmPk4GK63QtoZDM3e0r1nhhuUR3KhT7/cPErryvt7kIWWM
+	 OB0AJROTpv1oFRLdxPsmZaV6tVilTndruIzlv3lQyVfydgymZWdi7OwV1UQxJmmWEK
+	 LLBP7taxoDK5WcaobNlt1TQyiNPJ3JA9jZmtN6iqf7nCX9YStC0TyyHxJhRmK/hPxm
+	 59sFO6Q55TkKduj+/y0FwKNUC256t3K5aGxn0BsbcfoK4bAHhJlYD93JPbEOUa2DgD
+	 lyxT4i3Il8cE2BtKLyH1T2Pn+8MW4YGHl7f33Y/PmWqcU0Sj/il3aqsjJ5OsHItkGK
+	 toJnZrFTyqwqMGvB95oJzz2vtUiWycr3MCTTDds63z4cnAF90Q2xpohgqHfYW16mDL
+	 7j5l97NE3JinsBfG0j9RDWYA=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8105740E015D;
+	Sat,  8 Mar 2025 13:33:09 +0000 (UTC)
+Date: Sat, 8 Mar 2025 14:33:08 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Alexey Kardashevskiy <aik@amd.com>
+Cc: linux-crypto@vger.kernel.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Ashish Kalra <ashish.kalra@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>, stable@vger.kernel.org
+Subject: Re: [PATCH] crypto: ccp: Fix uAPI definitions of PSP errors
+Message-ID: <20250308133308.GCZ8xHFOX4JKRG1Mpk@fat_crate.local>
+References: <20250308011028.719002-1-aik@amd.com>
+ <CAAH4kHaK3Z-_aYizZM0Kvmsjvs_RT88tKG5aefm2_9GTUsU4bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAAH4kHaK3Z-_aYizZM0Kvmsjvs_RT88tKG5aefm2_9GTUsU4bg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 7 Mar 2025 10:42:09 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
-
-> On 03/06, Jonathan Santos wrote:
-> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> > 
-> > Depending on the controller, the default state of a gpio can vary. This
-> > change excludes the probability that the dafult state of the ADC reset
-> > gpio will be HIGH if it will be passed as reference in the devicetree.  
-> 
-> The description doesn't seem to match the changes nor the patch title. You are
-> essentinally adding support for hardware reset. Change the commit description to
-> reflect that.
-> 
-> The default state of GPIOs would not impact device reset because (in theory)
-> they weren't being connected to the reset pin prevously.
-Also possible some other entity was doing appropriate reset (sometimes
-it's just how the system is wired - puts appropriate voltage to come out
-of reset after some other action - no kernel involvement).
-
-Agreed in general though that this is simpler described as just implementing
-hardware reset and not worry about those details.
-
-Jonathan
-
-> 
-> > 
-> > Reviewed-by: David Lechner <dlechner@baylibre.com>
-> > Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> > Co-developed-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+On Fri, Mar 07, 2025 at 09:40:52PM -0800, Dionna Amalie Glaze wrote:
+> On Fri, Mar 7, 2025 at 5:10=E2=80=AFPM Alexey Kardashevskiy <aik@amd.co=
+m> wrote:
+> >
+> > Additions to the error enum after explicit 0x27 setting for
+> > SEV_RET_INVALID_KEY leads to incorrect value assignments.
+> >
+> > Use explicit values to match the manufacturer specifications more
+> > clearly.
+> >
+> > Fixes: 3a45dc2b419e ("crypto: ccp: Define the SEV-SNP commands")
+> > CC: stable@vger.kernel.org
+> > Signed-off-by: Dionna Glaze <dionnaglaze@google.com>
+> > Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
 > > ---
-> > v4 Changes:
-> > * None.
-> > 
-> > v3 Changes:
-> > * fixed SoB order.
-> > * increased delay after finishing the reset action to 200us, as the
-> >   datasheet recommends.
-> > 
-> > v2 Changes:
-> > * Replaced usleep_range() for fsleep() and gpiod_direction_output() for 
-> >   gpiod_set_value_cansleep().
-> > * Reset via SPI register is performed if the Reset GPIO is not defined. 
-> > ---
-> >  drivers/iio/adc/ad7768-1.c | 36 ++++++++++++++++++++++++------------
-> >  1 file changed, 24 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> > index 04a26e5b7d5c..86f44d28c478 100644
-> > --- a/drivers/iio/adc/ad7768-1.c
-> > +++ b/drivers/iio/adc/ad7768-1.c
-> > @@ -166,6 +166,7 @@ struct ad7768_state {
-> >  	struct completion completion;
-> >  	struct iio_trigger *trig;
-> >  	struct gpio_desc *gpio_sync_in;
-> > +	struct gpio_desc *gpio_reset;
-> >  	const char *labels[ARRAY_SIZE(ad7768_channels)];
-> >  	/*
-> >  	 * DMA (thus cache coherency maintenance) may require the
-> > @@ -487,19 +488,30 @@ static int ad7768_setup(struct ad7768_state *st)
-> >  {
-> >  	int ret;
-> >  
-> > -	/*
-> > -	 * Two writes to the SPI_RESET[1:0] bits are required to initiate
-> > -	 * a software reset. The bits must first be set to 11, and then
-> > -	 * to 10. When the sequence is detected, the reset occurs.
-> > -	 * See the datasheet, page 70.
-> > -	 */
-> > -	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
-> > -	if (ret)
-> > -		return ret;
-> > +	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
-> > +						 GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(st->gpio_reset))
-> > +		return PTR_ERR(st->gpio_reset);
-> >  
-> > -	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
-> > -	if (ret)
-> > -		return ret;
-> > +	if (st->gpio_reset) {
-> > +		fsleep(10);
-> > +		gpiod_set_value_cansleep(st->gpio_reset, 0);
-> > +		fsleep(200);
-> > +	} else {
-> > +		/*
-> > +		 * Two writes to the SPI_RESET[1:0] bits are required to initiate
-> > +		 * a software reset. The bits must first be set to 11, and then
-> > +		 * to 10. When the sequence is detected, the reset occurs.
-> > +		 * See the datasheet, page 70.
-> > +		 */
-> > +		ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> >  
-> >  	st->gpio_sync_in = devm_gpiod_get(&st->spi->dev, "adi,sync-in",
-> >  					  GPIOD_OUT_LOW);
-> > -- 
-> > 2.34.1
-> >   
+> >
+> > Reposting as requested in
+> > https://lore.kernel.org/r/Z7f2S3MigLEY80P2@gondor.apana.org.au
+> >
+> > I wrote it in the first place but since then it travelled a lot,
+> > feel free to correct the chain of SOBs and RB :)
+>=20
+> It's all good. Thanks for seeing this through to the end.
 
+It should be corrected because the current SOB chain says that Dionna is =
+the
+author but From is yours, making you the author when it gets applied.
+
+All is documented here and in the following sections:
+
+https://kernel.org/doc/html/latest/process/submitting-patches.html#sign-y=
+our-work-the-developer-s-certificate-of-origin
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
