@@ -1,52 +1,53 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8CF196
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 00:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B322AF1C
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 00:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741392145; cv=none; b=BDzkiihE/I9jvZG7a+reyuFaDjSbDrEj5bnbWxt51ls/fHB++qaKyRop1j2W7NoJyJcSOF1Kqeai6vj6IqUdAQSm44iTUkEq73tOUP4k112DA4TouhoaliN4GdN/EfePXWJQNhVxqwlBW8HrggP1rLLLRjVr9JP1p4/MCrP0eZs=
+	t=1741392145; cv=none; b=sXOVgiRbZ90u8355L50WqqlL+UwUr9NTFJK7QacNXJdB4CTTZ154Kf5zwcnvX159EpIWfaaKBh6QQT7xW6vqKg1vlG3B0A0ziJIb13c4bx80+Qg5qkFmfb2e9kLpPEkZClg78EwP1rBYmOx+DSl/PejsISfG1yOsoXUHDVSQpwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741392145; c=relaxed/simple;
-	bh=ym1gKgOZ8ndKCiW+GNMSZAf87EHU8Np/pIBi7mjUyIk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=gIZVo4diwqVaxagXjiWYt/YJr188q3PMVWSWVxt1pDaqHlkLx3FJY5Ab8p/g5BfqzfvpekgHLfw+SANZ/UuFj814FxdBNdSqNybssB3bczOMzymvemilE4JUzyxSULY8HS07yNAlPeY+3C6XEDlsph78jVVGksM36WZ9I/UwQn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+	bh=fObEnXAg5jsjYy3qkxbdriQ5mNWOHN5qGd+w/wA6llY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=SBjNp7/oWpmzq3gQc4IzfymJvVWL72wTHaedLNUoGJIvjR96eFUAxm01ChrvciJezylJCOMDgimbSh1cg0uszNgriILrkZdUmsHF7Y4sTC2x9thkV8b5e8EZ/6s/gOvVE6AIJCkEn77t/IWAaMZ8tf1iuaYCSLtx54U/7s++duY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-851c4ef08b9so479371539f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 16:02:22 -0800 (PST)
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d44a3882a0so5657495ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 16:02:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741392142; x=1741996942;
+        d=1e100.net; s=20230601; t=1741392143; x=1741996943;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6aqiyu/dMFS2r2s9XJYkQ3e5hk4SFcF8VLw2o4Me4TA=;
-        b=j0Yr1TDRJcVnebFh/GBe20FqCozIA5WsfLq014zqWNXI6XXFVoSQSlJ+GK5T1I0Z+Z
-         Rfo/sPOAq6HkYmYaHsnp9p6YFDo8DEXy7pZJLyWVymvea9XWxo9BialoMjweV/5BGfIZ
-         a1Gumbjb2w60MaUrNaseO5BfCuklh0lZUZZeUef29jR4BLDbRSVUizogAyNljs0MXsyt
-         isL/pPb3iHfTtu5Ji1wMlqegN6sRQsmiUvLnjENI4ik81XcSDvwbIBXTAt8KoLZHQyDS
-         yTReNJ2iiuHo+cprWsrTEVdh/Lh3oYFtPT9wYem9AYg55k9eH6Js7e6rg/fkFBTlx4Aq
-         E3CA==
-X-Gm-Message-State: AOJu0Yz84FHdz1TO6PsBXLL/Oc1uIivbeHcH+vF4R60ZmybRxuYkg0yc
-	RC/VfErZCdtTYXc8BRS8iuL0DCx2KpMoBRG+YMey573AuATEo4fPc7xoVByiD+gbM535fIR6m+g
-	PwF7Iecf87nEmnEFN/IweLTLDDxwzSJp4ZH7hygPGSONMz3t663rPMJe4WA==
-X-Google-Smtp-Source: AGHT+IHJS5UKipvwJ5J6WhKRzJ7o8MTTNQFTg3AaCTXOp39f+S12aD5X8AfKPF2ytEaMAq6+ZhsmgyXO/BrX8cU/sNx/WIWcZPdT
+        bh=67yxaripNAOdJdg5+dSaxSoYpXuKj+Ayupt/L0ZZGCQ=;
+        b=fhZ08BxKKhEl0LyncORdcVEbesQoQx8nzNkjw0PLJCxXdRJ96d1qwdoio80U+2uoT6
+         duzVVOoPMvouh/R4GHhk3aYLOIM58u1p6XK2Kt2bDSaY6+kJsg+vwXgh/HGDNWBcFrkO
+         zsccIZsE7h9ZgLsC6L86ahy0g6/Z358nD2Dd6cyYiUOc0LXoQz6fQ8jidwEwxzVJnNm+
+         cOFqeU8asqRHah+04FXl9mJ0Gb9un2EGG/4olf+Z4QDXFPDfs4FLe9M6LD6GsrADrA52
+         cb/lpt3r0Rl48fLMrLUo7Cx13IrMerve7PRODt6cPCwBKHnFCIDgH+sbLqg0RAQ8Nv7t
+         5j1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUZk5FFm0IN3PRBLtNOc5bDiubGDOxxc6/2l9VQ/nFkHPo2oy9tj5rUX8RRo/CxlKWhq/vzXsRWymb+taw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8QbYH4hNVYNaYseB79Ra3z5jyhfUdOQfSmpruvzCIxWr4Kc/4
+	7vCu5hxGXUlWICx221oA9ncJqqD2e7wjVCR/n21LiNTuVidaN6JjB+k+hN0+PBlfuS/gRoXr4de
+	3Jkv1LIG0SUdK0jHadxKXy6v9WkZD+AqgZaaQis7fKuyYSjEKLCq8OFY=
+X-Google-Smtp-Source: AGHT+IF3DwIJMt8Mc6/F+4qf1TYtJraNWFTV7WkqzecM3g8hUknoFG6DlXMel01ydyJi4CAnbgNCouQTfi2Rylr3RTlWfua8hS26
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c0b:b0:3d3:d4f0:271d with SMTP id
- e9e14a558f8ab-3d44196ff85mr69187845ab.12.1741392142308; Fri, 07 Mar 2025
+X-Received: by 2002:a05:6e02:378e:b0:3d4:2ea4:6b87 with SMTP id
+ e9e14a558f8ab-3d44af34fd9mr11621625ab.11.1741392142556; Fri, 07 Mar 2025
  16:02:22 -0800 (PST)
 Date: Fri, 07 Mar 2025 16:02:22 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67cb890e.050a0220.d8275.022e.GAE@google.com>
-Subject: [syzbot] [trace?] WARNING in tracepoint_add_func (2)
-From: syzbot <syzbot+161412ccaeff20ce4dde@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+Message-ID: <67cb890e.050a0220.d8275.022f.GAE@google.com>
+Subject: [syzbot] [rdma?] KASAN: slab-use-after-free Read in nla_put (2)
+From: syzbot <syzbot+f60349ba1f9f08df349f@syzkaller.appspotmail.com>
+To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
@@ -54,62 +55,201 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    7eb172143d55 Linux 6.14-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b9a464580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bed8205d3b84ef81
-dashboard link: https://syzkaller.appspot.com/bug?extid=161412ccaeff20ce4dde
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+HEAD commit:    f77f12010f67 Merge branch 'add-usb-net-support-for-telit-c..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=114dcfb8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1770b825960d3ae8
+dashboard link: https://syzkaller.appspot.com/bug?extid=f60349ba1f9f08df349f
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
 Unfortunately, I don't have any reproducer for this issue yet.
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/06a492964134/disk-7eb17214.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/83adeaa22219/vmlinux-7eb17214.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7386164633ed/bzImage-7eb17214.xz
+disk image: https://storage.googleapis.com/syzbot-assets/a2c507ff7038/disk-f77f1201.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5abb8efa39e3/vmlinux-f77f1201.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7d947a5dd280/bzImage-f77f1201.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+161412ccaeff20ce4dde@syzkaller.appspotmail.com
+Reported-by: syzbot+f60349ba1f9f08df349f@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 12326 at kernel/tracepoint.c:294 tracepoint_add_func+0xbfc/0xeb0 kernel/tracepoint.c:294
-Modules linked in:
-CPU: 1 UID: 0 PID: 12326 Comm: syz.6.10325 Tainted: G     U             6.14.0-rc5-syzkaller #0
-Tainted: [U]=USER
+==================================================================
+BUG: KASAN: slab-use-after-free in nla_put+0xd3/0x150 lib/nlattr.c:1099
+Read of size 5 at addr ffff888140ea1c60 by task syz.0.988/10025
+
+CPU: 0 UID: 0 PID: 10025 Comm: syz.0.988 Not tainted 6.14.0-rc4-syzkaller-00859-gf77f12010f67 #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:tracepoint_add_func+0xbfc/0xeb0 kernel/tracepoint.c:294
-Code: 09 fe ff 90 0f 0b 90 0f b6 74 24 43 31 ff 41 bc ea ff ff ff e8 45 04 fe ff 80 7c 24 44 00 0f 84 74 fb ff ff e8 95 09 fe ff 90 <0f> 0b 90 e9 66 fb ff ff e8 87 09 fe ff 48 8b 44 24 10 48 8d 78 18
-RSP: 0018:ffffc9000414fb48 EFLAGS: 00010283
-RAX: 00000000000012a1 RBX: ffffffff8e240ae0 RCX: ffffc90014b78000
-RDX: 0000000000080000 RSI: ffffffff81bbd78b RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: ffffffffffffffef
-R13: 0000000000000000 R14: dffffc0000000000 R15: ffffffff81c264f0
-FS:  00007f27217f66c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2e80dff8 CR3: 00000000268f8000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
  <TASK>
- tracepoint_probe_register_prio+0xc0/0x110 kernel/tracepoint.c:464
- register_trace_prio_sched_switch include/trace/events/sched.h:222 [inline]
- register_pid_events kernel/trace/trace_events.c:2354 [inline]
- event_pid_write.isra.0+0x439/0x7a0 kernel/trace/trace_events.c:2425
- vfs_write+0x24c/0x1150 fs/read_write.c:677
- ksys_write+0x12b/0x250 fs/read_write.c:731
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0x16e/0x5b0 mm/kasan/report.c:521
+ kasan_report+0x143/0x180 mm/kasan/report.c:634
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ __asan_memcpy+0x29/0x70 mm/kasan/shadow.c:105
+ nla_put+0xd3/0x150 lib/nlattr.c:1099
+ nla_put_string include/net/netlink.h:1621 [inline]
+ fill_nldev_handle+0x16e/0x200 drivers/infiniband/core/nldev.c:265
+ rdma_nl_notify_event+0x561/0xef0 drivers/infiniband/core/nldev.c:2857
+ ib_device_notify_register+0x22/0x230 drivers/infiniband/core/device.c:1344
+ ib_register_device+0x1292/0x1460 drivers/infiniband/core/device.c:1460
+ rxe_register_device+0x233/0x350 drivers/infiniband/sw/rxe/rxe_verbs.c:1540
+ rxe_net_add+0x74/0xf0 drivers/infiniband/sw/rxe/rxe_net.c:550
+ rxe_newlink+0xde/0x1a0 drivers/infiniband/sw/rxe/rxe.c:212
+ nldev_newlink+0x5ea/0x680 drivers/infiniband/core/nldev.c:1795
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x6dd/0x9e0 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f272398d169
+RIP: 0033:0x7f42d1b8d169
 Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f27217f6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f2723ba5fa0 RCX: 00007f272398d169
-RDX: 0000000000100082 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00007f2723a0e2a0 R08: 0000000000000000 R09: 0000000000000000
+RSP: 002b:00007f42d2960038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f42d1da6320 RCX: 00007f42d1b8d169
+RDX: 0000000000000000 RSI: 00004000000002c0 RDI: 000000000000000c
+RBP: 00007f42d1c0e2a0 R08: 0000000000000000 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f2723ba5fa0 R15: 00007ffe80f479d8
+R13: 0000000000000000 R14: 00007f42d1da6320 R15: 00007ffe399344a8
  </TASK>
+
+Allocated by task 10025:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __do_kmalloc_node mm/slub.c:4294 [inline]
+ __kmalloc_node_track_caller_noprof+0x28b/0x4c0 mm/slub.c:4313
+ __kmemdup_nul mm/util.c:61 [inline]
+ kstrdup+0x42/0x100 mm/util.c:81
+ kobject_set_name_vargs+0x61/0x120 lib/kobject.c:274
+ dev_set_name+0xd5/0x120 drivers/base/core.c:3468
+ assign_name drivers/infiniband/core/device.c:1202 [inline]
+ ib_register_device+0x178/0x1460 drivers/infiniband/core/device.c:1384
+ rxe_register_device+0x233/0x350 drivers/infiniband/sw/rxe/rxe_verbs.c:1540
+ rxe_net_add+0x74/0xf0 drivers/infiniband/sw/rxe/rxe_net.c:550
+ rxe_newlink+0xde/0x1a0 drivers/infiniband/sw/rxe/rxe.c:212
+ nldev_newlink+0x5ea/0x680 drivers/infiniband/core/nldev.c:1795
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x6dd/0x9e0 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 10035:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x196/0x430 mm/slub.c:4757
+ kobject_rename+0x38f/0x410 lib/kobject.c:524
+ device_rename+0x16a/0x200 drivers/base/core.c:4525
+ ib_device_rename+0x270/0x710 drivers/infiniband/core/device.c:402
+ nldev_set_doit+0x30e/0x4c0 drivers/infiniband/core/nldev.c:1146
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x6dd/0x9e0 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff888140ea1c60
+ which belongs to the cache kmalloc-8 of size 8
+The buggy address is located 0 bytes inside of
+ freed 8-byte region [ffff888140ea1c60, ffff888140ea1c68)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x140ea1
+flags: 0x57ff00000000000(node=1|zone=2|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 057ff00000000000 ffff88801b041500 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000000800080 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 1, tgid 1 (swapper/0), ts 3099873211, free_ts 3013711200
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1551
+ prep_new_page mm/page_alloc.c:1559 [inline]
+ get_page_from_freelist+0x365c/0x37a0 mm/page_alloc.c:3477
+ __alloc_frozen_pages_noprof+0x292/0x710 mm/page_alloc.c:4739
+ alloc_pages_mpol+0x311/0x660 mm/mempolicy.c:2270
+ alloc_slab_page mm/slub.c:2423 [inline]
+ allocate_slab+0x8f/0x3a0 mm/slub.c:2587
+ new_slab mm/slub.c:2640 [inline]
+ ___slab_alloc+0xc27/0x14a0 mm/slub.c:3826
+ __slab_alloc+0x58/0xa0 mm/slub.c:3916
+ __slab_alloc_node mm/slub.c:3991 [inline]
+ slab_alloc_node mm/slub.c:4152 [inline]
+ __do_kmalloc_node mm/slub.c:4293 [inline]
+ __kmalloc_node_track_caller_noprof+0x2e9/0x4c0 mm/slub.c:4313
+ __kmemdup_nul mm/util.c:61 [inline]
+ kstrdup+0x42/0x100 mm/util.c:81
+ acpi_add_id drivers/acpi/scan.c:1343 [inline]
+ acpi_set_pnp_ids drivers/acpi/scan.c:1415 [inline]
+ acpi_init_device_object+0x12bd/0x31f0 drivers/acpi/scan.c:1828
+ acpi_add_single_object+0x106/0x1e00 drivers/acpi/scan.c:1879
+ acpi_bus_check_add+0x32b/0x980 drivers/acpi/scan.c:2180
+ acpi_ns_walk_namespace+0x294/0x4f0
+ acpi_walk_namespace+0xeb/0x130 drivers/acpi/acpica/nsxfeval.c:606
+ acpi_bus_scan+0x4c1/0x560 drivers/acpi/scan.c:2594
+ acpi_scan_init+0x267/0x730 drivers/acpi/scan.c:2746
+page last free pid 1 tgid 1 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1127 [inline]
+ free_frozen_pages+0xe0d/0x10e0 mm/page_alloc.c:2660
+ discard_slab mm/slub.c:2684 [inline]
+ __put_partials+0x160/0x1c0 mm/slub.c:3153
+ put_cpu_partial+0x17c/0x250 mm/slub.c:3228
+ __slab_free+0x290/0x380 mm/slub.c:4479
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x9a/0x140 mm/kasan/quarantine.c:179
+ kasan_quarantine_remove_cache+0x15d/0x180 mm/kasan/quarantine.c:378
+ kmem_cache_shrink+0xd/0x20 mm/slab_common.c:565
+ acpi_os_purge_cache+0x15/0x20 drivers/acpi/osl.c:1605
+ acpi_purge_cached_objects+0x8f/0xc0 drivers/acpi/acpica/utxface.c:239
+ acpi_initialize_objects+0x2e/0xa0 drivers/acpi/acpica/utxfinit.c:250
+ acpi_bus_init+0xda/0xbc0 drivers/acpi/bus.c:1367
+ acpi_init+0xb4/0x240 drivers/acpi/bus.c:1454
+ do_one_initcall+0x248/0x930 init/main.c:1257
+ do_initcall_level+0x157/0x210 init/main.c:1319
+ do_initcalls+0x71/0xd0 init/main.c:1335
+ kernel_init_freeable+0x435/0x5d0 init/main.c:1568
+
+Memory state around the buggy address:
+ ffff888140ea1b00: 05 fc fc fc 06 fc fc fc 06 fc fc fc 06 fc fc fc
+ ffff888140ea1b80: fa fc fc fc 05 fc fc fc 00 fc fc fc 00 fc fc fc
+>ffff888140ea1c00: 05 fc fc fc 05 fc fc fc fa fc fc fc fa fc fc fc
+                                                       ^
+ ffff888140ea1c80: fa fc fc fc fa fc fc fc fa fc fc fc fa fc fc fc
+ ffff888140ea1d00: fa fc fc fc fa fc fc fc fa fc fc fc 05 fc fc fc
+==================================================================
 
 
 ---
