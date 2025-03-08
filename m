@@ -1,137 +1,162 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B94170A0B;
-	Sat,  8 Mar 2025 07:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86FD8462;
+	Sat,  8 Mar 2025 07:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741420096; cv=none; b=FaI7XZ5/byogI5vnfnSLotjZmTQMEfCoNvXvHfUlZCubinxNGeqYYGwMh7/noToMqtKiceUjUYesIkeWA1rZKjV2GoEdsQTGiXXyjeUjfJswIaGumSUN0qKTdsGwbbrXgUiPW8DYZFNe+8Nt5xS3RFPT4AoCn8+LU9Y5qc0NlQw=
+	t=1741420247; cv=none; b=kON34yULHp/aUhej2D8MRivwGhV48+j6cawrEix8Ln6/SM+ZXuq5yhUKEKy0OGntSPC+AFWXpdfOize8QiWa5QNd+d6CwYkNdkANdLWx3QeNyg6N8ZBxNOu/U9QdZpHK1X3RT2PDEOa1T4JGNZwqRhul2/wX6ZDz3qo8WxRT2pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741420096; c=relaxed/simple;
-	bh=JCuVIdBkbL91ahwTCnLcsSpeQfwQZETjti3XZnxU6ok=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NrTeovWaJH8yvFuIWS3xpnncaKurKMjc4RB+8OuU6VKIePS2fmGC9iJVqk2ocyyI+GvfHwaWqo/jIz/x1IPnI4u8fmSUWiQOQxchybFxf4VV8xvdygiYBrxkIEZ/9e6y+7OJ8XbDh18UXx2lU5wNQVb9gEBc5jmzjBk5CXTcJsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=F0t7dYEl; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1741420247; c=relaxed/simple;
+	bh=1zP1a5dMyb4DAaMCOQd4d2onxFIE66DEJCP0uRZ4hy8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VCkdJw7ahF5ZciDvY+aAdgYg1mjINeLTq/bqf6JpYosOrytKVjYIOK6hidj6Dv6yEQOWMbdfttSEUmOiu2zrpOrufTPwx7QmSrzLujSDNKpB05hwEPYB2AuIaKwE821TuX9lQ5KrbKnQah4fdYtTwFDAwkMSmy3wI6OluKVQ3CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NtCDDGYu; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="F0t7dYEl"
-X-UUID: abcdc938fbf111ef8eb9c36241bbb6fb-20250308
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Yrs6Kl3s6CsDWXhNqJl2Oe/kmJUZdpz3oXbEeCXJujo=;
-	b=F0t7dYElJyrQtg9qfGf2jBHoZz/2YpR2RzI4uJr2mCxQhI6ZAVlZfdvj5bhfisaPCcNjqTaZmoGO4I8R39ye2CwhlB5/7lXyk+msJ5JuO8MdGtQY7zUVuuOMdKSb1pCSkxq7+JmqYrO3WHlwWtxKBh9fo47r1qHmZPp8gP4C7ys=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:fdb86802-6d97-4432-a2fb-5c50540e37de,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:72301c8c-f5b8-47d5-8cf3-b68fe7530c9a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: abcdc938fbf111ef8eb9c36241bbb6fb-20250308
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2042403554; Sat, 08 Mar 2025 15:48:05 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Sat, 8 Mar 2025 15:48:04 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Sat, 8 Mar 2025 15:48:03 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
-	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>
-CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v8 1/3] media: mediatek: vcodec: remove vsi operation in common interface
-Date: Sat, 8 Mar 2025 15:47:55 +0800
-Message-ID: <20250308074802.18929-2-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250308074802.18929-1-yunfei.dong@mediatek.com>
-References: <20250308074802.18929-1-yunfei.dong@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtCDDGYu"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac0b6e8d96cso365042466b.0;
+        Fri, 07 Mar 2025 23:50:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741420244; x=1742025044; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Gm63QmkgaeWQbiVP834QkzwimUfZ5vt/9bD8i+JVic=;
+        b=NtCDDGYuMlwRX8OrkV/mL+TNmciTAjcx1oRaKJd1C4UnUkvBLbTO8NTuxH10Nf+VMu
+         0WrWv2G+o7tfhsIvvbnBXIhvkve6iM0ABX8Gmidq8U/bIh7sSa2HuFAqQvKy8aFulOe5
+         aNvv+IHM+4EwnNX+WsEydmSQziOe/NhxhxtOzBpSOeGe9hT6dV9SlQ1/J3oH+EcWO19E
+         7oWF60iMRoF1vj7dLthk5ITsNxo5+/l18KYtoXvZJ8x5JB+NqSaS2OQbq1aSEYA468+K
+         c9ElFi3zrJmVD/Bc6lPDP9oZcFZN25PV+54EJ0dCB5HPoORYbfvotUTSTkTu4LPVrzN5
+         UWtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741420244; x=1742025044;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+Gm63QmkgaeWQbiVP834QkzwimUfZ5vt/9bD8i+JVic=;
+        b=plz6PS+RKqoXcJ4jLDu9BJNmrJXiX3J2S+eEDfFG/EqI8aS/50ednya7Ho5VSMCuNJ
+         sXCiFFQsb7Jd/LozsVagGFuBM697HEgyJ4BE7oCnTIzGK/Q7RUHnFIm1CDDL7bqvJM9t
+         0sKi3x9ltBY9Q7OjKp0OdYuwE1ieVeGPIHZtFYpFFR9NbCIQSxHiQQl4f2gkWMgyJNEv
+         guQWmwRAh250JbE8+rT2k1Qs8NgGMHjDkjqKGtkfD1zCVzwJONxM9H6RNNuMwATdz48v
+         HTtbQDCii1EowFr8X+xOtxZtzi/FNbCHgao2y2iMvgwbpZ0glIJ/rzTQhbbCEEDNrdgD
+         o9wA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0ULEFH+JbYG3fthBchqPm0OVhrJgrRkHTpfBdVQK2iIR02B35skLmD2JbvFuSZftNf1+KNeHp6bT/MvpJ@vger.kernel.org, AJvYcCUU58194N3OyHy6GcDV+Sti9KowfM7ubqiWREyItR82HA0vhNvD+CduIEV0OWG9hLaXkrhAUFrPeXBi@vger.kernel.org, AJvYcCWntTjNqmTg2yrTik1nvUw04H1QnWgOEO6WVlFLD++jYpAN9Qu2AHp9xqHCQocxyhKwuSGmQbRKBKS1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLpSCXoHAK/QiAlrlA2uSvFSfXZMbJB47tvLVIBFAQvWXBMKwF
+	ps9xs5LBiQHZJaTZQs56lYmxOvh91vUlCFqjvLTWYaxPaFkCZu3e
+X-Gm-Gg: ASbGncsjG315Kp0yiXF7eQILulYJlSe4QXjNqYQrxycCwb3WXG9Ejm2N05b++esxuEc
+	Vn64Dvsa9BTovpFO78I6MuszHtnYqlE4/2iaTXnB9OwD4OVoCddO80t/Tw1l5utc4hMU845PalG
+	FWLd5WPuAgURMto1o0BZcIRJAoW3+RtfC0wyB/8Yi96tmYoZ6MzPWQqFL0SoE+n21cIuZhhUMeo
+	YWQI25FEEBUkEPRz/8H0WTyDwXaACSrCQCZ2L3ZASc7wFbX7jPP9OOSqXfzqUEFrQ7eeWVpLQEp
+	A8/ymMCuIyiUJIoDSTMteTTKpxXZYMienwgvor1t83vlkX3IjdDsT2s/7d8L37DFMyZTPpxWQYx
+	egTkF1crP+ajDrdx80Q==
+X-Google-Smtp-Source: AGHT+IFwuEnguVcsU4XeJmM0ayQyaOroGWPWft/RM6QnhSkJYKlbzfHJDVDEv/kkNTyLVPE1H5JmRw==
+X-Received: by 2002:a17:906:c516:b0:ac2:806e:bb5b with SMTP id a640c23a62f3a-ac2806ebd72mr5592066b.21.1741420243698;
+        Fri, 07 Mar 2025 23:50:43 -0800 (PST)
+Received: from hex.my.domain (83.11.221.132.ipv4.supernova.orange.pl. [83.11.221.132])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac25d376342sm213104766b.106.2025.03.07.23.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 23:50:42 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH v3 0/9] clk: bcm: kona: Add bus clock support, bus clocks
+ for BCM21664/BCM281xx
+Date: Sat, 08 Mar 2025 08:50:38 +0100
+Message-Id: <20250308-kona-bus-clock-v3-0-d6fb5bfc3b67@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM72y2cC/2XMSw7CIBSF4a00jMXQS4XiyH0YB5TetqQPDCjRN
+ N27tInR6PCc5P9mEtBbDOSYzcRjtMG6KQ2+y4jp9NQitXXaBBgcGORAezdpWt0DNYMzPS1AScR
+ GoyoYSdHVY2MfG3i+pN3ZcHP+ufkxX983JX6pmFNGsZRS1VJq0cCpHbUd9saNZKUifHLO+F8OK
+ ddccCO0qKQqv/NlWV6COFB/6wAAAA==
+X-Change-ID: 20250212-kona-bus-clock-4297eefae940
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Alex Elder <elder@kernel.org>, 
+ Stanislav Jakubek <stano.jakubek@gmail.com>, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>, Alex Elder <elder@riscstar.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741420241; l=3052;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=1zP1a5dMyb4DAaMCOQd4d2onxFIE66DEJCP0uRZ4hy8=;
+ b=MMr5YVGCded9/KOyn3VFmrWwZFK9ceIaAv68U0OQxxeSWhaE3wqIQdZKwX4cMWYjsikK1sXol
+ zbEh9T5xExvA9ISLwQM3PJPnxd4f4xxd51K/DCJSV1MGRhMqE4sDN4F
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-Extend the VSI (video shared information) struct to allow sending slice
-parameters to SCP, as the parameters have changed on MT8188 architecture.
-Remove VSI related information from the common interface to ensure, that
-the interface is usable by architectures with and without the extended
-parameters. The new VSI extensions will be introduced in later patches.
+This patchset does the following:
 
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+- Introduce support for bus clocks. These are fairly similar to
+  peripheral clocks, but only implement policy, gate and hyst.
+
+- Add matching bus clocks for BCM21664 and BCM281xx peripheral clocks
+  and update device tree bindings to match.
+
+The previous (RFC) version of this patchset also introduced a
+prerequisite clock mechanism to enable bus clocks before their
+corresponding peripheral clocks. It seems that this is unnecessary - 
+the way these clocks are initialized leaves them enabled by default.
+Thus, the prerequisite mechanism has been dropped from this version.
+
+This is fine for now, and more accurate to hardware (bus clocks are
+a prerequisite for the bus, not the peripheral clock). I had an idea
+to connect bus clocks to buses using "simple-pm-bus" in DT, but
+this is a task for another patchset.
+
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 ---
- .../vcodec/decoder/vdec/vdec_h264_req_multi_if.c    | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+Changes in v3:
+- Fix DT schema example in BCM281xx bus clock bindings
+- Move CLOCK_COUNT defines from dt-bindings header to the driver
+- Fix BCM21664 UARTBx_APB IDs being out of order compared to clock
+  driver
+- Link to v2: https://lore.kernel.org/r/20250303-kona-bus-clock-v2-0-a363c6a6b798@gmail.com
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
-index 1ed0ccec5665..ab192ce0b851 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
-@@ -171,9 +171,9 @@ struct vdec_h264_slice_inst {
- };
- 
- static int vdec_h264_slice_fill_decode_parameters(struct vdec_h264_slice_inst *inst,
--						  struct vdec_h264_slice_share_info *share_info)
-+						  struct vdec_h264_slice_share_info *share_info,
-+						  struct vdec_h264_slice_lat_dec_param *slice_param)
- {
--	struct vdec_h264_slice_lat_dec_param *slice_param = &inst->vsi->h264_slice_params;
- 	const struct v4l2_ctrl_h264_decode_params *dec_params;
- 	const struct v4l2_ctrl_h264_scaling_matrix *src_matrix;
- 	const struct v4l2_ctrl_h264_sps *sps;
-@@ -266,9 +266,6 @@ static int get_vdec_sig_decode_parameters(struct vdec_h264_slice_inst *inst)
- 	mtk_vdec_h264_get_ref_list(b0_reflist, v4l2_b0_reflist, reflist_builder.num_valid);
- 	mtk_vdec_h264_get_ref_list(b1_reflist, v4l2_b1_reflist, reflist_builder.num_valid);
- 
--	memcpy(&inst->vsi_ctx.h264_slice_params, slice_param,
--	       sizeof(inst->vsi_ctx.h264_slice_params));
--
- 	return 0;
- }
- 
-@@ -608,7 +605,8 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
- 	lat_buf->src_buf_req = src_buf_info->m2m_buf.vb.vb2_buf.req_obj.req;
- 	v4l2_m2m_buf_copy_metadata(&src_buf_info->m2m_buf.vb, &lat_buf->ts_info, true);
- 
--	err = vdec_h264_slice_fill_decode_parameters(inst, share_info);
-+	err = vdec_h264_slice_fill_decode_parameters(inst, share_info,
-+						     &inst->vsi->h264_slice_params);
- 	if (err)
- 		goto err_free_fb_out;
- 
-@@ -749,6 +747,9 @@ static int vdec_h264_slice_single_decode(void *h_vdec, struct mtk_vcodec_mem *bs
- 	if (err)
- 		goto err_free_fb_out;
- 
-+	memcpy(&inst->vsi_ctx.h264_slice_params, &inst->h264_slice_param,
-+	       sizeof(inst->vsi_ctx.h264_slice_params));
-+
- 	buf = (unsigned char *)bs->va;
- 	nal_start_idx = mtk_vdec_h264_find_start_code(buf, bs->size);
- 	if (nal_start_idx < 0) {
+Changes in v2:
+- Drop prerequisite clock patch
+- Move clock/bcm21664.h dt-bindings header change to dt-bindings patch
+- Add BCM281xx bus clocks
+- Link to v1: https://lore.kernel.org/r/20250216-kona-bus-clock-v1-0-e8779d77a6f2@gmail.com
+
+---
+Artur Weber (9):
+      clk: bcm: kona: Move CLOCK_COUNT defines into the driver
+      dt-bindings: clock: brcm,kona-ccu: Drop CLOCK_COUNT defines from DT headers
+      dt-bindings: clock: brcm,kona-ccu: Add BCM21664 bus clocks
+      dt-bindings: clock: brcm,kona-ccu: Add BCM281xx bus clocks
+      clk: bcm: kona: Add support for bus clocks
+      clk: bcm21664: Add matching bus clocks for peripheral clocks
+      clk: bcm281xx: Add corresponding bus clocks for peripheral clocks
+      ARM: dts: bcm2166x-common: Add matching bus clocks for peripheral clocks
+      ARM: dts: bcm11351: Add corresponding bus clocks for peripheral clocks
+
+ .../devicetree/bindings/clock/brcm,kona-ccu.yaml   |  49 +++++++-
+ arch/arm/boot/dts/broadcom/bcm11351.dtsi           |  33 ++++--
+ arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi    |  28 +++--
+ drivers/clk/bcm/clk-bcm21664.c                     |  91 ++++++++++++++
+ drivers/clk/bcm/clk-bcm281xx.c                     | 131 +++++++++++++++++++++
+ drivers/clk/bcm/clk-kona-setup.c                   | 116 ++++++++++++++++++
+ drivers/clk/bcm/clk-kona.c                         |  62 +++++++++-
+ drivers/clk/bcm/clk-kona.h                         |  10 ++
+ include/dt-bindings/clock/bcm21664.h               |  17 ++-
+ include/dt-bindings/clock/bcm281xx.h               |  24 +++-
+ 10 files changed, 528 insertions(+), 33 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250212-kona-bus-clock-4297eefae940
+
+Best regards,
 -- 
-2.46.0
+Artur Weber <aweber.kernel@gmail.com>
 
