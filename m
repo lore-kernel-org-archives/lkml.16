@@ -1,33 +1,33 @@
-Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
+Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BE81F5827;
-	Sat,  8 Mar 2025 18:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65CB20C49E
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 18:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741459487; cv=none; b=kWoI4s0g9AuJvG4MEdW35ISS4hjRHYASC/qH7Rf5gHSVeCuB/eIqobSMw5Hr8zZmbNA0QbkeHRKe1GDkndjlivEFIn6b8nVzsOi/ZDqd2cWAaI1/en84hOuuw/GmfmQBLJxKDrS126eovToVg0xysW+ys6+W09TKa7qX1/aP8SQ=
+	t=1741459490; cv=none; b=i92t1r4ZQl08bIGnMNQFU3kEwKVwBTtfrWiLqAKI60uNY+RYW985cIYKBX4Zftq/J7bHZXkjmTV1U/lAkIsSciASwbHLYQ3kt1wWw6zTFUjdG97M/ExevBOJC9sqJ7enwUGS6ZHTdJWLrOoE7orq6lzpleXIHxWhOCj3wQmdDok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741459487; c=relaxed/simple;
-	bh=teYppnQilIsd+YguFxHHDZ7fudTUmR5JFh8koioF+Pc=;
+	s=arc-20240116; t=1741459490; c=relaxed/simple;
+	bh=MXaLO2V6ZjDmrW7A119TF5SuxXeQ2/ryPO4zhKxu70o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aV3nKj9BxVHwnhNu3bQkKm1qHdE/q3+bFzTDQqXeqqs17S6C5C7/25j2SDB0Y8lX6p8ft3n0cuY5Eq1V7rt64catFwp+supe7R9vt5MbML+nJzNkfakpa5LTum5XX83G3p54v40WclNc9VtJXeeQjUcGxlGNrZP1kpMpowauM6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=W2elPVWU; arc=none smtp.client-ip=45.157.188.14
+	 MIME-Version:Content-Type; b=nscURMgKhTtvMWQ8Kjd1TdwiRHZvhYtD6693ToyGIouDjM4RcvItLNBeXPXlOiHrlUacltl2iFc5paVHIf/g5YEre+xBRoFtXbpx6tyTkZG6ZOiTJIHAugluJ+0H9mej8YazDDngJ0PsH292ELb74EETiKb9Ol2xerWS77lpIhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=b0ge4cY6; arc=none smtp.client-ip=185.125.25.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="W2elPVWU"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Z9BsR3XywzRxY;
-	Sat,  8 Mar 2025 19:44:43 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="b0ge4cY6"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Z9BsN55G7zNql;
+	Sat,  8 Mar 2025 19:44:40 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1741459483;
-	bh=SBOoMihG9Qi1HSfwunqx1u8g1OCHU2vV2AsORwv30PY=;
+	s=20191114; t=1741459480;
+	bh=61Lm58nZn5dPCvFx6teXyXEqJvov75x4EeQ4yxThK7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W2elPVWU/RH563idNt1A6X7lYeaViAOxMecM00vpIssQzd8pVorhXlKMpmmzRmQzO
-	 kadlQsawyhhyQII5+6dIEIchhXvUTuzRBecsfDdABtHIzHOMJbaOPATaqTJ7TypgMX
-	 IRKkAKACY9WmoW+wvX5QyJqTKVvtVY8UpBwIJfWM=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Z9BsQ5WWxzqjc;
-	Sat,  8 Mar 2025 19:44:42 +0100 (CET)
+	b=b0ge4cY6XNXkWXmPBw59WUF26NKXcf08yreHSar6bee8tiZH/P9Zw3aiATkxZbuGf
+	 yxaVII3gCC5Kj8+Y4oqz5ESzCzAxin90HA1Trk1NO9N8m7vobmSQEfoQQqO9x5n0h9
+	 /fkUFFEYXXNdSUQhb6CkWb56zNa875KVNKEym9pU=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Z9BsM6GVnzhtB;
+	Sat,  8 Mar 2025 19:44:39 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -58,9 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v6 07/26] landlock: Prepare to use credential instead of domain for fowner
-Date: Sat,  8 Mar 2025 19:44:03 +0100
-Message-ID: <20250308184422.2159360-8-mic@digikod.net>
+Subject: [PATCH v6 05/26] landlock: Prepare to use credential instead of domain for network
+Date: Sat,  8 Mar 2025 19:44:01 +0100
+Message-ID: <20250308184422.2159360-6-mic@digikod.net>
 In-Reply-To: <20250308184422.2159360-1-mic@digikod.net>
 References: <20250308184422.2159360-1-mic@digikod.net>
 Precedence: bulk
@@ -76,160 +76,73 @@ X-Infomaniak-Routing: alpha
 This cosmetic change that is needed for audit support, specifically to
 be able to filter according to cross-execution boundaries.
 
-struct landlock_file_security's size stay the same for now but it will
-increase with struct landlock_cred_security's size.
+Optimize current_check_access_socket() to only handle the access
+request.
 
-Only save Landlock domain in hook_file_set_fowner() if the current
-domain has LANDLOCK_SCOPE_SIGNAL, which was previously done for each
-hook_file_send_sigiotask() calls.  This should improve a bit
-performances.
-
-Replace hardcoded LANDLOCK_SCOPE_SIGNAL with the signal_scope.scope
-variable.
-
-Use scoped guards for RCU read-side critical sections.
+Remove explicit domain->num_layers check which is now part of the
+landlock_get_applicable_subject() call.
 
 Cc: Günther Noack <gnoack@google.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20250308184422.2159360-8-mic@digikod.net
+Link: https://lore.kernel.org/r/20250308184422.2159360-6-mic@digikod.net
 ---
-
-Changes since v5:
-- Only call landlock_get_ruleset() when needed in
-  hook_file_set_fowner().
 
 Changes since v4:
 - New patch.
 ---
- security/landlock/fs.c   | 26 ++++++++++++++++++++------
- security/landlock/fs.h   | 12 +++++++-----
- security/landlock/task.c | 25 ++++++++++++++++---------
- 3 files changed, 43 insertions(+), 20 deletions(-)
+ security/landlock/net.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-index d5b153d29fcb..7dbfc6420e1b 100644
---- a/security/landlock/fs.c
-+++ b/security/landlock/fs.c
-@@ -1641,17 +1641,31 @@ static int hook_file_ioctl_compat(struct file *file, unsigned int cmd,
- 
- static void hook_file_set_fowner(struct file *file)
- {
--	struct landlock_ruleset *new_dom, *prev_dom;
-+	static const struct access_masks signal_scope = {
-+		.scope = LANDLOCK_SCOPE_SIGNAL,
-+	};
-+	const struct landlock_cred_security *new_subject;
-+	struct landlock_cred_security *fown_subject;
-+	struct landlock_ruleset *prev_dom;
- 
- 	/*
- 	 * Lock already held by __f_setown(), see commit 26f204380a3c ("fs: Fix
- 	 * file_set_fowner LSM hook inconsistencies").
- 	 */
- 	lockdep_assert_held(&file_f_owner(file)->lock);
--	new_dom = landlock_get_current_domain();
--	landlock_get_ruleset(new_dom);
--	prev_dom = landlock_file(file)->fown_domain;
--	landlock_file(file)->fown_domain = new_dom;
-+
-+	fown_subject = &landlock_file(file)->fown_subject;
-+	prev_dom = fown_subject->domain;
-+	new_subject = landlock_get_applicable_subject(current_cred(),
-+						      signal_scope, NULL);
-+	if (new_subject) {
-+		landlock_get_ruleset(new_subject->domain);
-+		*fown_subject = *new_subject;
-+	} else {
-+		static const struct landlock_cred_security empty = {};
-+
-+		*fown_subject = empty;
-+	}
- 
- 	/* Called in an RCU read-side critical section. */
- 	landlock_put_ruleset_deferred(prev_dom);
-@@ -1659,7 +1673,7 @@ static void hook_file_set_fowner(struct file *file)
- 
- static void hook_file_free_security(struct file *file)
- {
--	landlock_put_ruleset_deferred(landlock_file(file)->fown_domain);
-+	landlock_put_ruleset_deferred(landlock_file(file)->fown_subject.domain);
+diff --git a/security/landlock/net.c b/security/landlock/net.c
+index 104b6c01fe50..6fb3e60bc5ff 100644
+--- a/security/landlock/net.c
++++ b/security/landlock/net.c
+@@ -39,10 +39,6 @@ int landlock_append_net_rule(struct landlock_ruleset *const ruleset,
+ 	return err;
  }
  
- static struct security_hook_list landlock_hooks[] __ro_after_init = {
-diff --git a/security/landlock/fs.h b/security/landlock/fs.h
-index d445f411c26a..1449a90e92c7 100644
---- a/security/landlock/fs.h
-+++ b/security/landlock/fs.h
-@@ -14,6 +14,7 @@
- #include <linux/rcupdate.h>
+-static const struct access_masks any_net = {
+-	.net = ~0,
+-};
+-
+ static int current_check_access_socket(struct socket *const sock,
+ 				       struct sockaddr *const address,
+ 				       const int addrlen,
+@@ -54,14 +50,14 @@ static int current_check_access_socket(struct socket *const sock,
+ 	struct landlock_id id = {
+ 		.type = LANDLOCK_KEY_NET_PORT,
+ 	};
+-	const struct landlock_ruleset *const dom =
+-		landlock_get_applicable_domain(landlock_get_current_domain(),
+-					       any_net);
++	const struct access_masks masks = {
++		.net = access_request,
++	};
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), masks, NULL);
  
- #include "access.h"
-+#include "cred.h"
- #include "ruleset.h"
- #include "setup.h"
- 
-@@ -54,12 +55,13 @@ struct landlock_file_security {
- 	 */
- 	access_mask_t allowed_access;
- 	/**
--	 * @fown_domain: Domain of the task that set the PID that may receive a
--	 * signal e.g., SIGURG when writing MSG_OOB to the related socket.
--	 * This pointer is protected by the related file->f_owner->lock, as for
--	 * fown_struct's members: pid, uid, and euid.
-+	 * @fown_subject: Landlock credential of the task that set the PID that
-+	 * may receive a signal e.g., SIGURG when writing MSG_OOB to the
-+	 * related socket.  This pointer is protected by the related
-+	 * file->f_owner->lock, as for fown_struct's members: pid, uid, and
-+	 * euid.
- 	 */
--	struct landlock_ruleset *fown_domain;
-+	struct landlock_cred_security fown_subject;
- };
- 
- /**
-diff --git a/security/landlock/task.c b/security/landlock/task.c
-index dbdfac11e015..da8f82c8054a 100644
---- a/security/landlock/task.c
-+++ b/security/landlock/task.c
-@@ -288,22 +288,29 @@ static int hook_task_kill(struct task_struct *const p,
- static int hook_file_send_sigiotask(struct task_struct *tsk,
- 				    struct fown_struct *fown, int signum)
- {
--	const struct landlock_ruleset *dom;
-+	const struct landlock_cred_security *subject;
- 	bool is_scoped = false;
- 
- 	/* Lock already held by send_sigio() and send_sigurg(). */
- 	lockdep_assert_held(&fown->lock);
--	dom = landlock_get_applicable_domain(
--		landlock_file(fown->file)->fown_domain, signal_scope);
-+	subject = &landlock_file(fown->file)->fown_subject;
- 
--	/* Quick return for unowned socket. */
 -	if (!dom)
-+	/*
-+	 * Quick return for unowned socket.
-+	 *
-+	 * subject->domain has already been filtered when saved by
-+	 * hook_file_set_fowner(), so there is no need to call
-+	 * landlock_get_applicable_subject() here.
-+	 */
-+	if (!subject->domain)
++	if (!subject)
  		return 0;
+-	if (WARN_ON_ONCE(dom->num_layers < 1))
+-		return -EACCES;
  
--	rcu_read_lock();
--	is_scoped = domain_is_scoped(dom, landlock_get_task_domain(tsk),
--				     LANDLOCK_SCOPE_SIGNAL);
--	rcu_read_unlock();
-+	scoped_guard(rcu)
-+	{
-+		is_scoped = domain_is_scoped(subject->domain,
-+					     landlock_get_task_domain(tsk),
-+					     signal_scope.scope);
-+	}
- 	if (is_scoped)
- 		return -EPERM;
+ 	if (!sk_is_tcp(sock->sk))
+ 		return 0;
+@@ -145,9 +141,10 @@ static int current_check_access_socket(struct socket *const sock,
+ 	id.key.data = (__force uintptr_t)port;
+ 	BUILD_BUG_ON(sizeof(port) > sizeof(id.key.data));
  
+-	rule = landlock_find_rule(dom, id);
+-	access_request = landlock_init_layer_masks(
+-		dom, access_request, &layer_masks, LANDLOCK_KEY_NET_PORT);
++	rule = landlock_find_rule(subject->domain, id);
++	access_request = landlock_init_layer_masks(subject->domain,
++						   access_request, &layer_masks,
++						   LANDLOCK_KEY_NET_PORT);
+ 	if (landlock_unmask_layers(rule, access_request, &layer_masks,
+ 				   ARRAY_SIZE(layer_masks)))
+ 		return 0;
 -- 
 2.48.1
 
