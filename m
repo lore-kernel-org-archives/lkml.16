@@ -1,62 +1,62 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C098219308;
-	Sat,  8 Mar 2025 18:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B3620E702;
+	Sat,  8 Mar 2025 18:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741458954; cv=none; b=OEYCQ7jSWuLTl1qojBYxqpowoO/8Tby2dbe4xoLnRridqShBxmZZ1D8PbN60+7gbHsHHlKunH8ZAqrrFjhGLmXUdck6mQQVpswBrJUOV5BPZES/7KxYUIXia12obY/tlI4SQXg/2DHFeRI7Xye+UBPJoQN8My18BUdHEOlHq+Nc=
+	t=1741458962; cv=none; b=KwMNoMBUT7OPY9L5fnvdmHn2L1ZD98D+pATlZO/wt68nSnpbKeeD0Y22zur9BnTwAlIWVdLgHzT9z24S6hjYzSrN3P6dZIUSlsu2DGFNGHukDYFJ0c+1TweWbRHxtK8E8s35co7ELfngLAz9Mj2JMsxlnk6IQu9fI8zGKCd1j/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741458954; c=relaxed/simple;
-	bh=FznTDNtKWojR9Ye+Jrb2h3xMj/oOzdqTZQIRY2kpr2g=;
+	s=arc-20240116; t=1741458962; c=relaxed/simple;
+	bh=9o7dWxkAzzvkB2Imojs5J6AXrsEiMQLNW5n5ACM0GTM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ttpLbixeAdRRG7EdYR3m6sqcX3NkcdXJPN0UfKgtzXRcrgii7D3f34UsfCQTVESV5EhRbFhIGd7ze1C3OS7UjrERxTYXzzcgURKwmdqzhmKoTNlkAIdstd7wPEPxxhR6YPaPeKgkUCLbNaDg6l8dtoBr4NchPAxSBZ3pRKAlpa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J8XRsgKM; arc=none smtp.client-ip=209.85.208.43
+	 MIME-Version; b=c5JC6IkZIKhaVpruFmLxmsbzy3umHmjhtlzWHFwFFimpBIlfL9ULIu2Ik8Mi6iaoNY4cEoJruOy+jPEyAYn5ovDC88w69MkQIGY8x/P/g3c12/wEcrN00rTxFD2XQ5OFK1umuin2rqcM9RU1p7/+KzF6cv3ewg9Ee0C6ZENzinc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AsEi+0hk; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8XRsgKM"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dca468c5e4so5411461a12.1;
-        Sat, 08 Mar 2025 10:35:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsEi+0hk"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abf6f3b836aso455585366b.3;
+        Sat, 08 Mar 2025 10:36:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741458951; x=1742063751; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741458959; x=1742063759; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xre/RsxIANW+aBbofEjpmFCtWlH5fWozQWnveyUbcrg=;
-        b=J8XRsgKMOHu2TBg4z5a0qtt2Vd45kaocrsCnDkXfs14wJDtgrLQ2RVLBFeCzuJMnJE
-         0+ptHgTsMg5qJmqtU+DU97wssHQzGIjqxBwixRmzgkkhq89CO6HbidUGjh4Pk58vWdBL
-         jE+AIwvfCTV8rZT8z3v9/IG2+3TMrfiCV9HrTNWpaD1Tr/MmZdoFCrSHAzCbg9BwdyXt
-         36lNC1TTsy7Kyk9U5unuip1XZlLM5MI7So+S76F4kjhT3voKmxJafv1cx72sZhMvZ85T
-         bjo/p9c681OtTysE+YG6S97A70HNVA7Drb7Qk9QV/EdfbMCCAsaMK7jBZFU//99QOATP
-         2ObQ==
+        bh=4dW4CzmrzcxsS+VFvHNn6mQCAsXdBank+JJs+zbf7Qs=;
+        b=AsEi+0hku9sFE8k4miOVyiije1QBXYEo0XLRdMmveKXNdi3dVPOSykwQV89lcRzI8G
+         KOWLzZvEF/78DlYHi8vlnL2lFAAHxSu6qmNlA/smQZeLFeNoct4BT54TbCZc3iknc9bk
+         Ylq5yIbz837v7h3+FFjGgiLuKXnnj3sQUhVBuNiH0oOCIJ0rT/JZJwhPC6AGhsAw0kfR
+         o5Is5FFIMZCvo2jq96EuWFdSbuzNU6ykzhnOwVokpY/607zDHkbqA0UVK1sUTfxgU1Fq
+         hEGQ4qowTvbp9SZgiRo1eTt5aDWasxibdBiYPuzGoYskWqck4E+AQ20z9pIZEtjV7fmu
+         3C/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741458951; x=1742063751;
+        d=1e100.net; s=20230601; t=1741458959; x=1742063759;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xre/RsxIANW+aBbofEjpmFCtWlH5fWozQWnveyUbcrg=;
-        b=tHVpQsmEzCnREU7cpz2tB9ngPSQb/W/E7Kj10TpcyG6e4QU4kXMNvLkkaqH1HwKtva
-         ORG3zqNqeDPfgzo7azoJA8LWZOC+cpJ7GnoPMCMM3o5X90k8DmaBgDm9kKt8BaDxqowb
-         ZrhBJAOe42ZZivz/wtA5mVFcA+z/6nhoIUEH3pMadepzr2RJncFvRA/79DlJqY9ONrof
-         haQDmliC6q6yAyjkwmZu+muoBzSY7odINs3RQyN5cNJRVkWknIO86oJ5XuKJB9R4tn9j
-         dlf3V+shTE/p+I0AXqKVfowkG8b++NFZMZv0yN0Bc2WP5siIAd2dtFAJSGthD5vPhZVH
-         WaoA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/zt10ENGanLOBQplZ8GemsI95KdgHY4Byru+ESNrkPcvf2xTC5LRY0zmeIO2EEJq+H9NeEvV/DhrMZe0=@vger.kernel.org, AJvYcCUfdoDbZqx9ha12cEcVQRqak8be5DTFlZStMV8IgWAVxwX1Y0OV9cZY7ItTg6jttsTrvsBjTvDDtM+oaA==@vger.kernel.org, AJvYcCVonjNrv899RzAoUv9JjxeRVoVbJCw8SQAfGX1V+Wosawyj3KjiK+OLeaFix430s1Rj6AxIYfGvuLRH@vger.kernel.org, AJvYcCXg2pNf9+7g3OwzwmbDhCRXGQmsyQFQeL+EpjrZ87lyTwzA6MFSVTHQcZIfEASKj76IsHmpKi9U1u2xUlTe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNRaOvqRFLSLwNo7rrPTUnozCBv0iRVNHQ27x3PGnZUTFTlIYw
-	Aj4z8+Gl7G+OhLz+Sd/8X313SYf6GkBOhrVknzP87U0mFjEUC4HW
-X-Gm-Gg: ASbGncs8k7gOe6YaNdVvd7MTQ1bmustJfwuUKAWBH7nfJkw7ya8ZHR1JuhQE0pUBAza
-	nEQVilCZ/slJZEWF4ZzBmhyzUN2Rdt3E3/Ycyy1f4Jcd91ntSt23ituZx8YmmaC1FmBkGlGDBQ3
-	r23rAb8Z7ChNKCtQv+wn4sC7txgaFgsAKSqRmQXyZtup5FHeCfqx1WvXoRPWD9qriVOFshkMleG
-	kQAqNSolNUPOmaNp4uCUlTA0NBcB4s/5Q92LbEvcDhlxd+pL2LNtw7U3WQW6OtyXf00ct6tWzfb
-	jCNgQsuYvgDkKhTXTEMdHaX1V8snyD4TCmvlT1i5UorK6txXhEfUHqWvHQ==
-X-Google-Smtp-Source: AGHT+IE7HcMcv8UGE2u8zJcS8GFDxgYSucRdRKjubTzY1De4Hv/qmaFr8IpaN1Nvc57DsiT+CQcqYA==
-X-Received: by 2002:a17:907:94d4:b0:ac1:df33:25b9 with SMTP id a640c23a62f3a-ac252ba291fmr945250566b.40.1741458950505;
-        Sat, 08 Mar 2025 10:35:50 -0800 (PST)
+        bh=4dW4CzmrzcxsS+VFvHNn6mQCAsXdBank+JJs+zbf7Qs=;
+        b=ftt4G67WxMGmeiLCIXd1FseJdVO23E6xUfDPAafYvR0YhLvJLDovozdUfxUsMk/KxN
+         YkB2/fwB5JME/V73l1u+Eft9swcrToQS1vw8E4iLOwyv/mAtmlmB3gna8PudVtuRh0RX
+         UlkgsYA2sb1uInGb3V01PoTaTTzdPhWYFK6emUPSNQE9ta4w2OfVkKxS/Dcb5MeKcSlQ
+         N+/R4sijqAvE/O4WXoe2y43G/zXOCGnKnrb7vSipN4qohYx3OIe6fMXHIURqNR+M1yOV
+         qcwCvG7PpQf24HDedXePoYznmh6AxmGQv913RvKcGlf/3mJJpl9ayLTVRsiP8UpwwumP
+         Ir0g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4rR5a4mncfvXdP5ebkjRoiQQ6UVWJARNFZHf2BriGvDsDceVEczCYaY6dFgKACOCaINjdjJj7Euwzxg==@vger.kernel.org, AJvYcCUs3VAlRp6k9fQagAvoDemor+HqPUJFp2YjDy8NeI8r8UKak/ZS3+G9EhfItkWR+1d4zxmG1lduq0RktUGW@vger.kernel.org, AJvYcCW9YVmwHL8vOOD5zO61pnAjycXJUcstaZI7ytESBe6FFmotYiNilb66sS1DEWmYdBuIEhirRNp/VCjYAxA=@vger.kernel.org, AJvYcCWnxZaVdiLgj0GcpjaG6cYIZCIqZPf9joAUJVW5j87kS7+0lNsoWdd4YKgN3bv0GDSTxRdzLeWIQGhD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnUEsubTSJzev2wT/UgmBuhcX42EE9EMCZdncyawK2xW5A0kLY
+	f11iM482nFaKIhg4ijLbaMMg6dfgPYOJlCHaKcxJcsFKIZRg47HX
+X-Gm-Gg: ASbGnctNhFuQj/K6/pTnQ7uYnSNqai1QrYmM+ja9QKzxMdtdy12aYy8Qhk2HKoVX2Op
+	ieS77nhD+4vIup9bFIw4gxDnIpUwNN1uWgOZq77NRiqKRosFTc5YGGQ7ic605TjJDXBs8zmeANz
+	GjTyPZnmdAMtKseKQvhaDZ2huy+TcRoLxfY+s3nLhoS20UEhCrK0BTY2JtbWHskr3o1HXlGf2Ys
+	fFlVsGCgahIi5PPYEJifa1MFvxqXExrTbgy1nKBoLhJ1xy+9lreXDe+Cv1O4ZW76oA52mJkSwJ0
+	LOT8+XUvIEo0ZsW895m5CLET500y9wDnsVUmv9E5Sc9kzk2mqnRwgkG9Zg==
+X-Google-Smtp-Source: AGHT+IFeTY6f+Z5x+qQcdIB8S71nVbnmrDN479LQd6qexMksrmnIptmPnmurHuelrlJDcIOha3YkMA==
+X-Received: by 2002:a17:907:2cc4:b0:abf:5fe7:40db with SMTP id a640c23a62f3a-ac252b5a1fdmr879505766b.31.1741458958420;
+        Sat, 08 Mar 2025 10:35:58 -0800 (PST)
 Received: from demon-pc.localdomain ([188.27.130.21])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac24a84397fsm379693666b.96.2025.03.08.10.35.47
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac24a84397fsm379693666b.96.2025.03.08.10.35.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 10:35:50 -0800 (PST)
+        Sat, 08 Mar 2025 10:35:58 -0800 (PST)
 From: Cosmin Tanislav <demonsingur@gmail.com>
 To: 
 Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
@@ -105,9 +105,9 @@ Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	linux-staging@lists.linux.dev,
 	linux-gpio@vger.kernel.org,
 	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [RFC PATCH 19/24] dt-bindings: media: i2c: max96712: add support for POC supplies
-Date: Sat,  8 Mar 2025 20:33:48 +0200
-Message-ID: <20250308183410.3013996-20-demonsingur@gmail.com>
+Subject: [RFC PATCH 21/24] arm64: defconfig: disable deprecated MAX96712 driver
+Date: Sat,  8 Mar 2025 20:33:50 +0200
+Message-ID: <20250308183410.3013996-22-demonsingur@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250308183410.3013996-1-demonsingur@gmail.com>
 References: <20250308183410.3013996-1-demonsingur@gmail.com>
@@ -119,31 +119,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The GMSL links can carry power to the serializer when using coaxial
-cables.
-
-Document this capability.
+The staging MAX96712 driver will be removed as its functionality has
+been moved to the MAX96724 driver which makes use of the Maxim
+GMSL2/3 deserializer framework.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 ---
- .../devicetree/bindings/media/i2c/maxim,max96712.yaml         | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/configs/defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index 4c4542d041cd..1680d99b1f36 100644
---- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -87,6 +87,10 @@ properties:
-       - required:
-           - port@7
- 
-+patternProperties:
-+  port[0-3]-poc-supply:
-+    description: Regulator providing Power over Coax for GMSL ports
-+
- required:
-   - compatible
-   - reg
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da4415599..6e9bd9072d11 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1272,7 +1272,6 @@ CONFIG_XEN_GNTDEV=y
+ CONFIG_XEN_GRANT_DEV_ALLOC=y
+ CONFIG_STAGING=y
+ CONFIG_STAGING_MEDIA=y
+-CONFIG_VIDEO_MAX96712=m
+ CONFIG_VIDEO_MESON_VDEC=m
+ CONFIG_SND_BCM2835=m
+ CONFIG_CHROME_PLATFORMS=y
 -- 
 2.48.1
 
