@@ -1,64 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C540784E1C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53D584D34;
 	Sat,  8 Mar 2025 00:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741392498; cv=none; b=jFnDXZ5E7Q6QVOXdbRdmiG4HC5BsIOAgC0lXOJbpwUNVDHerxCId+q2FE6/owHEIbnkbpM8ng8ANyZvGgGJ1yAMu52Z6qTRcJVUHc3sI6oD1KxJw1uMoGhqaptI5bxj/f9x8gDAct6p/2Ldxq+US/xNSJnS6f8ID1mgqLhMyyIA=
+	t=1741392498; cv=none; b=QeQoEd+ndbSK+OAjceSlkFzenNJoZMofzE2UD0JuCwHvb7u1m/RvQjwwc+We1wKWOHbOUJ28Z1/Jgfhedr7i7LVIKDRWDSOEAJoQxuCb7rXCILXauHWUP1IRFuvgjwbh9fXCR6KNvWwkMqk3ag7RZDgySSz38SNnEvi/DHAgH3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741392498; c=relaxed/simple;
-	bh=HdmSHcx2wzpHaeQvo8RfP82XOwo3n+e2XZjt5FpDBi8=;
+	bh=5D35/4ohmfpcis5XOvEhRdcwDHLDWNRtFM9y/samnV0=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JHvLtdlKRyvwZLatt7vQ+1FwQnpWNYohkUVT3ouQXpjth2fc/peDAsPSaYDifk+dSi3tGyBa8QX9eBrcpFhQMBJs/gk8iqBeP8Rz6nQbXsz6RP3OZduQsz5iBdwwDrXu64ve0zcGfb3FQU3IHX+IDVEcFlX6GquTKgDayKCGBRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ql1/axWf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7wSkLcpz; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=s0DFqrMyOo+B+r+D8rUp2RFia8HQd9o6xDpKkkx51zaBGTmIIhPj+njapcGru8m9E5efdCEJ2ftMKW7obFi8Jiq19iC98Qbx1n3yKCvES8XHycgJDYfivPJovlTycGTvjGG91KVxnNuk2ubwYH6FPTGU0tGfgJb/pf9uyWXGnDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Mq1KKxvb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=911nkO5p; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ql1/axWf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7wSkLcpz"
-Date: Sat, 08 Mar 2025 00:08:13 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mq1KKxvb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="911nkO5p"
+Date: Sat, 08 Mar 2025 00:08:14 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741392494;
+	s=2020; t=1741392495;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bF3yqIcpkk+pl8kAXpCbTpieac0WewbNoMKXtQLXspg=;
-	b=Ql1/axWfZfS49N66M+rve9jj+n9SQ8ElX4lKnyQWXwQRAkJoQyQrNl4Aovr9KI1vDMy+Jh
-	6g9ljP2aHnQwJ0shGvrzwNCBaJTpIuWQz16Gko1XpdgYCDxiOA6UFzwNtmYo2S2+eneNpa
-	28bx9D5kzkupnSLXrKv/uSveYPaJn/M1FKPfmt/gdPzFywdsq0PszLDhm8errZlzQRnJxf
-	SYAvTCEzzDFiYjAQcAjy+H/jkHMHBKZRzCHBFKze3v/yP9r4ITKapTXzQD4l3pUmQQ0pOf
-	hiWucAinr012WIPcj8aS+6FXcC3MQen9rIkYr+gNabGvKTwHgtTKXin6HRq6qw==
+	bh=4C35lSxeLOZfgjchJTfD0Qtk0qHxMzTuXFzGkO9UQ9c=;
+	b=Mq1KKxvb8V5/ywQak72ZKzRq/lc+yE89403C4tp/5C2l2YbrG/uCDoyHolXcpRUCEGmAAJ
+	i0s6H32J12yoy39IdvIBWEbEGgVlcqyblUvE/wjH8BUrsynWEVjVZB8/yV1tR9s7ty1/aL
+	n6PhcvhuUoulG9CYVAvzun9I/hwXM6uu98VljOQaaSSqnR2rROiaC/A64eeP86NElK3I/A
+	lTnxCv7Pw1SXJ9cO/V5LrjG06TD3irxZOwUhPZjZSTEJA9jBSGE+w2pQGgIiCuG0RxVe0N
+	07RKioC5Tvrj+ocELhAhbuJ5e9gCMbiLMWYxrsr9zqmZuigISiReUOn81EzjrA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741392494;
+	s=2020e; t=1741392495;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bF3yqIcpkk+pl8kAXpCbTpieac0WewbNoMKXtQLXspg=;
-	b=7wSkLcpzuh+d7nGlybvYbk6df2ztqFk2ai+wujjyiA/hXa/985Z3Fqw0RAZnn7T7j2VFqA
-	WtcOqaBauDuccyCg==
-From: "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
+	bh=4C35lSxeLOZfgjchJTfD0Qtk0qHxMzTuXFzGkO9UQ9c=;
+	b=911nkO5p241RyvkjjPmN8ptsGrxKA+o3kAR0I3rIn964OZ+c4XLTpoBtd8ZmaKL2saJH2n
+	guG44w9nOIENFMDg==
+From: "tip-bot2 for Mitchell Levy" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking/rtmutex: Use the 'struct' keyword in
- kernel-doc comment
-Cc: Randy Dunlap <rdunlap@infradead.org>, Boqun Feng <boqun.feng@gmail.com>,
- Ingo Molnar <mingo@kernel.org>, Waiman Long <longman@redhat.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250307232717.1759087-2-boqun.feng@gmail.com>
-References: <20250307232717.1759087-2-boqun.feng@gmail.com>
+Subject: [tip: locking/core] rust: lockdep: Remove support for dynamically
+ allocated LockClassKeys
+Cc: Alice Ryhl <aliceryhl@google.com>, Mitchell Levy <levymitchell0@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Benno Lossin <benno.lossin@proton.me>, stable@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250307232717.1759087-11-boqun.feng@gmail.com>
+References: <20250307232717.1759087-11-boqun.feng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174139249399.14745.14674916369094609023.tip-bot2@tip-bot2>
+Message-ID: <174139249455.14745.13816550054744263008.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,40 +69,65 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     b3c5ec8b79bf6bc49cc4850d0949d712830283d7
-Gitweb:        https://git.kernel.org/tip/b3c5ec8b79bf6bc49cc4850d0949d712830283d7
-Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Fri, 07 Mar 2025 15:26:51 -08:00
+Commit-ID:     966944f3711665db13e214fef6d02982c49bb972
+Gitweb:        https://git.kernel.org/tip/966944f3711665db13e214fef6d02982c49bb972
+Author:        Mitchell Levy <levymitchell0@gmail.com>
+AuthorDate:    Fri, 07 Mar 2025 15:27:00 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 08 Mar 2025 00:52:01 +01:00
+CommitterDate: Sat, 08 Mar 2025 00:52:00 +01:00
 
-locking/rtmutex: Use the 'struct' keyword in kernel-doc comment
+rust: lockdep: Remove support for dynamically allocated LockClassKeys
 
-Add the "struct" keyword to prevent a kernel-doc warning:
+Currently, dynamically allocated LockCLassKeys can be used from the Rust
+side without having them registered. This is a soundness issue, so
+remove them.
 
-  rtmutex_common.h:67: warning: cannot understand function prototype: 'struct rt_wake_q_head '
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: 6ea5aa08857a ("rust: sync: introduce `LockClassKey`")
+Suggested-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Mitchell Levy <levymitchell0@gmail.com>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Link: https://lore.kernel.org/r/20250307232717.1759087-2-boqun.feng@gmail.com
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20250307232717.1759087-11-boqun.feng@gmail.com
 ---
- kernel/locking/rtmutex_common.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ rust/kernel/sync.rs | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/locking/rtmutex_common.h b/kernel/locking/rtmutex_common.h
-index c38a2d2..78dd3d8 100644
---- a/kernel/locking/rtmutex_common.h
-+++ b/kernel/locking/rtmutex_common.h
-@@ -59,8 +59,8 @@ struct rt_mutex_waiter {
- };
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 3498fb3..16eab91 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -30,28 +30,20 @@ pub struct LockClassKey(Opaque<bindings::lock_class_key>);
+ unsafe impl Sync for LockClassKey {}
  
- /**
-- * rt_wake_q_head - Wrapper around regular wake_q_head to support
-- *		    "sleeping" spinlocks on RT
-+ * struct rt_wake_q_head - Wrapper around regular wake_q_head to support
-+ *			   "sleeping" spinlocks on RT
-  * @head:		The regular wake_q_head for sleeping lock variants
-  * @rtlock_task:	Task pointer for RT lock (spin/rwlock) wakeups
-  */
+ impl LockClassKey {
+-    /// Creates a new lock class key.
+-    pub const fn new() -> Self {
+-        Self(Opaque::uninit())
+-    }
+-
+     pub(crate) fn as_ptr(&self) -> *mut bindings::lock_class_key {
+         self.0.get()
+     }
+ }
+ 
+-impl Default for LockClassKey {
+-    fn default() -> Self {
+-        Self::new()
+-    }
+-}
+-
+ /// Defines a new static lock class and returns a pointer to it.
+ #[doc(hidden)]
+ #[macro_export]
+ macro_rules! static_lock_class {
+     () => {{
+-        static CLASS: $crate::sync::LockClassKey = $crate::sync::LockClassKey::new();
++        static CLASS: $crate::sync::LockClassKey =
++            // SAFETY: lockdep expects uninitialized memory when it's handed a statically allocated
++            // lock_class_key
++            unsafe { ::core::mem::MaybeUninit::uninit().assume_init() };
+         &CLASS
+     }};
+ }
