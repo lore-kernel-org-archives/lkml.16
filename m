@@ -1,59 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C43AD4B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CA31862A
 	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 03:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741404371; cv=none; b=r1kF/iBgdCoNPaAG2s0Mucaukt6b5o7bRy9D6VRhrItlUC/8OTQQjjy5+fEgyJywviP1kw49pcltLljl1QMXmjLSIxm0DgR7x4IT3uUgU+WSmZUgh07drepEEPHxiG+65rnb0Hq+Gave37X58m9tjznWKMMP66leXLbNaoPKtBU=
+	t=1741404371; cv=none; b=Kcue6JpRvk5+iLKYw2E0/b1F+nJHbxtEkwGjg/DkXzA19LT3MQZbD2sC1ECu8s8ZgZDdR+8yQdSnxG0FGclwNOlDR40YoixQ5mbBaZBe5Y1NziUVcNmNDa76Qo8BlxDCcF7sSeUchfliD6bq6wkegkCzdL5MBbSAhBLdzk1UavY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741404371; c=relaxed/simple;
-	bh=1k35KY42/7W5+ToXF1WDdti6RIeY44pn/qiYJ3GFNf8=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=jqXvQOxgpefkQbgghSHUNSkMMsWF/Q2TqbEZBT8a/k0o+jtKnhlJgDjMpg9aO1tSCHs2qNvJqY1pF4qwcftZXRcDdO0GIcK+jHT4WxxTLxFYA+UnwFMQkGyqM0l+i7n2jX8CUA5eu9Mv+mCVaUpGy/PPgHSA69rQ3i4QXxjTnKA=
+	bh=e9U30m3LgCgpQUYidMqGakXlegNdQafEexM2bRXOWMA=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=pda20ASDbWFHWGkAG2a2uItwJ6GO+w9hMiA7lBGVAYeYlEhv6oZsu60FveSX+yuZalUkeD5vDSId2CMEZvTh/dcaV4vnYh+WiYrJg/gn5ZBbhA2T10eh32io8KjtpXDO0Eq+Xh5JaTJRvTZlGTZhmba8UxEMzrLf6zLSPfRhOqA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14A90C4CED1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F6FAC4CEE8;
 	Sat,  8 Mar 2025 03:26:11 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tqkpI-00000000UkL-46TG;
-	Fri, 07 Mar 2025 22:26:12 -0500
-Message-ID: <20250308032432.109115966@goodmis.org>
+	id 1tqkpJ-00000000UlL-1Mt9;
+	Fri, 07 Mar 2025 22:26:13 -0500
+Message-ID: <20250308032613.178673641@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 07 Mar 2025 22:24:32 -0500
+Date: Fri, 07 Mar 2025 22:24:34 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 0/3] tracing: Latency updates for 6.15
+ Andrew Morton <akpm@linux-foundation.org>,
+ Frederic Weisbecker <fweisbec@gmail.com>,
+ Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Gabriele Monaco <gmonaco@redhat.com>
+Subject: [for-next][PATCH 2/3] tracing: Fix DECLARE_TRACE_CONDITION
+References: <20250308032432.109115966@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-latency/for-next
+From: Gabriele Monaco <gmonaco@redhat.com>
 
-Head SHA1: 41a4d2d3e3b6fe86bd54cc4c3b731378290a0d00
+Commit 287050d39026 ("tracing: Add TRACE_EVENT_CONDITIONAL()") adds
+macros to define conditional trace events (TRACE_EVENT_CONDITIONAL) and
+tracepoints (DECLARE_TRACE_CONDITION), but sets up functionality for
+direct use only for the former.
+
+Add preprocessor bits in define_trace.h to allow usage of
+DECLARE_TRACE_CONDITION just like DECLARE_TRACE.
+
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Link: https://lore.kernel.org/20250218123121.253551-2-gmonaco@redhat.com
+Fixes: 287050d39026 ("tracing: Add TRACE_EVENT_CONDITIONAL()")
+Link: https://lore.kernel.org/linux-trace-kernel/20250128111926.303093-1-gmonaco@redhat.com
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/define_trace.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
+index e1c1079f8c8d..ed52d0506c69 100644
+--- a/include/trace/define_trace.h
++++ b/include/trace/define_trace.h
+@@ -76,6 +76,10 @@
+ #define DECLARE_TRACE(name, proto, args)	\
+ 	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
+ 
++#undef DECLARE_TRACE_CONDITION
++#define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
++	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
++
+ /* If requested, create helpers for calling these tracepoints from Rust. */
+ #ifdef CREATE_RUST_TRACE_POINTS
+ #undef DEFINE_RUST_DO_TRACE
+@@ -108,6 +112,8 @@
+ /* Make all open coded DECLARE_TRACE nops */
+ #undef DECLARE_TRACE
+ #define DECLARE_TRACE(name, proto, args)
++#undef DECLARE_TRACE_CONDITION
++#define DECLARE_TRACE_CONDITION(name, proto, args, cond)
+ 
+ #ifdef TRACEPOINTS_ENABLED
+ #include <trace/trace_events.h>
+@@ -129,6 +135,7 @@
+ #undef DEFINE_EVENT_CONDITION
+ #undef TRACE_HEADER_MULTI_READ
+ #undef DECLARE_TRACE
++#undef DECLARE_TRACE_CONDITION
+ 
+ /* Only undef what we defined in this file */
+ #ifdef UNDEF_TRACE_INCLUDE_FILE
+-- 
+2.47.2
 
 
-Gabriele Monaco (2):
-      tracing: Fix DECLARE_TRACE_CONDITION
-      rv: Add license identifiers to monitor files
-
-Tomas Glozar (1):
-      trace/osnoise: Add trace events for samples
-
-----
- include/trace/define_trace.h                    |  7 ++
- include/trace/events/osnoise.h                  | 96 +++++++++++++++++++++++++
- kernel/trace/rv/monitors/wip/Kconfig            |  2 +
- kernel/trace/rv/monitors/wip/wip.h              |  1 +
- kernel/trace/rv/monitors/wwnr/Kconfig           |  2 +
- kernel/trace/rv/monitors/wwnr/wwnr.h            |  1 +
- kernel/trace/trace_osnoise.c                    | 55 +++++---------
- tools/verification/dot2/dot2k.py                |  1 +
- tools/verification/dot2/dot2k_templates/Kconfig |  2 +
- 9 files changed, 128 insertions(+), 39 deletions(-)
