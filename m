@@ -1,111 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DC72940D;
-	Sat,  8 Mar 2025 15:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FE84D8CE;
+	Sat,  8 Mar 2025 15:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741446818; cv=none; b=b2VXLkOwNuD0wlHToTrwQewdNEhzbARniVtc5QyjHuPBEzhr5y23R+SDyIhvRKBTbAde6Xi708PZxtG8cKtgZSCvhPbJ+wjOCcDcSRd8f+f+FJKsxrXOJc/gsBmG3YPrqTuFWsqHzeoJMP/G0Ru95bEr9O0p0lzGPJqWFYqT5EU=
+	t=1741446937; cv=none; b=R8qPROPr+hSlUX4rvtJXj1+2wrFW8rT4SVJeVqFW6084BR0WCFN5WHSqW+tqWaYIaibSnP7SWn0CTvhmbYTg3dLxmqholoxASNvPDU8QLyrqeuNVlsMjDQmsLNNSLoH3GkCf2DYNucy+QgvdGMrjMni2GNpdPHyq1dfX+n2sZgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741446818; c=relaxed/simple;
-	bh=bvvc1nYVs1I/NYL20PxAGXGIpw2D4A1yl9NIkmR4LL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d5leyGZX0DcdwPL0M4cLO/NP0weZb4DmsqcseD/NktqBhmCxSL0D9ju/eCPGncs15nhw602LkMujJVvuyJJn9RewxMjaA41L1XaVbGOL6vWeh9mLmAGc+HnYC8kD05LySW9CUbEaLPGj6uUZED9TmUVfvZbUhRLsBxu4gR1ptLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pfs+CVFQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741446937; c=relaxed/simple;
+	bh=AgKij9icPxUHdQ7wp2XVGsyE9+Y8y2YtloBCQAhf6fE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lDK+0MF8AxDUMJtS3TZvWHhWgK5Af9V4Ew/4NXZsuR3/0hKJKeHMX9/PV3Kpq4eTK8Bkts/Hfz5mNNM+DzP3GG8oN7FH84MwTBEcSYJ+c/zBs9Hh9D7bJXE7j7okiBRo2MxEf+Iz51wlevAXATKCrngsK7r9QDI727whrxr19p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ep280HGq; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pfs+CVFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56E1C4CEE5;
-	Sat,  8 Mar 2025 15:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741446817;
-	bh=bvvc1nYVs1I/NYL20PxAGXGIpw2D4A1yl9NIkmR4LL8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Pfs+CVFQ8lGcBfOviehm83BLqDsoNYiJIyTIb/uNF9cmWIq2jClteU1e2sIS2983V
-	 jy3WLdIqa52+HWS9TKdbECpx8i4HvMUFTf22E0dtE/h0yxL3v/wy38baobGuprxJB0
-	 qNUw1GZfw3Ed2SXoMe7HxtETUVrLX2g9KPQ5vmOH/f19nx9bZFht0KU80Ae9gRE5md
-	 OoaTpsrfqbt+ONzm6mKuyhqD69NeXBqyupb/VRxAgK7jo9KO5B0oeH9FuieYRp+G7u
-	 kzkRSFg7Nkr7T1+OKtwZXoqWqjQqOhmJWG5Fkw4qK88m/Vp9mHg2BBUEZxbLLQICmK
-	 ySzfK1oY2GdiA==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54998f865b8so716324e87.3;
-        Sat, 08 Mar 2025 07:13:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWroMyYiksPGeP0UUat41T2zjN0GTLPpW24Ku+8xQc0Ri7Xfua8urq194MhE4aJUl3GsAXlR9yaUyhDLBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbfQB1DcmXSLGS+WGBhIacbVikG1b1OQIiHJi4OAOU+l/pP7oA
-	nfhO557jhmT9rj4HMjXF5J2pV2ppmeOGWZeLsHcLlYxs20clMp9FP9SD/kpnNGerGiTBh4qRVqh
-	vDQsQZfl3JSLi/uofFlHCBRIC/CQ=
-X-Google-Smtp-Source: AGHT+IG15kErba6fplqNRy3ab57qxrJal91wUafXRQ1i/hNjMaCSZO+CoKIPmUgRvwuKhajeiERlq70yjw9mtpipSJk=
-X-Received: by 2002:a05:6512:ad1:b0:549:7d6d:3db6 with SMTP id
- 2adb3069b0e04-54990e672fbmr2960937e87.23.1741446816549; Sat, 08 Mar 2025
- 07:13:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ep280HGq"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22398e09e39so51573125ad.3;
+        Sat, 08 Mar 2025 07:15:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741446935; x=1742051735; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HxE7kN91mnx/dnYRUE3PA94yocIq8DjPSrJ2/CcwosU=;
+        b=Ep280HGqPCMfdUpTxW7YUu2Pm43//O9odw5v5zMVeLLm0VCpGFeKHmf+5WC78jpZ0o
+         quGEjOWYyuiW6HkAN0XLDDgTT7G5whtMF7w7TZpnT6algBkT3WfeASfmXhc+3059k2/k
+         5Dc0S6zdkYAImNScJtIcJ6vG7caHtUhSpYQa/TU32R9rgN2DclJDqEPX8yoY25vcZP6H
+         w49C2ksZkAuif4I7SMgGlqdM5XF1eESUn5ppx2QsK4xM23fI68han9G9LjUhFxPqZqs5
+         ydIBNnJ7FPz41+/SUa80hBmsVGHvHqcenpBApTkkCrExbmhaFoxHcGvSdHTBQIxmzOZC
+         i2Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741446935; x=1742051735;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HxE7kN91mnx/dnYRUE3PA94yocIq8DjPSrJ2/CcwosU=;
+        b=obnkZkdCqq4tCh3x2miM/ofvi8D0TITJEnSa4YPXYxC3ozBZ+VliqgthSCaHdQlTKe
+         dK0EszAiPSsBnWD0TE6+ziWzzwNalXaVXDQwS8fZ4uHJ1iyQ0EiVMn3XIW+IbYpNRhZX
+         BXdmXmmSqMkNJXnYKMVyTd6zBR7yCf1h1z1JiurXBHXzseT6TdrUK4sRwjJsceuIcAoh
+         jSnpDdSiH5lC6qWuLR49AZTZ4YNgPfbUzT+sRPTuRbkfUedqcz5/W8Jzux/l/bgpzMir
+         9NdfEUc+zfQ+IOE+HAianDYmeexcxF+IUOReUiBogGTtI5ZqjsZCya4oGU7BB/5cEwdr
+         iULQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6kmJFgmvREGNxYuBqm8R3u2SP5QRjRzrcsgK4LxfBraxMRF7ZmQ9SEG+dSUsLZNJxlHl3UeN6H12AZlA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt6TXSKu9sOx5z2QKsFXp5FBLV7T8XkVTS+QXyEytGguPbLYZX
+	lC7xZZW31TNS1pVzFyQ0R1yN95sEKKrjv/zsmSobT03EukM6sBeeZrTF4Q==
+X-Gm-Gg: ASbGncsoWSpypP09B35d9VukazlY6OOV2EdHE8WLTzXgXXzSNkmRC+HymxJ/RTrd8vC
+	6ICKagkXGS14fe1o+fX72EpxSXtO4M2Dp4R8h5EJKqsBIHLXyXfsPrk/ZErBDwUQrDqSy81rB1O
+	T8BhBLZ2fxO7fpeo/AQsn6bmsiTeIBn0LBmRShGlhF/GwgHG85cwL7wUM1S/8gEVip39nTRcPiE
+	MNij4EU97rvE4HO/qL74RlDafL2Gzs7Uw2lUyryr7Dbmi3bk8kng/4oPx9BH9MnvuyeyKS81vu6
+	g4yQMAzi5bmL1NFWMGbLE45B3hZVpFz7PzQWXplKW9yXQBynm8tjevBWQg==
+X-Google-Smtp-Source: AGHT+IGiXzCA206tUytfYMPn7EP+aqEfLAeC1T0h8hyqwwHJG1dER7GMyHIxzmAh9tnrtjt142Mbfg==
+X-Received: by 2002:a17:903:1c1:b0:224:1001:6787 with SMTP id d9443c01a7336-2242888665fmr97038475ad.4.1741446935414;
+        Sat, 08 Mar 2025 07:15:35 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109ddfbcsm47942015ad.21.2025.03.08.07.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Mar 2025 07:15:34 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 8 Mar 2025 07:15:33 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.12 000/148] 6.12.18-rc2 review
+Message-ID: <1c813c9d-de04-487c-a350-13577dbdd881@roeck-us.net>
+References: <20250306151415.047855127@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250308040451.585561-1-xin@zytor.com>
-In-Reply-To: <20250308040451.585561-1-xin@zytor.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun, 9 Mar 2025 00:12:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARHvn4Sy-e4hMmjGt0C7TFaWrGJrLq3YvN0BjehZ8QwSg@mail.gmail.com>
-X-Gm-Features: AQ5f1JrMPl6wMHTyp_NPgg49k7laO7yRBmgdwk1Y0EvLypR_-lvRnqFbbi40T00
-Message-ID: <CAK7LNARHvn4Sy-e4hMmjGt0C7TFaWrGJrLq3YvN0BjehZ8QwSg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] kbuild: Add "make headers" to "make help" output
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	nathan@kernel.org, nicolas@fjasle.eu, bp@alien8.de, hpa@zytor.com, 
-	sraithal@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306151415.047855127@linuxfoundation.org>
 
-On Sat, Mar 8, 2025 at 1:05=E2=80=AFPM Xin Li (Intel) <xin@zytor.com> wrote=
-:
->
-> Meanwhile explicitly state that the headers are uapi headers.
+On Thu, Mar 06, 2025 at 04:20:53PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.18 release.
+> There are 148 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
+> Anything received after that time might be too late.
+> 
+v6.12.18:
 
-There are many internal-use targets, which are not documented in the
-help message.
-I assume this one is the case.
+Building loongarch:defconfig ... failed
+--------------
+Error log:
+In file included from include/linux/bug.h:5,
+                 from include/linux/thread_info.h:13,
+                 from include/asm-generic/current.h:6,
+                 from ./arch/loongarch/include/generated/asm/current.h:1,
+                 from include/linux/sched.h:12,
+                 from arch/loongarch/kernel/asm-offsets.c:8:
+include/linux/thread_info.h: In function 'check_copy_size':
+arch/loongarch/include/asm/bug.h:47:9: error: implicit declaration of function 'annotate_reachable'
 
-If users want to install UAPI headers, 'headers_install' is
-the user-visible interface and it is already documented.
+This is not surprising:
 
+$ git grep annotate_reachable
+arch/loongarch/include/asm/bug.h:       annotate_reachable();
 
+Caused by 2cfd0e5084e3 ("objtool: Remove annotate_{,un}reachable()").
 
-
-
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->  Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index 70bdbf2218fc..8f5aa710105e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1659,7 +1659,8 @@ help:
->         @echo  '  kernelrelease   - Output the release version string (us=
-e with make -s)'
->         @echo  '  kernelversion   - Output the version stored in Makefile=
- (use with make -s)'
->         @echo  '  image_name      - Output the image name (use with make =
--s)'
-> -       @echo  '  headers_install - Install sanitised kernel headers to I=
-NSTALL_HDR_PATH'; \
-> +       @echo  '  headers         - Install sanitised kernel uapi headers=
- to usr/include'
-> +       @echo  '  headers_install - Install sanitised kernel uapi headers=
- to INSTALL_HDR_PATH'; \
->          echo  '                    (default: $(INSTALL_HDR_PATH))'; \
->          echo  ''
->         @echo  'Static analysers:'
->
-> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
-> --
-> 2.48.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+Guenter
