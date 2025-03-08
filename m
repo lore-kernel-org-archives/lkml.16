@@ -1,59 +1,55 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B591DE2AA;
-	Sat,  8 Mar 2025 17:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040F1204699;
+	Sat,  8 Mar 2025 17:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741455144; cv=none; b=IB4+BU/YnZomIHbM29dveHPp6gDjTJFt4KqQ5PUhAlpPwtb9e6P1ypWAiMH4pRLPF8MohgYjy2Oz1Px8BzBQqOPCWyfhFu42ULbfSGXarIWJYPh8nY4ntZWBaEmyIXExSzsmXT1I+4X2u9rQvnLl3dkMWZ0akQM11cI5oZ6bIP0=
+	t=1741455146; cv=none; b=XMVlgIyzTgOtxigr4BEhQ5EzhaYicgPTeTQafc0X6Xs+aH98yOoPefk5rJ+TjV5F/mAqJxwmotQT4LelgoJPhYU6PrroUwR7ipJRooWT30G/sOgYVJSA1ucJejH4EpPf27I9gtybovTv20E0Ly0I6NaoXu0PybqG9HVrWf5LqcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741455144; c=relaxed/simple;
-	bh=NSj1EXW9H9X2RX2EV73l6q1ga3OiLqMJevnTvUQPh7A=;
+	s=arc-20240116; t=1741455146; c=relaxed/simple;
+	bh=RrBxp3zxd/YzFzKbvcGWdMm6Dmufc6Pd0CU05EsmvRo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cu3AFquTYddQdf7Zgq17Zm4cfVZrrE82rlgWq3zFUxRcbmanDJDHahLns6odhn5EjnJNO6s8yc37NULKgnyIz8qXlCk5p+pva/FULq+ZxXcDP6Tl3N5mtBqiSyuDmPm7tpLgHeYYrbbaC2RmuYzfA1HHHv/TYQK5XWVlC2BOZZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=XCzQerHE; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=g7QNBIuERohAb9CFlCDsb8JxanaK843liJMbFnBSYNyLt86u03EF0r/ngYDATYBSux2JghbxOHg9AVNBWb7bXqfFC61V3RZ8JJVS1hDeF3nuLAXwUnGa3fhIzEqMAVSDZEh1aB0VnIxWm4lyqHsSG+EoJY78FUub/oXm6HpkYac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=xvTAMJJ2; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="XCzQerHE"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="xvTAMJJ2"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Mlmp/JejejU48CyLjywWdPMnJaDEMrjKUd4moOR86Fw=; b=XCzQerHE6bawYn8QgC7/JaKHJN
-	AHtJnVYHI97Vc/WcgJyglq3M944TP+KLqNdyNAWDfaLvuo5WiFbBL68z4MZex2Zv0TOjnlrWbRruK
-	n1tCDzUPMYlHhxQZroZprJvbF/L82LzHa2nkQb+wkM51HI2kq+8pUVKyBisk2VsZmiykn0E5BG94d
-	AnBAzJAW10aB+yLO+UIi9f/iKD6XQ4yg4WI+oKpBDjgS9Tk2hCRwzok0WUo/S+LxqhdqzDBCbgoZM
-	17rlB6oQsdo0bKVxyrJrCtapS7sJy1P4TJ0Wned2eKtrFABcG7cY6ZSRjoWmpJH5YPLX0oBJzJKZP
-	Fb9hgLKA==;
+	bh=Le3hYMAYg2a39hHnv9MXC3X/fcJZT6of4UTCrB3LqeQ=; b=xvTAMJJ2wKtjHzrOKxWewBTJJR
+	peeqDCycSz8HiAn5rP9LOsc/6XXeNrCLNj0p0riJg3bqyl42B2FpVOyllKuEJNtUxRzIJnFRSBD2f
+	Gem/rZ9fkpgjw1xmw72IHnFY+e4eGvEcpNS4h2zbOY/m9sTVLKSl6bt5y/b9nYxkEHPM/nHTiB3Fr
+	+j6xD3/GHr+9DvqXPI0jNty1/9H6tjUIvDvJjourq9yPMhfV+gDldN0Er2h5QEPuoz181D+V8YZzt
+	iPsQomT8w5+K8C6oDAZ6hmAOgppVF6u0IEHGVSZCh6OMQltX4VAYHE1MfDiiizMk9jgWgNdtCSJ4C
+	kVhduGWQ==;
 Received: from [194.95.143.137] (helo=phil.dip.tu-dresden.de)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1tqy1z-0004Tx-Fc; Sat, 08 Mar 2025 18:32:11 +0100
+	id 1tqy20-0004Tx-GC; Sat, 08 Mar 2025 18:32:12 +0100
 From: Heiko Stuebner <heiko@sntech.de>
-To: linux-kernel@vger.kernel.org,
-	Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-rockchip@lists.infradead.org,
+	Jianfeng Liu <liujianfeng1994@gmail.com>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Alexey Charkov <alchark@gmail.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Stephen Chen <stephen@radxa.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	kernel@collabora.com
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add HDMI support for rock-4d
-Date: Sat,  8 Mar 2025 18:32:03 +0100
-Message-ID: <174145503575.101861.8670068937049575401.b4-ty@sntech.de>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: slow down emmc freq for rock 5 itx
+Date: Sat,  8 Mar 2025 18:32:06 +0100
+Message-ID: <174145503579.101861.2973510887051189420.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250306180737.127726-1-detlev.casanova@collabora.com>
-References: <20250306180737.127726-1-detlev.casanova@collabora.com>
+In-Reply-To: <20250228143341.70244-1-liujianfeng1994@gmail.com>
+References: <20250228143341.70244-1-liujianfeng1994@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,15 +60,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Thu, 06 Mar 2025 13:06:31 -0500, Detlev Casanova wrote:
-> Enable HDMI and VOP nodes for the rock-4d board.
+On Fri, 28 Feb 2025 22:33:08 +0800, Jianfeng Liu wrote:
+> The current max-frequency 200000000 of emmc is not stable. When doing
+> heavy write there will be I/O Error. After setting max-frequency to
+> 150000000 the emmc is stable under write.
 > 
+> Also remove property mmc-hs200-1_8v because we are already running at
+> HS400 mode.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: Add HDMI support for rock-4d
-      commit: 4e4f54aaec204a27d51386a9dd0d3a805fea57f4
+[1/1] arm64: dts: rockchip: slow down emmc freq for rock 5 itx
+      commit: b36402e4a0772d1b3da06a4f5fbd1cfe4d6f1cc0
 
 Best regards,
 -- 
