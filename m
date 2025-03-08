@@ -1,72 +1,72 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBAE4EB51
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 14:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4903B13E02A
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 14:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741443462; cv=none; b=QrNiPhUrFj7HH6LU5//B/yzkVqBnzxSXlFSfSH2teKMDv53OdBokJz53bF1FD1rwCk9A/iAwo5XYkRJF9kcbkf0tsyqy+vKZ7dkt12q6RvZRhzYNUBsY8JbrJn2rQrbWZ1vAZUyppDfa1JCQG05q7sEmLaKRDlnJmaX3hHCbI0c=
+	t=1741444211; cv=none; b=pghj4pHcCMiVQbn2sO6dHbPObaGUMcDtAVOoKgYJO4HTwtI1CSvkzyixailKmoUtnaWzczu+Z53L4AvRwVBy1CgZthoxl7+7NX8bz2V+96jeVtdE7h2qhl7hAxEAtdl43mhRP7D+PK/gd/pHuDfXOzWmJuo18D/iWaZXOdxaiL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741443462; c=relaxed/simple;
-	bh=VHhYh29HAmnBbgx55i+6SXtV+sSpE13dSW2GVjGVlrE=;
+	s=arc-20240116; t=1741444211; c=relaxed/simple;
+	bh=F5qBzGxYOLt9eCgdLnykjzrwTu/UH8kucdR9MrrYK1k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d1xdeXxpCMHDrAMLfCdwnV6+CeZm0XIvklb1Co1Ff+Q0R9g04rqGkiqZtSRrhCR4KOL5aML0E2c7V9sxHOL18Np77YdOFDlKKklIsWieMPtibJDb1mEawv9OHVgNNj+zTYSWUyfS0rkJXKkd6tks2Olax4VxbaD4AGOf0lYQ62U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IoxtfEpz; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=VSgKlrjV3T+J0PH6YMBYXuKIr33AJEItzFPZtqrLWt2SAkEy4uwPb5QiEBbyAew1OCMstZ2xEXegKuGj89k/XMk6VgUpcmKyCiU7qxyAhYd/alvCNrnOUCMHuKCfUOoz1kq7y34Ai9I2u3guy0RiiK6mv9MBzmwi5aEYhFOD8B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lRaYzBAF; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IoxtfEpz"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5286Eocc018126
-	for <linux-kernel@vger.kernel.org>; Sat, 8 Mar 2025 14:17:40 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lRaYzBAF"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5285ubM0003692
+	for <linux-kernel@vger.kernel.org>; Sat, 8 Mar 2025 14:30:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	D1//V6hw7ZeJCpBe534PNy3XxpjNRBUsFUM+ImnjOdk=; b=IoxtfEpzYKF+eVbu
-	g/Up9NSNM3H0qu2+btdGjoL3d3q6dfAswAlRe64+JUfRwPPKCF15lAjCS7H3eCp0
-	VRT87TWNlZzejd3XV0gGfUxLVVW2X9D1PwWmCphVTFwWKLAXID3DAzYgyEbXvoZd
-	1UL6Lhm+DTq9Co8FYVe0Gf1bH2YESK+lS9O0Aq7dDPm+/9WxS4okIWkMekqpbr0A
-	Smmz1kKpPOrO5NKkTaoPt0fPm7OCTSP9KTQQdEY+luYYKu94ABSZdmVADwRiMHzD
-	gz4iir8+Jjl+B3FE7AkMfuHvtUg4sI8qRrnKnsLHWKPRfl1Q2RM2NbTukxFIHOzN
-	Ytgknw==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f2m8nkp-1
+	hiRrV2lDctabAYQ6GC4gGrhzwcW37m/6E8TpuE76Wg4=; b=lRaYzBAFRcrmmDJ1
+	n2vJHuxWkLU2j2SFdypC+JDu0hAM6tbi6AqKAoQ9nclAaHjVBdWkTzzefGYhwUYD
+	IpUdedjqFuJEKQRCnqSDsbJzpJlMLlHo5mA6FQXNRiqG7KMM4vVBm1H3CapLHiu4
+	EPHUvqHgNVTzeU01XZDkSyLdovCAmNhl6LnC1CnHZM6QucABksnJWAHcT4qjbQv4
+	SlCzx6YwcPwK7Ehnsq/6At8PMV7Xb0tL1/GsAoZLFXoz9MOtFGHNBSaLTUgGg3HG
+	UwR2rOJ/Y3UzyMLZbSm7iC1lVjorzShmUyJ1NiNax2jkSfUoOvnbOw5hGs0km9Ry
+	EHaR3Q==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458ewpgpbn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 14:17:39 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e906c422a9so3347926d6.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 06:17:39 -0800 (PST)
+	for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 14:30:09 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c53d5f85c9so14229585a.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 06:30:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741443450; x=1742048250;
+        d=1e100.net; s=20230601; t=1741444208; x=1742049008;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D1//V6hw7ZeJCpBe534PNy3XxpjNRBUsFUM+ImnjOdk=;
-        b=TQQg3Mn6D8CHeWgXe3/zKVpeqxnPt507VuRw6PQqM1djRfEkuQ4f1XzAGa3Cz7lvcc
-         kQEMpvrkZw/CgZhzjlc4XAGrIff8pCLUJJuvBtlpVIl4HzbDSgkhgqSaLtTVME8co/mf
-         fq+ItqhRG0gTnOH0pRcRh8Cwxi2GMi+eqp0Rf8kcvhKrbXOJyaxjPfGiM0bTsc4c7+UB
-         rumcFM5+xEtgXSvbcb+KR50l/4ApxfiX4OG7s+MO6G5JwnNvobeBOGB/EiE+MxvhAe8D
-         VI013smVf3vxbpHVLnuE6zh28Y2qPmHWw1bFsUB61W5NXRwDee6IbkBvlqD7PzfpGORG
-         2blg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgaAbKepsP6axSLAgrqCXPA07l9N6rLjW0H1J3k6CZ/HIF5I4jexCMlD0UiFw2+hKzcBLGI2GmyGsFJSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPeSCKSIYhopeug4V0p1XutTkzuq7yvMRlsS1+3Apf74ls1vyP
-	xrZP3EcjTRXrNAWn3KUr8AOBUKVRIsETswLIcOFaAcpeUP1H8kcaI77VqHXe5c39IsznaIUrtuT
-	t6j3WsGw5mfya+9SbIZ/1VWrbKsxV4NvBiOYL4cBwX4ZMmJnIzvlFVZ80/+GAqLY=
-X-Gm-Gg: ASbGncvQWt9DGE/XJ8MEKmXupwfwklSgmwOIfZQUQRTKAHkUSt0VCo5DX8fVTXn6WRQ
-	5c3AbUIjIAnkKFFF56WgPDpDPJlez+E+Bcpqx9CcSsx2wtP9CPfB44pp4qrVhA6nJk1Gg0FUhyu
-	sa/SK9vNKUcwrt8HS0EsWeuKtqsV8niTk7esVXzg9iSXP8PH747KfKQbQ34qu3AMiwpgvqW9stx
-	hQky6II7X+tme/CGfyjJxlsRPmqe7BATWtlOalRzVzJ3ucfIAAw8v0zXV79uFSGbVkRFWzgLEW6
-	O3kqyY1WHVyf3xcxccnHJdKm3EtfjBh7A9NpHCvERdQdG9qrgCva54FVkGGFjdR1B+2sbQ==
-X-Received: by 2002:ad4:5d63:0:b0:6e8:9c91:227a with SMTP id 6a1803df08f44-6e908a8299emr17047566d6.0.1741443449924;
-        Sat, 08 Mar 2025 06:17:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFn+apy78yObNDX132VCgoB+/Ws3nmpk1YJl8IUzHLq1owpnyugCLpRkOWW986ipasi3vQVoA==
-X-Received: by 2002:ad4:5d63:0:b0:6e8:9c91:227a with SMTP id 6a1803df08f44-6e908a8299emr17047406d6.0.1741443449547;
-        Sat, 08 Mar 2025 06:17:29 -0800 (PST)
+        bh=hiRrV2lDctabAYQ6GC4gGrhzwcW37m/6E8TpuE76Wg4=;
+        b=ctcMuYKLp59u2N9McCSh0Ajlhh7QgLB9ybguuscbgW49ZJb1tfY1/4RrNANq9Msuwa
+         KHVz+4j7SQ0xF00NaTQJypvd+es1Tdp8Q+XpZRjbCFg+B04fjf6lrlH+w3A1nzEGqA/g
+         KKxBKoOYkmX/Tbe7najFAdmmokntGs7X+dcOIU7Vc8psDCBuO+w5Xqvgy8mSJeZOqO7g
+         K0z/Mu6fzBIV2zwtFYRBAr38FDVYcnTS5FFfdYwSJBByIkPEzN2ih2cQXSBl3foPYn2U
+         fSmTj4fY57yRad0yPnsOGrxVMbLjD3LW+uF2kldNn/H5DfPsGLVZ/dzD381wYsHIaLOO
+         hqRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUGF9DrKm068R26ogpkubE642gwJeNuWr+idBVDxtimgTCIwCsK0Q2khvWL98dpo4yPQmfrLSSsUSOtF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIvgJX/hFtUHUk/GAraHAjMqvPAxsBpxE/ov8H0ta2mMsdh4aV
+	6d1NI94FibQ4kbch1ASChhzjxCWxF4VBURxHAeenent6/hV7xYBRxly1QRJ9ZZ5O048k7/twaCJ
+	9OwD0Z+AqGpxtJQPRYGiFPtDbU1aNekipJyTUPQYOtrcMkUCHZJXicAWFDfr6LBk=
+X-Gm-Gg: ASbGncvMXHQkCpLgPE7Xeoh8mdG06jbpzcLNjd6J8TG8p9EL+uKWhs0yWWuf5FaZHYa
+	VPp+g4tbbqvwoCDOF8siYcm7r0pWjnbvAk+9sIPDNV76ppu0WpRdvhad5I1ynwmKFf7olj9Xg0r
+	T6ly2fVd0sMFe1AI8tI1NTvBsTX1M8fyJnY7rJtaXYuHQGdWHEjCsBMc7UawggavVAjcCG2fQHJ
+	TO4dyDKB8lZMxWorrXhKOxZ0mOxnujauybfe6lUkqx77oDWGN+VnciyCPEjpTsE6WNGZDCPs91d
+	X1JkAuehbngeNHhdoSsJlH9PM1ckEO/LU6Dmx+CiPo7TgyS4ex0CBmngUaZDjV2igx9otA==
+X-Received: by 2002:ad4:4eed:0:b0:6e8:af1b:e70e with SMTP id 6a1803df08f44-6e908dab8d2mr14444866d6.8.1741444208060;
+        Sat, 08 Mar 2025 06:30:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFYzTmfYwrmQbqXEPPoiUQdcPwYzdBk1aldTn4ZYyfsbMEMVk0wKBrs3w6LhpEi2xGwz/bX3A==
+X-Received: by 2002:ad4:4eed:0:b0:6e8:af1b:e70e with SMTP id 6a1803df08f44-6e908dab8d2mr14444706d6.8.1741444207650;
+        Sat, 08 Mar 2025 06:30:07 -0800 (PST)
 Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac23973810csm439279366b.118.2025.03.08.06.17.24
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac284f76a22sm20376166b.149.2025.03.08.06.30.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Mar 2025 06:17:29 -0800 (PST)
-Message-ID: <53c3d2c3-2bfb-43f9-ad25-0d1fdd96f19f@oss.qualcomm.com>
-Date: Sat, 8 Mar 2025 15:17:23 +0100
+        Sat, 08 Mar 2025 06:30:07 -0800 (PST)
+Message-ID: <e7347992-acc6-4c0f-a26b-c646668917ed@oss.qualcomm.com>
+Date: Sat, 8 Mar 2025 15:30:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,119 +74,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/10] drm/msm/dsi/phy: add configuration for SAR2130P
-To: Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Krishna Manikandan <quic_mkrishn@quicinc.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org
-References: <20250308-sar2130p-display-v1-0-1d4c30f43822@linaro.org>
- <20250308-sar2130p-display-v1-7-1d4c30f43822@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcom6490-idp: Add IPA nodes
+To: Kaustubh Pandey <quic_kapandey@quicinc.com>, andersson@kernel.org,
+        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: quic_rpavan@quicinc.com, quic_sharathv@quicinc.com,
+        quic_sarata@quicinc.com
+References: <20250304152133.GA2763820@hu-kapandey-hyd.qualcomm.com>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250308-sar2130p-display-v1-7-1d4c30f43822@linaro.org>
+In-Reply-To: <20250304152133.GA2763820@hu-kapandey-hyd.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: R85l-0KWgzH6nInBPSf7rqBvUUoKVP7P
-X-Proofpoint-ORIG-GUID: R85l-0KWgzH6nInBPSf7rqBvUUoKVP7P
-X-Authority-Analysis: v=2.4 cv=ab+bnQot c=1 sm=1 tr=0 ts=67cc5184 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=WWvJJprN3eueWNfT7O0A:9 a=QEXdDO2ut3YA:10
- a=jpH7HpYVSZo6v3SV3j0F:22 a=OIgjcC2v60KrkQgK7BGD:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: mxZxBzvB8lrYUB-mNT9MzUY9yzZaH_hf
+X-Proofpoint-ORIG-GUID: mxZxBzvB8lrYUB-mNT9MzUY9yzZaH_hf
+X-Authority-Analysis: v=2.4 cv=C5sTyRP+ c=1 sm=1 tr=0 ts=67cc5471 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=oJ5fhsqBAEL7t78JBU0A:9 a=QEXdDO2ut3YA:10
+ a=zZCYzV9kfG8A:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-08_05,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- mlxscore=0 impostorscore=0 phishscore=0 clxscore=1015 spamscore=0
- adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 clxscore=1015 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=807 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503080107
+ definitions=main-2503080108
 
-On 8.03.2025 2:42 AM, Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On 4.03.2025 4:21 PM, Kaustubh Pandey wrote:
+> Add IPA nodes for Qualcomm qcm6490 board.
 > 
-> Qualcomm SAR2130P requires slightly different setup for the DSI PHY. It
-> is a 5nm PHY (like SM8450), so supplies are the same, but the rest of
-> the configuration is the same as SM8550 DSI PHY.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Kaustubh Pandey <quic_kapandey@quicinc.com>
 > ---
->  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c     |  2 ++
->  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h     |  1 +
->  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 23 +++++++++++++++++++++++
->  3 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> index c0bcc68289633fd7506ce4f1f963655d862e8f08..a58bafe9fe8635730cb82e8c82ec1ded394988cd 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> @@ -581,6 +581,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
->  	  .data = &dsi_phy_7nm_cfgs },
->  	{ .compatible = "qcom,dsi-phy-7nm-8150",
->  	  .data = &dsi_phy_7nm_8150_cfgs },
-> +	{ .compatible = "qcom,sar2130p-dsi-phy-5nm",
-> +	  .data = &dsi_phy_5nm_sar2130p_cfgs },
->  	{ .compatible = "qcom,sc7280-dsi-phy-7nm",
->  	  .data = &dsi_phy_7nm_7280_cfgs },
->  	{ .compatible = "qcom,sm6375-dsi-phy-7nm",
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> index 1925418d9999a24263d6621299cae78f1fb9455c..1ed08b56e056094bc0096d07d4470b89d9824060 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> @@ -59,6 +59,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_7nm_8150_cfgs;
->  extern const struct msm_dsi_phy_cfg dsi_phy_7nm_7280_cfgs;
->  extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8350_cfgs;
->  extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs;
-> +extern const struct msm_dsi_phy_cfg dsi_phy_5nm_sar2130p_cfgs;
->  extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs;
->  extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8650_cfgs;
->  
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> index a92decbee5b5433853ed973747f7705d9079068d..cad55702746b8d35949d22090796cca60f03b9e1 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> @@ -1289,6 +1289,29 @@ const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs = {
->  	.quirks = DSI_PHY_7NM_QUIRK_V4_3,
->  };
->  
-> +const struct msm_dsi_phy_cfg dsi_phy_5nm_sar2130p_cfgs = {
-> +	.has_phy_lane = true,
-> +	.regulator_data = dsi_phy_7nm_97800uA_regulators,
-> +	.num_regulators = ARRAY_SIZE(dsi_phy_7nm_97800uA_regulators),
-> +	.ops = {
-> +		.enable = dsi_7nm_phy_enable,
-> +		.disable = dsi_7nm_phy_disable,
-> +		.pll_init = dsi_pll_7nm_init,
-> +		.save_pll_state = dsi_7nm_pll_save_state,
-> +		.restore_pll_state = dsi_7nm_pll_restore_state,
-> +		.set_continuous_clock = dsi_7nm_set_continuous_clock,
-> +	},
-> +	.min_pll_rate = 600000000UL,
-> +#ifdef CONFIG_64BIT
-> +	.max_pll_rate = 5000000000UL,
-> +#else
-> +	.max_pll_rate = ULONG_MAX,
-> +#endif
-> +	.io_start = { 0xae95000, 0xae97000 },
-> +	.num_dsi_phy = 2,
-> +	.quirks = DSI_PHY_7NM_QUIRK_V5_2,
-> +};
 
-I'm squinting very very hard and can't tell how this is different from
-dsi_phy_4nm_8550_cfgs
+This is a patch to a devicetree of a board that is known not to boot [1].
+
+Were you able to confirm this change works with a relatively unchanged
+mainline kernel?
+
+Moreover, is the IDP still used, with a final SoC revision as well?
 
 Konrad
+
+[1] https://lore.kernel.org/linux-arm-msm/20250206-protected_clock_qcm6490-v1-1-5923e8c47ab5@quicinc.com/
+
