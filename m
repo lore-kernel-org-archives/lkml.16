@@ -1,31 +1,31 @@
 Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8ED207A10
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 21:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BB220B81E
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 21:37:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741469863; cv=none; b=nqcP9bvVIOWW3Q/gj7KAB6nqjnOVbXbWxY3CKVEe8UP3f5SgXYYh9M+2CqoUV7HtmYMztm5+LKtNAvPUcKIrHiOvR9IuwH4oUklA4UnNBKKVdbrP91EQ0x6Kv1+F5yZxP8cwnJd+oaoEft8DCcMQQH8qvbtIOqtrvqnKAHY49Os=
+	t=1741469874; cv=none; b=kgaefw0IqwCuPeWfJnnHE3fa/njElQa1mYETo9jJKYqwQUsBwbUBtfXjxwOLpAeZ4qvlGQOaD+gx3KQYcvwQCs5v5jVK4ZCNJvbVgr8VK1KngPIU3DhqVxib470dJdt60biDKOQ+55C/uF+TZKRMdQlljXg3Cgmeqtv72o7EV8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741469863; c=relaxed/simple;
-	bh=IPDNMr7X/K6yxoN9T0fftTf2PAkwAWDcRKsEdq7qczY=;
+	s=arc-20240116; t=1741469874; c=relaxed/simple;
+	bh=jv4tDZTTwStzQ9+56h0aOCvTHDpGzA9P2QxFXWKT8xc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ckPC3b2sLwdo8Wn+d7HWLZRc4lqpYqoLiC/E9wsJTx7KruoXq2xsloxcGUSbOapcXhR5dCvchPeNL1tROdwGK0/SiU8t+HNLTHa5OkwbYi0rm/48ysK4B6YqTLxSSV+BJN9qF64ukhZgoIIE4S2MjW0DNyb6c0lYCLcvOCbdr0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=ISGMtoKr; arc=none smtp.client-ip=149.28.215.223
+	 MIME-Version; b=CpsK1RH1I2FRKSGLLVwYEXxNn60MQu/cxrCxM99SC6NaAKZqEG/2q3mtKjJ73CR7cT6mPxS1mTh8LdNoLmJX/e4OobNvqJ2QGZvgqhs5htWIhXXd00PzAhvt1nytd3HK9MrOrsHkAVqxOR5Stw/x+zwYQAW6ZyxmTgRlXxhXPPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=jzrX8yCq; arc=none smtp.client-ip=149.28.215.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="ISGMtoKr"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="jzrX8yCq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1741469861; bh=I/ujcC5nq+Y57EaiIBIvtCu4qYPsR76utxdU3XJmP/Y=;
- b=ISGMtoKrcwxwTBpiyLgkxscTmJ2pNDq31IhZD3YzYid6UOCovtW5J7tmk2/ERYuqg/cqRPiRI
- rsNsdQXdlEdih+v8NbauzBQSY0AKv/j63KCqDDRcqa7UnE53NdEpldOjqbfCrevIUjDVlpIZD3D
- VMqVmtOYkeSH1Rm5jKp4sf7u7T1vWZpJsXZK33x7rwfGdW2BH2Y0XSXD3nmzZVBteD6ojS6jdeS
- kEzm+aKkGChzVThf/4zhq8dMxOI7zUHizAmr6EtAsmU34/Q+EBeHgtoT2tSc7N5MwanZ2GqNcZP
- Mr5jS3ME6cGAFcNw+rrwZyFaF6MM/24B3mQUfhilgqWA==
-X-Forward-Email-ID: 67ccb89cbfe70eb1bfc13b09
+ t=1741469871; bh=L3lm2pKDBhxfI+oBj9jTWq06myi7cTrg9V33m4Vwhw8=;
+ b=jzrX8yCqSjH6LBC7g6agaGYkIzbo3XXn/hCcM9JDKqvy9zOkxssYKw7bAwRRMgXuElKEGQsZi
+ av8kkEdj2SaHAlsf3UIXMvRuqzWo1cG7iBjfo1kEjdXaQnrRYkEoRwPaQ221g5B+kqp0Y9n5vZb
+ SeC7CfqoLTnna2qIq0jW1Hz5KgFJD2tGP3oqGtjiEgPf/5zHFCs8Rqr8lJFQNpZxXCesxpYYIO1
+ tM/xFLkYCTMxqk7Bthl02RD3nnGTA5zTIazMXaq+gA+8GpHogv7IiuxmpkArcVaSlQdXerDFALZ
+ 8XcMzXmrrQWldJhElTN2FgpkTq0K74cmuaiujsYTcpOQ==
+X-Forward-Email-ID: 67ccb8a5bfe70eb1bfc13b47
 X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
  149.28.215.223
 X-Forward-Email-Version: 0.4.40
@@ -40,19 +40,21 @@ To: Heiko Stuebner <heiko@sntech.de>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	David Wu <david.wu@rock-chips.com>
-Cc: netdev@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 1/3] dt-bindings: net: rockchip-dwmac: Require rockchip,grf and rockchip,php-grf
-Date: Sat,  8 Mar 2025 21:37:13 +0000
-Message-ID: <20250308213720.2517944-2-jonas@kwiboo.se>
+	Jonas Karlman <jonas@kwiboo.se>,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH v2 3/3] net: stmmac: dwmac-rk: Remove unneeded GRF and peripheral GRF checks
+Date: Sat,  8 Mar 2025 21:37:15 +0000
+Message-ID: <20250308213720.2517944-4-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250308213720.2517944-1-jonas@kwiboo.se>
 References: <20250308213720.2517944-1-jonas@kwiboo.se>
@@ -64,83 +66,573 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-All Rockchip GMAC variants typically write to GRF regs to control e.g.
-interface mode, speed and MAC rx/tx delay. Newer SoCs such as RK3562,
-RK3576 and RK3588 use a mix of GRF and peripheral GRF regs.
+Now that GRF, and peripheral GRF where needed, is validated at probe
+time there is no longer any need to check and log an error in each SoC
+specific operation.
 
-Prior to the commit b331b8ef86f0 ("dt-bindings: net: convert
-rockchip-dwmac to json-schema") the property rockchip,grf was listed
-under "Required properties". During the conversion this was lost and
-rockchip,grf has since then incorrectly been treated as optional and
-not as required.
-
-Similarly, when rockchip,php-grf was added to the schema in the
-commit a2b77831427c ("dt-bindings: net: rockchip-dwmac: add rk3588 gmac
-compatible") it also incorrectly has been treated as optional for all
-GMAC variants, when it should have been required for RK3588, and later
-also for RK3576.
-
-Update this binding to require rockchip,grf and rockchip,php-grf to
-properly reflect that GRF (and peripheral GRF for RK3576/RK3588) is
-required to control part of GMAC.
-
-This should not introduce any breakage as all Rockchip GMAC nodes have
-been added together with a rockchip,grf phandle (and rockchip,php-grf
-where required) in their initial commit.
+Remove unneeded IS_ERR() checks and early bail out from each SoC
+specific operation.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
 Changes in v2:
-- Reword the commit message
-- Disable rockchip,php-grf for other GMACs than RK3576 and RK3588
-
-The pending rockchip,rk3562-gmac compatible [1] must also be added to
-the list of compatible that require rockchip,php-grf.
-
-[1] https://lore.kernel.org/r/20250227110652.2342729-1-kever.yang@rock-chips.com/
+- Split removal of IS_ERR() checks to its own patch
 ---
- .../bindings/net/rockchip-dwmac.yaml          | 21 ++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ .../net/ethernet/stmicro/stmmac/dwmac-rk.c    | 249 ------------------
+ 1 file changed, 249 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml b/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
-index f8a576611d6c..8dd870f0214d 100644
---- a/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
-@@ -32,9 +32,6 @@ select:
-   required:
-     - compatible
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index 5615f015c5fe..342463587d06 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -102,13 +102,6 @@ struct rk_priv_data {
  
--allOf:
--  - $ref: snps,dwmac.yaml#
+ static void px30_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
 -
- properties:
-   compatible:
-     oneOf:
-@@ -114,6 +111,24 @@ required:
-   - compatible
-   - clocks
-   - clock-names
-+  - rockchip,grf
-+
-+allOf:
-+  - $ref: snps,dwmac.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - rockchip,rk3576-gmac
-+              - rockchip,rk3588-gmac
-+    then:
-+      required:
-+        - rockchip,php-grf
-+    else:
-+      properties:
-+        rockchip,php-grf: false
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, PX30_GRF_GMAC_CON1,
+ 		     PX30_GMAC_PHY_INTF_SEL_RMII);
+ }
+@@ -182,13 +175,6 @@ static const struct rk_gmac_ops px30_ops = {
+ static void rk3128_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3128_GRF_MAC_CON1,
+ 		     RK3128_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3128_GMAC_RMII_MODE_CLR);
+@@ -200,13 +186,6 @@ static void rk3128_set_to_rgmii(struct rk_priv_data *bsp_priv,
  
- unevaluatedProperties: false
+ static void rk3128_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3128_GRF_MAC_CON1,
+ 		     RK3128_GMAC_PHY_INTF_SEL_RMII | RK3128_GMAC_RMII_MODE);
+ }
+@@ -215,11 +194,6 @@ static void rk3128_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
  
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3128_GRF_MAC_CON1,
+ 			     RK3128_GMAC_CLK_2_5M);
+@@ -237,11 +211,6 @@ static void rk3128_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10) {
+ 		regmap_write(bsp_priv->grf, RK3128_GRF_MAC_CON1,
+ 			     RK3128_GMAC_RMII_CLK_2_5M |
+@@ -298,13 +267,6 @@ static const struct rk_gmac_ops rk3128_ops = {
+ static void rk3228_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
+ 		     RK3228_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3228_GMAC_RMII_MODE_CLR |
+@@ -317,13 +279,6 @@ static void rk3228_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3228_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
+ 		     RK3228_GMAC_PHY_INTF_SEL_RMII |
+ 		     RK3228_GMAC_RMII_MODE);
+@@ -336,11 +291,6 @@ static void rk3228_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
+ 			     RK3228_GMAC_CLK_2_5M);
+@@ -358,11 +308,6 @@ static void rk3228_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
+ 			     RK3228_GMAC_RMII_CLK_2_5M |
+@@ -420,13 +365,6 @@ static const struct rk_gmac_ops rk3228_ops = {
+ static void rk3288_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3288_GRF_SOC_CON1,
+ 		     RK3288_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3288_GMAC_RMII_MODE_CLR);
+@@ -438,13 +376,6 @@ static void rk3288_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3288_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3288_GRF_SOC_CON1,
+ 		     RK3288_GMAC_PHY_INTF_SEL_RMII | RK3288_GMAC_RMII_MODE);
+ }
+@@ -453,11 +384,6 @@ static void rk3288_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3288_GRF_SOC_CON1,
+ 			     RK3288_GMAC_CLK_2_5M);
+@@ -475,11 +401,6 @@ static void rk3288_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10) {
+ 		regmap_write(bsp_priv->grf, RK3288_GRF_SOC_CON1,
+ 			     RK3288_GMAC_RMII_CLK_2_5M |
+@@ -512,13 +433,6 @@ static const struct rk_gmac_ops rk3288_ops = {
+ 
+ static void rk3308_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3308_GRF_MAC_CON0,
+ 		     RK3308_GMAC_PHY_INTF_SEL_RMII);
+ }
+@@ -527,11 +441,6 @@ static void rk3308_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10) {
+ 		regmap_write(bsp_priv->grf, RK3308_GRF_MAC_CON0,
+ 			     RK3308_GMAC_SPEED_10M);
+@@ -584,13 +493,6 @@ static const struct rk_gmac_ops rk3308_ops = {
+ static void rk3328_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON1,
+ 		     RK3328_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3328_GMAC_RMII_MODE_CLR |
+@@ -604,14 +506,8 @@ static void rk3328_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3328_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+ 	unsigned int reg;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	reg = bsp_priv->integrated_phy ? RK3328_GRF_MAC_CON2 :
+ 		  RK3328_GRF_MAC_CON1;
+ 
+@@ -624,11 +520,6 @@ static void rk3328_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON1,
+ 			     RK3328_GMAC_CLK_2_5M);
+@@ -647,11 +538,6 @@ static void rk3328_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 	unsigned int reg;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	reg = bsp_priv->integrated_phy ? RK3328_GRF_MAC_CON2 :
+ 		  RK3328_GRF_MAC_CON1;
+ 
+@@ -712,13 +598,6 @@ static const struct rk_gmac_ops rk3328_ops = {
+ static void rk3366_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3366_GRF_SOC_CON6,
+ 		     RK3366_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3366_GMAC_RMII_MODE_CLR);
+@@ -730,13 +609,6 @@ static void rk3366_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3366_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3366_GRF_SOC_CON6,
+ 		     RK3366_GMAC_PHY_INTF_SEL_RMII | RK3366_GMAC_RMII_MODE);
+ }
+@@ -745,11 +617,6 @@ static void rk3366_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3366_GRF_SOC_CON6,
+ 			     RK3366_GMAC_CLK_2_5M);
+@@ -767,11 +634,6 @@ static void rk3366_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	if (speed == 10) {
+ 		regmap_write(bsp_priv->grf, RK3366_GRF_SOC_CON6,
+ 			     RK3366_GMAC_RMII_CLK_2_5M |
+@@ -823,13 +685,6 @@ static const struct rk_gmac_ops rk3366_ops = {
+ static void rk3368_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3368_GRF_SOC_CON15,
+ 		     RK3368_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3368_GMAC_RMII_MODE_CLR);
+@@ -841,13 +696,6 @@ static void rk3368_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3368_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3368_GRF_SOC_CON15,
+ 		     RK3368_GMAC_PHY_INTF_SEL_RMII | RK3368_GMAC_RMII_MODE);
+ }
+@@ -856,11 +704,6 @@ static void rk3368_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3368_GRF_SOC_CON15,
+ 			     RK3368_GMAC_CLK_2_5M);
+@@ -878,11 +721,6 @@ static void rk3368_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	if (speed == 10) {
+ 		regmap_write(bsp_priv->grf, RK3368_GRF_SOC_CON15,
+ 			     RK3368_GMAC_RMII_CLK_2_5M |
+@@ -934,13 +772,6 @@ static const struct rk_gmac_ops rk3368_ops = {
+ static void rk3399_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3399_GRF_SOC_CON5,
+ 		     RK3399_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RK3399_GMAC_RMII_MODE_CLR);
+@@ -952,13 +783,6 @@ static void rk3399_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3399_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RK3399_GRF_SOC_CON5,
+ 		     RK3399_GMAC_PHY_INTF_SEL_RMII | RK3399_GMAC_RMII_MODE);
+ }
+@@ -967,11 +791,6 @@ static void rk3399_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	if (speed == 10)
+ 		regmap_write(bsp_priv->grf, RK3399_GRF_SOC_CON5,
+ 			     RK3399_GMAC_CLK_2_5M);
+@@ -989,11 +808,6 @@ static void rk3399_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	if (speed == 10) {
+ 		regmap_write(bsp_priv->grf, RK3399_GRF_SOC_CON5,
+ 			     RK3399_GMAC_RMII_CLK_2_5M |
+@@ -1038,14 +852,8 @@ static const struct rk_gmac_ops rk3399_ops = {
+ static void rk3568_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+ 	u32 con0, con1;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	con0 = (bsp_priv->id == 1) ? RK3568_GRF_GMAC1_CON0 :
+ 				     RK3568_GRF_GMAC0_CON0;
+ 	con1 = (bsp_priv->id == 1) ? RK3568_GRF_GMAC1_CON1 :
+@@ -1063,14 +871,8 @@ static void rk3568_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3568_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+ 	u32 con1;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	con1 = (bsp_priv->id == 1) ? RK3568_GRF_GMAC1_CON1 :
+ 				     RK3568_GRF_GMAC0_CON1;
+ 	regmap_write(bsp_priv->grf, con1, RK3568_GMAC_PHY_INTF_SEL_RMII);
+@@ -1148,14 +950,8 @@ static const struct rk_gmac_ops rk3568_ops = {
+ static void rk3576_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+ 	unsigned int offset_con;
+ 
+-	if (IS_ERR(bsp_priv->grf) || IS_ERR(bsp_priv->php_grf)) {
+-		dev_err(dev, "Missing rockchip,grf or rockchip,php-grf property\n");
+-		return;
+-	}
+-
+ 	offset_con = bsp_priv->id == 1 ? RK3576_GRF_GMAC_CON1 :
+ 					 RK3576_GRF_GMAC_CON0;
+ 
+@@ -1181,14 +977,8 @@ static void rk3576_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3576_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+ 	unsigned int offset_con;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	offset_con = bsp_priv->id == 1 ? RK3576_GRF_GMAC_CON1 :
+ 					 RK3576_GRF_GMAC_CON0;
+ 
+@@ -1308,14 +1098,8 @@ static const struct rk_gmac_ops rk3576_ops = {
+ static void rk3588_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+ 	u32 offset_con, id = bsp_priv->id;
+ 
+-	if (IS_ERR(bsp_priv->grf) || IS_ERR(bsp_priv->php_grf)) {
+-		dev_err(dev, "Missing rockchip,grf or rockchip,php_grf property\n");
+-		return;
+-	}
+-
+ 	offset_con = bsp_priv->id == 1 ? RK3588_GRF_GMAC_CON9 :
+ 					 RK3588_GRF_GMAC_CON8;
+ 
+@@ -1336,13 +1120,6 @@ static void rk3588_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rk3588_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->php_grf)) {
+-		dev_err(dev, "%s: Missing rockchip,php_grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->php_grf, RK3588_GRF_GMAC_CON0,
+ 		     RK3588_GMAC_PHY_INTF_SEL_RMII(bsp_priv->id));
+ 
+@@ -1426,13 +1203,6 @@ static const struct rk_gmac_ops rk3588_ops = {
+ 
+ static void rv1108_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RV1108_GRF_GMAC_CON0,
+ 		     RV1108_GMAC_PHY_INTF_SEL_RMII);
+ }
+@@ -1441,11 +1211,6 @@ static void rv1108_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+ {
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	if (speed == 10) {
+ 		regmap_write(bsp_priv->grf, RV1108_GRF_GMAC_CON0,
+ 			     RV1108_GMAC_RMII_CLK_2_5M |
+@@ -1494,13 +1259,6 @@ static const struct rk_gmac_ops rv1108_ops = {
+ static void rv1126_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 				int tx_delay, int rx_delay)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "Missing rockchip,grf property\n");
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RV1126_GRF_GMAC_CON0,
+ 		     RV1126_GMAC_PHY_INTF_SEL_RGMII |
+ 		     RV1126_GMAC_M0_RXCLK_DLY_ENABLE |
+@@ -1519,13 +1277,6 @@ static void rv1126_set_to_rgmii(struct rk_priv_data *bsp_priv,
+ 
+ static void rv1126_set_to_rmii(struct rk_priv_data *bsp_priv)
+ {
+-	struct device *dev = &bsp_priv->pdev->dev;
+-
+-	if (IS_ERR(bsp_priv->grf)) {
+-		dev_err(dev, "%s: Missing rockchip,grf property\n", __func__);
+-		return;
+-	}
+-
+ 	regmap_write(bsp_priv->grf, RV1126_GRF_GMAC_CON0,
+ 		     RV1126_GMAC_PHY_INTF_SEL_RMII);
+ }
 -- 
 2.48.1
 
