@@ -1,121 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1547F382;
-	Sat,  8 Mar 2025 19:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4374206F0B;
+	Sat,  8 Mar 2025 20:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741463979; cv=none; b=Cu7f/N+aPGTeGPBcIC8+dnEp41LDjYh9T9CGDZsNUb7qbuJlUQS3M59Fyk2vJpbqQdVQol5XLAse8DIx6ybz3wcPU1Z5tHl/+jG7Jr1R/356dcXwDbERl1tR7+ivUmddqD1nyiuPQj5Uwgh15NMFGUi7OucoZ8OlwN/jXPNPeh8=
+	t=1741464150; cv=none; b=XZV9btYF3DoI1b9YoiBqB18E1t6d9WdbwtfqS8pRIgBLjn0CH1alb9Mg76oO0gGaxGfpGRLA3HG4PR2262RkfAEjDvLDN5/JQjnYgwnYictN0JmMwGpa3wa15txbdj0j8QPqQImfrVwr0OjvOYVDWjgr/YPp6WWVzC8JD4+JxXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741463979; c=relaxed/simple;
-	bh=x3E1fq8IZUwU/fUF2C5GTmbaJW+Wcl0XpQM85Bz+Stg=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=FM+QJj9GaDvTHcUBhem+A74d6eoQclAPI5JArJci3z9DWR0hUFqaYuv87AwetEs+OUTGclss3hEzpVYIW0x0CDJhKoI01Mll9l/jZhjwXAzNgSvjxFQtYdZcRMeOAd88NtZ2Lgt+naI0bcV3Eatr8yYxo7NbCNR9oYqE1XCxr+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkLZMjRU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741464150; c=relaxed/simple;
+	bh=e/M1KcFrTfIKFEzZH5CjLPVwQnJcCPmkrwdiZwKmFT8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XfnusLDBzgR76Egms5TOiGPEh0EL9lasOUs984hcM0SyQE3OEjLIxtujDht1ABR02c6lnNgasaCAIx7ltnZnBOUxZw/MaAjWwLLcf/GOTee/49hPMfo07dsBj5J60UdcPXW6Sh/tJetL2TSSHHTHVhH7UJhuJMah5U/obyFnIPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLm2++jd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkLZMjRU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A5CDC4CEE0;
-	Sat,  8 Mar 2025 19:59:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLm2++jd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 26BE9C4CEE3;
+	Sat,  8 Mar 2025 20:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741463978;
-	bh=x3E1fq8IZUwU/fUF2C5GTmbaJW+Wcl0XpQM85Bz+Stg=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=hkLZMjRUhZKV6eypsedqDvbQn7W1IHnBcglKkq/TE5/sFLtFpOheLF6YwiqIzy/9d
-	 reFkhemx4IRp/QKuwZXOGfn3ACLxmKqii8mD/5F9Fk/kRySyD+yk1Zi3a54/Z7piU/
-	 +vQjmu6fqSFGluVC94BAGLKsQs+WUZ7FWol7WwoHzr9CIxC+JyAaNA8+XoocHR+4M8
-	 WZxWCwk8GrNM7KFNIwbK+saC16tHOFij1wRXem+E0XOM/RZxn2v4wLfVqjnsA+HGoo
-	 oJIWGgqLxyz2ctbI7vlOw6dGHsHCq7kmZVQUXVa09oWQ35m5OyNjet/t44zRZf+MTs
-	 YLZrMGE3ieZ7g==
-Date: Sat, 08 Mar 2025 13:59:37 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1741464150;
+	bh=e/M1KcFrTfIKFEzZH5CjLPVwQnJcCPmkrwdiZwKmFT8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=uLm2++jd5oItQkirHptb84L+yr9rhtZnncQR6glJdq9l2ZN20TXt2GcSD5qn9qyzc
+	 CyudSdC8bd9LBIJ5vN5VCrF4U9udwLnARf0WOOYdq4s7+yCt3mzglXhcjqqI26HKP2
+	 fWsmMAsVYNeyXS/JhIYpSDCLuXDgLflL1Qf37oFv7eGL9Pf7WvodOXBLpReUXnCUJ2
+	 EFqxqOUvXZyaC3Bvnk7uyueEWiWmM5Fb44oQH+C3ieSwoCV8SKZkjC0VNWE2Vwi/j2
+	 aL3iggLitx+XPRqo1GcUPjhwqFv3ic7W+a8RjTh9VZaFlD89sT3ZFNNcI+CngPPld/
+	 fvoCteRiIp1gQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F6C28B30;
+	Sat,  8 Mar 2025 20:02:30 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Sat, 08 Mar 2025 21:00:59 +0100
+Subject: [PATCH 2/4] iio: light: al3000a: Use DRV_NAME
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, 
- linux-media@vger.kernel.org, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Eric Biggers <ebiggers@google.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Mark Brown <broonie@kernel.org>, 
- =?utf-8?q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>, 
- Ihor Matushchak <ihor.matushchak@foobox.net>, 
- Ricardo Ribalda <ribalda@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, 
- Hans Verkuil <hverkuil@xs4all.nl>, Umang Jain <umang.jain@ideasonboard.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Biju Das <biju.das.jz@bp.renesas.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Dongcheng Yan <dongcheng.yan@intel.com>, 
- Julien Massot <julien.massot@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-staging@lists.linux.dev, 
- Tommaso Merciai <tomm.merciai@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
- Taniya Das <quic_tdas@quicinc.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Conor Dooley <conor+dt@kernel.org>, Zhi Mao <zhi.mao@mediatek.com>, 
- Kieran Bingham <kieran.bingham@ideasonboard.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>, Will Deacon <will@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Ross Burton <ross.burton@arm.com>, 
- Javier Carrasco <javier.carrasco@wolfvision.net>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
- linux-arm-kernel@lists.infradead.org, 
- Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Bjorn Andersson <quic_bjorande@quicinc.com>, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-In-Reply-To: <20250308183410.3013996-20-demonsingur@gmail.com>
-References: <20250308183410.3013996-1-demonsingur@gmail.com>
- <20250308183410.3013996-20-demonsingur@gmail.com>
-Message-Id: <174146397700.3496940.17285353944853657369.robh@kernel.org>
-Subject: Re: [RFC PATCH 19/24] dt-bindings: media: i2c: max96712: add
- support for POC supplies
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250308-al3010-iio-regmap-v1-2-b672535e8213@ixit.cz>
+References: <20250308-al3010-iio-regmap-v1-0-b672535e8213@ixit.cz>
+In-Reply-To: <20250308-al3010-iio-regmap-v1-0-b672535e8213@ixit.cz>
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>
+Cc: Svyatoslav Ryhel <clamor95@gmail.com>, 
+ Robert Eckelmann <longnoserob@gmail.com>, linux-iio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1248; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=OztXp4B+Ou/RwdPOQioIug1hZ1oOyPA0zbFHMaWwpTA=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBnzKJUrEM0E1z5B6zdsevZMBPtg5f0lVFPsD1Jo
+ IU2gNgblVmJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ8yiVAAKCRBgAj/E00kg
+ cmqDD/49ajNvfw4bP7MWvD/QQ0yRsdD47903cCoa5kt/iuVpdL+E4m9TsUnBoNqV9P877afkspN
+ xWyDbnm0w04tenzbVNKduFOwU5gFOzFkXA62PVGjO7K1EbaPzbojVcmwTwz7eNXIa+dtkdivyMR
+ 97ucGVvT9awYNRobTo5IL1Y8swyEXtcDtHOdxovY045POFdaCyYylii5OXl2g7658aWcJmV3ZMK
+ mQ25VT9EhTxjfJMDtKjSrrEqUoXXBymQRo1rVl+wBH9m0rZqih/fdJHGttGjeimTnRFRFOz6gHY
+ c/5ROacg0SHHmUip0N+oftd+Q5zvm1loaaKSe/kxeG64Q1S8NGGNzv6+zlcnXbVU7hrMuBY0q7G
+ 7MidBjLn8BSTyGQ7sWOrvKmKlixhVbzpDXMZflX5bwbYKfozBk5T2H02CXaMlVki/p55bzLWUPA
+ LW29MT8XkZLYm7hSaBN4SttCp5D7ZNA+XpYzz2st8a0RVLfWgguNo2PJAO4Tyvy+5B6nNffgYCu
+ RSdJUvya5hNvEJrCSpVHvaBoX1K+rsn6G0ACFxSR9+Le1dEvqooi0x+sQPbSReabF2+NU4odnW4
+ lKrjG2ztrvVxj2JnbgUoU5xXUvsy15dKCMrtihIpZblG3hAUcBm8BFCez9HMhaqXCQYTAkkAPT0
+ swYCZDFrIFJlEww==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
+From: David Heidelberg <david@ixit.cz>
 
-On Sat, 08 Mar 2025 20:33:48 +0200, Cosmin Tanislav wrote:
-> The GMSL links can carry power to the serializer when using coaxial
-> cables.
-> 
-> Document this capability.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  .../devicetree/bindings/media/i2c/maxim,max96712.yaml         | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+Sync syntax with other similar drivers.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+ drivers/iio/light/al3000a.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-yamllint warnings/errors:
+diff --git a/drivers/iio/light/al3000a.c b/drivers/iio/light/al3000a.c
+index e2fbb1270040f43d9f0a97838861818a8eaef813..e1fa4543f336cec61140b5c44d3794df1fa485cd 100644
+--- a/drivers/iio/light/al3000a.c
++++ b/drivers/iio/light/al3000a.c
+@@ -13,6 +13,8 @@
+ 
+ #include <linux/iio/iio.h>
+ 
++#define AL3000A_DRV_NAME "al3000a"
++
+ #define AL3000A_REG_SYSTEM		0x00
+ #define AL3000A_REG_DATA		0x05
+ 
+@@ -148,7 +150,7 @@ static int al3000a_probe(struct i2c_client *client)
+ 				     "failed to get vdd regulator\n");
+ 
+ 	indio_dev->info = &al3000a_info;
+-	indio_dev->name = "al3000a";
++	indio_dev->name = AL3000A_DRV_NAME;
+ 	indio_dev->channels = al3000a_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(al3000a_channels);
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+@@ -195,7 +197,7 @@ MODULE_DEVICE_TABLE(of, al3000a_of_match);
+ 
+ static struct i2c_driver al3000a_driver = {
+ 	.driver = {
+-		.name = "al3000a",
++		.name = AL3000A_DRV_NAME,
+ 		.of_match_table = al3000a_of_match,
+ 		.pm = pm_sleep_ptr(&al3000a_pm_ops),
+ 	},
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml: patternProperties: 'port[0-3]-poc-supply' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+-- 
+2.47.2
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250308183410.3013996-20-demonsingur@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
