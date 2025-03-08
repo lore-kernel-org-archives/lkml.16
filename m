@@ -1,65 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C94B323D;
-	Sat,  8 Mar 2025 00:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2FFEACD;
+	Sat,  8 Mar 2025 00:08:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741392489; cv=none; b=VLvXry16hfxekUf4Uhi3VH5rqHXlhVSpv52fA1PA/s/ty6JaAZQdnqSulPTfQz02M9z2mwfkrlPFnIJGrztnEpwKFssjcq+b8yQCUkNvhehr7rVppibnsal09+OXQD5Zc5VwIwmGpnCGqLYVHgppk010CcOtw5PVKQuW5gLolGM=
+	t=1741392491; cv=none; b=UeDF2/rzv2RivAOIUTVIPb8KwGsZtdvqW5MlKpebBp/Q0GogXYpZ85eAFmxX3w/MImV8oOsTqJuG19V+w6q93PenvtH+fj4OXbhMa+LRBxTZ/LaILyjgAZuY7ehC7yYgblcx2pvdF9ZxeDHGiCgaUhna5c22PPKqvJJWrHHOy5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741392489; c=relaxed/simple;
-	bh=QlEa37nGN6+MvEF9b+z7UisLOjWHJRHVJhU7RmrEx+w=;
+	s=arc-20240116; t=1741392491; c=relaxed/simple;
+	bh=c0NqB6CF+ue+4CbqOdqgDsD7lzwUax7DRqFAxWrBgiA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=m7VsFGk8V2cRIolH6yruCBnbG+XVYOxp2KU0QQnTEKf4TPRoVao+2q61BW0fznt86kpresvrS3qHbgfhW49GiuyLWU0RUyBVCf86waYf2dw6V2eH6fbb+5pA2yUBjzdb7FrBGuNK0f7IXCOnpbxrKRr2Q012NLVyqxvNLwuZb0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HNpUhwuq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t2FD4YPj; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=b5DFxmCkJLnGW7bjPiCHdIhB4APZwnZanNEnU/P+yeDXm+oEqh5Nq+ko9s4peg23EMS6M8C0Lfv+yVtm8e2+BKrobiWGAnrLxfH9uAkMhmsbiofex2h1IlYLSmaC4/eEEhSWlulaoetF/wXNxXdclOPwrT4aVJTXEbjJUuTjiLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uKWP21F/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/Hglsecd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HNpUhwuq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t2FD4YPj"
-Date: Sat, 08 Mar 2025 00:08:04 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uKWP21F/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/Hglsecd"
+Date: Sat, 08 Mar 2025 00:08:06 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741392485;
+	s=2020; t=1741392487;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nWbSTEZX/uXwNJpxZxMGiTAxsevwGtUEjLgvJcZh1aM=;
-	b=HNpUhwuqq+TnsHRsTDiESBOUGT7rCjUxcEj2EDRqmys5QSHqWcOllUeRHHSlTfoLLUh1uV
-	LkbgdsE/uuTO62YRJPwJ+s2rxLd2/w8sfG1stbVN7UJ+XuWj57R+fbTfcRZZUcdR7s/Up0
-	vEHGWNhDi6Tx0hnV13OL4VqBZRLHwjIYzO1JV/xmIUnvoPnNpQhdUUSX2JuwVo1fJNLrel
-	nbSNEZiG95rT6TnbhNTB6MEd+I2Umi60edsAhUe3nQS4pECdfzzzjgICDGw9CvGC94/3uR
-	JD1RN8PbESbmcywxQThrR1V6SdmG5x8H4GXV1Z+Es3u7xUC4HsIBBcYpm+apaA==
+	bh=KoXqXAypsvzEIa1eHB8gIQ36LC9ITn+x1iV+Tykh4Bw=;
+	b=uKWP21F/2HP3QfJvjVi2hD1CR2mrIwo4VdPtPGkVe5dEVHFl3fec3qu4FM0son2J9dZa70
+	aox1XkVz7ZoWCYJOrhSXRjpeRLJQJGWBGDfv18pwOAs3qJz43aLPvUvEezV4rpzjaSitBi
+	UZgXII6DJrENWUz8836amNHZ8pYW130aKdVN1RqFB8pyKAyeToJHMC63z93jWKjhFCIWgx
+	DKUpxsKwpqo5GCSt7GCUNjXqBGv8/szNLNU6TOGrYCXOyse6Q+Dy/6UqRT3Q3GqP9BlQnY
+	Jvhwgk//KIm5I11SaCBIbcux0dlwtvWStrU5AAGLsQiVyfknwYkp3lU59DJzRQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741392485;
+	s=2020e; t=1741392487;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nWbSTEZX/uXwNJpxZxMGiTAxsevwGtUEjLgvJcZh1aM=;
-	b=t2FD4YPjeL1D6kjz+PgnCsXUJ5r/GQkrUpRzMJhU9qjoI58utEMQ2QmfGyFTkTUSnR2ibi
-	XZavazqYzhwAg8DQ==
+	bh=KoXqXAypsvzEIa1eHB8gIQ36LC9ITn+x1iV+Tykh4Bw=;
+	b=/HglsecdUdK95behu0Mg+8iRjPz47tynfv/+sutXPMsqipxlPYMNzVL0jrFmUOanqzHaU4
+	f4CWGxzqHEURdBBA==
 From: "tip-bot2 for Waiman Long" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking/lockdep: Add kasan_check_byte() check in
- lock_acquire()
-Cc: Marco Elver <elver@google.com>, Waiman Long <longman@redhat.com>,
- Boqun Feng <boqun.feng@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Andrey Konovalov <andreyknvl@gmail.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250307232717.1759087-7-boqun.feng@gmail.com>
-References: <20250307232717.1759087-7-boqun.feng@gmail.com>
+Subject:
+ [tip: locking/core] locking/lock_events: Add locking events for lockdep
+Cc: Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250307232717.1759087-5-boqun.feng@gmail.com>
+References: <20250307232717.1759087-5-boqun.feng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174139248454.14745.10281410147550782244.tip-bot2@tip-bot2>
+Message-ID: <174139248654.14745.6049947955619993643.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,61 +67,72 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     de4b59d652646cf00cf632174348ca2266099edc
-Gitweb:        https://git.kernel.org/tip/de4b59d652646cf00cf632174348ca2266099edc
+Commit-ID:     a94d32446ab5e85c7ba97e48a8c9bd85be4fe889
+Gitweb:        https://git.kernel.org/tip/a94d32446ab5e85c7ba97e48a8c9bd85be4fe889
 Author:        Waiman Long <longman@redhat.com>
-AuthorDate:    Fri, 07 Mar 2025 15:26:56 -08:00
+AuthorDate:    Fri, 07 Mar 2025 15:26:54 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 08 Mar 2025 00:55:04 +01:00
+CommitterDate: Sat, 08 Mar 2025 00:55:03 +01:00
 
-locking/lockdep: Add kasan_check_byte() check in lock_acquire()
+locking/lock_events: Add locking events for lockdep
 
-KASAN instrumentation of lockdep has been disabled, as we don't need
-KASAN to check the validity of lockdep internal data structures and
-incur unnecessary performance overhead. However, the lockdep_map pointer
-passed in externally may not be valid (e.g. use-after-free) and we run
-the risk of using garbage data resulting in false lockdep reports.
+Add some lock events to lockdep to profile its behavior.
 
-Add kasan_check_byte() call in lock_acquire() for non kernel core data
-object to catch invalid lockdep_map and print out a KASAN report before
-any lockdep splat, if any.
-
-Suggested-by: Marco Elver <elver@google.com>
 Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Marco Elver <elver@google.com>
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
-Link: https://lore.kernel.org/r/20250214195242.2480920-1-longman@redhat.com
-Link: https://lore.kernel.org/r/20250307232717.1759087-7-boqun.feng@gmail.com
+Link: https://lore.kernel.org/r/20250307232717.1759087-5-boqun.feng@gmail.com
 ---
- kernel/locking/lockdep.c |  9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/locking/lock_events_list.h | 7 +++++++
+ kernel/locking/lockdep.c          | 8 +++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
+diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
+index 80b11f1..9ef9850 100644
+--- a/kernel/locking/lock_events_list.h
++++ b/kernel/locking/lock_events_list.h
+@@ -88,3 +88,10 @@ LOCK_EVENT(rtmutex_slow_acq3)	/* # of locks acquired in *block()	*/
+ LOCK_EVENT(rtmutex_slow_sleep)	/* # of sleeps				*/
+ LOCK_EVENT(rtmutex_slow_wake)	/* # of wakeup's			*/
+ LOCK_EVENT(rtmutex_deadlock)	/* # of rt_mutex_handle_deadlock()'s	*/
++
++/*
++ * Locking events for lockdep
++ */
++LOCK_EVENT(lockdep_acquire)
++LOCK_EVENT(lockdep_lock)
++LOCK_EVENT(lockdep_nocheck)
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 8436f01..b15757e 100644
+index 4470680..8436f01 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -57,6 +57,7 @@
- #include <linux/lockdep.h>
- #include <linux/context_tracking.h>
- #include <linux/console.h>
-+#include <linux/kasan.h>
- 
+@@ -61,6 +61,7 @@
  #include <asm/sections.h>
  
-@@ -5830,6 +5831,14 @@ void lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 	if (!debug_locks)
- 		return;
+ #include "lockdep_internals.h"
++#include "lock_events.h"
  
-+	/*
-+	 * As KASAN instrumentation is disabled and lock_acquire() is usually
-+	 * the first lockdep call when a task tries to acquire a lock, add
-+	 * kasan_check_byte() here to check for use-after-free and other
-+	 * memory errors.
-+	 */
-+	kasan_check_byte(lock);
+ #include <trace/events/lock.h>
+ 
+@@ -170,6 +171,7 @@ static struct task_struct *lockdep_selftest_task_struct;
+ static int graph_lock(void)
+ {
+ 	lockdep_lock();
++	lockevent_inc(lockdep_lock);
+ 	/*
+ 	 * Make sure that if another CPU detected a bug while
+ 	 * walking the graph we dont change it (while the other
+@@ -5091,8 +5093,12 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	if (unlikely(lock->key == &__lockdep_no_track__))
+ 		return 0;
+ 
+-	if (!prove_locking || lock->key == &__lockdep_no_validate__)
++	lockevent_inc(lockdep_acquire);
 +
- 	if (unlikely(!lockdep_enabled())) {
- 		/* XXX allow trylock from NMI ?!? */
- 		if (lockdep_nmi() && !trylock) {
++	if (!prove_locking || lock->key == &__lockdep_no_validate__) {
+ 		check = 0;
++		lockevent_inc(lockdep_nocheck);
++	}
+ 
+ 	if (subclass < NR_LOCKDEP_CACHING_CLASSES)
+ 		class = lock->class_cache[subclass];
