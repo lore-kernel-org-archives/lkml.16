@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473AA2BB13;
-	Sat,  8 Mar 2025 21:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D288187FEC;
+	Sat,  8 Mar 2025 21:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741470491; cv=none; b=iLnGmAHtAFJB4/SoQGymsSNrJHwEO5GzQc2L/JRi2dkqVNYD4yERa/fYBqrDEXXOyQQkP7uXEFoNSzSGUtXoUxDOnBUFMTFqWCftMs0CE60UmOajjNm5OgsyM5yTYFqy3Y4qBx+A/PT4AsDnfg9tOOcSpqIA5jVTyBjuVde6gDg=
+	t=1741470491; cv=none; b=W2nE8LyRgy7j6DXiv+WHXiiDYKqipuQR4P2EAfA5V8sXL9fEYy1r5go0xBozMSQrM9UyAcm2PNwYxbUHQ/eDdcZho8mw5Pk2CLzrOtbUBccUOWsq9EnjqqnCgDSY/XxMzRarJEAhvYF1RhoktQQiY8RfXxVJIuzpH1cnhch+8es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741470491; c=relaxed/simple;
-	bh=zUId9PjSmn0obYH/MQAPLhkKVd5X65P4v7UboY1hDOU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UN4vsuYwGF3yX+rJHGB6YzIlCXC0n7uccWN7c7Kd5nZPsq4QO/TFb4b8E4hiSBgjwqW65bFyKAqYOt27ATwga2u2kOwrqjcAncN5TX29crNLfRVp2v+0+truzg8+nmtJqNgR9a/Uo+i6bKjyj/6VLH3VyQJrgzqjCBdNFJWBQN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GaGOmCI7; arc=none smtp.client-ip=10.30.226.201
+	bh=NBkyLSUP9n9Ax4+7aC60v72hjL1RvF641HX71E/k+i8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GaO4Q1m0nCl3tI6Cd7qmFzZGsjT8F/qd4hUu0bwRiABnCNajlQK32Qa4jXFZDBOGN6lOj0NKKiJ7xXJgQOGJ8J+jxkN+Zjp9c5JteYGKdf7Eyga9O+vBBXZOibink3oYFF7f88PWLbwNSQIVxdQZqU+YY950xdiVvSGlio1xYDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlH/w/dW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GaGOmCI7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AAE63C4CEE0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlH/w/dW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E7F4DC4CEED;
 	Sat,  8 Mar 2025 21:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741470490;
-	bh=zUId9PjSmn0obYH/MQAPLhkKVd5X65P4v7UboY1hDOU=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=GaGOmCI7zEC1lNgGaQz9b82iWHu+EOBhuJnMKulktCqkNAlemy8ivEzO7jz7a5iSy
-	 FAegUYgw2ho3xhNfHx+43FAb66k2Sua4GtpgCNW1A7ILznHxPq1aqHMfWMbrtw3fzC
-	 TEu2X/ZVjmyfRGJ+QsWNqnVcOOKbGUd5uq2KiqA5XXFgSHUlGfxVz/xfNt4GGNnzJR
-	 hCXbjAMyuRG/6V6ctllEGGrjY0aiiDZXEomzigf6RsJ9Xx/Qks1LF8YjiUVgcsSDRu
-	 CtGDr1GntpSCqytGduloUWHeLhpovF1ygw/ZFtz2H2aTi7HTd8uRsjamMqhgMy2HRb
-	 OdcF9bO3VjqSw==
+	s=k20201202; t=1741470491;
+	bh=NBkyLSUP9n9Ax4+7aC60v72hjL1RvF641HX71E/k+i8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=IlH/w/dW52z87757vTdf4M7w9gn7K6w+DE1iPANxiGTm7AidiByDUeN45c5keAROM
+	 3AaBW152441T2oqK0nERdZLc7rxY/4ugVU4MB7uJBYqtJ0qb8oF7f/9ucQjLSVURlw
+	 284o0HlUqfEiL7A20n0CFtYdgWa4mgHAih1HdOfzfKHbAo9d24r9olu2ATIE7xI1X3
+	 nzSeb+WfKpkCriACuXRELkR14clF9WeAoF0h6QESrl9vXZ76v/dv9CGwBOTkxHal66
+	 yBG0gM0QFujIW2Phjp71GY3+ztqbqhGnv7F0F4/KGazC0EfO8S4J6zVwJ6/17b63I+
+	 eHCL58Vnl5eJQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0C6C282EC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87C0C282EC;
 	Sat,  8 Mar 2025 21:48:10 +0000 (UTC)
 From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Subject: [PATCH RESEND 0/4] media: i2c: imx214: Add support for 23.88MHz
+Date: Sat, 08 Mar 2025 22:47:58 +0100
+Subject: [PATCH RESEND 4/4] media: i2c: imx214: Add support for 23.88MHz
  clock
-Date: Sat, 08 Mar 2025 22:47:54 +0100
-Message-Id: <20250308-imx214_clk_freq-v1-0-467a4c083c35@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,6 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250308-imx214_clk_freq-v1-4-467a4c083c35@apitzsch.eu>
+References: <20250308-imx214_clk_freq-v1-0-467a4c083c35@apitzsch.eu>
+In-Reply-To: <20250308-imx214_clk_freq-v1-0-467a4c083c35@apitzsch.eu>
 To: Ricardo Ribalda <ribalda@kernel.org>, 
  Sakari Ailus <sakari.ailus@linux.intel.com>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -48,11 +51,11 @@ Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
  linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741470489; l=883;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741470489; l=2166;
  i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=zUId9PjSmn0obYH/MQAPLhkKVd5X65P4v7UboY1hDOU=;
- b=kuBfcjUn9LmwUeVpxN9JMXjKpC9oj0KgSPIF23LkhTf4kcucoLbcuUuXdPD1nrIiL6oLkcO+J
- 2jDHZ+cYj/3BXn2MDnuYRTe9FSn8xeDi56og5e7IYivKLsZXM3Dx3Zz
+ bh=WazSPfo9iHxmaDrm3SErM4Vh2VDI2d/EHPhwKDpeOK0=;
+ b=9FuClyeXyAMC4vqo/KrMlBMy2FxYhXKiRyuEQ6X/GiABtnb+qz4HmAW41Ze4+ALTYE+RYFYIb
+ 0X6ehEiIaHLA+5xaZx9Q4/kdKFKhktKqdBC4tX/ATg7SW6jee3qkgXG
 X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
  pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
 X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
@@ -60,27 +63,71 @@ X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
 X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 Reply-To: git@apitzsch.eu
 
-The imx214 driver currently supports only a 24MHz external clock. But
-there are devices, like Qualcomm-MSM8916-based phones, which cannot
-provide this frequency. To make the sensor usable by those devices, add
-support for 23.88MHz clock.
+From: André Apitzsch <git@apitzsch.eu>
+
+Qualcomm MSM8916 devices only provide an external clock of 23.88MHz.
+Make the sensor usable by those devices by adding support for this
+frequency.
 
 Signed-off-by: André Apitzsch <git@apitzsch.eu>
 ---
-André Apitzsch (4):
-      media: i2c: imx214: Calculate link bit rate from clock frequency
-      media: i2c: imx214: Prepare for variable clock frequency
-      media: i2c: imx214: Read clock frequency from device tree
-      media: i2c: imx214: Add support for 23.88MHz clock
+ drivers/media/i2c/imx214.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
- drivers/media/i2c/imx214.c | 188 +++++++++++++++++++++++++++++++++++----------
- 1 file changed, 146 insertions(+), 42 deletions(-)
----
-base-commit: 942a51cca29ed20f23ba37f34ff52a6af32ab6c4
-change-id: 20250205-imx214_clk_freq-3bf6a05de35a
+diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+index c3d55259d6fd1c4ca96f52833864bdfe6bedf13a..e24c76e01ab5070c073d082b1a2969cff3e17f9f 100644
+--- a/drivers/media/i2c/imx214.c
++++ b/drivers/media/i2c/imx214.c
+@@ -30,7 +30,10 @@
+ 
+ #define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
+ 
++#define IMX214_CLK_FREQ_23880KHZ	23880000
+ #define IMX214_CLK_FREQ_24000KHZ	24000000
++
++#define IMX214_LINK_FREQ_597MHZ		597000000
+ #define IMX214_LINK_FREQ_600MHZ		600000000
+ /* Keep wrong link frequency for backward compatibility */
+ #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
+@@ -233,6 +236,7 @@ static const char * const imx214_supply_name[] = {
+ #define IMX214_NUM_SUPPLIES ARRAY_SIZE(imx214_supply_name)
+ 
+ static const s64 link_freq[] = {
++	IMX214_LINK_FREQ_597MHZ,
+ 	IMX214_LINK_FREQ_600MHZ,
+ };
+ 
+@@ -242,6 +246,10 @@ struct imx214_clk_params {
+ };
+ 
+ static const struct imx214_clk_params imx214_clk_params[] = {
++	{
++		.clk_freq = IMX214_CLK_FREQ_23880KHZ,
++		.link_freq = IMX214_LINK_FREQ_597MHZ,
++	},
+ 	{
+ 		.clk_freq = IMX214_CLK_FREQ_24000KHZ,
+ 		.link_freq = IMX214_LINK_FREQ_600MHZ,
+@@ -1320,8 +1328,7 @@ static int imx214_parse_fwnode(struct device *dev, struct imx214 *imx214)
+ 
+ 	if (i == bus_cfg.nr_of_link_frequencies)
+ 		ret = dev_err_probe(dev, -EINVAL,
+-				    "link-frequencies %d not supported, please review your DT\n",
+-				    IMX214_LINK_FREQ_600MHZ);
++				    "provided link-frequencies not supported, please review your DT\n");
+ 
+ done:
+ 	v4l2_fwnode_endpoint_free(&bus_cfg);
+@@ -1359,6 +1366,7 @@ static int imx214_probe(struct i2c_client *client)
+ 	}
+ 
+ 	switch (xclk_freq) {
++	case IMX214_CLK_FREQ_23880KHZ:
+ 	case IMX214_CLK_FREQ_24000KHZ:
+ 		if (imx214->clk_params->clk_freq != xclk_freq)
+ 			return dev_err_probe(imx214->dev, -EINVAL,
 
-Best regards,
 -- 
-André Apitzsch <git@apitzsch.eu>
+2.48.1
 
 
