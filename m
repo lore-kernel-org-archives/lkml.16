@@ -1,299 +1,286 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699DC8BFF;
-	Sat,  8 Mar 2025 18:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCD61DB122;
+	Sat,  8 Mar 2025 19:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741460271; cv=none; b=HtD0vxyKbkNv2ed/mASzC7RH22EMjfqzsuo05RzI+7lnNuqSj2T70lVMzhMbTn1HszSXR9lsHKjmOtrIXtNsguvajJFP4FRQeMTI+6ikJNSViojXuSIqnkzW5XopdB4EnUbKQ6br9hQffcfjPfbLHIOo6s0yTFF9NkPSNFXMzzo=
+	t=1741460641; cv=none; b=ncflCNlrttDBnBXkqQVjWE4Ss+618qho37T2fRvx8q2kQfrEPEUn/Bi7ptwvD2X9cdQ00ihnb6YNAfeVW8Z9LjUwOb/OWupkUuj9kcrdWrmoJQZT7A8ulOcTNjGMSKm3tfE9zjXM8ZNxNaYhubiNqCatxMVksICPiHNA7li+nbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741460271; c=relaxed/simple;
-	bh=XmNTWLJqsIjerW9NiA+27YBuZq9mjNlrLg5Xxj8WVLQ=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=lnbZWXdlot4tFSqNiMtc7GgzsGKXwscucQCaiiI3kXU3/HaW6H0VUgsArpKLKGnxfGmUSAIxsweovIr52g4MP4O3bYlJzboHk0n0qn8v+Q9jY4xNtXt/aZQROymtzrRT1xhDcaOvfwuGrdY2Y7WY0APSiqzEZhMCdnEza6XgylQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nUbQm7Ee; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741460641; c=relaxed/simple;
+	bh=+rxHqt446zRcVp/SCTQfHaohEqfDFE3SarBqTFs0xy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LyTZwDF5Mtzstac5raDf89lSc1i96pIwkMSa/TJouw3Eo84DZtK8dU1WAdQO/hxwv+Kewr8ggizx/ps4c9HdZiuTYFVmGht1do80IzrLtinnul4T8Kji3garFWzZNj6W45Yy3PTXhCpZaigXNMCwCFtIou9zt7NKb6k7XbyDjnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hY00UVYT; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUbQm7Ee"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso4181769a91.0;
-        Sat, 08 Mar 2025 10:57:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741460269; x=1742065069; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5GgQebRpaI8tg+e2D2WplA5dGl2hw8xIsKdL5v3sIfw=;
-        b=nUbQm7EeziTh3rfHjsuHV1fhQXFVYESsDB4ARYfk6OjMTTF07gxs2WV/jWRLiutWXY
-         mk890adELhfjPDwBwJPBwETJHAyPbG8p/C3CC66v7ofrt729VBydxMn/r4zD7EHU4VnX
-         OTUfhkhJdDnPfqwd3tHOkCOXhVrncStGjkos+ap68Z0WBqNlDd8kB64gIOa7vRz4SPT0
-         AxnapHhSeqZefZZ9RLknCT8V9XSZD2P/CT0C6soV0w8E0VkqJdOkJZ1xFCLONUJya/Om
-         OpILABs5hBRsfOzfB/920BUBDcJ2Bmvb8s23lQ+p6eTMrArieZzHiVsTq/D1O4o0cr1x
-         GI2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741460269; x=1742065069;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5GgQebRpaI8tg+e2D2WplA5dGl2hw8xIsKdL5v3sIfw=;
-        b=btDCHWmqstgFg+vcnwTvnt7VSromuYPt21ULs2PM0V2UGpsAxdZ5yRYmFQSUDILyiY
-         lh6JSnufgJgrxEsiwYFDMMIJIFmGANlBAn4GJGsdKuyxlfZ+PXNmF+28NCIbiOFDNP2P
-         PMtdtxrMobVFMWwjC3Mg0+bWlYz4ZZf0tVY10kAD48zHLeWcirl4vTxubhz66oJEkesY
-         F99h0w4iU0POIINDgcGtCrfT1Q5Q5KUuXzZsyAwJoh8jA6d23JXZGNDjLsE+l/q8e/1J
-         ZMQZ+aqnGs8Nwux3B7OEsD0plhJn7sfSMlbhuxRukgXSrQve5VPZDgTUzYRdmZ0WVOBo
-         +2VA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGQcuBmEzv8ogG+lexYRLTxwwbap7YIQZXScOwtgf1cthpaf0GgrpTaUO5Y3PvX/ClfMQYaCvHdPJgSWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyivAydErXP65xsPX5jOOOa0R16BH1QRY6bktvRj+Co0sYwEV5G
-	nRedUQIMgHvT47oin8/Ac0T82YuBz+1ogBy4z5eF8jXwSrx4CBXU
-X-Gm-Gg: ASbGncvlNBOakqIWAkqMl8vqYyvJw3epC++muhk5z6IRwOnoBMi8MfS8lNL/76hA30x
-	Yc/A39T0rF9I8T/EuH7JRFaVCNDUgS2ljcchinRHcu6ZAmhRvEhvk1Uwfcrn5HD8O3RQbGCN7uJ
-	d7sMMpWeQtUjH3SeKLzIt4RNg68ifR8sBr1+6TUV1ueSIzEzwlQ4FDxLZjIqPecZXdeWKvHXY+n
-	I1q5EK7plyBc2e38hlFaBteFMfhLIySsrUgxcl9OzPzx8Js7s8o2M0KrdpZZkUbpviSX0FT2kYZ
-	WAnbgQIQFL7yFQJLvfkP1Nu0YD+K4VSwNZ4=
-X-Google-Smtp-Source: AGHT+IFQNfbGhuNdv9bcKfedwM9w7GN5xsLluOGAk7ccw7yHuc5arby2ETjSD+scF+gJMKUEEBMOoQ==
-X-Received: by 2002:a17:90b:3c0d:b0:2fa:228d:5b03 with SMTP id 98e67ed59e1d1-2ff7ce93e84mr11804304a91.19.1741460268510;
-        Sat, 08 Mar 2025 10:57:48 -0800 (PST)
-Received: from dw-tp ([171.76.82.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e7ffdd3sm6942707a91.39.2025.03.08.10.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 10:57:47 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>, linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>
-Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if journal is destroying
-In-Reply-To: <Z8xbLrdN3L1E50-G@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-Date: Sun, 09 Mar 2025 00:11:22 +0530
-Message-ID: <87cyergyb1.fsf@gmail.com>
-References: <cover.1741270780.git.ojaswin@linux.ibm.com> <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com> <87ldtfhmo7.fsf@gmail.com> <Z8xAmyICsNlln4Y3@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com> <87ecz7hcw0.fsf@gmail.com> <Z8xbLrdN3L1E50-G@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hY00UVYT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741460640; x=1772996640;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+rxHqt446zRcVp/SCTQfHaohEqfDFE3SarBqTFs0xy0=;
+  b=hY00UVYTAO3BTX7uTiXxnvL+d2yrJhK2osKlaKQxtGotYc08az+5FYin
+   HGZdwu0GvnWugXBxJjESYuP2dU4n1rgFtBhz31q6Gb2pdRRy+bJH5dm//
+   tgBKtApi3NXDUDL7475w+Lc8Kqypztv3NCYi7ubIbqafbO3JIUC9zCN1O
+   Wxr5zDH4ORK/ZdfOOGvjaQ4dzXOM2gzIz9tlHxGeEIXGLvuAFnjMx845i
+   rrcVRH446zxvVUHkj+0polxk36azNAJcyH+BparwjXbxdP1/FUTCyKkHn
+   LPW4reqqi5z5HBnh4oV+JwKPtSvkTzhlzg0Qonu29cId8nuam8JFk1m3/
+   Q==;
+X-CSE-ConnectionGUID: Cll8ojllRWup3CVeYar1bA==
+X-CSE-MsgGUID: m+d7Qls7SOGmaIrtS3nx8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="42690740"
+X-IronPort-AV: E=Sophos;i="6.14,232,1736841600"; 
+   d="scan'208";a="42690740"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2025 11:03:59 -0800
+X-CSE-ConnectionGUID: 1Cr9wz4dQZCCRWNT40jMKQ==
+X-CSE-MsgGUID: E7ZWhpblThK2hTv2JJbWzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,232,1736841600"; 
+   d="scan'208";a="120087334"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 08 Mar 2025 11:03:55 -0800
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tqzSi-0002Dk-2a;
+	Sat, 08 Mar 2025 19:03:52 +0000
+Date: Sun, 9 Mar 2025 03:03:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Carpenter <error27@gmail.com>,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net] ipvs: prevent integer overflow in do_ip_vs_get_ctl()
+Message-ID: <202503090225.vNvZGEfz-lkp@intel.com>
+References: <6dddcc45-78db-4659-80a2-3a2758f491a6@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6dddcc45-78db-4659-80a2-3a2758f491a6@stanley.mountain>
 
-Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+Hi Dan,
 
-> On Sat, Mar 08, 2025 at 06:56:23PM +0530, Ritesh Harjani wrote:
->> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
->> 
->> > On Sat, Mar 08, 2025 at 03:25:04PM +0530, Ritesh Harjani (IBM) wrote:
->> >> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
->> >> 
->> >> > Presently we always BUG_ON if trying to start a transaction on a journal marked
->> >> > with JBD2_UNMOUNT, since this should never happen. However, while ltp running
->> >> > stress tests, it was observed that in case of some error handling paths, it is
->> >> > possible for update_super_work to start a transaction after the journal is
->> >> > destroyed eg:
->> >> >
->> >> > (umount)
->> >> > ext4_kill_sb
->> >> >   kill_block_super
->> >> >     generic_shutdown_super
->> >> >       sync_filesystem /* commits all txns */
->> >> >       evict_inodes
->> >> >         /* might start a new txn */
->> >> >       ext4_put_super
->> >> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
->> >> >         jbd2_journal_destroy
->> >> >           journal_kill_thread
->> >> >             journal->j_flags |= JBD2_UNMOUNT;
->> >> >           jbd2_journal_commit_transaction
->> >> >             jbd2_journal_get_descriptor_buffer
->> >> >               jbd2_journal_bmap
->> >> >                 ext4_journal_bmap
->> >> >                   ext4_map_blocks
->> >> >                     ...
->> >> >                     ext4_inode_error
->> >> >                       ext4_handle_error
->> >> >                         schedule_work(&sbi->s_sb_upd_work)
->> >> >
->> >> >                                                /* work queue kicks in */
->> >> >                                                update_super_work
->> >> >                                                  jbd2_journal_start
->> >> >                                                    start_this_handle
->> >> >                                                      BUG_ON(journal->j_flags &
->> >> >                                                             JBD2_UNMOUNT)
->> >> >
->> >> > Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
->> >> > destroying only do a journaled (and deferred) update of sb if this flag is not
->> >> > set. Otherwise, just fallback to an un-journaled commit.
->> >> >
->> >> > We set sbi->s_journal_destroying = true only after all the FS updates are done
->> >> > during ext4_put_super() (except a running transaction that will get commited
->> >> > during jbd2_journal_destroy()). After this point, it is safe to commit the sb
->> >> > outside the journal as it won't race with a journaled update (refer
->> >> > 2d01ddc86606).
->> >> >
->> >> > Also, we don't need a similar check in ext4_grp_locked_error since it is only
->> >> > called from mballoc and AFAICT it would be always valid to schedule work here.
->> >> >
->> >> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
->> >> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
->> >> > Suggested-by: Jan Kara <jack@suse.cz>
->> >> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
->> >> > ---
->> >> >  fs/ext4/ext4.h      | 2 ++
->> >> >  fs/ext4/ext4_jbd2.h | 8 ++++++++
->> >> >  fs/ext4/super.c     | 4 +++-
->> >> >  3 files changed, 13 insertions(+), 1 deletion(-)
->> >> >
->> >> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
->> >> > index 2b7d781bfcad..d48e93bd5690 100644
->> >> > --- a/fs/ext4/ext4.h
->> >> > +++ b/fs/ext4/ext4.h
->> >> > @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
->> >> >  	 */
->> >> >  	struct work_struct s_sb_upd_work;
->> >> >  
->> >> > +	bool s_journal_destorying;
->> >> > +
->> >> >  	/* Atomic write unit values in bytes */
->> >> >  	unsigned int s_awu_min;
->> >> >  	unsigned int s_awu_max;
->> >> > diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
->> >> > index 9b3c9df02a39..6bd3ca84410d 100644
->> >> > --- a/fs/ext4/ext4_jbd2.h
->> >> > +++ b/fs/ext4/ext4_jbd2.h
->> >> > @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
->> >> >  {
->> >> >  	int err = 0;
->> >> >  
->> >> > +	/*
->> >> > +	 * At this point all pending FS updates should be done except a possible
->> >> > +	 * running transaction (which will commit in jbd2_journal_destroy). It
->> >> > +	 * is now safe for any new errors to directly commit superblock rather
->> >> > +	 * than going via journal.
->> >> > +	 */
->> >> > +	sbi->s_journal_destorying = true;
->> >> 
->> >> This is not correct right. I think what we decided to set this flag
->> >> before we flush the workqueue. So that we don't schedule any new
->> >> work after this flag has been set. At least that is what I understood.
->> >> 
->> >> [1]: https://lore.kernel.org/all/87eczc6rlt.fsf@gmail.com/
->> >> 
->> >> -ritesh
->> >
->> > Hey Ritesh,
->> >
->> > Yes that is not correct, I missed that in my patch however we realised
->> > that adding it before flush_work() also has issues [1]. More
->> > specifically:
->> 
->> Ohk. right. 
->> 
->> >
->> >                      **kjournald2**
->> >                      jbd2_journal_commit_transaction()
->> >                      ...
->> >                      ext4_handle_error()
->> >                         /* s_journal_destorying is not set */
->> >                         if (journal && !s_journal_destorying)
->> 
->> Then maybe we should not schedule another work to update the superblock
->> via journalling, it the error itself occurred while were trying to
->> commit the journal txn? 
->> 
->> 
->> -ritesh
->
-> Hmm, ideally yes that should not happen, but how can we achieve that?
-> For example with the trace we saw:
->
->    **kjournald2**
->    jbd2_journal_commit_transaction()
->      jbd2_journal_get_descriptor_buffer
->        jbd2_journal_bmap
->          ext4_journal_bmap
->            ext4_map_blocks
->              ...
->              ext4_inode_error
->                ext4_handle_error
->                  schedule_work(&sbi->s_sb_upd_work)
->
-> How do we tell ext4_handle_error that it is in the context of a
-> committing txn.
+kernel test robot noticed the following build warnings:
 
-So even if we identify that the current
-jbd2_journal_commit_transaction() is coming from kjournald2(), that is
-sufficient right? Because the only other place where we call
-jbd2_journal_commit_transaction() is jbd2_journal_destroy() and that
-happens after we can set few things from ext4_put_super() and flush work
-is completed, correct? 
+[auto build test WARNING on net/main]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Carpenter/ipvs-prevent-integer-overflow-in-do_ip_vs_get_ctl/20250307-214537
+base:   net/main
+patch link:    https://lore.kernel.org/r/6dddcc45-78db-4659-80a2-3a2758f491a6%40stanley.mountain
+patch subject: [PATCH net] ipvs: prevent integer overflow in do_ip_vs_get_ctl()
+config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20250309/202503090225.vNvZGEfz-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250309/202503090225.vNvZGEfz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503090225.vNvZGEfz-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> net/netfilter/ipvs/ip_vs_ctl.c:3099:40: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+    3099 |                         pr_err("length: %u != %lu\n", *len, size);
+         |                                               ~~~           ^~~~
+         |                                               %zu
+   include/linux/printk.h:544:33: note: expanded from macro 'pr_err'
+     544 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+         |                                ~~~     ^~~~~~~~~~~
+   include/linux/printk.h:501:60: note: expanded from macro 'printk'
+     501 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                                                     ~~~    ^~~~~~~~~~~
+   include/linux/printk.h:473:19: note: expanded from macro 'printk_index_wrap'
+     473 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                         ~~~~    ^~~~~~~~~~~
+   net/netfilter/ipvs/ip_vs_ctl.c:3140:40: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+    3140 |                         pr_err("length: %u != %lu\n", *len, size);
+         |                                               ~~~           ^~~~
+         |                                               %zu
+   include/linux/printk.h:544:33: note: expanded from macro 'pr_err'
+     544 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+         |                                ~~~     ^~~~~~~~~~~
+   include/linux/printk.h:501:60: note: expanded from macro 'printk'
+     501 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                                                     ~~~    ^~~~~~~~~~~
+   include/linux/printk.h:473:19: note: expanded from macro 'printk_index_wrap'
+     473 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                         ~~~~    ^~~~~~~~~~~
+   2 warnings generated.
 
 
-> We can't pass down an argument all the way down 
-> cause that is not feasible. An sb level flag will also not work
-> I think. Any thoughts on this?
+vim +3099 net/netfilter/ipvs/ip_vs_ctl.c
 
-I was thinking if we should have a per task flag? Something like
-PF_KJOURNALD?  (Similar to how we have PF_KSWAPD or PF_KCOMPACTD)? This
-can help us identify if we are a kjournald2() kthread.
+  3012	
+  3013	static int
+  3014	do_ip_vs_get_ctl(struct sock *sk, int cmd, void __user *user, int *len)
+  3015	{
+  3016		unsigned char arg[MAX_GET_ARGLEN];
+  3017		int ret = 0;
+  3018		unsigned int copylen;
+  3019		struct net *net = sock_net(sk);
+  3020		struct netns_ipvs *ipvs = net_ipvs(net);
+  3021	
+  3022		BUG_ON(!net);
+  3023		BUILD_BUG_ON(sizeof(arg) > 255);
+  3024		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
+  3025			return -EPERM;
+  3026	
+  3027		if (cmd < IP_VS_BASE_CTL || cmd > IP_VS_SO_GET_MAX)
+  3028			return -EINVAL;
+  3029	
+  3030		copylen = get_arglen[CMDID(cmd)];
+  3031		if (*len < (int) copylen) {
+  3032			IP_VS_DBG(1, "get_ctl: len %d < %u\n", *len, copylen);
+  3033			return -EINVAL;
+  3034		}
+  3035	
+  3036		if (copy_from_user(arg, user, copylen) != 0)
+  3037			return -EFAULT;
+  3038		/*
+  3039		 * Handle daemons first since it has its own locking
+  3040		 */
+  3041		if (cmd == IP_VS_SO_GET_DAEMON) {
+  3042			struct ip_vs_daemon_user d[2];
+  3043	
+  3044			memset(&d, 0, sizeof(d));
+  3045			mutex_lock(&ipvs->sync_mutex);
+  3046			if (ipvs->sync_state & IP_VS_STATE_MASTER) {
+  3047				d[0].state = IP_VS_STATE_MASTER;
+  3048				strscpy(d[0].mcast_ifn, ipvs->mcfg.mcast_ifn,
+  3049					sizeof(d[0].mcast_ifn));
+  3050				d[0].syncid = ipvs->mcfg.syncid;
+  3051			}
+  3052			if (ipvs->sync_state & IP_VS_STATE_BACKUP) {
+  3053				d[1].state = IP_VS_STATE_BACKUP;
+  3054				strscpy(d[1].mcast_ifn, ipvs->bcfg.mcast_ifn,
+  3055					sizeof(d[1].mcast_ifn));
+  3056				d[1].syncid = ipvs->bcfg.syncid;
+  3057			}
+  3058			if (copy_to_user(user, &d, sizeof(d)) != 0)
+  3059				ret = -EFAULT;
+  3060			mutex_unlock(&ipvs->sync_mutex);
+  3061			return ret;
+  3062		}
+  3063	
+  3064		mutex_lock(&__ip_vs_mutex);
+  3065		switch (cmd) {
+  3066		case IP_VS_SO_GET_VERSION:
+  3067		{
+  3068			char buf[64];
+  3069	
+  3070			sprintf(buf, "IP Virtual Server version %d.%d.%d (size=%d)",
+  3071				NVERSION(IP_VS_VERSION_CODE), ip_vs_conn_tab_size);
+  3072			if (copy_to_user(user, buf, strlen(buf)+1) != 0) {
+  3073				ret = -EFAULT;
+  3074				goto out;
+  3075			}
+  3076			*len = strlen(buf)+1;
+  3077		}
+  3078		break;
+  3079	
+  3080		case IP_VS_SO_GET_INFO:
+  3081		{
+  3082			struct ip_vs_getinfo info;
+  3083			info.version = IP_VS_VERSION_CODE;
+  3084			info.size = ip_vs_conn_tab_size;
+  3085			info.num_services = ipvs->num_services;
+  3086			if (copy_to_user(user, &info, sizeof(info)) != 0)
+  3087				ret = -EFAULT;
+  3088		}
+  3089		break;
+  3090	
+  3091		case IP_VS_SO_GET_SERVICES:
+  3092		{
+  3093			struct ip_vs_get_services *get;
+  3094			size_t size;
+  3095	
+  3096			get = (struct ip_vs_get_services *)arg;
+  3097			size = struct_size(get, entrytable, get->num_services);
+  3098			if (*len != size) {
+> 3099				pr_err("length: %u != %lu\n", *len, size);
+  3100				ret = -EINVAL;
+  3101				goto out;
+  3102			}
+  3103			ret = __ip_vs_get_service_entries(ipvs, get, user);
+  3104		}
+  3105		break;
+  3106	
+  3107		case IP_VS_SO_GET_SERVICE:
+  3108		{
+  3109			struct ip_vs_service_entry *entry;
+  3110			struct ip_vs_service *svc;
+  3111			union nf_inet_addr addr;
+  3112	
+  3113			entry = (struct ip_vs_service_entry *)arg;
+  3114			addr.ip = entry->addr;
+  3115			rcu_read_lock();
+  3116			if (entry->fwmark)
+  3117				svc = __ip_vs_svc_fwm_find(ipvs, AF_INET, entry->fwmark);
+  3118			else
+  3119				svc = __ip_vs_service_find(ipvs, AF_INET,
+  3120							   entry->protocol, &addr,
+  3121							   entry->port);
+  3122			rcu_read_unlock();
+  3123			if (svc) {
+  3124				ip_vs_copy_service(entry, svc);
+  3125				if (copy_to_user(user, entry, sizeof(*entry)) != 0)
+  3126					ret = -EFAULT;
+  3127			} else
+  3128				ret = -ESRCH;
+  3129		}
+  3130		break;
+  3131	
+  3132		case IP_VS_SO_GET_DESTS:
+  3133		{
+  3134			struct ip_vs_get_dests *get;
+  3135			size_t size;
+  3136	
+  3137			get = (struct ip_vs_get_dests *)arg;
+  3138			size = struct_size(get, entrytable, get->num_dests);
+  3139			if (*len != size) {
+  3140				pr_err("length: %u != %lu\n", *len, size);
+  3141				ret = -EINVAL;
+  3142				goto out;
+  3143			}
+  3144			ret = __ip_vs_get_dest_entries(ipvs, get, user);
+  3145		}
+  3146		break;
+  3147	
+  3148		case IP_VS_SO_GET_TIMEOUT:
+  3149		{
+  3150			struct ip_vs_timeout_user t;
+  3151	
+  3152			__ip_vs_get_timeouts(ipvs, &t);
+  3153			if (copy_to_user(user, &t, sizeof(t)) != 0)
+  3154				ret = -EFAULT;
+  3155		}
+  3156		break;
+  3157	
+  3158		default:
+  3159			ret = -EINVAL;
+  3160		}
+  3161	
+  3162	out:
+  3163		mutex_unlock(&__ip_vs_mutex);
+  3164		return ret;
+  3165	}
+  3166	
 
-That will help prevent scheduling another work item to start a new
-transaction in case an error occurs while committing the currently
-running transaction. Correct?
-
-Now I don't know if we have any free bit available in current->flags. If
-not shall we use current->journal_info pointer to have 0th bit as a
-flag? Basically override current->journal_info to also store a flag.  We
-can create a wrapper to get the journal_info from current by masking
-this flag bit and use it to dereference journal_info.
-
-But before going down that road, it's better to know what others think?
-
--ritesh
-
-
->
-> regards,
-> ojaswin
->
->> 
->> 
->> >   ext4_put_super()
->> >     sbi->s_journal_destorying = true;
->> >     flush_work(&sbi->s_sb_upd_work)
->> >                                       schedule_work()
->> >     jbd2_journal_destroy()
->> >      journal->j_flags |= JBD2_UNMOUNT;
->> >
->> >                                         jbd2_journal_start()
->> >                                          start_this_handle()
->> >                                            BUG_ON(JBD2_UNMOUNT)
->> >
->> > So the right thing to do seems to be that we need to force a journal
->> > commit before the final flush as well. [1] Has more info on this and
->> > some followup discussion as well.
->> >
->> > [1] https://lore.kernel.org/all/cover.1741270780.git.ojaswin@linux.ibm.com/T/#mc8046d47b357665bdbd2878c91e51eb660f94b3e
->> >
->> > Regards,
->> > ojaswin
->> >> 
->> >> 
->> >> > +
->> >> >  	err = jbd2_journal_destroy(journal);
->> >> >  	sbi->s_journal = NULL;
->> >> >  
->> >> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
->> >> > index 8ad664d47806..31552cf0519a 100644
->> >> > --- a/fs/ext4/super.c
->> >> > +++ b/fs/ext4/super.c
->> >> > @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
->> >> >  		 * constraints, it may not be safe to do it right here so we
->> >> >  		 * defer superblock flushing to a workqueue.
->> >> >  		 */
->> >> > -		if (continue_fs && journal)
->> >> > +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
->> >> >  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
->> >> >  		else
->> >> >  			ext4_commit_super(sb);
->> >> > @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
->> >> >  	spin_lock_init(&sbi->s_error_lock);
->> >> >  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
->> >> >  
->> >> > +	sbi->s_journal_destorying = false;
->> >> > +
->> >> >  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
->> >> >  	if (err)
->> >> >  		goto failed_mount3;
->> >> > -- 
->> >> > 2.48.1
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
