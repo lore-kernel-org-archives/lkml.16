@@ -1,359 +1,179 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE8817A311
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 09:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D32C1AB6DE
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 09:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741426478; cv=none; b=GQszj3y5LVpDTtW5YPRlJdXMevvDD/EBzMaxXOihcdzC0/1NvU4MU39PiQ1IUGS4yE9dINFJq5dOJ+zBQqjP2+8efHmIaV5HOMi8UiKTYo3/+7I+AAO7c3hS5tjKx71ScfB7VRiWKFMGbE5vbJzPOtpRFWC3gRs6nWcAcoNZeUM=
+	t=1741426494; cv=none; b=V9zAmChBFrBU+WSXX5KBMH7p1G1LfPgHZ4ioFqZ1+7bjOO6jV1Oo4mWruDtOtrE2BaVFBzQ3V9gvLkxxfwf2Z2Dhmh21FzWpNUYjeQ2jVw01Xl4AHSggWnoau7RgrxvZh1mdKAQRLYGcp+e9p0aFp/7ChG+3CXbp6GN0ZpxTfKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741426478; c=relaxed/simple;
-	bh=AEQke3iaJcEGCk8IGcfYNyhfdxGPTniHtJn0Lphxmi8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ajxuGe2JzvEUneI9J+u7IVQLgXpKYu0uh/FyEd6eQEfA/mXSehCQkfG2vO+HMRBW4cY4hn0F14+Q0LGSkyU9soedi8uv6cvgAw0u9+8XPcen/fEHeWGZpuoo3MjmWtTstUbyrn2GigSUmP3kschmqPcyR9bG7szHYdlKDxwSrF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kvZ5JG54; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741426494; c=relaxed/simple;
+	bh=NHC7RP2GbKdwTiWHGO8lLwZWIfTS4uViaABUpCOl+2E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D7kawpTJ5MeuVnjaRaKwywgfzQqe4Awnjobreabwdcw85AS0CAYWjVKNEcf5Uzf+t6i+3Y2/ZW59Ih0ufTJOwGo0pAvB0rt1DGZz8b2gBjbGTOe26l8/+1JxawJ7FOvXvVG3cIiAOPah7nCtuG3DSWiGF2R9oUCZkPHwrTYsE+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eE84SUkc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvZ5JG54"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3912c09bea5so1984243f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 01:34:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741426474; x=1742031274; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zPHgjKqwrv3u0UPeI6ZEyPubF6kRYWjLcRGaVrm7wYg=;
-        b=kvZ5JG54kXmmm8nwwOx1Mu9edT6ID7SdAwhAlPBlPQgPg8L/5Nf67Oye/kB/pOanLA
-         jFdYLCy0PDXcwXip+MNVjGCAA+0+EyEJN1wqfK7F+BQ4wSUjvX1vI/DVHCHRXCigl02j
-         9MfBb2CdADf0ZvTSrxL6nibxVRsIobTb94sBsAZRK6DImRuc2xfaHJ4vV8M0dK8SvoYH
-         hSLOxLZUUK0+Z6v0yk01kuanjRUGrCF4/9qvKsXSwQ8TmJnmrDhCoSKb/0J2IHmC/eLU
-         N5b9eav/JbGyrP/EffjxVxpWioLORki+9rzqP3QbdTfj5a15Y2/NTA5XQLqgji+glSpy
-         2bCg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eE84SUkc"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5286STDL029053
+	for <linux-kernel@vger.kernel.org>; Sat, 8 Mar 2025 09:34:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2D2hEuOwQrEqYMvC2ATnO4j/VTIi52LI14hMdCpxT/w=; b=eE84SUkc6CSFHZFb
+	YlR/83jsDZ6y8lpInTcNDS9umqGI476vp4Bf0sfLmP+hsK3D4SD5zloIf2owaxC4
+	00z+cD0toWBiUEM5XTSive0iKfi2F5AIB0P+opuqoyGo7ye54QKmAWFnDWpqTDzk
+	m6bvl/AlIiLUU8rTjU95XjfuiDxPtR8GvRxIqKRePDlArPL3SisDtFaqGalz0S5L
+	BkTkrg+LEFE7TWMEvbhh0hNfvl2tHzPAgyC9l1gXce8JwlOb05z/j65fgJ1SlkIz
+	O6U6Km+E89+bh+EjZv++nexDO02y8X5FAZeeB5Qv0i9E+kVaq630kTDo4y5vgLit
+	8lGuMA==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f0w0b27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 09:34:51 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e8fd4ef023so5405296d6.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 01:34:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741426474; x=1742031274;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zPHgjKqwrv3u0UPeI6ZEyPubF6kRYWjLcRGaVrm7wYg=;
-        b=IqSrn0fwgF+V2KY9pgxzgNgKkvq6UovOYK6sHV99ULqRnfVds7KDXyGtqAmdTYz9JA
-         Zr1p/JG0kOcjfa+FnoyFBIKcqdUGtC8kE1zcOFuRLrtXDYrMnh8/GDofTdvYFJkVO/dY
-         mYbNrZcFQBlVP5vuM7ermghbO9b8UyouIN1WPTFUL8Y+k1B9x9gbIgYixJ6PuWQ9ckgp
-         0JVLA4d1J+/uTZkIY7LyLJ790mf4Hi8ek1ctyhqMjabvHMbQ1BtDgp6xRC/74PuX3ehI
-         6GfdqVcuGhoCasK+Jt+CyH3PfeipwFkJ2GlGMZAtaQ0p9gIbBQ7/hzIk4GvSiNAiyOfq
-         paJQ==
-X-Gm-Message-State: AOJu0Yz1ompyyIjRS4qb779hrNFGgayp052KRgI2RMbgfgpddpJ2uTRZ
-	6cm9hAWdBb2oK5G7GHmtGRFyr88HaaqaslKc2oLjELUntYQlxYPs1/ezdw==
-X-Gm-Gg: ASbGnct+f5gLz0VBqvg6wIPjTUHzUyvnVVgbT0G5iQigi80ArtVCzAGIx7etYKBxJ5j
-	XsPwaAv0WLJqeQHRL5cywqbXQOC9aUvdK0sn3ajI/q07eM9ZTrupuBe23JbpKHoGXvDzb8XF/bU
-	u/kXysb3vuesgheAoWJzaJl2HZ8kfPEGtL2nzmxOscN+Cp1LL8n1KZ4jvgWNRTR58WgKHfPL9Bm
-	tMnLbs0lx1XW+ryJvmUO9xBtac+VWSDIyUlwIcb7SvZmThFi+i8TaGhwHYJuAIObrZnmrzM6j10
-	JooCGfJZw8Pe9DgFmqM3bULAuqh/qyrLxSK3C18KArhy724sEP/ear0cgqIlSUaX5Sg2IXZjOA7
-	+vyi/uDDZlFUQC5joZtAm1utVoQ==
-X-Google-Smtp-Source: AGHT+IEs1etUoC2eBYjq1euM2OhKf/IYlfghXIBPhfXLRSrwrB2JK00cq+8ygKyp657SjJ7cKiLl4g==
-X-Received: by 2002:a5d:5985:0:b0:390:f9d0:5df with SMTP id ffacd0b85a97d-39132da9b88mr4247858f8f.52.1741426474148;
-        Sat, 08 Mar 2025 01:34:34 -0800 (PST)
-Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfba686sm8367784f8f.19.2025.03.08.01.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Mar 2025 01:34:33 -0800 (PST)
-From: David Laight <david.laight.linux@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christophe Leroy <christophe.leroy@c-s.fr>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	nnac123@linux.ibm.com,
-	horms@kernel.org
-Subject: [PATCH v2 1/1] lib: Optimise hex_dump_to_buffer()
-Date: Sat,  8 Mar 2025 09:34:21 +0000
-Message-Id: <20250308093421.3724-1-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        d=1e100.net; s=20230601; t=1741426490; x=1742031290;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2D2hEuOwQrEqYMvC2ATnO4j/VTIi52LI14hMdCpxT/w=;
+        b=lOiMJDqaVYeMQjSMCdnZRssjsTB5tzpCjKbtyAHSxpnOXCrbpbD+4h48kHXnpngx0P
+         6hfggAPLts45Jv4SmzNiZNx9PFoAgAgvzZTSGM1/5yl9oNl6HVzBJLUysV6+nALlpRSR
+         REWA0J/xXwRKC9uWIsAHspy6/RVX9UGF9iNlu7h7K1EOi60V4Yabp1iOohWT32kVpiK9
+         9bgZqSEZiMWE2FGaIMXd1TdmoA+wJmtbDXk6JajV4oAitjRYQJJg1rx6g3Dt8xNCUbVA
+         hkgp9tXGd8dQSJAWstHiyXShYU5hUZsJmMWyFeV+k3bTjW5JGPx8nTZGnpBo2SChfzjg
+         gbEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSXlRjVnlsP43lAtCIBqgcbysYOR8kPxCRw3pfZquT4AtHk6zIihJEis+tYcPoLozs/YSmWyWOdpeyZ2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPKMVyjIJlj08zrTz9ohnuCThh425cUfj7eXfeOxWBhkUqUrvr
+	FdUuLUNsoGARKKHGW/HFQGykqI06XfEQHjSkDU7jvCDu6K5xglsIvDQUmdnMidYbR5hL6TnCP6e
+	zWYWtAK5An72JibfZEKPRlEnRSqi1cF+dRD0nq0qMQ8P/94vxV4+M7t1FBwzFSJ0=
+X-Gm-Gg: ASbGncvpTkNVoZGC9YwrQn41iUfYSX00S0cj/5OKD6AhQQ3Aqr5y1Dia2ozVd5MFpLj
+	S5WwgPLRix7SuH29XaN5FtObTvwhMNi9qk9jsz9Dp18tZS7J9bTpiXoN4zGlGZoI8vX/Gx2P4yC
+	A98B4422yCoyGjX0fQhoIE5doSg3ysP2gy3fn161dDAIdTYhRTRHa7UhV24HFa25zp0aZjVnhJ0
+	ln3JGgPHD8czQjDTNzpMdonv3YbdzaJhR9/Vn7FJ0AF7QUx53EhrNimpbiTJDah6ikD7qmr04uR
+	KInBwgh0TT7PGeqRGAEIwxQPTdPRSlXmQIRtrBu0YghHEPPUr3Voumbv93cSRnewTTbX3w==
+X-Received: by 2002:a05:622a:11d0:b0:472:15be:54ad with SMTP id d75a77b69052e-47666fb5b2dmr10259011cf.14.1741426490146;
+        Sat, 08 Mar 2025 01:34:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGSQHbt0IYdZtC+FufjOVfWZsEqsYNhC+Fq/qSDVU1/CY2UA/2XqPrSX1GmY+54b8CpLYzCbg==
+X-Received: by 2002:a05:622a:11d0:b0:472:15be:54ad with SMTP id d75a77b69052e-47666fb5b2dmr10258751cf.14.1741426489676;
+        Sat, 08 Mar 2025 01:34:49 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239485bf3sm413325166b.63.2025.03.08.01.34.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Mar 2025 01:34:49 -0800 (PST)
+Message-ID: <0401fdf9-7665-40d6-9ec7-7222b2eda866@oss.qualcomm.com>
+Date: Sat, 8 Mar 2025 10:34:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] usb: common: usb-conn-gpio: switch psy_cfg from
+ of_node to fwnode
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Mark Brown <broonie@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Samuel Holland <samuel@sholland.org>,
+        David Lechner <david@lechnology.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang
+ <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
+ <20250225-psy-core-convert-to-fwnode-v1-3-d5e4369936bb@collabora.com>
+ <2025022542-recital-ebony-d9b5@gregkh>
+ <lhtljyn52wkhotaf2cn6fcj2vqx3dzipv2663kzwtw2tjjlxye@5l3xytkyvocy>
+ <2025030845-pectin-facility-a474@gregkh>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <2025030845-pectin-facility-a474@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: iQmBq_-1Q8K8BkA5uoAdxzF4D1Cs99gx
+X-Proofpoint-GUID: iQmBq_-1Q8K8BkA5uoAdxzF4D1Cs99gx
+X-Authority-Analysis: v=2.4 cv=MICamNZl c=1 sm=1 tr=0 ts=67cc0f3b cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=QX4gbG5DAAAA:8 a=ag1SF4gXAAAA:8 a=vjfVVXfxOX9NMr4QhcAA:9 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=AbAUZ8qAyYyZVLSsDulk:22 a=Yupwre4RP9_Eg_Bd0iYG:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-08_03,2025-03-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 phishscore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503080067
 
-Fastpath the normal case of single byte output that fits in the buffer.
-Output byte groups (byteswapped on little-endian) without calling snprintf().
-Remove the restriction that rowsize must be 16 or 32.
-(All callers currently pass 16 or 32.)
-Remove the restriction that groupsize must be 8 or less.
-If groupsize isn't a power of 2 or doesn't divide into both len and
-  rowsize it is set to 1 (otherwise byteswapping is hard).
-Change the types of the rowsize and groupsize parameters to be unsigned types.
+On 8.03.2025 6:57 AM, Greg Kroah-Hartman wrote:
+> On Sat, Mar 08, 2025 at 02:10:29AM +0100, Sebastian Reichel wrote:
+>> Hello Greg,
+>>
+>> On Tue, Feb 25, 2025 at 04:32:50AM +0100, Greg Kroah-Hartman wrote:
+>>> On Tue, Feb 25, 2025 at 12:21:36AM +0100, Sebastian Reichel wrote:
+>>>> In order to remove .of_node from the power_supply_config struct,
+>>>> use .fwnode instead.
+>>>>
+>>>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>>>> ---
+>>>>  drivers/usb/common/usb-conn-gpio.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
+>>>> index aa710b50791b0282be0a6a26cffdd981b794acaa..1e36be2a28fd5ca5e1495b7923e4d3e25d7cedef 100644
+>>>> --- a/drivers/usb/common/usb-conn-gpio.c
+>>>> +++ b/drivers/usb/common/usb-conn-gpio.c
+>>>> @@ -158,7 +158,7 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
+>>>>  	struct device *dev = info->dev;
+>>>>  	struct power_supply_desc *desc = &info->desc;
+>>>>  	struct power_supply_config cfg = {
+>>>> -		.of_node = dev->of_node,
+>>>> +		.fwnode = dev_fwnode(dev),
+>>>>  	};
+>>>>  
+>>>>  	desc->name = "usb-charger";
+>>>>
+>>>> -- 
+>>>> 2.47.2
+>>>
+>>> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>
+>> Please just merge this patch through the USB tree.
+>>
+>> There are no dependencies and I will send a new version for the
+>> later patches, but they won't make it to 6.15 as I want enough
+>> time in linux-next for them. This patch is rather simple and
+>> getting it merged now means we avoid immutable branches or
+>> merging through the wrong tree in the 6.16 cycle.
+> 
+> Attempting to merge a single patch out of a series is hard with our
+> current tools, you know that.  Please resend just the single patch if
+> you want that applied.
 
-Fix the return value (should be zero) when both len and linebuflen are zero.
+b4 shazam <msgid> -P 3
 
-All the updated tests in lib/test_hexdump.c pass.
-Code size (x86-64) approximately halved.
+to apply the third patch (such as this one) in a thread
 
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
----
-Changes for v2:
-- Fix typo in kerneldoc comment.
-- Fix indendation of function prototype contunuation lines.
-- Add un/likely() to the buffer overflow comparisons.
-  These are useful for the human readers and may improve code.
-- Adjust buffer limit tests to reduce register pressure.
-  (Removes a stack spill with gcc 12.2 for x86-84.)
-- Change some types to 'unsigned long' to avoid explicit zero extension
-  instructions when indexing arrays.
+unless you use some other set of tools..
 
-asc_hex[] is directly indexed to avoid the high nibble being masked.
-Possibly the helpers hex_pack_byte() (etc) could be changed now that
-'char' is unsigned in all kernel builds.
-
-I've also stopped gcc changing the loop that fills the pad before the
-ascii to a call to memset() - the count is small, often 1.
-An alternative option would be to explicitly memset the output buffer
-to spaces and then fill in the hex digits over the top.
-Definitely better if the output size is constant (unrolled writes).
-
-gcc 12 and 13 (but not 14) manage to load the two characters into (eg) %al
-and %ah and then do a 16bit write.
-However (I think to avoid false dependencies) the whole of %eax must
-be zeroed, this is done in a very stange way reading a zero from memory!
-See https://www.godbolt.org/z/1ds784hEq
-Strangly this only happens with -mno-sse.
-
- include/linux/printk.h |   6 +-
- lib/hexdump.c          | 172 +++++++++++++++++++++--------------------
- 2 files changed, 91 insertions(+), 87 deletions(-)
-
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 4217a9f412b2..19689467f532 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -752,9 +752,9 @@ enum {
- 	DUMP_PREFIX_ADDRESS,
- 	DUMP_PREFIX_OFFSET
- };
--extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
--			      int groupsize, char *linebuf, size_t linebuflen,
--			      bool ascii);
-+extern size_t hex_dump_to_buffer(const void *buf, size_t len, size_t rowsize,
-+				 size_t groupsize, char *linebuf,
-+				 size_t linebuflen, bool ascii);
- #ifdef CONFIG_PRINTK
- extern void print_hex_dump(const char *level, const char *prefix_str,
- 			   int prefix_type, int rowsize, int groupsize,
-diff --git a/lib/hexdump.c b/lib/hexdump.c
-index c3db7c3a7643..054548bf44ae 100644
---- a/lib/hexdump.c
-+++ b/lib/hexdump.c
-@@ -98,13 +98,16 @@ EXPORT_SYMBOL(bin2hex);
-  * hex_dump_to_buffer - convert a blob of data to "hex ASCII" in memory
-  * @buf: data blob to dump
-  * @len: number of bytes in the @buf
-- * @rowsize: number of bytes to print per line; must be 16 or 32
-- * @groupsize: number of bytes to print at a time (1, 2, 4, 8; default = 1)
-+ * @rowsize: number of bytes to print per line
-+ * @groupsize: number of bytes to print at a time
-  * @linebuf: where to put the converted data
-  * @linebuflen: total size of @linebuf, including space for terminating NUL
-  * @ascii: include ASCII after the hex output
-  *
-- * hex_dump_to_buffer() works on one "line" of output at a time, i.e.,
-+ * If @groupsize isn't a power of 2 that divides into both @len and @rowsize
-+ * then it is set to 1.
-+ *
-+ * hex_dump_to_buffer() works on one "line" of output at a time, e.g.,
-  * 16 or 32 bytes of input data converted to hex + ASCII output.
-  *
-  * Given a buffer of u8 data, hex_dump_to_buffer() converts the input data
-@@ -124,105 +127,106 @@ EXPORT_SYMBOL(bin2hex);
-  * (excluding the terminating NUL) which would have been written to the final
-  * string if enough space had been available.
-  */
--int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
--		       char *linebuf, size_t linebuflen, bool ascii)
-+size_t hex_dump_to_buffer(const void *buf, size_t len, size_t rowsize,
-+			  size_t groupsize, char *linebuf, size_t linebuflen,
-+			  bool ascii)
- {
-+	char *dst_last = linebuf + linebuflen - 2;
-+	char *pad_end, *dst = linebuf;
-+	size_t out_len, pad_len;
- 	const u8 *ptr = buf;
--	int ngroups;
--	u8 ch;
--	int j, lx = 0;
--	int ascii_column;
--	int ret;
-+	unsigned long ch;
-+	char ch_hi;
-+	size_t j;
- 
--	if (rowsize != 16 && rowsize != 32)
--		rowsize = 16;
-+	if (unlikely(!len)) {
-+		if (linebuflen)
-+			linebuf[0] = 0;
-+		return 0;
-+	}
- 
--	if (len > rowsize)		/* limit to one line at a time */
--		len = rowsize;
--	if (!is_power_of_2(groupsize) || groupsize > 8)
--		groupsize = 1;
--	if ((len % groupsize) != 0)	/* no mixed size output */
--		groupsize = 1;
-+	if (unlikely(len > rowsize)) {
-+		if (rowsize == 0)
-+			rowsize = 16;
-+		if (len > rowsize)
-+			len = rowsize;
-+	}
- 
--	ngroups = len / groupsize;
--	ascii_column = rowsize * 2 + rowsize / groupsize + 1;
-+	if (unlikely((groupsize | rowsize | len) & (groupsize - 1)))
-+		groupsize = 1;
- 
--	if (!linebuflen)
--		goto overflow1;
-+	if (groupsize == 1 && likely(len * 3 <= linebuflen)) {
-+		for (j = 0; j < len; j++, dst += 3) {
-+			ch = ptr[j];
-+			dst[0] = hex_asc[ch >> 4];
-+			dst[1] = hex_asc[ch & 0xf];
-+			dst[2] = ' ';
-+		}
- 
--	if (!len)
--		goto nil;
-+		pad_len = (rowsize - len) * 3;
-+	} else {
-+		unsigned int mask = groupsize - 1;
-+		unsigned int byteswap;
- 
--	if (groupsize == 8) {
--		const u64 *ptr8 = buf;
-+		byteswap = IS_ENABLED(CONFIG_CPU_BIG_ENDIAN) ? 0 : mask;
- 
--		for (j = 0; j < ngroups; j++) {
--			ret = snprintf(linebuf + lx, linebuflen - lx,
--				       "%s%16.16llx", j ? " " : "",
--				       get_unaligned(ptr8 + j));
--			if (ret >= linebuflen - lx)
--				goto overflow1;
--			lx += ret;
-+		for (j = 0; j < len; j++) {
-+			ch = ptr[j ^ byteswap];
-+			ch_hi = hex_asc[ch >> 4];
-+			if (unlikely(dst >= dst_last)) {
-+				if (dst == dst_last)
-+					dst_last[0] = ch_hi;
-+				if (++dst_last >= linebuf)
-+					dst_last[0] = 0;
-+				out_len = ascii ? rowsize : len;
-+				out_len = out_len * 2 + out_len / groupsize;
-+				return out_len + (ascii ? 1 + len : -1);
-+			}
-+			*dst++ = ch_hi;
-+			*dst++ = hex_asc[ch & 0xf];
-+			if ((j & mask) == mask)
-+				*dst++ = ' ';
- 		}
--	} else if (groupsize == 4) {
--		const u32 *ptr4 = buf;
- 
--		for (j = 0; j < ngroups; j++) {
--			ret = snprintf(linebuf + lx, linebuflen - lx,
--				       "%s%8.8x", j ? " " : "",
--				       get_unaligned(ptr4 + j));
--			if (ret >= linebuflen - lx)
--				goto overflow1;
--			lx += ret;
--		}
--	} else if (groupsize == 2) {
--		const u16 *ptr2 = buf;
-+		pad_len = rowsize - len;
-+		if (pad_len)
-+			pad_len = pad_len * 2 + pad_len / groupsize;
-+	}
-+	out_len = dst - linebuf;
- 
--		for (j = 0; j < ngroups; j++) {
--			ret = snprintf(linebuf + lx, linebuflen - lx,
--				       "%s%4.4x", j ? " " : "",
--				       get_unaligned(ptr2 + j));
--			if (ret >= linebuflen - lx)
--				goto overflow1;
--			lx += ret;
--		}
--	} else {
--		for (j = 0; j < len; j++) {
--			if (linebuflen < lx + 2)
--				goto overflow2;
--			ch = ptr[j];
--			linebuf[lx++] = hex_asc_hi(ch);
--			if (linebuflen < lx + 2)
--				goto overflow2;
--			linebuf[lx++] = hex_asc_lo(ch);
--			if (linebuflen < lx + 2)
--				goto overflow2;
--			linebuf[lx++] = ' ';
--		}
--		if (j)
--			lx--;
-+	if (!ascii) {
-+		dst[-1] = 0;
-+		return out_len - 1;
- 	}
--	if (!ascii)
--		goto nil;
- 
--	while (lx < ascii_column) {
--		if (linebuflen < lx + 2)
--			goto overflow2;
--		linebuf[lx++] = ' ';
-+	dst_last++;
-+	pad_len++;
-+	out_len += pad_len + len;
-+	pad_end = dst + pad_len;
-+	if (unlikely(pad_end > dst_last)) {
-+		if (dst >= dst_last) {
-+			dst_last[0] = 0;
-+			return out_len;
-+		}
-+		pad_end = dst_last;
- 	}
-+
-+	do {
-+		*dst++ = ' ';
-+		/* Stop gcc generating a call to memset() */
-+		barrier();
-+	} while (dst < pad_end);
-+
-+	if (unlikely(dst + len > dst_last))
-+		len = dst_last - dst;
-+
- 	for (j = 0; j < len; j++) {
--		if (linebuflen < lx + 2)
--			goto overflow2;
- 		ch = ptr[j];
--		linebuf[lx++] = (isascii(ch) && isprint(ch)) ? ch : '.';
-+		*dst++ = ch >= ' ' && ch < 0x7f ? ch : '.';
- 	}
--nil:
--	linebuf[lx] = '\0';
--	return lx;
--overflow2:
--	linebuf[lx++] = '\0';
--overflow1:
--	return ascii ? ascii_column + len : (groupsize * 2 + 1) * ngroups - 1;
-+	*dst = 0;
-+
-+	return out_len;
- }
- EXPORT_SYMBOL(hex_dump_to_buffer);
- 
--- 
-2.39.5
-
+Konrad
