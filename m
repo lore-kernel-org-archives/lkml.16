@@ -1,94 +1,121 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7339DDDC5;
-	Sat,  8 Mar 2025 16:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A5F14A8B
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 16:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741452436; cv=none; b=MPCXB+DMKMEad8lkJPh7aOh+TrMFeYqO578rIf2iLpTbkhnRYCNRbnJ+uDvf/kFN8fA20PfY0kQUGuMNN28ptZwciiLIqJS4lM07P/cKdkHfDujzQE4lYNzXXJF4F3lzot6lc+8/y2S98shHC1fBPWl9lkGkGFSBPrab/ey9968=
+	t=1741452493; cv=none; b=GIBGLgkwlqEpOKgenYjZSMhwJg9EogqZXEgHiYYtfNo+Y4lNh8eG8BQmYUULlmegyJfmhh3wRO8XsPl4bJE6AZkUQhXptLNecDMDTqsfWvoaG94kcBgsjmwtdcKRWGoIh0Kir2BagAIzojN2SgwbXGdZXnNwzcTk2XucYLTzbQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741452436; c=relaxed/simple;
-	bh=OD2hOtHQa0uwK+Cr0jnQY97FmNfZwoPMsZKx2Stcwn4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qpbR8g750fIQdxt2WwfBz6tYrcTjkM7izoW5FQww2LV1H5A61vgj04PHgyiPbCzb8vgQ4twUrZ8Txr8bqw10wfDf8/JjX5dOJxhg9YjmQQ2Sx0JQowx4iT4itYF/YkHOOwySdSRSGPC7ZyQOUs9HZqsFxG8w0T3BWHaww+LtzDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Xt+M408Y; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741452493; c=relaxed/simple;
+	bh=e5seaU7h1fj0s7e2+Jy9DxE9AIHEi+Ig9RGIaLfbV3k=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=dnmsgMJblRlVzr3maxUTk08mR4bIbG9g6qSB/cpHjrSc8bty8rwJ0etvCKVlrejccDYF7Rd9kgcQLf0aFmhGLMR2aScJcZO5i/63JlR0edAfJEVw0ktfCofiZpEMegJk6L/DlrO2hVwECnrKXM8iyVZOCKuP0dbbjMEA0xxPvrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lAMgb41m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x4k/D6Zh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Xt+M408Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=OD2hOtHQa0uwK+Cr0jnQY97FmNfZwoPMsZKx2Stcwn4=; b=Xt+M408YamdyCB/pMOD0BkKihm
-	Hg6ZflaaQS2yqz405faQ82I6AxOV5ze5MwaXsxDiX7jKdOlcr18KDU9B5DRXEe4CHalzrA6aic/MM
-	ITyEbZ0xgApQGzSXFTa71eg+cMXC+e9NvmU84UNo8p24AytPE34azJbvb5lU3TqzADoEc+h+nIbAT
-	VTHUHySoUwGoyGdt5VQqBXcDVHq1KTZYnQx4OXtPUSrYIX9K1aYSr7O8ORPhsXPJMdipeOTo8byPj
-	0aFzVLwicZTfM69yy6XoIt4cW8DCrHzIRLL27pKTUkjOD4ZK9UPEbOnMW+GXEyLIa2la5dZUzh2VN
-	gdlbWLzA==;
-Received: from [194.95.143.137] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tqwz8-0003oR-SC; Sat, 08 Mar 2025 17:25:10 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Chukun Pan <amadeus@jmu.edu.cn>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
- Yao Zi <ziyao@disroot.org>, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: rockchip: Add rockchip,rk3528-pwm
-Date: Sat, 08 Mar 2025 17:25:09 +0100
-Message-ID: <5942715.DvuYhMxLoT@phil>
-In-Reply-To: <pnlkcc2rl7fegltovgtvp4xdxhonw72rclvhn7qmvb7xyuullm@xf5x6lcigji3>
-References:
- <20250307120004.959980-1-amadeus@jmu.edu.cn>
- <20250307120004.959980-2-amadeus@jmu.edu.cn>
- <pnlkcc2rl7fegltovgtvp4xdxhonw72rclvhn7qmvb7xyuullm@xf5x6lcigji3>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lAMgb41m";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x4k/D6Zh"
+Message-ID: <20250308155501.391430556@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741452489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=CoM3wh12g6yZC2LPhjGodXFuF2yIHF+8b08AHc2hs+s=;
+	b=lAMgb41mXKPUlf54JlYWoVIOQtKSgOigMR0VMEEzFaM2RGJCUOPWuhH2UNGuwRI7nv/AK7
+	xu7S4H3/qqscIrb+H5+4yLtZusBGlv68RTyjEMXqE0yeVjW6Xbr/6bRlPSU943nd96F6Vh
+	ODYlbC1GAXUUDCcG2VuYg5rYc44i4izdA7dZYT7FZsRb1PCzXLHT1O8QfvldXX8C2vWWdF
+	pqHs5QZxJh4boDlBEADH6Nh/EDxIVPhOehYARgKc07gzdq6/iLlzzdGq24bBS7g4m7VpzV
+	xcMY7ZsnIyQF79CuI+UANJaE5JQvodBz+Qzd9xIhiWRIVbKH4xSLuS8Bhuaveg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741452489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=CoM3wh12g6yZC2LPhjGodXFuF2yIHF+8b08AHc2hs+s=;
+	b=x4k/D6ZhrDE6gSJ2bvsOvF4FB1mX/WciYv5sLvYXUXmZu1ewpo0Xllf9QklasZePuGQDfm
+	SbEIgUXx3tUGH8Cg==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Benjamin Segall <bsegall@google.com>,
+ Eric Dumazet <edumazet@google.com>,
+ Andrey Vagin <avagin@openvz.org>,
+ Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Cyrill Gorcunov <gorcunov@gmail.com>
+Subject: [patch V3 00/18] posix-timers: Rework the global hash table and
+ provide a sane mechanism for CRIU
+Date: Sat,  8 Mar 2025 17:48:08 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Hi Uwe,
+This is a follow up on V2 of this work, which can be found here:
 
-Am Freitag, 7. M=C3=A4rz 2025, 18:07:47 MEZ schrieb Uwe Kleine-K=C3=B6nig:
-> On Fri, Mar 07, 2025 at 08:00:03PM +0800, Chukun Pan wrote:
-> > Document pwm compatible for rk3528 which is fallback compatible
-> > of rk3328-pwm group.
-> >=20
-> > Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
->=20
-> to prevent binding warnings it's probably sensible to let both patches
-> go in via the same tree at the same time. Feel free to take the binding
-> patch via rockchip/arm-soc.
->=20
-> Acked-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
+     https://lore.kernel.org/all/20250224095736.145530367@linutronix.de
 
-You already have the rk3562 binding in your for-next branch [0], which
-could create merge-conflicts later on.
+It addresses the scalability problem of the posix timer hash and provides a
+performant mechanism to restore Posix timers with a given ID along with a
+couple of preperatory cleanups and enhancements. More details about
+implementation choices are in the change logs and the cover letter of V1:
 
-This patch already contains it, so should fit neatly onto your branch.
+     https://lore.kernel.org/all/20250302185753.311903554@linutronix.de
 
-And binding warnings only come from linux-next, so won't trigger as the
-pwm will feed the binding there too :-)
+Changes vs. V2:
 
-So I guess it might be better to take the binding through the pwm tree
-and me then picking up the dts patch.
+  - Ensure consistency on timer_create() (new patch) - Frederic
+  - Pick up the lock_timer() conditional unlock fix (was V2a)
+  - Use proper defines in selftests
+  - Pick up review/ack tags
 
-=46or the binding
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+The series survives all posix timer tests and did not show any regressions
+so far.
+
+The series is based on:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip timers/core
+
+and is also available from git:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git timers/posix
+
+Thanks,
+
+	tglx
+---
+Eric Dumazet (3):
+      posix-timers: Initialise timer before adding it to the hash table
+      posix-timers: Add cond_resched() to posix_timer_add() search loop
+      posix-timers: Make signal_struct:: Next_posix_timer_id an atomic_t
+
+Peter Zijlstra (1):
+      posix-timers: Make lock_timer() use guard()
+
+Thomas Gleixner (14):
+      posix-timers: Ensure that timer initialization is fully visible
+      posix-timers: Cleanup includes
+      posix-timers: Remove a few paranoid warnings
+      posix-timers: Remove SLAB_PANIC from kmem cache
+      posix-timers: Use guards in a few places
+      posix-timers: Simplify lock/unlock_timer()
+      posix-timers: Rework timer removal
+      posix-timers: Improve hash table performance
+      posix-timers: Switch to jhash32()
+      posix-timers: Avoid false cacheline sharing
+      posix-timers: Make per process list RCU safe
+      posix-timers: Dont iterate /proc/$PID/timers with sighand:: Siglock held
+      posix-timers: Provide a mechanism to allocate a given timer ID
+      selftests/timers/posix-timers: Add a test for exact allocation mode
 
 
-[0] https://web.git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git/=
-commit/?h=3Dpwm/for-next&id=3D058210e84b48dbb670a6bf72afaed6fbd8043a37
-
-
+ fs/proc/base.c                                |   48 --
+ include/linux/cleanup.h                       |   22 -
+ include/linux/posix-timers.h                  |   30 +
+ include/linux/sched/signal.h                  |    3 
+ include/uapi/linux/prctl.h                    |   10 
+ kernel/signal.c                               |    2 
+ kernel/sys.c                                  |    5 
+ kernel/time/posix-timers.c                    |  540 +++++++++++++-------------
+ tools/testing/selftests/timers/posix_timers.c |   66 +++
+ 9 files changed, 418 insertions(+), 308 deletions(-)
