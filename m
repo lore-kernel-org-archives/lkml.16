@@ -1,141 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFD52BB15;
-	Sat,  8 Mar 2025 17:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E141BEF74;
+	Sat,  8 Mar 2025 17:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741454928; cv=none; b=tDLc1F4gR2V9NsDBPlj0kpTx5LhPPWVxy96aHd8yDanYpUR9K7J7wPAn6lWq9xTSEOZ00wMnGPZocJ4+qD0xJs9Rvv6eh3FOoKtcX487CtZs4GsO50x6+k1A0xlN6hWXGc98gunJYwfCZuCXOhhKtbnwu3Bkqr8LDoq78M0NvTk=
+	t=1741455139; cv=none; b=Y90b952MxeS5+PG4nH/VitQPUSaDlJKZs3pSpVNRKchOcKHqnsu9JmNS8ceQ98NgN2Kjwx/CnLywuCGhevwNKCU0afm5E8TLewsLh/3p8+lkpGm4Rcxl4n8SY3udlrcYUKgb/+MhXgzyjMWkDvNpaIA1byGQ2jOATd4nKXUdT5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741454928; c=relaxed/simple;
-	bh=HAM14ok/bHmZ/6xW9eRRuNNPVwBwIJ9kIigWkoTG+d0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVpTrNDZrn6L8wd/WpO126kBJRI9LyorLhrbljFq2rcgojKYSm/y+d0+xVBilE9jyeFuau7yESIorIerWux1QxldS3QNedZnkHFjIjq9R/SiFnMgYiAfm3GM9TulvtUOWfSjx9/EsrYNac1mTf2Sx/qZ0I0ymsIfRm8Z/rPgLFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ASAHlAGm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741455139; c=relaxed/simple;
+	bh=nNiN9K4E46dbIvbUYC+yWk8Bs+6d/3nPhtm+gba7wKY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NlB34MIL77z5PLb9CNT945XL9IB8sbuqLdRm1yOXwENI11yg/63bfNyEGa4dZvmAcL1aG3XKUxYPk28QAJrEGYE8/xEZ3G9OskSeU7/+df1LXr/vRR8NeVAxZzEk75ORSMT3oWwsXZQH14XRWumR4M6nS2ED7t16TqILmYcZeRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=UZ+1WlFQ; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ASAHlAGm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D5DC4CEE0;
-	Sat,  8 Mar 2025 17:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741454927;
-	bh=HAM14ok/bHmZ/6xW9eRRuNNPVwBwIJ9kIigWkoTG+d0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ASAHlAGmRGCXlh5rw0SkoSgfLyLtB9qGKVWgSVw038D9p4l8Rk/26/dZ+caNrTcPS
-	 WH6Wjm38cga551s4Rb5RLDMM69Vnmpg9X7EbuNRN/3kNjK2x3g1Xs3aab1v9yhhjzO
-	 L1TD8+P/Jvd5GvCvf9rDxEjz5FcCkQq/iwm84ZCQ=
-Date: Sat, 8 Mar 2025 18:27:32 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Samuel Holland <samuel@sholland.org>,
-	David Lechner <david@lechnology.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
-	Purism Kernel Team <kernel@puri.sm>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/7] usb: common: usb-conn-gpio: switch psy_cfg from
- of_node to fwnode
-Message-ID: <2025030831-various-monthly-4ae0@gregkh>
-References: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
- <20250225-psy-core-convert-to-fwnode-v1-3-d5e4369936bb@collabora.com>
- <2025022542-recital-ebony-d9b5@gregkh>
- <lhtljyn52wkhotaf2cn6fcj2vqx3dzipv2663kzwtw2tjjlxye@5l3xytkyvocy>
- <2025030845-pectin-facility-a474@gregkh>
- <0401fdf9-7665-40d6-9ec7-7222b2eda866@oss.qualcomm.com>
- <eqfqv2tkfretqzvt74o5dvj5yixkfc3h3my4bhskvhtsrbmtwp@poryvs4oipnp>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="UZ+1WlFQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=TwCpWhtmMBakpaMGHdISZitCtlIawEEMo8Rgfzygze4=; b=UZ+1WlFQdQTmet1JzRbdXCrYQN
+	/uG5rd3zDP2G5kaa/2F4DNflhGf9mS3D1Fk4OXrix8aRVQ0jxYM5Bnu2OGVXHunv9LCOdKkC+d/I/
+	BJh5yHHPKM/f3VMLoizM91VUp4hML53PK/K7gjKVqLn/NAyGWbehIIeafMpIs8u9nyst0/aqQOb8X
+	lbJItjL7dxwf9j9Ujp6uWq3V/RjHMy7F+nKheWCWideq7+aHwi6fWBGtaneyPAMnlOHT0IQ3BPILV
+	p4QZHpma7kr88HsZSy+4Vkchgyl1Baz/nv4OMu3/7JhBptwI/fyyW0Mz523fgdyBzhefD1zzHl6n6
+	2O07e9Iw==;
+Received: from [194.95.143.137] (helo=phil.dip.tu-dresden.de)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tqy20-0004Tx-6Z; Sat, 08 Mar 2025 18:32:12 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Yao Zi <ziyao@disroot.org>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] rockchip: Add support for leds and buttons on Radxa E20C
+Date: Sat,  8 Mar 2025 18:32:05 +0100
+Message-ID: <174145503577.101861.8733087252860398696.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250304201642.831218-1-jonas@kwiboo.se>
+References: <20250304201642.831218-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eqfqv2tkfretqzvt74o5dvj5yixkfc3h3my4bhskvhtsrbmtwp@poryvs4oipnp>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 08, 2025 at 05:33:05PM +0100, Sebastian Reichel wrote:
-> Hi,
+
+On Tue, 04 Mar 2025 20:16:33 +0000, Jonas Karlman wrote:
+> The Radxa E20C has three GPIO leds, one SARADC maskrom button and one
+> GPIO user button.
 > 
-> On Sat, Mar 08, 2025 at 10:34:45AM +0100, Konrad Dybcio wrote:
-> > On 8.03.2025 6:57 AM, Greg Kroah-Hartman wrote:
-> > > On Sat, Mar 08, 2025 at 02:10:29AM +0100, Sebastian Reichel wrote:
-> > >> On Tue, Feb 25, 2025 at 04:32:50AM +0100, Greg Kroah-Hartman wrote:
-> > >>> On Tue, Feb 25, 2025 at 12:21:36AM +0100, Sebastian Reichel wrote:
-> > >>>> In order to remove .of_node from the power_supply_config struct,
-> > >>>> use .fwnode instead.
-> > >>>>
-> > >>>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > >>>> ---
-> > >>>>  drivers/usb/common/usb-conn-gpio.c | 2 +-
-> > >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>>>
-> > >>>> diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
-> > >>>> index aa710b50791b0282be0a6a26cffdd981b794acaa..1e36be2a28fd5ca5e1495b7923e4d3e25d7cedef 100644
-> > >>>> --- a/drivers/usb/common/usb-conn-gpio.c
-> > >>>> +++ b/drivers/usb/common/usb-conn-gpio.c
-> > >>>> @@ -158,7 +158,7 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
-> > >>>>  	struct device *dev = info->dev;
-> > >>>>  	struct power_supply_desc *desc = &info->desc;
-> > >>>>  	struct power_supply_config cfg = {
-> > >>>> -		.of_node = dev->of_node,
-> > >>>> +		.fwnode = dev_fwnode(dev),
-> > >>>>  	};
-> > >>>>  
-> > >>>>  	desc->name = "usb-charger";
-> > >>>>
-> > >>>> -- 
-> > >>>> 2.47.2
-> > >>>
-> > >>> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >>
-> > >> Please just merge this patch through the USB tree.
-> > >>
-> > >> There are no dependencies and I will send a new version for the
-> > >> later patches, but they won't make it to 6.15 as I want enough
-> > >> time in linux-next for them. This patch is rather simple and
-> > >> getting it merged now means we avoid immutable branches or
-> > >> merging through the wrong tree in the 6.16 cycle.
-> > > 
-> > > Attempting to merge a single patch out of a series is hard with our
-> > > current tools, you know that.
+> This series add leds, gpio-keys and adc-keys nodes to board DT to
+> describe the leds and buttons found on Radxa E20C.
 > 
-> Sorry, I did not know your tooling has issues with that. AFAIK most
-> maintainers are using b4 nowadays, which makes it really easy. Might
-> be I am biased because I mostly work on ARM stuff where series often
-> have patches for the driver and the device tree and thus merging
-> partial patch series is basically the norm.
+> Changes in v2:
+> - Change gpio-leds node name to leds
+> - Drop patches already applied
+> - Merge saradc and gpio button series
+> - Reorder patches
+> 
+> [...]
 
-I do use b4, but it wants to suck the whole series down.  If I want to
-pick an individual one out, I have to manually cut the message-id out
-of the email and type out the command and pick the individual commit
-out (or use the -P 3 as was said).
+Applied, thanks!
 
-But that's a world away from me just hitting a single key in my email
-client to suck down the whole thread and apply it to my tree.
+[1/4] arm64: dts: rockchip: Add leds node to Radxa E20C
+      commit: 6a709e003492e9878d5f1357be0b2e1162e1e6a6
+[2/4] arm64: dts: rockchip: Add user button to Radxa E20C
+      commit: ad8afc8813567994164f2720189c819da8c22b99
+[3/4] arm64: dts: rockchip: Add SARADC node for RK3528
+      commit: 6e58302c84ce90aadbecd41efe1f69098a6f91e5
+[4/4] arm64: dts: rockchip: Add maskrom button to Radxa E20C
+      commit: 3a2819ee9c71d1c6388e456cc4eb042914d15d7e
 
-For those of us who have to apply a lot of patches, automation is key.
-When sending a patch series that wants to be split across multiple
-trees, that makes it harder for everyone.
-
-Anyway, I can take this as is, I've spent more time typing this than it
-would have taken me to dig out just the single email.  Give me a few
-days to catch up with it...
-
-thanks,
-
-greg k-h
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
