@@ -1,78 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC1C158A13;
-	Sat,  8 Mar 2025 13:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5481B4152;
+	Sat,  8 Mar 2025 13:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741441287; cv=none; b=VdG+03b731+sfo2PZo3hmgYvxpAP+DEGJ3opNDT0P9geHjpe8KTJ+XU4aJhcQFvPA3J9/8G+xZiVsjPFyoE7kC6sw/LV6ojcInGWsqBi79kJIawcgBnZkdKFk351jbhIro6nt1VIRfgGLh6ezLQJarEfrVb6+N0d7vVkoeaepV0=
+	t=1741441501; cv=none; b=Rc04vUEQVTjAMpKni8Ot7birrBW7Rp9J8mC7WFESbz83jIWr523wdYgagVgGKB5lQG/cQvyb/hKfpDBIwMFFn7exx3WfYE7IszEQg57wm3t+Cte3PIr1CA1EwI5FKlm7eoCg/2+fSL3ZDVWEAvboV6kTVbN1XsbGCHmGdXnEZKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741441287; c=relaxed/simple;
-	bh=4NHDFlsc8FG2y36EOTQ/Y40HsfXXBpBLZPan5YHNSzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H3ng2mq6mQKGrs2mhR5OdBBWVBnKatlk1+hFKnJBq+kNXTZBGNGtzoo253pn83TzIXcoFRKAF6iolkmFpuz2wMbLxaXSn8qlh8gk6tqp3zxrNwGQvBbPMZYw5tJCXnx25ZU4aTAaZsV7E8v3erIfwPgxwCvD/yTJusMKuZNM2z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bw4YZquG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741441501; c=relaxed/simple;
+	bh=rrvgF9er4ytTDpd9u+FZrXAfRKVd4PQQKj8LMoV8Xko=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Irz3B4leZjoToXsRTNzMoBwJSa7Z6C5cdJEPafHfnHoQgGvdybHaD7C7cIHu1n+fzdGK2I7RFSsdVPvwJt+JnrMl/Ucpp1SIihwmkIns33+UUjl9A+QoFfkjmIdYBN1aYp4MRyk0/6C7KjizYzVJ7Atax8x6HOeir3DdPbFk9i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GsLEb/zr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/8YsDg5F; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bw4YZquG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28CE2C4CEE0;
-	Sat,  8 Mar 2025 13:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741441286;
-	bh=4NHDFlsc8FG2y36EOTQ/Y40HsfXXBpBLZPan5YHNSzg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bw4YZquGCyDn/lQZjSGo9ADHwvZdYKsoGkhrzO9G3tHe+qV32IdRkUvSYXZi3hu1s
-	 27g1/sZT7vAiTXtRbTJ9UXs1U2qHuNM4wefFtsREK4NyvGdyLDp3puDAK7qxyIvsS4
-	 wWlR9X9Izxs19UUSuQ42jyzG4a+NwrisL2/QMWWS4L9vas4vxUIZyhYFAv4IaMzXvE
-	 QjxwvsMeHf7675956XY2nYR7hXnlNZw8R0AEgbm86FMWYs+HwTT8p4K1iLVSsJb8ff
-	 RpfxxssGX/s1K5TW61Uuce9VUs5Nm46wdnyZir7ZfNZK5QrO5CYW73FMzMfgPmIEal
-	 q9O2VP+XwOukg==
-Date: Sat, 8 Mar 2025 13:41:14 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>, Sergiu
- Cuciurean <sergiu.cuciurean@analog.com>, <lars@metafoo.de>,
- <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
- <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
- <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
- <broonie@kernel.org>, <dlechner@baylibre.com>,
- <marcelo.schmitt1@gmail.com>, <jonath4nns@gmail.com>
-Subject: Re: [PATCH v4 12/17] iio: adc: ad7768-1: Add GPIO controller
- support
-Message-ID: <20250308134114.093a1ed4@jic23-huawei>
-In-Reply-To: <efdbddad734021f38a43cc9d101a22424e71dcef.1741268122.git.Jonathan.Santos@analog.com>
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
-	<efdbddad734021f38a43cc9d101a22424e71dcef.1741268122.git.Jonathan.Santos@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GsLEb/zr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/8YsDg5F"
+Date: Sat, 08 Mar 2025 13:44:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741441498;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sfRJdQf67VbfEVO/9Kg+E5Q2D8llyuwGMTrnS68JPlo=;
+	b=GsLEb/zrO7JRzKoO6pkoJS6uIzJDQSVPpOn5qhSKghnsxTr7gj4hx1bb3AfcT9F3/YN1gp
+	N2ehLdG+AxvNFQfPec5Igv/phWKd57Rj499mdFuwRUDkTtsRG3y5sVihnwp5IzGTyalDNE
+	kNjbvkuWh9xdsObIHzMLZAwNZA0phjcqnN6M7LS00ORJvvtHOOmp/6MYYzhJX/Zo9Mz4IG
+	HxrBeG5YDs+gOinnhDEsMjdSYP9/HPt4LUuk+4+Rwn9tnMKONDg7hwARewQgrVq98hr77R
+	hfx69eZxv/APBzR2Oy7Z7EPCjcb/iBQMLCx4ZNNpc/azw9SE1kA9hZ1zROCT/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741441498;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sfRJdQf67VbfEVO/9Kg+E5Q2D8llyuwGMTrnS68JPlo=;
+	b=/8YsDg5F6HODAW+hwZcaEy7wBkv0D2T6S+IjonZagv/RSLPLJWEYclnYtrnbv+HEAgbfDP
+	NKXnSBk3GNOykGCw==
+From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: timers/vdso] powerpc/vdso: Prepare introduction of struct vdso_clock
+Cc: Nam Cao <namcao@linutronix.de>, thomas.weissschuh@linutronix.de,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250303-vdso-clock-v1-17-c1b5c69a166f@linutronix.de>
+References: <20250303-vdso-clock-v1-17-c1b5c69a166f@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Message-ID: <174144149743.14745.4413631269943521746.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Mar 2025 18:03:13 -0300
-Jonathan Santos <Jonathan.Santos@analog.com> wrote:
+The following commit has been merged into the timers/vdso branch of tip:
 
-> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> 
-> The AD7768-1 has the ability to control other local hardware (such as gain
-> stages),to power down other blocks in the signal chain, or read local
-> status signals over the SPI interface.
-> 
-> Add direct mode conditional locks in the gpio callbacks to prevent register
-> access when the device is in buffered mode.
-> 
-> This change exports the AD7768-1's four gpios and makes them accessible
-> at an upper layer.
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> Co-developed-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-More iio_device_claim_direct() conversions to make in here.
-That's just a bit of unlucky timing vs that series getting merged.
+Commit-ID:     ed0c10f34ffd94d6e0d37b830c232f7ca38ea174
+Gitweb:        https://git.kernel.org/tip/ed0c10f34ffd94d6e0d37b830c232f7ca38=
+ea174
+Author:        Nam Cao <namcao@linutronix.de>
+AuthorDate:    Mon, 03 Mar 2025 12:11:19 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 08 Mar 2025 14:37:41 +01:00
 
-Jonathan
+powerpc/vdso: Prepare introduction of struct vdso_clock
+
+To support multiple PTP clocks, the VDSO data structure needs to be
+reworked. All clock specific data will end up in struct vdso_clock and in
+struct vdso_time_data there will be array of VDSO clocks. At the moment,
+vdso_clock is simply a define which maps vdso_clock to vdso_time_data.
+
+To prepare for the rework of the data structures, replace the struct
+vdso_time_data pointer with a struct vdso_clock pointer where applicable.
+
+No functional change.
+
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250303-vdso-clock-v1-17-c1b5c69a166f@linu=
+tronix.de
+
+---
+ arch/powerpc/include/asm/vdso/gettimeofday.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/incl=
+ude/asm/vdso/gettimeofday.h
+index dc955f2..99c9d6f 100644
+--- a/arch/powerpc/include/asm/vdso/gettimeofday.h
++++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+@@ -99,7 +99,7 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_=
+mode,
+ 	return get_tb();
+ }
+=20
+-static inline bool vdso_clocksource_ok(const struct vdso_time_data *vd)
++static inline bool vdso_clocksource_ok(const struct vdso_clock *vc)
+ {
+ 	return true;
+ }
