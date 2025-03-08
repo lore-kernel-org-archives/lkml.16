@@ -1,303 +1,748 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2055.outbound.protection.outlook.com [40.107.237.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65792744E;
-	Sat,  8 Mar 2025 18:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741458733; cv=fail; b=EAmrQvjvVfrPSPWp9zwFnZiTmHFfDFZRSkQxa/g8sHxggeREjm1wAvMiYOi8ZRZl/2G1zN9oPOXjrILeW48lyvZ0SQqfiUVeC6GbBrVb3a4qFyfwggU6pvuhnvTkw969W2NBsG0r2M1qRbPbYCCgNIv+SnMJzAwj2p8O/IsxgZI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741458733; c=relaxed/simple;
-	bh=VbrX6WNnr1ILKJBryIFUfpENaNmBXiNYAjXqSM1WAOE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EDDnStMSl9JBJ1Tctsoqx86PzyCn2vRiDNrowzku0N7B46YGTN6Ees6lLmVjLieW9qtFrQE1HUOrUo2OB8So4EBUFiF0Wt44lA/7vKkmsvLyWQxCOkOXc2jqHAxMYI1QqQqH4t9+bQGhZRNWJlnj58xa2oWwWOw8z5JtIy/saBc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RAPBl59c; arc=fail smtp.client-ip=40.107.237.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9B61EB5C3;
+	Sat,  8 Mar 2025 18:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741458827; cv=none; b=McvMsSZbzYTCwKOO4juf4l6WQtceOkJQ30hL88k8r8IRxmmZGHwnukj7jDxnSEt2IygFyu5lgxBSRg2Ga0HjUH4SQjbvKHvr8qHnv+FyGYU4ZYNqvnwp1gVg7xyfo/2fKicXTMkYDUbDKfEoT/SpmJ9X/EVy2Gi+uW6fOBPnbvA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741458827; c=relaxed/simple;
+	bh=jtOBHKyDxEY6kiI+aww7sEZvL9BXUlHdXpHVTUbYBAM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fU9dZILF7KHqC4XbUp31rmnIuzT3IMSR7C+vQkEwo+Kc+n6/KxCiNKbQabAAmanQTjfoRFNOFJPNIXjTCmpoQlif4A8zJs5kv2EGxqYJqaK9Yb+l0E1qVr972jNIWkTj35nADz6OK4s+cNaGhUbJ2ee7a2lTC4CAWo/MnxfBkzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbqsaZkW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RAPBl59c"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xlk1E88mgzfgwiaA3179AfPV952ZuZMExxKO1r/rMFnGikAzyOrEJYDk9sDIjurf4i1IqEXa/9uOFhX9ggGiHJg0Jyya+nx5u9pdFMcVfhqPhcBwKkeIjF0SUUGRK/PMjaOyWFmhkM1bpjcG4+8bKhT7hjItLflgrlIe2+L2XBaq/qfAeQuyKDQustF4Ono3V0dC4gTZ72eo0El5AMKqeQG8SB8sbWTg5Cm3Az+kzMH/TnmEHBXsZlTn8ZEjjFtP/jvWTSC6+dNXktDYRLGy7wggy8U4LxPUDv8B5awwtdwS3WkI0AVGy2nQDSRgo92x9V44w37YDIgLiNBDGLatTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z9w+6rHgFcZv4j2bPPW24Ze/CBGNeXBtGYkKKESjXAE=;
- b=bfSDq0effgOm/GYBUOLrLxqAyG7Mbxz90NAokg9sHM00QxBAU6RB5gx4nYs8m+PjypsRKFs3U6p6tspoqlyASN1w9XfyZE9PV3GiMuYJLdkl6yo8C8C3kipZ3JJr7E/qXumuvnYTfZqEq9VeALUVFsdM2riCkXJVEQy/CiXZgYF/MlplbCQ8bWwpcc2UWrDSA7uRC5zk6ybt9jvDDz+X7ipqDQqTaVrh49lvHUa9VrBtKax1zu7smu+pIm7UlRbV/MlC0yfVBxBWyysFrNE8Um354QdAcPkbOagW7tBPd9rTr+eaTFQ/Fp2HgUJflVVZtKutmQMGt9a0E0dt6TnSHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z9w+6rHgFcZv4j2bPPW24Ze/CBGNeXBtGYkKKESjXAE=;
- b=RAPBl59cfC5d1BOxu3dz6SB4oPN0LcdYoaPGLINU6JGcKOY0puNP70tWS79wuA3cz7HUTnIy4oV/TO1S5YVmalnhyWtUENbduymMD9wMDmXXBswjEmhMODYWN0/gjf8LfxcfahxmcheQ3WJkpv0m6Zot9nUZijLafcpTunKRaHeI1baRVIABR/BXugaa9e4n0OJw7qQYrBdvc2NRqJZPDJbu8cnBTuhAYdOkEPEAzVM45gIR6pMHQkOzJ2rhhax1CqiLAucVZrJmOhH+VvDndvPGztmtAZd5j/hKMpImFsnD0S+3ILp12dSavaCb3jN9ydScbMn4DcPHirNMDkRBpw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- IA1PR12MB6138.namprd12.prod.outlook.com (2603:10b6:208:3ea::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.23; Sat, 8 Mar
- 2025 18:32:06 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8511.020; Sat, 8 Mar 2025
- 18:32:06 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: SeongJae Park <sj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, Hugh Dickins <hughd@google.com>,
- Kairui Song <kasong@tencent.com>, Miaohe Lin <linmiaohe@huawei.com>,
- linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
- John Hubbard <jhubbard@nvidia.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
- "Kirill A. Shuemov" <kirill.shutemov@linux.intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Yang Shi <yang@os.amperecomputing.com>,
- Yu Zhao <yuzhao@google.com>
-Subject: Re: [PATCH v3 1/2] mm/filemap: use xas_try_split() in
- __filemap_add_folio()
-Date: Sat, 08 Mar 2025 13:32:02 -0500
-X-Mailer: MailMate (2.0r6222)
-Message-ID: <20A1553F-C30A-4D93-8A43-011163A22C60@nvidia.com>
-In-Reply-To: <20250308181402.95667-1-sj@kernel.org>
-References: <20250308181402.95667-1-sj@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BLAPR03CA0149.namprd03.prod.outlook.com
- (2603:10b6:208:32e::34) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbqsaZkW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6E82DC4CEE0;
+	Sat,  8 Mar 2025 18:33:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741458826;
+	bh=jtOBHKyDxEY6kiI+aww7sEZvL9BXUlHdXpHVTUbYBAM=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=JbqsaZkWwoagmn8o7M2vaVyodTBJhE2zuh2L9vNZqVnM0IBJlTwuoM7JNINkHfHPI
+	 Peu8/BMyoflhrym2dFdpniZT7PQxioBxoryFIurrnj7hhoL5wbhqLLszTh4o5pGbP3
+	 iZBl9LGK0Ub9bRONp0GZfjjMMXK3JVRK6BeU7fvLmOuvD3ZRmKSzOTOIxeXiLlGVEr
+	 fDbHQmBS4msoAybMGJYGip+3kEdXXgjqOOrz76D5lRtl6t9jWcOh39erln7qv3PzP4
+	 E5fTRSKUAm/CmKE15qTbS8EuH434yOAzqGvJnRGoDWJiGAMJxreHvzzuMWvIx4JPe7
+	 rOlm/AGSzuCyw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C6CC282EC;
+	Sat,  8 Mar 2025 18:33:46 +0000 (UTC)
+From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
+Date: Sat, 08 Mar 2025 19:33:39 +0100
+Subject: [PATCH v4] dt-bindings: dma: Convert fsl,elo*-dma to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|IA1PR12MB6138:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d34d850-59e3-4a4e-a2b4-08dd5e6f8722
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TzZkcFZ3QjlvY2ZZbDk5M3U1VmtBYlJLRWhEMjNieEFEU3VwTUF6NHlhVC9P?=
- =?utf-8?B?T3lWQmZUSnQ3MTlnRU8wZ256LytMOHJTYWlTb3h6a2Y1ZVhJK05jYlhTYnFx?=
- =?utf-8?B?a2ExZmw0M0l0UmNCczc1ZnVHT0hUODlKTGtkSHI3SjdJZUdjSURLM1BKSlpl?=
- =?utf-8?B?QlFwZ01BbVU0cFpndzN1M3F0aXhpRVllLzdxV3A5ck41T3lJbVpCVTEwVFZy?=
- =?utf-8?B?NEJvR3BvQWdDejFiZkVSeVdvNnMwL1FER0ljM2pZN05Yd1RabStacnRSdjNC?=
- =?utf-8?B?L3BqdlRNQ3BZTjBwd0U1OVd6QVBiV1ViYlFUVlFiZjhVTEhzZ0pMOTFCQ0NT?=
- =?utf-8?B?TXI0WkFMek9kNUlXTjR4YkpMeVVoWjIvUWNTV3VHeEN6WFlHang0clR5YzNB?=
- =?utf-8?B?M0h3dS82Z01FVTFOdDlTUVkvSnBYam9hcFV3ektSLzUvQWhvWm1hczlLbVNI?=
- =?utf-8?B?YXJxbTVoKzVzSXlKOTMvYlhOcXY3bmNBOXpVQkFIOUlobEtFZGVJUmdwcXZh?=
- =?utf-8?B?eEUzcm1VV2FYakVUWmlmYUZ4anJSTWtGRENDT01ZNDJQSWpWTlRGdTMwS0ky?=
- =?utf-8?B?cUwwSFpGM0tPdnhvWW9JNnlyOS9BMWR1U2pPSld4Z0dzaTBqaVhFemhrZTUr?=
- =?utf-8?B?eTZQNlZOcFNLQUl2b0wzaU0xMGQwdzZEcU9sZDRpSXRNN2RpeGh3TURZdk4r?=
- =?utf-8?B?V21kNVA1TzVObkZIb2xKY0FzdEttUnY2LzkrQThCT0NMY3FiMGFCOUdTTW1J?=
- =?utf-8?B?VmdrUmI2amllNWhJaG5OSkVsMEpkcTJpNGZZcjkrMVpCSHA5NkZTOUpPUStx?=
- =?utf-8?B?eWxleHpGZEh3RzJoZnA4eFNwSDRjeXUwcFF5bnNVYWJ4Y0JnakRRMWN4OEFD?=
- =?utf-8?B?UUdiVnV0QVcwVUE2cVd5SDNRVlA4WXN1c0dQWFN4a0xCMHZBcGtWSks3TWx4?=
- =?utf-8?B?dFQ2bHkzNzVIbnZJL3VSTEFTQzB2RXV2ODhreXVLejFheU1hK0pWcEN0K3VD?=
- =?utf-8?B?d1ZXajF5NmwyVFJxRUNVQ1RQblRMT2Z1cFcwMjN5eXo4WGp6ZUhwOTZEay9W?=
- =?utf-8?B?bXQrSlVEUk42ZVhpWFAvZ3dhQ2dJakxNclc5RGtLMHc1YloxZU1ndHhzZG1O?=
- =?utf-8?B?Z0JORmk0dW9OVFhVb05JUTNMd0RYQnowSUdlMHQwYXA0N0JyNVBOSTVXeFhJ?=
- =?utf-8?B?UHgrRzdweE1sZlIxNlhObi94engvV0lDdDN6N2w3ak1iUkZsSk1FTTUwV3ov?=
- =?utf-8?B?eEpJZklpeWNJQUoxMko1aGc4bmJWK1d5SkE5OG95cERSRjd2K0JiM01wdE5o?=
- =?utf-8?B?a1pLUkpQSFZuZjJLSTdWWG1wczlCNmdwNTF5M1V4ZW1CRFg5ZDRHdkZKaW84?=
- =?utf-8?B?OWtuczhBVk5USHlidGN0SUZHZjVjOHgxenZpY3JSUlJicGR4Q0hkWXVmNjcv?=
- =?utf-8?B?cHo2ek92TU1iVGUrcGRwZDB0TU0zQkg5a2dsVFJXUmRqb0F2WkJQZXFlWjhP?=
- =?utf-8?B?Z2FQUGVLOXdCWDVINGkxOS9NQ3VuVCtrZldoZXFUa1VwRDRIcXdadVllWWpY?=
- =?utf-8?B?WGRlQVZzRVhsNC9GbEZVci80UExzUnQwTWJuNzJZMFdNUGp4VzRWN2lsY25H?=
- =?utf-8?B?dXZyMU9WY24wTmQ3RDJrVnFIOFFrano5QWhIUXZZeUt2aW5HbEpsZzRkUW9u?=
- =?utf-8?B?STJsUUVmSmRXcXF5YUJMallEb1dTb0MvdEMrNGhTZm9VKzNPVno3RU91Kytn?=
- =?utf-8?B?KzFkUHB0dHRpK0x3c1NFaXFCV3IrWHpDYTM4dVhJck53NEJraFB1V3F6T2tz?=
- =?utf-8?B?NktzU3hoMmQ1QjJZdWZCZWwycGlKNzVmdll0VkZ3QW1jNkkzRGEvR2t0N08r?=
- =?utf-8?Q?Ejlm8O5dZh4L3?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ekxVekpybXVWMms4cGJJRytYMVNWSmtsQzJKekplVmV6bFE5TUJ5a0U3UVVI?=
- =?utf-8?B?OU51T3UvekVtdW02Z0NLek1CS1dNd1NjT0lnazBZSFltSndKOEpJUEhiai84?=
- =?utf-8?B?UVNSSWx1dGxVSlJGZWkybWE3WVE2M0x1RnhuV1RLRlFQZHg2WFRMRENkMjJq?=
- =?utf-8?B?aks4Nzd6TkEvUkVEaFdjazhjeG12aHdBdG9WemVaT3VsUTF6Y0k3bVdUL0xp?=
- =?utf-8?B?TDBBUVc1Z2VIMGtEWFRjRk5GbXdkVm5zRExOZGxmMEp6UUhUcTFSWU1FdFY1?=
- =?utf-8?B?ZWJ0c0RVa252VUFzWUNNSVg2ZjhXNElDTWVxNDhkZENaZEJpa29SMEV0d1VO?=
- =?utf-8?B?OFlzdHN1RkMrNGV2K1Axb0ZQZXJRUys0RkZ6YjNRR3dDTEFyaHkwSFJ0Q3d3?=
- =?utf-8?B?U0hERHJvRStrU0JHaENNU1k0WGVyNmtDQm0xcGZTaWgzRUtsUTdIOENXQXZO?=
- =?utf-8?B?aWdlMDQ4ZlFQTkVXRHlYNVR0ZGN0MElEZGwwMXVwWCtLY3FDaFl2M0RqMnNF?=
- =?utf-8?B?ZU1QekxUZVJxU0Q4L3kyejdwVVltSmRib29ZL1hwdk12eklFSkxBcTNNZW16?=
- =?utf-8?B?MkRGcXEyRnVpakdnTE9sZ3B2UXo4TDBHRHMzSVJDOUoyY1paOHh2NkRCOURk?=
- =?utf-8?B?VzFBYXdjYTlhS3dZQ2xXTzRnNnRMek1BVzVyc3ppejUwckFMdXZOTFdxRzlT?=
- =?utf-8?B?Mk5mdFF2STZKNXByYzJ4RFhhd0VHc0FmcTJZcnRWTlBrYjR4cVJHSGtGVHNJ?=
- =?utf-8?B?NUluYWd3OS9kWlE2Zkp0cTFmRHBWLzVDV2xScjhNQWhvR0YyOG5XQ1QyRVFi?=
- =?utf-8?B?dUlNSlJLd21uU1hYcEFxMkMwaU9NeXJCOW1BNUZaMGx2dHRCT1hZNXdmZFRp?=
- =?utf-8?B?Z3BJUXd4V3ZzaHVMa1ZMS01kT3RlUnhLUi9jOUxsMXFiMmtTcTlDYkV5MERq?=
- =?utf-8?B?eTNZcmxZZzRGOWRKNUZVOHV5UG9HQ21kaDB2UGczVFhNNFlreXFJcVRTN2Fr?=
- =?utf-8?B?UmM4NmJlMGIrMmdQZkcvRmgxMTVjdVhPdGlWRGc3YWtKVHJsQzUvbjMrUEhZ?=
- =?utf-8?B?OFV3OUh4b0NDWHFaQTlYa0NyK1ErSFBzNlhyRTRQbFhhcEIwZjgrdDlBK0ZP?=
- =?utf-8?B?RkVjbFlmMGdnUEh6eitZY2RYYzNISzlsd2tocExBTGI3eTBGWEo2aVQxQlNC?=
- =?utf-8?B?ZncxcklCQjEvSzU1ZzYxK0syVjBiRXY5YjVLRUtucVNaWGlndWhDUmtvL0M1?=
- =?utf-8?B?VXpVRmY5RTcxdUI2aklXVE5mbG9QQzVGR0NXcE52VWF5dFF1YWdhWGVwVnJD?=
- =?utf-8?B?emR3OUZiV0VXaUxCbjh3VUZubUJwWEIxUkJtUW1UeC9XZjgvVE9kRFdkT29v?=
- =?utf-8?B?YU91YTNxcERCTEx6VVJ3NFNuTWt4M3pkUXZTc085T2h5YndXUlJ1M0tlUTU5?=
- =?utf-8?B?VlFBbUI1YkVBY2JkR1FYZFJ2cSs5d0RSL2dkVTllamRJZ1NxMEtqUE1hS0t5?=
- =?utf-8?B?RE5YdmFBRks1S1ZLd3pJYW12cGx4MEhSWVF0WDB2Y2Y0dmcyVnpydGc1dWs3?=
- =?utf-8?B?V0RrWkJ4c1kvSHl0S1ZWNkFSN2lUejRFbjFIZzFsZlpPV2VLNWU3TG0rYm42?=
- =?utf-8?B?ZHR1cXRzLzkwMTdNMGVkTTRoYTZuKy9jRTdLenhmYktYYU1YK1FRMHovZUNW?=
- =?utf-8?B?OURkcjA2Um1rTk5UQnozRjM5OTN4SlpBL3ZuY2xRMStJOUg2R1pTeFNRWThl?=
- =?utf-8?B?bE9NV21hamNsdkpPeWoxM0pDZDRCS0x3OGFzcitncDZORFl3Z3J2Z0NoNDZ4?=
- =?utf-8?B?RDJvYU1nQmNaSjNvcjBiVzNWRGNna2NOMjJOYWtpK0NzMUlnL2tzRW0vWmMy?=
- =?utf-8?B?cE53QUF6RW0wMWpwbnMzYzU1MUxKSzFjNlRBQlpEQjhCZ3RiOWJCd1EwYjRY?=
- =?utf-8?B?QlR2TjVJRWxXK1g0ZHlsYUsrK29TZGRua3hlUzF1VGlBZWVVbEZuYVoxbGRn?=
- =?utf-8?B?RjJCREkrY09nKzE1aXkwdk5jbm8yKzFwWThjd3dvcmJqOXZMeW4zVGNQVjll?=
- =?utf-8?B?cGFPYmtLNHhzZ3p2V2JtZzVBQjNlNE15NCtjYzFyNzNleFpnNWF5Nkg0NVBr?=
- =?utf-8?Q?47lo=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d34d850-59e3-4a4e-a2b4-08dd5e6f8722
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2025 18:32:05.9456
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ifTymGwp6XFaw1wSQrmy5ecolZJKOtHsoZ8aqPmXKNO9rFXJgEBCm4Rs9RKa0nqT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6138
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250308-ppcyaml-dma-v4-1-20392ea81ec6@posteo.net>
+X-B4-Tracking: v=1; b=H4sIAIKNzGcC/1XMQQ6DIBCF4auYWXcahWrBVe/RuKAwVpIqBAipM
+ d691KSLLv+XvG+DSMFShL7aIFC20bqlxOVUgZ7U8iS0pjSwmrU1YzV6r1c1v9DMCoU0rVRMCC0
+ eUB4+0Gjfh3YfSk82JhfWA8/8u/6c7s/JHBu8Sk284bzt5HjzLiZy54USDPu+fwAdeNNTpwAAA
+ A==
+X-Change-ID: 20250220-ppcyaml-dma-89d59a288c8b
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Crystal Wood <oss@buserror.net>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741458825; l=21482;
+ i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
+ bh=kUFcASeT2mMvb2+Dq4sTDgkCEwV4TvZIUdMy+H9C690=;
+ b=iUiNKWSq2NeYpLgUuk7DWUhlArKsPgd6v9VFUm5nvnqu3pSme/8C2kFqFKS8GBrVG0Re+JM07
+ WlRvdINldmOCzn2EwcEOpLYxdW0l6zrafZFUkt84Ib7c8gIHuf4pUo/
+X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
+ auth_id=156
+X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Reply-To: j.ne@posteo.net
 
-On 8 Mar 2025, at 13:14, SeongJae Park wrote:
+From: "J. Neuschäfer" <j.ne@posteo.net>
 
-> Hello,
->
-> On Wed, 26 Feb 2025 16:08:53 -0500 Zi Yan <ziy@nvidia.com> wrote:
->
->> During __filemap_add_folio(), a shadow entry is covering n slots and a
->> folio covers m slots with m < n is to be added.  Instead of splitting al=
-l
->> n slots, only the m slots covered by the folio need to be split and the
->> remaining n-m shadow entries can be retained with orders ranging from m =
-to
->> n-1.  This method only requires
->>
->> 	(n/XA_CHUNK_SHIFT) - (m/XA_CHUNK_SHIFT)
->>
->> new xa_nodes instead of
->> 	(n % XA_CHUNK_SHIFT) * ((n/XA_CHUNK_SHIFT) - (m/XA_CHUNK_SHIFT))
->>
->> new xa_nodes, compared to the original xas_split_alloc() + xas_split()
->> one.  For example, to insert an order-0 folio when an order-9 shadow ent=
-ry
->> is present (assuming XA_CHUNK_SHIFT is 6), 1 xa_node is needed instead o=
-f
->> 8.
->>
->> xas_try_split_min_order() is introduced to reduce the number of calls to
->> xas_try_split() during split.
->>
->> Signed-off-by: Zi Yan <ziy@nvidia.com>
->> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
->> Cc: Hugh Dickins <hughd@google.com>
->> Cc: Kairui Song <kasong@tencent.com>
->> Cc: Miaohe Lin <linmiaohe@huawei.com>
->> Cc: Mattew Wilcox <willy@infradead.org>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: John Hubbard <jhubbard@nvidia.com>
->> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
->> Cc: Kirill A. Shuemov <kirill.shutemov@linux.intel.com>
->> Cc: Ryan Roberts <ryan.roberts@arm.com>
->> Cc: Yang Shi <yang@os.amperecomputing.com>
->> Cc: Yu Zhao <yuzhao@google.com>
->> ---
->>  include/linux/xarray.h |  7 +++++++
->>  lib/xarray.c           | 25 +++++++++++++++++++++++
->>  mm/filemap.c           | 45 +++++++++++++++++-------------------------
->>  3 files changed, 50 insertions(+), 27 deletions(-)
->>
->> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
->> index 4010195201c9..78eede109b1a 100644
->> --- a/include/linux/xarray.h
->> +++ b/include/linux/xarray.h
->> @@ -1556,6 +1556,7 @@ int xas_get_order(struct xa_state *xas);
->>  void xas_split(struct xa_state *, void *entry, unsigned int order);
->>  void xas_split_alloc(struct xa_state *, void *entry, unsigned int order=
-, gfp_t);
->>  void xas_try_split(struct xa_state *xas, void *entry, unsigned int orde=
-r);
->> +unsigned int xas_try_split_min_order(unsigned int order);
->>  #else
->>  static inline int xa_get_order(struct xarray *xa, unsigned long index)
->>  {
->> @@ -1582,6 +1583,12 @@ static inline void xas_try_split(struct xa_state =
-*xas, void *entry,
->>  		unsigned int order)
->>  {
->>  }
->> +
->> +static inline unsigned int xas_try_split_min_order(unsigned int order)
->> +{
->> +	return 0;
->> +}
->> +
->>  #endif
->>
->>  /**
->> diff --git a/lib/xarray.c b/lib/xarray.c
->> index bc197c96d171..8067182d3e43 100644
->> --- a/lib/xarray.c
->> +++ b/lib/xarray.c
->> @@ -1133,6 +1133,28 @@ void xas_split(struct xa_state *xas, void *entry,=
- unsigned int order)
->>  }
->>  EXPORT_SYMBOL_GPL(xas_split);
->>
->> +/**
->> + * xas_try_split_min_order() - Minimal split order xas_try_split() can =
-accept
->> + * @order: Current entry order.
->> + *
->> + * xas_try_split() can split a multi-index entry to smaller than @order=
- - 1 if
->> + * no new xa_node is needed. This function provides the minimal order
->> + * xas_try_split() supports.
->> + *
->> + * Return: the minimal order xas_try_split() supports
->> + *
->> + * Context: Any context.
->> + *
->> + */
->> +unsigned int xas_try_split_min_order(unsigned int order)
->> +{
->> +	if (order % XA_CHUNK_SHIFT =3D=3D 0)
->> +		return order =3D=3D 0 ? 0 : order - 1;
->> +
->> +	return order - (order % XA_CHUNK_SHIFT);
->> +}
->> +EXPORT_SYMBOL_GPL(xas_try_split_min_order);
->> +
->
-> I found this makes build fails when CONFIG_XARRAY_MULTI is unset, like be=
-low.
->
->     /linux/lib/xarray.c:1251:14: error: redefinition of =E2=80=98xas_try_=
-split_min_order=E2=80=99
->      1251 | unsigned int xas_try_split_min_order(unsigned int order)
->           |              ^~~~~~~~~~~~~~~~~~~~~~~
->     In file included from /linux/lib/xarray.c:13:
->     /linux/include/linux/xarray.h:1587:28: note: previous definition of =
-=E2=80=98xas_try_split_min_order=E2=80=99 with type =E2=80=98unsigned int(u=
-nsigned int)=E2=80=99
->      1587 | static inline unsigned int xas_try_split_min_order(unsigned i=
-nt order)
->           |                            ^~~~~~~~~~~~~~~~~~~~~~~
->
-> I think we should have the definition only when CONFIG_XARRAY_MULTI?
+The devicetree bindings for Freescale DMA engines have so far existed as
+a text file. This patch converts them to YAML, and specifies all the
+compatible strings currently in use in arch/powerpc/boot/dts.
 
-I think it might be a merge issue, since my original patch[1] places
-xas_try_split_min_order() above xas_try_split(), both of which are
-in #ifdef CONFIG_XARRAY_MULTI #endif. But mm-everything-2025-03-08-00-43
-seems to move xas_try_split_min_order() below xas_try_split() and
-out of CONFIG_XARRAY_MULTI guard.
+Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+---
+I considered referencing dma-controller.yaml, but that requires
+the #dma-cells property (via dma-common.yaml), and I'm now sure which
+value it should have, if any. Therefore I did not reference
+dma-controller.yaml.
 
-[1] https://lore.kernel.org/linux-mm/20250226210854.2045816-2-ziy@nvidia.co=
-m/
+V4:
+- switch DMA controller node name (in examples) back to dma@ because the
+  dma-controller.yaml binding is not used.
 
---
-Best Regards,
-Yan, Zi
+V3:
+- Link: https://lore.kernel.org/r/20250226-ppcyaml-dma-v3-1-79ce3133569f@posteo.net
+- split out as a single patch
+- restructure "description" definitions to use "items:" as much as possible
+- remove useless description of interrupts in fsl,elo3-dma
+- rename DMA controller nodes to dma-controller@...
+- use IRQ_TYPE_* constants in examples
+- define unit address format for DMA channel nodes
+- drop interrupts-parent properties from examples
+
+V2:
+- part of series [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT bindings
+  Link: https://lore.kernel.org/lkml/20250207-ppcyaml-v2-5-8137b0c42526@posteo.net/
+- remove unnecessary multiline markers
+- fix additionalProperties to always be false
+- add description/maxItems to interrupts
+- add missing #address-cells/#size-cells properties
+- convert "Note on DMA channel compatible properties" to YAML by listing
+  fsl,ssi-dma-channel as a valid compatible value
+- fix property ordering in examples: compatible and reg come first
+- add missing newlines in examples
+- trim subject line (remove "bindings")
+---
+ .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 137 ++++++++++++++
+ .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 125 +++++++++++++
+ .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 132 +++++++++++++
+ .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+ 4 files changed, 394 insertions(+), 204 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..92288d76d51be639ac9ca5264e5fa056e418e4d5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+@@ -0,0 +1,137 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Elo DMA Controller
++
++maintainers:
++  - J. Neuschäfer <j.ne@posteo.net>
++
++description:
++  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
++  series chips such as mpc8315, mpc8349, mpc8379 etc.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - fsl,mpc8313-dma
++          - fsl,mpc8315-dma
++          - fsl,mpc8323-dma
++          - fsl,mpc8347-dma
++          - fsl,mpc8349-dma
++          - fsl,mpc8360-dma
++          - fsl,mpc8377-dma
++          - fsl,mpc8378-dma
++          - fsl,mpc8379-dma
++      - const: fsl,elo-dma
++
++  reg:
++    items:
++      - description:
++          DMA General Status Register, i.e. DGSR which contains status for
++          all the 4 DMA channels.
++
++  cell-index:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Controller index. 0 for controller @ 0x8100.
++
++  ranges: true
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  interrupts:
++    maxItems: 1
++    description: Controller interrupt.
++
++required:
++  - compatible
++  - reg
++
++patternProperties:
++  "^dma-channel@[0-9a-f]+$":
++    type: object
++    additionalProperties: false
++
++    properties:
++      compatible:
++        oneOf:
++          # native DMA channel
++          - items:
++              - enum:
++                  - fsl,mpc8315-dma-channel
++                  - fsl,mpc8323-dma-channel
++                  - fsl,mpc8347-dma-channel
++                  - fsl,mpc8349-dma-channel
++                  - fsl,mpc8360-dma-channel
++                  - fsl,mpc8377-dma-channel
++                  - fsl,mpc8378-dma-channel
++                  - fsl,mpc8379-dma-channel
++              - const: fsl,elo-dma-channel
++
++          # audio DMA channel, see fsl,ssi.yaml
++          - const: fsl,ssi-dma-channel
++
++      reg:
++        maxItems: 1
++
++      cell-index:
++        description: DMA channel index starts at 0.
++
++      interrupts:
++        maxItems: 1
++        description:
++          Per-channel interrupt. Only necessary if no controller interrupt has
++          been provided.
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    dma@82a8 {
++        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
++        reg = <0x82a8 4>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges = <0 0x8100 0x1a4>;
++        interrupts = <71 IRQ_TYPE_LEVEL_LOW>;
++        cell-index = <0>;
++
++        dma-channel@0 {
++            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
++            reg = <0 0x80>;
++            cell-index = <0>;
++            interrupts = <71 IRQ_TYPE_LEVEL_LOW>;
++        };
++
++        dma-channel@80 {
++            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
++            reg = <0x80 0x80>;
++            cell-index = <1>;
++            interrupts = <71 IRQ_TYPE_LEVEL_LOW>;
++        };
++
++        dma-channel@100 {
++            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
++            reg = <0x100 0x80>;
++            cell-index = <2>;
++            interrupts = <71 IRQ_TYPE_LEVEL_LOW>;
++        };
++
++        dma-channel@180 {
++            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
++            reg = <0x180 0x80>;
++            cell-index = <3>;
++            interrupts = <71 IRQ_TYPE_LEVEL_LOW>;
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..0f5e475657a781a209587a9de1eb99c0d7077854
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml
+@@ -0,0 +1,125 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/fsl,elo3-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Elo3 DMA Controller
++
++maintainers:
++  - J. Neuschäfer <j.ne@posteo.net>
++
++description:
++  DMA controller which has same function as EloPlus except that Elo3 has 8
++  channels while EloPlus has only 4, it is used in Freescale Txxx and Bxxx
++  series chips, such as t1040, t4240, b4860.
++
++properties:
++  compatible:
++    const: fsl,elo3-dma
++
++  reg:
++    items:
++      - description:
++          DMA General Status Registers starting from DGSR0, for channel 1~4
++      - description:
++          DMA General Status Registers starting from DGSR1, for channel 5~8
++
++  ranges: true
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  interrupts:
++    maxItems: 1
++
++patternProperties:
++  "^dma-channel@[0-9a-f]+$":
++    type: object
++    additionalProperties: false
++
++    properties:
++      compatible:
++        enum:
++          # native DMA channel
++          - fsl,eloplus-dma-channel
++
++          # audio DMA channel, see fsl,ssi.yaml
++          - fsl,ssi-dma-channel
++
++      reg:
++        maxItems: 1
++
++      interrupts:
++        maxItems: 1
++        description:
++          Per-channel interrupt. Only necessary if no controller interrupt has
++          been provided.
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    dma@100300 {
++        compatible = "fsl,elo3-dma";
++        reg = <0x100300 0x4>,
++              <0x100600 0x4>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges = <0x0 0x100100 0x500>;
++
++        dma-channel@0 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x0 0x80>;
++            interrupts = <28 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++
++        dma-channel@80 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x80 0x80>;
++            interrupts = <29 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++
++        dma-channel@100 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x100 0x80>;
++            interrupts = <30 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++
++        dma-channel@180 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x180 0x80>;
++            interrupts = <31 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++
++        dma-channel@300 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x300 0x80>;
++            interrupts = <76 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++
++        dma-channel@380 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x380 0x80>;
++            interrupts = <77 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++
++        dma-channel@400 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x400 0x80>;
++            interrupts = <78 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++
++        dma-channel@480 {
++            compatible = "fsl,eloplus-dma-channel";
++            reg = <0x480 0x80>;
++            interrupts = <79 IRQ_TYPE_EDGE_FALLING 0 0>;
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..8992f244c4db41ac13104ca64b7f8bf4b1b5c756
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml
+@@ -0,0 +1,132 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/fsl,eloplus-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale EloPlus DMA Controller
++
++maintainers:
++  - J. Neuschäfer <j.ne@posteo.net>
++
++description:
++  This is a 4-channel DMA controller with extended addresses and chaining,
++  mainly used in Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as
++  mpc8540, mpc8641 p4080, bsc9131 etc.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - fsl,mpc8540-dma
++              - fsl,mpc8541-dma
++              - fsl,mpc8548-dma
++              - fsl,mpc8555-dma
++              - fsl,mpc8560-dma
++              - fsl,mpc8572-dma
++              - fsl,mpc8641-dma
++          - const: fsl,eloplus-dma
++      - const: fsl,eloplus-dma
++
++  reg:
++    items:
++      - description:
++          DMA General Status Register, i.e. DGSR which contains
++          status for all the 4 DMA channels
++
++  cell-index:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      controller index.  0 for controller @ 0x21000, 1 for controller @ 0xc000
++
++  ranges: true
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  interrupts:
++    maxItems: 1
++    description: Controller interrupt.
++
++patternProperties:
++  "^dma-channel@[0-9a-f]+$":
++    type: object
++    additionalProperties: false
++
++    properties:
++      compatible:
++        oneOf:
++          # native DMA channel
++          - items:
++              - enum:
++                  - fsl,mpc8540-dma-channel
++                  - fsl,mpc8541-dma-channel
++                  - fsl,mpc8548-dma-channel
++                  - fsl,mpc8555-dma-channel
++                  - fsl,mpc8560-dma-channel
++                  - fsl,mpc8572-dma-channel
++              - const: fsl,eloplus-dma-channel
++
++          # audio DMA channel, see fsl,ssi.yaml
++          - const: fsl,ssi-dma-channel
++
++      reg:
++        maxItems: 1
++
++      cell-index:
++        description: DMA channel index starts at 0.
++
++      interrupts:
++        maxItems: 1
++        description:
++          Per-channel interrupt. Only necessary if no controller interrupt has
++          been provided.
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    dma@21300 {
++        compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma";
++        reg = <0x21300 4>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges = <0 0x21100 0x200>;
++        cell-index = <0>;
++
++        dma-channel@0 {
++            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
++            reg = <0 0x80>;
++            cell-index = <0>;
++            interrupts = <20 IRQ_TYPE_EDGE_FALLING>;
++        };
++
++        dma-channel@80 {
++            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
++            reg = <0x80 0x80>;
++            cell-index = <1>;
++            interrupts = <21 IRQ_TYPE_EDGE_FALLING>;
++        };
++
++        dma-channel@100 {
++            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
++            reg = <0x100 0x80>;
++            cell-index = <2>;
++            interrupts = <22 IRQ_TYPE_EDGE_FALLING>;
++        };
++
++        dma-channel@180 {
++            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
++            reg = <0x180 0x80>;
++            cell-index = <3>;
++            interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+deleted file mode 100644
+index c11ad5c6db2190bf38c160632d9997122e169945..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
++++ /dev/null
+@@ -1,204 +0,0 @@
+-* Freescale DMA Controllers
+-
+-** Freescale Elo DMA Controller
+-   This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
+-   series chips such as mpc8315, mpc8349, mpc8379 etc.
+-
+-Required properties:
+-
+-- compatible        : must include "fsl,elo-dma"
+-- reg               : DMA General Status Register, i.e. DGSR which contains
+-                      status for all the 4 DMA channels
+-- ranges            : describes the mapping between the address space of the
+-                      DMA channels and the address space of the DMA controller
+-- cell-index        : controller index.  0 for controller @ 0x8100
+-- interrupts        : interrupt specifier for DMA IRQ
+-
+-- DMA channel nodes:
+-        - compatible        : must include "fsl,elo-dma-channel"
+-                              However, see note below.
+-        - reg               : DMA channel specific registers
+-        - cell-index        : DMA channel index starts at 0.
+-
+-Optional properties:
+-        - interrupts        : interrupt specifier for DMA channel IRQ
+-                              (on 83xx this is expected to be identical to
+-                              the interrupts property of the parent node)
+-
+-Example:
+-	dma@82a8 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
+-		reg = <0x82a8 4>;
+-		ranges = <0 0x8100 0x1a4>;
+-		interrupt-parent = <&ipic>;
+-		interrupts = <71 8>;
+-		cell-index = <0>;
+-		dma-channel@0 {
+-			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+-			cell-index = <0>;
+-			reg = <0 0x80>;
+-			interrupt-parent = <&ipic>;
+-			interrupts = <71 8>;
+-		};
+-		dma-channel@80 {
+-			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+-			cell-index = <1>;
+-			reg = <0x80 0x80>;
+-			interrupt-parent = <&ipic>;
+-			interrupts = <71 8>;
+-		};
+-		dma-channel@100 {
+-			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+-			cell-index = <2>;
+-			reg = <0x100 0x80>;
+-			interrupt-parent = <&ipic>;
+-			interrupts = <71 8>;
+-		};
+-		dma-channel@180 {
+-			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+-			cell-index = <3>;
+-			reg = <0x180 0x80>;
+-			interrupt-parent = <&ipic>;
+-			interrupts = <71 8>;
+-		};
+-	};
+-
+-** Freescale EloPlus DMA Controller
+-   This is a 4-channel DMA controller with extended addresses and chaining,
+-   mainly used in Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as
+-   mpc8540, mpc8641 p4080, bsc9131 etc.
+-
+-Required properties:
+-
+-- compatible        : must include "fsl,eloplus-dma"
+-- reg               : DMA General Status Register, i.e. DGSR which contains
+-                      status for all the 4 DMA channels
+-- cell-index        : controller index.  0 for controller @ 0x21000,
+-                                         1 for controller @ 0xc000
+-- ranges            : describes the mapping between the address space of the
+-                      DMA channels and the address space of the DMA controller
+-
+-- DMA channel nodes:
+-        - compatible        : must include "fsl,eloplus-dma-channel"
+-                              However, see note below.
+-        - cell-index        : DMA channel index starts at 0.
+-        - reg               : DMA channel specific registers
+-        - interrupts        : interrupt specifier for DMA channel IRQ
+-
+-Example:
+-	dma@21300 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma";
+-		reg = <0x21300 4>;
+-		ranges = <0 0x21100 0x200>;
+-		cell-index = <0>;
+-		dma-channel@0 {
+-			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
+-			reg = <0 0x80>;
+-			cell-index = <0>;
+-			interrupt-parent = <&mpic>;
+-			interrupts = <20 2>;
+-		};
+-		dma-channel@80 {
+-			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
+-			reg = <0x80 0x80>;
+-			cell-index = <1>;
+-			interrupt-parent = <&mpic>;
+-			interrupts = <21 2>;
+-		};
+-		dma-channel@100 {
+-			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
+-			reg = <0x100 0x80>;
+-			cell-index = <2>;
+-			interrupt-parent = <&mpic>;
+-			interrupts = <22 2>;
+-		};
+-		dma-channel@180 {
+-			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
+-			reg = <0x180 0x80>;
+-			cell-index = <3>;
+-			interrupt-parent = <&mpic>;
+-			interrupts = <23 2>;
+-		};
+-	};
+-
+-** Freescale Elo3 DMA Controller
+-   DMA controller which has same function as EloPlus except that Elo3 has 8
+-   channels while EloPlus has only 4, it is used in Freescale Txxx and Bxxx
+-   series chips, such as t1040, t4240, b4860.
+-
+-Required properties:
+-
+-- compatible        : must include "fsl,elo3-dma"
+-- reg               : contains two entries for DMA General Status Registers,
+-                      i.e. DGSR0 which includes status for channel 1~4, and
+-                      DGSR1 for channel 5~8
+-- ranges            : describes the mapping between the address space of the
+-                      DMA channels and the address space of the DMA controller
+-
+-- DMA channel nodes:
+-        - compatible        : must include "fsl,eloplus-dma-channel"
+-        - reg               : DMA channel specific registers
+-        - interrupts        : interrupt specifier for DMA channel IRQ
+-
+-Example:
+-dma@100300 {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	compatible = "fsl,elo3-dma";
+-	reg = <0x100300 0x4>,
+-	      <0x100600 0x4>;
+-	ranges = <0x0 0x100100 0x500>;
+-	dma-channel@0 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x0 0x80>;
+-		interrupts = <28 2 0 0>;
+-	};
+-	dma-channel@80 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x80 0x80>;
+-		interrupts = <29 2 0 0>;
+-	};
+-	dma-channel@100 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x100 0x80>;
+-		interrupts = <30 2 0 0>;
+-	};
+-	dma-channel@180 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x180 0x80>;
+-		interrupts = <31 2 0 0>;
+-	};
+-	dma-channel@300 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x300 0x80>;
+-		interrupts = <76 2 0 0>;
+-	};
+-	dma-channel@380 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x380 0x80>;
+-		interrupts = <77 2 0 0>;
+-	};
+-	dma-channel@400 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x400 0x80>;
+-		interrupts = <78 2 0 0>;
+-	};
+-	dma-channel@480 {
+-		compatible = "fsl,eloplus-dma-channel";
+-		reg = <0x480 0x80>;
+-		interrupts = <79 2 0 0>;
+-	};
+-};
+-
+-Note on DMA channel compatible properties: The compatible property must say
+-"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
+-driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
+-DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any DMA
+-channel that should be used for another driver should not use
+-"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
+-example, the compatible property should be "fsl,ssi-dma-channel".  See ssi.txt
+-for more information.
+
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250220-ppcyaml-dma-89d59a288c8b
+
+Best regards,
+-- 
+J. Neuschäfer <j.ne@posteo.net>
+
+
