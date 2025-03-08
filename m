@@ -1,142 +1,111 @@
-Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C51581720;
-	Sat,  8 Mar 2025 16:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7328181720;
+	Sat,  8 Mar 2025 16:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741450902; cv=none; b=m89PqNg/EjjwzFwILvkfCVX4Qpz8/PHrzKnbuJmrTKJuqfu9mAR1u9oZZay9jiQun/UDA5qiMIFl3ejqsnJbm6Wq1qZqq3DZfUYt+INRKhJaIgF3U62CY5VsmomnnUUncj6OHoXd8ds7rvGi1cBSQ4RBmwVfNYONajkwpaaTr9k=
+	t=1741451065; cv=none; b=GeeCU891/Dw1UTK8dyyhsxnaDVnlohFiUfLw3P/VZmIWp/SGLuO3XVpjxY0T3QDV+ig5tGq6Tg0N/Jp5lPWCS8IBrjw750RNY0NlpSPq9j+6GS83GkLpCHUhdNYM/tNtwFT9neLP7NBFx3k4vdfGVRIYRmMYaI9vHv9Zm+7k4yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741450902; c=relaxed/simple;
-	bh=kxs5tNCVzupbR+a2HYMXv9flCuEJr+0N0bQadsFG0Ms=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
-	 In-Reply-To:Content-Type; b=cilzfkDzVld8j23YyJenXoAR0sVABhevyKT89xQVZ/o6C9YXlywgXznUQFeNrqldbJGuARTl04KBKTheDzvqrsZl3semBLCI8DV95NNVYpB9TnZ4AciydIHM2DeLfRInz54G3LySh3qcP+YyiuDvwAS2nd5xkSPptTZDyPXKocM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=nO14uHBD; arc=none smtp.client-ip=80.12.242.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1741451065; c=relaxed/simple;
+	bh=mxjT0AhbJ+fH5D/EKExE2eW9/MHvtfzCY9Y8SWeY37U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=J99dZzilowK0UnkNR2npmQ+2/+z/EyVmDrojG0gfZ/vK/aWLX2ctPWPlyzzc6C5Ul0dIZSeeO0EzA9LgU+TLRTGMJYJa9Q1io2PzsYyMBWn84RkY0ifDWe9m0dH7BJqsidnzNmTCTG+Kq2iAKznM5b8XOTpCBBk2Qqw+uOB/oQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLtFli/M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="nO14uHBD"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id qwmutkNhDPGDMqwmytIRNA; Sat, 08 Mar 2025 17:12:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741450357;
-	bh=lkMkI/Q3wsGJiDCLw7+HfkXg9OghyPU1YGXGecq6QVE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To;
-	b=nO14uHBDYV2E5xYLoR88YkfLg09I5zLdKlxMCcqGDPbnIOiZrLWkw9u9YsOREp6hQ
-	 xuWeDM33aazDcthwSNm+iyxBGx+S3PMmxLwfGSYmxjwQqzq2weBDuTw009O2QJiLuG
-	 68CHqk2BR9USFdDXZ0NEE24c53PoMkrhyFrxlzwPJiZS1h3y9n83TyL2dN0cHcGm3v
-	 tfe3gKSGqOPunR3wMdw7Sb578qmuBWWnIh5nv93xozxlPp772GODGQv1qvtWdrXHVm
-	 +uWmESkAzl/HCsBun0nlWppXAzvdpyE3KWtxlrsPh1YbxQ+noEpsrF0s3T7HhEfsX4
-	 aVqzoDL/1teHQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 08 Mar 2025 17:12:37 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <fe21c55f-9baf-4b3d-b1fc-a866274b6178@wanadoo.fr>
-Date: Sat, 8 Mar 2025 17:12:32 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLtFli/M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE880C4CEE0;
+	Sat,  8 Mar 2025 16:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741451064;
+	bh=mxjT0AhbJ+fH5D/EKExE2eW9/MHvtfzCY9Y8SWeY37U=;
+	h=From:Date:Subject:To:Cc:From;
+	b=MLtFli/MqO4Uv/vWJrQeJLZscaCJTFEAX5rQgbMV/KCi0OPTJwFFDxn108zqE0AUY
+	 4ZUgcP7FesRx6Ue7uOOdz4kdyTTUmtA4A948l9KVk9tLi7hVhKQzE5tE2jdBC2s1FY
+	 J01kx2JQ0NBb7QC9vGMVumOBCPshqKtYQMXQilbfH7g6ciLgaHrVwaaKThFBBJ0Oew
+	 7hUcCwiqNnsZCK/LS7KMhr8eyiiREePVqzayZTU0kPVAGVOnsrtckXK2e/cJfdWNW4
+	 /HjcnvNA8gHnY9x9aMea6CL8M569x+a0v9TrrnKl94utGlJEaIWr25mJTfc4gQ+wZ8
+	 LE1juUi+x7pWw==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Sat, 08 Mar 2025 17:24:15 +0100
+Subject: [PATCH v2] dt-bindings: usb: qcom,dwc3: Synchronize minItems for
+ interrupts and -names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] iio: adc: add support for ad4052
-References: <20250306-iio-driver-ad4052-v1-0-2badad30116c@analog.com>
- <20250306-iio-driver-ad4052-v1-4-2badad30116c@analog.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: jorge.marques@analog.com
-Cc: Michael.Hennerich@analog.com, conor+dt@kernel.org, corbet@lwn.net,
- devicetree@vger.kernel.org, dlechner@baylibre.com, jic23@kernel.org,
- krzk+dt@kernel.org, lars@metafoo.de, linux-doc@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
-In-Reply-To: <20250306-iio-driver-ad4052-v1-4-2badad30116c@analog.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250308-topic-dt_bindings_fixes_usb-v2-1-3169a3394d5b@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAC5vzGcC/42NXQqDMBCEryL73EiS4k/71HsUEZNsdaEmNqvSI
+ t69qSfoy8A3A99swBgJGa7ZBhFXYgo+gT5lYIfO9yjIJQYtdSHPshRzmMgKN7eGvCPfc/ugN3K
+ 7sBFWSmfQVXVlL5AMU8RjTIJ7k3ggnkP8HGer+rX/eVcllECFZVcYh3WlboE5fy3d04ZxzFNAs
+ +/7F+Ml9NnNAAAA
+X-Change-ID: 20250306-topic-dt_bindings_fixes_usb-c00dbed787c9
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741451060; l=1614;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=SIaQZaIKTd4vnJ9IAfLcrJh++UCApOBcXKazDbk+l/Y=;
+ b=Amm4rC3YU4Z15RBVBr6EdjVNbFDukRdBlIfPI6IlqXe3lnfvIz1ugt1lS/EibcOQPYZW7+D/m
+ QdDEMC4crwRCxk6QIpq0QTsAjnpNNYHkR/NL7+clIUOassRlqNIbZTr
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Le 06/03/2025 à 15:03, Jorge Marques a écrit :
-> The AD4052/AD4058/AD4050/AD4056 are versatile, 16-bit/12-bit,
-> successive approximation register (SAR) analog-to-digital converter (ADC)
-> that enables low-power, high-density data acquisition solutions without
-> sacrificing precision.
-...
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> +#define AD4052_CHAN(bits, grade) {							\
-> +	.type = IIO_VOLTAGE,								\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_RAW) |				\
-> +				    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),		\
-> +	.info_mask_shared_by_type_available =  BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+It makes sense that ARRAY_SIZE(prop) should == ARRAY_SIZE(prop-names),
+so allow that to happen with interrupts.
 
-Nitpick: Unneeded extra space before BIT
+Fixes bogus warnings such as:
+usb@c2f8800: interrupt-names: ['pwr_event', 'qusb2_phy', 'hs_phy_irq'] is too short
 
-> +	.indexed = 1,									\
-> +	.channel = 0,									\
-> +	.event_spec = ad4052_events,							\
-> +	.num_event_specs = ARRAY_SIZE(ad4052_events),					\
-> +	.has_ext_scan_type = 1,								\
-> +	.ext_scan_type = ad4052_scan_type_##bits##_s,					\
-> +	.num_ext_scan_type = ARRAY_SIZE(ad4052_scan_type_##bits##_s),			\
-> +	.ext_info = grade##_ext_info,							\
-> +}
-> +
-> +#define AD4052_OFFLOAD_CHAN(bits, grade) {						\
-> +	.type = IIO_VOLTAGE,								\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_RAW) |				\
-> +				    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |		\
-> +				    BIT(IIO_CHAN_INFO_SAMP_FREQ),			\
-> +	.info_mask_shared_by_type_available =  BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+Fixes: 53c6d854be4e ("dt-bindings: usb: dwc3: Clean up hs_phy_irq in binding")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Changes in v2:
+- Use a better reference in the Fixes tag
+- Link to v1: https://lore.kernel.org/r/20250306-topic-dt_bindings_fixes_usb-v1-1-e1e6a5bde871@oss.qualcomm.com
+---
+ Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Nitpick: Unneeded extra space before BIT
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+index a2b3cf625e5b3962f3acfe93de02f3cae2b6123d..64137c1619a635a5a4f96fc49bd75c5fb757febb 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -404,6 +404,7 @@ allOf:
+           minItems: 2
+           maxItems: 3
+         interrupt-names:
++          minItems: 2
+           items:
+             - const: pwr_event
+             - const: qusb2_phy
+@@ -425,6 +426,7 @@ allOf:
+           minItems: 3
+           maxItems: 4
+         interrupt-names:
++          minItems: 3
+           items:
+             - const: pwr_event
+             - const: qusb2_phy
 
-> +	.indexed = 1,									\
-> +	.channel = 0,									\
-> +	.event_spec = ad4052_events,							\
-> +	.num_event_specs = ARRAY_SIZE(ad4052_events),					\
-> +	.has_ext_scan_type = 1,								\
-> +	.ext_scan_type = ad4052_scan_type_##bits##_s,					\
-> +	.num_ext_scan_type = ARRAY_SIZE(ad4052_scan_type_##bits##_s),			\
-> +	.ext_info = grade##_ext_info,							\
-> +}
+---
+base-commit: 565351ae7e0cee80e9b5ed84452a5b13644ffc4d
+change-id: 20250306-topic-dt_bindings_fixes_usb-c00dbed787c9
 
-...
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> +static int ad4052_probe(struct spi_device *spi)
-> +{
-> +	const struct ad4052_chip_info *chip;
-> +	struct device *dev = &spi->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct ad4052_state *st;
-> +	int ret;
-> +	u8 buf;
-> +
-> +	chip = spi_get_device_match_data(spi);
-> +	if (!chip)
-> +		return dev_err_probe(dev, -ENODEV,
-> +				     "Could not find chip info data\n");
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +	st->spi = spi;
-> +	spi_set_drvdata(spi, st);
-> +	init_completion(&st->completion);
-> +
-> +	st->regmap = devm_regmap_init_spi(spi, &ad4052_regmap_config);
-> +	if (IS_ERR(st->regmap))
-> +		return dev_err_probe(&spi->dev,  PTR_ERR(st->regmap),
-
-Nitpick: Unneeded extra space before PTR_ERR
-
-> +				     "Failed to initialize regmap\n");
-> +
-> +	st->mode = AD4052_SAMPLE_MODE;
-> +	st->wait_event = false;
-> +	st->chip = chip;
-
-...
-
-CJ
