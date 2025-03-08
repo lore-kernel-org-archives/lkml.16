@@ -1,155 +1,196 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48B61624C0
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 10:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520F71B0409;
+	Sat,  8 Mar 2025 10:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741428025; cv=none; b=ged2qosatD6FNWEPX0/C0PN+6NgRvI/EtzwhsYZXn2gu8LZOptyQBmoNPhQMEm8oSqmsG0rx18ZM9B2NuV3UTiX8ImNq1uCqRHChyHbJGe1A0exoFmEmcxnw/BHTF70KcsjN4cGUawduKkKQQw0slaN08bOFhWEXj0uIUqxum/E=
+	t=1741428044; cv=none; b=VOxeQ4i/IBwxyZFg/bQc2ahbcUa0Unzdl94FwH4qFNdqsja2yTkgcZkC7X/GJRWnNobvsVyJJ1LTbLbFUd3J9Fb4Yf6mmSAELUUT2a89vha7l1ckfOjHrBjFy1mxqstSvZgYT+DlW8PGF8moCuPDVF0bDUNI5YEiIk7UiXohat0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741428025; c=relaxed/simple;
-	bh=UWpfiX3eWSLlfomPYZ++NjpgdIvAWNwdxsvyoksscO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bsJf0+5EKz/rWY9Jj4m1KIU3PRTtz2+js+Iu9OwwCFqbmmx4hJTGOj/eli/cTLk/U3tECKuNkcbIPOuJPTZW/PRWVejpRG998Iu0t2rfdhzij1ne2TDLSGas8zWLSnQWl8/SoPDz+VzPAVQ9/XpzOTvSWkSyuC6B9vmbGC8P5cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hl0HnRKx; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741428044; c=relaxed/simple;
+	bh=hOfMBWl0HtY7p6i1BIV62u5V/ut0F3W96lyz5vF72NQ=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=NlWrW08jFhOGtGFn0n2wraqovfBamZwcIOpXBm54hJCRxjhimERHGw8z2ONVMLhUNb0Q4EDG+roxHeXMTirH5UQJXsPBIy1HnbPBElnsEvZXGvzBZZO2taoUlyKR0OvhMjr6Lqw4gPSoBAMH7AC02q30PRbPN6fBBrqXuE8uojk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUonHkhv; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hl0HnRKx"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30613802a59so29252181fa.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 02:00:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUonHkhv"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fa8ada6662so5771734a91.1;
+        Sat, 08 Mar 2025 02:00:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741428021; x=1742032821; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S6uIFtQrYeT1tKei1G8u36mCk/72dHjWycWuDYe5TJo=;
-        b=hl0HnRKxbZvV/DGqTpR51gxj+Ec93Z+weei0g8E5ZuFFycVoQ3DO8oce7iGhfh3klu
-         WtouGZZwz9M1fmRBvm3kHIbcRwZ2MVEVTuz9VVszkYw7sWvVmjaTLg2fcjZFSiZ5meef
-         j9wbHAnDlGEXluID1AhtItBXHmvJNL5PlGvFZFwMj5cKB79WvuQfXBxaVcffRgnB+XKb
-         +Uc3Zc1Ypd9i+jnBK8trTH9XNeHKCEw3S8xdOCQ6CwZPg3Evnpn6uOB0mKOAZpH8v/7B
-         9nf8x24XhTUhV6l2U5q1YQXZPUxyb5jrv4QCzhIWMqB2HzIdhREl8MOsHmSeimt9Reha
-         oxWQ==
+        d=gmail.com; s=20230601; t=1741428042; x=1742032842; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qmuWU+ABDEM7eRP+mmuPtmIx9zAefsZ3TrrNc1V03XM=;
+        b=hUonHkhvg031wVe/GYESFiAW160DehUQuZCBQgNM0apkF7JVfveW03F1r+tknNPjZ+
+         6W5cXYpCxK44Cs6VFR9ubgaRv1C4Rb4q9U8bKlGvLPiffmq9QEeTGobxmNPgONCzbxSL
+         ZizhjAa8L4qjkl4NCuqxpzk5A/RoE+jw7Cm9rp/be/qgS7aURSsmtof63uA/toj02TeL
+         mUKj7cmkRXbUUbLa6rSy9wH5lCZcdml3o/N3PI2wavsW1lFOc5BOdAsBk1KWLsVSJoO1
+         Mlz7VggmPx90TPymEg6S25wj0unQ6s3mijv3IoKb/ry2PHu+DyStzeIELwR2UaVPiXMj
+         I6/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741428021; x=1742032821;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S6uIFtQrYeT1tKei1G8u36mCk/72dHjWycWuDYe5TJo=;
-        b=mDmILT/rlN4L+E67KRmIfIBGLY5kdmWYPzf3wPhs6k9gtBfN7yKMjOw77FUTEOPAz5
-         MYoLd3kxgawMGDyesEuUwulwxMNEp4uCXGwHvqkiZ79HRe+tpU9BZYaMBww15ISQ+tX7
-         pSbWOmcBhoPzGU5N8GNJxBLaDI6qAKV8B3YOOjnGAWgkSQ8wAd17T6AgZiBqum68M89s
-         EyUKH2GM5G1RuNW3q2x82B1snSP0g9/Xol5J39XXIa3LAWZcfGtFJidr1zPsYee+r5Pu
-         E4gjpAV5PySwv7k5BK0J1rwIVTu+qZQUmCySIzoOZ9tr4kIusO+YxAqXFyw5Si5WdoT9
-         K1+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTuus+Qa8cKxsB58TnxqqlCv0nIMvXcNySWqGMfdQilAb+r+dYTEbQprVMNhyt2KxRxiVFmQaR0En9Bi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwToRhOTc8OXBuTv8BP16hUSnhmVJnnMPFMQJ5A4wlTxporTnOo
-	gi1weluYp0tja0nkSaEudcBBBwcUbNxUFoptwtM78FJDrSSU/bBTKAJAskTQoHxj0X/jUF5nu2a
-	SKMqBvVQ6LQSADOu+imApB/Xa9UXll+7honYp
-X-Gm-Gg: ASbGncsgnvSw7FTPYWYmWAdrtj9DWx++b8s8WLpfz1hKWum6/tcERVYyd98A1033XlJ
-	w0XU1KiU9wUbkbu6S27jfz2ejcYe3wm7F5rr/Qpl/CFeue8jI7dcGIjIo4ELxX7Avau92JlAOmM
-	eMJiTsVH6pH/NqhGY/lZ2fyCHulv6O5YmZVF92ERmsjp98GdUwiBMCqJZkIBU=
-X-Google-Smtp-Source: AGHT+IGubJbShcjmCRUedp5qeK9lj9GO7ly63pW0lnJcLUADqEY1POvXRWv6pq0XOWUwnIOiEph5l1yi5O9HRTF94aY=
-X-Received: by 2002:a2e:be0b:0:b0:30b:f94a:a954 with SMTP id
- 38308e7fff4ca-30bf94aaadcmr15062121fa.16.1741428020691; Sat, 08 Mar 2025
- 02:00:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741428042; x=1742032842;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qmuWU+ABDEM7eRP+mmuPtmIx9zAefsZ3TrrNc1V03XM=;
+        b=VKxKhgA6Vxm2ZLQRc5TErm4GyhBfMzt9kl5FlIZxrTdpyG6Co2w5JNDNhZQF6AfWQC
+         OPboAV/Jn9TdC9x4Ti7/uSQYikCjcuDtEYMgYVvBcT2i67UGfVQA/joHgm/o8vkk7S/h
+         DTGsqly2Pw9wb5PE/C8A7rIMO9KmenOwzzLZAhxJsTAPua/mkNR4wJna4+dJduIT6iTX
+         Lo3AD9hhxAtZ2j+H1MlOJYvr5vzCNUulUarEkXrRlHLiuGqRNCOJGSZoXjf0i1svAqGP
+         lHE52ho5jwFsNwJoWowZ4+r4AH3NvXh3ZfjuRlu+MlSvzv5cNIRX/OJEAxXU8xc+Qc/1
+         9jug==
+X-Forwarded-Encrypted: i=1; AJvYcCUEvU69I0pZMGZLp2hV18+fm+2u5BEk/Hw9GBsZJW0ay4a5Q7QkHezqaXCUFJypFvHYFdQog/+BxILk@vger.kernel.org, AJvYcCUrLJ4xyyEWKi95/R+yVki6oO32CRZtaZ2G+0fICQGNH36jlgftTTNk8djiGBGOuVQD3dz1zJVI19MSbfT1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQnf697w7Q/BIeUVOLe0uql9mjxXXVCu2dudXAqz293vER1fqw
+	cqGgbtcGaM5i4giUGXGdRukXupZ8aX2E95fvaKgGJSMiFc19G3VbwKfNcA==
+X-Gm-Gg: ASbGnctf5W59+0lISGsraiSjtqw77wDTZNgJqiW70dfmr4eVgoRzCL8Oc0IUYsu+QDw
+	A5U4tJLRRCAblwKtKyZtZRHTlW72w1hPti/CrIx+CHS7o/4UFgB0zzrWJTskjV9I+x6zQ7FaUM1
+	nqlCmbIcg0OALjRlCDAfyLA0mXY+yUWSuEaQWzFNCTuukMGJfS9NmuEfHnlk0xOGPi6yOUEzF97
+	egTHm4Q+XfBKzmMRpdV55cUrIar00smIeC17vRDw4/2MH83eMz3Dvl2IxAKHdfqji3IcCzxpNB2
+	v5/4yrZbTHx2IgzKPS6Oj0nWqS90V4OLH1c=
+X-Google-Smtp-Source: AGHT+IGPAJzUf9siyzmCmgkTC9kLKvlPxR154Kyh6/tNf5D6nZlFWTCUZP6hIDD9iyrGuUOK4JT+yQ==
+X-Received: by 2002:a17:90b:2f8f:b0:2ea:7cd5:4ad6 with SMTP id 98e67ed59e1d1-2ff7cf4dde5mr9395444a91.32.1741428042385;
+        Sat, 08 Mar 2025 02:00:42 -0800 (PST)
+Received: from dw-tp ([171.76.82.7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e78939dsm6315453a91.29.2025.03.08.02.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Mar 2025 02:00:41 -0800 (PST)
+From: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+To: Ojaswin Mujoo <ojaswin@linux.ibm.com>, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>, linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>
+Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if journal is destroying
+In-Reply-To: <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
+Date: Sat, 08 Mar 2025 15:25:04 +0530
+Message-ID: <87ldtfhmo7.fsf@gmail.com>
+References: <cover.1741270780.git.ojaswin@linux.ibm.com> <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1740386567.git.dvyukov@google.com> <de940218d0a59fd930ec244d87f2375b16a7815a.1740386567.git.dvyukov@google.com>
-In-Reply-To: <de940218d0a59fd930ec244d87f2375b16a7815a.1740386567.git.dvyukov@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Sat, 8 Mar 2025 11:00:09 +0100
-X-Gm-Features: AQ5f1JrAEz7lXTf4cBw6xQrjreG3r9oBNgidQ3LzkVQ4BJP7tZn6D1JDrFSyKyQ
-Message-ID: <CACT4Y+baLmcJ=vrcaTmPFTsspYO_WvrQ=uTOnfcbagvK9bz3Vg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] syscall_user_dispatch: Allow allowed range wrap-around
-To: krisman@collabora.com, tglx@linutronix.de, luto@kernel.org, 
-	peterz@infradead.org, keescook@chromium.org, gregory.price@memverge.com
-Cc: Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 24 Feb 2025 at 09:45, Dmitry Vyukov <dvyukov@google.com> wrote:
+Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+
+> Presently we always BUG_ON if trying to start a transaction on a journal marked
+> with JBD2_UNMOUNT, since this should never happen. However, while ltp running
+> stress tests, it was observed that in case of some error handling paths, it is
+> possible for update_super_work to start a transaction after the journal is
+> destroyed eg:
 >
-> There are two possible scenarios for syscall filtering:
->  - having a trusted/allowed range of PCs, and intercepting everything else
->  - or the opposite: a single untrusted/intercepted range and allowing
->    everything else
-> The current implementation only allows the former use case due to
-> allowed range wrap-around check. Allow the latter use case as well
-> by removing the wrap-around check.
-> The latter use case is relevant for any kind of sandboxing scenario,
-> or monitoring behavior of a single library. If a program wants to
-> intercept syscalls for PC range [START, END) then it needs to call:
-> prctl(..., END, -(END-START), ...);
-> which sets a wrap-around range that excludes everything
-> besides [START, END).
+> (umount)
+> ext4_kill_sb
+>   kill_block_super
+>     generic_shutdown_super
+>       sync_filesystem /* commits all txns */
+>       evict_inodes
+>         /* might start a new txn */
+>       ext4_put_super
+> 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+>         jbd2_journal_destroy
+>           journal_kill_thread
+>             journal->j_flags |= JBD2_UNMOUNT;
+>           jbd2_journal_commit_transaction
+>             jbd2_journal_get_descriptor_buffer
+>               jbd2_journal_bmap
+>                 ext4_journal_bmap
+>                   ext4_map_blocks
+>                     ...
+>                     ext4_inode_error
+>                       ext4_handle_error
+>                         schedule_work(&sbi->s_sb_upd_work)
 >
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Gabriel Krisman Bertazi <krisman@collabora.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Gregory Price <gregory.price@memverge.com>
-> Cc: Marco Elver <elver@google.com>
-> Cc: linux-kernel@vger.kernel.org
-
-Any remaining concerns with this series?
-
-Are syscall_user_dispatch patches pulled via x86 tree?
-
+>                                                /* work queue kicks in */
+>                                                update_super_work
+>                                                  jbd2_journal_start
+>                                                    start_this_handle
+>                                                      BUG_ON(journal->j_flags &
+>                                                             JBD2_UNMOUNT)
+>
+> Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
+> destroying only do a journaled (and deferred) update of sb if this flag is not
+> set. Otherwise, just fallback to an un-journaled commit.
+>
+> We set sbi->s_journal_destroying = true only after all the FS updates are done
+> during ext4_put_super() (except a running transaction that will get commited
+> during jbd2_journal_destroy()). After this point, it is safe to commit the sb
+> outside the journal as it won't race with a journaled update (refer
+> 2d01ddc86606).
+>
+> Also, we don't need a similar check in ext4_grp_locked_error since it is only
+> called from mballoc and AFAICT it would be always valid to schedule work here.
+>
+> Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+> Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
 > ---
->  kernel/entry/syscall_user_dispatch.c | 9 +++------
->  kernel/sys.c                         | 6 ++++++
->  2 files changed, 9 insertions(+), 6 deletions(-)
+>  fs/ext4/ext4.h      | 2 ++
+>  fs/ext4/ext4_jbd2.h | 8 ++++++++
+>  fs/ext4/super.c     | 4 +++-
+>  3 files changed, 13 insertions(+), 1 deletion(-)
 >
-> diff --git a/kernel/entry/syscall_user_dispatch.c b/kernel/entry/syscall_user_dispatch.c
-> index 5340c5aa89e7d..a0659f0515404 100644
-> --- a/kernel/entry/syscall_user_dispatch.c
-> +++ b/kernel/entry/syscall_user_dispatch.c
-> @@ -37,6 +37,7 @@ bool syscall_user_dispatch(struct pt_regs *regs)
->         struct syscall_user_dispatch *sd = &current->syscall_dispatch;
->         char state;
->
-> +       /* Note: this check form allows for range wrap-around. */
->         if (likely(instruction_pointer(regs) - sd->offset < sd->len))
->                 return false;
->
-> @@ -80,13 +81,9 @@ static int task_set_syscall_user_dispatch(struct task_struct *task, unsigned lon
->                 break;
->         case PR_SYS_DISPATCH_ON:
->                 /*
-> -                * Validate the direct dispatcher region just for basic
-> -                * sanity against overflow and a 0-sized dispatcher
-> -                * region.  If the user is able to submit a syscall from
-> -                * an address, that address is obviously valid.
-> +                * Note: we don't check and allow arbitrary values for
-> +                * offset/len in particular to allow range wrap-around.
->                  */
-> -               if (offset && offset + len <= offset)
-> -                       return -EINVAL;
->
->                 /*
->                  * access_ok() will clear memory tags for tagged addresses
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index cb366ff8703af..666322026ad72 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2735,6 +2735,12 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->                 error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
->                 break;
->         case PR_SET_SYSCALL_USER_DISPATCH:
-> +               /*
-> +                * Sign-extend len for 32-bit processes to allow region
-> +                * wrap-around.
-> +                */
-> +               if (in_compat_syscall())
-> +                       arg4 = (long)(s32)arg4;
->                 error = set_syscall_user_dispatch(arg2, arg3, arg4,
->                                                   (char __user *) arg5);
->                 break;
-> --
-> 2.48.1.601.g30ceb7b040-goog
->
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 2b7d781bfcad..d48e93bd5690 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
+>  	 */
+>  	struct work_struct s_sb_upd_work;
+>  
+> +	bool s_journal_destorying;
+> +
+>  	/* Atomic write unit values in bytes */
+>  	unsigned int s_awu_min;
+>  	unsigned int s_awu_max;
+> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
+> index 9b3c9df02a39..6bd3ca84410d 100644
+> --- a/fs/ext4/ext4_jbd2.h
+> +++ b/fs/ext4/ext4_jbd2.h
+> @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
+>  {
+>  	int err = 0;
+>  
+> +	/*
+> +	 * At this point all pending FS updates should be done except a possible
+> +	 * running transaction (which will commit in jbd2_journal_destroy). It
+> +	 * is now safe for any new errors to directly commit superblock rather
+> +	 * than going via journal.
+> +	 */
+> +	sbi->s_journal_destorying = true;
+
+This is not correct right. I think what we decided to set this flag
+before we flush the workqueue. So that we don't schedule any new
+work after this flag has been set. At least that is what I understood.
+
+[1]: https://lore.kernel.org/all/87eczc6rlt.fsf@gmail.com/
+
+-ritesh
+
+
+> +
+>  	err = jbd2_journal_destroy(journal);
+>  	sbi->s_journal = NULL;
+>  
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 8ad664d47806..31552cf0519a 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
+>  		 * constraints, it may not be safe to do it right here so we
+>  		 * defer superblock flushing to a workqueue.
+>  		 */
+> -		if (continue_fs && journal)
+> +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
+>  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
+>  		else
+>  			ext4_commit_super(sb);
+> @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+>  	spin_lock_init(&sbi->s_error_lock);
+>  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
+>  
+> +	sbi->s_journal_destorying = false;
+> +
+>  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
+>  	if (err)
+>  		goto failed_mount3;
+> -- 
+> 2.48.1
