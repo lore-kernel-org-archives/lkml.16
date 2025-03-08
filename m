@@ -1,148 +1,116 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECF3ECF
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 00:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E59190470
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Mar 2025 00:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741392027; cv=none; b=VUQrdMWrmcRuX/jpGDNR5TtMXTZjtilMf7orUhZ022uzwpL0S6KM41xghLgo4Kz3Hyxu6zOUwfZBCX8WfZhny9R85+NNFSSjLLx/XQsMcSGGXsgCRescBstEv8Jbxe1VmrorVbfnaQOz2AVyBlG4VTnEWYsDEU/ZqwmXl8HuJtM=
+	t=1741392032; cv=none; b=gxViN/yiavD4ryr4QOWbkYch6k1U+Wrgh3IJbIcXJ9KDc6g+IPQGO4hT/gKZkeiX7X11Z4E31Hcpk6xslLa4VndsS1RsNO8HcgyZymcQYWTub1w0/EVXYN4DBxCRJ7M9SqdMGifZE/m2UYIKAceK0c0peiYgWc19vDRyokX1vfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741392027; c=relaxed/simple;
-	bh=RZZHTTxJNgNohtZa1gzDCjg9oeP77kPAHt/LM0u4iM0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=EF9uftwaxFspzWYYHac/RyQBE+AvtLSC75Qm719UXURUH4gwtT34ZuFM3kzF0fuOXjBCli485xAU3oeIWBq5vuf9j1av0cyZIN5dv7FdPzoHowogLgxOemujw+ZvC5XYzHNLMfDMqD3Wbjz33/g0cihgrHy6UMmM8u9I8iwk+HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85adcf079f9so183741739f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 16:00:25 -0800 (PST)
+	s=arc-20240116; t=1741392032; c=relaxed/simple;
+	bh=G24jByTcLB3gZ7lneK9yPWDVXemn8A7VmPesVcSmOBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RPkKVegeS6opT89oQieeC9pAIHNds0dWG3838WxbQyAClmQFO7B9Dzd2HizVZIehpPRqEK0RTLyH1PrA4rKd4lxmVzD3vtdewXV27InIMdhfI8NIwkDIKQ36oORvK/Drr3OYsHhODCyBF0g00ZIdamOLF43TbZNekOQE8ywaOVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NkmBY1yi; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkmBY1yi"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso11508041fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Mar 2025 16:00:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741392029; x=1741996829; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEwMiLzCyICEunJ5u9SkRaghHLUa2TZbSRFS1CMQbNs=;
+        b=NkmBY1yiPzJxrCbEyvTRt6E0VuRa19ATlJfgiNbWVhmE9Jo3UIr/KtQClPwI5vO4rG
+         YPfZqsUq8kUPWqpBOzzIArxV9BToZ7nAvmvHu1im5SHmh9nWBIGDXQcslyjg6kI0MCDi
+         yLvSYMrDwht2DfoxRsjGGDemYP6bn+zbG/L7gaI4fsaNKC/b0yQX4t55IKzaPUcLikJN
+         BYZajfnba527eF/twvxEzD01z2oKFa5fpUtttxnBwnqtxAtgdpMRhLdFx4jfFwgVcAER
+         31BD2AXqr5AGjnTorSBL0/NYo0M3P4qWtoHLSgjc6nSxQvvYiC3uQUYC9MTleU9ZxfhR
+         YD9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741392025; x=1741996825;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qhQiBx2XYY54oyRylvoG6VkmFq/MljCpnjHyDU43HyQ=;
-        b=Rq700hZex+ArGl6BCgS0+4BkGE8IyNleSBactOmV/9YAVRUNb+Hi3RquuYMUF0OmZI
-         pLnDcnG7nGawQx1QfmA3lZI5HNAPRkNK1QRKWFNJTCxRvOtKFwEenpMZmXPKB4t7xRHe
-         P4EeeEIA2aK8uqW2w0e5DAHoDcj2vnq34JKOldaoWLrK98ZO7ALoO+VZ2xK4tEeVLRnW
-         kBa9MHtJJFRZG52rrc/kD6DuxMIPiMetHbc97zJa+EUi/eNZEONPrm3L7byLK8W+cf7U
-         Pl1ZAB2NZ0ZnWEeG0PtyQfSZuuDdn/db+XxqjDQ/KxQQ19QzOHBXvYGLSpmIAXXfzwrA
-         WtNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhfBdgz2TxnM6FtcLLTfbDNc1t0BnfrHOgyHSKVHvSd/zcFhbYNap7DltKANLqJgmfZLDca0sj2dnKVnE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTunouiCn9OuT9WSdhcTcd53Mhg5JQDuaehHQJY79J+dDLwRBo
-	Vbu7+IU3NzZObGkUM8Pr9o9bdKhF9bRAEZCHo/CzGQC8YevfBNlidrLnVdjYyM6NGcvTBD9auqa
-	yQ0SJAzW1qkUxhwiUET7ki8sLQKe8tCP4oZ+iLJT++lDuR+t5GOwn4RY=
-X-Google-Smtp-Source: AGHT+IFuXSZNH7lFGeb2uC0o3NbegtdSNLltHPGb24D67kfSiB2v58DHRJ34JaRhGi/lHGS2RGeUzPrEkc/ah40XwSaIH6NJnpLT
+        d=1e100.net; s=20230601; t=1741392029; x=1741996829;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AEwMiLzCyICEunJ5u9SkRaghHLUa2TZbSRFS1CMQbNs=;
+        b=Gf8vTkkXrGhStmO99o4XgWTLQLFAk6fyHSnkz2YCJyzAUwHhO7Ha2vrEmrgnnKJFqX
+         FwtJKwY+9IPvVstKuI+6ARatz2tUppmekCFC7YbIjwLn9UIX3ZP5gY2aiKgOTcSU/yka
+         KxGNGbJApZ3EKo9qxUYvOMeZdF8pJeEuVrPHm5s25T2yLKVGSriNlQhuIfTHbdq5sNzW
+         8hROmKzQd6/fAGIxRfZzzZKqcP2XO7zugZI8uC+67DPvIpTet0naepbprtiTFc0mi15G
+         fDyTZ2q9M878xD4KMR0nACn0KBGjqiFIPC16UQkM1tJOOJLzanIZKY2o/1ku+U8mugM0
+         ONiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrUbdUTRJ/Ett1aW8Rotg7K7TW/klzxm6UCKdyflqcbK06eiqJiaH/qjFJda24FSs/whaOColVskB3MHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxqnNS3qg7ZIgEoUuTg4cWQqLUMKKudfxIevkIq3sfDB7lqcYr
+	OheOmxHcVQ8PCIdrLFJyS5N3U1lv/tRvqFvk/hjkqYT5JEGUkbewtcMmYBpcJwc=
+X-Gm-Gg: ASbGncubukRPPEQVFPAEirqYG8Gph/49b4CVmxrnjvUYBc46sU9HEzcEbuDUcN2O1ya
+	EoWAd87oQ8OTa5XMLbjPYEI6bA0Pr4QlTKDtoNimqL3lcMvpyemc9yRpAW1Y3Qw4wNrHpqzpUjy
+	HK38Y2sH6UyjwpYjhDDKY5vpGltGxGyxfo0Rib48jhhBdvr3m+sjV+HsJEcouIKMHv+AN/gznb7
+	WG34piupyf6nPl3gE2gDe8vAxPMJjyiL98cC+FWDeWMEtuqjvNrrZY45cLQxlHYsSPaLrNj5muI
+	UiAAhIBbdeUh9DlYe4yJPVDW00sKL59SnX/+dcY0T3yhH06ZhqQHIvgwenBgZ/TsdCbF/PXbLN2
+	FzRz8DtRUYtPzVL9tJ5Rr39MG
+X-Google-Smtp-Source: AGHT+IHp+tbCuGTMiQOtkAJeNqJU+GLHRyHQrcNbiQ0L6CepcDGTgtUgqeherQpSU3yjAqkm/DxJgw==
+X-Received: by 2002:a2e:a78a:0:b0:30b:c3ce:ea38 with SMTP id 38308e7fff4ca-30bf43b45bcmr21229201fa.0.1741392028923;
+        Fri, 07 Mar 2025 16:00:28 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30be99c815fsm7131741fa.69.2025.03.07.16.00.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 16:00:27 -0800 (PST)
+Date: Sat, 8 Mar 2025 02:00:25 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
+	Xinwei Kong <kong.kongxinwei@hisilicon.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+	amd-gfx@lists.freedesktop.org, Jani Nikula <jani.nikula@intel.com>
+Subject: Re: [PATCH RFC v3 4/7] drm/display: dp-aux-dev: use new DCPD access
+ helpers
+Message-ID: <ytsczbxfokt4yz26w5zl2rxtuagrirdpi6uyxnt4itcllrowuk@wqqcgkr7b52k>
+References: <20250307-drm-rework-dpcd-access-v3-0-9044a3a868ee@linaro.org>
+ <20250307-drm-rework-dpcd-access-v3-4-9044a3a868ee@linaro.org>
+ <3284acdfa43fa62e7230355b4ed2e09ab75f326a.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:741:b0:3cf:bac5:d90c with SMTP id
- e9e14a558f8ab-3d441a06f4dmr78268705ab.18.1741392024490; Fri, 07 Mar 2025
- 16:00:24 -0800 (PST)
-Date: Fri, 07 Mar 2025 16:00:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67cb8898.050a0220.d8275.022a.GAE@google.com>
-Subject: [syzbot] [jfs?] UBSAN: shift-out-of-bounds in dbAllocAG (2)
-From: syzbot <syzbot+fe8264911355151c487f@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, jfs-discussion@lists.sourceforge.net, kristian@klausen.dk, 
-	linux-kernel@vger.kernel.org, shaggy@kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3284acdfa43fa62e7230355b4ed2e09ab75f326a.camel@redhat.com>
 
-Hello,
+On Fri, Mar 07, 2025 at 05:53:38PM -0500, Lyude Paul wrote:
+> I thought we had agreed that drm_dp_aux_dev.c was one of the few places where
+> we wanted to keep using the old functions here?
 
-syzbot found the following issue on:
+Hmm, I thought I dropped it.
 
-HEAD commit:    7eb172143d55 Linux 6.14-rc5
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12dc6464580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
-dashboard link: https://syzkaller.appspot.com/bug?extid=fe8264911355151c487f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16dc6464580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1336afb8580000
+> 
+> On Fri, 2025-03-07 at 06:34 +0200, Dmitry Baryshkov wrote:
+> > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > 
+> > Switch drm_dp_aux_dev.c to use new set of DPCD read / write helpers.
+> > 
+> > Acked-by: Jani Nikula <jani.nikula@intel.com>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  drivers/gpu/drm/display/drm_dp_aux_dev.c | 12 +++++-------
+> >  1 file changed, 5 insertions(+), 7 deletions(-)
+> > 
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0e7164e018a2/disk-7eb17214.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/30ec438ad743/vmlinux-7eb17214.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9b0e3bf8e8fd/bzImage-7eb17214.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/68478e58b8d0/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=14dc6464580000)
-
-The issue was bisected to:
-
-commit 2b9ac22b12a266eb4fec246a07b504dd4983b16b
-Author: Kristian Klausen <kristian@klausen.dk>
-Date:   Fri Jun 18 11:51:57 2021 +0000
-
-    loop: Fix missing discard support when using LOOP_CONFIGURE
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=112be464580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=132be464580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=152be464580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fe8264911355151c487f@syzkaller.appspotmail.com
-Fixes: 2b9ac22b12a2 ("loop: Fix missing discard support when using LOOP_CONFIGURE")
-
-loop0: detected capacity change from 0 to 32768
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/jfs/jfs_dmap.c:1400:9
-shift exponent -335544310 is negative
-CPU: 0 UID: 0 PID: 5822 Comm: syz-executor130 Not tainted 6.14.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
- dbAllocAG+0x1087/0x10b0 fs/jfs/jfs_dmap.c:1400
- dbDiscardAG+0x352/0xa20 fs/jfs/jfs_dmap.c:1613
- jfs_ioc_trim+0x45a/0x6b0 fs/jfs/jfs_discard.c:105
- jfs_ioctl+0x2cd/0x3e0 fs/jfs/ioctl.c:131
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7feb3a0bab19
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd2811fb58 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007feb3a0bab19
-RDX: 0000400000000080 RSI: 00000000c0185879 RDI: 0000000000000004
-RBP: 00007feb3a1335f0 R08: 000055557eb534c0 R09: 000055557eb534c0
-R10: 0000000000005ef0 R11: 0000000000000246 R12: 00007ffd2811fb80
-R13: 00007ffd2811fda8 R14: 431bde82d7b634db R15: 00007feb3a10303b
- </TASK>
----[ end trace ]---
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+With best wishes
+Dmitry
