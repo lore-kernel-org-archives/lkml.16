@@ -1,29 +1,28 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from out199-4.us.a.mail.aliyun.com (out199-4.us.a.mail.aliyun.com [47.90.199.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2ED189B8D;
-	Sun,  9 Mar 2025 06:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DD31A8F74;
+	Sun,  9 Mar 2025 06:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741501278; cv=none; b=C5qRE21sE1OxNx8veJ2JP0e0tLyYlA9oiVhAyvNBW15lHb53K3+CxbUJs3Sxkt2GpDT3AfVDtpSi85CaMsgAVY2PTVBIZd/GIJRagSiuUFCG3bQiC5ZnHq5KGOJ/K0tLoudLTK29FWCavl5nhecLA7M3BnKOEkJqntdkisybFWE=
+	t=1741501282; cv=none; b=EPOzXlsRVedlh/oJxjtG/eUrM5w4nvk0/IgrnkJZ9MGtMDo3vwAhYR0l7PWvLOoxztXRj6KMVrq12U4ZHJGEk1xhTvTSnje/Y6gAxTQqONFkfoqlbY/NzwyAxKdmaNVJVzGjVs47UE9XGOpRH1D+CfrjbnIsw88uCBj79zPbZGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741501278; c=relaxed/simple;
-	bh=rFJg6wX+4DM5TwYS6r8tr1DJyb+oo7EumjnC/NyCmXo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SX1VtPUJAgc6jvKXKYWIDE11y/YjTRlVOkz73OtUjvDVcOD5sSIO9+IkPH1oDX/+7ftBKXJTigQHNK8sSQPRQCCaLqMrMqIZtsI8CwiCVzjPp09qhx6NaUhNMddidHyjfXZyTHhitjB7M5PiSsJ8P6uPhyzPDJdMZGsdCyX5bDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UpKr4eUQ; arc=none smtp.client-ip=115.124.30.101
+	s=arc-20240116; t=1741501282; c=relaxed/simple;
+	bh=Vp01ITNOOkGnwN1qWqwbUpN6t0VXYSyEKmvcuktiah8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FZsdhDbU7sR/8cCP13/FveRSyQTE2pvNuI9eaDOxUpP+syVNrJxAJaDHlRWHQOLqFhQb2IvuDCbzRqQicMR40spLfgVKtmo6gGjdsslxA7OwjdT0QUZgfwuCXXUl4AzgC2FcsTVkzDorHNiWuFsf2qYETg1PdogqNcZcgg3JO/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gTLT4JlQ; arc=none smtp.client-ip=47.90.199.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UpKr4eUQ"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gTLT4JlQ"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1741501266; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=GnnFGqjb+BGHMl8EqY9dK4ejKzhYXIwh/TR7Rbf7cvs=;
-	b=UpKr4eUQ+jjVnA1x9JOC1p0jmYQWYBIA+DS5HV+75+DDZ75VLnHid2rkYFUnFVSeYjQcdaUFiUSi7cXBoybnFsUzWhVvM64KeOMN0G0muDFOPCVYp+dZW1j0kHbjFlNcBsNsE6UatEIk05hlrOOJw+Fk6ziw8D1mcPcy1NcIhGc=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQwVyl5_1741501265 cluster:ay36)
+	t=1741501261; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=84BSTPKsEHNbHHLF0j35JxpV2jRI56UR1rHEdPtI3Eg=;
+	b=gTLT4JlQr3mgg++RKBJZf7DkNrPByO5aDD1Cwapy7iFGsg2A8qsu24zobY8ckBnu6jX9VivRmn9jMivZgW92+14GqNLdHfyt0TMX6JuQ1SJxZzWfVW/MwvaexXbCe7GhyQruznVMmwm0sRKbBkceWr+q30mP59C7PfObp4P046M=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQwVyiJ_1741501259 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sun, 09 Mar 2025 14:21:05 +0800
+          Sun, 09 Mar 2025 14:21:00 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: vinicius.gomes@intel.com,
 	dave.jiang@intel.com,
@@ -33,12 +32,10 @@ To: vinicius.gomes@intel.com,
 Cc: xueshuai@linux.alibaba.com,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
-Date: Sun,  9 Mar 2025 14:20:58 +0800
-Message-ID: <20250309062058.58910-10-xueshuai@linux.alibaba.com>
+Subject: [PATCH v3 0/9] dmaengine: idxd: fix memory leak in error handling path
+Date: Sun,  9 Mar 2025 14:20:49 +0800
+Message-ID: <20250309062058.58910-1-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250309062058.58910-1-xueshuai@linux.alibaba.com>
-References: <20250309062058.58910-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,55 +44,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The idxd_cleanup() helper cleans up perfmon, interrupts, internals and
-so on. Refactor remove call with the idxd_cleanup() helper to avoid code
-duplication. Note, this also fixes the missing put_device() for idxd
-groups, enginces and wqs.
+changes since v2:
+- add to cc stable per Markus
+- add patch 4 to fix memory leak in idxd_setup_internals per Fenghua
+- collect Reviewed-by tag for patch 2 from Fenghua
+- fix reference cnt in remove() per Fenghua
 
-Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
-Cc: stable@vger.kernel.org
-Suggested-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- drivers/dma/idxd/init.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+changes since v1:
+- add Reviewed-by tag for patch 1-5 from Dave Jiang
+- add fixes tag
+- add patch 6 and 7 to fix memory leak in remove call per Vinicius
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index ecb8d534fac4..22b411b470be 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -1310,7 +1310,6 @@ static void idxd_shutdown(struct pci_dev *pdev)
- static void idxd_remove(struct pci_dev *pdev)
- {
- 	struct idxd_device *idxd = pci_get_drvdata(pdev);
--	struct idxd_irq_entry *irq_entry;
- 
- 	idxd_unregister_devices(idxd);
- 	/*
-@@ -1323,21 +1322,12 @@ static void idxd_remove(struct pci_dev *pdev)
- 	get_device(idxd_confdev(idxd));
- 	device_unregister(idxd_confdev(idxd));
- 	idxd_shutdown(pdev);
--	if (device_pasid_enabled(idxd))
--		idxd_disable_system_pasid(idxd);
- 	idxd_device_remove_debugfs(idxd);
--
--	irq_entry = idxd_get_ie(idxd, 0);
--	free_irq(irq_entry->vector, irq_entry);
--	pci_free_irq_vectors(pdev);
-+	idxd_cleanup(idxd);
- 	pci_iounmap(pdev, idxd->reg_base);
--	if (device_user_pasid_enabled(idxd))
--		idxd_disable_sva(pdev);
--	pci_disable_device(pdev);
--	destroy_workqueue(idxd->wq);
--	perfmon_pmu_remove(idxd);
- 	put_device(idxd_confdev(idxd));
- 	idxd_free(idxd);
-+	pci_disable_device(pdev);
- }
- 
- static struct pci_driver idxd_pci_driver = {
+Shuai Xue (9):
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_setup_wqs
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_setup_engines
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_setup_groups
+  dmaengine: idxd: Add missing cleanup for early error out in
+    idxd_setup_internals
+  dmaengine: idxd: Add missing cleanups in cleanup internals
+  dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_pci_probe
+  dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove
+    call
+  dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
+
+ drivers/dma/idxd/init.c | 160 ++++++++++++++++++++++++++++------------
+ 1 file changed, 114 insertions(+), 46 deletions(-)
+
 -- 
 2.39.3
 
