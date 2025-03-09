@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3C18248C;
-	Sun,  9 Mar 2025 10:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4B01CAA8E;
+	Sun,  9 Mar 2025 10:47:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741517256; cv=none; b=T9XvXeTkFp0TbgRagJmUspNbPHZdPE/2Uw9P1JP3im8k8Hjec4+wYkpIjqu9aw7zn6sa65QFuLysN7EMYeklHwjIDaTX5NZuHY4vaady3Rgp1UUW0RTWs4OBYBYvcQlW/SaY+4Bo7DGop7p8O/dteEOexMhgcUBSSaqH39/OCrI=
+	t=1741517271; cv=none; b=PJ8dzcdU7DEmJcm1s6YNzA/EtFJlQDOuaz+o0IBHz57ItS3jqr0d0mWYPK0fuILUs9nxEGWF1l+eHtw6BYL77n4tFmsu+5BhT4QJOlYlO+GCZxX0LxWYh2N4sCYZs34gmHMNkLhKcJixfKqEdAKXkl4qUfW8OyYhYLwOzYHLhcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741517256; c=relaxed/simple;
-	bh=ZEBqaG+/lKPqTcu2zNT1xpn2hWeJ6QQfZLTvGeGhISU=;
+	s=arc-20240116; t=1741517271; c=relaxed/simple;
+	bh=KHNKvaNQrW/TubLYiHi//7sCkHIl1zaGizz8x+M0qnE=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cCn7Zzpq2Lng4UaEPCI2lGpdhLOYPdjJKLLTB5gjaNR777sRrtDOlyLrYgPWFcn5kpgAYm/VoE/OMKRd074EXB9b2IXE5wcy+ckPSFILRpLeXcAOftERlHu8Iin+fz2DnXHUNARpbWTsu0o47R6mO4QbY01XJmXwqhkZ51tHfjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jHr5NQ43; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=VmOWCajYp0jKSEkfp4MNm0CaXi7QaQU6yhr3HliSxQKWBF6jJ5euy22eRsST/hMAZ/aHO48J7jVKrnYEh238LTgadLB3+JKXYsw6biZmY5ZYRs/4uTd1P675oPApBfiFmvA8VJh9YqtczXX+i9++HksMecpX/lWpJb5fkbuTquI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FpRxdPqv; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jHr5NQ43"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FpRxdPqv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741517255; x=1773053255;
+  t=1741517270; x=1773053270;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=ZEBqaG+/lKPqTcu2zNT1xpn2hWeJ6QQfZLTvGeGhISU=;
-  b=jHr5NQ43L5KomZgioCwwnru9bh8ibCCoaA93jLXq6I0F97HxlIU4GZ82
-   NXQ/hRGbGWEBtR9lsn1c8782KPkrWHocX5+fPRwY5fjyuRlB1NxrV1zeQ
-   uqeNIv2GWlj45TEgLB2to1Q0av26iZ0Qh2uGMmq1+miaBiQsQGmZ4Lbk0
-   ZevoDfDbPpRfAYAVocZUwh62ahowvmgI59cyf4mq+LDeDuawLodHmZYu8
-   s9i1EhdSfFWjxfmu6cSGAz4pd7OWRTj6bSaCyy+5S7enrC57YcjR7tg8S
-   nZ/6lS3L5Zc1ZuFmTW0d+8oT+BYx+KsTCLn6asEqyJpLoCx7yj8foCcGd
-   g==;
-X-CSE-ConnectionGUID: AWlpdgXEQTSIr8XDzW4/EA==
-X-CSE-MsgGUID: dzOHuKwyQFG294RinX/x1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="42635954"
+  bh=KHNKvaNQrW/TubLYiHi//7sCkHIl1zaGizz8x+M0qnE=;
+  b=FpRxdPqvfpb+84Qk1TXKRhT4EwpIIdKa5wzz9hOgU4rPakN92hyyxjnj
+   g6U5DcZA8Yo+kfTSmZmyQa99mfxRl2sMVLqm0rpEtbmV162jCJlYGLiYZ
+   cd7KYL9IE3A8gZwA5odPnGCgKEr9jS/ibIOWBFyK6xW5nG3ySNeco2hbl
+   IT4gMCWSWMW4JwyNZHUVxyw4k3UiWmF28VGLhiFG7msqhHwslMcpVYUqM
+   U+3MHZUkrYpFrJEA5M8sNguNAXpuX3qiIcjtrcNEvUvwsUBlIN9ScsSev
+   OQh0tBg5Euw0nu+Gj1KcpzicthNiPD7I7iEXtCP2/vkKKJ97459r0cwI7
+   w==;
+X-CSE-ConnectionGUID: 8dfx1f+1SPGq2ZkQAc59Dw==
+X-CSE-MsgGUID: 0TCbQRiKSXuCqnmzKFvKfw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="42636010"
 X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="42635954"
+   d="scan'208";a="42636010"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 03:47:34 -0700
-X-CSE-ConnectionGUID: GNaKWemxQRCGdIyo6+6ZUw==
-X-CSE-MsgGUID: uvjMEbSVQhaQ3qCQNWZyhA==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 03:47:50 -0700
+X-CSE-ConnectionGUID: oAWasDTCRYy6m2gKBLdGLg==
+X-CSE-MsgGUID: 2WmdQr0JSvOXsjcC8pRwoA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="124654990"
+   d="scan'208";a="124655041"
 Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by orviesa003.jf.intel.com with ESMTP; 09 Mar 2025 03:47:26 -0700
+  by orviesa003.jf.intel.com with ESMTP; 09 Mar 2025 03:47:42 -0700
 From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
 To: Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
@@ -79,9 +79,9 @@ To: Tony Nguyen <anthony.l.nguyen@intel.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v9 01/14] net: stmmac: move frag_size handling out of spin_lock
-Date: Sun,  9 Mar 2025 06:46:35 -0400
-Message-Id: <20250309104648.3895551-2-faizal.abdul.rahim@linux.intel.com>
+Subject: [PATCH iwl-next v9 03/14] net: ethtool: mm: reset verification status when link is down
+Date: Sun,  9 Mar 2025 06:46:37 -0400
+Message-Id: <20250309104648.3895551-4-faizal.abdul.rahim@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250309104648.3895551-1-faizal.abdul.rahim@linux.intel.com>
 References: <20250309104648.3895551-1-faizal.abdul.rahim@linux.intel.com>
@@ -93,72 +93,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The upcoming patch will extract verification logic into a new module,
-MMSV (MAC Merge Software Verification). MMSV will handle most FPE fields,
-except frag_size. It introduces its own lock (mmsv->lock), replacing
-fpe_cfg->lock.
+When the link partner goes down, "ethtool --show-mm" still displays
+"Verification status: SUCCEEDED," reflecting a previous state that is
+no longer valid.
 
-Since frag_size handling remains in the driver, the existing rtnl_lock()
-is sufficient. Move frag_size handling out of spin_lock_irq_save() to keep
-the upcoming patch a pure refactoring without behavior changes.
+Reset the verification status to ensure it reflects the current state.
 
 Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Furong Xu <0x1207@gmail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/ethtool/mm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 918a32f8fda8..cfe5aea24549 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -1216,6 +1216,10 @@ static int stmmac_get_mm(struct net_device *ndev,
- 	if (!stmmac_fpe_supported(priv))
- 		return -EOPNOTSUPP;
- 
-+	state->rx_min_frag_size = ETH_ZLEN;
-+	frag_size = stmmac_fpe_get_add_frag_size(priv);
-+	state->tx_min_frag_size = ethtool_mm_frag_size_add_to_min(frag_size);
+diff --git a/net/ethtool/mm.c b/net/ethtool/mm.c
+index bfd988464d7d..ad9b40034003 100644
+--- a/net/ethtool/mm.c
++++ b/net/ethtool/mm.c
+@@ -415,6 +415,10 @@ void ethtool_mmsv_link_state_handle(struct ethtool_mmsv *mmsv, bool up)
+ 		/* New link => maybe new partner => new verification process */
+ 		ethtool_mmsv_apply(mmsv);
+ 	} else {
++		/* Reset the reported verification state while the link is down */
++		if (mmsv->verify_enabled)
++			mmsv->status = ETHTOOL_MM_VERIFY_STATUS_INITIAL;
 +
- 	spin_lock_irqsave(&priv->fpe_cfg.lock, flags);
- 
- 	state->max_verify_time = STMMAC_FPE_MM_MAX_VERIFY_TIME_MS;
-@@ -1224,7 +1228,6 @@ static int stmmac_get_mm(struct net_device *ndev,
- 	state->verify_time = priv->fpe_cfg.verify_time;
- 	state->tx_enabled = priv->fpe_cfg.tx_enabled;
- 	state->verify_status = priv->fpe_cfg.status;
--	state->rx_min_frag_size = ETH_ZLEN;
- 
- 	/* FPE active if common tx_enabled and
- 	 * (verification success or disabled(forced))
-@@ -1236,9 +1239,6 @@ static int stmmac_get_mm(struct net_device *ndev,
- 	else
- 		state->tx_active = false;
- 
--	frag_size = stmmac_fpe_get_add_frag_size(priv);
--	state->tx_min_frag_size = ethtool_mm_frag_size_add_to_min(frag_size);
--
- 	spin_unlock_irqrestore(&priv->fpe_cfg.lock, flags);
- 
- 	return 0;
-@@ -1258,6 +1258,8 @@ static int stmmac_set_mm(struct net_device *ndev, struct ethtool_mm_cfg *cfg,
- 	if (err)
- 		return err;
- 
-+	stmmac_fpe_set_add_frag_size(priv, frag_size);
-+
- 	/* Wait for the verification that's currently in progress to finish */
- 	timer_shutdown_sync(&fpe_cfg->verify_timer);
- 
-@@ -1271,7 +1273,6 @@ static int stmmac_set_mm(struct net_device *ndev, struct ethtool_mm_cfg *cfg,
- 	if (!cfg->verify_enabled)
- 		fpe_cfg->status = ETHTOOL_MM_VERIFY_STATUS_DISABLED;
- 
--	stmmac_fpe_set_add_frag_size(priv, frag_size);
- 	stmmac_fpe_apply(priv);
- 
- 	spin_unlock_irqrestore(&fpe_cfg->lock, flags);
+ 		/* No link or pMAC not enabled */
+ 		ethtool_mmsv_configure_pmac(mmsv, false);
+ 		ethtool_mmsv_configure_tx(mmsv, false);
 -- 
 2.34.1
 
