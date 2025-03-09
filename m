@@ -1,228 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AAE11D8DFE;
-	Sun,  9 Mar 2025 10:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773981537A7;
+	Sun,  9 Mar 2025 11:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741517357; cv=none; b=mhaZmTbncPoiVKbhdjROEBegJRg4Tlo8UKXZqMxJ9KXPen8VtsQcZeOYjDiwLx7IE6EQzRgHjavJ0ExhjicmCa6QscdoR3kqrFYtWsYee3GYnP38zvwevf7mWuvL+KWATCnD2qR85udwK4Log3jqiemvvXX73econeNbGb+q9sg=
+	t=1741518768; cv=none; b=dw8vVuLw0RdgggPwc65vBA4Oq76Fei2OnUbVKXuWyxM2bXEpxIhJQbWYAmBhlFQnFSdlVLWS62Eiispp63hIXO/biNgqCp/08hS+KEbNuKnu2cVQjYMMXmmB90bQSJE+UeKoUILuTmXxolpurlYCBr+0tciyrCAFF7RhyZxNOnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741517357; c=relaxed/simple;
-	bh=/Rpt0g7Ks3pkE+tta5B9MFjJotESPE0HD7Oeoam8bfk=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZxpWj6NU6oLEesx/4mJZCNpvnYpxdlExnYIiBsZIf0kuxEnhj8NH+ScwtcFdgXnlBjbnoyA+BTX+wkh+fWwWGwnlgYPlfhH+SiMIThvmtmsxUKTu6Au8Vb3TuT0iKtfT2uVew3PC0pKMcye1djNrsKgM7TXoQusAD+I4n6zV6Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e6Rfz9ae; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741518768; c=relaxed/simple;
+	bh=R1/ra110SempN8LYaPUNnLAkhoOs41pIzMor/3d07BQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KpzagQZ4q1fl8g6QL/Y5wI7Tx2zeyylH0HMvB4/O5rFIBGOF/RuRAjkaZpMhRJELKR1bZkuR01b7LFb1KUOeLVH6gDX3JDHg2TA3quBfYo+3yATvJil8DWCn9huow4xG6cBjKwn2FxiCwfQT2O9Z3RqwlKDY5m3y/VXa8893sTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4+RH5HL; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e6Rfz9ae"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741517357; x=1773053357;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=/Rpt0g7Ks3pkE+tta5B9MFjJotESPE0HD7Oeoam8bfk=;
-  b=e6Rfz9aeCr5E6/bs1gMK0QBuOLx1GTVLvAtAoIf9o0lnnXFcN8HX8Npe
-   sOFje9CbqRkNvzKbpX4Or9EHtqzHjUibo8+1LqhnFs9QubLpuoygbAI9M
-   vNnE+3PVpi4Vl8jtRwNMexkUXhvO7CpyLqCz1tMpDFJus3q3alZ7e8hrQ
-   MCJpikF1iqrpWYTApSHAKkTIuXjFKyXdnSUxV5l8iyT3gItz39UIVWgdz
-   aGJ8cA2s/Htm0IO41k3mrU21VUGpJQ8gWFwrgieDFph2uZZS4jdYJj/r+
-   rlcG+hOwsxo0ug8tn7Czzv233NZXzfUBpZx7gQOAgpMXMzHX1MNICoYIz
-   Q==;
-X-CSE-ConnectionGUID: 562Ox31gQvmgEC4SpEVxRw==
-X-CSE-MsgGUID: MfZ+2dpdRDKm02aiDh5EEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="42636274"
-X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="42636274"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 03:49:16 -0700
-X-CSE-ConnectionGUID: pfGT78KETYqlpzGtVGbcyg==
-X-CSE-MsgGUID: Vkjkd0PTT1Gr0ZqdnB9BuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="124655188"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by orviesa003.jf.intel.com with ESMTP; 09 Mar 2025 03:49:08 -0700
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Chwee-Lin Choong <chwee.lin.choong@intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v9 14/14] igc: add support to get frame preemption statistics via ethtool
-Date: Sun,  9 Mar 2025 06:46:48 -0400
-Message-Id: <20250309104648.3895551-15-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250309104648.3895551-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250309104648.3895551-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4+RH5HL"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so746035e9.1;
+        Sun, 09 Mar 2025 04:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741518765; x=1742123565; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pLoLQv1oy3J8TFf2ZoD9HQxdL8JjlROz1Fj/a+R3JZU=;
+        b=Y4+RH5HL1EMOsWbU7+Fnnn0jpgZNU87rNUbvI5XKl2mFha6Pgkf/CDTJMF8S8eR2wX
+         6Bb8WpvNNQJxC2jH5TwSD//7OH+PndPocL4tyVTR29KavvHye0UHMTD8N+Vpjy1pqO7D
+         s3//uNkr1CPcRshuzUp0ZJ3+U094lcoH5Io51hXr3Ej7SgEHrGpHT9LjE5NA5Ip2nOiT
+         L3gBJmrVE1ZIeNuZIICkk94ORql7634Wv47PXrRX2u9Sj/7nlSdQBewq4xJC3cV9a46I
+         tP4JmfaoqoAFNAgFuNL1Uy9iCq4rfBLabQv56rJcvsKy3PZmqFbcNUGxi06IO653U13j
+         pzQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741518765; x=1742123565;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pLoLQv1oy3J8TFf2ZoD9HQxdL8JjlROz1Fj/a+R3JZU=;
+        b=CG5jAJi6kO4QP/iUMteSIeu880khnRoCdy7wyz/o8p4tt5QfWRBACsT57KThMOUtMm
+         Nhgg/tOZbkmRZzBsqf2OJjXkQKkBSAV5D1H+57vB6uPjsMzlxWPMrybYuUw32LmyjTLQ
+         yCy+KKcm/zvm2UH54jwyTNOF+xORHGmkRGngqKFvCdVIi1m/ZdUJhU4QZn8sqrgBG27Q
+         sYfxH93g67JnMTCuGLjlmzJRgMxBSkfGrY+f86Yi+qDEJq+r/js6QR647LzEkwZc8rrh
+         MU4CurWVP/CRZltTzMFtPugzgIS+q6KT5Yrba0oejSGQft8UbUqAp4eJqORAtqQ5l9KX
+         OvOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVv/ncGfgZCN7KJt0IieOCCgYe62QC9buRH97Df8jg/kxd0yBKKW8bFJZ7dFAdmCSDBrthe8ZNotYGZwh50g/GJYGxbBsk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbHCVWrQReGiBF7GtI2Ah1Pd8c+OhPokxRSCgkdFCuLHyFCCmU
+	POJpwF4ZUkZMG8z5IuhzjdhFwutY0s9fw6IZhRptnormdiAnuRhwMh6Muw==
+X-Gm-Gg: ASbGncu0NFiCwmnWUEUc/H82z8SRRL64fgYtAMMKE61zPZSZKUN5Szc0YJ7TPDgokJA
+	kWc9uWfRl4FkxjI9FL0FwDj72FpmesMZwe2dDFbQZTREfeU9ugT+vOFAlACQPKsqSQfw+rE5dOl
+	w06BoFZNrEc9Z1izO7dq2W7VlZsGUSwoEt4VWW0xf4PHHjwQASK+ERm8TN+UwgOahnEChBJIcT4
+	Q03FdsdmV4gjN+dxUACkklPOxznqPbXlRG+yEsUSubZxuxe6dCF8TGavVW156NgR/M8RONC5eed
+	oZBlUW7lkh2G6fJFBbfabqvW7g04ud5L0PIqI24XMQ==
+X-Google-Smtp-Source: AGHT+IG3/C8RXlmkY2CUPmeYDdxB6zY0IIjtYLFX1U9txnudgTJDegFVLenHDSK9U88TwDD2wtedcw==
+X-Received: by 2002:a05:600c:354b:b0:439:4b23:9e8e with SMTP id 5b1f17b1804b1-43ce4ab02eamr36510695e9.3.1741518764241;
+        Sun, 09 Mar 2025 04:12:44 -0700 (PDT)
+Received: from localhost ([2a02:168:59f0:1:b0ab:dd5e:5c82:86b0])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ceaac390bsm44649605e9.35.2025.03.09.04.12.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Mar 2025 04:12:43 -0700 (PDT)
+Date: Sun, 9 Mar 2025 12:12:39 +0100
+From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [RFC PATCH] MAINTAINERS: add an explicit credentials entry
+Message-ID: <20250309.5ddca2aac3f6@gnoack.org>
+References: <20250304222304.214704-2-paul@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250304222304.214704-2-paul@paul-moore.com>
 
-Implemented "ethtool --include-statistics --show-mm" callback for IGC.
+Hello Paul and Serge!
 
-Tested preemption scenario to check preemption statistics:
-1) Trigger verification handshake on both boards:
-    $ sudo ethtool --set-mm enp1s0 pmac-enabled on
-    $ sudo ethtool --set-mm enp1s0 tx-enabled on
-    $ sudo ethtool --set-mm enp1s0 verify-enabled on
-2) Set preemptible or express queue in taprio for tx board:
-    $ sudo tc qdisc replace dev enp1s0 parent root handle 100 taprio \
-      num_tc 4 map 3 2 1 0 3 3 3 3 3 3 3 3 3 3 3 3 \
-      queues 1@0 1@1 1@2 1@3 base-time 0 sched-entry S F 100000 \
-      fp E E P P
-3) Send large size packets on preemptible queue
-4) Send small size packets on express queue to preempt packets in
-   preemptible queue
-5) Show preemption statistics on the receiving board:
-   $ ethtool --include-statistics --show-mm enp1s0
-     MAC Merge layer state for enp1s0:
-     pMAC enabled: on
-     TX enabled: on
-     TX active: on
-     TX minimum fragment size: 64
-     RX minimum fragment size: 60
-     Verify enabled: on
-     Verify time: 128
-     Max verify time: 128
-     Verification status: SUCCEEDED
-     Statistics:
-      MACMergeFrameAssErrorCount: 0
-      MACMergeFrameSmdErrorCount: 0
-      MACMergeFrameAssOkCount: 511
-      MACMergeFragCountRx: 764
-      MACMergeFragCountTx: 0
-      MACMergeHoldCount: 0
+On Tue, Mar 04, 2025 at 05:23:05PM -0500, Paul Moore wrote:
+> The lack of an explicit credential (kernel/cred.c) entry has caused
+> confusion in the past among new, and not-so-new developers, about where
+> to send credential patches for discussion and merging.  Those patches
+> that are sent can often rot on the mailing lists for months as there
+> is no clear maintainer tasked with reviewing and merging patches.
+> 
+> I'm volunteering for the cred maintainer role to try and reduce the
+> confusion and help cred patches find their way up to Linus' tree.  As
+> there generally aren't a lot of cred patches I'll start with simply
+> folding them into the LSM tree, but if this changes I'll setup a
+> dedicated cred tree.
+> 
+> Signed-off-by: Paul Moore <paul@paul-moore.com>
+> ---
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 896a307fa065..68e4656c15ea 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6139,6 +6139,14 @@ L:	linux-input@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/hid/hid-creative-sb0540.c
+>  
+> +CREDENTIALS
+> +M:	Paul Moore <paul@paul-moore.com>
+> +L:	linux-security-module@vger.kernel.org
+> +S:	Supported
+> +T:	git https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git
+> +F:	include/linux/cred.h
+> +F:	kernel/cred.c
 
-Co-developed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Co-developed-by: Chwee-Lin Choong <chwee.lin.choong@intel.com>
-Signed-off-by: Chwee-Lin Choong <chwee.lin.choong@intel.com>
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_ethtool.c | 40 ++++++++++++++++++++
- drivers/net/ethernet/intel/igc/igc_regs.h    | 16 ++++++++
- 2 files changed, 56 insertions(+)
+Maybe also add the documentation:
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-index fd4b4b332309..324a27a5bef9 100644
---- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-@@ -1819,6 +1819,45 @@ static int igc_ethtool_set_mm(struct net_device *netdev,
- 	return igc_tsn_offload_apply(adapter);
- }
- 
-+/**
-+ * igc_ethtool_get_frame_ass_error - Get the frame assembly error count.
-+ * @reg_value: Register value for IGC_PRMEXCPRCNT
-+ * Return: The count of frame assembly errors.
-+ */
-+static u64 igc_ethtool_get_frame_ass_error(u32 reg_value)
-+{
-+	/* Out of order statistics */
-+	u32 ooo_frame_cnt, ooo_frag_cnt;
-+	u32 miss_frame_frag_cnt;
-+
-+	ooo_frame_cnt = FIELD_GET(IGC_PRMEXCPRCNT_OOO_FRAME_CNT, reg_value);
-+	ooo_frag_cnt = FIELD_GET(IGC_PRMEXCPRCNT_OOO_FRAG_CNT, reg_value);
-+	miss_frame_frag_cnt = FIELD_GET(IGC_PRMEXCPRCNT_MISS_FRAME_FRAG_CNT, reg_value);
-+
-+	return ooo_frame_cnt + ooo_frag_cnt + miss_frame_frag_cnt;
-+}
-+
-+static u64 igc_ethtool_get_frame_smd_error(u32 reg_value)
-+{
-+	return FIELD_GET(IGC_PRMEXCPRCNT_OOO_SMDC, reg_value);
-+}
-+
-+static void igc_ethtool_get_mm_stats(struct net_device *dev,
-+				     struct ethtool_mm_stats *stats)
-+{
-+	struct igc_adapter *adapter = netdev_priv(dev);
-+	struct igc_hw *hw = &adapter->hw;
-+	u32 reg_value;
-+
-+	reg_value = rd32(IGC_PRMEXCPRCNT);
-+
-+	stats->MACMergeFrameAssErrorCount = igc_ethtool_get_frame_ass_error(reg_value);
-+	stats->MACMergeFrameSmdErrorCount = igc_ethtool_get_frame_smd_error(reg_value);
-+	stats->MACMergeFrameAssOkCount = rd32(IGC_PRMPTDRCNT);
-+	stats->MACMergeFragCountRx = rd32(IGC_PRMEVNTRCNT);
-+	stats->MACMergeFragCountTx = rd32(IGC_PRMEVNTTCNT);
-+}
-+
- static int igc_ethtool_get_link_ksettings(struct net_device *netdev,
- 					  struct ethtool_link_ksettings *cmd)
- {
-@@ -2115,6 +2154,7 @@ static const struct ethtool_ops igc_ethtool_ops = {
- 	.set_link_ksettings	= igc_ethtool_set_link_ksettings,
- 	.self_test		= igc_ethtool_diag_test,
- 	.get_mm			= igc_ethtool_get_mm,
-+	.get_mm_stats		= igc_ethtool_get_mm_stats,
- 	.set_mm			= igc_ethtool_set_mm,
- };
- 
-diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
-index 12ddc5793651..f343c6bfc6be 100644
---- a/drivers/net/ethernet/intel/igc/igc_regs.h
-+++ b/drivers/net/ethernet/intel/igc/igc_regs.h
-@@ -222,6 +222,22 @@
- 
- #define IGC_FTQF(_n)	(0x059E0 + (4 * (_n)))  /* 5-tuple Queue Fltr */
- 
-+/* Time sync registers - preemption statistics */
-+#define IGC_PRMPTDRCNT		0x04284	/* Good RX Preempted Packets */
-+#define IGC_PRMEVNTTCNT		0x04298	/* TX Preemption event counter */
-+#define IGC_PRMEVNTRCNT		0x0429C	/* RX Preemption event counter */
-+
-+ /* Preemption Exception Counter */
-+ #define IGC_PRMEXCPRCNT				0x42A0
-+/* Received out of order packets with SMD-C */
-+#define IGC_PRMEXCPRCNT_OOO_SMDC			0x000000FF
-+/* Received out of order packets with SMD-C and wrong Frame CNT */
-+#define IGC_PRMEXCPRCNT_OOO_FRAME_CNT			0x0000FF00
-+/* Received out of order packets with SMD-C and wrong Frag CNT */
-+#define IGC_PRMEXCPRCNT_OOO_FRAG_CNT			0x00FF0000
-+/* Received packets with SMD-S and wrong Frag CNT and Frame CNT */
-+#define IGC_PRMEXCPRCNT_MISS_FRAME_FRAG_CNT		0xFF000000
-+
- /* Transmit Scheduling Registers */
- #define IGC_TQAVCTRL		0x3570
- #define IGC_TXQCTL(_n)		(0x3344 + 0x4 * (_n))
--- 
-2.34.1
++F:	Documentation/security/credentials.rst
 
+This documents the prepare_creds()/commit_creds()/abort_creds()
+"transactional" API that tasks should use to change credentials.
+
+> +
+>  INTEL CRPS COMMON REDUNDANT PSU DRIVER
+>  M:	Ninad Palsule <ninad@linux.ibm.com>
+>  L:	linux-hwmon@vger.kernel.org
+> -- 
+> 2.48.1
+> 
+
+Acked-by: Günther Noack <gnoack3000@gmail.com>
+
+Thank you both for stepping up to establish a clearer ownership for
+credentials!  There is a need for authoritative decisions in that
+area, and it has been difficult to find the right contacts for
+credentials on earlier patches as well, such as:
+
+https://lore.kernel.org/all/20240805-remove-cred-transfer-v2-0-a2aa1d45e6b8@google.com/
+(patch by Jann Horn: "get rid of cred_transfer")
+
+https://lore.kernel.org/all/20250221184417.27954-2-gnoack3000@gmail.com/
+(patch by me, multithreaded Landlock enablement)
+
+Thanks,
+–Günther
