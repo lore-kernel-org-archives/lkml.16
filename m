@@ -1,120 +1,147 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA73910E5;
-	Sun,  9 Mar 2025 17:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E06E1C5D78;
+	Sun,  9 Mar 2025 17:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741542519; cv=none; b=Vrg92iy6L10We4Zb9RNCLOM1M1ruDwaVwVOWavGsu2P4yM9hScGUl6IqFfnqavplTTTKra1zGC13y9hqjFbjOWpcDgHkOt81C4i2mJpVsyAhFosEtWO4JkNNl2iPT9GG2N0FRH+1WpUvklBSuqvBD1A4jy/kt5eSP0lxftUPvbM=
+	t=1741542573; cv=none; b=ZwsWuzJRGWCQ4ZLZ5B6Cr8E4chUbXHce+yQVwTFErrTQSQcn4IorfukoMIlmpLNAvAbMaO0cjXF3L49reOHF73grO5jC2oHUNYHawdEVg4iBKx9BO7R3mFMiTe87ohiKSebG3Y5PV39OtVJhBt0MZUV7H8hUHWpfmsAerKh/mcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741542519; c=relaxed/simple;
-	bh=IUW6EZm7/oaNBw5RPSdZbbA/T1kczIvutYqS5/DDbTs=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QaravzOC20vKiPq9vN4J9KLH+qR9VInt63jJ0gzMS6Xglphvs2ZELWNCOtohNNWwfVruKERb6OL7+qJH8Zki+tpaeQIsC6cppTh8EwIYvKUT28/IzLUmE56FFZB+QlqA42GUzhQJT391LZ4au8FEe6uitmFwaAPghyZfPZVfhKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UiKEAswy; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741542573; c=relaxed/simple;
+	bh=0jA0jE1d3VZYRFj2dEWSaC1XvTehPnfNraI7FcCBe0A=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bUbxZ4HWlsDpNusCNEfi12Hlz6ZEnrXAnUZ25BqCLYIoW1AthqKNUHh5LtiVJtdUvDKTFwNi/6yw46U3DTqFeaPoAHGA9izoM2F3vhzK0ZHITdL+UCXDBr9mYfhslYIeFqVmUvYy18PqrTFz5gmxHGbGVUeXom6qeFl2+lMQuo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=kBT2v4Ni; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiKEAswy"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43bd5644de8so36413735e9.3;
-        Sun, 09 Mar 2025 10:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741542516; x=1742147316; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=BrmgUU8m2W+dm6XtC7Lvzp3134bSe6hwOO06zK/FM4M=;
-        b=UiKEAswycpI3o/APvDq6IJPC2THpOgNWTA9NMz13b8ag/GU9iV119KIMRKDOOPxpfE
-         80q+J2/We1CJ0+z2uLub9EM/+qNVwm0SAQ4LgFuBFXTJ8hyNf4RbKqKuOGR40aCA/j8y
-         X3HzqzI5EcUa44nAknkGWJRo3346eyxXrKN8ZQZkEPfpVoFcxhLfQ3mLv9FywoUe+IHY
-         qn49VT9e9eeJZP2Qhm8zywV8YJiJAlMh5E58iK0vuxkzMpDVQJ1QrGus43tP3rMDNd+r
-         eBHMsuEMmJK8Hj/+xZF9nFLCqbHhYUoESHKUx1XzuV+Zb94ETZhFRVH7qwVhOzkDGgm8
-         f6BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741542516; x=1742147316;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BrmgUU8m2W+dm6XtC7Lvzp3134bSe6hwOO06zK/FM4M=;
-        b=GORj+TY89pUT87ssRz6DUlh3rVg0EeUvsZvYHZ/OLPsSkIbVixE3Z+DUnyVmfNo8fx
-         rys6OP0vq0XabXkWLhhnOraQIh+hgPFqbgoytofjb6RuIOcH4tI7lPWrGvzzgG4oQRs+
-         dZs6xrIjUxgeS8YGyVy/QlkCVvWpAz+cjN+QdY9KaaXrz/elqhabQYXG4toavp0l7pnD
-         +v1LQuOg5i+IG6pcN5X8Qve5MGOHmsFUU6Vqu09VeJcf7kYNOQNbII2GJ0OcLCRZ+uxI
-         NplHVD/oBrmE/g/u0zoJudeJRx4v6BMIcCbfK8Rz/KBFW2LzmD7uKlE4j9nm2fCDzSWZ
-         5SyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2Dqv0Im8cXz11d3mkaGqUn/VognR3o4f4NsSwKDCbrrtTFUHkUkOI4BTggrmiOuiayBW7SUFg@vger.kernel.org, AJvYcCUkx5/E8v1eIB3egyS5d7Y1Pdr3FWA78qddDg54sXUo1wyNmY9PHQI8WtwvGPmVpNYkhVGgjVAvJBQh@vger.kernel.org, AJvYcCWZCdZRE5PB1NuRryAoscw68wiPApJ+vjDAdjaaySCTUHr7ih/lWS7K06aNpmyox6JUZcf0uIvJGEMAd3GA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYo6BJjwGG1GxWOEPeWbRkPzIYIb6CW7BIKZ/jR0GoIh70wnC0
-	xyWv46zhRs85LV7SMRUhf+7MmkT0hZi9L5nk6X5OhfALNqlcmtmf
-X-Gm-Gg: ASbGncsOiCwSmQanEvCF0QtE47wnleeJkfFBb8g8swbJ/xqOKuh6iDERfGjzYRmzchi
-	/RSPOtAF4q9hjlV5UWwoBZjPw/U9H99aJbJGBsxL1oOcHgmTJWTUe+X2ic9ze/XXu+a/jdtkIfW
-	GfNeMCTs+s3OEHGvE7xMX/rqwTyBgO3Og9uHJGDH2cYfI94QncyDpLN9r6diYO4SHsM5iNPUQG1
-	yjNX+i0q7EtZw4WN2dnzaGaWpj8Zl1vbp3IrOPmuKThMOAp4gzxUntMkKzNbrDDA7H457ER7q/Y
-	jZCspK0WnLZmX6YCVImgN+vjY8zcN11XP4V1GKGiW/jbrqzwW5aKFHBFnljWBuKnOcslj4gSJEX
-	C
-X-Google-Smtp-Source: AGHT+IFqmRVo6FIysacWzJ33TfZtTvUxXtYg7bp/VcB+skW5kxcsz3otvb9dL4N79FYLMYigyzY4bQ==
-X-Received: by 2002:a05:600c:524a:b0:43c:f75a:eb54 with SMTP id 5b1f17b1804b1-43cf75aed5emr10293205e9.13.1741542516005;
-        Sun, 09 Mar 2025 10:48:36 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce8a493d0sm59519715e9.1.2025.03.09.10.48.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 10:48:35 -0700 (PDT)
-Message-ID: <67cdd473.7b0a0220.170541.e2af@mx.google.com>
-X-Google-Original-Message-ID: <Z83UcX4X2gpPogQs@Ansuel-XPS.>
-Date: Sun, 9 Mar 2025 18:48:33 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [net-next PATCH v12 08/13] net: mdio: regmap: add OF support
-References: <20250309172717.9067-1-ansuelsmth@gmail.com>
- <20250309172717.9067-9-ansuelsmth@gmail.com>
- <Z83R9qVfGbSc8bJs@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="kBT2v4Ni"
+Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 9F05E100002;
+	Sun,  9 Mar 2025 20:43:47 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 9F05E100002
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1741542227;
+	bh=GrOqXh07i7N0ySZW77DG1Gd9b3sEB1loXlmnzaagEgc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=kBT2v4NiGr2uN1XxQGXDawKdR83CBuFr8XbrHnis/gXRMCafPD9f5oUi0PyzXlZTZ
+	 US9RXHF0zY0PgHPwOcOFAw/JOnCjFncciXovVJgW76N2rx4BI88t5JsU5vXgCL5WzV
+	 MDx2+i4SCN0l7ycLBqbOHihDKWQoe/GnzA9P3FBm7a09KCYphGQLa2xIPPsfTuqGEi
+	 66Pwo1JVAl3MU55y0FyXXA0I3BAtJ0r4DEfRgjoXh+knAYVmO9HmsMgTxnhn9R+wg6
+	 hAsPi6KclBNhiOH2kcnj1mwBQ91C6Z1SnlI2j1gg1tb72EPHzBahVDlVuSOPCto6+S
+	 sw+fh8zXF9oOA==
+Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Sun,  9 Mar 2025 20:43:47 +0300 (MSK)
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
+	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>, Jerome Brunet
+	<jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>, Michael Turquette
+	<mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, Rob
+ Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v6 0/4] Add A1 Soc audio clock controller driver
+Date: Sun, 9 Mar 2025 20:43:18 +0300
+Message-ID: <20250309174322.1321201-1-jan.dakinevich@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z83R9qVfGbSc8bJs@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-a-m2.sberdevices.ru (172.24.196.120) To
+ p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 191599 [Mar 09 2025]
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;lore.kernel.org:7.1.1;sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, FromAlignment: n
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2025/03/09 17:18:00
+X-KSMG-LinksScanning: Clean, bases: 2025/03/09 17:18:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/03/09 15:22:00 #27687174
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Sun, Mar 09, 2025 at 05:37:58PM +0000, Russell King (Oracle) wrote:
-> On Sun, Mar 09, 2025 at 06:26:53PM +0100, Christian Marangi wrote:
-> > Permit to pass the device node pointer to mdio regmap config and permit
-> > mdio registration with an OF node to support DT PHY probe.
-> > 
-> > With the device node pointer NULL, the normal mdio registration is used.
-> 
-> Should this be using a device node, or a fwnode?
-> 
-> It depends _why_ you're adding this, and you omit to state that in the
-> commit description (hint - it should say why!)
->
+This series adds support for audio clock and reset controllers on A1 SoC family.
 
-Ugh totally forgot... It should be a device node. The use of the of_
-variant of mdiobus register permits to autoprobe PHY defined in device
-tree.
+Depends on [7]
 
-The current regmap driver only permit manual probe using the mask value
-so it's problematic for MFD usage with an abstract regmap and PHY
-autoprobe.
+Changes v5 [5] -> v6
+ - use __devm_auxiliary_device_create() helper that is being introduced in [7]
 
-Will add additional info in the commit.
+Changes v4 [4] -> v5
+ - moved changes of aux reset driver to series [6]
+ - added reset controller on top of audio-vad
+ - merged into single file
+ - reworked variables/defines naming
+ - added clk81 clock hierarchy
+ - added TDMIN_VAD-related clocks
+ - excluded DT patch (it will submitted separately)
+
+Changes v3 [3] -> v4
+ - Use auxiliary reset device implemented in [4]
+ - Split the driver into files
+ - Use common with axg-audio yaml schema
+ - Unify clock-names with axg-audio
+
+Changes v2 [2] -> v3
+ - reset:
+   * added auxiliary device
+ - yaml:
+   * added declaration of optional clocks
+   * fixed names in example and another cosmetics
+ - clocks:
+   * reworked naming
+   * stop using of "core" clock name
+   * fixed wrong parenting
+
+Changes v1 [1] -> v2:
+ - Detached from v1's series (patch 2, 3, 4, 25)
+ - Reuse some of defines from axg-audio
+ - Split the controller into two memory regions
+
+Links:
+ [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
+ [2] https://lore.kernel.org/lkml/20240328010831.884487-1-jan.dakinevich@salutedevices.com/
+ [3] https://lore.kernel.org/lkml/20240419125812.983409-1-jan.dakinevich@salutedevices.com/
+ [4] https://lore.kernel.org/all/20240913121152.817575-1-jan.dakinevich@salutedevices.com/
+ [5] https://lore.kernel.org/all/20241112230443.1406460-1-jan.dakinevich@salutedevices.com/
+ [6] https://lore.kernel.org/all/20241112230056.1406222-1-jan.dakinevich@salutedevices.com/
+ [7] https://lore.kernel.org/all/20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com/
+
+Jan Dakinevich (4):
+  clk: meson: axg: share the set of audio helper macros
+  dt-bindings: clock: axg-audio: document A1 SoC audio clock controller
+    driver
+  clk: meson: a1: add the audio clock controller driver
+  arm64: dts: meson: a1: add the audio clock controller
+
+ .../clock/amlogic,axg-audio-clkc.yaml         |   4 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |  49 +
+ drivers/clk/meson/Kconfig                     |  14 +
+ drivers/clk/meson/Makefile                    |   1 +
+ drivers/clk/meson/a1-audio.c                  | 856 ++++++++++++++++++
+ drivers/clk/meson/axg-audio.c                 | 215 +----
+ drivers/clk/meson/meson-audio.h               | 156 ++++
+ .../dt-bindings/clock/amlogic,a1-audio-clkc.h | 139 +++
+ 8 files changed, 1254 insertions(+), 180 deletions(-)
+ create mode 100644 drivers/clk/meson/a1-audio.c
+ create mode 100644 drivers/clk/meson/meson-audio.h
+ create mode 100644 include/dt-bindings/clock/amlogic,a1-audio-clkc.h
 
 -- 
-	Ansuel
+2.34.1
+
