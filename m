@@ -1,104 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFAF1C6FF4;
-	Sun,  9 Mar 2025 16:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC8B1C1ADB;
+	Sun,  9 Mar 2025 16:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741536708; cv=none; b=BI5Dioj7DBGJXpRlyfr7qgIRW//sSzOjfB4XU7WxP7XcwsXrSvAv7HRG/0rA8dZ9vU5AsdNWACSJsRa9f27hHhm72IYwXzzODad8o+9pw5WSobL/IBCjwYdx18zR8xhGu6KoaKAk6l8tYgVgyyoKeniEvrEFwUcIYyhDRHWWFg4=
+	t=1741536708; cv=none; b=mwwxwWMEcexdIOjuNc0whUnjLUeUh4AGSFnUCVxfPp7FixaMLGXCoNphN4+X7q3Uirq2WPEkVpkzgD22n52C1clwX/OoH/iDRXFjzPh844+pP2ZCwiUUWAcOXepbujCC2wq+XuhCNqHxnsPS3pVDorzc/fllKqtcgyadpqng8v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741536708; c=relaxed/simple;
-	bh=9hCZiuQUrvw8C6VOe681QbTu6p8BIa79fAzB/mklYP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aXEEDh+rCdIQ47QT+ImXMhNtqN2LXTFGdGpM65WApGqRHn2LUL41C76PM4NydudfouvG6MhEgTuoX/Pf73ipV1+L5gIMxmzJIANB8/1vxloDLWRPH+aK/lTSyQPXjc4AgOi5iaZJl1rdba1TfG+bn7i/K095J73kXAy36yec19g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZbGiYZo; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=cYAeS9+iVeuoEKPY0soxgWjQHLxWo/CJqXIGMP5cXTg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=LJXxCe+0ePbImRN8BYYIxIpJJEsKz9MAGA9TYTB42dr/CgULJAzTEQdM3Ekey9OZEe6M2AX3so+3Pm2IJE+FcZCwbQDlOiifzXwRCNYFLRxrb/yCOBu/65cyIVvdDIy30HsiFQ5fgYohahjTpTijuOyZ8kpEMUJEwEzV4O8+PfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AM2/bmW6; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZbGiYZo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741536707; x=1773072707;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9hCZiuQUrvw8C6VOe681QbTu6p8BIa79fAzB/mklYP4=;
-  b=YZbGiYZor6PfrgcvcNyBXY5ypy84ve6NQ22SlkMjKE5tgRJ3dna0G1gn
-   dr2led+iP31wMj7HLoRuqCzx3MEMcenbAWnei16GxE/gwl7k2P7re9QRE
-   FbuYvjeaWVMXnIRn1OCkXXv2HzOMnwgeKxJEvVrwxZbM41qMRGT8iIO20
-   MWYwhladsmmHwKE37BdAbIXR5rJOJ+0q0T85BRUxUjaJUkmVayvnjUqRf
-   h3xm7G1VhqOI2u1SXcsE8vHYvKi6Dy5U+Vh2vlwHjN1D7mdwCYOQml0I8
-   B9Kn1pI8P4FwTbLtvJjnCupJdGsVKBLidRZA5lz+uByU/BmKXsAAt+fnh
-   w==;
-X-CSE-ConnectionGUID: YLZw3CLtSFCfBdMxuWoEGw==
-X-CSE-MsgGUID: pSoZrAsfQN6h4MOaoQeNjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="42240133"
-X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="42240133"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 09:11:46 -0700
-X-CSE-ConnectionGUID: igfIiSO4REKuMBuIYyKnfg==
-X-CSE-MsgGUID: P9l/zbXRSr+FhzXTflQ3MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120680370"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 09 Mar 2025 09:11:42 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1trJFb-0003Gk-22;
-	Sun, 09 Mar 2025 16:11:39 +0000
-Date: Mon, 10 Mar 2025 00:11:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Ivan Belokobylskiy <belokobylskij@gmail.com>,
-	David Heidelberg <david@ixit.cz>
-Subject: Re: [PATCH v3] ARM: dts: nexus4: Initial dts
-Message-ID: <202503092337.8UvZ5rwI-lkp@intel.com>
-References: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AM2/bmW6"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 529G7ORJ1263742
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sun, 9 Mar 2025 09:07:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 529G7ORJ1263742
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741536453;
+	bh=seT44xgoWZ5mbi6YMs1X0xb2oeGYrNPZX+/U1qdQGTg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=AM2/bmW6qzoT4YywJnfg+kFnRXlll5tS36arYnqSjApIypQlKimmdfCt9YyV+hD5i
+	 dwEfkCUr9AtGwtNwd8jvLKVyhS9+DVOhMt0UxbaU8XLll4G1zqhZUN5wna9XCG0iyW
+	 78qL6sdm7Dmrl0dpbYygV8vUvwurgNltciei2+BotvHSOlc5nLcyRz7FcLa20sqElN
+	 aaLYBYPsfdON+oOvyxzkWw0OSqmFW0xR+GLH1tZOAogct9w6ii64Fkp372iR+MOFjL
+	 L/PbfQo7+FF9HFkiZXRXnx5Nau5yXjNHZfL42nnEtecfgu8tqCoFLf4g4XN6869eDo
+	 eXA4gSO7d9tjA==
+Date: Sun, 09 Mar 2025 09:00:58 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+CC: David Laight <david.laight.linux@gmail.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
+        akpm@linux-foundation.org, alistair@popple.id.au,
+        andrew+netdev@lunn.ch, andrzej.hajda@intel.com,
+        arend.vanspriel@broadcom.com, awalls@md.metrocast.net, bp@alien8.de,
+        bpf@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211@lists.linux.dev, dave.hansen@linux.intel.com,
+        davem@davemloft.net, dmitry.torokhov@gmail.com,
+        dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
+        edumazet@google.com, eleanor15x@gmail.com, gregkh@linuxfoundation.org,
+        hverkuil@xs4all.nl, jernej.skrabec@gmail.com, jirislaby@kernel.org,
+        jk@ozlabs.org, joel@jms.id.au, johannes@sipsolutions.net,
+        jonas@kwiboo.se, jserv@ccns.ncku.edu.tw, kuba@kernel.org,
+        linux-fsi@lists.ozlabs.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-serial@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux@rasmusvillemoes.dk,
+        louis.peens@corigine.com, maarten.lankhorst@linux.intel.com,
+        mchehab@kernel.org, mingo@redhat.com, miquel.raynal@bootlin.com,
+        mripard@kernel.org, neil.armstrong@linaro.org, netdev@vger.kernel.org,
+        oss-drivers@corigine.com, pabeni@redhat.com,
+        parthiban.veerasooran@microchip.com, rfoss@kernel.org, richard@nod.at,
+        simona@ffwll.ch, tglx@linutronix.de, tzimmermann@suse.de,
+        vigneshr@ti.com, x86@kernel.org, yury.norov@gmail.com
+Subject: Re: [PATCH v3 00/16] Introduce and use generic parity16/32/64 helper
+User-Agent: K-9 Mail for Android
+In-Reply-To: <Z824SgB9Dt5zdWYc@visitorckw-System-Product-Name>
+References: <4732F6F6-1D41-4E3F-BE24-E54489BC699C@zytor.com> <efc2ee9d-5382-457f-b471-f3c44b81a190@citrix.com> <5A790652-1B22-4D13-AAC5-5D9931E90903@zytor.com> <20250307195310.58abff8c@pumpkin> <EB85C3C1-8A0D-4CB9-B501-BFEABDF3E977@zytor.com> <Z824SgB9Dt5zdWYc@visitorckw-System-Product-Name>
+Message-ID: <EF4335E0-F8EB-4642-BD09-B16BCCF23F95@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi David,
+On March 9, 2025 8:48:26 AM PDT, Kuan-Wei Chiu <visitorckw@gmail=2Ecom> wro=
+te:
+>On Fri, Mar 07, 2025 at 12:07:02PM -0800, H=2E Peter Anvin wrote:
+>> On March 7, 2025 11:53:10 AM PST, David Laight <david=2Elaight=2Elinux@=
+gmail=2Ecom> wrote:
+>> >On Fri, 07 Mar 2025 11:30:35 -0800
+>> >"H=2E Peter Anvin" <hpa@zytor=2Ecom> wrote:
+>> >
+>> >> On March 7, 2025 10:49:56 AM PST, Andrew Cooper <andrew=2Ecooper3@ci=
+trix=2Ecom> wrote:
+>> >> >> (int)true most definitely is guaranteed to be 1=2E =20
+>> >> >
+>> >> >That's not technically correct any more=2E
+>> >> >
+>> >> >GCC has introduced hardened bools that intentionally have bit patte=
+rns
+>> >> >other than 0 and 1=2E
+>> >> >
+>> >> >https://gcc=2Egnu=2Eorg/gcc-14/changes=2Ehtml
+>> >> >
+>> >> >~Andrew =20
+>> >>=20
+>> >> Bit patterns in memory maybe (not that I can see the Linux kernel us=
+ing them) but
+>> >> for compiler-generated conversations that's still a given, or the ma=
+nager isn't C
+>> >> or anything even remotely like it=2E
+>> >>=20
+>> >
+>> >The whole idea of 'bool' is pretty much broken by design=2E
+>> >The underlying problem is that values other than 'true' and 'false' ca=
+n
+>> >always get into 'bool' variables=2E
+>> >
+>> >Once that has happened it is all fubar=2E
+>> >
+>> >Trying to sanitise a value with (say):
+>> >int f(bool v)
+>> >{
+>> >	return (int)v & 1;
+>> >}   =20
+>> >just doesn't work (see https://www=2Egodbolt=2Eorg/z/MEndP3q9j)
+>> >
+>> >I really don't see how using (say) 0xaa and 0x55 helps=2E
+>> >What happens if the value is wrong? a trap or exception?, good luck re=
+covering
+>> >from that=2E
+>> >
+>> >	David
+>>=20
+>> Did you just discover GIGO?
+>
+>Thanks for all the suggestions=2E
+>
+>I don't have a strong opinion on the naming or return type=2E I'm still a
+>bit confused about whether I can assume that casting bool to int always
+>results in 0 or 1=2E
+>
+>If that's the case, since most people prefer bool over int as the
+>return type and some are against introducing u1, my current plan is to
+>use the following in the next version:
+>
+>bool parity_odd(u64 val);
+>
+>This keeps the bool return type, renames the function for better
+>clarity, and avoids extra maintenance burden by having just one
+>function=2E
+>
+>If I can't assume that casting bool to int always results in 0 or 1,
+>would it be acceptable to keep the return type as int?
+>
+>Would this work for everyone?
+>
+>Regards,
+>Kuan-Wei
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 0a2f889128969dab41861b6e40111aa03dc57014]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/David-Heidelberg-via-B4-Relay/ARM-dts-nexus4-Initial-dts/20250309-084753
-base:   0a2f889128969dab41861b6e40111aa03dc57014
-patch link:    https://lore.kernel.org/r/20250309-lg-nexus4-mako-v3-1-1dc2807df296%40ixit.cz
-patch subject: [PATCH v3] ARM: dts: nexus4: Initial dts
-config: arm-randconfig-002-20250309 (https://download.01.org/0day-ci/archive/20250309/202503092337.8UvZ5rwI-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250309/202503092337.8UvZ5rwI-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503092337.8UvZ5rwI-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> Error: arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts:289.1-10 Label or path pmicintc not found
-   FATAL ERROR: Syntax error parsing input tree
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+You *CAN* safely assume that bool is an integer type which always has the =
+value 0 or 1=2E
