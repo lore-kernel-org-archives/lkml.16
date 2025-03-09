@@ -1,55 +1,56 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7F41F0985;
-	Sun,  9 Mar 2025 17:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4D1EF398;
+	Sun,  9 Mar 2025 17:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741543112; cv=none; b=qC+9rPDpqFzrW4EYxn4pHdFCHSbPKqp2gGiwMkHucy82Maq6FCifGS2/6PBxj7jSHJIrRpfXTrOPsSNB71dPQiSx73PSdsu8gnZ5uEHX+6VfrfaIp5h+qmu0xGTRK5jdHmvNw21O5jhUdr2ZI6BnPJGVCEsUilvEvYb29v3SqMk=
+	t=1741543130; cv=none; b=U1NDBcErtsYD0TeHvrDaF5MfcMTbIE61bMyxSGNG5bJD6drQV/2YDclMRq/jk+eNvhTabOh4xOyLW9HxU8yce7yqCbe/9PpMCSZiRCjUNCNjxRhMf7IOCWLFSIuzW7MqrLxsUkSIwhvxpfdJ1xU2ELfYpO/PA/iqu1Ft3MUiK6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741543112; c=relaxed/simple;
-	bh=buwG0JNAqxmhy71yWmRSifh1WyssX4NtI11ieeR6OCo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fcWQe1fGPc7j55ZJXvBRroZT57LzN1sskksJB7c3XLe7kE01g6St6J02Qh2FhCairdNypSkmSHYfQEpiLkNlchhbue7hOPLPFdWB05xHchgcHC4PeyYDwfHtX+CGvoNuGmJUNe1fpPvc/R63FZU3aPO5KdIFXMZeq5wFNgs14LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=Y7rEUn8u; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1741543130; c=relaxed/simple;
+	bh=YR5F62nzTkm61DF6L9OZv0/1q2kDXISugNqaQYKb2YQ=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=to1tXcI4ZS5i1o4VrkWmMcYc74O7CDoDEcjWU4DJXo+L3Eee5npJZZ4rHDJXU5d2zfZjhvRM+6VLU0jzkRIn9OPoVpqgAkE8ByXiKzw6nLyMYdOu1r1rBB4TUlX98WHJbpGlv8tNgLOfYalrcKZV7u2CgERQbli4urjia37Igr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=SV/xjMQP; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Y7rEUn8u"
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.2])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 83D3140CE1B9;
-	Sun,  9 Mar 2025 17:58:21 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 83D3140CE1B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1741543101;
-	bh=Tjb3sdTt+sV+fmJ3kLauDsvPMMI/JK6LCRHEJH7ZeKQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y7rEUn8ua3iAhXsU2TcVOuAZo0VdZ6PwteD4r69ZofP1rIcnfjN0wtvBoVuAyOFDu
-	 bRH9Hr9CQwRDe+HcFKSSVmXIHwGf+S7Z6MSIhu2rfrqVLiMvwQ9eVeuLOmTDRBl++x
-	 h1F5f7KRg6MUexg6ehWIYe5J2nquIJNo4SjLJbQU=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Peter Chen <peter.chen@kernel.org>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
-	Sebastian Reichel <sre@kernel.org>,
-	Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>,
-	linux-usb@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH 2/3] usb: chipidea: ci_hdrc_imx: disable regulator on error path in probe
-Date: Sun,  9 Mar 2025 20:57:58 +0300
-Message-ID: <20250309175805.661684-3-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250309175805.661684-1-pchelkin@ispras.ru>
-References: <20250309175805.661684-1-pchelkin@ispras.ru>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="SV/xjMQP"
+Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 0EA68100006;
+	Sun,  9 Mar 2025 20:58:45 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 0EA68100006
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1741543125;
+	bh=kPV/BnBSZwkzP1CAXcGTb/b489Qh5Q8Y01cLz+m8DDY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=SV/xjMQPBne/db251hG70CMder/nAcykeam1/SebWkoPALHpNCchFEexp3K6rwUJT
+	 BNXJfzOgReRFa8vm5ECqdRFljQ7OWoMi1mTMG8GlDvNYmWsV6e0p2U3W1r2N1JG5Df
+	 bxYio3dMuO5eG5kJynjA81EJX6eePOfnm595oyvGgjH4Wgnb81ihO5/BamamjjQwyt
+	 Kz7NVTY7RKNVRaUjucQ2wdsqLdkTxeL/0qzKKAsjyMV0f2qJOBnaZJ1YOweyjFd9+L
+	 PkysgKHDzKutMFtCv61ux/2GXADKwTihXdKaR8kXUiV/EosCpm6zVsdj6rfQHwfe6C
+	 nGPpSQInKNlOQ==
+Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Sun,  9 Mar 2025 20:58:44 +0300 (MSK)
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
+	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>, Jerome Brunet
+	<jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>, Michael Turquette
+	<mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, Rob
+ Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v6 2/4] dt-bindings: clock: axg-audio: document A1 SoC audio clock controller driver
+Date: Sun, 9 Mar 2025 20:58:36 +0300
+Message-ID: <20250309175838.1322014-2-jan.dakinevich@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250309175838.1322014-1-jan.dakinevich@salutedevices.com>
+References: <20250309175838.1322014-1-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,86 +58,202 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-a-m2.sberdevices.ru (172.24.196.120) To
+ p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 191599 [Mar 09 2025]
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_smtp_not_equal_from}, smtp.sberdevices.ru:7.1.1,5.0.1;sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, FromAlignment: n
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/03/09 17:28:00 #27692143
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Upon encountering errors during the HSIC pinctrl handling section the
-regulator should be disabled.
+Add device tree bindings for A1 SoC audio clock and reset controllers.
 
-After the above-stated changes it is possible to jump onto
-"disable_hsic_regulator" label without having added the CPU latency QoS
-request previously. This would result in cpu_latency_qos_remove_request()
-yielding a WARNING.
-
-So rearrange the error handling path to follow the reverse order of
-different probing phases.
-
-Found by Linux Verification Center (linuxtesting.org).
-
-Fixes: 4d6141288c33 ("usb: chipidea: imx: pinctrl for HSIC is optional")
-Cc: stable@vger.kernel.org
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 ---
- drivers/usb/chipidea/ci_hdrc_imx.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ .../clock/amlogic,axg-audio-clkc.yaml         |   4 +
+ .../dt-bindings/clock/amlogic,a1-audio-clkc.h | 139 ++++++++++++++++++
+ 2 files changed, 143 insertions(+)
+ create mode 100644 include/dt-bindings/clock/amlogic,a1-audio-clkc.h
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-index 619779eef333..3f11ae071c7f 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.c
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-@@ -407,13 +407,13 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 				"pinctrl_hsic_idle lookup failed, err=%ld\n",
- 					PTR_ERR(pinctrl_hsic_idle));
- 			ret = PTR_ERR(pinctrl_hsic_idle);
--			goto err_put;
-+			goto disable_hsic_regulator;
- 		}
- 
- 		ret = pinctrl_select_state(data->pinctrl, pinctrl_hsic_idle);
- 		if (ret) {
- 			dev_err(dev, "hsic_idle select failed, err=%d\n", ret);
--			goto err_put;
-+			goto disable_hsic_regulator;
- 		}
- 
- 		data->pinctrl_hsic_active = pinctrl_lookup_state(data->pinctrl,
-@@ -423,7 +423,7 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 				"pinctrl_hsic_active lookup failed, err=%ld\n",
- 					PTR_ERR(data->pinctrl_hsic_active));
- 			ret = PTR_ERR(data->pinctrl_hsic_active);
--			goto err_put;
-+			goto disable_hsic_regulator;
- 		}
- 	}
- 
-@@ -432,11 +432,11 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 
- 	ret = imx_get_clks(dev);
- 	if (ret)
--		goto disable_hsic_regulator;
-+		goto qos_remove_request;
- 
- 	ret = imx_prepare_enable_clks(dev);
- 	if (ret)
--		goto disable_hsic_regulator;
-+		goto qos_remove_request;
- 
- 	ret = clk_prepare_enable(data->clk_wakeup);
- 	if (ret)
-@@ -526,12 +526,13 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 	clk_disable_unprepare(data->clk_wakeup);
- err_wakeup_clk:
- 	imx_disable_unprepare_clks(dev);
-+qos_remove_request:
-+	if (pdata.flags & CI_HDRC_PMQOS)
-+		cpu_latency_qos_remove_request(&data->pm_qos_req);
- disable_hsic_regulator:
- 	if (data->hsic_pad_regulator)
- 		/* don't overwrite original ret (cf. EPROBE_DEFER) */
- 		regulator_disable(data->hsic_pad_regulator);
--	if (pdata.flags & CI_HDRC_PMQOS)
--		cpu_latency_qos_remove_request(&data->pm_qos_req);
- 	data->ci_pdev = NULL;
- err_put:
- 	if (data->usbmisc_data)
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+index fd7982dd4cea..10202b749001 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
++++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+@@ -18,6 +18,8 @@ description:
+ properties:
+   compatible:
+     enum:
++      - amlogic,a1-audio-clkc
++      - amlogic,a1-audio-vad-clkc
+       - amlogic,axg-audio-clkc
+       - amlogic,g12a-audio-clkc
+       - amlogic,sm1-audio-clkc
+@@ -114,6 +116,8 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - amlogic,a1-audio-clkc
++              - amlogic,a1-audio-vad-clkc
+               - amlogic,g12a-audio-clkc
+               - amlogic,sm1-audio-clkc
+     then:
+diff --git a/include/dt-bindings/clock/amlogic,a1-audio-clkc.h b/include/dt-bindings/clock/amlogic,a1-audio-clkc.h
+new file mode 100644
+index 000000000000..78e7a432d439
+--- /dev/null
++++ b/include/dt-bindings/clock/amlogic,a1-audio-clkc.h
+@@ -0,0 +1,139 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
++/*
++ * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
++ *
++ * Author: Jan Dakinevich <jan.dakinevich@salutedevices.com>
++ */
++
++#ifndef __A1_AUDIO_CLKC_BINDINGS_H
++#define __A1_AUDIO_CLKC_BINDINGS_H
++
++#define AUD_CLKID_DDR_ARB			1
++#define AUD_CLKID_TDMIN_A			2
++#define AUD_CLKID_TDMIN_B			3
++#define AUD_CLKID_TDMIN_LB			4
++#define AUD_CLKID_LOOPBACK			5
++#define AUD_CLKID_TDMOUT_A			6
++#define AUD_CLKID_TDMOUT_B			7
++#define AUD_CLKID_FRDDR_A			8
++#define AUD_CLKID_FRDDR_B			9
++#define AUD_CLKID_TODDR_A			10
++#define AUD_CLKID_TODDR_B			11
++#define AUD_CLKID_SPDIFIN			12
++#define AUD_CLKID_RESAMPLE			13
++#define AUD_CLKID_EQDRC				14
++#define AUD_CLKID_LOCKER			15
++#define AUD_CLKID_MST_A_MCLK_SEL		16
++#define AUD_CLKID_MST_A_MCLK_DIV		17
++#define AUD_CLKID_MST_A_MCLK			18
++#define AUD_CLKID_MST_B_MCLK_SEL		19
++#define AUD_CLKID_MST_B_MCLK_DIV		20
++#define AUD_CLKID_MST_B_MCLK			21
++#define AUD_CLKID_MST_C_MCLK_SEL		22
++#define AUD_CLKID_MST_C_MCLK_DIV		23
++#define AUD_CLKID_MST_C_MCLK			24
++#define AUD_CLKID_MST_D_MCLK_SEL		25
++#define AUD_CLKID_MST_D_MCLK_DIV		26
++#define AUD_CLKID_MST_D_MCLK			27
++#define AUD_CLKID_MST_A_SCLK_PRE_EN		28
++#define AUD_CLKID_MST_A_SCLK_DIV		29
++#define AUD_CLKID_MST_A_SCLK_POST_EN		30
++#define AUD_CLKID_MST_A_SCLK			31
++#define AUD_CLKID_MST_B_SCLK_PRE_EN		32
++#define AUD_CLKID_MST_B_SCLK_DIV		33
++#define AUD_CLKID_MST_B_SCLK_POST_EN		34
++#define AUD_CLKID_MST_B_SCLK			35
++#define AUD_CLKID_MST_C_SCLK_PRE_EN		36
++#define AUD_CLKID_MST_C_SCLK_DIV		37
++#define AUD_CLKID_MST_C_SCLK_POST_EN		38
++#define AUD_CLKID_MST_C_SCLK			39
++#define AUD_CLKID_MST_D_SCLK_PRE_EN		40
++#define AUD_CLKID_MST_D_SCLK_DIV		41
++#define AUD_CLKID_MST_D_SCLK_POST_EN		42
++#define AUD_CLKID_MST_D_SCLK			43
++#define AUD_CLKID_MST_A_LRCLK_DIV		44
++#define AUD_CLKID_MST_A_LRCLK			45
++#define AUD_CLKID_MST_B_LRCLK_DIV		46
++#define AUD_CLKID_MST_B_LRCLK			47
++#define AUD_CLKID_MST_C_LRCLK_DIV		48
++#define AUD_CLKID_MST_C_LRCLK			49
++#define AUD_CLKID_MST_D_LRCLK_DIV		50
++#define AUD_CLKID_MST_D_LRCLK			51
++#define AUD_CLKID_TDMIN_A_SCLK_SEL		52
++#define AUD_CLKID_TDMIN_A_SCLK_PRE_EN		53
++#define AUD_CLKID_TDMIN_A_SCLK_POST_EN		54
++#define AUD_CLKID_TDMIN_A_SCLK			55
++#define AUD_CLKID_TDMIN_A_LRCLK			56
++#define AUD_CLKID_TDMIN_B_SCLK_SEL		57
++#define AUD_CLKID_TDMIN_B_SCLK_PRE_EN		58
++#define AUD_CLKID_TDMIN_B_SCLK_POST_EN		59
++#define AUD_CLKID_TDMIN_B_SCLK			60
++#define AUD_CLKID_TDMIN_B_LRCLK			61
++#define AUD_CLKID_TDMIN_LB_SCLK_SEL		62
++#define AUD_CLKID_TDMIN_LB_SCLK_PRE_EN		63
++#define AUD_CLKID_TDMIN_LB_SCLK_POST_EN		64
++#define AUD_CLKID_TDMIN_LB_SCLK			65
++#define AUD_CLKID_TDMIN_LB_LRCLK		66
++#define AUD_CLKID_TDMOUT_A_SCLK_SEL		67
++#define AUD_CLKID_TDMOUT_A_SCLK_PRE_EN		68
++#define AUD_CLKID_TDMOUT_A_SCLK_POST_EN		69
++#define AUD_CLKID_TDMOUT_A_SCLK			70
++#define AUD_CLKID_TDMOUT_A_LRCLK		71
++#define AUD_CLKID_TDMOUT_B_SCLK_SEL		72
++#define AUD_CLKID_TDMOUT_B_SCLK_PRE_EN		73
++#define AUD_CLKID_TDMOUT_B_SCLK_POST_EN		74
++#define AUD_CLKID_TDMOUT_B_SCLK			75
++#define AUD_CLKID_TDMOUT_B_LRCLK		76
++#define AUD_CLKID_SPDIFIN_CLK_SEL		77
++#define AUD_CLKID_SPDIFIN_CLK_DIV		78
++#define AUD_CLKID_SPDIFIN_CLK			79
++#define AUD_CLKID_RESAMPLE_CLK_SEL		80
++#define AUD_CLKID_RESAMPLE_CLK_DIV		81
++#define AUD_CLKID_RESAMPLE_CLK			82
++#define AUD_CLKID_EQDRC_CLK_SEL			83
++#define AUD_CLKID_EQDRC_CLK_DIV			84
++#define AUD_CLKID_EQDRC_CLK			85
++#define AUD_CLKID_LOCKER_IN_CLK_SEL		86
++#define AUD_CLKID_LOCKER_IN_CLK_DIV		87
++#define AUD_CLKID_LOCKER_IN_CLK			88
++#define AUD_CLKID_LOCKER_OUT_CLK_SEL		89
++#define AUD_CLKID_LOCKER_OUT_CLK_DIV		90
++#define AUD_CLKID_LOCKER_OUT_CLK		91
++
++#define AUD_VAD_CLKID_CLK81			1
++#define AUD_VAD_CLKID_SYSCLK_A_DIV		2
++#define AUD_VAD_CLKID_SYSCLK_A			3
++#define AUD_VAD_CLKID_SYSCLK_B_DIV		4
++#define AUD_VAD_CLKID_SYSCLK_B			5
++#define AUD_VAD_CLKID_SYSCLK			6
++#define AUD_VAD_CLKID_DDR_ARB			7
++#define AUD_VAD_CLKID_PDM			8
++#define AUD_VAD_CLKID_TDMIN_VAD			9
++#define AUD_VAD_CLKID_TODDR_VAD			10
++#define AUD_VAD_CLKID_TOVAD			11
++#define AUD_VAD_CLKID_TOAUDIOTOP		12
++#define AUD_VAD_CLKID_MST_VAD_MCLK_SEL		13
++#define AUD_VAD_CLKID_MST_VAD_MCLK_DIV		14
++#define AUD_VAD_CLKID_MST_VAD_MCLK		15
++#define AUD_VAD_CLKID_MST_VAD_SCLK_PRE_EN	16
++#define AUD_VAD_CLKID_MST_VAD_SCLK_DIV		17
++#define AUD_VAD_CLKID_MST_VAD_SCLK_POST_EN	18
++#define AUD_VAD_CLKID_MST_VAD_SCLK		19
++#define AUD_VAD_CLKID_MST_VAD_LRCLK_DIV		20
++#define AUD_VAD_CLKID_MST_VAD_LRCLK		21
++#define AUD_VAD_CLKID_TDMIN_VAD_SCLK_SEL	22
++#define AUD_VAD_CLKID_TDMIN_VAD_SCLK_PRE_EN	23
++#define AUD_VAD_CLKID_TDMIN_VAD_SCLK_POST_EN	24
++#define AUD_VAD_CLKID_TDMIN_VAD_SCLK		25
++#define AUD_VAD_CLKID_TDMIN_VAD_LRCLK		26
++#define AUD_VAD_CLKID_PDM_DCLK_SEL		27
++#define AUD_VAD_CLKID_PDM_DCLK_DIV		28
++#define AUD_VAD_CLKID_PDM_DCLK			29
++#define AUD_VAD_CLKID_PDM_SYSCLK_SEL		30
++#define AUD_VAD_CLKID_PDM_SYSCLK_DIV		31
++#define AUD_VAD_CLKID_PDM_SYSCLK		32
++#define AUD_VAD_CLKID_VAD_CLK_SEL		33
++#define AUD_VAD_CLKID_VAD_CLK_DIV		34
++#define AUD_VAD_CLKID_VAD_CLK			35
++
++#endif /* __A1_AUDIO_CLKC_BINDINGS_H */
 -- 
-2.48.1
+2.34.1
 
