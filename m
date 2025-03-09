@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23D31925BF;
-	Sun,  9 Mar 2025 08:41:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AA719259F;
+	Sun,  9 Mar 2025 08:41:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741509706; cv=none; b=PBDTCUkI3veoHGJFObieoBh08WXf82lrMzSb34X2lou3QX7ywvRWeoolx0jVJzLft7pTNu3+4UbCTwmvkqAN+kzit8SzeKaPb0rpNKPfGTSv741AgjneeALbs5xFyIWzv5jAdWu3FWCdNyN/Y1XNm06li1RL++KOtRNbivz+7II=
+	t=1741509709; cv=none; b=rYNaQZ7WZq5OYmMNbuYf0avko51dYvhQsdp375+I8UiKHN2hwLhi+dzS5MRjHLPs14bg1fPH/Cq8D3kPQUCH5q5ipWdd6p9QRSjCSQ4xj9qUiAanPpGYpFWK9//PBCMexNbsuLt8N+1szn4up/Exzk6BY6ggiYkicuhQ9G6pUuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741509706; c=relaxed/simple;
-	bh=jGrSz3q2PeovBJ75uquLx2u7rWcyV5mNW9o+5ursyaY=;
+	s=arc-20240116; t=1741509709; c=relaxed/simple;
+	bh=9tEtHFlJqE1o/MEINhiPD+GOmg1b1ALbpAOx4KFy+Sc=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=EXFT2vWG6Vzw9BL1pWHz4Wds7NYBPa1Z2KjNH3O0ofRJ80xIVOhYww1kjOxfgFage+EXZ0sz6bfVFeCjtBYtdNX+zUxa4g+U7bMKC0M0FDr1fo1OaxX67FE1GNFq5J9eqrE6YZs4JBnFRzsU7MUKIvbGAfwGrShiqWWuUFvB0SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vRLNzW24; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jacMLK20; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=aXHs1u+9136L0beIvr79i11d9830YDqXJZxLDWFH8sZxjiU6ZY5sAWi3ZNKKgXYdn4ZG3njofp2X6i/FBno2Kay8NIhk8piihD2P0j71QxoLf6a31g03ENu1OPncB+rrRdSmbSMyFoyXuj9jCuYvukH5j7SRG07ExKvf/bdmVLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BrtQOnIK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0g6rJL9x; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vRLNzW24";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jacMLK20"
-Message-ID: <20250309084110.204054172@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BrtQOnIK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0g6rJL9x"
+Message-ID: <20250309084110.330984023@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741509703;
+	s=2020; t=1741509706;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=fFdeRnRhAOgqTfFMwz0jdJKn3mPpSCAhnyTgDYsDt9s=;
-	b=vRLNzW24aeS98cJexbJM+M4R+Mn9apIOepOvhp96T23WvAEWhqyZPnlvLnGQbO/Nm5S8t5
-	EUp24WHUPN16hDK4PFryDy4e3dE73i3bBfjL/9rB7NRA5gR9CJ9IqdZ6L6UxlyQ7lAzl7k
-	h3ws22FxOOtLbeQuKIx65PpGV/2Fg8ptfj2oZlnosQzSaqnEc+h8vkHV9luXnBtOnF5pIj
-	xrfLSxjJsWQHmRPALB3hL6CkfPtk/exd1y/JsIAQUYOPAeqJDra8AOMr8+DrVp7hDOCRfy
-	z07/+syNRnYeWgyN44SFBOt7Q6N4/iGFGkbDg/e6rBMhIDznwCgpq2C//4PZnQ==
+	 references:references; bh=IiWbXtUeXooyeuJFwLf7yOIiWovf7ZPuVakAtiZcres=;
+	b=BrtQOnIKYAJunATsXri4JzRzur6rakZw2kbALlr6ENNZp0zIxRgb5VWBvusyJE5JNrz0MM
+	TudKe9G4/rZbycUNV1p65bSLEtPvACDRRgADscQznczRaXvas5LJtRSDZrN/5+kqnK6wW6
+	4wLY1ekEC4DWY4PnDt4CIrb08dE2P2t0XL+DfArlEsbgabGiwsTaT5IkjQXTUHF7C8X8gF
+	+c3Wx+px9wssYP3HGBhVKCoJ24p7x6aTfFky41t7+aaPaNIfz14xgqFlP1/huyjfXZcZQG
+	/Y4OpbdyLJ76pgSq9NKe2BkEHogPR7nJirrJ3nuukPjb8gbL3IzHNHPv5Jv1gw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741509703;
+	s=2020e; t=1741509706;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=fFdeRnRhAOgqTfFMwz0jdJKn3mPpSCAhnyTgDYsDt9s=;
-	b=jacMLK20w0fuI5BleSJ94pud3jGuvlqvXCP+V95Vl9nBUvF7MsKHG485jWD1RoFdzw643J
-	nBQn83bXJkB64rCA==
+	 references:references; bh=IiWbXtUeXooyeuJFwLf7yOIiWovf7ZPuVakAtiZcres=;
+	b=0g6rJL9xuERtADBm6475N2QyTn187OBtIxEGr6ib8mm4NkN7c+xU5SQo6EYiyGRkwsWPxB
+	BkKdNL8YCXipvrAg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>,
@@ -55,7 +55,8 @@ Cc: Marc Zyngier <maz@kernel.org>,
  "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
  "Martin K. Petersen" <martin.petersen@oracle.com>,
  linux-scsi@vger.kernel.org
-Subject: [patch 01/10] genirq/msi: Make a few functions static
+Subject: [patch 03/10] soc: ti: ti_sci_inta_msi: Switch MSI descriptor locking
+ to guard()
 References: <20250309083453.900516105@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,127 +65,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Sun,  9 Mar 2025 09:41:42 +0100 (CET)
+Date: Sun,  9 Mar 2025 09:41:46 +0100 (CET)
 
-None of these functions are used outside of the MSI core.
+Convert the code to use the new guard(msi_descs_lock).
+
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <kristo@kernel.org>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>
 ---
- include/linux/msi.h |    5 -----
- kernel/irq/msi.c    |   40 +++++++---------------------------------
- 2 files changed, 7 insertions(+), 38 deletions(-)
+ drivers/soc/ti/ti_sci_inta_msi.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -81,7 +81,6 @@ struct device_attribute;
- struct irq_domain;
- struct irq_affinity_desc;
+--- a/drivers/soc/ti/ti_sci_inta_msi.c
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(st
+ 	if (ret)
+ 		return ret;
  
--void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
- #ifdef CONFIG_GENERIC_MSI_IRQ
- void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg);
- #else
-@@ -603,8 +602,6 @@ void msi_remove_device_irq_domain(struct
- bool msi_match_device_irq_domain(struct device *dev, unsigned int domid,
- 				 enum irq_domain_bus_token bus_token);
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
+-	if (nvec <= 0) {
+-		ret = nvec;
+-		goto unlock;
+-	}
++	if (nvec <= 0)
++		return nvec;
  
--int msi_domain_alloc_irqs_range_locked(struct device *dev, unsigned int domid,
--				       unsigned int first, unsigned int last);
- int msi_domain_alloc_irqs_range(struct device *dev, unsigned int domid,
- 				unsigned int first, unsigned int last);
- int msi_domain_alloc_irqs_all_locked(struct device *dev, unsigned int domid, int nirqs);
-@@ -613,8 +610,6 @@ struct msi_map msi_domain_alloc_irq_at(s
- 				       const struct irq_affinity_desc *affdesc,
- 				       union msi_instance_cookie *cookie);
- 
--void msi_domain_free_irqs_range_locked(struct device *dev, unsigned int domid,
--				       unsigned int first, unsigned int last);
- void msi_domain_free_irqs_range(struct device *dev, unsigned int domid,
- 				unsigned int first, unsigned int last);
- void msi_domain_free_irqs_all_locked(struct device *dev, unsigned int domid);
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -270,16 +270,11 @@ static int msi_domain_add_simple_msi_des
+ 	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
+ 	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
+ 	if (ret)
+ 		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
+-unlock:
+-	msi_unlock_descs(dev);
  	return ret;
  }
- 
--void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
--{
--	*msg = entry->msg;
--}
--
- void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg)
- {
- 	struct msi_desc *entry = irq_get_msi_desc(irq);
- 
--	__get_cached_msi_msg(entry, msg);
-+	*msg = entry->msg;
- }
- EXPORT_SYMBOL_GPL(get_cached_msi_msg);
- 
-@@ -1352,21 +1347,17 @@ static int msi_domain_alloc_locked(struc
- }
- 
- /**
-- * msi_domain_alloc_irqs_range_locked - Allocate interrupts from a MSI interrupt domain
-+ * msi_domain_alloc_irqs_range - Allocate interrupts from a MSI interrupt domain
-  * @dev:	Pointer to device struct of the device for which the interrupts
-  *		are allocated
-  * @domid:	Id of the interrupt domain to operate on
-  * @first:	First index to allocate (inclusive)
-  * @last:	Last index to allocate (inclusive)
-  *
-- * Must be invoked from within a msi_lock_descs() / msi_unlock_descs()
-- * pair. Use this for MSI irqdomains which implement their own descriptor
-- * allocation/free.
-- *
-  * Return: %0 on success or an error code.
-  */
--int msi_domain_alloc_irqs_range_locked(struct device *dev, unsigned int domid,
--				       unsigned int first, unsigned int last)
-+int msi_domain_alloc_irqs_range(struct device *dev, unsigned int domid,
-+				unsigned int first, unsigned int last)
- {
- 	struct msi_ctrl ctrl = {
- 		.domid	= domid,
-@@ -1374,27 +1365,10 @@ int msi_domain_alloc_irqs_range_locked(s
- 		.last	= last,
- 		.nirqs	= last + 1 - first,
- 	};
--
--	return msi_domain_alloc_locked(dev, &ctrl);
--}
--
--/**
-- * msi_domain_alloc_irqs_range - Allocate interrupts from a MSI interrupt domain
-- * @dev:	Pointer to device struct of the device for which the interrupts
-- *		are allocated
-- * @domid:	Id of the interrupt domain to operate on
-- * @first:	First index to allocate (inclusive)
-- * @last:	Last index to allocate (inclusive)
-- *
-- * Return: %0 on success or an error code.
-- */
--int msi_domain_alloc_irqs_range(struct device *dev, unsigned int domid,
--				unsigned int first, unsigned int last)
--{
- 	int ret;
- 
- 	msi_lock_descs(dev);
--	ret = msi_domain_alloc_irqs_range_locked(dev, domid, first, last);
-+	ret = msi_domain_alloc_locked(dev, &ctrl);
- 	msi_unlock_descs(dev);
- 	return ret;
- }
-@@ -1618,8 +1592,8 @@ static void msi_domain_free_locked(struc
-  * @first:	First index to free (inclusive)
-  * @last:	Last index to free (inclusive)
-  */
--void msi_domain_free_irqs_range_locked(struct device *dev, unsigned int domid,
--				       unsigned int first, unsigned int last)
-+static void msi_domain_free_irqs_range_locked(struct device *dev, unsigned int domid,
-+					      unsigned int first, unsigned int last)
- {
- 	struct msi_ctrl ctrl = {
- 		.domid	= domid,
+ EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
 
