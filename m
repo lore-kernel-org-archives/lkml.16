@@ -1,123 +1,228 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A8610E5
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 15:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AD046426;
+	Sun,  9 Mar 2025 15:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741532759; cv=none; b=ZgOS7NC1AOVEU86zJ8dLSHFUL29rAVSQh1LqrhX79nZ+2N+LbQLGX6g4RyQ3hO4FEt7H4Egq8f22h6oMTBP08+wgSi4W//g/G3CQoRFw+Rr5W8E4BcRG9mUfBuya2snFyB29ctTK7hpNgr0vTH2EtpIWdoeCVb4YZI0oJAGt+V0=
+	t=1741533718; cv=none; b=i5k+dB70G26ZMJXfUxdimmCGLATKTBHBYbK0RRbl/vSBiDbgkzstVrKSDntGSRNAgZ7c3pDZIsdr/+vs3hL+xK17iQ1HcZjn26k3f6XMzgTJMHm/yMfcRR4yGDJk6JAT2OyW/iObRiZ32oiE0u2EfcmM8Mhyeq871NpqH71AZD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741532759; c=relaxed/simple;
-	bh=ebfZERffrcxvr64/MPxzlnS0hE43Pk0ur9n5LoJtHXE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BkDzjLySyMJ9W2vvwiWYPF6EMK9W0euc0h2BUj6AQW2HmjWxP1qPYbUezc32NVrdeL4m2a9AC4hPxupHYXQrNbzbL5oXqgBqzbd12wkISHZ8BfCkSvPQNzYubvvY4j49ksr3pBW8WpRRYnkiCQGUNUalWGxyQTxVLPsuSG0pSyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HoChI9Ul; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741533718; c=relaxed/simple;
+	bh=XC9i27LoAS9Ry1i3YnpjdFGuLigUZQ8uGI9xUepInAo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tVCH8nF/7elckGojYgpx+BzNMXyuLPnQdE6Mmy+8TvchI2ACIdt0Tu+KqYiUlS58R8R6Bi0k9UFK1Wk7+FuNF4boVUjc8DdULpO19i4/xQia4d33IURSYC0dNJ5p1XZf4lpc8uy4jveIHCbTHGETCy9zgAFNy+vHbFJU/3Qqgmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSTA3p/r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoChI9Ul"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224341bbc1dso29680935ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 08:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741532757; x=1742137557; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Ozonw66VG2iXCj9BlQvmRvg7NIoSJ4Sd9BE/3KwnJQ=;
-        b=HoChI9UliBE1uLkgziFNiOfBxjVZ4tg+sDbec2OfQ+QONOajED++IOSHX+Am7oedzV
-         JIPcVjZD/7EMHO6bsOVh62Vd7xfSys0wANc7zWdJG9xRlxhIOE2pyXnEnLfVPrYe31oH
-         lXSd1sW8yUFQB80jfOaUegOr8v9RYrbnpH7EQ471cufgQkurTdDikdbAwvVEfscJjWtR
-         9SH4wEDBHmPjD/n6Uxy8buZKdLA4CwfL9ypfheEeqcW2IgcZACudzR8CiJmkkyLxguEB
-         4b94EOK1slaT3LtygQjD7gJ5UmLD795l49QFqjzheN7pgyBKblBRsX8GDFYKOL9uV1xZ
-         iGjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741532757; x=1742137557;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2Ozonw66VG2iXCj9BlQvmRvg7NIoSJ4Sd9BE/3KwnJQ=;
-        b=b8nRDabBFA+/zT1+/89dKyrCQbzqXsnQneXG8v578+wAJh8U6UgOzDwI9sqRWZKMB3
-         +7zM4y0fnZondAOYmmpQxBRB/T6xU25BoCL+vqvjtAqoV7GJjY4czqZxOOwwLQJVxiFD
-         FRmkge99Q9khZ80Ugfzi6JV/UDSjmYHfi6eqScn8iKlQ7t+Fhch2tnKi+W1FGmpLIfMB
-         cxFXwHTvHC6+iZLyAbF5+dQUW4qCYaA1lJTX3zYSiqNnU3h5aTfuFQ60SsvPDAfJ2/BE
-         Kf5mJZT1Z1LYGIFHytisW+5w04GKYsKmeUojsiRX04Gn9lt4jQ1BqCNKQ2r1ohPRrCZx
-         d7Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCVg83j6zwDLZOdSMmfTgwkv/row1+O2rnDNfyImqQVv71/LQS7Vdma+rFdAZKrXwLmVTw1dec7H8K0FUY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3V/QrRdBO6DHf21s+huCGlhGBdV73/oxcE//qpMDchx9szT+9
-	MB6/J/QpqIbTI3T51lzz9gtD6amXGYYetggXeAhSR0x/kGDQKW9G
-X-Gm-Gg: ASbGnctNc4jlEx6d/aTZromSLHVhwVF99w/GoXO0PnbpyCZ0/aYjnyMFqs/BORD4G7K
-	zCdJmCsxohoOgmFn/uflTeFV9xSbFYXBMfbOZzA5aAuRFW+uLObNHMK3mz1gq0i4GzOqA2UMQM+
-	cfIS8ZRhsupZlfIvM2VHEFS9MTqa3uUUEClArCAdpy2C7k8etLxlDOXtsEUq9l9LIXUVb7frA4v
-	ePS5RgC788E6mFZkpnK4CeHdmFKA4GkPWN8lP2BrMSwh+34l7xTEvOhEOW/irfZmFjRUudCVS04
-	JqJ/Aq6xe2tvG9BHTms+HpD5usCzmADUFCyoeBObIHVCxsP+UWF9+PsOBY+IMOeDuyUN
-X-Google-Smtp-Source: AGHT+IF3XolKks3dhcsCKSfRs574KeRdphITuYA1m1fhh5tR6rQlFLzi7EK3NZkkbjX9v78orRXH+Q==
-X-Received: by 2002:a05:6a00:1703:b0:730:9801:d3e2 with SMTP id d2e1a72fcca58-736aa9df8afmr16477900b3a.8.1741532756844;
-        Sun, 09 Mar 2025 08:05:56 -0700 (PDT)
-Received: from localhost.localdomain ([240e:3b1:300a:bd50:c889:b2e6:3a9c:90dd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736ad0f7eaasm4772168b3a.76.2025.03.09.08.05.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 08:05:56 -0700 (PDT)
-From: Qiuer Zhu <chaozyhaha@gmail.com>
-To: peterz@infradead.org,
-	frederic@kernel.org,
-	tglx@linutronix.de
-Cc: chaozyhaha@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] time: Add macros to prevent duplicate inclusion of headers
-Date: Sun,  9 Mar 2025 23:05:24 +0800
-Message-Id: <20250309150524.760-1-chaozyhaha@gmail.com>
-X-Mailer: git-send-email 2.32.0.windows.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSTA3p/r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 654C6C4CEE3;
+	Sun,  9 Mar 2025 15:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741533716;
+	bh=XC9i27LoAS9Ry1i3YnpjdFGuLigUZQ8uGI9xUepInAo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=dSTA3p/rjFhZVaq7XuTB7cHTtoQFU8szYfKBKjoFhF+FWkJhf/E62+oVWLvgNyFBq
+	 fTmeF45CVGwCYz+w2PUJ4p6LlV4DmJlKE2XPlhXxJDfIZCM4Q81YHYnLPccfw7Stc5
+	 +ifBRNLByTI2l86gd5Me+89qfBtULYaBw3qVXPktcgP+y1q87wr6PTQaq5GsMeQTi/
+	 RQtD4ePQuS+WIEbhhQvOVnBb6VdG61duBRWwXHnFznCG1bjZDPSmpSY07PZzcXnBTm
+	 Mg6RpDi+SrgCeC58tFXi1orrfotvxSm8+mGBX6HeKh2RjjnE//5EmlzEkrHBInkWqd
+	 DLSpr9QLM2rOg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Sun, 09 Mar 2025 16:19:01 +0100
+Subject: [PATCH v12 10/13] rust: hrtimer: implement `HrTimerPointer` for
+ `Pin<Box<T>>`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250309-hrtimer-v3-v6-12-rc2-v12-10-73586e2bd5f1@kernel.org>
+References: <20250309-hrtimer-v3-v6-12-rc2-v12-0-73586e2bd5f1@kernel.org>
+In-Reply-To: <20250309-hrtimer-v3-v6-12-rc2-v12-0-73586e2bd5f1@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
+ Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5248; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=XC9i27LoAS9Ry1i3YnpjdFGuLigUZQ8uGI9xUepInAo=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnzbFwsMfSYXGzay2VmyZm/9TwgBGlB70D+9pqy
+ qgiwsxeRhuJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ82xcAAKCRDhuBo+eShj
+ dzcpEACeSez4lj0cALJhMZt5DeuNuKs1/xt4h1DStGe1vtGNPn+XmDVdfRVbA2jPhp1ucQo+lG8
+ ez8TTQyZoPrEEKeVQO3ExmCUhhKxszMgdOb99oTISe44p5OjmqISgFt+Hlt4Gl5O5KxxggW0t5n
+ 7qo6nQmqRSRfSlLzB7e+i1Ik79jFcqMPWWvugeff6cGCVmM9abh+i9OTYdad1L6w6i2uv7Hm08x
+ G4WIaMefzo+Wnu7A+8GcisdTMRIb9tFtk3H44cHfosfLMpRgp5/PX5uRYt9KxHvLg3m8+lyfEDK
+ zk/ZPAJTS1nIW0TQmaqDU5Iq8rVDOhTrhgVudtyo3rUsOEkhrr5P68TlZaHx8Zr0Qq5PyMEEe5L
+ rIxzLg5ks1lJxAozvfzRnFHaCj/Yq9HOKI4cgX70EZu0l8j6yIqj4EiGBl/MN7EnBPT42cbWWqx
+ pVCty9bYTfWQxv4jc8ROvy6NsypTphmfrsjbi2Lcwt79Q0SNyiPCxFokB1L9JTL9phP3EsIbxVa
+ mcwyShsBnJZglJW8IPBUdE6FoHofuy7TVHSGzPC0g1egMiCf2rq8NbDXtL7n4TcsyUUYFPReCXY
+ Mw9NW10zy5wShs17WJ/RTTS599FqQA9Tc/He1mr1kZJKsrfADC5KzUm9QD2NQbY6gEzs9yi/nHQ
+ CEjZx36DlLa3FpQ==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Add macros to prevent duplicate inclusion of tick-internal.h
-and posix-timers.h.
+Allow `Pin<Box<T>>` to be the target of a timer callback.
 
-Signed-off-by: Qiuer Zhu <chaozyhaha@gmail.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- kernel/time/posix-timers.h  | 5 +++++
- kernel/time/tick-internal.h | 5 +++++
- 2 files changed, 10 insertions(+)
+ rust/kernel/time/hrtimer.rs      |   3 +
+ rust/kernel/time/hrtimer/tbox.rs | 120 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 123 insertions(+)
 
-diff --git a/kernel/time/posix-timers.h b/kernel/time/posix-timers.h
-index 61906f0688c1..5166b832143f 100644
---- a/kernel/time/posix-timers.h
-+++ b/kernel/time/posix-timers.h
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _POSIX_TIMERS_H
-+#define _POSIX_TIMERS_H
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index 4e81505d6675..2436f04d02c7 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -436,3 +436,6 @@ unsafe fn timer_container_of(
+ pub use pin::PinHrTimerHandle;
+ mod pin_mut;
+ pub use pin_mut::PinMutHrTimerHandle;
++// `box` is a reserved keyword, so prefix with `t` for timer
++mod tbox;
++pub use tbox::BoxHrTimerHandle;
+diff --git a/rust/kernel/time/hrtimer/tbox.rs b/rust/kernel/time/hrtimer/tbox.rs
+new file mode 100644
+index 000000000000..2071cae07234
+--- /dev/null
++++ b/rust/kernel/time/hrtimer/tbox.rs
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0
 +
- #define TIMER_RETRY 1
- 
- enum posix_timer_state {
-@@ -50,3 +53,5 @@ int common_timer_set(struct k_itimer *timr, int flags,
- 		     struct itimerspec64 *old_setting);
- void posix_timer_set_common(struct k_itimer *timer, struct itimerspec64 *new_setting);
- int common_timer_del(struct k_itimer *timer);
++use super::HasHrTimer;
++use super::HrTimer;
++use super::HrTimerCallback;
++use super::HrTimerHandle;
++use super::HrTimerPointer;
++use super::RawHrTimerCallback;
++use crate::prelude::*;
++use crate::time::Ktime;
++use core::ptr::NonNull;
 +
-+#endif
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index faac36de35b9..bcccc0975f70 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _TICK_INTERNAL_H
-+#define _TICK_INTERNAL_H
++/// A handle for a [`Box<HasHrTimer<T>>`] returned by a call to
++/// [`HrTimerPointer::start`].
++///
++/// # Invariants
++///
++/// - `self.inner` comes from a `Box::into_raw` call.
++pub struct BoxHrTimerHandle<T, A>
++where
++    T: HasHrTimer<T>,
++    A: crate::alloc::Allocator,
++{
++    pub(crate) inner: NonNull<T>,
++    _p: core::marker::PhantomData<A>,
++}
 +
- /*
-  * tick internal variable and functions used by low/high res code
-  */
-@@ -213,3 +216,5 @@ void hrtimers_resume_local(void);
- #endif
- 
- extern ssize_t sysfs_get_uname(const char *buf, char *dst, size_t cnt);
++// SAFETY: We implement drop below, and we cancel the timer in the drop
++// implementation.
++unsafe impl<T, A> HrTimerHandle for BoxHrTimerHandle<T, A>
++where
++    T: HasHrTimer<T>,
++    A: crate::alloc::Allocator,
++{
++    fn cancel(&mut self) -> bool {
++        // SAFETY: As we obtained `self.inner` from a valid reference when we
++        // created `self`, it must point to a valid `T`.
++        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self.inner.as_ptr()) };
 +
-+#endif
++        // SAFETY: As `timer_ptr` points into `T` and `T` is valid, `timer_ptr`
++        // must point to a valid `HrTimer` instance.
++        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
++    }
++}
++
++impl<T, A> Drop for BoxHrTimerHandle<T, A>
++where
++    T: HasHrTimer<T>,
++    A: crate::alloc::Allocator,
++{
++    fn drop(&mut self) {
++        self.cancel();
++        // SAFETY: By type invariant, `self.inner` came from a `Box::into_raw`
++        // call.
++        drop(unsafe { Box::<T, A>::from_raw(self.inner.as_ptr()) })
++    }
++}
++
++impl<T, A> HrTimerPointer for Pin<Box<T, A>>
++where
++    T: 'static,
++    T: Send + Sync,
++    T: HasHrTimer<T>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Pin<Box<T, A>>>,
++    A: crate::alloc::Allocator,
++{
++    type TimerHandle = BoxHrTimerHandle<T, A>;
++
++    fn start(self, expires: Ktime) -> Self::TimerHandle {
++        // SAFETY:
++        //  - We will not move out of this box during timer callback (we pass an
++        //    immutable reference to the callback).
++        //  - `Box::into_raw` is guaranteed to return a valid pointer.
++        let inner =
++            unsafe { NonNull::new_unchecked(Box::into_raw(Pin::into_inner_unchecked(self))) };
++
++        // SAFETY:
++        //  - We keep `self` alive by wrapping it in a handle below.
++        //  - Since we generate the pointer passed to `start` from a valid
++        //    reference, it is a valid pointer.
++        unsafe { T::start(inner.as_ptr(), expires) };
++
++        // INVARIANT: `inner` came from `Box::into_raw` above.
++        BoxHrTimerHandle {
++            inner,
++            _p: core::marker::PhantomData,
++        }
++    }
++}
++
++impl<T, A> RawHrTimerCallback for Pin<Box<T, A>>
++where
++    T: 'static,
++    T: HasHrTimer<T>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Pin<Box<T, A>>>,
++    A: crate::alloc::Allocator,
++{
++    type CallbackTarget<'a> = Pin<&'a mut T>;
++
++    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
++        // `HrTimer` is `repr(C)`
++        let timer_ptr = ptr.cast::<super::HrTimer<T>>();
++
++        // SAFETY: By C API contract `ptr` is the pointer we passed when
++        // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
++        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
++
++        // SAFETY:
++        //  - As per the safety requirements of the trait `HrTimerHandle`, the
++        //   `BoxHrTimerHandle` associated with this timer is guaranteed to
++        //   be alive until this method returns. That handle owns the `T`
++        //   behind `data_ptr` thus guaranteeing the validity of
++        //   the reference created below.
++        // - As `data_ptr` comes from a `Pin<Box<T>>`, only pinned references to
++        //   `data_ptr` exist.
++        let data_mut_ref = unsafe { Pin::new_unchecked(&mut *data_ptr) };
++
++        T::run(data_mut_ref).into_c()
++    }
++}
+
 -- 
-2.32.0.windows.2
+2.47.0
+
 
