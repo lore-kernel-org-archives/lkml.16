@@ -1,61 +1,63 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7D01DE4F8;
-	Sun,  9 Mar 2025 21:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93F821D5A9;
+	Sun,  9 Mar 2025 21:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741554866; cv=none; b=sWE/IZunGH0XZ6cuOUFMfhesSxpj6xkD/b0fSc2QeVvRc0ULEj8yzDF5oDg8rKUy/4VKdVQ0xjbnk4VYHug84FXn/O0HddzHvyTKP7uOAHmuDNxL8YOb6v4ZGF4KZAr3B8aFoesSYlege2aX2oRoR7Z0RVy+4L1NeCpei+xqwho=
+	t=1741554868; cv=none; b=GZNjF1iiW6X52iXWuBonHIe7XouC+bFvJ4/G9M51eldwjh+dSOlh7GvsEYg18DCLHZ4s5l/yrTC1N3KCQnS5S/aQW/CKffTODiuoEkmAySwr2e284TeGyKM9aiXNAFryRElr8obNK0kx1Nnmr3zy+I1mgi54+eGIIssH1nk0ZjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741554866; c=relaxed/simple;
-	bh=5uHd9xjXdEZaXObU+4SbLN+Np/GQfZbqf4wISMCElIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TsryF9AB4aAtnQAeEyAEj6Rb9bf2YzoXNkECijVzyiwMcKk6q7ZR3FtYFx42Su0cYeAlj9clGxh6RDLNL/GuNVLH9NA3uIj1uR2Jur1G1OPhR215EOa5/76P4xbUpvm1gYzmSJdwB+vIYDv7tbjQQqb29swq6ZW5DUb9//8pxYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FG9Zsm1v; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1741554868; c=relaxed/simple;
+	bh=Ctb3XdJaw1yEZi06F78U/2yJIF/pTdQZx9Potu1zAF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Lzb6nOoqLfEuD+YbKr3piXKMeVC57bPKMUwFYmtW+GnHtG5bkmZj5pUzSdz3DGSpnyMVcoKniEji59m/Y835m0N087jy6hQoXFSOyXVy3FtlMVxlOSy/U1UkRf7F0xQElnbZWRTSJm9BbXCFDRMxT26y9x/D5R+n8UdDoY+T+8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l70Y3QPU; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FG9Zsm1v"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4394a823036so30243075e9.0;
-        Sun, 09 Mar 2025 14:14:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l70Y3QPU"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3911748893aso2213268f8f.3;
+        Sun, 09 Mar 2025 14:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741554863; x=1742159663; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PIMTkiNU4zbDZ6B6FJBvAjPPAB3czQ5F/+urFnF7Kr8=;
-        b=FG9Zsm1vQPr9gIkk3RWZrp1vgG7qPj+XPu9qz3UbvNxsx1Wa52dkdmA6EqjGD+wTb5
-         vqsRQ8qADPtzfJLAH3r3T76D06hqLGUibCg/G8XfNSK9n1i6NCkMmeyvMFuNKxoP2iop
-         Ff1yZ31ImB6V59WX53xjHzbItFypqGnTw7MvSUVwO8VuFkjtcY6mLZvh3U9AjJPhoTTQ
-         rtrPwApdLAGTSf1h1hKJOc1g6uJaiM71Xd0uG2N6fMd93iX9q7Y/dXzhy1uL8qUpJ1SB
-         IFNriYkD+YT3q8kgTSbdhcqlE/KQeGF9Je5Am55gUHEu/wYQjbET/EhM4KhUq5rks5I6
-         8yCQ==
+        d=gmail.com; s=20230601; t=1741554865; x=1742159665; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qQsVu3V7iTkYEpNppecMtm9vo+fb/bvtnYLC+K5awKM=;
+        b=l70Y3QPUP15y2p11PdSJaSCN5rcMvKrxd4ZMgXaWdUQLP43fWIK7hgY3scwU7CB8/D
+         ypJ8ZlrFSvBOnmLgnUxOxKyre7ur2zwpgPJQNCdaIbcDk1wLb5T2uQEZuHFzH7wiUD0x
+         IOSEn7W4Veu2vZg9an/CTpNpnxqnBff/UZUbXsmOdBjr5dhFovQ9buEb0IMXRsPO+1L+
+         kN8W3XYR2JcSYfvTdL0/laHnuA7Pm6SdEBECpOeyPUnmccGLXBQTmFZGayyyMVJOt2V2
+         AEi3I1I86CbvULio9mDD0aIs+1S0+GvAfhUsE2OAvPDmN7Zf9frMwnVME80WuF6LRNr6
+         tgCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741554863; x=1742159663;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PIMTkiNU4zbDZ6B6FJBvAjPPAB3czQ5F/+urFnF7Kr8=;
-        b=XbS1lKdP7jvg0xl7VbYMpV0KPj4RNzX18hw1EV8Uz7E4Gz7/x13vCl4l4CXAs58MMU
-         LGuS0WjYQR2DnXC+idkb1SI8EnRAlCYEKZU0v6wc7prWIvuv4FLuHUItQHhRJOqWwHUw
-         BEZhdFKEC2g+lmG18/0lkbsVqH/rzDp1W20IsXaOUUE/XQjhApT3BJ38Ay3XeYGkAUYP
-         7bK+HSjibdEag0ajog+WynDrg5FMeA2Ihh436fZaJ/Ppnuzl9wwknXMKgLu5OzjsegHr
-         2ioDI4ndor3lIvIblZ1tDhu7Z/f5ZwlltmiZF/z73mL4HOOJCRRNkYT1f6H8zTCoBEN4
-         Gw+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUSELYTjrfTXIjTz+8LdPA24lfP6SYS2IJElNWYjZlfW5jz3AZ+UpIbBuePGj8KYmGceLZVIyEgsSfvC3Y=@vger.kernel.org, AJvYcCVffBw3YNNGqBtzEYLI96IrFMc/zFrNXW2gDT7KHWxuYsrFguIDWoJL7NSkUQle8X9QW1IFBXWbzk8jlaaW0aT6FRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0wDl8IBNs8PZ4H7Xvj4RS0+kBKhcuF8JgZjvj6bn/tiZho8ow
-	Sv8sk8yp4FOsz2cv1597TnhmcVC5Be8Mof74NWrqBI4wD8xk4mCm
-X-Gm-Gg: ASbGncvkWSvqxupyhIOnUa24r2OIE3YVMkHaamSddktXOuoORlCXd+dlUN8i5i7FL4m
-	wJsWdNwgmBcYUMS9tjpnmHkggPD7g4VmSqjpwd7/VguFGJf6aYDqHkindBGCG3xvsFZyrxt4WjD
-	rGctdpBnneDCyc34mPH5huDs2KoaU5XTRFmjITsU14d9p4ZaFTsCUP2BitzP4YDsX6sdkVQWwd9
-	e2XHj19d6omR+08lEtd7whDCQ+NC31PBIQz+1CVKEOQWnrSfze1GNMNrk1msFVDzTroh5Pg3rBE
-	k3FtYpyp6LOvr71QNwhQ5p7jEcGBJHE+1AJk9NhSO9k10EyF3PThmH8Ww3P6w6Udk6Uda16mJ3U
-	ETRRUlRJt
-X-Google-Smtp-Source: AGHT+IG2F8lX5fIXy6wPtRbfBu/tBQnjoxJwHKLJzikjPZDRdW0BtdhcidK7IEE1J97FIM9STrXR/g==
-X-Received: by 2002:a05:600c:5248:b0:43c:ed61:2c26 with SMTP id 5b1f17b1804b1-43ced612d1amr27931675e9.17.1741554862719;
-        Sun, 09 Mar 2025 14:14:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741554865; x=1742159665;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qQsVu3V7iTkYEpNppecMtm9vo+fb/bvtnYLC+K5awKM=;
+        b=t9Avjq03683SDql6ksWCp8BD/LrN1Eh8+O5vUmn6yRUw0uGs/QzmTvWBPJuqEaudca
+         rECkaMGM/+7wvEj1FPPcfhBYeKV64t+TR1p7sYts9acqRn0l8Gmb/9gPI64jkUI4gNEp
+         sMKXf2Jio+b+jz81QZJh1HZ8eCS607fBnFOt5zgVK+FZF91aYpHbXCjqysBTiXh/3ztb
+         4DR7woQDg2L0hzvgqL/i6sea/rLvjvQXjhL951gwyRJUeDT0VtlTGIFLfAQkr5slR9k8
+         FMiPf01mUSD/ghrPP3sjwp8/GmwRfFtNeXwmcET/Zv8/tymYyq6OBxPNigNZJc77wJKE
+         dXPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHUvnerzseuvE/7Z0VAPnUOocXeXCqcb3bjSZ5hErfepfmvoTd/41tmA2joAcn1YB3opjyEtRfRjxfjsA=@vger.kernel.org, AJvYcCXjFKkiM8vzVn7miV3np89BD1PJcb3m8ilFjfS+Gu1WTjlNfFFRHBjN6yW4F7KEQGT+huGy0OyALZeBQ3TR+YZzLqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4+tgBOXGJOd93pPCIltXHvtLVC5mNAfqlzuihpsXtlwqNS2x1
+	DAc8ab8sphRwwP5e0rbjt3OZP0zWL+83dGc+yDSgxG7OgHNtPOa3
+X-Gm-Gg: ASbGncs2srNp5W0wjcLV9WlA1Dc90xYm84Ey9eT/kjXdj3+5l/87H3MxbLuixYWWOue
+	csVJzf1dxAK5nLkGcMiTKhJfISDN2oWeWBdETLe0yuMI+VwfXZ5WvhkQlH2kXNQIYeEWPlTq6I1
+	JXXMMTMzShSdyIMTt2GZG+6jeHBieuEQ7Rl0vV3Y2w7RYZftxZtJhvHU6KsS9RuQxeyuXOfk5UH
+	ePRxDMxPN0hCeU1sSFlPIiJ9LWeKkf0mj4tNEEnQlcw8HTln63LMr/9wqsjIF2SsljiE/64OaaK
+	qMX0yrn5m0pN/od5nuYwQ2Y8N7Smus1hktyuZ2t8Yi4v3CvmgcisbLkIj7poHzBHvF+U/rfAUg=
+	=
+X-Google-Smtp-Source: AGHT+IGUIWLdyFE/AX8vkaEOfJOg5Gcqr6TEZTjX6eN4222W7kkPwwOcDk+uL3P+elhwAd+QmBK6BQ==
+X-Received: by 2002:a5d:6c66:0:b0:391:4763:2a with SMTP id ffacd0b85a97d-39147630139mr1587245f8f.47.1741554864782;
+        Sun, 09 Mar 2025 14:14:24 -0700 (PDT)
 Received: from prasmi.Home ([2a06:5906:61b:2d00:e951:ba7a:6a53:bac5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce70d13b4sm64443845e9.38.2025.03.09.14.14.21
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce70d13b4sm64443845e9.38.2025.03.09.14.14.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 14:14:22 -0700 (PDT)
+        Sun, 09 Mar 2025 14:14:24 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -68,10 +70,12 @@ Cc: linux-clk@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 0/5] clk: renesas: Add GE3D clock/reset entries for RZ/V2H(P) SoC
-Date: Sun,  9 Mar 2025 21:13:57 +0000
-Message-ID: <20250309211402.80886-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 2/5] clk: renesas: rzv2h: Remove unused `type` field from `struct pll_clk`
+Date: Sun,  9 Mar 2025 21:13:59 +0000
+Message-ID: <20250309211402.80886-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250309211402.80886-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250309211402.80886-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,33 +86,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi All,
+Remove the redundant `type` field from `struct pll_clk`, as it is not used
+in the PLL clock handling logic.
 
-This patch series introduces support for enabling PLL clocks in the
-RZ/V2H(P) CPG family driver and adds clock and reset entries for the
-GE3D module.
-
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
 v1->v2
-- Simplified PLL conf handling as suggested by Geert
-- Updated macros to get PLL configuration offsets
-- Minor cleanups
+- New patch
+---
+ drivers/clk/renesas/rzv2h-cpg.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Cheers,
-Prabhakar
-
-Lad Prabhakar (5):
-  clk: renesas: rzv2h: Refactor PLL configuration handling
-  clk: renesas: rzv2h: Remove unused `type` field from `struct pll_clk`
-  clk: renesas: rzv2h-cpg: Add support for enabling PLLs
-  clk: renesas: rzv2h: Rename PLL field macros for consistency
-  clk: renesas: r9a09g057: Add clock and reset entries for GE3D
-
- drivers/clk/renesas/r9a09g047-cpg.c |  2 +-
- drivers/clk/renesas/r9a09g057-cpg.c | 16 +++++-
- drivers/clk/renesas/rzv2h-cpg.c     | 78 +++++++++++++++++++++++------
- drivers/clk/renesas/rzv2h-cpg.h     | 32 +++++++++---
- 4 files changed, 104 insertions(+), 24 deletions(-)
-
+diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
+index d115a810a46b..e489ce28ae63 100644
+--- a/drivers/clk/renesas/rzv2h-cpg.c
++++ b/drivers/clk/renesas/rzv2h-cpg.c
+@@ -97,7 +97,6 @@ struct pll_clk {
+ 	void __iomem *base;
+ 	struct clk_hw hw;
+ 	struct pll pll;
+-	unsigned int type;
+ };
+ 
+ #define to_pll(_hw)	container_of(_hw, struct pll_clk, hw)
+@@ -199,7 +198,6 @@ rzv2h_cpg_pll_clk_register(const struct cpg_core_clk *core,
+ 	pll_clk->pll = core->cfg.pll;
+ 	pll_clk->base = base;
+ 	pll_clk->priv = priv;
+-	pll_clk->type = core->type;
+ 
+ 	ret = devm_clk_hw_register(dev, &pll_clk->hw);
+ 	if (ret)
 -- 
 2.43.0
 
