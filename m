@@ -1,276 +1,202 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB7B216E1D;
-	Sun,  9 Mar 2025 19:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8542216E1D
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 19:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741549783; cv=none; b=SQns+T3KvFdNv+QkbTgfYnfupH47EVXH75tEWRAz+UxO+gjhWOfqKhi/d0lzDLcCKKMPnDfk5FQG77FShc9t6+6tLxSl/GpkHryufuUDHD3gN6dTxrSfSRM3hLHsCmO006s3jmfRwypOu6VvqVHmzBkiwbRKp1ryqS/SkO6RRuw=
+	t=1741549797; cv=none; b=EOLsckLApv7USG8QgX8AdKMB48XqtworIH2KtHHfrn9pviGzvqew/FT0CiGNtgL+aLF0zV3gUWyFolyQ5viNOXoz+YVPEUIT7e/XXrwJdlZtLjLJXls3mkioFODYEnykxH7/SmMBcIXnwdBjY7cMyN8WGvq5waeS7igjP94Bc4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741549783; c=relaxed/simple;
-	bh=qm7NCth7SSiCrGvo8FOAj3ROn2wn+5MSTYC388d6AEo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uv7ZJ49M/xOeZOBWFcCzk3abQw+stz3uTylyP58aZrJDqq0T1R74yYRv4oCmjITWntYZxojX1yBMC3u5F4QqpZcUS5GYjK2XuJfCMpsRZpZ0nhRWCzaOBKFKiqiZ0lHrbfDpe0XkjeA5QId5E9gj4+BdUZCFncNivFaRrGaiZqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M4Mkpj9g; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741549797; c=relaxed/simple;
+	bh=gj6AGtX1q2p8VAzzwOecfBd720acqQekxkWiB32r8Kc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=G4pnPzs7xenb327+1/ayk1s1yy+GhbtXvXTmTd3qd2UgnFjlktVT5lJ6t4Kn0sQTMQn29pxxeU1vCw795h25vhmXoIu5lxRQGg42bFdUm06IIZZFH8t7T8DuHKhRdmJBC2tAtcoZcrPRaOVohju0+9ntJJLmCUZJsFr+6BQtMWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xl0aQjuw; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4Mkpj9g"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43690d4605dso20679665e9.0;
-        Sun, 09 Mar 2025 12:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741549779; x=1742154579; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f/cPOi0J564nrBzXobvKmByHB+/vuscxMVR9qYxRb+E=;
-        b=M4Mkpj9gRsDvDSoln5IYhYJewJ9QGGeAit5QNyn+zYU5sguFjzqjxP5JEUGJueLArt
-         DmDNxtoaelQGr/LYVJ4XhJCj6sBX20VQF3Xp3zDL6VORI85alMLtNsQNiEdk7TNsmNN1
-         bNAGYn1ElZDDqVj6Ci51m6GRywd0ezyjXa1qPfJEMrM76JDn3bQaK9PWybtw4YoLcCi6
-         Vhq4ZtkPo4kuWUxjEB7XKNYO9LlkOIKNHIiycw16vLJjS/yuAabABrX6w4Ew+aZJoH9N
-         z0H/T6tsH1L77U/tQvWqWQo/b+vZGzk1/BvNmGuvMPQcWj5gcGzh++8vs1E1+TrER9+i
-         l+AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741549779; x=1742154579;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f/cPOi0J564nrBzXobvKmByHB+/vuscxMVR9qYxRb+E=;
-        b=FY271napxNWrV61Y8ZZFFz/nsWsz9+8RkYTNASuRskbSDPrKHu6zoEzfpk2QyJ5YL7
-         7Vzv6v881RCDRiR9Jxm77qZUt6UD/hCTxfoceq8AKaE69dGLNypztNIYxs0CnMzXff1p
-         AlMrexV93yls3915qau2lPQb6G6ZdG4/+ALqBQjTagKGyt39s+l0grLyZFqv8DfCnp8L
-         JK/tNBSBek7CdHlOQEntfiusL3+2+KMmDp/33+2DAoylnFh8DM5ky0r4xvfPocZK7gt1
-         I7nPswp4EKwvRIEZhQbvg8+aGuy88Cqnohon8qaZqzMz+RRroLUkgfZvyXAwkOlIPoYG
-         SIIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlLWQHviSi1e9bboXTQAGEVsP4uIZaRHQMXVoPCa4MftuiOhzS7YqKS1VMY6oKDSUDDkwushQQIdkDPQ==@vger.kernel.org, AJvYcCXVYUpJfzIeRHqYeDL77gimAlNo5fANdwJjrK2Bwq5UdBYLHy9vPV4fvks2r5DjqoUwoda6hlUvF+ucq2kl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU7DjDhzagrcOUxmbw7bWEeQOh9QwyDj2F6xR8WL9JKOS2qmAk
-	uJrswZAJfmUzzOH/QQs5jj2ehpkQX9YkxDVSRgoK16Jj74O0vYP1
-X-Gm-Gg: ASbGncvbUl80dS7ToLNp+zuNTMfuhU9+Jvp+sxQTAv6fNz3+DhuT1Q1EBugIj5KIcax
-	F56P2dm5IemMvakef76T39b+ap4EAdHaGHCWb9+nOIYXQrSahKbE6hlgDyToJb0eX2ndqdiSQXG
-	YrED17zTbbu2Iz1Pm5bdDQ6pERV5KN6ETrMFcJ50fpdwYJkAXE66qby05OY6RTbenHMKOTTvLsO
-	qZv5De8ycNy1lb6Wx6K+YUoCHbdmyu/T9iSvsw/1K7o8oAo2InzqqFbsL/g1YpU1CStiDfZEHBD
-	QvIFtKF/JuFPN8nqxcQOxncNlSz4nPAST08ug7EyDr9c1UZL1RDK58ohKQFv/Kb2
-X-Google-Smtp-Source: AGHT+IFoJ7S+NM+1fld/sDOZSv7i1hwfQMxgAHLpJJzUks/6H9K0NhHJlElFI9KKk6L5kpIID510FQ==
-X-Received: by 2002:a05:6000:2c6:b0:391:31f2:b99e with SMTP id ffacd0b85a97d-39132d1fc45mr7466902f8f.2.1741549779006;
-        Sun, 09 Mar 2025 12:49:39 -0700 (PDT)
-Received: from localhost.localdomain ([176.206.121.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c01567fsm12454968f8f.41.2025.03.09.12.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 12:49:38 -0700 (PDT)
-From: Denis Benato <benato.denis96@gmail.com>
-To: Basavaraj Natikar <basavaraj.natikar@amd.com>
-Cc: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Ivan Dovgal <iv.dovg@gmail.com>,
-	Adrian Freund <adrian@freund.io>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Denis Benato <benato.denis96@gmail.com>,
-	=?UTF-8?q?Pawe=C5=82=20Kotiuk?= <pawel@kotiuk.pl>
-Subject: [PATCH 1/1] HID: amd_sfh: Add support for tablet mode switch sensors
-Date: Sun,  9 Mar 2025 20:49:34 +0100
-Message-ID: <20250309194934.1759953-2-benato.denis96@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250309194934.1759953-1-benato.denis96@gmail.com>
-References: <20250309194934.1759953-1-benato.denis96@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xl0aQjuw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741549796; x=1773085796;
+  h=date:from:to:cc:subject:message-id;
+  bh=gj6AGtX1q2p8VAzzwOecfBd720acqQekxkWiB32r8Kc=;
+  b=Xl0aQjuw3JrjxkhAyttmvHq4rrRz6RaCKoT6kRu32GcK/CfSjv1yh3j0
+   D05lDn+isngEGYpyavjSRuS1v5E7GT58gnjUgyN+kg7xBfUSlqFOr478J
+   vpqNA2/J1La/QTIw+whMW1BpO4NJyM2qEHwlyp65vTgEExx9S883Ffwgh
+   Bd/L/xx7rdq4hR4ViFg/A31eUfLIufNfXugVzsfyGeIt8skMvCmaB1Qh7
+   93wfFrJj+4zBjjb3lDmyExgO/z9BGp4Kt49HNKFIgiULZvHx8uP4vPzsn
+   YGWQHlGm2e7CZduzs4q4CQCa9dhcgPWu5NHubZ+9wzPdddJHq3z0RpjsJ
+   w==;
+X-CSE-ConnectionGUID: CfcwRNKjR7Wxl1gvbQhjhA==
+X-CSE-MsgGUID: YZgcRNcNRqC5HswU2T286g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="53920761"
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="53920761"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 12:49:55 -0700
+X-CSE-ConnectionGUID: Ni/oajv8Qhu/wzapW2+Rjg==
+X-CSE-MsgGUID: vFx4lWfKSdKvxiK0AAfC6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="120521652"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 09 Mar 2025 12:49:54 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1trMem-0003Q4-0G;
+	Sun, 09 Mar 2025 19:49:52 +0000
+Date: Mon, 10 Mar 2025 03:49:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 058a6bec37c6c3b826158f6d26b75de43816a880
+Message-ID: <202503100319.sbHm0PIc-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-This patch adds support for the tablet mode switch sensors on
-convertible devices where that sensor is managed by AMD SFH, like the
-Asus Flow X13 and the Lenovo ThinkPad L13 Yoga Gen2 (AMD).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: 058a6bec37c6c3b826158f6d26b75de43816a880  x86/microcode/AMD: Add some forgotten models to the SHA check
 
-Tested-by: Paweł Kotiuk <pawel@kotiuk.pl>
-Co-developed-by: Ivan Dovgal <iv.dovg@gmail.com>
-Signed-off-by: Ivan Dovgal <iv.dovg@gmail.com>
-Co-developed-by: Luke D. Jones <luke@ljones.dev>
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
-Signed-off-by: Adrian Freund <adrian@freund.io>
-Signed-off-by: Denis Benato <benato.denis96@gmail.com>
----
- drivers/hid/amd-sfh-hid/amd_sfh_client.c      |  2 ++
- drivers/hid/amd-sfh-hid/amd_sfh_pcie.c        |  4 +++
- drivers/hid/amd-sfh-hid/amd_sfh_pcie.h        |  1 +
- .../hid_descriptor/amd_sfh_hid_desc.c         | 27 +++++++++++++++++++
- .../hid_descriptor/amd_sfh_hid_desc.h         |  8 ++++++
- .../hid_descriptor/amd_sfh_hid_report_desc.h  | 20 ++++++++++++++
- 6 files changed, 62 insertions(+)
+elapsed time: 1448m
 
-diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_client.c b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-index 3438d392920f..867019955b10 100644
---- a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-+++ b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-@@ -146,6 +146,8 @@ static const char *get_sensor_name(int idx)
- 		return "gyroscope";
- 	case mag_idx:
- 		return "magnetometer";
-+	case tms_idx:
-+		return "tablet-mode-switch";
- 	case als_idx:
- 	case ACS_IDX: /* ambient color sensor */
- 		return "ALS";
-diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-index 48cfd0c58241..72a70f5e3cef 100644
---- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-+++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-@@ -28,6 +28,7 @@
- #define ACEL_EN		BIT(0)
- #define GYRO_EN		BIT(1)
- #define MAGNO_EN	BIT(2)
-+#define TMS_EN		BIT(15)
- #define HPD_EN		BIT(16)
- #define ALS_EN		BIT(19)
- #define ACS_EN		BIT(22)
-@@ -231,6 +232,9 @@ int amd_mp2_get_sensor_num(struct amd_mp2_dev *privdata, u8 *sensor_id)
- 	if (MAGNO_EN & activestatus)
- 		sensor_id[num_of_sensors++] = mag_idx;
- 
-+	if (TMS_EN & activestatus)
-+		sensor_id[num_of_sensors++] = tms_idx;
-+
- 	if (ALS_EN & activestatus)
- 		sensor_id[num_of_sensors++] = als_idx;
- 
-diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
-index 05e400a4a83e..617f0265b707 100644
---- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
-+++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
-@@ -79,6 +79,7 @@ enum sensor_idx {
- 	accel_idx = 0,
- 	gyro_idx = 1,
- 	mag_idx = 2,
-+	tms_idx = 15,
- 	als_idx = 19
- };
- 
-diff --git a/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.c b/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.c
-index ef1f9be8b893..516a07bf3be6 100644
---- a/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.c
-+++ b/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.c
-@@ -47,6 +47,11 @@ static int get_report_descriptor(int sensor_idx, u8 *rep_desc)
- 		memcpy(rep_desc, comp3_report_descriptor,
- 		       sizeof(comp3_report_descriptor));
- 		break;
-+	case tms_idx: /* tablet mode switch */
-+		memset(rep_desc, 0, sizeof(tms_report_descriptor));
-+		memcpy(rep_desc, tms_report_descriptor,
-+		       sizeof(tms_report_descriptor));
-+		break;
- 	case als_idx: /* ambient light sensor */
- 	case ACS_IDX: /* ambient color sensor */
- 		memset(rep_desc, 0, sizeof(als_report_descriptor));
-@@ -97,6 +102,16 @@ static u32 get_descr_sz(int sensor_idx, int descriptor_name)
- 			return sizeof(struct magno_feature_report);
- 		}
- 		break;
-+	case tms_idx:
-+		switch (descriptor_name) {
-+		case descr_size:
-+			return sizeof(tms_report_descriptor);
-+		case input_size:
-+			return sizeof(struct tms_input_report);
-+		case feature_size:
-+			return sizeof(struct tms_feature_report);
-+		}
-+		break;
- 	case als_idx:
- 	case ACS_IDX: /* ambient color sensor */
- 		switch (descriptor_name) {
-@@ -140,6 +155,7 @@ static u8 get_feature_report(int sensor_idx, int report_id, u8 *feature_report)
- 	struct accel3_feature_report acc_feature;
- 	struct gyro_feature_report gyro_feature;
- 	struct magno_feature_report magno_feature;
-+	struct tms_feature_report tms_feature;
- 	struct hpd_feature_report hpd_feature;
- 	struct als_feature_report als_feature;
- 	u8 report_size = 0;
-@@ -175,6 +191,11 @@ static u8 get_feature_report(int sensor_idx, int report_id, u8 *feature_report)
- 		memcpy(feature_report, &magno_feature, sizeof(magno_feature));
- 		report_size = sizeof(magno_feature);
- 		break;
-+	case tms_idx:  /* tablet mode switch */
-+		get_common_features(&tms_feature.common_property, report_id);
-+		memcpy(feature_report, &tms_feature, sizeof(tms_feature));
-+		report_size = sizeof(tms_feature);
-+		break;
- 	case als_idx:  /* ambient light sensor */
- 	case ACS_IDX: /* ambient color sensor */
- 		get_common_features(&als_feature.common_property, report_id);
-@@ -214,6 +235,7 @@ static u8 get_input_report(u8 current_index, int sensor_idx, int report_id,
- 	struct accel3_input_report acc_input;
- 	struct gyro_input_report gyro_input;
- 	struct hpd_input_report hpd_input;
-+	struct tms_input_report tms_input;
- 	struct als_input_report als_input;
- 	struct hpd_status hpdstatus;
- 	u8 report_size = 0;
-@@ -247,6 +269,11 @@ static u8 get_input_report(u8 current_index, int sensor_idx, int report_id,
- 		memcpy(input_report, &magno_input, sizeof(magno_input));
- 		report_size = sizeof(magno_input);
- 		break;
-+case tms_idx: /* tablet mode switch */
-+		get_common_inputs(&tms_input.common_property, report_id);
-+		report_size = sizeof(tms_input);
-+		memcpy(input_report, &tms_input, sizeof(tms_input));
-+		break;
- 	case als_idx: /* Als */
- 	case ACS_IDX: /* ambient color sensor */
- 		get_common_inputs(&als_input.common_property, report_id);
-diff --git a/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.h b/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.h
-index 882434b1501f..afcdac989cb6 100644
---- a/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.h
-+++ b/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_desc.h
-@@ -114,4 +114,12 @@ struct hpd_input_report {
- 	u8 human_presence;
- } __packed;
- 
-+struct tms_feature_report {
-+	struct common_feature_property common_property;
-+} __packed;
-+
-+struct tms_input_report {
-+	struct common_input_property common_property;
-+} __packed;
-+
- #endif
-diff --git a/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_report_desc.h b/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_report_desc.h
-index 67ec2d6a417d..4dc87d684776 100644
---- a/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_report_desc.h
-+++ b/drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_report_desc.h
-@@ -665,6 +665,26 @@ static const u8 als_report_descriptor[] = {
- 0xC0			/* HID end collection */
- };
- 
-+/* TABLET MODE SWITCH */
-+__maybe_unused // Used by sfh1.0, but not yet implemented in sfh1.1
-+static const u8 tms_report_descriptor[] = {
-+0x06, 0x43, 0xFF,  // Usage Page (Vendor Defined 0xFF43)
-+0x0A, 0x02, 0x02,  // Usage (0x0202)
-+0xA1, 0x01, // Collection (Application)
-+0x85, 0x11, //   Report ID (17)
-+0x15, 0x00, //   Logical Minimum (0)
-+0x25, 0x01, //   Logical Maximum (1)
-+0x35, 0x00, //   Physical Minimum (0)
-+0x45, 0x01, //   Physical Maximum (1)
-+0x65, 0x00, //   Unit (None)
-+0x55, 0x00, //   Unit Exponent (0)
-+0x75, 0x01, //   Report Size (1)
-+0x95, 0x98, //   Report Count (-104)
-+0x81, 0x03, //   Input (Const,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-+0x91, 0x03, //   Output (Const,Var,Abs,No Wrap,Linear,Preferred State,No Null Position,Non-volatile)
-+0xC1, 0x00, // End Collection
-+};
-+
- /* BIOMETRIC PRESENCE*/
- static const u8 hpd_report_descriptor[] = {
- 0x05, 0x20,          /* Usage page */
--- 
-2.48.1
+configs tested: 125
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                     haps_hs_smp_defconfig    gcc-13.2.0
+arc                   randconfig-001-20250309    gcc-13.2.0
+arc                   randconfig-002-20250309    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250309    clang-21
+arm                   randconfig-002-20250309    gcc-14.2.0
+arm                   randconfig-003-20250309    clang-21
+arm                   randconfig-004-20250309    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250309    clang-15
+arm64                 randconfig-002-20250309    clang-17
+arm64                 randconfig-003-20250309    clang-15
+arm64                 randconfig-004-20250309    gcc-14.2.0
+csky                             alldefconfig    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250309    gcc-14.2.0
+csky                  randconfig-002-20250309    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250309    clang-21
+hexagon               randconfig-002-20250309    clang-21
+i386                             alldefconfig    gcc-12
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250309    clang-19
+i386        buildonly-randconfig-002-20250309    clang-19
+i386        buildonly-randconfig-003-20250309    gcc-11
+i386        buildonly-randconfig-004-20250309    gcc-12
+i386        buildonly-randconfig-005-20250309    clang-19
+i386        buildonly-randconfig-006-20250309    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250309    gcc-14.2.0
+loongarch             randconfig-002-20250309    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       m5208evb_defconfig    gcc-14.2.0
+m68k                        mvme16x_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                      bmips_stb_defconfig    clang-18
+mips                         db1xxx_defconfig    clang-21
+mips                           gcw0_defconfig    clang-15
+mips                           ip30_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250309    gcc-14.2.0
+nios2                 randconfig-002-20250309    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250309    gcc-14.2.0
+parisc                randconfig-002-20250309    gcc-14.2.0
+powerpc                     akebono_defconfig    clang-21
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                      ppc6xx_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250309    gcc-14.2.0
+powerpc               randconfig-002-20250309    clang-21
+powerpc               randconfig-003-20250309    clang-21
+powerpc                        warp_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250309    clang-15
+powerpc64             randconfig-002-20250309    gcc-14.2.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                               defconfig    clang-19
+riscv                    nommu_k210_defconfig    clang-15
+riscv                 randconfig-001-20250309    clang-15
+riscv                 randconfig-002-20250309    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250309    clang-16
+s390                  randconfig-002-20250309    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                 kfr2r09-romimage_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250309    gcc-14.2.0
+sh                    randconfig-002-20250309    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250309    gcc-14.2.0
+sparc                 randconfig-002-20250309    gcc-14.2.0
+sparc                       sparc32_defconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250309    gcc-14.2.0
+sparc64               randconfig-002-20250309    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250309    clang-21
+um                    randconfig-002-20250309    clang-21
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250309    gcc-12
+x86_64      buildonly-randconfig-002-20250309    gcc-11
+x86_64      buildonly-randconfig-003-20250309    gcc-12
+x86_64      buildonly-randconfig-004-20250309    gcc-12
+x86_64      buildonly-randconfig-005-20250309    clang-19
+x86_64      buildonly-randconfig-006-20250309    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250309    gcc-14.2.0
+xtensa                randconfig-002-20250309    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
