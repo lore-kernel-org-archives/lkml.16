@@ -1,80 +1,43 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3ED19259F
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 09:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C355D19259F;
+	Sun,  9 Mar 2025 09:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741512200; cv=none; b=sAHF8hWWITwVaHUqnZF31peZ4y5wJ6KJUtWAHW35GcbcAiljhMZYz2W7phNoLHu/rQKmVweQxNLzbvX53XB1EDIJO7grvCN0ZrTQj2i2pPWA7Yz8huCRUx/AqZTjg1e4AoAywolCBrjO0u2ETjPzw+lOMNsCy5cdB/VEuc2vbBE=
+	t=1741512207; cv=none; b=VMQu7zkP6YBn0/BjU4XVIKKj94pdaKWZUUDgSt7T3RifDVgUSjZHQRPxMwjapOTz1HCJpVW97daQxbGDS2sRkbNJd2cyfZ7qC5kxyQl+Fz46WY3esGsDL9Mk7SN+cAzBDhkCjAUGp9/O1gCznBu140do08HPeBo0OH6qREf4Rq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741512200; c=relaxed/simple;
-	bh=64WZrmgyPkgy2YnI7U81yn6KSZ4lJ6AYo9WRW6tDuIQ=;
+	s=arc-20240116; t=1741512207; c=relaxed/simple;
+	bh=THgUwDalBcg4erMWitkeLHzuSldpSihPUeUF48weiAc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rjAJupv8dfrPnAzTNZJ7yXWiPpgH9ju5CYBwisLlSiDYKnyzb+e0kD2f41ti5YbVfASdV0KDV4hpwvwZaYBvdeaXN2WbifGNNMj3K7/ecnXtUBISzwHb5j2DTFWVVjJN5K86G0+Lb/umewgAVNxN3070Gl2eoiB4C3qy3EMEWtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ab6N48KY; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksuM7mnRN5iLx+cXhSHeCAcze4S4WQk9w4n/Fc0SIgHHx1XMVYZykbEuNJyr4tlGWuONTZx5QTEW7yCXLf4KapVe1HcG5blqgT0vhzqB1fy7FRz/nZIRl59weWnFE4kjJyDUP7MuDU2oM/5XbYAwVbcrTFZBiW9MWwgCJXHfm3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=w6zC3R3t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ab6N48KY"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abfe7b5fbe8so472353966b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 01:23:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741512197; x=1742116997; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WquEMt/nHeDbDu+wCTeJFQKwvIymjPr1TDpYSMcRfWU=;
-        b=Ab6N48KYUd0NByEI5BB3psqhklj+00GGIuGJaQNZL4IGNMtzOgG0MyCOJsoSf8Ethc
-         T40UWinA5DgG9RXZKSVL8k6xvYFl1N0inDBPZpXwpO1E40NhEwxTTlIKm8KOo+JWTSb3
-         Pg2VJe82hNpzRLTxKrZBk1y5bsPdjguKP7H7UTGZSXamqAVnLo7EZXOqACSmksIUsDHV
-         VPMaKl6FIKarroYDl1A5Pu3z+UgVDX8wxrypoILOSZ6aoVq3AwBx8+xnKUubS+5shycn
-         d92qZronz82QiYKsqo2Y4GbVfbSenxKdEdiS6BxLIAXQ5ip04kP3p2QLHd5ZHy7kGrcW
-         Tn6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741512197; x=1742116997;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WquEMt/nHeDbDu+wCTeJFQKwvIymjPr1TDpYSMcRfWU=;
-        b=qztuPm8YtjdGVIlV5dVQO7XZBilu+aNniSZFbQfR9I7xs/6efCjnf74UoTnDSP9JC1
-         pu1MMyLo9H88nZBccBxn5jdTF9/D38P3p0C3Pd9ic0sMw6dJ0gnQPgLrgLCJeAONEEvh
-         wJykTL1XqNXj0CBpq7DuIOK5i9gQae0JBIpM1kAjUjlhLF67JmKHZ1oyiWbzFgb3LONC
-         Q8X0vTKyTvjDVO/q72rYzfcWHXYYjkLizPqzsoHbaCiljbobY5UcjX3LexVWyzoRv11K
-         YxGWnVYLPgnbTeb8+sCrGfLkHaOTqvyLw3Ad8mR5+/RAUDPFFAITm4tHg6AeFDltALWJ
-         tRQw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9tjIHGw7ZG9jkIy1znKWDvuuVo5ka4so6rqldXsTkrcB9ZNHrkXy+t1u/ZsFzn6+f1RFPpdexsYKHSnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZot+WoL7d+IaEQYxV/xVMhO3stmoVq2hSTuVKkUM0dGjOp5vK
-	jSrclvanJz0FGWTezaj2mDG1w9gC0z1b9wC5rHqlUm2kfueLk0oxZTx3V7GIUl8=
-X-Gm-Gg: ASbGncu+UwTGklMxcXiNpD8AaUZfMidAVTBr7eXUkXqFNPAuep3tQNb3li9uDpxhomR
-	+1iS3RDbmyh6DzHO++BUGrh5cd1ePHolLKyRh/n5lkE4PVOeIFNXRPelrHFlzKNUbLipLfYYEHY
-	L1s8emf3Ivf0C+Z9NlJSsQC47UB7VFaUhrm2N5R0BKqLqpIA9VrR+uYQ3v20VhXGfdC57nt3soa
-	Nt+DX3OY3FYggTmJ/Oi7z9H5XbTLt3AJqoCsjX5Cn8j3P9/+/hGYwAiIe4f2m1aNWU1NZDrd2yd
-	XJ1uPvaQd8feUAnU9ELYQ3TtDW8jDHXE8IbQVGCKDg==
-X-Google-Smtp-Source: AGHT+IETCUltWmQN+zLCmKRFkdNtCxZ4Os14U+jDnEz2nSP339omXsmyTsnb1B+RdPyq0H+r5s5iRw==
-X-Received: by 2002:a05:6402:1d4c:b0:5e5:b53:fd49 with SMTP id 4fb4d7f45d1cf-5e5e229e46emr24575900a12.3.1741512196682;
-        Sun, 09 Mar 2025 01:23:16 -0800 (PST)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c733fd48sm5071517a12.9.2025.03.09.01.23.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 01:23:15 -0800 (PST)
-Date: Sun, 9 Mar 2025 11:23:12 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Trilok Soni <quic_tsoni@quicinc.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 0/4] arm64: dts: qcom: x1e80100: crd/t14s:
- Enable Parade Type-C retimers
-Message-ID: <Z81eAMoXb9li4lba@linaro.org>
-References: <20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-v5-0-380a3e0e7edc@linaro.org>
- <ea9344b7-6646-4329-b8f6-45d2b51f183b@gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="w6zC3R3t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113A5C4CEED;
+	Sun,  9 Mar 2025 09:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741512207;
+	bh=THgUwDalBcg4erMWitkeLHzuSldpSihPUeUF48weiAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=w6zC3R3tXZy0yHQwQxUYIacl2K+sbrGGIalVm84cgx2UQtS7T19HTtIvG3qpXprbp
+	 pNKXkfZEGtVcS0nlIkHR1EOewVTtruvbkDWbTYEsgqEfPaYBmZZb68xRr6EAfPvXja
+	 1Af3xesPtbn/RSegBWX9uNKD99uMjKOEXrEMN+bY=
+Date: Sun, 9 Mar 2025 10:22:11 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.12 000/148] 6.12.18-rc2 review
+Message-ID: <2025030902-avert-scored-a9c6@gregkh>
+References: <20250306151415.047855127@linuxfoundation.org>
+ <1c813c9d-de04-487c-a350-13577dbdd881@roeck-us.net>
+ <3d99c624-88a8-4a98-b614-7565aa5dc4ba@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,63 +46,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea9344b7-6646-4329-b8f6-45d2b51f183b@gmail.com>
+In-Reply-To: <3d99c624-88a8-4a98-b614-7565aa5dc4ba@roeck-us.net>
 
-On 25-03-07 23:03:07, Aleksandrs Vinarskis wrote:
-> 
-> 
-> On 2/20/25 18:42, Abel Vesa wrote:
-> > Since the driver and dt-bindings have been alread merged, it has been
-> > agreed offline that there is no point of holding on to these DT patches
-> > even though there are some issues with plug/unplug during suspend in
-> > both pmic-glink-altmode and ucsi-glink. These issues are being worked on
-> > meanwhile. Merging these means that even though this will provide external DP
-> > and USB orientation, plug/unplug during suspend will give some splats
-> > and render both the USB orientation and DP broken. But then, other
-> > X Elite boards already have these nodes described, so lets bring the crd
-> > and t14s to the same level.
+On Sat, Mar 08, 2025 at 10:24:37AM -0800, Guenter Roeck wrote:
+> On Sat, Mar 08, 2025 at 07:15:35AM -0800, Guenter Roeck wrote:
+> > On Thu, Mar 06, 2025 at 04:20:53PM +0100, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.12.18 release.
+> > > There are 148 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Sat, 08 Mar 2025 15:13:38 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > v6.12.18:
 > > 
-> > These patches are just a resend of the ones found in v5 and dropped in the v6
-> > patchset of the driver and dt-bindings.
+> > Building loongarch:defconfig ... failed
+> > --------------
+> > Error log:
+> > In file included from include/linux/bug.h:5,
+> >                  from include/linux/thread_info.h:13,
+> >                  from include/asm-generic/current.h:6,
+> >                  from ./arch/loongarch/include/generated/asm/current.h:1,
+> >                  from include/linux/sched.h:12,
+> >                  from arch/loongarch/kernel/asm-offsets.c:8:
+> > include/linux/thread_info.h: In function 'check_copy_size':
+> > arch/loongarch/include/asm/bug.h:47:9: error: implicit declaration of function 'annotate_reachable'
 > > 
-> > Link to v5: https://lore.kernel.org/all/20241112-x1e80100-ps8830-v5-0-4ad83af4d162@linaro.org/
+> > This is not surprising:
 > > 
-> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> 
-> If you will be respinning, could you please add link-frequencies to
-> enable HBR3 speeds, similarly to [1]? Alternatively, I can also send
-> fixups once this series lands.
-
-
-It's already re-spun here:
-
-https://lore.kernel.org/all/20250304-x1e80100-dts-crd-t14s-enable-typec-retimers-v6-0-e5a49fae4e94@linaro.org/
-
-Waiting to be merged.
-
-Lets make the HBR3 enablement a separate patchset as I'm not able to
-test it in time, if we want external DP to be part of 6.15.
-
-> 
-> [1]
-> https://lore.kernel.org/all/20250226231436.16138-1-alex.vinarskis@gmail.com/
-> 
-> Thanks,
-> Alex
-> 
-> > ---
-> > Abel Vesa (4):
-> >        arm64: dts: qcom: x1e80100-crd: Describe the Parade PS8830 retimers
-> >        arm64: dts: qcom: x1e80100-crd: Enable external DisplayPort support
-> >        arm64: dts: qcom: x1e80100-t14s: Describe the Parade PS8830 retimers
-> >        arm64: dts: qcom: x1e80100-t14s: Enable external DisplayPort support
+> > $ git grep annotate_reachable
+> > arch/loongarch/include/asm/bug.h:       annotate_reachable();
 > > 
-> >   .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts     | 321 +++++++++++++-
-> >   arch/arm64/boot/dts/qcom/x1e80100-crd.dts          | 474 ++++++++++++++++++++-
-> >   2 files changed, 785 insertions(+), 10 deletions(-)
-> > ---
-> > base-commit: 50a0c754714aa3ea0b0e62f3765eb666a1579f24
-> > change-id: 20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-325cdb7b097d
+> > Caused by 2cfd0e5084e3 ("objtool: Remove annotate_{,un}reachable()").
 > > 
-> > Best regards,
 > 
+> The same problem also affects v6.13.6.
+
+Now fixed up in the queues, thanks.
+
+greg k-h
