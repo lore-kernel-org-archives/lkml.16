@@ -1,53 +1,77 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E06E1C5D78;
-	Sun,  9 Mar 2025 17:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB611DEFCD
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 17:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741542573; cv=none; b=ZwsWuzJRGWCQ4ZLZ5B6Cr8E4chUbXHce+yQVwTFErrTQSQcn4IorfukoMIlmpLNAvAbMaO0cjXF3L49reOHF73grO5jC2oHUNYHawdEVg4iBKx9BO7R3mFMiTe87ohiKSebG3Y5PV39OtVJhBt0MZUV7H8hUHWpfmsAerKh/mcQ=
+	t=1741542715; cv=none; b=NYDEzjV5JyDh5Mn/+jKyRuI99yuv+Vm2PDb3SIFdEbsmw749eBdxyMGwXB3+vAvVUypsxURfsv8tqDT9MA1OcwiOX7jBCTzW1Fg3oJxFG3Ngm7y3QbJ9nqHvnxXtMe4pS4cf56Olr2WPWnIAkdtwlj2DY3ZG/3VaCGqjVZlsLS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741542573; c=relaxed/simple;
-	bh=0jA0jE1d3VZYRFj2dEWSaC1XvTehPnfNraI7FcCBe0A=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bUbxZ4HWlsDpNusCNEfi12Hlz6ZEnrXAnUZ25BqCLYIoW1AthqKNUHh5LtiVJtdUvDKTFwNi/6yw46U3DTqFeaPoAHGA9izoM2F3vhzK0ZHITdL+UCXDBr9mYfhslYIeFqVmUvYy18PqrTFz5gmxHGbGVUeXom6qeFl2+lMQuo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=kBT2v4Ni; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	s=arc-20240116; t=1741542715; c=relaxed/simple;
+	bh=wqzDb0QwjxRa7XVwLas9r4QBvnQeBCYaIII+SwsSoao=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GDtqZe8ooUj0+OIS8AXlwmXztYrFiuW1M721yW0n5MW9XBY1cf1DRzHfnN6e4B8PUAw9scTMr2wrT39SaBt8Pvoh3cH504KvPcpiIiIxUTZrb8GF01jdSdUYgwtkG8L6M9PT7NErYz/hwtbcuwd6tzBeoLdRgT+2IvvzkVtgCqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h3TQGOOI; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="kBT2v4Ni"
-Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 9F05E100002;
-	Sun,  9 Mar 2025 20:43:47 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 9F05E100002
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1741542227;
-	bh=GrOqXh07i7N0ySZW77DG1Gd9b3sEB1loXlmnzaagEgc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=kBT2v4NiGr2uN1XxQGXDawKdR83CBuFr8XbrHnis/gXRMCafPD9f5oUi0PyzXlZTZ
-	 US9RXHF0zY0PgHPwOcOFAw/JOnCjFncciXovVJgW76N2rx4BI88t5JsU5vXgCL5WzV
-	 MDx2+i4SCN0l7ycLBqbOHihDKWQoe/GnzA9P3FBm7a09KCYphGQLa2xIPPsfTuqGEi
-	 66Pwo1JVAl3MU55y0FyXXA0I3BAtJ0r4DEfRgjoXh+knAYVmO9HmsMgTxnhn9R+wg6
-	 hAsPi6KclBNhiOH2kcnj1mwBQ91C6Z1SnlI2j1gg1tb72EPHzBahVDlVuSOPCto6+S
-	 sw+fh8zXF9oOA==
-Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Sun,  9 Mar 2025 20:43:47 +0300 (MSK)
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
-	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>, Jerome Brunet
-	<jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, Michael Turquette
-	<mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, Rob
- Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH v6 0/4] Add A1 Soc audio clock controller driver
-Date: Sun, 9 Mar 2025 20:43:18 +0300
-Message-ID: <20250309174322.1321201-1-jan.dakinevich@salutedevices.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h3TQGOOI"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3912b75c0f2so184665f8f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 10:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741542711; x=1742147511; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ag3e+knRyg8hgi6gCn3CC6P74JcStlCkhKaiz35snmc=;
+        b=h3TQGOOI1zhU8maqRCYUmp9vaDw46f5IS+zcDmbqR4UjgZzDSXKhF5iOw+7DCmwos/
+         5QHYylak0iCwcWYweKuBrMobEOMesce5evlKGak7tSraJnAakCHP3M4rncVhUh4cFg6F
+         9MsbmKNgqkXP2FAggMcUV+7KHnzkVuu4VmCbONJawMfQPjBMdGW4lcdPdsc/ad1a47ib
+         7fwSJ1a4/FgBaXRkp6dquN2EK/K9Jb4YIUe5EbKb+yuw2ugE9Ge0ZvxilC6FdJlQKwLq
+         hdOajDBzOuQMVkLPgpd1Er0uTKhp+m/tb8bdF0HMloqQXo0Y7KaWVT5qHVJroEmlkCZD
+         i4yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741542711; x=1742147511;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ag3e+knRyg8hgi6gCn3CC6P74JcStlCkhKaiz35snmc=;
+        b=NHB2f9uS6/eeUGHEn4d8iROuMHbMyHlfCvfRg8Akk4JY8tFZautCqXjn1zRxYGjyuT
+         ze1vW52y0T12WTLLjowkwESFiUYIUDjV4jWGjmnZetTN2eypKTwjeK8vw8a862iG456a
+         bwQJ+KRyjuYSIWAkV2Ki+5sPogxeX496fdVyyrZPdFVHPMC9pAsyGz7g+p8wO/MT7xrq
+         XJGTOH4kmM3r7orpj+IYnoYoGbMrb0Jh2yJW3so1rE36C/aKTJ93eFWfz+ov1UR7lJjh
+         rEK78NnGIvhExxfxQGqMEGfBTrPg9csAOHn7nHCgC2hzbdi/31Qs0MjxeXHloE03B+95
+         g/mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUobcayOlZ7+VzEZ3PKjeHEDO8p2WDFCg4mjrdjgLCx7ifoWxkAw2XP2mO5qLOs9pEXCdysPoh4DE+jmrA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3EzcpR1RbSv9wOMxSZwd+T8Yy14vx+UYJMQ+vP7UnQrD5mILr
+	tPJM7qnGcs1Jwbb9X9MUO8vyu6NRLtLTUDmr1BcH5jDUrITez/Ft82/pzHFIfC0=
+X-Gm-Gg: ASbGnctqHHmC26DzOIwi3jIcBhJw/sdBWxXLk6xmi0R1iio2K8oyY2cHvCVQyVGD4/k
+	L6JU+XKcCdb/rpJzioOLvtt5JBA3sH7d6Oi8v3prLIDdUsZ5tTzG7nQXZk+Q1CcoWYS739p4y+4
+	iBLDK8agkjLYz7KF3YyJOhhAwcd/0EWjCY4KEUuCL7jDGMGsarV/pBTyYrqs14wEKVgrMpteAxq
+	Iu2Z5ts+7DP+V3QjsKIDzZEDFFyCUMt3UeGupxkr1KQRk9NvfvJfqyk1U7BNJu0RhW3v4jY8Yrr
+	EPtSKpo8H9SyGEAQyxTmAet5MFpEZq2cBrXP9pGm02g8YsCPjXEA2AjhK4tdnCgf8F0lhQ==
+X-Google-Smtp-Source: AGHT+IFa08ql7h89Y752Zvu7Rau8znLYoWC3F6Ls9EZuW63PkjYBwc7RN80jzLbibjKC9dFckabhWw==
+X-Received: by 2002:a05:6000:4021:b0:390:d8ec:1779 with SMTP id ffacd0b85a97d-3913bbd20d1mr1460637f8f.12.1741542711124;
+        Sun, 09 Mar 2025 10:51:51 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ceeb34904sm39156975e9.30.2025.03.09.10.51.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Mar 2025 10:51:50 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	linux-clk@vger.kernel.org,
+	Sylwester Nawrocki <snawrocki@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] clk: samsung: drivers for v6.15
+Date: Sun,  9 Mar 2025 18:51:47 +0100
+Message-ID: <20250309175147.6672-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,93 +79,117 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-a-m2.sberdevices.ru (172.24.196.120) To
- p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 191599 [Mar 09 2025]
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;lore.kernel.org:7.1.1;sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, FromAlignment: n
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2025/03/09 17:18:00
-X-KSMG-LinksScanning: Clean, bases: 2025/03/09 17:18:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/03/09 15:22:00 #27687174
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-This series adds support for audio clock and reset controllers on A1 SoC family.
+Hi,
 
-Depends on [7]
+New clk drivers for Samsung SoC.  This pull includes drivers which you
+commented later and pointed out few issues.  Pointed issues are in all Samsung
+clk drivers and the ones here just copy existing patterns:
 
-Changes v5 [5] -> v6
- - use __devm_auxiliary_device_create() helper that is being introduced in [7]
+1. Headers: I fixed it for new and existing drivers and this pull request
+includes the fixes.
+2. device_get_match_data(): I still wait for contributors response. If they do
+not respond, I will fix it for next cycle.
+3. refdata and platform_driver_probe: I tried fixing it, but incomplete and
+need to investigate more.
 
-Changes v4 [4] -> v5
- - moved changes of aux reset driver to series [6]
- - added reset controller on top of audio-vad
- - merged into single file
- - reworked variables/defines naming
- - added clk81 clock hierarchy
- - added TDMIN_VAD-related clocks
- - excluded DT patch (it will submitted separately)
+Best regards,
+Krzysztof
 
-Changes v3 [3] -> v4
- - Use auxiliary reset device implemented in [4]
- - Split the driver into files
- - Use common with axg-audio yaml schema
- - Unify clock-names with axg-audio
 
-Changes v2 [2] -> v3
- - reset:
-   * added auxiliary device
- - yaml:
-   * added declaration of optional clocks
-   * fixed names in example and another cosmetics
- - clocks:
-   * reworked naming
-   * stop using of "core" clock name
-   * fixed wrong parenting
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-Changes v1 [1] -> v2:
- - Detached from v1's series (patch 2, 3, 4, 25)
- - Reuse some of defines from axg-audio
- - Split the controller into two memory regions
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-Links:
- [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
- [2] https://lore.kernel.org/lkml/20240328010831.884487-1-jan.dakinevich@salutedevices.com/
- [3] https://lore.kernel.org/lkml/20240419125812.983409-1-jan.dakinevich@salutedevices.com/
- [4] https://lore.kernel.org/all/20240913121152.817575-1-jan.dakinevich@salutedevices.com/
- [5] https://lore.kernel.org/all/20241112230443.1406460-1-jan.dakinevich@salutedevices.com/
- [6] https://lore.kernel.org/all/20241112230056.1406222-1-jan.dakinevich@salutedevices.com/
- [7] https://lore.kernel.org/all/20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com/
+are available in the Git repository at:
 
-Jan Dakinevich (4):
-  clk: meson: axg: share the set of audio helper macros
-  dt-bindings: clock: axg-audio: document A1 SoC audio clock controller
-    driver
-  clk: meson: a1: add the audio clock controller driver
-  arm64: dts: meson: a1: add the audio clock controller
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-clk-6.15
 
- .../clock/amlogic,axg-audio-clkc.yaml         |   4 +
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |  49 +
- drivers/clk/meson/Kconfig                     |  14 +
- drivers/clk/meson/Makefile                    |   1 +
- drivers/clk/meson/a1-audio.c                  | 856 ++++++++++++++++++
- drivers/clk/meson/axg-audio.c                 | 215 +----
- drivers/clk/meson/meson-audio.h               | 156 ++++
- .../dt-bindings/clock/amlogic,a1-audio-clkc.h | 139 +++
- 8 files changed, 1254 insertions(+), 180 deletions(-)
- create mode 100644 drivers/clk/meson/a1-audio.c
- create mode 100644 drivers/clk/meson/meson-audio.h
- create mode 100644 include/dt-bindings/clock/amlogic,a1-audio-clkc.h
+for you to fetch changes up to 017bbc922a09630579ff7b5b314fb186b8c0efcf:
 
--- 
-2.34.1
+  clk: samsung: Drop unused clk.h and of.h headers (2025-03-07 16:01:22 +0100)
 
+----------------------------------------------------------------
+Samsung SoC clock drivers changes for 6.15
+
+1. Exynos990: Add support for the PERIS clock controller in existing
+   driver.
+2. Exynos2200: Add new driver for several clock controllers (Alive,
+   CMGP, HSI, PERIC/PERIS, TOP, UFS and VFS).
+3. Exynos7870: Add new driver for several clock controllers (Alive,
+   MIF, DISP AUD, FSYS, G3D, ISP, MFC and PERI).
+4. Correct undefined behavior / runtime array bounds check of flexible
+   array member (last 'hws' element in 'struct clk_hw_onecell_data').
+   The code was logically correct for normal case, but not for the
+   clang/GCC runtime bounds checking of flexible array member.
+5. Few cleanups: spelling, header inclusions.
+
+----------------------------------------------------------------
+Colin Ian King (1):
+      clk: samsung: Fix spelling mistake "stablization" -> "stabilization"
+
+Igor Belwon (2):
+      dt-bindings: clock: exynos990: Add CMU_PERIS block
+      clk: samsung: exynos990: Add CMU_PERIS block
+
+Ivaylo Ivanov (3):
+      dt-bindings: clock: add Exynos2200 SoC
+      clk: samsung: clk-pll: add support for pll_4311
+      clk: samsung: introduce Exynos2200 clock driver
+
+Kaustabh Chakraborty (2):
+      dt-bindings: clock: add clock definitions and documentation for exynos7870 CMU
+      clk: samsung: add initial exynos7870 clock driver
+
+Krzysztof Kozlowski (3):
+      Merge branch 'for-v6.15/samsung-clk-dt-bindings' into next/clk
+      clk: samsung: Add missing mod_devicetable.h header
+      clk: samsung: Drop unused clk.h and of.h headers
+
+Will McVicker (1):
+      clk: samsung: Fix UBSAN panic in samsung_clk_init()
+
+ .../bindings/clock/samsung,exynos2200-cmu.yaml     |  247 ++
+ .../bindings/clock/samsung,exynos7870-cmu.yaml     |  227 ++
+ .../bindings/clock/samsung,exynos990-clock.yaml    |   19 +
+ drivers/clk/samsung/Makefile                       |    2 +
+ drivers/clk/samsung/clk-cpu.c                      |    2 +-
+ drivers/clk/samsung/clk-exynos-audss.c             |    1 +
+ drivers/clk/samsung/clk-exynos-clkout.c            |    1 +
+ drivers/clk/samsung/clk-exynos2200.c               | 3928 ++++++++++++++++++++
+ drivers/clk/samsung/clk-exynos3250.c               |    4 +-
+ drivers/clk/samsung/clk-exynos4.c                  |    2 +-
+ drivers/clk/samsung/clk-exynos4412-isp.c           |    2 +-
+ drivers/clk/samsung/clk-exynos5-subcmu.c           |    1 +
+ drivers/clk/samsung/clk-exynos5250.c               |    1 +
+ drivers/clk/samsung/clk-exynos5260.c               |    3 -
+ drivers/clk/samsung/clk-exynos5410.c               |    2 -
+ drivers/clk/samsung/clk-exynos5420.c               |    1 +
+ drivers/clk/samsung/clk-exynos5433.c               |    4 +-
+ drivers/clk/samsung/clk-exynos7.c                  |    1 -
+ drivers/clk/samsung/clk-exynos7870.c               | 1829 +++++++++
+ drivers/clk/samsung/clk-exynos7885.c               |    2 +-
+ drivers/clk/samsung/clk-exynos850.c                |    2 +-
+ drivers/clk/samsung/clk-exynos8895.c               |    2 +-
+ drivers/clk/samsung/clk-exynos990.c                |  182 +-
+ drivers/clk/samsung/clk-exynosautov9.c             |    2 +-
+ drivers/clk/samsung/clk-exynosautov920.c           |    2 +-
+ drivers/clk/samsung/clk-fsd.c                      |    2 +-
+ drivers/clk/samsung/clk-gs101.c                    |    2 +-
+ drivers/clk/samsung/clk-pll.c                      |    1 +
+ drivers/clk/samsung/clk-pll.h                      |    1 +
+ drivers/clk/samsung/clk-s3c64xx.c                  |    1 -
+ drivers/clk/samsung/clk-s5pv210-audss.c            |    1 +
+ drivers/clk/samsung/clk-s5pv210.c                  |    1 -
+ drivers/clk/samsung/clk.c                          |    4 +-
+ drivers/clk/samsung/clk.h                          |    1 +
+ include/dt-bindings/clock/samsung,exynos2200-cmu.h |  431 +++
+ include/dt-bindings/clock/samsung,exynos7870-cmu.h |  324 ++
+ include/dt-bindings/clock/samsung,exynos990.h      |   21 +
+ 37 files changed, 7231 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,exynos2200-cmu.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,exynos7870-cmu.yaml
+ create mode 100644 drivers/clk/samsung/clk-exynos2200.c
+ create mode 100644 drivers/clk/samsung/clk-exynos7870.c
+ create mode 100644 include/dt-bindings/clock/samsung,exynos2200-cmu.h
+ create mode 100644 include/dt-bindings/clock/samsung,exynos7870-cmu.h
