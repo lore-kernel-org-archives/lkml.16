@@ -1,115 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9B81D79BE;
-	Sun,  9 Mar 2025 14:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A46519E999;
+	Sun,  9 Mar 2025 14:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741530732; cv=none; b=UvLhckNpl3rR6FkxePK//713cXpHqZi82CTK/bKKZHDGqzAzSQKppiywh/5qs9n5XUtBp6B7m9umcNBrt4nj0atnH0iiLvpN4yV2WpiGtBlArt8poCyr9cIK6750OkHZLoAW0LndHwsQtt/sYeDyU5BNDRa0beih1/VtIbszdGM=
+	t=1741530847; cv=none; b=KEJ8gIE4KlNSlQr45vbzQsGQrNL3mUGRatECEjyGCHGbPOml3C6iTnKBhZPG9MB5PO2ipNjgN8DLXBxZBiL4GxKx0I0jZDVSYvwtO8aCo8ilZHaT0yUa4JDkpwy5DengtwF4FkZ+4LYtI5zEbbx5s4ug70abP3scrib7boTDuo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741530732; c=relaxed/simple;
-	bh=ZWTyKCgzxgzSSnZYEH9mQTJDvRlV/PPeWnE8ql+GB+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UR7qA3kmGlbFHDiL8J656TzShiSnxtVtC1bl4Cly8jfzMWVm3/7VdcqnnPdf6IUfxMQnR2awvmrTJ9SOD87rnJ0uGJHiRe45r0YnawnHDeV28nU4LlKUG/o5oKxfilTadXcqcQRrIvLol/92w8dZL/yDQLcqJwcamHjPqPeGL6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L3/ENNus; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741530847; c=relaxed/simple;
+	bh=3JJGZMJpB7+V80Clbzkplw/qm4VlJ1qS7WZ8lR/zBa4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UypRmRw92fUYaIv2xqCfsx7Y0T0b4uNsumfi4O7qdpgHTJkQtjna8xutL8w0eVLB0vxL74Q85lxiJ57GYsWCtwNyruMPrjbN85LadJf4X5jDBcEsG0ymaxQbVOrGQz8pui++ECWxP8nPk0dIS6tYUEPzGT7yny8QZrLidzAeKQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=YrxIco/d; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L3/ENNus"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741530729; x=1773066729;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZWTyKCgzxgzSSnZYEH9mQTJDvRlV/PPeWnE8ql+GB+Y=;
-  b=L3/ENNusB9qZO8NGKxrGpsjiYFbDFspbdBD+H5eMMumSHiDl0h65sumq
-   uaiF6T0s7qrJNruIUp8inXH0bYT7z5tPa1gKXA0JBb7JLNNYXCKTV9O8A
-   y42jrTfUBpob4BJcq1Ye6h5obATzxAE5+HbEAoGaaF81YYoFAD1YQOKBM
-   5Xtw3xZelg87rhAHK0HUbsxDRRTq5ZjHAHYYJ/hP/hdO7k838I26cyeaa
-   T+N9tom0GiuCiVcWxALVKqCWZsyEaKH/+i7UGhsqSsiLVKXMmc/Np4rqz
-   H2VWdtpjJfxo0xjhY1i/8Y1zdUCFzoVbHCI+yuqW0RFqnkwcMQjR3VXOq
-   Q==;
-X-CSE-ConnectionGUID: +XuAXZz/QLKE+RnWWWKI5A==
-X-CSE-MsgGUID: LbhE7CbxQguP8h6ooFwI1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="59938766"
-X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="59938766"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 07:32:08 -0700
-X-CSE-ConnectionGUID: aMco+C0zQ5qpV9QAErOFcw==
-X-CSE-MsgGUID: ZxCFfxEnQMevnKssQarnOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123947082"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 09 Mar 2025 07:32:04 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1trHhC-0003BM-0K;
-	Sun, 09 Mar 2025 14:32:02 +0000
-Date: Sun, 9 Mar 2025 22:31:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wen Yang <wen.yang@linux.dev>, Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Wen Yang <wen.yang@linux.dev>, Jens Axboe <axboe@kernel.dk>,
-	Dylan Yudaken <dylany@fb.com>, David Woodhouse <dwmw@amazon.co.uk>,
-	Paolo Bonzini <pbonzini@redhat.com>, Dave Young <dyoung@redhat.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] eventfd: introduce configurable maximum value for
- eventfd
-Message-ID: <202503092210.z9CcRYoe-lkp@intel.com>
-References: <20250309055003.32194-1-wen.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="YrxIco/d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=T2cFjlJIrVRM69qletiJGY6RJ3yS/PGLw1X+m0oQKn8=; b=YrxIco/dTxoQcefG
+	/4Qj+fTyhIfxj4u8lNXtIYBHgNM0B49JN7/jg0GtaEVwMpIh4wGPnQqA/dBgGccCAJ/wWHK0ifSwQ
+	0yTZYsXAXblWCyFLsXsR7Kw5JW+2zPdp79jDs1driYo3q5OY+sqvc9rj0lHzxJbtGN1M6XW3rZD8o
+	I/bYnYJ226lyXV5dnexTVPnL1Da9AMQuy9lmfI0mRsboPbAb+gT//lWoXFXBQQzutz5TyTPvc0WAz
+	z7DJgIQUTZwc/1ii4rsO+obcUYxEPDiHiuyecv5E9U/1+wVpgGukKB5QD2DjUzXPsEvemzJ8Ljbfu
+	lXa1yqfu2ok28kJE7Q==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1trHiu-003iFV-2S;
+	Sun, 09 Mar 2025 14:33:48 +0000
+From: linux@treblig.org
+To: kashyap.desai@broadcom.com,
+	sumit.saxena@broadcom.com,
+	shivasharan.srikanteshwara@broadcom.com,
+	chandrakanth.patil@broadcom.com
+Cc: James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	megaraidlinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] scsi: megaraid_sas: static most module parameters
+Date: Sun,  9 Mar 2025 14:33:48 +0000
+Message-ID: <20250309143348.32896-1-linux@treblig.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309055003.32194-1-wen.yang@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-Hi Wen,
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-kernel test robot noticed the following build errors:
+Most of the module parameters are only used locally in the same
+C file; so static them.
 
-[auto build test ERROR on brauner-vfs/vfs.all]
-[also build test ERROR on linus/master v6.14-rc5 next-20250307]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ drivers/scsi/megaraid/megaraid_sas_base.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wen-Yang/eventfd-introduce-configurable-maximum-value-for-eventfd/20250309-135152
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250309055003.32194-1-wen.yang%40linux.dev
-patch subject: [PATCH v3] eventfd: introduce configurable maximum value for eventfd
-config: i386-buildonly-randconfig-002-20250309 (https://download.01.org/0day-ci/archive/20250309/202503092210.z9CcRYoe-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250309/202503092210.z9CcRYoe-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503092210.z9CcRYoe-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> fs/eventfd.c:251:69: error: use of undeclared identifier 'ucnt'
-     251 |         return (ctx->maximum > ctx->count) && (ctx->maximum - ctx->count > ucnt);
-         |                                                                            ^
-   1 error generated.
-
-
-vim +/ucnt +251 fs/eventfd.c
-
-   248	
-   249	static inline bool eventfd_is_writable(const struct eventfd_ctx *ctx)
-   250	{
- > 251		return (ctx->maximum > ctx->count) && (ctx->maximum - ctx->count > ucnt);
-   252	}
-   253	
-
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index d85f990aec88..28c75865967a 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -93,7 +93,7 @@ static unsigned int scmd_timeout = MEGASAS_DEFAULT_CMD_TIMEOUT;
+ module_param(scmd_timeout, int, 0444);
+ MODULE_PARM_DESC(scmd_timeout, "scsi command timeout (10-90s), default 90s. See megasas_reset_timer.");
+ 
+-int perf_mode = -1;
++static int perf_mode = -1;
+ module_param(perf_mode, int, 0444);
+ MODULE_PARM_DESC(perf_mode, "Performance mode (only for Aero adapters), options:\n\t\t"
+ 		"0 - balanced: High iops and low latency queues are allocated &\n\t\t"
+@@ -105,15 +105,15 @@ MODULE_PARM_DESC(perf_mode, "Performance mode (only for Aero adapters), options:
+ 		"default mode is 'balanced'"
+ 		);
+ 
+-int event_log_level = MFI_EVT_CLASS_CRITICAL;
++static int event_log_level = MFI_EVT_CLASS_CRITICAL;
+ module_param(event_log_level, int, 0644);
+ MODULE_PARM_DESC(event_log_level, "Asynchronous event logging level- range is: -2(CLASS_DEBUG) to 4(CLASS_DEAD), Default: 2(CLASS_CRITICAL)");
+ 
+-unsigned int enable_sdev_max_qd;
++static unsigned int enable_sdev_max_qd;
+ module_param(enable_sdev_max_qd, int, 0444);
+ MODULE_PARM_DESC(enable_sdev_max_qd, "Enable sdev max qd as can_queue. Default: 0");
+ 
+-int poll_queues;
++static int poll_queues;
+ module_param(poll_queues, int, 0444);
+ MODULE_PARM_DESC(poll_queues, "Number of queues to be use for io_uring poll mode.\n\t\t"
+ 		"This parameter is effective only if host_tagset_enable=1 &\n\t\t"
+@@ -122,7 +122,7 @@ MODULE_PARM_DESC(poll_queues, "Number of queues to be use for io_uring poll mode
+ 		"High iops queues are not allocated &\n\t\t"
+ 		);
+ 
+-int host_tagset_enable = 1;
++static int host_tagset_enable = 1;
+ module_param(host_tagset_enable, int, 0444);
+ MODULE_PARM_DESC(host_tagset_enable, "Shared host tagset enable/disable Default: enable(1)");
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
