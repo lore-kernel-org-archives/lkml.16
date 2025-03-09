@@ -1,39 +1,40 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA697288DB;
-	Sun,  9 Mar 2025 18:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F7E16B3B7;
+	Sun,  9 Mar 2025 18:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741544170; cv=none; b=XLogUqhXB8HDdPH/eTtn5uYMrFspkxY0JwX+2H+KutuF7zf+XtsbLl0X6vl+3T7JI1ejEu3YI4D86drIyBi33WbSsg8Y2MCrcTflicLQl2JCfh2g7mNjcNil5ttvmdjqyeGRFZAKtZI1e9Ud4eEP5+8zx1Iteoc6OBEPPs7hYFA=
+	t=1741544171; cv=none; b=TOk4+Qd6F4VcscyEtiShIupAW02f4+793PdGdiK+UShacm8Rv+ln4NG3nDoxc3Fb+vugz/kzss00z5ANz0Twm1M/9prnnh5+GhYGrxo8UCnlYgmAeQ+uR81avUCySIcJPhrbDTmeZhll2UM0Sm5hcZK0ns8B1WHhM5fuaEmhrIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741544170; c=relaxed/simple;
-	bh=Lmwa9oWRWgD2JNaTz2dK4LFye8+v03wV8rRgOHvIMqc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fe7ejvvusppP02VijFylx6Oq11ORmur+RU5BeewJ6ajSNlchknSP70esG0IBIvesd11yIgD8IVsBSHVfSQ8fbpFtogo7Lfnur+oYAxTd2hRSRdtSzwFpu0u2DxrjsVanImcUyS+CIe7l+mTkDn4p2IrXTVzTAzYJuKbD5fgna6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=lWf1R2q3; arc=none smtp.client-ip=45.89.224.132
+	s=arc-20240116; t=1741544171; c=relaxed/simple;
+	bh=WZm6aGYafspZGqZlKpDblBNiGRhDc+4xrZN9Eus+Fag=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uvpIoJq9wZt0d1KEx+hyHtPzo22TjHD/qefoFqvk2E/+y4p/HEisAwR9XR5U0XhfR7QeEAWErTS3LEJCgJGtzWlmfuMV8WCw94TNkmUWq8u+7nJqWym97edX1oMygydzyRLoSwLkwi1HIQcGP2LnPP3CE2n2gC+CwggI6pLsDC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=a9kYQhLS; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="lWf1R2q3"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id A7A97120004;
-	Sun,  9 Mar 2025 21:16:06 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A7A97120004
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="a9kYQhLS"
+Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id E0F0C100006;
+	Sun,  9 Mar 2025 21:16:07 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E0F0C100006
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1741544166;
-	bh=38pc2HrGEn22seG8bYETzhJAzcp/r821LyC9GborcOQ=;
+	s=mail; t=1741544167;
+	bh=NK0/S9lD6J4LrJ0za2Y5lt/Fq95o4i6toJkcTTbksdo=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=lWf1R2q3Y9vIzUvEUxW8WMbsN4mTWPOfyx3qoa3zSoodKL/iLt6tV5B74MlP8LgOA
-	 e8+nSN8SXymf5XUTE81x3TbuBHdPzv2u0SAFMMmZaJ9LDpx2PVG1mTU77L6u+i+jj2
-	 BTCelsL6S85r+B7buA69Sazi0BhjVyhT18/5SBzbCGcdW3QBG94gIxTIrDMeKa7DSB
-	 vPE0SdKSTBQi/P9IqIj0X77EYGHwc/ZrD3G8keZXOsTFECBC4U/l53E4wrfJecVoII
-	 ff0NHdP5BuOVewXCXiI5iFD2hTZulPLD4N0r02vTWSir2dswRdO1kxd7vTmaqCwKUH
-	 kB8MPnPaNcXMQ==
+	b=a9kYQhLSEKIt9eH6h05y5xl2QBhpA6VlsTPW615kc77SZZOXCMnmdOuzKpgIOpobO
+	 QvQdxHs4WPutsKwdFD/Xs0Dq/IvMdzi9RQC7IXwET26Vo1cGWFFhlqVe4QlcvKHSVO
+	 fbAZKDdnmcR+b058Ct7VP3b8Z21oY3rW9JOlFcoRaYy6UUpcaVWkTHPWQR5B8HF/pN
+	 kGWZDtWVN2ArLvfMTuQ31p6vk+F3K7Guq22gLh0AeWLkI7vdysd1C8nXsCBvVyDmKZ
+	 p30kGxlC3p5vEB1S5JlzgcG/UV/iWf2STa1CU5f2V0mU/qAoRObNOBuiX0bb99jTM2
+	 qrcA71gAq0NBQ==
 Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Sun,  9 Mar 2025 21:16:06 +0300 (MSK)
+	Sun,  9 Mar 2025 21:16:07 +0300 (MSK)
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
 	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>, Jaroslav Kysela
@@ -45,10 +46,12 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
  Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, Takashi Iwai
 	<tiwai@suse.com>
-Subject: [PATCH v2 0/4] ASoC: meson: g12a-toacodec: add support for A1 SoC
-Date: Sun, 9 Mar 2025 21:15:56 +0300
-Message-ID: <20250309181600.1322701-1-jan.dakinevich@salutedevices.com>
+Subject: [PATCH v2 3/4] ASoC: dt-bindings: meson: g12a-toacodec: add support for A1 SoC family
+Date: Sun, 9 Mar 2025 21:15:59 +0300
+Message-ID: <20250309181600.1322701-4-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250309181600.1322701-1-jan.dakinevich@salutedevices.com>
+References: <20250309181600.1322701-1-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,38 +71,50 @@ X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;sberdevices.ru:5.0.1,7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;lore.kernel.org:7.1.1, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, FromAlignment: n
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_smtp_not_equal_from}, 127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, FromAlignment: n
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2025/03/09 17:18:00
-X-KSMG-LinksScanning: Clean, bases: 2025/03/09 17:18:00
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/03/09 17:28:00 #27692143
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-This series adds support for A1 SoC family in g12a-toacodec driver. The main
-change is that the driver now supports capture streams which are suitable for
-ADC found on A1's internal audio codec.
+Add support for "toacodec" audio component found A1 SoC family. On this
+SoC the component supports capture streams, additional DAI ids are added
+to configure this feature.
 
-Changes v1 [1] -> v2
- - detached from v1's series (patch 6, 7, 8, 9)
- - reworked the definition of bits
+Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+---
+ .../devicetree/bindings/sound/amlogic,g12a-toacodec.yaml     | 1 +
+ include/dt-bindings/sound/meson-g12a-toacodec.h              | 5 +++++
+ 2 files changed, 6 insertions(+)
 
-Links:
- [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
-
-Jan Dakinevich (4):
-  ASoC: meson: codec-glue: add support for capture stream
-  ASoC: meson: g12a-toacodec: drop the definition of bits
-  ASoC: dt-bindings: meson: g12a-toacodec: add support for A1 SoC family
-  ASoC: meson: g12a-toacodec: add support for A1 SoC family
-
- .../bindings/sound/amlogic,g12a-toacodec.yaml |   1 +
- .../dt-bindings/sound/meson-g12a-toacodec.h   |   5 +
- sound/soc/meson/g12a-toacodec.c               | 242 ++++++++++++++----
- sound/soc/meson/meson-codec-glue.c            | 174 ++++++++++---
- sound/soc/meson/meson-codec-glue.h            |  23 ++
- 5 files changed, 358 insertions(+), 87 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
+index 23f82bb89750..c47604aa590f 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
++++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
+@@ -26,6 +26,7 @@ properties:
+       - items:
+           - enum:
+               - amlogic,sm1-toacodec
++              - amlogic,a1-toacodec
+           - const: amlogic,g12a-toacodec
+ 
+   reg:
+diff --git a/include/dt-bindings/sound/meson-g12a-toacodec.h b/include/dt-bindings/sound/meson-g12a-toacodec.h
+index 69d7a75592a2..f726e2c6064d 100644
+--- a/include/dt-bindings/sound/meson-g12a-toacodec.h
++++ b/include/dt-bindings/sound/meson-g12a-toacodec.h
+@@ -7,4 +7,9 @@
+ #define TOACODEC_IN_C	2
+ #define TOACODEC_OUT	3
+ 
++#define TOACODEC_CAPTURE_OUT_A	4
++#define TOACODEC_CAPTURE_OUT_B	5
++#define TOACODEC_CAPTURE_OUT_C	6
++#define TOACODEC_CAPTURE_IN	7
++
+ #endif /* __DT_MESON_G12A_TOACODEC_H */
 -- 
 2.34.1
 
