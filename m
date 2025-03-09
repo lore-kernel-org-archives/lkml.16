@@ -1,60 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA8A18CBFE;
-	Sun,  9 Mar 2025 09:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769ABECF
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 09:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741512227; cv=none; b=Cnmk+jZMDsW8b/MJgYuNQaWIBrsjeHcQXqSkKv7WwGjMFpSITpT9XnooSyV6r00BS7npdmrdA/UfiVuKEGVXl5LfSginlAP6XYuAVBiVC5jlU5gHX0fnICEHEQXx8rmm4b/aMejrrBS8u0hGSR1KS8UhSYu4zr/sVw9BbUmEdUE=
+	t=1741512406; cv=none; b=e+/DnGdvrN5JLpMWqWpnCyJKdGv+/YFqEjQrSKZtAR15VA9zEZFw7DjV8bqKMOhzuQHpUPgtTRUsCtzKuU0JgwHpOpaPD6Mjjl8FBT0luDTLizbW/TnwkId44aIdSdQPGUfGoF8iRgBE8mlIdt0dK14LzgregqTUBBkFC3i5MCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741512227; c=relaxed/simple;
-	bh=NGUThif1MWAbt3yYjCQawzz72SNY3fuWhUbs+gZEPUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cnG7NPzPc1Tpd9+G2CawHwBgwRGub3kYaFgURfldfpYbUaUb+5fmb4w6L52QsEtYHehSu9RT15enqXkpv/LOnIZ1CtxTB212UzE9Ab00ruvBzKvqGVzkxNpF9m+6mwYvWvzGp8CoNdaZDD3BV8hDpXE/rpy4rOInRw7r+arF41Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1UB+Wn7e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741512406; c=relaxed/simple;
+	bh=ik8X4IEQqDHG4yAjGI+QpJp8re+baTrHsLFeLL7+3Kw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KaGeJD9zZojJzDDdkTm2rvIapsMswwXz8vU101UGdi2AtqOa4feEqaKHbGKYX+AJpuHbk1YhrU6cdQE1DwWNFd2JYutmTziDuSjzm5tDel4zb356HumZtydLRXy1+klUUavRbAxm9t4Ss6ort3XKhY0ZfVil/kS3lp3cyqlo440=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vEDNglcP; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1UB+Wn7e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F30C4CEE5;
-	Sun,  9 Mar 2025 09:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741512227;
-	bh=NGUThif1MWAbt3yYjCQawzz72SNY3fuWhUbs+gZEPUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1UB+Wn7eTNO9nmCReuyR+Sc17w/eBSy8b0Rpoz7PckNrstPyXF2RqKe5fK71qCcct
-	 OYdK5Z5lx9DR1wq9zWqWrWu15wRN1iK1nfMHOkyODbDidhOJhU5sfuemRW6LS/Uiv+
-	 5yNzaZBMUVueoeSQvvLADP73aOTIlPZItCgexsgU=
-Date: Sun, 9 Mar 2025 10:22:30 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: =?iso-8859-1?Q?J=F6rg-Volker?= Peetz <jvpeetz@web.de>,
-	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-	torvalds@linux-foundation.org, stable@vger.kernel.org,
-	x86@kernel.org, lwn@lwn.net, jslaby@suse.cz
-Subject: Re: Linux 6.13.6
-Message-ID: <2025030925-crazed-swerve-57a3@gregkh>
-References: <2025030751-mongrel-unplug-83d8@gregkh>
- <1b3ea3ce-7754-494c-a87b-0b70b2d25f99@web.de>
- <20250308163003.GDZ8xwi0u3rAAX0J23@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEDNglcP"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e636585c375so1351094276.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 01:26:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741512403; x=1742117203; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=y+UfwYvKoniH4ediByf7+QM/x5ez72G5r941EDLOy/s=;
+        b=vEDNglcPMlZJKyeRwmdYJLaLyHYG57ezjXrzV9DPNeSOFoEQmdo48ogYdjki63b49R
+         E8WqEcEpGi+0NvTZcVxZfAC5IACb59aih/ATZJsk7WIAz6VO+oRaIg9a285YFAHtWZE+
+         39+cdk+Slzp1H4HT0HTs5D/INfxZJMlaVSQk0R062ztW2ap8Yf9SMdvWI8HHaC/DVinS
+         Rwa4wJ+82/pCpAN/AZPDGSNOlaesEz7SHoO8tWVCDsx04DMhJRQ5pdAnitalxku3E+9N
+         WNsXCFPgSwQMDGbzyxq0uDLE1o3jXo52VP94kuV4NgsyEu4JlvcINqB4hE3uqEXtUEUW
+         qhfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741512403; x=1742117203;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y+UfwYvKoniH4ediByf7+QM/x5ez72G5r941EDLOy/s=;
+        b=ft1RHCi6JezHFNkFnJdEewXv+amlhdoWu9K9xWbmfeYXQUW+Iq8osuMdxsztAKns9P
+         E1LVOOHv4qsjsaDm2IrSQJhb8zV0Q6f77481Z9NoTxRCIEpYn+BGF5fIW1NHrWC53rgC
+         TTdFP/ButaCN97o9hM/V7fiY9/2+xYKM+23QDNrKEblIZHR86Q4GTTW7jrqyf8gpVRRi
+         xEuRgu//3vlbHZPwb0esa3h3CszPTFxj0fpllKbYj/JYbHlQAT1B0guNSc8cI+eqh0KV
+         qh5ycCBlQnACMTqQ0bwt1gRI7uQ0dlx/AbjNkU6X83kCALQl/uvtjcGx6GPmm/X01Mgj
+         QVYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaajvS/akmKL8bpPOblkECeTi3UoIUbLFwfwndSRyWVY4ibulEuEMWkXVae9qVx1l5emOCDj5Oot4sOBo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+vWlMLO75F9qopAlsVugU1TKbU0D/BQMePIdgDJl+IME3ZmMV
+	yYtu3B19prGQV++hheQGaj79xLu82Nz106IlgQbrM96PRQgKkms1A3puVmQwVC05SNX7tYoPw1x
+	Ef4jEvXquLNnUSbbovV3cLScEdrIPiqGUlWcA0A==
+X-Gm-Gg: ASbGncvKaJGk3KDwJIYQ0L6uagBcJhVU/2yAR/GmMw0Ow+r4LIIRCLjSHM9nYtNFpfl
+	xjG87n/e1XWdyvvNmvzcxqsqYqy4ZyzICM2UdksHgfc0w13P5m6m03kfRjlH0jJapF8q/1JxuIc
+	z9en8wOe8Mn6rzbtVdyxxiZpn6gX5PtS4kbgT+0kvf
+X-Google-Smtp-Source: AGHT+IEN3V2OLC8hZDOELnAVWI6ww13m5GBnJ8YaCGEl0AbmzOskx9R9Se1xuJeZm/tmBc9JT8v5uFIi9nlaU4PorAA=
+X-Received: by 2002:a05:6902:2683:b0:e60:b17c:423f with SMTP id
+ 3f1490d57ef6-e635c17bdb5mr13660886276.28.1741512403353; Sun, 09 Mar 2025
+ 01:26:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250308163003.GDZ8xwi0u3rAAX0J23@fat_crate.local>
+References: <20250308-phy-sam-hdptx-bpc-v5-0-35087287f9d1@collabora.com> <20250308-phy-sam-hdptx-bpc-v5-8-35087287f9d1@collabora.com>
+In-Reply-To: <20250308-phy-sam-hdptx-bpc-v5-8-35087287f9d1@collabora.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Sun, 9 Mar 2025 11:26:32 +0200
+X-Gm-Features: AQ5f1JqfxNZ22KnfkCh9BmlsU97_eUwp8gZfAiDHoYY-EuyqHBEuJ0Y2Zcaf2N0
+Message-ID: <CAA8EJpoGu4Tq-wt09Jj+b+=eJ3dNXhPWVOg4DyCQxrJbFNFfYw@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] phy: rockchip: samsung-hdptx: Setup TMDS char
+ rate via phy_configure_opts_hdmi
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Algea Cao <algea.cao@rock-chips.com>, 
+	Sandor Yu <Sandor.yu@nxp.com>, Maxime Ripard <mripard@kernel.org>, kernel@collabora.com, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Mar 08, 2025 at 05:30:03PM +0100, Borislav Petkov wrote:
-> On Sat, Mar 08, 2025 at 05:03:08PM +0100, Jörg-Volker Peetz wrote:
-> > [    0.000000] microcode: You should not be seeing this. Please send the
-> > following couple of lines to x86-<at>-kernel.org
-> > [    0.000000] microcode: CPUID(1).EAX: 0xa50f00, current revision: 0xa500011
-> 
-> This should fix it:
-> 
-> https://lore.kernel.org/r/20250307220256.11816-1-bp@kernel.org
+On Sat, 8 Mar 2025 at 14:21, Cristian Ciocaltea
+<cristian.ciocaltea@collabora.com> wrote:
+>
+> The current workaround to setup the TMDS character rate relies on the
+> unconventional usage of phy_set_bus_width().
+>
+> Make use of the recently introduced HDMI PHY configuration API to
+> properly handle the setup.  The workaround will be dropped as soon as
+> the switch has been completed on both ends.
+>
+> Rename rk_hdptx_phy_verify_config() to rk_hdptx_phy_verify_dp_config()
+> and introduce the rk_hdptx_phy_verify_hdmi_config() helper to check the
+> HDMI parameters during phy_configure().
+>
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 64 +++++++++++++++++------
+>  1 file changed, 47 insertions(+), 17 deletions(-)
+>
 
-Now queued up.
+> @@ -1469,8 +1474,27 @@ static int rk_hdptx_phy_power_off(struct phy *phy)
+>         return rk_hdptx_phy_consumer_put(hdptx, false);
+>  }
+>
+> -static int rk_hdptx_phy_verify_config(struct rk_hdptx_phy *hdptx,
+> -                                     struct phy_configure_opts_dp *dp)
+> +static int rk_hdptx_phy_verify_hdmi_config(struct rk_hdptx_phy *hdptx,
+> +                                          struct phy_configure_opts_hdmi *hdmi)
+> +{
+> +       int i;
+> +
+> +       if (!hdmi->tmds_char_rate || hdmi->tmds_char_rate > HDMI20_MAX_RATE)
+> +               return -EINVAL;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
+> +               if (hdmi->tmds_char_rate == ropll_tmds_cfg[i].rate)
+> +                       break;
 
+return 0;
+
+> +
+> +       if (i == ARRAY_SIZE(ropll_tmds_cfg) &&
+
+Then you can drop the first clause in the if
+
+> +           !rk_hdptx_phy_clk_pll_calc(hdmi->tmds_char_rate, NULL))
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +
+> +static int rk_hdptx_phy_verify_dp_config(struct rk_hdptx_phy *hdptx,
+> +                                        struct phy_configure_opts_dp *dp)
+>  {
+>         int i;
+>
+
+
+
+-- 
+With best wishes
+Dmitry
