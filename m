@@ -1,151 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7782114;
-	Sun,  9 Mar 2025 10:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0206C2C8
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 10:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741515840; cv=none; b=oaEH4DZid+W2QMR0C9WknwDY3ZzbBlCPHSxZaiWUyeyPenLabEbvHdFohEhfG800th9Jwd1GP2I4cQA5wno+/eHRad7QRtJBVMH7KKDzi+5AjvaTBe8kczH37idEiN4Au/5k/huv7PraLa+XPIj1Lvy7knMFgBmgmyuMZ8FOJeE=
+	t=1741516367; cv=none; b=N19kH2Il5/2d+T0yxaQVb60WBq4HP1tZxFsbnG6LA/Ln/KDlE8N+zaCALz0TwTGKFeTfFVWpua05/3YLaltToczOEp0tAIsxr+/JjFDQ5HjWUAhZ7D9NzqsDHTkn59L9ouXscLXK3HNscg2DxP2b6Os2iIGpCHowlf1SUkv4ZW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741515840; c=relaxed/simple;
-	bh=s4OlYYrHmgxAkduxUPPzl6dmn5j30zeeUCSL98+gt0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDdoX+cm4wwLmPdqnOuxbAKV0zaE8JWXvMq4tyKmqYHYCMgEpdlP9eya84LtL+6bdiltP1tv2uIzB2TccHq6N/vfrT17bpqqz0NRaZTdIKnBT0A5e0MJTqCxjV3WHLviZD4YjgPfolYdcdl7ZdJPm+k+Mo2pw2iiiPQ5VaLJZFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=p0/qQf7d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741516367; c=relaxed/simple;
+	bh=JNrhIUCl8uKi2zGaj3/5wmGyxr3eXLSdAcYya8I097M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LvAVVlSCjNfqDVTwSI2iNgCS96b3Wo7s8fIBBFxyfBlWD80anOvLcoGdPdXRppQb/UFB71a9FAsirxRnD8HADkBnU5wlPF5GhUC2sEafzTh8OVM42EMh7l8yxzP1LFcek4v468o/qAS7rZemNowtd41FXAP6A8IQjeJQI3vgDDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eOvl5Qjf; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="p0/qQf7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25358C4CEE5;
-	Sun,  9 Mar 2025 10:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741515839;
-	bh=s4OlYYrHmgxAkduxUPPzl6dmn5j30zeeUCSL98+gt0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p0/qQf7dbD1L/RE4VY7VRk5SHv13Ank8EeC7HdjaJUEqaRcajePJA1U0KNKe7MW69
-	 ZZKiur1ARxaCX4qN8Q236I1rnzq0+Kud1hLv77mnCSTSte3y1PPuNjZW8OcIqlXrQ6
-	 RK1+GlxIqL1eFPdysvH6YBZh4b1arYfz3jrRhDTw=
-Date: Sun, 9 Mar 2025 11:22:43 +0100
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	Aun-Ali Zaidi <admin@kodeit.net>, "paul@mrarm.io" <paul@mrarm.io>,
-	Orlando Chamberlain <orlandoch.dev@gmail.com>
-Subject: Re: [PATCH RFC] staging: Add driver to communicate with the T2
- Security Chip
-Message-ID: <2025030929-cryptic-ducky-9e23@gregkh>
-References: <2025030931-tattoo-patriarch-006d@gregkh>
- <PN3PR01MB9597793C256B5A16048ADBFDB8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <2025030937-antihero-sandblast-7c87@gregkh>
- <PN3PR01MB9597F037471B133B54BA25BCB8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <2025030935-contently-handbrake-9239@gregkh>
- <PN3PR01MB9597F040DD8F5A9B1A65B397B8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <2025030909-recoup-unafraid-1df0@gregkh>
- <PN3PR01MB95970E60B250F91CA8E12720B8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <2025030901-deceiver-jolliness-53f5@gregkh>
- <PN3PR01MB9597B64008E01DC0336FAE37B8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eOvl5Qjf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741516364;
+	bh=JNrhIUCl8uKi2zGaj3/5wmGyxr3eXLSdAcYya8I097M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eOvl5QjfMn0ehXW+yjOg/C2Wlgqm5TwbMy8zOJDl4wTd/8N7s+YDpdtaCY2noon17
+	 5DscJYUNLrxlNDs4AXY9GkJ8pYGtfTDT7qQbkKv8Ke+mAbJVY9f8T4qym3Cgegs/S2
+	 Sy7nrsPvVd24Y2eYIUHmwXOZR9UHr+UPtXsii1HZBZHLDvwqQprA3qkC00UViMdIhl
+	 VrlTrqe5GPMDQl7Mxn7nqUOokkYsCCkdWazQ3g+NoRVWw8E0TXnLyS/Yw8HViy16iq
+	 ZUFaBxRe2WjHvgJbK8M0OdT+Vnu0cGblpGUps9EDZErep6nQnnyZhO6Uk7RlM5XCcV
+	 sH+BDFEXL8kwg==
+Received: from [192.168.1.90] (unknown [84.232.140.93])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8025817E05C1;
+	Sun,  9 Mar 2025 11:32:43 +0100 (CET)
+Message-ID: <884acd6e-4936-4b00-88ed-cbccc10efc9c@collabora.com>
+Date: Sun, 9 Mar 2025 12:32:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PN3PR01MB9597B64008E01DC0336FAE37B8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/12] phy: rockchip: samsung-hdptx: Optimize internal
+ rate handling
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>,
+ Maxime Ripard <mripard@kernel.org>, kernel@collabora.com,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250308-phy-sam-hdptx-bpc-v5-0-35087287f9d1@collabora.com>
+ <20250308-phy-sam-hdptx-bpc-v5-11-35087287f9d1@collabora.com>
+ <CAA8EJpqzZaRoQ5mDeKUHpNhYsegC=V6c2SQpKaQn4FYhozQn1A@mail.gmail.com>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <CAA8EJpqzZaRoQ5mDeKUHpNhYsegC=V6c2SQpKaQn4FYhozQn1A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 09, 2025 at 10:12:06AM +0000, Aditya Garg wrote:
+On 3/9/25 12:17 PM, Dmitry Baryshkov wrote:
+> On Sat, 8 Mar 2025 at 14:21, Cristian Ciocaltea
+> <cristian.ciocaltea@collabora.com> wrote:
+>>
+>> Drop the rate parameter from a bunch of internal helpers and, instead,
+>> make better use of the newly introduced ->hdmi_cfg.tmds_char_rate driver
+>> data.
+>>
+>> Additionally, rename the rather ambiguous ->rate member of struct
+>> rk_hdptx_phy to ->hw_rate and ensure rk_hdptx_ropll_tmds_cmn_config()
 > 
+> Would it be better to name it tmds_char_rate?
+
+This is only used in rk_hdptx_phy_clk_recalc_rate() to provide the
+actual rate programmed in hardware, hence the "hw_rate" naming.
+Renaming it to tmds_char_rate might add some confusion with the similar
+one in ->hdmi_cfg, but I don't really have any strong preference here.
+
+>> updates it only after all the other operations have been successful.
 > 
-> > On 9 Mar 2025, at 3:26 PM, gregkh@linuxfoundation.org wrote:
-> > 
-> > ﻿On Sun, Mar 09, 2025 at 09:52:43AM +0000, Aditya Garg wrote:
-> >> 
-> >> 
-> >>>> On 9 Mar 2025, at 3:21 PM, gregkh@linuxfoundation.org wrote:
-> >>> 
-> >>> ﻿On Sun, Mar 09, 2025 at 09:41:29AM +0000, Aditya Garg wrote:
-> >>>> 
-> >>>> 
-> >>>>>> On 9 Mar 2025, at 3:09 PM, gregkh@linuxfoundation.org wrote:
-> >>>>> 
-> >>>>> ﻿On Sun, Mar 09, 2025 at 09:28:01AM +0000, Aditya Garg wrote:
-> >>>>>> 
-> >>>>>> 
-> >>>>>>>> On 9 Mar 2025, at 2:46 PM, gregkh@linuxfoundation.org wrote:
-> >>>>>>> 
-> >>>>>>> ﻿On Sun, Mar 09, 2025 at 09:03:29AM +0000, Aditya Garg wrote:
-> >>>>>>>> 
-> >>>>>>>> 
-> >>>>>>>>>> On 9 Mar 2025, at 2:24 PM, gregkh@linuxfoundation.org wrote:
-> >>>>>>>>> 
-> >>>>>>>>> ﻿On Sun, Mar 09, 2025 at 08:40:31AM +0000, Aditya Garg wrote:
-> >>>>>>>>>> From: Paul Pawlowski <paul@mrarm.io>
-> >>>>>>>>>> 
-> >>>>>>>>>> This patch adds a driver named apple-bce, to add support for the T2
-> >>>>>>>>>> Security Chip found on certain Macs.
-> >>>>>>>>>> 
-> >>>>>>>>>> The driver has 3 main components:
-> >>>>>>>>>> 
-> >>>>>>>>>> BCE (Buffer Copy Engine) - this is what the files in the root directory
-> >>>>>>>>>> are for. This estabilishes a basic communication channel with the T2.
-> >>>>>>>>>> VHCI and Audio both require this component.
-> >>>>>>>>> 
-> >>>>>>>>> So this is a new "bus" type?  Or a platform resource?  Or something
-> >>>>>>>>> else?
-> >>>>>>>> 
-> >>>>>>>> It's a PCI device
-> >>>>>>> 
-> >>>>>>> Great, but then is the resources split up into smaller drivers that then
-> >>>>>>> bind to it?  How does the other devices talk to this?
-> >>>>>> 
-> >>>>>> We technically can split up these 3 into separate drivers and put then into their own trees.
-> >>>>> 
-> >>>>> That's fine, but you say that the bce code is used by the other drivers,
-> >>>>> right?  So there is some sort of "tie" between these, and that needs to
-> >>>>> be properly conveyed in the device tree in sysfs as that will be
-> >>>>> required for proper resource management.
-> >>>> 
-> >>>> Yes there needs to be a tie, basically first establish a communication with the t2 using bce and then the other 2 come into the picture. I did get a basic idea from what the maintainers want, and this will be some work to do. Thanks for your inputs!
-> >>> 
-> >>> If there is "communication" then that's a bus in the driver model
-> >>> scheme, so just use that, right?
-> >> 
-> >> So basically RE the whole driver to see what exactly should be use?
-> > 
-> > I'm sorry, I can not parse this.
-> 
-> 
-> I was asking that should I introduce a completely new bus instead of
-> pci and probably reverse engineer the original macOS driver to see
-> what exactly is going on there?
+> Please don't mix refactoring / renames and the actual code changes.
 
-No, if it's a PCI device on a PCI bus, then use the PCI api for all of
-that.
+Right, I should have moved that to a dedicated patch.  Will handle in
+the next revision.
 
-It's what that PCI device "exposes" here, are the other devices, like
-the USB host controller, hanging off of that, or are they real PCI
-devices as well?
-
-What exactly does this BCE driver do?
-
-> I might not have been clear, but I'm not the author of this patch.
-
-That's fine, but why doesn't the original author want to do this work?
-Have you asked them if they want this code included in the kernel tree?
-Who is going to do the maintenance for it and who is going to answer
-questions like the ones I have here?
-
-And again, what is with the new user/kernel api being added?  What is
-all of that for?
-
-thanks,
-
-greg k-h
+Thanks,
+Cristian
