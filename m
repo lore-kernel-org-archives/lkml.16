@@ -1,154 +1,126 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761B217C77;
-	Sun,  9 Mar 2025 07:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35D417C77
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 07:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741506455; cv=none; b=pTzahQLnug0fBcgRZTk549Z28MjMYw//o+YPhZvt3eLsu+a+Z1HbWmAfUhgPQvfkh+Whg7ZoShTZ96cl/Jph1rv+JkWmjejyBiZkn0k35GcUPeAAEumnuAzrlm3BCc2vGmdry8blz+WzKIcpJlGRUlcMwafgsR8nxvLuk1gRWDY=
+	t=1741506619; cv=none; b=pxNd9CEz3D/JI9VkLDbs5OwK7KI/kwN8KlscSiC7TqQ29vkHj4x7kpDOlqB5h5IccGxlqCN31cUxlEdK4fPCHzhePhl81DXM7lwU/rsR0bL23Ch7CTiYAhrZ2n0I6TzecIKDAkC6phn/LnAuUuhMFg3dsQqpC9yM6h1TwdnujoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741506455; c=relaxed/simple;
-	bh=qtXCXe+nNyfcyRAulZDFi2Udoq+tbMD7n9+7CwQJoXc=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=To7D+9BbLrppEyB5HVeAXrdhEZt2BwC2pjG6wqkCbzUcihaEzQ0sPUIRA4ab1oxcieTa+ykd24lGGE3b5mrbYms8OzGZNG2YlBKu4zMpdUvFBkrXrVzpqF+FEMpOymMKa0JCLs/MzYFnaLWLCGiONv/L7rhLlwV1yE9Tp7HPtos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kHtuooKT; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1741506619; c=relaxed/simple;
+	bh=/4UNSiBYoPdChrC/c4VnDQ5DFzsk7Mw5wBAtjO2LQBU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uHOyc5fQY0POEfp3fhpQHqH7s6iRnS1sM90KfgolMWU9ib0bzm+lIZw+CuM0Jhsr5aeQ83x0TAeMqr7rk9rguvhga0utDO2IDL5mfoSwWk4Uqf728e/1ZYv4bq5VVecsCchuXwoXefR+IiEVWqZGtF7Q+2h3N718Tfc8kclTnTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JW54Gs4w; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kHtuooKT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741506439; bh=UuctHCw54Sbs+GMXZiA+9NBNhsVaLpJkYq7/z98yanc=;
-	h=From:To:Cc:Subject:Date;
-	b=kHtuooKT48tsok0BZV5wfYaQo4lrCy2wxYYfyBLLZMdE25Oo64UsKKI9M/J/sbOEu
-	 ceEmh14M0VjEUWUK7J/5KLgHX8gdhvyhDSqH7BdJCus1esA/z2BYetd3Xe2l5lQOL3
-	 P5cRaZ0gUsJaonoTy5QnPRI+Vmz3Yp9+ahCW0zw0=
-Received: from localhost.localdomain ([59.66.26.122])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id BD13AEE0; Sun, 09 Mar 2025 15:47:17 +0800
-X-QQ-mid: xmsmtpt1741506437ty97nhdku
-Message-ID: <tencent_0A154BBE38E000228C01BE742CB73681FE09@qq.com>
-X-QQ-XMAILINFO: NouDQD3dZCwaaL7UEsvYJy45KdtSWtllmld6g/xFR5bnFZB3OHNNpL+AnFsFCn
-	 5eL0r4MmUInGwGPq3ytPdImyqTee9RnvxXs9dFvi25efOaLjpFRkGY52nhV4jPLTTYhFH0Fg/CFX
-	 JpWCn6Ozzz6XcHh4pJikoOry/g0jBv0idm2Kr/9cUx19Dmf42iQqRBeRv6f1XUkRha3a8Jcv+Hc6
-	 JLWq0x/PKiqcyH8bJVLvAhuN/Bh4+eloxqYwDcgl8UE8Xs+HnaDQ7UM8/tBuid/mIapt9Ux7bkSF
-	 eIp7n52PPc2e2c7XdlxkdRIm2PAVOee51QumLlTPBkJOmEIIaQdAd4oQIZPIo/l0uDOf0WgpBsEf
-	 NjqDNGQV/YhJGBeNiPXL66hO79e9NeuNVmQ2XUB7ewrGMJFwFsqP+kwllDnH2o7hTxs2FEEw7Smy
-	 Nux/fG9SwgsjM973B7j6ENwr4AdfcG2VaTuVLTpHsg3uRCpTWv7LAJJJEE3gggwy1gKY1V3d9+nF
-	 FoEHheeE/KDYhz8FTjOB4AN5yQcEtMhmeZpc5ao3sxa009cnU17P9WhiF2OgWMKcFqK/pqUBnUTV
-	 XgMKMXt3AOUpwam9GweJu1yY9IV/E85fJFWSUZ+B4M2EGAAHbrurK0RDQWif0qmsCDY7B78Lc9FX
-	 mm4AI/YhvFMgo0aVPa97YKKTwDWIFl5Uwi4cBBdi3fp08tn7nECpeLOw6dnRDN0XIMAuB00qbuDB
-	 CY92jN+Sli58OQqwLWA2IYebsTbz3TYYZEjAQsIf+Nt/DtHvJ3o89+6xI7Sx9M58U738SHF5OOEi
-	 EZrmc+CuYiOzvZAxha4LLRNgeAZk6lNUqD8lLSA50gk5wv5+QfT8RTN5ZmHcNtexEjVFaTzmFiYc
-	 fGZS1a3cQNG48fpUAE3AwDKfSUDKO5alV40jy9vugy3dhJ9rk/bt0DVOGeJ1U6CM7wH/peGI3rja
-	 BxkRe8qtPthhmIM2X6rSqi618vJhPtemStqChy5pgt4OQr+SF9xeUN28tvjtUO5ys9hXF+e/c=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Hanyuan Zhao <hanyuan-z@qq.com>
-To: davem@davemloft.net,
-	kuba@kernel.org,
-	andrew+netdev@lunn.ch,
-	edumazet@google.com,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hanyuan Zhao <hanyuan-z@qq.com>
-Subject: [PATCH 1/2] net: enc28j60: support getting irq number from gpio phandle in the device tree
-Date: Sun,  9 Mar 2025 15:47:08 +0800
-X-OQ-MSGID: <20250309074709.127504-1-hanyuan-z@qq.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JW54Gs4w"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30b83290b7bso36716391fa.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Mar 2025 23:50:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741506616; x=1742111416; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U61qrkFOwoXR06m7zLiDQZVTSFxcg8gP2ViCYbXH5mM=;
+        b=JW54Gs4wXaFG4Sp0yRbB7ehXVBu9BhGWY8x5pmyz6sTa9U26ol6Q9r+F30ly77Qsgb
+         oNPbrO1/kntLSVXAT+nTeZo/YZ0Aw+8rinmXR32IGUep61HKi3LBKf5E3/tSp/d3EZOA
+         ocX7NUjJR6Uwi07MS8iSYKNPPCrrmOIEudMvizV4W/X2/kwJEJybYVUI5sc+Yip56rOT
+         TUbY2QN6j0yPWvVIhRhNk6Sj8d/omuWewPZOXnuHaDi+oDSIYcuMRCnbLoNptwDjZEhE
+         UabOtsLBRC2vEjg/dzI0W9jj1KFaTaxbgAXJSJ/c6Vee35VMAT6RVq9sHjGFtkzrHDvp
+         5p1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741506616; x=1742111416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U61qrkFOwoXR06m7zLiDQZVTSFxcg8gP2ViCYbXH5mM=;
+        b=Qu6uIMFXpg3aon1LGGBqgWnvcVHe6/MZ7nAcnI0pfXgOaLDW9uJyygpk6Dte1ki+pl
+         ME/Wl/GInidoaTpmB9w62TGQDOHg+DVVz5Xlz0iR/5uiSUCjJXWc3U+x4v/g3o2he/hP
+         FkdNBRqtNnceG6WeM/5Hmz6NmNfjM7K6I4NL1OBl0PeyPY7E9pF1GTky975guEsIRf/7
+         +rNm+K01BXNZ/0va3jhfW34Mlprb2mR3IAHHXfKnzZyMr91mcGivMjDXS/7FstDfWyYv
+         AEjjadK5fReYubZmjc2RGFGm+6QqhzlIs4bQEBlfQEKkUDf15qyT0OowX96RqdE462vA
+         muIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVNt8ZQ8rUV5ajIy2f9/ThHsBTkGCHfqqaT1Dn55UIqKs1yUNxSo4gZE0hgNeOB3AHloM6tCvbyYmk1FQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWueGjVBqBT4YgC7YHgm6LrhFlzO/vdW8F+Tsg+h2lxBIcn5rP
+	8n/USeAV4qC/h2kVLU+7uDF8ZZvDcABMcs0+KaIxW4J4msTJf8paUFBA66552D0/cXY7rNGFzu0
+	fr6ljgSaXo3KfBjofY9pnhLI5zG/H3o2X
+X-Gm-Gg: ASbGncvWHCOcEiON+7CIjfU3FndxKAhrsjY2Y0MjLjtkOIULLmSBT6iX6Lg+4f0lyzq
+	UVdCigrM3Ml8wt5+5Y/fGSjMN84Lg2XVF3Ce3IzWgQQ1Rbe8RNPkVUoww7Sjb/SYnTt2S/q5UBE
+	8fY8LkNlciZuhF/u4Z1PD27i1THQ==
+X-Google-Smtp-Source: AGHT+IFZAPhwlu7rJk89LBID0Zh+JpgT4CJYFLEmtLXXzNOanWwC81VtkqC7otzYI4JJz716YI2EDiVPjmlwMNoCPXQ=
+X-Received: by 2002:a2e:be05:0:b0:30c:ae8:8f53 with SMTP id
+ 38308e7fff4ca-30c0ae8908bmr5196891fa.36.1741506615588; Sat, 08 Mar 2025
+ 23:50:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250228123825.2729925-1-ubizjak@gmail.com> <20f1af22-71dc-4d62-9615-03030012222e@intel.com>
+ <954c7084-3d6f-47b8-b6cc-08a912eda74c@zytor.com>
+In-Reply-To: <954c7084-3d6f-47b8-b6cc-08a912eda74c@zytor.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 9 Mar 2025 08:50:08 +0100
+X-Gm-Features: AQ5f1JqlmsEZAOS0QZ9ftyii4l7581MonDMIUMS15ZpDzEXHIl5uJ7AXZtlXQ58
+Message-ID: <CAFULd4Z0FugNh7+6c5Di_o6zKTNOmkNytEpn0kfPhinFQEOSzA@mail.gmail.com>
+Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
+ locking insns
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch allows the kernel to automatically requests the pin, configures
-it as an input, and converts it to an IRQ number, according to a GPIO
-phandle specified in device tree. This simplifies the process by
-eliminating the need to manually define pinctrl and interrupt nodes.
-Additionally, it is necessary for platforms that do not support pin
-configuration and properties via the device tree.
+On Sat, Mar 8, 2025 at 8:08=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrote=
+:
+>
+> On 2/28/25 08:48, Dave Hansen wrote:
+> > On 2/28/25 04:35, Uros Bizjak wrote:
+> >> The code size of the resulting x86_64 defconfig object file increases
+> >> for 33.264 kbytes, representing 1.2% code size increase:
+> >>
+> >>     text    data     bss     dec     hex filename
+> >> 27450107        4633332  814148 32897587        1f5fa33 vmlinux-old.o
+> >> 27483371        4633784  814148 32931303        1f67de7 vmlinux-new.o
+> >
+> > So, first of all, thank you for including some objective measurement of
+> > the impact if your patches. It's much appreciated.
+> >
+> > But I think the patches need to come with a solid theory of why they're
+> > good. The minimum bar for that, I think, is *some* kind of actual
+> > real-world performance test. I'm not picky. Just *something* that spend=
+s
+> > a lot of time in the kernel and ideally where a profile points at some
+> > of the code you're poking here.
+> >
+> > I'm seriously not picky: will-it-scale, lmbench, dbench, kernel
+> > compiles. *ANYTHING*. *ANY* hardware. Run it on your laptop.
+> >
+> > But performance patches need to come with performance *numbers*.
+>
+> Incidentally, this is exactly the reason why gcc added "asm inline" *at
+> our request*. We just haven't caught up with it everywhere yet.
+>
+> In fact, I would wonder if we shouldn't simply do:
+>
+> #define asm __asm__ __inline__
+> #define asm_noinline __asm__
+>
+> ... in other words, to make asm inline an opt-out instead of an opt-in.
+> It is comparatively unusual that we do complex things in inline assembly
+> that we would want gcc to treat as something that should be avoided.
 
-Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
----
- drivers/net/ethernet/microchip/enc28j60.c | 25 ++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+I don't think we need such radical changes. There are only a few
+groups of instructions, nicely hidden behind macros, that need asm
+noinline. Alternatives (gcc counted them as 20 - 23 instructions) are
+already using asm inline (please see
+arch/x86/include/asm/alternative.h) in their high-level macros, and my
+proposed patch converts all asm using LOCK_PREFIX by amending macros
+in 7 header files.
 
-diff --git a/drivers/net/ethernet/microchip/enc28j60.c b/drivers/net/ethernet/microchip/enc28j60.c
-index d6c9491537e4..b3613e45c900 100644
---- a/drivers/net/ethernet/microchip/enc28j60.c
-+++ b/drivers/net/ethernet/microchip/enc28j60.c
-@@ -24,6 +24,7 @@
- #include <linux/skbuff.h>
- #include <linux/delay.h>
- #include <linux/spi/spi.h>
-+#include <linux/of_gpio.h>
- 
- #include "enc28j60_hw.h"
- 
-@@ -1526,6 +1527,7 @@ static int enc28j60_probe(struct spi_device *spi)
- 	struct net_device *dev;
- 	struct enc28j60_net *priv;
- 	int ret = 0;
-+	unsigned long irq_flags = IRQF_ONESHOT;
- 
- 	if (netif_msg_drv(&debug))
- 		dev_info(&spi->dev, "Ethernet driver %s loaded\n", DRV_VERSION);
-@@ -1558,20 +1560,33 @@ static int enc28j60_probe(struct spi_device *spi)
- 		eth_hw_addr_random(dev);
- 	enc28j60_set_hw_macaddr(dev);
- 
-+	if (spi->irq > 0) {
-+		dev->irq = spi->irq;
-+	} else {
-+		/* Try loading device tree property irq-gpios */
-+		struct gpio_desc *irq_gpio_desc = devm_fwnode_gpiod_get_index(&spi->dev,
-+				of_fwnode_handle(spi->dev.of_node), "irq", 0, GPIOD_IN, NULL);
-+		if (IS_ERR(irq_gpio_desc)) {
-+			dev_err(&spi->dev, "unable to get a valid irq gpio\n");
-+			goto error_irq;
-+		}
-+		dev->irq = gpiod_to_irq(irq_gpio_desc);
-+		irq_flags |= IRQF_TRIGGER_FALLING;
-+	}
-+
- 	/* Board setup must set the relevant edge trigger type;
- 	 * level triggers won't currently work.
- 	 */
--	ret = request_threaded_irq(spi->irq, NULL, enc28j60_irq, IRQF_ONESHOT,
-+	ret = request_threaded_irq(dev->irq, NULL, enc28j60_irq, irq_flags,
- 				   DRV_NAME, priv);
- 	if (ret < 0) {
- 		if (netif_msg_probe(priv))
- 			dev_err(&spi->dev, "request irq %d failed (ret = %d)\n",
--				spi->irq, ret);
-+				dev->irq, ret);
- 		goto error_irq;
- 	}
- 
- 	dev->if_port = IF_PORT_10BASET;
--	dev->irq = spi->irq;
- 	dev->netdev_ops = &enc28j60_netdev_ops;
- 	dev->watchdog_timeo = TX_TIMEOUT;
- 	dev->ethtool_ops = &enc28j60_ethtool_ops;
-@@ -1589,7 +1604,7 @@ static int enc28j60_probe(struct spi_device *spi)
- 	return 0;
- 
- error_register:
--	free_irq(spi->irq, priv);
-+	free_irq(dev->irq, priv);
- error_irq:
- 	free_netdev(dev);
- error_alloc:
-@@ -1601,7 +1616,7 @@ static void enc28j60_remove(struct spi_device *spi)
- 	struct enc28j60_net *priv = spi_get_drvdata(spi);
- 
- 	unregister_netdev(priv->netdev);
--	free_irq(spi->irq, priv);
-+	free_irq(priv->netdev->irq, priv);
- 	free_netdev(priv->netdev);
- }
- 
--- 
-2.43.0
-
+Uros.
