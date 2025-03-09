@@ -1,126 +1,89 @@
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175924C70;
-	Sun,  9 Mar 2025 08:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C39383A2
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 08:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741508410; cv=none; b=tPGYEeJT5BeqNtIqBq+N9a8gqSzlSlwugdRDeaFEAQufFkwBfKY39tovILq4J6qArwwORPFb17eJQsmnBJFygpN98YaB2rkaaScaOav/yAIBL9ZAKd2XesHqqmhivAkJvT3fViDIG9LJ5Em1J3/+DxkeOGt82u94eCyxuwOXzag=
+	t=1741508514; cv=none; b=qbS530CYzmk6wSnBjgr+sNs8qL4jCAU7Ja66k3S9VDeQqHhvQhDxH4GM1z8jSbqCYXk1HpFJgaS7yLus0bweSwr/kO5jh360jaRhm6ffT0OgqYpMD7shQvGfs4SxV/rgcrYfUKrlS8Nh/WJ0zK1vc3Cxs7NXxZt04YzAjiMT0Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741508410; c=relaxed/simple;
-	bh=YJd7K01Y9oAxYGKugOPKABLM5bgZH6skQOHXLa+naD0=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=SNn4o1j0xqyDfe7kx2hCT/fWvqY8DN99f5WOzDMvNb9xlvoVjLdQsJs8Zt5tdEsiXjFCL16C/9cY94/3Isl1XroFZa0CXKpsLODyEBvIKmNSSobauzwWxs4Z4CZXPMaF5QsLJSo3Rt0CyxqA+405OC9VjUSr2RjvnJ3+qrrQz9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=lVK7/nlj; arc=none smtp.client-ip=203.205.221.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1741508514; c=relaxed/simple;
+	bh=TrZ7azIrzbMSkZBddckej2yJsiFDejtt8ghoGU2gH+A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=usoYBqhaRp/2tc0BAGJjxfN7OxYBSCUaEeynxFW4jYTymhQk1V1kM6y8KNpe2WvhJNbFBBBihnvEaUpxlC0YY8ZKxJlybACBgSlLfyM+f+TsyFrEHQ18IgzUzKzqUF//HjG0Bf5pCSzMTLMkMtX9u3oPsj+nXfY+0Kg0mGwDcEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4waA2xo0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BJTKeMwS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="lVK7/nlj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741508397; bh=4QtA+Ouj6OoRKOCD+7cWv7slbqgJtrFMVALehC4qc0U=;
-	h=From:To:Cc:Subject:Date;
-	b=lVK7/nljBjPbarDAcbzMMtJbDFS11KDsPdCszCjqVdQqxVTxGODLmsFJHE2NIz8Hc
-	 dV83rFxmyyC5J16tfqQtcjU8hwZVnQuQiztwY1FJsJf2n3ji9y9Lq206wzMs/jsIxe
-	 RgYWUTB5/isKAH6AaN87KKkRBMjPuLIaivbb496s=
-Received: from localhost.localdomain ([59.66.26.122])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id C36296A9; Sun, 09 Mar 2025 15:48:54 +0800
-X-QQ-mid: xmsmtpt1741506534t5qburu87
-Message-ID: <tencent_8031D017AFE5E266C43F62C916C709009E06@qq.com>
-X-QQ-XMAILINFO: M1rD3f8svNznEc2CaSvmAf4Ta9dC0ocsEd5uActWCQeQAhzP/KMe3RJHaaYeW3
-	 yDZE3VQKEcoEB5K5rnqLVlXRGT3m0sfkN7nRHxj1cUiVqB83PftxbfHlioAZzEyRXESJtVaCuVMK
-	 CCQOyJX7tfbP29TXafJh2e0ct6OPDCiNZp3il7sBRPC57Uq+CIgbD1ZVs1xHPdK7p7umipefS9ul
-	 DugW5NTlBob7n4I3I3+7xzoSsl+bBFcAkIIDHoVCua1nf+GzLZgmqcoTX4vVHtZuDNlLFIX1+NRV
-	 m1E6JA0zCzT/nGF71Xo0/m43JznAiTJWv7xytCqTbYofAUzPTsg5CLgO90Gu1f6kgDYjsXhhzWsW
-	 aLz7t61Ug3Ho1WjAczlYwQ4fwD4DLy7iGc1JJaoPyy6bhRmtxheqUFv637O/rXqc6Vz3M5Ldgwpw
-	 6hbJLyaVqBWhZ4jHoXcFYAJ6awOaQcmXbEkvQVnEBs2rwEAiup3QITUgCk/kDywBIkCY1yaQgpOJ
-	 d8vM0Q1BjLhaj2jKydm2j1haAO9aWCBs+hP3lljgJwM/uPUe4Z23fr5vK9lEUWLAPnq6EujjSdch
-	 uXG5ChCAe1uX1u1JHFm9RKDXHUZW80a742RHW6cEkcJsMq6ldNX/3jjyJzeFN7PE/8UePF0ocSXt
-	 YdkkoYMdmBlzb99nQKozcz5h/NTOisMQ6v6CANl1Dmvkq5Uz5FkEy9J+CHHQWhbZNencRH2c0zIn
-	 AnY8PSb05Czt5dDXVpl4Kqp9jE0RD0mYF5xUtBEs4kSYNV3aWpBtP+qfu577t+h0O6KNGKXR3dHV
-	 D8DbMiVM/+Mld5OuNC995Xy96mmsuzDZgLfE8IwOHIob8vAcy6uPKlhiSahsSo6Ab/zRs50N2awb
-	 XSL+hsLnPKYVS6XMD94CGURh7Lt5oMtqfoJNULkXmYMKuWn+4f0b682dZsap9Mhj98Pb5bCbyR4O
-	 JRh2Pf1N6Sc7GDeb4DcI7AP7flODfIbtOr+T1HGLvwkNO9CxOhWrFElTbANZ31cL5W3c1VvgHy06
-	 l25E2kATZzV+WQXbLI7350ab0Lklc=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Hanyuan Zhao <hanyuan-z@qq.com>
-To: davem@davemloft.net,
-	kuba@kernel.org,
-	andrew+netdev@lunn.ch,
-	edumazet@google.com,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hanyuan Zhao <hanyuan-z@qq.com>
-Subject: [PATCH 2/2] dt-bindings: net: add enc28j60's irq-gpios node description and binding example
-Date: Sun,  9 Mar 2025 15:48:38 +0800
-X-OQ-MSGID: <20250309074838.128110-1-hanyuan-z@qq.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4waA2xo0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BJTKeMwS"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741508504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbwmK4gTnd6mpuy9RKYPZlJJq01XNnEJiMFrXc5ggFo=;
+	b=4waA2xo0yl+81huxniNyu0by6KET8Znv0va2nUMQSMYuOUYFnJ2Ocsg7lcLjY8wBjAl5Uo
+	8J9fKk/1BSvCrPyDbBxiQYw8ClOg/lJhJTwJqtonJCdHd5bUi0KLrq+TWgqmgcnpAMGIvV
+	+HHB5+fvKGTw+sOBWL0haVHBEeWQpP5Ukl1czc8j2u+qoKBXKE/HlIXmaC0CIkVANpa7Y+
+	+VvXmjSGiwAPkecBS7a8DUbdwxNUhNBeZGT4SACJ9rrUy9hMoEepIZ90OLsYVpPE80VMfa
+	ist3JsR8JTxEjXd9+Q3TKlKWbtkOOVPVQ4HgW121wobTHWZJfl1ceCYDzQFZBQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741508504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbwmK4gTnd6mpuy9RKYPZlJJq01XNnEJiMFrXc5ggFo=;
+	b=BJTKeMwSfM597oZBERdNxIZuVn2vaq7XYVDw5nkMYI/EfFlNU8+2sIESKR/nLUWRRx+6WU
+	rDVfeAWOmvV87vAQ==
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Benjamin Segall <bsegall@google.com>, Eric
+ Dumazet <edumazet@google.com>, Andrey Vagin <avagin@openvz.org>, Pavel
+ Tikhomirov <ptikhomirov@virtuozzo.com>, Peter Zijlstra
+ <peterz@infradead.org>
+Subject: Re: [patch V2 08/17] posix-timers: Rework timer removal
+In-Reply-To: <Z8zJQtzLIliTNe2e@pavilion.home>
+References: <20250302185753.311903554@linutronix.de>
+ <20250302193627.416552300@linutronix.de> <Z8t7UJUd9SLT0Ytj@pavilion.home>
+ <8734fn53b5.ffs@tglx> <Z8zJQtzLIliTNe2e@pavilion.home>
+Date: Sun, 09 Mar 2025 09:21:44 +0100
+Message-ID: <87msdu397r.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This patch allows the kernel to automatically requests the pin, configures
-it as an input, and converts it to an IRQ number, according to a GPIO
-phandle specified in device tree. This simplifies the process by
-eliminating the need to manually define pinctrl and interrupt nodes.
-Additionally, it is necessary for platforms that do not support pin
-configuration and properties via the device tree.
+On Sat, Mar 08 2025 at 23:48, Frederic Weisbecker wrote:
+> Le Sat, Mar 08, 2025 at 09:34:06AM +0100, Thomas Gleixner a =C3=A9crit :
+>> >> --- a/kernel/time/posix-timers.c
+>> >> +++ b/kernel/time/posix-timers.c
+>> >> @@ -279,7 +279,7 @@ static bool __posixtimer_deliver_signal(
+>> >>  	 * since the signal was queued. In either case, don't rearm and
+>> >>  	 * drop the signal.
+>> >>  	 */
+>> >> -	if (timr->it_signal_seq !=3D timr->it_sigqueue_seq || WARN_ON_ONCE(=
+!timr->it_signal))
+>> >> +	if (timr->it_signal_seq !=3D timr->it_sigqueue_seq || !posixtimer_v=
+alid(timr))
+>> >
+>> > Hmm, should it still warn here? ie: WARN_ON_ONCE(!posixtimer_valid(tim=
+r)) ?
+>>=20
+>> No, because the timer is invalidated early now.
+>
+> But the signal can only be queued before posix_timer_delete(). So
+> if the bit 0 of it_signal has been reset, it_signal_seq must have been
+> incremented along, right?
+>
+> And if so then timr->it_signal_seq =3D=3D timr->it_sigqueue_seq must imply
+> posixtimer_valid(). And if not we should warn. Or am I missing something?
 
-Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
----
- .../bindings/net/microchip,enc28j60.txt       | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/microchip,enc28j60.txt b/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
-index a8275921a896..e6423635e55b 100644
---- a/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
-+++ b/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
-@@ -8,6 +8,8 @@ the SPI master node.
- Required properties:
- - compatible: Should be "microchip,enc28j60"
- - reg: Specify the SPI chip select the ENC28J60 is wired to
-+
-+Required interrupt properties with pin control subsystem:
- - interrupts: Specify the interrupt index within the interrupt controller (referred
-               to above in interrupt-parent) and interrupt type. The ENC28J60 natively
-               generates falling edge interrupts, however, additional board logic
-@@ -17,6 +19,14 @@ Required properties:
-              see also generic and your platform specific pinctrl binding
-              documentation.
- 
-+Required interrupt properties with a single GPIO phandle:
-+- irq-gpios: Specify the GPIO pin used as the interrupt line. When this property is
-+             set, the kernel automatically requests the pin, configures it as an input,
-+             and converts it to an IRQ number. This simplifies the process by
-+             eliminating the need to manually define pinctrl and interrupt nodes.
-+             Additionally, it is necessary for platforms that do not support pin
-+             configuration and properties via the device tree.
-+
- Optional properties:
- - spi-max-frequency: Maximum frequency of the SPI bus when accessing the ENC28J60.
-   According to the ENC28J80 datasheet, the chip allows a maximum of 20 MHz, however,
-@@ -54,3 +64,17 @@ Example (for NXP i.MX28 with pin control stuff for GPIO irq):
-                         fsl,pull-up = <MXS_PULL_DISABLE>;
-                 };
-         };
-+
-+Example (if can not configure pin properties via the device tree):
-+
-+        &spi2 {
-+                status = "okay";
-+                cs-gpios = <&porta 23 GPIO_ACTIVE_LOW>;
-+
-+                enc28j60: ethernet@1 {
-+                        compatible = "microchip,enc28j60";
-+                        reg = <0>;
-+                        spi-max-frequency = <12000000>;
-+                        irq-gpios = <&porta 24 GPIO_ACTIVE_HIGH>;
-+                };
-+        };
--- 
-2.43.0
-
+You're just missing the fact, that I managed to confuse myself :)
