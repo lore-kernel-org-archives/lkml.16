@@ -1,60 +1,62 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E625F1DF279
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 18:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3BE41F8737
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 18:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741546571; cv=none; b=ujrUJt3oAvtDpCDJiaCIn95+HieZCNvG5UKEX0/K1aoAalqTV+vlhIJsomRiXBNK7ftsinNYy/njj5L1+2Z7iZLeK54rSP/2gh9fzhW1SvB1lzghD5XgkciyhM08KF6WClKY+twsK6LqkwuRLj45+v31UZ7g+jP+fFG7dAhK4No=
+	t=1741546573; cv=none; b=Z023f5Im27Fymq1bT1mTG4Drboe2P+gnfp3dqxyTcQkEOaYQCHhS09NfEYs3yQTC0uBUIDcVcN1/SWXKb70MgzDrjlTYlJfQ7mzARVsPJJL+bwTPlNJ+R7LLC5pgkAMdTzGPbjhwjUFdwlaIvHOypu+EbW92p1TacAuToE/2pww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741546571; c=relaxed/simple;
-	bh=Wa7r3qkuu7xnz/VOd3o4Ss+BQayKG/5FMUt/lzJsU2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gblqqmhyuzNY43BGb0M6J4iN5FrQ//bN/u67B2vOTcw7OMn0mESEjFiEhKePk0xZizZsFhmwLRUJJB+uNUjA+IwTyp8bBh3qyYg0/+d5muq+m5pNJ64Vg9FItlSyWNYE7dG1sJ3rlafU0fRsCe1DRGsv5u1b7c9C9OgbwyJUi/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ztMzmngd; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1741546573; c=relaxed/simple;
+	bh=kUxIzjT34djjsSWrouN9kcaq2cVWYfP4zf9wrxF60YQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=n25iYMSE1fJKC0jnwp1IADypbS52OM4l+FXZ8GPoZR+L4m3LrnbkDpU6bsXkeWPNZuhbY8Y5F4U8ICX83mLXy0JSvFMDnUL0onXnGHIdQwuOhcChZjK3UC70YQqq55bEmBDVtDjYbdPa9sRvGAy6V2jyTWJ7ygZ7xOMkb/iU+IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BUvAfBfP; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ztMzmngd"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3912ebb8e88so239505f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 11:56:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BUvAfBfP"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ceeb85ab2so616595e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 11:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741546567; x=1742151367; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZYpRuX79H42AyJwMpeb72MjPa6wN8mVoMbygXkMxqYc=;
-        b=ztMzmngdVYMXFcJ9jUivm1CFFbjV4EG7hgbQ8r5OHrVu7S9ApBbUZ/V5uULjgZ+bWj
-         NFiM625rgRt806580PuydULfC56oFnUo89uJ7De3VNdvwOVf5AOJHI90sK5vF6+ymkHW
-         jEGBIezsTWjnOFKNTwKDuBHegCRpRJwqAdRoW2gVsVGYoCFXyjxfHG7dn9LVOL/uUA7G
-         yLkaBrqUhgG5BwS++FkYM7b6PIDd8sUqSSOu0qLyDr3kvM9Vd25OSouQI7SIS/inTu3N
-         1Mla66AJdSxDdeN3xhlnzI9uNTVPafNxSxdffhjP7akDB8fU44acxMDMT8mqjH8peB0Z
-         YQLg==
+        d=linaro.org; s=google; t=1741546570; x=1742151370; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=csnV4M7t8mG+4gzOzlbb+RIrtUw1t0+Fx7m4dlnVHBE=;
+        b=BUvAfBfPzS8V5fAnWkJ1+FUAenq+Lgdi/BXByG7jddMToWlLBusdiYntynvy17Lzzd
+         aG5Alq7Ai0X9s7ghBLejAxE3irhkno0QvQMvOWPnlHfbIQyEg5UKcfjGuMHc7fXENqW6
+         pwqETGZLEHYs0BCBCeHuj7OQ7QVCs0uU3x4jrXIi3cMD4GflM4kmg21fLp6IxnsIOHfI
+         zNixhMvQxoOagigtHK0IJ9/jKdcyClc8VnZQ2XJ4JEwuYS18eZwpVzHANxnlbxj0Ei4h
+         vyvMgRW56JzIKvHIvNUMW5E745TE8vdXY7cfg9iFCym02/yVwMcasEecbORouV0wAGas
+         8OLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741546567; x=1742151367;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZYpRuX79H42AyJwMpeb72MjPa6wN8mVoMbygXkMxqYc=;
-        b=u3mxHyy5/BptfvhHleSc/rDgxxAZ1jK+s8rvLD04UJ4NXYFbdMPIfQxw4uxuNhbz/E
-         TA6RKh98WzvV/+ozYPDTiq75dnq2tZWQYN+1PA9Qs3+1WhK/dtivPQ0l2cF4hh2Wg/Dg
-         D4nsOnG4G6bUTdkRGbJcLIv1G6HZXsUeKe7QCBARj9ou5m33VoD0fFBiD7W35Zjnj5bS
-         8t73RuTyXW/9UlBks8ShIhyhwmcHg2KafcEmGgadpRdnwhwgFEnn/BENoNpRLeUQzIpH
-         1y5uVMdZn+214gJtJoDzWUsx5KEo6nzDTJ+cHWvpA35lsfFA9CC1eXc4r2O/ulZpmThM
-         LQWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQR8oIU0OpscIAu1qm3quCmEI/lJ7W7HnABJF6H5A0BohgyT9BtXzUHcK3Qcq54VrFYqYZH9y9avAblck=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6xl+44Qu1z0/pcMVqYCc6mDJSyJdR7B9x1EdR4ppnbNz83Z45
-	2+ssfFVp2VtvOSzHvNM0KMQhdDGo8yrlJT5QRaq4SFa5TGTUp2MxWfNh2L5tQ08=
-X-Gm-Gg: ASbGncvjIhGo3V8mZAlmPqxZKkGjcdHDUDUwgTVRlszasCITOlxmb4Q//7nNJwY6nr4
-	BTzkWVLbAN456Y8q3yK5hhI4JP9CGYqh57FA3UqeWk2kGNFt/WrK4Zxn7A3R+3Uax+BCO9k+9+I
-	FZfuVUpDx/D+Dq4wec63ZQaMeOMNLHkvfnZk0v4683hoXJj7CJg9Exfwo9ePGau1Xb+Sb6zuGd2
-	D7PEwfeWchEOl4tiO4bbRNYPIOJo3LhKADZb7jw9wTxzVfyJvfFrUs9737Ymwdxt6rzoQUXW4AM
-	wIPo9aYsFRMN+ligdAt+SfmJ85SD/J3W2FaMV2SYfZx4jQnyQyutifURW5Q=
-X-Google-Smtp-Source: AGHT+IGtaEQwIFc/6TYT3DLRhe8XehJ9zBv7aECl0lbGZTSP5NvnoXEhZ0PSYiVFLI7kcHS+u3EmMQ==
-X-Received: by 2002:a5d:6d8e:0:b0:38c:5d0b:71ca with SMTP id ffacd0b85a97d-3913ba438famr1345644f8f.0.1741546567145;
-        Sun, 09 Mar 2025 11:56:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741546570; x=1742151370;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=csnV4M7t8mG+4gzOzlbb+RIrtUw1t0+Fx7m4dlnVHBE=;
+        b=Q+Gsiusy86S4Z5HPfi9EGe9rsKHvc5EYwe3i58qju0X0pxOG5xAoQr1IAdxaGSLph5
+         Zqkpss2/sCfqz0vLXYIo5iud2D3RuL7KZh7pFEy9Yx4w/5CcgEXsZPKRnjXmmzcXUzJc
+         ac6Ot+oLJ8VLINDUxHys6tSFyKD9cbnIH3I0pr3QmmjW4budHVGim51nJH7QKbec/k2n
+         E9kKOq/UEG4+Oqx9V9NCII+s3Tu1+FEPjKmNFVqLvDjnKGoU+MrObA+5go/5e+X5cEzY
+         LqDpmPmCNzAuKXi5/dwtiauSTSMpdI7m/ALxgO4vBkuHS2N2DLFJbZ7UDoEyu9cRcGN0
+         IksA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2e2xR0NVSOK2Nn2JKxBW2PqOhTeV30MV0jhq5oNlcuVoB79rUurBC/gSo217vNNFef+YaFQX+gLhSXfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6XJndE2zi2sxEh3A+pbVOSTqbqwwdTp7jamboXA+PL/wf6MED
+	pJFRFYt/+eGrGiP9R3A2ubtVpITV18IFVsZi04ptDQG3QEHfmBF4+Oj1pjAAmD4=
+X-Gm-Gg: ASbGncvXpvDmPIAfkKWjMxOEmbLlW7qJ9mNLpdiFUVDRistDC8aay0Cgkq096Vw5muD
+	NiK6xEkvD2vRiz6X7qrAYNyTF5EtyTEXtb8S5xtTV6i+mbQa7U7niiztn3AovvQOkusCTz6/k3h
+	6NMRS0AH9PKgaWolJdwY1M6BUx0hcU3Od8howmP+5ZPDGV7IMobaLHHZ15Ap8ACVECFQp4dgvbn
+	6c7BZLlacLOkMxIJnrZxj7Hs3z/n4xwO/wxVLSBJMBHc67+rGacxbXWCmaLVwfvn2N2WJsu62DE
+	zYJpMVBMPSGO1spILjT6+pH//rOCRDOUaXgWCTBSZyhA3YeJ52zpediPsOo=
+X-Google-Smtp-Source: AGHT+IHOjQZl6au5AX9pwx89qj1PiY9uUWPbWjZhcAqE7l92MV4Sd5wk3pnxNKw3T6EVY3vWBvszTg==
+X-Received: by 2002:a05:600c:3588:b0:43b:ca39:a9b8 with SMTP id 5b1f17b1804b1-43ce6b12816mr15245875e9.2.1741546570242;
+        Sun, 09 Mar 2025 11:56:10 -0700 (PDT)
 Received: from krzk-bin.. ([178.197.206.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cee22c13fsm44263945e9.40.2025.03.09.11.56.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cee22c13fsm44263945e9.40.2025.03.09.11.56.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 11:56:06 -0700 (PDT)
+        Sun, 09 Mar 2025 11:56:09 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Arnd Bergmann <arnd@arndb.de>,
 	soc@lists.linux.dev
@@ -65,10 +67,12 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	linux-samsung-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL 1/4] samsung: drivers for v6.15
-Date: Sun,  9 Mar 2025 19:55:55 +0100
-Message-ID: <20250309185601.10616-1-krzysztof.kozlowski@linaro.org>
+Subject: [GIT PULL 3/4] ARM: samsung: soc/drivers for v6.15
+Date: Sun,  9 Mar 2025 19:55:57 +0100
+Message-ID: <20250309185601.10616-3-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250309185601.10616-1-krzysztof.kozlowski@linaro.org>
+References: <20250309185601.10616-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,89 +87,26 @@ The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-6.15
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-soc-6.15
 
-for you to fetch changes up to 8f299df1b75ad0939f1340182c265de019eab438:
+for you to fetch changes up to c8222ef6cf29dd7cad21643228f96535cc02b327:
 
-  dt-bindings: soc: samsung: exynos-usi: Drop unnecessary status from example (2025-03-09 18:53:34 +0100)
-
-----------------------------------------------------------------
-Samsung SoC drivers for v6.15
-
-1. Add support for Exynos USI v1 serial engines.  Drivers already
-   supported newer IP blocks - USI v2 - present in Exynos850 and newer.
-   A bit older ARM64 designs, like Exynos8895 use older USI v1 block.
-
-2. Add Exynos ACPM (Alive Clock and Power Manager) protocol driver
-   for Google GS101 SoC.  ACPM protocol allows communication between the
-   power management firmware and other embedded processors.
-
-3. Exynos2200: Add PMU, ChipID and SYSREG Devicetree bindings.
-
-4. Exynos7870: Add PMU and ChipID Devicetree bindings.
-
-5. Various cleanups.
+  soc: samsung: exynos-chipid: Add NULL pointer check in exynos_chipid_probe() (2025-02-15 14:37:19 +0100)
 
 ----------------------------------------------------------------
-Arnd Bergmann (1):
-      soc: samsung: include linux/array_size.h where needed
+Samsung mach/soc changes for v6.15
 
-Colin Ian King (1):
-      firmware: Exynos ACPM: Fix spelling mistake "Faile" -> "Failed"
+1. S3C: Drop linux/fb.h header.
+2. Exynos ChipID: Check if memory allocation succeeded.
 
-Ivaylo Ivanov (7):
-      dt-bindings: soc: samsung: usi: add USIv1 and samsung,exynos8895-usi
-      soc: samsung: usi: add a routine for unconfiguring the ip
-      soc: samsung: usi: implement support for USIv1 and exynos8895
-      dt-bindings: soc: samsung: exynos-sysreg: add sysreg compatibles for exynos2200
-      dt-bindings: soc: samsung: exynos-pmu: add exynos2200 compatible
-      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos2200 compatible
-      soc: samsung: exynos-chipid: add exynos2200 SoC support
+----------------------------------------------------------------
+Chenyuan Yang (1):
+      soc: samsung: exynos-chipid: Add NULL pointer check in exynos_chipid_probe()
 
-Kaustabh Chakraborty (3):
-      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
-      dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
-      soc: samsung: exynos-chipid: add support for exynos7870
+Thomas Zimmermann (1):
+      ARM: s3c: Do not include <linux/fb.h>
 
-Krzysztof Kozlowski (3):
-      soc: samsung: Use syscon_regmap_lookup_by_phandle_args
-      Merge branch 'for-v6.15/samsung-soc-dt-bindings' into next/drivers
-      dt-bindings: soc: samsung: exynos-usi: Drop unnecessary status from example
-
-Tudor Ambarus (3):
-      dt-bindings: firmware: add google,gs101-acpm-ipc
-      firmware: add Exynos ACPM protocol driver
-      MAINTAINERS: add entry for the Samsung Exynos ACPM mailbox protocol
-
- .../bindings/firmware/google,gs101-acpm-ipc.yaml   |  50 ++
- .../bindings/hwinfo/samsung,exynos-chipid.yaml     |   2 +
- .../bindings/soc/samsung/exynos-pmu.yaml           |   2 +
- .../bindings/soc/samsung/exynos-usi.yaml           | 100 ++-
- .../soc/samsung/samsung,exynos-sysreg.yaml         |   5 +
- MAINTAINERS                                        |  10 +
- drivers/firmware/Kconfig                           |   1 +
- drivers/firmware/Makefile                          |   1 +
- drivers/firmware/samsung/Kconfig                   |  14 +
- drivers/firmware/samsung/Makefile                  |   4 +
- drivers/firmware/samsung/exynos-acpm-pmic.c        | 224 ++++++
- drivers/firmware/samsung/exynos-acpm-pmic.h        |  29 +
- drivers/firmware/samsung/exynos-acpm.c             | 769 +++++++++++++++++++++
- drivers/firmware/samsung/exynos-acpm.h             |  23 +
- drivers/soc/samsung/exynos-asv.c                   |   1 +
- drivers/soc/samsung/exynos-chipid.c                |   3 +
- drivers/soc/samsung/exynos-pmu.c                   |   1 +
- drivers/soc/samsung/exynos-usi.c                   | 108 ++-
- drivers/soc/samsung/exynos3250-pmu.c               |   1 +
- drivers/soc/samsung/exynos5250-pmu.c               |   1 +
- drivers/soc/samsung/exynos5420-pmu.c               |   1 +
- include/dt-bindings/soc/samsung,exynos-usi.h       |  17 +-
- .../linux/firmware/samsung/exynos-acpm-protocol.h  |  49 ++
- 23 files changed, 1359 insertions(+), 57 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
- create mode 100644 drivers/firmware/samsung/Kconfig
- create mode 100644 drivers/firmware/samsung/Makefile
- create mode 100644 drivers/firmware/samsung/exynos-acpm-pmic.c
- create mode 100644 drivers/firmware/samsung/exynos-acpm-pmic.h
- create mode 100644 drivers/firmware/samsung/exynos-acpm.c
- create mode 100644 drivers/firmware/samsung/exynos-acpm.h
- create mode 100644 include/linux/firmware/samsung/exynos-acpm-protocol.h
+ arch/arm/mach-s3c/devs.c                   | 1 -
+ arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c | 1 -
+ drivers/soc/samsung/exynos-chipid.c        | 2 ++
+ 3 files changed, 2 insertions(+), 2 deletions(-)
