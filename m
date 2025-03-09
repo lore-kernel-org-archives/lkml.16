@@ -1,143 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688111C68BE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0941CAA98;
 	Sun,  9 Mar 2025 10:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741517311; cv=none; b=MVnBPthW5F6IM4h2y2a9K0ot1Q3HH/9/IdjOf5125BhUKq8mL5KKHFjRWgxYnZzO4k5eqsKIoRG6HNwCEWVX90nqGMlKwk9deCBYhXEcTFwOwRVpUE/P48BlVljz2Plq/e9C/8p7KEfF1m1uutAJlI2U+pvz8Hg1TqQmg7guwB0=
+	t=1741517311; cv=none; b=NOhUMCD2G1X0en6a0MtUMzT/+k5SBQinzeySqlvvPVWsZRiOBjlgxDFzG/TeWMvWE8jTpPvLKFahh0wk407CkTGUIBP8aUT9ynE8X9RWxCeuqjBQ54///t4+hlpNGJibnHdX2G/xymj+cMBpKk7uLcZ2uHIRziMkjFnh/IZXutA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741517311; c=relaxed/simple;
-	bh=Ocq5e0cvJCj6sSblL8b9kb+v9HOHoUW+NcBfEhCLAg4=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CGb/5Hpvrwv1q+hGmmwqsLY7iy0SQ7JI/3r12D2m6lS2NMJLUMqE/WHyliazENewhNq/h0QgibvFWaP6m0sVPW9lS++nEYXLxW8vqx5uKMCcu3ahz8PttqeEU0L3n9Azhm/RlJk/+szIKkXTFX/vI/TYysiRXVlOdFuU6mT9BTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M1s/kDOx; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=TjZmsSHVn2SQaXWQ8Iww7+RL5TcnsYTFLjZk+aCqfro=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nPcL9I+1PHYUl7yLGCeHFC9tUrO3Ddtax5ID7Ul5fAN6AdPKhtQm0UaBOeMA10gCHO5+6r7MmxE2WAk12Ht7Z06u2Gf24Lp26XKtXmfrwMamaL4SIjKn7gr7CnKiPDJZE/O89k9Xcy6Tyl+fH+PKeAwJrzW86JkU/hyR8ZrjicQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Nq+vRrzm; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M1s/kDOx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741517310; x=1773053310;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=Ocq5e0cvJCj6sSblL8b9kb+v9HOHoUW+NcBfEhCLAg4=;
-  b=M1s/kDOxblojHQ1GuPsr6t90zOxzQfiQznkh2XqnW7ehhvp+7g72jcSG
-   ojRe/au2QGkITfsbxrN84kj3xlaMInQfoLM8l9vb/yKvrq6siYD1Zpb9j
-   i17ANUH/ejZFMpNdZSvBJUUoMcKn7coqQJFd5q024NznJD3ID9jrScbk8
-   eLJv99KyrZ3+K+4POUIdeLJtdOSPaErL2QS4BGehXbdbDbgk5xvezpQ/V
-   6fncbn1tq3Tjq2qlNzqXOdf/E41ZJKsCHggVkl3H9RCM0HcboqP8s03Yt
-   G8PjWWFcXZIyKd77DLQC0IQJVFI4RuFx0RE0g/5ZuP/LaOTxLJaeOKT7G
-   Q==;
-X-CSE-ConnectionGUID: QFpLFD2KRbyXWLzIj1locA==
-X-CSE-MsgGUID: uJiVV2BwRDyprvmLVAA3EQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="42636131"
-X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="42636131"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 03:48:29 -0700
-X-CSE-ConnectionGUID: bA9EKfNKRpuXm3mKYtZVlg==
-X-CSE-MsgGUID: IHMZ2A0sRnSSqUpzMYSp8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
-   d="scan'208";a="124655116"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by orviesa003.jf.intel.com with ESMTP; 09 Mar 2025 03:48:21 -0700
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Chwee-Lin Choong <chwee.lin.choong@intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v9 08/14] igc: use FIELD_PREP and GENMASK for existing RX packet buffer size
-Date: Sun,  9 Mar 2025 06:46:42 -0400
-Message-Id: <20250309104648.3895551-9-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250309104648.3895551-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250309104648.3895551-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Nq+vRrzm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741517306; x=1741776506;
+	bh=onuREebFVAgubtnf0xzHhQjePAlGKksLg0sZJIHSe2k=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=Nq+vRrzmSYbN67fo8nG+S4xwnmoZWxabsmSV2shfUTAsjBgYCh7dFeqTkksz3CRHo
+	 z5A/sSHDdoSYBlffpKpZyO17VfWiK5pcEi6q/72dEOo9DzBJ1y6M7+b0oIeseFJc/+
+	 JU34FVGgITf+kptigttGUemYp3ZCxudcPpP/pQvtLpxSNTsnJg0nWNbQ3hXsr7bhRP
+	 rbKIwiuIJbhNTpnl7/tpTLS+zHdv82txDL7Mb70PDgnDmlPhnZ3MF2k53itdGJ6OaW
+	 F3a1ZIX6HexQCs35+RuyBXmMMtl9Xo+QjEiB0xl0iTSZbWmyhDv7WWq0NaF1ZCDU0M
+	 fAFenup7rduMQ==
+Date: Sun, 09 Mar 2025 10:48:17 +0000
+To: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, Markus Elfring <Markus.Elfring@web.de>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 03/13] rust: hrtimer: implement `HrTimerPointer` for `Arc`
+Message-ID: <D8BOCUZJCEVI.3JD6KJK3UTCKX@proton.me>
+In-Reply-To: <20250307-hrtimer-v3-v6-12-rc2-v11-3-7934aefd6993@kernel.org>
+References: <20250307-hrtimer-v3-v6-12-rc2-v11-0-7934aefd6993@kernel.org> <20250307-hrtimer-v3-v6-12-rc2-v11-3-7934aefd6993@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: d7874bcbc129a3e3c118a19be8ed3c2630d93df1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Prepare for an upcoming patch that modifies the RX buffer size in TSN mode.
-Refactor IGC_RXPBSIZE_EXP_BMC_DEFAULT and IGC_RXPBS_CFG_TS_EN using
-FIELD_PREP and GENMASK to improve clarity and maintainability. Refactor
-both macros for consistency, even though the upcoming patch only use
-IGC_RXPBSIZE_EXP_BMC_DEFAULT.
+On Fri Mar 7, 2025 at 10:38 PM CET, Andreas Hindborg wrote:
+> Allow the use of intrusive `hrtimer` fields in structs that are managed b=
+y
+> an `Arc` by implementing `HrTimerPointer` and `RawTimerCallbck` for `Arc`=
+.
+>
+> Acked-by: Frederic Weisbecker <frederic@kernel.org>
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-The newly introduced macros follow the naming from the i226 SW User Manual
-for easy reference.
+With the safety comment adjusted as I mentioned in the other thread:
 
-I've tested IGC_RXPBSIZE_EXP_BMC_DEFAULT and IGC_RXPBS_CFG_TS_EN before
-and after the refactoring, and their values remain unchanged.
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
 ---
- drivers/net/ethernet/intel/igc/igc_defines.h | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+Cheers,
+Benno
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-index db937931c646..3564d15df57b 100644
---- a/drivers/net/ethernet/intel/igc/igc_defines.h
-+++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-@@ -396,9 +396,20 @@
- #define IGC_RCTL_PMCF		0x00800000 /* pass MAC control frames */
- #define IGC_RCTL_SECRC		0x04000000 /* Strip Ethernet CRC */
- 
--/* RXPBSIZE default value for Express and BMC buffer */
--#define IGC_RXPBSIZE_EXP_BMC_DEFAULT	0x000000A2
--#define IGC_RXPBS_CFG_TS_EN		0x80000000 /* Timestamp in Rx buffer */
-+/* Mask for RX packet buffer size */
-+#define IGC_RXPBSIZE_EXP_MASK		GENMASK(5, 0)
-+#define IGC_BMC2OSPBSIZE_MASK		GENMASK(11, 6)
-+/* Mask for timestamp in RX buffer */
-+#define IGC_RXPBS_CFG_TS_EN_MASK	GENMASK(31, 31)
-+/* High-priority RX packet buffer size (KB). Used for Express traffic when preemption is enabled */
-+#define IGC_RXPBSIZE_EXP(x)		FIELD_PREP(IGC_RXPBSIZE_EXP_MASK, (x))
-+/* BMC to OS packet buffer size in KB */
-+#define IGC_BMC2OSPBSIZE(x)		FIELD_PREP(IGC_BMC2OSPBSIZE_MASK, (x))
-+/* Enable RX packet buffer for timestamp descriptor, saving 16 bytes per packet if set */
-+#define IGC_RXPBS_CFG_TS_EN		FIELD_PREP(IGC_RXPBS_CFG_TS_EN_MASK, 1)
-+/* Default value following I225/I226 SW User Manual Section 8.3.1 */
-+#define IGC_RXPBSIZE_EXP_BMC_DEFAULT ( \
-+	IGC_RXPBSIZE_EXP(34) | IGC_BMC2OSPBSIZE(2))
- 
- /* Mask for TX packet buffer size */
- #define IGC_TXPB0SIZE_MASK		GENMASK(5, 0)
--- 
-2.34.1
+> ---
+>  rust/kernel/time/hrtimer.rs     |   4 +-
+>  rust/kernel/time/hrtimer/arc.rs | 102 ++++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 105 insertions(+), 1 deletion(-)
 
