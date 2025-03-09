@@ -1,124 +1,80 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD2017ADE8
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 09:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBF219259F;
+	Sun,  9 Mar 2025 09:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741511879; cv=none; b=lCmDkBPlujfkP6O9s6hzbqIAM/W9L38y773zQRtulBT09K4glEYrKibyr1kn3hAxTk+aiSYFrJ1bbrL6dbmwdyPIMgpiK07UN1FkIUKo9sFIKVS4wpQ7jfswMTmSu2IjkXIosp6qGhIv06l5G9OvL2JyZU/+ipkxlBXnEh2g2A8=
+	t=1741511891; cv=none; b=oVoOPm/3YOHU6dNnfBVUD1/sNJSO+uCf7mmK+Y5zqwKIpDQE99dbv+nzmSroNFqlzk7OcfiwdDbHMgXpsBqrZ5Fk6aB4iaNepNNBkqGlI1cXN/ihdT63Hh9gHO75PACnoeRPqsQsSejsZ6LQbEsDd15PBeHO2i97SyBRzcYAgqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741511879; c=relaxed/simple;
-	bh=1WAfpS9djc2Vef9uTMYeMxtcZmvL1He6joBABBwhNuA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eHTknWQUt0Stsppb8xkQzyDZmzhobWSYxg/XA5q7Jsv7FWRWxnLB3Fc6Dhh8Fc273nvk0Kttqz8/pp8uscOQq0637YogpNdnqY3LKg/V9+nKSaWJB+zn/PN703CcBy5F+HRirx84K7pORCvOABeBLyCan/8QoTHKTm2lb236cvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u7bST9Sl; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741511891; c=relaxed/simple;
+	bh=Q77QRDZ4Pd4QE01w+F0Lno/svSsw0zVKxGGmOk7nNEM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J6sjki2e5CCSR0USMneSohGKb6E53W8izcnJ8JGH1JbHcO1qOrf4Y3QU83chaAHR6LSL7j7o5649RWiPNaO/phhzZsmINyqco1sYqL9VT9OqKMILY+4mb69dEpfllIFtKU8KdetzfkoojSpIlKWs3CzewKyW20JAGsRrKvzcdYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZH6VQHkB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u7bST9Sl"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6fda22908d9so23784337b3.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 01:17:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741511877; x=1742116677; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZIwW4mMqcjhikStJ4LuoRwMzffSHbBGrUJN18yF51J4=;
-        b=u7bST9SlY8RxR7TzzH58lXgnA3Y86bspba1JrnXWb8UStHY6uhH1hWFsdL1Wyp+1qM
-         S6y/7wY4D+ByFOV1jGK6T0XnMe6OwDca6r7xZSGNm/Iv9XXjC1vjJtOgSg3IquEMuDWD
-         +3sokkUl6QFSt+O/a04fmA2yKDNDbhwtM1xMM7cmf2/z691ieJ/PDdaMV0X+O97592eo
-         dXwEFo8L12Jfcddwy7dm5eHPh958mX53KgFjFkER2n1phezsoKPsjiJOfTNbQg6zy+/E
-         pwN+AwDSKbUJyWAp/57Bu5ky61HJPcbs9c9EcmjMYiEsqf/hQG1LP8CQON2XRSGK4Qn0
-         zJDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741511877; x=1742116677;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZIwW4mMqcjhikStJ4LuoRwMzffSHbBGrUJN18yF51J4=;
-        b=rhBomTmrV3Uzb+GD2NtFmjUggikRZNP1ZufIia1f9GEzpLa+rZtMcF1eg27yYWjfwE
-         vzUzZaHILUcpV1X0/hUCLx817pOs+ORkAYeMsAiEXZed+bl2GJRHhSi67HmjjuzIA5iK
-         8da/bYRCrFuMZob3FmZygnxlQV2OE2NQPYDSaI3rXUCemw1WmKbDGdq4eFKEdvwHS08u
-         TLzEMU8y14WYMKiD79L29CAeI7Yd8O8dYgkeaVyDvMOgByscRnO+b3MXs1FIPzzQK2YN
-         uWdZcEfWn9nSRdd7x+xWkRmwnFp+38GczFIleEEEdVIH02DJTCS/SLLAs0yLzjsH9XWf
-         200A==
-X-Forwarded-Encrypted: i=1; AJvYcCWps1LsJxwZrXR7yJW4SEDoH0BCsiySgkaEl5E5Ps6q9tFP82iQkpLRzPY3tQzMDvGPRp8DW94H4wTN3MQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzpQ91Sze3mydS2a0S5kwLjwc0ie+dXnW5vf41VcTZCyp82Kxu
-	MRujaW8IN0gNEs51JBF8QSFiHt6s4oUFC8e91GTgeYV4GIt8/BYSd+d5oTjbzqLYbo8x6pFJGvv
-	nvitB18Hs+kggEIdITl3AdRl4RaWMTkJkbkJr1A==
-X-Gm-Gg: ASbGncv3JalhToWEqnSbw4j0VbuEPjR0X7hOLFlgtB/wU7KZLHXll9G3GMpMYqfkfGi
-	tRVvBZ9PewdWk5rlFVXAohxmEPvWat5zk2G1WS7SGGTYnA5dWOAmk/dhlDX6/YjltQDLZEqJa/4
-	fi8QzU4gF4i5QTjMCPcfHb7P/fuMwjHKQ2N2U29wOf
-X-Google-Smtp-Source: AGHT+IF5EPBAwX/vFFn1MyOCNXGFDeVtGYDbOKvZ8oN+itZnMpk7nJvsL5ZhfsKbFo9VQ/c2bu3NL+W9hdt3Gt+ff7Q=
-X-Received: by 2002:a05:690c:3612:b0:6fd:2192:cf3c with SMTP id
- 00721157ae682-6febf3b7663mr133674427b3.34.1741511876931; Sun, 09 Mar 2025
- 01:17:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZH6VQHkB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53712C4CEE5;
+	Sun,  9 Mar 2025 09:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741511890;
+	bh=Q77QRDZ4Pd4QE01w+F0Lno/svSsw0zVKxGGmOk7nNEM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZH6VQHkBTf2q7eFdtwEVhErqjfXu1RWSNfDqLvuls/YfmAiEiErXygpCCnCwfJMVl
+	 CUfGM1iQ/TwWhSdHUxsrRGzylfbX5CJuM+1ha1WnCbpB1uEnLq9OjgJUWe+wGLRXGb
+	 reNHimbZm/TvVdZD472xUl2iZQxu0LvyLvH+GLaU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	torvalds@linux-foundation.org,
+	stable@vger.kernel.org
+Cc: lwn@lwn.net,
+	jslaby@suse.cz,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 6.6.82
+Date: Sun,  9 Mar 2025 10:16:52 +0100
+Message-ID: <2025030919-hurdle-tapestry-5b79@gregkh>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250308-phy-sam-hdptx-bpc-v5-0-35087287f9d1@collabora.com> <20250308-phy-sam-hdptx-bpc-v5-3-35087287f9d1@collabora.com>
-In-Reply-To: <20250308-phy-sam-hdptx-bpc-v5-3-35087287f9d1@collabora.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 9 Mar 2025 11:17:46 +0200
-X-Gm-Features: AQ5f1Jo12FGGsHm8kzdQ4xf0NIPejEccC7plOVJMbEqHfZYKsXU52PdjyJ4Y43Q
-Message-ID: <CAA8EJprBcGz0tZ5SDVC_WK2bzjXZAtOj+LfGnSxmwktvaQw=VQ@mail.gmail.com>
-Subject: Re: [PATCH v5 03/12] phy: rockchip: samsung-hdptx: Fix clock ratio setup
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Algea Cao <algea.cao@rock-chips.com>, 
-	Sandor Yu <Sandor.yu@nxp.com>, Maxime Ripard <mripard@kernel.org>, kernel@collabora.com, 
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 8 Mar 2025 at 14:21, Cristian Ciocaltea
-<cristian.ciocaltea@collabora.com> wrote:
->
-> The switch from 1/10 to 1/40 clock ratio must happen when exceeding the
-> 340 MHz rate limit of HDMI 1.4, i.e. when entering the HDMI 2.0 domain,
-> and not before.
+I'm announcing the release of the 6.6.82 kernel.
 
-Am I correct that the only functional change is a switch from
-greater-or-equal to simple greater?
+All i386 users of the 6.6 kernel series must upgrade (as they skipped
+the last release.)  All other arches can skip this one as it should not
+affect them.
 
->
-> While at it, introduce a define for this rate limit constant.
->
-> Fixes: 553be2830c5f ("phy: rockchip: Add Samsung HDMI/eDP Combo PHY driver")
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> ---
->  drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> index f88369864c50e4563834ccbb26f1f9f440e99271..cf2c3a46604cb9d8c26fe5ec8346904e0b62848f 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> @@ -320,6 +320,7 @@
->  #define LN3_TX_SER_RATE_SEL_HBR2_MASK  BIT(3)
->  #define LN3_TX_SER_RATE_SEL_HBR3_MASK  BIT(2)
->
-> +#define HDMI14_MAX_RATE                        340000000
->  #define HDMI20_MAX_RATE                        600000000
->
->  enum dp_link_rate {
-> @@ -1072,7 +1073,7 @@ static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx,
->
->         regmap_write(hdptx->regmap, LNTOP_REG(0200), 0x06);
->
-> -       if (rate >= 3400000) {
-> +       if (rate > HDMI14_MAX_RATE / 100) {
->                 /* For 1/40 bitrate clk */
->                 rk_hdptx_multi_reg_write(hdptx, rk_hdtpx_tmds_lntop_highbr_seq);
->         } else {
->
-> --
-> 2.48.1
->
+The updated 6.6.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.6.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
+thanks,
 
--- 
-With best wishes
-Dmitry
+greg k-h
+
+------------
+
+ Makefile                         |    2 
+ arch/x86/Kconfig                 |    4 +
+ arch/x86/include/asm/microcode.h |    2 
+ arch/x86/include/asm/setup.h     |    1 
+ arch/x86/kernel/Makefile         |    1 
+ arch/x86/kernel/head32.c         |  117 ++++++++++++++++++++++++++++-----------
+ 6 files changed, 93 insertions(+), 34 deletions(-)
+
+Greg Kroah-Hartman (1):
+      Linux 6.6.82
+
+Thomas Gleixner (6):
+      x86/boot/32: Disable stackprotector and tracing for mk_early_pgtbl_32()
+      x86/boot: Use __pa_nodebug() in mk_early_pgtbl_32()
+      x86/boot/32: De-uglify the 2/3 level paging difference in mk_early_pgtbl_32()
+      x86/boot/32: Restructure mk_early_pgtbl_32()
+      x86/microcode: Provide CONFIG_MICROCODE_INITRD32
+      x86/boot/32: Temporarily map initrd for microcode loading
+
