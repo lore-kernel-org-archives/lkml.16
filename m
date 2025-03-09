@@ -1,33 +1,33 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ACF1CAA6C
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 23:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B061CAA6C
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 23:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741562804; cv=none; b=KCU74aSaL4lLUSO+919C0BLTYe4S+0DFQd6xJkliV2pHZhaAZ09/7nJjSA6Sp4Q9Mb3k+7Yh0iEKDBgKb+hDa2zoLnGPnEcGTU8qpqhksFnAquI8AOrW4JV2QkfZviW/WGKoepAD6GiutT17vJU3U/JuvmQ39juaQfu75ZGExOE=
+	t=1741562809; cv=none; b=UJ5Nd8Xxv5vOsv7n74jaa8LNy+DtbvjxIJAgIB630mGLW6khluC/2ybuX0eX74c+TZV+Ir8RzkJh+6gwrKSgi1lGpQBaWEvmNRVMGkBgr04zfMYda36ryI5O9/mB6viYCxTDTMCcJuuRcMzeK6XWNmX4vdLVmrGeEi0HLf43h28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741562804; c=relaxed/simple;
-	bh=QgHqKYOvWVyGVZtvyCcc5NYc2fqYBSJeW421CpGLeBk=;
+	s=arc-20240116; t=1741562809; c=relaxed/simple;
+	bh=1KwXe9PoxEReMydTX2qSnybaHlsL4TT8cuxNZbn6vKE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ciRZ32gAyV7qXYCdY6W93cPpX/26o9lxg/hvizsxPXF1IIRRPNsKhVm1F5f5oyKeaWNg+xKWYOIQOtqKB7UO69LcmTVzMUBHNObqaLmPdB5SpAPtZCh+/FusphJN1Ba0Pa3PsUaxuzeNY42/0IId2Lx5pP8bTzW8gdM7BQlkVME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=CJsfeSeB; arc=none smtp.client-ip=121.127.44.73
+	 MIME-Version; b=g0oh2jkY5UzrHTvOLKHOD91DfX+N3pmRHl62XQ9L51rD3m21UYxlN05D9GaZVDdXgHF4xYRaPjIVO1CcPXLwIbdV4k8mqsaQ3bxRJG6dlMVY7RAPJ8cZ5mL0APWFh1FRopeu7bAD64XdnZNj1SiEKfOXsXZpTH3LqT1kokLms44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=FFbjU5gY; arc=none smtp.client-ip=121.127.44.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="CJsfeSeB"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="FFbjU5gY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1741562796; bh=Fvsg997oISgjqp0W2TJFAP7RLXkppIq9T5s0bg5qC1I=;
- b=CJsfeSeBhoF+LbwG4joLkIws7INvvldZH/GyQhk/F9f4d2yWXMAbZLNKOuKtFQnnJYnUi7Y+5
- mjWvPdI8kIisZXuTodNaKZylyMNOfgUY9QJ15Pgylq9921AWXwyFd6xYDv7R4eE0rSRLv0deSDj
- IvGqxaWTq55nzOjKj+r7UsOXQ2RrbSMagbIfoc4wsKHBb1Kh4pscAtOuL1gu4rhTfTjK1e6wtDK
- VgYDXQS+k9B5Z7bR8Sz+6Y7iy/NvctWsEoe/SYsQN9P5oQ3k+rFOQWg/aLeH6shoZQQc2QDrv7Y
- YVwVIi0pNySL1znCSBIAttqIOJZb0lHAkLVuBz+gQGwQ==
-X-Forward-Email-ID: 67ce23a95209992d7c670e6e
+ t=1741562806; bh=L3Wm/7k4UnB9TXY856GOytFcdaOKPaHZ6TKBq1pbNtA=;
+ b=FFbjU5gYETSaZjPXHkV5/mQP3a3rkAmFOjT6FsJi2mBasdF5mdnCdsd3P9r54+2kbTK5ktQ9a
+ zdHdUAIFNYp/XtEtkg2rg878zi4yMUmwExd1Ka4srbCFam7ZcnAfM+aaUi6kwSXQdV+MeV50GXA
+ VgEND9Euv7uq32/m8xUYU95t9bKqxPKqtM+ITYNS62Bp2d4uSRrG/81Eu2TQllqesW0bWW64sL0
+ 3SWPjOsAWzF0xEvFn8CynPJyCbm6LfZNZDcVVy82j8bi1Bsyn5CwxwwKTe/Q8l50d0P0sJ7R6Tm
+ CW4tpR3Mt/frt4OFw29Fc82eW/0WGM/Do1CNe5L6TERg==
+X-Forward-Email-ID: 67ce23b35209992d7c670e98
 X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
+ 121.127.44.59
 X-Forward-Email-Version: 0.4.40
 X-Forward-Email-Website: https://forwardemail.net
 X-Complaints-To: abuse@forwardemail.net
@@ -40,20 +40,24 @@ To: Heiko Stuebner <heiko@sntech.de>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	David Wu <david.wu@rock-chips.com>
-Cc: Yao Zi <ziyao@disroot.org>,
+	David Wu <david.wu@rock-chips.com>,
+	Yao Zi <ziyao@disroot.org>,
 	netdev@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 1/5] dt-bindings: net: rockchip-dwmac: Add compatible string for RK3528
-Date: Sun,  9 Mar 2025 23:26:11 +0000
-Message-ID: <20250309232622.1498084-2-jonas@kwiboo.se>
+	Jonas Karlman <jonas@kwiboo.se>,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH v2 3/5] net: stmmac: dwmac-rk: Move integrated_phy_powerup/down functions
+Date: Sun,  9 Mar 2025 23:26:13 +0000
+Message-ID: <20250309232622.1498084-4-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250309232622.1498084-1-jonas@kwiboo.se>
 References: <20250309232622.1498084-1-jonas@kwiboo.se>
@@ -65,73 +69,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rockchip RK3528 has two Ethernet controllers based on Synopsys DWC
-Ethernet QoS IP.
+Rockchip RK3528 (and RV1106) has a different integrated PHY compared to
+the integrated PHY on RK3228/RK3328. Current powerup/down operation is
+not compatible with the integrated PHY found in these SoCs.
 
-Add compatible string for the RK3528 variant.
+Move the rk_gmac_integrated_phy_powerup/down functions to top of the
+file to prepare for them to be called directly by a GMAC variant
+specific powerup/down operation.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
 Changes in v2:
-- Restrict the minItems: 4 change to rockchip,rk3528-gmac
-
-The enum will be extended in a future patch, Pending RK3562 and a future
-RK3506 variant also only have 4 clocks.
-
-Because snps,dwmac-4.20a is already listed in snps,dwmac.yaml adding the
-rockchip,rk3528-gmac compatible did not seem necessary.
+- New patch
 ---
- .../devicetree/bindings/net/rockchip-dwmac.yaml  | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/dwmac-rk.c    | 88 +++++++++----------
+ 1 file changed, 44 insertions(+), 44 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml b/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
-index 8dd870f0214d..fe417c19b597 100644
---- a/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.yaml
-@@ -24,6 +24,7 @@ select:
-           - rockchip,rk3366-gmac
-           - rockchip,rk3368-gmac
-           - rockchip,rk3399-gmac
-+          - rockchip,rk3528-gmac
-           - rockchip,rk3568-gmac
-           - rockchip,rk3576-gmac
-           - rockchip,rk3588-gmac
-@@ -49,6 +50,7 @@ properties:
-               - rockchip,rv1108-gmac
-       - items:
-           - enum:
-+              - rockchip,rk3528-gmac
-               - rockchip,rk3568-gmac
-               - rockchip,rk3576-gmac
-               - rockchip,rk3588-gmac
-@@ -56,7 +58,7 @@ properties:
-           - const: snps,dwmac-4.20a
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index 03ea9368ffbb..31f4b7eb3718 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -92,6 +92,50 @@ struct rk_priv_data {
+ 	(((tx) ? soc##_GMAC_TXCLK_DLY_ENABLE : soc##_GMAC_TXCLK_DLY_DISABLE) | \
+ 	 ((rx) ? soc##_GMAC_RXCLK_DLY_ENABLE : soc##_GMAC_RXCLK_DLY_DISABLE))
  
-   clocks:
--    minItems: 5
-+    minItems: 4
-     maxItems: 8
- 
-   clock-names:
-@@ -130,6 +132,18 @@ allOf:
-       properties:
-         rockchip,php-grf: false
- 
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - rockchip,rk3528-gmac
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 5
++#define RK_GRF_MACPHY_CON0		0xb00
++#define RK_GRF_MACPHY_CON1		0xb04
++#define RK_GRF_MACPHY_CON2		0xb08
++#define RK_GRF_MACPHY_CON3		0xb0c
 +
- unevaluatedProperties: false
++#define RK_MACPHY_ENABLE		GRF_BIT(0)
++#define RK_MACPHY_DISABLE		GRF_CLR_BIT(0)
++#define RK_MACPHY_CFG_CLK_50M		GRF_BIT(14)
++#define RK_GMAC2PHY_RMII_MODE		(GRF_BIT(6) | GRF_CLR_BIT(7))
++#define RK_GRF_CON2_MACPHY_ID		HIWORD_UPDATE(0x1234, 0xffff, 0)
++#define RK_GRF_CON3_MACPHY_ID		HIWORD_UPDATE(0x35, 0x3f, 0)
++
++static void rk_gmac_integrated_phy_powerup(struct rk_priv_data *priv)
++{
++	if (priv->ops->integrated_phy_powerup)
++		priv->ops->integrated_phy_powerup(priv);
++
++	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_CFG_CLK_50M);
++	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_GMAC2PHY_RMII_MODE);
++
++	regmap_write(priv->grf, RK_GRF_MACPHY_CON2, RK_GRF_CON2_MACPHY_ID);
++	regmap_write(priv->grf, RK_GRF_MACPHY_CON3, RK_GRF_CON3_MACPHY_ID);
++
++	if (priv->phy_reset) {
++		/* PHY needs to be disabled before trying to reset it */
++		regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_DISABLE);
++		if (priv->phy_reset)
++			reset_control_assert(priv->phy_reset);
++		usleep_range(10, 20);
++		if (priv->phy_reset)
++			reset_control_deassert(priv->phy_reset);
++		usleep_range(10, 20);
++		regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_ENABLE);
++		msleep(30);
++	}
++}
++
++static void rk_gmac_integrated_phy_powerdown(struct rk_priv_data *priv)
++{
++	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_DISABLE);
++	if (priv->phy_reset)
++		reset_control_assert(priv->phy_reset);
++}
++
+ #define PX30_GRF_GMAC_CON1		0x0904
  
- examples:
+ /* PX30_GRF_GMAC_CON1 */
+@@ -1463,50 +1507,6 @@ static const struct rk_gmac_ops rv1126_ops = {
+ 	.set_rmii_speed = rv1126_set_rmii_speed,
+ };
+ 
+-#define RK_GRF_MACPHY_CON0		0xb00
+-#define RK_GRF_MACPHY_CON1		0xb04
+-#define RK_GRF_MACPHY_CON2		0xb08
+-#define RK_GRF_MACPHY_CON3		0xb0c
+-
+-#define RK_MACPHY_ENABLE		GRF_BIT(0)
+-#define RK_MACPHY_DISABLE		GRF_CLR_BIT(0)
+-#define RK_MACPHY_CFG_CLK_50M		GRF_BIT(14)
+-#define RK_GMAC2PHY_RMII_MODE		(GRF_BIT(6) | GRF_CLR_BIT(7))
+-#define RK_GRF_CON2_MACPHY_ID		HIWORD_UPDATE(0x1234, 0xffff, 0)
+-#define RK_GRF_CON3_MACPHY_ID		HIWORD_UPDATE(0x35, 0x3f, 0)
+-
+-static void rk_gmac_integrated_phy_powerup(struct rk_priv_data *priv)
+-{
+-	if (priv->ops->integrated_phy_powerup)
+-		priv->ops->integrated_phy_powerup(priv);
+-
+-	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_CFG_CLK_50M);
+-	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_GMAC2PHY_RMII_MODE);
+-
+-	regmap_write(priv->grf, RK_GRF_MACPHY_CON2, RK_GRF_CON2_MACPHY_ID);
+-	regmap_write(priv->grf, RK_GRF_MACPHY_CON3, RK_GRF_CON3_MACPHY_ID);
+-
+-	if (priv->phy_reset) {
+-		/* PHY needs to be disabled before trying to reset it */
+-		regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_DISABLE);
+-		if (priv->phy_reset)
+-			reset_control_assert(priv->phy_reset);
+-		usleep_range(10, 20);
+-		if (priv->phy_reset)
+-			reset_control_deassert(priv->phy_reset);
+-		usleep_range(10, 20);
+-		regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_ENABLE);
+-		msleep(30);
+-	}
+-}
+-
+-static void rk_gmac_integrated_phy_powerdown(struct rk_priv_data *priv)
+-{
+-	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_DISABLE);
+-	if (priv->phy_reset)
+-		reset_control_assert(priv->phy_reset);
+-}
+-
+ static int rk_gmac_clk_init(struct plat_stmmacenet_data *plat)
+ {
+ 	struct rk_priv_data *bsp_priv = plat->bsp_priv;
 -- 
 2.48.1
 
