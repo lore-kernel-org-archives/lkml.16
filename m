@@ -1,63 +1,52 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0B014A4E7;
-	Sun,  9 Mar 2025 08:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F3518787F
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Mar 2025 08:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741507739; cv=none; b=UZzs9xzbCQWe/Rd6Y0gMJ33xAJrdvIz9O2R4+PwIOPbNHiG12FWRdCQfi03ubpqK15dk7xIlwkEBHm2luKJjya4Bu72VMoaAp69Mmq01u3sFOm2xilaWTHb5DmV0Qxi52ajgpvfxQkyzd3Zx77cbwkp2dolbqUIGEumz2u8ctWU=
+	t=1741507888; cv=none; b=Yk6qjUtZRWV90yGvIXC5ap5H3jYY6v7wM182dtJwYvFHqjsbonlTEa0Xg3OC9iSpNBqPnbeVzgxTW75GxOSg06AaOOlQg4R1lj96xzrviJZNwnDpMJJHVcvImtfaeIKZro2txdNlqNE2ly/whGZYgEUkNOYh5hCK3Wm4+kFC7rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741507739; c=relaxed/simple;
-	bh=mVGo6cZizCxBMHTz6A8TFTXzta23bxReakaQRj6g5n4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hlYbIEc/TJyaQW5KKMP/Okz8hKUnXCnc7cU/s4vnvNzbY2yWUSizWmAHtAKMbd7Ce++4fOFkybo9gl4Z9Z6ig26XgXf9pnfkrmefhzW8LeyQSO9MZSWGndxyVRbiT0xrQfQazc2Krl3y55UqT7owBTga5QRkYRXrBgAjJFSbS/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=AL/PJjho; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1741507888; c=relaxed/simple;
+	bh=ywIIx7CiwkSiZ7dUfWCVTJcaWhwCEYd2mnYkP29YtLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pFvuO1wb8f4JHS2oQkgw7Jnwyb1wRAiHlQpq98i8+nhW+RFfkjOePPZQD3F7C/HmS8abFEGareFgLgd7BulMW0gnfMYWhnkpLFMONyPjy0xJdJJga/N+n7snLh+lj7n4JEca/LjbWNYDbGTX9pTm3N+ozzBSlbQu7twovql2K98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+ohwJQU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AL/PJjho"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1741507737; x=1773043737;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DycMLRtBjeeykWMU7bu/+eHYSnqYqv4lVfemfVZdWgo=;
-  b=AL/PJjhoJ76vNz7OV/d+Sjy3yDBDvUNjJ2Yak0mRGGTZmslyXmkCgwsX
-   zLCDCZU7GkKBCfchQSR9ECy1KP2TsCuXsHTLRn7W7mydxXqiGU5rN6/2K
-   D3nXoWRwvgn+gOovYfWCI/T6TDnJdpSEb8kmCMCMqKXOq2cvo16TOt3qT
-   4=;
-X-IronPort-AV: E=Sophos;i="6.14,233,1736812800"; 
-   d="scan'208";a="30072758"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 08:08:56 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:36675]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.245:2525] with esmtp (Farcaster)
- id fac3bf64-0b79-435d-a327-294bd6fc7f01; Sun, 9 Mar 2025 08:08:55 +0000 (UTC)
-X-Farcaster-Flow-ID: fac3bf64-0b79-435d-a327-294bd6fc7f01
-Received: from EX19D003ANC003.ant.amazon.com (10.37.240.197) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 9 Mar 2025 08:08:55 +0000
-Received: from b0be8375a521.amazon.com (10.118.253.182) by
- EX19D003ANC003.ant.amazon.com (10.37.240.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 9 Mar 2025 08:08:48 +0000
-From: Kohei Enju <enjuk@amazon.com>
-To: <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-CC: <syzbot+83fed965338b573115f7@syzkaller.appspotmail.com>, Pablo Neira Ayuso
-	<pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>, "David S .
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
-	<daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, "John
- Fastabend" <john.fastabend@gmail.com>, Yi-Hung Wei <yihung.wei@gmail.com>,
-	Florian Westphal <fw@strlen.de>, <kohei.enju@gmail.com>, Kohei Enju
-	<enjuk@amazon.com>
-Subject: [PATCH net v1] netfilter: nf_conncount: Fully initialize struct nf_conncount_tuple in insert_tree()
-Date: Sun, 9 Mar 2025 17:07:38 +0900
-Message-ID: <20250309080816.87224-2-enjuk@amazon.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+ohwJQU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741507885;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7sH7FGfqnhoLEuqI61iUbKKZNJk8uSxjiDzSzhKVUkA=;
+	b=J+ohwJQUMm1UaURcA/6hVfd1IiwNlZpW7prlf2j54fbHm/mfVJg17a8hDsxyDEmu/gpcY8
+	WiZXZGieUqvPQDKXlSiLcv0fherhu2dVcPz3lmoTaPL73u2GK/70KqaVV1eiLEYbm8kQ7K
+	FWIChhnDsLU+tb09WkvwPUaYP74Cg9M=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-222-MWeIDluvMKy8ay3kww2keg-1; Sun,
+ 09 Mar 2025 04:11:21 -0400
+X-MC-Unique: MWeIDluvMKy8ay3kww2keg-1
+X-Mimecast-MFC-AGG-ID: MWeIDluvMKy8ay3kww2keg_1741507880
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0D9731956080;
+	Sun,  9 Mar 2025 08:11:20 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 46D0E1800370;
+	Sun,  9 Mar 2025 08:11:19 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux-6.14-rc6
+Date: Sun,  9 Mar 2025 04:11:18 -0400
+Message-ID: <20250309081118.2953196-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,123 +54,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D032UWA001.ant.amazon.com (10.13.139.62) To
- EX19D003ANC003.ant.amazon.com (10.37.240.197)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Since commit b36e4523d4d5 ("netfilter: nf_conncount: fix garbage
-collection confirm race"), `cpu` and `jiffies32` were introduced to
-the struct nf_conncount_tuple.
+Linus,
 
-The commit made nf_conncount_add() initialize `conn->cpu` and
-`conn->jiffies32` when allocating the struct.
-In contrast, count_tree() was not changed to initialize them.
+The following changes since commit 916b7f42b3b3b539a71c204a9b49fdc4ca92cd82:
 
-By commit 34848d5c896e ("netfilter: nf_conncount: Split insert and
-traversal"), count_tree() was split and the relevant allocation
-code now resides in insert_tree().
-Initialize `conn->cpu` and `conn->jiffies32` in insert_tree().
+  kvm: retry nx_huge_page_recovery_thread creation (2025-03-01 02:54:18 -0500)
 
-BUG: KMSAN: uninit-value in find_or_evict net/netfilter/nf_conncount.c:117 [inline]
-BUG: KMSAN: uninit-value in __nf_conncount_add+0xd9c/0x2850 net/netfilter/nf_conncount.c:143
- find_or_evict net/netfilter/nf_conncount.c:117 [inline]
- __nf_conncount_add+0xd9c/0x2850 net/netfilter/nf_conncount.c:143
- count_tree net/netfilter/nf_conncount.c:438 [inline]
- nf_conncount_count+0x82f/0x1e80 net/netfilter/nf_conncount.c:521
- connlimit_mt+0x7f6/0xbd0 net/netfilter/xt_connlimit.c:72
- __nft_match_eval net/netfilter/nft_compat.c:403 [inline]
- nft_match_eval+0x1a5/0x300 net/netfilter/nft_compat.c:433
- expr_call_ops_eval net/netfilter/nf_tables_core.c:240 [inline]
- nft_do_chain+0x426/0x2290 net/netfilter/nf_tables_core.c:288
- nft_do_chain_ipv4+0x1a5/0x230 net/netfilter/nft_chain_filter.c:23
- nf_hook_entry_hookfn include/linux/netfilter.h:154 [inline]
- nf_hook_slow+0xf4/0x400 net/netfilter/core.c:626
- nf_hook_slow_list+0x24d/0x860 net/netfilter/core.c:663
- NF_HOOK_LIST include/linux/netfilter.h:350 [inline]
- ip_sublist_rcv+0x17b7/0x17f0 net/ipv4/ip_input.c:633
- ip_list_rcv+0x9ef/0xa40 net/ipv4/ip_input.c:669
- __netif_receive_skb_list_ptype net/core/dev.c:5936 [inline]
- __netif_receive_skb_list_core+0x15c5/0x1670 net/core/dev.c:5983
- __netif_receive_skb_list net/core/dev.c:6035 [inline]
- netif_receive_skb_list_internal+0x1085/0x1700 net/core/dev.c:6126
- netif_receive_skb_list+0x5a/0x460 net/core/dev.c:6178
- xdp_recv_frames net/bpf/test_run.c:280 [inline]
- xdp_test_run_batch net/bpf/test_run.c:361 [inline]
- bpf_test_run_xdp_live+0x2e86/0x3480 net/bpf/test_run.c:390
- bpf_prog_test_run_xdp+0xf1d/0x1ae0 net/bpf/test_run.c:1316
- bpf_prog_test_run+0x5e5/0xa30 kernel/bpf/syscall.c:4407
- __sys_bpf+0x6aa/0xd90 kernel/bpf/syscall.c:5813
- __do_sys_bpf kernel/bpf/syscall.c:5902 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5900 [inline]
- __ia32_sys_bpf+0xa0/0xe0 kernel/bpf/syscall.c:5900
- ia32_sys_call+0x394d/0x4180 arch/x86/include/generated/asm/syscalls_32.h:358
- do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
- __do_fast_syscall_32+0xb0/0x110 arch/x86/entry/common.c:387
- do_fast_syscall_32+0x38/0x80 arch/x86/entry/common.c:412
- do_SYSENTER_32+0x1f/0x30 arch/x86/entry/common.c:450
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+are available in the Git repository at:
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4121 [inline]
- slab_alloc_node mm/slub.c:4164 [inline]
- kmem_cache_alloc_noprof+0x915/0xe10 mm/slub.c:4171
- insert_tree net/netfilter/nf_conncount.c:372 [inline]
- count_tree net/netfilter/nf_conncount.c:450 [inline]
- nf_conncount_count+0x1415/0x1e80 net/netfilter/nf_conncount.c:521
- connlimit_mt+0x7f6/0xbd0 net/netfilter/xt_connlimit.c:72
- __nft_match_eval net/netfilter/nft_compat.c:403 [inline]
- nft_match_eval+0x1a5/0x300 net/netfilter/nft_compat.c:433
- expr_call_ops_eval net/netfilter/nf_tables_core.c:240 [inline]
- nft_do_chain+0x426/0x2290 net/netfilter/nf_tables_core.c:288
- nft_do_chain_ipv4+0x1a5/0x230 net/netfilter/nft_chain_filter.c:23
- nf_hook_entry_hookfn include/linux/netfilter.h:154 [inline]
- nf_hook_slow+0xf4/0x400 net/netfilter/core.c:626
- nf_hook_slow_list+0x24d/0x860 net/netfilter/core.c:663
- NF_HOOK_LIST include/linux/netfilter.h:350 [inline]
- ip_sublist_rcv+0x17b7/0x17f0 net/ipv4/ip_input.c:633
- ip_list_rcv+0x9ef/0xa40 net/ipv4/ip_input.c:669
- __netif_receive_skb_list_ptype net/core/dev.c:5936 [inline]
- __netif_receive_skb_list_core+0x15c5/0x1670 net/core/dev.c:5983
- __netif_receive_skb_list net/core/dev.c:6035 [inline]
- netif_receive_skb_list_internal+0x1085/0x1700 net/core/dev.c:6126
- netif_receive_skb_list+0x5a/0x460 net/core/dev.c:6178
- xdp_recv_frames net/bpf/test_run.c:280 [inline]
- xdp_test_run_batch net/bpf/test_run.c:361 [inline]
- bpf_test_run_xdp_live+0x2e86/0x3480 net/bpf/test_run.c:390
- bpf_prog_test_run_xdp+0xf1d/0x1ae0 net/bpf/test_run.c:1316
- bpf_prog_test_run+0x5e5/0xa30 kernel/bpf/syscall.c:4407
- __sys_bpf+0x6aa/0xd90 kernel/bpf/syscall.c:5813
- __do_sys_bpf kernel/bpf/syscall.c:5902 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5900 [inline]
- __ia32_sys_bpf+0xa0/0xe0 kernel/bpf/syscall.c:5900
- ia32_sys_call+0x394d/0x4180 arch/x86/include/generated/asm/syscalls_32.h:358
- do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
- __do_fast_syscall_32+0xb0/0x110 arch/x86/entry/common.c:387
- do_fast_syscall_32+0x38/0x80 arch/x86/entry/common.c:412
- do_SYSENTER_32+0x1f/0x30 arch/x86/entry/common.c:450
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-Reported-by: syzbot+83fed965338b573115f7@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=83fed965338b573115f7
-Fixes: b36e4523d4d5 ("netfilter: nf_conncount: fix garbage collection confirm race")
-Signed-off-by: Kohei Enju <enjuk@amazon.com>
----
- net/netfilter/nf_conncount.c | 2 ++
- 1 file changed, 2 insertions(+)
+for you to fetch changes up to ea9bd29a9c0d757b3384ae3e633e6bbaddf00725:
 
-diff --git a/net/netfilter/nf_conncount.c b/net/netfilter/nf_conncount.c
-index 4890af4dc263..4d7cc94cb151 100644
---- a/net/netfilter/nf_conncount.c
-+++ b/net/netfilter/nf_conncount.c
-@@ -377,6 +377,8 @@ insert_tree(struct net *net,
- 
- 	conn->tuple = *tuple;
- 	conn->zone = *zone;
-+	conn->cpu = raw_smp_processor_id();
-+	conn->jiffies32 = (u32)jiffies;
- 	memcpy(rbconn->key, key, sizeof(u32) * data->keylen);
- 
- 	nf_conncount_list_init(&rbconn->list);
--- 
-2.48.1
+  Merge tag 'kvm-x86-fixes-6.14-rcN.2' of https://github.com/kvm-x86/linux into HEAD (2025-03-09 03:44:06 -0400)
+
+This remains quite an active rc period, but these are "just" bugs and
+issues introduced during this merge window.  So, no big deal overall.
+
+Paolo
+
+----------------------------------------------------------------
+KVM/arm64 fixes for 6.14, take #4
+
+* Fix a couple of bugs affecting pKVM's PSCI relay implementation
+  when running in the hVHE mode, resulting in the host being entered
+  with the MMU in an unknown state, and EL2 being in the wrong mode.
+
+x86:
+
+* Set RFLAGS.IF in C code on SVM to get VMRUN out of the STI shadow.
+
+* Ensure DEBUGCTL is context switched on AMD to avoid running the guest with
+  the host's value, which can lead to unexpected bus lock #DBs.
+
+* Suppress DEBUGCTL.BTF on AMD (to match Intel), as KVM doesn't properly
+  emulate BTF.  KVM's lack of context switching has meant BTF has always been
+  broken to some extent.
+
+* Always save DR masks for SNP vCPUs if DebugSwap is *supported*, as the guest
+  can enable DebugSwap without KVM's knowledge.
+
+* Fix a bug in mmu_stress_tests where a vCPU could finish the "writes to RO
+  memory" phase without actually generating a write-protection fault.
+
+* Fix a printf() goof in the SEV smoke test that causes build failures with
+  -Werror.
+
+* Explicitly zero EAX and EBX in CPUID.0x8000_0022 output when PERFMON_V2
+  isn't supported by KVM.
+
+----------------------------------------------------------------
+Ahmed Genidi (1):
+      KVM: arm64: Initialize SCTLR_EL1 in __kvm_hyp_init_cpu()
+
+Mark Rutland (1):
+      KVM: arm64: Initialize HCR_EL2.E2H early
+
+Paolo Bonzini (2):
+      Merge tag 'kvmarm-fixes-6.14-4' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+      Merge tag 'kvm-x86-fixes-6.14-rcN.2' of https://github.com/kvm-x86/linux into HEAD
+
+Sean Christopherson (11):
+      KVM: SVM: Set RFLAGS.IF=1 in C code, to get VMRUN out of the STI shadow
+      KVM: selftests: Assert that STI blocking isn't set after event injection
+      KVM: SVM: Drop DEBUGCTL[5:2] from guest's effective value
+      KVM: SVM: Suppress DEBUGCTL.BTF on AMD
+      KVM: x86: Snapshot the host's DEBUGCTL in common x86
+      KVM: SVM: Manually context switch DEBUGCTL if LBR virtualization is disabled
+      KVM: x86: Snapshot the host's DEBUGCTL after disabling IRQs
+      KVM: SVM: Save host DR masks on CPUs with DebugSwap
+      KVM: SVM: Don't rely on DebugSwap to restore host DR0..DR3
+      KVM: selftests: Ensure all vCPUs hit -EFAULT during initial RO stage
+      KVM: selftests: Fix printf() format goof in SEV smoke test
+
+Xiaoyao Li (1):
+      KVM: x86: Explicitly zero EAX and EBX when PERFMON_V2 isn't supported by KVM
+
+ arch/arm64/include/asm/el2_setup.h                 | 31 +++++++++++---
+ arch/arm64/kernel/head.S                           | 22 ++--------
+ arch/arm64/kvm/hyp/nvhe/hyp-init.S                 | 10 +++--
+ arch/arm64/kvm/hyp/nvhe/psci-relay.c               |  3 ++
+ arch/x86/include/asm/kvm_host.h                    |  1 +
+ arch/x86/kvm/cpuid.c                               |  2 +-
+ arch/x86/kvm/svm/sev.c                             | 24 +++++++----
+ arch/x86/kvm/svm/svm.c                             | 49 ++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.h                             |  2 +-
+ arch/x86/kvm/svm/vmenter.S                         | 10 +----
+ arch/x86/kvm/vmx/vmx.c                             |  8 +---
+ arch/x86/kvm/vmx/vmx.h                             |  2 -
+ arch/x86/kvm/x86.c                                 |  2 +
+ tools/testing/selftests/kvm/mmu_stress_test.c      | 21 ++++++----
+ .../selftests/kvm/x86/nested_exceptions_test.c     |  2 +
+ tools/testing/selftests/kvm/x86/sev_smoke_test.c   |  3 +-
+ 16 files changed, 130 insertions(+), 62 deletions(-)
 
