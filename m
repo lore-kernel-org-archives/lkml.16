@@ -1,194 +1,147 @@
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [85.215.255.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764871DA0E0;
-	Sun,  9 Mar 2025 18:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.22
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741546771; cv=pass; b=jwG4OTDBkt+bUZI/89EsZz8x/+u1PL34cjmWzmy5Yttfj9jipvR4vYOAftB3PzTMj6Gq9KR1dJUvrJeKj/NOt29ZB7n/LKneorBqqqOsW1dCce6s5RmMPgnR2oNVIedIcvDSPO5/XyyDgHOt0F0uawYAB7mGmLP9525/uVuAEaw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741546771; c=relaxed/simple;
-	bh=+MbBpKKuJKK0Ybn6pjZFnv5ufwznv1SGiyfyOPyeEfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=K8wn1ZBmja9+p/Yc5V7ohLYBMnkl/v96zRxmrLBcu2dV+D9OrVO6e8uPqga14vD40DxsnVCr232mBsYlUNcIpBk/bGTI2DRbPVkTBGxRznoVhDOlQXcWu7Km1HE4u5MaBPWKoFkdJpSTkPqEIs2AbmbYq2SXU4oOSztcMiPmyyk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net; spf=pass smtp.mailfrom=hartkopp.net; dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=Wmlw7Ope; dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=kTIEeRCu; arc=pass smtp.client-ip=85.215.255.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hartkopp.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B50D528;
+	Sun,  9 Mar 2025 19:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741546869; cv=none; b=ms5+LNc4wBinkfr7b8c2A3cP9eixu3hJcCJvG/+t/6AQZcJM0iGZ8Wg1OBIGreaAKV17BgmMiu471UIqpa2dp7eFUFkUV36zdButPVVkaXjBrdopVS+v614aixjBVeUkA0l5aDgMwVRYjWsMjvbzBkVul1ezObLc+t/xM5pzFJk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741546869; c=relaxed/simple;
+	bh=kH5JdLfYUUDkMU6DKgUeLSwXtGrR71Mgz2D16I88pkU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MwtKXdaYc8p7m8qlcgh/Gr/RNHJhcmAooc4YLvRAXhugBwNesSg/ebbjm3sj5Zl6rCl5mYWI2ncB0fCxowGGeW2H6/jPYVRcV/BBEKYLWJOkhb70rAba5YU9h8YeMKTc7vVhbNu+v/4UhAm+RRNMzacYon1hibrlvoCNyj722r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUDSBA8Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="Wmlw7Ope";
-	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="kTIEeRCu"
-ARC-Seal: i=1; a=rsa-sha256; t=1741546044; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=E/n2wBNSGxnWwNiUdp3g9u4bRyHiKKSwFSpI7Xcb74nF5TeI09HuTBPrJRT+4nFeUz
-    ksxnVXGIe7exbE5FvXfWLi2CEz+6QPDIU8jvxmfHjERqUc2cYc56wHFbf66iFXRQw3qp
-    xXBBdTE0+UORnhUUpDa694df7ZLgOur+XXq+ySNAbVH+TSSpYgJIrYa7Zf+V1ZdlmnQm
-    9EXAB7QDGFsoPMQ8YYKl79vpA5CNmH2DoqxXc3fUJzbjs2c6NJqktMBM5HwXhnAbnzMH
-    tOkEnyS8mtsNg/Hw7fdPTenYO8QW43kakCqS3AsURFqpPgelWEaGQiQxKOnljhTPAneE
-    IGSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1741546044;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:Cc:References:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=0VIIqdmoRNGEpXgGs6HGzncaolpdEE7DgMVPQ+A3/2I=;
-    b=JhPD/xMnXLFsE7TnQrZ2uPpvOOyOT2w6A4NThSQJ53XoQ4tkGHZjreXQZmouJbJWF4
-    pgGi4bTzni5KgqkU5hsKziAlsAw+rBGdp+wKfBqtqCOmq0HgkOcfqvtmwzviZpkbh5hY
-    03IXvzu6RmT+Jfi80bxxsa0QxxI+yAJoJrcOKhiAfBiwsCgPSsM9lpCSzttIVUpcXVOt
-    t1yRnG3YK+FwU9uC8DX5lz/hhXUGwvNE6tFnbTbnFYbdun1s17l/ADJw/9ciSPtCPCaw
-    P4/QDBQPxpy5Ru1/b0s4PXsHm3bvSXPljq9ay2navq9pKeRkfDbA1ilP8zVtZtliA1h2
-    5d0w==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1741546044;
-    s=strato-dkim-0002; d=hartkopp.net;
-    h=In-Reply-To:From:Cc:References:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=0VIIqdmoRNGEpXgGs6HGzncaolpdEE7DgMVPQ+A3/2I=;
-    b=Wmlw7OpezyliDHMC+Pd0G5+vKz3tzHHAVIaBbdte34TYxZfvKZoreJb2UnvHECvg7h
-    wpiM86c60fd9rh7Ur5q0ioHpjyvpSwrd+GokxfYllw1OxXFZ+r+cwsa2fF5tBeACLIUL
-    6tS4Npw3MiU7adgjqRYGLne+ByJNUBEmsrmqldEsAhlN+HWlX2vj3Ma/375efx1CDPpT
-    Ne5LqG0IqG4ROySdfG9hUr00+jNwdZRZB+wz07VmkEpEyX3TLiEk/ADMjGWlxx44Zx/u
-    BmWdSlECgrel8tB/43ESoCLIKJzu1kqQEhTlMP6mfPuyUvIbIUSN+3gdtRjRqcY69Xl0
-    qt2w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1741546044;
-    s=strato-dkim-0003; d=hartkopp.net;
-    h=In-Reply-To:From:Cc:References:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=0VIIqdmoRNGEpXgGs6HGzncaolpdEE7DgMVPQ+A3/2I=;
-    b=kTIEeRCu3WcWaGHt11BkQsNfYikd0EPLJhld2F4q+w9XJBBkye5AVIMEvaQ775YTU2
-    Bxq791RMnxj/Qk5179Bg==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjH4JKvMdQv2tTUsMrZpkO3Mw3lZ/vMMcFB+5xtv9aJ67XA=="
-Received: from [IPV6:2a00:6020:4a8e:5000::9f3]
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id K2a3e5129IlOQ9h
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 9 Mar 2025 19:47:24 +0100 (CET)
-Message-ID: <c9047828-708a-42d8-97f6-fffb7d806679@hartkopp.net>
-Date: Sun, 9 Mar 2025 19:47:17 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUDSBA8Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661E5C4CEE3;
+	Sun,  9 Mar 2025 19:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741546868;
+	bh=kH5JdLfYUUDkMU6DKgUeLSwXtGrR71Mgz2D16I88pkU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nUDSBA8QYKj4ib20a3S0gzNzWPwUXQt5HPtjgFPa9psXoTr6RhK9erJQDi8sH2xAQ
+	 CJ8Nq6I6tPx27GzYGUBlIIUISD8I0Q2ORxaoLJNzGHrqZz/92qzYOyDsSlFW0MCwlX
+	 tlw0L69rvsptL+078lnlCHn725mVxmdOW1wfi/phzTe7UVzAwtDRoD+qL5wmun1rUJ
+	 GT5Bf8mH/JduCeYEkUVsuVqTQWjwa4+YRVINd7rvlfdcbtW4aTjF7r+AY5Dbgk86jO
+	 wZ8Sif6RHVVQevmi0EAleR9w8jAtgB/h/aju8GsdTfNCIpeLPcE4BENTdB9oJa27Mz
+	 fyH3qk+/qY1dQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1trLta-00ByG4-3R;
+	Sun, 09 Mar 2025 19:01:06 +0000
+Date: Sun, 09 Mar 2025 19:01:05 +0000
+Message-ID: <864j02owpa.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Andrew Jones <andrew.jones@linux.dev>,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	devel@daynix.com
+Subject: Re: [PATCH v2 3/3] KVM: arm64: PMU: Set raw values from user to PM{C,I}NTEN{SET,CLR}, PMOVS{SET,CLR}
+In-Reply-To: <20250307-pmc-v2-3-6c3375a5f1e4@daynix.com>
+References: <20250307-pmc-v2-0-6c3375a5f1e4@daynix.com>
+	<20250307-pmc-v2-3-6c3375a5f1e4@daynix.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [can?] KCSAN: data-race in can_send / can_send (5)
-To: mkl@pengutronix.de
-References: <67cd717d.050a0220.e1a89.0006.GAE@google.com>
-Content-Language: en-US
-Cc: syzbot <syzbot+78ce4489b812515d5e4d@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- linux-can@vger.kernel.org
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-In-Reply-To: <67cd717d.050a0220.e1a89.0006.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: akihiko.odaki@daynix.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, andrew.jones@linux.dev, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, devel@daynix.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello Marc,
-
-On 09.03.25 11:46, syzbot wrote:
-> Hello,
+On Fri, 07 Mar 2025 10:55:30 +0000,
+Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
 > 
-> syzbot found the following issue on:
+> Commit a45f41d754e0 ("KVM: arm64: Add {get,set}_user for
+> PM{C,I}NTEN{SET,CLR}, PMOVS{SET,CLR}") changed KVM_SET_ONE_REG to update
+> the mentioned registers in a way matching with the behavior of guest
+> register writes. This is a breaking change of a UAPI though the new
+> semantics looks cleaner and VMMs are not prepared for this.
 > 
-> HEAD commit:    0f52fd4f67c6 Merge tag 'bcachefs-2025-03-06' of git://evil..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12d12a54580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=523b0e2f15224775
-> dashboard link: https://syzkaller.appspot.com/bug?extid=78ce4489b812515d5e4d
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> Firecracker, QEMU, and crosvm perform migration by listing registers
+> with KVM_GET_REG_LIST, getting their values with KVM_GET_ONE_REG and
+> setting them with KVM_SET_ONE_REG. This algorithm assumes
+> KVM_SET_ONE_REG restores the values retrieved with KVM_GET_ONE_REG
+> without any alteration. However, bit operations added by the earlier
+> commit do not preserve the values retried with KVM_GET_ONE_REG and
+> potentially break migration.
 > 
-> Unfortunately, I don't have any reproducer for this issue yet.
+> Remove the bit operations that alter the values retrieved with
+> KVM_GET_ONE_REG.
 > 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/eb0d7b540c67/disk-0f52fd4f.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/51c261332ad9/vmlinux-0f52fd4f.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/38914a4790c8/bzImage-0f52fd4f.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+78ce4489b812515d5e4d@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KCSAN: data-race in can_send / can_send
-> 
-> read-write to 0xffff888117566290 of 8 bytes by interrupt on cpu 0:
->   can_send+0x5a2/0x6d0 net/can/af_can.c:290
->   bcm_can_tx+0x314/0x420 net/can/bcm.c:314
->   bcm_tx_timeout_handler+0xea/0x280
->   __run_hrtimer kernel/time/hrtimer.c:1801 [inline]
->   __hrtimer_run_queues+0x20d/0x5e0 kernel/time/hrtimer.c:1865
->   hrtimer_run_softirq+0xe4/0x2c0 kernel/time/hrtimer.c:1882
->   handle_softirqs+0xbf/0x280 kernel/softirq.c:561
->   run_ksoftirqd+0x1c/0x30 kernel/softirq.c:950
->   smpboot_thread_fn+0x31c/0x4c0 kernel/smpboot.c:164
->   kthread+0x4ae/0x520 kernel/kthread.c:464
->   ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:148
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> 
-> read-write to 0xffff888117566290 of 8 bytes by interrupt on cpu 1:
->   can_send+0x5a2/0x6d0 net/can/af_can.c:290
->   bcm_can_tx+0x314/0x420 net/can/bcm.c:314
->   bcm_tx_timeout_handler+0xea/0x280
->   __run_hrtimer kernel/time/hrtimer.c:1801 [inline]
->   __hrtimer_run_queues+0x20d/0x5e0 kernel/time/hrtimer.c:1865
->   hrtimer_run_softirq+0xe4/0x2c0 kernel/time/hrtimer.c:1882
->   handle_softirqs+0xbf/0x280 kernel/softirq.c:561
->   run_ksoftirqd+0x1c/0x30 kernel/softirq.c:950
->   smpboot_thread_fn+0x31c/0x4c0 kernel/smpboot.c:164
->   kthread+0x4ae/0x520 kernel/kthread.c:464
->   ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:148
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> 
-> value changed: 0x0000000000002b9d -> 0x0000000000002b9e
-> 
-
-Increased by '1' ...
-
-I assume this problem is caused by increasing the per-netdevice statistic in
-
-https://elixir.bootlin.com/linux/v6.13.6/source/net/can/af_can.c#L289
-
-pkg_stats->tx_frames++;
-pkg_stats->tx_frames_delta++;
-
-We update the statistics for the device and in this specific case the 
-hrtimer fired on two CPUs resulting in a can_send() to the same netdevice.
-
-Do you agree with this quick analysis?
-
-Isn't there some lock-less per-cpu safe statistic handling within netdev 
-we might pick for our use-case?
-
-Best regards,
-Oliver
-
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 1 UID: 0 PID: 23 Comm: ksoftirqd/1 Tainted: G        W          6.14.0-rc5-syzkaller-00109-g0f52fd4f67c6 #0
-> Tainted: [W]=WARN
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-> ==================================================================
-> 
-> 
+> Fixes: a45f41d754e0 ("KVM: arm64: Add {get,set}_user for PM{C,I}NTEN{SET,CLR}, PMOVS{SET,CLR}")
+> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  arch/arm64/kvm/sys_regs.c | 21 +--------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
 > 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 51054b7befc0b4bd822cecf717ee4a4740c4a685..2f44d4d4f54112787683dd75ea93fd60e92dd31f 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1142,26 +1142,7 @@ static bool access_pmu_evtyper(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+>  
+>  static int set_pmreg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r, u64 val)
+>  {
+> -	bool set;
+> -
+> -	val &= kvm_pmu_valid_counter_mask(vcpu);
+> -
+> -	switch (r->reg) {
+> -	case PMOVSSET_EL0:
+> -		/* CRm[1] being set indicates a SET register, and CLR otherwise */
+> -		set = r->CRm & 2;
+> -		break;
+> -	default:
+> -		/* Op2[0] being set indicates a SET register, and CLR otherwise */
+> -		set = r->Op2 & 1;
+> -		break;
+> -	}
+> -
+> -	if (set)
+> -		__vcpu_sys_reg(vcpu, r->reg) |= val;
+> -	else
+> -		__vcpu_sys_reg(vcpu, r->reg) &= ~val;
+> -
+> +	__vcpu_sys_reg(vcpu, r->reg) = val & kvm_pmu_valid_counter_mask(vcpu);
+>  	kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
+>  
+>  	return 0;
 > 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
 
+Yup, this code was definitely a brain fart. Thanks for spotting it.
+One of the big mistake was to expose both CLR and SET registers to
+userspace (one of the two should have been hidden).
+
+This requires a Cc to stable@vger.kernel.org so that this can be
+backported to anything from 6.12. It would also help if you put this
+patch at the head of the series, before adding the PMU request (it is
+then likely to be very easy to backport).
+
+With that,
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
