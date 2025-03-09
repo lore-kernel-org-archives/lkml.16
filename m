@@ -1,103 +1,113 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2B81C5D78;
-	Sun,  9 Mar 2025 17:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71A1DF42;
+	Sun,  9 Mar 2025 17:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741541589; cv=none; b=ERhTnpd/oK2hKrGDCuIUA3waSNlCgEsYe1fQ1AjcBEs4vzRWkTVXtU+mSQbPsJewGvalyhVnyMjPBk23qdDgzS1GS9l/Jthlwyhm1lLemJHuNOjfjYxooiE3paB7SwPxJEGt9rGeQ2ElZn86Qk3b39YbuzhS1YiF1YLtCJd00Ks=
+	t=1741541709; cv=none; b=HEJIGYFYUhMCCSEH+F91AhH8gTdnVc+PiTPi6jDKYBGQJ7cP5Rby+ngOwqoCP1WpOgAbs5Ql9vg4CpNhflbArmA/9cmvGHx1f99xTHQ9lX+dd4LC5bmdEzGyQfH0GewJbL+Ij9SaCzHp+YxXmogSIQzNqpanlxZngeT1jucYXpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741541589; c=relaxed/simple;
-	bh=DBdtiV38JvrK5apez6Z4gd9rOPGIqtIoKuhPJl81drU=;
+	s=arc-20240116; t=1741541709; c=relaxed/simple;
+	bh=R1HcZEoim7RkU2s3cAzwwS4sVdwcrpbNQ3WffTXn9mM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TmqjQ1BYxUEGsTOklJIhyBK7X9iPDt1ZEZrHbcwf3AG3MnM+eEMRoGIvFfWCMijaXdHFjcTlueO3PGm9LYpfKXBzfYrbAa49R2DaKa2/K9dX9wTWk7ZHgV0/8f6BGsyzIa3C40Iq1JvbM215cqeil/1aK15GQ8lhTYbtOXNUflA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QvmkxY6h; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QvmkxY6h"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4EC1A40E015D;
-	Sun,  9 Mar 2025 17:33:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WO0JmeVPD-1N; Sun,  9 Mar 2025 17:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741541580; bh=JE9z+8KfG9ic8fY+M0OmWcViQrJ70UNbKwvs4lEwbEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QvmkxY6hDXFKYcuxskX/12KIrWNIR+YqqxWLI577Z55egcc1KJ+cGlQcMcHIWYApU
-	 xhdAHZr1W18gwvjQlQpFSIhIftw/0/ZX4Uhfx0ySPR3J4vnzNCI0Iwbw1c/ByTeItT
-	 tIJsc6VSEhk4V+AE5lfDM2IWVd0dRXowF2z+lYpHyTCp7JKVs4LpzEUyZq47BxXGzY
-	 yjSB2VoHp1ObZZLL+Q3IWGuqNd/z1K6LfVXVlGCFmikcL6C2mwHyfpOByOl7H/Skc+
-	 GI761HxrbR04DgX9XNGOkgoPwbvL0aCFZrK/veUrDlTgv8G/REWZdXt74RS6IcKGgs
-	 84Zqn6WoTc2tClCZr88MLHV1xHASSVb+lLuWltPKO3iIex7fATNww+I8kPx3NTkKTM
-	 k4z29ewk8snCyFeVr6j5sJdJAcVnllr2c4zOU1PwEIHcdJA/qai6OOeyA5qwdJB6ib
-	 6PcxfDNx64FtOzjub4nAIKMdhxLthJXSJrkXsnQLTeZAk3Dam/71haGiDVNfD+1Apv
-	 pS5AwANTz5yMrcYh6tc8bO8tZ1jJKI7yXWZalkrmg+J8ImIMAZOMDmFcRFjQtKyrkW
-	 C8Uhc3EGQ/NGaoP8iQHPehIr27evpjeG3QDLHyrMwleZCLz2tWG68DFroCgTSKaOKA
-	 yNvBU/vFybgYyWjNDVUzdx9c=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 89D1240E0214;
-	Sun,  9 Mar 2025 17:32:40 +0000 (UTC)
-Date: Sun, 9 Mar 2025 18:32:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v7 2/4] x86/cpu: Add cpu_type to struct x86_cpu_id
-Message-ID: <20250309173239.GCZ83Qt2uxtPvMNxVL@fat_crate.local>
-References: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
- <20250306-add-cpu-type-v7-2-f903fb022fd4@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FoHXbDrSEUYW5dWXNYKMAdsprGdn5S044XIPdQjDA5sj77/nlQNduqFTOsrlPkk5grPB8qBfhPDLxhM0QWD03/Qg8YFjEFDc9ezAQ4GTvpYWybuZJHF8tfTlkMGZPuli7dnXBFLxsUQdejH4bM0F5Pkk2HF8odzsCYIZ5V8qCbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22113560c57so63609955ad.2;
+        Sun, 09 Mar 2025 10:35:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741541706; x=1742146506;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lqfgSnF+WviyCGuHYaz7kEPSmau08UBaZRQ3w6s7VbQ=;
+        b=QSzdH+XdClwGTXW2tHGPFIJqyfDgrURJQqHHs+/IO1OCXLmOgkPOdKiMjlF1OolfB8
+         v94lxQQYcw9EO4/oC7YZq6cqkZXC/RzVXijvdqW0geEnGKHzvyfPxweuolRDKYQxxSN7
+         FDw+icyaxGScNpwKnMVDKWUNU7EfHu/u4na/EgrPtaadx3NK5IKJ23X5m00Hp/s6sCmW
+         y72UPOgW2BWKCOni7swZSeIapvodUGvC/rVDF6NWwmgDTssl4J0CiDxUR57I60LRFhp2
+         iPjHAb8nCzlI85/M+z9IeHerqY3NAIIuVVG7V1IyW5MQzePhjYcWRy9iaXbVRjLDt6zC
+         JH3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUESqf55HBvo4Y8LXQ22N6M3K1/Lupl+5TyTvSpOChS4mdOWuZX85imtpw0SgngepoYZ1zpneZQyczp@vger.kernel.org, AJvYcCVkQBe7Zkwa5b4OHO7FyMzNWjYHzq7NSCku4JzEVwURwaeYHeDI9qh7zWcJVHfpABYJnYrRtPi1EAIu@vger.kernel.org, AJvYcCXdDuWV0PbPrFNS9x1x/9TGVuabaSwwdrSbj0pSRkX6S3TDx4g2PoAfrcy/U4y3BrleHUGU41JgEgKYoUoK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz1Ou6cg2CzJ+JHvsRW3++OgW5iuWZoxp0V49SAImmTw0FN84v
+	XLXJjjxx8K7GawE6PmMWB4k+b9TOmx+T9OFAzi9CPFb21l6nX9CM
+X-Gm-Gg: ASbGncvrytGIFcuxL4mn36/uvVKGG2kL4FH5hQyUyPaGdbMP/Q/8vOWMHGp5Zg3TvE/
+	iBAGz7pFap1DTN5H+gJ0u9d0Ep7R1M7zk0OL8LNflXFyRmoLk/P/TgXhkHEnNkJ50+SSCXyaCkZ
+	t0czd3rFQb3mU2axwGS88+Jb1r7an2H7vNLweUrboO6j9IrqfxZWqIlgEKl3LVe3FZW/pZ0VMs1
+	bSxlanfuSpNDFfN700DxTlb6eYez8IvzYWnCdAtV9q9L5uxhZNvHfotRZp3IJ3qzhGvxzE7s2rq
+	/GwTBZUCLbTl8VYzy2U3sgI4Pdw9jgPHnsQKuKEpe6SYPUnh/Yqwjgq+/fKj3BJ8Ce43h1FJBh1
+	fzH8=
+X-Google-Smtp-Source: AGHT+IHVZbyUWkJbEz7fVY1tLMRkANLMWGHI0dBoEjw74h/W7/m++eJqTOXwGGMJyEQB9vKsowPLBA==
+X-Received: by 2002:a17:903:2445:b0:21f:52e:939e with SMTP id d9443c01a7336-2242899465emr214237965ad.28.1741541706127;
+        Sun, 09 Mar 2025 10:35:06 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22410aa8a86sm62324315ad.240.2025.03.09.10.35.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Mar 2025 10:35:05 -0700 (PDT)
+Date: Mon, 10 Mar 2025 02:35:03 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com
+Subject: Re: [PATCH v5 1/3] PCI: xilinx-cpm: Fix IRQ domain leak in error
+ path of probe.
+Message-ID: <20250309173503.GB2564088@rocinante>
+References: <20250224155025.782179-1-thippeswamy.havalige@amd.com>
+ <20250224155025.782179-2-thippeswamy.havalige@amd.com>
+ <20250304154608.5nmg4afotcp6hfym@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250306-add-cpu-type-v7-2-f903fb022fd4@linux.intel.com>
+In-Reply-To: <20250304154608.5nmg4afotcp6hfym@thinkpad>
 
-On Thu, Mar 06, 2025 at 06:18:20PM -0800, Pawan Gupta wrote:
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index d67614f7b7f1..18e996acb49a 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -692,6 +692,7 @@ struct x86_cpu_id {
->  	__u16 feature;	/* bit index */
->  	/* Solely for kernel-internal use: DO NOT EXPORT to userspace! */
->  	__u16 flags;
-> +	__u8  cpu_type;
+Hello,
 
-The struct is called "x86_cpu_id" and all its members describe a CPU. There's
-no need to have more "cpu_" redundancy in the member names - just call that
-"type".  It is clear that it is about a CPU's type.
+[...]
+> > The IRQ domain allocated for the PCIe controller is not freed if
+> > resource_list_first_type returns NULL, leading to a resource leak.
+> > 
+> > This fix ensures properly cleaning up the allocated IRQ domain in the error
+> > path.
+> > 
+> 
+> Missing Fixes tag.
 
-The macro names having "CPU" - X86_CPU_TYPE_ANY - are fine I guess.
+Done.
 
-Thx.
+> > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> > ---
+> >  drivers/pci/controller/pcie-xilinx-cpm.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+> > index 81e8bfae53d0..660b12fc4631 100644
+> > --- a/drivers/pci/controller/pcie-xilinx-cpm.c
+> > +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+> > @@ -583,8 +583,10 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+> >  		return err;
+> >  
+> >  	bus = resource_list_first_type(&bridge->windows, IORESOURCE_BUS);
+> > -	if (!bus)
+> > +	if (!bus) {
+> > +		xilinx_cpm_free_irq_domains(port);
+> 
+> Why can't you use existing 'err_parse_dt' label? If the reason is the name, just
+> change it to actual error case. Like, 'err_free_irq_domains'.
 
--- 
-Regards/Gruss,
-    Boris.
+Done.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I took care of the review feedback and added missing "Fixes:" tag, and
+changed the code to use an existing goto label.  Both changes are already
+on the branch.
+
+Thank you!
+
+	Krzysztof
