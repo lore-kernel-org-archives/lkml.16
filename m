@@ -1,68 +1,104 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D892165F9;
-	Sun,  9 Mar 2025 19:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3392D216E3A;
+	Sun,  9 Mar 2025 19:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741549666; cv=none; b=ukzjqyEY97QB1wgP76AIwEphHC7otUAcN4j12y6bsAvi9RhS7dMJSwzexciGZxXSmb8ToBZUiM9xu5SOTNdrDNzVLEdxT1NZTK8QeWd1WQBnYJLXjnAOp8ycK8OJl+UuQfzhtm/5a9KyH8gx6WFn72vSAHBO92cnsbD+2a4hMmc=
+	t=1741549781; cv=none; b=S7qk0ExSKz2zr9rLzO/doPgfap0Rfe8OehQNrFySUmkdRKCYardspz1FH0k04rnbxpv4Z6OOCxn5+euhjfmt7qAb1kq1yajdX4Jqhbion5SGo8PA5R0q5hZ2t8FVr5Q3s2/57rN8LsL+5bG/XtUeMtJ1HTDTkp7EZi9AuS+/iE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741549666; c=relaxed/simple;
-	bh=ggVdP5WB7dmKeqoWnaYejxWiD8uyj1cRmz9hIWSjxgI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MX3BUkg2u4BPRdP2UyPi/8ePzfT97BmSRBtEcXOdgEpte58KmBgmzPdHY4HZMMU748bvz3H+5c2yyN8xsIuiSN0Zafaqs/nLBmDvaGYAYP6jKwlg5qL24iCNedvnVwjX4prmwtvK4NhZWvT/1zC7wcasVOLzCNF7lxQ23yUM6Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=XdEDtKem; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741549781; c=relaxed/simple;
+	bh=r56I7HaDUZmNq0/JP6F9FJieMDfuEuOVaXRoNDw06XM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R0m1VOpSEDI27xXitbEVPAru4PhzEzgH5tQTz8aQIfYgbUHtdumIN3UHybWaCmhcpI3DeTQsjw0/UPw1W4oA4xl0KkQbYGmjewDyOQ+RC4TxBl3FVnxquL9u/ANgppAPtjiSSJI2BU/np5mrMyvsfviCHSpDe3tHBfGPpHf75UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQDqJ1nP; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="XdEDtKem"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=ggVdP5WB7dmKeqoWnaYejxWiD8uyj1cRmz9hIWSjxgI=; b=XdEDtKemwiyOxfou/xXkzu2wSA
-	uKIzI70rg8yVmSfOgB8RBcPiosdXczqgBH73d1ahIJBBvkP+/1JjO/qyqGMAydwIU7lr4mg5G+9Il
-	3y7wuWg3MwoRAJE3XVTeIFK8nTEBcArjAd3iKTPPZCeg4h7sKH9S9C5p4+uq4NkwQLdCX7eSQWvky
-	MT5WgaV7NViv5skVp5OzZ02U9I5Ybm5BZ96WzfM5fZVJwolqfTS1M+h928y8hBhuTuouXUyRblC2p
-	ErII2wchfWP4o17/z3iLG/tO2L6LM/AwEH2t5br5+Hc35gI/F5ppGqGsRMgdWG7RfE5qUSulXjFNQ
-	0Vb3YEeg==;
-Received: from i53875a38.versanet.de ([83.135.90.56] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1trMcP-0003bO-AZ; Sun, 09 Mar 2025 20:47:25 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Yao Zi <ziyao@disroot.org>,
- Chukun Pan <amadeus@jmu.edu.cn>, Yao Zi <ziyao@disroot.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 1/3] dt-bindings: i2c: i2c-rk3x: Add compatible string for RK3528
-Date: Sun, 09 Mar 2025 20:47:24 +0100
-Message-ID: <1914308.tdWV9SEqCh@diego>
-In-Reply-To: <20250309070603.35254-2-ziyao@disroot.org>
-References:
- <20250309070603.35254-1-ziyao@disroot.org>
- <20250309070603.35254-2-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQDqJ1nP"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso4347145e9.1;
+        Sun, 09 Mar 2025 12:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741549778; x=1742154578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pqiQtKisRnhXpmZFZwk1xNcziyW49eZC+8aIuCkeFow=;
+        b=EQDqJ1nPTH48R5RiE7FtTYEIYBeDFnJXsonPJF6X9Yqty8x+/QankSLu6qbwe/RBBB
+         6KUuXGcHRlRs+iCafzIXWO+nvHITdpWwIEhSBBbBHnWu5grhdiRwN/wUTKu4C2ZPmhcr
+         ltPMUBrX8wUz8YydnHt/15qihZMD/udtujr6wHHr4bUdnWwWCnIjtMPheTI/WyYCN58Z
+         zQSW49p0Fdp4KDGKJ5w2S7eZcOzzr5rJ4kG/jGb/3vI3XXmWHNwm79zBjck3paaWHp2j
+         zzLnf6L1e4bX/Jw61JnCXqYMrkWy2jJKNn1WvUl/d5FvxTCm3HYv0zoOnZ/OPMFxGCYu
+         xNKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741549778; x=1742154578;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pqiQtKisRnhXpmZFZwk1xNcziyW49eZC+8aIuCkeFow=;
+        b=qYcHBfGrDo4rzsqDppXeuF61pJijslVJcYX5bIb+RwtM19+IVDNBj22yjwNGZ9h/4X
+         K1+qJ1QDr+TmhD9zJR7ESWm9cdxx+cu+lBLs9k4bu9/miPpQD9P6jFbga6mC3Y5WvP3m
+         HNHl4+ufhyz/SgEPIOYJvgl9B1Z3ykIcAXnRhDPIJhROAS4ahlzN4cNA6w3FaTOPvvNF
+         u5O3QbdUQcegnczt+QirkTxnY2rQqI+uaIArtZRe6vpEhi6zNPIDvEXc3e7YJzgJgYNd
+         4dpVnke/UcNFz1+yxsr2rAu34BYkseK+4iKTLOcSDiyKbiFN9OoDlNCA2eoZ1KcwLGgu
+         qN/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWpDmqFZEEMDrkTM4n1ndO/38Fk3vRLhnlSjy6b5VcM+iPAMorMz5h20bcjQzpAi0aXfBC1jh00aFWTgQ==@vger.kernel.org, AJvYcCXlkK7m3EsSN109WMDDZDhebUULL9XfTQv8XPshMiwLtUKsZW9ODHZ+B4DYhWUk38eJSL4bjBqu9V8ykrKO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8TaKS9Fj/Sa4o8zePoeacpP8WoxNLnNVQYszeUV8+y6qd/4ux
+	BnWhJfeMuPQkx4pd5cFktyhCRDUAh24Vw7Nz0UKbkxVFQNSqQ9c465/FqxaY76s=
+X-Gm-Gg: ASbGncuIwnTtiusXaZ3SoeFR/FhvZzNHzj0kOWkx0JeA70zok8QZ7lV8IrtWijvGU1Z
+	tRzyAI2EKxSVZiDgX7dOfedElN3KQs5CMmKj7u/TtiAPzQwt8FbL1FlN1KXcHTCkWB8xJ9ksuaF
+	viBWM0nYxjMLEe4WgjA67X0rlqqQEKSJW1dY3aim5ifgvS7atA7i5Z/9zMxCcXO6D5nwsbkv5d2
+	obDJv2lAERly0huwLiHtuHL43DZOBe1gMuCNABb7eiKUlm/5SRTIWPs5YwRM/QmRsG/xGgKRmcG
+	wMHvvzeOudzQdCDFmxgj0/kbV/Go+Y+JBwTh2wqs1hxbg7kbwq9Y9pbC9L7YK71y
+X-Google-Smtp-Source: AGHT+IE1b3vTyNHENuuJ7lf3QTYQeTeABe0PT7MOoVhhsfz30ePcubet8/e94gJrTJOb8eSX64gUsg==
+X-Received: by 2002:a05:600c:1550:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-43ceeeeba24mr20078675e9.22.1741549778107;
+        Sun, 09 Mar 2025 12:49:38 -0700 (PDT)
+Received: from localhost.localdomain ([176.206.121.35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c01567fsm12454968f8f.41.2025.03.09.12.49.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Mar 2025 12:49:37 -0700 (PDT)
+From: Denis Benato <benato.denis96@gmail.com>
+To: Basavaraj Natikar <basavaraj.natikar@amd.com>
+Cc: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Ivan Dovgal <iv.dovg@gmail.com>,
+	Adrian Freund <adrian@freund.io>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Denis Benato <benato.denis96@gmail.com>
+Subject: [PATCH 0/1] HID: amd_sfh: Add support for tablet mode
+Date: Sun,  9 Mar 2025 20:49:33 +0100
+Message-ID: <20250309194934.1759953-1-benato.denis96@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Am Sonntag, 9. M=C3=A4rz 2025, 08:06:01 MEZ schrieb Yao Zi:
-> Document I2C controllers integrated in RK3528, which are compatible with
-> the RK3399 variant.
->=20
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
+Recently there has been a renewed interest in this patch: ASUS has launched a new z13 model
+and many more users requested tablet mode support for previous models.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+I have made required adjustments to apply cleanly on top of linux-next:
+nothing substantial, a macro has been changed from 5 to 6 upstream as
+the previous patch also did and a few line changed their position.
 
+Given there were no functional changes at all I took
+the liberty to retain previous tags.
+
+Denis Benato (1):
+  HID: amd_sfh: Add support for tablet mode switch sensors
+
+ drivers/hid/amd-sfh-hid/amd_sfh_client.c      |  2 ++
+ drivers/hid/amd-sfh-hid/amd_sfh_pcie.c        |  4 +++
+ drivers/hid/amd-sfh-hid/amd_sfh_pcie.h        |  1 +
+ .../hid_descriptor/amd_sfh_hid_desc.c         | 27 +++++++++++++++++++
+ .../hid_descriptor/amd_sfh_hid_desc.h         |  8 ++++++
+ .../hid_descriptor/amd_sfh_hid_report_desc.h  | 20 ++++++++++++++
+ 6 files changed, 62 insertions(+)
+
+-- 
+2.48.1
 
