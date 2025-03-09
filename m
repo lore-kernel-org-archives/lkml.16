@@ -1,95 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D371FB3;
-	Sun,  9 Mar 2025 09:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3DC1AC43A;
+	Sun,  9 Mar 2025 09:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741513717; cv=none; b=s/ZVjr0Sp+92XVPkXBWEXMxMPHCyLl18Yp3HP2egHW9Rup2QX8oxuFJis2R5ye+hmcvArB0ULKqU3XeWnQhBwQ9f5qnOE7DRW2yzFBGi5pqs7+hzsCd+WHzPXrzKOFkcho2Off10GKuRb1PUwSzpDHM+G2YMte5D1nq8rWtxWsY=
+	t=1741513799; cv=none; b=iPMmP2WzFJmjSmer4o/O+LwusvyJHiHUu1bCFKvkn1fwKotmFQ+SYSEbp4Q+GPdGeDFkFm3Gsij0+ZHlqBWtpB8Q34wg0YRCdmiSdTxrieNScyb8EsW5ntTcRluJE3oj6lWK0p5ZkrEs0e4XE8gzDXr7Y81xMeDUNJtAsdK5G9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741513717; c=relaxed/simple;
-	bh=IlTX9kCJPuxZe+JTOdP3GseAAtQzgwIcutpUztNU7t4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PsS5BPQHWvVXYpPyTgjHb8J387JVlSnHmEfZiM9OwuZBNs0MX7cPPG8SxXsTJZ/IxfGgo3x/knSZiHf88LYkg69pjxVcKxVvXn0L8GI4TNvzXVVGV2FAsbstemV5zKgk+7TLZv7II2SxyulFarNuH9Di7MxkUfk+/9PbR/x1Zd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JoG/eB3/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741513799; c=relaxed/simple;
+	bh=VxJvVn6qaRu0WEzuAQdi5gaBI4IgpefPj5pgizkVmH4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Htgz5yp/yyFQ0dRT23503ut/nzh5tGrT/L4WociWPOxe1J8nfY2Mkr4akdDsKRZy8sbENJuc4ytYaVQFpOIh54VJ9gUNg5nGNZisRu6VReejm1v64N4/JU6ljc8HOmkBcL1q8VJCFNGZPLFbOrbJr1yYStmHc0+z5Dg1C+kIdRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DZmnhS/l; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JoG/eB3/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E763C4CEEC;
-	Sun,  9 Mar 2025 09:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741513717;
-	bh=IlTX9kCJPuxZe+JTOdP3GseAAtQzgwIcutpUztNU7t4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JoG/eB3/+ltN6Rd4CQnb1NxClMyElmVR3OgWN5mMJlIbX1Fa4lc5Fhvob1QtpQvp8
-	 izxu4GwHBMxiIsHJrMIqw+9Wzk+wN0zxMdeUyWeNNhPzjjtfd0cCpe4yt+0TJ6o3zT
-	 qkDia0My6WeCdThw47EZ5m7Pbh2/8wV7U6zb9KrqipIcmYklIPMWtefD/Up8N1jkOW
-	 M1AZzV+tBAwSkqvhhD7D1rcBGU2yYlxEv0j/GzbEh2SDPryERU/sfNFJwkQK6lss3C
-	 rZNzqX/lCEvMe8FeLg73CXMRQRFdPjqq/wzcAmoN+7zHxyPu1gXZ+dGyDEsSY18ENR
-	 ZzAZJ3OZP7rHQ==
-Date: Sun, 9 Mar 2025 10:48:32 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, linux-kbuild@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 0/4] x86/build: Get rid of vmlinux postlink step
-Message-ID: <Z81j8EguDyz_uesu@gmail.com>
-References: <20250224132132.1765115-6-ardb+git@google.com>
- <CAMj1kXHamiZ8u4YO9FnrWhpcotUkAusDF_db_5H2qaVD85qmVA@mail.gmail.com>
- <CAK7LNATLf2iXNGi-UKRg=+PRRqgmxry5QQnQ4GUNsuVmDBAnmw@mail.gmail.com>
- <CAMj1kXGVe-R7VF1nHmRx+UB4FuhSjiwMU=n_uWCLC99rTTa5ZQ@mail.gmail.com>
- <CAK7LNATkaTvAwPmNM3kSOCkCptW-bo9Ko6asWyFVcGYgu5rHtw@mail.gmail.com>
- <CAMj1kXHCia-gQy7fkVC5SgMyFqz6rRgpVbz6_W7e9jk7ENaQxA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DZmnhS/l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=D0D4APOoeYC81PF9TRG8I9kzmofvMySqAZ9SAcnxvBs=;
+	b=DZmnhS/lIVwn/yubSTMxmdq6LpOYSPKVJUiGEZ1x2JQXNhdMJnIzdLeIV2Qdg6
+	r8o7cPHgyoIneXfvYgM+62HyXpFP+WlcBIycoGQszZ99GL/SwwOEq4j8e2q0W3fb
+	eHD2lnckm0BEOGql1FguTlTczGvihYaLf8DWRShHdkjyk=
+Received: from [192.168.71.45] (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wBHf_oWZM1n+J9ZRg--.21878S2;
+	Sun, 09 Mar 2025 17:49:10 +0800 (CST)
+Message-ID: <bf9fc865-58b9-45ed-a346-ce82899d838c@163.com>
+Date: Sun, 9 Mar 2025 17:49:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHCia-gQy7fkVC5SgMyFqz6rRgpVbz6_W7e9jk7ENaQxA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] PCI: cadence: Add configuration space capability search API
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, bwawrzyn@cisco.com,
+ thomas.richard@bootlin.com, wojciech.jasko-EXT@continental-corporation.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250308133903.322216-1-18255117159@163.com>
+ <20250309023839.2cakdpmsbzn6pm7g@uda0492258>
+ <3e6645a8-6de9-4125-8444-fa1a4f526881@163.com>
+ <20250309054835.4ydiq4xpguxtbvkf@uda0492258>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250309054835.4ydiq4xpguxtbvkf@uda0492258>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wBHf_oWZM1n+J9ZRg--.21878S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCFyfXFWDAFWUJw4UtryrZwb_yoWrGF48pa
+	yDXFyFkF4kJrW29rs2gan0qFyFq3s3JryUG34DGw15Zrn09F12yF4I9r45uF97CrZ7uF1Y
+	v390qrZ7Xan8A37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uf739UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWw0Lo2fNW1rYVAAAsZ
 
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-> On Sat, 8 Mar 2025 at 17:17, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> ...
-> > I do not think it is broken.
-> > As I mentioned above, I regard vmlinux.relocs as a byproduct
-> > of the atomic build rule of vmlinux. This works.
-
-Except when it doesn't work, such as when an intermediate linking step 
-fails, and intermediate build products are lost and cannot be recreated 
-easily (or at all without modifying the source)?
-
-And the thing is, there should be no such thing as an 'atomic build 
-rule of vmlinux' if it means lost information when the build is broken 
-at an intermediate step. What purpose does it have?
-
-> There is no make rule for vmlinux.relocs, and so
+On 2025/3/9 13:48, Siddharth Vadapalli wrote:
+> On Sun, Mar 09, 2025 at 11:18:21AM +0800, Hans Zhang wrote:
+>>
+>>
+>> On 2025/3/9 10:38, Siddharth Vadapalli wrote:
+>>> On Sat, Mar 08, 2025 at 09:39:03PM +0800, Hans Zhang wrote:
+>>>> Add configuration space capability search API using struct cdns_pcie*
+>>>> pointer.
+>>>>
+>>>> The offset address of capability or extended capability designed by
+>>>> different SOC design companies may not be the same. Therefore, a flexible
+>>>> public API is required to find the offset address of a capability or
+>>>> extended capability in the configuration space.
+>>>>
+>>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>>> ---
+>>>> Changes since v1:
+>>>> https://lore.kernel.org/linux-pci/20250123070935.1810110-1-18255117159@163.com
+>>>>
+>>>> - Added calling the new API in PCI-Cadence ep.c.
+>>>> - Add a commit message reason for adding the API.
+>>>
+>>> In reply to your v1 patch, you have mentioned the following:
+>>> "Our controller driver currently has no plans for upstream and needs to
+>>> wait for notification from the boss."
+>>> at:
+>>> https://lore.kernel.org/linux-pci/fcfd4827-4d9e-4bcd-b1d0-8f9e349a6be7@163.com/
+>>>
+>>> Since you have posted this patch, does it mean that you will be
+>>> upstreaming your driver as well? If not, we still end up in the same
+>>> situation as earlier where the Upstream Linux has APIs to support a
+>>> Downstream driver.
+>>>
+>>> Bjorn indicated the above already at:
+>>> https://lore.kernel.org/linux-pci/20250123170831.GA1226684@bhelgaas/
+>>> and you did agree to do so. But this patch has no reference to the
+>>> upstream driver series which shall be making use of the APIs in this
+>>> patch.
+>>
+>> Hi Siddharth,
+>>
+>>
+>> Bjorn:
+>>    If/when you upstream code that needs this interface, include this
+>>    patch as part of the series.  As Siddharth pointed out, we avoid
+>>    merging code that has no upstream users.
+>>
+>>
+>> Hans: This user is: pcie-cadence-ep.c. I think this is an optimization of
+>> Cadence common code. I think this is an optimization of Cadence common code.
+>> Siddharth, what do you think?
 > 
-> - if it gets deleted, it cannot be rebuilt and even though the build
-> does not break, the relocation data is missing from the compressed
-> image, and this could potentially break the kaslr startup code,
-> - it vmlinux.relocs is older than vmlinux for some reason, make will
-> not notice and silently reuse the outdated version,
-> - when creating vmlinux.relocs from vmlinux and an error occurs,
-> vmlinux is deleted, making it difficult to diagnose the problem.
+> This seems to be an extension of the driver rather than an optimization.
+> At first glance, though it seems like this patch is enabling code-reuse,
+> it is actually attempting to walk through the config space registers to
+> identify a capability. Prior to this patch, those offsets were hard-coded,
+> saving the trouble of having to walk through the capability pointers to
+> arrive at the capability.
+
+Hi Siddharth,
+
+Prior to this patch, I don't think hard-coded is that reasonable. 
+Because the SOC design of each company does not guarantee that the 
+offset of each capability is the same. This parameter can be configured 
+when selecting PCIe configuration options. The current code that just 
+happens to hit the offset address is the same.
+
+You can refer to the pci_find_*capability() or dw_pcie_find_*capability 
+API. The meaning of their appearance is the same as what I said, and the 
+design of each company may be different.
+
+Best regards,
+Hans
+
 > 
-> I think this is badly broken, but if you think this is all working as
-> it should, I am not going to debate this further, and you can consider
-> the patch series withdrawn.
+> This patch will affect the following functions:
+> 01. cdns_pcie_get_fn_from_vfn()
+> 02. cdns_pcie_ep_write_header()
+> 03. cdns_pcie_ep_set_msi()
+> 04. cdns_pcie_ep_get_msi()
+> 05. cdns_pcie_ep_get_msix()
+> 06. cdns_pcie_ep_set_msix()
+> 07. cdns_pcie_ep_send_msi_irq()
+> 08. cdns_pcie_ep_map_msi_irq()
+> 09. cdns_pcie_ep_send_msix_irq()
+> 10. cdns_pcie_ep_start()
+> which will now take longer to get to the capability whose offset was
+> known. I understand that you wish to extend these functions to support
+> your SoC where the offsets don't match the hard-coded ones.
+>
+In my opinion, hard-coded is not universal.
 
-That's very sad, as both the simplification is substantial:
+> I will let Bjorn and others share their views on this patch.
+> 
+> Regards,
+> Siddharth.
 
-  19 files changed, 52 insertions(+), 87 deletions(-)
-
-and the increase in debuggability is substantial as well.
-
-Thanks,
-
-	Ingo
