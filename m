@@ -1,93 +1,81 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C357225413;
-	Mon, 10 Mar 2025 12:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD352158D94;
+	Mon, 10 Mar 2025 12:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741609636; cv=none; b=AZh4lkDKHu4CKfodoXqy+QMDlemRkXGpdse3NTAcwD55v4xjKe9EWgAs0jIrZKkAvrJsEf/mn1nKfnz0qUuZSmbJ36sosXih/mlNyYeCXUvYmlSZcmIEYmnLmekHD5GKcpDPABIBYv9M0z5L7/BAZbvFaQrqh+cs6VFShd0EX7U=
+	t=1741609666; cv=none; b=hdHEWrWuhM+r1MS530gasICw1gFR4CBttQEe2utvRKv5QnBGB0VHU3iro91XCrCDJxtACWt9i9yEsMoWoUog5rHgYzLmEw3AAXRoQ0lrn8uC49dX6b9nVg7/z8PL8WMymGQaH0MVnt+MjCXdaN/5Rhx8emUi1zzYXzobxB+96rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741609636; c=relaxed/simple;
-	bh=vK/TgnIZyvdL0hDlShnuvalPvRRxRIKI1qEKWTLREVA=;
-	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=oTUh91oFocaGHAy9mBconoWLtg/S3eoKZDA9PKFUl6/+1TNkaFKt9XCo0BIQAPEb1RU4Zr03/wXcwpcQZjQANJ06GTRJdkUQ8/vCMPfNNdxGniDqJlGH05dxGTjehiBt8E0Zg6wsk0nJvvkr90HAz/WoyW9GD7G2xVlOdxylGOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=g+sNguYq; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1741609666; c=relaxed/simple;
+	bh=OeSYjs/e3TEnZvrI+XL9ijVLOAQxM4B4wuRjM/3qewE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZPhKTwreiEOTITCsJoPORRBk3BuzUBo8Qk5RQVJnJocevicplWrsBP+GGy3z9dQTMyH5gtl4FDfBtZGLy9HsGuwcrrz5Il4Zoy1tfStfFuVhzTN3TBWNn+d2b1x5/GfVVTOVCrcuX+cR6JxunohGnqTLO2ox4YaHJPRjCvCZ+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtrK1Y82; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="g+sNguYq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741609620; bh=WkCx060iOy43w4Yye4pXYXhvwRUF2PXnYXTMpaw7xas=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=g+sNguYqcku0ZeaZ/ngWqYceajbkSvb1W+O12eT2gUfvZ97o/BXmQnj6v1MoXz9VR
-	 QvqMD7O9Zz8ZYxm5znMf61sA0K03DkKY8kzlvSr2jjj71pFbUJtGTlTNQicPKkUEV4
-	 xZwdiFPragetD/EvtjJzoCxA6PnosDvi3YnnH+Dw=
-Received: from smtpclient.apple ([59.66.139.231])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id 66F0309E; Mon, 10 Mar 2025 20:25:47 +0800
-X-QQ-mid: xmsmtpt1741609547tqvjfmzyd
-Message-ID: <tencent_7C72D4006818B37C695B066E0AFD5F94380A@qq.com>
-X-QQ-XMAILINFO: MF096ickW6xYEl/mYlfV9grOILopNqOQoEmD1Cp6RVGcFTcAXEHvfJdU6yPp55
-	 hTsB3CfZdbJ0eHBlqOOmgnzuhNthp5TQcdIaezX72nDWS6SqsfqaBAiDJ6MujraDxyN02KnIBlRi
-	 qIDVOSBHrU9MI92SPRjcM96ec/aFYCtISH5Ub9Wxi3Wkek/JGznunt5mRnm/ggJ8qJrpIuwBUSpI
-	 dvFFVOoZPNl5LwrpLDjxKTXb1U+nXQB4iNx42bUDqnYJHdU3ZzNh0mTYZg1nHiqgIxOyWXGqMJq+
-	 43ZvZuzSeezokMN6H+7iZqARRyZ48I7kTo68AgTypkkzmMe/eChagCxr+9yXntoorpWpM6WgUHed
-	 Q1ZzayxdHpwfNPTJwkr7ysarD9pL5CYoInif4iCqUBnVxWTM899/ex/hV4Z9KNMB+BFlPMwosg8l
-	 6U/HfBGZoTKlpipRtwRGmyGBLY11Hiau/oaXHOHyvldog/p5jBLjOPZuuEadoCMzPjZzKoArEijk
-	 Xdyh7MW+hNU9FjLmYuDqILxVQhTKN0oHf8fYC00C83VT0w0WL1W43EmbtdWddyUKLngQtfBPqrBw
-	 xV/8gHNZQ9dVlx+7B6yMeJBKYrtQQgT5qvHZN96w5EYbx6rpAHhORMN6aUdnmzqBUNs5U0VJBPMo
-	 1CJ2InWR+Ux0gLACPJKAjoyfmYGupHwJValAQLPlx7nvgxz1CJidKFiPsuebC653NGbGG5GF4tt5
-	 l8h8GehvKik7A0q30q1Lb864S8r9YASO18KDgjEnaYGNocCQ7VzX4XLSJuBWb+y0SVSSInKXD/Wq
-	 n0XcBIdHaesJxaYgsDOFTaZNGF4oSoziYgk1yj6kb8HngzIhoON+O1A9lFTfW3c+hkOOFKAI7imm
-	 L2NXFb5HPhEKtGrKudi4MxmzZd2cZzDnpSxlfj3IwCrTjGdPKd1G2eHeEKBZAXxHQ/kK5wXLuWdk
-	 X1k3T0SoppLfVHzm/6XAxzh0qKX/6dsk8iyvkx9XkBQf5Lx3YtWCJP/4p9zwz6XvMRa78DyQY=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtrK1Y82"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC66C4CEE5;
+	Mon, 10 Mar 2025 12:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741609666;
+	bh=OeSYjs/e3TEnZvrI+XL9ijVLOAQxM4B4wuRjM/3qewE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OtrK1Y82V0rnyJpMlQZ207YSjSiJmeioBG4iufI+ie0Yek0el+yiNIf8NfHA6zN7/
+	 MM70fPhhevoQduEPbt/ySZ9r9ka+8c7lYoQphQ4MBqPI40Gm3LjOjbNMVZ1vk8wBGP
+	 X+SatA9XGCF1wN3wGYjs0Qjwjovim1+DhdnEIQFunOLguKl7FpGInt7UKkuO3HdGw8
+	 qshgTaMQJEORfn7VxXYNXgUcD2zDpNYXceH8Ttzkrso2Ahl1CY2bZP9uYZ3cBObiPP
+	 dONjjyz3AlAW16pS/IkhH7TX9oTUFQwRWVyfljDSbPKJNcxwiOBMoHBpP+HMvWQ446
+	 Ju3bHOKraWPsA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1trcEP-000000002aK-0C37;
+	Mon, 10 Mar 2025 13:27:41 +0100
+Date: Mon, 10 Mar 2025 13:27:41 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Jonathan Marek <jonathan@marek.ca>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Joel Stanley <joel@jms.id.au>, Sebastian Reichel <sre@kernel.org>,
+	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
+	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] arm64: dts: qcom: x1e80100: enable rtc
+Message-ID: <Z87avd83XTYQYIP8@hovoldconsulting.com>
+References: <20250219134118.31017-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH 1/2] net: enc28j60: support getting irq number from gpio
- phandle in the device tree
-From: hanyuan <hanyuan-z@qq.com>
-In-Reply-To: <c8553dc9-2d8f-4d4b-a381-f87660c2ee99@lunn.ch>
-Date: Mon, 10 Mar 2025 20:25:36 +0800
-Cc: netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-X-OQ-MSGID: <D289843D-4962-4A6A-897C-0CF4A53A7EAF@qq.com>
-References: <tencent_83CBDD726353E21FBD648E831600C078F205@qq.com>
- <c8553dc9-2d8f-4d4b-a381-f87660c2ee99@lunn.ch>
-To: Andrew Lunn <andrew@lunn.ch>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219134118.31017-1-johan+linaro@kernel.org>
 
+Hi Alexandre,
 
-> 2025=E5=B9=B43=E6=9C=8810=E6=97=A5 20:18=EF=BC=8CAndrew Lunn =
-<andrew@lunn.ch> =E5=86=99=E9=81=93=EF=BC=9A
->=20
->> My embedded platform has limited support, it only provides a
->> hard-coded pin control driver and does not support configuring
->> pinctrl properties in the device tree. So, there is no generic
->> way to request the pin and set its direction via device tree =
-bindings.
->=20
-> So it sounds like that is your real problem. Please write a proper
-> pinctrl driver for the SoC you are using. They are not very complex
-> drivers.
->=20
->    Andrew
->=20
-> ---
-> pw-bot: cr
+On Wed, Feb 19, 2025 at 02:41:12PM +0100, Johan Hovold wrote:
+> This series adds support for utilising the UEFI firmware RTC offset to
+> the Qualcomm PMIC RTC driver and uses that to enable the RTC on all X
+> Elite machines.
 
-Hi
+Do you think you could pick up the driver and binding changes here so
+that Bjorn can take the DT patches for 6.15?
 
-Sorry for my previous low level mistake on the email format and
-thanks again for your patience. I agree with you and please ignore
-my patches.
+> Johan Hovold (4):
+>   rtc: pm8xxx: add support for uefi offset
+>   rtc: pm8xxx: mitigate flash wear
+>   arm64: dts: qcom: sc8280xp-x13s: switch to uefi rtc offset
+>   arm64: dts: qcom: x1e80100: enable rtc
+> 
+> Jonathan Marek (2):
+>   dt-bindings: rtc: qcom-pm8xxx: document qcom,no-alarm flag
+>   rtc: pm8xxx: implement qcom,no-alarm flag for non-HLOS owned alarm
 
-Hanyuan
-
+Johan
