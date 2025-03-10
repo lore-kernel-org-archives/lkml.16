@@ -1,89 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D1B1D5142;
-	Mon, 10 Mar 2025 08:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4328422371F;
+	Mon, 10 Mar 2025 08:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741595901; cv=none; b=Re6IR3jfF1rUH3L0T2w3AMhuWGy7EHFwIGQJWsLfPVkDG9H79dxFWAqfpzvp7sLgXwH6YlD53pQyFIUqOr0zZ1w/A39HyiBxVpKYqpeYFywg4bcoj0Rc0ScC3bVtzsh3AcPLdRuhuFIF9oFhngpRnry2uPwcPOj1Vh65SWZ6Z14=
+	t=1741595905; cv=none; b=BLhaNPquVao+xRuPltOwvI2IeCC6Ld9P/IJIbjprtzKAFAihCSjf0CFjOiFrQ3FIiMefdaSNlkx39s717cqJWD3L9Sr+zIN/0SAczAAqGDj89VGeSwajvwvA86ika1RUivQVQ4kYGfcSVoqwYaavMqGZy0gAywhRWn6WOQQn0IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741595901; c=relaxed/simple;
-	bh=r4/JPIW6MjEsja8Y5IUSOTA1XlmLtgY4IVJWbznTO8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SfOi5V44Wtua0JDhIZRSc/sP1wXRiox8ccKniyN9x+2pgIhwy3B2XXhSQjFUnAuYXpNIMa8n9tLrxta+/IYJU+HSPX6G6cS22sB5iX8TG9zcF8T2U6EWQZ6CeeDak0n07LIhQ/d1Nyt93EYzwiqCTkNQd2ZLGvFDH/Jhz7tCC2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQPa0jwa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741595905; c=relaxed/simple;
+	bh=akipc65XKCiwxOWNfRRDN4qDO2IUHQ6d7ElCj/ism0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hIvLyRXq1EMnuVXbZ++VbmKXBipOlaD/ZJou9xduKA4Tp0LVmzjFyq9UnmY9x1IoMriYRxHiIctBeXhjZkjNJvKxfQnyr2LzuX7D5zNVQwJ3bmtmjMP3HcrkMty44aFYPhng0jBbxLs5U3YBY4PNCt3DWaFiZC6W6EPWjup95rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=UhrfUTVC; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQPa0jwa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 975F8C4CEE5;
-	Mon, 10 Mar 2025 08:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741595900;
-	bh=r4/JPIW6MjEsja8Y5IUSOTA1XlmLtgY4IVJWbznTO8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BQPa0jwa5JqeaOt1cjSzr9z9tpr6jtYK1lHAYg7b2vRUcDnms7auuiuqdV8wBH7Xw
-	 EUS+AxlHGWEr34gVfJqpD0xFC8dR0GxmbvkLy3kMHkQqTRjE20B6D6s4Ulm3bgHS1O
-	 /16bQ9BxGC3AfCIVZZIXwH4GcmmAlZvTMornvlaKpUh/wLh0NQklS3OkyHyUu7NipP
-	 irHVymfYyhvT+o2bZfh8DdKZWp3HzLdEC8JbxPzMpxtG15IBczR8tNqdPSaOtBVVAc
-	 ZkEDX6ZaQtlhe8Kj4XfP8XbPRvnB65IdhHEG0SV4z7NBjSMycqZ8xV9d9J1GLmrZj+
-	 Tigqn6u37+9TQ==
-Date: Mon, 10 Mar 2025 09:38:16 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
-	dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org, abel.vesa@linaro.org, 
-	quic_qianyu@quicinc.com, quic_krichai@quicinc.com, johan+linaro@kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v3 2/4] arm64: dts: qcom: qcs615: enable pcie
-Message-ID: <20250310-neon-wealthy-sheep-2da4cd@krzk-bin>
-References: <20250310065613.151598-1-quic_ziyuzhan@quicinc.com>
- <20250310065613.151598-3-quic_ziyuzhan@quicinc.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="UhrfUTVC"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 39688A0397;
+	Mon, 10 Mar 2025 09:38:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=1RPvwC+SFy2YIdkjWwuN
+	aPaUWekWLQniVxE5EnDG1B8=; b=UhrfUTVC37v4qZRwCV/aThUVI46V6B18Qc05
+	HuvcPrcXOvM5V/kF/pSa8HquCMmbLJXOqvXQgCDEv5HxpejqO7RlzrgKwT4SAh0i
+	A9LbLotIB8uhz2hh9p8KUL67lePVISnoQjdU5usVzMuROcw2mdLrUj5OzUwGQmGc
+	GfPY8zU7uWFUmG+3QenSdOUDQogd36Q/pVmvMj1IxKj4fdNbyFsJuKmYilrZfo1X
+	p8PFgc8GM6K4jPA6l8i6mFvQrCqyElufwhj6zmBIW5+zPt6rwIFnQQCkTy0kwdQx
+	AxPwylG0A8/1MBtwlIzblNxX4HKd58lH04iGLS3bEU1f//amdmAIV8+2atP0zZBb
+	Ooh3hHwz+0g/wFBI2f2fJGKeEqkx3RMdFjHlBKmU604my3jT6bQ4rGHWsyo2t76A
+	YQxPG8Ghy1o2YRu6gSTcEZuUtUUj7WD/LGhWTG/MWCuPnPeLJqCH6RG3jZd0iGZ9
+	TxjKf7Io/crgBcwyUT5pCNV5aPR8zU1vTgnOl64VV8ApF2CL6WF7vc4C7OBsJdQf
+	SLJAN8pJIE6jHnaEfqIVFPINs0g3CHkBhjhVGWtQGVICgHbkoUdy7YpYodv9JLr8
+	SAUvm1N1FPWxBYcdZA4NCUP1CxAkwcS9Q/0GliG63eZVgpXrtRDwRlehuSeYWbc1
+	qzO47dk=
+Message-ID: <790f00da-d66e-42bc-bae2-339144fbec95@prolan.hu>
+Date: Mon, 10 Mar 2025 09:38:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250310065613.151598-3-quic_ziyuzhan@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] counter: microchip-tcb-capture: Add support for RC
+ Compare
+To: William Breathitt Gray <wbg@kernel.org>, Kamel Bouhara
+	<kamel.bouhara@bootlin.com>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+References: <20250306-introduce-compare-component-v1-0-93993b3dca9c@kernel.org>
+ <20250306-introduce-compare-component-v1-2-93993b3dca9c@kernel.org>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <20250306-introduce-compare-component-v1-2-93993b3dca9c@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852627664
 
-On Mon, Mar 10, 2025 at 02:56:11PM +0800, Ziyue Zhang wrote:
-> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Hi,
+
+On 2025. 03. 06. 8:05, William Breathitt Gray wrote:
+> In Capture mode, the RC register serves as a compare register for the
+> Timer Counter Channel. When a the Counter Value reaches the RC value, a
+> RC Compare event occurs (COUNTER_EVENT_THRESHOLD). This patch exposes
+> the RC register to userspace as the 'compare' Count extension, thus
+> allowing users to configure the threshold condition for these events.
 > 
-> Add configurations in devicetree for PCIe0, including registers, clocks,
-> interrupts and phy setting sequence.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 142 +++++++++++++++++++++++++++
->  1 file changed, 142 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> index f4abfad474ea..282072084435 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> @@ -1001,6 +1001,148 @@ mmss_noc: interconnect@1740000 {
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
->  
-> +	pcie: pcie@1c08000 {
+> Signed-off-by: William Breathitt Gray <wbg@kernel.org>
 
-Incorrect indentation (I am not going to look at anything else here).
+I'm assuming you'll merge it with my capture extensions patch. Will this 
+`compare` extension be carried over to 104-quad-8 as well? Otherwise:
 
-Binding wasn't tested (you expect community to be the tools), this has
-obvious style issue, so I really do not believe you performed internal
-review.
+Acked-by: Bence Csókás <csokas.bence@prolan.hu>
 
-Quality of patches recently coming from quicinc is really poor. That's
-one more example. I raised it internally and it seems it reaches people
-slow, so here you have a public nagging.
-
-Do the internal review before you post.
-
-Best regards,
-Krzysztof
+Bence
 
