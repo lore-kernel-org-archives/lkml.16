@@ -1,98 +1,91 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDF022A4D1;
-	Mon, 10 Mar 2025 13:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC0322AE6D;
+	Mon, 10 Mar 2025 13:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741614725; cv=none; b=a7OcjekyQWZ2mY6EwuIEeSyFAahorQoLC2X3pK7QaltuvWXBVxpjLd+PGFwpkdoAj31qT3c1q42ecutal3+ImR/UyVtk/bSAS22FZYqdbpw6Tl/0trtqgHQELDqxySfCILO9vwCS11gkbGa7CU79ZI77xvLqECvEUMDP13Dot0E=
+	t=1741614793; cv=none; b=UzNnKqvvgZydWvgWbto1P5s0wCzXS6Xzp3R7iJHkIVKkuqQ7+8EJlSgR7/+JE1lKM7lovxq8+RHqvv/q2fxayDetAeyc7ysnW1e31VvERflWKiEZKG1bmqTSEOq9HKUJl1WK56WOAnkNX8/FC9wcV+iiB7rSOXkjcL1Zo0gwQcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741614725; c=relaxed/simple;
-	bh=1TJ53lJRDTMxywhBHJv4vf86bvPwz8wl/ZKsNYS3z7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qIi78SUmG66Gj3jdsGwtv3iZHe+uThX8AidFEOacyVx7wMQ+bRFdx9t+WGGWA6KuYB91JXTWPmoY2jY3r1E78nMOy4C8jFHi+dsnEodvN+biYsaUjbpuOxxD12g1MS5tNvJskMRlQ22IDHqf56FDt60o7Q9qnhrqNFX64nJNb60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=XM7YoThf; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741614793; c=relaxed/simple;
+	bh=b+P4vKkK142ylgc34PXD4AdP2x7aUnRfBXYHIS1TtRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DVyieT54uOBW3IxsEFhI/2IrTLm+/srCb6/kaP8VOa/lDLF7g88kii9SN7cuIQrpl8fegs35LF4YGZuqB5Pn2YEAoQTgFRlSjMYA9Q0LM2/sQ2PgD9QHRNmswEesrvvGXhaCNwZg7ZdhzKS6trZXnSW/xxOyF8Bh7NGtfH3OG+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NwkcmgIT; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="XM7YoThf"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8825940E0219;
-	Mon, 10 Mar 2025 13:52:01 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id JIZtN1r01_MQ; Mon, 10 Mar 2025 13:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741614717; bh=PJPXCJ4ZG3jPjneSuXnZz7yG6y2P2lIKAdq82tpdR6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XM7YoThfORbKlY2PATOa4swN8Bj5Llw+HngLxblCZL7MDiXzNEHo5Gargue+3cjRP
-	 u36WP8heRdLecPrBFVtoacQRwwCDK38c0JumZDMMc0xXHDA/K5lrNtjt6gIaQpc6ri
-	 zCC46/S7Yuc0p1VIcJJWkrVATUq8CYkdaHrXBcRikJ5VJ1Tbcxlr2P4PrH45tXPtsI
-	 BGLOuz0//iC5OLKyz4nd9wFSzOS3f8ycAs2WpZYVBYj9CWua7viXf2XHM/yJlThQ+Y
-	 yYmosbLc3zcDid+EZpKBbKCE/xl5J81vx7AgAkzlIugQihNUNI4CVKkqoU45PqHUYw
-	 nXIvXVOxIvLEqwBUjLTcR6xV1q8nfrORBfI/Xu5s/M2T8N1rKnqOPwY+AMwGkIdp91
-	 XKNWTdysxRpM1JVMdgaNK2MhGBEWmia/7yw6tU8jpHQUsCzEz9krfBdM52bWP8Yk0H
-	 6hLWHzoY0kC4k9IZnA7GrsGJCOyzTTvY/0N3UyOTAqzolD27qD19nQf2iUiLrX6jDh
-	 Nsk0RVeCeyqRYDMC1gq9UM1meDsL/MW1lisnmdj2ATdolhEtLGpF6t4d0WPjoYTA3P
-	 NsKsDfY8WqSC9nM9esQ13Dlv3OIRvBUeM42aStNB6BFTw1YUgmYxgFs4QK5eNcCGXO
-	 qkN8EgTxrQO7LsM7vmICcwEQ=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 97EF440E0214;
-	Mon, 10 Mar 2025 13:51:39 +0000 (UTC)
-Date: Mon, 10 Mar 2025 14:51:33 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>, linux-coco@lists.linux.dev,
-	Dionna Glaze <dionnaglaze@google.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC PATCH v2 2/6] x86/sev: add SVSM vTPM probe/send_command
- functions
-Message-ID: <20250310135133.GIZ87uZZNhNSkmxvg1@fat_crate.local>
-References: <20250228170720.144739-1-sgarzare@redhat.com>
- <20250228170720.144739-3-sgarzare@redhat.com>
- <20250310113006.GFZ87NPu-LgFVVtsEG@fat_crate.local>
- <mjftygohmhgs6daqvgkh2jbfuqjquchcaovcjtnzyhilnt5ww5@l3fr7phqh2ps>
- <3dd645f2-476a-d0d5-c8c1-c87307f2d756@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NwkcmgIT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741614793; x=1773150793;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=b+P4vKkK142ylgc34PXD4AdP2x7aUnRfBXYHIS1TtRY=;
+  b=NwkcmgITt/uXh+74nX6qYuFgYzUA6/GP1ywwjxRuNC7dkMhB3H9XhWe8
+   iCQ+ohfrm6x/TuurQlK3FOBH5Fb9jZN/8OI3yITli+S8Ef9q642GPqsDG
+   1473xllGMEEwSffGIV7KijWjIfTznc6S40HxxSzMGQ+cGf5VUud2b1YkP
+   bLUbwAP3nKytRIeLHqqjGMwOC8Ic2gun0jEmAsvTermyqrOykqrf729Ug
+   HCF8eTHNDfUWuaC/vRWiEP4gGJzTIuLOzDkiFfIyRvGSCk/vQ40GUCdVu
+   MbBk/bU0Fg89u/JZiNIaLcnGmpahtluGKFoDks+hJqrttfc7HE5/pEKp/
+   A==;
+X-CSE-ConnectionGUID: FZvlbWONTEOQy1IvRiVF1g==
+X-CSE-MsgGUID: p4jL86nARbuxY8TZdZh7kg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="46519404"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="46519404"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 06:53:12 -0700
+X-CSE-ConnectionGUID: IoWGwWhwTnqZxjnweKexBg==
+X-CSE-MsgGUID: GGzU0XmXSR6O9wlBy0n8Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="124170270"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa003.fm.intel.com with ESMTP; 10 Mar 2025 06:53:10 -0700
+Message-ID: <2e3372fb-5eed-4259-841e-4af5ceeebf76@linux.intel.com>
+Date: Mon, 10 Mar 2025 15:54:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3dd645f2-476a-d0d5-c8c1-c87307f2d756@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] usb: xhci: Don't change the status of stalled TDs on
+ failed Stop EP
+To: Michal Pecio <michal.pecio@gmail.com>,
+ Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250310093605.2b3d0425@foxbook>
+ <20250310094037.52625e24@foxbook>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250310094037.52625e24@foxbook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10, 2025 at 08:27:37AM -0500, Tom Lendacky wrote:
-> I don't think anything needs to be checked or printed.
+On 10.3.2025 10.40, Michal Pecio wrote:
+> When the device stalls an endpoint, current TD is assigned -EPIPE
+> status and Reset Endpoint is queued. If a Stop Endpoint is pending
+> at the time, it will run before Reset Endpoint and fail due to the
+> stall. Its handler will change TD's status to -EPROTO before Reset
+> Endpoint handler runs and initiates giveback.
+> 
+> Check if the stall has already been handled and don't try to do it
+> again. Since xhci_handle_halted_endpoint() performs this check too,
+> not overwriting td->status is the only difference.
+> 
+> I haven't seen this case yet, but I have seen a related one where
+> the xHC has already executed Reset Endpoint, EP Context state is
+> now Stopped and EP_HALTED is set. If the xHC took a bit longer to
+> execute Reset Endpoint, said case would become this one.
+> 
+> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
 
-Yes.
+Makes sense, nice improvement
 
-> If you want to do anything, just issue a pr_info() with the features value
-> (and maybe the platform_cmds value, too). Issuing a pr_warn() here would be
-> like issuing a pr_warn() for a new CPUID value that the current kernel
-> doesn't know about.
+Thanks
+Mathias
 
-I still don't get the need to print anything. Why?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
