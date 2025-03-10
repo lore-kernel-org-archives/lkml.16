@@ -1,281 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1BE11CBA;
-	Mon, 10 Mar 2025 01:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB9C11CBA;
+	Mon, 10 Mar 2025 01:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741570238; cv=none; b=DOwc8ldJtcIIo2N9dosR9EvW/X6ln4uYV8ArQfrd8FyZjEjZAbbK9JY0FrBA4ugSlUoyuMHeOJpKROzR8YErrESCJ1USkgqF4pzcuqs3OXFRCNvk2sBQOzM8igddY9hKeTgv1/BoP2lSqkjD94RVXgfoaZGGTdNOfSgtO0DyVvg=
+	t=1741570341; cv=none; b=p+C/TerL1NKNhqn1M7E7gETT2Hs14lZMeNko6gz1lOUqVuvhIPKr9+2O6uML24Dmr/CwOaNkuUy/PBcAa1t/860AaS3o/EZLHsap1TqBvvTCc43fk4zLWcT85UAfFbgQ9tgKpSE+aRDGAWcMvpuEHLzT6olLATuFU2/SEhHPl/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741570238; c=relaxed/simple;
-	bh=nY48KGtzim/Et7OdgnAyeUqF4DZ8WmMB2K4F0Yv9nwQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=bFbLH7XqGR7Gv+Mz1QE/FoZdCp19Q3eHCCQi7zCx8Tk1IP3GtBc7Nydqr7haBApdG1HJZLZTVuxKva9CJ6prhvLHF/Mt40Fyezu5qmZse2a7UUNhT+vROZjrQpsC8nq1QHfXT9G1n/f9E+u1sD8/OyQ8D9ZWN+iGOI3NAxVtJO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d73oH79L; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d73oH79L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741570237; x=1773106237;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=nY48KGtzim/Et7OdgnAyeUqF4DZ8WmMB2K4F0Yv9nwQ=;
-  b=d73oH79LtJTY4rnMjCwfxFT/ja3C9A65BNPRgej+YrW/ZlmCiQfNhixs
-   kvVZ8M2Y9Z1+kpubFBQ/UGc5MJa1pqWkc0DVL5ShvOiYOsPRxT7aqWKtJ
-   u05zAi8Asl0pT5WDnTVxS1OlieN7EXJZkbOfl5SI6TQIPhxnXrZRHj1Cs
-   0pNhcK4zrZv3j1zfQStppkbOFi/TQQ5c+HAhGkqIsI6t6lDFtqT0qQNy3
-   4d72DlayYYjntqs6FWOvhGhy3c41Iz6CiTsIG+z6+rB1z3rnVNyv2K5UD
-   dSZVGI+ySOm+5Pj83lpef63LuwYqqgVs939Mx1v16Lj9zZ7+PtUh5LOSM
-   w==;
-X-CSE-ConnectionGUID: wjm/NnS8QeWMeFLavpMMCA==
-X-CSE-MsgGUID: WFefyQbDSp2/kKGHFcabSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="67914686"
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="67914686"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 18:30:37 -0700
-X-CSE-ConnectionGUID: gfCIPxKZRBiaSXky6ed+9g==
-X-CSE-MsgGUID: aWPHqpWsS5S8WQEaSTRQIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="124925773"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 18:30:33 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Jason Baron <jbaron@akamai.com>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Gary Wang <gary.c.wang@intel.com>,
-	Yi Lai <yi1.lai@intel.com>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/11] EDAC/ie31200: Switch Raptor Lake-S to interrupt mode
-Date: Mon, 10 Mar 2025 09:14:11 +0800
-Message-Id: <20250310011411.31685-12-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250310011411.31685-1-qiuxu.zhuo@intel.com>
-References: <20250226015202.36576-1-qiuxu.zhuo@intel.com>
- <20250310011411.31685-1-qiuxu.zhuo@intel.com>
+	s=arc-20240116; t=1741570341; c=relaxed/simple;
+	bh=K0VE+sJrY0WaN2KfS6hpRMlDZ2kaL50SG92UpBHuuZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eo2eQy6p27N+vR6Shmu+AztXIYfiUNMEQ1VtaC2IPsJ++H/Tws6B3S24YaWpDQTKA+25idApD+EQnschfbxO4+IFep0LlPhj9lhxgHmhDZppp0QqojbU4kGX3yDoek6c3woa8aA8k6HNK+loGzOiF67BXgz7QDK8eTeVZr5IvRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1trRzl-000000003B6-3CoK;
+	Mon, 10 Mar 2025 01:31:53 +0000
+Date: Mon, 10 Mar 2025 01:31:35 +0000
+From: Daniel Golle <daniel@makrotopia.org>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, sander@svanheule.net, markus.stockhausen@gmx.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v9] net: mdio: Add RTL9300 MDIO driver
+Message-ID: <Z85A9_Li_4n9vcEG@pidgin.makrotopia.org>
+References: <20250309232536.19141-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309232536.19141-1-chris.packham@alliedtelesis.co.nz>
 
-Raptor Lake-S SoCs notify correctable memory errors via CMCI (Corrected
-Machine Check Interrupt). Switch Raptor Lake-S EDAC support from polling
-to interrupt mode by registering the callback to the MCE decode notifier
-chain.
+Hi Chris,
 
-Note that as Raptor Lake-S SoCs may not recover from uncorrectable memory
-errors, the system will hang as soon as this type of error occurs, and the
-registered callback on the MCE decode chain will not be executed. This is
-the expected behavior.
+On Mon, Mar 10, 2025 at 12:25:36PM +1300, Chris Packham wrote:
+> Add a driver for the MDIO controller on the RTL9300 family of Ethernet
+> switches with integrated SoC. There are 4 physical SMI interfaces on the
+> RTL9300 however access is done using the switch ports. The driver takes
+> the MDIO bus hierarchy from the DTS and uses this to configure the
+> switch ports so they are associated with the correct PHY. This mapping
+> is also used when dealing with software requests from phylib.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
 
-Tested-by: Gary Wang <gary.c.wang@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
- drivers/edac/Kconfig        |  2 +-
- drivers/edac/ie31200_edac.c | 83 ++++++++++++++++++++++++++++++++++---
- 2 files changed, 78 insertions(+), 7 deletions(-)
+> ...
+> +static int rtl9300_mdio_read_c22(struct mii_bus *bus, int phy_id, int regnum)
+> +{
+> +	struct rtl9300_mdio_chan *chan = bus->priv;
+> +	struct rtl9300_mdio_priv *priv;
+> +	struct regmap *regmap;
+> +	int port;
+> +	u32 val;
+> +	int err;
+> +
+> +	priv = chan->priv;
+> +	regmap = priv->regmap;
+> +
+> +	port = rtl9300_mdio_phy_to_port(bus, phy_id);
+> +	if (port < 0)
+> +		return port;
+> +
+> +	mutex_lock(&priv->lock);
+> +	err = rtl9300_mdio_wait_ready(priv);
+> +	if (err)
+> +		goto out_err;
+> +
+> +	err = regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, FIELD_PREP(PHY_CTRL_INDATA, port));
+> +	if (err)
+> +		goto out_err;
+> +
+> +	val = FIELD_PREP(PHY_CTRL_REG_ADDR, regnum) |
+> +	      FIELD_PREP(PHY_CTRL_PARK_PAGE, 0x1f) |
+> +	      FIELD_PREP(PHY_CTRL_MAIN_PAGE, 0xfff) |
+> +	      PHY_CTRL_READ | PHY_CTRL_TYPE_C22 | PHY_CTRL_CMD;
 
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 703522d5d6c3..19ad3c3b675d 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -196,7 +196,7 @@ config EDAC_I3200
- 
- config EDAC_IE31200
- 	tristate "Intel e312xx"
--	depends on PCI && X86
-+	depends on PCI && X86 && X86_MCE_INTEL
- 	help
- 	  Support for error detection and correction on the Intel
- 	  E3-1200 based DRAM controllers.
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index 8c0a2beec537..204834149579 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -51,6 +51,7 @@
- #include <linux/edac.h>
- 
- #include <linux/io-64-nonatomic-lo-hi.h>
-+#include <asm/mce.h>
- #include "edac_module.h"
- 
- #define EDAC_MOD_STR "ie31200_edac"
-@@ -123,6 +124,7 @@ static int ie31200_registered = 1;
- 
- struct res_config {
- 	enum mem_type mtype;
-+	bool cmci;
- 	int imc_num;
- 	/* Host MMIO configuration register */
- 	u64 reg_mchbar_mask;
-@@ -172,6 +174,7 @@ struct ie31200_error_info {
- 	u16 errsts;
- 	u16 errsts2;
- 	u64 eccerrlog[IE31200_CHANNELS];
-+	u64 erraddr;
- };
- 
- static const struct ie31200_dev_info ie31200_devs[] = {
-@@ -327,13 +330,13 @@ static void ie31200_process_error_info(struct mem_ctl_info *mci,
- 		log = info->eccerrlog[channel];
- 		if (log & cfg->reg_eccerrlog_ue_mask) {
- 			edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci, 1,
--					     0, 0, 0,
-+					     info->erraddr >> PAGE_SHIFT, 0, 0,
- 					     field_get(cfg->reg_eccerrlog_rank_mask, log),
- 					     channel, -1,
- 					     "ie31200 UE", "");
- 		} else if (log & cfg->reg_eccerrlog_ce_mask) {
- 			edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, 1,
--					     0, 0,
-+					     info->erraddr >> PAGE_SHIFT, 0,
- 					     field_get(cfg->reg_eccerrlog_syndrome_mask, log),
- 					     field_get(cfg->reg_eccerrlog_rank_mask, log),
- 					     channel, -1,
-@@ -342,14 +345,20 @@ static void ie31200_process_error_info(struct mem_ctl_info *mci,
- 	}
- }
- 
--static void ie31200_check(struct mem_ctl_info *mci)
-+static void __ie31200_check(struct mem_ctl_info *mci, struct mce *mce)
- {
- 	struct ie31200_error_info info;
- 
-+	info.erraddr = mce ? mce->addr : 0;
- 	ie31200_get_and_clear_error_info(mci, &info);
- 	ie31200_process_error_info(mci, &info);
- }
- 
-+static void ie31200_check(struct mem_ctl_info *mci)
-+{
-+	__ie31200_check(mci, NULL);
-+}
-+
- static void __iomem *ie31200_map_mchbar(struct pci_dev *pdev, struct res_config *cfg, int mc)
- {
- 	union {
-@@ -459,7 +468,7 @@ static int ie31200_register_mci(struct pci_dev *pdev, struct res_config *cfg, in
- 	mci->mod_name = EDAC_MOD_STR;
- 	mci->ctl_name = ie31200_devs[mc].ctl_name;
- 	mci->dev_name = pci_name(pdev);
--	mci->edac_check = ie31200_check;
-+	mci->edac_check = cfg->cmci ? NULL : ie31200_check;
- 	mci->ctl_page_to_phys = NULL;
- 	priv = mci->pvt_info;
- 	priv->window = window;
-@@ -499,6 +508,58 @@ static int ie31200_register_mci(struct pci_dev *pdev, struct res_config *cfg, in
- 	return ret;
- }
- 
-+static void mce_check(struct mce *mce)
-+{
-+	struct ie31200_priv *priv;
-+	int i;
-+
-+	for (i = 0; i < IE31200_IMC_NUM; i++) {
-+		priv = ie31200_pvt.priv[i];
-+		if (!priv)
-+			continue;
-+
-+		__ie31200_check(priv->mci, mce);
-+	}
-+}
-+
-+static int mce_handler(struct notifier_block *nb, unsigned long val, void *data)
-+{
-+	struct mce *mce = (struct mce *)data;
-+	char *type;
-+
-+	if (mce->kflags & MCE_HANDLED_CEC)
-+		return NOTIFY_DONE;
-+
-+	/*
-+	 * Ignore unless this is a memory related error.
-+	 * Don't check MCI_STATUS_ADDRV since it's not set on some CPUs.
-+	 */
-+	if ((mce->status & 0xefff) >> 7 != 1)
-+		return NOTIFY_DONE;
-+
-+	type = mce->mcgstatus & MCG_STATUS_MCIP ?  "Exception" : "Event";
-+
-+	edac_dbg(0, "CPU %d: Machine Check %s: 0x%llx Bank %d: 0x%llx\n",
-+		 mce->extcpu, type, mce->mcgstatus,
-+		 mce->bank, mce->status);
-+	edac_dbg(0, "TSC 0x%llx\n", mce->tsc);
-+	edac_dbg(0, "ADDR 0x%llx\n", mce->addr);
-+	edac_dbg(0, "MISC 0x%llx\n", mce->misc);
-+	edac_dbg(0, "PROCESSOR %u:0x%x TIME %llu SOCKET %u APIC 0x%x\n",
-+		 mce->cpuvendor, mce->cpuid, mce->time,
-+		 mce->socketid, mce->apicid);
-+
-+	mce_check(mce);
-+	mce->kflags |= MCE_HANDLED_EDAC;
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block ie31200_mce_dec = {
-+	.notifier_call	= mce_handler,
-+	.priority	= MCE_PRIO_EDAC,
-+};
-+
- static void ie31200_unregister_mcis(void)
- {
- 	struct ie31200_priv *priv;
-@@ -534,6 +595,13 @@ static int ie31200_probe1(struct pci_dev *pdev, struct res_config *cfg)
- 			goto fail_register;
- 	}
- 
-+	if (cfg->cmci) {
-+		mce_register_decode_chain(&ie31200_mce_dec);
-+		edac_op_state = EDAC_OPSTATE_INT;
-+	} else {
-+		edac_op_state = EDAC_OPSTATE_POLL;
-+	}
-+
- 	/* get this far and it's successful. */
- 	edac_dbg(3, "MC: success\n");
- 	return 0;
-@@ -560,9 +628,13 @@ static int ie31200_init_one(struct pci_dev *pdev,
- 
- static void ie31200_remove_one(struct pci_dev *pdev)
- {
-+	struct ie31200_priv *priv = ie31200_pvt.priv[0];
-+
- 	edac_dbg(0, "\n");
- 	pci_dev_put(mci_pdev);
- 	mci_pdev = NULL;
-+	if (priv->cfg->cmci)
-+		mce_unregister_decode_chain(&ie31200_mce_dec);
- 	ie31200_unregister_mcis();
- }
- 
-@@ -612,6 +684,7 @@ static struct res_config skl_cfg = {
- 
- struct res_config rpl_s_cfg = {
- 	.mtype				= MEM_DDR5,
-+	.cmci				= true,
- 	.imc_num			= 2,
- 	.reg_mchbar_mask		= GENMASK_ULL(41, 17),
- 	.reg_mchbar_window_size		= BIT_ULL(16),
-@@ -677,8 +750,6 @@ static int __init ie31200_init(void)
- 	int pci_rc, i;
- 
- 	edac_dbg(3, "MC:\n");
--	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
--	opstate_init();
- 
- 	pci_rc = pci_register_driver(&ie31200_driver);
- 	if (pci_rc < 0)
--- 
-2.17.1
+Using "raw" access to the PHY and thereby bypassing the MDIO
+controller's support for hardware-assisted page access is problematic.
+The MDIO controller also polls all PHYs status in hardware and hence
+be aware of the currently selected page. Using raw access to switch
+the page of a PHY "behind the back" of the hardware polling mechanism
+results in in occassional havoc on link status changes in case Linux'
+reading the phy status overlaps with the hardware polling.
+This is esp. when using RealTek's 2.5GBit/s PHYs which require using
+paged access in their read_status() function.
+
+Markus Stockhausen (already in Cc) has implemented a nice solution to
+this problem, including documentation, see
+https://git.openwrt.org/?p=openwrt/openwrt.git;a=blob;f=target/linux/realtek/files-6.6/drivers/net/ethernet/rtl838x_eth.c;h=4b79090696e341ed1e432a7ec5c0f7f92776f0e1;hb=HEAD#l1631
+
+Including a similar mechanism in this driver for C22 read and write
+operations would be my advise, so hardware-assisted access to the PHY
+pages is always used, and hence the hardware polling mechanism is aware
+of the currently selected page.
+
+Other than that the driver looks really good now, and will allow using
+existing RealTek PHY drivers independently of whether they are used with
+RealTek's switch SoCs or with non-RealTek systems -- this has always
+been a big issue with OpenWrt's current implementation and I look
+forward to use this driver instead asap ;)
 
