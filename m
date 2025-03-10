@@ -1,126 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD97347B4;
-	Mon, 10 Mar 2025 07:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F101DE2B7;
+	Mon, 10 Mar 2025 07:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591719; cv=none; b=Cc0cwAK0JDQfAkr4UOH3IFjVPYzhX6ol6PXxS/dHqqxWvUV3gh1GNwbYqcKmDb1SrYIJM4moFEt8gr2CENs2NLXOrhczuNz1m25c+Qi4J0WOzN8etVuZpJm7WyAaqIZO8oOH9Uw1PVyB/R7KroHadwnt03ADTL4Y7oZk+TIvzq8=
+	t=1741591746; cv=none; b=ATrUD/jkNWPB8oL2Opy1hy7D8JFPDkVcNJpnW2+ZR3K6LEV3FxOPinjtYspYlF5pdf2WoBUMc9QPKcYKg9ngkm4nIZ0ZNuIP/gcTy0ChZO+s62tPBWgU5dT+uHqhwAbdwLp79vDHCPeI8NvbWaKDTfTG+L859o3acIo/tT1GgGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591719; c=relaxed/simple;
-	bh=1g5F+A1cBRXVc1hiVX4P5/HWsys7JL9H0jyHVwU6T2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qB7z7g9Io08aJlIiLSED9LTjiWCpOv5VDf5W9mcbmBcc0f2CbSyNoKM/Zmxxb7GiXuIlKVx2HSmKk3lkGrsDvNYYeRvzzu1fzIV1xfvKy5LWFExqUn5+vAVLo6qEPgnv3GknhL1mWjaG0McS1y4JQbbtp/oX/OuDBCD2iwqJPKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4M6tjjF; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1741591746; c=relaxed/simple;
+	bh=ssEg4vPopMVhOA1s0W0lhcWOtIh6Cxqt2KYRDMOOri4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ye7JuJdn5VjgKEyKobba0fKYXjota/dHOdkpLqTnq48Oo2eNgzIJJQBTaQcvhQ25woQfCvwMDJWhBaNBeq7M+nKIfqACXlZ/+K3yCNyCEROe6Lt3wewfzviTUaPt1SVdyee+3EK8W6vIrM+8CGrMbZhOjbmo6biuf88Tfy3j4/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XF9FEq7M; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4M6tjjF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XF9FEq7M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741591718; x=1773127718;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1g5F+A1cBRXVc1hiVX4P5/HWsys7JL9H0jyHVwU6T2Q=;
-  b=l4M6tjjFiXCJt7S0t89Khv9kDCKSH8Ijr7y+SLdQkqDbawL+ITs/JnD6
-   ZfZL9NUvoDcE9FMvDoJ5AX2Dl11rQltyfx6oZMJWulpnIbXXVrMY3/YDA
-   4XkaRcXOPPfk/nUXlk/0TLkod+TfWm4vRCpXry2geEExNlMdI501vWPEf
-   NrEjs0BqXbgXUFxxKPV+d3pSQRbHaUKSzd4ivfWiDlAFZfRMus/9SJXYt
-   c1UimNJD5UYEZp8p19mHPYEX8SFrUMzHIb4i9GA/B4fUDI7jIVftDMkew
-   +XCiLfFNlJNFFBWOAA5AXC9N0mSzlsGngJ6TSWm/MguF17qH9wN5XE/Zt
-   w==;
-X-CSE-ConnectionGUID: 1V3TB6CQRzaTSeon5MTCEw==
-X-CSE-MsgGUID: 8nQfB0bJQhucJWcSSa0GEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="46219362"
+  t=1741591745; x=1773127745;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ssEg4vPopMVhOA1s0W0lhcWOtIh6Cxqt2KYRDMOOri4=;
+  b=XF9FEq7M64Iu+dE27g8dTv0vy3y1h7pAQvdPquJ5Riht4bWi8+/YTmJa
+   CJoHEnlwRgFuI1oTemZqJu7BPQfCs0sgJ8IVOjwTKP35+7V71+yuP3KdW
+   pzcSdJwi9EpDNPBfh+6OIe2RFeLaHccCl3BsY/jFQreKTYtc4p4/aadlN
+   CAE8+qQSWnCEidm+MMSVEQAJEyWhgdz8QUWGD2203udkQVwVBlQIyF6P8
+   hGl/jsomNwqVCTe6O+jvQrg00S3BaRIPq/kBAm6jiYrA8OHN/ii7Td9lN
+   uCVuaXFwSOeFl03BoJVDPfa7SDErOUhWPElGXP0WSqR32eKfsihAJFDhC
+   Q==;
+X-CSE-ConnectionGUID: xGlSFC5BRJS0SwqrHp9pHg==
+X-CSE-MsgGUID: g8gDkPZQRUq5LxVmBGosgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="65017617"
 X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="46219362"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:28:37 -0700
-X-CSE-ConnectionGUID: RhJG3G7RQdGEhvRarNRaTg==
-X-CSE-MsgGUID: vmNY4aaCRemkotsM1388SA==
+   d="scan'208";a="65017617"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:29:04 -0700
+X-CSE-ConnectionGUID: iTIwBm7ARi+jwHUHMJcJjw==
+X-CSE-MsgGUID: dq70DRYETUWoDTmHCnfvGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="124508676"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:28:34 -0700
-Message-ID: <85ed4258-6a8e-4820-8627-29fff61572d2@intel.com>
-Date: Mon, 10 Mar 2025 15:28:30 +0800
+   d="scan'208";a="119847504"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 10 Mar 2025 00:29:01 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1trXZ9-0003wI-0V;
+	Mon, 10 Mar 2025 07:28:50 +0000
+Date: Mon, 10 Mar 2025 15:26:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kevin Chen <kevin_chen@aspeedtech.com>, lee@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+	andrew@codeconstruct.com.au, derek.kiernan@amd.com,
+	dragan.cvetic@amd.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Kevin Chen <kevin_chen@aspeedtech.com>
+Subject: Re: [PATCH v2 3/3] soc: aspeed: lpc-pcc: Add PCC controller support
+Message-ID: <202503101519.AIZNCLz1-lkp@intel.com>
+References: <20250304104434.481429-4-kevin_chen@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/10] KVM: TDX: Save and restore IA32_DEBUGCTL
-To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: adrian.hunter@intel.com, seanjc@google.com, rick.p.edgecombe@intel.com
-References: <20250307212053.2948340-1-pbonzini@redhat.com>
- <20250307212053.2948340-10-pbonzini@redhat.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250307212053.2948340-10-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304104434.481429-4-kevin_chen@aspeedtech.com>
 
-On 3/8/2025 5:20 AM, Paolo Bonzini wrote:
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> Save the IA32_DEBUGCTL MSR before entering a TDX VCPU and restore it
-> afterwards.  The TDX Module preserves bits 1, 12, and 14, so if no
-> other bits are set, no restore is done.
+Hi Kevin,
 
-Reviewed-by: Xiayao Li <xiaoyao.li@intel.com>
+kernel test robot noticed the following build errors:
 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Message-ID: <20250129095902.16391-12-adrian.hunter@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/kvm/vmx/tdx.c | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 5625b0801ce8..25972e12504b 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -683,6 +683,8 @@ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
->   	else
->   		vt->msr_host_kernel_gs_base = read_msr(MSR_KERNEL_GS_BASE);
->   
-> +	vt->host_debugctlmsr = get_debugctlmsr();
-> +
->   	vt->guest_state_loaded = true;
->   }
->   
-> @@ -826,11 +828,15 @@ static void tdx_load_host_xsave_state(struct kvm_vcpu *vcpu)
->   	if (kvm_host.xss != (kvm_tdx->xfam & kvm_caps.supported_xss))
->   		wrmsrl(MSR_IA32_XSS, kvm_host.xss);
->   }
-> -EXPORT_SYMBOL_GPL(kvm_load_host_xsave_state);
+[auto build test ERROR on char-misc/char-misc-testing]
+[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus robh/for-next linus/master v6.14-rc6 next-20250307]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This needs to be cleaned up in patch 05;
+url:    https://github.com/intel-lab-lkp/linux/commits/Kevin-Chen/ARM-dts-aspeed-g6-Add-AST2600-LPC-PCC-support/20250304-194530
+base:   char-misc/char-misc-testing
+patch link:    https://lore.kernel.org/r/20250304104434.481429-4-kevin_chen%40aspeedtech.com
+patch subject: [PATCH v2 3/3] soc: aspeed: lpc-pcc: Add PCC controller support
+config: s390-randconfig-r112-20250310 (https://download.01.org/0day-ci/archive/20250310/202503101519.AIZNCLz1-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250310/202503101519.AIZNCLz1-lkp@intel.com/reproduce)
 
-> +
-> +#define TDX_DEBUGCTL_PRESERVED (DEBUGCTLMSR_BTF | \
-> +				DEBUGCTLMSR_FREEZE_PERFMON_ON_PMI | \
-> +				DEBUGCTLMSR_FREEZE_IN_SMM)
->   
->   fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
->   {
->   	struct vcpu_tdx *tdx = to_tdx(vcpu);
-> +	struct vcpu_vt *vt = to_vt(vcpu);
->   
->   	/*
->   	 * force_immediate_exit requires vCPU entering for events injection with
-> @@ -846,6 +852,9 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
->   
->   	tdx_vcpu_enter_exit(vcpu);
->   
-> +	if (vt->host_debugctlmsr & ~TDX_DEBUGCTL_PRESERVED)
-> +		update_debugctlmsr(vt->host_debugctlmsr);
-> +
->   	tdx_load_host_xsave_state(vcpu);
->   	tdx->guest_entered = true;
->   
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503101519.AIZNCLz1-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/io.h:14,
+                    from include/linux/of_address.h:7,
+                    from drivers/mfd/syscon.c:18:
+   drivers/mfd/syscon.c: In function 'of_syscon_register':
+>> arch/s390/include/asm/io.h:31:17: error: implicit declaration of function 'iounmap' [-Wimplicit-function-declaration]
+      31 | #define iounmap iounmap
+         |                 ^~~~~~~
+   drivers/mfd/syscon.c:157:9: note: in expansion of macro 'iounmap'
+     157 |         iounmap(base);
+         |         ^~~~~~~
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for MFD_SYSCON
+   Depends on [n]: HAS_IOMEM [=n]
+   Selected by [y]:
+   - ASPEED_LPC_PCC [=y]
+
+
+vim +/iounmap +31 arch/s390/include/asm/io.h
+
+cd24834130ac65 Jan Glauber 2012-11-29  26  
+b43b3fff042d08 Baoquan He  2023-07-06  27  /*
+b43b3fff042d08 Baoquan He  2023-07-06  28   * I/O memory mapping functions.
+b43b3fff042d08 Baoquan He  2023-07-06  29   */
+b43b3fff042d08 Baoquan He  2023-07-06  30  #define ioremap_prot ioremap_prot
+b43b3fff042d08 Baoquan He  2023-07-06 @31  #define iounmap iounmap
+b43b3fff042d08 Baoquan He  2023-07-06  32  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
