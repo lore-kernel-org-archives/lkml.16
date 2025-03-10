@@ -1,130 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0267D22A4C3;
-	Mon, 10 Mar 2025 15:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB4722A4C3;
+	Mon, 10 Mar 2025 15:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741620153; cv=none; b=L/FYvmc73zMyKJRxWl/wbeqbhybaXidD2SdqzRJlEkSRjECL2u3DeWp3oTlPgpVoSvFuV9+nuaEZVw7vaXBMr2s4cqzL2w43aIUtR1FNNyGiBWSujxJ5/5ZSeKM5wiJyulEXNCim2wE2QMXHjV1hzCY5G9wk5tFjQJJEGDAIckc=
+	t=1741620199; cv=none; b=Rp9ByKdRZ5r9Wyfe68ccY+Np0ibef+9eYRVkfBgxaMsXxf4j+K5k1opFPo6qmYneacL/71Z+xPISDpwZf6hYGWoq+TyPGNPyJos9kkJH1ZDQF9QrrKAeIirVWLK3l1OCpyfJhdCTGGJPV3mliIG41tEaR67zKfeJ88TAY5mSTHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741620153; c=relaxed/simple;
-	bh=Cv8m8jD7+RmPJkCj57aD0CpR1gxtDVWyCmNb4E+uGhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aepfbliWNJdA2VNw8Nb++cPhavgrFYWDMxWjckn/TtqPuaMtmQVDK+NDGnSpI0T+/vW4I6oywQA160SMOXJa27rz0XyOevoZjs/fGNQQ0a5clW9w/PJ3ar5pb/tFDNhALgbKj/+tjuLy45bYEZwwZ3vMrZYV5guJHU/iQy1QOQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0FHpWcWc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741620199; c=relaxed/simple;
+	bh=VYbY9rIbQJQUZihr7MBQ0+PYIh42KLO/D4PgPe54Uxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AnFlnvlIBpnC6qyTkR67mJtFeTnGTpujwdF9ItH84koGD6B2S6GEmSZJid8khW0ldYHqskUm6NthgHMejhLU8hiYUUUPP0QsPzqhGeI/+cv7hc6RDtpN3vcD5DHoMBDdlLvNqJIWkfp1mPNlIgr1LW9c20O1nkTnXEOizAXk8bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PUog0SG7; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0FHpWcWc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2056DC4CEE5;
-	Mon, 10 Mar 2025 15:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741620152;
-	bh=Cv8m8jD7+RmPJkCj57aD0CpR1gxtDVWyCmNb4E+uGhU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0FHpWcWc7Qca61uQIH2Govy451NTIDVUxX2ga1F597qu9+ST0RzvlJXxvR0B48iFj
-	 ofDf9PKmqRIuNmNpOjue02Gp0jrJ7v6bu+qrUShfMnC+4g3aTQAt3WRjNG3Apc6tpV
-	 8mTflCuUbscJQpbTB2nbZKty+F5JMvp5PEU3hadk=
-Date: Mon, 10 Mar 2025 16:22:29 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Christian Zigotzky <chzigotzky@xenosoft.de>,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	seanjc@google.com, linuxppc-dev@lists.ozlabs.org,
-	regressions@lists.linux.dev, Trevor Dickinson <rtd2@xtra.co.nz>,
-	mad skateman <madskateman@gmail.com>, hypexed@yahoo.com.au,
-	Darren Stevens <darren@stevens-zone.net>,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: [Kernel 6.12.17] [PowerPC e5500] KVM HV compilation error
-Message-ID: <2025031053-define-calamity-8115@gregkh>
-References: <20250112095527.434998-4-pbonzini@redhat.com>
- <DDEA8D1B-0A0F-4CF3-9A73-7762FFEFD166@xenosoft.de>
- <2025030516-scoured-ethanol-6540@gregkh>
- <CABgObfb5U9zwTQBPkPB=mKu-vMrRspPCm4wfxoQpB+SyAnb5WQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PUog0SG7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741620196;
+	bh=VYbY9rIbQJQUZihr7MBQ0+PYIh42KLO/D4PgPe54Uxs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PUog0SG76zNzOvlevM9N30C0xe+8NOsE9gTz6GVbGf2rJKtGhTr5/JE3fNIRmPW3T
+	 zErGRWxFE4dNsS/s/Ln2jF0R/b9yX5egA4FMToakgHKnXZw42JWFPrm6pACEyg1Z2u
+	 olcvSsxBG/1RNNi6SWAZ3nWQHcs5kMml3qxedktabQtUF45J1XzWLrina508rjYRZ4
+	 rxdnJX/CQKT6YUyyVcaKmyjpOePusZZqUi//drGXLsExEwIJ3UPsMC2PJ1n502lt11
+	 syWoOoqU8pS0bs6mBf23X/LmC1JbrYoMo3oE4QLCwMmaplEyil0DbxIAcVWBdktBO6
+	 fk/i8Uql6NzKg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3327017E0630;
+	Mon, 10 Mar 2025 16:23:15 +0100 (CET)
+Message-ID: <5983252e-22b6-4150-a770-a6b64031daf5@collabora.com>
+Date: Mon, 10 Mar 2025 16:23:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABgObfb5U9zwTQBPkPB=mKu-vMrRspPCm4wfxoQpB+SyAnb5WQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/14] ASoC: mediatek: mt8196: add common interface for
+ mt8196 DAI driver
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20250307124841.23777-1-darren.ye@mediatek.com>
+ <20250307124841.23777-5-darren.ye@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250307124841.23777-5-darren.ye@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 05, 2025 at 03:54:06PM +0100, Paolo Bonzini wrote:
-> On Wed, Mar 5, 2025 at 3:19 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Wed, Mar 05, 2025 at 03:14:13PM +0100, Christian Zigotzky wrote:
-> > > Hi All,
-> > >
-> > > The stable long-term kernel 6.12.17 cannot compile with KVM HV support for e5500 PowerPC machines anymore.
-> > >
-> > > Bug report: https://github.com/chzigotzky/kernels/issues/6
-> > >
-> > > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/x5000_defconfig
-> > >
-> > > Error messages:
-> > >
-> > > arch/powerpc/kvm/e500_mmu_host.c: In function 'kvmppc_e500_shadow_map':
-> > > arch/powerpc/kvm/e500_mmu_host.c:447:9: error: implicit declaration of function '__kvm_faultin_pfn' [-Werror=implicit-function-declaration]
-> > >    pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
-> > >          ^~~~~~~~~~~~~~~~~
-> > >   CC      kernel/notifier.o
-> > > arch/powerpc/kvm/e500_mmu_host.c:500:2: error: implicit declaration of function 'kvm_release_faultin_page'; did you mean 'kvm_read_guest_page'? [-Werror=implicit-function-declaration]
-> > >   kvm_release_faultin_page(kvm, page, !!ret, writable);
-> > >
-> > > After that, I compiled it without KVM HV support.
-> > >
-> > > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/e5500_defconfig
-> > >
-> > > Please check the error messages.
-> >
-> > Odd, what commit caused this problem?
+Il 07/03/25 13:47, Darren.Ye ha scritto:
+> From: Darren Ye <darren.ye@mediatek.com>
 > 
-> 48fe216d7db6b651972c1c1d8e3180cd699971b0
+> Implement sample rate conversion and set private data for mt8196.
 > 
-> > Any hint as to what commit is missing to fix it?
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> ---
+>   .../soc/mediatek/mt8196/mt8196-afe-control.c  | 109 ++++++++++++++++++
+>   1 file changed, 109 insertions(+)
+>   create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-control.c
 > 
-> A big-ass 90 patch series. __kvm_faultin_pfn and
-> kvm_release_faultin_page were introduced in 6.13, as part of a big
-> revamp of how KVM does page faults on all architectures.
-> 
-> Just revert all this crap and apply the version that I've just sent
-> (https://lore.kernel.org/stable/20250305144938.212918-1-pbonzini@redhat.com/):
-> 
-> commit 48fe216d7db6b651972c1c1d8e3180cd699971b0
->     KVM: e500: always restore irqs
-> 
-> commit 833f69be62ac366b5c23b4a6434389e470dd5c7f
->     KVM: PPC: e500: Use __kvm_faultin_pfn() to handle page faults
->     Message-ID: <20241010182427.1434605-55-seanjc@google.com>
->     Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
-> 
-> commit f2623aec7fdc2675667042c85f87502c9139c098
->     KVM: PPC: e500: Mark "struct page" pfn accessed before dropping mmu_lock
->     Message-ID: <20241010182427.1434605-54-seanjc@google.com>
->     Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
-> 
-> commit dec857329fb9a66a5bce4f9db14c97ef64725a32
->     KVM: PPC: e500: Mark "struct page" dirty in kvmppc_e500_shadow_map()
->     Message-ID: <20241010182427.1434605-53-seanjc@google.com>
->     Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
-> 
-> And this, ladies and gentlemen, is why I always include the apparently
-> silly Message-ID trailer. Don't you just love how someone, whether
-> script or human, cherry picked patches 53-55 without even wondering
-> what was in the 52 before. I'm not sure if it'd be worse for it to be
-> a human or a script... because if it's a script, surely the same level
-> of sophistication could have been put into figuring out whether the
-> thing even COMPILES.
-> 
-> Sasha, this wins the prize for most ridiculous automatic backport
-> ever. Please stop playing maintainer if you can't be bothered to read
-> the commit messages for random stuff that you apply.
+> diff --git a/sound/soc/mediatek/mt8196/mt8196-afe-control.c b/sound/soc/mediatek/mt8196/mt8196-afe-control.c
+> new file mode 100644
+> index 000000000000..bb85f4ad8585
+> --- /dev/null
+> +++ b/sound/soc/mediatek/mt8196/mt8196-afe-control.c
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  MediaTek ALSA SoC Audio Control
+> + *
+> + *  Copyright (c) 2024 MediaTek Inc.
+> + *  Author: Darren Ye <darren.ye@mediatek.com>
+> + */
+> +
+> +#include "mt8196-afe-common.h"
+> +#include <linux/pm_runtime.h>
+> +
+> +unsigned int mt8196_general_rate_transform(struct device *dev,
+> +					   unsigned int rate)
+> +{
+> +	switch (rate) {
+> +	case 8000:
+> +		return MTK_AFE_IPM2P0_RATE_8K;
+> +	case 11025:
+> +		return MTK_AFE_IPM2P0_RATE_11K;
+> +	case 12000:
+> +		return MTK_AFE_IPM2P0_RATE_12K;
+> +	case 16000:
+> +		return MTK_AFE_IPM2P0_RATE_16K;
+> +	case 22050:
+> +		return MTK_AFE_IPM2P0_RATE_22K;
+> +	case 24000:
+> +		return MTK_AFE_IPM2P0_RATE_24K;
+> +	case 32000:
+> +		return MTK_AFE_IPM2P0_RATE_32K;
+> +	case 44100:
+> +		return MTK_AFE_IPM2P0_RATE_44K;
+> +	case 48000:
+> +		return MTK_AFE_IPM2P0_RATE_48K;
+> +	case 88200:
+> +		return MTK_AFE_IPM2P0_RATE_88K;
+> +	case 96000:
+> +		return MTK_AFE_IPM2P0_RATE_96K;
+> +	case 176400:
+> +		return MTK_AFE_IPM2P0_RATE_176K;
+> +	case 192000:
+> +		return MTK_AFE_IPM2P0_RATE_192K;
+> +	/* not support 260K */
+> +	case 352800:
+> +		return MTK_AFE_IPM2P0_RATE_352K;
+> +	case 384000:
+> +		return MTK_AFE_IPM2P0_RATE_384K;
+> +	default:
+> +		dev_info(dev, "%s(), rate %u invalid, use %d!!!\n",
+> +			 __func__,
+> +			 rate, MTK_AFE_IPM2P0_RATE_48K);
+> +		return MTK_AFE_IPM2P0_RATE_48K;
+> +	}
+> +}
+> +
+> +static unsigned int pcm_rate_transform(struct device *dev,
+> +				       unsigned int rate)
+> +{
 
-Sasha, I thought we weren't taking any kvm patches that were not
-explicitly tagged for stable?  The filter list says that...
+You have this function in mt8186-afe-control.c and mt8192-afe-control.c, with
+the only difference being the default case.
 
-Anyway, let me go revert these, thanks for the report.
+Please commonize this function and handle the default case for each SoC (if needed)
+in each SoC-specific driver.
 
-thanks,
+While at it, please do the same with mt8196_general_rate_transform, as this IPM2.0
+will be in other MediaTek SoCs, and this function will otherwise be commonized next
+time anyway.
 
-greg k-h
+Possible names could be mtk_afe_pcm_rate_transform() for one, and probably
+mtk_ipm20_general_rate_transform() for the other.
+
+> +	switch (rate) {
+> +	case 8000:
+> +		return MTK_AFE_PCM_RATE_8K;
+> +	case 16000:
+> +		return MTK_AFE_PCM_RATE_16K;
+> +	case 32000:
+> +		return MTK_AFE_PCM_RATE_32K;
+> +	case 48000:
+> +		return MTK_AFE_PCM_RATE_48K;
+> +	default:
+> +		dev_info(dev, "%s(), rate %u invalid, use %d!!!\n",
+> +			 __func__,
+> +			 rate, MTK_AFE_PCM_RATE_32K);
+> +		return MTK_AFE_PCM_RATE_32K;
+> +	}
+> +}
+> +
+> +unsigned int mt8196_rate_transform(struct device *dev,
+> +				   unsigned int rate, int aud_blk)
+> +{
+> +	switch (aud_blk) {
+> +	case MT8196_DAI_PCM_0:
+> +	case MT8196_DAI_PCM_1:
+> +		return pcm_rate_transform(dev, rate);
+> +	default:
+> +		return mt8196_general_rate_transform(dev, rate);
+> +	}
+> +}
+> +
+> +int mt8196_dai_set_priv(struct mtk_base_afe *afe, int id,
+> +			int priv_size, const void *priv_data)
+> +{
+> +	struct mt8196_afe_private *afe_priv = afe->platform_priv;
+> +	void *temp_data;
+> +
+> +	temp_data = devm_kzalloc(afe->dev,
+> +				 priv_size,
+> +				 GFP_KERNEL);
+> +	if (!temp_data)
+> +		return -ENOMEM;
+> +
+> +	if (priv_data)
+> +		memcpy(temp_data, priv_data, priv_size);
+> +
+> +	if (id >= MT8196_DAI_NUM || id < 0)
+> +		return -EINVAL;
+> +
+> +	afe_priv->dai_priv[id] = temp_data;
+> +
+> +	return 0;
+> +}
+> +
+
+
