@@ -1,114 +1,119 @@
-Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3C1209F5B;
-	Mon, 10 Mar 2025 08:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9CD222584
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741593903; cv=none; b=EolymxrwqVYmQ1Mm2b01uVivS8OvhQNCur9IW4WtD2UkK1It3DeJzzfIdoKX2JyA2shdXbFglargRnpE/g1vqAMV8T+5naF98QID8hUpXG05QKNFFtuC3HPf5yi7NX6Q3HV9Xzl5DcwmHwMGWiSUylN6KcEka3K+JXIJRvC4TWY=
+	t=1741593933; cv=none; b=sXafWQi2+xHfIPTSeuNphg6HScjG++FzbtPCucrssmrjfoYsbNlORXVC5/cEFbg/RPVCq6oEr43OZIZqCabtnzhPmc59yECj5ljThuM+Ka1KXBphE9q1bLINz8G91r7/US4h8qSYXvQ8UkhDLqXZjFFGspIHlY5LO8i9Glbg/Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741593903; c=relaxed/simple;
-	bh=DHlfY57p6h6SKmE8ssHMDa5+6tjkTUcm/QHAqHKbtYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hnKyb5Vjqu2c8K1D/K6ViNAOqbG684VZo/7dBTbYXmWN31HxMyIgnWSXk5Uuj+cIKkAJkANJjOvNxTuYGHvHCclPeNnnW13Uw/L6eWVwLuG2lp7pGd2sc77+qywGnl2u5zfvl87JA9ANf0aPFpep0lC5302xyi89tPJ+UXYD3lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=FawhFLw7; arc=none smtp.client-ip=168.119.41.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
+	s=arc-20240116; t=1741593933; c=relaxed/simple;
+	bh=3zWnGu58N16ImW59wQBusJJKObQVZ1jczDB54CFg87Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7j9vZderH6idO0UE110hGvA3eJyXyTYkmcDQ3TVgMQeN9TPXWNbOg5KaHSCjdtsI7lfNEMIcDati8sdzn/xKAHg40WrADl/B07gybLXxKXBZ65UfOqognFdjzxJg+dQz3GpkQH1bYnsAqAzdAUGEPSeQCsmzfnAPQHK0LeX070=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=BqgMezPu; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="FawhFLw7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
-	 s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
-	:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=y1UGZfwMxMzHKFzr1JvXBywioLUm+BvcV2Z76x1etEc=; b=FawhFLw7Og8aaRtmS7FqI5xCke
-	+grr16xbVC+Egw1Ar7NT74qmowzCtgTmnylfG3OinfuFGGydOlF+G1IWaFf9xpanQEJ9BBsp5lfjk
-	Og0CN54nWYRe+arxzUbFBvjMg2FmlmEefomaxGKQd2YG7L0+dy8PTXwydoX6PdU4kHJo=;
-Received: from 194-208-208-245.tele.net ([194.208.208.245]:62820 helo=[192.168.0.218])
-	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
-	(Exim 4.93)
-	(envelope-from <matthias.fend@emfend.at>)
-	id 1trY84-001kgr-Jl; Mon, 10 Mar 2025 09:04:52 +0100
-Message-ID: <597be0ca-ab3e-4313-8b35-57d2ce52f156@emfend.at>
-Date: Mon, 10 Mar 2025 09:04:50 +0100
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="BqgMezPu"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e66407963fso1968516a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 01:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1741593930; x=1742198730; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9/46n50lkXxXG2Ap+gYI/XvZtdQWDWRE7Pv0p9E/S7A=;
+        b=BqgMezPu4DBwnxdrN72L/a2FDiNJoqB1r3qrmz0ArTnSWkeHKi/zZrfIl7uIWDGlnb
+         s7+vV/+27ws9cLAEAuVr0o6QGsPc/mfPMAtppU17yce2gvUNJ0jlLBo6omHzqgEZGCZq
+         R880fOHEfPGu7lXq8IfcahiV7lDbtI/KHVP9HXgGxtw2JNkKVkc08SCxNxVjxhM6CHgZ
+         S9Q0ToTH+hSYICYeLWs8nQQkyNMrcmAdXMh3PkBxQ9T+VrS2b4vz1a/SiEsEYdkuw5HY
+         gmfpr09IWvthDFL4Vl9M3QJOiyW6rSPS3GGwYMgkk3dS81GwrCsW08A/jajdCKoWc8Xr
+         M0hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741593930; x=1742198730;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9/46n50lkXxXG2Ap+gYI/XvZtdQWDWRE7Pv0p9E/S7A=;
+        b=vBkumXnuJ2gJcxJOu9tQIHou5N82mMtMajFwhGE+qxe70roNAdSSjBW2926yQbRM3L
+         FNlNH9nUmdwOshxtENnvA86p5vB1QN1whZYlkeQFXVSiU0fi44LmsgbqjALXjH+XGVOv
+         uPFrfzbe3Jf4Aq5hikWqtIFQZ9o2/oJOK/HfvceEAOc9vOYLblj0xzQF63BTrH1+bCED
+         n2BwmSAo9nKoDYgWu7GJk4AZtAuquY9yhfjSsC2Q9w9ekdhHaVAh8Q2TnmjnwCqkjzeN
+         vbJVLtcWLzvG2UUCCLQGJcBKZEvbqQLe6yT0XviFeUMCDgUkXVvjlY1uLImd4X/iRGRy
+         HH9g==
+X-Forwarded-Encrypted: i=1; AJvYcCU86c25VJxomuhSIA4pieHP2Fzt3fv4SHncwWtC0i198tncoGqMi36KzYW04hQUElMw/6cD3dXtZrtITJk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLnLsBW/H4sgq4FJdQuXpDofSrTCmI2kE5sAm59xrnYJ1DUq3Q
+	5GtW2XrOT0zyUgUksRNbjyV2g+klXBeBCcBK90o7hQfD2x5IRjtDk1QtRMrdsPI=
+X-Gm-Gg: ASbGncvoPYTOgVEoMoqV2eoJ7e7QQse2flgno1/E3ib2F2nV/52EDuHphQ14tDyg6DL
+	pFXdpv9LluGR90EEcV5vQ78QBgZ9hoAU1i36GIdapRXOU3EQ9RvC5Z5pCuq4n4YaoZRrXVu36O7
+	czEbTbWOaeXlPgcXhpAVDXizsK0gS25a9mO0EsN3te3K5PGLMQasUPvVjAQHFQ+cnYUG8A+K0tt
+	q3idYH987W9XSB/UD8nmVXkkq1GnvIQOoqhSN9gsKEiuq+U+ld57pGlVvjZsgjiyb/tvoQ6HltO
+	BB4xMudWHLhEGFizqbdqC9AKvkbZiCViikDfOBdvkpikabkM
+X-Google-Smtp-Source: AGHT+IFyE1+ZQDfcpYaXDj6cU2hjRv5YTsTRSeNjT+LusaidpLpAMwAvHbC7htyCKPAPDOKqhc1SBg==
+X-Received: by 2002:a05:6402:35d1:b0:5e6:6407:3b27 with SMTP id 4fb4d7f45d1cf-5e664073f4amr5039593a12.31.1741593929576;
+        Mon, 10 Mar 2025 01:05:29 -0700 (PDT)
+Received: from mail.gmail.com ([2a04:ee41:4:b2de:1ac0:4dff:fe0f:3782])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c733fa47sm6471074a12.6.2025.03.10.01.05.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 01:05:28 -0700 (PDT)
+Date: Mon, 10 Mar 2025 08:09:36 +0000
+From: Anton Protopopov <aspsk@isovalent.com>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+	yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	jolsa@kernel.org, shuah@kernel.org, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/bpf: Convert comma to semicolon
+Message-ID: <Z86eQH1dV0zEm3Ov@mail.gmail.com>
+References: <20250310032045.651068-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] leds: tps6131x: add support for Texas Instruments
- TPS6131X flash LED driver
-To: Krzysztof Kozlowski <krzk@kernel.org>, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, bsp-development.geo@leica-geosystems.com
-References: <20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at>
- <20250228-leds-tps6131x-v1-2-d1071d90f9ea@emfend.at>
- <554823f8-be69-452d-908d-a7c7a80bcd9e@kernel.org>
-Content-Language: de-DE
-From: Matthias Fend <matthias.fend@emfend.at>
-In-Reply-To: <554823f8-be69-452d-908d-a7c7a80bcd9e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: 
-X-Spam-Bar: 
-X-Spam-Report: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310032045.651068-1-nichen@iscas.ac.cn>
 
-Hi Krzysztof,
-
-Am 10.03.2025 um 08:46 schrieb Krzysztof Kozlowski:
-> On 28/02/2025 11:31, Matthias Fend wrote:
->> +	tps6131x->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
->> +	ret = tps6131x_reset_chip(tps6131x);
->> +	if (ret)
->> +		return dev_err_probe(&client->dev, ret, "Failed to reset LED controller\n");
->> +
->> +	ret = tps6131x_init_chip(tps6131x);
->> +	if (ret)
->> +		return dev_err_probe(&client->dev, ret, "Failed to initialize LED controller\n");
->> +
->> +	ret = tps6131x_led_class_setup(tps6131x);
->> +	if (ret)
->> +		return dev_err_probe(&client->dev, ret, "Failed to setup led class\n");
->> +
->> +	ret = tps6131x_v4l2_setup(tps6131x);
->> +	if (ret)
->> +		return dev_err_probe(&client->dev, ret, "Failed to setup v4l2 flash\n");
->> +
->> +	return 0;
->> +}
->> +
->> +static void tps6131x_remove(struct i2c_client *client)
->> +{
->> +	struct tps6131x *tps6131x = i2c_get_clientdata(client);
->> +
->> +	v4l2_flash_release(tps6131x->v4l2_flash);
->> +
->> +	cancel_delayed_work_sync(&tps6131x->torch_refresh_work);
->> +}
->> +
->> +static const struct of_device_id of_tps6131x_leds_match[] = {
->> +	{ .compatible = "ti,tps61310" },
->> +	{ .compatible = "ti,tps61311" },
+On 25/03/10 11:20AM, Chen Ni wrote:
+> Replace comma between expressions with semicolons.
 > 
+> Using a ',' in place of a ';' can have unintended side effects.
+> Although that is not the case here, it is seems best to use ';'
+> unless ',' is intended.
+
+This is a typo, of course. Thanks!
+
+> Found by inspection.
+> No functional change intended.
+> Compile tested only.
 > 
-> No differences? So devices are fully compatible? Then it should be
-> expressed in the binding with fallback. Or the binding description or
-> commit msg should explain why they are not compatible.
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 
-Yes, from a software perspective both are identical.
-The only difference I found between the two variants are different 
-valley current limits. These are described in the bindings.
+Acked-by: Anton Protopopov <aspsk@isovalent.com>
 
-Best regards
-  ~Matthias
-
+> ---
+>  tools/testing/selftests/bpf/prog_tests/fd_array.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/fd_array.c b/tools/testing/selftests/bpf/prog_tests/fd_array.c
+> index a1d52e73fb16..9add890c2d37 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/fd_array.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/fd_array.c
+> @@ -83,8 +83,8 @@ static inline int bpf_prog_get_map_ids(int prog_fd, __u32 *nr_map_ids, __u32 *ma
+>  	int err;
+>  
+>  	memset(&info, 0, len);
+> -	info.nr_map_ids = *nr_map_ids,
+> -	info.map_ids = ptr_to_u64(map_ids),
+> +	info.nr_map_ids = *nr_map_ids;
+> +	info.map_ids = ptr_to_u64(map_ids);
+>  
+>  	err = bpf_prog_get_info_by_fd(prog_fd, &info, &len);
+>  	if (!ASSERT_OK(err, "bpf_prog_get_info_by_fd"))
+> -- 
+> 2.25.1
 > 
-> Best regards,
-> Krzysztof
-
