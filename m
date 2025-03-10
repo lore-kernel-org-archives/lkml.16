@@ -1,160 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CAB17BA5;
-	Mon, 10 Mar 2025 07:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240051CAA70
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591524; cv=none; b=BEXHHxN3/ndukiIl1ZQdqBTABQ4c5cWmkMt1or/kSRbSs1guPhOK6f65EaQbT8r2Qe/xGENaPhb8WNz+AhjtYO/bkd/13Sit2RLdUwrv4/XSGa5irjbUWGe2SGdC9o/wkZhOtOF5z6TZR9yUsxqdd6yzL4gqCHOt/SUUL5XhXKg=
+	t=1741591547; cv=none; b=jSighS3eHpnB5ZBp8lVoos9IZlJexRIpSs90xgO5UZLdweejq7/02MOmuj0Efywc8VEUmiB+3klY2B9v1qC9JYn5ufpUAoSOb4lhyagucQJLiU+mPN9bOT58mcXWX5c9KuIKeU7CiQMawdzEYRujHmnVxRsrU213DNQJ1FfddA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591524; c=relaxed/simple;
-	bh=W67DMzEwuogDvPpLCC4fTWcsWd7acCqkfXpDWz+haC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t4zIjjbo8SIeN0hW6GbjzISb7x9FKn2KawzS1RfdjGkd+WW4YrF53WpaDNXtVyy0vmMp5EjRCE/sIZ11UeyCCk8BmyyKpg3/fYXgkRSmbw1g1/tOpePb4BpuvEpS7XW07KuUMRX48MBP8b+NXrmy7v0u9Dxb4Boe+jS+KwvaJYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OjVxBPmi; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741591547; c=relaxed/simple;
+	bh=fq05aJvii9M9tH5nUzsmzfC9jiUArPMzjVHXJMObHXw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I8HkZRthK0xOziy+Et/bUsttaYHF/adcatZVHDS+Tchh1g8anL7GlNweCMhZzRIk4X086lzaprAZyyrZOTpu1K41tsbtj6OcTnsZmy5MR3p9e2gzC7RN9dicucuNGwbywjWO69RqMJQn0kpb995Oux0uRq4YtfMyk+s+exNJUb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=IEqtXiRp; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OjVxBPmi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741591522; x=1773127522;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=W67DMzEwuogDvPpLCC4fTWcsWd7acCqkfXpDWz+haC4=;
-  b=OjVxBPmi0e5YlTC1q0jt7g1m/7GRcT0JQ1pehoPJeYsXv3sZK0B6Gt4w
-   GFvrokKa4vCPacaZP3eDk0qbY2EHdl9Us0X2cDq7Q5y/Qs4l/3gpmPcgG
-   2k8nXJXeYazVLnz+5Ob1XrcRmi/pR3SnYkJFbTGPeY9luDNmjazcWwClf
-   IsyMAp5bzB0al+hj2vr7ixO8aSsdZxxohJN0khgUCOS0DBH58pfPpX7fR
-   UdudMGK3+CtTCqVqADIacugr636wHN0fNGVrjVI7oPiWBGRszVVRfK9PW
-   t3gQBdZur6BmrqCLx4c6a2QHehIvn40SO5mBBlHaCwmMP44ARroHQuvPt
-   g==;
-X-CSE-ConnectionGUID: HU0yBssMRuu1i8HsmHuy/Q==
-X-CSE-MsgGUID: 7HRxNCD2QYaNgRfl8OqRVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="60124647"
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="60124647"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:25:22 -0700
-X-CSE-ConnectionGUID: 7oSOCb+dSs+ncJlZdy1FGQ==
-X-CSE-MsgGUID: gmx0jSDrRCyVFNM7TMvFKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="120072176"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:25:19 -0700
-Message-ID: <87def3e5-2e44-4e63-bc6c-9a07077a8c8b@intel.com>
-Date: Mon, 10 Mar 2025 15:25:16 +0800
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="IEqtXiRp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1741591469;
+	bh=Wy+jnUoivwyS60gpTT9Uw9KftbsOYh42amALLbDE8D8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=IEqtXiRpvSLTLZCdYEECw7CbNez1RDCfH55X9M3fKj3uhvEXofzRyi6ho1OpOrW99
+	 5XS/mdxHNX2+kI+CWbnAcDyUQ4DzEGXyQBoKWsRxrXFrk3g/FRxtI39zjzvFLXd+J+
+	 dNODXZJxUqauTCEXtfxK8dUiVxyeYiYr41kNQcyQ=
+X-QQ-mid: bizesmtpip3t1741591455tlup6ji
+X-QQ-Originating-IP: C5l8J16DYC9HptF8KBT0mnAZGyZbnYXd4QOp+OU39QY=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 10 Mar 2025 15:24:13 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 6406034055523155332
+From: WangYuli <wangyuli@uniontech.com>
+To: liviu.dudau@arm.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] drm/arm: Suppress "ARM devices" menu if not essential
+Date: Mon, 10 Mar 2025 15:23:57 +0800
+Message-ID: <D20815A68EE4902F+20250310072357.52841-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/10] KVM: x86: Allow to update cached values in
- kvm_user_return_msrs w/o wrmsr
-To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: adrian.hunter@intel.com, seanjc@google.com, rick.p.edgecombe@intel.com,
- Chao Gao <chao.gao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>
-References: <20250307212053.2948340-1-pbonzini@redhat.com>
- <20250307212053.2948340-7-pbonzini@redhat.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250307212053.2948340-7-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OAOHw7tUGLQOmUO5QGLUlZ0rTas9nWoVLFV94VzqTjHvUXGxUVCBub1I
+	rbYvbxq4GlQ/OCoGI7YWfLGRbej9vqQ5mWNKIdUHKvMxY7bzYipsKRT7tdv1kccdDUlMtXY
+	DXal1fBG8Jb/KcWjK46ImzTfm/EDbNe+39Z1wQTv1L+Qeuj5Xsa0rpd5RZuMNV/xw7yS9SL
+	nS2tS8oMeMZ0yNP32mQhaWzP5YWHMW4XMSeh7GDCW+q+tuxgT3MkaUsU9cP11HImjLkan5q
+	VR5EORQ71CIzhffhc2JYma5xmrMuY0Vz/h8Cx0ObXKyg3y14s44VYaCehfoR6hm9239Hyds
+	oOCyH2NfcAb7KXYBjMxowryYy+4WwdY48k0wb+GjbDKMVd2cr1U6joHMBulNsa8TQIS5wOO
+	vE4HmsO4A1YYBUczWKx9DzGh7JMcv4/6uQfjEjGY1Gcg38xPbrmMvwPpzmNaZeKZW3Bb72A
+	G7F8HJOQgSYeBR6RG7CWCYjEjuaC+Qu9AghNVdnpKHFrprq6w1Ia4m4RimRGrvs9Vva2MXx
+	Js6vEKs3Mo9gP04Hx0x61/J4FfpuEQiQ87jk/3BTX4IMuF4h/dmzHQGuAgpG+ilU7ziKUFu
+	lHKOZSa+A0vpDqrer35l93Bkc9JE6m5p4CJgBNaW0PqKRhsi6g76PmwFkP5zalO2stT5B2d
+	8rxwD5qvJCPctjVBsFWfcMU9xaYVQK8Fxjiy/QGsvEC1ehZxAk1Qef5vD1D2Co6PHm4sstN
+	09JIrlPDrJqSU5bt0bRppk+RbL8R+dzFbRqIppDQVkCwy+92H/m9Jv1JgQkwG8jN6SYPhN1
+	74+ZxVofxeNOBX1ZCUiyf/8mcFnBWjEHMqWw9uFJ+bz9XMLltEw7dft5828hyNF5I8ufHas
+	FuWdkz5WRryNmy7wgZaRDmZkF55FQ+DzEaBPRihUilPmN8gOgf9LqVjs8rbCZ4yZAhQk8E+
+	KFq5ubBC1Y35n3y+NtE8murbJM2fg5yMISLyAKlkdgIdiZZaX23QiLEifHos+9RuxKO306N
+	BFuRqX/cCPCV7TUPewBYzjBb2N8mBPI4NDy3Agjw==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On 3/8/2025 5:20 AM, Paolo Bonzini wrote:
-> From: Chao Gao <chao.gao@intel.com>
-> 
-> Several MSRs are constant and only used in userspace(ring 3).  But VMs may
-> have different values.  KVM uses kvm_set_user_return_msr() to switch to
-> guest's values and leverages user return notifier to restore them when the
-> kernel is to return to userspace.  To eliminate unnecessary wrmsr, KVM also
-> caches the value it wrote to an MSR last time.
-> 
-> TDX module unconditionally resets some of these MSRs to architectural INIT
-> state on TD exit.  It makes the cached values in kvm_user_return_msrs are
-> inconsistent with values in hardware.  This inconsistency needs to be
-> fixed.  Otherwise, it may mislead kvm_on_user_return() to skip restoring
-> some MSRs to the host's values.  kvm_set_user_return_msr() can help correct
-> this case, but it is not optimal as it always does a wrmsr.  So, introduce
-> a variation of kvm_set_user_return_msr() to update cached values and skip
-> that wrmsr.
+Manifestly, the "ARM devices" menu is appropriate only for the ARM
+architecture.
 
-My Reviewed-by for the previous version isn't tracked. So again:
+Inasmuch as every single item in this menu is predicated on
+(ARM || ARM64 || COMPILE_TEST), it is therefore illogical for the
+"ARM devices" menu itself not to be predicated upon
+(ARM || ARM64 || COMPILE_TEST), and displaying a blank menu in other
+architectures is unwarranted.
 
-Reviewed-by: Xiayao Li <xiaoyao.li@intel.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ drivers/gpu/drm/arm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Chao Gao <chao.gao@intel.com>
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> Message-ID: <20250129095902.16391-9-adrian.hunter@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/include/asm/kvm_host.h |  1 +
->   arch/x86/kvm/x86.c              | 24 +++++++++++++++++++-----
->   2 files changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index c89130fda012..1208aee90df1 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -2326,6 +2326,7 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
->   int kvm_add_user_return_msr(u32 msr);
->   int kvm_find_user_return_msr(u32 msr);
->   int kvm_set_user_return_msr(unsigned index, u64 val, u64 mask);
-> +void kvm_user_return_msr_update_cache(unsigned int index, u64 val);
->   
->   static inline bool kvm_is_supported_user_return_msr(u32 msr)
->   {
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 2e7f8cb43c12..6dcf8998a34f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -636,6 +636,15 @@ static void kvm_user_return_msr_cpu_online(void)
->   	}
->   }
->   
-> +static void kvm_user_return_register_notifier(struct kvm_user_return_msrs *msrs)
-> +{
-> +	if (!msrs->registered) {
-> +		msrs->urn.on_user_return = kvm_on_user_return;
-> +		user_return_notifier_register(&msrs->urn);
-> +		msrs->registered = true;
-> +	}
-> +}
-> +
->   int kvm_set_user_return_msr(unsigned slot, u64 value, u64 mask)
->   {
->   	struct kvm_user_return_msrs *msrs = this_cpu_ptr(user_return_msrs);
-> @@ -649,15 +658,20 @@ int kvm_set_user_return_msr(unsigned slot, u64 value, u64 mask)
->   		return 1;
->   
->   	msrs->values[slot].curr = value;
-> -	if (!msrs->registered) {
-> -		msrs->urn.on_user_return = kvm_on_user_return;
-> -		user_return_notifier_register(&msrs->urn);
-> -		msrs->registered = true;
-> -	}
-> +	kvm_user_return_register_notifier(msrs);
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(kvm_set_user_return_msr);
->   
-> +void kvm_user_return_msr_update_cache(unsigned int slot, u64 value)
-> +{
-> +	struct kvm_user_return_msrs *msrs = this_cpu_ptr(user_return_msrs);
-> +
-> +	msrs->values[slot].curr = value;
-> +	kvm_user_return_register_notifier(msrs);
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_user_return_msr_update_cache);
-> +
->   static void drop_user_return_notifiers(void)
->   {
->   	struct kvm_user_return_msrs *msrs = this_cpu_ptr(user_return_msrs);
+diff --git a/drivers/gpu/drm/arm/Kconfig b/drivers/gpu/drm/arm/Kconfig
+index c901ac00c0c3..0aa6a54567b6 100644
+--- a/drivers/gpu/drm/arm/Kconfig
++++ b/drivers/gpu/drm/arm/Kconfig
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ menu "ARM devices"
+-	depends on DRM
++	depends on DRM && (ARM || ARM64 || COMPILE_TEST)
+ 
+ config DRM_HDLCD
+ 	tristate "ARM HDLCD"
+-- 
+2.47.2
 
