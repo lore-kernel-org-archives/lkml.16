@@ -1,65 +1,65 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769DC226D0A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924C6227BA5
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741610430; cv=none; b=QIRFRolennqTKhUctfDGCPN8qYQakrZLd6IqUS/L87m3S0AGJL0QfpPf3Xg1ABfJg4ey56XS9hnC9fdBrx/cjDnDk3NEolMrXjAcjGHXr5Jz+rop43d/irGs8vmK2/p7NKItdnMxhWAMpflaXihFnNoy+euuhpwFZtHdfSEwOc4=
+	t=1741610432; cv=none; b=tA5MMM/dkqrmCyZca9QSIGw0qLl2d0D35Pgtncaq0gMKReE5q8s75eTtspEqWL+VUrYazPwPE04U+8V2zJi6zjUTLZINMDr4HYrFm6IOVGUh35gp2Byq/GisCMwIJs7UfnbKDQHsxFsy1uHc1Z97Yu2wcwciyHub6/RMEFXmAr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741610430; c=relaxed/simple;
-	bh=oW/aiEUvZZXqJSh9yhfXEXd+nz94th1LNEkngduFixs=;
+	s=arc-20240116; t=1741610432; c=relaxed/simple;
+	bh=br0qgCwXR6IILS/HJMnJoxXyosKeHcCMyBKnZ2REJ5U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=akK/H1N5RnGguxhUufCY9bQw9GWiIzP0rHctVRbxLjvYovUMWQkiovuFHyKhoqgolXq4sjmJ78/nkHqE9mFn5ECBKv3LejScQBxjI7Gz+JNHgZxsqI2bjYtPHUwjePhCxPYdb1O7umLvAeiSPHuIHxYSPnbPH3OAPUBHaWjQhpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2oPyzvpN; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:To:Cc; b=i1DCo5NrgcOFfj+BX/YF0SMWB+19aVMZt8OpJWMeoGHityJvC8v46goyE5MxNqU4vIkkEs4WLttBRE/kQSl8qBkjjjyzMQ9dOoWkdiWWjteF43tbvgKxSl9YQJvWkbSFFoBu1UjNSigVzEbzeMncDRYbqgVRaDVVO5xZkyhV3uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jyqig6gZ; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2oPyzvpN"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso13038295e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 05:40:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jyqig6gZ"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bcc85ba13so33630835e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 05:40:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741610427; x=1742215227; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741610429; x=1742215229; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GYGAI05OK7Mp/05h37Cjc2avvREPLKZMIgnLXPpZpUk=;
-        b=2oPyzvpNOQxj0AoIsHlPAvoQwk2ZarGCLuUwM0+S7xdIB1vsslGDiNQGq/fDW29Pbs
-         +yELrJNgE9JQIEzmeM7UQttfKhwVLi6L7JLvSlcPEWE4Fu4iAGmpu7L9avPHPEpIxGk1
-         yt/BfQ+ATCsFxPV2Vl+vfYUVcRDLMXKhWm8YLx0FXY6V/W9FFG73tlHRa4BTcPG69zp9
-         cfXXVuGfCCIFuH7OVdgsQqSeo7o8le2tr8INqPw/6HmI7zK7zvUWG4BnEE9fOUwhVN+4
-         sGRd5yMY6pumPCmdwR0D9TE8ww9RAuPS9N1xCVPWPP2qefTujsAsb0y/C/+NZNGr8NZg
-         mbOg==
+        bh=ExDJc9PeCSc2zmT6lc+tq6m+jvUQwjNZ5eNvB72f2YY=;
+        b=jyqig6gZQ0nCiULpAf3nGzcp79wfbJKx/fEKbwNCUttgwl+rt4Dnmt6dweGSNQbign
+         DvMHem/0toB4npvftOAD1wU+fQO0nPpL+Aj9y+BsPYkh3H/FoX87oEq+HtVPp0GC3Ykx
+         poZKpMlEGs1YtkmInF7FAgEzg7+mD5xgMxjkmXapVKEkrEi8xUWzGPD8NW8uoqF8XcBg
+         sYVlOFWdVBnemu85711Km36qWuKA0oLA2mZuwnzNV5qpYw24lRaYFpcn4XENfI7tfyLL
+         yETXjzkRUawY5VSVGYVQxnzwF54+qEqU1PLnpoq9hhlREd1lR+rat2Tm9Ld4SpeeTpFA
+         PzYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741610427; x=1742215227;
+        d=1e100.net; s=20230601; t=1741610429; x=1742215229;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GYGAI05OK7Mp/05h37Cjc2avvREPLKZMIgnLXPpZpUk=;
-        b=RkZqKOH1tzHOAGbLhL0zD+V2UaAlgA6yExkFJX9O4RdJ9UK8Pn7pL0YoFsnuffXOR6
-         KkbakfbpQNBYKr8Kn79UKZSQqpKitAI4it9HFcOb4JDXO9HfJ5QsJT6R/l5vxDMWMU7Y
-         /F6TMwks7dng91S+tUWRpWI4PS3D0qfMDfGly2G34QpsI+HvrjKngaoIG5PLFyhQ0FnK
-         uCtJi4Zamvy0ksqcJA2/P0/Ty/+t9foNcsDVoo1WWgr6AASQXeAgAfUzXjqMLK9BLc9w
-         nnc7rmFmznnt7oLoz6uIvEQcDgAMYdx6NOlFly6T5ZiNku860vczIki55ZZyqTg3czl0
-         mhxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXsCFidumfSEuI+9eDEJD07gqGgtckFoRMAVlRMBq+E5F7mg96vWagehgdvr05HLRSuAn8YiDxZzNdsjQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8LtDbonfKH7J/9RPCnKxjq1vbQbgGIx5qaL2ZHvIg7ggGP+ye
-	0geBRFwKj3+Vua+/TvcAlAz5YsAHBTLd50PejlC7d8QecqT1ZInfhfWTzzyHUKs=
-X-Gm-Gg: ASbGncuEz1OpkEEFZXz25FnqfM6MAPB7xCTAhS8z1IPx9yan8bSYJvj9lKzpdSRFcYd
-	D/RGYEbv/gGco7YAzUihjhWBG4YxtWnWJuVI7sTZLms/hCa6lAb9GoxiWc8eK/eYFMjoDFA8ZIO
-	CtyvpekCp66dwxMN8xSu1S3tY5SJ81kCnZujtrnhNkyy9kRv1fznYz1NBynE3dacccO6zljPmcG
-	ZRytTd0bdYqOQuFnDNh+pnpJMLh7MAi1iu9MgRfmSzZOJGjfxWyaNqMpuW+gV9/uZm5xaj5/chB
-	jQuWzwEcDCWPXRY52kQIOFER3YraCA/lMXRWeKfLiSRKj46C
-X-Google-Smtp-Source: AGHT+IEpiZSigsD7mq/7aroNSLpkKgw14vyLzwCpAs6P3IU39kiwkAcoJYwXJqsG7JdjAFA2p1EHlQ==
-X-Received: by 2002:a05:6000:1fa4:b0:38f:577f:2f6d with SMTP id ffacd0b85a97d-39132d093demr9788508f8f.2.1741610426632;
-        Mon, 10 Mar 2025 05:40:26 -0700 (PDT)
+        bh=ExDJc9PeCSc2zmT6lc+tq6m+jvUQwjNZ5eNvB72f2YY=;
+        b=lBJ5GjiAqv6xqKaRLq8i+RvcS9tatuOKZIHT38EW12Vso3QnNuLst17JRFUs6h6wVU
+         dNt7O/Gc/BHzFWtGqSY2KjeMhrIWe2Q7Dwx4N4/sufmPF67aBU81E3Xg0zL6s9uh3vcN
+         bxAseAPh177U0NgIxQ8ll1Imw3tQ05CDrKgt+q3n6OuzfRL1u6rVRY9U/wUDrICUov56
+         tl0tSEhbDIV9432tUZJY0iJ7MT0stlb4bfRAQ9ElyUzbRL5GoIEirkiXVH2W3dh3ex7o
+         JQk/EEC44t5faYBbf8OuuQS60JvlpHohC/1OEGXsmbxBwrIrFuWw0YIBDGF69+qNwxSi
+         bSgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHrODKOSXTmaA1t4dz6pDTTLpGiTOSas5M+6shNCqlEHCyQM43UZr8gBdb1RbKEj+t7Avf8BbrO+7wleg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3ShK2Un2TrRxLZ4FwJ+0aAdxJUnvpUs9Ifud1mnhgUWxz0gWw
+	nmI0Y7VV5Jk41ickfsDV5QXjO18KE7Sr753NSoICFQrtPcheGxDJInWntpmkhAQ=
+X-Gm-Gg: ASbGnctO/pMbGLcPdU36YQ5KBsmSU3PM7mHlEbWAjMDXn5YzX6bXDw+T1Pyrhn4w8fF
+	V9GXRwh7qAgFWxcQAJvAy9Y71pmz1oU4+z7eDVo7yw67npVTHBts2VC9ZD70Ox1oHyFB6KxnMMc
+	qokegX2jFuEj3i5v3fqGHtB71QIlbL4K+TFXYZlq1uriIcZH/2O1wII2k0j0WYPc4bU3Yv6Z0NZ
+	VV7vzeATlHrKA8ZinrxchwkkXCP+F3eKnO5ntGqc4L+FF48j2ggGbiUyvaXhsiY7VhCuP8mz/Od
+	Wp3WFvlmhV/enAmcvncMLoJPvKIe6gOjiNHCAtP3N/gou1Nn
+X-Google-Smtp-Source: AGHT+IFR4eU8W3pLo7eGZme/v2IPUi8jYvj7XNPiJwIbpKFova8nZ7EiLJqrg7eufMPKCGOAKDZk6Q==
+X-Received: by 2002:a05:600c:3411:b0:43c:e8a5:87a with SMTP id 5b1f17b1804b1-43ce8a50bcfmr55669035e9.16.1741610428892;
+        Mon, 10 Mar 2025 05:40:28 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2711:39c0:fb51:b639])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfdc5sm14535865f8f.25.2025.03.10.05.40.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfdc5sm14535865f8f.25.2025.03.10.05.40.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 05:40:26 -0700 (PDT)
+        Mon, 10 Mar 2025 05:40:28 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 10 Mar 2025 13:40:15 +0100
-Subject: [PATCH 01/15] gpio: bcm-kona: use lock guards
+Date: Mon, 10 Mar 2025 13:40:17 +0100
+Subject: [PATCH 03/15] gpio: bd71815: use new line value setter callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250310-gpiochip-set-conversion-v1-1-03798bb833eb@linaro.org>
+Message-Id: <20250310-gpiochip-set-conversion-v1-3-03798bb833eb@linaro.org>
 References: <20250310-gpiochip-set-conversion-v1-0-03798bb833eb@linaro.org>
 In-Reply-To: <20250310-gpiochip-set-conversion-v1-0-03798bb833eb@linaro.org>
 To: Ray Jui <rjui@broadcom.com>, 
@@ -88,299 +88,75 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-renesas-soc@vger.kernel.org, chrome-platform@lists.linux.dev, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8700;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1712;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=64LvLyjulLlcRTZ6GwgHPm6zOm13plfMb/iq3ckJj3M=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnzt21eodUQWkbpDril/aofsEv3YS5awh3YzS5v
- pLHOsHTSUKJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ87dtQAKCRARpy6gFHHX
- co4WEACFOzNSsrtqyn29Tv1p2FDoEi4QHiQUDjLxZx2Bv3sENlv3Tx75JcS/y1LNsyW06lE+Lht
- hni/2nm5Ku+vMumPzvWiQpBGr7jvBFFisiXHVGoKHZD60rPJV3x1VGH5fpXSYrkqF0G9SzZi2/l
- sr1zPSrIQ98kdRuklC9yiUQCidpG7gpymoTNQ61suzfAmfv23IiTfxlE8xnzb3YRnGZgMAoTydg
- yiWDrRIiOgcxDTGUf9Qb0NqtPeOKf7xy7K7WDs3vSkHs9HWmU3IAmawoi0CYedV6LVxTwWxjmpc
- csZNcgsMcVziHsGfPLUVy0/8HlwM5Ukux4cLc7Bn6q9k+Jn1ceTy5UyyRzSpdoCI+DC6lp6pzMm
- i654kvtGMluy6k3KW3YAErcIMxRWcM3aXp8RMGs5CxfkUnOMKS4XycWERkdPLun4RgR6HFvrHlI
- KhhJpNS9RGUBP7stOEyCgd+PkGd6y1oU2qGGNshbuXlg9c+xU+R/JZEHApv09Ncywafj9Bdjtpy
- vxHR4j2+I/jnJi56GrWy53xOBgGky1gNT6SAXOIOS1xn01LuIZeRPNMXL0eGmxG0EOxnhXd5psN
- HS/oYXp5UOwxqWQBiSK8N4yy7mxJrW7R5ptA//ih+YDloJvs0xBPMUxedvFEn2yqJ5ElJ7N0WFJ
- qzp7ejpfa8xA3eg==
+ bh=6eI9oSEZvQ/zRQ9ewG5oMx4x49O1IBi4OsEUA4Kgf+A=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnzt21t5hg45JOHH4FIQC8J2+lEXuZA+Eo1vWQx
+ d7HdKIRoXiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ87dtQAKCRARpy6gFHHX
+ cjyGD/0SGk000FmhJu2Sr6c1Cl9SGsiT2TcHqvF8b8i+n0CVrJ5B3pRnyj2DXREnxyRGCrbyhdm
+ DcBI/oty8LNJzRcjkVoZBhikYQACHOVwlQYKr+GeX8vGSyAQ+4tCMtu3Bpoqo3lLqq6NY0Cwvyv
+ w3X0l0mIFjjCcqEHUhqAImv1/mQEa/kJlU4FT2E6vm1q2/YkhlMJQsQMbVXHY55eu/pVt3wAY7R
+ /j/tEAbkjIPVTg5WqmjQUCD+M+4m6qG1E+Ike1bmFBz+LnLhHMzo4tLKPSc6CAxKQASkLBeWXeq
+ AZGJuKNwBjV7BN3goJZXXpSVTugCcxaIA2aAghnJFbW73kYWSOGtRRaUIoP4JamtEj6PnNvwEqu
+ eNTyMvYRx5AJoqcZIuK8H0X72khuVADHxwB90dObjOBFrQNXmjxc9lVDhcrGjdEoaMDLefa0m2E
+ fnM2TdI5IhfI9mjcwIV7XVtlj0UpDBbqRt4ICb+kZclM9ezI0sl9d9MRvRQ4yvarBAyzNpuh5iP
+ WJgkdZFlzHQzvlH5/zyVbtVj6fhF8iGV/BYVD+m2En4UHERaTpmYiKXKCKk240LGxUV2spZY3qR
+ Oy3L+kB6vnM7MTvQYIWn3HStDtNQlc0gxQchDSn4+4sHsFN5BpMguhDL/i4oclpLN/HaAFDMn/S
+ XDIX5SDT+taWgng==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reduce the code complexity by using automatic lock guards with the raw
-spinlock.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-bcm-kona.c | 64 +++++++++++++-------------------------------
- 1 file changed, 18 insertions(+), 46 deletions(-)
+ drivers/gpio/gpio-bd71815.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index 64908f1a5e7f..a7390b1f1173 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -7,6 +7,7 @@
-  */
+diff --git a/drivers/gpio/gpio-bd71815.c b/drivers/gpio/gpio-bd71815.c
+index 08ff2857256f..36701500925e 100644
+--- a/drivers/gpio/gpio-bd71815.c
++++ b/drivers/gpio/gpio-bd71815.c
+@@ -37,21 +37,18 @@ static int bd71815gpo_get(struct gpio_chip *chip, unsigned int offset)
+ 	return (val >> offset) & 1;
+ }
  
- #include <linux/bitops.h>
-+#include <linux/cleanup.h>
- #include <linux/err.h>
- #include <linux/gpio/driver.h>
- #include <linux/init.h>
-@@ -100,7 +101,6 @@ static void bcm_kona_gpio_lock_gpio(struct bcm_kona_gpio *kona_gpio,
- 					unsigned gpio)
+-static void bd71815gpo_set(struct gpio_chip *chip, unsigned int offset,
+-			   int value)
++static int bd71815gpo_set(struct gpio_chip *chip, unsigned int offset,
++			  int value)
  {
- 	u32 val;
--	unsigned long flags;
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	struct bcm_kona_gpio_bank *bank = &kona_gpio->banks[bank_id];
-@@ -112,13 +112,11 @@ static void bcm_kona_gpio_lock_gpio(struct bcm_kona_gpio *kona_gpio,
- 	}
+ 	struct bd71815_gpio *bd71815 = gpiochip_get_data(chip);
+-	int ret, bit;
++	int bit;
  
- 	if (--bank->gpio_unlock_count[bit] == 0) {
--		raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+		guard(raw_spinlock_irqsave)(&kona_gpio->lock);
+ 	bit = BIT(offset);
  
- 		val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
- 		val |= BIT(bit);
- 		bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, val);
--
--		raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
- 	}
+ 	if (value)
+-		ret = regmap_set_bits(bd71815->regmap, BD71815_REG_GPO, bit);
+-	else
+-		ret = regmap_clear_bits(bd71815->regmap, BD71815_REG_GPO, bit);
++		return regmap_set_bits(bd71815->regmap, BD71815_REG_GPO, bit);
+ 
+-	if (ret)
+-		dev_warn(bd71815->dev, "failed to toggle GPO\n");
++	return regmap_clear_bits(bd71815->regmap, BD71815_REG_GPO, bit);
  }
  
-@@ -126,19 +124,16 @@ static void bcm_kona_gpio_unlock_gpio(struct bcm_kona_gpio *kona_gpio,
- 					unsigned gpio)
- {
- 	u32 val;
--	unsigned long flags;
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	struct bcm_kona_gpio_bank *bank = &kona_gpio->banks[bank_id];
- 
- 	if (bank->gpio_unlock_count[bit] == 0) {
--		raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+		guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 		val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
- 		val &= ~BIT(bit);
- 		bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, val);
--
--		raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
- 	}
- 
- 	++bank->gpio_unlock_count[bit];
-@@ -161,24 +156,21 @@ static void bcm_kona_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	u32 val, reg_offset;
--	unsigned long flags;
- 
- 	kona_gpio = gpiochip_get_data(chip);
- 	reg_base = kona_gpio->reg_base;
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	/* this function only applies to output pin */
- 	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
--		goto out;
-+		return;
- 
- 	reg_offset = value ? GPIO_OUT_SET(bank_id) : GPIO_OUT_CLEAR(bank_id);
- 
- 	val = readl(reg_base + reg_offset);
- 	val |= BIT(bit);
- 	writel(val, reg_base + reg_offset);
--
--out:
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
- }
- 
- static int bcm_kona_gpio_get(struct gpio_chip *chip, unsigned gpio)
-@@ -188,11 +180,11 @@ static int bcm_kona_gpio_get(struct gpio_chip *chip, unsigned gpio)
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	u32 val, reg_offset;
--	unsigned long flags;
- 
- 	kona_gpio = gpiochip_get_data(chip);
- 	reg_base = kona_gpio->reg_base;
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	if (bcm_kona_gpio_get_dir(chip, gpio) == GPIO_LINE_DIRECTION_IN)
- 		reg_offset = GPIO_IN_STATUS(bank_id);
-@@ -202,8 +194,6 @@ static int bcm_kona_gpio_get(struct gpio_chip *chip, unsigned gpio)
- 	/* read the GPIO bank status */
- 	val = readl(reg_base + reg_offset);
- 
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
--
- 	/* return the specified bit status */
- 	return !!(val & BIT(bit));
- }
-@@ -228,19 +218,17 @@ static int bcm_kona_gpio_direction_input(struct gpio_chip *chip, unsigned gpio)
- 	struct bcm_kona_gpio *kona_gpio;
- 	void __iomem *reg_base;
- 	u32 val;
--	unsigned long flags;
- 
- 	kona_gpio = gpiochip_get_data(chip);
- 	reg_base = kona_gpio->reg_base;
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	val = readl(reg_base + GPIO_CONTROL(gpio));
- 	val &= ~GPIO_GPCTR0_IOTR_MASK;
- 	val |= GPIO_GPCTR0_IOTR_CMD_INPUT;
- 	writel(val, reg_base + GPIO_CONTROL(gpio));
- 
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
--
- 	return 0;
- }
- 
-@@ -252,11 +240,11 @@ static int bcm_kona_gpio_direction_output(struct gpio_chip *chip,
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	u32 val, reg_offset;
--	unsigned long flags;
- 
- 	kona_gpio = gpiochip_get_data(chip);
- 	reg_base = kona_gpio->reg_base;
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	val = readl(reg_base + GPIO_CONTROL(gpio));
- 	val &= ~GPIO_GPCTR0_IOTR_MASK;
-@@ -268,8 +256,6 @@ static int bcm_kona_gpio_direction_output(struct gpio_chip *chip,
- 	val |= BIT(bit);
- 	writel(val, reg_base + reg_offset);
- 
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
--
- 	return 0;
- }
- 
-@@ -289,7 +275,6 @@ static int bcm_kona_gpio_set_debounce(struct gpio_chip *chip, unsigned gpio,
- 	struct bcm_kona_gpio *kona_gpio;
- 	void __iomem *reg_base;
- 	u32 val, res;
--	unsigned long flags;
- 
- 	kona_gpio = gpiochip_get_data(chip);
- 	reg_base = kona_gpio->reg_base;
-@@ -312,7 +297,7 @@ static int bcm_kona_gpio_set_debounce(struct gpio_chip *chip, unsigned gpio,
- 	}
- 
- 	/* spin lock for read-modify-write of the GPIO register */
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	val = readl(reg_base + GPIO_CONTROL(gpio));
- 	val &= ~GPIO_GPCTR0_DBR_MASK;
-@@ -327,8 +312,6 @@ static int bcm_kona_gpio_set_debounce(struct gpio_chip *chip, unsigned gpio,
- 
- 	writel(val, reg_base + GPIO_CONTROL(gpio));
- 
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
--
- 	return 0;
- }
- 
-@@ -367,17 +350,15 @@ static void bcm_kona_gpio_irq_ack(struct irq_data *d)
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	u32 val;
--	unsigned long flags;
- 
- 	kona_gpio = irq_data_get_irq_chip_data(d);
- 	reg_base = kona_gpio->reg_base;
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	val = readl(reg_base + GPIO_INT_STATUS(bank_id));
- 	val |= BIT(bit);
- 	writel(val, reg_base + GPIO_INT_STATUS(bank_id));
--
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
- }
- 
- static void bcm_kona_gpio_irq_mask(struct irq_data *d)
-@@ -388,19 +369,16 @@ static void bcm_kona_gpio_irq_mask(struct irq_data *d)
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	u32 val;
--	unsigned long flags;
- 
- 	kona_gpio = irq_data_get_irq_chip_data(d);
- 	reg_base = kona_gpio->reg_base;
- 
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	val = readl(reg_base + GPIO_INT_MASK(bank_id));
- 	val |= BIT(bit);
- 	writel(val, reg_base + GPIO_INT_MASK(bank_id));
- 	gpiochip_disable_irq(&kona_gpio->gpio_chip, gpio);
--
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
- }
- 
- static void bcm_kona_gpio_irq_unmask(struct irq_data *d)
-@@ -411,19 +389,16 @@ static void bcm_kona_gpio_irq_unmask(struct irq_data *d)
- 	int bank_id = GPIO_BANK(gpio);
- 	int bit = GPIO_BIT(gpio);
- 	u32 val;
--	unsigned long flags;
- 
- 	kona_gpio = irq_data_get_irq_chip_data(d);
- 	reg_base = kona_gpio->reg_base;
- 
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	val = readl(reg_base + GPIO_INT_MSKCLR(bank_id));
- 	val |= BIT(bit);
- 	writel(val, reg_base + GPIO_INT_MSKCLR(bank_id));
- 	gpiochip_enable_irq(&kona_gpio->gpio_chip, gpio);
--
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
- }
- 
- static int bcm_kona_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-@@ -433,7 +408,6 @@ static int bcm_kona_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	unsigned gpio = d->hwirq;
- 	u32 lvl_type;
- 	u32 val;
--	unsigned long flags;
- 
- 	kona_gpio = irq_data_get_irq_chip_data(d);
- 	reg_base = kona_gpio->reg_base;
-@@ -459,15 +433,13 @@ static int bcm_kona_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 		return -EINVAL;
- 	}
- 
--	raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&kona_gpio->lock);
- 
- 	val = readl(reg_base + GPIO_CONTROL(gpio));
- 	val &= ~GPIO_GPCTR0_ITR_MASK;
- 	val |= lvl_type << GPIO_GPCTR0_ITR_SHIFT;
- 	writel(val, reg_base + GPIO_CONTROL(gpio));
- 
--	raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
--
- 	return 0;
- }
- 
+ static int bd71815_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+@@ -88,7 +85,7 @@ static const struct gpio_chip bd71815gpo_chip = {
+ 	.owner			= THIS_MODULE,
+ 	.get			= bd71815gpo_get,
+ 	.get_direction		= bd71815gpo_direction_get,
+-	.set			= bd71815gpo_set,
++	.set_rv			= bd71815gpo_set,
+ 	.set_config		= bd71815_gpio_set_config,
+ 	.can_sleep		= true,
+ };
 
 -- 
 2.45.2
