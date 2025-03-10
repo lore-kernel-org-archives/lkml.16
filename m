@@ -1,73 +1,34 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from air.basealt.ru (air.basealt.ru [193.43.8.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C34380;
-	Mon, 10 Mar 2025 09:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0412236F4
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.43.8.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741597504; cv=none; b=byM3/6Wo+pNsq+Cpeo74MnMbfhh027ICKbBXdDZRRYTcDT2loS8pE3DglHdMwje13iBLMHF3+1jzjHq/ql1K/aez/o6Ak1QaYBHzz9L41h8aSrPNyHvc7rCxM5/sX4NW7pREU6JL+1LpNFxLd0RNcVPpyvXvWQYooFmzGqcbU+c=
+	t=1741597507; cv=none; b=gxxfCC+DPFkqbpggZ4VUJYVcMe03C/FLHfjB7SqLrWi4fR7oEhvMH33Af4irz5ifLkFIiDUuOQfloWXkK0qQ7pUgTvXO+LrRisfTzr+PwHlrICOtAoecQ6MIg7IPs0uP6fiMvkdtafIpBYwvBwKTs0xCCqhnVqQ6sQPeTD2eYpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741597504; c=relaxed/simple;
-	bh=9e4H2rOnPYGPDm/9KeG8ykhPaoW+GmadYPr+uX/QnW0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fFeeIAX3Z7M0s/d46sAVlnkSnpZDfX1PI9zvCgMiNMA0YTDYZ+eBL8aN+v9QoCSp8QFk9cEoW62ztHI8NSd5geneWQNdh3ii/lc5L9eO35cgD6bmxpLfOglHzMOU4M8foqxiQgReJtjjqo+xBR1L9E45tr4PX6Ek9tKPh/VLPtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dBU5GcSk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dBU5GcSk"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 529LDiLj013127;
-	Mon, 10 Mar 2025 09:04:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/y3ccLGRS28rbxxS8x8ptTcuQEA4QZ6Z9IHOOS7Jtj0=; b=dBU5GcSkVasDyJxG
-	iIXVFoftvoQLIGg0srMZe1xG+kTM5vbY3UXB2Wxl2mVfe+TTFgRc14zO9yveey9k
-	AKnnD+xXcxZaz5mfPh8N57mlyqOf/Hg1Yy6TDtPht36kfhyGMlG2yoiGmFiygCq+
-	4uRsRb37m/NBw5ths8blzuLpjXgLGVgFirFXJ1T3l4gryx4r7xwfIk0qvzRCdQbR
-	2aqduWT90FHfccVxKulXym0pEO6YIpCLtRNXzmjW7LyhUm2oK3N6x+6ZmxCgPSp8
-	LhQsr5NHdb2PwcWQWCJmuxegzunvOeJ5Oc7zWQo2bzJOkAQ+bQWvc6ACb2Kc10g8
-	gLCtZQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f0w4869-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 09:04:39 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52A94ccn024865
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 09:04:38 GMT
-Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 10 Mar 2025 02:04:33 -0700
-From: Jie Gan <quic_jiegan@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v1 1/4] coresight: tmc: Introduce new APIs to get the RWP offset of ETR buffer
-Date: Mon, 10 Mar 2025 17:04:04 +0800
-Message-ID: <20250310090407.2069489-2-quic_jiegan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310090407.2069489-1-quic_jiegan@quicinc.com>
-References: <20250310090407.2069489-1-quic_jiegan@quicinc.com>
+	s=arc-20240116; t=1741597507; c=relaxed/simple;
+	bh=w3BR6QPDy9hnL6s+qjUkpTKXrUYFLvXNgLVLn6KL2M4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tIIv4xuLZsYmThp/o7ymGUzuWwBRpMYEhsrV/7EN6MwFz1m0AuRZzFX4SZd1wdJKf2xxn+wCVxEqHkt38yL5GT+4MG1OvHzjXjG0iHBPKINOBgmxsmzrxgft32xAkY5g3a1xzr8eTxipK/sFP3SNh3OAYVCFfDZXAlO9fVha8MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=193.43.8.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
+	(Authenticated sender: kovalevvv)
+	by air.basealt.ru (Postfix) with ESMTPSA id C5D8123374;
+	Mon, 10 Mar 2025 11:56:02 +0300 (MSK)
+From: Vasiliy Kovalev <kovalev@altlinux.org>
+To: Dave Kleikamp <shaggy@kernel.org>,
+	Edward Adam Davis <eadavis@qq.com>,
+	Rand Deeb <rand.sec96@gmail.com>,
+	jfs-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Cc: lvc-project@linuxtesting.org,
+	kovalev@altlinux.org
+Subject: [PATCH] jfs: validate AG parameters in dbMount() to prevent crashes
+Date: Mon, 10 Mar 2025 11:56:02 +0300
+Message-Id: <20250310085602.953206-1-kovalev@altlinux.org>
+X-Mailer: git-send-email 2.33.8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,97 +36,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: wFn8xYvhJG6QyQN_corUmwD4YwxRiQIf
-X-Proofpoint-GUID: wFn8xYvhJG6QyQN_corUmwD4YwxRiQIf
-X-Authority-Analysis: v=2.4 cv=MICamNZl c=1 sm=1 tr=0 ts=67ceab27 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=NC6d20HEQiqhJ-MTNCwA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_03,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=576 lowpriorityscore=0 phishscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100071
 
-The new functions calculate and return the offset to the write pointer of
-the ETR buffer based on whether the memory mode is SG, flat or reserved.
-The functions have the RWP offset can directly read data from ETR buffer,
-enabling the transfer of data to any required location.
+Validate db_agheight, db_agwidth, and db_agstart in dbMount to catch
+corrupted metadata early and avoid undefined behavior in dbAllocAG.
+Limits are derived from L2LPERCTL, LPERCTL/MAXAG, and CTLTREESIZE:
 
-Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+- agheight: 0 to L2LPERCTL/2 (0 to 5) ensures shift
+  (L2LPERCTL - 2*agheight) >= 0.
+- agwidth: 1 to min(LPERCTL/MAXAG, 2^(L2LPERCTL - 2*agheight))
+  ensures agperlev >= 1.
+  - Ranges: 1-8 (agheight 0-3), 1-4 (agheight 4), 1 (agheight 5).
+  - LPERCTL/MAXAG = 1024/128 = 8 limits leaves per AG;
+    2^(10 - 2*agheight) prevents division to 0.
+- agstart: 0 to CTLTREESIZE-1 - agwidth*(MAXAG-1) keeps ti within
+  stree (size 1365).
+  - Ranges: 0-1237 (agwidth 1), 0-348 (agwidth 8).
+
+UBSAN: shift-out-of-bounds in fs/jfs/jfs_dmap.c:1400:9
+shift exponent -335544310 is negative
+CPU: 0 UID: 0 PID: 5822 Comm: syz-executor130 Not tainted 6.14.0-rc5-syzkaller #0
+Hardware name: Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
+ dbAllocAG+0x1087/0x10b0 fs/jfs/jfs_dmap.c:1400
+ dbDiscardAG+0x352/0xa20 fs/jfs/jfs_dmap.c:1613
+ jfs_ioc_trim+0x45a/0x6b0 fs/jfs/jfs_discard.c:105
+ jfs_ioctl+0x2cd/0x3e0 fs/jfs/ioctl.c:131
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+
+Cc: stable@vger.kernel.org
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+fe8264911355151c487f@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=fe8264911355151c487f
+Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
 ---
- .../hwtracing/coresight/coresight-tmc-etr.c   | 40 +++++++++++++++++++
- drivers/hwtracing/coresight/coresight-tmc.h   |  1 +
- 2 files changed, 41 insertions(+)
+ fs/jfs/jfs_dmap.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index eda7cdad0e2b..ec636ab1fd75 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -267,6 +267,46 @@ void tmc_free_sg_table(struct tmc_sg_table *sg_table)
- }
- EXPORT_SYMBOL_GPL(tmc_free_sg_table);
- 
-+static long tmc_flat_resrv_get_rwp_offset(struct tmc_drvdata *drvdata)
-+{
-+	dma_addr_t paddr = drvdata->sysfs_buf->hwaddr;
-+	u64 rwp;
-+
-+	rwp = tmc_read_rwp(drvdata);
-+	return rwp - paddr;
-+}
-+
-+static long tmc_sg_get_rwp_offset(struct tmc_drvdata *drvdata)
-+{
-+	struct etr_buf *etr_buf = drvdata->sysfs_buf;
-+	struct etr_sg_table *etr_table = etr_buf->private;
-+	struct tmc_sg_table *table = etr_table->sg_table;
-+	long w_offset;
-+	u64 rwp;
-+
-+	rwp = tmc_read_rwp(drvdata);
-+	w_offset = tmc_sg_get_data_page_offset(table, rwp);
-+
-+	return w_offset;
-+}
-+
-+/*
-+ * Retrieve the offset to the write pointer of the ETR buffer based on whether
-+ * the memory mode is SG, flat or reserved.
-+ */
-+long tmc_get_rwp_offset(struct tmc_drvdata *drvdata)
-+{
-+	struct etr_buf *etr_buf = drvdata->sysfs_buf;
-+
-+	if (etr_buf->mode == ETR_MODE_ETR_SG)
-+		return tmc_sg_get_rwp_offset(drvdata);
-+	else if (etr_buf->mode == ETR_MODE_FLAT || etr_buf->mode == ETR_MODE_RESRV)
-+		return tmc_flat_resrv_get_rwp_offset(drvdata);
-+	else
-+		return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(tmc_get_rwp_offset);
-+
- /*
-  * Alloc pages for the table. Since this will be used by the device,
-  * allocate the pages closer to the device (i.e, dev_to_node(dev)
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-index b48bc9a01cc0..baedb4dcfc3f 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.h
-+++ b/drivers/hwtracing/coresight/coresight-tmc.h
-@@ -442,5 +442,6 @@ void tmc_etr_remove_catu_ops(void);
- struct etr_buf *tmc_etr_get_buffer(struct coresight_device *csdev,
- 				   enum cs_mode mode, void *data);
- extern const struct attribute_group coresight_etr_group;
-+long tmc_get_rwp_offset(struct tmc_drvdata *drvdata);
- 
- #endif
+diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
+index 26e89d0c69b61..cfb21f15f5971 100644
+--- a/fs/jfs/jfs_dmap.c
++++ b/fs/jfs/jfs_dmap.c
+@@ -194,7 +194,11 @@ int dbMount(struct inode *ipbmap)
+ 	    !bmp->db_numag || (bmp->db_numag > MAXAG) ||
+ 	    (bmp->db_maxag >= MAXAG) || (bmp->db_maxag < 0) ||
+ 	    (bmp->db_agpref >= MAXAG) || (bmp->db_agpref < 0) ||
+-	    !bmp->db_agwidth ||
++	    bmp->db_agheight < 0 || bmp->db_agheight > (L2LPERCTL >> 1) ||
++	    bmp->db_agwidth < 1 || bmp->db_agwidth > (LPERCTL / MAXAG) ||
++	    bmp->db_agwidth > (1 << (L2LPERCTL - (bmp->db_agheight << 1))) ||
++	    bmp->db_agstart < 0 || bmp->db_agstart >
++	    (CTLTREESIZE - 1 - bmp->db_agwidth * (MAXAG - 1)) ||
+ 	    (bmp->db_agl2size > L2MAXL2SIZE - L2MAXAG) ||
+ 	    (bmp->db_agl2size < 0) ||
+ 	    ((bmp->db_mapsize - 1) >> bmp->db_agl2size) > MAXAG) {
 -- 
-2.34.1
+2.42.2
 
