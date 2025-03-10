@@ -1,117 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B1D822A4EF;
-	Mon, 10 Mar 2025 14:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F8622A4EF;
+	Mon, 10 Mar 2025 14:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741618605; cv=none; b=J3TLlyn0HJgyNOxmDsZhhCX1riJUjlcmCuKzhl6Z4+ubmKDf4EJHLM6xB2RG/BNjPzNKxg1f1CFAW58/npTPTreOG3mBmnsP+cqsebrOzn1yOhzMTJyIesbzc8BNQR/iDUHppjxw5Z7JpNyMFQti6FDOvy/Sv9nZhzlIZ4wKsos=
+	t=1741618683; cv=none; b=bH5dmlWzJ6c7pnDQeaZvTkc8DLXYaU8A6sk+ai47fjeBym0bHueGn71UuwDT7vdzP051kS6rEkwmy3639Ibdp9+EocIUYw+XlcnZQ1SQYhxw2rBSKwXEPL4u5gcnIFWELNewbmZ7zT5bLxdc1SXgy+QLXDWZqCnGuxnhXECPBWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741618605; c=relaxed/simple;
-	bh=dQqnv6mgf3IwDlnwbZwTB6OKAFN6Up7tjfQY+73RYCo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X/3cCAxOCUITw8fAOPp3YQC+7YRnWwpoPpZEQ+UDuvx0xvQieNOKbe5wJJOSgwtv0W56Mpb3Ic7JF5gLC5EtNEKiZAJw2KQ5LOs3pe0RvU07loR45WbxripIeega5qnaiQcKpZplNYq4EzqN+0yNpKyy/S8hpxOxd7hlp9rd8J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C18D226BC;
-	Mon, 10 Mar 2025 07:56:54 -0700 (PDT)
-Received: from [10.57.39.174] (unknown [10.57.39.174])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0B203F5A1;
-	Mon, 10 Mar 2025 07:56:39 -0700 (PDT)
-Message-ID: <2af9ea85-b31d-49c9-b574-38c33cc89cef@arm.com>
-Date: Mon, 10 Mar 2025 14:56:37 +0000
+	s=arc-20240116; t=1741618683; c=relaxed/simple;
+	bh=nKeMJqcXOybsOCtgidoWKKriWWEU+V6EOHzym+y4Rww=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=DI5NRNNiSyI5apSHMrY/SRGypHvlx01noBVhKU6HFxvX8Tyd03jqeXaE1tEInuYQKAhCCdIBW/G73IzHiSmWO/ycT06Ddzvjst1JPQsr5WhfSqVwzKFtu0IwvhBQN9NXAYbEOmTZNEx51xLOikoPSjT6io4P/cXNV7wel1qsBaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0zYmuTP; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0zYmuTP"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-523eb86b31aso1118864e0c.0;
+        Mon, 10 Mar 2025 07:58:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741618680; x=1742223480; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xrdG1fpL5CikYynfNpId4ukhi3X0kK30B2xjj7IytkY=;
+        b=j0zYmuTPA7YB/7EwdNN8EXYtfOGUCAhBvk6VPeI5+43BmyZKhiO53U96xS34hQwPcP
+         KqkDJ5PifJSUvAIn3TGlsG5wljKwhXRXTe+Oj16FKqaY1OG3q0jkBKGxRxTV5COY9soq
+         FhwkQSousFprxy7uMyTqG0RY7Con0PCac/r8cLy3zXcDl/zhG5paSaFgf6Dn6zlIsaPv
+         bPjrju4M+fp3UCvzawkF4HdJN34sc/JGxcPttugw8r6a9Au2xtHqmy+75sZPFl+EixCs
+         1mv+f0UcOlUILtPWZsXHjFPFk9LaLuv71YUP9JsFyRcv+7S/QSyXbJwrKiMzOTvXMShK
+         Xr1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741618680; x=1742223480;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xrdG1fpL5CikYynfNpId4ukhi3X0kK30B2xjj7IytkY=;
+        b=CEJwLfTQE7iHJJTTL4gWWZ9YEWt6bgRNgbCDlwnRYKm9xpmwXeTEf+O8eLI6i/iiYK
+         yvKfX0L5cXtpysvW01H8RNXhiF3uf5SxMs7n+ToTLNTtK81ccD1wAwtogkQgzxW4LmQV
+         hE3M/DkKcsu6syGE6D/h71Xrg1CZSiYoLSytEbubB6Aic6Nnem2zhhU101m8N8HyBNkY
+         5XISmhO6xk2upxcXJqfkbhGo0rb1THtkbDMeoIHW7MfC6PigCjmeGg0eKe8nJ1Xr08d6
+         UUNw96S+SroP2YJTVVklxrO7oXmJBgA/H6DdNkElydrW3dzD28T+rbMc44ETIkiBX5JF
+         ARWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGNu2QH0mpOamgMtSfai4QJPBmRDbtViOa4G6wcDUQEjdlqUe3OXnmDqRI7ZTcfCQU9Bqq/7Ob+Z2iA3dCt4edIZ5Btw==@vger.kernel.org, AJvYcCXNjdh9w4OfZk3xXlwphKZBZhF7ab72Sy9KGUKPMdBn9pQpVmVve+1PQshieldAGmwza9L3Uhl4gA35wyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6pGt2LQb3eGmPstQJuZDu93bZnRPG6FKnpfZQ2Wx3g+cLwUjZ
+	A5+xOtM3xtkSFUBx8ywOLy3Q4ZQxLKTyO913St6zOaKCI105odOW36H7YTuq
+X-Gm-Gg: ASbGncv6tVi2TSssQjMZ9d+1xlWVH61Q93/oDnMD+4840Uiai9XbWth0SGJfEbWMS1t
+	GpEkA1hNO7a8agvXyvL4zoDdytzxeMnONbeYhidhkdcY2HHyg2kcWWZ8T04GFU7kzA0G0sMCQCN
+	QQn6OP7/cWTQ7CBfQ3Aqbor4KNSMVPtFGjsW3xPvuMEOq4+ROw2a7iaLfDSDaKb6/2OYlK0uUNq
+	1ELYXpgG1jq32j0+HhKjyO9I79A3iPwlMVBWz1hqUqWakgeOTMEw55lJO1ZhP2s3oC15ySeA+Zx
+	z7YnW1An4e+fg2GvPvhvgmZd3z5yWOQQ4V6d
+X-Google-Smtp-Source: AGHT+IHUDZIuIbHcr33yulbymoIlv7q2VlkrSuz2EsmPrJWcWsAcy1tmH7sM08Qnglzp4x9fp1DZ5g==
+X-Received: by 2002:a05:6122:3191:b0:520:61ee:c815 with SMTP id 71dfb90a1353d-523e4188194mr7105607e0c.10.1741618680357;
+        Mon, 10 Mar 2025 07:58:00 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-523d8ac3266sm1490598e0c.15.2025.03.10.07.57.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Mar 2025 07:57:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 06/12] dma: direct: Provide accessor to dmem region
-To: Maxime Ripard <mripard@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T.J. Mercier" <tjmercier@google.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Tomasz Figa <tfiga@chromium.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org
-References: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
- <20250310-dmem-cgroups-v1-6-2984c1bc9312@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250310-dmem-cgroups-v1-6-2984c1bc9312@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 10 Mar 2025 09:57:57 -0500
+Message-Id: <D8COAMZV0RBJ.1C66Q3AVETTD8@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ <platform-driver-x86@vger.kernel.org>, "LKML"
+ <linux-kernel@vger.kernel.org>, "kernel test robot" <lkp@intel.com>
+Subject: Re: [PATCH] platform/x86: dell: Fix ALIENWARE_WMI dependencies
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250309-dell-kconfig-fix-v1-1-38a2308d0ac6@gmail.com>
+ <8d219429-b13f-2610-960e-58851d53696f@linux.intel.com>
+In-Reply-To: <8d219429-b13f-2610-960e-58851d53696f@linux.intel.com>
 
-On 2025-03-10 12:06 pm, Maxime Ripard wrote:
-> Consumers of the direct DMA API will have to know which region their
-> device allocate from in order for them to charge the memory allocation
-> in the right one.
+Hi Ilpo,
 
-This doesn't seem to make much sense - dma-direct is not an allocator 
-itself, it just provides the high-level 
-dma_alloc_attrs/dma_alloc_pages/etc. interfaces wherein the underlying 
-allocations _could_ come from CMA, but also a per-device 
-coherent/restricted pool, or a global coherent/atomic pool, or the 
-regular page allocator, or in one weird corner case the SWIOTLB buffer, 
-or...
+On Mon Mar 10, 2025 at 9:29 AM -05, Ilpo J=C3=A4rvinen wrote:
+> On Sun, 9 Mar 2025, Kurt Borja wrote:
+>
+>> If ACPI_PLATFORM_PROFILE is selected by ALIENWARE_WMI_WMAX, the former
+>> is forced to be at least =3Dm, because the latter is a bool.
+>>=20
+>> This allows the following config:
+>>=20
+>> 	CONFIG_ALIENWARE_WMI=3Dy
+>> 	CONFIG_ACPI_PLATFORM_PROFILE=3Dm
+>
+> Hi,
+>
+> selecting from =3Dy should not result in =3Dm for the other symbol. This =
+is=20
+> a bug in Kconfig infrastructure.
+>
+> I ran across this a few years back and even had a test case to prove the=
+=20
+> select bug but back then the original problem eventually was solved in a=
+=20
+> different way which no longer hit the problem. I never could figure out
+> how to fix the kconfig logic though without breaking something and it=20
+> ended up into low priority bin and never got solved.
+>
+> Sadly, it seems I've lost the test case patch that exhibits the bug=20
+> somewhere... I'll try to look for it from my archived files.
 
-Thanks,
-Robin.
+That's funny.
 
-> Let's provide an accessor for that region.
-> 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->   include/linux/dma-direct.h | 2 ++
->   kernel/dma/direct.c        | 8 ++++++++
->   2 files changed, 10 insertions(+)
-> 
-> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-> index d7e30d4f7503a898a456df8eedf6a2cd284c35ff..2dd7cbccfaeed81c18c67aae877417fe89f2f2f5 100644
-> --- a/include/linux/dma-direct.h
-> +++ b/include/linux/dma-direct.h
-> @@ -145,6 +145,8 @@ void dma_direct_free_pages(struct device *dev, size_t size,
->   		enum dma_data_direction dir);
->   int dma_direct_supported(struct device *dev, u64 mask);
->   dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
->   		size_t size, enum dma_data_direction dir, unsigned long attrs);
->   
-> +struct dmem_cgroup_region *dma_direct_get_dmem_cgroup_region(struct device *dev);
-> +
->   #endif /* _LINUX_DMA_DIRECT_H */
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 5b4e6d3bf7bcca8930877ba078aed4ce26828f06..ece1361077b6efeec5b202d838750afd967d473f 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -42,10 +42,18 @@ u64 dma_direct_get_required_mask(struct device *dev)
->   	u64 max_dma = phys_to_dma_direct(dev, phys);
->   
->   	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
->   }
->   
-> +#if IS_ENABLED(CONFIG_CGROUP_DMEM)
-> +struct dmem_cgroup_region *
-> +dma_direct_get_dmem_cgroup_region(struct device *dev)
-> +{
-> +	return dma_contiguous_get_dmem_cgroup_region(dev);
-> +}
-> +#endif
-> +
->   static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 *phys_limit)
->   {
->   	u64 dma_limit = min_not_zero(
->   		dev->coherent_dma_mask,
->   		dev->bus_dma_limit);
-> 
+I thought this was a Kconfig quirk, that resulted from the following
+hierarchy:
 
+Type		0	1	2
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D =3D=3D=
+=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D
+Bool		n	y
+Tristate	n	m	y
+
+So a <bool> selecting the <tristate> would force it to be at least =3Dm.
+
+The same thing happens with depend, where a dependecy would be fulfilled
+for a <bool> if a <tristate> was at least =3Dm. That's why in the kernel
+robot report the linking error was also due to the HWMON dependency.
+
+Anyway, this patch could serve as a workaround if you feel it's
+necessary. I'm going to put the HWMON dependecy in the ALIENWARE_WMI
+symbol for my other series.
+
+--=20
+ ~ Kurt
