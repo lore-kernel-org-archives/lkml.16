@@ -1,85 +1,136 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47421E22E6;
-	Mon, 10 Mar 2025 21:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE36F1E22E9;
+	Mon, 10 Mar 2025 21:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741641185; cv=none; b=ruvarS258cgyn7fcdEWVwZtrQB48ft3Pg6qdWgtaWAeSTHPSmmzoW+4PoHkdGHqqdoHpw/vbvuZxzGYBzwdRENXlG45Qriz5DHeobpzl1Nd5Wg/Ke0O9/cPRODAtQ8vV0M+c8nad2fO49yGytfLMJHrMliqTE3HDPWGxsJHicmE=
+	t=1741641186; cv=none; b=MJBf6Jxk3IWyZEW+kT+2u2kGgSe6ldTM39GgdB3dbGd8Ty7b29ZIOldWNxQwmtsULgBzS9NFO8xB8iHuVVQFjfQ/INepePq3z86/v5lf1eQluEVsjRSGvX8OTF3+YApDPp5fTvyQuabRKbGzz+DPLUiDVKYmez5/mue+LF2l8xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741641185; c=relaxed/simple;
-	bh=+Kv/6kjMA/uFZCgoFF2u5xmnuCS9pwMnmJLH8opwzfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=n6AvkYDO+b4tHbbIoL41GlolGIixroJZs6AciX7KxPR9BaPIwpL0pyCzWcmF+u7jgdJ6XLJevR/M6pJj7s9IIkANke4VD6YhVnKr7Gp6paeNa4ihA21/Y7sxIe/bGHrQ5FlbhBV04DLfH6pM3eIvs+XfyTvAWNFBm1frf1F/Jz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CzUGMiJ2; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1741641186; c=relaxed/simple;
+	bh=hcUiz3N63DAeb6G8U7Zwr9NHM1rpXGXDIG5fA5OuPRw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=ptnGqKWnaJOmgAqi3c0y9IDM5mwEV6dy2Ue76nMh+GTORK4Dn13sF9zBMCJrQQpRl99PK6wA6tLuwkTSG+vdhDyGiCIWeUnNCk3mXQD2uQPVrCrRghIG8Yqt/EFXXm0pWz8Ioec7MujdlTb/mrZpIToYiYpTcd0I3VyqJD5pOoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ml2fik4n; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CzUGMiJ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1741641181;
-	bh=wP7pYElV020dzStrLF11BHJwsXoWPu24x/+zB8gtJUg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=CzUGMiJ2RhhgZ2jLOHxC8C39RP8E7MbWkAN+UmXzyrlhf4NrOTceP9yurzpUmkiNK
-	 +U7t0kE+ecPpmSngliFWluR32+4XCBRH/xDUENbp4iqmFR5ltL3gEvTQXnoQxEGNnT
-	 c6YdKYuuly6BJ4bmrHCPsdZIu7hud00DOBdElz8o3WPuWZuHcKSvtcY5xa4TZZgdcj
-	 RhUpoBGdWDmA6UTd+tnr2cH9GN5u3b4kg+Z0cjAdUznYxSrzLguuI9A6WVxmnKVeqm
-	 ys4LPNK4gJrLyMWosmljhoF1IiOP4kPR6vVgEQ1wA7CgS5E81+Gh5ZYmAuY92wN/g6
-	 rCLjv4bkxEItA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZBV3d5HrJz4x3p;
-	Tue, 11 Mar 2025 08:13:01 +1100 (AEDT)
-Date: Tue, 11 Mar 2025 08:13:01 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker
- <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Boqun
- Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the rcu tree
-Message-ID: <20250311081301.6a22ab25@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ml2fik4n"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52AL2tk2025411;
+	Mon, 10 Mar 2025 21:12:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cLpARsczquAdLgsj/FcLjU2y3YWSnAoledfDtctwhsg=; b=Ml2fik4nhG+gXZem
+	nfWJG3fdryXpsJoIhi0d8ORtxMpaCpvS4+uc1w2Gmzt8hJNC49atmb+IERDire6G
+	XFKD8/0H/DQCAW1Fe3s/miNA7HI3Wy1bEaUAJoWmOrLXIAnKkiMeuTaYZJJsSSkR
+	oxoyPVTYE23HbKe5dImUJ6BSMayUiobdtmQnnI5Tz9DfKFvjEz2++R2V01fYug9/
+	w0RnE6ZLCoxNQ8o1cFyqoV5mcIqtEcdfThYAr1s4/iTTrUGAGTFmP+ziEG+0Hsan
+	XZ7r6Hz0dT78essfha9Mlm72H8oWjIcXSBUD+SQm3jXa0qpf71dfwAqAfGHXw+a2
+	cwTYjA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458ex6x70r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 21:12:42 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52ALCgIn030237
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 21:12:42 GMT
+Received: from hu-molvera-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 10 Mar 2025 14:12:41 -0700
+From: Melody Olvera <quic_molvera@quicinc.com>
+Date: Mon, 10 Mar 2025 14:12:29 -0700
+Subject: [PATCH v2 1/6] dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy:
+ document the SM8750 QMP UFS PHY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sk9dF9WeMSb1MTQ+m.X3fMj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250310-sm8750_ufs_master-v2-1-0dfdd6823161@quicinc.com>
+References: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
+In-Reply-To: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Nitin Rawat <quic_nitirawa@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741641161; l=1168;
+ i=quic_molvera@quicinc.com; s=20241204; h=from:subject:message-id;
+ bh=FQqqjK3cWy3/ddUGwo9sBTHtWsUxwLsugXCLdQnUKNQ=;
+ b=LEumYJ4R7zaF6pPuYW7ctD6FUcesvM+YmpZf7Cpatzg/vM+xFlwXYdLuQaaUkQXn4ko7lSZjB
+ di1m8pQAPyQDKZl/6P3Ddz3BoT8NlU0kq1eQ5qZuJVKRUA8hnbCy38g
+X-Developer-Key: i=quic_molvera@quicinc.com; a=ed25519;
+ pk=1DGLp3zVYsHAWipMaNZZTHR321e8xK52C9vuAoeca5c=
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=G8bmE8k5 c=1 sm=1 tr=0 ts=67cf55ca cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=3H110R4YSZwA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=BahsdhlD1VgbZ89a8f0A:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: nxhSjuovW1WqG2JFloeljvg4C6hN8kn1
+X-Proofpoint-ORIG-GUID: nxhSjuovW1WqG2JFloeljvg4C6hN8kn1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-10_08,2025-03-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=898 phishscore=0
+ malwarescore=0 mlxscore=0 suspectscore=0 clxscore=1015 bulkscore=0
+ adultscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503100162
 
---Sig_/sk9dF9WeMSb1MTQ+m.X3fMj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
 
-Hi all,
+Document the QMP UFS PHY on the SM8750 Platform.
 
-Commits
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+---
+ Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-  fcb83ae12343 ("Revert "rcu/nocb: Fix rcuog wake-up from offline softirq"")
-  c37cf754ebf5 ("rcu: Remove swake_up_one_online() bandaid")
+diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml
+index 72bed2933b034ff61a29fafebfa176383086e440..a58370a6a5d389cd0118e7b4650c6ff960bf86fa 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml
+@@ -44,6 +44,7 @@ properties:
+           - qcom,sm8475-qmp-ufs-phy
+           - qcom,sm8550-qmp-ufs-phy
+           - qcom,sm8650-qmp-ufs-phy
++          - qcom,sm8750-qmp-ufs-phy
+ 
+   reg:
+     maxItems: 1
+@@ -111,6 +112,7 @@ allOf:
+               - qcom,sm8475-qmp-ufs-phy
+               - qcom,sm8550-qmp-ufs-phy
+               - qcom,sm8650-qmp-ufs-phy
++              - qcom,sm8750-qmp-ufs-phy
+     then:
+       properties:
+         clocks:
 
-are missing a Signed-off-by from their committer.
+-- 
+2.46.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/sk9dF9WeMSb1MTQ+m.X3fMj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfPVd0ACgkQAVBC80lX
-0Gyi1Af7B61gT9q9ebrn1QHv4P969NJAzfrMabQSqawba1P9JqeVDPy0qJQ4sAvF
-er8fDbIGDagVOJ7tcQiNk78Mef1uCFnU6RIEEoDEjFTM0XSUD+xwr402/QnJx1jt
-TLntSlwTvX0ecZPgZaAXZgUaycmi+el/aeBcwULPbYudHd467IVEOvn//eL5IEfB
-cAPiSt6epoU5rOzricw/0lUiVMiqW4NZ2TIal7hkD9LXzY+pAsBamJDsXF1lPYzq
-wDgcozSKOybXvAzaJw0TuK0waKtxPu0eRg6VncLhPBRprpl7/gKp7uZmbpv5IoQm
-Gj6zj9kIYk7c/zLCBvOJcJbb/3N4qQ==
-=XTFi
------END PGP SIGNATURE-----
-
---Sig_/sk9dF9WeMSb1MTQ+m.X3fMj--
