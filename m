@@ -1,141 +1,114 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382B71B4153;
-	Mon, 10 Mar 2025 07:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76821B4153;
+	Mon, 10 Mar 2025 07:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591045; cv=none; b=hPm7lJtK2UuXJxlWsuDj3yoFvLEcGh01Ki2kFzf2kKlL1XBJ5kfyHx/FV9Nbjowrlq04ANql0XTTph/EiT7qHgJpMGuzEp3IoZVdZJn5+jwEtegf6YPgFxvhcxFpzb2YgmiR0yzA5mh6PReLoZM4Jkt/fk+h77HqkX4AWrxakp4=
+	t=1741591126; cv=none; b=GmmzakOMEDYdoKeFkAZOdITUeKArLIC3twDQk42rK2T5K5HPX7vvODJL+VHn2tFW1MAgbWz6ZhJyFyZE+2u5wIKSz1WQSdvPSYlgEdCdL6M6weCEnR60gQHGIwLpgBA+Xb8dkZN227Csm7yGwuQWISoUT1GT1l0gPIQ1wEWHfjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591045; c=relaxed/simple;
-	bh=9L8JCBhgoFxdIePQoDp94udzf7pnTqrsbwNxET6a7Mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LulswUemrwLMib5mXHpOKlvqQzgTWMLhdTptkYT7VRKP7r567DxK8UfmLG7FhypD+0pYRxD25K4RpPuHIXtno0WIbjwEMMNA5Q8AcVeHVZVrcVILVqAdxHfFeV1krW0KkgD3+ZEoPxS/FZEGu/saduhHSprjJOILJLkUU3Ymuac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=YCSnSpI9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=J7sE2/bH; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1741591126; c=relaxed/simple;
+	bh=XkI9j9ilCxbI1mPLDRb3uYm5mYMwPhYUsWqtQ8ItyR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cqfSh5deXciI7rodth7vkv9jy5teL+7sG/DeHibFrq4LfxEvVAp+pCxDeyWIMIslXGiF+7J5iVnhwXLXpaibbvmyooLAUpn9YVV3V4U0D/lIr7yZmoLtujemYytODnNX7WWF6w+kuN3y7tGmYTsi95S8XYmqqVFoB1B986S3b58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qF3yTHM+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="YCSnSpI9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J7sE2/bH"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id EE75F2540146;
-	Mon, 10 Mar 2025 03:17:21 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Mon, 10 Mar 2025 03:17:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1741591041; x=1741677441; bh=I6iCa18A/p
-	d2A9SeKJfs9/4Am1VGJRgjZyfzz/7cgMs=; b=YCSnSpI9lrANtHYc5QQFjusx+7
-	5q7OB5PDB2A70lHcgJ3m0Ffk0zv8ByD1ulfBMfSC6KTTYGVGG9gQpXhyrslSdmaR
-	W76Lf2TdiOkz00llD/J8gbOANFUAS5HRtanPZOIg1SVQdNXau34tzYuIW/b4RCq6
-	kFfi4xM9m2b+YgKsWeeSkeRBqfOy/gn6QcwrhIPoTvNiCUK2m+LCuTklGVe3Bdvy
-	1k6xLCix5uLKSyGBrp8Wwp8ofvscI5N8s3EDigqug2DRRiV3auknUPoiPkTgqlIK
-	l/MbyhTDpaJ15vuOL8/U8BFuxFT0YTzeAp8n+VAL9ehQJpyJCPuQe7xT7Kiw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1741591041; x=1741677441; bh=I6iCa18A/pd2A9SeKJfs9/4Am1VGJRgjZyf
-	zz/7cgMs=; b=J7sE2/bHPs4mM1TAR73K78Auxfh0JjF8gBjJ+q8/Cd1PEbAXW7U
-	A8o7Bn6cAoKv18Lk+zeNt4niwzMVktK2XQ4owow9WQsHqxt1ThdEU5QwkRVXJGvA
-	LF4qKFv/I7LD6fsfaRh+iGJ/Es3qiAjixxeL0oTFy/d5rHV/k16O0D7vxDaxNUp+
-	iboECaz7K2GS2hTVKkf0Uq6bjxapYouI+v47voru+HbjW9ChbUjQpeTVpvRNua8x
-	6zEKg3smIr5ssh0o7OVM6+8dpF+D+mFeDQ6+HrhXEBIyxNq0FTWI3BN5jA/pctWr
-	l8bI4BuH38cPO067q4IsjHJMg/jUAOljRqw==
-X-ME-Sender: <xms:AJLOZ7cZ4YH04XNn4zqTklGi2FOduzIU64meXkY0NZR1s42DxhVVVw>
-    <xme:AJLOZxN5nDjsPwPCrlxrEtL__GEpoW1RPQ5yBgyI_cAF8nmdO3sRzrQbPjQtYSNRR
-    Q8p-sTKQSn-Gg>
-X-ME-Received: <xmr:AJLOZ0j3Sr5ZPZSBEMuLfX8Fl1IDkxTuE6EsDuqSB4LEK1RwjUPLj6RlyZXPRR8epnXXsmwtsHObUYIld6yyRp92nvv-OlBLCJzbTQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudekjeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
-    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
-    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrg
-    hupdhrtghpthhtoheplhhksegtqddqvgdruggvpdhrtghpthhtohepughmihhtrhihrdgs
-    rghrhihshhhkohhvsehlihhnrghrohdrohhrghdprhgtphhtthhopegsohguuggrhhekje
-    elgeesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:AJLOZ89lWQu1VcP4aH9xlmZE4Hx_4w8salYJGTp3hBxfCqg73NNaIQ>
-    <xmx:AJLOZ3sXoL-7_5sScP_l5Rk5zEv96IjNMLxS-mDHGT7j5597iGPacw>
-    <xmx:AJLOZ7EdjTySaap-b9QteRGShIBmQ1tFwgZTqTYnTkliAqGHyZcOYQ>
-    <xmx:AJLOZ-M7jOBdvvxM3m3S6Y045TRYPLWCNrWU27VAGV2Qw4mXqLFOig>
-    <xmx:AZLOZwH7mgUizHWuhsNQmY-F4HsFfiz4IsoEcfckm3TmvI3et8I8W_KI>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Mar 2025 03:17:20 -0400 (EDT)
-Date: Mon, 10 Mar 2025 08:17:17 +0100
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: "Christian A. Ehrhardt" <lk@c--e.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Fedor Pchelkin <boddah8794@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the usb tree with the usb.current
- tree
-Message-ID: <2025031003-stimulus-overwrite-6e88@gregkh>
-References: <20250220141559.71d7db7c@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qF3yTHM+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B11EC4CEE5;
+	Mon, 10 Mar 2025 07:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741591125;
+	bh=XkI9j9ilCxbI1mPLDRb3uYm5mYMwPhYUsWqtQ8ItyR4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qF3yTHM+8drhXE9gyycYy7fNd+yPAYuUhuDVoY7M4Z6dGfYR1QR2rqyeNCPaEuB/F
+	 MmqXRuPy7FqSovssv3tCwsomShqO8+40P1XWO73Iiq0tfT30nb3QwmA+6h9MnlWAim
+	 /qZueFPRQJjKCw32wuE3evmsLVKjrIZb8s2JMo6iIKHZFg5v25Dxk9+xEwCGSVg3NL
+	 CroJj6vJU0y6pK5KIlzEgyCieE+vGFgK8GW/N/nxnsH8vlEMRMNTypDVFvAZaNTFFn
+	 nQuAr8pNoYxP8LSbR3BDc47cP9qAUbth6GTEqI5aFbM0Uv54+I6NbhTnrmc9cG0RcH
+	 +e2TmXh8Da3OQ==
+Message-ID: <f679c5a0-5044-4cff-8c3b-5051b1b873f9@kernel.org>
+Date: Mon, 10 Mar 2025 08:18:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220141559.71d7db7c@canb.auug.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] dt-bindings: PCI: qcom: Document the QCS615 PCIe
+ Controller
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
+ kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+ dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org, abel.vesa@linaro.org
+Cc: quic_qianyu@quicinc.com, quic_krichai@quicinc.com,
+ johan+linaro@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20250310065613.151598-1-quic_ziyuzhan@quicinc.com>
+ <20250310065613.151598-2-quic_ziyuzhan@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250310065613.151598-2-quic_ziyuzhan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 20, 2025 at 02:15:59PM +1100, Stephen Rothwell wrote:
-> Hi all,
+On 10/03/2025 07:56, Ziyue Zhang wrote:
+> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > 
-> Today's linux-next merge of the usb tree got a conflict in:
+> Add dedicated schema for the PCIe controllers found on QCS615.
+> Due to qcs615's clock-names do not match any of the existing
+> dt-bindings, a new compatible for qcs615 is needed.
 > 
->   drivers/usb/typec/ucsi/ucsi_acpi.c
-> 
-> between commit:
-> 
->   976e7e9bdc77 ("acpi: typec: ucsi: Introduce a ->poll_cci method")
-> 
-> from the usb.current tree and commit:
-> 
->   f9cf5401526c ("usb: typec: ucsi: acpi: move LG Gram quirk to ucsi_gram_sync_control()")
-> 
-> from the usb tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/usb/typec/ucsi/ucsi_acpi.c
-> index ac1ebb5d9527,ada5d0d21ee6..000000000000
-> --- a/drivers/usb/typec/ucsi/ucsi_acpi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
-> @@@ -131,25 -131,7 +137,8 @@@ static int ucsi_gram_sync_control(struc
->   static const struct ucsi_operations ucsi_gram_ops = {
->   	.read_version = ucsi_acpi_read_version,
->   	.read_cci = ucsi_acpi_read_cci,
->  +	.poll_cci = ucsi_acpi_poll_cci,
-> - 	.read_message_in = ucsi_gram_read_message_in,
-> + 	.read_message_in = ucsi_acpi_read_message_in,
->   	.sync_control = ucsi_gram_sync_control,
->   	.async_control = ucsi_acpi_async_control
->   };
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> ---
 
-This is now fixed up in my tree, thanks.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-greg k-h
-
+Best regards,
+Krzysztof
