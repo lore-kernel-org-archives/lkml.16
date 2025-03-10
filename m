@@ -1,188 +1,162 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0659B14F6C;
-	Mon, 10 Mar 2025 01:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3BA81E;
+	Mon, 10 Mar 2025 01:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741568574; cv=none; b=pY7uYZqDoWSJlOQLMUiUn7WEABpDdnCsShWGje+oJaaE2Lg08NyEcbM58IMV3LINsGhjmRC+yI7qKBtov5yKYK0drJVUxdaizWCVGiJsWt1kB2GOpByIW/rXaXXWrAXH+lKxv6gHSS8E3MuRMh7ydGTm1529nqYJksgbVU7+80k=
+	t=1741569375; cv=none; b=hoZ9ub2D87PCE85SfHa0uBZ5t9aHiopT7fhL2BQDHX/p8jWZznol3/QpaWDRF+31eAufDaH0gHVb05h/0v3uBYAqcEFOIFuy/G1lsALAPDMHHPfFIt4oqF7U5EBYyNGvTFu24SEe+S8f06ntsysDTuSpVQxICcqBuYf7jrF/FaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741568574; c=relaxed/simple;
-	bh=u3Dqu0ugfjezZL9sksgaDDpAYysw1L8gQsi1MZZBcXg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F2NONIaTzSDUXnYePaEQfG/SsW2r1iR6ewiBd0PcxJ1twKxTr5v1faS5nVnO8HXTrYn7luI6Gy0NxTSLt7Udn6qJkd64R5BzlXW2AhnHszHrGWOk+Y2L9nlQg5X9qkQbXy5ELMpMBe7usMV5HaQ+7YLInvfXj1sd8NNHbgLU8Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ohpoggXT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741569375; c=relaxed/simple;
+	bh=fItbnL0VfJSCXWPmbaXP/wonhs74sgjKr0ENQ6tOn88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pgr2/9dKIacGF0y6fcoJQGin0NcM/5Wl7P3rlaqSFfJ3QypUDyZz4lPNCKrsohpie18hMDsy4vgVNm7D2Sw8yNaDWO3q0bVO9/mMD5hg452A4pjP9dBB7nWrSEQDFiBcHSBDkGwSIAhKTO3QN2WWRd8eHkKKWG1eFAetwgascf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2HtYue1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ohpoggXT"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 529Ko9Kd017510;
-	Mon, 10 Mar 2025 01:02:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	c+Bnz5MXFNxyk70QqOJh4tmnrisC9p1l21NoG0whgJw=; b=ohpoggXTgLWDaHDW
-	xlDLn4AlNbXmmU3s2O5mCz890HI0h6ZzwgCsd27VLGpOUMx6rsPk2ABdxKJJa+K0
-	XNrPsJ/6i/EWLSjDeTbIKZKw65fyECz/aHSQFH8K+poGheVNNzk4GnGGVoSJN12U
-	Zc9pJ1Q7J4rB76CmMzS4u3lgUlNC5Uyo+Wlo5rU6UlkK06LrwnzdX768bDBN9oSs
-	NkDyjaoDn9QeylxUQ0RmZ3HM8C6uOWkmYmks5eovLVn3g9PdOERCAupiEce88X/V
-	zbY/Pr54QGlP5gc5DIcrSZx+nk+3wThvMA7MPiBEuOWudrIPDlKLXYdSdtEKzQbd
-	a7MkgQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458eyt31w1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 01:02:34 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52A12XPk017208
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 01:02:33 GMT
-Received: from Z2-SFF-G9-MQ.ap.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 9 Mar 2025 18:02:31 -0700
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
-To: <quic_jjohnson@quicinc.com>
-CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <johan+linaro@kernel.org>,
-        Miaoqing Pan
-	<quic_miaoqing@quicinc.com>
-Subject: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient length
-Date: Mon, 10 Mar 2025 09:02:17 +0800
-Message-ID: <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
-References: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2HtYue1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B82DC4CEE3;
+	Mon, 10 Mar 2025 01:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741569374;
+	bh=fItbnL0VfJSCXWPmbaXP/wonhs74sgjKr0ENQ6tOn88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A2HtYue1etjgjLFvcSzEWnKt7vtjBGU3/LluPT4Gt1uWAPxhX268bAstUqUVg7V8M
+	 cAFL+RDVkw7qtrJJIgivE0bh06IsKj+boJ0uqUaxcVFSNpNQoBiQ4I8ESZSxv6C8HJ
+	 aab452vHSI3hQgKUZhqRzfYzi1sUQkDXOiyp/aUzT6L36YTDQvj/KGUJ2CQitPstLp
+	 PyW8MhjPvPWXc2zS8x8A9wjeuoLrReX+N7Y20PiBPHSfwEGL19bE/6NOOl07rCCMUu
+	 m/23Z7pw6gChKciHiM5Bfs7fEw1QWrYHpbFTRaXUYwI+k4ZZ8pz1I3hKsgzBZ6ExAL
+	 6TjNPU5EogXsg==
+Date: Mon, 10 Mar 2025 09:16:04 +0800
+From: Peter Chen <peter.chen@kernel.org>
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+	"krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
+	"christophe.jaillet@wanadoo.fr" <christophe.jaillet@wanadoo.fr>,
+	"javier.carrasco@wolfvision.net" <javier.carrasco@wolfvision.net>,
+	"make_ruc2021@163.com" <make_ruc2021@163.com>,
+	"peter.chen@nxp.com" <peter.chen@nxp.com>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Pawel Eichler <peichler@cadence.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] usb: hub: lack of clearing xHC resources
+Message-ID: <Z849VPcttlQXTEoW@nchen-desktop>
+References: <20250228074307.728010-1-pawell@cadence.com>
+ <PH7PR07MB953841E38C088678ACDCF6EEDDCC2@PH7PR07MB9538.namprd07.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0LH8pJNppikRHyfsPGizh3ulDdqu111o
-X-Authority-Analysis: v=2.4 cv=CupFcm4D c=1 sm=1 tr=0 ts=67ce3a2a cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=oICLHHyMo7b6fcdoYYIA:9 a=RVmHIydaz68A:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 0LH8pJNppikRHyfsPGizh3ulDdqu111o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-09_09,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- suspectscore=0 phishscore=0 adultscore=0 impostorscore=0 malwarescore=0
- bulkscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100005
+In-Reply-To: <PH7PR07MB953841E38C088678ACDCF6EEDDCC2@PH7PR07MB9538.namprd07.prod.outlook.com>
 
-A relatively unusual race condition occurs between host software
-and hardware, where the host sees the updated destination ring head
-pointer before the hardware updates the corresponding descriptor.
-When this situation occurs, the length of the descriptor returns 0.
+On 25-02-28 07:50:25, Pawel Laszczak wrote:
+> The xHC resources allocated for USB devices are not released in correct
+> order after resuming in case when while suspend device was reconnected.
+> 
+> This issue has been detected during the fallowing scenario:
+> - connect hub HS to root port
+> - connect LS/FS device to hub port
+> - wait for enumeration to finish
+> - force host to suspend
+> - reconnect hub attached to root port
+> - wake host
+> 
+> For this scenario during enumeration of USB LS/FS device the Cadence xHC
+> reports completion error code for xHC commands because the xHC resources
+> used for devices has not been properly released.
+> XHCI specification doesn't mention that device can be reset in any order
+> so, we should not treat this issue as Cadence xHC controller bug.
+> Similar as during disconnecting in this case the device resources should
+> be cleared starting form the last usb device in tree toward the root hub.
+> To fix this issue usbcore driver should call hcd->driver->reset_device
+> for all USB devices connected to hub which was reconnected while
+> suspending.
+> 
+> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
+> cc: <stable@vger.kernel.org>
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 
-The current error handling method is to increment descriptor tail
-pointer by 1, but 'sw_index' is not updated, causing descriptor and
-skb to not correspond one-to-one, resulting in the following error:
+Tested at Cixtech sky1 SoC which uses Cadence USB SSP IP.
 
-ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1488, expected 1492
-ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, expected 1484
+Tested-by: Peter Chen <peter.chen@cixtech.com>
 
-To address this problem, temporarily skip processing the current
-descriptor and handle it again next time. However, to prevent this
-descriptor from continuously returning 0, use skb cb to set a flag.
-If the length returns 0 again, this descriptor will be discarded.
+Peter
+> 
+> ---
+> Changelog:
+> v3:
+> - Changed patch title
+> - Corrected typo
+> - Moved hub_hc_release_resources above mutex_lock(hcd->address0_mutex)
+> 
+> v2:
+> - Replaced disconnection procedure with releasing only the xHC resources
+> 
+>  drivers/usb/core/hub.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index a76bb50b6202..dcba4281ea48 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -6065,6 +6065,36 @@ void usb_hub_cleanup(void)
+>  	usb_deregister(&hub_driver);
+>  } /* usb_hub_cleanup() */
+>  
+> +/**
+> + * hub_hc_release_resources - clear resources used by host controller
+> + * @udev: pointer to device being released
+> + *
+> + * Context: task context, might sleep
+> + *
+> + * Function releases the host controller resources in correct order before
+> + * making any operation on resuming usb device. The host controller resources
+> + * allocated for devices in tree should be released starting from the last
+> + * usb device in tree toward the root hub. This function is used only during
+> + * resuming device when usb device require reinitialization – that is, when
+> + * flag udev->reset_resume is set.
+> + *
+> + * This call is synchronous, and may not be used in an interrupt context.
+> + */
+> +static void hub_hc_release_resources(struct usb_device *udev)
+> +{
+> +	struct usb_hub *hub = usb_hub_to_struct_hub(udev);
+> +	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
+> +	int i;
+> +
+> +	/* Release up resources for all children before this device */
+> +	for (i = 0; i < udev->maxchild; i++)
+> +		if (hub->ports[i]->child)
+> +			hub_hc_release_resources(hub->ports[i]->child);
+> +
+> +	if (hcd->driver->reset_device)
+> +		hcd->driver->reset_device(hcd, udev);
+> +}
+> +
+>  /**
+>   * usb_reset_and_verify_device - perform a USB port reset to reinitialize a device
+>   * @udev: device to reset (not in SUSPENDED or NOTATTACHED state)
+> @@ -6129,6 +6159,9 @@ static int usb_reset_and_verify_device(struct usb_device *udev)
+>  	bos = udev->bos;
+>  	udev->bos = NULL;
+>  
+> +	if (udev->reset_resume)
+> +		hub_hc_release_resources(udev);
+> +
+>  	mutex_lock(hcd->address0_mutex);
+>  
+>  	for (i = 0; i < PORT_INIT_TRIES; ++i) {
+> -- 
+> 2.43.0
+> 
 
-Tested-on: QCA6698AQ hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
-
-Reported-by: Johan Hovold <johan+linaro@kernel.org>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218623
-Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
----
- drivers/net/wireless/ath/ath11k/ce.c   | 32 ++++++++++++++++++++------
- drivers/net/wireless/ath/ath11k/core.h |  1 +
- 2 files changed, 26 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath11k/ce.c b/drivers/net/wireless/ath/ath11k/ce.c
-index e66e86bdec20..2573f8c7a994 100644
---- a/drivers/net/wireless/ath/ath11k/ce.c
-+++ b/drivers/net/wireless/ath/ath11k/ce.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: BSD-3-Clause-Clear
- /*
-  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2021-2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2021-2023, 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #include "dp_rx.h"
-@@ -387,18 +387,36 @@ static int ath11k_ce_completed_recv_next(struct ath11k_ce_pipe *pipe,
- 
- 	ath11k_hal_srng_access_begin(ab, srng);
- 
--	desc = ath11k_hal_srng_dst_get_next_entry(ab, srng);
-+	desc = ath11k_hal_srng_dst_peek(ab, srng);
- 	if (!desc) {
- 		ret = -EIO;
- 		goto err;
- 	}
- 
- 	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
--	if (*nbytes == 0) {
--		ret = -EIO;
--		goto err;
-+	if (unlikely(*nbytes == 0)) {
-+		struct ath11k_skb_rxcb *rxcb =
-+			ATH11K_SKB_RXCB(pipe->dest_ring->skb[sw_index]);
-+
-+		/* A relatively unusual race condition occurs between host
-+		 * software and hardware, where the host sees the updated
-+		 * destination ring head pointer before the hardware updates
-+		 * the corresponding descriptor.
-+		 *
-+		 * Temporarily skip processing the current descriptor and handle
-+		 * it again next time. However, to prevent this descriptor from
-+		 * continuously returning 0, set 'is_desc_len0' flag. If the
-+		 * length returns 0 again, this descriptor will be discarded.
-+		 */
-+		if (!rxcb->is_desc_len0) {
-+			rxcb->is_desc_len0 = true;
-+			ret = -EIO;
-+			goto err;
-+		}
- 	}
- 
-+	ath11k_hal_srng_dst_next(ab, srng);
-+
- 	*skb = pipe->dest_ring->skb[sw_index];
- 	pipe->dest_ring->skb[sw_index] = NULL;
- 
-@@ -430,8 +448,8 @@ static void ath11k_ce_recv_process_cb(struct ath11k_ce_pipe *pipe)
- 		dma_unmap_single(ab->dev, ATH11K_SKB_RXCB(skb)->paddr,
- 				 max_nbytes, DMA_FROM_DEVICE);
- 
--		if (unlikely(max_nbytes < nbytes)) {
--			ath11k_warn(ab, "rxed more than expected (nbytes %d, max %d)",
-+		if (unlikely(max_nbytes < nbytes || !nbytes)) {
-+			ath11k_warn(ab, "rxed invalid length (nbytes %d, max %d)",
- 				    nbytes, max_nbytes);
- 			dev_kfree_skb_any(skb);
- 			continue;
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index 1a3d0de4afde..c8614c5c6493 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -128,6 +128,7 @@ struct ath11k_skb_rxcb {
- 	bool is_continuation;
- 	bool is_mcbc;
- 	bool is_eapol;
-+	bool is_desc_len0;
- 	struct hal_rx_desc *rx_desc;
- 	u8 err_rel_src;
- 	u8 err_code;
 -- 
-2.25.1
 
+Best regards,
+Peter
