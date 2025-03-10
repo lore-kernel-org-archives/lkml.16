@@ -1,292 +1,318 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493D51C5D7F;
-	Mon, 10 Mar 2025 06:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDDC38B;
+	Mon, 10 Mar 2025 06:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741588298; cv=none; b=Hs/T4UI+IK/m+GXBnJ3f85GKRBzgWyFXBpaaOMfVkXGgBSjB5MXgXWMeX1My7klxbtnFZu8c2NNUnzNJUfj16FjQchpduuyshv4JGULDfjdNkDeeMfXhDIsEkMamPhLcTvKA4vVdf8ZjXxra+16uE8ggLh+xpiFSfZw6pIYRtM0=
+	t=1741588361; cv=none; b=B4dJ5eDaeoGCe4JtUjOgaXL8kz3XUUHMXpdAHsj9SO/PEKwSz9Ou9IOa/jI6FyeaVWlDCadWt1Rq02BmohV9+giWc8RCAaEdpo5tReKdReELndJ/aHAqDbo+WBDnNtnWDbsYaMq/NwWkvpDxTyXuldwq+8nJRyLxdsniC2rjBYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741588298; c=relaxed/simple;
-	bh=gh6nnN7M8MW9/ZT5nzaIpc6A+EaraszpPYjrZP4fmZs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AfbiU54zd8gOhPiWybcWJAA1X96LgRZQA35HWkcziu5hEpyZI8TAc0bguZWXN+VNZr7l/IKpQcCFVXhXgERrwAeETSTgAFj9eqhKXereWzI1be4xy+fkd72tSZh4WA0gvSlTegLRlRZKwbD72eVlSkl+ylhO+4l6a9qh59HHojA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i0eVIEwS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1741588361; c=relaxed/simple;
+	bh=EUFbqtCL5HuUmUMcDgzovMNMOcqHYTpQD4V/27f19tI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HFImXPNz+SymWsES/LMZCuHAFA5iBsXQFWdVQNx8O9ravor0ntap5Z/744devulojmpQlV2c33C8YSPL6Vp+sBiIqPEjsgHQ5+PxEa2umZa0khTF5ymKhk4YDmR6gO+gUYbTuq4Tq4SInFJpxOEZTA/mBix2zK41KJw0Ee+PuiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAeeCfQ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i0eVIEwS"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 529MFU0Z005642;
-	Mon, 10 Mar 2025 06:31:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=Cz4sKw/W/M/
-	LJrvh67MKCo+b4y1QPIQ/ybqH0XMuM+s=; b=i0eVIEwS3yvg97feRazrnf++nAh
-	IJVkp/on1wM6x6x5JyzSmYFw/OmTmbqo8TlIZFVARFVjzJF25wCV4IFVmJYgzYMy
-	LaphMtIwb+4Vog2m+FGD9/raN0NwXIjYOIXBO64yJUBogSSW3FXsimMVvGA4TDay
-	It7kexxCKBL5zZmlKUVdJiQfKBA2cytw0Jh+emyt4JuhniO/4DVPeiN/Riq76VU6
-	JUA2/Aj/hAgvHRof8kD41JrOGU63QTYr1J0ZqzftQCQdswRXuUQKTZmFaIzYTGlg
-	1CKBG3tOD6EZCxzeyjrg43PsHLXDwAyXJTZQ3TsRYuREzM+7VLiMv/QZ7AQ==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f6abr22-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 06:31:13 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52A6VBG1011120;
-	Mon, 10 Mar 2025 06:31:11 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 458yu87f36-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 06:31:11 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52A6VBJU011101;
-	Mon, 10 Mar 2025 06:31:11 GMT
-Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 52A6VAis011094
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 06:31:11 +0000
-Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id 9CE5C27CB; Mon, 10 Mar 2025 14:31:09 +0800 (CST)
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-To: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-        manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org,
-        dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org,
-        abel.vesa@linaro.org
-Cc: quic_ziyuzhan@quicinc.com, quic_qianyu@quicinc.com,
-        quic_krichai@quicinc.com, johan+linaro@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v4 5/8] arm64: dts: qcom: qcs8300: enable pcie0
-Date: Mon, 10 Mar 2025 14:31:00 +0800
-Message-Id: <20250310063103.3924525-6-quic_ziyuzhan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310063103.3924525-1-quic_ziyuzhan@quicinc.com>
-References: <20250310063103.3924525-1-quic_ziyuzhan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAeeCfQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C08DC4CEE5;
+	Mon, 10 Mar 2025 06:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741588359;
+	bh=EUFbqtCL5HuUmUMcDgzovMNMOcqHYTpQD4V/27f19tI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IAeeCfQ5aG6wEK+82/lMCroHOsh9eITArhIPbTbwHdomFD1iskJihRV1NovpIspBQ
+	 XPIf/RFfZVkMHiAbzgMOlEeg+zSci1qabQNsNJ6kXftClEYqkdi0V6VNXBYiGr1jdc
+	 coikgZFKdcY60HIB98S+Hax/P0qIdVu+ei7LeM8+wXV7O60xwUh0WSsYz5kPYtHK95
+	 zQUFgnchgBXyXaAHh3zhysR+/k6Z7lv4P3HuZLywY3kTUmrEQRIq7hHsZi7qwxxMX/
+	 wVsEBHeukZxtlCwf5hSPh8HXaIYxMOAT6nByLcWkPv0+vDsGo99deagc53gy1iheUz
+	 O5YZ30rrTeFqw==
+Date: Mon, 10 Mar 2025 07:32:26 +0100
+From: Simon Horman <horms@kernel.org>
+To: Gur Stavi <gur.stavi@huawei.com>
+Cc: Fan Gong <gongfan1@huawei.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Lee Trager <lee@trager.us>,
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Cai Huoqing <cai.huoqing@linux.dev>, luosifu <luosifu@huawei.com>,
+	Xin Guo <guoxin09@huawei.com>,
+	Shen Chenyang <shenchenyang1@hisilicon.com>,
+	Zhou Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>,
+	Shi Jing <shijing34@huawei.com>,
+	Meny Yossefi <meny.yossefi@huawei.com>,
+	Suman Ghosh <sumang@marvell.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Joe Damato <jdamato@fastly.com>
+Subject: Re: [PATCH net-next v08 1/1] hinic3: module initialization and tx/rx
+ logic
+Message-ID: <20250310063226.GE4159220@kernel.org>
+References: <cover.1741247008.git.gur.stavi@huawei.com>
+ <fc43342cbb9915da210792edcc8f6bf661b298e9.1741247008.git.gur.stavi@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=WsDRMcfv c=1 sm=1 tr=0 ts=67ce8731 cx=c_pps a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=AB9_xyHDybkdeVn4xrgA:9 a=7J6QaMaBFc7-EZ5F:21
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: N1i-IjVFcxdEyuCG8u-DYsmMbOOn4USS
-X-Proofpoint-ORIG-GUID: N1i-IjVFcxdEyuCG8u-DYsmMbOOn4USS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_02,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 clxscore=1011
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc43342cbb9915da210792edcc8f6bf661b298e9.1741247008.git.gur.stavi@huawei.com>
 
-Add configurations in devicetree for PCIe0, including registers, clocks,
-interrupts and phy setting sequence.
+On Thu, Mar 06, 2025 at 09:50:28AM +0200, Gur Stavi wrote:
+> From: Fan Gong <gongfan1@huawei.com>
+> 
+> This is [1/3] part of hinic3 Ethernet driver initial submission.
+> With this patch hinic3 is a valid kernel module but non-functional
+> driver.
+> 
+> The driver parts contained in this patch:
+> Module initialization.
+> PCI driver registration but with empty id_table.
+> Auxiliary driver registration.
+> Net device_ops registration but open/stop are empty stubs.
+> tx/rx logic.
+> 
+> All major data structures of the driver are fully introduced with the
+> code that uses them but without their initialization code that requires
+> management interface with the hw.
+> 
+> Co-developed-by: Xin Guo <guoxin09@huawei.com>
+> Signed-off-by: Xin Guo <guoxin09@huawei.com>
+> Signed-off-by: Fan Gong <gongfan1@huawei.com>
+> Co-developed-by: Gur Stavi <gur.stavi@huawei.com>
+> Signed-off-by: Gur Stavi <gur.stavi@huawei.com>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs8300.dtsi | 168 +++++++++++++++++++++++++-
- 1 file changed, 167 insertions(+), 1 deletion(-)
+Hi Gur,
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-index 4a057f7c0d9f..5d05640c5e21 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-@@ -601,7 +601,7 @@ gcc: clock-controller@100000 {
- 			#power-domain-cells = <1>;
- 			clocks = <&rpmhcc RPMH_CXO_CLK>,
- 				 <&sleep_clk>,
--				 <0>,
-+				 <&pcie0_phy>,
- 				 <0>,
- 				 <0>,
- 				 <0>,
-@@ -711,6 +711,172 @@ mmss_noc: interconnect@17a0000 {
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 		};
- 
-+		pcie0: pci@1c00000 {
-+			device_type = "pci";
-+			compatible = "qcom,pcie-qcs8300", "qcom,pcie-sa8775p";
-+			reg = <0x0 0x01c00000 0x0 0x3000>,
-+			      <0x0 0x40000000 0x0 0xf20>,
-+			      <0x0 0x40000f20 0x0 0xa8>,
-+			      <0x0 0x40001000 0x0 0x4000>,
-+			      <0x0 0x40100000 0x0 0x100000>,
-+			      <0x0 0x01c03000 0x0 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config",
-+				    "mhi";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
-+			bus-range = <0x00 0xff>;
-+
-+			dma-coherent;
-+
-+			linux,pci-domain = <0>;
-+			num-lanes = <2>;
-+
-+			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-+				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-+			clock-names = "aux",
-+				      "cfg",
-+				      "bus_master",
-+				      "bus_slave",
-+				      "slave_q2a";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_0_AUX_CLK>;
-+			assigned-clock-rates = <19200000>;
-+
-+			interconnects = <&pcie_anoc MASTER_PCIE_0 QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-+					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &config_noc SLAVE_PCIE_0 QCOM_ICC_TAG_ACTIVE_ONLY>;
-+			interconnect-names = "pcie-mem",
-+					     "cpu-pcie";
-+
-+			iommu-map = <0x0 &pcie_smmu 0x0000 0x1>,
-+				    <0x100 &pcie_smmu 0x0001 0x1>;
-+
-+			resets = <&gcc GCC_PCIE_0_BCR>,
-+				 <&gcc GCC_PCIE_0_LINK_DOWN_BCR>;
-+			reset-names = "pci",
-+				      "link_down";
-+
-+			power-domains = <&gcc GCC_PCIE_0_GDSC>;
-+
-+			phys = <&pcie0_phy>;
-+			phy-names = "pciephy";
-+
-+			status = "disabled";
-+
-+			pcie3_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				/* GEN 1 x1 */
-+				opp-2500000 {
-+					opp-hz = /bits/ 64 <2500000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <250000 1>;
-+				};
-+
-+				/* GEN 1 x2 and GEN 2 x1 */
-+				opp-5000000 {
-+					opp-hz = /bits/ 64 <5000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <500000 1>;
-+				};
-+
-+				/* GEN 2 x2 */
-+				opp-10000000 {
-+					opp-hz = /bits/ 64 <10000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <1000000 1>;
-+				};
-+
-+				/* GEN 3 x1 */
-+				opp-8000000 {
-+					opp-hz = /bits/ 64 <8000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <984500 1>;
-+				};
-+
-+				/* GEN 3 x2 and GEN 4 x1 */
-+				opp-16000000 {
-+					opp-hz = /bits/ 64 <16000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+					opp-peak-kBps = <1969000 1>;
-+				};
-+
-+				/* GEN 4 x2 */
-+				opp-32000000 {
-+					opp-hz = /bits/ 64 <32000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+					opp-peak-kBps = <3938000 1>;
-+				};
-+			};
-+		};
-+
-+		pcie0_phy: phy@1c04000 {
-+			compatible = "qcom,qcs8300-qmp-gen4x2-pcie-phy";
-+			reg = <0x0 0x01c04000 0x0 0x2000>;
-+
-+			clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_CLKREF_EN>,
-+				 <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>,
-+				 <&gcc GCC_PCIE_0_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_0_PIPEDIV2_CLK>,
-+				 <&gcc GCC_PCIE_0_PHY_AUX_CLK>;
-+			clock-names = "cfg_ahb",
-+				      "ref",
-+				      "rchng",
-+				      "pipe",
-+				      "pipediv2",
-+				      "phy_aux";
-+
-+			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-+			reset-names = "phy";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			#clock-cells = <0>;
-+			clock-output-names = "pcie_0_pipe_clk";
-+
-+			#phy-cells = <0>;
-+
-+			status = "disabled";
-+		};
-+
- 		ufs_mem_hc: ufs@1d84000 {
- 			compatible = "qcom,qcs8300-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
- 			reg = <0x0 0x01d84000 0x0 0x3000>;
--- 
-2.34.1
+I've reviewed this patch paying particular attention to error handling.
 
+Please find some minor feedback below.
+
+...
+
+> diff --git a/drivers/net/ethernet/huawei/hinic3/hinic3_lld.c b/drivers/net/ethernet/huawei/hinic3/hinic3_lld.c
+
+...
+
+> +static int hinic3_probe_func(struct hinic3_pcidev *pci_adapter)
+> +{
+> +	struct pci_dev *pdev = pci_adapter->pdev;
+> +	int err;
+> +
+> +	err = hinic3_mapping_bar(pdev, pci_adapter);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Failed to map bar\n");
+> +		goto err_map_bar;
+> +	}
+> +
+> +	err = hinic3_func_init(pdev, pci_adapter);
+> +	if (err)
+> +		goto err_func_init;
+> +
+> +	return 0;
+> +
+> +err_func_init:
+> +	hinic3_unmapping_bar(pci_adapter);
+> +
+> +err_map_bar:
+> +	dev_err(&pdev->dev, "Pcie device probe function failed\n");
+
+nit: PCIE
+
+> +	return err;
+> +}
+
+...
+
+> +static int hinic3_sw_init(struct net_device *netdev)
+> +{
+> +	struct hinic3_nic_dev *nic_dev = netdev_priv(netdev);
+> +	struct hinic3_hwdev *hwdev = nic_dev->hwdev;
+> +	int err;
+> +
+> +	nic_dev->q_params.sq_depth = HINIC3_SQ_DEPTH;
+> +	nic_dev->q_params.rq_depth = HINIC3_RQ_DEPTH;
+> +
+> +	/* VF driver always uses random MAC address. During VM migration to a
+> +	 * new device, the new device should learn the VMs old MAC rather than
+> +	 * provide its own MAC. The product design assumes that every VF is
+> +	 * suspectable to migration so the device avoids offering MAC address
+> +	 * to VFs.
+> +	 */
+> +	eth_hw_addr_random(netdev);
+> +	err = hinic3_set_mac(hwdev, netdev->dev_addr, 0,
+> +			     hinic3_global_func_id(hwdev));
+> +	if (err) {
+> +		dev_err(hwdev->dev, "Failed to set default MAC\n");
+> +		goto err_out;
+
+nit: I think it would be slightly nicer to simply return err here
+     and drop the err_out label. This is because there is no
+     unwind to perform in this error case.
+
+     Likewise for any similar cases that may be in this patch
+     (I didn't spot any so far).
+
+> +	}
+> +
+> +	err = hinic3_alloc_txrxqs(netdev);
+> +	if (err) {
+> +		dev_err(hwdev->dev, "Failed to alloc qps\n");
+> +		goto err_alloc_qps;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_alloc_qps:
+> +	hinic3_del_mac(hwdev, netdev->dev_addr, 0, hinic3_global_func_id(hwdev));
+> +
+> +err_out:
+> +	return err;
+> +}
+> +
+> +static void hinic3_sw_deinit(struct net_device *netdev)
+> +{
+> +	struct hinic3_nic_dev *nic_dev = netdev_priv(netdev);
+> +
+> +	hinic3_free_txrxqs(netdev);
+> +	hinic3_del_mac(nic_dev->hwdev, netdev->dev_addr, 0,
+> +		       hinic3_global_func_id(nic_dev->hwdev));
+> +}
+
+...
+
+> +static int hinic3_nic_probe(struct auxiliary_device *adev,
+> +			    const struct auxiliary_device_id *id)
+> +{
+> +	struct hinic3_hwdev *hwdev = hinic3_adev_get_hwdev(adev);
+> +	struct pci_dev *pdev = hwdev->pdev;
+> +	struct hinic3_nic_dev *nic_dev;
+> +	struct net_device *netdev;
+> +	u16 max_qps, glb_func_id;
+> +	int err;
+> +
+> +	if (!hinic3_support_nic(hwdev)) {
+> +		dev_dbg(&adev->dev, "HW doesn't support nic\n");
+> +		return 0;
+> +	}
+> +
+> +	hinic3_adev_event_register(adev, hinic3_nic_event);
+> +
+> +	glb_func_id = hinic3_global_func_id(hwdev);
+> +	err = hinic3_func_reset(hwdev, glb_func_id, COMM_FUNC_RESET_BIT_NIC);
+> +	if (err) {
+> +		dev_err(&adev->dev, "Failed to reset function\n");
+> +		goto err_undo_event_register;
+> +	}
+> +
+> +	max_qps = hinic3_func_max_qnum(hwdev);
+> +	netdev = alloc_etherdev_mq(sizeof(*nic_dev), max_qps);
+> +	if (!netdev) {
+> +		dev_err(&adev->dev, "Failed to allocate netdev\n");
+> +		err = -ENOMEM;
+> +		goto err_undo_event_register;
+> +	}
+> +
+> +	nic_dev = netdev_priv(netdev);
+> +	dev_set_drvdata(&adev->dev, nic_dev);
+> +	err = hinic3_init_nic_dev(netdev, hwdev);
+> +	if (err)
+> +		goto err_undo_netdev_alloc;
+> +
+> +	err = hinic3_init_nic_io(nic_dev);
+> +	if (err)
+> +		goto err_undo_netdev_alloc;
+> +
+> +	err = hinic3_sw_init(netdev);
+> +	if (err)
+> +		goto err_sw_init;
+> +
+> +	hinic3_assign_netdev_ops(netdev);
+> +
+> +	netdev_feature_init(netdev);
+> +	err = hinic3_set_default_hw_feature(netdev);
+> +	if (err)
+> +		goto err_set_features;
+> +
+> +	err = register_netdev(netdev);
+> +	if (err) {
+> +		err = -ENOMEM;
+
+Could you clarify why err is being overridden here?
+I would have expected this function to return the
+error returned by register_netdev?
+
+> +		goto err_register_netdev;
+> +	}
+> +
+> +	netif_carrier_off(netdev);
+> +	return 0;
+> +
+> +err_register_netdev:
+> +	hinic3_update_nic_feature(nic_dev, 0);
+> +	hinic3_set_nic_feature_to_hw(nic_dev);
+> +
+> +err_set_features:
+> +	hinic3_sw_deinit(netdev);
+> +
+> +err_sw_init:
+> +	hinic3_free_nic_io(nic_dev);
+> +
+> +err_undo_netdev_alloc:
+> +	free_netdev(netdev);
+> +
+> +err_undo_event_register:
+> +	hinic3_adev_event_unregister(adev);
+> +	dev_err(&pdev->dev, "NIC service probe failed\n");
+> +
+> +	return err;
+> +}
+
+...
+
+> diff --git a/drivers/net/ethernet/huawei/hinic3/hinic3_netdev_ops.c b/drivers/net/ethernet/huawei/hinic3/hinic3_netdev_ops.c
+
+...
+
+> +static int hinic3_change_mtu(struct net_device *netdev, int new_mtu)
+> +{
+> +	int err;
+> +
+> +	err = hinic3_set_port_mtu(netdev, new_mtu);
+> +	if (err) {
+> +		netdev_err(netdev, "Failed to change port mtu to %d\n", new_mtu);
+> +	} else {
+> +		netdev_dbg(netdev, "Change mtu from %u to %d\n", netdev->mtu, new_mtu);
+> +		WRITE_ONCE(netdev->mtu, new_mtu);
+> +	}
+> +
+> +	return err;
+
+The above is straightforward enough, but I do think it would
+be nicer to stick with the idiomatic pattern of keeping the
+non-error paths in the main flow of execution, while
+error paths are handled conditionally.
+
+And also, to keep lines less than 80 columns wide unless
+it reduces readability.
+
+Something like this (completely untested!):
+
+	err = hinic3_set_port_mtu(netdev, new_mtu);
+	if (err) {
+		netdev_err(netdev, "Failed to change port mtu to %d\n",
+			   new_mtu);
+		return err;
+	}
+
+	netdev_dbg(netdev, "Change mtu from %u to %d\n", netdev->mtu, new_mtu);
+	WRITE_ONCE(netdev->mtu, new_mtu);
+
+	return 0;
+
+> +}
+
+...
