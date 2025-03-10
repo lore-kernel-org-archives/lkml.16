@@ -1,198 +1,179 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CC42248A8;
-	Mon, 10 Mar 2025 09:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D619017A2E7
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741600297; cv=none; b=M9vdWwZmQMFqH/bTHt8Drt5a6BCblPw1aHFBn+D4hIFi57LY7qT+manxqima57Yx/Vji4RFAEurGOqO1mJDDJt8lkKWnBRpBlSAXf5HwtkWRtR+YwBkl7uJ90RdLfK1X3FG14cwcDHa6HnJxS5kQwLaFzdIa+Nd3Zqwal1zXXis=
+	t=1741600316; cv=none; b=TXK387wJG7NdNkdb338PEaD35M9w+GAKh1/aS5YEoaD/IdKV6FZ08hu0hag0xpbBrEVqMRlP0sEuYWHl2updVhhgP+BMxdzO3rMil/8k3kGKUzeKAUacDdHsEbyDs2nU03Pqvuqfh31TQDkdN8ZDV2TXoRa1r3qtFSIDFq4euno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741600297; c=relaxed/simple;
-	bh=KcsuoE5oc+tflOf5s+fkW50lshhYKgljE2mWx5LItuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K0GJWuNPwPJCSGSehNG6xdTVv5gvQhEj2hT2tzVV8qUhotAs3+OInThAumJbcx/jNfL0kjufD7UyO9afag94fywHvvm/dA3Q14utPkJ5yNw7rhekFnxjMSfejq8Ipxy9hMEFl2cFb1wCECRk5nOE3IJqLz8zZeSMy4XALkdT+Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cl6366UW; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cl6366UW"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abf4b376f2fso750590066b.3;
-        Mon, 10 Mar 2025 02:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741600294; x=1742205094; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7fIk/wLn8siLSomZZskx1hmM4iyC641S3xGJlKKijlM=;
-        b=cl6366UWtMCfZLO1rHOgXS7DihlEtSbIlvmgXfCK/TTp7e879cYQ/fMO/1QfrgSahQ
-         EWRX+ckMiP0lJZzdkapUiT4ulNP8UHaxnQ5fpQKw4p0dkcaHqlxve8yOGHrhXnAxgf2X
-         plq9tKh0a8sR8WhFjPPTfhs7sV+ZC+5omeQlk+aM5aTd7/C4KhFSe4We9nXsoR4gyj1Y
-         QXYf4d/fwQay6q3VSOfnAhk85AI0vCcKcsDJkSdbzmOqO2vr8SlTJ2zb3hRoStLCd4cU
-         RoilNsv3clVOJawPXcuBOYMzULuU1zQfo6KB2rCaHu17EsRhG6RIQKMsfBrWSFBWcrm/
-         EYGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741600294; x=1742205094;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7fIk/wLn8siLSomZZskx1hmM4iyC641S3xGJlKKijlM=;
-        b=WHzrqGR68pC9JKfMB1Br947PJ8U7N3TJvHdo/64IBl66BOidfMkD5o2LNQux9lm5uZ
-         lIYefm0/D7O8mh73ZW3A6aXCzvN9jOZXhMkUOOq8Oup5h5d4N5xS6qmSM20GRtGcbnvg
-         Ho6b7usCFvEMLeWRe8FUAMyDyxr/G/hHf8vX4IIZCe6jGIoYyiu/57fuAFi2nlQSvSYh
-         pguQ7L6uzEkxIxgdT8RprzdVLIuw7DTHVNxdnSunw7EaLQonJHkTx9TjBW1D5KP0+0kH
-         tbWEyOD7lZ7ReziVo/DWhzbbZLLHG2/BRzxD7hOs9djwEVWc3hwVKFXR/al4ucZ8h8cS
-         334Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVxWrCMX7+imHK5yid25aSgePBgXXPtSdQt29iBlmuW0T7q/AXcRsfh1i5g2OFpjQu/r+TY5PWm23Mp@vger.kernel.org, AJvYcCW0kflvjg8MEvnJiJEuT92INi6dNxy9P1cJIB/8Fx128iKY7NHDJTqqoe1wLKUDyWaulY1UvFMVq6bU@vger.kernel.org, AJvYcCWpW7fb7rj3k9qiS4qGEgB9CA0fLeEquy+3/Xu/dqQTshKPmDehAo+4nXqeptEkDJbP3C0tSgPL4HJqG4DD@vger.kernel.org
-X-Gm-Message-State: AOJu0YydbIZWWHU52nCwLlyaUqvLWudGAFzr8CLVRl6yJubXNkXOO6rt
-	uFyV472ASbwuEkFD+LssO7NiHGFee67ndzXNJ0BzpRJFJ3WwQpcC
-X-Gm-Gg: ASbGncs/6jZrbXnAJJGaVbN6Roji4ySRxUrFhHF5/L7XSuvU2RIoW6poqSLoq33KTho
-	gmGlLxTPdiQIuL9VsgJ69U7YtdnXL7siMxLhjzOXCtuNIUgXzy4nDFT3IWRD/HSTZ5mnw7QLwLe
-	qh+W5xZ0ciIwoancG123tmNTIFGAOPJzEDd205gVdX6AVle/m+SAI2fqj2Zf++N3FE2+h2e5vku
-	npsP3DHA2uSklL6TS8lq+LMNEwaLyBWfHOUzqUUpWO1u4k9G1lA6fKnERyHQReMXWMHuNKygann
-	MOfCZege2v9SeiNFKOUGfiifIZIYSA50+mkDfJthLrPSHoWbREaxqQE=
-X-Google-Smtp-Source: AGHT+IEnsaBC89bibOD1BqC+ZZ1kovv3JGu+umNRENY/jx8wzQl9KTymklI/3Rp6DH54iA+FTxPRUw==
-X-Received: by 2002:a17:907:3f2a:b0:abf:5fa3:cf96 with SMTP id a640c23a62f3a-ac252a879d7mr1234111666b.14.1741600293920;
-        Mon, 10 Mar 2025 02:51:33 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac255589a30sm594247266b.107.2025.03.10.02.51.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Mar 2025 02:51:25 -0700 (PDT)
-Date: Mon, 10 Mar 2025 09:51:24 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <20250310095124.pa7dwgqhxglqrfes@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-3-rppt@kernel.org>
- <20250218155004.n53fcuj2lrl5rxll@master>
- <Z7WHL_Xqgoln9oLg@kernel.org>
- <20250223002229.xuk6xlp23zr72hkc@master>
+	s=arc-20240116; t=1741600316; c=relaxed/simple;
+	bh=gmxFtjMteVui9x27eFqfr1NYcGv8Yb2TXHpW8smvi1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NIfwUJzWRiApXqinF/Ll4/32Tw24Y2G3dEfhi+wdinTK/FfEyKsHxjnmbDnFpGAwiSAd6RxPN4eV5MHo8x3AnMtqdSWDomnvA0c8eh+O3sdSilmck+tgCrZf4vE7iUOl0F4lwQd6flDRsHH7sA4+RY5sILHfr0BEvxPBIQqn3+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A04AC4330C;
+	Mon, 10 Mar 2025 09:51:50 +0000 (UTC)
+Message-ID: <5074e2d2-f458-4bbd-a9e1-7e8d9f7e32e9@ghiti.fr>
+Date: Mon, 10 Mar 2025 10:51:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250223002229.xuk6xlp23zr72hkc@master>
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/4] riscv: entry: Split ret_from_fork() into user and
+ kernel
+Content-Language: en-US
+To: Charlie Jenkins <charlie@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>,
+ Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20250305-riscv_optimize_entry-v5-0-6507b5dff3ce@rivosinc.com>
+ <20250305-riscv_optimize_entry-v5-2-6507b5dff3ce@rivosinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250305-riscv_optimize_entry-v5-2-6507b5dff3ce@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudeltdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpefhlefhffeggfeftddvtdeukeelgfehkeehhfeuheehleefkeelgffglefghfffueenucffohhmrghinhepvghnthhrhidrshgsnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemhedvkeemudhfieejmeekudegudemkeegvgeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeehvdekmedufheijeemkedugedumeekgegvkedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemhedvkeemudhfieejmeekudegudemkeegvgekngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegthhgrrhhlihgvsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlm
+ hgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlseigvghntdhnrdhnrghmvgdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehluhhtoheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-On Sun, Feb 23, 2025 at 12:22:29AM +0000, Wei Yang wrote:
->On Wed, Feb 19, 2025 at 09:24:31AM +0200, Mike Rapoport wrote:
->>Hi,
->>
->>On Tue, Feb 18, 2025 at 03:50:04PM +0000, Wei Yang wrote:
->>> On Thu, Feb 06, 2025 at 03:27:42PM +0200, Mike Rapoport wrote:
->>> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->>> >
->>> >to denote areas that were reserved for kernel use either directly with
->>> >memblock_reserve_kern() or via memblock allocations.
->>> >
->>> >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->>> >---
->>> > include/linux/memblock.h | 16 +++++++++++++++-
->>> > mm/memblock.c            | 32 ++++++++++++++++++++++++--------
->>> > 2 files changed, 39 insertions(+), 9 deletions(-)
->>> >
->>> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->>> >index e79eb6ac516f..65e274550f5d 100644
->>> >--- a/include/linux/memblock.h
->>> >+++ b/include/linux/memblock.h
->>> >@@ -50,6 +50,7 @@ enum memblock_flags {
->>> > 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
->>> > 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
->>> > 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
->>> >+	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
->>> 
->>> Above memblock_flags, there are comments on explaining those flags.
->>> 
->>> Seems we miss it for MEMBLOCK_RSRV_KERN.
->>
->>Right, thanks!
->> 
->>> > 
->>> > #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
->>> >@@ -1459,14 +1460,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->>> > again:
->>> > 	found = memblock_find_in_range_node(size, align, start, end, nid,
->>> > 					    flags);
->>> >-	if (found && !memblock_reserve(found, size))
->>> >+	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
->>> 
->>> Maybe we could use memblock_reserve_kern() directly. If my understanding is
->>> correct, the reserved region's nid is not used.
->>
->>We use nid of reserved regions in reserve_bootmem_region() (commit
->>61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")) but KHO needs to
->>know the distribution of reserved memory among the nodes before
->>memmap_init_reserved_pages().
->> 
+Hi Charlie,
+
+On 06/03/2025 01:43, Charlie Jenkins wrote:
+> This function was unified into a single function in commit ab9164dae273
+> ("riscv: entry: Consolidate ret_from_kernel_thread into ret_from_fork").
+> However that imposed a performance degradation. Partially reverting this
+> commit to have ret_from_fork() split again results in a 1% increase on
+> the number of times fork is able to be called per second.
 >
->I took another look into this commit. There maybe a very corner case in which
->will leave a reserved region with no nid set.
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>   arch/riscv/include/asm/asm-prototypes.h |  3 ++-
+>   arch/riscv/kernel/entry.S               | 13 ++++++++++---
+>   arch/riscv/kernel/process.c             | 17 +++++++++++------
+>   3 files changed, 23 insertions(+), 10 deletions(-)
 >
->memmap_init_reserved_pages()
->    for_each_mem_region() {
->        ...
->	memblock_set_node(start, end, &memblock.reserved, nid);
->    }
->
->We leverage the iteration here to set nid to all regions in memblock.reserved.
->But memblock_set_node() may call memblock_double_array() to expand the array,
->which may get a range before current start. So we would miss to set the
->correct nid to the new reserved region.
->
->I have tried to create a case in memblock test. This would happen when there
->are 126 memblock.reserved regions. And the last region is across the last two
->node.
->
->One way to fix this is compare type->max in memblock_set_node(). Then check
->this return value in memmap_init_reserved_pages(). If we found the size
->changes, repeat the iteration.
->
->But this is a very trivial one, not sure it worth fix.
+> diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm/asm-prototypes.h
+> index 733ff609778797001006c33bba9e3cc5b1f15387..bfc8ea5f9319b19449ec59493b45b926df888832 100644
+> --- a/arch/riscv/include/asm/asm-prototypes.h
+> +++ b/arch/riscv/include/asm/asm-prototypes.h
+> @@ -52,7 +52,8 @@ DECLARE_DO_ERROR_INFO(do_trap_ecall_s);
+>   DECLARE_DO_ERROR_INFO(do_trap_ecall_m);
+>   DECLARE_DO_ERROR_INFO(do_trap_break);
+>   
+> -asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs);
+> +asmlinkage void ret_from_fork_kernel(void *fn_arg, int (*fn)(void *), struct pt_regs *regs);
+> +asmlinkage void ret_from_fork_user(struct pt_regs *regs);
+>   asmlinkage void handle_bad_stack(struct pt_regs *regs);
+>   asmlinkage void do_page_fault(struct pt_regs *regs);
+>   asmlinkage void do_irq(struct pt_regs *regs);
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index b2dc5e7c7b3a843fa4aa02eba2a911eb3ce31d1f..0fb338000c6dc0358742cd03497fa54b9e9d1aec 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -319,14 +319,21 @@ SYM_CODE_END(handle_kernel_stack_overflow)
+>   ASM_NOKPROBE(handle_kernel_stack_overflow)
+>   #endif
+>   
+> -SYM_CODE_START(ret_from_fork_asm)
+> +SYM_CODE_START(ret_from_fork_kernel_asm)
+>   	call schedule_tail
+>   	move a0, s1 /* fn_arg */
+>   	move a1, s0 /* fn */
+>   	move a2, sp /* pt_regs */
+> -	call ret_from_fork
+> +	call ret_from_fork_kernel
+>   	j ret_from_exception
+> -SYM_CODE_END(ret_from_fork_asm)
+> +SYM_CODE_END(ret_from_fork_kernel_asm)
+> +
+> +SYM_CODE_START(ret_from_fork_user_asm)
+> +	call schedule_tail
+> +	move a0, sp /* pt_regs */
+> +	call ret_from_fork_user
+> +	j ret_from_exception
+> +SYM_CODE_END(ret_from_fork_user_asm)
+>   
+>   #ifdef CONFIG_IRQ_STACKS
+>   /*
+> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+> index 7b0a0bfe29aec896c2bdd8976d855dd390de88d7..485ec7a80a56097e8905cd6395af29633846b5c8 100644
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -38,7 +38,8 @@ unsigned long __stack_chk_guard __read_mostly;
+>   EXPORT_SYMBOL(__stack_chk_guard);
+>   #endif
+>   
+> -extern asmlinkage void ret_from_fork_asm(void);
+> +extern asmlinkage void ret_from_fork_kernel_asm(void);
+> +extern asmlinkage void ret_from_fork_user_asm(void);
+>   
+>   void noinstr arch_cpu_idle(void)
+>   {
+> @@ -208,14 +209,18 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+>   	return 0;
+>   }
+>   
+> -asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs)
+> +asmlinkage void ret_from_fork_kernel(void *fn_arg, int (*fn)(void *), struct pt_regs *regs)
+>   {
+> -	if (unlikely(fn))
+> -		fn(fn_arg);
+> +	fn(fn_arg);
+>   
+>   	syscall_exit_to_user_mode(regs);
+>   }
+>   
+> +asmlinkage void ret_from_fork_user(struct pt_regs *regs)
+> +{
+> +	syscall_exit_to_user_mode(regs);
+> +}
+> +
+>   int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   {
+>   	unsigned long clone_flags = args->flags;
+> @@ -238,6 +243,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   
+>   		p->thread.s[0] = (unsigned long)args->fn;
+>   		p->thread.s[1] = (unsigned long)args->fn_arg;
+> +		p->thread.ra = (unsigned long)ret_from_fork_kernel_asm;
+>   	} else {
+>   		*childregs = *(current_pt_regs());
+>   		/* Turn off status.VS */
+> @@ -247,12 +253,11 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   		if (clone_flags & CLONE_SETTLS)
+>   			childregs->tp = tls;
+>   		childregs->a0 = 0; /* Return value of fork() */
+> -		p->thread.s[0] = 0;
+> +		p->thread.ra = (unsigned long)ret_from_fork_user_asm;
+>   	}
+>   	p->thread.riscv_v_flags = 0;
+>   	if (has_vector() || has_xtheadvector())
+>   		riscv_v_thread_alloc(p);
+> -	p->thread.ra = (unsigned long)ret_from_fork_asm;
+>   	p->thread.sp = (unsigned long)childregs; /* kernel sp */
+>   	return 0;
+>   }
 >
 
-Hi, Mike
+As I had noted in v2, this won't bring any performance improvement on 
+real hardware, so I'm not convinced we need this patch.
 
-I have done a user space test which shows we may have a chance to leave a
-region with non-nid set.
+IMO, we should merge micro-optimizations like this if they really bring 
+something.
 
-Not sure you are ok with my approach of fixing.
+Thanks,
 
--- 
-Wei Yang
-Help you, Help me
+Alex
+
