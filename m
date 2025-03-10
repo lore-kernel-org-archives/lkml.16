@@ -1,157 +1,147 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50692253E1
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C82122578D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741599624; cv=none; b=qltCmoLjTUToMBxKC9vnycMPmvNz0bNgqd9Y0ZmEjnqIS9WcG6QquKBqFXrmpNbVgANgUTs69eUo4BgZ0+sGFDQdswp13orYZ9mF9gqNHYjbBYJ7eU5wp6DmpADf+04jyKB8iu8utrmqjRpcXzBHlQmLmwlNvefQvd1ZJHZN2Lc=
+	t=1741599629; cv=none; b=CYSL4Oos/VCz4c5HvSqC5ewq7Knnw6lXgfZ3yJoTj8Kw4GXozvrU/Ew5XwDYWfSaeNw0pz3hPwkyt141JIw85u8IjkWT4WjICMXFSQkt76jBHOGTWkbk2el6Oh9S346ieIiHuCzs7Kt9WzRcgW0L8ZHs+nBP1aCW3zWwJGIL5MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741599624; c=relaxed/simple;
-	bh=+0wn6CEZBMks82wBoIPLAtnrHTCR+LvgWxO/drTJy2c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CmIU4FMM/wygl8dMbEg0uRAUBRRBc0C/RRCW4JX/u9ZF9ppsre0IdprIZ51at6Tdy8cAofVRLKpAmDbLKGXRLOoK/gZPJ11oNSvCdzvkqziHFNxcleAY8t6ceyoRzB456BzgfsIP3epJvV/mu5yUTK4JhZ8gVVU8tHGV/OfdhEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=HjYiFA7F; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="HjYiFA7F"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id EA05B24002A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:40:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1741599620; bh=+0wn6CEZBMks82wBoIPLAtnrHTCR+LvgWxO/drTJy2c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
-	b=HjYiFA7FUOhEeK6QNoDusYHrF7NqumYMc2pTgtGqANSYErV7CfVghhEdfLXF0gb+6
-	 AyBVl8ILXOyVgZZ5hCQrK8MNrAzTN/ZKh7emJ51agDWxniE7an+qTpNEVo2n54Hns9
-	 EjWx/3ZIZg+JYvJw2hAbgB9K6XipWd64anzII64B5pa2m8U4yHkuTNi1EnY85OJCzA
-	 B3CbmWbvg5PRrw3gqxb44vnOqNwGdQcpWrxEbvRECpBcW7LpiSSiub3T67L5BfUmX9
-	 3h+IaMawrDXdB6KbtXZuHHdFtqfI6V4SQcTo82TJQIqVzBA3abEc7Ln+H4+pWhxn9c
-	 fshze9SQECPPg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZBBhK6GQdz9rxM;
-	Mon, 10 Mar 2025 10:40:17 +0100 (CET)
-From: Panagiotis Foliadis <pfoliadis@posteo.net>
-Date: Mon, 10 Mar 2025 09:39:15 +0000
-Subject: [PATCH] rust: task: mark Task methods inline
+	s=arc-20240116; t=1741599629; c=relaxed/simple;
+	bh=lo+mgRRNQjvpOTF3c3mfILdt7OCcuqmpFl0MOtPCrC8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HqploRXRHdLr7VjwL+lHxmjY/Le+h0M3l2l9OReVzDZ9IBqgFBGdzK+7e0gDB+Ny9FrdufYpKtGmhgMzENDY9SvPk2zBo8NC6gTDRDGmFw30PVUM2VfWx8330ma7Phaqs5dliBq+H7v5kYLcvo8w374z8SwCOXrYoJL2M/kJuKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b3b781313so351111439f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 02:40:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741599627; x=1742204427;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NE/k1yN/gLjrNlDfMWfhJPadtzMdT1WCO7NFniN3tmA=;
+        b=Cg7McH6IQymv1AqeKTXtrpmmJpfATPhTwTabCgv0Eoh6prJdrc6NhrVt0mhaad06QP
+         1zf2+phmBcRzYpi9U9I8krw16Wm7hWGhvOOy1gdHLfOSvbv0ISsrJGvF3EZPW/bhjFVZ
+         3z+V63FHXJwsJ+wfv5OmMXJd41jKHkDFTmZCa4bFN6T2L07K8KBGCn+uUax78yPc7kMa
+         jF4Qp2HFsr92CvHSBfkoda9Tpi1eVEMqU/SILmRpKl4pcgF+R/Xeu/HGTDL2voOugzBp
+         dg55s1+nSG3NAijBeQWMptKtxavNvmV6YgcItINm9qOA0wyGMfGPs2VzJKgIdi2WykQt
+         OYFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxa1SgfobAxh1GxqeqMD5J6nfebz3SL00p3Upe2t4shTFz7srMCNQ5KBKoi2K89R8h+GkWtXe4al4m6XQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq30+DEGcaWp4F/aqC4RKpyvi6q0gHcGVWzU/Lkdn6e9F7de1k
+	wup8aqWlZlzknWSKZNUs1XFGmHlOmPmelv7hr2NB1WTViRVXfhO6Wr+2G3bGCkUCrhTL7W80iOl
+	zXV5Sf0AbkKk71Wh4OMrAjLWc8BC1IVc6p+ICCmQE4udoE00+Re+y8jc=
+X-Google-Smtp-Source: AGHT+IFwfuahL2FdpG6q4fYGDj1OphYaUWZoo8mff8eTs9/Lt2LG1X3x7humY8uWcVcDb4A33QAji53ZHNKx8r4N2MQYNRASfR40
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250310-inline-c-wrappers-v1-1-d726415e6332@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAEKzzmcC/x3MQQqAIBBA0avErBtQI5KuEi1EpxoIkxEqEO+et
- HyL/wtkEqYMc1dA6ObMV2zQfQf+cHEn5NAMRplRDcoix5MjocdHXEokGYOzA3ntjZsmaF0S2vj
- 9n8ta6wevQw8GYwAAAA==
-X-Change-ID: 20250308-inline-c-wrappers-da83ec1c2a77
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Panagiotis Foliadis <pfoliadis@posteo.net>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741599617; l=3618;
- i=pfoliadis@posteo.net; s=20250308; h=from:subject:message-id;
- bh=+0wn6CEZBMks82wBoIPLAtnrHTCR+LvgWxO/drTJy2c=;
- b=va5T3sB7VN1Q9VHEsh3uaHTGU4mG5/H7vyeKhbV9ow08fFutaBADQBRBBoxI25knuJk/WSbvd
- lcQNwKQCGwqD1x0sQrVwXOE8i3+IRZRxnESvJFR88YHq6gC+SrYXHQa
-X-Developer-Key: i=pfoliadis@posteo.net; a=ed25519;
- pk=/8ch2dv3mwtZ5ygYwiG7ldc/132K6XmLkAZDmIe0aQw=
+X-Received: by 2002:a05:6e02:198e:b0:3d4:36da:19a1 with SMTP id
+ e9e14a558f8ab-3d44193ed4fmr179769775ab.21.1741599626800; Mon, 10 Mar 2025
+ 02:40:26 -0700 (PDT)
+Date: Mon, 10 Mar 2025 02:40:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ceb38a.050a0220.e1a89.04b1.GAE@google.com>
+Subject: [syzbot] [mm?] [fs?] KCSAN: data-race in __filemap_add_folio /
+ invalidate_bdev (8)
+From: syzbot <syzbot+f2aaf773187f5cae54f3@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-When you build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
-toolchain provided by kernel.org, the following symbols are generated:
+Hello,
 
-$ nm vmlinux | grep ' _R'.*Task | rustfilt
-ffffffff817b2d30 T <kernel::task::Task>::get_pid_ns
-ffffffff817b2d50 T <kernel::task::Task>::tgid_nr_ns
-ffffffff817b2c90 T <kernel::task::Task>::current_pid_ns
-ffffffff817b2d00 T <kernel::task::Task>::signal_pending
-ffffffff817b2cc0 T <kernel::task::Task>::uid
-ffffffff817b2ce0 T <kernel::task::Task>::euid
-ffffffff817b2c70 T <kernel::task::Task>::current
-ffffffff817b2d70 T <kernel::task::Task>::wake_up
-ffffffff817b2db0 T <kernel::task::Task as kernel::types::AlwaysRefCounted>::dec_ref
-ffffffff817b2d90 T <kernel::task::Task as kernel::types::AlwaysRefCounted>::inc_ref
+syzbot found the following issue on:
 
-Most of these Rust symbols are trivial wrappers around the C functions
-signal_pending, uid, euid, wake_up, dec_ref and inc_ref.It doesn't
-make sense to go through a trivial wrapper for these functions, so
-mark them inline.
+HEAD commit:    80e54e84911a Linux 6.14-rc6
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1664a7a8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=958433697845b9a6
+dashboard link: https://syzkaller.appspot.com/bug?extid=f2aaf773187f5cae54f3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-After applying this patch, the above command will produce this output:
+Unfortunately, I don't have any reproducer for this issue yet.
 
-ffff8000805aa004 T <kernel::task::Task>::get_pid_ns
-ffff8000805aa01c T <kernel::task::Task>::tgid_nr_ns
-ffff8000805a9fe8 T <kernel::task::Task>::current_pid_ns
-ffff8000805a9fd0 T <kernel::task::Task>::current
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e94728c052e3/disk-80e54e84.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/742f05e27746/vmlinux-80e54e84.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/90d418e775f7/bzImage-80e54e84.xz
 
-Signed-off-by: Panagiotis Foliadis <pfoliadis@posteo.net>
-Link: https://github.com/Rust-for-Linux/linux/issues/1145
----
- rust/kernel/task.rs | 6 ++++++
- 1 file changed, 6 insertions(+)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f2aaf773187f5cae54f3@syzkaller.appspotmail.com
 
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 07bc22a7645c0c7d792a0a163dd55b8ff0fe5f92..996d7c96e48689a5752817f9ca196c021865291d 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -273,18 +273,21 @@ pub fn pid(&self) -> Pid {
-     }
- 
-     /// Returns the UID of the given task.
-+    #[inline]
-     pub fn uid(&self) -> Kuid {
-         // SAFETY: It's always safe to call `task_uid` on a valid task.
-         Kuid::from_raw(unsafe { bindings::task_uid(self.as_ptr()) })
-     }
- 
-     /// Returns the effective UID of the given task.
-+    #[inline]
-     pub fn euid(&self) -> Kuid {
-         // SAFETY: It's always safe to call `task_euid` on a valid task.
-         Kuid::from_raw(unsafe { bindings::task_euid(self.as_ptr()) })
-     }
- 
-     /// Determines whether the given task has pending signals.
-+    #[inline]
-     pub fn signal_pending(&self) -> bool {
-         // SAFETY: It's always safe to call `signal_pending` on a valid task.
-         unsafe { bindings::signal_pending(self.as_ptr()) != 0 }
-@@ -319,6 +322,7 @@ pub fn tgid_nr_ns(&self, pidns: Option<&PidNamespace>) -> Pid {
-     }
- 
-     /// Wakes up the task.
-+    #[inline]
-     pub fn wake_up(&self) {
-         // SAFETY: It's always safe to call `signal_pending` on a valid task, even if the task
-         // running.
-@@ -328,11 +332,13 @@ pub fn wake_up(&self) {
- 
- // SAFETY: The type invariants guarantee that `Task` is always refcounted.
- unsafe impl crate::types::AlwaysRefCounted for Task {
-+    #[inline]
-     fn inc_ref(&self) {
-         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
-         unsafe { bindings::get_task_struct(self.as_ptr()) };
-     }
- 
-+    #[inline]
-     unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-         // SAFETY: The safety requirements guarantee that the refcount is nonzero.
-         unsafe { bindings::put_task_struct(obj.cast().as_ptr()) }
+EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
+==================================================================
+BUG: KCSAN: data-race in __filemap_add_folio / invalidate_bdev
+
+read-write to 0xffff888100630570 of 8 bytes by task 3291 on cpu 0:
+ __filemap_add_folio+0x430/0x6f0 mm/filemap.c:929
+ filemap_add_folio+0x9c/0x1b0 mm/filemap.c:981
+ page_cache_ra_unbounded+0x1c1/0x350 mm/readahead.c:276
+ do_page_cache_ra mm/readahead.c:328 [inline]
+ force_page_cache_ra mm/readahead.c:357 [inline]
+ page_cache_sync_ra+0x252/0x680 mm/readahead.c:585
+ filemap_get_pages+0x2ca/0x11a0 mm/filemap.c:2580
+ filemap_read+0x230/0x8c0 mm/filemap.c:2691
+ blkdev_read_iter+0x228/0x2d0 block/fops.c:796
+ new_sync_read fs/read_write.c:484 [inline]
+ vfs_read+0x5cc/0x6f0 fs/read_write.c:565
+ ksys_read+0xe8/0x1b0 fs/read_write.c:708
+ __do_sys_read fs/read_write.c:717 [inline]
+ __se_sys_read fs/read_write.c:715 [inline]
+ __x64_sys_read+0x42/0x50 fs/read_write.c:715
+ x64_sys_call+0x2874/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:1
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff888100630570 of 8 bytes by task 3306 on cpu 1:
+ invalidate_bdev+0x25/0x70 block/bdev.c:99
+ ext4_put_super+0x571/0x810 fs/ext4/super.c:1356
+ generic_shutdown_super+0xe5/0x220 fs/super.c:642
+ kill_block_super+0x2a/0x70 fs/super.c:1710
+ ext4_kill_sb+0x44/0x80 fs/ext4/super.c:7368
+ deactivate_locked_super+0x7d/0x1c0 fs/super.c:473
+ deactivate_super+0x9f/0xb0 fs/super.c:506
+ cleanup_mnt+0x268/0x2e0 fs/namespace.c:1413
+ __cleanup_mnt+0x19/0x20 fs/namespace.c:1420
+ task_work_run+0x13a/0x1a0 kernel/task_work.c:227
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xa8/0x120 kernel/entry/common.c:218
+ do_syscall_64+0xd6/0x1c0 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+value changed: 0x000000000000000d -> 0x000000000000000e
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 UID: 0 PID: 3306 Comm: syz-executor Not tainted 6.14.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+==================================================================
+
 
 ---
-base-commit: 7f0e9ee5e44887272627d0fcde0b19a675daf597
-change-id: 20250308-inline-c-wrappers-da83ec1c2a77
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Best regards,
--- 
-Panagiotis Foliadis <pfoliadis@posteo.net>
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
