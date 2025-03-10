@@ -1,168 +1,87 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F66E231A2B;
-	Mon, 10 Mar 2025 16:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDEE1BD9C6;
+	Mon, 10 Mar 2025 16:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741625605; cv=none; b=X8DP/XGlKW23kpQikU7CohZ6LfDVN1M0I3GBba/QsaNlcY8V0IS6gwMxYt++9LLlRCqp7UYto1xk1JePcfik4XdSh773Mn6lQ2hvvLCZDiubZh7TlyUqp/EXqckHu1Hy1bOhPfckdlH7or3F37MbrsqprSOxnaB6s1Wk8hy1Uts=
+	t=1741625678; cv=none; b=sTKd5UNbPAvPKfwV8PAVaYqkrrsWenD3Rt9hAUbCU+RiolxTry4iyNOxOsXzHJAJj3qUr43RWGYy4/sItowgS5Gy4btqn3KTS9nkQen1twMbC7GzB0ISCiMiI/uqCDBkDGiixZxxq0bmEW1i7I5aV6TWDZsNSklTef+sOGqoBi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741625605; c=relaxed/simple;
-	bh=AyfR641cdKCZy6W0n6TlmM4KyPqA41GREqbdpaC3pjg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R2bVtH9TC7097ptvdh2QHxqcVOZAwMz6iv26istW+vFpq4dVU2pus7ieMdVmcuv9dVXTePdPuiG+TA/QBQdWQmv+IR6/TwYfPM8utQbnYNh5W+0V5kVYrQJUVGuP70VQulXMKA1qL5BEFpnCV06gG6Em9D7dfBSCFnSKZbDQPpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xgq+b2QE; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741625678; c=relaxed/simple;
+	bh=p/WTFwQVZWqzvwsT0pYojOfEwtLBKPo356bGqhDxAII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlhIMdLQg5kOZ5tqshgejq6kgGNQbjHPRbt/DIS5LMBoJim9uSSMNURKJNNt+JIWp8/1X7RMRc7OMU605gL5bVckb4rsgxsJx6Qrrr1TVfC2zMKeIgcHZce1xjimW2rD6lwqkK0D8ddRFP0sMtcIz39gSvOt54zKKvRRW/gwSGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaXbUIoi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xgq+b2QE"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff7cf59a8fso972627a91.3;
-        Mon, 10 Mar 2025 09:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741625603; x=1742230403; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MGWCx+SP2CEwzo/yDt6/toEmCVnke5ZqmE53jF+Pnaw=;
-        b=Xgq+b2QEz7XsPyKSWLgfS/XebKnyR5OqAm1O3i/VIPlscetSBaWoV5PPXtk5m+NX95
-         KOptRjHaWx+Vz8RYjvy8q2xGRs6tOMgQE5+SGuxDN4vsvIFUI4+UYu1p3zbDRGLDdHdV
-         9pxt6UzDTVgR+QF2Oea+UZdYFR/zk5hU4xQVeE/H0kk5LutjuntGFKEZNcWOAbcPLnHw
-         HggvO022Wr0hED0LxjbQl5sDtfKuVF1hWjGqZ/pofmmXEFeCmT5nIKNwlKUj0pc7FtAn
-         7z+w5ZXMjbKout8ilJ6RlRTnoUIaSPNCOmkvf+hBCTMW/9DLchC/05JqqNKGFjUu4b81
-         vtrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741625603; x=1742230403;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MGWCx+SP2CEwzo/yDt6/toEmCVnke5ZqmE53jF+Pnaw=;
-        b=YyPHCCHaXQK/BU7L03cG3MnON9nO5mEpHVFuHG0BziU6jnYP234f4/fP2bL80qkx5g
-         7aK3kcMNFrEn96BkbH2ymK8K784/Cug4mIG50ImrB3iOsGBjaIBctjE5n8JXIIcSf80G
-         G3uxwWAFVIRZRg0ku6TDpLjneJt6DKdSdpM2iRTgg/h9VoYENXNS04ZFSq8ahoccK2tf
-         FCgk7UuHNqMuFztcCRo6jpLO9V8ATCygmGPEU9fCrDM1egyzWsHaU7nFEthASfRpY316
-         TNR63+Hs5d7fV0suDydAkRpqFKH8lZ1VhZUyfTLZ1qRp51L3Sxg9KOP0x56CGX41Ui+o
-         t+MA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhURlpKF8zw4y+GWPn/52g6oFaw0Rh/mS+bOfQtBFnXpA+tFzp2gEDJql1P+aPugY0VJjt2Dg+zGoRPka/lUk=@vger.kernel.org, AJvYcCXpDZtqC84arwmiqxvHZT+y788w8VWjEv1ywDkMoju+C7RKVFxd75Rm4djzEn7xI8RT9H+ipXUPVBvWPQA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPPqrbX2yw6kcrSyDmvEz7KyuthjL4fQ9LH0xtfl3x6e/xE+/a
-	yGUDIuQgmdANx42RdzXjhPvZ2O1IgVEwcB+iolFRwJ0MB5v1dHZZ1tc/lgwbj6kHuWTJ/PGE4nC
-	ZExnPWFsVqoj2oLw4FASqhfjdHbQ=
-X-Gm-Gg: ASbGncuFzZIx8vB/7rRZ32As5nf9VI7hDu/RoFv+3i7btxP1Wo6i5AesbtjZ3fHR1gg
-	ln4hOx7mFGLqniV4bjB/T+GVyyFAOLFEE/XfOaHVvOn8fmgqe4vy5cPgYRqsOCZ2VKQhyBQNGrd
-	MOLOyN36wGVplkTfXNSuKllT+daw==
-X-Google-Smtp-Source: AGHT+IEYPLWSokqycAlJYDknETMKQnZPApe3+mtQKMISpbNvpmAarVnfXC69vQZ7iPcoM2dsavEQ/18114ggROUq/0s=
-X-Received: by 2002:a17:90b:224d:b0:2ff:4e90:3c47 with SMTP id
- 98e67ed59e1d1-300ff897fd9mr235938a91.4.1741625603212; Mon, 10 Mar 2025
- 09:53:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaXbUIoi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54C3C4CEEB;
+	Mon, 10 Mar 2025 16:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741625678;
+	bh=p/WTFwQVZWqzvwsT0pYojOfEwtLBKPo356bGqhDxAII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gaXbUIoiQBiyUyqGF58080L7cQWbflH5i2Y05U8RHv6DMnN2QgkWiATjkgwOBdH/x
+	 0FS0cUqrYep3QcXXmqw8w3s11A79/GxSGC1AgM5pldYV3zIfLEh9bILlUAi4TAS1Bz
+	 HXMj/CM8hkYAGgp6iDGOegNByZ9OUoqT1ZWVXSnzrSzQBBfogv0n0BWkSONDhZDGrU
+	 XuMDF25IWDyNRXaTjhVcUlIEAfNkUUaeopoWe+hCtSkg2KN1NuPrCawn45dr20MgHz
+	 7WA2Jm7v8T40byL5ZV3HNO1n7bWUcVec7Z0YCZlVGgvKH9i6GTduUDL5Ry/WGSe8+g
+	 5ACz+RMmm5hKw==
+Date: Mon, 10 Mar 2025 16:54:36 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: mhklinux@outlook.com
+Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	kys@microsoft.com, jakeo@microsoft.com,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] Drivers: hv: vmbus: Don't release fb_mmio
+ resource in vmbus_free_mmio()
+Message-ID: <Z88ZTO88g9I6Nuqy@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250310035208.275764-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310161947.1767855-2-bqe@google.com>
-In-Reply-To: <20250310161947.1767855-2-bqe@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 10 Mar 2025 17:53:10 +0100
-X-Gm-Features: AQ5f1JqSAgmpt3Iw0rHmDnmkw3gQAiO5-r-omP0lH1MAV1e7rN4oiPAdku5NFKY
-Message-ID: <CANiq72=uBYDBn2CS9OW-+S0=rCZEJFdrcBAk8yBQdNB+0Yjq=A@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: add bindings and API for bitmap.h and bitops.h.
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310035208.275764-1-mhklinux@outlook.com>
 
-Hi Burak,
+On Sun, Mar 09, 2025 at 08:52:08PM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> The VMBus driver manages the MMIO space it owns via the hyperv_mmio
+> resource tree. Because the synthetic video framebuffer portion of the
+> MMIO space is initially setup by the Hyper-V host for each guest, the
+> VMBus driver does an early reserve of that portion of MMIO space in the
+> hyperv_mmio resource tree. It saves a pointer to that resource in
+> fb_mmio. When a VMBus driver requests MMIO space and passes "true"
+> for the "fb_overlap_ok" argument, the reserved framebuffer space is
+> used if possible. In that case it's not necessary to do another request
+> against the "shadow" hyperv_mmio resource tree because that resource
+> was already requested in the early reserve steps.
+> 
+> However, the vmbus_free_mmio() function currently does no special
+> handling for the fb_mmio resource. When a framebuffer device is
+> removed, or the driver is unbound, the current code for
+> vmbus_free_mmio() releases the reserved resource, leaving fb_mmio
+> pointing to memory that has been freed. If the same or another
+> driver is subsequently bound to the device, vmbus_allocate_mmio()
+> checks against fb_mmio, and potentially gets garbage. Furthermore
+> a second unbind operation produces this "nonexistent resource" error
+> because of the unbalanced behavior between vmbus_allocate_mmio() and
+> vmbus_free_mmio():
+> 
+> [   55.499643] resource: Trying to free nonexistent
+> 			resource <0x00000000f0000000-0x00000000f07fffff>
+> 
+> Fix this by adding logic to vmbus_free_mmio() to recognize when
+> MMIO space in the fb_mmio reserved area would be released, and don't
+> release it. This filtering ensures the fb_mmio resource always exists,
+> and makes vmbus_free_mmio() more parallel with vmbus_allocate_mmio().
+> 
+> Fixes: be000f93e5d7 ("drivers:hv: Track allocations of children of hv_vmbus in private resource tree")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Tested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 
-Some quick notes...
-
-On Mon, Mar 10, 2025 at 5:20=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
->
-> +void rust_helper_bitmap_copy_and_extend(unsigned long *dst, const unsign=
-ed long *src, unsigned int count, unsigned int size)
-> +{
-> +       bitmap_copy_and_extend(dst, src, count, size);
-> +}
-
-Please use the same parameter names as the real one, i.e. `to` and `from`.
-
-> +/// Wraps underlying C bitmap structure.
-
-I am not sure I would say it "structure" here, i.e. it seems like it
-actually wraps a C `struct bitmap`.
-
-In general, we also try to mention the "wraps ..." (if it actually did
-so) in a second paragraph, rather than doing so in the title.
-
-> +/// # Invariants
-> +///
-> +/// * `ptr` is obtained from a successful call to `bitmap_zalloc` and
-
-Also, you may remove the bullet list -- we currently do not enforce
-that it is always a bullet list (though we may in the future).
-
-> +    /// Pointer to an array of unsigned long.
-
-`unsigned long`
-
-> +    ptr: NonNull<usize>,
-> +    /// How many bits this bitmap stores. Must be < 2^32.
-
-Should the "Must be" be part of the invariants above?
-
-> +        // SAFETY: `self.ptr` was returned by bitmap_zalloc.
-
-"the C `bitmap_zalloc`"
-
-> +impl Bitmap {
-> +    /// Constructs a new [`Bitmap`].
-> +    ///
-> +    /// Fails with AllocError if `nbits` is greater than or equal to 2^3=
-2,
-
-Intra-doc links where possible: [`AllocError`].
-
-> +    /// # Example
-
-We use plurals even if there is a single example (like for the invariants).
-
-> +    /// ```
-> +    /// # use kernel::bitmap::Bitmap;
-> +    ///
-> +    /// fn new_bitmap() -> Bitmap {
-> +    ///   Bitmap::new(128, GFP_KERNEL).unwrap()
-> +    /// }
-> +    /// ```
-
-Is there a reason why this example cannot be run? i.e. to not have it
-wrapped in a function.
-
-Also, please use the `?` operator if possible -- we try to write
-examples as "real code", so we try to avoid `unwrap()` etc.
-
-> +            Ok(Bitmap { ptr, nbits })
-
-When we have invariants, we use an `// INVARIANT: ...` comment (please
-grep for similar cases to see how it is usually done).
-
-> +    /// Returns how many bits this bitmap holds.
-
-We should have examples (which double as tests) for these.
-
-One alternative, that may be simpler to showcase how the type works,
-is to write a longer example in the documentation of the type itself.
-
-> +        // SAFETY: nbits =3D=3D 0 is supported and access is within boun=
-ds.
-
-Markdown wherever possible, e.g. `nbits =3D=3D 0` (also other instance).
-
-Thanks!
-
-Cheers,
-Miguel
+Applied to hyperv-fixes. Thanks.
