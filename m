@@ -1,445 +1,242 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBEB230BEE;
-	Mon, 10 Mar 2025 16:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741624811; cv=none; b=ZNwAwpuKJ9/u3l+e4p7zuN4toA23Rq93fkY0Fo5xh87ugiIHAuyPH87nK/MmjAcGeLmGavb/VueFdvIG9G0Un4VBzSIHAeKgBHmSw2zRIu9UM4qlHSr9otQEuhGr4Vpm7n/iDKYaOOB3HjEnGfJOIx5TZIO90Xdo/vCQT8jYTlI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741624811; c=relaxed/simple;
-	bh=MgCdjpVn5JjBH9Q7mqPRM+D+GIItbuUSnEVe5WROEq4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Sexu1zwAMnacrUAl/R+L0ANaoQWK3QxH08P4sXwnR9x4scewfpms6wjA2AT0e6fGPtpYKFnc4ESyVHqXBPKQt+/mxdCm/jeHdNiyE3DnVCDyPVP9w7trDziSJ4QVrzyl7XmTUUCy2aUyTPhH/R7q2TzHOvmHk38NGxDrX60OxV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h64oHeq1; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5A622F17C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741624839; cv=fail; b=gKPmOP2WPYcrbsWJxEpRfWNuTUKDuurDw4/ZR1M3M81ak67X18xxAAU+gUaqFvXqcKzgsfEZ5zsXLijaRM9hw1uw3Rd1+uNNeJVMTLV6WihIF7sXTGcBK74aFbhR7F/B1tfjne05HGjMZDWS90J8ErduGYgKIyQr5S5bz07N8xk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741624839; c=relaxed/simple;
+	bh=LdY2Wrh8pA3HInJObcW0Z8BXruB8v3H4H6WBRzvjHjo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FqJyFr+PfLW9kuOXBrbzTa7GM4qVQIBZ/5bzZT8V9V1IHXZmJKrarml8GLa2SV1f3z2PqXu2WqWj0IM5uKMHyeJIJrrF8kTvzYYQCsiNQVTrzvVc+myvN8jptto1roB4KrmObv3+kJfB3MOH3yi1J0HLeApSphBkD59nVtGQh+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rAJfGgvw; arc=fail smtp.client-ip=40.107.93.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h64oHeq1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6D46A44431;
-	Mon, 10 Mar 2025 16:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741624807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A5Z5zPAM+0f74IQVMyMnuPc/AXbhtFbg6j2IA+SJm9I=;
-	b=h64oHeq1uyNez9W5evGd9PY67ZjNAR1fuiiK+TMOXzTbeKQGefuR7Q7bRqbxrwmBOFFDso
-	e6mHalCnSDlDAhC256k7wZJWnE5Ka46DeouXQUaHWH34Emd9kkAopHJ8NkbfoP9d+ljm/F
-	KIALtjuDi21ISdtyb8hHfxf+h5R2m+QCqlHWz47+G9t2S0zztrOxOTQNDcDUIhBv2fZfPf
-	Dr5kJjEYhSqwf4mjVW/iHCoJ+jxcVvMkDS8SXfuVl6wuB4LniChuJQ6YDpC0/9hGyCRqIk
-	oMAaXSrfJqHVonDJPtENUQCUuex+bkjmn01iaakuy601wao8v1smCWwT6CMV6A==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 10 Mar 2025 17:39:50 +0100
-Subject: [PATCH v4 3/3] ARM: dts: imx6ul: Add Variscite Concerto board
- support
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rAJfGgvw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xi2YiNHkH6JU2trxzv0+Tl3lQJdkWRsUexlu9HG8v/DvJCbgI9NnNq/gGOHu4MFZWe9hgZJzI92r1eyDGEtgMk2+RUPCLvJru0i1ifxOkrHWlf9Z1W7R+yf1Q1yJ4Ob2u1gRdUGxrVSPEkxMTx6tZIbfBhZJnXCKtwpFUGFDxcMfXRH1fy3BpQjhyXCN1IVctKTD0SapTFXvoBYKrYnUKmmh5QRTY/Q+ght/SdCePh8ttJyDxcBh2UXs70hLlGrUJthxKTnj+SLV0URWjdmYtNFawngriY8MbHzpGS9M2xsDFUXKGdpkVySY0xg6wPkEpFgrykJaVOJS2Dm92C15jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vy1e7AbaI0l0iyO3jFfUGq3avsKRwSRnj9oCBE44DL0=;
+ b=WdRdrU4hOrcW9pux500TBRPY0WpfaAqbN6np0PPC6jOl3OHPy4LJpR9LODb+r4gRughcVepkRmYjpvmqS8LxG9QEbrKa8j6LIeDDqOe5T18DrJh2KcLc24nLgDS7XJlwinOv5Mb26llEP0NeTEmtGm7hjzZH0716a258jqf2t+J2PexIDjW32YDaqNuMG/izdh4AomfI9Neu8UKlLgsOZJR9YyXPhWjEvlZO7K/6RDQmLzaj5Ff76Arcgfd/WHUqj8fC7AzgICY1IgGqX+Rq2B4Z052JCFCZIcKlSGHeW0kqJoLh6KQdU1LcJmglJ27ZcU/ZorY8NfGqZ4HCYE7ZcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vy1e7AbaI0l0iyO3jFfUGq3avsKRwSRnj9oCBE44DL0=;
+ b=rAJfGgvwl0lFYMt3rzb8q8D0yFuiMTqfqAnWMWlGKrP7gACYCbRuyfzipOhhBCsPmOkh5ZKX1VInOK73VCZrzt1AetbYFf0t0OVTSJ94fv+HEl31p198/tJpBOSttBt0MUradBUZPmYLfAIEMhaqkeyEBG+4/CFf2G0EqNIMjuY=
+Received: from BL1PR13CA0071.namprd13.prod.outlook.com (2603:10b6:208:2b8::16)
+ by SJ5PPF1C7838BF6.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::98d) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Mon, 10 Mar
+ 2025 16:40:34 +0000
+Received: from BL6PEPF00022573.namprd02.prod.outlook.com
+ (2603:10b6:208:2b8:cafe::78) by BL1PR13CA0071.outlook.office365.com
+ (2603:10b6:208:2b8::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.18 via Frontend Transport; Mon,
+ 10 Mar 2025 16:40:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF00022573.mail.protection.outlook.com (10.167.249.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Mon, 10 Mar 2025 16:40:33 +0000
+Received: from tiny.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Mar
+ 2025 11:40:32 -0500
+From: David Kaplan <david.kaplan@amd.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar
+	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>
+CC: <linux-kernel@vger.kernel.org>, Brendan Jackman <jackmanb@google.com>,
+	Derek Manwaring <derekmn@amazon.com>
+Subject: [PATCH v4 00/36] Attack vector controls
+Date: Mon, 10 Mar 2025 11:39:47 -0500
+Message-ID: <20250310164023.779191-1-david.kaplan@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250310-varsom6ul-concerto-dts-v4-3-6034fda6ec64@bootlin.com>
-References: <20250310-varsom6ul-concerto-dts-v4-0-6034fda6ec64@bootlin.com>
-In-Reply-To: <20250310-varsom6ul-concerto-dts-v4-0-6034fda6ec64@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9091;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=MgCdjpVn5JjBH9Q7mqPRM+D+GIItbuUSnEVe5WROEq4=;
- b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnzxXlaR+zor43bMUElOzKYcXOPnxe1JBqoeIiB
- wajWfw1dY+JAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ88V5QAKCRDRgEFAKaOo
- NjklEACAYt5demjngsRu9rXXvDDzpm4nTv8KkCEYCNlR3BlvEKo0BTvPNwu4vk8C1Ex/fTlQwta
- ikP+7Xh1nrj36CGwmXgnL+aP3Ql45kd6M/0CbyDExTm60yDtNbs2P1AT9WI/wBwLAKY2AraS5m4
- 5XJ+eCqjrsVR49hR4y95NqMTOT8lOIP5IED75r72zXYjjObtk/HgfaIhFz9TzIWW6v18Xgu0Q+G
- Nw5ZAPa8XnxgEhzLBuLtwWt92AYqtXWRah64xCvY72WWZlYIy1JXMx/jloc7jirX0HKV3vmrgcS
- gCXl+EHOWDHMaF625hLP4FP1PmE2oFvicL6BqlFoxKVBIO3y1OJeVgYaTPbfLK0FyuYpkDX4WLc
- mnKT+1WR8lSblt11ZDK2JSSOMDOxWHFQBXWVyQPMqL5BP6t8Gz0pf+0HXVuR0sJvZCYdgBsELBY
- N2CBOfmgd3ivO8iD/R/yhNgTq2lZbO/yjf1e+5oqbYKMXIxj4l4EDP3dpkNDRS/6Xz7ZfeOXGyz
- F9O+v43FPlR9W1aAHYe+i7A48M6PUVpn23qci6QqW2A6VkTDiwURQfRcBUYb+9qPXKy/De9Crtv
- 6M8dCsgxFe4Cu/jvGAOmy36yCw3gSmkX2UCKJ321agYmCJs1WUvBHZpIkaAVZ591ADJKHAGjaCu
- /ZCJzT6Afq7ufWg==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekgeekvdduvdetheetgeefgfeljeevgfegkeduheeutdevvddtfedvveettddtvdenucffohhmrghinhepvhgrrhhishgtihhtvgdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: antonin.godard@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00022573:EE_|SJ5PPF1C7838BF6:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea503b2e-26a3-4aaa-a2da-08dd5ff24724
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vT4csCFqPqqrRH5tn5fRdRKRAdCnDNjiucm44zXZSD1YbgRz8g/b5uSOELj8?=
+ =?us-ascii?Q?hCv3ShL+M9iUZX/ECtPRLJkbO4J1IfbL8Aw9Nk2s4GDzF7l6/W4F8RETs/tl?=
+ =?us-ascii?Q?ceK81macLQQWcKCgB+wCw/Slkr8I8uoSokSfxhg4lExlOCASIRoQArP2liln?=
+ =?us-ascii?Q?rq3wKbuQQUUN5LyRttTSyL29cEPb8bXlVpL6NRj2KWfz1+3pKj13aHTk6OHy?=
+ =?us-ascii?Q?k7GIecGocgkqEjjeL5SC92Qvfsje6EKAh8wpEPSY0uVnnMPdXJ5CGau10/ZZ?=
+ =?us-ascii?Q?rN9P/Zyii+JJyfIso4ofsbPPDexbLTNqY5kjdaTOzUyFkSprfSGkERpdfJpm?=
+ =?us-ascii?Q?2eAni+CJCwgYv+9VatiASSftaUTcCBRZrygehdEeGcJYmJCspD5mPT63ae13?=
+ =?us-ascii?Q?d00mopvahuJcUeA12t5DhSE+IWj+TGJ0FqtPcL+zZeBo1H7USGiTN9dAM1uI?=
+ =?us-ascii?Q?X6YWkDsuDVU2Xpa8GAFf/VLayQrO+6awP3Q3vyHGwZu4CacjvT/tjoejOlvj?=
+ =?us-ascii?Q?lgxo5Lb229b7O0bvsUMjmmICx77qFT5sCBG7WNCiTDNnOkL7TKvLn+iIZKQ6?=
+ =?us-ascii?Q?LjEygkJQoW2q4qbaxdVEP1abMEl59vadQlMstgQppTmu3kPaj52EVlltubfH?=
+ =?us-ascii?Q?gJyBQ5P5JQYBkSJIABMVHahk88A5j61BrnYqHhoW4+6nvOFH71pIgt8hA3On?=
+ =?us-ascii?Q?efJnlhGadBtnOwM8MmeQd070gTlja96zir0Z4fAnaNcLEdHuwbVsb0PBKx1h?=
+ =?us-ascii?Q?htW3oVAfUxJBtmGBBvN5K+3CpvxCMVLb0eJmn8k3b6iUDiw4qynlF2UiLt6a?=
+ =?us-ascii?Q?fiYE1v289t5rA8GWndKUIc0fwjxwhCXfOpPDXw5e4wLPyjd2PmkmdqtBIHUd?=
+ =?us-ascii?Q?SEjC4qlAroosR143SQQFSeaSMLR0u03Jy8RnxwUEEDzrpjtHA0GoiVx6dYz/?=
+ =?us-ascii?Q?8Hn7hEq3/aNiBEOcX7OvbAjkW3+ONLnjuyS+Z2bOxR92i8TBhpb8G2xuxHG7?=
+ =?us-ascii?Q?Bp4c4q+WDEl93iZ/3Ath1N3sSYMSsqu3dw1Cvmwb2zm8ZpoV2UFAThX82W3u?=
+ =?us-ascii?Q?yVPlWgyFMTNw1GwzSwZzpIsgQjZUlW8iC1EqPnAI8DSfqs1WPUqQU0tzCCyO?=
+ =?us-ascii?Q?wL/T+rXgejs1F29Mr4NUXH3rcHowwqWigN6seRRVpPb7dTykGpFVSjXpXkFQ?=
+ =?us-ascii?Q?NguT/KH/QGyigDJhE4h7bN9zRAShfeFdRtF5P4sgMJdFOU78ZspdgB/RvNjW?=
+ =?us-ascii?Q?7E+qohSPW9HbaCYRCgdjXVTsv0KcpTRqiaxHIz9uDSKxHbOo+5LXXXOXi3BI?=
+ =?us-ascii?Q?FeXv7kpBZztjabZm4fURs3bd9fB44zsMwZNK8YQYqNXCZHIUp6YL3W98/jYQ?=
+ =?us-ascii?Q?b9D4KslPXgu4PC780k1uQgL/jtW1bhYaXdxF8tGc7ml4j46ebdLE+AbQ6WZk?=
+ =?us-ascii?Q?LCB6Wj1vBPj5U/KywNUOwZMZwZrA0ATUeXBOkzKWdI+3l17plJvrwaOxshSR?=
+ =?us-ascii?Q?3dW/ZXzyY+G6B8Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 16:40:33.6473
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea503b2e-26a3-4aaa-a2da-08dd5ff24724
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00022573.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1C7838BF6
 
-Add support for the Variscite Concerto Carrier Board with:
+This series restructures arch/x86/kernel/cpu/bugs.c and proposes new
+command line options to make it easier to control which CPU mitigations
+are applied.  These options select relevant mitigations based on chosen
+attack vectors, which are hopefully easier for users to understand.
 
-- LVDS interface for the VLCD-CAP-GLD-LVDS 7" LCD 800 x 480 touch
-  display (not configured)
-- USB Host + USB OTG Connector
-- 10/100 Mbps Ethernet
-- miniPCI-Express slot
-- SD Card connector
-- Audio Headphone/Line In jack connectors
-- S-ATA
-- On-board DMIC
+There are two parts to this patch series:
 
-Product Page: https://www.variscite.com/product/single-board-computers/concerto-board
+The first 16 patches restructure the existing mitigation selection logic
+to use a uniform set of functions.  First, the "select" function is
+called for each mitigation to select an appropriate mitigation.  Unless
+a mitigation is explicitly selected or disabled with a command line
+option, the default mitigation is AUTO and the "select" function will
+then choose the best mitigation.  After the "select" function is called
+for each mitigation, some mitigations define an "update" function which
+can be used to update the selection, based on the choices made by other
+mitigations.  Finally, the "apply" function is called which enables the
+chosen mitigation.
 
-This file is based on the one provided by Variscite on their own kernel,
-but adapted for mainline.
+This structure simplifies the mitigation control logic, especially when
+there are dependencies between multiple vulnerabilities.  It also
+prepares the code for the second set of patches.
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- arch/arm/boot/dts/nxp/imx/Makefile                 |   1 +
- .../boot/dts/nxp/imx/imx6ul-var-som-concerto.dts   | 320 +++++++++++++++++++++
- 2 files changed, 321 insertions(+)
+The rest of the patches define new "attack vector" options
+to make it easier to select appropriate mitigations based on the usage
+of the system.  While many users may not be intimately familiar with the
+details of these CPU vulnerabilities, they are likely better able to
+understand the intended usage of their system.  As a result, unneeded
+mitigations may be disabled, allowing users to recoup more performance.
+New documentation is included with recommendations on what to consider
+when choosing which attack vectors to enable/disable.
 
-diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
-index 39a153536d2a2b8f75b5fbe4332660f89442064a..94c9bc94cc8e2daa1fb3b5686b0b58db1f6678b6 100644
---- a/arch/arm/boot/dts/nxp/imx/Makefile
-+++ b/arch/arm/boot/dts/nxp/imx/Makefile
-@@ -329,6 +329,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-+	imx6ul-var-som-concerto.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-aster.dtb \
- 	imx6ull-colibri-emmc-aster.dtb \
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..9ff3b374a2b31ceb7c4974adf86c2f036c78d4d5
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts
-@@ -0,0 +1,320 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Support for Variscite MX6 Concerto Carrier board with the VAR-SOM-MX6UL
-+ * Variscite SoM mounted on it
-+ *
-+ * Copyright 2019 Variscite Ltd.
-+ * Copyright 2025 Bootlin
-+ */
-+
-+#include "imx6ul-var-som.dtsi"
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	model = "Variscite VAR-SOM-MX6UL Concerto Board";
-+	compatible = "variscite,mx6ulconcerto", "variscite,var-som-imx6ul", "fsl,imx6ul";
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_key_back>, <&pinctrl_gpio_key_wakeup>;
-+
-+		key-back {
-+			gpios = <&gpio4 14 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BACK>;
-+		};
-+
-+		key-wakeup {
-+			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_WAKEUP>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led-0 {
-+			function = LED_FUNCTION_STATUS;
-+			color = <LED_COLOR_ID_GREEN>;
-+			label = "gpled2";
-+			gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	status = "disabled";
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>, <&pinctrl_enet2_gpio>, <&pinctrl_enet2_mdio>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy1>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@3 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <3>;
-+			clocks = <&rmii_ref_clk>;
-+			clock-names = "rmii-ref";
-+			reset-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
-+			reset-assert-us = <100000>;
-+			micrel,led-mode = <0>;
-+			micrel,rmii-reference-clock-select-25-mhz = <1>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	rtc@68 {
-+		/*
-+		 * To actually use this interrupt
-+		 * connect pins J14.8 & J14.10 on the Concerto-Board.
-+		 */
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_enet2_gpio: enet2-gpiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* fec2 reset */
-+		>;
-+	};
-+
-+	pinctrl_enet2_mdio: enet2-mdiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
-+			MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
-+			MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
-+		>;
-+	};
-+
-+	pinctrl_gpio_key_back: gpio-key-backgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x17059
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpio-ledsgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0x1b0b0	/* GPLED2 */
-+		>;
-+	};
-+
-+	pinctrl_gpio_key_wakeup: gpio-keys-wakeupgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x17059
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_PIXCLK__I2C1_SCL		0x4001b8b0
-+			MX6UL_PAD_CSI_MCLK__I2C1_SDA		0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO05__PWM4_OUT		0x110b0
-+		>;
-+	};
-+
-+	pinctrl_rtc: rtcgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0 /* RTC alarm IRQ */
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1
-+			MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1
-+			MX6UL_PAD_GPIO1_IO09__UART5_DCE_CTS	0x1b0b1
-+			MX6UL_PAD_GPIO1_IO08__UART5_DCE_RTS	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usb_otg1_id: usbotg1idgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_TX_DATA__ANATOP_OTG1_ID	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_gpio: usdhc1-gpiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x1b0b1 /* CD */
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO01__WDOG1_WDOG_B	0x78b0
-+		>;
-+	};
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>;
-+	status = "okay";
-+};
-+
-+&snvs_pwrkey {
-+	status = "disabled";
-+};
-+
-+&snvs_rtc {
-+	status = "disabled";
-+};
-+
-+&tsc {
-+	/*
-+	 * Conflics with wdog1 ext-reset-output & SD CD pins,
-+	 * so we keep it disabled by default.
-+	 */
-+	status = "disabled";
-+};
-+
-+/* Console UART */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+/* ttymxc4 UART */
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
-+	dr_mode = "otg";
-+	disable-over-current;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_usdhc1_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_usdhc1_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
-+	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	/*
-+	 * To actually use ext-reset-output
-+	 * connect pins J17.3 & J17.8 on the Concerto-Board
-+	 */
-+	fsl,ext-reset-output;
-+};
+In this series, attack vector options are chosen using the mitigations=
+command line.  Attack vectors may be individually disabled such as
+'mitigations=auto;no_user_kernel,no_user_user'.  The 'mitigations=off'
+option is equivalent to disabling all attack vectors.  'mitigations=off'
+therefore disables all mitigations, unless bug-specific command line
+options are used to re-enable some.
+
+Note that this patch series does not change any of the existing
+mitigation defaults.
+
+Changes in v4:
+   - New command line interface for attack vector selection
+   - Rework of smt mitigations into on/auto/off
+   - Print mitigated attack vectors in dmesg and sysfs
+   - Various bug fixes and clean up
+
+Changes in v3:
+   - Moved command line options to be x86-only
+   - Fix bugs related to ucode detection for taa/mmio/rfds
+   - Various clean up
+
+Changes in v2:
+   - Removed new enum, just use X86_BUG* to identify vulnerabilities
+   - Mitigate gds if cross-thread protection is selected as pointed out
+     by Andrew Cooper
+   - Simplifications around verw-based mitigation handling
+   - Various bug fixes
+
+David Kaplan (36):
+  x86/bugs: Restructure mds mitigation
+  x86/bugs: Restructure taa mitigation
+  x86/bugs: Restructure mmio mitigation
+  x86/bugs: Restructure rfds mitigation
+  x86/bugs: Remove md_clear_*_mitigation()
+  x86/bugs: Restructure srbds mitigation
+  x86/bugs: Restructure gds mitigation
+  x86/bugs: Restructure spectre_v1 mitigation
+  x86/bugs: Only allow retbleed=stuff on Intel
+  x86/bugs: Restructure retbleed mitigation
+  x86/bugs: Restructure spectre_v2_user mitigation
+  x86/bugs: Restructure bhi mitigation
+  x86/bugs: Restructure spectre_v2 mitigation
+  x86/bugs: Restructure ssb mitigation
+  x86/bugs: Restructure l1tf mitigation
+  x86/bugs: Restructure srso mitigation
+  Documentation/x86: Document the new attack vector controls
+  cpu: Define attack vectors
+  x86/Kconfig: Arch attack vector support
+  x86/bugs: Determine relevant vulnerabilities based on attack vector
+    controls.
+  x86/bugs: Add attack vector controls for mds
+  x86/bugs: Add attack vector controls for taa
+  x86/bugs: Add attack vector controls for mmio
+  x86/bugs: Add attack vector controls for rfds
+  x86/bugs: Add attack vector controls for srbds
+  x86/bugs: Add attack vector controls for gds
+  x86/bugs: Add attack vector controls for spectre_v1
+  x86/bugs: Add attack vector controls for retbleed
+  x86/bugs: Add attack vector controls for spectre_v2_user
+  x86/bugs: Add attack vector controls for bhi
+  x86/bugs: Add attack vector controls for spectre_v2
+  x86/bugs: Add attack vector controls for l1tf
+  x86/bugs: Add attack vector controls for srso
+  x86/pti: Add attack vector controls for pti
+  x86/bugs: Print enabled attack vectors
+  cpu: Show attack vectors in sysfs
+
+ .../hw-vuln/attack_vector_controls.rst        |  236 +++
+ Documentation/admin-guide/hw-vuln/index.rst   |    1 +
+ arch/Kconfig                                  |    3 +
+ arch/x86/Kconfig                              |    1 +
+ arch/x86/include/asm/processor.h              |    1 +
+ arch/x86/kernel/cpu/bugs.c                    | 1302 ++++++++++-------
+ arch/x86/kvm/vmx/vmx.c                        |    2 +
+ arch/x86/mm/pti.c                             |    4 +-
+ drivers/base/cpu.c                            |   67 +
+ include/linux/cpu.h                           |   20 +
+ kernel/cpu.c                                  |  129 +-
+ 11 files changed, 1248 insertions(+), 518 deletions(-)
+ create mode 100644 Documentation/admin-guide/hw-vuln/attack_vector_controls.rst
 
 -- 
-2.47.0
+2.34.1
 
