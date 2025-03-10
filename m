@@ -1,171 +1,114 @@
-Received: from mail115-24.sinamail.sina.com.cn (mail115-24.sinamail.sina.com.cn [218.30.115.24])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C801227E81
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C345227B83;
+	Mon, 10 Mar 2025 10:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741603811; cv=none; b=RAOwxKbsT+q5wPOF+y0O/10faRqIzlBC0AzftgmqBCbw8vurY2RzVMS8pmoBzmoshd7Jmph6sqjjfIeuc8QaxJKBSiQ/SkT5Ah7KthjjYp+hZmgjvhiCyjfStjF6ghn3rXsHhy+fuHrdDLMBdFDKmEYNatRbR9YUWD05lR8ZciE=
+	t=1741603851; cv=none; b=aoA8xJ1sdMdaYyxmiUo8BvMzBuTZDKJA9Tyy4uYf2ZrU0fcyhQGhibSCxknQzGzGAoPOKl0RpL3bDqRNSU4jee1LIXYca2nD3IAGOfOhSFrw1amq7h9ZkzbSPrn0JGnmowcBTbSe4iQkSA1Utscbbp4cP8ESjs7lL7CZ5usoyz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741603811; c=relaxed/simple;
-	bh=IZlU5cNa8r4FVNiEVWpS8D09uzeiSeUP7VLyE2PJdmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aguaLPIvwinj2XtAvpB2y6W4mfqoTPTFmKiaOQDr6UtXDoFZpLiCmsQK5gS7a9tqDQcCzPlRrGk2MAd21/FUFYOycHx16u+BTsgJf2S+ZrgMu20pXK3VMHcPEqlLxXbid7L2C0iJa8q/XtX7DELPwGwxFVmP9kyMf+OpvUDRFZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.68.168])
-	by sina.com (10.185.250.22) with ESMTP
-	id 67CEC3AF00000ACE; Mon, 10 Mar 2025 18:49:22 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 1923207602725
-X-SMAIL-UIID: 86346AB2018145879571C55EBA739B9F-20250310-184922-1
-From: Hillf Danton <hdanton@sina.com>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-Date: Mon, 10 Mar 2025 18:49:09 +0800
-Message-ID: <20250310104910.3232-1-hdanton@sina.com>
-In-Reply-To: <20250309170254.GA15139@redhat.com>
-References: <20250228163347.GB17761@redhat.com> <20250304050644.2983-1-hdanton@sina.com> <20250304102934.2999-1-hdanton@sina.com> <20250304233501.3019-1-hdanton@sina.com> <20250305045617.3038-1-hdanton@sina.com> <20250305224648.3058-1-hdanton@sina.com> <20250307060827.3083-1-hdanton@sina.com> <20250307104654.3100-1-hdanton@sina.com> <20250307112920.GB5963@redhat.com> <20250307235645.3117-1-hdanton@sina.com>
+	s=arc-20240116; t=1741603851; c=relaxed/simple;
+	bh=a4LHUipB9qkEfTODFAbdGuOOi65tkmIXS/JoJ86bPFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=E+N3Fwl+4UR9iVO9SEQb3vNzRgv0QslDix+0nQOnLHWSvibmWsHwA4oqQhDukjL90CL6LYVu5Z0YDiiGjRvw0D4G5ZQS4srPs/BGdz3kSloBzDn2u2cKG4dw2BUNPMP1jcldfPxe1LLLRTa5UThyA5ZLzYLgDWd5Cr2MHhd09FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ko9A3bkK; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ko9A3bkK"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A9G8gL017253;
+	Mon, 10 Mar 2025 11:50:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	dfbmKwc6v1yeOOE9JCszYxgrUac0n2yNInRPRE4qjhw=; b=ko9A3bkKtA24VlrH
+	kBrInCzGMbc4p6W9TWc+ruaxkYw5Q7OnYOa2X466UnvXzzEbUPIMegQiHSRnwBgd
+	8F3W5l9bE3VuWTdsPcZcZOPwOjZ6xaAHaqIZ9MrmyYSMN7tgU6/EjQr6/0O/Pd+K
+	PbDr1N0RlYzTry9IXisVbuJ0gCRUbazozF3tUv3CEijRX4zS7TWdwwNIc627QMBF
+	yn/bwId8jPVcoOiypBuE7hE16cVmRkgC5r7IB/4KsjbRIr5K8YS6VlmDBBWIZhyo
+	gv7IP6y4rZgm/ifysDFv493rnbw6a48ISxAfEruYHXnugrCDBnyoBZvMzploIIHN
+	W574Xg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4590b8v7t7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 11:50:21 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9377640057;
+	Mon, 10 Mar 2025 11:49:17 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 543A54235AC;
+	Mon, 10 Mar 2025 11:48:37 +0100 (CET)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Mar
+ 2025 11:48:36 +0100
+Message-ID: <e5a5dd9b-475b-4c66-a580-08f11a80e5a3@foss.st.com>
+Date: Mon, 10 Mar 2025 11:48:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ARM: dts: stm32: use IRQ_TYPE_EDGE_FALLING on
+ stm32mp157c-dk2
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        <linux-kernel@vger.kernel.org>
+CC: <linux-amarula@amarulasolutions.com>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20250301115116.2862353-1-dario.binacchi@amarulasolutions.com>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20250301115116.2862353-1-dario.binacchi@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-10_04,2025-03-07_03,2024-11-22_01
 
-On Sun, 9 Mar 2025 18:02:55 +0100 Oleg Nesterov
-> 
-> Well. Prateek has already provide the lengthy/thorough explanation,
-> but let me add anyway...
-> 
-lengthy != correct
+Hi Dario
 
-> On 03/08, Hillf Danton wrote:
-> > On Fri, 7 Mar 2025 13:34:43 +0100 Oleg Nesterov <oleg@redhat.com>
-> > > On 03/07, Oleg Nesterov wrote:
-> > > > On 03/07, Hillf Danton wrote:
-> > > > > On Fri, 7 Mar 2025 11:54:56 +0530 K Prateek Nayak <kprateek.nayak@amd.com>
-> > > > > >> step-03
-> > > > > >> 	task-118766 new reader
-> > > > > >> 	makes pipe empty
-> > > > > >
-> > > > > >Reader seeing a pipe full should wake up a writer allowing 118768 to
-> > > > > >wakeup again and fill the pipe. Am I missing something?
-> > > > > >
-> > > > > Good catch, but that wakeup was cut off [2,3]
-> > >
-> > > Please note that "that wakeup" was _not_ removed by the patch below.
-> > >
-> > After another look, you did cut it.
+On 3/1/25 12:51, Dario Binacchi wrote:
+> Replace the number 2 with the appropriate numerical constant defined in
+> dt-bindings/interrupt-controller/irq.h.
 > 
-> I still don't think so.
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 > 
-> > Link: https://lore.kernel.org/all/20250209150718.GA17013@redhat.com/
-> ...
-> > --- a/fs/pipe.c
-> > +++ b/fs/pipe.c
-> > @@ -360,29 +360,9 @@ anon_pipe_read(struct kiocb *iocb, struct iov_iter *to)
-> >  			break;
-> >  		}
-> >  		mutex_unlock(&pipe->mutex);
-> > -
-> >  		/*
-> >  		 * We only get here if we didn't actually read anything.
-> >  		 *
-> > -		 * However, we could have seen (and removed) a zero-sized
-> > -		 * pipe buffer, and might have made space in the buffers
-> > -		 * that way.
-> > -		 *
-> > -		 * You can't make zero-sized pipe buffers by doing an empty
-> > -		 * write (not even in packet mode), but they can happen if
-> > -		 * the writer gets an EFAULT when trying to fill a buffer
-> > -		 * that already got allocated and inserted in the buffer
-> > -		 * array.
-> > -		 *
-> > -		 * So we still need to wake up any pending writers in the
-> > -		 * _very_ unlikely case that the pipe was full, but we got
-> > -		 * no data.
-> > -		 */
-> > -		if (unlikely(wake_writer))
-> > -			wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
-> > -		kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
-> > -
-> > -		/*
-> >  		 * But because we didn't read anything, at this point we can
-> >  		 * just return directly with -ERESTARTSYS if we're interrupted,
-> >  		 * since we've done any required wakeups and there's no need
-> > @@ -391,7 +371,6 @@ anon_pipe_read(struct kiocb *iocb, struct iov_iter *to)
-> >  		if (wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable(pipe)) < 0)
-> >  			return -ERESTARTSYS;
-> >
-> > -		wake_writer = false;
-> >  		wake_next_reader = true;
-> >  		mutex_lock(&pipe->mutex);
-> >  	}
-> 
-> Please note that in this particular case (hackbench testing)
-> pipe_write() -> copy_page_from_iter() never fails. So wake_writer is
-> never true before pipe_reader() calls wait_event(pipe->rd_wait).
-> 
-Given never and the BUG_ON below, you accidentally prove that Prateek's
-comment is false, no?
-
-> So (again, in this particular case) we could apply the patch below
-> on top of Linus's tree.
-> 
-> So, with or without these changes, the writer should be woken up at
-> step-03 in your scenario.
-> 
-Fine, before checking my scenario once more, feel free to pinpoint the
-line number where writer is woken up, with the change below applied.
-
-> Oleg.
 > ---
 > 
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -360,27 +360,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
->  		}
->  		mutex_unlock(&pipe->mutex);
->  
-> -		/*
-> -		 * We only get here if we didn't actually read anything.
-> -		 *
-> -		 * However, we could have seen (and removed) a zero-sized
-> -		 * pipe buffer, and might have made space in the buffers
-> -		 * that way.
-> -		 *
-> -		 * You can't make zero-sized pipe buffers by doing an empty
-> -		 * write (not even in packet mode), but they can happen if
-> -		 * the writer gets an EFAULT when trying to fill a buffer
-> -		 * that already got allocated and inserted in the buffer
-> -		 * array.
-> -		 *
-> -		 * So we still need to wake up any pending writers in the
-> -		 * _very_ unlikely case that the pipe was full, but we got
-> -		 * no data.
-> -		 */
-> -		if (unlikely(wake_writer))
-> -			wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
-> -		kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
-> -
-> +		BUG_ON(wake_writer);
->  		/*
->  		 * But because we didn't read anything, at this point we can
->  		 * just return directly with -ERESTARTSYS if we're interrupted,
+>   arch/arm/boot/dts/st/stm32mp157c-dk2.dts | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> 
+> diff --git a/arch/arm/boot/dts/st/stm32mp157c-dk2.dts b/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
+> index 5f9c0160a9c4..dcf17c493022 100644
+> --- a/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
+> +++ b/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
+> @@ -11,6 +11,7 @@
+>   #include "stm32mp15-pinctrl.dtsi"
+>   #include "stm32mp15xxac-pinctrl.dtsi"
+>   #include "stm32mp15xx-dkx.dtsi"
+> +#include <dt-bindings/interrupt-controller/irq.h>
+
+really needed ? as it comes also with 
+dt-bindings/interrupt-controller/arm-gic.h
+
+>   / {
+>   	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
+> @@ -67,7 +68,7 @@ &i2c1 {
+>   	touchscreen@38 {
+>   		compatible = "focaltech,ft6236";
+>   		reg = <0x38>;
+> -		interrupts = <2 2>;
+> +		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+>   		interrupt-parent = <&gpiof>;
+>   		touchscreen-size-x = <480>;
+>   		touchscreen-size-y = <800>;
