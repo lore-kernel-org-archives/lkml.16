@@ -1,367 +1,109 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B240422617F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBC82B9A7;
+	Mon, 10 Mar 2025 10:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741602155; cv=none; b=HQwXwKMgqwjBieUkUJK2xSFB9Y4ecbs22E103d7Zr7BT2Vvh9I5/6E6Tbm7LXE7UkQLM3nPH3R/e0OjimeutGdNt5wIMkdCFIXvp3k3CttvwbxSXberjaneFjOgXLBEUEoEE0cwOHcBXqV86V8vtquUXVWj6VdLYJRk6DUi2BfI=
+	t=1741602212; cv=none; b=aggZy9nGZEYAkUu0gUFE3caFrEAp7IwDz5bLs1YSUlmFBIwMzXdb0x3nciyAEvuZcQbeSERAUFNWmt6mdVIbTtcduRstCl6JBUvXFhn5OF/o+YIANQa2Ept/7uZfOYkb5jcmHmHoFB3cuOt+nWfqLesUv+4GGeKUc+vNfvF4kNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741602155; c=relaxed/simple;
-	bh=wFpnAs22fXuT0PMFbK/YpY8JUGZCfXPre3Hs3PJ6MSI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kFHcDNoXSqfOSvCu4v7HASiA4ZIY8kR5BG2mqhB0+U+nJJOD66BvI7bWZlocZ52NFLdIJY74+h8ugx21FIB0aMcyuX/BcfdQuVfWVxLEgB0qg+CkUcFJeLHE5/8sd1Pjqc/VzYK1hLfgQh10I767/bYXqxSJ8LoTE/A3+mt2u8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1traHH-00027G-Sz; Mon, 10 Mar 2025 11:22:31 +0100
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	s=arc-20240116; t=1741602212; c=relaxed/simple;
+	bh=Qm494IXouHJfzxVJIxXKepFKziCY8+8LovLWpSX5aG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OVI7mMYbzfAHQOSXdM95+2sdeRwzDGntK8j1n15QoRprdveabCBT/9rFB6N2Ni0rMk6AAEmBLuh4KvDfnxtmCj5/Q98dJv5uBuPS5ki2u8A2ayxKM+YsS2kpU3hYkCFsP2CuVtfHh30w+JQvTlv71ulrSsfUR9jVojM/kX78GMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=19FPdQbR; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="19FPdQbR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GitiaqC7LjmHhDKtZ+LDT+LSsI6ZPHCbODuJvW3+aF0=; b=19FPdQbRnN9Jvw1POiDkVJOB0v
+	YB86PWZU7kFxe3RrkNVVn0PNUpmrAUM02ZlKglf7RIm4tqbPCjh/mwTB6zsV+rGs4Ze2cj0MK59+D
+	QwdnWo0b6ZSof5gOXKK9bYPRDnKlnEHdw4kEqBIQuqJ5BxmgbfNExHWYFAMw/RXLHogUafQE2iq3u
+	ADJVIHoCgg3a5jNd0TOmB7vJH6hWrRDMV7McAj6bnME5nhCoCJ2djBfDdv4VhGanqwXK3ERi7VxLv
+	oig/NWJEuWAp+iWDPPq4Xv4s6mZU8DaAzGTBTW98i233NRB6P8prplhEWo5X06Xyl5lwJee8dKMTa
+	6vPoZWZA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51298)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1traHG-004yr6-2y;
-	Mon, 10 Mar 2025 11:22:30 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1traHG-001bYq-2k;
-	Mon, 10 Mar 2025 11:22:30 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Avri Altman <Avri.Altman@sandisk.com>
-Subject: [PATCH v4 1/4] mmc: core: Handle undervoltage events and register regulator notifiers
-Date: Mon, 10 Mar 2025 11:22:26 +0100
-Message-Id: <20250310102229.381887-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250310102229.381887-1-o.rempel@pengutronix.de>
-References: <20250310102229.381887-1-o.rempel@pengutronix.de>
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1traI4-0002Ni-2i;
+	Mon, 10 Mar 2025 10:23:20 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1traI3-0002Nt-0x;
+	Mon, 10 Mar 2025 10:23:19 +0000
+Date: Mon, 10 Mar 2025 10:23:19 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Thangaraj.S@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	Rengarajan.S@microchip.com, Woojung.Huh@microchip.com,
+	pabeni@redhat.com, edumazet@google.com, kuba@kernel.org,
+	phil@raspberrypi.org, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v2 1/7] net: usb: lan78xx: Convert to PHYlink
+ for improved PHY and MAC management
+Message-ID: <Z869l9q5tXj6Fcjl@shell.armlinux.org.uk>
+References: <20250307182432.1976273-1-o.rempel@pengutronix.de>
+ <20250307182432.1976273-2-o.rempel@pengutronix.de>
+ <1bb51aad80be4bb5e0413089e1b1bf747db4e123.camel@microchip.com>
+ <Z863zsYNM8hkfB19@pengutronix.de>
+ <Z8660bKssi3rX_ny@shell.armlinux.org.uk>
+ <Z8676rcaq6h4X8To@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8676rcaq6h4X8To@pengutronix.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Extend the MMC core to handle undervoltage events by implementing
-infrastructure to notify the MMC bus about voltage drops.
+On Mon, Mar 10, 2025 at 11:16:10AM +0100, Oleksij Rempel wrote:
+> On Mon, Mar 10, 2025 at 10:11:29AM +0000, Russell King (Oracle) wrote:
+> > On Mon, Mar 10, 2025 at 10:58:38AM +0100, Oleksij Rempel wrote:
+> > > Hi Thangaraj,
+> > > 
+> > > On Mon, Mar 10, 2025 at 09:29:45AM +0000, Thangaraj.S@microchip.com wrote:
+> > > > > -       mii_adv_to_linkmode_adv_t(fc, mii_adv);
+> > > > > -       linkmode_or(phydev->advertising, fc, phydev->advertising);
+> > > > > +       phy_suspend(phydev);
+> > > > > 
+> > > > 
+> > > > Why phy_suspend called in the init? Is there any specific reason?
+> > > 
+> > > In my tests with EVB-LAN7801-EDS, the attached PHY stayed UP in initial
+> > > state.
+> > 
+> > Why is that an issue?
+> 
+> The local interface was in the administrative DOWN state, but link was up:
+> - port LEDs are on
+> - link partner sees the link is UP.
+> 
+> It is not a big deal, but for me it looks inconsistent.
 
-Background & Decision at LPC24:
+That's not an uncommon situation.
 
-This solution was proposed and refined during LPC24 in the talk
-"Graceful Under Pressure: Prioritizing Shutdown to Protect Your Data in
-Embedded Systems," which aimed to address how Linux should handle power
-fluctuations in embedded devices to prevent data corruption or storage
-damage.
+Given that the link was up for a period of time before the driver
+probes, taking it down on probe, only to then have userspace then
+bring the interface up and have to wait for negotiation to complete
+slows down the interface initialisation.
 
-At the time, multiple possible solutions were considered:
-1. Triggering a system-wide suspend or shutdown: when undervoltage is
-   detected, with device-specific prioritization to ensure critical
-   components shut down first.
-   - This approach was disliked by Greg Kroah-Hartman, as it introduced
-     complexity and was not suitable for all use cases.
+As for the link partner, in such a situation the link partner can't
+assume that this end is up _anyway_ because the link will be up
+before the driver has probed.
 
-2. Notifying relevant devices through the regulator framework: to allow
-   graceful per-device handling.
-   - This approach was agreed upon as the most acceptable by participants
-     in the discussion, including Greg Kroah-Hartman, Mark Brown,
-     and Rafael J. Wysocki.
-   - This patch implements that decision by integrating undervoltage
-     handling into the MMC subsystem.
+So, I don't see the point of forcing the link down on probe.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v3:
-- filter supported cards at early stage
-- add locking in mmc_handle_regulator_event()
-- claim/release host in mmc_handle_undervoltage()
----
- drivers/mmc/core/core.c      |  30 +++++++++
- drivers/mmc/core/core.h      |   2 +
- drivers/mmc/core/regulator.c | 124 +++++++++++++++++++++++++++++++++++
- include/linux/mmc/host.h     |   8 +++
- 4 files changed, 164 insertions(+)
-
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 5241528f8b90..06adfb54825b 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1399,6 +1399,36 @@ void mmc_power_cycle(struct mmc_host *host, u32 ocr)
- 	mmc_power_up(host, ocr);
- }
- 
-+/**
-+ * mmc_handle_undervoltage - Handle an undervoltage event on the MMC bus
-+ * @host: The MMC host that detected the undervoltage condition
-+ *
-+ * This function is called when an undervoltage event is detected on one of
-+ * the MMC regulators.
-+ *
-+ * Returns: 0 on success or a negative error code on failure.
-+ */
-+int mmc_handle_undervoltage(struct mmc_host *host)
-+{
-+	int ret;
-+
-+	mmc_claim_host(host);
-+
-+	if (!host->bus_ops->handle_undervoltage) {
-+		mmc_release_host(host);
-+		return 0;
-+	}
-+
-+	dev_warn(mmc_dev(host), "%s: Undervoltage detected, initiating emergency stop\n",
-+		 mmc_hostname(host));
-+
-+	ret = host->bus_ops->handle_undervoltage(host);
-+
-+	mmc_release_host(host);
-+
-+	return ret;
-+}
-+
- /*
-  * Assign a mmc bus handler to a host. Only one bus handler may control a
-  * host at any given time.
-diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
-index fc9c066e6468..b77f053039ab 100644
---- a/drivers/mmc/core/core.h
-+++ b/drivers/mmc/core/core.h
-@@ -31,6 +31,7 @@ struct mmc_bus_ops {
- 	int (*sw_reset)(struct mmc_host *);
- 	bool (*cache_enabled)(struct mmc_host *);
- 	int (*flush_cache)(struct mmc_host *);
-+	int (*handle_undervoltage)(struct mmc_host *host);
- };
- 
- void mmc_attach_bus(struct mmc_host *host, const struct mmc_bus_ops *ops);
-@@ -59,6 +60,7 @@ void mmc_power_off(struct mmc_host *host);
- void mmc_power_cycle(struct mmc_host *host, u32 ocr);
- void mmc_set_initial_state(struct mmc_host *host);
- u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
-+int mmc_handle_undervoltage(struct mmc_host *host);
- 
- static inline void mmc_delay(unsigned int ms)
- {
-diff --git a/drivers/mmc/core/regulator.c b/drivers/mmc/core/regulator.c
-index 3dae2e9b7978..1074567e242f 100644
---- a/drivers/mmc/core/regulator.c
-+++ b/drivers/mmc/core/regulator.c
-@@ -7,6 +7,7 @@
- #include <linux/err.h>
- #include <linux/log2.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/workqueue.h>
- 
- #include <linux/mmc/host.h>
- 
-@@ -262,6 +263,107 @@ static inline int mmc_regulator_get_ocrmask(struct regulator *supply)
- 
- #endif /* CONFIG_REGULATOR */
- 
-+static void mmc_undervoltage_workfn(struct work_struct *work)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(work, struct mmc_supply, uv_work);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	mmc_handle_undervoltage(mmc);
-+}
-+
-+static int mmc_handle_regulator_event(struct mmc_host *mmc,
-+				      const char *regulator_name,
-+				      unsigned long event)
-+{
-+	unsigned long flags;
-+
-+	switch (event) {
-+	case REGULATOR_EVENT_UNDER_VOLTAGE:
-+		/* Currently we support only MMC cards */
-+		spin_lock_irqsave(&mmc->lock, flags);
-+		if (mmc->undervoltage || !mmc->card ||
-+		    !mmc_card_mmc(mmc->card)) {
-+			spin_unlock_irqrestore(&mmc->lock, flags);
-+			return NOTIFY_OK;
-+		}
-+
-+		mmc->undervoltage = true;
-+		spin_unlock_irqrestore(&mmc->lock, flags);
-+
-+		queue_work(system_highpri_wq, &mmc->supply.uv_work);
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int mmc_vmmc_notifier_callback(struct notifier_block *nb,
-+				      unsigned long event, void *data)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(nb, struct mmc_supply, vmmc_nb);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	return mmc_handle_regulator_event(mmc, "vmmc", event);
-+}
-+
-+static int mmc_vqmmc_notifier_callback(struct notifier_block *nb,
-+				       unsigned long event, void *data)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(nb, struct mmc_supply, vqmmc_nb);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	return mmc_handle_regulator_event(mmc, "vqmmc", event);
-+}
-+
-+static int mmc_vqmmc2_notifier_callback(struct notifier_block *nb,
-+					unsigned long event, void *data)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(nb, struct mmc_supply, vqmmc2_nb);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	return mmc_handle_regulator_event(mmc, "vqmmc2", event);
-+}
-+
-+static void
-+mmc_register_regulator_notifier(struct mmc_host *mmc,
-+				struct regulator *regulator,
-+				struct notifier_block *nb,
-+				int (*callback)(struct notifier_block *,
-+						unsigned long, void *),
-+				const char *name)
-+{
-+	struct device *dev = mmc_dev(mmc);
-+	int ret;
-+
-+	nb->notifier_call = callback;
-+	ret = devm_regulator_register_notifier(regulator, nb);
-+	if (ret)
-+		dev_warn(dev, "Failed to register %s notifier: %pe\n", name,
-+			 ERR_PTR(ret));
-+}
-+
-+static void mmc_undervoltage_work_cleanup(void *data)
-+{
-+	struct mmc_supply *supply = data;
-+
-+	/* Ensure the work is canceled or flushed here */
-+	cancel_work_sync(&supply->uv_work);
-+}
-+
- /**
-  * mmc_regulator_get_supply - try to get VMMC and VQMMC regulators for a host
-  * @mmc: the host to regulate
-@@ -281,6 +383,13 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
- 	mmc->supply.vqmmc = devm_regulator_get_optional(dev, "vqmmc");
- 	mmc->supply.vqmmc2 = devm_regulator_get_optional(dev, "vqmmc2");
- 
-+	INIT_WORK(&mmc->supply.uv_work, mmc_undervoltage_workfn);
-+
-+	ret = devm_add_action_or_reset(dev, mmc_undervoltage_work_cleanup,
-+				       &mmc->supply);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add cleanup action\n");
-+
- 	if (IS_ERR(mmc->supply.vmmc)) {
- 		if (PTR_ERR(mmc->supply.vmmc) == -EPROBE_DEFER)
- 			return dev_err_probe(dev, -EPROBE_DEFER,
-@@ -293,6 +402,11 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
- 			mmc->ocr_avail = ret;
- 		else
- 			dev_warn(dev, "Failed getting OCR mask: %d\n", ret);
-+
-+		mmc_register_regulator_notifier(mmc, mmc->supply.vmmc,
-+						&mmc->supply.vmmc_nb,
-+						mmc_vmmc_notifier_callback,
-+						"vmmc");
- 	}
- 
- 	if (IS_ERR(mmc->supply.vqmmc)) {
-@@ -301,12 +415,22 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
- 					     "vqmmc regulator not available\n");
- 
- 		dev_dbg(dev, "No vqmmc regulator found\n");
-+	} else {
-+		mmc_register_regulator_notifier(mmc, mmc->supply.vqmmc,
-+						&mmc->supply.vqmmc_nb,
-+						mmc_vqmmc_notifier_callback,
-+						"vqmmc");
- 	}
- 
- 	if (IS_ERR(mmc->supply.vqmmc2)) {
- 		if (PTR_ERR(mmc->supply.vqmmc2) == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
- 		dev_dbg(dev, "No vqmmc2 regulator found\n");
-+	} else {
-+		mmc_register_regulator_notifier(mmc, mmc->supply.vqmmc2,
-+						&mmc->supply.vqmmc2_nb,
-+						mmc_vqmmc2_notifier_callback,
-+						"vqmmc2");
- 	}
- 
- 	return 0;
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 68f09a955a90..4e147ad82804 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -11,6 +11,7 @@
- #include <linux/device.h>
- #include <linux/fault-inject.h>
- #include <linux/debugfs.h>
-+#include <linux/workqueue.h>
- 
- #include <linux/mmc/core.h>
- #include <linux/mmc/card.h>
-@@ -342,6 +343,12 @@ struct mmc_supply {
- 	struct regulator *vmmc;		/* Card power supply */
- 	struct regulator *vqmmc;	/* Optional Vccq supply */
- 	struct regulator *vqmmc2;	/* Optional supply for phy */
-+
-+	struct notifier_block vmmc_nb;		/* Notifier for vmmc */
-+	struct notifier_block vqmmc_nb;		/* Notifier for vqmmc */
-+	struct notifier_block vqmmc2_nb;	/* Notifier for vqmmc2 */
-+
-+	struct work_struct uv_work;		/* Undervoltage work */
- };
- 
- struct mmc_ctx {
-@@ -493,6 +500,7 @@ struct mmc_host {
- 	unsigned int		retune_crc_disable:1; /* don't trigger retune upon crc */
- 	unsigned int		can_dma_map_merge:1; /* merging can be used */
- 	unsigned int		vqmmc_enabled:1; /* vqmmc regulator is enabled */
-+	unsigned int		undervoltage:1;	 /* Undervoltage state */
- 
- 	int			rescan_disable;	/* disable card detection */
- 	int			rescan_entered;	/* used with nonremovable devices */
 -- 
-2.39.5
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
