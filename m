@@ -1,375 +1,275 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11D31C5F2D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A403781E;
+	Mon, 10 Mar 2025 06:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741589631; cv=none; b=k2iLLgz6G7/ehgTO91sYXtRXClT5VNgweKYAXEugSXdkTZ9Hn5I5Kgp3bPg0Fjmk8pfD64pWbp4YUQEl/bWIzvqWjyacBCS+IPTEGzVfvQmd+BjMarteB5Le2+zDUfjmPU9Sp2CALBhLQ5fAfiaEpZ5VuYLZOsPx4mNVYBR/sKQ=
+	t=1741589790; cv=none; b=SiFrjh08VRKid1hLmpyhmb0cfqZsIkJ7MkC0NCj8Vr5F7X8Qgc2IdxVwfQImW75P0EkyOGYebJphR7B9noyDnW62quCEbvouv36QJv8f6CA+pFRcUnDduyYFiKCVojcZyn1x3OZ21u06o/TJDsstXbCYoaHE+Bp2RbAFPthIs+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741589631; c=relaxed/simple;
-	bh=+Mvd1cqrRnj2UJawDWZ/FNcD407yz19JVojDG3LwICQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h6j0NhgMyKOa/xkmCDYLHFAngIU4JRB0EiPviNSCm83K18sskwS9ZKp4QYUwv30OO8EvqeQJvrVI8HvPKec19nZrMnObCtOy3Cj30UTm2aDZmQmgt449gtBv609miNwhpNVsDpHV8nqzf6mgVPDMbx9P+Yt5u7eeaXWbnZX6SWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=f6u+9kwv; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1741589790; c=relaxed/simple;
+	bh=tXrDgHIxecaivzfdXHIVZ/uGSlkI8nHfcrID3POCJ1A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kQNU/AQlrQW4CQQFWYTFrcC70z82Zg3NuqAFy+Z1tJXnwwZoKpw4dM11QjBrTrVb6PUtJND/kUV76eG1qEg2Rh/QD5H5vt5SuZEUaTOuGXD8FsMh8appHtKGL1ZKOwYR9xcYpbXiJIO4DMU02Kdx21JtuKsfHh2dz1N4cHFY/BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pybLA+qI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="f6u+9kwv"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22359001f1aso92504445ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 23:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1741589628; x=1742194428; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V+lae8KNUZmIk784QUfpfzALekpSGimeXh+iOI8RB4k=;
-        b=f6u+9kwvOQZMQyvTnjLAXLZVw/G1f+YNNmY6NHDMi9DQJpyDk08N/lRF/vx2YcNo20
-         eML6N/IS8+A1dAfNOa+Y7ASzhbs8zl1xU0HyY3mD1Z1jr4wAWPFCbkPKHlwk7FG4wWCH
-         IAFXQgor87HyScuBjI26pSLbvw7uQXEN8WROoQJ3o+LVq0wxKmCah+aC5dYLb6Efbev/
-         7BTz7GFtFUiFZNF1AP5I8acFZf3nDl7KlQpwt0EwedRD7ZI+YD1P+JmCNekOKW55WAM3
-         3rD+Xsm0wW3LDlq+txjdQwUbhZ6g5SSsuGd+0S7dys6ohD4JTfDdZdw9w+Sdn3aOwwC5
-         +2xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741589628; x=1742194428;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+lae8KNUZmIk784QUfpfzALekpSGimeXh+iOI8RB4k=;
-        b=PBFwKpKaLMrU+W/4wFHJznX3fVmrX79gHuKxeicgEND1mhAxN2uILNcHxuJvWrUtKe
-         HoQRbZYysX2jJvdG8/W+0UbrpKxsC/EFm+edqqsD/rSiZ9jb2A7kzT5J25LhA43dQ5hI
-         njkU2TcNsYMDF9krB67yp2UxpueVCgfDr/uA+z06PtIjuxPSOw3CUxfeja/UGHuBbQ2u
-         4dGRkEYsQUUBmWuidRoocd3icRHq0NQupkxlZJHywsWtMm7ybUEe0wUWMSlbKt8huvnp
-         y60Ij+kMCOhK5wwKHjTY2IrHSZB42EpZkq5pZ0aVQ5m9pghtVGc/imSZmAIMoWNeGyBC
-         q7Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEuA3ij0jhZFDhZlJlzuWjoSXvIvrrDklG7rT9H/+L61Sl9UZaMmmcs6RUJkjPtglyYGPz2gzicN19JcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy9mcdk0Jz06imbqOzhOoAoivdbZuXZ49GGoMDqTphKua3NUKf
-	8a57jZ4dXCU210fJ6hmaA+k0TKPxeTBjkwfIj11Zi1I3WbrM2MiwgiIEmanLxd0=
-X-Gm-Gg: ASbGncuJiCd7KNOtmtkj8bOcSo/Tnu3SOhy+4XS2rK193sPyQf9xB8EarF+Yodj1rRw
-	06Z9Y7SP9cxcdqe5i9SSozyXtThoSYQt1L9hWCYVA9qDh4oeqSy4+Icwfa5cGcsx7pNSEZwtNBA
-	HRwbKxNBGg9aqcXAUTRLvWnSDlHgao0Fd6W3bAoCngxTQJ+yARTmC5vRYda0unpgcuXDYPw3GlC
-	DeTz3aL/td3EBIJGQXA6IcqAIgdjiLaJXYo3MHKrGzYKKxKYifsoYfPnpXxZLWB/DdoAKK7FH3Y
-	R3/8JDZewCDtzkkvrU4mmLRqm7TqRjR3dNra4Es459mhOyvfcF1n5HSV1ADOnqOwhCWj
-X-Google-Smtp-Source: AGHT+IGAt/lRGqcYffem3GLpt+BRgwl1EoyO59vlTzdj5PmOKfs6JEHAncR5g/o3gnY8IK7o4uVdYA==
-X-Received: by 2002:a05:6a00:4b4a:b0:736:a8db:93b8 with SMTP id d2e1a72fcca58-736aa9b3970mr21535017b3a.3.1741589627912;
-        Sun, 09 Mar 2025 23:53:47 -0700 (PDT)
-Received: from [157.82.205.237] ([157.82.205.237])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736d6f48c17sm1428809b3a.3.2025.03.09.23.53.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Mar 2025 23:53:47 -0700 (PDT)
-Message-ID: <2e27f18b-1fc9-433d-92e9-8b2e3b1b65dc@daynix.com>
-Date: Mon, 10 Mar 2025 15:53:42 +0900
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pybLA+qI"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 529KR1kg021547;
+	Mon, 10 Mar 2025 06:56:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=OTmXY3gb2QG
+	4tbmLLX3afqFeTrJWYKTayvszVIcxDlo=; b=pybLA+qIPjb/kqPjRrhJhhwLQXF
+	hXP9rv7+E4JTJTKdItIJlSp1OuB5/iyswwUkemTHKSgnM0clcsX7YA2v59qGCkQ2
+	y4rKHS5cXHo79aYXkHWv07OS+gsVUp02MdZOUn1lliLR6t+5O46NPdldUZViRwZY
+	RU7KP3U1qSkgBSnPxgKNdxJQKNcr5UBFXqgxUl04JOGHjFrda36mBvNy/uWISDjD
+	XQJGRPPdVB6a9wgXaNsavMFHt9nNyH6R8AGj8ySq2FNjFTxCCJwaSlX5r1PSuasf
+	R4Jhu+XoaaIOXy3IE6D7BRcDf4mrmq9oj9iUFgGXlasupknMh6GHBAJ1pJw==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458ewpkshs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 06:56:18 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52A6uGVT004001;
+	Mon, 10 Mar 2025 06:56:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 458yu87jb1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 06:56:16 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52A6uGY7003995;
+	Mon, 10 Mar 2025 06:56:16 GMT
+Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 52A6uGrF003992
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 06:56:16 +0000
+Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id 4115F27CC; Mon, 10 Mar 2025 14:56:15 +0800 (CST)
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+To: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+        manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org,
+        dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org,
+        abel.vesa@linaro.org
+Cc: quic_ziyuzhan@quicinc.com, quic_qianyu@quicinc.com,
+        quic_krichai@quicinc.com, johan+linaro@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: [PATCH v3 1/4] dt-bindings: PCI: qcom: Document the QCS615 PCIe Controller
+Date: Mon, 10 Mar 2025 14:56:10 +0800
+Message-Id: <20250310065613.151598-2-quic_ziyuzhan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250310065613.151598-1-quic_ziyuzhan@quicinc.com>
+References: <20250310065613.151598-1-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 1/6] virtio_net: Add functions for hashing
-To: Jason Wang <jasowang@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, kvm@vger.kernel.org,
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
- Yuri Benditovich <yuri.benditovich@daynix.com>,
- Andrew Melnychenko <andrew@daynix.com>,
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com,
- Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
-References: <20250307-rss-v9-0-df76624025eb@daynix.com>
- <20250307-rss-v9-1-df76624025eb@daynix.com>
- <CACGkMEvxkwe9OJRZPb7zz-sRfVpeuoYSz4c2kh9_jjtGbkb_qA@mail.gmail.com>
-Content-Language: en-US
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-In-Reply-To: <CACGkMEvxkwe9OJRZPb7zz-sRfVpeuoYSz4c2kh9_jjtGbkb_qA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: DAhSkC9CJd-biBapWJFpZhviHmtZxXOe
+X-Proofpoint-ORIG-GUID: DAhSkC9CJd-biBapWJFpZhviHmtZxXOe
+X-Authority-Analysis: v=2.4 cv=C5sTyRP+ c=1 sm=1 tr=0 ts=67ce8d13 cx=c_pps a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17 a=Vs1iUdzkB0EA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=GBUzMPdPfdI7RGa8oQ4A:9
+ a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-10_02,2025-03-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 clxscore=1015 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503100053
 
-On 2025/03/10 12:55, Jason Wang wrote:
-> On Fri, Mar 7, 2025 at 7:01 PM Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
->>
->> They are useful to implement VIRTIO_NET_F_RSS and
->> VIRTIO_NET_F_HASH_REPORT.
->>
->> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
->> Tested-by: Lei Yang <leiyang@redhat.com>
->> ---
->>   include/linux/virtio_net.h | 188 +++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 188 insertions(+)
->>
->> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
->> index 02a9f4dc594d02372a6c1850cd600eff9d000d8d..426f33b4b82440d61b2af9fdc4c0b0d4c571b2c5 100644
->> --- a/include/linux/virtio_net.h
->> +++ b/include/linux/virtio_net.h
->> @@ -9,6 +9,194 @@
->>   #include <uapi/linux/tcp.h>
->>   #include <uapi/linux/virtio_net.h>
->>
->> +struct virtio_net_hash {
->> +       u32 value;
->> +       u16 report;
->> +};
->> +
->> +struct virtio_net_toeplitz_state {
->> +       u32 hash;
->> +       const u32 *key;
->> +};
->> +
->> +#define VIRTIO_NET_SUPPORTED_HASH_TYPES (VIRTIO_NET_RSS_HASH_TYPE_IPv4 | \
->> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv4 | \
->> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv4 | \
->> +                                        VIRTIO_NET_RSS_HASH_TYPE_IPv6 | \
->> +                                        VIRTIO_NET_RSS_HASH_TYPE_TCPv6 | \
->> +                                        VIRTIO_NET_RSS_HASH_TYPE_UDPv6)
-> 
-> Let's explain why
-> 
-> #define VIRTIO_NET_HASH_REPORT_IPv6_EX         7
-> #define VIRTIO_NET_HASH_REPORT_TCPv6_EX        8
-> #define VIRTIO_NET_HASH_REPORT_UDPv6_EX        9
-> 
-> are missed here.
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-Because they require parsing IPv6 options and I'm not sure how many we 
-need to parse. QEMU's eBPF program has a hard-coded limit of 30 options; 
-it has some explanation for this limit, but it does not seem definitive 
-either:
-https://gitlab.com/qemu-project/qemu/-/commit/f3fa412de28ae3cb31d38811d30a77e4e20456cc#6ec48fc8af2f802e92f5127425e845c4c213ff60_0_165
+Add dedicated schema for the PCIe controllers found on QCS615.
+Due to qcs615's clock-names do not match any of the existing
+dt-bindings, a new compatible for qcs615 is needed.
 
-In this patch series, I add an ioctl to query capability instead; it 
-allows me leaving those hash types unimplemented and is crucial to 
-assure extensibility for future additions of hash types anyway. Anyone 
-who find these hash types useful can implement in the future.
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+---
+ .../bindings/pci/qcom,qcs615-pcie.yaml        | 160 ++++++++++++++++++
+ 1 file changed, 160 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,qcs615-pcie.yaml
 
-> 
-> And explain how we could maintain migration compatibility
-> 
-> 1) Does those three work for userspace datapath in Qemu? If yes,
-> migration will be broken.
-
-They work for userspace datapath so my RFC patch series for QEMU uses 
-TUNGETVNETHASHCAP to prevent breaking migration:
-https://patchew.org/QEMU/20240915-hash-v3-0-79cb08d28647@daynix.com/
-
-This patch series first adds configuration options for users to choose 
-hash types. QEMU then automatically picks one implementation from the 
-following (the earlier one is the more preferred):
-1) The hash capability of vhost hardware
-2) The hash capability I'm proposing here
-3) The eBPF program
-4) The pure userspace implementation
-
-This decision depends on the following:
-- The required hash types; supported ones are queried for 1) and 2)
-- Whether vhost is enabled or not and what vhost backend is used
-- Whether hash reporting is enabled; 3) is incompatible with this
-
-The network device will not be realized if no implementation satisfies 
-the requirements.
-
-> 2) once we support those three in the future. For example, is the qemu
-> expected to probe this via TUNGETVNETHASHCAP in the destination and
-> fail the migration?
-
-QEMU is expected to use TUNGETVNETHASHCAP, but it can selectively enable 
-hash types with TUNSETVNETHASH to keep migration working.
-
-In summary, this patch series provides a sufficient facility for the 
-userspace to make extensibility and migration compatible; 
-TUNGETVNETHASHCAP exposes all of the kernel capabilities and 
-TUNSETVNETHASH allows the userspace to limit them.
-
-Regards,
-Akihiko Odaki
-
-> 
-> Thanks
-> 
-> 
-> 
->> +
->> +#define VIRTIO_NET_RSS_MAX_KEY_SIZE 40
->> +
->> +static inline void virtio_net_toeplitz_convert_key(u32 *input, size_t len)
->> +{
->> +       while (len >= sizeof(*input)) {
->> +               *input = be32_to_cpu((__force __be32)*input);
->> +               input++;
->> +               len -= sizeof(*input);
->> +       }
->> +}
->> +
->> +static inline void virtio_net_toeplitz_calc(struct virtio_net_toeplitz_state *state,
->> +                                           const __be32 *input, size_t len)
->> +{
->> +       while (len >= sizeof(*input)) {
->> +               for (u32 map = be32_to_cpu(*input); map; map &= (map - 1)) {
->> +                       u32 i = ffs(map);
->> +
->> +                       state->hash ^= state->key[0] << (32 - i) |
->> +                                      (u32)((u64)state->key[1] >> i);
->> +               }
->> +
->> +               state->key++;
->> +               input++;
->> +               len -= sizeof(*input);
->> +       }
->> +}
->> +
->> +static inline u8 virtio_net_hash_key_length(u32 types)
->> +{
->> +       size_t len = 0;
->> +
->> +       if (types & VIRTIO_NET_HASH_REPORT_IPv4)
->> +               len = max(len,
->> +                         sizeof(struct flow_dissector_key_ipv4_addrs));
->> +
->> +       if (types &
->> +           (VIRTIO_NET_HASH_REPORT_TCPv4 | VIRTIO_NET_HASH_REPORT_UDPv4))
->> +               len = max(len,
->> +                         sizeof(struct flow_dissector_key_ipv4_addrs) +
->> +                         sizeof(struct flow_dissector_key_ports));
->> +
->> +       if (types & VIRTIO_NET_HASH_REPORT_IPv6)
->> +               len = max(len,
->> +                         sizeof(struct flow_dissector_key_ipv6_addrs));
->> +
->> +       if (types &
->> +           (VIRTIO_NET_HASH_REPORT_TCPv6 | VIRTIO_NET_HASH_REPORT_UDPv6))
->> +               len = max(len,
->> +                         sizeof(struct flow_dissector_key_ipv6_addrs) +
->> +                         sizeof(struct flow_dissector_key_ports));
->> +
->> +       return len + sizeof(u32);
->> +}
->> +
->> +static inline u32 virtio_net_hash_report(u32 types,
->> +                                        const struct flow_keys_basic *keys)
->> +{
->> +       switch (keys->basic.n_proto) {
->> +       case cpu_to_be16(ETH_P_IP):
->> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
->> +                       if (keys->basic.ip_proto == IPPROTO_TCP &&
->> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv4))
->> +                               return VIRTIO_NET_HASH_REPORT_TCPv4;
->> +
->> +                       if (keys->basic.ip_proto == IPPROTO_UDP &&
->> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv4))
->> +                               return VIRTIO_NET_HASH_REPORT_UDPv4;
->> +               }
->> +
->> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv4)
->> +                       return VIRTIO_NET_HASH_REPORT_IPv4;
->> +
->> +               return VIRTIO_NET_HASH_REPORT_NONE;
->> +
->> +       case cpu_to_be16(ETH_P_IPV6):
->> +               if (!(keys->control.flags & FLOW_DIS_IS_FRAGMENT)) {
->> +                       if (keys->basic.ip_proto == IPPROTO_TCP &&
->> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_TCPv6))
->> +                               return VIRTIO_NET_HASH_REPORT_TCPv6;
->> +
->> +                       if (keys->basic.ip_proto == IPPROTO_UDP &&
->> +                           (types & VIRTIO_NET_RSS_HASH_TYPE_UDPv6))
->> +                               return VIRTIO_NET_HASH_REPORT_UDPv6;
->> +               }
->> +
->> +               if (types & VIRTIO_NET_RSS_HASH_TYPE_IPv6)
->> +                       return VIRTIO_NET_HASH_REPORT_IPv6;
->> +
->> +               return VIRTIO_NET_HASH_REPORT_NONE;
->> +
->> +       default:
->> +               return VIRTIO_NET_HASH_REPORT_NONE;
->> +       }
->> +}
->> +
->> +static inline void virtio_net_hash_rss(const struct sk_buff *skb,
->> +                                      u32 types, const u32 *key,
->> +                                      struct virtio_net_hash *hash)
->> +{
->> +       struct virtio_net_toeplitz_state toeplitz_state = { .key = key };
->> +       struct flow_keys flow;
->> +       struct flow_keys_basic flow_basic;
->> +       u16 report;
->> +
->> +       if (!skb_flow_dissect_flow_keys(skb, &flow, 0)) {
->> +               hash->report = VIRTIO_NET_HASH_REPORT_NONE;
->> +               return;
->> +       }
->> +
->> +       flow_basic = (struct flow_keys_basic) {
->> +               .control = flow.control,
->> +               .basic = flow.basic
->> +       };
->> +
->> +       report = virtio_net_hash_report(types, &flow_basic);
->> +
->> +       switch (report) {
->> +       case VIRTIO_NET_HASH_REPORT_IPv4:
->> +               virtio_net_toeplitz_calc(&toeplitz_state,
->> +                                        (__be32 *)&flow.addrs.v4addrs,
->> +                                        sizeof(flow.addrs.v4addrs));
->> +               break;
->> +
->> +       case VIRTIO_NET_HASH_REPORT_TCPv4:
->> +               virtio_net_toeplitz_calc(&toeplitz_state,
->> +                                        (__be32 *)&flow.addrs.v4addrs,
->> +                                        sizeof(flow.addrs.v4addrs));
->> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->> +                                        sizeof(flow.ports.ports));
->> +               break;
->> +
->> +       case VIRTIO_NET_HASH_REPORT_UDPv4:
->> +               virtio_net_toeplitz_calc(&toeplitz_state,
->> +                                        (__be32 *)&flow.addrs.v4addrs,
->> +                                        sizeof(flow.addrs.v4addrs));
->> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->> +                                        sizeof(flow.ports.ports));
->> +               break;
->> +
->> +       case VIRTIO_NET_HASH_REPORT_IPv6:
->> +               virtio_net_toeplitz_calc(&toeplitz_state,
->> +                                        (__be32 *)&flow.addrs.v6addrs,
->> +                                        sizeof(flow.addrs.v6addrs));
->> +               break;
->> +
->> +       case VIRTIO_NET_HASH_REPORT_TCPv6:
->> +               virtio_net_toeplitz_calc(&toeplitz_state,
->> +                                        (__be32 *)&flow.addrs.v6addrs,
->> +                                        sizeof(flow.addrs.v6addrs));
->> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->> +                                        sizeof(flow.ports.ports));
->> +               break;
->> +
->> +       case VIRTIO_NET_HASH_REPORT_UDPv6:
->> +               virtio_net_toeplitz_calc(&toeplitz_state,
->> +                                        (__be32 *)&flow.addrs.v6addrs,
->> +                                        sizeof(flow.addrs.v6addrs));
->> +               virtio_net_toeplitz_calc(&toeplitz_state, &flow.ports.ports,
->> +                                        sizeof(flow.ports.ports));
->> +               break;
->> +
->> +       default:
->> +               hash->report = VIRTIO_NET_HASH_REPORT_NONE;
->> +               return;
->> +       }
->> +
->> +       hash->value = toeplitz_state.hash;
->> +       hash->report = report;
->> +}
->> +
->>   static inline bool virtio_net_hdr_match_proto(__be16 protocol, __u8 gso_type)
->>   {
->>          switch (gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
->>
->> --
->> 2.48.1
->>
-> 
+diff --git a/Documentation/devicetree/bindings/pci/qcom,qcs615-pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,qcs615-pcie.yaml
+new file mode 100644
+index 000000000000..ad6159b05a96
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/qcom,qcs615-pcie.yaml
+@@ -0,0 +1,160 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/qcom,qcs615-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm QCS615 PCI Express Root Complex
++
++maintainers:
++  - Bjorn Andersson <andersson@kernel.org>
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++
++description:
++  Qualcomm QCS615 SoC (and compatible) PCIe root complex controller is based on
++  the Synopsys DesignWare PCIe IP.
++
++properties:
++  compatible:
++    const: qcom,qcs615-pcie
++
++  reg:
++    minItems: 6
++    maxItems: 6
++
++  reg-names:
++    items:
++      - const: parf # Qualcomm specific registers
++      - const: dbi # DesignWare PCIe registers
++      - const: elbi # External local bus interface registers
++      - const: atu # ATU address space
++      - const: config # PCIe configuration space
++      - const: mhi # MHI registers
++
++  clocks:
++    minItems: 6
++    maxItems: 6
++
++  clock-names:
++    items:
++      - const: aux # Auxiliary clock
++      - const: cfg # Configuration clock
++      - const: bus_master # Master AXI clock
++      - const: bus_slave # Slave AXI clock
++      - const: slave_q2a # Slave Q2A clock
++      - const: ref # REFERENCE clock
++
++  interrupts:
++    minItems: 9
++    maxItems: 9
++
++  interrupt-names:
++    items:
++      - const: msi0
++      - const: msi1
++      - const: msi2
++      - const: msi3
++      - const: msi4
++      - const: msi5
++      - const: msi6
++      - const: msi7
++      - const: global
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: pci # PCIe core reset
++
++allOf:
++  - $ref: qcom,pcie-common.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,qcs615-gcc.h>
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interconnect/qcom,qcs615-rpmh.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pcie@1c08000 {
++            compatible = "qcom,qcs615-pcie";
++            reg = <0 0x01c08000 0 0x3000>,
++                  <0 0x40000000 0 0xf1d>,
++                  <0 0x40000f20 0 0xa8>,
++                  <0 0x40001000 0 0x1000>,
++                  <0 0x40100000 0 0x100000>,
++                  <0 0x01c0b000 0 0x1000>;
++            reg-names = "parf", "dbi", "elbi", "atu", "config", "mhi";
++            ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
++                     <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x3d00000>;
++
++            bus-range = <0x00 0xff>;
++            device_type = "pci";
++            linux,pci-domain = <0>;
++            num-lanes = <1>;
++
++            #address-cells = <3>;
++            #size-cells = <2>;
++
++            clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
++                     <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++                     <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
++                     <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
++                     <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
++                     <&rpmhcc RPMH_CXO_CLK>;
++            clock-names = "aux",
++                          "cfg",
++                          "bus_master",
++                          "bus_slave",
++                          "slave_q2a",
++                          "ref";
++
++            dma-coherent;
++
++            interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "msi0", "msi1", "msi2", "msi3",
++                              "msi4", "msi5", "msi6", "msi7", "global";
++            #interrupt-cells = <1>;
++            interrupt-map-mask = <0 0 0 0x7>;
++            interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++                            <0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++                            <0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++                            <0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++
++            interconnects = <&agree1_noc MASTER_PCIE 0 &mc_virt SLAVE_EBI1 0>,
++                            <&gem_noc MASTER_APPSS_PROC 0 &cnoc_main SLAVE_PCIE_0 0>;
++            interconnect-names = "pcie-mem", "cpu-pcie";
++
++            iommu-map = <0x0 &apps_smmu 0x400 0x1>,
++                        <0x100 &apps_smmu 0x401 0x1>;
++
++            phys = <&pcie_phy>;
++            phy-names = "pciephy";
++
++            pinctrl-0 = <&pcie_default_state>;
++            pinctrl-names = "default";
++
++            power-domains = <&gcc PCIE_0_GDSC>;
++
++            resets = <&gcc GCC_PCIE_0_BCR>;
++            reset-names = "pci";
++
++            perst-gpios = <&tlmm 101 GPIO_ACTIVE_LOW>;
++            wake-gpios = <&tlmm 100 GPIO_ACTIVE_HIGH>;
++        };
++    };
+-- 
+2.25.1
 
