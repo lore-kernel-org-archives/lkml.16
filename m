@@ -1,121 +1,98 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630C2216392
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741600834; cv=none; b=Y2ndoJ80QelqXQF6Huta9ZSnf+Q/Z5WwHrJqeb1IUxMnMKkqVNzlCY8n6qmZxSctcw+kJjkgsDytk8doHl+PFfQQLRRCvt1V+QOdDGz47vI5faxZUn5cBaKvlOma2RTPT6qKjRYOC9V81Wzp/r2RGjVn4ptARoVklIh8bZ/I8W8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741600834; c=relaxed/simple;
-	bh=/WFGkSucmQQVqC4YRwLmx2Q0dcE6jZVaFroVNYU1Qnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YI52qXcrhRmZ72xe0Z25CQOLUdbdPuDubm13NekFjwhGahLGEsJ1lp3PAD/xanNLWgslBj9gQmnGi3hN4wI7zVBB8GQ/qzq86e0DsWbuhfx1TyR5nPOcM2vbK5GFP6Qc2TQ7KRNe3LDF3PphE+s+Ogn8SvsNnYBxbz0uHyHbaHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Pgy2XlTx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CDB29A2;
+	Mon, 10 Mar 2025 10:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741600869; cv=pass; b=Ns59pSm5xSNLJ1rBiukMpzo/GlfWOTPIiJrXHtjd7ob8jmbvWkIvtd7JMiNzYFR39RVbHVK4aTgq3ZSMScGger+4TT7qnKryU0mguhLJwfSmJYS5wmwQlhcUM8Y0iF2indDgBOWT1+yrYYrCYwCyhk6qcO4m4RJU7xvVKafnbbk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741600869; c=relaxed/simple;
+	bh=slBkkxdL5yulCJikcYC8ve+41KsUu/C+4DkmX9HRbTc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QmI+FPAaOyO/ICnUULk3v8Hlv8etNHp8yDcSQi5bma3T/w7wPTM4Wy9ogVqBjdX/jtM7f0r/8Vojmo1Ooc2tBWTaRdarTH45Out8ljEPXQ1bUtF3q3gGCwX/2jUU7qyezaO+vj/AY79j7hfrAQLONUVVikHhtudedr3ek4LcAfU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=FEXAgxF4; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Pgy2XlTx"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A9eOXW023054
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:00:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	o/gEoqv9b7eMEoqWazb0zYafPZy1bYCDNTUQlmA/QxU=; b=Pgy2XlTxWpU8uLAX
-	zx0dbb9Qc1lsGe2Zxn+RenQS+DywssgNwDKqey4AnlfDrU+ZF6VQbInYJ/kurxwi
-	nZ+oEUbStS+u8BgvBzCTEBcT9s4wrXpvn6OCXPbfC1Z/IyFMMyDnsBgt56I6EswI
-	BfvTFiqCqqwEflpVkPyrozuJDuM8pW3bqyFl7EbySwU2SiByZvjtfwtyoB6QkL7O
-	bkLD2rT8JMsgmpn6Vqc7qXiDUpE1jKPVwgTVwzAvuJ6cQYRnD79cf7wyzJbvewbP
-	OLzt3PzZwwSjgzDbnzdMS0hG21/9kv22gxMLgby2iTU3Eg+C+o8MBBrV97Y6WOH6
-	w7dCqw==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f6acf8y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:00:30 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so4759154a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 03:00:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741600830; x=1742205630;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o/gEoqv9b7eMEoqWazb0zYafPZy1bYCDNTUQlmA/QxU=;
-        b=egIYMxsUZH7ZB0ovAeuBNO1hFjg4KuENOL0yGsCTHsjghl1vhRC/LO/ff9tmE8KVJA
-         IcP9IPUEBIxiu3gE5pHUZ6rv5hi7tbk++xgRAan7+Vb4rYkvCAdyce+CQVM30/D//lLt
-         TZAL5NavRTwQF26/83EuC2pUzSf480vs8qLYd8qOmFZlQvARCSLoFUg64BYs4mfDViX6
-         2J7wE3w5VQDZV33k+FMc7YOXRhR0jIp07BcI3+yqLq+2FWDb0oQoQ9tK0xHANKzK5FEM
-         wtLZhJM45RCiYti4fppI4myS+uiUY2swvmkNUnUvqLrWxoxmoSRszXr2ntHvPKtcQAS0
-         xJPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDnbG3ouaE/pZPcfaUgz1hgqp8Ir4FYIhJ5f/TMMzZ4P2CTlAYMATPHQyT801ZyZhYIc3RlujgxFPpYaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQufV5CToF6+7rlvQ3WPrfImqqWYr1CfswXvmvu9EkAfltx25a
-	bJPETKtQpLI2olSjgd6WrqJtXhRBF80NYIC1BDGipKObR+QqMV0k2otZsxcLQNbiOEfZhl+WhO+
-	gRCcF80rw/f8S92vTTOw05BDoB3Hb+mmPHgXUDnGIG/IXZus/AjwIXIhN0FvmrZo=
-X-Gm-Gg: ASbGncvhvb9eUTWeKOIh9/LqPlN3ZadWZzr4s8XJzbKL7U/Rf8gTlIwAOch7hjwlNCq
-	RP7lHAMVzz0iJQ0ZcFUGTM19tfKdDHZN5Y+15it9LOeV/hJOBP6eYtdwcn5Eswv39d9E81oTXqC
-	ke1DeKOj/5ZCtv33a64u4v3KP8hboUGnQ6TylQpPD9AXqMSrM+DGPjLcmmopTNaA6HX6zYZLLfI
-	Uh436r6X1n4nFib7VhRQwaUMxY0GoOyjo1LmnNSP74RWYiD6TGPKk6fj5rc9Qh9m1dAUqf/Lyw4
-	LuHc2lioFPjKDNdYaC8Z2u+/qS9nQXYmP06eEVYtf5XINtUfOeMiv7pZ
-X-Received: by 2002:a17:90b:54cf:b0:2fa:f8d:65de with SMTP id 98e67ed59e1d1-2ff7cf09609mr17131117a91.22.1741600829612;
-        Mon, 10 Mar 2025 03:00:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2PnlBORgrtsnN495wyn9nxcbur0ZbfXPq3v1ScLmErAorXFDXK/mJYeYf0Bj2DhaFWSa+2g==
-X-Received: by 2002:a17:90b:54cf:b0:2fa:f8d:65de with SMTP id 98e67ed59e1d1-2ff7cf09609mr17131087a91.22.1741600829242;
-        Mon, 10 Mar 2025 03:00:29 -0700 (PDT)
-Received: from [10.151.37.217] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7f9f9sm73645885ad.125.2025.03.10.03.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Mar 2025 03:00:28 -0700 (PDT)
-Message-ID: <bf79cf5a-0c50-49e0-b930-1ec5028e7d0c@oss.qualcomm.com>
-Date: Mon, 10 Mar 2025 15:30:24 +0530
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="FEXAgxF4"
+ARC-Seal: i=1; a=rsa-sha256; t=1741600838; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=X5Ku3qEwrPdTwHAs8CrQxzz2J3LO50Dck05HJNsqiSXQMoKhtAqznZE+V0P6YikN9ZZ277HTM+mzbvazOm0VOmiiNkWaMXt9uwn82hGV305SLJrsGvV+z8dqAEKR87i7zKXpZZSO3QQMLZL8huG6pRnlKF53/XDtsgyXPOQy7AM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1741600838; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZwrgReuxeLe3BlfVPHAP9VVYbVwRHECtchfxWVqLJ5Y=; 
+	b=cnQQnbBEmSBNlT159xZEkiUBzCZF2A72tJCc0ngGWPQ5QSiQgLS05RjkssshA315YjAQxycIN6vSI6e8AVAEjQc5F8Mw2gdiVA35GmPASJ/JNHeGPocFEqeHNnHEmAotyHbNw0VfxJk4E6YnFYgLU7bFoWySIm3yzHnWBdcg4yY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741600838;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=ZwrgReuxeLe3BlfVPHAP9VVYbVwRHECtchfxWVqLJ5Y=;
+	b=FEXAgxF4nC6Mz0MdzNKCqEIZv3V8zKnbJSpXnnHH9MkA5JID4lrpIXUeQr5dDrvl
+	u/8yhefBhas4jgrjELJ5R9yjvjA4YtQ+k49yqWmRQ3xc6RJf6lMACwK7kI7HbkoaHzh
+	oytOKInKXZSHdT5vISnl61U4WFbs+RdEqK7+N06E=
+Received: by mx.zohomail.com with SMTPS id 1741600837144360.63308913443063;
+	Mon, 10 Mar 2025 03:00:37 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Mon, 10 Mar 2025 10:59:56 +0100
+Subject: [PATCH 1/2] dt-bindings: clock: rk3576: add SCMI clocks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] drivers: clk: qcom: ipq5424: fix the freq table of
- sdcc1_apps clock
-To: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>, andersson@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, dmitry.baryshkov@linaro.org,
-        quic_srichara@quicinc.com, quic_varada@quicinc.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250306112900.3319330-1-quic_mmanikan@quicinc.com>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <20250306112900.3319330-1-quic_mmanikan@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=WsDRMcfv c=1 sm=1 tr=0 ts=67ceb83e cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=o3auzIaOksCvpTgIIaIA:9 a=QEXdDO2ut3YA:10
- a=rl5im9kqc5Lf4LNbBjHf:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: y1Oc-EdhwUBuxsqj12upBljeI65L0PJk
-X-Proofpoint-ORIG-GUID: y1Oc-EdhwUBuxsqj12upBljeI65L0PJk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_04,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=795 clxscore=1015
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100079
+Message-Id: <20250310-rk3576-scmi-clocks-v1-1-e165deb034e8@collabora.com>
+References: <20250310-rk3576-scmi-clocks-v1-0-e165deb034e8@collabora.com>
+In-Reply-To: <20250310-rk3576-scmi-clocks-v1-0-e165deb034e8@collabora.com>
+To: Jonas Karlman <jonas@kwiboo.se>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Heiko Stuebner <heiko@sntech.de>, 
+ Detlev Casanova <detlev.casanova@collabora.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Liang Chen <cl@rock-chips.com>, 
+ Elaine Zhang <zhangqing@rock-chips.com>, 
+ Finley Xiao <finley.xiao@rock-chips.com>, 
+ Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Cc: kernel@collabora.com, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On 3/6/2025 4:59 PM, Manikanta Mylavarapu wrote:
-> The divider values in the sdcc1_apps frequency table were incorrectly
-> updated, assuming the frequency of gpll2_out_main to be 1152MHz.
-> However, the frequency of the gpll2_out_main clock is actually 576MHz
-> (gpll2/2).
->
-> Due to these incorrect divider values, the sdcc1_apps clock is running
-> at half of the expected frequency.
->
-> Fixing the frequency table of sdcc1_apps allows the sdcc1_apps clock to
-> run according to the frequency plan.
->
-> Fixes: 21b5d5a4a311 ("clk: qcom: add Global Clock controller (GCC) driver for IPQ5424 SoC")
-> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+Mainline Linux uses different clock IDs from both downstream and
+mainline TF-A, which both got them from downstream Linux. If we want to
+control clocks through SCMI, we'll need to know about these IDs.
 
-Reviewed-by: Kathiravan Thirumoorthy 
-<kathiravan.thirumoorthy@oss.qualcomm.com>
+Add the relevant ones prefixed with SCMI_ to the header.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ include/dt-bindings/clock/rockchip,rk3576-cru.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/dt-bindings/clock/rockchip,rk3576-cru.h b/include/dt-bindings/clock/rockchip,rk3576-cru.h
+index 25aed298ac2c2e2d37e2b441c9d92ac68801be6e..f576e61bec7041455e10ac18c92f3b33ec0760e3 100644
+--- a/include/dt-bindings/clock/rockchip,rk3576-cru.h
++++ b/include/dt-bindings/clock/rockchip,rk3576-cru.h
+@@ -589,4 +589,9 @@
+ #define PCLK_EDP_S			569
+ #define ACLK_KLAD			570
+ 
++/* SCMI clocks, use these when changing clocks through SCMI */
++#define SCMI_ARMCLK_L			10
++#define SCMI_ARMCLK_B			11
++#define SCMI_CLK_GPU			456
++
+ #endif
+
+-- 
+2.48.1
 
