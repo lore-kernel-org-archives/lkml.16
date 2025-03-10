@@ -1,77 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B2612B73;
-	Mon, 10 Mar 2025 21:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6976D1D5CDB
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 21:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741640463; cv=none; b=GpfhwkIhT9HzIR1ziF38bhC9GbL3joQ5p/YtVzS9YH69BLh+KW+XvXe7z9zrB5h+cFQFLuhvBQf+RbBhfCDWOsYY3hqP8p/2kK9YKH6zhWusJigNBxfT4wVMrk4AyJ0OkcPuNg6GuV4ooG7AvFvH4Oy3qOOXXHT5817E8UuabjQ=
+	t=1741640510; cv=none; b=E99iCDst2MSNgt3u2LY1B4zmHOuLKx/HT5VqNqDnZQaz8DDlGhp8MgOfHO9VSkyw5mHW8KrGAHI+kgWVuVavayLJ8OhcYdZu0UX4i4J4S2vbSs/+D3dOJg/BUy1du6kPub6t8mSCanmz4SAr+1EGzH+KOT7tpNgJAaFR3zczKM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741640463; c=relaxed/simple;
-	bh=aYyGi+0GlhtZZOl3eElkEgro/Og6UgEBW7ME0Eh2cEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uj1WkTgSopApKZtTKGLls2ma+G9zFYIvmn5sIvn8bvFJTEKyAEskUTKCGc2pm+34h+iabTmPKxqWnmdzQq9UUoT+/r+9PB+BmOO1q2G87jFef1dovRawFzPvBr1cnfd1SNgzejaO82mtpEvxoEx+cj128uiixj5Azyg+PoibC3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XELG8I6W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741640510; c=relaxed/simple;
+	bh=uvl+tCTSBkpkA1JocRjArWmG37T36+NIL9cpQh3h/7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B57/ig3ektUCQhNf63WaNye9xh3+H0yXxOqtMVfLJgXvR8LAp3kjyVJwEJmlUufAEBcCeHgKyQ9qDAvnZr9aMbMcFNmKNb+bCcyJ09HVFv73RgnQGXG/WRcD1YVs52zOjAkjMDxGKttxaCD7DWZJJiPoIthmQ1WD8S8+P7D8D4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gD4So5IK; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XELG8I6W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE6AC4CEE5;
-	Mon, 10 Mar 2025 21:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741640463;
-	bh=aYyGi+0GlhtZZOl3eElkEgro/Og6UgEBW7ME0Eh2cEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XELG8I6WYICbM6YDswWTIzR5vBY0ZCdCcGJ/XwRd+rPF8jWKv8h3HR7gxrqFV55Yk
-	 YC03rspukIbY7kdASAul32qn3tTTF0Mjsk4YyEhIb3u5/Qj1XV8c+Zcm0FFT2h6v/m
-	 F+zkgxIJhbNnd1atUL3+ZMTBsK1wGd1gj7eVnMIfItWqcZQxPHdLUiPB76A4Z3cCow
-	 IF6tot8i/DiR7HlFaN9aZMA18vcatU2dTOp5YxckUak3MYgFIzXJtGfVYF6T2k2P02
-	 /qA3Twqr+moDiV/Zm01s5J3HOrF4lAXYPAyy3NYPcJQWX3oaLIFX74c7Yw+/KrdG1v
-	 Dwfdi1Ujv4h8A==
-Date: Tue, 11 Mar 2025 02:30:59 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com,
-	quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v5 RESEND 1/2] dmaengine: qcom: gpi: Add GPI Block event
- interrupt support
-Message-ID: <Z89TC7fKzmmeu6tW@vaman>
-References: <20250212120536.28879-1-quic_jseerapu@quicinc.com>
- <20250212120536.28879-2-quic_jseerapu@quicinc.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gD4So5IK"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72726025fa5so924278a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:01:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741640506; x=1742245306; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mh6NBQiJXATQe2dlTg58r4IHLGmkgQvhFuYRHTx4JoI=;
+        b=gD4So5IKpAvy5uKSGrhX3CF1MhN8VeXjcQST/2NIsihABLxIdspg/Dwd+gIw5xw1y0
+         CJgrkqqYjLvpIlr5VrwOxkttdw5iAl2uEUJEARU4K6xUgi/CIp7DqlZfenA0HHPiAYYK
+         utQXzq0EH3UmTzBi5KpZgzjr6V4FDyd7UP7SaKvoYhemwnLPiI61QSqMLJcSAnFAVI6u
+         P1KvqD3SHTrxglYPOUpB2KcLmXB+gald9DA/8UZSKhrN03/QEzvZ2SmDmOtU3jCAYm58
+         OMIme8YOUnhptFlyAO4qH3SErcyIYF63Jd2yRUnQadTdHu+pE5+AuDtclfVhkpR9MrUN
+         PW4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741640506; x=1742245306;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mh6NBQiJXATQe2dlTg58r4IHLGmkgQvhFuYRHTx4JoI=;
+        b=JOnqNZQGCtoVbWeOLopCxW0TNO5vd/KQ97F5sA6hhulVaVHH3tZN32eFKgMPtnqpOz
+         D2uoxM3Q0w41LVzl8KWqKIPiglRjlh9AUAPNHNm6hPv4LTSvEVcBygY6Huf/TeHGPbYC
+         IV94rM6kJB7sQsPzyS5oV70evJjBESLHJ05eE/B5f6vC1QH1ENwpKx6Ehu+6u/qT9rE8
+         grByNNEjzGFhkb4ir93Z6ZH+g2inuc1zghLig+5jFj30uuv9JJ4VPlIK1NaN2Ztnv8vF
+         Md2iuXb5A31/UTVqqWUu/pN80ujz8oSO/f4umkRYwq3aU88XQ/utMxOmCDUTbbvsGWMB
+         Jk1A==
+X-Forwarded-Encrypted: i=1; AJvYcCV/Zue+M9BFLTvBXquz+5lE+ydaVbklFz9fhWvsPpTGfPLsvHcGcMR6Cz1BGyb798aDg3jnKB0/G1RZljk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRAYTSXCeBqNkSHOJqbC45fHu2fKLQaymq6Okh9UbKAG8szQj8
+	3p9zWV3smWOxeahs6P8ZBs02V++J6aY1pp9weAcsHlmC2P0jjyp8UmOEMIXIzz8=
+X-Gm-Gg: ASbGncu5y0yt6m8wG2IIc2dIdqi04GxOMwkBp/CgFq82I+kQsSvqjKJ843GJivT4M3e
+	J1w7E0PxGx76AJvtKDSbFNDPzxUlWkgDJ+NcvEtqi1Trs3pFmDxZkgio392shIetjfurEwUbDIp
+	ykWydCtP0uRm3BH9vTcnQW/Otp88zgqH51h8bIMxFsp8nXjT2H04dD1qWaHGCzy23Fc0jt3pJJQ
+	cw1ZyWq4YaRgzwAAx8zSQPuDXNgS4xhWHyPB68+UlR9uKs3WaWqglwpfb5DnO+21p+0DkskBiea
+	Jntor68UvQPi/fMFYvuUnIH6E0gQfdo3f1B9ANG7xtyZysTc7Ia+VcSDurXUiHBD9/VvJ0N9hXL
+	SUAxpiTbgsYvZOFi6
+X-Google-Smtp-Source: AGHT+IFws383NJzGNKMTduW7VFs/LhYVCds9An+PWkBfwPQGP9vDAELOMSUsERr+wmmRotC7x4j6MQ==
+X-Received: by 2002:a05:6830:6a8d:b0:72a:11aa:6ebd with SMTP id 46e09a7af769-72a37c771c2mr8328040a34.23.1741640506456;
+        Mon, 10 Mar 2025 14:01:46 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72a7c926001sm1298993a34.32.2025.03.10.14.01.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Mar 2025 14:01:46 -0700 (PDT)
+Message-ID: <3fa4136e-b384-4c3b-a58d-773887b87552@baylibre.com>
+Date: Mon, 10 Mar 2025 16:01:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212120536.28879-2-quic_jseerapu@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/3] Add support for AD7191
+To: Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Alisa-Dariana Roman <alisa.roman@analog.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ramona Gradinariu <ramona.bolboaca13@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+References: <20250228141327.262488-1-alisa.roman@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250228141327.262488-1-alisa.roman@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 12-02-25, 17:35, Jyothi Kumar Seerapu wrote:
-> GSI hardware generates an interrupt for each transfer completion.
-> For multiple messages within a single transfer, this results in
-> N interrupts for N messages, leading to significant software
-> interrupt latency.
+On 2/28/25 8:05 AM, Alisa-Dariana Roman wrote:
 > 
-> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
-> Enabling BEI instructs the GSI hardware to prevent interrupt generation
-> and BEI is disabled when an interrupt is necessary.
-> 
-> When using BEI, consider splitting a single multi-message transfer into
-> chunks of 8 messages internally and so interrupts are not expected for
-> the first 7 message completions, only the last message triggers
-> an interrupt, indicating the completion of 8 messages.
-> 
-> This BEI mechanism enhances overall transfer efficiency.
 
-That sounds good but I dont like the idea that we add a custom interface
-for this. Please use DMA_PREP_INTERRUPT instead. Adding this flag should
-trigger N interrupts, absence of this should lead to Block events only
+Probably too late...
 
--- 
-~Vinod
+Reviewed-by: David Lechner<dlechner@baylibre.com>
+
