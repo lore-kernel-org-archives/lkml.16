@@ -1,210 +1,126 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BBB1AA7BA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC1422B59C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741615191; cv=none; b=PXC6FXGjxdvW9WjeHbJJRWAydSHsOix8JDylcpDvXk2RgWLqqPU4Q0hziJWDWtOPrfxcPzVbG/5A8Ku0E4XC/KPipesTLpAjJ7WlmZ1/Gldv0D30inpzsADnub6tn5bATjWEi7Rl4refuIU1wrjdJODoUou4VK6YR+GkJAryIkM=
+	t=1741615195; cv=none; b=uyMQ/BfD6CZR07l1q5RtrRIwt0/rMqu2ajrxTNPZhysnPKKxb3gCq+vuVec/teWzAr24poHZGI5CuLoimG1Ap+B1/CUedmH6GVRxDEX9IPTLH+TqzEPVExa01kNby9/bnGerXipmOC5/whGCqbAH2yUoJCHdIjsjPA7XVLo5ZfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741615191; c=relaxed/simple;
-	bh=Yh6n9bq/amLuXLGzyyexficZQzX1dJOyGY6+IEDDQsA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hkqAerLjp/LA04WoLa6EQYLsfhdTvKI+3aDSw8Kkv+H5sW2g9WpzSpBbRNFE4K1S2um69h2ZJj7wUKrQrThy0tPZBGE4x/XKyVshrTA1iFr58ahdra7tZkjJeSMlQpjzNDim43Z9lmmO7Umc+bVexhoWq0Pfe6UE4a4LE8mTAKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P4bGru9o; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741615195; c=relaxed/simple;
+	bh=5yRa8msLShePncZ4iDaj+ETPUsYjrQ57wsSamBBpqFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SsS7YgPslaJekkD1ZbgAS6fYa4Ddon5ptGxwgcj1JbdQPpwbAU0Lp6hkzTUYG1ImWX0rEPEmkccDUYN90R9JNVAH84kRn2ofa8tZnIn9AT8/6SiBARpjYfDkTyBj0kHUtbYUFCnIyow3Qs+oXUzzCQNMgWM3fUGtpDJyEWBHlLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CGfbJCB3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P4bGru9o"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e6ff035e9aso1740445a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741615188; x=1742219988; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jl+g7SjppZuPPqGMNpi69kOreR0Ej6ApvhdQOqINvfs=;
-        b=P4bGru9od4kyAKTNMVICMn2JIvPZjprHcZdNaR804zjAndHgFqbtw50JEfe1DLNKHw
-         xakueD3P/c5TfnDfgkdDoHcpDgpECfLMG/cPQ39Pvrrl5Q8lhbUMKOFYHR8H2zBZIGIz
-         1eh2Gry3N6FG1t49ix9KxjhyzHuMfL0/UzLCMqsXXrklT8bOlxmcF6X+PeBK9lGJ7+XL
-         On/sizXMClFS4RZ6cdzstddEPQHvwrgo3WzHqJnhPcqczvfUma6du/laZRN6vUJP6DmT
-         eg29MppqfgTxt0ZZM6ITHnTiFYTmDTp8Bj5rYOPHGcLH7mm1gXRilCE6tk/qNYA+NWvb
-         JqwQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CGfbJCB3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741615193;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ifLyZAwaMIQnJH8LV9Yf25LDs5jy6kdU3M/pInj3w4g=;
+	b=CGfbJCB3h74hfYh9wvbwHoAqsZ4D5zYvleITVtJeT+Fl1BKy0jj/NMtsYdyeoO20obKDqZ
+	JKhhgZrZzqa60YeqCuqhrOCPox2zJdobkp+HLaw5ewmWT8XvHqfWUFQ+dIVCyWoK8DqSqh
+	kIvccIwUKI/qIJP0j1vsD3eCszoFazk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-641-xlGJMYJNN7-zGKOGyJxv3g-1; Mon, 10 Mar 2025 09:59:52 -0400
+X-MC-Unique: xlGJMYJNN7-zGKOGyJxv3g-1
+X-Mimecast-MFC-AGG-ID: xlGJMYJNN7-zGKOGyJxv3g_1741615191
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4394c747c72so17532815e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:59:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741615188; x=1742219988;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jl+g7SjppZuPPqGMNpi69kOreR0Ej6ApvhdQOqINvfs=;
-        b=EZPpSyzbfMwZbresvCKz5xQXWKz7x2KzSIPnLh1MJx516dhDAur6hYY4kvMPKW2Gkm
-         gFZx01YpgyJaWbMydprVqoKN/BpyGQ5RYgMNzQoN72VPwfrh14nWNZSOehS/+/mRBen4
-         RRAgyrhDaV1sQq83gZ+ETl0u8zETSmSt34LZ3U9GZ56HeQg1vLGbMFBSYk9wpAiv2Ytz
-         nl4gLh0r9e69o4OX64rIHv6Xbq6JfuHDSm9M6uSjRri1lbcv/sMKkQQlrHMjLRm4LAhu
-         QhdervjtghDt0DEiDbokiveLdzhTTx+wIL2qbsy7MM4/HMUppUpfa+4FBKrv6QIMst3p
-         syqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhJSPld7ikTnRfIdA15klKcbMHyuYs3ilqZ2XtpLbGrbqNfWhWSjpPQuDEiGkDKNjAO5IbXRwPwJLQRNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2W3y1UhvuCrPj551ngCyZzDhDInZDKwz0ajKmioLD6kQMSXsW
-	yVkwRkA6DUHkMJn1kUGzlZYSX5/AwnXEyuhcWIEqE8R55jchMPWeECnEk581guQHy1XM49+4Khh
-	XfbeWqVXISmabv3k/Ixp1O+Fdgnas1IdhoqhlEZf7CjI8OrljdYE=
-X-Gm-Gg: ASbGncs38nPhxc2ZlAgSCueBdIzbRfO+ya9dTMCqpQp922o9I2GLU7RAMo7iaDdBoUj
-	sSCS4je+bCvLX7pCBbBk6shqVFHgBenh9ZaxoGUxl2CeQTlXS9uqWtMUQY2Re/mCB1Zdp2fm4aZ
-	IzK0YVRmrFSW4JmU8w+kU4U0iU0APJaqoy1TN2u4AruKtQpkDQ8q0IpY0=
-X-Google-Smtp-Source: AGHT+IEtJqb7qfe2DsiNgJhvPScBvm1kIZ1noKr+pKDu1mABwPOfnwjYQ06UJTE6wA0frCo76hdhEImgTegcbjsvblA=
-X-Received: by 2002:a17:907:9455:b0:abf:425d:5d3 with SMTP id
- a640c23a62f3a-ac252f4b12dmr1655355266b.40.1741615187926; Mon, 10 Mar 2025
- 06:59:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741615191; x=1742219991;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ifLyZAwaMIQnJH8LV9Yf25LDs5jy6kdU3M/pInj3w4g=;
+        b=bjyyvKG1G6NHxhkiekGH1MuTveDQSF5MWv64ByzvFeZlGSLOX9BaDeo8bSX8QhE2yL
+         +bpkNrfSAdRSI8zLJ8oBzdbBHNiwFwOgqdgE9b6hoK8YmF/1yBJHn9Iy8geNrYoZvg5F
+         yXs2rJWQsePF7BEULCxCG8r8jskbLp2SQcajRkFYc8lDgMjyszEVkkVbkYaQv2IUnJlw
+         PgP4Oiif6MK6EUdbQgYVz/EyzMWeuuO8yZ/FVJi7IGGjsbZccuYBwTrzxHVB59kw0sOR
+         dDqkyAEP/RRPXi+rNvmnbWYSTC3itf9/X6trUnLQo9skmnB4jwXuzGF+vkin36xReT0n
+         Yptg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcPYlA0Rv4reJZylvRyv1OOYV5NyOf0uaP5Cp2u8uBWK3vRnZtOMJOISJ59+m/2SMemzEXD7uNu/5gsug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLvWky7OUIyLVTLYo5bdOMCBk05Gm338shG3yzDDgvtnEreCqj
+	dveVUcVxO28dtDqCLtUTzOwJePLVhw6UB/ptJd/jIMulkgJWw8Xr5tw19Eg6XHGGjCtHseG5am/
+	j9SJeTfTidNw2YPV3ejRblTO7CpcLLLCdEDyoL5HPQrPZe9Py6CO5iszZ3NrQoQ==
+X-Gm-Gg: ASbGncvHg8tpO/wZ/AaDav9AkmMImRO9o3/JIzYL+tZACvSaJssrWYjGKkpa2bHN7I8
+	NJ1UzsFBlg6RekKZwnhS0JZx65bQIG7WuFp4baN4oW3cJDon12MIg5tqTAuISlte38Gxso2ic+v
+	dF1FAvfqQ4s7PNBi7SPUnLDdobU9wdGrFsVHRGHj2OsKc4hz/nQT0zVB2T25yxJCYlHubTHi4Au
+	3KztGL+S9zNZIk+7zxiaYg1US/+YgmzaXZnxEyK5GY1v+lqBgFYNM8JGSDHtgDzyjQayV9XAAV8
+	fud+TNztD1Tk/2ylA5Itbj8KpdmjsbnJC81+UMUKzU87P6bNiM28lFLIT/bsV5jX
+X-Received: by 2002:a05:600c:19cd:b0:43c:f1b8:16ad with SMTP id 5b1f17b1804b1-43cf1b81b78mr36929285e9.30.1741615190717;
+        Mon, 10 Mar 2025 06:59:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFFmVHuNChMNNNrFWHjGJdn1345A9IsanbdgH+oWygKlCfwy44eSx0LLGJRthRLUF/igUx+qA==
+X-Received: by 2002:a05:600c:19cd:b0:43c:f1b8:16ad with SMTP id 5b1f17b1804b1-43cf1b81b78mr36928725e9.30.1741615190121;
+        Mon, 10 Mar 2025 06:59:50 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ceeb5995esm64570735e9.16.2025.03.10.06.59.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 06:59:49 -0700 (PDT)
+Date: Mon, 10 Mar 2025 14:59:44 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Borislav Petkov <bp@alien8.de>, Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Claudio Carvalho <cclaudio@linux.ibm.com>, 
+	Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org, Dov Murik <dovmurik@linux.ibm.com>, 
+	linux-coco@lists.linux.dev, Dionna Glaze <dionnaglaze@google.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC PATCH v2 2/6] x86/sev: add SVSM vTPM probe/send_command
+ functions
+Message-ID: <6yzzspawrp6lg3m242bcdl5egpdvt6je2kc3cuznnnze7iypc7@4uaonepi7myq>
+References: <20250228170720.144739-1-sgarzare@redhat.com>
+ <20250228170720.144739-3-sgarzare@redhat.com>
+ <20250310113006.GFZ87NPu-LgFVVtsEG@fat_crate.local>
+ <mjftygohmhgs6daqvgkh2jbfuqjquchcaovcjtnzyhilnt5ww5@l3fr7phqh2ps>
+ <3dd645f2-476a-d0d5-c8c1-c87307f2d756@amd.com>
+ <20250310135133.GIZ87uZZNhNSkmxvg1@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306162635.2614376-1-dietmar.eggemann@arm.com>
-In-Reply-To: <20250306162635.2614376-1-dietmar.eggemann@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Mon, 10 Mar 2025 14:59:36 +0100
-X-Gm-Features: AQ5f1JqXfUiTPrsgOLbGCRIyNlvJx35yv-k1-8QkWqgOfehpJs9nYQjirGu9CPA
-Message-ID: <CAKfTPtCfd_=gm7rsT_qBL8pw5uybEvYH4N2tvxpKndxxi4L7oA@mail.gmail.com>
-Subject: Re: [PATCH] /sched/core: Fix Unixbench spawn test regression
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Hagar Hemdan <hagarhem@amazon.com>, linux-kernel@vger.kernel.org, 
-	wuchi.zero@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250310135133.GIZ87uZZNhNSkmxvg1@fat_crate.local>
 
-On Thu, 6 Mar 2025 at 17:26, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+On Mon, Mar 10, 2025 at 02:51:33PM +0100, Borislav Petkov wrote:
+>On Mon, Mar 10, 2025 at 08:27:37AM -0500, Tom Lendacky wrote:
+>> I don't think anything needs to be checked or printed.
 >
-> Hagar reported a 30% drop in UnixBench spawn test with commit
-> eff6c8ce8d4d ("sched/core: Reduce cost of sched_move_task when config
-> autogroup") on a m6g.xlarge AWS EC2 instance with 4 vCPUs and 16 GiB RAM
-> (aarch64) (single level MC sched domain) [1].
->
-> There is an early bail from sched_move_task() if p->sched_task_group is
-> equal to p's 'cpu cgroup' (sched_get_task_group()). E.g. both are
-> pointing to taskgroup '/user.slice/user-1000.slice/session-1.scope'
-> (Ubuntu '22.04.5 LTS').
+>Yes.
 
-Isn't this same use case that has been used by commit eff6c8ce8d4d to
-show the benefit of adding the test if ((group ==
-tsk->sched_task_group) ?
-Adding Wuchi who added the condition
+Ack, I removed the check and the print.
 
->
-> So in:
->
->   do_exit()
->
->     sched_autogroup_exit_task()
->
->       sched_move_task()
->
->         if sched_get_task_group(p) == p->sched_task_group
->           return
->
->         /* p is enqueued */
->         dequeue_task()              \
->         sched_change_group()        |
->           task_change_group_fair()  |
->             detach_task_cfs_rq()    |                              (1)
->             set_task_rq()           |
->             attach_task_cfs_rq()    |
->         enqueue_task()              /
->
-> (1) isn't called for p anymore.
->
-> Turns out that the regression is related to sgs->group_util in
-> group_is_overloaded() and group_has_capacity(). If (1) isn't called for
-> all the 'spawn' tasks then sgs->group_util is ~900 and
-> sgs->group_capacity = 1024 (single CPU sched domain) and this leads to
-> group_is_overloaded() returning true (2) and group_has_capacity() false
-> (3) much more often compared to the case when (1) is called.
->
-> I.e. there are much more cases of 'group_is_overloaded' and
-> 'group_fully_busy' in WF_FORK wakeup sched_balance_find_dst_cpu() which
-> then returns much more often a CPU != smp_processor_id() (5).
->
-> This isn't good for these extremely short running tasks (FORK + EXIT)
-> and also involves calling sched_balance_find_dst_group_cpu() unnecessary
-> (single CPU sched domain).
->
-> Instead if (1) is called for 'p->flags & PF_EXITING' then the path
-> (4),(6) is taken much more often.
->
->   select_task_rq_fair(..., wake_flags = WF_FORK)
->
->     cpu = smp_processor_id()
->
->     new_cpu = sched_balance_find_dst_cpu(..., cpu, ...)
->
->       group = sched_balance_find_dst_group(..., cpu)
->
->         do {
->
->           update_sg_wakeup_stats()
->
->             sgs->group_type = group_classify()
->
->               if group_is_overloaded()                             (2)
->                 return group_overloaded
->
->               if !group_has_capacity()                             (3)
->                 return group_fully_busy
->
->               return group_has_spare                               (4)
->
->         } while group
->
->         if local_sgs.group_type > idlest_sgs.group_type
->           return idlest                                            (5)
->
->         case group_has_spare:
->
->           if local_sgs.idle_cpus >= idlest_sgs.idle_cpus
->             return NULL                                            (6)
->
-> Unixbench Tests './Run -c 4 spawn' on:
->
-> (a) VM AWS instance (m7gd.16xlarge) with v6.13 ('maxcpus=4 nr_cpus=4')
->     and Ubuntu 22.04.5 LTS (aarch64).
->
->     Shell & test run in '/user.slice/user-1000.slice/session-1.scope'.
->
->     w/o patch   w/ patch
->     21005       27120
->
-> (b) i7-13700K with tip/sched/core ('nosmt maxcpus=8 nr_cpus=8') and
->     Ubuntu 22.04.5 LTS (x86_64).
->
->     Shell & test run in '/A'.
->
->     w/o patch   w/ patch
->     67675       88806
->
-> CONFIG_SCHED_AUTOGROUP=y & /sys/proc/kernel/sched_autogroup_enabled equal
-> 0 or 1.
->
-> [1] https://lkml.kernel.org/r/20250205151026.13061-1-hagarhem@amazon.com
->
-> Reported-by: Hagar Hemdan <hagarhem@amazon.com>
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> ---
->  kernel/sched/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index b00f884701a6..ca0e3c2eb94a 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -9064,7 +9064,7 @@ void sched_move_task(struct task_struct *tsk)
->          * group changes.
->          */
->         group = sched_get_task_group(tsk);
-> -       if (group == tsk->sched_task_group)
-> +       if ((group == tsk->sched_task_group) && !(tsk->flags & PF_EXITING))
->                 return;
->
->         update_rq_clock(rq);
-> --
-> 2.34.1
->
+@Boris I also removed `ret` to continue the slimming, so the end
+result should be this:
+
+bool snp_svsm_vtpm_probe(void)
+{
+	struct svsm_call call = {};
+
+	/* The vTPM device is available only if a SVSM is present */
+	if (!snp_vmpl)
+		return false;
+
+	call.caa = svsm_get_caa();
+	call.rax = SVSM_VTPM_CALL(SVSM_VTPM_QUERY);
+
+	if (svsm_perform_call_protocol(&call))
+		return false;
+
+	/* Check platform commands contains TPM_SEND_COMMAND - platform command 8 */
+	return (call.rcx_out & BIT_ULL(8)) == BIT_ULL(8);
+}
+
+Quite nice, thanks for the review!
+Stefano
+
