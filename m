@@ -1,78 +1,148 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DADBA2C9A;
-	Mon, 10 Mar 2025 02:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411C42C9A;
+	Mon, 10 Mar 2025 02:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741572614; cv=none; b=uyLlbe0DbArfizgwQq9v/TTZN8kylbRXXSl9BaVjs7PMq8X1SZWUUV9SZzJeeM1AEyzS64p+UbIZBwtU3tHKn0ZgV+5U4E/Or8v8FmHhb8i9D0ps8wGgFUk7cIRgRAX86fcPQ6rGzmS/ELHysQYvTkzKBLX20AIWMTEj9oOI5lA=
+	t=1741572818; cv=none; b=lNTj7JZTICaKdQjl+zWjnPdZ9xfxq2m3YA/m79ITK/fUzZuyzomTL7FvHKCrCf+R2LHfz1fRE/XEOyfeadG/24rOtYVoJCnmEA4imy5ntNnfttx+f8lihPmKbTI2jtIINjnRX+ca24QUbyEs/AAZrDRWLXJbILtGoDTDhVz0Hug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741572614; c=relaxed/simple;
-	bh=ieVV6CJ/Ra+TEPn8aN2lUekyNG8zVTbU8qGoJ6x1JCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IUETlgLfxTiIMQg42IX5NdJvD2Jb3CoX/JFlKxiUkJLcm54vxvUSerwHCTGPNJUrJm1Lnhi8e4JcJtOm5FPTB12kq0GZPSHAhg1iRORru+O6ACl9LUksblXclQV84YCOGZuQME5d4SoPioY7CkpzZHnwK8JE5i8d7/GqpbAIVQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=oG5lFVfo; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1741572818; c=relaxed/simple;
+	bh=z9mLsHw9Q3v422/Yt1W+ofnnkznofgPzm/tT/dzXn38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LEsZghhSgnhWFmkV/b0uYgKtKJsNnZtnp8MEspnQ9DyXfXhW96yNcL8hjedqcIIV1AhxbBZWZfLrpAsiLZ+gbkiCpnTGkOnO/IyRn6LnXI9cIEAWlJUBjZYYE0cBJINcMzXClmST/I+oUHHnoyG6s3S4Wbe/wrDYTtRPawmu9Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HR3HVoEJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="oG5lFVfo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=WQbkt
-	5MbX6FWnP6mNnh/2Ztp8PMd5g3lbLTTqSinn6c=; b=oG5lFVfoOiSoCuZhwK6aL
-	5Ohoqeol/tXcQ2ETIOgUYVjLKQ2JQ0oV4IL7oTfqG/tiMznTz3qIx9QMsdtVKXsj
-	M0b0kkLNgY+Z/UGLbcfSNIGATX7U79OHYRNZykoK5W5/O/vX9vwuMejUEOjbx4kt
-	Ate2Qr2P9lqD3iGbT1yuhk=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDXTzNYRs5nFOjSRg--.17921S2;
-	Mon, 10 Mar 2025 09:54:34 +0800 (CST)
-From: oushixiong1025@163.com
-To: Timur Tabi <timur@kernel.org>
-Cc: Helge Deller <deller@gmx.de>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH v3] fbdev: fsl-diu-fb: add missing device_remove_file()
-Date: Mon, 10 Mar 2025 09:54:31 +0800
-Message-Id: <20250310015431.43387-1-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HR3HVoEJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBEEC4CEE5;
+	Mon, 10 Mar 2025 02:13:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741572817;
+	bh=z9mLsHw9Q3v422/Yt1W+ofnnkznofgPzm/tT/dzXn38=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HR3HVoEJs8Dj3SJUQJl/9yOkY3qzYNH49NJSed8dRp+v8BKG7DmZN4jkt97KyJc0b
+	 r5kJKlTVYyJPJBrKUJXCa+eJt0MrjnGYClR9q2KAzOQgc9Ixw+TUTAD8tHdCTm8INh
+	 TjfexCnSzVOWUHewX3eeZTMyY6U4YkR6yRaJPRelwGTDeWt4gQxZNbDP7QntiPZnyS
+	 EjZodPom+DIfeozpq4+YApfldJjutgQTSIgU9BY94Qm/1L2c6oI3wJoJC0p6IqKa2t
+	 xhqNc1/CG/p1coU/y2Ckk+KrUR5B9n1JH+6a7KFXAp2X2fTaGrHg44mpj2TaUh2CrL
+	 1ZnerZ2TWwT0w==
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso2684815e9.0;
+        Sun, 09 Mar 2025 19:13:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVROONEp0hMlSe3i0NE40E5HLbzZg3OHtIqqq27HSUz95XyBdZpt6LO3qRXfO0IPP4/GRIo1eg5smfq@vger.kernel.org, AJvYcCVcxjFJL3LNutwf9F8+zGmzpmw9KiRjrbBSUAMOSdc8CvBKJif7eV5SvTUmDWnn+j97FpiF4fNULFc5tg==@vger.kernel.org, AJvYcCXsIZJG1H3IqLFXsCKYDrOrBpFmKLirDWMLOIL7Rw2u3IeJ3bhIiSeGIr40jmMzCj7pBvuNl3npSrGGNugR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/acw+ec21L5hkB3VVdQ+Nte2Vv9ilcdlYCltL4S1kUHZhHO5V
+	3A0JOvmH7gBuR66M+zRn2ns3j91KEK4G4yvpuaaMDYoRvtB6LE2pG4z+r47sNQvXW6j+kgXr2zD
+	Wtjyjnf5VVxEQi3grdUnWOBErG3U=
+X-Google-Smtp-Source: AGHT+IFKsAup9e8Gc1v8ulkbmHr98edm6s87EvlcdJ5Cvko4at1GaCbqwTsdJwbMKXfm/BQUgl53lstuyy4HISvzJV0=
+X-Received: by 2002:a05:600c:1d1a:b0:43c:e6d1:efe7 with SMTP id
+ 5b1f17b1804b1-43ce6d1f1e6mr28755625e9.26.1741572816273; Sun, 09 Mar 2025
+ 19:13:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXTzNYRs5nFOjSRg--.17921S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZFWDGFWxWw18ArWkGw43GFg_yoW3Zwc_uF
-	15Z395Xr4UGr1kKw1IgFsIyryUKF1qgay3XFs2gr95J3s7uw4Yq3yjvr42grWDWw4IkF9x
-	tw1qgr4jvF1rCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1nXo3UUUUU==
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXAQMD2fOO+-mFwAAsX
+References: <20250224112042.60282-1-xry111@xry111.site> <91797ac4bbe27d7d60b89053050e429bcd630db3.camel@xry111.site>
+In-Reply-To: <91797ac4bbe27d7d60b89053050e429bcd630db3.camel@xry111.site>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 10 Mar 2025 10:13:24 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRXyMX+9C_aEDbxAsxWDD2rbnDWO775YDZ3EmrQ=QinfQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JpxPLjcz__aP8mbaWjnVB43tgqVJ36D7ViX6jxsCAtJ6NThRTlt4NTpaRI
+Message-ID: <CAJF2gTRXyMX+9C_aEDbxAsxWDD2rbnDWO775YDZ3EmrQ=QinfQ@mail.gmail.com>
+Subject: Re: Ping: [PATCH 0/3] Drop explicit --hash-style= setting for new
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Fangrui Song <i@maskray.me>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+On Wed, Mar 5, 2025 at 9:27=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
+:
+>
+> Ping.
+>
+> On Mon, 2025-02-24 at 19:20 +0800, Xi Ruoyao wrote:
+> > For riscv, csky, and LoongArch, GNU hash had already become the de-
+> > facto
+> > standard when they borned, so there's no Glibc/Musl releases for them
+> > without GNU hash support, and the traditional SysV hash is just
+> > wasting
+> > space for them.
+> >
+> > Remove those settings and follow the distro toolchain default, which
+> > is
+> > likely --hash-style=3Dgnu.  In the past it could break vDSO self tests,
+> > but now the issue has been addressed by commit
+> > e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
+> >
+> > Xi Ruoyao (3):
+> >   riscv: vDSO: Remove --hash-style=3Dboth
+The patch's comment is incorrect; when I removed --hash-style=3Dboth,
+the output still contained the HASH, and no space was saved.
 
-Call device_remove_file() when driver remove.
+--hash-style=3Dboth and after the patch are the same:
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .hash             HASH             0000000000000120  00000120
+       000000000000003c  0000000000000004   A       3     0     8
+  [ 2] .gnu.hash         GNU_HASH         0000000000000160  00000160
+       0000000000000044  0000000000000000   A       3     0     8
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
----
-v1->v2:
-	add has_dev_attrs flag.
-v2->v3:
-	drop those extra checks.
+But, --hash-style=3Dgnu could save space:
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .gnu.hash         GNU_HASH         0000000000000120  00000120
+       0000000000000044  0000000000000000   A       2     0     8
 
- drivers/video/fbdev/fsl-diu-fb.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/fbdev/fsl-diu-fb.c b/drivers/video/fbdev/fsl-diu-fb.c
-index 5ac8201c3533..b71d15794ce8 100644
---- a/drivers/video/fbdev/fsl-diu-fb.c
-+++ b/drivers/video/fbdev/fsl-diu-fb.c
-@@ -1827,6 +1827,7 @@ static void fsl_diu_remove(struct platform_device *pdev)
- 	int i;
- 
- 	data = dev_get_drvdata(&pdev->dev);
-+	device_remove_file(&pdev->dev, &data->dev_attr);
- 	disable_lcdc(&data->fsl_diu_info[0]);
- 
- 	free_irq(data->irq, data->diu_reg);
--- 
-2.25.1
+Here is my GCC VERSION:
+Using built-in specs.
+COLLECT_GCC=3D/rvhome/ren.guo/source/toolchain/rv64lp64/bin/riscv64-unknown=
+-linux-gnu-gcc
+COLLECT_LTO_WRAPPER=3D/rvhome/ren.guo/source/toolchain/rv64lp64/bin/../libe=
+xec/gcc/riscv64-unknown-linux-gnu/13.2.0/lto-wrapper
+Target: riscv64-unknown-linux-gnu
+Configured with:
+/home/runner/work/riscv-gnu-toolchain/riscv-gnu-toolchain/gcc/configure
+--target=3Driscv64-unknown-linux-gnu --prefix=3D/opt/riscv
+--with-sysroot=3D/opt/riscv/sysroot --with-pkgversion=3D
+--with-system-zlib --enable-shared --enable-tls
+--enable-languages=3Dc,c++,fortran --disable-libmudflap --disable-libssp
+--disable-libquadmath --disable-libsanitizer --disable-nls
+--disable-bootstrap --src=3D.././gcc --disable-default-pie
+--disable-multilib --with-abi=3Dlp64d --with-arch=3Drv64gc
+--with-tune=3Drocket --with-isa-spec=3D20191213 'CFLAGS_FOR_TARGET=3D-O2
+-mcmodel=3Dmedlow' 'CXXFLAGS_FOR_TARGET=3D-O2    -mcmodel=3Dmedlow'
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 13.2.0 ()
 
+So, do you mean "--hash-style=3Dgnu"?
+
+> >   csky: vDSO: Remove --hash-style=3Dboth
+> >   LoongArch: vDSO: Remove --hash-style=3Dsysv
+> >
+> >  arch/csky/kernel/vdso/Makefile  | 2 +-
+> >  arch/loongarch/vdso/Makefile    | 2 +-
+> >  arch/riscv/kernel/vdso/Makefile | 2 +-
+> >  3 files changed, 3 insertions(+), 3 deletions(-)
+> >
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
+
+
+
+--=20
+Best Regards
+ Guo Ren
