@@ -1,167 +1,112 @@
-Received: from mail-m155115.qiye.163.com (mail-m155115.qiye.163.com [101.71.155.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E8C2222A2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.115
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77CC3229B17;
+	Mon, 10 Mar 2025 11:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741607977; cv=none; b=PlSby384lz3u5JIkVGu3PSe8YzVqbpB9gNSUXh96NzJRFCTsw3WZZXILZvKAyxj9Is4plymPF63Vpt57lTo93r0xQo3/2j0n949Xxz0r3bo5dWxyDKBoRJCt9dxAK3OXBRiL8imKBBWhVFLTLVKfxpSgL0Qn/Z+KaQIcYOtOuPM=
+	t=1741607981; cv=none; b=mjDFw74DxkUguXWI/pW0Z/VTzHwOGHihW1Fg8EHi0ZExgR1wBgc6I2pQcL/Yq4cXjbgjmgE3A87ur7gTzC5zpRxxV5wARCCOVXQAkl7TW5ilpv3OoURkDDYuEAZi9rLsONuhJdMvWUOo5eOBRRrfzWSdh9NIyDyRLr9IZuQ6doQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741607977; c=relaxed/simple;
-	bh=QMts34dWgeBsar09qndDB7RHQBSnc6dPuZ36AI/LkOc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I/FoDytq1vCP/xrwdxwWw51qLoUYeMJZZ0ktHleZimc9ySTmzBQlTsW0oWlZc7qTBXfDtyEVzCv6Ix0zDvy8r8roYWN9ti2YPaUWezKVSD1Es8wetpHiP5Ekw4NGWafn1X0pDSMSbe+bEXSBPKDCx6CzuSYaFL7Nb3Z4JU7l5vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=NNscdC8x; arc=none smtp.client-ip=101.71.155.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="NNscdC8x"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id dc188291;
-	Mon, 10 Mar 2025 18:42:19 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v8 09/13] dt-bindings: display: rockchip: analogix-dp: Add support for RK3588
-Date: Mon, 10 Mar 2025 18:41:10 +0800
-Message-Id: <20250310104114.2608063-10-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
-References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+	s=arc-20240116; t=1741607981; c=relaxed/simple;
+	bh=JdTtNW4KV9x3208UN40VO7s75L7zCHPjuhDtsTLEx4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekknl8N/WZiOo+i32/7AltwtW13qtZswqg4/YDGgM4pV2HdNHN+DjYk/aa7OOjbosRfD9xTlMmoXaT9IkpDFSpx5uTj2ocSM0zja/a/HvSBcZKkaKObMFithq+MaMOmxbI+5Pvxe8oR8x8hvIgJP4AEjwgKSxcW4V8GYgLElJbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 481C71516;
+	Mon, 10 Mar 2025 04:59:50 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9B693F5A1;
+	Mon, 10 Mar 2025 04:59:35 -0700 (PDT)
+Date: Mon, 10 Mar 2025 11:59:33 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Aisheng Dong <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
+ scmi cpufreq
+Message-ID: <Z87UJdhiTWhssnbl@bogus>
+References: <Z6x8cNyDt8rJ73_B@bogus>
+ <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
+ <Z65U2SMwSiOFYC0v@pluto>
+ <20250218010949.GB22580@nxa18884-linux>
+ <Z7Rf9GPdO2atP89Z@bogus>
+ <20250218133619.GA22647@nxa18884-linux>
+ <Z7Wvyn1QJQMVigf9@bogus>
+ <Z7Z-ZnztmvUxWoQJ@NXL53680.wbi.nxp.com>
+ <Z86w3ZRS6T2MvV3X@bogus>
+ <DB9PR04MB84614FBF96E7BC0D125D97F688D62@DB9PR04MB8461.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkwYTFYdSUgfTUsZTB8YTUlWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
-	NVSktLVUpCWQY+
-X-HM-Tid: 0a957fa5fdee03a3kunmdc188291
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MFE6DTo6ETJLIiMrFTkuPQhJ
-	NQ0KCUxVSlVKTE9KTUtISE9KQ0tPVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJT0pJNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=NNscdC8xikclEGPAktF8uBbNr11WnR49azaZjkIjKxnQvF12Dr7n5mTfCjVOPTe6atmJgNzd5G386uxsakqDx1RMVMPjibDiSEQGOiAe6VnUxMpEZ5OlZwlRXhtkWQ7hI8sif7nBpcrsF91EFNhZ7Atn/Vy/gJsnf2nnW3D0VKM=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=v/jgEld0YWuyA8ypQD6vc8cECMQ47VIivyHQrVFzLW8=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB9PR04MB84614FBF96E7BC0D125D97F688D62@DB9PR04MB8461.eurprd04.prod.outlook.com>
 
-Compared with RK3288/RK3399, the HBR2 link rate support is the main
-improvement of RK3588 eDP TX controller, and there are also two
-independent eDP display interfaces on RK3588 Soc.
+On Mon, Mar 10, 2025 at 10:45:44AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting
+> > fwnode for scmi cpufreq
+> > 
+> > On Thu, Feb 20, 2025 at 08:59:18AM +0800, Peng Fan wrote:
+> > >
+> > > Sorry, if I misunderstood.
+> > >
+> > > I will give a look on this and propose a RFC.
+> > >
+> > > DT maintainers may ask for a patchset including binding change and
+> > > driver changes to get a whole view on the compatible stuff.
+> > >
+> > > BTW, Cristian, Saravana if you have any objections/ideas or would
+> > take
+> > > on this effort, please let me know.
+> > >
+> > 
+> > Can you point me to the DTS with which you are seeing this issue ?
+> > I am trying to reproduce the issue but so far not successful. I did move
+> > to power-domains for CPUFreq on Juno. IIUC all we need is both
+> > cpufreq and performance genpd drivers in the kernel and then GPU
+> > using perf genpd fails with probe deferral right ? I need pointers to
+> > reproduce the issue so that I can check if what I have cooked up as a
+> > solution really works.
+>
+> This is in downstream tree:
+> https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L2971
+> https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L3043
+> https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L80
+>
+> we are using "power-domains" property for cpu perf and gpu/vpu perf.
+>
+> If cpufreq.off=1 is set in bootargs, the vpu/gpu driver will defer probe.
+>
 
-The newly added 'apb' reset is to ensure the APB bus of eDP controller
-works well on the RK3588 SoC.
+OK, does the probe of these drivers get called or they don't as the driver
+core doesn't allow that ? I just have a dummy driver for mali on Juno
+which just does dev_pm_domain_attach_list() in the probe and it seem to
+succeed even when cpufreq.off=1 is passed. I see scmi-cpufreq failing
+with -ENODEV as expected.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+I need to follow the code and check if I can somehow reproduce. Also are
+you sure this is not with anything in the downstream code ? Also have you
+tried this with v6.14-rc* ? Are you sure all the fw_devlink code is backported
+in the tree you pointed me which is v6.6-stable ?
 
----
-
-Changes in v2:
-- Add the main defferences of the RK3588 eDP and the previous versions
-  in commit message
-
-Changes in v3:
-- Expand the property clock-names, resets and reset-names
-
-Changes in v4:
-- Remove 'spdif' clock which added in v3
-- Add the comment of newly added 'apb' reset in commit message
-
-Changes in v5:
-- Put the differences between RK3288/RK3399 and RK3588 into 'allOf'
-
-Changes in v6:
-- Keep the widest constraints and add only RK3588 related constraints
-  into 'allOf'
-
-Changes in v7:
-- Fix the errors related to 'reset-names'
-- Remove unnecessary 'maxItems' under 'reset-names'
----
- .../rockchip/rockchip,analogix-dp.yaml        | 22 +++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-index eaf4e67e232e..d99b23b88cc5 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-@@ -15,6 +15,7 @@ properties:
-     enum:
-       - rockchip,rk3288-dp
-       - rockchip,rk3399-edp
-+      - rockchip,rk3588-edp
- 
-   clocks:
-     minItems: 2
-@@ -31,10 +32,14 @@ properties:
-     maxItems: 1
- 
-   resets:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 2
- 
-   reset-names:
--    const: dp
-+    minItems: 1
-+    items:
-+      - const: dp
-+      - const: apb
- 
-   rockchip,grf:
-     $ref: /schemas/types.yaml#/definitions/phandle
-@@ -55,6 +60,19 @@ required:
- allOf:
-   - $ref: /schemas/display/bridge/analogix,dp.yaml#
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - rockchip,rk3588-edp
-+    then:
-+      properties:
-+        resets:
-+          minItems: 2
-+        reset-names:
-+          minItems: 2
-+
- unevaluatedProperties: false
- 
- examples:
--- 
-2.34.1
-
+--
+Regards,
+Sudeep
