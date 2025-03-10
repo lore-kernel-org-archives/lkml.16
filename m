@@ -1,111 +1,99 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB52A22DFB0
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD6D22618F;
+	Mon, 10 Mar 2025 15:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741621077; cv=none; b=PCId2RF6ShAsCJ/dBbwDT9y0cqT8aqHBwbJK4CjPCpCsF3M7S4L4/RJd0hZsquNcCuXSvmdNxcfBhPc4LXCAsugY6CDPzOAg4dJYPu7kVLUBepebmX6l8S0mCFbwU5Sgokw/TKJuWS07k5FEZUWvODR9+bCWHJRrHQMqbdh82QI=
+	t=1741621110; cv=none; b=PcO4HqDbUfjxq9e9qvUcup+kua00q2VSNxHTyKBnjc6Rlpq+SPnFXcYPGCJKSxHgk1s6lhugbtRJdJ27/tbzd2KJjouInleeuf70+QUzLMl7+779vODRvK1H4+nfZMKgPRe3HDhjEv1MOlWd/QWYT5kh6LrYJqfe7ugNKp6ofeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741621077; c=relaxed/simple;
-	bh=OQQn5b6TgE+Vkztwfk+wMzQZVPlzWI8LM20KRhtjSJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B8iR6TFUbCNwVbz013Hy/W+hDoMM50AJ4+gs0+2M72mNTr80BZGuKulxnCryh61mDLU6aERZt5dBL1bjWVVBmcumKQnqBIg/8MsazMi6v8pbOyzRNb1EuR4rXAN6uB+lKvHD8ViafuZW30JBRfdd66sU5qPlofo/YqhgaJG++oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-112-29.bstnma.fios.verizon.net [173.48.112.29])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 52AFbjVv023312
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 11:37:45 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id EB66E2E010B; Mon, 10 Mar 2025 11:37:44 -0400 (EDT)
-Date: Mon, 10 Mar 2025 11:37:44 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: linux-ext4@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: A syscall for changing birth time
-Message-ID: <20250310153744.GD8837@mit.edu>
-References: <bda3fa3f-dd12-40de-841a-e4c216ab533f@gmx.com>
- <20250310135828.GB8837@mit.edu>
- <69d8b100-f65d-470f-a957-2819795e82a4@gmx.com>
+	s=arc-20240116; t=1741621110; c=relaxed/simple;
+	bh=kwv6YXzRLSKnph4Bl6KQltrd4tKRcYjiSMLedmuP9Ag=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RQR4qAKNWA41oiJCZR/wMhe9j1DE2MKs+YXf4SfZ/wKGp4J47g7wIQFbogwQTvUps5W3WMJrL1DuaXH0uGHxaYbXtidmSOzZmsKWD7jcHmmhVIP16GtxZfnS9pemUE1FshEBTUpv8HWonUnDjgYZS0Rjh56c1xlj+i6JBt1IbgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J9yDaS7c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+3aFRTCN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J9yDaS7c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+3aFRTCN"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741621106;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=onKZ358iPe3ysbYLBfjepet0iilG2tjfvE5V6cV3SMA=;
+	b=J9yDaS7cOedY3dvMZxxw9U+nvuLx6vzA6UZcfdSiYtLqYuYkqXQvg1KOn1WT7cDIsqrR5J
+	TClfFX7H1kmxDqZ5cbAAwxvDxhgrpbAd5/JhU5eG8H1LvCkReQU+AnllGWQ/xFLFvycqPL
+	qL87gMnsPmLgW7/ms6avfTgC1T0dc1uS6WUwyBL4FU/S8pSbYLFDpf9x4cHHbzrwg98O3f
+	Sy2mPHgcFw03X1zXpiMq84jOXuC831iRxekwKQK/rXD+G/geTdold4XkwjXX/obtIFB2pp
+	2g5GIfVWGpTvd23WQqam4dj1ULjcKvQw8cYK+yylSvaeaSmBm/8w2afb4LCnPQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741621106;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=onKZ358iPe3ysbYLBfjepet0iilG2tjfvE5V6cV3SMA=;
+	b=+3aFRTCNY/Sy0ctAsngH1dSFQqizVCDY+PjB6AjJVetoV+vINiaBDbWhi7R94zs+X+4MTa
+	MkLcBnV/CTvbqxAw==
+Subject: [PATCH v2 0/2] usb: Don't use %pK through printk
+Date: Mon, 10 Mar 2025 16:38:22 +0100
+Message-Id: <20250310-restricted-pointers-usb-v2-0-a7598e2d47d1@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <69d8b100-f65d-470f-a957-2819795e82a4@gmx.com>
+X-B4-Tracking: v=1; b=H4sIAG4Hz2cC/4WNQQ6CMBBFr0K6dgytVgor72FYAB1lEtOSmUIwh
+ LtbuYDL95L//qYEmVBUU2yKcSGhGDKYU6GGsQsvBPKZlSmNLY2ugFES05DQwxQpJGSBWXpwQ6V
+ 13+Gtrq8qryfGJ61H+dFmHklS5M9xtOif/d9cNJRQOd9Zq61zF3N/U5gTx0Dr2aNq933/At4Ft
+ zDCAAAA
+X-Change-ID: 20250217-restricted-pointers-usb-8c711bae6994
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741621105; l=1065;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=kwv6YXzRLSKnph4Bl6KQltrd4tKRcYjiSMLedmuP9Ag=;
+ b=GwvblWNPSZ+SxzDwVWvmpIZtyOCKLyP5mBcCcmR1GoW75IDYGZAo031r+hH7oj2r53yQ/aCpD
+ UrC+v5DR9g8Aj1PR/vJCAMbQqUEN+e4ejnI/o95UWI00TchQxistgos
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Mon, Mar 10, 2025 at 02:11:13PM +0000, Artem S. Tashkinov wrote:
-> 
-> I'm not going to argue with your reasoning but being able to set btime
-> could be beneficial for backup and restore purposes/utilities.
+Restricted pointers ("%pK") are not meant to be used through printk().
+It can unintentionally expose security sensitive, raw pointer values.
 
-I think the fundmental question is should we change the current
-defined semantics of btime, versus adding some new "crtime" field for
-those people who care about Windows compatibility.
+Use regular pointer formatting instead.
 
-Granted, it's only been relatively recently that userspace could even
-*access* btime for a file in the a mounted file system via the
-statx(2) system call.  So there might not be that many users of btime
-today, so changing the semantics might not break userspace (much).
+Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
 
-Again, the choices are:
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Refer to original %p->%pK changes in commit messages
+- Link to v1: https://lore.kernel.org/r/20250217-restricted-pointers-usb-v1-0-78da55158832@linutronix.de
 
-* Change semantics of "birth time" for everyone as of some new kernel version
+---
+Thomas Weißschuh (2):
+      usb: core: Don't use %pK through printk
+      usb: dwc3: Don't use %pK through printk
 
-* Make the semantics of "birth time" be subject to chagge via a mount option
+ drivers/usb/core/hcd.c     | 4 ++--
+ drivers/usb/core/urb.c     | 2 +-
+ drivers/usb/dwc3/dwc3-st.c | 2 +-
+ drivers/usb/dwc3/gadget.c  | 6 +++---
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250217-restricted-pointers-usb-8c711bae6994
 
-* Add the ability to optionally store a new "creation time" which as
-  Windows semantics in addition to btime.  This could either be via an
-  xattr, or by adding a new on-disk inode field for some file systems
-  that care about Windows compatibility.
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-> Secondly, I really like having separate modification and creation times
-> for all my files.
-
-Personally, I don't find it all that useful, since "creation time" is
-really (with apologies to Lewis Carroll):
-
-   “When I use a timestamp,’ Humpty Dumpty said in rather a scornful tone, ‘it
-    means just what I choose it to mean — neither more nor less.’
-
-    ’The question is,’ said Alice, ‘whether you can make timestamps mean so
-    many different things.’
-
-    ’The question is,’ said Humpty Dumpty, ‘which is to be master — that’s all.”
-
-.... combined with the fact that most file systems don't support
-creation time today.
-
-Hence I find it more useful to find some other way to do version
-stamping --- and something more reliable, like a SHA1 hash like git
-uses.  Or as a nother example, using an external database, such as a
-rpm or dpkg installed package database, with a crypto hash to verify
-whether the file has actually changed, no matter what the package
-manager thinks.
-
-But that's just my personal opinion.  I am sure that other people
-might find "creation time" to be useful.
-
-> Finally, as for POSIX not offering this feature - doesn't Linux already
-> have a lot of syscalls that are not found in POSIX?
-
-What I was trying to point out that there is precedent in POSIX not
-allowing certain timestamps to be changed, because that would violate
-the semantics of ctime --- and the same would apply for btime's
-current semantics.
-
-Can we forcibly change btime's semantics?  Perhaps.  But let's do so
-consciously, and not blindly follow Windows' way of doing things.
-
-Cheers,
-
-	     	     	     	    	     	 - Ted
