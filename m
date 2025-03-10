@@ -1,174 +1,276 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B303422758F;
-	Mon, 10 Mar 2025 09:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDBC227B8C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741599765; cv=none; b=HrxTQD0qZgbhJiZO4C7+njTXQwomSKJSL5IpuI+yBOqF0UF28Ej+xgbwUnurPbN//ZuzHcAA4oczRQU68hIBzdRDB1MEO366LnOYJFcEE5N52q3mO19l7mg3d2H95DVq7fSUyHjS7vwNYj0BK2GvO0uzdVzlehyDFHfi3A2TCJs=
+	t=1741599766; cv=none; b=i66rEVu3SJYqQ9LNPnGiwDawwTLIM5EGYG4ZlxVvSrLFY01uHdftU9s+zGWDygf3kWl9wOs7m9rbLKD2L8ETh7/1JepfhRBZf3graROK3gKxmcXM0K0UBNsyq4/+HfrvNNTfsroaX+TqDQuirYrTuDa/yuo/8tr63dOhZglUgy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741599765; c=relaxed/simple;
-	bh=h1E0/A3bjATDwXlqdk725GKR6Hwuu+h4mOX6XmeZSLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qzz6gpnTpAXRbF9uegA6G0jfmqKrphJKiRA70HyfQ+hPfgW9npOiU8+EzA34UlHaS+iQhQOkS6B0Eca/IJV+ef/SNxjzCrxlxPkSvJRGpEpN12tTq+kQ+OXWYzuza8Zey+9sAqapec7cA5RTBm655Xdkj+Y0/tgO16M+hlkkGoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DpVojWJm; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741599766; c=relaxed/simple;
+	bh=mnwr0qJt2k8Iix3QGp5xkW79KQcIIw/eqMdZgRCKhHQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p4LXuxf8CyywkUbHwkXUKtl+KLQMP18fzfpQscN1XGlyXU6k8Mp0nTsNGTH+d+gsMARXGRx0lMVplhhJyYTJp7Vfd3Wm8dggYUVvQXAMJSNDPa0W2ZSYr2eAcO3M275wOhyqkDGLsw663gZjQ4/T+GeFTiC6vpPCFAB9Umkb6QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HiEbenx0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpVojWJm"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so702500466b.3;
-        Mon, 10 Mar 2025 02:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741599762; x=1742204562; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tMClGTb/xowiN+wUj5f6h9i/suU0YoMn0juoJl6ktWM=;
-        b=DpVojWJmneojq2ZrP1u99fpWNf0SBdT1DibjcoP7GeQR/NTxu/2QQCVNqUDZDd6eBQ
-         OWTjm61pD3LzLs/P2FqPJg+KpIKT5ZF7lPYGo7Nu6hSnKNhR2B3a3oZCBss1FIQ2mK2i
-         +Q8JOnI28+J8cWH1UBpcyT1x+C+fIpB8V70+o+wtz0+Z897JA7Qiu4B35mIyzBMDUqHp
-         JLlbrS4zbL2Q7Vm35ZZEhJhdlwW01u0emD29BM8OPd6ut+/yc44pAuEL2XC1ZVmtyQYi
-         gv3YCZQxkvawGBMumXu3A4qZmi3ksEbF4TPbQpFnpvUOJXWcROSNOLUBXmjchYtrPEXS
-         RoPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741599762; x=1742204562;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tMClGTb/xowiN+wUj5f6h9i/suU0YoMn0juoJl6ktWM=;
-        b=tBj/+/vIEiNXqyg+aNSjXb8/YqT1JoVkzMS+2VUV8QyBgdIRqOnv4azKmTGtGh9Nks
-         fLRR4yUGcV9JpiLSWkP7IowUWC2LJufh7um/Pdklt0z+6BOmbs6X5TfmctSZSS+TSQ8o
-         VT0ggAbimzXreF7G1aY1I0nLnP4PaAVnoJD9HUxKmUboZQSiaPdtfSEubfxBkXUYrgIH
-         WlguWGUIKERn0EtjbM7XXFVzQAG5mA/JthENY8UrUT8C9KU7+vFK2Swf0UxGKWH6JeFB
-         91W0uzRIbdQae/JCyyIneh2oTzOn5tcuO/QuzoHNJAasxuAyVL/7AYm4eWBVqoQPvYM0
-         VhYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVc8WBsmP8BxAKIvBUXMh2XnELTvZjA/9r/wuACZsiPFjqVlueTlUEpIgVnSYoCbOdkNDNGZJ45Yhje@vger.kernel.org, AJvYcCWG2frz4YnptvSZPz1KjwamSH9OpS0u833hzcUwwwlTwDHeTRVRjudQFx1YCVjtP5R2dLpkvTZKi5qOIo3y@vger.kernel.org, AJvYcCWRr+/kG8SiXzADS4RLuCyImdp/1grl4/F2slmv6KqTr3Wpt4h6PhJJaKLIAuH1iBym0ZM3egnNFAQ6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj4j4FdZdDpIdbVIICUGa79VBUPfrP1lIIiLoh6Ep3J8EsKphQ
-	ssFnLQWf3YTVR6MD+siccCjeIg2vlGM/3uXKNWyX7QOuEfAuc1B6
-X-Gm-Gg: ASbGnctXSn2hWWQ4Z+us1LfqkN1temS8lVu/YsOXXkuvzxRl3duA4JA8edhvaqqvHAP
-	0rQJ55VJqhT+n3JMgMqArmFQsI4jShIOokMkd+e7WGPbvRCSlNaCVESmkQVGR3s1J1QcJbCDWs0
-	o4PTuBQTqVybJ094LW7Fsl6mg99noal7ZZodIF7j2eF4w2sLxyux2wpe7In+LEhKOxujG+5y9jF
-	6R8JXVizYuvqx8veNChElJT316amYJACOieWFwOB6tqsVPVyT8xUEHwdjkwy+VhnDw3rUllFCxt
-	5I6Lr8SptTA+NQb1nLeK3IFKjmF3RBKAca9SCe5WOlkF
-X-Google-Smtp-Source: AGHT+IGr1BXamH0TMzryWGEFJPRvklcDIRXonoj2fHuOVeIPkUnC7Qwd3/v9Pu02iEAlM/2ZB1tn9g==
-X-Received: by 2002:a17:907:3f96:b0:abf:62a4:14ef with SMTP id a640c23a62f3a-ac25274a051mr1561659766b.9.1741599761642;
-        Mon, 10 Mar 2025 02:42:41 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2b0daaa0asm28863966b.38.2025.03.10.02.42.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Mar 2025 02:42:40 -0700 (PDT)
-Date: Mon, 10 Mar 2025 09:42:38 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <20250310094238.lgsiyqci3aqdzrhj@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-3-rppt@kernel.org>
- <20250218155004.n53fcuj2lrl5rxll@master>
- <Z7WHL_Xqgoln9oLg@kernel.org>
- <20250224013131.fzz552bn7fs64umq@master>
- <Z711VP45tjBi0kwx@kernel.org>
- <20250226020915.ytxusrrl7rv4g64l@master>
- <20250310075627.5hettrn2j2ien5bj@master>
- <Z86ikkLVHQhLmBWj@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HiEbenx0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741599763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mrpYWalYw7EJxA/nUrbhkuC60QhcJ0mNDk/XtiF2k4=;
+	b=HiEbenx0XapvfjnLUfcquGOTeXfPwDDOleOJ7qdfLBruvESOoXRbV1sDupxPaUWKhbVodI
+	RXJ/JY85YqdxUgKRcyHVgJc/jQgT4pymSRkjcPqBpUbspTimOXz5eONUixE84BkRRoVNh/
+	SM6i6O1Nc6l2zE+ep34sRBMk/YjfzLY=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-G7KWNf_hOZSMNOdZ4au04g-1; Mon,
+ 10 Mar 2025 05:42:40 -0400
+X-MC-Unique: G7KWNf_hOZSMNOdZ4au04g-1
+X-Mimecast-MFC-AGG-ID: G7KWNf_hOZSMNOdZ4au04g_1741599759
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6662E19560A3;
+	Mon, 10 Mar 2025 09:42:39 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.61])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC55D19560AD;
+	Mon, 10 Mar 2025 09:42:37 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Marc Dionne <marc.dionne@auristor.com>
+Cc: David Howells <dhowells@redhat.com>,
+	Christian Brauner <christian@brauner.io>,
+	linux-afs@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 07/11] afs: Drop the net parameter from afs_unuse_cell()
+Date: Mon, 10 Mar 2025 09:42:00 +0000
+Message-ID: <20250310094206.801057-8-dhowells@redhat.com>
+In-Reply-To: <20250310094206.801057-1-dhowells@redhat.com>
+References: <20250310094206.801057-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z86ikkLVHQhLmBWj@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, Mar 10, 2025 at 10:28:02AM +0200, Mike Rapoport wrote:
->Hi Wei,
->
->On Mon, Mar 10, 2025 at 07:56:27AM +0000, Wei Yang wrote:
->> On Wed, Feb 26, 2025 at 02:09:15AM +0000, Wei Yang wrote:
->> >>> 
->> >>> From the above call flow and background, there are three cases when
->> >>> memblock_alloc_range_nid() would be called:
->> >>> 
->> >>>   * If it is called before (1), memblock.reserved's nid would be adjusted correctly.
->> >>>   * If it is called after (2), we don't touch memblock.reserved.
->> >>>   * If it happens between (1) and (2), it looks would break the consistency of
->> >>>     nid information in memblock.reserved. Because when we use
->> >>>     memblock_reserve_kern(), NUMA_NO_NODE would be stored in region.
->> >>> 
->> >>> So my question is if the third case happens, would it introduce a bug? If it
->> >>> won't happen, seems we don't need to specify the nid here?
->> >>
->> >>We don't really care about proper assignment of nodes between (1) and (2)
->> >>from one side and the third case does not happen on the other side. Nothing
->> >>should call membloc_alloc() after memblock_free_all(). 
->> >>
->> >
->> >My point is if no one would call memblock_alloc() after memblock_free_all(),
->> >which set nid in memblock.reserved properly, it seems not necessary to do
->> >__memblock_reserve() with exact nid during memblock_alloc()? 
->> >
->> >As you did __memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN) in this
->> >patch.
->> >
->> 
->> Hi, Mike
->> 
->> Do you think my understanding is reasonable?
->
->Without KHO it is indeed not strictly necessary to set nid during memblock_alloc().
->But since we anyway have nid parameter in memblock_alloc_range_nid() and it
->anyway propagates to memblock_add_range(), I think it's easier and cleaner
->to pass nid to __memblock_reserve() there.
->
->And for KHO estimation of scratch size it is important to have nid assigned to
->the reserved areas before memblock_free_all(), at least for the allocations
->that request particular nid explicitly.
+Remove the redundant net parameter to afs_unuse_cell() as cell->net can be
+used instead.
 
-Thanks, I see your point.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-fsdevel@vger.kernel.org
+Link: https://lore.kernel.org/r/20250224234154.2014840-12-dhowells@redhat.com/ # v1
+---
+ fs/afs/cell.c              | 12 ++++++------
+ fs/afs/dynroot.c           |  4 ++--
+ fs/afs/internal.h          |  2 +-
+ fs/afs/mntpt.c             |  2 +-
+ fs/afs/proc.c              |  2 +-
+ fs/afs/super.c             |  9 ++++-----
+ fs/afs/vl_alias.c          |  4 ++--
+ include/trace/events/afs.h |  1 +
+ 8 files changed, 18 insertions(+), 18 deletions(-)
 
-> 
->> -- 
->> Wei Yang
->> Help you, Help me
->
->-- 
->Sincerely yours,
->Mike.
+diff --git a/fs/afs/cell.c b/fs/afs/cell.c
+index 73894180f653..acbf35b4c9ed 100644
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -339,7 +339,7 @@ struct afs_cell *afs_lookup_cell(struct afs_net *net,
+ 		goto wait_for_cell;
+ 	goto error_noput;
+ error:
+-	afs_unuse_cell(net, cell, afs_cell_trace_unuse_lookup);
++	afs_unuse_cell(cell, afs_cell_trace_unuse_lookup_error);
+ error_noput:
+ 	_leave(" = %d [error]", ret);
+ 	return ERR_PTR(ret);
+@@ -402,7 +402,7 @@ int afs_cell_init(struct afs_net *net, const char *rootcell)
+ 				       lockdep_is_held(&net->cells_lock));
+ 	up_write(&net->cells_lock);
+ 
+-	afs_unuse_cell(net, old_root, afs_cell_trace_unuse_ws);
++	afs_unuse_cell(old_root, afs_cell_trace_unuse_ws);
+ 	_leave(" = 0");
+ 	return 0;
+ }
+@@ -520,7 +520,7 @@ static void afs_cell_destroy(struct rcu_head *rcu)
+ 	trace_afs_cell(cell->debug_id, r, atomic_read(&cell->active), afs_cell_trace_free);
+ 
+ 	afs_put_vlserverlist(net, rcu_access_pointer(cell->vl_servers));
+-	afs_unuse_cell(net, cell->alias_of, afs_cell_trace_unuse_alias);
++	afs_unuse_cell(cell->alias_of, afs_cell_trace_unuse_alias);
+ 	key_put(cell->anonymous_key);
+ 	idr_remove(&net->cells_dyn_ino, cell->dynroot_ino);
+ 	kfree(cell->name - 1);
+@@ -608,7 +608,7 @@ struct afs_cell *afs_use_cell(struct afs_cell *cell, enum afs_cell_trace reason)
+  * Record a cell becoming less active.  When the active counter reaches 1, it
+  * is scheduled for destruction, but may get reactivated.
+  */
+-void afs_unuse_cell(struct afs_net *net, struct afs_cell *cell, enum afs_cell_trace reason)
++void afs_unuse_cell(struct afs_cell *cell, enum afs_cell_trace reason)
+ {
+ 	unsigned int debug_id;
+ 	time64_t now, expire_delay;
+@@ -632,7 +632,7 @@ void afs_unuse_cell(struct afs_net *net, struct afs_cell *cell, enum afs_cell_tr
+ 	WARN_ON(a == 0);
+ 	if (a == 1)
+ 		/* 'cell' may now be garbage collected. */
+-		afs_set_cell_timer(net, expire_delay);
++		afs_set_cell_timer(cell->net, expire_delay);
+ }
+ 
+ /*
+@@ -957,7 +957,7 @@ void afs_cell_purge(struct afs_net *net)
+ 	ws = rcu_replace_pointer(net->ws_cell, NULL,
+ 				 lockdep_is_held(&net->cells_lock));
+ 	up_write(&net->cells_lock);
+-	afs_unuse_cell(net, ws, afs_cell_trace_unuse_ws);
++	afs_unuse_cell(ws, afs_cell_trace_unuse_ws);
+ 
+ 	_debug("del timer");
+ 	if (del_timer_sync(&net->cells_timer))
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 4ff2a396dbd4..011c63350df1 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -125,7 +125,7 @@ static struct dentry *afs_dynroot_lookup_cell(struct inode *dir, struct dentry *
+ 	return d_splice_alias(inode, dentry);
+ 
+ out:
+-	afs_unuse_cell(cell->net, cell, afs_cell_trace_unuse_lookup_dynroot);
++	afs_unuse_cell(cell, afs_cell_trace_unuse_lookup_dynroot);
+ out_no_cell:
+ 	if (!inode)
+ 		return d_splice_alias(inode, dentry);
+@@ -167,7 +167,7 @@ static void afs_dynroot_d_release(struct dentry *dentry)
+ {
+ 	struct afs_cell *cell = dentry->d_fsdata;
+ 
+-	afs_unuse_cell(cell->net, cell, afs_cell_trace_unuse_dynroot_mntpt);
++	afs_unuse_cell(cell, afs_cell_trace_unuse_dynroot_mntpt);
+ }
+ 
+ /*
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 24b87ae11524..9c8dfde758c3 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1051,7 +1051,7 @@ struct afs_cell *afs_lookup_cell(struct afs_net *net,
+ 				 const char *vllist, bool excl,
+ 				 enum afs_cell_trace trace);
+ extern struct afs_cell *afs_use_cell(struct afs_cell *, enum afs_cell_trace);
+-extern void afs_unuse_cell(struct afs_net *, struct afs_cell *, enum afs_cell_trace);
++void afs_unuse_cell(struct afs_cell *cell, enum afs_cell_trace reason);
+ extern struct afs_cell *afs_get_cell(struct afs_cell *, enum afs_cell_trace);
+ extern void afs_see_cell(struct afs_cell *, enum afs_cell_trace);
+ extern void afs_put_cell(struct afs_cell *, enum afs_cell_trace);
+diff --git a/fs/afs/mntpt.c b/fs/afs/mntpt.c
+index 4a3edb9990b0..45cee6534122 100644
+--- a/fs/afs/mntpt.c
++++ b/fs/afs/mntpt.c
+@@ -87,7 +87,7 @@ static int afs_mntpt_set_params(struct fs_context *fc, struct dentry *mntpt)
+ 		ctx->force = true;
+ 	}
+ 	if (ctx->cell) {
+-		afs_unuse_cell(ctx->net, ctx->cell, afs_cell_trace_unuse_mntpt);
++		afs_unuse_cell(ctx->cell, afs_cell_trace_unuse_mntpt);
+ 		ctx->cell = NULL;
+ 	}
+ 	if (test_bit(AFS_VNODE_PSEUDODIR, &vnode->flags)) {
+diff --git a/fs/afs/proc.c b/fs/afs/proc.c
+index fc7027fc3084..9a3d8eb5da43 100644
+--- a/fs/afs/proc.c
++++ b/fs/afs/proc.c
+@@ -130,7 +130,7 @@ static int afs_proc_cells_write(struct file *file, char *buf, size_t size)
+ 		}
+ 
+ 		if (test_and_set_bit(AFS_CELL_FL_NO_GC, &cell->flags))
+-			afs_unuse_cell(net, cell, afs_cell_trace_unuse_no_pin);
++			afs_unuse_cell(cell, afs_cell_trace_unuse_no_pin);
+ 	} else {
+ 		goto inval;
+ 	}
+diff --git a/fs/afs/super.c b/fs/afs/super.c
+index aa6a3ccf39b5..25b306db6992 100644
+--- a/fs/afs/super.c
++++ b/fs/afs/super.c
+@@ -297,7 +297,7 @@ static int afs_parse_source(struct fs_context *fc, struct fs_parameter *param)
+ 			       cellnamesz, cellnamesz, cellname ?: "");
+ 			return PTR_ERR(cell);
+ 		}
+-		afs_unuse_cell(ctx->net, ctx->cell, afs_cell_trace_unuse_parse);
++		afs_unuse_cell(ctx->cell, afs_cell_trace_unuse_parse);
+ 		afs_see_cell(cell, afs_cell_trace_see_source);
+ 		ctx->cell = cell;
+ 	}
+@@ -394,7 +394,7 @@ static int afs_validate_fc(struct fs_context *fc)
+ 				ctx->key = NULL;
+ 				cell = afs_use_cell(ctx->cell->alias_of,
+ 						    afs_cell_trace_use_fc_alias);
+-				afs_unuse_cell(ctx->net, ctx->cell, afs_cell_trace_unuse_fc);
++				afs_unuse_cell(ctx->cell, afs_cell_trace_unuse_fc);
+ 				ctx->cell = cell;
+ 				goto reget_key;
+ 			}
+@@ -520,9 +520,8 @@ static struct afs_super_info *afs_alloc_sbi(struct fs_context *fc)
+ static void afs_destroy_sbi(struct afs_super_info *as)
+ {
+ 	if (as) {
+-		struct afs_net *net = afs_net(as->net_ns);
+ 		afs_put_volume(as->volume, afs_volume_trace_put_destroy_sbi);
+-		afs_unuse_cell(net, as->cell, afs_cell_trace_unuse_sbi);
++		afs_unuse_cell(as->cell, afs_cell_trace_unuse_sbi);
+ 		put_net(as->net_ns);
+ 		kfree(as);
+ 	}
+@@ -605,7 +604,7 @@ static void afs_free_fc(struct fs_context *fc)
+ 
+ 	afs_destroy_sbi(fc->s_fs_info);
+ 	afs_put_volume(ctx->volume, afs_volume_trace_put_free_fc);
+-	afs_unuse_cell(ctx->net, ctx->cell, afs_cell_trace_unuse_fc);
++	afs_unuse_cell(ctx->cell, afs_cell_trace_unuse_fc);
+ 	key_put(ctx->key);
+ 	kfree(ctx);
+ }
+diff --git a/fs/afs/vl_alias.c b/fs/afs/vl_alias.c
+index ffcfba1725e6..709b4cdb723e 100644
+--- a/fs/afs/vl_alias.c
++++ b/fs/afs/vl_alias.c
+@@ -205,11 +205,11 @@ static int afs_query_for_alias(struct afs_cell *cell, struct key *key)
+ 			goto is_alias;
+ 
+ 		if (mutex_lock_interruptible(&cell->net->proc_cells_lock) < 0) {
+-			afs_unuse_cell(cell->net, p, afs_cell_trace_unuse_check_alias);
++			afs_unuse_cell(p, afs_cell_trace_unuse_check_alias);
+ 			return -ERESTARTSYS;
+ 		}
+ 
+-		afs_unuse_cell(cell->net, p, afs_cell_trace_unuse_check_alias);
++		afs_unuse_cell(p, afs_cell_trace_unuse_check_alias);
+ 	}
+ 
+ 	mutex_unlock(&cell->net->proc_cells_lock);
+diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
+index 42c3a51db72b..82d20c28dc0d 100644
+--- a/include/trace/events/afs.h
++++ b/include/trace/events/afs.h
+@@ -197,6 +197,7 @@ enum yfs_cm_operation {
+ 	EM(afs_cell_trace_unuse_fc,		"UNU fc    ") \
+ 	EM(afs_cell_trace_unuse_lookup,		"UNU lookup") \
+ 	EM(afs_cell_trace_unuse_lookup_dynroot,	"UNU lu-dyn") \
++	EM(afs_cell_trace_unuse_lookup_error,	"UNU lu-err") \
+ 	EM(afs_cell_trace_unuse_mntpt,		"UNU mntpt ") \
+ 	EM(afs_cell_trace_unuse_no_pin,		"UNU no-pin") \
+ 	EM(afs_cell_trace_unuse_parse,		"UNU parse ") \
 
--- 
-Wei Yang
-Help you, Help me
