@@ -1,182 +1,120 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BC1227EBB;
-	Mon, 10 Mar 2025 14:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F7522A4D3;
+	Mon, 10 Mar 2025 14:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741617313; cv=none; b=pmTR1IZTKGDvmWJ3aYI9W0fCSl4058jU3ZYolK3o0hcsWJe0WDl2Fq06SuPKPG9RziPV45jzfOv7LnEYHSgkmofnF8OX0wlPJADaXo8g34RcnasMdDdGzaUwdymR6yRY3XlInGEbbOJj/T+3QPY4tzTmOxjWQPS9uAOVa1uqbj8=
+	t=1741617315; cv=none; b=g0G/Xq7oxdm4fOA4Q+T5/bbSr4hpI+8VWDHKzpgGfO1dpw/D59VJezJ4dskQ7vNc9MgtG6lZsGIJVq2nZ21yGjlmAsQk1x8KWvthRrZijMBvQYo2VX1sF62EZ6pzh1xE8x3SR9D4+RnEhsH3mJP0sYCUbGt8YjMZ/aGW2i9atQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741617313; c=relaxed/simple;
-	bh=jt7NDGc8noYexdYzv/8Lg3bRt9IuUj8K8Bh1YPqYeHE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=emtObuveJJ19IxxUZ8vTffjaMaAdiswspepVEETpPokvfDi73DTDYcrcDv8ISumbtO+YQrrYacZxjBm2YPUo79LV1XNtihwEchOhorf4HzanLEbzJIZ66RnJXMDHLdT2VB/7VPSrz2qtBHQr4Crpm7mflvRfvY4bnxc0IAyeI3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gqmoc2xR; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741617315; c=relaxed/simple;
+	bh=b08aAQ44suZ87Xe2zqcpVzFlmw5lKdQuzSMVWAV8bIc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LrSR8vZbbgHX9YIiIOUooPjy4ATHxyefQkmais4DK2YRFOCGyYKzglgm7D919iJr1tW2c8Tz4A8k0TsQk21rVI6c36AdZ+Apa+lpr4hpCdsWmtuFTxzBhxqrwa9qc0y7yK5cUpvOZCMs8bN2l+wS8vcyTvBzBpVR59bNomfZh3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IeenkXay; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqmoc2xR"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-223fb0f619dso80743755ad.1;
-        Mon, 10 Mar 2025 07:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741617311; x=1742222111; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k3PCN1rM0WbHIM2gIVr2uSVcfKomlI7ImWzVGLtI+Ys=;
-        b=gqmoc2xRJLcxH4pWuEMHRb9n/n1Y2FYqFaizutBrDSNVT/2WIH1ponUMROsELxFnRa
-         ts8Hr5U6PI+uakVKvPMz66bJ/Ye5fnh/R6fwccEPqO2WQ+kkKAzFChm0ARtfG3zsUYmO
-         ePhymFPmmNYc9MJEJt5cUEcMPLecWyMwQqXRsD9pnuOlEN5quSB7/hCZJeKCdk7O1HCa
-         yN9nZx2sFSxr/6mqOW1mHYaB53I+sP+xuoLnEc66aMmTZCozYCpe5j6OuB8AVbgvbj8C
-         exOAO9rE2Ebsh3O1Kf/XWDH+r0tYp4R/8Dw75gkrBQ4ziQAk6AixTR7sp93JRHRAHRvA
-         +r8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741617311; x=1742222111;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k3PCN1rM0WbHIM2gIVr2uSVcfKomlI7ImWzVGLtI+Ys=;
-        b=TD1FlHRq1OWIg17FtM8euAgFYCV6t8QjiQGqwVOZ4UxZ6wFyP7YUCJicbmOIUwPhYc
-         RP3PNOq+nyVOrhR2Q2JdK7uhDUaRZc7a1BMm+Bn7KWAKa5vaNnC6b+0aE12IF638cuaS
-         N5qv8L86vg09sb3tzNPQ/6mlQPo7YPuGMDtGrqIzmH/MgzAwNdXrqYIv6s/nBynWyQ09
-         Mh2lRA1VnmvW6SrnUvmo6iixMCwfSk4NrHPGuVU8lHAXx9dJZWeEr4ZVLGYwW9ayBjbU
-         TGrL41cSBWJxbElZ+3IBZDCUIWwxXjsZJFuXv47qXSxxDGhY+c/9rDE/9n37++XE5vdM
-         Z7kg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkAl4TihBU8RXrwxgY8KuD7P7QbcGgFf4x39OZy8wO8UvzqBHsTmtE2bUUiSTqHw/Q6MlDft5EtdT7ySamsd463A0=@vger.kernel.org, AJvYcCVkFO0B+RdpnhWWufcdEZC1xweGsL3kCLPiqWltBExV08hcYcs4VxYcOWrXGWe/YaEFgu8v60uYl3VWn7E=@vger.kernel.org, AJvYcCWtM1UPb2Jtbk0vF3HMfD/RdgEIovA5283k8cU9G1NK0v6wJyV5mcfSd27sE6YxaL1ahxmZOQxUC9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjcV1blVlYdwhTchLXJKj3mUGCavmZyIKjDPiG2nC/Zyf4m9UL
-	ZpFFnJwuaYoMAJKnuTElMENzfuJ8RPNPLqdxKv1U7um9DOvNlu1E
-X-Gm-Gg: ASbGncvHxv1H80A4hUvfcdFepSNRKI3G0aqT5iFAbDb2dvuY0nyScW9I0pDZKbcCR28
-	B7aP4E7FT2z0ktDga+h3DCgv68yOANQ4KZjwESVfGze+W3jYtciTMKFgYwN2ENGGorZqUusA5y4
-	xw+hJZQ0DdkuchI4TVd3jHHqbkk8x2vIpHT5kUdRv/SGKiTsY6hjI0A+4xfIF99HLx8zosX56Ba
-	UwsiEgpRgG+TMosTxOErc58/OF9A2UKbwAN+oWLHsrjVJLXTx7nlBCmLOLqVyjQy6/xYrnxsDpa
-	48bLTcStrmiZ7XfnGuVEgn6AgxzNvGdYT1YG2+CjSXyobmo3Dkbaf4/yLec=
-X-Google-Smtp-Source: AGHT+IGRjAcGVcNUlBufVXhtdKF6feTENZiruX3FJiNFzexU5+dfH+syt6bCsQK3e8kMsxDHJZJ4HQ==
-X-Received: by 2002:a05:6a21:46c4:b0:1f5:6d00:ba05 with SMTP id adf61e73a8af0-1f58cbefa96mr2309637.38.1741617309689;
-        Mon, 10 Mar 2025 07:35:09 -0700 (PDT)
-Received: from localhost.localdomain ([103.221.69.50])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af281096763sm7785900a12.30.2025.03.10.07.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 07:35:09 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-pm@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
-	linux-samsung-soc@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v4 1/4] drivers/thermal/exynos: Refactor clk_sec initialization inside SOC-specific case
-Date: Mon, 10 Mar 2025 20:04:42 +0530
-Message-ID: <20250310143450.8276-2-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250310143450.8276-1-linux.amoon@gmail.com>
-References: <20250310143450.8276-1-linux.amoon@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeenkXay"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356E3C4CEE5;
+	Mon, 10 Mar 2025 14:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741617314;
+	bh=b08aAQ44suZ87Xe2zqcpVzFlmw5lKdQuzSMVWAV8bIc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IeenkXaywcwgJ3PcYpQXiQN7NJUml07AKlh4VZWZbRNtMOXFaZzS7fG3/wUioP5fB
+	 VLEsndpZKBpP89LiSiwe53h+wkoreXmMHxSHx6FjCN+bMWuGtdzvzKFj7ZiI2znZq0
+	 VVoQjYvW9VaxgOOwRfpRrgnoQSA5BMftcMq7yCTEiRnzqH5/R3qUQy4ugQ+pl9Yp10
+	 kTjqnjWnjmS4H2oMJ0OCrAENsZ9NWBjmCtA1QpMIvnYjBsFOlFK11OB7p5E5buSEAo
+	 aTCHoiA56fmeKti7u31wf6FhUzjFyKiulUVW5Y24nNa1frcosvkXJGMwEi/zqURgie
+	 2+DxYkFeZlXLQ==
+Message-ID: <cfd2c51a-cf2a-45f1-a926-65388d2c3ed6@kernel.org>
+Date: Mon, 10 Mar 2025 15:35:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] arm64: dts: qcom: x1e78100-t14s: Add LCD variant
+ with backlight support
+To: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+References: <20250310141504.3008517-1-abel.vesa@linaro.org>
+ <20250310141504.3008517-3-abel.vesa@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250310141504.3008517-3-abel.vesa@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Refactor the initialization of the clk_sec clock to be inside the
-SOC_ARCH_EXYNOS5420_TRIMINFO case. It ensures that the clk_sec clock
-is only initialized for the specified SOC and not for other SOCs,
-thereby simplifying the code. The clk_sec clock is used by the TMU
-for GPU on the Exynos 542x platform.
+On 10/03/2025 15:15, Abel Vesa wrote:
+> Due to the fact that Lenovo Thinkpad T14s Gen6 is available with both
+> OLED and LCD, the backlight control differs HW-wise. For the LCD variant,
+> the panel's backlight is controlled via one of the PWMs provided by the
+> PMK8550 PMIC. For the OLED variant, the backlight is internal to the
+> panel and therefore it is not described in devicetree.
+> 
+> For this reason, create a generic dtsi for the T14s by renaming the
+> existing dts. While at it, add a node name to panel and drop the enable
+> gpio and pinctrl properties from the panel node. Then add the LCD variant
+> dts file with the old name and describe all backlight related nodes.
+> 
+> So the existing dts will now be used for LCD variant while for OLED new
+> dts will be added.
+> 
+> Tested-by: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 
-Removed redundant IS_ERR() checks for the clk_sec clock since error
-handling is already managed internally by clk_unprepare() functions.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-v4: Fix the aligment of code clk for clk_prepare in proper if/else block.
-    update the commit for clk_sec used.
-    checked to goto clean up all the clks are proper.
-    drop IS_ERR() check for clk_sec.
-v3: improve the commit message.
----
- drivers/thermal/samsung/exynos_tmu.c | 37 ++++++++++++++--------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index 47a99b3c53958..3657920de0004 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -1037,29 +1037,30 @@ static int exynos_tmu_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	data->clk = devm_clk_get(dev, "tmu_apbif");
--	if (IS_ERR(data->clk))
-+	if (IS_ERR(data->clk)) {
- 		return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to get clock\n");
--
--	data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
--	if (IS_ERR(data->clk_sec)) {
--		if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO)
--			return dev_err_probe(dev, PTR_ERR(data->clk_sec),
--					     "Failed to get triminfo clock\n");
- 	} else {
--		ret = clk_prepare(data->clk_sec);
-+		ret = clk_prepare(data->clk);
- 		if (ret) {
- 			dev_err(dev, "Failed to get clock\n");
- 			return ret;
- 		}
- 	}
- 
--	ret = clk_prepare(data->clk);
--	if (ret) {
--		dev_err(dev, "Failed to get clock\n");
--		goto err_clk_sec;
--	}
--
- 	switch (data->soc) {
-+	case SOC_ARCH_EXYNOS5420_TRIMINFO:
-+		data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-+		if (IS_ERR(data->clk_sec)) {
-+			ret = dev_err_probe(dev, PTR_ERR(data->clk_sec),
-+					    "Failed to get clk_sec clock\n");
-+			goto err_clk;
-+		}
-+		ret = clk_prepare(data->clk_sec);
-+		if (ret) {
-+			dev_err(dev, "Failed to prepare clk_sec clock\n");
-+			goto err_clk_sec;
-+		}
-+		break;
- 	case SOC_ARCH_EXYNOS5433:
- 	case SOC_ARCH_EXYNOS7:
- 		data->sclk = devm_clk_get(dev, "tmu_sclk");
-@@ -1112,11 +1113,10 @@ static int exynos_tmu_probe(struct platform_device *pdev)
- 
- err_sclk:
- 	clk_disable_unprepare(data->sclk);
-+err_clk_sec:
-+	clk_unprepare(data->clk_sec);
- err_clk:
- 	clk_unprepare(data->clk);
--err_clk_sec:
--	if (!IS_ERR(data->clk_sec))
--		clk_unprepare(data->clk_sec);
- 	return ret;
- }
- 
-@@ -1128,8 +1128,7 @@ static void exynos_tmu_remove(struct platform_device *pdev)
- 
- 	clk_disable_unprepare(data->sclk);
- 	clk_unprepare(data->clk);
--	if (!IS_ERR(data->clk_sec))
--		clk_unprepare(data->clk_sec);
-+	clk_unprepare(data->clk_sec);
- }
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-2.48.1
-
+Best regards,
+Krzysztof
