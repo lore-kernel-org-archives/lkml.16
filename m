@@ -1,95 +1,112 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AD422AE7C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741620879; cv=none; b=EQvchybGHZFZAhHs2QmBCOWN10d7ACKDhgTT4dr/sUhm96GVJR/st7RAToriHZsETCVjAMXh7FFo1doJK/i2on0DNd+zEtcK4S1577qU5lOI6jq9J8HXW4UoT4mbgxEW2cO+E5qTNP5Eh3yclQJhX6xWmz4AsHR/tiG2EVu6iDQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741620879; c=relaxed/simple;
-	bh=Uqakw+yourYNBUhuzuW/M3+f6rWLBJ6lFYCFBPMwCWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a415JA2LpsaDJ9xyqsRF0HdMmDLteh0NDQdF2Q3kP9cHbFUCvmSQ86BDOON88HpZ9+C8xHeehfmq6Ak4HDWPFdmA2HbWwhPbubXEjqJ89ovhp7NVgXnK/UPqwB5KULTpqjuc1C9uF7txx1ALG3NMj5oZrrzVwYs3ZqYGWd9ULjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nF20pPEJ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4D21C68B6
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741620904; cv=pass; b=YE6kuN8j0P7YZe+P7Z88W3t6Iuu2GEdcy1dDKBJ9fIlDpI0mVQ5HmA1fTugtJIyl7tG5K66KaT6eBJ140utXIKkG3aufZldb7ZJ4BuJ75eW+3qKhqgDUqEYKli659iSd656joqDjkYfruhaA9WiMEb4YaBFyxkIMFeKDWP6I7NQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741620904; c=relaxed/simple;
+	bh=Nx555+NtSDzXz90QOuxjrITiDLAiiZFLg+hfDKtRm5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JxVShEdO+HTjIUWE7sxwnEaL4KQaO2HApC3pXP+VlnH99yQ3+m4qL/MTdundPJcdY3RjGatkHMOdhnqN/o3xTDw6pUEtMIu/9mfkIG+Qv6sU9yp1/4dQgkMMApO52e8+18f/jgNhBZ+9/gep80na1m6lE4Ray+UAKBS/2iJmEgs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=QAvzpGjK; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nF20pPEJ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so4703335e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741620876; x=1742225676; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z2UW3DGFaIT/OlHaafnnTm7ntqZnQZLSZf8OhxhOmO4=;
-        b=nF20pPEJpxGm1rtHDWUBxh5SW2+GPpDDhTh3CzEYLu5faPgnI6g9GfBaoDeyt/rYrb
-         7LV+hxXOvzRuKYFHYwcLrZaSqQsxmr5KOqDoupl38X1reEi2V30815KTiwJp8uyyW+Kw
-         WHYe/iE0kgdALFleubvPumak1hfg5t9gP4mCnAzeniV07Zp8ctmuPthhK2rDbAxbYqy7
-         uYkJApJGr2ErLUFQgt1SgkVMvWYXcId1DehGfXEZqWWQ6b0RiVfsvwxOn6RYZHS+bK/5
-         g749CP9VV8G0JJb63ah9JRRvBoMI4tYI4Qp/XsvXkNkFnJUSUsAASXduwH90d9av+SVc
-         tDRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741620876; x=1742225676;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z2UW3DGFaIT/OlHaafnnTm7ntqZnQZLSZf8OhxhOmO4=;
-        b=EeMn/FVtw0jn8UF6NZFBfOhZhYZolQiJUXpxJ6NqFq3Pa9McGvYnnZEzxvD9OkNdU1
-         F6N8T+FewRweq59Y/bZV/Ve1+pCMxKjOSz3ijSVDKMZAX4neClK1Nj8incRCiJnnRX+T
-         7h64yg0IrEckku0L+ZJtrJTAozT5eAn89fO9A3ARAbjH0zTW73qgNatimZrLmOvq3LkQ
-         B6msHuzhtEJQqP7Myn11HXatOZdW7eQ9p+FB/N1qSk7Z41GN8UA4BWnV3aQ3YvgJLyT6
-         btaLKzbtdvFYBIvgx8/jG1V/Jz59Fj1TOSMVv9i1aJSdqSOM8hWvLEfU/UFl6es5vSxC
-         sDFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEu41MvbFqaXTlgfY4inOA6j+014+pR5Iz2eRo3AIH+Q89Nxd7xg8zNasghxnfvZOaHTuHNQ24NZCVHJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhfVnTS3Xs+rTt6wSKSOiJ6DZBufa7NNXf485QvubqeUbnSE2D
-	B26As4Fm2JnEWO7Jg9GCMhGf0gzdjJbJfpCDTk+ONXTZovsV3YNO
-X-Gm-Gg: ASbGnctaoCHVdq7U8Mo3b27N4Y1DQUVtA1cziaDtOF70eMS7s68I/z/QYjxYNsxeExE
-	JMeJd6KEFV0m/usILHdKfb6J5SyNwo13XlEwEC2yonkdEPydO1lD+3j9iz2c6s43umI5yc0hyiv
-	Z8RA3fMLc46ZQiXLlfHX+h9oy3iKF+O+SFUP/5Tq9EU8UhSmRBjXi/lx/6espwv33+jldyhLlYl
-	ep7juZAH1Yu3NOUgiIcPAZi54eTrwqtQLNQdy9SXPiwkhff5HeW5gkG/4RIJ+9E0AEtZIlC76Tw
-	gnONKdqPzxP8yFNRCBzD5g3I5XO0dSHF0dg=
-X-Google-Smtp-Source: AGHT+IFPB9H89htTJ8gi+6j6UdIu7tu/68Ca/noH/NXJTp/f9gbF0i/RpmkDIJCF+VEYSdvTCn1u9w==
-X-Received: by 2002:a05:600c:3148:b0:43b:cd0d:9457 with SMTP id 5b1f17b1804b1-43c601d901dmr103550815e9.10.1741620875543;
-        Mon, 10 Mar 2025 08:34:35 -0700 (PDT)
-Received: from pc ([196.235.255.34])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce715731csm88286025e9.2.2025.03.10.08.34.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 08:34:34 -0700 (PDT)
-Date: Mon, 10 Mar 2025 16:19:09 +0100
-From: Salah Triki <salah.triki@gmail.com>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Felix Kuehling <felix.kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: amdkfd: Replace (un)register_chrdev() by
- (unregister/alloc)_chrdev_region()
-Message-ID: <Z88C7ZzM88skw+qr@pc>
-References: <20250305210809.218138-1-salah.triki@gmail.com>
- <a5b1d94e-30ee-411c-88f5-1e340068220c@amd.com>
- <Z8tEti/ZRbx5pt5M@pc>
- <b2068f4f-c832-4cd5-b9bb-e175217d7647@amd.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="QAvzpGjK"
+ARC-Seal: i=1; a=rsa-sha256; t=1741620879; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=DzrekeHXCnD07yLLuY9kF+sth2UjlCNk1s4871aVms+4GuRthn3JEvdxKgxfzhK86oZN9tYQfOOr1lctAG3C8BXNlGtD/0PXLonNfc5Re6jMkXHSZA5dfp1EK296TxYgR8SVRuzm2uTXGyD8M17dNwdLazp0DE4vUNn0vOE3ToM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1741620879; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=fKGYjqu4Ev4SqaAEdORO3V9LqmGHctq0CSPM/977IfQ=; 
+	b=NmOrwpT6AAtoZP/TrXyYOBgChsgLjxIZSqYOTj2kLm8PrTfQoFNQMDecXKoKob5fLRfl//k6lsMrc7zwohpl7RrCCE6Spdbv/8RN32yI04udiOTGDWTNocaVnmOr4f1Cow9NajLBj2MGjtCHkkyrCrYzHRprOcleMUyJ8ecC9vA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741620879;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=fKGYjqu4Ev4SqaAEdORO3V9LqmGHctq0CSPM/977IfQ=;
+	b=QAvzpGjK9VnN7UqGBMBTo+N83eYP0pmKLVdfSpxGEldWGMlefXxFCAdtRaa/uv7j
+	n/QO+HCaIe+qZhGDy/ljjHKyoVgrv0e9G47YaMSVGKg24OBWLRHicomssfyk9qT9+7T
+	lHsYJ6dz1rt9hmjwuFZfgnPR2TGdg+m8JGmt9tSM=
+Received: by mx.zohomail.com with SMTPS id 1741620876294195.17720317390024;
+	Mon, 10 Mar 2025 08:34:36 -0700 (PDT)
+Message-ID: <ec151d39-2cb2-4f67-a23a-dafc421fff75@collabora.com>
+Date: Mon, 10 Mar 2025 12:34:30 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2068f4f-c832-4cd5-b9bb-e175217d7647@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/4] drm/panfrost: Support ARM_64_LPAE_S1 page table
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ robh@kernel.org, steven.price@arm.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch
+References: <20250226183043.140773-1-ariel.dalessandro@collabora.com>
+ <20250226183043.140773-4-ariel.dalessandro@collabora.com>
+ <20250227155539.59944e18@collabora.com>
+Content-Language: en-US
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+In-Reply-To: <20250227155539.59944e18@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-> > register_chrdev() registers 256 minor numbers, calling it will result in
-> > calling kmalloc_array(256, sizeof(struct probe), GFP_KERNEL) whereas
-> > calling alloc_chrdev_region() with count parameter equals to 1, which is
-> > the number of minor numbers requested, will result in calling
-> > kmalloc_array(1, sizeof(stuct probe), GFP_KERNEL). 
-> >
+Hi Boris,
 
-Is it worth replacing register_chrdev() by alloc_chrdev_region() for
-this ? If so I will change the patch description.
+On 2/27/25 11:55 AM, Boris Brezillon wrote:
+> On Wed, 26 Feb 2025 15:30:42 -0300
+> Ariel D'Alessandro <ariel.dalessandro@collabora.com> wrote:
+> 
+>> @@ -642,8 +713,15 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
+>>   		.iommu_dev	= pfdev->dev,
+>>   	};
+>>   
+>> -	mmu->pgtbl_ops = alloc_io_pgtable_ops(ARM_MALI_LPAE, &mmu->pgtbl_cfg,
+>> -					      mmu);
+>> +	if (panfrost_has_hw_feature(pfdev, HW_FEATURE_AARCH64_MMU)) {
+>> +		fmt = ARM_64_LPAE_S1;
+>> +		mmu->enable = mmu_lpae_s1_enable;
+>> +	} else {
+>> +		fmt = ARM_MALI_LPAE;
+>> +		mmu->enable = mmu_mali_lpae_enable;
+>> +	}
+> 
+> How about we stick to the legacy pgtable format for all currently
+> supported GPUs, and make this an opt-in property attached to the
+> compatible. This way, we can progressively move away from the legacy
+> format once enough testing has been done, while allowing support for
+> GPUs that can't use the old format because the cachability/shareability
+> configuration is too limited.
 
-Best Regards,
-Salah Triki
+Indeed, that's a better way to go.
+
+Specifically, what you mean is: keep the same compatible string and add 
+a new property to the `panfrost_compatible` private data for that 
+specific variant? E.g.
+
+In drivers/gpu/drm/panfrost/panfrost_drv.c:
+```
+struct panfrost_compatible mediatek_mt8188_data
+[...]
+{ .compatible = "mediatek,mt8188-mali", .data = &mediatek_mt8188_data },
+```
+
+Thanks,
+
+-- 
+Ariel D'Alessandro
+Software Engineer
+
+Collabora Ltd.
+Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
+Registered in England & Wales, no. 5513718
+
