@@ -1,435 +1,282 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273BC79C0
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741613514; cv=pass; b=Bi3mrhHxaXJSKIE4x0IGk0MfmagPqo1MGOEWgDXqjwK9m4SS+pKjCbg2e9hdFssrN+Jxoa4IQ05Ge9opfRLkvYIHh5GSChDF73U9WYynmh0gt9B8aH0ZiRS507tOzKnlF5DONMRWdabaA1OTkvIn4211mnE/SLU6pklCAQwubJE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741613514; c=relaxed/simple;
-	bh=FMU6I/tO3LmWNK7ZIbrIdNR6j/Z6m8fLpqi2TtzMVxk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J9upOGn7JrZyLS8mUDg/piuij7FT4ZEynp8xIOs8wZJRU1v/O2ur8JeUJPyGnJxhrvya+GMoc5biTY/FHrqgu4aNm9Hy6OEXXs0Y213XKC0MWG7DnpHpQqdAlkFxsW09IZ6JDVwElqYLDOvVyNCmoZwVwHnRJFwmzHBq1yWjR+Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b=g6JAj/Cs; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b="g6JAj/Cs"
-ARC-Seal: i=1; a=rsa-sha256; t=1741613485; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=MFaD2OrSyuWsCEX5aPSlo8Y8ylCMaBEdaOP1Oo6HOuNfsFqnEIWOBAxBoUWd7nPGaeOkgvxdCcRbL3xIy/3Wto8DLoxE/ezVGGuwkmkrkaewK1wP/dI7YXg0dJCUTJWwW8jscBtG4EZFMsDEel4vwf80YzdJ7oflSBtickaJf+g=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741613485; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=hAGNFKs8bMDJwHMCEhNn1+Z5G6tbqj4exrl0Q3vZrb0=; 
-	b=RFe0EhK6nDt0cs8UkevnJJkLk7q2sifaIXhGrq+i23a5rKQEfT34g1Wmt6tP+EZdLUQrHrwcbsdOJgEWVTJIMdDUXuB9Ne0QBsOWc1vejRVfdfdQUgWR2B/+L3kc77ds6wvSZYxOeo6NKbEDE5d4nDfeQmRvipElTQGSYgfaFLU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ashley.smith@collabora.com;
-	dmarc=pass header.from=<ashley.smith@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741613485;
-	s=zohomail; d=collabora.com; i=ashley.smith@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=hAGNFKs8bMDJwHMCEhNn1+Z5G6tbqj4exrl0Q3vZrb0=;
-	b=g6JAj/CsjTB+IjIL2OzoHNCp23D60KHTfrSi1npgGBiJ5EJU7jBiPW9jQ3VBJ1Jp
-	VNH2aVjFuiunBeXR8t7ou19RyoBA7K/JU+hhF0MQuQpI0pmAUS2/wcWOZtoLkpAmobG
-	Kcf3ohwixHP/4fuO8in6w0QjTg3sqihCAC3JY7AQ=
-Received: by mx.zohomail.com with SMTPS id 17416134824891012.3118705215352;
-	Mon, 10 Mar 2025 06:31:22 -0700 (PDT)
-From: Ashley Smith <ashley.smith@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: kernel@collabora.com,
-	Ashley Smith <ashley.smith@collabora.com>,
-	Daniel Stone <daniels@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/panthor: Make the timeout per-queue instead of per-job
-Date: Mon, 10 Mar 2025 13:30:09 +0000
-Message-ID: <20250310133050.280614-1-ashley.smith@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4FE846D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741613542; cv=none; b=nsQppVMf1oV5S3oAu4BTbapJ5iCrkH9iu8nqpLFmEcP3GvE/OYOEdXMiwfZvYXOSl6PJHcfkpbLjBzIWHMALGbxORo+ehA+UZuODxxPFR289sO3d0IMGTl1XxO9KMV7etk4YPEzjKIH7DQChEpzCYdEN/ZKpL9+y8tc+ev6JsxA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741613542; c=relaxed/simple;
+	bh=MxUGtItzdHn9mOpY/sYS15j1TuaN+v05N+60iPhkelo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uyce72wsCyjoSIZXz8KPBwH6Zd1rzmpQp+2ZRPY0PSwUN7qmpYP1MQe+4ZNf1PYJ317iz8KCTKcJIAb66A2Rni3suznyFX0JojuwLZ85wL+g1Efkl7v096EOHSWRicIZoLNjT4AV41HyH4lJdTz4lzB3IUti03frSFa901TtCyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d2b3a2f2d4so82197975ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:32:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741613539; x=1742218339;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MYbgyRHeKh0XqiQ7QhQ5H2YnwJA15iAWXtoBQzsrzf4=;
+        b=RgecIeCf2YyRPHSRlOpwdS+EpXSjpbu5vy5r8u/o3ytm+s8SJfC7cn3+gFgsA1Vv1T
+         DtX43GCvYmS+vz9hOFT7YgV0MAs7aana9Zv4XTkdZFl0ojRv2fZSAIAbxnm9uNNFG1pA
+         5xXP2cQf48XxJHpkygXq8vEQkZ2wStuVw1SP3A8g2CFUIt5P/BhhLFHzhcxqmKEYhLUC
+         sUI9Fx3QdujbkmscM+L3ayCZrJrf2+gzStcI/xP4OGFpwUNdrNy0rMGP8xKneOHRQf2D
+         g5uR75L+FyDX1+87wkx1QK6vV3jvMTNmMa92WElp8dbVZyxl98NXLfa7eHlL4cp/G54d
+         67Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqgo2mtLPSzlOgIzLVNM2fKxuystq2TF4s7XlzXWVA7f8l3onxAlVncrPnZ9YxoPVkkK+pa7Ut6iJowag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT/VS2+GiIcHKHWwUyBNTA3kYSNcEKh1RKkt0oeRF+6E+mXckn
+	zoG3I930D8Qn0bvxA4hXuIwtrJjLdf+w8rWCaBMac+eypihwrGraxiCVDWgMt9GvnWJ7N5d7TIY
+	zhnj69jCgXINJ0+9v0r+v4ozhEZua4S6/ijtVVdM7ZP25b8HobNYwYJw=
+X-Google-Smtp-Source: AGHT+IHmHfUuR/BiTP5jRpcYaVKXUZbY62Rqb4KGVUm3T0/7rpOiKrlRD0FFRirPI8NXEhNGxCbIPp05yU3ji1AuoN1qxV1m0Gbu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-Received: by 2002:a05:6e02:168b:b0:3d4:3db1:77ae with SMTP id
+ e9e14a558f8ab-3d4419f4f33mr199534665ab.18.1741613538796; Mon, 10 Mar 2025
+ 06:32:18 -0700 (PDT)
+Date: Mon, 10 Mar 2025 06:32:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67cee9e2.050a0220.1939a6.0004.GAE@google.com>
+Subject: [syzbot] [media?] KASAN: slab-use-after-free Read in vidtv_mux_init
+From: syzbot <syzbot+0d33ab192bd50b6c91e6@syzkaller.appspotmail.com>
+To: dwlsalmeida@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, mchehab@kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The timeout logic provided by drm_sched leads to races when we try
-to suspend it while the drm_sched workqueue queues more jobs. Let's
-overhaul the timeout handling in panthor to have our own delayed work
-that's resumed/suspended when a group is resumed/suspended. When an
-actual timeout occurs, we call drm_sched_fault() to report it
-through drm_sched, still. But otherwise, the drm_sched timeout is
-disabled (set to MAX_SCHEDULE_TIMEOUT), which leaves us in control of
-how we protect modifications on the timer.
+Hello,
 
-One issue seems to be when we call drm_sched_suspend_timeout() from
-both queue_run_job() and tick_work() which could lead to races due to
-drm_sched_suspend_timeout() not having a lock. Another issue seems to
-be in queue_run_job() if the group is not scheduled, we suspend the
-timeout again which undoes what drm_sched_job_begin() did when calling
-drm_sched_start_timeout(). So the timeout does not reset when a job
-is finished.
+syzbot found the following issue on:
 
-Co-developed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Tested-by: Daniel Stone <daniels@collabora.com>
-Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
-Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
+HEAD commit:    848e07631744 Merge tag 'hid-for-linus-2025030501' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12e38a64580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bed8205d3b84ef81
+dashboard link: https://syzkaller.appspot.com/bug?extid=0d33ab192bd50b6c91e6
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138afda8580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6a6c7015dd03/disk-848e0763.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/66cbd3af2068/vmlinux-848e0763.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1c1ceeb2230c/bzImage-848e0763.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0d33ab192bd50b6c91e6@syzkaller.appspotmail.com
+
+RBP: 00007fff4b19a7ec R08: 0000000b4b19a87f R09: 00000000000927c0
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000003
+R13: 00000000000927c0 R14: 000000000001d553 R15: 00007fff4b19a840
+ </TASK>
+==================================================================
+BUG: KASAN: slab-use-after-free in vidtv_mux_pid_ctx_init drivers/media/test-drivers/vidtv/vidtv_mux.c:78 [inline]
+BUG: KASAN: slab-use-after-free in vidtv_mux_init+0xac2/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:524
+Read of size 8 at addr ffff88802fa42acc by task syz.2.37/6059
+
+CPU: 0 UID: 0 PID: 6059 Comm: syz.2.37 Not tainted 6.14.0-rc5-syzkaller-00039-g848e07631744 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xd9/0x110 mm/kasan/report.c:634
+ vidtv_mux_pid_ctx_init drivers/media/test-drivers/vidtv/vidtv_mux.c:78 [inline]
+ vidtv_mux_init+0xac2/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:524
+ vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194 [inline]
+ vidtv_start_feed+0x334/0x4c0 drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
+ dmx_section_feed_start_filtering+0x3a5/0x660 drivers/media/dvb-core/dvb_demux.c:973
+ dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
+ dvb_dmxdev_feed_restart.isra.0+0x457/0x530 drivers/media/dvb-core/dmxdev.c:537
+ dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
+ dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
+ dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
+ __fput+0x3ff/0xb70 fs/file_table.c:464
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
+ x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f871d58d169
+Code: Unable to access opcode bytes at 0x7f871d58d13f.
+RSP: 002b:00007fff4b19a788 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f871d58d169
+RDX: 0000000000000064 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fff4b19a7ec R08: 0000000b4b19a87f R09: 00000000000927c0
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000003
+R13: 00000000000927c0 R14: 000000000001d553 R15: 00007fff4b19a840
+ </TASK>
+
+Allocated by task 6059:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ vidtv_psi_pat_table_init+0x46/0x2c0 drivers/media/test-drivers/vidtv/vidtv_psi.c:970
+ vidtv_channel_si_init+0x67/0x1a90 drivers/media/test-drivers/vidtv/vidtv_channel.c:423
+ vidtv_mux_init+0x526/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:519
+ vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194 [inline]
+ vidtv_start_feed+0x334/0x4c0 drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
+ dmx_section_feed_start_filtering+0x3a5/0x660 drivers/media/dvb-core/dvb_demux.c:973
+ dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
+ dvb_dmxdev_feed_restart.isra.0+0x457/0x530 drivers/media/dvb-core/dmxdev.c:537
+ dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
+ dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
+ dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
+ __fput+0x3ff/0xb70 fs/file_table.c:464
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
+ x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 6059:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x2c4/0x4d0 mm/slub.c:4757
+ vidtv_channel_si_init+0x34a/0x1a90 drivers/media/test-drivers/vidtv/vidtv_channel.c:499
+ vidtv_mux_init+0x526/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:519
+ vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194 [inline]
+ vidtv_start_feed+0x334/0x4c0 drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
+ dmx_section_feed_start_filtering+0x3a5/0x660 drivers/media/dvb-core/dvb_demux.c:973
+ dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
+ dvb_dmxdev_feed_restart.isra.0+0x457/0x530 drivers/media/dvb-core/dmxdev.c:537
+ dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
+ dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
+ dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
+ __fput+0x3ff/0xb70 fs/file_table.c:464
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
+ x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88802fa42ac0
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 12 bytes inside of
+ freed 32-byte region [ffff88802fa42ac0, ffff88802fa42ae0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2fa42
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88801b041780 dead000000000122 0000000000000000
+raw: 0000000000000000 0000000000400040 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5963, tgid 5963 (syz-executor), ts 120407289997, free_ts 120403969520
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1551
+ prep_new_page mm/page_alloc.c:1559 [inline]
+ get_page_from_freelist+0xfce/0x2f80 mm/page_alloc.c:3477
+ __alloc_frozen_pages_noprof+0x221/0x2470 mm/page_alloc.c:4739
+ alloc_pages_mpol+0x1fc/0x540 mm/mempolicy.c:2270
+ alloc_slab_page mm/slub.c:2423 [inline]
+ allocate_slab mm/slub.c:2587 [inline]
+ new_slab+0x23d/0x330 mm/slub.c:2640
+ ___slab_alloc+0xc5d/0x1720 mm/slub.c:3826
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3916
+ __slab_alloc_node mm/slub.c:3991 [inline]
+ slab_alloc_node mm/slub.c:4152 [inline]
+ __kmalloc_cache_noprof+0xfa/0x410 mm/slub.c:4320
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ ref_tracker_alloc+0x17c/0x5b0 lib/ref_tracker.c:203
+ __netdev_tracker_alloc include/linux/netdevice.h:4282 [inline]
+ netdev_tracker_alloc include/linux/netdevice.h:4294 [inline]
+ netdev_get_by_index+0x7c/0xb0 net/core/dev.c:990
+ fib6_nh_init+0x792/0x1da0 net/ipv6/route.c:3548
+ ip6_route_info_create+0x1073/0x1910 net/ipv6/route.c:3814
+ ip6_route_add+0x26/0x1c0 net/ipv6/route.c:3858
+ addrconf_add_mroute+0x1de/0x350 net/ipv6/addrconf.c:2549
+ addrconf_add_dev+0x14e/0x1c0 net/ipv6/addrconf.c:2567
+ addrconf_dev_config net/ipv6/addrconf.c:3475 [inline]
+ addrconf_init_auto_addrs+0x380/0x820 net/ipv6/addrconf.c:3563
+page last free pid 6059 tgid 6059 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1127 [inline]
+ free_frozen_pages+0x6db/0xfb0 mm/page_alloc.c:2660
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x237/0x7b0 mm/mmu_gather.c:491
+ exit_mmap+0x40e/0xba0 mm/mmap.c:1297
+ __mmput+0x12a/0x410 kernel/fork.c:1356
+ mmput+0x62/0x70 kernel/fork.c:1378
+ exit_mm kernel/exit.c:570 [inline]
+ do_exit+0x9ba/0x2d70 kernel/exit.c:925
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
+ x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88802fa42980: 00 00 00 05 fc fc fc fc 00 00 05 fc fc fc fc fc
+ ffff88802fa42a00: 00 00 02 fc fc fc fc fc 00 00 00 00 fc fc fc fc
+>ffff88802fa42a80: 00 00 00 04 fc fc fc fc fa fb fb fb fc fc fc fc
+                                              ^
+ ffff88802fa42b00: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff88802fa42b80: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+==================================================================
+
+
 ---
- drivers/gpu/drm/panthor/panthor_sched.c | 233 +++++++++++++++++-------
- 1 file changed, 167 insertions(+), 66 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-index 4d31d1967716..5f02d2ec28f9 100644
---- a/drivers/gpu/drm/panthor/panthor_sched.c
-+++ b/drivers/gpu/drm/panthor/panthor_sched.c
-@@ -360,17 +360,20 @@ struct panthor_queue {
- 	/** @entity: DRM scheduling entity used for this queue. */
- 	struct drm_sched_entity entity;
- 
--	/**
--	 * @remaining_time: Time remaining before the job timeout expires.
--	 *
--	 * The job timeout is suspended when the queue is not scheduled by the
--	 * FW. Every time we suspend the timer, we need to save the remaining
--	 * time so we can restore it later on.
--	 */
--	unsigned long remaining_time;
-+	/** @timeout: Queue timeout related fields. */
-+	struct {
-+		/** @timeout.work: Work executed when a queue timeout occurs. */
-+		struct delayed_work work;
- 
--	/** @timeout_suspended: True if the job timeout was suspended. */
--	bool timeout_suspended;
-+		/**
-+		 * @timeout.remaining: Time remaining before a queue timeout.
-+		 *
-+		 * When the timer is running, this value is set to MAX_SCHEDULE_TIMEOUT.
-+		 * When the timer is suspended, it's set to the time remaining when the
-+		 * timer was suspended.
-+		 */
-+		unsigned long remaining;
-+	} timeout;
- 
- 	/**
- 	 * @doorbell_id: Doorbell assigned to this queue.
-@@ -1031,6 +1034,82 @@ group_unbind_locked(struct panthor_group *group)
- 	return 0;
- }
- 
-+static bool
-+group_is_idle(struct panthor_group *group)
-+{
-+	struct panthor_device *ptdev = group->ptdev;
-+	u32 inactive_queues;
-+
-+	if (group->csg_id >= 0)
-+		return ptdev->scheduler->csg_slots[group->csg_id].idle;
-+
-+	inactive_queues = group->idle_queues | group->blocked_queues;
-+	return hweight32(inactive_queues) == group->queue_count;
-+}
-+
-+static void
-+queue_suspend_timeout(struct panthor_queue *queue)
-+{
-+	unsigned long qtimeout, now;
-+	struct panthor_group *group;
-+	struct panthor_job *job;
-+	bool timer_was_active;
-+
-+	spin_lock(&queue->fence_ctx.lock);
-+
-+	/* Already suspended, nothing to do. */
-+	if (queue->timeout.remaining != MAX_SCHEDULE_TIMEOUT)
-+		goto out_unlock;
-+
-+	job = list_first_entry_or_null(&queue->fence_ctx.in_flight_jobs,
-+				       struct panthor_job, node);
-+	group = job ? job->group : NULL;
-+
-+	/* If the queue is blocked and the group is idle, we want the timer to
-+	 * keep running because the group can't be unblocked by other queues,
-+	 * so it has to come from an external source, and we want to timebox
-+	 * this external signalling.
-+	 */
-+	if (group && (group->blocked_queues & BIT(job->queue_idx)) &&
-+	    group_is_idle(group))
-+		goto out_unlock;
-+
-+	now = jiffies;
-+	qtimeout = queue->timeout.work.timer.expires;
-+
-+	/* Cancel the timer. */
-+	timer_was_active = cancel_delayed_work(&queue->timeout.work);
-+	if (!timer_was_active || !job)
-+		queue->timeout.remaining = msecs_to_jiffies(JOB_TIMEOUT_MS);
-+	else if (time_after(qtimeout, now))
-+		queue->timeout.remaining = qtimeout - now;
-+	else
-+		queue->timeout.remaining = 0;
-+
-+	if (WARN_ON_ONCE(queue->timeout.remaining > msecs_to_jiffies(JOB_TIMEOUT_MS)))
-+		queue->timeout.remaining = msecs_to_jiffies(JOB_TIMEOUT_MS);
-+
-+out_unlock:
-+	spin_unlock(&queue->fence_ctx.lock);
-+}
-+
-+static void
-+queue_resume_timeout(struct panthor_queue *queue)
-+{
-+	spin_lock(&queue->fence_ctx.lock);
-+
-+	/* When running, the remaining time is set to MAX_SCHEDULE_TIMEOUT. */
-+	if (queue->timeout.remaining != MAX_SCHEDULE_TIMEOUT) {
-+		mod_delayed_work(queue->scheduler.timeout_wq,
-+				 &queue->timeout.work,
-+				 queue->timeout.remaining);
-+
-+		queue->timeout.remaining = MAX_SCHEDULE_TIMEOUT;
-+	}
-+
-+	spin_unlock(&queue->fence_ctx.lock);
-+}
-+
- /**
-  * cs_slot_prog_locked() - Program a queue slot
-  * @ptdev: Device.
-@@ -1069,10 +1148,8 @@ cs_slot_prog_locked(struct panthor_device *ptdev, u32 csg_id, u32 cs_id)
- 			       CS_IDLE_EMPTY |
- 			       CS_STATE_MASK |
- 			       CS_EXTRACT_EVENT);
--	if (queue->iface.input->insert != queue->iface.input->extract && queue->timeout_suspended) {
--		drm_sched_resume_timeout(&queue->scheduler, queue->remaining_time);
--		queue->timeout_suspended = false;
--	}
-+	if (queue->iface.input->insert != queue->iface.input->extract)
-+		queue_resume_timeout(queue);
- }
- 
- /**
-@@ -1099,14 +1176,7 @@ cs_slot_reset_locked(struct panthor_device *ptdev, u32 csg_id, u32 cs_id)
- 			       CS_STATE_STOP,
- 			       CS_STATE_MASK);
- 
--	/* If the queue is blocked, we want to keep the timeout running, so
--	 * we can detect unbounded waits and kill the group when that happens.
--	 */
--	if (!(group->blocked_queues & BIT(cs_id)) && !queue->timeout_suspended) {
--		queue->remaining_time = drm_sched_suspend_timeout(&queue->scheduler);
--		queue->timeout_suspended = true;
--		WARN_ON(queue->remaining_time > msecs_to_jiffies(JOB_TIMEOUT_MS));
--	}
-+	queue_suspend_timeout(queue);
- 
- 	return 0;
- }
-@@ -1888,19 +1958,6 @@ tick_ctx_is_full(const struct panthor_scheduler *sched,
- 	return ctx->group_count == sched->csg_slot_count;
- }
- 
--static bool
--group_is_idle(struct panthor_group *group)
--{
--	struct panthor_device *ptdev = group->ptdev;
--	u32 inactive_queues;
--
--	if (group->csg_id >= 0)
--		return ptdev->scheduler->csg_slots[group->csg_id].idle;
--
--	inactive_queues = group->idle_queues | group->blocked_queues;
--	return hweight32(inactive_queues) == group->queue_count;
--}
--
- static bool
- group_can_run(struct panthor_group *group)
- {
-@@ -2888,35 +2945,50 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
- 	xa_unlock(&gpool->xa);
- }
- 
--static void group_sync_upd_work(struct work_struct *work)
-+static bool queue_check_job_completion(struct panthor_queue *queue)
- {
--	struct panthor_group *group =
--		container_of(work, struct panthor_group, sync_upd_work);
-+	struct panthor_syncobj_64b *syncobj = NULL;
- 	struct panthor_job *job, *job_tmp;
-+	bool cookie, progress = false;
- 	LIST_HEAD(done_jobs);
--	u32 queue_idx;
--	bool cookie;
- 
- 	cookie = dma_fence_begin_signalling();
--	for (queue_idx = 0; queue_idx < group->queue_count; queue_idx++) {
--		struct panthor_queue *queue = group->queues[queue_idx];
--		struct panthor_syncobj_64b *syncobj;
-+	spin_lock(&queue->fence_ctx.lock);
-+	list_for_each_entry_safe(job, job_tmp, &queue->fence_ctx.in_flight_jobs, node) {
-+		if (!syncobj) {
-+			struct panthor_group *group = job->group;
- 
--		if (!queue)
--			continue;
-+			syncobj = group->syncobjs->kmap +
-+				  (job->queue_idx * sizeof(*syncobj));
-+		}
- 
--		syncobj = group->syncobjs->kmap + (queue_idx * sizeof(*syncobj));
-+		if (syncobj->seqno < job->done_fence->seqno)
-+			break;
- 
--		spin_lock(&queue->fence_ctx.lock);
--		list_for_each_entry_safe(job, job_tmp, &queue->fence_ctx.in_flight_jobs, node) {
--			if (syncobj->seqno < job->done_fence->seqno)
--				break;
-+		list_move_tail(&job->node, &done_jobs);
-+		dma_fence_signal_locked(job->done_fence);
-+	}
- 
--			list_move_tail(&job->node, &done_jobs);
--			dma_fence_signal_locked(job->done_fence);
--		}
--		spin_unlock(&queue->fence_ctx.lock);
-+	if (list_empty(&queue->fence_ctx.in_flight_jobs)) {
-+		/* If we have no job left, we cancel the timer, and reset remaining
-+		 * time to its default so it can be restarted next time
-+		 * queue_resume_timeout() is called.
-+		 */
-+		cancel_delayed_work(&queue->timeout.work);
-+		queue->timeout.remaining = msecs_to_jiffies(JOB_TIMEOUT_MS);
-+
-+		/* If there's no job pending, we consider it progress to avoid a
-+		 * spurious timeout if the timeout handler and the sync update
-+		 * handler raced.
-+		 */
-+		progress = true;
-+	} else if (!list_empty(&done_jobs)) {
-+		mod_delayed_work(queue->scheduler.timeout_wq,
-+				 &queue->timeout.work,
-+				 msecs_to_jiffies(JOB_TIMEOUT_MS));
-+		progress = true;
- 	}
-+	spin_unlock(&queue->fence_ctx.lock);
- 	dma_fence_end_signalling(cookie);
- 
- 	list_for_each_entry_safe(job, job_tmp, &done_jobs, node) {
-@@ -2926,6 +2998,27 @@ static void group_sync_upd_work(struct work_struct *work)
- 		panthor_job_put(&job->base);
- 	}
- 
-+	return progress;
-+}
-+
-+static void group_sync_upd_work(struct work_struct *work)
-+{
-+	struct panthor_group *group =
-+		container_of(work, struct panthor_group, sync_upd_work);
-+	u32 queue_idx;
-+	bool cookie;
-+
-+	cookie = dma_fence_begin_signalling();
-+	for (queue_idx = 0; queue_idx < group->queue_count; queue_idx++) {
-+		struct panthor_queue *queue = group->queues[queue_idx];
-+
-+		if (!queue)
-+			continue;
-+
-+		queue_check_job_completion(queue);
-+	}
-+	dma_fence_end_signalling(cookie);
-+
- 	group_put(group);
- }
- 
-@@ -3173,17 +3266,6 @@ queue_run_job(struct drm_sched_job *sched_job)
- 	queue->iface.input->insert = job->ringbuf.end;
- 
- 	if (group->csg_id < 0) {
--		/* If the queue is blocked, we want to keep the timeout running, so we
--		 * can detect unbounded waits and kill the group when that happens.
--		 * Otherwise, we suspend the timeout so the time we spend waiting for
--		 * a CSG slot is not counted.
--		 */
--		if (!(group->blocked_queues & BIT(job->queue_idx)) &&
--		    !queue->timeout_suspended) {
--			queue->remaining_time = drm_sched_suspend_timeout(&queue->scheduler);
--			queue->timeout_suspended = true;
--		}
--
- 		group_schedule_locked(group, BIT(job->queue_idx));
- 	} else {
- 		gpu_write(ptdev, CSF_DOORBELL(queue->doorbell_id), 1);
-@@ -3192,6 +3274,7 @@ queue_run_job(struct drm_sched_job *sched_job)
- 			pm_runtime_get(ptdev->base.dev);
- 			sched->pm.has_ref = true;
- 		}
-+		queue_resume_timeout(queue);
- 		panthor_devfreq_record_busy(sched->ptdev);
- 	}
- 
-@@ -3241,6 +3324,11 @@ queue_timedout_job(struct drm_sched_job *sched_job)
- 
- 	queue_start(queue);
- 
-+	/* We already flagged the queue as faulty, make sure we don't get
-+	 * called again.
-+	 */
-+	queue->scheduler.timeout = MAX_SCHEDULE_TIMEOUT;
-+
- 	return DRM_GPU_SCHED_STAT_NOMINAL;
- }
- 
-@@ -3283,6 +3371,17 @@ static u32 calc_profiling_ringbuf_num_slots(struct panthor_device *ptdev,
- 	return DIV_ROUND_UP(cs_ringbuf_size, min_profiled_job_instrs * sizeof(u64));
- }
- 
-+static void queue_timeout_work(struct work_struct *work)
-+{
-+	struct panthor_queue *queue = container_of(work, struct panthor_queue,
-+						   timeout.work.work);
-+	bool progress;
-+
-+	progress = queue_check_job_completion(queue);
-+	if (!progress)
-+		drm_sched_fault(&queue->scheduler);
-+}
-+
- static struct panthor_queue *
- group_create_queue(struct panthor_group *group,
- 		   const struct drm_panthor_queue_create *args)
-@@ -3298,7 +3397,7 @@ group_create_queue(struct panthor_group *group,
- 		 * their profiling status.
- 		 */
- 		.credit_limit = args->ringbuf_size / sizeof(u64),
--		.timeout = msecs_to_jiffies(JOB_TIMEOUT_MS),
-+		.timeout = MAX_SCHEDULE_TIMEOUT,
- 		.timeout_wq = group->ptdev->reset.wq,
- 		.name = "panthor-queue",
- 		.dev = group->ptdev->base.dev,
-@@ -3321,6 +3420,8 @@ group_create_queue(struct panthor_group *group,
- 	if (!queue)
- 		return ERR_PTR(-ENOMEM);
- 
-+	queue->timeout.remaining = msecs_to_jiffies(JOB_TIMEOUT_MS);
-+	INIT_DELAYED_WORK(&queue->timeout.work, queue_timeout_work);
- 	queue->fence_ctx.id = dma_fence_context_alloc(1);
- 	spin_lock_init(&queue->fence_ctx.lock);
- 	INIT_LIST_HEAD(&queue->fence_ctx.in_flight_jobs);
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-base-commit: b72f66f22c0e39ae6684c43fead774c13db24e73
--- 
-2.43.0
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
