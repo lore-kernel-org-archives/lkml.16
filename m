@@ -1,161 +1,123 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B17A846D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C22879C0;
+	Mon, 10 Mar 2025 13:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741613385; cv=none; b=EcyUdNsu7YOgNyUnY+l+rvmky5bmIa9anky2w9AmZML3NEd0eQkMzb1jKokllkDcdmADroYpwzCR7tnYU4YOxZAYUynMJTpBqQk68m1A5BqkF3fM1HE3p9o5/Ou2xf8V5bOnK1be3M9Te+lvenagebOJ2cG9TH9Bsp1ofxz2FLE=
+	t=1741613456; cv=none; b=J95Q8QEhe/6CobVdGA9Od4YO3DmjDZCXk4rWnyO3e+a9VZNVnRrqQk0H493bdatwY76eb87uk6QFOlG2ynCAMswVTdbJVjzWZgdR3lTv1xAJ0aJc3jbe3WgcP3hNF56kEwDKBnYDuuSF87kDLC4hV7GJhnPJTVGQFrBSrP92nok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741613385; c=relaxed/simple;
-	bh=Fsl2gHLVFCv7J2FAW8iDKqh8SzHWoEhhR1AJ9qbGxMw=;
+	s=arc-20240116; t=1741613456; c=relaxed/simple;
+	bh=7DK+rBnIB6+gK5GprT7obsuYQKNEBuzPpYg+bZU61VM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jeL4zpBsl7Af5idibQj+pMWatm5R+AX43Ka7i5MxR1CngT7f/on2KrsVjjwYcvPP/WHRr+FbCuh5LEeiiZD92jGW96Q156u1lXr24+isZhoVVFl2sDw/OPmThrrSlmhzbJ7msuwnU5o+/aKBU1oWUYvKI8qFo551FoTDm7uLJYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it; spf=pass smtp.mailfrom=4sigma.it; dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b=qu5aO65n; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4sigma.it
+	 To:Cc:Content-Type; b=NVFbtPCeseo39M2plLenNuJp51gEReGqhByzob4KVwYhX1fpXMia2Az9jTIwK/j2XzEIJcnnykD77Fsg2kKknb/Jrstvd9ZsYzIPmO8I0BiIjuRc7HrM+/wQRx2a9Xfq7Li1rF580a/GKCeIFiB5gyMEeyfK+5cRjKPnmVOHR/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N6gaNjDS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b="qu5aO65n"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6febbd3b75cso32255817b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=4sigma.it; s=google; t=1741613381; x=1742218181; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3KxWhyFdVbsMG415LkqpI3V+a1EL8BtY2dzLTWy7ycE=;
-        b=qu5aO65nh15rjiktsq3hgpMsp6WRPgwYIQOi/NGF4fjeSPkadJXBLbDaHh0NQsAuu/
-         f6zrVOmXGho7OjaQmY2L29RCg5uoE1iLBin55DLRzNWnvek32qqZDe98/L6MIpJH50RZ
-         RCcV9oAB7pcqlJHID61Med9SxLAeI8nyriqPc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741613381; x=1742218181;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3KxWhyFdVbsMG415LkqpI3V+a1EL8BtY2dzLTWy7ycE=;
-        b=xJ2O6FiyOqWp9xWAVbA8tsFHSvk61EALV/GsED7/8iXGvHWdW32VPfngzyzpFyts+B
-         thdwUIsUUS2LGHZtaNvQRNSfO739xHuuRbI0u/QsgP/gEldoM5anXN1z35eYkW/kpGOI
-         EAKEVym4lDa4Pz3kkrbFSv1uhutSCJJ/7Ki1Gzd7vGziH38J/xztQLS0g97s1k004TZ+
-         ldXZk4XLvKXDDo+ROAUAnKrn4enWnzMCR6I9FktXoCsxpKO39nT9jrWAbaGMF33pTgTV
-         QQ3tNuX6ghUS4f3OuHZRq0XJJiaNcGssu5D3I4VsnfWtNYNUuwt259j8saMg2BgYkrr9
-         lWmA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzcXM8cbBapTt8vhFMxZ7wcgRGdtboAqDGxN6MVJSqjLe1Ymo5TIWDyDSFDwloRohCtpmfzPVZPif1ja0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU0+b6BwxAey/+3QrE5hygWjdwXPDFYDSQNa82923D6NSgtSsn
-	jcKXGRn33726iv10eA+kbF/3eYThf0C5xmdEJAnBelLoGL70rInTkFbbMlWGC+2blsnxPPwDgnH
-	Sm2CMU+IN0P3LtDFneB/51jVzQ6SY5BUSedWO
-X-Gm-Gg: ASbGncsVyOBOy/a9H5ahCtlh7ACc2MRtgp3kwEGQhJQB+ZvEUJJM3h9dNQVutNctsQJ
-	iI5ooLrj+Achwv04QS+h9SYKAecbDDMglwYe+My+XWM1T6YkS2x81ExQ2/QG2WLcil3Kq7POs1k
-	OEmhghBChreJ4MS2zk5pWlT/VjwlA=
-X-Google-Smtp-Source: AGHT+IGjnnG8vv4xO+caWb7tXE+5eX5letdxuWCa2dqrkVQYGbQAcyXvsH8hHsNbsdnMBoZFjJEd9XyaNr0FbNoRmLk=
-X-Received: by 2002:a05:690c:2e03:b0:6fb:9c08:496d with SMTP id
- 00721157ae682-6febf3c2cbcmr145437107b3.30.1741613381151; Mon, 10 Mar 2025
- 06:29:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6gaNjDS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1705BC4CEFB;
+	Mon, 10 Mar 2025 13:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741613455;
+	bh=7DK+rBnIB6+gK5GprT7obsuYQKNEBuzPpYg+bZU61VM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=N6gaNjDSopjXklq/smuCritonxIFRZcviors5Z6GWB5x2DpMe9pO4/a1jaWMwCMRO
+	 XKM0+fEzSCVucV5ScvQoQ4r3iOQZWQMoaLcQwNYuCYgYOPHTldegww1SII5Cau6QnD
+	 Ju03QmZ8EZu0/Et5J9/gLX9NlW2ViKuUxQAbeyiJOzIgHK/EPz0Rs0AsEuTpPIuBkf
+	 s7vhEeKFI5S7yvD9DwzksfDuNkTyjBrUjAYlCAPqeey+zdk2sx/hHA0zHc9pJZtbEU
+	 VDn34iKB3dun0ff6ieYvPwjaWIEv4a1r+crojlHQkLeNctJcxqWBGH9useMMIp3X/m
+	 2Nxnwt4X2GZBw==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so5392814a12.1;
+        Mon, 10 Mar 2025 06:30:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVFS33wGMEfApjduNqsL36k3VblAj77AQG5Lqi2opsgeugaHEDEV6X5nErsz2XuPw/kHy7OFtemhR8pamikqg==@vger.kernel.org, AJvYcCVIY7lFMreqRSWLgJMkv6fIGRmD2tRmuBjSrtDmNsRoJYYlk5TTVLOBKiLieuH/zSKI0effgcuEgrht@vger.kernel.org, AJvYcCWIVQV9Z3MeFNp9KjD2eWT+RFVzQlEYsEwlRZIAJyolt/HjJthZu9zW/9Er/SHxfanVcwKccwm9T66w5uAD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdCgEdcr/HTm5YwNccdMHN4bGecHRsqXTOG/lxZFSBYu44GWzX
+	1k9eqMz6du0pMcJ7GL+joPZrwiKLLaYrBm8JhUafamxb4XUF4a3jZFcfinliMbF+Fnm/UrL79yf
+	QtE2fCJ/IejpeeuDGzqNy0ywbow==
+X-Google-Smtp-Source: AGHT+IHQqQev9Mt/kBzD3p7JhI6eC5lr1d6ht0exKs8fcQ7bw7GOc5LSSjJJgeGQCo3IH1yYOPaQ4qbZnGMKJ40RyrI=
+X-Received: by 2002:a05:6402:4409:b0:5e7:110a:c55 with SMTP id
+ 4fb4d7f45d1cf-5e7110a0c6dmr3695220a12.18.1741613453358; Mon, 10 Mar 2025
+ 06:30:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303132124.52811-2-s.seva@4sigma.it> <Z8nDzyVO596rW0Mf@lore-desk>
- <CALKJsrqc__ZeLoZ5V+hBxVMU+Crpv_YG0KM69N1CXuHc_rM-FQ@mail.gmail.com> <Z8sFdGG4bDyALrsi@lore-desk>
-In-Reply-To: <Z8sFdGG4bDyALrsi@lore-desk>
-From: Silvano Seva <s.seva@4sigma.it>
-Date: Mon, 10 Mar 2025 14:29:30 +0100
-X-Gm-Features: AQ5f1Jqlt8x3XDDC0Qws37se1RFz7E06-AKjm0dhbWcj-KGZMrT7yJ5yVF6Day4
-Message-ID: <CALKJsrodHaDdra2ZMzHkHmcZy+KMwbaO5jTSkSOx5S27SByecQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: fix possible lockup during FIFO read
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: a.greco@4sigma.it, Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, 
-	"open list:ST LSM6DSx IMU IIO DRIVER" <linux-iio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20250308-sar2130p-display-v1-0-1d4c30f43822@linaro.org>
+ <20250308-sar2130p-display-v1-5-1d4c30f43822@linaro.org> <174140525677.1770282.3232695979994091275.robh@kernel.org>
+ <nddxntwmiyurqew75gc6yoj2dcinhjqu36cdujhruqyrz62ry5@4e2y76ghmo4h>
+In-Reply-To: <nddxntwmiyurqew75gc6yoj2dcinhjqu36cdujhruqyrz62ry5@4e2y76ghmo4h>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 10 Mar 2025 08:30:41 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ6iYm-8BF+4QwimAX69jmivpCNqKbD_AtWkKDtAn_Wgw@mail.gmail.com>
+X-Gm-Features: AQ5f1JqRkP_MsxtbTrRXJIVMatqOMN_D3NTt1ZS-seDKkCW2KxLIXoxniVXXOnU
+Message-ID: <CAL_JsqJ6iYm-8BF+4QwimAX69jmivpCNqKbD_AtWkKDtAn_Wgw@mail.gmail.com>
+Subject: Re: [PATCH 05/10] dt-bindings: display/msm: Add Qualcomm SAR2130P
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, dri-devel@lists.freedesktop.org, 
+	David Airlie <airlied@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, devicetree@vger.kernel.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Clark <robdclark@gmail.com>, 
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Simona Vetter <simona@ffwll.ch>, freedreno@lists.freedesktop.org, 
+	Bjorn Andersson <andersson@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Jonathan Marek <jonathan@marek.ca>, Maxime Ripard <mripard@kernel.org>, 
+	iommu@lists.linux.dev, Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+	linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 7, 2025 at 3:40=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.org=
-> wrote:
+On Fri, Mar 7, 2025 at 11:09=E2=80=AFPM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
 >
-> > On Thu, Mar 6, 2025 at 4:48=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel=
-.org> wrote:
-> > >
-> > > > Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functi=
-ons
-> > > > from falling in an infinite loop in case pattern_len is equal to ze=
-ro and
-> > > > the device FIFO is not empty.
-> > > >
-> > > > Signed-off-by: Silvano Seva <s.seva@4sigma.it>
-> > > > ---
-> > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > >
-> > > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drive=
-rs/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > > > index 0a7cd8c1aa33..7f343614f8a5 100644
-> > > > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> > > > @@ -395,12 +395,17 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw=
- *hw)
-> > > >       fifo_len =3D (le16_to_cpu(fifo_status) & fifo_diff_mask) *
-> > > >                  ST_LSM6DSX_CHAN_SIZE;
-> > > >       fifo_len =3D (fifo_len / pattern_len) * pattern_len;
-> > > > +     if (!fifo_len)
-> > > > +             return 0;
-> > >
-> > > I do not think this check is necessary since if fifo_len is 0 we will=
- not run
-> > > the for loop, right?
+> On Fri, Mar 07, 2025 at 09:40:56PM -0600, Rob Herring (Arm) wrote:
 > >
-> > This check is present in the st_lsm6dsx_read_tagged_fifo() function, i
-> > added it here for consistency. I agree with you that is not strictly
-> > necessary.
-> >
+> > On Sat, 08 Mar 2025 03:42:23 +0200, Dmitry Baryshkov wrote:
+> > > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > > >
-> > > >
-> > > >       acc_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
-> > > >       gyro_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
-> > > >       if (hw->iio_devs[ST_LSM6DSX_ID_EXT0])
-> > > >               ext_sensor =3D iio_priv(hw->iio_devs[ST_LSM6DSX_ID_EX=
-T0]);
-> > > >
-> > > > +     if (!pattern_len)
-> > > > +             pattern_len =3D ST_LSM6DSX_SAMPLE_SIZE;
+> > > Describe the Mobile Display SubSystem (MDSS) device present on the
+> > > Qualcomm SAR2130P platform. It looks pretty close to SM8550 on the
+> > > system level. SAR2130P features two DSI hosts and single DisplayPort
+> > > controller.
 > > >
-> > > same here, I do not think pattern_len can be 0 since hw->sip must be =
-greater
-> > > than 0 in order to enable the FIFO. Moreover, this check should be so=
-me lines
-> > > above since we have already divided fifo_len by pattern_len here.
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > ---
+> > >  .../bindings/display/msm/qcom,sar2130p-mdss.yaml   | 445 +++++++++++=
+++++++++++
+> > >  1 file changed, 445 insertions(+)
 > > >
 > >
-> > There is a situation causing the subsequent for loop to never
-> > terminate, hanging the kernel boot process: given a system which
-> > doesn't have an hardware reset line allowing the kernel to
-> > re-initialize the IMU hardware, in case of an hot reboot the driver
-> > probe() function attempts to flush the FIFO, which may contain some
-> > data, while the hw->sip is zero.
-> > The complete execution path is the following:
-> > - call of st_lsm6dsx_probe();
-> > - allocation of the st_lsm6dsx_hw structure via the devm_kzalloc,
-> > zero-initializing the sip field;
-> > - call of st_lsm6dsx_init_device();
-> > - call of st_lsm6dsx_reset_device();
-> > - call of st_lsm6dsx_flush_fifo();
-> > - call of st_lsm6dsx_read_fifo/st_lsm6dsx_read_tagged_fifo via the
-> > fifo_ops function pointer.
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/display/msm/qcom,sar2130p-mdss.example.dtb: dsi@ae94000: compatible: 'oneO=
+f' conditional failed, one must be fixed:
+> >       ['qcom,sar2130p-dsi-ctrl', 'qcom,mdss-dsi-ctrl'] is too long
+> >       'qcom,sar2130p-dsi-ctrl' is not one of ['qcom,apq8064-dsi-ctrl', =
+'qcom,msm8226-dsi-ctrl', 'qcom,msm8916-dsi-ctrl', 'qcom,msm8953-dsi-ctrl', =
+'qcom,msm8974-dsi-ctrl', 'qcom,msm8976-dsi-ctrl', 'qcom,msm8996-dsi-ctrl', =
+'qcom,msm8998-dsi-ctrl', 'qcom,qcm2290-dsi-ctrl', 'qcom,sc7180-dsi-ctrl', '=
+qcom,sc7280-dsi-ctrl', 'qcom,sdm660-dsi-ctrl', 'qcom,sdm670-dsi-ctrl', 'qco=
+m,sdm845-dsi-ctrl', 'qcom,sm6115-dsi-ctrl', 'qcom,sm6125-dsi-ctrl', 'qcom,s=
+m6150-dsi-ctrl', 'qcom,sm6350-dsi-ctrl', 'qcom,sm6375-dsi-ctrl', 'qcom,sm71=
+50-dsi-ctrl', 'qcom,sm8150-dsi-ctrl', 'qcom,sm8250-dsi-ctrl', 'qcom,sm8350-=
+dsi-ctrl', 'qcom,sm8450-dsi-ctrl', 'qcom,sm8550-dsi-ctrl', 'qcom,sm8650-dsi=
+-ctrl']
+> >       'qcom,sar2130p-dsi-ctrl' is not one of ['qcom,dsi-ctrl-6g-qcm2290=
+', 'qcom,mdss-dsi-ctrl']
+> >       from schema $id: http://devicetree.org/schemas/display/msm/dsi-co=
+ntroller-main.yaml#
 >
-> ack, I can see the issue now, thx for pointing this out. I should we shou=
-ld set
-> pattern_len to ST_LSM6DSX_SAMPLE_SIZE or ST_LSM6DSX_TAGGED_SAMPLE_SIZE if=
- it is
-> 0. Can you please move the check before updating fifo_len in
-> st_lsm6dsx_read_fifo()?
->
-> Regards,
-> Lorenzo
->
+> It looks like the patch 2 could not be applied and was skipped. Is the
+> bot parsing the dependencies from the cover letter?
 
-Changes done, I sent the updated patch in a separate reply email: I
-hope that doing so didn't cause any trouble.
+No, it's not that smart. I need to move it to using b4 though that has
+its own quirks when no dependencies are given.
 
-Thank you,
-Silvano.
+Rob
