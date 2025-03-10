@@ -1,38 +1,38 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB97230BE8;
-	Mon, 10 Mar 2025 16:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBEB230BEE;
+	Mon, 10 Mar 2025 16:40:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741624811; cv=none; b=XJz1f5tV/Ik9z8ANeR1Hrv1orQ402WLLcRvNY9HcjKx8RnwBPkgqs+nVlFe8Vc3UrGH7i1ZPE47RdqoT1HDXuwcM/dAjlM+GPOa1Du3Ylb4L2JCvXeUQh6OsTJ89Wu+Kd2jCieoVSTHnoQ8VhkBEzJXjCYJrljR7VqAMmdck2Nw=
+	t=1741624811; cv=none; b=ZNwAwpuKJ9/u3l+e4p7zuN4toA23Rq93fkY0Fo5xh87ugiIHAuyPH87nK/MmjAcGeLmGavb/VueFdvIG9G0Un4VBzSIHAeKgBHmSw2zRIu9UM4qlHSr9otQEuhGr4Vpm7n/iDKYaOOB3HjEnGfJOIx5TZIO90Xdo/vCQT8jYTlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741624811; c=relaxed/simple;
-	bh=jG2AhQ8rfFnaTwya10N47DF4WYRctsn28OpF3DNfM1U=;
+	bh=MgCdjpVn5JjBH9Q7mqPRM+D+GIItbuUSnEVe5WROEq4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GLKh3/CzRxwec19vm6qDRoMdnGWvVfqXhLWOcLUSD+ibanYz7mUYC95saW4Z1wly534MrgBCM4zdRABaZOlW9G/ITEIbUerF8gPNfChvpTCg3nLpLegG0B2EYhV8TBLY8Nn+YPkzfLnn/japDbrT/JVhaetsuCu0qNBmekUtB8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ctxr40Tz; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=Sexu1zwAMnacrUAl/R+L0ANaoQWK3QxH08P4sXwnR9x4scewfpms6wjA2AT0e6fGPtpYKFnc4ESyVHqXBPKQt+/mxdCm/jeHdNiyE3DnVCDyPVP9w7trDziSJ4QVrzyl7XmTUUCy2aUyTPhH/R7q2TzHOvmHk38NGxDrX60OxV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h64oHeq1; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ctxr40Tz"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D8E2944430;
-	Mon, 10 Mar 2025 16:40:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h64oHeq1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6D46A44431;
+	Mon, 10 Mar 2025 16:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1741624807;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a+jhmNSWGtF6gwCaOphrzoK/yfH+/FtGdxKL5Im1AWA=;
-	b=Ctxr40TztXSUsyl12pTNFDb1xb3FyY//+PeF5GfStZyzF4XtM4a+4FfX6Ud3r24dSgsdQO
-	6C7EEdHxb2T0Jz6zwPpXlZIYpSCpXweYR2iSTz2RmdFFTPrmIm0/a5hcIwcNjgLmvV8aGl
-	aHDh2YbJQcW1O45QCaVUeYKrYuyDsTyrRyhO3RwpV7Tog7eN7+PJr1GG5u/8wuNVLIjOEY
-	jEUWO7PUhblawju9gFRmqfuLSP+eAXl1/qAliHvzC2fEp5DPKvagerGnkuUidRqsXbtAbm
-	A4jXTIMHO+x8Frp3bG1h2ri9pJt3j+8LV5mghDMPK5gFty/wJbvy7Vbp0mrKKA==
+	bh=A5Z5zPAM+0f74IQVMyMnuPc/AXbhtFbg6j2IA+SJm9I=;
+	b=h64oHeq1uyNez9W5evGd9PY67ZjNAR1fuiiK+TMOXzTbeKQGefuR7Q7bRqbxrwmBOFFDso
+	e6mHalCnSDlDAhC256k7wZJWnE5Ka46DeouXQUaHWH34Emd9kkAopHJ8NkbfoP9d+ljm/F
+	KIALtjuDi21ISdtyb8hHfxf+h5R2m+QCqlHWz47+G9t2S0zztrOxOTQNDcDUIhBv2fZfPf
+	Dr5kJjEYhSqwf4mjVW/iHCoJ+jxcVvMkDS8SXfuVl6wuB4LniChuJQ6YDpC0/9hGyCRqIk
+	oMAaXSrfJqHVonDJPtENUQCUuex+bkjmn01iaakuy601wao8v1smCWwT6CMV6A==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 10 Mar 2025 17:39:49 +0100
-Subject: [PATCH v4 2/3] ARM: dts: imx6ul: Add Variscite VAR-SOM-MX6UL SoM
+Date: Mon, 10 Mar 2025 17:39:50 +0100
+Subject: [PATCH v4 3/3] ARM: dts: imx6ul: Add Variscite Concerto board
  support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250310-varsom6ul-concerto-dts-v4-2-6034fda6ec64@bootlin.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250310-varsom6ul-concerto-dts-v4-3-6034fda6ec64@bootlin.com>
 References: <20250310-varsom6ul-concerto-dts-v4-0-6034fda6ec64@bootlin.com>
 In-Reply-To: <20250310-varsom6ul-concerto-dts-v4-0-6034fda6ec64@bootlin.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -55,304 +55,389 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
  imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7899;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9091;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=jG2AhQ8rfFnaTwya10N47DF4WYRctsn28OpF3DNfM1U=;
- b=kA0DAAgB0YBBQCmjqDYByyZiAGfPFeWhE88pX5S2aqICactDuiuZq77zkE/zX8QF1d9WH5Zvb
- 4kCMwQAAQgAHRYhBIZIclGI3UAbuaDT/9GAQUApo6g2BQJnzxXlAAoJENGAQUApo6g2vFoP/iNM
- j5qShed0pMKax1FlHwK2gPZ3ZmMovvDLVhFAOIsW38prJSXpe9xrk4EZXfQ200TARIL/3Fnt6Dw
- oVX/YS3hxa8pTWEWxltAaOJsQyGUFt/mMTILgPk2dUJitj3wmyd9p6cyZLNemBsG0xl/1fHmR2K
- fpKrtl2y/z0O0/cf3CWMsdf272lUAvjyNTPeCfwcbsRtklNyLZtrO+/ZsABMLWtYf/d1RvaRSso
- nPwM6f00W4sVPGormnmsqtwPd1xdSBDUGLV6ihmQ5aX6tnbAgL3kq6tBkMGI/FDsIq/ba8t2xzO
- 7+MqvspaWSXCsyL0ZDFXcRhs9qXKgVkgTgWjB5kwomp8zFiRla0C8IfkufXWTGThh3QZeiYayk+
- 8Yevr/Yo/lW15fANkdqGjoUR+MaJh4uWoELJWyqL3ng7JVjdKEEcQmdSNq0cs3ipvQviF9qUKTa
- xmukhkeOI2jQ7Oc3Shjizj9GOAoJIFSNGCmJLEycU5QEQRubM/zHTE7ASIzX9pYXiUhoVc0ivAe
- +hRaJmJMGPdC1TW3vUj6wCepADC9y782TiIWaW2ryhl6UcFPlduWRNX9wUNLjXPP5+WdCtpGN58
- FJ3nXYKyqub8ZNi+xlQ6TYCHyr4ai9BQcoGif+dXX53bNncqBNXjnl0dTrId+ND7BWC5feB4isz
- VJWrc
+ bh=MgCdjpVn5JjBH9Q7mqPRM+D+GIItbuUSnEVe5WROEq4=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnzxXlaR+zor43bMUElOzKYcXOPnxe1JBqoeIiB
+ wajWfw1dY+JAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ88V5QAKCRDRgEFAKaOo
+ NjklEACAYt5demjngsRu9rXXvDDzpm4nTv8KkCEYCNlR3BlvEKo0BTvPNwu4vk8C1Ex/fTlQwta
+ ikP+7Xh1nrj36CGwmXgnL+aP3Ql45kd6M/0CbyDExTm60yDtNbs2P1AT9WI/wBwLAKY2AraS5m4
+ 5XJ+eCqjrsVR49hR4y95NqMTOT8lOIP5IED75r72zXYjjObtk/HgfaIhFz9TzIWW6v18Xgu0Q+G
+ Nw5ZAPa8XnxgEhzLBuLtwWt92AYqtXWRah64xCvY72WWZlYIy1JXMx/jloc7jirX0HKV3vmrgcS
+ gCXl+EHOWDHMaF625hLP4FP1PmE2oFvicL6BqlFoxKVBIO3y1OJeVgYaTPbfLK0FyuYpkDX4WLc
+ mnKT+1WR8lSblt11ZDK2JSSOMDOxWHFQBXWVyQPMqL5BP6t8Gz0pf+0HXVuR0sJvZCYdgBsELBY
+ N2CBOfmgd3ivO8iD/R/yhNgTq2lZbO/yjf1e+5oqbYKMXIxj4l4EDP3dpkNDRS/6Xz7ZfeOXGyz
+ F9O+v43FPlR9W1aAHYe+i7A48M6PUVpn23qci6QqW2A6VkTDiwURQfRcBUYb+9qPXKy/De9Crtv
+ 6M8dCsgxFe4Cu/jvGAOmy36yCw3gSmkX2UCKJ321agYmCJs1WUvBHZpIkaAVZ591ADJKHAGjaCu
+ /ZCJzT6Afq7ufWg==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhvdetuefghfeugfeutdeuueettdffudefgfeljeehvdetvefhjeffvdetvdehhfenucffohhmrghinhepvhgrrhhishgtihhtvgdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlr
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekgeekvdduvdetheetgeefgfeljeevgfegkeduheeutdevvddtfedvveettddtvdenucffohhmrghinhepvhgrrhhishgtihhtvgdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlr
  dhorhhgpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
 X-GND-Sasl: antonin.godard@bootlin.com
 
-Add support for the Variscite VAR_SOM-MX6UL SoM with:
+Add support for the Variscite Concerto Carrier Board with:
 
-- NXP i.MX6 UltraLite SoC
-- 128–1024 MB DDR3L
-- 8–128 GB eMMC
-- 128–512 MB SLC NAND
-- Camera Interface
-- LVDS / Parallel RGB interfaces (not configured)
-- Touch controller (not configured)
-- Ethernet RMII interface (not configured)
-- On-SoM Wi-Fi/Bluetooth with CYW43353 on SDIO Module (not configured)
-- SD/MMC/SDIO interface
-- USB Host + USB OTG interface
-- I2C interfaces
-- SPI interfaces
-- PCI-Express 2.0 interface
-- on-SoM Audio Codec (not configured)
-- S/PDIF interface (not configured)
+- LVDS interface for the VLCD-CAP-GLD-LVDS 7" LCD 800 x 480 touch
+  display (not configured)
+- USB Host + USB OTG Connector
+- 10/100 Mbps Ethernet
+- miniPCI-Express slot
+- SD Card connector
+- Audio Headphone/Line In jack connectors
+- S-ATA
+- On-board DMIC
 
-Product website: https://www.variscite.com/product/system-on-module-som/cortex-a7/var-som-6ul-nxp-imx6ul-6ull-6ulz
-
-Support is handled with a SoM-centric dtsi exporting the default
-interfaces along the default pinmuxing to be enabled by the board dts
-file.
-
-I tested this on a VAR-SOM-6UL_G2_700C_512R_8N_IT_REV1.3A, which is why
-some of the features above are mentioned as "not configured" (I couldn't
-test them).
+Product Page: https://www.variscite.com/product/single-board-computers/concerto-board
 
 This file is based on the one provided by Variscite on their own kernel,
 but adapted for mainline.
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi | 233 ++++++++++++++++++++++++++
- 1 file changed, 233 insertions(+)
+ arch/arm/boot/dts/nxp/imx/Makefile                 |   1 +
+ .../boot/dts/nxp/imx/imx6ul-var-som-concerto.dts   | 320 +++++++++++++++++++++
+ 2 files changed, 321 insertions(+)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi
+diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
+index 39a153536d2a2b8f75b5fbe4332660f89442064a..94c9bc94cc8e2daa1fb3b5686b0b58db1f6678b6 100644
+--- a/arch/arm/boot/dts/nxp/imx/Makefile
++++ b/arch/arm/boot/dts/nxp/imx/Makefile
+@@ -329,6 +329,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ul-tx6ul-0010.dtb \
+ 	imx6ul-tx6ul-0011.dtb \
+ 	imx6ul-tx6ul-mainboard.dtb \
++	imx6ul-var-som-concerto.dtb \
+ 	imx6ull-14x14-evk.dtb \
+ 	imx6ull-colibri-aster.dtb \
+ 	imx6ull-colibri-emmc-aster.dtb \
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts
 new file mode 100644
-index 0000000000000000000000000000000000000000..4e536e0252def06a7660c29b7231169e3aa38dba
+index 0000000000000000000000000000000000000000..9ff3b374a2b31ceb7c4974adf86c2f036c78d4d5
 --- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi
-@@ -0,0 +1,233 @@
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts
+@@ -0,0 +1,320 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Support for Variscite VAR-SOM-MX6UL Module
++ * Support for Variscite MX6 Concerto Carrier board with the VAR-SOM-MX6UL
++ * Variscite SoM mounted on it
 + *
 + * Copyright 2019 Variscite Ltd.
 + * Copyright 2025 Bootlin
 + */
 +
-+/dts-v1/;
-+
-+#include "imx6ul.dtsi"
-+#include <dt-bindings/clock/imx6ul-clock.h>
-+#include <dt-bindings/gpio/gpio.h>
++#include "imx6ul-var-som.dtsi"
++#include <dt-bindings/leds/common.h>
 +
 +/ {
-+	model = "Variscite VAR-SOM-MX6UL module";
-+	compatible = "variscite,var-som-imx6ul", "fsl,imx6ul";
++	model = "Variscite VAR-SOM-MX6UL Concerto Board";
++	compatible = "variscite,mx6ulconcerto", "variscite,var-som-imx6ul", "fsl,imx6ul";
 +
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
++	chosen {
++		stdout-path = &uart1;
 +	};
 +
-+	reg_gpio_dvfs: reg-gpio-dvfs {
-+		compatible = "regulator-gpio";
-+		regulator-min-microvolt = <1300000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-name = "gpio_dvfs";
-+		regulator-type = "voltage";
-+		gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
-+		states = <1300000 0x1
-+			  1400000 0x0>;
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_key_back>, <&pinctrl_gpio_key_wakeup>;
++
++		key-back {
++			gpios = <&gpio4 14 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_BACK>;
++		};
++
++		key-wakeup {
++			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_WAKEUP>;
++			wakeup-source;
++		};
 +	};
 +
-+	rmii_ref_clk: rmii-ref-clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+		clock-output-names = "rmii-ref";
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led-0 {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_GREEN>;
++			label = "gpled2";
++			gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
 +	};
 +};
 +
-+&clks {
-+	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
-+	assigned-clock-rates = <786432000>;
-+};
-+
-+&cpu0 {
-+	dc-supply = <&reg_gpio_dvfs>;
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	status = "okay";
 +};
 +
 +&fec1 {
++	status = "disabled";
++};
++
++&fec2 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>, <&pinctrl_enet1_gpio>, <&pinctrl_enet1_mdio>;
++	pinctrl-0 = <&pinctrl_enet2>, <&pinctrl_enet2_gpio>, <&pinctrl_enet2_mdio>;
 +	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
++	phy-handle = <&ethphy1>;
 +	status = "okay";
 +
 +	mdio {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		ethphy0: ethernet-phy@1 {
++		ethphy1: ethernet-phy@3 {
 +			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
++			reg = <3>;
 +			clocks = <&rmii_ref_clk>;
 +			clock-names = "rmii-ref";
-+			reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
++			reset-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
 +			reset-assert-us = <100000>;
-+			micrel,led-mode = <1>;
++			micrel,led-mode = <0>;
 +			micrel,rmii-reference-clock-select-25-mhz = <1>;
 +		};
 +	};
 +};
 +
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	rtc@68 {
++		/*
++		 * To actually use this interrupt
++		 * connect pins J14.8 & J14.10 on the Concerto-Board.
++		 */
++		compatible = "dallas,ds1337";
++		reg = <0x68>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_rtc>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
++	};
++};
++
 +&iomuxc {
++	pinctrl_enet2: enet2grp {
++		fsl,pins = <
++			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
++			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
++			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
++			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
++			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
++			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
++			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
++			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
++		>;
++	};
++
++	pinctrl_enet2_gpio: enet2-gpiogrp {
++		fsl,pins = <
++			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* fec2 reset */
++		>;
++	};
++
++	pinctrl_enet2_mdio: enet2-mdiogrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
++			MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
++		>;
++	};
++
++	pinctrl_flexcan1: flexcan1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
++			MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
++		>;
++	};
++
++	pinctrl_gpio_key_back: gpio-key-backgrp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x17059
++		>;
++	};
++
++	pinctrl_gpio_leds: gpio-ledsgrp {
++		fsl,pins = <
++			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0x1b0b0	/* GPLED2 */
++		>;
++	};
++
++	pinctrl_gpio_key_wakeup: gpio-keys-wakeupgrp {
++		fsl,pins = <
++			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x17059
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6UL_PAD_CSI_PIXCLK__I2C1_SCL		0x4001b8b0
++			MX6UL_PAD_CSI_MCLK__I2C1_SDA		0x4001b8b0
++		>;
++	};
++
++	pinctrl_pwm4: pwm4grp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO05__PWM4_OUT		0x110b0
++		>;
++	};
++
++	pinctrl_rtc: rtcgrp {
++		fsl,pins = <
++			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0 /* RTC alarm IRQ */
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
++			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1
++			MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1
++			MX6UL_PAD_GPIO1_IO09__UART5_DCE_CTS	0x1b0b1
++			MX6UL_PAD_GPIO1_IO08__UART5_DCE_RTS	0x1b0b1
++		>;
++	};
++
++	pinctrl_usb_otg1_id: usbotg1idgrp {
++		fsl,pins = <
++			MX6UL_PAD_UART3_TX_DATA__ANATOP_OTG1_ID	0x17059
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
++		>;
++	};
++
++	pinctrl_usdhc1_gpio: usdhc1-gpiogrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x1b0b1 /* CD */
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO01__WDOG1_WDOG_B	0x78b0
++		>;
++	};
++};
++
++&pwm4 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_enet1_gpio: enet1-gpiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0 /* fec1 reset */
-+		>;
-+	};
-+
-+	pinctrl_enet1_mdio: enet1-mdiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-+			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
-+			MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN Enable */
-+		>;
-+	};
-+
-+	pinctrl_sai2: sai2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
-+			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
-+			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x11088
-+			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x11088
-+			MX6UL_PAD_JTAG_TMS__SAI2_MCLK		0x17088
-+		>;
-+	};
-+
-+	pinctrl_tsc: tscgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
-+			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
-+			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
-+			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
-+			MX6UL_PAD_UART2_CTS_B__UART2_DCE_CTS	0x1b0b1
-+			MX6UL_PAD_UART2_RTS_B__UART2_DCE_RTS	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10069
-+			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
-+			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
-+			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
-+			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
-+			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
-+			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
-+			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
-+			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
-+			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
-+			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
-+			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
-+			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
-+			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
-+			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
-+			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170b9
-+			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170b9
-+			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170b9
-+			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
-+			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
-+			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
-+			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
-+			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
-+			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
-+			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170f9
-+			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170f9
-+			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170f9
-+			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170f9
-+		>;
-+	};
-+};
-+
-+&pxp {
++	pinctrl-0 = <&pinctrl_pwm4>;
 +	status = "okay";
 +};
 +
-+&sai2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai2>;
-+	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,
-+			  <&clks IMX6UL_CLK_SAI2>;
-+	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
-+	assigned-clock-rates = <0>, <12288000>;
-+	fsl,sai-mclk-direction-output;
-+	status = "okay";
++&snvs_pwrkey {
++	status = "disabled";
 +};
 +
-+&snvs_poweroff {
-+	status = "okay";
++&snvs_rtc {
++	status = "disabled";
 +};
 +
 +&tsc {
++	/*
++	 * Conflics with wdog1 ext-reset-output & SD CD pins,
++	 * so we keep it disabled by default.
++	 */
++	status = "disabled";
++};
++
++/* Console UART */
++&uart1 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_tsc>;
-+	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+	measure-delay-time = <0xffff>;
-+	pre-charge-time = <0xfff>;
++	pinctrl-0 = <&pinctrl_uart1>;
 +	status = "okay";
 +};
 +
-+&uart2 {
++/* ttymxc4 UART */
++&uart5 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
++	pinctrl-0 = <&pinctrl_uart5>;
 +	uart-has-rtscts;
 +	status = "okay";
 +};
 +
-+&usdhc2 {
++&usbotg1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usb_otg1_id>;
++	dr_mode = "otg";
++	disable-over-current;
++	srp-disable;
++	hnp-disable;
++	adp-disable;
++	status = "okay";
++};
++
++&usbotg2 {
++	dr_mode = "host";
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc1 {
 +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-+	bus-width = <8>;
++	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_usdhc1_gpio>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_usdhc1_gpio>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
++	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
 +	no-1-8-v;
-+	non-removable;
 +	keep-power-in-suspend;
 +	wakeup-source;
 +	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	/*
++	 * To actually use ext-reset-output
++	 * connect pins J17.3 & J17.8 on the Concerto-Board
++	 */
++	fsl,ext-reset-output;
 +};
 
 -- 
