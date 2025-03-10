@@ -1,231 +1,213 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D6A233D89
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 18:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741630462; cv=fail; b=b81N3QzL8/w5UV3TZn+BaI8dNN92BrrzQJBKa6FvoZpZsMw5I5yKyDXHkWaLufmTJG04QrbEOfH/xPQuemSUZzKi8U92kj4CJio5dgejntkzCPaHTLA9RMhsa5cxMXmBjxOMt/cD5+lJAY4dvVJLeR1qwflLf6kCZj9KNuBvxwI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741630462; c=relaxed/simple;
-	bh=taP0Nl4ED7iM+3l+N5JpjcZeE2r3CPodapSdsBP5ehE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PsgrGLggfd4BXRGiU8VNyHWvIn6E9Op8WQhSBUeZ0qaydVx7/2DKRsigtkwVaflPRPTH6T9TKC+z1MPv8cinSkG0eQOMA8vo2ocRmFNWrIQVceq+8VGuE+2k9FF7hD6O24O5RsH/k9UUY/ILugrwMmQ3DZAMqGVdu8fHmD7iU7k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ebg3pVdl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Ow47u/tW; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24377233725
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 18:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741630471; cv=none; b=RU8bfoh649oGkEMFcsKNRC54eRK6YWfUHw+J5eSyK2KiIoAdCYGres53ibBIrCe8TUiMUq7+73zXN1cSAtxJG923RK+X12bfhkbYTMyB7ed7C0YiVu432Ccp4jdSzAkVE0fERUUnP0Se4bqQemORhJABTGDGlJlKKtxMStkHECM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741630471; c=relaxed/simple;
+	bh=Az6X3nXxUvrPwsXz0EKPfQdrosxiIgR+lp2S0lY+RfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avQ9nxx4yCF4TeXNSp+Psx5odvGpXsKjaJaiTXLEDpbFYPqC7AIGACMkKWX0cXw/bDvRC+j05jPcyDHVzCNStgbj3/EWPUlg/8DnuaORf4vraiwccgp2/iX6w+PVUQKJdv2ahjk1/X9Q7i4AVjWQrYQaPBDIVuZ7i/jFboDxifQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IhehjCjt; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ebg3pVdl";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Ow47u/tW"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52AGfnte015854;
-	Mon, 10 Mar 2025 18:14:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IhehjCjt"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52ACS3BB021499;
+	Mon, 10 Mar 2025 18:13:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=pUeuWGZ0esupoq1p0+
-	/ltsbohw5HhduPnaIvCvI4ckw=; b=Ebg3pVdlsiGmZhKTqCytu6StVBIG4Zfazs
-	IkefAitWQGDBl3/+bwaYe6xBxJfruRTORe6Pva2JvDKsSix0bmu70znb0HF4aKyp
-	oR9SO2+mRNjFa89M568obHPGL05th6YOHdd4DK4bHqAmsyGosJ/hJ9rEccg92GiY
-	G192NbWxxo5JumIZxE/+cJ1kLbTtE7VwUEicsGN2/RQodCFuRYWUpUwcZ1c9Uoev
-	Sk9EgOvAeZEaMH/olRsjG5NyeCbSpLaqHDMeUfYhofJ7xSLgS8GbctqbuVZpR7AS
-	wqiYQwlPSbhd+mXvxFzPB3oiHseSv0OEl4WPo9v7bF8rs3RaQcCw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 458cacb7px-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Mar 2025 18:14:10 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52AI1S43021713;
-	Mon, 10 Mar 2025 18:14:09 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2173.outbound.protection.outlook.com [104.47.57.173])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 458wmnesxb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Mar 2025 18:14:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xywzVDTC/Nq6okAMOvdeOlsnahwaeKuKg9vUUoxmWh7k+Entbz0tUp3QXiOq6/L911L3lXuRPVV7ix1VhGFGSJVcST7BDLWyMGsmTysW8CiMDQRrx1I/HhgzV9LqUu9Qofr4Q+LKa/s/60jxKgH9MMt1RAVit8+xfkTdP8Dg65dRvZM4H5IptZPRElq4ZWNdSNbLiCvoVR0H8bYzDe3xwCAw04B8iBRxhvht3fOYtKh25VYRBUbrbkyecy7coNt2QXIA3CKL7GaEQ6VvHVm4UDCXGyA5wEkovZq5yIoOqExY9mw/ptRMllSM6todnFBwUnrLI5Cp9uhsFfaUzHYBJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pUeuWGZ0esupoq1p0+/ltsbohw5HhduPnaIvCvI4ckw=;
- b=yw+oo3lA4r/jZDMuBWA1egZ3wEtXw/mhUL9AmImCwKbm7lF7VrhgPEyKshOGQ/nk/acW83sAKBHgf1+BWOOVC4Ma2ezviVkEULRJ3bV96M9o8bkFXxs9WNIqjKqiSigk2phk5+3ye3Q46+/yuGsg4sbJtpunHay8t6MdqMzXYFSxgqgiUwEp2pbMOcyeWRbdN2psqNElMa2eu4Y5NNorw60HcDXTkw0EdSLW0FbgkLetWIJXF/H7UPyqP4XcLMm5lvZfQglEBhNOR0NrBfPkAqTxA78QcXdshWX+uR2+b7MZiouhivPnFJCxnX62GidttMRV7fPesnYyO8JnaDCQrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pUeuWGZ0esupoq1p0+/ltsbohw5HhduPnaIvCvI4ckw=;
- b=Ow47u/tWIwaZWU8SjgB5sNFbQncUY8EyqhXYI1n/T4y1PpnViLTFYiw70JeSzM8OJA0x+8KZh8h9oyY8WVX8G3cglGf9aZF9cdFnEa1kMajrsebYOO/f1Ix+wK9eKwYKyPQmJVXf56qORyK7H2wlu+kasHkeJGlhSFfkB+Sj8tU=
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
- by SA1PR10MB5687.namprd10.prod.outlook.com (2603:10b6:806:23f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Mon, 10 Mar
- 2025 18:14:01 +0000
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c%7]) with mapi id 15.20.8489.025; Mon, 10 Mar 2025
- 18:14:01 +0000
-Date: Mon, 10 Mar 2025 18:13:59 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Jann Horn <jannh@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Harry Yoo <harry.yoo@oracle.com>,
-        Yosry Ahmed <yosry.ahmed@linux.dev>
-Subject: Re: [PATCH v2 7/7] mm/mremap: thread state through move page table
- operation
-Message-ID: <0602cc1a-0013-47ec-9111-1b4fdf8f44ae@lucifer.local>
-References: <cover.1741256580.git.lorenzo.stoakes@oracle.com>
- <1d85814f3a73eaa241c554b3e0f751f3e267a467.1741256580.git.lorenzo.stoakes@oracle.com>
- <38628bf6-1676-409a-9712-15095eec8dc1@suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38628bf6-1676-409a-9712-15095eec8dc1@suse.cz>
-X-ClientProxiedBy: LNXP265CA0074.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::14) To MN2PR10MB4112.namprd10.prod.outlook.com
- (2603:10b6:208:11e::33)
+	:references:subject:to; s=pp1; bh=aKDbI3+YGJ6bMdW1QwFFc+EXWT7+Ji
+	l57FacsSZ1fBA=; b=IhehjCjtDir8UAecMeUEAJMl1Hs54G4SNFWwZRzeeRH7OE
+	qdq6FK3jvoQOCbbZ4QRVr8Tn/LvnDGuTESM/kK9mGYtqSazeGeC2JtFh0rUEW+q2
+	b2GFIV8/9HkvknL0p0/RB+EZ4Thza480y8R56rj+M4PNmMOqlFE6s6uH2CLgQ8Yi
+	Qgu6YZTUI7FL1bokGqxT4Xixp1vl5Jx6kLuoL6MXWz1iia+U75vLVZNnjz30s63s
+	v9bcBLOEKMIkML+lYa6gl3taAqHoneHQw6GP6BBbzE0wFX1FpAy6zLRO284Ynn3g
+	8UpHeCW4usII+KnN+WA4tdUMy0FyEOC18c48n2TQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a042swr2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 18:13:50 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52AIDn3N022209;
+	Mon, 10 Mar 2025 18:13:49 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a042swqw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 18:13:49 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52AH8wsr023888;
+	Mon, 10 Mar 2025 18:13:48 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4590kyr5se-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 18:13:48 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52AIDkHV47972706
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Mar 2025 18:13:46 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 926AE20043;
+	Mon, 10 Mar 2025 18:13:46 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1FFDC2004E;
+	Mon, 10 Mar 2025 18:13:46 +0000 (GMT)
+Received: from localhost (unknown [9.179.22.167])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 10 Mar 2025 18:13:46 +0000 (GMT)
+Date: Mon, 10 Mar 2025 19:13:44 +0100
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Sidhartha Kumar <sidhartha.kumar@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org,
+        linux-mm@kvack.org, liam.howlett@oracle.com, richard.weiyang@gmail.com
+Subject: Re: [PATCH v3 5/6] maple_tree: add sufficient height
+Message-ID: <your-ad-here.call-01741630424-ext-7048@work.hours>
+References: <20250227204823.758784-1-sidhartha.kumar@oracle.com>
+ <20250227204823.758784-6-sidhartha.kumar@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|SA1PR10MB5687:EE_
-X-MS-Office365-Filtering-Correlation-Id: 646f9c7a-0f44-42c9-9e4b-08dd5fff5570
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?U4xGe/gp5IOUpAHyPU8cqwQytsL0lF4qoLIVOplQ0x7uxR+ZPAudtK1zwbuX?=
- =?us-ascii?Q?GbwNUPlCAmmp1M6lqOceX6D/g7EGBAFIl9J0GzONk+grtm6ljPgFwO7YqN94?=
- =?us-ascii?Q?iliMNcCiauUfg0P3V22slgeJD4O4sGpycanLIIErNj7FnqDdMM6U3DHW7kZ/?=
- =?us-ascii?Q?LAeJBQ+mbSodbUBqoifzGtRMC0UDsijxqrFyohHzL+m9rOfUgmdgnIBTW8zx?=
- =?us-ascii?Q?GRK94/91TzgxXknUkIgk4KEbSwP/bS5SYR6/D7PAdMrskkrPzrmloANlXeMq?=
- =?us-ascii?Q?XrHxSrr6UvsaBhTxb0yDMmM8KDiBD+LPdp5SAmi5kXqXwYp/eeE57pLC4R/F?=
- =?us-ascii?Q?phlYL64TqqP7OwnC8SUroKyA+v4Sx/EyUIoonJbenEU7LpjOrawySft5Duk6?=
- =?us-ascii?Q?2dxXh/GMNpA6bBnR/8UoD+r9PMPeG8FWiDsQ0Jws9eP+S3Q2DW1PHaZNiXVe?=
- =?us-ascii?Q?YOgtr2Bf3ZjU/iB5wxElz7OrZSzeqf9PRn3ddv+6Y9N+L1NVvM3Blq2iSBt1?=
- =?us-ascii?Q?H8NajypxZG9RUlG0iaYVqIHSMTbN2Sxqz90lnxEMqtUm0Tg+Qk2bc+RtKqaN?=
- =?us-ascii?Q?0KIT1tSpeL5kE1BivYtgXCzob7dXuS2vb4JuNEep5HNLSVHsZrsxL4nrrarv?=
- =?us-ascii?Q?QWRMS0z0FBv32m697sG2mAuOm7D9cEb1WRQV3//NEF7BhrBGqdw9uZrAoZdC?=
- =?us-ascii?Q?znMR37S6zuDbk6zsXYHWchyU9ZjOCuEaWKnawVWyQP7okbAw0bognZby1sWx?=
- =?us-ascii?Q?uOwPHwzjZHQjN/s7xPUSNQ6o1maJcTE1dN1Ir8q9tBx/iWX1cuXHU6r6lU+E?=
- =?us-ascii?Q?QECWWZaIo3hD6Azb4tdma3PfiQuri/GsZvmpRvpdwSedx7xq1P4VwhJuTaSX?=
- =?us-ascii?Q?B7QqAQAgijCbfJLrgUBOAbrJRVw+YC8CgFA3QxT2Fvij1uQ9jG+gvCu1ytR6?=
- =?us-ascii?Q?FhWxNC8albI6jRYwwRHLe1ahoWaltB4IX/AgOU4rnk3AiRkOjOG9VXfoXroq?=
- =?us-ascii?Q?u9gaMFwgjBqWEykOuroqgaeQET7cyPrzkwH6GUmodjSV38JdLg77s2Ca4T4W?=
- =?us-ascii?Q?qUeLcD3SZqOLciCErszDawtsYSHCb4s00lHdjKWlj4GCZW+8ssH6rLMNu1/x?=
- =?us-ascii?Q?92tzlGMiHSs4h9H3e1lKxfsr9bO68lN0Z/e1ZzxjAses/avWGP3cRKEkI61Y?=
- =?us-ascii?Q?hTsHNE5+HRQGzzIPBg8oi0tNoMD4os9xDDxYvGfK84G6PDRk0b7XfBIdpS6T?=
- =?us-ascii?Q?jwZg1piJhhQsMISS5FurCdlwcCpffDy/tgBRCGJZ3y1TVlrhvKJo1abgF9Py?=
- =?us-ascii?Q?1yy4+JoKmx39PErxiXstn/917F2qtfdY+2DlotWhnoKq87fvZ+7vwCLvtrQq?=
- =?us-ascii?Q?Clkp/29+PkzCFb1oNpEklxo/CDMP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rQXUuI8YjWolmjxRPdIxLZN9dkOIGewV9vm6pbHBp0ijdCx8nqnI5XvVwpJO?=
- =?us-ascii?Q?1QD2Uq/PNcKTVFX6YoT9BHZVmHrxBI5gxCCgD+sdnEROC03Jd3ezjHzzaUR3?=
- =?us-ascii?Q?7RMLSckwCKqFBzjs/g9/dk/adb/IDXf+blHw6hXVwpZwVKHKWztrPK/e5VQX?=
- =?us-ascii?Q?+jjTSvzgSe3qcyukS7oxA6SVscVbDRFXOnLhfHj3Kqwp4XSrxigZl2bdNh7E?=
- =?us-ascii?Q?tD8UkgqiUxXs7cHsmVXYaX40cHdhWtSVdyasA4YmMx7WeKaDJIChpC1US7Dw?=
- =?us-ascii?Q?Eoh/TrMNfBLq2pLVW9TQhGZMnwVxzObJsaXT9Awal28zFhBUMwj80xCusdBA?=
- =?us-ascii?Q?GQcvOiW8dBYFp5BzxCgwNJE99PuGAAsFl6J3+8T4JGUiLeMGEij3HwLwllTE?=
- =?us-ascii?Q?z6UlwdK94hYVt4Tj7wVWbA6zjOG2lp1d1GiY9BMv5nVUM/JST9le7647olKc?=
- =?us-ascii?Q?13ACyfq2VAduQIrdcuQaTB/XXGPgY2A+DUkduHppt1Gc1k1huiaDcGQXgUK0?=
- =?us-ascii?Q?mo2Zn5Is0KzjLGigbOM07oZuCv0Z1FQK22PtksgjJU7ioQhM39gjvBdJJw8F?=
- =?us-ascii?Q?febQJo6bbZunQ5q7ibH6pAbnzVs7bCZGvAQvUrnLOtr9Nb7hfU1oXKbTnjB0?=
- =?us-ascii?Q?H98LCAmVj/5JeIUrD64M4kv5B5DPh45iFPGCuFsAFEay/+imef/puy+ZfSVi?=
- =?us-ascii?Q?Jio5masT45L6mbRgGESNPVPaxteHlQCwHHH/TRkI18lhmX/8fBIXkinxyU+W?=
- =?us-ascii?Q?WAQkMrNaKSrqfNiJP43iZSgRhG4QLEOsCfm+yr6SyagiBeggZnZmDOjuWWnf?=
- =?us-ascii?Q?1FnuC1sSQxbeZCOBT4NyNi6k1hiDMH09wN4SGP9zsNPmhHbrCxLlFFF2RQfQ?=
- =?us-ascii?Q?RtdJCASNUFQdoRJ1mUC5dBXfoHfP0Ot8db+fXzZQogIrFVu3nMMU3SqUTije?=
- =?us-ascii?Q?YmdC47UPe8E8PrU4yY/+6lzmJzWF7OA7AfJ2qIQUaHjt8CaWlYVm/yWnEaol?=
- =?us-ascii?Q?d6jVHfwdlJQu03tB+eGhGgwUv0/Q+KzXXhpT1xQIE8cMj7WlP1Ca+q9KGh8P?=
- =?us-ascii?Q?nD5asM97BzdCaKZGyp6zttZhR3sfcbZVuPaRWliuMeuMpTnSqIR0JAxQBr+i?=
- =?us-ascii?Q?MYZO3hSFePxIAh6kjzA0D5e5l3DnizBLeUDQkvHzMg8/26ROjpcr8fIjTzcw?=
- =?us-ascii?Q?/av3ea+Sc5NX0hXefyUNnOwzgqmOm7/Bqy7cdkIUzYk/DmgBQtLvAKW6Ooct?=
- =?us-ascii?Q?cm4FhRtNJX1sgdHDw/gDNZRiqTEaeq/qvTjbuzWqzi+QaT64BwHcaYDaj6a1?=
- =?us-ascii?Q?plmYeto93YTKqN0iFtGHxNzteVNUNdquMBf4quCgju0PVi81AXrmoTJUUVK+?=
- =?us-ascii?Q?sDDpNk2XqQBApLRqTj+mzywXwOCXiLfbuXYxMt9wKegTyXTqXQLGzCwzzxTX?=
- =?us-ascii?Q?P4szUVfEFFw/5i1SwAgwneg1LHChO7Kg1V+VGYSVKEdeNqYvLqz4lmhcfOQB?=
- =?us-ascii?Q?7CgpipNifOTpkO11Tu7A7Zgg9+NZTJjP6ELmskw8P98JdiKIkUr3yqr5zTuP?=
- =?us-ascii?Q?lc/3cDm3e26C99R/Em4zicbtOvbctQbwvzCq5mJwDe8KeBYxIkGeIyZr1xjb?=
- =?us-ascii?Q?9A=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	3G6v3EbYsL3vtTGUXnvLIWb0N3XcIa06hu1oERY8I/YeCjsSoGpv+27oJiVdOU+8DzOEiw/VxJt367zW25Hr+q/G9WLaHRADkV2XHHPnmzFe1TxhnKqeSEqrwVqGrBtlpHCw1M2fo6CLlgLDLnkh8zpcJb+RwAFqOusQgT05bRv6jf364usY3Rzdz6cdtk9GOp9WxL6aFSPL8H2eAweb0Lx5eHfpPHgKhUP53swes6BXgvbiMiKJOtNyRjbCfo92BXEXtuzO2ZJDy2gtC85ZHXib1tzjJTwy5dCXiijFyrCyQ8BGRjFUBsa7QPvoaxixqnWTXDse17CznSkypKE7JmeFOiIagypDgu7uvydZpeqLEHHF/cvfBVXiDw0/RGwSA92M0kQwHNza7IDnGKlnVlI4T98brPR0H8w/ksiD0r888sSAjjzo0rEkBXa3LaKIX6SN2tlIy+Vu73E2iSWhKzCtqE+M4+a/xDUL9l6aFPYUgACb2iB3inVLA6V0g1yqPGCST3As6s78sFKk4XnJK2Q3f8pPA376tSCo5wH2zVN3a3hIkoRDPj0pYqBEXNQGIEGjE5E3bLQ68nbOMANhscL2k7tlulsJsfMAczbEJb0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 646f9c7a-0f44-42c9-9e4b-08dd5fff5570
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 18:14:01.3093
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s++Kz4MDG2yNCYWUYGI3uhhndahi4e8f32Ohj61mw5zhqXNMcuSSgPNL/mPJ2ASg5Fez3ViQWPndWIY/6WJ0h3qmPNEhAW4al6idMBpOSJI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5687
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250227204823.758784-6-sidhartha.kumar@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HHbrunjQ8NBr49QfhYG8dEmYPX8WK_tO
+X-Proofpoint-ORIG-GUID: xmaX0HPPsKfch8W7iTDe0WskxktTlma4
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-10_06,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2503100142
-X-Proofpoint-ORIG-GUID: tXlxseul8CTNbVeTbeAOoujBh_uqWLei
-X-Proofpoint-GUID: tXlxseul8CTNbVeTbeAOoujBh_uqWLei
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ impostorscore=0 clxscore=1011 mlxscore=0 priorityscore=1501 spamscore=0
+ adultscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503100140
 
-On Mon, Mar 10, 2025 at 06:52:25PM +0100, Vlastimil Babka wrote:
-> On 3/6/25 11:34, Lorenzo Stoakes wrote:
-> > Finish refactoring the page table logic by threading the PMC state
-> > throughout the operation, allowing us to control the operation as we go.
-> >
-> > Additionally, update the old_addr, new_addr fields in move_page_tables()
-> > as we progress through the process making use of the fact we have this
-> > state object now to track this.
-> >
-> > With these changes made, not only is the code far more readable, but we
-> > can finally transmit state throughout the entire operation, which lays the
-> > groundwork for sensibly making changes in future to how the mremap()
-> > operation is performed.
-> >
-> > Additionally take the opportunity to refactor the means of determining the
-> > progress of the operation, abstracting this to pmc_progress() and
-> > simplifying the logic to make it clearer what's going on.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+On Thu, Feb 27, 2025 at 08:48:22PM +0000, Sidhartha Kumar wrote:
+> In order to support rebalancing and spanning stores using less than the
+> worst case number of nodes, we need to track more than just the vacant
+> height. Using only vacant height to reduce the worst case maple node
+> allocation count can lead to a shortcoming of nodes in the following
+> scenarios.
+...
+> Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+> ---
+>  include/linux/maple_tree.h       |  4 +++-
+>  lib/maple_tree.c                 | 17 +++++++++++++++--
+>  tools/testing/radix-tree/maple.c | 28 ++++++++++++++++++++++++++++
+>  3 files changed, 46 insertions(+), 3 deletions(-)
 
-Thanks!
+Hi Sidhartha,
 
->
-> Small nit:
->
-> >
-> > +/*
-> > + * Should move_pgt_entry() acquire the rmap locks? This is either expressed in
-> > + * the PMC, or overridden in the case of normal, larger page tables.
-> > + */
-> > +static bool should_take_rmap_locks(struct pagetable_move_control *pmc,
-> > +				   enum pgt_entry entry)
-> > +{
-> > +	if (pmc->need_rmap_locks)
-> > +		return true;
-> > +
-> > +	switch (entry) {
-> > +	case NORMAL_PMD:
-> > +	case NORMAL_PUD:
-> > +		return true;
-> > +	default:
-> > +		return false;
-> > +	}
-> > +}
-> > +
->
-> IMHO the "overriden" logic would be more obvious if we removed the initial
-> "if" and just had default: return pmc->need_rmap_locks
+Starting from this commit, the LTP test "linkat02" consistently triggers
+a kernel WARNING followed by a crash, at least on s390 (and probably on
+other big-endian architectures as well). The maple tree selftest passes
+successfully.
 
-Ack, agreed, will fix!
+[  233.489583] LTP: starting linkat02
+linkat02    0  TINFO  :  Using /tmp/ltp-8P2ZJL0mgN/LTP_lin3flG7N as tmpdir (tmpfs filesystem)
+linkat02    0  TINFO  :  Found free device 0 '/dev/loop0'
+[  234.187957] loop0: detected capacity change from 0 to 614400
+linkat02    0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
+mke2fs 1.47.1 (20-May-2024)
+[  234.571157] operation not supported error, dev loop0, sector 614272 op 0x9:(WRITE_ZEROES) flags 0x10000800 phys_seg 0 prio class 0
+linkat02    0  TINFO  :  Mounting /dev/loop0 to /tmp/ltp-8P2ZJL0mgN/LTP_lin3flG7N/mntpoint fstyp=ext2 flags=0
+[  234.690816] EXT4-fs (loop0): mounting ext2 file system using the ext4 subsystem
+[  234.696090] EXT4-fs (loop0): mounted filesystem 29120d07-e10b-43b8-bfb0-6156683a2769 r/w without journal. Quota mode: none.
+linkat02    0  TINFO  :  Failed reach the hardlinks limit
+[  239.616047] ------------[ cut here ]------------
+[  239.616231] WARNING: CPU: 0 PID: 669 at lib/maple_tree.c:1156 mas_pop_node+0x220/0x290
+[  239.616252] Modules linked in:
+[  239.616292] CPU: 0 UID: 0 PID: 669 Comm: linkat02 Not tainted 6.14.0-rc5-next-20250307 #29
+[  239.616305] Hardware name: IBM 3931 A01 704 (KVM/Linux)
+[  239.616315] Krnl PSW : 0704c00180000000 00007fffe2b6c314 (mas_pop_node+0x224/0x290)
+[  239.616334]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
+[  239.616349] Krnl GPRS: 0000000000000005 001c0feffc355f67 00007f7fe1aafb38 001c000000000000
+[  239.616360]            001c000000000000 001c0fef00007f05 0000000000000000 ffffffffffffffff
+[  239.616371]            00007f7fe1aaf3e0 00007f7fe1aafb08 001c000000000000 0000000000000000
+[  239.616381]            0000000001026838 0000000000000005 00007f7fe1aaf020 00007f7fe1aaefc8
+[  239.616399] Krnl Code: 00007fffe2b6c306: e370a0000024        stg     %r7,0(%r10)
+[  239.616399]            00007fffe2b6c30c: a7f4ff83            brc     15,00007fffe2b6c212
+[  239.616399]           #00007fffe2b6c310: af000000            mc      0,0
+[  239.616399]           >00007fffe2b6c314: a7b90000            lghi    %r11,0
+[  239.616399]            00007fffe2b6c318: a7f4ff89            brc     15,00007fffe2b6c22a
+[  239.616399]            00007fffe2b6c31c: c0e5fefc1f8a        brasl   %r14,00007fffe0af0230
+[  239.616399]            00007fffe2b6c322: a7f4ff4b            brc     15,00007fffe2b6c1b8
+[  239.616399]            00007fffe2b6c326: c0e5fefc1fa5        brasl   %r14,00007fffe0af0270
+[  239.616454] Call Trace:
+[  239.616463]  [<00007fffe2b6c314>] mas_pop_node+0x224/0x290
+[  239.616475]  [<00007fffe2b85ab6>] mas_spanning_rebalance+0x3006/0x4e90
+[  239.616487]  [<00007fffe2b87e7a>] mas_rebalance+0x53a/0x9c0
+[  239.616627]  [<00007fffe2b8c10a>] mas_wr_bnode+0x14a/0x1a0
+[  239.616639]  [<00007fffe2b9a87c>] mas_erase+0xd9c/0x1120
+[  239.616650]  [<00007fffe2b9acbe>] mtree_erase+0xbe/0xf0
+[  239.616661]  [<00007fffe0c3b4d2>] simple_offset_remove+0x52/0x90
+[  239.616674]  [<00007fffe093dc16>] shmem_unlink+0xb6/0x320
+[  239.616686]  [<00007fffe0bc0830>] vfs_unlink+0x270/0x760
+[  239.616698]  [<00007fffe0bd473a>] do_unlinkat+0x40a/0x5c0
+[  239.616709]  [<00007fffe0bd4a48>] __s390x_sys_unlink+0x58/0x70
+[  239.616720]  [<00007fffe0155356>] do_syscall+0x2f6/0x430
+[  239.616733]  [<00007fffe2bd3668>] __do_syscall+0xc8/0x1c0
+[  239.616746]  [<00007fffe2bf70d4>] system_call+0x74/0x98
+[  239.616758] 4 locks held by linkat02/669:
+[  239.616769]  #0: 0000780097e89450 (sb_writers#8){.+.+}-{0:0}, at: mnt_want_write+0x4c/0xc0
+[  239.616799]  #1: 00007800a7de6cd0 (&type->i_mutex_dir_key#5/1){+.+.}-{3:3}, at: do_unlinkat+0x1f8/0x5c0
+[  239.616831]  #2: 00007800a7de7ac0 (&sb->s_type->i_mutex_key#12){+.+.}-{3:3}, at: vfs_unlink+0xc6/0x760
+[  239.616860]  #3: 00007800a7de6a58 (&simple_offset_lock_class){+.+.}-{2:2}, at: mtree_erase+0xb4/0xf0
+[  239.616886] Last Breaking-Event-Address:
+[  239.616895]  [<00007fffe2b6c12a>] mas_pop_node+0x3a/0x290
+[  239.616909] irq event stamp: 5205821
+[  239.616918] hardirqs last  enabled at (5205831): [<00007fffe03d2be8>] __up_console_sem+0xe8/0x130
+[  239.616931] hardirqs last disabled at (5205840): [<00007fffe03d2bc6>] __up_console_sem+0xc6/0x130
+[  239.616943] softirqs last  enabled at (5200824): [<00007fffe0246b6c>] handle_softirqs+0x6dc/0xe30
+[  239.616955] softirqs last disabled at (5200687): [<00007fffe024508a>] __irq_exit_rcu+0x34a/0x3f0
+[  239.616994] ---[ end trace 0000000000000000 ]---
+[  239.617009] Unable to handle kernel pointer dereference in virtual kernel address space
+[  239.617019] Failing address: 0000000000000000 TEID: 0000000000000483
+[  239.617029] Fault in home space mode while using kernel ASCE.
+[  239.617049] AS:0000000005dac00b R2:00000001ffffc00b R3:00000001ffff8007 S:00000001ffff7801 P:000000000000013d
+[  239.617150] Oops: 0004 ilc:3 [#1] PREEMPT SMP
+[  239.617162] Modules linked in:
+[  239.617170] CPU: 0 UID: 0 PID: 669 Comm: linkat02 Tainted: G        W           6.14.0-rc5-next-20250307 #29
+[  239.617243] Tainted: [W]=WARN
+[  239.617248] Hardware name: IBM 3931 A01 704 (KVM/Linux)
+[  239.617253] Krnl PSW : 0704c00180000000 00007fffe2b6a988 (mab_mas_cp+0x168/0x640)
+[  239.617264]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
+[  239.617272] Krnl GPRS: 0000000000000008 0000000000000000 00007fff00000008 00007f7f00000009
+[  239.617279]            0000000000000008 001c000000000000 0000000000000008 0000000000000048
+[  239.617285]            001c0ffffc638e09 001c000000000009 0000000000000098 001c000000000000
+[  239.617292]            0000000001026838 00007f7fe1aaf608 001c000000000013 00007f7fe1aaef68
+[  239.617302] Krnl Code: 00007fffe2b6a97c: b90800e5            agr     %r14,%r5
+[  239.617302]            00007fffe2b6a980: 9500e000            cli     0(%r14),0
+[  239.617302]           #00007fffe2b6a984: a7740262            brc     7,00007fffe2b6ae48
+[  239.617302]           >00007fffe2b6a988: e548a0000000        mvghi   0(%r10),0
+[  239.617302]            00007fffe2b6a98e: e3a0f0c00004        lg      %r10,192(%r15)
+[  239.617302]            00007fffe2b6a994: a7b80000            lhi     %r11,0
+[  239.617302]            00007fffe2b6a998: eb2a0003000d        sllg    %r2,%r10,3
+[  239.617302]            00007fffe2b6a99e: e320f0f00024        stg     %r2,240(%r15)
+[  239.617350] Call Trace:
+[  239.617354]  [<00007fffe2b6a988>] mab_mas_cp+0x168/0x640
+[  239.617362]  [<00007fffe2b85bcc>] mas_spanning_rebalance+0x311c/0x4e90
+[  239.617369]  [<00007fffe2b87e7a>] mas_rebalance+0x53a/0x9c0
+[  239.617376]  [<00007fffe2b8c10a>] mas_wr_bnode+0x14a/0x1a0
+[  239.617383]  [<00007fffe2b9a87c>] mas_erase+0xd9c/0x1120
+[  239.617389]  [<00007fffe2b9acbe>] mtree_erase+0xbe/0xf0
+[  239.617396]  [<00007fffe0c3b4d2>] simple_offset_remove+0x52/0x90
+[  239.617403]  [<00007fffe093dc16>] shmem_unlink+0xb6/0x320
+[  239.617410]  [<00007fffe0bc0830>] vfs_unlink+0x270/0x760
+[  239.617416]  [<00007fffe0bd473a>] do_unlinkat+0x40a/0x5c0
+[  239.617422]  [<00007fffe0bd4a48>] __s390x_sys_unlink+0x58/0x70
+[  239.617429]  [<00007fffe0155356>] do_syscall+0x2f6/0x430
+[  239.617436]  [<00007fffe2bd3668>] __do_syscall+0xc8/0x1c0
+[  239.617443]  [<00007fffe2bf70d4>] system_call+0x74/0x98
+[  239.617450] INFO: lockdep is turned off.
+[  239.617454] Last Breaking-Event-Address:
+[  239.617458]  [<00007fffe2b6a8f4>] mab_mas_cp+0xd4/0x640
+[  239.617468] Kernel panic - not syncing: Fatal exception: panic_on_oops
