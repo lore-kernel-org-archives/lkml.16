@@ -1,148 +1,119 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0171DFE11;
-	Mon, 10 Mar 2025 21:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DA51E0E0B;
+	Mon, 10 Mar 2025 21:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741641207; cv=none; b=IrTnPQNc499OiNH4mGb46R4oDjdBa82uJxFVhLuz7Ji7TGqGXa+MImTFw4V9yIHhKS8O9M/gFtLhGC77Z8Nwi79hHYCLYM5gAcxOQ+4V1KgtQgcigZKwK9cBjn1gLNvidMvjJdqdyEkYc/6grC4vxGRaLPU7bJCl4ytJBZnxVo0=
+	t=1741641239; cv=none; b=upn8UEZyNUe4fy0uABe9mjy8htLsQfPBL/1GmffTLJ1vu9dYi1T+oltUeJnxZTA8gr/lMMKAVcazTTx39SSMlRBdY+snwskcPu6sIgegobqDLIKBqAhXDTGEYiG6c29q+8wB3/P1tzMlaRGPs7WoU3PyNyt1KeGLnJtPGkOn9K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741641207; c=relaxed/simple;
-	bh=c7IdIpJ3aK1Kf49zymxxQAucHQWnVIIvgDHXXSsWhr0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Y1d+VtIgBoBJx9EwtQbM3eXxqBpRTBqtbmDAJ4PuYnCw2tlnqnEzev96AftsNz1Xnhn5bSD7OX2t/AQT7B2W8kSesY6aWGXfZD/LO2qRFazKr90m98xIsIEc/XxlwlCg9xldzp38yF3kv3szk0xOZ95aRrjo1LMiTAocSwRlNjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JPiXPI3P; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741641239; c=relaxed/simple;
+	bh=ofonAGYkuJD+XxID+8fbp4tmBpONyoJozUMiWHGHFQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCXW3goRyaKJKMXmasOP5V2Rw5III1D7Op2TzrCywGGYFKiwwgfki4jb0I1P/iFTwIzEmvm2XKBiW+90o3nvnfCg+sJdoFXxSr69QmdMCh89y+4r6gw0uaNvzOqhq8ZmVsgiFQa6Q8CyUGztKNYl8ecSsDrpIBh/cL4cHd1G39Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNTnyBgv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JPiXPI3P"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52AKnRQk031779;
-	Mon, 10 Mar 2025 21:12:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4GBzjcKHWukf6zhLpvItoGIImOhAJr9aLYlHFn+XiGk=; b=JPiXPI3PSDS+gSSI
-	Iy4A++lHHAiESGNF5K22wtnpd9Q2aduLshQZdCJCgiaQ8Q9xpO3SvOJ4obdLgCWv
-	Y58RaLp1l4oil3mS3CeSjSqygDhpI6sDaptkuCdbcmsAQH8zv7+lJqSsxznKDkSv
-	TlyVGk21zOnxjKsWtGOzi4feDAuWd+8j8TQnhE4AnSQrTruTtVoyW2K0gpXWesJd
-	BMJ5TzDnVUyz7K3vlC9K4JsPLcKNodGJv1Vt5Ijo2++LOq3aHk58Q8qx3qkxWmIo
-	45C1MLje6bZYnIfY+OuZ6Ntufy5JmKaAtHIvCNqq1kS4uPyVntHoYJ9RNQ+QhgrM
-	RG8wsg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f0w65p7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 21:12:45 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52ALCiKg030315
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 21:12:44 GMT
-Received: from hu-molvera-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 10 Mar 2025 14:12:43 -0700
-From: Melody Olvera <quic_molvera@quicinc.com>
-Date: Mon, 10 Mar 2025 14:12:34 -0700
-Subject: [PATCH v2 6/6] arm64: dts: qcom: sm8750: Add UFS nodes for SM8750
- QRD board
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNTnyBgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F158C4CEE5;
+	Mon, 10 Mar 2025 21:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741641238;
+	bh=ofonAGYkuJD+XxID+8fbp4tmBpONyoJozUMiWHGHFQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FNTnyBgv5ZEXhsVleSIt/nVR2j56/f24Rg4RVedUFhX5n270mDWY6b0dr0Q0f4G14
+	 oy9OXWlXqizoY/fHnfvLTjOxr8jXxALGJYrs2jUx6n6kkltQ33LnqwQUahx04ifAEP
+	 PMrwASNRu4epFCiVK1FcJHK6xDtP9Oqi2qbGMc2BSQvCanH8uVgPEmp9d+rd9ruvTD
+	 LjaQUu/3cOx2BhU8ZdEszGUM9ZO9iFPXNXcIT02CvvpqEs8e0qdpAqION12AZ4Rgpm
+	 EiZMIx5XfgDBhx2dps5nH7w2g4OtqbfY6viJUoL9WPgkSMw3jJNEkw141OggFku+Di
+	 aIaqYbnloVKnw==
+Date: Mon, 10 Mar 2025 14:13:56 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Martin Liska <martin.liska@hey.com>, Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH] perf script: Update brstack syntax documentation
+Message-ID: <Z89WFKPIxWBgN6q2@google.com>
+References: <20250225061736.1698175-1-yujie.liu@intel.com>
+ <Z8q51Mcz/9QenjnC@yujie-X299>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250310-sm8750_ufs_master-v2-6-0dfdd6823161@quicinc.com>
-References: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
-In-Reply-To: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Satya Durga Srinivasu Prabhala
-	<quic_satyap@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Nitin Rawat <quic_nitirawa@quicinc.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>,
-        Manish Pandey <quic_mapa@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741641161; l=1189;
- i=quic_molvera@quicinc.com; s=20241204; h=from:subject:message-id;
- bh=TjNnq0bo1snKIna/Dt9u/bFOfXNFpyIpmhE3rd5HC1c=;
- b=4k+nCLAbdsqebqMnWPZDYbLvx3CFQfOLk9X17+RY8D/Eb/Ji4bI/lQvzQgZYpYF0ljwy8KKAL
- eNguARQqkpgCZA4WRJ8Un/S220aucSaDpv6bwBVzzNAQA6G9zJGRB/d
-X-Developer-Key: i=quic_molvera@quicinc.com; a=ed25519;
- pk=1DGLp3zVYsHAWipMaNZZTHR321e8xK52C9vuAoeca5c=
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: csiOHH4FMsuTJHyxewwws7iJj8ncP78O
-X-Proofpoint-GUID: csiOHH4FMsuTJHyxewwws7iJj8ncP78O
-X-Authority-Analysis: v=2.4 cv=MICamNZl c=1 sm=1 tr=0 ts=67cf55cd cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=3H110R4YSZwA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=hrXLu3QTvXQGvIIKRjgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_08,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=882 lowpriorityscore=0 phishscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100162
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z8q51Mcz/9QenjnC@yujie-X299>
 
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
+Hello,
 
-Add UFS host controller and PHY nodes for SM8750 QRD board.
+On Fri, Mar 07, 2025 at 05:18:12PM +0800, Yujie Liu wrote:
+> Hi, friendly ping on this perf script doc fix. Thanks.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
-Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
-Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sm8750-qrd.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Sorry for the late reply.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8750-qrd.dts b/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
-index f77efab0aef9bab751a947173bcdcc27df7295a8..8dd82494ba5aea6e6b5ddafc9299ec68dfb84bcd 100644
---- a/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
-@@ -790,3 +790,21 @@ &tlmm {
- &uart7 {
- 	status = "okay";
- };
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply = <&vreg_l1j_0p91>;
-+	vdda-pll-supply = <&vreg_l3g_1p2>;
-+
-+	status = "okay";
-+};
-+
-+&ufs_mem_hc {
-+	reset-gpios = <&tlmm 215 GPIO_ACTIVE_LOW>;
-+
-+	vcc-supply = <&vreg_l17b_2p5>;
-+	vcc-max-microamp = <1300000>;
-+	vccq-supply = <&vreg_l1d_1p2>;
-+	vccq-max-microamp = <1200000>;
-+
-+	status = "okay";
-+};
+> 
+> On Tue, Feb 25, 2025 at 02:17:36PM +0800, Yujie Liu wrote:
+> > The following commits appended new fields to the end of the branch info
+> > list, such as branch type and branch speculation info.
+> > 
+> > commit 1f48989cdc7d ("perf script: Output branch sample type")
+> > commit 6ade6c646035 ("perf script: Show branch speculation info")
+> > 
+> > Update brstack syntax documentation to be consistent with the latest
+> > branch info list. Improve the descriptions to help users interpret the
+> > fields accurately.
 
--- 
-2.46.1
+Thanks for your work, but can you please update it again with recent
+changes from Leo?
 
+https://lore.kernel.org/linux-perf-users/20250304111240.3378214-1-leo.yan@arm.com/
+
+Thanks,
+Namhyung
+
+> > 
+> > Signed-off-by: Yujie Liu <yujie.liu@intel.com>
+> > ---
+> >  tools/perf/Documentation/perf-script.txt | 16 +++++++++-------
+> >  1 file changed, 9 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> > index b72866ef270b..8bd105084280 100644
+> > --- a/tools/perf/Documentation/perf-script.txt
+> > +++ b/tools/perf/Documentation/perf-script.txt
+> > @@ -239,13 +239,15 @@ OPTIONS
+> >  	i.e., -F "" is not allowed.
+> >  
+> >  	The brstack output includes branch related information with raw addresses using the
+> > -	/v/v/v/v/cycles syntax in the following order:
+> > -	FROM: branch source instruction
+> > -	TO  : branch target instruction
+> > -        M/P/-: M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
+> > -	X/- : X=branch inside a transactional region, -=not in transaction region or not supported
+> > -	A/- : A=TSX abort entry, -=not aborted region or not supported
+> > -	cycles
+> > +	FROM/TO/PRED/INTX/ABORT/CYCLES/TYPE/SPEC syntax in the following order:
+> > +	FROM  : branch source instruction
+> > +	TO    : branch target instruction
+> > +	PRED  : M=branch target mispredicted or branch direction was mispredicted, P=target predicted or direction predicted, -=not supported
+> > +	INTX  : X=branch inside a transactional region, -=not in transaction region or not supported
+> > +	ABORT : A=TSX abort entry, -=not aborted region or not supported
+> > +	CYCLES: the number of cycles that have elapsed since the last branch was recorded
+> > +	TYPE  : branch type
+> > +	SPEC  : branch speculation info
+> >  
+> >  	The brstacksym is identical to brstack, except that the FROM and TO addresses are printed in a symbolic form if possible.
+> >  
+> > -- 
+> > 2.34.1
+> > 
