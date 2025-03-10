@@ -1,225 +1,418 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2087.outbound.protection.outlook.com [40.107.212.87])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2071.outbound.protection.outlook.com [40.107.20.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB921DE3DF;
-	Mon, 10 Mar 2025 20:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775C9139E;
+	Mon, 10 Mar 2025 20:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741637810; cv=fail; b=Cx6fHqJ5BeVYBsCSK+htYtaL8dadl8XMSESBW14KD7KHyfjZk4ChLlvDDyq849o4RbVxQ7cBsH9rmpcCojlTF9q4gyH6CsqBVHAo9cKBREGSCguNlhNOTWQBSQE4T2IBbx8kkCWuLzbrw1181xWYAaBdd5KdmfaIr2+qOntmC0g=
+	t=1741637846; cv=fail; b=nWsooqUbaaKe6pqmt2gpvEpRZApI9p3dOPY6g1TRNVdoL/u2hJdOjHmkdVJaty7QAE+pNKBgJk0HGKtv2neI3C8GMZXD3V5b6V+Lbx5S4n15dJlHG1AiKXP02hJHWrSNURtHZQZbY4N9M2a9D7LTUpueWn/c4zL17D59B4JrtOM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741637810; c=relaxed/simple;
-	bh=aInZDTNxUqlgn7k4ej2ewwvEQ98YxwwzGS6F7ejLDVw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=txmWFh6KuqvKY/WEixrH9HHmK5OMCY33iU8Qk242LKkA11ahM4AY3wSiPm44haKEE019fk3bS1WeJ6vkgCKF/YWFxtIb4gNXpVc1WQc9AWq6+mbw72so4s4jbSseRDT3gpIoIUNv2SQRMLADAXz3oSZQX1jwKs06PZOWPhgSa1w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xjxBpnyW; arc=fail smtp.client-ip=40.107.212.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1741637846; c=relaxed/simple;
+	bh=rpjV8ib+BKGHKp/ind90+7pvN3dGLE63Xta+NCdFcT0=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=CQUgBUk2o1fr31U3MN4nZ29EtsmaeNjcUt3SYnXUC9/7RF0CBXzd0jwdZarp6gL9O0Vd8akcFI2rwzzBFr4oS2lmvVAbfB4xAUYbzgYQd9Jxc38c+GGR0J0ZzZ7v3t6I/m157OuwbM3eDxl2tyibiiu9zfyVx8M+/KK/btQxjWQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=VwGZ6Adn; arc=fail smtp.client-ip=40.107.20.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xjxBpnyW"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="VwGZ6Adn"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t/zckCp3w/E7qkYayhPHntAgVtearpkdc0olQBoaQG9+fOe0RPjQdZVvymMJIRtQfNIYHLjtqmStBSDLdMzNxhfs/zgcVkvTC/prRiYRbUGTeyJGICf8xKzUm1pA8Yp/aMt2M5Iyl0DhH1VgcX7GhN+sPG3Npb9n2dgORzsz1HVy3HuJvJ6QsBGqssX4ovu2oG7rINsMO61nmQYhjkBMne4B+xIAMcN8Bz20hrF4y9JUX7Zhrp3BDzcAd5VKzoZUstnQaVFv/6uR25tJOOx41Usxbtid5NvfV0AqQfxP1pj5mG4KkdF4+WWDd9haU0uOTdFbVWl2tcBvraOYpBSkQw==
+ b=xTTCydPAyancnASEZAdX96zAVk3RW+iPkUyZkwFUnD2OLeSVDczsfvNBVNPjeW0PL4rXkgZb5JysnVVN8uSjPjms12PNdcQZ1MjFSw+fHR/DQzszUHHnRq+MHrgaUWFzECya+oEYHPdGxmTdgYu+xodHSV2q0Jr3aoSGY+IEfqJ3zQPJuMg4KOIQ682vdyvcWbiy99NvWhgTY47Xq0/NSQY/EGVpoDlc6TuE1SqBq6LvpBRGXwMCWw5/PbPV+ZTzLAOslj19BP1FtEj/fYundUXHTULW1gHwZ8E0EYqanv36sXF9mySiG4VFgeVRvqoj09ScXW8ytBbvZXthVkW37Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sOCJnVgnKswO2yh9nLDr05lx4KcdCz2+eOfPJTDkydA=;
- b=OeOZ6iSHntzSer/4ydRDbZQsr7tUJgJYRFItIQsa9qETaX3jPFI9slobHKz/XxNjSkm3PIRZbK/DMjBPkPn4F07p2tiXDSXIS+9VA64YoYpUN+dg8MJ4hrrejXqhJipTNZ+t5kCdIXyiVLKA7EsQ7RVrmPssHDExO9OZNzT8RqQZZF3/4Q0AO/dyfDXboMIU0yC8KCumrb3Dp8tthv5eoSTcV2CyjImpHpn1BkX0VBqwRG4U1oFk+Vvj4k4Kb4X2VmYyTtYe8rjgHRTDgx/idqV3m51wFb1yS3VwcfHXvrrsrVTmeYoSE1U2dvR/IpOqyw5zUyTz6eKshzqZFeokLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=n4ZxVERpLvmkqGZ7PjYCz4nQIvKyVijJa/+tDJTgiIs=;
+ b=vthuJ99dwJjFYR2Oj85TbxjFpr7yg460gD19ipPOBXpNTdyfFLlYh2nNasFzh8IDQvYnG0c2oeyPYEi8Hs0jg8apbkVnRGv65mj2oMUS9W/gDuXUVfpIFrl19nWkywOHy3B4S1EZjOij/86oSbvAVp8yYlAaOSKdTtJt0mrhAEnSiuNegiCB3LKCoFB4WPg8RXm7XkWlrp3qrt0aFahq+AI7A+hYo6KrkoiCFEvcsLgM+xT2bFgLzFY8KUqjHm5tEYMQcC0qkytWVHhDyBlK94WExWadsTZbnxK9SCka1acaMzd9HajXI+XIBgJuEoadO62xuQF/fqK/nU5hC/muKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sOCJnVgnKswO2yh9nLDr05lx4KcdCz2+eOfPJTDkydA=;
- b=xjxBpnyWTbmiGgTtgK+u916RaPHSCtuvLzRI1O0vP7iHjYKul045QPR6/djDxtAWSC5bJaxGlUH9JS6C12zxsLqCH6jeiHpgK4K09ypsYyPqKQMZ7u6faDhMTp9Tkf0FftdHYMVzcRn9pJQRbX116koBQ7k3qMaZXaTljnrelIw=
-Received: from MN0P223CA0024.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:52b::31)
- by SA0PR12MB4496.namprd12.prod.outlook.com (2603:10b6:806:9b::14) with
+ bh=n4ZxVERpLvmkqGZ7PjYCz4nQIvKyVijJa/+tDJTgiIs=;
+ b=VwGZ6AdnPO6EJcVtCsesVb61xO6u2BGAfnf4Nvx/TQimAxdi13WdKv1orRjp8sNZq6W1T8dyFU8aJRuBQmwtaL5UvDc6gzH7uLA2f5CKEVkyFtX5GGI/g1XdJ32ir2VjcH/XZMifdXLGYZp3bc255yPdHUd5pC5GRrX8wSTUPAPDr29dR50FSSFbJ3u5W+UQOZc+QbjdwQUv4P3P0yaQ1ve5oVWH3Dk/WL6xNAJNiqrg/UsZJLEWoTLHUd3GbtgrNhu0bog1k3KNZwr3kxeVvjrDyWwvG9TiVU+eNviH5OJUfN10XW5bixIKqSdiPrMPRiFlBmkXQO3SO85o2c5KXw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by GVXPR04MB10682.eurprd04.prod.outlook.com (2603:10a6:150:214::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 10 Mar
- 2025 20:16:45 +0000
-Received: from BL6PEPF00020E63.namprd04.prod.outlook.com
- (2603:10b6:208:52b:cafe::61) by MN0P223CA0024.outlook.office365.com
- (2603:10b6:208:52b::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.26 via Frontend Transport; Mon,
- 10 Mar 2025 20:16:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF00020E63.mail.protection.outlook.com (10.167.249.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Mon, 10 Mar 2025 20:16:45 +0000
-Received: from zweier.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Mar
- 2025 15:16:44 -0500
-From: Kim Phillips <kim.phillips@amd.com>
-To: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-CC: Tom Lendacky <thomas.lendacky@amd.com>, Michael Roth
-	<michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, "Nikunj A .
- Dadhania" <nikunj@amd.com>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
-	"Naveen N Rao" <naveen@kernel.org>, Alexey Kardashevskiy <aik@amd.com>,
-	"Borislav Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"Sean Christopherson" <seanjc@google.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, "Ingo Molnar" <mingo@redhat.com>, "H. Peter Anvin"
-	<hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v5 2/2] KVM: SEV: Configure "ALLOWED_SEV_FEATURES" VMCB Field
-Date: Mon, 10 Mar 2025 15:16:03 -0500
-Message-ID: <20250310201603.1217954-3-kim.phillips@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250310201603.1217954-1-kim.phillips@amd.com>
-References: <20250310201603.1217954-1-kim.phillips@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Mon, 10 Mar
+ 2025 20:17:19 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8511.025; Mon, 10 Mar 2025
+ 20:17:19 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v10 00/10] PCI: Use device bus range info to cleanup RC
+ Host/EP pci_fixup_addr()
+Date: Mon, 10 Mar 2025 16:16:38 -0400
+Message-Id: <20250310-pci_fixup_addr-v10-0-409dafc950d1@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKZIz2cC/3XQ207DMAwG4FeZck2Rk9g5cMV7IDQ1J5YL2qqFa
+ mjqu5NOgrULXNrR99vOhU1xzHFiT4cLG+Ocp9x3peDwcGD+1HZvscmhNJgAgWAFNoPPx5TPn8O
+ xDWFsWkPKJOuck8gKGsZYXq+JL6+lPuXpox+/rgNmvnb/jZp5Aw3pwLG1PHpMz915ePT9O1uDZ
+ rHFqsKi4IgkkJDHkHCP5QZLqLAs2ECMGiSJ5PUe4y/mAKbCWLCgSAJAkXZ+j2mDOVWYCvYxECl
+ vSGjYY7XBop6s1ptddD6YFDDdfZjeYlthvd4sOQQvMDl9t7a5Yc5rbNa10aWWuJXCmD22P5iA/
+ 7G2LVgW7QhUUopueFmWbyZt4LOTAgAA
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ Jingoo Han <jingoohan1@gmail.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741637834; l=10919;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=rpjV8ib+BKGHKp/ind90+7pvN3dGLE63Xta+NCdFcT0=;
+ b=op5b7GvUiifPIGi1CUkzaoEyibor57K9ogmlwrQvxpWavU1coiWPdKs3NfX5DO36nWR15FCVH
+ 5BJstYMCj12CRG0bHkOTcgn+EduAkxvivfY34Ea9ZOjLlwWRp1QWxYs
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: BYAPR08CA0058.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E63:EE_|SA0PR12MB4496:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2bd8057a-5384-4e4a-1373-08dd60107ae8
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GVXPR04MB10682:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77604d17-9935-4f11-7b71-08dd60108f21
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|7416014|376014|82310400026;
+	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|921020|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kTDWTajjJVdBEEWQMxOSXUoSWghPEgVurmaFUObKERN9kw5N8EZN3LiGKcXO?=
- =?us-ascii?Q?OZoBikgpEnhgFiRT7705iGHHxT5PwkbsCFN9bB5wJJXqjlmpzMn22KO+jhfn?=
- =?us-ascii?Q?jjVvpJEzB5adPOU/TBpientUBPLOwPl9CRIOA553b6EmDZtxAEHleOGj0Kgx?=
- =?us-ascii?Q?OM/ncN8DafjruKQWzq/dqbpStdl5SvE3SPaXCEkBi7BN9KuI/YBH6mqtkD0Y?=
- =?us-ascii?Q?/J7GDP0Gc++JwW7/AQ77qS3LxdY+cZvV1UyQ2E3Xzxb+Mu79AMjc/GXX9rGW?=
- =?us-ascii?Q?E5bSHfBhnu35mY7lkAiGcIj9sc+ka4T8tOmzhYvrFgFTcPa4ftogYszIZa6V?=
- =?us-ascii?Q?scPYeUkHC00hJY3Y4H/QBCmWT1loL0VloUoLp+qke3QdjbQqSqtDe6jzEwHn?=
- =?us-ascii?Q?euNRUG/JehsbvV1VPKLodDY47kvFBYAieukl1mtH7BH1sSXIrGU/j8Rbp6vG?=
- =?us-ascii?Q?xfHb88OeLmXYDKsMuIKVquNAQh9dLxClsKzCO3CElIXguM7NSP3Tq1uk3Xoh?=
- =?us-ascii?Q?otOOrq9TFf3CiJq+d6GMjtKRmbqCuBBcte38UB+zQrQ7Xl7C3nSSd5VrC2Rq?=
- =?us-ascii?Q?zn0LgqHK5ynfq5812UOqjscqvJ1gAIksY9w68JbnQSIdX9pTIeBuxT6pkLr/?=
- =?us-ascii?Q?hgkxxP3r3B2JHZSIEgRJwkvTvy2YRSo3H5mVV3tDUZmXF4X+xIjw/Bh8kx1D?=
- =?us-ascii?Q?LgRPLRa+26c9khWiTVT8PK82La9tl4QdATwN8P//hS6oJsOxKboGwKu+Ufh4?=
- =?us-ascii?Q?OR0lIL2XeD0UaZNXZF6AHRR9w4Spfw+0vwU0X9lHPg9g0oh77R3Co835rtpS?=
- =?us-ascii?Q?zYpNlS++vCMsWPfrPKpuFpZfMhx8lI2ejqiOxocXNbpk436oYBWNaxaT1rXt?=
- =?us-ascii?Q?G1TAS1CHC6/7jGNS2C2Klf+Boux0ydlTZVHQFJAE7zvDcYV3nSjolalS0kKP?=
- =?us-ascii?Q?7bxiwe1nz5JRIwdcN8CGKTVgr/0GwGHfcNnkl9gS1QpQ7de+9qOTjdrmnicf?=
- =?us-ascii?Q?MjU44DLIIMUnAMJiNqCUEf9wmDt63SqL42dfgdKGJ3gVlLXYq6rd7KeyXj7B?=
- =?us-ascii?Q?VonQM5pJr6qbEYkW3kXcKg699LnJxf8VjUQUbPl1sepAnq7xP1U1mC2Mjbjh?=
- =?us-ascii?Q?0XQaAUw2lx7QuMtus5cKWlLhOKBRTxMWItHw1kmqwQOHvopyNdkSv93ucdgi?=
- =?us-ascii?Q?pL4fZCQKkfkP5BESugu/SCqZvgtYInMmSh7vGo6VUGdXX+JTWOgUUAlXNbqJ?=
- =?us-ascii?Q?e4J60xf3jnWFZTLsnAJCbTuHEV57UgKilPXl9OtM4y6Z8oO7BnMdO5y6aWMY?=
- =?us-ascii?Q?FdzzP+mH+zUUna/VIxwpfY3QeFr9bL4NbCp/EwfybvsQVO+XxB6ZdnHekdRx?=
- =?us-ascii?Q?viF9VRSWvqrJNRhXlU95Yh9ZzbMMpgHVDOclZJ6c6i6h6I4XO+4C4HokroXD?=
- =?us-ascii?Q?kD1cr/+DJL8=3D?=
+	=?utf-8?B?UkhLQWR4WUVwaFlDVGw3czZYMGhobTY5dDl5WmJwWkp6L09jRzdHV2N1QVJl?=
+ =?utf-8?B?Z1dtTFVYYlVyaUxVdUdCdGRXK0lOOSs4S3FleHhNZFZ0WTRMOFJkeFduMnVj?=
+ =?utf-8?B?a1NxTTVpV3lYQ0I5U1IvZ3FxczE3WlFhbDNPbDRyQUVGOUttdnpXaTQ5ZFIv?=
+ =?utf-8?B?dnBKbkM1TE1nTUZsazB5TVlERzIxUVBaanVPTDNIN0NRZ1dIMGdINC91cVNV?=
+ =?utf-8?B?ZWx0MVcwL2plOVg5YzcydDVkckJ0OVBsWll4cERzQlRTaWdKblBNN0IxQ2Jj?=
+ =?utf-8?B?SmFESHJDK2I5cy9tNzY3ekppbkpHWG52TDNuTnM5MmlqT3g5V1lWTGZyQng0?=
+ =?utf-8?B?U0E1dEtpcDRHNEp5L1ZZcy9XRjh3a3VldFZwOEhSVDh2SGlycWFRUlo2Q1Vl?=
+ =?utf-8?B?U2c2YmRHem5zWGxCQlNJV0RWbzhYSjk5UnJmbEhMeUU1YkdxNUVaQjlReFBo?=
+ =?utf-8?B?blBHeW9Fdm5LU2hJNUJyWDdHSEhxY3k1MGcwS01hL3RNbGI1MlUvci92cVVk?=
+ =?utf-8?B?U1ZoMzNLVmJvQUFYdGxFZkxDNTU5UTFlU2lGSUVFM3hvT3dkbUIwM0hGVC9M?=
+ =?utf-8?B?a0RMMUh1cHZxVDdFK0xVeFAzOHJ6NDZBdG5oS3V2dEsrZ1JJaUIxZXgyTnIw?=
+ =?utf-8?B?aUhJVDQ5TzVwekdIbGMwNkViTy9kZHAzQ09CSUFwS3ZDRHRxVTdYeHBlWC9P?=
+ =?utf-8?B?RFgvMkYyZmxvaDJsL3lib0NleDkrZ2xjR1JpTHZuNm4xTnZYUnViT08zaGg1?=
+ =?utf-8?B?VmdBOGhxQTRVQlFDNVFheHh1THVxdnJDOEp0VzNWY3JPdUNrSkN2K0tsSFRK?=
+ =?utf-8?B?N2Q5U2tsZEJPZXBLNFlSMTUvamhXWkFXVnhlU0E1THo0QXFqWVpKOFZKS29R?=
+ =?utf-8?B?RUcwOTl2NDREcTJxK3ROUWFVN0VzdHVwT1VvMVpkRko0ZytPY0dWQ3BXaSts?=
+ =?utf-8?B?d3dCYlJtM0t4eUQybmswb2RiWTdFUXduL2p5VTNxTmR6c1hwU2xaMk51RTN1?=
+ =?utf-8?B?SGN4UDRIektUSnB5ZmZDVVF0M0t3WkNHRGl4U2NJa0o1eGZYU3Bjb2k5N29M?=
+ =?utf-8?B?emo4Q2VxL1RrN3VKc2M0U2lRbU9qRmhKU3NjZjYwbHpUOTZjZlpObTJQQ1ll?=
+ =?utf-8?B?RjlxMFcvZEUybDVxUVZlQVZiN24xMGNIZmJId2J6cGRKbGwxUzg4L0tXVFRw?=
+ =?utf-8?B?UHo1VkVjL053SG4xMXRROHcvRzkwbkU0ZjFucmYwWld6cHlLZVF1QytmdTJr?=
+ =?utf-8?B?WnFJMG1hRU9GQm1GSWd5WGNxWE92TzY4a0JRNjB1aUVDSEhsQnVVQnR1L25x?=
+ =?utf-8?B?UWFaZEN4Vk5TN3UzUXhRLzBWMzI3RW9JN3RzdDdCcTB2QittdzlUYldjZW1X?=
+ =?utf-8?B?RytvZENTa2hxOVdKeGoyV1ZyTmJCUHd3bmtMZTl2S0hWbVQvQm9PaC9wU29k?=
+ =?utf-8?B?RjNBTlIxV0ZlR0hOMFkrQkUwWHhXa2laOGNSS21VNmJYckZZNHJXWWg2NGwv?=
+ =?utf-8?B?R1dMNEFZVm0wSk90Y21JNzEwNkMzK1NXV1lBS2RLSWFmKzEyMUI4RzRndk5C?=
+ =?utf-8?B?MFg1QlJXRUlheTd0NzFlU3VzQkdnSTRKWkoyeFZVSURDeHZjSjUwb2xXZ0Iz?=
+ =?utf-8?B?NFZQSDNDZVlmd01aMEhESnhnTEViUG5KK1JMdFRKbzRhN1laaTl5U2tBTGhN?=
+ =?utf-8?B?MndDUjZLTWN0KzE2ZVRjbkhuWVExR2xhdkZhTUFlSGN4TENIMDVISnZ4aEJv?=
+ =?utf-8?B?WFNIUmhSekcyMmtBRE1vYVhxRktWdXBKLzRBV3N6S2VWbndkWDdBQ3VtWTNi?=
+ =?utf-8?B?K09WM3Q2MmtUTnpsaUhydDArREM3YSt2aXBqY1Q4S2pkTW16bXh0dlEwUDJK?=
+ =?utf-8?B?NW8zc2FpM0FNTHRWcE13NFpzdTFBM0M3YURRUGpMeEcvNGRsRjJoUTBKelgy?=
+ =?utf-8?Q?KQJGFJa6uKE=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 20:16:45.3938
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Mjc0cUU2QkRGdjJXSkV5ZDZYUFpLamxLK1JBSjNObCtKNjY2Unk2SVpWYitR?=
+ =?utf-8?B?MjFZaDF4OXFsU3NCM3M3ZGJBNWZPM3pXV05DcWVnSENqemNWWUl0b0h4ZmZ6?=
+ =?utf-8?B?OUFRWGg3N0cxTlJnK3ZpekVTazFrd0IxVmduVnVUUkNXdHp5YW5XZTdjNTlR?=
+ =?utf-8?B?Y3g4anRNajlmM3BBWjdyV3lESlo4UDlzL0Zlc0FnMFZ1alp0S2pPTi8ySFcv?=
+ =?utf-8?B?cDJvbFg5b2FST01YNG8yWnpmUVFXZm5FOCtuSG1RY3hyVVVpQnZ3S1NhSFJ6?=
+ =?utf-8?B?empXNGplWHRaNy8yTnhoY2t6QktEdXlETEJYSWIra2VsTUFMaTh2YnlJY1pt?=
+ =?utf-8?B?UUxHQzdQZjBNd3g4UnNnNURkZDVtTGJlUWRDbTF5R3FnRGlERjlrcVYvSGFa?=
+ =?utf-8?B?U0xkcVcvMkorZzM5ODEvOWhlMzBZWWlOZjVYdDFTdzNWeHVGQ29zQ05ENXFL?=
+ =?utf-8?B?SmF2cjRCSE03eHRrMmZFZzR6Mm9DSjVrZ2NYZzBpUmY3TWpTK2JKVXB6ZnJ0?=
+ =?utf-8?B?R0NiNk56cG9Dd2FXWURaVUhZeDRtSFFFOEg4MGEvOWd2T1B2T3B6dnl1ZGRh?=
+ =?utf-8?B?WVdZUE9NbnVQL25OWUxLVFJlaDUzSk05N1V0RVZRNUlGL3ZOV1M4QTBTcFhN?=
+ =?utf-8?B?alNmNFhGTWF4QW5sWEt0UDY1Vk1aMmRaaGZNck4yM3crV2sra1VUVGQ2MWZx?=
+ =?utf-8?B?b1VQLzlLMlQ1OFVEVW1mcysxT0E2bG9TeEI5ZGtxWmRBWVNJSVFMcDEvRjdB?=
+ =?utf-8?B?ZDdQeE8zaGZMOWNEWHFQQU1kdnVFT2dZd3pBbXBRaEJycnNldGtnUkJ0MnFK?=
+ =?utf-8?B?azRhMm95RTB4bmRoanVub2g3bW90Q2hLWUp6MGtuZno0M1llczZTTDBQajE0?=
+ =?utf-8?B?YWhoejdQeVZvMmFiM0c2dG9PSWVBcmdGRmpmRW1jVzlORG9NMEdLNldyWi9z?=
+ =?utf-8?B?eElLT25uK0NqVktqclJLNHE5R3FFNWxFV2gwRkkyNEo4NGlna1U2L1piNjVD?=
+ =?utf-8?B?UHJmUW94dnFWeGp1aTR0NDVuTWRVSmhzVmpCd1M1bmlEMzkvMWVzOUFCdG0x?=
+ =?utf-8?B?R0hNZEZYSFNZUy9qSm5JZHhLcVRKOUtsQnpkcHJVSTUvZmtTSGErSk00QmxE?=
+ =?utf-8?B?R3dLVW5GOXMrdHBDYVRlclNjdGkrbzc1cjhBRDVtM1ZkOXVySGxsdzZRUjd0?=
+ =?utf-8?B?VE5LOXJTUnU0NzEyS01NdEVCM3VZRHBNay82cjBZNmlibGpqeVY5VGtoUDcv?=
+ =?utf-8?B?RklWdHU0TmFPU3oxdUpyMnkrOThHVE1KdW01Nm5ZNjUwNXFIVHpzSDE2b0o3?=
+ =?utf-8?B?Q3B5VmQ3aGlsU2xxUFZKN3hMNHRLNmNJNm9wdmJXclFub1RDYklVVHdmZjNJ?=
+ =?utf-8?B?UGM2b2dYUnVCbzlrKzUwT1E5bkFHYnF1bm1PeGVUV1k0K3FjWkdOYlF1VCtp?=
+ =?utf-8?B?WVRsQmNEb0s0TnRGd1lubDAwMnU2NU45Q1FVWjgwUjgzRnFwK2hqRFVZWVRE?=
+ =?utf-8?B?MTRKcGlOOGZVOGwvbGtqSHJ2V3pHUEVSUGkxVU5ReWhLdWl6dWh4enpMSVpI?=
+ =?utf-8?B?VmxqVU1qUzFzQllxeCtibUlqTXcxMGdzbFM0MGJjQmRWY1pySnRGMm9BNWZx?=
+ =?utf-8?B?R2ltR2plaVNjQ0xOaW1aK3V6ZUdXMEdxMXNqMEd6N3JmbVlHRFp0aUZTSWFz?=
+ =?utf-8?B?SGxZUkwwa2FMYS85MFh4VVI0a1JtYzl5TVpNMHk2blF4UFExNjRHeklzQXRT?=
+ =?utf-8?B?bmpZdGYvY2ZxZzdHbytJREowcWhaNmlVU3g5djBoZExQRDVBcklLSG1qTkov?=
+ =?utf-8?B?SjZhb0xpaE1lZHFBdk5wdTJWQ1VBVjI1eURFTmlTNWk0UkxRS0hXOWtoRW12?=
+ =?utf-8?B?eTdDUTRWWTlaQlFQUEZWWkNUUjg0VjNtbnBYVU5sa0o4bm80WlNuaklnNGlI?=
+ =?utf-8?B?QnV5RlBlZE9PMDd0TUs3b2pzKzRmb2RnS1kyK1pHNVhSNFRjMFRTb1ZNUy81?=
+ =?utf-8?B?c1AyK1hDUzFLS0hRRDFXSkx5Y3BhcjdvTFE5akVlNUFXYlFhNS9xazRFRm4r?=
+ =?utf-8?B?KzkvQjNQcmZ4UWIrR1JQK3hnVzFWZXJ4MlVNc3dKcm9zZWNqd05DdCtRY204?=
+ =?utf-8?Q?0k2s=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77604d17-9935-4f11-7b71-08dd60108f21
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 20:17:19.4960
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bd8057a-5384-4e4a-1373-08dd60107ae8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E63.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4496
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Yr1I3Q+s56GY0CE/TkSsf5JFRFcCPwK+NzdnbyBdw9wwcgBeOB+JgPjsUHmgMCQy2RjpDCNUJ2J7E1c9mIYsjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10682
 
-AMD EPYC 5th generation processors have introduced a feature that allows
-the hypervisor to control the SEV_FEATURES that are set for, or by, a
-guest [1].  ALLOWED_SEV_FEATURES can be used by the hypervisor to enforce
-that SEV-ES and SEV-SNP guests cannot enable features that the
-hypervisor does not want to be enabled.
+== RC side:
 
-Always enable ALLOWED_SEV_FEATURES.  A VMRUN will fail if any
-non-reserved bits are 1 in SEV_FEATURES but are 0 in
-ALLOWED_SEV_FEATURES.
+            ┌─────────┐                    ┌────────────┐
+ ┌─────┐    │         │ IA: 0x8ff8_0000    │            │
+ │ CPU ├───►│   ┌────►├─────────────────┐  │ PCI        │
+ └─────┘    │   │     │ IA: 0x8ff0_0000 │  │            │
+  CPU Addr  │   │  ┌─►├─────────────┐   │  │ Controller │
+0x7ff8_0000─┼───┘  │  │             │   │  │            │
+            │      │  │             │   │  │            │   PCI Addr
+0x7ff0_0000─┼──────┘  │             │   └──► IOSpace   ─┼────────────►
+            │         │             │      │            │    0
+0x7000_0000─┼────────►├─────────┐   │      │            │
+            └─────────┘         │   └──────► CfgSpace  ─┼────────────►
+             BUS Fabric         │          │            │    0
+                                │          │            │
+                                └──────────► MemSpace  ─┼────────────►
+                        IA: 0x8000_0000    │            │  0x8000_0000
+                                           └────────────┘
 
-Some SEV_FEATURES - currently PmcVirtualization and SecureAvic
-(see Appendix B, Table B-4) - require an opt-in via ALLOWED_SEV_FEATURES,
-i.e. are off-by-default, whereas all other features are effectively
-on-by-default, but still honor ALLOWED_SEV_FEATURES.
+Current dwc implimemnt, pci_fixup_addr() call back is needed when bus
+fabric convert cpu address before send to PCIe controller.
 
-[1] Section 15.36.20 "Allowed SEV Features", AMD64 Architecture
-    Programmer's Manual, Pub. 24593 Rev. 3.42 - March 2024:
-    https://bugzilla.kernel.org/attachment.cgi?id=306250
+    bus@5f000000 {
+            compatible = "simple-bus";
+            #address-cells = <1>;
+            #size-cells = <1>;
+            ranges = <0x80000000 0x0 0x70000000 0x10000000>;
 
-Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+            pcie@5f010000 {
+                    compatible = "fsl,imx8q-pcie";
+                    reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
+                    reg-names = "dbi", "config";
+                    #address-cells = <3>;
+                    #size-cells = <2>;
+                    device_type = "pci";
+                    bus-range = <0x00 0xff>;
+                    ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
+                             <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
+            ...
+            };
+    };
+
+Device tree already can descript all address translate. Some hardware
+driver implement fixup function by mask some bits of cpu address. Last
+pci-imx6.c are little bit better by fetch memory resource's offset to do
+fixup.
+
+static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+{
+	...
+	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+	return cpu_addr - entry->offset;
+}
+
+But it is not good by using IORESOURCE_MEM to fix up io/cfg address map
+although address translate is the same as IORESOURCE_MEM.
+
+This patches to fetch untranslate range information for PCIe controller
+(pcie@5f010000: ranges). So current config ATU without cpu_fixup_addr().
+
+== EP side:
+
+                   Endpoint
+  ┌───────────────────────────────────────────────┐
+  │                             pcie-ep@5f010000  │
+  │                             ┌────────────────┐│
+  │                             │   Endpoint     ││
+  │                             │   PCIe         ││
+  │                             │   Controller   ││
+  │           bus@5f000000      │                ││
+  │           ┌──────────┐      │                ││
+  │           │          │ Outbound Transfer     ││
+  │┌─────┐    │  Bus     ┼─────►│ ATU  ──────────┬┬─────►
+  ││     │    │  Fabric  │Bus   │                ││PCI Addr
+  ││ CPU ├───►│          │Addr  │                ││0xA000_0000
+  ││     │CPU │          │0x8000_0000            ││
+  │└─────┘Addr└──────────┘      │                ││
+  │       0x7000_0000           └────────────────┘│
+  └───────────────────────────────────────────────┘
+
+bus@5f000000 {
+        compatible = "simple-bus";
+        ranges = <0x80000000 0x0 0x70000000 0x10000000>;
+
+        pcie-ep@5f010000 {
+                reg = <0x5f010000 0x00010000>,
+                      <0x80000000 0x10000000>;
+                reg-names = "dbi", "addr_space";
+                ...                ^^^^
+        };
+        ...
+};
+
+Add `bus_addr_base` to configure the outbound window address for CPU write.
+The BUS fabric generally passes the same address to the PCIe EP controller,
+but some BUS fabrics convert the address before sending it to the PCIe EP
+controller.
+
+Above diagram, CPU write data to outbound windows address 0x7000_0000,
+Bus fabric convert it to 0x8000_0000. ATU should use BUS address
+0x8000_0000 as input address and convert to PCI address 0xA000_0000.
+
+Previously, `cpu_addr_fixup()` was used to handle address conversion. Now,
+the device tree provides this information.
+
+The both pave the road to eliminate ugle cpu_fixup_addr() callback function.
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- arch/x86/include/asm/svm.h | 7 ++++++-
- arch/x86/kvm/svm/sev.c     | 5 +++++
- arch/x86/kvm/svm/svm.c     | 2 ++
- 3 files changed, 13 insertions(+), 1 deletion(-)
+Changes in v10:
+- Remove patch PCI: Add parent_bus_offset to resource_entry because it
+is detect by reg-names["config"] and reg-names["space_addr"];
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 9b7fa99ae951..b382fd251e5b 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -159,7 +159,10 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
- 	u64 avic_physical_id;	/* Offset 0xf8 */
- 	u8 reserved_7[8];
- 	u64 vmsa_pa;		/* Used for an SEV-ES guest */
--	u8 reserved_8[720];
-+	u8 reserved_8[40];
-+	u64 allowed_sev_features;	/* Offset 0x138 */
-+	u64 guest_sev_features;		/* Offset 0x140 */
-+	u8 reserved_9[664];
- 	/*
- 	 * Offset 0x3e0, 32 bytes reserved
- 	 * for use by hypervisor/software.
-@@ -291,6 +294,8 @@ static_assert((X2AVIC_MAX_PHYSICAL_ID & AVIC_PHYSICAL_MAX_INDEX_MASK) == X2AVIC_
- #define SVM_SEV_FEAT_ALTERNATE_INJECTION		BIT(4)
- #define SVM_SEV_FEAT_DEBUG_SWAP				BIT(5)
- 
-+#define VMCB_ALLOWED_SEV_FEATURES_VALID			BIT_ULL(63)
-+
- struct vmcb_seg {
- 	u16 selector;
- 	u16 attrib;
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 0bc708ee2788..f9ec139901ef 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -4449,6 +4449,7 @@ void sev_vcpu_after_set_cpuid(struct vcpu_svm *svm)
- 
- static void sev_es_init_vmcb(struct vcpu_svm *svm)
- {
-+	struct kvm_sev_info *sev = to_kvm_sev_info(svm->vcpu.kvm);
- 	struct vmcb *vmcb = svm->vmcb01.ptr;
- 	struct kvm_vcpu *vcpu = &svm->vcpu;
- 
-@@ -4464,6 +4465,10 @@ static void sev_es_init_vmcb(struct vcpu_svm *svm)
- 	if (svm->sev_es.vmsa && !svm->sev_es.snp_has_guest_vmsa)
- 		svm->vmcb->control.vmsa_pa = __pa(svm->sev_es.vmsa);
- 
-+	if (cpu_feature_enabled(X86_FEATURE_ALLOWED_SEV_FEATURES))
-+		svm->vmcb->control.allowed_sev_features = sev->vmsa_features |
-+							  VMCB_ALLOWED_SEV_FEATURES_VALID;
-+
- 	/* Can't intercept CR register access, HV can't modify CR registers */
- 	svm_clr_intercept(svm, INTERCEPT_CR0_READ);
- 	svm_clr_intercept(svm, INTERCEPT_CR4_READ);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 8abeab91d329..bff6e9c34586 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3435,6 +3435,8 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
- 	pr_err("%-20s%016llx\n", "avic_logical_id:", control->avic_logical_id);
- 	pr_err("%-20s%016llx\n", "avic_physical_id:", control->avic_physical_id);
- 	pr_err("%-20s%016llx\n", "vmsa_pa:", control->vmsa_pa);
-+	pr_err("%-20s%016llx\n", "allowed_sev_features:", control->allowed_sev_features);
-+	pr_err("%-20s%016llx\n", "guest_sev_features:", control->guest_sev_features);
- 	pr_err("VMCB State Save Area:\n");
- 	pr_err("%-5s s: %04x a: %04x l: %08x b: %016llx\n",
- 	       "es:",
--- 
-2.43.0
+- using Bjorn suggest method
+https://lore.kernel.org/linux-pci/20250307233744.440476-1-helgaas@kernel.org/
+- other detail change each patches's change log.
+- PCI: dwc: Move cfg0 setup to dw_pcie_cfg0_setup() is not necessary, but
+nice clean up, so keep it.
+
+- Still keep use_parent_dt_ranges in case some platform without cpu_addr_fixup,
+which use fake address transation at DTB. If no one report warning for
+sometime, we can remove it safely. Bjoin, if you think this case is rare,
+you can remove it.
+
+- Link to v9: https://lore.kernel.org/r/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com
+
+Changes in v9:
+- There are some change in patches, if need drop review-tags, let me known.
+- DTS part: https://lore.kernel.org/imx/20250128211559.1582598-2-Frank.Li@nxp.com/T/#u
+- Keep "use_parent_dt_ranges" flags because need below combine logic
+
+cpu_addr_fixup  use_parent_dt_ranges
+NULL		X			No difference.
+!NULL		true			Use device tree parent_address informaion [1]
+!NULL		false			Keep use lagency method	[2]
+
+Generally DTS is in different maintainer tree. It need two steps to cleanup
+cpu_address_fixup() to avoid function block.
+1. Update dts, which reflect the correct bus fabric behavior.
+2. set "use_parent_dt_ranges" to true, then remove "cpu_address_fixup()" callback
+in platform driver.
+
+Bjorn's comments in https://lore.kernel.org/imx/20250123190900.GA650360@bhelgaas/
+
+> After all cpu_address_fixup() removed, we can remove use_parent_dt_ranges
+> in one clean up patches.
+>
+>
+  ...
+>  dw_pcie_rd_other_conf
+>  dw_pcie_wr_other_conf
+>    dw_pcie_prog_outbound_atu() only called if pp->cfg0_io_shared,
+>    after an ECAM map via dw_pcie_other_conf_map_bus() and subsequent
+>    successful access; atu.cpu_addr came from pp->io_base, set by
+>    dw_pcie_host_init() from pci_pio_to_address(), which I'm pretty
+>    sure returns a CPU address.
+
+io_base is parent_bus_address
+
+>    So this still looks wrong to me.  In addition, I think doing the
+>    ATU setup in *_map() and restore in *rd/wr_other_conf() is ugly
+>    and looks unreliable.
+
+....
+
+>  dw_pcie_pme_turn_off
+>    atu.cpu_addr came from pp.msg_res, set by
+>    dw_pcie_host_request_msg_tlp_res() to a CPU address at the end of
+>    the first MMIO bridge window.  This one also looks wrong to me.
+
+Fixed at this version.
+
+- Link to v8: https://lore.kernel.org/r/20241119-pci_fixup_addr-v8-0-c4bfa5193288@nxp.com
+
+Changes in v8:
+- Add mani's review tages
+- use rename use_dt_ranges to use_parent_dt_ranges
+- Add dev_warn_once to reminder to fix their dt file and remove
+cpu_fixup_addr() callback.
+- rename dw_pcie_get_untranslate_addr() to dw_pcie_get_parent_addr()
+- Link to v7: https://lore.kernel.org/r/20241029-pci_fixup_addr-v7-0-8310dc24fb7c@nxp.com
+
+Changes in v7:
+- fix
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410291546.kvgEWJv7-lkp@intel.com/
+- Link to v6: https://lore.kernel.org/r/20241028-pci_fixup_addr-v6-0-ebebcd8fd4ff@nxp.com
+
+Changes in v6:
+- merge RC and EP to one thread!
+- Link to v5: https://lore.kernel.org/r/20241015-pci_fixup_addr-v5-0-ced556c85270@nxp.com
+
+Changes in v5:
+- update address order in diagram patches.
+- remove confused 0x5f00_0000 range
+- update patch1's commit message.
+- Link to v4: https://lore.kernel.org/r/20241008-pci_fixup_addr-v4-0-25e5200657bc@nxp.com
+
+Changes in v4:
+- Improve commit message by add driver source code path.
+- Link to v3: https://lore.kernel.org/r/20240930-pci_fixup_addr-v3-0-80ee70352fc7@nxp.com
+
+Changes in v3:
+- see each patch
+- Link to v2: https://lore.kernel.org/r/20240926-pci_fixup_addr-v2-0-e4524541edf4@nxp.com
+
+Changes in v2:
+- see each patch
+- Link to v1: https://lore.kernel.org/r/20240924-pci_fixup_addr-v1-0-57d14a91ec4f@nxp.com
+
+---
+Bjorn Helgaas (3):
+      PCI: dwc: Move cfg0 setup to dw_pcie_cfg0_setup()
+      PCI: dwc: Add helper dw_pcie_init_parent_bus_offset()
+      PCI: dwc: Use parent_bus_offset
+
+Frank Li (7):
+      PCI: dwc: Use resource start as iomap() input in dw_pcie_pme_turn_off()
+      PCI: dwc: Rename cpu_addr to parent_bus_addr for ATU configuration
+      PCI: dwc: Use devicetree 'ranges' property to get rid of cpu_addr_fixup() callback
+      PCI: dwc: ep: Add parent_bus_addr for outbound window
+      PCI: dwc: Print warning message when cpu_addr_fixup() exists
+      PCI: dwc: ep: Ensure proper iteration over outbound map windows
+      PCI: imx6: Remove cpu_addr_fixup()
+
+ drivers/pci/controller/dwc/pci-imx6.c             | 18 +----
+ drivers/pci/controller/dwc/pcie-designware-ep.c   | 21 ++++--
+ drivers/pci/controller/dwc/pcie-designware-host.c | 63 +++++++++++------
+ drivers/pci/controller/dwc/pcie-designware.c      | 84 ++++++++++++++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h      | 20 +++++-
+ 5 files changed, 140 insertions(+), 66 deletions(-)
+---
+base-commit: 5fcc194143ce5918ea0790a16323a844c5ab9499
+change-id: 20240924-pci_fixup_addr-a8568f9bbb34
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
 
