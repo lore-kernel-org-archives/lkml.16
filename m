@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D89C225762
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D98D22576A
 	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:57:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741607873; cv=none; b=RLBdhk7yUtJh7eOujnDGT2jntfoKpBfqdQJp0C2gVy9q33hK0cq6V+pznv16Hd3912trefQhyX/bKG7RKT1K+SdPMc01QmjkgLjprsMT1/9enzF9lFCUFIZBepEds54Pqz3cHcAkQLCT3L63V20ETjHTSTDq2n7q9KrY9cGgIPA=
+	t=1741607871; cv=none; b=jEtH32mihKxPHTfhg0qGdzkzY3FmcGukX44LcVkJ/L0QZtC8b6nDIpXvNmKtq33tp4PPZLxF4YDznrQRVacq2B/zKuRxEAiIL9TmchHuEepsncypt8WXo+21yVc1zZekrmH453Nowa5OOZTlIbHAoiz3gxht7jKKz7UWX1O+Fr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741607873; c=relaxed/simple;
-	bh=+eajRrOH/xNkg5/U26rvYo+W4vGukV/RaRL49tGEn70=;
+	s=arc-20240116; t=1741607871; c=relaxed/simple;
+	bh=agE0DgjvQ7Cvo+66vvgwpx9SrlSJ/iDfvgGrfiPMsqA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Jo8ILzdTZvm/tnGW+7YZczk2jbXsZH6wZqYt1Sy4t+IUFbOyqoIhL12Xbsqp23AxtqVec3t0178KzFeaDF6FawNkKE4cgA4ZY5xFnNh1Uf/wsMFIfRyK8wWKv6LUa+x/qytVaVEthJgI0LylRzXtHAh5DeityGAmEU68gNvhAjI=
+	 MIME-Version; b=QI22M6cB5L6omjBLF/+JhOtYJtHzXBaWKkM+U3p/KojsKddbDQtHT1/rVpl0nNVIuO2cnQ3nI1PT/GQxWnywkg7mYBaLVGeOCaeOASt8xvaOATA1IkCa8oi05IBVEAEjyAQ7Zk9U7pNURHi0WvpH13KNPi6i1Tie5GLLaou7qxo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1trblL-0000S8-Cn; Mon, 10 Mar 2025 12:57:39 +0100
+	id 1trblL-0000S6-Cl; Mon, 10 Mar 2025 12:57:39 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1trblK-004za4-0W;
+	id 1trblK-004za1-0M;
 	Mon, 10 Mar 2025 12:57:38 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1trblK-003I25-0E;
+	id 1trblK-003I1l-07;
 	Mon, 10 Mar 2025 12:57:38 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -45,9 +45,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	netdev@vger.kernel.org,
 	UNGLinuxDriver@microchip.com,
 	Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH net-next v3 5/7] net: usb: lan78xx: port link settings to phylink API
-Date: Mon, 10 Mar 2025 12:57:35 +0100
-Message-Id: <20250310115737.784047-6-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v3 3/7] net: usb: lan78xx: Improve error handling for PHY init path
+Date: Mon, 10 Mar 2025 12:57:33 +0100
+Message-Id: <20250310115737.784047-4-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250310115737.784047-1-o.rempel@pengutronix.de>
 References: <20250310115737.784047-1-o.rempel@pengutronix.de>
@@ -63,70 +63,115 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Refactor lan78xx_get_link_ksettings and lan78xx_set_link_ksettings to
-use the phylink API (phylink_ethtool_ksettings_get and
-phylink_ethtool_ksettings_set) instead of directly interfacing with the
-PHY. This change simplifies the code and ensures better integration with
-the phylink framework for link management.
+Make sure existing return values are actually used.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/usb/lan78xx.c | 34 ++--------------------------------
- 1 file changed, 2 insertions(+), 32 deletions(-)
+ drivers/net/usb/lan78xx.c | 38 ++++++++++++++++++++++++++------------
+ 1 file changed, 26 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 73f62c3e5c58..7107eaa440e5 100644
+index dd55a9ba78fa..465762c3efcf 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -1862,46 +1862,16 @@ static int lan78xx_get_link_ksettings(struct net_device *net,
- 				      struct ethtool_link_ksettings *cmd)
+@@ -2569,31 +2569,40 @@ static struct phy_device *lan7801_phy_init(struct lan78xx_net *dev)
  {
- 	struct lan78xx_net *dev = netdev_priv(net);
--	struct phy_device *phydev = net->phydev;
--	int ret;
--
--	ret = usb_autopm_get_interface(dev->intf);
--	if (ret < 0)
--		return ret;
+ 	struct phy_device *phydev;
+ 	int ret;
+-	u32 buf;
  
--	phy_ethtool_ksettings_get(phydev, cmd);
--
--	usb_autopm_put_interface(dev->intf);
--
--	return ret;
-+	return phylink_ethtool_ksettings_get(dev->phylink, cmd);
+ 	phydev = phy_find_first(dev->mdiobus);
+ 	if (!phydev) {
+ 		netdev_dbg(dev->net, "PHY Not Found!! Forcing RGMII configuration\n");
+ 		ret = lan78xx_write_reg(dev, MAC_RGMII_ID,
+ 					MAC_RGMII_ID_TXC_DELAY_EN_);
++		if (ret < 0)
++			return ERR_PTR(ret);
++
+ 		ret = lan78xx_write_reg(dev, RGMII_TX_BYP_DLL, 0x3D00);
+-		ret = lan78xx_read_reg(dev, HW_CFG, &buf);
+-		buf |= HW_CFG_CLK125_EN_;
+-		buf |= HW_CFG_REFCLK25_EN_;
+-		ret = lan78xx_write_reg(dev, HW_CFG, buf);
++		if (ret < 0)
++			return ERR_PTR(ret);
++
++		ret = lan78xx_update_reg(dev, HW_CFG, HW_CFG_CLK125_EN_ |
++					 HW_CFG_REFCLK25_EN_,
++					 HW_CFG_CLK125_EN_ | HW_CFG_REFCLK25_EN_);
++		if (ret < 0)
++			return ERR_PTR(ret);
+ 	} else {
+ 		if (!phydev->drv) {
+ 			netdev_err(dev->net, "no PHY driver found\n");
+-			return NULL;
++			return ERR_PTR(-ENODEV);
+ 		}
+ 		phydev->interface = PHY_INTERFACE_MODE_RGMII_ID;
+ 		/* The PHY driver is responsible to configure proper RGMII
+ 		 * interface delays. Disable RGMII delays on MAC side.
+ 		 */
+-		lan78xx_write_reg(dev, MAC_RGMII_ID, 0);
++		ret = lan78xx_write_reg(dev, MAC_RGMII_ID, 0);
++		if (ret < 0)
++			return ERR_PTR(ret);
+ 
+ 		phydev->is_internal = false;
+ 	}
++
+ 	return phydev;
  }
  
- static int lan78xx_set_link_ksettings(struct net_device *net,
- 				      const struct ethtool_link_ksettings *cmd)
- {
- 	struct lan78xx_net *dev = netdev_priv(net);
--	struct phy_device *phydev = net->phydev;
--	int ret = 0;
--	int temp;
--
--	ret = usb_autopm_get_interface(dev->intf);
--	if (ret < 0)
--		return ret;
--
--	/* change speed & duplex */
--	ret = phy_ethtool_ksettings_set(phydev, cmd);
+@@ -2662,7 +2671,7 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 		phydev = phy_find_first(dev->mdiobus);
+ 		if (!phydev) {
+ 			netdev_err(dev->net, "no PHY found\n");
+-			return -EIO;
++			return -ENODEV;
+ 		}
+ 		phydev->is_internal = true;
+ 		phydev->interface = PHY_INTERFACE_MODE_GMII;
+@@ -2670,7 +2679,7 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
  
--	if (!cmd->base.autoneg) {
--		/* force link down */
--		temp = phy_read(phydev, MII_BMCR);
--		phy_write(phydev, MII_BMCR, temp | BMCR_LOOPBACK);
--		mdelay(1);
--		phy_write(phydev, MII_BMCR, temp);
--	}
--
--	usb_autopm_put_interface(dev->intf);
--
--	return ret;
-+	return phylink_ethtool_ksettings_set(dev->phylink, cmd);
- }
+ 	default:
+ 		netdev_err(dev->net, "Unknown CHIP ID found\n");
+-		return -EIO;
++		return -ENODEV;
+ 	}
  
- static void lan78xx_get_pause(struct net_device *net,
+ 	/* if phyirq is not set, use polling mode in phylib */
+@@ -2684,7 +2693,7 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 	if (ret) {
+ 		netdev_err(dev->net, "can't attach PHY to %s, error %pe\n",
+ 			   dev->mdiobus->id, ERR_PTR(ret));
+-		return -EIO;
++		return ret;
+ 	}
+ 
+ 	phy_support_eee(phydev);
+@@ -2698,7 +2707,10 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 						      sizeof(u32));
+ 		if (len >= 0) {
+ 			/* Ensure the appropriate LEDs are enabled */
+-			lan78xx_read_reg(dev, HW_CFG, &reg);
++			ret = lan78xx_read_reg(dev, HW_CFG, &reg);
++			if (ret < 0)
++				return ret;
++
+ 			reg &= ~(HW_CFG_LED0_EN_ |
+ 				 HW_CFG_LED1_EN_ |
+ 				 HW_CFG_LED2_EN_ |
+@@ -2707,7 +2719,9 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 				(len > 1) * HW_CFG_LED1_EN_ |
+ 				(len > 2) * HW_CFG_LED2_EN_ |
+ 				(len > 3) * HW_CFG_LED3_EN_;
+-			lan78xx_write_reg(dev, HW_CFG, reg);
++			ret = lan78xx_write_reg(dev, HW_CFG, reg);
++			if (ret < 0)
++				return ret;
+ 		}
+ 	}
+ 
 -- 
 2.39.5
 
