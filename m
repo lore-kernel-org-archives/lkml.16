@@ -1,182 +1,174 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazon11020077.outbound.protection.outlook.com [52.101.225.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B87F1DA112;
-	Mon, 10 Mar 2025 07:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.225.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591230; cv=fail; b=nMPXIRVZPqfZD6ZaclkH0qrvhnV3mR8B0FryrLdTuvEeeUps2bHqksn4GV5lDtpcN5N+lBXgHw5UVnv4uke+5ymET3nOKzy3Cgwr34F3imAPAl4xeP9y+ZYrE8+O6cziibbmfP28b74w87HTxh8nImYsV3RzYEv/km69YS0w5kI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591230; c=relaxed/simple;
-	bh=6SxpglWcPNuyxX/QFkioG/j9oodFdZhFE69fbxt679Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uDVTwfesaWiLF+JS9z6Gg8lcsCn4by7Su+e+dlrU7Gfms3AXCc5VlObN0Cz6vUZQbD2S2Z8ay6DsZgqDsK+0Azu6E2o3MLZ9pypfOqZJPp1EcVJRaobhVnU3p8QNx/bZhGJnOUz/ITDnAOO/sUbbcEFSr8YbMbBB6sEGAD4uIVw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=52.101.225.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I+DeoPPhEBW1FT57DVfJY7jnaBC8sYKgUJFOy3ykCl/JFqbDzDORoc3VTobNYsQmZdy0sVz5g7rY+mRjwQMCX9CGSZwNgfQWNJyNdIRhbHNekgdr2DMXVgis/r0FuLOyZjk582d+JRwu3gYX+vSob76FUvHgLR/1dIySTe4Yz/0/IXS3sc04QzMqZ7PGOmtTN/hDwNw3hhwMAmMjCQLxmoNJb3mhIQl8sakWPG2fXmDDE3Rss6KR6iCvdMwYQhZVh/nnPBFD4mFFAaEnZs+gOeMEVpmI5YVqWP+pPiu8w5mEgVxe7+2oykERP80cYhdvf8iGL5F0SANQoBNUgOG3gA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QrgC84zkxbR5GaiRFxx7YIOSJhBTJKzWkZaCMU4ZlIw=;
- b=ECzDA1I0knzEay5Y2h/gNoJpMhTAoQVeTwVmtjITyH7cvt+fOrteORtVEoK2snAWT/jfKv+FoOH+zZYPJ4y9gX0eM4nLK1OPkzpAKBUzSXMZZtipMnju8y/oC+6E09cuFz8YDEjc1i+YIksPVtzbMqYXtXhnGDYzq9QQdQogtcmqFRHCm9kXXI7dI297kMrU4FRYoCSRT7UEEPk2hnrBTnBqQkwnam6Eo6+fNHNTDmihPHkfE9AYgSg9ZkDUvVnruNq819qru7EfUWJ6X00qy5SU741HXhnBbilSjPmHMQhDnMr48RX98h9I7A0efEwKfDQ5Y56V2lbahAaQhUlIag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
- by PN0P287MB1221.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:190::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
- 2025 07:20:25 +0000
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::58ec:81a0:9454:689f]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::58ec:81a0:9454:689f%3]) with mapi id 15.20.8511.025; Mon, 10 Mar 2025
- 07:20:24 +0000
-From: Tarang Raval <tarang.raval@siliconsignals.io>
-To: sakari.ailus@linux.intel.com,
-	kieran.bingham@ideasonboard.com
-Cc: Shravan.Chippa@microchip.com,
-	Tarang Raval <tarang.raval@siliconsignals.io>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Julien Massot <julien.massot@collabora.com>,
-	Zhi Mao <zhi.mao@mediatek.com>,
-	Mikhail Rudenko <mike.rudenko@gmail.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Luis Garcia <git@luigi311.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] media: i2c: imx334: Enable runtime PM before sub-device registration
-Date: Mon, 10 Mar 2025 12:47:48 +0530
-Message-Id: <20250310071751.151382-7-tarang.raval@siliconsignals.io>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310071751.151382-1-tarang.raval@siliconsignals.io>
-References: <20250310071751.151382-1-tarang.raval@siliconsignals.io>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PN3PEPF00000180.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c04::50) To PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:199::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FFE1D5AAD;
+	Mon, 10 Mar 2025 07:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741591309; cv=none; b=euD7EgKRupDyc6hy/J07IB7Tf8VtNYrR3fdD0b1PduIuw1GT0lQfaLa5Q3OeHVnS2anmRAX9TW/lDuBu8eJaWTRhkmcQf+/JQ7W90Qc02zk0TljonZh4yMH4Qw2keXNM0y+UxX04USSKdKeatb/XfJdF+tPsEoHcV4VK8082Hcs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741591309; c=relaxed/simple;
+	bh=bwzwOjpoJdTp8dStniYCS+eiqWFCsaTpoCpnmRYoBVQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XTUfMnS079z3IZ9MMfJelUSFFm9AXsdxL3gNjfwjoehjE9nyBNvyLYxpptkRdGf+QQbBIbkjavremBTKzclNSBybHrKeSIzOPg9ikhiei74dkbEKQGgJaaZU4mLJUczu8nUQlVGFIkSqsf82z8ayiMHloOKjoxJccUmw0gaYUB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2q588JQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2q588JQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55C27C4CEE5;
+	Mon, 10 Mar 2025 07:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741591309;
+	bh=bwzwOjpoJdTp8dStniYCS+eiqWFCsaTpoCpnmRYoBVQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=G2q588JQEantEptls1igKb1mCeSfH0cMWDtWBrm35xkL9CaLjxWwxAnJPpsOe5Qft
+	 gZaw/kn0KbqvcWeuy6qer3a2ZwLeywtAxbQB+z5IJc5Olwhfq0h9rLClfmIigdvEnD
+	 Xoeh8nDmG8nWK0dcT+0yPwH+se0FuMRDysYq4Vx6I2MASDUwff9loljo3qXg/dutqa
+	 fL95cvVm3Tc+7+HmVr29TgIuUoIuc6bzZCqFRrcdTW0/2MHaiNXurDrPVrVjXhSlf5
+	 J4Y0yZwxK59Rkvzt1S6eiswe3UMv2UUg9PvifQomJbPF9lerc+0qAtlddPT6wrA0zV
+	 mK2QFRvujxR2Q==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30761be8fa8so42718641fa.2;
+        Mon, 10 Mar 2025 00:21:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV+sjia7lDk3ELfd1/1oNb6Iu3tH9Z2avt8Bsh3xI781LuGFoYMNKZZ/l/C2paW2HaIluW6lyQGyYhnqVrD@vger.kernel.org, AJvYcCV2imihIXc3eMrJYFwAo9jgs+5DLsWX3mpSAoayFrPaIsMXd0dVZr8/Mg1CqBeY//Qz+0gLcBclQlR7RdTOwA==@vger.kernel.org, AJvYcCWdOFOs89rsP1Wnpf/RODGTFS3qwE7gWAcRER49Z19KG/x8k3/Y+P/nLMZ4YuE19XJIuGfuOO+iGCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVmnANHeuyrLkJ3L4w7OAfCxVKs1hGz2i96LEv+ezC5rffhI49
+	Dqg8ECcVqtGfKEUlBgMyMc4YvYD/a3B0/6CSpu4T6dGTLLd0GRjhVOcdvJbTIezKQAw4rqaLpyj
+	D2LrPy9JL8SiiDetGVCy/hWrOeO8=
+X-Google-Smtp-Source: AGHT+IGge2A+fnL8sOyilyTq9nCYuH103mq7sQ/sC1+LPZhomoy5MIoKYB8jPThuj9l7/H8hSZJKNPij57l1IvvXYPA=
+X-Received: by 2002:a2e:960a:0:b0:307:e498:1254 with SMTP id
+ 38308e7fff4ca-30bf4613baemr36896451fa.35.1741591307671; Mon, 10 Mar 2025
+ 00:21:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3P287MB1829:EE_|PN0P287MB1221:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17da0f82-6ab0-4ce6-277d-08dd5fa406b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1nez9/KGkfwVjEI9fsex+soA8QMfUW9dX1k2OkvTZSiejNHZ+mV2jgMMCTwl?=
- =?us-ascii?Q?mf4vbZMxRyWoYG1iSw5Rf5NFSssOpuNSD+zwSKYKuJZQHASiugqr1JrgaThQ?=
- =?us-ascii?Q?LG/1JGJuqKPeJAbz8j2qf+PM4h+lJhlSNnTS8HE72KgU71A5JOKqQZNzQxIh?=
- =?us-ascii?Q?5bG8KcSJ2FyjeqcSFV/EKPmj0GrPFO88yh4jdVJrv7XQ+2lA9T97qIkG1ZVH?=
- =?us-ascii?Q?1AFUIgz3zwbprere0m2w4+/fDqhT/vJnZGqW/qAA9kh1YC/vQXq+YjjP+Y6f?=
- =?us-ascii?Q?W5LYg8rhhgG2j2y7j/E/Ruy3kA7+6lT20f7BsNPZQA5j7ewWjBtwjYlgCp3v?=
- =?us-ascii?Q?cid++yYRxWfJmQkE3qDFV/IORB6VkEMRdAL6ejsXJtsMcL7apURzmgz0dUg2?=
- =?us-ascii?Q?tAla93AA3Dgn3JSbZD0eB3q5pR7ybIKBtYEiXAK+OVrOtgYzcKIGqLb8xOpe?=
- =?us-ascii?Q?weYJYD3Sm/K8Vua/xU6uq83N3p6s6uiU10SXYt1VQLKERlQbDT0UrJnSS2MN?=
- =?us-ascii?Q?ExVIUBTtl4Nc5GeYifT24p9U8drG0yStbRUJT0Ogfo7sTcVal1GiHFWkB5Of?=
- =?us-ascii?Q?/iSp9+7d34QhMpxWDin1jV6rnupgRakgP+v2wzr960v/jSB9T7XO0JNLJRE/?=
- =?us-ascii?Q?Zca8Bxtg7Se63D9fBdQoBgdPP1EoBKXI6/Pe6cYWbR9prFboDAInmX8HtxhZ?=
- =?us-ascii?Q?dMKGIUTCigEKKoOBG0vZRHquGTPu2GPXoU89N7DWB3gWMAtEkwfycVBN9Q/X?=
- =?us-ascii?Q?WJbnkf4eOQpXUZHTPbahpd0F9MvDm2tEjlgP4u58yuvBCu5IpQSq6hzviswb?=
- =?us-ascii?Q?xioF577QnPkyZQEop9McJQtNU5fmeGoxgNe5FBMj0sE+4sKZczUSOhVEVnN8?=
- =?us-ascii?Q?eM77H1Qd39D/QGzWqYfjcLJgx9p70S9vfQ91O5CCXOsV0XAzPpgqnbtL0Ws1?=
- =?us-ascii?Q?yOpi28N4WzxyNKit2k0dqXDHcfzEtrsCdAkhg4COngwemfOQQsxv9mchK+gH?=
- =?us-ascii?Q?/43fjPAGhcBPDgPjPijEyChaDsnUn3NiYfDPGKoe9y23EqSCT7SKrDLy9Oh8?=
- =?us-ascii?Q?pLyNk+N/hSfVrR3rBGsBDm2KgBI548P88qA+XMrm6nvXfnPSzq3obR4v6MRy?=
- =?us-ascii?Q?PLj/uLrnS0VpyT7lCoe4O8O3B053rK92l94dcWt0mJSb4ov+Bz175QibnIZv?=
- =?us-ascii?Q?bwIeqF+MMjKNddJt7xP70aErepM5ZVsD6RS1JArh22MOWzCfIw+xDZAoHDDZ?=
- =?us-ascii?Q?4kT7SETfALsDRSj2gzyoAAB5IQtF4tEl4y0gm9DDzgw6IeG/S9kMywWsWo9t?=
- =?us-ascii?Q?HN4fsHCx34RazPxcqeZ1v3GSFr6lzbOtCMqGV+9hjv06OyS5s087YODNyMeW?=
- =?us-ascii?Q?3uPhPH2ePUDAHdohTHVTEkDd0Z1kxSsW6EPOYM18Cx3jW8aBUWJVjIWV7cUg?=
- =?us-ascii?Q?b1eAADcSZbptCHLiur1+lVEpyxrDJpX1?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XaFplv488EURpeUmCUbd/AEATjeZEQ3hlwvNAy2aKqkLGQ4/zCROgMLIrWY0?=
- =?us-ascii?Q?FGt4VohQ7/xK+bqFrIe9DCs4XUYi0XWSjUzWNwdTGCdm9bE+W7IOWZJX4CU7?=
- =?us-ascii?Q?rTU8xkkKP2raECHA0TxkUsl8Z+vWwKt3WfrU44QyO72CAZLq3doGebDhxZrl?=
- =?us-ascii?Q?p0unjFKBy9HWwgBQMhupvGLb8JwNN49mUs18QlhfM1oqL6DJWIs04ovpifk0?=
- =?us-ascii?Q?2VbQRjRi3wzEZPe1/a8Mp9bfjpepYvQFD7GqbwjHQX9Z9gkvdNj0BZ73Q5Qp?=
- =?us-ascii?Q?fr0t3xxZbNSWPplSkaQX4wBoS1GjFgddy3+8S2P1/4dGSMphu0xO4OdLVIEX?=
- =?us-ascii?Q?Y/DZ/AXH5N7APBdMaQBjZO7SeCI8nrg1CtO8lwT8Gm6b8vedzvLjZhTmCAZA?=
- =?us-ascii?Q?AMV7Wu9q2mdFvAVtIpZuT3j70nHh3mbS0JWuRzXulLpRFyYXbDGrJlN4+AZM?=
- =?us-ascii?Q?OIfUaEzTxAEy2QaCudP97Q+ziyEPNv22Ot4+LXZViIuTgcYGLAhrwzdmwk8T?=
- =?us-ascii?Q?O4D85KbH1CUemepU0Dq4hCzR/VLR45do90x55HZorJguXy3nQsuwZjDkoAU8?=
- =?us-ascii?Q?1RU0/2rZXtubPkt9GJmP88IxWi3jSX3TEwcjJ2IQ/dW5AXjNj5H2kjUhfNw2?=
- =?us-ascii?Q?AwN7/YDXWeKN+clGBZ1prsYUu8lALN/ChBRkqCFAiLPCjOPq07CbjzVBmt/n?=
- =?us-ascii?Q?WqSZ8NwLHHiBXv0/+LizPP8CQOMF/MtTjqb8bSVcYjTy4HOLJItIo4Zs+IG7?=
- =?us-ascii?Q?kvVFkiBio63dajyximYnlQUJOyh0K01L/nTrz3O2qkaaLlDWr2EMgoLAGv53?=
- =?us-ascii?Q?U1wn+ZJiLzAekZZogDGv2cSUOAPLL/l7aUT+7cutnKGt/NIkCOrfFjGD+Nsz?=
- =?us-ascii?Q?BbSeEpIS0r7j1wezHdqNektdhmeW9If4S1SQkmWUP4ivW4kn2gBZRzF2trMC?=
- =?us-ascii?Q?3FYT+5Bl3yQ+fjTG0OElBNedcHlRLOgapINNymTT30ysloX0GDRyUD84xj0K?=
- =?us-ascii?Q?5ZbMtbOoXjDbgaeoQzBzHuaMcurygmh89vQcyk+6xhsOVM7gF2BuhRRfBDil?=
- =?us-ascii?Q?B7UBfKzsma7WPic+1tf+F7pyPtjjLVKN9QQI6WY8wDytZ3SW4lfNSjcbeShz?=
- =?us-ascii?Q?k5Tzzeo5Bn0rMuFjxHPE+C7oA0ywD8zp0xeFu78iOUn4v9OOC+z8E5mHLwAK?=
- =?us-ascii?Q?aqli7UpUfHb8/nnTqPtLBMGGpupyXEUtb/oBzzxskGTupgrl/hQNA4PY+xeE?=
- =?us-ascii?Q?kVNtWVBzKkB2huFDBhJQ5tmDWveEy4tB2zp8ouVQj3kKPOTieBrIG+rYyOx6?=
- =?us-ascii?Q?VgWXoi52ljug4gtpeger4cZDsY1MoWLHYuzq3/I6UtMC1mpgi59We4h+xGmv?=
- =?us-ascii?Q?DAGwDFTHCs2sdHvlcFy61zBYPWsOn0/tuEA5DQ1xXHUEZ+uChUQ4KzYI7ejH?=
- =?us-ascii?Q?GTlESZG1HO4lqLsVXrXzBUet1bMzK3Vq8ztm8IZJdgtdrNOD4PsToJgIdWIJ?=
- =?us-ascii?Q?VvAt6S1XE7jHmlqIEsqhWOghC8DHJFWUTNU/QHPrpRKtp73g6asXH8DU/TCo?=
- =?us-ascii?Q?bNhUJQSS+cxTAdxZibf34Ex4/Afy4r6/FGDZwQW4DQR/6O05G06ZWFNyWuLp?=
- =?us-ascii?Q?jw=3D=3D?=
-X-OriginatorOrg: siliconsignals.io
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17da0f82-6ab0-4ce6-277d-08dd5fa406b1
-X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 07:20:24.8978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q5OWenMrF4DRTag1d5X7kwREQlNvovBkvz10N38mOVa0RqXBIepLI0ca7VyuJ6IrLnhU5iul9LjnVRSQkby/49wVzLdTpTnk2jfAUIpOvq8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB1221
+References: <67cd0276.050a0220.14db68.006c.GAE@google.com>
+In-Reply-To: <67cd0276.050a0220.14db68.006c.GAE@google.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 10 Mar 2025 08:21:36 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXER-4ErtQiU6oPWfOEsmTz8pqPOsQ3GB8EGQeHhHXS0_w@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp_t0I_OP6aZ1QHAnkD4_UsvVHnzfc1Q5x29HnwX01uUG60SpbDECqNSO8
+Message-ID: <CAMj1kXER-4ErtQiU6oPWfOEsmTz8pqPOsQ3GB8EGQeHhHXS0_w@mail.gmail.com>
+Subject: Re: [syzbot] [efi?] [fs?] possible deadlock in efivarfs_actor
+To: syzbot <syzbot+019072ad24ab1d948228@syzkaller.appspotmail.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>
+Cc: jk@ozlabs.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Runtime PM is fully initialized before calling
-v4l2_async_register_subdev_sensor(). Moving the runtime PM initialization
-earlier prevents potential access to an uninitialized or powered-down device.
+(cc James)
 
-Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
----
- drivers/media/i2c/imx334.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
-index ffa39bb317f7..8964d60324e2 100644
---- a/drivers/media/i2c/imx334.c
-+++ b/drivers/media/i2c/imx334.c
-@@ -1295,6 +1295,9 @@ static int imx334_probe(struct i2c_client *client)
- 		goto error_handler_free;
- 	}
- 
-+	pm_runtime_set_active(imx334->dev);
-+	pm_runtime_enable(imx334->dev);
-+
- 	ret = v4l2_async_register_subdev_sensor(&imx334->sd);
- 	if (ret < 0) {
- 		dev_err(imx334->dev,
-@@ -1302,8 +1305,6 @@ static int imx334_probe(struct i2c_client *client)
- 		goto error_media_entity;
- 	}
- 
--	pm_runtime_set_active(imx334->dev);
--	pm_runtime_enable(imx334->dev);
- 	pm_runtime_idle(imx334->dev);
- 
- 	return 0;
--- 
-2.34.1
-
+On Sun, 9 Mar 2025 at 03:52, syzbot
+<syzbot+019072ad24ab1d948228@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    e056da87c780 Merge remote-tracking branch 'will/for-next/p..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14ce9c64580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d6b7e15dc5b5e776
+> dashboard link: https://syzkaller.appspot.com/bug?extid=019072ad24ab1d948228
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: arm64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111ed7a0580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b97c64580000
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/3d8b1b7cc4c0/disk-e056da87.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/b84c04cff235/vmlinux-e056da87.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/2ae4d0525881/Image-e056da87.gz.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+019072ad24ab1d948228@syzkaller.appspotmail.com
+>
+> efivarfs: resyncing variable state
+> ============================================
+> WARNING: possible recursive locking detected
+> 6.14.0-rc4-syzkaller-ge056da87c780 #0 Not tainted
+> --------------------------------------------
+> syz-executor772/6443 is trying to acquire lock:
+> ffff0000c6826558 (&sb->s_type->i_mutex_key#16){++++}-{4:4}, at: inode_lock include/linux/fs.h:877 [inline]
+> ffff0000c6826558 (&sb->s_type->i_mutex_key#16){++++}-{4:4}, at: efivarfs_actor+0x1b8/0x2b8 fs/efivarfs/super.c:422
+>
+> but task is already holding lock:
+> ffff0000c6c7a558 (&sb->s_type->i_mutex_key#16){++++}-{4:4}, at: iterate_dir+0x3b4/0x5f4 fs/readdir.c:101
+>
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
+>
+>        CPU0
+>        ----
+>   lock(&sb->s_type->i_mutex_key#16);
+>   lock(&sb->s_type->i_mutex_key#16);
+>
+>  *** DEADLOCK ***
+>
+>  May be due to missing lock nesting notation
+>
+> 3 locks held by syz-executor772/6443:
+>  #0: ffff80008fc57208 (system_transition_mutex){+.+.}-{4:4}, at: lock_system_sleep+0x68/0xc0 kernel/power/main.c:56
+>  #1: ffff80008fc75d70 ((pm_chain_head).rwsem){++++}-{4:4}, at: blocking_notifier_call_chain+0x58/0xa0 kernel/notifier.c:379
+>  #2: ffff0000c6c7a558 (&sb->s_type->i_mutex_key#16){++++}-{4:4}, at: iterate_dir+0x3b4/0x5f4 fs/readdir.c:101
+>
+> stack backtrace:
+> CPU: 0 UID: 0 PID: 6443 Comm: syz-executor772 Not tainted 6.14.0-rc4-syzkaller-ge056da87c780 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+> Call trace:
+>  show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:120
+>  dump_stack+0x1c/0x28 lib/dump_stack.c:129
+>  print_deadlock_bug+0x4e8/0x668 kernel/locking/lockdep.c:3039
+>  check_deadlock kernel/locking/lockdep.c:3091 [inline]
+>  validate_chain kernel/locking/lockdep.c:3893 [inline]
+>  __lock_acquire+0x6240/0x7904 kernel/locking/lockdep.c:5228
+>  lock_acquire+0x23c/0x724 kernel/locking/lockdep.c:5851
+>  down_write+0x50/0xc0 kernel/locking/rwsem.c:1577
+>  inode_lock include/linux/fs.h:877 [inline]
+>  efivarfs_actor+0x1b8/0x2b8 fs/efivarfs/super.c:422
+>  dir_emit include/linux/fs.h:3849 [inline]
+>  dcache_readdir+0x2dc/0x4e8 fs/libfs.c:209
+>  iterate_dir+0x46c/0x5f4 fs/readdir.c:108
+>  efivarfs_pm_notify+0x2f4/0x350 fs/efivarfs/super.c:517
+>  notifier_call_chain+0x1c4/0x550 kernel/notifier.c:85
+>  blocking_notifier_call_chain+0x70/0xa0 kernel/notifier.c:380
+>  pm_notifier_call_chain+0x2c/0x3c kernel/power/main.c:109
+>  snapshot_release+0x128/0x1b8 kernel/power/user.c:125
+>  __fput+0x340/0x760 fs/file_table.c:464
+>  ____fput+0x20/0x30 fs/file_table.c:492
+>  task_work_run+0x230/0x2e0 kernel/task_work.c:227
+>  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+>  do_notify_resume+0x178/0x1f4 arch/arm64/kernel/entry-common.c:151
+>  exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
+>  exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
+>  el0_svc+0xac/0x168 arch/arm64/kernel/entry-common.c:745
+>  el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
