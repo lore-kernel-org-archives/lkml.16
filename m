@@ -1,508 +1,204 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2070.outbound.protection.outlook.com [40.107.223.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB612309BE;
-	Mon, 10 Mar 2025 16:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741625140; cv=none; b=eDBNnCEVQ7TkoRCJ+pLYeg00W8f8VugHqoKZNDGPYoVYYNCW6oIoeK4weRCbVhYb3cDdB/O8UYZ3e4vU9uU7LkT7BS0LDVE0wOix3ryZXv6HKbamPy3wEakejg5mwvVcJlqo2JfR7V9Aly2Aybypp32bT2rccf3IOcuHZXgAaTY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741625140; c=relaxed/simple;
-	bh=dUHJnLuRhQUEp5bATO47cFdOOW5SVrK6Z66j7jfuz/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hSlr2XpB6baHc0neVwiyAO57nI+jJ/tcxNYCE1HKxin5lWk5KEwUhQDt5eKVhe3P22i2DyIuGu7QdWW4a2C+KnAInRKh9VjTquHVE5Rve0oXUQiyGpiG92Z7Ugi6zjvUsm4MH1jYc63u0NytGUvfv+kH3dXt/IjoCNyhQhCebwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VfgnaLfX; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACF022B8D9
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741625184; cv=fail; b=fZd9sFMT9R6gMsRQDsy68v0Zq/VkPSTKw9j1iGMgKKWpiHowqzEL4EfpPKo47+mSfd587cMA8rBfpqb9/1eJ2gHf0chWrFLDDPb5Ds1t3nUqbXLs7oU44BJ0pbDZ6EK0+Yg5HbC5Xa5bzcjtuSG2umwW7YTEvgyWeSgYLn2YqVQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741625184; c=relaxed/simple;
+	bh=GRfpKgA2L+fPG7AYPAdoyUVRLgbIIPaHvEKTbv7lE18=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=FUuHIv2WLssS05COusYJYA4UVSBgjV3VZ5BwNGOOisYbIycGG9YUqkFRMs7zhAm389DrI8ESBnMS12sYyNCQ6N0JQkYPOqJEgpU1NDvi28e8/C5ljt67uJBd13+q9rbRPWh2lShwJ74zB/DbgvhJdAVUzGuNtlgtCW67PUUpnlQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BkyVS9oM; arc=fail smtp.client-ip=40.107.223.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfgnaLfX"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30615661f98so48472211fa.2;
-        Mon, 10 Mar 2025 09:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741625136; x=1742229936; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KiE+Q7UK47J+dHgiSPPhu0XXxo3OoadMix/FGOTi0rc=;
-        b=VfgnaLfXVD1QyNQNckhX6ooD2ttaRbKJeoQEh+jnV1lzicGP5r+r1FaRVm09mdjmvO
-         zLsfyojs1vPLDU48B/JvIx7u2Pi9jNli4/FHZSY/euiOh5YxCUxWgi8eOIHar8VGVru3
-         TyNVeVZwjUjPXX2We2oRI6OWsw/KxqkVzpdR3jdulfW3DCk2MgJy5iW7DpToZI/jIFCi
-         aIsAciAfwlUZMuwlHZws1V6Hms/8wNUg9cdimOSH79686d412RAAuAHGKvDhZeA669EL
-         ikRoj9CQaKyHCbPTmVCUtPV9iUBNElynf+cYkruWUE7pj1uHUDTaehC0yf7mO2U0KY5T
-         7TUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741625136; x=1742229936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KiE+Q7UK47J+dHgiSPPhu0XXxo3OoadMix/FGOTi0rc=;
-        b=M1/TYfQdIdEfp2MIRTxWOQBPzpOIoHPpDsJpk7S/IUNYfHyqmxAojYznS/WvTvZhSf
-         OeT+ThYG+gbZyk+13w42hefSpkNVQu9AFAn2GpTxBmFINyRPEtmaeqDUgIIJ0ETDk5Ul
-         +zkFjgDFwMbGDIi1eId41qw2UgMD1xUcEZTetLngRRutukdt5K85FdCxvo/NCdXi1LSB
-         9UhkKyCyRD0ICnCw3g0qQfT0BxKpHYiPXNgwyXGKTALKqDJLFuxvptLOGCpT03ol7nb8
-         aoUQOpb8uay14LKhZzmejNUrnFu1PWQUoJlPakLlL/iShetkRfFt8/efsrvGniozx8aT
-         HnFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlgDwtPtYq9LheREajCWIesZ9DzDggxaWxOB7CbfYYy45lFlLhLJNuU+ZE+bhk2aNtRJch5szynPNK9GI=@vger.kernel.org, AJvYcCWYMwhPxKL9n0Sx/D8FI+Ni71wIYqSWYpsHuVQGPUeO/nlTjJkti5VVjGN8SDn58dP0Esi7Olij6OBrWGByXLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5LI/OpaxisIXHFzKEVFLoSyF4rDgtVRp4Bj0C4+sQPbVRZwrf
-	7UfA/IIj12TayuFTrrwlCEEIJKTivWCqAkOyjtOUFFi3Zc6odwgLdicDDBtIbCgSRS3SzKlyglR
-	DikM7oG6P/2ReAlZ4+5Ax4bcHclw=
-X-Gm-Gg: ASbGncsBQf9sPV4IRPS39kbX3tT/tcgQDqI7jgR0VW9zttA2bRBAVcqNfZqyu/37P9F
-	kLDPAgkOeghrlxhLtvAqD53zPf4dTrU1R162apvLm1V4oTGViFFnSj9Q8SG9d7bJt7r95gapBts
-	UBVCF7CRn04K2dU299oQnxlbtA
-X-Google-Smtp-Source: AGHT+IGJQCxAdfEa1Hdsay43Kk3Rc0IKMGtk70rtjSL96n1Pnt7d521UpWn64mesGbDkvsgg3Esixerqx34iZi2tY5k=
-X-Received: by 2002:a2e:bc23:0:b0:30c:1002:faa8 with SMTP id
- 38308e7fff4ca-30c1002ff06mr18067711fa.7.1741625136298; Mon, 10 Mar 2025
- 09:45:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BkyVS9oM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yx/uY4JTh5pP7wi23foRqHG+jY63riXsc1qR5c3l3udY6na4Ucy2bjro8rwCDLayCb99pEbgcOzHMCopQZreVWPGGqU8Uwy01mcxPPQxK+/g3RS1whbalHEie+nWb90x8r3Mk5cHLSVS4EseVPB0c9PPubyOhAX0hHDNiIT4J5HyhWdjHyYYfTXUKWty3BjazPW8rUnwS5Uh+gknwKCbaq6xZFcNmhKeRSAZSzz2eCGHK+f4VJJMb9SpbKY9V85uZ+cYkogQ6iQP5ObhUJZKJiSXo0NqzQJk+Tm39nt1lhGXsoL7s/m6+B93xfxH6odE2krQA/RC8X80VYc+hXlboA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZzZu3YNzd2ym9kMZwNpI5ZV9lfWivzE1HBRF8axTQhQ=;
+ b=C3Fi4cL6hIuKN7PqR20yKASUIKBiYRzWsLaVhzGwbCu0UgMrhqK31QGcQBIHUTZ2uFfC6r5FGV3DtOm9xgeyvudtnx3Y2NN5W16aoh6G7FfQnhHwbDxl6gHye7nCuxX/isMP6b5ywCvsLClPDyuT4fDSDMArh9BZuyLf2tf3OSwKWGI17Bx7Dh6JKktZGKncj5kGYFBtGZt2jZ7FplZibruSz3rFC6QAgYu04n6INlHxTwnfrMuoq/XkxtKbqPJNu3h72UmyedNrRLOT+1vMziveZOJ6OKdeRCxVM6gLzCZBEDrmJxvs1QvQu8aHlwU3No5MLAR9yL9H+Zky5Z8A9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZzZu3YNzd2ym9kMZwNpI5ZV9lfWivzE1HBRF8axTQhQ=;
+ b=BkyVS9oMzRImTxZSIRgIdBWUtr5RHkVnpaQOn5PQ4LtgSxlZLSPO/6uAWsfdo8eXhZSEuJGusqLRh3yVB3ShrpYC8uDcd3xZBPYuNF8pdBdmdHk5bPqAVvjiMCLAV7oiNfT3+UtH/HiVobvFx3T9jHI5IwGE9xxMow3e/zrwnQQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MW4PR12MB6731.namprd12.prod.outlook.com (2603:10b6:303:1eb::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
+ 2025 16:46:19 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.8511.025; Mon, 10 Mar 2025
+ 16:46:19 +0000
+Message-ID: <05e39b53-8e2f-4e21-8106-028fe54c37a0@amd.com>
+Date: Mon, 10 Mar 2025 22:16:09 +0530
+User-Agent: Mozilla Thunderbird
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH v3 7/7] perf: Make perf_pmu_unregister() useable
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, lucas.demarchi@intel.com, linux-kernel@vger.kernel.org,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250307193305.486326750@infradead.org>
+ <20250307193723.525402029@infradead.org>
+Content-Language: en-US
+In-Reply-To: <20250307193723.525402029@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0030.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::21) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310161947.1767855-2-bqe@google.com>
-In-Reply-To: <20250310161947.1767855-2-bqe@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 10 Mar 2025 12:44:59 -0400
-X-Gm-Features: AQ5f1JpOXW70_rr9xVy7MfaOMBJM34eSajGvwG59jPIRyfqmzMst5H9lqPw7C-E
-Message-ID: <CAJ-ks9nR9AcqK8WfHDshG4h+K9PzEa8Lwr3odn99r34y=zzWgA@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: add bindings and API for bitmap.h and bitops.h.
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW4PR12MB6731:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7a94465-9499-4352-d72f-08dd5ff314fa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QjVNcTRaTDBrbFB1WHJPMmJiNFRuQTk1dmppTW5nZDhJeEROSTk3V2ZuRVpC?=
+ =?utf-8?B?N2JXcFIxNEViVlo3TVdhcFQwUk5OV1Z0UWJNNksydkNKOHZFalhGQ1VjSHdD?=
+ =?utf-8?B?eFAvU3BsTFg3N1ZtQm5Yckw1c2xzNGRHRWdpQUlta29FWVdjREEzVnhmK3NO?=
+ =?utf-8?B?Z2xYNE5sSy9MVElvOW1vTVpIWkdENVFuVksrRDRyMGM0blROWVpYRUJFMGZ5?=
+ =?utf-8?B?N1FlcnB5dlJka3ZzcHVjQzNzMHZ3cHYxSVk5MlhZQ25pMVh5MmY4VG02bVRj?=
+ =?utf-8?B?ZlVuemNDQk54QkRTVFYyRzJxeGVCS2FuWmtlUFQvV3UyRHF2dERGT1J3YmdR?=
+ =?utf-8?B?UjRzemU4Wjk1cEdSSnA1ZHI4T1piYXJKMHpxcmxFcmpvZU8ycG1hMEZ1YzVt?=
+ =?utf-8?B?cGtldWpvNkZrcFdqUDJCN3FIM1FJdWthWEo4QVF0aTNlbkxFWnpzV0R5VnFD?=
+ =?utf-8?B?QXJaRXcvempObnlPNC9JT3JOUXpkQjdhb1NnQjEzZWZoYVNqSzJEbnNHL05X?=
+ =?utf-8?B?TmErU0h6Q0dOZEszWURRZ0NBTVpyOXBEMHlodTNJbTlCMVpKclZ4VDl1dlJ0?=
+ =?utf-8?B?YmRNNklyN0NuUzJoUjlTVlZLdDhwWmx0eEpxOG1ScFhtWTJ4ZmtvQXNsL1hO?=
+ =?utf-8?B?N3JaU1RIRzdNc3c4MnJVdnNXamk0bW41RUpieWlWZFdSYnJjaW5uNTlYbU5p?=
+ =?utf-8?B?TkptaytrbERBUVdQVWZ3VVJzUnpUTStUOE5DOHFhQXptMXZvNE10T1Y2L1I3?=
+ =?utf-8?B?L3pSejdwaXBFbzhnZWpTUnZSdmNsMG14L2IxSGRhdC9SRkdXNGliZkV1azhV?=
+ =?utf-8?B?Mnl3Qmx6NFhMTXFJeER4SFZJVlg3RG0yM1RCREZmUko5WHJCaTlndmpxUGxM?=
+ =?utf-8?B?SmprdEwrVk5aU0RsNyszdVo4SkRGRCtGQWNBVFVsVE1FMlREV2UrMEFRQUdI?=
+ =?utf-8?B?aU9YVjVMV3J6Y2VtdVR4M2FORS90R242dnd2QmVvU3RNWmVHRjl3NkJjSkF5?=
+ =?utf-8?B?L1hVL1NmbVM5dGVZZEt0cGZjR0MrYzRHWFMxTndyL1VDbEJ5b0E0c0pWR084?=
+ =?utf-8?B?S2hKNnZ5cmx1OVZTdW1aS1loMHhyNG9WeC9MYkZIVWE3WFVPWjdpSUxjenhY?=
+ =?utf-8?B?WU4rSlIyYWlmTVNPMFA2dE9Ea1RZUXZ4anRRcUMwTG1qL0YvZXJZLzNRblhW?=
+ =?utf-8?B?VGRpQ01jd3BDcTlHNHp5bTgyRzFCblN0cGp6QkNBRTZITXZBaG5CQUYzUVNK?=
+ =?utf-8?B?TnR3NllGRUZVY0pmWjFCVnlnZmZDWGRacEQydUpRRVM1a1NVTTkvOERITUh4?=
+ =?utf-8?B?TEk1Sm5MYnZ1QTBJU3owTmxScUgwZW1YSDF0VGV6RzRraFErYzJtc3R6OHk1?=
+ =?utf-8?B?cVpsZXYrZDZDRFVkWmlZNWVaN0dxODBacU1iK3VvWkg4NjhidUNUZE5IWDFN?=
+ =?utf-8?B?dTBJWUZFSlpUS0VFWmtwZUlaNXpBdjU3dEx3a2dOM21lK1IzOENRbGpMMEFL?=
+ =?utf-8?B?djRqcDRNVkc1TCswV1FKMFJ6YXRIWnZVV2NTYlZQUGhGRFZuTloyRmNqVERp?=
+ =?utf-8?B?NWhHc0FBZ0RTT001QUZ4K0ZFcEgzZWMyYVljSUgzSXZ0VjcwcjJQelNCemsy?=
+ =?utf-8?B?STIveXkzZzNFYU9JRE8rZGhMSzh6NnJEa0pLSXRzYmgzZ2x4ajVwcFo4ekJX?=
+ =?utf-8?B?UGdaNE9pazFuOTJrSGJaYnluQ3RNb2lwN2k2QXZHNkMvbUlRa1lGcW1DVWd0?=
+ =?utf-8?B?TkFQaFQvZDF5ZmdzemgwczJ6V3JhMmwzUWIxVjQ4MHZrdFdpRHRoQkJSSVVm?=
+ =?utf-8?B?ZFVsOXNGMTZtUzF2bzVENVZqMGJySDBlOVRWNFFKNTJjZkZtaTc1anVxQUlB?=
+ =?utf-8?Q?iqGCmZVV+3qMA?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RUwyN3FwMnRrSWJheU9COFlaNGZGZUlMczF4K2w3L2x6dE9WSGlJbXVtMUtW?=
+ =?utf-8?B?Zmhicyt3am1RNnRSNm9qZGRjMldkVGtqTER1Sm1Vd2Q5eGp5ajlpSXRVOTlD?=
+ =?utf-8?B?UU5yV08wY2czOFBzVGJNU2xBY3g4dTBZb0J5Vzh2OUR2VzF1TzZuS0pmUHV6?=
+ =?utf-8?B?K1pVbWdpNG13T2dhUDFTdk5aQVN5WnZVZzBEWjNYM2xjektBRHJqVTBoUTF6?=
+ =?utf-8?B?QzNpVDNhdzAydTRoZCtUcU9BRWdqVm5LY1FWR05xRndSZ1dNRTlkL3pLdkY2?=
+ =?utf-8?B?YXNaT1RmaXIyekdvNnlVWjltcjlUR2RzbmIvMXh5ekp0bUljbGVIdGdlKzNs?=
+ =?utf-8?B?dGtZSnpEdGxxOVBCbUFYT3RJVnF4b3pHbmw5YU02UEF5MzY0N2tKeUwzd0w1?=
+ =?utf-8?B?UGpPSGZCNFphN1V1MXNBTXFPMDdaUmFhTzJ4bTJubXFwYU5HNnc2KzhuK1FY?=
+ =?utf-8?B?MG0rVHZBZXNEQVNZU05FdnRmVXdPUjhwV25WTndLcm44ZytObnZIeWZVbjFC?=
+ =?utf-8?B?WVdDOUhtUU9pRnhxbFpQdWVQUmpEZTZTQUtVNkhxVUNJa2F2UlRGQVlSd1lR?=
+ =?utf-8?B?WFNHMzVLcTE0SUpSSnZEdFhHZnRERUt3UHlvYy94Z0ExdjNMeGpsd0s3a0tD?=
+ =?utf-8?B?NnNsMklidUErTXJRZzUrU2JCVlZqZzJVblJuWUg0YlVqZHlRL25HZFlRN0JW?=
+ =?utf-8?B?T2FUS2dUOEQwWnloQTlaN3FuL0phdkpZbFhUdHlrOTdTQktBNWVSQ3JBS1V2?=
+ =?utf-8?B?UTUyaEora2FmU3ZrTUVaaU5oZWNoWEJTTmRCNTV6MzR3ZG5iWmlmbTJLYkZG?=
+ =?utf-8?B?U0FJdmF3VVA1Tk9JTDhmWktwbTZoTkEvTEc0TjVlMTE3LzJQdDdnUllxRUFJ?=
+ =?utf-8?B?Zzg3VHhVSWpBb0JRbmVFY29oK3A5c1ZhbHJMdjRNMVk5Ylpjd2tMRnhKWDNE?=
+ =?utf-8?B?OHhKeE1oMFNWMDBEUmRPdExSODByb3hOWHQzVk1sVlJ1cTIzcE80WTBCOERT?=
+ =?utf-8?B?ekpEcFhITUNzV2NMOFNEVWVkbXBldFdJQnFIcXFZTmZXT3p3OWh2QndIeVhy?=
+ =?utf-8?B?dmtTUmk2MG8zbm9BUjQ4RXZNNE5QcFBSaEcxNzZqSEluZmlHdnVJeEdiQlpj?=
+ =?utf-8?B?YkFBdjZwcW8rdjVzMzRsNUQyUUMydFJiTDQxMDR3MGdTUmJ1cGxtNWlzUWlP?=
+ =?utf-8?B?ck9FbVhpdUhDclVtZ0ZSMFdTcU5qb2hsellnQjdoTGlFYjhnT3JLK2ljZkZB?=
+ =?utf-8?B?WjFLdjZMV01kOVIxWHZjbGsvTnV5SXgrdG5XbXoycmFJNnMxK1I2SEYwT1pH?=
+ =?utf-8?B?N1JrK3pLTTNVVlg5UkcwdVRmTU9NVnFCenhXM25CeGc2aXZ0N0FNdE4xKy90?=
+ =?utf-8?B?eHFBMk9JbjVxbllaaGhmU29LdHdNaEVlelZQMlpRK0VDWDZKUHNWcVpVRGcr?=
+ =?utf-8?B?MGRMeVBqc3Nlek5acFc3VS9sYmtyc3JBSlNJeS91NEVVcDFwcVBiNlhCTFFl?=
+ =?utf-8?B?RElKOFJDNWNtdXJHc09KWDI0NXRqRmRQcTRRSjBoY0RBRlBIa0FheDk2WVFY?=
+ =?utf-8?B?dXIrcWFocVJuZHJwTGNRLzV6dVBOOUhGYXN4RnZ6WkNPZk11RmladXo3bGNH?=
+ =?utf-8?B?dEdCSURiWERaRVd3R3hKblAzNW5paldKQWVKZmxpMWdLZDE1THVaOTBMQVhY?=
+ =?utf-8?B?clNLdC9tQ1dtYnJhZVhkSHNoYjA1L0JZenNocnV6TFBsT3g5aEJXZGR2aGRC?=
+ =?utf-8?B?Tnh6Rm9teFNJME1kUUdrOGl6c1IyK3F6U2k3M1RkOW1QTHJRbEFKZU16dEkz?=
+ =?utf-8?B?TVkxTlYxODh5cW44YXFUWUs1aU9yK0Z4ME1Zd05YMHUwejZ6M1FVV1VFRE5o?=
+ =?utf-8?B?SXNRVm5ta0N1bnJXOTFoSk5rMXpibzlMYTdLKzN1NG1EWTQ5UGN5MytoWnhh?=
+ =?utf-8?B?andxVnhXOE1ZSVo3bFM1Qk4vRVNPaUVGRXhIbTlVVXFzUG1FQ241eG0zTHN4?=
+ =?utf-8?B?dEpOcTZWelJaRi9UWXZ3aEZnTjRrY2s4QWl4dTlqNjZpT2pxNlI2QWFhQ2lU?=
+ =?utf-8?B?blFOUUNuNE4yZ3k1Smg0MERBU1VmcTR3ZWhNbktGMjBWR0xET2hIUFd5aE9h?=
+ =?utf-8?Q?zbnR23uEY6Fo/Baz6pkZl3W8i?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7a94465-9499-4352-d72f-08dd5ff314fa
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 16:46:19.4361
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2kfX0m7OkMXYBZTbcDIdvDqpRUbLxgXhbatDDZwPePnVANmu5CT3v2E2v9jHBuL7mEC+FGw2mUMc6nDk204fhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6731
 
-Hi Burak, some comments inline. Hopefully I haven't missed important
-context from previous versions.
+On 08-Mar-25 1:03 AM, Peter Zijlstra wrote:
+> Previously it was only safe to call perf_pmu_unregister() if there
+> were no active events of that pmu around -- which was impossible to
+> guarantee since it races all sorts against perf_init_event().
+> 
+> Rework the whole thing by:
+> 
+>  - keeping track of all events for a given pmu
+> 
+>  - 'hiding' the pmu from perf_init_event()
+> 
+>  - waiting for the appropriate (s)rcu grace periods such that all
+>    prior references to the PMU will be completed
+> 
+>  - detaching all still existing events of that pmu (see first point)
+>    and moving them to a new REVOKED state.
+> 
+>  - actually freeing the pmu data.
+> 
+> Where notably the new REVOKED state must inhibit all event actions
+> from reaching code that wants to use event->pmu.
 
-On Mon, Mar 10, 2025 at 12:21=E2=80=AFPM Burak Emir <bqe@google.com> wrote:
->
-> Adds a Rust bitmap API and necessary bitmap and bitops bindings.
-> These are for porting the approach from commit 15d9da3f818c ("binder:
-> use bitmap for faster descriptor lookup") to Rust. The functionality
-> in dbitmap.h makes use of bitmap and bitops.
->
-> The Rust bitmap API provides an abstraction to underlying bitmap
-> and bitops operations. For now, we only include methods that are
-> necessary for reimplementing dbitmap.h. It is straightforward to add
-> more methods later, as needed. We offer a safe API through
-> bounds checks which panic if violated.
->
-> We introduce bindings for the non-atomic variants __set_bit and
-> __clear_bit, and use the _find_* variants instead of the find_*
-> wrappers which enable small size optimization in C. These C
-> small size optimizations do not carry over to Rust. The
-> principle followed is that whenever there are plain variants, we use
-> those.
->
-> This series uses the usize type for sizes and indices into the bitmap,
-> because Rust generally always uses that type for indices and lengths
-> and it will be more convenient if the API accepts that type. This means
-> that we need to perform some casts to/from u32 and usize, since the C
-> headers use unsigned int instead of size_t/unsigned long for these
-> numbers in some places.
->
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Burak Emir <bqe@google.com>
-> ---
-> This is v3 of a patch introducing Rust bitmap API [v2]. Thanks
-> for all the helpful comments!
->
-> Changes v2 --> v3:
-> - change `bitmap_copy` to `copy_from_bitmap_and_extend` which
->   zeroes out extra bits. This enables dbitmap shrink and grow use
->   cases while offering a consistent and understandable Rust API for
->   other uses (Alice)
->
-> Changes v1 --> v2:
-> - Rebased on Yury's v2 patch [1] and Viresh's v2 patch [2]
-> - Removed import of `bindings::*`, keeping only prefix (Miguel)
-> - Renamed panic methods to make more explicit (Miguel)
-> - use markdown in doc comments and added example/kunit test (Miguel)
-> - Added maintainer section for BITOPS API BINDINGS [RUST] (Yury)
-> - Added M: entry for bitmap.rs which goes to Alice (Viresh, Alice)
-> - Changed calls from find_* to _find_*, removed helpers (Yury)
-> - Use non-atomic __set_bit and __clear_bit from Bitmap Rust API (Yury)
->
-> Link [1] https://lore.kernel.org/all/20250224233938.3158-1-yury.norov@gma=
-il.com/
-> Link [2] https://lore.kernel.org/all/cover.1740726226.git.viresh.kumar@li=
-naro.org/
-> Link [v2]: https://lore.kernel.org/rust-for-linux/20250303114037.3259804-=
-2-bqe@google.com/
-> ---
->  MAINTAINERS                     |   8 ++
->  rust/bindings/bindings_helper.h |   1 +
->  rust/helpers/bitmap.c           |   8 ++
->  rust/helpers/bitops.c           |  13 +++
->  rust/helpers/helpers.c          |   2 +
->  rust/kernel/bitmap.rs           | 190 ++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs              |   1 +
->  7 files changed, 223 insertions(+)
->  create mode 100644 rust/helpers/bitmap.c
->  create mode 100644 rust/helpers/bitops.c
->  create mode 100644 rust/kernel/bitmap.rs
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6d6e55d8593b..8f42fb1f24c6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4032,12 +4032,15 @@ F:      tools/lib/find_bit.c
->  BITMAP API BINDINGS [RUST]
->  M:     Yury Norov <yury.norov@gmail.com>
->  S:     Maintained
-> +F:     rust/helpers/bitmap.c
->  F:     rust/helpers/cpumask.c
->
->  BITMAP API [RUST]
->  M:     Viresh Kumar <viresh.kumar@linaro.org> (cpumask)
-> +M:     Alice Ryhl <aliceryhl@google.com> (bitmap)
->  R:     Yury Norov <yury.norov@gmail.com>
->  S:     Maintained
-> +F:     rust/kernel/bitmap.rs
->  F:     rust/kernel/cpumask.rs
->
->  BITOPS API
-> @@ -4054,6 +4057,11 @@ F:       include/linux/bitops.h
->  F:     lib/test_bitops.c
->  F:     tools/*/bitops*
->
-> +BITOPS API BINDINGS [RUST]
-> +M:     Yury Norov <yury.norov@gmail.com>
-> +S:     Maintained
-> +F:     rust/helpers/bitops.c
-> +
->  BLINKM RGB LED DRIVER
->  M:     Jan-Simon Moeller <jansimon.moeller@gmx.de>
->  S:     Maintained
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
-per.h
-> index 673b1daa9a58..50416c1a3de9 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -7,6 +7,7 @@
->   */
->
->  #include <kunit/test.h>
-> +#include <linux/bitmap.h>
->  #include <linux/blk-mq.h>
->  #include <linux/blk_types.h>
->  #include <linux/blkdev.h>
-> diff --git a/rust/helpers/bitmap.c b/rust/helpers/bitmap.c
-> new file mode 100644
-> index 000000000000..1cc88b34d716
-> --- /dev/null
-> +++ b/rust/helpers/bitmap.c
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/bitmap.h>
-> +
-> +void rust_helper_bitmap_copy_and_extend(unsigned long *dst, const unsign=
-ed long *src, unsigned int count, unsigned int size)
-> +{
-> +       bitmap_copy_and_extend(dst, src, count, size);
-> +}
-> diff --git a/rust/helpers/bitops.c b/rust/helpers/bitops.c
-> new file mode 100644
-> index 000000000000..986dafb45184
-> --- /dev/null
-> +++ b/rust/helpers/bitops.c
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/bitops.h>
-> +
-> +void rust_helper___set_bit(unsigned int nr, volatile unsigned long *addr=
-)
-> +{
-> +       __set_bit(nr, addr);
-> +}
-> +
-> +void rust_helper___clear_bit(unsigned int nr, volatile unsigned long *ad=
-dr)
-> +{
-> +       __clear_bit(nr, addr);
-> +}
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index de2341cfd917..541d8cb30195 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -7,6 +7,8 @@
->   * Sorted alphabetically.
->   */
->
-> +#include "bitmap.c"
-> +#include "bitops.c"
->  #include "blk.c"
->  #include "bug.c"
->  #include "build_assert.c"
-> diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
-> new file mode 100644
-> index 000000000000..b8fe18dff832
-> --- /dev/null
-> +++ b/rust/kernel/bitmap.rs
-> @@ -0,0 +1,190 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2025 Google LLC.
-> +
-> +//! Rust API for bitmap.
-> +//!
-> +//! C headers: [`include/linux/bitmap.h`](srctree/include/linux/bitmap.h=
-).
-> +
-> +use crate::alloc::{AllocError, Flags};
-> +use crate::bindings;
-> +use core::ptr::NonNull;
-> +
-> +/// Wraps underlying C bitmap structure.
+I think perf_event_init_task() failure path can still race with
+perf_pmu_unregister() and trigger a WARN():
 
-Missing article here.
+        CPU 1                                          CPU 2
 
-> +///
-> +/// # Invariants
-> +///
-> +/// * `ptr` is obtained from a successful call to `bitmap_zalloc` and
-> +///   holds the address of an initialized array of unsigned long
-> +///   that is large enough to hold `nbits` bits.
-> +pub struct Bitmap {
-> +    /// Pointer to an array of unsigned long.
-> +    ptr: NonNull<usize>,
-> +    /// How many bits this bitmap stores. Must be < 2^32.
-> +    nbits: usize,
+  perf_event_init_task()
+    perf_event_free_task()
+      perf_free_event(event1)
+      /* event1->refcount is 1 */
+                                                  perf_pmu_unregister()
+                                                    pmu_detach_events()
+                                                      pmu_get_event(pmu) /* Picks event1 */
+                                                        atomic_long_inc_not_zero(&event1->refcount) /* event1 */
+      /* event1->refcount became 2 (by CPU 2) */
+        free_event(event1)
+          WARN()
 
-How come this isn't held as u32? There's a lot of conversion to u32
-sprinkled around.
+Thanks,
+Ravi
 
-> +}
-> +
-> +impl Drop for Bitmap {
-> +    fn drop(&mut self) {
-> +        // SAFETY: `self.ptr` was returned by bitmap_zalloc.
-
-Ticks around `bitmap_zalloc` for consistency. I think this should also
-have an INVARIANT section since after this call the invariant
-described on Bitmap is broken.
-
-> +        unsafe { bindings::bitmap_free(self.as_mut_ptr()) };
-> +    }
-> +}
-> +
-> +#[cold]
-> +fn panic_not_in_bounds_lt(arg: &'static str, len: usize, val: usize) -> =
-! {
-> +    panic!("{arg} must be less than length {len}, was {val}");
-> +}
-
-Have you considered using build_error or returning an error?
-
-> +
-> +#[cold]
-> +fn panic_not_in_bounds_le(arg: &'static str, len: usize, val: usize) -> =
-! {
-> +    panic!("{arg} must be less than or equal to length {len}, was {val}"=
-);
-> +}
-> +
-> +impl Bitmap {
-> +    /// Constructs a new [`Bitmap`].
-> +    ///
-> +    /// Fails with AllocError if `nbits` is greater than or equal to 2^3=
-2,
-> +    /// or when the bitmap could not be allocated.
-> +    ///
-> +    /// # Example
-> +    ///
-> +    /// ```
-> +    /// # use kernel::bitmap::Bitmap;
-> +    ///
-> +    /// fn new_bitmap() -> Bitmap {
-> +    ///   Bitmap::new(128, GFP_KERNEL).unwrap()
-> +    /// }
-> +    /// ```
-> +    #[inline]
-> +    pub fn new(nbits: usize, flags: Flags) -> Result<Self, AllocError> {
-> +        if let Ok(nbits_u32) =3D u32::try_from(nbits) {
-> +            // SAFETY: nbits =3D=3D 0 is permitted and nbits fits in u32=
-.
-> +            let ptr =3D unsafe { bindings::bitmap_zalloc(nbits_u32, flag=
-s.as_raw()) };
-> +            // Zero-size allocation is ok and yields a dangling pointer.
-> +            let ptr =3D NonNull::new(ptr).ok_or(AllocError)?;
-> +            Ok(Bitmap { ptr, nbits })
-> +        } else {
-> +            Err(AllocError)
-> +        }
-> +    }
-
-Similar question to above: why return an error here but panic in the setter=
-s?
-
-> +
-> +    /// Returns how many bits this bitmap holds.
-> +    #[inline]
-> +    pub fn len(&self) -> usize {
-> +        self.nbits
-> +    }
-> +
-> +    /// Returns true if this bitmap has length 0.
-> +    #[inline]
-> +    pub fn is_empty(&self) -> bool {
-> +        self.nbits =3D=3D 0
-> +    }
-> +
-> +    /// Returns a mutable raw pointer to the backing bitmap.
-> +    #[inline]
-> +    pub fn as_mut_ptr(&mut self) -> *mut usize {
-> +        self.ptr.as_ptr()
-> +    }
-> +
-> +    /// Returns a raw pointer to the backing bitmap.
-> +    #[inline]
-> +    pub fn as_ptr(&self) -> *const usize {
-> +        self.ptr.as_ptr()
-> +    }
-
-Could you describe the need for these functions in the commit message?
-I would expect that leaking the internal pointer would be an anti-goal
-of an abstraction like this.
-
-> +
-> +    /// Sets bit with number `nr`.
-> +    ///
-> +    /// # Panics
-> +    ///
-> +    /// Panics if `nr` is greater than or equal to `self.nbits`.
-> +    #[inline]
-> +    pub fn set_bit(&mut self, nr: usize) {
-> +        if self.nbits <=3D nr {
-> +            panic_not_in_bounds_lt("nr", self.nbits, nr)
-> +        }
-> +        // SAFETY: Bit nr is within bounds.
-> +        unsafe { bindings::__set_bit(nr as u32, self.as_mut_ptr()) };
-> +    }
-> +
-> +    /// Clears bit with number `nr`.
-> +    ///
-> +    /// # Panics
-> +    ///
-> +    /// Panics if `nr` is greater than or equal to `self.nbits`.
-> +    #[inline]
-> +    pub fn clear_bit(&mut self, nr: usize) {
-> +        if self.nbits <=3D nr {
-> +            panic_not_in_bounds_lt("nr", self.nbits, nr);
-> +        }
-> +        // SAFETY: Bit nr is within bounds.
-> +        unsafe { bindings::__clear_bit(nr as u32, self.as_mut_ptr()) };
-> +    }
-> +
-> +    /// Copies all bits from `src` and sets any remaining bits to zero.
-> +    ///
-> +    /// # Panics
-> +    ///
-> +    /// Panics if `src.nbits` has more bits than this bitmap.
-> +    #[inline]
-> +    pub fn copy_from_bitmap_and_extend(&mut self, src: &Bitmap) {
-
- nit: `Bitmap` could be `Self` here.
-
-> +        if self.nbits < src.nbits {
-> +            panic_not_in_bounds_le("src.nbits", self.nbits, src.nbits);
-> +        }
-> +        // SAFETY: nbits =3D=3D 0 is supported and access to `self` and =
-`src` is within bounds.
-> +        unsafe {
-> +            bindings::bitmap_copy_and_extend(self.as_mut_ptr(), src.as_p=
-tr(), src.nbits as u32, self.nbits as u32)
-> +        };
-> +    }
-> +
-> +    /// Finds the last bit.
-> +    #[inline]
-> +    pub fn find_last_bit(&self) -> usize {
-> +        // SAFETY: nbits =3D=3D 0 is supported and access is within boun=
-ds.
-> +        unsafe { bindings::_find_last_bit(self.as_ptr(), self.nbits) }
-> +    }
-> +
-> +    /// Finds the last bit, searching up to `nbits` bits.
-> +    ///
-> +    /// # Panics
-> +    ///
-> +    /// Panics if `nbits` is too large for this bitmap.
-> +    #[inline]
-> +    pub fn find_last_bit_upto(&self, nbits: usize) -> usize {
-> +        if self.nbits < nbits {
-> +            panic_not_in_bounds_le("nbits", self.nbits, nbits);
-> +        }
-> +        // SAFETY: nbits =3D=3D 0 is supported and access is within boun=
-ds.
-> +        unsafe { bindings::_find_last_bit(self.as_ptr(), nbits) }
-> +    }
-> +
-> +    /// Finds the next zero bit, searching up to `nbits`.
-> +    ///
-> +    /// # Panics
-> +    ///
-> +    /// Panics if `nbits` is too large for this bitmap.
-> +    #[inline]
-> +    pub fn find_next_zero_bit_upto(&self, nbits: usize) -> usize {
-> +        if self.nbits < nbits {
-> +            panic_not_in_bounds_le("nbits", self.nbits, nbits);
-> +        }
-> +        // SAFETY: nbits =3D=3D 0 is supported and access is within boun=
-ds.
-> +        unsafe {
-> +            bindings::_find_next_zero_bit(self.as_ptr(), nbits, 0 /* off=
-set */)
-> +        }
-> +    }
-
-How come `find_last_bit` exists but `find_next_zero_bit` does not? I
-wonder if the APIs could be unified by taking optional sizes and
-offsets.
-
-> +
-> +    /// Finds the next zero bit, searching up to `nbits` bits, with offs=
-et `offset`.
-> +    ///
-> +    /// # Panics
-> +    ///
-> +    /// Panics if `nbits` is too large for this bitmap.
-> +    #[inline]
-> +    pub fn find_next_zero_bit_upto_offset(&self, nbits: usize, offset: u=
-size) -> usize {
-> +        if self.nbits < nbits {
-> +            panic_not_in_bounds_le("nbits", self.nbits, nbits);
-> +        }
-> +        // SAFETY: nbits =3D=3D 0 and out-of-bounds offset is supported,=
- and access is within bounds.
-> +        unsafe { bindings::_find_next_zero_bit(self.as_ptr(), nbits, off=
-set) }
-> +    }
-> +}
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index efbd7be98dab..be06ffc47473 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -36,6 +36,7 @@
->  pub use ffi;
->
->  pub mod alloc;
-> +pub mod bitmap;
->  #[cfg(CONFIG_BLOCK)]
->  pub mod block;
->  #[doc(hidden)]
-> --
-> 2.49.0.rc0.332.g42c0ae87b1-goog
->
->
-
-Cheers.
-Tamir
+I'll schedule a perf_fuzzer + tinypmu test overnight and see if it
+reports any other issues.
