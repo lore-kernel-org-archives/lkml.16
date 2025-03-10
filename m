@@ -1,55 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0072253E4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0293223322;
+	Mon, 10 Mar 2025 09:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741599746; cv=none; b=q2hLFTsA3FvNt8JBt2RG4JFn6RAbX3LVMFVO6S8DReMI01HsUYtrcYMB6tJ3wzMHtsY/XJpFQ4fzBrS6xlFriG8SpF+cSTic1tistTa1wjR+XewQmDvTzLWLPlFUyaPky3+cvCEO5EHVQc+qocmURhz/LppWOeOschcvQkWnWKQ=
+	t=1741599747; cv=none; b=S6SblkQO8+5TW26j2KxKaPyP17fPdY+FPULxqowfKaSY58rerxveaXQWJk3IhUa4TgZcWQm8CfDlL53iPAyzq6hvv8YrsT/2slhC5TE+nVRp8w9FxKtNOIlTXPyY2JTUaPuqptLHiGmVBEHWHQjGmKjsVTXBNo/ZmIWfE5Fi1Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741599746; c=relaxed/simple;
-	bh=9NUbkeHFJVXSvpJC6cffvGAry+3XZDrlAYjzGGwtup4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WTx/NY+KM3HhsajWilJ7LzaTpNYGmHZ7yWq4FllqX9HnsX3P1kmAa383Gdc3NQw0qdojzUmsIioruNlCE0TidV4ic2zYghvjKkjPDs1Uyo/IjNTnuXDk4BHmuhKhTKSDtZYWjl6pGRRYSZr+frhlwTnPCP5Cvx+9L+nj8ojlZOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b1ZfBUXe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741599747; c=relaxed/simple;
+	bh=NQHT5InkDyXgo08L9DDc3BqAK61davpXyErhFl9ZHZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ofiZ5JazYPm8GjeNdpACYfuLGDhfUrv1aPxtUx/fMHHhHUBcPWTvZUC8FTBUOMfUYG0Y4TuWgCnvLSAmQa8vMfQ0vEQybUNioJL3qyMoIR+6Z1BOcXxsD7U0MtRDGCXPB5jjbS1zBB/8un7iZ8ne8pLwOzznr/up95/JoUG7xOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hGS+nSgi; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b1ZfBUXe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741599743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Sp9hYSzH6vGjH5HKqctZ4em7wna5YpsrQRLignkLGyE=;
-	b=b1ZfBUXe6XU5dKTfm9T88WsVVfXPTQlLxEScoa4wnWLHE+12m2ZRHOhlzwQgzzGOzrBm7x
-	XFuknL06t8DitTjXTBQ1sNg+9ZfHSUaiZZ0ZaDorbVJ2PadFFLGjZK8wRkNnMfXsZ+CvvU
-	NUAziBQ3Q7usPHphOb7tgea2YrsJHMc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-481-OF0Y5ao4N9SMK71jUXUVLw-1; Mon,
- 10 Mar 2025 05:42:18 -0400
-X-MC-Unique: OF0Y5ao4N9SMK71jUXUVLw-1
-X-Mimecast-MFC-AGG-ID: OF0Y5ao4N9SMK71jUXUVLw_1741599737
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F6121955BC1;
-	Mon, 10 Mar 2025 09:42:12 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.61])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A5BA81800366;
-	Mon, 10 Mar 2025 09:42:09 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Marc Dionne <marc.dionne@auristor.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Christian Brauner <christian@brauner.io>,
-	linux-afs@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/11] afs, rxrpc: Clean up refcounting on afs_cell and afs_server records
-Date: Mon, 10 Mar 2025 09:41:53 +0000
-Message-ID: <20250310094206.801057-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGS+nSgi"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2241c95619eso7559315ad.0;
+        Mon, 10 Mar 2025 02:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741599745; x=1742204545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7VWz2km1p8A5Qrb528dwkKrCW4fkTzMxBmqo/9LnHk4=;
+        b=hGS+nSgijMCamFdU1iPVCGXuFRMoS5I2pNS0V141BuIzI1VqLBSVdV0b+MOH/igmRs
+         U0o4o7kC+lSW9/QN/b63w1T9VKYQfzwB64AU89MzEKRV/gT1kPewOtnRhYT+qFg2RkWU
+         DbSzPUf0rl1VWMQvMgKAihyK7pzJL/ZaksEBSwlDmCOrc862X0yLSDw2x3Kv5jratt2+
+         Zkfw44aAl7AvAKoi55hQX7xBIrT12XMFvh1gEiD4EFib76Oe1r21k9Gj9cQlJ+PdK9TV
+         3mth4upAdmrjubH7JM+6sXb4v45ZfSY2IxbfL9u9f5UfNVvm85G1QRJQoaWKi7kX6K3A
+         blyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741599745; x=1742204545;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7VWz2km1p8A5Qrb528dwkKrCW4fkTzMxBmqo/9LnHk4=;
+        b=sBFNPsjR6VhfULx3n/VVKOj0YR2m0A5BFY5YyXEVeTFeLcC2CgAZvj9x3LzIPSIO7d
+         hcvJ4QnApXtoXO2AhZr3HudOVz3jsyLSBNSDMDxphFa9h9MG2DRi6jopaN/QDRkzr6uq
+         TqV16On0MADqcO4h+QGgk553bWV011juBERSx4UzaP78dMSIyKeb5bSIPvY09kAhYum2
+         yxrpDsRcYxqyTfhUb063RBej5mskCrYC1OLn/ZG92+ypdjOl67DwHlJ4+fffdXTdppsS
+         kUQ7Kn42trmLPvtnpytbCRGuP6HYwidBznexdyaKrbKwSaK15O2FIVXMX6Shagu5hUkI
+         nYwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxnImqKaTafNpjxeN0oZXiS+aLUQZCbNOzOdk9B9tMGjrhO9h2z3c5d8UP1g5BiLgbrBBY0ZdpiRTtXxU=@vger.kernel.org, AJvYcCXFHzFQRX3I8VwoeIzGPsXW7Fh3M1/CDA9QDis81yquYOkclqsE5AEziMdNCjXl2gFj1Ur9Nb6T@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/Pu7xEMOJzneJlFFiwabWz7ndjxywb2BZYeYW9v7bPUGbLuLT
+	FMysflH/YsngEd39j522nch/cVWNpdJQhUBtpX+9D4loDWK5ngdF
+X-Gm-Gg: ASbGnctC5A5AFWjFgD/8g/31yoT4x0gmlFz59W+YvrhkwU+vRNN27wrnpvuD76eGsFH
+	JIzG9gxkOc6rpP2jcv+7EAoE05wJyCrzLpVduD/bNSCl2cpOCN4HlZ3XGZVRzzaUcknsJqRjsW0
+	RQ8lwKNrAudAAOr6f07JyiTVeRRe/ClWnOuIF5m58HAsTyB4ZG/OuMEhuoAX2FHBMpy6Alzh1KH
+	c8bggenaBklqq2rHrrUZ5VEG0dn3wGAtfRIuPQGotVLNjWJ6RDJcAnVw8ydNwOrwBkuSRpW7wRs
+	544BTyCD+/HlPwLTtsDG6lPnjD+vzdmNK1eTZWEQMrc6ET+3YB7VutqYI7CG1g==
+X-Google-Smtp-Source: AGHT+IFo0zr5IznfFqV/6Ax1xUdw01T8Ui1VTflInlSacqsAlrf5cMCvN4QODRufJlVGOpwF2k+jhA==
+X-Received: by 2002:a17:903:2302:b0:224:1212:7da1 with SMTP id d9443c01a7336-225422a8e8emr49856275ad.13.1741599744843;
+        Mon, 10 Mar 2025 02:42:24 -0700 (PDT)
+Received: from localhost.localdomain ([182.148.13.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a91971sm73285915ad.165.2025.03.10.02.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 02:42:23 -0700 (PDT)
+From: Qianyi Liu <liuqianyi125@gmail.com>
+To: phasta@mailbox.org
+Cc: airlied@gmail.com,
+	ckoenig.leichtzumerken@gmail.com,
+	dakr@kernel.org,
+	daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	liuqianyi125@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	matthew.brost@intel.com,
+	mripard@kernel.org,
+	phasta@kernel.org,
+	stable@vger.kernel.org,
+	tzimmermann@suse.de
+Subject: [PATCH V3] drm/sched: Fix fence reference count leak
+Date: Mon, 10 Mar 2025 17:42:16 +0800
+Message-Id: <20250310094216.3821893-1-liuqianyi125@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <a5f389b1c08847fb658f4120b205521e4a8ea0c1.camel@mailbox.org>
+References: <a5f389b1c08847fb658f4120b205521e4a8ea0c1.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,115 +85,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This series fixes an occasional hang that's only really encountered when
-rmmod'ing the kafs module, one of the reasons why I'm proposing it for the
-next merge window rather than immediate upstreaming.  The changes include:
+> Sorry for the delay
+>
+> On Wed, 2025-02-26 at 17:05 +0800, Qianyi Liu wrote:
+>> From: qianyi liu <liuqianyi125@gmail.com>
+>>
+>> The last_scheduled fence leaked when an entity was being killed and
+>> adding its callback failed.
+>
+> s/leaked/leaks
+>
+> s/was being/is being
+>
+> s/its callback/the cleanup callback
+>
+> s/failed/fails
 
- (1) Fix missing handling of RCU pathwalk in afs_atcell_get_link().
+>>
+>> Decrement the reference count of prev when dma_fence_add_callback()
+>> fails, ensuring proper balance.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 2fdb8a8f07c2 ("drm/scheduler: rework entity flush, kill and
+>> fini")
+>> Signed-off-by: qianyi liu <liuqianyi125@gmail.com>
+>> ---
+>> v2 -> v3: Rework commit message (Markus)
+>> v1 -> v2: Added 'Fixes:' tag and clarified commit message (Philipp
+>> and Matthew)
+>> ---
+>>  drivers/gpu/drm/scheduler/sched_entity.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/scheduler/sched_entity.c
+>> b/drivers/gpu/drm/scheduler/sched_entity.c
+>> index 69bcf0e99d57..1c0c14bcf726 100644
+>> --- a/drivers/gpu/drm/scheduler/sched_entity.c
+>> +++ b/drivers/gpu/drm/scheduler/sched_entity.c
+>> @@ -259,9 +259,12 @@ static void drm_sched_entity_kill(struct
+>> drm_sched_entity *entity)
+>>  		struct drm_sched_fence *s_fence = job->s_fence;
+>>
+>>  		dma_fence_get(&s_fence->finished);
+>> -		if (!prev || dma_fence_add_callback(prev, &job-
+>> >finish_cb,
+>> -
+>> drm_sched_entity_kill_jobs_cb))
+>> +		if (!prev ||
+>> +		    dma_fence_add_callback(prev, &job->finish_cb,
+>> +
+>> drm_sched_entity_kill_jobs_cb)) {
+>> +			dma_fence_put(prev);
+>
+> Please add a little comment about the dma_fence_put()'s purpose. Sth
+> like "Adding callback above failed. dma_fence_put() checks for NULL."
+>
+> Then we should be good I think
+>
+> Thx
 
- (2) Remove the "-o autocell" mount option.  This is obsolete with the
-     dynamic root and removing it makes the next patch slightly easier.
+OK, thank you for your detailed feedback.
 
- (3) Change how the dynamic root mount is constructed.  Currently, the root
-     directory is (de)populated when it is (un)mounted if there are cells
-     already configured and, further, pairs of automount points have to be
-     created/removed each time a cell is added/deleted.
-
-     This is changed so that readdir on the root dir lists all the known
-     cell automount pairs plus the @cell symlinks and the inodes and
-     dentries are constructed by lookup on demand.  This simplifies the
-     cell management code.
-
- (4) A few improvements to the afs_volume tracepoint.
-
- (5) A few improvements to the afs_server tracepoint.
-
- (6) Pass trace info into the afs_lookup_cell() function to allow the trace
-     log to indicate the purpose of the lookup.
-
- (7) Remove the 'net' parameter from afs_unuse_cell() as it's superfluous.
-
- (8) In rxrpc, allow a kernel app (such as kafs) to store a word of
-     information on rxrpc_peer records.
-
- (9) Use the information stored on the rxrpc_peer record to point to the
-     afs_server record.  This allows the server address lookup to be done
-     away with.
-
-(10) Simplify the afs_server ref/activity accounting to make each one
-     self-contained and not garbage collected from the cell management work
-     item.
-
-(11) Simplify the afs_cell ref/activity accounting to make each one of
-     these also self-contained and not driven by a central management work
-     item.
-
-     The current code was intended to make it such that a single timer for
-     the namespace and one work item per cell could do all the work
-     required to maintain these records.  This, however, made for some
-     sequencing problems when cleaning up these records.  Further, the
-     attempt to pass refs along with timers and work items made getting it
-     right rather tricky when the timer or work item already had a ref
-     attached and now a ref had to be got rid of.
-
-The patches are here:
-
-	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=afs-next
-
-Thanks,
-David
-
-Changes
-=======
-ver #4)
- - Add a fix patch to handle RCU pathwalk in afs_atcell_get_link().
-
-ver #3)
- - Fix the fix for an error check of the form "unsigned value < 0".
-
-ver #2)
- - Fix an error check of the form "unsigned value < 0".
-
-Link: https://lore.kernel.org/r//3190716.1740733119@warthog.procyon.org.uk/ # v1
-Link: https://lore.kernel.org/r//3399677.1740754398@warthog.procyon.org.uk/ # v2
-Link: https://lore.kernel.org/r//3761344.1740995350@warthog.procyon.org.uk/ # v3
-
-David Howells (11):
-  afs: Fix afs_atcell_get_link() to handle RCU pathwalk
-  afs: Remove the "autocell" mount option
-  afs: Change dynroot to create contents on demand
-  afs: Improve afs_volume tracing to display a debug ID
-  afs: Improve server refcount/active count tracing
-  afs: Make afs_lookup_cell() take a trace note
-  afs: Drop the net parameter from afs_unuse_cell()
-  rxrpc: Allow the app to store private data on peer structs
-  afs: Use the per-peer app data provided by rxrpc
-  afs: Fix afs_server ref accounting
-  afs: Simplify cell record handling
-
- fs/afs/addr_list.c         |  50 +++
- fs/afs/cell.c              | 446 ++++++++++++---------------
- fs/afs/cmservice.c         |  82 +----
- fs/afs/dir.c               |   5 +-
- fs/afs/dynroot.c           | 501 +++++++++++++------------------
- fs/afs/fs_probe.c          |  32 +-
- fs/afs/fsclient.c          |   4 +-
- fs/afs/internal.h          | 100 +++---
- fs/afs/main.c              |  16 +-
- fs/afs/mntpt.c             |   5 +-
- fs/afs/proc.c              |  19 +-
- fs/afs/rxrpc.c             |   8 +-
- fs/afs/server.c            | 601 ++++++++++++++++---------------------
- fs/afs/server_list.c       |   6 +-
- fs/afs/super.c             |  25 +-
- fs/afs/vl_alias.c          |   7 +-
- fs/afs/vl_rotate.c         |   2 +-
- fs/afs/volume.c            |  15 +-
- include/net/af_rxrpc.h     |   2 +
- include/trace/events/afs.h |  83 ++---
- net/rxrpc/ar-internal.h    |   1 +
- net/rxrpc/peer_object.c    |  30 +-
- 22 files changed, 927 insertions(+), 1113 deletions(-)
-
+Best regards.
+QianYi.
