@@ -1,156 +1,115 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7976C220681;
-	Mon, 10 Mar 2025 11:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060ED28EA;
+	Mon, 10 Mar 2025 11:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741605855; cv=none; b=UBcNgYZ/EkfEL+9c3c9HWwQ22LzvxBNi4tWG5WYyqqG1EaWMauxIeJxFfCEJzYGRrOZrWJClbNxR0yGOlpJjAdPixQoYb1HUvGvnQ9YK60FX659nq5yzd6V/6gRsXhQ5ztui1q3DVnL/tKpIWF3uyX/ni5HsxviEnWFEauATT/M=
+	t=1741605924; cv=none; b=X8ucUPkIp06mf72JAb+JG1S7eTopBE7I9kuJwBoqzXuYMVhNOPuleYq7+CMs2BD43AKrc6ZbW2rg5NFobA738CyD1eIyZP4UEqEIeKpmG9er3pdYh7GfYzd3Z9r3MbJEL5XUebXltJW6NuBDsvFmABWxhokXmTZNiWp1/ycxBPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741605855; c=relaxed/simple;
-	bh=OeLaqDjCUWAjwPd9YXgc8Nf2jUeZmFsbQrRX1+n7oCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dkw3M6/TO0fGE7XI0pTOtpu8maB7FJwa9V2+jI6fd9y4Uj7gTTu9DS3uMGdUgEQZpTtdnCIxY3E02QU4VPGcmnwWqYTeWefiQtrZMgPVsq306Bo4JMbLBu9R4Pjt26E+hRCLw8qaD5vp7ojNcB0zet6usN3dtk/JrGS0d6NjeFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DnjZuGux; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741605924; c=relaxed/simple;
+	bh=i/7QjVV7rIb5AvxHrpWor82wSEVgjqYwZDr90kTdXOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUIbUYHNZ7/82yvYDhCy3S3aqyDtr7ezmiRkNvWYoueK5w38Kercp9Xx8odywLEkDOdrcxcRc3xnY7HcBf6n2EW6ncNgLESk8GqebD/s0M5RUqVsazbMK6fFFUrHv41+3ABJwv+tn7peUy1v1Bn3b2VoyG6ZaYc8RV9slgHkhd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PL9L+ipc; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DnjZuGux"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 73C8843281;
-	Mon, 10 Mar 2025 11:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741605844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VIOxtXonhRWejNWq5rxRyT2kvdpRAuigNbl7XmTldVo=;
-	b=DnjZuGuxEwPfPqwor/sH5Pai+QeBH4BGQz6SCaIyuecx+hsULkaMmRZ24I9+i1YqAFsiEC
-	88/Ot/2+dooGKqzx/g7D+5Lglw5VLxEK0gkrEOPY1+OKpvolevV4NeZcZDJNu3I7TtspQ8
-	J/wFp7NguwsuDNj5GMNyhkDnnsXgy8lO0uCYMPDR82VzmOWKureunDkzhhbvzW6+hBCw4k
-	iuGaf1RSN9GnEjBjNvnLPPKbh9T0Rzwr6Gn5Lr8zwmCI7vGhiGnBakvIVjlclwTOO7Fra1
-	dtqVi4uUqoN/SxwTVUoFsMx8XuEv4pnkXnKuWPhvhqKqvxMIhs3ioV/+sI8Gxg==
-Date: Mon, 10 Mar 2025 12:23:58 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alex Shi
- <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
- <lukasz.luba@arm.com>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Petr Mladek <pmladek@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Morton
- <akpm@linux-foundation.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Liu Ying <victor.liu@nxp.com>,
- linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Binbin Zhou
- <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH 2/2] vsprintf: remove redundant and unused %pCn format
- specifier
-Message-ID: <20250310122358.3c07ed18@booty>
-In-Reply-To: <Z86gCjzuC5UFZBIL@smile.fi.intel.com>
-References: <20250307-vsprintf-pcn-v1-0-df0b2ccf610f@bootlin.com>
-	<20250307-vsprintf-pcn-v1-2-df0b2ccf610f@bootlin.com>
-	<Z8sqJhbqEBla_Ch7@smile.fi.intel.com>
-	<20250308003425.7b89bfb6@booty>
-	<Z86gCjzuC5UFZBIL@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PL9L+ipc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741605923; x=1773141923;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i/7QjVV7rIb5AvxHrpWor82wSEVgjqYwZDr90kTdXOk=;
+  b=PL9L+ipcN+XaFMxYQXOWqINJ/k5P7J/3m4fJOxb5MA/sANzxE6j/xE71
+   uGCJf3FzWmyygwQddaBCbMuG7mbA7aoTlUALxpJH8FcanWfTRRtiCFc+M
+   nbxgKYYqp5I+rzadV87jYu4hLorjCznn0yXjnGIB9A3tjbebKE198aECr
+   PgS1vHxg0O9RlyCC96rUbHagNYLft2UE9m2YIoPCO/71ixl6DLJDAG+4M
+   gohltjfLg6IvRxoeoLvy2bbTUG7gN2cMajRAp45KkzVNApkcjn+ukWmst
+   2fl9nMaAUaQy+A+V2CV3GIgWE6t/bmE/P1m2eG6pfqkITofK/RCaRM4bg
+   A==;
+X-CSE-ConnectionGUID: TDPsM6gOQjGSVT8GJ5huqw==
+X-CSE-MsgGUID: YBVSDdwFQjaBfBqG4+RoEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="42634063"
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="42634063"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 04:25:23 -0700
+X-CSE-ConnectionGUID: hJMWasBGToeid9xeZGyNeQ==
+X-CSE-MsgGUID: cx2Dvm+2RPqB4/EUr8hb2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="124964273"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.8.107]) ([10.94.8.107])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 04:25:19 -0700
+Message-ID: <f9436b0d-8cfa-4f37-9b0c-395c033f849e@linux.intel.com>
+Date: Mon, 10 Mar 2025 12:25:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelvddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfekieegtefhgeelieehhefgtdekffevgfegvdeggeelkeehjeetteethfevudfgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvledprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
- egurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhuihdriihhrghnghesihhnthgvlhdrtghomhdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphhtthhopehrjhhuihessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepshgsrhgrnhguvghnsegsrhhorggutghomhdrtghomh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/14] ASoC: amd: acp: Implement acp_common_hw_ops support
+ for acp platforms
+To: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+ broonie@kernel.org, alsa-devel@alsa-project.org
+Cc: Vijendar.Mukunda@amd.com, mario.limonciello@amd.com,
+ Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com,
+ syed.sabakareem@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>,
+ "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..."
+ <linux-sound@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20250310104601.7325-1-venkataprasad.potturu@amd.com>
+ <20250310104601.7325-3-venkataprasad.potturu@amd.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <20250310104601.7325-3-venkataprasad.potturu@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 3/10/2025 11:45 AM, Venkata Prasad Potturu wrote:
+> Implement acp common hardware ops for acp_init and acp_deinit
+> funcions to support commons ops for all platforms.
+> 
+> Signed-off-by: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+> ---
+>   sound/soc/amd/acp/acp-legacy-common.c | 50 +++++++++++++++++++++++++++
+>   sound/soc/amd/acp/acp-pci.c           | 13 ++++---
+>   sound/soc/amd/acp/amd.h               | 36 +++++++++++++++++++
+>   3 files changed, 95 insertions(+), 4 deletions(-)
+> 
 
-+To: Alex Shi, Yanteng Si (Chinese docs maintainers)
-+Cc: Binbin Zhou (contributor to English version of printk-formats.rst)
+...
 
-On Mon, 10 Mar 2025 10:17:14 +0200
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+>   
+> @@ -252,6 +274,20 @@ int restore_acp_i2s_params(struct snd_pcm_substream *substream,
+>   
+>   void check_acp_config(struct pci_dev *pci, struct acp_chip_info *chip);
+>   
+> +static inline int acp_hw_init(struct acp_chip_info *chip)
+> +{
+> +	if (chip && chip->acp_hw_ops && chip->acp_hw_ops->acp_init)
+> +		return chip->acp_hw_ops->acp_init(chip);
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline int acp_hw_deinit(struct acp_chip_info *chip)
+> +{
+> +	if (chip && chip->acp_hw_ops && chip->acp_hw_ops->acp_init)
 
-> On Sat, Mar 08, 2025 at 12:34:25AM +0100, Luca Ceresoli wrote:
-> > On Fri, 7 Mar 2025 19:17:26 +0200
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote: =20
-> > > On Fri, Mar 07, 2025 at 12:19:08PM +0100, Luca Ceresoli wrote: =20
-> > > > %pC and %pCn print the same string, and commit 900cca294425 ("lib/v=
-sprintf:
-> > > > add %pC{,n,r} format specifiers for clocks") introducing them does =
-not
-> > > > clarify any intended difference. It can be assumed %pC is a default=
- for
-> > > > %pCn as some other specifiers do, but not all are consistent with t=
-his
-> > > > policy. Moreover there is now no other suffix other than 'n', which=
- makes a
-> > > > default not really useful.
-> > > >=20
-> > > > All users in the kernel were using %pC except for one which has been
-> > > > converted. So now remove %pCn and all the unnecessary extra code and
-> > > > documentation.   =20
-> > >=20
-> > > You seem forgot to update translation(s) of the documentation. =20
-> >=20
-> > I'm afraid I don't speak Chinese. :-) =20
->=20
-> At bare minimum we can drop the same line in the list.
-> Also in such a case we may ask a Chinese speaking person to review / corr=
-ect /
-> suggest the changes. I would not leave a leftover as it will be forgotten=
- so
-> easily and documentation becomes not in sync.
+Shouldn't it check for ->acp_deinit() instead?
 
-Alex Shi, Yanteng Si: what is the process to update the Chinese
-documentation after changes to the English one, considering I don't
-speak Chinese?
+> +		return chip->acp_hw_ops->acp_deinit(chip);
+> +	return -EOPNOTSUPP;
+> +}
+> +
+>   static inline u64 acp_get_byte_count(struct acp_dev_data *adata, int dai_id, int direction)
+>   {
+>   	u64 byte_count = 0, low = 0, high = 0;
 
-The documentation [0] seems to imply it will be done by you after the
-English documentation update, is it the case?
-
-Otherwise, for this simple change, I can add a patch that looks like a
-somewhat correct one for Chinese:
-
-@@ -523,9 +523,8 @@ clk=E7=BB=93=E6=9E=84=E4=BD=93
- ::
-=20
- 	%pC	pll1
--	%pCn	pll1
-=20
--=E7=94=A8=E4=BA=8E=E6=89=93=E5=8D=B0clk=E7=BB=93=E6=9E=84=E3=80=82%pC =E5=
-=92=8C %pCn =E6=89=93=E5=8D=B0=E6=97=B6=E9=92=9F=E7=9A=84=E5=90=8D=E7=A7=B0=
-=EF=BC=88=E9=80=9A=E7=94=A8=E6=97=B6=E9=92=9F=E6=A1=86=E6=9E=B6=EF=BC=89=E6=
-=88=96=E5=94=AF=E4=B8=80=E7=9A=8432=E4=BD=8D
-+=E7=94=A8=E4=BA=8E=E6=89=93=E5=8D=B0clk=E7=BB=93=E6=9E=84=E3=80=82%pC =E6=
-=89=93=E5=8D=B0=E6=97=B6=E9=92=9F=E7=9A=84=E5=90=8D=E7=A7=B0=EF=BC=88=E9=80=
-=9A=E7=94=A8=E6=97=B6=E9=92=9F=E6=A1=86=E6=9E=B6=EF=BC=89=E6=88=96=E5=94=AF=
-=E4=B8=80=E7=9A=8432=E4=BD=8D
- ID=EF=BC=88=E4=BC=A0=E7=BB=9F=E6=97=B6=E9=92=9F=E6=A1=86=E6=9E=B6=EF=BC=89=
-=E3=80=82
-=20
- =E9=80=9A=E8=BF=87=E5=BC=95=E7=94=A8=E4=BC=A0=E9=80=92=E3=80=82
-
-Can you confirm the above is a correct change?
-
-Luca
-
-[0] https://docs.kernel.org/translations/index.html
-
---=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
