@@ -1,135 +1,141 @@
-Received: from mail-m155104.qiye.163.com (mail-m155104.qiye.163.com [101.71.155.104])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EDA21E0B7
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AC721D3F7;
+	Mon, 10 Mar 2025 11:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741605564; cv=none; b=hUl5gusBltujja7rloxS2zxEzeaz3zHXkP5kETS2jOH5vC0HNfoKJ/WDAlwjFoHMJnbYLlW3rZibf5N2w5SEfF25NokcEh3VoqC4IO326qjHc0fAs8nDpG5p7rytvvjDOizROiET1ASxOeXgG3SRf8YQd7gfmucbl7AMp+bBOX4=
+	t=1741605582; cv=none; b=ABMQuWhiNIDn5+B4Cu3z6yvqhxPj43UmdF8J8fFHk4PrvSGj1OFmgwEjZKTntLPX525Gd+dKfo47o+1a26dgCsxL0ulWnCN941ynmPGimtOQ6H6/WvBCv9fc92j8H1m5uNStqSRRG1hySI1glCQ1hZEXHUK7Kgp+Y1fZl3VBN1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741605564; c=relaxed/simple;
-	bh=MXYZosYNWXPyoge+Rlv4+JeeONSw/MWHUsMxx2PXRTM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nLdC4zWROA3iulHvjgRgDt23Mx/Rc1/dGE8FWjeKtxh4Qs8XgJYTCPwiMnC1yN+vlp77S8g/vMzBa3xD6SyIMu0TNYzS7gmytkClm3EadgQhwX305rTIB6LEHmGYsYsOyMfElwc0VwfTMa5g+nTsqz6TcLwDIRmkl35/oJp6vUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=MCZEVnWe; arc=none smtp.client-ip=101.71.155.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1741605582; c=relaxed/simple;
+	bh=XWVIqy9wk7otgQU2pGwNOKtJVNBViOOhWpTuBzczzNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uHur1QmID9Q6mIs3+1pKdlfmOjnLYecdMIlVLGgHQNgsf6ilclLKG2sJONU3RFi0Ym1BHLM7SJZoYU30Dd54Rz60KQeh8v8McZVxYP8N4IFjpuv1x0up5NtbE7Y577efxufWE9H+6GG0fTRFplQ4x5ry252SpmSZw98sjiVtGes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYtHAf+E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="MCZEVnWe"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id dc1882b2;
-	Mon, 10 Mar 2025 18:42:26 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v8 12/13] arm64: dts: rockchip: Add eDP0 node for RK3588
-Date: Mon, 10 Mar 2025 18:41:13 +0800
-Message-Id: <20250310104114.2608063-13-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
-References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYtHAf+E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98689C4CEE5;
+	Mon, 10 Mar 2025 11:19:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741605581;
+	bh=XWVIqy9wk7otgQU2pGwNOKtJVNBViOOhWpTuBzczzNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sYtHAf+ErfQMkoDwuFKslZ3pfupKVXFvrRMyChzbsFItZPTb6xQ+jVQECv7qmbma4
+	 A4uWaQq4+Y8e6etjRje4Hw/URQqaFTWZ/5Da1Afub2Uf4rRWUh/eeKo5lzmaxblpdn
+	 ueMZ0SKNb605mzDkhUvwqbCd/F9T/misC7HZetBp/1XxhPaClFGtRZTiuVIJwUnWA9
+	 Ed6Pg93W5lzq7zAuMheZWLTS4JA46CnCavpXY02j8D72YDKX8YhLLWDPw86nMwaT9V
+	 SSwPUl3ksb7+7Kjt9oc2gfmRlwhMeHsjIqi945FT3gRg1tkGNt3B/0tRDwV4+oECs5
+	 +WNhp3BXKhwwQ==
+Date: Mon, 10 Mar 2025 13:19:37 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stuart Yoder <stuart.yoder@arm.com>
+Cc: linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+	sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] Add support for the TPM FF-A start method
+Message-ID: <Z87KyTbL0Xi89jEr@kernel.org>
+References: <20250305173611.74548-1-stuart.yoder@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx4YSVZPS0pCQ08dQkhJTxlWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
-	5VSktLVUpCS0tZBg++
-X-HM-Tid: 0a957fa617b703a3kunmdc1882b2
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NxA6Pxw6MTJRKiM1FTgzPREh
-	Mk4aCQxVSlVKTE9KTUtISE9DSE1MVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKT0xONwY+
-DKIM-Signature:a=rsa-sha256;
-	b=MCZEVnWekdOZ+BrvUkhP7HxFa5gB5GZ4E1apDoLHUutC8e7KVwcLGHiKhOuiNIte6zQOIJtYR5dzn248Ugkp29aMkh+5taF7UgQSjM/UsORwFvDcE5JCTsxM1YOGRMMDQa+YqldoxpwWa5Mf13tdODTpRxMkbOogvJVoPvM8lf4=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=0FGcNJWIvGFWgnAJXPV53XsegYYbwW5nYaQTOeqtjiw=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305173611.74548-1-stuart.yoder@arm.com>
 
-Add support for the eDP0 output on RK3588 SoC.
+On Wed, Mar 05, 2025 at 11:36:06AM -0600, Stuart Yoder wrote:
+> Firmware Framework for Arm A-profile (FF-A) is a messaging framework
+> for Arm-based systems, and in the context of the TPM CRB driver is used
+> to signal 'start' to a CRB-based TPM service which is hosted in an
+> FF-A secure partition running in TrustZone.
+> 
+> These patches add support for the CRB FF-A start method defined
+> in the TCG ACPI specification v1.4 and the FF-A ABI defined
+> in the Arm TPM Service CRB over FF-A (DEN0138) specification:
+> https://developer.arm.com/documentation/den0138/latest/
+> 
+> The first patch adds an FF-A driver to handle the FF-A messaging when
+> communicating with a CRB-based TPM secure partition built on FF-A.
+> The driver is probed when the TPM secure partition is discovered by
+> the Linux FF-A infrastructure.
+> 
+> The second patch consolidates the check for idle support in the CRB
+> driver to one place.
+> 
+> The third patch defines the new ACPI start method enumeration for
+> CRB over FF-A.
+> 
+> The fourth patch adds support for the FF-A ACPI start method to
+> the TPM crb driver.
+> 
+> The fifth patch adds documentation explaining how the CRB driver
+> and FF-A relate.
+> 
+> Version 6
+> -in tpm_crb removed unnecessary brackets from if statement and
+>  fixed comment style
+> -noticed and fixed bug in patch 2, polarity of return value
+>  from tpm_crb_has_idle() was wrong and wasn't caught in past
+>  testing
+> -added Reviewed-by tag to patches 2 and 5
+> 
+> Version 5
+> -tpm_ffa_crb patch: removed module version
+> -tpm_ffa_crb patch: fixed module description
+> -tpm_ffa_crb patch: updated comment on mutex declaration
+> -reworded commit message for patch 2 as per Jarkko's 
+>  suggestion
+> -added Acked tag by Sudeep to patch 1 for FF-A changes 
+> -added Reviewed-by tag to patches 3 and 4
+> 
+> Version 4
+> -fix warning from kernel test robot in patch 1
+> -fix warnings from checkpatch.pl --strict
+> -clean up unnecessary parenthesis usage
+> -update variable declaration to be reverse tree order
+> -document exported functions in tpm_crb_ffa driver
+> -remove unnecessary author and maintainer info in tpm_crb_ffa driver
+> -fix declaration of variables to be in reverse tree order
+> 
+> Version 3
+> -changed prefixes used throughout patch series to tpm_crb_ffa*
+> 
+> Version 2
+> -updates to cover letter to define FF-A
+> -added new patch with documentation
+> -created pull request in ACPIA and added link to the patch
+>  updating actbl3.h
+> -added tpm_ prefix to the FF-A CRB driver
+> 
+> Stuart Yoder (5):
+>   tpm_crb: implement driver compliant to CRB over FF-A
+>   tpm_crb: clean-up and refactor check for idle support
+>   ACPICA: add start method for Arm FF-A
+>   tpm_crb: add support for the Arm FF-A start method
+>   Documentation: tpm: add documentation for the CRB FF-A interface
+> 
+>  Documentation/security/tpm/tpm_ffa_crb.rst |  65 ++++
+>  drivers/char/tpm/Kconfig                   |   9 +
+>  drivers/char/tpm/Makefile                  |   1 +
+>  drivers/char/tpm/tpm_crb.c                 | 105 +++++--
+>  drivers/char/tpm/tpm_crb_ffa.c             | 348 +++++++++++++++++++++
+>  drivers/char/tpm/tpm_crb_ffa.h             |  25 ++
+>  include/acpi/actbl3.h                      |   1 +
+>  7 files changed, 535 insertions(+), 19 deletions(-)
+>  create mode 100644 Documentation/security/tpm/tpm_ffa_crb.rst
+>  create mode 100644 drivers/char/tpm/tpm_crb_ffa.c
+>  create mode 100644 drivers/char/tpm/tpm_crb_ffa.h
+> 
+> -- 
+> 2.34.1
+> 
 
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+Check this out:
 
----
+https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/
 
-Changes in v3:
-- Remove currently unsupported property '#sound-dai-cells'
+Any tested-by's are welcome.
 
-Changes in v4:
-- Remove currently unsupported clock 'spdif'
----
- arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-index 2403a3950128..7e089422c947 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-@@ -1410,6 +1410,34 @@ hdmi0_out: port@1 {
- 		};
- 	};
- 
-+	edp0: edp@fdec0000 {
-+		compatible = "rockchip,rk3588-edp";
-+		reg = <0x0 0xfdec0000 0x0 0x1000>;
-+		clocks = <&cru CLK_EDP0_24M>, <&cru PCLK_EDP0>;
-+		clock-names = "dp", "pclk";
-+		interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH 0>;
-+		phys = <&hdptxphy0>;
-+		phy-names = "dp";
-+		power-domains = <&power RK3588_PD_VO1>;
-+		resets = <&cru SRST_EDP0_24M>, <&cru SRST_P_EDP0>;
-+		reset-names = "dp", "apb";
-+		rockchip,grf = <&vo1_grf>;
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			edp0_in: port@0 {
-+				reg = <0>;
-+			};
-+
-+			edp0_out: port@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
-+
- 	qos_gpu_m0: qos@fdf35000 {
- 		compatible = "rockchip,rk3588-qos", "syscon";
- 		reg = <0x0 0xfdf35000 0x0 0x20>;
--- 
-2.34.1
-
+BR, Jarkko
