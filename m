@@ -1,84 +1,322 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0450D1361
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24FA170826;
+	Mon, 10 Mar 2025 09:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741598153; cv=none; b=hDjSfa3keL3j5UG0FPeS64ZLA2GY1YIwPqC/b7jRajSJknxJknUVkDM6aIjUGoGdQLa3DMkiz0Hb7icnF5JSWuJW52SyNpVAJKGi8mvGvFroPXpgVSdF2i8hmfHUZXZRk7OMngYjc23ArgYXRo45LjtTI6wepayPFjMVOvE1QCI=
+	t=1741598345; cv=none; b=bbsCNDgMwQr3iePbwt8Geb1n/mdCSlCyjA9BJoBdCHziJ5m0e/xg7MJ7mZBxTndynrVt9g/1JzIYpbuAlFilfZAOhoA7KIPUeveTOXNR1vvhN86DtRck+7APHsc+W/DKdSbcYzJA0hAWYhwzNsPaEka//mRRHNl5NALpDRRg/1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741598153; c=relaxed/simple;
-	bh=KjSoU6/mBbGahQ04HV4jjvNKb9ObDoSCk+0lV+80R4w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fRwN7MsA+V9dWenR/U+wHPGk6KkBEuht5Z89jDtWGeSMJR44U/PGplnM2cq42l6Oqstv1C0gn8nD3Pq1x9KQc8PwqWWzqQ+eVAxI4AVp7cf66w+awKIzdzb9ZXHzLTHF8uE3GWbRlTL8gZsFLujdVisSECLJOmCkGhNYifh6hL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1hc1VQ9+; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1741598345; c=relaxed/simple;
+	bh=TKc2U347FukTETBcOg3oDnIRF/XzQbbD0zzbzORHsG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nnehGbXk1k1pIm0UbJD69TGCuIrwP9XSCIUXVexIHOy/+Ev3r8ZTwVYtO1065+I1KV35L90ciCxiyQZR8XY0/ZcdPlor3B+tl5AC3655MJ2mRt+zFCNEE0vNuzKwGxX/xCTNgWl4yxmrOzug6Wwzm8lgHCFzyE5EmFU4nyzj2IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b=qK+V4wuc; arc=none smtp.client-ip=77.240.19.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1hc1VQ9+"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf64f1dc5so3626215e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 02:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741598150; x=1742202950; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jC9dwmLMGrJONvWdmLchB8OrIEYq2jjVi0+jpdkBizI=;
-        b=1hc1VQ9+HImo9HXOoLOaEZ4Z2hS7xQpfWafecn9cL21vx40Ck9OzJp9L5FOQIrNG7+
-         Shn3OySkR1iHegJt9I79hQOs5Tdli+sbiV1+kGUHsI4shJMBld0GIzWo94AGW0GpJ6AL
-         LRVwpcp3WPjNUSK9lg5jjZ7VI2hOsaKpxVqViVQedrR3fBnIrpkMANaITQdWmgx4E+LX
-         MRvJENo1oOjVngr+W8afvO9mIZXAsCPXpaAo2VSAubvaSD4M9FwhaP9HEfOf94zh09Jl
-         32ivivoo2QhiK2MaJqDYLp9YPVyQ5UfQVYTatoEFi3ztVBKS7TfmAFcvSK9qT2KYnGEc
-         P6EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741598150; x=1742202950;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jC9dwmLMGrJONvWdmLchB8OrIEYq2jjVi0+jpdkBizI=;
-        b=Xn+aKdFLkSsOiHEoLBf9ur/JUyUbea3b0C2+ba/1T9O13sK/WI5cJpbm61/P5jJPUB
-         eFdcFjz/y3HxiEofdimlpi0FEEgdD6ZFyIu9/wiNzG1glCnsrJFooBf6XRL3JU6RkuNF
-         Fb+lZCI3PgtZzAT6cb6GCQwLsZZSZB7rarAzLw0Y4NurARx6Z6HlYIvPY2zFhE/Fn/Lc
-         n4OnRXWMD9YlnSnDcuWHFtNCLapPvx9JPkqADF8dme/cbfGMPLaNMtRXOhQ10zOuteer
-         QF+sNnAzKYLy1GaqA0mzd8H6+dbLpvIwwc8TuN7s+DUvKs9vooBoCoaqTFt2m5PD6Jva
-         xyyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOLkWFn40xhmYH3kB0LaHvO9tDDZoCLBFjV6D2nYaRC/tmSqCIa7V64st5++Q7oC1bmjYHetgVC9tMwbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs+fnFVnePxzS2zdajpdP4PQE2XZ/fvB4IHXKGDvob5RAJJsz9
-	m/74GqWBCmpiG9n7NFHOTT0jwWxUJn1aPlwZ36hBe+hOwImIAnw/i8fiu/JmkxYiFhqcLBpmloI
-	htbj7mU10Rfsdgg==
-X-Google-Smtp-Source: AGHT+IFld+YMbPi6vF1aQtVy8e1i98OzUQUBy9QMXqfEE1Pf4Daw9v+O6rr7flwQQrudHMtNoS+bOOx/1S6RKQs=
-X-Received: from wmqa4.prod.google.com ([2002:a05:600c:3484:b0:43c:fc61:959c])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4fc1:b0:43b:cd0d:9466 with SMTP id 5b1f17b1804b1-43c601d9251mr66339335e9.9.1741598150298;
- Mon, 10 Mar 2025 02:15:50 -0700 (PDT)
-Date: Mon, 10 Mar 2025 09:15:47 +0000
-In-Reply-To: <20250308-comment-fix-v1-1-4bba709fd36d@posteo.net>
+	dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b="qK+V4wuc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=haloniitty.fi; s=default; h=Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=aHsXF/th7Qp5UlegwhFSAEpyRDH/WRYr3dD5gq1T1R8=; b=qK+V4wucF6xP3y2SgHCo7pwXtZ
+	zKsevhk+NgWRFHXOUBlAxhRO5Ig4aOqT6i5H2vMCD65eEpAT0CbaUael/S6gIgFHuKhSXTEk295Op
+	yVvcytdL+6akXCtoAVyFjhZQACe1C8HQ2a7aBebJCFEt0NDnOpZei0/Vt0Qz5OfCtBxCQxC8CcXJg
+	7qg/tU/AYOYvBVUcR3jqMPUdJPF+SAZDU12BL+OmVBfpIXD6oH/PM/Fl1rzt+wtduQQf5PGAuPfSR
+	c2PoVwnQJ6hN5OshyLGNAodViHlgL5nCVV8jCAdliR+LA4CJGILvSD/YNROnOV+jZ1Vg6HFbod8Qu
+	Ab31Btlw==;
+Received: from [194.136.85.206] (port=57892 helo=eldfell)
+	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <pekka.paalanen@haloniitty.fi>)
+	id 1trZCF-000000001cy-2moR;
+	Mon, 10 Mar 2025 11:13:15 +0200
+Date: Mon, 10 Mar 2025 11:12:59 +0200
+From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Louis Chauvet <louis.chauvet@bootlin.com>, Rodrigo Siqueira
+ <rodrigosiqueiramelo@gmail.com>, Melissa Wen <melissa.srw@gmail.com>,
+ =?UTF-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>, Haneen Mohammed
+ <hamohammed.sa@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ rdunlap@infradead.org, arthurgrillo@riseup.net, Jonathan Corbet
+ <corbet@lwn.net>, Simona Vetter <simona@ffwll.ch>, Simona Vetter
+ <simona.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v16 5/7] drm/vkms: Create KUnit tests for YUV
+ conversions
+Message-ID: <20250310111259.4e18d550@eldfell>
+In-Reply-To: <6fa7a17f-3932-4b93-a3c7-885619f8ec73@bootlin.com>
+References: <20250121-yuv-v16-0-a61f95a99432@bootlin.com>
+	<20250121-yuv-v16-5-a61f95a99432@bootlin.com>
+	<qwym5wty72f6o4dfz2iduamkpuom6jt5txskknovqxzagruusx@zuytk7awe2uw>
+	<Z5dkd3npNtzPWCrP@louis-chauvet-laptop>
+	<20250205-pristine-perch-of-abundance-7abac1@houat>
+	<Z6OEd329pDNRrL5v@louis-chauvet-laptop>
+	<20250219-inventive-micro-parrot-c24846@houat>
+	<ce5fb86d-f3bc-4196-9cfd-8af41a83beb1@bootlin.com>
+	<20250307-glaring-kiwi-of-teaching-d5ddd4@houat>
+	<6fa7a17f-3932-4b93-a3c7-885619f8ec73@bootlin.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250308-comment-fix-v1-1-4bba709fd36d@posteo.net>
-Message-ID: <Z86tw6ugdwfJCTnu@google.com>
-Subject: Re: [PATCH] rust: task: fix `SAFETY` comment for Task::wake_up
-From: Alice Ryhl <aliceryhl@google.com>
-To: Panagiotis Foliadis <pfoliadis@posteo.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Christian Brauner <brauner@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/fFoK6zyuMmWcASjFqjoAznd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - whm50.louhi.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - haloniitty.fi
+X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
+X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Sat, Mar 08, 2025 at 04:49:05PM +0000, Panagiotis Foliadis wrote:
-> The `SAFETY` comment inside the `wake_up` function references
-> erroneously the `signal_pending` function instead of the
-> `wake_up_process` which is actually called. Fix the comment
-> to reference the correct function.
-> 
-> Fixes: fe95f58320e6 ("rust: task: adjust safety comments in Task methods")
-> Signed-off-by: Panagiotis Foliadis <pfoliadis@posteo.net>
+--Sig_/fFoK6zyuMmWcASjFqjoAznd
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+On Fri, 7 Mar 2025 15:50:41 +0100
+Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Le 07/03/2025 =C3=A0 11:20, Maxime Ripard a =C3=A9crit=C2=A0:
+> > On Wed, Feb 19, 2025 at 02:35:14PM +0100, Louis Chauvet wrote: =20
+> >>
+> >>
+> >> Le 19/02/2025 =C3=A0 11:15, Maxime Ripard a =C3=A9crit=C2=A0: =20
+> >>> On Wed, Feb 05, 2025 at 04:32:07PM +0100, Louis Chauvet wrote: =20
+> >>>> On 05/02/25 - 09:55, Maxime Ripard wrote: =20
+> >>>>> On Mon, Jan 27, 2025 at 11:48:23AM +0100, Louis Chauvet wrote: =20
+> >>>>>> On 26/01/25 - 18:06, Maxime Ripard wrote: =20
+> >>>>>>> On Tue, Jan 21, 2025 at 11:48:06AM +0100, Louis Chauvet wrote: =20
+> >>>>>>>> +static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[=
+] =3D {
+> >>>>>>>> +	/*
+> >>>>>>>> +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
+> >>>>>>>> +	 *                     K=3Dcolour.WEIGHTS_YCBCR["ITU-R BT.601"=
+],
+> >>>>>>>> +	 *                     in_bits =3D 16,
+> >>>>>>>> +	 *                     in_legal =3D False,
+> >>>>>>>> +	 *                     in_int =3D True,
+> >>>>>>>> +	 *                     out_bits =3D 8,
+> >>>>>>>> +	 *                     out_legal =3D False,
+> >>>>>>>> +	 *                     out_int =3D True)
+> >>>>>>>> +	 *
+> >>>>>>>> +	 * Test cases for conversion between YUV BT601 full range and =
+RGB
+> >>>>>>>> +	 * using the ITU-R BT.601 weights.
+> >>>>>>>> +	 */ =20
+> >>>>>>>
+> >>>>>>> What are the input and output formats?
+> >>>>>>>
+> >>>>>>> Ditto for all the other tests. =20
+> >>>>>>
+> >>>>>> There is no really "input" and "output" format, they are reference=
+ values
+> >>>>>> for conversion, you should be able to use it in both direction. Th=
+ey are
+> >>>>>> generated by RGB_to_YCbCr (RGB input, YUV output) just because it =
+was
+> >>>>>> easier to create the colors from RGB values. =20
+> >>>>>
+> >>>>> RGB and YUV aren't formats, they are color models. XRGB8888 is a fo=
+rmat.
+> >>>>> NV12 is a format.
+> >>>>> =20
+> >>>>>> If you think we should specify what is was used as input and outpu=
+t to
+> >>>>>> generate those values, I can modify the comment to:
+> >>>>>>
+> >>>>>> 	Tests cases for color conversion generated by converting RGB
+> >>>>>> 	values to YUV BT601 full range using the ITU-R BT.601 weights. =20
+> >>>>>
+> >>>>> My point is that those comments should provide a way to reimplement=
+ the
+> >>>>> test from scratch, and compare to the actual implementation. It's u=
+seful
+> >>>>> when you have a test failure and start to wonder if the implementat=
+ion
+> >>>>> or the test is at fault.
+> >>>>>
+> >>>>> By saying only RGB and YUV, you can't possibly do that. =20
+> >>>>
+> >>>> I understand your concern, but I believe there might be a slight
+> >>>> misunderstanding. The table in question stores reference values for
+> >>>> specific color models, not formats. Therefore, it doesn't specify any
+> >>>> particular format like XRGB8888 or NV12.
+> >>>>
+> >>>> To clarify this, I can rename the format_pair struct to value_pair. =
+This
+> >>>> should make it clearer that we are dealing with color model values r=
+ather
+> >>>> than formats.
+> >>>>
+> >>>> If you want to test a specific format conversion, such as
+> >>>> YUV420_to_argbu16, you would need to follow a process like this:
+> >>>>
+> >>>> 	// Recreate a YUV420 data
+> >>>> 	plane_1[0] =3D test_case.yuv.y
+> >>>> 	plane_2[0] =3D test_case.yuv.u
+> >>>> 	plane_2[1] =3D test_case.yuv.v
+> >>>>
+> >>>> 	// convertion to test from YUV420 format to argb_u16
+> >>>> 	rgb_u16 =3D convert_YUV420_to_argbu16(plane_1, plane_2)
+> >>>>
+> >>>> 	// ensure the conversion is valid
+> >>>> 	assert_eq(rgb_u16, test_case.rgb)
+> >>>>
+> >>>> The current test is not performing this kind of format conversion.
+> >>>> Instead, it verifies that for given (y, u, v) values, the correct (r=
+, g,
+> >>>> b, a) values are obtained. =20
+> >>>
+> >>> You already stated that you check for the A, R, G, and B components. =
+On
+> >>> how many bits are the values you are comparing stored? The YUV values
+> >>> you are comparing are stored on how many bits for each channel? With
+> >>> subsampling?
+> >>>
+> >>> If you want to compare values, you need to encode a given color into
+> >>> bits, and the way that encoding is done is what the format is about.
+> >>>
+> >>> You might not compare the memory layout but each component individual=
+ly,
+> >>> but it's still a format. =20
+> >>
+> >> Sorry, I think I misunderstood what a format really is. =20
+> >=20
+> > Ultimately, a format is how a given "color value" is stored. How many
+> > bits will you use? If you have an unaligned number of bits, how many
+> > bits of padding you'll use, where the padding is? If there's multiple
+> > bytes, what's the endianness?
+> >=20
+> > The answer to all these questions is "the format", and that's why
+> > there's so many of them. =20
+>=20
+> Thanks!
+>=20
+> >> But even with this explanation, I don't understand well what you ask
+> >> me to change. Is this better:
+> >>
+> >> The values are computed by converting RGB values, with each component =
+stored
+> >> as u16, to YUV values, with each component stored as u8. The conversio=
+n is
+> >> done from RGB full range to YUV BT601 full range using the ITU-R BT.601
+> >> weights.
+> >>
+> >> TBH, I do not understand what you are asking for exactly. Can you plea=
+se
+> >> give the sentence you expect directly? =20
+> >=20
+> > The fourcc[1] code for the input and output format would be nice. And if
+> > you can't, an ad-hoc definition of the format, answering the questions I
+> > mentionned earlier (and in the previous mail for YUV). =20
+>=20
+> I don't think any fourcc code will apply in this case, the tests use=20
+> internal VKMS structures pixel_argb_16 and pixel_yuv_u8. How do I=20
+> describe them better? If I add this comment for the structures, is it=20
+> enough?
+>=20
+> /**
+>   * struct pixel_argb_u16 - Internal representation of a pixel color.
+>   * @r: Red component value, stored in 16 bits, without padding, using
+>   *     machine endianness
+>   * @b: [...]
+>   *
+>   * The goal of this structure is to keep enough precision to ensure
+>   * correct composition results in VKMS and simplifying color
+>   * manipulation by splitting each component into its own field.
+>   * Caution: the byte ordering of this structure is machine-dependent,
+>   * you can't cast it directly to AR48 or xR48.
+>   */
+> struct pixel_argb_u16 {
+> 	u16 a, r, g, b;
+> };
+>=20
+> (ditto for pixel_yuv_u8)
+>=20
+> > I'm really
+> > surprised about the RGB component values being stored on 16 bits though.
+> > It's super unusual, to the point where it's almost useless for us to
+> > test, and we should probably use 8 bits values. =20
+>=20
+> We need to have 16 bits because some of the writeback formats are 16 bits.
+
+Hi Maxime,
+
+Louis' proposed comment is good and accurate. I can elaborate further on
+it.
+
+pixel_argb_u16 is an internal structure used only for temporary pixel
+storage: the intermediate format. It's aim is to make computations on
+pixel values easy: every input format is converted to it before
+computations, and after computations it is converted to each output
+format. This allows VKMS to implement computations, e.g. a matrix
+operation, in simple code for only one cpu-endian "pixel format", the
+intermediate format. (drm_fourcc.h has no cpu-endian formats at all,
+and that is good.)
+
+That VKMS never stores complete images in the intermediate format. To
+strike a balance between temporary memory requirements and
+computational overhead, VKMS processes images line-by-line. Only one
+(or two) line's worth of pixels is needed to be kept in memory per
+source or destination framebuffer at a time.
+
+16-bit precision is required not just because some writeback and
+framebuffer formats are 16-bit. We also need extra precision due to the
+color value encoding. Transfer functions can convert pixel data between
+the optical and electrical domains. Framebuffers usually contain
+electrical domain data, because it takes less bits per pixel in order
+to achieve a specific level of visual image quality (think of color
+gradient banding). However, some computations, like color space
+conversion with a matrix, must be done in the optical domain, which
+requires more bits per pixel in order to not degrade the image quality.
+
+In the future I would even expect needing 32-bit or even 64-bit per
+channel precision in the intermediate format once higher-than-16 bits
+per channel framebuffer formats require testing.
+
+YUV can work with 8 bits per pixel for now, because in practice YUV is
+always stored in electrical domain due its definition. YUV in optical
+domain is simply never used. However, there are framebuffer formats
+with more than 8 bits of YUV channels, so this may need extending too.
+
+
+Thanks,
+pq
+
+--Sig_/fFoK6zyuMmWcASjFqjoAznd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmfOrRsACgkQI1/ltBGq
+qqe1tg//TcEfVsZK/Chn4rCT2I+Cx0znJU3Z5Wkq2TSIQju88TlsxpThp0wJCYJB
+Fx6Wnxw29CQChkh+nv628Its/2mLzucO2Wpk+CF1vj7iZQuDFLJz7IWogBmD7dqz
+4PktXoYGlBM9hXJ7bFytQv+uTebAtZUKsIAfEY+rVVXqKjub5YwxhaQpP+P6QaNv
+VukUqEMofEyvYtZd9MMfouyT4yiUAaqBDA2fJVr3rfU0OsMKSic1V2Yad875v+ut
+pxZFvy4CQV1egSvPCLvbnBUbIHG3iKSWlsG1dxsO2IW2hPwL9yQos3L37o0rlJhR
+HJbgVQDHIG7exigPOPsV5gkkNxjOSmzozw/HOJahkELoOTkb8ug+WHf4d+6ns7Mz
+JbuRYTILGd3+QJIbPJanORU0WCiCn7xAy9IMWRFd2/r4I2pZIW9q5/2qS2ocZg06
+vB/L4v/L9mbh+J6fZ+SN2ejNAfWb4ZxapYfaWfWuvzRyIoRraQS/+wD1yrP4Z3hz
+wSWkRejD5/I3O/IfhYg4NeqHwQ7jOxK3okKElbcAPsiiSoio0eKb6kYtEDLv33dr
+PtAYUVp0hj7bqHt8wFJu66cZkvRwpAAkH3QeLBAC4BRO1SYhjtnVJr7b5dfBQkLZ
+g+gR5E108Imdq9+obN8H4X63XJN9JyA6mnN0zt/yd5Wwn29sa30=
+=HvDc
+-----END PGP SIGNATURE-----
+
+--Sig_/fFoK6zyuMmWcASjFqjoAznd--
