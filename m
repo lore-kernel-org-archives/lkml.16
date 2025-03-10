@@ -1,332 +1,132 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FD81E519
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFD022FF24
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741624294; cv=none; b=g9rhnR+HwxMW6WhKoaeM7Fw8Q6SDVJvW2XX+B0bmVaXTWdS7DZkjglgmf5qL6AqzBp4qkr7pqC3C1PjUHXG4YYKz3f+0+nrWE9VFPN9j6at9xY97NkSjVHOcKct80iIj2TZTEIiw5ZFbPTqp60Kui95r/UqUSuV+fPCZeL2ogBg=
+	t=1741624299; cv=none; b=aFo1CzX13IqmHm8PkPL+Ugq7tEjHLtlhgZON3q0jYYT50EHwpgQCLq7W1SerEivpLS3lFvzh3yYswk2qNki1TxnJhMUk/A53s5BuGwDA0TZv+QbjN5vK9Ddf7HkPHi8GA08jzjXZeI+fkYdBmhRGNxO6lLpnYh95XuOAm0yB5TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741624294; c=relaxed/simple;
-	bh=haAZfR/LdRqtneTUaG1eryf05n233fNsdLw9bnRughM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AylRSN9eceUesDRJrl7U8ppVmoLRo/Kw+vtOS3I7LsXIhvYUkP419qTcpT2XcETLSoNc97ANIjR2WdyKPVOML6CVl5gxe0f+/2OxguQWrpD7Wphndkghc9KOPT7pdl0a1aIORXetHhwyKjIPUPXrXsd55NDaEj389kDwjwmtAQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o6W+o3O6; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741624299; c=relaxed/simple;
+	bh=EOzJGti6xtE/KS0s/r8JB1JyrUcLNSuZkkzVMvKg/uA=;
+	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Subject:
+	 References:In-Reply-To; b=nvNdYMPct5caA/HMKql5Wqyv6GxoxIH7RMTNuf9tgvyYexBnym0wIlEbUOMUTDb3SYUC94gPJ+E+JgiSshldrcSTyd0X1AGIapBP8Xyzw81/BnAo3iKzcuiGIHlj6kWnia5m1C3WQT9Q57FWgXyN9ugQqZhHmlxwwjfUH8YQtmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=dN650yOg; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o6W+o3O6"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30613802a59so50232631fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="dN650yOg"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-46fcbb96ba9so58910131cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741624290; x=1742229090; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/97Uwq5DKKx0KFCL6yeTDndlS2gQbEpvHiCnSZ80p5M=;
-        b=o6W+o3O62aQaCC6A0yDN7qQFlRgV13J9+yX/PlKQbiS3738Fq3iA+aTDvJvMkzXumB
-         YcG9isbm5+sLZ8loSjzZDVLltXd1Gzf6ur94NX4TfbaIWNNCBsYO3LwS6+es+pJ4u0FF
-         b58+mHN1FS2iPuU2XzHDCK1j1Kvl05NALgTz8UvJCeUTcknFBYtgvChoQCBUr1Gg6NuF
-         aaCUWpdZjUTtFd4vaPOGfMpNL/+xRj5m/kmNMB3043uGZX6qcfRy+Mdrkf7M/HlBHMD/
-         ceqEhKiQ+/2eILVBjE5CAyqgsQpJApGTABzuxcDLRkMHFDT4ebeJar8c8YIt3OAp51P8
-         dnvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741624290; x=1742229090;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=paul-moore.com; s=google; t=1741624295; x=1742229095; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:to:from:content-transfer-encoding
+         :mime-version:message-id:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/97Uwq5DKKx0KFCL6yeTDndlS2gQbEpvHiCnSZ80p5M=;
-        b=CKcoJAiy/zFDBkguQBQ31V5ANWby6KAITrzYPRe3nzuhyhTBd6mjoHeltldVnTI9LT
-         SM3l6OoNfVh/wo1YP4IXytLjMsb8HouBbep6q6Emm3o78qfYrfpqVzlBZ2i79UydMbbk
-         Y9V1mW+ktKBV17PquA2MNUJJhYR7F0Zue+BnIXU3JA+2j4fz3HhQrR33iNPSSNXI60P0
-         c/ut4BLH6VZYjYoD+8uIL0E9kspgaoCkcOkEPTtGwRFLhgMIQ8Bnx/ZVaYvvoF9mofPf
-         jABmMwgjz3tGQvvjX0i1wq6UykTUouMxKKDRGUuxeViHS4LKmdSL8L/H5xU9d7WAcoe+
-         Q/qA==
-X-Forwarded-Encrypted: i=1; AJvYcCU09O7g7nxwLkqjkQKaenZNukfBqhCGwtv+MjmjGkc9GF5oberEyORY9fPi4S+vikxAXD/C/enTShJs+mQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAESSj4NNWCz2zQilTBx9sMkTfiKhzuluTIb+Q9eRCaVxiGBE3
-	Growvx7lKbVjx92M2oshHrvcChbfcT2jzZzFXfAbTTsGA5V2mjQKRK6rq+Wu9D/J5HyogsUcfyS
-	Nr4BUgscsx5X+h3fDaVWqHjVhwAA3+w6pYVur
-X-Gm-Gg: ASbGncuRuIvMAUL9lfbhA/W/ba7dfI1NytJewCWlVn8hh2ZpXU1S1u0X4jkYdj9re6S
-	dEFCbQlyXzZVlImMAiiCe1b/i1XQJRla86Lu/yba92u+1UfguLl9xjYwqnv3PyVqsS7gGmc/Txl
-	DZWZ3C0xkUdvHs6dI/CVARHQHO
-X-Google-Smtp-Source: AGHT+IHmuGWkGjBkIkBnodVoY6wALKW8QhUew9NmGg6ee4YInHF0/4Hgop4vVxf5qMyGhrscBDD8yRf/Ebl2b6DEv4Q=
-X-Received: by 2002:a2e:bcd0:0:b0:30c:12b8:fb9e with SMTP id
- 38308e7fff4ca-30c12b9034emr16614131fa.37.1741624288302; Mon, 10 Mar 2025
- 09:31:28 -0700 (PDT)
+        bh=K+rvxu2VtO7t9hS1BcwolfWYrJhJIsb4fGcBMA3gsjI=;
+        b=dN650yOgLkW1MLoBZYEBHGx5/s6s5eakefzMlmnu962JPwhfd6GjTKiL3ftoSz9OKQ
+         8NiGNIiFWFybSC6g5vwBTg/SY9oAOs67Kcg1/p9J61/h7jI5O2i9H+6YcMABjhvC9LHn
+         /vuSKDlasEt0EZQ/FDL6PF10s3BppbQLDQ8i71ITG14j96Xq0sUXhh/TIiwewO0diVOc
+         15m8Q81PTy52dr+kyV02zc4SBnCMtAGVhqv2K6WrbQW2s9/Gyfhap2RBtM9bGgdvUttC
+         LqLFINudK8XhgLltE1LAJPLIEWnZQ4IK/AlNxn7X5vQ6HOiotplzZK4Kkhif6iB01KHH
+         TDFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741624295; x=1742229095;
+        h=in-reply-to:references:subject:to:from:content-transfer-encoding
+         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K+rvxu2VtO7t9hS1BcwolfWYrJhJIsb4fGcBMA3gsjI=;
+        b=EOpofc+XDDKSM6ULCOIQsJ4QRJAGcd3cU9Veon4EJULqBLHTai4f+nndOfH4NNsAGh
+         JdHH1N9zmlfeAq65KK53Pa7J5vis408Nk9J3e6M0TP7GzT1mNvKlNFKCIQw3s4Ixh5xE
+         1FNE0le31urPffAmy9Lrs1GWL/D27T4eLqKB7p4m6ld2w9RUTj4lN9upxSzcTAT8s+3k
+         1nmHm1eZ0OTjYxy+NMj9TnSPxp+KGPnAL4dwm9BN+JaQcCgWwbDJOxJ5F0bDkIXb52le
+         6wAi24jh1fo9YnE5gj/DqeMrxfve6uUk6RI3vq2HU27RVajETNqbKrlZN8026naGyOLZ
+         2nWA==
+X-Forwarded-Encrypted: i=1; AJvYcCWteGJbhUAAIUEMQM0N1m/XhWNE1UdqgoIalMnpcJyrloCXzaDM1xVYmhUuxCiAq/rnSv7SqnbJUGcKSf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFhzrKLSMhV94qoZ4EIaI2sT4pn4ybzRTksuihhCB7OfYe06hL
+	FzP/AQYiBTtKsitPULd4sNd5+nPevS5sFuv53D5F9CeJppirOPptBUNqSecLyQ==
+X-Gm-Gg: ASbGnctWDTt0mmOnGObvXagzxAF1AgI0XMXdW4zmFrtOZy7ePfvTUwuFjVxOr45D6GK
+	cJiN9a+UYMpZFx5UHal5LcLmUuvnxBnThXtTMsZHJnfExoVWksFas2zvAcjrsgNplTd9h8gRR7O
+	gmA5iVUA6otqCYnrh+rxRrRF2dTBzkOfEcvbiFYkvF4qbV0aJAh1wOnCQhox8nqNuOeNs2lUrc8
+	pdrnvjPKCbabwWuOXDgADwIraPR66PH0rEXeWXfkQr+eJVdSj+oYAjOBb1QLexQSalcHX2X3p4y
+	IWTg/yCnjId6RhlsmHF4MA0OnGg5gRv84uUFQOn3xrWrPjFgO+jCR5Wy/p49Ae0g2byREmUceCh
+	PKolKx5eyC64Ji5GtHM7KMDpK
+X-Google-Smtp-Source: AGHT+IHlZT3bIAT3WS2IFI/YedPMfsOmKAgmF62kbG0sEZfn6Fzjq1oKL8J7czbvA3wYWZrIG85mUw==
+X-Received: by 2002:a05:622a:ca:b0:475:486:2fa7 with SMTP id d75a77b69052e-476109bc959mr190733101cf.26.1741624295266;
+        Mon, 10 Mar 2025 09:31:35 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4768cf1ec2dsm15915861cf.31.2025.03.10.09.31.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 09:31:34 -0700 (PDT)
+Date: Mon, 10 Mar 2025 12:31:34 -0400
+Message-ID: <2101885775982b2b6310298ae96a3278@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1740664852.git.dvyukov@google.com> <9a98ed5d655e9a0d66027779c75c3ba67601e1bf.1740664852.git.dvyukov@google.com>
- <26b779d4-0478-4926-ba5c-e71449e92020@efficios.com> <CACT4Y+aT9z8qjY-66wiOR0Wiep2BoTN7QJYxj-QK_KRXLmgiLA@mail.gmail.com>
- <c3781655-b667-4477-9337-445d8250fb4e@efficios.com> <CACT4Y+YpnCfm6xjdwnUJ-3ND_YPNdAqReffueF1dWGfxmJLWEQ@mail.gmail.com>
- <3c45a374-804f-4a9f-8885-5ef1bfc8676f@efficios.com>
-In-Reply-To: <3c45a374-804f-4a9f-8885-5ef1bfc8676f@efficios.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 10 Mar 2025 17:31:13 +0100
-X-Gm-Features: AQ5f1Jpaq5u1pKxA1dVg9X5WdhSG1JE8cb_lr4C4Lpw9IQhJej26e2sPXdwp02k
-Message-ID: <CACT4Y+Y1Hgw9xmqhcCqPmgspOKLqvm6c54yxZus4uXd==PJxuQ@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] selftests/rseq: Add test for rseq+pkeys
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: peterz@infradead.org, boqun.feng@gmail.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	aruna.ramakrishna@oracle.com, elver@google.com, 
-	"Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20250310_1216/pstg-lib:20250310_1216/pstg-pwork:20250310_1216
+From: Paul Moore <paul@paul-moore.com>
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Xu Kuohai <xukuohai@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] security: Propagate caller information in bpf hooks
+References: <20250308013314.719150-2-bboscaccy@linux.microsoft.com>
+In-Reply-To: <20250308013314.719150-2-bboscaccy@linux.microsoft.com>
 
-On Mon, 10 Mar 2025 at 16:41, Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> On 2025-03-10 10:43, Dmitry Vyukov wrote:
-> > On Mon, 10 Mar 2025 at 15:38, Mathieu Desnoyers
-> > <mathieu.desnoyers@efficios.com> wrote:
-> >>
-> >> On 2025-03-10 10:36, Dmitry Vyukov wrote:
-> >>> On Mon, 10 Mar 2025 at 15:30, Mathieu Desnoyers
-> >>> <mathieu.desnoyers@efficios.com> wrote:
-> >>>>
-> >>>> On 2025-02-27 09:03, Dmitry Vyukov wrote:
-> >>>>> Add a test that ensures that PKEY-protected struct rseq_cs
-> >>>>> works and does not lead to process kills.
-> >>>>>
-> >>>>> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> >>>>> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> >>>>> Cc: Peter Zijlstra <peterz@infradead.org>
-> >>>>> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> >>>>> Cc: Boqun Feng <boqun.feng@gmail.com>
-> >>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >>>>> Cc: Ingo Molnar <mingo@redhat.com>
-> >>>>> Cc: Borislav Petkov <bp@alien8.de>
-> >>>>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> >>>>> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> >>>>> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-> >>>>> Cc: x86@kernel.org
-> >>>>> Cc: linux-kernel@vger.kernel.org
-> >>>>> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> >>>>> Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
-> >>>>>
-> >>>>> ---
-> >>>>> Changes in v5:
-> >>>>>     - Use static for variables/functions
-> >>>>>     - Use RSEQ_READ/WRITE_ONCE instead of volatile
-> >>>>>
-> >>>>> Changes in v4:
-> >>>>>     - Added Fixes tag
-> >>>>>
-> >>>>> Changes in v3:
-> >>>>>     - added Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> >>>>>     - rework the test to work when only pkey 0 is supported for rseq
-> >>>>>
-> >>>>> Changes in v2:
-> >>>>>     - change test to install protected rseq_cs instead of rseq
-> >>>>> ---
-> >>>>>     tools/testing/selftests/rseq/Makefile    |  2 +-
-> >>>>>     tools/testing/selftests/rseq/pkey_test.c | 98 ++++++++++++++++++++++++
-> >>>>>     tools/testing/selftests/rseq/rseq.h      |  1 +
-> >>>>>     3 files changed, 100 insertions(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
-> >>>>> index 5a3432fceb586..9111d25fea3af 100644
-> >>>>> --- a/tools/testing/selftests/rseq/Makefile
-> >>>>> +++ b/tools/testing/selftests/rseq/Makefile
-> >>>>> @@ -16,7 +16,7 @@ OVERRIDE_TARGETS = 1
-> >>>>>
-> >>>>>     TEST_GEN_PROGS = basic_test basic_percpu_ops_test basic_percpu_ops_mm_cid_test param_test \
-> >>>>>                 param_test_benchmark param_test_compare_twice param_test_mm_cid \
-> >>>>> -             param_test_mm_cid_benchmark param_test_mm_cid_compare_twice
-> >>>>> +             param_test_mm_cid_benchmark param_test_mm_cid_compare_twice pkey_test
-> >>>>>
-> >>>>>     TEST_GEN_PROGS_EXTENDED = librseq.so
-> >>>>>
-> >>>>> diff --git a/tools/testing/selftests/rseq/pkey_test.c b/tools/testing/selftests/rseq/pkey_test.c
-> >>>>> new file mode 100644
-> >>>>> index 0000000000000..cc4dd98190942
-> >>>>> --- /dev/null
-> >>>>> +++ b/tools/testing/selftests/rseq/pkey_test.c
-> >>>>> @@ -0,0 +1,98 @@
-> >>>>> +// SPDX-License-Identifier: LGPL-2.1
-> >>>>> +/*
-> >>>>> + * Ensure that rseq works when rseq data is inaccessible due to PKEYs.
-> >>>>> + */
-> >>>>> +
-> >>>>> +#define _GNU_SOURCE
-> >>>>> +#include <err.h>
-> >>>>> +#include <errno.h>
-> >>>>> +#include <stdio.h>
-> >>>>> +#include <stdlib.h>
-> >>>>> +#include <string.h>
-> >>>>> +#include <sys/mman.h>
-> >>>>> +#include <sys/syscall.h>
-> >>>>> +#include <ucontext.h>
-> >>>>> +#include <unistd.h>
-> >>>>> +
-> >>>>> +#include "rseq.h"
-> >>>>> +#include "rseq-abi.h"
-> >>>>> +
-> >>>>> +static int pkey;
-> >>>>> +static ucontext_t ucp0, ucp1;
-> >>>>> +
-> >>>>> +static void coroutine(void)
-> >>>>> +{
-> >>>>> +     int i, orig_pk0, old_pk0, old_pk1, pk0, pk1;
-> >>>>> +     /*
-> >>>>> +      * When we disable access to pkey 0, globals and TLS become
-> >>>>> +      * inaccessible too, so we need to tread carefully.
-> >>>>> +      * Pkey is global so we need to copy it onto the stack.
-> >>>>> +      */
-> >>>>> +     int pk = RSEQ_READ_ONCE(pkey);
-> >>>>> +     struct timespec ts;
-> >>>>> +
-> >>>>> +     orig_pk0 = pkey_get(0);
-> >>>>> +     if (pkey_set(0, PKEY_DISABLE_ACCESS))
-> >>>>> +             err(1, "pkey_set failed");
-> >>>>> +     old_pk0 = pkey_get(0);
-> >>>>> +     old_pk1 = pkey_get(pk);
-> >>>>> +
-> >>>>> +     /*
-> >>>>> +      * Prevent compiler from initializing it by loading a 16-global.
-> >>>>> +      */
-> >>>>> +     RSEQ_WRITE_ONCE(ts.tv_sec, 0);
-> >>>>> +     RSEQ_WRITE_ONCE(ts.tv_nsec, 10 * 1000);
-> >>>>> +     /*
-> >>>>> +      * If the kernel misbehaves, context switches in the following loop
-> >>>>> +      * will terminate the process with SIGSEGV.
-> >>>>> +      * Trigger preemption w/o accessing TLS.
-> >>>>> +      * Note that glibc's usleep touches errno always.
-> >>>>> +      */
-> >>>>> +     for (i = 0; i < 10; i++)
-> >>>>> +             syscall(SYS_clock_nanosleep, CLOCK_MONOTONIC, 0, &ts, NULL);
-> >>>>> +
-> >>>>> +     pk0 = pkey_get(0);
-> >>>>> +     pk1 = pkey_get(pk);
-> >>>>> +     if (pkey_set(0, orig_pk0))
-> >>>>> +             err(1, "pkey_set failed");
-> >>>>> +
-> >>>>> +     /*
-> >>>>> +      * Ensure that the kernel has restored the previous value of pkeys
-> >>>>> +      * register after changing them.
-> >>>>> +      */
-> >>>>> +     if (old_pk0 != pk0)
-> >>>>> +             errx(1, "pkey 0 changed %d->%d", old_pk0, pk0);
-> >>>>> +     if (old_pk1 != pk1)
-> >>>>> +             errx(1, "pkey 1 changed %d->%d", old_pk1, pk1);
-> >>>>> +
-> >>>>> +     swapcontext(&ucp1, &ucp0);
-> >>>>> +     abort();
-> >>>>> +}
-> >>>>> +
-> >>>>> +int main(int argc, char **argv)
-> >>>>> +{
-> >>>>> +     pkey = pkey_alloc(0, 0);
-> >>>>> +     if (pkey == -1) {
-> >>>>> +             printf("[SKIP]\tKernel does not support PKEYs: %s\n",
-> >>>>> +                     strerror(errno));
-> >>>>> +             return 0;
-> >>>>> +     }
-> >>>>> +
-> >>>>> +     if (rseq_register_current_thread())
-> >>>>> +             err(1, "rseq_register_current_thread failed");
-> >>>>> +
-> >>>>> +     if (getcontext(&ucp1))
-> >>>>> +             err(1, "getcontext failed");
-> >>>>> +     ucp1.uc_stack.ss_size = getpagesize() * 4;
-> >>>>> +     ucp1.uc_stack.ss_sp = mmap(NULL, ucp1.uc_stack.ss_size,
-> >>>>> +             PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-> >>>>> +     if (ucp1.uc_stack.ss_sp == MAP_FAILED)
-> >>>>> +             err(1, "mmap failed");
-> >>>>> +     if (pkey_mprotect(ucp1.uc_stack.ss_sp, ucp1.uc_stack.ss_size,
-> >>>>> +                     PROT_READ | PROT_WRITE, pkey))
-> >>>>> +             err(1, "pkey_mprotect failed");
-> >>>>> +     makecontext(&ucp1, coroutine, 0);
-> >>>>> +     if (swapcontext(&ucp0, &ucp1))
-> >>>>> +             err(1, "swapcontext failed");
-> >>>>
-> >>>> Should the rseq register be paired with a rseq unregister here ?
-> >>>
-> >>> I dunno. It's necessary for this test and in general. Tcmalloc won't
-> >>> unregister on thread exit. Even for a libc it may be a bad idea due to
-> >>> signals.
-> >>
-> >> The rseq register/unregister is only for the case where libc does not
-> >> support rseq. But if you want to use rseq_register_current_thread(),
-> >> then you'll want to pair it with unregister.
-> >
-> > Why? Isn't it better to have tests more realitic?
->
-> If you use rseq.c rseq_register_current_thread without
-> rseq_unregister_current_thread, then you rely on implicit
-> unregistration done by the kernel at thread exit.
->
-> Then you need to ensure your userspace runtime keep the TLS
-> that holds the rseq area allocated for the entire execution
-> of the thread until it exits in the kernel. Note that
-> disabling signals is not sufficient to prevent the kernel
-> from accessing the rseq area.
->
-> GNU libc gets away with automatic unregistration at
-> thread exit because it completely controls the lifetime
-> of the registered rseq area, keeping it allocated for as
-> long as the thread is executing.
->
-> So in order to minimize the dependency on specific libc
-> behavior in the kernel sefltests, the selftests rseq.h
-> requires explicit registration *and* unregistration.
+On Mar  7, 2025 Blaise Boscaccy <bboscaccy@linux.microsoft.com> wrote:
+> 
+> Certain bpf syscall subcommands are available for usage from both
+> userspace and the kernel. LSM modules or eBPF gatekeeper programs may
+> need to take a different course of action depending on whether or not
+> a BPF syscall originated from the kernel or userspace.
+> 
+> Additionally, some of the bpf_attr struct fields contain pointers to
+> arbitrary memory. Currently the functionality to determine whether or
+> not a pointer refers to kernel memory or userspace memory is exposed
+> to the bpf verifier, but that information is missing from various LSM
+> hooks.
+> 
+> Here we augment the LSM hooks to provide this data, by simply passing
+> a boolean flag indicating whether or not the call originated in the
+> kernel, in any hook that contains a bpf_attr struct that corresponds
+> to a subcommand that may be called from the kernel.
+> 
+> Signed-off-by: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+> Acked-by: Song Liu <song@kernel.org>
+> Acked-by: Paul Moore <paul@paul-moore.com>
+> ---
+>  include/linux/lsm_hook_defs.h                     |  6 +++---
+>  include/linux/security.h                          | 12 ++++++------
+>  kernel/bpf/syscall.c                              | 10 +++++-----
+>  security/security.c                               | 15 +++++++++------
+>  security/selinux/hooks.c                          |  6 +++---
+>  tools/testing/selftests/bpf/progs/rcu_read_lock.c |  3 ++-
+>  .../selftests/bpf/progs/test_cgroup1_hierarchy.c  |  4 ++--
+>  .../selftests/bpf/progs/test_kfunc_dynptr_param.c |  6 +++---
+>  .../testing/selftests/bpf/progs/test_lookup_key.c |  2 +-
+>  .../selftests/bpf/progs/test_ptr_untrusted.c      |  2 +-
+>  .../selftests/bpf/progs/test_task_under_cgroup.c  |  2 +-
+>  .../selftests/bpf/progs/test_verify_pkcs7_sig.c   |  2 +-
+>  12 files changed, 37 insertions(+), 33 deletions(-)
 
-If libc registers rseq (!rseq_ownership), then
-rseq_unregister_current_thread is a no-op. And if libc has not
-registered rseq, then we are not relying on any libc behavior. I don't
-see how calling rseq_unregister_current_thread helps to rely less on
-libc. Am I missing something?
+This still looks good to me (ACK already present), are the BPF folks
+still on track to merge this into their tree?  It would be good to get
+this into linux-next sooner rather than later if we want to send this
+up to Linus during the next merge window.
 
-
-
-
-> Thanks,
->
-> Mathieu
->
->
-> >
-> >
-> >> Thanks,
-> >>
-> >> Mathieu
-> >>
-> >>>
-> >>>> Thanks,
-> >>>>
-> >>>> Mathieu
-> >>>>
-> >>>>> +     return 0;
-> >>>>> +}
-> >>>>> diff --git a/tools/testing/selftests/rseq/rseq.h b/tools/testing/selftests/rseq/rseq.h
-> >>>>> index ba424ce80a719..65da4a727c550 100644
-> >>>>> --- a/tools/testing/selftests/rseq/rseq.h
-> >>>>> +++ b/tools/testing/selftests/rseq/rseq.h
-> >>>>> @@ -8,6 +8,7 @@
-> >>>>>     #ifndef RSEQ_H
-> >>>>>     #define RSEQ_H
-> >>>>>
-> >>>>> +#include <assert.h>
-> >>>>>     #include <stdint.h>
-> >>>>>     #include <stdbool.h>
-> >>>>>     #include <pthread.h>
-> >>>>
-> >>>>
-> >>>> --
-> >>>> Mathieu Desnoyers
-> >>>> EfficiOS Inc.
-> >>>> https://www.efficios.com
-> >>
-> >>
-> >> --
-> >> Mathieu Desnoyers
-> >> EfficiOS Inc.
-> >> https://www.efficios.com
->
->
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> https://www.efficios.com
+--
+paul-moore.com
