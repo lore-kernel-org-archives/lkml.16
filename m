@@ -1,90 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A286DA930;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2AB229B1F;
 	Mon, 10 Mar 2025 13:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612670; cv=none; b=YHPfoVvsKh2vEvxsTYOP9UznDdDF66oJnY05K2Xn0tEzRUvplejc1+rR9vN6YX1TVjlUar8mkwei7grvmEUCrB9/m1I0g+DA5hakE87a4uFJ0/dWy6O3bGl/7+lTkIt/NYtA55QYKdNYKxqgqkmE1aQcglV4MNSmUYJh3LGKD6Y=
+	t=1741612672; cv=none; b=HCHmAydzGJH3EP8XYZu/KmB1CS01nWehYieY1VII1RAg9O3j5SeFxSGT9ryFjVTrKilQaJV+AH9/mZfozxci/XIZYCinJBc9eKgN+hUIas7OYIgOM4e16Ym829eoUo8c3JNPbLaA6zicaIdXH1P9E5ESk090camqtCCYEm48R8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612670; c=relaxed/simple;
-	bh=4ZqG39C5Pf1QNEH581g9JUhd773SjHjH1W/XN4R90kM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gXgvkONvj0sDXfMnXs5ZhK3wtgl+96zht5s+68mrWgQ7AvhKh/dJGExB5/AONojgntVxNjnl5Fe4Lak9Nt6t/AiOJN91DLhYsSL4U86FlvFfHXSSqfboLa5bm7Sso00JOTe81vWyKS+cI81EbkWcEnrwWvqcpBQ7Ykd++qVTkBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0cy2i+0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741612672; c=relaxed/simple;
+	bh=e81hWutsLUVTbqCvfJFaNFyyZMm2S/O9LJi7D6VMUY0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QH/BllqgdLa6mUICQuWobtuY4iZR6VUQDMS6nDvtIkXDGxC0x1F/Fk8hlUrQbRQobAGG2SBT/t4jfwRb9IfHwwD06glZF2xt7VK/ZKm+B/4EdpfQEu7NodNdof1cANEOPCGfreaN3kBW5ILOOPLfmbaj3BFdnZe6t09Vez3bsg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvKOExco; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0cy2i+0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B87D4C4CEE5;
-	Mon, 10 Mar 2025 13:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741612670;
-	bh=4ZqG39C5Pf1QNEH581g9JUhd773SjHjH1W/XN4R90kM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l0cy2i+02xhEoPTuiAszjprYlougcvywMXyIRcJqQDZN0By0NVslsy8cdRhL46nH7
-	 AvSMgJ3n6XiCG4WhTsSwuKyW73hzeJIzhuoHKcHV4E4V0Ead9RAwWM9lP8hpLh+7x+
-	 Tk6g7mlSZbVD6q3pEzZxS47X/4f1iLVSbqBMbS7719rHlUwmWp+qm//dLCmF/F1EGQ
-	 Y4gz/xfVz+X4pn+qTQdZVEGNncnPjALvI8dGZjMt9/OL5+VV4F/Z/69lsbEjF7I9RF
-	 AbPobtS5X9jKqnUqFXlHHfWK9T0sbEeZotEeGvBbacNk88edjN134aalObDqJRubLb
-	 H5Daac2fyQr7Q==
-Date: Mon, 10 Mar 2025 13:17:45 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, Phil Elwell <phil@raspberrypi.org>
-Subject: Re: [PATCH net v1 1/1] net: usb: lan78xx: Sanitize return values of
- register read/write functions
-Message-ID: <92b0588d-df0b-4f97-99db-d607de774728@sirena.org.uk>
-References: <20250307101223.3025632-1-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvKOExco"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaeec07b705so652761566b.2;
+        Mon, 10 Mar 2025 06:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741612669; x=1742217469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e81hWutsLUVTbqCvfJFaNFyyZMm2S/O9LJi7D6VMUY0=;
+        b=XvKOExcoYYRwSmCvg0kxxM/oWBzKWPNHVnn81jELnHH0tEd1hwU6N+YObjYFXVJqYv
+         akZ3fD1HZYhBesq9VVnTWr/9uX1BzzpOtbVo1xYzI7HnlQa5A1XY05Ou3vYDv3rKyeyt
+         3UV0J4uxVWCa1BJZRb/DJuaz29khSdnC2tQGbePmr5VgolDF7aOyLRtjD/b/yIXEgIHU
+         BKy5m6WCrF7l/yTMD3sxd3aInO5B8UB9TIpOd1Gb7aIuSIm1pbJwSUyyJPnN6r8fQxAf
+         9AFu29uDaJQ4dpH3If7nj7tnwQm0Xp75/HQxz3xMUqTOLj5eESqdi9dqF+1kVsb18VJU
+         cRLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741612669; x=1742217469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e81hWutsLUVTbqCvfJFaNFyyZMm2S/O9LJi7D6VMUY0=;
+        b=cvFO4gGQ3TPBe0gYTX0TdoBz9MJhlvhi4LBs1XBx+YQun94ass+/N5FEzMIV9fLeL6
+         yH6ep1lIDuLXvkMR8CtC3JpPX+CJ9bKE2K/Jh3Ja/GZALQO6IU5V8xAb8zROIO738J3M
+         4yshE90d2RBTA7hkuBgtobDQI9U2QbcJn/WBZ3nsDHlYrVaN3iPd5cx1TG/Pi7ZPTnku
+         adlKcz+Ekq2MRHoSIqDfZ5JhuCjHG3uf285JhIc20MFbAC09YwlPBslNiyzcinoQdQqX
+         Zk+TRdXdcTlCvf0ekhS6+Lq+dsGBGXtKlL+P7UZcpr/oLZsUK1Vus6VWNQblv/Mn6mwb
+         4b4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVFeqyxhWZVIkz2HWrrd98TAiOs3842a1EOLlv80RTW1jmdkduCsv9nLisZWLPwT/I3xFX3MKP+1bMg@vger.kernel.org, AJvYcCWgJYqa9zZSicz/eZCxwmMOf7+mOk1Kk+h7G41h4EHnIkCY3IYna1tfYpbB4g4fdsJK82Nl9pVj9WPy8Q==@vger.kernel.org, AJvYcCXJxlfexEGnWTKcO2xxmgPZ35AVNipt1G/uqfJ8ag/hxJrKMI0hhPwicxlIE+D461gB/RvRLhNu0qLeXoKh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfdTtW5zyjS+UXwnMqwVly9SsMOPwEApaFoix8ZH+vOn1iyxbq
+	J3VX9Mwc0NgA0BOTCs5M79AkNLlubRiNJMSKsZgqxsJeMLZXbp+1RS6eT0lansmNHapNOGnbaUb
+	NRsUFn3J8jgKRC5KOkyui8Hy8s+E=
+X-Gm-Gg: ASbGncsQfHx8eX1KFm79b8xgepEMcfJvhWeme0z0fhxwB8MhUeKEngl3xoKp46/Ch2K
+	Mlkcmpo2IwpNw8iz2JmtpZnwns6YlQGtRlt8M1p6ccBPoUIvK0LXLXNpQw9+JMZ/aHONL5i9iyx
+	5CiGpqVtOzKi8mc0CbFPX4rLJ2nqF0nsKL+E2VijAzw8QwGzrd+aMFjFk=
+X-Google-Smtp-Source: AGHT+IHNxB7jUw7U1sU/YqvDy1jvAc6QAzamEdqe5B5rflGZNx7smc4lFSrtP5k1Y6lgh3In9FvZqyrp1KvyKGAvTYo=
+X-Received: by 2002:a17:906:b385:b0:ac1:daba:c6c with SMTP id
+ a640c23a62f3a-ac2526df221mr1329698266b.24.1741612669113; Mon, 10 Mar 2025
+ 06:17:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l3HifBw0bN+3GatU"
-Content-Disposition: inline
-In-Reply-To: <20250307101223.3025632-1-o.rempel@pengutronix.de>
-X-Cookie: You have a truly strong individuality.
-
-
---l3HifBw0bN+3GatU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-3-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <1740611284-27506-3-git-send-email-nunodasneves@linux.microsoft.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Mon, 10 Mar 2025 21:17:12 +0800
+X-Gm-Features: AQ5f1JqV0EUVop03OzEgZ2BTz5oBdKMCuLbK2kh3Jb2YpPh1RrSVLJOuu0BV0dg
+Message-ID: <CAMvTesBG_=Vzwm5DtMcC29DELWvMEhC+XFZhZ=9p7WdiJBSK8Q@mail.gmail.com>
+Subject: Re: [PATCH v5 02/10] x86/mshyperv: Add support for extended Hyper-V features
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com, 
+	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org, 
+	joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de, 
+	jinankjain@linux.microsoft.com, muminulrussell@gmail.com, 
+	skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com, 
+	ssengar@linux.microsoft.com, apais@linux.microsoft.com, 
+	Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com, 
+	gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com, 
+	muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org, 
+	lenb@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 07, 2025 at 11:12:23AM +0100, Oleksij Rempel wrote:
-> usb_control_msg() returns the number of transferred bytes or a negative
-> error code. The current implementation propagates the transferred byte
-> count, which is unintended. This affects code paths that assume a
-> boolean success/failure check, such as the EEPROM detection logic.
->=20
-> Fix this by ensuring lan78xx_read_reg() and lan78xx_write_reg() return
-> only 0 on success and preserve negative error codes.
+On Thu, Feb 27, 2025 at 7:09=E2=80=AFAM Nuno Das Neves
+<nunodasneves@linux.microsoft.com> wrote:
+>
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+>
+> Extend the "ms_hyperv_info" structure to include a new field,
+> "ext_features", for capturing extended Hyper-V features.
+> Update the "ms_hyperv_init_platform" function to retrieve these features
+> using the cpuid instruction and include them in the informational output.
+>
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
 
-Tested-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
 
-This fixes NFS boot on the Raspberry Pi 3+, it'd be good to get it into
-v6.14.
-
---l3HifBw0bN+3GatU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfO5ngACgkQJNaLcl1U
-h9CWbgf/YvMxNz/qhTlv3AYOZk5I4nBX9bOxERFS7Sp/H0sDcC610uSKp3TXNPDp
-2s1HDKI6gS3YxuG+qWEe7HVOZPF5TOpN22UIN+s9YJ+eV7/d088hbl5KkwNjfMNc
-W15vBIgEhGcnKMhz0ZZMOURzklFjp7id9s2f5MdU3y5YvCdrFFs/nj4i11JHdpj3
-GkRux67ifQ6t7sEMpGB6Po15zX5A603wYTDuiKZ5MQ/9szUIPjWQTT78UNKN8ZkU
-fALRy0yd3UGWwRAUJYcOm8Oxk3mhePqizm4jDylyHMjVg33gQCW8Hg9hnR8b42pi
-RBBWJu3TwqIsqWGZf+CaDtUAPqWlZQ==
-=XDSV
------END PGP SIGNATURE-----
-
---l3HifBw0bN+3GatU--
+--=20
+Thanks
+Tianyu Lan
