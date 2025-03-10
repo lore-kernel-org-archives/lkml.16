@@ -1,74 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m15574.qiye.163.com (mail-m15574.qiye.163.com [101.71.155.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563F922257E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E02224B08
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741607827; cv=none; b=c0gI3wY/Crnp/vQ5GHyPNlwn7iK+5cxfWx9s9iCuw9XhHIOeYINh/r541DAVIvnFuqznAnzWO79HWXs6FWjXryIyA2ndqMvQmqAdCaDxf4gpmvPLT2MgLe7QGhDh8u2qI6fov1kBNOKIXQt74ThQhgT3R7Qatm3bTVIPKtJYCnw=
+	t=1741607852; cv=none; b=Li+JNYB18ewcIDfPVKQugCwbC9997b5HRGUpZCShOnlyuOvWD6XfFkff3XI+XPw4ynoO95t5g9EAPDozP6ki1yKN4ggn2Aj/H5zvvwzT57oT38AtnQ/fCdnB+7Wwj90+c3pGOnbNOD7GKS9Wl8vcB/rL3qiqLVKkI2xxEhHFgQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741607827; c=relaxed/simple;
-	bh=15GcULUpOb7hGhUv5GIYCsVvVe8mVuOVz/m4IO0mXys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u6xbfnGNCwiMtHT4BjRLPudsw8yzPDHJ6nvxIhmf4XBuMfufi9L+0/8+l97ATI0SP1GRCzvXQofvxvDAiwUWDajOmPPuGajZSRyKxx+KUWbe+bw7JfChNmdPihTF51iyD+2WigMoxgT+q00dyQmtPnMnj+X/OmHY9Ch4J65Fzqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5umSw3c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741607852; c=relaxed/simple;
+	bh=jczZ1AEYAhbVGyei9EzIzmMEh7ZV0hMULPaA9ffgmAc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V/BgCuH5MUKBpLdep9jRFBxjUJKnjWHenvCUfJm1uO0W1I+wfKiv7FlTbGz4beBMuosPQMisdjbzzgrd2NmznV5bq5d0HteYTY8UTulS3wM8+ZAfa5LYIru9hMEPkUaX6kSwJzuaAY+l+caGvM4yuc70ojJo4uS3yNVOvFehB+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Ne1sjB72; arc=none smtp.client-ip=101.71.155.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5umSw3c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D03AC4CEE5;
-	Mon, 10 Mar 2025 11:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741607826;
-	bh=15GcULUpOb7hGhUv5GIYCsVvVe8mVuOVz/m4IO0mXys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g5umSw3cV8FWmC7/zPIcsqhwUnhkM11yjeAX6MZmIp+QrqdTJCb4TiLeLk076gr4W
-	 mFamXsx8OlNcad9G5bCetzG1x3qTAFm2P7dzkuVc8lyU/7NeN0RijvkgIAckmzK2b4
-	 gdQQiifce9aS/E3wbR93BcebctKXyeCbJy1uUSOBJ2xzkXiCRfhvdtW/OnNzvzo/d6
-	 cYVh7uLOvTBLa2M/Is7rhgF5CEXHWGjp/5WOSpDrXdbwmSoSfG3nb8bVryTXC3o1E5
-	 Skb7WUR+3imFvkemUbJQFvUo+fKnsz9UK8VmQz/IlQGSQ5SC7jKfjzZQ5CI2pEpNti
-	 V09FI4Zfy+ALw==
-Date: Mon, 10 Mar 2025 12:57:03 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Benjamin Segall <bsegall@google.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrey Vagin <avagin@openvz.org>,
-	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Cyrill Gorcunov <gorcunov@gmail.com>
-Subject: Re: [patch V3 10/18] posix-timers: Make lock_timer() use guard()
-Message-ID: <Z87Tj5BryQd9Rya8@pavilion.home>
-References: <20250308155501.391430556@linutronix.de>
- <20250308155624.087465658@linutronix.de>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Ne1sjB72"
+Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id dc1881fc;
+	Mon, 10 Mar 2025 18:41:46 +0800 (GMT+08:00)
+From: Damon Ding <damon.ding@rock-chips.com>
+To: heiko@sntech.de
+Cc: andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	dianders@chromium.org,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	boris.brezillon@collabora.com,
+	l.stach@pengutronix.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>
+Subject: [PATCH v8 00/13] Add eDP support for RK3588
+Date: Mon, 10 Mar 2025 18:41:01 +0800
+Message-Id: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250308155624.087465658@linutronix.de>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkhLQlYfQ0hLGUpDH01JSENWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEtLTE
+	5VSktLVUtZBg++
+X-HM-Tid: 0a957fa57bc003a3kunmdc1881fc
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OU06HRw6GjICCCMfSjoYPT4e
+	NzhPFDJVSlVKTE9KTUtISEtDTEtLVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJSU5JNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=Ne1sjB72m8GlZHHq8D0kOPJ82+bx3HtiAzX0u7DXfYBwIzSyLB/KggtBK3YnavILVsalpf7wTM9KpH5lrVbwsuaJrhExWhUYOstp1YQI84ftUKLh5Resssmpk2cnHJd+enAMs2I5yGT+qXEjBOeSbT0CQ3onhcGjOX3NhhbSUtQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=lLXPPK6HZnhjRu30hi0LrwQfdstf2dQNmG/Lde/uOWM=;
+	h=date:mime-version:subject:message-id:from;
 
-Le Sat, Mar 08, 2025 at 05:48:34PM +0100, Thomas Gleixner a écrit :
-> --- a/kernel/time/posix-timers.c
-> +++ b/kernel/time/posix-timers.c
-> @@ -63,9 +63,18 @@ static struct k_itimer *__lock_timer(tim
->  
->  static inline void unlock_timer(struct k_itimer *timr)
->  {
-> -	spin_unlock_irq(&timr->it_lock);
-> +	if (likely((timr)))
-> +		spin_unlock_irq(&timr->it_lock);
->  }
->  
-> +#define scoped_timer_get_or_fail(_id)					\
-> +	scoped_cond_guard(lock_timer, return -EINVAL, _id)
+Picked from:
+https://patchwork.kernel.org/project/linux-rockchip/list/?series=936932
 
-I'm not really fond of the fact this hides a return.
+These patchs have been tested with a 1536x2048p60 eDP panel on
+RK3588S EVB1 board, and HDMI 1080P/4K display also has been verified
+on RK3588 EVB1 board. Furthermore, the eDP display has been rechecked
+on RK3399 sapphire excavator board.
 
-But anyway:
+Patch 1~3   are preparations for the RK3588 eDP support on both Analogix
+            side.
+Patch 4~8   are to support to get panel from the DP AUX bus.
+Patch 9~11  are the RK3588 Analogix DP driver support.
+Patch 12    is the addition of RK3588 eDP0 node.
+Patch 13    is to enable the eDP0 display on RK3588S EVB1 board.
 
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Damon Ding (13):
+  drm/bridge: analogix_dp: Add irq flag IRQF_NO_AUTOEN instead of
+    calling disable_irq()
+  drm/bridge: analogix_dp: Remove CONFIG_PM related check in
+    analogix_dp_bind()/analogix_dp_unbind()
+  drm/bridge: analogix_dp: Add support for phy configuration.
+  dt-bindings: display: rockchip: analogix-dp: Add support to get panel
+    from the DP AUX bus
+  drm/bridge: analogix_dp: Support to get &analogix_dp_device.plat_data
+    and &analogix_dp_device.aux
+  drm/bridge: analogix_dp: Add support to get panel from the DP AUX bus
+  drm/bridge: analogix_dp: Add support for
+    &drm_dp_aux.wait_hpd_asserted()
+  drm/rockchip: analogix_dp: Add support to get panel from the DP AUX
+    bus
+  dt-bindings: display: rockchip: analogix-dp: Add support for RK3588
+  drm/bridge: analogix_dp: Add support for RK3588
+  drm/rockchip: analogix_dp: Add support for RK3588
+  arm64: dts: rockchip: Add eDP0 node for RK3588
+  arm64: dts: rockchip: Enable eDP0 display on RK3588S EVB1 board
+
+ .../rockchip/rockchip,analogix-dp.yaml        |  25 ++++-
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  28 +++++
+ .../boot/dts/rockchip/rk3588s-evb1-v10.dts    |  55 ++++++++++
+ .../drm/bridge/analogix/analogix_dp_core.c    |  85 +++++++++------
+ .../gpu/drm/bridge/analogix/analogix_dp_reg.c |  52 +++++++++
+ drivers/gpu/drm/rockchip/Kconfig              |   1 +
+ .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 103 ++++++++++++++++--
+ include/drm/bridge/analogix_dp.h              |   7 +-
+ 8 files changed, 310 insertions(+), 46 deletions(-)
+
+-- 
+2.34.1
+
