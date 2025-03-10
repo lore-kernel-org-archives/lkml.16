@@ -1,269 +1,166 @@
-Received: from mail-m15598.qiye.163.com (mail-m15598.qiye.163.com [101.71.155.98])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD3D3EA76
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9CE3EA76
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741615989; cv=none; b=q4NUsJEia1kMiBSI/JphVQXvPW291sXH9FmHuK0KYwJPdFymaRMLVtFrdR5FQvYM8PeYNyUD2Rm7YeQiD6LY4fn5bUM5bVmSo/tUxLEkMu3/KQyCVmd2A89MeOOKdEYrtGV9xzcf4IkIK8WDAqGCkXvy/EYvet1vfyMRgjaD6WM=
+	t=1741616002; cv=none; b=jpLxdlTDT8Rg5ZWL7/NkDF/0NnUi6ZZ5rNHMXgHpaO7GDFQ5AaYN/l6GIEUiW74aJWwalNmjIKWphBXC3vf7cjsv2vh6lj4sGxvJPie9FyuMGgpXiNlpa4niJNtxwYA0/ICMBoLxdpCQMkSy6HJLyBiAhSL3WQavHQeVZkpojiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741615989; c=relaxed/simple;
-	bh=fjNAGgrKeZTrzftZD3mX5G6O3Fkd7HV77QsyAn9TYi4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I2IaACliI+0WOAGY8Vvc3zpUOjAKdBaVlvlVeCohyITb720Kx+XyuP0gMPpLxqMKxA7vAWE5wMHgcam+HxyUONi0Y3kCJ7RQclxg29ufmuGrvqVRL4aEyqmyChtLPSooe7zFtGN83oMYfzt3rrkz2iMV4FMiAGL8T4hXxkY6Gcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=EhDl7WWw; arc=none smtp.client-ip=101.71.155.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1741616002; c=relaxed/simple;
+	bh=DmtnAJrjBv1ZpYTymNL6mSXrRlM01YbV56c2e4VO4G0=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=VnnmGfXwKrTXSweSAjY8ddwql0164gSorhXx9oTa88RsGEbNfR6fdQ3XOIbjO2fhVM7I08xOj5KAq9rizusGlW391aSW3DwJPnFqSYcOC7gdxqGgiFKw0h5Ee9tcnAJJgW+tLxl7s9r528D0sEceDuG5i2pJ9MOWla3ijCOI0xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GiBQ17U/; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="EhDl7WWw"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id dc1882a3;
-	Mon, 10 Mar 2025 18:42:24 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v8 11/13] drm/rockchip: analogix_dp: Add support for RK3588
-Date: Mon, 10 Mar 2025 18:41:12 +0800
-Message-Id: <20250310104114.2608063-12-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
-References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GiBQ17U/"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0sdTFZNHxhKH0pKS08aQ0JWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
-	NVSktLVUpCWQY+
-X-HM-Tid: 0a957fa60ef003a3kunmdc1882a3
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NU06Phw6UTIDPiNLFTkwPRAq
-	Vi0KCSNVSlVKTE9KTUtISE9NSUhDVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFNT0hINwY+
-DKIM-Signature:a=rsa-sha256;
-	b=EhDl7WWwc5UH/JCcRBF/ghHkEAdtUrv9lku1B3YM0UJK93mOE/SmsKdRVJBw/mDqqZB2MmJAlJhvu3VPw8veBV6g5/hsZHPmssvXqK7sXDVjXPSr+gaWNVEpD3BOk7HHXa6lm2UpFGMIuFmWc7WiVvd/bFTSoYG3/SqwjwBFzVk=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=MmAgdxXY+qxEevcP9ldCLwQthi/h62Xx0tBGh/13AqU=;
-	h=date:mime-version:subject:message-id:from;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741615993;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nWSoLiRTEl1DjXdOcd+TwPvgMZDQndPcdIRX20wh1e0=;
+	b=GiBQ17U/f6AC0XSjR0DITgXAMHz4ntd+PlDK0JYqhVUprheNASdM9fPwfaBunJw68x4LNx
+	kjqu0Qae29dGXRRPEuHzSMmVv5gSrYWcE8HmXVkP3KimqVviZaMo4ETZ3ASM9/IEdsFtjI
+	bUKeTfpqPBiaGjukSrSpI8RCC/5JCI4=
+Date: Mon, 10 Mar 2025 14:13:02 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <fe664471a8933c894ac98029bd704ccfb010eae3@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v2 1/3] bpf, sockmap: avoid using sk_socket
+ after free
+To: "Michal Luczaj" <mhal@rbox.co>, xiyou.wangcong@gmail.com,
+ john.fastabend@gmail.com, jakub@cloudflare.com, martin.lau@linux.dev
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, andrii@kernel.org,
+ eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org, daniel@iogearbox.net,
+ song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org,
+ sgarzare@redhat.com, netdev@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ mrpre@163.com, cong.wang@bytedance.com,
+ syzbot+dd90a702f518e0eac072@syzkaller.appspotmail.com
+In-Reply-To: <d2d3eff9-23df-4098-87cc-d0ad5fde6e1e@rbox.co>
+References: <20250228055106.58071-1-jiayuan.chen@linux.dev>
+ <20250228055106.58071-2-jiayuan.chen@linux.dev>
+ <baeca627-e6f1-4d0a-aea5-fa31689edc4d@rbox.co>
+ <78ee737400721758fa67b4f285e8ba61dc6b893b@linux.dev>
+ <d2d3eff9-23df-4098-87cc-d0ad5fde6e1e@rbox.co>
+X-Migadu-Flow: FLOW_OUT
 
-RK3588 integrates the Analogix eDP 1.3 TX controller IP and the HDMI/eDP
-TX Combo PHY based on a Samsung IP block. There are also two independent
-eDP display interface with different address on RK3588 Soc.
+March 10, 2025 at 9:08 PM, "Michal Luczaj" <mhal@rbox.co> wrote:
 
-The patch currently adds only the basic support, specifically RGB output
-up to 4K@60Hz, without the tests for audio, PSR and other eDP 1.3 specific
-features.
 
-In additon, the above Analogix IP has always been utilized as eDP on
-Rockchip platform, despite its capability to also support the DP v1.2.
-Therefore, the newly added logs will contain the term 'edp' rather than
-'dp'. And the newly added 'apb' reset control is to ensure the APB bus
-of eDP controller works well on the RK3588 SoC.
 
-Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
-
----
-
-Changes in v2:
-- Add support for the other eDP output edp1
-
-Changes in v3:
-- Fix the unexpected use of alias
-- Add more details in commit message
-
-Changes in v4:
-- Add the 'apb' reset control
-
-Changes in v5:
-- Use drm_...()/dev_...() instead of DRM_...()
-- Clean &rockchip_dp_chip_data.reg related comments in commit message
-- Move the modifications in anlogix_dp.h to the Analogix side in order
-  to avoid the warning:
-
-  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1506:10: warning:
-  enumeration value 'RK3588_EDP' not handled in switch [-Wswitch]
-          switch (dp->plat_data->dev_type) {
-
-Changes in v6:
-- Pass 'dp' in drm_...() rather than 'dp->drm_dev'
-- Use drm_...() uniformly rather than mixing drm_...() and dev_..()
-
-Changes in v7:
-- Just keep the DRM_...() as they were in the previous for this series
----
- .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 61 ++++++++++++++++++-
- 1 file changed, 58 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-index 5632b7e3e122..d30f0983a53a 100644
---- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-@@ -52,11 +52,13 @@ struct rockchip_grf_reg_field {
- /**
-  * struct rockchip_dp_chip_data - splite the grf setting of kind of chips
-  * @lcdc_sel: grf register field of lcdc_sel
-+ * @edp_mode: grf register field of edp_mode
-  * @chip_type: specific chip type
-  * @reg: register base address
-  */
- struct rockchip_dp_chip_data {
- 	const struct rockchip_grf_reg_field lcdc_sel;
-+	const struct rockchip_grf_reg_field edp_mode;
- 	u32	chip_type;
- 	u32	reg;
- };
-@@ -71,6 +73,7 @@ struct rockchip_dp_device {
- 	struct clk               *grfclk;
- 	struct regmap            *grf;
- 	struct reset_control     *rst;
-+	struct reset_control     *apbrst;
- 
- 	const struct rockchip_dp_chip_data *data;
- 
-@@ -116,6 +119,10 @@ static int rockchip_dp_pre_init(struct rockchip_dp_device *dp)
- 	usleep_range(10, 20);
- 	reset_control_deassert(dp->rst);
- 
-+	reset_control_assert(dp->apbrst);
-+	usleep_range(10, 20);
-+	reset_control_deassert(dp->apbrst);
-+
- 	return 0;
- }
- 
-@@ -137,12 +144,21 @@ static int rockchip_dp_poweron(struct analogix_dp_plat_data *plat_data)
- 		return ret;
- 	}
- 
-+	ret = rockchip_grf_field_write(dp->grf, &dp->data->edp_mode, 1);
-+	if (ret != 0)
-+		DRM_DEV_ERROR(dp->dev, "failed to set edp mode %d\n", ret);
-+
- 	return ret;
- }
- 
- static int rockchip_dp_powerdown(struct analogix_dp_plat_data *plat_data)
- {
- 	struct rockchip_dp_device *dp = pdata_encoder_to_dp(plat_data);
-+	int ret;
-+
-+	ret = rockchip_grf_field_write(dp->grf, &dp->data->edp_mode, 0);
-+	if (ret != 0)
-+		DRM_DEV_ERROR(dp->dev, "failed to set edp mode %d\n", ret);
- 
- 	clk_disable_unprepare(dp->pclk);
- 
-@@ -206,6 +222,10 @@ static void rockchip_dp_drm_encoder_enable(struct drm_encoder *encoder,
- 	struct rockchip_dp_device *dp = encoder_to_dp(encoder);
- 	struct drm_crtc *crtc;
- 	struct drm_crtc_state *old_crtc_state;
-+	struct of_endpoint endpoint;
-+	struct device_node *remote_port, *remote_port_parent;
-+	char name[32];
-+	u32 port_id;
- 	int ret;
- 
- 	crtc = rockchip_dp_drm_get_new_crtc(encoder, state);
-@@ -223,13 +243,27 @@ static void rockchip_dp_drm_encoder_enable(struct drm_encoder *encoder,
- 		return;
- 	}
- 
--	ret = drm_of_encoder_active_endpoint_id(dp->dev->of_node, encoder);
-+	ret = drm_of_encoder_active_endpoint(dp->dev->of_node, encoder, &endpoint);
- 	if (ret < 0)
- 		return;
- 
--	DRM_DEV_DEBUG(dp->dev, "vop %s output to dp\n", (ret) ? "LIT" : "BIG");
-+	remote_port_parent = of_graph_get_remote_port_parent(endpoint.local_node);
-+	if (remote_port_parent) {
-+		if (of_get_child_by_name(remote_port_parent, "ports")) {
-+			remote_port = of_graph_get_remote_port(endpoint.local_node);
-+			of_property_read_u32(remote_port, "reg", &port_id);
-+			of_node_put(remote_port);
-+			sprintf(name, "%s vp%d", remote_port_parent->full_name, port_id);
-+		} else {
-+			sprintf(name, "%s %s",
-+				remote_port_parent->full_name, endpoint.id ? "vopl" : "vopb");
-+		}
-+		of_node_put(remote_port_parent);
-+
-+		DRM_DEV_DEBUG(dp->dev, "vop %s output to dp\n", (ret) ? "LIT" : "BIG");
-+	}
- 
--	ret = rockchip_grf_field_write(dp->grf, &dp->data->lcdc_sel, ret);
-+	ret = rockchip_grf_field_write(dp->grf, &dp->data->lcdc_sel, endpoint.id);
- 	if (ret != 0)
- 		DRM_DEV_ERROR(dp->dev, "Could not write to GRF: %d\n", ret);
- 
-@@ -323,6 +357,12 @@ static int rockchip_dp_of_probe(struct rockchip_dp_device *dp)
- 		return PTR_ERR(dp->rst);
- 	}
- 
-+	dp->apbrst = devm_reset_control_get_optional(dev, "apb");
-+	if (IS_ERR(dp->apbrst)) {
-+		DRM_DEV_ERROR(dev, "failed to get apb reset control\n");
-+		return PTR_ERR(dp->apbrst);
-+	}
-+
- 	return 0;
- }
- 
-@@ -525,9 +565,24 @@ static const struct rockchip_dp_chip_data rk3288_dp[] = {
- 	{ /* sentinel */ }
- };
- 
-+static const struct rockchip_dp_chip_data rk3588_edp[] = {
-+	{
-+		.edp_mode = GRF_REG_FIELD(0x0000, 0, 0),
-+		.chip_type = RK3588_EDP,
-+		.reg = 0xfdec0000,
-+	},
-+	{
-+		.edp_mode = GRF_REG_FIELD(0x0004, 0, 0),
-+		.chip_type = RK3588_EDP,
-+		.reg = 0xfded0000,
-+	},
-+	{ /* sentinel */ }
-+};
-+
- static const struct of_device_id rockchip_dp_dt_ids[] = {
- 	{.compatible = "rockchip,rk3288-dp", .data = &rk3288_dp },
- 	{.compatible = "rockchip,rk3399-edp", .data = &rk3399_edp },
-+	{.compatible = "rockchip,rk3588-edp", .data = &rk3588_edp },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rockchip_dp_dt_ids);
--- 
-2.34.1
-
+>=20
+>=20On 3/10/25 12:36, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> March 7, 2025 at 5:45 PM, "Michal Luczaj" <mhal@rbox.co> wrote:
+> >=20
+>=20>  ...
+> >=20
+>=20> >=20
+>=20> > BTW, lockdep (CONFIG_LOCKDEP=3Dy) complains about calling AF_UNIX=
+'s
+> > >=20
+>=20> >  read_skb() under RCU read lock.
+> > >=20
+>=20>=20
+>=20>  My environment also has LOCKDEP enabled, but I didn't see similar
+> >=20
+>=20>  warnings.
+> >=20
+>=20>  Moreover, RCU assertions are typically written as:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  WARN_ON_ONCE(!rcu_read_lock_held())
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  And when LOCKDEP is not enabled, rcu_read_lock_held() defaults to
+> >=20
+>=20>  returning 1. So, it's unlikely to trigger a warning due to an RCU =
+lock
+> >=20
+>=20>  being held.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Could you provide more of the call stack?
+> >=20
+>=20
+> Sure, bpf-next with this series applied, test_progs -t sockmap_basic:
+>=20
+>=20=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>=20
+>=20[ BUG: Invalid wait context ]
+>=20
+>=206.14.0-rc3+ #111 Tainted: G OE
+>=20
+>=20-----------------------------
+>=20
+>=20test_progs/37755 is trying to lock:
+>=20
+>=20ffff88810d9bc3c0 (&u->iolock){+.+.}-{4:4}, at: unix_stream_read_skb+0=
+x30/0x120
+>=20
+>=20other info that might help us debug this:
+>=20
+>=20context-{5:5}
+>=20
+>=201 lock held by test_progs/37755:
+>=20
+>=20 #0: ffffffff833700e0 (rcu_read_lock){....}-{1:3}, at: sk_psock_verdi=
+ct_data_ready+0x3e/0x2a0
+>=20
+>=20stack backtrace:
+>=20
+>=20CPU: 13 UID: 0 PID: 37755 Comm: test_progs Tainted: G OE 6.14.0-rc3+ =
+#111
+>=20
+>=20Tainted: [O]=3DOOT_MODULE, [E]=3DUNSIGNED_MODULE
+>=20
+>=20Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linu=
+x 1.16.3-1-1 04/01/2014
+>=20
+>=20Call Trace:
+>=20
+>=20 dump_stack_lvl+0x68/0x90
+>=20
+>=20 lock_acquire+0xcf/0x2e0
+>=20
+>=20 __mutex_lock+0x9c/0xcc0
+>=20
+>=20 unix_stream_read_skb+0x30/0x120
+>=20
+>=20 sk_psock_verdict_data_ready+0x8d/0x2a0
+>=20
+>=20 unix_stream_sendmsg+0x232/0x640
+>=20
+>=20 __sys_sendto+0x1cd/0x1e0
+>=20
+>=20 __x64_sys_sendto+0x20/0x30
+>=20
+>=20 do_syscall_64+0x93/0x180
+>=20
+>=20 entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>
+Thanks, I got this stack too after enabling CONFIG_PROVE_LOCKING.
+It seems that we can't call sleepable lock such as mutex_lock under rcu-l=
+ocked context.
+I'm working on it.
