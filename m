@@ -1,399 +1,379 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2052.outbound.protection.outlook.com [40.107.237.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4448233D72
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 17:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741627889; cv=none; b=KUfavZasGpBVAirgkEGNAQqe9y5HvonAZJsijnf6PutRCX2/7A8VuuUAz0j3edDmZaQcHbOPuHOlVyBecWjEdL7BGwxApIMVgxn+9b/y8Vh7zHC8buLbv61wln4/yDZLwrqw+V0sv4A5ny4LwJL8OxThrJfl3zL2Nd4I5KFkQe8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741627889; c=relaxed/simple;
-	bh=zKc0sdLMgvyw+MGvOj3UKmAPQrDoIt6HAaheJ5pxgSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1dnSq2BrkPHgWZSzCW6+0/syjYXINbS5nKAWUJAhsT6brOTMoT9EGMDGp7r/JbgAEvD5HoDst8Kej2WO1X13P2/cmPZHVI7N/sLB8rEjTd4kPJbHITeV0p0u3QSNipqE1l4buMusMR0zEnGf0HzDWOb5uC226mmocB4sW/ZWZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g/zEmscr; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8718226D0B;
+	Mon, 10 Mar 2025 17:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741627946; cv=fail; b=YqiBD7KJ88nyVhchPCZcJ0+ehJm63Vi1MLAzVMaw7XR5GsgPnc5OjLvh10exqM3+IdT0CNmyVipr/KEm2CtRDhIfUTxB8zdRg1rmCSX1xIqXu8O8Zw17yAB8QYxe0z08A7ujTtG+6xCtEDlyDZ2g4yRVq8wVnuHkXxIdf9luZw4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741627946; c=relaxed/simple;
+	bh=sVF7oItdMxWaeEQjtT6vVAHowOHUusl4tfqETTioR+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=V5n82DUBTcxk2+CkWbSZeijPQiP3Ou4gk20DDwzqLTQFQMQj05szdUuLBKaXp/6ZvBboQmzdMFiN15NhvUwuD7daCxUMM0hDORNNx1G1+52jjQUULqCRBA0ssOEWEodSa3NqTXNa+aB0q0iOsDrk9Zogy/HKdGWavOw4p4IzAwU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rvMh2/OL; arc=fail smtp.client-ip=40.107.237.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g/zEmscr"
-Date: Mon, 10 Mar 2025 17:31:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741627874;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9AKzdTafnP5muRvcqyXS2cPqfeLVBByaoT/d3amflSw=;
-	b=g/zEmscrHJL62ZFqgpFnuqAI9kvWT61cfapyzX53zX6kHG8OVkvakrd95jEfjly4hW6Esl
-	TajY/BRHAhXAKHdQn26Va00uNSowqAzhmH2UD6+YtJbZcu/JdZhcwzIEmZJtWEBz544CUi
-	aBAVwwjDZHOQOjK7FcJsLkcX6ctTveU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: "Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"nphamcs@gmail.com" <nphamcs@gmail.com>,
-	"chengming.zhou@linux.dev" <chengming.zhou@linux.dev>,
-	"usamaarif642@gmail.com" <usamaarif642@gmail.com>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"21cnbao@gmail.com" <21cnbao@gmail.com>,
-	"ying.huang@linux.alibaba.com" <ying.huang@linux.alibaba.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"clabbe@baylibre.com" <clabbe@baylibre.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"ebiggers@google.com" <ebiggers@google.com>,
-	"surenb@google.com" <surenb@google.com>,
-	"Accardi, Kristen C" <kristen.c.accardi@intel.com>,
-	"Feghali, Wajdi K" <wajdi.k.feghali@intel.com>,
-	"Gopal, Vinodh" <vinodh.gopal@intel.com>
-Subject: Re: [PATCH v8 12/14] mm: zswap: Simplify acomp_ctx resource
- allocation/deletion and mutex lock usage.
-Message-ID: <Z88h1mPkYNM6yOGE@google.com>
-References: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
- <20250303084724.6490-13-kanchana.p.sridhar@intel.com>
- <Z8n5CCmELvpUwi3B@google.com>
- <PH8SPRMB004414B5E1E0765C18F9A89DC9D52@PH8SPRMB0044.namprd11.prod.outlook.com>
- <Z8tJOi5G_3dpK31v@google.com>
- <PH8SPRMB00447B066A769C76F57F8800C9D42@PH8SPRMB0044.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rvMh2/OL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Zyfy0bf5MfrLe5/ERJeWwDF3P27FPna+KshlupPSFozLPlkE+8ca99bjzJ8Bm5wrh9aXtAyv8I4cbjbF2zWZVd/pr2MchMQznh1nRJcXUyKKwc7AwzQ0KmYaTgVJPQgrCRH4GWUH597pBVx0N/ie/eZUsnN3L1E3skRqmnJ7rskY/p+v2pIz+dSZW3EK/cYF7e4Fg+c8CSftPRCr551Y9yLkc5jLiHf1SVLKmSMzYWpDXsjcKDKOF8y7ujQELDwd1HyEQVNV9MRlnFmNXkzOkYH+9q1v2exIjOizV7TqkX7j7KM4nzaQpLKH/vJMXAsjknnbzPjCwmqeRVcRsSXnUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=c7cAkIIcgqn6lbSNC5oZ04SxkK2AUKgfYjwsa6hbSPk=;
+ b=xSLsTdgdWK8cpDpTlO1hFGFllfu00a7RCZsBlPyz8yPu9PqzEe+qt9a0UxrEVxG1TIVXhddUff23fa33m5MMAwSMsX/jlSsJA3agMpSoo0sUJLzQ/jV1Bz1qPiKjpOCWHFoJ27Ti2hen28PPDknPErLgamTuhtdVTq1l1NgvaZI2NYbR5ACjIGiJcnB86+42ct/h7dsdSpBhjwPT1YCzaGFHQGs9zzdVWNQXai9bScNNvab4P4EUbZcqy0QFQ7ijMksNipLTH+3p0jGAtkGSkkE/tp8GcNS/Q3DEIGTcnnVJJFqkatFc0pVfC1Z8sIXN2L+ZkGVmQrKyjQL+wURFzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c7cAkIIcgqn6lbSNC5oZ04SxkK2AUKgfYjwsa6hbSPk=;
+ b=rvMh2/OLgmWPdHTHDC12O8KbZWGGzxs7zwgRKb1Cp/r9QzJoVLfecDk9owGmyWGpyd9qNn8pEUq+nho56xF7m6iyxA7JlBfyMnzjGGk1dtG9FV0ebVSPJFoDltsd3KjrRCGXrpKRhXaThXxiGE3VWOJ9YOhcAouCV5M8kOgArBJAwyH4we3NqIz/P/Usp0QvC7zDprCNa79J65Fshd0S58OMpJbRWEu5J+doMN7pccQH8BMj7BFoFfgopF5qkGvRho0Pe3qmcMm+qfDmPRB/YqH4bnTwBPeccv7BpKymsNAm1T/gZQEbUYhC8UnrXULqsp2SX6e/OVWxQRwWH/HNOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ SJ2PR12MB7989.namprd12.prod.outlook.com (2603:10b6:a03:4c3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Mon, 10 Mar
+ 2025 17:32:19 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8511.026; Mon, 10 Mar 2025
+ 17:32:19 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Hugh Dickins <hughd@google.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: linux-mm@kvack.org, Ryan Roberts <ryan.roberts@arm.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>, Yang Shi <yang@os.amperecomputing.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Yu Zhao <yuzhao@google.com>, John Hubbard <jhubbard@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
+ Kairui Song <kasong@tencent.com>
+Subject: Re: [PATCH v10 2/8] mm/huge_memory: add two new (not yet used)
+ functions for folio_split()
+Date: Mon, 10 Mar 2025 13:32:16 -0400
+X-Mailer: MailMate (2.0r6233)
+Message-ID: <0F15DA7F-1977-412F-9A3E-F06B515D4BD2@nvidia.com>
+In-Reply-To: <71414652-95AC-40C6-87BB-2B3B2E680C58@nvidia.com>
+References: <20250307174001.242794-1-ziy@nvidia.com>
+ <20250307174001.242794-3-ziy@nvidia.com>
+ <71414652-95AC-40C6-87BB-2B3B2E680C58@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN9PR03CA0123.namprd03.prod.outlook.com
+ (2603:10b6:408:fe::8) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH8SPRMB00447B066A769C76F57F8800C9D42@PH8SPRMB0044.namprd11.prod.outlook.com>
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SJ2PR12MB7989:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2dae67e9-1adf-4f4c-44e6-08dd5ff9820b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NlRHNVFLZHpleExjRC9ES3lYUE5FV1JQRjRGVjM3UTVRV0h4WkFUakhzQXhN?=
+ =?utf-8?B?YUd0RUpCUWlEUEhobE9TRDRRV0YzSFVPMzhubjFSai9EZ3VoQW5CSGNBNWdS?=
+ =?utf-8?B?ckdYR1hPMTZUMFdwWm5hVlYrR09zclJvbjZzRkQ1NkJ0NUtHbmlsQmtlRktt?=
+ =?utf-8?B?YnRuT1VFNmZKWEFDS0wrZmpCei8rOElJMXNhQW9HQmZNY2VraTZRdTVoY0hK?=
+ =?utf-8?B?QksyaGlzaFN2dnRMZWN0anlMNWFIVXNFaFR4Z21SNGZlQmkyRlpaaHZmZVg0?=
+ =?utf-8?B?VjhCVk9NSGUwY1dnekxNd1pEeE1PNjVRWm55cTFxZHVlTTNaMzk0NEVZbVN2?=
+ =?utf-8?B?c3NPM1ZrSFV6OFVQemNQS0thSE9NZFFWMUhrKzF0d3dWSGR1NlFBSHdTZVFY?=
+ =?utf-8?B?bi9ranJKQWJCSDljNEtmZFFEa1NHaUdUS3ZxNENRejVjUkI3eUxEV3dGelh2?=
+ =?utf-8?B?VG8wK0Q4QytEazhYenh0ZE1mM1lSTjV6WTJFYTVnS3N4L3BYYWdqcGxaNkdV?=
+ =?utf-8?B?RVd5dFlySWNsUzJhQjZhc0pPaDE3d0prNjc0T3crZC8waUduaXNYR2lPVXhk?=
+ =?utf-8?B?SVNEeEt6VVJjVXlBK0tOa2R5TUdHbzBZZTZhaGkzeEFGZEV3M05QcFFSUVpt?=
+ =?utf-8?B?VFBhNmJuelFyeG1oeTZaYmxnQU5VR0N5ZFllRVVUSk9TRGF6N0M3U05USDBO?=
+ =?utf-8?B?MU9MQXlEd2p2NlJobzkrUWRFWXI5S2tFUm5pNkNDVGt4b2pRVzdRTnVST0FQ?=
+ =?utf-8?B?Y3N3azc5MXdQbWxQdmt2bGorTE1QUTMzdjlscC9VZm5jNEZyQjVyMWhyQk0w?=
+ =?utf-8?B?VlUzUlNtWkNacGxyNFlyTDI4bFkxZXlvYnRKOWw5WHBZdXhsK0pGSEN6MHho?=
+ =?utf-8?B?N0FzSG1oVzhFY0VOOUxTbDlqdFZYZkR2NG50aS9GZ09QL0M5N1I5dDhTL0lt?=
+ =?utf-8?B?Mkkxa0kvQjUveTlKNS9zUWpFajNMaG83WEMva2draUtyZ1h5MDRqSEEzejNn?=
+ =?utf-8?B?QWsvOGp4VXlCOXVSaGxzUjVoVVFOZUoyckFoZURqS3pqREd5NnNac2RPMkh4?=
+ =?utf-8?B?dHBzYnphSHFuMjFMQ0NrOGRIWVJXWlpBdHc5QzRWTlM2S0FUd1YwZ0R0Rm5B?=
+ =?utf-8?B?bmJLaE1SMU5tQ1VId0JJelRvMEtVR0djQzVDMzVqNWdURW5helJxcjk1V1Nv?=
+ =?utf-8?B?UDQ2NjVlbGVZcmszcmIrWG5ZVEErK3FFdGZjcU1RS2Ura3Jha2t0NEx1cDg2?=
+ =?utf-8?B?SEljZCt2a1FJMVc1RjdOanE5VnRkeGtjQ3RXeXEzc2NDTER3SklCdHh1dFBp?=
+ =?utf-8?B?ZFVBMkV3MVVYbUJMd1ZnMlRseWFKSGFXTzBua0gvNk5YNUZhNTVKZ2NyMVJJ?=
+ =?utf-8?B?M0E0TUtpdHlTYWRlS2tOaGlSRzNiL2ZldURrWExsNWhDdzgwU3d4cUlXR1p1?=
+ =?utf-8?B?aGkwK1RwVkJnTWFYQnYxZk5SVlVlRU9SNEdSM1BHaXZNbjE3V0ZETllpMFJm?=
+ =?utf-8?B?RFkxSDZOL3RIS3pwNnYvUlRFM1d0T0FkMmtPd0FUd1pxdzByL3pSNUdDWnJi?=
+ =?utf-8?B?dEd6MkpDM3RPQVhTNzF1Q1VHK2VQS0k0UGQvZkRRejVoS1ZsY0xhdElFbjFO?=
+ =?utf-8?B?TG9aVFhJcC9CRWxDQUpsTDQxenZ4NlhFT01EcU9GdmlraEc4V0Rvb0NaYjVN?=
+ =?utf-8?B?ZjRpR3k5MmxZV2J3NVN6akltS29pQy9zNEQwYmJ2cWhsVWI2Y1VCcjh1TE9o?=
+ =?utf-8?B?VzN1SUl2TlJvRFlDUVc4YjhGb0V3RnllMEdhdW02RHc0U0hLZXhybEFNMnNM?=
+ =?utf-8?B?ampVeVM5NVFKOXpQeFhnbWx5Sk9aSEVPcWkzUkRHNmpiQm5ybmhQRjNXdHV6?=
+ =?utf-8?Q?VvHBBBN/CgspT?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eHo1Vi9SZ051THJKYzJjT0R0bEU0UFY2ZE1mejJoY2tPL2JtSUVSZkNjemg5?=
+ =?utf-8?B?TDBibXdoY0VlZkVaZnh4RnBhQnNlM1ppTXBBRDNuTUxBeTFlbWFBaWZmckpT?=
+ =?utf-8?B?VldWL2lVdDROcGF0Y0t5MGo0bUJDdXkzK1NyRHlING12bXBIYjduYnNjK25i?=
+ =?utf-8?B?VXBSOUhndm1Ra0ZEVW9YdGZDVDN4UzFWY2ppcnBIODlrWHVOb2M4NVhjOG1F?=
+ =?utf-8?B?NkEwbyszOGFZNkxUZll3eEpsR2NKd1pmWlBXWVFZUGlHSWFrajlsZHoydEhR?=
+ =?utf-8?B?ZTJwNFpZakhSandUV2YvRDBCdkkrR0syeW9OeTAxN2llbWR6WFREbkIrbzBa?=
+ =?utf-8?B?U0pSWHNpMTYwdXNIUkFVUDlYZkVVelBJUlJBQ0YwVTBPaUpqQU10OGFEY2JR?=
+ =?utf-8?B?TG40bjhJbkl5M2RFOEY3R2t4SVJDQW9RUDhwK1VMbkh1SzV6dDNIWUg3c1Rt?=
+ =?utf-8?B?ZUlINzd1ZnUyV0lFU1dRWEhhMU44WUxtU1Y4bWx2ekRnSGdHZG1aaEdwbjJT?=
+ =?utf-8?B?c3lLM213eW1BK0JwdGE5b2MzdldRd1p6c0JBUWlVelpGSUtnN0E2MDRUQnoy?=
+ =?utf-8?B?WXp0RjBuZVlzYmxIbEErcWpzRUdXeldBSTRaa2RUR21Gc0ZJSFNXcmdjTCtu?=
+ =?utf-8?B?czBRaXFSK1VxVy9xVGxJYURWdnJ1Q2R2L2lxQmdzenJ0ZWdIS1NWTHAza0Nx?=
+ =?utf-8?B?RVBTODYxWVhNcUV4cXRMOWY1M3FmSGpPdzBmNjE2VVVpTjliSmU4YXNBSW16?=
+ =?utf-8?B?aUU4enB5M2cvdkp1SDA1Q1IrS202OEVMTHF0SitSYjJPeFl4MUl6QTN1dThU?=
+ =?utf-8?B?MEcwT2U0RXM2QXRLK1lTRGV6bXppYzBPRmU3Nlk1a3Z2dGxwY0FueU1PYzJu?=
+ =?utf-8?B?QUNLODRPUTc4S0cxK3pjdnhSM3JFWHhKVXdIK0h3aFJzc1BnUjNFMVJzYld2?=
+ =?utf-8?B?V05HWklGS21RVjhmbXlndW92YlFHblJhamt6ZmUyZlpyeGNvbTdjT2dPVGZ6?=
+ =?utf-8?B?aHh2aUJnVDRSSHNMYVd1NUlZZ0c5V0MyOGZPVEF6Vnh3NXA2aXl3b3hUcDRo?=
+ =?utf-8?B?ZkRYZzExYmt0TytZZm1aRGZlSkhkSTl1aThTWU1aVXpZVWtLT1JRcG0wZjl5?=
+ =?utf-8?B?R3lPUG10Z09CYjZtUlZ5ZHhYOXVPN2pEVExabC9kbHhFaUJ5a1A2eWVqcTVG?=
+ =?utf-8?B?cXg5cWM2Tjd4YmFPVDVQTEd3Umtra2tjNHNDenI0amNVVWc1eGwzY3VkdlFz?=
+ =?utf-8?B?ZUpnZ0N1MGEyVDZGVFdxZ095dG1oMEw0Zk5tSTdTR29NUnoveXRkN2xQcUln?=
+ =?utf-8?B?OGREZWN5dmNBV1k2WW5OWlJ1em44NTFUWkp3alRkVHVWUzlIcFRqOTBzM3BK?=
+ =?utf-8?B?VHhqRk1kY2hBcERXbU84Sk1tQlFISUtqKzFPbEpGTjJ0YjlFcS9qNmNJbUtL?=
+ =?utf-8?B?OHZsanpDeVpEbW5USUJPYldzdmFmRVNjUGxLVUZYSWdUMCt6bitESG9IYVlr?=
+ =?utf-8?B?c2ZSeW55N1BNcWQ0WnVNUStDOGNGWHRYZ0I1cS84Nlo1WE42VHNhSGc0K2Q3?=
+ =?utf-8?B?RlhtT0UzbnUvRnpkNXJoa2l3SlVkejN0UE9lL3RsOElTMTdwdG1xUkFxNFN1?=
+ =?utf-8?B?cy8wWjc1SE1IUVFLZTl5dHRXZWFieFpTTzg2RGNOYzN0dk9LSUtaREtMemxt?=
+ =?utf-8?B?Z2YzV2VncXdNekw0dEpwanlBZ0pMaTg0dWhjZmVrOHhGa2xSY3RkTkx4OTA5?=
+ =?utf-8?B?U3hTRW9QTkR1dU5DM0dNR1ZPZE1GYVMxNWdQVEduRnMxd0hkWFFDd0dsSUNG?=
+ =?utf-8?B?SWw2TDlKQzZ3RE4vV0NmdWVneU5Ra01vSUZkaXZDeTBpRWdsVk5Lek5pQVR6?=
+ =?utf-8?B?S0syaFJOQU84dUE0cWxBNnJjYktqa3BlOE9YdDV3dmJVVHhYS29lVzUrWXpr?=
+ =?utf-8?B?eHdNYWJvUjk5U0VoWDhTTVMwMmVUMVZXMjJuN0VyNzAzYTdlSmcvMFd6dHdO?=
+ =?utf-8?B?SjBsb1BYZ3hFUkVOblhobXk0R2RZWGZReDYwUXJtdklRQjNzZHZXL3BXbVEw?=
+ =?utf-8?B?ZFRJczdIckN4aEhCaUI1WDlsdmgwNXZMbWtCc3RsTWloSFpkaVQvVUIyTTFs?=
+ =?utf-8?Q?8cTIIVmSTCEyosY1vH4cdwhXA?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2dae67e9-1adf-4f4c-44e6-08dd5ff9820b
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 17:32:19.0866
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JvXT9nvvEja3LYA+KT9KDNL20xTsSx9inf8mQ3m6isdNFuK08O19zuPcDmnGtXck
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7989
 
-On Sat, Mar 08, 2025 at 02:47:15AM +0000, Sridhar, Kanchana P wrote:
-> 
-[..]
-> > > > >  	u8 *buffer;
-> > > > > +	u8 nr_reqs;
-> > > > > +	struct crypto_wait wait;
-> > > > >  	struct mutex mutex;
-> > > > >  	bool is_sleepable;
-> > > > > +	bool __online;
-> > > >
-> > > > I don't believe we need this.
-> > > >
-> > > > If we are not freeing resources during CPU offlining, then we do not
-> > > > need a CPU offline callback and acomp_ctx->__online serves no purpose.
-> > > >
-> > > > The whole point of synchronizing between offlining and
-> > > > compress/decompress operations is to avoid UAF. If offlining does not
-> > > > free resources, then we can hold the mutex directly in the
-> > > > compress/decompress path and drop the hotunplug callback completely.
-> > > >
-> > > > I also believe nr_reqs can be dropped from this patch, as it seems like
-> > > > it's only used know when to set __online.
-> > >
-> > > All great points! In fact, that was the original solution I had implemented
-> > > (not having an offline callback). But then, I spent some time understanding
-> > > the v6.13 hotfix for synchronizing freeing of resources, and this comment
-> > > in zswap_cpu_comp_prepare():
-> > >
-> > > 	/*
-> > > 	 * Only hold the mutex after completing allocations, otherwise we
-> > may
-> > > 	 * recurse into zswap through reclaim and attempt to hold the mutex
-> > > 	 * again resulting in a deadlock.
-> > > 	 */
-> > >
-> > > Hence, I figured the constraint of "recurse into zswap through reclaim" was
-> > > something to comprehend in the simplification (even though I had a tough
-> > > time imagining how this could happen).
-> > 
-> > The constraint here is about zswap_cpu_comp_prepare() holding the mutex,
-> > making an allocation which internally triggers reclaim, then recursing
-> > into zswap and trying to hold the same mutex again causing a deadlock.
-> > 
-> > If zswap_cpu_comp_prepare() does not need to hold the mutex to begin
-> > with, the constraint naturally goes away.
-> 
-> Actually, if it is possible for the allocations in zswap_cpu_comp_prepare()
-> to trigger reclaim, then I believe we need some way for reclaim to know if
-> the acomp_ctx resources are available. Hence, this seems like a potential
-> for deadlock regardless of the mutex.
+On 10 Mar 2025, at 12:14, Zi Yan wrote:
 
-I took a closer look and I believe my hotfix was actually unnecessary. I
-sent it out in response to a syzbot report, but upon closer look it
-seems like it was not an actual problem. Sorry if my patch confused you.
+> On 7 Mar 2025, at 12:39, Zi Yan wrote:
+>
+>> This is a preparation patch, both added functions are not used yet.
+>>
+>> The added __split_unmapped_folio() is able to split a folio with its
+>> mapping removed in two manners: 1) uniform split (the existing way), and
+>> 2) buddy allocator like (or non-uniform) split.
+>>
+>> The added __split_folio_to_order() can split a folio into any lower orde=
+r.
+>> For uniform split, __split_unmapped_folio() calls it once to split the
+>> given folio to the new order. For buddy allocator like (non-uniform)
+>> split, __split_unmapped_folio() calls it (folio_order - new_order) times
+>> and each time splits the folio containing the given page to one lower
+>> order.
+>>
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: John Hubbard <jhubbard@nvidia.com>
+>> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> Cc: Kirill A. Shuemov <kirill.shutemov@linux.intel.com>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Miaohe Lin <linmiaohe@huawei.com>
+>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>> Cc: Yang Shi <yang@os.amperecomputing.com>
+>> Cc: Yu Zhao <yuzhao@google.com>
+>> Cc: Kairui Song <kasong@tencent.com>
+>> ---
+>>  mm/huge_memory.c | 348 ++++++++++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 347 insertions(+), 1 deletion(-)
+>
+> Hi Andrew,
+>
+> The patch below should fix the issues discovered by Hugh. Please fold
+> it into this patch. Thank you for all the help.
+>
 
-Looking at enum cpuhp_state in include/linux/cpuhotplug.h, it seems like
-CPUHP_MM_ZSWP_POOL_PREPARE is in the PREPARE section. The comment above
-says:
+Hi Andrew,
 
- * PREPARE: The callbacks are invoked on a control CPU before the
- * hotplugged CPU is started up or after the hotplugged CPU has died.
+This is the updated version including:
+1. Hugh=E2=80=99s fix on unfreezing head folio correctly,
+2. Hugh=E2=80=99s fix on drop the right number of refs on tail folio,
+3. Matthew=E2=80=99s suggestion on using new_folio instead of new_head and
+using i instead of index.
 
-So even if we go into reclaim during zswap_cpu_comp_prepare(), it will
-never be on the CPU that we are allocating resources for.
 
-The other case where zswap_cpu_comp_prepare() could race with
-compression/decompression is when a pool is being created. In this case,
-reclaim from zswap_cpu_comp_prepare() can recurse into zswap on the same
-CPU AFAICT. However, because the pool is still under creation, it will
-not be used (i.e. zswap_pool_current_get() won't find it).
+From 82b40c8d0fb3959d0d438929a3e4166f0785fe56 Mon Sep 17 00:00:00 2001
+From: Zi Yan <ziy@nvidia.com>
+Date: Mon, 10 Mar 2025 11:59:42 -0400
+Subject: [PATCH] mm/huge_memory: unfreeze head folio after page cache entri=
+es
+ are updated
 
-So I think we don't need to worry about zswap_cpu_comp_prepare() racing
-with compression or decompression for the same pool and CPU.
+Otherwise others can grab the head folio and see stale page cache entries.
+Data corruption can happen because of that.
 
-> 
-> I verified that all the zswap_cpu_comp_prepare() allocations are done with
-> GFP_KERNEL, which implicitly allows direct reclaim. So this appears to be a
-> risk for deadlock between zswap_compress() and zswap_cpu_comp_prepare()
-> in general, i.e., aside from this patchset.
-> 
-> I can think of the following options to resolve this, and would welcome
-> other suggestions:
-> 
-> 1) Less intrusive: acomp_ctx_get_cpu_lock() should get the mutex, check
->     if acomp_ctx->__online is true, and if so, return the mutex. If
->     acomp_ctx->__online is false, then it returns NULL. In other words, we
->     don't have the for loop.
->     - This will cause recursions into direct reclaim from zswap_cpu_comp_prepare()
->        to fail, cpuhotplug to fail. However, there is no deadlock.
->         - zswap_compress() will need to detect NULL returned by
->           acomp_ctx_get_cpu_lock(), and return an error.
->         - zswap_decompress() will need a BUG_ON(!acomp_ctx) after calling
->           acomp_ctx_get_cpu_lock().
->     - We won't be migrated to a different CPU because we hold the mutex, hence
->       zswap_cpu_comp_dead() will wait on the mutex.
-> 
-> 2) More intrusive: We would need to use a gfp_t that prevents direct reclaim
->     and kswapd, i.e., something similar to GFP_TRANSHUGE_LIGHT in gfp_types.h,
->     but for non-THP allocations. If we decide to adopt this approach, we would
->     need changes in include/crypto/acompress.h, crypto/api.c, and crypto/acompress.c
->     to allow crypto_create_tfm_node() to call crypto_alloc_tfmmem() with this
->     new gfp_t, in lieu of GFP_KERNEL.
-> 
-> > 
-> > >
-> > > Hence, I added the "bool __online" because zswap_cpu_comp_prepare()
-> > > does not acquire the mutex lock while allocating resources. We have
-> > already
-> > > initialized the mutex, so in theory, it is possible for compress/decompress
-> > > to acquire the mutex lock. The __online acts as a way to indicate whether
-> > > compress/decompress can proceed reliably to use the resources.
-> > 
-> > For compress/decompress to acquire the mutex they need to run on that
-> > CPU, and I don't think that's possible before onlining completes, so
-> > zswap_cpu_comp_prepare() must have already completed before
-> > compress/decompress can use that CPU IIUC.
-> 
-> If we can make this assumption, that would be great! However, I am not
-> totally sure because of the GFP_KERNEL allocations in
-> zswap_cpu_comp_prepare().
+Drop large EOF tail folios with the right number of refs to prevent memory
+leak.
 
-As I mentioned above, when zswap_cpu_comp_prepare() is run we are in one
-of two situations:
-- The pool is under creation, so we cannot race with stores/loads from
-  that same pool.
-- The CPU is being onlined, in which case zswap_cpu_comp_prepare() is
-  called from a control CPU before tasks start running on the CPU being
-  onlined.
+Also include Matthew's suggestion on __split_folio_to_order()[1]
 
-Please correct me if I am wrong.
+[1] https://lore.kernel.org/all/Z88ar5YS99HsIRYo@casper.infradead.org/
 
-[..]
-> > > > > @@ -285,13 +403,21 @@ static struct zswap_pool
-> > > > *zswap_pool_create(char *type, char *compressor)
-> > > > >  		goto error;
-> > > > >  	}
-> > > > >
-> > > > > -	for_each_possible_cpu(cpu)
-> > > > > -		mutex_init(&per_cpu_ptr(pool->acomp_ctx, cpu)->mutex);
-> > > > > +	for_each_possible_cpu(cpu) {
-> > > > > +		struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool-
-> > > > >acomp_ctx, cpu);
-> > > > > +
-> > > > > +		acomp_ctx->acomp = NULL;
-> > > > > +		acomp_ctx->req = NULL;
-> > > > > +		acomp_ctx->buffer = NULL;
-> > > > > +		acomp_ctx->__online = false;
-> > > > > +		acomp_ctx->nr_reqs = 0;
-> > > >
-> > > > Why is this needed? Wouldn't zswap_cpu_comp_prepare() initialize them
-> > > > right away?
-> > >
-> > > Yes, I figured this is needed for two reasons:
-> > >
-> > > 1) For the error handling in zswap_cpu_comp_prepare() and calls into
-> > >     zswap_cpu_comp_dealloc() to be handled by the common procedure
-> > >     "acomp_ctx_dealloc()" unambiguously.
-> > 
-> > This makes sense. When you move the refactoring to create
-> > acomp_ctx_dealloc() to a separate patch, please include this change in
-> > it and call it out explicitly in the commit message.
-> 
-> Sure.
-> 
-> > 
-> > > 2) The second scenario I thought of that would need this, is let's say
-> > >      the zswap compressor is switched immediately after setting the
-> > >      compressor. Some cores have executed the onlining code and
-> > >      some haven't. Because there are no pool refs held,
-> > >      zswap_cpu_comp_dealloc() would be called per-CPU. Hence, I figured
-> > >      it would help to initialize these acomp_ctx members before the
-> > >      hand-off to "cpuhp_state_add_instance()" in zswap_pool_create().
-> > 
-> > I believe cpuhp_state_add_instance() calls the onlining function
-> > synchronously on all present CPUs, so I don't think it's possible to end
-> > up in a state where the pool is being destroyed and some CPU executed
-> > zswap_cpu_comp_prepare() while others haven't.
-> 
-> I looked at the cpuhotplug code some more. The startup callback is
-> invoked sequentially for_each_present_cpu(). If an error occurs for any
-> one of them, it calls the teardown callback only on the earlier cores that
-> have already finished running the startup callback. However, 
-> zswap_cpu_comp_dealloc() will be called for all cores, even the ones
-> for which the startup callback was not run. Hence, I believe the
-> zero initialization is useful, albeit using alloc_percpu_gfp(__GFP_ZERO)
-> to allocate the acomp_ctx.
+Reported-by: Hugh Dickins <hughd@google.com>
+Closes: https://lore.kernel.org/all/fcbadb7f-dd3e-21df-f9a7-2853b53183c4@go=
+ogle.com/
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/huge_memory.c | 52 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 23 deletions(-)
 
-Yeah this is point (1) above IIUC, and I agree about zero initialization
-for that.
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index c10ee77189bd..220a6e833003 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3525,15 +3525,14 @@ static void __split_folio_to_order(struct folio *fo=
+lio, int old_order,
+ {
+ 	long new_nr_pages =3D 1 << new_order;
+ 	long nr_pages =3D 1 << old_order;
+-	long index;
++	long i;
 
-> 
-> > 
-> > That being said, this made me think of a different problem. If pool
-> > destruction races with CPU onlining, there could be a race between
-> > zswap_cpu_comp_prepare() allocating resources and
-> > zswap_cpu_comp_dealloc() (or acomp_ctx_dealloc()) freeing them.
-> > 
-> > I believe we must always call cpuhp_state_remove_instance() *before*
-> > freeing the resources to prevent this race from happening. This needs to
-> > be documented with a comment.
-> 
-> Yes, this race condition is possible, thanks for catching this! The problem with
-> calling cpuhp_state_remove_instance() before freeing the resources is that
-> cpuhp_state_add_instance() and cpuhp_state_remove_instance() both
-> acquire a "mutex_lock(&cpuhp_state_mutex);" at the beginning; and hence
-> are serialized.
-> 
-> For the reasons motivating why acomp_ctx->__online is set to false in
-> zswap_cpu_comp_dead(), I cannot call cpuhp_state_remove_instance()
-> before calling acomp_ctx_dealloc() because the latter could wait until
-> acomp_ctx->__online to be true before deleting the resources. I will
-> think about this some more.
+ 	/*
+ 	 * Skip the first new_nr_pages, since the new folio from them have all
+ 	 * the flags from the original folio.
+ 	 */
+-	for (index =3D new_nr_pages; index < nr_pages; index +=3D new_nr_pages) {
+-		struct page *head =3D &folio->page;
+-		struct page *new_head =3D head + index;
++	for (i =3D new_nr_pages; i < nr_pages; i +=3D new_nr_pages) {
++		struct page *new_head =3D &folio->page + i;
 
-I believe this problem goes away with acomp_ctx->__online going away,
-right?
+ 		/*
+ 		 * Careful: new_folio is not a "real" folio before we cleared PageTail.
+@@ -3541,7 +3540,7 @@ static void __split_folio_to_order(struct folio *foli=
+o, int old_order,
+ 		 */
+ 		struct folio *new_folio =3D (struct folio *)new_head;
 
-> 
-> Another possibility is to not rely on cpuhotplug in zswap, and instead
-> manage the per-cpu acomp_ctx resource allocation entirely in
-> zswap_pool_create(), and deletion entirely in zswap_pool_destroy(),
-> along with the necessary error handling. Let me think about this some
-> more as well.
-> 
-> > 
-> > Let me know if I missed something.
-> > 
-> > >
-> > > Please let me know if these are valid considerations.
-> > >
-> > > >
-> > > > If it is in fact needed we should probably just use __GFP_ZERO.
-> > >
-> > > Sure. Are you suggesting I use "alloc_percpu_gfp()" instead of
-> > "alloc_percpu()"
-> > > for the acomp_ctx?
-> > 
-> > Yeah if we need to initialize all/most fields to 0 let's use
-> > alloc_percpu_gfp() and pass GFP_KERNEL | __GFP_ZERO.
-> 
-> Sounds good.
-> 
-> > 
-> > [..]
-> > > > > @@ -902,16 +957,52 @@ static struct crypto_acomp_ctx
-> > > > *acomp_ctx_get_cpu_lock(struct zswap_pool *pool)
-> > > > >
-> > > > >  	for (;;) {
-> > > > >  		acomp_ctx = raw_cpu_ptr(pool->acomp_ctx);
-> > > > > -		mutex_lock(&acomp_ctx->mutex);
-> > > > > -		if (likely(acomp_ctx->req))
-> > > > > -			return acomp_ctx;
-> > > > >  		/*
-> > > > > -		 * It is possible that we were migrated to a different CPU
-> > > > after
-> > > > > -		 * getting the per-CPU ctx but before the mutex was
-> > > > acquired. If
-> > > > > -		 * the old CPU got offlined, zswap_cpu_comp_dead() could
-> > > > have
-> > > > > -		 * already freed ctx->req (among other things) and set it to
-> > > > > -		 * NULL. Just try again on the new CPU that we ended up on.
-> > > > > +		 * If the CPU onlining code successfully allocates acomp_ctx
-> > > > resources,
-> > > > > +		 * it sets acomp_ctx->__online to true. Until this happens, we
-> > > > have
-> > > > > +		 * two options:
-> > > > > +		 *
-> > > > > +		 * 1. Return NULL and fail all stores on this CPU.
-> > > > > +		 * 2. Retry, until onlining has finished allocating resources.
-> > > > > +		 *
-> > > > > +		 * In theory, option 1 could be more appropriate, because it
-> > > > > +		 * allows the calling procedure to decide how it wants to
-> > > > handle
-> > > > > +		 * reclaim racing with CPU hotplug. For instance, it might be
-> > > > Ok
-> > > > > +		 * for compress to return an error for the backing swap device
-> > > > > +		 * to store the folio. Decompress could wait until we get a
-> > > > > +		 * valid and locked mutex after onlining has completed. For
-> > > > now,
-> > > > > +		 * we go with option 2 because adding a do-while in
-> > > > > +		 * zswap_decompress() adds latency for software
-> > > > compressors.
-> > > > > +		 *
-> > > > > +		 * Once initialized, the resources will be de-allocated only
-> > > > > +		 * when the pool is destroyed. The acomp_ctx will hold on to
-> > > > the
-> > > > > +		 * resources through CPU offlining/onlining at any time until
-> > > > > +		 * the pool is destroyed.
-> > > > > +		 *
-> > > > > +		 * This prevents races/deadlocks between reclaim and CPU
-> > > > acomp_ctx
-> > > > > +		 * resource allocation that are a dependency for reclaim.
-> > > > > +		 * It further simplifies the interaction with CPU onlining and
-> > > > > +		 * offlining:
-> > > > > +		 *
-> > > > > +		 * - CPU onlining does not take the mutex. It only allocates
-> > > > > +		 *   resources and sets __online to true.
-> > > > > +		 * - CPU offlining acquires the mutex before setting
-> > > > > +		 *   __online to false. If reclaim has acquired the mutex,
-> > > > > +		 *   offlining will have to wait for reclaim to complete before
-> > > > > +		 *   hotunplug can proceed. Further, hotplug merely sets
-> > > > > +		 *   __online to false. It does not delete the acomp_ctx
-> > > > > +		 *   resources.
-> > > > > +		 *
-> > > > > +		 * Option 1 is better than potentially not exiting the earlier
-> > > > > +		 * for (;;) loop because the system is running low on memory
-> > > > > +		 * and/or CPUs are getting offlined for whatever reason. At
-> > > > > +		 * least failing this store will prevent data loss by failing
-> > > > > +		 * zswap_store(), and saving the data in the backing swap
-> > > > device.
-> > > > >  		 */
-> > > >
-> > > > I believe we can dropped. I don't think we can have any store/load
-> > > > operations on a CPU before it's fully onlined, and we should always have
-> > > > a reference on the pool here, so the resources cannot go away.
-> > > >
-> > > > So unless I missed something we can drop this completely now and just
-> > > > hold the mutex directly in the load/store paths.
-> > >
-> > > Based on the above explanations, please let me know if it is a good idea
-> > > to keep the __online, or if you think further simplification is possible.
-> > 
-> > I still think it's not needed. Let me know if I missed anything.
-> 
-> Let me think some more about whether it is feasible to not have cpuhotplug
-> manage the acomp_ctx resource allocation, and instead have this be done
-> through the pool creation/deletion routines.
+-		VM_BUG_ON_PAGE(atomic_read(&new_head->_mapcount) !=3D -1, new_head);
++		VM_BUG_ON_PAGE(atomic_read(&new_folio->_mapcount) !=3D -1, new_head);
 
-I don't think this is necessary, see my comments above.
+ 		/*
+ 		 * Clone page flags before unfreezing refcount.
+@@ -3556,8 +3555,8 @@ static void __split_folio_to_order(struct folio *foli=
+o, int old_order,
+ 		 * unreferenced sub-pages of an anonymous THP: we can simply drop
+ 		 * PG_anon_exclusive (-> PG_mappedtodisk) for these here.
+ 		 */
+-		new_head->flags &=3D ~PAGE_FLAGS_CHECK_AT_PREP;
+-		new_head->flags |=3D (head->flags &
++		new_folio->flags &=3D ~PAGE_FLAGS_CHECK_AT_PREP;
++		new_folio->flags |=3D (folio->flags &
+ 				((1L << PG_referenced) |
+ 				 (1L << PG_swapbacked) |
+ 				 (1L << PG_swapcache) |
+@@ -3576,23 +3575,20 @@ static void __split_folio_to_order(struct folio *fo=
+lio, int old_order,
+ 				 (1L << PG_dirty) |
+ 				 LRU_GEN_MASK | LRU_REFS_MASK));
+
+-		/* ->mapping in first and second tail page is replaced by other uses */
+-		VM_BUG_ON_PAGE(new_nr_pages > 2 && new_head->mapping !=3D TAIL_MAPPING,
+-			       new_head);
+-		new_head->mapping =3D head->mapping;
+-		new_head->index =3D head->index + index;
++		new_folio->mapping =3D folio->mapping;
++		new_folio->index =3D folio->index + i;
+
+ 		/*
+ 		 * page->private should not be set in tail pages. Fix up and warn once
+ 		 * if private is unexpectedly set.
+ 		 */
+-		if (unlikely(new_head->private)) {
++		if (unlikely(new_folio->private)) {
+ 			VM_WARN_ON_ONCE_PAGE(true, new_head);
+-			new_head->private =3D 0;
++			new_folio->private =3D 0;
+ 		}
+
+ 		if (folio_test_swapcache(folio))
+-			new_folio->swap.val =3D folio->swap.val + index;
++			new_folio->swap.val =3D folio->swap.val + i;
+
+ 		/* Page flags must be visible before we make the page non-compound. */
+ 		smp_wmb();
+@@ -3788,17 +3784,18 @@ static int __split_unmapped_folio(struct folio *fol=
+io, int new_order,
+ 			}
+
+ 			/*
+-			 * Unfreeze refcount first. Additional reference from
+-			 * page cache.
++			 * origin_folio should be kept frozon until page cache
++			 * entries are updated with all the other after-split
++			 * folios to prevent others seeing stale page cache
++			 * entries.
+ 			 */
+-			folio_ref_unfreeze(release,
+-				1 + ((!folio_test_anon(origin_folio) ||
+-				     folio_test_swapcache(origin_folio)) ?
+-					     folio_nr_pages(release) : 0));
+-
+ 			if (release =3D=3D origin_folio)
+ 				continue;
+
++			folio_ref_unfreeze(release, 1 +
++					((mapping || swap_cache) ?
++						folio_nr_pages(release) : 0));
++
+ 			lru_add_page_tail(origin_folio, &release->page,
+ 						lruvec, list);
+
+@@ -3810,7 +3807,7 @@ static int __split_unmapped_folio(struct folio *folio=
+, int new_order,
+ 					folio_account_cleaned(release,
+ 						inode_to_wb(mapping->host));
+ 				__filemap_remove_folio(release, NULL);
+-				folio_put(release);
++				folio_put_refs(release, folio_nr_pages(release));
+ 			} else if (mapping) {
+ 				__xa_store(&mapping->i_pages,
+ 						release->index, release, 0);
+@@ -3822,6 +3819,15 @@ static int __split_unmapped_folio(struct folio *foli=
+o, int new_order,
+ 		}
+ 	}
+
++	/*
++	 * Unfreeze origin_folio only after all page cache entries, which used
++	 * to point to it, have been updated with new folios. Otherwise,
++	 * a parallel folio_try_get() can grab origin_folio and its caller can
++	 * see stale page cache entries.
++	 */
++	folio_ref_unfreeze(origin_folio, 1 +
++		((mapping || swap_cache) ? folio_nr_pages(origin_folio) : 0));
++
+ 	unlock_page_lruvec(lruvec);
+
+ 	if (swap_cache)
+--=20
+2.47.2
+
+
+
+Best Regards,
+Yan, Zi
