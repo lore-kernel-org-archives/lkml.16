@@ -1,104 +1,125 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.119])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ACD21E0BE
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A6921E0B2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741605838; cv=none; b=nxZNu1kmhs4N00ZFaEYNsF357wBCxFttV0JhW4ONMxiByEy0nzxx8ikZedBjuJ2rOHC5/DJetmKa/QQc0qQbE2YnE4zpgAgFoU45NanfcnJI/Rpk7VhJnmWbuZxrs9FCOxTFkCfDadkAUUJ0/tWeuk5CXrY9O/7AivpkrwsWyZY=
+	t=1741605848; cv=none; b=Fkn1aW4A+xkBv8O2kLmsX/DxGWaPINW5uKi61AW+kABElAkwMGv+OM45JJI7tI+ruaItnb0eo7WdHimLQ5cESotRkLR2t6tK3/47XYjFKwp1yudBnW2cskegTHy8PBZTTxDvSOi92ngFQCxzChfWybTsNZu7KTGOWIzOiSkshOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741605838; c=relaxed/simple;
-	bh=wKISntxfKZCLCKAKO+8OeRVGz+AW4fz6x3QOe90BYFE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qmeeDZe3lLiOCoOq/h5xf3UsTr1mqfKRVXJ0Y7Jhm2NxDqL6YSqFaBB58y73BbOyF8XPN/NjdhUFJCaknffiCH/WrcTbemP3GH4mWp4KaNEqiH1GbmyQAFy+W43hc3rqOixU6cYVtzW0BWzcRdUbsiMAMM7zkmKAcdRq2OTicn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=Q7MDSz7T; arc=none smtp.client-ip=212.42.244.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	s=arc-20240116; t=1741605848; c=relaxed/simple;
+	bh=OVxeJv8tEguFEVHqMcAK9wTwDs4k5rlSLED7iFr0Ai8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MaaLkKjX9iMvcXH1jAdPwshwwMHk2m2Htt3fepi47RB9wbClqYHD6bXTXeSguoUv1ORBnqOxbb2FQm9Cycq+c9pSs9NqOdrk52hjxwZEE/aUaamikrfJD6WH7vxJqFjrlER0dGy99U18oFuaMrt53jcri85xRe5nmwUVgVsea1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dw/9mUhE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="Q7MDSz7T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1741605766; bh=wKISntxfKZCLCKAKO+8OeRVGz+AW4fz6x3QOe90BYFE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Q7MDSz7TgWWNz6bfk9tPmhEFSUGronD3cPMw/YaloiKz6lgDVKVweKun5aL2vfBH4
-	 TS/1yIhJ4YHVDoL+cPrShs9zfBNGADE7+lWpBG9myfjz6TwNQ15pnq4bLMDMEK42Zt
-	 IdHmYvXDLzvb6cM3tdhgv9N/sOVSxebf9m5qylGY=
-Received: from [2001:bf0:244:244::71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
-	(envelope-from <phahn-oss@avm.de>)
-	id 67cecb86-1471-7f0000032729-7f000001d8f2-1
-	for <multiple-recipients>; Mon, 10 Mar 2025 12:22:46 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [IPv6:2001:bf0:244:244::71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Mon, 10 Mar 2025 12:22:46 +0100 (CET)
-From: Philipp Hahn <phahn-oss@avm.de>
-To: linux-kernel@vger.kernel.org
-Cc: Philipp Hahn <phahn-oss@avm.de>,
-	Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Philipp Hahn <p.hahn@avm.de>
-Subject: [PATCH] checkpatch: Describe --min-conf-desc-length
-Date: Mon, 10 Mar 2025 12:22:27 +0100
-Message-Id: <c71c170c90eba26265951e248adfedd3245fe575.1741605695.git.p.hahn@avm.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dw/9mUhE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECA7C4CEE5;
+	Mon, 10 Mar 2025 11:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741605848;
+	bh=OVxeJv8tEguFEVHqMcAK9wTwDs4k5rlSLED7iFr0Ai8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dw/9mUhEUOhGBFF0e+TPWemhtnjvHh4R14Dw8OUmhe4HMdMK0vLyJeCdDoJzaUwtw
+	 0v7LpCP0T9ppOPb2fnLRQZW0b8xrYJpO5ARSMWlUgdK2WHZTTq9Z4umoKWs1y6NRVn
+	 /oSFCS01Bkb8B44E23L9+X0hkRjrxgIVHD7Xfx6RP+tlu9mHOmAEILh46F94UHiuok
+	 cf8sgLt8qYWXeYDyKtSFSiWOhVvAwvbZsXazHVaadpUnEAwkxbuBkJGDlyJRurkoDU
+	 370DHpiqb5GhAd8WYFJrw41+zSaojRNtsgik0I12VotP+Ur40t0nUXZSd5gjKU7eHz
+	 LXrxFnMG7ClaA==
+Date: Mon, 10 Mar 2025 12:24:01 +0100
+From: Alexey Gladkov <legion@kernel.org>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: "Alexey Gladkov (Intel)" <alexey.gladkov@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Joerg Roedel <jroedel@suse.de>, Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org, hpa@zytor.com,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
+	Larry.Dewey@amd.com
+Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
+Message-ID: <Z87L0bRi8tcAIsDw@example.org>
+References: <20250305113155.GCZ8g2K1XEdgynTA9D@fat_crate.local>
+ <Z8g4sU_dsZgY0PuS@gmail.com>
+ <20250305115035.GEZ8g6i7NTiSfkxk7J@fat_crate.local>
+ <Z8hYEsHvwUwlOold@suse.de>
+ <20250305153705.GKZ8hvoaz2GPt2rGtu@fat_crate.local>
+ <b0cf4bfc-bf22-4986-9e76-62e3f54179ea@intel.com>
+ <2koe2zg26fndx6d6jcmbg6dzybbgldgrjufupj74nvmav2dmqg@w6bknhosl64h>
+ <Z8le_TWUJNebrfs7@8bytes.org>
+ <Z8l66FFgPu5hWtuI@agladkov-desk>
+ <Z86-3n1-MArVLM9Z@8bytes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: AVM GmbH, Berlin, Germany
-Content-Transfer-Encoding: 8bit
-X-purgate-ID: 149429::1741605766-6FDC59D3-D1867036/0/0
-X-purgate-type: clean
-X-purgate-size: 2342
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z86-3n1-MArVLM9Z@8bytes.org>
 
-Neither the warning nor the help message gives any hint on the unit for
-length: Could be meters, inches, bytes, characters or ... lines.
+On Mon, Mar 10, 2025 at 11:28:46AM +0100, Joerg Roedel wrote:
+> On Thu, Mar 06, 2025 at 11:37:28AM +0100, Alexey Gladkov (Intel) wrote:
+> > I was thinking to suggest something like that
+> > 
+> > /sys/firmware/coco/tdx/...
+> > /sys/firmware/coco/sev/...
+> 
+> So on a second thought I'd like to vote for the /sys/hypervisor/
+> hierarchy. The `firmware` term is a bit amibious here, the TDX module
+> can be seen as a kind of firmware for the guest OS, but realistically it
+> is more like another hypervisor sitting between KVM and the guest.
+> 
+> Also the settings on the SEV side that need to be exposed (VMPL and
+> SEV_STATUS) are CPU properties, but on the other side also set by some
+> form of hypervisor (either KVM/QEMU, the SVSM, or some other paravisor
+> in-between).
+> 
+> Overall /sys/hypervisor/ seems to be the best-fitting location for all
+> this data. To avoid ambiguation I propose:
+> 
+> 	/sys/hypervisor/common/[coco/]tdx/
+> 	/sys/hypervisor/common/[coco/]sev/
 
-Extend the output of `--help` to name the unit "lines" and the default:
--  --min-conf-desc-length=n   set the min description length, if shorter, warn
-+  --min-conf-desc-length=n   set the minimum description length for config symbols
-+                             in lines, if shorter, warn (default 4)
+The /sys/hypervisor requires CONFIG_SYS_HYPERVISOR=y. Now, this parameter
+is not required for the minimum TDX guest configuration.
 
-Include the minimum number of lines as other error messages already do:
-- WARNING: please write a help paragraph that fully describes the config symbol
-+ WARNING: please write a help paragraph that fully describes the config symbol with at least 4 lines
+As I can see right now [1] this directory is used exclusively by xen team.
+It's part of their ABI stable. I'm not sure we can go in there.
 
-Cc: Andy Whitcroft <apw@canonical.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Philipp Hahn <p.hahn@avm.de>
----
- scripts/checkpatch.pl | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+/sys/hypervisor/compilation/compile_date
+/sys/hypervisor/compilation/compiled_by
+/sys/hypervisor/compilation/compiler
+/sys/hypervisor/properties/capabilities
+/sys/hypervisor/properties/changeset
+/sys/hypervisor/properties/features
+/sys/hypervisor/properties/pagesize
+/sys/hypervisor/properties/virtual_start
+/sys/hypervisor/type
+/sys/hypervisor/uuid
+/sys/hypervisor/version/extra
+/sys/hypervisor/version/major
+/sys/hypervisor/version/minor
+/sys/hypervisor/start_flags/*
+/sys/hypervisor/guest_type
+/sys/hypervisor/pmu/pmu_mode
+/sys/hypervisor/pmu/pmu_features
+/sys/hypervisor/properties/buildid
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 7b28ad331742..784912f570e9 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -113,7 +113,8 @@ Options:
-   --max-line-length=n        set the maximum line length, (default $max_line_length)
-                              if exceeded, warn on patches
-                              requires --strict for use with --file
--  --min-conf-desc-length=n   set the min description length, if shorter, warn
-+  --min-conf-desc-length=n   set the minimum description length for config symbols
-+                             in lines, if shorter, warn (default $min_conf_desc_length)
-   --tab-size=n               set the number of spaces for tab (default $tabsize)
-   --root=PATH                PATH to the kernel tree root
-   --no-summary               suppress the per-file summary
-@@ -3645,7 +3646,7 @@ sub process {
- 			    $help_length < $min_conf_desc_length) {
- 				my $stat_real = get_stat_real($linenr, $ln - 1);
- 				WARN("CONFIG_DESCRIPTION",
--				     "please write a help paragraph that fully describes the config symbol\n" . "$here\n$stat_real\n");
-+				     "please write a help paragraph that fully describes the config symbol with at least $min_conf_desc_length lines\n" . "$here\n$stat_real\n");
- 			}
- 		}
- 
+[1] Documentation/ABI/stable/sysfs-hypervisor-xen
+
+> Using `common` makes it clear that this directory does not point to some
+> sort of Hypervisor, but to data common to all hypervisors. Using another
+> `coco` subdirectory is not necessary in my view, but if people think it
+> should exist I am fine with that.
+> 
+> Is this something we can agree on?
+> 
+> Regards,
+> 
+> 	Joerg
+
 -- 
-2.34.1
+Rgrds, legion
 
