@@ -1,81 +1,121 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5929C22DFED
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFB8221F26
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622999; cv=none; b=B1ta2LWk9eY7aiZ3ukDyfkkdeLHJlheO91FTHPJFXIXqvrSnJoHtQY8CIMBiZsEGDvL6dAoPz5qMZ8bvo1CC+xN+vtnnm400M5/JTwwcizARnJbwIEVhwAbu9jpmqe41zTXk8OAog7aBpVZO6nnJ6r4mt3edETkUqjif0NIzihQ=
+	t=1741623168; cv=none; b=ieZN9OMiEcc5vzHb0JLh12nCKx+2/qHApgmhv76gFdlZYSeUu1TXi2qxpjktJWR/Blbxm1BJrKaXDjE5InubOq68fLVNuysNsQVDTQTk5VyIu4ZuG4GL5WlxdUCUN79etd1LNGP8pVowHzoUKU0L6omP7xm0pXKHQNL52Fw0jAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741622999; c=relaxed/simple;
-	bh=RGbEOYg5EIYVE583Aym3kwacUWvpgLSgkDgTcItvahU=;
+	s=arc-20240116; t=1741623168; c=relaxed/simple;
+	bh=GvXTzlRKlAbofNa+lbT2BMK1UdR2zHsco8fZgqhFdv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MdSVMZIL0tTVJNXOAMBbOwqkzRPll7zQARXfCB8dUU501T70PHgRbZLUlt33kL0MN8cg5X4g/UV0Ecg76DCA3ZzQ+wlV8/xQ76x8qwkKCnjaog95wqVV0hoLC1eqsaz9qqBbs/2fkrghtum3L99E8z+WdUQrQszL+SwWbet1MYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZjjD7aK+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pF9dMdcFRKFJ6ofB2H0feoPF63wNytobuO4YW74s8jFc0amo3evTqasTuHpGUNdsKGb6i4PmfYpsAdDV7pdN0ceGSHTuOqLR4K7qZrnsN0YsEwz6HQzHlDkPHDYLMsvRUy3GeMhw2N0H3n2jONBExMQAvnb9DnkWY/bJUMX/cu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vtEH831t; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZjjD7aK+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=J6F1S2cZ9UkcPfKFsoptQ0OTp4oA8A+WUNl2JYbbT/Q=; b=ZjjD7aK+pJhkISCZD/ilNaY/so
-	Osk/f267yv8me9B/AwDu6l/1wqnEvs/RndrNrlUZYNYAOXL7QoIrdDC6wLkWj0oIaQ/59SX0bg2Rd
-	d5kYROu0yXENkBXLgcic5x23ZG4qtA1NNM1vMVh0K8YxZ/i/cVOKR4vI92Rmgdy+ZPt6zX2bPhSUN
-	RufYboRN8prgP9niB6QVMgu+b6fNj2LdBnOH449aT580bjdp27BLLQtk4h3D7Y7xP9uHkwJ25ZuHj
-	4sUIhJT4Nbd67vEihSnTqFaQSr35IFUngplDRxuuKtG5PX5yORJH8t5OGXXnUMCItENEsCegx6yOA
-	O316VMbA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1trfYt-000000078Vp-0RMm;
-	Mon, 10 Mar 2025 16:02:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 543643006C0; Mon, 10 Mar 2025 17:01:02 +0100 (CET)
-Date: Mon, 10 Mar 2025 17:01:02 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v9 00/11] futex: Add support task local hash maps.
-Message-ID: <20250310160102.GG19344@noisy.programming.kicks-ass.net>
-References: <20250225170914.289358-1-bigeasy@linutronix.de>
- <20250303105416.GY11590@noisy.programming.kicks-ass.net>
- <20250303141753.tF-FoCm1@linutronix.de>
- <20250303164015.HHfy1Ibj@linutronix.de>
- <20250304145837.a8g07J-k@linutronix.de>
- <20250305090237.2Q9GwRA1@linutronix.de>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vtEH831t"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913d129c1aso1355966f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741623164; x=1742227964; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GvXTzlRKlAbofNa+lbT2BMK1UdR2zHsco8fZgqhFdv4=;
+        b=vtEH831teuQCeHel8KYvXIMhG5xQBMhcVaegpJAYPQqS87/WhEamc6YpBAUug/lNi6
+         X2YMscU2iL2b/G7xdvQE1q+YY0Zy9oSs17oV39GjfnoYIDrKV4tUu65XIi0JPcXj+Q0t
+         D04OdaiWMM6MmzMDA8OPCCVC00w1Atx2inbK4YbKM7ff7Eql6Md9f8DG8swQ0tKRcJ8O
+         I1/STyUbLLS6hWhP9ZDMoWHFys5EW34tl3EMGUc3kId+R7WMYMLRzlYFELOrs7ub9jm3
+         c60Y181+2iidAStsTKol4e/v1JBJz44jtf2fpMon+8T0JUdeI0srFcZEq3+vHZ/HIJUN
+         msrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741623164; x=1742227964;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GvXTzlRKlAbofNa+lbT2BMK1UdR2zHsco8fZgqhFdv4=;
+        b=YQ7JDWFeHbi9AdVLgVboqMvZfyft2PVMzbmLyV0bBYeIzXg1k2BVut9PCefVVdbPWe
+         60fCd2ItPjtFWfiDaUCaySJM/eZbDS8KqljY/DwQvAI5Kqf2UKIYAkLlsoonUXB3Vl0p
+         zMmLpxjS1j/FU6JbtV5Yhk4XH8HxP+m1MMaFVKAEWnc4NDzgiRsZZcMD+a6lyK1uUTeF
+         +CQC/X5PaRDrT6KmogRdp42yIE0PkfnOI3WtarfeQkPWTNTi0I2f4U+2ykSlYheXxmGi
+         K8SZ910ZRyyzeNtchGKzRy/aRwVSBOmvYaaHLLr+3HJSaGMpcUcgGmrs91RJTKI5X2Ob
+         pJxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNe4kjq5rkGB/5e9r3ijsIyTWpmsnao4wWxdgkCwmpJX69HTxmPVG6rqE3uAsC+WupfyjeFOJX4vXqn5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZjA2HGAQJpKF6QMEj91DPTV1lGN6rgWwjAy6kZPb477lsXQIK
+	bxgIJo8XbwYy6GX5eR8nHORtHU+6LoNSOGmZ+ylScdRbD1oTU6FK8MUxGCSh+zs=
+X-Gm-Gg: ASbGncshyzUqzcBgd2aQR00/3JxwTTiXpsYWtRvRfgjHoyrxcYHc0RpB78Tt+mfA3pQ
+	y+yOypk4L4J7ncuIrLhdkNToVckbzN8ERHQzIyiiPO7ahJmLOI84f0uQlRJCbfhEwtHiTsb+VPZ
+	9Fv1A5bzX8phDz7IJY8mQ2eZOpGcn0Wz5af1MiRcrIZx1dLmUPC+RHSBABJCREIAB1ba3SWh6yT
+	51LSIR2s2WDsiyBqKKKvECfft5ZA4fy6B3tWhFwTC3G5ZqTYSJGS7QEycg34qh9Ok/A6UlqvWs8
+	VJXSE4yP6KEYwt7glpsscglDMP3eXFILzIu5+0i2abeJTZ9+qHize/JHqh6AAesWUOyuWU1+dzw
+	L9PK4zeQ=
+X-Google-Smtp-Source: AGHT+IFBbTozIoHSsEjyOzqv8zgmaRteBxrQlNVCcmKEKPGV689kjbOrp1a7Gy8xkgnb4JfTfotxdQ==
+X-Received: by 2002:a5d:5888:0:b0:391:27f1:fbf3 with SMTP id ffacd0b85a97d-3926d6e57ccmr78729f8f.27.1741623163982;
+        Mon, 10 Mar 2025 09:12:43 -0700 (PDT)
+Received: from localhost (p200300f65f2c000400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f2c:4::1b9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb7934sm15566705f8f.12.2025.03.10.09.12.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 09:12:43 -0700 (PDT)
+Date: Mon, 10 Mar 2025 17:12:41 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Dominique Martinet <dominique.martinet@atmark-techno.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Adam Ford <aford173@gmail.com>, 
+	Frieder Schrempf <frieder.schrempf@kontron.de>, Marco Felsch <m.felsch@pengutronix.de>, 
+	Lucas Stach <l.stach@pengutronix.de>, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Makoto Sato <makoto.sato@atmark-techno.com>
+Subject: Re: [PATCH] phy: freescale: fsl-samsung-hdmi: return closest rate
+ instead LUT
+Message-ID: <b2qwqacogz5vzfekhk5276owld6isgewu5a2iw3roag3lbtsgm@67vqf54c5tdh>
+References: <20250310-8ulp_hdmi-v1-1-a2f231e31987@atmark-techno.com>
+ <v57uy3gddzcoeg3refyv7h6j3ypx23mobctybt27xzdyqy6bgb@atzdlqlytz3c>
+ <Z861gsaGY6bGSisf@atmark-techno.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mjffy452cs7bmfrg"
 Content-Disposition: inline
-In-Reply-To: <20250305090237.2Q9GwRA1@linutronix.de>
+In-Reply-To: <Z861gsaGY6bGSisf@atmark-techno.com>
 
-On Wed, Mar 05, 2025 at 10:02:37AM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-03-04 15:58:39 [+0100], To Peter Zijlstra wrote:
-> > hash. That is why I had the `released' member.
-> 
-> The box was still alive this morning so it did survive >12h testing. I
-> would bring back the `released' member back unless you have other
-> preferences.
 
-Like I just wrote in that other email; I'm a bit confused as to how this
-can happen. If rcuref_put() returns success, then the value is DEAD. It must
-then either be decremented below RELEASED or incremented past NOREF in
-order for rcuref_read() to no longer return 0.
+--mjffy452cs7bmfrg
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH] phy: freescale: fsl-samsung-hdmi: return closest rate
+ instead LUT
+MIME-Version: 1.0
 
-> Depending on those I could fold the fixes directly into the patches and
-> repost the whole thing or prepare you patches that can be folded back
-> and send those.
+Hello Dominique,
 
-Please, it appears I don't have as much time as I would like :/
+On Mon, Mar 10, 2025 at 06:48:50PM +0900, Dominique Martinet wrote:
+> [...] and I'm sure there are other improvements that could be made at
+> the edges.
+
+One thing that irritated me is the function names. `phy_clk_round_rate`
+sounds too generic. `fsl_samsung_hdmi_phy_clk_round_rate` is long, but
+I'd say would be a better match.
+
+Best regards
+Uwe
+
+--mjffy452cs7bmfrg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfPD3cACgkQj4D7WH0S
+/k5R7Qf/VxOUrJge8JojL4BFpnMAkq1wOnQL4hVuzrN5LWBFTHDPnK+iAEFwkkSq
+3jprj6qucTaOj1b/fweLyFX+FXjq6dlZBTJvX13h78SpjN5mQN9e5sUHWtQygHDT
+iB02eNLLAiH+m4z68jbra3tRIThghGj4hL3rqalXOtohIYVrppmTv4AuyDDQKKT4
+JEAUYqaUO36QRJwXjMcKmIrmdkvDfq3fVgLlrAF31xE9Bd9NqvDi91EFweu+9YDk
+1RsJZCm474kggQRDwcoreI7qNxwOBUsv0qWZEyaTBKu3wx4kgLAhsegvIHK3EVYz
+nLhtC3X5kNEZJhvQgfXfGRmiU1qcfQ==
+=fsNW
+-----END PGP SIGNATURE-----
+
+--mjffy452cs7bmfrg--
