@@ -1,219 +1,410 @@
-Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022096.outbound.protection.outlook.com [40.107.193.96])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C606B1B3934
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741621752; cv=fail; b=fcc1WKjSl6lKCxQalN0EoCMZBrkjEfEU31CsY3N1ulytyXq2M45GK/PNmDHEx7T7tW+FBaKA5gxlXwjBJoEM3MsfOIKwOatzRdx6LBoJbw9Jb2BOL4NjslT/UB3+3UqAh4oWXxwYkkhMp4puw/OT1sqY7qUwoGCNkbDPIdHUuz0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741621752; c=relaxed/simple;
-	bh=/A3m3mvmKZ34XdbkMkCtjcUkDNu0XDUX179UtuR02Zo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Bud2vfYSmxq6sSkzFlxa/5AGpneA8opvbHyL4LjakCKWRUVsh5FwMIF6/ECVNqNR8hg41VqA1j31q3kaMdDrGSciIlL9oyQzAVYXFUIII2PwT8tkdqYb+v3g8qkVSKEPae7JMtou3QnNZgguuLXjmTBCkkRHSFcRO+d0RwlsFRo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=pAQabM1v; arc=fail smtp.client-ip=40.107.193.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED411B3934;
+	Mon, 10 Mar 2025 15:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741621759; cv=none; b=PldWuWKZXZJbWH6T1uRrABAPMBDO2bZnqir+dBl5qWIxxok3mekq5kcU8Pb3WW3n87MFm4GVNb6oSsnRxbwTpHqwD4M07MwSZaHoE8JALNA9xGJmxHXdGBC6Nquowm8tiZAfgotH1wvwlSgoy7vOhV2P6bANz8rc5TaZnnjR7iA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741621759; c=relaxed/simple;
+	bh=+IX+LJ7MTGdyqtBe4vRp7+Qs5oOEKhGq8+t84yoE8Gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hxcOb/vW7ewI3kgeg2o5bpjhKZaPw+2oFgS8QHh1AF78cNjq0NFqVtHMxTvNTpZPPos/cqYs1IvP8XZCmvZkjpnQqatiwF1JUuBBO5Zourm13DlQXFuEKTkd138YkM8Q04uwBhttFiCRMnuIBpR64qMQB/7xNd5XqeNgyRDpAPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=movTzyNj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="pAQabM1v"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q7mcFCS0KKq4AmsZjJITPyOOnnV8mvP4OjLLmLDXNtE8DnRMvfGYMvMq1k6U7vm8xSuMUA3Y1IphNk9JoEMabTMtJdmFeE1IOgySORFTmpN+eg5HTin/Z+1pgn8SpS1SFKEPzu8G+8doyX0H95uEDZ0duzwyEttnTTvyBRZjGYb4tlT2TMVTQU7/kal4IBJhsWFm7dj+QhGnOeqY9mA99xhL9hvfMzIgccZIKfGd7sn2nZDS7v9kfW70rymdpt+5HHPO3pfxQ3PN+PwjJJ2ABUL/MpHbtsOnp96+atNqaBG+tF3+3TzllrBYSk0HsEQy2qAJ0FUYs6bbwTMbz7x37A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QaZmlO4x5d3/bmJtcGECPJOgN2LtYtObOSLTY+1r08Q=;
- b=ew9pxLJj3XS4sDC1KV2RvJl/BPjidSkrln+L7DeulLroQhO22e74OdjT2eYp9JYZhKW7uBU7YO7d9VIL+k3laedSnMaEG+zPqLAzSe8D+cKRIVeaT2U1Gopv8Ui90WgUP55pFMyDPRWt0ELF2Tq1b/SJSORQrAb3CqHyWikvanuAN2xFvkBB4PePy+b7fY9Rg4raVFnAcKs5JWS2WRhKY9TpWjqca9oV59IyS9HCLbVVvQZWwJrZ7+4EOBUrrzgPkBKjffpRJkYu4oIVRnPXmWBbaU9RK7iWIqLby9tjbSYQQqareAtutR0V1qCpNt+dj0q9WqmGFwCfC9qzxHJORg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QaZmlO4x5d3/bmJtcGECPJOgN2LtYtObOSLTY+1r08Q=;
- b=pAQabM1vZkwNI7mFJ+166U1rUYLJ99d1roQwtbBbZmZaEspbC/NkulWMHK3NEVp5gUD0/sMrn31noO0CsTH8r/noeZy3a0dLvPx0A3oUcXdErsKRNf3lmupWQrOveO8iElBNPNenIUOSLuZuTK5UzoUKBPIL6cCS+HCyEhWCknCUqratYRGUMXso/ZC+BltHv74/fpZm2N1ufsTNGMGqB+V7IrE676lmbKtuGbiu2Gd+4oKdVRDw9gUtCidx3FLt1x/XibkAb2uQfsoNGcpqUduBHZwqOkO0HNduBY6YoscVtowhplp/CgbPo18T8b+2/wyjv3oxB/jwXByvlfKVDQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:a0::18)
- by YT3PR01MB9978.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:8e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
- 2025 15:49:07 +0000
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5393:fe91:357f:3ccf]) by YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5393:fe91:357f:3ccf%6]) with mapi id 15.20.8511.026; Mon, 10 Mar 2025
- 15:49:07 +0000
-Message-ID: <c100ffbd-5b37-4c38-af45-e86b35854a84@efficios.com>
-Date: Mon, 10 Mar 2025 11:49:05 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 2/3] sched: Move task_mm_cid_work to mm work_struct
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, "Paul E. McKenney"
- <paulmck@kernel.org>, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@redhat.org>, Shuah Khan <shuah@kernel.org>
-References: <20250227153329.672079-1-gmonaco@redhat.com>
- <20250227153329.672079-3-gmonaco@redhat.com>
-Content-Language: en-US
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20250227153329.672079-3-gmonaco@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQBP288CA0025.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c01:9d::26) To YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:a0::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="movTzyNj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6B8C4CEEE;
+	Mon, 10 Mar 2025 15:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741621759;
+	bh=+IX+LJ7MTGdyqtBe4vRp7+Qs5oOEKhGq8+t84yoE8Gs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=movTzyNj4mfwJfalcPJ2qe15KhtO2brnQytr19sKL3SqEwA9dmTHt8WdM3TPwpqbi
+	 CYP0RU72FiSumIOmjp9PmaZVwqvrM3myYP54iW9nodMrwOVLttTMf5EEuQq1FJ5mHI
+	 8bKMbbMdiwGcosYdrxXz96ZEXH2ZkX+RSeVXesl2JbI/iIssJykAR/STSvvtOLAiTv
+	 QqODVDDWMgrHO2ACq8X8mx/j4Mh1knicg1Jf4fA79as2KWRu2BH5oT/GUd3hhQhlZV
+	 zHRdDH0P+KXNkOMHZDzmfUus6Il5rt4vPGpVeujXIIT6TId+2tT1SZPKMDcPSeoMLb
+	 hdV/LQXn0gHBg==
+Message-ID: <4b9fbfe7-294c-4b07-b986-6e378fecc5be@kernel.org>
+Date: Mon, 10 Mar 2025 15:49:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT3PR01MB9171:EE_|YT3PR01MB9978:EE_
-X-MS-Office365-Filtering-Correlation-Id: 838a83c6-ccbf-4605-a052-08dd5feb173e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VS9rR0M1WGh4bDBnRzN3aUtKTjBuVDVXd25TS3V2SXBDMWp0WHU3OER3bmdH?=
- =?utf-8?B?QnkxZ1U0cDRjVHd4U3R0WkdNNE5qWkFzT0RtZHhGalZHdUJkK1dsaTJmSlRT?=
- =?utf-8?B?L0hta1dBNjhRUVF5by9yem1Cbmc3aG1lODhUdGpsclk4RENiOGFtRm9TMG5Z?=
- =?utf-8?B?LytOWXlzaDFPK2tVVjZYVW10dUwvVGhoZlRubml5OXdWMmJyTnhyVEpyaENi?=
- =?utf-8?B?RHRCdmpvY2poNXA3dXBnbndma3YyS29GdDdxVUtEWjZ3bGJTWFYxalhEVjlj?=
- =?utf-8?B?RFhhR25rUXVvR29CZE5YakRiSnpjU3Q1Nkpyc2duekJRcWl0YXlLRXBIdHVa?=
- =?utf-8?B?S3BWUWtYbjZJQWlYd1B5NHhlS0JEa0NOd29BQ0xhVGtPbUQ5enVTRVR3U0Yr?=
- =?utf-8?B?bzkxRmRVa3dvS0hkeWdMTUpFa1JUSUw0T29UWXpkVGNLMnpWMU5QSUlnNmFT?=
- =?utf-8?B?OFdHdGRYM3AvSzBZaEpxK1VlWk14ZVJoUFpHNnpwRDVsUGpJVGo0RlhnNmla?=
- =?utf-8?B?eENMMHFjc3hRZTNFc2NGdktSRVprUmQ2dTJDMEQ2bVJvQ3BabitGUWt5aktZ?=
- =?utf-8?B?ekttcm1QM2xHVmlzQkZMOGJUNFpTRlNkQUZlT3B1MmpzSlI4dSs1NFdjYnhK?=
- =?utf-8?B?N2xTelpKS2tETmtTL3BNNENLdFluS05ibmI2TC9aS3FUUW1GajF1MlJ5R0xp?=
- =?utf-8?B?a1d5ekxrQ3dHMEdYNFRKSWVtTlZlUFBISEsxeWcvNnVORUdNNGR6NmdoVW1k?=
- =?utf-8?B?OUwwMFc1UFAzSmtSdHIyODN3NGh0NXlsa2pqY1RycVYwS0I5YnhXT3R6aWhW?=
- =?utf-8?B?dUFuZmRiTVdRK3JpVVBUSVZkUUFRTm1iZUR1Z2E5RERvbHpha25TeTRpa0V3?=
- =?utf-8?B?V3pKYVBlRjNkTlRZMGtUbjJaY0hKRTd1cDhpOVNVM2djOVYvNVJ2R3RaZzJl?=
- =?utf-8?B?WldoRHNRcForK0U3Si95OUdmZHUzOTNyZEp2c25vdUhZeEYrV1dJZHgvdHFj?=
- =?utf-8?B?T0ZqZ1Yyb2hIUTdFQU1vbXF5RGJPNFloMlNNSlFTdWs4akJnYk03YytqbFM4?=
- =?utf-8?B?RWJ2bVd2ck1xZnZmR3BLNHdhVWs5bHM2a0ovNHFCaW9Dbi9RMUFuRjNPcHZ5?=
- =?utf-8?B?ZHRUZ2RkTW9kQ2hDdXNjS051TEU1TDVPYU9ISWttUnR3S28xdHRuV0xhRUp1?=
- =?utf-8?B?endSM3BkSitnRG8rdXZFSGgwRlpLdkpKRmRmZ25ONWhNNEEwZjZSUXJnVjMv?=
- =?utf-8?B?UkFUUEdZSVN1bnV5VFRNODZFenVCNGJ1bkFtVnVBV0R0aTEyN1VYSmd0QjNl?=
- =?utf-8?B?T0ZXTFZEZ0UwZ3ZCcmNFQ1p6YVA2OUphOFpITk1oMERJV3pvdUJTVFZoam5X?=
- =?utf-8?B?V0dWeHB0K3daeE15M2Z2YXlWTTQ0L1VYdWxZanBDdUUvOVNSdzhRbWFkZ0ZX?=
- =?utf-8?B?OGE3aURkdkpaMTJISk04WUw3a1VmZ05iMmNiTjdkUFJlamovS2UrRWwzaG0y?=
- =?utf-8?B?T016Qi9XWW0yN1ZkdlM2ODRJemRTL1ExZmtsNWUvaE10SFFhMlVPYm9EbVVl?=
- =?utf-8?B?L3R0REhqekhNbDBPbmJ1UTlNT2habVArV3Z4T29xOXZTdTZMaElqNENoWkJT?=
- =?utf-8?B?Zzc2ZGFpNk5SczhPZFJxMG03REtWU2xnMzVXa29RRmNHN2pFTnI4UW9iVmVn?=
- =?utf-8?B?U2tpS0owd2ZnTG1POWJ5TXY2VmZMK0x1d3ZWTFZpUmROc3RpQnF6NEhKZFh0?=
- =?utf-8?Q?q6hQ/bq14VZIAT0JpQfhh64ayL6RZb1SL4/GgVD?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UGcyak5JZGhJK1dzZm5ZUVhmL29WWlBuR0JvdXVuS0Y1UmFYTUg4dWE5THgr?=
- =?utf-8?B?NWhDT3BFZE1TWXNkaE0wdUtEN244RkhlMUtFT1pNMGE0OUhPalJkajNsQWQx?=
- =?utf-8?B?enBLQnB2TUNjenNTc3ZKbHRzOFh3Z2FyczlvdEZTTGh5VFVUTkx4enZhZzJZ?=
- =?utf-8?B?ZUx0eUcycGJ0N1BJREMrb3duMXAzci8xMzZnSXpmYUdEM0QzUWQ1WHdVb0RM?=
- =?utf-8?B?cGZvNHprSkFQRkx6dUZoRWY2dUJOamNUMFFQRXlYSGxZWm9oWDBKUi9mcy9M?=
- =?utf-8?B?V0VoNmdEUS9WMGRtRXYrdHMzVTdad280NGRVT1pQOTJRTlo1eHM1UFlSYlpv?=
- =?utf-8?B?OEw1OVRkb08vUFd2NjdLWldINmdwSWkzclZEbmg4WVhsQ3dKSmt0NHhHU3l3?=
- =?utf-8?B?UmFaT1cwdlNCZzV3S25LZWFYekw0NHpEVGVobjR2WFd4cjFIb29MRXdmVERU?=
- =?utf-8?B?Y0lYL2huenRoZTVPRDZWTzA4ZHllUXlSeExEemN1dW41VkYrRkF3K255R3Fo?=
- =?utf-8?B?YUxOdTRtVDZReGlWVEQ3V1dLMDZlZDlzQ2hqUVVlb0x4bjJkWjFyWE5NWnJO?=
- =?utf-8?B?L2E5NEhFMmZsaDdHMm5GdGlkYVIyUk5RenZEWXJiVTRIcS9IM3A5VURHelhH?=
- =?utf-8?B?WmFUY2NFdzQyazZiMDd6L2Z5cjgrdlEwM3BNenFpdU9VNWJUamY3VGNIQnBv?=
- =?utf-8?B?YjNFQUFsMHdIOFkydmludDZ2cU5CWFRwMk9sSmM0OWs2OVNHb25MTjg4RWoz?=
- =?utf-8?B?R2dWNWdkR2R5R1Iyc3A4S2FUM0xHMW9WZmdmSkVaSlV2ZU1TSm1DdzdUUnd4?=
- =?utf-8?B?SURvU21BRnk3cEM2YkxHdkFzR1RuRHFNQWorMnRSL1c4OGh0M3NzZXI4MTVO?=
- =?utf-8?B?QVdRUVUrUEh2T2d5Z3Vmc0lNUHlKWVNGbzZmNXR3ZlUvdkFwN0lHbnZmWloy?=
- =?utf-8?B?Qm1iUWk0N085THFhYzFya3BsekVlRnRVUmVNU2kvbk5DTXA2L2VjZkE3SjJ4?=
- =?utf-8?B?OTV1UXA0b2picU9URFJoR0hBZDJpZHVDY0IxeUhRNEJ4TC8wNlFUSjQySVFu?=
- =?utf-8?B?WmZFR0VGZXlEZGlVTmpMYVBWZE92ZkI4TTFmMHAzTXdRQTM3aUhGR1pvV3RJ?=
- =?utf-8?B?RnJVYVFMcDhrYzV2VldWa1Q4bTR6dzV6MXozajE1UEpkOWFjcXRSZysvYWUw?=
- =?utf-8?B?cTZpeDhiejVwcGsyYSt1YnUzU0tkZE5BZHBEOGRlaU9DUFdpVkpFZnBkTDRw?=
- =?utf-8?B?UFNZeTlCSWVCSlBoZU94ZXQxNVhkYlNzRU9iQzQ0aTZSeUV3UDYvSFMzMVpY?=
- =?utf-8?B?STNmNmFhTCtDVktoVDczVHQwTEFuRFNWV2lQanZKZXZ2eHV0TXN1MCtxdGRD?=
- =?utf-8?B?Y1RUd2dtaFU0b21la2VuUUE3UUd4RGtPSTRrQ3R2b2I1OVdrT05tNXpOYTAr?=
- =?utf-8?B?b2NFRkU5R08vTUtwSExiTjhpK2tjcFM2OVllQ0ZvMEJrNWN5T0dwS2VHc2k0?=
- =?utf-8?B?MlNjdGord2NVV0ZicW42NTJkYUVoOFhMM0RFSC8wV1NRQjBlT1ppR2NDSVRV?=
- =?utf-8?B?SDhFQ251OXVxODVySjUvQlpNUFNKL01CQW9aRGNKcHVTNWtFREhBZUxuK1hD?=
- =?utf-8?B?b3FGOFZlbkpKMnRNU0lXckNBVmIzTDV3TzNseWlsMlRCNys0aEJ2SDlWZWFD?=
- =?utf-8?B?Y1ZoYjNIc3loeXV4bDZZSzZwQ1RpeHJYTnpFaU5wbG9hYUdsaUxUZ1YxNndU?=
- =?utf-8?B?OWYyempNZnVnSHFHYXR6Nzk3TkZmSW5xZnUwdUpSSVhFOVpkOTIrdk54Z09I?=
- =?utf-8?B?dzFOMkpwS3pKWDAwYVVhZXFkRWdNM05zUzZLQmdlV2wwd0k5cU9QUG11N3NL?=
- =?utf-8?B?L09zNGVXcGFuRGMxcmtDSE8rU1JBVzkrMGVWbVUvemwyaG9FYzZhNStnTjdV?=
- =?utf-8?B?VTdValdVek8wcG9BZjJzYndXV3ZvQTBUMWNnZjgzM2lsdGdRdEdaUm04MElW?=
- =?utf-8?B?R2NpMU1LS2JQS1MxdDVpZlF5N1BQUXBxSjc4NGZtRzJmbUs4MURsTmJydEV3?=
- =?utf-8?B?Nk5xLzBYL01IU1NNQlp4NXd1UE9Ja3hvR0h1bmdBSFlXQitKa2wzdjUxMy9N?=
- =?utf-8?B?Uy93RlV0ZGJ4aU5mUm9HN25RQnBtaGJjZ3BKT3Y1dGxzblYweWk0WUhlSk8r?=
- =?utf-8?Q?V2xaukX2GvME5KsvSdMpiUI=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 838a83c6-ccbf-4605-a052-08dd5feb173e
-X-MS-Exchange-CrossTenant-AuthSource: YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 15:49:07.0198
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G5Fghnz8cT9dlRwHrPKsfOcVx4h2eQI5Z39eYnruBjaUeD/LihNed4YLjA5REkLXL+51gegT6kBjjvqVBt5iDSf+u8H8cMJDbkn8YSIGfsE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB9978
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v1 2/2] bpftool: Using the right format
+ specifiers
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org
+Cc: daniel@iogearbox.net, linux-kernel@vger.kernel.org, ast@kernel.org,
+ davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+ john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mrpre@163.com
+References: <20250310142037.45932-1-jiayuan.chen@linux.dev>
+ <20250310142037.45932-3-jiayuan.chen@linux.dev>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <20250310142037.45932-3-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-27 10:33, Gabriele Monaco wrote:
-> Currently, the task_mm_cid_work function is called in a task work
-> triggered by a scheduler tick to frequently compact the mm_cids of each
-> process. This can delay the execution of the corresponding thread for
-> the entire duration of the function, negatively affecting the response
-> in case of real time tasks. In practice, we observe task_mm_cid_work
-> increasing the latency of 30-35us on a 128 cores system, this order of
-> magnitude is meaningful under PREEMPT_RT.
+2025-03-10 22:20 UTC+0800 ~ Jiayuan Chen <jiayuan.chen@linux.dev>
+> Fixed some formatting specifiers errors, such as using %d for int and %u
+> for unsigned int, as well as other byte-length types.
 > 
-> Run the task_mm_cid_work in a new work_struct connected to the
-> mm_struct rather than in the task context before returning to
-> userspace.
-> 
-> This work_struct is initialised with the mm and disabled before freeing
-> it. The queuing of the work happens while returning to userspace in
-> __rseq_handle_notify_resume, maintaining the checks to avoid running
-> more frequently than MM_CID_SCAN_DELAY.
-> To make sure this happens predictably also on long running tasks, we
-> trigger a call to __rseq_handle_notify_resume also from the scheduler
-> tick if the runtime exceeded a 100ms threshold.
-> 
-> The main advantage of this change is that the function can be offloaded
-> to a different CPU and even preempted by RT tasks.
-> 
-> Moreover, this new behaviour is more predictable with periodic tasks
-> with short runtime, which may rarely run during a scheduler tick.
-> Now, the work is always scheduled when the task returns to userspace.
-> 
-> The work is disabled during mmdrop, since the function cannot sleep in
-> all kernel configurations, we cannot wait for possibly running work
-> items to terminate. We make sure the mm is valid in case the task is
-> terminating by reserving it with mmgrab/mmdrop, returning prematurely if
-> we are really the last user while the work gets to run.
-> This situation is unlikely since we don't schedule the work for exiting
-> tasks, but we cannot rule it out.
-> 
-> Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid")
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 > ---
-[...]
-> +
-> +static inline bool mm_cid_needs_scan(struct mm_struct *mm)
-> +{
-> +	unsigned long now = jiffies;
-> +
-> +	return mm && !time_before(now, READ_ONCE(mm->mm_cid_next_scan));
+>  kernel/bpf/disasm.c                |  4 ++--
+>  tools/bpf/bpftool/btf.c            | 14 +++++++-------
+>  tools/bpf/bpftool/btf_dumper.c     |  2 +-
+>  tools/bpf/bpftool/cgroup.c         |  2 +-
+>  tools/bpf/bpftool/common.c         |  4 ++--
+>  tools/bpf/bpftool/jit_disasm.c     |  3 ++-
+>  tools/bpf/bpftool/map_perf_ring.c  |  6 +++---
+>  tools/bpf/bpftool/net.c            |  4 ++--
+>  tools/bpf/bpftool/netlink_dumper.c |  5 ++---
+>  tools/bpf/bpftool/prog.c           | 12 ++++++------
+>  tools/bpf/bpftool/tracelog.c       |  2 +-
+>  tools/bpf/bpftool/xlated_dumper.c  |  6 +++---
+>  12 files changed, 32 insertions(+), 32 deletions(-)
+> 
+> diff --git a/kernel/bpf/disasm.c b/kernel/bpf/disasm.c
+> index 974d172d6735..20883c6b1546 100644
+> --- a/kernel/bpf/disasm.c
+> +++ b/kernel/bpf/disasm.c
+> @@ -202,7 +202,7 @@ void print_bpf_insn(const struct bpf_insn_cbs *cbs,
+>  				insn->dst_reg, class == BPF_ALU ? 'w' : 'r',
+>  				insn->dst_reg);
+>  		} else if (is_addr_space_cast(insn)) {
+> -			verbose(cbs->private_data, "(%02x) r%d = addr_space_cast(r%d, %d, %d)\n",
+> +			verbose(cbs->private_data, "(%02x) r%d = addr_space_cast(r%d, %u, %u)\n",
+>  				insn->code, insn->dst_reg,
+>  				insn->src_reg, ((u32)insn->imm) >> 16, (u16)insn->imm);
+>  		} else if (is_mov_percpu_addr(insn)) {
+> @@ -381,7 +381,7 @@ void print_bpf_insn(const struct bpf_insn_cbs *cbs,
+>  				insn->code, class == BPF_JMP32 ? 'w' : 'r',
+>  				insn->dst_reg,
+>  				bpf_jmp_string[BPF_OP(insn->code) >> 4],
+> -				insn->imm, insn->off);
+> +				(u32)insn->imm, insn->off);
+>  		}
+>  	} else {
+>  		verbose(cbs->private_data, "(%02x) %s\n",
+> diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
+> index 2636655ac180..4dc0ffdaf8ce 100644
+> --- a/tools/bpf/bpftool/btf.c
+> +++ b/tools/bpf/bpftool/btf.c
+> @@ -253,7 +253,7 @@ static int dump_btf_type(const struct btf *btf, __u32 id,
+>  				if (btf_kflag(t))
+>  					printf("\n\t'%s' val=%d", name, v->val);
+>  				else
+> -					printf("\n\t'%s' val=%u", name, v->val);
+> +					printf("\n\t'%s' val=%d", name, v->val);
 
-Small nit:
 
-You can remove "now", and just use jiffies as argument to time_before.
-
-Other than that:
-
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+This one looks suspicious, it makes the two branches of the if/else the
+same. See the JSON case right above, the "else" is meant to be printed
+as an unsigned. You likely want a cast, instead.
 
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+>  			}
+>  		}
+>  		if (json_output)
+> @@ -1022,7 +1022,7 @@ static int do_dump(int argc, char **argv)
+>  			for (i = 0; i < root_type_cnt; i++) {
+>  				if (root_type_ids[i] == root_id) {
+>  					err = -EINVAL;
+> -					p_err("duplicate root_id %d supplied", root_id);
+> +					p_err("duplicate root_id %u supplied", root_id);
+>  					goto done;
+>  				}
+>  			}
+> @@ -1132,7 +1132,7 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
+>  			break;
+>  		default:
+>  			err = -1;
+> -			p_err("unexpected object type: %d", type);
+> +			p_err("unexpected object type: %u", type);
+>  			goto err_free;
+>  		}
+>  		if (err) {
+> @@ -1155,7 +1155,7 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
+>  			break;
+>  		default:
+>  			err = -1;
+> -			p_err("unexpected object type: %d", type);
+> +			p_err("unexpected object type: %u", type);
+>  			goto err_free;
+>  		}
+>  		if (fd < 0) {
+> @@ -1188,7 +1188,7 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
+>  			break;
+>  		default:
+>  			err = -1;
+> -			p_err("unexpected object type: %d", type);
+> +			p_err("unexpected object type: %u", type);
+>  			goto err_free;
+>  		}
+>  		if (!btf_id)
+> @@ -1254,12 +1254,12 @@ show_btf_plain(struct bpf_btf_info *info, int fd,
+>  
+>  	n = 0;
+>  	hashmap__for_each_key_entry(btf_prog_table, entry, info->id) {
+> -		printf("%s%lu", n++ == 0 ? "  prog_ids " : ",", entry->value);
+> +		printf("%s%ld", n++ == 0 ? "  prog_ids " : ",", entry->value);
+>  	}
+>  
+>  	n = 0;
+>  	hashmap__for_each_key_entry(btf_map_table, entry, info->id) {
+> -		printf("%s%lu", n++ == 0 ? "  map_ids " : ",", entry->value);
+> +		printf("%s%ld", n++ == 0 ? "  map_ids " : ",", entry->value);
+>  	}
+
+
+Program and map IDs should likely be printed as unsigned. The values
+stored in the hashmap come from unsigned IDs by the way, let's re-cast
+entry->value instead.
+
+
+>  
+>  	emit_obj_refs_plain(refs_table, info->id, "\n\tpids ");
+> diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
+> index 527fe867a8fb..4e896d8a2416 100644
+> --- a/tools/bpf/bpftool/btf_dumper.c
+> +++ b/tools/bpf/bpftool/btf_dumper.c
+> @@ -653,7 +653,7 @@ static int __btf_dumper_type_only(const struct btf *btf, __u32 type_id,
+>  	case BTF_KIND_ARRAY:
+>  		array = (struct btf_array *)(t + 1);
+>  		BTF_PRINT_TYPE(array->type);
+> -		BTF_PRINT_ARG("[%d]", array->nelems);
+> +		BTF_PRINT_ARG("[%u]", array->nelems);
+>  		break;
+>  	case BTF_KIND_PTR:
+>  		BTF_PRINT_TYPE(t->type);
+> diff --git a/tools/bpf/bpftool/cgroup.c b/tools/bpf/bpftool/cgroup.c
+> index 9af426d43299..93b139bfb988 100644
+> --- a/tools/bpf/bpftool/cgroup.c
+> +++ b/tools/bpf/bpftool/cgroup.c
+> @@ -191,7 +191,7 @@ static int show_bpf_prog(int id, enum bpf_attach_type attach_type,
+>  		if (attach_btf_name)
+>  			printf(" %-15s", attach_btf_name);
+>  		else if (info.attach_btf_id)
+> -			printf(" attach_btf_obj_id=%d attach_btf_id=%d",
+> +			printf(" attach_btf_obj_id=%u attach_btf_id=%u",
+>  			       info.attach_btf_obj_id, info.attach_btf_id);
+>  		printf("\n");
+>  	}
+> diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
+> index 0a764426d935..ecfa790adc13 100644
+> --- a/tools/bpf/bpftool/common.c
+> +++ b/tools/bpf/bpftool/common.c
+> @@ -714,7 +714,7 @@ ifindex_to_arch(__u32 ifindex, __u64 ns_dev, __u64 ns_ino, const char **opt)
+>  	int vendor_id;
+>  
+>  	if (!ifindex_to_name_ns(ifindex, ns_dev, ns_ino, devname)) {
+> -		p_err("Can't get net device name for ifindex %d: %s", ifindex,
+> +		p_err("Can't get net device name for ifindex %u: %s", ifindex,
+>  		      strerror(errno));
+>  		return NULL;
+>  	}
+> @@ -739,7 +739,7 @@ ifindex_to_arch(__u32 ifindex, __u64 ns_dev, __u64 ns_ino, const char **opt)
+>  	/* No NFP support in LLVM, we have no valid triple to return. */
+>  	default:
+>  		p_err("Can't get arch name for device vendor id 0x%04x",
+> -		      vendor_id);
+> +		      (unsigned int)vendor_id);
+>  		return NULL;
+>  	}
+>  }
+> diff --git a/tools/bpf/bpftool/jit_disasm.c b/tools/bpf/bpftool/jit_disasm.c
+> index c032d2c6ab6d..8895b4e1f690 100644
+> --- a/tools/bpf/bpftool/jit_disasm.c
+> +++ b/tools/bpf/bpftool/jit_disasm.c
+> @@ -343,7 +343,8 @@ int disasm_print_insn(unsigned char *image, ssize_t len, int opcodes,
+>  {
+>  	const struct bpf_line_info *linfo = NULL;
+>  	unsigned int nr_skip = 0;
+> -	int count, i, pc = 0;
+> +	int count, i;
+> +	unsigned int pc = 0;
+>  	disasm_ctx_t ctx;
+>  
+>  	if (!len)
+> diff --git a/tools/bpf/bpftool/map_perf_ring.c b/tools/bpf/bpftool/map_perf_ring.c
+> index 21d7d447e1f3..552b4ca40c27 100644
+> --- a/tools/bpf/bpftool/map_perf_ring.c
+> +++ b/tools/bpf/bpftool/map_perf_ring.c
+> @@ -91,15 +91,15 @@ print_bpf_output(void *private_data, int cpu, struct perf_event_header *event)
+>  		jsonw_end_object(json_wtr);
+>  	} else {
+>  		if (e->header.type == PERF_RECORD_SAMPLE) {
+> -			printf("== @%lld.%09lld CPU: %d index: %d =====\n",
+> +			printf("== @%llu.%09llu CPU: %d index: %d =====\n",
+>  			       e->time / 1000000000ULL, e->time % 1000000000ULL,
+>  			       cpu, idx);
+>  			fprint_hex(stdout, e->data, e->size, " ");
+>  			printf("\n");
+>  		} else if (e->header.type == PERF_RECORD_LOST) {
+> -			printf("lost %lld events\n", lost->lost);
+> +			printf("lost %llu events\n", lost->lost);
+>  		} else {
+> -			printf("unknown event type=%d size=%d\n",
+> +			printf("unknown event type=%u size=%u\n",
+>  			       e->header.type, e->header.size);
+>  		}
+>  	}
+> diff --git a/tools/bpf/bpftool/net.c b/tools/bpf/bpftool/net.c
+> index d2242d9f8441..811150873125 100644
+> --- a/tools/bpf/bpftool/net.c
+> +++ b/tools/bpf/bpftool/net.c
+> @@ -476,7 +476,7 @@ static void __show_dev_tc_bpf(const struct ip_devname_ifindex *dev,
+>  	for (i = 0; i < optq.count; i++) {
+>  		NET_START_OBJECT;
+>  		NET_DUMP_STR("devname", "%s", dev->devname);
+> -		NET_DUMP_UINT("ifindex", "(%u)", dev->ifindex);
+> +		NET_DUMP_UINT("ifindex", "(%d)", dev->ifindex);
+
+
+Macro NET_DUMP_UINT() clearly denotes the intent to have an insigned; if
+you change the plain-output format specifier only, you risk introducing
+differences between the plain and JSON forms. Either use NET_DUMP_INT()
+as well, or cast the ifindex. I'd probably go with the cast.
+
+
+>  		NET_DUMP_STR("kind", " %s", attach_loc_strings[loc]);
+>  		ret = __show_dev_tc_bpf_name(prog_ids[i], prog_name,
+>  					     sizeof(prog_name));
+> @@ -831,7 +831,7 @@ static void show_link_netfilter(void)
+>  		if (err) {
+>  			if (errno == ENOENT)
+>  				break;
+> -			p_err("can't get next link: %s (id %d)", strerror(errno), id);
+> +			p_err("can't get next link: %s (id %u)", strerror(errno), id);
+>  			break;
+>  		}
+>  
+> diff --git a/tools/bpf/bpftool/netlink_dumper.c b/tools/bpf/bpftool/netlink_dumper.c
+> index 5f65140b003b..00741d51e7de 100644
+> --- a/tools/bpf/bpftool/netlink_dumper.c
+> +++ b/tools/bpf/bpftool/netlink_dumper.c
+> @@ -26,8 +26,7 @@ static void xdp_dump_prog_id(struct nlattr **tb, int attr,
+>  		NET_END_OBJECT
+>  }
+>  
+> -static int do_xdp_dump_one(struct nlattr *attr, unsigned int ifindex,
+> -			   const char *name)
+> +static int do_xdp_dump_one(struct nlattr *attr, int ifindex, const char *name)
+>  {
+>  	struct nlattr *tb[IFLA_XDP_MAX + 1];
+>  	unsigned char mode;
+> @@ -168,7 +167,7 @@ int do_filter_dump(struct tcmsg *info, struct nlattr **tb, const char *kind,
+>  		NET_START_OBJECT;
+>  		if (devname[0] != '\0')
+>  			NET_DUMP_STR("devname", "%s", devname);
+> -		NET_DUMP_UINT("ifindex", "(%u)", ifindex);
+> +		NET_DUMP_UINT("ifindex", "(%d)", ifindex);
+
+
+Same here regarding NET_DUMP_UINT().
+
+
+>  		NET_DUMP_STR("kind", " %s", kind);
+>  		ret = do_bpf_filter_dump(tb[TCA_OPTIONS]);
+>  		NET_END_OBJECT_FINAL;
+> diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+> index e71be67f1d86..58791542515a 100644
+> --- a/tools/bpf/bpftool/prog.c
+> +++ b/tools/bpf/bpftool/prog.c
+> @@ -521,10 +521,10 @@ static void print_prog_header_plain(struct bpf_prog_info *info, int fd)
+>  	print_dev_plain(info->ifindex, info->netns_dev, info->netns_ino);
+>  	printf("%s", info->gpl_compatible ? "  gpl" : "");
+>  	if (info->run_time_ns)
+> -		printf(" run_time_ns %lld run_cnt %lld",
+> +		printf(" run_time_ns %llu run_cnt %llu",
+>  		       info->run_time_ns, info->run_cnt);
+>  	if (info->recursion_misses)
+> -		printf(" recursion_misses %lld", info->recursion_misses);
+> +		printf(" recursion_misses %llu", info->recursion_misses);
+>  	printf("\n");
+>  }
+>  
+> @@ -569,7 +569,7 @@ static void print_prog_plain(struct bpf_prog_info *info, int fd, bool orphaned)
+>  	}
+>  
+>  	if (info->btf_id)
+> -		printf("\n\tbtf_id %d", info->btf_id);
+> +		printf("\n\tbtf_id %u", info->btf_id);
+>  
+>  	emit_obj_refs_plain(refs_table, info->id, "\n\tpids ");
+>  
+> @@ -1164,7 +1164,7 @@ static int get_run_data(const char *fname, void **data_ptr, unsigned int *size)
+>  		}
+>  		if (nb_read > buf_size - block_size) {
+>  			if (buf_size == UINT32_MAX) {
+> -				p_err("data_in/ctx_in is too long (max: %d)",
+> +				p_err("data_in/ctx_in is too long (max: %u)",
+>  				      UINT32_MAX);
+>  				goto err_free;
+>  			}
+> @@ -2251,7 +2251,7 @@ static char *profile_target_name(int tgt_fd)
+>  
+>  	t = btf__type_by_id(btf, func_info.type_id);
+>  	if (!t) {
+> -		p_err("btf %d doesn't have type %d",
+> +		p_err("btf %u doesn't have type %u",
+>  		      info.btf_id, func_info.type_id);
+>  		goto out;
+>  	}
+> @@ -2329,7 +2329,7 @@ static int profile_open_perf_events(struct profiler_bpf *obj)
+>  			continue;
+>  		for (cpu = 0; cpu < obj->rodata->num_cpu; cpu++) {
+>  			if (profile_open_perf_event(m, cpu, map_fd)) {
+> -				p_err("failed to create event %s on cpu %d",
+> +				p_err("failed to create event %s on cpu %u",
+>  				      metrics[m].name, cpu);
+>  				return -1;
+>  			}
+> diff --git a/tools/bpf/bpftool/tracelog.c b/tools/bpf/bpftool/tracelog.c
+> index bf1f02212797..31d806e3bdaa 100644
+> --- a/tools/bpf/bpftool/tracelog.c
+> +++ b/tools/bpf/bpftool/tracelog.c
+> @@ -78,7 +78,7 @@ static bool get_tracefs_pipe(char *mnt)
+>  		return false;
+>  
+>  	/* Allow room for NULL terminating byte and pipe file name */
+> -	snprintf(format, sizeof(format), "%%*s %%%zds %%99s %%*s %%*d %%*d\\n",
+> +	snprintf(format, sizeof(format), "%%*s %%%zus %%99s %%*s %%*d %%*d\\n",
+>  		 PATH_MAX - strlen(pipe_name) - 1);
+>  	while (fscanf(fp, format, mnt, type) == 2)
+>  		if (strcmp(type, fstype) == 0) {
+> diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_dumper.c
+> index d0094345fb2b..5e7cb8b36fef 100644
+> --- a/tools/bpf/bpftool/xlated_dumper.c
+> +++ b/tools/bpf/bpftool/xlated_dumper.c
+> @@ -199,13 +199,13 @@ static const char *print_imm(void *private_data,
+>  
+>  	if (insn->src_reg == BPF_PSEUDO_MAP_FD)
+>  		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
+> -			 "map[id:%u]", insn->imm);
+> +			 "map[id:%d]", insn->imm);
+>  	else if (insn->src_reg == BPF_PSEUDO_MAP_VALUE)
+>  		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
+> -			 "map[id:%u][0]+%u", insn->imm, (insn + 1)->imm);
+> +			 "map[id:%d][0]+%d", insn->imm, (insn + 1)->imm);
+>  	else if (insn->src_reg == BPF_PSEUDO_MAP_IDX_VALUE)
+>  		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
+> -			 "map[idx:%u]+%u", insn->imm, (insn + 1)->imm);
+> +			 "map[idx:%d]+%d", insn->imm, (insn + 1)->imm);
+>  	else if (insn->src_reg == BPF_PSEUDO_FUNC)
+>  		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
+>  			 "subprog[%+d]", insn->imm);
+
+
+pw-bot: cr
+
+Thanks!
+Quentin
