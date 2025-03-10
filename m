@@ -1,179 +1,269 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mail-m15598.qiye.163.com (mail-m15598.qiye.163.com [101.71.155.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0821322A80A;
-	Mon, 10 Mar 2025 14:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD3D3EA76
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741615978; cv=none; b=JD1MaAttoJbycO+LZBdeOog/tbXsleUyYAVTXEcmhPrbccMHc0TOJgEtN1s1HwezzvqReF0IKah8SVo6JxDRhEgxjjjYRtMkregB0zqku/IF/jtwC3zfNThcR9Ywvpd7RHivOsXHJLQYw2kAdTtmkIHtsbBldWTS2K1G4GfHgEs=
+	t=1741615989; cv=none; b=q4NUsJEia1kMiBSI/JphVQXvPW291sXH9FmHuK0KYwJPdFymaRMLVtFrdR5FQvYM8PeYNyUD2Rm7YeQiD6LY4fn5bUM5bVmSo/tUxLEkMu3/KQyCVmd2A89MeOOKdEYrtGV9xzcf4IkIK8WDAqGCkXvy/EYvet1vfyMRgjaD6WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741615978; c=relaxed/simple;
-	bh=GxBwBLFH48jh32FDkdDhoDf5IRc91N9B3eYtyK7KSIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q++FYyGFj4DHeo8yJEykvbZfLYSBR0PZtgi6M5Ea8QS34y9Aw/LWSGSq3/4DJ79//Dn8cyt1NvyVIQw4qXBJL7II6D1zqk3vY8prAHMlh/22wmlVG8eHylAQgrG6k/GaY39vQdraEBfXTQORtyC12gfprOOjx+RsjC26SSrVg/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af04a.dynamic.kabel-deutschland.de [95.90.240.74])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id C778F61E647BD;
-	Mon, 10 Mar 2025 15:12:18 +0100 (CET)
-Message-ID: <bc28fec8-6ab3-4633-86ea-fd1b35ca91c8@molgen.mpg.de>
-Date: Mon, 10 Mar 2025 15:12:18 +0100
+	s=arc-20240116; t=1741615989; c=relaxed/simple;
+	bh=fjNAGgrKeZTrzftZD3mX5G6O3Fkd7HV77QsyAn9TYi4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=I2IaACliI+0WOAGY8Vvc3zpUOjAKdBaVlvlVeCohyITb720Kx+XyuP0gMPpLxqMKxA7vAWE5wMHgcam+HxyUONi0Y3kCJ7RQclxg29ufmuGrvqVRL4aEyqmyChtLPSooe7zFtGN83oMYfzt3rrkz2iMV4FMiAGL8T4hXxkY6Gcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=EhDl7WWw; arc=none smtp.client-ip=101.71.155.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="EhDl7WWw"
+Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id dc1882a3;
+	Mon, 10 Mar 2025 18:42:24 +0800 (GMT+08:00)
+From: Damon Ding <damon.ding@rock-chips.com>
+To: heiko@sntech.de
+Cc: andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	dianders@chromium.org,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	boris.brezillon@collabora.com,
+	l.stach@pengutronix.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>
+Subject: [PATCH v8 11/13] drm/rockchip: analogix_dp: Add support for RK3588
+Date: Mon, 10 Mar 2025 18:41:12 +0800
+Message-Id: <20250310104114.2608063-12-damon.ding@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] tpm, tpm_tis: Workaround failed command reception on
- Infineon devices
-To: Jonathan McDowell <noodles@earth.li>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
- Jason Gunthorpe <jgg@ziepe.ca>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- Stefan Berger <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <Z8lkSKOqBgt78pU2@earth.li> <Z8ogT_gERUYstPbK@kernel.org>
- <Z8sgfMmsfn894yLj@earth.li> <Z8sixTuKG5sxO-D1@kernel.org>
- <Z87Y69l5_GbzlLfp@earth.li>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <Z87Y69l5_GbzlLfp@earth.li>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0sdTFZNHxhKH0pKS08aQ0JWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
+	NVSktLVUpCWQY+
+X-HM-Tid: 0a957fa60ef003a3kunmdc1882a3
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NU06Phw6UTIDPiNLFTkwPRAq
+	Vi0KCSNVSlVKTE9KTUtISE9NSUhDVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFNT0hINwY+
+DKIM-Signature:a=rsa-sha256;
+	b=EhDl7WWwc5UH/JCcRBF/ghHkEAdtUrv9lku1B3YM0UJK93mOE/SmsKdRVJBw/mDqqZB2MmJAlJhvu3VPw8veBV6g5/hsZHPmssvXqK7sXDVjXPSr+gaWNVEpD3BOk7HHXa6lm2UpFGMIuFmWc7WiVvd/bFTSoYG3/SqwjwBFzVk=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=MmAgdxXY+qxEevcP9ldCLwQthi/h62Xx0tBGh/13AqU=;
+	h=date:mime-version:subject:message-id:from;
 
-Dear Jonathan,
+RK3588 integrates the Analogix eDP 1.3 TX controller IP and the HDMI/eDP
+TX Combo PHY based on a Samsung IP block. There are also two independent
+eDP display interface with different address on RK3588 Soc.
 
+The patch currently adds only the basic support, specifically RGB output
+up to 4K@60Hz, without the tests for audio, PSR and other eDP 1.3 specific
+features.
 
-Some nits, should you resend. Feel free to ignore. The verb *work 
-around* is spelled with a space.
+In additon, the above Analogix IP has always been utilized as eDP on
+Rockchip platform, despite its capability to also support the DP v1.2.
+Therefore, the newly added logs will contain the term 'edp' rather than
+'dp'. And the newly added 'apb' reset control is to ensure the APB bus
+of eDP controller works well on the RK3588 SoC.
 
-Am 10.03.25 um 13:19 schrieb Jonathan McDowell:
-> From: Jonathan McDowell <noodles@meta.com>
-> 
-> Some Infineon devices have a issue where the status register will get
-> stuck with a quick REQUEST_USE / COMMAND_READY sequence. This is not
-> simply a matter of requiring a longer timeout; the work around is to
+Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
 
-The noun without. ;-)
+---
 
-> retry the command submission. Add appropriate logic to do this in the
-> send path.
+Changes in v2:
+- Add support for the other eDP output edp1
 
-Does the workaround have downsides?
+Changes in v3:
+- Fix the unexpected use of alias
+- Add more details in commit message
 
-> This is fixed in later firmware revisions, but those are not always
-> available, and cannot generally be easily updated from outside a
-> firmware environment.
+Changes in v4:
+- Add the 'apb' reset control
 
-Please mention the affected revisions. Is there an errata for tis.
+Changes in v5:
+- Use drm_...()/dev_...() instead of DRM_...()
+- Clean &rockchip_dp_chip_data.reg related comments in commit message
+- Move the modifications in anlogix_dp.h to the Analogix side in order
+  to avoid the warning:
 
-> Testing has been performed with a simple repeated loop of doing a
-> TPM2_CC_GET_CAPABILITY for TPM_CAP_PROP_MANUFACTURER using the Go code
-> at:
-> 
->   https://the.earth.li/~noodles/tpm-stuff/timeout-reproducer-simple.go
+  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1506:10: warning:
+  enumeration value 'RK3588_EDP' not handled in switch [-Wswitch]
+          switch (dp->plat_data->dev_type) {
 
-Awesome. Thank you for sharing.
+Changes in v6:
+- Pass 'dp' in drm_...() rather than 'dp->drm_dev'
+- Use drm_...() uniformly rather than mixing drm_...() and dev_..()
 
-> It can take several hours to reproduce, and several million operations.
-> 
-> Signed-off-by: Jonathan McDowell <noodles@meta.com>
-> ---
-> v2: Rename flag to TPM_TIS_STATUS_VALID_RETRY
-> 
->   drivers/char/tpm/tpm_tis_core.c | 17 ++++++++++++++---
->   drivers/char/tpm/tpm_tis_core.h |  1 +
->   include/linux/tpm.h             |  1 +
->   3 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/ 
-> tpm_tis_core.c
-> index c969a1793184..4ab69c3e103c 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -463,7 +463,10 @@ static int tpm_tis_send_data(struct tpm_chip *chip, 
-> const u8 *buf, size_t len)
-> 
->           if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
->                       &priv->int_queue, false) < 0) {
-> -            rc = -ETIME;
-> +            if (test_bit(TPM_TIS_STATUS_VALID_RETRY, &priv->flags))
-> +                rc = -EAGAIN;
-> +            else
-> +                rc = -ETIME;
+Changes in v7:
+- Just keep the DRM_...() as they were in the previous for this series
+---
+ .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 61 ++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 3 deletions(-)
 
-I’d use a ternary operator as the same variable is assigned to.
-
->               goto out_err;
->           }
->           status = tpm_tis_status(chip);
-> @@ -480,7 +483,10 @@ static int tpm_tis_send_data(struct tpm_chip *chip, 
-> const u8 *buf, size_t len)
-> 
->       if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
->                   &priv->int_queue, false) < 0) {
-> -        rc = -ETIME;
-> +        if (test_bit(TPM_TIS_STATUS_VALID_RETRY, &priv->flags))
-> +            rc = -EAGAIN;
-> +        else
-> +            rc = -ETIME;
->           goto out_err;
->       }
->       status = tpm_tis_status(chip);
-> @@ -545,9 +551,11 @@ static int tpm_tis_send_main(struct tpm_chip *chip, 
-> const u8 *buf, size_t len)
->           if (rc >= 0)
->               /* Data transfer done successfully */
->               break;
-> -        else if (rc != -EIO)
-> +        else if (rc != EAGAIN && rc != -EIO)
->               /* Data transfer failed, not recoverable */
->               return rc;
-> +
-> +        usleep_range(priv->timeout_min, priv->timeout_max);
->       }
-> 
->       /* go and do it */
-> @@ -1143,6 +1151,9 @@ int tpm_tis_core_init(struct device *dev, struct 
-> tpm_tis_data *priv, int irq,
->           priv->timeout_max = TIS_TIMEOUT_MAX_ATML;
->       }
-> 
-> +    if (priv->manufacturer_id == TPM_VID_IFX)
-> +        set_bit(TPM_TIS_STATUS_VALID_RETRY, &priv->flags);
-> +
->       if (is_bsw()) {
->           priv->ilb_base_addr = ioremap(INTEL_LEGACY_BLK_BASE_ADDR,
->                       ILB_REMAP_SIZE);
-> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/ 
-> tpm_tis_core.h
-> index 690ad8e9b731..970d02c337c7 100644
-> --- a/drivers/char/tpm/tpm_tis_core.h
-> +++ b/drivers/char/tpm/tpm_tis_core.h
-> @@ -89,6 +89,7 @@ enum tpm_tis_flags {
->       TPM_TIS_INVALID_STATUS        = 1,
->       TPM_TIS_DEFAULT_CANCELLATION    = 2,
->       TPM_TIS_IRQ_TESTED        = 3,
-> +    TPM_TIS_STATUS_VALID_RETRY    = 4,
->   };
-> 
->   struct tpm_tis_data {
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 20a40ade8030..6c3125300c00 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -335,6 +335,7 @@ enum tpm2_cc_attrs {
->   #define TPM_VID_WINBOND  0x1050
->   #define TPM_VID_STM      0x104A
->   #define TPM_VID_ATML     0x1114
-> +#define TPM_VID_IFX      0x15D1
-> 
->   enum tpm_chip_flags {
->       TPM_CHIP_FLAG_BOOTSTRAPPED        = BIT(0),
+diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+index 5632b7e3e122..d30f0983a53a 100644
+--- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
++++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+@@ -52,11 +52,13 @@ struct rockchip_grf_reg_field {
+ /**
+  * struct rockchip_dp_chip_data - splite the grf setting of kind of chips
+  * @lcdc_sel: grf register field of lcdc_sel
++ * @edp_mode: grf register field of edp_mode
+  * @chip_type: specific chip type
+  * @reg: register base address
+  */
+ struct rockchip_dp_chip_data {
+ 	const struct rockchip_grf_reg_field lcdc_sel;
++	const struct rockchip_grf_reg_field edp_mode;
+ 	u32	chip_type;
+ 	u32	reg;
+ };
+@@ -71,6 +73,7 @@ struct rockchip_dp_device {
+ 	struct clk               *grfclk;
+ 	struct regmap            *grf;
+ 	struct reset_control     *rst;
++	struct reset_control     *apbrst;
+ 
+ 	const struct rockchip_dp_chip_data *data;
+ 
+@@ -116,6 +119,10 @@ static int rockchip_dp_pre_init(struct rockchip_dp_device *dp)
+ 	usleep_range(10, 20);
+ 	reset_control_deassert(dp->rst);
+ 
++	reset_control_assert(dp->apbrst);
++	usleep_range(10, 20);
++	reset_control_deassert(dp->apbrst);
++
+ 	return 0;
+ }
+ 
+@@ -137,12 +144,21 @@ static int rockchip_dp_poweron(struct analogix_dp_plat_data *plat_data)
+ 		return ret;
+ 	}
+ 
++	ret = rockchip_grf_field_write(dp->grf, &dp->data->edp_mode, 1);
++	if (ret != 0)
++		DRM_DEV_ERROR(dp->dev, "failed to set edp mode %d\n", ret);
++
+ 	return ret;
+ }
+ 
+ static int rockchip_dp_powerdown(struct analogix_dp_plat_data *plat_data)
+ {
+ 	struct rockchip_dp_device *dp = pdata_encoder_to_dp(plat_data);
++	int ret;
++
++	ret = rockchip_grf_field_write(dp->grf, &dp->data->edp_mode, 0);
++	if (ret != 0)
++		DRM_DEV_ERROR(dp->dev, "failed to set edp mode %d\n", ret);
+ 
+ 	clk_disable_unprepare(dp->pclk);
+ 
+@@ -206,6 +222,10 @@ static void rockchip_dp_drm_encoder_enable(struct drm_encoder *encoder,
+ 	struct rockchip_dp_device *dp = encoder_to_dp(encoder);
+ 	struct drm_crtc *crtc;
+ 	struct drm_crtc_state *old_crtc_state;
++	struct of_endpoint endpoint;
++	struct device_node *remote_port, *remote_port_parent;
++	char name[32];
++	u32 port_id;
+ 	int ret;
+ 
+ 	crtc = rockchip_dp_drm_get_new_crtc(encoder, state);
+@@ -223,13 +243,27 @@ static void rockchip_dp_drm_encoder_enable(struct drm_encoder *encoder,
+ 		return;
+ 	}
+ 
+-	ret = drm_of_encoder_active_endpoint_id(dp->dev->of_node, encoder);
++	ret = drm_of_encoder_active_endpoint(dp->dev->of_node, encoder, &endpoint);
+ 	if (ret < 0)
+ 		return;
+ 
+-	DRM_DEV_DEBUG(dp->dev, "vop %s output to dp\n", (ret) ? "LIT" : "BIG");
++	remote_port_parent = of_graph_get_remote_port_parent(endpoint.local_node);
++	if (remote_port_parent) {
++		if (of_get_child_by_name(remote_port_parent, "ports")) {
++			remote_port = of_graph_get_remote_port(endpoint.local_node);
++			of_property_read_u32(remote_port, "reg", &port_id);
++			of_node_put(remote_port);
++			sprintf(name, "%s vp%d", remote_port_parent->full_name, port_id);
++		} else {
++			sprintf(name, "%s %s",
++				remote_port_parent->full_name, endpoint.id ? "vopl" : "vopb");
++		}
++		of_node_put(remote_port_parent);
++
++		DRM_DEV_DEBUG(dp->dev, "vop %s output to dp\n", (ret) ? "LIT" : "BIG");
++	}
+ 
+-	ret = rockchip_grf_field_write(dp->grf, &dp->data->lcdc_sel, ret);
++	ret = rockchip_grf_field_write(dp->grf, &dp->data->lcdc_sel, endpoint.id);
+ 	if (ret != 0)
+ 		DRM_DEV_ERROR(dp->dev, "Could not write to GRF: %d\n", ret);
+ 
+@@ -323,6 +357,12 @@ static int rockchip_dp_of_probe(struct rockchip_dp_device *dp)
+ 		return PTR_ERR(dp->rst);
+ 	}
+ 
++	dp->apbrst = devm_reset_control_get_optional(dev, "apb");
++	if (IS_ERR(dp->apbrst)) {
++		DRM_DEV_ERROR(dev, "failed to get apb reset control\n");
++		return PTR_ERR(dp->apbrst);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -525,9 +565,24 @@ static const struct rockchip_dp_chip_data rk3288_dp[] = {
+ 	{ /* sentinel */ }
+ };
+ 
++static const struct rockchip_dp_chip_data rk3588_edp[] = {
++	{
++		.edp_mode = GRF_REG_FIELD(0x0000, 0, 0),
++		.chip_type = RK3588_EDP,
++		.reg = 0xfdec0000,
++	},
++	{
++		.edp_mode = GRF_REG_FIELD(0x0004, 0, 0),
++		.chip_type = RK3588_EDP,
++		.reg = 0xfded0000,
++	},
++	{ /* sentinel */ }
++};
++
+ static const struct of_device_id rockchip_dp_dt_ids[] = {
+ 	{.compatible = "rockchip,rk3288-dp", .data = &rk3288_dp },
+ 	{.compatible = "rockchip,rk3399-edp", .data = &rk3399_edp },
++	{.compatible = "rockchip,rk3588-edp", .data = &rk3588_edp },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, rockchip_dp_dt_ids);
+-- 
+2.34.1
 
