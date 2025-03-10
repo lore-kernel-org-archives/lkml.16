@@ -1,220 +1,364 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A4D1D5AD9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 04:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11E7320B;
+	Mon, 10 Mar 2025 04:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741579774; cv=none; b=NhEL1ACnvKoWXyy7QlkpMSf+YhXNAlDt29vw5V9F2I5luOaur/XMlfBzjMx1oxTfaQfqWTXTj8hZpz1c2yUv/3WTrZgW/RhelAfvabLhfiFCaTv1eKJ1dOSpfdruJGcXRQSQkjiI1VQZl/5grsacr3qWyBg8IDViTo76lW+pPcM=
+	t=1741580289; cv=none; b=t5ehNOb/o0+jcIPMpnt1BlARaA7z9q3yTGYSvvVuBQ1AP2yXf9gIh4nkAQH/j3JmUMsKBiiZJClfEo9A46oLiFcWBhQXxZ3yIdPmlX7kr/6RU+9GtyzcEnN4qKDp9yiWxenJ0Y+pi0FC0zAIECJxvH4igFpJW3/R78gbw4W2g0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741579774; c=relaxed/simple;
-	bh=AuhnF22lBIPI4J8+aDvGKlxpt8YZz4FYBxTZj4hFY/4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ocpy48fluNlWAX+9+fnOH+y47jilqsvuX87rqKS9NQ4XyqWBHlp5gldhrQOVoiL/Neb2wzxg4H1pVmcBAXQ5kw+HdNlV1Z9W2pQYlxx8oJTcUS/7QkQeOxyVEgrXNa59IkVR6X0xQXXHEkaThHdGA27z3zzc4dBB8kk4f5/8cW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZB3G56qTrzvWqN;
-	Mon, 10 Mar 2025 12:05:33 +0800 (CST)
-Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id 86624180113;
-	Mon, 10 Mar 2025 12:09:23 +0800 (CST)
-Received: from localhost.huawei.com (10.169.71.169) by
- kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 10 Mar 2025 12:09:22 +0800
-From: Yongbang Shi <shiyongbang@huawei.com>
-To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>
-CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
-	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 drm-dp 8/9] drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
-Date: Mon, 10 Mar 2025 12:01:37 +0800
-Message-ID: <20250310040138.2025715-9-shiyongbang@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250310040138.2025715-1-shiyongbang@huawei.com>
-References: <20250310040138.2025715-1-shiyongbang@huawei.com>
+	s=arc-20240116; t=1741580289; c=relaxed/simple;
+	bh=UOxj5OylV4l/yjY17pIDZcn1Jblw/TKtBze/+IVULqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P5NTpHTWOKGrScCK44FOAswl7kKrFLfVgJbgJeV7Pasb+yhc5pQbt6wLsn9EXAU1Z2RKQjmWVX2d9nNPO31iRxJnuVO1nZsUQfSxe5qCBOYVYrkA18kIJs03foKMVTPkMkRRHf/xT01OHP1usjW3trzTsjBjJtH7JbanLBJE+5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BBAC15A1;
+	Sun,  9 Mar 2025 21:18:17 -0700 (PDT)
+Received: from [10.162.43.22] (K4MQJ0H1H2.blr.arm.com [10.162.43.22])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8FB23F673;
+	Sun,  9 Mar 2025 21:17:52 -0700 (PDT)
+Message-ID: <08d13445-5ed1-42ea-8aee-c1dbde24407e@arm.com>
+Date: Mon, 10 Mar 2025 09:47:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 7/9] khugepaged: add mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ryan.roberts@arm.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com,
+ apopple@nvidia.com, dave.hansen@linux.intel.com, will@kernel.org,
+ baohua@kernel.org, jack@suse.cz, srivatsa@csail.mit.edu,
+ haowenchao22@gmail.com, hughd@google.com, aneesh.kumar@kernel.org,
+ yang@os.amperecomputing.com, peterx@redhat.com, ioworker0@gmail.com,
+ wangkefeng.wang@huawei.com, ziy@nvidia.com, jglisse@google.com,
+ surenb@google.com, vishal.moola@gmail.com, zokeefe@google.com,
+ zhengqi.arch@bytedance.com, jhubbard@nvidia.com, 21cnbao@gmail.com,
+ willy@infradead.org, kirill.shutemov@linux.intel.com, david@redhat.com,
+ aarcange@redhat.com, raquini@redhat.com, sunnanyong@huawei.com,
+ usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <20250211003028.213461-8-npache@redhat.com>
+ <b246b91b-4b4f-4582-ad3b-8b3adde834e2@arm.com>
+ <CAA1CXcA+E8BLZ3SfL8jeGSY8hRF0BgzSuWDUA70J_z28NU5_Cw@mail.gmail.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAA1CXcA+E8BLZ3SfL8jeGSY8hRF0BgzSuWDUA70J_z28NU5_Cw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd500013.china.huawei.com (7.221.188.12)
 
-From: Baihan Li <libaihan@huawei.com>
 
-To realize HPD feature, request irq for HPD , add its handler function.
-We use pci_alloc_irq_vectors() to get our msi irq, because we have two
-interrupts now.
 
-Signed-off-by: Baihan Li <libaihan@huawei.com>
-Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
-ChangeLog:
-v4 -> v5:
-  - remove pci_disable_msi() in hibmc_unload()
----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  3 +
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   | 74 +++++++++++++++----
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  3 +
- 3 files changed, 66 insertions(+), 14 deletions(-)
+On 08/03/25 1:44 am, Nico Pache wrote:
+> On Fri, Mar 7, 2025 at 1:39 AM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>>
+>> On 11/02/25 6:00 am, Nico Pache wrote:
+>>> Introduce the ability for khugepaged to collapse to different mTHP sizes.
+>>> While scanning a PMD range for potential collapse candidates, keep track
+>>> of pages in MIN_MTHP_ORDER chunks via a bitmap. Each bit represents a
+>>> utilized region of order MIN_MTHP_ORDER ptes. We remove the restriction
+>>> of max_ptes_none during the scan phase so we dont bailout early and miss
+>>> potential mTHP candidates.
+>>>
+>>> After the scan is complete we will perform binary recursion on the
+>>> bitmap to determine which mTHP size would be most efficient to collapse
+>>> to. max_ptes_none will be scaled by the attempted collapse order to
+>>> determine how full a THP must be to be eligible.
+>>>
+>>> If a mTHP collapse is attempted, but contains swapped out, or shared
+>>> pages, we dont perform the collapse.
+>>>
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>>    mm/khugepaged.c | 122 ++++++++++++++++++++++++++++++++----------------
+>>>    1 file changed, 83 insertions(+), 39 deletions(-)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index c8048d9ec7fb..cd310989725b 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -1127,13 +1127,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>    {
+>>>        LIST_HEAD(compound_pagelist);
+>>>        pmd_t *pmd, _pmd;
+>>> -     pte_t *pte;
+>>> +     pte_t *pte, mthp_pte;
+>>>        pgtable_t pgtable;
+>>>        struct folio *folio;
+>>>        spinlock_t *pmd_ptl, *pte_ptl;
+>>>        int result = SCAN_FAIL;
+>>>        struct vm_area_struct *vma;
+>>>        struct mmu_notifier_range range;
+>>> +     unsigned long _address = address + offset * PAGE_SIZE;
+>>>        VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+>>>
+>>>        /*
+>>> @@ -1148,12 +1149,13 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>                *mmap_locked = false;
+>>>        }
+>>>
+>>> -     result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>>> +     result = alloc_charge_folio(&folio, mm, cc, order);
+>>>        if (result != SCAN_SUCCEED)
+>>>                goto out_nolock;
+>>>
+>>>        mmap_read_lock(mm);
+>>> -     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>>> +     *mmap_locked = true;
+>>> +     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
+>>>        if (result != SCAN_SUCCEED) {
+>>>                mmap_read_unlock(mm);
+>>>                goto out_nolock;
+>>> @@ -1171,13 +1173,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>                 * released when it fails. So we jump out_nolock directly in
+>>>                 * that case.  Continuing to collapse causes inconsistency.
+>>>                 */
+>>> -             result = __collapse_huge_page_swapin(mm, vma, address, pmd,
+>>> -                             referenced, HPAGE_PMD_ORDER);
+>>> +             result = __collapse_huge_page_swapin(mm, vma, _address, pmd,
+>>> +                             referenced, order);
+>>>                if (result != SCAN_SUCCEED)
+>>>                        goto out_nolock;
+>>>        }
+>>>
+>>>        mmap_read_unlock(mm);
+>>> +     *mmap_locked = false;
+>>>        /*
+>>>         * Prevent all access to pagetables with the exception of
+>>>         * gup_fast later handled by the ptep_clear_flush and the VM
+>>> @@ -1187,7 +1190,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>         * mmap_lock.
+>>>         */
+>>>        mmap_write_lock(mm);
+>>> -     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>>> +     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
+>>>        if (result != SCAN_SUCCEED)
+>>>                goto out_up_write;
+>>>        /* check if the pmd is still valid */
+>>> @@ -1198,11 +1201,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>        vma_start_write(vma);
+>>>        anon_vma_lock_write(vma->anon_vma);
+>>>
+>>> -     mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
+>>> -                             address + HPAGE_PMD_SIZE);
+>>> +     mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address,
+>>> +                             _address + (PAGE_SIZE << order));
+>>>        mmu_notifier_invalidate_range_start(&range);
+>>>
+>>>        pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
+>>> +
+>>>        /*
+>>>         * This removes any huge TLB entry from the CPU so we won't allow
+>>>         * huge and small TLB entries for the same virtual address to
+>>> @@ -1216,10 +1220,10 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>        mmu_notifier_invalidate_range_end(&range);
+>>>        tlb_remove_table_sync_one();
+>>>
+>>> -     pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
+>>> +     pte = pte_offset_map_lock(mm, &_pmd, _address, &pte_ptl);
+>>>        if (pte) {
+>>> -             result = __collapse_huge_page_isolate(vma, address, pte, cc,
+>>> -                                     &compound_pagelist, HPAGE_PMD_ORDER);
+>>> +             result = __collapse_huge_page_isolate(vma, _address, pte, cc,
+>>> +                                     &compound_pagelist, order);
+>>>                spin_unlock(pte_ptl);
+>>>        } else {
+>>>                result = SCAN_PMD_NULL;
+>>> @@ -1248,8 +1252,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>        anon_vma_unlock_write(vma->anon_vma);
+>>>
+>>>        result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
+>>> -                                        vma, address, pte_ptl,
+>>> -                                        &compound_pagelist, HPAGE_PMD_ORDER);
+>>> +                                        vma, _address, pte_ptl,
+>>> +                                        &compound_pagelist, order);
+>>>        pte_unmap(pte);
+>>>        if (unlikely(result != SCAN_SUCCEED))
+>>>                goto out_up_write;
+>>> @@ -1260,20 +1264,37 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>         * write.
+>>>         */
+>>>        __folio_mark_uptodate(folio);
+>>> -     pgtable = pmd_pgtable(_pmd);
+>>> -
+>>> -     _pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
+>>> -     _pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
+>>> -
+>>> -     spin_lock(pmd_ptl);
+>>> -     BUG_ON(!pmd_none(*pmd));
+>>> -     folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
+>>> -     folio_add_lru_vma(folio, vma);
+>>> -     pgtable_trans_huge_deposit(mm, pmd, pgtable);
+>>> -     set_pmd_at(mm, address, pmd, _pmd);
+>>> -     update_mmu_cache_pmd(vma, address, pmd);
+>>> -     deferred_split_folio(folio, false);
+>>> -     spin_unlock(pmd_ptl);
+>>> +     if (order == HPAGE_PMD_ORDER) {
+>>> +             pgtable = pmd_pgtable(_pmd);
+>>> +             _pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
+>>> +             _pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
+>>> +
+>>> +             spin_lock(pmd_ptl);
+>>> +             BUG_ON(!pmd_none(*pmd));
+>>> +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
+>>> +             folio_add_lru_vma(folio, vma);
+>>> +             pgtable_trans_huge_deposit(mm, pmd, pgtable);
+>>> +             set_pmd_at(mm, address, pmd, _pmd);
+>>> +             update_mmu_cache_pmd(vma, address, pmd);
+>>> +             deferred_split_folio(folio, false);
+>>> +             spin_unlock(pmd_ptl);
+>>> +     } else { //mTHP
+>>> +             mthp_pte = mk_pte(&folio->page, vma->vm_page_prot);
+>>> +             mthp_pte = maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
+>>> +
+>>> +             spin_lock(pmd_ptl);
+>>
+>> Please add a BUG_ON(!pmd_none(*pmd)) here. I hit this a lot of times
+>> when I was generalizing for VMA size.
+> 
+> The PMD has been removed until the PMD_populate. The BUG_ON will
+> always be hit if we do this.
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-index 5614b727a710..394b1e933c3a 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-@@ -99,6 +99,9 @@
- 
- #define HIBMC_DP_TIMING_SYNC_CTRL		0xFF0
- 
-+#define HIBMC_DP_INTSTAT			0x1e0724
-+#define HIBMC_DP_INTCLR				0x1e0728
-+
- /* dp serdes reg */
- #define HIBMC_DP_HOST_OFFSET		0x10000
- #define HIBMC_DP_LANE0_RATE_OFFSET	0x4
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 98b01c8aee8e..768b97f9e74a 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -32,6 +32,8 @@
- 
- DEFINE_DRM_GEM_FOPS(hibmc_fops);
- 
-+static const char *g_irqs_names_map[HIBMC_MAX_VECTORS] = { "vblank", "hpd" };
-+
- static irqreturn_t hibmc_interrupt(int irq, void *arg)
- {
- 	struct drm_device *dev = (struct drm_device *)arg;
-@@ -49,6 +51,22 @@ static irqreturn_t hibmc_interrupt(int irq, void *arg)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t hibmc_dp_interrupt(int irq, void *arg)
-+{
-+	struct drm_device *dev = (struct drm_device *)arg;
-+	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
-+	u32 status;
-+
-+	status = readl(priv->mmio + HIBMC_DP_INTSTAT);
-+	if (status) {
-+		priv->dp.irq_status = status;
-+		writel(status, priv->mmio + HIBMC_DP_INTCLR);
-+		return IRQ_WAKE_THREAD;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int hibmc_dumb_create(struct drm_file *file, struct drm_device *dev,
- 			     struct drm_mode_create_dumb *args)
- {
-@@ -251,15 +269,48 @@ static int hibmc_hw_init(struct hibmc_drm_private *priv)
- 	return 0;
- }
- 
--static int hibmc_unload(struct drm_device *dev)
-+static void hibmc_unload(struct drm_device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev->dev);
--
- 	drm_atomic_helper_shutdown(dev);
-+}
- 
--	free_irq(pdev->irq, dev);
-+static int hibmc_msi_init(struct drm_device *dev)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev->dev);
-+	char name[32] = {0};
-+	int valid_irq_num;
-+	int irq;
-+	int ret;
- 
--	pci_disable_msi(to_pci_dev(dev->dev));
-+	ret = pci_alloc_irq_vectors(pdev, HIBMC_MIN_VECTORS,
-+				    HIBMC_MAX_VECTORS, PCI_IRQ_MSI);
-+	if (ret < 0) {
-+		drm_err(dev, "enabling MSI failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	valid_irq_num = ret;
-+
-+	for (int i = 0; i < valid_irq_num; i++) {
-+		snprintf(name, ARRAY_SIZE(name) - 1, "%s-%s-%s",
-+			 dev->driver->name, pci_name(pdev), g_irqs_names_map[i]);
-+
-+		irq = pci_irq_vector(pdev, i);
-+
-+		if (i)
-+			/* PCI devices require shared interrupts. */
-+			ret = devm_request_threaded_irq(&pdev->dev, irq,
-+							hibmc_dp_interrupt,
-+							hibmc_dp_hpd_isr,
-+							IRQF_SHARED, name, dev);
-+		else
-+			ret = devm_request_irq(&pdev->dev, irq, hibmc_interrupt,
-+					       IRQF_SHARED, name, dev);
-+		if (ret) {
-+			drm_err(dev, "install irq failed: %d\n", ret);
-+			return ret;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -291,15 +342,10 @@ static int hibmc_load(struct drm_device *dev)
- 		goto err;
- 	}
- 
--	ret = pci_enable_msi(pdev);
-+	ret = hibmc_msi_init(dev);
- 	if (ret) {
--		drm_warn(dev, "enabling MSI failed: %d\n", ret);
--	} else {
--		/* PCI devices require shared interrupts. */
--		ret = request_irq(pdev->irq, hibmc_interrupt, IRQF_SHARED,
--				  dev->driver->name, dev);
--		if (ret)
--			drm_warn(dev, "install irq failed: %d\n", ret);
-+		drm_err(dev, "hibmc msi init failed, ret:%d\n", ret);
-+		goto err;
- 	}
- 
- 	/* reset all the states of crtc/plane/encoder/connector */
-@@ -375,7 +421,7 @@ static void hibmc_pci_remove(struct pci_dev *pdev)
- 
- static void hibmc_pci_shutdown(struct pci_dev *pdev)
- {
--	drm_atomic_helper_shutdown(pci_get_drvdata(pdev));
-+	hibmc_pci_remove(pdev);
- }
- 
- static const struct pci_device_id hibmc_pci_table[] = {
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index daed1330b961..274feabe7df0 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -22,6 +22,9 @@
- 
- #include "dp/dp_hw.h"
- 
-+#define HIBMC_MIN_VECTORS	1
-+#define HIBMC_MAX_VECTORS	2
-+
- struct hibmc_vdac {
- 	struct drm_device *dev;
- 	struct drm_encoder encoder;
--- 
-2.33.0
+That's why it is !pmd_none(*pmd).
+
+>>
+>>> +             folio_ref_add(folio, (1 << order) - 1);
+>>> +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
+>>> +             folio_add_lru_vma(folio, vma);
+>>> +             spin_lock(pte_ptl);
+>>> +             set_ptes(vma->vm_mm, _address, pte, mthp_pte, (1 << order));
+>>> +             update_mmu_cache_range(NULL, vma, _address, pte, (1 << order));
+>>> +             spin_unlock(pte_ptl);
+>>> +             smp_wmb(); /* make pte visible before pmd */
+>>> +             pmd_populate(mm, pmd, pmd_pgtable(_pmd));
+>>> +             deferred_split_folio(folio, false);
+>>> +             spin_unlock(pmd_ptl);
+>>> +     }
+>>>
+>>>        folio = NULL;
+>>>
+>>> @@ -1353,21 +1374,27 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>    {
+>>>        pmd_t *pmd;
+>>>        pte_t *pte, *_pte;
+>>> +     int i;
+>>>        int result = SCAN_FAIL, referenced = 0;
+>>>        int none_or_zero = 0, shared = 0;
+>>>        struct page *page = NULL;
+>>>        struct folio *folio = NULL;
+>>>        unsigned long _address;
+>>> +     unsigned long enabled_orders;
+>>>        spinlock_t *ptl;
+>>>        int node = NUMA_NO_NODE, unmapped = 0;
+>>>        bool writable = false;
+>>> -
+>>> +     int chunk_none_count = 0;
+>>> +     int scaled_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - MIN_MTHP_ORDER);
+>>> +     unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+>>>        VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+>>>
+>>>        result = find_pmd_or_thp_or_none(mm, address, &pmd);
+>>>        if (result != SCAN_SUCCEED)
+>>>                goto out;
+>>>
+>>> +     bitmap_zero(cc->mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
+>>> +     bitmap_zero(cc->mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
+>>>        memset(cc->node_load, 0, sizeof(cc->node_load));
+>>>        nodes_clear(cc->alloc_nmask);
+>>>        pte = pte_offset_map_lock(mm, pmd, address, &ptl);
+>>> @@ -1376,8 +1403,12 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>                goto out;
+>>>        }
+>>>
+>>> -     for (_address = address, _pte = pte; _pte < pte + HPAGE_PMD_NR;
+>>> -          _pte++, _address += PAGE_SIZE) {
+>>> +     for (i = 0; i < HPAGE_PMD_NR; i++) {
+>>> +             if (i % MIN_MTHP_NR == 0)
+>>> +                     chunk_none_count = 0;
+>>> +
+>>> +             _pte = pte + i;
+>>> +             _address = address + i * PAGE_SIZE;
+>>>                pte_t pteval = ptep_get(_pte);
+>>>                if (is_swap_pte(pteval)) {
+>>>                        ++unmapped;
+>>> @@ -1400,16 +1431,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>                        }
+>>>                }
+>>>                if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
+>>> +                     ++chunk_none_count;
+>>>                        ++none_or_zero;
+>>> -                     if (!userfaultfd_armed(vma) &&
+>>> -                         (!cc->is_khugepaged ||
+>>> -                          none_or_zero <= khugepaged_max_ptes_none)) {
+>>> -                             continue;
+>>> -                     } else {
+>>> +                     if (userfaultfd_armed(vma)) {
+>>>                                result = SCAN_EXCEED_NONE_PTE;
+>>>                                count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+>>>                                goto out_unmap;
+>>>                        }
+>>> +                     continue;
+>>>                }
+>>>                if (pte_uffd_wp(pteval)) {
+>>>                        /*
+>>> @@ -1500,7 +1529,16 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>                     folio_test_referenced(folio) || mmu_notifier_test_young(vma->vm_mm,
+>>>                                                                     address)))
+>>>                        referenced++;
+>>> +
+>>> +             /*
+>>> +              * we are reading in MIN_MTHP_NR page chunks. if there are no empty
+>>> +              * pages keep track of it in the bitmap for mTHP collapsing.
+>>> +              */
+>>> +             if (chunk_none_count < scaled_none &&
+>>> +                     (i + 1) % MIN_MTHP_NR == 0)
+>>> +                     bitmap_set(cc->mthp_bitmap, i / MIN_MTHP_NR, 1);
+>>>        }
+>>> +
+>>>        if (!writable) {
+>>>                result = SCAN_PAGE_RO;
+>>>        } else if (cc->is_khugepaged &&
+>>> @@ -1513,10 +1551,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>    out_unmap:
+>>>        pte_unmap_unlock(pte, ptl);
+>>>        if (result == SCAN_SUCCEED) {
+>>> -             result = collapse_huge_page(mm, address, referenced,
+>>> -                                         unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
+>>> -             /* collapse_huge_page will return with the mmap_lock released */
+>>> -             *mmap_locked = false;
+>>> +             enabled_orders = thp_vma_allowable_orders(vma, vma->vm_flags,
+>>> +                     tva_flags, THP_ORDERS_ALL_ANON);
+>>> +             result = khugepaged_scan_bitmap(mm, address, referenced, unmapped, cc,
+>>> +                            mmap_locked, enabled_orders);
+>>> +             if (result > 0)
+>>> +                     result = SCAN_SUCCEED;
+>>> +             else
+>>> +                     result = SCAN_FAIL;
+>>>        }
+>>>    out:
+>>>        trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
+>>> @@ -2476,11 +2518,13 @@ static int khugepaged_collapse_single_pmd(unsigned long addr, struct mm_struct *
+>>>                        fput(file);
+>>>                        if (result == SCAN_PTE_MAPPED_HUGEPAGE) {
+>>>                                mmap_read_lock(mm);
+>>> +                             *mmap_locked = true;
+>>>                                if (khugepaged_test_exit_or_disable(mm))
+>>>                                        goto end;
+>>>                                result = collapse_pte_mapped_thp(mm, addr,
+>>>                                                                 !cc->is_khugepaged);
+>>>                                mmap_read_unlock(mm);
+>>> +                             *mmap_locked = false;
+>>>                        }
+>>>                } else {
+>>>                        result = khugepaged_scan_pmd(mm, vma, addr,
+>>
+> 
 
