@@ -1,55 +1,48 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C50D62288F7;
-	Mon, 10 Mar 2025 13:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70BA221729;
+	Mon, 10 Mar 2025 13:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741614113; cv=none; b=bgF0uPqd0mrtzxQ7/je5COd4GpDDNSVgy5dIfVjDkzctlPg0S1S/n1r4yi90OKuUPLmH1Chn6z1gsySS4REkWfMTl18Zpmbgq8CGhrUflDenU6XVRGt8Ii1A1weujhpd/P+SfRSScoP4ggyQU922ShAykkzGTTR69Fdhd9tk0Lg=
+	t=1741614124; cv=none; b=OPcx9q75B0Zf00x9N51rmZKZpfjjS6FQ6eSQHd6aRhvfjMmWj8MnR6Z5CSc+FYkP5hf6vBQpoycEDPFC3ryoxeHJX+OjYiOUDq5fB4we6zuxAFUKL/3sl0lMMg5Uca2nJdyp5ghtqOIs4kY8IRzLfnf6PtBnUsB6hskPXdqQ4IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741614113; c=relaxed/simple;
-	bh=nAmgfZNQu7S8jr939gr7ER0zYUBcT7czwN5spys2Q5U=;
+	s=arc-20240116; t=1741614124; c=relaxed/simple;
+	bh=YseASnTCb4kJt65uee0yzPI779rItNm4h9T31KLhRjo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B/VvDFSvN/wVi/VJuQOY48c3SylA3F3Or3u2kw18OZbvDEkw+3XLeJgNe1r3AYovyKh6Hhie9xqlRoqjTqDgujlFtgQnh5wQYyF5zO9Nn8RHkGapwiD6a3WwTGwZ/xguG7Rvx3EWM4/ybdIi6AnQMdIJ0EUJJawFi9FPxH5hwKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4D4F26BC;
-	Mon, 10 Mar 2025 06:42:01 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 462AC3F673;
-	Mon, 10 Mar 2025 06:41:47 -0700 (PDT)
-Date: Mon, 10 Mar 2025 13:41:44 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Aisheng Dong <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z87sGF_jHKau_FMe@bogus>
-References: <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
- <Z65U2SMwSiOFYC0v@pluto>
- <20250218010949.GB22580@nxa18884-linux>
- <Z7Rf9GPdO2atP89Z@bogus>
- <20250218133619.GA22647@nxa18884-linux>
- <Z7Wvyn1QJQMVigf9@bogus>
- <Z7Z-ZnztmvUxWoQJ@NXL53680.wbi.nxp.com>
- <Z86w3ZRS6T2MvV3X@bogus>
- <DB9PR04MB84614FBF96E7BC0D125D97F688D62@DB9PR04MB8461.eurprd04.prod.outlook.com>
- <Z87UJdhiTWhssnbl@bogus>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MHzmlp4K5brtTn82ghDvwAmaAxPN/pDUzD9o0rt/Ki4AZ0c9s+wQQ6ab6d3mpB8ssts2lqX+DMZYKBiew42Yk5JhOZiB1egqkRHyZqH0KTGTv0ah2LECTRTFSW8AySYBEaa5xBZzlr1Mh2Ake0xJXFmNRKOuAqFDuq3Q9vH3iug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEkU6G3e; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEkU6G3e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF5DC4CEE5;
+	Mon, 10 Mar 2025 13:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741614124;
+	bh=YseASnTCb4kJt65uee0yzPI779rItNm4h9T31KLhRjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vEkU6G3eAlqAtIwRrw13bpL0WHsyI6ESgyEcZW/5gWXnKG9Yu0xxgq6NYRYu6k9/7
+	 82jeC5iEvmMbik+xKl05RQVfCLuREzkQhSEnVhMwbG8PULXMKdLvL36AXARGUM9lID
+	 214ovhePlm1eRVoH2HkYH1ug+yeYzgcDiqNr9F2DXVJCCk2lgcRh5PmgLccCjuI0zS
+	 WthRbQ+ldEPuNjCnHIhkZlq8h77WCfRc9wh9g5DGf7mSE2uU+0DVY80GfW2FoKFLRA
+	 cuPzevocXdHPBmH3lseH3ejBzHomsnZ2+BL22Xv95YK/0i6VkB9AxVtnNAwPWV4+e3
+	 VFucZ9yfbxEOg==
+Date: Mon, 10 Mar 2025 14:41:59 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] s390: mv s390 sysctls into their own file under
+ arch/s390 dir
+Message-ID: <r73ph4ht5ejeeuj65nxocmqp7pury2mekz2lz3r6fs264s24c4@ransymcrzk2h>
+References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
+ <20250306-jag-mv_ctltables-v2-6-71b243c8d3f8@kernel.org>
+ <20250307152620.9880F75-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,62 +51,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z87UJdhiTWhssnbl@bogus>
+In-Reply-To: <20250307152620.9880F75-hca@linux.ibm.com>
 
-On Mon, Mar 10, 2025 at 11:59:33AM +0000, Sudeep Holla wrote:
-> On Mon, Mar 10, 2025 at 10:45:44AM +0000, Peng Fan wrote:
-> > > Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting
-> > > fwnode for scmi cpufreq
-> > > 
-> > > On Thu, Feb 20, 2025 at 08:59:18AM +0800, Peng Fan wrote:
-> > > >
-> > > > Sorry, if I misunderstood.
-> > > >
-> > > > I will give a look on this and propose a RFC.
-> > > >
-> > > > DT maintainers may ask for a patchset including binding change and
-> > > > driver changes to get a whole view on the compatible stuff.
-> > > >
-> > > > BTW, Cristian, Saravana if you have any objections/ideas or would
-> > > take
-> > > > on this effort, please let me know.
-> > > >
-> > > 
-> > > Can you point me to the DTS with which you are seeing this issue ?
-> > > I am trying to reproduce the issue but so far not successful. I did move
-> > > to power-domains for CPUFreq on Juno. IIUC all we need is both
-> > > cpufreq and performance genpd drivers in the kernel and then GPU
-> > > using perf genpd fails with probe deferral right ? I need pointers to
-> > > reproduce the issue so that I can check if what I have cooked up as a
-> > > solution really works.
-> >
-> > This is in downstream tree:
-> > https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L2971
-> > https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L3043
-> > https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L80
-> >
-> > we are using "power-domains" property for cpu perf and gpu/vpu perf.
-> >
-> > If cpufreq.off=1 is set in bootargs, the vpu/gpu driver will defer probe.
-> >
+On Fri, Mar 07, 2025 at 04:26:20PM +0100, Heiko Carstens wrote:
+> On Thu, Mar 06, 2025 at 12:29:46PM +0100, joel granados wrote:
+> > Move s390 sysctls (spin_retry and userprocess_debug) into their own
+> > files under arch/s390. We create two new sysctl tables
+> > (2390_{fault,spin}_sysctl_table) which will be initialized with
+> > arch_initcall placing them after their original place in proc_root_init.
+> > 
+> > This is part of a greater effort to move ctl tables into their
+> > respective subsystems which will reduce the merge conflicts in
+> > kernel/sysctl.c.
+> > 
+> > Signed-off-by: joel granados <joel.granados@kernel.org>
+> > ---
+> >  arch/s390/lib/spinlock.c | 18 ++++++++++++++++++
+> >  arch/s390/mm/fault.c     | 17 +++++++++++++++++
+> >  kernel/sysctl.c          | 18 ------------------
+> >  3 files changed, 35 insertions(+), 18 deletions(-)
 > 
-> OK, does the probe of these drivers get called or they don't as the driver
-> core doesn't allow that ? I just have a dummy driver for mali on Juno
-> which just does dev_pm_domain_attach_list() in the probe and it seem to
-> succeed even when cpufreq.off=1 is passed. I see scmi-cpufreq failing
-> with -ENODEV as expected.
+> Acked-by: Heiko Carstens <hca@linux.ibm.com>
 > 
-> I need to follow the code and check if I can somehow reproduce. Also are
-> you sure this is not with anything in the downstream code ? Also have you
-> tried this with v6.14-rc* ? Are you sure all the fw_devlink code is backported
-> in the tree you pointed me which is v6.6-stable ?
-> 
+> How should this go upstream? Will you take care of this, or should
+> this go via the s390 tree?
 
-I even tried the above branch, but no luck. The above is neither latest
-stable version nor pure stable. It has few extra patches backported
-though IIUC. Anyways any pointers to enable me to reproduce the issue
-would be much appreciated.
+thx for the review
+
+It would be great if you can push it through the s390 tree. However, if
+it is not possible to do so, please let me know and I'll add it to the
+sysctl-next changes.
+
+Best
 
 -- 
-Regards,
-Sudeep
+
+Joel Granados
