@@ -1,157 +1,93 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F58C22423E;
-	Mon, 10 Mar 2025 12:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C357225413;
+	Mon, 10 Mar 2025 12:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741609618; cv=none; b=f/mXhcAKpdNz4LwCoB6/BGIvxY4J8zEP+6O7OG0Mbf7yuub1HkgHiuKB3kiz2S1qmmPbpn+J22zG+SVIkWwdJBAs5sLGR2ghMCNQj7SyhbU/rz34jc7RgGKPxl5pD1oc8KMemklbdYwDGan/AkbU4gk/qov2y2rFEsxMTQB++Pg=
+	t=1741609636; cv=none; b=AZh4lkDKHu4CKfodoXqy+QMDlemRkXGpdse3NTAcwD55v4xjKe9EWgAs0jIrZKkAvrJsEf/mn1nKfnz0qUuZSmbJ36sosXih/mlNyYeCXUvYmlSZcmIEYmnLmekHD5GKcpDPABIBYv9M0z5L7/BAZbvFaQrqh+cs6VFShd0EX7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741609618; c=relaxed/simple;
-	bh=EXAFn8QnTluKjBOG8QHCZx5SfK4hGrmt9U3EDlFi1p8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=sziT+59na9IisEN2WRfLJVuhi3KZdbimKHf8vfFINTpJ84irOB4cCQZ8v1JB+p8pHWaAq268CHnRo/F1KhEy30LNVumbtoTYeI2qx+11XaMsWMUmnPNMg/T5hTsoMYWZi+q5oI64g/yjq5k2j/J4hfSKWaLb9TY6DAsY4Ac5viE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-93-67ceda89a610
-Message-ID: <9caca3a8-280a-45bd-a081-cf4a28f05f21@sk.com>
-Date: Mon, 10 Mar 2025 21:26:48 +0900
+	s=arc-20240116; t=1741609636; c=relaxed/simple;
+	bh=vK/TgnIZyvdL0hDlShnuvalPvRRxRIKI1qEKWTLREVA=;
+	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
+	 Date:Cc:References:To; b=oTUh91oFocaGHAy9mBconoWLtg/S3eoKZDA9PKFUl6/+1TNkaFKt9XCo0BIQAPEb1RU4Zr03/wXcwpcQZjQANJ06GTRJdkUQ8/vCMPfNNdxGniDqJlGH05dxGTjehiBt8E0Zg6wsk0nJvvkr90HAz/WoyW9GD7G2xVlOdxylGOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=g+sNguYq; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="g+sNguYq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1741609620; bh=WkCx060iOy43w4Yye4pXYXhvwRUF2PXnYXTMpaw7xas=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=g+sNguYqcku0ZeaZ/ngWqYceajbkSvb1W+O12eT2gUfvZ97o/BXmQnj6v1MoXz9VR
+	 QvqMD7O9Zz8ZYxm5znMf61sA0K03DkKY8kzlvSr2jjj71pFbUJtGTlTNQicPKkUEV4
+	 xZwdiFPragetD/EvtjJzoCxA6PnosDvi3YnnH+Dw=
+Received: from smtpclient.apple ([59.66.139.231])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id 66F0309E; Mon, 10 Mar 2025 20:25:47 +0800
+X-QQ-mid: xmsmtpt1741609547tqvjfmzyd
+Message-ID: <tencent_7C72D4006818B37C695B066E0AFD5F94380A@qq.com>
+X-QQ-XMAILINFO: MF096ickW6xYEl/mYlfV9grOILopNqOQoEmD1Cp6RVGcFTcAXEHvfJdU6yPp55
+	 hTsB3CfZdbJ0eHBlqOOmgnzuhNthp5TQcdIaezX72nDWS6SqsfqaBAiDJ6MujraDxyN02KnIBlRi
+	 qIDVOSBHrU9MI92SPRjcM96ec/aFYCtISH5Ub9Wxi3Wkek/JGznunt5mRnm/ggJ8qJrpIuwBUSpI
+	 dvFFVOoZPNl5LwrpLDjxKTXb1U+nXQB4iNx42bUDqnYJHdU3ZzNh0mTYZg1nHiqgIxOyWXGqMJq+
+	 43ZvZuzSeezokMN6H+7iZqARRyZ48I7kTo68AgTypkkzmMe/eChagCxr+9yXntoorpWpM6WgUHed
+	 Q1ZzayxdHpwfNPTJwkr7ysarD9pL5CYoInif4iCqUBnVxWTM899/ex/hV4Z9KNMB+BFlPMwosg8l
+	 6U/HfBGZoTKlpipRtwRGmyGBLY11Hiau/oaXHOHyvldog/p5jBLjOPZuuEadoCMzPjZzKoArEijk
+	 Xdyh7MW+hNU9FjLmYuDqILxVQhTKN0oHf8fYC00C83VT0w0WL1W43EmbtdWddyUKLngQtfBPqrBw
+	 xV/8gHNZQ9dVlx+7B6yMeJBKYrtQQgT5qvHZN96w5EYbx6rpAHhORMN6aUdnmzqBUNs5U0VJBPMo
+	 1CJ2InWR+Ux0gLACPJKAjoyfmYGupHwJValAQLPlx7nvgxz1CJidKFiPsuebC653NGbGG5GF4tt5
+	 l8h8GehvKik7A0q30q1Lb864S8r9YASO18KDgjEnaYGNocCQ7VzX4XLSJuBWb+y0SVSSInKXD/Wq
+	 n0XcBIdHaesJxaYgsDOFTaZNGF4oSoziYgk1yj6kb8HngzIhoON+O1A9lFTfW3c+hkOOFKAI7imm
+	 L2NXFb5HPhEKtGrKudi4MxmzZd2cZzDnpSxlfj3IwCrTjGdPKd1G2eHeEKBZAXxHQ/kK5wXLuWdk
+	 X1k3T0SoppLfVHzm/6XAxzh0qKX/6dsk8iyvkx9XkBQf5Lx3YtWCJP/4p9zwz6XvMRa78DyQY=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Honggyu Kim <honggyu.kim@sk.com>
-Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for
- memoryless nodes
-To: Gregory Price <gourry@gourry.net>
-Cc: kernel_team@skhynix.com, Joshua Hahn <joshua.hahnjy@gmail.com>,
- harry.yoo@oracle.com, ying.huang@linux.alibaba.com,
- gregkh@linuxfoundation.org, rakie.kim@sk.com, akpm@linux-foundation.org,
- rafael@kernel.org, lenb@kernel.org, dan.j.williams@intel.com,
- Jonathan.Cameron@huawei.com, dave.jiang@intel.com, horen.chuang@linux.dev,
- hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
- yunjeong.mun@sk.com
-References: <20250226213518.767670-1-joshua.hahnjy@gmail.com>
- <20250226213518.767670-2-joshua.hahnjy@gmail.com>
- <b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com>
- <Z8cqe3BCdobsV4-2@gourry-fedora-PF4VCD3F>
- <f64819e2-8dc6-4907-b8bf-faec66eecd0e@sk.com>
- <Z8ncOp2H54WE4C5s@gourry-fedora-PF4VCD3F>
- <9c0d8aa8-cac7-4679-aece-af88e8129345@sk.com>
- <Z8syE7l5H35pk9T5@gourry-fedora-PF4VCD3F>
-Content-Language: ko
-In-Reply-To: <Z8syE7l5H35pk9T5@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsXC9ZZnoW7nrXPpBpOmKVjMWb+GzWL61AuM
-	FiduNrJZ/Lx7nN2iefF6NovVm3wt7i97xmJxu/8cq8WqhdfYLI5vncduse8iUMPOh2/ZLJbv
-	62e0uLxrDpvFvTX/WS3mfpnKbLF6TYaDoMfhN++ZPXbOusvu0d12md2j5chbVo/Fe14yeWxa
-	1cnmsenTJHaPEzN+s3jsfGjpsbBhKrPH/rlr2D3OXazw+Pj0FovH501yAXxRXDYpqTmZZalF
-	+nYJXBlbnh9mLpguUjF95lGWBsZ1/F2MnBwSAiYSN+bvZoexN05qZwaxeQUsJfa++8oCYrMI
-	qEq8m9XABhEXlDg58wlYXFRAXuL+rRlgvWwCahJXXk5iArGFBaIkdr76C2RzcIgA9bZdce9i
-	5OJgFnjMLPHpThcziCMk0MoscXnPBLAGZgERidmdbWCLOQXMJC7NWMUGETeT6NraxQhhy0ts
-	fzsHrFlC4Bq7xOoXZxkhrpaUOLjiBssERsFZSA6chWTuLCSzZiGZtYCRZRWjUGZeWW5iZo6J
-	XkZlXmaFXnJ+7iZGYBwvq/0TvYPx04XgQ4wCHIxKPLwP5p1NF2JNLCuuzD3EKMHBrCTCe/DK
-	uXQh3pTEyqrUovz4otKc1OJDjNIcLErivEbfylOEBNITS1KzU1MLUotgskwcnFINjKv+BC6v
-	CNapLvqqYJC/ysU8a6HV9okfgn8uePPztF3R7MIdHAdEhX3aaz+Z6DBP7n48qyTGL6Q199Gu
-	HFHrzdHBE3LuhvTamh7VW7bh+NK3f/pnhDYZncuYVeC8xCeEV0PdYZ3l/hSFtKtlGzqlklOk
-	dp6Q17lx4u6k5zciBaetPaa220eJXYmlOCPRUIu5qDgRAFOaNt3fAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsXCNUNLT7fz1rl0gzet3BZz1q9hs5g+9QKj
-	xYmbjWwWP+8eZ7doXryezWL1Jl+L+8uesVjc7j/HarFq4TU2i+Nb57Fb7LsI1HB47klWi50P
-	37JZLN/Xz2hxedccNot7a/6zWsz9MpXZ4tC156wWq9dkWPzetoLNQcTj8Jv3zB47Z91l9+hu
-	u8zu0XLkLavH4j0vmTw2repk89j0aRK7x4kZv1k8dj609FjYMJXZY//cNewe5y5WeHx8eovF
-	49ttD4/FLz4weXzeJBcgEMVlk5Kak1mWWqRvl8CVseX5YeaC6SIV02ceZWlgXMffxcjJISFg
-	IrFxUjsziM0rYCmx991XFhCbRUBV4t2sBjaIuKDEyZlPwOKiAvIS92/NYAex2QTUJK68nMQE
-	YgsLREnsfPUXyObgEAHqbbvi3sXIxcEs8JhZ4tOdLmYQR0iglVni8p4JYA3MAiISszvbwBZz
-	CphJXJqxig0ibibRtbWLEcKWl9j+dg7zBEa+WUjumIWkfRaSlllIWhYwsqxiFMnMK8tNzMwx
-	1SvOzqjMy6zQS87P3cQIjNhltX8m7mD8ctn9EKMAB6MSD++DeWfThVgTy4orcw8xSnAwK4nw
-	HrxyLl2INyWxsiq1KD++qDQntfgQozQHi5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qBkZNn
-	W67wvRK35YkfWJiL+mdxn9i5+OEqB76CbTunX5J7XXm3Z//6ae4t05t26fee5FiRvPCJjOau
-	KDbj7595y3YyOn+3Yn/jdMMw8NmN691ah7f+e/Rg05u4j+H23VNPWH8Tr/IsOhC8a8p5Sy4G
-	RRnJDrb9X62sIidIB/Y+/WLJa3ni5pO2Z0osxRmJhlrMRcWJANJP0sPUAgAA
-X-CFilter-Loop: Reflected
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH 1/2] net: enc28j60: support getting irq number from gpio
+ phandle in the device tree
+From: hanyuan <hanyuan-z@qq.com>
+In-Reply-To: <c8553dc9-2d8f-4d4b-a381-f87660c2ee99@lunn.ch>
+Date: Mon, 10 Mar 2025 20:25:36 +0800
+Cc: netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+X-OQ-MSGID: <D289843D-4962-4A6A-897C-0CF4A53A7EAF@qq.com>
+References: <tencent_83CBDD726353E21FBD648E831600C078F205@qq.com>
+ <c8553dc9-2d8f-4d4b-a381-f87660c2ee99@lunn.ch>
+To: Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
 
-Hi Gregory,
 
-On 3/8/2025 2:51 AM, Gregory Price wrote:
-> On Fri, Mar 07, 2025 at 08:46:46PM +0900, Honggyu Kim wrote:
->> You can see more info below.
->>
->>    $ cd /sys/devices/system/node
->>
->>    $ ls -d node*
->>    node0  node1  node2  node3
->>
->>    $ cat possible
->>    0-11
-> 
-> We're split across two threads now, but i'll add this context
-> 
-> I'm basically asking whether there should be 12 nodes possible. It seems
-> like there should only be 4 nodes possible - 2 for sockets, 2 for host
-> bridges.
+> 2025=E5=B9=B43=E6=9C=8810=E6=97=A5 20:18=EF=BC=8CAndrew Lunn =
+<andrew@lunn.ch> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+>> My embedded platform has limited support, it only provides a
+>> hard-coded pin control driver and does not support configuring
+>> pinctrl properties in the device tree. So, there is no generic
+>> way to request the pin and set its direction via device tree =
+bindings.
+>=20
+> So it sounds like that is your real problem. Please write a proper
+> pinctrl driver for the SoC you are using. They are not very complex
+> drivers.
+>=20
+>    Andrew
+>=20
+> ---
+> pw-bot: cr
 
-Ack. If the N_POSSIBLE itself becomes 4, then I agree this problem can simply be 
-resolved.
+Hi
 
-> 
-> Unless I'm misunderstanding, it should be the case that a given physical
-> address can only be hosted by 1 numa node (proximity domain).
+Sorry for my previous low level mistake on the email format and
+thanks again for your patience. I agree with you and please ignore
+my patches.
 
-Yeah, the proximity domain detects the node correctly as follows in dmesg.
-
-  [  0.009915] ACPI: SRAT: Node 0 PXM 0 [mem 0x00000000-0x7fffffff]
-  [  0.009917] ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0x207fffffff]
-  [  0.009919] ACPI: SRAT: Node 1 PXM 1 [mem 0x60f80000000-0x64f7fffffff]
-  [  0.009924] ACPI: SRAT: Node 2 PXM 6 [mem 0x2080000000-0x807fffffff] hotplug
-  [  0.009925] ACPI: SRAT: Node 3 PXM 7 [mem 0x64f80000000-0x6cf7fffffff] hotplug
-
-It is printed even before CXL detection.
-
-> 
-> So it *should* be the case that you either have 4 nodes possible or 10
-> nodes possible, not 12.  But I could be missing a piece of context.
-> 
->> Which command do we need for this info specifically?  My output doesn't
->> provide some useful info for that.
->>
->>    $ acpidump -b
->>    $ iasl -d *
->>    $ cat cedt.dsl
->>        ...
->>    **** Unknown ACPI table signature [CEDT]
->>
-> 
-> You probably have an old version of acpidump here, you might need to get
-> a newer version that knows about the CEDT.
-
-I just used the newest acpica and was able to dump CEDT properly.  But its
-output is also very long so it'd be helpful if you could tell us which specific
-info you need.
-
-> 
-> You'll also want to get all the Memory Affinity entries from srat.dsl
-> 
->> Not sure about it.  This must be fixed ASAP because current kernel is
->> broken on this issue and the fix should go into hotfix tree first.
->>
-> 
-> I agree something is broken, I'm not convinced what is broken.
-
-Yeah, we should fix the broken status hopefully before v6.14 release.
-
-Thanks,
-Honggyu
-
-> 
->> If you can think this is just a bandaid, but leaving it bleeding as is
->> not the right approach.
->>
-> 
-> This affects userland, we shouldn't thrash on this. Lets get it right.
-> 
-> ~Gregory
+Hanyuan
 
