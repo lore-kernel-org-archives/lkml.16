@@ -1,67 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C8B22FDFB;
-	Mon, 10 Mar 2025 16:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EE81D79BE
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741623949; cv=none; b=KtilW27lv/GRIIPKiNWUa4cqOxABAZcFgVoBtSlf8Il2dOI70P8tXjDivQk2f2r59xO0a2s+Cn2pFaqd+3a/oVIK6eVhm997CNk32ccjyhSf/kao3uAqAm1f5de8ajIom+xoH+73PI1j+mAbyH/hDOYML3YtfntZTcYM4/RZXVg=
+	t=1741624036; cv=none; b=hbwtF1kETCazgszTNvlhX3vBwmjPMMfsCknRXROE/ibMSN/fYFUgaZvAPzq/OGuBbR0QDmWb5+3a/yPvHnGej9lz+sVMCY9tBnmb+3a0Ms2+tmPrHFL3x6py4B/2dv9vcd9RPWIKWoxtZC+DaC+SMadO7Bm6nbWyHo0JCmT6RBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741623949; c=relaxed/simple;
-	bh=wvmdDKCoDaEru8Dl5f0QNShdKE18WMOAWrVkw03H/mM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OPVkIe4i+XQtESnMEMdK9t4Qdote2Vi/STD0REDD8zyw67lEi3clsBD0VeRz16MdLcOh95u7d2T8OUcYSA+sya6yyq+FufsEq2RyRdxoqUNgVZbLMWGuhiuryNJeN7FRq0kwMQJgTXT7kQ2wq2pty3NMAWzZNZNiWXJWGIM/yro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XkBokQ9O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741624036; c=relaxed/simple;
+	bh=nIUS1VxN5/Hz6wdrivIb/OjTycZsUqQPze6V9Vsnb5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yo7EdoFgxn1RQV1/DTAvhQ6kvCTNkJGOmOktbREpVWo6SYYRg0jtDvCdadzpdxjYho/wZ0fQQ4AORMRW3Kg0TviQyHXOisC0oYNu9NdzNKcXXzI+VzMsr2bw3Xgs34HavevWnTBmW833dYUNrOp6zVmuKZ6zEpWfgnl6Zk1CZBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sqiTt5sK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z0RcFeGf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XkBokQ9O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B96DC4CEE5;
-	Mon, 10 Mar 2025 16:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741623949;
-	bh=wvmdDKCoDaEru8Dl5f0QNShdKE18WMOAWrVkw03H/mM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XkBokQ9OhC2gPVk+5VQsLxbrKnkd6hnpAJBzbrTPjTKHo9Qkv2ZlOFtBRfkWIJh79
-	 439Uil74VB7VwaVNalpI156hOq2CTmlpl+36UHbs5vFrDtjRBTDQpCP/Vqc2/GOr3y
-	 Vpsf7rP2BKWXM/TOEUa8lf+Pv6Q9wgECGM+SgN4bSUnQeSLHKyWYuAMFUclWD5pm+X
-	 ixex9jj4Y7uLs6j7qVbMirhNG7kI0TL1i/LiNagCm7FBjMjGTlpiT3tGvboUZEyVgF
-	 UaG1SY2hr7GsEdN50+QPg+BEWQD0IP8dobwL6av9eClZS+UhXHhvD3YCgjNsZ1XY9o
-	 9nJh5lfAezF0w==
-Date: Mon, 10 Mar 2025 17:25:41 +0100
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Meghana Malladi <m-malladi@ti.com>, Richard Cochran
- <richardcochran@gmail.com>, <lokeshvutla@ti.com>, <vigneshr@ti.com>,
- <javier.carrasco.cruz@gmail.com>, <diogo.ivo@siemens.com>,
- <horms@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
- <davem@davemloft.net>, <andrew+netdev@lunn.ch>,
- <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>, Roger Quadros
- <rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: Re: Plan to validate supported flags in PTP core (Was: Re: [PATCH
- net v2 0/2] Fixes for perout configuration in IEP driver)
-Message-ID: <20250310172541.30896e20@kernel.org>
-In-Reply-To: <f7072ca6-47a7-4278-be5d-7cbd240fcd35@intel.com>
-References: <20250219062701.995955-1-m-malladi@ti.com>
-	<415f755d-18a6-4c81-a1a7-b75d54a5886a@intel.com>
-	<20250220172410.025b96d6@kernel.org>
-	<a7e434a5-b5f6-4736-98e4-e671f88d1873@intel.com>
-	<f7072ca6-47a7-4278-be5d-7cbd240fcd35@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sqiTt5sK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z0RcFeGf"
+Date: Mon, 10 Mar 2025 17:27:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741624032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DFD536wMdTJ6LY0ss1eyMKKNPZmdrMoobxJp7aKL7vM=;
+	b=sqiTt5sK2hynMcn8UYi9tmtrA0vM43uzctbjnNWIf+33TOuKYZU/MZ3xkcdNg7BpjE3Hu2
+	9Bv4sQqFiEevtxRT7XdzdqfXXFnuemx22iGeOlg9Xr708zaWkGlg8RhmWuJaUqbzY81SbJ
+	7lv/vk9XS5yCUM0r3QC07ZrgZcpr9FOY2HLcwrlAGG6J8b1JQtEJ0EcqkR1PvDLdxEGEzT
+	yx0tmAPZTPiau36+qxJZWIZR9vxZ/JtGOKqtbjblIY8S+z4mnsQnw25b6VQBpKF1IyUFeU
+	/P/mBIUIA41GqKo25vdbC8wyeJu167okJldR6+zfBTSB/mqAWpxWLCUhUYiD4A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741624032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DFD536wMdTJ6LY0ss1eyMKKNPZmdrMoobxJp7aKL7vM=;
+	b=Z0RcFeGfIEhmUo83NL5oiaTAoSfHiGGean1r0+7Fo9+HDqeGFu4WdKZrHm29/vFEegqxTa
+	jRVTzQtYdH0vv6CQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v9 00/11] futex: Add support task local hash maps.
+Message-ID: <20250310162710.K9WY5tzN@linutronix.de>
+References: <20250225170914.289358-1-bigeasy@linutronix.de>
+ <20250303105416.GY11590@noisy.programming.kicks-ass.net>
+ <20250303141753.tF-FoCm1@linutronix.de>
+ <20250303164015.HHfy1Ibj@linutronix.de>
+ <20250304145837.a8g07J-k@linutronix.de>
+ <20250305090237.2Q9GwRA1@linutronix.de>
+ <20250310160102.GG19344@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250310160102.GG19344@noisy.programming.kicks-ass.net>
 
-On Fri, 7 Mar 2025 15:48:27 -0800 Jacob Keller wrote:
-> Would a series with individual patches for the 3 special cases + one
-> patch to handle all the drivers that have no explicit flag check be
-> acceptable? Or should I do individual patches for each driver and just
-> break the series up? Or are we ok with just fixing this in next with the
-> .supported_extts_flags change?
+On 2025-03-10 17:01:02 [+0100], Peter Zijlstra wrote:
+> On Wed, Mar 05, 2025 at 10:02:37AM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2025-03-04 15:58:39 [+0100], To Peter Zijlstra wrote:
+> > > hash. That is why I had the `released' member.
+> > 
+> > The box was still alive this morning so it did survive >12h testing. I
+> > would bring back the `released' member back unless you have other
+> > preferences.
+> 
+> Like I just wrote in that other email; I'm a bit confused as to how this
+> can happen. If rcuref_put() returns success, then the value is DEAD. It must
+> then either be decremented below RELEASED or incremented past NOREF in
+> order for rcuref_read() to no longer return 0.
 
-A mass rejection of unsupported settings feels like a net-next material
-in general. Handling the more complex cases individually and the rest in
-a big patch makes sense.
+We can't rely on 0 to be released as it might become active. We could
+change rcuref_read() to return 0 if it could be obtained and -1 if it
+can not.
+We don't have many users atm so an audit should be quick.
+
+> > Depending on those I could fold the fixes directly into the patches and
+> > repost the whole thing or prepare you patches that can be folded back
+> > and send those.
+> 
+> Please, it appears I don't have as much time as I would like :/
+
+Sebastian
