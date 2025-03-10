@@ -1,133 +1,168 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A618227E80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9158C227BAD
 	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741609676; cv=none; b=tiRfbeGFoQeBzeniqM81nNOq6MWz9599RX7TsARX3l6T8Xia/o87OYZwbXd9um35t7UJP4L1yOe5TNAVHKsx2UNbi5dg2mquPApsSKZg5lIDLbaLMxeLfvjj7nyWzYUDdgfwgvjFsdEJ4NcJ69WWpfNi516/DxT1f4xBX4ABc7g=
+	t=1741609677; cv=none; b=XPVlhG/rbLo9fmJqmKh10r0vg3EZ53uFhusDUE5e4CZRXHEAh+faEWLHuPRh/OorLN8g2+hhApE1f8S65tkVaruwnNUma+gBgKjqmPt8ek4jxmzb1UWF8vVP+BFFv5P3KybBHLJMMkPdbXLmstEp6G1192DoGYcGiaHdcQ6yh8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741609676; c=relaxed/simple;
-	bh=Zy2fJh3cTHOqRs4mkjI77HUqzP8JFc4VAdL+NBQchrE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HYHCv+ZmuvlQbRKl4+34X2fr5UYoycfgix0WuxBIW2omquep7rDS8T0pQU+0MwcplosnlPEIK2rZCemozzu9TkXo5l52wTEYaLNN60XNHrb9H/B1zpefUmosb6FYRWnU95K2wQTPjIgVnLdBHAOQa3gzacVjB+C5rTkVklve8pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iL4HlbPh; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741609677; c=relaxed/simple;
+	bh=HgIqmGu9WMv4AosBsYyNR+EjhaTIva6EV1iEbNMAm78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z2FKI3eLolloXXY0qRa67Jt7R9ueemSvAyC51wd2DR/lyO/VRMIAWcoMxhQKpswt9bmASPMWx1sEWZgtGnmGUMnRNYYFgr8TcvGB6KMWP0aa0x80PiPWDDEXCaj61il1yN5MdsuQX3GRBqg1cqPaFSJh5rP2dyU6SlJrnv7FVJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=KFFVc9Xa; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iL4HlbPh"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so4392655e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 05:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741609673; x=1742214473; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pP5AGd49889Z3JFGOGRHgkg7HKkdewQ+Zwhw794fEIw=;
-        b=iL4HlbPhDqcg69x6dbhz6ymy9OQPpsErBzXCNa0PCRSylZf3AMCwRGngS8Hazjnu8t
-         e7EPJG86IGMb8vOIbzJI0U6nkl1RmjUfEo031ftqgGp25BiOJRJJKZj2YQKQJkL4zft8
-         uvpEcMJv44z1vZ9Ltz09MrsV9Rgp1j8+L1rgM4E+1oRxzP/awuT8wKWidmRd6Gpvbmt1
-         UKrqAq2YiZ5kSCrc2/d5IdW7KbDxAv2HqVUHotxYqUXDJCR+ljyFlrBIr0u9U4Sicrxw
-         QfOiV/n1CDIBYw8+H1YMXe5HOR14DXhnEhaaeM18njiyMetuo6pf3w3JoLtyJsoIDFwX
-         LuoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741609673; x=1742214473;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pP5AGd49889Z3JFGOGRHgkg7HKkdewQ+Zwhw794fEIw=;
-        b=mj+cxPTcTPYeTGm4wKUcsXnXNOL9QvAuBf3qjm0WIlM/1aIXqrZz2t9260M2BNVC1o
-         QRQKOBb32tNjNSY/4/ctOdV1VZZvMpjFJXjQAiLJoj3d6lTg2otDHyzzEGSh3zt1+l20
-         teARSIYoDOVBcCSx3KA8VJtpDsXdBGNzA4TJfk2TA/Z7Tbf+4zEOlWW4LUOhctgOy0mZ
-         TbQynfGRHi2ZmyQQmf1n/cmfOScPbOpg2WQ6unqEPhEwrtADaJ5z2vmTkrFt8/httCaF
-         6DwZxUO8Q/STvmr8SSVxHOsjIcrNrMCoOlQ9QkjmX2BTCpiJzBFlLMjgAfjWMQAROhZG
-         zuYA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0zySk8lyrz9/f6UziTh6XUdwgifr0nSxttAmAvP3FyPB3oJYoduECNeNlRSB3cRKG6DO49W475/zyhXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmu4nHF31pSxRDOzHv8OULzrowGL3KvOX0ikK5c5yNwZnfO8tk
-	48mAbmRh8QfC+DijC0/zKim7OiAJG/GmEsoe3JNSILchmSaweLzs
-X-Gm-Gg: ASbGncvcUQ4IBqNxtDe3WpeicFh7JoHdrLmUEAKoTGOmCLUXk4LUJFRwo6zt8saikjK
-	kIQPbc2eEQGPdrRCeEkKb4+ymjPYgloAZNEpiUNtUqJQ8ZuocV52/d/N8GYKGNx4AuvBzYZlldX
-	YAjqoPAnpI+Au4JXfe+ta/pGHrPV+8xusZuMJCXRRBFjXlNpJI/BO6Hb6dXzLhH+JhLvx+JZfUQ
-	8ikjpLkjmuP/ZW7A+QRtTiYGjLvEV9ngdOWQz0TdhnLWksopDJPraQV0in3MdoWJV9Up6KHWxrI
-	ZYEMd13dmv7jlj5F7XjobAPg0Jq3ss7R/ila6G67zHSgotnoB9lyJ9gCph3ZFm5lOsJf3Wrfr11
-	NTvXhF7kYX1HyHCwa
-X-Google-Smtp-Source: AGHT+IHkdFXutwUlHgJUEeibLtGVxZ9e1BYhqaRmZdU3VrmHHopZkCNH9T65QpbRvqLO+DUNS6Gfbw==
-X-Received: by 2002:a05:600c:1e08:b0:43c:f680:5c2e with SMTP id 5b1f17b1804b1-43cf6805d78mr26252335e9.13.1741609673265;
-        Mon, 10 Mar 2025 05:27:53 -0700 (PDT)
-Received: from eichest-laptop.toradex.int (85-195-230-40.fiber7.init7.net. [85.195.230.40])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd6530f26sm171963245e9.4.2025.03.10.05.27.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 05:27:52 -0700 (PDT)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	p.zabel@pengutronix.de,
-	hongxing.zhu@nxp.com,
-	tharvey@gateworks.com,
-	Frank.Li@nxp.com,
-	francesco.dolcini@toradex.com
-Cc: linux-phy@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: [PATCH v3 1/2] phy: freescale: imx8m-pcie: cleanup reset logic
-Date: Mon, 10 Mar 2025 13:27:03 +0100
-Message-ID: <20250310122745.34947-2-eichest@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250310122745.34947-1-eichest@gmail.com>
-References: <20250310122745.34947-1-eichest@gmail.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="KFFVc9Xa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=OOBZ8qTz+v44tkaV6ZMNqcXZyTXLCvBkFF2upUV3LoM=; b=KFFVc9XaY+1pFHNBOL4y01UKy3
+	zjmJtOA9Ognov++GYVTJxhjGRAfsvmzNPYAcIzh5il82pEKjczbp5VojwIOUWckxJ9mIzy6DLx72n
+	Vcw6Uen8ImsNc/buI1dH0OLt39jRq712dULKNwZCL/pR3Pj88TAW8P/p9TPsLN+UXmPyN1e5EcktJ
+	Uox80rIpGR5SXTeD/s2LDVJJBNO99LjGDmSbBhvPeh6vRORpub+LMMlJrAf3AH13xBqqOkm+EW+jn
+	b332S3z75Ss8viQ8jRYQpSNFy3wYYWMWZ2qmD5cNf1PRXc6Cw8NWHKkZXwa2sZ98NLLAMusMEasM6
+	pK3LK4vg==;
+Received: from [90.241.98.187] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1trcEL-006TNE-8x; Mon, 10 Mar 2025 13:27:43 +0100
+Message-ID: <6b9b27a7-2ccd-4f16-aa36-05877b5e8f7c@igalia.com>
+Date: Mon, 10 Mar 2025 12:27:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/sched: revert "drm_sched_job_cleanup(): correct false
+ doc"
+To: phasta@kernel.org, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <ckoenig.leichtzumerken@gmail.com>, matthew.brost@intel.com,
+ dakr@kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <20250310074414.2129157-1-christian.koenig@amd.com>
+ <564be70f7d64c04c1ad77499522d99c64ea4d4d3.camel@mailbox.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <564be70f7d64c04c1ad77499522d99c64ea4d4d3.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-Remove the switch statement for releasing perst and reset since they are
-already correctly set at probe and are no-ops for
-reset_control_deassert(NULL). Call these unconditionally.
+On 10/03/2025 12:11, Philipp Stanner wrote:
+> On Mon, 2025-03-10 at 08:44 +0100, Christian König wrote:
+>> This reverts commit 44d2f310f008613c1dbe5e234c2cf2be90cbbfab.
+> 
+> OK, your arguments with fence ordering are strong. Please update the
+> commit message according to our discussion:
 
-This does not change the behavior of the driver but reduces driver
-complexity and allows for easier future modifications.
+Could that argument please be explained in more concrete terms?
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
-Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
----
- drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Are we talking here about skipping one seqno has potential to cause a 
+problem, or there is more to it?
 
-diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-index e98361dcdeadf..5b505e34ca364 100644
---- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-@@ -141,15 +141,9 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 			   IMX8MM_GPR_PCIE_REF_CLK_PLL);
- 	usleep_range(100, 200);
- 
--	switch (imx8_phy->drvdata->variant) {
--	case IMX8MP:
--		reset_control_deassert(imx8_phy->perst);
--		fallthrough;
--	case IMX8MM:
--		reset_control_deassert(imx8_phy->reset);
--		usleep_range(200, 500);
--		break;
--	}
-+	reset_control_deassert(imx8_phy->perst);
-+	reset_control_deassert(imx8_phy->reset);
-+	usleep_range(200, 500);
- 
- 	/* Do the PHY common block reset */
- 	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
--- 
-2.45.2
+Because if it is just skipping I don't immediately see that breaks the 
+monotonic/unique seqno ordering.
+
+Only if we are worried about some code somewhere making assumptions  "if 
+N got completed, that means N-1 got completed too". That generally isn't 
+anything new and can happen with GPU resets, albeit in the latter case 
+the fence error is I think always set.
+
+Regards,
+
+Tvrtko
+
+>> Sorry for the delayed response, I only stumbled over this now while
+>> going
+>> over old mails and then re-thinking my reviewed by for this change.
+> 
+> Your RB hadn't even been applied (I merged before you gave it), so you
+> can remove this first paragraph from the commit message
+> 
+>>
+>> The function drm_sched_job_arm() is indeed the point of no return.
+>> The
+>> background is that it is nearly impossible for the driver to
+>> correctly
+>> retract the fence and signal it in the order enforced by the
+>> dma_fence
+>> framework.
+>>
+>> The code in drm_sched_job_cleanup() is for the purpose to cleanup
+>> after
+>> the job was armed through drm_sched_job_arm() *and* processed by the
+>> scheduler.
+>>
+>> The correct approach for error handling in this situation is to set
+>> the
+>> error on the fences and then push to the entity anyway. We can
+>> certainly
+>> improve the documentation, but removing the warning is clearly not a
+>> good
+>> idea.
+> 
+> This last paragraph, as per our discussion, seems invalid. We shouldn't
+> have that in the commit log, so that it won't give later hackers
+> browsing it wrong ideas and we end up with someone actually mengling
+> with those fences.
+> 
+> Thx
+> P.
+> 
+>>
+>> Signed-off-by: Christian König <christian.koenig@amd.com>
+>> ---
+>>   drivers/gpu/drm/scheduler/sched_main.c | 12 +++++-------
+>>   1 file changed, 5 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+>> b/drivers/gpu/drm/scheduler/sched_main.c
+>> index 53e6aec37b46..4d4219fbe49d 100644
+>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>> @@ -1015,13 +1015,11 @@ EXPORT_SYMBOL(drm_sched_job_has_dependency);
+>>    * Cleans up the resources allocated with drm_sched_job_init().
+>>    *
+>>    * Drivers should call this from their error unwind code if @job is
+>> aborted
+>> - * before it was submitted to an entity with
+>> drm_sched_entity_push_job().
+>> + * before drm_sched_job_arm() is called.
+>>    *
+>> - * Since calling drm_sched_job_arm() causes the job's fences to be
+>> initialized,
+>> - * it is up to the driver to ensure that fences that were exposed to
+>> external
+>> - * parties get signaled. drm_sched_job_cleanup() does not ensure
+>> this.
+>> - *
+>> - * This function must also be called in &struct
+>> drm_sched_backend_ops.free_job
+>> + * After that point of no return @job is committed to be executed by
+>> the
+>> + * scheduler, and this function should be called from the
+>> + * &drm_sched_backend_ops.free_job callback.
+>>    */
+>>   void drm_sched_job_cleanup(struct drm_sched_job *job)
+>>   {
+>> @@ -1032,7 +1030,7 @@ void drm_sched_job_cleanup(struct drm_sched_job
+>> *job)
+>>   		/* drm_sched_job_arm() has been called */
+>>   		dma_fence_put(&job->s_fence->finished);
+>>   	} else {
+>> -		/* aborted job before arming */
+>> +		/* aborted job before committing to run it */
+>>   		drm_sched_fence_free(job->s_fence);
+>>   	}
+>>   
+> 
 
