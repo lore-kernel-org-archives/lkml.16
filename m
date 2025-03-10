@@ -1,119 +1,234 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4576B227BAA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1AF52288FE;
+	Mon, 10 Mar 2025 10:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604246; cv=none; b=ZmngBhrEFagXIsn1/cWhrgJBOldH2aQd27rXCx9K4nv5FNGCVwMte8vmoNCeueHUfVynodhaUnxan7jmZBVVxUacR6kr1GIgHmULK8YmX2kgB4ZNPlXCcZsxaUHQMhUNDaaiQnusKRZi8b5pgP39auo92qHRoKeMtTTfqJwqKwc=
+	t=1741604250; cv=none; b=ZyViVS2FarWynOcdAte7fdhR3GubKI3MOpLmq10t7vle4eM0KdQ4Ci3JYCeNc6bedHHdfDyNDOfaXiWyZzDJIhpkpC+aV/pmoRQMDI9kcKR6SrGjYxMqFkg6S1MweU6ysLdgV2IGaBHTR/hHFsxurgMDQYBfYy9fNI7U7k6fSog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604246; c=relaxed/simple;
-	bh=61A/V3lwSclZiCJInLxEmepbN95X1sJN7svSDJK7DL8=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FRC/7vokLkAsxrs498cCOA6A5WrFmvp1pB00qeLxhEuldkdMFnqbGWwxIW6dKGiPRwjfsC5A8jYf1Il0suFDvjeO6hdUnfdwPedJ3ljPgjNqaI5KbTibD6AGSAfUaxomJkg8LYUIy5zNLVbUku1IPJWhNrqRezX6haJvsO44kWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=OkhwnAdV; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="OkhwnAdV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1741604241; x=1741863441;
-	bh=hLncp8wa6eofNjWes0vCOaYEUoMimwk7wJagoEBWPLQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=OkhwnAdVH6mxIe70vbXH9uMKzaakcvCGlkmAMw0oF7uC2onBQvfXlnuSTeekZZB1Z
-	 0Iriaz7UublqKawcfI9Pwra9Y0Z+NK9glPT9URoXAoHGhZUFVKOoCWJph76DHARziG
-	 3Q2AsrC3YFiX2UybB6div6lQSAO+LbeGNeU+ta63C54lW085778t4Sn1RruR4KNDtJ
-	 nkNcSrTHTVHF8ox+TqrrMA5tYQjiG2lSWs1M2+ZTBff1Gt4rtIMFvmi4hemsk0yaZe
-	 UnqS3VZt/fgtejUXVTbq8KQv0Pn5i3I1WLLF0XNfWXorI+jDn+jlrgT+tbzqgcDiBt
-	 O9YwJCHfVr4kw==
-Date: Mon, 10 Mar 2025 10:57:15 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
-Subject: [PATCH v7 0/4] New trait OwnableRefCounted for ARef<->Owned conversion.
-Message-ID: <20250310-unique-ref-v7-0-4caddb78aa05@pm.me>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: c678b95834604c22f58371b93567e473988925a5
+	s=arc-20240116; t=1741604250; c=relaxed/simple;
+	bh=z8r8f3WaYefKneLFYtKcXNW7XunavUfymqJg+kkCuZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=D2ULHZZYoFCVZDTbpD995AqAdaTQNBpfq0a0MWNDZhK1UhImPyBg/aojEBDkWXJXRwl20+tyQAbt67J6AtX4WUDGTxTEwoBUlmKwfhKgfynp1dF0KMMemiS4r1svW7h82FeHPMkdjAgKSTZhM/J+DWhHuiEdRx7+Fok/2x5XygE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9B7415A1;
+	Mon, 10 Mar 2025 03:57:39 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0759C3F5A1;
+	Mon, 10 Mar 2025 03:57:26 -0700 (PDT)
+Message-ID: <bb390d95-7f2b-4327-a809-9e4cdbd1a1bc@arm.com>
+Date: Mon, 10 Mar 2025 10:57:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] coresight: etm4x: Extract the trace unit
+ controlling
+To: Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250310104919.58816-1-leo.yan@arm.com>
+ <20250310104919.58816-2-leo.yan@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250310104919.58816-2-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This allows to convert between ARef<T> and Owned<T> by
-implementing the new trait OwnedRefCounted.
+Hi Leo
 
-This way we will have a shared/unique reference counting scheme
-for types with built-in refcounts in analogy to Arc/UniqueArc.
+On 10/03/2025 10:49, Leo Yan wrote:
+> The trace unit is controlled in the ETM hardware enabling and disabling.
+> The sequential changes for support AUX pause and resume will reuse the
+> same operations.
+> 
+> Extract the operations in the etm4_{enable|disable}_trace_unit()
+> functions.  A minor improvement in etm4_enable_trace_unit() is for
+> returning the timeout error to callers.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
----
-Changes in v7:
-- Squash patch to make Owned::from_raw/into_raw public into parent
-- Added Signed-off-by to other people's commits
-- Link to v6: https://lore.kernel.org/r/20250310-unique-ref-v6-0-1ff5355861=
-7e@pm.me
+fyi, this area of code has changes significantly and will cause
+conflicts, due to the introduction of synchronization after
+each access to the TRCSTATR. Please rebase your next version on
+the coresight next branch to avoid the conflict.
 
-Changes in v6:
-- Changed comments/formatting as suggested by Miguel Ojeda
-- Included and used new config flag RUSTC_HAS_DO_NOT_RECOMMEND,
-  thus no changes to types.rs will be needed when the attribute
-  becomes available.
-- Fixed commit message for Owned patch.
-- Link to v5: https://lore.kernel.org/r/20250307-unique-ref-v5-0-bffeb63327=
-7e@pm.me
+The changes as such look good to me.
 
-Changes in v5:
-- Rebase the whole thing on top of the Ownable/Owned traits by Asahi Lina.
-- Rename AlwaysRefCounted to RefCounted and make AlwaysRefCounted a
-  marker trait instead to allow to obtain an ARef<T> from an &T,
-  which (as Alice pointed out) is unsound when combined with UniqueRef/Owne=
-d.
-- Change the Trait design and naming to implement this feature,
-  UniqueRef/UniqueRefCounted is dropped in favor of Ownable/Owned and
-  OwnableRefCounted is used to provide the functions to convert
-  between Owned and ARef.
-- Link to v4: https://lore.kernel.org/r/20250305-unique-ref-v4-1-a8fdef7b1c=
-2c@pm.me
+Suzuki
 
-Changes in v4:
-- Just a minor change in naming by request from Andreas Hindborg,
-  try_shared_to_unique() -> try_from_shared(),
-  unique_to_shared() -> into_shared(),
-  which is more in line with standard Rust naming conventions.
-- Link to v3: https://lore.kernel.org/r/Z8Wuud2UQX6Yukyr@mango
 
----
-Asahi Lina (1):
-      rust: types: Add Ownable/Owned types
 
-Miguel Ojeda (1):
-      rust: kbuild: provide `RUSTC_HAS_DO_NOT_RECOMMEND` symbol
-
-Oliver Mangold (2):
-      rust: rename AlwaysRefCounted to RefCounted
-      rust: adding OwnableRefCounted and SimpleOwnableRefCounted
-
- init/Kconfig                    |   3 +
- rust/kernel/block/mq/request.rs |  10 +-
- rust/kernel/cred.rs             |   8 +-
- rust/kernel/device.rs           |   8 +-
- rust/kernel/fs/file.rs          |  10 +-
- rust/kernel/pid_namespace.rs    |   8 +-
- rust/kernel/task.rs             |   6 +-
- rust/kernel/types.rs            | 429 ++++++++++++++++++++++++++++++++++++=
-++--
- 8 files changed, 451 insertions(+), 31 deletions(-)
----
-base-commit: 4b2ee22fe32ea9b255926effbb6f26450607c391
-change-id: 20250305-unique-ref-29fcd675f9e9
-
-Best regards,
---=20
-Oliver Mangold <oliver.mangold@pm.me>
-
+> ---
+>   .../coresight/coresight-etm4x-core.c          | 126 ++++++++++--------
+>   1 file changed, 74 insertions(+), 52 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index 2c1a60577728..71be566bd117 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -428,6 +428,78 @@ static void etm4_check_arch_features(struct etmv4_drvdata *drvdata,
+>   }
+>   #endif /* CONFIG_ETM4X_IMPDEF_FEATURE */
+>   
+> +static int etm4_enable_trace_unit(struct etmv4_drvdata *drvdata)
+> +{
+> +	struct coresight_device *csdev = drvdata->csdev;
+> +	struct device *etm_dev = &csdev->dev;
+> +	struct csdev_access *csa = &csdev->access;
+> +
+> +	/*
+> +	 * ETE mandates that the TRCRSR is written to before
+> +	 * enabling it.
+> +	 */
+> +	if (etm4x_is_ete(drvdata))
+> +		etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
+> +
+> +	etm4x_allow_trace(drvdata);
+> +	/* Enable the trace unit */
+> +	etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
+> +
+> +	/* Synchronize the register updates for sysreg access */
+> +	if (!csa->io_mem)
+> +		isb();
+> +
+> +	/* wait for TRCSTATR.IDLE to go back down to '0' */
+> +	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_IDLE_BIT, 0)) {
+> +		dev_err(etm_dev,
+> +			"timeout while waiting for Idle Trace Status\n");
+> +		return -ETIME;
+> +	}
+> +
+> +	/*
+> +	 * As recommended by section 4.3.7 ("Synchronization when using the
+> +	 * memory-mapped interface") of ARM IHI 0064D
+> +	 */
+> +	dsb(sy);
+> +	isb();
+> +
+> +	return 0;
+> +}
+> +
+> +static void etm4_disable_trace_unit(struct etmv4_drvdata *drvdata)
+> +{
+> +	u32 control;
+> +	struct coresight_device *csdev = drvdata->csdev;
+> +	struct device *etm_dev = &csdev->dev;
+> +	struct csdev_access *csa = &csdev->access;
+> +
+> +	control = etm4x_relaxed_read32(csa, TRCPRGCTLR);
+> +
+> +	/* EN, bit[0] Trace unit enable bit */
+> +	control &= ~0x1;
+> +
+> +	/*
+> +	 * If the CPU supports v8.4 Trace filter Control,
+> +	 * set the ETM to trace prohibited region.
+> +	 */
+> +	etm4x_prohibit_trace(drvdata);
+> +	/*
+> +	 * Make sure everything completes before disabling, as recommended
+> +	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
+> +	 * SSTATUS") of ARM IHI 0064D
+> +	 */
+> +	dsb(sy);
+> +	isb();
+> +	/* Trace synchronization barrier, is a nop if not supported */
+> +	tsb_csync();
+> +	etm4x_relaxed_write32(csa, control, TRCPRGCTLR);
+> +
+> +	/* wait for TRCSTATR.PMSTABLE to go to '1' */
+> +	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_PMSTABLE_BIT, 1))
+> +		dev_err(etm_dev,
+> +			"timeout while waiting for PM stable Trace Status\n");
+> +}
+> +
+>   static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+>   {
+>   	int i, rc;
+> @@ -536,33 +608,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+>   		etm4x_relaxed_write32(csa, trcpdcr | TRCPDCR_PU, TRCPDCR);
+>   	}
+>   
+> -	/*
+> -	 * ETE mandates that the TRCRSR is written to before
+> -	 * enabling it.
+> -	 */
+> -	if (etm4x_is_ete(drvdata))
+> -		etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
+> -
+> -	etm4x_allow_trace(drvdata);
+> -	/* Enable the trace unit */
+> -	etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
+> -
+> -	/* Synchronize the register updates for sysreg access */
+> -	if (!csa->io_mem)
+> -		isb();
+> -
+> -	/* wait for TRCSTATR.IDLE to go back down to '0' */
+> -	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
+> -		dev_err(etm_dev,
+> -			"timeout while waiting for Idle Trace Status\n");
+> -
+> -	/*
+> -	 * As recommended by section 4.3.7 ("Synchronization when using the
+> -	 * memory-mapped interface") of ARM IHI 0064D
+> -	 */
+> -	dsb(sy);
+> -	isb();
+> -
+> +	rc = etm4_enable_trace_unit(drvdata);
+>   done:
+>   	etm4_cs_lock(drvdata, csa);
+>   
+> @@ -906,7 +952,6 @@ static void etm4_disable_hw(void *info)
+>   	struct etmv4_drvdata *drvdata = info;
+>   	struct etmv4_config *config = &drvdata->config;
+>   	struct coresight_device *csdev = drvdata->csdev;
+> -	struct device *etm_dev = &csdev->dev;
+>   	struct csdev_access *csa = &csdev->access;
+>   	int i;
+>   
+> @@ -920,31 +965,8 @@ static void etm4_disable_hw(void *info)
+>   		etm4x_relaxed_write32(csa, control, TRCPDCR);
+>   	}
+>   
+> -	control = etm4x_relaxed_read32(csa, TRCPRGCTLR);
+> +	etm4_disable_trace_unit(drvdata);
+>   
+> -	/* EN, bit[0] Trace unit enable bit */
+> -	control &= ~0x1;
+> -
+> -	/*
+> -	 * If the CPU supports v8.4 Trace filter Control,
+> -	 * set the ETM to trace prohibited region.
+> -	 */
+> -	etm4x_prohibit_trace(drvdata);
+> -	/*
+> -	 * Make sure everything completes before disabling, as recommended
+> -	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
+> -	 * SSTATUS") of ARM IHI 0064D
+> -	 */
+> -	dsb(sy);
+> -	isb();
+> -	/* Trace synchronization barrier, is a nop if not supported */
+> -	tsb_csync();
+> -	etm4x_relaxed_write32(csa, control, TRCPRGCTLR);
+> -
+> -	/* wait for TRCSTATR.PMSTABLE to go to '1' */
+> -	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_PMSTABLE_BIT, 1))
+> -		dev_err(etm_dev,
+> -			"timeout while waiting for PM stable Trace Status\n");
+>   	/* read the status of the single shot comparators */
+>   	for (i = 0; i < drvdata->nr_ss_cmp; i++) {
+>   		config->ss_status[i] =
 
