@@ -1,110 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A592E1C54B2;
-	Mon, 10 Mar 2025 19:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB4158535
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 19:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741635950; cv=none; b=FZb9mewM3HaR/O0IxvMWYDqj2FtR61O/OHSiKWlYDaL1XAm+5D2gcYJzUoLTPtPVtOHPMfjgDC5wSNlUTIHGLS8VQPNe27/iY4aMZN6Z0KUnxf6+XwyVbFhvmjHkUVhAE5jAIE+7EU6g/hrG7tb5bYVo/YX7mxrcWZqkj0buPr8=
+	t=1741635987; cv=none; b=cctAO6dqYYQrca06In2b87a8xsac0xbuXrevXdXPJhDybkgyfOcGM5ieSOyC2NdxOYx6RKlyVEz2sZNmpKb/mFVpA44JouUcIv8y4U7dkP5XS5T/NwSkQZlv9dVacVAmlYXRiYnBPBLke1k7QL87/5wmdMoqgpcpwBjzSVvKK/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741635950; c=relaxed/simple;
-	bh=eWMNKQXpfEBHkUD356t+edleLweO0zbR+YCN2pmhSoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c14MPQ6AWOi1grXIOXnYBheV+2fD/VwvlVMQSb32EzXFiDP8GgWUxp72n9IdJ/VtuY+tqba/+GnXQHtykLpCqJmRLEV54sVYnV+oDqsr2glKwT9cNZDvWSI6Cp+jJAEEagKrqX+5ck4SPwgOVU+tN/XsB7T2kEnm6vJYQeGciqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbpr7KuQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741635987; c=relaxed/simple;
+	bh=yPtT1URqHYreEI5ndrCPZSwQGTTEBPuFfvMnUG3ZU+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AOJt2cbBsQcg5hFKTN8MFdFs/bIWpMKLRYHM1VZmm9LporXsCASz47ZuB4hGjMGekUNRpN6nqqQTn5A1y2q3krGgKNIQb3enb3CYtLK5liISNUP8Od82Z61zZf+Z5wBjHzEFH087rRR+0UJ7wwWlimIeyY4bhDeQidVqJTDa8Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bOXb2S3S; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbpr7KuQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52603C4CEEC;
-	Mon, 10 Mar 2025 19:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741635950;
-	bh=eWMNKQXpfEBHkUD356t+edleLweO0zbR+YCN2pmhSoU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fbpr7KuQpkAPVuF6BHJjglrczjMo72vIWGnyysEbBaxp3tJbO7tddCb6u2saAKRGV
-	 twvgDS5Sa/ig9WQyyV6MJzq6fegQ2qmTZUA471xlBEL1ORRYGyEqASh6HdKSXhNZDJ
-	 hZYThQUotFdSdpo7yryrJTlPHSxyR5PJmVonTN049lGW74wM7nzmzieZab5OUgCDyT
-	 OkHVI4MAPMKvOG9J6NgI8AvNGzddmMBgguTQ09WBvery/uyJEdpp2Jc0k+nbCBIKiI
-	 vqaa0+yHTbK8M3RJAz4uS1ADD2K4meqkbfQEAYe29pqR1mxhWLPXO5FKJ90x2W1/v6
-	 sUkHdnr1/v2vw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 3/3] perf hist stdio: Do bounds check when printing callchains to avoid UB with new gcc versions
-Date: Mon, 10 Mar 2025 16:45:33 -0300
-Message-ID: <20250310194534.265487-4-acme@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250310194534.265487-1-acme@kernel.org>
-References: <20250310194534.265487-1-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bOXb2S3S"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso2312828f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741635983; x=1742240783; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IvLfn3qhWG0LPJSKPMLdwGHyzm3ZQnbWN9kL2fMh4Mw=;
+        b=bOXb2S3SDxRCZR5epXmTDOriYQ2VjsOfjNJGx984+FMp6W8h5nh+TKDpS5g7SAO6+M
+         RByqwmm0F4r95T2ajtEt+9v4TRmDxHRtGxlpZln9Opg+J8FdDqIeN7bmDCFD50fnD6ZW
+         rVzpx9OJrWarbGRpE9j9GwucNMgMnSWSzalz5WIC+41iIXo4V/ksDO14GZL+RW44crk+
+         atYJi3nKRXDmD90yW6UqNLv3q6EI/ovdrPcf2pJcIliABn1dWr4hbHl4S5SmKacwAbON
+         VtDeTzqxAcC2CqGxSJyoo7sWoAltCy63r9iD6neef3L7SwlQ+OcqBkSdzcK98ZXGKLaG
+         RBxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741635983; x=1742240783;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IvLfn3qhWG0LPJSKPMLdwGHyzm3ZQnbWN9kL2fMh4Mw=;
+        b=RmDomQt0ghdeeQQGuXCtjKZSoOcqLRm2+lkxLsos26aiPFIGH9jEPv/xAfbd7MhBTh
+         FVUX3aiRxJXdbC/jurqJhGx3unsRoJm0VYig9uCV9Q5TI8FHFMCkOU+G4YVb7h5byJTW
+         FaU81w6aXSA+gXdUPvDMPzkPKJPeyZT09Sl7cIjxEgc43ziGnGVuu+j6ANnEXKYEXdLI
+         A2DD6s8XNjMRakvfBUSmClrHehyoeEp/3B2wQPFZsv3fzMqfr+pdRXBZJ0BksMIeuw9S
+         y3vATMCpMy/dzTsTJgxcUplvz1mXS/ChS18rhEmdpuUnMao13qOAhUWHrkXfsNWKOJFm
+         pqCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYgrKGFNMBv0AEllAnMDBoI/qrCyvfobsJ4lgiSi4VkipY2us8hWJJIjw7STJf+V1SLPNDfEbcgV+wVec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxALWsoMXPa0okWuBg/PG5IU17vpJV0SLkRK2+c9DM7BQpF7JR
+	6qb6GETs13P03dNAfJtFhU8buDZaJOobCsymnxEyakgDYHHRfcKdnm9SusTSvtA=
+X-Gm-Gg: ASbGnct82SCrfSnfUJvmHtnFXYBZUc4YzVq2TnBlSI2/c4gB7vhPX6b1SbSfCGQs016
+	t2bklafpXk4c/JYL1XrxjQbUrR6c2GqURuwzaIiKLPLEb3Tk3EKJ9QwraKGAO01aZxpv5C7Gfnj
+	XEDpexDFkVVmGrjrkgAzz4VT2QUpQS/nMddafXHE2gS5ei8Rsc2oENtdCPHBWMJOeQBM9axSUqJ
+	p5igWbjZt2AHsulJD4uaDaPdB3Z4yhzDPi0g0vJzyHe7vHej6sCLXy+RGfDg5+mgRm4/m9jnPge
+	VuzLw5XUkZwp8JCGxMiYjcAvXia72IFMvQq6bmcsgxSPqRCFyw==
+X-Google-Smtp-Source: AGHT+IEd/pl739SBNrD6h1Towv44982Wiak2l2/J5QTRayAEyqBes8blAzLgBmUO87jKdAG+98SPfw==
+X-Received: by 2002:a5d:64e4:0:b0:391:865:5a93 with SMTP id ffacd0b85a97d-3926d123ba9mr995249f8f.22.1741635983490;
+        Mon, 10 Mar 2025 12:46:23 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912c0e3250sm15993154f8f.61.2025.03.10.12.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 12:46:23 -0700 (PDT)
+Date: Mon, 10 Mar 2025 22:46:19 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	John Harrison <John.C.Harrison@intel.com>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] drm/i915/gsc: delete a stray tab in
+ intel_gsc_fw_get_binary_info()
+Message-ID: <6152e1ac-745d-4b38-ba49-f013e6760936@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+This line is indented on tab too far.  Delete the extra tab.
 
-Do a simple bounds check to avoid this on new gcc versions:
-
-  31    15.81 fedora:rawhide                : FAIL gcc version 15.0.1 20250225 (Red Hat 15.0.1-0) (GCC)
-    In function 'callchain__fprintf_left_margin',
-        inlined from 'callchain__fprintf_graph.constprop' at ui/stdio/hist.c:246:12:
-    ui/stdio/hist.c:27:39: error: iteration 2147483647 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-       27 |         for (i = 0; i < left_margin; i++)
-          |                                      ~^~
-    ui/stdio/hist.c:27:23: note: within this loop
-       27 |         for (i = 0; i < left_margin; i++)
-          |                     ~~^~~~~~~~~~~~~
-    cc1: all warnings being treated as errors
-    --
-    util/units.c: In function 'unit_number__scnprintf':
-    util/units.c:67:24: error: initializer-string for array of 'char' is too long [-Werror=unterminated-string-initialization]
-       67 |         char unit[4] = "BKMG";
-          |                        ^~~~~~
-    cc1: all warnings being treated as errors
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- tools/perf/ui/stdio/hist.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/i915/gt/uc/intel_gsc_fw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 74b2c619c56c8ba3..7ac4b98e28bca82e 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <limits.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <linux/string.h>
-@@ -24,6 +25,9 @@ static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
- 	int i;
- 	int ret = fprintf(fp, "            ");
+diff --git a/drivers/gpu/drm/i915/gt/uc/intel_gsc_fw.c b/drivers/gpu/drm/i915/gt/uc/intel_gsc_fw.c
+index 5dc0ccd07636..d550eb6edfb8 100644
+--- a/drivers/gpu/drm/i915/gt/uc/intel_gsc_fw.c
++++ b/drivers/gpu/drm/i915/gt/uc/intel_gsc_fw.c
+@@ -230,7 +230,7 @@ int intel_gsc_fw_get_binary_info(struct intel_uc_fw *gsc_fw, const void *data, s
+ 		gt_info(gt, "Invalid GSC firmware for MTL/ARL, got %d.%d.%d.%d but need 102.x.x.x",
+ 			gsc->release.major, gsc->release.minor,
+ 			gsc->release.patch, gsc->release.build);
+-			return -EINVAL;
++		return -EINVAL;
+ 	}
  
-+	if (left_margin > USHRT_MAX)
-+		left_margin = USHRT_MAX;
-+
- 	for (i = 0; i < left_margin; i++)
- 		ret += fprintf(fp, " ");
- 
+ 	if (min_ver.major) {
 -- 
-2.48.1
+2.47.2
 
