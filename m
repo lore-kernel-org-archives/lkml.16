@@ -1,158 +1,209 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB67A178395
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C90D1ADC7F;
+	Mon, 10 Mar 2025 13:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612261; cv=none; b=C/8H2YImRjNoNWOilO7YtPxmbaIhJNNDul2ZPDujLsq68/8WTQxNAwvdAkTo7V6tlLyxS2sAZ8r1r69fkcmvW/GKC9pGkL2GvX7pAOlKe8GodK8QJiiws3EH+RQWdOE7PCKO7ET/GfgWD8wpkBMU28NxemkC+PMvr/+nj0ueahE=
+	t=1741612285; cv=none; b=PBbN/hJFRQTJRgOpgoFdZG9zzrE30s7IL86i0MJGZ49dK2P8k1TEg14BTRai4Iq9yf1mvtWNed1m6vM2QFdzrCMSF7d5kGNYPRriz/bPlgtJsNYVdZT/6GiL4fSqvKUM+TEFLAeJV4Fcsmrw6smccxhH7w/ycif2gRCauCN56X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612261; c=relaxed/simple;
-	bh=/YBgUHgorEByh1qRn8grRlvMisGp1g3JEl01KzlpUz0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=HZUEsNBYeasPExuM73sJs6S8JfiZwAtvooyrU0Yavd61izJPZdkmhV74rpNETmU0gnxmoaY73TKZ+Ju+k81Bm1yxKPUbtH4t0MJ3USyi6NXID+AivMhB7vVvHkAa9ZqhB4l6NvcU4W84AWdSq9+cbhAvrtvQISL7GZn+ZNbM+N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FYzK+YX/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=7jixCHNs; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1741612285; c=relaxed/simple;
+	bh=r1x470L4jwmbDuNUlklKPJk6JIqwC47B9etJYyW0vW8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=NXCrYO6hN/rRYI3kwvZ0q2UJn4cRH/ZGiB+D+ZkgwmmMsy5SwjQsdMmeKhKLDab9af3f5+s+fN0KnHv3ge430cpSwTjq8hOhRR9/aATiewoeZXH8BGKVZv6tFqA4QQSLW7swyZ8A6DFyw8Ga/TRY0zkjsTwYw+P3jKjS82kgNOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=BQ5f+Psv; arc=none smtp.client-ip=185.132.180.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FYzK+YX/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="7jixCHNs"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 67DEE2540201;
-	Mon, 10 Mar 2025 09:10:58 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Mon, 10 Mar 2025 09:10:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741612258;
-	 x=1741698658; bh=OQntpLoo3ph3muLoF4Ou7wx76i2vcnUwLXFqRX2k83k=; b=
-	FYzK+YX/uP5dIuMqJ0YhLDWSZnV5Ba5Z3Vi/O27+agWlrwyHY6qjecekLwlpEkD5
-	iE8MnK2xUfNihxQF3kJMChtvmtA9dnVB8t09kxnq7ZPJKgiLW5S94azNadZYK0iu
-	plmu4oCDa18vZZVAasQ8bFiP9YNmc0cHXiFyDNiydvWJ7NebY2hpLRpmqYeAWA50
-	KZVt9t662FCtm2wp75InaMlbFhUFxU4D37v3vIBpn8OFgHhX9o1tE7MXFwMFJgdB
-	IYHIuI7Zcowj1lR2uX46QoexT6tR5KFUIBv2tmwhGOA5TgUUC0vXzqWq0Bgn/Oi5
-	VOpgNPHnyWrbSn3qFC2VQw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741612258; x=
-	1741698658; bh=OQntpLoo3ph3muLoF4Ou7wx76i2vcnUwLXFqRX2k83k=; b=7
-	jixCHNsndMpFkg/bxWotZ9jihuZgVPSMy9RSh8tBTI2hxtrsdw51A7ENUKwdvk1Y
-	c0zg8575ey0P0ERTBiBOEFV1dTsdB9TV8K33O1oYR9YZSFkxlkEoLDRTdjPPQAnE
-	e7IErZM4bHX2MPMPzMDffvtbYRn090pcYGtJaUktTtMqQAJgVD4sGdCGMYpYfFkA
-	WpmWsNWMcYHV4sEp7mjuhAwRCAberEvdXqe1UDb9yhrlynUt4vHURcuuABd2VDQ4
-	IbidcZgiQgA9A8fVkeoQ4ugZTYj0jZv4pAXY4XcGimd1CX5jWNWweHjn7i/LHDvU
-	QwVzRiguN+czE6YomNf7Q==
-X-ME-Sender: <xms:4eTOZyZdYXnbrpO3hUKJpiuEzpSIExEowRfgS91FOXjOTEsXsAo3Fg>
-    <xme:4eTOZ1bpIkP-tKHQqmgYYpQbpC8GOdIXs6u_o0dKtNlZjYDdQK6pm3DVJpS7kzZ4Y
-    T6LLEdqgJ0CxEEoCOY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelgeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    udegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-    dprhgtphhtthhopehthhhomhgrshdrlhgvnhgurggtkhihsegrmhgurdgtohhmpdhrtghp
-    thhtoheprhhitghkrdhprdgvughgvggtohhmsggvsehinhhtvghlrdgtohhmpdhrtghpth
-    htoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhnghhosehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopegurghvvgdrhhgr
-    nhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepkhhirhhilhhlrd
-    hshhhuthgvmhhovheslhhinhhugidrihhnthgvlhdrtghomh
-X-ME-Proxy: <xmx:4eTOZ8_1KJo9jpuy3vJKXKF2sAN2Jhn3OSPmZUOD5jm3AvFFwr7aPA>
-    <xmx:4eTOZ0oPANJHtNWC4p4lzlZHBTPD2j8WqnwkXRYgDjvCS4gqHJJd9w>
-    <xmx:4eTOZ9rCPvhGjiNefgfXysx0Kfcdkvzgtxvf--9RTGNwqgtN-_vNPg>
-    <xmx:4eTOZyRvp0Of_I2Yl0_PKa7siRf14jYWhm59Uba1F048eEWe3WVEqg>
-    <xmx:4uTOZ-4HqUswNRoNQWpeWe2wK97LG9Lgf2G0hi5V-VD25wfBSTlUfMWy>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id AA1AB2220073; Mon, 10 Mar 2025 09:10:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="BQ5f+Psv"
+Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A7A2JD004779;
+	Mon, 10 Mar 2025 13:10:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=u
+	ESA4QqfGTGCsO/HkNgYjU2s1+AKtHc4tu+9+ZTUrcM=; b=BQ5f+PsvMDuhwGK8E
+	10RJVx0XT1RjJ1ux178sb6JHVgAHbMRnxxhWT0VZt3zscjtSFKsEobZ3tiQTm3NB
+	T+6L0rXDjFyQfWtbOApNwC0SRSJnP61ETiVfkNtbM8IA1f2tfWOCSVK2gcVSL5ee
+	ZSOdodCFjFPh8KpVxt9/1fBX9ysvtK+nNeO0SKVQvA+ExwtJ8PNjo8QuzLaxpiy1
+	4OB573BBCyt0256l9FE8uSNHwqlznV+Nl4NPj932LQB3uLDBSXW7nGVQc1scx8W7
+	aC6q2b64+f+VYc4PV0djGYxodAZldB/5B22JLNv5D17OFMQKR/lYALCf4wxYSnRu
+	Aqy4g==
+Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 458ev09es0-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 10 Mar 2025 13:10:55 +0000 (GMT)
+Received: from Matts-MacBook-Pro.local (172.25.0.133) by
+ HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 10 Mar 2025 13:10:54 +0000
+From: Matt Coster <matt.coster@imgtec.com>
+Date: Mon, 10 Mar 2025 13:10:39 +0000
+Subject: [PATCH v3 15/18] drm/imagination: Use cached memory with
+ dma_coherent
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 10 Mar 2025 14:10:23 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Borislav Petkov" <bp@alien8.de>
-Cc: "Ingo Molnar" <mingo@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "Kuppuswamy Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>,
- "Rick Edgecombe" <rick.p.edgecombe@intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Tom Lendacky" <thomas.lendacky@amd.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org
-Message-Id: <7012583a-90be-4156-a151-2fc56fa18d51@app.fastmail.com>
-In-Reply-To: <20250305225057.GBZ8jVUXJmIJBZwdgT@fat_crate.local>
-References: <20250304143340.928503-1-arnd@kernel.org>
- <Z8grEnsAcMrm9sCc@gmail.com>
- <20250305221700.GPZ8jNXPCFR1w1NyEQ@fat_crate.local>
- <20250305222052.GAZ8jORCVmKQhEkrw6@fat_crate.local>
- <a6145d2a-e1a9-41b4-8017-5bbf37ec2d65@app.fastmail.com>
- <20250305225057.GBZ8jVUXJmIJBZwdgT@fat_crate.local>
-Subject: Re: [PATCH] x86: coco: mark cc_mask as __maybe_unused
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-15-143b3dbef02f@imgtec.com>
+References: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
+In-Reply-To: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
+To: Frank Binns <frank.binns@imgtec.com>,
+        Matt Coster
+	<matt.coster@imgtec.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        "Vignesh
+ Raghavendra" <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
+        "Alessio
+ Belle" <alessio.belle@imgtec.com>,
+        Alexandru Dadu <alexandru.dadu@imgtec.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4974;
+ i=matt.coster@imgtec.com; h=from:subject:message-id;
+ bh=r1x470L4jwmbDuNUlklKPJk6JIqwC47B9etJYyW0vW8=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3KJL830IYfNtUURzUx/8gtzf6/MdVp+ZcaN4PSlr
+ PVvfq116ChlYRDjYJAVU2TZscJyhdofNS2JG7+KYeawMoEMYeDiFICJzDRkZNioyOe4o3x2+Jll
+ d9e7TZ9mO8u1Y+fuq5e3bjW+EnJvE/MpRoY9DhpqP7LblWeahJn90e/xk1w7+0/I4/sqbsz23S/
+ ibBkA
+X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
+ fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
+X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
+X-Authority-Analysis: v=2.4 cv=CeII5Krl c=1 sm=1 tr=0 ts=67cee4df cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=0i1-_hofAh2E2eMZgqcA:9
+ a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-GUID: oIhM6dVq5HA_8GTn7csNNV7iln7BsNC-
+X-Proofpoint-ORIG-GUID: oIhM6dVq5HA_8GTn7csNNV7iln7BsNC-
 
-On Wed, Mar 5, 2025, at 23:50, Borislav Petkov wrote:
-> On Wed, Mar 05, 2025 at 11:45:11PM +0100, Arnd Bergmann wrote:
->> There is a twist here: clang by default warns about unused const
->> variables in .c files but not in headers, while gcc doesn't
->
-> What is the point of this warning, do you know?
->
-> Someone defines a const, forgets to use it and? Oh big deal. This should be
-> a -Wunused anyway, no?
->
-> I must be missing something here...
+The TI k3-j721s2 platform does not allow us to use uncached memory
+(which is what the driver currently does) without disabling cache snooping
+on the AXI ACE-Lite interface, which would be too much of a performance
+hit.
 
-We turned on -Wunused a while ago for default builds after all the
--Wunused-variable warnings got addressed, but instead turned off
--Wunused-const-variable and -Wunused-but-set-variable
-unless W=1 is set while there are still existing warnings.
+Given the platform is dma-coherent, we can simply force all
+device-accessible memory allocations through the CPU cache. In fact, this
+can be done whenever the dma_coherent attribute is present.
 
-In my opinion, there is little difference between unused const and
-non-const variables, the reason that gcc treats them differently
-seems to be from common c++ coding style advocating for them to be
-used in place of macros. This is the case here, but most of the
-warnings it actually shows are for mistakes where some variable
-is in the wrong #ifdef block or the only user got removed.
+Signed-off-by: Matt Coster <matt.coster@imgtec.com>
+---
+Changes in v3:
+- Change from a workaround to a regular codepath
+- Add missing <linux/property.h> include
+- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-19-3fd45d9fb0cf@imgtec.com
+Changes in v2:
+- None
+- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-19-4ed30e865892@imgtec.com
+---
+ drivers/gpu/drm/imagination/pvr_gem.c | 10 +++++++---
+ drivers/gpu/drm/imagination/pvr_gem.h |  6 ++++--
+ drivers/gpu/drm/imagination/pvr_mmu.c |  8 +++++++-
+ 3 files changed, 18 insertions(+), 6 deletions(-)
 
->> In this case, the only user is a macro:
->> #define _PAGE_CC               (_AT(pteval_t, cc_mask))
->> 
->> so maybe '#define cc_mask 0' would be appropriate.
->
-> Sounds a lot better to me.
-
-Too bad that did not work. This version is also a bit ugly:
-
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index c90e9c51edb7..f31c1a31742d 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -179,7 +179,11 @@ enum page_cache_mode {
- };
- #endif
+diff --git a/drivers/gpu/drm/imagination/pvr_gem.c b/drivers/gpu/drm/imagination/pvr_gem.c
+index 6a8c81fe8c1e85c2130a4fe90fce35b6a2be35aa..9467cd563339cd5bf62ff92edba115ed5721ee76 100644
+--- a/drivers/gpu/drm/imagination/pvr_gem.c
++++ b/drivers/gpu/drm/imagination/pvr_gem.c
+@@ -19,6 +19,7 @@
+ #include <linux/log2.h>
+ #include <linux/mutex.h>
+ #include <linux/pagemap.h>
++#include <linux/property.h>
+ #include <linux/refcount.h>
+ #include <linux/scatterlist.h>
  
-+#ifdef CONFIG_ARCH_HAS_CC_PLATFORM
- #define _PAGE_CC               (_AT(pteval_t, cc_mask))
-+#else
-+#define _PAGE_CC               (_AT(pteval_t, 0))
-+#endif
- #define _PAGE_ENC              (_AT(pteval_t, sme_me_mask))
+@@ -336,6 +337,7 @@ struct drm_gem_object *pvr_gem_create_object(struct drm_device *drm_dev, size_t
+ struct pvr_gem_object *
+ pvr_gem_object_create(struct pvr_device *pvr_dev, size_t size, u64 flags)
+ {
++	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
+ 	struct drm_gem_shmem_object *shmem_obj;
+ 	struct pvr_gem_object *pvr_obj;
+ 	struct sg_table *sgt;
+@@ -345,7 +347,10 @@ pvr_gem_object_create(struct pvr_device *pvr_dev, size_t size, u64 flags)
+ 	if (size == 0 || !pvr_gem_object_flags_validate(flags))
+ 		return ERR_PTR(-EINVAL);
  
- #define _PAGE_CACHE_MASK       (_PAGE_PWT | _PAGE_PCD | _PAGE_PAT)
+-	shmem_obj = drm_gem_shmem_create(from_pvr_device(pvr_dev), size);
++	if (device_get_dma_attr(drm_dev->dev) == DEV_DMA_COHERENT)
++		flags |= PVR_BO_CPU_CACHED;
++
++	shmem_obj = drm_gem_shmem_create(drm_dev, size);
+ 	if (IS_ERR(shmem_obj))
+ 		return ERR_CAST(shmem_obj);
+ 
+@@ -360,8 +365,7 @@ pvr_gem_object_create(struct pvr_device *pvr_dev, size_t size, u64 flags)
+ 		goto err_shmem_object_free;
+ 	}
+ 
+-	dma_sync_sgtable_for_device(shmem_obj->base.dev->dev, sgt,
+-				    DMA_BIDIRECTIONAL);
++	dma_sync_sgtable_for_device(drm_dev->dev, sgt, DMA_BIDIRECTIONAL);
+ 
+ 	/*
+ 	 * Do this last because pvr_gem_object_zero() requires a fully
+diff --git a/drivers/gpu/drm/imagination/pvr_gem.h b/drivers/gpu/drm/imagination/pvr_gem.h
+index e0e5ea509a2e88a437b8d241ea13c7bab2220f56..c99f30cc62088c030bd8a806df79b738b62a968f 100644
+--- a/drivers/gpu/drm/imagination/pvr_gem.h
++++ b/drivers/gpu/drm/imagination/pvr_gem.h
+@@ -44,8 +44,10 @@ struct pvr_file;
+  * Bits not defined anywhere are "undefined".
+  *
+  * CPU mapping options
+- *    :PVR_BO_CPU_CACHED: By default, all GEM objects are mapped write-combined on the CPU. Set this
+- *       flag to override this behaviour and map the object cached.
++ *    :PVR_BO_CPU_CACHED: By default, all GEM objects are mapped write-combined on the CPU. Set
++ *       this flag to override this behaviour and map the object cached. If the dma_coherent
++ *       property is present in devicetree, all allocations will be mapped as if this flag was set.
++ *       This does not require any additional consideration at allocation time.
+  *
+  * Firmware options
+  *    :PVR_BO_FW_NO_CLEAR_ON_RESET: By default, all FW objects are cleared and reinitialised on hard
+diff --git a/drivers/gpu/drm/imagination/pvr_mmu.c b/drivers/gpu/drm/imagination/pvr_mmu.c
+index 4fe70610ed94cf707e631f8148af081a94f97327..450d476d183f0173d0ef03f0d8897fbeb04831a2 100644
+--- a/drivers/gpu/drm/imagination/pvr_mmu.c
++++ b/drivers/gpu/drm/imagination/pvr_mmu.c
+@@ -17,6 +17,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/kmemleak.h>
+ #include <linux/minmax.h>
++#include <linux/property.h>
+ #include <linux/sizes.h>
+ 
+ #define PVR_SHIFT_FROM_SIZE(size_) (__builtin_ctzll(size_))
+@@ -259,6 +260,7 @@ pvr_mmu_backing_page_init(struct pvr_mmu_backing_page *page,
+ 	struct device *dev = from_pvr_device(pvr_dev)->dev;
+ 
+ 	struct page *raw_page;
++	pgprot_t prot;
+ 	int err;
+ 
+ 	dma_addr_t dma_addr;
+@@ -268,7 +270,11 @@ pvr_mmu_backing_page_init(struct pvr_mmu_backing_page *page,
+ 	if (!raw_page)
+ 		return -ENOMEM;
+ 
+-	host_ptr = vmap(&raw_page, 1, VM_MAP, pgprot_writecombine(PAGE_KERNEL));
++	prot = PAGE_KERNEL;
++	if (device_get_dma_attr(dev) != DEV_DMA_COHERENT)
++		prot = pgprot_writecombine(prot);
++
++	host_ptr = vmap(&raw_page, 1, VM_MAP, prot);
+ 	if (!host_ptr) {
+ 		err = -ENOMEM;
+ 		goto err_free_page;
 
-so I'll just follow Ingo's earlier suggestion for the v2 patch.
+-- 
+2.48.1
 
-       Arnd
