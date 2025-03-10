@@ -1,126 +1,121 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124FB22B8B1;
-	Mon, 10 Mar 2025 13:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A13E22CBF5
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612291; cv=none; b=ZEItG+LqLs41V4uO+Aho9Oj1MPF8ArTdFv9uXnR1CxgwrP/RsOiE/pRFHpiZLexqtIrVZ/3dZTVoDcDbuRU8uMG+pDngSFg1Ki+zGMSZKEQJpwSJxRsyXzFI5XnXBxkPPOvntcaWTMbpdFKw74aSUXmrzoBcn8auN163ldIRwmo=
+	t=1741612293; cv=none; b=lCNpsawEPE3extke+cGP/93bShwn5FN2Do7X9Uac48ZnQkGh9H4772B+PXa5afXXF3Y0rwOsSK/wzECQbwUEF2utzjP7z22/yKk0PYgbrk8GwvT3cvOK8HT+/5y9XrRxldQPdTxL6zx+eYLic1HS2rBjnOOwyhO0r/pR6d4NYq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612291; c=relaxed/simple;
-	bh=97EAD05oYJm2LRj0eLR/YT2QcnAuH/+kLKeGrQSF2Ck=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Fg1W1HkJO+kMksAGKWS8b7bxjeWHoNoYh7annFoDVxw5XdBfEAYuK0X/ZWZuUpHByZa+Yb/THjsR6Cx8BovnyqIjWBh395xhrPvktwudjOQg3zZMWj9nLhg1GZex7Fufj5T0mpt5/qJsqD7K0f6VrcEuHHEZxIYVuKXo9mQjIPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=rnJIZgKU; arc=none smtp.client-ip=91.207.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	s=arc-20240116; t=1741612293; c=relaxed/simple;
+	bh=1sPXlOrJgc2EhQcV6hft1tTfyoeXcFPRPvUKeNq3yfc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=heam2Moy7az7O+9cL9jIjujSbybkLkvy7kTl9qF90fS8ov8l0o4gK/r1y7motjFKg0F5j+5EqITREIohdsRduzN2p/zCGEYk919eYyp8gamoiGn5IWreolv0n/D9q3UogMaeJJ5To1Q5WkZOWsGex0VxmXSAJhr781j1yZwpYKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPZ1YSnU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="rnJIZgKU"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A7V2r2018074;
-	Mon, 10 Mar 2025 13:10:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=p
-	lapHMEmjTIY/r+qZVekOspFjoGIxOFU4iWp9EB5Fbk=; b=rnJIZgKUABQfaktFc
-	pCaWupAeXzoExStHr9dz3R4AnNmIyr1LEEVrf51GGa100tD2n3RQ5A2rzFONzUSw
-	hC52E9oeYm9LT7rPfKQ3b4PsOyaXKwHzasNLg8r9nSoeW/PAC01p6Q2aBx9ioW9Z
-	0VCvDlgzeoLi8WyJdA+uPcM+1LTj95c3sb7KI01ETO1JvHajJJiDpPI12QD5theC
-	LI7NWyhZipnFn3pSR1nBgnJlfs/h6uL+VkwX1zHqkULGq8Wag8XzbN9KrfpTLzcC
-	NcGNUdma5Q/2DnGwsVDBjlwmgozyaqVXGdYfd5bjtxj0y7jBf73lhxA+SyqEgPc3
-	1+QsQ==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 458d1wha4t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 10 Mar 2025 13:10:56 +0000 (GMT)
-Received: from Matts-MacBook-Pro.local (172.25.0.133) by
- HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Mar 2025 13:10:55 +0000
-From: Matt Coster <matt.coster@imgtec.com>
-Date: Mon, 10 Mar 2025 13:10:40 +0000
-Subject: [PATCH v3 16/18] drm/imagination: Add support for TI AM68 GPU
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPZ1YSnU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D68FC4CEE5;
+	Mon, 10 Mar 2025 13:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741612292;
+	bh=1sPXlOrJgc2EhQcV6hft1tTfyoeXcFPRPvUKeNq3yfc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dPZ1YSnU9FAWDhgF5MpWC2QUKcwHi8O/O44pcdb6Y4xZMroJUgsrfUYBNqZrmR6pX
+	 PBLqx1N2G3o6b8OnKK75BK4mwy+TUwr0a/gqmah5J8OPlav60yad9do9sXSMoB0PGD
+	 xsI408VzkRITOmrxSIPGJPk6KXE4tVsL0I5L1V8KMHC0Nb+xLpFLRdA8qE3ycd+GJ/
+	 je8x7THwni+aqlXIyVCQKHqWJ0M3SeOsDzo9uVdSPVjX+Ui4fd8wMflQx/ciMCCQla
+	 38aUdhYQqvTkx+p4hckgf09D9TJ02ZpM6rIN5eKbBepSGuRPWk43g/eMDQaYWomk9X
+	 sswaWhlWhbsiA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Yue Haibing <yuehaibing@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] x86: coco: replace static const cc_mask with a function
+Date: Mon, 10 Mar 2025 14:10:59 +0100
+Message-Id: <20250310131114.2635497-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-16-143b3dbef02f@imgtec.com>
-References: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
-In-Reply-To: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
-To: Frank Binns <frank.binns@imgtec.com>,
-        Matt Coster
-	<matt.coster@imgtec.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        "Vignesh
- Raghavendra" <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
-        "Alessio
- Belle" <alessio.belle@imgtec.com>,
-        Alexandru Dadu <alexandru.dadu@imgtec.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1424;
- i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=97EAD05oYJm2LRj0eLR/YT2QcnAuH/+kLKeGrQSF2Ck=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3Lp/AtduWVLb+4+WS7dunRvUkBTqfl6GZGbHF4Hz
- q/lCZJS6ihlYRDjYJAVU2TZscJyhdofNS2JG7+KYeawMoEMYeDiFICJfNzIyDDB3H7d+bIHJw56
- Nk4uto9abpc50Svjmf5c9n1d+5U/GOxk+Kd8YFJWV+l5TdEDKimx6i6xKdOPBGy+6yF9aMLMXqN
- tubwA
-X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
- fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: NcBkbGDYVYp8_s0mwZyGiYtzO69c3lx5
-X-Proofpoint-GUID: NcBkbGDYVYp8_s0mwZyGiYtzO69c3lx5
-X-Authority-Analysis: v=2.4 cv=U8+SDfru c=1 sm=1 tr=0 ts=67cee4e0 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=8q2ZPnE9uwbZrF7VKmgA:9
- a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
+Content-Transfer-Encoding: 8bit
 
-Since we already added a generic compatible string for all IMG Rogue GPUs
-("img,img-rogue"), all that's needed here is to link the appropriate
-firmware for the BXS-4-64 GPU in the AM68.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Matt Coster <matt.coster@imgtec.com>
+When extra warnings are enabled, the cc_mask definition in asm/coco.h
+causes a build failure with gcc:
+
+arch/x86/include/asm/coco.h:28:18: error: 'cc_mask' defined but not used [-Werror=unused-const-variable=]
+   28 | static const u64 cc_mask = 0;
+
+Add a cc_get_mask() function mirroring cc_set_mask() for the one
+user of the variable outside of the coco implementation.
+
+Fixes: a0a8d15a798b ("x86/tdx: Preserve shared bit on mprotect()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+--
+v2: use an inline helper instead of a __maybe_unused annotaiton.
 ---
-Changes in v3:
-- Remove device overrides
-- Remove specific compatible string
-- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-20-3fd45d9fb0cf@imgtec.com
-Changes in v2:
-- None
-- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-20-4ed30e865892@imgtec.com
----
- drivers/gpu/drm/imagination/pvr_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/coco.h          | 10 +++++++++-
+ arch/x86/include/asm/pgtable_types.h |  2 +-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imagination/pvr_drv.c b/drivers/gpu/drm/imagination/pvr_drv.c
-index ac4f5855c5692f0956862cebdbf76b16d8da9a81..b058ec183bb30ab5c3db17ebaadf2754520a2a1f 100644
---- a/drivers/gpu/drm/imagination/pvr_drv.c
-+++ b/drivers/gpu/drm/imagination/pvr_drv.c
-@@ -44,6 +44,7 @@
-  * This driver supports the following PowerVR/IMG graphics cores from Imagination Technologies:
-  *
-  * * AXE-1-16M (found in Texas Instruments AM62)
-+ * * BXS-4-64 MC1 (found in Texas Instruments J721S2/AM68)
-  */
+diff --git a/arch/x86/include/asm/coco.h b/arch/x86/include/asm/coco.h
+index aa6c8f8ca958..e7225452963f 100644
+--- a/arch/x86/include/asm/coco.h
++++ b/arch/x86/include/asm/coco.h
+@@ -15,6 +15,11 @@ enum cc_vendor {
+ extern enum cc_vendor cc_vendor;
+ extern u64 cc_mask;
  
- /**
-@@ -1512,3 +1513,4 @@ MODULE_DESCRIPTION(PVR_DRIVER_DESC);
- MODULE_LICENSE("Dual MIT/GPL");
- MODULE_IMPORT_NS("DMA_BUF");
- MODULE_FIRMWARE("powervr/rogue_33.15.11.3_v1.fw");
-+MODULE_FIRMWARE("powervr/rogue_36.53.104.796_v1.fw");
-
++static inline u64 cc_get_mask(void)
++{
++	return cc_mask;
++}
++
+ static inline void cc_set_mask(u64 mask)
+ {
+ 	RIP_REL_REF(cc_mask) = mask;
+@@ -25,7 +30,10 @@ u64 cc_mkdec(u64 val);
+ void cc_random_init(void);
+ #else
+ #define cc_vendor (CC_VENDOR_NONE)
+-static const u64 cc_mask = 0;
++static inline u64 cc_get_mask(void)
++{
++	return 0;
++}
+ 
+ static inline u64 cc_mkenc(u64 val)
+ {
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index c90e9c51edb7..74d461cc8e20 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -179,7 +179,7 @@ enum page_cache_mode {
+ };
+ #endif
+ 
+-#define _PAGE_CC		(_AT(pteval_t, cc_mask))
++#define _PAGE_CC		(_AT(pteval_t, cc_get_mask()))
+ #define _PAGE_ENC		(_AT(pteval_t, sme_me_mask))
+ 
+ #define _PAGE_CACHE_MASK	(_PAGE_PWT | _PAGE_PCD | _PAGE_PAT)
 -- 
-2.48.1
+2.39.5
 
