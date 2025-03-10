@@ -1,90 +1,138 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49AA230BFA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E27C1C5D5C;
+	Mon, 10 Mar 2025 16:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741624990; cv=none; b=JcfaiuqeblDXgPtgK30g8ykjPqoBd9XWtp7emXMrzN1984RSc2iOtovn+sKwHDnT5RWVtYn65Rjj4YmFgUyvCdgAcxMk/u/OBgHkuf7HBPrU9LjIMLhTXCnDHNMnJD5GqGvqAnXnjMGUKc66p95xW0mFgOJMR/aChPoZeXuQkNM=
+	t=1741625138; cv=none; b=Md4Gg8ztCEUbmub4dyMZ2cZHs8DqpFZaCyFuwR8TuW9+uwFVXBmwhkDePrR/EAypZeIUqROjJIVrczRzQ7HQgJxq3MDAL/ZPpfr+oVUgMoC98/8TDcIgcuHUnPr5H7f9AkqxmVz6kQ2xCMOd5s6C7t/Zn/guepXk7L3vIujX8ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741624990; c=relaxed/simple;
-	bh=KeJ1RRzvTqUvULwTdyZYl5//YQOn9JBoSQ1imwwbGMo=;
+	s=arc-20240116; t=1741625138; c=relaxed/simple;
+	bh=AhSiebyZisSEOEjFm8MpCPrlAdsRA9L9FC+Hd4Xs7NQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HXi0kTQlWKV2cU9QeiJliNEr2pCwFqBlf1xS99RhKkfxO6lKzOEXV1piIRUuJG4tNbzxUIaWgIzimFuwUV348atBbEAaWwCwDpkQ37Lan2K2+Ma4RT5xCT5CaodotT9yGQT8QtKFWSOm4g5GyLHo6S74f5U86rWA7L14O0Zg2GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=e9YzPdcR; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	 To:Cc:Content-Type; b=dKDRhRFf//mYFFX8vrgRDeEKEI5e3xUeyQBjv8xuybJBDexIH4RSkMGsXgqV3m4Ga7DYYOA8j0qlVTA/GHXUBeu29ybQQd50BNY6m6CBybt+RHqFSvQSCQbqLT6gwex5sYKim7F334y7z9vPdA3QkBcll1TRY2zN9yJa7qcoE1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoOScSYC; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="e9YzPdcR"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47698757053so3183551cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:43:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoOScSYC"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5439a6179a7so4423976e87.1;
+        Mon, 10 Mar 2025 09:45:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1741624986; x=1742229786; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o7+xCb6XzG3joR6a4M5865iGYkCdDkI6eexc4SK+HB0=;
-        b=e9YzPdcR3SFGD+bZJnuWgXoRnN1teJnbhbLGJ02CMSZV/2Sh/iFUP1vtA+FZICDd1h
-         /ojuL8ALW2tgQyVBsfq+shE/L2G1YWwcfx7MgSnvikhjzOwwSlt663tDAohogz99P02b
-         RdYm8pHf0JncWM8AzIv+qaLfAktzdvfUkyHtI=
+        d=gmail.com; s=20230601; t=1741625135; x=1742229935; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4xsicxmenQMOAQy9ZUHws7xk8D0uVS0Ti0PNVqRnMSU=;
+        b=JoOScSYC/JaQnJuNSa52W4io2hXQ6QQ8GfgsOgZpuHu66Nn+LMCZ0lvBGS8mxbx4RG
+         P476uk/M2yg5M5vc87K2nw6Fwqr474pt+iERLf1fdtk/iwTmxf6NsqEnhST6hud1DemD
+         WuRzN+O23DBX3hdXYSctXCKgwC1+KIoCjyNPDqSRKdSiZ9asJWnKvU4ZwF1IqnITuJNt
+         6IthKEK0ibCulB86dMgPWd8HpK/CT+RiNsYG9kERbvPM6qsmuGmamvCsqtc9we6+Klcb
+         QBt215SvVxJtxl7GL/YAb1rrdf65OFykWlC0BAzIJyOAlOpqOFvL8+QD1jud/N7jmPed
+         QtwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741624986; x=1742229786;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o7+xCb6XzG3joR6a4M5865iGYkCdDkI6eexc4SK+HB0=;
-        b=LrGOtEqqqJqEW39OGehYH4yaRsSDZXgNgl/x+phG2DpfG9YYjZwKQzO88n88ZSgJ51
-         oM8lyhqLPEkuwXBNpBKP9iAJ5Xd1Ywi2DlOHaMBC0ALLmIpNh1BImHK/NKEFeumCmVCM
-         vi5b/bp98Jp6tIyo9ggx2KK4cNtgPTGLZs0izYGJ7I73dpAtmSW3rFCcrQ7sMgJ8J7vw
-         xs4DvOpy7xOtlfk56zmivwZr/8bUR2rYsGLffpCm2rYsQH6oTjHNFIM2yw9TURUzxVFJ
-         z8ussrINb0UsNqvNsghFj0vJAZZTkes1q3eEnHMqIgdSAoyytcDwzzzE9y+/UNSehyo1
-         o1JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWO5LGN8IHwKvX/fyDbbo7fm1VhlCWidqF42wIURZ3rXPgUhEAXQuYZlzuqaoypzmpNO9LDVzRRGCPT/H4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv2R8FQ7s8WJks9Ia+eJO3NHaZbTlHeSgEFrZxS2W2awUC7gC3
-	zo9RmXwFP5ZLoU4PisGFuB0uX55FzD//jC5KGZkR5rHV2/kvZIBuSeXzhXBa/0h1KOW5rLIcpHl
-	GXZ/yIDe+3uL1g+LJWXwivtl12YJX8ekJ8SHFI0at2aYqQ57bhrA=
-X-Gm-Gg: ASbGnctOBPiaJaXZvoPPQ1kjv6tkaC8eJktLmLxsBebWOvlm+f+uTvlAstdooTdsWW8
-	2wWamPLqjAInJNXzhUCJ9ceWFHjFo9TtqQAFFBnvSqvE7Gn8p03ZWfYWsxhs4bo0DX0xSnftUd4
-	wMUP4qWjxmHigGp5FF6HXju/rECUs=
-X-Google-Smtp-Source: AGHT+IEBIzx9e6K8gY1P3uwG4053vKnCQo/A/45CHTp4TpCwHW2p6fOzKlu/gMvt4iEwPXinaX6bmM7d+7zufNH5siI=
-X-Received: by 2002:ac8:5a4e:0:b0:476:959b:7592 with SMTP id
- d75a77b69052e-476959b7aadmr25117691cf.17.1741624986587; Mon, 10 Mar 2025
- 09:43:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741625135; x=1742229935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4xsicxmenQMOAQy9ZUHws7xk8D0uVS0Ti0PNVqRnMSU=;
+        b=CEsKftTRhJ5w0aFWhpkJ3DkUvp3b8qqBqjaqUwugntpnUWhtizZ3vsjNjJvosKxddx
+         Mh2ngiI47kYTAfPyhB2yUd7Yktn5u0mQwgUTF4dg4oRkgIS0pGhell01/eBMcV+Jyfxm
+         S/NmliWUsLO7tfQIEDLSpPdIMMMiWR7scGp3CbDDau6RBz8yCLWs5Htw5HEKgYXUGuJB
+         VeFuU3ls9mqpgst8ngYv9ckuiVRrJBEi6UDjVvJMWWcVSfzkXFoqwGusjVZak+ASpfBd
+         xakya3wTjtTzBOpNStmKkj/GtZaDrl8Ju8QuLS0rgkF4JUbeFWofsGO0taCUFT3IYTJn
+         nTYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzexAbgVAOTCXEUHq9I/SYlS06h4kEYkliDiZwil5N3IMfhzYMVpfrNXpbPTBUHEQup56bWyRI@vger.kernel.org, AJvYcCXPwyKSmHkcRS73eQsMdZZVr8uqM1+N/z0XRXVTrRMINol8XhV3H2Jynt1dszaMT1eUPa0HtcSmRUJuIVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzedaopKuctthISL9Qs04aQ40M6AjmwmTb9OE58KqCM5u0bUznl
+	+BD1V0VYvHkw7tgQJFhB/G9GYpW/QTpSLbLuswuYJV8RetcFzjHt0KvhGRE9IjFcKDPvyxb2Z0y
+	5oxGLfVN3uWJF/DobllSXzfVhbjA=
+X-Gm-Gg: ASbGncv8YZDidHQ0XSWIS1ysajDawGaITASucE6EE9CpKzWXBMRlD4rRdowrcp1GhsP
+	XwhD63LrSXa1itqgjB9iEnMpGgAS/kV/blGQM5Xj4GbPNIxWmZ02Fo4UQqUpVUsyfHjlZ54uUln
+	DpM0j+kH4qhgfNhO4JAxIfKjFHMA==
+X-Google-Smtp-Source: AGHT+IELaT2li0TDFdIGi0ECQA6PJQbMNSD/H8pY1VH0V8khSOVia+1VvBGBenJ4MrkzN10ddT3NAwJsgribGaiDenw=
+X-Received: by 2002:a19:385c:0:b0:549:9813:3e6b with SMTP id
+ 2adb3069b0e04-549abc9f5fcmr91423e87.0.1741625134237; Mon, 10 Mar 2025
+ 09:45:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226091451.11899-1-luis@igalia.com> <87msdwrh72.fsf@igalia.com>
-In-Reply-To: <87msdwrh72.fsf@igalia.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 10 Mar 2025 17:42:53 +0100
-X-Gm-Features: AQ5f1JqEE_1WaqbsqdDTMPa4eJILmqSWGchDRmitOQV2dELsrChoGlHoLVS5zaw
-Message-ID: <CAJfpegvcEgJtmRkvHm+WuPQgdyeCQZggyExayc5J9bdxWwOm4w@mail.gmail.com>
-Subject: Re: [PATCH v8] fuse: add more control over cache invalidation behaviour
-To: Luis Henriques <luis@igalia.com>
-Cc: Bernd Schubert <bschubert@ddn.com>, Dave Chinner <david@fromorbit.com>, 
-	Matt Harvey <mharvey@jumptrading.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250310-b4-qcom-smmu-v1-1-733a1398ff85@gmail.com> <6f5f2047-b315-440b-b57d-2ed0dd7395f6@arm.com>
+In-Reply-To: <6f5f2047-b315-440b-b57d-2ed0dd7395f6@arm.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 10 Mar 2025 11:45:22 -0500
+X-Gm-Features: AQ5f1JqmGHzEzkS1We4m_O_rX5wft37F9HsGwqv_A82mE5sllwO43e52LVF4N6s
+Message-ID: <CALHNRZ87t7eXohTcpFnejFAPDsyE_1g0aPsASuQ7y5c_zxnLUw@mail.gmail.com>
+Subject: Re: [PATCH] iommu/arm: Allow disabling Qualcomm support in arm_smmu_v3
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 7 Mar 2025 at 16:31, Luis Henriques <luis@igalia.com> wrote:
+On Mon, Mar 10, 2025 at 7:42=E2=80=AFAM Robin Murphy <robin.murphy@arm.com>=
+ wrote:
+>
+> On 2025-03-10 6:11 am, Aaron Kling via B4 Relay wrote:
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > If ARCH_QCOM is enabled when building arm_smmu_v3,
+>
+> This has nothing to do with SMMUv3, though?
+>
+> > a dependency on
+> > qcom-scm is added, which currently cannot be disabled. Add a prompt to
+> > ARM_SMMU_QCOM to allow disabling this dependency.
+>
+> Why is that an issue - what problem arises from having the SCM driver
+> enabled? AFAICS it's also selected by plenty of other drivers including
+> pretty fundamental ones like pinctrl. If it is somehow important to
+> exclude the SCM driver, then I can't really imagine what the use-case
+> would be for building a kernel which won't work on most Qualcomm
+> platforms but not simply disabling ARCH_QCOM...
+>
 
-> Any further feedback on this patch, or is it already OK for being merged?
+I am working with the android kernel. The more recent setup enables a
+minimal setup of configs in a core kernel that works across all
+supported arch's, then requires further support to all be modules. I
+specifically am working with tegra devices. But as ARCH_QCOM is
+enabled in the core defconfig, when I build smmuv3 as a module, I end
+up with a dependency on qcom-scm which gets built as an additional
+module. And it would be preferable to not require qcom modules to boot
+a tegra device.
 
-The patch looks okay.  I have ideas about improving the name, but that can wait.
+Sincerely,
+Aaron
 
-What I think is still needed is an actual use case with performance numbers.
-
-> And what about the extra call to shrink_dcache_sb(), do you think that
-> would that be acceptable?  Maybe that could be conditional, by for example
-> setting a flag.
-
-My wish would be a more generic "garbage collection" mechanism that
-would collect stale cache entries and get rid of them in the
-background.  Doing that synchronously doesn't really make sense, IMO.
-
-But that can be done independently of this patch, obviously.
-
-Thanks,
-Miklos
+> Thanks,
+> Robin.
+>
+> > Fixes: 0f0f80d9d5db ("iommu/arm: fix ARM_SMMU_QCOM compilation")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > ---
+> >   drivers/iommu/Kconfig | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > index ec1b5e32b9725bc1104d10e5d7a32af7b211b50a..cca0825551959e3f37cc2ea=
+41aeae526fdb73312 100644
+> > --- a/drivers/iommu/Kconfig
+> > +++ b/drivers/iommu/Kconfig
+> > @@ -381,6 +381,7 @@ config ARM_SMMU_MMU_500_CPRE_ERRATA
+> >
+> >   config ARM_SMMU_QCOM
+> >       def_tristate y
+> > +     prompt "Qualcomm SMMUv3 Support"
+> >       depends on ARM_SMMU && ARCH_QCOM
+> >       select QCOM_SCM
+> >       help
+> >
+> > ---
+> > base-commit: 1110ce6a1e34fe1fdc1bfe4ad52405f327d5083b
+> > change-id: 20250310-b4-qcom-smmu-d4ccaf66a1ce
+> >
+> > Best regards,
+>
