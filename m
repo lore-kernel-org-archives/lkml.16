@@ -1,142 +1,230 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2232E2222B5;
-	Mon, 10 Mar 2025 12:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6F51A314B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741608089; cv=none; b=Iv+BwiZ0kR3+m/xnidNlfxFdvTcbinueMW+jphCPpFyw4TckmwkOTP/biNLxz34K/3YKQm4vGhn/nCXXHX7Tklsa+Nu6OpSLzUYtwYDcpObYpPb7TWbgPGdlxbyFcduWBcxYbBlteQM+B2BS2xk8nAT3GtjLd7i+8Pe4Dal8Yz0=
+	t=1741608263; cv=none; b=d0m546QJUJNnwVmuDyA+/56ofhSNQHCqRSAX0HwzB1sWeoJ65zrtKFcNWOP9+yBx8VxZybXoTYT5P6CFmSk4IO/bK7sNFwRqImmL7LYvDFMaRbNXzofoxIJqywNpTnTsR6BEX2A1aUkA0Saf21IC/dPxq7uSrpxpeEKQA5PlkL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741608089; c=relaxed/simple;
-	bh=WBDXx1vokHCS7NaHgBUOgXNOTV2V7L3CvptF+NRbaf8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XrhF+OhqPZ4ZQ5WW6OMzxKyzsuXCCcHe9J0ifY6AdFBxCt4SDvFgj3gB50OXxRUxCLZ0UkT89vfGLpNbvTPNNwmatdrfb98Oq4BE9wXUwdXmk4ugkgKllpkF/6dS23fYTYw9Nb4IRrig+h4AdNVHkYJ/P1TZ1wNwU2y5JaIKnh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F18881516;
-	Mon, 10 Mar 2025 05:01:38 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B1C83F5A1;
-	Mon, 10 Mar 2025 05:01:26 -0700 (PDT)
-Message-ID: <65979e92-0047-427c-848d-53f908671905@arm.com>
-Date: Mon, 10 Mar 2025 12:01:25 +0000
+	s=arc-20240116; t=1741608263; c=relaxed/simple;
+	bh=Bn0ajlg1udmn5GMH7s6qm/cx0Mnvp5I2mJJZdEL+VH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VZRvH2WXz24bUVQfIgv0toELsAGHHXBThEIXwqsK5cgS6dEL11/EgLbmmP8Qv3tOCXNajQND9XVY6bsJm30GKMRGN25ZZN9VtlKMlKakt6nAux0s6x8I2RnIw0Qi/INysUQWycGpTK5xRshStgHZaPoGPqrJpSv3YlLuMSHcrWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com; spf=pass smtp.mailfrom=yandex-team.com; dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b=fWZtyGmN; arc=none smtp.client-ip=178.154.239.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b="fWZtyGmN"
+Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:600c:0:640:a431:0])
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 7B72A60EBA;
+	Mon, 10 Mar 2025 15:04:01 +0300 (MSK)
+Received: from dellarbn.yandex.net (unknown [10.214.35.248])
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-Kq6zF6NZ;
+	Mon, 10 Mar 2025 15:04:00 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
+	s=default; t=1741608240;
+	bh=XKHgnvQxGKjJqIO37SYW6qMo+hh+Xx+yeaCwPWU001c=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=fWZtyGmNAf3TxCVO6cR1CGphoTpFv46TB+NUDs4zpbDUeTVIZKTYFlC+LQ+ien5GU
+	 QI0RVRKypVgBFhNPJDMiHCF41YTWhLaWzJdRGjVMxU/odm0o51V6JYFmZE/A+JZxL7
+	 1txeZtvXpPp4GDHbsTI1J0q25oF/V39ygtwGEZGk=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
+From: Andrey Ryabinin <arbn@yandex-team.com>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Graf <graf@amazon.com>,
+	James Gowans <jgowans@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	kexec@lists.infradead.org,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	David Rientjes <rientjes@google.com>,
+	Andrey Ryabinin <arbn@yandex-team.com>
+Subject: [PATCH v2 0/7] KSTATE: a mechanism to migrate some part of the kernel state across kexec
+Date: Mon, 10 Mar 2025 13:03:11 +0100
+Message-ID: <20250310120318.2124-1-arbn@yandex-team.com>
+X-Mailer: git-send-email 2.45.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] coresight: Introduce pause and resume APIs for
- source
-To: Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>,
- James Clark <james.clark@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250310104919.58816-1-leo.yan@arm.com>
- <20250310104919.58816-3-leo.yan@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250310104919.58816-3-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/03/2025 10:49, Leo Yan wrote:
-> Introduce APIs for pausing and resuming trace source and export as GPL
-> symbols.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   drivers/hwtracing/coresight/coresight-core.c | 20 ++++++++++++++++++++
->   drivers/hwtracing/coresight/coresight-priv.h |  2 ++
->   include/linux/coresight.h                    |  4 ++++
->   3 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-> index 0a9380350fb5..eb7b83a7bfa2 100644
-> --- a/drivers/hwtracing/coresight/coresight-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> @@ -365,6 +365,26 @@ void coresight_disable_source(struct coresight_device *csdev, void *data)
->   }
->   EXPORT_SYMBOL_GPL(coresight_disable_source);
->   
-> +void coresight_pause_source(struct coresight_device *csdev)
-> +{
-> +	if (!csdev || !coresight_is_percpu_source(csdev))
+ Main changes from v1 [1]:
+  - Get rid of abusing crashkernel and implent proper way to pass memory to new kernel
+  - Lots of misc cleanups/refactorings.
 
-You may remove the !csdev check, coresight_is_percpu_source() already 
-checks that.
+kstate (kernel state) is a mechanism to describe internal some part of the
+kernel state, save it into the memory and restore the state after kexec
+in the new kernel.
+
+The end goal here and the main use case for this is to be able to
+update host kernel under VMs with VFIO pass-through devices running
+on that host. Since we are pretty far from that end goal yet, this
+only establishes some basic infrastructure to describe and migrate complex
+in-kernel states.
+
+The idea behind KSTATE resembles QEMU's migration framework [1], which
+solves quite similar problem - migrate state of VM/emulated devices
+across different versions of QEMU.
+
+This is an altenative to Kexec Hand Over (KHO [3]).
+
+So, why not KHO?
+
+ - The main reason is KHO doesn't provide simple and convenient internal
+    API for the drivers/subsystems to preserve internal data.
+    E.g. lets consider we have some variable of type 'struct a'
+    that needs to be preserved:
+	struct a {
+	        int i;
+        	unsigned long *p_ulong;
+	        char s[10];
+        	struct page *page;
+	};
+
+     The KHO-way requires driver/subsystem to have a bunch of code
+     dealing with FDT stuff, something like
+
+     a_kho_write()
+     {
+	     ...
+	     fdt_property(fdt, "i", &a.i, sizeof(a.i));
+	     fdt_property(fdt, "ulong", a.p_ulong, sizeof(*a.p_ulong));
+	     fdt_property(fdt, "s", &a.s, sizeof(a.s));
+	     if (err)
+	     ...
+     }
+     a_kho_restore()
+     {
+             ...
+     	     a.i = fdt_getprop(fdt, offset, "i", &len);
+	     if (!a.i || len != sizeof(a.i))
+	     	goto err
+	     *a.p_ulong = fdt_getprop....
+     }
+
+    Each driver/subsystem has to solve this problem in their own way.
+    Also if we use fdt properties for individual fields, that might be wastefull
+    in terms of used memory, as these properties use strings as keys.
+
+   While with KSTATE solves the same problem in more elegant way, with this:
+	struct kstate_description a_state = {
+        	.name = "a_struct",
+	        .version_id = 1,
+        	.id = KSTATE_TEST_ID,
+	        .state_list = LIST_HEAD_INIT(test_state.state_list),
+        	.fields = (const struct kstate_field[]) {
+                	KSTATE_BASE_TYPE(i, struct a, int),
+	                KSTATE_BASE_TYPE(s, struct a, char [10]),
+        	        KSTATE_POINTER(p_ulong, struct a),
+                	KSTATE_PAGE(page, struct a),
+	                KSTATE_END_OF_LIST()
+        	},
+	};
 
 
-> +		return;
-> +
-> +	if (source_ops(csdev)->pause)
-> +		source_ops(csdev)->pause(csdev);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_pause_source);
-> +
-> +void coresight_resume_source(struct coresight_device *csdev)
-> +{
-> +	if (!csdev || !coresight_is_percpu_source(csdev))
-> +		return;
-> +
+	{
+		static unsigned long ulong
+		static struct a a_data = { .p_ulong = &ulong };
 
-Same as above.
+		kstate_register(&test_state, &a_data);
+	}
 
-> +	if (source_ops(csdev)->resume)
-> +		source_ops(csdev)->resume(csdev);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_resume_source);
-> +
->   /*
->    * coresight_disable_path_from : Disable components in the given path beyond
->    * @nd in the list. If @nd is NULL, all the components, except the SOURCE are
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index 76403530f33e..a9f14c075e91 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -247,5 +247,7 @@ void coresight_add_helper(struct coresight_device *csdev,
->   void coresight_set_percpu_sink(int cpu, struct coresight_device *csdev);
->   struct coresight_device *coresight_get_percpu_sink(int cpu);
->   void coresight_disable_source(struct coresight_device *csdev, void *data);
-> +void coresight_pause_source(struct coresight_device *csdev);
-> +void coresight_resume_source(struct coresight_device *csdev);
->   
->   #endif
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 17276965ff1d..703e1b8dbe22 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -385,6 +385,8 @@ struct coresight_ops_link {
->    *		is associated to.
->    * @enable:	enables tracing for a source.
->    * @disable:	disables tracing for a source.
-> + * @resume:	resumes tracing for a source.
-> + * @pause:	pauses tracing for a source.
->    */
->   struct coresight_ops_source {
->   	int (*cpu_id)(struct coresight_device *csdev);
-> @@ -392,6 +394,8 @@ struct coresight_ops_source {
->   		      enum cs_mode mode, struct coresight_trace_id_map *id_map);
->   	void (*disable)(struct coresight_device *csdev,
->   			struct perf_event *event);
-> +	int (*resume)(struct coresight_device *csdev);
-> +	void (*pause)(struct coresight_device *csdev);
+       The driver needs only to have a proper 'kstate_description' and call kstate_register()
+       to save/restore a_data.
+       Basically 'struct kstate_description' provides instructions how to save/restore 'struct a'.
+       And kstate_register() does all this save/restore stuff under the hood.
 
-Given these callbacks are for perf mode, does it make sense  to pass the 
-parameters similar to enable() ? Also, should we rename these as :
+ - Another bonus point - kstate can preserve migratable memory, which is required
+    to preserve guest memory
 
-resume_perf
-pause_perf
 
-To explicitly mark them perf mode specific ?
+So now to the part how this works.
 
-Suzuki
+State of kernel data (usually it's some struct) is described by the
+'struct kstate_description' containing the array of individual
+fields descpriptions - 'struct kstate_field'. Each field
+has set of bits in ->flags which instructs how to save/restore
+a certain field of the struct. E.g.:
+  - KS_BASE_TYPE flag tells that field can be just copied by value,
 
->   };
->   
->   /**
+  - KS_POINTER means that the struct member is a pointer to the actual
+     data, so it needs to be dereference before saving/restoring data
+     to/from kstate data steam.
+
+  - KS_STRUCT - contains another struct,  field->ksd must point to
+      another 'struct kstate_dscription'
+
+  - KS_CUSTOM - Some non-trivial field that requires custom kstate_field->save()
+               ->restore() callbacks to save/restore data.
+
+  - KS_ARRAY_OF_POINTER - array of pointers, the size of array determined by the
+                         field->count() callback
+  - KS_ADDRESS - field is a pointer to either vmemmap area (struct page) or
+     linear address. Store offset
+
+  - KS_END - special flag indicating the end of migration stream data.
+
+kstate_register() call accepts kstate_description along with an instance
+of an object and registers it in the global 'states' list.
+
+During kexec reboot phase we go through the list of 'kstate_description's
+and each instance of kstate_description forms the 'struct kstate_entry'
+which save into the kstate's data stream.
+
+The 'kstate_entry' contains information like ID of kstate_description, version
+of it, size of migration data and the data itself. The ->data is formed in
+accordance to the kstate_field's of the corresponding kstate_description.
+
+After the reboot, when the kstate_register() called it parses migration
+stream, finds the appropriate 'kstate_entry' and restores the contents of
+the object in accordance with kstate_description and ->fields.
+
+ [1] https://lkml.kernel.org/r/20241002160722.20025-1-arbn@yandex-team.com
+ [2] https://www.qemu.org/docs/master/devel/migration/main.html#vmstate
+ [3] https://lkml.kernel.org/r/20250206132754.2596694-1-rppt@kernel.org
+
+Andrey Ryabinin (7):
+  kstate: Add kstate - a mechanism to describe and migrate kernel state
+    across kexec
+  kstate, kexec, x86: transfer kstate data across kexec
+  kexec: exclude control pages from the destination addresses
+  kexec, kstate: delay loading of kexec segments
+  x86, kstate: Add the ability to preserve memory pages across kexec.
+  kexec, kstate: save kstate data before kexec'ing
+  kstate, test: add test module for testing kstate subsystem.
+
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/kernel/kexec-bzimage64.c |   4 +
+ arch/x86/kernel/setup.c           |   2 +
+ include/linux/kexec.h             |   3 +
+ include/linux/kstate.h            | 216 ++++++++++++++
+ kernel/Kconfig.kexec              |  13 +
+ kernel/Makefile                   |   1 +
+ kernel/kexec_core.c               |  30 ++
+ kernel/kexec_file.c               | 159 +++++++----
+ kernel/kexec_internal.h           |   9 +
+ kernel/kstate.c                   | 458 ++++++++++++++++++++++++++++++
+ lib/Makefile                      |   2 +
+ lib/test_kstate.c                 |  86 ++++++
+ 13 files changed, 925 insertions(+), 59 deletions(-)
+ create mode 100644 include/linux/kstate.h
+ create mode 100644 kernel/kstate.c
+ create mode 100644 lib/test_kstate.c
+
+-- 
+2.45.3
 
