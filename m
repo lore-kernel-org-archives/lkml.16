@@ -1,90 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC4E22AE7C;
-	Mon, 10 Mar 2025 17:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E6F22D4C3;
+	Mon, 10 Mar 2025 17:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741627453; cv=none; b=ZGJGtw6SpM1ZKa532v2MLl4JrwzTTp5wbz0t/Y4SP4C/Fx1KCSvKJBFImQsoS7DRUF4+mwHQsXg8Oe7dRmBZPhQnlc4WMKGuE9s8gge17GMpilzTIobvXVWPGS/TI8D59VrSG8BUOJp3hslW1abxpPMPVFzyO42LMdwdOT79KOo=
+	t=1741627507; cv=none; b=Ae0CxxMrMraTb6HhIJyOqkgq4v+eJGTgr1S3i0JkXFbOcX93J7WnEW64YWxFJK9V+f0qGZC6pUTa1N8hExOU4u1ZbOcjYqpmH26Yzs5HPL7uks7kW/SfFNSN55Qh75HT5+SnBlQ4Lb5EWAFlJvp9r3SPBZx34l74jDboNkG/n7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741627453; c=relaxed/simple;
-	bh=KxCVrFtEEQ489IO+8LWASMRjBenAxwUf883ccdADMVc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hXoSGCHg4ybUNCilarScnhno2Fz0X44zcoxSq0CyIIQEMzFuMKjEpotdBQPACqbDs/h4b1SaQ3hDavbxWLyhzjQfmtUzjAOy+H9cdktw46W1P6dnbxrtTs4PwNk95RSj9lR2Hj/0v0MEkyaQOp6FYmIIfhIR9OTuy2PD2eLe19c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pt3cuynU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741627507; c=relaxed/simple;
+	bh=BghEd2GQW3wTIlHStsjpZEDMB9FucNbdaiZrISQmQN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mF/RIEzLwwxJy907HppyABktyBSuDnrL8tGTjI86VduU2R75DiOegnbeHS5zo/E4KlwlIw7bzcm65iqYkKfxF+28C9ewmDz0uHjVeDGAKdaiIZFvdAn3Mg3PMZhZGBzWEQptpapV155cxkzuh4aFD+ua5NkPw+8fOkP/DMGsKO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLKxfv7T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pt3cuynU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8AC4C4CEEC;
-	Mon, 10 Mar 2025 17:24:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLKxfv7T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF18C4CEED;
+	Mon, 10 Mar 2025 17:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741627452;
-	bh=KxCVrFtEEQ489IO+8LWASMRjBenAxwUf883ccdADMVc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Pt3cuynUjtE+SMseBKPGdQYThBoNnPCnoJwgIL0KGM5Ixz0N3mCXFufKTs9kkSFsH
-	 kotbgn9hmuA9XQu5LX0coGkGs+/v6b9jm2PfsNvHj0MHc+SBjsEl+guByNBzS3nCZR
-	 615PZLM5isfmdCN7xk1S0aDZn8Hh2X/GsXDcBRObtjn0PDtBEvDixCqpT2l13hy7CG
-	 As8CP9unJ2bnI6QAvpjQmFONddNeFeM+giBRkh+4hs792q+I1mcBa+bn2s5H3MmhFC
-	 cs1REYTNtcwepOAoE/wX/VReN8YT8DVyIjMtCjnfxYbqj7idUILczrUfSq1Z3fljgD
-	 B4QSzSWe+RCDA==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bf251025aso34247471fa.1;
-        Mon, 10 Mar 2025 10:24:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWpFiIjixI31TEawQARX4CafUigwrU7f1ZbpIJxChytzzT4vm9mMfuKpQEHk1mnBYhTkYf8OhhQ2kSMNEdx@vger.kernel.org, AJvYcCWtYxHG0UHC7Kn/IrdZ0EWXuokzEF28+PYmUi8ncYeQimiA3X3cQjpbVmXwe9dL0e+sraFTFvCunafL63fPIZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydE3k38yVFxtMOkDLSW4GNEa9ITQYR2xn9k1TqfRU9HpzgY1ZD
-	Ump9ybTsM55lKblTsG/beglPbbOQYnanlrINcg7QF0Pp8q3dVPu5KjeJKCYKSWLzdgkPuI5R+m6
-	PsQq+QLAJWF6/Q/PyALTkIx2hhiI=
-X-Google-Smtp-Source: AGHT+IGDP35HxL6L4rAJ9cayRi1yFXnNJWJ+1hc45NrBGj/WElMB/wxvCYz04jCP6aYQds3stLvQSAMSUrqB0yhFHXw=
-X-Received: by 2002:a2e:9d05:0:b0:309:23ea:5919 with SMTP id
- 38308e7fff4ca-30bf462423dmr40930191fa.31.1741627451205; Mon, 10 Mar 2025
- 10:24:11 -0700 (PDT)
+	s=k20201202; t=1741627507;
+	bh=BghEd2GQW3wTIlHStsjpZEDMB9FucNbdaiZrISQmQN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JLKxfv7TquaSQVj6pduRdJDLTKPzknb5tkgsZMzpLvUTvE9PEYMQsIjrM4VFFgYIN
+	 veK3Jwsfb3aoCpCdWqKhvnl4zMBDJHVUR0jca3yqUZ8zH5UkMHxrnBUtHZlyquNf9h
+	 oe4WgGBn9PoHeBGiFmq9gcv+Q1NvEL63XpQrx53yLCRmhUciVfY6nGvnLfP12N0Zo4
+	 iYEwCZAQVnCT40WqIKXo4ZaV6RNvCJz6+Yugzn27g1jzuyUHWHQnHprenZENXDlpr8
+	 pFqP/yG7Jhf9+nzn3j2o3mzEND2mwXgXGu8yJ6CUYm8ekFhSQBej/CiazZVpKJiijW
+	 Qc+CSbiSKKWiA==
+Date: Mon, 10 Mar 2025 10:25:07 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, brauner@kernel.org,
+	cem@kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, martin.petersen@oracle.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v4 09/12] xfs: Add xfs_file_dio_write_atomic()
+Message-ID: <20250310172507.GU2803749@frogsfrogsfrogs>
+References: <20250303171120.2837067-1-john.g.garry@oracle.com>
+ <20250303171120.2837067-10-john.g.garry@oracle.com>
+ <877c4x57j8.fsf@gmail.com>
+ <5e6795b1-305c-40a0-84d0-43dfb4ee6cd7@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250308-efibc-kmalloc_array-v1-1-7bfc4013986f@ethancedwards.com>
-In-Reply-To: <20250308-efibc-kmalloc_array-v1-1-7bfc4013986f@ethancedwards.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 10 Mar 2025 18:23:59 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHuMt5QfkKbErmou3TB=5aOENPW=0+Vexom_Y_iFd98qA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp7a1_yGUrVfOp-0rUojPlpvr9tH7JA_CWRKmb9aQX44_SaGdio6iKyS_Q
-Message-ID: <CAMj1kXHuMt5QfkKbErmou3TB=5aOENPW=0+Vexom_Y_iFd98qA@mail.gmail.com>
-Subject: Re: [PATCH] efi: efibc: change kmalloc(size * count, ...) to kmalloc_array()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e6795b1-305c-40a0-84d0-43dfb4ee6cd7@oracle.com>
 
-On Sun, 9 Mar 2025 at 02:27, Ethan Carter Edwards
-<ethan@ethancedwards.com> wrote:
->
-> Open coded arithmetic in allocator arguments is discouraged. Helper
-> functions like kcalloc or, in this case, kmalloc_array are preferred.
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
->
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  drivers/firmware/efi/efibc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/efibc.c b/drivers/firmware/efi/efibc.c
-> index 4f9fb086eab7b0e22252d22e59e5aae55865322d..0a7c764dcc614fbba3cbcd94183dc07939837a03 100644
-> --- a/drivers/firmware/efi/efibc.c
-> +++ b/drivers/firmware/efi/efibc.c
-> @@ -47,7 +47,7 @@ static int efibc_reboot_notifier_call(struct notifier_block *notifier,
->         if (ret || !data)
->                 return NOTIFY_DONE;
->
-> -       wdata = kmalloc(MAX_DATA_LEN * sizeof(efi_char16_t), GFP_KERNEL);
-> +       wdata = kmalloc_array(MAX_DATA_LEN, sizeof(efi_char16_t), GFP_KERNEL);
->         if (!wdata)
->                 return NOTIFY_DONE;
->
->
-> ---
-> base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
-> change-id: 20250308-efibc-kmalloc_array-ba78097a0708
->
+On Mon, Mar 10, 2025 at 03:24:23PM +0000, John Garry wrote:
+> On 10/03/2025 13:39, Ritesh Harjani (IBM) wrote:
+> > John Garry <john.g.garry@oracle.com> writes:
+> > 
+> > > Add xfs_file_dio_write_atomic() for dedicated handling of atomic writes.
+> > > 
+> > > In case of -EAGAIN being returned from iomap_dio_rw(), reissue the write
+> > > in CoW-based atomic write mode.
+> > > 
+> > > For CoW-based mode, ensure that we have no outstanding IOs which we
+> > > may trample on.
+> > > 
+> > > Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
+> > > ---
+> > >   fs/xfs/xfs_file.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+> > >   1 file changed, 42 insertions(+)
+> > > 
+> > > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > > index 51b4a43d15f3..70eb6928cf63 100644
+> > > --- a/fs/xfs/xfs_file.c
+> > > +++ b/fs/xfs/xfs_file.c
+> > > @@ -619,6 +619,46 @@ xfs_file_dio_write_aligned(
+> > >   	return ret;
+> > >   }
+> > > +static noinline ssize_t
+> > > +xfs_file_dio_write_atomic(
+> > > +	struct xfs_inode	*ip,
+> > > +	struct kiocb		*iocb,
+> > > +	struct iov_iter		*from)
+> > > +{
+> > > +	unsigned int		iolock = XFS_IOLOCK_SHARED;
+> > > +	unsigned int		dio_flags = 0;
+> > > +	ssize_t			ret;
+> > > +
+> > > +retry:
+> > > +	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = xfs_file_write_checks(iocb, from, &iolock);
+> > > +	if (ret)
+> > > +		goto out_unlock;
+> > > +
+> > > +	if (dio_flags & IOMAP_DIO_FORCE_WAIT)
+> > > +		inode_dio_wait(VFS_I(ip));
+> > > +
+> > > +	trace_xfs_file_direct_write(iocb, from);
+> > > +	ret = iomap_dio_rw(iocb, from, &xfs_atomic_write_iomap_ops,
+> > > +			&xfs_dio_write_ops, dio_flags, NULL, 0);
+> > > +
+> > > +	if (ret == -EAGAIN && !(iocb->ki_flags & IOCB_NOWAIT) &&
+> > > +	    !(dio_flags & IOMAP_DIO_ATOMIC_SW)) {
+> > > +		xfs_iunlock(ip, iolock);
+> > > +		dio_flags = IOMAP_DIO_ATOMIC_SW | IOMAP_DIO_FORCE_WAIT;
+> > > +		iolock = XFS_IOLOCK_EXCL;
+> > > +		goto retry;
+> > > +	}
+> > 
+> > IIUC typically filesystems can now implement support for IOMAP_ATOMIC_SW
+> > as a fallback mechanism, by returning -EAGAIN error during
+> > IOMAP_ATOMIC_HW handling from their ->iomap_begin() routine.  They can
+> > then retry the entire DIO operation of iomap_dio_rw() by passing
+> > IOMAP_DIO_ATOMIC_SW flag in their dio_flags argument and handle
+> > IOMAP_ATOMIC_SW fallback differently in their ->iomap_begin() routine.
+> > 
+> > However, -EAGAIN can also be returned when there is a race with mmap
+> > writes for the same range. We return the same -EAGAIN error during page
+> > cache invalidation failure for IOCB_ATOMIC writes too.  However, current
+> > code does not differentiate between these two types of failures. Therefore,
+> > we always retry by falling back to SW CoW based atomic write even for
+> > page cache invalidation failures.
+> > 
+> > __iomap_dio_rw()
+> > {
+> > <...>
+> > 		/*
+> > 		 * Try to invalidate cache pages for the range we are writing.
+> > 		 * If this invalidation fails, let the caller fall back to
+> > 		 * buffered I/O.
+> > 		 */
+> > 		ret = kiocb_invalidate_pages(iocb, iomi.len);
+> > 		if (ret) {
+> > 			if (ret != -EAGAIN) {
+> > 				trace_iomap_dio_invalidate_fail(inode, iomi.pos,
+> > 								iomi.len);
+> > 				if (iocb->ki_flags & IOCB_ATOMIC) {
+> > 					/*
+> > 					 * folio invalidation failed, maybe
+> > 					 * this is transient, unlock and see if
+> > 					 * the caller tries again.
+> > 					 */
+> > 					ret = -EAGAIN;
+> > 				} else {
+> > 					/* fall back to buffered write */
+> > 					ret = -ENOTBLK;
+> > 				}
+> > 			}
+> > 			goto out_free_dio;
+> > 		}
+> > <...>
+> > }
+> > 
+> > It's easy to miss such error handling conditions. If this is something
+> > which was already discussed earlier, then perhaps it is better if
+> > document this.  BTW - Is this something that we already know of and has
+> > been kept as such intentionally?
+> > 
+> 
+> On mainline, for kiocb_invalidate_pages() error for IOCB_ATOMIC, we always
+> return -EAGAIN to userspace.
+> 
+> Now if we have any kiocb_invalidate_pages() error for IOCB_ATOMIC, we retry
+> with SW CoW mode - and if it fails again, we return -EAGAIN to userspace.
+> 
+> If we choose some other error code to trigger the SW-based COW retry (so
+> that we don't always retry for kiocb_invalidate_pages() error when
+> !IOMAP_DIO_ATOMIC_HW), then kiocb_invalidate_pages() could still return that
+> same error code and we still retry in SW-based COW mode - is that better? Or
+> do we need to choose some error code which kiocb_invalidate_pages() would
+> never return?
+> 
+> Note that -EAGAIN is used by xfs_file_dio_unwrite_unaligned(), so would be
+> nice to use the same error code.
 
-Queued up in efi/next, thanks.
+Frankly I don't see why it's a problem that EAGAIN triggers the software
+fallback no matter what tripped that.  Maybe the writer would be ok with
+the retry even if it came from an (unlikely) mmap write collision.
+
+--D
+
+> Thanks,
+> John
+> 
