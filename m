@@ -1,119 +1,120 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D9222B8B1
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6042248A8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741616536; cv=none; b=TtI6fFQqluOTD71YlfXn6GEnVu2TpHfQ/5dX3qoRUPJRmULmlk3CQxX/3AheMky2DyfKJ14CAnwsNd6dkWAwCpGfzT7ybDXf4ObIyZgcu/zwbgMblkks4hc91R3KehU3Fp7yXoHcREU6YwtHwX9bmZzVZcmIp4GYqe8VPdnXo6I=
+	t=1741616720; cv=none; b=tuylBX1GeBe9So2zEAP9TE0oI6AUFGqfV2+AG+NBwgiTH3lztequOfafo+5BloeemHZggGgn6gc2+zRI/10QvKIlKTMOgQ5kzhcjLtqAebsIPL+W93F/7TB1fuZyAc3IsiGX0yQ4retrgAh9wdFiAA31HVA9kmetdvbJMWxrBMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741616536; c=relaxed/simple;
-	bh=GopVi4CFli9+2u8VyRRCUiOOhbr6gjtfX/hbJvOfiDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GoW/FfqfnjD8z/ehrH1Cdlx/wcci6+A3u7tUzWI7IISpUihEbeEeru2Ts+Xin9FbiCooe5Yh4nFyRCu8LYfntP8FWtAj3pLtKQ2FL6JFJGt0rVn/uaQORUEq4D3t8jdfmA84qmP0E+UAuJV1RLdfRuhSJGeCxNRbMQ2l45E8lxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aCBNVXNP; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1741616720; c=relaxed/simple;
+	bh=RvgBhmSVcfRiCq0Lux2A/AMSwo9aNXNH4wQ3F3+UYNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dfZgkW1O3mB4Popi072b658m7F92RWgD0tDHIVoQyGYqyZcPST758MyM0QDD7htzo78mRwiSyzE5LE3B3hKrI+aNDAO572VGViT73tdEPWIFAW6UgCasdYhak07hAPy9HB8pPRkCv2XCD0tGnx3NBkbFoLwGb3OSQ/kmWy9XdmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it; spf=pass smtp.mailfrom=4sigma.it; dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b=dty+Ss8l; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4sigma.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aCBNVXNP"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7be8f28172dso276289485a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:22:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b="dty+Ss8l"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3911748893aso2678852f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741616534; x=1742221334; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aqAivX8fNZr1y5mCMqdp2/vAbFsiV7nutZcGvyFYNRs=;
-        b=aCBNVXNPy5NXU+Y+aLYqID97r3sNYkcNqH/Vw+Jszu9g2ysAXpj4M9Q/51OLOTsBGO
-         XnET9eGTcxgwt08T8TOqRfPyrRYDwovO4oungzj66WaIQNg1cbsgCaeg3OISR8lBrILE
-         5CR0e/bn4HqPCBi21v+waF76cEDG6+dvoAu+wtuSKaz6vPRCLchuc4850PsEzTtUIx3D
-         J38/ipz0fU0S4B0FvBNJM+zO2gvgpL62f1JsnMAwk5H2qtuSU6IaVNcxyEjwhCodQdRH
-         gjjQ8puQsI83FBZa1z7A7N/VKwyk78jwyEuUrsMkvZoCy19sdEhjD21BptRogAg2X2yy
-         SvQA==
+        d=4sigma.it; s=google; t=1741616714; x=1742221514; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kW/pm4MavsZmqqFiY6ttCOniK97oiQCgMeDYqCM9/LI=;
+        b=dty+Ss8lPPcfuPySSV6m8vpXVLdwP+T42El5fBz7sq6c/PP2qm658I6OgyuW1pYlMY
+         ZUEriS3Jmeaj0zONyY6K0vwr3WJm/YWPTaDGnep9i3S0j3TFUDmHNSj6pW0pcMZViCkV
+         jsWThC3KGKtpAkZ4BU8KhwhfpFYEPAVBBGhls=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741616534; x=1742221334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aqAivX8fNZr1y5mCMqdp2/vAbFsiV7nutZcGvyFYNRs=;
-        b=lIX/amEOTnMUvSd8JOEVPVkOHW/DiOjt6021c32RUTMBksJXVoWSh0xOZOc1UvSZu7
-         AyWNYiBfDm2gwOitncEt+RVH34yanifbniEtlXHK1ZplFQRNqBA8SXDmxEaMCI4ya5vK
-         EM+jDrIh8NnhdUCWM0ioh8tzHD3DBG4xkgAAyJDzosIvoRvz2urKceTwiCHxzSMuiLTz
-         pj2B0XHRV4pLXVu2ImHEGCc4wHAlbwYfMnuFr5c6m3lFlsXv+MOkqZdaHteQ257FreDn
-         hrHfas8mqayLhr8For9p8LtUoDMwZhtMHyswccowe13Pz6HuVyYCfEKP5ax98mLMe+s+
-         E8Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCXi7yGNKn9ESrE6zvtG556xLhjEy6iiV/UaJKQ/IFGwpjpN2wEaMB4xPBBhtIdNHgD4Ner1URgV/ZOQt+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPH5u/8z6efxfHcIs/vQSHFMcOWggPl2S0WYNh5Lz5AojbBcy4
-	eD6UCYqtfu/tMc4Sk8eFE+UaTl34uV7rxH9E197q5VX2uoR7vXmQvXCqnTHLC6A=
-X-Gm-Gg: ASbGncu/rwL/+drOTSh0FAiERzShFuE5e+Wdda27qLnBjYm60XOB8uOd0dC1nvUQ8R0
-	rAwfrQ9/ytfbdGtFk4t+iiJfkanx/INl7sbnL8cXWNGvBIwP4cRVaG8Rqjbx8b0pNHOkhufSRpF
-	vfRrmhuZ/JG7rrq+ln9akG/N2SnqnIsJBk6oIf607chZ0XFcDah94G76aRUgX+X46VEEpf96nvT
-	MCj9Y65IHrVKIk5YHUXgYRJZaKAZOU3VpXu145pohTZzjgWmEVoc9af6iwjzRGVcj88yp/B4gjo
-	nJ2iy3skK1d6xhryXoAa82JLXEmmazSzexju+LsNBQb0HREv4UgKcUiCETMcAtjb5iwPvkoMuEG
-	bBmuYz9mXkb/v4GOhkhI6mdD7a/E=
-X-Google-Smtp-Source: AGHT+IGWp5c3aEnPJVivT/AhAFPuiRfwxBggFm2GJnLG9GVp+RjnZOHURcFZvyyZYlV4KH2xR6gLmw==
-X-Received: by 2002:a05:620a:4397:b0:7c5:54d8:3d43 with SMTP id af79cd13be357-7c554d83f59mr522944285a.58.1741616533797;
-        Mon, 10 Mar 2025 07:22:13 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c555478e28sm173939785a.36.2025.03.10.07.22.12
+        d=1e100.net; s=20230601; t=1741616714; x=1742221514;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kW/pm4MavsZmqqFiY6ttCOniK97oiQCgMeDYqCM9/LI=;
+        b=mm6jWMTgpG6VE57glmZqpeSkkf2W042FiG8lULKDRtKTTsZT5ccRit3+Nss2pOVJld
+         aTOqBUBC6LSHJ5EP/5OIGqUk0LmpKrTh0gV94GzKn8Br7s9HRwXgBC+mr2BvK0hrQ8RV
+         rT5e1hzJWKNgefaDop/8HY2G+JkrEjcZg3ddUxyBDI0npeXzPgGHtcHBwRJYhrBkiPOg
+         MDsHTuEIo5wubJ6M5h+UTYwTuhBsaYf/Iuf2PFI9JO7HDbin8vo+UCcCQ1XfUpKtyoQd
+         vdak5ueS+3odGIQ/OpioKD+7IHpFr2c+8xO7QygzRoyv/Wwek2ZvWTBjFLFmt+aTbhIG
+         kFwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLbainl/Jze6fsHE4DYjEPotIOgFt6uguvFUVZ1Lx3EsFDLPxYFUkoYprCZeaFzz9f/X1wKxP4/ZDsSOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIuhtF/DoJeLYfOYc03/XzYXHJVi4KegwrGPxUf2zNVREgNKis
+	us86p+s/eaceC81T+Yy0K1uw8HZNXzvTPAqsSscq35H0cKqHI0Z3a5ec0wj77u3qdOMJTjzOwCc
+	v5w==
+X-Gm-Gg: ASbGncvriltzJq9psY2u7rN8ayj7X7tuhG7/8cLe0CFFA6StEGGL1RuS6SoQX8uERbp
+	Mw58/MkpEe7oAaPgSHcBRdXzoEo9XUEf1UNhv2/NokytRjG3X8zzT8HmZv490ggWyGWw7tibUia
+	vcmNvAMxYrJZTtztmajokK7d1cP2epw3EjwuTVu4TfRTlaKrV3aWEvoJFErxcB2pO4yJuUcXWcS
+	Qa8QUGElDrUUEP9hlyBfVoDJ2IbaXV/jUNTFVh4FWbOF5KQf+AytAayrMrR0yMYyysbf2QQwxTd
+	SfvmPp8oZ3RuJxVtnlKesaXGCviT19jLKiArjwDBjeSDDvTvEkIZ0fOMQIfVB0evzE1SrGix0mp
+	nmZ4Tj2Q=
+X-Google-Smtp-Source: AGHT+IHVGeWNFLhTxxSByXr4IsPKYCfOogvrHznEpaw7DcTPiThSqxKiTivX5c0n9iRBv6Rs9+WbZQ==
+X-Received: by 2002:a05:6000:4103:b0:391:39fb:59b4 with SMTP id ffacd0b85a97d-39139fb5e40mr5830285f8f.27.1741616713993;
+        Mon, 10 Mar 2025 07:25:13 -0700 (PDT)
+Received: from marvin.localdomain (83-103-103-194.ip.fastwebnet.it. [83.103.103.194])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0195casm15395492f8f.53.2025.03.10.07.25.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 07:22:13 -0700 (PDT)
-Date: Mon, 10 Mar 2025 10:22:11 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: kernel_team@skhynix.com, Joshua Hahn <joshua.hahnjy@gmail.com>,
-	harry.yoo@oracle.com, ying.huang@linux.alibaba.com,
-	gregkh@linuxfoundation.org, rakie.kim@sk.com,
-	akpm@linux-foundation.org, rafael@kernel.org, lenb@kernel.org,
-	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org, kernel-team@meta.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for
- memoryless nodes
-Message-ID: <Z871k085e-Th-jTz@gourry-fedora-PF4VCD3F>
-References: <20250226213518.767670-1-joshua.hahnjy@gmail.com>
- <20250226213518.767670-2-joshua.hahnjy@gmail.com>
- <b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com>
- <Z8cqe3BCdobsV4-2@gourry-fedora-PF4VCD3F>
- <f64819e2-8dc6-4907-b8bf-faec66eecd0e@sk.com>
- <Z8ncOp2H54WE4C5s@gourry-fedora-PF4VCD3F>
- <9c0d8aa8-cac7-4679-aece-af88e8129345@sk.com>
- <Z8syE7l5H35pk9T5@gourry-fedora-PF4VCD3F>
- <9caca3a8-280a-45bd-a081-cf4a28f05f21@sk.com>
+        Mon, 10 Mar 2025 07:25:13 -0700 (PDT)
+From: Silvano Seva <s.seva@4sigma.it>
+To: lorenzo@kernel.org
+Cc: a.greco@4sigma.it,
+	Silvano Seva <s.seva@4sigma.it>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: imu: st_lsm6dsx: fix possible lockup during FIFO read
+Date: Mon, 10 Mar 2025 15:19:17 +0100
+Message-ID: <20250310142501.29535-1-s.seva@4sigma.it>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9caca3a8-280a-45bd-a081-cf4a28f05f21@sk.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 10, 2025 at 09:26:48PM +0900, Honggyu Kim wrote:
-> Yeah, the proximity domain detects the node correctly as follows in dmesg.
-> 
->  [  0.009915] ACPI: SRAT: Node 0 PXM 0 [mem 0x00000000-0x7fffffff]
->  [  0.009917] ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0x207fffffff]
->  [  0.009919] ACPI: SRAT: Node 1 PXM 1 [mem 0x60f80000000-0x64f7fffffff]
->  [  0.009924] ACPI: SRAT: Node 2 PXM 6 [mem 0x2080000000-0x807fffffff] hotplug
->  [  0.009925] ACPI: SRAT: Node 3 PXM 7 [mem 0x64f80000000-0x6cf7fffffff] hotplug
-> 
-> It is printed even before CXL detection.
-> 
+Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
+from falling in an infinite loop in case pattern_len is equal to zero and
+the device FIFO is not empty.
 
-I wrote a some documentation on some example configurations last friday
+Fixes: 290a6ce11d93 ("iio: imu: add support to lsm6dsx driver")
+Fixes: 801a6e0af0c6 ("iio: imu: st_lsm6dsx: add support to LSM6DSO")
+Signed-off-by: Silvano Seva <s.seva@4sigma.it>
+---
 
-https://lore.kernel.org/linux-mm/Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F/T/#m2780e47df7f0962a79182502afc99843bb046205
+Changes since v1:
+* st_lsm6dsx_read_fifo: moved check for zero pattern_len before fifo_len assignment
+* st_lsm6dsx_read_fifo: dropped check for zero fifo_len
+* added Fixes tags in commit message
 
-This isn't exhaustive, but as I said with Rakie, I think your
-configuration is probably ok - if slightly confusing.
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-What I'm going to guess is happening is you have 1 CFMWS per device that
-do not have matching SRAT entries, and then the CFMWS covering these:
-
->  [  0.009924] ACPI: SRAT: Node 2 PXM 6 [mem 0x2080000000-0x807fffffff] hotplug
->  [  0.009925] ACPI: SRAT: Node 3 PXM 7 [mem 0x64f80000000-0x6cf7fffffff] hotplug
-
-have interleave set up
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+index 0a7cd8c1aa33..8a9d2593576a 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+@@ -392,6 +392,9 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+ 	if (fifo_status & cpu_to_le16(ST_LSM6DSX_FIFO_EMPTY_MASK))
+ 		return 0;
+ 
++	if (!pattern_len)
++		pattern_len = ST_LSM6DSX_SAMPLE_SIZE;
++
+ 	fifo_len = (le16_to_cpu(fifo_status) & fifo_diff_mask) *
+ 		   ST_LSM6DSX_CHAN_SIZE;
+ 	fifo_len = (fifo_len / pattern_len) * pattern_len;
+@@ -623,6 +626,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw *hw)
+ 	if (!fifo_len)
+ 		return 0;
+ 
++	if (!pattern_len)
++		pattern_len = ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
++
+ 	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
+ 		err = st_lsm6dsx_read_block(hw,
+ 					    ST_LSM6DSX_REG_FIFO_OUT_TAG_ADDR,
+-- 
+2.48.1
 
