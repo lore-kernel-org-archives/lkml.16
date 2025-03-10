@@ -1,114 +1,190 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C345227B83;
-	Mon, 10 Mar 2025 10:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183AA21A44D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741603851; cv=none; b=aoA8xJ1sdMdaYyxmiUo8BvMzBuTZDKJA9Tyy4uYf2ZrU0fcyhQGhibSCxknQzGzGAoPOKl0RpL3bDqRNSU4jee1LIXYca2nD3IAGOfOhSFrw1amq7h9ZkzbSPrn0JGnmowcBTbSe4iQkSA1Utscbbp4cP8ESjs7lL7CZ5usoyz4=
+	t=1741603923; cv=none; b=mlABxq19bQ9MUdPNkqu7qwYZabxyxZ0rvLh1pTyWmHLqkQzsoAXKnzHc56Oc7ikGCkILlUlNL3qN/P42ivBoHeMPUb/ovpgLfNYpXz62ze4AyRU0zbqHb90le9VvCfQ7LV5uZrPK+FL8dQOAkCZhzq3gbedKtUaDE4uXqdWCW0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741603851; c=relaxed/simple;
-	bh=a4LHUipB9qkEfTODFAbdGuOOi65tkmIXS/JoJ86bPFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=E+N3Fwl+4UR9iVO9SEQb3vNzRgv0QslDix+0nQOnLHWSvibmWsHwA4oqQhDukjL90CL6LYVu5Z0YDiiGjRvw0D4G5ZQS4srPs/BGdz3kSloBzDn2u2cKG4dw2BUNPMP1jcldfPxe1LLLRTa5UThyA5ZLzYLgDWd5Cr2MHhd09FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ko9A3bkK; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1741603923; c=relaxed/simple;
+	bh=8pFmW2yF7XeBHwGWpBOIVO3bVuCA2uTCoDSKVDixUQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EALnCc6Qo1oLc0fPxElLt+TeXZOzvEoma32OzPVK3yNLmGkjlxoUt5x6I6CqxE3pOpVBeWoROkj1tQPqr9bPtGNYq5Kf9yiQYpoe1cmegCA+SSjwrRf3xFT4ktMgO4kEYSjUKpA5vsuHcnYt9XJuEbmEe3FaNPLemYXyDuG4DAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yJhUanvB; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ko9A3bkK"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A9G8gL017253;
-	Mon, 10 Mar 2025 11:50:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	dfbmKwc6v1yeOOE9JCszYxgrUac0n2yNInRPRE4qjhw=; b=ko9A3bkKtA24VlrH
-	kBrInCzGMbc4p6W9TWc+ruaxkYw5Q7OnYOa2X466UnvXzzEbUPIMegQiHSRnwBgd
-	8F3W5l9bE3VuWTdsPcZcZOPwOjZ6xaAHaqIZ9MrmyYSMN7tgU6/EjQr6/0O/Pd+K
-	PbDr1N0RlYzTry9IXisVbuJ0gCRUbazozF3tUv3CEijRX4zS7TWdwwNIc627QMBF
-	yn/bwId8jPVcoOiypBuE7hE16cVmRkgC5r7IB/4KsjbRIr5K8YS6VlmDBBWIZhyo
-	gv7IP6y4rZgm/ifysDFv493rnbw6a48ISxAfEruYHXnugrCDBnyoBZvMzploIIHN
-	W574Xg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4590b8v7t7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 11:50:21 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9377640057;
-	Mon, 10 Mar 2025 11:49:17 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 543A54235AC;
-	Mon, 10 Mar 2025 11:48:37 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Mar
- 2025 11:48:36 +0100
-Message-ID: <e5a5dd9b-475b-4c66-a580-08f11a80e5a3@foss.st.com>
-Date: Mon, 10 Mar 2025 11:48:36 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yJhUanvB"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf848528aso6524155e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 03:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741603920; x=1742208720; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oRaYsvVFrqrTjWbVoLzSGid2k7c2/yuWbrvy6P2VIxo=;
+        b=yJhUanvBwPoRt/h2J7vQjHB4pn0Y8MkOwza7TUr08zWjsZSGX51/pXwgo4wxqVp+iw
+         0YrjbJeVENhg3FuMpVSFBENnWeq4/eKkL2EKY6V6FQZtzGyxciZISKizq267RQzuCBUZ
+         6J0Q949WXQxDxhayMaCxWgH+5JbIvdLFvratTq3H7ZtaA6qGnjy8Uejr5nUypboH6ryk
+         Y9MqoASeMZiavmeX53rBJ6FfJP185C+fw/x9qqPINjsy79IIzd1AdmqhzaXDseIjXHe0
+         bTto9+tziiSCw0IlGvt1mLkxyATSRBCK0CzpDDTOZp7DPEdqF4qCCyt0g3GWA9oqeD1p
+         L5HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741603920; x=1742208720;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oRaYsvVFrqrTjWbVoLzSGid2k7c2/yuWbrvy6P2VIxo=;
+        b=nnLl47sBoe9bcLptYLthFGJ4uhilZJqQTjQsyEaKbd4ZSLm3IfVtcresIzcBMsaYiE
+         6W+rgBBoZectL0taF8GamTBxkexj+4rWs8r/xwwxeAjQ5rPXHKaH+/MEANQR04RWmtdZ
+         IIgW+30nOLjSek1zbZENkKW4aNXbmJJsiiY1mAzFSrXVPViuhktrJpPNhZzgjH6Np5j2
+         2/9U5Ynp3whdNGs4rollDCjNwIUU7wB9czaedf8t+jLoegO0+JPQU87ipocquG8VVq0a
+         NiF6Pu1jtTxE1jfd+HPl0XFupERvXQ7ZtzDTyRqVkI1H9UIDLHFN+Y8FeUEt+AcvbUYt
+         jnbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuPsIk1UBasMlvmd0tUq7gwCo1yTtxcmnHi/AzZ1gL4WESJBLQQjqGVyUuPpdBRov8t4PghJqUklRHKaw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwdT6BQ2Xe7NpMYwe7oG1MiRliBbgwXXp2vHHL13+u84+PbZ7Z
+	huh9AQ+Y+TXhURiHcLQGHrb0BsLxoQZqDOZnKzXFlHY3y5J/yQuaEk67OGomxDU=
+X-Gm-Gg: ASbGnctkGu28V/2CWZL6WcY5OdtK7MCRMQ2mBYkT6J7+kI40rbLIZA6mQG1KbMb94vc
+	8gVaTd4lnQbcuUxdYNP2dUevqphpWxECIVL8xT6w5vCWwjmOLpuuc9saZSQvK5/pHUVAJ1sAqmJ
+	a2XxVxiBPGwEBbJZEfE8RISUgVnJlgleCNoG2DwgJOcz1f3xL71GmNmtXcJd7uYAtONJ7qaMl3O
+	5ItILEDrmly0/FsLt39lx6OeS0H7TGHhqKL7WSPjnFuiQgnqhFRJQk8XXo46Uk5PK/pbdoUbzji
+	kqq+E+VpZCLFFACGn73vPu37xsIf+YRI/dYVLrnnYokPVkZKdw==
+X-Google-Smtp-Source: AGHT+IGMN8eK8zmMhyTnMEO8hcxY2G1+yaEB1GlPZwSy0jRn7v/TP69/lWg+VAd4stSNCOgX1BzcIQ==
+X-Received: by 2002:a05:600c:1d08:b0:43c:f184:2e16 with SMTP id 5b1f17b1804b1-43cf184310dmr30775335e9.5.1741603920329;
+        Mon, 10 Mar 2025 03:52:00 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ceed32e64sm59063525e9.5.2025.03.10.03.51.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 03:51:59 -0700 (PDT)
+Date: Mon, 10 Mar 2025 13:51:56 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Patil Rajesh Reddy <Patil.Reddy@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()
+Message-ID: <43ad5358-f5b2-4cfc-85b4-e7ab8c7cf329@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: stm32: use IRQ_TYPE_EDGE_FALLING on
- stm32mp157c-dk2
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        <linux-kernel@vger.kernel.org>
-CC: <linux-amarula@amarulasolutions.com>, Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20250301115116.2862353-1-dario.binacchi@amarulasolutions.com>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20250301115116.2862353-1-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_04,2025-03-07_03,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Hi Dario
+There are a couple problems in this code:
 
-On 3/1/25 12:51, Dario Binacchi wrote:
-> Replace the number 2 with the appropriate numerical constant defined in
-> dt-bindings/interrupt-controller/irq.h.
-> 
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> 
-> ---
-> 
->   arch/arm/boot/dts/st/stm32mp157c-dk2.dts | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/st/stm32mp157c-dk2.dts b/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
-> index 5f9c0160a9c4..dcf17c493022 100644
-> --- a/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
-> +++ b/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
-> @@ -11,6 +11,7 @@
->   #include "stm32mp15-pinctrl.dtsi"
->   #include "stm32mp15xxac-pinctrl.dtsi"
->   #include "stm32mp15xx-dkx.dtsi"
-> +#include <dt-bindings/interrupt-controller/irq.h>
+First, if amd_pmf_tee_init() fails then the function returns directly
+instead of cleaning up.  We cannot simply do a "goto error;" because
+that would lead to a double free.  I have re-written this code to
+use an unwind ladder to free the allocations.
 
-really needed ? as it comes also with 
-dt-bindings/interrupt-controller/arm-gic.h
+Second, if amd_pmf_start_policy_engine() fails on every iteration though
+the loop then the code calls amd_pmf_tee_deinit() twice which is also a
+double free.  Call amd_pmf_tee_deinit() inside the loop for each failed
+iteration.  Also on that path the error codes are not necessarily
+negative kernel error codes.  Set the error code to -EINVAL.
 
->   / {
->   	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
-> @@ -67,7 +68,7 @@ &i2c1 {
->   	touchscreen@38 {
->   		compatible = "focaltech,ft6236";
->   		reg = <0x38>;
-> -		interrupts = <2 2>;
-> +		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
->   		interrupt-parent = <&gpiof>;
->   		touchscreen-size-x = <480>;
->   		touchscreen-size-y = <800>;
+Fixes: 376a8c2a1443 ("platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/platform/x86/amd/pmf/tee-if.c | 36 +++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index ceaff1ebb7b9..a1e43873a07b 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -510,18 +510,18 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 
+ 	ret = amd_pmf_set_dram_addr(dev, true);
+ 	if (ret)
+-		goto error;
++		goto err_cancel_work;
+ 
+ 	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
+ 	if (IS_ERR(dev->policy_base)) {
+ 		ret = PTR_ERR(dev->policy_base);
+-		goto error;
++		goto err_free_dram_buf;
+ 	}
+ 
+ 	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
+ 	if (!dev->policy_buf) {
+ 		ret = -ENOMEM;
+-		goto error;
++		goto err_free_dram_buf;
+ 	}
+ 
+ 	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
+@@ -531,13 +531,13 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
+ 	if (!dev->prev_data) {
+ 		ret = -ENOMEM;
+-		goto error;
++		goto err_free_policy;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
+ 		ret = amd_pmf_tee_init(dev, &amd_pmf_ta_uuid[i]);
+ 		if (ret)
+-			return ret;
++			goto err_free_prev_data;
+ 
+ 		ret = amd_pmf_start_policy_engine(dev);
+ 		switch (ret) {
+@@ -550,27 +550,41 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 			status = false;
+ 			break;
+ 		default:
+-			goto error;
++			ret = -EINVAL;
++			amd_pmf_tee_deinit(dev);
++			goto err_free_prev_data;
+ 		}
+ 
+ 		if (status)
+ 			break;
+ 	}
+ 
+-	if (!status && !pb_side_load)
+-		goto error;
++	if (!status && !pb_side_load) {
++		ret = -EINVAL;
++		goto err_free_prev_data;
++	}
+ 
+ 	if (pb_side_load)
+ 		amd_pmf_open_pb(dev, dev->dbgfs_dir);
+ 
+ 	ret = amd_pmf_register_input_device(dev);
+ 	if (ret)
+-		goto error;
++		goto err_pmf_remove_pb;
+ 
+ 	return 0;
+ 
+-error:
+-	amd_pmf_deinit_smart_pc(dev);
++err_pmf_remove_pb:
++	if (pb_side_load && dev->esbin)
++		amd_pmf_remove_pb(dev);
++	amd_pmf_tee_deinit(dev);
++err_free_prev_data:
++	kfree(dev->prev_data);
++err_free_policy:
++	kfree(dev->policy_buf);
++err_free_dram_buf:
++	kfree(dev->buf);
++err_cancel_work:
++	cancel_delayed_work_sync(&dev->pb_work);
+ 
+ 	return ret;
+ }
+-- 
+2.47.2
+
