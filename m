@@ -1,65 +1,65 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C8222A4DA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43F522A81A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741610437; cv=none; b=aUngWjUzkJv/uSjO3FtMQ8GDjGwF745ytYJYWfm9vNJAjeD6gR+2mPnQ9VQTo+q8aR+uPKNZFJs87Trcj8DANJLfGS9CNv58Lly3UqIqKJR/X0ta6Kmx4NtUuHh2IeUXO3b2GbH8xJU5kixobl6wEGHGiy9PySkM9AP+iwO8yPQ=
+	t=1741610439; cv=none; b=sP17Qei3JAPFRusE3QnJWuF4QdLTlh8w8LHUqwBvERPU3pImP7GKuJCZKRCnlk9fjHK8oM+w2GqlqIShLeql4sCE91/+AJu/hW5N5lS8+15jvdsydaeObU79jqdGZM48AV0UTO4r/0e3TDxU2IYEpu0tHqr9XfkjNpiBSbwNne0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741610437; c=relaxed/simple;
-	bh=M+L3sOe3OAAzrK/5BquNt3kcr6Ll6ljNK/MgillJMU4=;
+	s=arc-20240116; t=1741610439; c=relaxed/simple;
+	bh=eF0hDq+dmWyAGOjr1phNsifrrwjw6vv6u7L6MkqdfqM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MZXhN4FMZXlXXrseCbmUKru5B2+NooMhQrASzTr+7SGZR419OPIddz0hgrFnUI7BQHqDJ0BqyuSgskYllfugIJeLTYKPX7tPTgcFaLxcu8w4NDEDjcElQdGwdHpNYaWn1XGsL/U7+27TNYYdvZxMkROdUmCSncmhbPdYMUcNhGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a6+V7RS2; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:To:Cc; b=dnryWOVZRlgoEbHKbsmnNbqFidus25ps4pB1cbHnfoXSB/D+k06D80qRgANMYUt3v0XatqQ/ZUKg0yIMrabBpUGj8tT95ESdLETgzmZNqiBFjJbl70CyV1W2zx5DZYOLjE093J5KK0qHl8thFKdhwyD3ik70cbA3G7gxciSMqU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LdQacVMp; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a6+V7RS2"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-390effd3e85so3667501f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 05:40:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LdQacVMp"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3911748893aso2565722f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 05:40:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741610433; x=1742215233; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741610436; x=1742215236; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Id3vfYo4VZD5XkzVJtKrhfXekLSBu1hf0uoNw4mF3Eo=;
-        b=a6+V7RS2ckUnYyiDdymX3ygwZw4inZEoui+ogR1mRyWdP/p3kx2LzlcA8C6rguemkE
-         SrAInpeExQoVAq0bqM6efOcobSFIGSoCweqdVE2I9Zp5Oh40WSe742T0k72ZN8Zf0PcO
-         z3mn5VcpvuYKSWXDrGfmff1sYSjLyKT/d5vfE3xZxjxRRfW9QnXK8pL6hBk64jOHWytm
-         4lsvOtqNSZBenTX2Tp4Fg+chEXR50DPt2VPgWx/FzW2JPO6izG0T+YL3CiBqJ2e17E8Q
-         G1Ark+66ExNkmmpw5AKJxMx2NhzZOAvQsBGML2k2fWZ6rOsqunKjF/rZbAxef+tx4gyU
-         gygA==
+        bh=/ul5VnJBefCrA6KPx6o9qS+QweFeRf07qToseQLHiWw=;
+        b=LdQacVMptewwLTCYIIi16kmx96uRETPIXbiO08cvzK2JfVIx5wiEtr4Yo+/nbXY9zk
+         lHiJlgrgt29hzZ2JrC7cOSAPrkqi4BOGmJRFOXFarQEqhkRfEiiQiJHpN0zBoLzZlswL
+         2yAoV1QQb/tCq459kWYM2oHcJbqBFMbxOqvbxcIHLkvL6skX/fzHHgXlMvDChdleaEGF
+         1s/V99n/8iLX0UiXqBE/ycS+evz+DQu4FrHBpunxbbcfkmQ1GGQWkIFHYC0z94++8aJx
+         MFHNEi/FDI51Pui/qPBlhjK7CjiIvB62T9MN98saFW4qwlmTbztF93PBBFI7hPwTUNBw
+         HXQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741610433; x=1742215233;
+        d=1e100.net; s=20230601; t=1741610436; x=1742215236;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Id3vfYo4VZD5XkzVJtKrhfXekLSBu1hf0uoNw4mF3Eo=;
-        b=m6HGl1j3r9Fgobu015BzLABaPnSJRNRa/Z1pAovyAdK4JMe22CRX/3q4Vvk6VXgpjl
-         Kzol96ur/OlOknxjTvwY9ZNYx4MTpR0Q7VMU98zJN8gsClC3CWrJi1gEPcfKG3RGykkY
-         tYg0XUiXMemMeRuGduxXwdHkUmyU3Jk44gZ3CzoJ5I+4caRgqAh7bGu8BTej11HudmkL
-         DK8eCPbhnJaFtKDyMbUJ4IrPcOw2JAfT1yK2/KfDGjb2uD/Uv48WXzN7tzIFVsnE0dsu
-         vngtUosLk9XTbQShxyPmQtVs+BeyhirFJXvq3SCbdcNVGunWcvIUZ/9L6J0pO/kdQpFU
-         JOFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqugmMyEAE6+kDqzMMCjV3ZAKGI0Sinr6fMRv8JTnfvv3m8yj8T0p4soO1F3zeaKQlToUTbCDcbQ5ermI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3lBKF2F5dIn8XcaKAhO33WravwH1PxRCXwItlYrJKCd8AXWZN
-	ABYpEfEyzTMnHU4eEvpckemxkTnjr26s5NwxkWi5bW4OYFEhiNq9WxgrolhDRaE=
-X-Gm-Gg: ASbGncvaO8VCKs9Hsc6Kl0BoXqyXHoDQxpDWwTbHujb+C30Nt7jDNRbVSrwjCa7JA+b
-	x7WHRGUUMlDbF7tdOcuQORo5X7ZiHc/Ru+kLGgw/CTt6+p6DLS4rDYeWDZL6VoV07NUZoRfmowa
-	0vH/TIi8G8TN0hyRY7iwyIlOBatA+gsh5zKl4HKDlspysq9OCVImwbvY9H6/bQqZOaxWewVVgGl
-	B6cDFGAlWe/zjw0GblFeJnCkavbmKkNmuG0/QC+lrBTHP12f+WSIfF6KycA5YIovXnhwHZFLYu+
-	fl3ciYeL3GzoaCxEvv5L0WyWHmJtndNewlGsow==
-X-Google-Smtp-Source: AGHT+IECcUEAyJk+oPoRKjamWfM+6cuRlv65sUT1emZeg5dAbLhRfMSv7hXYlymPRYvGi9qDzp5WJA==
-X-Received: by 2002:a05:6000:402a:b0:390:ed05:aa26 with SMTP id ffacd0b85a97d-39132d30c22mr7780118f8f.5.1741610433374;
-        Mon, 10 Mar 2025 05:40:33 -0700 (PDT)
+        bh=/ul5VnJBefCrA6KPx6o9qS+QweFeRf07qToseQLHiWw=;
+        b=cuiDmtH8US7cHHBGhtxYexjBQJ1VGAtt26fkTmvNHHpbfNaMGZWt3N5ygTXH0rXoYw
+         J16ppmG44LEb8QlDktMVMgzDxLKmAX8CvmamyL+VkrpcUECj66+zwWmiCWKviIWTss6P
+         8nbhskrLcIqtlP/cx9rgI4jkwDUILFLrjrELFCJCKzJg9dYb6xVkpOYOjaFvFFf9UIbK
+         4copa4GyYF7K8vZ4Mj4kBkH++xnXtAZbg3uDMJJzF7ahdWYkDvmv1rFVnz3vJe6Pz2lY
+         xQo971Dvc4/5dTNgTZrSYtQRnRoFwA4uJsZH+5/GgxsdAiqkydry6ohBFRGe2hMniVR+
+         kiwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWh1ZB9uSr3HIQ4Q6yRoNRtlKINx4+7dKWcdE6dwOl+dZwQuN+Dsq95qAeTVijU7Lk8Hu9P5veKMelxNv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLrfs0Ew+nfY5IWlJ79EHmQx/B5YW+hhU0v4eJuNgM4mIK9jyB
+	LC7W8z4E/gyyPp1TnpTDL+Zw7XXZayRD9JikG7cNW34htUTNC1wQ5BDP+wpw0Ww=
+X-Gm-Gg: ASbGncsshjuqT+ASEc188FPb7JAi9NA0nwBpUD0aeWSrxSIyULiVJAKaPHcLA3o+nYl
+	EGlD5nxegBBGh94L4zH6nJbW7ITcBEPl92kwnz55EQ/SC4bIXRNL7uDAAIL+ZA9WYAr+4HEwCrX
+	sfFymDirwmnXuD3KVypvUBauH8xC98y4ChmnPZn3fei5bTr4XEUx9CTkwEb5FLq7aG/qFiQa4iS
+	qfTJj3BM646Wnjev4i656ls1cpr4e/U14QraNAFLU+HD3w4jbSNBjFohmMJZzi4Al0aMNO/ojPZ
+	XAbm/Dko+5VRYynAN/lZYoih8zLBji4MOo3BLQ==
+X-Google-Smtp-Source: AGHT+IEFFTCQlnKxKa5Uqz8Qsewx5EPKGuImlX0WipUtNgEC5ZPbK9A6g9jliGLQxqqZ0CjYumZWrQ==
+X-Received: by 2002:a05:6000:25e3:b0:38d:d603:ff46 with SMTP id ffacd0b85a97d-39132d8a273mr8267077f8f.14.1741610435829;
+        Mon, 10 Mar 2025 05:40:35 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2711:39c0:fb51:b639])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfdc5sm14535865f8f.25.2025.03.10.05.40.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfdc5sm14535865f8f.25.2025.03.10.05.40.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 05:40:32 -0700 (PDT)
+        Mon, 10 Mar 2025 05:40:35 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 10 Mar 2025 13:40:21 +0100
-Subject: [PATCH 07/15] gpio: bt8xx: use lock guards
+Date: Mon, 10 Mar 2025 13:40:23 +0100
+Subject: [PATCH 09/15] gpio: cgbc: use new line value setter callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250310-gpiochip-set-conversion-v1-7-03798bb833eb@linaro.org>
+Message-Id: <20250310-gpiochip-set-conversion-v1-9-03798bb833eb@linaro.org>
 References: <20250310-gpiochip-set-conversion-v1-0-03798bb833eb@linaro.org>
 In-Reply-To: <20250310-gpiochip-set-conversion-v1-0-03798bb833eb@linaro.org>
 To: Ray Jui <rjui@broadcom.com>, 
@@ -88,175 +88,105 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-renesas-soc@vger.kernel.org, chrome-platform@lists.linux.dev, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4382;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2670;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=EhqOin58PEfzgx3eJ5unejxbV9F/HjaBEBaMhpRjuiU=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnzt228iyNyevo/zmL5UjBckrYdT+ePey2+NAqp
- f+oE7+vEmCJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ87dtgAKCRARpy6gFHHX
- cg4gD/wNsLQBjjyB4YIEs1F1nmfjbZaGOKUNQEQ1mGrVWV+Ys6F2xeaYF0e6BZo64oEe/hRcDAV
- slCccpz4sLSCc7hbjcevCbwK/jTj8sN9aIcgsIMVIVdy5pc98CFwM96Gf6naCZC/62eUr96Gf+p
- 2+DRtSDHs7J5I9fKr6O9aKlk4O9dtVnsv89+uEwwM46yXuqjGrKkN8aRGZKlYmMCVriwHN2uZZc
- KhdgcZ5AEQ4fd01RiZwIGeCg3SJs14FqOg46YBWvM7Ba+kcb+83fRcy+TU2nuZ5YK2VlPnhMdQw
- vQipTEKxs8O12n0MXdPkKbiqr3HeTXBKjb3da7SMqPfPrSQ/zV0s6Z7rut0A+rX5ycNhvwQJQ7A
- 3WI8cUAFmocYhX0W1T5cN7ssegIzI45Q0QUa16fwxNz92rUvUvEWLIPIhwB3uNmkQblpiIVwGHg
- hSYChG3o1nmtw0YJXc8SM5Njj+2aRx41YGBxy8AmpUO4Lvaisfc/+kWLxhCl36AHy8Q+6KqYNS8
- Vki2t3QAVYFTInIusfdY6zjNNaKVewT98C8xLbU87/eA9GMDVixFyEdXmchmJtC0xKk5cjSR3YL
- mkSF9Y8fy2nJqj8oO+TvBHduRPZlo07/Fh0ewKthqSiRqpTHpeuJD4JmDIjypddrAk4hjBNB/F4
- qJANL60tTxvMY0Q==
+ bh=1v/SXsvrtA+Yw36LlEJRsvD6C7VXgTznVWuX8EmPL5E=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnzt23h45ep6JsGUc+cwRb71/qO+/+nDM1jaN6r
+ kIDV5FoeemJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ87dtwAKCRARpy6gFHHX
+ cj09D/9LqUW7e1QJC8y1pvtBoGpumfGGVdjjKlOP0Nf8cj7GV+OHGLG13szW3NVOjrmRxHBvOv/
+ by4FD0UfZuyeWy6j6m0SghMAQQ1Ik4WxSWsJTJo71i1qPqwZQtZuV9F+/JdcMHPa0D7dq114Kpl
+ V5R4K2jF9/g4/UDmsS42VemnAuzETo+p+M9u2nBHMH8t9yKYUEQfN6WHZHJzVkktQYC1qh5Vp0l
+ mxrhFmQAyZb+Rd+lcC2sDZeVulOT/ZmL+ZRKcVHI0hMLy0RCVQbxjFszzhPpoVxSAsJoGUZiRLp
+ xmh9sWBU1fOklwBlmRa4lyEYl/ri40xa0mAELP1UqqX/QqsLQXJeAZz1ctOZ8iE/1qOucHi9biT
+ jnENyJ0kCenHSbdqL1fkhQyXiys9bNTeA7B90jWKrBli31Kqgx+LASUDt5CRkyKNnVjeOID3MLd
+ /6hpjFWFjLjaa49pc8XS2qixCa6t4Xf7Jv03HWCTd3yUQKJcELUSFHWPn+DW2d/O0HVROv+6sBh
+ cBYhjLRA1fopAgt6jYLFa+sl8j2hzKW3ks4bO8oEnhf3j2Pu49sYM1HgEF1TbW93LvhLedxvgKD
+ GeLzVLO+U2cSXJrYx3hqHYtDyY17+3vmhU4o4P6ZMpdyrL775ibIn4bHx0yyy2sw7qonW/453+J
+ rQKMsBy22LFL3pA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reduce the code complexity by using automatic lock guards with the
-spinlock.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-bt8xx.c | 43 ++++++++++++++-----------------------------
- 1 file changed, 14 insertions(+), 29 deletions(-)
+ drivers/gpio/gpio-cgbc.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpio/gpio-bt8xx.c b/drivers/gpio/gpio-bt8xx.c
-index 7920cf256798..173da7bbfc98 100644
---- a/drivers/gpio/gpio-bt8xx.c
-+++ b/drivers/gpio/gpio-bt8xx.c
-@@ -31,6 +31,7 @@
- 
- */
- 
-+#include <linux/cleanup.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/spinlock.h>
-@@ -69,10 +70,9 @@ MODULE_PARM_DESC(gpiobase, "The GPIO number base. -1 means dynamic, which is the
- static int bt8xxgpio_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
- {
- 	struct bt8xxgpio *bg = gpiochip_get_data(gpio);
--	unsigned long flags;
- 	u32 outen, data;
- 
--	spin_lock_irqsave(&bg->lock, flags);
-+	guard(spinlock_irqsave)(&bg->lock);
- 
- 	data = bgread(BT848_GPIO_DATA);
- 	data &= ~(1 << nr);
-@@ -82,20 +82,17 @@ static int bt8xxgpio_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
- 	outen &= ~(1 << nr);
- 	bgwrite(outen, BT848_GPIO_OUT_EN);
- 
--	spin_unlock_irqrestore(&bg->lock, flags);
--
- 	return 0;
+diff --git a/drivers/gpio/gpio-cgbc.c b/drivers/gpio/gpio-cgbc.c
+index 9213faa11522..1495bec62456 100644
+--- a/drivers/gpio/gpio-cgbc.c
++++ b/drivers/gpio/gpio-cgbc.c
+@@ -51,8 +51,8 @@ static int cgbc_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ 		return (int)(val & (u8)BIT(offset));
  }
  
- static int bt8xxgpio_gpio_get(struct gpio_chip *gpio, unsigned nr)
+-static void __cgbc_gpio_set(struct gpio_chip *chip,
+-			    unsigned int offset, int value)
++static int __cgbc_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			   int value)
  {
- 	struct bt8xxgpio *bg = gpiochip_get_data(gpio);
--	unsigned long flags;
- 	u32 val;
+ 	struct cgbc_gpio_data *gpio = gpiochip_get_data(chip);
+ 	struct cgbc_device_data *cgbc = gpio->cgbc;
+@@ -61,23 +61,23 @@ static void __cgbc_gpio_set(struct gpio_chip *chip,
  
--	spin_lock_irqsave(&bg->lock, flags);
-+	guard(spinlock_irqsave)(&bg->lock);
-+
- 	val = bgread(BT848_GPIO_DATA);
--	spin_unlock_irqrestore(&bg->lock, flags);
+ 	ret = cgbc_gpio_cmd(cgbc, CGBC_GPIO_CMD_GET, (offset > 7) ? 1 : 0, 0, &val);
+ 	if (ret)
+-		return;
++		return ret;
  
- 	return !!(val & (1 << nr));
- }
-@@ -104,10 +101,9 @@ static int bt8xxgpio_gpio_direction_output(struct gpio_chip *gpio,
- 					unsigned nr, int val)
- {
- 	struct bt8xxgpio *bg = gpiochip_get_data(gpio);
--	unsigned long flags;
- 	u32 outen, data;
- 
--	spin_lock_irqsave(&bg->lock, flags);
-+	guard(spinlock_irqsave)(&bg->lock);
- 
- 	outen = bgread(BT848_GPIO_OUT_EN);
- 	outen |= (1 << nr);
-@@ -120,8 +116,6 @@ static int bt8xxgpio_gpio_direction_output(struct gpio_chip *gpio,
- 		data &= ~(1 << nr);
- 	bgwrite(data, BT848_GPIO_DATA);
- 
--	spin_unlock_irqrestore(&bg->lock, flags);
--
- 	return 0;
- }
- 
-@@ -129,10 +123,9 @@ static void bt8xxgpio_gpio_set(struct gpio_chip *gpio,
- 			    unsigned nr, int val)
- {
- 	struct bt8xxgpio *bg = gpiochip_get_data(gpio);
--	unsigned long flags;
- 	u32 data;
- 
--	spin_lock_irqsave(&bg->lock, flags);
-+	guard(spinlock_irqsave)(&bg->lock);
- 
- 	data = bgread(BT848_GPIO_DATA);
- 	if (val)
-@@ -140,8 +133,6 @@ static void bt8xxgpio_gpio_set(struct gpio_chip *gpio,
+ 	if (value)
+ 		val |= BIT(offset % 8);
  	else
- 		data &= ~(1 << nr);
- 	bgwrite(data, BT848_GPIO_DATA);
--
--	spin_unlock_irqrestore(&bg->lock, flags);
+ 		val &= ~(BIT(offset % 8));
+ 
+-	cgbc_gpio_cmd(cgbc, CGBC_GPIO_CMD_SET, (offset > 7) ? 1 : 0, val, &val);
++	return cgbc_gpio_cmd(cgbc, CGBC_GPIO_CMD_SET, (offset > 7) ? 1 : 0, val, &val);
  }
  
- static void bt8xxgpio_gpio_setup(struct bt8xxgpio *bg)
-@@ -236,18 +227,15 @@ static void bt8xxgpio_remove(struct pci_dev *pdev)
- static int bt8xxgpio_suspend(struct pci_dev *pdev, pm_message_t state)
+-static void cgbc_gpio_set(struct gpio_chip *chip,
+-			  unsigned int offset, int value)
++static int cgbc_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
  {
- 	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
--	unsigned long flags;
+ 	struct cgbc_gpio_data *gpio = gpiochip_get_data(chip);
  
--	spin_lock_irqsave(&bg->lock, flags);
-+	scoped_guard(spinlock_irqsave, &bg->lock) {
-+		bg->saved_outen = bgread(BT848_GPIO_OUT_EN);
-+		bg->saved_data = bgread(BT848_GPIO_DATA);
- 
--	bg->saved_outen = bgread(BT848_GPIO_OUT_EN);
--	bg->saved_data = bgread(BT848_GPIO_DATA);
--
--	bgwrite(0, BT848_INT_MASK);
--	bgwrite(~0x0, BT848_INT_STAT);
--	bgwrite(0x0, BT848_GPIO_OUT_EN);
--
--	spin_unlock_irqrestore(&bg->lock, flags);
-+		bgwrite(0, BT848_INT_MASK);
-+		bgwrite(~0x0, BT848_INT_STAT);
-+		bgwrite(0x0, BT848_GPIO_OUT_EN);
-+	}
- 
- 	pci_save_state(pdev);
- 	pci_disable_device(pdev);
-@@ -259,7 +247,6 @@ static int bt8xxgpio_suspend(struct pci_dev *pdev, pm_message_t state)
- static int bt8xxgpio_resume(struct pci_dev *pdev)
- {
- 	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
--	unsigned long flags;
- 	int err;
- 
- 	pci_set_power_state(pdev, PCI_D0);
-@@ -268,7 +255,7 @@ static int bt8xxgpio_resume(struct pci_dev *pdev)
- 		return err;
- 	pci_restore_state(pdev);
- 
--	spin_lock_irqsave(&bg->lock, flags);
-+	guard(spinlock_irqsave)(&bg->lock);
- 
- 	bgwrite(0, BT848_INT_MASK);
- 	bgwrite(0, BT848_GPIO_DMA_CTL);
-@@ -277,8 +264,6 @@ static int bt8xxgpio_resume(struct pci_dev *pdev)
- 	bgwrite(bg->saved_data & bg->saved_outen,
- 		BT848_GPIO_DATA);
- 
--	spin_unlock_irqrestore(&bg->lock, flags);
--
- 	return 0;
+-	scoped_guard(mutex, &gpio->lock)
+-		__cgbc_gpio_set(chip, offset, value);
++	guard(mutex)(&gpio->lock);
++
++	return __cgbc_gpio_set(chip, offset, value);
  }
- #else
+ 
+ static int cgbc_gpio_direction_set(struct gpio_chip *chip,
+@@ -116,10 +116,14 @@ static int cgbc_gpio_direction_output(struct gpio_chip *chip,
+ 				      unsigned int offset, int value)
+ {
+ 	struct cgbc_gpio_data *gpio = gpiochip_get_data(chip);
++	int ret;
+ 
+ 	guard(mutex)(&gpio->lock);
+ 
+-	__cgbc_gpio_set(chip, offset, value);
++	ret = __cgbc_gpio_set(chip, offset, value);
++	if (ret)
++		return ret;
++
+ 	return cgbc_gpio_direction_set(chip, offset, GPIO_LINE_DIRECTION_OUT);
+ }
+ 
+@@ -167,7 +171,7 @@ static int cgbc_gpio_probe(struct platform_device *pdev)
+ 	chip->direction_output = cgbc_gpio_direction_output;
+ 	chip->get_direction = cgbc_gpio_get_direction;
+ 	chip->get = cgbc_gpio_get;
+-	chip->set = cgbc_gpio_set;
++	chip->set_rv = cgbc_gpio_set;
+ 	chip->ngpio = CGBC_GPIO_NGPIO;
+ 
+ 	ret = devm_mutex_init(dev, &gpio->lock);
 
 -- 
 2.45.2
