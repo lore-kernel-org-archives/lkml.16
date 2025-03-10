@@ -1,234 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1AF52288FE;
-	Mon, 10 Mar 2025 10:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-m49225.qiye.163.com (mail-m49225.qiye.163.com [45.254.49.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90470227BAA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604250; cv=none; b=ZyViVS2FarWynOcdAte7fdhR3GubKI3MOpLmq10t7vle4eM0KdQ4Ci3JYCeNc6bedHHdfDyNDOfaXiWyZzDJIhpkpC+aV/pmoRQMDI9kcKR6SrGjYxMqFkg6S1MweU6ysLdgV2IGaBHTR/hHFsxurgMDQYBfYy9fNI7U7k6fSog=
+	t=1741604252; cv=none; b=hLQ78IFvhxRILf/0NB/9qeEJZ41VSPrHrSf5aaeKv1kQGqdlnJJCYVQyoNU+GrzWISaJZHZVpsN9QTMG29nldhA3vomAtTYSodi/8vJusStjuGLSHvJGWBkTAHY5LBPotTEDi22f9K76uqV08hnci0uqf4lSKngMOBWiahV/ryU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604250; c=relaxed/simple;
-	bh=z8r8f3WaYefKneLFYtKcXNW7XunavUfymqJg+kkCuZw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=D2ULHZZYoFCVZDTbpD995AqAdaTQNBpfq0a0MWNDZhK1UhImPyBg/aojEBDkWXJXRwl20+tyQAbt67J6AtX4WUDGTxTEwoBUlmKwfhKgfynp1dF0KMMemiS4r1svW7h82FeHPMkdjAgKSTZhM/J+DWhHuiEdRx7+Fok/2x5XygE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9B7415A1;
-	Mon, 10 Mar 2025 03:57:39 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0759C3F5A1;
-	Mon, 10 Mar 2025 03:57:26 -0700 (PDT)
-Message-ID: <bb390d95-7f2b-4327-a809-9e4cdbd1a1bc@arm.com>
-Date: Mon, 10 Mar 2025 10:57:25 +0000
+	s=arc-20240116; t=1741604252; c=relaxed/simple;
+	bh=aD06Fbbe9EMC6Hx8Zi16tcAO/wSri7Ge/ZU2T6oRbwk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m7HmuU0ioNxqBrrEA3FnctxYJnYoOpuck46BijxVsw6QCsVaEkrzjsDbPqNbv4sF9/24U9+2I9SM+yCp6d8fZBrTzaoeP3J90dcpwXqTQ8xxPB5kdRMQrMrA+7fx/AsaxGnkjC3LhcWEnC6eRLceD6fjA9piexHYplmuha4oLwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=cx/5/rIf; arc=none smtp.client-ip=45.254.49.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="cx/5/rIf"
+Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id dc18826a;
+	Mon, 10 Mar 2025 18:42:10 +0800 (GMT+08:00)
+From: Damon Ding <damon.ding@rock-chips.com>
+To: heiko@sntech.de
+Cc: andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	dianders@chromium.org,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	boris.brezillon@collabora.com,
+	l.stach@pengutronix.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>
+Subject: [PATCH v8 05/13] drm/bridge: analogix_dp: Support to get &analogix_dp_device.plat_data and &analogix_dp_device.aux
+Date: Mon, 10 Mar 2025 18:41:06 +0800
+Message-Id: <20250310104114.2608063-6-damon.ding@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] coresight: etm4x: Extract the trace unit
- controlling
-To: Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>,
- James Clark <james.clark@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250310104919.58816-1-leo.yan@arm.com>
- <20250310104919.58816-2-leo.yan@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250310104919.58816-2-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0pDH1YeGhpOS0xOSh5MHkNWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
+	NVSktLVUpCWQY+
+X-HM-Tid: 0a957fa5db1303a3kunmdc18826a
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NzY6IQw4NzJOSSMRMzkSPShL
+	UTZPFAlVSlVKTE9KTUtISEhJQk1IVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJSEhJNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=cx/5/rIf8YViD47f5CCZTK5rwAEg9fCuUgxCgxRPiT7Re0DJYrb/E7fOSXVCOlOQDscOtEkimyXIdtNJkLW4XWn5L20Vm/4aJHuVN4nYvlxLZdV8knI+f+NZGIF8DeW3tzt4fiDPpzS2yEeO0Iu4rqu7in+mxVX7uzElLw0WAzQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=WiJhY8PG8AgEQhlaFruZbMXxvourhl/iCjB/6RJP8bw=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi Leo
+Add two new functions: one to find &analogix_dp_device.plat_data via
+&drm_dp_aux, and the other to get &analogix_dp_device.aux. Both of them
+serve for the function of getting panel from DP AUX bus, which is why
+they are included in a single commit.
 
-On 10/03/2025 10:49, Leo Yan wrote:
-> The trace unit is controlled in the ETM hardware enabling and disabling.
-> The sequential changes for support AUX pause and resume will reuse the
-> same operations.
-> 
-> Extract the operations in the etm4_{enable|disable}_trace_unit()
-> functions.  A minor improvement in etm4_enable_trace_unit() is for
-> returning the timeout error to callers.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
 
-fyi, this area of code has changes significantly and will cause
-conflicts, due to the introduction of synchronization after
-each access to the TRCSTATR. Please rebase your next version on
-the coresight next branch to avoid the conflict.
+---
 
-The changes as such look good to me.
+Changes in v7:
+- Use the forward-declare struct drm_dp_aux instead of including the
+  relevant header file.
+---
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 14 ++++++++++++++
+ include/drm/bridge/analogix_dp.h                   |  4 ++++
+ 2 files changed, 18 insertions(+)
 
-Suzuki
-
-
-
-> ---
->   .../coresight/coresight-etm4x-core.c          | 126 ++++++++++--------
->   1 file changed, 74 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index 2c1a60577728..71be566bd117 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -428,6 +428,78 @@ static void etm4_check_arch_features(struct etmv4_drvdata *drvdata,
->   }
->   #endif /* CONFIG_ETM4X_IMPDEF_FEATURE */
->   
-> +static int etm4_enable_trace_unit(struct etmv4_drvdata *drvdata)
-> +{
-> +	struct coresight_device *csdev = drvdata->csdev;
-> +	struct device *etm_dev = &csdev->dev;
-> +	struct csdev_access *csa = &csdev->access;
-> +
-> +	/*
-> +	 * ETE mandates that the TRCRSR is written to before
-> +	 * enabling it.
-> +	 */
-> +	if (etm4x_is_ete(drvdata))
-> +		etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
-> +
-> +	etm4x_allow_trace(drvdata);
-> +	/* Enable the trace unit */
-> +	etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
-> +
-> +	/* Synchronize the register updates for sysreg access */
-> +	if (!csa->io_mem)
-> +		isb();
-> +
-> +	/* wait for TRCSTATR.IDLE to go back down to '0' */
-> +	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_IDLE_BIT, 0)) {
-> +		dev_err(etm_dev,
-> +			"timeout while waiting for Idle Trace Status\n");
-> +		return -ETIME;
-> +	}
-> +
-> +	/*
-> +	 * As recommended by section 4.3.7 ("Synchronization when using the
-> +	 * memory-mapped interface") of ARM IHI 0064D
-> +	 */
-> +	dsb(sy);
-> +	isb();
-> +
-> +	return 0;
-> +}
-> +
-> +static void etm4_disable_trace_unit(struct etmv4_drvdata *drvdata)
-> +{
-> +	u32 control;
-> +	struct coresight_device *csdev = drvdata->csdev;
-> +	struct device *etm_dev = &csdev->dev;
-> +	struct csdev_access *csa = &csdev->access;
-> +
-> +	control = etm4x_relaxed_read32(csa, TRCPRGCTLR);
-> +
-> +	/* EN, bit[0] Trace unit enable bit */
-> +	control &= ~0x1;
-> +
-> +	/*
-> +	 * If the CPU supports v8.4 Trace filter Control,
-> +	 * set the ETM to trace prohibited region.
-> +	 */
-> +	etm4x_prohibit_trace(drvdata);
-> +	/*
-> +	 * Make sure everything completes before disabling, as recommended
-> +	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
-> +	 * SSTATUS") of ARM IHI 0064D
-> +	 */
-> +	dsb(sy);
-> +	isb();
-> +	/* Trace synchronization barrier, is a nop if not supported */
-> +	tsb_csync();
-> +	etm4x_relaxed_write32(csa, control, TRCPRGCTLR);
-> +
-> +	/* wait for TRCSTATR.PMSTABLE to go to '1' */
-> +	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_PMSTABLE_BIT, 1))
-> +		dev_err(etm_dev,
-> +			"timeout while waiting for PM stable Trace Status\n");
-> +}
-> +
->   static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
->   {
->   	int i, rc;
-> @@ -536,33 +608,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
->   		etm4x_relaxed_write32(csa, trcpdcr | TRCPDCR_PU, TRCPDCR);
->   	}
->   
-> -	/*
-> -	 * ETE mandates that the TRCRSR is written to before
-> -	 * enabling it.
-> -	 */
-> -	if (etm4x_is_ete(drvdata))
-> -		etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
-> -
-> -	etm4x_allow_trace(drvdata);
-> -	/* Enable the trace unit */
-> -	etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
-> -
-> -	/* Synchronize the register updates for sysreg access */
-> -	if (!csa->io_mem)
-> -		isb();
-> -
-> -	/* wait for TRCSTATR.IDLE to go back down to '0' */
-> -	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
-> -		dev_err(etm_dev,
-> -			"timeout while waiting for Idle Trace Status\n");
-> -
-> -	/*
-> -	 * As recommended by section 4.3.7 ("Synchronization when using the
-> -	 * memory-mapped interface") of ARM IHI 0064D
-> -	 */
-> -	dsb(sy);
-> -	isb();
-> -
-> +	rc = etm4_enable_trace_unit(drvdata);
->   done:
->   	etm4_cs_lock(drvdata, csa);
->   
-> @@ -906,7 +952,6 @@ static void etm4_disable_hw(void *info)
->   	struct etmv4_drvdata *drvdata = info;
->   	struct etmv4_config *config = &drvdata->config;
->   	struct coresight_device *csdev = drvdata->csdev;
-> -	struct device *etm_dev = &csdev->dev;
->   	struct csdev_access *csa = &csdev->access;
->   	int i;
->   
-> @@ -920,31 +965,8 @@ static void etm4_disable_hw(void *info)
->   		etm4x_relaxed_write32(csa, control, TRCPDCR);
->   	}
->   
-> -	control = etm4x_relaxed_read32(csa, TRCPRGCTLR);
-> +	etm4_disable_trace_unit(drvdata);
->   
-> -	/* EN, bit[0] Trace unit enable bit */
-> -	control &= ~0x1;
-> -
-> -	/*
-> -	 * If the CPU supports v8.4 Trace filter Control,
-> -	 * set the ETM to trace prohibited region.
-> -	 */
-> -	etm4x_prohibit_trace(drvdata);
-> -	/*
-> -	 * Make sure everything completes before disabling, as recommended
-> -	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
-> -	 * SSTATUS") of ARM IHI 0064D
-> -	 */
-> -	dsb(sy);
-> -	isb();
-> -	/* Trace synchronization barrier, is a nop if not supported */
-> -	tsb_csync();
-> -	etm4x_relaxed_write32(csa, control, TRCPRGCTLR);
-> -
-> -	/* wait for TRCSTATR.PMSTABLE to go to '1' */
-> -	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_PMSTABLE_BIT, 1))
-> -		dev_err(etm_dev,
-> -			"timeout while waiting for PM stable Trace Status\n");
->   	/* read the status of the single shot comparators */
->   	for (i = 0; i < drvdata->nr_ss_cmp; i++) {
->   		config->ss_status[i] =
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index d5bbc8843a56..dd91760c4b1c 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -1764,6 +1764,20 @@ int analogix_dp_stop_crc(struct drm_connector *connector)
+ }
+ EXPORT_SYMBOL_GPL(analogix_dp_stop_crc);
+ 
++struct analogix_dp_plat_data *analogix_dp_aux_to_plat_data(struct drm_dp_aux *aux)
++{
++	struct analogix_dp_device *dp = to_dp(aux);
++
++	return dp->plat_data;
++}
++EXPORT_SYMBOL_GPL(analogix_dp_aux_to_plat_data);
++
++struct drm_dp_aux *analogix_dp_get_aux(struct analogix_dp_device *dp)
++{
++	return &dp->aux;
++}
++EXPORT_SYMBOL_GPL(analogix_dp_get_aux);
++
+ MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
+ MODULE_DESCRIPTION("Analogix DP Core Driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/include/drm/bridge/analogix_dp.h b/include/drm/bridge/analogix_dp.h
+index 6002c5666031..e19b0bbc57d6 100644
+--- a/include/drm/bridge/analogix_dp.h
++++ b/include/drm/bridge/analogix_dp.h
+@@ -10,6 +10,7 @@
+ #include <drm/drm_crtc.h>
+ 
+ struct analogix_dp_device;
++struct drm_dp_aux;
+ 
+ enum analogix_dp_devtype {
+ 	EXYNOS_DP,
+@@ -48,4 +49,7 @@ void analogix_dp_unbind(struct analogix_dp_device *dp);
+ int analogix_dp_start_crc(struct drm_connector *connector);
+ int analogix_dp_stop_crc(struct drm_connector *connector);
+ 
++struct analogix_dp_plat_data *analogix_dp_aux_to_plat_data(struct drm_dp_aux *aux);
++struct drm_dp_aux *analogix_dp_get_aux(struct analogix_dp_device *dp);
++
+ #endif /* _ANALOGIX_DP_H_ */
+-- 
+2.34.1
 
