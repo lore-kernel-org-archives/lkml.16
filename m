@@ -1,151 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB2E227E96
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 17:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D66422D7AD
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 17:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741626253; cv=none; b=bZpm/LOLPZYKAfsSH3zbGv485jnmjgGh+eF/QHIzR9aP3lIgQ2VzEIBnQlMD0v95CmUmfw3nfC2ZtELdKzdOJyxVXZ/4KSMRA96JWnre5HZURSi5G63ftB3fMuHSvx7LcpwDnMFRwYSgVqtNb3JXppnyjduka1kcvlOJMEu4FxU=
+	t=1741626299; cv=none; b=KthT7VGyrARiscP5ive3OeqDMVaS87c0SUGahjC+fgJMr4rybJiEQerQdaim4nK3THH2wDHVpfDU1P20WKCL3JGP9oaqGYXzV8nnXLwmkgCeRvhdij9GfnsrXL3krQDVQMT6M0mbWVQ/Df/n1a7/pe0XeA9enPZQNXHFcLMbl7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741626253; c=relaxed/simple;
-	bh=2iHTQcPXH1FLrxQMiNT55fa/PnOIlAodbQMDjn30aQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rL1Rg/HaZH+vh08YSOnOyG5OiB1IYD/dK79rM0+PyE97DOabJJ6me2ciHxDmvsqdJdtfeT0Zo3wQEA/0zsKUwg5H2clPtWguNdDDwA4P7sH1Q+AL295AIkAH4EKF6OaMJyls5zQ2pMdmIBZI5klWhhFPnVzFP7of9NB5xwV0eRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UI0l+O5e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741626299; c=relaxed/simple;
+	bh=nXDpJfEVYBLWpKkKXDr0/wztF3N/rbV4yP3I2doI6lk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZZsJ7fdAFwmQSk++SsN8eNdtPyKNojOEY7gA7dASr/B09fL0ai4AOi+mozC0oKq2ihd4J7Ut7l7AnEHsb/88jH1BwZSaUKByGXYBKtDbwn5sCVCTq2DWEaMKUd6yYNO9Sg8icTd5stqTmqa+aSJBpOSlISkLZdiuNnCsUrqbx5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N+oJanIg; arc=none smtp.client-ip=209.85.128.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UI0l+O5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741626251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d7S8yd6R0h6QkbjSSTjEPq0BtEAD/xvKVvoWKNDxzjI=;
-	b=UI0l+O5ehc38NNBR0puKp4TKnmZ2om4xOQML+H3FVI7EzZBYLEjoZ+thsTynl3BVP7y+91
-	yaKy4KG1zNNWBrG/tGRntFncsYXLz/3PePkPbc/RYvSz73MQrDBYJgzy33gvEsW5a/9Ki/
-	qaLwTRKz3LF9issEZKhTsA5nOYhxSt0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-550-qcA6nO9WNJ6cidPgFWXLFQ-1; Mon,
- 10 Mar 2025 13:04:08 -0400
-X-MC-Unique: qcA6nO9WNJ6cidPgFWXLFQ-1
-X-Mimecast-MFC-AGG-ID: qcA6nO9WNJ6cidPgFWXLFQ_1741626245
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3444E1800349;
-	Mon, 10 Mar 2025 17:04:03 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 310AD1956094;
-	Mon, 10 Mar 2025 17:03:53 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Mar 2025 18:03:32 +0100 (CET)
-Date: Mon, 10 Mar 2025 18:03:21 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Tong Tiangen <tongtiangen@huawei.com>
-Subject: Re: [PATCH -next v1 3/3] kernel/events/uprobes:
- uprobe_write_opcode() rewrite
-Message-ID: <20250310170320.GC26382@redhat.com>
-References: <20250304154846.1937958-1-david@redhat.com>
- <20250304154846.1937958-4-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N+oJanIg"
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-43bc4b16135so26776965e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741626295; x=1742231095; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2HiqREuR54kxkPz3bPI9x4Ub9LuCiTlMlEcfuLYBzU=;
+        b=N+oJanIgVaVaiKwbBjzThDLmvC9bc6DshuJy8xhrXbcVAOt2IVtZURNhJ1Zvo5u3/7
+         R7K884DK739P6dKuNdH2viUX8jEuiHjQzWUVP8c5cpiaqVpyv7OXAy/3CSkMAMOeH7T2
+         wxUNVtqSNUOmmzGzw4KDsoF2dYum2g0+cABwgveGv452quPhXsMqq1a4dAx3fIvoAnN+
+         r9WCaQfF/dKQbpVXkSks6KIa/4brs+ZOTUQXVkTofmZC2ubVgrlt96U1gSPrWeHdW49n
+         U5yACvudL56dyHh0FhJvUeja2m5kZQpWLpv+4YNgQVl9vxN8sgYDCPic77ugl8Ef3QHb
+         OqGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741626295; x=1742231095;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C2HiqREuR54kxkPz3bPI9x4Ub9LuCiTlMlEcfuLYBzU=;
+        b=rhY6sSbMq9t8EnDhm6mg1yFN4vOZPU1QoZz0bo8EiS+uCQ4Cz7YqswOcHtNCi96xBv
+         MvJ5R4J9V7BcHiKVFj70TTbIKJw7P/IRcy53mj/UGrp10mv1GhW7c1zwC6VLCPVraxI6
+         jopLa+uk7XWF+sXS1le42Y1l3T03oogANQtkAMmz/5kMJscfPw/J2hrDMHweE9A6humZ
+         x3/PDA2WTq+A5qWNUVfBLCIGYSptcUg88Bdl7ZoU7xspUMzyWcV4lP2hOPRGuK5bhGXU
+         jZLWyL4ixb8mwyc7GyFeHrmIq2+6BrVHo2mQHc/K5QGayEOe+dbCF0k83l3JWsDWwJfs
+         ufLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWobN1fqSKxrcDBnp+1Hf9QstQWqzj5bKaeqcEpTgol/QB0kGsoRiedDiE38bPaHbahYZMXB3uMomm43Ns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh42cyXDiU2TEofVuThSzGXDy/kHSZZTooikI2mWg5oUHc7PnT
+	c1fwYpt0i88QHDGkTtHQbLFkNNyrb+noslEtEfWSelsD8aVFII6wl//ZK33jRDk=
+X-Gm-Gg: ASbGncsfk+JEQG+go6CFRrd+5My8ZnJLXuf/agexGqR0BcX/Z9JHN0FOS67bv9YZF9H
+	CjQkAyxkIRqq0E2oyHq0sI0vLwzIuEz/3QwjhOpvmmP8FRjR44qz8zjNFX9Ig1mkUzdENw1Dukb
+	svuIKXlriTKPsij9Tut2ksl7k9DS8tgKLshsrlPRZ80f/kgGt/DGt82AzFHT5h77qGO4gm/t/g+
+	VGjacCN36rfy/8vWmndTBAgnWE2XD0Q2d/tdUVoZg3fLHcxGJtpziQWHSWZRs9sGrrLsV2We5ql
+	MLAYuaV7jkpJHB+71HYB370TK3yW64Hmo3tEEz5H/UgbMlbzhB+kcioMsQ==
+X-Google-Smtp-Source: AGHT+IEC2SmEhvEnLEv4KyZUCOW4bXKgkDgcZcZ6gL+4ji1CDp5Qw9swnbc/V9eJB42qhEh0l1CT3A==
+X-Received: by 2002:a05:600c:1c04:b0:43c:f629:66f4 with SMTP id 5b1f17b1804b1-43cf62969f2mr44870395e9.0.1741626294361;
+        Mon, 10 Mar 2025 10:04:54 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfba679sm15302514f8f.8.2025.03.10.10.04.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 10:04:54 -0700 (PDT)
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Frederic Weisbecker <fweisbecker@suse.com>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+Subject: [PATCH v2 00/10] Add kernel cmdline option for rt_group_sched
+Date: Mon, 10 Mar 2025 18:04:32 +0100
+Message-ID: <20250310170442.504716-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304154846.1937958-4-david@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 03/04, David Hildenbrand wrote:
->
-> uprobe_write_opcode() does some pretty low-level things that really, it
-> shouldn't be doing:
+Despite RT_GROUP_SCHED is only available on cgroup v1, there are still
+some (v1-bound) users of this feature. General purpose distros (e.g.
+[1][2][3][4]) cannot enable CONFIG_RT_GROUP_SCHED easily:
+- since it prevents creation of RT tasks unless RT runtime is determined
+  and distributed into cgroup tree,
+- grouping of RT threads is not what is desired by default on such
+  systems,
+- it prevents use of cgroup v2 with RT tasks.
 
-Agreed. Thanks again for doing this.
+This changeset aims at deferring the decision whether to have
+CONFIG_RT_GROUP_SCHED or not up until the boot time.
+By default RT groups are available as originally but the user can
+pass rt_group_sched=0 kernel cmdline parameter that disables the
+grouping and behavior is like with !CONFIG_RT_GROUP_SCHED (with certain
+runtime overhead).
 
-David, as I said, I can't review. I don't understand this mm/folio magic
-with or without your changes.
+The series is organized as follows:
 
-However. With your changes the code looks "better" and more understandable
-to me. So I'd vote for your patches even if I can't ack them.
+1) generic ifdefs cleanup, no functional changes,
+2) preparing root_task_group to be used in places that take shortcuts in
+   the case of !CONFIG_RT_GROUP_SCHED,
+3) boot cmdline option that controls cgroup (v1) attributes,
+4) conditional bypass of non-root task groups,
+5) checks and comments refresh.
 
-But I'd like to ask some stupid (no, really) questions.
-__uprobe_write_opcode() does:
+The crux are patches:
+  sched: Skip non-root task_groups with disabled RT_GROUP
+  sched: Bypass bandwitdh checks with runtime disabled RT_GROUP_SCHED
 
-	/* We're done if we don't find an anonymous folio when unregistering. */
-	if (!folio_test_anon(folio))
-		return is_register ? -EFAULT : 0;
+Further notes:
+- it is not sched_feat() flag because that can be flipped any time
+- runtime disablement is not implemented as infinite per-cgroup RT limit
+  since that'd still employ group scheduling which is unlike
+  !CONFIG_RT_GROUP_SCHED
+- there remain two variants of various functions for
+  CONFIG_RT_GROUP_SCHED and !CONFIG_RT_GROUP_SCHED, those could be
+  folded into one and runtime evaluated guards in the folded functions
+  could be used (I haven't posted it yet due to unclear performance
+  benefit)
+- I noticed some lockdep issues over rt_runtime_lock but those are also
+  in an unpatched kernel (and they seem to have been present since a
+  long time with CONFIG_RT_GROUP_SCHED)
 
-Yes, but we do not expect !folio_test_anon() if register == true, right?
-See also below.
+Changes from RFC (https://lore.kernel.org/r/20241216201305.19761-1-mkoutny@suse.com/):
+- fix macro CONFIG_RT_GROUP_SCHED_DEFAULT_DISABLED invocation
+- rebase on torvalds/master
 
-	/* Verify that the page content is still as expected. */
-	if (verify_opcode(fw->page, opcode_vaddr, &opcode) <= 0) {
-		set_pte_at(vma->vm_mm, vaddr, fw->ptep, fw->pte);
-		return -EAGAIN;
-	}
+Changes from v1 (https://lore.kernel.org/all/20250210151239.50055-1-mkoutny@suse.com/)
+- add runtime deprecation warning
 
-The caller, uprobe_write_opcode(), has already called verify_opcode(),
-why do we need to re-check?
+[1] Debian (https://salsa.debian.org/kernel-team/linux/-/blob/debian/latest/debian/config/kernelarch-x86/config),
+[2] ArchLinux (https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/blob/main/config),
+[3] Fedora (https://src.fedoraproject.org/rpms/kernel/blob/rawhide/f/kernel-x86_64-fedora.config)
+[4] openSUSE TW (https://github.com/SUSE/kernel-source/blob/stable/config/x86_64/default)
 
-But whatever reason we have. Can we change uprobe_write_opcode() to
-"delay" put_page() and instead of
+Michal Koutný (10):
+  sched: Convert CONFIG_RT_GROUP_SCHED macros to code conditions
+  sched: Remove unneeed macro wrap
+  sched: Always initialize rt_rq's task_group
+  sched: Add commadline option for RT_GROUP_SCHED toggling
+  sched: Skip non-root task_groups with disabled RT_GROUP_SCHED
+  sched: Bypass bandwitdh checks with runtime disabled RT_GROUP_SCHED
+  sched: Do not construct nor expose RT_GROUP_SCHED structures if
+    disabled
+  sched: Add RT_GROUP WARN checks for non-root task_groups
+  sched: Add annotations to RT_GROUP_SCHED fields
+  sched: Add deprecation warning for users of RT_GROUP_SCHED
 
-	/* Walk the page tables again, to perform the actual update. */
-	folio = folio_walk_start(&fw, vma, vaddr, 0);
-	if (folio) {
-		ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
-					    opcode);
-		folio_walk_end(&fw, vma);
-	} else {
-		ret = -EAGAIN;
-	}
+ .../admin-guide/kernel-parameters.txt         |  5 ++
+ init/Kconfig                                  | 11 +++
+ kernel/sched/core.c                           | 70 +++++++++++++++----
+ kernel/sched/rt.c                             | 51 +++++++++-----
+ kernel/sched/sched.h                          | 34 +++++++--
+ kernel/sched/syscalls.c                       |  5 +-
+ 6 files changed, 138 insertions(+), 38 deletions(-)
 
-do something like
 
-	/* Walk the page tables again, to perform the actual update. */
-	ret = -EAGAIN;
-	folio = folio_walk_start(&fw, vma, vaddr, 0);
-	if (folio) {
-		if (fw.page == page) {
-			WARN_ON(is_register && !folio_test_anon(folio));
-			ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
-					            opcode);
-		}
-		folio_walk_end(&fw, vma);
-	}
-
-?
-
-Once again, I am not trying to review. I am trying to understand the
-basics of your code.
-
-Thanks,
-
-Oleg.
+base-commit: 69e858e0b8b2ea07759e995aa383e8780d9d140c
+-- 
+2.48.1
 
