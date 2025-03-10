@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9932A1EB5F9;
-	Mon, 10 Mar 2025 22:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE4B2144AE;
+	Mon, 10 Mar 2025 22:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741646967; cv=none; b=JtWBghp1f5cu8OBy7szXYzIkEa8Awzz/kIJIqWUiDA3V/MLC5xlyVS45IYBUAnZBihH3NBoFDcC7ncq2yb+ShjdO/JLy0p4Js0918ZQrcRgAgp4vjkmc3XGlcpj/G7PeHkm59rP2xlUCr66qOVz+5tm9ok0ulhRLzYA2T5wBhfg=
+	t=1741646968; cv=none; b=Jb3JUF7Oyo9ctBPS09v0YjO5mvjkSsNzkmxH8kq4od422bo8qtDu7wWzOeaZO3HGrTFyygdKVuO+Yb2ABtdEKGGjtPYboabiH43XY0J13bIUd+0LDDLt34bgtC4/SfuxTmzqHISZMxugiZvPs8wbvxLXrtv03XHkFG7N2j5xCpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741646967; c=relaxed/simple;
-	bh=LyTo7sFjnogmd09szBPpG47+nMOqHTi8i38MCphK5zU=;
+	s=arc-20240116; t=1741646968; c=relaxed/simple;
+	bh=1nZKc+HMzsTs1mIFuu7S1fF5pLgo23yrQCVk/XD/6nM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rx5SVbPb2NmNApvgQHdJVcXIYrgl8GNzEK+kl8a9H0pH/Gx2PR/uD3ligSRrJGXMqqenqRkTtcQxH31NUIa1dVyxqvOD6NR+4HVVHhUv2Zw9RUmiK1HQfUSi/2yjLV4AkQDWDpAH54gQRGX3M6eVNwV/Mb4JCBfPqfZzN+xPEic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7bt1CAV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=l+2DVm0GE8Ib1W39S2ep0c7TCnNPXpkcWcZaFSOqQPotT8W234acCRvs8YT9CpaKtj1qCLb8cXYy1LpjFPOVRXKkS3YpEWFnO3wBGomieadnB2GV1JyMXCbvOnxz3HgqbzAP56FeLhhiIOZ3kc/pz0/2IPEvHQguQDqymezuGjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0PHWdKU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7bt1CAV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F42C4CEEA;
-	Mon, 10 Mar 2025 22:49:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0PHWdKU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB5AC4CEEA;
+	Mon, 10 Mar 2025 22:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741646967;
-	bh=LyTo7sFjnogmd09szBPpG47+nMOqHTi8i38MCphK5zU=;
+	s=k20201202; t=1741646968;
+	bh=1nZKc+HMzsTs1mIFuu7S1fF5pLgo23yrQCVk/XD/6nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i7bt1CAVIcnTclypz5WXR70I6FWAZweVJBk0jJcoJInqwtaApCH6VM0w9JYOfbGZY
-	 IyJYnDkdpMFXaVVKJFGDWB1OfvFKISv8XIrJdJCutpUMS4J6cLIwehDLwzxjOA0tay
-	 05kWQ4dFDG7tfZ/lRZ0s0V/0rKIeKG5kU1Hsih3VTC/hauczESMTrjqqH8ggyuVyqq
-	 hUqQdYtHC6GZHWlIjO/giuJsnECj9NxomydMSwh3SzOkeZKUwqUiRn1siv/0IQOWDw
-	 7orQfy0wBdJc6Nf0nZ8zwE8EtKMo8PYYPZwsGuaPg2Tijz04t0PVMKw66aGzNzRGqB
-	 goss0WhiWfQpA==
+	b=A0PHWdKUdBuU+jLgMQFbOYy/x5YvhYqQUzjE/j6GGHgNTcGcxj8mBx26GwrBsGDcP
+	 HmEfKd8oIy4kSfF1+R2/wrQGTxs91aVlll8xtmBC6GRdddRqgrqL+zgpS4vvIQdVkf
+	 CP3wc1hK/BvE9Beak0fMy82Bm+x1PCPOkUf59THxvxfG8RPQNPjT/7a3iTUxv3I/NI
+	 cwAJZxIv7Umk8mVjjNRK4Y9Mh9W3RVAFvutRFNA1kYfbDKXDN6quslrbRd7TlAKe4s
+	 IggrEjhvoX0sEgvJDoO/fDicx2Zfh1XOsNLLqMkC+leWopj2qIsjgvFaIiMnRFfpCZ
+	 Z/ddQTuHipYRw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,9 +37,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH v2 1/7] perf annotate-data: Add annotated_data_type__get_member_name()
-Date: Mon, 10 Mar 2025 15:49:19 -0700
-Message-ID: <20250310224925.799005-2-namhyung@kernel.org>
+Subject: [PATCH v2 3/7] perf annotate: Pass annotation_options to annotation_line__print()
+Date: Mon, 10 Mar 2025 15:49:21 -0700
+Message-ID: <20250310224925.799005-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
 In-Reply-To: <20250310224925.799005-1-namhyung@kernel.org>
 References: <20250310224925.799005-1-namhyung@kernel.org>
@@ -51,159 +51,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Factor out a function to get the name of member field at the given
-offset.  This will be used in other places.
+The annotation_line__print() has many arguments.  But min_percent,
+max_lines and percent_type are from struct annotaion_options.  So let's
+pass a pointer to the option instead of passing them separately to
+reduce the number of function arguments.
 
-Also update the output of typeoff sort key a little bit.  As we know
-that some special types like (stack operation), (stack canary) and
-(unknown) won't have fields, skip printing the offset and field.
-
-For example, the following change is expected.
-
-  "(stack operation) +0 (no field)"   ==>   "(stack operation)"
+Actually it has a recursive call if 'queue' is set.  Add a new option
+instance to pass different values for the case.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate-data.c | 34 ++++++++++++++++++++++++++++
- tools/perf/util/annotate-data.h | 13 +++++++++++
- tools/perf/util/sort.c          | 39 ++++++---------------------------
- 3 files changed, 54 insertions(+), 32 deletions(-)
+ tools/perf/util/annotate.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index eaf96fa80c830d05..1ef2edbc71d91a50 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -314,6 +314,40 @@ static void delete_members(struct annotated_member *member)
- 	}
- }
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 2e0f70b4872b475a..469fcc945126f4f7 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -760,13 +760,14 @@ static int disasm_line__print(struct disasm_line *dl, u64 start, int addr_fmt_wi
  
-+static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
-+			    int offset, bool first)
-+{
-+	struct annotated_member *child;
-+
-+	if (list_empty(&m->children))
-+		return 0;
-+
-+	list_for_each_entry(child, &m->children, node) {
-+		int len;
-+
-+		if (offset < child->offset || offset >= child->offset + child->size)
-+			continue;
-+
-+		/* It can have anonymous struct/union members */
-+		if (child->var_name) {
-+			len = scnprintf(buf, sz, "%s%s",
-+					first ? "" : ".", child->var_name);
-+			first = false;
-+		} else {
-+			len = 0;
-+		}
-+
-+		return fill_member_name(buf + len, sz - len, child, offset, first) + len;
-+	}
-+	return 0;
-+}
-+
-+int annotated_data_type__get_member_name(struct annotated_data_type *adt,
-+					 char *buf, size_t sz, int member_offset)
-+{
-+	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true);
-+}
-+
- static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
- 							  Dwarf_Die *type_die)
+ static int
+ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start,
+-		       struct evsel *evsel, int min_pcnt, int printed,
+-		       int max_lines, struct annotation_line *queue, int addr_fmt_width,
+-		       int percent_type)
++		       struct evsel *evsel, struct annotation_options *opts,
++		       int printed, struct annotation_line *queue, int addr_fmt_width)
  {
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 98c80b2268dde889..541fee1a5f0a7af2 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -227,8 +227,13 @@ void annotated_data_type__tree_delete(struct rb_root *root);
- /* Release all global variable information in the tree */
- void global_var_type__tree_delete(struct rb_root *root);
+ 	struct disasm_line *dl = container_of(al, struct disasm_line, al);
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	static const char *prev_line;
++	int max_lines = opts->max_lines;
++	int percent_type = opts->percent_type;
  
-+/* Print data type annotation (including members) on stdout */
- int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
+ 	if (al->offset != -1) {
+ 		double max_percent = 0.0;
+@@ -786,19 +787,25 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+ 		if (al->data_nr > nr_percent)
+ 			nr_percent = al->data_nr;
  
-+/* Get name of member field at the given offset in the data type */
-+int annotated_data_type__get_member_name(struct annotated_data_type *adt,
-+					 char *buf, size_t sz, int member_offset);
+-		if (max_percent < min_pcnt)
++		if (max_percent < opts->min_pcnt)
+ 			return -1;
+ 
+ 		if (max_lines && printed >= max_lines)
+ 			return 1;
+ 
+ 		if (queue != NULL) {
++			struct annotation_options queue_opts = {
++				.max_lines = 1,
++				.percent_type = percent_type,
++			};
 +
- bool has_reg_type(struct type_state *state, int reg);
- struct type_state_stack *findnew_stack_state(struct type_state *state,
- 						int offset, u8 kind,
-@@ -276,6 +281,14 @@ static inline int hist_entry__annotate_data_tty(struct hist_entry *he __maybe_un
- 	return -1;
- }
+ 			list_for_each_entry_from(queue, &notes->src->source, node) {
+ 				if (queue == al)
+ 					break;
+ 				annotation_line__print(queue, sym, start, evsel,
+-						       0, 0, 1, NULL, addr_fmt_width,
+-						       percent_type);
++						       &queue_opts, /*printed=*/0,
++						       /*queue=*/NULL,
++						       addr_fmt_width);
+ 			}
+ 		}
  
-+static inline int annotated_data_type__get_member_name(struct annotated_data_type *adt __maybe_unused,
-+						       char *buf __maybe_unused,
-+						       size_t sz __maybe_unused,
-+						       int member_offset __maybe_unused)
-+{
-+	return -1;
-+}
-+
- #endif /* HAVE_LIBDW_SUPPORT */
+@@ -1225,8 +1232,7 @@ int symbol__annotate_printf(struct map_symbol *ms, struct evsel *evsel)
+ 		}
  
- #ifdef HAVE_SLANG_SUPPORT
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 2b6023de7a53ae2e..6f7696b11b97a9f9 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2403,44 +2403,19 @@ sort__typeoff_sort(struct hist_entry *left, struct hist_entry *right)
- 	return left->mem_type_off - right->mem_type_off;
- }
+ 		err = annotation_line__print(pos, sym, start, evsel,
+-					     opts->min_pcnt, printed, opts->max_lines,
+-					     queue, addr_fmt_width, opts->percent_type);
++					     opts, printed, queue, addr_fmt_width);
  
--static void fill_member_name(char *buf, size_t sz, struct annotated_member *m,
--			     int offset, bool first)
--{
--	struct annotated_member *child;
--
--	if (list_empty(&m->children))
--		return;
--
--	list_for_each_entry(child, &m->children, node) {
--		if (child->offset <= offset && offset < child->offset + child->size) {
--			int len = 0;
--
--			/* It can have anonymous struct/union members */
--			if (child->var_name) {
--				len = scnprintf(buf, sz, "%s%s",
--						first ? "" : ".", child->var_name);
--				first = false;
--			}
--
--			fill_member_name(buf + len, sz - len, child, offset, first);
--			return;
--		}
--	}
--}
--
- static int hist_entry__typeoff_snprintf(struct hist_entry *he, char *bf,
- 				     size_t size, unsigned int width __maybe_unused)
- {
- 	struct annotated_data_type *he_type = he->mem_type;
- 	char buf[4096];
- 
--	buf[0] = '\0';
--	if (list_empty(&he_type->self.children))
--		snprintf(buf, sizeof(buf), "no field");
--	else
--		fill_member_name(buf, sizeof(buf), &he_type->self,
--				 he->mem_type_off, true);
--	buf[4095] = '\0';
-+	if (he_type == &unknown_type || he_type == &stackop_type ||
-+	    he_type == &canary_type)
-+		return repsep_snprintf(bf, size, "%s", he_type->self.type_name);
-+
-+	if (!annotated_data_type__get_member_name(he_type, buf, sizeof(buf),
-+						  he->mem_type_off))
-+		scnprintf(buf, sizeof(buf), "no field");
- 
- 	return repsep_snprintf(bf, size, "%s +%#x (%s)", he_type->self.type_name,
- 			       he->mem_type_off, buf);
+ 		switch (err) {
+ 		case 0:
 -- 
 2.49.0.rc0.332.g42c0ae87b1-goog
 
