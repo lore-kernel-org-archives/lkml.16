@@ -1,116 +1,180 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA53178395;
-	Mon, 10 Mar 2025 13:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C5C227EA0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612125; cv=none; b=Gq6Ny6K/dwcNunEqnLiKIfng7ICPIYrAJ67qUZTczSnLrx2imaj3PxHidj2qpQZ6qs+5euadKPUOZLNSf6c11cLDpfW/K3LQsIDPflqro0oFMp5Wc+u8+tsk3mCzKPOdsTciYKtVxhDHYgfiNxRr5zKahG4lggumEq046+Bh6p0=
+	t=1741612154; cv=none; b=Kyq5ia6RvWy8E75TL01bmtU6E/lJ8Gp8gpgK3xO3aoeHo+DSMIpoxH+1oWKXrBPga449wTRe37VKiQ9fNj3jEc/wQe9AcF2dkh6z3nM5UqpygAA9QbFdqNAVyqv6hd5dv0J7BaYTk9zF1oZz+ZFXDmEatNkGZ3+sr1WwNb0OUpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612125; c=relaxed/simple;
-	bh=rdAP5tZXO/e6X0g9/aj7v6Q8fYYTM/HQGTEow6hWTxU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VoLzK/8EJqrMOisRfZeYIlsAmotcvhAQQ2NhGnx3dUVEQFcVbumNuklJDgxr8NygfFGbzrx6YvjypMtf/yiQ6HM85pDrhvbYlYp9zzItG/Ajk1BlsDHTuVkUY3ysrMZwsoPUUeKORsYpTbgTWRp6K0Og3xVq29Lp1iYWnfRZSAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=A8BFc6kb; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1741612154; c=relaxed/simple;
+	bh=Vq+v5sP4eqDziClAZd6XjfUr7QO/4X4D/kFCPmbk2aw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ZMADrTbCyLbjbJQeXVJ4ONwwzQsMzGPVMwC6b7Me/CfUgloTN0Or2E4Kr1POlDojGpQ6myGN5aY5AXjfjAlGOAnSEy63QBihNtbOPNpOAt2nAYmgP+fLRXZmJBNyv9yMAk+fHKkm/nffSvCPik9GPNkEGu99Yvq+8xfAtxunI5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vr3W7lX+; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="A8BFc6kb"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1trcrp-00ByIO-7S; Mon, 10 Mar 2025 14:08:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=YMtG22Pqun0Tp+q9j4j91l8TFa4W5ET+k4wRnt7+fP0=; b=A8BFc6kbFm87pNoML1HwqDmRTf
-	UJA/GzevYwKdN5F5BZrgi//pgOyudJoiTj1cK1jqvTlnhZursG3xtzsBooyMMx4vLOx+Py6kxhz8u
-	hIEVjCM4oc8/5KNIerC9JWvKACQGvBa3WFWLxq6inZH8tyNEnNemy3BsVbvmoAWRn+/snlLvSHaXk
-	ddO8bi7iUrcF5CFLUzM58GA01OsGXH138lYeRHo1EjItfLMyknx62msIBc85WDunVEuay4pTlM87c
-	oHaOor4nkaHnadScKgfH3p4cxyNGqYOaGlUCpKQVr2CTHSgJL4J7b442qLYS5+VhMNWyP9iroaqxJ
-	2zf7qkeA==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1trcrc-0006oZ-M9; Mon, 10 Mar 2025 14:08:13 +0100
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1trcrZ-007B3j-Vc; Mon, 10 Mar 2025 14:08:10 +0100
-Message-ID: <d2d3eff9-23df-4098-87cc-d0ad5fde6e1e@rbox.co>
-Date: Mon, 10 Mar 2025 14:08:07 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vr3W7lX+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741612153; x=1773148153;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Vq+v5sP4eqDziClAZd6XjfUr7QO/4X4D/kFCPmbk2aw=;
+  b=Vr3W7lX+mrZmQ03abQzg5/eRVT60igEzmqIX+3Zgx4pG0f/EfZ4u7Fjb
+   viygj26baGxRP0NeL/V7u5OxrARG7stBx9dosHMuZCd7+aX33FcJ6Qtzv
+   W+yqk5hVY0CKYQdKnKWbCixmlGUJCcbE0mzVX5eek2sus9KIhLh+ipkin
+   /SShZGg3jp9qoi0LtiLxGfGaYLxC6a1ULZmVEqIjo0IxqmcmgawoPtms/
+   FJKK9/WUXO5ZcI35m+dGx27ur8iCC7xbnBZdLTlMvR8oXQaJSnxxBZTGW
+   wPWM9J0E/z1x28UNXXc++34JI2+2jppamiU+k0fZ6sXoBI4qI2xdl8zOl
+   g==;
+X-CSE-ConnectionGUID: LlOSiDmbR32H7c+IhVkEsw==
+X-CSE-MsgGUID: f1euYP8JRaC8uIoyd/Rjaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42515507"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="42515507"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 06:09:12 -0700
+X-CSE-ConnectionGUID: Lzhp/OENQxuRbABCjpzBwQ==
+X-CSE-MsgGUID: YdsDAS0nR/eXQm8MGMvmkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="125043995"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 10 Mar 2025 06:09:10 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1trcsW-0004GC-2Z;
+	Mon, 10 Mar 2025 13:09:08 +0000
+Date: Mon, 10 Mar 2025 21:08:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250304 5/11]
+ drivers/net/wireless/intel/iwlwifi/fw/api/tx.h:745:31: error: field 'tx' has
+ incomplete type
+Message-ID: <202503102143.Rm06fBbo-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v2 1/3] bpf, sockmap: avoid using sk_socket after
- free
-To: Jiayuan Chen <jiayuan.chen@linux.dev>, xiyou.wangcong@gmail.com,
- john.fastabend@gmail.com, jakub@cloudflare.com, martin.lau@linux.dev
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, andrii@kernel.org, eddyz87@gmail.com,
- mykolal@fb.com, ast@kernel.org, daniel@iogearbox.net, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, shuah@kernel.org, sgarzare@redhat.com,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, mrpre@163.com, cong.wang@bytedance.com,
- syzbot+dd90a702f518e0eac072@syzkaller.appspotmail.com
-References: <20250228055106.58071-1-jiayuan.chen@linux.dev>
- <20250228055106.58071-2-jiayuan.chen@linux.dev>
- <baeca627-e6f1-4d0a-aea5-fa31689edc4d@rbox.co>
- <78ee737400721758fa67b4f285e8ba61dc6b893b@linux.dev>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <78ee737400721758fa67b4f285e8ba61dc6b893b@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/10/25 12:36, Jiayuan Chen wrote:
-> March 7, 2025 at 5:45 PM, "Michal Luczaj" <mhal@rbox.co> wrote:
-> ...
->> BTW, lockdep (CONFIG_LOCKDEP=y) complains about calling AF_UNIX's
->> read_skb() under RCU read lock.
->>
-> My environment also has LOCKDEP enabled, but I didn't see similar
-> warnings.
-> Moreover, RCU assertions are typically written as:
-> 
-> WARN_ON_ONCE(!rcu_read_lock_held())
-> 
-> And when LOCKDEP is not enabled, rcu_read_lock_held() defaults to
-> returning 1. So, it's unlikely to trigger a warning due to an RCU lock
-> being held.
-> 
-> Could you provide more of the call stack?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250304
+head:   6d2e9e1f723433e96db706772bc630bc704bf9ba
+commit: a6053266a6e573a3c22309605547bf35869fbaf3 [5/11] wifi: iwlwifi: dvm: Avoid -Wflex-array-member-not-at-end warnings
+config: arc-allmodconfig (https://download.01.org/0day-ci/archive/20250310/202503102143.Rm06fBbo-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250310/202503102143.Rm06fBbo-lkp@intel.com/reproduce)
 
-Sure, bpf-next with this series applied, test_progs -t sockmap_basic:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503102143.Rm06fBbo-lkp@intel.com/
 
-=============================
-[ BUG: Invalid wait context ]
-6.14.0-rc3+ #111 Tainted: G           OE
------------------------------
-test_progs/37755 is trying to lock:
-ffff88810d9bc3c0 (&u->iolock){+.+.}-{4:4}, at: unix_stream_read_skb+0x30/0x120
-other info that might help us debug this:
-context-{5:5}
-1 lock held by test_progs/37755:
- #0: ffffffff833700e0 (rcu_read_lock){....}-{1:3}, at: sk_psock_verdict_data_ready+0x3e/0x2a0
-stack backtrace:
-CPU: 13 UID: 0 PID: 37755 Comm: test_progs Tainted: G           OE      6.14.0-rc3+ #111
-Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
-Call Trace:
- dump_stack_lvl+0x68/0x90
- lock_acquire+0xcf/0x2e0
- __mutex_lock+0x9c/0xcc0
- unix_stream_read_skb+0x30/0x120
- sk_psock_verdict_data_ready+0x8d/0x2a0
- unix_stream_sendmsg+0x232/0x640
- __sys_sendto+0x1cd/0x1e0
- __x64_sys_sendto+0x20/0x30
- do_syscall_64+0x93/0x180
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+All errors (new ones prefixed by >>):
 
+   In file included from drivers/net/wireless/intel/iwlwifi/pcie/tx.c:27:
+>> drivers/net/wireless/intel/iwlwifi/fw/api/tx.h:745:31: error: field 'tx' has incomplete type
+     745 |         struct iwl_tx_cmd_hdr tx;
+         |                               ^~
+   drivers/net/wireless/intel/iwlwifi/fw/api/tx.h:764:31: error: field 'tx' has incomplete type
+     764 |         struct iwl_tx_cmd_hdr tx;
+         |                               ^~
+--
+   In file included from drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:10,
+                    from drivers/net/wireless/intel/iwlwifi/mvm/fw-api.h:10,
+                    from drivers/net/wireless/intel/iwlwifi/mvm/sta.h:15,
+                    from drivers/net/wireless/intel/iwlwifi/mvm/mvm.h:30,
+                    from drivers/net/wireless/intel/iwlwifi/mvm/fw.c:21:
+>> drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:745:31: error: field 'tx' has incomplete type
+     745 |         struct iwl_tx_cmd_hdr tx;
+         |                               ^~
+   drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:764:31: error: field 'tx' has incomplete type
+     764 |         struct iwl_tx_cmd_hdr tx;
+         |                               ^~
+>> drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:53:31: error: field 'tx_cmd' has incomplete type
+      53 |         struct iwl_tx_cmd_hdr tx_cmd;
+         |                               ^~~~~~
+>> drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:134:31: error: field 'pti_req_tx_cmd' has incomplete type
+     134 |         struct iwl_tx_cmd_hdr pti_req_tx_cmd;
+         |                               ^~~~~~~~~~~~~~
+
+
+vim +/tx +745 drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+
+   686	
+   687	/**
+   688	 * struct iwl_compressed_ba_notif - notifies about reception of BA
+   689	 * ( BA_NOTIF = 0xc5 )
+   690	 * @flags: status flag, see the &iwl_mvm_ba_resp_flags
+   691	 * @sta_id: Index of recipient (BA-sending) station in fw's station table
+   692	 * @reduced_txp: power reduced according to TPC. This is the actual value and
+   693	 *	not a copy from the LQ command. Thus, if not the first rate was used
+   694	 *	for Tx-ing then this value will be set to 0 by FW.
+   695	 * @tlc_rate_info: TLC rate info, initial rate index, TLC table color
+   696	 * @retry_cnt: retry count
+   697	 * @query_byte_cnt: SCD query byte count
+   698	 * @query_frame_cnt: SCD query frame count
+   699	 * @txed: number of frames sent in the aggregation (all-TIDs)
+   700	 * @done: number of frames that were Acked by the BA (all-TIDs)
+   701	 * @rts_retry_cnt: RTS retry count
+   702	 * @reserved: reserved (for alignment)
+   703	 * @wireless_time: Wireless-media time
+   704	 * @tx_rate: the rate the aggregation was sent at
+   705	 * @tfd_cnt: number of TFD-Q elements
+   706	 * @ra_tid_cnt: number of RATID-Q elements
+   707	 * @tfd: array of TFD queue status updates. See &iwl_compressed_ba_tfd
+   708	 *	for details. Length in @tfd_cnt.
+   709	 * @ra_tid: array of RA-TID queue status updates. For debug purposes only. See
+   710	 *	&iwl_compressed_ba_ratid for more details. Length in @ra_tid_cnt.
+   711	 */
+   712	struct iwl_compressed_ba_notif {
+   713		__le32 flags;
+   714		u8 sta_id;
+   715		u8 reduced_txp;
+   716		u8 tlc_rate_info;
+   717		u8 retry_cnt;
+   718		__le32 query_byte_cnt;
+   719		__le16 query_frame_cnt;
+   720		__le16 txed;
+   721		__le16 done;
+   722		u8 rts_retry_cnt;
+   723		u8 reserved;
+   724		__le32 wireless_time;
+   725		__le32 tx_rate;
+   726		__le16 tfd_cnt;
+   727		__le16 ra_tid_cnt;
+   728		union {
+   729			DECLARE_FLEX_ARRAY(struct iwl_compressed_ba_ratid, ra_tid);
+   730			DECLARE_FLEX_ARRAY(struct iwl_compressed_ba_tfd, tfd);
+   731		};
+   732	} __packed; /* COMPRESSED_BA_RES_API_S_VER_4,
+   733		       COMPRESSED_BA_RES_API_S_VER_5 */
+   734	
+   735	/**
+   736	 * struct iwl_mac_beacon_cmd_v6 - beacon template command
+   737	 * @tx: the tx commands associated with the beacon frame
+   738	 * @template_id: currently equal to the mac context id of the coresponding
+   739	 *  mac.
+   740	 * @tim_idx: the offset of the tim IE in the beacon
+   741	 * @tim_size: the length of the tim IE
+   742	 * @frame: the template of the beacon frame
+   743	 */
+   744	struct iwl_mac_beacon_cmd_v6 {
+ > 745		struct iwl_tx_cmd_hdr tx;
+   746		__le32 template_id;
+   747		__le32 tim_idx;
+   748		__le32 tim_size;
+   749		struct ieee80211_hdr frame[];
+   750	} __packed; /* BEACON_TEMPLATE_CMD_API_S_VER_6 */
+   751	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
