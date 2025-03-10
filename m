@@ -1,100 +1,63 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3EC1DEFD4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 20:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDEC1DED4B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 20:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741639844; cv=none; b=TmlNtjYuWVzHtMh3bYfRkXZ4tT5ftOBRM0OovStDX0anH8k/ivRwF36O+Y+s0sPtsyncSNCaQ0MUMhShIe6rVHA39OyCKIYtWHkW/kIgPdMrwDMYXlSL5CKVk/GzPMBYqjX98dBEGS/cl2cd/Wie0TDprKJ+UYspv0m333Jsf3o=
+	t=1741639870; cv=none; b=hfYSUMBVrbwQEoQNBdpSrFApZZc+gl6f6Q/ThAiATR35hAMEsBEalUeYbapOYidCs7FIpH3oau+7caRpsn9BopHqCZyWYhVmCb/2+w/ut24+yK4T9Gfa50eqIiIAsejzlv4NckWbYaCvdTtUsijAZzPeimtEmy2Gt9BuZBsZg8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741639844; c=relaxed/simple;
-	bh=JMgtmwqbCF1crKu5gvghokge0/ISSw0obFY1lBovTyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eQNMhGJnQpO5wa6jp8qgoOfnvVw4qj0sqvewfvhm2SSU3K+BSLPUpt9Scx4I7/zcf8ud0YUBoYwIH6RGNYn4FDmj9EsvWucByrv40MiI29E5nMN7D/7pXgDKjrus8n76sc+SnIZPOXDaLSqq3XCM7ASU8wOcJX0j/W428PEHiXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yozNS0AA; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741639870; c=relaxed/simple;
+	bh=vwYnqaJ6V8gjuQV7aFah34+viTT6zEQRet1hjvprP+k=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=brIiD/4KtSq4LM+fwnbyxt3fW7eKKMttd3E2OeeyoXJqbz/kvz2e4XOazHw75U7ozhAGH5GMwhHp7Y0C2/0UC24zHQpdEnriDuDQx/cRmoe+RUReMfQKNED4T09u9S65LTHpT2kceaI+ZH5PAJkft5O0yMAzcR/nanBcRIBlrbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0LWc7VR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yozNS0AA"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30761be8fa8so52688021fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741639840; x=1742244640; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MFIKZkaTfjlzWSNll4lqXgpcQhLW3KQ5qFxK5aL+7cU=;
-        b=yozNS0AAdIEjVRKmRYq7iQt7ql0F92g/RzUVKg5rNwW5S7at61dY6H6NjSRvDro9ft
-         qEZLd1W8ERt5VtTiWaN4rmCI6htz+qnhZkPjXrQxMTtUGYFuHtsE8sStUbqxY3hEkWgh
-         0K+Es1nB7jb8hrYlsDEzEfuZ3qQfSNyExxGx9V7pYOeIEZE0ck6D1PYbDP6iUGhOaOXt
-         4DfUDwA/qN/P9i9WDENVyufUslPI7dTotxsM2sV7MB8qG8mFGQbihZLGJd1ZXWLRDp+5
-         zqt/GuMvAG/SavSJiImq5lHMRAcr9cKOE6LPgl9vCRRAbLVqWI8JzDD/W/rfdBBQ1oIK
-         wdSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741639840; x=1742244640;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MFIKZkaTfjlzWSNll4lqXgpcQhLW3KQ5qFxK5aL+7cU=;
-        b=Yxj28YzG4c4mVvmcA82nk0/jfeF2cxTct227ORQE1wdHAYChbvJBkhx8EdYrtJtgLJ
-         A2hNzKT2dLBYbd3pBLciSLtYn6rPg+CiPvJIXNItNivljPlemzb07QJeX9Qin4ChruVR
-         /JuwvDIntFCdjNZgVLKGhZ9c8HTqSwmNioTBCFNGVidTzvZcbyGi8cTV30AqC0xk0Tf4
-         4T+mHBm8fATlNI8DoXd0lvsfjbNrT5eSN5KqgxitE/ZcrAB6BWzMya9oD9Bze2VPHuo+
-         pzFXlXSpNDyIf7Y3V338b8mQRzsbqKiO823/3/NDFubC/3uYujlkcB0D56GDhjzFrZcO
-         b95A==
-X-Forwarded-Encrypted: i=1; AJvYcCXcI5KN3s4iBHRKvxp0xJRbT4XzOd4MuyCWKKAc4QLA2vs06HD7F6rrKzujiqDa9qJ/Ud3wkRKF788FkVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxfaqt09fOM178aYA809qbLOBvz0iX03NHbfkaL5DQVyitIyp71
-	kSsD88dOVKSr5UnVPAHqiB/p/cgVb9+vj7EwZJiivwOL+pV+v9RTsq/nhh+52jY=
-X-Gm-Gg: ASbGncuZ9xvZM5ljEdKABwclCjo4onLcRXEG99hIz4Lfp0UdYC3PmnFWxEo+x7XQXmy
-	qOJBJzalWQQ0bVosfgWzaS7YLOAezt9pL72KLL4p7ALefQnqoaBu0xAKuiFiGw9ODYJVBxrJEeg
-	5i/mTEegN+JUGUCUD7dINwio6YtXI68Hm1/Vc72f5z2wMJq6vbs5qDAEKmk+RXbAPKz5GY/B2rB
-	69q2VCZIxFtcneFXUK6+gLEEh6wokDjfl0WvBceeinNuqly5Rc9LE2HdKQyAlcmr9UaQnV2F+Pw
-	NS8+h/LpCOx+i5I0QrlB+HyxyBJoYMlRXQP9pBKvvf6HjIP4inx1AAECmjlLO13bcvCRka2a++C
-	subvzokA4ySV4exzr9s0S0hry
-X-Google-Smtp-Source: AGHT+IGcrlELrZBnhqzie4iDaP6avVfnzS9Zwuy/y5VMLk7WTqgSbAIjxpbHVS4pswFb2Tc4oA719A==
-X-Received: by 2002:a2e:bc27:0:b0:30b:bb45:6616 with SMTP id 38308e7fff4ca-30bf45e2500mr50729081fa.29.1741639839816;
-        Mon, 10 Mar 2025 13:50:39 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498ff85e23sm1362140e87.225.2025.03.10.13.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 13:50:38 -0700 (PDT)
-Date: Mon, 10 Mar 2025 22:50:35 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Damon Ding <damon.ding@rock-chips.com>
-Cc: heiko@sntech.de, andy.yan@rock-chips.com, hjc@rock-chips.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, dianders@chromium.org, 
-	sebastian.reichel@collabora.com, cristian.ciocaltea@collabora.com, boris.brezillon@collabora.com, 
-	l.stach@pengutronix.de, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 07/13] drm/bridge: analogix_dp: Add support for
- &drm_dp_aux.wait_hpd_asserted()
-Message-ID: <gnwqnapqlc7bym2nd55oif5lxxiibeme22upepbrgafilpcxxn@py5j7ju4rac3>
-References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
- <20250310104114.2608063-8-damon.ding@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0LWc7VR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBDFC4CEEA;
+	Mon, 10 Mar 2025 20:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741639869;
+	bh=vwYnqaJ6V8gjuQV7aFah34+viTT6zEQRet1hjvprP+k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=r0LWc7VRIOKwSdWEQGRpye30enQW1cFKUSvomRYC7BL43EykYY8SUvparGvW1lGp1
+	 P7V+W+HL6rJDF7zNrZ1rEe2Ua2hkk46RrnLwPsGryXsVpvbD0gp7xmUFfRxxvgKt8C
+	 zEdfXZc02Z7o9JSyh8mDKRYAxCynek2ORCSxeJ9SV+PxsZRapZZEFhryrI9TirY6FT
+	 h2ZfdQ9Hkr4BKItoaGDrMZlbJftk6E7Jwd3m+blnnXRvzmY53BXnmIXctOO3Eb/QJV
+	 XGD+BirWOUA1R41PyKCC//sbjeIqnQ4v8i20i2zPg36k8As4EqBtNfgsZvS0kXK4T9
+	 6lb2Ookll6kww==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE18F380AACB;
+	Mon, 10 Mar 2025 20:51:44 +0000 (UTC)
+Subject: Re: [GIT PULL] x86 fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Z89ELs3yiGe6kdml@gmail.com>
+References: <Z89ELs3yiGe6kdml@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Z89ELs3yiGe6kdml@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-03-10
+X-PR-Tracked-Commit-Id: e3e89178a9f4a80092578af3ff3c8478f9187d59
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4d872d51bc9d7b899c1f61534e3dbde72613f627
+Message-Id: <174163990325.3692111.18184384203241241628.pr-tracker-bot@kernel.org>
+Date: Mon, 10 Mar 2025 20:51:43 +0000
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310104114.2608063-8-damon.ding@rock-chips.com>
 
-On Mon, Mar 10, 2025 at 06:41:08PM +0800, Damon Ding wrote:
-> Add analogix_dpaux_wait_hpd_asserted() to help confirm the HPD state
-> before doing AUX transfers.
-> 
-> Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
-> ---
->  .../drm/bridge/analogix/analogix_dp_core.c    | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
+The pull request you sent on Mon, 10 Mar 2025 20:57:34 +0100:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-03-10
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4d872d51bc9d7b899c1f61534e3dbde72613f627
+
+Thank you!
 
 -- 
-With best wishes
-Dmitry
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
