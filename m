@@ -1,158 +1,91 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE352343C1
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BB21E519;
+	Mon, 10 Mar 2025 17:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741625997; cv=none; b=hRA9GpP4WtJ08S6iZC2whX6ho932cSIHZcz5HO+ZNuYynXV20fBSsPlG/kr2CAgCKAkGi+MEq3dZTPRHHS98hgrhh+FwqV+QQGmrQsqzhZ/kEr3CTTV+PXwSDDBvmbcdim0Yp9izEDoaE/jmU6MmbjfyLO7o5gB+pjfIIzq2IEI=
+	t=1741626056; cv=none; b=PApyR14XsgRcjbCDftYcX0S5ehb4Gj+TYHcvDP1lsJbwZ1DBgnkBw4ij7YS3F3zDOYXU3ybhFmRtM1GmJ6XL8M3x5Ha30VbKemtcAzRFHCcrxb6lH0bDnH8m7+ozSPruwp2WkMvt29HQEwZ4OQL47WdepN81B5EBQK2Ebooddwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741625997; c=relaxed/simple;
-	bh=BtxPDe8zkq/NBpYVlLij2a8ynqMMcpMY3Pfrlpgmqxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iquHDJfJ+kRtJEV1tzQd/qyusfUK2gH8Xignx6VW0HdQdU5BoWCEgY5IcI/rNuPfsaD4k54t5VpHzoZSySL8TP2FDaNpxhmhKdyfKDI2Jrgq78Gres3SdAIoyjE/WkVpP4M8t2w8eQ9os/dPuOdeymuFb3T37Fh7pTh7ffu7PxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OvKZBtkS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yuCVoSsu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OvKZBtkS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yuCVoSsu; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1741626056; c=relaxed/simple;
+	bh=MeG1VCik5Ze8Q6an3AFip2HUlayeAdN3z/xG111Hfxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jeiZRKPG81x/O6awK3ipYUEpeMDuKJjuWYbpGae5UsmaHyJ+zpjx37xrthHEyZPehmG215V5Y8i+WzTBsdZQJ5/5pXThpVJws2RU+yPuHwgukA2sWGahOhvBCVwEiQHlwn7SHYc6vUSRr64IEboGQg7K6BVcEeC+ZAYqaa35HKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s1w14gMk; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OvKZBtkS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yuCVoSsu";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OvKZBtkS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yuCVoSsu"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8C2B621162;
-	Mon, 10 Mar 2025 16:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741625986; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/15a4p4/MRhFHiV3UC/tU5arF9LRXK/RyuAoe1B54Zs=;
-	b=OvKZBtkSVIuhal8NQF+trarWxwmgq6Wiw/cbDYY8tMMfjZud9/5ATVMMxueNOwlHZGMuUI
-	M29AcdqxQMrs9/5VIGuPJbYtA2lUavwVe3kcYb96TTYhR2vFbh4AFrCSy8VhIxR4O2mevj
-	n07uNHkaE1+cYHhDSzY6jEsRuSliWxk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741625986;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/15a4p4/MRhFHiV3UC/tU5arF9LRXK/RyuAoe1B54Zs=;
-	b=yuCVoSsuVODwm2e/wNVO6b67HB9RlLPhbzlO3ATIFQBPElZ0sdOsDYG4LnVoHXS38M8rJP
-	8Fjj6sLzzb6BZBAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741625986; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/15a4p4/MRhFHiV3UC/tU5arF9LRXK/RyuAoe1B54Zs=;
-	b=OvKZBtkSVIuhal8NQF+trarWxwmgq6Wiw/cbDYY8tMMfjZud9/5ATVMMxueNOwlHZGMuUI
-	M29AcdqxQMrs9/5VIGuPJbYtA2lUavwVe3kcYb96TTYhR2vFbh4AFrCSy8VhIxR4O2mevj
-	n07uNHkaE1+cYHhDSzY6jEsRuSliWxk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741625986;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/15a4p4/MRhFHiV3UC/tU5arF9LRXK/RyuAoe1B54Zs=;
-	b=yuCVoSsuVODwm2e/wNVO6b67HB9RlLPhbzlO3ATIFQBPElZ0sdOsDYG4LnVoHXS38M8rJP
-	8Fjj6sLzzb6BZBAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7CDC6139E7;
-	Mon, 10 Mar 2025 16:59:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id o8dHHYIaz2fCaAAAD6G6ig
-	(envelope-from <nstange@suse.de>); Mon, 10 Mar 2025 16:59:46 +0000
-From: Nicolai Stange <nstange@suse.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nicolai Stange <nstange@suse.de>
-Subject: [PATCH v1 4/4] ipv6: sr: continue initialization at ENOENT HMAC instantiation failures
-Date: Mon, 10 Mar 2025 17:58:57 +0100
-Message-ID: <20250310165857.3584612-5-nstange@suse.de>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250310165857.3584612-1-nstange@suse.de>
-References: <20250310165857.3584612-1-nstange@suse.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s1w14gMk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=owMofiDXpcMMHo+/HgqyyJABYuI5qKBiRMXRGlcf8l4=; b=s1w14gMkAYfFDIL9YOPASgbOwx
+	1az5TYCE3Iop3ZjuWP2hMZHc43uhYwtz5t7FlF858GhQVCseu/YIf4c22DkYuRMnqk1hIL35OuVeK
+	a4OD0/z6Wcw9NLx0GUo6uvZO4d3b9LUdnwzgs5xQ13u1WpWMdK6M874QTs8kWKOJf6o8OhIZoPcx/
+	Ro7cyoNQl02p3o07+Rg+Tu5oODc1mDtEjn5oyDd1bpRATMvwcbbGVOV7VFvu1oPLipbVL/Pm3nlBs
+	PNJl+C5UjweOwUlE5arqj9dDswrg62muLoeiuCzqOM5IzKqqIB5wBR5O3U3u0kS8L+wLGYdnMX4Ky
+	l39qbUYg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1trgUR-00000008IkT-240a;
+	Mon, 10 Mar 2025 17:00:38 +0000
+Date: Mon, 10 Mar 2025 17:00:31 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Yu Zhao <yuzhao@google.com>, John Hubbard <jhubbard@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: Re: [PATCH v10 2/8] mm/huge_memory: add two new (not yet used)
+ functions for folio_split()
+Message-ID: <Z88ar5YS99HsIRYo@casper.infradead.org>
+References: <20250307174001.242794-1-ziy@nvidia.com>
+ <20250307174001.242794-3-ziy@nvidia.com>
+ <Z88ToirSWa_meevw@casper.infradead.org>
+ <A10312E5-F4CE-4CBA-B7CB-D435DFEA496F@nvidia.com>
+ <D94BB56F-4BA0-4376-B5C4-7E38D2D92624@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+In-Reply-To: <D94BB56F-4BA0-4376-B5C4-7E38D2D92624@nvidia.com>
 
-As it currently stands, the IPv6 SR HMAC __init, and thus the IPv6
-subsystem's __init, would fail to come up if any of the HMAC algo
-instantiations failed.
+On Mon, Mar 10, 2025 at 12:42:06PM -0400, Zi Yan wrote:
+> > Because of the “Careful” comment. But new_folio->* should be fine,
+> > since it is the same as new_head. So I probably can replace all
+> > new_head with new_folio except those VM_BUG_ON_PAGE checks?
 
-This used to be fine, as they usually don't. However, that situation will
-change, because NIST announced to sunset SHA1 by 2030, and then at latest
-instantiations thereof through the cryptomgr will have to made to fail with
--ENOENT when booted in FIPS mode. Note that the sunset date has
-implications on certificates' lifetimes for those issued today already, so
-distributions might be eager to disable SHA1 in FIPS mode downstream
-starting now.
+Why not also the VM_BUG_ON_PAGE check?  I mean:
 
-Make seg6_hmac_init_algos() to ignore ENOENT HMAC algo instantiation
-errors. Note that in this case, a failed algo will have its ->tfms == NULL,
-and __hmac_get_algo() would filter such ones already.
+> @@ -3364,8 +3364,8 @@ static void __split_folio_to_order(struct folio *folio, int old_order,
+>  		/* ->mapping in first and second tail page is replaced by other uses */
+>  		VM_BUG_ON_PAGE(new_nr_pages > 2 && new_head->mapping != TAIL_MAPPING,
+>  			       new_head);
 
-Signed-off-by: Nicolai Stange <nstange@suse.de>
----
- net/ipv6/seg6_hmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+		VM_BUG_ON_PAGE(new_nr_pages > 2 && new_folio->mapping != TAIL_MAPPING, new_head);
 
-diff --git a/net/ipv6/seg6_hmac.c b/net/ipv6/seg6_hmac.c
-index 85e90d8d8050..4a63ee4dbf7e 100644
---- a/net/ipv6/seg6_hmac.c
-+++ b/net/ipv6/seg6_hmac.c
-@@ -433,7 +433,7 @@ static int seg6_hmac_init_algos(void)
- 	alg_count = ARRAY_SIZE(hmac_algos);
- 	for (i = 0; i < alg_count; i++) {
- 		ret = seg6_hmac_init_algo(&hmac_algos[i]);
--		if (ret)
-+		if (ret && ret != -ENOENT)
- 			goto error_out;
- 	}
- 
--- 
-2.47.1
+(or we could just ditch the assert entirely; it's not all that useful)
+
+> -		new_head->mapping = head->mapping;
+> -		new_head->index = head->index + index;
+> +		new_folio->mapping = head->mapping;
+> +		new_folio->index = head->index + index;
+
+	new_folio->mapping = folio->mapping
+	new_folio->index = folio->index +index;
+
+(um, and that index + index looks weird; better name might be just 'i')
 
