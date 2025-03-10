@@ -1,126 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C010154F8C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 02:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E8CA935
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 02:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741573029; cv=none; b=q7S5NxdH1zJvyiC0CSbvqS6LwPloW+Bc465kh5f9KPZhproaruvgOwmhc3FTXlrJUoSLRSxOz6+p1PIoDccuOmXwqQhiyqR0n17cN43iSX7Yj1gvoHLurPmOXPZBSKDcxWSige+uc3hWJjBOc530C0w7xkXB8VUu6jApK0sbpuc=
+	t=1741573093; cv=none; b=WOimuBTwjf2XnYOE5FfVF36yUVgPThPMQ0cJyBeAFFWLKdnZRAnSbDV3Zi4LVADjPOxj4yfQOp/7J71fZyYCXiiT0na3Emgjx5g6swMRS258hXl2zOYrb9r/IHKl2UPK3G5OORqseNyOJ+ODO2og4/yYWs55/16Ggnjcv697PcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741573029; c=relaxed/simple;
-	bh=M0I9e+37iGKDtZoDzeO5pmsFG0Bsth0P4d1lDUCl/nM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AndFPvwKj0Py9U2RRoua4+mE7F0rygXhPzuzmjHx60h02J74eR5bKlu83srowy1BMFg5Fcl7s9hdj/92cHbTcF0jeNdNq4utcDlvWVDgEX8RJe6ay6Ly9WMG06qybabnTmtC3+PSbCfVNrPnOU8k/Rez7xfXzQ2rtxlumqrlIzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WM++iCzZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WM++iCzZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741573025;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uSDm5RqDvPpOOOzQzCbG2887sb5kw+SbviHpW34eBvQ=;
-	b=WM++iCzZ+0kGGu1KK1eU4j9bjsx0G6Y8bLUo0egVEpl4Rf+LGozEhdyAgwSdniyvDm7upH
-	tEEkcx1qL4VxXqOlv3944mNxKd8C4fWAwIGXF2hbTpNR5OUlWIGwBtm9uZRVc6iyRbZJzP
-	BcswCLP4Lv9R5FjIPPIBOm8ulQmUKHg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-93-axi359iXM9W26bB6PfSCBQ-1; Sun,
- 09 Mar 2025 22:17:02 -0400
-X-MC-Unique: axi359iXM9W26bB6PfSCBQ-1
-X-Mimecast-MFC-AGG-ID: axi359iXM9W26bB6PfSCBQ_1741573020
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 31CB2180025A;
-	Mon, 10 Mar 2025 02:17:00 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.21])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 66E9218009BC;
-	Mon, 10 Mar 2025 02:16:51 +0000 (UTC)
-Date: Mon, 10 Mar 2025 10:16:46 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Tejun Heo <tj@kernel.org>, axboe@kernel.dk, josef@toxicpanda.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH] blk-throttle: support io merge over iops_limit
-Message-ID: <Z85LjhvkCzlqBVZy@fedora>
-References: <20250307090152.4095551-1-yukuai1@huaweicloud.com>
- <Z8sZyElaHQQwKqpB@slm.duckdns.org>
- <5fc124c9-e202-99ca-418d-0f52d027640f@huaweicloud.com>
+	s=arc-20240116; t=1741573093; c=relaxed/simple;
+	bh=mbtf9veYrCrRfgqvsdsnXp9xr2jROJgHfnuNE3rNgVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nRnsAl+/hjbspAgmmnKGsdYPlNVEc4+4vzkUaWsQDg5QmI6vga4X4lAS4+RsPR5vPgO73P4A1oesDB4nEhDaQnhCkZQo+ZsgthRiD5zCOWCQTtZsElmvhsLnhR+IC43MQ6x3yohUXCy+t+Pofb/cLkhY0zEp6dJ7pwa+YLv1NC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 2bc4590efd5511efa216b1d71e6e1362-20250310
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:714a792e-d65d-45f2-acdb-0f73a9af7f3f,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:b1d969583b6a59686ae824acd623b8e7,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|83|102,TC:nil,Content:0|50,EDM:-3,
+	IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
+	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 2bc4590efd5511efa216b1d71e6e1362-20250310
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <luyun@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 857193283; Mon, 10 Mar 2025 10:12:52 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id CBA4FB80758A;
+	Mon, 10 Mar 2025 10:12:51 +0800 (CST)
+X-ns-mid: postfix-67CE4AA3-712602477
+Received: from localhost.localdomain (unknown [10.42.43.204])
+	by node2.com.cn (NSMail) with ESMTPA id CD518B80758A;
+	Mon, 10 Mar 2025 02:12:50 +0000 (UTC)
+From: Yun Lu <luyun@kylinos.cn>
+To: syzbot+882589c97d51a9de68eb@syzkaller.appspotmail.com
+Cc: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [mm?] INFO: rcu detected stall in mas_preallocate (2)
+Date: Mon, 10 Mar 2025 10:12:49 +0800
+Message-Id: <20250310021249.2624454-1-luyun@kylinos.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <6756b479.050a0220.a30f1.0196.GAE@google.com>
+References: <6756b479.050a0220.a30f1.0196.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5fc124c9-e202-99ca-418d-0f52d027640f@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2025 at 09:58:57AM +0800, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2025/03/08 0:07, Tejun Heo 写道:
-> > Hello,
-> > 
-> > On Fri, Mar 07, 2025 at 05:01:52PM +0800, Yu Kuai wrote:
-> > > From: Yu Kuai <yukuai3@huawei.com>
-> > > 
-> > > Commit 9f5ede3c01f9 ("block: throttle split bio in case of iops limit")
-> > > support to account split IO for iops limit, because block layer provides
-> > > io accounting against split bio.
-> > > 
-> > > However, io merge is still not handled, while block layer doesn't
-> > > account merged io for iops. Fix this problem by decreasing io_disp
-> > > if bio is merged, and following IO can use the extra budget. If io merge
-> > > concurrent with iops throttling, it's not handled if one more or one
-> > > less bio is dispatched, this is fine because as long as new slice is not
-> > > started, blk-throttle already preserve one extra slice for deviation,
-> > > and it's not worth it to handle the case that iops_limit rate is less than
-> > > one per slice.
-> > > 
-> > > A regression test will be added for this case [1], before this patch,
-> > > the test will fail:
-> > > 
-> > > +++ /root/blktests-mainline/results/nodev/throtl/007.out.bad
-> > > @@ -1,4 +1,4 @@
-> > >   Running throtl/007
-> > >   1
-> > > -1
-> > > +11
-> > >   Test complete
-> > > 
-> > > [1] https://lore.kernel.org/all/20250307080318.3860858-2-yukuai1@huaweicloud.com/
-> > 
-> > For blk-throtl, iops limit has meant the number of bios issued. I'm not
-> 
-> Yes, but it's a litter hard to explain to users the differece between IO
-> split and IO merge, they just think IO split is the numer of IOs issued
-> to disk, and IO merge is the number of IOs issued from user.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
+git  master
 
-Here it is really one trouble.
+Signed-off-by: Yun Lu <luyun@kylinos.cn>
+---
 
-a) Sometimes people think IOs wrt. IOPS means that the read/write IO
-submitted from application, one typical example is `fio`.
-
-b) Sometimes people think it is the data observed from `iostat`.
-
-In a), io merge/split isn't taken into account, but b) does cover io
-merge and split.
-
-So question is that what is the correct way for user to observe IOPS
-wrt. iops throttle?
-
-
-Thanks,
-Ming
-
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index a68e17891b0b..7d3769e0ac0b 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -104,6 +104,7 @@ struct taprio_sched {
+ 	u32 max_sdu[TC_MAX_QUEUE]; /* save info from the user */
+ 	u32 fp[TC_QOPT_MAX_QUEUE]; /* only for dump and offloading */
+ 	u32 txtime_delay;
++	ktime_t offset;
+ };
+=20
+ struct __tc_taprio_qopt_offload {
+@@ -170,6 +171,19 @@ static ktime_t sched_base_time(const struct sched_ga=
+te_list *sched)
+ 	return ns_to_ktime(sched->base_time);
+ }
+=20
++static ktime_t taprio_get_offset(const struct taprio_sched *q)
++{
++	enum tk_offsets tk_offset =3D READ_ONCE(q->tk_offset);
++	ktime_t time =3D ktime_get();
++
++	switch (tk_offset) {
++	case TK_OFFS_MAX:
++		return 0;
++	default:
++		return ktime_sub_ns(ktime_mono_to_any(time, tk_offset), time);
++	}
++}
++
+ static ktime_t taprio_mono_to_any(const struct taprio_sched *q, ktime_t =
+mono)
+ {
+ 	/* This pairs with WRITE_ONCE() in taprio_parse_clockid() */
+@@ -918,6 +932,7 @@ static enum hrtimer_restart advance_sched(struct hrti=
+mer *timer)
+ 	int num_tc =3D netdev_get_num_tc(dev);
+ 	struct sched_entry *entry, *next;
+ 	struct Qdisc *sch =3D q->root;
++	ktime_t now_offset =3D taprio_get_offset(q);
+ 	ktime_t end_time;
+ 	int tc;
+=20
+@@ -957,6 +972,14 @@ static enum hrtimer_restart advance_sched(struct hrt=
+imer *timer)
+ 	end_time =3D ktime_add_ns(entry->end_time, next->interval);
+ 	end_time =3D min_t(ktime_t, end_time, oper->cycle_end_time);
+=20
++	if (q->offset !=3D now_offset) {
++		ktime_t diff =3D ktime_sub_ns(now_offset, q->offset);
++
++		end_time =3D ktime_add_ns(end_time, diff);
++		oper->cycle_end_time =3D ktime_add_ns(oper->cycle_end_time, diff);
++		q->offset =3D now_offset;
++	}
++
+ 	for (tc =3D 0; tc < num_tc; tc++) {
+ 		if (next->gate_duration[tc] =3D=3D oper->cycle_time)
+ 			next->gate_close_time[tc] =3D KTIME_MAX;
+@@ -1207,6 +1230,7 @@ static int taprio_get_start_time(struct Qdisc *sch,
+=20
+ 	base =3D sched_base_time(sched);
+ 	now =3D taprio_get_time(q);
++	q->offset =3D taprio_get_offset(q);
+=20
+ 	if (ktime_after(base, now)) {
+ 		*start =3D base;
