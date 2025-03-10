@@ -1,145 +1,143 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C37227EA0;
-	Mon, 10 Mar 2025 15:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC0522DF8F;
+	Mon, 10 Mar 2025 15:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619870; cv=none; b=KGICZMhZhvKd96YB53Z0fZ33MekjzodOImj89HeAv2cc+Ta+jgLT0V7YUfJXI80EYkS4a53eI8dh2uAwZa+EEw8Mcs32Sk4hmU/ZpyZdsr70zAw8zbc8TQxvygkzmkR6q9fRy9miwUgioS287j0e4X48ofrmfTxWnyHubAsId3w=
+	t=1741619887; cv=none; b=Si9n0iQY8q5inRQhSmBvSDSXb47Fr9ehbcI79zj3EmbyViiYVdMeNRB0W11dNw7TPPkkiQbC0/uluoRd2XJU2FCUPxVeGf6SzFdcnd6iALcB0I5zWS4+Ix8y1bM2H1RMyjkomeUq0tb3D9jwj0ROMPUV31Ri9J1w9FAp+zC9bSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619870; c=relaxed/simple;
-	bh=cq5Im/NgOcTZ4rtPa09PGi4z5bXY7vuDuSLx3ZWUD2Q=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nDldyR4z+86hAnkuDy/giQ8PwJab25twEr+9B7y7yIFuiIEiAic5SJJ4WcMvyVMqYy71h9SZ7dW1XQSgm8JH0a57p2mGP29oONHncl57p2t6jAcgVL0lf4gbrSEh55oUsa+BJKWuQTXveW2PxTCfY3lwJWW+e9PLnJCFB4V2a0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kbB96ZpT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GtkcfSU2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741619887; c=relaxed/simple;
+	bh=cCr6swPrHejV21H7pFXmqC8XKvmp4WhdXKPELwIzMOM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UUfzE1ueZ9xcWERay9TdbYh+ml5cyCV085OVf6TLk2smuhf+Ccqp6fHiQWE7EQX3yo2aLZwVlPPaRkzNQNJngMCVg23B2Zh0zvSaeifb6PeWihaVEBx0i2CFLronVEd5/98eYrWEV2r0Ap/4ZsdIeic4TNNgmlHhjMmyupr2WY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K618IVTM; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kbB96ZpT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GtkcfSU2"
-Date: Mon, 10 Mar 2025 15:17:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741619867;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kjCXVwpRpL1HkRl3NKPzVuAOudC0kOAalJB1yrlrCZE=;
-	b=kbB96ZpTbWOWEtTRHu/8OmDeRE+k8DuRxNLyzRNxwveydC5UDjliZOzmkXhaevffLF541u
-	pnwWnCP64sQ31aXJfdkgKPDhN1VEZdLeI4Q6wpsoEbOhm0ARd/lIGZraW9SZARHc9h4HZy
-	qaEBz4m4AAO+YnOMGbsde+60vfok6Cws3XY3VQmMp+RfmPAow2WWRpmhCe4yXUYzFy6DX/
-	0YdrP+CIhJ5SK8/HRZZ6HB7SL2nxcQ349tbe19I35SrQDoUfF68qXV+ywZw0LlIdFFc4MS
-	E+H9PHyKTyRJwBGFKYm9B3su0jKYble22iYcWrYe6H9zdP5336JymGvd/+FmrQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741619867;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kjCXVwpRpL1HkRl3NKPzVuAOudC0kOAalJB1yrlrCZE=;
-	b=GtkcfSU28f+3GgA4ByOMml9NAr9hZfj5wacArlLtZxkvKkZH1mHxS74f5rMDmqc8BTNDf2
-	c/KZQCIIs8s0gQAg==
-From: "tip-bot2 for Florent Revest" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/microcode/AMD: Fix out-of-bounds on systems
- with CPU-less NUMA nodes
-Cc: Florent Revest <revest@chromium.org>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, stable@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250310144243.861978-1-revest@chromium.org>
-References: <20250310144243.861978-1-revest@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K618IVTM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741619886; x=1773155886;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cCr6swPrHejV21H7pFXmqC8XKvmp4WhdXKPELwIzMOM=;
+  b=K618IVTMZyGOO4KLiKRzfSZCJrrG980YnJgI/wlOY+0i44cfTE0Px3m+
+   2trab2k8742IAeqtETEBO9MEx5bu72h4X+51H7eNShEedxk94EZ8c689F
+   w5503A+t21kgJVrxiTvgdTVCFe153e1056NOsUTMv70jSrk+Y+KXmLP/7
+   f/gkLL/lsvvJ17B6xWK4SXvSNKXPjO5TR8OVw5Gx+Gup1bhj8vycLzE5l
+   rkVJOqePHPwEw4Vl3zXPR5UwzFXvVxWwedBiRfJJSCxzueXYzB+hVXZy0
+   LE3SJsT9AaVJlWGo5IFKLX+cJ4wxT/H3COf8t47qNchCtu8Yqz8vI6GcC
+   w==;
+X-CSE-ConnectionGUID: UJCdwBgfSee/DLy5EnCIYA==
+X-CSE-MsgGUID: nPHq1KpaSBqKKjYhmf2wMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42656858"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="42656858"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:18:05 -0700
+X-CSE-ConnectionGUID: SMzo5GZDR3iRv+uNIbIeuA==
+X-CSE-MsgGUID: BmWdffciSh2Xpkpqi0attg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="120539239"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.63]) ([10.125.111.63])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:18:04 -0700
+Message-ID: <1fe5dc6e-3fa9-41a0-a38e-367fa2cc9475@intel.com>
+Date: Mon, 10 Mar 2025 08:18:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174161986360.14745.5442918704046363367.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [patch 04/10] NTB/msi: Switch MSI descriptor locking to lock
+ guard()
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Jon Mason <jdmason@kudzu.us>,
+ Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+ Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Santosh Shilimkar <ssantosh@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org
+References: <20250309083453.900516105@linutronix.de>
+ <20250309084110.394142327@linutronix.de>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250309084110.394142327@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     e3e89178a9f4a80092578af3ff3c8478f9187d59
-Gitweb:        https://git.kernel.org/tip/e3e89178a9f4a80092578af3ff3c8478f9187d59
-Author:        Florent Revest <revest@chromium.org>
-AuthorDate:    Mon, 10 Mar 2025 15:42:43 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 10 Mar 2025 16:02:54 +01:00
 
-x86/microcode/AMD: Fix out-of-bounds on systems with CPU-less NUMA nodes
+On 3/9/25 1:41 AM, Thomas Gleixner wrote:
+> Convert the code to use the new guard(msi_descs_lock).
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jon Mason <jdmason@kudzu.us>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Allen Hubbe <allenbh@gmail.com>
+> Cc: ntb@lists.linux.dev
 
-Currently, load_microcode_amd() iterates over all NUMA nodes, retrieves their
-CPU masks and unconditionally accesses per-CPU data for the first CPU of each
-mask.
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 
-According to Documentation/admin-guide/mm/numaperf.rst:
+> ---
+>  drivers/ntb/msi.c |   22 ++++++++--------------
+>  1 file changed, 8 insertions(+), 14 deletions(-)
+> 
+> --- a/drivers/ntb/msi.c
+> +++ b/drivers/ntb/msi.c
+> @@ -106,10 +106,10 @@ int ntb_msi_setup_mws(struct ntb_dev *nt
+>  	if (!ntb->msi)
+>  		return -EINVAL;
+>  
+> -	msi_lock_descs(&ntb->pdev->dev);
+> -	desc = msi_first_desc(&ntb->pdev->dev, MSI_DESC_ASSOCIATED);
+> -	addr = desc->msg.address_lo + ((uint64_t)desc->msg.address_hi << 32);
+> -	msi_unlock_descs(&ntb->pdev->dev);
+> +	scoped_guard (msi_descs_lock, &ntb->pdev->dev) {
+> +		desc = msi_first_desc(&ntb->pdev->dev, MSI_DESC_ASSOCIATED);
+> +		addr = desc->msg.address_lo + ((uint64_t)desc->msg.address_hi << 32);
+> +	}
+>  
+>  	for (peer = 0; peer < ntb_peer_port_count(ntb); peer++) {
+>  		peer_widx = ntb_peer_highest_mw_idx(ntb, peer);
+> @@ -289,7 +289,7 @@ int ntbm_msi_request_threaded_irq(struct
+>  	if (!ntb->msi)
+>  		return -EINVAL;
+>  
+> -	msi_lock_descs(dev);
+> +	guard(msi_descs_lock)(dev);
+>  	msi_for_each_desc(entry, dev, MSI_DESC_ASSOCIATED) {
+>  		if (irq_has_action(entry->irq))
+>  			continue;
+> @@ -307,17 +307,11 @@ int ntbm_msi_request_threaded_irq(struct
+>  		ret = ntbm_msi_setup_callback(ntb, entry, msi_desc);
+>  		if (ret) {
+>  			devm_free_irq(&ntb->dev, entry->irq, dev_id);
+> -			goto unlock;
+> +			return ret;
+>  		}
+> -
+> -		ret = entry->irq;
+> -		goto unlock;
+> +		return entry->irq;
+>  	}
+> -	ret = -ENODEV;
+> -
+> -unlock:
+> -	msi_unlock_descs(dev);
+> -	return ret;
+> +	return -ENODEV;
+>  }
+>  EXPORT_SYMBOL(ntbm_msi_request_threaded_irq);
+>  
+> 
 
-  "Some memory may share the same node as a CPU, and others are provided as
-  memory only nodes."
-
-Therefore, some node CPU masks may be empty and wouldn't have a "first CPU".
-
-On a machine with far memory (and therefore CPU-less NUMA nodes):
-- cpumask_of_node(nid) is 0
-- cpumask_first(0) is CONFIG_NR_CPUS
-- cpu_data(CONFIG_NR_CPUS) accesses the cpu_info per-CPU array at an
-  index that is 1 out of bounds
-
-This does not have any security implications since flashing microcode is
-a privileged operation but I believe this has reliability implications by
-potentially corrupting memory while flashing a microcode update.
-
-When booting with CONFIG_UBSAN_BOUNDS=y on an AMD machine that flashes
-a microcode update. I get the following splat:
-
-  UBSAN: array-index-out-of-bounds in arch/x86/kernel/cpu/microcode/amd.c:X:Y
-  index 512 is out of range for type 'unsigned long[512]'
-  [...]
-  Call Trace:
-   dump_stack
-   __ubsan_handle_out_of_bounds
-   load_microcode_amd
-   request_microcode_amd
-   reload_store
-   kernfs_fop_write_iter
-   vfs_write
-   ksys_write
-   do_syscall_64
-   entry_SYSCALL_64_after_hwframe
-
-Change the loop to go over only NUMA nodes which have CPUs before determining
-whether the first CPU on the respective node needs microcode update.
-
-  [ bp: Massage commit message, fix typo. ]
-
-Fixes: 7ff6edf4fef3 ("x86/microcode/AMD: Fix mixed steppings support")
-Signed-off-by: Florent Revest <revest@chromium.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20250310144243.861978-1-revest@chromium.org
----
- arch/x86/kernel/cpu/microcode/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index c69b1bc..138689b 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -1074,7 +1074,7 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
- 	if (ret != UCODE_OK)
- 		return ret;
- 
--	for_each_node(nid) {
-+	for_each_node_with_cpus(nid) {
- 		cpu = cpumask_first(cpumask_of_node(nid));
- 		c = &cpu_data(cpu);
- 
