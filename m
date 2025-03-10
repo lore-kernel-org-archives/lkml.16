@@ -1,125 +1,145 @@
-Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802D522B597;
-	Mon, 10 Mar 2025 15:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C37227EA0;
+	Mon, 10 Mar 2025 15:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619782; cv=none; b=nRUR7TYcHgKD11hVRxmm+JEiB2twUEI4bQV+E0OT+8E/jnRnwyrgBQ2CpPbnJ46jjD93vkOoXlFQbBlsPubEyTPqb8C5hahi36HslEJvMuQ3TlMNF+AfGODnfPXPyGIfCeB0aE5YAfkkJAnOZrqDcoU2IIyM9w7FbwqzTRijp8c=
+	t=1741619870; cv=none; b=KGICZMhZhvKd96YB53Z0fZ33MekjzodOImj89HeAv2cc+Ta+jgLT0V7YUfJXI80EYkS4a53eI8dh2uAwZa+EEw8Mcs32Sk4hmU/ZpyZdsr70zAw8zbc8TQxvygkzmkR6q9fRy9miwUgioS287j0e4X48ofrmfTxWnyHubAsId3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619782; c=relaxed/simple;
-	bh=i29N+u43fRtD6lnjrMAJHY4VE43Yw+EgbKOaqHTP6x4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iDs22YPtpissQKRxGIvZRwh1PdFekePFp5AfoVcKBf0xWYJ3CV8q6VISjKpX7ahEdyD4Wm1lgZNuA3xS+fPp/zOphzHrxx20L1YzY8v0N0ITRnQ93RXnmidXS7haazoI/HfugYuhVq6hFpk2XMDiHBir111wIhYTNydGCrTgD20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=tfWc913k; arc=none smtp.client-ip=203.205.221.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1741619870; c=relaxed/simple;
+	bh=cq5Im/NgOcTZ4rtPa09PGi4z5bXY7vuDuSLx3ZWUD2Q=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=nDldyR4z+86hAnkuDy/giQ8PwJab25twEr+9B7y7yIFuiIEiAic5SJJ4WcMvyVMqYy71h9SZ7dW1XQSgm8JH0a57p2mGP29oONHncl57p2t6jAcgVL0lf4gbrSEh55oUsa+BJKWuQTXveW2PxTCfY3lwJWW+e9PLnJCFB4V2a0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kbB96ZpT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GtkcfSU2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="tfWc913k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1741619466;
-	bh=JVydiL4Vz0YDQP+EpA5Rcz0Mj+8qQUNDN9KpCmqJyDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=tfWc913ku91iXJJozwhfpdl73cCxFoWsB2Z+GWM34ZEqJ1Ln+aG7fbbbNzJaNzIYR
-	 Edkk+aSL2oQunO7f11MZJyc6lP3bduw7hNhinYw8QSGfo0qNU/v0azAzUFV4GsgP+2
-	 EIyK2lXnMmooDmjwmZsLO4OCfAx7KzTYHbEqve0Y=
-Received: from chenyu5-mobl2 ([125.69.38.41])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 2C114417; Mon, 10 Mar 2025 23:11:01 +0800
-X-QQ-mid: xmsmtpt1741619461tc0wkaf75
-Message-ID: <tencent_F6079264D94CE4B445A5EE6C3DAAE162670A@qq.com>
-X-QQ-XMAILINFO: NY3HYYTs4gYSCkstl2Z/dxjKIClzdbHnjpDbGNcHLK0GM09CJ4Z0H8DECAbmuj
-	 D/WWpq0UTlL8AWQFJWd1VcPhrB5oVMgjFFfCjnokjftQAMbzZhDoP+lDLMXmueoKVTmSlI5p7FWC
-	 U3Pi09l8Qh59ZzJ4p5WMyvY/aOm3rX83ZM+vC2uqGfxlTPUw8AST1nX6Gl9zeam+QVHT59OIwUj8
-	 0SUszbJvwUFSIhgWwARryf2IuqtGZguVi/buYrKoR5L0VovrCz8m0fHqg4aVzhjsvcqFFKPuhAG3
-	 gquK/gti2Kv+lv2T9sgXPmhKlQOy6YHLjwXQTzr32mu68RuDBfYfz8HvUXUlu/qKO4bkxv2M4LYa
-	 XXahRKg5Ar7pnFm6xTm2jtuIMZfWdZIT4RQkQRiCxgtcsgu3rfeKzTMk9FarSr9fXk8xKAUf9Ynm
-	 rztyvO68yQmkWO8nMUcXJ7Y/BBaSIiyjF1vWVCkBDC+hZDNsJS78BLoOx/OqKz4ZfU7ADWf9d5Am
-	 cHGl1YVGDSf/nCx1JfA2jocdFZ7D/UFME7IbChIoVidkImLkKstpovjI9Ton5MJbAOMVkGLkk1GG
-	 VxhzOwPccWezdjO4WNmykLdnWsljE1oaY1LF0bMGOtygKphARu4z8a7Cc6B6uQ+8tlkV5kK6xBRp
-	 byM1x1fz9QzlvCFraBw95EZX8ng9q30p75lR2xaVmPMXZA/DSl4qFxJ/QW/VEGvXncI2/THScPPI
-	 UwfY+Q/obj4g8QkqgsU4IAy1Jd2Zr7pDy44eqykFlALna58ALi2X7HrmVnUUUnpWuIMWJLs4f6RY
-	 OjJyUycyB5OIMBAyn6Y9Ncg3AlK9BbuYAJHDljzdL0dAqzITPji+u7H2s/5/P+MT+uab4R1xZWy+
-	 uMf7c6nNjnWujdzHVC4TifkyKUBoxVXsO/9Vd5wEYSCq2L52EyNbrW8HCF5jUXWgr6TqnBI/7SbM
-	 vuCAegoErmwvtX6hpfsQ==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-Date: Mon, 10 Mar 2025 23:12:31 +0800
-From: Chen Yu <yu.chen.surf@foxmail.com>
-To: Kaiyang Zhao <kaiyang2@cs.cmu.edu>
-Cc: Chen Yu <yu.c.chen@intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rik van Riel <riel@redhat.com>, Mel Gorman <mgorman@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>,
-	David Rientjes <rientjes@google.com>,
-	Raghavendra K T <raghavendra.kt@amd.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] sched/numa: Introduce per cgroup numa balance
- control
-X-OQ-MSGID: <Z88BX/TLEEzo5Oxg@chenyu5-mobl2>
-References: <cover.1740483690.git.yu.c.chen@intel.com>
- <Z8hh1urLnpmMxHqW@localhost.localhost>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kbB96ZpT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GtkcfSU2"
+Date: Mon, 10 Mar 2025 15:17:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741619867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjCXVwpRpL1HkRl3NKPzVuAOudC0kOAalJB1yrlrCZE=;
+	b=kbB96ZpTbWOWEtTRHu/8OmDeRE+k8DuRxNLyzRNxwveydC5UDjliZOzmkXhaevffLF541u
+	pnwWnCP64sQ31aXJfdkgKPDhN1VEZdLeI4Q6wpsoEbOhm0ARd/lIGZraW9SZARHc9h4HZy
+	qaEBz4m4AAO+YnOMGbsde+60vfok6Cws3XY3VQmMp+RfmPAow2WWRpmhCe4yXUYzFy6DX/
+	0YdrP+CIhJ5SK8/HRZZ6HB7SL2nxcQ349tbe19I35SrQDoUfF68qXV+ywZw0LlIdFFc4MS
+	E+H9PHyKTyRJwBGFKYm9B3su0jKYble22iYcWrYe6H9zdP5336JymGvd/+FmrQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741619867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kjCXVwpRpL1HkRl3NKPzVuAOudC0kOAalJB1yrlrCZE=;
+	b=GtkcfSU28f+3GgA4ByOMml9NAr9hZfj5wacArlLtZxkvKkZH1mHxS74f5rMDmqc8BTNDf2
+	c/KZQCIIs8s0gQAg==
+From: "tip-bot2 for Florent Revest" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/microcode/AMD: Fix out-of-bounds on systems
+ with CPU-less NUMA nodes
+Cc: Florent Revest <revest@chromium.org>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250310144243.861978-1-revest@chromium.org>
+References: <20250310144243.861978-1-revest@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8hh1urLnpmMxHqW@localhost.localhost>
+Message-ID: <174161986360.14745.5442918704046363367.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Kaiyang,
+The following commit has been merged into the x86/urgent branch of tip:
 
-On 2025-03-05 at 14:38:14 +0000, Kaiyang Zhao wrote:
-> On Tue, Feb 25, 2025 at 09:59:33PM +0800, Chen Yu wrote:
-> > This per-cgroup NUMA balancing control was once proposed in
-> > 2019 by Yun Wang[1]. Then, in 2024, Kaiyang Zhao mentioned
-> > that he was working with Meta on per-cgroup NUMA control[2]
-> > during a discussion with David Rientjes.
-> > 
-> > I could not find further discussion regarding per-cgroup NUMA
-> > balancing from that point on. This set of RFC patches is a
-> > rough and compile-passed version, and may have unhandled cases
-> > (for example, THP). It has not been thoroughly tested and is
-> > intended to initiate or resume the discussion on the topic of
-> > per-cgroup NUMA load balancing.
-> 
-> Hello Chen,
-> 
-> It's nice to see people interested in this. I posted a set of RFC patches
-> later[1] that focuses on the fairness issue in memory tiering. It mostly
-> concerns the demotion side of things, and the promotion / NUMA balancing
-> side of things was left out of the patch set.
->
+Commit-ID:     e3e89178a9f4a80092578af3ff3c8478f9187d59
+Gitweb:        https://git.kernel.org/tip/e3e89178a9f4a80092578af3ff3c8478f9187d59
+Author:        Florent Revest <revest@chromium.org>
+AuthorDate:    Mon, 10 Mar 2025 15:42:43 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 10 Mar 2025 16:02:54 +01:00
 
-I see, thanks for the information.
+x86/microcode/AMD: Fix out-of-bounds on systems with CPU-less NUMA nodes
+
+Currently, load_microcode_amd() iterates over all NUMA nodes, retrieves their
+CPU masks and unconditionally accesses per-CPU data for the first CPU of each
+mask.
+
+According to Documentation/admin-guide/mm/numaperf.rst:
+
+  "Some memory may share the same node as a CPU, and others are provided as
+  memory only nodes."
+
+Therefore, some node CPU masks may be empty and wouldn't have a "first CPU".
+
+On a machine with far memory (and therefore CPU-less NUMA nodes):
+- cpumask_of_node(nid) is 0
+- cpumask_first(0) is CONFIG_NR_CPUS
+- cpu_data(CONFIG_NR_CPUS) accesses the cpu_info per-CPU array at an
+  index that is 1 out of bounds
+
+This does not have any security implications since flashing microcode is
+a privileged operation but I believe this has reliability implications by
+potentially corrupting memory while flashing a microcode update.
+
+When booting with CONFIG_UBSAN_BOUNDS=y on an AMD machine that flashes
+a microcode update. I get the following splat:
+
+  UBSAN: array-index-out-of-bounds in arch/x86/kernel/cpu/microcode/amd.c:X:Y
+  index 512 is out of range for type 'unsigned long[512]'
+  [...]
+  Call Trace:
+   dump_stack
+   __ubsan_handle_out_of_bounds
+   load_microcode_amd
+   request_microcode_amd
+   reload_store
+   kernfs_fop_write_iter
+   vfs_write
+   ksys_write
+   do_syscall_64
+   entry_SYSCALL_64_after_hwframe
+
+Change the loop to go over only NUMA nodes which have CPUs before determining
+whether the first CPU on the respective node needs microcode update.
+
+  [ bp: Massage commit message, fix typo. ]
+
+Fixes: 7ff6edf4fef3 ("x86/microcode/AMD: Fix mixed steppings support")
+Signed-off-by: Florent Revest <revest@chromium.org>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20250310144243.861978-1-revest@chromium.org
+---
+ arch/x86/kernel/cpu/microcode/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index c69b1bc..138689b 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -1074,7 +1074,7 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
+ 	if (ret != UCODE_OK)
+ 		return ret;
  
-> I don't work for Meta now, but my understanding is that they'll attempt
-> to push through a solution for per-cgroup control of memory tiering that
-> is in the same vein as my RFC patches, and it may include controls for
-> per-group NUMA balancing in the context of tiered memory.
->
-
-OK, it would be nice to see that patch set. We can continue the disscussion
-on this basic per-cgroup Numa balancing control, the tiered memory promotion
-could be on top of that IMO.
-
-thanks,
-Chenyu
+-	for_each_node(nid) {
++	for_each_node_with_cpus(nid) {
+ 		cpu = cpumask_first(cpumask_of_node(nid));
+ 		c = &cpu_data(cpu);
  
-> Best,
-> Kaiyang
-> 
-> [1] https://lore.kernel.org/linux-mm/20240920221202.1734227-1-kaiyang2@cs.cmu.edu/
-
