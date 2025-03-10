@@ -1,89 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2A8156861;
-	Mon, 10 Mar 2025 18:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFFF233D98;
+	Mon, 10 Mar 2025 18:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741631072; cv=none; b=FnrkozQIgw+dYeCPu+0B3q0sSwRF0967ANc0WFF+OX7bh0w+MzR4B5SoARWR+K5B/3IErOTdwirnYdD/BLH1nMMNaq+Z0uyGFBddTrbndX5aLTXUy/KfCq85W/W/un/W7mquhb8i9hDcMN1QteTYlXRThkHivik++ADdY5THPhE=
+	t=1741631096; cv=none; b=hWsKl6nRI8KDloltttSqSqxjpVe9qTEROra7uVS78XImXP8Kb+Zi+wQZSNDcVvfUqkMT9/itqRopoeeQLZi32H4omtqhjC6bWFuD3I4M30AfPppaJ+xSGws2ZsGFkKrGo5PhnGbWH5PKPro+ZZGnUCgMGyC2ISmirssryvyEtN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741631072; c=relaxed/simple;
-	bh=I9v83gD5FScUmGVEHRSB9QRMjjO35gmukcVxbPouQhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWTI0sWXOo/avJnKAIaV6Yq31mjJHGqCQBx+WuO2qSJ9hl7IDFNbiugA6c8V59j+ykTiL1lX1vQ1dkxFrIEGtkj48QD/OBZS7GCR3620aR5SJwpvSv0VJxY1Szru6t2x751h7IdfDOCS25mkeuUaxeZ8G0Sge2OjovnBQorlegc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I901CpS6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741631096; c=relaxed/simple;
+	bh=IkGd7DLrk2ypLCT9DhcVtWOLsLwvcrPe7Zl9iOboKg8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RWrqybWwG7mKXpVwleM3SW4ryxzTarFKJi5LhTKSeYpJ/rmkWZfLjUyWLqv1GyQpu8baArZ8CHxyJLatuvvnFFO8dpxIpqBSfDkJt3gali4+VmRPKfKUZpy5XbQHBODhdTTUCnFX4Ss69jNJnQ2uv6QHx8rgIOZYp6NcJakj07c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ngwhcv3B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I901CpS6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7F1C4CEE5;
-	Mon, 10 Mar 2025 18:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741631071;
-	bh=I9v83gD5FScUmGVEHRSB9QRMjjO35gmukcVxbPouQhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I901CpS6Vdf3DtNpDgEiDxTsFlIlx7rAUEWgjN2Ufo/lo9UJGZDFf3ywzXYuX1FiF
-	 Bcn+Sf16FRLMQTryJA297F3fT3341P3BA+P9ialV3qSwkBbox4ybZ7Lz4gcAK17sTQ
-	 lJ8mN9QWBAyJ8yEgTCtpFCMk79fFOez7EO4lZyX0=
-Date: Mon, 10 Mar 2025 19:19:36 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] rust/kernel/faux: mark Registration methods inline
-Message-ID: <2025031053-tribute-crudely-0e1d@gregkh>
-References: <20250309-faux-inline-v1-1-c1b692862433@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ngwhcv3B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DCAAC4CEEC;
+	Mon, 10 Mar 2025 18:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741631096;
+	bh=IkGd7DLrk2ypLCT9DhcVtWOLsLwvcrPe7Zl9iOboKg8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ngwhcv3BBxZOn17k3Nr2ahQxspTK7eZxkThDzamNsjJniSP80hUhfhEqyc6jYskBk
+	 I9v6rWag7ijnmPCL8VIp9Df6oO/UBMgMWVhorw8h5TYIovhX/KRtkvYl/nbo7Nt//q
+	 FFq3mTkPn8T9DfG7HQwHlHqBLpN3zEYvs8htN4jfQ1+NQve56Eo4G89n7sCEZocS61
+	 bIs0LilUq1Pdwa3Yzl9G/3FLP96DZ/Go1+OsqXYU+h52mBBfuuzLOaOHYkwymROy9w
+	 XOo9E2OxG4Rc/APv2sdl0Gt5Ozlfy8g+iRhNOFSvYS6filL6rMC7NDUp+JxbtPryNL
+	 zBjjCUlWZMQmg==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-549967c72bcso3126293e87.3;
+        Mon, 10 Mar 2025 11:24:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVxus5DaYZXGnJtX3DAL6zsDqh8+nxpBTuTLR57nBcRqB9F41Z1X71SXSwja9Cq66jduLK+xj2hdR3NtWEL@vger.kernel.org, AJvYcCX0JHM3ThhE64eMXWrMrEmpzKg8eQF8JrCGEjZ8jBHrHNHAbTG0AhUlz3LXA0u9Kpqpjr9cADK9Ik/TK+AAlw==@vger.kernel.org, AJvYcCXu4A4kNUqO/hHx0buQCNUsDIFVvlm91KNnuRNsqp1fpUIsATkbV9HBvVPOXQXFW4GLp2dW5bn/eVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiALLlqFaZ/9CWjx8TT4cUYl108OIL09xfUef9On0iw41eMZ/+
+	QR7DyLAHOzQfc8QI71bSm2sctkUtk0C6zBWnUNUWAHabyxGCsuZYOXfGk7tqIbRHmIjE62pG46D
+	x19Eh6jcT4p6W2zcxWmv8jiwW78Q=
+X-Google-Smtp-Source: AGHT+IEYVX/TK3hkXMZJ+vXbq9P9RIUDJi2lu9r1F0cMejB1V+b4vDNeCWZM2Il+u9q9HjZn/hR39ZvBd/um7iOropM=
+X-Received: by 2002:a05:6512:3993:b0:549:792a:a382 with SMTP id
+ 2adb3069b0e04-549910b59bdmr4658691e87.32.1741631094697; Mon, 10 Mar 2025
+ 11:24:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309-faux-inline-v1-1-c1b692862433@ethancedwards.com>
+References: <67cd0276.050a0220.14db68.006c.GAE@google.com> <8cf7d7efdc069772d69f913b02e5f67feadce18e.camel@HansenPartnership.com>
+ <CAMj1kXH0Myy3bV-hFNWnoUk6ZAa6MAd1zFTM-X6dXiJPx==w0A@mail.gmail.com>
+In-Reply-To: <CAMj1kXH0Myy3bV-hFNWnoUk6ZAa6MAd1zFTM-X6dXiJPx==w0A@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 10 Mar 2025 19:24:43 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEfG=Q3pk6PsVZxf5qCjEBTwTjUCJcNwBPO3PqNmSp=hw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jqwty5yqdg2G3GZwGtOQrAbPKtEBOr05ar2n3rX90ReMnstOFG_G9GGZqE
+Message-ID: <CAMj1kXEfG=Q3pk6PsVZxf5qCjEBTwTjUCJcNwBPO3PqNmSp=hw@mail.gmail.com>
+Subject: Re: [syzbot] [efi?] [fs?] possible deadlock in efivarfs_actor
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: syzbot <syzbot+019072ad24ab1d948228@syzkaller.appspotmail.com>, jk@ozlabs.org, 
+	linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Mar 09, 2025 at 10:14:36PM -0400, Ethan Carter Edwards wrote:
-> When building the kernel on Arch Linux using on x86_64 with tools:
-> $ rustc --version
-> rustc 1.84.0 (9fc6b4312 2025-01-07)
-> $ cargo --version
-> cargo 1.84.0 (66221abde 2024-11-19)
-> $ clang --version
-> clang version 19.1.7
-> Target: x86_64-pc-linux-gnu
-> 
-> The following symbols are generated:
-> $ nm vmlinux | rg ' _R' | rustfilt | rg faux
-> ffffffff81959ae0 T <kernel::faux::Registration>::new
-> ffffffff81959b40 T <kernel::faux::Registration as core::ops::drop::Drop>::drop
-> 
-> However, these Rust symbols are wrappers around bindings in the C faux
-> code. Inlining these functions removes the middle-man wrapper function
-> After applying this patch, the above function signatures disappear.
-> 
-> Link: https://github.com/Rust-for-Linux/linux/issues/1145
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  rust/kernel/faux.rs | 2 ++
->  1 file changed, 2 insertions(+)
+On Mon, 10 Mar 2025 at 19:21, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Mon, 10 Mar 2025 at 17:50, James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+> >
+> > On Sat, 2025-03-08 at 18:52 -0800, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following issue on:
+> > >
+> > > HEAD commit:    e056da87c780 Merge remote-tracking branch 'will/for-
+> > > next/p..
+> > > git tree:
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-
+> > > kernelci
+> > > console output:
+> > > https://syzkaller.appspot.com/x/log.txt?x=14ce9c64580000
+> > > kernel config:
+> > > https://syzkaller.appspot.com/x/.config?x=d6b7e15dc5b5e776
+> > > dashboard link:
+> > > https://syzkaller.appspot.com/bug?extid=019072ad24ab1d948228
+> > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for
+> > > Debian) 2.40
+> > > userspace arch: arm64
+> > > syz repro:
+> > > https://syzkaller.appspot.com/x/repro.syz?x=111ed7a0580000
+> > > C reproducer:
+> > > https://syzkaller.appspot.com/x/repro.c?x=13b97c64580000
+> > >
+> > > Downloadable assets:
+> > > disk image:
+> > > https://storage.googleapis.com/syzbot-assets/3d8b1b7cc4c0/disk-e056da87.raw.xz
+> > > vmlinux:
+> > > https://storage.googleapis.com/syzbot-assets/b84c04cff235/vmlinux-e056da87.xz
+> > > kernel image:
+> > > https://storage.googleapis.com/syzbot-assets/2ae4d0525881/Image-e056da87.gz.xz
+> > >
+> > > IMPORTANT: if you fix the issue, please add the following tag to the
+> > > commit:
+> > > Reported-by: syzbot+019072ad24ab1d948228@syzkaller.appspotmail.com
+> > >
+> > > efivarfs: resyncing variable state
+> > > ============================================
+> > > WARNING: possible recursive locking detected
+> > > 6.14.0-rc4-syzkaller-ge056da87c780 #0 Not tainted
+> > > --------------------------------------------
+> > > syz-executor772/6443 is trying to acquire lock:
+> > > ffff0000c6826558 (&sb->s_type->i_mutex_key#16){++++}-{4:4}, at:
+> > > inode_lock include/linux/fs.h:877 [inline]
+> > > ffff0000c6826558 (&sb->s_type->i_mutex_key#16):4}, at:
+> > > iterate_dir+0x3b4/0x5f4 fs/readdir.c:101
+> > >
+> > > other info that might help us debug this:
+> > >  Possible unsafe locking scenario:
+> > >
+> > >        CPU0
+> > >        ----
+> > >   lock(&sb->s_type->i_mutex_key#16);
+> > >   lock(&sb->s_type->i_mutex_key#16);
+> > >
+> > >  *** DEADLOCK ***
+> >
+> > I can't figure out how you got here.  the shared lock in readdir.c is
+> > on the directory and the inode_lock in the actor is on the files within
+> > the directory.  The only way to get those to be the same is if the
+> > actor gets called on the '.' element, which efivarfs_pm_notify is
+> > supposed to skip with the
+> >
+> >         file->f_pos = 2;        /* skip . and .. */
+> >
+> > line.  Emitting the '.' and '..' in positions 0 and 1 is hard coded
+> > into libfs.c:dcache_readdir() unless you're also applying a patch that
+> > alters that behaviour?
+> >
+>
+> The repro log also has
+>
+> program crashed: BUG: unable to handle kernel paging request in
+> efivarfs_pm_notify
+>
+> preceding the other log output regarding the locks, so the deadlock
+> might be a symptom of another problem.
 
-This does not apply to my tree.  Can you regenerate it against either
-the driver-core.git driver-core-next branch, or the linux-next tree and
-resend it?
+And one of the other logs has
 
-What release/branch did you make this against?
+[   47.650966][ T6617] syz.2.9/6617 is trying to acquire lock:
+[   47.652339][ T6617] ffff0000d69f6558
+(&sb->s_type->i_mutex_key#25){++++}-{4:4}, at:
+efivarfs_actor+0x1b8/0x2b8
+[   47.654943][ T6617]
+[   47.654943][ T6617] but task is already holding lock:
+[   47.656931][ T6617] ffff0000f5b84558
+(&sb->s_type->i_mutex_key#25){++++}-{4:4}, at: iterate_dir+0x3b4/0x5f4
 
-thanks,
+where the locks have the same name but the address is different.
 
-greg k-h
+So there is something dodgy going on here, and I'm inclined to just ignore it.
