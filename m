@@ -1,69 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D7E14A098
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802D522B597;
+	Mon, 10 Mar 2025 15:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619764; cv=none; b=TnqPpywzpFK8Rfvrhz7GJi6RMJCJ2ur5J1NxDYBWolu0V58DcNU3CMa9ageEsCf622V8AC2PX7D0D16kups9+T41Kz9vVxlxGSZqbjdoDAA1JGjbdocsWWJxttofDDc0XYpX6QRkfCE3dP1dqeLTzSAD0YRrZI1BWFDQHIMlj1Q=
+	t=1741619782; cv=none; b=nRUR7TYcHgKD11hVRxmm+JEiB2twUEI4bQV+E0OT+8E/jnRnwyrgBQ2CpPbnJ46jjD93vkOoXlFQbBlsPubEyTPqb8C5hahi36HslEJvMuQ3TlMNF+AfGODnfPXPyGIfCeB0aE5YAfkkJAnOZrqDcoU2IIyM9w7FbwqzTRijp8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619764; c=relaxed/simple;
-	bh=8Oin34g00wCaHk8FeIrARHeJ7CFihYZLzJBhDjqaX+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4nwI3gVdtIlCbH+RR+17nbOeJl3yFjf9MJcw8CCJTDW5/oWFH5NaVRoRyW0CX18j6TTSM9ILGgr0jkPSJyAARXSUZTXnnbAoRUpubeCW7MSYOkfu0a2pv0PsSoRVEd0IYlY6k4n7SRjVgMgMufXLsxemv+sVYJ1cL8o4GpKpPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENodMEer; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741619782; c=relaxed/simple;
+	bh=i29N+u43fRtD6lnjrMAJHY4VE43Yw+EgbKOaqHTP6x4=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iDs22YPtpissQKRxGIvZRwh1PdFekePFp5AfoVcKBf0xWYJ3CV8q6VISjKpX7ahEdyD4Wm1lgZNuA3xS+fPp/zOphzHrxx20L1YzY8v0N0ITRnQ93RXnmidXS7haazoI/HfugYuhVq6hFpk2XMDiHBir111wIhYTNydGCrTgD20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=tfWc913k; arc=none smtp.client-ip=203.205.221.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENodMEer"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741619763; x=1773155763;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8Oin34g00wCaHk8FeIrARHeJ7CFihYZLzJBhDjqaX+k=;
-  b=ENodMEerr7QK9u9g7AK1S2btUT9AtISNygFnx3bjEVYLY0BwY+kWdDvJ
-   O40aGl0DAXl/hll/R9cq9Q3Kg1Pg3WJRviwqlBFTEUmIkveKeJSenpoUf
-   NBq6kSyyQSc306+JGS56FyyrYqyunHKdVN4Brig2E1cAYcKIK+kYrYtPU
-   1P5+SIdaz/r27O3/tmnb+zT5mx+efFaS3cBSGXOuiK+CqfaOxgEF7n7Ov
-   rKLHh9yKB3QiPDp38XwGLtlWieKa6Nz3JluC5Gvby3zzdLwM2LRPG6qhI
-   QJjxa08zCDPYwWpIBTgwOfcvuUsr4icAB90g8F3/9/aWhhCtClHvUNPbc
-   w==;
-X-CSE-ConnectionGUID: PrT2fqjuSlmPU/gIN5RGqQ==
-X-CSE-MsgGUID: BnjJwJ3+TjWymEZxG+UJ7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42812445"
-X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="42812445"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:16:02 -0700
-X-CSE-ConnectionGUID: M3u8CCVSSZSEjbBoSINTFA==
-X-CSE-MsgGUID: YgmAbBanR+GtWfWfPwyjnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="125033371"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:16:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1trerF-00000001Hzj-2uDT;
-	Mon, 10 Mar 2025 17:15:57 +0200
-Date: Mon, 10 Mar 2025 17:15:57 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org, Willy Tarreau <willy@haproxy.com>,
-	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
-Subject: Re: [PATCH v1 1/7] auxdisplay: charlcd: Partially revert "Move
- hwidth and bwidth to struct hd44780_common"
-Message-ID: <Z88CLcR6ZLMl1OOv@smile.fi.intel.com>
-References: <20250224173010.219024-1-andriy.shevchenko@linux.intel.com>
- <20250224173010.219024-2-andriy.shevchenko@linux.intel.com>
- <CAMuHMdWBGb5AXv8Ch3XhPPHc0CVYHf31tx1Feh87OU5MDUCdPQ@mail.gmail.com>
- <Z8slexKyo7VFkSKW@smile.fi.intel.com>
- <CAMuHMdVmg=kuPWCN6rRTxP1LSZFtK=gagd0x092kxzif8Tav2Q@mail.gmail.com>
- <Z8tBnq-j7gKrzlpk@smile.fi.intel.com>
- <CAMuHMdWeFhqf-A-71pCZ+eFMh+ibGudMwiE5hPrdkfCYwVXHCA@mail.gmail.com>
- <Z86e3t8YVoaGsRlF@smile.fi.intel.com>
- <CAMuHMdVA5pAWKXjYDZrLczgzmhvHVOAdpK3kBQC8UGY_TzEW3A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="tfWc913k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1741619466;
+	bh=JVydiL4Vz0YDQP+EpA5Rcz0Mj+8qQUNDN9KpCmqJyDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=tfWc913ku91iXJJozwhfpdl73cCxFoWsB2Z+GWM34ZEqJ1Ln+aG7fbbbNzJaNzIYR
+	 Edkk+aSL2oQunO7f11MZJyc6lP3bduw7hNhinYw8QSGfo0qNU/v0azAzUFV4GsgP+2
+	 EIyK2lXnMmooDmjwmZsLO4OCfAx7KzTYHbEqve0Y=
+Received: from chenyu5-mobl2 ([125.69.38.41])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 2C114417; Mon, 10 Mar 2025 23:11:01 +0800
+X-QQ-mid: xmsmtpt1741619461tc0wkaf75
+Message-ID: <tencent_F6079264D94CE4B445A5EE6C3DAAE162670A@qq.com>
+X-QQ-XMAILINFO: NY3HYYTs4gYSCkstl2Z/dxjKIClzdbHnjpDbGNcHLK0GM09CJ4Z0H8DECAbmuj
+	 D/WWpq0UTlL8AWQFJWd1VcPhrB5oVMgjFFfCjnokjftQAMbzZhDoP+lDLMXmueoKVTmSlI5p7FWC
+	 U3Pi09l8Qh59ZzJ4p5WMyvY/aOm3rX83ZM+vC2uqGfxlTPUw8AST1nX6Gl9zeam+QVHT59OIwUj8
+	 0SUszbJvwUFSIhgWwARryf2IuqtGZguVi/buYrKoR5L0VovrCz8m0fHqg4aVzhjsvcqFFKPuhAG3
+	 gquK/gti2Kv+lv2T9sgXPmhKlQOy6YHLjwXQTzr32mu68RuDBfYfz8HvUXUlu/qKO4bkxv2M4LYa
+	 XXahRKg5Ar7pnFm6xTm2jtuIMZfWdZIT4RQkQRiCxgtcsgu3rfeKzTMk9FarSr9fXk8xKAUf9Ynm
+	 rztyvO68yQmkWO8nMUcXJ7Y/BBaSIiyjF1vWVCkBDC+hZDNsJS78BLoOx/OqKz4ZfU7ADWf9d5Am
+	 cHGl1YVGDSf/nCx1JfA2jocdFZ7D/UFME7IbChIoVidkImLkKstpovjI9Ton5MJbAOMVkGLkk1GG
+	 VxhzOwPccWezdjO4WNmykLdnWsljE1oaY1LF0bMGOtygKphARu4z8a7Cc6B6uQ+8tlkV5kK6xBRp
+	 byM1x1fz9QzlvCFraBw95EZX8ng9q30p75lR2xaVmPMXZA/DSl4qFxJ/QW/VEGvXncI2/THScPPI
+	 UwfY+Q/obj4g8QkqgsU4IAy1Jd2Zr7pDy44eqykFlALna58ALi2X7HrmVnUUUnpWuIMWJLs4f6RY
+	 OjJyUycyB5OIMBAyn6Y9Ncg3AlK9BbuYAJHDljzdL0dAqzITPji+u7H2s/5/P+MT+uab4R1xZWy+
+	 uMf7c6nNjnWujdzHVC4TifkyKUBoxVXsO/9Vd5wEYSCq2L52EyNbrW8HCF5jUXWgr6TqnBI/7SbM
+	 vuCAegoErmwvtX6hpfsQ==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+Date: Mon, 10 Mar 2025 23:12:31 +0800
+From: Chen Yu <yu.chen.surf@foxmail.com>
+To: Kaiyang Zhao <kaiyang2@cs.cmu.edu>
+Cc: Chen Yu <yu.c.chen@intel.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rik van Riel <riel@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>,
+	David Rientjes <rientjes@google.com>,
+	Raghavendra K T <raghavendra.kt@amd.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] sched/numa: Introduce per cgroup numa balance
+ control
+X-OQ-MSGID: <Z88BX/TLEEzo5Oxg@chenyu5-mobl2>
+References: <cover.1740483690.git.yu.c.chen@intel.com>
+ <Z8hh1urLnpmMxHqW@localhost.localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,90 +77,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVA5pAWKXjYDZrLczgzmhvHVOAdpK3kBQC8UGY_TzEW3A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <Z8hh1urLnpmMxHqW@localhost.localhost>
 
-On Mon, Mar 10, 2025 at 10:39:49AM +0100, Geert Uytterhoeven wrote:
-> On Mon, 10 Mar 2025 at 09:12, Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, Mar 07, 2025 at 08:05:56PM +0100, Geert Uytterhoeven wrote:
-> > > On Fri, 7 Mar 2025 at 19:57, Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Fri, Mar 07, 2025 at 07:14:02PM +0100, Geert Uytterhoeven wrote:
-> > > > > On Fri, 7 Mar 2025 at 17:57, Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > On Fri, Mar 07, 2025 at 10:03:31AM +0100, Geert Uytterhoeven wrote:
-> > > > > > > On Mon, 24 Feb 2025 at 18:30, Andy Shevchenko
-> > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > > > The commit 2545c1c948a6 ("auxdisplay: Move hwidth and bwidth to struct
-> > > > > > >
-> > > > > > > s/The commit/Commit/
-> > > > > >
-> > > > > > Why? We know that we are talking about the very specific commit.
-> > > > >
-> > > > > You can have a noun with or without an article:
-> > > >
-> > > > This is not so simple :-), esp. if a noun is a weekday or a toponym.
-> > > >
-> > > > >   - "a commit": an unspecified commit,
-> > > > >   - "the commit": a specific commit, specified by context.
-> > > > >   - "commit 1234abcd": a specific commit, specified by what follows.
-> > > > >
-> > > > > > My English is not native I would appreciate a link to a material to study
-> > > > > > the case you pointed out.
-> > > > >
-> > > > > Neither is mine, but the use of articles is similar in English and Dutch.
-> > > > > (I am aware your mother tongue does not have articles ;-)
-> > > > >
-> > > > > I found plenty of articles explaining cases 1 and 2.
-> > > > > Case 3 can be considered equivalent to "Mount Everest" in
-> > > > > https://learnenglish.britishcouncil.org/grammar/a1-a2-grammar/articles-the-or-no-article
-> > > >
-> > > > Okay, so you actually think that the hash and the title can be considered as
-> > > > "name of a place". Hmm... I don't think it applies here. It's not a place.
-> > > > Moreover some places require "the" article.
-> > >
-> > > Only if they are a region, not if they are a country (yes, that's
-> > > unrelated here).
-> > >
-> > > > Here https://www.butte.edu/departments/cas/tipsheets/grammar/articles.html,
-> > > > for example, the sentence "The 2003 federal budget" sounds to me closer to
-> > > > our case. Every year there is a federal budget, but we explicitly point out
-> > > > to one and reader knows what is this. The same with the commit.
-> > > >
-> > > > Sorry, but I am still not convinced.
-> > >
-> > > In "The 2003 federal budget", both "2003" and "federal" are adjectives.
-> > > In "commit 1234abcd", "1234abcd" is a name.
-> > >
-> > > Cfr. "King Charles".  "The King Charles" would be used only when
-> > > putting a very special emphasis on "king".
-> >
-> > I have talked to the language teacher (okay, her native is not English),
-> > and she told me that no article is for the cases of location, person, or
-> > character. None of that category the commit falls into.
-> >
-> > So, still not convinced.
+Hi Kaiyang,
+
+On 2025-03-05 at 14:38:14 +0000, Kaiyang Zhao wrote:
+> On Tue, Feb 25, 2025 at 09:59:33PM +0800, Chen Yu wrote:
+> > This per-cgroup NUMA balancing control was once proposed in
+> > 2019 by Yun Wang[1]. Then, in 2024, Kaiyang Zhao mentioned
+> > that he was working with Meta on per-cgroup NUMA control[2]
+> > during a discussion with David Rientjes.
+> > 
+> > I could not find further discussion regarding per-cgroup NUMA
+> > balancing from that point on. This set of RFC patches is a
+> > rough and compile-passed version, and may have unhandled cases
+> > (for example, THP). It has not been thoroughly tested and is
+> > intended to initiate or resume the discussion on the topic of
+> > per-cgroup NUMA load balancing.
 > 
-> I have a hard time finding the official rule (git commits did not
-> exist when English grammar was written ;-)... Examples are easier to
-> find.  E.g. the first sentence on [1] does not start with an article:
+> Hello Chen,
 > 
->    European route E40 is the longest European route.
+> It's nice to see people interested in this. I posted a set of RFC patches
+> later[1] that focuses on the fairness issue in memory tiering. It mostly
+> concerns the demotion side of things, and the promotion / NUMA balancing
+> side of things was left out of the patch set.
+>
 
-Okay, seems AI may help here. It tells that grammatically article is needed,
-but in technical texts (like this one) it's the usual case to drop it and
-it's considered grammatically correct.
+I see, thanks for the information.
+ 
+> I don't work for Meta now, but my understanding is that they'll attempt
+> to push through a solution for per-cgroup control of memory tiering that
+> is in the same vein as my RFC patches, and it may include controls for
+> per-group NUMA balancing in the context of tiered memory.
+>
 
-We both are right but from different angles. And yours seems the winner today
-:)
+OK, it would be nice to see that patch set. We can continue the disscussion
+on this basic per-cgroup Numa balancing control, the tiered memory promotion
+could be on top of that IMO.
 
-I'll update the message accordingly.
-
-> [1] https://en.wikipedia.org/wiki/European_route_E40
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+thanks,
+Chenyu
+ 
+> Best,
+> Kaiyang
+> 
+> [1] https://lore.kernel.org/linux-mm/20240920221202.1734227-1-kaiyang2@cs.cmu.edu/
 
