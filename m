@@ -1,91 +1,123 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5E41DFF0
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041981DFF0;
+	Mon, 10 Mar 2025 15:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622162; cv=none; b=HDNBjhtK2tj2cRFQb05aCUUiS6klLu+u0BuLH3Pxs77u/eNFZiyOuKnxEMq2EQKb7Eq/5VkwlRSULRXbyWLslqtbfDbf4xCcRyU3iLamyV3+PN0EToxmLv8ZUWmdd2ha05xeC3QbAO+3tAxpgtTdVVsJV2aAQ1zWfVxtWQAdopQ=
+	t=1741622209; cv=none; b=IgYIOueYo3NxJRA6FrnE9SnjP6M5qhezTZCMmVFtxjRmXHTxbC/Z5CGNcRciZ4Q0K3XkU5rf93J4UkXdJAFBFfUj6E7AprgauOTN/hqdQMCwvmF2zGq7hE8IrX6A7nBs2G/Mcb6RKWUKuRoPp4IcSqi4PjSjcPj/8BG+DXQoBZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741622162; c=relaxed/simple;
-	bh=Vpib4HknDTcWF0+SOM32JnezkrePARgvbNr3p5pKfxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KHTKcjIziCsqw/sZ0Pi3YFNT4dHk+J9HEDMceSmd3wPCwkuqioH4VYE+rOzgKWnf4bT17MkmgZEqQsQYwWFWz7ESTDSomltjnQ0gIG2waYoGSJQBLClv+LLCB98x3kIKusl88JH33gzcd7Fht7rBx33M7cEwiAVB5sRNvkHRZ1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=E8GgY0rh; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741622209; c=relaxed/simple;
+	bh=kamb/0x1RtibBi69Oi3ZHY8EijG20URTJpwtA9UanIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RxN4AtxZKRQdvxzMoCbnJOYJZDU4KEi1nDd5ncPmbA/PJ5+5xOJLPyjyc8Rpd+TxVr9KBFlyB876NlhwjM6zTBrc/UzspYyKtleSM1t1WnK3U3NdI0N117TJhC5Gs0p8keaEa7V/ycJLgg+N94zDvaBUmEgw1vTC/Lb8LkGKCTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YU8rIuID; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="E8GgY0rh"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7EA4B40E0214;
-	Mon, 10 Mar 2025 15:55:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 3rCujaEF5c82; Mon, 10 Mar 2025 15:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741622153; bh=ytO3kw2/VnCOnax+CiIDtQsCcsdLqF1YX6RbNsPln9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E8GgY0rhVvOteJgFJu7PHUiNx4uPmnHsDM7jyNq1S9R0ArkMgvEHev+cJKh/722Wn
-	 9FIGSlHohhe8t3D3cfmNx5RISE4PGsVNYxl9vtd7almZ6aZYMC6p528hRyHTPYXoLL
-	 GGgvYUm9Kw2OlY5ie+bjOPJFXIaHqIjz0zAOU8I5wPhnJZ2M7DFsVTRpDGkISbELbz
-	 LOhDBroNYFIyEaKzECW7B6gKktbHrBV1nuzIoB9xiGuYSKDn6lOo81kE8lxBkgEd92
-	 zKgIPoKXwZTJNq1fGeSRxLvTql3CxzAY3Knd4AUcPObeZ7xhhWYeV+wEuQo0iQBf1h
-	 tV0XPNRlgn/nagokllamFn/tT0qknwoxxAjmQMx67qmNyJu4+64Iqlu9sRqit5V9/6
-	 wWaXGmQ1Vidqg0cj3wfy8DnfaJx3LJuLRZp/G41ir34j7yZtoM/ynRF2TdVzK5Ozc4
-	 SBCO2ehigCxKY1Xd8eeXFhc5u4nfeFoxeiBfnyEgAIILWeqfYnUJIHU3Cb4uZW2g7t
-	 PDeKcSwoqnEoMOGaBvfZACx9fiNUiqCzEbLr1lcKazLhFepNx4SvOjgR9rxH/AUFhJ
-	 2CnNfa3UJBg8PjDL8kjXAlV7/8ZP8XhGaFdNgcnhQ1X+vnwLwk4mQ8ZNzBnJNNhz5j
-	 WTxE47UG/tUzuHdEXALm8RGE=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E64C440E015D;
-	Mon, 10 Mar 2025 15:55:38 +0000 (UTC)
-Date: Mon, 10 Mar 2025 16:55:37 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Juergen Gross <jgross@suse.com>
-Cc: Alexey Gladkov <legion@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-	"Alexey Gladkov (Intel)" <alexey.gladkov@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@intel.com>, Joerg Roedel <jroedel@suse.de>,
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org, hpa@zytor.com,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
-	Larry.Dewey@amd.com
-Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
-Message-ID: <20250310155537.GSZ88LeX9PQQpeCCaU@fat_crate.local>
-References: <Z87L0bRi8tcAIsDw@example.org>
- <e9d58d64-ab0f-49e8-ac87-c02bda6bc837@suse.com>
- <Z87ce37GjCqpOLCW@8bytes.org>
- <b2e585a7-edd5-4b13-b904-3d0913177aee@suse.com>
- <20250310133833.GHZ87rWfuV6WgQTsoh@fat_crate.local>
- <Z878IRbbzIbUDQvj@example.org>
- <20250310151154.GOZ88BOinZVkbYEx0w@fat_crate.local>
- <104b6d4f-2848-42f4-a134-3373d12d9424@suse.com>
- <Z88Iv0w8_l9i7_8l@example.org>
- <57b64adb-c7b6-445c-b01b-7b05bd7c919b@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YU8rIuID"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1991C4CEED;
+	Mon, 10 Mar 2025 15:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741622208;
+	bh=kamb/0x1RtibBi69Oi3ZHY8EijG20URTJpwtA9UanIs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YU8rIuID2ZcjzyRs4+lMKU6IIcOYPchsQLG8WBKpT5Ha/xw9e66suP6XzGUBAQby9
+	 LZNpEwOWo/AwkdScXHw/AY5olaZVgQxfmNbXMS6bFKhx2IHVw3oEAENbFZuyl3IbBg
+	 VEyJmVpHuIvXn115vcAYqS3Epp0L3rx4dio4v6OQwcJIAgZtLzahLeP92RMArsPWxZ
+	 r9HAPUaA7yFQVKJw6NloVzlTuNamWAz7rK5RXLP2NoR6ugt2fqYdJIwRy5jkuPhNzr
+	 FiNRf1yHuRscImO5S74kZYlaxutGB4x34xsxS1ivBx5u0Up3mrSgkq36dG+chDqE/V
+	 gMoO7+RVJHeFQ==
+Date: Mon, 10 Mar 2025 16:56:38 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Yury Norov
+ <yury.norov@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V2 1/2] cpumask: Fix kernel-doc formatting errors in
+ cpumask.h
+Message-ID: <20250310165638.7b001393@sal.lan>
+In-Reply-To: <bcce7d39-f142-4838-ba23-4fa2dda69fd0@gmail.com>
+References: <cover.1741332579.git.viresh.kumar@linaro.org>
+	<f4ad81150eaa00b43c161f0d1f811f8ecfe21889.1741332579.git.viresh.kumar@linaro.org>
+	<20250310155301.6db5033c@foz.lan>
+	<bcce7d39-f142-4838-ba23-4fa2dda69fd0@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <57b64adb-c7b6-445c-b01b-7b05bd7c919b@suse.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10, 2025 at 04:52:37PM +0100, Juergen Gross wrote:
-> /sys/kvm/ might be a good fit when using KVM?
+Em Tue, 11 Mar 2025 00:27:47 +0900
+Akira Yokosawa <akiyks@gmail.com> escreveu:
 
-What are we going to do when Xen runs coco guests? Or there's no such danger
-in the near future?
+> Hi,
+> 
+> Mauro Carvalho Chehab wrote:
+> > Em Fri,  7 Mar 2025 13:04:51 +0530  
+> [...]
+> >>  /**
+> >> - * cpumask_first_and - return the first cpu from *srcp1 & *srcp2
+> >> + * cpumask_first_and - return the first cpu from *@srcp1 & *@srcp2  
+> > 
+> > I don't think this would produce the right output. See my other comment.
+> > 
+> > See, if I add this there:
+> > 
+> > 	 * cpumask_first_and - return the first cpu from ``*srcp1`` & @srcp2 & *@srp3
+> > 
+> > The kernel-doc output is:
+> > 
+> > 	.. c:function:: unsigned int cpumask_first_and (const struct cpumask *srcp1, const struct cpumask *srcp2)
+> > 
+> > 	   return the first cpu from ``*srcp1`` & **srcp2** & ***srp3**
+> > 
+> > e.g.:
+> > 
+> > - srcp1: will not be bold, but it will use a monospaced font and will have 
+> > 	 an asterisk;
+> > 
+> > - srcp2: will be bold, without asterisk;
+> > 
+> > - srcp3: violates ReST spec: different versions may show it different
+> >          and warnings may be issued.  
+> 
+> This third pattern is available since commit 69fc23efc7e5 ("kernel-doc:
+> Add unary operator * to $type_param_ref") and I haven't heard of any
+> regression report.
+> 
+> Sphinx parses ***srp3** in the following way:
+> 
+>   - It sees the first ** and start strong emphasis.
+>   - It continues that mode until it sees next **.
+> 
+> In the end, Sphinx will produce strongly emphasized "*srp3".
 
-:-P
+Yes, I got it. But, as "*" is a reserved symbol, used already as
+*italic* and **bold**, nothing prevents some day to have a ***something***.
 
--- 
-Regards/Gruss,
-    Boris.
+Also, other ReST tools may misinterpret that,as, IMO, this has
+undefined behavior. So, better avoid that.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> It would be much better to convert *@srp3 into "\*\ **srp3", which will
+> result in normal "*" followed by emphasized "srp3", but I didn't go that
+> far at that time.  
+
+Yeah, either that or **\*srp3** to keep the asterisk bold
+(assuming it works properly) [1].
+
+[1] I remember I had some troubles with escape codes on
+bold before, but can't rename exactly on what version.
+
+> This looked sufficient to me as a band-aid workaround.
+> 
+> Or you are aware of any Sphinx version who doesn't work in this way?
+
+Didn't check this specific issue.
+
+> 
+>         Thanks, Akira
+> 
