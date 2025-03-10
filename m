@@ -1,85 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB5BD2FB;
-	Mon, 10 Mar 2025 01:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C40D2FB;
+	Mon, 10 Mar 2025 01:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741569967; cv=none; b=e4WnVrAaGv+KYMUmSxr/7h7nlc3qHGyRTInGIbp+3y6nN/kVfOZMwSCnPfXBpJCtLGcpKTNoKi5wB29gtXi/TwXe2IqKtt6s/X23Rx/AUoaOtQcaAJ25hVuJunzil0cGRlM1XJ48l5IL+wi737p6RVW2lnK1HcN24Xn8wTnYQVI=
+	t=1741570049; cv=none; b=Wd2OJ1BXBGUrnYhHbhcblyUcvv1b9t0HABqKSmOtUOhgxFWlkoadmKsnkPOmKdM07Igm/68jF3eY76juOItR/qeZ/QOLLtNVRwoXNOCrQKRJ3n7vyUtFIAxtg948WPxT/GdBW97wJB3yx53b90uROREb2KOOW4bMJvxLCNc4pnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741569967; c=relaxed/simple;
-	bh=niTPujelY/5yJ2aZGPQo/oOGRfZZBnNHnH4STmdWhzs=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qgKMpvF+nBIICriiXdaIMg7Q01YaFpko+gTd67nPO9xyIBrzDQj+hRhu7k6Hb5zNin/3mcWmsK+6GKmEAbbwtNdJpThDZ1LKjt+EFioCmecbv0FebapEqHrQphEes4LMsYgKoI5ZZ8ogsVeA3ZnJy3oszue/imjBihhc7Tf6Sss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKgWNPOg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741570049; c=relaxed/simple;
+	bh=rxSbpLnmPg/f1C5iQZrRtp2qCYHu/UFoK9lKzu9mXjU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BOkalOlfnQIzRNqCrmpkMYKhsUhwqfUfHX4oZkvHrpibkmGlQPfaTv+GwXjW4o9a7lb+z6XZP+MYhospDL/wyGyDm/uozNwneYW7FredChjnUWf/VHYBGfIl71Vmr5r+50KE6CGktvcD9OU6xLnHp5aeYpIN4SW1GW06kmWtDlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h/tx52t6; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKgWNPOg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A2FEC4CEED;
-	Mon, 10 Mar 2025 01:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741569966;
-	bh=niTPujelY/5yJ2aZGPQo/oOGRfZZBnNHnH4STmdWhzs=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=OKgWNPOgpP5Hvg55x3Eo8nfgm3rpxEtORf+cHGQuqJPyuod3JxrLOYXrgN3E5zmYq
-	 3zN6Gszv2KmYUFBjI01gFPoeBunNxJILmMhXFto63eiyCH60BTSPK1umTO5AIRznl9
-	 XCcXaruCqXjuWFPPEUE4W1772K90TAU0iMSVtbN2ZwdsbCzEMypvkFp6t/1/UAhjJC
-	 eyKlJE4ofA6d6TKlENGKtbnV5KF00GtC+L9mtJPAfNlUftK1Xc6wK/gX083x6y8tFZ
-	 CpIaKLcvVsvMsYoUALvDt8XkB37af1J1wdmStxJUIOPYhbAPEOh1F2814zWqrzUy9w
-	 Hv0crZGSQZ7bw==
-From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
- conor+dt@kernel.org, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
- festevam@gmail.com, linux-arm-kernel@lists.infradead.org, 
- imx@lists.linux.dev, Shengjiu Wang <shengjiu.wang@nxp.com>
-In-Reply-To: <20250306053138.1914956-1-shengjiu.wang@nxp.com>
-References: <20250306053138.1914956-1-shengjiu.wang@nxp.com>
-Subject: Re: [PATCH] ASoC: dt-bindings: fsl,imx-asrc: Document audio graph
- port
-Message-Id: <174156996154.2353078.15110736493128457712.b4-ty@kernel.org>
-Date: Mon, 10 Mar 2025 01:26:01 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h/tx52t6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741570048; x=1773106048;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=rxSbpLnmPg/f1C5iQZrRtp2qCYHu/UFoK9lKzu9mXjU=;
+  b=h/tx52t6/7fZQ6LuMMiFwevBdJxKkq5Jef2r91CHdZ6AUt+PIUsk/xcR
+   r+lBQf6A/j9YTnnclsNqW4jJsTAuP2Ndv3XM6eLIMupIsdU6NfOXLxk7g
+   b3bSuNqNFc6hsVVpAadefUzpb8Fcm1ux5PQxC8SpvuoaTq2mCHzEeaBAi
+   GedtiuNl18KJxXYWu6TGuK/YkmJ2hosir2+ei3WWfAd8724B1HR+jyB6n
+   74Eqh04YtSomOObHCqng2wS0Ax7tJ2mwh1ungDVfRjumMPzFvnVgutyF5
+   hXJpdbf0nF08i8mlLwubY11hJlcngaY4uBr8/iMf/jGCUquqg6wwZIr9v
+   A==;
+X-CSE-ConnectionGUID: nw8d7VlzTpG990jrjIeuPA==
+X-CSE-MsgGUID: q3IyDrO3SXS6N/GqqOfzCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="67914518"
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="67914518"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 18:27:27 -0700
+X-CSE-ConnectionGUID: LyWHBSXQQyOBOesHlmU9UA==
+X-CSE-MsgGUID: S+/fXDVjQrWl0iF250T17g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="124925399"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 18:27:24 -0700
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Jason Baron <jbaron@akamai.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Gary Wang <gary.c.wang@intel.com>,
+	Yi Lai <yi1.lai@intel.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/11] Add EDAC support for Intel Raptor Lake-S SoCs
+Date: Mon, 10 Mar 2025 09:14:00 +0800
+Message-Id: <20250310011411.31685-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250226015202.36576-1-qiuxu.zhuo@intel.com>
+References: <20250226015202.36576-1-qiuxu.zhuo@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-42535
 
-On Thu, 06 Mar 2025 13:31:38 +0800, Shengjiu Wang wrote:
-> This device can be used in conjunction with audio-graph-card to provide
-> an endpoint for binding with the other side of the audio link.
-> 
-> 
+This series refactors the ie31200_edac driver to add EDAC support for Intel
+client SoCs with multiple memory controllers and out-of-band ECC capability.
+The first SoC with multiple memory controllers to be added is Raptor Lake-S.
 
-Applied to
+Patch 0001 ~ 0005: Bug fixes and cleanup.
+Patch 0006 ~ 0009: Refactor and make resource data configurable.
+Patch 0010 ~ 0011: Add EDAC support for Raptor Lake-S.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+This series is on top of:
 
-Thanks!
+  https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
 
-[1/1] ASoC: dt-bindings: fsl,imx-asrc: Document audio graph port
-      commit: db91ad81a2545eb82aa47d0306bc3e1adb05e336
+Changes in v2:
+ - 0001 ~ 0010 : No changes.
+ - 0011        : 1) Update the commit message to clarify that the
+                    correctable memory errors of RPL-S are notified
+                    via CMCI, not by #MC.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+                 2) Update the configuration field: s/machine_check/cmci/
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Qiuxu Zhuo (11):
+  EDAC/ie31200: Fix the size of EDAC_MC_LAYER_CHIP_SELECT layer
+  EDAC/ie31200: Fix the DIMM size mask for several SoCs
+  EDAC/ie31200: Fix the error path order of ie31200_init()
+  EDAC/ie31200: Fix the 3rd parameter name of *populate_dimm_info()
+  EDAC/ie31200: Simplify the pci_device_id table
+  EDAC/ie31200: Make the memory controller resources configurable
+  EDAC/ie31200: Make struct dimm_data contain decoded information
+  EDAC/ie31200: Fold the two channel loops into one loop
+  EDAC/ie31200: Break up ie31200_probe1()
+  EDAC/ie31200: Add Intel Raptor Lake-S SoCs support
+  EDAC/ie31200: Switch Raptor Lake-S to interrupt mode
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+ drivers/edac/Kconfig        |   2 +-
+ drivers/edac/ie31200_edac.c | 637 ++++++++++++++++++++++--------------
+ 2 files changed, 387 insertions(+), 252 deletions(-)
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
+base-commit: 079b06b8b3a057b0f04381b4144602577f875080
+-- 
+2.17.1
 
