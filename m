@@ -1,270 +1,199 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7A1221DB2;
-	Mon, 10 Mar 2025 07:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C59221541
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741592467; cv=none; b=PCYL7xTw4Kgm4OAPkVuJBq/yn8mUx8kaBW3W34LC2gqlR6dgc2RHVj3idV1UYT3PqWbLqx3e+pk55pFBIOU5h3BALZeHJTam146NQ5eREAS3k3Y6YXr9gIRw0e5IQRJI1Fkbt7TPUZgsrOOh/v18uDYi3LBm4By3yxtRTy81AYk=
+	t=1741592482; cv=none; b=CvHIRomudGjErLpCcoAoT3VpX7jWdIA6e+WrNvFBQHgseUe2tszSg2ezNfgCKrjzKtvuZh8s+INziM/UjqC+Ae/ZFva5b0pHC6tSffrjti9Pt4Vcv3djRu5sVE6po73QxxGGymC12MUBXjEaUE5jFsCBhbn6IXNmFgDpaeqlu9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741592467; c=relaxed/simple;
-	bh=LTMAUQTizHw74W2gOqhgX2l8ap8D2eBxC8RTz2GImYg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PClRoOW/nXoiGIjDXaw2QHVsEJA7wLCgiiGaCKz5W2c4FW0g9R+rDoJ04+qHlrL44D15m5cA46/ttVDMYRLgh+xbvLvTXi5rKlu8GuMA5RmlsyQEZlSia0JpM4mRbz4p0qEn0J/p5r+TqK0CC5nAHNBFDaoVRZhFmHWFAeAt2/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M7IaUz1p; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741592482; c=relaxed/simple;
+	bh=6vlkNLt2wNyzgoZ31HBZaGaKN/AYI9na+E8aX3yPJjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ty9BnE1Yx7Folqqba475nw/yYsiJGTtmXW6vh3FLJ4k4xtq3oHGSqvNZmmhMXhx6q2K7MY1krEFNUenFhIVuhBhzhv1+YLBDsSfrFa8eM+HeI/2sZj6TXI3iWDMtp5cDN27rVkmX8kV+0eMskQFu+EMbj5VLBEjSaCs2L3Iza7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bORrUA4e; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7IaUz1p"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-548430564d9so4166672e87.2;
-        Mon, 10 Mar 2025 00:41:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bORrUA4e"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224104a9230so6729335ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 00:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741592463; x=1742197263; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=osEFHHA8j9TYONQ8F8JDSlqbUbM3s6nOsIv91QRD3Lc=;
-        b=M7IaUz1pL/Fkht9c6+DMpzfo3RJiMc5fJOAhhWo0OZDmcEPTSlg6fmqbUsO76aGVct
-         YM6qc64fBtyLPw05f5YOodRcMcpUNx4BLpGE8liHaoQxz4YJkNcNWvkARMJJuTdFrSpA
-         mp46zF2SmNoLsSWP1fwYKacoVd2VWpFMjo7Wxok9Qgh/Df9UesUoJq7DaVm1oyBiKRTG
-         rmvGV9I21X7NM8Zfbz7xmaPxjL8qWcFnXz+2j1m1FZhsurO5tIPYeu86OHkhjOifUWyd
-         xee34B96JD9ZD9x/lPd+i3cVSPIKWtvcjhtyskijsL7zlT+Q1aIhcVN2c3GtOBJmQ0Oh
-         0CbA==
+        d=bytedance.com; s=google; t=1741592480; x=1742197280; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=33/QyKRQnnhIEj3uXq/x7qASVRIRp5tCMAk2Yb5EEBY=;
+        b=bORrUA4eu9u/hYFST3n0+cIXuyByDRUoZfGgMH9s5WxTBUYJrDkFf1MzAGJa+E/+t2
+         I7gk13npNFYyKa1Jv0fus/tsko4Pkfp9rCWiYugRTzd4/iQepvzBq1TtBqtNYlV4uV68
+         JpcwnpDFo/2+CRRgJXfyLg9+gf9O7AQGm0k8A/WwzECP7n6Wi4KJZ7UqBfZJpKrtEz1x
+         RSBzikGAqSvteVKpLblI09h/a3cck5Ahx/Vgj5T7uto2EmsmV2jv9vPufVNgNWO1EaDv
+         gMTFVyRSBnqFI8k3poyOVs8ADlyhCbQupiMJ32dehIGZsq44wpYctR98YvMKuKsLqbAW
+         fGhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741592463; x=1742197263;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=osEFHHA8j9TYONQ8F8JDSlqbUbM3s6nOsIv91QRD3Lc=;
-        b=a/Nsbh9qeXpLi8nUfDLG1o+KgQJUnC9oQ6/nh8ZJvHqtqGGwY2a4q1gu7TcdguFVEi
-         KThi1jEo0ym375A/0oghAZd2u5bCZYKdo40Ak4XTwFcAQupTDMBUK/L5hHRM82+UURnM
-         qY3kRR1DmVZdLrCsudM2L43Ll7LRFib0Kvw31PcpXVXmXR1xKANMDgNYocyHtG2czReO
-         uL2styeChDCdQBcqXnTI7z/rpuIBfY1GVZ6UT7qWEZp57NvBh+aE/0y30YL0ZruY3gMN
-         k6ZovkbPnYFQ4KEPnCmKwHCRsDVWaqPBsTZdOVy5rcJ66geDSOP/cimUi8vvnLnPUohu
-         Ehcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqnaIucHYEaeGL8f7eRwxH+4D3xYIiYfrys1xkrgVBaWurs/1q9nP9+edHytEDz+2/IeiSCKgVNvSVX2Mk1CtvjX0=@vger.kernel.org, AJvYcCVFl8sgPMv5K6ZgSh+XbvFjcrqmSeGMpSNt19l4gHITQhNCMhWbub3D82zoku4U6pMzWsLAZDiQZBQH@vger.kernel.org, AJvYcCVJyXk+todzfmqmwvUslvM2OqolRuhhhlJEkXt25FxqXUo/sCpCZRuOPWRqrjkSuRGWZuhoCxvA90sm@vger.kernel.org, AJvYcCVRp1KuIcsRN0D0KSOnxM53ae5TfLLSsHmFscDAg//VOHuZ+1YH3BOHoi44elDk/AYipKRsFdUEUQZZww==@vger.kernel.org, AJvYcCWNQdt6SSt4jnh6FrOa8canLANIbwJATzWR7Y0t0mwpSF3hgL1aMTXPLX7VCozmzQR0htC73Qpi67fMqXyT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFxZquo8PKroukFc11TWZ/a/Hd13QWnC0DWghz2BoSB3rRtDyu
-	ZozBbJT0lR7zbTsZzIelx0pJDgjszQcRTNnC+sKSZxeQnMojCXEonI0O0g==
-X-Gm-Gg: ASbGncspsYtURzFPa2hf/9KDoH/ttcyc1f2XBeJRkgIFrBZYjgikGQfTBLoHCXq5VCh
-	/SD2mjj+YZukn7PlcgDQkNsyJV7lWGuEvxOoYOuKPCfwXZim4U783wiYSkXqIbVhBC2AD6LK+D8
-	osoNtdATeoB5soqGSmvSPOBpFzWg1mOsm/M0T6hwXuVAEpEBJLIF9TO13dR1Zm6CsO44BMeEhyS
-	THcdL5xU3HbNOtOwQrsv9FOAJeRJCF6VKsgeSrSqgw0t75asab/qs3N7h2TXlc+95NqyevE4IH4
-	Znz7vJ7WlWp8Ps5N0HRjplq04/Unk8tL98CC6aiCVhpE/pPR6d9kk+tyO0HFf8H05H1hE5JWVYM
-	KWVOYKIBDzauLqA+bnVhLHztTWg==
-X-Google-Smtp-Source: AGHT+IH2xlfCjxUf0Jmc6edmxLihr/sOKf0PRYUS3gP/gGJ3W6JuFQR6v8x9TcODLg2RTjj4/+/a7A==
-X-Received: by 2002:a05:6512:ba6:b0:549:8f15:db2f with SMTP id 2adb3069b0e04-54990e6771cmr4714399e87.31.1741592462737;
-        Mon, 10 Mar 2025 00:41:02 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b0bd032sm1379150e87.142.2025.03.10.00.41.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Mar 2025 00:41:02 -0700 (PDT)
-Message-ID: <4d5212b3-3801-408c-9a5d-c6111189793c@gmail.com>
-Date: Mon, 10 Mar 2025 09:41:00 +0200
+        d=1e100.net; s=20230601; t=1741592480; x=1742197280;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=33/QyKRQnnhIEj3uXq/x7qASVRIRp5tCMAk2Yb5EEBY=;
+        b=HCPdUhv+GtzUmxE9Hurany2cViyoPvewKPmpEELPWl96pwLWwBq6auar0l8ISgQVr8
+         JA0cayqusm3hR4uJD4LPTRSaX6Zet37fJu5+uGHro7cTMwLhNsQT2BHEDxiQm5A/FB3t
+         zWZI1uRbzZq3zAlyQFv9y/wr9aHvTx4r+p7OlICaCDx+3esrTArJ98b03IuV6bbzYQof
+         aJf6G0JZzxLcrP9zRt0YZ7CJp7GnxLE+9mBWVR8dr6dctBOlcL3IpFsZZZd5Qg1mK46J
+         GN4K6xUty6bEixZulf1fRhHZMuNjD10WAv5Pm+hrmEiX1aZCe2XxiFqwbUteHsCNV67v
+         mjPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXL3VG9VICzE7DDd+B+L4rpORQxugUNMg/P1BL8h16pJwWurAvCX6jN56Fu0OjSINuVXU8ImdoSVeeWkRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAiFneaLhszfU6hauXblcS+OP05j1XCLE1oagooQKexYTAjQCD
+	BtQdblSmyFca9H3Fy4AmrZqRYq5u2bzMcoC8cm4GYUQKIU79j4wgfF30AkapBZo=
+X-Gm-Gg: ASbGncs8ytqitGKEKFo70+HZ+h9hRgBFI2O3YqmMkT+O79vkN4Mw8SC3cnACaY6bD8L
+	tk8VOkwnkNXTFHNdUrhY3fqbnEVucs7rgBEJK7ROO8GqYRT5h++n8o1z95NdCS1WYA8kLgnbhxS
+	rFLEEDpWtIHaCkS/u2oKqXSUDUn9TpwsrI5bUIBat74q862WdIKEJjiWF8WoTOxSLjwPAHBWaxU
+	bJdzKawaThW18r9vqGz602o6Z0rBflk3LWE7CsLKBygDlBOrBt7U8LS7KvIyEBRvS2984DQeI+Z
+	IhH25XBYXite8NWpfYVwmO98DMerj4Q3iFe8Ec/4Q13BfScg4inphjlZ5DvBAIs1VRPyaAOot7m
+	YrEAZAtZ0XRK7nPUGpgvfyuM=
+X-Google-Smtp-Source: AGHT+IEXDvUU9C+runxcNDE1EjSSzaOhCy8SB4ThcUMkGrLj0GyJujy0MMt6MRMMAoseTC1QUt4+JA==
+X-Received: by 2002:a17:903:40ce:b0:221:7854:7618 with SMTP id d9443c01a7336-22541efb708mr44497305ad.8.1741592479537;
+        Mon, 10 Mar 2025 00:41:19 -0700 (PDT)
+Received: from C02DV8HUMD6R.bytedance.net ([139.177.225.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7f8b6sm70965225ad.136.2025.03.10.00.41.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 00:41:18 -0700 (PDT)
+From: Abel Wu <wuyun.abel@bytedance.com>
+To: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Josh Don <joshdon@google.com>,
+	Tianchen Ding <dtcccc@linux.alibaba.com>
+Cc: Abel Wu <wuyun.abel@bytedance.com>,
+	linux-kernel@vger.kernel.org (open list:SCHEDULER)
+Subject: [RFC PATCH 0/2] Prioritize idle cpus over SCHED_IDLE ones
+Date: Mon, 10 Mar 2025 15:40:40 +0800
+Message-Id: <20250310074044.3656-1-wuyun.abel@bytedance.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 03/10] iio: adc: add helpers for parsing ADC nodes
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa <nuno.sa@analog.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Guillaume Stols <gstols@baylibre.com>,
- Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- Matteo Martelli <matteomartelli3@gmail.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- Ramona Alexandra Nechita <ramona.nechita@analog.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <cover.1740993491.git.mazziesaccount@gmail.com>
- <e71c63c2f61135f9a8c7884525aab2c48f1e84c2.1740993491.git.mazziesaccount@gmail.com>
- <CAMknhBGQaqFZJsPAoauZL4S5MYtN05EOQ-BO2vw5gH+Z2RLOhw@mail.gmail.com>
- <54a031d0-df47-4baa-a23a-1a79c0922542@gmail.com>
- <20250308162928.72bd1d1b@jic23-huawei>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250308162928.72bd1d1b@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 08/03/2025 18:29, Jonathan Cameron wrote:
-> On Wed, 5 Mar 2025 12:54:33 +0200
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> 
->> Thanks for the review David.
->>
->> On 04/03/2025 11:25, David Lechner wrote:
->>> On Mon, Mar 3, 2025 at 12:32 PM Matti Vaittinen
->>> <mazziesaccount@gmail.com> wrote:
->>>>
->>>> There are ADC ICs which may have some of the AIN pins usable for other
->>>> functions. These ICs may have some of the AIN pins wired so that they
->>>> should not be used for ADC.
->>>>
->>>> (Preferred?) way for marking pins which can be used as ADC inputs is to
->>>> add corresponding channels@N nodes in the device tree as described in
->>>> the ADC binding yaml.
->>>>
->>>> Add couple of helper functions which can be used to retrieve the channel
->>>> information from the device node.
->>>>
->>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>>>
->>>> ---
->>
->>>> + *
->>>> + * Return:     Number of found channels on succes. Negative value to indicate
->>>
->>> s/succes/success/
->>
->> Thanks!
->>
->>>> +int devm_iio_adc_device_alloc_chaninfo_se(struct device *dev,
->>>> +                                         const struct iio_chan_spec *template,
->>>> +                                         int max_chan_id,
->>>> +                                         struct iio_chan_spec **cs)
->>>> +{
->>>> +       struct iio_chan_spec *chan_array, *chan;
->>>> +       int num_chan = 0, ret;
->>>> +
->>>> +       num_chan = iio_adc_device_num_channels(dev);
->>>> +       if (num_chan < 1)
->>>> +               return num_chan;
->>>> +
->>>> +       chan_array = devm_kcalloc(dev, num_chan, sizeof(*chan_array),
->>>> +                                 GFP_KERNEL);
->>>> +       if (!chan_array)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       chan = &chan_array[0];
->>>> +
->>>> +       device_for_each_child_node_scoped(dev, child) {
->>>> +               u32 ch;
->>>> +
->>>> +               if (!fwnode_name_eq(child, "channel"))
->>>> +                       continue;
->>>> +
->>>> +               ret = fwnode_property_read_u32(child, "reg", &ch);
->>>> +               if (ret)
->>>> +                       return ret;
->>>> +
->>>> +               if (max_chan_id != -1 && ch > max_chan_id)
->>>> +                       return -ERANGE;
->>>> +
->>>
->>> Should we use return dev_err_probe() on these to help with debugging a bad dtb?
->>>    
->>
->> I am not fan of using dev_err_probe() in a 'library code'. This is
->> because we never know if there'll be some odd use-case where this is not
->> called from the probe.
->>
->> All in all, I'd leave adding most of the debugs to the callers -
->> especially because we do not expect to have bad device-trees after the
->> initial 'development stage' of a board. The board 'development stage'
->> should really reveal bugs which prevent the channels from being
->> registered - and after the DT is correct, these debug prints become
->> unnecessary (albeit minor) binary bloat.
->>
->>>> +               *chan = *template;
->>>> +               chan->channel = ch;
->>>> +               chan++;
->>>> +       }
->>>> +
->>>> +       *cs = chan_array;
->>>> +
->>>> +       return num_chan;
->>>> +}
->>>> +EXPORT_SYMBOL_NS_GPL(devm_iio_adc_device_alloc_chaninfo_se, "IIO_DRIVER");
->>>
->>> We can make this less verbose by setting #define
->>> DEFAULT_SYMBOL_NAMESPACE at the start of the file. Then we can just do
->>> EXPORT_SYMBOL_GPL() throughout the rest of the file.
->>
->> I am not sure what to think of this. I use the good old 'ctrl + ]' in my
->> editor when I need to check how a function was supposed to be used. That
->> jumps to the spot of code where the function is. I'd like to see the
->> namespace mentioned there in order to not accidentally miss the fact the
->> function belongs to one.
->>
->> OTOH, I do like simplifications. Yet, the added simplification might not
->> warrant the namespace not being visible in the function definition.
->>
->>> Also, I would prefer if the namespace matched config name (IIO_ADC_HELPER).
->>
->> I had some lengthy discussion about this with Andy and Jonathan during
->> earlier review versions. In short, I don't like the idea of very
->> fragmented namespaces in IIO, which will just complicate the drivers
->> without providing any obvious benefit.
->>
->> https://lore.kernel.org/all/20250222174842.57c091c5@jic23-huawei/
->>
->>>> +
->>>> +int devm_iio_adc_device_alloc_chaninfo_se(struct device *dev,
->>>> +                                         const struct iio_chan_spec *template,
->>>> +                                         int max_chan_id,
->>>> +                                         struct iio_chan_spec **cs);
->>>> +
->>>
->>> There are some different opinions on this, but on the last patch I did
->>> introducing a new namespace, the consensus seems to be that putting
->>> the MODULE_IMPORT_NS() in the header file was convenient so that users
->>> of the API don't have to remember to both include the header and add
->>> the import macro.
->>>    
->>
->> I do like this suggestion, and I believe this would be the balance
->> between getting the benefit of hiding part of the symbols - while not
->> unnecessarily complicating the callers. I know some people are opposing
->> it though. My personal opinion is that having the MODULE_IMPORT_NS() in
->> a header would be neatly simplifying the calling code with very little
->> harm, especially here where including the header hardly has use-cases
->> outside the IIO ADC.
->>
->> Unfortunately, the "safety" seems to often be a synonym for just "making
->> it intentionally hard". As Finnish people say: "Kärsi, kärsi,
->> kirkkaamman kruunun saat". :)
->> (Roughly translated as "Suffer, suffer, you will get a brighter crown").
->>
->> Let's hear what Jonathan thinks of your suggestion.
-> 
-> For this particular case my intent was that all the IIO exports that
-> are suitable for use in simple IIO drives will be in this namespace,
-> we just haven't started that conversion yet.
-> 
-> As such, having it defined from a header for this helper isn't a good
-> thing to do.
+Since commit
 
-Hmm. I agree.
+  17346452b25b ("sched/fair: Make sched-idle CPU selection consistent")
 
->  Generally I prefer to see in driver code what namespaces
-> are involved but do understand the other viewpoint. In this case I
-> definitely don't think it is appropriate unless we go for a specific namespace
-> for just this helper.
+the SCHED_IDLE cpus are given equal or more preference over idle ones in
+fast- and slow-path of select_task_rq_fair(). This works well in flattened
+cgroup hierarchy, e.g. all tasks running inside root cgroup, but may not
+ideal in a deeper hierarchy where SCHED_IDLE doesn't mean anything between
+entities whose parents are different. Hence a SCHED_IDLE cpu does NOT
+necessarily implies any of the following:
 
-I suppose having the MODULE_IMPORT_NS() in the header would actually 
-make the more fine-grained namespaces (like IIO_ADC_HELPERS, IIO_GTS, 
-...) much more usable. That'd relieved the drivers from explicitly 
-listing multiple namespaces while nicely limiting the visibility.
+ - It is a less loaded cpu (since the parent of its topmost idle
+   ancestor could be a 'giant' entity with large cpu.weight).
 
-If IIO was my territory, I might want to ask people to go with that 
-approach - but I am quite happy being a freeloade.. errm, I mean, 
-bystander ;)
+ - It can be expected to be preempted by a newly woken task soon
+   enough (which actually depends on their ancestors who have
+   common parent).
 
-Thanks!
+As a less loaded cpu probably has better ability to serve the newly
+woken task, which also applies to the SCHED_IDLE cpus that less loaded
+SCHED_IDLE cpu might be easier and faster preempted, let's not special
+case SCHED_IDLE cpus at least in slowpath when selecting.
 
-Yours,
-	-- Matti
+  [ Plan to try the same in SIS, that is selecting a less loaded cpu
+    and get rid of ambiguous sched_idle_cpu(). Comments and suggests
+    are really appreciated. ]
+
+Some benchmarks are tested in a Intel(R) Xeon(R) CPU E5-2650 v4 machine
+based on tip/master ec3106906cbf, and are tested in following two setup:
+
+		(t1)			(t2)
+		root			root
+		/  \\			/  \
+	benchmark   noise	benchmark   X
+					     \\
+					     noise
+
+where noise comes from a SCHED_IDLE cgroup. I didn't see an obvious diff
+in hackbench or tbench, but not schbench.
+
+				vanilla-t1	       patched-t1
+Lat 50.0th-qrtle-1         8.00 (   0.00%)        8.00 (   0.00%)
+Lat 90.0th-qrtle-1        13.00 (   0.00%)       13.00 (   0.00%)
+Lat 99.0th-qrtle-1        19.00 (   0.00%)       18.00 (   5.26%)
+Lat 99.9th-qrtle-1        22.00 (   0.00%)       22.00 (   0.00%)
+Lat 20.0th-qrtle-1       257.00 (   0.00%)      259.00 (  -0.78%)
+Lat 50.0th-qrtle-2         8.00 (   0.00%)        9.00 ( -12.50%)
+Lat 90.0th-qrtle-2        13.00 (   0.00%)       13.00 (   0.00%)
+Lat 99.0th-qrtle-2        19.00 (   0.00%)       19.00 (   0.00%)
+Lat 99.9th-qrtle-2        23.00 (   0.00%)       24.00 (  -4.35%)
+Lat 20.0th-qrtle-2       484.00 (   0.00%)      434.00 (  10.33%)
+Lat 50.0th-qrtle-4         9.00 (   0.00%)        9.00 (   0.00%)
+Lat 90.0th-qrtle-4        14.00 (   0.00%)       14.00 (   0.00%)
+Lat 99.0th-qrtle-4        19.00 (   0.00%)       19.00 (   0.00%)
+Lat 99.9th-qrtle-4        25.00 (   0.00%)       24.00 (   4.00%)
+Lat 20.0th-qrtle-4       877.00 (   0.00%)      857.00 (   2.28%)
+Lat 50.0th-qrtle-8         9.00 (   0.00%)        9.00 (   0.00%)
+Lat 90.0th-qrtle-8        14.00 (   0.00%)       15.00 (  -7.14%)
+Lat 99.0th-qrtle-8        20.00 (   0.00%)       21.00 (  -5.00%)
+Lat 99.9th-qrtle-8        26.00 (   0.00%)       26.00 (   0.00%)
+Lat 20.0th-qrtle-8      1698.00 (   0.00%)     1598.00 (   5.89%)
+Lat 50.0th-qrtle-16       10.00 (   0.00%)       10.00 (   0.00%)
+Lat 90.0th-qrtle-16       15.00 (   0.00%)       15.00 (   0.00%)
+Lat 99.0th-qrtle-16       20.00 (   0.00%)       20.00 (   0.00%)
+Lat 99.9th-qrtle-16       28.00 (   0.00%)       27.00 (   3.57%)
+Lat 20.0th-qrtle-16     2900.00 (   0.00%)     2860.00 (   1.38%)
+Lat 50.0th-qrtle-23        9.00 (   0.00%)        9.00 (   0.00%)
+Lat 90.0th-qrtle-23       15.00 (   0.00%)       15.00 (   0.00%)
+Lat 99.0th-qrtle-23       49.00 (   0.00%)       28.00 (  42.86%)
+Lat 99.9th-qrtle-23     1602.00 (   0.00%)     1458.00 (   8.99%)
+Lat 20.0th-qrtle-23     3796.00 (   0.00%)     3804.00 (  -0.21%)
+
+				vanilla-t2	       patched-t2
+Lat 50.0th-qrtle-1        10.00 (   0.00%)        9.00 (  10.00%)
+Lat 90.0th-qrtle-1       271.00 (   0.00%)      272.00 (  -0.37%)
+Lat 99.0th-qrtle-1      1013.00 (   0.00%)      793.00 (  21.72%)
+Lat 99.9th-qrtle-1      1998.00 (   0.00%)     1642.00 (  17.82%)
+Lat 20.0th-qrtle-1       262.00 (   0.00%)      262.00 (   0.00%)
+Lat 50.0th-qrtle-2        10.00 (   0.00%)        9.00 (  10.00%)
+Lat 90.0th-qrtle-2       531.00 (   0.00%)      510.00 (   3.95%)
+Lat 99.0th-qrtle-2      1034.00 (   0.00%)      933.00 (   9.77%)
+Lat 99.9th-qrtle-2      1846.00 (   0.00%)     1614.00 (  12.57%)
+Lat 20.0th-qrtle-2       517.00 (   0.00%)      517.00 (   0.00%)
+Lat 50.0th-qrtle-4        10.00 (   0.00%)       10.00 (   0.00%)
+Lat 90.0th-qrtle-4       523.00 (   0.00%)      494.00 (   5.54%)
+Lat 99.0th-qrtle-4       973.00 (   0.00%)      901.00 (   7.40%)
+Lat 99.9th-qrtle-4      1618.00 (   0.00%)     1606.00 (   0.74%)
+Lat 20.0th-qrtle-4      1015.00 (   0.00%)     1001.00 (   1.38%)
+Lat 50.0th-qrtle-8        11.00 (   0.00%)       10.00 (   9.09%)
+Lat 90.0th-qrtle-8       527.00 (   0.00%)      454.00 (  13.85%)
+Lat 99.0th-qrtle-8       931.00 (   0.00%)      901.00 (   3.22%)
+Lat 99.9th-qrtle-8      1598.00 (   0.00%)     1582.00 (   1.00%)
+Lat 20.0th-qrtle-8      1738.00 (   0.00%)     1666.00 (   4.14%)
+Lat 50.0th-qrtle-16        9.00 (   0.00%)        9.00 (   0.00%)
+Lat 90.0th-qrtle-16      410.00 (   0.00%)      243.00 (  40.73%)
+Lat 99.0th-qrtle-16      979.00 (   0.00%)      891.00 (   8.99%)
+Lat 99.9th-qrtle-16     1486.00 (   0.00%)     1470.00 (   1.08%)
+Lat 20.0th-qrtle-16     2708.00 (   0.00%)     2708.00 (   0.00%)
+Lat 50.0th-qrtle-23        8.00 (   0.00%)        9.00 ( -12.50%)
+Lat 90.0th-qrtle-23      454.00 (   0.00%)      303.00 (  33.26%)
+Lat 99.0th-qrtle-23     3228.00 (   0.00%)     2564.00 (  20.57%)
+Lat 99.9th-qrtle-23     5496.00 (   0.00%)     5304.00 (   3.49%)
+Lat 20.0th-qrtle-23     3132.00 (   0.00%)     3156.00 (  -0.77%)
+
+Abel Wu (2):
+  Revert "sched/fair: Make sched-idle CPU selection consistent throughout"
+  sched/fair: Do not specialcase SCHED_IDLE cpus in select slowpath
+
+ kernel/sched/fair.c | 40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
+
+-- 
+2.37.3
+
