@@ -1,49 +1,56 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCB9380;
-	Mon, 10 Mar 2025 08:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2574380;
+	Mon, 10 Mar 2025 08:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741596944; cv=none; b=COq0PKzoCnwBThABMElXfBbKLttnp9ca6tUmNTb0rCfLmolN0QhhcRsXliZS8WHUXtF+PY14fYQlbHQUfizXyRfoPyignbzmJzVkbMGl5usCrEs6HDzRY6VaKL7XX5Nzlu0ZvmfJsO0hSZuGykQovhNcF+MZZhwofix0LzU2eow=
+	t=1741596996; cv=none; b=el34XrQfVrx6LG3Zke2qUf1fl/7/q09J2UpjMMTo7Jma6cP3s0czXVhtKYeNfIiH0HrBFZbreYZt3pLvKyGyPwrXfMG6Gexn40WyYFCVNGItKC7U13tpg1TNEm3JCcXVJ8DzGkPGtlcaVxeNHGKeBiadSkSlLa2FonO8o5bNZAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741596944; c=relaxed/simple;
-	bh=yHvsB5ALBqO6HcLi9r38BJv6YSoU1qYhhIzz3JKUdcA=;
+	s=arc-20240116; t=1741596996; c=relaxed/simple;
+	bh=C12mkxyY7Tuz4k36lFMWBiBskfY3UsSgTUDwu4ymK5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kpseceWbJu62WYZSeEQgkPgZjtKYYA2Dy8Ukat3JahOHQmrH66L9iGyPiZuipYDnr0kkcMQT0RJZpY1HEvevd2xAC1UxrfVSs3lH+OHYZiddRobn/+i7yqEN0duBDpp/BUSr1dTf6G8RwWHtVNXYrKX6NkgszVSJdCni8y0TpmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qY1eII80; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=uSdV37EQfykIFegLlGDNdaPot1IpV2QWO8UZuTT5+uMhYRHAhRSPKi+t0yFkUu4J7wwPhFxg2spYksg/eJJDRdZirs0fLdsyPKOVaohb6pRvtTsmYrShPug0T3uI0qRyEYC7b2frzIeyU2cK96YoFEi9DOMkNo1XZXNM3Y2Zxck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VS2GD8mC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qY1eII80"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=y6ewIZM2dtnWRQcBfslu1okDKdEcc8mCLFTRLy3nMdY=; b=qY1eII80wtVqZhUqGvphOqBc6p
-	/Jc/c2Qop8wc3+/ZOOpcICg5f9hfwLEigNpRZIuPPgKCdXlJpQDdko+7npdFpw195J3r8FNnY+Ige
-	gKdoDuBlowUr+76i3AxH3r3JCj9+5YznP6kmMGqzr7VBY3MMvByJZytnp3FY9G3MPuwOUj8g/vk+K
-	b6pkv+WIYphhe8aR9OKtrofYhshhS/XzIv7YqeES9uv7RgZoQf2zeLgDao+NBHsSQPzfb2Xtj5RvX
-	xnFXcfSi8zwQy0SC6gyBU2+p25yfevV+tZSJsOrmUvdAD05WOkioZg6rLZfhPcTCYce5tp4GUojBP
-	vn+QbTUQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1trYvA-00000002l58-1k5G;
-	Mon, 10 Mar 2025 08:55:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DDB143006C0; Mon, 10 Mar 2025 09:55:35 +0100 (CET)
-Date: Mon, 10 Mar 2025 09:55:35 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: linux-kernel@vger.kernel.org, ojeda@kernel.org
-Cc: linux-tip-commits@vger.kernel.org,
-	Scott Constable <scott.d.constable@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>,
-	x86@kernel.org
-Subject: Re: [tip: x86/core] x86/ibt: Implement FineIBT-BHI mitigation
-Message-ID: <20250310085535.GQ31462@noisy.programming.kicks-ass.net>
-References: <20250224124200.820402212@infradead.org>
- <174057447519.10177.9447726208823079202.tip-bot2@tip-bot2>
- <20250226195308.GA29387@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VS2GD8mC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF69EC4CEEC;
+	Mon, 10 Mar 2025 08:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741596996;
+	bh=C12mkxyY7Tuz4k36lFMWBiBskfY3UsSgTUDwu4ymK5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VS2GD8mC3KF67GsqwrZolL2PJC5nV8QLxQyAj07n3f39prZtkH1iJvEM60yAG3gQD
+	 V6plRwhAVbOW7QKUgyQAJHRX8KqkzSNYtqJVSaCbMIZFHBfrzwotEzdTyBf7nahb1F
+	 ulw5xmNt1ZS0/aH3skbKsPmqAglFS17CXESwCPnsNYfVvt5TieC74ADPeUyUBP34F1
+	 pDsXpTVlIpEGb5v1s3vkFszlbLMYeyG2K7k5dPXep0ShufS8ewpYY5j+8DCkBkiobB
+	 dcRrEG7RKtdyu/gY2i+79yqPKgi/ec7BtqCYNCz/r78UnJa0FdyBemgkAxkJvqs9vk
+	 pVW7xYFBa9f3g==
+Date: Mon, 10 Mar 2025 14:26:26 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 01/10] tee: tee_device_alloc(): copy dma_mask from
+ parent device
+Message-ID: <Z86pOi874jfJJSOv@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-2-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,54 +59,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250226195308.GA29387@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250305130634.1850178-2-jens.wiklander@linaro.org>
 
+On Wed, Mar 05, 2025 at 02:04:07PM +0100, Jens Wiklander wrote:
+> If a parent device is supplied to tee_device_alloc(), copy the dma_mask
+> field into the new device. This avoids future warnings when mapping a
+> DMA-buf for the device.
+> 
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  drivers/tee/tee_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
 
-Ping -- anything I can do the help?
+Reviewed-by: Sumit Garg <sumit.garg@kernel.org>
 
-On Wed, Feb 26, 2025 at 08:53:08PM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 26, 2025 at 12:54:35PM -0000, tip-bot2 for Peter Zijlstra wrote:
+-Sumit
+
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index d113679b1e2d..685afcaa3ea1 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -922,6 +922,8 @@ struct tee_device *tee_device_alloc(const struct tee_desc *teedesc,
+>  	teedev->dev.class = &tee_class;
+>  	teedev->dev.release = tee_release_device;
+>  	teedev->dev.parent = dev;
+> +	if (dev)
+> +		teedev->dev.dma_mask = dev->dma_mask;
+>  
+>  	teedev->dev.devt = MKDEV(MAJOR(tee_devt), teedev->id);
+>  
+> -- 
+> 2.43.0
 > 
-> > diff --git a/Makefile b/Makefile
-> > index 96407c1..f19431f 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1014,6 +1014,9 @@ CC_FLAGS_CFI	:= -fsanitize=kcfi
-> >  ifdef CONFIG_CFI_ICALL_NORMALIZE_INTEGERS
-> >  	CC_FLAGS_CFI	+= -fsanitize-cfi-icall-experimental-normalize-integers
-> >  endif
-> > +ifdef CONFIG_FINEIBT_BHI
-> > +	CC_FLAGS_CFI	+= -fsanitize-kcfi-arity
-> > +endif
-> >  ifdef CONFIG_RUST
-> >  	# Always pass -Zsanitizer-cfi-normalize-integers as CONFIG_RUST selects
-> >  	# CONFIG_CFI_ICALL_NORMALIZE_INTEGERS.
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index c4175f4..5c27726 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -2473,6 +2473,10 @@ config CC_HAS_RETURN_THUNK
-> >  config CC_HAS_ENTRY_PADDING
-> >  	def_bool $(cc-option,-fpatchable-function-entry=16,16)
-> >  
-> > +config CC_HAS_KCFI_ARITY
-> > +	def_bool $(cc-option,-fsanitize=kcfi -fsanitize-kcfi-arity)
-> > +	depends on CC_IS_CLANG && !RUST
-> > +
-> 
-> Miguel, can we work on fixing that !RUST dep?
-> 
-> >  config FUNCTION_PADDING_CFI
-> >  	int
-> >  	default 59 if FUNCTION_ALIGNMENT_64B
-> > @@ -2498,6 +2502,10 @@ config FINEIBT
-> >  	depends on X86_KERNEL_IBT && CFI_CLANG && MITIGATION_RETPOLINE
-> >  	select CALL_PADDING
-> >  
-> > +config FINEIBT_BHI
-> > +	def_bool y
-> > +	depends on FINEIBT && CC_HAS_KCFI_ARITY
-> > +
-> >  config HAVE_CALL_THUNKS
-> >  	def_bool y
-> >  	depends on CC_HAS_ENTRY_PADDING && MITIGATION_RETHUNK && OBJTOOL
