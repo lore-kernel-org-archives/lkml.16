@@ -1,44 +1,44 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB4C18C02E;
-	Mon, 10 Mar 2025 10:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F75B29A2;
+	Mon, 10 Mar 2025 10:01:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741600873; cv=pass; b=ZOTc5yktWf4bS7PeU9RBynShLDSt9IrANoY89RO6kK0qO3M382nkGVJZ7iSU6Nf8OJ6WBwfYuG0gTv2l2/uMU282rxscLjxmWtvFcjc8qOCQRnSBgsFuwD17HJIKQiYUB6Pbo0EzIA5skfgKs875A+xaoUHFLGHlfQgsybsdSUo=
+	t=1741600874; cv=pass; b=NJF1+NciMSJrHQB/UTCTURTZwJ1R+nSVhEi2bisj51f9pQiPaiXnaVHB0hn9NDDt1SRneHpNiiT6xtqVex3Z3I5mkauCH01j66jyEjmNKxh4vVRNiFKEsZbuScmOWb+heZhMxKfW9pR4UuRaVVLNnkcZltPfuJs9RNiEd/pcDME=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741600873; c=relaxed/simple;
-	bh=Rm3gOZ31VuZ+SKZ3tMs4s7MfGetnjl0qusm9vId4TOs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XK+SnBfTcoFBhnNno90gtBmTPRO5eeVwl5Zep73JTsqDDpUT6/0OYdJ+0yNf7gnK/+NlzCzETqDPmpwDERAlIRhIRp5UV8qwR0cxzVeuDyJHh+Q+RlUKw3sG9jgk2ZjOcdUqz+iXbNQjYP/MEivk6rPI5KmRTgxHiQHZV2SDmDI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=H41kcfGV; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1741600874; c=relaxed/simple;
+	bh=b76qrhBUBBQgOxNEP24/iaezZ47DqFJATqoAHC9PA6A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Rofkw5F97fyJ05StyiCFyXusbPk5IK5wKXVW1iN6y3qtbPKKuM8zursQsIEoo2aC9TfjXimFEYAw0M55E3q9CFFzgviV8CptM2neN1IEkIGQJpN7hmGjmXuYwoR63Ma7ea9dBYwe/YaJ14F7i4TwyqAANtroiwpjcD9dA2PT0WQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=IQxgjB9l; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="H41kcfGV"
-ARC-Seal: i=1; a=rsa-sha256; t=1741600834; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="IQxgjB9l"
+ARC-Seal: i=1; a=rsa-sha256; t=1741600844; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=dob90s3z+DONEzCUXvAaOGYEGDPs+bd4jgxP31YtrPBNE5GxV4QlxFaWohCjFzrWzA11X4kNHqzW+z9MelRjDmBcaA1t57uYfZUIq9zgFC8vMn/jK430n3L/lp1iWawoIQn5EedojvNh839bKCYolkT5Vsf/MQuUz+UUXT1Sl4k=
+	b=LUAZ4AB574FF/KkzPzySh74VUqaKk7Up4geZssi+tUWNoVBPmbOXaAB0X2kT4+3Wbwj1fV/MKAEB7dANewJ33AqC8P4Oss8Iipj6Y97OwfM4KJ/c+VSRs1O1gLlaE9xuzeOnE90bxczUP5GDESSsbObyinaN12NBVrqijYEffFQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741600834; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZT8kUfSIqR+U8jrdTEq3259tcSEYOxweQkSV2xoZlKM=; 
-	b=RH9E2xuXmJP1UAgRBfLw546oEGYFEFhDpNrHIkkF1mMB5nziRoJM4HxGN3/BBHyH36dBcMw2Jk/mzO3taQ1CmhbQq0FzzGXoNLa8NzUEgNjBokGThCILxYNpDCFPkMCnQmYu8e1sL+l31mhP+6VGeTesKQGAgmS8f+Sm+MGFytY=
+	t=1741600844; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=sG0ZptlmWh6usz+6gYzu3av5prS4D953FeG+EZTRlmE=; 
+	b=Fyv59Hi6jM+QmMMz4EVYjOWDyqSx9Tdyog8JkvORFtntRG92twzxE0N61oF1iAv7x8o4qbhLsFLqKux87Hwt7QYYOlnQ4LFMYVFMLuXhhrCucZR8+ZZWZZWFS2WthKQfmqwC4VzPjrC/HclcCnESvi9XePFtgQ1mv5zh+rcgpYQ=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741600834;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741600844;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=ZT8kUfSIqR+U8jrdTEq3259tcSEYOxweQkSV2xoZlKM=;
-	b=H41kcfGVxS+NJd7AoxBHL0YbVoPVD1GftC5jSHsAdnKxn4HHq95F7V6bcRpA/aXD
-	Ycccp/ZEjkZkDQcYY4MLMpsMuve3R2YE8PpGQbOActapzRbBf9QdKKTAhg3X94L+uVQ
-	UrlKhd11KF4B2+cwfqfyN5c6ucxkIi3vR81Ysynk=
-Received: by mx.zohomail.com with SMTPS id 1741600832221948.8309673820739;
-	Mon, 10 Mar 2025 03:00:32 -0700 (PDT)
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=sG0ZptlmWh6usz+6gYzu3av5prS4D953FeG+EZTRlmE=;
+	b=IQxgjB9lLAHcZuF00S0hPyH4P/moK4+Fc+IszQagDcah2y50VQSL1g435V4GGsjF
+	V2PW5GMQwJNtc/Xrg2fZ9rdxCtoJVRjFBeGPmQu2AdYVtZuO+U6SD0ms2XPVGWgkpwZ
+	6YCFoC8OeRm6qM5vLsMZvOGvmwcK+dGLvtsEqN6E=
+Received: by mx.zohomail.com with SMTPS id 174160084194050.598305390263135;
+	Mon, 10 Mar 2025 03:00:41 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Subject: [PATCH 0/2] Fix CPU and GPU clocks on RK3576
-Date: Mon, 10 Mar 2025 10:59:55 +0100
-Message-Id: <20250310-rk3576-scmi-clocks-v1-0-e165deb034e8@collabora.com>
+Date: Mon, 10 Mar 2025 10:59:57 +0100
+Subject: [PATCH 2/2] arm64: dts: rockchip: fix RK3576 SCMI clock IDs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,10 +47,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABu4zmcC/yXMQQrDIBCF4avIrDtgFCPkKiULY6btkKqt2hIIu
- XulLv8H7zugUGYqMIkDMn25cIothosA/3DxTshra1BSGakHiXnTxo5YfGD0z+S3gk7L0ZjVSmc
- VtOMr0433P3qde2d6f5pd+wiLK4Q+hcB1EpH2it2XFubz/AFYKoUflQAAAA==
-X-Change-ID: 20250310-rk3576-scmi-clocks-a30655d70a72
+Message-Id: <20250310-rk3576-scmi-clocks-v1-2-e165deb034e8@collabora.com>
+References: <20250310-rk3576-scmi-clocks-v1-0-e165deb034e8@collabora.com>
+In-Reply-To: <20250310-rk3576-scmi-clocks-v1-0-e165deb034e8@collabora.com>
 To: Jonas Karlman <jonas@kwiboo.se>, 
  Sebastian Reichel <sebastian.reichel@collabora.com>, 
  Heiko Stuebner <heiko@sntech.de>, 
@@ -68,34 +67,111 @@ Cc: kernel@collabora.com, linux-clk@vger.kernel.org,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-As Jonas Karlman pointed out on the #linux-rockchip IRC channel on
-Libera yesterday, mainline has once again chosen a different set of
-clock IDs compared to downstream, with hugely detrimental effects to
-mainline's ability to use SCMI for clock operations. This is because
-TF-A will use the downstream IDs, and when we reclock things through
-SCMI, TF-A will get the wrong clock ID from us.
+Downstream Linux, and consequently both downstream and mainline TF-A,
+all use a different set of clock IDs from mainline Linux. If we want to
+fiddle with these clocks through SCMI, we'll need to use the right IDs.
+If we don't do this we'll end up changing unrelated clocks all over the
+place.
 
-So this series adds the three relevant clock IDs to the bindings in
-patch 1, and then uses them in the SoC .dtsi in patch 2. That way, we
-actually get functional GPU reclocking, and cpufreq will work as well.
-As a bonus, we no longer change random unrelated clocks all over the
-place, and it seems somewhat miraculous this didn't blow up in our faces
-in a much bigger way before this.
+Change the clock IDs to the newly added SCMI clock IDs for the CPU and
+GPU nodes, which are currently the only ones using SCMI clocks. This
+fixes the terrible GPU performance, as we weren't reclocking it
+properly.
 
+Fixes: 57b1ce903966 ("arm64: dts: rockchip: Add rk3576 SoC base DT")
+Reported-by: Jonas Karlman <jonas@kwiboo.se>
+Closes: https://libera.irclog.whitequark.org/linux-rockchip/2025-03-09#1741542223-1741542875;
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
-Nicolas Frattaroli (2):
-      dt-bindings: clock: rk3576: add SCMI clocks
-      arm64: dts: rockchip: fix RK3576 SCMI clock IDs
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
- arch/arm64/boot/dts/rockchip/rk3576.dtsi        | 18 +++++++++---------
- include/dt-bindings/clock/rockchip,rk3576-cru.h |  5 +++++
- 2 files changed, 14 insertions(+), 9 deletions(-)
----
-base-commit: f064b0a4aa5f2bc61c9611a23a7fc83855751626
-change-id: 20250310-rk3576-scmi-clocks-a30655d70a72
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+index 8591065b575223a5eb2da70f723f16969aa2ecf7..1fddf298795e5c914a76d9779b6f8563ee15c8e3 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+@@ -111,7 +111,7 @@ cpu_l0: cpu@0 {
+ 			reg = <0x0>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <485>;
+-			clocks = <&scmi_clk ARMCLK_L>;
++			clocks = <&scmi_clk SCMI_ARMCLK_L>;
+ 			operating-points-v2 = <&cluster0_opp_table>;
+ 			#cooling-cells = <2>;
+ 			dynamic-power-coefficient = <120>;
+@@ -124,7 +124,7 @@ cpu_l1: cpu@1 {
+ 			reg = <0x1>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <485>;
+-			clocks = <&scmi_clk ARMCLK_L>;
++			clocks = <&scmi_clk SCMI_ARMCLK_L>;
+ 			operating-points-v2 = <&cluster0_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP>;
+ 		};
+@@ -135,7 +135,7 @@ cpu_l2: cpu@2 {
+ 			reg = <0x2>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <485>;
+-			clocks = <&scmi_clk ARMCLK_L>;
++			clocks = <&scmi_clk SCMI_ARMCLK_L>;
+ 			operating-points-v2 = <&cluster0_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP>;
+ 		};
+@@ -146,7 +146,7 @@ cpu_l3: cpu@3 {
+ 			reg = <0x3>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <485>;
+-			clocks = <&scmi_clk ARMCLK_L>;
++			clocks = <&scmi_clk SCMI_ARMCLK_L>;
+ 			operating-points-v2 = <&cluster0_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP>;
+ 		};
+@@ -157,7 +157,7 @@ cpu_b0: cpu@100 {
+ 			reg = <0x100>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			clocks = <&scmi_clk ARMCLK_B>;
++			clocks = <&scmi_clk SCMI_ARMCLK_B>;
+ 			operating-points-v2 = <&cluster1_opp_table>;
+ 			#cooling-cells = <2>;
+ 			dynamic-power-coefficient = <320>;
+@@ -170,7 +170,7 @@ cpu_b1: cpu@101 {
+ 			reg = <0x101>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			clocks = <&scmi_clk ARMCLK_B>;
++			clocks = <&scmi_clk SCMI_ARMCLK_B>;
+ 			operating-points-v2 = <&cluster1_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP>;
+ 		};
+@@ -181,7 +181,7 @@ cpu_b2: cpu@102 {
+ 			reg = <0x102>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			clocks = <&scmi_clk ARMCLK_B>;
++			clocks = <&scmi_clk SCMI_ARMCLK_B>;
+ 			operating-points-v2 = <&cluster1_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP>;
+ 		};
+@@ -192,7 +192,7 @@ cpu_b3: cpu@103 {
+ 			reg = <0x103>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			clocks = <&scmi_clk ARMCLK_B>;
++			clocks = <&scmi_clk SCMI_ARMCLK_B>;
+ 			operating-points-v2 = <&cluster1_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP>;
+ 		};
+@@ -932,7 +932,7 @@ power-domain@RK3576_PD_VO1 {
+ 		gpu: gpu@27800000 {
+ 			compatible = "rockchip,rk3576-mali", "arm,mali-bifrost";
+ 			reg = <0x0 0x27800000 0x0 0x200000>;
+-			assigned-clocks = <&scmi_clk CLK_GPU>;
++			assigned-clocks = <&scmi_clk SCMI_CLK_GPU>;
+ 			assigned-clock-rates = <198000000>;
+ 			clocks = <&cru CLK_GPU>;
+ 			clock-names = "core";
 
-Best regards,
 -- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+2.48.1
 
