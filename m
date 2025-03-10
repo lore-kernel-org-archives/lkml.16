@@ -1,92 +1,107 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65A722B8C5
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB01422B8D0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741616467; cv=none; b=OGwEQB9bOFJ9r+21K1cCMQRWE60SLIew/kuyakE0d3nSK+/2YO5LXPTF+pnRxmwYAdR+vxmP0dxM9wofDyV6p9OGmtdSy636/3107DIbRF6OCCPlelZ2lbk3Cdufh0GtvOnqZ4sc8XHEfjBBqwzaWEYArQOTJyLBxQgVpqNOIq0=
+	t=1741616469; cv=none; b=pEaA6JljbDzHKq1LbcGeYBrVW4eiNKXjtG+DOFzYbBznN+bfzF0LRJuSwQuitnydGxJP6PUWkdisxqsT0SH7yJ+KPj+LQvZE3/qpM7fqncI9+n+DJPx5/kVaS/RG/QzGAh6OvdSS7sZ80oOFFNSNKO7g/S8TdUla4eKW4VRG6eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741616467; c=relaxed/simple;
-	bh=aVMorMUiyrSnpjgp/0n5/Fu8Y14PnT/tyqBbuLhoxOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s0+tU7mHXFmFRBO2UWpbMyI7e96nxitZf4F0opvFzO5YeXLMx+XY8M1Z4nRqTqOXtgCHWIrGwWE2pUwGZgarfw4vFE0120zfQtwKYIGWZg1EBDRLTn9P7jzjCVIYs5XAEoHf1F5WR1iTuAI1ycWHKYMobzHQAKabWRrDaeJVWGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XMItmqxO; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XMItmqxO"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741616463;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2tdnaKqRE25Nlj4kRDb0pUzwsk1xxSG4ugbiY1bif4c=;
-	b=XMItmqxOZoE/imkSMs4uxBdrASELhaNwUAvEoqEJN+ljWnmDqyd54sMlWQnZSEKlm8Qd4Q
-	A71y+ynbhTwx6A8EaZML9rNGngBbG3wIZ/a3pRLPwyQM2Oz9tbOxYxUghq17RDEIr65Fxo
-	LenOjJR2TewFTlHjf2zERxkZ86yhlwY=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org,
-	qmo@kernel.org
-Cc: daniel@iogearbox.net,
-	linux-kernel@vger.kernel.org,
-	ast@kernel.org,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	hawk@kernel.org,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>
-Subject: [PATCH bpf-next v1 1/2] bpftool: Add -Wformat-signedness flag to detect format errors
-Date: Mon, 10 Mar 2025 22:20:36 +0800
-Message-ID: <20250310142037.45932-2-jiayuan.chen@linux.dev>
-In-Reply-To: <20250310142037.45932-1-jiayuan.chen@linux.dev>
-References: <20250310142037.45932-1-jiayuan.chen@linux.dev>
+	s=arc-20240116; t=1741616469; c=relaxed/simple;
+	bh=bpWXb/FRdwofYskvz7WprVy+0U8vW/XDTuSJzFijw3M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VLn/YI34hnNr8A4X3UoknZ+xfvU4u3+kcVV2spPFCS41AF9IJ4GUxXAjfW0R/c2rU7VDeb+HzcfmtoCGllBfyFOt0I6aXyY/EIIQLZ6amWUVy/VPi0Sbhy4Jaovko03aXI7dbmf1wIVdMCyMk82oqxJ6yGjCi846WwzPNH2lxiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A25516F2;
+	Mon, 10 Mar 2025 07:21:17 -0700 (PDT)
+Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D45A3F673;
+	Mon, 10 Mar 2025 07:21:00 -0700 (PDT)
+Message-ID: <6f2886fa-a563-43e0-b2c5-5de068c41863@arm.com>
+Date: Mon, 10 Mar 2025 14:20:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 31/49] x86/resctrl: Remove the limit on the number of
+ CLOSID
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com
+References: <20250228195913.24895-1-james.morse@arm.com>
+ <20250228195913.24895-32-james.morse@arm.com>
+ <a1a64dd1-7180-4845-828d-0d327d29fde4@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <a1a64dd1-7180-4845-828d-0d327d29fde4@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This commit adds the -Wformat-signedness compiler flag to detect and
-prevent printf format errors, where signed or unsigned types are
-mismatched with format specifiers. This helps to catch potential issues at
-compile-time, ensuring that our code is more robust and reliable. With
-this flag, the compiler will now warn about incorrect format strings, such
-as using %d with unsigned types or %u with signed types.
+Hi Reinette,
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- tools/bpf/bpftool/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 07/03/2025 04:40, Reinette Chatre wrote:
+> On 2/28/25 11:58 AM, James Morse wrote:
+>> From: Amit Singh Tomar <amitsinght@marvell.com>
+>>
+>> Resctrl allocates and finds free CLOSID values using the bits of a u32.
+>> This restricts the number of control groups that can be created by
+>> user-space.
+>>
+>> MPAM has an architectural limit of 2^16 CLOSID values, Intel x86 could
+>> be extended beyond 32 values. There is at least one MPAM platform which
+>> supports more than 32 CLOSID values.
+>>
+>> Replace the fixed size bitmap with calls to the bitmap API to allocate
+>> an array of a sufficient size.
+>>
+>> ffs() returns '1' for bit 0, hence the existing code subtracts 1 from
+>> the index to get the CLOSID value. find_first_bit() returns the bit
+>> number which does not need adjusting.
 
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index dd9f3ec84201..d9f3eb51a48f 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -71,7 +71,7 @@ prefix ?= /usr/local
- bash_compdir ?= /usr/share/bash-completion/completions
- 
- CFLAGS += -O2
--CFLAGS += -W -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
-+CFLAGS += -W -Wall -Wextra -Wformat-signedness -Wno-unused-parameter -Wno-missing-field-initializers
- CFLAGS += $(filter-out -Wswitch-enum -Wnested-externs,$(EXTRA_WARNINGS))
- CFLAGS += -DPACKAGE='"bpftool"' -D__EXPORTED_HEADERS__ \
- 	-I$(or $(OUTPUT),.) \
--- 
-2.47.1
+>> @@ -3071,6 +3085,7 @@ static void rdt_kill_sb(struct super_block *sb)
+>>  		resctrl_arch_disable_alloc();
+>>  	if (resctrl_arch_mon_capable())
+>>  		resctrl_arch_disable_mon();
+>> +	closid_exit();
+>>  	resctrl_mounted = false;
+>>  	kernfs_kill_sb(sb);
+>>  	mutex_unlock(&rdtgroup_mutex);
+> 
+> Above is the new change in this patch ... I am trying to understand the choice
+> in ordering since I expect that freeing resources is done in opposite
+> order from what it was allocated. I thus expected it to be before
+> schemata_list_destroy() but it is instead done as the last thing before removing
+> the superblock.
+> 
+> The changelog does not mention dependencies that need to be kept in mind.
+> I thought that there may be something going on with open files ... for
+> example if user kept "bit_usage" (that calls closid_allocated() that
+> depends on the closid_free_map) but a quick test confirmed that
+> if a file is open then an attempt to unmount will get a resource
+> busy error. So rdt_kill_sb() will not even start while a file is open.
+> Specifically, user sees a "umount: /sys/fs/resctrl: target is busy"
+> 
+> What am I missing?
 
+I just shoved it at the end of the list, but before anything 'outside' resctrl.
+I'll change it to be the opposite of the order in rdt_get_tree().
+
+
+Thanks,
+
+James
