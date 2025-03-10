@@ -1,95 +1,119 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F025C1C57B2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 18:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D1B2356DA;
+	Mon, 10 Mar 2025 18:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741630504; cv=none; b=diPqLk6q75WUsIEYi86PdnLAI38GsuEW2Cfwp59CvwylAWZszftydzZPt0PnLf3W9f9YnzqVeGT1AdPamIp6MRSremBI2700RPmyG4lM/pav5F3F7Wga0DScHAJKFgLupHN4AO4fM8mU5aI64NevW4ly+BXnFmgId9CX4qORRvk=
+	t=1741630514; cv=none; b=R7C7ujM+pFIGNG4MWHoTi3WgKtU2X+4eiSnx70bhZxm7IsqvBcJuA3bCKfi4N0sf2IQ43+W1m2QUKHDUlnOz/8Mm3KtuBcuA1BQReoIrum4bWnm2WPujmKQpiUVYcXACyAtTRyOKmCaJwAS/lVUWPzfduYrteqP98z6YmHIJ69c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741630504; c=relaxed/simple;
-	bh=JtQ4T7DUXV/4zbw/s9ZH5QQTnRitO6guKWphr/3ZL+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s6QzrFhp2rRyVklSsks1/FX2fBqehfjk/tjssup1zCGtHOrQgjOqUxlof5e8J5nLYOUwkFyyRhlyTQHGBWoIU6/kfF5s+e+/0rgaWQRwfcswi42d3WQmykjvR032u0KO9SPo9h+wZYRTr+rgqS3eCnMKi91KdNfT7yVQObCw1b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZtBQFUKu; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741630514; c=relaxed/simple;
+	bh=7uL5ZmR9eqpqABbNyHdQiScorxeToFNyfHq3wBewTFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=byDLZcad64Ba+VH9sZaNj3UdQWPDAIsPaatX+wO8zgCEyObNn4puGU/q28Ilzhg9M+V8lRdpl9fAfJy5ODEIoDTV1SuyNtgz0Emz0eNyu58ky5yzwSB/KkBkk49KzZxCuMymBK5y3igm7+bYscBuHkRw6dzfPBbYu6cgcr89G6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=nVBDurFU; arc=none smtp.client-ip=80.12.242.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZtBQFUKu"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43948021a45so39304125e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741630500; x=1742235300; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=l3RzlGFhAvuM0cuDF00eJyPgemDXX9EL9Mn84ikQ4pw=;
-        b=ZtBQFUKuzE6Qx9/6tqBcGKu+ekc87RGrOeWeqwW6ST81kNHSDDC61cMJwTvfp4JXGp
-         5p8jQzFnO0P1bFMvjRRJsyixuohINrtpGnVFJullClIJT3IdPCYWjlba8KuTClOHRizT
-         MqGz9KHj86mNMsn5P3uDGScppRQK1sEgxvgrSpeylVrkOSAsnyMW2r04c39UtaqpGKZX
-         sQzAxAx8MdxGIrGcj9z3jEZ0CmX8VDEI0jNgvaFNfw4BDUtdkuyG29SYXKUgqE6la36E
-         e7W+8VdFyXRnriPagvcb/kcZ0ncG6/1jS27hcXBnRzrC4ICLJJeOBNmtocLcZKUFyawZ
-         NtYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741630500; x=1742235300;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3RzlGFhAvuM0cuDF00eJyPgemDXX9EL9Mn84ikQ4pw=;
-        b=gRCr1zmrq9VlRghz+hdIToAKog6bh/iglEzjYdm4ACk9vlt5uHPFMYN9iAruTKKTBc
-         V4jTkUnjfMnYT/pokeE7UqGsDTTDhrwL/0v0IJzqJ3dON9ydD4G7/1nNL0GAbApH1zkB
-         VfB9kkq3tr5xXVObAL1Y9050BoEIODvZpNfLX0qu45vMWp7ZqWBjM9Aa2y/Y1qO905g1
-         7siLH6naBD/5kVrIM1ev2AfoBza96gL64Bx89pahXuLCZcsYyokBZs2eKM2D2R5iDHC4
-         FikAlA9zoVi1ahkM14u5XHnp5Q1LHlyVEKsnwNAFLybzVzCyPc3XL2pDH6a4ygPmUiG0
-         QEjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhbnk059t96ucunIQVubf/OXYtoQZJptTRP2imClEucTrg2WapX0mOT3/kDQGqHLaI13nsLQvPJiFMgY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMz+bEwPj0Uoy7UVIwnIFR1JdKESLQWwCp9PZSwIiRL7VWQyWD
-	/80K7loSqAm8Uc753exnZ2Q5wJSFud6GNQuX8kFmfbD8dKWCDGO37774FHZ//Ik=
-X-Gm-Gg: ASbGnctfTfp4DfAjh6QbHW4AlHUGe8gUhw2Pg9QmvneZAQoL+jj62RoJewMiDJv1yaI
-	/yMJEgityXhJrg+clZ5adK8ckYELVNPcivTIQNHJP0FiwTgO3O6zMmipzF9U6l3YNyKKEE/W426
-	R4RQg0jLnozqypOxNV/D+tg8qEn1yTY0YttSQ1Ybhf4Zj2pECNUzFnAlg6Uz45o0nfQla0rVevy
-	JUJzy50huKCrRyyjbb4VxqVefH1dEsIq/VH5uPCHDavMcsRDo735Vb1XDifx7dD+5RQC61m0Yof
-	w42mLwNTTm72GJ2cNrjsb9eSBru12Yp1lWy3eYCrFcpkZ95hFh5SIz1SlN6p
-X-Google-Smtp-Source: AGHT+IFt3w/t0krndV7nu2YZ6CAjcoMbnNHYnSPvnNwZG4aH7mpi4yFNuonaavUpPD2h5koG09zTWw==
-X-Received: by 2002:a05:600c:3b21:b0:43c:fee3:2bce with SMTP id 5b1f17b1804b1-43cfee32d16mr19567085e9.26.1741630500212;
-        Mon, 10 Mar 2025 11:15:00 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43cf7b88494sm45446875e9.0.2025.03.10.11.14.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 11:14:59 -0700 (PDT)
-Date: Mon, 10 Mar 2025 21:14:55 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vchiq_arm: Don't use %pK through printk
-Message-ID: <eb4eeb0c-7cdd-44b6-a9bb-11133ff55925@stanley.mountain>
-References: <20250310-restricted-pointers-vchiq_arm-v1-1-dd04f208ee55@linutronix.de>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="nVBDurFU"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id rhW1t3ie5TOr6rhW5tb3js; Mon, 10 Mar 2025 19:06:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1741629982;
+	bh=WMRX0mNpYOtHYTyQMB9DnGlTp5zfxDqIujyHCenYZGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=nVBDurFUW6yoBONmf6n1QGzDRUs8Ilm53aR81Wn/NLb7Toz7f9TsmjM+aWzu6vjEU
+	 rPKC08lHZdLiZgUTWxcVxy/oOxn/L696t9gCC3KvoM5g8UpvfgHAD4Lk5DeGhTrLKV
+	 z8HzRZB1JI7+VTl6mCvPU1i4kr84lKnRM6d4mRp3ZP+xtJ6IXPceivyApSZXr/D/oI
+	 kHter8T7bQ+JmSNCqlYFBY5H17SMDeJ60918smfsGv458M3Xh+LgYNOSg8U+7Z8DIV
+	 q3EIAF6bu9rUQ2oKgjds7QC56EU0ZBgfupl+G1oin2Ll6tQjM6/mf/IDQc8xqzEHwf
+	 5z2CtBKXxzU7g==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Mon, 10 Mar 2025 19:06:22 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <3514933e-0fdd-4f1e-b1e4-b72a638edfc8@wanadoo.fr>
+Date: Mon, 10 Mar 2025 19:06:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9] net: mdio: Add RTL9300 MDIO driver
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, andrew@lunn.ch,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ sander@svanheule.net, markus.stockhausen@gmx.de
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250309232536.19141-1-chris.packham@alliedtelesis.co.nz>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250309232536.19141-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250310-restricted-pointers-vchiq_arm-v1-1-dd04f208ee55@linutronix.de>
 
-On Mon, Mar 10, 2025 at 04:53:33PM +0100, Thomas Wei�schuh wrote:
-> @@ -2003,7 +2003,7 @@ parse_message(struct vchiq_state *state, struct vchiq_header *header)
->  
->  	if (((unsigned long)header & VCHIQ_SLOT_MASK) +
->  	    calc_stride(size) > VCHIQ_SLOT_SIZE) {
-> -		dev_err(state->dev, "core: header %pK (msgid %x) - size %x too big for slot\n",
-> +		dev_err(state->dev, "core: header %K (msgid %x) - size %x too big for slot\n",
-                                                   ^^
-You deleted the wrong character here.  :P
+Le 10/03/2025 à 00:25, Chris Packham a écrit :
+> Add a driver for the MDIO controller on the RTL9300 family of Ethernet
+> switches with integrated SoC. There are 4 physical SMI interfaces on the
+> RTL9300 however access is done using the switch ports. The driver takes
+> the MDIO bus hierarchy from the DTS and uses this to configure the
+> switch ports so they are associated with the correct PHY. This mapping
+> is also used when dealing with software requests from phylib.
 
-regards,
-dan carpenter
+...
 
+> +	fwnode_for_each_child_node(ports, port) {
+> +		struct device_node *mdio_dn;
+> +		u32 addr;
+> +		u32 bus;
+> +		u32 pn;
+> +
+> +		struct device_node *phy_dn __free(device_node) =
+> +			of_parse_phandle(to_of_node(port), "phy-handle", 0);
+> +		/* skip ports without phys */
+> +		if (!phy_dn)
+> +			continue;
+> +
+> +		mdio_dn = phy_dn->parent;
+> +		/* only map ports that are connected to this mdio-controller */
+> +		if (mdio_dn->parent != dev->of_node)
+> +			continue;
+> +
+> +		err = fwnode_property_read_u32(port, "reg", &pn);
+> +		if (err)
+> +			return err;
+> +
+> +		if (pn >= MAX_PORTS)
+> +			return dev_err_probe(dev, -EINVAL, "illegal port number %d\n", pn);
+
+While checking for illegal port numbers, does the following make sense:
+
+	if (test_bit(pn, priv->valid_ports)
+		return dev_err_probe(dev, -EINVAL, "duplicated port number %d\n", pn);
+
+> +
+> +		err = of_property_read_u32(mdio_dn, "reg", &bus);
+> +		if (err)
+> +			return err;
+> +
+> +		if (bus >= MAX_SMI_BUSSES)
+> +			return dev_err_probe(dev, -EINVAL, "illegal smi bus number %d\n", bus);
+> +
+> +		err = of_property_read_u32(phy_dn, "reg", &addr);
+> +		if (err)
+> +			return err;
+> +
+> +		bitmap_set(priv->valid_ports, pn, 1);
+
+set_bit(pn, priv->valid_ports) ?
+
+> +		priv->smi_bus[pn] = bus;
+> +		priv->smi_addr[pn] = addr;
+> +	}
+
+...
+
+CJ
