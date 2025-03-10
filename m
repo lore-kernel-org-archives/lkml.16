@@ -1,67 +1,110 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D53D28EA;
-	Mon, 10 Mar 2025 10:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from nbd.name (nbd.name [46.4.11.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B24128EA;
+	Mon, 10 Mar 2025 10:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604158; cv=none; b=cAQsWT1b1NFDDL7AP/eyOUCxiuXQO/dceptDlDV3zAvCWOhKZBknHdc9kVtekokGco1hBNDqjNGLRMsljHHRwK61s7gwBC09O0ZygULK1g6f5AxzOwNoRCtxXOxLdRdIE7FaDyv1nYzisWfS+gckCukEqAWfbkomMpSiEY0z1YI=
+	t=1741604208; cv=none; b=Br2qCREMpNqGVFqA7MCbfsoybIPv1EBwaLrK3XAg4AacDVknGDUmJSIIzA5wQ4u+pWTqWhyUxcHJZi07m9EiQN3karZd7I9Fu2K6X2avIIvelV4ubk/Rp0iC/v8yI738rpifFEOXcJy1KC+nPfKlgmWeZzOuYch+pglPs6/sCCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604158; c=relaxed/simple;
-	bh=U6QojVvDNCz2sg10+fQRWNK7SCsQmMVV3uzE13H8jHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lRHZ8Fcdp5MQ5M9PtJ4d9ItF6wJ7zbbK97oZDQ85YK1iVHsLlUZHN3d3FlqoLhnwEziTBNs+0xITQ9oz+nhK69Wsl+9RXt6qdK8XX2s/6eRsUG5noAzxiLyq/HzXbqFVk7F65Nj0j+WwCx8tKUZB1j9J/myotB/0cskFEW72Gmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B3D9152B;
-	Mon, 10 Mar 2025 03:56:08 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81E653F5A1;
-	Mon, 10 Mar 2025 03:55:56 -0700 (PDT)
-Date: Mon, 10 Mar 2025 10:55:51 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Mark Barnett <mark.barnett@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com,
-	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org,
-	james.clark@arm.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/5] perf: Allow periodic events to alternate between
- two sample periods
-Message-ID: <20250310105551.GB9682@e132581.arm.com>
-References: <20250106120156.227273-1-mark.barnett@arm.com>
- <20250106120156.227273-2-mark.barnett@arm.com>
- <20250121130154.GA416913@e132581.arm.com>
- <c62a9f8a-312d-4f9e-9022-265e53564101@arm.com>
+	s=arc-20240116; t=1741604208; c=relaxed/simple;
+	bh=ivYS0yJpeyvxoK8uCMOjDbDUT55IQfzz/a22vunLrXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iE9bVKFUXBbfxmMLCTrZVN7mQezApKNpmM4MRmsMECYisfJvY3L3OalgxzjCBOAd2ekCCHHyLCBE3+7b4k21m+s4hcy2TQT5pnTEoTsBRyto4GWT7r0xuCpyH/xQeVOBn9/2dIYzDDsKq0aeocoo5klD8Xb7FawM/vXtrrFJeFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=QmqaspNY; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="QmqaspNY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AKmw+VYlbnRg7vgRGNsJLfqevduWjYdjPL3zS35h19I=; b=QmqaspNYGCuZ0DeizoOna+/oF1
+	icgAPSB/W8HD049qUeSYCHsBYhd4Ln1rGHBHsvy44olFRaBRqZeFHAq0dFrvIFGf+GhnA4JJEjgEw
+	ANUuM63iKJtGRo+L08CSbHnxlOTX7w1cJ6ZNcRI0xrk8awhP6O66iac4guGeS2uiGaVg=;
+Received: from p5b206ef1.dip0.t-ipconnect.de ([91.32.110.241] helo=nf.local)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <nbd@nbd.name>)
+	id 1traZH-00FdO6-1p;
+	Mon, 10 Mar 2025 11:41:07 +0100
+Message-ID: <71ed8398-4619-4793-804d-77cad36e7402@nbd.name>
+Date: Mon, 10 Mar 2025 11:41:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c62a9f8a-312d-4f9e-9022-265e53564101@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 RESEND] wifi: mt76: mt7915: add wds support when wed is
+ enabled
+To: Shengyu Qu <wiagn233@outlook.com>, Ping-Ke Shih <pkshih@realtek.com>,
+ "lorenzo@kernel.org" <lorenzo@kernel.org>,
+ "ryder.lee@mediatek.com" <ryder.lee@mediatek.com>,
+ "shayne.chen@mediatek.com" <shayne.chen@mediatek.com>,
+ "sean.wang@mediatek.com" <sean.wang@mediatek.com>,
+ "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "angelogioacchino.delregno@collabora.com"
+ <angelogioacchino.delregno@collabora.com>,
+ "miriam.rachel.korenblit@intel.com" <miriam.rachel.korenblit@intel.com>,
+ "howard-yh.hsu@mediatek.com" <howard-yh.hsu@mediatek.com>,
+ "greearb@candelatech.com" <greearb@candelatech.com>,
+ "chui-hao.chiu@mediatek.com" <chui-hao.chiu@mediatek.com>,
+ "mingyen.hsieh@mediatek.com" <mingyen.hsieh@mediatek.com>,
+ "quic_adisi@quicinc.com" <quic_adisi@quicinc.com>,
+ "sujuan.chen@mediatek.com" <sujuan.chen@mediatek.com>,
+ "gustavoars@kernel.org" <gustavoars@kernel.org>,
+ "bo.jiao@mediatek.com" <bo.jiao@mediatek.com>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+References: <TYCPR01MB84376C7074C566865654F05098D42@TYCPR01MB8437.jpnprd01.prod.outlook.com>
+ <b6b52bfcdb614137ac63fddfdaf9cb97@realtek.com>
+ <OSZPR01MB843481965BA47B030566DF2698D62@OSZPR01MB8434.jpnprd01.prod.outlook.com>
+From: Felix Fietkau <nbd@nbd.name>
+Content-Language: en-US
+Autocrypt: addr=nbd@nbd.name; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
+ cL98efvrjdstUfTCP2pfetyN
+In-Reply-To: <OSZPR01MB843481965BA47B030566DF2698D62@OSZPR01MB8434.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 07, 2025 at 08:28:13PM +0000, Mark Barnett wrote:
-> On 1/21/25 13:01, Leo Yan wrote:
-> > >   	local64_set(&hwc->period_left, hwc->sample_period);
-> > > +	if (attr->alt_sample_period) {
-> > > +		hwc->sample_period = attr->alt_sample_period;
-> > > +		hwc->using_alt_sample_period = true;
-> > > +	}
-> > 
-> > My understanding it sets a short sample window for the first period.
-> > Would it initialize the `hwc->period_left` with the updated sample
-> > period?
-> > 
-> 
-> It sets the long period first: hwc->period_left is used to program the PMU
-> when setting up the event, and hwc->sample_period is queued up as the next
-> period to switch to.
+On 10.03.25 11:33, Shengyu Qu wrote:
+>> if (IS_ENABLED(CONFIG_NET_MEDIATEK_SOC_WED) ... ?
+> I did a search in code about this, seems current MT76 code is using a
+> mix of IS_ENABLED and ifdef. And this file already have a ifdef
+> implementation. I prefer keep it as is and use another patch to convert
+> the whole mt76 driver.
 
-Makes sense to me.  Thanks for explanation.
+The driver uses #ifdef where it relies on struct members that are also 
+#ifdef'd out, and using IS_ENABLED would lead do build failures.
 
-Leo
+- Felix
