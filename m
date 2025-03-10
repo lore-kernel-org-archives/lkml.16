@@ -1,92 +1,151 @@
-Received: from mail.cs.ucr.edu (mail.cs.ucr.edu [169.235.30.83])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28CD19004A;
-	Mon, 10 Mar 2025 17:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=169.235.30.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB2E227E96
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 17:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741626181; cv=none; b=IqYU1sP3ha+3/JN1RtNssXqvTv7QhL8Uz46WnarppGnA4uETUyhWMQF/hkgl6QawVo2g9bqU9JhxQ0Z7epJREvsDPWH4lfS6vchl8Yp1ZJqVxE2a/ZpJBGKopEfllGuo9uCNBNF2ujeY/sH9l7D/Jvh9HSQ3EAemSQx6JBesqD0=
+	t=1741626253; cv=none; b=bZpm/LOLPZYKAfsSH3zbGv485jnmjgGh+eF/QHIzR9aP3lIgQ2VzEIBnQlMD0v95CmUmfw3nfC2ZtELdKzdOJyxVXZ/4KSMRA96JWnre5HZURSi5G63ftB3fMuHSvx7LcpwDnMFRwYSgVqtNb3JXppnyjduka1kcvlOJMEu4FxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741626181; c=relaxed/simple;
-	bh=hdUusOO1njK/6Sqr856+h049ZnrUaK5BHfpdHIEg3LM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mvzh5c2+GLw4SyU8W/46T6hgyPVOEIyWy5Lz3HwXsPOSPbKZm0T5eqnf9bk7ETCrpxrg34sXPKRaJmo3IzMpA/1Q8hxsC+mF2bDAxyw1QBJvr13kv8iJpl3h2OZ1Q3IPge5JNNgJoSDAZN/+mVy4Bjrem0ru7wLdrbgMPDYGBp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org; spf=none smtp.mailfrom=mail.cs.ucr.edu; arc=none smtp.client-ip=169.235.30.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mail.cs.ucr.edu
-Received: by mail.cs.ucr.edu (Postfix, from userid 1000)
-	id BAB902C800243; Mon, 10 Mar 2025 09:55:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cs.ucr.edu BAB902C800243
-X-Spam-Report: No
-X-Spam-Level: No
-Received: from kq.cs.ucr.edu (kq.cs.ucr.edu [169.235.27.223])
-	by mail.cs.ucr.edu (Postfix) with ESMTP id 9C2D92C8002FC;
-	Mon, 10 Mar 2025 09:55:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cs.ucr.edu 9C2D92C8002FC
-Received: by kq.cs.ucr.edu (Postfix, from userid 101072)
-	id 84D6427E46DC; Mon, 10 Mar 2025 09:54:46 -0700 (PDT)
-From: Yuan Tan <tanyuan@tinylab.org>
-To: axboe@kernel.dk,
-	syzbot+f2aaf773187f5cae54f3@syzkaller.appspotmail.com
-Cc: linux-block@vger.kernel.org,
-	akpm@linux-foundation.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	syzkaller-bugs@googlegroups.com,
-	willy@infradead.org,
-	falcon@tinylab.org,
-	tanyuan@tinylab.org
-Subject: [PATCH] block: add lock for safe nrpages access in invalidate_bdev()
-Date: Mon, 10 Mar 2025 09:54:00 -0700
-Message-Id: <20250310165400.3166618-1-tanyuan@tinylab.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <67ceb38a.050a0220.e1a89.04b1.GAE@google.com>
-References: <67ceb38a.050a0220.e1a89.04b1.GAE@google.com>
+	s=arc-20240116; t=1741626253; c=relaxed/simple;
+	bh=2iHTQcPXH1FLrxQMiNT55fa/PnOIlAodbQMDjn30aQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rL1Rg/HaZH+vh08YSOnOyG5OiB1IYD/dK79rM0+PyE97DOabJJ6me2ciHxDmvsqdJdtfeT0Zo3wQEA/0zsKUwg5H2clPtWguNdDDwA4P7sH1Q+AL295AIkAH4EKF6OaMJyls5zQ2pMdmIBZI5klWhhFPnVzFP7of9NB5xwV0eRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UI0l+O5e; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UI0l+O5e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741626251;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d7S8yd6R0h6QkbjSSTjEPq0BtEAD/xvKVvoWKNDxzjI=;
+	b=UI0l+O5ehc38NNBR0puKp4TKnmZ2om4xOQML+H3FVI7EzZBYLEjoZ+thsTynl3BVP7y+91
+	yaKy4KG1zNNWBrG/tGRntFncsYXLz/3PePkPbc/RYvSz73MQrDBYJgzy33gvEsW5a/9Ki/
+	qaLwTRKz3LF9issEZKhTsA5nOYhxSt0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-550-qcA6nO9WNJ6cidPgFWXLFQ-1; Mon,
+ 10 Mar 2025 13:04:08 -0400
+X-MC-Unique: qcA6nO9WNJ6cidPgFWXLFQ-1
+X-Mimecast-MFC-AGG-ID: qcA6nO9WNJ6cidPgFWXLFQ_1741626245
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3444E1800349;
+	Mon, 10 Mar 2025 17:04:03 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 310AD1956094;
+	Mon, 10 Mar 2025 17:03:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 10 Mar 2025 18:03:32 +0100 (CET)
+Date: Mon, 10 Mar 2025 18:03:21 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Tong Tiangen <tongtiangen@huawei.com>
+Subject: Re: [PATCH -next v1 3/3] kernel/events/uprobes:
+ uprobe_write_opcode() rewrite
+Message-ID: <20250310170320.GC26382@redhat.com>
+References: <20250304154846.1937958-1-david@redhat.com>
+ <20250304154846.1937958-4-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304154846.1937958-4-david@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Syzbot reported a data-race in __filemap_add_folio / invalidate_bdev[1]
-due to concurrent access to mapping->nrpages.
-Adds a lock around the access to nrpages.
+On 03/04, David Hildenbrand wrote:
+>
+> uprobe_write_opcode() does some pretty low-level things that really, it
+> shouldn't be doing:
 
-[1] https://syzkaller.appspot.com/bug?extid=f2aaf773187f5cae54f3
+Agreed. Thanks again for doing this.
 
-Signed-off-by: Yuan Tan <tanyuan@tinylab.org>
-Reported-by: syzbot+f2aaf773187f5cae54f3@syzkaller.appspotmail.com
----
- block/bdev.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+David, as I said, I can't review. I don't understand this mm/folio magic
+with or without your changes.
 
-I had already completed and tested this patch before Matthew sent the
-email. I'm not sure if this solution is correct. If it's not, please
-ignore the patch :)
+However. With your changes the code looks "better" and more understandable
+to me. So I'd vote for your patches even if I can't ack them.
 
-diff --git a/block/bdev.c b/block/bdev.c
-index 9d73a8fbf7f9..934043d09068 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -96,7 +96,14 @@ void invalidate_bdev(struct block_device *bdev)
- {
- 	struct address_space *mapping = bdev->bd_mapping;
- 
--	if (mapping->nrpages) {
-+	XA_STATE(xas, &mapping->i_pages, 0);  /* we don't care about the index */
-+	unsigned long nrpages;
-+
-+	xas_lock_irq(&xas);
-+	nrpages = mapping->nrpages;
-+	xas_unlock_irq(&xas);
-+
-+	if (nrpages) {
- 		invalidate_bh_lrus();
- 		lru_add_drain_all();	/* make sure all lru add caches are flushed */
- 		invalidate_mapping_pages(mapping, 0, -1);
--- 
-2.25.1
+But I'd like to ask some stupid (no, really) questions.
+__uprobe_write_opcode() does:
+
+	/* We're done if we don't find an anonymous folio when unregistering. */
+	if (!folio_test_anon(folio))
+		return is_register ? -EFAULT : 0;
+
+Yes, but we do not expect !folio_test_anon() if register == true, right?
+See also below.
+
+	/* Verify that the page content is still as expected. */
+	if (verify_opcode(fw->page, opcode_vaddr, &opcode) <= 0) {
+		set_pte_at(vma->vm_mm, vaddr, fw->ptep, fw->pte);
+		return -EAGAIN;
+	}
+
+The caller, uprobe_write_opcode(), has already called verify_opcode(),
+why do we need to re-check?
+
+But whatever reason we have. Can we change uprobe_write_opcode() to
+"delay" put_page() and instead of
+
+	/* Walk the page tables again, to perform the actual update. */
+	folio = folio_walk_start(&fw, vma, vaddr, 0);
+	if (folio) {
+		ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
+					    opcode);
+		folio_walk_end(&fw, vma);
+	} else {
+		ret = -EAGAIN;
+	}
+
+do something like
+
+	/* Walk the page tables again, to perform the actual update. */
+	ret = -EAGAIN;
+	folio = folio_walk_start(&fw, vma, vaddr, 0);
+	if (folio) {
+		if (fw.page == page) {
+			WARN_ON(is_register && !folio_test_anon(folio));
+			ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
+					            opcode);
+		}
+		folio_walk_end(&fw, vma);
+	}
+
+?
+
+Once again, I am not trying to review. I am trying to understand the
+basics of your code.
+
+Thanks,
+
+Oleg.
 
