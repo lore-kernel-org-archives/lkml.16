@@ -1,219 +1,241 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873E322A819
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E93222423F;
+	Mon, 10 Mar 2025 13:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741613548; cv=none; b=vCwPFCqpvXHRcokl5fyFU9BZC309mysL//jdnwZfiw749ORwGP3QhgBFc/XbLLg19KKe6IdDZiX/JsJwSmidIHnPBI9PsgVWgVmVNAcNhpv2xwcc3zVWnOTIqHj5fiVtWsh4k+sJvePApqZvVWFGNHn+Sr7iLKqo1xV8/rIKLPs=
+	t=1741613582; cv=none; b=NO/4NU8NcKQrBZs1rIFs4AuksGoCftlKhDjp54HZQRNV5Eksr4aFA8hOe8CH57ueurfD+haqZTaTMLncdmI1QrZdArX3GKFVIoYeL7zD7g6qcVtpoFivxfQOf0EsOC7+2epwAqaHJCOIlDljD7oPxkIrYbcjYP+d8gmxoXJRGTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741613548; c=relaxed/simple;
-	bh=mLdxVos0hPyLd2bmuvUrymnzAJjvTnjjfAT+4GunGm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dOqgh0epC4yznBwUZiK6hQgheyoR08ZvDHADvV4262cjPH4Kmw4OTQXGHNgJ4GuvGn2W1k9VO0B5xBpO3Ax5OraC8sOFw9SY76H/SrsqTrEHHtD2l/n8DXhytsbgjA1wgI/nN8L6sC72zlSHHybp2OTEE3YMs9/A8NDtdo1nxYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=loGHcEf0; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1741613582; c=relaxed/simple;
+	bh=pPO6jYdwMoqL3V8oJELFQhsA3MHL1bJzSyUQlu1DkWU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=YXTwY/S26mvXcwbfN3ykiLM5mchE5ta1fsE+K5R8nIWhSaQTLOtvi2M7aaLS5BsS/mO0+dDnskadeB4gTdpyfIfDPR/Qoy4W3bzBQols+RQks5YGk9yuReseZC1qsfxwTUsKgjsknfM1MfttgQTSEG/U4GJ1yZJZyy7e2WU4pHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NFw6lo44; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=09sEgtRZ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="loGHcEf0"
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id B57503F5B0
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1741613536;
-	bh=HaCDmfpp8ZRPXhUw4ZNlmKPznZLLlpm1APhqUxOUw6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=loGHcEf0YAv1ppFDAeIRIRnx5q+dbD9a3fuw83OK50wvYOC00Pf62JnW3qgi9NGBM
-	 OjmBE2kBej3NtHu1QIV8dQ2yx3sVM42XGwPhJtZujjgWiTEwv/1CSZMC9lWGisf9uf
-	 oz/GS5ZpU2lH+/jHv/xH6fBrpm6tBMog2t0YVib/1Rtc5+bH7HrQhzH4MukSodpcqd
-	 qKHR/hz23omI40dOzIcJhurftwH0WmLF11EsutTvOprCL26AbeCiBO6hgcukU8OM51
-	 JBl2E/IZ5x2Zq+5dk4RK9s41WcOCP+BfAjyniuOZvxik0TuIfqeNCHpkCoPtoyF5Pg
-	 s1r5RiEKcvSoQ==
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff7aecba07so5709848a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:32:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741613535; x=1742218335;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HaCDmfpp8ZRPXhUw4ZNlmKPznZLLlpm1APhqUxOUw6M=;
-        b=Fcb+Di2/HhGmvqAOq3u0aVZ4IAZUZqI7nuFag747EiTsr3DMCEgOzYINVS0K7xbD8z
-         7uj2o9sZSwm7xQeMtJIJyppu4aaVhPrdWz9NISBAGHHNYX8nrbkEZuGvrIXlPjv4TUhB
-         2h938CYSV3CteVGMjwAgSbKgT2RNe0MOssNin9cThu2owGr/DIEGGDq38pwa8yNXVzvy
-         yoQf6omuAKATAM0LqKnAxkOY+cRI+nzPy7kwqf9zXVJqSZV7IxlYh2tI8lEu8wY6n0mR
-         MIlyM7BA+mULNuDMTXCiZ1ymPF2ec/X1fhe8fkzIzNJQDUR6m8AtlAqUWtFohD7YVIN1
-         xasA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfK4394/fgzI+rqJ6xW+WhF1/ut0kGKQJdFTX0YHOOFeF6PaL6YZRZtAbzdIl2Q4QA6OtkF+4p+cUiBU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuDvTZvyryTM44QPzTTttODc3cUc2/awNzvH45EpGFrA0SAMIk
-	CLbhRredm0GMOr0BTaXbuemJ+6/QrtGbCeSVy4Ojxi7J4t1fpK4hkVMNJ1WqRqk8l66GsU/BdEY
-	eko37Row+eIJfCuKOPcs28tPhm4Vhj1wFdATrwBO+ldOrw4YVU8dI7v1izIPugK4GYdLviiy4r1
-	lbPw==
-X-Gm-Gg: ASbGncvM54XI3IO97i1NPhpJOfNAtiHKZUphZ5Ap9NPOsGFn4DU1RMjqNGAvkxqA38Y
-	DGjRy10DGpv1knFYpwon06BBfLCLE2mEj0VK7FrJA9STqwT+UsVawYTNv+QR/EuCSK2cyT7SLoH
-	0YQLRY/HLVCz5RlBQp5MwiYVZgoGvXrv2ctqfkjBZzZR7it2ISBl4RQMJnUzyo4fXc4ZihqPx9P
-	yKvryyESDKjCQIgZjbTSuJcJvPUY/prJYUCmiTBhNW0YS8Mtpr3EsBTCSooAfaaWIayHgIPuV8I
-	9IfHQfV/T3dWsJsFUg==
-X-Received: by 2002:a17:90b:394d:b0:2fe:a545:4c84 with SMTP id 98e67ed59e1d1-2ff7cf13eddmr17068166a91.34.1741613535215;
-        Mon, 10 Mar 2025 06:32:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHz263sGPsYQaHEeN0+wO5Ne+rOpPHxsfXurrvf0VqTDGXjQ+3335KRj6Lff0lJoRAFMdhBw==
-X-Received: by 2002:a17:90b:394d:b0:2fe:a545:4c84 with SMTP id 98e67ed59e1d1-2ff7cf13eddmr17068137a91.34.1741613534819;
-        Mon, 10 Mar 2025 06:32:14 -0700 (PDT)
-Received: from localhost ([240f:74:7be:1:55b0:de12:de5a:26cc])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e7747aesm9740634a91.20.2025.03.10.06.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 06:32:14 -0700 (PDT)
-Date: Mon, 10 Mar 2025 22:32:12 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/9] Introduce configfs-based interface for
- gpio-aggregator
-Message-ID: <oedikhiegt3iqj7xg4vtfhlqxihicd7bdtaglk73q2m3c42zla@roh336fpkszm>
-References: <20250224143134.3024598-1-koichiro.den@canonical.com>
- <CAMRc=Me9_EvVj2U-wGWjoVyH_igZBtUs1ymtE=4_r2EkSBAAcA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NFw6lo44";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="09sEgtRZ"
+Date: Mon, 10 Mar 2025 13:32:53 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741613577;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fiTYNeL7CB349A2biujNXPhjhq5XSMbGAIrgqUm6BmQ=;
+	b=NFw6lo44pl0VKiLznKbhX0PMxjBi1Pe18TbBditsnhCzNh55nDX1NTVs/p80WDvSl4ghFM
+	E1YGsjZJixHfKiHrp2ndh8Zcq/h/vb+xdJZkhkxMrIM5WmCKqG7OWR9RVLnf3i6jovdokS
+	J4QxMmbgc0oCV8+GXpSPQyjJwHrTeD+j7n3B7GiV2YJQjkf9rmayC5cAI30kkCPYdowbE0
+	QsdrPkGwsiMxc3W8mj0PrDTN3LmQdE/4PatoMm8eS1A2zF6ONl5llvKby6MOAYXphysg9/
+	zLzLG95CKGjHVS4i4iXDOupqe10JicC5tzGbjWVBBUl22ybWCerp3rmzMeimoA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741613577;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fiTYNeL7CB349A2biujNXPhjhq5XSMbGAIrgqUm6BmQ=;
+	b=09sEgtRZxqEo744VyqFCB6O7f6GLwkdRsBCMnjnFsXW97/sOE93PyzKjQ1TYIDmgYk5ZI8
+	XK1A78U9+ilKUmAA==
+From: "tip-bot2 for Yafang Shao" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/clock: Don't define sched_clock_irqtime as
+ static key
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+ Yafang Shao <laoar.shao@gmail.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250205032438.14668-1-laoar.shao@gmail.com>
+References: <20250205032438.14668-1-laoar.shao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Me9_EvVj2U-wGWjoVyH_igZBtUs1ymtE=4_r2EkSBAAcA@mail.gmail.com>
+Message-ID: <174161357383.14745.8770394914047302959.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2025 at 11:19:40AM GMT, Bartosz Golaszewski wrote:
-> On Mon, Feb 24, 2025 at 3:31 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > This patch series introduces a configfs-based interface to gpio-aggregator
-> > to address limitations in the existing 'new_device' interface.
-> >
-> > The existing 'new_device' interface has several limitations:
-> >
-> >   Issue#1. No way to determine when GPIO aggregator creation is complete.
-> >   Issue#2. No way to retrieve errors when creating a GPIO aggregator.
-> >   Issue#3. No way to trace a GPIO line of an aggregator back to its
-> >            corresponding physical device.
-> >   Issue#4. The 'new_device' echo does not indicate which virtual
-> >            gpiochip<N> was created.
-> >   Issue#5. No way to assign names to GPIO lines exported through an
-> >            aggregator.
-> >
-> > Although Issue#1 to #3 could technically be resolved easily without
-> > configfs, using configfs offers a streamlined, modern, and extensible
-> > approach, especially since gpio-sim and gpio-virtuser already utilize
-> > configfs.
-> >
-> > This v5 patch series includes 9 patches:
-> >
-> >   Patch#1: Fix an issue that was spotted during v3 preparation.
-> >   Patch#2: Reorder functions to prepare for configfs introduction.
-> >   Patch#3: Add aggr_alloc() to reduce code duplication.
-> >   Patch#4: Introduce basic configfs interface. Address Issue#1 to #4.
-> >   Patch#5: Address Issue#5.
-> >   Patch#6: Prepare for Patch#7.
-> >   Patch#7: Expose devices created with sysfs to configfs.
-> >   Patch#8: Suppress deferred probe for purely configfs-based aggregators.
-> >   Patch#9: Documentation for the new configfs interface.
-> >
-> > N.B. This v5 is based on the latest gpio/for-next commit as of writing this:
-> >      * 45af02f06f69 ("gpio: virtuser: convert to use dev-sync-probe utilities")
-> >
-> >
-> > v4->v5 changes:
-> >   - Rebased off of the latest gpio/for-next, that includes the patch series:
-> >     "Add synchronous fake device creation utility for GPIO drivers"
-> >     (https://lore.kernel.org/all/20250221133501.2203897-1-koichiro.den@canonical.com/)
-> >
-> > v3->v4 changes:
-> >   - Splitted off the introduction of gpio-pseudo.[ch] and conversions.
-> >   - Reordered commits to place a fix commit first.
-> >   - Squashed the trivial update for gpio-aggregator's conversion to gpio-pseudo
-> >     into the primary commit "gpio: aggregator: introduce basic configfs interface"
-> >     as it is only meaningful when combined.
-> >
-> > v2->v3 changes:
-> >   - Addressed feedback from Bartosz:
-> >     * Factored out the common mechanism for synchronizing platform device
-> >       probe by adding gpio-pseudo.[ch].
-> >     * Renamed "_auto." prefix to "_sysfs." for auto-generated
-> >       configfs entries corresponding to sysfs-created devices.
-> >     * Squashed v2 Patch#3 into its predecessor.
-> >   - Addressed feedback from Geert:
-> >     * Factored out duplicate code in struct gpio_aggregator initialization
-> >       by adding gpio_alloc()/gpio_free() functions. Note that v2 Patch#7
-> >       was dropped for other reasons as mentioned below, so aggr_free() in
-> >       v3 is unrelated to the same-named function in v2.
-> >     * Removed redundant parsing of gpio-line-names and unnecessary
-> >       chip->names assignments; squashed v2 Patch#4 + v2 Patch#5 into v3
-> >       Patch#9.
-> >     * Updated to use sysfs_emit().
-> >     * Updated Kconfig (select CONFIGFS_FS).
-> >     * Fixed typos, coding style issues, missing const qualifiers, and other
-> >       minor issues.
-> >   - Resolved an issue that was spotted during v3 preparation. See Patch#2.
-> >   - Reordered resource initialization order in gpio_aggregator_init() to
-> >     both eliminate a potential race condition (as noted in the source code
-> >     comment) and simplify the code. See Patch#8. This enabled:
-> >     * Removal of v2 Patch#7.
-> >     * Merging of aggr_unregister_lines() and aggr_free_lines() into a
-> >       unified function.
-> >   - Disabled 'delete_device' functionality for devices created via configfs
-> >     for simplicity. It was mistakenly allowed in v2 and proved buggy. See
-> >     Patch #8.
-> >
-> > RFC->v2 changes:
-> >   - Addressed feedback from Bartosz:
-> >     * Expose devices created with sysfs to configfs.
-> >     * Drop 'num_lines' attribute.
-> >     * Fix bugs and crashes.
-> >     * Organize internal symbol prefixes more cleanly.
-> >   - Split diffs for improved reviewability.
-> >   - Update kernel doc to reflect the changes.
-> >
-> > v4: https://lore.kernel.org/all/20250217143531.541185-1-koichiro.den@canonical.com/
-> > v3: https://lore.kernel.org/all/20250216125816.14430-1-koichiro.den@canonical.com/
-> > v2: https://lore.kernel.org/all/20250203031213.399914-1-koichiro.den@canonical.com/
-> > RFC (v1): https://lore.kernel.org/linux-gpio/20250129155525.663780-1-koichiro.den@canonical.com/T/#u
-> >
-> >
-> > *** BLURB HERE ***
-> >
-> > Koichiro Den (9):
-> >   gpio: aggregator: protect driver attr handlers against module unload
-> >   gpio: aggregator: reorder functions to prepare for configfs
-> >     introduction
-> >   gpio: aggregator: add aggr_alloc()/aggr_free()
-> >   gpio: aggregator: introduce basic configfs interface
-> >   gpio: aggregator: add 'name' attribute for custom GPIO line names
-> >   gpio: aggregator: rename 'name' to 'key' in aggr_parse()
-> >   gpio: aggregator: expose aggregator created via legacy sysfs to
-> >     configfs
-> >   gpio: aggregator: cancel deferred probe for devices created via
-> >     configfs
-> >   Documentation: gpio: document configfs interface for gpio-aggregator
-> >
-> >  .../admin-guide/gpio/gpio-aggregator.rst      |  107 ++
-> >  drivers/gpio/Kconfig                          |    2 +
-> >  drivers/gpio/gpio-aggregator.c                | 1129 ++++++++++++++---
-> >  3 files changed, 1050 insertions(+), 188 deletions(-)
-> >
-> > --
-> > 2.45.2
-> >
-> 
-> I did some more testing as I want to pick it up for v6.15 but I now
-> noticed that we're hitting the lockdep_assert_held(&aggr->lock) splat
-> in aggr_line_add(). Could you please look into it?
+The following commit has been merged into the sched/urgent branch of tip:
 
-Thanks. Could you share with me a sample splat?
+Commit-ID:     f3fa0e40df175acd60b71036b9a1fd62310aec03
+Gitweb:        https://git.kernel.org/tip/f3fa0e40df175acd60b71036b9a1fd62310=
+aec03
+Author:        Yafang Shao <laoar.shao@gmail.com>
+AuthorDate:    Wed, 05 Feb 2025 11:24:38 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 10 Mar 2025 14:22:58 +01:00
 
-Koichiro
+sched/clock: Don't define sched_clock_irqtime as static key
 
-> 
-> Bartosz
+The sched_clock_irqtime was defined as a static key in:
+
+  8722903cbb8f ("sched: Define sched_clock_irqtime as static key")
+
+However, this change introduces a 'sleeping in atomic context' warning:
+
+	arch/x86/kernel/tsc.c:1214 mark_tsc_unstable()
+	warn: sleeping in atomic context
+
+As analyzed by Dan, the affected code path is as follows:
+
+vcpu_load() <- disables preempt
+-> kvm_arch_vcpu_load()
+   -> mark_tsc_unstable() <- sleeps
+
+virt/kvm/kvm_main.c
+   166  void vcpu_load(struct kvm_vcpu *vcpu)
+   167  {
+   168          int cpu =3D get_cpu();
+                          ^^^^^^^^^^
+This get_cpu() disables preemption.
+
+   169
+   170          __this_cpu_write(kvm_running_vcpu, vcpu);
+   171          preempt_notifier_register(&vcpu->preempt_notifier);
+   172          kvm_arch_vcpu_load(vcpu, cpu);
+   173          put_cpu();
+   174  }
+
+arch/x86/kvm/x86.c
+  4979          if (unlikely(vcpu->cpu !=3D cpu) || kvm_check_tsc_unstable())=
+ {
+  4980                  s64 tsc_delta =3D !vcpu->arch.last_host_tsc ? 0 :
+  4981                                  rdtsc() - vcpu->arch.last_host_tsc;
+  4982                  if (tsc_delta < 0)
+  4983                          mark_tsc_unstable("KVM discovered backwards T=
+SC");
+
+arch/x86/kernel/tsc.c
+    1206 void mark_tsc_unstable(char *reason)
+    1207 {
+    1208         if (tsc_unstable)
+    1209                 return;
+    1210
+    1211         tsc_unstable =3D 1;
+    1212         if (using_native_sched_clock())
+    1213                 clear_sched_clock_stable();
+--> 1214         disable_sched_clock_irqtime();
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+kernel/jump_label.c
+   245  void static_key_disable(struct static_key *key)
+   246  {
+   247          cpus_read_lock();
+                ^^^^^^^^^^^^^^^^
+This lock has a might_sleep() in it which triggers the static checker
+warning.
+
+   248          static_key_disable_cpuslocked(key);
+   249          cpus_read_unlock();
+   250  }
+
+Let revert this change for now as {disable,enable}_sched_clock_irqtime
+are used in many places, as pointed out by Sean, including the following:
+
+The code path in clocksource_watchdog():
+
+  clocksource_watchdog()
+  |
+  -> spin_lock(&watchdog_lock);
+     |
+     -> __clocksource_unstable()
+        |
+        -> clocksource.mark_unstable() =3D=3D tsc_cs_mark_unstable()
+           |
+           -> disable_sched_clock_irqtime()
+
+And the code path in sched_clock_register():
+
+	/* Cannot register a sched_clock with interrupts on */
+	local_irq_save(flags);
+
+	...
+
+	/* Enable IRQ time accounting if we have a fast enough sched_clock() */
+	if (irqtime > 0 || (irqtime =3D=3D -1 && rate >=3D 1000000))
+		enable_sched_clock_irqtime();
+
+	local_irq_restore(flags);
+
+[ lkp@intel.com: reported a build error in the prev version ]
+[ mingo: cherry-picked it over into sched/urgent ]
+
+Closes: https://lore.kernel.org/kvm/37a79ba3-9ce0-479c-a5b0-2bd75d573ed3@stan=
+ley.mountain/
+Fixes: 8722903cbb8f ("sched: Define sched_clock_irqtime as static key")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Debugged-by: Dan Carpenter <dan.carpenter@linaro.org>
+Debugged-by: Sean Christopherson <seanjc@google.com>
+Debugged-by: Michal Koutn=C3=BD <mkoutny@suse.com>
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20250205032438.14668-1-laoar.shao@gmail.com
+---
+ kernel/sched/cputime.c | 8 ++++----
+ kernel/sched/sched.h   | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 5d9143d..6dab485 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -9,8 +9,6 @@
+=20
+ #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+=20
+-DEFINE_STATIC_KEY_FALSE(sched_clock_irqtime);
+-
+ /*
+  * There are no locks covering percpu hardirq/softirq time.
+  * They are only modified in vtime_account, on corresponding CPU
+@@ -24,14 +22,16 @@ DEFINE_STATIC_KEY_FALSE(sched_clock_irqtime);
+  */
+ DEFINE_PER_CPU(struct irqtime, cpu_irqtime);
+=20
++int sched_clock_irqtime;
++
+ void enable_sched_clock_irqtime(void)
+ {
+-	static_branch_enable(&sched_clock_irqtime);
++	sched_clock_irqtime =3D 1;
+ }
+=20
+ void disable_sched_clock_irqtime(void)
+ {
+-	static_branch_disable(&sched_clock_irqtime);
++	sched_clock_irqtime =3D 0;
+ }
+=20
+ static void irqtime_account_delta(struct irqtime *irqtime, u64 delta,
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c8512a9..023b844 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3259,11 +3259,11 @@ struct irqtime {
+ };
+=20
+ DECLARE_PER_CPU(struct irqtime, cpu_irqtime);
+-DECLARE_STATIC_KEY_FALSE(sched_clock_irqtime);
++extern int sched_clock_irqtime;
+=20
+ static inline int irqtime_enabled(void)
+ {
+-	return static_branch_likely(&sched_clock_irqtime);
++	return sched_clock_irqtime;
+ }
+=20
+ /*
