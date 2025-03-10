@@ -1,97 +1,78 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92230234970;
-	Mon, 10 Mar 2025 18:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4453717A2E8;
+	Mon, 10 Mar 2025 18:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741631671; cv=none; b=ozsbhf9MYriMyV2nPxlHlCeY+YHXu+XuKN7kvKABmc6cUr++9z0MrIBGnW4ZVS66ibbtyTLTjU9aRRZ0qnVWGqxwpuGoBMYb2uD1JwmHhKb2co46s4JxyPvgqp0yssPmpvK2zdvCPfinWWxLvU/6VOWgSe1SO32QBidYVTvnzls=
+	t=1741631883; cv=none; b=bTz2lSvyZ4XYqY3VPQX9m+kpf+Ed5hOS5qw5cmOXS6jiSuCo7AOLr0n4aAWDtqXdJ738UxHEUmnjU6M8fG4LEMC9WvSzM9DqRUktsruuYb8zQi3RJ11DwARRbBTMrrhsJcllyAClPkfBrxebvsuY4OXIKeEQkvBPoF+qx5blFS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741631671; c=relaxed/simple;
-	bh=/W2lfrmzDmAKnppEcTfcNpT/cFN/uegbkn0BHi6gUUs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zs0GJIvkDn+e4CWwSvrWLhLB7hsogT/gxeeiM/3HCo+Gou7eYGcRo1NNsL6iaVJVH4bo4v0MIEoVv+xTzenUcGeJQayH1mgyxNf74eTbc9fKCYJVjIEXSE217uc81Qo8VUP17oRXVRt4TUGm2o1P5TY0YgqPVdHUtxfJNc25N2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JgQZueVg; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741631883; c=relaxed/simple;
+	bh=LVB/LqaahZ8gGbPqHcZJ5mQIkiJOmxQolT0W/AYlvZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nTe1WGIUmuEDSNg7QQcpLywB0bDQ77573L8GfE8b7KG8vXeMDOQbgynUYqneW18Oh8WC7qWFmAlaA6jG2ot/PFPTBkkoUxZxtibpPai7D2T6XJNdfhxdqw76MSs+CuuxcntI/q0RsAeDEdnx9PAU68R6XfVzAHfrRg1SvXtUdOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQpdnkA7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgQZueVg"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22398e09e39so84442245ad.3;
-        Mon, 10 Mar 2025 11:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741631669; x=1742236469; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kXHTh7I/mRgEaJneAkHgQi8aR3fLt8UCUliwudcDsl4=;
-        b=JgQZueVgv44YXbxQBHWS4aE9IGhNUzqVgmomTb3152/jtbTkvZve1QGLvfssL3Ys9b
-         AmZ/nsXXMLtHv0iNZPB5YhHQwvEcw2URBStOYwtwN//eo954G+frzqusx5WA3k4thajs
-         mEGGjIYLqbHysRrOOw9Sfb67jnnnTdifTKVkSf6APM/JePOfSFqQPxvRsToQALBA1f6R
-         PCIJkD80eacOAc1EJ5vgCco/AcDq+i6XUK/aYw6Gg/TkSC2cWIM8zMfMtBUWSeQ4Da3y
-         hJRaEtyvgjVXvjHkEpM0jYdtS4/2rhZXaH8U4xFGtvTpE8tFhXKHFUGna6RpSfg485Tc
-         lJkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741631669; x=1742236469;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kXHTh7I/mRgEaJneAkHgQi8aR3fLt8UCUliwudcDsl4=;
-        b=vv3ZBSWy3Eoep+iqKTGrPs9fuvoCAqvC+L1k1AKG8EZn/Lse/k9PMHiz7muZL9Moob
-         lLzetdoiNSU9Ar1mKubSgULNh1gkVeNtZ78e0JvtFeTJ/e9OiPjWVGE0mSw7uePeLrYM
-         o1wqxEyCw62lgXzz7hqEdLUzU2xr8gbsSJFF/yU7GwsFhkEiID/6N8yUMHhOodcNeoBc
-         OeO8qMLd5FP9GyVi87ZSnrphiiPjiAWZ7niLD95Te/HlbS/SSOW6eUHG3PTinZ/o5tiT
-         ykI97+fRKmBd5On/BYt4gMBjpfQUhWVhZ0XbJW/yuem0Sxs8YkksbSWqcOsTleUpgogp
-         q0eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWd8wS4M1gJVS68sK+0Uh2NB9mneL25F8HOr+bl58wTJCnQvbH4Pax9pBf9CbYOG+gMgXkilh29hYlpi2Uk@vger.kernel.org, AJvYcCXV6MheiMdniQIMIYgVhnp9p6k5fuu7qEhkTCDCqk0rhn96CjmsKlFNJ3ANnZLsieUxCWSM67r9bzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmDHrsnrS1nHM9YbR7NYBKKRox1zqSAeVzvsoREU/h0GIhzHJt
-	a9x5gkFw7qjpeszCdRdvX67q3/R0YpFDke/HwMcEY17HKjYXeEUV
-X-Gm-Gg: ASbGncsO0KjiAuid+narG9Y0MgwY/Sn7m7j4nmMXn84eJn4X33WRUzcf6cSFkq5NkBl
-	KUQ7qfmDlsLO8lOA0HhdtKkp0Coi26sn8GHTDWllL1Wc0AfL7lp4aHU2wTxomG6NAiOp8aBOvc6
-	gyQtffTrOZn62xicneT+TqnDjsbos2M/y3gjXhtmEjHtNe14IdJ/SRJao85Bo5cidaUy5qi/2sq
-	0SE/jIRJi9Q+itzgTcAkGX4V8ywPIiDsMqAQo1d9jUGDcXIb33sUuNrlOk4ZCzDzLQQT/owHX56
-	2Gfsu/nC7LvcpBLjr80xvPd0NltzmTLynSrCGyidmLeD
-X-Google-Smtp-Source: AGHT+IGuwJ4gBSQ8mC66f3ZNlELs5twuXESiljrZEL7164A7B8IaoRu6usWP4AuvYsUTSuGUSN/5CQ==
-X-Received: by 2002:a17:903:32ce:b0:223:39ae:a98 with SMTP id d9443c01a7336-22428a98102mr257906745ad.22.1741631668412;
-        Mon, 10 Mar 2025 11:34:28 -0700 (PDT)
-Received: from arch.lan ([103.6.150.165])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7f717sm81618925ad.111.2025.03.10.11.34.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 11:34:27 -0700 (PDT)
-From: kth <kangtaeho2456@gmail.com>
-To: corbet@lwn.net
-Cc: kangtaeho2456@gmail.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: Fix typo from smpfs to smbfs in filesystem documentation
-Date: Tue, 11 Mar 2025 02:34:20 +0800
-Message-ID: <20250310183420.324958-1-kangtaeho2456@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQpdnkA7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1CE2C4CEEC;
+	Mon, 10 Mar 2025 18:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741631882;
+	bh=LVB/LqaahZ8gGbPqHcZJ5mQIkiJOmxQolT0W/AYlvZs=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=rQpdnkA7yyTigYWe7XQTYKESp7rRfhfcgobb/yUGEsPaCUp28CwgFsd9kwIsgz+O7
+	 yeVcVh271D6h1LkAfjCZ053X24C10cSw+hTdanUE7b2589IdadYI68aETIN2KMcgwC
+	 uM8iSnw3FIIkcoY/zWFtlZRg2PtoSh7VcPv07dAW5FxAcmhSx1yzd4XfBflHXik4pi
+	 KyNABGQ8HPk/aP5oj0jqGSXGncjVsbIrGzHr4VEMBp2ug4VWcnky6KGMRIUu6QXQ4P
+	 utDZRw5GxCzes6N57+67Odz83kNIHJPgFuIaXznMytn8hBaHREsIA9GeByFYhQFfUJ
+	 LlNwRp+auGyzg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 63B67CE079A; Mon, 10 Mar 2025 11:38:02 -0700 (PDT)
+Date: Mon, 10 Mar 2025 11:38:02 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org
+Subject: [PATCH 0/9] RCU torture-test changes for v6.16
+Message-ID: <4bf081c8-9299-4ee3-b337-d5b751cef6be@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The documentation incorrectly reffered to 'smbfs' as 'smpfs'. This change corrects that typo to ensure the documentation is accurate and not misleading.
+Hello!
 
-Signed-off-by: Kang Taeho <kangtaeho2456@gmail.com>
----
- Documentation/admin-guide/highuid.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The following series improves testing of SRCU-fast and SRCU up/down:
 
-diff --git a/Documentation/admin-guide/highuid.rst b/Documentation/admin-guide/highuid.rst
-index 6ee70465c0ea..9239067563a1 100644
---- a/Documentation/admin-guide/highuid.rst
-+++ b/Documentation/admin-guide/highuid.rst
-@@ -64,7 +64,7 @@ What's left to be done for 32-bit UIDs on all Linux architectures:
- 
-   Other filesystems have not been checked yet.
- 
--- The ncpfs and smpfs filesystems cannot presently use 32-bit UIDs in
-+- The ncpfs and smbfs filesystems cannot presently use 32-bit UIDs in
-   all ioctl()s. Some new ioctl()s have been added with 32-bit UIDs, but
-   more are needed. (as well as new user<->kernel data structures)
- 
--- 
-2.48.1
+1.	Make srcu_lockdep.sh check kernel Kconfig.
 
+2.	Make srcu_lockdep.sh check reader-conflict handling.
+
+3.	Split out beginning and end from rcu_torture_one_read().
+
+4.	Make torture.sh --do-rt use CONFIG_PREEMPT_RT.
+
+5.	Add tests for SRCU up/down reader primitives.
+
+6.	Pull rcu_torture_updown() loop body into new function.
+
+7.	Comment invocations of tick_dep_set_task().
+
+8.	Complain if an ->up_read() is delayed more than 10 seconds.
+
+9.	Check for ->up_read() without matching ->down_read().
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+ b/kernel/rcu/rcutorture.c                                |  124 ++++--
+ b/tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh |   11 
+ b/tools/testing/selftests/rcutorture/bin/torture.sh      |   12 
+ kernel/rcu/rcutorture.c                                  |  297 ++++++++++++---
+ tools/testing/selftests/rcutorture/bin/srcu_lockdep.sh   |   31 +
+ 5 files changed, 383 insertions(+), 92 deletions(-)
