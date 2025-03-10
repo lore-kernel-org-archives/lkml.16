@@ -1,114 +1,131 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5861F227BB5;
-	Mon, 10 Mar 2025 16:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C829A29;
+	Mon, 10 Mar 2025 16:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622461; cv=none; b=l2y/WKhre89XA+rFgc5k/AbU03UxU44tJNvBGbtSvzSwvbe49N4cMLh1p8ZinlVGMfT0ggoBTpbb3cPNufvNqSOe7cWfFVIU3zjwrf04PM3nPrOtXpSxt1yBFZ7aAy8Zu4edoKBeQ3JeW+grABi5roIvJJqMZss43voLTCW7hoY=
+	t=1741622510; cv=none; b=XjlMAZDHT2KstNN7Ep/p/OLHn/zJC3vRH/kIbU5Pwk/G+gonJj4JKvkoI7pNcDL1X6V0h/id7Ji1umyqp0XvynLtXBkvbctDFAPfVwS5i5ErzyniiK06TkrXHNzJvhOhP0LzO9Z6jxapn+yHwTYxd55eYH/TC/NQe8Qq3FX0E+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741622461; c=relaxed/simple;
-	bh=mz7e+DwnGEi0ZbMOIPk0d2pyGa8YuaSQhtow3eIM53g=;
+	s=arc-20240116; t=1741622510; c=relaxed/simple;
+	bh=mqBXqjlVmhomvFbTex1Fuk/DW/hR4kbX8x9xFHLmTAg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c3NFPzWfXktVoerK6706Bbku4O/JQh8jFZ713pIDZJJURVgziaFBdSOe0bnLNmKrGwYiWWLWjB4OFNGZvzkwVbwfApKjMOrUmT9UQu8tOhPm/eJDIbsadi9oVCiLUxbzTakpdRRdp8ljdYkWlQzRD+GI1Kw1bsM10UGJnlWlE6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KnXAnM/8; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=SE1lN95E7tEnr7ZYBYGsTzF2cjVVB7kcCWcf6/ZwErRZ2JK9bn+SYgkVVvFpfaKQ2XCYm1uP7CAeOe+MNYr/ggbQEADbmxV24oXuGyuSPfv4AUdU3Cwtoyvb17nnw0U30oRqPGAgDP48p4QjXfAJJRwpEn7UHnMxeHhwHrrJ+18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZEvc9GA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnXAnM/8"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-301001bc6a8so9562a91.1;
-        Mon, 10 Mar 2025 09:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741622459; x=1742227259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0zZBaSde5BDm2iUrwQj9zdT29C5q6BzjamuIxH45kT4=;
-        b=KnXAnM/8nzktazxxJpNhuqJLd8KbavK+85pnVgKLPjdBlmNMrC186usEH5kbQzmVyF
-         nHmTyh19OKrUBLCbSYPFtuO6zQiLmdlaFqu6VfSgzGr1VycDAQFJ0Bv8i55BW6fhBCx4
-         VH562b+i7f/kTwaHEYjW2p3fucrCojIwsmdP9gL0rsRcMz7A914Oj7p8ASfBp86J79iK
-         /UiNtrmIFRDOF7Qs4rJwhKAXOPwEAWo7si4iwoKDG4hrPkMjs0ZUMAwe2lB9fI8PkzrV
-         gywW5cSwIHzdV/arouMMjf/n2HJI6YYyM0SHud3cdpf5hV/8MrO8sdfLm18xfGLTL2UI
-         l+GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741622459; x=1742227259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0zZBaSde5BDm2iUrwQj9zdT29C5q6BzjamuIxH45kT4=;
-        b=T3gx3M17SsiORGFky7iwRRZiKLxvJwY9UExA3gZvicyfoNuPvwlIZCpFpzJ9i+cXyu
-         d1oyPxViJDzVU4C1w+OYpAdC8yd0bPC6e4RWgkPuPT5DOu5/pnaT3TK5iqoImoKaRL21
-         IYHy3GdCvrMe16wKSvRW7R5jvu+zC3we+6S+PYdIYzF5rPx5YFBRcMS+P0AwmbyF4z0x
-         ImkEQwZpryJSNGNfHv1EVWhDwduHvd80n+zDWJ29eb48OI5XJDLD0UKvFHo+IOQhco4J
-         7Bnz8nU8i7Yun/LmlDJexcmnZICthu+W6MxzMW/AbbjYE6gh5SNgWfoGgPzV3TX2EjOP
-         zMVg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8r/eHG5BIhdgq13Bf/nFHxkq4c9S5Qq0MOh7QvY/8/xJFnP7myLFezo64WrlKYWJFuo9Qlwp3l18vsIEplO6YFQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3jh4S9fNiqn0PhiXF98Cqs+NTagN8YnRynv2A290C3K1ApXTe
-	UbWJUscrafAOPD6j4dzv8DrmQHlNiDV2I0yHZBWqbhQZ4YbAF2+0UrVL7qq9sNwW5Ba6Nsjd1CW
-	rsSGV5RwRwVPRwWx+msHBi4DbvAk=
-X-Gm-Gg: ASbGnctcc/43OPzJbaNvtFGQ5gmNfTQtB4rBV3lQPtqVd1IzrWpfZ4sMvayGuuPubtb
-	1PJ1bL6wl/fsPMhWs1MqraAriohHbkJjh6XOrfwUn4n6MzEuuiJhNY5hShi/+5lSay4crbOhFcV
-	2OMBvMYjPyIB2MgDr/Op2o5dFzUw==
-X-Google-Smtp-Source: AGHT+IGUT+lwFvvHh9DxFp/evRyCtc43rNwXVv3kIVt8aG9wUooVO7R3xngVyEL0TltRIXFVEVRjTkyOK4us/gpOr3I=
-X-Received: by 2002:a17:90b:1a8f:b0:2ff:4b7a:f0a4 with SMTP id
- 98e67ed59e1d1-300ff8b9c82mr141206a91.3.1741622459338; Mon, 10 Mar 2025
- 09:00:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZEvc9GA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E31DAC4CEEE;
+	Mon, 10 Mar 2025 16:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741622509;
+	bh=mqBXqjlVmhomvFbTex1Fuk/DW/hR4kbX8x9xFHLmTAg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XZEvc9GANYPdICMpXDD3qOBgROJyZeYvqYf5tsCihhDqk1stckOl4S2UrtTxF6V1C
+	 JivBaco8lWZmRiz2pECQqJcoOBPwY4ziEx9TpUY77TJjwa//XmXQ7lY+04/C2AGWZ+
+	 HJzA/Txu+2VoBq/IFTOjkm/0BjbAy0bjaSw+wjge5QU6FwgWroRn6nvThBgS6LxA9f
+	 OdAYtH/eClhmTbntargzvdaxna9+KLcLr0v/MYOWsHMTwKvhZfdAX3HR5z7h/gblhv
+	 H1kvKUnswjuYYTKkWNYZybHQGVVKqbCsTgzsR+z1mkxqEJe0lgmuOkyXNI0RLShoPV
+	 +vQR929kn/o8w==
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2bd2218ba4fso1311672fac.1;
+        Mon, 10 Mar 2025 09:01:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWtTzGGhK8jthAWzL/qC967tfA5Q0AAOpuEwoEeaXc/5ll+uLiDflwIo4Km/sHrSaLTEOP/r9BbeA4=@vger.kernel.org, AJvYcCXF72IPEQz0wGUZ7hIP1lz4VsHqmBA98TjfyJKiHnmavzb4z0jRsqXdw55UegKe/nQwhNa9hXWN7qC6/KU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzir95xoRQXZ9D6cSFr5W7reiO4Nw81bIPvbG9fZtihdkqKVuN+
+	GZJ3c0ukVCZznKVS8JOUIjFzhjk9gshjSEWPB0/qrSO2bYikqlCFICdUy0bDV4ifCCykFRsrciS
+	6kbv4Qi3+m8HgPG6XzXQgzj49jT4=
+X-Google-Smtp-Source: AGHT+IFwGvUc4Tp7kR6y9fTJze0Y92I2Yu8TbnbXDoZHpz0CWvJxxKW5lztZnATqgBlP4ijhJFYR2vhCdDXTfnjI3Fs=
+X-Received: by 2002:a05:6870:c87:b0:29e:7d35:2319 with SMTP id
+ 586e51a60fabf-2c2e86a10e9mr102664fac.4.1741622509128; Mon, 10 Mar 2025
+ 09:01:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224124200.820402212@infradead.org> <174057447519.10177.9447726208823079202.tip-bot2@tip-bot2>
- <20250226195308.GA29387@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250226195308.GA29387@noisy.programming.kicks-ass.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 10 Mar 2025 17:00:47 +0100
-X-Gm-Features: AQ5f1JrMVR5D2io-jpxIYwEZZnkZnNoP44hiVSLAuqjgKpDzteU9AB2q6JKAJLM
-Message-ID: <CANiq72=3ghFxy8E=AU9p+0imFxKr5iU3sd0hVUXed5BA+KjdNQ@mail.gmail.com>
-Subject: Re: [tip: x86/core] x86/ibt: Implement FineIBT-BHI mitigation
-To: Peter Zijlstra <peterz@infradead.org>, Ramon de C Valle <rcvalle@google.com>, 
-	Matthew Maurer <mmaurer@google.com>
-Cc: linux-kernel@vger.kernel.org, ojeda@kernel.org, 
-	linux-tip-commits@vger.kernel.org, 
-	Scott Constable <scott.d.constable@intel.com>, Ingo Molnar <mingo@kernel.org>, 
-	Kees Cook <kees@kernel.org>, x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>, 
-	Alice Ryhl <aliceryhl@google.com>
+References: <13709135.uLZWGnKmhe@rjwysocki.net> <CAGETcx-ow3T_R_Lj1s3sjp6nQz6Wv7T3dQdP3HJHd+E8nkh6rw@mail.gmail.com>
+ <CAJZ5v0g3qOvESqvqiCnwVz2BYGHzrG8=nRQ8j36Qd_LC0io_Tw@mail.gmail.com> <CAGETcx82sLvG19eUN1ATrL5RzEKJjOeWP+kdYJdQX9O=ck7q2Q@mail.gmail.com>
+In-Reply-To: <CAGETcx82sLvG19eUN1ATrL5RzEKJjOeWP+kdYJdQX9O=ck7q2Q@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 10 Mar 2025 17:01:37 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0guoA-xp-yyr7Fb7ikmE9rjt8xwDPcxU52sd0UP_u=2jA@mail.gmail.com>
+X-Gm-Features: AQ5f1JoUs4xvOWLvABy9PgNqRj_ZLqrO_B7qa6QzolnUbKfXtStzMfX9DtMd0t4
+Message-ID: <CAJZ5v0guoA-xp-yyr7Fb7ikmE9rjt8xwDPcxU52sd0UP_u=2jA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] PM: sleep: Improvements of async suspend and
+ resume of devices
+To: Saravana Kannan <saravanak@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 26, 2025 at 8:53=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Sun, Mar 9, 2025 at 11:38=E2=80=AFPM Saravana Kannan <saravanak@google.c=
+om> wrote:
 >
-> On Wed, Feb 26, 2025 at 12:54:35PM -0000, tip-bot2 for Peter Zijlstra wro=
-te:
+> On Thu, Feb 27, 2025 at 8:23=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.=
+org> wrote:
+> >
+> > On Thu, Feb 27, 2025 at 4:45=E2=80=AFPM Saravana Kannan <saravanak@goog=
+le.com> wrote:
+> > >
+> > > On Tue, Feb 25, 2025 at 8:46=E2=80=AFAM Rafael J. Wysocki <rjw@rjwyso=
+cki.net> wrote:
+> > > >
+> > > > Hi Everyone,
+> > > >
+> > > > Initially, this was an attempt to address the problems described by
+> > > > Saravana related to spawning async work for any async device upfron=
+t
+> > > > in the resume path:
+> > > >
+> > > > https://lore.kernel.org/linux-pm/20241114220921.2529905-1-saravanak=
+@google.com/
+> > > >
+> > > > but then I realized that it could be extended to the suspend path a=
+nd
+> > > > used for speeding it up, which it really does.
+> > >
+> > > Btw, maybe I didn't  word it correctly, but my patch series was meant
+> > > to speed up the non-async case too.
+> >
+> > If "the non-async case" means the case with "async" suspend/resume
+> > disabled entirely, I don't think that the ordering in which devices
+> > are processed can be changed just because there are no known
+> > dependencies.
+> >
+> > > I was going to get around sending a v2 of my series, but was caught u=
+p
+> > > with some other work. But I'm okay if you want to finish up my effort
+> > > -- less work for me and I can focus on the other aspects of suspend :=
+)
+> > >
+> > > Maybe add a Suggested-by: to the patches?
+> >
+> > Yeah, I can do that.
+> >
+> > > I definitely want to review the series, but very busy this week with
+> > > some other work. I'll get to this next week for sure.
+> >
+> > That should be fine.
 >
-> > +config CC_HAS_KCFI_ARITY
-> > +     def_bool $(cc-option,-fsanitize=3Dkcfi -fsanitize-kcfi-arity)
-> > +     depends on CC_IS_CLANG && !RUST
-> > +
+> Hi Rafael,
 >
-> Miguel, can we work on fixing that !RUST dep?
+> I looked at the full series and it has at least one bug and a few gaps
+> that I address in mine.
 
-Thanks for the ping Peter -- we discussed `rustc` in the couple PRs
-that added it to LLVM back then, and I think the conclusion was that
-it shouldn't be a fundamental problem to add it to `rustc`.
+What bug?
 
-From a quick look, the Clang flag that eventually landed just emits
-one more `llvm.module.flags` and LLVM takes care of the rest. So it
-should be straightforward to add a `-Csanitize-kcfi-arity` in `rustc`
-and then pass it at the same time to both Clang and `rustc` in the
-kernel.
+You need to tell me specifically because I'm not aware of any bugs in
+this series and unless you tell me what it is and I agree that it is a
+bug, I have no reason to believe that there are any.
 
-But I may be missing something -- Cc'ing Ramon and Matthew, since they
-are the ones behind sanitizers and kCFI in upstream Rust.
+As for the gaps, there are obvious differences between this patch
+series and your work and it would be kind of nice to explain why they
+matter in practice, in your view.
 
-I added it to our list, and created an issue in upstream Rust for it:
+> And those are what make my patches have a
+> higher diff. Can we just continue with my series instead?
 
-    https://github.com/rust-lang/rust/issues/138311
-    https://github.com/Rust-for-Linux/linux/issues/355
-
-I will also mention it in the meeting with upstream Rust in a couple days.
-
-Cheers,
-Miguel
+Of course you are free to send a new version of it, but it is unlikely
+to be a sufficient replacement for constructive feedback.
