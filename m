@@ -1,110 +1,162 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E32189B80;
-	Mon, 10 Mar 2025 15:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A86B61E49F;
+	Mon, 10 Mar 2025 15:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619031; cv=none; b=ImvPeEa1p5STlcCUm8L3oemYahuiIp/HdMn508esyVDEalCLPbCssVcafrQYnt86raW0OeKV8pF/J1StKxzgEz3Kiy5pXn19POosBBx/IzPgG+XMYHhI7fotmSiUmDbNvz2m5IyOUunq8oxp0KbFctHBMGUD1E5G9ZA0IYha8Pw=
+	t=1741619170; cv=none; b=maAK1i9pQwnjlRmuS6F0aBzaf8aw+h5eCT8iVYOjJiRlKKACUFpaB+SjaBDI7gVSyOfHfl+psQpAybZpBc06syBF4TXOi2YDm17Ba1klrOha6yRf9IIuKkfgfinVIDKuCl8/Q5R/7fB6H87qvXXDBFlVTH3dD8C0GiyrnALaOFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619031; c=relaxed/simple;
-	bh=4kBNkTbR5FLLbTabbHHu6HAsSSZd056FRwt9Fndw7O8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kg6q+2OlCJFYOZ8uYFxWWKwvUw5N8/PfObkPqOQNKVxiug24B3ZFjxretMasdphOqGkioTLT9yb9HG9tyEWePossn+yDhtgOvBgZvToOKVawcTjvniSudwCwlfszFFYH4vuHKr8W2b10RoqM8WBQeOJ1QOKZiRT4fESV2py8WLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B819Ue5c; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B819Ue5c"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f9b8ef4261so1175794a91.1;
-        Mon, 10 Mar 2025 08:03:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741619030; x=1742223830; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XCZ7+q9PYpMdvI9LsnDStpXywHOjjRsLA5+sW6O9TXk=;
-        b=B819Ue5cEe87zZcaJv+aim1P9CcxUlyNtoDZ+i8FZTb/p79Mq5qPzDxZzfhhaHcE/J
-         XyXisRHNlqlf1QaGthVaEljASdaYtdzMzBoV1MQpyqxeIKngXbpwXmiV7kptjNMZ6quq
-         L9FMieKxlhqEDtQgmd47Kteas6dKJA0oAwBLFBvmUIOKMU0/ScYznnI4/aTlZnP0uGwm
-         GNyzGG8HqJtPQEGk2A2gy+z+8fJRNLi33zASiqWaQb1N3hi4/ujBPX4b7eGyfwsMpZVg
-         Ta9XCn+GR/LEXJcHmGBP3Q1lpsDBiz9D/CwIM080PXMM11g5za/E3AO4xz/ZSNCQAls9
-         q0vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741619030; x=1742223830;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XCZ7+q9PYpMdvI9LsnDStpXywHOjjRsLA5+sW6O9TXk=;
-        b=MyY4IgH86J9rjRnaKd8WhD9TU/MH5iUOc59U5doqBtzwLpBUQGyzrQ8+L1C9XetJ2h
-         YJ37eU6qFfZd+NFNIqnagcOhXPKRnDsxzlb9JEyhxmK9AfBQIdsZHJaX1PB7GRSXHseq
-         j6DBrO0oyWpRqnOw1fgMT1dlqOTBdRbWn2WtG3yvI0FuCX96GmNXQ6PPmQ4O2/xrqMtd
-         hm9a/ijWgn6f3ZrAG1XyA8oPkLe538R6SEK3QQah8w8NdsC368GWB02Ua+w41S8DbktO
-         m1AsuiMaALSmFx4YdcfVo/RAfyaOE+Fv/XFNhHhgxynR6pjdXazQTT+Tp2j3IGIGhbdo
-         hSRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcSUlnyTfqFLu5IrfSGfWFVL2NsLAVziBR0Zednf7ODkamiVmGsr2esBsAkixwP5SY1zJ4OTFDchSvbx0b@vger.kernel.org, AJvYcCXyj+Qpy6dEhssXlDfRtj+sqMl0k67aYlE9slucJAABrMTw2UWg4yfpj5BoNjbClrU/e/yknWIWVjKd8Fu4ySk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxau1j/C9VtR6M2o3e8a+zcf1HcgTrxn5E6YbkyYMZ5K0E/GfqN
-	8Fn38BnZ8wnsssRmQT2QJYJDg3sutcfQuqdGfORhGO2FvbZhEciAro/RCXaa4dSUOGNcLjyn8i6
-	TM9WAWPgoFKBwNm49CpFVvnuarGs=
-X-Gm-Gg: ASbGncuZ5b2oqX3bIPiHS+ApQ5LWDNCk6RODiSe7oJ/cYDnjVeV9KqZpL7rh25LvKIm
-	hPIERDsahuSK+V7D5SywZ87fMm8gluRPzjZBXJNBtDUH5w0VtwH6BEcXdkjg/3lsH+QthfRqtM1
-	PpH8knxpSN5EfGtNyohf34raWglg==
-X-Google-Smtp-Source: AGHT+IFMUfkkxyv4DFg5N8sru2ilACJrDgnRxjOU1nRv0P7Z1KHYBcYqmTsNdwlU/vhI/3zGhCpvcSCgAR6M0BtdUvY=
-X-Received: by 2002:a17:90b:4a4f:b0:2fe:b2ea:30f0 with SMTP id
- 98e67ed59e1d1-300a575a10cmr5731794a91.4.1741619029744; Mon, 10 Mar 2025
- 08:03:49 -0700 (PDT)
+	s=arc-20240116; t=1741619170; c=relaxed/simple;
+	bh=WnCQv/xgSpGCbHwz6yDpf1vARBG8hTZ3pYokNi2kzqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gBjsnVfVf5PoxPvHqBGfAV/7QbfaivS2Grtpbv19zpc8/DrnTt9Ua7p164OCpjKhKxvaJTZCP51I7Ygoinux5t8GanO2cveqoDSiyQMCRf4DR6g8dFUrGEFA5rDJj8zhReUzf/9XIyeaMRaU7KuP/dDcu7Uc9ueK/VySkBu3ShU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E10516F2;
+	Mon, 10 Mar 2025 08:06:18 -0700 (PDT)
+Received: from [10.57.39.174] (unknown [10.57.39.174])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F15A23F5A1;
+	Mon, 10 Mar 2025 08:06:02 -0700 (PDT)
+Message-ID: <8bb8dfcb-bc44-48f2-acdb-58e6d259d25b@arm.com>
+Date: Mon, 10 Mar 2025 15:06:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2503b45f-751e-4b50-96fd-8dad33821c40@stanley.mountain>
-In-Reply-To: <2503b45f-751e-4b50-96fd-8dad33821c40@stanley.mountain>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 10 Mar 2025 11:03:38 -0400
-X-Gm-Features: AQ5f1JpmwP1VV7tLkk-a9qxkXnTTzKMtdLoBQrX-kuLocNBhJ8LElGmugPOqQio
-Message-ID: <CADnq5_NJnn0QxmsKMXnimRLDAkN7LD4u7sJOZq7OzSL54yrjUQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: Use tabs for indenting in amdgpu_sdma_reset_engine()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Jesse.zhang@amd.com" <Jesse.zhang@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Hawking Zhang <Hawking.Zhang@amd.com>, Tim Huang <tim.huang@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Likun Gao <Likun.Gao@amd.com>, Le Ma <le.ma@amd.com>, 
-	Yang Wang <kevinyang.wang@amd.com>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 11/12] drm/gem: Add cgroup memory accounting
+To: Maxime Ripard <mripard@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T.J. Mercier" <tjmercier@google.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Tomasz Figa <tfiga@chromium.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org
+References: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
+ <20250310-dmem-cgroups-v1-11-2984c1bc9312@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250310-dmem-cgroups-v1-11-2984c1bc9312@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thanks for the patch, but someone already fixed this.  Thanks!
-
-Alex
-
-On Mon, Mar 10, 2025 at 6:47=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> This line has a seven space indent instead of a tab.
->
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+On 2025-03-10 12:06 pm, Maxime Ripard wrote:
+> In order to support any device using the GEM support, let's charge any
+> GEM DMA allocation into the dmem cgroup.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c b/drivers/gpu/drm/a=
-md/amdgpu/amdgpu_sdma.c
-> index 39669f8788a7..3a4cef896018 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-> @@ -621,5 +621,5 @@ int amdgpu_sdma_reset_engine(struct amdgpu_device *ad=
-ev, uint32_t instance_id, b
->         if (suspend_user_queues)
->                 amdgpu_amdkfd_resume(adev, false);
->
-> -       return ret;
-> +       return ret;
->  }
-> --
-> 2.47.2
->
+>   drivers/gpu/drm/drm_gem.c            | 5 +++++
+>   drivers/gpu/drm/drm_gem_dma_helper.c | 6 ++++++
+>   include/drm/drm_device.h             | 1 +
+>   include/drm/drm_gem.h                | 2 ++
+>   4 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index ee811764c3df4b4e9c377a66afd4967512ba2001..e04733cb49353cf3ff9672d883b106a083f80d86 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -108,10 +108,11 @@ drm_gem_init(struct drm_device *dev)
+>   	dev->vma_offset_manager = vma_offset_manager;
+>   	drm_vma_offset_manager_init(vma_offset_manager,
+>   				    DRM_FILE_PAGE_OFFSET_START,
+>   				    DRM_FILE_PAGE_OFFSET_SIZE);
+>   
+> +
+>   	return drmm_add_action(dev, drm_gem_init_release, NULL);
+>   }
+>   
+>   /**
+>    * drm_gem_object_init_with_mnt - initialize an allocated shmem-backed GEM
+> @@ -973,10 +974,14 @@ drm_gem_release(struct drm_device *dev, struct drm_file *file_private)
+>    * drm_gem_object_init().
+>    */
+>   void
+>   drm_gem_object_release(struct drm_gem_object *obj)
+>   {
+> +
+> +	if (obj->cgroup_pool_state)
+> +		dmem_cgroup_uncharge(obj->cgroup_pool_state, obj->size);
+> +
+>   	if (obj->filp)
+>   		fput(obj->filp);
+>   
+>   	drm_gem_private_object_fini(obj);
+>   
+> diff --git a/drivers/gpu/drm/drm_gem_dma_helper.c b/drivers/gpu/drm/drm_gem_dma_helper.c
+> index 16988d316a6dc702310fa44c15c92dc67b82802b..6236feb67ddd6338f0f597a0606377e0352ca6ed 100644
+> --- a/drivers/gpu/drm/drm_gem_dma_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_dma_helper.c
+> @@ -104,10 +104,16 @@ __drm_gem_dma_create(struct drm_device *drm, size_t size, bool private)
+>   	if (ret) {
+>   		drm_gem_object_release(gem_obj);
+>   		goto error;
+>   	}
+>   
+> +	ret = dmem_cgroup_try_charge(dma_get_dmem_cgroup_region(drm->dev),
+> +				     size,
+> +				     &dma_obj->base.cgroup_pool_state, NULL);
+> +	if (ret)
+> +		goto error;
+
+Doesn't that miss cleaning up gem_obj? However, surely you want the 
+accounting before the allocation anyway, like in the other cases. 
+Otherwise userspace is still able to allocate massive amounts of memory 
+and incur some of the associated side-effects of that, it just doesn't 
+get to keep said memory for very long :)
+
+Thanks,
+Robin.
+
+> +
+>   	return dma_obj;
+>   
+>   error:
+>   	kfree(dma_obj);
+>   	return ERR_PTR(ret);
+> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+> index c91f87b5242d7a499917eb4aeb6ca8350f856eb3..58987f39ba8718eb768f6261fb0a1fbf16b38549 100644
+> --- a/include/drm/drm_device.h
+> +++ b/include/drm/drm_device.h
+> @@ -1,8 +1,9 @@
+>   #ifndef _DRM_DEVICE_H_
+>   #define _DRM_DEVICE_H_
+>   
+> +#include <linux/cgroup_dmem.h>
+>   #include <linux/list.h>
+>   #include <linux/kref.h>
+>   #include <linux/mutex.h>
+>   #include <linux/idr.h>
+>   
+> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+> index fdae947682cd0b7b06db5e35e120f049a0f30179..95fe8ed48a26204020bb47d6074689829c410465 100644
+> --- a/include/drm/drm_gem.h
+> +++ b/include/drm/drm_gem.h
+> @@ -430,10 +430,12 @@ struct drm_gem_object {
+>   	 * @lru:
+>   	 *
+>   	 * The current LRU list that the GEM object is on.
+>   	 */
+>   	struct drm_gem_lru *lru;
+> +
+> +	struct dmem_cgroup_pool_state *cgroup_pool_state;
+>   };
+>   
+>   /**
+>    * DRM_GEM_FOPS - Default drm GEM file operations
+>    *
+> 
+
