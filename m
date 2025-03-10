@@ -1,122 +1,128 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E036422B59D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E5C22CBCC
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741618330; cv=none; b=rzupSNIqbB1R8EKrnxnuSxHMDVdJupz+JYjH8CiURpw9Yg73s+Q/lvIV771MXlyxsdabOkhsjpbWkwR1jFtMwdr1Myu8dCWt2dwk9UFuABINK4vk+MJ1xpE2KcT43Wonnayh190b9mCu/7H0DFioklKDVx2MoCiHQL0BICpMGHA=
+	t=1741618357; cv=none; b=HOAv2E2Xs/EHpKtD/SKYMpyp8VOZyWAoDvHUvUCSlXEdsPV8hOz13mXGcS8z8j2mLR6hHlsu486KJ+K/7CiTndInFCFqSUly+XM4W07LHDlyZA2dXrtP4ZCuxYDQc0lM1CjypXpoAuEmwKhqlX8mfhLA8FQ1CgiaS/WoBA9pxj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741618330; c=relaxed/simple;
-	bh=La8fa582+cudZWU7EBZb+kiU11zXIyrob0PJV2PXjfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bZ6Rt04nlaGxwV2HoSNcm/0/zEOM7EJ2lrTvDcSqKDCU5BNvEAHYuQ/44Ym1BPdtkhOaFavt+S70cVucHkboz20n4MnsmcubAG3bNZZuYaqQVNmThQR5529tdr0VP1cHNa1cn1pyAYmorKVRyL9LD6nzm1X3flwIezfDWzLARs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KFd9FhJa; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741618357; c=relaxed/simple;
+	bh=fvZEXse498MAei+juRUqd4/R9FeoMw38NPBzNnBXz58=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XeTAtr9oOZVFOAVZBiDLNRsiJRUHp4O4rCBCMMou3pPzCHXyTY0DU54jdczZ8heZx48yyGX2n6Hhs4hGy2enwmzA50xLjAI9niabZ9tzwXEqP2Bge4Dd0e4jdfz0l3coQ427MN/6uMXzzG4FocoIH6EbGFfX12MnOfA7uoRaHRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qT8njxvc; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFd9FhJa"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so25444445e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:52:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qT8njxvc"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2234e4b079cso76854905ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:52:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741618327; x=1742223127; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oJhmOti6S9aSxHFcfgWlRYy87Ur6fs4aWozpDuFk45g=;
-        b=KFd9FhJapk9LSPrTSWPYVYrj9OPaxtDOWFbamAr2nAK3v58lTN7B1G/K5ZL/s6+++r
-         Ej66R0z7uvendhA6TlVMinoHfN91/7IQfe36jmXtlxy62nz44IqciyX6wdOLXT0dIOkj
-         59kDKpM7uYwhvFNKmFd/4qv8kevkUtZq1xhGXaNMZYvmvyIUHd6mBTJYdkyBo//EDdEX
-         7dS41EdawFpgPDo7Av8GqU1gbK2iqC+O6YjxlXVpZDkUP1SBBZ94U+beNZx9e5ngdl3T
-         R4PA32rtAdERI02fVx4CEnQYQr+qhb5QgFIwheqvM/c1Sek1g0esxv+hXFD6Aal95DQS
-         9hmg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1741618355; x=1742223155; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9ADFXc53D/cc0VutYfr8tgUjvI5cmEZUhOUtSZhfaHM=;
+        b=qT8njxvcFWywG74UVYmqzi+wSnsvfdw3Uv7Oqs6yTatlDi7wXNGpKuHM2kvPsw3ijb
+         +l33qtxvqgiLvjXowL9sNa7A42FMbI/UPW3tQkupYq7mbR+MS0JpCMGW/EBBdm7O2NtF
+         4uUq2Pnn6gb+sykYVaGeSTx/Gjx4NYx8u/47/ZfVKQGhZuPGFVwSPBcIXkS+oanJceUh
+         +2XFVVjZDm5szukXs626lde7nfrfjIkzt3NLhvXhtDNmmxIEzVnz20MUJMYy0S72UyVD
+         XqwxHOE6mJp9sGmrVBLUuLONPoEQser0ZpgrgLfVLYMZjpo+M0aEMrRSLQ1grYcop58a
+         WpLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741618327; x=1742223127;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oJhmOti6S9aSxHFcfgWlRYy87Ur6fs4aWozpDuFk45g=;
-        b=eTFv6gWUyp19AVFLoP4D4cZmCl6izOQOST5gQq5hUsYMMPCQVUyQRa4ssN7MTg0dT3
-         91yFdc6RWyP4bGDWnzAD48kh2Zmm9H/j/XIuOUpuoBFVJ49Fp6Y0ugBnxyuxasZybN9w
-         S3a1sy7wG66u3NzLck+14tubgz4I/QVGZr5V6q7sr0GRpzUcr/0zUrFcvMGlrH0Qoxvf
-         +SOTo7S+aRoKoaB8LRMs2aSRs1LhpwmCGmJDKdV4gF/TQSLhhWGUgGYUoEz8kDT0n8ba
-         6UDCh8Bnk24n1ybH1VufBJ7Acfc4oDkLHe1O0Tg90MR2Hc/DbrOd9ZOCBRaVbr9sDtZm
-         K9bw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEEi11CxZQvAuuPpwZFs9xUjygRiUX2mmEB4vfUCp7Ji0syKOiGuMcBdgG5S7h17n2e66owRJbuVfqEJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzePhM8A64y/KfLzIwcW9Kk9W+xFGTu/O3CU26snM70bx9HStH4
-	x0o0nQ0hOULnpbLtRvMLS6flFZsGZXvDKMCPGXrWckcm/RN3vakpldiL5NvqK/o=
-X-Gm-Gg: ASbGncsXWBXt/RBPZZUK/fItjlhsnM9Tqk2Ut7KlREGRxFT65YVxZ+yiVE+kRBaUXjn
-	ugQIeOiLdEmaI/UHR8DbWV893KTsHhSU/Qo7k9mW4NOKREu0Iw4cxEQnERVTQpaylXEDrj52DKa
-	+eHr/1zybrO+Ayb+VC74M62jiVzzT5mmTEwDSYwNzp3/UqRLgtOO0ELSrRGgmayLJWMVqPa2nWh
-	r9mnwYLRHe4eECaZ7cKrc/3brXWvXCGuubv5SE7IZWIsv8yBV7s8nrA5170I8saOpgO8funj1nf
-	f/T3IQDzm7M+i45UMxeSGKXsGjTLl1Q0NPwh2pSCPAzI5ymhLw==
-X-Google-Smtp-Source: AGHT+IEWXxlykPP+DK6XBhySTuz9TVLUo/1Ocj0YrcVL3sXXqxgbc5YK7TpnRor10s4o+P6MhNGnfg==
-X-Received: by 2002:a05:600c:1c2a:b0:43b:c95f:fd9 with SMTP id 5b1f17b1804b1-43c5a5e9074mr106986775e9.5.1741618327226;
-        Mon, 10 Mar 2025 07:52:07 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43cef25f075sm63882915e9.28.2025.03.10.07.52.06
+        d=1e100.net; s=20230601; t=1741618355; x=1742223155;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9ADFXc53D/cc0VutYfr8tgUjvI5cmEZUhOUtSZhfaHM=;
+        b=I2HEfD3D7RpvnALgszN6m85tH236PK45DkjOQXUAub8+S0e9lSvmQ6Aa0yP1wUt3N7
+         ZnWq714uEtkqk/8bmdAFxin0vgmZzMf1zpO3+8z37D/gzEyP3bMPDhCPlsDm3A15lcYf
+         UaaHsJ3a/2Gkh6ttcpnQTFX/AZWMHOLuyFkR6fJofxUQ0CCSyiZy1MjXSn4K3ELL5/S7
+         ZACFRxpy9NBU663QtplCzm0NXlBbf4/1AirmAY5nWNMQ2KNpsRen30GRzWf9iE2Hz5HT
+         AgkpHF5RC46ub14MEy7mh9sSev6WKhpHTfjciH4SR6Ojim8FXpoSoQX6thnyqNLOntZP
+         SBrA==
+X-Gm-Message-State: AOJu0YwnMaYoba0/shefjJNLSyxbp47L2P0BCSRV5c1PTRm2yUC7EeTX
+	ftlpS1M9Almc1TecL7lDQa+3uKcYSKn9+hWMR6l9A4QHZ2o59nykmFKBhJURKhw=
+X-Gm-Gg: ASbGncst+PGppOujf8NhepJ4+H9ToqwRSA/8c6I//gNddhT6bm/yrHMdEN8sqTWqjqW
+	j47j8BB7vq/LE37Oxr8lW5kxS22Lu/2m+bd3jYZzjEIc1kXXR9XgmtWXYK+i9QwVt1KPpDGUHi0
+	pnEL+cnt9NVJ4Dze3GMTTw3IYwmCGNV2D5Disz1O1ETY8czyKR2wtWZ4MocLCTB6a1+CidSZ1MY
+	DILtc9gFb/WuxuvOesnzzX4v7ijOFi8oV8qtw2Kme6c+315ohZGRwYnPjpEGhPJuAZjUiGatryi
+	XvejAzJv6bLFz9o1rzGeXYUwXTlk2LMMYs9Ahox/XRHYCFRnjiHNQho=
+X-Google-Smtp-Source: AGHT+IGmALl7tE1vDAuhwzUIZXgg+Q9w22Wqj1GO54eJLmN8OylP52nRYF70/T1mCfLbdEp2H00RTw==
+X-Received: by 2002:a05:6a21:4606:b0:1f5:7df9:f147 with SMTP id adf61e73a8af0-1f57df9f49dmr7380018637.40.1741618355060;
+        Mon, 10 Mar 2025 07:52:35 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736d11d4600sm2890275b3a.116.2025.03.10.07.52.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 07:52:06 -0700 (PDT)
-Date: Mon, 10 Mar 2025 17:52:03 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Patil Rajesh Reddy <Patil.Reddy@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd/pmf: fix cleanup in
- amd_pmf_init_smart_pc()
-Message-ID: <4a14c0a5-d6f8-4df9-b947-a0d3c3ef02b3@stanley.mountain>
-References: <43ad5358-f5b2-4cfc-85b4-e7ab8c7cf329@stanley.mountain>
- <32c6c456-94f0-f077-040c-09f67d60953a@linux.intel.com>
+        Mon, 10 Mar 2025 07:52:34 -0700 (PDT)
+From: Deepak Gupta <debug@rivosinc.com>
+Date: Mon, 10 Mar 2025 07:52:23 -0700
+Subject: [PATCH v11 01/27] mm: VM_SHADOW_STACK definition for riscv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <32c6c456-94f0-f077-040c-09f67d60953a@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250310-v5_user_cfi_series-v11-1-86b36cbfb910@rivosinc.com>
+References: <20250310-v5_user_cfi_series-v11-0-86b36cbfb910@rivosinc.com>
+In-Reply-To: <20250310-v5_user_cfi_series-v11-0-86b36cbfb910@rivosinc.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
+ atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
+ alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
+ rick.p.edgecombe@intel.com, Deepak Gupta <debug@rivosinc.com>
+X-Mailer: b4 0.14.0
 
-On Mon, Mar 10, 2025 at 02:43:51PM +0200, Ilpo Järvinen wrote:
-> On Mon, 10 Mar 2025, Dan Carpenter wrote:
-> 
-> > There are a couple problems in this code:
-> > 
-> > First, if amd_pmf_tee_init() fails then the function returns directly
-> > instead of cleaning up.  We cannot simply do a "goto error;" because
-> > that would lead to a double free.  I have re-written this code to
-> > use an unwind ladder to free the allocations.
-> 
-> Thanks Dan,
-> 
-> Could you please amend this with the information of what is getting 
-> double freed, it took considerable amount of time for me to figure out.
-> I assume it's ->fw_shm_pool ?
-> 
+VM_HIGH_ARCH_5 is used for riscv
 
-Yes, that's it.  Sure, I can re-write that.
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+---
+ include/linux/mm.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> > Second, if amd_pmf_start_policy_engine() fails on every iteration though
-> > the loop then the code calls amd_pmf_tee_deinit() twice which is also a
-> > double free.  Call amd_pmf_tee_deinit() inside the loop for each failed
-> > iteration.  Also on that path the error codes are not necessarily
-> > negative kernel error codes.  Set the error code to -EINVAL.
-> 
-> Maybe I should start to consistently reject any attempt to use 
-> cleanup/deinit helper functions instead of a proper rollback. It 
-> seems a pattern that is very prone to errors like this.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7b1068ddcbb7..1ef231cbc8fe 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -378,6 +378,13 @@ extern unsigned int kobjsize(const void *objp);
+ # define VM_SHADOW_STACK	VM_HIGH_ARCH_6
+ #endif
+ 
++#if defined(CONFIG_RISCV_USER_CFI)
++/*
++ * Following x86 and picking up the same bitpos.
++ */
++# define VM_SHADOW_STACK	VM_HIGH_ARCH_5
++#endif
++
+ #ifndef VM_SHADOW_STACK
+ # define VM_SHADOW_STACK	VM_NONE
+ #endif
 
-I do not like deinit functions.  They are so hard to review.  But I
-detected this bug because of a Smatch warning:
-
-drivers/platform/x86/amd/pmf/tee-if.c:540 amd_pmf_init_smart_pc() warn: missing unwind goto?
-
-regards,
-dan carpenter
+-- 
+2.34.1
 
