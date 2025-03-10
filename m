@@ -1,389 +1,331 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCC222B8AA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41C122CBE5
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741616476; cv=none; b=SJ6OMSlC0avTCluVWn38RcWPX3YII+tONGrwh1l2mI/qsRUoyEm3DSxMr6+9EIkxT6cOPZGYW+BHZT+hlnIqvBF+7xJXBndUQ5iEWZXvfgXgmVIdf78m715QgRtRtHuvRxywHK+YS0hg7CGByINUM8rd2aZkWpf47Z5YewU38hU=
+	t=1741616479; cv=none; b=ldNewx/1TxZx5aKO1tzncNxINgAD+L46odsH6BarWf0OWU/qKbq8fjOgHyfV7K5Er9WpglLmSF/gPmPbR3nIQDTyTbfgrTHv/04cH+T0Kr9mA/dxZUrN9RfRwABu8CFzF2+OZ3j2Oz6R648GaHHqz5trv/k0TDte/Tkfld/Jo5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741616476; c=relaxed/simple;
-	bh=wx/qaPgqmQV1OHxnS/4xVDVYbfy6smuhEifLQq2IoJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QUQVtRr8VBBqmpJSgnVgLnPUj0azxT841Zhr/CcyhUNk75g2L3cPoPmw2tIhBpmPPuEm8hhx5M7mHeT7MFgnDNvHghSYCyifh/a0kf6+AVmOScp07gzL58MltBDqnB0TjA8BMFCdk1UIr12kr9sP069v70nBfNsESla27S6q3DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=A6yGpCg3; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741616479; c=relaxed/simple;
+	bh=hDf2FiSrtEj6EocOxr+BFVJaxfoKsKNjxTKvFI3oJLw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l/x8OD/7cePIRC+n7U9I7u1tNnRUZTvQWzIQmSGMMFl9TW+ULUw/c8zQ0IDc4GC3jUsOtTcPi2pJVmePBGL29Kf+JqwkCvXnE2F75t2VaMMXofOG6w+oFxFg7mnpfUMQP57Evuf6HUpBfkuXUr7BQBzC4rQZO7os45hPbB/AjA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=RkhgdW9P; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="A6yGpCg3"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741616470;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hGjmMwNsYsEU6XSb5gVAFngUH/2QUAQwqoU/xUXJ9Ek=;
-	b=A6yGpCg3dA64cjm4I9451IElkhc2mj8ssEOyfdQHLylKwwN1lIN/j8dV7wCK3jk8Kx4QqB
-	NvK+X8TT9jJgY29z5a8rECLqvF2VIA0aB5QHI4W+Tr5z2JR1PrLvxhBtzCs5/d9ZM70PTR
-	XhBT8ut7nc4gDL+lapODPmBDKClAOlo=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org,
-	qmo@kernel.org
-Cc: daniel@iogearbox.net,
-	linux-kernel@vger.kernel.org,
-	ast@kernel.org,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	hawk@kernel.org,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>
-Subject: [PATCH bpf-next v1 2/2] bpftool: Using the right format specifiers
-Date: Mon, 10 Mar 2025 22:20:37 +0800
-Message-ID: <20250310142037.45932-3-jiayuan.chen@linux.dev>
-In-Reply-To: <20250310142037.45932-1-jiayuan.chen@linux.dev>
-References: <20250310142037.45932-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="RkhgdW9P"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso6502408a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1741616477; x=1742221277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0aa0jZ9AchGlp5yWV6WZT3t8mQdLgGg2qOoZKac8GrA=;
+        b=RkhgdW9PW/CiOSfkcHyyuL5LTd9HcbgS/g7QGck4GkJ1CE1QttpvcYZJEiYYhtloW/
+         s3viIj/egQufHUyLb/24K7rwZ8+KDiGcJTjvCWoWGQD05NMg/llWCh81tv7Xdani0FG5
+         BCMzv0AM1jRJj+NvaYzJPI578x1+fu5ifmhEiG40QkkAZG7NSlmIB3X6EfSYwZ77nC52
+         Fe71mnj68zxldPp+QS6jep9qk0pJIW36wLnqdF25ge1utdxpXu6huvLua6YXWmFmimTW
+         NY0lcvb23JmRJbuZ3unOBIKxCohnpz7cxp625HMJZj7SLrQZfa6S/YXoN3Nspz0FBd9C
+         ryRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741616477; x=1742221277;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0aa0jZ9AchGlp5yWV6WZT3t8mQdLgGg2qOoZKac8GrA=;
+        b=s6XB+8cfUt9v23FuJ5iMbVa/1QqCM9HBIGX/KiugdDsTZBvW0tEJpAYDknOO3k55/G
+         FxUMhU/TmlLGmdts57QUjvtXAMg3w8UrFp3T88rNZfbYWdnJk0p4W5TgJxMjXMNCxWUd
+         jcf2WjoWI7eqRDceysGXtRBvvGf1BhYvj64uzXhctKCMA9ThVzwoZq0r0nYg/NQED4ZR
+         E4x7wDtlFXAMSIqhyMiu7N2hJgXS+U6A8rsOJsqC/emRjfSljuRrIlB439GP32tfeT00
+         GrL0ix8hYNwA3e//SeCSX7yvqOH31D84QUbroAlLXtUl/LQc7pA9mmbU1FlBO7wAsS4Z
+         ZxDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmJ0i0giepficppJ1Mt4KRChQyMw4WkvJx1bd9ufocpfb0av6rowuNKx/GbG0Ezc8Gvt75KS/OVjebZ7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+D9t8NWTqflKL2LyA/Nqg4KtKgmg4JWFYnY6Jtqfh+KdI+jfj
+	Mgh7+UwD+zfJ+xut/AYoH9YDLeF3oUCco00pyEtwIF/884Kap5gOBlTfc7B3px/IKry/zflaUGV
+	5XV2RCGpYC7I9AErA6oUZSfpVq2YhemAbpnUlBQ==
+X-Gm-Gg: ASbGncsDCT68Txf3JLsnFYE/lHCNgMQfD7MCwxIj4xjeEdXM1GmY/50/LNtMi0nQ2Z3
+	LQB3g6NsC512d34LH2vbvO+mQoeDBgIPz1kb+5ao/LIt0SiPqPJFwGoExFvYDk7ba939aoNOAGi
+	TFh5NFdbtCjoLaQ1oCwNYb1O8Ewi1TRcV/QV2Ii0Wv7QoF3DmaUIj1MLIfGw==
+X-Google-Smtp-Source: AGHT+IHzhHPEKiwQV8/xTAzjm8IBmtIaoF+M1g5Rq1eq3z20HMMIT/cwN5htca9XmOSUGb0vkHd2gBWPFVvEM90AB+Y=
+X-Received: by 2002:a17:90b:2e90:b0:2ee:d7d3:3019 with SMTP id
+ 98e67ed59e1d1-2ff7ce8e50amr26081042a91.12.1741616476890; Mon, 10 Mar 2025
+ 07:21:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+ <20250213171435.1c2ce376@bootlin.com> <CAMEGJJ1++aeE7WWLVVesbujME+r2WicEkK+CQgigRRp2grYf=A@mail.gmail.com>
+ <Z87wTfChRC5Ruwc0@apocalypse>
+In-Reply-To: <Z87wTfChRC5Ruwc0@apocalypse>
+From: Phil Elwell <phil@raspberrypi.com>
+Date: Mon, 10 Mar 2025 14:21:05 +0000
+X-Gm-Features: AQ5f1JpdsttO77vWem7lsOAk9ydjGfL3diQWsedrl91N1zA3FWs-hfYV843PSmU
+Message-ID: <CAMEGJJ0f4YUgdWBhxvQ_dquZHztve9KO7pvQjoDWJ3=zd3cgcg@mail.gmail.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using
+ a DT overlay
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Herve Codina <herve.codina@bootlin.com>, andrew@lunn.ch, Arnd Bergmann <arnd@arndb.de>, 
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com, brgl@bgdev.pl, 
+	Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com, 
+	devicetree@vger.kernel.org, dragan.cvetic@amd.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org, kw@linux.com, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, lpieralisi@kernel.org, 
+	luca.ceresoli@bootlin.com, manivannan.sadhasivam@linaro.org, 
+	masahiroy@kernel.org, Michael Turquette <mturquette@baylibre.com>, 
+	Rob Herring <robh@kernel.org>, saravanak@google.com, Stephen Boyd <sboyd@kernel.org>, 
+	thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, 
+	Will Deacon <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixed some formatting specifiers errors, such as using %d for int and %u
-for unsigned int, as well as other byte-length types.
+Hi Andrea,
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- kernel/bpf/disasm.c                |  4 ++--
- tools/bpf/bpftool/btf.c            | 14 +++++++-------
- tools/bpf/bpftool/btf_dumper.c     |  2 +-
- tools/bpf/bpftool/cgroup.c         |  2 +-
- tools/bpf/bpftool/common.c         |  4 ++--
- tools/bpf/bpftool/jit_disasm.c     |  3 ++-
- tools/bpf/bpftool/map_perf_ring.c  |  6 +++---
- tools/bpf/bpftool/net.c            |  4 ++--
- tools/bpf/bpftool/netlink_dumper.c |  5 ++---
- tools/bpf/bpftool/prog.c           | 12 ++++++------
- tools/bpf/bpftool/tracelog.c       |  2 +-
- tools/bpf/bpftool/xlated_dumper.c  |  6 +++---
- 12 files changed, 32 insertions(+), 32 deletions(-)
+On Mon, 10 Mar 2025 at 13:58, Andrea della Porta <andrea.porta@suse.com> wr=
+ote:
+>
+> Hi,
+>
+> On 16:27 Thu 13 Feb     , Phil Elwell wrote:
+> > Hi Herv=C3=A9,
+> >
+> > On Thu, 13 Feb 2025 at 16:14, Herve Codina <herve.codina@bootlin.com> w=
+rote:
+> > >
+> > > Hi Phil,
+> > >
+> > > On Thu, 13 Feb 2025 15:18:45 +0000
+> > > Phil Elwell <phil@raspberrypi.com> wrote:
+> > >
+> > > > Hi Andrea,
+> > > >
+> > > > The problem with this approach (loading an overlay from the RP1 PCI=
+e
+> > > > driver), and it's one that I have raised with you offline, is that
+> > > > (unless anyone can prove otherwise) it becomes impossible to create=
+ a
+> > > > Pi 5 DTS file which makes use of the RP1's resources. How do you
+> > > > declare something as simple as a button wired to an RP1 GPIO, or fa=
+n
+> > > > connected to a PWM output?
+> > >
+> > > The driver could be improved in a second step.
+> > > For instance, it could load the dtbo from user-space using request_fi=
+rmare()
+> > > instead of loading the embedded dtbo.
+> > >
+> > > >
+> > > > If this is the preferred route to upstream adoption, I would prefer=
+ it
+> > > > if rp1.dtso could be split in two - an rp1.dtsi similar to what we
+> > > > have downstream, and an rp1.dtso that #includes it. In this way we =
+can
+> > > > keep the patching and duplication to a minimum.
+> > >
+> > > Indeed, having a rp1.dtsi avoid duplication but how the rp1.dtso in
+> > > the the kernel sources could include user customization (button, fan,=
+ ...)
+> > > without being modified ?
+> > > At least we have to '#include <my_rp1_customizations.dtsi>'.
+> > >
+> > > Requesting the dtbo from user-space allows to let the user to create
+> > > its own dtso without the need to modify the one in kernel sources.
+> > >
+> > > Does it make sense ?
+> >
+> > I think I understand what you are saying, but at this point the RP1
+> > overlay would no longer be an RP1 overlay - it would be an
+> > RP1-and-everything-connected-to-it overlay, which is inherently
+> > board-specific. Which user-space process do you think would be
+> > responsible for loading this alternative overlay, choosing carefully
+> > based on the platform it is running on? Doesn't that place quite a
+> > burden on all the OS maintainers who up to now have just needed a
+> > kernel and a bunch of dtb files?
+> >
+> > If it is considered essential that the upstream Pi 5 dts file does not
+> > include RP1 and its children, then Raspberry Pi are going to have to
+> > walk a different path until we've seen how that can work. By splitting
+> > rp1.dtso as I suggested, and perhaps providing an alternative helper
+> > function that only applies the built-in overlay if the device node
+> > doesn't already exist, we get to stay as close to upstream as
+> > possible.
+> >
+> > Phil
+>
+> So, the problem is twofold: the first is due to the fact that downstream
+> expects the dtb to be fully declared at fw load time (I'll call that
+> *monolithic* dtb from now on), the second is about how to represent depen=
+dencies
+> between board dtb and rp1 overlay which arises only when using overlays i=
+nstead
+> of a monolithic dtb.
+>
+> The former issue must be solved first in order for the latter to even exi=
+sts
+> (if we don't use overlay, the dependencies are fully exposed in the dtb s=
+ince
+> the beginning), so I'll concentrate on the former for now.
+>
+> There are 3 possible scenarios to be reconciled:
+>
+>
+> 1 - MONOLITHIC DTB
+>
+> This is the downstream case, where it's advisable to have only one dtb bl=
+ob
+> containing everything (rp1 included) loaded by the fw. In this case the
+> resulting devicetree would looks like:
+>
+>   axi {
+>     pcie@120000 {
+>       rp1_nexus {
+>         pci-ep-bus@1 {
+>              ...
+>         }
+>       }
+>     }
+>   }
 
-diff --git a/kernel/bpf/disasm.c b/kernel/bpf/disasm.c
-index 974d172d6735..20883c6b1546 100644
---- a/kernel/bpf/disasm.c
-+++ b/kernel/bpf/disasm.c
-@@ -202,7 +202,7 @@ void print_bpf_insn(const struct bpf_insn_cbs *cbs,
- 				insn->dst_reg, class == BPF_ALU ? 'w' : 'r',
- 				insn->dst_reg);
- 		} else if (is_addr_space_cast(insn)) {
--			verbose(cbs->private_data, "(%02x) r%d = addr_space_cast(r%d, %d, %d)\n",
-+			verbose(cbs->private_data, "(%02x) r%d = addr_space_cast(r%d, %u, %u)\n",
- 				insn->code, insn->dst_reg,
- 				insn->src_reg, ((u32)insn->imm) >> 16, (u16)insn->imm);
- 		} else if (is_mov_percpu_addr(insn)) {
-@@ -381,7 +381,7 @@ void print_bpf_insn(const struct bpf_insn_cbs *cbs,
- 				insn->code, class == BPF_JMP32 ? 'w' : 'r',
- 				insn->dst_reg,
- 				bpf_jmp_string[BPF_OP(insn->code) >> 4],
--				insn->imm, insn->off);
-+				(u32)insn->imm, insn->off);
- 		}
- 	} else {
- 		verbose(cbs->private_data, "(%02x) %s\n",
-diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
-index 2636655ac180..4dc0ffdaf8ce 100644
---- a/tools/bpf/bpftool/btf.c
-+++ b/tools/bpf/bpftool/btf.c
-@@ -253,7 +253,7 @@ static int dump_btf_type(const struct btf *btf, __u32 id,
- 				if (btf_kflag(t))
- 					printf("\n\t'%s' val=%d", name, v->val);
- 				else
--					printf("\n\t'%s' val=%u", name, v->val);
-+					printf("\n\t'%s' val=%d", name, v->val);
- 			}
- 		}
- 		if (json_output)
-@@ -1022,7 +1022,7 @@ static int do_dump(int argc, char **argv)
- 			for (i = 0; i < root_type_cnt; i++) {
- 				if (root_type_ids[i] == root_id) {
- 					err = -EINVAL;
--					p_err("duplicate root_id %d supplied", root_id);
-+					p_err("duplicate root_id %u supplied", root_id);
- 					goto done;
- 				}
- 			}
-@@ -1132,7 +1132,7 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
- 			break;
- 		default:
- 			err = -1;
--			p_err("unexpected object type: %d", type);
-+			p_err("unexpected object type: %u", type);
- 			goto err_free;
- 		}
- 		if (err) {
-@@ -1155,7 +1155,7 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
- 			break;
- 		default:
- 			err = -1;
--			p_err("unexpected object type: %d", type);
-+			p_err("unexpected object type: %u", type);
- 			goto err_free;
- 		}
- 		if (fd < 0) {
-@@ -1188,7 +1188,7 @@ build_btf_type_table(struct hashmap *tab, enum bpf_obj_type type,
- 			break;
- 		default:
- 			err = -1;
--			p_err("unexpected object type: %d", type);
-+			p_err("unexpected object type: %u", type);
- 			goto err_free;
- 		}
- 		if (!btf_id)
-@@ -1254,12 +1254,12 @@ show_btf_plain(struct bpf_btf_info *info, int fd,
- 
- 	n = 0;
- 	hashmap__for_each_key_entry(btf_prog_table, entry, info->id) {
--		printf("%s%lu", n++ == 0 ? "  prog_ids " : ",", entry->value);
-+		printf("%s%ld", n++ == 0 ? "  prog_ids " : ",", entry->value);
- 	}
- 
- 	n = 0;
- 	hashmap__for_each_key_entry(btf_map_table, entry, info->id) {
--		printf("%s%lu", n++ == 0 ? "  map_ids " : ",", entry->value);
-+		printf("%s%ld", n++ == 0 ? "  map_ids " : ",", entry->value);
- 	}
- 
- 	emit_obj_refs_plain(refs_table, info->id, "\n\tpids ");
-diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
-index 527fe867a8fb..4e896d8a2416 100644
---- a/tools/bpf/bpftool/btf_dumper.c
-+++ b/tools/bpf/bpftool/btf_dumper.c
-@@ -653,7 +653,7 @@ static int __btf_dumper_type_only(const struct btf *btf, __u32 type_id,
- 	case BTF_KIND_ARRAY:
- 		array = (struct btf_array *)(t + 1);
- 		BTF_PRINT_TYPE(array->type);
--		BTF_PRINT_ARG("[%d]", array->nelems);
-+		BTF_PRINT_ARG("[%u]", array->nelems);
- 		break;
- 	case BTF_KIND_PTR:
- 		BTF_PRINT_TYPE(t->type);
-diff --git a/tools/bpf/bpftool/cgroup.c b/tools/bpf/bpftool/cgroup.c
-index 9af426d43299..93b139bfb988 100644
---- a/tools/bpf/bpftool/cgroup.c
-+++ b/tools/bpf/bpftool/cgroup.c
-@@ -191,7 +191,7 @@ static int show_bpf_prog(int id, enum bpf_attach_type attach_type,
- 		if (attach_btf_name)
- 			printf(" %-15s", attach_btf_name);
- 		else if (info.attach_btf_id)
--			printf(" attach_btf_obj_id=%d attach_btf_id=%d",
-+			printf(" attach_btf_obj_id=%u attach_btf_id=%u",
- 			       info.attach_btf_obj_id, info.attach_btf_id);
- 		printf("\n");
- 	}
-diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
-index 0a764426d935..ecfa790adc13 100644
---- a/tools/bpf/bpftool/common.c
-+++ b/tools/bpf/bpftool/common.c
-@@ -714,7 +714,7 @@ ifindex_to_arch(__u32 ifindex, __u64 ns_dev, __u64 ns_ino, const char **opt)
- 	int vendor_id;
- 
- 	if (!ifindex_to_name_ns(ifindex, ns_dev, ns_ino, devname)) {
--		p_err("Can't get net device name for ifindex %d: %s", ifindex,
-+		p_err("Can't get net device name for ifindex %u: %s", ifindex,
- 		      strerror(errno));
- 		return NULL;
- 	}
-@@ -739,7 +739,7 @@ ifindex_to_arch(__u32 ifindex, __u64 ns_dev, __u64 ns_ino, const char **opt)
- 	/* No NFP support in LLVM, we have no valid triple to return. */
- 	default:
- 		p_err("Can't get arch name for device vendor id 0x%04x",
--		      vendor_id);
-+		      (unsigned int)vendor_id);
- 		return NULL;
- 	}
- }
-diff --git a/tools/bpf/bpftool/jit_disasm.c b/tools/bpf/bpftool/jit_disasm.c
-index c032d2c6ab6d..8895b4e1f690 100644
---- a/tools/bpf/bpftool/jit_disasm.c
-+++ b/tools/bpf/bpftool/jit_disasm.c
-@@ -343,7 +343,8 @@ int disasm_print_insn(unsigned char *image, ssize_t len, int opcodes,
- {
- 	const struct bpf_line_info *linfo = NULL;
- 	unsigned int nr_skip = 0;
--	int count, i, pc = 0;
-+	int count, i;
-+	unsigned int pc = 0;
- 	disasm_ctx_t ctx;
- 
- 	if (!len)
-diff --git a/tools/bpf/bpftool/map_perf_ring.c b/tools/bpf/bpftool/map_perf_ring.c
-index 21d7d447e1f3..552b4ca40c27 100644
---- a/tools/bpf/bpftool/map_perf_ring.c
-+++ b/tools/bpf/bpftool/map_perf_ring.c
-@@ -91,15 +91,15 @@ print_bpf_output(void *private_data, int cpu, struct perf_event_header *event)
- 		jsonw_end_object(json_wtr);
- 	} else {
- 		if (e->header.type == PERF_RECORD_SAMPLE) {
--			printf("== @%lld.%09lld CPU: %d index: %d =====\n",
-+			printf("== @%llu.%09llu CPU: %d index: %d =====\n",
- 			       e->time / 1000000000ULL, e->time % 1000000000ULL,
- 			       cpu, idx);
- 			fprint_hex(stdout, e->data, e->size, " ");
- 			printf("\n");
- 		} else if (e->header.type == PERF_RECORD_LOST) {
--			printf("lost %lld events\n", lost->lost);
-+			printf("lost %llu events\n", lost->lost);
- 		} else {
--			printf("unknown event type=%d size=%d\n",
-+			printf("unknown event type=%u size=%u\n",
- 			       e->header.type, e->header.size);
- 		}
- 	}
-diff --git a/tools/bpf/bpftool/net.c b/tools/bpf/bpftool/net.c
-index d2242d9f8441..811150873125 100644
---- a/tools/bpf/bpftool/net.c
-+++ b/tools/bpf/bpftool/net.c
-@@ -476,7 +476,7 @@ static void __show_dev_tc_bpf(const struct ip_devname_ifindex *dev,
- 	for (i = 0; i < optq.count; i++) {
- 		NET_START_OBJECT;
- 		NET_DUMP_STR("devname", "%s", dev->devname);
--		NET_DUMP_UINT("ifindex", "(%u)", dev->ifindex);
-+		NET_DUMP_UINT("ifindex", "(%d)", dev->ifindex);
- 		NET_DUMP_STR("kind", " %s", attach_loc_strings[loc]);
- 		ret = __show_dev_tc_bpf_name(prog_ids[i], prog_name,
- 					     sizeof(prog_name));
-@@ -831,7 +831,7 @@ static void show_link_netfilter(void)
- 		if (err) {
- 			if (errno == ENOENT)
- 				break;
--			p_err("can't get next link: %s (id %d)", strerror(errno), id);
-+			p_err("can't get next link: %s (id %u)", strerror(errno), id);
- 			break;
- 		}
- 
-diff --git a/tools/bpf/bpftool/netlink_dumper.c b/tools/bpf/bpftool/netlink_dumper.c
-index 5f65140b003b..00741d51e7de 100644
---- a/tools/bpf/bpftool/netlink_dumper.c
-+++ b/tools/bpf/bpftool/netlink_dumper.c
-@@ -26,8 +26,7 @@ static void xdp_dump_prog_id(struct nlattr **tb, int attr,
- 		NET_END_OBJECT
- }
- 
--static int do_xdp_dump_one(struct nlattr *attr, unsigned int ifindex,
--			   const char *name)
-+static int do_xdp_dump_one(struct nlattr *attr, int ifindex, const char *name)
- {
- 	struct nlattr *tb[IFLA_XDP_MAX + 1];
- 	unsigned char mode;
-@@ -168,7 +167,7 @@ int do_filter_dump(struct tcmsg *info, struct nlattr **tb, const char *kind,
- 		NET_START_OBJECT;
- 		if (devname[0] != '\0')
- 			NET_DUMP_STR("devname", "%s", devname);
--		NET_DUMP_UINT("ifindex", "(%u)", ifindex);
-+		NET_DUMP_UINT("ifindex", "(%d)", ifindex);
- 		NET_DUMP_STR("kind", " %s", kind);
- 		ret = do_bpf_filter_dump(tb[TCA_OPTIONS]);
- 		NET_END_OBJECT_FINAL;
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index e71be67f1d86..58791542515a 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -521,10 +521,10 @@ static void print_prog_header_plain(struct bpf_prog_info *info, int fd)
- 	print_dev_plain(info->ifindex, info->netns_dev, info->netns_ino);
- 	printf("%s", info->gpl_compatible ? "  gpl" : "");
- 	if (info->run_time_ns)
--		printf(" run_time_ns %lld run_cnt %lld",
-+		printf(" run_time_ns %llu run_cnt %llu",
- 		       info->run_time_ns, info->run_cnt);
- 	if (info->recursion_misses)
--		printf(" recursion_misses %lld", info->recursion_misses);
-+		printf(" recursion_misses %llu", info->recursion_misses);
- 	printf("\n");
- }
- 
-@@ -569,7 +569,7 @@ static void print_prog_plain(struct bpf_prog_info *info, int fd, bool orphaned)
- 	}
- 
- 	if (info->btf_id)
--		printf("\n\tbtf_id %d", info->btf_id);
-+		printf("\n\tbtf_id %u", info->btf_id);
- 
- 	emit_obj_refs_plain(refs_table, info->id, "\n\tpids ");
- 
-@@ -1164,7 +1164,7 @@ static int get_run_data(const char *fname, void **data_ptr, unsigned int *size)
- 		}
- 		if (nb_read > buf_size - block_size) {
- 			if (buf_size == UINT32_MAX) {
--				p_err("data_in/ctx_in is too long (max: %d)",
-+				p_err("data_in/ctx_in is too long (max: %u)",
- 				      UINT32_MAX);
- 				goto err_free;
- 			}
-@@ -2251,7 +2251,7 @@ static char *profile_target_name(int tgt_fd)
- 
- 	t = btf__type_by_id(btf, func_info.type_id);
- 	if (!t) {
--		p_err("btf %d doesn't have type %d",
-+		p_err("btf %u doesn't have type %u",
- 		      info.btf_id, func_info.type_id);
- 		goto out;
- 	}
-@@ -2329,7 +2329,7 @@ static int profile_open_perf_events(struct profiler_bpf *obj)
- 			continue;
- 		for (cpu = 0; cpu < obj->rodata->num_cpu; cpu++) {
- 			if (profile_open_perf_event(m, cpu, map_fd)) {
--				p_err("failed to create event %s on cpu %d",
-+				p_err("failed to create event %s on cpu %u",
- 				      metrics[m].name, cpu);
- 				return -1;
- 			}
-diff --git a/tools/bpf/bpftool/tracelog.c b/tools/bpf/bpftool/tracelog.c
-index bf1f02212797..31d806e3bdaa 100644
---- a/tools/bpf/bpftool/tracelog.c
-+++ b/tools/bpf/bpftool/tracelog.c
-@@ -78,7 +78,7 @@ static bool get_tracefs_pipe(char *mnt)
- 		return false;
- 
- 	/* Allow room for NULL terminating byte and pipe file name */
--	snprintf(format, sizeof(format), "%%*s %%%zds %%99s %%*s %%*d %%*d\\n",
-+	snprintf(format, sizeof(format), "%%*s %%%zus %%99s %%*s %%*d %%*d\\n",
- 		 PATH_MAX - strlen(pipe_name) - 1);
- 	while (fscanf(fp, format, mnt, type) == 2)
- 		if (strcmp(type, fstype) == 0) {
-diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_dumper.c
-index d0094345fb2b..5e7cb8b36fef 100644
---- a/tools/bpf/bpftool/xlated_dumper.c
-+++ b/tools/bpf/bpftool/xlated_dumper.c
-@@ -199,13 +199,13 @@ static const char *print_imm(void *private_data,
- 
- 	if (insn->src_reg == BPF_PSEUDO_MAP_FD)
- 		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
--			 "map[id:%u]", insn->imm);
-+			 "map[id:%d]", insn->imm);
- 	else if (insn->src_reg == BPF_PSEUDO_MAP_VALUE)
- 		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
--			 "map[id:%u][0]+%u", insn->imm, (insn + 1)->imm);
-+			 "map[id:%d][0]+%d", insn->imm, (insn + 1)->imm);
- 	else if (insn->src_reg == BPF_PSEUDO_MAP_IDX_VALUE)
- 		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
--			 "map[idx:%u]+%u", insn->imm, (insn + 1)->imm);
-+			 "map[idx:%d]+%d", insn->imm, (insn + 1)->imm);
- 	else if (insn->src_reg == BPF_PSEUDO_FUNC)
- 		snprintf(dd->scratch_buff, sizeof(dd->scratch_buff),
- 			 "subprog[%+d]", insn->imm);
--- 
-2.47.1
+This is indeed our current DT usage for the Pi 5 family - a single DTB
+describing each board - although I would like to make it clear that
+overlays can then be applied on top of it describing the attached
+peripherals.
 
+> 2 - RP1 LOADED FROM OVERLAY BY THE FW
+>
+> In this case the rp1 dt node is loaded from overlay directly by the fw an=
+d the
+> resulting devicetree is exactly equal to the monolithic dtb scenario.
+> In order for that overlay to be loaded by fw, just add 'dtoverlay=3Drp1' =
+in
+> 'config.txt'.
+
+This halfway house combines the advantages and disadvantages of
+scenarios 1 and 3. Compared to scenario 3 it gains support for
+applying overlays that make use of interfaces provided by RP1 - I2C,
+SPI, UARTs etc. Compared to scenario 1 it loses the ability for the
+base DTB to refer to elements of RP1, other than by replacing these
+DTB elements with overlays that must be loaded after the RP1 overlay.
+As such, we would see that as a backwards step and not use it.
+
+> 3 - RP1 LOADED FROM OVERLAY AT RUNTIME
+>
+> Here it's the rp1 driver that loads the overlay at runtime, which is the =
+case
+> that this patchset originally proposed. The devicetree ends up like this:
+>
+>   axi {
+>     pcie@120000 {
+>       pci@0,0 {
+>         dev@0,0 {
+>           pci-ep-bus@1 {
+>                ...
+>           }
+>         }
+>       }
+>     }
+>   }
+>
+> and this is exepcially useful to cope with the case in which there's no D=
+T
+> natively used, e.g. on ACPI systems.
+>
+>
+> In order for all those 3 mentioned scenatios to work, I propose the follo=
+wing
+> inclusion scheme for for the dts files (the arrow points to the includer)=
+:
+>
+>
+>  rp1-pci.dtso         rp1.dtso
+>      ^                    ^
+>      |                    |
+> rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b-MONOLITHIC.dts
+>
+>
+> where those dts are defined as follows (omitting the internal properties =
+for
+> clarity sake):
+>
+>
+> - rp1-common.dtsi ------- // definition of core rp1 and its peripherals, =
+common
+>                           // for all cases
+>
+>         pci_ep_bus: pci-ep-bus@1
+>         {
+>                 rp1_clocks { };
+>
+>                 rp1_gpio { };
+>
+>                 rp1_eth { };
+>         };
+>
+> - rp1-pci.dtso ---------- // ovl linked in the rp1 driver code to be load=
+ed at
+>                           // runtime from rp1 driver. Only for case 3
+>
+>         /plugin/;
+>         fragment@0 {
+>                 target-path=3D"";
+>                 __overlay__ {
+>                         #include "rp1-common.dtsi"
+>                 };
+>         }
+>
+> - rp1-nexus.dtsi ------- // adapter to decouple rp1 ranges for non runtim=
+e-loaded
+>                          // overlay case (i.e. only for case 1 and 2)
+>
+>         rp1_nexus {
+>                 ranges =3D ...
+>
+>                  #include "rp1-common.dtsi"
+>         };
+>
+> - rp1.dtso ------------ // overlay to be loaded by fw (case 2)
+>
+>         /plugin/;
+>         &pcie2 {
+>                 #include "rp1-nexus.dtsi"
+>         };
+>
+> - bcm2712-rpi-5-b-MONOLITHIC.dts --- // monolithic dtb to avoid any overl=
+ay use
+>                                      // (case 1)
+>
+>         / {
+>                 ... all rpi5 board dts ...
+>                 &pcie2 {
+>                         #include "rp1-nexus.dtsi"
+>                 };
+>         };
+>
+>
+> with only minimal changes to the rp1 driver code, I can confirm that all =
+those
+> scenarios can coexits and are working fine. Before processding with a new=
+ patchset
+> I'd like to have some thoughts about that, do you think this is a viable =
+approach?
+
+Thank you for this - the creation of a core RP1 declaration that can
+be tailored to multiple applications using different wrappers is
+exactly what I had in mind. I agree that your partitioning scheme can
+cater for the 3 usage scenarios, but for the reasons outlined above I
+think scenario 2 is not useful to us, although it isn't impossible
+that U-boot might see things differently; I see no harm in having it
+supported, but I wouldn't want anyone to go to unnecessary effort to
+make it work.
+
+Phil
