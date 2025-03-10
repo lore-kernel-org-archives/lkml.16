@@ -1,445 +1,186 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2045.outbound.protection.outlook.com [40.107.237.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC741B3934;
-	Mon, 10 Mar 2025 15:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622233; cv=none; b=gnRgbUTn8ZWqtkdGsWiIzQKUsrom3+a5gQ+P1eA8EY5aYPPqFKC2UQU8wjgy6116rbNfuQkwHgWVX82r+PmM2jdF3l6mHZgQTQehywXEu6grQq5TeIOJUJzI81edIDMCzBprFwqFMbqdy/v111KfBGBLWgqJOLl4ovDC2qsm9NE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741622233; c=relaxed/simple;
-	bh=MgCdjpVn5JjBH9Q7mqPRM+D+GIItbuUSnEVe5WROEq4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aSS9XDyGrgk08UG4EO8CaDZJwuYrLE2Ui4sajIwOzhb6M/q4Ud0XxV4RPQZkrWmIGj0CCQr1h0dlOz5NrraemLyyWlohKGa43TBDCoQrEVILb8x378oiUIZ8w0qAjBnCq/YlASUQw7l1xUIVAcGirTrFuyOTt39ruipgrLmBunU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JOjpWx5p; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA0E22DF8E;
+	Mon, 10 Mar 2025 15:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741622259; cv=fail; b=e1sbUN5+cZKe7I4gcN5T5jBJ4dBOBmoanq/nyK7eGxRiK+uEwQs2CO6S/urfFWV6CLk253w7wKbnLVZWYg5SrhJaeaWy309nOB1z2yMG5R+gUO5gW25rR6bFL9YYLB3Jp6Nvpj0Cnwe+fOTUJkB0Kb+ewYcIV5rUPm/4VOoVYvc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741622259; c=relaxed/simple;
+	bh=nn+2oLoCNngrGEYfdAa3Sh4AxAok8z77W8bp9rNUU2g=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=a6zIzI10vHCdxGM+bd01nT1HtZn3TJQ8Q6rSn2YCsxah2z36fvs+p66sII0ZUj9L8cF/kJf7lSUqDZ9uFDMv48PYbuzkisnIiKQLNAql0Ion2NWbRmVXBp/1hEaUOoioiJm0/lQ1NQpNJm2ixJLugFoSlw2pbhcR2HDC9ngO3cg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jxNLpEhn; arc=fail smtp.client-ip=40.107.237.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JOjpWx5p"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7A740441BC;
-	Mon, 10 Mar 2025 15:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741622229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A5Z5zPAM+0f74IQVMyMnuPc/AXbhtFbg6j2IA+SJm9I=;
-	b=JOjpWx5pK4JZM/gmtnma9Fd+4RWYpYmrpI7loThL2w/eu9D07CZtoUYSSABX5Njc+4NfzU
-	FTd49DDXOvINZ6u5rZuG2U5Ep+MHTGGy0CgHECpqf4aScmQqExYEImIiJQlLkbWY+ck4Fv
-	P2tWElMMB/ISWnhlgumdzg3ovUoc6rNgwSPXC9mZuKmGFPV9P8bATTrEVwFq81H9bLm75q
-	cnVJ+Mu6pwTXK1dEAgIAIit08ggt/76isx6gyaZNvFNlmzkVXIUyw6NNaB6la3B/YjtSpp
-	mY0LEGIVEO29P1npHruVXCyPydeg1+xTX/C8vOv1SyzLBdvSr8lze7dJ4X9h6g==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 10 Mar 2025 16:56:09 +0100
-Subject: [PATCH v3 3/3] ARM: dts: imx6ul: Add Variscite Concerto board
- support
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jxNLpEhn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BHIZBEnuUdGWmHyTGCzFL6Z424RjjWia7MkJ6qA2ZpeSYxdQ2GyOmF6gaYDwef9edWNC54frWSHz3p9ynn0iwdqWxBuLvSEOpGblyCjLCOmfGFcDMwAcQfUCDHjvBBoLzPpPnuO7r0rqlDY/eZz7i2jV4B/syvxkWbTgPzEXsgzyDVSxrkL3Y9ZmJ+c8BOI1V6jumMg73JsOaqXYksxYv8miguPvevM+gfEq7cJJk9Q0BIz0ktQuJRTZnAOVVTPaunjsuOWEodJD9H3tl3JJ7Rwy5R1J67dqCBdzZpPI9rTa8qRshBBK8VU+VkFpR0zP4Ve6cp1YQ0AzFNgayo+nYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ccYvPW6dm8ctnBwDkHi2b+M5i+J3C6lOo76iC+lf4R4=;
+ b=hsYmwrNSFiJ9nIyoEeidkPSIPeKDUdLRBlVkiPH7aQh9udiM9HJc+Dvpt7hN2QEzJ5PgM4XOYcfTVXnbtf8jgGf+GbNmaUge5WsbCM+UoijgS/wN/CLHurrQ/NN2vS5SDgbzIapiZgIKrzvGJqM6NLL2Ifs7vU62gkByc+VPU3Ian8XD9TGODVZCnaEtYVbB9zzXoB/r/7PBpIYhWGc9swrd2g/3eHpOr2Z6Yu3lIqiPd2qE7ROvYQZJ0wYgFaklKZyb9jlHFXJ2lc0CO56Gu2RPNt0tH7HrGK1dE1FwVRFSJsMNHBoMr75UHHtcZHwE/j7x87gqORji5URT0+u8WQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ccYvPW6dm8ctnBwDkHi2b+M5i+J3C6lOo76iC+lf4R4=;
+ b=jxNLpEhnKoG/dIJ37P0Mt14KDL8ClNbs01kUd1AbTjSnE9Ulpoms3VisN5PZEwQ0SFUNKLFVt3DXyPE9eOaW0BZJGpFfsdNHufLjo51fTnBTQdywdKaZaGvF40/OLvUK4m3edAt0M0mZO0T/Ch1+esivs9/RD7ax+na1t2c9iUk4ul92onH8YyNmNhHKExzF/E5JcSyfRt6V2IzlT8aWMvchMkoR3Ob1ZUEZ2UcUVxrvQJOkYYRrOXrmVh1glxwJEp0sJ9W5+54Pq0+Mv/NSd9zDd4mcx7rrOlu0Yk3PLxWzre6lNqAEJkpxsD8N1IaoT58C1UueS4o+NXkU4FwdFA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ SN7PR12MB6691.namprd12.prod.outlook.com (2603:10b6:806:271::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.27; Mon, 10 Mar 2025 15:57:34 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8511.026; Mon, 10 Mar 2025
+ 15:57:34 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Pankaj Raghav <p.raghav@samsung.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Yu Zhao <yuzhao@google.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Zi Yan <ziy@nvidia.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] mm/huge_memory: drop beyond-EOF folios with the right number of refs.
+Date: Mon, 10 Mar 2025 11:57:27 -0400
+Message-ID: <20250310155727.472846-1-ziy@nvidia.com>
+X-Mailer: git-send-email 2.47.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MN2PR14CA0026.namprd14.prod.outlook.com
+ (2603:10b6:208:23e::31) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250310-varsom6ul-concerto-dts-v3-3-551e60713523@bootlin.com>
-References: <20250310-varsom6ul-concerto-dts-v3-0-551e60713523@bootlin.com>
-In-Reply-To: <20250310-varsom6ul-concerto-dts-v3-0-551e60713523@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9091;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=MgCdjpVn5JjBH9Q7mqPRM+D+GIItbuUSnEVe5WROEq4=;
- b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnzwvS9pnIy+Nmty70GKu5BsHxlJt9AXpuDa+MJ
- CmkXp9OSxGJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ88L0gAKCRDRgEFAKaOo
- Nu8QD/9L3pQ34PqLB5C/Zo5iJLxy1OjdY9cFZO3QEw0WSioOu+vLO3NE0/DjYr/hczUSLMyhJ8J
- RC8GddvanpuXdcnknKh4nMF3UzW+Dc8RvtgGjlqPmwQ7jvW+mZP8Xt+wRegAPkROyOc4aCTt3Lt
- PzLV1rAx8XZyOSIQJ8zivynobIYkD9YNo5w1NYjS5jr6PiO9RrH9vhPP44ZBIDcMqYnOkUZJVlf
- WcD3C19xgexuS+N1xkRO4B+llQBB8CEp2/nO2nXCPH0rCt6N5tVVbnMx6OMlwsU7NgMbery1LnD
- ju7qh/GdZM3mMUr8W6Xxpr6BppXJVKvO36yBSNPTcpUhPbFHQZmA+1uEnafKnTanei4stlvC+1t
- Qy1/eGMV5poEUfsfgUT5B7aL4hYmVmDBP5yY8Wli6+mxLuxIkQAX+RvFWqa5paB28r7wzSdMElZ
- 2OrIH64X5EAJ1v0spyT0ST8dpkd07SBKL4AL0+Hh2avGu6BUEsDtVig5VNcm0vKhKvhUFe7GcH1
- Ssp19NePpz13137z3mDhtLibit8olSVNH9bpyMDEYnlH4jKCdOMr+4eY0FEJTSPAstycl2yqxji
- qDCAPXf+4Xs60bjSgp+mo6hGtOc3EzKeUUN+1Zs59HpkDwJsJT49VsUdtZRiDzdP1qaHeUJuWbU
- qOTC1rbHO0YVyUg==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudeljeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekgeekvdduvdetheetgeefgfeljeevgfegkeduheeutdevvddtfedvveettddtvdenucffohhmrghinhepvhgrrhhishgtihhtvgdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdpr
- hgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: antonin.godard@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SN7PR12MB6691:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91c82ef4-1e5a-499f-bff3-08dd5fec45b4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?kT8chveS/eMHSzu8CXbHzXJrfnrhjqaalSj1lAoOyZhTjUgzPDSnt3vF6Bcb?=
+ =?us-ascii?Q?u9pYZx0NMlAiUJFZscuts+blyE20Ph6ZLKOETz/FcNYSyM7XB93O7tYcRA5P?=
+ =?us-ascii?Q?AOF1zw0byJ/gasggKB17DTqKiyMG1QqiquepE2xmzwLHYslZxwsoDvI70zf7?=
+ =?us-ascii?Q?CDba6nm5Dbi9Vz0pgutnJZl1xCQ+JNBUTAnwQy7rI1X6De6ghWR9hKQ/wiSV?=
+ =?us-ascii?Q?pyGI/AW/sPycfsHVT+egsr0A5ePKc7nmN4/AtSvIh0wr2Cd8NpVNU+5g5LaR?=
+ =?us-ascii?Q?FDQjGWEEc+2gMRQbk1lHrNpQA/663tPqok5vlmFZeVFvA9lcJS9174e1BvTv?=
+ =?us-ascii?Q?m5cX4D0AnNgm1SEhOHIQ9wOEHxDrh/lPj5S6jWvRToqygaSHy8ySGVipfRP3?=
+ =?us-ascii?Q?UEnxkWMs5+L29EgMrte1ha/qUrgAUd+Ppzsdw+8Dozt4r5wnMt4Cd0eRnF+E?=
+ =?us-ascii?Q?NFMiDqpDdJCv2J+yA5IPYhin36gd4oHrewA5Iyrn7orEwg6ulnCtQwggK5cF?=
+ =?us-ascii?Q?P5v8T0qcdG2qcyW9y1SQJ1uTjtFH87YWFST8xrqrHSkHygbUkUlK0vCYuh6t?=
+ =?us-ascii?Q?nGmPPigfs7qPvrlIUIeaDLZYpzgD8NFpIZK+c4JC+D3RzekqcVrwZMxU3FJw?=
+ =?us-ascii?Q?DM7zldln4XbCckESAfcH2a0iWaS+aGnWWjO7Uf+RDKN4F5+fs0PTpOX+j2tZ?=
+ =?us-ascii?Q?D8RoTw/w/3yFZ91mjEtrD612xB+bwvwsuh5TS7U4AeouX9v5a7fqLAkzR6WM?=
+ =?us-ascii?Q?GdTgq3TofMSGHMmFQsjs/0arp1SIQfXMp18cKQKQ0ODABSl1gjiKrEdK0Z8B?=
+ =?us-ascii?Q?NA00jHPWktZM5Lddsav0gRwImrewTbp+wPL5r1EknnJ/kiQcSHz8yoeSUcRJ?=
+ =?us-ascii?Q?YhM5xXr+UZiI1XUmEVpkikgi5KegtyOZ7FbWFvcFXPsUIcnbxLTDSFwQQZbp?=
+ =?us-ascii?Q?zFN5tVlxKNxXcBvOpE82Jh9NeC7ZjC2E6XNKwTdLcaKMNXPieonTtFhm8ZQa?=
+ =?us-ascii?Q?V5sOM4hOen3qJPULnE/mAQssF3W7J6F1zk5O2xaicTWFuP13zmTW+XS2M9+Z?=
+ =?us-ascii?Q?PCU1k5YKO1MH2g4XQcfSi3Bq16/MP77OmwGjpuClt3E4pCLcRgiQtuHps3mz?=
+ =?us-ascii?Q?AVN4xjfVugUWgsIsz+PLwNJWSgzPlO5DvNScJZfjJTA49lxIK0YxRvkTG66E?=
+ =?us-ascii?Q?0o/vn/cYIu8ECZUtDp8gS6KRVE7n/eJRy4a9B25emlVxd/y1KhVBk6GRPxgv?=
+ =?us-ascii?Q?4k+W74uJPGVU3LI3xlVyEpfgkbHxMDKeb2YNIV1W/n3f37GoOB1TVTFCJ1ss?=
+ =?us-ascii?Q?Oa1W1NoRWjVUvERuG8ZfXd+IKPoTWL1NhRwBfYGHbPKqNrAun3sJF3OZGF4j?=
+ =?us-ascii?Q?2hvfMMJzukeV6KScVssx/RQpcv24?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?67IXBwOMfSnaretTO5rUdXrmJNZA4coQfYKKqEtKGEPOTczwcmiGJXefIHRW?=
+ =?us-ascii?Q?aMcwC8yz1K8T91pF7iMp4v6hxEBVNXDw/l92MEsn0vJwhiMZjDX40DTNdTrY?=
+ =?us-ascii?Q?t9lM0nvKVkq3j1y83itvHm46koy8NlS26ozHB5S8QSru7ecxiJvqUPxzaeRF?=
+ =?us-ascii?Q?ke4pchmZtx86PZibAAfXekcuUADv+G5Xh4XAOV+kSbcbwSLgQwPCgFYdLhN5?=
+ =?us-ascii?Q?M+82Jk25dC2OAZTNdLjRkmkTmkeBypcNzsYOZb0GJfRwpFPZ/ZHv6YL18+EW?=
+ =?us-ascii?Q?C41ONsiYFvUlm1yKXJ0f5CUF8nKq5iUL6aMlvKWVpjm7OANgTr1lYlm50D/L?=
+ =?us-ascii?Q?pwyjjcQBNl2ZH04E2b5cJs445GT8P1J31p2cjNiII1kYIj4bdDygoCUl+yeT?=
+ =?us-ascii?Q?adybtcA883T779uictKRrtiRzWAYBAaYRZ5P82mbGi9+6YtJ0pOMgCC8iWGu?=
+ =?us-ascii?Q?qDEs/nlrT4QknoSYxWcC4Gwhns5cjDfVmrofPMCrh7+BLO6XtbpZyXuP6ugg?=
+ =?us-ascii?Q?Govhipzqb+LOtkSMMFKyQmCYQ3Cgw6boM6BB6vhSmlmM7gAKi5COuMDeRLaa?=
+ =?us-ascii?Q?dQw2o2fRi8dwSTXuNiJ8uRjWh/aP5/lNhR3AP4euRg6V5hJOpPpzit6UeVPB?=
+ =?us-ascii?Q?9+VewKOqa/Ym5usR3OvrfsOXCLQ8U2V9UNmSH4naZL8kN7SWkeR9O4XV+uGX?=
+ =?us-ascii?Q?0kjXM5AxeTSxkcojxQE+rAbhOCMMklPq2M3waGPsdilwQQbR+aKXfSthhmMb?=
+ =?us-ascii?Q?oksqBF2Grzij7NUa4v9+U/d71JCbzR32WdGv6irc7m2LYu+h5FIQZenMI1mK?=
+ =?us-ascii?Q?5rn29EG8kE8RspWgntK1wZ7Ta43XNSn2DgJKHLt1oq8e6jYQloTPvs3ocGsK?=
+ =?us-ascii?Q?Alyi+iC6Zup8obquHKgeJJOErig5QeG35AgL+ESFWiWj3aP3fAZlrnEDnTZ2?=
+ =?us-ascii?Q?hPutrRHwQ83einxAST+3BsRxegqNm+EszZ3QQmzrmEHeerOddZ+85gx0iZJR?=
+ =?us-ascii?Q?NFG7tNOBK0kmryPe+grcld7a80Nf3ppdAFXA+tmeAXioR8BVc1J0tZo9T8Kw?=
+ =?us-ascii?Q?SoyKXeTFkyyK5RvCKy2QX0sCRp8zTe8JvCQLVxSkapZrokGHFLWVLOuzK81A?=
+ =?us-ascii?Q?Ktwg0AzTflONlRubUoS+SSkybHYqdUJ3X8hOlu4pVXUFHKhrkgIR5Dqr7A6i?=
+ =?us-ascii?Q?VG4UqngYGfEqE1hptgh1Sr6m2if3I5sOMuMaUxTFAW1+UY6uShYwSjlEYFmF?=
+ =?us-ascii?Q?CzP5+Hqzq07apJV3t4zg7yMRjGQPy68KubJp843Gp11zno5w/bnnBTpKA8NY?=
+ =?us-ascii?Q?0Q8O+0RQ2yYy18U9/FCIzIb8cn+DyZ8zlmGVBY9JkCemA6r9V0Hbf1T1hLi7?=
+ =?us-ascii?Q?SfOn5Rw0xgbDgjvzsZV1MzsBaTlw8015YtWAqnytH5D480XksrGnlrYmd2Od?=
+ =?us-ascii?Q?kYR8Nq9SZhowIpcdCcv9V7RE2YWwZzX9AVovlAE530lWPxm9hcKAiuW67VZm?=
+ =?us-ascii?Q?Z7+EltORiNB6TIMo9DvcWyRDQy6cCMsbSUCH+j56dArrj/tTN6T++xvWIZO8?=
+ =?us-ascii?Q?j5rtGV3rQnu53rBUsFBeDrBZYnFJvAI8H1pMxQRE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91c82ef4-1e5a-499f-bff3-08dd5fec45b4
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 15:57:34.4221
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vNYxpBq62BuGcjfkCkRlAPQG0d0PGAwOMF7tms9rq7yh/ERAPG0xdyszKB95XeCZ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6691
 
-Add support for the Variscite Concerto Carrier Board with:
+When an after-split folio is large and needs to be dropped due to EOF,
+folio_put_refs(folio, folio_nr_pages(folio)) should be used to drop
+all page cache refs. Otherwise, the folio will not be freed, causing
+memory leak.
 
-- LVDS interface for the VLCD-CAP-GLD-LVDS 7" LCD 800 x 480 touch
-  display (not configured)
-- USB Host + USB OTG Connector
-- 10/100 Mbps Ethernet
-- miniPCI-Express slot
-- SD Card connector
-- Audio Headphone/Line In jack connectors
-- S-ATA
-- On-board DMIC
+This leak would happen on a filesystem with blocksize > page_size and
+a truncate is performed, where the blocksize makes folios split to
+>0 order ones, causing truncated folios not being freed.
 
-Product Page: https://www.variscite.com/product/single-board-computers/concerto-board
-
-This file is based on the one provided by Variscite on their own kernel,
-but adapted for mainline.
-
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+Fixes: c010d47f107f ("mm: thp: split huge page to any lower order pages")
+Reported-by: Hugh Dickins <hughd@google.com>
+Closes: https://lore.kernel.org/all/fcbadb7f-dd3e-21df-f9a7-2853b53183c4@google.com/
+Cc: stable@vger.kernel.org
+Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- arch/arm/boot/dts/nxp/imx/Makefile                 |   1 +
- .../boot/dts/nxp/imx/imx6ul-var-som-concerto.dts   | 320 +++++++++++++++++++++
- 2 files changed, 321 insertions(+)
+ mm/huge_memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
-index 39a153536d2a2b8f75b5fbe4332660f89442064a..94c9bc94cc8e2daa1fb3b5686b0b58db1f6678b6 100644
---- a/arch/arm/boot/dts/nxp/imx/Makefile
-+++ b/arch/arm/boot/dts/nxp/imx/Makefile
-@@ -329,6 +329,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-+	imx6ul-var-som-concerto.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-aster.dtb \
- 	imx6ull-colibri-emmc-aster.dtb \
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..9ff3b374a2b31ceb7c4974adf86c2f036c78d4d5
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som-concerto.dts
-@@ -0,0 +1,320 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Support for Variscite MX6 Concerto Carrier board with the VAR-SOM-MX6UL
-+ * Variscite SoM mounted on it
-+ *
-+ * Copyright 2019 Variscite Ltd.
-+ * Copyright 2025 Bootlin
-+ */
-+
-+#include "imx6ul-var-som.dtsi"
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	model = "Variscite VAR-SOM-MX6UL Concerto Board";
-+	compatible = "variscite,mx6ulconcerto", "variscite,var-som-imx6ul", "fsl,imx6ul";
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_key_back>, <&pinctrl_gpio_key_wakeup>;
-+
-+		key-back {
-+			gpios = <&gpio4 14 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BACK>;
-+		};
-+
-+		key-wakeup {
-+			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_WAKEUP>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led-0 {
-+			function = LED_FUNCTION_STATUS;
-+			color = <LED_COLOR_ID_GREEN>;
-+			label = "gpled2";
-+			gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	status = "disabled";
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>, <&pinctrl_enet2_gpio>, <&pinctrl_enet2_mdio>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy1>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@3 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <3>;
-+			clocks = <&rmii_ref_clk>;
-+			clock-names = "rmii-ref";
-+			reset-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
-+			reset-assert-us = <100000>;
-+			micrel,led-mode = <0>;
-+			micrel,rmii-reference-clock-select-25-mhz = <1>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	rtc@68 {
-+		/*
-+		 * To actually use this interrupt
-+		 * connect pins J14.8 & J14.10 on the Concerto-Board.
-+		 */
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_enet2_gpio: enet2-gpiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* fec2 reset */
-+		>;
-+	};
-+
-+	pinctrl_enet2_mdio: enet2-mdiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
-+			MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
-+			MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
-+		>;
-+	};
-+
-+	pinctrl_gpio_key_back: gpio-key-backgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x17059
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpio-ledsgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0x1b0b0	/* GPLED2 */
-+		>;
-+	};
-+
-+	pinctrl_gpio_key_wakeup: gpio-keys-wakeupgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x17059
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_PIXCLK__I2C1_SCL		0x4001b8b0
-+			MX6UL_PAD_CSI_MCLK__I2C1_SDA		0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO05__PWM4_OUT		0x110b0
-+		>;
-+	};
-+
-+	pinctrl_rtc: rtcgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0 /* RTC alarm IRQ */
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1
-+			MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1
-+			MX6UL_PAD_GPIO1_IO09__UART5_DCE_CTS	0x1b0b1
-+			MX6UL_PAD_GPIO1_IO08__UART5_DCE_RTS	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usb_otg1_id: usbotg1idgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_TX_DATA__ANATOP_OTG1_ID	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_gpio: usdhc1-gpiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x1b0b1 /* CD */
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO01__WDOG1_WDOG_B	0x78b0
-+		>;
-+	};
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>;
-+	status = "okay";
-+};
-+
-+&snvs_pwrkey {
-+	status = "disabled";
-+};
-+
-+&snvs_rtc {
-+	status = "disabled";
-+};
-+
-+&tsc {
-+	/*
-+	 * Conflics with wdog1 ext-reset-output & SD CD pins,
-+	 * so we keep it disabled by default.
-+	 */
-+	status = "disabled";
-+};
-+
-+/* Console UART */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+/* ttymxc4 UART */
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
-+	dr_mode = "otg";
-+	disable-over-current;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_usdhc1_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_usdhc1_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
-+	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	/*
-+	 * To actually use ext-reset-output
-+	 * connect pins J17.3 & J17.8 on the Concerto-Board
-+	 */
-+	fsl,ext-reset-output;
-+};
-
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 3d3ebdc002d5..373781b21e5c 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3304,7 +3304,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 				folio_account_cleaned(tail,
+ 					inode_to_wb(folio->mapping->host));
+ 			__filemap_remove_folio(tail, NULL);
+-			folio_put(tail);
++			folio_put_refs(tail, folio_nr_pages(tail));
+ 		} else if (!folio_test_anon(folio)) {
+ 			__xa_store(&folio->mapping->i_pages, tail->index,
+ 					tail, 0);
 -- 
-2.47.0
+2.47.2
 
