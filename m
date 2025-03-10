@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7B328EA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F902253EC
 	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741603066; cv=none; b=C4QyvUKktfaqDEY/h6N0BNfRNC9ga0xkvoNoTbL+eQphJQajcZNgLGvTvNGapn9G89bPJCt0lLt0UH6DZMNroNxvkrR7RKdWkLkicWBEvRMcSzL4luGMQyVidGjmuSEh1SSGSZDgtRqAZu4v4k2O5PyI3zUZP5w/iSqtXujhF38=
+	t=1741603067; cv=none; b=KA/tflndcfqaaUG0iDMTGG8ICL8H/etx56yleYqRIqrdRexWefmuPj69p0ycLGGN5z6QxlYVckpSLy7MuiYib0n8aKvbp1OQChevVvcCB5aKrR1jsQhCZ2ZGSFGovLuTUSVuGJ/vPNIL1OsqDuJRAKWnzPkANy0oyX4OJRCd4GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741603066; c=relaxed/simple;
-	bh=X22BauJ/yxhjyd9bdHmx73unUwfLqnlpQZoxOrJ9bLs=;
+	s=arc-20240116; t=1741603067; c=relaxed/simple;
+	bh=+6O+mA2fzpX7x0jBw55O1jhy+s61L25CXgYyz0ThUBw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k/h3nfniqfFMTRtj48535iKsILwudwohmP1AQejK3BMrhUXDMeaBrEiapQILOi0sxoo8E4lF41SYlY9OHydg7oILK/zosAsK5ddZGYE8NhokXGNkYmHaSZeaar0sOfum9R2uFq2FB5bWo/Gy66SUbcD4wmA5/oA/JUa6gS/43+Y=
+	 MIME-Version; b=flY8T461wphKc3du8rHFrB+n8btXZ36HX/G1+Bet8F8MbKMKb0fQxqGhVQQ0QbY69l+M82Znc8Egaq70XdqSsQbeeU7mSuglxUaFJSdbeaoXbe5fUkzV0IOp8TqPdTc0kQKnhF9LC266jtvoS+AzdnU9lfwkerY9332/vHp9Pio=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1traVq-0004EG-5V; Mon, 10 Mar 2025 11:37:34 +0100
+	id 1traVq-0004E9-5V; Mon, 10 Mar 2025 11:37:34 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1traVp-004yz6-1N;
+	id 1traVp-004yyy-0u;
 	Mon, 10 Mar 2025 11:37:33 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1traVp-001mDV-10;
+	id 1traVp-001mCW-0g;
 	Mon, 10 Mar 2025 11:37:33 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Sebastian Reichel <sre@kernel.org>,
@@ -43,9 +43,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Lukasz Luba <lukasz.luba@arm.com>,
 	linux-pm@vger.kernel.org,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH v5 7/7] thermal: core: Record PSCR before hw_protection_shutdown()
-Date: Mon, 10 Mar 2025 11:37:32 +0100
-Message-Id: <20250310103732.423542-8-o.rempel@pengutronix.de>
+Subject: [PATCH v5 1/7] power: Extend power_on_reason.h for upcoming PSCRR framework
+Date: Mon, 10 Mar 2025 11:37:26 +0100
+Message-Id: <20250310103732.423542-2-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250310103732.423542-1-o.rempel@pengutronix.de>
 References: <20250310103732.423542-1-o.rempel@pengutronix.de>
@@ -61,46 +61,31 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Enhance the thermal core to record the Power State Change Reason (PSCR)
-prior to invoking hw_protection_shutdown(). This change integrates the
-PSCR framework with the thermal subsystem, ensuring that reasons for
-power state changes, such as overtemperature events, are stored in a
-dedicated non-volatile memory (NVMEM) cell.
-
-This 'black box' recording is crucial for post-mortem analysis, enabling
-a deeper understanding of system failures and abrupt shutdowns,
-especially in scenarios where PMICs or watchdog timers are incapable of
-logging such events.  The recorded data can be utilized during system
-recovery routines in the bootloader or early kernel stages of subsequent
-boots, significantly enhancing system diagnostics, reliability, and
-debugging capabilities.
+Prepare for the introduction of the Power State Change Reason Recorder
+(PSCRR)  framework by expanding the power_on_reason.h header. This
+extension includes new power-on reasons:
+- POWER_ON_REASON_OVER_CURRENT for over-current conditions.
+- POWER_ON_REASON_REGULATOR_FAILURE for regulator failures.
+- POWER_ON_REASON_OVERTEMPERATURE for over temperature situations.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/thermal/thermal_core.c | 3 +++
+ include/linux/power/power_on_reason.h | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 2328ac0d8561..af4e9cf22bf6 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -16,6 +16,7 @@
- #include <linux/kdev_t.h>
- #include <linux/idr.h>
- #include <linux/thermal.h>
-+#include <linux/pscrr.h>
- #include <linux/reboot.h>
- #include <linux/string.h>
- #include <linux/of.h>
-@@ -380,6 +381,8 @@ static void thermal_zone_device_halt(struct thermal_zone_device *tz, bool shutdo
+diff --git a/include/linux/power/power_on_reason.h b/include/linux/power/power_on_reason.h
+index 95a1ec0c403c..f2446cece277 100644
+--- a/include/linux/power/power_on_reason.h
++++ b/include/linux/power/power_on_reason.h
+@@ -15,5 +15,8 @@
+ #define POWER_ON_REASON_XTAL_FAIL "crystal oscillator failure"
+ #define POWER_ON_REASON_BROWN_OUT "brown-out reset"
+ #define POWER_ON_REASON_UNKNOWN "unknown reason"
++#define POWER_ON_REASON_OVER_CURRENT "over current"
++#define POWER_ON_REASON_REGULATOR_FAILURE "regulator failure"
++#define POWER_ON_REASON_OVERTEMPERATURE "overtemperature"
  
- 	dev_emerg(&tz->device, "%s: critical temperature reached\n", tz->type);
- 
-+	set_power_state_change_reason(PSCR_OVERTEMPERATURE);
-+
- 	if (shutdown)
- 		hw_protection_shutdown(msg, poweroff_delay_ms);
- 	else
+ #endif /* POWER_ON_REASON_H */
 -- 
 2.39.5
 
