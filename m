@@ -1,120 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA4122FF33;
-	Mon, 10 Mar 2025 15:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB6A230270
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619637; cv=none; b=tC5/J3D2Z32+NJM/b8l+AuI6WzwSEEtRiAB6YkHl9oHg1yo0HCJhG0sU4/EjKEYRnq9eY1urrNm2mSuuGMNDbDeYejBL5ODxVQR+I1vROu8cezNSOJJIFB1XKWJDt5l01z7zKMZcuq8nGs/jTfebaCfQZSP4UQPRi1PiQOBlrO4=
+	t=1741619644; cv=none; b=F7vxoo67PjtRr2F5pidCXb1veax8ovcUwrEqcLe696sEpiFWVOD53nh0Uz/YTgpUU2ZYW2xaJjwdy+jNIqNuFevZEO0RUaKSq4Eq6BKHIjtC/nADzjZcE38OjhFFljYgHxOkqywMporbxZLkLJaKfVx0e8r17dKRGNPy36Vn/uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619637; c=relaxed/simple;
-	bh=E8j4pIgtYeVUVyPLYeWsQ6wdM/3mTyY6T0E83ZHYNzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BI7kf2Q41HoWGbmm7ljOJ+gHIqhiaRg13xkKM9U67l9GPrpT4AVwVh9bmLEMXP3tiBkVyW029R2y608MywMGKKQXLAqXFfPWEshZWw6SVBESRLLQAtdmd+N+AxI+0/w3oxnjZPDfysGAZ4J/nHFioPPzTjdinmuPmRIXNzD7wX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJJujxul; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741619644; c=relaxed/simple;
+	bh=B4l5ww4xM3ybuxVDnFD7O4s6SCugiqPi0tOYv0B/adg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U6N/X8UwZJOgZS6Jdv7x8MxQuTeitRbHJ1N3xUZcqP4E/7jSyGR7e2hzW8XC74uE21hVeU9/s4TTeOiwmCb2EucR3UO6/3pKM2Mffd/ppDMg1TRezYKZaQ/l1udAS0hsEjGU7WxXu9eNjV0HOEL7oFmwn9G0yaKyZbC/j0t4RpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=phyKIH0L; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJJujxul"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71B6C4CEED;
-	Mon, 10 Mar 2025 15:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741619637;
-	bh=E8j4pIgtYeVUVyPLYeWsQ6wdM/3mTyY6T0E83ZHYNzU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=iJJujxulFWEs8Br8hqbYISk8Tujo00i169PIPNHrsXDEjwmWTKGeQbbQR1ptqtjOD
-	 BSqcllLruqCfmW26xbmMOR8eY3v1xJDW1t67GDozmSCMt1BKQn2kl2y1TfTDgOyhYt
-	 0lOrjm/qTQVdfe6dVcEPsPb/KlD3uP3AAHsrNboPK0cK8s1dArLABZHjdtvKTtWQLk
-	 IwJCoNBe7esLEi0kl39cBey0pYYsQtY3/r4g++V9TlOav7pjknjitEpEnnW2W/FRH+
-	 M5clvNcj8PVkFFXH/xqg6m9uAXieKswl7vYcgv6SfCT2rShQPMsaeYmHMNxIjGEN5H
-	 0dm9Vr1I8oTPw==
-Date: Mon, 10 Mar 2025 16:13:54 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Silvano Seva <s.seva@4sigma.it>
-Cc: a.greco@4sigma.it, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: imu: st_lsm6dsx: fix possible lockup during FIFO
- read
-Message-ID: <Z88Bstpob7Jueugd@lore-desk>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="phyKIH0L"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22398e09e39so79079355ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1741619642; x=1742224442; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z9Vwlc46bZsQyt2QxW9m2l1M9vTOam7Mm6HyDDfLEZk=;
+        b=phyKIH0LB85yJ+LguS7wKtU89NW1nV7XXxzNvx9aR+JVuimcTKgh1gW7BD+Qb8tM7P
+         kFXzFlnt2iMQJMvrt1wmretsUcNW/Q3G4gIovHKC9kYALAIw7xGZiuFLoTkjgXipYm8E
+         whBOyPY8lGh/D/lRk0QpQJAsiOWhpGvxFvpwYsy00ieeJUFDbWxx9gsJgxbI7j++ANhY
+         /IzdOnBb+m8CsqYjjuOgIwoYfGdb/9KNs20lvaFsJGK7wYtpSGjFVi5ffjaFDIQ1eoEo
+         9Sxqf7E+iOFYsuB8xshlSYOrRX5lms7JPrfx1rNBagNwCLap4PrKxSoxtI+h2CF5jCnl
+         wYgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741619642; x=1742224442;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z9Vwlc46bZsQyt2QxW9m2l1M9vTOam7Mm6HyDDfLEZk=;
+        b=ARL0lfEtq4IcaWk4UFbUv7l0Oq6waC+ICOPLGSTCculJXg85uxlmxgCh1uW/dymr4F
+         7uQEG1omEd2K0f+Ha9U0Gd60wGCxLyH7Er+Vfm2shkCaaRbv49HVsYgDw2XjtQ+x5lrW
+         sTYcSvw4kIgHUbWKVwy9M1bSh7+m2nyEGHNhCjLoe8kKkQ1ynrmxTj46dZe1Bfv7cgwx
+         /8rl6Zbtbw4CJ19bdJG0BMkfiug5vVl2SDX0YUJXkw6C9hbwLDRh4JoGWZROSsSylONh
+         Rg/4t+8UeEG4y7clEm4vjq5qHPGPS0w+xQrDwbltCdECz9kqM0IxBIEO7nvxj9fbFJEW
+         E2UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwXEUIs9jeOkVRudrQcSHl3X7tB9eUcXSIRugdQ/zJXS1X3xcSgkZaWqJFU2r6R8f+UWBrZQwXR0COFRM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEINppw2icqlMArKOOfaaRNK0o9gk6VALPOruYsFA0iH2f3XNq
+	y8ExPfdgH6HKJ5kvgtFg9cFK81MOvvltREQ5dOLVb90ptrVSyAANz62jvqaXAB4=
+X-Gm-Gg: ASbGncuEB5bl2cAMdBkGhIFkkklhKgvWDgv40umlxytZQSiq2vlI1S5QlwEqNSV0dcd
+	MPC/dem0uWn015tR5sDAUb5Ij/9IiqmbHisMmFxbxyZ0RHY0hMpii+gMoFMPKV1wnqtbAzAoo4D
+	YZyZX+VYLYtouOMSGLP9NzS4J2FMjyJEz/3xbaJHxfnEpT1OrQCdzGrkhXv8apqrDpn0EJnqfQ5
+	XWk0mznw+xBbrHFrSsUO7JXpG8NkgGTIFx1abqwxxDKbmMvjttHc55OQ52MuvbDm6mcl5XkCHAm
+	3OXrBA1WX9syzwBSD9g8bLUW6ih2WiVJfRzAHbet4GJJZA==
+X-Google-Smtp-Source: AGHT+IE/Wftdkd3zlZdL/ywUH78DLaDAVcrFF4WfEuA9Q1JYQZM9C8xhDZMPOQ9HkccIr+uMejIbbw==
+X-Received: by 2002:a17:903:298b:b0:21f:4649:fd49 with SMTP id d9443c01a7336-22428c221dbmr239345965ad.49.1741619642512;
+        Mon, 10 Mar 2025 08:14:02 -0700 (PDT)
+Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109e99dfsm79230515ad.91.2025.03.10.08.13.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 08:14:02 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v3 09/17] riscv: misaligned: factorize trap handling
+Date: Mon, 10 Mar 2025 16:12:16 +0100
+Message-ID: <20250310151229.2365992-10-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250310151229.2365992-1-cleger@rivosinc.com>
+References: <20250310151229.2365992-1-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TCV8Nel+ysraon/u"
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+misaligned accesses traps are not nmi and should be treated as normal
+one using irqentry_enter()/exit(). Since both load/store and user/kernel
+should use almost the same path and that we are going to add some code
+around that, factorize it.
 
---TCV8Nel+ysraon/u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Clément Léger <cleger@rivosinc.com>
+---
+ arch/riscv/kernel/traps.c | 49 ++++++++++++++++-----------------------
+ 1 file changed, 20 insertions(+), 29 deletions(-)
 
-I guess it was v3 in this case :)
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index 8ff8e8b36524..55d9f3450398 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -198,47 +198,38 @@ asmlinkage __visible __trap_section void do_trap_insn_illegal(struct pt_regs *re
+ DO_ERROR_INFO(do_trap_load_fault,
+ 	SIGSEGV, SEGV_ACCERR, "load access fault");
+ 
+-asmlinkage __visible __trap_section void do_trap_load_misaligned(struct pt_regs *regs)
++enum misaligned_access_type {
++	MISALIGNED_STORE,
++	MISALIGNED_LOAD,
++};
++
++static void do_trap_misaligned(struct pt_regs *regs, enum misaligned_access_type type)
+ {
+-	if (user_mode(regs)) {
+-		irqentry_enter_from_user_mode(regs);
++	irqentry_state_t state = irqentry_enter(regs);
+ 
++	if (type ==  MISALIGNED_LOAD) {
+ 		if (handle_misaligned_load(regs))
+ 			do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+-			      "Oops - load address misaligned");
+-
+-		irqentry_exit_to_user_mode(regs);
++				      "Oops - load address misaligned");
+ 	} else {
+-		irqentry_state_t state = irqentry_nmi_enter(regs);
+-
+-		if (handle_misaligned_load(regs))
++		if (handle_misaligned_store(regs))
+ 			do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+-			      "Oops - load address misaligned");
+-
+-		irqentry_nmi_exit(regs, state);
++				      "Oops - store (or AMO) address misaligned");
+ 	}
++
++	irqentry_exit(regs, state);
+ }
+ 
+-asmlinkage __visible __trap_section void do_trap_store_misaligned(struct pt_regs *regs)
++asmlinkage __visible __trap_section void do_trap_load_misaligned(struct pt_regs *regs)
+ {
+-	if (user_mode(regs)) {
+-		irqentry_enter_from_user_mode(regs);
+-
+-		if (handle_misaligned_store(regs))
+-			do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+-				"Oops - store (or AMO) address misaligned");
+-
+-		irqentry_exit_to_user_mode(regs);
+-	} else {
+-		irqentry_state_t state = irqentry_nmi_enter(regs);
+-
+-		if (handle_misaligned_store(regs))
+-			do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+-				"Oops - store (or AMO) address misaligned");
++	do_trap_misaligned(regs, MISALIGNED_LOAD);
++}
+ 
+-		irqentry_nmi_exit(regs, state);
+-	}
++asmlinkage __visible __trap_section void do_trap_store_misaligned(struct pt_regs *regs)
++{
++	do_trap_misaligned(regs, MISALIGNED_STORE);
+ }
++
+ DO_ERROR_INFO(do_trap_store_fault,
+ 	SIGSEGV, SEGV_ACCERR, "store (or AMO) access fault");
+ DO_ERROR_INFO(do_trap_ecall_s,
+-- 
+2.47.2
 
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-
-Regards,
-Lorenzo
-
-> Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
-> from falling in an infinite loop in case pattern_len is equal to zero and
-> the device FIFO is not empty.
->=20
-> Fixes: 290a6ce11d93 ("iio: imu: add support to lsm6dsx driver")
-> Fixes: 801a6e0af0c6 ("iio: imu: st_lsm6dsx: add support to LSM6DSO")
-> Signed-off-by: Silvano Seva <s.seva@4sigma.it>
-> ---
->=20
-> Changes since v1:
-> * st_lsm6dsx_read_fifo: moved check for zero pattern_len before fifo_len =
-assignment
-> * st_lsm6dsx_read_fifo: dropped check for zero fifo_len
-> * added Fixes tags in commit message
->=20
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio=
-/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> index 0a7cd8c1aa33..8a9d2593576a 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> @@ -392,6 +392,9 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
->  	if (fifo_status & cpu_to_le16(ST_LSM6DSX_FIFO_EMPTY_MASK))
->  		return 0;
-> =20
-> +	if (!pattern_len)
-> +		pattern_len =3D ST_LSM6DSX_SAMPLE_SIZE;
-> +
->  	fifo_len =3D (le16_to_cpu(fifo_status) & fifo_diff_mask) *
->  		   ST_LSM6DSX_CHAN_SIZE;
->  	fifo_len =3D (fifo_len / pattern_len) * pattern_len;
-> @@ -623,6 +626,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw =
-*hw)
->  	if (!fifo_len)
->  		return 0;
-> =20
-> +	if (!pattern_len)
-> +		pattern_len =3D ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
-> +
->  	for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern_len) {
->  		err =3D st_lsm6dsx_read_block(hw,
->  					    ST_LSM6DSX_REG_FIFO_OUT_TAG_ADDR,
-> --=20
-> 2.48.1
->=20
-
---TCV8Nel+ysraon/u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ88BsgAKCRA6cBh0uS2t
-rO6cAP9lH4mAzcPivWU2YzjjjKdDQnuieoUA6RK+0d++MzaFxwEAsxwK5sOeNt5O
-yeWZot/H9Wz2BM/v71/uWH2P+Iz2cgU=
-=iG3h
------END PGP SIGNATURE-----
-
---TCV8Nel+ysraon/u--
