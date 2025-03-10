@@ -1,120 +1,104 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF81226D18;
-	Mon, 10 Mar 2025 11:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F64D28EA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604942; cv=none; b=mr3SiU9Mf0dKFt8bIrYMw7wA/NqU4eonC/v/7AWbfbbED9GLWxdsKzwYfUvgsJeHU1v15PtmzXxojv24Yblyd5tF0rj7+HGizsHxHDOuLmuTmvTHHb7OK3tWldlMkGDHa8KGs5ssgDNABekwlDuZpzrnEl3qBgvGe2Y3DXTG8Mc=
+	t=1741604999; cv=none; b=fIqZRcq7fNYJ9OaokNy62AEn1B6LYP8XqKYpJrFGWLaQLLPRg7roObO7U1gCc68stIaKVF7IIBFBKjA8i5ZtVqsJt2rfx4KkVEx4bBw6cvCFKEFFcdeIyGnjIrhgP5WwcO4msIowTttPo9UqKTRcjydeTUyRzdTbO9GsQoN0pdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604942; c=relaxed/simple;
-	bh=zyuUROdM8RYQHtdyR8GD86eCrfq6ILVcngJvYInm2Xw=;
+	s=arc-20240116; t=1741604999; c=relaxed/simple;
+	bh=QhZuDoyXPwU0zWzvdHsudE00w2M1x8BCuEsReSrGY+w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=un7AYdJc5uzj1ticRbQw7kaKLliaAHNnPspFwwMPEjwEhzjCorIhnons93XfHInCwA1AvtKjGXPSCB/5gDaXMicJkRlt438uySSKwqeIQ8uLla0uotSPDmJ3ElVl+Coq1QTSpGEDeAc9vBjGKoc7Vya2M8/gDuKfqPfScJOoBWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=j9RSy0HF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=H2LX02jpQ68H3Ma9FSLS8l6FWbj5EadSwvZU6dLPu6g4WN5Vj1VWevAdYwS1DMRQD1LKuWAZ4Ctjn5f28YNfgLAowGQEX3PeaRigpRHKzA+RtMmDyLC7R3ccQJhwiUhCtDW+5WmTUZHwdNKkgxjfo2LIChPJCdH2Zt+E8O3NCgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dmYZzL94; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="j9RSy0HF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3F0F740E0176;
-	Mon, 10 Mar 2025 11:08:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bKnyDEiQksym; Mon, 10 Mar 2025 11:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741604933; bh=YQAaINXv5w2Ci1rsU+w5Dx9VoI6ACjlMHpZFyp5XQpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j9RSy0HFlqKlxAbOMr3YapFNwd0xktOUTfuUieUpH6MtW5IEpR6cR9MQsuVUA10MQ
-	 BMkqTeprw9v+v8LpmvCbumr88U/SVTkkmsu2E5lHMU1CdRpsuUkXlILRbB2OxZIeuV
-	 xh26yU0kKBjyI/L7h6KnpKFwzlol/RnsVKBN+RoRu32An/FUAwISUKOHfK91g3RsaR
-	 nBeQ5LExjVwiyy7jsFwRRtehMnd65feMUitCSTix1X44V8AdXbYQqTt76GFDVVQj7A
-	 XvlDAfm//Ue4dd7L8syXz0vrdEr84Ags/4ZpbvJYol1aoi6ZdcFA+rUfhlc/5C3JlL
-	 b4AtwQiEOyYtpSQX/UUcwrdXqmO+7Cc3qkyorC/LiXr5ejYGnjynNeXHotd+V6G4mb
-	 WXwZZxG1DGyfgmwN5Pa9Vca0pFQPEAJdacKCByyzddVzKozzf4+7DscdfUUL+ER9Ew
-	 Quy8cd/rfSCsIjC41fSekVL3+7rKUkv87p8yQJ2FVgQNqkCGfXyzFZfx5UXjtVaGb4
-	 LVtLYIJZ+5Js1Bf62nhwBSA4HPWDnKzVEhlFKSpHvpQXc1ViSeZf7koIP4JXmPnKal
-	 weDhmzqF76Elfy/8XQC3C7254kuGX/6izP2uOk5inKJQ/UC1FDeNXzgnE8lpsr0xk9
-	 VrlRgAi2vTCUMebcF4Q5Cb/k=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dmYZzL94"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741604997;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wYm99ae64FxzvhRAPoRmkCAFFzyYHIuA7FzWt/K271Y=;
+	b=dmYZzL94qXbvV9aC9YbaLOJf9Zfrfo82ejDQzHCnvBZ7CwVH1KKUGZGiq3c1I3CskYA4xt
+	AkuDmJTWhV9RyQuJ1zsuRk2Z+FowRh0mKmseQyCMvHV4cuApf6s/wwIQ6qu//XdmYW2KEn
+	sUiIieSPQhFwaJcUT6VoU6j7IQnoecU=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-Xn0HdWn6P62amKN5gjJGeQ-1; Mon,
+ 10 Mar 2025 07:09:52 -0400
+X-MC-Unique: Xn0HdWn6P62amKN5gjJGeQ-1
+X-Mimecast-MFC-AGG-ID: Xn0HdWn6P62amKN5gjJGeQ_1741604990
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4CFC640E015D;
-	Mon, 10 Mar 2025 11:08:35 +0000 (UTC)
-Date: Mon, 10 Mar 2025 12:08:34 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>, linux-coco@lists.linux.dev,
-	Dionna Glaze <dionnaglaze@google.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC PATCH v2 1/6] x86/sev: add SVSM call macros for the vTPM
- protocol
-Message-ID: <20250310110834.GEZ87IMgB_I86-3u3l@fat_crate.local>
-References: <20250228170720.144739-1-sgarzare@redhat.com>
- <20250228170720.144739-2-sgarzare@redhat.com>
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F50518004A9;
+	Mon, 10 Mar 2025 11:09:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B0F6B19560AB;
+	Mon, 10 Mar 2025 11:09:47 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 10 Mar 2025 12:09:19 +0100 (CET)
+Date: Mon, 10 Mar 2025 12:09:15 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
+ full
+Message-ID: <20250310110914.GA26382@redhat.com>
+References: <20250304050644.2983-1-hdanton@sina.com>
+ <20250304102934.2999-1-hdanton@sina.com>
+ <20250304233501.3019-1-hdanton@sina.com>
+ <20250305045617.3038-1-hdanton@sina.com>
+ <20250305224648.3058-1-hdanton@sina.com>
+ <20250307060827.3083-1-hdanton@sina.com>
+ <20250307104654.3100-1-hdanton@sina.com>
+ <20250307112920.GB5963@redhat.com>
+ <20250307235645.3117-1-hdanton@sina.com>
+ <20250310104910.3232-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250228170720.144739-2-sgarzare@redhat.com>
+In-Reply-To: <20250310104910.3232-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Fri, Feb 28, 2025 at 06:07:15PM +0100, Stefano Garzarella wrote:
-> Add macros for SVSM_VTPM_QUERY and SVSM_VTPM_CMD calls as defined
-> in the "Secure VM Service Module for SEV-SNP Guests"
-> Publication # 58019 Revision: 1.00
-> 
-> Link: https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/58019.pdf
+On 03/10, Hillf Danton wrote:
+>
+> On Sun, 9 Mar 2025 18:02:55 +0100 Oleg Nesterov
+> >
+> > So (again, in this particular case) we could apply the patch below
+> > on top of Linus's tree.
+> >
+> > So, with or without these changes, the writer should be woken up at
+> > step-03 in your scenario.
+> >
+> Fine, before checking my scenario once more, feel free to pinpoint the
+> line number where writer is woken up, with the change below applied.
 
-Those URLs are unstable - simply naming the document properly in the commit
-message so that a search engine can find it is enough.
+    381          if (wake_writer)
+==> 382                  wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
+    383          if (wake_next_reader)
+    384                  wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+    385          kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+    386          if (ret > 0)
+    387                  file_accessed(filp);
+    388          return ret;
 
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  arch/x86/include/asm/sev.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-> index 1581246491b5..f6ebf4492606 100644
-> --- a/arch/x86/include/asm/sev.h
-> +++ b/arch/x86/include/asm/sev.h
-> @@ -384,6 +384,10 @@ struct svsm_call {
->  #define SVSM_ATTEST_SERVICES		0
->  #define SVSM_ATTEST_SINGLE_SERVICE	1
->  
-> +#define SVSM_VTPM_CALL(x)		((2ULL << 32) | (x))
-> +#define SVSM_VTPM_QUERY			0
-> +#define SVSM_VTPM_CMD			1
-> +
->  #ifdef CONFIG_AMD_MEM_ENCRYPT
->  
->  extern u8 snp_vmpl;
-> -- 
+line 382, no?
 
-Merge this patch with the patch where those are used - no need for a separate
-patch.
+Oleg.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
