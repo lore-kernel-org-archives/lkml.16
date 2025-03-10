@@ -1,123 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29118236A98
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 17:23:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670DB22D4C3;
+	Mon, 10 Mar 2025 17:24:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741627414; cv=none; b=U/IEmKgGssL0K4o7l5E341GFp2g0q+LYlwSgMyrRmphfwVn3p3uXHFkFZf8DCX0gApuvPhhSxX0/VJVV1NuQ/fgtWAkwzN4pxrZ6hwJN/5GxHY8EKZIVhgdvvDDmYo1pxPmYx7GU8pZ0Ky4ecUidEw+fcu2vNj3XzrzPT1HZm6E=
+	t=1741627445; cv=none; b=Htd19FjAioumAfa3x3Qe/4edY1LEKLZ34PRxUlF+m3UvJDUZzGvI54yU0MyxVT5e96qC5vdPqOH/IEmARjTrRkAhiDSYJjNiejdJlrU2DbAsEmxskLtYJJyf+VpV1wQcOy8PWJsEVL1K/gZpiath2S401DJkpEDMhXE2Jg6+4K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741627414; c=relaxed/simple;
-	bh=P3FkpaakjLXsflqPzPkcSxDHFwcvtfrO/BuhT1Vlk/c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qxUFztfYw9JOnirpH/pLeINQFAKjovHpiIy1BitgRqkUxY1qPxqLvFgkmzCF+6jQQdjkvntCG2xz0aXSsEeZxee2F9dPYY4Sp/3c+rZHOb9HpsE2E3f0K7DC6gbW3g8l8wI8MrH02FTrjnAj7q4yCGA+TzZrPa3s08blZE84N30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Set4HVYi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741627445; c=relaxed/simple;
+	bh=vgO6p1/iX1sD311S5rusvTmrKmd1302HPDYV0L8gTLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ov4Gve8DR9sbFvM3jfaalfulOAxlHbYcyBwwxCeJK2VbYYjv38EvB27pzxf26gAGQOMtoKEi6DhA0+eer0t2z2B00iStwtY1Of9dsQNMVE1ZW3mcuCL22ZgJma3k9rMEBBdXJl4/sN1OHiDVjbDGHtObxpQ6tp0P4/2kG8Dg2/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1feot6H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Set4HVYi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A8CC4CEF3;
-	Mon, 10 Mar 2025 17:23:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1feot6H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB3CDC4CEEC;
+	Mon, 10 Mar 2025 17:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741627414;
-	bh=P3FkpaakjLXsflqPzPkcSxDHFwcvtfrO/BuhT1Vlk/c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Set4HVYiJXagZv6AHBunmJA2YaxUOJNXk/xAV/vhDbFjpU1vNEeI+SBBALuj/M05i
-	 KURLdN1pNktQabof22sMSLvUlHkADTNX1hIHgdSslYYSh8X5MurEWENbg0as8amXZ8
-	 3j67efJT7/8ngHcGzDhAqL3JWDpqLWmrNa3eE93RbLgP3ZaGBOJN+U3MkkZUcfemAX
-	 j2w0y5eq4tpmZ16QqA+T7gOEJOtMnGL7tyQX/IHV0A4AE+tJiAxejseb4ofZt0hmKP
-	 64a4hJBNiaED6o2r144J+62wh3s3o/d4eb9OVTVKRL8Ck59jNEoJ81sBI1Qo/AZK4L
-	 t4BlhlGEzf4NQ==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	"Liam R. Howlett" <howlett@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 9/9] mm/madvise: remove !tlb support from madvise_{dontneed,free}_single_vma()
-Date: Mon, 10 Mar 2025 10:23:18 -0700
-Message-Id: <20250310172318.653630-10-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250310172318.653630-1-sj@kernel.org>
-References: <20250310172318.653630-1-sj@kernel.org>
+	s=k20201202; t=1741627445;
+	bh=vgO6p1/iX1sD311S5rusvTmrKmd1302HPDYV0L8gTLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y1feot6HnbgmPnB940s6mPSzWLFcChSAFfajbWD5XtQPef5Pzhn7WjFjkwcaeQfFB
+	 xZ5C4sRl5+f4ajBtt4r2SwQVRGFl1Z/2knI98Omnhw0YXhSnDXwCsSXdlf8fBiQqnL
+	 LCZcYeExaoJOdqx6IwSDm9OPMqJe3kGNh25KCcVkGpzP8vEByMZNezB0GHXmPUk9mN
+	 9DyIdmEljU1v402Yx6Ru+X2n8b1aKnpVci34v5Pp1jfSuPsIiRKUnQZpgKdX0GNxzT
+	 IMowtnowj0TFB2nPg5pOyeWu28ht2uZG4gLWhhG5LhXnooecW/ypAIPL8Hxb/qY2mn
+	 R2p4kVDr2kXwA==
+Date: Mon, 10 Mar 2025 10:24:03 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Stephan Mueller <smueller@chronox.de>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] crypto: fix dependencies on lib/crypto modules
+Message-ID: <20250310172403.GD1701@sol.localdomain>
+References: <20250310132647.3256818-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310132647.3256818-1-arnd@kernel.org>
 
-madvise_dontneed_single_vma() and madvise_free_single_vma() support both
-batched tlb flushes and unbatched tlb flushes use cases depending on
-received tlb parameter's value.  The supports were for safe and fine
-transition of the usages from the unbatched flushes to the batched ones.
-Now the transition is done, and therefore there is no real unbatched tlb
-flushes use case.  Remove the code for supporting the no more being used
-cases.
+On Mon, Mar 10, 2025 at 02:26:39PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The crypto subsystem helpers for chacha, poly1305 and curve25519 were
+> changed to select the 'INTERNAL' Kconfig symbols, but the code references
+> the generic implementation instead, which leads to a link failure when
+> nothing else selects it.
+> 
+> ld.lld-21: error: undefined symbol: chacha_crypt_generic
+> >>> referenced by chacha_generic.c
+> >>>               crypto/chacha_generic.o:(chacha_stream_xor) in archive vmlinux.a
+> 
+> ld.lld-21: error: undefined symbol: poly1305_final_generic
+> >>> referenced by poly1305_generic.c
+> >>>               crypto/poly1305_generic.o:(crypto_poly1305_final) in archive vmlinux.a
+> 
+> The INTERNAL version turns on the architecture specific optimized cipher,
+> which normally usually also enables the generic version, but this is not
+> the case on all architectures. Selecting only the GENERIC version here is
+> not sufficient since the architecture specific ones are now hidden symbols
+> and are only built when the INTERNAL symbol is also available.
+> 
+> Fixes: 17ec3e71ba79 ("crypto: lib/Kconfig - Hide arch options from user")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  crypto/Kconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index aac27a4668fd..76693e3edff8 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -317,6 +317,7 @@ config CRYPTO_ECRDSA
+>  config CRYPTO_CURVE25519
+>  	tristate "Curve25519"
+>  	select CRYPTO_KPP
+> +	select CRYPTO_LIB_CURVE25519_GENERIC
+>  	select CRYPTO_LIB_CURVE25519_INTERNAL
+>  	help
+>  	  Curve25519 elliptic curve (RFC7748)
+> @@ -615,6 +616,7 @@ config CRYPTO_ARC4
+>  
+>  config CRYPTO_CHACHA20
+>  	tristate "ChaCha"
+> +	select CRYPTO_LIB_CHACHA_GENERIC
+>  	select CRYPTO_LIB_CHACHA_INTERNAL
+>  	select CRYPTO_SKCIPHER
+>  	help
+> @@ -936,6 +938,7 @@ config CRYPTO_POLYVAL
+>  config CRYPTO_POLY1305
+>  	tristate "Poly1305"
+>  	select CRYPTO_HASH
+> +	select CRYPTO_LIB_POLY1305_GENERIC
+>  	select CRYPTO_LIB_POLY1305_INTERNAL
+>  	help
+>  	  Poly1305 authenticator algorithm (RFC7539)
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- mm/madvise.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+Looks the same as
+https://lore.kernel.org/linux-crypto/Z8UdUoaKtDKzgPph@gondor.apana.org.au/ which
+was already applied.
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index d5f4ce3041a4..25af0a24c00b 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -795,18 +795,11 @@ static const struct mm_walk_ops madvise_free_walk_ops = {
- };
- 
- static int madvise_free_single_vma(
--		struct mmu_gather *caller_tlb, struct vm_area_struct *vma,
-+		struct mmu_gather *tlb, struct vm_area_struct *vma,
- 		unsigned long start_addr, unsigned long end_addr)
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	struct mmu_notifier_range range;
--	struct mmu_gather self_tlb;
--	struct mmu_gather *tlb;
--
--	if (caller_tlb)
--		tlb = caller_tlb;
--	else
--		tlb = &self_tlb;
- 
- 	/* MADV_FREE works for only anon vma at the moment */
- 	if (!vma_is_anonymous(vma))
-@@ -822,8 +815,6 @@ static int madvise_free_single_vma(
- 				range.start, range.end);
- 
- 	lru_add_drain();
--	if (!caller_tlb)
--		tlb_gather_mmu(tlb, mm);
- 	update_hiwater_rss(mm);
- 
- 	mmu_notifier_invalidate_range_start(&range);
-@@ -832,9 +823,6 @@ static int madvise_free_single_vma(
- 			&madvise_free_walk_ops, tlb);
- 	tlb_end_vma(tlb, vma);
- 	mmu_notifier_invalidate_range_end(&range);
--	if (!caller_tlb)
--		tlb_finish_mmu(tlb);
--
- 	return 0;
- }
- 
-@@ -866,10 +854,7 @@ static long madvise_dontneed_single_vma(struct mmu_gather *tlb,
- 		.even_cows = true,
- 	};
- 
--	if (!tlb)
--		zap_page_range_single(vma, start, end - start, &details);
--	else
--		unmap_vma_single(tlb, vma, start, end - start, &details);
-+	unmap_vma_single(tlb, vma, start, end - start, &details);
- 	return 0;
- }
- 
--- 
-2.39.5
+- Eric
