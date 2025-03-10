@@ -1,269 +1,96 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDC411CBA;
-	Mon, 10 Mar 2025 15:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C2C22DFB0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741621194; cv=none; b=auQOZcjbjOJiUGCZNo5n06C0hSQQj/b3vONVzdskT6+tYIV4r9l9Hu6txDHK4Fq3Ep0hMAt/g31gBznXFJ6ytsbGgwJ2uvti2VhFpX0EFfNslWbfJZzblNxmSPfd1tDnxx+m1hIeSS39Ynln3zE8Yeid5NaHUvK2wr9nYsPUCc8=
+	t=1741621199; cv=none; b=uEYNmPmvzeCz6ioqso2HYn25toiDKYpyvGHStA11jS8OxoTDdGZsCSBT9fVnXqlwO9rv5hiWlynlS7N8UfNOWDvgxEP413nrXxYP4ps8xyJ4LydxMVqd6A1z2YASvH3YUzuR5zcml+WaQO7MzdFPU14grZlp5f8788NgYnv7szE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741621194; c=relaxed/simple;
-	bh=sf48gHTI2g1XhG0YpUhtLmKmMVnv4Y3V1rfNKy+WvL0=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hmVW6hacJUiTDxVUzL6mtQ3DVxYULIvkCkP084vpA94B40L9bfIL2+CH3lH8KSKftrK1TF+cJFkHIcBUUB+m0PWbpb+HhRzwYH8DD45q3pUWb+7ZJAhAr0qs4WIwXh0qZ8TsaXB2qFWasEMOaamuO8doBLjOGUyiK5Jm8WH2sOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=x7eIRHPa; arc=none smtp.client-ip=203.205.221.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1741621199; c=relaxed/simple;
+	bh=UgKyEekB99QTYNP4fJFy3O5FfG+351jcDbaPpf+tBa0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bMRFRjzscJxCiHVgppv2/OPLf0J6967fuO2dyiHI798b63zeAY4+dPrYbPXk/ow2KwX9OikrDhHflQdlIpjfNuneterdmpqBIpMdJYHYMMAjyfbVDjjCeVRf5LXVLJr2LZgB0b3+GTySvxdNYlZok5Ara9I3l279Son9hUwqlX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HUzdea+k; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="x7eIRHPa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1741620886;
-	bh=QD4BNC6L/gJ1g337KEtnyuP7OQgQm7c2Xf3mWHcS5dA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=x7eIRHPa7tjrn76zu/SduIeF/2tjupIAvQj6DL1s3awlfZprptXX3231LOzEp/2X+
-	 YofT77yuHUvAGepY4PizyBnUGqsHRb5m1IrhkXNoYqBXsYBqgGTw0QVgtCDeT2ASjV
-	 qnas55sr67opfLu3DlVdspzpxANXfqwDwM9/IYA0=
-Received: from chenyu5-mobl2 ([125.69.38.41])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 8A7A6EA5; Mon, 10 Mar 2025 23:34:39 +0800
-X-QQ-mid: xmsmtpt1741620879tgob8bak6
-Message-ID: <tencent_DD83D4AEAD7235546C9CC0C62CD189A6B607@qq.com>
-X-QQ-XMAILINFO: McFs54YitxxBSSrbZshezlPop2X5lsIPeKke4k5HxK2vwsXIsgILU//lzZ+g9e
-	 wVKHYtthKTjn3eY7vovBwQMc7uApmxOe5vwhpLIIQ1j/ceEMh6/v5tu8WUlslfIf9u+BJwjSXhlV
-	 Z8Oyfvv5lJqCN5f3tIn0nodIN4rIE2HP/pvmEiK53GRNQUTF0/CRllDf+I7GiWhQQvrP17YPku+p
-	 629q8onGAQCepi+B6ubNIPIQyOf0HOwIaqjLygJ1Vi5LbxTR+818+YnQrIVHiuYahSmkYyC5tY+3
-	 UvRPOZLBtvU2ZQqhmoQ2pHXeRyXmAClQVfNGAQHcSXLl/pqNj/DI62IzqM7GzX0H0GRZaeTKUSOh
-	 qwEXsrVmemxy/0QtFZ8BN9Ll/wViFGxRNUW/VVBS2IjltPhq71zPiep18QoN7OuMMKLDY0baDTkz
-	 qc41HuZUTGrzLlfgMe14l+0XMwOOybXSl+/N+c8nQXPsZmZvlcMkMAtRH/bZU2yZo2vR8efCJZHZ
-	 VSgitjyDhHGJrG/QSEhRFo6OKKJ7uoJ9sYv7h33rncHqPtA9/Eu5gDWyYs+efO3MrNzeW1LSAAPo
-	 pxAUvSl34n+D5OhkOzSxcq9USf2b8JPK4ZcfAycpYJ6MWgwh/fj1ahLNkDpIxW9jPn9fAMr1jTMk
-	 eV7bHhCtbk9ezqvKzTShpkUyZJOilCWYVEuOOZBvGEeBUV1JTNZCbKtpVTlIQzdvB6vqoBrXUO/F
-	 R1ex0vLnnE4tDmzuz52UIn8Pd80TVd35NzEIRDy/1+wGsrYaaa2CaAE3P1ZExWIqKSzxq9IutaRV
-	 75UBLPCMaIHF532CcOe9xVE8I3W/jqiSqUKUFefK2/fy/Y9LgfzyLN5BJQztgdvtHbk0HPEadtjX
-	 DEqB5yncAFF80IC+qWaFRNNizxGJljBGGnGruMiJ7RJMtdfKtQLRol06MbZe9aHW/CAhsOWI0xdX
-	 sSUa9YcC2zZ8vSCVKK9J7+Q05qPf4NzVwVw6/CLbRMB99OIXUIyIbZHTo/V7h7h5oSCIcI/m4=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-Date: Mon, 10 Mar 2025 23:36:10 +0800
-From: Chen Yu <yu.chen.surf@foxmail.com>
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Chen Yu <yu.c.chen@intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rik van Riel <riel@redhat.com>, Mel Gorman <mgorman@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>,
-	Michael Wang <yun.wang@linux.alibaba.com>,
-	Kaiyang Zhao <kaiyang2@cs.cmu.edu>,
-	David Rientjes <rientjes@google.com>,
-	Raghavendra K T <raghavendra.kt@amd.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/3] sched/numa: Introduce per cgroup numa balance
- control
-X-OQ-MSGID: <Z88G6tILI6h5InqM@chenyu5-mobl2>
-References: <cover.1740483690.git.yu.c.chen@intel.com>
- <b3f1f6c478127a38b9091a8341374ba160d25c5a.1740483690.git.yu.c.chen@intel.com>
- <0d1cc457c6a97178fc68880957757f3c27088f53.camel@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HUzdea+k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741621196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UgKyEekB99QTYNP4fJFy3O5FfG+351jcDbaPpf+tBa0=;
+	b=HUzdea+k2XvkE9S/Kpypm/eOYCJ3+o/33S7Sk3wcdOVXSeweApipfNCI2m/OlB1l5rq7FD
+	0bVjBdB2WibxxgF8TMQQxuu0JQahx/5PD38qAmAO0TVbGNUyztUXH17YgNl8klUh9Uo0Li
+	DuN9nn0h+lO5uew3aoji/z0yNvkIvgs=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-76-AbeWwQj2N1-ut-WOrM7fEQ-1; Mon, 10 Mar 2025 11:39:55 -0400
+X-MC-Unique: AbeWwQj2N1-ut-WOrM7fEQ-1
+X-Mimecast-MFC-AGG-ID: AbeWwQj2N1-ut-WOrM7fEQ_1741621194
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-5495a1c0be4so2503049e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:39:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741621193; x=1742225993;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UgKyEekB99QTYNP4fJFy3O5FfG+351jcDbaPpf+tBa0=;
+        b=lF9Qw5lfELdzfVdkx1Ptk0IKl1RWFgCTJTfrwHk422btMWvq0g+KTqoXDNhjLTgwCE
+         mxF+YD+IXnNuLpgyhBpLPZRprg/8+e9w3CBHF8doB69GCTqX01QLLDJBSuCMcJy9f86a
+         kYogWoHO43FzWYLrpAK1J8vkk3Kmsz1z9mmEUWTJ1ZQNW3BA4SghTPgftwzvDHtL8SIA
+         Hu13ym6MqCVxqFkxdcMeLPqMyWIVZZGtTX4gJZVWsOLp+VPiv9aW4q6M25MJVqt8cORX
+         BSdnFehR+9G7dvZ0zMitIkEHxacduyoaGGgtsqwtyk4TLWeDUV6BUoQ4KwxuyExwcqQS
+         Xs/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUro0YcwsLW3NFTB6IBebTMD3Cwk7/qYdlR86/kOzb1OGT/dM49lHHqMQCxNJOHwKLYFi6Drm0aSSVJggk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2Oj7Oq1+jBKPI2JNramZsOOPoqrybA/DTPqm46nxbLh/VZHT5
+	wplKqS5mON2hGCOwdpT2ddVumoiqLFuhWmWqY3MZIzgjv3oxcgOSM0tJqOwmr/KVsRrE4iNjkyS
+	Z/o6qYBvNSvtXjm5zn5apuCMWh611C0qav9MQxvKPAxIeq7dgeZ7VUVs6keMNFYkmjRumQXPM8w
+	oHkJm8xWJb/3Mi9gFnFiEevyIrPG3xJ7fVaXVk
+X-Gm-Gg: ASbGncvfoJRRDXH+4grGiZSSj/1f+2tEiqsjyxnXA4f95QT/lqLjhISsDCxdHEzz5HB
+	TD941KYlMKNguBUgiFW4MDz4aJdx/YYppZIeNUi7sjyo42vYAjmFrcyTJjnQCySqKzgn76xWD
+X-Received: by 2002:a05:6512:1242:b0:549:905c:c3b9 with SMTP id 2adb3069b0e04-54990e27382mr4079654e87.9.1741621192633;
+        Mon, 10 Mar 2025 08:39:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8r6MosJU6bCJ7fTaIje1/2x6BKstRJc7xapTbeccshOaGXSyueQIe9iWTKagYPOWCFUMq4FUPddHh5u9bO0s=
+X-Received: by 2002:a05:6512:1242:b0:549:905c:c3b9 with SMTP id
+ 2adb3069b0e04-54990e27382mr4079607e87.9.1741621190775; Mon, 10 Mar 2025
+ 08:39:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d1cc457c6a97178fc68880957757f3c27088f53.camel@linux.intel.com>
+References: <20250309172215.21777-2-vdronov@redhat.com> <c21c89d29f006945b6be7624599809b36574530e.camel@intel.com>
+ <Z86l9WiiP_4bFC8q@gmail.com> <d91942f7782fe1e1f1491de86d60bb14b2d5e781.camel@intel.com>
+In-Reply-To: <d91942f7782fe1e1f1491de86d60bb14b2d5e781.camel@intel.com>
+From: Vladis Dronov <vdronov@redhat.com>
+Date: Mon, 10 Mar 2025 16:39:39 +0100
+X-Gm-Features: AQ5f1JppX7aB_ARebLW62l8EsNs6FyfTqyQsbqGxChoyav7O61KfV8THxwKV9Zo
+Message-ID: <CAMusb+RJh-xvuFkNJoeVY_28W5_GR0pn+=gw3hLzi4rhdAKaXg@mail.gmail.com>
+Subject: Re: [PATCH -v3] x86/sgx: Warn explicitly if X86_FEATURE_SGX_LC is not enabled
+To: "Huang, Kai" <kai.huang@intel.com>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"jarkko@kernel.org" <jarkko@kernel.org>
+Cc: "mingo@kernel.org" <mingo@kernel.org>, 
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-03-07 at 14:54:10 -0800, Tim Chen wrote:
-> On Tue, 2025-02-25 at 22:00 +0800, Chen Yu wrote:
-> > [Problem Statement]
-> > Currently, NUMA balancing is configured system-wide. However,
-> > 
-> > 
-> > A simple example to show how to use per-cgroup Numa balancing:
-> > 
-> > Step1
-> > //switch to global per cgroup Numa balancing,
-> > //All cgroup's Numa balance is disabled by default.
-> > echo 4 > /proc/sys/kernel/numa_balancing
-> > 
-> 
-> Can you add documentation of this additional feature
-> for numa_balancing in
-> admin-guide/sysctl/kernel.rst
->
+Hi, Jarkko, Kai,
 
-OK, will refine in next version.
- 
-> Should you make NUMA_BALANCING_NORMAL and NUMA_BALANCING_CGROUP
-> mutually exclusive in? In other words
-> echo 5 > /proc/sys/kernel/numa_balancing should result in numa_balancing to be 1?
-> 
-> Otherwise tg_numa_balance_enabled() can return 0 with NUMA_BALANCING_CGROUP
-> bit turned on even though you have NUMA_BALANCING_NORMAL bit on.
->
+Thanks a ton for your suggestions and edits!
 
-I see, will fix tg_numa_balance_enabled() in next version, thanks!
+Hi, Ingo,
 
-Best,
-Chenyu
- 
-> Tim
-> > 
-> > Suggested-by: Tim Chen <tim.c.chen@intel.com>
-> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > ---
-> >  include/linux/sched/sysctl.h |  1 +
-> >  kernel/sched/core.c          | 32 ++++++++++++++++++++++++++++++++
-> >  kernel/sched/fair.c          | 18 ++++++++++++++++++
-> >  kernel/sched/sched.h         |  3 +++
-> >  mm/mprotect.c                |  5 +++--
-> >  5 files changed, 57 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> > index 5a64582b086b..1e4d5a9ddb26 100644
-> > --- a/include/linux/sched/sysctl.h
-> > +++ b/include/linux/sched/sysctl.h
-> > @@ -22,6 +22,7 @@ enum sched_tunable_scaling {
-> >  #define NUMA_BALANCING_DISABLED		0x0
-> >  #define NUMA_BALANCING_NORMAL		0x1
-> >  #define NUMA_BALANCING_MEMORY_TIERING	0x2
-> > +#define NUMA_BALANCING_CGROUP		0x4
-> >  
-> >  #ifdef CONFIG_NUMA_BALANCING
-> >  extern int sysctl_numa_balancing_mode;
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 44efc725054a..f4f048b3da68 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -10023,6 +10023,31 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
-> >  }
-> >  #endif
-> >  
-> > +#ifdef CONFIG_NUMA_BALANCING
-> > +static DEFINE_MUTEX(numa_balance_mutex);
-> > +static int numa_balance_write_u64(struct cgroup_subsys_state *css,
-> > +				  struct cftype *cftype, u64 enable)
-> > +{
-> > +	struct task_group *tg;
-> > +	int ret;
-> > +
-> > +	guard(mutex)(&numa_balance_mutex);
-> > +	tg = css_tg(css);
-> > +	if (tg->nlb_enabled == enable)
-> > +		return 0;
-> > +
-> > +	tg->nlb_enabled = enable;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static u64 numa_balance_read_u64(struct cgroup_subsys_state *css,
-> > +				 struct cftype *cft)
-> > +{
-> > +	return css_tg(css)->nlb_enabled;
-> > +}
-> > +#endif /* CONFIG_NUMA_BALANCING */
-> > +
-> >  static struct cftype cpu_files[] = {
-> >  #ifdef CONFIG_GROUP_SCHED_WEIGHT
-> >  	{
-> > @@ -10071,6 +10096,13 @@ static struct cftype cpu_files[] = {
-> >  		.seq_show = cpu_uclamp_max_show,
-> >  		.write = cpu_uclamp_max_write,
-> >  	},
-> > +#endif
-> > +#ifdef CONFIG_NUMA_BALANCING
-> > +	{
-> > +		.name = "numa_load_balance",
-> > +		.read_u64 = numa_balance_read_u64,
-> > +		.write_u64 = numa_balance_write_u64,
-> > +	},
-> >  #endif
-> >  	{ }	/* terminate */
-> >  };
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 1c0ef435a7aa..526cb33b007c 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -3146,6 +3146,18 @@ void task_numa_free(struct task_struct *p, bool final)
-> >  	}
-> >  }
-> >  
-> > +/* return true if the task group has enabled the numa balance */
-> > +static bool tg_numa_balance_enabled(struct task_struct *p)
-> > +{
-> > +	struct task_group *tg = task_group(p);
-> > +
-> > +	if (tg && (sysctl_numa_balancing_mode & NUMA_BALANCING_CGROUP) &&
-> > +	    !tg->nlb_enabled)
-> > +		return false;
-> > +
-> > +	return true;
-> > +}
-> > +
-> >  /*
-> >   * Got a PROT_NONE fault for a page on @node.
-> >   */
-> > @@ -3174,6 +3186,9 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
-> >  	     !cpupid_valid(last_cpupid)))
-> >  		return;
-> >  
-> > +	if (!tg_numa_balance_enabled(p))
-> > +		return;
-> > +
-> >  	/* Allocate buffer to track faults on a per-node basis */
-> >  	if (unlikely(!p->numa_faults)) {
-> >  		int size = sizeof(*p->numa_faults) *
-> > @@ -3596,6 +3611,9 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
-> >  	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
-> >  		return;
-> >  
-> > +	if (!tg_numa_balance_enabled(curr))
-> > +		return;
-> > +
-> >  	/*
-> >  	 * Using runtime rather than walltime has the dual advantage that
-> >  	 * we (mostly) drive the selection from busy threads and that the
-> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> > index 38e0e323dda2..9f478fb2c03a 100644
-> > --- a/kernel/sched/sched.h
-> > +++ b/kernel/sched/sched.h
-> > @@ -491,6 +491,9 @@ struct task_group {
-> >  	/* Effective clamp values used for a task group */
-> >  	struct uclamp_se	uclamp[UCLAMP_CNT];
-> >  #endif
-> > +#ifdef CONFIG_NUMA_BALANCING
-> > +	u64			nlb_enabled;
-> > +#endif
-> >  
-> >  };
-> >  
-> > diff --git a/mm/mprotect.c b/mm/mprotect.c
-> > index 516b1d847e2c..ddaaf20ef94c 100644
-> > --- a/mm/mprotect.c
-> > +++ b/mm/mprotect.c
-> > @@ -155,10 +155,11 @@ static long change_pte_range(struct mmu_gather *tlb,
-> >  				toptier = node_is_toptier(nid);
-> >  
-> >  				/*
-> > -				 * Skip scanning top tier node if normal numa
-> > +				 * Skip scanning top tier node if normal/cgroup numa
-> >  				 * balancing is disabled
-> >  				 */
-> > -				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
-> > +				if (!(sysctl_numa_balancing_mode &
-> > +				    (NUMA_BALANCING_CGROUP | NUMA_BALANCING_NORMAL)) &&
-> >  				    toptier)
-> >  					continue;
-> >  				if (folio_use_access_time(folio))
-> 
+Thank you many tons for your help and attention to this small
+patch and a TIP submission! I wasn't expecting such an...
+immediate response to my small suggestion, honestly.
+
+Best regards,
+Vladis
 
