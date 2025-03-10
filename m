@@ -1,335 +1,202 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7517222F19;
-	Mon, 10 Mar 2025 04:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3628B29A0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 04:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741582336; cv=none; b=OM6cWFE1T9Zl0HdCkcSwzzW1pOmPEF6QMLuDrxbl5RJr/d67unDuiXwWbHcBSmu78EGlzcy9ZWxVdE8VBWoGF9x5hIQHiva2ZU5uoXK6JsfDSdz+E4DtEvTxXLCp0wmicyytKBjFBKVPv+MKp4XAMshDyQcALnKGzVSA0lHxK6s=
+	t=1741582484; cv=none; b=bOZMtca2IsJCtg7zVGLo7OUUoRytkR93USoBcD9J5eRR9XdEHPdR+Sc/naIxaVhe3zahXl6ADKMY8oRRi6oB7dHtUL4cZr8BuNyvs3AoIsfPoHy+gGwPc+q1lyQU0r2EbfYoobEntJ6miCtzd8VnTxFbkZz4U7GlqFQiU5DsW4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741582336; c=relaxed/simple;
-	bh=c2Kb6GBTy1FNaZha5z5DlQW5jEUjKvvg42tkxZoyw/c=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=JMRCQMZi5+9b9XjqwUURNi77Idw7DLsl6FK0bU3JQHDrO7HBhbPLljSK4jitcF7lTDSsjpBU3YUnLFJJy6BQ9Gw3Xdydtzvx+BKUlIcKxshoPBQmk7CutnnyHzAA7cIeH4yRCSH8aZg71r8J/6LHIfe9l8gukFuRypVstZeN9PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWj4s5Tg; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741582484; c=relaxed/simple;
+	bh=Ej3GMGlHpVfzanKsBYzCcPizoBxxPLk+vmAC5dehH98=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dI6B7ZpZiJQrjjGOs7lPGfYWp0HbfKh2TFSsDXgDkohxRU/CMvJrccjjh9usfdIAemNPMQV9vbzaKAzd1nOHJa3Zflv13l7BNVgKt3a/Cc5CId2dDlpwstYHhp8AvlO6wuErEZT5U0X53Bu2+rIjDH5TThwrxJ6FKa/355LDI+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YxsUKWEC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWj4s5Tg"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22401f4d35aso65216405ad.2;
-        Sun, 09 Mar 2025 21:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741582334; x=1742187134; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hPZPoRjcyOE0kbrctulab7lfdybsIPALCBgsQ7KETJ4=;
-        b=RWj4s5TgimPwEt1z/LIzS1fFKm1EMm2XWGhrEDgxENm0SPFsbqtQTxIKZxeofhWfdh
-         IE+E+s03wDU8pi2yXTGUrGKg90Bkh6oGXhM3yZpwv3ArtjQ1NWjAwV1GdiBCgJtVMJ0l
-         ByAjsnVjnJMuGejrv6ZN78YLxVXmJCNXjMIv1YF5KJJqg6mjvytl8h0Gtlk/IkLSdmpG
-         AEYpmlxvoZOwih744Rkbvrxb5MHdo7db50h1I8zUjw3yj9wdK9VIr3Y76ZT8MA2wPoR1
-         tLVltlLCvUxyd4aYvafYUVEAjyFalNE3AK+pX1uCqypauan61K6ZN13xIq+ufNlmGdA2
-         3vnw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YxsUKWEC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741582481;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EbceALFOAXDwlrKk6BKJ6uMiVvCY64LvSE/YeKmsmrM=;
+	b=YxsUKWECTRhfU2usd9ltQifPHNpEJsS3pXRXWP5ezzKBSeTOA1YTPgQ6pxhVzp1LXlSs5n
+	ZbFN7lEPl6HC+9+rHVY1LxE3iaYhJiXxmUaAdaEuqYutbglBSqb6KGOfVDNuzkS8FoxHAY
+	lhfUWkqbOaRi/PX7q+H6PakRQinnUzQ=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-584-PGah6oQxMWyvi-Lre9z07Q-1; Mon, 10 Mar 2025 00:54:39 -0400
+X-MC-Unique: PGah6oQxMWyvi-Lre9z07Q-1
+X-Mimecast-MFC-AGG-ID: PGah6oQxMWyvi-Lre9z07Q_1741582479
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff798e8c93so5411553a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Mar 2025 21:54:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741582334; x=1742187134;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hPZPoRjcyOE0kbrctulab7lfdybsIPALCBgsQ7KETJ4=;
-        b=j4PXDdE2eCDHIxw8az8IlKnzP+tqDQ9T21B8j6QKEU3UrcObDsYkxzBcJXrS4mbk7j
-         /C7eRqFK0N4umLJrxw2AjIzkN7wu5RjHbBQi9ZTpMbo3Tqse0QrPWhT1w1M3geio1gfR
-         U9zi7rO4Z7VGzGtkySfwic6i7NxcXXY43nGOHs8GWNioEy0OpLZ8Dmrk2odqmx3RcCqh
-         HbxtONJpwub7e7MsllYyfVPjXUNXY3nfqZiVWPlf5Qsx1jhxOGqtvkB1797v60eONpxG
-         p4R3PlrpCUmS1LDTadODWv9TX+CrE2vLeFPwprMIGiOw6fHI7+aBEnCZO5Y8O64gvDkn
-         cdIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXRD/H1zTbgynWhoPLde6THxIFC/C3mArXFrLYct4hXwkqS+dMcMN4qdxC1P8PxXULcuKAvZyUjRGJwmH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQbWITBEQ12LtXqqYW8ra+TJFUNWOvoJkF42HeMcRSiaJYsLCp
-	8nnNKDbN8Pim92niMfyX6PHi68rXbf39UtF04I18/zZSqqDwcUBI
-X-Gm-Gg: ASbGncu53JRAEfNSgCpaBSHxbdT40GMgD4WkG1v97lKcGm+3n3XomzHwvNJU7Y6chiL
-	Xo0qgQ163Fx1VMUOaee/YWKfs49Uul+2pIorbng4UWV++dkEOAGcBmzKXyP/lW8zONwna0bpmCB
-	Hr77+0QQ0mtjfeYdFgVbQX+eVY+I9U6K/lTZBmOQPttdfTGqVCT2amufkZEiM/vqVqSFFQDh1Po
-	xkE8Y/NfmPqOLM9GO3ZRdj39TnE78Oyf2zrlKaAPb0b6fdgVeHa9NK9J8q+rTMXWKy+e4B7FqyI
-	2SN6I5V1gD+XzHFk56y9LDrmUZ9/xsuPeQ4=
-X-Google-Smtp-Source: AGHT+IFRtkC/DBfRCvqYBXy5Q8Qy7y8OJI4ja/YusGuNdRdfzfjhOo4bdDCGs3xuzorPAKe2zbXwhQ==
-X-Received: by 2002:a05:6a21:6e4c:b0:1f5:790c:947 with SMTP id adf61e73a8af0-1f5790c0c79mr4641673637.19.1741582333458;
-        Sun, 09 Mar 2025 21:52:13 -0700 (PDT)
-Received: from dw-tp ([129.41.58.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736d47f9da3sm1502444b3a.137.2025.03.09.21.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 21:52:12 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>, linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>
-Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if journal is destroying
-In-Reply-To: <Z82EjcExRMc8nz2v@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-Date: Mon, 10 Mar 2025 10:13:36 +0530
-Message-ID: <871pv5cx6v.fsf@gmail.com>
-References: <cover.1741270780.git.ojaswin@linux.ibm.com> <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com> <87ldtfhmo7.fsf@gmail.com> <Z8xAmyICsNlln4Y3@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com> <87ecz7hcw0.fsf@gmail.com> <Z8xbLrdN3L1E50-G@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com> <87cyergyb1.fsf@gmail.com> <Z82EjcExRMc8nz2v@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+        d=1e100.net; s=20230601; t=1741582479; x=1742187279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EbceALFOAXDwlrKk6BKJ6uMiVvCY64LvSE/YeKmsmrM=;
+        b=rO6jXYmMf47IThkaE9y0An7NPxVfBnOXDrVy3GCIa9fNKUwwv8yCkNp88CFqGJbltk
+         znwVFKS7D4rNnIh5u1iXse8mwvGZxhodiLURDY9WsOEwzoGGQOVdDxieUBq+W9j1itjg
+         JnPmqdldQXCzqP0diq4CRd//cQGWwBCSHIxkja09SI1gDXT4G/qML0qYPLXIxO2U5LVK
+         XwOjSTWUbkRIoFV+vA4nk4Mo81lUucX3iFbCmGW88Nb+tZRo+PK3syKn+hJJgnJg12A2
+         XZ46Tvi9OsT3CeugIgeg3QiWli+4/nzdG8+0Vk4RuiUf6boi62KiaP+9EOB9EcaW/84p
+         LZPw==
+X-Forwarded-Encrypted: i=1; AJvYcCW88gkWi2ytJUSjSsvNSCeDQX38RztwWuQzHANRgqIfDMfLA0SPFijKTL2wbe7JxhCcm+kcoUDDAg1vHpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA4M3Meu0OCj2E/n2t4guN4s3+N+jxw/vnFBDtArrd5RiUIcE2
+	9l0Vs/XJWhzwq/1IWXkTsOxojjVco6x8NcWf0VEN+uv0KEGSCXLOAOxlHsdzaVRD4J1cBY8+gZM
+	sG4xzV+ki3rBMKO+lpnhsoFnpEatPMYVabF7a0FPDzVSj9TtnMr5ml6f1hN7rlFAlRz2XvWTGPU
+	s6BR02jF2etH9yBhxy7EAflEdUprJu82ItHakj
+X-Gm-Gg: ASbGncutDN5kGwJHC9Bxi8mJkL7P7j/hT7G4ffVLLXB9JC9cL6KO29ACvBVg0d8oV3C
+	hH8Q1+xmkzdu8mBl8jhztq//gyqNtVTj/7C40663YTzyOEaguNZbYk71njcgYIiMxAeVJDnYeLQ
+	==
+X-Received: by 2002:a17:90b:17c3:b0:2ff:784b:ffe with SMTP id 98e67ed59e1d1-2ff7ce8361fmr20103671a91.11.1741582478659;
+        Sun, 09 Mar 2025 21:54:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOy4wkubfdY4rmjE4nVYH3EzfIy63HlIimFfPmtjEVryCYR1AfKHQgA7u4tps+tBzTrdofki7L500MLPtq6VE=
+X-Received: by 2002:a17:90b:17c3:b0:2ff:784b:ffe with SMTP id
+ 98e67ed59e1d1-2ff7ce8361fmr20103635a91.11.1741582478041; Sun, 09 Mar 2025
+ 21:54:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250302143259.1221569-1-lulu@redhat.com> <20250302143259.1221569-9-lulu@redhat.com>
+ <CACGkMEv7WdOds0D+QtfMSW86TNMAbjcdKvO1x623sLANkE5jig@mail.gmail.com> <20250303122619-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20250303122619-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 10 Mar 2025 12:54:26 +0800
+X-Gm-Features: AQ5f1Jp343rEJyx66YRk5WfInd8kOaRENHB4oOZ_ZHycTTo0oYdMS29y7Ll8IMo
+Message-ID: <CACGkMEtheNa905789WT20=p84HN9-B6=K7XA8dpB6=jJV0kh-g@mail.gmail.com>
+Subject: Re: [PATCH v7 8/8] vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Cindy Lu <lulu@redhat.com>, michael.christie@oracle.com, sgarzare@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
-
-> On Sun, Mar 09, 2025 at 12:11:22AM +0530, Ritesh Harjani wrote:
->> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
->> 
->> > On Sat, Mar 08, 2025 at 06:56:23PM +0530, Ritesh Harjani wrote:
->> >> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
->> >> 
->> >> > On Sat, Mar 08, 2025 at 03:25:04PM +0530, Ritesh Harjani (IBM) wrote:
->> >> >> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
->> >> >> 
->> >> >> > Presently we always BUG_ON if trying to start a transaction on a journal marked
->> >> >> > with JBD2_UNMOUNT, since this should never happen. However, while ltp running
->> >> >> > stress tests, it was observed that in case of some error handling paths, it is
->> >> >> > possible for update_super_work to start a transaction after the journal is
->> >> >> > destroyed eg:
->> >> >> >
->> >> >> > (umount)
->> >> >> > ext4_kill_sb
->> >> >> >   kill_block_super
->> >> >> >     generic_shutdown_super
->> >> >> >       sync_filesystem /* commits all txns */
->> >> >> >       evict_inodes
->> >> >> >         /* might start a new txn */
->> >> >> >       ext4_put_super
->> >> >> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
->> >> >> >         jbd2_journal_destroy
->> >> >> >           journal_kill_thread
->> >> >> >             journal->j_flags |= JBD2_UNMOUNT;
->> >> >> >           jbd2_journal_commit_transaction
->> >> >> >             jbd2_journal_get_descriptor_buffer
->> >> >> >               jbd2_journal_bmap
->> >> >> >                 ext4_journal_bmap
->> >> >> >                   ext4_map_blocks
->> >> >> >                     ...
->> >> >> >                     ext4_inode_error
->> >> >> >                       ext4_handle_error
->> >> >> >                         schedule_work(&sbi->s_sb_upd_work)
->> >> >> >
->> >> >> >                                                /* work queue kicks in */
->> >> >> >                                                update_super_work
->> >> >> >                                                  jbd2_journal_start
->> >> >> >                                                    start_this_handle
->> >> >> >                                                      BUG_ON(journal->j_flags &
->> >> >> >                                                             JBD2_UNMOUNT)
->> >> >> >
->> >> >> > Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
->> >> >> > destroying only do a journaled (and deferred) update of sb if this flag is not
->> >> >> > set. Otherwise, just fallback to an un-journaled commit.
->> >> >> >
->> >> >> > We set sbi->s_journal_destroying = true only after all the FS updates are done
->> >> >> > during ext4_put_super() (except a running transaction that will get commited
->> >> >> > during jbd2_journal_destroy()). After this point, it is safe to commit the sb
->> >> >> > outside the journal as it won't race with a journaled update (refer
->> >> >> > 2d01ddc86606).
->> >> >> >
->> >> >> > Also, we don't need a similar check in ext4_grp_locked_error since it is only
->> >> >> > called from mballoc and AFAICT it would be always valid to schedule work here.
->> >> >> >
->> >> >> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
->> >> >> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
->> >> >> > Suggested-by: Jan Kara <jack@suse.cz>
->> >> >> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
->> >> >> > ---
->> >> >> >  fs/ext4/ext4.h      | 2 ++
->> >> >> >  fs/ext4/ext4_jbd2.h | 8 ++++++++
->> >> >> >  fs/ext4/super.c     | 4 +++-
->> >> >> >  3 files changed, 13 insertions(+), 1 deletion(-)
->> >> >> >
->> >> >> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
->> >> >> > index 2b7d781bfcad..d48e93bd5690 100644
->> >> >> > --- a/fs/ext4/ext4.h
->> >> >> > +++ b/fs/ext4/ext4.h
->> >> >> > @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
->> >> >> >  	 */
->> >> >> >  	struct work_struct s_sb_upd_work;
->> >> >> >  
->> >> >> > +	bool s_journal_destorying;
->> >> >> > +
->> >> >> >  	/* Atomic write unit values in bytes */
->> >> >> >  	unsigned int s_awu_min;
->> >> >> >  	unsigned int s_awu_max;
->> >> >> > diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
->> >> >> > index 9b3c9df02a39..6bd3ca84410d 100644
->> >> >> > --- a/fs/ext4/ext4_jbd2.h
->> >> >> > +++ b/fs/ext4/ext4_jbd2.h
->> >> >> > @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
->> >> >> >  {
->> >> >> >  	int err = 0;
->> >> >> >  
->> >> >> > +	/*
->> >> >> > +	 * At this point all pending FS updates should be done except a possible
->> >> >> > +	 * running transaction (which will commit in jbd2_journal_destroy). It
->> >> >> > +	 * is now safe for any new errors to directly commit superblock rather
->> >> >> > +	 * than going via journal.
->> >> >> > +	 */
->> >> >> > +	sbi->s_journal_destorying = true;
->> >> >> 
->> >> >> This is not correct right. I think what we decided to set this flag
->> >> >> before we flush the workqueue. So that we don't schedule any new
->> >> >> work after this flag has been set. At least that is what I understood.
->> >> >> 
->> >> >> [1]: https://lore.kernel.org/all/87eczc6rlt.fsf@gmail.com/
->> >> >> 
->> >> >> -ritesh
->> >> >
->> >> > Hey Ritesh,
->> >> >
->> >> > Yes that is not correct, I missed that in my patch however we realised
->> >> > that adding it before flush_work() also has issues [1]. More
->> >> > specifically:
->> >> 
->> >> Ohk. right. 
->> >> 
->> >> >
->> >> >                      **kjournald2**
->> >> >                      jbd2_journal_commit_transaction()
->> >> >                      ...
->> >> >                      ext4_handle_error()
->> >> >                         /* s_journal_destorying is not set */
->> >> >                         if (journal && !s_journal_destorying)
->> >> 
->> >> Then maybe we should not schedule another work to update the superblock
->> >> via journalling, it the error itself occurred while were trying to
->> >> commit the journal txn? 
->> >> 
->> >> 
->> >> -ritesh
->> >
->> > Hmm, ideally yes that should not happen, but how can we achieve that?
->> > For example with the trace we saw:
->> >
->> >    **kjournald2**
->> >    jbd2_journal_commit_transaction()
->> >      jbd2_journal_get_descriptor_buffer
->> >        jbd2_journal_bmap
->> >          ext4_journal_bmap
->> >            ext4_map_blocks
->> >              ...
->> >              ext4_inode_error
->> >                ext4_handle_error
->> >                  schedule_work(&sbi->s_sb_upd_work)
->> >
->> > How do we tell ext4_handle_error that it is in the context of a
->> > committing txn.
->> 
->> So even if we identify that the current
->> jbd2_journal_commit_transaction() is coming from kjournald2(), that is
->> sufficient right? Because the only other place where we call
->> jbd2_journal_commit_transaction() is jbd2_journal_destroy() and that
->> happens after we can set few things from ext4_put_super() and flush work
->> is completed, correct? 
->> 
->> 
->> > We can't pass down an argument all the way down 
->> > cause that is not feasible. An sb level flag will also not work
->> > I think. Any thoughts on this?
->> 
->> I was thinking if we should have a per task flag? Something like
->> PF_KJOURNALD?  (Similar to how we have PF_KSWAPD or PF_KCOMPACTD)? This
->> can help us identify if we are a kjournald2() kthread.
->> 
->> That will help prevent scheduling another work item to start a new
->> transaction in case an error occurs while committing the currently
->> running transaction. Correct?
+On Tue, Mar 4, 2025 at 1:33=E2=80=AFAM Michael S. Tsirkin <mst@redhat.com> =
+wrote:
 >
-> Yes, I like this approach. I think this will also help us avoid the
-> extra checks in ext4_journal_destroy() since the journal will no longer
-> schecule work for updating the sb. Hence we can be sure that after the
-> final flush_work() noone will try to schedule more work or start a new
-> transaction.
+> On Mon, Mar 03, 2025 at 01:52:06PM +0800, Jason Wang wrote:
+> > On Sun, Mar 2, 2025 at 10:34=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrot=
+e:
+> > >
+> > > Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
+> > > to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
+> > > When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
+> > > is disabled, and any attempt to use it will result in failure.
+> > >
+> > > Signed-off-by: Cindy Lu <lulu@redhat.com>
+> > > ---
+> > >  drivers/vhost/Kconfig | 15 +++++++++++++++
+> > >  drivers/vhost/vhost.c | 11 +++++++++++
+> > >  2 files changed, 26 insertions(+)
+> > >
+> > > diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+> > > index b455d9ab6f3d..e5b9dcbf31b6 100644
+> > > --- a/drivers/vhost/Kconfig
+> > > +++ b/drivers/vhost/Kconfig
+> > > @@ -95,3 +95,18 @@ config VHOST_CROSS_ENDIAN_LEGACY
+> > >           If unsure, say "N".
+> > >
+> > >  endif
+> > > +
+> > > +config VHOST_ENABLE_FORK_OWNER_IOCTL
+> > > +       bool "Enable IOCTL VHOST_FORK_FROM_OWNER"
+> > > +       default n
+> > > +       help
+> > > +         This option enables the IOCTL VHOST_FORK_FROM_OWNER, which =
+allows
+> > > +         userspace applications to modify the thread mode for vhost =
+devices.
+> > > +
+> > > +          By default, `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL` is set =
+to `n`,
+> > > +          meaning the ioctl is disabled and any operation using this=
+ ioctl
+> > > +          will fail.
+> > > +          When the configuration is enabled (y), the ioctl becomes
+> > > +          available, allowing users to set the mode if needed.
+> > > +
+> > > +         If unsure, say "N".
+> > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > > index fb0c7fb43f78..09e5e44dc516 100644
+> > > --- a/drivers/vhost/vhost.c
+> > > +++ b/drivers/vhost/vhost.c
+> > > @@ -2294,6 +2294,8 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsig=
+ned int ioctl, void __user *argp)
+> > >                 r =3D vhost_dev_set_owner(d);
+> > >                 goto done;
+> > >         }
+> > > +
+> > > +#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL
+> > >         if (ioctl =3D=3D VHOST_FORK_FROM_OWNER) {
+> > >                 u8 inherit_owner;
+> > >                 /*inherit_owner can only be modified before owner is =
+set*/
+> > > @@ -2313,6 +2315,15 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsi=
+gned int ioctl, void __user *argp)
+> > >                 r =3D 0;
+> > >                 goto done;
+> > >         }
+> > > +
+> > > +#else
+> > > +       if (ioctl =3D=3D VHOST_FORK_FROM_OWNER) {
+> > > +               /* When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is 'n', =
+return error */
+> > > +               r =3D -ENOTTY;
+> > > +               goto done;
+> > > +       }
 >
-> I'll try to spin up a poc and test it. Does seem like we are out of flags in 
-> task struct though.
+> why do we need this? won't it fail as any other unsupported ioctl?
 >
-> Regards,
-> ojaswin
+> > > +#endif
+> > > +
+> > >         /* You must be the owner to do anything else */
+> > >         r =3D vhost_dev_check_owner(d);
+> > >         if (r)
+> > > --
+> > > 2.45.0
+> >
+> > Do we need to change the default value of the inhert_owner? For example=
+:
+> >
+> > #ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL
+> > inherit_owner =3D false;
+> > #else
+> > inherit_onwer =3D true;
+> > #endif
+> >
+> > ?
 >
->> 
->> Now I don't know if we have any free bit available in current->flags. If
->> not shall we use current->journal_info pointer to have 0th bit as a
->> flag? Basically override current->journal_info to also store a flag.  We
->> can create a wrapper to get the journal_info from current by masking
->> this flag bit and use it to dereference journal_info.
+> I feel it is best to keep the default consistent.
+
+Just want to make sure we are on the same page.
+
+For "default", did you mean inherit_owner =3D false which is consistent
+with behaviour without the vhost task?
+
+Or inherit_onwer =3D true, then the new ioctl to make it false is
+useless. And if legacy applications want kthread behaviour it needs to
+be patched which seems self-contradictory.
+
+> All the kconfig should do, is block the ioctl.
 >
-> Hmm so journal_info will be holding a kernel address of the handle. Is
-> it possible to have it share a flag as well? I thought the address would
-> utilize the full 64bits?
 
-
-What I meant here was - 
-In general I assume we should be able to play some tricks with a pointer
-which at least should be 4 byte aligned. So we can save some flag bits in
-the lower bits of a pointer.  For e.g. check struct address_space &
-PAGE_MAPPING_FLAGS. There maybe few other examples too.
-
-
--ritesh
-
+Thanks
 
 >
-> Regards,
-> ojaswin
+> > Other patches look good to me.
+> >
+> > Thanks
+> >
+> > >
 >
->> 
->> But before going down that road, it's better to know what others think?
->> 
->> -ritesh
->> 
->> 
->> >
->> > regards,
->> > ojaswin
->> >
->> >> 
->> >> 
->> >> >   ext4_put_super()
->> >> >     sbi->s_journal_destorying = true;
->> >> >     flush_work(&sbi->s_sb_upd_work)
->> >> >                                       schedule_work()
->> >> >     jbd2_journal_destroy()
->> >> >      journal->j_flags |= JBD2_UNMOUNT;
->> >> >
->> >> >                                         jbd2_journal_start()
->> >> >                                          start_this_handle()
->> >> >                                            BUG_ON(JBD2_UNMOUNT)
->> >> >
->> >> > So the right thing to do seems to be that we need to force a journal
->> >> > commit before the final flush as well. [1] Has more info on this and
->> >> > some followup discussion as well.
->> >> >
->> >> > [1] https://lore.kernel.org/all/cover.1741270780.git.ojaswin@linux.ibm.com/T/#mc8046d47b357665bdbd2878c91e51eb660f94b3e
->> >> >
->> >> > Regards,
->> >> > ojaswin
->> >> >> 
->> >> >> 
->> >> >> > +
->> >> >> >  	err = jbd2_journal_destroy(journal);
->> >> >> >  	sbi->s_journal = NULL;
->> >> >> >  
->> >> >> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
->> >> >> > index 8ad664d47806..31552cf0519a 100644
->> >> >> > --- a/fs/ext4/super.c
->> >> >> > +++ b/fs/ext4/super.c
->> >> >> > @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
->> >> >> >  		 * constraints, it may not be safe to do it right here so we
->> >> >> >  		 * defer superblock flushing to a workqueue.
->> >> >> >  		 */
->> >> >> > -		if (continue_fs && journal)
->> >> >> > +		if (continue_fs && journal && !EXT4_SB(sb)->s_journal_destorying)
->> >> >> >  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
->> >> >> >  		else
->> >> >> >  			ext4_commit_super(sb);
->> >> >> > @@ -5311,6 +5311,8 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
->> >> >> >  	spin_lock_init(&sbi->s_error_lock);
->> >> >> >  	INIT_WORK(&sbi->s_sb_upd_work, update_super_work);
->> >> >> >  
->> >> >> > +	sbi->s_journal_destorying = false;
->> >> >> > +
->> >> >> >  	err = ext4_group_desc_init(sb, es, logical_sb_block, &first_not_zeroed);
->> >> >> >  	if (err)
->> >> >> >  		goto failed_mount3;
->> >> >> > -- 
->> >> >> > 2.48.1
+
