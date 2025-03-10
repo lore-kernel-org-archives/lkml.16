@@ -1,106 +1,107 @@
-Received: from air.basealt.ru (air.basealt.ru [193.43.8.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0412236F4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.43.8.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD182248A4
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741597507; cv=none; b=gxxfCC+DPFkqbpggZ4VUJYVcMe03C/FLHfjB7SqLrWi4fR7oEhvMH33Af4irz5ifLkFIiDUuOQfloWXkK0qQ7pUgTvXO+LrRisfTzr+PwHlrICOtAoecQ6MIg7IPs0uP6fiMvkdtafIpBYwvBwKTs0xCCqhnVqQ6sQPeTD2eYpQ=
+	t=1741597520; cv=none; b=HDAU2rVznjV/z7Y5ywccstlR8IJJmJyXgjoyNRomPyBLemKK1A5Rj52V+qRCG8sHo/uG4GYt1Pjsdk7qGuRfGuqKKJKqO0WCIYL7WiWef9kOR2XraEPyE536+lcNMIcTBNPgT+NHUXMhwWaSKkzd3xYNyWL/jCe87/5yeJ+rFFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741597507; c=relaxed/simple;
-	bh=w3BR6QPDy9hnL6s+qjUkpTKXrUYFLvXNgLVLn6KL2M4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tIIv4xuLZsYmThp/o7ymGUzuWwBRpMYEhsrV/7EN6MwFz1m0AuRZzFX4SZd1wdJKf2xxn+wCVxEqHkt38yL5GT+4MG1OvHzjXjG0iHBPKINOBgmxsmzrxgft32xAkY5g3a1xzr8eTxipK/sFP3SNh3OAYVCFfDZXAlO9fVha8MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=193.43.8.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
-	(Authenticated sender: kovalevvv)
-	by air.basealt.ru (Postfix) with ESMTPSA id C5D8123374;
-	Mon, 10 Mar 2025 11:56:02 +0300 (MSK)
-From: Vasiliy Kovalev <kovalev@altlinux.org>
-To: Dave Kleikamp <shaggy@kernel.org>,
-	Edward Adam Davis <eadavis@qq.com>,
-	Rand Deeb <rand.sec96@gmail.com>,
-	jfs-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: lvc-project@linuxtesting.org,
-	kovalev@altlinux.org
-Subject: [PATCH] jfs: validate AG parameters in dbMount() to prevent crashes
-Date: Mon, 10 Mar 2025 11:56:02 +0300
-Message-Id: <20250310085602.953206-1-kovalev@altlinux.org>
-X-Mailer: git-send-email 2.33.8
+	s=arc-20240116; t=1741597520; c=relaxed/simple;
+	bh=H9aOs02SWLngIIsgj7aqOszYNTxcOhjqxOo2HstY74s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AW+rEP42HdpSZbXZZrmyUN46hxer5NIgDTneNN8GfxRO/+HPfOGRLC3raeusON6By+NcYySqjpoWgt3BHz1IaEiS1n6ew+vS3NN9EThJTmfjloaLfawVyd9om35qS+j4vNP6JwiWCXxa5GU5DsOrXzKcD6bVAT908RrOyP+85y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNPsVcXQ; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNPsVcXQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741597519; x=1773133519;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H9aOs02SWLngIIsgj7aqOszYNTxcOhjqxOo2HstY74s=;
+  b=hNPsVcXQe2xudNSr0AFSGzhm+uVQIPaePWi5N1fW6Z18AP3Civ8oN3ND
+   yPxxgxDKI4QTgRgzA0z9ruTA4gBKPjazaGGFQGlDRWMc76TyCOQ7GHod3
+   ineUoqcTCQ4g1TZi67aZWINkTeHEYRdvscg+QXdMNXASzJMYmiD1MUr3D
+   nsZYxI/LnmrcF7NJ/fzJ2plUTcUT5t2DlcudExOazeAVSooPheIgFhyqH
+   bfs6ayhw60rNGiruyALRPvBQDyB0+CEnRbMwMfNal3uT7Eo1BLB0ct2l7
+   5Ehd2J3yYSOgceq3HmxOj6IJQgGQKmeiHGDdGFpxEPIDaLnyshpbfqfzI
+   A==;
+X-CSE-ConnectionGUID: OhGm3AZJTmaCqHK7Flifrg==
+X-CSE-MsgGUID: NWYhuMISS5WtuTpaFlBfig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="53222277"
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="53222277"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 02:05:19 -0700
+X-CSE-ConnectionGUID: uqIzASqnTs+E+NJozEbXxw==
+X-CSE-MsgGUID: TW0nVdEzR9SOfmZS0hTRgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="120642449"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 02:05:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1trZ4T-00000001CMU-3nZO;
+	Mon, 10 Mar 2025 11:05:13 +0200
+Date: Mon, 10 Mar 2025 11:05:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Christophe Leroy <christophe.leroy@c-s.fr>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, nnac123@linux.ibm.com,
+	horms@kernel.org
+Subject: Re: [PATCH v2 1/1] lib: Optimise hex_dump_to_buffer()
+Message-ID: <Z86rSd88eSiJxV-M@smile.fi.intel.com>
+References: <20250308093421.3724-1-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250308093421.3724-1-david.laight.linux@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Validate db_agheight, db_agwidth, and db_agstart in dbMount to catch
-corrupted metadata early and avoid undefined behavior in dbAllocAG.
-Limits are derived from L2LPERCTL, LPERCTL/MAXAG, and CTLTREESIZE:
+On Sat, Mar 08, 2025 at 09:34:21AM +0000, David Laight wrote:
+> Fastpath the normal case of single byte output that fits in the buffer.
+> Output byte groups (byteswapped on little-endian) without calling snprintf().
+> Remove the restriction that rowsize must be 16 or 32.
+> (All callers currently pass 16 or 32.)
+> Remove the restriction that groupsize must be 8 or less.
+> If groupsize isn't a power of 2 or doesn't divide into both len and
+>   rowsize it is set to 1 (otherwise byteswapping is hard).
+> Change the types of the rowsize and groupsize parameters to be unsigned types.
+> 
+> Fix the return value (should be zero) when both len and linebuflen are zero.
+> 
+> All the updated tests in lib/test_hexdump.c pass.
+> Code size (x86-64) approximately halved.
 
-- agheight: 0 to L2LPERCTL/2 (0 to 5) ensures shift
-  (L2LPERCTL - 2*agheight) >= 0.
-- agwidth: 1 to min(LPERCTL/MAXAG, 2^(L2LPERCTL - 2*agheight))
-  ensures agperlev >= 1.
-  - Ranges: 1-8 (agheight 0-3), 1-4 (agheight 4), 1 (agheight 5).
-  - LPERCTL/MAXAG = 1024/128 = 8 limits leaves per AG;
-    2^(10 - 2*agheight) prevents division to 0.
-- agstart: 0 to CTLTREESIZE-1 - agwidth*(MAXAG-1) keeps ti within
-  stree (size 1365).
-  - Ranges: 0-1237 (agwidth 1), 0-348 (agwidth 8).
+...
 
-UBSAN: shift-out-of-bounds in fs/jfs/jfs_dmap.c:1400:9
-shift exponent -335544310 is negative
-CPU: 0 UID: 0 PID: 5822 Comm: syz-executor130 Not tainted 6.14.0-rc5-syzkaller #0
-Hardware name: Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
- dbAllocAG+0x1087/0x10b0 fs/jfs/jfs_dmap.c:1400
- dbDiscardAG+0x352/0xa20 fs/jfs/jfs_dmap.c:1613
- jfs_ioc_trim+0x45a/0x6b0 fs/jfs/jfs_discard.c:105
- jfs_ioctl+0x2cd/0x3e0 fs/jfs/ioctl.c:131
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> -extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
+> -			      int groupsize, char *linebuf, size_t linebuflen,
+> -			      bool ascii);
+> +extern size_t hex_dump_to_buffer(const void *buf, size_t len, size_t rowsize,
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+Why is extern still here?
 
-Cc: stable@vger.kernel.org
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+fe8264911355151c487f@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=fe8264911355151c487f
-Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
----
- fs/jfs/jfs_dmap.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> +				 size_t groupsize, char *linebuf,
+> +				 size_t linebuflen, bool ascii);
 
-diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
-index 26e89d0c69b61..cfb21f15f5971 100644
---- a/fs/jfs/jfs_dmap.c
-+++ b/fs/jfs/jfs_dmap.c
-@@ -194,7 +194,11 @@ int dbMount(struct inode *ipbmap)
- 	    !bmp->db_numag || (bmp->db_numag > MAXAG) ||
- 	    (bmp->db_maxag >= MAXAG) || (bmp->db_maxag < 0) ||
- 	    (bmp->db_agpref >= MAXAG) || (bmp->db_agpref < 0) ||
--	    !bmp->db_agwidth ||
-+	    bmp->db_agheight < 0 || bmp->db_agheight > (L2LPERCTL >> 1) ||
-+	    bmp->db_agwidth < 1 || bmp->db_agwidth > (LPERCTL / MAXAG) ||
-+	    bmp->db_agwidth > (1 << (L2LPERCTL - (bmp->db_agheight << 1))) ||
-+	    bmp->db_agstart < 0 || bmp->db_agstart >
-+	    (CTLTREESIZE - 1 - bmp->db_agwidth * (MAXAG - 1)) ||
- 	    (bmp->db_agl2size > L2MAXL2SIZE - L2MAXAG) ||
- 	    (bmp->db_agl2size < 0) ||
- 	    ((bmp->db_mapsize - 1) >> bmp->db_agl2size) > MAXAG) {
+int - > size_t in the returned value is incorrect change.
+This is explained in the comments to the test cases patch series.
+
 -- 
-2.42.2
+With Best Regards,
+Andy Shevchenko
+
 
