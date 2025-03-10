@@ -1,177 +1,183 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85780220697
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233AD21E092
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741606612; cv=none; b=Smjh45/v2wLS6iI1ANzu1cxgnVJCtwBLV7uKY2l+8MQH7hWW0zWCxkcC96KieOC+ZBXT8dP+kLf/iu2gMAYPWwnTqhd5qmPO67aApgIPnhPCQ771uGxFswk5SOx5Vvxhsl2eRmnaujNYM2DXgh1YjZqPwKLRvNE6ao2UA8Znf98=
+	t=1741606651; cv=none; b=GZzoRfB63y2IL0N+n7JrNrgHLrraHGPgL28Bu0s7wGRfou0a+h6Za1uhqc9xYyF+sKr5mY9OAt3kcbWRMtkr6ZQ/5f3OhehzsSDMGQtMRLdV+ALoxhtxGVSEPWbU2E765+bOJgXNQJ7ux1ZcD6BUee2cqaRiwdmjgOd6vw4kCAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741606612; c=relaxed/simple;
-	bh=JaApZ7d/+Ggz2krnVT3vjrpaonIRlghHFizWVFRNLkQ=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=hZjYu3cHdOjVeDdwtWVo3/4KObTtsMpRHrxMw1ss6W6Wml1CJLzYZZ+vxJ9wfnuPx7NExWa7WbOBhFNb+AuE+BeZqpDrdtt9IZnW1mjnWwLkv8Aqdl1zRzACs3KnwobumHeDVLdv95A/lwf+6z2jo69AlvTwUagW46JyIjqsIN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JfCtcZ40; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741606651; c=relaxed/simple;
+	bh=DMs/TAlP3Os2nxZau3ARmh/n4V/08GFKW/xi2WtQBSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d4carXBFIYHDbxe2YTNbLdwLoIo1NVCcLe7uq/8UkVG9PCCc9fn2S8ur/Q7gFjUzx6ZKgI5MN/6px29kR+7hdAXzaIkOF33nv/kFL0OyjRjPbahKx5F+w/Vn3PN+hXFqnh3808dmv/IULJnx5NhAhcimypcYMyGb/PyrXtDZ2Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xcNZI6Pk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=k4MRRiFZ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xcNZI6Pk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=k4MRRiFZ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JfCtcZ40"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xcNZI6Pk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="k4MRRiFZ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xcNZI6Pk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="k4MRRiFZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0CF721F38C;
+	Mon, 10 Mar 2025 11:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741606646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PfW0icj+R9uq3V3PyovxRXcxaOTH8rdLWSIUiTmY8c0=;
+	b=xcNZI6Pk6vvaINpdGf5jo7J4jmr2mj+lwY9UyB/3nEOjoMU+AhkU35JnFa0BPVsFfLPcWS
+	+sn0XLx4Z2aqnwEHjvHKx+1NnS9J/qyASd0SjBVh0p6QKZti64sA8uoU6tWP7CtJ9EEMeE
+	J/drOe0g4JU4nLpHWAkaKrIF/HSFrSo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741606646;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PfW0icj+R9uq3V3PyovxRXcxaOTH8rdLWSIUiTmY8c0=;
+	b=k4MRRiFZkZwWAGpJwFbr/uxf8Virpg/n2xQLkPc81RUTZEs9PUGXN0SkqSYDbP2Ci3w0eT
+	0nQvFQZut0mW7HCg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=xcNZI6Pk;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=k4MRRiFZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741606646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PfW0icj+R9uq3V3PyovxRXcxaOTH8rdLWSIUiTmY8c0=;
+	b=xcNZI6Pk6vvaINpdGf5jo7J4jmr2mj+lwY9UyB/3nEOjoMU+AhkU35JnFa0BPVsFfLPcWS
+	+sn0XLx4Z2aqnwEHjvHKx+1NnS9J/qyASd0SjBVh0p6QKZti64sA8uoU6tWP7CtJ9EEMeE
+	J/drOe0g4JU4nLpHWAkaKrIF/HSFrSo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741606646;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PfW0icj+R9uq3V3PyovxRXcxaOTH8rdLWSIUiTmY8c0=;
+	b=k4MRRiFZkZwWAGpJwFbr/uxf8Virpg/n2xQLkPc81RUTZEs9PUGXN0SkqSYDbP2Ci3w0eT
+	0nQvFQZut0mW7HCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DFE211399F;
+	Mon, 10 Mar 2025 11:37:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id G3j/NfXOzmdLfwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 10 Mar 2025 11:37:25 +0000
+Message-ID: <03b53f18-8c16-4716-8ed4-1902d7247354@suse.cz>
+Date: Mon, 10 Mar 2025 12:37:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741606607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oLn3thOLc+VOfKHEltzpNOv/oUESIWK0aGZgVBXpS9g=;
-	b=JfCtcZ40G8NAGBVTYfKtZMCkqctg29fSlsTpEKq0K19h1yqX9qJAQSBSXkrtqusCPMPCmR
-	M4kbtzO/BR1Azsg8Y/n42rgEcUZNono4emHKB0bj4EkSBKGBRoComjlNFEgwYo4LbbvNGZ
-	dJZrZIFA/MyzEHs2Wmxv29knOKuC7Hg=
-Date: Mon, 10 Mar 2025 11:36:44 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <78ee737400721758fa67b4f285e8ba61dc6b893b@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v2 1/3] bpf, sockmap: avoid using sk_socket
- after free
-To: "Michal Luczaj" <mhal@rbox.co>, xiyou.wangcong@gmail.com,
- john.fastabend@gmail.com, jakub@cloudflare.com, martin.lau@linux.dev
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, andrii@kernel.org,
- eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org, daniel@iogearbox.net,
- song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org,
- sgarzare@redhat.com, netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- mrpre@163.com, cong.wang@bytedance.com,
- syzbot+dd90a702f518e0eac072@syzkaller.appspotmail.com
-In-Reply-To: <baeca627-e6f1-4d0a-aea5-fa31689edc4d@rbox.co>
-References: <20250228055106.58071-1-jiayuan.chen@linux.dev>
- <20250228055106.58071-2-jiayuan.chen@linux.dev>
- <baeca627-e6f1-4d0a-aea5-fa31689edc4d@rbox.co>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/page_alloc: Fix memory accept before watermarks gets
+ initialized
+Content-Language: en-US
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ linux-mm@kvack.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Farrah Chen <farrah.chen@intel.com>
+References: <20250310082855.2587122-1-kirill.shutemov@linux.intel.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250310082855.2587122-1-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 0CF721F38C
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-March 7, 2025 at 5:45 PM, "Michal Luczaj" <mhal@rbox.co> wrote:
+On 3/10/25 09:28, Kirill A. Shutemov wrote:
+> Watermarks are initialized during the postcore initcall. Until then, all
+> watermarks are set to zero. This causes cond_accept_memory() to
+> incorrectly skip memory acceptance because a watermark of 0 is always
+> met.
 
->=20
->=20On 2/28/25 06:51, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> ...
-> >=20
->=20>  static void sk_psock_verdict_data_ready(struct sock *sk)
-> >=20
->=20>  {
-> >=20
->=20>  - struct socket *sock =3D sk->sk_socket;
-> >=20
->=20>  + struct socket *sock;
-> >=20
->=20>  const struct proto_ops *ops;
-> >=20
->=20>  int copied;
-> >=20
->=20>=20=20
->=20>=20
->=20>  trace_sk_data_ready(sk);
-> >=20
->=20>=20=20
->=20>=20
->=20>  + /* We need RCU to prevent the sk_socket from being released.
-> >=20
->=20>  + * Especially for Unix sockets, we are currently in the process
-> >=20
->=20>  + * context and do not have RCU protection.
-> >=20
->=20>  + */
-> >=20
->=20>  + rcu_read_lock();
-> >=20
->=20>  + sock =3D sk->sk_socket;
-> >=20
->=20>  if (unlikely(!sock))
-> >=20
->=20>  - return;
-> >=20
->=20>  + goto unlock;
-> >=20
->=20>  +
-> >=20
->=20>  ops =3D READ_ONCE(sock->ops);
-> >=20
->=20>  if (!ops || !ops->read_skb)
-> >=20
->=20>  - return;
-> >=20
->=20>  + goto unlock;
-> >=20
->=20>  +
-> >=20
->=20>  copied =3D ops->read_skb(sk, sk_psock_verdict_recv);
-> >=20
->=20>  if (copied >=3D 0) {
-> >=20
->=20>  struct sk_psock *psock;
-> >=20
->=20>=20=20
->=20>=20
->=20>  - rcu_read_lock();
-> >=20
->=20>  psock =3D sk_psock(sk);
-> >=20
->=20>  if (psock)
-> >=20
->=20>  sk_psock_data_ready(sk, psock);
-> >=20
->=20>  - rcu_read_unlock();
-> >=20
->=20>  }
-> >=20
->=20>  +unlock:
-> >=20
->=20>  + rcu_read_unlock();
-> >=20
->=20>  }
-> >=20
->=20
-> Hi,
->=20
->=20Doesn't sk_psock_handle_skb() (!ingress path) have the same `struct s=
-ocket`
->=20
->=20release race issue? Any plans on fixing that one, too?
+What are the user-visible consequences of that?
 
-Yes, the send path logic also has similar issues, and after some hacking,
-I was able to reproduce it. Thanks for providing this information.
-I can fix these together in the next revision of this patchset, anyway,
-this patchset still needs further confirmation from the maintainer.
+> To ensure progress, accept one MAX_ORDER page if the watermark is zero.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reported-and-tested-by: Farrah Chen <farrah.chen@intel.com>
 
->=20
->=20BTW, lockdep (CONFIG_LOCKDEP=3Dy) complains about calling AF_UNIX's
->=20
->=20read_skb() under RCU read lock.
->=20
->=20Thanks,
->=20
->=20Michal
->
-My environment also has LOCKDEP enabled, but I didn't see similar
-warnings.
-Moreover, RCU assertions are typically written as:
+Fixes:, Cc: stable etc?
 
-WARN_ON_ONCE(!rcu_read_lock_held())
+> ---
+>  mm/page_alloc.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 579789600a3c..4fe93029bcb6 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -7004,7 +7004,7 @@ static inline bool has_unaccepted_memory(void)
+>  
+>  static bool cond_accept_memory(struct zone *zone, unsigned int order)
+>  {
+> -	long to_accept;
+> +	long to_accept, wmark;
+>  	bool ret = false;
+>  
+>  	if (!has_unaccepted_memory())
+> @@ -7013,8 +7013,18 @@ static bool cond_accept_memory(struct zone *zone, unsigned int order)
+>  	if (list_empty(&zone->unaccepted_pages))
+>  		return false;
+>  
+> +	wmark = promo_wmark_pages(zone);
+> +
+> +	/*
+> +	 * Watermarks have not been initialized yet.
+> +	 *
+> +	 * Accepting one MAX_ORDER page to ensure progress.
+> +	 */
+> +	if (!wmark)
+> +		return try_to_accept_memory_one(zone);
+> +
+>  	/* How much to accept to get to promo watermark? */
+> -	to_accept = promo_wmark_pages(zone) -
+> +	to_accept = wmark -
+>  		    (zone_page_state(zone, NR_FREE_PAGES) -
+>  		    __zone_watermark_unusable_free(zone, order, 0) -
+>  		    zone_page_state(zone, NR_UNACCEPTED));
 
-And when LOCKDEP is not enabled, rcu_read_lock_held() defaults to
-returning 1. So, it's unlikely to trigger a warning due to an RCU lock
-being held.
-
-Could you provide more of the call stack?
-
-Thanks.
