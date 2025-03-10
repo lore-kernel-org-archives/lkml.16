@@ -1,144 +1,111 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52131CAA6C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 20:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4BE1B87F0;
+	Mon, 10 Mar 2025 20:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741638582; cv=none; b=TxBTA0LWqMr6xy7GL45OTt/MFEdTK+OIoV6eMIhxHGO+79YeYwmll5hXG97i3HFydoAKd8s6ve+0TMmEoDOxbiQrAfA4ZpHBU5HsgxBCO5mMOPu+C0q6iCAGGCdPA0YM+/zNg+38Cc4OXl16ktc6XwX5TMqutXMZ+SkpiOuSiu0=
+	t=1741638708; cv=none; b=n8nxyCOnRqxYAK3LtTIdAjJSfp4U99CgwFdbs3+MJ54+TG52FWcr2bNTij24X/XOfXd9p3Hocq2yHpY9OrFGclgxusLlXmqEWPcVQ1Gk1meo6VsH9Uol3UA0StbRIxA3yoda4qkpJIPaW3JrKx3r9HYFUtZVILHPLY86HTzndQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741638582; c=relaxed/simple;
-	bh=hWy1NNmb+wDtSIi4PW/nVnogw+nRN5uXUX33xLXpMkM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nw39Sj4aGkiBLx7hYkoxP8/nOFNHtZCD8vTVls9crJFYkr457YAH+YViGZQVla8sR8T+aJUMRJZ/KsGbgJv9BiZRzAJ6rVeuQO3gBF/CDbkevta7vkG+przzDJxjBrP0pa3vMmMYbP4mXBNP9G1ZuAtirvtY8S/K+9v4QqGHltU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=VCkHgt/J; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1741638708; c=relaxed/simple;
+	bh=wqwG90EKh+JKAewBGlOY847BC5tTSk1WR1QSUCMgTLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaltsOMoZeGsTi6NK47EhkXXWNpopQyZWnS4QxIW6nKQEHrKstlf0p/isrFWFCdF5DWVHsMDOwF2tT8SFEZ93O10GDWLz+Mhhe0Mt6HjM0UZaAbCp3JibxKCKP9Vx+WAJfi+Qgh6wd99/itLDp3lKL8bv6iKbKsbfAxEb2fR/ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIfiwtrA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="VCkHgt/J"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6fd8be1e534so43849567b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1741638579; x=1742243379; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tDUgfGNw9ICwKZepnDkVTHAQdOKERWg4DcwDZnus3D8=;
-        b=VCkHgt/JZaaPTIXA8KjXEbI/hOwbz0aOVcm/oBCsfOFjj6uJr0x5WBJDnoWAsMMxvO
-         Exp+6wdYV9OaAKx9zo6vTBRZEKbonGGANBBFg0IWysKG7StkZfwI6dLqzKp75MmiKb+j
-         KW4aq4+WJZeX9+pqCPAx9T/KelJWUbF/2OGOnnC19dNeNQegA5WMs6cqrbndgbfiaZpi
-         FWDovvyZQvAOiC3FVMW0UbRTGJF9YNGCxX7VMkh3JlNhl9eacFHYVkjtAfbgo1t1g2Go
-         IyuG3jXM8xPopjWsa/DN9XwtNNtmHscFyFgt7wbyELF2ZwI741u8ak0+gJVjIz/M9cys
-         f5sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741638579; x=1742243379;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tDUgfGNw9ICwKZepnDkVTHAQdOKERWg4DcwDZnus3D8=;
-        b=VQK/Sp71id09IiId22Prp5tH/0weCnZ2zwQjYeNIfZ0g/lN5ouNQGhs12h1VGQTbxO
-         FXaW39qb+AXiU1OsATRHYngwLkjfX4mqmaDKE4Bo3CwJL2o3GRs1vS0jV/0klaJMMrzS
-         vN3Qt8ti9S5mReUIN1njW7aOKp+TSIfyKbNj1l9BqjsjS4q3eA9hp51NyyAAF2enUm7a
-         KvJw0Pnpgp9C86NGVktGxjlhHLTYNWm4H+7SD/WW011OKiIPg99/QmOzc4VHi7oE64FT
-         LJTeqtKDdJQfA3k7Jpi8Lncl14HaLQW9mrgo0pHsqHhG85z24psCN32/ZuF3q7kNYHfH
-         3Btw==
-X-Gm-Message-State: AOJu0YwIzrMPGZ/OlWF6tROkyJ2zQhvQTPhAQ9DofaBH/pInfW8P7i6G
-	RV7q+GbzFnFbJtjEZFsus4tKVh/9EvN3ykQNmIJqhNBGzxXEoZrhBAb8Rk21p21dQq4zIrK54u4
-	JWKmGGIWqbnOhRgXf0zWC6r+SKOWtqk5srWvr
-X-Gm-Gg: ASbGncs4oT8FdiNsIsyYi4j8Sqlhkj/pNQY/K9gfwAojEfuFdth2uNIGfnx1RAX0qc8
-	WhivdGISch4PUGWvVWDJ3YourBvg5eGaAc3w/ZmhT+oRybIo7wVGFAmpDIvcRgB1hnTMHhP35UJ
-	GXmmXfXuykuktXGjD5eYlxu0O3iRxS6I2caLJM
-X-Google-Smtp-Source: AGHT+IHo9iy1GNgVzKJMJvK8t10zpvURWG53DXUjC0ljR28U670/ZoBhoVEa4msK2fl4fpIGkvkg9EPXy5FjpxcyQvg=
-X-Received: by 2002:a05:690c:25c9:b0:6fb:5498:70fa with SMTP id
- 00721157ae682-6febf2fc84dmr218686397b3.18.1741638579693; Mon, 10 Mar 2025
- 13:29:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIfiwtrA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 226F6C4CEE5;
+	Mon, 10 Mar 2025 20:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741638707;
+	bh=wqwG90EKh+JKAewBGlOY847BC5tTSk1WR1QSUCMgTLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jIfiwtrANyeJ1aGfVsu8tw3mw+yLe4+oCX9AQZWFi0DiBq0etpJQcEKN31WmMGMnr
+	 br7WUKzs0M9HICWd0IXxIKxsi1S1wSQvuXznwwhKjR5V9R9j4cHyW+8gfpv6yY2fCU
+	 sHV3cj7osTZthJUbEQd2guV8OqV8wGahwoT+u5T5ELqzDote4ShqzcgoHFIHivkFW9
+	 irfYuZSjOWqWRYikGC7zPWRP63quWIGjyCDdvTk21qkglGHktgsa1jMTGDQ3hKwulJ
+	 gIxd+EW0P6ZyshmtqwASQ6OB/NpcpoS/kc51t+YKSnl5tCq7jiWaTEchHW/VhYYjyB
+	 Xqq5QhQxD5n8g==
+Date: Mon, 10 Mar 2025 17:31:44 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	James Clark <james.clark@linaro.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: Re: [PATCH v2 02/11] perf evlist: Add success path to
+ evlist__create_syswide_maps
+Message-ID: <Z89MMMncPTvG8bdf@x1>
+References: <20250228222308.626803-1-irogers@google.com>
+ <20250228222308.626803-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304222304.214704-2-paul@paul-moore.com> <20250309.5ddca2aac3f6@gnoack.org>
-In-Reply-To: <20250309.5ddca2aac3f6@gnoack.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 10 Mar 2025 16:29:29 -0400
-X-Gm-Features: AQ5f1Jo6QOPoGUFGOIb3gjnWMhzQIShhWRjzY8eEyp8Wz0ElgezHE72pke3O1VI
-Message-ID: <CAHC9VhQRWOJkSTsYDGHArmm212CW+EOia-b0hR_r9HrCxspLcg@mail.gmail.com>
-Subject: Re: [RFC PATCH] MAINTAINERS: add an explicit credentials entry
-To: =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228222308.626803-3-irogers@google.com>
 
-On Sun, Mar 9, 2025 at 7:12=E2=80=AFAM G=C3=BCnther Noack <gnoack3000@gmail=
-.com> wrote:
->
-> Hello Paul and Serge!
->
-> On Tue, Mar 04, 2025 at 05:23:05PM -0500, Paul Moore wrote:
-> > The lack of an explicit credential (kernel/cred.c) entry has caused
-> > confusion in the past among new, and not-so-new developers, about where
-> > to send credential patches for discussion and merging.  Those patches
-> > that are sent can often rot on the mailing lists for months as there
-> > is no clear maintainer tasked with reviewing and merging patches.
-> >
-> > I'm volunteering for the cred maintainer role to try and reduce the
-> > confusion and help cred patches find their way up to Linus' tree.  As
-> > there generally aren't a lot of cred patches I'll start with simply
-> > folding them into the LSM tree, but if this changes I'll setup a
-> > dedicated cred tree.
-> >
-> > Signed-off-by: Paul Moore <paul@paul-moore.com>
-> > ---
-> >  MAINTAINERS | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 896a307fa065..68e4656c15ea 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -6139,6 +6139,14 @@ L:     linux-input@vger.kernel.org
-> >  S:   Maintained
-> >  F:   drivers/hid/hid-creative-sb0540.c
-> >
-> > +CREDENTIALS
-> > +M:   Paul Moore <paul@paul-moore.com>
-> > +L:   linux-security-module@vger.kernel.org
-> > +S:   Supported
-> > +T:   git https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.g=
-it
-> > +F:   include/linux/cred.h
-> > +F:   kernel/cred.c
->
-> Maybe also add the documentation:
->
-> +F:     Documentation/security/credentials.rst
->
-> This documents the prepare_creds()/commit_creds()/abort_creds()
-> "transactional" API that tasks should use to change credentials.
+On Fri, Feb 28, 2025 at 02:22:59PM -0800, Ian Rogers wrote:
+> Over various refactorings evlist__create_syswide_maps has been made to
+> only ever return with -ENOMEM. Fix this so that when
+> perf_evlist__set_maps is successfully called, 0 is returned.
 
-Thanks.  Serge already posted a patch to add the doc page, we should be all=
- set.
+I think this was when the problem was introduced:
 
-> Acked-by: G=C3=BCnther Noack <gnoack3000@gmail.com>
->
-> Thank you both for stepping up to establish a clearer ownership for
-> credentials!  There is a need for authoritative decisions in that
-> area, and it has been difficult to find the right contacts for
-> credentials on earlier patches as well, such as:
->
-> https://lore.kernel.org/all/20240805-remove-cred-transfer-v2-0-a2aa1d45e6=
-b8@google.com/
-> (patch by Jann Horn: "get rid of cred_transfer")
->
-> https://lore.kernel.org/all/20250221184417.27954-2-gnoack3000@gmail.com/
-> (patch by me, multithreaded Landlock enablement)
+Fixes: 8c0498b6891d7ca5 ("perf evlist: Fix create_syswide_maps() not propagating maps")
 
-Yeah, the cred_transfer/keyctl issue is particularly nasty and needs
-to be revisited.  If memory serves there was still a compatibility
-issue with Jann's patch, but we may want to consider merging that into
--next just to see if userspace still cares.  It's on my todo list to
-take a closer look when I have the time.
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
---=20
-paul-moore.com
+- Arnaldo
+ 
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/evlist.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index f0dd174e2deb..633df7d9204c 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -1373,19 +1373,18 @@ static int evlist__create_syswide_maps(struct evlist *evlist)
+>  	 */
+>  	cpus = perf_cpu_map__new_online_cpus();
+>  	if (!cpus)
+> -		goto out;
+> +		return -ENOMEM;
+>  
+>  	threads = perf_thread_map__new_dummy();
+> -	if (!threads)
+> -		goto out_put;
+> +	if (!threads) {
+> +		perf_cpu_map__put(cpus);
+> +		return -ENOMEM;
+> +	}
+>  
+>  	perf_evlist__set_maps(&evlist->core, cpus, threads);
+> -
+>  	perf_thread_map__put(threads);
+> -out_put:
+>  	perf_cpu_map__put(cpus);
+> -out:
+> -	return -ENOMEM;
+> +	return 0;
+>  }
+>  
+>  int evlist__open(struct evlist *evlist)
+> -- 
+> 2.48.1.711.g2feabab25a-goog
