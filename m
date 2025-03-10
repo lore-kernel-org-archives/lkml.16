@@ -1,132 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F934226D07
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C701B4138;
+	Mon, 10 Mar 2025 11:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604660; cv=none; b=b2YSNChltwFhW0XtZ1vil6gv3UYZ2IpoANpheTH5DNb2urrH0PhOLEktZyW8wqFMZudN+jJYnSo9eZDcBBkNcsA6sCpbrw+W4n3Pr/U4EJzgtHEF5VuFV0rr+clgLpl50b2X73w0FILJzL/DtLHatUjvhHaR5V6+V20OCO7FevQ=
+	t=1741604777; cv=none; b=qx3MQdyDUE2ZDSIumIb5M7SjC0BL7n+gIsBfpOhmOwZ0HelLADswG2/f5kq5/K30MaO2NoynToTmt6a7+Uo9XykjYpLrsabr9cRR2aGYTQWmFrIPqfqRR4AzBorZ/m/lovYd6EQuzSNXGv1YjKxKSVbR9CVg2z5+xkqeh3tYjbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604660; c=relaxed/simple;
-	bh=SLKi5/pU6VmqZloQSrc3BsEC95BvrfInlTEKZdNyDPI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JXSQVQ5tabtEkbKwwY6PoUjQLnnjAC5proQ+r8Id7XOE4oR6W6HAL9Py3rbLUnGmqSpg5bRyT4Y8SmwX1k+mF9GF7bo3C8VjZRH+XDyLpIqlPrhiPQS9pOpKhkZxkG8IEQ2u/is8v3ji47ONUVHN3A2Rc8sJHkzrGrJvgHlLinY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bj2neNPP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741604777; c=relaxed/simple;
+	bh=+vAYszaLuAjc+++c5UH/i1OBbtRd6LtGOcYREzENjkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HmuZ8DyyTAOF66xUv3V9FXvNy9zbHtDmLpXkm0cKrQwxKvYuAI1wjHnOz282llreAxvKGpqXR5AA6EpnyVOpSpP4ZOuKyEKRMYGKMHMmwVo1JOPmjbieFtmmbderRbasG/f2UwdizDYhyUDQVOsFLk9y/GQ0YH3qA11q4vSgwE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=EORwAhbX; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bj2neNPP"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A9tWkL008001
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:04:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=7+h0SgCQWbpp2hc08NzZtuUqyuQ4lXLc5tQ
-	LmGtbA50=; b=bj2neNPPyGpRSdjTyspYKoXqr14OqsTXVLwiR9JUgqJTZzyZpXX
-	d6rdXBVYipzcHPvJkkfveDmRHAt+jCfMBfr/+expJ8k8JEBMb6quwaPVvS3bM05Q
-	U9ax+hAhd89Kx2tEmJXMSzepqa7qBD1990jPd63aBdEPBeE5TvU1j50VUcv47qPs
-	6K0d+9i4AVpvR1oegcOwVb/dMV7HUfORL+FkmNZ0YIFi0OiUe0PZAeTzTw9qZycz
-	ox3rzhe0kIdVE88URT+z/PjGkEYuPcnPBkv0Vg5XUd11WHmUhJ9nuRTq9h8v4PkT
-	U+4p74QN3SeXafsdULRBxxAGj5tWvhZ8NqQ==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458eyt4h7c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:04:16 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2242ade807fso87035205ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 04:04:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741604655; x=1742209455;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7+h0SgCQWbpp2hc08NzZtuUqyuQ4lXLc5tQLmGtbA50=;
-        b=FPBfesLRbBxYm59n98cKTxq3oTyuYhDkVhWMkkB+WMBz9N+yubl50qOQOjpArpk4ym
-         FQPWmbi32irEAIrH8N9x9+A0qNcDD7bel20qH2HyYlKUI1sa5mhg16tsw3YKFNjLnfxk
-         yl6JgeZtaFUmvCLE1W6Isf3Qoh/tiCUTJ14HfLYnHWf/VKEYDEFmUatPsD+JjKKQwwYp
-         1wrRvIbBdKnBWO82ANmpysbBTIEgywZfX4wpUnvtarWQTUTOC+bsl4qrOXHMXO/d8YWw
-         hJK1loGBau6FUiDza11d7EO9PNU8xJ7iFSfTwjic4+4qHfDMFztG5ysLdgGLC748N8nP
-         oCew==
-X-Forwarded-Encrypted: i=1; AJvYcCUxH+LrrZF51FDqYqap2JJ5LtYK0j9b9Lp+FChS5PEpe1m08hWhmVrhbL8yR5PleUCVXnwZvu0LF2j1obY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIcikBoN8YzsbU3ylDzWF3oVhHv6QZKT4fb4FZhn2BZjKRW3bK
-	a6jtamsEXgZ31X3BNeQl4gQRB5+5bTqEHPF8q9qARYIfV3jYsbhEzoIapAbNXB1dVOeniVAkVcc
-	GM4uXZ8om9iQhws5RFoQLHm9/D3FfoRkDm9Fd2dRBbuviNkIVFOo6zi+3N6oWESg=
-X-Gm-Gg: ASbGnct5wdErCBJEMXB5Hofvgvq96Wccq4jNW6LL4CRCSZvzIiVHnLnxQjmINM97iA1
-	6VnXwEmWguw6Lod8CmufTYUkfIwzN3wjWcpDehVT7H9IDcfx/7GU4S+MwzxWuEspVqG23X14Vwy
-	sxoaFDAcXy98Q74XfC1y8TEsG7ngNV7hpC87abIjdrzJfsIzlerugWSeHPAQktmF2bvUvV8h4XY
-	thZKVH1gAl1AY86YXjjh3zwBHXn/2sgEDUeJT1WUf39X3CU7oDvZgupERIEsIu2fLnxxEHJcPQi
-	AUd1JXOd+COTeOC6i3CA7O8yAM5zGgECAJGuq9BCqztjFcFTlWfjmQ==
-X-Received: by 2002:a17:903:22c8:b0:220:f449:7419 with SMTP id d9443c01a7336-22428880305mr190238575ad.7.1741604655631;
-        Mon, 10 Mar 2025 04:04:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPpOyafTgqJOPNvJdDELRWWpYaOQqOg/hYct9/Qs6ay7Y38goWmm0TeDagcKLKgA3lGaIYZQ==
-X-Received: by 2002:a17:903:22c8:b0:220:f449:7419 with SMTP id d9443c01a7336-22428880305mr190238105ad.7.1741604655245;
-        Mon, 10 Mar 2025 04:04:15 -0700 (PDT)
-Received: from hu-kriskura-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7f8c2sm74902025ad.116.2025.03.10.04.04.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 04:04:14 -0700 (PDT)
-From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Johan Hovold <johan+linaro@kernel.org>
-Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-Subject: [PATCH v4] phy: qcom: qmp-usbc: Add qmp configuration for QCS615
-Date: Mon, 10 Mar 2025 16:33:59 +0530
-Message-Id: <20250310110359.210990-1-krishna.kurapati@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="EORwAhbX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Iw/s6OMG43ULsx4UXStKq7FqeOmxKAHk2WEArxE2pKc=; b=EORwAhbX8xg68mKTCSZ8Cd4emp
+	72FX7gvakjH7BgEDp4dCeBtZPaJNNudFmrcMoRorA8RboAINJFMXRmz18BuRI6UJOfG6NlXKAnStJ
+	U1Bnz8sje/QPQhE/CsOk8XVVF2PoXdiQRWlXF9NWW22HVFvkHssgad2+BiCfQll4YgFMwGm8R+fXm
+	VaFTmKi+Me65kz+CCSq7Qw6IgNgT2YUC11negNR3qvEFMmsdhU1LzWuRLB4SjEEIElcFl+iS+J8UB
+	yQO4ntjt19o3zayOgCKopfjtDFP7Zdg/LozF+SZ6mkUBHm/Poj9rXthJJLKwvw0NzzvM9yqbfC9sf
+	k8tjv3Ow==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47598)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1traxJ-0002RJ-11;
+	Mon, 10 Mar 2025 11:05:57 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1traxF-0002PQ-1W;
+	Mon, 10 Mar 2025 11:05:53 +0000
+Date: Mon, 10 Mar 2025 11:05:53 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+	upstream@airoha.com
+Subject: Re: [net-next PATCH v12 12/13] net: dsa: Add Airoha AN8855 5-Port
+ Gigabit DSA Switch driver
+Message-ID: <Z87HkcdK2QTjooDK@shell.armlinux.org.uk>
+References: <20250309172717.9067-1-ansuelsmth@gmail.com>
+ <20250309172717.9067-13-ansuelsmth@gmail.com>
+ <Z83WgMeg_IxgbxhO@shell.armlinux.org.uk>
+ <67cec5a9.170a0220.93f86.9dcf@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: am3rX5PjVs2l-MfD3QYvUpOfBxoAYfiy
-X-Authority-Analysis: v=2.4 cv=CupFcm4D c=1 sm=1 tr=0 ts=67cec730 cx=c_pps a=JL+w9abYAAE89/QcEU+0QA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=GV-Fn4z6lk5qDZWrX1MA:9 a=324X-CrmTo6CU4MGRt3R:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: am3rX5PjVs2l-MfD3QYvUpOfBxoAYfiy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_04,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- suspectscore=0 phishscore=0 adultscore=0 impostorscore=0 malwarescore=0
- bulkscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67cec5a9.170a0220.93f86.9dcf@mx.google.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Provide PHY configuration for the USB QMP PHY for QCS615 Platform.
+On Mon, Mar 10, 2025 at 11:57:41AM +0100, Christian Marangi wrote:
+> > > +static int an8855_pcs_config(struct phylink_pcs *pcs, unsigned int neg_mode,
+> > > +			     phy_interface_t interface,
+> > > +			     const unsigned long *advertising,
+> > > +			     bool permit_pause_to_mac)
+> > > +{
+> > > +	struct an8855_priv *priv = container_of(pcs, struct an8855_priv, pcs);
+> > > +	u32 val;
+> > > +	int ret;
+> > > +
+> > > +	/*                   !!! WELCOME TO HELL !!!                   */
+> > > +
+> > [... hell ...]
+> 
+> Will drop :( It was an easter egg for the 300 lines to configure PCS.
 
-Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
-Link to v3:
-https://lore.kernel.org/all/20241224084621.4139021-4-krishna.kurapati@oss.qualcomm.com/
- 
-Changes in v4:
-First two patches in v3 are merged. Rebasing this patch on top
-of phy/next. No changes in code and v3 applies cleanly so keeping
-RB from Dmitry unchanged. Also changing mail ID from quicinc to OSS
-mail ID.
+That wasn't a request to drop the comment, just that I didn't want to
+include all that in my reply.
 
- drivers/phy/qualcomm/phy-qcom-qmp-usbc.c | 3 +++
- 1 file changed, 3 insertions(+)
+> > I guess, however, that as you're only using SGMII with in-band, it
+> > probably doesn't make much difference, but having similar behaviour
+> > in the various drivers helps with ongoing maintenance.
+> 
+> Do we have some driver that implement the logic of skipping the bulk of
+> configuration if the mode doesn't change?
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-usbc.c b/drivers/phy/qualcomm/phy-qcom-qmp-usbc.c
-index cf12a6f12134..5e7fcb26744a 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-usbc.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-usbc.c
-@@ -1124,6 +1124,9 @@ static const struct of_device_id qmp_usbc_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,qcm2290-qmp-usb3-phy",
- 		.data = &qcm2290_usb3phy_cfg,
-+	}, {
-+		.compatible = "qcom,qcs615-qmp-usb3-phy",
-+		.data = &qcm2290_usb3phy_cfg,
- 	}, {
- 		.compatible = "qcom,sdm660-qmp-usb3-phy",
- 		.data = &sdm660_usb3phy_cfg,
+For many, it doesn't matter, but for e.g. xpcs, there may be a reset
+of the XPCS when the mode changes, and there's workarounds for the
+TXGBE - both of those only happen when the interface mode actually
+changes.
+
+Re-reading my .pcs_config() documentation, I really ought to mention
+that .pcs_config() will be called for both interface mode changes and
+for advertisement changes, and should not disrupt the link when
+nothing has changed.
+
 -- 
-2.34.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
