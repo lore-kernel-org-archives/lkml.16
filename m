@@ -1,96 +1,94 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5546F14A09E;
-	Mon, 10 Mar 2025 08:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A79C14A09E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741595018; cv=none; b=GH9nLrPE5W1yQbTlFU8NfOHLnA+Qpv8Ui7LLPr6GbmIikBKHCzXTM3SrXbOnjv3xRT9OgPD+d1ShVE0+sGMkb+IK6mYa15ODs16le0rrlRUlg7mzI+lmisMuqIWo81zGtvM51PH9uUzUOCEjMnqyBcFnV+6j/A9Kr40rpdaOUZ4=
+	t=1741595027; cv=none; b=pv5FgNKflQ8pY0Ces14pZ1gbO83W0+kxQ0ULFNyAW7aHGM+aV7JvKiG+k/Ra5Vr22G6Re17h0TItefS3xY4GA1kGRG9dwYjCdTW7bsu6UGTf7FhuxqACASKf3Ky8JPUaT5YxZhlBLjTJ36mlyvZV9lMpIG5e/SHds9OVM5kumWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741595018; c=relaxed/simple;
-	bh=AjPlA6/0Vt2/ykNJB2kiR4TJT7iqwwM1ouKE+3LBPIc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IRKh3AJ82NqIWc+1dsM9wug1WMh5D/Ij5pizVg7b1Cto+61pKvA4KgW0FtvaTBIhQJWEJllCxoZHFbcYFvGv4SNPb9762Qtgz5CEetP4mextk29A0HPg6U+63KHk/+Hj+JKJODs25oop6PjWomVMQA9dft+fNPyzgOFBJ8ELSeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3c9ff7000001d7ae-45-67cea17bf4e7
-From: Rakie Kim <rakie.kim@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	Rakie Kim <rakie.kim@sk.com>
-Subject: Re: [PATCH 4/4] mm/mempolicy: Fix memory leaks in mempolicy_sysfs_init()
-Date: Mon, 10 Mar 2025 17:23:03 +0900
-Message-ID: <20250310082313.584-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <Z8sPjdXmFGO9-y7D@gourry-fedora-PF4VCD3F>
-References: 
+	s=arc-20240116; t=1741595027; c=relaxed/simple;
+	bh=Ivx/6EEyCTtnvCErNeMLytYw3JO2KfbbSfvqVn7RN1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XVKOZPSMcNiXZjgibUb5W7KmpuxyNAg3m5oLEttqKAZjqGJKfOatUApyNAg95bfBBxAEQlJTczob/IkGXQBBiSndRvOWxXTng2dWZVVLfEJZMsu2x8YB0SsF/xwaMo3hTnhS9qPm/bNGjJVoUKXcc92cRcdX6GdHG7bn9kWqF+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=ZXtYA+4A; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="ZXtYA+4A"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-474faf23fbeso49671461cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 01:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar.org; s=google; t=1741595023; x=1742199823; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ivx/6EEyCTtnvCErNeMLytYw3JO2KfbbSfvqVn7RN1A=;
+        b=ZXtYA+4AITxBSkj1mqYzXxt7za0Mug9GjtCVLUc0Sp+hITuCASF7dyFnbXS85vUwXm
+         BmIPN0FIsb7WVPJhQiis91Dh77+pcFvi9eV9KpApIjTEhlImpJlKgwIbb0Lk/+uAW2fM
+         NjKr0DWynLnvl/PF9p+Hju/dXOPeC3QyxqkRHCy6f9ib1yn5Zzgs4zbPvEh5QnqYBV49
+         FmCCOm7Uty+hmbzawvG4TrJP8OFvr3mdGXF//c8wjGRRUIJcK6A1YafnhrF+2ScNuuiC
+         u7vPgNi6IaOriRqf2IHXp7zS88Kd4HbOu5KDmzU1A1oVttRXC7fxr4bTzx7kxrDVLm5T
+         AM7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741595023; x=1742199823;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ivx/6EEyCTtnvCErNeMLytYw3JO2KfbbSfvqVn7RN1A=;
+        b=Pikk0ef25MfXSmJWwdPh6Op9WFr5/LKBG3yePrgI9W93gVd2SZXIMcAyO/QZy/AZut
+         4kf+65CLjKDLR7wDsaWC8kHJet2OPit/weVzwwfV7WvuhF8K9KsWAAnSn5u1/4pe1/LW
+         gJWptoPd1kKETMcgV/+J6OKXiEOEG9oT7OIOK6Uh2ih9pYd/lVR2aTHmr0PVekHuF1pJ
+         t4v5mRQsKwdsfs9WmXhaj5li+c6uSL0sY4SS+hyzDTQuxwdBA+/K5WgiS4uJ7BY2BvZB
+         0Ass+8bL2Rid+qZFiRXs7qDkHTTqQJMBad9SI0VWFGvzUYVgVZMQD3meB7nIinvSyWkx
+         a23A==
+X-Forwarded-Encrypted: i=1; AJvYcCX3Cb8VJxgS6i6vrwux1zU6zdSZfZGAdzoJB1J8GfBCnm2C2cqAB6mNuUPPw5qyZrw7e10JuRDE8QEkyww=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzktg/0noT1Ufgx5MxLnykP4mgMKqJsmNVsrmAhaKV8jx86nB/g
+	ON2aW1aZ+PlydjnmSxUZ10RF6EastyvTSdmbcLWgmVgADwr1aa9wwHOLCoWu+T79Ob2pQZVUeji
+	Vs9YaBRsaI2bUq/dc++6ifTYvPzSzsfE3kWld/A==
+X-Gm-Gg: ASbGnctkN6lfjZ65MPmfRxZflLmfdHgnwFQCM75kBjo8k1oTSjkUrHpRM2wyTDQg45h
+	xzIHJN13mMpMfrhU7RZVuR6Rq9Ju5g5pD4ujeVuVdGEG8HRmGpRLEbnvRWGGhU8B7WNaDKtRLXl
+	6QJGQKqM7F8QPL2tCMg9YW9Av+sUQ=
+X-Google-Smtp-Source: AGHT+IHX/ie+SCwilG9VkCigXT7dVOX7s13SM5HyamqcMyXKzLgr5BlSUTLW598RuV9I7TxHm+K7rOgy8bC/hIiXpus=
+X-Received: by 2002:a05:6214:da9:b0:6d4:238e:35b0 with SMTP id
+ 6a1803df08f44-6e90060411amr182729926d6.17.1741595022743; Mon, 10 Mar 2025
+ 01:23:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsXC9ZZnkW71wnPpBlNPGljMWb+GzWL61AuM
-	Fj/vHme3OL51HrvF+VmnWCwu75rDZnFvzX9Wi9VrMhw4PHbOusvu0d12md1j8Z6XTB6bPk1i
-	9zgx4zeLx86Hlh6fN8kFsEdx2aSk5mSWpRbp2yVwZfx4+ZO1oImj4tfDsAbGbWxdjJwcEgIm
-	Ems/HmCBsX82PQeKc3CwCShJHNsbA2KKCKhKtF1x72Lk4mAWWM8k8XrTLLBWYYFAiVszvjKC
-	2CxANWs2HAKL8woYS5xYu4wJYqSmRMOle2A2p4CZxMyTk8BWCQnwSLzasJ8Rol5Q4uTMJ2Bx
-	ZgF5ieats5kheo+wSbxrUYSwJSUOrrjBMoGRfxaSlllIWhYwMq1iFMrMK8tNzMwx0cuozMus
-	0EvOz93ECAzhZbV/oncwfroQfIhRgINRiYf3wbyz6UKsiWXFlbmHGCU4mJVEeNW2n0oX4k1J
-	rKxKLcqPLyrNSS0+xCjNwaIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwFgf/OOKy4vsWyYp
-	WdsXtqt/LZ67kHvtZd8FLGnStcvsyqrj3U5uy5DaO//V0o4LpdF7bPbt211erRoiYX+9O6lv
-	RtRWW9as0gKG8EITyfqNmr8UNnj0xa6TuKz85ckJ+3M/r03mWLN4ZUZ/5cp913ZuTbsvxjpD
-	pOvm323q7D3Xy+V6OM37W5RYijMSDbWYi4oTAQq63LVdAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXCNUNNS7d64bl0g8971SzmrF/DZjF96gVG
-	i593j7NbfH72mtni+NZ57BaH555ktTg/6xSLxeVdc9gs7q35z2px6NpzVovVazIsfm9bwebA
-	47Fz1l12j+62y+wei/e8ZPLY9GkSu8eJGb9ZPHY+tPT4dtvDY/GLD0wenzfJBXBGcdmkpOZk
-	lqUW6dslcGX8ePmTtaCJo+LXw7AGxm1sXYycHBICJhI/m54D2RwcbAJKEsf2xoCYIgKqEm1X
-	3LsYuTiYBdYzSbzeNAusXFggUOLWjK+MIDYLUM2aDYfA4rwCxhIn1i5jghipKdFw6R6YzSlg
-	JjHz5CQWEFtIgEfi1Yb9jBD1ghInZz4BizMLyEs0b53NPIGRZxaS1CwkqQWMTKsYRTLzynIT
-	M3NM9YqzMyrzMiv0kvNzNzECA3dZ7Z+JOxi/XHY/xCjAwajEw/tg3tl0IdbEsuLK3EOMEhzM
-	SiK8attPpQvxpiRWVqUW5ccXleakFh9ilOZgURLn9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUw
-	VtfU1B424nN71FzTcenQ3Y1n2YWKjJpnZZ+2dq9hvLVrdtsrnvLansv/rr1UO3Kl7Xuqx5mL
-	d3PtHTe2dKy9ZX3twqZn/TUu61J1TunGiB9ZKN/ULBHk0MB0+e+G7d+endz2wuf1Pvej32dV
-	K2q3bE33LjULCpCZdUYg49v/uUFPjmzJSJ8uqMRSnJFoqMVcVJwIAPNFUWVYAgAA
-X-CFilter-Loop: Reflected
+References: <20250217053719.442644-1-vignesh.raman@collabora.com>
+In-Reply-To: <20250217053719.442644-1-vignesh.raman@collabora.com>
+From: Daniel Stone <daniel@fooishbar.org>
+Date: Mon, 10 Mar 2025 08:23:31 +0000
+X-Gm-Features: AQ5f1JppnRfUR_zOw553KNwUL6uzyjdZezy5exd4nob7qrMJgxJe74M-TX4Aplg
+Message-ID: <CAPj87rNUMDMUtrfV=8c_+T5VQ0FykjpR5JW5dgO4grYXpabSdQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] drm/ci: enable lockdep detection
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
+	helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch, 
+	robdclark@gmail.com, guilherme.gallo@collabora.com, 
+	sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
+	jani.nikula@linux.intel.com, dmitry.baryshkov@linaro.org, mripard@kernel.org, 
+	boqun.feng@gmail.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 7 Mar 2025 10:23:57 -0500 Gregory Price <gourry@gourry.net> wrote:
+Hi Vignesh,
 
-Hi Gregory
-
- On Fri, Mar 07, 2025 at 03:35:33PM +0900, Rakie Kim wrote:
-> > Improper cleanup of sysfs attributes caused kobject and memory leaks when
-> > initialization failed or nodes were removed.
-> >
-> 
-> Is this fixing something in your patch set or fixing something in the
-> current upstream code?  If in the current patch set, roll this into the
-> patch that causes it.
-> 
-> If this is fixing something upstream, I recommend submitting this
-> separately to stable and rebasing on top of it.
-
-Thank you for your response regarding this patch.
-This patch isn't a modification of my hotplug-related patch but rather
-a fix addressing issues in the existing implementation of the commit
-listed below.
-I will proceed to update it as a separate patch based on the mentioned
-commit.
-
-mm/mempolicy: implement the sysfs-based weighted_interleave interface
-(dce41f5ae2539d1c20ae8de4e039630aec3c3f3c)
-
-Rakie
-
+On Mon, 17 Feb 2025 at 05:37, Vignesh Raman <vignesh.raman@collabora.com> wrote:
+> This patch series enables lockdep detection in drm-ci. Any lockdep
+> failures will be shown as warnings in the pipeline. This series
+> also enables CONFIG_DEBUG_WW_MUTEX_SLOWPATH for mutex slowpath
+> debugging and refactors software-driver stage jobs.
 >
-> 
-> ~Gregory
+> Test run with this series,
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1366054
+
+Series is:
+Reviewed-by: Daniel Stone <daniels@collabora.com>
+
+Please merge at will.
+
+Cheers,
+Daniel
