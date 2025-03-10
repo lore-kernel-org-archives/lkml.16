@@ -1,118 +1,110 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3D419D8A9;
-	Mon, 10 Mar 2025 15:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E32189B80;
+	Mon, 10 Mar 2025 15:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619011; cv=none; b=hs5W9BVIgKRmFpSjh3F/sGnsLH0m1tX13HtEaiPClt2CbhpourudPDXlajsWznL3V/JCYO0vX8GSF5nTwF/KHa2F5G3rUL9vkcgj7GCBX+H2pmx3rLJK2De5cXE2Vs2LQKAbuY4hJhzi5XT6ddNaDDDNsfa8gZgW3+6HAdeOh4w=
+	t=1741619031; cv=none; b=ImvPeEa1p5STlcCUm8L3oemYahuiIp/HdMn508esyVDEalCLPbCssVcafrQYnt86raW0OeKV8pF/J1StKxzgEz3Kiy5pXn19POosBBx/IzPgG+XMYHhI7fotmSiUmDbNvz2m5IyOUunq8oxp0KbFctHBMGUD1E5G9ZA0IYha8Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619011; c=relaxed/simple;
-	bh=qHOlMVOSQWZyR+1T7W2LmKujsTHuLbGrbmBhJNI0i1E=;
+	s=arc-20240116; t=1741619031; c=relaxed/simple;
+	bh=4kBNkTbR5FLLbTabbHHu6HAsSSZd056FRwt9Fndw7O8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SrjmX0uM+q0IWVPaQO1mCUt3utLb4kr/hFfGs1zlUqUmuFZBAx0N629zm1wmxURntacwsQ0ueRxnFvnY/E8X/QiOgmFweKYYiaFLN6re4TzU855Ic+67u7rA7YR6bf7rkA64Pm8CExF47cdqDzBCQovH4bcZv0246znyKTu1pIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QynXcZ7k; arc=none smtp.client-ip=209.85.216.50
+	 To:Cc:Content-Type; b=kg6q+2OlCJFYOZ8uYFxWWKwvUw5N8/PfObkPqOQNKVxiug24B3ZFjxretMasdphOqGkioTLT9yb9HG9tyEWePossn+yDhtgOvBgZvToOKVawcTjvniSudwCwlfszFFYH4vuHKr8W2b10RoqM8WBQeOJ1QOKZiRT4fESV2py8WLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B819Ue5c; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QynXcZ7k"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fc92215d15so1206538a91.1;
-        Mon, 10 Mar 2025 08:03:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B819Ue5c"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f9b8ef4261so1175794a91.1;
+        Mon, 10 Mar 2025 08:03:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741619009; x=1742223809; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741619030; x=1742223830; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EJOdMi7TuJtokqVht55QzyLtEZiNv+1M/RG0LMYucBg=;
-        b=QynXcZ7kb539KDfLo3uE9WBB+cc85Np8B4DMXW34VB9pEfMrtBw1RiLONATZ1DQXg1
-         GQv31r6IigNIzpOJnYamMl7nGO5vPyibC/jPkvvPFD8eexPObe3aB0o5gg5hyrJtQfIW
-         qxWCvZwST8xFpu15fpoImV39SEgJ7YaM9qYfv29MDG/H09ZTtaosRjg153l1yuZyGF+W
-         l3auF+jXoeDKjcTnYhyTYi2LVSAdvvHpy9Jn1/F8i0qvUGGxTlI4OoYPfBc5wL1k009z
-         zpQV7fVGTQ06XiO1pVvfFqxOgvhGiSL+eMUMKzmo3HEiv32ZKzgYiop41KwliTooA8jM
-         KBXA==
+        bh=XCZ7+q9PYpMdvI9LsnDStpXywHOjjRsLA5+sW6O9TXk=;
+        b=B819Ue5cEe87zZcaJv+aim1P9CcxUlyNtoDZ+i8FZTb/p79Mq5qPzDxZzfhhaHcE/J
+         XyXisRHNlqlf1QaGthVaEljASdaYtdzMzBoV1MQpyqxeIKngXbpwXmiV7kptjNMZ6quq
+         L9FMieKxlhqEDtQgmd47Kteas6dKJA0oAwBLFBvmUIOKMU0/ScYznnI4/aTlZnP0uGwm
+         GNyzGG8HqJtPQEGk2A2gy+z+8fJRNLi33zASiqWaQb1N3hi4/ujBPX4b7eGyfwsMpZVg
+         Ta9XCn+GR/LEXJcHmGBP3Q1lpsDBiz9D/CwIM080PXMM11g5za/E3AO4xz/ZSNCQAls9
+         q0vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741619009; x=1742223809;
+        d=1e100.net; s=20230601; t=1741619030; x=1742223830;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EJOdMi7TuJtokqVht55QzyLtEZiNv+1M/RG0LMYucBg=;
-        b=kglxx1W7Cl640tVYAVU89bw2cfuZbYe7734QUV/8meuX+JrfNpDCkUxOH1Mfr0A6+f
-         6lE3j8QsR1Mxn9fbCfiRYdq4ICCTYn6xdUY9kmZPahFNkKU04iSLRP2b7zXYXEoA5qTR
-         fZMIhu6h+cnPmRni/igMqZN+pvWqvj8J6/gq7MW1U1YSBjzsWaWbq5wRn4wVZN2uGOjN
-         9Wb+wGBzNS3ul5vZXsUN+K5VBUMWfJX3b5Y4ZJqyOndcsgJgvhTb0ZJyhgIK9lIgVnQE
-         mudXNkvGxoREdiMx9RQd8Zt9CbBHv2C8jOyfkZeY1U67c63bbSmA+6Zf7m/UDT2zWykJ
-         ERlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKzKXDuA2JAoPCtTiOMTxmu8xsPYNEI/ZHJqGffUO/ianouCIuQ2Eo49rnmbZzwXV1TusNbCtGrOCmOrHsldY=@vger.kernel.org, AJvYcCX2wAUwFR0m8OFvBUfhs01kooEnePwOk+wx2Gp+lV6hfEaLjMQxECZNXcaujuvzmuhCxEzDSB3uoNMkzf5o@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnF0alckWADGaOZwRtD2N7gI4akldl2F/6Alz4xq66A3G8VYCc
-	J1B1M0TvEcEt1YtFtEUbYUpMBJcZvEbEJUGS9pMIO6nxBtmW13Q/3kmxUMV7+ZHh3yTp8P84yj+
-	bdcBHq7iQo/eoc91uzgj6vGtvrlA=
-X-Gm-Gg: ASbGncvPThB8fqMQkHB5refcaetBpVj+Ia3DjoROkYiqh2MK5AHTaY3C/A1TGy6NYDF
-	FMIZgjtK35swOEnYigalLJD4457tBMxhNHFe4TwcZF3GQcduuP0pATS8CPB9bPTsomOC9uvGyVv
-	+Tm7I4NsgqgNbj+tbMXugvocN/N1EdxgpK7SX2
-X-Google-Smtp-Source: AGHT+IHDWjvbsImoIvEZ8NiG696nfaDNI6yarD9NR7psbuORnZuZ4bAHU5Szn7yUD4MzuaZiF/MYlkPQ025P9W9WkVQ=
-X-Received: by 2002:a17:90b:4c51:b0:2ff:5540:bb48 with SMTP id
- 98e67ed59e1d1-300ff94c15dmr50225a91.8.1741619008631; Mon, 10 Mar 2025
- 08:03:28 -0700 (PDT)
+        bh=XCZ7+q9PYpMdvI9LsnDStpXywHOjjRsLA5+sW6O9TXk=;
+        b=MyY4IgH86J9rjRnaKd8WhD9TU/MH5iUOc59U5doqBtzwLpBUQGyzrQ8+L1C9XetJ2h
+         YJ37eU6qFfZd+NFNIqnagcOhXPKRnDsxzlb9JEyhxmK9AfBQIdsZHJaX1PB7GRSXHseq
+         j6DBrO0oyWpRqnOw1fgMT1dlqOTBdRbWn2WtG3yvI0FuCX96GmNXQ6PPmQ4O2/xrqMtd
+         hm9a/ijWgn6f3ZrAG1XyA8oPkLe538R6SEK3QQah8w8NdsC368GWB02Ua+w41S8DbktO
+         m1AsuiMaALSmFx4YdcfVo/RAfyaOE+Fv/XFNhHhgxynR6pjdXazQTT+Tp2j3IGIGhbdo
+         hSRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcSUlnyTfqFLu5IrfSGfWFVL2NsLAVziBR0Zednf7ODkamiVmGsr2esBsAkixwP5SY1zJ4OTFDchSvbx0b@vger.kernel.org, AJvYcCXyj+Qpy6dEhssXlDfRtj+sqMl0k67aYlE9slucJAABrMTw2UWg4yfpj5BoNjbClrU/e/yknWIWVjKd8Fu4ySk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxau1j/C9VtR6M2o3e8a+zcf1HcgTrxn5E6YbkyYMZ5K0E/GfqN
+	8Fn38BnZ8wnsssRmQT2QJYJDg3sutcfQuqdGfORhGO2FvbZhEciAro/RCXaa4dSUOGNcLjyn8i6
+	TM9WAWPgoFKBwNm49CpFVvnuarGs=
+X-Gm-Gg: ASbGncuZ5b2oqX3bIPiHS+ApQ5LWDNCk6RODiSe7oJ/cYDnjVeV9KqZpL7rh25LvKIm
+	hPIERDsahuSK+V7D5SywZ87fMm8gluRPzjZBXJNBtDUH5w0VtwH6BEcXdkjg/3lsH+QthfRqtM1
+	PpH8knxpSN5EfGtNyohf34raWglg==
+X-Google-Smtp-Source: AGHT+IFMUfkkxyv4DFg5N8sru2ilACJrDgnRxjOU1nRv0P7Z1KHYBcYqmTsNdwlU/vhI/3zGhCpvcSCgAR6M0BtdUvY=
+X-Received: by 2002:a17:90b:4a4f:b0:2fe:b2ea:30f0 with SMTP id
+ 98e67ed59e1d1-300a575a10cmr5731794a91.4.1741619029744; Mon, 10 Mar 2025
+ 08:03:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ece8324f-0d58-4c83-adca-7187f730c56f@stanley.mountain>
-In-Reply-To: <ece8324f-0d58-4c83-adca-7187f730c56f@stanley.mountain>
+References: <2503b45f-751e-4b50-96fd-8dad33821c40@stanley.mountain>
+In-Reply-To: <2503b45f-751e-4b50-96fd-8dad33821c40@stanley.mountain>
 From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 10 Mar 2025 11:03:17 -0400
-X-Gm-Features: AQ5f1Jp6LUX-uLM6Bz9IEwc8fZsKBb7jSG1dspE9kwAMpt4MWUT1TRhw3ipvpKg
-Message-ID: <CADnq5_Mn0Mqr4vbiLCGAgUa-rxa_YfM1=vSCtQsByquwN8oMFA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdkfd: delete stray tab in kfd_dbg_set_mes_debug_mode()
+Date: Mon, 10 Mar 2025 11:03:38 -0400
+X-Gm-Features: AQ5f1JpmwP1VV7tLkk-a9qxkXnTTzKMtdLoBQrX-kuLocNBhJ8LElGmugPOqQio
+Message-ID: <CADnq5_NJnn0QxmsKMXnimRLDAkN7LD4u7sJOZq7OzSL54yrjUQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: Use tabs for indenting in amdgpu_sdma_reset_engine()
 To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+Cc: "Jesse.zhang@amd.com" <Jesse.zhang@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
 	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Hawking Zhang <Hawking.Zhang@amd.com>, Tim Huang <tim.huang@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Likun Gao <Likun.Gao@amd.com>, Le Ma <le.ma@amd.com>, 
+	Yang Wang <kevinyang.wang@amd.com>, amd-gfx@lists.freedesktop.org, 
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
 	kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied.  thanks!
+Thanks for the patch, but someone already fixed this.  Thanks!
 
-On Mon, Mar 10, 2025 at 6:48=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+Alex
+
+On Mon, Mar 10, 2025 at 6:47=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
 .org> wrote:
 >
-> These lines are indented one tab more than they should be.  Delete
-> the stray tabs.
+> This line has a seven space indent instead of a tab.
 >
 > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  drivers/gpu/drm/amd/amdkfd/kfd_debug.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_debug.c b/drivers/gpu/drm/amd=
-/amdkfd/kfd_debug.c
-> index 12456c61ffa5..ba99e0f258ae 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_debug.c
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_debug.c
-> @@ -357,12 +357,12 @@ int kfd_dbg_set_mes_debug_mode(struct kfd_process_d=
-evice *pdd, bool sq_trap_en)
->                 return 0;
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c b/drivers/gpu/drm/a=
+md/amdgpu/amdgpu_sdma.c
+> index 39669f8788a7..3a4cef896018 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
+> @@ -621,5 +621,5 @@ int amdgpu_sdma_reset_engine(struct amdgpu_device *ad=
+ev, uint32_t instance_id, b
+>         if (suspend_user_queues)
+>                 amdgpu_amdkfd_resume(adev, false);
 >
->         if (!pdd->proc_ctx_cpu_ptr) {
-> -                       r =3D amdgpu_amdkfd_alloc_gtt_mem(adev,
-> -                               AMDGPU_MES_PROC_CTX_SIZE,
-> -                               &pdd->proc_ctx_bo,
-> -                               &pdd->proc_ctx_gpu_addr,
-> -                               &pdd->proc_ctx_cpu_ptr,
-> -                               false);
-> +               r =3D amdgpu_amdkfd_alloc_gtt_mem(adev,
-> +                       AMDGPU_MES_PROC_CTX_SIZE,
-> +                       &pdd->proc_ctx_bo,
-> +                       &pdd->proc_ctx_gpu_addr,
-> +                       &pdd->proc_ctx_cpu_ptr,
-> +                       false);
->                 if (r) {
->                         dev_err(adev->dev,
->                         "failed to allocate process context bo\n");
+> -       return ret;
+> +       return ret;
+>  }
 > --
 > 2.47.2
 >
