@@ -1,102 +1,60 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2713846C;
-	Mon, 10 Mar 2025 12:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E62846C;
+	Mon, 10 Mar 2025 12:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741609107; cv=none; b=i7rrE/aC893Mv2hEkI1RBwGNXslNiYoPSSRBLmsTSwVOWZg1HB5uQgbSgbn3dkrBQ9+zh5CKyI4+Sw6EIfbQYVfFPy52VEegU4VAprzSjXRqS+kPYvtcfxYOvp5y06K/3JsLiDbS/Md16yuLrXSZoo/JlRp5UBZJinX7fYNs+1M=
+	t=1741609145; cv=none; b=tYGQsXBrD+P8oSYxLdQTVpMtYldBG7wh71aNOpNNgVQjFHR3blfREsLLWbVnFFmvyXU4xealG+yn7eZsP0RELagrRosZY///sSy9dkBci+K2KjF45VDxhWrjGhF58IshhBnbS40co7fkgiAT7CxbrwNi5OcpHUUdEPZpe6Et4Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741609107; c=relaxed/simple;
-	bh=7r2vPsDnpJH9TKpn2vKV8tqiwgp4F2qwtIfTAscYPSM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=U5MnIJqNHeeK79FAq3obcWJT6v6Ati2B7ZcOD5bxxYH0EgQQb0N8Pm8uyFRGT/9tBTbXFZS6QI6AQ/Gt9Lv1cVXpG7+8xj1/coGN3rnMLXXv0Whmp+Fr/4qdFc2uW1nXvov3aMKcvb2QcA8BQyIf9BzsiXpNbjBRigVgxobfSnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ChXJnTat; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1741609145; c=relaxed/simple;
+	bh=hon+ZlpcdpiM2z4RWA+hrWnsN9KcBLw1pLs4yAL6aoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=srOE5QLdn7pZjxmlsYatUUVZNIvMlpSQq3Y2d1xyrjZtcnXBUkWQl+I8XT3gp4kI6+WMi0W9TcDQFSxsZBvt13OUtDD8ScMzhu5Jd7FqvPNlYc+wEyUNoo0zsfxiE50Fpv06U/lvfsUNNJ/5dTJMlzILZLgpSfUWcdpaEu/B8DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zIt1t3rC; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ChXJnTat"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741609077; x=1742213877; i=markus.elfring@web.de;
-	bh=2tw3alwm60ny/fP6jFcsFJLqPkGHkgwJRPku5I/wZ4A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ChXJnTat4TVo2ThVOTmQaalnnS23CPXY0QcqtXHYCOe1wTxbD+4rZPEigkubEKEu
-	 t1PQ6lo24RKwEXGtgr0F2fLhH8M3TFwNptGuz1J6Uekv3FDlvJhwfyBddXCdetF7n
-	 KMNFkV3V5S8EY+7Rj9S96jbA1CBfVCcMQTNNP80y8XjN01+uiFV/9F15jYFUyOPmU
-	 Ryg55oczzSIZzvfD5NfSatc7DCzphnZ+0w7Ba4f7S4OnomYZphhR9VBYodw0z3VPA
-	 YtXvWrcJSu6T/zRj6RwDDkjQm53MO3zuf6q+ucNsd9m6KUyJxWDwszLkbeJIrHy2o
-	 J1F3KWNSmXhWyIXt4A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.82]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MjgXH-1tOdFG3JhD-00okj6; Mon, 10
- Mar 2025 13:17:57 +0100
-Message-ID: <6f01f71b-284b-4841-bda9-a3934cb4efc8@web.de>
-Date: Mon, 10 Mar 2025 13:17:56 +0100
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zIt1t3rC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ueh+7CZG9MPdobqMqruBWMwjX+BSXQ112an7S+3qACw=; b=zIt1t3rCv5RJM3i32AEKgTPGiZ
+	6WejDzTTseO686uRIjXn1azeCg5OnLaiEG15E9gBGTbv9SaSYqCLYVTwgW6uyMBu83IdgRtjhPiNM
+	/32cCoz3tMF+LS8hBBuG/o401FH/0h/J6pbCRVV3aR9+uMQBlCCz6FGKdIdw0wc607WE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1trc5z-0040LU-Mn; Mon, 10 Mar 2025 13:18:59 +0100
+Date: Mon, 10 Mar 2025 13:18:59 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: hanyuan <hanyuan-z@qq.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: enc28j60: support getting irq number from gpio
+ phandle in the device tree
+Message-ID: <c8553dc9-2d8f-4d4b-a381-f87660c2ee99@lunn.ch>
+References: <tencent_83CBDD726353E21FBD648E831600C078F205@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Qasim Ijaz <qasdev00@gmail.com>, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, David Airlie <airlied@gmail.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
- Simona Vetter <simona@ffwll.ch>
-References: <20250309095525.7738-1-qasdev00@gmail.com>
-Subject: Re: [PATCH v2] drm/msm/dpu: reorder pointer operations after sanity
- checks to avoid NULL deref
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250309095525.7738-1-qasdev00@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lX4SIjOmammwLZH318S5lMgZQ2ZBxYPFrDIDt1pXOyV/U0uVq7E
- Z7zc04UG9WpoVUqiIP0mIXCzL/uLaCh8CoO9UGUUqkycLxpyqJ4qrBHI6dx1tFMs85B7KrP
- ttX8Mf3ItqtAVsxRB2C8ZV1eTemquESG2A5IGjkVe8UhJ5i06XkzMMvMpnbWPvZpTytTUfB
- y+lOk9lMq/HAJjlXtxjSg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3LAlbRlWX8c=;aoZA2x/JnIUoXzfHy169i3CcSh4
- juaLuFj1kn4e/q6Pp+rwTzXzlsFblSZX2PRALGX2V8kmHKUMMu1kMszDvxF+/sK5JdKN0Hk7B
- Ov+ze3gM4c/08LaxNSSbZHdOAUrAER9lmqSyqN5cHHRUJGhVcoLcgTjHBX/fbSyWhDjimMCUc
- 4U2G8Dn7lujcMvRpwwr6GgI+k79Wclr/6swVcDb29n6eEeDYD7X/1ouVs4SOUe9Q/TvM9PdC+
- W0Ekg1rNXwH0ED+X3KKz2z3iJqbS0Yrpv/yXP6FNFPuNHTEYctSgaY7n/vosIYwEC/jZNfbYW
- c6EvzlUjYWyUmQDRIeNFzrmgSIyvzSnIsuKSxsMXfgoZ6EYdYpAxohJZBXkhs8lC+ql9nYiTn
- 0ZhT2jt2eUj1ZqxJAiwAF+TpIyZ7R5kYaj1mdVGkguc0sqVgjbnqsWV/tbgBFO1T8aZHnDlZc
- HgKr+tWrBKp2mt9F2nb2hHk0O5CsKwBXj4w0hthVA+Rx3lvZXdE5lCliQb87NfNqgNZxN8/o9
- d/VbxKsdZOUFQXniZM/24vajblAYg71TtP8kh/WDHh302rdVF0hi+DmVXotpFBcznolvVjHvA
- XOrbpmbULwbDLnh+PvNhQf2leBUgvG2aVeif/nHMMLBxh78pj/72SSTG6VCpivxV+cfZ1o1m8
- 0S/qeO52eI1nHga2FAlDQvtPqp2HAMreOZvxxfxBw/iYBVgZIlA39GjJRYB6DCTtAS9D5MbTm
- T/7AgNkRHkO0jJ2fJ/p880LF0NS6RyUPGYIWEpec3QkBuB1bwPmD0QnaxWi6OBxRJ4Q01PBYL
- 3ctoCjJhjvqrq8HhXGw9pt0W8q9x1xR+vaQ5WBYKJKqr8pc/1FgxxoMzcG9D+gV/HJ9QJ7IJL
- NLoYlcIU1YqsYu54Ne0eQcZAF/2JIdPAJa+XG2KLNZjErnwGeIIt2rM2JxeYdg3N3naI5/bC4
- r+Hgu518Gm1Z9A1tx5eNEukaDQWzTFJaidvE6MWDim7CPewLscvrXtRYe+h1euQfUGmM3U634
- iGdBWO2VxQMT0EdbKrg7XbjF2Bk8v8CBf2YYlsETkOHPXHrUWgb0XHdJK2himgkJV+gGUoAOF
- CkMCCDFPKaTVxEHf51laNOhAw9FtcZf4Vg8R3Ex9jYqjlFY1GTw11ZJ7kAiU2sQ+wYv7KW0GQ
- 3Q1bMq9Y21dFQT8JHTllbZiqWxVavYtvPKSHBSZDmVLXjr8mONg7/jKzqIEBDl+WNueJ5Wzmf
- Nc57GujbE6AtnAw2fS19QT3OZTZXFZadsnhYj9xGuBRKou97sMZ3TMSbwJN/99zSYYsntdbEw
- U6VXdYEECvF5/6QcmSKzJFmQHp49Wulrb8GEn1aoR1202E+ETXmUtM2NKvp2d/plnq1ZtYN/9
- 0FzQD7hvu6hNqkJR9sQrX5js1UKZRHTQxM+0zsspTttV69Rc/SDz6x/IEqR9QQxl3pVhMzz0L
- PaWLaVrjZJEeNRlZ8q/856xiIaxM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_83CBDD726353E21FBD648E831600C078F205@qq.com>
 
-=E2=80=A6
-> Fix this by reordering the dereference after the sanity checks.
+> My embedded platform has limited support, it only provides a
+> hard-coded pin control driver and does not support configuring
+> pinctrl properties in the device tree. So, there is no generic
+> way to request the pin and set its direction via device tree bindings.
 
-Can another wording approach (like the following) be more appropriate?
+So it sounds like that is your real problem. Please write a proper
+pinctrl driver for the SoC you are using. They are not very complex
+drivers.
 
-  Thus move the assignment of the variable =E2=80=9Cdpu_enc=E2=80=9D behin=
-d =E2=80=A6
+    Andrew
 
-
-Would an other summary phrase become nicer?
-
-Regards,
-Markus
+---
+pw-bot: cr
