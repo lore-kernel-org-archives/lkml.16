@@ -1,203 +1,138 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477B022576A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 14:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741617565; cv=none; b=HkJL36eoCa3KkPl4JQ3IpEnQzNnVupcX1neU/YE4uxqaDOVtXbCtCc2gaz+vpShWJ+GAcrVzXPJDEZGW8wbbnV6lDYl9hzRsGv0w7/eJA4/9L3YnjYmjuDIcAfglL7Dmunmyd7SFFLm6cBdA3IvTqvSFMJZZ/4kWwWYdujtnFIM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741617565; c=relaxed/simple;
-	bh=tnTJiZPz2ufHQUuirbZx8UKcD03ja78KjLyAgJf9EO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pfe5oukXXY5Hgi5enWRdcWhayw1lVNoEirH3uy6K/dDI9U5b8zts0yDSBsHKtqz9I9kuct1LXcgIAF7+0iG36O4wfaZo5REUGAvZaNTlm+nrmGGGZj5XDuu1ID3f/zwF1qA7rO4nMKRJh/jKZ9M/ZEXWEMZdRJG++5jUGG73xC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QiXPzjX1; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64C122B8D2;
+	Mon, 10 Mar 2025 14:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741617588; cv=pass; b=hJXNgLsUb666Fv8Hu6Rwae4P+/bNgkryaVqv3zTkXorAKWiwyJiCOZTvAKiGlcR4WxN3znYdPY5lZNFPqZ6TUGNwzoS2S1rR08yrHW9KV+YsCT/7eDxEpFluPJM4m8n56QvVgjBiqeNdgiATZ6jHtJi+uK7okk7MkQjLJBe9+l8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741617588; c=relaxed/simple;
+	bh=8symuAPDwRCaaKmhal/zQ72Owp+udrHEgPUBOc97ZdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BWgLosEVY5jY9QABi2mhHt1vZvy2Pckd1JCsr20XHBp2TfmLEkOU7qMcia6aun1YEnG9/VVjUOTt8b5Chii+FpEb+Zy5JTAaQMMwgky6y9lhmdxOngO0ySABH7jRkEUZqR5/2m0H0SB4A3SnapE8x7rrXpOMsdbBwf1AbTFaJjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net; spf=pass smtp.mailfrom=hartkopp.net; dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=YEFpp0qM; dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=3yK3NQ5h; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hartkopp.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QiXPzjX1"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf8632052so30286681fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741617561; x=1742222361; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RFWBA9JER4UT7QvrwlvRn6vyweHG/A4vT9DO9mBKj+o=;
-        b=QiXPzjX1TXFSAuA88hmzlgeD8cCJHD0JG5K1zPbJp9Pay3zUz7sEF2HJCqOaaFoO5J
-         6P03P8EpcAYh82wYNcjr8NinZwpYiuBxk+y+gCTc6Jl21+K1DaXPKMTa2KbmnzQVKNLR
-         ItHsVjLPj+d4wH6MYHWTl3HM2SjuqqAAE0pecXVysmESIT5NuDT42dCHqJmcKaIPeseB
-         P1SQJx3xyryJyv+aREBhr4sgvGHoy6PrPM9fbH+VZvV8LAXM/o1MFGf4zhhBmUA1TcqI
-         X9VvxomdIB372aFLNHMB742CA5Ke49sXPERCbYQlfvRdBs8EttfXhy7TnTMrTbhrMc8R
-         wwEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741617561; x=1742222361;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RFWBA9JER4UT7QvrwlvRn6vyweHG/A4vT9DO9mBKj+o=;
-        b=Ez5UJ4a66mtoFgIMofl9Gbm9dvtjg67USBhKL3twoyz0ddMf4U8mPrWg5SNsyo7IG6
-         3TUBi/S/EnURBKQIsd05sJjWqhI6Slok1ZqFEhs8O7xsNvBymxWhRSjqc+wSl4lcrJTc
-         9RnUeGWPFDm12m6NmLriTiCDoQv2x66ND3XvkJxwKXOvo3VvQxlTgBxFsPaQQ/3Sw3XE
-         C4Uy8BEEAfM1OVUafFWo9ZmbiF32m8dHY6wej4Xv6Mfe+LH0npqzndnak5ypIbRgIaHB
-         l9S72gyHM/uKVMe6mXpOLF66RwkwGl9awtn3a6sxwdqcCrXcewd5VGd1CYRzcq5oe6eq
-         U9eg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaQeLCLDO6Dq1PdHbwPsaHOgoAzXpCLZVv/8Jb+HqzKGwr2i4xsgr3bzBoTEcMq5QIrQG6IBZ93PVFhi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyadxFSk70vl9+JzxUEWFIXm0L6ZEct63oeiI8I0/IEf6+TuhZu
-	rmWWRC2BwQ9t1wj2gNWRdFrn5KnKbY9Ptt3C65x5bXdXHG320v8UjJ23dm/dNfCfDYqhbndt1Mc
-	2Buzxb5U3NXQfykHk+0mWkiIp9uedIyaNm5Ll
-X-Gm-Gg: ASbGncv+DjqSkAxyJJwC7VIZbT8X2mfXUaQP8ibHeit4GTLMt6uk4N7ukYR6Hwf7R4X
-	YKKTmPlXXcYd2nxMHSCv0SLWP7Sv7W4bMcmWFI4IbF1vqdCzeLk9kAohXrTLR4UwyJfFSmZrfXH
-	vAoToWgM57yYWchcGc76o7ej+j
-X-Google-Smtp-Source: AGHT+IG0Maa20eIeuxqPEC+leLaOQVIVmOmxTsk6+h5XXrjyAulVd3ZiS+LpX3uALwiPdheQPNG8xi3F87OXmII2qxo=
-X-Received: by 2002:a2e:7207:0:b0:302:48fd:6922 with SMTP id
- 38308e7fff4ca-30bf461caecmr42892931fa.37.1741617561081; Mon, 10 Mar 2025
- 07:39:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="YEFpp0qM";
+	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="3yK3NQ5h"
+ARC-Seal: i=1; a=rsa-sha256; t=1741617394; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=W3lvnjgE4IPBcxuYpH/QkMqZbgy22tRZIIBAJwo5P6sRf/3NsBTOcaz80879lHai+S
+    nwVWDRnyEMfa8U4B2Ks/crFYbkgQfBu7mPhrB2VJ1h180SbYRny2+u0wJ3Xg++Dq2AJ1
+    jxc1y9b04Ct4TQmf7DmXi6kb8gF/NuNFqJEiqTlSoTpFZ43bMI2nXinKazA6/TduTa+A
+    l0Yur+g7CNiMEPTwUzi7ZSQIaJOf2BJrW6lGcPVPNjzWUhwzxpM37IHfsI0J4QOZ9yeB
+    xD74mwV5fWu6fKNl7nDDyHnyDLIOrH6fIrllWPEcEL/zjQZM2NdGN42MGcJjnd+7bs4m
+    P/sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1741617394;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=4qxJYB0h1z/05W0c+7TAMG0e87lLkV/5Jm4DbEm/z3g=;
+    b=mewMVaVPcrOHP9NuMn4UF+hqbSbYFtBUMocFO15WD1MwIgQrbCU27YbNQT4tPMkwvY
+    Zzl5T5o5e0pSYMT5e8fv+01EUzUfRF6wIS21JZMoa0SioGBXZsxAs2feedji2MSySECz
+    vcp1tcSzH/yc7C1PQZdSUdymU5uLJ4HU6OSOmGu2Z0MB0sJ/tnTn8Rvl5mSlHsik7rU6
+    Li+uS05lXsnNVTvbz/3kHr1oHRHiKH4RbAvV0oZgn4RYqybbHIzkOSqxSZfoKaEZeH4h
+    F2cZClp0soh29ayTbygtMr+/mgnh+0RKYQMU6wBPrQMpRgVHOwRY5UcMDOZSsn11NIOt
+    JUGQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1741617394;
+    s=strato-dkim-0002; d=hartkopp.net;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=4qxJYB0h1z/05W0c+7TAMG0e87lLkV/5Jm4DbEm/z3g=;
+    b=YEFpp0qMUV14DeIkzecxYVBt1WpRq0N155SFbK+oDREc9GTyH2UOSu2mdsJPz/QgyV
+    XxiciUgcjGAmS5YzZolR/HzCjkwvibfvJk4THe6uTx87RlNWJYzqHa6XDWxCbDXUKfU3
+    Eu1U1S67TMQ67uEMro+40UWjj53ywSWigBtUH+vqJqYUvxdfj1G+7fZ+jrYKeV5iB4jw
+    V9mnWfpwZ4nznNw0uGvhJsdi4t0Pv+Kb4HPjgj/dyqrXoQs/4Rw8hfWt0h88NWUaO0Bk
+    SCq8jys2jkS9OZ9isKWbtn3PiuQj4rP5PX9xy+frpvK1nDg5Y+AQCs91LUFgFbBVgaKh
+    0x1g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1741617394;
+    s=strato-dkim-0003; d=hartkopp.net;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=4qxJYB0h1z/05W0c+7TAMG0e87lLkV/5Jm4DbEm/z3g=;
+    b=3yK3NQ5heAejcEMIXUOwR+R51jUbW7LP8WBmrd6QqyxKc60RTdOzuoYCLYnpvn8ouV
+    p816AbO2K8q4HR+Ww0Bg==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjH4JKvMdQv2tTUsMrZpkO3Mw3lZ/vMMcFB+5xtv9aJ67XA=="
+Received: from [IPV6:2a00:6020:4a8e:5000::9f3]
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id K2a3e512AEaXUkE
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 10 Mar 2025 15:36:33 +0100 (CET)
+Message-ID: <b7cb5a2f-29a8-4174-8b0e-c9cbf7349531@hartkopp.net>
+Date: Mon, 10 Mar 2025 15:36:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1740664852.git.dvyukov@google.com> <e534910c51271eebf4055a92f3b1c5ac998988bc.1740664852.git.dvyukov@google.com>
- <CACT4Y+bxV-keWg6-NGnA2k039gzMf_9COCe+zQWpcup8bMhToQ@mail.gmail.com> <28358cb6-135b-4126-ab80-f2e2d0cb4389@efficios.com>
-In-Reply-To: <28358cb6-135b-4126-ab80-f2e2d0cb4389@efficios.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 10 Mar 2025 15:39:06 +0100
-X-Gm-Features: AQ5f1JofYVYwCPxisde6nRNiMf22HlK5cgDqZ-xmWwQBvJJpQttEsdotumD_WAk
-Message-ID: <CACT4Y+Zip7O1gAF9atqib52UnEhs4K7+4hkL2xpnwYt34eqMeA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] rseq: Make rseq work with protection keys
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: peterz@infradead.org, boqun.feng@gmail.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	aruna.ramakrishna@oracle.com, elver@google.com, 
-	"Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [can?] KCSAN: data-race in can_send / can_send (5)
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, mkl@pengutronix.de
+Cc: syzbot <syzbot+78ce4489b812515d5e4d@syzkaller.appspotmail.com>,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ linux-can@vger.kernel.org
+References: <67cd717d.050a0220.e1a89.0006.GAE@google.com>
+ <c9047828-708a-42d8-97f6-fffb7d806679@hartkopp.net>
+ <CAMZ6RqKyMreMfNDmYU=tLyaEcReopmGx2VkBWPB12LLzd5o7Pg@mail.gmail.com>
+ <f8e7f845-253b-47b7-9e09-97a580ce0e5c@hartkopp.net>
+ <CAMZ6RqKga=f=Xd33GF1zPwmiearrz3mg+ZiryVbJD_RE5MGjKA@mail.gmail.com>
+Content-Language: en-US
+From: Oliver Hartkopp <socketcan@hartkopp.net>
+In-Reply-To: <CAMZ6RqKga=f=Xd33GF1zPwmiearrz3mg+ZiryVbJD_RE5MGjKA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Mar 2025 at 15:31, Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> On 2025-03-08 05:02, Dmitry Vyukov wrote:
-> > On Thu, 27 Feb 2025 at 15:03, Dmitry Vyukov <dvyukov@google.com> wrote:
-> >>
-> >> If an application registers rseq, and ever switches to another pkey
-> >> protection (such that the rseq becomes inaccessible), then any
-> >> context switch will cause failure in __rseq_handle_notify_resume()
-> >> attempting to read/write struct rseq and/or rseq_cs. Since context
-> >> switches are asynchronous and are outside of the application control
-> >> (not part of the restricted code scope), temporarily switch to
-> >> pkey value that allows access to the 0 (default) PKEY.
-> >>
-> >> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> >> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> >> Cc: Peter Zijlstra <peterz@infradead.org>
-> >> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> >> Cc: Boqun Feng <boqun.feng@gmail.com>
-> >> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >> Cc: Ingo Molnar <mingo@redhat.com>
-> >> Cc: Borislav Petkov <bp@alien8.de>
-> >> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> >> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> >> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-> >> Cc: x86@kernel.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
-> >
-> > Any remaining concerns with this series?
-> >
-> > What tree should it go into?
->
-> Usually the rseq bits go through the -tip tree.
+Hi Vincent, Marc,
 
-Thomas, Ingo, can you please take this to -tip tree? Or who would that be?
+I sent a patch to be reviewed:
+https://lore.kernel.org/linux-can/20250310143353.3242-1-socketcan@hartkopp.net/T/#u
 
+I've also tested this patch without any new issues.
 
-> Thanks,
->
-> Mathieu
->
-> >
-> >> ---
-> >> Changes in v6:
-> >>   - Added a comment to struct rseq with MPK rules
-> >>
-> >> Changes in v4:
-> >>   - Added Fixes tag
-> >>
-> >> Changes in v3:
-> >>   - simplify control flow to always enable access to 0 pkey
-> >>
-> >> Changes in v2:
-> >>   - fixed typos and reworded the comment
-> >> ---
-> >>   include/uapi/linux/rseq.h |  4 ++++
-> >>   kernel/rseq.c             | 11 +++++++++++
-> >>   2 files changed, 15 insertions(+)
-> >>
-> >> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
-> >> index c233aae5eac90..019fd248cf749 100644
-> >> --- a/include/uapi/linux/rseq.h
-> >> +++ b/include/uapi/linux/rseq.h
-> >> @@ -58,6 +58,10 @@ struct rseq_cs {
-> >>    * contained within a single cache-line.
-> >>    *
-> >>    * A single struct rseq per thread is allowed.
-> >> + *
-> >> + * If struct rseq or struct rseq_cs is used with Memory Protection Keys,
-> >> + * then the assigned pkey should either be accessible whenever these structs
-> >> + * are registered/installed, or they should be protected with pkey 0.
-> >>    */
-> >>   struct rseq {
-> >>          /*
-> >> diff --git a/kernel/rseq.c b/kernel/rseq.c
-> >> index 2cb16091ec0ae..9d9c976d3b78c 100644
-> >> --- a/kernel/rseq.c
-> >> +++ b/kernel/rseq.c
-> >> @@ -10,6 +10,7 @@
-> >>
-> >>   #include <linux/sched.h>
-> >>   #include <linux/uaccess.h>
-> >> +#include <linux/pkeys.h>
-> >>   #include <linux/syscalls.h>
-> >>   #include <linux/rseq.h>
-> >>   #include <linux/types.h>
-> >> @@ -402,11 +403,19 @@ static int rseq_ip_fixup(struct pt_regs *regs)
-> >>   void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
-> >>   {
-> >>          struct task_struct *t = current;
-> >> +       pkey_reg_t saved_pkey;
-> >>          int ret, sig;
-> >>
-> >>          if (unlikely(t->flags & PF_EXITING))
-> >>                  return;
-> >>
-> >> +       /*
-> >> +        * Enable access to the default (0) pkey in case the thread has
-> >> +        * currently disabled access to it and struct rseq/rseq_cs has
-> >> +        * 0 pkey assigned (the only supported value for now).
-> >> +        */
-> >> +       saved_pkey = enable_zero_pkey_val();
-> >> +
-> >>          /*
-> >>           * regs is NULL if and only if the caller is in a syscall path.  Skip
-> >>           * fixup and leave rseq_cs as is so that rseq_sycall() will detect and
-> >> @@ -419,9 +428,11 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
-> >>          }
-> >>          if (unlikely(rseq_update_cpu_node_id(t)))
-> >>                  goto error;
-> >> +       write_pkey_val(saved_pkey);
-> >>          return;
-> >>
-> >>   error:
-> >> +       write_pkey_val(saved_pkey);
-> >>          sig = ksig ? ksig->sig : 0;
-> >>          force_sigsegv(sig);
-> >>   }
-> >> --
-> >> 2.48.1.658.g4767266eb4-goog
-> >>
->
->
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> https://www.efficios.com
+Best regards,
+Oliver
+
+On 10.03.25 10:55, Vincent Mailhol wrote:
+> On Mon. 10 Mar 2025 at 18:46, Oliver Hartkopp <socketcan@hartkopp.net> wrote:
+>> On 10.03.25 10:29, Vincent Mailhol wrote:
+>>> On Mon. 10 Mar 2025 at 03:59, Oliver Hartkopp <socketcan@hartkopp.net> wrote:
+> 
+> (...)
+> 
+>>>> Isn't there some lock-less per-cpu safe statistic handling within netdev
+>>>> we might pick for our use-case?
+>>>
+>>> I see two solutions. Either we use lock_sock(skb->sk) and
+>>> release_sock(skb->sk) or we can change the types of
+>>> can_pkg_stats->tx_frames and can_pkg_stats->tx_frames_delta from long
+>>> to atomic_long_t.
+>>>
+>>> The atomic_long_t is the closest solution to a lock-less. But my
+>>> preference goes to the lock_sock() which looks more natural in this
+>>> context. And look_sock() is just a spinlock which under the hood is
+>>> also an atomic, so no big penalty either.
+>>
+>> When we get skbs from the netdevice (and not from user space), we do not
+>> have a valid sk value. It is set to zero.
+>>
+>> See:
+>> https://elixir.bootlin.com/linux/v6.13.6/source/net/can/raw.c#L203
+>>
+>> And those skbs can also be forwarded by can-gw using can_send().
+>>
+>> Therefore there is no lock_sock() without a valid sk ;-)
+>>
+>> When 'atomic_long_t' would also fix this simple statistics handling, we
+>> should use that.
+> 
+> I see, Thanks for the explanation. Then atomic_long_t seems the best
+> (and easiest).
+
