@@ -1,108 +1,141 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180F1226CEC;
-	Mon, 10 Mar 2025 16:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149BD230BCE
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741624298; cv=none; b=llwiLi/BxqzegSkk/GnCnmE2R9QVMncWThaCQHr0fpR5NqRdRF9SQ/VE4esqFfpe5UnqW3xWHF8FQTOaPVMmdoiopkJt+eHLd+ovBCIlLs++Rc4Krjm7nENwg/lQFJ3QrDUxz6QD0oZ0TWfxqIrDP0SWVGWQsOWgswintn+0220=
+	t=1741624303; cv=none; b=KOM3A+/VSOXWrzJVBfHivRYTpE8Fms28r0/h1Kip4IK3wF4kHv6FITEHi4SfdyUpI4q/LYMhgsJIZ3M+Isdb3u3h5yTDMLbwDlOC5jBPTpEBO1nC896UqyafVl5X6qbsYDuPoOZwEbC5Z2RAA0deFVhvHNDvpepctPnb6u2q/2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741624298; c=relaxed/simple;
-	bh=Men/YQvbniyBZCsHsLLPHLGHHkqzBckBKs8MSvuAcUg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=a+LKSuQhCew/MZU/mjXwhtsyp8bLhE8QDDFxg1nJiOV8MLLg8WeCRZSAeh+fBKnsqqY3P9QFNWGBMd4HPXQYNRoea0qP9VRzBaMA8Ptl3av7Cwrj9zRYyoADsPjyECLrHSfxTHFdxRhc93KSlGJeLOz0LgAP1Mlb8L4oQa/fdF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZdbJLhsM; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZdbJLhsM"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CA26D4421A;
-	Mon, 10 Mar 2025 16:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741624293;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Men/YQvbniyBZCsHsLLPHLGHHkqzBckBKs8MSvuAcUg=;
-	b=ZdbJLhsMMvNtKlRd1B4Xxs/CP2OEBSFJQYi8sAu5+jOg/ppkH8n8f0wnGfsORUMbLDvZIE
-	AFc2QC/dNL3f1ZcCeZjdFlZuvErFK6bCwsSvM1iLlT+9VxJv9pjpgg3ol8YyJtUJcaKRYK
-	4i2KuWmOug8oPC9l1Xuj315Yr8zfggcfe3ai92c8dAOo8jvTb+shgcXHN4MOt7v7uyAHX9
-	Z2JyH9WSexnJ0tcCb4JEiljRXVxC8vgtnlgJYx65e+JfvoEfJJiYEEJOnq2vZw1ok+u+oY
-	fHo5GJw7SIp2R8a2GxA4RMD6pEbMoie43PLSn4PEVqyWWy6jZnGy0xRNqZrMPg==
+	s=arc-20240116; t=1741624303; c=relaxed/simple;
+	bh=wPxmxtZ0L1CpbfM5XV6kkpSzMXwHwYpSGhpvzwxys2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QDK/yE4VriOy6NGXLD3789L3M1yisHiGdcsnzU45t+oq3MB5nKf8AQ3nSdQa6oFWlmDpSgpSGczQKSZ49n2aeSrcWTxfVEyjTZCs6TLoWrBH3tw+/QskG4yIra6CYPlwJzwtp2CRLt83Vksxf14WMefGvEFjNqyi44f2vBucpV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1D031692;
+	Mon, 10 Mar 2025 09:31:52 -0700 (PDT)
+Received: from [10.57.83.165] (unknown [10.57.83.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34D4A3F5A1;
+	Mon, 10 Mar 2025 09:31:40 -0700 (PDT)
+Message-ID: <661898ee-c1f9-4f51-a73d-b70fe2eccd84@arm.com>
+Date: Mon, 10 Mar 2025 16:31:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm: use ptep_get() instead of directly dereferencing
+ pte_t*
+Content-Language: en-GB
+To: Qi Zheng <zhengqi.arch@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250310140418.1737409-1-ryan.roberts@arm.com>
+ <f0d9986d-b3f0-42db-8fb6-d6087dd77f7d@bytedance.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <f0d9986d-b3f0-42db-8fb6-d6087dd77f7d@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Mar 2025 17:31:32 +0100
-Message-Id: <D8CQAAKOZ1O5.8JVESQPJSSM8@bootlin.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: Add VAR-SOM-MX6UL SoM and
- Concerto board
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, "Shawn Guo" <shawnguo@kernel.org>, "Sascha
- Hauer" <s.hauer@pengutronix.de>, "Pengutronix Kernel Team"
- <kernel@pengutronix.de>, "Fabio Estevam" <festevam@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250310-varsom6ul-concerto-dts-v3-0-551e60713523@bootlin.com>
- <20250310-varsom6ul-concerto-dts-v3-1-551e60713523@bootlin.com>
- <63f8aa7d-fcd4-450f-b3a1-44886a29fc7e@kernel.org>
- <cd2f3c97-53bb-42f5-a3cd-4385bfda5dc7@kernel.org>
-In-Reply-To: <cd2f3c97-53bb-42f5-a3cd-4385bfda5dc7@kernel.org>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelkeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdetnhhtohhnihhnucfiohgurghrugdfuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhedtteetheefgfejleeiledvieevleduffejgeeufedujeeufeefjeefveegudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrt
- ghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
-X-GND-Sasl: antonin.godard@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Mon Mar 10, 2025 at 5:22 PM CET, Krzysztof Kozlowski wrote:
-> On 10/03/2025 17:22, Krzysztof Kozlowski wrote:
->> On 10/03/2025 16:56, Antonin Godard wrote:
->>> Add support for the Variscite i.MX6UL VAR-SOM-MX6UL and the Variscite
->>> Concerto carrier board.
->>>
->>> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
->>> ---
->> <form letter>
->> This is a friendly reminder during the review process.
->>=20
->> It looks like you received a tag and forgot to add it.
->>=20
->> If you do not know the process, here is a short explanation:
->> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
->> of patchset, under or above your Signed-off-by tag, unless patch changed
->> significantly (e.g. new properties added to the DT bindings). Tag is
->> "received", when provided in a message replied to you on the mailing
->> list. Tools like b4 can help here. However, there's no need to repost
->> patches *only* to add the tags. The upstream maintainer will do that for
->> tags received on the version they apply.
->>=20
->> Please read:
->> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/=
-submitting-patches.rst#L577
->>=20
->> If a tag was not added on purpose, please state why and what changed.
->
-> And now I noticed you used b4, so I really do not get how the tags can
-> be missing here. :/
+On 10/03/2025 15:51, Qi Zheng wrote:
+> Hi Ryan,
+> 
+> On 3/10/25 10:04 PM, Ryan Roberts wrote:
+>> It is best practice for all pte accesses to go via the arch helpers, to
+>> ensure non-torn values and to allow the arch to intervene where needed
+>> (contpte for arm64 for example). While in this case it was probably safe
+>> to directly dereference, let's tidy it up for consistency.
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>   mm/migrate.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> This looks good to me. So
+> 
+> Reviewed-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
-Sorry, that's totally my fault here, I forgot to run 'b4 trailers -u' befor=
-e
-sending... :/ And I don't think it's part of the prep checks?
+Thanks!
 
-I will send a new version with the proper trailers.
+> 
+> BTW, there are many other places in the kernel that directly
+> dereference pmd_t* and pud_t*, etc.
 
-Antonin
+It's all a little bit murky. For now, from arm64's perspective at least, there
+is only a hard requirement for ptes to be accessed through the arch helper. This
+is because arm64's contpte layer may apply a transform when reading the pte.
 
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+In general there are also potential issues with tearing, if you don't at least
+read with READ_ONCE(). But often to consumer of the value is tolerant to tearing
+(e.g. pmd_none(), etc). Also, in practice on arm64 the compiler will emit
+instructions that ensure single-copy-atomicity for direct dereferences, so it
+all works out.
+
+That said, Anshuman (cc'ed) has been looking at supporting FEAT_D128 (128 bit
+page table descriptors) on arm64. The compiler does not emit single-copy-atomic
+loads for direct dereferences of 128 bit data, so he has been working on
+converting the other levels to use the accessors for that reason.
+
+But that has some potentially problematic interactions with level folding that
+need to be solved. Some arches rely on the compiler optimizing away the direct
+dereferences when folded. But it can't do that for a READ_ONCE().
+
+I believe Anshuman is aiming to post a series to do this at some point in the
+future.
+
+Thanks,
+Ryan
+
+> 
+> For example:
+> 
+> root@debian:~# grep "*vmf->pmd" . -rwn
+> ./mm/memory.c:5113:    if (pmd_none(*vmf->pmd) && !vmf->prealloc_pte) {
+> ./mm/memory.c:5207:    if (unlikely(!pmd_none(*vmf->pmd)))
+> ./mm/memory.c:5339:    if (pmd_none(*vmf->pmd)) {
+> ./mm/memory.c:5490:    if (pmd_none(*vmf->pmd)) {
+> ./mm/memory.c:5996:    if (unlikely(pmd_none(*vmf->pmd))) {
+> ./mm/filemap.c:3612:    if (pmd_trans_huge(*vmf->pmd)) {
+> ./mm/filemap.c:3618:    if (pmd_none(*vmf->pmd) &&
+> folio_test_pmd_mappable(folio)) {
+> ./mm/filemap.c:3628:    if (pmd_none(*vmf->pmd) && vmf->prealloc_pte)
+> ./mm/huge_memory.c:1237:    if (unlikely(!pmd_none(*vmf->pmd))) {
+> ./mm/huge_memory.c:1352:        if (pmd_none(*vmf->pmd)) {
+> ./mm/huge_memory.c:1496:    if (pmd_none(*vmf->pmd)) {
+> ./mm/huge_memory.c:1882:    if (unlikely(!pmd_same(*vmf->pmd, vmf->orig_pmd)))
+> ./mm/huge_memory.c:1947:    if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
+> ./mm/huge_memory.c:1965:        if (unlikely(!pmd_same(*vmf->pmd, orig_pmd))) {
+> ./fs/dax.c:1935:    if (pmd_trans_huge(*vmf->pmd) || pmd_devmap(*vmf->pmd)) {
+> ./fs/dax.c:2058:    if (!pmd_none(*vmf->pmd) && !pmd_trans_huge(*vmf->pmd) &&
+> ./fs/dax.c:2059:            !pmd_devmap(*vmf->pmd)) {
+> 
+> Would it be best to clean them up as well?
+> 
+> Thanks,
+> Qi
+> 
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 22e270f727ed..33a22c2d6b20 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -202,7 +202,7 @@ static bool try_to_map_unused_to_zeropage(struct
+>> page_vma_mapped_walk *pvmw,
+>>           return false;
+>>       VM_BUG_ON_PAGE(!PageAnon(page), page);
+>>       VM_BUG_ON_PAGE(!PageLocked(page), page);
+>> -    VM_BUG_ON_PAGE(pte_present(*pvmw->pte), page);
+>> +    VM_BUG_ON_PAGE(pte_present(ptep_get(pvmw->pte)), page);
+>>
+>>       if (folio_test_mlocked(folio) || (pvmw->vma->vm_flags & VM_LOCKED) ||
+>>           mm_forbids_zeropage(pvmw->vma->vm_mm))
+>> -- 
+>> 2.43.0
+>>
+> 
+
