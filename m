@@ -1,108 +1,129 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18CC2253E6;
-	Mon, 10 Mar 2025 12:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C375D229B2D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741610665; cv=none; b=dBDjrdQTyO1t1+ZWQ5W3A4U7NoY082ZzNEeoF1BevlMBUzGcKsRG159qX20x2PKx+taZQYv4OKhs9NDIz9vhQ0nJJp4Oved0cVeP6/iPaUFyfqEnB+ETNmTVqqW96a7hWkv/LXAhM8T/9GZ/zPJB8eV/PJbK59iJfbsYBEbFSMk=
+	t=1741610665; cv=none; b=VR/bHrQMiskkiPU9sEDimVx173PPpQCvVZNgBzvZBfM0uWMHv6Cg36uKBk88JOeRe/QiawoBYgfUPUuZZkuloblab9s2oRxSBs1Z1uTbjLhAlap1hNIF+AXaLo5vlkI5xsXUzQ4jP8qCCAERkuAc00mNI/jqOvJ4iuAGp1dJFXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741610665; c=relaxed/simple;
-	bh=uH+sZDT/+u9Xsuiowtq09BO7Ga7yEOnPdwZTgyvS4HQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aAN/+i6ZEb5aNpx0LIPepTE1bvKNRIbyidltl/yrtIYCnHg6ceuz+Wht7P8nVFxxwgyUNeywwQgZtgHFVKd1xPsk1/njYBLrTYorxe6CCE4yNYPQzVpVQWuNotl8HsOEt/VVkPctbr+uP7a8Uqc3l2y13C4H9gQExA79jxscI9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZBGj534jzz67Ldy;
-	Mon, 10 Mar 2025 20:41:13 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AC6691405E3;
-	Mon, 10 Mar 2025 20:44:18 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 10 Mar
- 2025 13:44:17 +0100
-Date: Mon, 10 Mar 2025 12:44:15 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Shiju Jose <shiju.jose@huawei.com>, "dferguson@amperecomputing.com"
-	<dferguson@amperecomputing.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "bp@alien8.de"
-	<bp@alien8.de>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 2/3] ACPI:RAS2: Add ACPI RAS2 driver
-Message-ID: <20250310124415.0000710a@huawei.com>
-In-Reply-To: <a0b319b4f42c4286a120fbb88a88adeb@huawei.com>
-References: <20250305180225.1226-1-shiju.jose@huawei.com>
-	<20250305180225.1226-3-shiju.jose@huawei.com>
-	<20250306171925.00002721@huawei.com>
-	<a0b319b4f42c4286a120fbb88a88adeb@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	bh=42bpw7QsJxoPFZyWS63GGnQgVa3DFvQUvEX/6GgwASk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GrPonLG9NbLeMXRIl77PMiJb1FwdHvXnTirhWV0Wj99ICA3o0qXMoFhlb3e8b6a5o35aURh8kZegFalvdYA4osstp8T6ltDcYkYPKSvZHIdQkedTJNxb9yYiXy49o8y6+KV0GymH82gjFdN9vxQnBWBiaMXpfyrsJ+KGJKGRW0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RXRSZvXc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXRSZvXc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741610662;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8DXEg1k9/LkI/RFF7cRqUAYGlbFUNVfNuX3I9mixJac=;
+	b=RXRSZvXcXVyrUl4VyaP81OfAZTdluSgjw8A9cQNwioSyBkA7NTGhO3MpYi8kekFWPsQfr8
+	8SZgkpO/g7TFbILMtVlx/FAJOXMO5+nKTCywhLk33LdEu9plP1Ti1Akh/Gq50Eb88Tib4J
+	Rkc/L9JFWwMFOQbAuCnSPT8fASXk/OY=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-223-4Wx9TQohOMe862VXD_Qmdg-1; Mon,
+ 10 Mar 2025 08:44:19 -0400
+X-MC-Unique: 4Wx9TQohOMe862VXD_Qmdg-1
+X-Mimecast-MFC-AGG-ID: 4Wx9TQohOMe862VXD_Qmdg_1741610658
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8700A195609F;
+	Mon, 10 Mar 2025 12:44:17 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A1D811956094;
+	Mon, 10 Mar 2025 12:44:14 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 10 Mar 2025 13:43:46 +0100 (CET)
+Date: Mon, 10 Mar 2025 13:43:42 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
+ full
+Message-ID: <20250310124341.GB26382@redhat.com>
+References: <20250304102934.2999-1-hdanton@sina.com>
+ <20250304233501.3019-1-hdanton@sina.com>
+ <20250305045617.3038-1-hdanton@sina.com>
+ <20250305224648.3058-1-hdanton@sina.com>
+ <20250307060827.3083-1-hdanton@sina.com>
+ <20250307104654.3100-1-hdanton@sina.com>
+ <20250307112920.GB5963@redhat.com>
+ <20250307235645.3117-1-hdanton@sina.com>
+ <20250310104910.3232-1-hdanton@sina.com>
+ <20250310113726.3266-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310113726.3266-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-> >> +#define RAS2_PCC_CMD_COMPLETE	BIT(0)
-> >> +#define RAS2_PCC_CMD_ERROR	BIT(2)
-> >> +  
-> >I think these bits are from table 14.11 and
-> >generic to all PCC status registers? Should these
-> >have more generic names rather than ras2 specific ones?  
-> Yes.
-> Instead will use PCC_STATUS_CMD_ COMPLETE and  PCC_STATUS_ ERROR
-> from include/acpi/pcc.h. 
-> 
-> >  
-> >> +/* RAS2 specific PCC commands */
-> >> +#define RAS2_PCC_CMD_EXEC 0x01  
-> >Are we mixing commands and field definitions both
-> >with prefix RAS2_PCC_CMD_ ?  That is somewhat
-> >confusing.  
-> Will add Table 5.82: .. here in the comment and 
-> Is rename to PCC_CMD_ EXEC_RAS2  better?
+On 03/10, Hillf Danton wrote:
+>
+> On Mon, 10 Mar 2025 12:09:15 +0100 Oleg Nesterov
+> > On 03/10, Hillf Danton wrote:
+> > > On Sun, 9 Mar 2025 18:02:55 +0100 Oleg Nesterov
+> > > >
+> > > > So (again, in this particular case) we could apply the patch below
+> > > > on top of Linus's tree.
+> > > >
+> > > > So, with or without these changes, the writer should be woken up at
+> > > > step-03 in your scenario.
+> > > >
+> > > Fine, before checking my scenario once more, feel free to pinpoint the
+> > > line number where writer is woken up, with the change below applied.
+> >
+> >     381          if (wake_writer)
+> > ==> 382                  wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
+> >     383          if (wake_next_reader)
+> >     384                  wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+> >     385          kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+> >     386          if (ret > 0)
+> >     387                  file_accessed(filp);
+> >     388          return ret;
+> >
+> > line 382, no?
+> >
+> Yes, but how is the wait loop at line-370 broken?
+>
+>  360                 }
+>  361                 mutex_unlock(&pipe->mutex);
+>  362
+>  363                 BUG_ON(wake_writer);
+>  364                 /*
+>  365                  * But because we didn't read anything, at this point we can
+>  366                  * just return directly with -ERESTARTSYS if we're interrupted,
+>  367                  * since we've done any required wakeups and there's no need
+>  368                  * to mark anything accessed. And we've dropped the lock.
+>  369                  */
+>  370                 if (wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable(pipe)) < 0)
+>  371                         return -ERESTARTSYS;
 
-That seems OK to me.
+Hmm. I don't understand you, again.
 
+OK, once some writer writes at least one byte (this will make the
+pipe_empty() condition false) and wakes this reader up.
 
-For things you agree with feel free to just crop out that bit
-of the email so it is easier to spot the remaining questions.
+If you meant something else, say, if you referred to you previous
+scenario, please clarify your question.
 
-Thanks,
-
-Jonathan
+Oleg.
 
