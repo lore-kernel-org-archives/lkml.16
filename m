@@ -1,101 +1,209 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2229F22154C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741613936; cv=none; b=aa7NzKefNgvBb9+8UUvS6kJ1Qoc8shLF984w/488r4fpUgW/TgLNVbjWeyYg8QA0c2ntAc8N6ocJ8TooVhZHDBpJF7ssmr6mGvgm32sfDWCsRiYQ7B46wDNPtChk4YnMN8svRgnbjr8WVNdG+jucF9pVg/KRfx6H3IPzUs2RsbM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741613936; c=relaxed/simple;
-	bh=n0QR94b1ACqHO7qz1/g1NVjlox0kbGrQGKI5IkM6s1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qj2/dMKU+ZJT5S6NsABrjKFCAUOWOAzubj9rKbWsL4tCx51iFt3s5HNLXXMnlzOeo5pTEcc2gP+AYlZoLQu+BrkdmsXbFrQ8o/ZGXnlKevRYtQ7fj6vI2DKt/ZRvUCdcEvCaN3nWgbsam68x/HG7Od+wiuZKgOGu/qnm2QFil90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iNwI8Mrq; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A305B22154C;
+	Mon, 10 Mar 2025 13:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741614013; cv=fail; b=k4duQC8F4jTtACreXVMklQWYXI4PWiQnPOcbb/+wLde0ACPFfxZQFEUd0zPDs2KCj1Hq7tCtoEo77ayY2Qkcp2LWKGKmJADVvLVDUSQbgqGv2Fe/KZs8cezWLsbHQoQ84C1UMN8Rq4EAGwV3fyInydd1zondncAYO2YShx7haFE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741614013; c=relaxed/simple;
+	bh=W/+IYl1I3tRPDHOnZz0ydAVBDIhXiZABf+My/YOqzjY=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=VlNnTwrMxv29LAUPWymtGQGdsHDB7vB6u8eJekP3tK7c+HGYDwP25rBPJee/hCbxQDlxX3PHvnyybGLgxAajsP7IAMu2HgYxCEpegXN7wh/FHlH8MM39iwEECTvtIm9TzFfyFhWKa2iU9ldT1OstwP2noT+jIIIeacJzm88M3UM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=doFXu3ib; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=P3mTY7WB; arc=fail smtp.client-ip=216.71.154.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iNwI8Mrq"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DDE6940E0218;
-	Mon, 10 Mar 2025 13:38:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id A5yFdn3_9Qn6; Mon, 10 Mar 2025 13:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741613928; bh=yz9qRKIWQjHoRou4yomeKKijPLVARfKK56eOb5EDQyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iNwI8MrqTnUbG7sFMNfzAXa231YunK/F612DnEFLb/Wej8PsxzY4T14Nv0ajjk5vB
-	 rlXosLOsVZDdBfhp1SAlVNkpoW19uiA/wxiJ6IST1tE1jJ/TNW44+mA4an+Dq17i8m
-	 7UE9qDW9dglsU+3BiXpbRpOCZMQH8RJe7H2Fiivvtwj8xjvKjACR/vuOhGrLu5AAhw
-	 ezK2fNcqU0STDMLo1l4w3ryECkCIybufhgZNJ43b4wWqUG5fNCVjTHGWNTqLIjICwb
-	 WIk0Sr7BJi68OEQlXqFyFUWNTP+O9rGJdZNdiMxmGveSz5lLXzNf52OiNDtTVVpCIt
-	 nl8wF+9C2da+mSfTwZIJyie8MWQbUssJUsvngrC+lZNaQx3wwySW2UeV9WBmvmgTJF
-	 9b3h9QEIlPMutHEfdgnQMMdLC8MJyDcyFIEOA0ajbyJ/Voy18HmgsThZTqOJTUrUFD
-	 VvV9I4VBoN7is+Vtv8O3BUq92OXUyaXXMf5cdtwAMBjqXfInVKiuKNF50akV+gup4k
-	 q/TkWl0U1CmlcHqXcIGm4JlObrup7t2zXtUvOxWWPJOY5oPcDBL0uHxw+tblJ8GesQ
-	 hBR69Kiu1J1mpLZ0dR1YXwuRAPI994ab5oM+Ar6Bt/IhX/QOL0H9aYPwS52VdQPZd8
-	 F6DXFgTcuBXAQhhKd9ZESLn8=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 61F5A40E0214;
-	Mon, 10 Mar 2025 13:38:34 +0000 (UTC)
-Date: Mon, 10 Mar 2025 14:38:33 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Juergen Gross <jgross@suse.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Alexey Gladkov <legion@kernel.org>,
-	"Alexey Gladkov (Intel)" <alexey.gladkov@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@intel.com>, Joerg Roedel <jroedel@suse.de>,
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org, hpa@zytor.com,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
-	Larry.Dewey@amd.com
-Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
-Message-ID: <20250310133833.GHZ87rWfuV6WgQTsoh@fat_crate.local>
-References: <20250305153705.GKZ8hvoaz2GPt2rGtu@fat_crate.local>
- <b0cf4bfc-bf22-4986-9e76-62e3f54179ea@intel.com>
- <2koe2zg26fndx6d6jcmbg6dzybbgldgrjufupj74nvmav2dmqg@w6bknhosl64h>
- <Z8le_TWUJNebrfs7@8bytes.org>
- <Z8l66FFgPu5hWtuI@agladkov-desk>
- <Z86-3n1-MArVLM9Z@8bytes.org>
- <Z87L0bRi8tcAIsDw@example.org>
- <e9d58d64-ab0f-49e8-ac87-c02bda6bc837@suse.com>
- <Z87ce37GjCqpOLCW@8bytes.org>
- <b2e585a7-edd5-4b13-b904-3d0913177aee@suse.com>
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="doFXu3ib";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="P3mTY7WB"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1741614012; x=1773150012;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=W/+IYl1I3tRPDHOnZz0ydAVBDIhXiZABf+My/YOqzjY=;
+  b=doFXu3ib5x9mruDrsVmHZqp4amExFgJfT63Vu9kaD87oKPJ4riT0eqbk
+   d2wy6U5y+O8BJNTbp9Q3Tww6CPL3Xt8kIiaaX3LKm7V88zisPTEDDkcOt
+   VzJ8q9w7gZPoM+b3sCYY3WiLkVlx2vhlGeMzA1exfXhZK9LRA9lcHVjYr
+   XdhdMDFMxL7gN47GNrxIRXtLFk7yJavqn7i7Za2QXLv2WXtO1gIyaO7G2
+   ZQXddDasFU2DhDxBhZLLM+8CZ6X2Iwk55GpvTRQu/nd7p5dXBFy5kLVeo
+   tjga4rALFZPy4mqSEDzh2ooqQZX2xbRvp7l3s6xyzKRWDMgIdVmHGmV5r
+   g==;
+X-CSE-ConnectionGUID: NhP7y9jrSAOuguARSPGNgw==
+X-CSE-MsgGUID: rpJLjp4nSu2VzpTDvmfKMw==
+X-IronPort-AV: E=Sophos;i="6.14,236,1736784000"; 
+   d="scan'208";a="44698052"
+Received: from mail-bl0pr05cu006.outbound1701.protection.outlook.com (HELO BL0PR05CU006.outbound.protection.outlook.com) ([40.93.2.9])
+  by ob1.hgst.iphmx.com with ESMTP; 10 Mar 2025 21:40:04 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Hk1kVHjVhDRqNhKhQ94L32d/3b8CQXq5kr8RgpChebTvPxjkeIHhERIiQ7FFPOSOhLUI9UJfhap9U/DM6UQxRoJbW5WxB7M4bvMqJF+zbFJ8z15zgYxqQqBUoItKIZjz3lPkIHCSChX7kh+VMQg7V6SAmzTZDbRUruWfoRdSBU2TT8n/5Tkwvw/0HEYk7jU/dm/ORI7NpxMNYKg49oHMqYJJ0VwaDAE3LdcCet5pkQ3VQOuM7z6+A+lv5A/Fzel4vmitA1E5Kvy4pGz1UkkNGK5s6pvlAS3MZiaaDLKlXu7UZF1RAL9Yng+ruyK4xEpIezLTtpknOmYJ7ckyfSDu6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G0ON6s2ZiOKK7+/bVvAFH1ABAJm/O+R1yaJOmAtsS/w=;
+ b=O9vv6bGSbuybXaudssYGXXIBK9TFCzxdM6Is/cZsnda/Eal5GfVgD7Dg5KACY5VVoLT+gavOboNE61lW+qub/44gRHtIO9K1EBRv57kVo/eC2ra1a3dBiIoSGiJN0Ml/l62lZZ/zjsvBim+hcUtkwTzwzeK5q2STJ+oKM+ZirxpZIZorW5GtMkytj/DGL6VJiKy842GOCgbOUd5zfKT8KC7UVnZEcS2SiVpw4lbT3mppUkP8JUSGWTKdN5Bb5KzDQOFeGFGnXVVbuT9oJfOiR1zezWphfZ3hoVYi73lGtCVaxbpNrreW8oz6SzKNj8rEiCUZxO1R4I6ol0HvZpB8Nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G0ON6s2ZiOKK7+/bVvAFH1ABAJm/O+R1yaJOmAtsS/w=;
+ b=P3mTY7WBQxHzo+fXmoA3hEU5f+FjsFDvmjCqMj8q98qjj9SfURL+DHiMGKCpB/ZmFcXEC/hh0JrviKmSw6UPaCJQErwiA94wX2NhZdAmR2MvACz99rv0wOxPEL/rfhssX81kWyfRRYi07rQybRKj2gnaU38MCqSj5BuJIbVdlBA=
+Received: from BY1PR04MB8773.namprd04.prod.outlook.com (2603:10b6:a03:532::14)
+ by CO6PR04MB8410.namprd04.prod.outlook.com (2603:10b6:303:141::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
+ 2025 13:40:00 +0000
+Received: from BY1PR04MB8773.namprd04.prod.outlook.com
+ ([fe80::1e29:80f5:466d:e4e5]) by BY1PR04MB8773.namprd04.prod.outlook.com
+ ([fe80::1e29:80f5:466d:e4e5%4]) with mapi id 15.20.8511.025; Mon, 10 Mar 2025
+ 13:40:00 +0000
+From: Hans Holmberg <Hans.Holmberg@wdc.com>
+To: Carlos Maiolino <cem@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>
+CC: hch <hch@lst.de>, "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Holmberg
+	<Hans.Holmberg@wdc.com>
+Subject: [PATCH] xfs: trigger zone GC when out of available rt blocks
+Thread-Topic: [PATCH] xfs: trigger zone GC when out of available rt blocks
+Thread-Index: AQHbkcHru47f7mgTq0ydKc6KrGtHAQ==
+Date: Mon, 10 Mar 2025 13:39:59 +0000
+Message-ID: <20250310133848.9856-1-hans.holmberg@wdc.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.47.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY1PR04MB8773:EE_|CO6PR04MB8410:EE_
+x-ms-office365-filtering-correlation-id: f771f6b6-4340-4c1a-a1e3-08dd5fd90db8
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?7Wfka3Dv16mkYYTL2Wcc5ixu/1Sj23xOusNjHPEXb68IYO+gcYyHJ8OxKn?=
+ =?iso-8859-1?Q?IwF0ek0xvTHF8pU8aqW28UYo8mzXjWoE/Satu3yUSQGZ7I8CFkAoiGtcnX?=
+ =?iso-8859-1?Q?mz9WCqvQeI9iPuqnG/c8kmV+HyrxGoz3wYKIE9+D2b8Wm5cWS6Y6Uviy/j?=
+ =?iso-8859-1?Q?cZJ4kkyKluUW8GbbGgR02k4rMo5eAYsBTfnFtsYlDOfBKBwAG3sZ9PEGWf?=
+ =?iso-8859-1?Q?QGxx3Ge/Ofv7Nqiv0EcaLd880hlrkyspdPLKsZvY7vp7xnSq11XtI/an4i?=
+ =?iso-8859-1?Q?KzBjXlhUP7a1CodMpFgpfBCNaq1mf1k3cgRq2B4si5VmjQaFPiM8wLaFr6?=
+ =?iso-8859-1?Q?QaMIUkr8Cyqh1FMtQgXcwASu9KMufFMPhqtDfgFfT1FCKKqGx4+yXGGvvi?=
+ =?iso-8859-1?Q?EyefMDSmrCymp2BDBd3+4mfquSNU2/YUzR8JIbAtF7fipH51JxHHtLru2S?=
+ =?iso-8859-1?Q?JvkEJgoV/z+rETU7nyZUtbwcGTA+LiPY5NB3KEL+p3YposgtQCrGydUQoY?=
+ =?iso-8859-1?Q?CV/sPUHaHIrEt/nyO6Q/lh5PEVuVAjI6w25j+AUrG1w9CqidjRjVSQvIiC?=
+ =?iso-8859-1?Q?8+NWobx60EE7r8hdWVQ3AIZ8JkLZu9/HGDy2Xww2KVF/gepHiMJz8m+psG?=
+ =?iso-8859-1?Q?dFJkQrXP6RHhSwv5zeGx2xLaiZj0sJuesh7pGxhXBOBbRPe5XH9O53akKb?=
+ =?iso-8859-1?Q?SyMXjPb9dA2XRay2ag2FSRjM1JMvu5i6fLF4xyo5RU5k8HcIjHHNdgtMxl?=
+ =?iso-8859-1?Q?g1wheRjg6hpvdkP48+dbClCj1Vr8fjL44wH391qr3lF4ehF4Dyge8qT83U?=
+ =?iso-8859-1?Q?yDKVLLxlcm/HIW5Ic02/twh4CYWtbnQUTSIcbtSqCCJkzpP+kx+SN+Qq5s?=
+ =?iso-8859-1?Q?6YtVI9GB/0ycxOyM+UTfCJK8x4teAVkHPLjibdRJ/KYOiDEWNg2/i7v2M9?=
+ =?iso-8859-1?Q?CUPnY5y6jfpFhj+13LRFM+AGo78BKxVwtLIB01q8eYraJHyomgCORBkWMv?=
+ =?iso-8859-1?Q?0hDTzzpR1pIAhOx1aRrovU6GvDZczVkdyfZZyUtnG7G1/SZtOiFjVmXPnw?=
+ =?iso-8859-1?Q?JdbzfywFzPhQJfbWwFXRNk+Axr8Qb5jb6iSsNSUj+uOp1bD0gkw579DhKP?=
+ =?iso-8859-1?Q?fdEHsI5A6tsqUDUtEvC1+d3O5LLTXsLvldle/SVm+g8PprPsTFgmN5Qfma?=
+ =?iso-8859-1?Q?uqQQRwIB2J+RKDlxFmoGdY/F2xNTWoM2uOzz6RrYDxM5w+dyXFJzSQRs60?=
+ =?iso-8859-1?Q?wHCdoTxts5qsHn9bIbBCOMtn1DVGhApvraP2zYFRotoSnDrM2jV+A4oViu?=
+ =?iso-8859-1?Q?221AS7IMVdO0AHWoLlQguir2RC07UHU46AHjruxuhDWsFpyyUV/6GBjSPm?=
+ =?iso-8859-1?Q?ycnE7E4+dOAZdbAWULe4LvHPqGc1C5b32EZqzYD5ePgGO+QWzlzq2yEaTy?=
+ =?iso-8859-1?Q?NJULT/pkYYfCOvNTX4TEhGqIpQ5C+c7u6eiTlcoyhdKi9GNXH52tLZQCZb?=
+ =?iso-8859-1?Q?QWwGkz45T2vMmYQegVpHSf?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY1PR04MB8773.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?xc+wCqGhAeHZ1CnMuVfXc5K9tp27SCXrMwAQlhiWdf/o7q4vkLUeyaR/+a?=
+ =?iso-8859-1?Q?k+z7g0EQ8Rmnyj0j6WL72hQ/XM5usYxPRTIV30HBxLuF3Im0V7oZoBxtEC?=
+ =?iso-8859-1?Q?wwG3DC1ViCCsJQystsdpVX1Z0A10W2ARS7WqEPenqKQ+AeAoe/7u6Bx65Q?=
+ =?iso-8859-1?Q?W+JX/KUzN6bhmjcOSg9ZIIlrjulqZClCWfiD/2XHUAimsFNwsTDRPaX4+G?=
+ =?iso-8859-1?Q?Nzw8tJGDIhvSuwdhWkqYcCp/abSLhlJSVaWaJbXaZaqTVtsmhrGEZm29+u?=
+ =?iso-8859-1?Q?vR1H69MzqF+q03M+fw22pGgS/HFFVQlBqhRoqHMMfFftiAA15z+qE4CgP9?=
+ =?iso-8859-1?Q?0nNJsZc0p+jr+VIaFkEIBtdu1SfohPJM7C3JAdFOHe+e/kWSch8Gya+V0s?=
+ =?iso-8859-1?Q?IQZJwFOOvuMzkHa+tPLTDoVtOBBiLllP5VqkIEMA1ZAt/d6CvZIm+xQ7u1?=
+ =?iso-8859-1?Q?QjJuiIxq4YYCyB3I4yga11ru7dpzlhB+0IuZ2d02+UMFKiN78a2lcq26eo?=
+ =?iso-8859-1?Q?vhand1JkTv2tjVCGADp80YGQGBdEkfrGBamZWK4w488IljOC25uEH9NRLn?=
+ =?iso-8859-1?Q?KwzRqX7E6R+ih02kUZYrarcdgVbH7R+wabajRBi7ZedxlG4SUhwEcrpXIg?=
+ =?iso-8859-1?Q?Gr4nyVfZdmKfjArR3aeLMcxY4ivNagZTWNUANtr7mS47ybwXtueL0sR1md?=
+ =?iso-8859-1?Q?3Sm1hZ/MVjVUtPS6CkVrOBnpOaOoKYgRFfuJJhk+kIqU6NbAgzVhDCx2dN?=
+ =?iso-8859-1?Q?klZOySPE6P6NLSKWtSdh6zxiPOK0MDfKQwrr3dyBWSd89M900AuY2LJYBp?=
+ =?iso-8859-1?Q?STj8ZMtyNpTkTA3ZRJiOmQ7kmlNC4bAN585O6gUWYdReI3qCFjYnTMTjsg?=
+ =?iso-8859-1?Q?9838ch+DBLzaRwgjUJrFnz1sFCqbGs1DHgPPw+yGnFUUB6fSEjNh49tuIw?=
+ =?iso-8859-1?Q?4pROJ19S0NB4wnxjBZEBPESEIPIwZszrYFGE57GqSKtEV3zcDwpIVS2Q9F?=
+ =?iso-8859-1?Q?PzrE9KO5kICbRVlk8XWgXjk7N9di82mWQnYn5swQCn9Aw7sAXqin754ZXA?=
+ =?iso-8859-1?Q?4v/jewOkkw/u1j6salViImxK4Hlo/ltfOjcJ9B2WBMlWbYFEaIGPVaGQo9?=
+ =?iso-8859-1?Q?TlgsVV2detgqLtcwDGxVSrHwORMrnLBfKO28PoSZT9WWw3QDZHZyvUd/VL?=
+ =?iso-8859-1?Q?e+PXfXmJ2D4cP2qaZgFQsqlYQUC+DwCAkLZF6fT1mpb5yjaS4CWlY4zx01?=
+ =?iso-8859-1?Q?blolPGHPy0rG980pNCFYuqoguVb57qZ7p+pCFjypkzgrh+vdqWS2fhLleT?=
+ =?iso-8859-1?Q?pm1zQOgLIQv3U1+LiqCeYi4GT5phkxRi6Y1cH1+6SJNG22s6I7MfuGCCNX?=
+ =?iso-8859-1?Q?+CVaTM4jVXYFdCxyLttfa43LTsJb7bMOvb4ipwxe9YkUHATpmBPI/W2Wpp?=
+ =?iso-8859-1?Q?BUNL6FJbxZX4pjyaiH6NMGKgcNtb7YxujVjSA7PoJVDvFKXFZpn5PQYWXa?=
+ =?iso-8859-1?Q?ef2O5uYdjCj3k1PTD22KpZgBg5rlAnYTYwvRFOZ/mygV6B5yFrDbA+y86k?=
+ =?iso-8859-1?Q?qw/OG6NWWkIfjaRUc346CWIOcDyqKUkIHNe4dmhpRVWmuOvp13KFdV09ZE?=
+ =?iso-8859-1?Q?BgetTrosV0CLgFWu/YdKyr2gZWh4BIvD3WAHvMYPsCiUBoYowRgpSF6Q?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b2e585a7-edd5-4b13-b904-3d0913177aee@suse.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	9bjUJSzCG7EJ5OVwxb9fZen2HQFr+/Er7mql8uisPPBIMOg4MpCJ2tbK+mWtFRzGrB4Mx6S54Eju+H++BL6bwPCkSC9npZoKKA/75El/ZCwiv77/Dr8JhGMmeRSMQKVUV4O3YKydskBiEdVNOp5/yOAxH76u7Xnggh+wBTY0FsM7bcza+lk7oXn7H0HkRQeg+kuN7rE9/gD7UBvaUl7pG0ai3shN/MyXVowZz+U5wYlaovSQIYx6aKiIJqGAgWmWGOXXLdwb3t+1QEmfCDxpNKtTtI1AjDhBS+Zjwcm6XOnGbg/Y1+8UtGo/mO1VHMSszDTA2F48jGZlm9BdkwaY7/tDlpKJWAuLFqY4Gk9Cn6/fbFqnurXU5/QBAFlnlxE5TJqvyzZVW4e3i5Q0+0KjuZ8ea5atmUFdOEus4GPCoB6IuVDPGqWIjwwl7RNUlcatg2Tc7ICtX31fOk/zHvY61uB42oYRDKH3WKlkK1FCLs6G17Xjwy7oTKqIh9kqyN+DCXcl6IByWiM9BVObyaU+PFTYywZOmMi6jhzoApsz/m59FOOmxRFp8Yw3QTp0ZaNmXCHhh+Lwl6o/FUOFStS6At3qMs4TrcY0Y0dxLRmPWFd12T7WHo4qVD+PklUQO8al
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY1PR04MB8773.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f771f6b6-4340-4c1a-a1e3-08dd5fd90db8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2025 13:39:59.8949
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: U1/8o7C7jtZUUJM0ITK2i6izNftvTxVGzmTdYR1rXPiLzYDz65ga6Ix2HCU/GhJEFak++LA9znU00ccTx7ZYpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR04MB8410
 
-On Mon, Mar 10, 2025 at 01:49:46PM +0100, Juergen Gross wrote:
-> 1. Only name the hypervisor nearest to the guest (similar to running Xen on
->    top of another hypervisor in nested virtualization, which would still
->    say "xen").
-> 
-> 2. Add another entry for naming the outer hypervisor(s) (if possible).
-> 
-> 3. Name all known hypervisor levels, like "kvm,svsm" or "svsm,kvm").
+We periodically check the available rt blocks when filling up zones
+and start GC if needed, but we may run completely out in between
+filling zones, so start GC(unless already running) if we can't reserve
+writable space.
 
-/sys/guest it is then.
+This should only happen as a corner case in setups with very few
+backing zones.
 
-Let's just keep /sys/hypervisor alone and as Joerg said, we can link to it
-from /sys/guest.
+Fixes: 080d01c41d44 ("xfs: implement zoned garbage collection")
+Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
+---
 
-I guess that sounds ok...
+This issue was found in a yet-to-be-upstreamed xfstest.
 
-Thx.
+ fs/xfs/xfs_zone_space_resv.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/fs/xfs/xfs_zone_space_resv.c b/fs/xfs/xfs_zone_space_resv.c
+index 4bf1b18aa7a7..4433a060b7ff 100644
+--- a/fs/xfs/xfs_zone_space_resv.c
++++ b/fs/xfs/xfs_zone_space_resv.c
+@@ -159,6 +159,16 @@ xfs_zoned_reserve_available(
+ 		if (error !=3D -ENOSPC)
+ 			break;
+=20
++		/*
++		 * Make sure to start GC if it is not running already. As we
++		 * check the rtavailable count when filling up zones, GC is
++		 * normally already running at this point, but in some setups
++		 * with very few zones we may completely run out of non-
++		 * reserved blocks in between filling zones.
++		 */
++		if (!xfs_is_zonegc_running(mp))
++			wake_up_process(zi->zi_gc_thread);
++
+ 		/*
+ 		 * If there is no reclaimable group left and we aren't still
+ 		 * processing a pending GC request give up as we're fully out
+--=20
+2.34.1
