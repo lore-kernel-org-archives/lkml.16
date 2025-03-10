@@ -1,168 +1,152 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9158C227BAD
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931C7227E8A;
+	Mon, 10 Mar 2025 12:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741609677; cv=none; b=XPVlhG/rbLo9fmJqmKh10r0vg3EZ53uFhusDUE5e4CZRXHEAh+faEWLHuPRh/OorLN8g2+hhApE1f8S65tkVaruwnNUma+gBgKjqmPt8ek4jxmzb1UWF8vVP+BFFv5P3KybBHLJMMkPdbXLmstEp6G1192DoGYcGiaHdcQ6yh8k=
+	t=1741609678; cv=none; b=JtMTKtRFHrLDER2JuHvB4aJvjurZCkUIhdsq7x2QTjK2lMAz9HU7BMpKkps8Nd9xtSes0Aeq0kcID+x144uQD1XJ/Onr5O/JNXbGoHRepNP5832/bvmexqUAlerb3njNCre0RgyKGGCE8rpS+ykTN1KE6R55oYcO1Y6BuzqdmEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741609677; c=relaxed/simple;
-	bh=HgIqmGu9WMv4AosBsYyNR+EjhaTIva6EV1iEbNMAm78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z2FKI3eLolloXXY0qRa67Jt7R9ueemSvAyC51wd2DR/lyO/VRMIAWcoMxhQKpswt9bmASPMWx1sEWZgtGnmGUMnRNYYFgr8TcvGB6KMWP0aa0x80PiPWDDEXCaj61il1yN5MdsuQX3GRBqg1cqPaFSJh5rP2dyU6SlJrnv7FVJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=KFFVc9Xa; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1741609678; c=relaxed/simple;
+	bh=nfghLeOpazL62fRqIJWQz1MP6JIaYaoFaN69gx/8b4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XahLDA/wJ/8JYBlGM3pd+8oWFCdoKioq1AnXgNXCfYidC6MSwZmjXYE6KrvZ9McSIH88V6PllltXIJAzrQwDPmvkX0PCparB3Y96JRvagIqh1SNiM/wEKgR1cWMvHyvyQlrdgAbpv3XlMYusEztvMDvqRt69EKn23ilTWLDHegQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ENbRSXNm; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="KFFVc9Xa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=OOBZ8qTz+v44tkaV6ZMNqcXZyTXLCvBkFF2upUV3LoM=; b=KFFVc9XaY+1pFHNBOL4y01UKy3
-	zjmJtOA9Ognov++GYVTJxhjGRAfsvmzNPYAcIzh5il82pEKjczbp5VojwIOUWckxJ9mIzy6DLx72n
-	Vcw6Uen8ImsNc/buI1dH0OLt39jRq712dULKNwZCL/pR3Pj88TAW8P/p9TPsLN+UXmPyN1e5EcktJ
-	Uox80rIpGR5SXTeD/s2LDVJJBNO99LjGDmSbBhvPeh6vRORpub+LMMlJrAf3AH13xBqqOkm+EW+jn
-	b332S3z75Ss8viQ8jRYQpSNFy3wYYWMWZ2qmD5cNf1PRXc6Cw8NWHKkZXwa2sZ98NLLAMusMEasM6
-	pK3LK4vg==;
-Received: from [90.241.98.187] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1trcEL-006TNE-8x; Mon, 10 Mar 2025 13:27:43 +0100
-Message-ID: <6b9b27a7-2ccd-4f16-aa36-05877b5e8f7c@igalia.com>
-Date: Mon, 10 Mar 2025 12:27:42 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENbRSXNm"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso8836815e9.3;
+        Mon, 10 Mar 2025 05:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741609675; x=1742214475; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y07tVQtayKingIMzHvY+mUqyx0BK9tRXRpx87DXqL0Y=;
+        b=ENbRSXNmNy29S2e3KLbciMx5Rk26oTtEFAUBrhn7DVO06ykXtgEJoVFlaxSmvScF3W
+         hmW0noB3yb3scqDQHLT3cxSsGRL3ACG9uLR+xEryteuYFb70kZpdOwlBkVFGjANNKO5E
+         pLFpVoIPr+gjeSxEjUjnGlWKhivBQvn39Uxfsv4kY7MVBwjCbE7lSRxTQfiPdgLIMzvX
+         sg3XmqMS+SnJbZOmC3rXklR/KBabpP/MZGQohgRonzGORH9b3EmdAWe22Ut8d2tcdT9M
+         iOuuFPr5Ynze/Wi+3AiG6Q5F4t89+RfZR4P9Yh3APMvvRfEyy4PckAQ+mQvqtWBq5ued
+         KyPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741609675; x=1742214475;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y07tVQtayKingIMzHvY+mUqyx0BK9tRXRpx87DXqL0Y=;
+        b=oI4rmDA9mwi6FpPwANiE1v7zBff3A4OOkvTcdcxcMK5b+f7blaUYgHrOIhcBxMip0z
+         8vED4IU8fFjAkI1i1gv9vcO2FK57nqOvgvPk5Gt16ax+KmmYy6MBTVxmENUK/mJll/3b
+         mlwRzaJjvfsntTvQTH6fZXdYq1qSuvdhsrsuJ/jlRSBDbelsRc1BS1XPLb1fEfQ4YE3r
+         CUfr+rFnDS76nPMOxzXNwm1nXNuD7ZVRh8ZQDqdWDwq9/lbfrXdWlZ3D2D918ii5PDSM
+         UvciXRqXd8+6JTNTRBLoAy87nbHaALGNfgDzLJA9HigGb3yGRZWKIXzuzZ9isEI0dW4h
+         jHNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVjxbDZ+T7mtwC7io0SJZtcJeXJ0bbuZ558Pgbm6HzjJ6e8qUpGxu30HnoneVIlbzp619lfcK2@vger.kernel.org, AJvYcCVp6W3zkuE2m2IStRb+D75IsVeWh0l7Ju9mmhQms3iM8uyXuiMhCfwWkr/2uiLGhmbkYK7aelRSsLLM/z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfHc7j6vypT//yuwiOgBshmNH9XuawapGvjrj5SRKzBILJ/ndE
+	1buvt+QoF+PlRtGP0GL6Rm+mFD4oEhSSQ5IqStnmEtnX7hUDXdbq
+X-Gm-Gg: ASbGncs4hRLuEqTeuhGxSVIBVjzCHl3AsMM2OW80LNSmxkiZEnMlkHYfGwYBZLGVtk2
+	5o/C/806fnEfxWAMIHQFxo63dfoBAcuMOivDuyDuRLbjmoLbDaWyJD9q0jay1puu0+DPicx5fxR
+	E3IFRPw4DU5dkXgfn0TkYi9/RWI5UaUAbZoFqpASCS6XP3wEBlC8aI453GKoNe+I9BikF33M71a
+	jU1+hNySfWnzixIcOcInd1qceevJDHvG9Mkh95yyj5FbphnLeFEWcFhgCWxUYChR1TdvS7vsWYS
+	gaHHJxoUN8ZyRwtSifTmkSYUYCM1vSRnl0i7Olo2+ie6xQaCy1ZK0J1ieJYeC/PLTpiWF3Dg7Fb
+	4xQ0WWjJjeMeICrZe
+X-Google-Smtp-Source: AGHT+IHyEEGGzhCMZxMwRjQ82ccOJZrD+gnc4+NfGxz62Tu6AF+ZAKBbTzzBzG5J8FJd1mZ+MeHucw==
+X-Received: by 2002:a05:600c:4f41:b0:43c:ec28:d301 with SMTP id 5b1f17b1804b1-43cec28d3c2mr31513105e9.26.1741609674640;
+        Mon, 10 Mar 2025 05:27:54 -0700 (PDT)
+Received: from eichest-laptop.toradex.int (85-195-230-40.fiber7.init7.net. [85.195.230.40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd6530f26sm171963245e9.4.2025.03.10.05.27.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 05:27:53 -0700 (PDT)
+From: Stefan Eichenberger <eichest@gmail.com>
+To: vkoul@kernel.org,
+	kishon@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	p.zabel@pengutronix.de,
+	hongxing.zhu@nxp.com,
+	tharvey@gateworks.com,
+	Frank.Li@nxp.com,
+	francesco.dolcini@toradex.com
+Cc: linux-phy@lists.infradead.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v3 2/2] phy: freescale: imx8m-pcie: assert phy reset and perst in power off
+Date: Mon, 10 Mar 2025 13:27:04 +0100
+Message-ID: <20250310122745.34947-3-eichest@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250310122745.34947-1-eichest@gmail.com>
+References: <20250310122745.34947-1-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/sched: revert "drm_sched_job_cleanup(): correct false
- doc"
-To: phasta@kernel.org, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <ckoenig.leichtzumerken@gmail.com>, matthew.brost@intel.com,
- dakr@kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-References: <20250310074414.2129157-1-christian.koenig@amd.com>
- <564be70f7d64c04c1ad77499522d99c64ea4d4d3.camel@mailbox.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <564be70f7d64c04c1ad77499522d99c64ea4d4d3.camel@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-On 10/03/2025 12:11, Philipp Stanner wrote:
-> On Mon, 2025-03-10 at 08:44 +0100, Christian König wrote:
->> This reverts commit 44d2f310f008613c1dbe5e234c2cf2be90cbbfab.
-> 
-> OK, your arguments with fence ordering are strong. Please update the
-> commit message according to our discussion:
+Ensure the PHY reset and perst is asserted during power-off to
+guarantee it is in a reset state upon repeated power-on calls. This
+resolves an issue where the PHY may not properly initialize during
+subsequent power-on cycles. Power-on will deassert the reset at the
+appropriate time after tuning the PHY parameters.
 
-Could that argument please be explained in more concrete terms?
+During suspend/resume cycles, we observed that the PHY PLL failed to
+lock during resume when the CPU temperature increased from 65C to 75C.
+The observed errors were:
+  phy phy-32f00000.pcie-phy.3: phy poweron failed --> -110
+  imx6q-pcie 33800000.pcie: waiting for PHY ready timeout!
+  imx6q-pcie 33800000.pcie: PM: dpm_run_callback(): genpd_resume_noirq+0x0/0x80 returns -110
+  imx6q-pcie 33800000.pcie: PM: failed to resume noirq: error -110
 
-Are we talking here about skipping one seqno has potential to cause a 
-problem, or there is more to it?
+This resulted in a complete CPU freeze, which is resolved by ensuring
+the PHY is in reset during power-on, thus preventing PHY PLL failures.
 
-Because if it is just skipping I don't immediately see that breaks the 
-monotonic/unique seqno ordering.
+Cc: stable@vger.kernel.org
+Fixes: 1aa97b002258 ("phy: freescale: pcie: Initialize the imx8 pcie standalone phy driver")
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
+Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+---
+ drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Only if we are worried about some code somewhere making assumptions  "if 
-N got completed, that means N-1 got completed too". That generally isn't 
-anything new and can happen with GPU resets, albeit in the latter case 
-the fence error is I think always set.
-
-Regards,
-
-Tvrtko
-
->> Sorry for the delayed response, I only stumbled over this now while
->> going
->> over old mails and then re-thinking my reviewed by for this change.
-> 
-> Your RB hadn't even been applied (I merged before you gave it), so you
-> can remove this first paragraph from the commit message
-> 
->>
->> The function drm_sched_job_arm() is indeed the point of no return.
->> The
->> background is that it is nearly impossible for the driver to
->> correctly
->> retract the fence and signal it in the order enforced by the
->> dma_fence
->> framework.
->>
->> The code in drm_sched_job_cleanup() is for the purpose to cleanup
->> after
->> the job was armed through drm_sched_job_arm() *and* processed by the
->> scheduler.
->>
->> The correct approach for error handling in this situation is to set
->> the
->> error on the fences and then push to the entity anyway. We can
->> certainly
->> improve the documentation, but removing the warning is clearly not a
->> good
->> idea.
-> 
-> This last paragraph, as per our discussion, seems invalid. We shouldn't
-> have that in the commit log, so that it won't give later hackers
-> browsing it wrong ideas and we end up with someone actually mengling
-> with those fences.
-> 
-> Thx
-> P.
-> 
->>
->> Signed-off-by: Christian König <christian.koenig@amd.com>
->> ---
->>   drivers/gpu/drm/scheduler/sched_main.c | 12 +++++-------
->>   1 file changed, 5 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
->> b/drivers/gpu/drm/scheduler/sched_main.c
->> index 53e6aec37b46..4d4219fbe49d 100644
->> --- a/drivers/gpu/drm/scheduler/sched_main.c
->> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->> @@ -1015,13 +1015,11 @@ EXPORT_SYMBOL(drm_sched_job_has_dependency);
->>    * Cleans up the resources allocated with drm_sched_job_init().
->>    *
->>    * Drivers should call this from their error unwind code if @job is
->> aborted
->> - * before it was submitted to an entity with
->> drm_sched_entity_push_job().
->> + * before drm_sched_job_arm() is called.
->>    *
->> - * Since calling drm_sched_job_arm() causes the job's fences to be
->> initialized,
->> - * it is up to the driver to ensure that fences that were exposed to
->> external
->> - * parties get signaled. drm_sched_job_cleanup() does not ensure
->> this.
->> - *
->> - * This function must also be called in &struct
->> drm_sched_backend_ops.free_job
->> + * After that point of no return @job is committed to be executed by
->> the
->> + * scheduler, and this function should be called from the
->> + * &drm_sched_backend_ops.free_job callback.
->>    */
->>   void drm_sched_job_cleanup(struct drm_sched_job *job)
->>   {
->> @@ -1032,7 +1030,7 @@ void drm_sched_job_cleanup(struct drm_sched_job
->> *job)
->>   		/* drm_sched_job_arm() has been called */
->>   		dma_fence_put(&job->s_fence->finished);
->>   	} else {
->> -		/* aborted job before arming */
->> +		/* aborted job before committing to run it */
->>   		drm_sched_fence_free(job->s_fence);
->>   	}
->>   
-> 
+diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+index 5b505e34ca364..7355d9921b646 100644
+--- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
++++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+@@ -156,6 +156,16 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
+ 	return ret;
+ }
+ 
++static int imx8_pcie_phy_power_off(struct phy *phy)
++{
++	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
++
++	reset_control_assert(imx8_phy->reset);
++	reset_control_assert(imx8_phy->perst);
++
++	return 0;
++}
++
+ static int imx8_pcie_phy_init(struct phy *phy)
+ {
+ 	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
+@@ -176,6 +186,7 @@ static const struct phy_ops imx8_pcie_phy_ops = {
+ 	.init		= imx8_pcie_phy_init,
+ 	.exit		= imx8_pcie_phy_exit,
+ 	.power_on	= imx8_pcie_phy_power_on,
++	.power_off	= imx8_pcie_phy_power_off,
+ 	.owner		= THIS_MODULE,
+ };
+ 
+-- 
+2.45.2
 
