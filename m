@@ -1,97 +1,70 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301B3221F13;
-	Mon, 10 Mar 2025 08:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91876221F13;
+	Mon, 10 Mar 2025 08:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741596434; cv=none; b=b57tcbFzbr/9kQSe6/ToNz+NskRBkvtqfgf8DcNswfBOc9LvLsFEeLHKFTdOrS9M1yBKBLOZgzgh49mUJJF49RI/5qooRc+CVhp+pj4k9l13SXscodwS2RHs8SNwiYloHEvCzeE9RhvqQ6pSHVXrIBBss0OEXr2Lb9xgi8PC13E=
+	t=1741596457; cv=none; b=aFRxctyTD1yL3erqmai2EJauG92PBriljVWTs/0mZXekZjCs10cjbQYHHW2kBGzN/BEIavVoRGipgKOpdtEEOWWL05vwwSW7EAdvrvO5H2Q/IZSmVUSCIn5LvT7XRW86q3MLvWFLX0kCvq8mg8zXbOJVx2oLBTG1zauv4C6qhaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741596434; c=relaxed/simple;
-	bh=7eYxJiXXyvsA4PJuVaPR8SWKzbE9Klceg0t0r2NLctQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ee6mnsyPROgYEsQmimM2as9a45cmDO44THkEBIT+Ll9UyCIA3M2JlfDe2kxua8SBMlTnMaHzop9fSfjtvuFnfE2QRueN9xynSwtXeDs6/34fO9cOA8RALzg3Q4A24BJBD6roy8UtToz+wZpCJO2IeNvdhfb9pB8fA/RGAwBJ8CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso7681155e9.3;
-        Mon, 10 Mar 2025 01:47:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741596431; x=1742201231;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+KtY77mY4u59FBf462AarhG9KG7rTrsBhUE1IoAfDc0=;
-        b=cr5Q6GLnho2+SlxvckGVxYy6SxVwKXXvrqfUtYX5akAD+ZMo+geVB43gxyevoA4jmg
-         IC9/KtGYtBMYFCJ1Zq9nJYC0yBOyPWmTTpu92ZwwW0R/qbEMvmKrVgHfgjzuXJo8hpB9
-         A9mIaDrIvTL9d/l7qJ1lcaapo5SIuqdcKi5hszU9SJOTdx2u4GOJs9cZyOQj6aaQZOaN
-         WCFNqv1AM5A9V8Su7OGlCOtk1dmMhbKoMwnW5Z5sX1DXSo4DyArpquz9u+1ulkmKQLd7
-         4VjNR6XJoE0rIlGGDngfnS1Y2Gi4wlrW2Rzdzl66vJI474OIdfJ+5xWZOJKOnLJCch2G
-         +Xgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbORXq9M9CIcmD0ybgoeCcXcYBXq3q666zSQDzN+Kw4+UrT0Ws8xao7gUb4j96c9Dw8ertsYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVauTn4xfgBoPPHYtQHNRQ6AlcklIzM5cWyyTzt6U6Ffe3ug8a
-	0TBrZ2CzcDLvT0t3HqQjKie8TSbZTPqS9sSKVHROFPCCWRVc3yOu
-X-Gm-Gg: ASbGnctckEnoI9kiyh83ceEyI32xtEnGL/pAl2mm+qfP2V/9Ce20Aj+pcZggpct3EZZ
-	l0cBulp+zan9MXM+RNiO12kahGOFYBA2l171KuvoHSn4uzY+ldOEJc86wB2OOvaYh+9Lqg6lPac
-	+FRC5J1vEgCi6n5MflsMdZiBqSNp16gn09Ux85vwkDiHeUKd2cJ089FSJO+smJeAGnFhNKihoiG
-	huQ1fpVC/SOLEluwCZ/dtnzbVWB68I9PG7XuEHjSRyKLMCdpuNs8qxC1TQw7qkHz3Cu9X9nBsOr
-	ceUbmwn0vyZQ6BPf11yQBAX6y5TEXU1XSmf1VJvgWCcKihyypGnctru10fDBqlkHKs3TJI1lpMb
-	U1NkQ0V76BOcLrcGI2SiYqZompX76Y8RLIq1ihw==
-X-Google-Smtp-Source: AGHT+IGLA3YDys0mrOMYJGrn/b+QddIi0nCx7Fb8mHhlLaz+GWXXXaiAbYgc13p1mplmr2Cyg3HGtg==
-X-Received: by 2002:a05:600c:1c8f:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-43cfae151f4mr7605275e9.25.1741596431097;
-        Mon, 10 Mar 2025 01:47:11 -0700 (PDT)
-Received: from nuc.fritz.box (p200300f6f7433100fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f743:3100:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce70d13b4sm77093465e9.38.2025.03.10.01.47.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 01:47:10 -0700 (PDT)
-From: Johannes Thumshirn <jth@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org,
-	Johannes Thumshirn <jth@kernel.org>
-Subject: [PATCH 1/1] mcb: fix a double free bug in chameleon_parse_gdd()
-Date: Mon, 10 Mar 2025 09:46:57 +0100
-Message-ID: <6201d09e2975ae5789879f79a6de4c38de9edd4a.1741596225.git.jth@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1741596225.git.jth@kernel.org>
-References: <cover.1741596225.git.jth@kernel.org>
+	s=arc-20240116; t=1741596457; c=relaxed/simple;
+	bh=LbhKqE9ARKxh5Om8xA8bVJLhSQJDq+eo4FUOXoer76Y=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TgxV+ulNNIq5eF8ts++ZWvP+sOPtVODCFdXfGVakpZxtUUnmI+msPcWh+IOIlcmDhgecY/x1ZwHFjYscIL4P9ru5VQ74BLVQ8ujMysU8ld4P9u2F00JJ53gQR86Ql/+hWV6AoGN+X4vLYpsaOaKdcb+hiUncUUyRTrVTJkvOmjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrMMhx6I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrMMhx6I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E7FC4CEE5;
+	Mon, 10 Mar 2025 08:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741596457;
+	bh=LbhKqE9ARKxh5Om8xA8bVJLhSQJDq+eo4FUOXoer76Y=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=CrMMhx6IQoxI3nez2E7ZpKbWicXf/UbZ7Pk6EE63+zgZoOb4Ss9Eza95FjqbVoPJp
+	 5mTk6/Yra6xbJK86/DP1KAQUHi+s98bZlJjniKw+0ZuxDJ9ko+DsY+Z3IE1ZVZlgLe
+	 66W9vCxB3ylExfEPG5uIKS7cqGosmqqMPZkLu6Eb/bQItPBsYeAuQq2eB7u7+3iRK7
+	 ehwPCAygY2+Rj4JdUAOqy398XkvTjDYvTbTtLj1tj+uiP7MTTLTtGNS0PDAbotplM8
+	 5bLm+OJ0psm9TpGS2Sq+EQKGqubUJ+xYe6JpSUyHaftidePr8mV5OrjWubQ4AQzQ9C
+	 +WhzWtYP0nPgg==
+From: Leon Romanovsky <leon@kernel.org>
+To: Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>
+Cc: Gal Pressman <gal@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, 
+ Moshe Shemesh <moshe@nvidia.com>, linux-rdma@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, Cosmin Ratiu <cratiu@nvidia.com>, 
+ Yael Chemla <ychemla@nvidia.com>, Leon Romanovsky <leon@kernel.org>
+In-Reply-To: <1741545697-23041-1-git-send-email-tariqt@nvidia.com>
+References: <1741545697-23041-1-git-send-email-tariqt@nvidia.com>
+Subject: Re: [PATCH mlx5-next] net/mlx5: Add IFC bits for PPCNT recovery
+ counters group
+Message-Id: <174159645340.444856.147815401586670383.b4-ty@kernel.org>
+Date: Mon, 10 Mar 2025 04:47:33 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-37811
 
-From: Haoxiang Li <haoxiang_li2024@163.com>
 
-In chameleon_parse_gdd(), if mcb_device_register() fails, 'mdev'
-would be released in mcb_device_register() via put_device().
-Thus, goto 'err' label and free 'mdev' again causes a double free.
-Just return if mcb_device_register() fails.
+On Sun, 09 Mar 2025 20:41:37 +0200, Tariq Toukan wrote:
+> Add recovery counters group layout of PPCNT (Ports Performance Counters
+> Register). This group counts recovery events per link. Also add the
+> corresponding bit in PCAM to indicate this group is supported.
+> 
+> 
 
-Fixes: 3764e82e5150 ("drivers: Introduce MEN Chameleon Bus")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-Signed-off-by: Johannes Thumshirn <jth@kernel.org>
----
- drivers/mcb/mcb-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/drivers/mcb/mcb-parse.c b/drivers/mcb/mcb-parse.c
-index 02a680c73979..bf0d7d58c8b0 100644
---- a/drivers/mcb/mcb-parse.c
-+++ b/drivers/mcb/mcb-parse.c
-@@ -96,7 +96,7 @@ static int chameleon_parse_gdd(struct mcb_bus *bus,
- 
- 	ret = mcb_device_register(bus, mdev);
- 	if (ret < 0)
--		goto err;
-+		return ret;
- 
- 	return 0;
- 
+[1/1] net/mlx5: Add IFC bits for PPCNT recovery counters group
+      https://git.kernel.org/rdma/rdma/c/f550694e88b7b1
+
+Best regards,
 -- 
-2.43.0
+Leon Romanovsky <leon@kernel.org>
 
