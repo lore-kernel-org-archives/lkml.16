@@ -1,29 +1,29 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FBF1BC073
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 04:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0990E537F8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 04:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741579765; cv=none; b=sPwch5AYS6QXyFPcYF5TtOs0TdDhPtGKtdDKmqQJcxseJpUCftwIo5yhTnr1d7Bx0bUTjaJvHvEEVtPadmuGw3Mdi+N8vca3JHwJHBxVZDLTiWz/NzjGcoQaQjVZh6fUMiHcSQ/SQAVX8JHKqNLM5SAbSIr5cbikAqLDVIpS5I4=
+	t=1741579765; cv=none; b=C6tORjYrospLBi2A7vAjq+iwcZGG9wYiveN5MsVptESTwwdH7V7EuaInSK8YQB3RNdcQtRdUAGFfkAo/oVjS+GVW3N4kglRUXCX17wp1wuId619e3rvCDNUyAOUqwklDFUhBlLVbo8Y69UEgkBwkf+8EkXJVLGIvsGKLuzpNqMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741579765; c=relaxed/simple;
-	bh=JLUTfpDvUKOiQCmv00dbkdBkOPZM4dbmTzbkfHQnrlQ=;
+	bh=BsmGfVImH6VmbiWg9CYuWRiKEpSKEg4JkR4i2MKy3Uc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jpHrCIqr7H5GfPlIzj8aiI4yaKZf/tI6spOFfQai9yeoKdg/RC4ZDYMbfr2wGhA/FkigZP/9zS9ZyfK9gIG7c5SfWBvlgriaVLqn6rzuDoXMqGqeOaBY0JC9OjlUUztc83IcO19PNwbkF4h6OtFpYktJSXCIrMymp8sZ13w2ODo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=tPucnUy0DtMNx1F9Oowx8b/2JtULV51er1iJMMMcMsp8HSvTVRcicT1wQhugCGvwKxmUq7I+y0F5Q+PRqWKeDtyeoUc+dY8o9jsJFZQaBdcLMSyPnl2lXFiprA/IrsrGO8sx/n8PEl4fvBWKy5/fk4YOqiTR+QUd5ex35D6xOd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZB3Gn6Cywz2CcB9;
-	Mon, 10 Mar 2025 12:06:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZB3Gh3ZMczDsvL;
+	Mon, 10 Mar 2025 12:06:04 +0800 (CST)
 Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id A83661401F2;
-	Mon, 10 Mar 2025 12:09:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 864FE140156;
+	Mon, 10 Mar 2025 12:09:14 +0800 (CST)
 Received: from localhost.huawei.com (10.169.71.169) by
  kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 10 Mar 2025 12:09:18 +0800
+ 15.2.1258.34; Mon, 10 Mar 2025 12:09:13 +0800
 From: Yongbang Shi <shiyongbang@huawei.com>
 To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
 	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
@@ -33,9 +33,9 @@ CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
 	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
 	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
 	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 drm-dp 5/9] drm/hisilicon/hibmc: Getting connector info and EDID by using AUX channel
-Date: Mon, 10 Mar 2025 12:01:34 +0800
-Message-ID: <20250310040138.2025715-6-shiyongbang@huawei.com>
+Subject: [PATCH v6 drm-dp 1/9] drm/hisilicon/hibmc: Restructuring the header dp_reg.h
+Date: Mon, 10 Mar 2025 12:01:30 +0800
+Message-ID: <20250310040138.2025715-2-shiyongbang@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20250310040138.2025715-1-shiyongbang@huawei.com>
 References: <20250310040138.2025715-1-shiyongbang@huawei.com>
@@ -52,123 +52,157 @@ X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
 
 From: Baihan Li <libaihan@huawei.com>
 
-Add registering drm_aux and use it to get connector edid with drm
-functions. Add ddc channel in connector initialization to put drm_aux
-in drm_connector.
+Move the macros below their corresponding registers to make
+them more obvious.
 
 Signed-off-by: Baihan Li <libaihan@huawei.com>
 Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
 ChangeLog:
-v5 -> v6:
-  - move the detect_ctx() to the patch 7/9.
 v2 -> v3:
-  - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
-v1 -> v2:
-  - deleting type conversion, suggested by Dmitry Baryshkov.
-  - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
+  - restructuring the header dp_reg.h, suggested by Dmitry Baryshkov.
 ---
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  3 +-
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    | 32 ++++++++++++++++---
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  5 +++
- 3 files changed, 34 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h | 98 +++++++++++++--------
+ 1 file changed, 60 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-index ded9e7ce887a..e0bb9b14d9d8 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-@@ -161,7 +161,8 @@ void hibmc_dp_aux_init(struct hibmc_dp *dp)
- 				 HIBMC_DP_MIN_PULSE_NUM);
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+index 4a515c726d52..dc2bd3f80b70 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+@@ -5,72 +5,94 @@
+ #define DP_REG_H
  
- 	dp->aux.transfer = hibmc_dp_aux_xfer;
--	dp->aux.is_remote = 0;
-+	dp->aux.name = kasprintf(GFP_KERNEL, "HIBMC DRM dp aux");
-+	dp->aux.drm_dev = dp->drm_dev;
- 	drm_dp_aux_init(&dp->aux);
- 	dp->dp_dev->aux = &dp->aux;
- }
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-index 603d6b198a54..891fde237c16 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-@@ -15,11 +15,17 @@
- 
- static int hibmc_dp_connector_get_modes(struct drm_connector *connector)
- {
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
-+	const struct drm_edid *drm_edid;
- 	int count;
- 
--	count = drm_add_modes_noedid(connector, connector->dev->mode_config.max_width,
--				     connector->dev->mode_config.max_height);
--	drm_set_preferred_mode(connector, 1024, 768); // temporary implementation
-+	drm_edid = drm_edid_read_ddc(connector, &dp->aux.ddc);
+ #define HIBMC_DP_AUX_CMD_ADDR			0x50
 +
-+	drm_edid_connector_update(connector, drm_edid);
+ #define HIBMC_DP_AUX_WR_DATA0			0x54
+ #define HIBMC_DP_AUX_WR_DATA1			0x58
+ #define HIBMC_DP_AUX_WR_DATA2			0x5c
+ #define HIBMC_DP_AUX_WR_DATA3			0x60
+ #define HIBMC_DP_AUX_RD_DATA0			0x64
 +
-+	count = drm_edid_connector_add_modes(connector);
+ #define HIBMC_DP_AUX_REQ			0x74
++#define HIBMC_DP_CFG_AUX_REQ			BIT(0)
++#define HIBMC_DP_CFG_AUX_SYNC_LEN_SEL		BIT(1)
++#define HIBMC_DP_CFG_AUX_TIMER_TIMEOUT		BIT(2)
++#define HIBMC_DP_CFG_AUX_MIN_PULSE_NUM		GENMASK(13, 9)
 +
-+	drm_edid_free(drm_edid);
+ #define HIBMC_DP_AUX_STATUS			0x78
++#define HIBMC_DP_CFG_AUX_TIMEOUT		BIT(0)
++#define HIBMC_DP_CFG_AUX_STATUS			GENMASK(11, 4)
++#define HIBMC_DP_CFG_AUX_READY_DATA_BYTE	GENMASK(16, 12)
++#define HIBMC_DP_CFG_AUX			GENMASK(24, 17)
++
+ #define HIBMC_DP_PHYIF_CTRL0			0xa0
++#define HIBMC_DP_CFG_SCRAMBLE_EN		BIT(0)
++#define HIBMC_DP_CFG_PAT_SEL			GENMASK(7, 4)
++#define HIBMC_DP_CFG_LANE_DATA_EN		GENMASK(11, 8)
++
+ #define HIBMC_DP_VIDEO_CTRL			0x100
++#define HIBMC_DP_CFG_STREAM_RGB_ENABLE		BIT(1)
++#define HIBMC_DP_CFG_STREAM_VIDEO_MAPPING	GENMASK(5, 2)
++#define HIBMC_DP_CFG_STREAM_FRAME_MODE		BIT(6)
++#define HIBMC_DP_CFG_STREAM_HSYNC_POLARITY	BIT(7)
++#define HIBMC_DP_CFG_STREAM_VSYNC_POLARITY	BIT(8)
++
+ #define HIBMC_DP_VIDEO_CONFIG0			0x104
++#define HIBMC_DP_CFG_STREAM_HACTIVE		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_HBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_CONFIG1			0x108
++#define HIBMC_DP_CFG_STREAM_VACTIVE		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_VBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_CONFIG2			0x10c
++#define HIBMC_DP_CFG_STREAM_HSYNC_WIDTH		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_CONFIG3			0x110
++#define HIBMC_DP_CFG_STREAM_VSYNC_WIDTH		GENMASK(15, 0)
++#define HIBMC_DP_CFG_STREAM_VFRONT_PORCH	GENMASK(31, 16)
++
+ #define HIBMC_DP_VIDEO_PACKET			0x114
++#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_SIZE	GENMASK(5, 0)
++#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
++
+ #define HIBMC_DP_VIDEO_MSA0			0x118
++#define HIBMC_DP_CFG_STREAM_VSTART		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_HSTART		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_MSA1			0x11c
+ #define HIBMC_DP_VIDEO_MSA2			0x120
++
+ #define HIBMC_DP_VIDEO_HORIZONTAL_SIZE		0X124
++#define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
++
+ #define HIBMC_DP_TIMING_GEN_CONFIG0		0x26c
++#define HIBMC_DP_CFG_TIMING_GEN0_HACTIVE	GENMASK(31, 16)
++#define HIBMC_DP_CFG_TIMING_GEN0_HBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_TIMING_GEN_CONFIG2		0x274
++#define HIBMC_DP_CFG_TIMING_GEN0_VACTIVE	GENMASK(31, 16)
++#define HIBMC_DP_CFG_TIMING_GEN0_VBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_TIMING_GEN_CONFIG3		0x278
++#define HIBMC_DP_CFG_TIMING_GEN0_VFRONT_PORCH	GENMASK(31, 16)
++
+ #define HIBMC_DP_HDCP_CFG			0x600
++
+ #define HIBMC_DP_DPTX_RST_CTRL			0x700
++#define HIBMC_DP_CFG_AUX_RST_N			BIT(4)
++
+ #define HIBMC_DP_DPTX_CLK_CTRL			0x704
++
+ #define HIBMC_DP_DPTX_GCTL0			0x708
++#define HIBMC_DP_CFG_PHY_LANE_NUM		GENMASK(2, 1)
++
+ #define HIBMC_DP_INTR_ENABLE			0x720
+ #define HIBMC_DP_INTR_ORIGINAL_STATUS		0x728
+-#define HIBMC_DP_TIMING_MODEL_CTRL		0x884
+-#define HIBMC_DP_TIMING_SYNC_CTRL		0xFF0
  
- 	return count;
- }
-@@ -28,12 +34,28 @@ static const struct drm_connector_helper_funcs hibmc_dp_conn_helper_funcs = {
- 	.get_modes = hibmc_dp_connector_get_modes,
- };
- 
-+static int hibmc_dp_late_register(struct drm_connector *connector)
-+{
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
+-#define HIBMC_DP_CFG_AUX_SYNC_LEN_SEL		BIT(1)
+-#define HIBMC_DP_CFG_AUX_TIMER_TIMEOUT		BIT(2)
+-#define HIBMC_DP_CFG_STREAM_FRAME_MODE		BIT(6)
+-#define HIBMC_DP_CFG_AUX_MIN_PULSE_NUM		GENMASK(13, 9)
+-#define HIBMC_DP_CFG_LANE_DATA_EN		GENMASK(11, 8)
+-#define HIBMC_DP_CFG_PHY_LANE_NUM		GENMASK(2, 1)
+-#define HIBMC_DP_CFG_AUX_REQ			BIT(0)
+-#define HIBMC_DP_CFG_AUX_RST_N			BIT(4)
+-#define HIBMC_DP_CFG_AUX_TIMEOUT		BIT(0)
+-#define HIBMC_DP_CFG_AUX_READY_DATA_BYTE	GENMASK(16, 12)
+-#define HIBMC_DP_CFG_AUX			GENMASK(24, 17)
+-#define HIBMC_DP_CFG_AUX_STATUS			GENMASK(11, 4)
+-#define HIBMC_DP_CFG_SCRAMBLE_EN		BIT(0)
+-#define HIBMC_DP_CFG_PAT_SEL			GENMASK(7, 4)
+-#define HIBMC_DP_CFG_TIMING_GEN0_HACTIVE	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_TIMING_GEN0_HBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_TIMING_GEN0_VACTIVE	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_TIMING_GEN0_VBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_TIMING_GEN0_VFRONT_PORCH	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HACTIVE		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_HSYNC_WIDTH		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VACTIVE		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_VBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VFRONT_PORCH	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_VSYNC_WIDTH		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VSTART		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HSTART		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VSYNC_POLARITY	BIT(8)
+-#define HIBMC_DP_CFG_STREAM_HSYNC_POLARITY	BIT(7)
+-#define HIBMC_DP_CFG_STREAM_RGB_ENABLE		BIT(1)
+-#define HIBMC_DP_CFG_STREAM_VIDEO_MAPPING	GENMASK(5, 2)
++#define HIBMC_DP_TIMING_MODEL_CTRL		0x884
+ #define HIBMC_DP_CFG_PIXEL_NUM_TIMING_MODE_SEL1	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_SIZE	GENMASK(5, 0)
+-#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
+-#define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
 +
-+	return drm_dp_aux_register(&dp->aux);
-+}
-+
-+static void hibmc_dp_early_unregister(struct drm_connector *connector)
-+{
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
-+
-+	drm_dp_aux_unregister(&dp->aux);
-+}
-+
- static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
- 	.reset = drm_atomic_helper_connector_reset,
- 	.fill_modes = drm_helper_probe_single_connector_modes,
- 	.destroy = drm_connector_cleanup,
- 	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+	.late_register = hibmc_dp_late_register,
-+	.early_unregister = hibmc_dp_early_unregister,
- };
++#define HIBMC_DP_TIMING_SYNC_CTRL		0xFF0
  
- static inline int hibmc_dp_prepare(struct hibmc_dp *dp, struct drm_display_mode *mode)
-@@ -103,8 +125,8 @@ int hibmc_dp_init(struct hibmc_drm_private *priv)
- 
- 	drm_encoder_helper_add(encoder, &hibmc_dp_encoder_helper_funcs);
- 
--	ret = drm_connector_init(dev, connector, &hibmc_dp_conn_funcs,
--				 DRM_MODE_CONNECTOR_DisplayPort);
-+	ret = drm_connector_init_with_ddc(dev, connector, &hibmc_dp_conn_funcs,
-+					  DRM_MODE_CONNECTOR_DisplayPort, &dp->aux.ddc);
- 	if (ret) {
- 		drm_err(dev, "init dp connector failed: %d\n", ret);
- 		return ret;
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index d982f1e4b958..3ddd71aada66 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -47,6 +47,11 @@ static inline struct hibmc_vdac *to_hibmc_vdac(struct drm_connector *connector)
- 	return container_of(connector, struct hibmc_vdac, connector);
- }
- 
-+static inline struct hibmc_dp *to_hibmc_dp(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct hibmc_dp, connector);
-+}
-+
- static inline struct hibmc_drm_private *to_hibmc_drm_private(struct drm_device *dev)
- {
- 	return container_of(dev, struct hibmc_drm_private, dev);
+ #endif
 -- 
 2.33.0
 
