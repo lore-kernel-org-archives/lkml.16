@@ -1,321 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B317C22AE7C;
-	Mon, 10 Mar 2025 18:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B96233737;
+	Mon, 10 Mar 2025 18:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741630111; cv=none; b=HsdXboKdrrJX+d7LtoRd4smQDbXOB5BdoWJnRZsdXV5N/ddQPyRJ9CVGICveVKRDzahThE2ZeHcA45hcgA9013pAZGqTmdKIcwfSGA2kKE6HUrAQET7LieAbq8gxG6sajEvj4jY0b1pJLXIbZz6uVXlYE/6Zj7rPgeoN18uMbpY=
+	t=1741630192; cv=none; b=nB9e872vrIVwu1w/Q5t+tEs1SvpQv+LQ3dfPzAx1KkW9s5VOb4ybVarlWmBDJ/63rSHC2w/mDmvElMAMcHD9IOreYjYwjqinWFehUVf192Poq3PtOHa0WM8W9y3wGqzUkKujKY3ywBx1QfQymQid8sVuQUubdC6w3B+HzcgF6co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741630111; c=relaxed/simple;
-	bh=3QoDKJ2jdA4Jo7YpO2FWqrnftt8JeDxs6ksYF0O93QA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kHjZLVmiGAO/Pdm42SmmUb5ngxFuEnAHtgjd0p0ClLDbfItiNKa9YhEEJYLTIWChVSFnqOWbd7L0+A9t1uam1hgG10T972pg6qPr3S9T5hfXjZ6qQuHPAkt8BB10TxzIEfQfR5GxWIucsm4F0HfyYWm19tPRLQLlr7DOm9aYKRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D60F1516;
-	Mon, 10 Mar 2025 11:08:40 -0700 (PDT)
-Received: from pluto.guest.local (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07A5B3F673;
-	Mon, 10 Mar 2025 11:08:27 -0700 (PDT)
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org
-Cc: sudeep.holla@arm.com,
-	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH] firmware: arm_scmi: Add polling support to raw mode
-Date: Mon, 10 Mar 2025 18:08:11 +0000
-Message-ID: <20250310180811.1463539-1-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1741630192; c=relaxed/simple;
+	bh=NqjlWBV34qNah3nFVeImdNVUTYXHJApCOBgfG6qXSxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tjOeEPSWbrDsvyK6LnKBWOD+JPwIF/lp56NMWKne5spUtXH7i/yz+bE2meeAxZawOYR7uqDwEqAd3h/GBEx9JjdYjfRuYrjG8BUS/M+swZcIPuhWJ/g0ZuFEW25cQgZqAyEa/xbB2oOXaPCzcKiGPNKU7ixQD4OMbiDK361Xkv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXzR4HdH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXzR4HdH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 164C3C4CEE5;
+	Mon, 10 Mar 2025 18:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741630192;
+	bh=NqjlWBV34qNah3nFVeImdNVUTYXHJApCOBgfG6qXSxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IXzR4HdHNm0lCsWhMS7Qh2ZjVOzf793rCeaBCvEbLwZeZieX3JWFlq4gZvAAmPjyz
+	 +IXxKcH2D1GD2eTMbbrioyLSrC46Ufngk3DzORjpFG6zL1zigudZ/E9IyxzG3d3Irx
+	 /gJYrBxcr4PtoBIItjeKpMldJ7F88T0Nxlomw/giWIVZaEQB4FqY+tBsKeviBkfhfG
+	 +A/HtZ2+76YRzJt/V9IFIe8hoyZEIeoeAN+O+T0O4FmSfeSITfxFX2JO+XaxOs+tkj
+	 qAZye9TjbuNu62QFmZC3adnFt5aWSAz+JNmg0SlenJTRG3g1cSSc/ovdo9KAdyR9c6
+	 SpHxFa+1X7K0w==
+Date: Mon, 10 Mar 2025 11:09:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Peter Collingbourne <pcc@google.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+Subject: Re: [PATCH] string: Disable read_word_at_a_time() optimizations if
+ kernel MTE is enabled
+Message-ID: <202503101107.995ECFA@keescook>
+References: <20250308023314.3981455-1-pcc@google.com>
+ <202503071927.1A795821A@keescook>
+ <Z88jbhobIz2yWBbJ@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z88jbhobIz2yWBbJ@arm.com>
 
-Provide a couple of additional debugfs entries to enable polling-mode on
-the waiting path of injected messages: message_poll will cause the system
-to poll while waiting for the reply, while message_poll_async will send an
-asynchronous message, as usual, and will use polling mode for the immediate
-synchronous part of the async command.
+On Mon, Mar 10, 2025 at 05:37:50PM +0000, Catalin Marinas wrote:
+> On Fri, Mar 07, 2025 at 07:36:31PM -0800, Kees Cook wrote:
+> > On Fri, Mar 07, 2025 at 06:33:13PM -0800, Peter Collingbourne wrote:
+> > > The optimized strscpy() and dentry_string_cmp() routines will read 8
+> > > unaligned bytes at a time via the function read_word_at_a_time(), but
+> > > this is incompatible with MTE which will fault on a partially invalid
+> > > read. The attributes on read_word_at_a_time() that disable KASAN are
+> > > invisible to the CPU so they have no effect on MTE. Let's fix the
+> > > bug for now by disabling the optimizations if the kernel is built
+> > > with HW tag-based KASAN and consider improvements for followup changes.
+> > 
+> > Why is faulting on a partially invalid read a problem? It's still
+> > invalid, so ... it should fault, yes? What am I missing?
+> 
+> read_word_at_a_time() is used to read 8 bytes, potentially unaligned and
+> beyond the end of string. The has_zero() function is then used to check
+> where the string ends. For this uses, I think we can go with
+> load_unaligned_zeropad() which handles a potential fault and pads the
+> rest with zeroes.
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
-Not sure if it is not better to unify all these common read/write entrypoint
-into one single function that decide what to do based on the a strcmp of its
-own filepath....seems still cleaner using these stupid wrappers to
-diffrentiate between message_poll/message_poll_async etc etc
----
- Documentation/ABI/testing/debugfs-scmi-raw | 91 ++++++++++++++++++++++
- drivers/firmware/arm_scmi/driver.c         |  3 +-
- drivers/firmware/arm_scmi/raw_mode.c       | 72 +++++++++++++++--
- 3 files changed, 160 insertions(+), 6 deletions(-)
+Agh, right, I keep forgetting that this can read past the end of the
+actual allocation. I'd agree, load_unaligned_zeropad() makes sense
+there.
 
-diff --git a/Documentation/ABI/testing/debugfs-scmi-raw b/Documentation/ABI/testing/debugfs-scmi-raw
-index 97678cc9535c..5847b96b3896 100644
---- a/Documentation/ABI/testing/debugfs-scmi-raw
-+++ b/Documentation/ABI/testing/debugfs-scmi-raw
-@@ -31,6 +31,42 @@ Description:	SCMI Raw asynchronous message injection/snooping facility; write
- 		(receiving an EOF at each message boundary).
- Users:		Debugging, any userspace test suite
- 
-+What:		/sys/kernel/debug/scmi/<n>/raw/message_poll
-+Date:		June 2025
-+KernelVersion:	6.16
-+Contact:	cristian.marussi@arm.com
-+Description:	SCMI Raw message injection/snooping facility using polling mode;
-+		write a complete SCMI command message (header included) in
-+		little-endian binary format to have it sent to the configured
-+		backend SCMI server for instance <n>, using polling mode on
-+		the reception path. (if transport is polling capable)
-+		Any subsequently received response can be read from this same
-+		entry if it arrived within the configured timeout.
-+		Each write to the entry causes one command request to be built
-+		and sent while the replies are read back one message at time
-+		(receiving an EOF at each message boundary).
-+Users:		Debugging, any userspace test suite
-+
-+What:		/sys/kernel/debug/scmi/<n>/raw/message_poll_async
-+Date:		June 2025
-+KernelVersion:	6.16
-+Contact:	cristian.marussi@arm.com
-+Description:	SCMI Raw asynchronous message injection/snooping facility using
-+		polling-mode; write a complete SCMI asynchronous command message
-+		(header included) in little-endian binary format to have it sent
-+		to the configured backend SCMI server for instance <n>, using
-+		polling-mode on the reception path of the immediate part of the
-+		asynchronous command. (if transport is polling capable)
-+		Any subsequently received response can be read from this same
-+		entry if it arrived within the configured timeout.
-+		Any additional delayed response received afterwards can be read
-+		from this same entry too if it arrived within the configured
-+		timeout.
-+		Each write to the entry causes one command request to be built
-+		and sent while the replies are read back one message at time
-+		(receiving an EOF at each message boundary).
-+Users:		Debugging, any userspace test suite
-+
- What:		/sys/kernel/debug/scmi/<n>/raw/errors
- Date:		March 2023
- KernelVersion:	6.3
-@@ -115,3 +151,58 @@ Description:	SCMI Raw asynchronous message injection/snooping facility; write
- 		exist only if the transport is configured to have more than
- 		one default channel.
- Users:		Debugging, any userspace test suite
-+
-+
-+What:		/sys/kernel/debug/scmi/<n>/raw/channels/<m>/message_poll
-+Date:		June 2025
-+KernelVersion:	6.16
-+Contact:	cristian.marussi@arm.com
-+Description:	SCMI Raw message injection/snooping facility using polling mode;
-+		write a complete SCMI command message (header included) in
-+		little-endian binary format to have it sent to the configured
-+		backend SCMI server for instance <n> through the <m> transport
-+		channel, using polling mode on the reception path.
-+		(if transport is polling capable)
-+		Any subsequently received response can be read from this same
-+		entry if it arrived on channel <m> within the configured
-+		timeout.
-+		Each write to the entry causes one command request to be built
-+		and sent while the replies are read back one message at time
-+		(receiving an EOF at each message boundary).
-+		Channel identifier <m> matches the SCMI protocol number which
-+		has been associated with this transport channel in the DT
-+		description, with base protocol number 0x10 being the default
-+		channel for this instance.
-+		Note that these per-channel entries rooted at <..>/channels
-+		exist only if the transport is configured to have more than
-+		one default channel.
-+Users:		Debugging, any userspace test suite
-+
-+What:		/sys/kernel/debug/scmi/<n>/raw/channels/<m>/message_poll_async
-+Date:		June 2025
-+KernelVersion:	6.16
-+Contact:	cristian.marussi@arm.com
-+Description:	SCMI Raw asynchronous message injection/snooping facility using
-+		polling-mode; write a complete SCMI asynchronous command message
-+		(header included) in little-endian binary format to have it sent
-+		to the configured backend SCMI server for instance <n> through
-+		the <m> transport channel, using polling mode on the reception
-+		path of the immediate part of the asynchronous command.
-+		(if transport is polling capable)
-+		Any subsequently received response can be read from this same
-+		entry if it arrived on channel <m> within the configured
-+		timeout.
-+		Any additional delayed response received afterwards can be read
-+		from this same entry too if it arrived within the configured
-+		timeout.
-+		Each write to the entry causes one command request to be built
-+		and sent while the replies are read back one message at time
-+		(receiving an EOF at each message boundary).
-+		Channel identifier <m> matches the SCMI protocol number which
-+		has been associated with this transport channel in the DT
-+		description, with base protocol number 0x10 being the default
-+		channel for this instance.
-+		Note that these per-channel entries rooted at <..>/channels
-+		exist only if the transport is configured to have more than
-+		one default channel.
-+Users:		Debugging, any userspace test suite
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index e6cf83950875..bf2dc200604e 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -1190,7 +1190,8 @@ static void scmi_handle_response(struct scmi_chan_info *cinfo,
- 		 * RX path since it will be already queued at the end of the TX
- 		 * poll loop.
- 		 */
--		if (!xfer->hdr.poll_completion)
-+		if (!xfer->hdr.poll_completion ||
-+		    xfer->hdr.type == MSG_TYPE_DELAYED_RESP)
- 			scmi_raw_message_report(info->raw, xfer,
- 						SCMI_RAW_REPLY_QUEUE,
- 						cinfo->id);
-diff --git a/drivers/firmware/arm_scmi/raw_mode.c b/drivers/firmware/arm_scmi/raw_mode.c
-index 7cc0d616b8de..3d543b1d8947 100644
---- a/drivers/firmware/arm_scmi/raw_mode.c
-+++ b/drivers/firmware/arm_scmi/raw_mode.c
-@@ -671,11 +671,13 @@ static int scmi_do_xfer_raw_start(struct scmi_raw_mode_info *raw,
-  * @len: Length of the message in @buf.
-  * @chan_id: The channel ID to use.
-  * @async: A flag stating if an asynchronous command is required.
-+ * @poll: A flag stating if a polling transmission is required.
-  *
-  * Return: 0 on Success
-  */
- static int scmi_raw_message_send(struct scmi_raw_mode_info *raw,
--				 void *buf, size_t len, u8 chan_id, bool async)
-+				 void *buf, size_t len, u8 chan_id,
-+				 bool async, bool poll)
- {
- 	int ret;
- 	struct scmi_xfer *xfer;
-@@ -684,6 +686,16 @@ static int scmi_raw_message_send(struct scmi_raw_mode_info *raw,
- 	if (ret)
- 		return ret;
- 
-+	if (poll) {
-+		if (is_transport_polling_capable(raw->desc)) {
-+			xfer->hdr.poll_completion = true;
-+		} else {
-+			dev_err(raw->handle->dev,
-+				"Failed to send RAW message - Polling NOT supported\n");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	ret = scmi_do_xfer_raw_start(raw, xfer, chan_id, async);
- 	if (ret)
- 		scmi_xfer_raw_put(raw->handle, xfer);
-@@ -801,7 +813,7 @@ static ssize_t scmi_dbg_raw_mode_common_read(struct file *filp,
- static ssize_t scmi_dbg_raw_mode_common_write(struct file *filp,
- 					      const char __user *buf,
- 					      size_t count, loff_t *ppos,
--					      bool async)
-+					      bool async, bool poll)
- {
- 	int ret;
- 	struct scmi_dbg_raw_data *rd = filp->private_data;
-@@ -831,7 +843,7 @@ static ssize_t scmi_dbg_raw_mode_common_write(struct file *filp,
- 	}
- 
- 	ret = scmi_raw_message_send(rd->raw, rd->tx.buf, rd->tx_size,
--				    rd->chan_id, async);
-+				    rd->chan_id, async, poll);
- 
- 	/* Reset ppos for next message ... */
- 	rd->tx_size = 0;
-@@ -875,7 +887,8 @@ static ssize_t scmi_dbg_raw_mode_message_write(struct file *filp,
- 					       const char __user *buf,
- 					       size_t count, loff_t *ppos)
- {
--	return scmi_dbg_raw_mode_common_write(filp, buf, count, ppos, false);
-+	return scmi_dbg_raw_mode_common_write(filp, buf, count, ppos,
-+					      false, false);
- }
- 
- static __poll_t scmi_dbg_raw_mode_message_poll(struct file *filp,
-@@ -964,7 +977,8 @@ static ssize_t scmi_dbg_raw_mode_message_async_write(struct file *filp,
- 						     const char __user *buf,
- 						     size_t count, loff_t *ppos)
- {
--	return scmi_dbg_raw_mode_common_write(filp, buf, count, ppos, true);
-+	return scmi_dbg_raw_mode_common_write(filp, buf, count, ppos,
-+					      true, false);
- }
- 
- static const struct file_operations scmi_dbg_raw_mode_message_async_fops = {
-@@ -976,6 +990,40 @@ static const struct file_operations scmi_dbg_raw_mode_message_async_fops = {
- 	.owner = THIS_MODULE,
- };
- 
-+static ssize_t scmi_dbg_raw_mode_message_poll_write(struct file *filp,
-+						    const char __user *buf,
-+						    size_t count, loff_t *ppos)
-+{
-+	return scmi_dbg_raw_mode_common_write(filp, buf, count, ppos,
-+					      false, true);
-+}
-+
-+static const struct file_operations scmi_dbg_raw_mode_message_poll_fops = {
-+	.open = scmi_dbg_raw_mode_open,
-+	.release = scmi_dbg_raw_mode_release,
-+	.read = scmi_dbg_raw_mode_message_read,
-+	.write = scmi_dbg_raw_mode_message_poll_write,
-+	.poll = scmi_dbg_raw_mode_message_poll,
-+	.owner = THIS_MODULE,
-+};
-+
-+static ssize_t scmi_dbg_raw_mode_message_poll_async_write(struct file *filp,
-+							  const char __user *buf,
-+							  size_t count, loff_t *ppos)
-+{
-+	return scmi_dbg_raw_mode_common_write(filp, buf, count, ppos,
-+					      true, true);
-+}
-+
-+static const struct file_operations scmi_dbg_raw_mode_message_poll_async_fops = {
-+	.open = scmi_dbg_raw_mode_open,
-+	.release = scmi_dbg_raw_mode_release,
-+	.read = scmi_dbg_raw_mode_message_read,
-+	.write = scmi_dbg_raw_mode_message_poll_async_write,
-+	.poll = scmi_dbg_raw_mode_message_poll,
-+	.owner = THIS_MODULE,
-+};
-+
- static ssize_t scmi_test_dbg_raw_mode_notif_read(struct file *filp,
- 						 char __user *buf,
- 						 size_t count, loff_t *ppos)
-@@ -1199,6 +1247,12 @@ void *scmi_raw_mode_init(const struct scmi_handle *handle,
- 	debugfs_create_file("message_async", 0600, raw->dentry, raw,
- 			    &scmi_dbg_raw_mode_message_async_fops);
- 
-+	debugfs_create_file("message_poll", 0600, raw->dentry, raw,
-+			    &scmi_dbg_raw_mode_message_poll_fops);
-+
-+	debugfs_create_file("message_poll_async", 0600, raw->dentry, raw,
-+			    &scmi_dbg_raw_mode_message_poll_async_fops);
-+
- 	debugfs_create_file("notification", 0400, raw->dentry, raw,
- 			    &scmi_dbg_raw_mode_notification_fops);
- 
-@@ -1230,6 +1284,14 @@ void *scmi_raw_mode_init(const struct scmi_handle *handle,
- 			debugfs_create_file_aux_num("message_async", 0600, chd,
- 					    raw, channels[i],
- 					    &scmi_dbg_raw_mode_message_async_fops);
-+
-+			debugfs_create_file_aux_num("message_poll", 0600, chd,
-+						    raw, channels[i],
-+						    &scmi_dbg_raw_mode_message_poll_fops);
-+
-+			debugfs_create_file_aux_num("message_poll_async", 0600,
-+						    chd, raw, channels[i],
-+						    &scmi_dbg_raw_mode_message_poll_async_fops);
- 		}
- 	}
- 
+> 
+> > > Signed-off-by: Peter Collingbourne <pcc@google.com>
+> > > Link: https://linux-review.googlesource.com/id/If4b22e43b5a4ca49726b4bf98ada827fdf755548
+> > > Fixes: 94ab5b61ee16 ("kasan, arm64: enable CONFIG_KASAN_HW_TAGS")
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  fs/dcache.c  | 2 +-
+> > >  lib/string.c | 3 ++-
+> > >  2 files changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > Why are DCACHE_WORD_ACCESS and HAVE_EFFICIENT_UNALIGNED_ACCESS separate
+> > things? I can see at least one place where it's directly tied:
+> > 
+> > arch/arm/Kconfig:58:    select DCACHE_WORD_ACCESS if HAVE_EFFICIENT_UNALIGNED_ACCESS
+> 
+> DCACHE_WORD_ACCESS requires load_unaligned_zeropad() which handles the
+> faults. For some reason, read_word_at_a_time() doesn't expect to fault
+> and it is only used with HAVE_EFFICIENT_UNALIGNED_ACCESS. I guess arm32
+> only enabled load_unaligned_zeropad() on hardware that supports
+> efficient unaligned accesses (v6 onwards), hence the dependency.
+> 
+> > Would it make sense to sort this out so that KASAN_HW_TAGS can be taken
+> > into account at the Kconfig level instead?
+> 
+> I don't think we should play with config options but rather sort out the
+> fault path (load_unaligned_zeropad) or disable MTE temporarily. I'd go
+> with the former as long as read_word_at_a_time() is only used for
+> strings in conjunction with has_zero(). I haven't checked.
+
+Okay, sounds good. (And with a mild thread-merge: yes, folks want to use
+KASAN_HW_TAGS=y in production.)
+
 -- 
-2.47.0
-
+Kees Cook
