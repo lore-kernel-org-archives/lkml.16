@@ -1,169 +1,81 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FC322A7FA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5929C22DFED
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622959; cv=none; b=HLPa6pWrlevEVhYfYe3VJUeEVIE4L99Cx9LIvakZ6SKvCDVHmJw4ZN+2hLFS18Eajpbsx0Lb6NElPvPHz2O8f2LCBdkji/V94Icx0jWa9g1WTN12lfEsC+zet/wFJEILWVML8eW8MKdJXOAMorTwhr8iZjPM4Tha8PMp1BOQZdo=
+	t=1741622999; cv=none; b=B1ta2LWk9eY7aiZ3ukDyfkkdeLHJlheO91FTHPJFXIXqvrSnJoHtQY8CIMBiZsEGDvL6dAoPz5qMZ8bvo1CC+xN+vtnnm400M5/JTwwcizARnJbwIEVhwAbu9jpmqe41zTXk8OAog7aBpVZO6nnJ6r4mt3edETkUqjif0NIzihQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741622959; c=relaxed/simple;
-	bh=D4Vb33RNqJrJxqz1esDLVLlIZGIk1xCNfU2hCUsdZEA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UsVLlFte+mMlaiQcRQSYVwqHPPlxPZShHIB35seU/uDufZXyvY6uRzCWrGfJH4bZf+IWQH9CfnNuQ+bEsAMRdEQwUAHvL+8WNp+lPzE02sr8/jNN51ubtmzijQSjbGXAyzlm791MBZapOm3XkezMN7eYIAwGa8/4fcP44zymGmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=oSf6XTIW; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1741622999; c=relaxed/simple;
+	bh=RGbEOYg5EIYVE583Aym3kwacUWvpgLSgkDgTcItvahU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdSVMZIL0tTVJNXOAMBbOwqkzRPll7zQARXfCB8dUU501T70PHgRbZLUlt33kL0MN8cg5X4g/UV0Ecg76DCA3ZzQ+wlV8/xQ76x8qwkKCnjaog95wqVV0hoLC1eqsaz9qqBbs/2fkrghtum3L99E8z+WdUQrQszL+SwWbet1MYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZjjD7aK+; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="oSf6XTIW"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id BD6EA240028
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 17:09:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1741622953; bh=D4Vb33RNqJrJxqz1esDLVLlIZGIk1xCNfU2hCUsdZEA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=oSf6XTIWaf3kcYQPaXMyBvlku3naljwgcKCOjL5MTN4HmVbS5lbHjF/GKS48lQQr2
-	 PQ2IfKNhDK4jgdtVSg87waMP0yJY0TTtZHsWObWvgzub2koRmXtfOX1Q2RuSD6ZNAH
-	 slqAAmiBvgwIo6CR+7O1ysgyY1099U8LOFLJMI7LdOag7lwq2OLFB4bp2wJc870EXd
-	 b9o4x83uoPOxzfslQWoCea50q4BhyjDaqV+rvV+/C2cjVyHFs7YBXnoI6Xsw7dO0yr
-	 G+Hx4Q28I39qEATaSViavXZGuO5smlGIH/q73/1+uA473TOBdA5mUzYq+w9UCNacv2
-	 pChMtSUKN5xOQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZBMK161dtz6tvZ;
-	Mon, 10 Mar 2025 17:09:09 +0100 (CET)
-Message-ID: <87725b0d-42e9-4273-a51f-90c82aad2254@posteo.net>
-Date: Mon, 10 Mar 2025 16:09:09 +0000
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZjjD7aK+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=J6F1S2cZ9UkcPfKFsoptQ0OTp4oA8A+WUNl2JYbbT/Q=; b=ZjjD7aK+pJhkISCZD/ilNaY/so
+	Osk/f267yv8me9B/AwDu6l/1wqnEvs/RndrNrlUZYNYAOXL7QoIrdDC6wLkWj0oIaQ/59SX0bg2Rd
+	d5kYROu0yXENkBXLgcic5x23ZG4qtA1NNM1vMVh0K8YxZ/i/cVOKR4vI92Rmgdy+ZPt6zX2bPhSUN
+	RufYboRN8prgP9niB6QVMgu+b6fNj2LdBnOH449aT580bjdp27BLLQtk4h3D7Y7xP9uHkwJ25ZuHj
+	4sUIhJT4Nbd67vEihSnTqFaQSr35IFUngplDRxuuKtG5PX5yORJH8t5OGXXnUMCItENEsCegx6yOA
+	O316VMbA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1trfYt-000000078Vp-0RMm;
+	Mon, 10 Mar 2025 16:02:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 543643006C0; Mon, 10 Mar 2025 17:01:02 +0100 (CET)
+Date: Mon, 10 Mar 2025 17:01:02 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v9 00/11] futex: Add support task local hash maps.
+Message-ID: <20250310160102.GG19344@noisy.programming.kicks-ass.net>
+References: <20250225170914.289358-1-bigeasy@linutronix.de>
+ <20250303105416.GY11590@noisy.programming.kicks-ass.net>
+ <20250303141753.tF-FoCm1@linutronix.de>
+ <20250303164015.HHfy1Ibj@linutronix.de>
+ <20250304145837.a8g07J-k@linutronix.de>
+ <20250305090237.2Q9GwRA1@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] rust: task: mark Task methods inline
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20250310-inline-c-wrappers-v1-1-d726415e6332@posteo.net>
- <CAH5fLgi1YOP9gbXEmYfBtjWeMaqsYpNrrC1fd2rGABCKWYVcbg@mail.gmail.com>
-Content-Language: en-US
-From: Panagiotis Foliadis <pfoliadis@posteo.net>
-In-Reply-To: <CAH5fLgi1YOP9gbXEmYfBtjWeMaqsYpNrrC1fd2rGABCKWYVcbg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305090237.2Q9GwRA1@linutronix.de>
 
+On Wed, Mar 05, 2025 at 10:02:37AM +0100, Sebastian Andrzej Siewior wrote:
+> On 2025-03-04 15:58:39 [+0100], To Peter Zijlstra wrote:
+> > hash. That is why I had the `released' member.
+> 
+> The box was still alive this morning so it did survive >12h testing. I
+> would bring back the `released' member back unless you have other
+> preferences.
 
+Like I just wrote in that other email; I'm a bit confused as to how this
+can happen. If rcuref_put() returns success, then the value is DEAD. It must
+then either be decremented below RELEASED or incremented past NOREF in
+order for rcuref_read() to no longer return 0.
 
-On 10/3/25 12:23, Alice Ryhl wrote:
-> On Mon, Mar 10, 2025 at 10:40 AM Panagiotis Foliadis
-> <pfoliadis@posteo.net> wrote:
->> When you build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
->> toolchain provided by kernel.org, the following symbols are generated:
->>
->> $ nm vmlinux | grep ' _R'.*Task | rustfilt
->> ffffffff817b2d30 T <kernel::task::Task>::get_pid_ns
->> ffffffff817b2d50 T <kernel::task::Task>::tgid_nr_ns
->> ffffffff817b2c90 T <kernel::task::Task>::current_pid_ns
->> ffffffff817b2d00 T <kernel::task::Task>::signal_pending
->> ffffffff817b2cc0 T <kernel::task::Task>::uid
->> ffffffff817b2ce0 T <kernel::task::Task>::euid
->> ffffffff817b2c70 T <kernel::task::Task>::current
->> ffffffff817b2d70 T <kernel::task::Task>::wake_up
->> ffffffff817b2db0 T <kernel::task::Task as kernel::types::AlwaysRefCounted>::dec_ref
->> ffffffff817b2d90 T <kernel::task::Task as kernel::types::AlwaysRefCounted>::inc_ref
->>
->> Most of these Rust symbols are trivial wrappers around the C functions
->> signal_pending, uid, euid, wake_up, dec_ref and inc_ref.It doesn't
->> make sense to go through a trivial wrapper for these functions, so
->> mark them inline.
-> There's no C function called dec_ref or inc_ref? Please use the C
-> function names instead of the Rust ones.
->
->> After applying this patch, the above command will produce this output:
->>
->> ffff8000805aa004 T <kernel::task::Task>::get_pid_ns
->> ffff8000805aa01c T <kernel::task::Task>::tgid_nr_ns
->> ffff8000805a9fe8 T <kernel::task::Task>::current_pid_ns
->> ffff8000805a9fd0 T <kernel::task::Task>::current
-> I think it'd be nice with an explanation of why you did not mark these
-> #[inline].
+> Depending on those I could fold the fixes directly into the patches and
+> repost the whole thing or prepare you patches that can be folded back
+> and send those.
 
-Since the issue focuses on the functions that are trivial wrappers around
-c and `do nothing that call a C function` I thought i would leave this out
-since there is some other functionality (albeit sometimes minimal) other
-that being just a c-wrapper.
-
->
->> Signed-off-by: Panagiotis Foliadis <pfoliadis@posteo.net>
->> Link: https://github.com/Rust-for-Linux/linux/issues/1145
-> The SoB usually goes at the bottom of the tags.
->
->>   rust/kernel/task.rs | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
->> index 07bc22a7645c0c7d792a0a163dd55b8ff0fe5f92..996d7c96e48689a5752817f9ca196c021865291d 100644
->> --- a/rust/kernel/task.rs
->> +++ b/rust/kernel/task.rs
->> @@ -273,18 +273,21 @@ pub fn pid(&self) -> Pid {
->>       }
->>
->>       /// Returns the UID of the given task.
->> +    #[inline]
->>       pub fn uid(&self) -> Kuid {
->>           // SAFETY: It's always safe to call `task_uid` on a valid task.
->>           Kuid::from_raw(unsafe { bindings::task_uid(self.as_ptr()) })
->>       }
->>
->>       /// Returns the effective UID of the given task.
->> +    #[inline]
->>       pub fn euid(&self) -> Kuid {
->>           // SAFETY: It's always safe to call `task_euid` on a valid task.
->>           Kuid::from_raw(unsafe { bindings::task_euid(self.as_ptr()) })
->>       }
->>
->>       /// Determines whether the given task has pending signals.
->> +    #[inline]
->>       pub fn signal_pending(&self) -> bool {
->>           // SAFETY: It's always safe to call `signal_pending` on a valid task.
->>           unsafe { bindings::signal_pending(self.as_ptr()) != 0 }
->> @@ -319,6 +322,7 @@ pub fn tgid_nr_ns(&self, pidns: Option<&PidNamespace>) -> Pid {
->>       }
->>
->>       /// Wakes up the task.
->> +    #[inline]
->>       pub fn wake_up(&self) {
->>           // SAFETY: It's always safe to call `signal_pending` on a valid task, even if the task
->>           // running.
->> @@ -328,11 +332,13 @@ pub fn wake_up(&self) {
->>
->>   // SAFETY: The type invariants guarantee that `Task` is always refcounted.
->>   unsafe impl crate::types::AlwaysRefCounted for Task {
->> +    #[inline]
->>       fn inc_ref(&self) {
->>           // SAFETY: The existence of a shared reference means that the refcount is nonzero.
->>           unsafe { bindings::get_task_struct(self.as_ptr()) };
->>       }
->>
->> +    #[inline]
->>       unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
->>           // SAFETY: The safety requirements guarantee that the refcount is nonzero.
->>           unsafe { bindings::put_task_struct(obj.cast().as_ptr()) }
->>
->> ---
->> base-commit: 7f0e9ee5e44887272627d0fcde0b19a675daf597
->> change-id: 20250308-inline-c-wrappers-da83ec1c2a77
->>
->> Best regards,
->> --
->> Panagiotis Foliadis <pfoliadis@posteo.net>
->>
-
+Please, it appears I don't have as much time as I would like :/
