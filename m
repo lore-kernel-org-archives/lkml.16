@@ -1,211 +1,113 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603241624C3
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87849224240;
+	Mon, 10 Mar 2025 09:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741600708; cv=none; b=N0dkmHPGH7dmBviWSmfWNjtR37bOush+DAmMW0vMOBWFHlgW3fxJdqdaFNUs93fubaVJEnhRi5q1HLj5t4hL6gCDIGqjkVd7xaHc/M+BRZI8ZIW3qFuX2drwy3txvt6gxD20wafaaBNzEN1a4/4x5QxWFVBwntVUQlLK+ZyLMM8=
+	t=1741600754; cv=none; b=Tz/H38gVU49oNbHpCyo/g4ILvU2czCipowOqzDnGaf7laGzi1qO062D/lMNRGdFixYVrquJfBmIZz56IUBvpRHpo37TXwIsDLVa/mj7uvaHQWWB+AKg+xA2Az2T3ZovRV4+gLzVgRdg1uH/E404cPN2Y0relTlSiDEBe4JchRPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741600708; c=relaxed/simple;
-	bh=ZwaLaXDoVEdopEWx6MLjOmW1+Aiu31WDeG+F2281xdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a0tnUrRNwQdydC8ArVRn1my25GdW+xLNoblk55WSIGgYUn1yCi6lH0n4/Ci0ip9uegriKrhgh2eQElAQ/zdX7q6PCdwkY+89DxPehGf8NQEkYd9AFmyiNgFQ5azYTDYo1kn+yWITeWKujFzdzuQNj7SOOAWbd2fLeHPrv031w14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CB5DC44201;
-	Mon, 10 Mar 2025 09:58:15 +0000 (UTC)
-Message-ID: <346ecf28-807f-4ae9-be5d-08ebd649d241@ghiti.fr>
-Date: Mon, 10 Mar 2025 10:58:15 +0100
+	s=arc-20240116; t=1741600754; c=relaxed/simple;
+	bh=XH1y/JjcV/CKMZwziHUqjxzKZzlcynVjW+vD9avrsjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YhcHenhovLArCOPz6abR+XavLLAp/u5iHwhequn3u9JiDNUFivo1mZr/A1ZF3toHeDLSR2hb6IHlGan5azhIq75SDdesNXsjrgmWZe9Gh/adm2NvPcWgZBjVo4oD6/DMd20HC3kOQm9sEo5Ic4gNHIDsdpquphUx20LQO79jVAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AD8515A1;
+	Mon, 10 Mar 2025 02:59:23 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.42.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 59DE33F673;
+	Mon, 10 Mar 2025 02:59:04 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-mm@kvack.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org
+Subject: [RFC 0/2] mm/ptdump: Drop assumption that pxd_val() is u64
+Date: Mon, 10 Mar 2025 15:29:00 +0530
+Message-Id: <20250310095902.390664-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] entry: Inline syscall_exit_to_user_mode()
-Content-Language: en-US
-To: Charlie Jenkins <charlie@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>,
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250305-riscv_optimize_entry-v5-0-6507b5dff3ce@rivosinc.com>
- <20250305-riscv_optimize_entry-v5-4-6507b5dff3ce@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250305-riscv_optimize_entry-v5-4-6507b5dff3ce@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudeltdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeehvdekmedufheijeemkedugedumeekgegvkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemhedvkeemudhfieejmeekudegudemkeegvgekpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeehvdekmedufheijeemkedugedumeekgegvkegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrt
- ghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhesgigvnhdtnhdrnhgrmhgvpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhuthhosehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
 
-Hi Charlie,
+Last argument passed down in note_page() is u64 assuming pxd_val() returned
+value (all page table levels) is 64 bit - which might not be the case going
+ahead when D128 page tables is enabled on arm64 platform. Besides pxd_val()
+is very platform specific and its type should not be assumed in generic MM.
 
-On 06/03/2025 01:43, Charlie Jenkins wrote:
-> Architectures using the generic entry code can be optimized by having
-> syscall_exit_to_user_mode inlined.
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
->   include/linux/entry-common.h | 43 ++++++++++++++++++++++++++++++++++++--
->   kernel/entry/common.c        | 49 +-------------------------------------------
->   2 files changed, 42 insertions(+), 50 deletions(-)
->
-> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-> index fc61d0205c97084acc89c8e45e088946f5e6d9b2..f94f3fdf15fc0091223cc9f7b823970302e67312 100644
-> --- a/include/linux/entry-common.h
-> +++ b/include/linux/entry-common.h
-> @@ -14,6 +14,7 @@
->   #include <linux/kmsan.h>
->   
->   #include <asm/entry-common.h>
-> +#include <asm/syscall.h>
->   
->   /*
->    * Define dummy _TIF work flags if not defined by the architecture or for
-> @@ -366,6 +367,15 @@ static __always_inline void exit_to_user_mode(void)
->   	lockdep_hardirqs_on(CALLER_ADDR0);
->   }
->   
-> +/**
-> + * syscall_exit_work - Handle work before returning to user mode
-> + * @regs:	Pointer to current pt_regs
-> + * @work:	Current thread syscall work
-> + *
-> + * Do one-time syscall specific work.
-> + */
-> +void syscall_exit_work(struct pt_regs *regs, unsigned long work);
-> +
->   /**
->    * syscall_exit_to_user_mode_work - Handle work before returning to user mode
->    * @regs:	Pointer to currents pt_regs
-> @@ -379,7 +389,30 @@ static __always_inline void exit_to_user_mode(void)
->    * make the final state transitions. Interrupts must stay disabled between
->    * return from this function and the invocation of exit_to_user_mode().
->    */
-> -void syscall_exit_to_user_mode_work(struct pt_regs *regs);
-> +static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *regs)
-> +{
-> +	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
-> +	unsigned long nr = syscall_get_nr(current, regs);
-> +
-> +	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
-> +
-> +	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-> +		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-> +			local_irq_enable();
-> +	}
-> +
-> +	rseq_syscall(regs);
-> +
-> +	/*
-> +	 * Do one-time syscall specific work. If these work items are
-> +	 * enabled, we want to run them exactly once per syscall exit with
-> +	 * interrupts enabled.
-> +	 */
-> +	if (unlikely(work & SYSCALL_WORK_EXIT))
-> +		syscall_exit_work(regs, work);
-> +	local_irq_disable_exit_to_user();
-> +	exit_to_user_mode_prepare(regs);
-> +}
->   
->   /**
->    * syscall_exit_to_user_mode - Handle work before returning to user mode
-> @@ -410,7 +443,13 @@ void syscall_exit_to_user_mode_work(struct pt_regs *regs);
->    * exit_to_user_mode(). This function is preferred unless there is a
->    * compelling architectural reason to use the separate functions.
->    */
-> -void syscall_exit_to_user_mode(struct pt_regs *regs);
-> +static __always_inline void syscall_exit_to_user_mode(struct pt_regs *regs)
-> +{
-> +	instrumentation_begin();
-> +	syscall_exit_to_user_mode_work(regs);
-> +	instrumentation_end();
-> +	exit_to_user_mode();
-> +}
->   
->   /**
->    * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index e33691d5adf7aab4af54cf2bf8e5ef5bd6ad1424..f55e421fb196dd5f9d4e34dd85ae096c774cf879 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -146,7 +146,7 @@ static inline bool report_single_step(unsigned long work)
->   	return work & SYSCALL_WORK_SYSCALL_EXIT_TRAP;
->   }
->   
-> -static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
-> +void syscall_exit_work(struct pt_regs *regs, unsigned long work)
->   {
->   	bool step;
->   
-> @@ -173,53 +173,6 @@ static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
->   		ptrace_report_syscall_exit(regs, step);
->   }
->   
-> -/*
-> - * Syscall specific exit to user mode preparation. Runs with interrupts
-> - * enabled.
-> - */
-> -static void syscall_exit_to_user_mode_prepare(struct pt_regs *regs)
-> -{
-> -	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
-> -	unsigned long nr = syscall_get_nr(current, regs);
-> -
-> -	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
-> -
-> -	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-> -		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-> -			local_irq_enable();
-> -	}
-> -
-> -	rseq_syscall(regs);
-> -
-> -	/*
-> -	 * Do one-time syscall specific work. If these work items are
-> -	 * enabled, we want to run them exactly once per syscall exit with
-> -	 * interrupts enabled.
-> -	 */
-> -	if (unlikely(work & SYSCALL_WORK_EXIT))
-> -		syscall_exit_work(regs, work);
-> -}
-> -
-> -static __always_inline void __syscall_exit_to_user_mode_work(struct pt_regs *regs)
-> -{
-> -	syscall_exit_to_user_mode_prepare(regs);
-> -	local_irq_disable_exit_to_user();
-> -	exit_to_user_mode_prepare(regs);
-> -}
-> -
-> -void syscall_exit_to_user_mode_work(struct pt_regs *regs)
-> -{
-> -	__syscall_exit_to_user_mode_work(regs);
-> -}
-> -
-> -__visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
-> -{
-> -	instrumentation_begin();
-> -	__syscall_exit_to_user_mode_work(regs);
-> -	instrumentation_end();
-> -	exit_to_user_mode();
-> -}
-> -
->   noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
->   {
->   	enter_from_user_mode(regs);
->
+This series splits note_page() into individual page table level specific
+callbacks which accepts corresponding pxd_t page table entry as an argument
+instead and later all subscribing platforms could derive pxd_val() from the
+entries as required and proceed as before.
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Page table entry's value, mask and protection are represented with pteval_t
+not u64 that has been assumed while dumping the page table entries on arm64
+platform. Replace such u64 instances with pteval_t instead as expected.
 
-Thanks,
+This series has been lightly tested on arm64 platform but it does build on
+other relevant platforms (v6.14-rc5).
 
-Alex
+Some questions:
+
+- Is there a better method to address this problem than splitting current
+  note_page() into multiple call backs as proposed here ?
+
+- This replaces note_page(st, 0, -1, 0) with note_page_pte(st, 0, pte_zero)
+  Is that problematic ? Does level = -1 has got a special meaning ? Should
+  level = -1 case be handled differently possibly via a separate callback ?
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-mm@kvack.org
+
+Anshuman Khandual (2):
+  mm/ptdump: Split note_page() into level specific callbacks
+  arm64/ptdump: Replace u64 with pteval_t
+
+ arch/arm64/include/asm/ptdump.h | 22 ++++++++++++-----
+ arch/arm64/mm/ptdump.c          | 41 ++++++++++++++++++++++++++++---
+ arch/powerpc/mm/ptdump/ptdump.c | 37 ++++++++++++++++++++++++++--
+ arch/riscv/mm/ptdump.c          | 37 ++++++++++++++++++++++++++--
+ arch/s390/mm/dump_pagetables.c  | 37 ++++++++++++++++++++++++++--
+ arch/x86/mm/dump_pagetables.c   | 31 +++++++++++++++++++++++-
+ include/linux/ptdump.h          |  7 ++++--
+ mm/ptdump.c                     | 43 +++++++++++++++++++++++++--------
+ 8 files changed, 226 insertions(+), 29 deletions(-)
+
+-- 
+2.25.1
 
