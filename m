@@ -1,104 +1,177 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9CB226D12
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741603642; cv=none; b=PdHTBahVHRI3+Lp5EyjKjwemYlz+r4B6ZieN0/I2QKLy2eB7fxDFwjuUcEQBQCS4mWESaO4sFl6cqdmksFP52bWzjFyeDA8w8jNXjb3ifDDRWRvl5cXmmTZNZtHkW+ygIODoja/x3BHsYuU1lOvB0rvuWJXHURp2ZWoUlZube1Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741603642; c=relaxed/simple;
-	bh=yZDLwHLfwqgSEJuN56eo4V3J1jrerAKvj2dir6+1stM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RI3w5UQ1DKVkOJHAklu5ZNzpxadLw40nIsZTI+1gdp3BSjSqErc3GaqEuh3MHevuze5TOzcqUiUV3ESVB9NF6PLQ915B8bjWBwp4kCBTKD0DXYGPTZtSlTrkgDR5UQ1SWI/Ub1/IGi78JPVHvlSANyIQ28UYrkLVVHw3QPdX8ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X08vEahF; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F041622A1D5;
+	Mon, 10 Mar 2025 10:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741603643; cv=fail; b=HL5usTa/YPCqnfeEBeKGg0qsFnLLBbpQ7Tm3oIe6VZDU/8PRZ3zTXKOjxZTXsGknzEHjnjhnw+CSoeh4FZVGw5eoD76ws+omtQ6dEPGdUMIs5v7xI58oY6jApzJ88NYVz4sh9EfRZcvvxBacivgjuX7XAY5oBpIjFJQBV0/3P3A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741603643; c=relaxed/simple;
+	bh=t661xpz0psPhm1HBFqyIVFWiRHo+OYAblfstEUMjzbw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=to1TdW3KXH0HBpwxDgWIVRBjaKYuZIo7sLdQBWKusHfeNAGiC/yJX+12nOFR8CrEX7fyHG1xmhvpBOOyjUohKEEzcaDIxkDP9uwg0vXwNo7Yr4kZ2ucYL6I9iHmWlHcxrcCoZm9Eot8MJJlojVVweQ2s/nh1zkzHaYC7TyuePao=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ccq4ANA9; arc=fail smtp.client-ip=40.107.220.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X08vEahF"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913d45a148so1221455f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 03:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741603639; x=1742208439; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S/usSyZvOMqcO02UgIaZS38RjkJHQ2qzt+JqdGQEbLM=;
-        b=X08vEahFNpilP3mGBWbsQQoQZAhW+fNe4DupsbHI3vnfhtqnvVNyJ1dlMn2900ko1u
-         8Q7R8lIZVi9nLGIBm7A6Jl1VEiVCnQeow+eacAr4yEtzktQ4T5YPmhftpOQvtkCKnAa4
-         UBDMXQCJdZ4CeEDMacZIO4LnV4c5BwHNA38Fa/5SSzpLIbVVZvIst/Bi6VMQ0GHMI3DO
-         WXgNq55ouwX+SiKSiyvdNZ+r/SDjsQ9L4Aa3wHRUwm6DVt7LOJyGIeP52Ze7ELpSkCLg
-         jDBvS9F5MHuzLFh4BjWEqGG4rXZgRB6uATJiNseUBj1OQj6Ap9e2BvvwCF7iFCACPZ/D
-         Q53A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741603639; x=1742208439;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S/usSyZvOMqcO02UgIaZS38RjkJHQ2qzt+JqdGQEbLM=;
-        b=VF1F7l+Jt887BkYX5bDCpxFrP2ZGbEq1JlUd8L2pjG4OkvlwJdnxPReKmNwpgBgKFM
-         j/HbTDM5A/jHChqOiB3bEopv25VhB4PlRoPK0dIpXBLCe3RJvlbNMYyBn/gtGRPMWVbk
-         Bz/FmJ7E1nNanimKzr96ItbNG2ybNSMzIvdPliM+Eh9eYojWtLgxDGEGQwqR8LDp7ji6
-         xHyuZa1uQONwhLs3RVTao2vOW17kGg3kRnBkos+hsXIIz60KUKYXdlytCX/RvuA9G0KY
-         n1YsdVRyp6/38OkbMm6H4Or86nO/makHT5GLVuapCkoq1L9Pe3m0enH4xFzxtdeeu54j
-         O54g==
-X-Forwarded-Encrypted: i=1; AJvYcCWr8oytMhdzEcEAnib7NPZPd5aeZlCekWevmQKmk57zw3eRXOOdfXmfm5ZaJlQdTG/PljOFieHkGMUrIXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKKIVIDDdO/j1HJIaF0sVSfcvJhee74w1pH1Anbw76HY8/1uu+
-	SXUKEISfj5u3+NgTvOmI49mu1HTyWibLg+lVFQCs6g+RLcJxYq0tNvJqhIcy+Q0=
-X-Gm-Gg: ASbGnctZ2a0Fw1PjoBqwHQMgRyjoINv9gBy3WntPkrKIY4KX/KiZVYTAbgaT5m38C/F
-	WdkJELPhpf0uGatnqA+mOVtceSPNyiGYF9Ux3tX2sVRvLQDdJOWJ7jvCS09kqpDeUDuKUbP2onD
-	s4H6i2iJMHWg0BG1/dzeceuwc77wo31ovKTe8Wfui2EhA4F6+wInzQwcy7kaQeGJL0SNJnK97D/
-	oN6FciGTJvpQoSTIKhy+ECk3V67cU/poK58D0XJK0ScRGa4BvSt2NOMOw9JzhLt/cEZjwUE5PMB
-	LdKNkfMHjBu28flnq49Pi5YlHy/TMC1HEmAcnY3lWdzwYSRAR6Ju5it0rN+u
-X-Google-Smtp-Source: AGHT+IG0DRVFzL2VYuk4+0xwXKcyqK/IIpus26os/g6Pm2aV01RIKQYEWia+Sq3ARp2iOSgT/MR1WQ==
-X-Received: by 2002:a05:6000:4105:b0:391:41c9:7a8d with SMTP id ffacd0b85a97d-39141c97c1bmr2940385f8f.54.1741603638928;
-        Mon, 10 Mar 2025 03:47:18 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912c0195casm14715253f8f.53.2025.03.10.03.47.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 03:47:18 -0700 (PDT)
-Date: Mon, 10 Mar 2025 13:47:15 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: "Jesse.zhang@amd.com" <Jesse.zhang@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Tim Huang <tim.huang@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Likun Gao <Likun.Gao@amd.com>, Le Ma <le.ma@amd.com>,
-	Yang Wang <kevinyang.wang@amd.com>, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amdgpu: Use tabs for indenting in
- amdgpu_sdma_reset_engine()
-Message-ID: <2503b45f-751e-4b50-96fd-8dad33821c40@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ccq4ANA9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZV70bano5TN5vAEr/cn86OGDqhtn+CYJYs47JBP1M/zOtIdCnyEbdL0XV4WHEgVZ1lwAp4yZSNLZc1KM64E95XFB5PUCSkN7jCRFNEnwN4ziU5aV8Ed2lflCowl/50cJvH0ORMJxqp46fS6w/9VqzR6w2t5bB4E2QSYRNp/goX4Qnd09BjXC5NNgwpeMMc/WbeyzjVVWuZXIJpBThlSzHnyw8fEMHbsm0NPfyNoCfemXwxc2zbgvPmUlTMlIMQ11gmRVxxoQ3k4uEdDvfU0yQ+m4QomkCBDpeH+VCs+CkVBw8IjFSXxDgNO3CYurazv5PQPTe7RM5OcRrVYQSyeJ8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g5NhkVKbsZ50z1DaXBL29hyG6g17nvFphx4rIeaCPjc=;
+ b=mk1JEuThyH9jTGic0GA2x2DFAej01q0Sh5aT8uSCgc/rcbRDBQHjIyKzMPn1Mp1xKxDqTgrWHNqD0CuaF710erc2LJ2Aj1ASabBoJ6i1MJS1UdEfqVzoedOYy+JHw0yRHa6jz3nA1pSMESGLzAEyYCzGgcek4HRZU+NG9KQJdWFRjt2JRS24IoFMlgNbtnUqineCpCmdUZHz1qSVNzNYApAFtKnHtzikepADXEX7knV5IOtOb0ynrR81ykAN746AxqhT8UWgQvih0uO0ZXag71eS8LS9BJXpdcnY2Tsnvz/gA88uB0E6PECOa2EHLVNiFoDT5iRUORh3xZxjHYNNow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g5NhkVKbsZ50z1DaXBL29hyG6g17nvFphx4rIeaCPjc=;
+ b=Ccq4ANA99ii00HioAZDeJDN+pBss15dbAJf+BBt41Ad0J+qQhkzuumSQLWtbzaRpgXrx/1gO/Vbg6OqXR1qm1jeUijFbcqTaY14hvuLy6eV4aBTvWvYZZ8jeht2FYHLvqMyU1J+mOZ5r+nmFc0LCKLhjOqYR2sBHUj2zNyUgu8g=
+Received: from PH7P223CA0006.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::27)
+ by BL3PR12MB6473.namprd12.prod.outlook.com (2603:10b6:208:3b9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
+ 2025 10:47:18 +0000
+Received: from SJ1PEPF000026C3.namprd04.prod.outlook.com
+ (2603:10b6:510:338:cafe::8a) by PH7P223CA0006.outlook.office365.com
+ (2603:10b6:510:338::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.26 via Frontend Transport; Mon,
+ 10 Mar 2025 10:47:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF000026C3.mail.protection.outlook.com (10.167.244.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Mon, 10 Mar 2025 10:47:18 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Mar
+ 2025 05:47:12 -0500
+Received: from prasad-lnx-mach.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 10 Mar 2025 05:47:08 -0500
+From: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+To: <broonie@kernel.org>, <alsa-devel@alsa-project.org>
+CC: <Vijendar.Mukunda@amd.com>, <mario.limonciello@amd.com>,
+	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>,
+	<syed.sabakareem@amd.com>, Venkata Prasad Potturu
+	<venkataprasad.potturu@amd.com>, Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Jeff Johnson
+	<quic_jjohnson@quicinc.com>, Greg KH <gregkh@linuxfoundation.org>, "Peter
+ Zijlstra" <peterz@infradead.org>, Murad Masimov <m.masimov@maxima.ru>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, "open list:SOUND - SOC
+ LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, "open
+ list" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 08/14] ASoC: amd: acp: Move spin_lock and list initialization to acp-pci driver
+Date: Mon, 10 Mar 2025 16:15:55 +0530
+Message-ID: <20250310104601.7325-9-venkataprasad.potturu@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250310104601.7325-1-venkataprasad.potturu@amd.com>
+References: <20250310104601.7325-1-venkataprasad.potturu@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: venkataprasad.potturu@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C3:EE_|BL3PR12MB6473:EE_
+X-MS-Office365-Filtering-Correlation-Id: f91d68d3-91a8-451a-7830-08dd5fc0edb1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?MamCW/QdJ53r+URfbw5r0R8+odltODSslqP+0+Q6asztIXyv544bbRJs9n8B?=
+ =?us-ascii?Q?NaJU/LiuIZFQqDXIp6TBLZUyqK8LiaGRIheJ7+ZXQX4vuBJix/EwSQ4NjL/Y?=
+ =?us-ascii?Q?0Tqco9hd79YH2d8/rDZcfRXYq72oE2D+fr32ixWZ2aRI1pKMf5EAaPflL36Z?=
+ =?us-ascii?Q?uKoVH0gEmwenqfkrEsgAlj7jWVUOk2gAn6Jl0ETKgniU8ItG7ZwmV1gmD2r6?=
+ =?us-ascii?Q?6NaACxwnuCveTTQShG8hJ+kefptuBKTYlp1kGMDt1rI3f9BEydchYDjeWh+r?=
+ =?us-ascii?Q?RCLbmNsNNK6r7i7DlZBYo2RHN635oSGSrvFL5PzR83GMV4M+01FaZLfULt5d?=
+ =?us-ascii?Q?kcjAXN3N2lEvvA88oTrEf+6uIXPwgjefnsdhnOucXygT+eodcYsO/xNns0xQ?=
+ =?us-ascii?Q?GhzAwdPpR9C6bKBERA9HtWU6sZyNR+xWRhb86wE2A/3H9gXHKjfdivMzmJsT?=
+ =?us-ascii?Q?xJ1FfKsvNKUKvlxkUTBrbCoGKaJ7STjEV786R47f9KD+ajNGxa3LC3o7nrHE?=
+ =?us-ascii?Q?KJM2CpgwnQFoOG7mv5O0DvPJYFPcqVlqobDsV816BBRTYJTNyyonRhCmxW+W?=
+ =?us-ascii?Q?+j0lId4EhYZ1TobOPFOAYPdvHbQ38gx/aDHR7L3+RqBmA40QBiHfZM+VMR1h?=
+ =?us-ascii?Q?9RMKIZ3AFOBVJy4yZUAPkcEcS+zVBaMqAfeffEZfsSMTPSfhBuO0g2ItwV/k?=
+ =?us-ascii?Q?wNVUWNEda4mBSFdQuW07oDrb+yJM+gYRGUhxhyrGUgcgkgPSp/O7kRWa+Xv4?=
+ =?us-ascii?Q?DCEJ1fA7EOjz+dkwWU1FT03UuJTzT6tO6MjCD+nDfWQ/+JtUXB+b/vDjhXwA?=
+ =?us-ascii?Q?MtqikBh9V/H+sEtxpY6UQetjqFD/hzm+DX8a085bHPvrEeM1wq4yKiTTWxQJ?=
+ =?us-ascii?Q?O9LGyNmdporOOHMQ82jzCreu1ytFdxX48CIcOObG/nunTPX+Zzq14eStGd8q?=
+ =?us-ascii?Q?4CngFnfyKSn2I1X2QTP3sHlalKQdud0ADtStgHKTjMZmvY+JsyeFogsKNVtn?=
+ =?us-ascii?Q?25tdNz+HIdLreFiG8Y2unixCyeYKrLZvhmdHiVt3u39a2LLqf5xekkA6/g2h?=
+ =?us-ascii?Q?KWEglMdH0d0kGgoRPQgKhUyb4WppZtYxBDMJi2YDjBGZQdeV+hKmTN4OeJ98?=
+ =?us-ascii?Q?MArxtq6yFdWW4vpT4KEb14vJZ4jBf+eODijVd7n/r1qSC7s14YRYeFdt1YcY?=
+ =?us-ascii?Q?dQVIsD1YXq0qVocWGfW8U6gKP4/yXTT1vHG9eUYIZYxjFEJ2RD9IZNZhmdNk?=
+ =?us-ascii?Q?k49WDzK7ryQX4jDPRQ4vXf530FSGjacS+qCHGCd48osHny6kvZz1cWSKZZIs?=
+ =?us-ascii?Q?nPJ2DmN/R9vB2To96WteCKZ6RugRxGqe0NKMq7YqIgvlXIpjUXxA0RG29poQ?=
+ =?us-ascii?Q?9Jl8qLqcIugla9uGavn3/HplV1/XdogHn9z/hx8ZcSnL9KtiGIZoHfdL08/h?=
+ =?us-ascii?Q?0xGwek7e8q8JuEXtKsEDS+FWr7LuPWCR+F3n4H1j/d+L3jvjs5heKVuqnN9B?=
+ =?us-ascii?Q?jxcBZc/xdnWfYEk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 10:47:18.0949
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f91d68d3-91a8-451a-7830-08dd5fc0edb1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000026C3.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6473
 
-This line has a seven space indent instead of a tab.
+Move spin_lock and linked list initialization from platform driver to
+acp-pci driver.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/amd/acp/acp-pci.c      | 3 +++
+ sound/soc/amd/acp/acp-platform.c | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-index 39669f8788a7..3a4cef896018 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-@@ -621,5 +621,5 @@ int amdgpu_sdma_reset_engine(struct amdgpu_device *adev, uint32_t instance_id, b
- 	if (suspend_user_queues)
- 		amdgpu_amdkfd_resume(adev, false);
+diff --git a/sound/soc/amd/acp/acp-pci.c b/sound/soc/amd/acp/acp-pci.c
+index 8c47a5e1bb0a..e89b39190200 100644
+--- a/sound/soc/amd/acp/acp-pci.c
++++ b/sound/soc/amd/acp/acp-pci.c
+@@ -196,6 +196,9 @@ static int acp_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id
+ 	chip->dev = &chip->acp_plat_dev->dev;
  
--       return ret;
-+	return ret;
+ 	acp_machine_select(chip);
++
++	INIT_LIST_HEAD(&chip->stream_list);
++	spin_lock_init(&chip->acp_lock);
+ skip_pdev_creation:
+ 	dev_set_drvdata(&pci->dev, chip);
+ 	pm_runtime_set_autosuspend_delay(&pci->dev, 2000);
+diff --git a/sound/soc/amd/acp/acp-platform.c b/sound/soc/amd/acp/acp-platform.c
+index 8d61e1991e4f..b3eddf76aaa4 100644
+--- a/sound/soc/amd/acp/acp-platform.c
++++ b/sound/soc/amd/acp/acp-platform.c
+@@ -343,9 +343,6 @@ int acp_platform_register(struct device *dev)
+ 		return status;
+ 	}
+ 
+-	INIT_LIST_HEAD(&chip->stream_list);
+-	spin_lock_init(&chip->acp_lock);
+-
+ 	return 0;
  }
+ EXPORT_SYMBOL_NS_GPL(acp_platform_register, "SND_SOC_ACP_COMMON");
 -- 
-2.47.2
+2.39.2
 
