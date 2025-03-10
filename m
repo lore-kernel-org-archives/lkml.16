@@ -1,45 +1,63 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F681227E8F;
-	Mon, 10 Mar 2025 13:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D7022A1E5
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612845; cv=none; b=A8Jjd7PhIwI8Edn5waIWlglxC7yV5WaOt7t96q7KPB/pPFCZV2jRnATKWXHmn7zRPF0It6uPFgORBPXL7S2Ak7zu1PHuhxm3/ZNzF7WLRYuCR4Rz59WT3D/kI2h9Ng1lJ2WNdWO1K2YSDQidAabrZrW+HjSMPrh7U9aTfiAMCRQ=
+	t=1741612874; cv=none; b=u1YAOI3FJdv9/26nBjajOJ/wP2VcHR/ktritDbVzkJ2npCDFh66wVVAZ4hVhEI2vLNSv6n5DkogCBvRihGU6zfwZdT81EPhyflfMbWppqWqRx1ZgKO3ahlEpQxOeJpUYZK5wiHXR0cX2EueG9dGIylBbIk+dUmZDIbe7YxwlPH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612845; c=relaxed/simple;
-	bh=DS3WwuYo/m1/c7L4LA4Z4ZqTlbQTv8+RmtFgtRHUyhs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=fradq1Liy3GcBvJhdELcGXYCp9LLGY474uAPZzCq+zwviY30q6apzrUEaRLrSYoN1r6t3KiDupxGbCPDVS1OAoJxugeZ2YNJIQgtrJbX8WBlC/Tc26FvIlK5ZG4NkTxZQok7jEFcSUpo0Z3A8ZdgoE6jYFuduvLyEZ49HK52zgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=F1qAZCgG; arc=none smtp.client-ip=91.207.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	s=arc-20240116; t=1741612874; c=relaxed/simple;
+	bh=Ggvbp6qOa6npOF1qMV9S0zFDNXuxRGjSMsDMPctgc+8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WOmnSV88H+JxgCIj+AzsbhofKhqs0o02O2ZwOJmgFgY2SHKxK+qkwOOIH4o00DtdLPb5iE7xn/f48jjjhbH9kMGAtaqtUNCR+8hZ3g7nLlLXAgYNXoq9TF16BDI22Dr5ZlEVCkKSywBbs4Xd32Z26iY79tuutorxSc59p3s9OHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=I9wWsLHX; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="F1qAZCgG"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A7w1XR027964;
-	Mon, 10 Mar 2025 13:10:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=k
-	7NLY+G1Nh8YMDCI8xUWrkYZ1dDDqm7IoDzd0jBfIj8=; b=F1qAZCgG6G2EKyayV
-	+Vju2S80WhmkzHnPQ0IUm+LENpKHNTmDdMe+unLZawCkPq6RvPLXarZtmIA1ZfIO
-	W3Dvay4jN7yTGs7j0ZKUOsVHVHBBW6JHW4ftIOfIFefkpa7svivRP0yPfbw7G4Wa
-	Dh/2pDcdKtjXabEYtLk+EOSbEcye4HauiGv/gVV4mAFVyJIjx52Vz9cFmJsxEYqY
-	EDBGwlsSsXi5kl9IodKMvdf2ZRGa1y/FOkaeWKLVUCdnliFHkJQe3AtEN4nuJvYI
-	IaWI5cv4eIOqWCV0RhJdAAHteXu7H62xK/PnO117oMj68cP49uMSKmAPkhlVx/8t
-	6UU9g==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 458d1wha4s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 10 Mar 2025 13:10:54 +0000 (GMT)
-Received: from Matts-MacBook-Pro.local (172.25.0.133) by
- HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Mar 2025 13:10:52 +0000
-From: Matt Coster <matt.coster@imgtec.com>
-Date: Mon, 10 Mar 2025 13:10:37 +0000
-Subject: [PATCH v3 13/18] drm/imagination: Move ELF fw utils to common file
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I9wWsLHX"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8fb83e137so27262116d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1741612870; x=1742217670; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FEnhfGvFhDvehBkjvbbg0FC/c5Jl4TnP9p7hSbE7ZkQ=;
+        b=I9wWsLHXUHc0rJhggJkxE3Ox4nkg1zAaCd/dJZmBEK/5xKuBvrIiH/qhqHoOApXlcB
+         bz7PoWpd85u2pUGHvGw+0x5L7haRm+0EzuF5A0C5RW/uo38a4OZ6LwmwQnexZhe6SQHj
+         H1IGF/SdIVhiR8hpJahSR2OrEDVOZ9QvCGHx4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741612870; x=1742217670;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FEnhfGvFhDvehBkjvbbg0FC/c5Jl4TnP9p7hSbE7ZkQ=;
+        b=dC3n+2xVYn2xEuKU1/SJDPOhFUfXyNbrlcr/m1xneHCDne3E5Xvc+aHaj1vhCcfkWb
+         myfjWCEjrPnfDFYetpQ68VtK3qyyX4dhupza7IuKpWV195I5D8DRCpmSfPqRGqHc++ix
+         U1beZHmS4WlUtR8GtyuK7sRXgXRHyEDJo/4+PCTcki0RId9wVmoudhsImik8aw/EQoiO
+         vHFUUVQD1zZULox+o5phzFKkUO4H8ykWGHVToqlLx1jgwQihELjC/xfJu9nq1C1UOeXK
+         zpRwwWmVx+GFlwMwvaeR4YEtjdaNIexMB8yRbkXx8IzB8Qd/OGtRVk1cdyUZgWFDGFF0
+         75Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtVhV8g92DN6lzA9MnKttDMKMwoDONH0YL2RAsau5GxfR0aMwv4VGjLjIpgIjsbRuTb+k7PcpnMeZkI78=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyEy0n6T4XcPWPJFUhfQ8lkjajPYDO4268alz9Hv6sJWOKRZSK
+	jEMSsCBSS9GIJbqlrgTcuA3tA/rtkLJh1Z4U2NlUfAHNr7SqfaYGFNpXUPrfVJ272IQPzK4MxXw
+	=
+X-Gm-Gg: ASbGncth4EIzM7q96APKw05zSecHRNNCy9KmPwq69/+mHGgVr+sHg2kjWOC42jV+yiK
+	/lv990jbK6KbH3hWPGVlwl1CSUpr2dGIxUZVJ//qh9/dqD6eZEjJenVTUK51iSyUCMf8xxJwxW3
+	8iP26RVaQQSiROEm2770vGfdJHkNIzf7i93jmUorhKEi/xcddf0xmNLWD2iyImb6+7ZfLzP+t4i
+	vBr7w7Rj5jDEx/p+TB5ml/EfwMUYL+X0ia0UUGhIm/1iHkCDnta4dO1Fie0nE+rDaYSuzsAZ+dU
+	PXCi6ubwbkuyGDUD3C2QFgO5dSQIAvTd+9gYt6dsteyOHFaaezIPMyzoKxxxZPSCXOsEreUr+vd
+	/lDMxy8ZK2tjSIob2zlJAoA==
+X-Google-Smtp-Source: AGHT+IHx9NmSS7QfBnoPwnOYaAioCmKsiHZltBnlg+tKiT79EFQbFaFwYpgBnFGU0pCHoAYf+3pmxA==
+X-Received: by 2002:a05:6214:2428:b0:6e8:97d2:99a2 with SMTP id 6a1803df08f44-6e900681c78mr197207696d6.39.1741612870054;
+        Mon, 10 Mar 2025 06:21:10 -0700 (PDT)
+Received: from denia.c.googlers.com (15.237.245.35.bc.googleusercontent.com. [35.245.237.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e90f5198fasm29718846d6.67.2025.03.10.06.21.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 06:21:09 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 10 Mar 2025 13:21:08 +0000
+Subject: [PATCH v6] media: uvcvideo: Set V4L2_CTRL_FLAG_DISABLED during
+ queryctrl errors
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,247 +66,204 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-13-143b3dbef02f@imgtec.com>
-References: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
-In-Reply-To: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
-To: Frank Binns <frank.binns@imgtec.com>,
-        Matt Coster
-	<matt.coster@imgtec.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        "Vignesh
- Raghavendra" <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
-        "Alessio
- Belle" <alessio.belle@imgtec.com>,
-        Alexandru Dadu <alexandru.dadu@imgtec.com>
+Message-Id: <20250310-uvc-eaccess-v6-1-bf4562f7cabd@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAEPnzmcC/23PTW7DIBCG4atErEvFMPyYrnqPqAszQMwicQUNS
+ hX57sWRqsaVlx/S82q4sxpLjpW9He6sxJZrni99mJcDo2m8nCLPoW8mhVQgAfm1EY8jUayVW62
+ JhIERjWBdfJaY8u1RO370PeX6NZfvR7zB+rrfacCBGxmFV4nIoHqnqcznfD2/zuXE1lSTz9xtu
+ ezcJ6OloMEPJuxw/OVagLBbjp07lxBRBw2IO1w9cYAtV52Ttdr5FMCHveP1H5dSbble/+5EsOg
+ pJjn848uy/AAs9s7SpQEAAA==
+X-Change-ID: 20241213-uvc-eaccess-755cc061a360
+To: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7362;
- i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=DS3WwuYo/m1/c7L4LA4Z4ZqTlbQTv8+RmtFgtRHUyhs=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3Lx0ezNf/evttTfu7Xi4bkl+iYuJpYLJl+/91JXc
- Mcc6Z/uJztKWRjEOBhkxRRZdqywXKH2R01L4savYpg5rEwgQxi4OAVgIi5/GBkOPv0e/up36kt+
- M5OcL55pnvXWdfeaV4bkHSlQCK3j4vZl+Cv3Q1vNaLakylePnzVreOM7Km/MPvk91rO3kN+vorh
- rOQsA
-X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
- fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: 6r4inKAhSg4fWhqhURqz-FWZ7C-TyqlT
-X-Proofpoint-GUID: 6r4inKAhSg4fWhqhURqz-FWZ7C-TyqlT
-X-Authority-Analysis: v=2.4 cv=U8+SDfru c=1 sm=1 tr=0 ts=67cee4de cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=gtgaOig2gG6QrLUE_6sA:9
- a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
 
-Currently only MIPS firmware processors use ELF-formatted firmware. When
-adding support for RISC-V firmware processors, it will be useful to have
-ELF handling functions ready to go.
+To implement VIDIOC_QUERYCTRL, we need to know the minimum, maximum,
+step and flags of the control. For some of the controls, this involves
+querying the actual hardware.
 
-Signed-off-by: Matt Coster <matt.coster@imgtec.com>
+Some non-compliant cameras produce errors when we query them. These
+error can be triggered every time, sometimes, or when other controls do
+not have the "right value". Right now, we populate that error to userspace.
+When an error happens, the v4l2 framework does not copy the v4l2_queryctrl
+struct to userspace. Also, userspace apps are not ready to handle any
+other error than -EINVAL.
+
+One of the main usecases of VIDIOC_QUERYCTRL is enumerating the controls
+of a device. This is done using the V4L2_CTRL_FLAG_NEXT_CTRL flag. In
+that usecase, a non-compliant control will make it almost impossible to
+enumerate all controls of the device.
+
+A control with an invalid max/min/step/flags is better than non being
+able to enumerate the rest of the controls.
+
+This patch:
+- Retries for an extra attempt to read the control, to avoid spurious
+  errors. More attempts do not seem to produce better results in the
+  tested hardware.
+- Makes VIDIOC_QUERYCTRL return 0 in all the error cases different than
+  -EINVAL.
+- Introduces a warning in dmesg so we can have a trace of what has happened
+  and sets the V4L2_CTRL_FLAG_DISABLED.
+- Makes sure we keep returning V4L2_CTRL_FLAG_DISABLED for all the next
+  attempts to query that control (other operations have the same
+  functionality as now).
+
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
+Hi 2*Hans and Laurent!
+
+I came around a device that was listing just a couple of controls when
+it should be listing much more.
+
+Some debugging latter I found that the device was returning -EIO when
+all the focal controls were read.
+
+Lots of good arguments in favor/against this patch in the v1. Please
+check!
+
+Without this patch:
+$ v4l2-ctl --list-ctrls
+                  auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
+         exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
+     exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
+region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
+
+With this patch:
+$ v4l2-ctl --list-ctrls
+                  auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
+         exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
+     exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
+error 5 getting ext_ctrl Focus, Absolute
+error 5 getting ext_ctrl Focus, Automatic Continuous
+   region_of_interest_rectangle 0x009a1901 (unknown): type=107 value=unsupported payload type flags=has-payload
+region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
+--
+---
+Changes in v6:
+- Keep returning V4L2_CTRL_FLAG_DISABLED in future control queries.
+- Link to v5: https://lore.kernel.org/r/20250224-uvc-eaccess-v5-1-690d73bcef28@chromium.org
+
+Changes in v5:
+- Explain the retry in the commit message (Thanks Laurent).
+- Link to v4: https://lore.kernel.org/r/20250111-uvc-eaccess-v4-1-c7759bfd1bd4@chromium.org
+
+Changes in v4:
+- Display control name (Thanks Hans)
+- Link to v3: https://lore.kernel.org/r/20250107-uvc-eaccess-v3-1-99f3335d5133@chromium.org
+
 Changes in v3:
-- None
-- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-16-3fd45d9fb0cf@imgtec.com
-Changes in v2:
-- None
-- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-16-4ed30e865892@imgtec.com
----
- drivers/gpu/drm/imagination/Makefile      |  1 +
- drivers/gpu/drm/imagination/pvr_fw.h      |  5 +++
- drivers/gpu/drm/imagination/pvr_fw_mips.c | 59 +--------------------------
- drivers/gpu/drm/imagination/pvr_fw_util.c | 67 +++++++++++++++++++++++++++++++
- 4 files changed, 75 insertions(+), 57 deletions(-)
+- Add a retry mechanism during error.
+- Set V4L2_CTRL_FLAG_DISABLED flag.
+- Link to v2: https://lore.kernel.org/r/20241219-uvc-eaccess-v2-1-bf6520c8b86d@chromium.org
 
-diff --git a/drivers/gpu/drm/imagination/Makefile b/drivers/gpu/drm/imagination/Makefile
-index 9bc6a3884c2239e44265f3cdebee149841b270de..077e4762c7c383b6e339da1584c3865d830ef8d6 100644
---- a/drivers/gpu/drm/imagination/Makefile
-+++ b/drivers/gpu/drm/imagination/Makefile
-@@ -16,6 +16,7 @@ powervr-y := \
- 	pvr_fw_mips.o \
- 	pvr_fw_startstop.o \
- 	pvr_fw_trace.o \
-+	pvr_fw_util.o \
- 	pvr_gem.o \
- 	pvr_hwrt.o \
- 	pvr_job.o \
-diff --git a/drivers/gpu/drm/imagination/pvr_fw.h b/drivers/gpu/drm/imagination/pvr_fw.h
-index ab69f40a7fbc6304171f16dd16d825a68b0362a5..e120eae06bf78633b5bae79a77adac63aa5e06d3 100644
---- a/drivers/gpu/drm/imagination/pvr_fw.h
-+++ b/drivers/gpu/drm/imagination/pvr_fw.h
-@@ -478,4 +478,9 @@ pvr_fw_object_get_fw_addr(struct pvr_fw_object *fw_obj, u32 *fw_addr_out)
- 	pvr_fw_object_get_fw_addr_offset(fw_obj, 0, fw_addr_out);
+Changes in v2:
+- Never return error, even if we are not enumerating the controls
+- Improve commit message.
+- Link to v1: https://lore.kernel.org/r/20241213-uvc-eaccess-v1-1-62e0b4fcc634@chromium.org
+---
+ drivers/media/usb/uvc/uvc_ctrl.c | 46 +++++++++++++++++++++++++++++++++-------
+ drivers/media/usb/uvc/uvcvideo.h |  2 ++
+ 2 files changed, 40 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+index 4e58476d305efddac331417feda8cb064e340a13..4b282ac714220b26581fe468d9ecb1109a28483f 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -1280,6 +1280,8 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
+ 	return ~0;
  }
  
-+/* Util functions defined in pvr_fw_util.c. These are intended for use in pvr_fw_<arch>.c files. */
-+int
-+pvr_fw_process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw, u8 *fw_code_ptr,
-+				  u8 *fw_data_ptr, u8 *fw_core_code_ptr, u8 *fw_core_data_ptr);
++#define MAX_QUERY_RETRIES 2
 +
- #endif /* PVR_FW_H */
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_mips.c b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-index 524a9bd0a20b64c509f5708cc61d93b4c864b835..7f341ceb0661c61ac059654faeec91e149036467 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_mips.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-@@ -8,7 +8,6 @@
- #include "pvr_rogue_mips.h"
- #include "pvr_vm_mips.h"
+ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+ 	struct uvc_control *ctrl,
+ 	struct uvc_control_mapping *mapping,
+@@ -1305,19 +1307,44 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+ 		__uvc_find_control(ctrl->entity, mapping->master_id,
+ 				   &master_map, &master_ctrl, 0);
+ 	if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
++		unsigned int retries;
+ 		s32 val;
+-		int ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
+-		if (ret < 0)
+-			return ret;
++		int ret;
  
--#include <linux/elf.h>
- #include <linux/err.h>
- #include <linux/types.h>
- 
-@@ -16,60 +15,6 @@
- #define ROGUE_FW_HEAP_MIPS_SHIFT 24 /* 16 MB */
- #define ROGUE_FW_HEAP_MIPS_RESERVED_SIZE SZ_1M
- 
--/**
-- * process_elf_command_stream() - Process ELF firmware image and populate
-- *                                firmware sections
-- * @pvr_dev: Device pointer.
-- * @fw: Pointer to firmware image.
-- * @fw_code_ptr: Pointer to FW code section.
-- * @fw_data_ptr: Pointer to FW data section.
-- * @fw_core_code_ptr: Pointer to FW coremem code section.
-- * @fw_core_data_ptr: Pointer to FW coremem data section.
-- *
-- * Returns :
-- *  * 0 on success, or
-- *  * -EINVAL on any error in ELF command stream.
-- */
--static int
--process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw, u8 *fw_code_ptr,
--			   u8 *fw_data_ptr, u8 *fw_core_code_ptr, u8 *fw_core_data_ptr)
--{
--	struct elf32_hdr *header = (struct elf32_hdr *)fw;
--	struct elf32_phdr *program_header = (struct elf32_phdr *)(fw + header->e_phoff);
--	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
--	u32 entry;
--	int err;
--
--	for (entry = 0; entry < header->e_phnum; entry++, program_header++) {
--		void *write_addr;
--
--		/* Only consider loadable entries in the ELF segment table */
--		if (program_header->p_type != PT_LOAD)
--			continue;
--
--		err = pvr_fw_find_mmu_segment(pvr_dev, program_header->p_vaddr,
--					      program_header->p_memsz, fw_code_ptr, fw_data_ptr,
--					      fw_core_code_ptr, fw_core_data_ptr, &write_addr);
--		if (err) {
--			drm_err(drm_dev,
--				"Addr 0x%x (size: %d) not found in any firmware segment",
--				program_header->p_vaddr, program_header->p_memsz);
--			return err;
--		}
--
--		/* Write to FW allocation only if available */
--		if (write_addr) {
--			memcpy(write_addr, fw + program_header->p_offset,
--			       program_header->p_filesz);
--
--			memset((u8 *)write_addr + program_header->p_filesz, 0,
--			       program_header->p_memsz - program_header->p_filesz);
--		}
--	}
--
--	return 0;
--}
--
- static int
- pvr_mips_init(struct pvr_device *pvr_dev)
- {
-@@ -100,8 +45,8 @@ pvr_mips_fw_process(struct pvr_device *pvr_dev, const u8 *fw,
- 	u32 page_nr;
- 	int err;
- 
--	err = process_elf_command_stream(pvr_dev, fw, fw_code_ptr, fw_data_ptr, fw_core_code_ptr,
--					 fw_core_data_ptr);
-+	err = pvr_fw_process_elf_command_stream(pvr_dev, fw, fw_code_ptr, fw_data_ptr,
-+						fw_core_code_ptr, fw_core_data_ptr);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_util.c b/drivers/gpu/drm/imagination/pvr_fw_util.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..7bc8a5c48e9b0eed2045607ab2cfed80a60a32b5
---- /dev/null
-+++ b/drivers/gpu/drm/imagination/pvr_fw_util.c
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/* Copyright (c) 2024 Imagination Technologies Ltd. */
-+
-+#include "pvr_device.h"
-+#include "pvr_fw.h"
-+
-+#include <drm/drm_device.h>
-+#include <drm/drm_print.h>
-+
-+#include <linux/elf.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+/**
-+ * pvr_fw_process_elf_command_stream() - Process ELF firmware image and populate
-+ *                                       firmware sections
-+ * @pvr_dev: Device pointer.
-+ * @fw: Pointer to firmware image.
-+ * @fw_code_ptr: Pointer to FW code section.
-+ * @fw_data_ptr: Pointer to FW data section.
-+ * @fw_core_code_ptr: Pointer to FW coremem code section.
-+ * @fw_core_data_ptr: Pointer to FW coremem data section.
-+ *
-+ * Returns :
-+ *  * 0 on success, or
-+ *  * -EINVAL on any error in ELF command stream.
-+ */
-+int
-+pvr_fw_process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw,
-+				  u8 *fw_code_ptr, u8 *fw_data_ptr,
-+				  u8 *fw_core_code_ptr, u8 *fw_core_data_ptr)
-+{
-+	struct elf32_hdr *header = (struct elf32_hdr *)fw;
-+	struct elf32_phdr *program_header = (struct elf32_phdr *)(fw + header->e_phoff);
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
-+	u32 entry;
-+	int err;
-+
-+	for (entry = 0; entry < header->e_phnum; entry++, program_header++) {
-+		void *write_addr;
-+
-+		/* Only consider loadable entries in the ELF segment table */
-+		if (program_header->p_type != PT_LOAD)
-+			continue;
-+
-+		err = pvr_fw_find_mmu_segment(pvr_dev, program_header->p_vaddr,
-+					      program_header->p_memsz, fw_code_ptr, fw_data_ptr,
-+					      fw_core_code_ptr, fw_core_data_ptr, &write_addr);
-+		if (err) {
-+			drm_err(drm_dev,
-+				"Addr 0x%x (size: %d) not found in any firmware segment",
-+				program_header->p_vaddr, program_header->p_memsz);
-+			return err;
+-		if (val != mapping->master_manual)
+-				v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
++		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
++			ret = __uvc_ctrl_get(chain, master_ctrl, master_map,
++					     &val);
++			if (ret >= 0)
++				break;
 +		}
 +
-+		/* Write to FW allocation only if available */
-+		if (write_addr) {
-+			memcpy(write_addr, fw + program_header->p_offset,
-+			       program_header->p_filesz);
-+
-+			memset((u8 *)write_addr + program_header->p_filesz, 0,
-+			       program_header->p_memsz - program_header->p_filesz);
++		if (ret < 0) {
++			dev_warn_ratelimited(&chain->dev->udev->dev,
++					     "UVC non compliance: Error %d querying master control %x (%s)\n",
++					     ret, master_map->id,
++					     uvc_map_get_name(master_map));
++		} else if (val != mapping->master_manual) {
++			v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
 +		}
-+	}
+ 	}
+ 
+ 	if (!ctrl->cached) {
+-		int ret = uvc_ctrl_populate_cache(chain, ctrl);
+-		if (ret < 0)
+-			return ret;
++		unsigned int retries;
++		int ret;
 +
-+	return 0;
-+}
++		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
++			ret = uvc_ctrl_populate_cache(chain, ctrl);
++			if (ret >= 0)
++				break;
++		}
++
++		if (ret < 0) {
++			dev_warn_ratelimited(&chain->dev->udev->dev,
++					     "UVC non compliance: permanently disabling control %x (%s), due to error %d\n",
++					     mapping->id,
++					     uvc_map_get_name(mapping), ret);
++			mapping->disabled = true;
++		}
+ 	}
+ 
+ 	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_DEF) {
+@@ -1325,6 +1352,9 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+ 				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
+ 	}
+ 
++	if (mapping->disabled)
++		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_DISABLED;
++
+ 	switch (mapping->v4l2_type) {
+ 	case V4L2_CTRL_TYPE_MENU:
+ 		v4l2_ctrl->minimum = ffs(mapping->menu_mask) - 1;
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index 5e388f05f3fcaf0e4c503a34745d05837ecb0184..63687d7e97738a50d037b1f456f5215241909c13 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -129,6 +129,8 @@ struct uvc_control_mapping {
+ 	s32 master_manual;
+ 	u32 slave_ids[2];
+ 
++	bool disabled;
++
+ 	const struct uvc_control_mapping *(*filter_mapping)
+ 				(struct uvc_video_chain *chain,
+ 				struct uvc_control *ctrl);
 
+---
+base-commit: c2b96a6818159fba8a3bcc38262da9e77f9b3ec7
+change-id: 20241213-uvc-eaccess-755cc061a360
+
+Best regards,
 -- 
-2.48.1
+Ricardo Ribalda <ribalda@chromium.org>
 
