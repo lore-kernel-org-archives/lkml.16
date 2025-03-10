@@ -1,123 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04C71DE2C7;
-	Mon, 10 Mar 2025 19:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A781DE2C6;
+	Mon, 10 Mar 2025 19:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741636749; cv=none; b=pBDPJgXIlnGUyXPnVHkP7KTnL0E1xrNKDpwGqcMYZ9Yityw0rfAE6U4Etxv0ztmsuyvnLy4yv+DgZQyPlIzIah3STYX4nArqlxrEmXGkrtB+xUndRv71mp+5CdBQiaXcD3kZL/h439YaGvXS3GargFXyJBn1EtoLckw+yhh7d7I=
+	t=1741636760; cv=none; b=Tpem6owhR/aEW7ITt44oWb66vDmaqi8BKLRD9wylcRKGApSMxw2yC6Gb4d1SgfsCMFS7UaQOZQ+4HG3HZ4zW3/bLzXUEVGWLe1iD/NZgEcddEhIyZKvndZ4lfmbG+D263ytza/zv04ZdzWVWdHwt5isppJdV/eBjdi18iGUVaQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741636749; c=relaxed/simple;
-	bh=H5ycHYupR28l1HqDSyLBg9rTOcsIGNw4x4qnabynmmM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VSekre8FiCnh/eHev1zXSnMCsQXSnbI0lsNLP+vgzJWPQ4+t+MhaTo8eDGYlPT8IWJkBr08f+eXpAGO7UjQU1ObDPZyXQR3ne+EB/Jrr9gHCts5XcvUSkUSlYSSab5rQoOGOQuBMtfyIaqgoHov1wLmbFpHeYytQPCSFzYkZ4pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3SbeLVv1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ERBjMpka; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741636760; c=relaxed/simple;
+	bh=YqJdrfcQL5bnoaK4e6HG8xxxcS9OpHaA0+10lzP6WRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k9GhaPbeCsWEm4NIvVmeFel0m8HTQW3/SWV42/3KorDdW6PQt/bfNfPjgBOCVMf/Lcbb0QNIZA4QCTmKJsK78VS4aY9tDw7XdSKL/q5/tqARegg/KUaHT6EYNwFp4yyxWl6CnZT+CBj3sEx/ULekIBqWDvB4p1mdUsttP9hPueQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELSA4Ikd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3SbeLVv1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ERBjMpka"
-Date: Mon, 10 Mar 2025 19:59:04 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741636746;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uLGE1KdgCPQhUtvXDXBlsuV2cfjDAG5GjUb0ed3g0a8=;
-	b=3SbeLVv11xKGSdx6ouLcfcYMFTE+OctQlV7xqzUDglkuieS0pqg5NF2rYsKEuAqdTO72qG
-	V3IZ4PZnosx0r8nhkWcFotynMRV7nBUFzLBX4/Oc/Rx4jqqC4qtfFHIf9PofmIr8jyVir5
-	9Oe+J+mQc9Yv/pEZyHACxcFfbB3O9m+xg6JqQvhtq9JMEzvI/1rO3qv4q89y0HFhihr9FL
-	9qVJmaYl4yABsqCxpTL0wjvWwzaQcZS51KInydJkVHvzeAavFTUvkrEV5PRnz7JaZStR7w
-	7bXSzOGVHLw7sBY0W50KXScY2cYmdMfIZjJs+qzXtZV7CPVoswUdwIsRV8WFoA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741636746;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uLGE1KdgCPQhUtvXDXBlsuV2cfjDAG5GjUb0ed3g0a8=;
-	b=ERBjMpkaI3HlSlM+1HMdfFEb9hY6loJPHSakz/UY8ZxxpgvGR5gubuimWUWDbfwySs8Axq
-	SdvQATqtC4tamODw==
-From: "tip-bot2 for Thorsten Blum" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Remove optional 'size' arguments from
- strscpy() calls
-Cc: Thorsten Blum <thorsten.blum@linux.dev>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250310192336.442994-1-thorsten.blum@linux.dev>
-References: <20250310192336.442994-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELSA4Ikd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCE4C4CEE5;
+	Mon, 10 Mar 2025 19:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741636759;
+	bh=YqJdrfcQL5bnoaK4e6HG8xxxcS9OpHaA0+10lzP6WRE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ELSA4IkdAyOc/R4oignOVi0GSH5WimVosRrPkHmnUNzvU44ucu6Rug24nJlBen4BI
+	 1SF95b24TYr9ya7oNj4w52pva7KmVNlMOLTsLjBQPcf1UzbWKqnwgG4OWNP27/QWP5
+	 p4BGyNQ+LBcNVkESGVqU9kONuHjGgfco3EVks/TQLMkYqoys7CsEuUmMnxe1cMp0ca
+	 raDxBZ63kYZCr5JZ7KsdKl6OmZNez1viGEA04OnkLX+1mXJEX4VF5pidq87HUctduw
+	 dXMpXuU71XQG8Osmxn15fw2FyTDcYGhLrzhB3ARoBmniUTfvt/2EEn/P2tWl71z3W6
+	 CS8lF90dLu3PA==
+Date: Tue, 11 Mar 2025 01:29:15 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
+Cc: kishon@kernel.org, p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org,
+	abel.vesa@linaro.org, quic_qianyu@quicinc.com,
+	neil.armstrong@linaro.org, manivannan.sadhasivam@linaro.org,
+	quic_devipriy@quicinc.com, konrad.dybcio@oss.qualcomm.com,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] phy: qcom: qmp-pcie: Add PCIe PHY no_csr reset
+ support
+Message-ID: <Z89Ek8Y7TRSgTuMg@vaman>
+References: <20250226103600.1923047-1-quic_wenbyao@quicinc.com>
+ <e556e3c9-93ee-494a-be35-9353dc5718e4@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174163674500.14745.11511940835737633546.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e556e3c9-93ee-494a-be35-9353dc5718e4@quicinc.com>
 
-The following commit has been merged into the perf/core branch of tip:
+On 10-03-25, 16:58, Wenbin Yao (Consultant) wrote:
+> On 2/26/2025 6:35 PM, Wenbin Yao wrote:
+> > The series aims to skip phy register programming and drive PCIe PHY with
+> > register setting programmed in bootloader by simply toggling no_csr reset,
+> > which once togglled, PHY hardware will be reset while PHY registers are
+> > retained.
+> > 
+> > First, determine whether PHY setting can be skipped by checking
+> > QPHY_START_CTRL register and the existence of nocsr reset. If it is
+> > programmed and no_csr reset is supported, do no_csr reset and skip BCR
+> > reset which will reset entire PHY.
+> > 
+> > This series also remove has_nocsr_reset flag in qmp_phy_cfg structure and
+> > decide whether the PHY supports nocsr reset by checking the existence of
+> > nocsr reset in device tree.
+> > 
+> > The series are tested on X1E80100-QCP and HDK8550.
+> > 
+> > The commit messages of this patchset have been modified based on comments
+> > and suggestions.
+> > 
+> > Changes in v5:
+> > - Add a check whether the init sequences are exist if the PHY needs to be
+> >    initialized to Patch 2/2.
+> > - Link to v4: https://lore.kernel.org/all/20250220102253.755116-1-quic_wenbyao@quicinc.com/
+> > 
+> > Changes in v4:
+> > - Add Philipp's Reviewed-by tag to Patch 1/2.
+> > - Use PHY instead of phy in comments in Patch 2/2.
+> > - Use "if (qmp->nocsr_reset)" instead of "if (!qmp->nocsr_reset)" in
+> >    function qmp_pcie_exit for readability in Patch 2/2.
+> > - Use goto statements in function qmp_pcie_power_on and qmp_pcie_power_off
+> >    for readability in Patch 2/2.
+> > - Refine the comment of why not checking qmp->skip_init when reset PHY in
+> >    function qmp_pcie_power_off in Patch 2/2.
+> > - Link to v3: https://lore.kernel.org/all/20250214104539.281846-1-quic_wenbyao@quicinc.com/
+> > 
+> > Changes in v3:
+> > - Replace devm_reset_control_get_exclusive with
+> >    devm_reset_control_get_optional_exclusive when get phy_nocsr reset
+> >    control in Patch 1/2.
+> > - Do not ignore -EINVAL when get phy_nocsr reset control in Patch 1/2.
+> > - Replace phy_initialized with skip_init in struct qmp_pcie in Patch 2/2.
+> > - Add a comment to why not check qmp->skip_init in function
+> >    qmp_pcie_power_off in Patch 2/2.
+> > - Link to v2: https://lore.kernel.org/all/20250211094231.1813558-1-quic_wenbyao@quicinc.com/
+> > 
+> > Changes in v2:
+> > - Add Abel's and Manivannan's Reviewed-by tag to Patch 1/2.
+> > - Refine commit msg of Patch 2/2.
+> > - Link to v1: https://lore.kernel.org/all/20250121094140.4006801-1-quic_wenbyao@quicinc.com/
+> > 
+> > Konrad Dybcio (1):
+> >    phy: qcom: pcie: Determine has_nocsr_reset dynamically
+> > 
+> > Qiang Yu (1):
+> >    phy: qcom: qmp-pcie: Add PHY register retention support
+> > 
+> >   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 86 +++++++++++++++++-------
+> >   1 file changed, 63 insertions(+), 23 deletions(-)
+> > 
+> > 
+> > base-commit: bcf2acd8f64b0a5783deeeb5fd70c6163ec5acd7
+> 
+> Hi, do you have any futher comments?
 
-Commit-ID:     fd3f5d385a52531589c8a7a26d9e108aa1d3f52e
-Gitweb:        https://git.kernel.org/tip/fd3f5d385a52531589c8a7a26d9e108aa1d3f52e
-Author:        Thorsten Blum <thorsten.blum@linux.dev>
-AuthorDate:    Mon, 10 Mar 2025 20:23:35 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 10 Mar 2025 20:50:30 +01:00
+Patches lgtm, It would be great if this was tested by someone as well...
+Abel, Stephan, Neil can you folks test this and provide T-B
 
-perf/core: Remove optional 'size' arguments from strscpy() calls
+I am also concerned about bootloader assumptions esp if the Qcom boot
+chain is skipped
 
-The 'size' parameter is optional and strscpy() automatically determines
-the length of the destination buffer using sizeof() if the argument is
-omitted. This makes the explicit sizeof() calls unnecessary.
-
-Furthermore, KSYM_NAME_LEN is equal to sizeof(name) and can also be
-removed. Remove them to shorten and simplify the code.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250310192336.442994-1-thorsten.blum@linux.dev
----
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f159dba..e7d0b05 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8665,7 +8665,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
- 	unsigned int size;
- 
- 	memset(comm, 0, sizeof(comm));
--	strscpy(comm, comm_event->task->comm, sizeof(comm));
-+	strscpy(comm, comm_event->task->comm);
- 	size = ALIGN(strlen(comm)+1, sizeof(u64));
- 
- 	comm_event->comm = comm;
-@@ -9109,7 +9109,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	}
- 
- cpy_name:
--	strscpy(tmp, name, sizeof(tmp));
-+	strscpy(tmp, name);
- 	name = tmp;
- got_name:
- 	/*
-@@ -9533,7 +9533,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
- 	    ksym_type == PERF_RECORD_KSYMBOL_TYPE_UNKNOWN)
- 		goto err;
- 
--	strscpy(name, sym, KSYM_NAME_LEN);
-+	strscpy(name, sym);
- 	name_len = strlen(name) + 1;
- 	while (!IS_ALIGNED(name_len, sizeof(u64)))
- 		name[name_len++] = '\0';
+-- 
+~Vinod
