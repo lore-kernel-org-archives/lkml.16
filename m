@@ -1,105 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0AE1D5150;
-	Mon, 10 Mar 2025 20:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3EC1DEFD4
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 20:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741639802; cv=none; b=jhlaQx7gLCMEmq9ex/VaQ/ts/09XurSY5M4WRAWOsnCrkMQ6aCjpEE7brB2YBmB+3ukTysfSoikc5URHh4COKd3/R2sxIS6ddJ8CpdUk3rJbnoGgoFSo3TeEMP6+BfwS9kTdpELJ55veywCMEA9bUEfo3fstYhwt5H6Jeydpgto=
+	t=1741639844; cv=none; b=TmlNtjYuWVzHtMh3bYfRkXZ4tT5ftOBRM0OovStDX0anH8k/ivRwF36O+Y+s0sPtsyncSNCaQ0MUMhShIe6rVHA39OyCKIYtWHkW/kIgPdMrwDMYXlSL5CKVk/GzPMBYqjX98dBEGS/cl2cd/Wie0TDprKJ+UYspv0m333Jsf3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741639802; c=relaxed/simple;
-	bh=CYGGp7rWU103fsuOZ9lJT+vvLji2uulj15ckfU6FoH8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=EIEhcnTe97ltGi7SaGbGm824hyF3PTZ3gPG+lnd54w11sHX2JwovuAi+oj9j75rSHI9hHzbEd2KcUnroabMZxFHq/8dDRju0Y5rauOGlUGLaXgnnsqdk98hph+TE8PWYh3GX7/gWcw34X1j7s+z4K91QnaZNPLBO85RmJyKtbQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJ8Lpdi8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741639844; c=relaxed/simple;
+	bh=JMgtmwqbCF1crKu5gvghokge0/ISSw0obFY1lBovTyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQNMhGJnQpO5wa6jp8qgoOfnvVw4qj0sqvewfvhm2SSU3K+BSLPUpt9Scx4I7/zcf8ud0YUBoYwIH6RGNYn4FDmj9EsvWucByrv40MiI29E5nMN7D/7pXgDKjrus8n76sc+SnIZPOXDaLSqq3XCM7ASU8wOcJX0j/W428PEHiXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yozNS0AA; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJ8Lpdi8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3340DC4CEE5;
-	Mon, 10 Mar 2025 20:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741639802;
-	bh=CYGGp7rWU103fsuOZ9lJT+vvLji2uulj15ckfU6FoH8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MJ8Lpdi8JqpWarA/vc7U1W/52ADRyMA0S/mh6Hm2GpC6B4EQPOLG3SBcUg8kfsoOs
-	 DKe1CbHFk94qKlhl+bT0sPJcAsjkiT2GuwijX62eewVFOTH/Wu0BhjknZ1dnxVX1W1
-	 /QZhos37RMxKDuJLAlMRoBeohecJ6YIFZt25YCQgl0YFWY+teatsBEA/frhbD1cVDq
-	 U1JOF/OkMOBbtCwyslF8m223tiNt+pgsgLMkqmMiixGJr2p/GW35bhpxS4CiMe6Mos
-	 RqTnlkJqPqtwFxn/94a6xizjioB7NfKaADd/KxVAEUDsocHMvmi1BZNZIvVBi4NYHv
-	 bIv6H7fODpEHQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 713A4380AACB;
-	Mon, 10 Mar 2025 20:50:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yozNS0AA"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30761be8fa8so52688021fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741639840; x=1742244640; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MFIKZkaTfjlzWSNll4lqXgpcQhLW3KQ5qFxK5aL+7cU=;
+        b=yozNS0AAdIEjVRKmRYq7iQt7ql0F92g/RzUVKg5rNwW5S7at61dY6H6NjSRvDro9ft
+         qEZLd1W8ERt5VtTiWaN4rmCI6htz+qnhZkPjXrQxMTtUGYFuHtsE8sStUbqxY3hEkWgh
+         0K+Es1nB7jb8hrYlsDEzEfuZ3qQfSNyExxGx9V7pYOeIEZE0ck6D1PYbDP6iUGhOaOXt
+         4DfUDwA/qN/P9i9WDENVyufUslPI7dTotxsM2sV7MB8qG8mFGQbihZLGJd1ZXWLRDp+5
+         zqt/GuMvAG/SavSJiImq5lHMRAcr9cKOE6LPgl9vCRRAbLVqWI8JzDD/W/rfdBBQ1oIK
+         wdSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741639840; x=1742244640;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MFIKZkaTfjlzWSNll4lqXgpcQhLW3KQ5qFxK5aL+7cU=;
+        b=Yxj28YzG4c4mVvmcA82nk0/jfeF2cxTct227ORQE1wdHAYChbvJBkhx8EdYrtJtgLJ
+         A2hNzKT2dLBYbd3pBLciSLtYn6rPg+CiPvJIXNItNivljPlemzb07QJeX9Qin4ChruVR
+         /JuwvDIntFCdjNZgVLKGhZ9c8HTqSwmNioTBCFNGVidTzvZcbyGi8cTV30AqC0xk0Tf4
+         4T+mHBm8fATlNI8DoXd0lvsfjbNrT5eSN5KqgxitE/ZcrAB6BWzMya9oD9Bze2VPHuo+
+         pzFXlXSpNDyIf7Y3V338b8mQRzsbqKiO823/3/NDFubC/3uYujlkcB0D56GDhjzFrZcO
+         b95A==
+X-Forwarded-Encrypted: i=1; AJvYcCXcI5KN3s4iBHRKvxp0xJRbT4XzOd4MuyCWKKAc4QLA2vs06HD7F6rrKzujiqDa9qJ/Ud3wkRKF788FkVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfaqt09fOM178aYA809qbLOBvz0iX03NHbfkaL5DQVyitIyp71
+	kSsD88dOVKSr5UnVPAHqiB/p/cgVb9+vj7EwZJiivwOL+pV+v9RTsq/nhh+52jY=
+X-Gm-Gg: ASbGncuZ9xvZM5ljEdKABwclCjo4onLcRXEG99hIz4Lfp0UdYC3PmnFWxEo+x7XQXmy
+	qOJBJzalWQQ0bVosfgWzaS7YLOAezt9pL72KLL4p7ALefQnqoaBu0xAKuiFiGw9ODYJVBxrJEeg
+	5i/mTEegN+JUGUCUD7dINwio6YtXI68Hm1/Vc72f5z2wMJq6vbs5qDAEKmk+RXbAPKz5GY/B2rB
+	69q2VCZIxFtcneFXUK6+gLEEh6wokDjfl0WvBceeinNuqly5Rc9LE2HdKQyAlcmr9UaQnV2F+Pw
+	NS8+h/LpCOx+i5I0QrlB+HyxyBJoYMlRXQP9pBKvvf6HjIP4inx1AAECmjlLO13bcvCRka2a++C
+	subvzokA4ySV4exzr9s0S0hry
+X-Google-Smtp-Source: AGHT+IGcrlELrZBnhqzie4iDaP6avVfnzS9Zwuy/y5VMLk7WTqgSbAIjxpbHVS4pswFb2Tc4oA719A==
+X-Received: by 2002:a2e:bc27:0:b0:30b:bb45:6616 with SMTP id 38308e7fff4ca-30bf45e2500mr50729081fa.29.1741639839816;
+        Mon, 10 Mar 2025 13:50:39 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498ff85e23sm1362140e87.225.2025.03.10.13.50.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 13:50:38 -0700 (PDT)
+Date: Mon, 10 Mar 2025 22:50:35 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Damon Ding <damon.ding@rock-chips.com>
+Cc: heiko@sntech.de, andy.yan@rock-chips.com, hjc@rock-chips.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
+	simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, dianders@chromium.org, 
+	sebastian.reichel@collabora.com, cristian.ciocaltea@collabora.com, boris.brezillon@collabora.com, 
+	l.stach@pengutronix.de, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 07/13] drm/bridge: analogix_dp: Add support for
+ &drm_dp_aux.wait_hpd_asserted()
+Message-ID: <gnwqnapqlc7bym2nd55oif5lxxiibeme22upepbrgafilpcxxn@py5j7ju4rac3>
+References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+ <20250310104114.2608063-8-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/15] mptcp: pm: code reorganisation
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174163983626.3691119.3217596204968315026.git-patchwork-notify@kernel.org>
-Date: Mon, 10 Mar 2025 20:50:36 +0000
-References: <20250307-net-next-mptcp-pm-reorg-v1-0-abef20ada03b@kernel.org>
-In-Reply-To: <20250307-net-next-mptcp-pm-reorg-v1-0-abef20ada03b@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310104114.2608063-8-damon.ding@rock-chips.com>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri, 07 Mar 2025 12:21:44 +0100 you wrote:
-> Before this series, the PM code was dispersed in different places:
+On Mon, Mar 10, 2025 at 06:41:08PM +0800, Damon Ding wrote:
+> Add analogix_dpaux_wait_hpd_asserted() to help confirm the HPD state
+> before doing AUX transfers.
 > 
-> - pm.c had common code for all PMs.
+> Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+> ---
+>  .../drm/bridge/analogix/analogix_dp_core.c    | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> - pm_netlink.c was initially only about the in-kernel PM, but ended up
->   also getting exported common helpers, callbacks used by the different
->   PMs, NL events for PM userspace daemon, etc. quite confusing.
-> 
-> [...]
 
-Here is the summary with links:
-  - [net-next,01/15] mptcp: pm: use addr entry for get_local_id
-    https://git.kernel.org/netdev/net-next/c/7462fe22cc74
-  - [net-next,02/15] mptcp: pm: remove '_nl' from mptcp_pm_nl_addr_send_ack
-    https://git.kernel.org/netdev/net-next/c/fac7a6ddc757
-  - [net-next,03/15] mptcp: pm: remove '_nl' from mptcp_pm_nl_mp_prio_send_ack
-    https://git.kernel.org/netdev/net-next/c/d1734987992c
-  - [net-next,04/15] mptcp: pm: remove '_nl' from mptcp_pm_nl_work
-    https://git.kernel.org/netdev/net-next/c/551a9ad7879d
-  - [net-next,05/15] mptcp: pm: remove '_nl' from mptcp_pm_nl_rm_addr_received
-    https://git.kernel.org/netdev/net-next/c/636113918508
-  - [net-next,06/15] mptcp: pm: remove '_nl' from mptcp_pm_nl_subflow_chk_stale()
-    https://git.kernel.org/netdev/net-next/c/550c50bbc2b7
-  - [net-next,07/15] mptcp: pm: remove '_nl' from mptcp_pm_nl_is_init_remote_addr
-    https://git.kernel.org/netdev/net-next/c/498d7d8b75f1
-  - [net-next,08/15] mptcp: pm: kernel: add '_pm' to mptcp_nl_set_flags
-    https://git.kernel.org/netdev/net-next/c/40aa7409d30d
-  - [net-next,09/15] mptcp: pm: avoid calling PM specific code from core
-    https://git.kernel.org/netdev/net-next/c/a17336b2b2e0
-  - [net-next,10/15] mptcp: pm: worker: split in-kernel and common tasks
-    https://git.kernel.org/netdev/net-next/c/a49eb8ae95b8
-  - [net-next,11/15] mptcp: pm: export mptcp_remote_address
-    https://git.kernel.org/netdev/net-next/c/a14673127236
-  - [net-next,12/15] mptcp: pm: move generic helper at the top
-    https://git.kernel.org/netdev/net-next/c/bcc32640ada0
-  - [net-next,13/15] mptcp: pm: move generic PM helpers to pm.c
-    https://git.kernel.org/netdev/net-next/c/e4c28e3d5c09
-  - [net-next,14/15] mptcp: pm: split in-kernel PM specific code
-    https://git.kernel.org/netdev/net-next/c/8617e85e04bd
-  - [net-next,15/15] mptcp: pm: move Netlink PM helpers to pm_netlink.c
-    https://git.kernel.org/netdev/net-next/c/2e7e6e9cda1e
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+With best wishes
+Dmitry
