@@ -1,175 +1,97 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1284B233725;
-	Mon, 10 Mar 2025 18:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F562356CC;
+	Mon, 10 Mar 2025 18:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741630352; cv=none; b=YB1cMGFlSYw7FK7JcbRoM9zRqnGt0WgmhctiYVbe+1IgaQ18vMRIDZHw8RmmQKNaHCd64riQpw1H904hhhHq9km+j2YQCy1Deoa4J9pmixh1l6K9PTpeU7/LNBfL9fI3qcdEXwshxajlpwb8RqbE6wDfLbFAx4ycrRfw7OSLYTo=
+	t=1741630355; cv=none; b=U9KVoHbnaqs9EPoYgLesvIUvX0jnGku4udNBnfx1sOEk6D2JGyS3I7SpIf+AQUnuKmJDDWZ42/q/1c4ZJOn7szrwQqYe0YYwO7E1tavjktGbGELYCMQGTQUHAu1Z8Yhiec6U3HR9BawzyPIGpWnOeN9cUZOk312avIhParh1nRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741630352; c=relaxed/simple;
-	bh=HG/W4n5uZlKY6cxWkKtd3p2/Kd4jfK+Mk8Uxv4orh/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ql5BMjqAJbOHwuNZyjWJsRnZB/LehRN5Vi7LEICAixKRm5tU9uhc/j/uW7MA1oV1stMZVCQL6IqehiArTnNzwNXm8PA/q38qQwOn4d8IbWgq4zy+TWzXPGgraRsy2XInmIfrElP+xscKST/ZjDQ7cdQPUaAn4mIOgrprowDIuIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Ntwx2Uyu; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1741630355; c=relaxed/simple;
+	bh=xutUtI8ncSnysxzMFMlH3TgBkjEFcJ6ylYOCCdQt5sY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TLQhCfjN1Nq9A/yjDCQzog4oDPGSsNapzc28nTDU5gEzp2cBdBWZX3l/Cu3Q3nYmsazCQaBcoXh1v+G9/YwQzWAUkfVryZPiAKP8G+yqDMBgHy7ePW49/PMwBzBlBmRFX03H2XzKggnKGkbwWU+uQtkf0qaJVsLw6eyjFXlYz50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQkr1HSc; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ntwx2Uyu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1741630351; x=1773166351;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=AJNzET63DVGR7tJQ8b5ZW+nPqzzSSt+0wH0JG0KxXMQ=;
-  b=Ntwx2Uyu3x33GAf7fzYGVLxmIbFhej99vgmteWkYBNzqLRgg9breUu7v
-   RS/98kS+foQ5MCCOrVk7xuB2NdOOKWkMQQSIMdPnvKGbG/Mia7UcNYqjl
-   mY+uwxwnlKnj2dg/KWDW5uCx38+L0nfQXMQ6PD8IQxO34/qWXbOmLehxM
-   E=;
-X-IronPort-AV: E=Sophos;i="6.14,236,1736812800"; 
-   d="scan'208";a="278114488"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 18:12:26 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:59359]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.34.60:2525] with esmtp (Farcaster)
- id c3925b25-0958-4048-85a6-faf49dbd70a0; Mon, 10 Mar 2025 18:12:24 +0000 (UTC)
-X-Farcaster-Flow-ID: c3925b25-0958-4048-85a6-faf49dbd70a0
-Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 10 Mar 2025 18:12:24 +0000
-Received: from [192.168.30.50] (10.106.82.18) by EX19D022EUC002.ant.amazon.com
- (10.252.51.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 10 Mar 2025
- 18:12:23 +0000
-Message-ID: <fdae95e3-962b-4eaf-9ae7-c6bd1062c518@amazon.com>
-Date: Mon, 10 Mar 2025 18:12:22 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQkr1HSc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741630354; x=1773166354;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xutUtI8ncSnysxzMFMlH3TgBkjEFcJ6ylYOCCdQt5sY=;
+  b=FQkr1HScr8iBA6xrY2HK29ZJkkmZ6d9ztleZhLQlrUl6IBwrX5IpZcrV
+   opCHADnP3V0nFNg5MYKGDB6oYxCLuVvoBd4gU5HsdwRGwNOqHRfKk5iwR
+   Lu+bMDs1x957FWqZxAgxmGV/IuboTgapqxCXTjQc4tHBfy+NidiZOCpp8
+   uTQopKT0NOpJH03Kdul/AQobOjZdZFBDpB/mvelICgTq82oQhpJjDNlS1
+   FC1clurpE5Y5x3ZRNA2HHM4hHlEzHwFZhsppRogjeW0pNYjtMnRHbgP2v
+   2bl1m2Qwt6Gj9Bv42nFupKYaLC0NCfCNImURa4G6puwkaZmY3LS041jZ5
+   g==;
+X-CSE-ConnectionGUID: GgVKTgTVTAqPCT/Fik9T6Q==
+X-CSE-MsgGUID: B98toNZ5TEmsUSr2aGnzyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="45433458"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="45433458"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 11:12:32 -0700
+X-CSE-ConnectionGUID: XTWVcWlLSdaQ6N8oMqzVWQ==
+X-CSE-MsgGUID: D3Ts7d9eSaqsvtxwU60bpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="120552572"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 11:12:27 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id A1BEB11F7E5;
+	Mon, 10 Mar 2025 20:12:24 +0200 (EET)
+Date: Mon, 10 Mar 2025 18:12:24 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v6 02/10] property: Add functions to iterate named child
+Message-ID: <Z88riPwuTvnAy-cj@kekkonen.localdomain>
+References: <cover.1741610847.git.mazziesaccount@gmail.com>
+ <ff924f640feeb87819d40557f12a04e607894682.1741610847.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [RFC PATCH 0/5] KVM: guest_memfd: support for uffd missing
-To: Peter Xu <peterx@redhat.com>, James Houghton <jthoughton@google.com>
-CC: <akpm@linux-foundation.org>, <pbonzini@redhat.com>, <shuah@kernel.org>,
-	<kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<lorenzo.stoakes@oracle.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
-	<quic_eberman@quicinc.com>, <graf@amazon.de>, <jgowans@amazon.com>,
-	<roypat@amazon.co.uk>, <derekmn@amazon.com>, <nsaenz@amazon.es>,
-	<xmarcalx@amazon.com>
-References: <20250303133011.44095-1-kalyazin@amazon.com>
- <Z8YfOVYvbwlZST0J@x1.local>
- <CADrL8HXOQ=RuhjTEmMBJrWYkcBaGrqtXmhzPDAo1BE3EWaBk4g@mail.gmail.com>
- <Z8i0HXen8gzVdgnh@x1.local>
-Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <Z8i0HXen8gzVdgnh@x1.local>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D004EUC004.ant.amazon.com (10.252.51.191) To
- EX19D022EUC002.ant.amazon.com (10.252.51.137)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff924f640feeb87819d40557f12a04e607894682.1741610847.git.mazziesaccount@gmail.com>
 
+Moi,
 
+On Mon, Mar 10, 2025 at 02:55:53PM +0200, Matti Vaittinen wrote:
+> Please note, the checkpatch.pl was not happy about the for_each...()
+> macros. I tried to make them to follow the existing convention. I am
+> open to suggestions how to improve.
 
-On 05/03/2025 20:29, Peter Xu wrote:
-> On Wed, Mar 05, 2025 at 11:35:27AM -0800, James Houghton wrote:
->> I think it might be useful to implement an fs-generic MINOR mode. The
->> fault handler is already easy enough to do generically (though it
->> would become more difficult to determine if the "MINOR" fault is
->> actually a MISSING fault, but at least for my userspace, the
->> distinction isn't important. :)) So the question becomes: what should
->> UFFDIO_CONTINUE look like?
->>
->> And I think it would be nice if UFFDIO_CONTINUE just called
->> vm_ops->fault() to get the page we want to map and then mapped it,
->> instead of having shmem-specific and hugetlb-specific versions (though
->> maybe we need to keep the hugetlb specialization...). That would avoid
->> putting kvm/gmem/etc. symbols in mm/userfaultfd code.
->>
->> I've actually wanted to do this for a while but haven't had a good
->> reason to pursue it. I wonder if it can be done in a
->> backwards-compatible fashion...
-> 
-> Yes I also thought about that. :)
+checkpatch.pl isn't always handling macros as well as it might. (It's just
+hard to parse C using regular expressions and in practice some
+simplifications end up being made.)
 
-Hi Peter, hi James.  Thanks for pointing at the race condition!
-
-I did some experimentation and it indeed looks possible to call 
-vm_ops->fault() from userfault_continue() to make it generic and 
-decouple from KVM, at least for non-hugetlb cases.  One thing is we'd 
-need to prevent a recursive handle_userfault() invocation, which I 
-believe can be solved by adding a new VMF flag to ignore the userfault 
-path when the fault handler is called from userfault_continue().  I'm 
-open to a more elegant solution though.
-
-Regarding usage of the MINOR notification, in what case do you recommend 
-sending it?  If following the logic implemented in shmem and hugetlb, ie 
-if the page is _present_ in the pagecache, I can't see how it is going 
-to work with the write syscall, as we'd like to know when the page is 
-_missing_ in order to respond with the population via the write.  If 
-going against shmem/hugetlb logic, and sending the MINOR event when the 
-page is missing from the pagecache, how would it solve the race 
-condition problem?
-
-Also, where would the check for the folio_test_uptodate() mentioned by 
-James fit into here?  Would it only be used for fortifying the MINOR 
-(present) against the race?
-
-> When Axel added minor fault, it's not a major concern as it's the only fs
-> that will consume the feature anyway in the do_fault() path - hugetlbfs has
-> its own path to take care of.. even until now.
-> 
-> And there's some valid points too if someone would argue to put it there
-> especially on folio lock - do that in shmem.c can avoid taking folio lock
-> when generating minor fault message.  It might make some difference when
-> the faults are heavy and when folio lock is frequently taken elsewhere too.
-
-Peter, could you expand on this?  Are you referring to the following 
-(shmem_get_folio_gfp)?
-
-	if (folio) {
-		folio_lock(folio);
-
-		/* Has the folio been truncated or swapped out? */
-		if (unlikely(folio->mapping != inode->i_mapping)) {
-			folio_unlock(folio);
-			folio_put(folio);
-			goto repeat;
-		}
-		if (sgp == SGP_WRITE)
-			folio_mark_accessed(folio);
-		if (folio_test_uptodate(folio))
-			goto out;
-		/* fallocated folio */
-		if (sgp != SGP_READ)
-			goto clear;
-		folio_unlock(folio);
-		folio_put(folio);
-	}
-
-Could you explain in what case the lock can be avoided?  AFAIC, the 
-function is called by both the shmem fault handler and userfault_continue().
-
-> It might boil down to how many more FSes would support minor fault, and
-> whether we would care about such difference at last to shmem users. If gmem
-> is the only one after existing ones, IIUC there's still option we implement
-> it in gmem code.  After all, I expect the change should be very under
-> control (<20 LOCs?)..
-> 
-> --
-> Peter Xu
-> 
-
+-- 
+Sakari Ailus
