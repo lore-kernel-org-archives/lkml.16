@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D602225A35
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6B5225A35
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741599752; cv=none; b=mTVrKMC3EKuew9W6Umt1GUwzUkBSUDGaU9GtL1cZiTg0HFGVTHvEhQKM5sza7bkRUOQOQro26cXA8VXVO0HAoF5QLSqfk+lQhAedk72LMlKxLcANUX9zvXc8e2YRhZB/7F7zxJqZ49hYv7lYAkHIfCQoeRzfFy7SJpUkDlSKUoE=
+	t=1741599759; cv=none; b=P2unqyoIeUDkUgvS+9DtTfRrOS4SVDT+8RWCGYNJMTcG+DVixsEUybwN2P7KTH/yfVtjp9l+WSmVLzoo/vz+Tuhely+3fa8t3qzrsyztNfVQciB/sQ+/AmVtFZo0vlMkZQ0mZWj/XU15ndKMqPdxsrE5sIh4vd7b8LznJJ/4D4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741599752; c=relaxed/simple;
-	bh=0Kixhs+Wzb2xkgum3kaWfJly4Y7xnsiWnM4rZnsGe50=;
+	s=arc-20240116; t=1741599759; c=relaxed/simple;
+	bh=/htZgUzt8knAr+hiRacdqz5GeDl5/4xYQD4/ZC7eRD8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LjV52Fw2VOjm2fxCi4A6PcAAqbnps3E8yVHEhr5HgJYKNYjG1zXfGNlFfm7ULVP8w6YrjaUeEgY4Aoxt4dLpo+AFJyeDvR2WXNFvg3df9UfrtONTZeDISLS0CUYXBH9cOHJ1z/17T+wSQkh0tu7foEBW52EKDgB3/qXene54Ghg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JtnJusDV; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=hUgmqG0JuH4V4AsUStuJqvpw0YzJaz+sFniveI+4bgHhbEAOmiijqTs5lrf75acMI6btW5MLW0Gvyvbz5sT3vAHrMXmeIDkQTV2JPnCHKdbfVv53JeHI7frzZpsyWoEQbSKMH2ppOG9MDZPQLayjPngQni41aFXFs5Vbb+cfbws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UPUFwYCt; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JtnJusDV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPUFwYCt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741599749;
+	s=mimecast20190719; t=1741599756;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ms7KYDawzWvNN1tWImlyZ0pX/itnGIeBBJQ2IqDFAKk=;
-	b=JtnJusDV7cJRUHJNkZxjxkRaYTMucLv4CXgfl9EwSLOVHIZ1J11MAXUmjeSPPOdHASr7++
-	szGEpNvMnJTyFgv7EbGqpAIYl0OPDZFwKlvODpjOk5DCJeuJ+qnBAEfJAZ52ftjLVgsAj7
-	ycWZLLUXpvUNn6MysWiiQKijP3yUgNs=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=16o31y5LryjLyHYuo1OhSgUhMY7/YxydWgak/ianHBU=;
+	b=UPUFwYCtphDk8OC4BeXoTZni7xiIeVuwH/K6LOJl7Z/IwjaRKiAjAsXNr2n+ZsLWtIssn8
+	Z+srzmnXuvOJ2jNUM4JAnqlKaPydEMIrsuBWGGX/SJ0TcYtX0lK5QUECbkU/fcAf0gut71
+	KK1ziEmoHPsLDEZH0/xVOQt49URKZ1A=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-373-VHgX47lnNCGefziFaqYZ0Q-1; Mon,
- 10 Mar 2025 05:42:26 -0400
-X-MC-Unique: VHgX47lnNCGefziFaqYZ0Q-1
-X-Mimecast-MFC-AGG-ID: VHgX47lnNCGefziFaqYZ0Q_1741599745
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-602-4W0z7l4xPNuYI2Te3AP8GA-1; Mon,
+ 10 Mar 2025 05:42:33 -0400
+X-MC-Unique: 4W0z7l4xPNuYI2Te3AP8GA-1
+X-Mimecast-MFC-AGG-ID: 4W0z7l4xPNuYI2Te3AP8GA_1741599752
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1650119560A1;
-	Mon, 10 Mar 2025 09:42:25 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 23822180025A;
+	Mon, 10 Mar 2025 09:42:31 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.61])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5A1AD3000197;
-	Mon, 10 Mar 2025 09:42:23 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7555719560AB;
+	Mon, 10 Mar 2025 09:42:29 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Marc Dionne <marc.dionne@auristor.com>
 Cc: David Howells <dhowells@redhat.com>,
@@ -49,9 +49,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-afs@lists.infradead.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/11] afs: Remove the "autocell" mount option
-Date: Mon, 10 Mar 2025 09:41:55 +0000
-Message-ID: <20250310094206.801057-3-dhowells@redhat.com>
+Subject: [PATCH v4 04/11] afs: Improve afs_volume tracing to display a debug ID
+Date: Mon, 10 Mar 2025 09:41:57 +0000
+Message-ID: <20250310094206.801057-5-dhowells@redhat.com>
 In-Reply-To: <20250310094206.801057-1-dhowells@redhat.com>
 References: <20250310094206.801057-1-dhowells@redhat.com>
 Precedence: bulk
@@ -61,107 +61,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Remove the "autocell" mount option.  It was an attempt to do automounting
-of arbitrary cells based on what the user looked up but within the root
-directory of a mounted volume.  This isn't really the right thing to do,
-and using the "dyn" mount option to get the dynamic root is the right way
-to do it.  The kafs-client package uses "-o dyn" when mounting /afs, so it
-should be safe to drop "-o autocell".
+Improve the tracing of afs_volume objects to include displaying a debug ID
+so that different instances of volumes with the same "vid" can be
+distinguished.
+
+Also be consistent about displaying the volume's refcount (and not the
+cell's).
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: linux-afs@lists.infradead.org
 cc: linux-fsdevel@vger.kernel.org
-Link: https://lore.kernel.org/r/20250224234154.2014840-7-dhowells@redhat.com/ # v1
+Link: https://lore.kernel.org/r/20250224234154.2014840-9-dhowells@redhat.com/ # v1
 ---
- fs/afs/dir.c      | 5 ++---
- fs/afs/dynroot.c  | 5 +----
- fs/afs/internal.h | 2 --
- fs/afs/super.c    | 5 -----
- 4 files changed, 3 insertions(+), 14 deletions(-)
+ fs/afs/internal.h          |  1 +
+ fs/afs/volume.c            | 15 +++++++++------
+ include/trace/events/afs.h | 18 +++++++++++-------
+ 3 files changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 02cbf38e1a77..9f62b8938350 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -1004,9 +1004,8 @@ static struct dentry *afs_lookup(struct inode *dir, struct dentry *dentry,
- 	afs_stat_v(dvnode, n_lookup);
- 	inode = afs_do_lookup(dir, dentry);
- 	if (inode == ERR_PTR(-ENOENT))
--		inode = afs_try_auto_mntpt(dentry, dir);
--
--	if (!IS_ERR_OR_NULL(inode))
-+		inode = NULL;
-+	else if (!IS_ERR_OR_NULL(inode))
- 		fid = AFS_FS_I(inode)->fid;
- 
- 	_debug("splice %p", dentry->d_inode);
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index 008698d706ca..0b4cc291c65e 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -155,7 +155,7 @@ static int afs_probe_cell_name(struct dentry *dentry)
-  * Try to auto mount the mountpoint with pseudo directory, if the autocell
-  * operation is setted.
-  */
--struct inode *afs_try_auto_mntpt(struct dentry *dentry, struct inode *dir)
-+static struct inode *afs_try_auto_mntpt(struct dentry *dentry, struct inode *dir)
- {
- 	struct afs_vnode *vnode = AFS_FS_I(dir);
- 	struct inode *inode;
-@@ -164,9 +164,6 @@ struct inode *afs_try_auto_mntpt(struct dentry *dentry, struct inode *dir)
- 	_enter("%p{%pd}, {%llx:%llu}",
- 	       dentry, dentry, vnode->fid.vid, vnode->fid.vnode);
- 
--	if (!test_bit(AFS_VNODE_AUTOCELL, &vnode->flags))
--		goto out;
--
- 	ret = afs_probe_cell_name(dentry);
- 	if (ret < 0)
- 		goto out;
 diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index df30bd62da79..0e00e061f0d9 100644
+index 47e98a78f59f..97045e2a455d 100644
 --- a/fs/afs/internal.h
 +++ b/fs/afs/internal.h
-@@ -700,7 +700,6 @@ struct afs_vnode {
- #define AFS_VNODE_ZAP_DATA	3		/* set if vnode's data should be invalidated */
- #define AFS_VNODE_DELETED	4		/* set if vnode deleted on server */
- #define AFS_VNODE_MOUNTPOINT	5		/* set if vnode is a mountpoint symlink */
--#define AFS_VNODE_AUTOCELL	6		/* set if Vnode is an auto mount point */
- #define AFS_VNODE_PSEUDODIR	7 		/* set if Vnode is a pseudo directory */
- #define AFS_VNODE_NEW_CONTENT	8		/* Set if file has new content (create/trunc-0) */
- #define AFS_VNODE_SILLY_DELETED	9		/* Set if file has been silly-deleted */
-@@ -1111,7 +1110,6 @@ extern int afs_silly_iput(struct dentry *, struct inode *);
- extern const struct inode_operations afs_dynroot_inode_operations;
- extern const struct dentry_operations afs_dynroot_dentry_operations;
+@@ -623,6 +623,7 @@ struct afs_volume {
+ 	afs_volid_t		vid;		/* The volume ID of this volume */
+ 	afs_volid_t		vids[AFS_MAXTYPES]; /* All associated volume IDs */
+ 	refcount_t		ref;
++	unsigned int		debug_id;	/* Debugging ID for traces */
+ 	time64_t		update_at;	/* Time at which to next update */
+ 	struct afs_cell		*cell;		/* Cell to which belongs (pins ref) */
+ 	struct rb_node		cell_node;	/* Link in cell->volumes */
+diff --git a/fs/afs/volume.c b/fs/afs/volume.c
+index af3a3f57c1b3..0efff3d25133 100644
+--- a/fs/afs/volume.c
++++ b/fs/afs/volume.c
+@@ -10,6 +10,7 @@
+ #include "internal.h"
  
--extern struct inode *afs_try_auto_mntpt(struct dentry *, struct inode *);
- extern int afs_dynroot_mkdir(struct afs_net *, struct afs_cell *);
- extern void afs_dynroot_rmdir(struct afs_net *, struct afs_cell *);
- extern int afs_dynroot_populate(struct super_block *);
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index a9bee610674e..2f18aa8e2806 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -194,8 +194,6 @@ static int afs_show_options(struct seq_file *m, struct dentry *root)
+ static unsigned __read_mostly afs_volume_record_life = 60 * 60;
++static atomic_t afs_volume_debug_id;
  
- 	if (as->dyn_root)
- 		seq_puts(m, ",dyn");
--	if (test_bit(AFS_VNODE_AUTOCELL, &AFS_FS_I(d_inode(root))->flags))
--		seq_puts(m, ",autocell");
- 	switch (as->flock_mode) {
- 	case afs_flock_mode_unset:	break;
- 	case afs_flock_mode_local:	p = "local";	break;
-@@ -478,9 +476,6 @@ static int afs_fill_super(struct super_block *sb, struct afs_fs_context *ctx)
- 	if (IS_ERR(inode))
- 		return PTR_ERR(inode);
+ static void afs_destroy_volume(struct work_struct *work);
  
--	if (ctx->autocell || as->dyn_root)
--		set_bit(AFS_VNODE_AUTOCELL, &AFS_FS_I(inode)->flags);
--
- 	ret = -ENOMEM;
- 	sb->s_root = d_make_root(inode);
- 	if (!sb->s_root)
+@@ -59,7 +60,7 @@ static void afs_remove_volume_from_cell(struct afs_volume *volume)
+ 	struct afs_cell *cell = volume->cell;
+ 
+ 	if (!hlist_unhashed(&volume->proc_link)) {
+-		trace_afs_volume(volume->vid, refcount_read(&cell->ref),
++		trace_afs_volume(volume->debug_id, volume->vid, refcount_read(&volume->ref),
+ 				 afs_volume_trace_remove);
+ 		write_seqlock(&cell->volume_lock);
+ 		hlist_del_rcu(&volume->proc_link);
+@@ -84,6 +85,7 @@ static struct afs_volume *afs_alloc_volume(struct afs_fs_context *params,
+ 	if (!volume)
+ 		goto error_0;
+ 
++	volume->debug_id	= atomic_inc_return(&afs_volume_debug_id);
+ 	volume->vid		= vldb->vid[params->type];
+ 	volume->update_at	= ktime_get_real_seconds() + afs_volume_record_life;
+ 	volume->cell		= afs_get_cell(params->cell, afs_cell_trace_get_vol);
+@@ -115,7 +117,7 @@ static struct afs_volume *afs_alloc_volume(struct afs_fs_context *params,
+ 
+ 	*_slist = slist;
+ 	rcu_assign_pointer(volume->servers, slist);
+-	trace_afs_volume(volume->vid, 1, afs_volume_trace_alloc);
++	trace_afs_volume(volume->debug_id, volume->vid, 1, afs_volume_trace_alloc);
+ 	return volume;
+ 
+ error_1:
+@@ -247,7 +249,7 @@ static void afs_destroy_volume(struct work_struct *work)
+ 	afs_remove_volume_from_cell(volume);
+ 	afs_put_serverlist(volume->cell->net, slist);
+ 	afs_put_cell(volume->cell, afs_cell_trace_put_vol);
+-	trace_afs_volume(volume->vid, refcount_read(&volume->ref),
++	trace_afs_volume(volume->debug_id, volume->vid, refcount_read(&volume->ref),
+ 			 afs_volume_trace_free);
+ 	kfree_rcu(volume, rcu);
+ 
+@@ -262,7 +264,7 @@ bool afs_try_get_volume(struct afs_volume *volume, enum afs_volume_trace reason)
+ 	int r;
+ 
+ 	if (__refcount_inc_not_zero(&volume->ref, &r)) {
+-		trace_afs_volume(volume->vid, r + 1, reason);
++		trace_afs_volume(volume->debug_id, volume->vid, r + 1, reason);
+ 		return true;
+ 	}
+ 	return false;
+@@ -278,7 +280,7 @@ struct afs_volume *afs_get_volume(struct afs_volume *volume,
+ 		int r;
+ 
+ 		__refcount_inc(&volume->ref, &r);
+-		trace_afs_volume(volume->vid, r + 1, reason);
++		trace_afs_volume(volume->debug_id, volume->vid, r + 1, reason);
+ 	}
+ 	return volume;
+ }
+@@ -290,12 +292,13 @@ struct afs_volume *afs_get_volume(struct afs_volume *volume,
+ void afs_put_volume(struct afs_volume *volume, enum afs_volume_trace reason)
+ {
+ 	if (volume) {
++		unsigned int debug_id = volume->debug_id;
+ 		afs_volid_t vid = volume->vid;
+ 		bool zero;
+ 		int r;
+ 
+ 		zero = __refcount_dec_and_test(&volume->ref, &r);
+-		trace_afs_volume(vid, r - 1, reason);
++		trace_afs_volume(debug_id, vid, r - 1, reason);
+ 		if (zero)
+ 			schedule_work(&volume->destructor);
+ 	}
+diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
+index c19132605f41..cf94bf1e8286 100644
+--- a/include/trace/events/afs.h
++++ b/include/trace/events/afs.h
+@@ -1539,25 +1539,29 @@ TRACE_EVENT(afs_server,
+ 	    );
+ 
+ TRACE_EVENT(afs_volume,
+-	    TP_PROTO(afs_volid_t vid, int ref, enum afs_volume_trace reason),
++	    TP_PROTO(unsigned int debug_id, afs_volid_t vid, int ref,
++		     enum afs_volume_trace reason),
+ 
+-	    TP_ARGS(vid, ref, reason),
++	    TP_ARGS(debug_id, vid, ref, reason),
+ 
+ 	    TP_STRUCT__entry(
++		    __field(unsigned int,		debug_id)
+ 		    __field(afs_volid_t,		vid)
+ 		    __field(int,			ref)
+ 		    __field(enum afs_volume_trace,	reason)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->vid = vid;
+-		    __entry->ref = ref;
+-		    __entry->reason = reason;
++		    __entry->debug_id	= debug_id;
++		    __entry->vid	= vid;
++		    __entry->ref	= ref;
++		    __entry->reason	= reason;
+ 			   ),
+ 
+-	    TP_printk("V=%llx %s ur=%d",
+-		      __entry->vid,
++	    TP_printk("V=%08x %s vid=%llx r=%d",
++		      __entry->debug_id,
+ 		      __print_symbolic(__entry->reason, afs_volume_traces),
++		      __entry->vid,
+ 		      __entry->ref)
+ 	    );
+ 
 
