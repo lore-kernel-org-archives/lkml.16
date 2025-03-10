@@ -1,89 +1,184 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C351D5AA0;
-	Mon, 10 Mar 2025 07:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0924B17BA5
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 07:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591567; cv=none; b=jL7zQwYiDyZ9SYs/QPlDRTuVAwgTWo723oP7abRWjb6omAVIQPUSSZAvLNhfZ+1Q4SZIt3l/dtjMWs4TeoFMOH5GblQlCDRRHccoD6LyGHwz10CE9C1/RcKNx93RNPQ1vR/LZX/GQOPZYrZx6nvg+0+mrnxyYXnY/Rz3ojYBzYw=
+	t=1741591616; cv=none; b=fI9Je/TC9Y1j8YFgUBrmfly+ueK8nhL+HPTj1kWSckrFsDoDwVGXBtY3+3j11L6IagFLVpFz4q0qFSunHlVzA98CPdFcMgjn+x3dXzKMOKR3+I3XJg9gy1JT4p/z0orW4V5YyChvomzjhMkqgHuXnWaC40/q+Hq+Qbm1omJs/ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591567; c=relaxed/simple;
-	bh=kQOLy3c+kJxUC9iEU5qpaeaptXfIDafn604QRTV5Iz8=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=XmnKslZd4yyCIRc8GYkp6F4YL69kmTURV8/qcyuH2DNNnJI+AmFDdpOrQdmXEyNdvNPA18CyAXReK5q4D0X4aOhYv/dc/TkgikQGIUw5rBRdjYLT2c7ZIqrSIAKsYsh7dMj/TkItxc2bo9BcDCeFWnvy+4q24DrW+Xhy8prW6t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=aros@gmx.com header.b=UND7lBlx; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1741591616; c=relaxed/simple;
+	bh=7wBfnmZleX7Y85tYsTskYok1c1ngfWy+JcWmAk0PEZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UtpxFaPGncszTNe8WGl9T5Eh5f2+AdcVxIQG4Gdt/QLhZaAsOW85DSkwhcfD2XGdrxSFAeJXhYIiNW4kuIGDefM3V+yYceB5JmPNFFuFYgYU6fWSofhk3lblu8YA9w8/R6/tu1YaqI7yMxrpX8ZLfBuoF8mQkSPwNtvxgU7WO94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zs65k6cP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=aros@gmx.com header.b="UND7lBlx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1741591561; x=1742196361; i=aros@gmx.com;
-	bh=kQOLy3c+kJxUC9iEU5qpaeaptXfIDafn604QRTV5Iz8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:From:Subject:
-	 Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=UND7lBlxvWFdQq6PPIRQQ/NAeb9XJBobhnmqS2u1C1dJPDuOKcsHlPV/Vbp6VeMt
-	 QXTmXHjYHo//9Ukl2fMQGwPGjIMN7+YRXoQoChf7HrLmJwsC8o6FkS1V32IyxDmPo
-	 j22eG8NXMay4SCTWQiMkshccyPRrMM1S8bhQeueKTGf9FzQZ0DWI8AIWGBHOlw1vW
-	 zh6Q0OjhKjYTXtWfiqGGkQpD9lVxQq5caTGyVU6Vzfw11RHtyfPhZ51CI/5IzykoW
-	 k5AEndazlZdJYXDU6uhhSns1MfgNg7AlobTpFQPocxg4ZL0Sz2o44e4zRHNM+Pudn
-	 DVq8oFZrbuYJd81qUw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.10.12.239] ([156.200.109.2]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MTABT-1tfHCo1pdv-00QM5B; Mon, 10
- Mar 2025 08:26:01 +0100
-Message-ID: <bda3fa3f-dd12-40de-841a-e4c216ab533f@gmx.com>
-Date: Mon, 10 Mar 2025 07:26:00 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zs65k6cP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCFD5C4CEE5;
+	Mon, 10 Mar 2025 07:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741591614;
+	bh=7wBfnmZleX7Y85tYsTskYok1c1ngfWy+JcWmAk0PEZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zs65k6cPyITwlw4q7+nFyQLTJ+9cSdxFo2+sEvOpPBWysAq7W331LPGSq6AKxj85j
+	 CbHaN6iZOmqT0H/aRFAWEqIvVQo4f91FP3pXcP7WYdCGQZl9N8YSivakG5dY1DXB4C
+	 NEC+XQ/m2cGiHjBv/ZSq/8d18XrWFbYhSp5aWeltzsLb7qFU4KeSd9VSZwWzcG9a4K
+	 9DlUpDQzhoOV+QliJQwjhLQjMbZ1eZol3ztJl6gPd5YDTXhk1Juznlw3vJBcKe9Uvj
+	 eO4a84IOxLQ+/B3fGsukNS/m2G68aM7JjXEi+0jPDwwMqAfukaEL2eaNi4KJU5j9L4
+	 9qftv9+ALTn5w==
+Date: Mon, 10 Mar 2025 12:56:50 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Andy Yan <andyshrk@163.com>
+Cc: heiko@sntech.de, kishon@kernel.org, sebastian.reichel@collabora.com,
+	yubing.zhang@rock-chips.com, dmitry.baryshkov@linaro.org,
+	frank.wang@rock-chips.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH] phy: rockchip: usbdp: Check these parameters only when
+ the corresponding set flags are set
+Message-ID: <Z86UOmPg/UDSBajZ@vaman>
+References: <20250306065952.485809-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Language: en-US
-To: linux-ext4@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-Subject: A syscall for changing birth time
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8gFaD7N23b8Pf6p8d79ynv+PB2t8EstQuP9/VyRhPk6hQ/LjJ5O
- NpGOT9+N9dsYR9EUGZVwjmD8wVH3muhU0R/aqSg4/ert6Y4LOS9LM7iTrVXTJoAiwJCPcNx
- NxXKOltRpZhGoYE32yznlmppd/hLSvw3eUmpch1FEeL1kpYzf5ykr3XPPheCuw+LtGQo+SJ
- qveNyAHvh86TG9f3Mn5BQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sg9bfIL8f+U=;qXR6csuNLyav8KCo3Xs5A3cB97G
- oYTa8hTst/OcnhdZg6Y8KT8aGEd6fyOUhdNgD63YBetgbi+TpswyIDGqRKokXsD4uL19ZFg2n
- V6L1H2HSa4SIritAXDHXgwRIIZJLcRhhcmKx73MOYXetQIrwUk7GnsDXcatc3sjgNlXdkc2RL
- 95Sa8k9RRBQ2yDKviAihhK7vw8jKLYj7EvpXhCSWrzpuuLZ3RT+CWUFj+kq3GigOyz1YSDAkS
- oEE0W1aNJkLcohzyzgHyEfHuJLdHOHgpEZ6j2MG54OOu94DVtBEdYUVArnrSNnGL4nRUSKXVB
- Ff02NuR4Jk36XrXDsVWEE4bB+8Ssx4Vy7O2lralfOR+p5DUIZyTIG16iIHCAr1oEQSjuPn37l
- +QuDyb3YI2vxB8a2BCBQuI3/HLd4pRKSgY/J4xlEUPNoa8PuwUdkhF+LaWp35nZ2QSB8plIWv
- u+ZzsRN3HCb2vFcNQ9KB3/lFvd52p5Ea4Sz4Nd4BOXxu024B8aCw6ZzuQL/iTIgFlvBj01qWc
- XbApMFSRxfkZeN4dk4aG1dEbFUKw4g2BDmv7meVtRHjJVwwtIk1jO6hQcn6TKaW9lnOoBbkAz
- bjNVSBDCfdB9gWF9SSoRzgXO7iBXXbZIX1zKJ167ELsj4wYZufpZNKIHGoH1WbchbUlOq4xy8
- FpFlVYey3Qrl++fO7Ug5UdahqLPeBPQmStafctNLZ+iL8sak2VU5Sln2y6nXru1Q/2EG0sA1f
- ReeWkM+Cao/OAhK1N7mixVfzV2uDNZ6EfdfBWQ1tmESzojaTHYbrkwlya0s4qYiNs1Jc3dhBg
- GqfSvIm3yYztE6w91vjiRkukUT/Csf+CbHGo8D7YgS7jHnG0XN16qxk5nNDUwwyilciO1MUfN
- B36/r45UIqjg9ATCvGul3M4NFSRjxqlJ68HvAMC+kAhqMrNeXkzhubGSsSxXowqbOfhIq1lon
- ezSFzDuxTbWYSIBJffeZdyOJIFWpV6GMJKU9cMISUTgIbkc2n1ljrzfg2OY5co3fRegQMox5h
- Dz2bGbxZFbyaPFkYAFPhm5M2PITFg0MxCUgDRfKV15at62BSt9K83ASKgPRuaFZezTgdgixCf
- lWVpg5s9E1cP37dFnVQWhzu2Svp+k422BXmLH9vV1gwkZVdrW5wwj55VkC2uuttXFRRX5b1t3
- Xmxmq+Ux20iNpLKMy2Pf2MxVPz43gCY8/4ChdY/e5/jOedeh/WgPifQzPu77pC4cfZMolnUWB
- Fd7VK5YuARs3gpLd7LqE+JKFTUs4o6Pvh5Hz70gQEqqspinMdHuayHlPSbiBy5jsmGJeFV794
- VhZqn3FYPlPpz9ZaCgbpfG+RROvLTVAQTn2iHmiJxcmm/hZ/Z4h6vBXsTKDuA0aevvqO3DRln
- +/7hG/x010uDONPbcG82xoLRxlhuY9VkcZizueYTsJHv8bfoZt5VO82OaN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306065952.485809-1-andyshrk@163.com>
 
-Hello,
+On 06-03-25, 14:59, Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
+> 
+> According documentation of phy_configure_opts_dp, at the configure
+> stage, we should only verify/configure the link_rate when set_rate
+> flag is set, the same applies to lanes and voltage.
+> 
+> So we do it as the documentation says, also record the link rate
+> and lanes in phy internal for set_voltate stage.
 
-Why is it that the Linux kernel supports reading btime, but there's no
-syscall to change it? At least for ext4 there's the debugfs utility, but
-for other filesystems there's just nothing. And even debugfs is not a
-solution, since it requires root privileges and an unmounted/mounted RO
-filesystem.
+Whenever you say also, that is a sign that it should be another patch!
 
-Having it allows for better compatibility with Windows and BSD operating
-systems and could improve backup/restore.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> ---
+> 
+>  drivers/phy/rockchip/phy-rockchip-usbdp.c | 63 +++++++++++------------
+>  1 file changed, 31 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+> index c04cf64f8a35..d1bbdf382aa2 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+> @@ -187,6 +187,8 @@ struct rk_udphy {
+>  	u32 dp_aux_din_sel;
+>  	bool dp_sink_hpd_sel;
+>  	bool dp_sink_hpd_cfg;
+> +	unsigned int link_rate;
+> +	unsigned int lanes;
+>  	u8 bw;
+>  	int id;
+>  
+> @@ -1102,42 +1104,39 @@ static int rk_udphy_dp_phy_power_off(struct phy *phy)
+>  	return 0;
+>  }
+>  
+> -static int rk_udphy_dp_phy_verify_link_rate(unsigned int link_rate)
+> -{
+> -	switch (link_rate) {
+> -	case 1620:
+> -	case 2700:
+> -	case 5400:
+> -	case 8100:
+> -		break;
+> -
+> -	default:
+> -		return -EINVAL;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int rk_udphy_dp_phy_verify_config(struct rk_udphy *udphy,
+>  					 struct phy_configure_opts_dp *dp)
+>  {
+> -	int i, ret;
+> +	int i;
+>  
+> -	/* If changing link rate was required, verify it's supported. */
+> -	ret = rk_udphy_dp_phy_verify_link_rate(dp->link_rate);
+> -	if (ret)
+> -		return ret;
+> +	/* Verify link rate. */
+> +	if (dp->set_rate) {
+> +		switch (dp->link_rate) {
+> +		case 1620:
+> +		case 2700:
+> +		case 5400:
+> +		case 8100:
+> +			udphy->link_rate = dp->link_rate;
+> +			break;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
 
-Best regards,
-Artem
+why drop helper? Why not set the rate on success?
+
+> +	}
+>  
+>  	/* Verify lane count. */
+> -	switch (dp->lanes) {
+> -	case 1:
+> -	case 2:
+> -	case 4:
+> -		/* valid lane count. */
+> -		break;
+> +	if (dp->set_lanes) {
+> +		switch (dp->lanes) {
+> +		case 1:
+> +		case 2:
+> +		case 4:
+> +			/* valid lane count. */
+> +			udphy->lanes = dp->lanes;
+> +			break;
+>  
+> -	default:
+> -		return -EINVAL;
+> +		default:
+> +			return -EINVAL;
+> +		}
+
+another change where helper would have made this look better
+
+>  	}
+>  
+>  	/*
+> @@ -1146,7 +1145,7 @@ static int rk_udphy_dp_phy_verify_config(struct rk_udphy *udphy,
+>  	 */
+>  	if (dp->set_voltages) {
+>  		/* Lane count verified previously. */
+> -		for (i = 0; i < dp->lanes; i++) {
+> +		for (i = 0; i < udphy->lanes; i++) {
+>  			if (dp->voltage[i] > 3 || dp->pre[i] > 3)
+>  				return -EINVAL;
+>  
+> @@ -1243,9 +1242,9 @@ static int rk_udphy_dp_phy_configure(struct phy *phy,
+>  	}
+>  
+>  	if (dp->set_voltages) {
+> -		for (i = 0; i < dp->lanes; i++) {
+> +		for (i = 0; i < udphy->lanes; i++) {
+>  			lane = udphy->dp_lane_sel[i];
+> -			switch (dp->link_rate) {
+> +			switch (udphy->link_rate) {
+>  			case 1620:
+>  			case 2700:
+>  				regmap_update_bits(udphy->pma_regmap,
+> -- 
+> 2.34.1
+
+-- 
+~Vinod
