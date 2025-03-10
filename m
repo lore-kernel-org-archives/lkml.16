@@ -1,121 +1,78 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF0D1DE885
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 20:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69B41D7E3E;
+	Mon, 10 Mar 2025 20:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741637925; cv=none; b=uu/ZC7OJ4tEn56gtO8nRQFGCXnqerhvlMB6HStUQZYc8ZNQgg2AfCJ6NMJ+FOj3hgY5CLMzQqO4N3G0LlFMvYndlwi+uVvWJJNuLecodt7yOVhgYRd4psYN4pqMS7uVZd7kUshraHH58/vkoQC8iO9k9aXzgFsfeRvZROcJq77g=
+	t=1741638004; cv=none; b=H147gxjNmyyT30CcTf1FBBeEmMnR1O45YSbP1sigxqveToK0loSRwj2koaOdbOa+qXJj8RsvUNOfpOzCDofdLJTVftAsgJ2klnplBGgfcBFAspT1JvWPHuhND3x3Bdg7nDjjtl76QHzY+UkMnun27n8zStJ5QtD46cQZmXA7hQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741637925; c=relaxed/simple;
-	bh=dNBOcmXv4yLqTFrO3VIX+EpkBqdtncVM6nDPAi2ht5g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HgeuhknhByKRcIoiys5grbUYnbtKYG6s3IbsiFT8CoHUVCRt/pnfVUKi+Sv7+eacZQnNWPe9pOvhBJm9GBr9Hec5jvuNmXZcfI9qv6vRQ2xl4yNWdNwSuemkkacSlYvsOhzHpe9YJ/GOasjgYYDZB1/4Q8lakMgPPLDngf24rDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=IJ94421b; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1741638004; c=relaxed/simple;
+	bh=7pdIPCEDL7BN32azht/Sc4BIMnIg+tKYUud4LmRAFpI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=IEUb7HUdpYCMXnr44klKOcGaKHPvrb35RwDslpJnpG/YG/kAcggsyp/uqnFJ1OmpoHVBwdpACkIvlOiaiZm9qXZIBXGPN2I0I2jJ3XOw8UrLrfu4mqfyO2kHqSEhEyhbqfEdOvTxBCeX97pKZlGrIEXEeFCzUdPGJ0nKMEOEcXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dD3Afsbz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="IJ94421b"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6fd9d9ae47cso44220257b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1741637923; x=1742242723; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n7j7VrDGfjSW+piSXBuBjf4TItNrtuBqNTazSyrjysg=;
-        b=IJ94421bVHaW+fc2FdvnYD4cS8eH2da8ojEYPp6l40re5akQHO/7Mpgp4d0sQI6Qs8
-         F0xn0RBx5kjlD9lgKtuBPUtmeYI9nklZ9oqhpduxDsGG6Nbz5MT1FO6d+OCBcE3Qmx6I
-         8It6QDmO+YOYr+xRk6ifIG8z2+wdKbBCG9Xm5kfVOhhR6ixG8FCbubeinEdsRwt/g6Ui
-         2M7GnjAy8Q2gHc/knaEg5PXdJuTk6QozcBOvI8gbuRgo5o6wi43fxZpR4yj4Ikh0Umhu
-         koylMx6ekNUx6D8MEzCqRI5TZyhMkFjufaBix3ujUf7LX92c7w58FNJjX4Kt+BdZe0th
-         VPvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741637923; x=1742242723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n7j7VrDGfjSW+piSXBuBjf4TItNrtuBqNTazSyrjysg=;
-        b=VyjJgov8sJeUHcYA1jWCyjPHrgPJLFG24FvoOH4yRdcRrkEhLpOT+tyCf7FQVaVAW6
-         o43Hb0JjprVSTJif5rQ9ybcXPZDC+kc4NIswdVfX6gDpRZNP8eBK5epQ3owYAbo7areT
-         kA/JprIt6GtxfxZaEiWW9SMeO0I4QqRzI70jGMxH1NS3Bl2SqGytMZNA3cxV8EZ1QlIC
-         bUhZ4bVoGLTmO5fF2zi3V6AEixd2laCJwUc980v21t8jkpYct8zZ4k0C67N06LVlxHzF
-         w3Ppqw18lxPTp220ASp8vbf0qJl/r4r3jXpsDslyfomZ7ocRML5cq/nCkA6iVffPZmzV
-         GUxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtf35NyeQBbPpQOU3sJ+5TpQcczJGz0c6vvVND5kjKLd6iugCfewSmPOWfo4UZLe6IT348xYj4XjysaHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQIoGGFUaEuY4Y52Ik6V1mvZbI6qcphs+dHrmW3Pf36MMdeUha
-	te/dPu9zodawvC6SoJ9Cikd0/r2MMCKkFCleJSXca57gsLMWkl2CC29MJdtyspNBMVBvQmH7U+g
-	g+4sajnm1B+0yBQSLYqKR6WHvyoWWibYoxMrX
-X-Gm-Gg: ASbGncsQhUQdjMyauhuKtFtKFiK0EYXc5dfMyQu5CSazzvKh6gstFCjlCJplwLDeRdS
-	4IGfsmMJwI88G7torPu5FfSaWePYkSIdZLMfTFWvb43+HmVNkF1YijFkOiXiTviKqInf6QWcYM0
-	/MriAGqS7FBYVNw29nZl+tc/s5SA==
-X-Google-Smtp-Source: AGHT+IG9WDx8ZAkHJVZqGMzMAmI3gsi1s9h5U2lJHR3eqS/CG9KHmGF1qjpk9M1cSxiZapUdewq9ADQphs2Rtbpa/58=
-X-Received: by 2002:a05:690c:28b:b0:6fd:346f:97ba with SMTP id
- 00721157ae682-6ff091c6271mr23109947b3.11.1741637922902; Mon, 10 Mar 2025
- 13:18:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dD3Afsbz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6791EC4CEE5;
+	Mon, 10 Mar 2025 20:20:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741638003;
+	bh=7pdIPCEDL7BN32azht/Sc4BIMnIg+tKYUud4LmRAFpI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=dD3Afsbzr9HkwBdwSdxUtuPItd7FQl03EvBe/UfkXYHYfSuIlddJNMfGIKUQJeaPb
+	 AxswXN7iZi8fSndhoOTaTbap4iN8lAKcJzqyMoaBKcGE/K0HdBQkmG7Fww6EwVUURX
+	 miZABuqc5p8E3+mls/tO6TkjBCnqw/hZUWA0UVlGlJC+h+FVrcfdVt5vAeMwYQqP9Q
+	 A18g7k/7rVE9Y6GH53gk0nzr+cOuH6ncYC9fztz4lWVcHCXSE1GjQy62IaB7lXII8M
+	 KH3IhDKZSqtA3Mlp8t2YKnzTKUegSnpSyQI+CumbskLgr3qa9NRGhQJppWYY9kx3FT
+	 mbV3bwTvEneaw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF00380DBDB;
+	Mon, 10 Mar 2025 20:20:38 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67cb894d.050a0220.d8275.0232.GAE@google.com> <tencent_0BEE86CD3878D26D402DDD6F949484E96E0A@qq.com>
- <CAEjxPJ6qFSSBUmK_F-rDhvhh0xw3y1QMP6bVr0iQ+V0FZ3niDQ@mail.gmail.com>
-In-Reply-To: <CAEjxPJ6qFSSBUmK_F-rDhvhh0xw3y1QMP6bVr0iQ+V0FZ3niDQ@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 10 Mar 2025 16:18:31 -0400
-X-Gm-Features: AQ5f1Jozk9bjIdyK5_Z3F8NS9II3-cE3r81pwcpWVImE2ku4Egdr1-NKjbklYaA
-Message-ID: <CAHC9VhT-VA74h90ScjwO11g7b0pmCjzhVYWKHmkKqD2LLio98g@mail.gmail.com>
-Subject: Re: [PATCH] selinux: read and write sid under lock
-To: Edward Adam Davis <eadavis@qq.com>, Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: syzbot+00c633585760c05507c3@syzkaller.appspotmail.com, 
-	linux-kernel@vger.kernel.org, omosnace@redhat.com, selinux@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] net: ethtool: tsinfo: Fix dump command
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174163803723.3681464.5219456681589472906.git-patchwork-notify@kernel.org>
+Date: Mon, 10 Mar 2025 20:20:37 +0000
+References: <20250307091255.463559-1-kory.maincent@bootlin.com>
+In-Reply-To: <20250307091255.463559-1-kory.maincent@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ vadim.fedorenko@linux.dev, thomas.petazzoni@bootlin.com, andrew@lunn.ch,
+ kuba@kernel.org, edumazet@google.com, pabeni@redhat.com, horms@kernel.org
 
-On Mon, Mar 10, 2025 at 3:53=E2=80=AFPM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
-> On Sat, Mar 8, 2025 at 11:55=E2=80=AFPM Edward Adam Davis <eadavis@qq.com=
-> wrote:
-> >
-> > syzbot reported a data-race in selinux_socket_post_create /
-> > selinux_socket_sock_rcv_skb. [1]
-> >
-> > When creating the socket path and receiving the network data packet pat=
-h,
-> > effective data access protection is not performed when reading and writ=
-ing
-> > the sid, resulting in a race condition.
-> >
-> > Add a lock to synchronize the two.
+Hello:
 
-...
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> > Reported-by: syzbot+00c633585760c05507c3@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=3D00c633585760c05507c3
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > ---
-> >  security/selinux/hooks.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > index 7b867dfec88b..ea5d0273f9d5 100644
-> > --- a/security/selinux/hooks.c
-> > +++ b/security/selinux/hooks.c
-> > @@ -4677,8 +4677,10 @@ static int selinux_socket_post_create(struct soc=
-ket *sock, int family,
-> >
-> >         if (sock->sk) {
-> >                 sksec =3D selinux_sock(sock->sk);
-> > +               spin_lock(&sksec->lock);
->
-> You didn't include the diff that adds this lock field to
-> sk_security_struct, but aside from that, I would suggest something
-> lighter-weight like READ_ONCE/WRITE_ONCE if possible.
+On Fri,  7 Mar 2025 10:12:55 +0100 you wrote:
+> Fix missing initialization of ts_info->phc_index in the dump command,
+> which could cause a netdev interface to incorrectly display a PTP provider
+> at index 0 instead of "none".
+> Fix it by initializing the phc_index to -1.
+> 
+> In the same time, restore missing initialization of ts_info.cmd for the
+> IOCTL case, as it was before the transition from ethnl_default_dumpit to
+> custom ethnl_tsinfo_dumpit.
+> 
+> [...]
 
-Yes, please don't add a spinlock to something that is potentially
-going to be hit on every packet entering the system.
+Here is the summary with links:
+  - [net,v2] net: ethtool: tsinfo: Fix dump command
+    https://git.kernel.org/netdev/net/c/d0a4a1b36d7a
 
---=20
-paul-moore.com
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
