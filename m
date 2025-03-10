@@ -1,78 +1,164 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB5D13E41A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0629213E93
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741594564; cv=none; b=Pd1Z7ixFSfSNkoP7uOz+LO8iDNqO2UlL8dGqwFvgEFnNN1Eq7GHBm1GAC8ITUsoXDTGlOhD76LFdeHB01bYCFnnqnAvSWlWuPD0I/6SYia8/5XkYBedYGCHNW59hOfZJwQeuQ6La7IzgcFiK3btKSPVhKLyjlVdm7Z/b7CfO+F4=
+	t=1741594608; cv=none; b=m0zWQV/M6PM+YIxGLg+dKQoe98xtHcfaicpXlfiXF9lIZu42YmVPkPIFywiSJvHime2pfdr9vWDZOxYIe7uiAwsfHsEcG3akWxmarWQZUvLA9Y3QYd1ArJN/N+sx4jDHCpwZRozwtaJtuoxBZKzsAbyoF/Pt63G6cdVNAcmEDkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741594564; c=relaxed/simple;
-	bh=JTF1lZEOEkNPM9MrYB2hrKVjp4XeMgvXRmaOZv8Jd8Q=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=agzwP4ZxLXNx6KsL0fYIQVNYWwDf7qgrE4zKCwqVi5R3TJUKPRB+yqd7O26Q0f7ZFd6hezHSDGQ0FeJxAods38CGaYOxObq5jSvbiGdWSdHe+Z88hj5f6JzAT86UqaHGw4BCEIxEHiXoHLqSPmq2zrJHwZcSE3aKKbFupFjQTEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d060cfe752so30848315ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 01:16:02 -0700 (PDT)
+	s=arc-20240116; t=1741594608; c=relaxed/simple;
+	bh=bYJgB5J1rWOwdnYTlKo6V+nCLjOSgt8m+waOje7Vwoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n/4/y9zRaXN/VR3UJSqoMbhct6odraL7ZC8OQTjiwgNRUxh1PN5xtTpFjPz9fgIDRsQLP5wxj+DmiglduSguYSgVGEWJkIbTlGzrApFLRHqVLx94Y4OJfc7tJva7p5CBM+CE0Wfqmm+qPLG50E1tr09qB+Qoe+g9pIx8LjLQL5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=NBn0+jdL; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="NBn0+jdL"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22409077c06so49991095ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 01:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1741594606; x=1742199406; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZmMfWN/YjTztlUTbhbD2bh8ol9HLPI3qHdmgf2q4Pyk=;
+        b=NBn0+jdL7TtqMlPl4/KtYMrMunRagWlS6tO3+ay0X4H+WhhkJwuU7ueUX5D1NIZkas
+         f4mKJHieBq5ypC7rZFa17DbwcsoAZmVGWhBL/rOXx9A23dx2C7BlUkJAh52Hs3XqSLTn
+         P/NdUhRLn1WqIq649kD06QH/sKTYmp6f5xsgAYLb0hbTseeN8/lwpnQz/sTvn6ovc4K/
+         v3HT23f/dOxrK0E5TojvrnqXTL7CF2iQBKuWSD+ipN5FjjJGO/VVyV/Razy7Q9Q4ZORc
+         EZj3GrVfAZOt9kAAjcCD9SBJOObn+r+LQ8H92CSYYwOeefZeTaIAEvC/61vA2CfDGZDM
+         EkLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741594562; x=1742199362;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1741594606; x=1742199406;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=22y5blgPG/7lHh8Yv1Qxh3X8BqbkqE0oG9zwwdSyRpc=;
-        b=Xy+uBp/G4trUzYwQ+sPNONgLKdnysAWy309hVY3Jq/hdtY4kRb+zOAWSdB/oLd2bRX
-         m+GSsfCUwPDLdgzYLdvq5Hc+yrD8kxDUghNO2jN3J7doWfMva+e/16T18AxP2UrDkJQ3
-         EfAMZaCNSAN6N3Z0J9DwaqVHrfzJ1/BJIB1HbygnJjHeLN6XWDXl3UraVbsx1gM+EC2h
-         2OA3cN0bj0wj5Zkeyomo7eV50MVUnFe6AT6KK8TsZZcbGFwXeNh/gidTnZJOktnoCqkN
-         vb6M+n8Mf8gWpzvsvdJ2nxXI/1hJ+wPghY/qjV21v+A9Qho7GU+hH65E5bGEOlMxJ5lw
-         HZcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV05lYaFwHivUMw2a62E8RGGGoUESOMdF4sFHaJs/fIRbnjvCg+Sl9QucbHCtxRmu3W8fLpDRZuAGgBZGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWfYiKsOr8pEM2EPMSKELrQTamWKjtRIovh2gBGeAVFBgagoAE
-	6TIOSkK3XBVUX4Wmxi79z9k2EN4UOkqYNlBJAw9GNrFpzxTvy57QCwM+DHt5H7WfByoeKosgpzn
-	7pYkN3WdhQDb9ajAQbVZvrKreEmb9U0swlNKCBV9UrmOMMdi6lYSxcgo=
-X-Google-Smtp-Source: AGHT+IFN0yQHYbThJi2b8lhndx403095CWT60RxPFOrDTXJSjATNNhBCFXSWA7A8o55d1zQEIdoDw1HchtFAFGxO9e6Nl+uQ3feh
+        bh=ZmMfWN/YjTztlUTbhbD2bh8ol9HLPI3qHdmgf2q4Pyk=;
+        b=I4LmCO+6s9u9AIJg9hDHDwTQqFpSWMi/arsBTSykBQNHce3NMuyZg2fPp1u+WvSkaY
+         xTDRpT5zNF+vfoLD/A3uAha/Od6Hl/5prETtG86SdLQnhNk5+smp6V5AEaZOUA1Iwl/x
+         tEyfwZbOGy7AJdWU+Qb02+tcC/m+/2JyHiu36KI20WkoBo6+jCmoj56BZXjM7FNmKkii
+         9Y9aJyyodpO8lEUmbWdoMsT0BbaO39A9E0JPFtb+/a1Z0u+RYogqksVXFEsNzkC/5XeB
+         J9EBVFAaFfDesH4PnkmyXD8cpaQujySIn45CUwQKq1QqW9ltC3w6S2jwpHOGg6taCS6/
+         KDbg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7etRySpONPtoDY9mxqZejj2OYHvGw2f+R7j/DkG8PzrjqFY9No2HkpfibvkpgSaXmgy4UeMH2j6spMNs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzwomnU1cON0cffmZLRwpajE5NdLPLVQSdt8jdIYLO19Wu9wOg
+	uASItAFJtsQ4Ffbyab4Dos1GgE3lxuXKzsAAj5tg9B719VTdfKdp9tvVWcULiFY=
+X-Gm-Gg: ASbGncs3b6i7fZI7lxqvuEWSO42WRAeZ2U2wztknk4n6lxyOTuysVjctkSezevso/nP
+	ihEdVMYILI+7dHXQE/4jXwYpwbfIRgZrFZhwRWDSwFI00AdG+VJNNGyu88/OzvuyJvJrCY3QXFq
+	mOPtOcKDb5XaEncdnk3oNmmykCj8p5Vr+UkFnMW8TmRhGryZV0s/VZMt5RRffgaWvbC4NapXiQi
+	1cwoInJ5k91W8xTkCDRpuFBfxgR8JQZjjqqvuz8jqI3PkoNADJVtKtOXCC63czatvl/+rVxeg65
+	9FspGyLQqHnm9J17epH8SnwGqBJ/Bsh5lVacLuUBA9V5HzgL1UMC4g7jVQ==
+X-Google-Smtp-Source: AGHT+IF0rPYRbicP0/CqimCD18L/ZR4wVPSR4hAOvttkF0NCrjknQOFhZJD3NGgEaMlKRFPN5jMntA==
+X-Received: by 2002:a05:6a00:4f90:b0:736:3d6c:aa64 with SMTP id d2e1a72fcca58-736aab13b03mr19832278b3a.21.1741594606209;
+        Mon, 10 Mar 2025 01:16:46 -0700 (PDT)
+Received: from [157.82.205.237] ([157.82.205.237])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736e085c030sm819390b3a.14.2025.03.10.01.16.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Mar 2025 01:16:45 -0700 (PDT)
+Message-ID: <5cfedd24-de7c-484b-afa7-ddb4828fb9e8@daynix.com>
+Date: Mon, 10 Mar 2025 17:16:41 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b07:b0:3d4:36da:19a9 with SMTP id
- e9e14a558f8ab-3d44196ffc2mr143152735ab.15.1741594562162; Mon, 10 Mar 2025
- 01:16:02 -0700 (PDT)
-Date: Mon, 10 Mar 2025 01:16:02 -0700
-In-Reply-To: <67b1f949.050a0220.173698.000c.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ce9fc2.050a0220.e1a89.01f2.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] possible deadlock in get_partial_node (2)
-From: syzbot <syzbot+725322cc4ff5c53abfac@syzkaller.appspotmail.com>
-To: anna-maria@linutronix.de, axboe@kernel.dk, frederic@kernel.org, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 3/6] tun: Introduce virtio-net hash feature
+To: Jason Wang <jasowang@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, kvm@vger.kernel.org,
+ virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
+ Yuri Benditovich <yuri.benditovich@daynix.com>,
+ Andrew Melnychenko <andrew@daynix.com>,
+ Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com,
+ Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+References: <20250307-rss-v9-0-df76624025eb@daynix.com>
+ <20250307-rss-v9-3-df76624025eb@daynix.com>
+ <CACGkMEsNHba=PY5UQoH1zdGQRiHC8FugMG1nkXqOj1TBdOQrww@mail.gmail.com>
+ <CACGkMEtCEwSB7XvCg7_8ebkcM8o2s8JB2Err2f153L-_i2KtxA@mail.gmail.com>
+Content-Language: en-US
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+In-Reply-To: <CACGkMEtCEwSB7XvCg7_8ebkcM8o2s8JB2Err2f153L-_i2KtxA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
+On 2025/03/10 13:01, Jason Wang wrote:
+> On Mon, Mar 10, 2025 at 11:55 AM Jason Wang <jasowang@redhat.com> wrote:
+>>
+>> On Fri, Mar 7, 2025 at 7:01 PM Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>>
+>>> Hash reporting
+>>> ==============
+>>>
+>>> Allow the guest to reuse the hash value to make receive steering
+>>> consistent between the host and guest, and to save hash computation.
+>>>
+>>> RSS
+>>> ===
+>>>
+>>> RSS is a receive steering algorithm that can be negotiated to use with
+>>> virtio_net. Conventionally the hash calculation was done by the VMM.
+>>> However, computing the hash after the queue was chosen defeats the
+>>> purpose of RSS.
+>>>
+>>> Another approach is to use eBPF steering program. This approach has
+>>> another downside: it cannot report the calculated hash due to the
+>>> restrictive nature of eBPF steering program.
+>>>
+>>> Introduce the code to perform RSS to the kernel in order to overcome
+>>> thse challenges. An alternative solution is to extend the eBPF steering
+>>> program so that it will be able to report to the userspace, but I didn't
+>>> opt for it because extending the current mechanism of eBPF steering
+>>> program as is because it relies on legacy context rewriting, and
+>>> introducing kfunc-based eBPF will result in non-UAPI dependency while
+>>> the other relevant virtualization APIs such as KVM and vhost_net are
+>>> UAPIs.
+>>>
+>>> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+>>> Tested-by: Lei Yang <leiyang@redhat.com>
+>>> ---
+>>>   Documentation/networking/tuntap.rst |   7 ++
+>>>   drivers/net/Kconfig                 |   1 +
+>>>   drivers/net/tap.c                   |  68 ++++++++++++++-
+>>>   drivers/net/tun.c                   |  98 +++++++++++++++++-----
+>>>   drivers/net/tun_vnet.h              | 159 ++++++++++++++++++++++++++++++++++--
+>>>   include/linux/if_tap.h              |   2 +
+>>>   include/linux/skbuff.h              |   3 +
+>>>   include/uapi/linux/if_tun.h         |  75 +++++++++++++++++
+>>>   net/core/skbuff.c                   |   4 +
+>>>   9 files changed, 386 insertions(+), 31 deletions(-)
+> 
+> [...]
+> 
+>>> + *
+>>> + * The %TUN_VNET_HASH_REPORT flag set with this ioctl will be effective only
+>>> + * after calling the %TUNSETVNETHDRSZ ioctl with a number greater than or equal
+>>> + * to the size of &struct virtio_net_hdr_v1_hash.
+>>
+>> So you had a dependency check already for vnet hdr len. I'd still
+>> suggest to split this into rss and hash as they are separated
+>> features. Then we can use separate data structure for them instead of
+>> a container struct.
+>>
+> 
+> Besides this, I think we still need to add new bits to TUNGETIFF to
+> let userspace know about the new ability.
 
-commit 14152654805256d760315ec24e414363bfa19a06
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Mon Nov 25 05:21:27 2024 +0000
+The userspace can peform TUNGETVNETHASHCAP and see if it results in EINVAL.
 
-    bcachefs: Bad btree roots are now autofix
+Regards,
+Akihiko Odaki
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1688a7a8580000
-start commit:   b7c90e3e717a Merge tag 'x86-urgent-2025-03-08' of git://gi..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1588a7a8580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1188a7a8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
-dashboard link: https://syzkaller.appspot.com/bug?extid=725322cc4ff5c53abfac
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137c1fa0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e0fa54580000
+> 
+> Thanks
+> 
 
-Reported-by: syzbot+725322cc4ff5c53abfac@syzkaller.appspotmail.com
-Fixes: 141526548052 ("bcachefs: Bad btree roots are now autofix")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
