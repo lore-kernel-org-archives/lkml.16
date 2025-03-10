@@ -1,203 +1,122 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5888222B5AB
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256B922D79D;
+	Mon, 10 Mar 2025 15:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741620969; cv=none; b=UBQA6tCky5a8A+ktlwk78TMde28CTpmfJHbfZtyUVT7P8f2CAKNwe6PUlU3dCZPfCLo24tvS+4FBBJnTw7133yzlGrKrDTha74Q/oChM5/Qx3h4st/W5UdGBEAEO0Faya5Nau38DVFDURQrGsp1Qx+XRcUii3eAWYDnr9GwHGRw=
+	t=1741620993; cv=none; b=HKzneyR8a3yW021AmjcyxQy1PiyDqfQPCHFycOsQ/owBc28sXs19dnBh8dswEHnCUNZvkIbffxzQdniYdMYlA7dP71lKfVg4IMx8CM59BYZ3XoSSBqlp1QNOnNmwtw22RQcxOvO0SrMjdPwanMS+07t7k8iU5KCwK6wW/l1Mf/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741620969; c=relaxed/simple;
-	bh=2zIct7nGU4LDpG+b0rzInwpF3Q1u4ClrFDj4hjAo1aA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SVBMhvI3lN5DLBTNhrLLN1bnfb5aDb+siR10JIomT3A45OB7Dl7BrZkIcGI+T8wby319SQI3+C4Yo4v18iYZRtjWgLIxK+xW8UN0G/kHqKGTCYOFdt1aogxlsgW3S075bnP6IgqLf4dCvVcCiiZxTD+f2E/s1cxlkQyCGaF6IbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=V99+h1ms; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1741620993; c=relaxed/simple;
+	bh=64F4B4yJEEAfxN3wUIZgI4lC2XVN5r8inKVe5WmZtRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QItSgq1xZk/DNB79G3MAC0UESQ2ylnCiuga0LXI8KTXhO+7HNalNjJ4qnLLe7U27xy41G6ZKz9IRAH1Ml6KeVpsbswc40Tws1s1LtPWQCn5jacGN239EubY3upYw98Q5BkQqvdRgXVD7z0NnGFF1mxRkG3iA9HysUgAH4u20Mv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mp1NPEM4; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V99+h1ms"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O7YzTmnjzMTJtVsFR5/1NkXeM+yNG7azeI82ZnpvY10=; b=V99+h1msR9H8t9cKDJddhoasO9
-	E98xgm2hTZZ/PjR7trFK1MqDlD1GQqX5UUTfFhR2IfT/cv2FrpFgoj/3TdhrwG5TJE5vyXPtBn2SC
-	1XadmoyxNEfoxtxO/NAe0ZKuU+ib8riVVBBVIxIObJ06DX3nsOdwMot9FDFW0SwGlrIJ/90M1CeFg
-	NuL1uGt5Wr7pYYGKxFD9eGGPA/4BkAvi0e5MNpN7xc33kbgDDb1lwbGExeMvzEmjUrmCpJgYYM0oU
-	JM+hoFE37AcbIMDCly/zmx5wB+wURFdUAR/5m7AjKjmpThjF46jfrOWXncSwGZD7f2gixQTwVdkPo
-	OummNXgQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1trfAe-00000001tAX-0Y1W;
-	Mon, 10 Mar 2025 15:36:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 817BE300599; Mon, 10 Mar 2025 16:35:59 +0100 (CET)
-Date: Mon, 10 Mar 2025 16:35:59 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: mingo@kernel.org, ravi.bangoria@amd.com, lucas.demarchi@intel.com
-Cc: linux-kernel@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Subject: [PATCH v3a 5/7] perf: Unify perf_event_free_task() /
- perf_event_exit_task_context()
-Message-ID: <20250310153559.GD19344@noisy.programming.kicks-ass.net>
-References: <20250307193305.486326750@infradead.org>
- <20250307193723.274039710@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mp1NPEM4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741620992; x=1773156992;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=64F4B4yJEEAfxN3wUIZgI4lC2XVN5r8inKVe5WmZtRY=;
+  b=mp1NPEM40uZILz1IrbOiJ0lF3BzJvYZdlmmdnyZNjYljuaahSFNv/jto
+   NBwvNyuz1SQojnJgKuQJq4vqUMBSQrtRQ7tyRgN4Fc1gWI1Q1JP6wg+j3
+   VdN5+qRMKpErzSeumUQNW1aRopcOC7nxmsaBk5Hq9xzFSGaLiiWy0HliI
+   pSQdZb23B/6kHVzwBNum0oOLGXeS0DEemj47Oc6dS/1bcFweOqR68yq7J
+   Qio2abDxXsgNOTGUTBsKxuMGMtBjKlyUPM86wdd2et/P6X951NKeu0bsI
+   yORfWAH5XEEq/pUGmYu1hqSXMfPeVjskxZygwRKCLZ3ClWCvxljsNxrJW
+   Q==;
+X-CSE-ConnectionGUID: pja+oU0PR1mfojYMPPcj5A==
+X-CSE-MsgGUID: ppoDMT9BQgey6ZEw3SYRxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="41870588"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="41870588"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:36:30 -0700
+X-CSE-ConnectionGUID: F3VoGm4ET5KIlKSB614RWQ==
+X-CSE-MsgGUID: GZmB2o0OT2CBKOdaDJhi3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="150986398"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.63]) ([10.125.111.63])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:36:29 -0700
+Message-ID: <49c6ce4e-52a4-43e2-b67f-9aa096694f39@intel.com>
+Date: Mon, 10 Mar 2025 08:36:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307193723.274039710@infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 9/9] dmaengine: idxd: Refactor remove call with
+ idxd_cleanup() helper
+To: Shuai Xue <xueshuai@linux.alibaba.com>, vinicius.gomes@intel.com,
+ Markus.Elfring@web.de, fenghuay@nvidia.com, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250309062058.58910-1-xueshuai@linux.alibaba.com>
+ <20250309062058.58910-10-xueshuai@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250309062058.58910-10-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Both perf_event_free_task() and perf_event_exit_task_context() are
-very similar, except perf_event_exit_task_context() is a little more
-generic / makes less assumptions.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |   90 ++++++++++++---------------------------------------
- 1 file changed, 22 insertions(+), 68 deletions(-)
+On 3/8/25 11:20 PM, Shuai Xue wrote:
+> The idxd_cleanup() helper cleans up perfmon, interrupts, internals and
+> so on. Refactor remove call with the idxd_cleanup() helper to avoid code
+> duplication. Note, this also fixes the missing put_device() for idxd
+> groups, enginces and wqs.
+> 
+> Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
+> Cc: stable@vger.kernel.org
+> Suggested-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13546,13 +13546,11 @@ perf_event_exit_event(struct perf_event
- 	perf_event_wakeup(event);
- }
- 
--static void perf_event_exit_task_context(struct task_struct *child)
-+static void perf_event_exit_task_context(struct task_struct *child, bool exit)
- {
- 	struct perf_event_context *child_ctx, *clone_ctx = NULL;
- 	struct perf_event *child_event, *next;
- 
--	WARN_ON_ONCE(child != current);
--
- 	child_ctx = perf_pin_task_context(child);
- 	if (!child_ctx)
- 		return;
-@@ -13597,13 +13595,31 @@ static void perf_event_exit_task_context
- 	 * won't get any samples after PERF_RECORD_EXIT. We can however still
- 	 * get a few PERF_RECORD_READ events.
- 	 */
--	perf_event_task(child, child_ctx, 0);
-+	if (exit)
-+		perf_event_task(child, child_ctx, 0);
- 
- 	list_for_each_entry_safe(child_event, next, &child_ctx->event_list, event_entry)
- 		perf_event_exit_event(child_event, child_ctx);
- 
- 	mutex_unlock(&child_ctx->mutex);
- 
-+	if (!exit) {
-+		/*
-+		 * perf_event_release_kernel() could still have a reference on
-+		 * this context. In that case we must wait for these events to
-+		 * have been freed (in particular all their references to this
-+		 * task must've been dropped).
-+		 *
-+		 * Without this copy_process() will unconditionally free this
-+		 * task (irrespective of its reference count) and
-+		 * _free_event()'s put_task_struct(event->hw.target) will be a
-+		 * use-after-free.
-+		 *
-+		 * Wait for all events to drop their context reference.
-+		 */
-+		wait_var_event(&child_ctx->refcount,
-+			       refcount_read(&child_ctx->refcount) == 1);
-+	}
- 	put_ctx(child_ctx);
- }
- 
-@@ -13631,7 +13647,7 @@ void perf_event_exit_task(struct task_st
- 	}
- 	mutex_unlock(&child->perf_event_mutex);
- 
--	perf_event_exit_task_context(child);
-+	perf_event_exit_task_context(child, true);
- 
- 	/*
- 	 * The perf_event_exit_task_context calls perf_event_task
-@@ -13642,27 +13658,6 @@ void perf_event_exit_task(struct task_st
- 	perf_event_task(child, NULL, 0);
- }
- 
--static void perf_free_event(struct perf_event *event,
--			    struct perf_event_context *ctx)
--{
--	struct perf_event *parent = event->parent;
--
--	if (WARN_ON_ONCE(!parent))
--		return;
--
--	mutex_lock(&parent->child_mutex);
--	list_del_init(&event->child_list);
--	mutex_unlock(&parent->child_mutex);
--
--	put_event(parent);
--
--	raw_spin_lock_irq(&ctx->lock);
--	perf_group_detach(event);
--	list_del_event(event, ctx);
--	raw_spin_unlock_irq(&ctx->lock);
--	free_event(event);
--}
--
- /*
-  * Free a context as created by inheritance by perf_event_init_task() below,
-  * used by fork() in case of fail.
-@@ -13672,48 +13667,7 @@ static void perf_free_event(struct perf_
-  */
- void perf_event_free_task(struct task_struct *task)
- {
--	struct perf_event_context *ctx;
--	struct perf_event *event, *tmp;
--
--	ctx = rcu_access_pointer(task->perf_event_ctxp);
--	if (!ctx)
--		return;
--
--	mutex_lock(&ctx->mutex);
--	raw_spin_lock_irq(&ctx->lock);
--	/*
--	 * Destroy the task <-> ctx relation and mark the context dead.
--	 *
--	 * This is important because even though the task hasn't been
--	 * exposed yet the context has been (through child_list).
--	 */
--	RCU_INIT_POINTER(task->perf_event_ctxp, NULL);
--	WRITE_ONCE(ctx->task, TASK_TOMBSTONE);
--	put_task_struct(task); /* cannot be last */
--	raw_spin_unlock_irq(&ctx->lock);
--
--
--	list_for_each_entry_safe(event, tmp, &ctx->event_list, event_entry)
--		perf_free_event(event, ctx);
--
--	mutex_unlock(&ctx->mutex);
--
--	/*
--	 * perf_event_release_kernel() could've stolen some of our
--	 * child events and still have them on its free_list. In that
--	 * case we must wait for these events to have been freed (in
--	 * particular all their references to this task must've been
--	 * dropped).
--	 *
--	 * Without this copy_process() will unconditionally free this
--	 * task (irrespective of its reference count) and
--	 * _free_event()'s put_task_struct(event->hw.target) will be a
--	 * use-after-free.
--	 *
--	 * Wait for all events to drop their context reference.
--	 */
--	wait_var_event(&ctx->refcount, refcount_read(&ctx->refcount) == 1);
--	put_ctx(ctx); /* must be last */
-+	perf_event_exit_task_context(task, false);
- }
- 
- void perf_event_delayed_put(struct task_struct *task)
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/dma/idxd/init.c | 14 ++------------
+>  1 file changed, 2 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index ecb8d534fac4..22b411b470be 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -1310,7 +1310,6 @@ static void idxd_shutdown(struct pci_dev *pdev)
+>  static void idxd_remove(struct pci_dev *pdev)
+>  {
+>  	struct idxd_device *idxd = pci_get_drvdata(pdev);
+> -	struct idxd_irq_entry *irq_entry;
+>  
+>  	idxd_unregister_devices(idxd);
+>  	/*
+> @@ -1323,21 +1322,12 @@ static void idxd_remove(struct pci_dev *pdev)
+>  	get_device(idxd_confdev(idxd));
+>  	device_unregister(idxd_confdev(idxd));
+>  	idxd_shutdown(pdev);
+> -	if (device_pasid_enabled(idxd))
+> -		idxd_disable_system_pasid(idxd);
+>  	idxd_device_remove_debugfs(idxd);
+> -
+> -	irq_entry = idxd_get_ie(idxd, 0);
+> -	free_irq(irq_entry->vector, irq_entry);
+> -	pci_free_irq_vectors(pdev);
+> +	idxd_cleanup(idxd);
+>  	pci_iounmap(pdev, idxd->reg_base);
+> -	if (device_user_pasid_enabled(idxd))
+> -		idxd_disable_sva(pdev);
+> -	pci_disable_device(pdev);
+> -	destroy_workqueue(idxd->wq);
+> -	perfmon_pmu_remove(idxd);
+>  	put_device(idxd_confdev(idxd));
+>  	idxd_free(idxd);
+> +	pci_disable_device(pdev);
+>  }
+>  
+>  static struct pci_driver idxd_pci_driver = {
+
