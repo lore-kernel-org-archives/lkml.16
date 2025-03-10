@@ -1,159 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail-m155104.qiye.163.com (mail-m155104.qiye.163.com [101.71.155.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3068C21E087;
-	Mon, 10 Mar 2025 11:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EDA21E0B7
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741605548; cv=none; b=b0fxw5CuKbtOGPehMjQJq7/8JNbwHlAJWUN00Kpx4L6KgTw2pCCC9TIiGL5qtSx7RjtQdPmU1GnOtN9QIbpmNSRu2CmNB9mzRoX2SYPAujv2qsCmfzZB8EUCMrknnBItzFzqprcBs6qoS0kt/GUtcI+hjzXlLN7NNpD0aTGhVBg=
+	t=1741605564; cv=none; b=hUl5gusBltujja7rloxS2zxEzeaz3zHXkP5kETS2jOH5vC0HNfoKJ/WDAlwjFoHMJnbYLlW3rZibf5N2w5SEfF25NokcEh3VoqC4IO326qjHc0fAs8nDpG5p7rytvvjDOizROiET1ASxOeXgG3SRf8YQd7gfmucbl7AMp+bBOX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741605548; c=relaxed/simple;
-	bh=nZs7IZ/4KeAR6wKxY3sjzJOI+Iw7AiPTBFgOoJe0lIc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=YQ+35rHUDO2MaSzYjuX7PAcXlPYSe1V4g+ZiyKNwR3NFTJoS/UExkkovWSxnFwIZECn8c2WPutW/lZtTZloAN2q21vfjlbz4MlHsZbdGm6/4PFbq8DHTTOVeyKei/pArnM+BrXQSUEu8dMUyWXm13Z++5M1b0EhHfDNOGHwAsEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Qsr/Wppr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741605564; c=relaxed/simple;
+	bh=MXYZosYNWXPyoge+Rlv4+JeeONSw/MWHUsMxx2PXRTM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nLdC4zWROA3iulHvjgRgDt23Mx/Rc1/dGE8FWjeKtxh4Qs8XgJYTCPwiMnC1yN+vlp77S8g/vMzBa3xD6SyIMu0TNYzS7gmytkClm3EadgQhwX305rTIB6LEHmGYsYsOyMfElwc0VwfTMa5g+nTsqz6TcLwDIRmkl35/oJp6vUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=MCZEVnWe; arc=none smtp.client-ip=101.71.155.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Qsr/Wppr"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A9sdEd022850;
-	Mon, 10 Mar 2025 11:18:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MbWUl3ZlSZPkOmZ+lmJUhhx+AnqNXGkMWn9c0LwSBrc=; b=Qsr/Wppr4B5j0o8l
-	s7M8mL+LbcGl25kW5LQ5msKe6OBzP0RHZq9707YtUyINx14zLblEo/aqMuIWHi1Q
-	p4Sj1JmXmlk24Xh4HIDFDVfwId9wBQ+B6d+UmO4AeKJ6mYYuI21XmfckLB9bbdbB
-	j6fsFbjBfuAFfwsoAT6Pdb7gjUU1YArnKnW0IQBxxNjRNouTjZouY+V3EAT5RwCd
-	APww8cdsMVqEr92tM+vgCoCTcgKHwflBu8tRPArrk+w6++uW9m9pIpei/Xoy4HXD
-	ouVhqwMjtVm90ZOqLHRl0NmlVyrTzZW434pkLsjUboBZ0+HarO37CG+yg79a8/gl
-	BC7M/Q==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f0pvjsu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 11:18:57 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52ABIt7q017939
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 11:18:55 GMT
-Received: from hu-pbrahma-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 10 Mar 2025 04:18:51 -0700
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-Date: Mon, 10 Mar 2025 16:48:35 +0530
-Subject: [PATCH v6 2/2] arm64: dts: qcom: qcs8300: Add device node for
- gfx_smmu
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="MCZEVnWe"
+Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id dc1882b2;
+	Mon, 10 Mar 2025 18:42:26 +0800 (GMT+08:00)
+From: Damon Ding <damon.ding@rock-chips.com>
+To: heiko@sntech.de
+Cc: andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	dianders@chromium.org,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	boris.brezillon@collabora.com,
+	l.stach@pengutronix.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>
+Subject: [PATCH v8 12/13] arm64: dts: rockchip: Add eDP0 node for RK3588
+Date: Mon, 10 Mar 2025 18:41:13 +0800
+Message-Id: <20250310104114.2608063-13-damon.ding@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250310-b4-branch-gfx-smmu-v6-2-15c60b8abd99@quicinc.com>
-References: <20250310-b4-branch-gfx-smmu-v6-0-15c60b8abd99@quicinc.com>
-In-Reply-To: <20250310-b4-branch-gfx-smmu-v6-0-15c60b8abd99@quicinc.com>
-To: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        "Joerg
- Roedel" <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Pratyush Brahma <quic_pbrahma@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741605522; l=2215;
- i=quic_pbrahma@quicinc.com; s=20250113; h=from:subject:message-id;
- bh=nZs7IZ/4KeAR6wKxY3sjzJOI+Iw7AiPTBFgOoJe0lIc=;
- b=yfreIRdhQP25Q6VMy5KP2YOKvkVwq8mAW6gP03F6xQpPw3FWGhSvvzzcr0sfn6KkLJkH07MEG
- PiGPg0FEQyJCdH4Cok4AdZh8JTTDoeqOfLUfTtc0bPNf6F3PY81rXjv
-X-Developer-Key: i=quic_pbrahma@quicinc.com; a=ed25519;
- pk=YvfZKC4rRO1Fot+wlXZqsoQWnAtLqrpMyEzslw3Ji+M=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _oe3w7_9QBbAwL2jzWLIdWoE8j_XEIJ4
-X-Authority-Analysis: v=2.4 cv=KK2gDEFo c=1 sm=1 tr=0 ts=67cecaa1 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=_Nf39ELEytuevgX8nBcA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: _oe3w7_9QBbAwL2jzWLIdWoE8j_XEIJ4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_04,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=739
- clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100090
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx4YSVZPS0pCQ08dQkhJTxlWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
+	5VSktLVUpCS0tZBg++
+X-HM-Tid: 0a957fa617b703a3kunmdc1882b2
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NxA6Pxw6MTJRKiM1FTgzPREh
+	Mk4aCQxVSlVKTE9KTUtISE9DSE1MVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKT0xONwY+
+DKIM-Signature:a=rsa-sha256;
+	b=MCZEVnWekdOZ+BrvUkhP7HxFa5gB5GZ4E1apDoLHUutC8e7KVwcLGHiKhOuiNIte6zQOIJtYR5dzn248Ugkp29aMkh+5taF7UgQSjM/UsORwFvDcE5JCTsxM1YOGRMMDQa+YqldoxpwWa5Mf13tdODTpRxMkbOogvJVoPvM8lf4=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=0FGcNJWIvGFWgnAJXPV53XsegYYbwW5nYaQTOeqtjiw=;
+	h=date:mime-version:subject:message-id:from;
 
-Add the device node for gfx smmu that is required for gpu
-specific address translations.
+Add support for the eDP0 output on RK3588 SoC.
 
-Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+
 ---
- arch/arm64/boot/dts/qcom/qcs8300.dtsi | 39 +++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..40771b062e8d7010dd93d7cc7b3db73cfa16bfdb 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-@@ -2674,6 +2674,45 @@ gpucc: clock-controller@3d90000 {
- 			#power-domain-cells = <1>;
+Changes in v3:
+- Remove currently unsupported property '#sound-dai-cells'
+
+Changes in v4:
+- Remove currently unsupported clock 'spdif'
+---
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+index 2403a3950128..7e089422c947 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+@@ -1410,6 +1410,34 @@ hdmi0_out: port@1 {
  		};
+ 	};
  
-+		adreno_smmu: iommu@3da0000 {
-+			compatible = "qcom,qcs8300-smmu-500", "qcom,adreno-smmu",
-+				     "qcom,smmu-500", "arm,mmu-500";
-+			reg = <0x0 0x3da0000 0x0 0x20000>;
-+			#iommu-cells = <2>;
-+			#global-interrupts = <2>;
++	edp0: edp@fdec0000 {
++		compatible = "rockchip,rk3588-edp";
++		reg = <0x0 0xfdec0000 0x0 0x1000>;
++		clocks = <&cru CLK_EDP0_24M>, <&cru PCLK_EDP0>;
++		clock-names = "dp", "pclk";
++		interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH 0>;
++		phys = <&hdptxphy0>;
++		phy-names = "dp";
++		power-domains = <&power RK3588_PD_VO1>;
++		resets = <&cru SRST_EDP0_24M>, <&cru SRST_P_EDP0>;
++		reset-names = "dp", "apb";
++		rockchip,grf = <&vo1_grf>;
++		status = "disabled";
 +
-+			interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+			clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-+				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
-+				 <&gpucc GPU_CC_AHB_CLK>,
-+				 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
-+				 <&gpucc GPU_CC_CX_GMU_CLK>,
-+				 <&gpucc GPU_CC_HUB_CX_INT_CLK>,
-+				 <&gpucc GPU_CC_HUB_AON_CLK>;
++			edp0_in: port@0 {
++				reg = <0>;
++			};
 +
-+			clock-names = "gcc_gpu_memnoc_gfx_clk",
-+				      "gcc_gpu_snoc_dvm_gfx_clk",
-+				      "gpu_cc_ahb_clk",
-+				      "gpu_cc_hlos1_vote_gpu_smmu_clk",
-+				      "gpu_cc_cx_gmu_clk",
-+				      "gpu_cc_hub_cx_int_clk",
-+				      "gpu_cc_hub_aon_clk";
-+			power-domains = <&gpucc GPU_CC_CX_GDSC>;
-+			dma-coherent;
++			edp0_out: port@1 {
++				reg = <1>;
++			};
 +		};
++	};
 +
- 		pmu@9091000 {
- 			compatible = "qcom,qcs8300-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
- 			reg = <0x0 0x9091000 0x0 0x1000>;
-
+ 	qos_gpu_m0: qos@fdf35000 {
+ 		compatible = "rockchip,rk3588-qos", "syscon";
+ 		reg = <0x0 0xfdf35000 0x0 0x20>;
 -- 
 2.34.1
 
