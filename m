@@ -1,221 +1,106 @@
-Received: from mail-m1973171.qiye.163.com (mail-m1973171.qiye.163.com [220.197.31.71])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7510A227E88
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C36722A7EA;
+	Mon, 10 Mar 2025 10:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741603760; cv=none; b=qyJC8lzYeF5KMWsh0J/VDgmVpHIhjWEXm3CN3JTDA5sMX/+fqAE3tR4VEOzSz1TTPEpUzLp7XJfT/kt3/eylpHLqKL6HIH816aczVF+Dxpg/6LtlF1oRAY+TeC7g1x3xHjNpQKe7ueC3d0BU2/FlNepiii/r6tH/wws4UXvoRlo=
+	t=1741603761; cv=none; b=ZqldcqDmfJIfMZAiWPrm1kq3XZvbBAV3ZzJ2QfzPAGep8o9WgR+boctw+Eq5RmezUu1fLBWYy5eaMj1b0hDehR8Z+sWwGilF8BCvg/8bkRiN5oDvF9pPiT2H/YstoJRJ+KCjF/y68rjTBzM5lsxmcGBz/K2SPSX5iGmTAqnY+Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741603760; c=relaxed/simple;
-	bh=R2HqBJbNLoGnDO/WdzUTS+J2NQU1gsqalx+ojF6QZu8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s2IRlyDdn48BM8o+RyGVGAlLrLhmDvQu0V2m0JdE7NpPZ8UZi18mCcjdF8KD9IyMJWF5Zr2yq82ottRjv6QPqd/WVi5flRVrpAd5hdLjdVsYzuWrSxLGNuCbUjsIJjRno0cdpRjO5XnRNjpuU8DbASNcLa26ywHi41yVrFpi5vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=SNZrux65; arc=none smtp.client-ip=220.197.31.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1741603761; c=relaxed/simple;
+	bh=8OTdGJQCtFjQymUwSNIHy++1HlxocMtdJ+1/0VU2Id8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B8yEKjv+5yTpXloSI1rjvtZKDNJEDBW6OK8MN4430xEObGE5okmtUcDjtwve8yyZm8gJHpvIqDvClRdcHJXCyphEBCkwclBN9xgBop2ImZTZoZFdBWLufCP98LIvTE1G16snUDncgpNEvERoE37MgI/P+vwhmhIcZzinJMr35do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jr1ZkYkJ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="SNZrux65"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id dc18828a;
-	Mon, 10 Mar 2025 18:42:17 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v8 08/13] drm/rockchip: analogix_dp: Add support to get panel from the DP AUX bus
-Date: Mon, 10 Mar 2025 18:41:09 +0800
-Message-Id: <20250310104114.2608063-9-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
-References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jr1ZkYkJ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 16E9F40E0202;
+	Mon, 10 Mar 2025 10:49:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id kiTctQKvuhkz; Mon, 10 Mar 2025 10:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741603752; bh=LreVgI+fx8En+wOY6PpZOizm2j4hFPvgajwvgyqZjvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jr1ZkYkJODuKKKz3ecmLV/cToLxxR+jcoEw908mhdRAHWsYl+QXE7iTeasvMKekWW
+	 6/VKPweooryO7m6pG3OE+RCL2SluTzifafzMHw2IXeEqs50Y0W7K59WP87x9R8tCy9
+	 nIs/q1flM6Io/S2D7EQl78Lg6EgKyjC9GvsZZ5ULffc7HvzyBp9TNU4G7MLeefHPwi
+	 4BPIatkELStcsTgirh8zgm7eMuSYHYmBoue9G5qF+0i3/h0TgT7Ymcvdda0TH52jL+
+	 LZJnMBD4DNO83NK1rJUAbo1iaq3+E/ouL8iWwfTCGv4ygTqKP4CinxRCOMiL2iaehV
+	 3BtKOoMGNmdMmlmbP6ZA5f6Cj3z2OC0bz3aJIsSsK3c1zNXBEqbfwmQ1Q8QAvLqC2X
+	 FlHHiz5X+yZIXP4i4oC7GpmK0PKOM2g4zw4aXSiUGCqdpV4fLGap+Nnwj7QXNkx+fh
+	 pgtDIznhegSFGLpDZVDQotdSy5qituCGbDJLpsDTBxkv8m2NIQIyvvyxdau+X47XKt
+	 Lv8Q8rVPSNVr+ItXiZyRC5+Y5ENxEm7PSqNa11df/60Wk/hdUQ+Sr6Tv3VzsTpcnOI
+	 JnMitX3W/NBWedocm/fdWJK3MvY5y7QtVbwZm6GoQRNimTPtB2vBQOCZoo89Sdua+f
+	 I3AogolXHzuv7Yy3p8oDgvoI=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6E0FC40E0176;
+	Mon, 10 Mar 2025 10:48:52 +0000 (UTC)
+Date: Mon, 10 Mar 2025 11:48:44 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v7 3/4] x86/cpu: Update x86_match_cpu() to also use
+ cpu-type
+Message-ID: <20250310104844.GDZ87DjFQef8GaREqg@fat_crate.local>
+References: <20250306-add-cpu-type-v7-0-f903fb022fd4@linux.intel.com>
+ <20250306-add-cpu-type-v7-3-f903fb022fd4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkxITlZCSE9OSRpJSEkaTkpWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
-	NVSktLVUpCWQY+
-X-HM-Tid: 0a957fa5f58803a3kunmdc18828a
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ODI6CRw5CjJOIiM0Izk2PS8*
-	Th1PFAxVSlVKTE9KTUtISEhCTUhIVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFOSUJMNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=SNZrux65+2z148itasgWITDP2C9eY8vwJWr1tfFV3Uwq5Mu2RoVjBD/Aq+DwQDmf+XCeT5y/Twn9iVU4TJc5Ze77RUVWt8pw23xnzjBpGm7cPlaD4xPWp34MFHs9VFmq3Z4hIgBnuyd2goMISudWcRh7MJWwaKnTajQV1xTy7YE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=BjjaUkr/z4Q0qZiPadymcyXjqL+DalxJAT81z/wxaYs=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250306-add-cpu-type-v7-3-f903fb022fd4@linux.intel.com>
 
-Move drm_of_find_panel_or_bridge() a little later and combine it with
-component_add() into a new function rockchip_dp_link_panel(). The function
-will serve as done_probing() callback of devm_of_dp_aux_populate_bus(),
-aiding to support for obtaining the eDP panel via the DP AUX bus.
+On Thu, Mar 06, 2025 at 06:18:36PM -0800, Pawan Gupta wrote:
+> +static bool x86_match_vendor_cpu_type(struct cpuinfo_x86 *c, const struct x86_cpu_id *m)
+> +{
+> +	if (m->cpu_type == X86_CPU_TYPE_ANY)
+> +		return true;
+> +
+> +	/* Hybrid CPUs are special, they are assumed to match all cpu-types */
+> +	if (boot_cpu_has(X86_FEATURE_HYBRID_CPU))
 
-If failed to get the panel from the DP AUX bus, it will then try the other
-way to get panel information through the platform bus.
+check_for_deprecated_apis: WARNING: arch/x86/kernel/cpu/match.c:25: Do not use boot_cpu_has() - use cpu_feature_enabled() instead.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+> +		return true;
+> +
+> +	if (c->x86_vendor == X86_VENDOR_INTEL)
+> +		return m->cpu_type == c->topo.intel_type;
+> +	if (c->x86_vendor == X86_VENDOR_AMD)
+> +		return m->cpu_type == c->topo.amd_type;
+> +
+> +	return false;
+> +}
 
----
-
-Changes in v4:
-- Use done_probing() to call drm_of_find_panel_or_bridge() and
-  component_add() when getting panel from the DP AUX bus
-
-Changes in v5:
-- Use the functions exported by the Analogix side to get the pointers of
-  struct analogix_dp_plat_data and struct drm_dp_aux.
-- Use dev_err() instead of drm_err() in rockchip_dp_poweron().
-
-Changes in v6:
-- Keep drm_err() in rockchip_dp_poweron()
-- Pass 'dp' in drm_...() rather than 'dp->drm_dev'
-
-Changes in v7:
-- Include the drm_dp_aux_bus.h for devm_of_dp_aux_populate_bus()
-- Use dev_err_probe() for the return value check of
-  devm_of_dp_aux_populate_bus()
-- Select DRM_DISPLAY_DP_AUX_BUS if ROCKCHIP_ANALOGIX_DP
-- Restore the error check for drm_of_find_panel_or_bridge() which was
-  removed by mistake
-
-Changes in v8:
-- Add comments when drm_of_find_panel_or_bridge() returns -ENODEV
-- Remove some redundant return cases
-- Add comments when devm_of_dp_aux_populate_bus() returns -ENODEV
----
- drivers/gpu/drm/rockchip/Kconfig              |  1 +
- .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 42 +++++++++++++++----
- 2 files changed, 34 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index 26c4410b2407..f9d7776a859a 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -8,6 +8,7 @@ config DRM_ROCKCHIP
- 	select DRM_PANEL
- 	select VIDEOMODE_HELPERS
- 	select DRM_ANALOGIX_DP if ROCKCHIP_ANALOGIX_DP
-+	select DRM_DISPLAY_DP_AUX_BUS if ROCKCHIP_ANALOGIX_DP
- 	select DRM_DW_HDMI if ROCKCHIP_DW_HDMI
- 	select DRM_DW_HDMI_QP if ROCKCHIP_DW_HDMI_QP
- 	select DRM_DW_MIPI_DSI if ROCKCHIP_DW_MIPI_DSI
-diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-index a8265a1bf9ff..5632b7e3e122 100644
---- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-@@ -21,6 +21,7 @@
- #include <video/of_videomode.h>
- #include <video/videomode.h>
- 
-+#include <drm/display/drm_dp_aux_bus.h>
- #include <drm/display/drm_dp_helper.h>
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-@@ -392,11 +393,28 @@ static const struct component_ops rockchip_dp_component_ops = {
- 	.unbind = rockchip_dp_unbind,
- };
- 
-+static int rockchip_dp_link_panel(struct drm_dp_aux *aux)
-+{
-+	struct analogix_dp_plat_data *plat_data = analogix_dp_aux_to_plat_data(aux);
-+	struct rockchip_dp_device *dp = pdata_encoder_to_dp(plat_data);
-+	int ret;
-+
-+	/*
-+	 * If drm_of_find_panel_or_bridge() returns -ENODEV, there may be no valid panel
-+	 * or bridge nodes. The driver should go on for the driver-free bridge or the DP
-+	 * mode applications.
-+	 */
-+	ret = drm_of_find_panel_or_bridge(dp->dev->of_node, 1, 0, &plat_data->panel, NULL);
-+	if (ret && ret != -ENODEV)
-+		return ret;
-+
-+	return component_add(dp->dev, &rockchip_dp_component_ops);
-+}
-+
- static int rockchip_dp_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	const struct rockchip_dp_chip_data *dp_data;
--	struct drm_panel *panel = NULL;
- 	struct rockchip_dp_device *dp;
- 	struct resource *res;
- 	int i;
-@@ -406,10 +424,6 @@ static int rockchip_dp_probe(struct platform_device *pdev)
- 	if (!dp_data)
- 		return -ENODEV;
- 
--	ret = drm_of_find_panel_or_bridge(dev->of_node, 1, 0, &panel, NULL);
--	if (ret < 0 && ret != -ENODEV)
--		return ret;
--
- 	dp = devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
- 	if (!dp)
- 		return -ENOMEM;
-@@ -432,7 +446,6 @@ static int rockchip_dp_probe(struct platform_device *pdev)
- 
- 	dp->dev = dev;
- 	dp->adp = ERR_PTR(-ENODEV);
--	dp->plat_data.panel = panel;
- 	dp->plat_data.dev_type = dp->data->chip_type;
- 	dp->plat_data.power_on = rockchip_dp_poweron;
- 	dp->plat_data.power_off = rockchip_dp_powerdown;
-@@ -448,9 +461,20 @@ static int rockchip_dp_probe(struct platform_device *pdev)
- 	if (IS_ERR(dp->adp))
- 		return PTR_ERR(dp->adp);
- 
--	ret = component_add(dev, &rockchip_dp_component_ops);
--	if (ret)
--		return ret;
-+	ret = devm_of_dp_aux_populate_bus(analogix_dp_get_aux(dp->adp), rockchip_dp_link_panel);
-+	if (ret) {
-+		/*
-+		 * If devm_of_dp_aux_populate_bus() returns -ENODEV, the done_probing() will not
-+		 * be called because there are no EP devices. Then the rockchip_dp_link_panel()
-+		 * will be called directly in order to support the other valid DT configurations.
-+		 *
-+		 * NOTE: The devm_of_dp_aux_populate_bus() is allowed to return -EPROBE_DEFER.
-+		 */
-+		if (ret != -ENODEV)
-+			return dev_err_probe(dp->dev, ret, "failed to populate aux bus\n");
-+
-+		return rockchip_dp_link_panel(analogix_dp_get_aux(dp->adp));
-+	}
- 
- 	return 0;
- }
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
