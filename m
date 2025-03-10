@@ -1,189 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3BE928EA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (unknown [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF05E21E0AE;
+	Mon, 10 Mar 2025 11:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741605763; cv=none; b=q+uOshGFjdZKJSv4DLyqOwRDZq/a7SwVIJXxo7CmSqkDP4rbHMiuNCJtBcPm+boSqeeAqG1lEAfjXlXy3YKNBuKEWBrP5mu932zrRCOueJvaqjN7boZp4Sb3zYDaXzKJ+RU3fEvO5atKEtfHBgbULUi34FcJys0gnrSBiVhZi6U=
+	t=1741605818; cv=none; b=g79wZQcKjzMRRHlwHI+PPLgpCY1xEDE/sVXdMSN+sZssNuo4flqtd+H2gGmQPKw3J6nQbv5DXrTby+LQcyhxAeiX3W9MExcxsGD21BuW8H8HDPCqqoIINqRLTBkpBK7UcNUotCA0DqPFoa2/wCM0hCTpD5i6iwCwJaBZ/Agzrj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741605763; c=relaxed/simple;
-	bh=hqRn07KR0r9PP3fU7g1RkOqJHjTZe11hpeinO1FMmEg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XIOa+63Bg41Oz9gC9eYm6Z8swBciBwVvFgx5FEMiYkub2+z3bg+9DXcazXDfPXccBq3DViKVo9iiRLpBzffIdxeCRMjMiJ0prjX06nKLPH33oIQX95mPiPDXj678ipOBXUdrIpPitJee7DCTX22ud+EpeqzqXFkHLAycj6Oy3kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 964B41516;
-	Mon, 10 Mar 2025 04:22:51 -0700 (PDT)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC9123F5A1;
-	Mon, 10 Mar 2025 04:22:37 -0700 (PDT)
-Message-ID: <65365ec7-6a16-4e66-8005-e78788cbedfa@arm.com>
-Date: Mon, 10 Mar 2025 12:22:36 +0100
+	s=arc-20240116; t=1741605818; c=relaxed/simple;
+	bh=E5eFDYZ2bw6fQtD72q9Yk5lSyan7UWSFac8+dlQpXI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lUtV0i9A9XEppKlNpftFFhDuCiDHtufHJ5cDvMQaP4RGKC5E6lXPg6PSRCMkZp18itoimV9OaEgqjjjU+zn4uTMx+XFW6kufWRbdrCfW/XgEK0LfjQuEzKNSBvw1vPom8o8XyN/YNK5pugpvJ89IUfPFfyWDbjp50YF0hBtWkfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Raq4xoas; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Raq4xoas"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=YNZPfFGP+uTjY3cBvGbcg2FVm6EpkrIboOpfDM7t1i0=; b=Raq4xoas0fmypQOdr6ECbQkBOT
+	j86zk+zLOjLmtUAdXKk0LM4yQ5CI7CH903YBuJ3bkln87vw0qVkcaongwBya1WjmrvVvgSKwCqHBN
+	tk8uVdYWY8bJ9CArVBY3fqa60iFl2SA27A+3WM6Ob7XsI/B41lKeLqZJOjSTL6+mHl3B6q/cb8Ykm
+	fuKehtjXAaWNcnLDrERnDZZg+1JGBYJnsasMdamty3GMALSSELYDSgYo4mNxE35pzDtu2UDLYrd2E
+	M4OMKrYkDptRYP7jXlRXdC8g/zCdfjxvDrmvQ8+KTIXY/3wXf7EkvcPaJf9vIjTDvhoG6HMpOdWir
+	DHymwHZw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1trbE4-00000004Ees-049a;
+	Mon, 10 Mar 2025 11:23:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 889E7300599; Mon, 10 Mar 2025 12:23:15 +0100 (CET)
+Date: Mon, 10 Mar 2025 12:23:15 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Chris Murphy <lists@colorremedies.com>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+	David Sterba <dsterba@suse.cz>,
+	Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+Message-ID: <20250310112315.GS16878@noisy.programming.kicks-ass.net>
+References: <20230125171517.GV11562@twin.jikos.cz>
+ <CABXGCsOD7jVGYkFFG-nM9BgNq_7c16yU08EBfaUc6+iNsX338g@mail.gmail.com>
+ <Y9K6m5USnON/19GT@boqun-archlinux>
+ <CABXGCsMD6nAPpF34c6oMK47kHUQqADQPUCWrxyY7WFiKi1qPNg@mail.gmail.com>
+ <a8992f62-06e6-b183-3ab5-8118343efb3f@redhat.com>
+ <7e48c1ec-c653-484e-88fb-69f3deb40b1d@app.fastmail.com>
+ <Y9NN9CFWc40oxmzP@boqun-archlinux>
+ <b112394d-7efa-c6f9-bbef-a73c501ff02c@redhat.com>
+ <2ffd1b69-76c2-4e15-a139-1406746ae4ef@app.fastmail.com>
+ <CABXGCsOz43OKLXUcJcqHfNpyppgK6EbfZ7aoXYPS1t21+N6i8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/uclamp: Let each sched_class handle uclamp
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Hongyan Xia <hongyan.xia2@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
- Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
- linux-kernel@vger.kernel.org, Xuewen Yan <xuewen.yan@unisoc.com>
-References: <84441660bef0a5e67fd09dc3787178d0276dad31.1740664400.git.hongyan.xia2@arm.com>
- <4394f2a7-b4e8-419a-a299-f1afa560c944@arm.com>
- <CAB8ipk_627GF+TV5u=6DK_3aRUHW8qGYwmN+KXMq_Cg-+Say1Q@mail.gmail.com>
- <bf5a70bf-3d13-4b3b-a3ef-804998b21fe9@arm.com>
- <CAB8ipk-SUFDATb=euJQFebxQ513SRwTEpSbBSD6K=batQKELHg@mail.gmail.com>
- <80c2c9f4-eb84-4a43-9c48-8f776615b45a@arm.com>
- <CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBGtt9TLTWW-iWTQKiA@mail.gmail.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBGtt9TLTWW-iWTQKiA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABXGCsOz43OKLXUcJcqHfNpyppgK6EbfZ7aoXYPS1t21+N6i8g@mail.gmail.com>
 
-On 10/03/2025 12:03, Xuewen Yan wrote:
-> Hi Dietmar,
+On Mon, Mar 10, 2025 at 03:51:21AM +0500, Mikhail Gavrilov wrote:
+> On Fri, Jan 27, 2023 at 8:33 PM Chris Murphy <lists@colorremedies.com> wrote:
+> > Also, at least in Fedora Rawhide where the mainline debug kernels appear, mostly get used non-interactively with automated tests. So if we're going to discover lockdep issues, we need the kernel logs to be reliable at the time those tests are run, and we don't have a practical way of adding another boot parameter just for these tests.
+> >
+> > Anyway I went ahead and submitted an MR to bump this to 19.
+> > https://gitlab.com/cki-project/kernel-ark/-/merge_requests/2271
+> >
 > 
-> On Mon, Mar 10, 2025 at 6:53 PM Dietmar Eggemann
-> <dietmar.eggemann@arm.com> wrote:
->>
->> On 10/03/2025 03:41, Xuewen Yan wrote:
->>> On Sat, Mar 8, 2025 at 2:32 AM Dietmar Eggemann
->>> <dietmar.eggemann@arm.com> wrote:
->>>>
->>>> On 06/03/2025 13:01, Xuewen Yan wrote:
->>>>> On Thu, Mar 6, 2025 at 2:24 AM Dietmar Eggemann
->>>>> <dietmar.eggemann@arm.com> wrote:
->>>>>>
->>>>>> On 27/02/2025 14:54, Hongyan Xia wrote:
->>>>>>
->>>>>> [...]
->>>>>>
->>>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>>>>> index 857808da23d8..7e5a653811ad 100644
->>>>>>> --- a/kernel/sched/fair.c
->>>>>>> +++ b/kernel/sched/fair.c
->>>>>>> @@ -6941,8 +6941,10 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->>>>>>>        * Let's add the task's estimated utilization to the cfs_rq's
->>>>>>>        * estimated utilization, before we update schedutil.
->>>>>>>        */
->>>>>>> -     if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE))))
->>>>>>> +     if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE)))) {
->>>>>>> +             uclamp_rq_inc(rq, p);
->>>>>>>               util_est_enqueue(&rq->cfs, p);
->>>>>>> +     }
->>>>>>
->>>>>> So you want to have p uclamp-enqueued so that its uclamp_min value
->>>>>> counts for the cpufreq_update_util()/cfs_rq_util_change() calls later in
->>>>>> enqueue_task_fair?
->>>>>>
->>>>>>   if (p->in_iowait)
->>>>>>     cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT);
->>>>>>
->>>>>>   enqueue_entity() -> update_load_avg() -> cfs_rq_util_change() ->
->>>>>>   cpufreq_update_util()
->>>>>>
->>>>>> But if you do this before requeue_delayed_entity() (1) you will not
->>>>>> uclamp-enqueue p which got his ->sched_delayed just cleared in (1)?
->>>>>>
->>>>>
->>>>> Could we change to the following:
->>>>>
->>>>> when enqueue:
->>>>>
->>>>> -     if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags
->>>>> & ENQUEUE_RESTORE))))
->>>>> +     if (!(p->se.sched_delayed && !(flags & ENQUEUE_DELAYED)))
->>>>
->>>> Why you want to check ENQUEUE_DELAYED as well here? Isn't
->>>> !p->se.sched_delayed implying !ENQUEUE_DELAYED).
->>>
->>> Indeed, the (!(p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))) is equal to
->>> the  (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags &
->>> ENQUEUE_RESTORE)))).
->>> I just think it might be easier to read using the ENQUEUE_DELAYED flag.
->>> Because we only allow enq the uclamp and util_est when wake up the delayed-task.
->>
->> OK, I see.
->>
->> So that means we would not have to move the uclamp handling into the sched
->> classes necessarily, we could use flags in enqueue_task() as well:
->>
->> -->8--
->>
->> Subject: [PATCH] Align uclamp and util_est and call before freq update
->>
->> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
->> ---
->>  kernel/sched/core.c | 14 ++++++++------
->>  kernel/sched/fair.c |  4 ++--
->>  2 files changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index b60916d77482..f833108a3b2d 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -1747,7 +1747,8 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
->>         }
->>  }
->>
->> -static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->> +static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p,
->> +                                int flags)
->>  {
->>         enum uclamp_id clamp_id;
->>
->> @@ -1763,7 +1764,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->>         if (unlikely(!p->sched_class->uclamp_enabled))
->>                 return;
->>
->> -       if (p->se.sched_delayed)
->> +       if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
->>                 return;
->>
->>         for_each_clamp_id(clamp_id)
->> @@ -2067,12 +2068,13 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
->>         if (!(flags & ENQUEUE_NOCLOCK))
->>                 update_rq_clock(rq);
->>
->> -       p->sched_class->enqueue_task(rq, p, flags);
->>         /*
->> -        * Must be after ->enqueue_task() because ENQUEUE_DELAYED can clear
->> -        * ->sched_delayed.
->> +        * Can be before ->enqueue_task() because uclamp considers the
->> +        * ENQUEUE_DELAYED task before its ->sched_delayed gets cleared
->> +        * in ->enqueue_task().
->>          */
->> -       uclamp_rq_inc(rq, p);
->> +       uclamp_rq_inc(rq, p, flags);
->> +       p->sched_class->enqueue_task(rq, p, flags);
->>
->>         psi_enqueue(p, flags);
->>
+> Hi,
+> Two years have passed since my last message in this thread.
+> And now CONFIG_LOCKDEP_CHAIN_BITS=19 has become insufficient.
+> https://gitlab.com/cki-project/kernel-ark/-/blob/os-build/redhat/configs/fedora/generic/CONFIG_LOCKDEP_CHAINS_BITS
 > 
-> I submitted a patch similar to yours before:
-> 
-> https://lore.kernel.org/all/CAB8ipk_AvaOWp9QhmnFDdbFSWcKLhCH151=no6kRO2z+pSJfyQ@mail.gmail.com/
-> 
-> And Hongyan fears that as more complexity goes into each sched_class
-> like delayed dequeue,
-> so it's better to just let the sched_class handle how uclamp is
-> enqueued and dequeued within itself rather than leaking into core.c.
+> I am again faced by "BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!"
+> Still not exists a boot parameter that could redefine
+> MAX_LOCKDEP_CHAIN_HLOCKS at boot time?
+> And what should we do? Again, bump CONFIG_LOCKDEP_CHAIN_BITS? Now up to 20?
 
-Ah, OK. Your patch didn't have 'sched' in the subject so I didn't see it
-immediately.
+What are you actually doing? Anyway, check your chains to see if there's
+anything obviously silly causing a combinatorial explosion.
 
-I would prefer that uclamp stays in core.c. ENQUEUE_DELAYED among all
-the other flags is already used there (ttwu_runnable()).
 
-task_struct contains  sched_{,rt_,dl_}entity}. We just have to be
-careful when switching policies.
