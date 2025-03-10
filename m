@@ -1,60 +1,65 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9B61DF72D;
-	Mon, 10 Mar 2025 20:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19A21D514E;
+	Mon, 10 Mar 2025 20:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741639261; cv=none; b=lyX4QspjP1/zwrCp9moTVvE+snxbgyAhrq6bVgejAdYVVsAGVuP/jG4g3vYgOYfCwYHxmJCg3t9u6Bd8B+brNs8DEupO+l6oGIidqFza+rsoDEpk1ibfR9wmUPNkOXZpDCJZ1Dvauhp/XLj/tHtV83tnMxEg4Oq3zKtEHn5TRTM=
+	t=1741639287; cv=none; b=ob1vDauAzmHnV6rIpOZWJ/zvziccrPz5k0jMN7n/VDJFnZ5lrGvjBRB+q1PE3xahZnUr2JYJGmT8d7oQNwp9h6ybkY+0XoXkp8QKX1soCmKyeEOGLsblT7eQzu0ulUAzRDZ/Pgvngr/EW26XGkl26SBbGy+smjt9izmRpdEAya0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741639261; c=relaxed/simple;
-	bh=p7FT2wD3WZKNMVQnP49Wzu1EdaqUzeZXhk1DDsgTN+I=;
+	s=arc-20240116; t=1741639287; c=relaxed/simple;
+	bh=iOFeGEkeYwKNw3YjGLa4PAADjkpOns1puKEPrbXm/R0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p9ORLF+rvyU/gp0B94HWYAqW3kSCsPnaetl8ooUgMAZo357LKg3xHPvule/nJdYLG0o1ncC5MA3lgtlndYL+FLbxSauMNoyaWrmunA0c+Z4DPt6JgMI2U88NvdRgJRG4Pv9LoNgMQyAmlYk7ROsJ6pRqromRESVPjNMjP1hjO8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KLSBTZ4K; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=evefkxUuTyWDB1ZpkDz9dM3t5lnvtZGnFob3Df+PDyauCeFiv4c8wMwwNmWW4rzk56OO/vx3w/s8M/t9935+66eWI6+SCGP8h1Ov7YF8aCIiRWukYPYej5GYLeNjW4RbMHUiRIuNYtsPztGnu/kS4y9mPRRXR2pEzPNHKtRZVZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FcD5fpOs; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KLSBTZ4K"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52AKFZbd012622;
-	Mon, 10 Mar 2025 20:40:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=W9YuYK
-	qO6w28khy+jb3BDttjVL1yDkzw2RZ/N4axoRo=; b=KLSBTZ4Kd0n2+aXrsgXbOJ
-	xPicY7lYsjGAsY6LMaVj09lNRZUOGpGI0sTby/ypWJYxvcoIuonqgZZlFYVj/i45
-	rpflT//Z0+G61ZRIUgqtxuIIn0xG+i6teLC3DWxTMiRb3W4O3Es62k0AzjHeORxY
-	xJa2Htatu2N/uw+8DgfXEyZK1GT2XM1FAoiiAee79ISuRsfmO2etz97y0QP80oRh
-	woqJq70wcn2B3bfYYImFaJrcqLebHOgqQ7SUkl+dwHjptqExj4L9m6IHjm5ViuAA
-	YAGL+gBjOkVe+sl3pn0zyaZfK+yoKF8vKDTRSlSyMJ2wnS7Mbn6sC4jJ5XKwIDKA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 459rf94y47-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 20:40:52 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52AIj3Dc014921;
-	Mon, 10 Mar 2025 20:40:51 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4592ek8anm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 20:40:51 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52AKeogr30671556
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Mar 2025 20:40:50 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ABE8E58052;
-	Mon, 10 Mar 2025 20:40:50 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BF8D558056;
-	Mon, 10 Mar 2025 20:40:49 +0000 (GMT)
-Received: from [9.61.55.227] (unknown [9.61.55.227])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Mar 2025 20:40:49 +0000 (GMT)
-Message-ID: <4a32f00e-a79b-457d-8789-597b9a0e6c9b@linux.ibm.com>
-Date: Mon, 10 Mar 2025 16:40:49 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcD5fpOs"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-72a1c42c70dso1794755a34.1;
+        Mon, 10 Mar 2025 13:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741639285; x=1742244085; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gt8lLeNOphLGI2TA8iOt/B8rG8B3lX/1L2wm03BOc/Y=;
+        b=FcD5fpOsQIG/lCs0yiN1Xq78D+Q0VCL43I7/Ue+AK0X9EXxcBxJSxtZ16jSnRQJn0x
+         cjRxn7QXpS82sG3oEYw2/hGMHBT6JDM+td0dWYrqiPZo41fJxzSo0+uYFL96W9l80WI7
+         i2/orGQxRk4bJv/fShy0vmMl6UBO/uUp70/DAVidYkWZwoUqyh3Y7n05W1tlp35Va2xq
+         Lam8A6bBLAHFc8Iz1kSGPe/9VbfeEOI32f6yi0tZjp0asapIYXy6o6zRNxuu7h1+TZ5I
+         IpYbn7QblJZTKu5ej5cqmpuRH1ub3ilYC9ePup0OuPchyZUPHAaXeBIj4R7cM9SGeejE
+         N7Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741639285; x=1742244085;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gt8lLeNOphLGI2TA8iOt/B8rG8B3lX/1L2wm03BOc/Y=;
+        b=TqgisOOguFwwwNxTjSHpNmTMCbVNUxJ0tWaab/8qGLOIcFlu07cf20pLzfhVCdqmUL
+         JBfaKF/+lhPxbPNemRYp9VBAdfaM+HP7PwuLUO4NK+wKAzxmsLz02HQxKgh32X/632Cd
+         x3i4PijsGaXtS5u+wP/rw/ao0DzTYh55WTwdDrNBYUcVVTZJ/A1S0pr4LjbsQaTy4zag
+         fmqXkRkYm54aKI+mMHSZ0oK56DrRgpiPTwKfE2Ediy2UpjiEXLSeAXW+VRHlt+z/jL6I
+         oYtkQ9Xs8WWR6MypD8QmbjBjtmUGMO+GYqE7+cuUetJ4edQNXx8uoLmaCiCD8RBmf67P
+         V4iA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBJzc3e6M+SMnaCgM4WVzKGH4vJMOzPT8nDyvNi+Z49XxGx7CBp6cWn+3b7Mgs9C/RdUgDCT0i@vger.kernel.org, AJvYcCWxfcN3BJR1dJHpp4WaRvn5QbObOsdpPEx29YwARV3W89R+WD45A2iqD0HOW9lTuiXJ9NusBOoi4SlF/A4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvxzADUIVb6cUMbDP92RrCN4lbQU/OIT8hOZJDGON79KbgYcnn
+	8dBjgczzhwB4AwLq/8QBXzbhPT9OutwNHGuaudSw2jsWNZAYpLK2
+X-Gm-Gg: ASbGncvP1/jw+kWsc+DMCPPYhZC6CNlYC2m5JB6NzHLCl1g9XEDozKRJdlGQrgMa0qO
+	wZjJXC48tfFMpcZHg6uteBsx6iPwuODCn/PmMRIejYsp3X0eOFIMEYcXTKTbqMUBRAbxl7j+RPU
+	4Ej6tKofZb4Z2D+RBjY636olBnalN1qwgeikELidn8W5ZJe6xkNfQOJoabIro/NowOI+iEyycwd
+	6j/dQRW6nfO/JefcgtqxrhF2RO5tCYY310kRb0k9bgdukVyMPng9euAMrEEqZbEjr2bOnPmVhCn
+	//p6nVXltWXo5Op23FFg1TDAfO+LN+GM82UMuxHIHMRYi0//9v0uXF9O59nXcFWccxpdz1aw
+X-Google-Smtp-Source: AGHT+IH9Pa17O3DgN1ZWzumsrv6i27njbnYFEjZVmLWI+Bck5mchL4HicXMwOe+/QWv/1Ky6N1hX7Q==
+X-Received: by 2002:a9d:5385:0:b0:72b:2513:ad54 with SMTP id 46e09a7af769-72b9b73e937mr570131a34.10.1741639284767;
+        Mon, 10 Mar 2025 13:41:24 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c248d5ad7bsm2305532fac.34.2025.03.10.13.41.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Mar 2025 13:41:23 -0700 (PDT)
+Message-ID: <c7719f5b-b56a-4f6f-93d3-18c46f713a00@gmail.com>
+Date: Mon, 10 Mar 2025 13:41:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,103 +67,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] s390/pci: Fix dev.dma_range_map missing sentinel element
-To: Niklas Schnelle <schnelle@linux.ibm.com>, Joerg Roedel <jroedel@suse.de>,
-        Will Deacon <will@kernel.org>, Gerd Bayer <gbayer@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, iommu@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20250306-fix_dma_map_alloc-v1-1-b4fa44304eac@linux.ibm.com>
+Subject: Re: [PATCH 5.15 000/620] 5.15.179-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250310170545.553361750@linuxfoundation.org>
 Content-Language: en-US
-From: Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20250306-fix_dma_map_alloc-v1-1-b4fa44304eac@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCZ7gLLgUJMbXO7gAKCRBhV5kVtWN2DlsbAJ9zUK0VNvlLPOclJV3YM5HQ
+ LkaemACgkF/tnkq2cL6CVpOk3NexhMLw2xzOw00ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU8JPBBgRAgAPAhsMBQJn
+ uAtCBQkxtc7uAAoJEGFXmRW1Y3YOJHUAoLuIJDcJtl7ZksBQa+n2T7T5zXoZAJ9EnFa2JZh7
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250310170545.553361750@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: H3MptcF8lDlYcW0Cz2Rw9oJlNh-9qJ5V
-X-Proofpoint-GUID: H3MptcF8lDlYcW0Cz2Rw9oJlNh-9qJ5V
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_07,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
- phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503100158
 
-On 3/6/25 10:25 AM, Niklas Schnelle wrote:
-> The fixed commit sets up dev.dma_range_map but missed that this is
-> supposed to be an array of struct bus_dma_region with a sentinel element
-> with the size field set to 0 at the end. This would lead to overruns in
-> e.g. dma_range_map_min(). It could also result in wrong translations
-> instead of DMA_MAPPIN_ERROR in translate_phys_to_dma() if the paddr were
-
-Typo, DMA_MAPPING_ERROR
-
-> to not fit in the aperture. Fix this by using the dma_direct_set_offset()
-> helper which creates a sentinel for us.
+On 3/10/25 09:57, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.179 release.
+> There are 620 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Fixes: d236843a6964 ("s390/pci: store DMA offset in bus_dma_region")
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-
-Thanks for looking into this while I was out.  I confirmed that I can reproduce the potential issue by forcing codepaths - and that your proposed fix also resolves it (by forcing a DMA mapping error instead of using random values for a bus_dma_region).
-
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
-
-
-> ---
-> This is based on iommu/next which contains the fixed commit
-> ---
->  arch/s390/pci/pci_bus.c | 24 +++++++++++-------------
->  1 file changed, 11 insertions(+), 13 deletions(-)
+> Responses should be made by Wed, 12 Mar 2025 17:04:00 +0000.
+> Anything received after that time might be too late.
 > 
-> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> index 0e725039861f92925a38f7ff7cb6de6b0d965ac3..14310c3b48860a16de13536adf95ef99e6af21cc 100644
-> --- a/arch/s390/pci/pci_bus.c
-> +++ b/arch/s390/pci/pci_bus.c
-> @@ -287,23 +287,21 @@ static struct zpci_bus *zpci_bus_alloc(int topo, bool topo_is_tid)
->  static void pci_dma_range_setup(struct pci_dev *pdev)
->  {
->  	struct zpci_dev *zdev = to_zpci(pdev);
-> -	struct bus_dma_region *map;
-> -	u64 aligned_end;
-> +	u64 aligned_end, size;
-> +	dma_addr_t dma_start;
-> +	int ret;
->  
-> -	map = kzalloc(sizeof(*map), GFP_KERNEL);
-> -	if (!map)
-> -		return;
-> -
-> -	map->cpu_start = 0;
-> -	map->dma_start = PAGE_ALIGN(zdev->start_dma);
-> +	dma_start = PAGE_ALIGN(zdev->start_dma);
->  	aligned_end = PAGE_ALIGN_DOWN(zdev->end_dma + 1);
-> -	if (aligned_end >= map->dma_start)
-> -		map->size = aligned_end - map->dma_start;
-> +	if (aligned_end >= dma_start)
-> +		size = aligned_end - dma_start;
->  	else
-> -		map->size = 0;
-> -	WARN_ON_ONCE(map->size == 0);
-> +		size = 0;
-> +	WARN_ON_ONCE(size == 0);
->  
-> -	pdev->dev.dma_range_map = map;
-> +	ret = dma_direct_set_offset(&pdev->dev, 0, dma_start, size);
-> +	if (ret)
-> +		pr_err("Failed to allocate DMA range map for %s\n", pci_name(pdev));
->  }
->  
->  void pcibios_bus_add_device(struct pci_dev *pdev)
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.179-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
 > 
-> ---
-> base-commit: e840414e5a73ac02ffba6299b46f535a0b7cba98
-> change-id: 20250306-fix_dma_map_alloc-b3b05903dcfb
+> thanks,
 > 
-> Best regards,
+> greg k-h
 
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
