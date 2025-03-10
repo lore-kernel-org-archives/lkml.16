@@ -1,164 +1,89 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4253C2309BD;
-	Mon, 10 Mar 2025 18:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2A8156861;
+	Mon, 10 Mar 2025 18:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741631025; cv=none; b=BGo19Vh0bwA76kkjIYsS23ANPec1pNhDuOLcScGZlXeYhZRAZ5zIGkanVrRw04o2LotDk8KMfBdqZAy6Ql1jZuefufnsMWfJVo6exGkh8nA0pBzNRP0GyRouIoeWrGvgIk/5t1BNJvPC4HRp53AaaeT9Mz+CDtDupTLRMC6bxdc=
+	t=1741631072; cv=none; b=FnrkozQIgw+dYeCPu+0B3q0sSwRF0967ANc0WFF+OX7bh0w+MzR4B5SoARWR+K5B/3IErOTdwirnYdD/BLH1nMMNaq+Z0uyGFBddTrbndX5aLTXUy/KfCq85W/W/un/W7mquhb8i9hDcMN1QteTYlXRThkHivik++ADdY5THPhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741631025; c=relaxed/simple;
-	bh=8h/uiU16If6NruzF8ynG/tGThQGk0I+HF/byzjcy1pc=;
+	s=arc-20240116; t=1741631072; c=relaxed/simple;
+	bh=I9v83gD5FScUmGVEHRSB9QRMjjO35gmukcVxbPouQhQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tnGFd4MuGl29s76ex7t/bUfZ2fES89X/qK1M0u6wt2GaQF1AJTdFr/7IeDCNHCmQgElqlEsTFOZYSh/OwcMhPWqxqVYjq8L+6VjD5NzOx0xAqvJ9P7gSUQ2Z90EtNo6+nQFj59J1w5FohApwwoPq/tt66nfaou9GtwCoOpGeC88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=aDQAMiwK; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	 Content-Type:Content-Disposition:In-Reply-To; b=BWTI0sWXOo/avJnKAIaV6Yq31mjJHGqCQBx+WuO2qSJ9hl7IDFNbiugA6c8V59j+ykTiL1lX1vQ1dkxFrIEGtkj48QD/OBZS7GCR3620aR5SJwpvSv0VJxY1Szru6t2x751h7IdfDOCS25mkeuUaxeZ8G0Sge2OjovnBQorlegc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I901CpS6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="aDQAMiwK"
-Received: from localhost (unknown [10.10.165.14])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 6D5F140CE18B;
-	Mon, 10 Mar 2025 18:23:32 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 6D5F140CE18B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1741631012;
-	bh=J9WgnNk8hsJqucJXyV7OVTWvviSo1PzyLdaWKwbmS6M=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I901CpS6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7F1C4CEE5;
+	Mon, 10 Mar 2025 18:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741631071;
+	bh=I9v83gD5FScUmGVEHRSB9QRMjjO35gmukcVxbPouQhQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aDQAMiwKnUsInpKrImOsgUADu1a87Mys1J5sBBz/s9yCHBo5sX+KP2t2K5NH2zzB2
-	 /etkaY7/rdkKB5LfEDmDk35MoABlNOzSRqfwSokrrq7wCplaB3wMEQV7VnzlZcb2er
-	 WardCxs7Xv7IvNb/G1zhCdGQwviVFEbBGtIltczo=
-Date: Mon, 10 Mar 2025 21:23:32 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Peter Chen <peter.chen@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, 
-	Sebastian Reichel <sre@kernel.org>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, 
-	linux-usb@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/3] usb: chipidea: ci_hdrc_imx: disable regulator on
- error path in probe
-Message-ID: <lbsj2h2zut3eafu5vy6ysuv4y7xjuqtemovqtg3lzuyhp6fjbl@4xwikb3bxl7k>
-References: <20250309175805.661684-1-pchelkin@ispras.ru>
- <20250309175805.661684-3-pchelkin@ispras.ru>
- <Z8781hzSKJ5P0gBe@lizhi-Precision-Tower-5810>
+	b=I901CpS6Vdf3DtNpDgEiDxTsFlIlx7rAUEWgjN2Ufo/lo9UJGZDFf3ywzXYuX1FiF
+	 Bcn+Sf16FRLMQTryJA297F3fT3341P3BA+P9ialV3qSwkBbox4ybZ7Lz4gcAK17sTQ
+	 lJ8mN9QWBAyJ8yEgTCtpFCMk79fFOez7EO4lZyX0=
+Date: Mon, 10 Mar 2025 19:19:36 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] rust/kernel/faux: mark Registration methods inline
+Message-ID: <2025031053-tribute-crudely-0e1d@gregkh>
+References: <20250309-faux-inline-v1-1-c1b692862433@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z8781hzSKJ5P0gBe@lizhi-Precision-Tower-5810>
+In-Reply-To: <20250309-faux-inline-v1-1-c1b692862433@ethancedwards.com>
 
-On Mon, 10. Mar 10:53, Frank Li wrote:
-> On Sun, Mar 09, 2025 at 08:57:58PM +0300, Fedor Pchelkin wrote:
-> > Upon encountering errors during the HSIC pinctrl handling section the
-> > regulator should be disabled.
-> >
-> > After the above-stated changes it is possible to jump onto
-> > "disable_hsic_regulator" label without having added the CPU latency QoS
-> > request previously. This would result in cpu_latency_qos_remove_request()
-> > yielding a WARNING.
-> >
-> > So rearrange the error handling path to follow the reverse order of
-> > different probing phases.
+On Sun, Mar 09, 2025 at 10:14:36PM -0400, Ethan Carter Edwards wrote:
+> When building the kernel on Arch Linux using on x86_64 with tools:
+> $ rustc --version
+> rustc 1.84.0 (9fc6b4312 2025-01-07)
+> $ cargo --version
+> cargo 1.84.0 (66221abde 2024-11-19)
+> $ clang --version
+> clang version 19.1.7
+> Target: x86_64-pc-linux-gnu
 > 
-> Suggest use devm_add_action() to simple whole error handle code.
-
-I'll try with that in v2 then, thanks for suggestion.
-
+> The following symbols are generated:
+> $ nm vmlinux | rg ' _R' | rustfilt | rg faux
+> ffffffff81959ae0 T <kernel::faux::Registration>::new
+> ffffffff81959b40 T <kernel::faux::Registration as core::ops::drop::Drop>::drop
 > 
-> >
-> > Found by Linux Verification Center (linuxtesting.org).
+> However, these Rust symbols are wrappers around bindings in the C faux
+> code. Inlining these functions removes the middle-man wrapper function
+> After applying this patch, the above function signatures disappear.
 > 
-> I think this sentense have not provide valuable informaiton for reader.
+> Link: https://github.com/Rust-for-Linux/linux/issues/1145
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>  rust/kernel/faux.rs | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Well, that's a line which the organization rules specify to put into
-every bugfix patch found on its behalf. I must follow these rules.
+This does not apply to my tree.  Can you regenerate it against either
+the driver-core.git driver-core-next branch, or the linux-next tree and
+resend it?
 
-Btw, you can find this in the changelogs of many other commits existing
-in the main kernel tree:
+What release/branch did you make this against?
 
-$ git shortlog --grep="linuxtesting.org" --group=format:""
- (859):
-      kernel/range.c: fix clean_sort_range() for the case of full array
-      Staging: pohmelfs/dir.c: Remove unneeded mutex_unlock() from pohmelfs_rename()
-      USB: usb-gadget: unlock data->lock mutex on error path in ep_read()
-      ...
+thanks,
 
-> 
-> Frank
-> 
-> >
-> > Fixes: 4d6141288c33 ("usb: chipidea: imx: pinctrl for HSIC is optional")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> > ---
-> >  drivers/usb/chipidea/ci_hdrc_imx.c | 15 ++++++++-------
-> >  1 file changed, 8 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-> > index 619779eef333..3f11ae071c7f 100644
-> > --- a/drivers/usb/chipidea/ci_hdrc_imx.c
-> > +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-> > @@ -407,13 +407,13 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
-> >  				"pinctrl_hsic_idle lookup failed, err=%ld\n",
-> >  					PTR_ERR(pinctrl_hsic_idle));
-> >  			ret = PTR_ERR(pinctrl_hsic_idle);
-> > -			goto err_put;
-> > +			goto disable_hsic_regulator;
-> >  		}
-> >
-> >  		ret = pinctrl_select_state(data->pinctrl, pinctrl_hsic_idle);
-> >  		if (ret) {
-> >  			dev_err(dev, "hsic_idle select failed, err=%d\n", ret);
-> > -			goto err_put;
-> > +			goto disable_hsic_regulator;
-> >  		}
-> >
-> >  		data->pinctrl_hsic_active = pinctrl_lookup_state(data->pinctrl,
-> > @@ -423,7 +423,7 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
-> >  				"pinctrl_hsic_active lookup failed, err=%ld\n",
-> >  					PTR_ERR(data->pinctrl_hsic_active));
-> >  			ret = PTR_ERR(data->pinctrl_hsic_active);
-> > -			goto err_put;
-> > +			goto disable_hsic_regulator;
-> >  		}
-> >  	}
-> >
-> > @@ -432,11 +432,11 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
-> >
-> >  	ret = imx_get_clks(dev);
-> >  	if (ret)
-> > -		goto disable_hsic_regulator;
-> > +		goto qos_remove_request;
-> >
-> >  	ret = imx_prepare_enable_clks(dev);
-> >  	if (ret)
-> > -		goto disable_hsic_regulator;
-> > +		goto qos_remove_request;
-> >
-> >  	ret = clk_prepare_enable(data->clk_wakeup);
-> >  	if (ret)
-> > @@ -526,12 +526,13 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
-> >  	clk_disable_unprepare(data->clk_wakeup);
-> >  err_wakeup_clk:
-> >  	imx_disable_unprepare_clks(dev);
-> > +qos_remove_request:
-> > +	if (pdata.flags & CI_HDRC_PMQOS)
-> > +		cpu_latency_qos_remove_request(&data->pm_qos_req);
-> >  disable_hsic_regulator:
-> >  	if (data->hsic_pad_regulator)
-> >  		/* don't overwrite original ret (cf. EPROBE_DEFER) */
-> >  		regulator_disable(data->hsic_pad_regulator);
-> > -	if (pdata.flags & CI_HDRC_PMQOS)
-> > -		cpu_latency_qos_remove_request(&data->pm_qos_req);
-> >  	data->ci_pdev = NULL;
-> >  err_put:
-> >  	if (data->usbmisc_data)
-> > --
-> > 2.48.1
-> >
+greg k-h
