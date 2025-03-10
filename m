@@ -1,153 +1,131 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6BC227E8F;
-	Mon, 10 Mar 2025 13:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7B7229B23;
+	Mon, 10 Mar 2025 13:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612816; cv=none; b=uLmLsAjPKFr+4JTrPI71wAV2OhJ7sn6pDXPzJGWsHwy/29PiP9So2za61F25/mBGDidyI6WhfL9Lz60B1XuQBhOZ2yaXNSYqt7aES0dnHFDzEifRJVtniJf/11aLtr/c2YQKBwscUc6mlDsPzCKdgbEudREO6oXx5O3BvhPZtZQ=
+	t=1741612843; cv=none; b=dLSQy7vvJGLPOo87dBS2HKxe13f8kgrY7lBaS/5SchiZkNLlOxtmmgBSQ5M06HtmX7XRAvaMtLpaGgPdnKFFMasaH+H4IvVMxM2qHtOoPbho7bAQqOHnbQGyOaIuSnpQABJnLqO/S2J43Iwq4wbLJ7u+fmKW84yrhHjaGva/03k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612816; c=relaxed/simple;
-	bh=2AHxYwcyOZBFHgTfNokaRNt0i2/xdNHTQ7pLuqe2Xh8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lgS5wrycCgK2lK/mSNmkEVhNADYxhr1lRwL6HIfuDvs8kRylRmxBuCRqo/gECftY7zFSpD7WMQyCNflsRpfM/sF5mqfNlGxs9urlNk9ahPlomGBbDs7Fh4G+sqQOeWHLNpFPCsGxl3EOI215znxGfqAvuiVcL/SRx8td24+kkxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=filiGp9+; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741612843; c=relaxed/simple;
+	bh=ZmuLKqPBfUzKMPTJUTmSc8vjdOxRrosiBwBAQBDU044=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=oac8RsGMgrm5ibjW03k6WdcTgXBdZaiR6lVHSaTbQzrmT5rIJ7ex/MVHo2pc0VXsix2nEp5oJTTHE/8SpfTs9YWExv8f9cWPiZ8OIQLFw0BXHLAr+p0y4EaLzSqVUxY1279rnKE/3A3GDHjmTri3r143y/+ppseSasS8rzDKjYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=ZcZY3k/+; arc=none smtp.client-ip=91.207.212.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="filiGp9+"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso25455351fa.3;
-        Mon, 10 Mar 2025 06:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741612812; x=1742217612; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uIN9qnJPxF5d49Ai441xtWm1lqpAVaRoxtSwVCRC5ZE=;
-        b=filiGp9+xzlHum3ErH0AIIDBE27e6UdZgG/MA20QntA3LgVDrj1SX1N1evJ3WGq7C4
-         kRPE5FY20XFHtEwRALOuAy70J8gHUZmF17ETWlagNVzh/OlNvFdnRF0k+F2M1kPRq2BR
-         ytzgsgcrSzeY3YcCBfDNXpH7UUieCPOpBWoFNnchv1hf9/w6ELi+DUc0sAu3hmJAHDOx
-         jLxJLXbwcuUH0PvimKn34WEOnOXT9YgkKwqiSyJEFuYnakkYbLtGR1MeI/9q3Z24i0Nh
-         MMDr/JHUuHV47Uee9bczLLbBL+6D1eMsfMxjLUuf4/B/q1xLqLAJtdZMsDEucZnl9DvE
-         xFNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741612812; x=1742217612;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uIN9qnJPxF5d49Ai441xtWm1lqpAVaRoxtSwVCRC5ZE=;
-        b=JIa5mJ1LmzpWT2a2vjN8MKp6Mr9ra4dbom1KSmfWNCkj7GJ1IM3RCKTWlloEQ5y6mL
-         xK0BlaA4Nt2wnzsyMaxewByA7bGJ0jNClCwBt5E7XlhIuLj6cSN+9hVOml2WfTOkMGsP
-         uFu7ud+IYxCHbriMoJwiL4qWmbUIxIDp41vK21IS2lSffUS+g6xx25ARGlJjb3Q71xv/
-         wP2+DyGT/0L6UM7I3OgbgWMxN4TSsK+K2gSCz4YWYbeMnkSV3BIfLt3sNuPGh+V5xVmv
-         Rcru7C7kEKiPSp7IKSwuYQRAOuunyeycUG4U140WNJkJj6fefDMjeXUPBoYpWr5BQ7Y+
-         zgww==
-X-Forwarded-Encrypted: i=1; AJvYcCVDUz7oePTIkYS2F8lk2Qmza8d/ElnxVUQjTrq/JnEifSPH5iZLBdHjolBANoyK9qfgKFOE9X+6fTJED6M=@vger.kernel.org, AJvYcCVGspokqkWDhbIPCiXTsPp2RgByF2ORnBKPyeQ/+vLlFyECMeqyR+H7OFbCYikFVNKdeKQ+VrnZRCCEDtNR1+roFkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxrz+DSIIxM3K+ljhgzo3ZE/MELgv8fJ3+WnwnZGpu8I50PZ7AT
-	oWgLUVb+sxfnIJkWqwouLWPMktyshoBQccAcNupvYTIqmamY+Yv4
-X-Gm-Gg: ASbGncv+/DKgLjaJqxVQ4nyk64U2WBL87+b4Nmyfl3tvfDkYxqvsxZrPeO7C3IW+AES
-	e9w8ENCiHMf21mZSgHRskI3P+d7aiP/7NmeLrcdJwM0OMbpgf8df9hvWwvT8+RbxS89ov4mmIJ4
-	J5cxASrFXsmMNaVBNBYX/nASRx3bX2r5yBpBxXSGP5Kll2DcXB0dF0w8Hj0CRexA2dJWNl7wnPG
-	R0pWT/j+ydtiTXpqHA//CLd8NG6BXGe5QEHhia6Yygtg/Vtyw2Tq0h/j6qpmbVDcVwHSMIbmBJY
-	CPoj72smfvWRHuNv6+Eh0LlNQB4GK77/Wxwf2InK+8iBgqcBDNN6zXNf6TV+ZCKxu1aKTgckU9/
-	Hfr5GKTS6JsF5qFhv7j5f3UlNqg==
-X-Google-Smtp-Source: AGHT+IEF1Q5OiufZ1ooC9SoR2jkBeuL8mpXvsPLmTBTbXNvs5wA77q8kyDlOtMByfhSrkrTpiQUACA==
-X-Received: by 2002:a05:651c:19a1:b0:307:9555:dc5e with SMTP id 38308e7fff4ca-30bf44ed6d8mr42550331fa.3.1741612812228;
-        Mon, 10 Mar 2025 06:20:12 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c13a0e20asm4133221fa.49.2025.03.10.06.20.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Mar 2025 06:20:11 -0700 (PDT)
-Message-ID: <475375c9-9d72-4583-a21e-37b17c6b8c46@gmail.com>
-Date: Mon, 10 Mar 2025 15:20:10 +0200
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="ZcZY3k/+"
+Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
+	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A802bM030724;
+	Mon, 10 Mar 2025 13:10:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=r
+	aPRfqGyZV++wq3NiKy2nVLbvA0NuqFXxd/s+kh24Qo=; b=ZcZY3k/+LBR4xrROE
+	3Saidcmj8/foaeI49orUyzruhn6GElt6rzLjuvQjgrV1A3bb/LQLlLy8jgsGrdOQ
+	1oXXVcL3b3T/W0uOQplckmoH+s4RyDTNkSH8u+b7rJPhWSDtdLD4ZrKmb1+8B96U
+	NCpA5mlsUYIZ7x1V40fhYaRX7JfZX/pZt8jkrSXT//7d9ql2k07xgmSJ/fgAkrGR
+	dhssJ5iEPB9BFagigGOF0rK7ygTwIwgp+LbE/Pskr/v1hHvBOkOFIlOCGAhaxIgE
+	+zt522D+zxERQCBbC8bEmlZQHH36FSEur2+vyT3DT0pXUnYrGpFgR35jk9dvTGtM
+	Lw0Iw==
+Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
+	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 458d1wha4p-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 10 Mar 2025 13:10:46 +0000 (GMT)
+Received: from Matts-MacBook-Pro.local (172.25.0.133) by
+ HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 10 Mar 2025 13:10:46 +0000
+From: Matt Coster <matt.coster@imgtec.com>
+Date: Mon, 10 Mar 2025 13:10:28 +0000
+Subject: [PATCH v3 04/18] drm/imagination: Use new generic compatible
+ string
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/15] gpio: bd71828: use new line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Ray Jui <rjui@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>,
- Marek Vasut <marek.vasut+renesas@gmail.com>, Michael Buesch <m@bues.ch>,
- Thomas Richard <thomas.richard@bootlin.com>,
- Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
- Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
- Andy Shevchenko <andy@kernel.org>,
- Support Opensource <support.opensource@diasemi.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, chrome-platform@lists.linux.dev,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250310-gpiochip-set-conversion-v1-0-03798bb833eb@linaro.org>
- <20250310-gpiochip-set-conversion-v1-4-03798bb833eb@linaro.org>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250310-gpiochip-set-conversion-v1-4-03798bb833eb@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-4-143b3dbef02f@imgtec.com>
+References: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
+In-Reply-To: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
+To: Frank Binns <frank.binns@imgtec.com>,
+        Matt Coster
+	<matt.coster@imgtec.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        "Vignesh
+ Raghavendra" <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
+        "Alessio
+ Belle" <alessio.belle@imgtec.com>,
+        Alexandru Dadu <alexandru.dadu@imgtec.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1658;
+ i=matt.coster@imgtec.com; h=from:subject:message-id;
+ bh=ZmuLKqPBfUzKMPTJUTmSc8vjdOxRrosiBwBAQBDU044=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3Ih7CRX+q7Xdhvqdnzk5mKNF/+dsuYQ45NDazd/d
+ umr0Lw2s6OUhUGMg0FWTJFlxwrLFWp/1LQkbvwqhpnDygQyhIGLUwAm0qTK8L/2ZkzcvX6XHwLl
+ 7A9TZn4p+9hz38jmbGJ3m4u5ivux6l5Ghv75D3YIxWZretqWZn/ecF5dbGIe25Eq/rPhOxvn/W7
+ fwgcA
+X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
+ fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
+X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
+X-Proofpoint-ORIG-GUID: zNM4L3uVa8T8gsO_8bX1VFMofh0AQtSh
+X-Proofpoint-GUID: zNM4L3uVa8T8gsO_8bX1VFMofh0AQtSh
+X-Authority-Analysis: v=2.4 cv=U8+SDfru c=1 sm=1 tr=0 ts=67cee4d7 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=6TxX0kamTyKH95WNaFsA:9
+ a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
 
-On 10/03/2025 14:40, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->   drivers/gpio/gpio-bd71828.c | 15 ++++++---------
->   1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
-> index b2ccc320c7b5..4ba151e5cf25 100644
-> --- a/drivers/gpio/gpio-bd71828.c
-> +++ b/drivers/gpio/gpio-bd71828.c
-> @@ -16,10 +16,9 @@ struct bd71828_gpio {
->   	struct gpio_chip gpio;
->   };
->   
-> -static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> -			     int value)
-> +static int bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +			    int value)
->   {
-> -	int ret;
->   	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
->   	u8 val = (value) ? BD71828_GPIO_OUT_HI : BD71828_GPIO_OUT_LO;
->   
-> @@ -28,12 +27,10 @@ static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset,
->   	 * we are dealing with - then we are done
->   	 */
->   	if (offset == HALL_GPIO_OFFSET)
-> -		return;
-> +		return 0;
+Follow-on from the companion dt-bindings change ("dt-bindings: gpu: img:
+More explicit compatible strings"), deprecating "img,img-axe" in favour of
+the more explicit combination of "img,img-rogue" and "img,img-axe-1-16m".
 
-Should this be -EINVAL (or, can this check be just dropped?) Value of an 
-input pin is tried to be set.
+Since all relevant details are interrogated from the device at runtime,
+we can match on the generic "img,img-rogue" and avoid adding more entries
+with NULL data members (barring hardware quirks).
 
->   
-> -	ret = regmap_update_bits(bdgpio->regmap, GPIO_OUT_REG(offset),
-> -				 BD71828_GPIO_OUT_MASK, val);
-> -	if (ret)
-> -		dev_err(bdgpio->dev, "Could not set gpio to %d\n", value);
-> +	return regmap_update_bits(bdgpio->regmap, GPIO_OUT_REG(offset),
-> +				  BD71828_GPIO_OUT_MASK, val);
->   }
->   
->   static int bd71828_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> @@ -112,7 +109,7 @@ static int bd71828_probe(struct platform_device *pdev)
->   	bdgpio->gpio.set_config = bd71828_gpio_set_config;
->   	bdgpio->gpio.can_sleep = true;
->   	bdgpio->gpio.get = bd71828_gpio_get;
-> -	bdgpio->gpio.set = bd71828_gpio_set;
-> +	bdgpio->gpio.set_rv = bd71828_gpio_set;
->   	bdgpio->gpio.base = -1;
->   
->   	/*
-> 
+Signed-off-by: Matt Coster <matt.coster@imgtec.com>
+---
+Changes in v3:
+- Don't use more specific compatible strings when not required
+- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-5-3fd45d9fb0cf@imgtec.com
+Changes in v2:
+- None
+- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-5-4ed30e865892@imgtec.com
+---
+ drivers/gpu/drm/imagination/pvr_drv.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/gpu/drm/imagination/pvr_drv.c b/drivers/gpu/drm/imagination/pvr_drv.c
+index 0639502137b4431dc23a349476572cc898d1f8d0..3130193f8fffc185e630a293be53374bdc4b7ce0 100644
+--- a/drivers/gpu/drm/imagination/pvr_drv.c
++++ b/drivers/gpu/drm/imagination/pvr_drv.c
+@@ -1473,6 +1473,13 @@ static void pvr_remove(struct platform_device *plat_dev)
+ }
+ 
+ static const struct of_device_id dt_match[] = {
++	{ .compatible = "img,img-rogue", .data = NULL },
++
++	/*
++	 * This legacy compatible string was introduced early on before the more generic
++	 * "img,img-rogue" was added. Keep it around here for compatibility, but never use
++	 * "img,img-axe" in new devicetrees.
++	 */
+ 	{ .compatible = "img,img-axe", .data = NULL },
+ 	{}
+ };
+
+-- 
+2.48.1
 
