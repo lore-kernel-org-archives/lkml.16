@@ -1,55 +1,55 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3451B0F20
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 02:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5431E1B85CC
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 02:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741574867; cv=none; b=iNDszRI7MPJTwdpKtrc8exRn1jm0xwQ2X1POPvoIkBMuyZgs482gLk8rIIOQ8ASTVc1RSTJgkG01bVs4PCPrh9ZYhh4T7bKJQ7yjhzo6eMgIIqbGg4fFdWt5bBEmSgsQxF/C8w25dXas6/sLO5LJk42+LIGCnFLlEpK+ewJUb2A=
+	t=1741574867; cv=none; b=rFC0aRjEYj0hZhkK8icghNkCauqS6Qw9+BqsHOJwqXzrseTM7Iyx5uO6GAh79VIJcgsa7KoDeYg/hdmuinFGils378bM4X2KpLP6+TqFvPYV2/OmgCpMMUxzlNC5/5oBnJ7ebCQfeferRfhbcvroVm3anhqF/8jgs85U62o1AV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741574867; c=relaxed/simple;
-	bh=e8N98miGjhZxcY9cjAV3CsYuZfyz+ZbDyvNfXdF6jbU=;
+	bh=uvmDMhSJxXxzxnFDExTRka6WtW0ou5h0o0fSWRSjBJ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kb99xhRJJlySrR6Pn835nUmELEbl0+gcGgkJKVirneES8znxGuAvvlKz5bp137bJJw16VMbt01E+mvkD3BvD4kKCkiPVhzwg6SKF9rgJxbztdWBKjU1ltldhQtVpYpekqhZOnGeBd+PfsUD8p5Opb0nkQlH43H2fkqpjyQ4x5+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bmb7fxw/; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=tN2UfwqFew/a9nC1+gLCevpeRpdrcy+4VE6w/89Rui7x5dkfF3uDvtQ+TDEclGUjzzud9g3RR0McD6SKihD9z11LWwKKz/0M/ZFwM7JPfd5VjkyIuZwDBNRHBy9gyU/qL0eqkBnkbgU8AuHNa4kx3MeXi3TzixuA3z/QHasNJuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h1npF8N4; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bmb7fxw/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1npF8N4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741574865; x=1773110865;
+  t=1741574866; x=1773110866;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=e8N98miGjhZxcY9cjAV3CsYuZfyz+ZbDyvNfXdF6jbU=;
-  b=Bmb7fxw/dg7bQjAhGKqvm0Sb/YmKNR24MTJr96mwhDrG/ANxMpThIpPF
-   LLcQjQqY4i9ORK0HT0jN8l3mL9+rDGE8qS3wfssH68+1TOaxcIs+Z7aln
-   xfrAQ+7ksn2ZwHTeWNnpRS18Y9I/Mr1f+23qeITjv0X2xBlqvfFTxhv9G
-   mfa9oBRh9h7c00eFBeN+wxJOmtx+lmmONL//3l9Ga0IwURpoe07BoOCxZ
-   IPj7sanEsjHg3702tWJhir3nVQdRXkXHCGTNG075ncamiBXtoF9e1jcmD
-   EE2TV+V1MuptyRF8kkxFIstN2MgB1XaGPrtos31jnzhVnWrf5duCSz5Zy
-   A==;
-X-CSE-ConnectionGUID: uHb4SrBaRCmZICJRAPjlGA==
-X-CSE-MsgGUID: Gte5EnLlRqGRBop95KcO5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="42401608"
+  bh=uvmDMhSJxXxzxnFDExTRka6WtW0ou5h0o0fSWRSjBJ8=;
+  b=h1npF8N4roeTwbwKXFFeX9NOnAqBuBRSux4++PKAfOKr0eiDK1EIjWA4
+   Amz/igWShZyXGHaH/xnG1KKtH4Epf609Y3C3fvENL8VLntcTwlNaooWi8
+   Fglm8cgttKW3BGYjqNI0vqLoYQBF/5j7og14A8l16vrc592hJiA7J77KV
+   O9ky2LhhYW+JI1G8uNApJXzh3LGIFw1nIyuLwIkRy/hvj+HOmKD8X/d1Z
+   oxnB8UoS6ExG/eCD/h0S8MDWR5wK1hmo1spJBkUsNsPc/pdmWXJiZAxZj
+   wJlBFJJBlDsf0uBxcvcDL63MHYd9Li92xVfEtpMO97c81dGHCm28iCriu
+   w==;
+X-CSE-ConnectionGUID: znVXYjwDSbyBKh5u9MlnfA==
+X-CSE-MsgGUID: uHHaDt7bSuy16Vrc3QvBww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="42401615"
 X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="42401608"
+   d="scan'208";a="42401615"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 19:47:40 -0700
-X-CSE-ConnectionGUID: vrTO/rQeQsyjEJ9fd13EOg==
-X-CSE-MsgGUID: Fk5YOvyMSqqlKPGkn9k/5w==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 19:47:43 -0700
+X-CSE-ConnectionGUID: j1Ok4pvtS4OLAQxoGLZd0w==
+X-CSE-MsgGUID: jDwWRNNARRultASU9+vMAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="143079235"
+   d="scan'208";a="143079239"
 Received: from allen-box.sh.intel.com ([10.239.159.52])
-  by fmviesa002.fm.intel.com with ESMTP; 09 Mar 2025 19:47:38 -0700
+  by fmviesa002.fm.intel.com with ESMTP; 09 Mar 2025 19:47:41 -0700
 From: Lu Baolu <baolu.lu@linux.intel.com>
 To: Joerg Roedel <joro@8bytes.org>
 Cc: iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] iommu/vt-d: Move scalable mode ATS enablement to probe path
-Date: Mon, 10 Mar 2025 10:47:47 +0800
-Message-ID: <20250310024749.3702681-5-baolu.lu@linux.intel.com>
+Subject: [PATCH 6/6] iommu/vt-d: Cleanup intel_context_flush_present()
+Date: Mon, 10 Mar 2025 10:47:49 +0800
+Message-ID: <20250310024749.3702681-7-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250310024749.3702681-1-baolu.lu@linux.intel.com>
 References: <20250310024749.3702681-1-baolu.lu@linux.intel.com>
@@ -61,156 +61,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Device ATS is currently enabled when a domain is attached to the device
-and disabled when the domain is detached. This creates a limitation:
-when the IOMMU is operating in scalable mode and IOPF is enabled, the
-device's domain cannot be changed.
-
-The previous code enables ATS when a domain is set to a device's RID and
-disables it during RID domain switch. So, if a PASID is set with a
-domain requiring PRI, ATS should remain enabled until the domain is
-removed. During the PASID domain's lifecycle, if the RID's domain
-changes, PRI will be disrupted because it depends on ATS, which is
-disabled when the blocking domain is set for the device's RID.
-
-Remove this limitation by moving ATS enablement to the device probe path.
+The intel_context_flush_present() is called in places where either the
+scalable mode is disabled, or scalable mode is enabled but all PASID
+entries are known to be non-present. In these cases, the flush_domains
+path within intel_context_flush_present() will never execute. This dead
+code is therefore removed.
 
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Link: https://lore.kernel.org/r/20250228092631.3425464-5-baolu.lu@linux.intel.com
+Link: https://lore.kernel.org/r/20250228092631.3425464-7-baolu.lu@linux.intel.com
 ---
- drivers/iommu/intel/iommu.c | 51 ++++++++++++++++++++-----------------
- 1 file changed, 27 insertions(+), 24 deletions(-)
+ drivers/iommu/intel/iommu.c |  2 +-
+ drivers/iommu/intel/iommu.h |  5 ++---
+ drivers/iommu/intel/pasid.c | 41 +++++++------------------------------
+ 3 files changed, 10 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 58bff6fe3a93..1c8724cd2ddc 100644
+index 6a6c271ef7e6..85aa66ef4d61 100644
 --- a/drivers/iommu/intel/iommu.c
 +++ b/drivers/iommu/intel/iommu.c
-@@ -1173,32 +1173,28 @@ static bool dev_needs_extra_dtlb_flush(struct pci_dev *pdev)
- 	return true;
+@@ -1783,7 +1783,7 @@ static void domain_context_clear_one(struct device_domain_info *info, u8 bus, u8
+ 	context_clear_entry(context);
+ 	__iommu_flush_cache(iommu, context, sizeof(*context));
+ 	spin_unlock(&iommu->lock);
+-	intel_context_flush_present(info, context, did, true);
++	intel_context_flush_no_pasid(info, context, did);
  }
  
--static void iommu_enable_pci_caps(struct device_domain_info *info)
-+static void iommu_enable_pci_ats(struct device_domain_info *info)
- {
- 	struct pci_dev *pdev;
+ int __domain_setup_first_level(struct intel_iommu *iommu,
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index 42b4e500989b..c4916886da5a 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -1286,9 +1286,8 @@ void cache_tag_flush_all(struct dmar_domain *domain);
+ void cache_tag_flush_range_np(struct dmar_domain *domain, unsigned long start,
+ 			      unsigned long end);
  
--	if (!dev_is_pci(info->dev))
-+	if (!info->ats_supported)
- 		return;
+-void intel_context_flush_present(struct device_domain_info *info,
+-				 struct context_entry *context,
+-				 u16 did, bool affect_domains);
++void intel_context_flush_no_pasid(struct device_domain_info *info,
++				  struct context_entry *context, u16 did);
  
- 	pdev = to_pci_dev(info->dev);
--	if (info->ats_supported && pci_ats_page_aligned(pdev) &&
--	    !pci_enable_ats(pdev, VTD_PAGE_SHIFT))
-+	if (!pci_ats_page_aligned(pdev))
-+		return;
-+
-+	if (!pci_enable_ats(pdev, VTD_PAGE_SHIFT))
- 		info->ats_enabled = 1;
+ int intel_iommu_enable_prq(struct intel_iommu *iommu);
+ int intel_iommu_finish_prq(struct intel_iommu *iommu);
+diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
+index c2742e256552..7ee18bb48bd4 100644
+--- a/drivers/iommu/intel/pasid.c
++++ b/drivers/iommu/intel/pasid.c
+@@ -932,7 +932,7 @@ static void device_pasid_table_teardown(struct device *dev, u8 bus, u8 devfn)
+ 	context_clear_entry(context);
+ 	__iommu_flush_cache(iommu, context, sizeof(*context));
+ 	spin_unlock(&iommu->lock);
+-	intel_context_flush_present(info, context, did, false);
++	intel_context_flush_no_pasid(info, context, did);
  }
  
--static void iommu_disable_pci_caps(struct device_domain_info *info)
-+static void iommu_disable_pci_ats(struct device_domain_info *info)
- {
--	struct pci_dev *pdev;
--
--	if (!dev_is_pci(info->dev))
-+	if (!info->ats_enabled)
- 		return;
- 
--	pdev = to_pci_dev(info->dev);
--
--	if (info->ats_enabled) {
--		pci_disable_ats(pdev);
--		info->ats_enabled = 0;
--	}
-+	pci_disable_ats(to_pci_dev(info->dev));
-+	info->ats_enabled = 0;
- }
- 
- static void intel_flush_iotlb_all(struct iommu_domain *domain)
-@@ -1557,12 +1553,19 @@ domain_context_mapping(struct dmar_domain *domain, struct device *dev)
- 	struct device_domain_info *info = dev_iommu_priv_get(dev);
- 	struct intel_iommu *iommu = info->iommu;
- 	u8 bus = info->bus, devfn = info->devfn;
-+	int ret;
- 
- 	if (!dev_is_pci(dev))
- 		return domain_context_mapping_one(domain, iommu, bus, devfn);
- 
--	return pci_for_each_dma_alias(to_pci_dev(dev),
--				      domain_context_mapping_cb, domain);
-+	ret = pci_for_each_dma_alias(to_pci_dev(dev),
-+				     domain_context_mapping_cb, domain);
-+	if (ret)
-+		return ret;
-+
-+	iommu_enable_pci_ats(info);
-+
-+	return 0;
- }
- 
- /* Return largest possible superpage level for a given mapping */
-@@ -1844,8 +1847,6 @@ static int dmar_domain_attach_device(struct dmar_domain *domain,
- 	if (ret)
- 		goto out_block_translation;
- 
--	iommu_enable_pci_caps(info);
--
- 	ret = cache_tag_assign_domain(domain, dev, IOMMU_NO_PASID);
- 	if (ret)
- 		goto out_block_translation;
-@@ -3209,6 +3210,7 @@ static void domain_context_clear(struct device_domain_info *info)
- 
- 	pci_for_each_dma_alias(to_pci_dev(info->dev),
- 			       &domain_context_clear_one_cb, info);
-+	iommu_disable_pci_ats(info);
- }
+ static int pci_pasid_table_teardown(struct pci_dev *pdev, u16 alias, void *data)
+@@ -1119,17 +1119,15 @@ static void __context_flush_dev_iotlb(struct device_domain_info *info)
  
  /*
-@@ -3225,7 +3227,6 @@ void device_block_translation(struct device *dev)
- 	if (info->domain)
- 		cache_tag_unassign_domain(info->domain, dev, IOMMU_NO_PASID);
- 
--	iommu_disable_pci_caps(info);
- 	if (!dev_is_real_dma_subdevice(dev)) {
- 		if (sm_supported(iommu))
- 			intel_pasid_tear_down_entry(iommu, dev,
-@@ -3760,6 +3761,9 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
- 	    !pci_enable_pasid(pdev, info->pasid_supported & ~1))
- 		info->pasid_enabled = 1;
- 
-+	if (sm_supported(iommu))
-+		iommu_enable_pci_ats(info);
-+
- 	return &iommu->iommu;
- free_table:
- 	intel_pasid_free_table(dev);
-@@ -3776,6 +3780,8 @@ static void intel_iommu_release_device(struct device *dev)
- 	struct device_domain_info *info = dev_iommu_priv_get(dev);
+  * Cache invalidations after change in a context table entry that was present
+- * according to the Spec 6.5.3.3 (Guidance to Software for Invalidations). If
+- * IOMMU is in scalable mode and all PASID table entries of the device were
+- * non-present, set flush_domains to false. Otherwise, true.
++ * according to the Spec 6.5.3.3 (Guidance to Software for Invalidations).
++ * This helper can only be used when IOMMU is working in the legacy mode or
++ * IOMMU is in scalable mode but all PASID table entries of the device are
++ * non-present.
+  */
+-void intel_context_flush_present(struct device_domain_info *info,
+-				 struct context_entry *context,
+-				 u16 did, bool flush_domains)
++void intel_context_flush_no_pasid(struct device_domain_info *info,
++				  struct context_entry *context, u16 did)
+ {
  	struct intel_iommu *iommu = info->iommu;
+-	struct pasid_entry *pte;
+-	int i;
  
-+	iommu_disable_pci_ats(info);
-+
- 	if (info->pasid_enabled) {
- 		pci_disable_pasid(to_pci_dev(dev));
- 		info->pasid_enabled = 0;
-@@ -4379,13 +4385,10 @@ static int identity_domain_attach_dev(struct iommu_domain *domain, struct device
- 	if (dev_is_real_dma_subdevice(dev))
- 		return 0;
+ 	/*
+ 	 * Device-selective context-cache invalidation. The Domain-ID field
+@@ -1152,30 +1150,5 @@ void intel_context_flush_present(struct device_domain_info *info,
+ 		return;
+ 	}
  
--	if (sm_supported(iommu)) {
-+	if (sm_supported(iommu))
- 		ret = intel_pasid_setup_pass_through(iommu, dev, IOMMU_NO_PASID);
--		if (!ret)
--			iommu_enable_pci_caps(info);
--	} else {
-+	else
- 		ret = device_setup_pass_through(dev);
+-	/*
+-	 * For scalable mode:
+-	 * - Domain-selective PASID-cache invalidation to affected domains
+-	 * - Domain-selective IOTLB invalidation to affected domains
+-	 * - Global Device-TLB invalidation to affected functions
+-	 */
+-	if (flush_domains) {
+-		/*
+-		 * If the IOMMU is running in scalable mode and there might
+-		 * be potential PASID translations, the caller should hold
+-		 * the lock to ensure that context changes and cache flushes
+-		 * are atomic.
+-		 */
+-		assert_spin_locked(&iommu->lock);
+-		for (i = 0; i < info->pasid_table->max_pasid; i++) {
+-			pte = intel_pasid_get_entry(info->dev, i);
+-			if (!pte || !pasid_pte_is_present(pte))
+-				continue;
+-
+-			did = pasid_get_domain_id(pte);
+-			qi_flush_pasid_cache(iommu, did, QI_PC_ALL_PASIDS, 0);
+-			iommu->flush.flush_iotlb(iommu, did, 0, 0, DMA_TLB_DSI_FLUSH);
+-		}
 -	}
- 
- 	return ret;
+-
+ 	__context_flush_dev_iotlb(info);
  }
 -- 
 2.43.0
