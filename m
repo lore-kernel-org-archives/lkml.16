@@ -1,196 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EE7846C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 00:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E8281E;
+	Mon, 10 Mar 2025 00:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741565429; cv=none; b=BL1WTL3GVglhayRsXQhk0Jhk/FuUR2ceOWMpMUG5NwwCsM+V1sj83ya6MzMs5FVQyAg1VfE8nyGwbLhmn3qtvLeoLtM1DT7JZPVk1y2hq2lP5GlnJJygUjEQkk595446vfptNThE5FAFe9fU6XFUolfXokwswe45UmyO1flNvtc=
+	t=1741565467; cv=none; b=WCbX51aXdqXEFgIyMhqmE5ih8ee6eH1YhhLnsxOyjKiJFQ8SAVPO4wvqucA3H9qtMcVJWtx8E0Iv1FseW5feQLG2kdbTwuPcH0yAL21T8pSUCWokW/Jv5Rmik1kcYoJb6R+20ALJG1QmnRP56gQZK/tLqYOlMratyjJZ3omd6Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741565429; c=relaxed/simple;
-	bh=dpMLSPu3tm3urLeArKbbND33SQTo47Luj9QdGB/MXKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=GzaRnyL18DKXyg7e73TOKPXSt20Vyj8TA2HBZp/sqHMidp7jU2Jw+q1HSnzMpzj0CvcFDLinZCsWL1BNtsbIsz92c4wvyOCOgRqM9m7UifxjfJWGpCryj06My9KdlLCkvKUf4fouZ9QHas9PIIMiHDlA0o3ldjmCL338afuGE80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npSmY0LJ; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741565467; c=relaxed/simple;
+	bh=NNTDTkTEz9AitGsCoxYmnI5gt9HoS2+WSaQHCSMuMMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bbi3shPfvFITMxoSNzSiW74mvnvDWVWJnNnEPM7jOAGymKMH4peAT1C9lIf4EPa8u6PrGfusbzAcgO+N/RscAC68RmKX0HPAdB2fugNfuVIDv9Mfcjji6m+e8oGZqyVfEmjAgMwgfFpROO+L7bn1UqwN6QktxJ/BVeAnGLU/fCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jqsETMfQ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npSmY0LJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741565428; x=1773101428;
-  h=date:from:to:cc:subject:message-id;
-  bh=dpMLSPu3tm3urLeArKbbND33SQTo47Luj9QdGB/MXKQ=;
-  b=npSmY0LJU3Fwg5OWZo4hQElC48eNi2A9vgZgrzCQfaAsw4VA6p8bNudn
-   ybKeyQRhI6maXMPNj6BxlmQ7endchEakdW6XrdzyIPKWRPn0Kb1/YIsY3
-   1t8c/dVsPMJ+Tcutm0a5N8T+iKxEgVveQDaB/o5l9c49Rzp+EJRAGW9nm
-   IEWSIIk0Z6TYsuwhpWcIZwQi0KfjyRTSA4GqL4xROWoo6Tz3iOvFjlYWn
-   DZ5qETNNP2GesQeqg6X5CygrL/V4XGZFxAn2ZMZH8nvP0JlK7wy/txUpy
-   nvZJGct+GWOJ2Wa9YY297n7CA7qqqx2KYXHh1ozDPfukiXhN8E4i/+Sdu
-   g==;
-X-CSE-ConnectionGUID: 4W9qThKgQNCM9dXrjsNIRA==
-X-CSE-MsgGUID: JnotnpdpTuefXwJlluJ86A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="42688270"
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="42688270"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 17:10:27 -0700
-X-CSE-ConnectionGUID: 5s6YrNuOQr+Mft02e1/U3A==
-X-CSE-MsgGUID: DCqIO6gIRMmYIsIytgsszQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="124917647"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 09 Mar 2025 17:10:26 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1trQit-0003Zs-2R;
-	Mon, 10 Mar 2025 00:10:23 +0000
-Date: Mon, 10 Mar 2025 08:09:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- a66b8b4e9029a87fa7e59ea43fc749ddce6a0ed3
-Message-ID: <202503100852.vL1QAo8s-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqsETMfQ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22355618fd9so63886425ad.3;
+        Sun, 09 Mar 2025 17:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741565465; x=1742170265; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8ALG8qqKPFoDaQ+ApQvcfDOn130RPhdd8vCinfDX1Mk=;
+        b=jqsETMfQXy7lONtS57XvEHjB2Me7yoP83Ds2PN74Y1pmFhPtHCQJRa4oTT5cy9uCDk
+         zopWpydry9WO0xL8+F5X96xoc/2dfyVpzfY/96y78ouBF6a9VYliY0Jap7SYLQ1gma3Q
+         YhX7e2zd6ta7mSNqSPubpLvtT6FAhVP5TjE3gEaqPaJikWhUHGHd09UUIyvlEIH3o+5N
+         d8FRL9sJ4+zOuffnHfB9kUquHC46jW1YTBlTughwTy8dmJ+HHEyr9m2Nnra8zdRgrT3z
+         o1r4wqh55wanAnYNoczmIgHDignsHfKRCRS391ziXDmi/58OPPMc+gOpnyjVCXXlSOk2
+         iu2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741565465; x=1742170265;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8ALG8qqKPFoDaQ+ApQvcfDOn130RPhdd8vCinfDX1Mk=;
+        b=eDoQwTQiF4XoCPG7yjY20XnzafVrbTRRMbdPWFzZ3aR7527KNOn9Z3ZPosJ/C1UgZ9
+         9tO0rIJygp9kP+t5eoar67C2dPcn/fRRY3fhOmoQa38VIOvpv/J4QvkvGoUIEv8MWfy0
+         ocriAjcXE2PnvN1zzYS1Zq6Uf7Ze88wxSXs6MOxurr4XM44U1NQKk0HWK/+LL9iwAIXS
+         +Dov/MBvS/hpZstiZfcdNd9GtIiWaDIbIHHg3VPdStoP+lvuqo6+85+ZZBi4aTV63Y1M
+         JKfJRVWLutPG8xHhkcsteE03NU6Zko6RX5C+pUXFviS5HLUZOEzuzOpELx9pFgGjhPR4
+         68mA==
+X-Forwarded-Encrypted: i=1; AJvYcCULrZ9QqEwtqweFUy5Z3pXic1YCWGPEgs7raIkdNMx9lLIemXt3i72e6/mVFF2xdJBFbjlgDmiq6Es=@vger.kernel.org, AJvYcCUYomXiMQikWfzr9lHoqO3stYNcRIOabWAtJON/n/kkLEZ9uYDSA6+aNZsF42k6QUyVYiPQp4MM4+UXc9hl@vger.kernel.org, AJvYcCXgzaaxnY4G8+3xmdxnc3dyTlriHNMopgjQFZws43K0KnwGtEn4U1QxYueAKD8klhqyfM0N9xGKtwMUGaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVhGAR+GmfN6IPfCYpF0wwbyOqyPP6qnTJIiqQ1xDMiWmrdgF4
+	vuqOXbjU4decyGVj89niKQTzN5w1et57o9LqG8vT//TNc6HgFtk/
+X-Gm-Gg: ASbGncsx3ekp1hgHaqrl6c9VFZ1Di81J61urFLG3kM6jfLp4EjzU4zHivlPBxjxQJzQ
+	mYuGAxoSnovpBpf1NIBxNSUt4b/1KfvrKBLqFH8ysXBQSMrMfNTSCUuSCZn7+j99lAElqnWc4Qw
+	Fqe6VQuym7SzBD7gO81uXcORRevNOI153AoHxDnsopUrVrTsMtHRL3HaJdLZxIa8XKR+YrnapLJ
+	+S0CDbLLTUE+ggIjWgCqW6+QbR9lC1SPXuEfAytQrzyFP/vg+7STfl5O7gVg9WGFApVYpXYvoaN
+	tjinu4VwbSp/KdQKdbfLEMIbofvM4NPNmQBJvpi6NG8SOYz27f4+ZhHnNK3ebN06YnwYnQk0mqH
+	V2zCyfz6/lAbg5Bz4tQ==
+X-Google-Smtp-Source: AGHT+IHVE5OqQhV5ylGDdd0P+vVeUVyBaJoy5vWD4RhhvEt/K3A2WBkRk/06pCQ1V9qJeFFzmV3dSQ==
+X-Received: by 2002:a05:6a00:1703:b0:736:57cb:f2aa with SMTP id d2e1a72fcca58-736aa9fdbbamr16863191b3a.13.1741565465405;
+        Sun, 09 Mar 2025 17:11:05 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73698246387sm6951170b3a.72.2025.03.09.17.11.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Mar 2025 17:11:04 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <9865e1b9-6f03-4f54-83fc-73591646b74c@roeck-us.net>
+Date: Sun, 9 Mar 2025 17:11:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] hwmon: (dell-smm) Increment the number of fans
+To: Kurt Borja <kuurtb@gmail.com>, linux-hwmon@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+References: <20250304055249.51940-2-kuurtb@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250304055249.51940-2-kuurtb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: a66b8b4e9029a87fa7e59ea43fc749ddce6a0ed3  Merge branch into tip/master: 'x86/sev'
+On 3/3/25 21:52, Kurt Borja wrote:
+> Some Alienware laptops that support the SMM interface, may have up to 4
+> fans.
+> 
+> Tested on an Alienware x15 r1.
+> 
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+> Hi all,
+> 
+> Guenter, if you prefer a different patch for the documentation, let me
+> know.
+> 
 
-elapsed time: 847m
+It looks ok, I'd just like to get a confirmation from someone with a
+system with fewer fans that this doesn't cause trouble on those.
 
-configs tested: 119
-configs skipped: 6
+Thanks,
+Guenter
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ~ Kurt
+> 
+>   Documentation/hwmon/dell-smm-hwmon.rst | 14 +++++++-------
+>   drivers/hwmon/dell-smm-hwmon.c         |  5 ++++-
+>   2 files changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/hwmon/dell-smm-hwmon.rst b/Documentation/hwmon/dell-smm-hwmon.rst
+> index 74905675d71f..5a4edb6565cf 100644
+> --- a/Documentation/hwmon/dell-smm-hwmon.rst
+> +++ b/Documentation/hwmon/dell-smm-hwmon.rst
+> @@ -32,12 +32,12 @@ Temperature sensors and fans can be queried and set via the standard
+>   =============================== ======= =======================================
+>   Name				Perm	Description
+>   =============================== ======= =======================================
+> -fan[1-3]_input                  RO      Fan speed in RPM.
+> -fan[1-3]_label                  RO      Fan label.
+> -fan[1-3]_min                    RO      Minimal Fan speed in RPM
+> -fan[1-3]_max                    RO      Maximal Fan speed in RPM
+> -fan[1-3]_target                 RO      Expected Fan speed in RPM
+> -pwm[1-3]                        RW      Control the fan PWM duty-cycle.
+> +fan[1-4]_input                  RO      Fan speed in RPM.
+> +fan[1-4]_label                  RO      Fan label.
+> +fan[1-4]_min                    RO      Minimal Fan speed in RPM
+> +fan[1-4]_max                    RO      Maximal Fan speed in RPM
+> +fan[1-4]_target                 RO      Expected Fan speed in RPM
+> +pwm[1-4]                        RW      Control the fan PWM duty-cycle.
+>   pwm1_enable                     WO      Enable or disable automatic BIOS fan
+>                                           control (not supported on all laptops,
+>                                           see below for details).
+> @@ -93,7 +93,7 @@ Again, when you find new codes, we'd be happy to have your patches!
+>   ---------------------------
+>   
+>   The driver also exports the fans as thermal cooling devices with
+> -``type`` set to ``dell-smm-fan[1-3]``. This allows for easy fan control
+> +``type`` set to ``dell-smm-fan[1-4]``. This allows for easy fan control
+>   using one of the thermal governors.
+>   
+>   Module parameters
+> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+> index cd00adaad1b4..79e5606e6d2f 100644
+> --- a/drivers/hwmon/dell-smm-hwmon.c
+> +++ b/drivers/hwmon/dell-smm-hwmon.c
+> @@ -73,7 +73,7 @@
+>   #define DELL_SMM_LEGACY_EXECUTE	0x1
+>   
+>   #define DELL_SMM_NO_TEMP	10
+> -#define DELL_SMM_NO_FANS	3
+> +#define DELL_SMM_NO_FANS	4
+>   
+>   struct smm_regs {
+>   	unsigned int eax;
+> @@ -1074,11 +1074,14 @@ static const struct hwmon_channel_info * const dell_smm_info[] = {
+>   			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MIN | HWMON_F_MAX |
+>   			   HWMON_F_TARGET,
+>   			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MIN | HWMON_F_MAX |
+> +			   HWMON_F_TARGET,
+> +			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MIN | HWMON_F_MAX |
+>   			   HWMON_F_TARGET
+>   			   ),
+>   	HWMON_CHANNEL_INFO(pwm,
+>   			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
+>   			   HWMON_PWM_INPUT,
+> +			   HWMON_PWM_INPUT,
+>   			   HWMON_PWM_INPUT
+>   			   ),
+>   	NULL
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250309    gcc-13.2.0
-arc                   randconfig-002-20250309    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250309    clang-21
-arm                   randconfig-002-20250309    gcc-14.2.0
-arm                   randconfig-003-20250309    clang-21
-arm                   randconfig-004-20250309    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250309    clang-15
-arm64                 randconfig-002-20250309    clang-17
-arm64                 randconfig-003-20250309    clang-15
-arm64                 randconfig-004-20250309    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250309    gcc-14.2.0
-csky                  randconfig-002-20250309    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250309    clang-21
-hexagon               randconfig-002-20250309    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250309    clang-19
-i386        buildonly-randconfig-002-20250309    clang-19
-i386        buildonly-randconfig-003-20250309    gcc-11
-i386        buildonly-randconfig-004-20250309    gcc-12
-i386        buildonly-randconfig-005-20250309    clang-19
-i386        buildonly-randconfig-006-20250309    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250309    gcc-14.2.0
-loongarch             randconfig-002-20250309    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                           virt_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           mtx1_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250309    gcc-14.2.0
-nios2                 randconfig-002-20250309    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250309    gcc-14.2.0
-parisc                randconfig-002-20250309    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                   motionpro_defconfig    clang-17
-powerpc               randconfig-001-20250309    gcc-14.2.0
-powerpc               randconfig-002-20250309    clang-21
-powerpc               randconfig-003-20250309    clang-21
-powerpc                    socrates_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250309    clang-15
-powerpc64             randconfig-002-20250309    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250309    clang-15
-riscv                 randconfig-002-20250309    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250309    clang-16
-s390                  randconfig-002-20250309    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250309    gcc-14.2.0
-sh                    randconfig-002-20250309    gcc-14.2.0
-sh                        sh7785lcr_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250309    gcc-14.2.0
-sparc                 randconfig-002-20250309    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250309    gcc-14.2.0
-sparc64               randconfig-002-20250309    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250309    clang-21
-um                    randconfig-002-20250309    clang-21
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250309    gcc-12
-x86_64      buildonly-randconfig-002-20250309    gcc-11
-x86_64      buildonly-randconfig-003-20250309    gcc-12
-x86_64      buildonly-randconfig-004-20250309    gcc-12
-x86_64      buildonly-randconfig-005-20250309    clang-19
-x86_64      buildonly-randconfig-006-20250309    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250309    gcc-14.2.0
-xtensa                randconfig-002-20250309    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
