@@ -1,94 +1,96 @@
-Received: from us-smtp-delivery-162.mimecast.com (us-smtp-delivery-162.mimecast.com [170.10.129.162])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE3A17A2E8
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 18:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7659B17A2E8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 18:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741632919; cv=none; b=uxCNb2o3+NeEKJB7zBkX2NKOvASrEa6Y8+t+eJo+Bu+E7O/8gro3ccyRo5jM2psEKl+4hOgwrj2OHJe4P8JSq+kCP6o00d/qo+/aG1ixbTXwZcF9+vWxq2tnKFv3Q/ucwybe79lSflWwHK1HDm/LHMXN46txaWQLtYFF/vY4v9c=
+	t=1741632932; cv=none; b=YqePAq1rsFc00N/gISu1t2KnQxT65DkiFPfQec+k4yaGovxFDKTX6oWfvrjw0ATTYUEVXwOnIHOTQUkOGiZ4sAPkN400IjEgE4uvAmmyWZoEPJv2SWUAimvcaixA2iIYo0iyqWRsqZtWHVJMp/lJOBOzcxS1NnIPczWrKFdBL34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741632919; c=relaxed/simple;
-	bh=7ookYLrNwrNtolfzFvPur19JqZSBzO+XPKJeVceqMr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Disposition; b=p8wsLYK4q1ZIz8sG4iSVFn2KhHD0hkGYeC+AzmPcmvtyiAlPLaRTPxLb7KyDnWWyEdbnSatzB8c9jw5hZeTMc5lrdZKySQ7jsyxTsjhp3HNpRd83F3yrfClOR4uDb7AQfDKshZyZ5dUJcwEJkOudHVemL1ucDJeiFrHqSc65AQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hp.com; spf=pass smtp.mailfrom=hp.com; dkim=pass (1024-bit key) header.d=hp.com header.i=@hp.com header.b=U6avsyvL; arc=none smtp.client-ip=170.10.129.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hp.com
+	s=arc-20240116; t=1741632932; c=relaxed/simple;
+	bh=YeEiCX3eO6SfdtFU1Q1WpSRmJDm9wzrGwehlgBcf3og=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WMbWSxJK41QvlewbZCA6xFZUodUBL9Vm9EO2JfjRufax/9hq3O3Qejc29ZF9a5cWC+PIqocGuI8ZAK3AyQKwJwP3rnZczB/p4OJlTmbVUWhCXuIGdztPXO8v8C0mc1iMGTCeSP3v8WNQvxwojonppXGFj8njIqD5nxt23Tn4Ni4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlpeKZg2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hp.com header.i=@hp.com header.b="U6avsyvL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hp.com; s=mimecast20180716;
-	t=1741632916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7ookYLrNwrNtolfzFvPur19JqZSBzO+XPKJeVceqMr0=;
-	b=U6avsyvLh3XMf77iRqOvgcBKrfjoRI6hNIFmDD7V9poZhHxlz8pwJiROq3HHM9ytXYtGRM
-	6Bqlvn/knkTUJG2XeFLwLo8whrQt3KDSfDUnvkdblnfE4MLvYZhbc9srYky42LY7u5rJQD
-	mKtieELzV0GALrdQCw6ICxuKnRAibxE=
-Received: from g8t13016g.inc.hp.com (hpifallback.mail.core.hp.com
- [15.72.64.134]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-BiBXDuYGNGKcKjyGd3neRA-1; Mon, 10 Mar 2025 14:55:13 -0400
-X-MC-Unique: BiBXDuYGNGKcKjyGd3neRA-1
-X-Mimecast-MFC-AGG-ID: BiBXDuYGNGKcKjyGd3neRA_1741632912
-Received: from g8t13021g.inc.hpicorp.net (g8t13021g.inc.hpicorp.net [15.60.27.219])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by g8t13016g.inc.hp.com (Postfix) with ESMTPS id 214466002E61;
-	Mon, 10 Mar 2025 18:55:11 +0000 (UTC)
-Received: from localhost.localdomain (unknown [15.53.255.151])
-	by g8t13021g.inc.hpicorp.net (Postfix) with ESMTP id B57826000324;
-	Mon, 10 Mar 2025 18:55:09 +0000 (UTC)
-From: Alexandru Gagniuc <alexandru.gagniuc@hp.com>
-To: masahiroy@kernel.org,
-	nathan@kernel.org,
-	linux-kbuild@vger.kernel.org
-Cc: nicolas@fjasle.eu,
-	linux-kernel@vger.kernel.org,
-	Alexandru Gagniuc <alexandru.gagniuc@hp.com>
-Subject: Re: [PATCH] kbuild: deb-pkg: don't set KBUILD_BUILD_VERSION indiscriminately
-Date: Mon, 10 Mar 2025 18:53:06 +0000
-Message-ID: <20250310185306.2476022-1-alexandru.gagniuc@hp.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250307205612.GA2695746@ax162>
-References: <20250305192536.1673099-1-alexandru.gagniuc@hp.com> <Z8sgisZ8FI3wkpfZ@fjasle.eu> <20250307205612.GA2695746@ax162>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlpeKZg2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF259C4CEE5;
+	Mon, 10 Mar 2025 18:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741632931;
+	bh=YeEiCX3eO6SfdtFU1Q1WpSRmJDm9wzrGwehlgBcf3og=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=mlpeKZg2OZddd//uz0p3x4t5A9gqRDKwR/xzMOhK54jJ7x7z8oIQPNgZaNgMYXLBs
+	 VbPP7c0QIjxQuuR+lrF7jjdTvt6IYtL7MmJ7WZWmBVZzzLH5DxOJK+CndUG1BD2CVN
+	 n8ZQZu591P+bGrq4Aep6sWt/me+CFQ47AadUMb38N3TSmvVLbJsTpkcEA0LDd6Ixso
+	 wMBt1o3Hoaa3+klzhYAqklRf9u3GN8ZGmxUs1vLOOntkpn8cd0Eq7rfMhto/jztaAM
+	 vD//Y+luX1FZfmJon/uNQ640YMs1USJtnoMxFB8c97Xq2zXHFaOZi+A+aD/kyk8OcH
+	 iRq3vOf/F4CuQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 58635CE079A; Mon, 10 Mar 2025 11:55:31 -0700 (PDT)
+Date: Mon, 10 Mar 2025 11:55:31 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <skhan@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] nolibc changes for v6.15
+Message-ID: <c9537841-b4b1-4dfa-b673-7a2d46755a89@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <25e1c397-d554-4334-b344-56ec252564c1@t-8ch.de>
+ <00c760a8-0075-486f-9456-63ae07ecb341@paulmck-laptop>
+ <3598f2c8-e04a-4e4a-ae1f-db2201fff802@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mutt-References: <20250307205612.GA2695746@ax162>
-X-Mutt-Fcc: ~/sent
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: DLalwrYBWV9go-wsx_k6UqffBao6_n9r80TCAklS1tU_1741632912
-X-Mimecast-Originator: hp.com
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3598f2c8-e04a-4e4a-ae1f-db2201fff802@t-8ch.de>
 
-Hi Nathan and Nicholas,
+On Mon, Mar 10, 2025 at 07:22:35PM +0100, Thomas Weißschuh wrote:
+> On 2025-03-10 10:09:49-0700, Paul E. McKenney wrote:
+> > On Sat, Mar 08, 2025 at 02:06:21PM +0100, Thomas Weißschuh wrote:
+> > > The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+> > > 
+> > >   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+> > > 
+> > > are available in the Git repository at:
+> > > 
+> > >   https://git.kernel.org/pub/scm/linux/kernel/git/nolibc/linux-nolibc.git tags/nolibc-20250308-for-6.15-1
+> > > 
+> > > for you to fetch changes up to bceb73904c855c78402dca94c82915f078f259dd:
+> > > 
+> > >   tools/nolibc: don't use asm/ UAPI headers (2025-03-08 13:18:27 +0100)
+> > 
+> > Thank you, I have pulled this in and will expose it to -next testing.
+> 
+> Thanks!
+> 
+> > Results from "make run":
+> > 
+> > 198 test(s): 198 passed,   0 skipped,   0 failed => status: success
+> > 
+> > Results from "make user":
+> > 
+> > 198 test(s): 196 passed,   2 skipped,   0 failed => status: warning
+> > 
+> > I don't understand the "warning" given that the "run.out" file has all
+> > "OK" aside from the two "SKIPPED" tests.  Or maybe I am just forgetting
+> > how this works.  ;-)
+> 
+> A skipped test will mark the whole run as "warning".
 
-On Fri, Mar 07, 2025 at 09:56:12PM +0100, Nathan Chancellor wrote:
-> On Fri, Mar 07, 2025 at 05:36:26PM +0100, Nicolas Schier wrote:
-> > On Wed, Mar 05, 2025 at 07:25:36PM +0000 Alexandru Gagniuc wrote:
-> > > Cc: <stable@vger.kernel.org> # v6.12+
-> >=20
-> > Shouldn't this be v6.8, as 7d4f07d5cb71 got introduced there?
->=20
-> Presumably this is because there are no supported kernel versions
-> between 6.8 and 6.12 anymore but I think the '# v6.12+' is entirely
-> superfluous because there is a fixes tag, so the stable folks will
-> figure out how far to backport it automatically based on that.
->=20
-I'll just remove the '# v6.12+' then.
-> > > Fixes: 7d4f07d5cb71 ("kbuild: deb-pkg: squash scripts/package/deb-bui=
-ld-option to debian/rules")
+Ah, never mind, me being forgetful!
 
-I agree that "unconditionally" better conveys the idea behind the
-patch. I'll make that change too.
+							Thanx, Paul
 
-Alex
-
+> Maybe we'll adopt the kselftest harness at some point and align with the
+> rest of the selftests.
+> 
+> <snip>
+> 
+> 
+> Thomas
