@@ -1,112 +1,321 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73B5188A3B;
-	Mon, 10 Mar 2025 04:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9711728F5
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 04:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741579729; cv=none; b=nYb0f+KjQoYCuK39N4rJWarUhgere7Vsu/F1fmjuwwqkA3MnUFxfGsHxAp6IiQBEQw3dqQTTfi3slEcID07tPtwQLtu2+ZmHqAOJPPRdUF7mVn0uCtY4aVEoCS8s4kp71V93+fKU0tWj4G1HrnmLTJvAY2vXVTnuyVWFQdm01s8=
+	t=1741579763; cv=none; b=D42VshpIJCQZb1SE1jkjogswcXQ87qCx98C6XABuANimC/dURh22kwspZLIVnqQ9SjUqkhv7VVnSb5R9LFS0gAiPnmQbZiTtdXRb48CosE9/e6yV2bzKyrz5a/UllTKH6/Z9BeMuN8Ldw76nzsgLvfpTuvf1y2vdTt8Q9FImyiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741579729; c=relaxed/simple;
-	bh=fJYoS5wlG8QstMdby11IKTbGL41o3ycq8U79HfpMshw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lVKlfAy6kBRMrD3qae6TVi6q3KcLOTpKPLxc2mM3Zb9qJBlBSBsokpLQac05ZCjzjyOxwFTH1mpiNpqO6TSXARonLB6DU+keQ3zJHC8Zj7mFe7vauRhKjJZnA7rAvbtjUX8ebFb1ksuuJWknj6xNp9IhMRTxZqpU5R4OnO+8iaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQBdQ3m0; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQBdQ3m0"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c2303a56d6so439836485a.3;
-        Sun, 09 Mar 2025 21:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741579727; x=1742184527; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9VOuggK65iHL1WrZt7LgIkYldFFZ7T+Rk2QuSTsMBqc=;
-        b=FQBdQ3m0QJuiE3A7xh7CiR6DUEDSgWd2eYrSpucSak0S+iQ5681go16guNxM8lzUPY
-         exAYQxZCZEfofFZ2w4E6AmVX+JVJw1gervWaMTVM0+Cs/Th05azKQo16t0x+GG0fvuw7
-         W1/xG/ESGPA8c5aogpMUUA9QqoVdVmjUn0RZlzLWs9AQU/zydlth2sKQPaYSHEeWAH2F
-         mCJ7vYhzGeEBIMDwyU7LBW5dV7M8Jd3OVaRvKYkVb4hdrSq3Nt7zUpCYWTG8UKtgzGwD
-         uHMevUExe22+yrD3VFNvxNtplUBNC+shkX33VydZ918F9FlMxsB2sY76cY2fqiSwlK9T
-         vxoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741579727; x=1742184527;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9VOuggK65iHL1WrZt7LgIkYldFFZ7T+Rk2QuSTsMBqc=;
-        b=rK7JIHJ5ggIapSAZxxbFWHTdV2N40e3nr+xObnZ6CiTCRuN1yLcpv1X1GoSiZodECn
-         qAj0jodZqnCmggqlnZvg0PKyec2fhU7JIrjY1o+lAFBQipdZDFlCGg+mSndiJJrJebCT
-         +/poGWi4CQAe2cR11xrtNJpzwiAAxIDE+GX438XzKeSYa37aWfYqyi028HFreCHauNo7
-         EFbia5uSs5s0FCC6vFb6nsY7w/A74NsVUpX9mBXBOgFY4jTY+XkAZobDFR8hPsgYdyv5
-         YIk2xGAooaz14LjjBt8XRs+fyu/ZUDJjSRy78zchlVCYqHZ7hnGrVhPTd7XmkPqmDzel
-         96OA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5ZcLwMAeceKqJh54cfTQdbcr1GtErWRRX0aZO+HxwoPAphR+2H9vVbjqPP7nBjLz/K4eFtR+ld3dcHLUv@vger.kernel.org, AJvYcCV3hKLU7GrCowYr6PEMxTQmdqxYEDBkm3ON/sw1H6V3B64B3oWxZLXzBVocnvRHX7xvXJVpvy3g@vger.kernel.org, AJvYcCWnYUcr+XdVx+S32l2gcaOVcCV4tKTr/cLwExLM76RsuP5VZptIgA2a/8GUnbUo4n7YDt+Xxcm49WuE@vger.kernel.org
-X-Gm-Message-State: AOJu0YziTVrZ0LetCAfdCttCNLYiNNStt0KrsIttiy6xqryYsWYKyklF
-	GYpUcU8SZR4fcp+zkiwFm+WNbTiUrtY1FnwyNObLsgxJntiBuqkg
-X-Gm-Gg: ASbGncv0q9c0kVkKdXPtTDc8azB4V8MTj2b9mldpoHGG+N9HZOrElOshOsKRDwy+dtl
-	8qHdP+2cAv44L3hTWfXN+tGus7R/nERoO7vpxaZcZ8Et7Yp2ABxgwvE22XC4GvS1VwZrnH0nFtY
-	rH9UBiHRFNnR/6bLZmZ8ovQVwgCqOYm0TGKpyWdg45xICzAYC9gHXmMxrRQ+mURKB4hOTEYvua+
-	/2nZCooL2dipjBsgKYS4USl80iWHsP+9vErRLV+QGzlzeEXqZZRP36cELypfnyEnh1Tb9tBIb8L
-	s+ecYlCw+On7Bj2xa8GZ
-X-Google-Smtp-Source: AGHT+IF48MIEuo2MOFTyOtajCaIZ0VDeA9fTgytDQQC+qHk6FufxDgXmhh2qYRm3u0obvO/2DLZIOQ==
-X-Received: by 2002:a05:620a:278a:b0:7c3:c421:3e92 with SMTP id af79cd13be357-7c4e167830emr1619956585a.10.1741579726778;
-        Sun, 09 Mar 2025 21:08:46 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c557e08ecasm36964685a.98.2025.03.09.21.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 21:08:46 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v3 0/2] clk: sophgo: add SG2044 clock controller support
-Date: Mon, 10 Mar 2025 12:08:32 +0800
-Message-ID: <174157953239.287836.12496608762621997429.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250226232320.93791-1-inochiama@gmail.com>
-References: <20250226232320.93791-1-inochiama@gmail.com>
+	s=arc-20240116; t=1741579763; c=relaxed/simple;
+	bh=C0UaHSvNIqvfh2MYS0J8HQ1rSvOxLRYbCNcJoOu5WKM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fZvq0lA4ZJYqcfswdToEIwSNUZJz2obEUd5Um1mPlqDIRKlC84AiB4Hcnkf+lg2yLgJ/4OjX8PIG3Z75Hewm1LQdb5bmQ7KD5S8Pd2joqMPIx9us4UpwUbIgTJIcWncn/wNOhGAVKBe6HDrBvV5KvvTV6qhBKQ2EH0yx2KelMM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZB3Jg340dzqVWp;
+	Mon, 10 Mar 2025 12:07:47 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 21FAD14022F;
+	Mon, 10 Mar 2025 12:09:17 +0800 (CST)
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 10 Mar 2025 12:09:15 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 drm-dp 3/9] drm/hisilicon/hibmc: Add dp serdes cfg in dp process
+Date: Mon, 10 Mar 2025 12:01:32 +0800
+Message-ID: <20250310040138.2025715-4-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250310040138.2025715-1-shiyongbang@huawei.com>
+References: <20250310040138.2025715-1-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-On Thu, 27 Feb 2025 07:23:17 +0800, Inochi Amaoto wrote:
-> The clock controller of SG2044 provides multiple clocks for various
-> IPs on the SoC, including PLL, mux, div and gates. As the PLL and
-> div have obvious changed and do not fit the framework of SG2042,
-> a new implement is provided to handle these.
-> 
-> Changed from v2:
-> 1. Applied Chen Wang' tag
-> 2. patch 2: fix author mail infomation
-> 
-> [...]
+From: Baihan Li <libaihan@huawei.com>
 
-Applied to for-next, thanks!
+Add dp serdes cfg in link training process, and related adapting
+and modificating. Change some init values about training, because we want
+completely to negotiation process, so we start with the maximum rate and
+the electrical characteristic level is 0. Because serdes default cfgs is
+changed and used in hibmc_kms_init(), we changed the if-statement to check
+whether the value is 0.
 
-[1/2] dt-bindings: clock: sophgo: add clock controller for SG2044
-      https://github.com/sophgo/linux/commit/0332ae22ce09ce64f5e54fc2a24ed22073dbeb9d
-[2/2] clk: sophgo: Add clock controller support for SG2044 SoC
-      https://github.com/sophgo/linux/commit/fcee6f2173e7f7fb39f35899faea282fd9b5ea30
+Signed-off-by: Baihan Li <libaihan@huawei.com>
+Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ChangeLog:
+v4 -> v5:
+  - add commit log about hibmc_kms_init(), suggested by Dmitry Baryshkov.
+  - fix the format of block comments, suggested by Dmitry Baryshkov.
+  - add hibmc_dp_get_serdes_rate_cfg() to correct transferring serdes cfg.
+v3 -> v4:
+  - add comments for if-statement of dp_init(), suggested by Dmitry Baryshkov.
+v2 -> v3:
+  - change commit to an imperative sentence, suggested by Dmitry Baryshkov.
+  - put HIBMC_DP_HOST_SERDES_CTRL in dp_serdes.h, suggested by Dmitry Baryshkov.
+v1 -> v2:
+  - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
+---
+ .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |  1 +
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  5 +-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  | 77 ++++++++++++++-----
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  5 ++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   | 13 ++--
+ 5 files changed, 75 insertions(+), 26 deletions(-)
 
-Thanks,
-Inochi
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+index 74dd9956144e..c5feef8dc27d 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+@@ -15,5 +15,6 @@
+ #define HIBMC_DP_CLK_EN			0x7
+ #define HIBMC_DP_SYNC_EN_MASK		0x3
+ #define HIBMC_DP_LINK_RATE_CAL		27
++#define HIBMC_DP_SYNC_DELAY(lanes)	((lanes) == 0x2 ? 86 : 46)
+ 
+ #endif
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+index 3612f3c5ab23..dcb2ab5ea6bb 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+@@ -72,6 +72,9 @@ static void hibmc_dp_set_sst(struct hibmc_dp_dev *dp, struct drm_display_mode *m
+ 				 HIBMC_DP_CFG_STREAM_HTOTAL_SIZE, htotal_size);
+ 	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_HORIZONTAL_SIZE,
+ 				 HIBMC_DP_CFG_STREAM_HBLANK_SIZE, hblank_size);
++	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_PACKET,
++				 HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION,
++				 HIBMC_DP_SYNC_DELAY(dp->link.cap.lanes));
+ }
+ 
+ static void hibmc_dp_link_cfg(struct hibmc_dp_dev *dp, struct drm_display_mode *mode)
+@@ -171,7 +174,7 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
+ 		return ret;
+ 
+ 	dp_dev->link.cap.lanes = 0x2;
+-	dp_dev->link.cap.link_rate = DP_LINK_BW_2_7;
++	dp_dev->link.cap.link_rate = DP_LINK_BW_8_1;
+ 
+ 	/* hdcp data */
+ 	writel(HIBMC_DP_HDCP, dp_dev->base + HIBMC_DP_HDCP_CFG);
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+index f6355c16cc0a..2b4940ea809c 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+@@ -9,6 +9,22 @@
+ 
+ #define HIBMC_EQ_MAX_RETRY 5
+ 
++static inline int hibmc_dp_get_serdes_rate_cfg(struct hibmc_dp_dev *dp)
++{
++	switch (dp->link.cap.link_rate) {
++	case DP_LINK_BW_1_62:
++		return DP_SERDES_BW_1_62;
++	case DP_LINK_BW_2_7:
++		return DP_SERDES_BW_2_7;
++	case DP_LINK_BW_5_4:
++		return DP_SERDES_BW_5_4;
++	case DP_LINK_BW_8_1:
++		return DP_SERDES_BW_8_1;
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int hibmc_dp_link_training_configure(struct hibmc_dp_dev *dp)
+ {
+ 	u8 buf[2];
+@@ -41,11 +57,7 @@ static int hibmc_dp_link_training_configure(struct hibmc_dp_dev *dp)
+ 		return ret >= 0 ? -EIO : ret;
+ 	}
+ 
+-	ret = drm_dp_read_dpcd_caps(&dp->aux, dp->dpcd);
+-	if (ret)
+-		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
+-
+-	return ret;
++	return 0;
+ }
+ 
+ static int hibmc_dp_link_set_pattern(struct hibmc_dp_dev *dp, int pattern)
+@@ -108,7 +120,11 @@ static int hibmc_dp_link_training_cr_pre(struct hibmc_dp_dev *dp)
+ 		return ret;
+ 
+ 	for (i = 0; i < dp->link.cap.lanes; i++)
+-		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_2;
++		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_0;
++
++	ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
++	if (ret)
++		return ret;
+ 
+ 	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set, dp->link.cap.lanes);
+ 	if (ret != dp->link.cap.lanes) {
+@@ -137,21 +153,18 @@ static bool hibmc_dp_link_get_adjust_train(struct hibmc_dp_dev *dp,
+ 	return false;
+ }
+ 
+-static inline int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
++static int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
+ {
+-	switch (dp->link.cap.link_rate) {
+-	case DP_LINK_BW_2_7:
+-		dp->link.cap.link_rate = DP_LINK_BW_1_62;
+-		return 0;
+-	case DP_LINK_BW_5_4:
+-		dp->link.cap.link_rate = DP_LINK_BW_2_7;
+-		return 0;
+-	case DP_LINK_BW_8_1:
+-		dp->link.cap.link_rate = DP_LINK_BW_5_4;
+-		return 0;
+-	default:
++	int ret;
++
++	if (dp->link.cap.link_rate == DP_LINK_BW_1_62)
+ 		return -EINVAL;
+-	}
++
++	ret = hibmc_dp_get_serdes_rate_cfg(dp);
++	if (ret < 0)
++		return ret;
++
++	return hibmc_dp_serdes_rate_switch(--ret, dp);
+ }
+ 
+ static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
+@@ -159,6 +172,7 @@ static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
+ 	switch (dp->link.cap.lanes) {
+ 	case 0x2:
+ 		dp->link.cap.lanes--;
++		drm_dbg_dp(dp->dev, "dp link training reduce to 1 lane\n");
+ 		break;
+ 	case 0x1:
+ 		drm_err(dp->dev, "dp link training reduce lane failed, already reach minimum\n");
+@@ -206,6 +220,11 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
+ 		}
+ 
+ 		level_changed = hibmc_dp_link_get_adjust_train(dp, lane_status);
++
++		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
++		if (ret)
++			return ret;
++
+ 		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, dp->link.train_set,
+ 					dp->link.cap.lanes);
+ 		if (ret != dp->link.cap.lanes) {
+@@ -255,6 +274,11 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
+ 		}
+ 
+ 		hibmc_dp_link_get_adjust_train(dp, lane_status);
++
++		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
++		if (ret)
++			return ret;
++
+ 		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET,
+ 					dp->link.train_set, dp->link.cap.lanes);
+ 		if (ret != dp->link.cap.lanes) {
+@@ -295,6 +319,21 @@ int hibmc_dp_link_training(struct hibmc_dp_dev *dp)
+ 	struct hibmc_dp_link *link = &dp->link;
+ 	int ret;
+ 
++	ret = drm_dp_read_dpcd_caps(&dp->aux, dp->dpcd);
++	if (ret)
++		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
++
++	dp->link.cap.link_rate = dp->dpcd[DP_MAX_LINK_RATE];
++	dp->link.cap.lanes = 0x2;
++
++	ret = hibmc_dp_get_serdes_rate_cfg(dp);
++	if (ret < 0)
++		return ret;
++
++	ret = hibmc_dp_serdes_rate_switch(ret, dp);
++	if (ret)
++		return ret;
++
+ 	while (true) {
+ 		ret = hibmc_dp_link_training_cr_pre(dp);
+ 		if (ret)
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+index 16ea58903598..6eb76decc636 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+@@ -54,6 +54,7 @@
+ #define HIBMC_DP_VIDEO_PACKET			0x114
+ #define HIBMC_DP_CFG_STREAM_TU_SYMBOL_SIZE	GENMASK(5, 0)
+ #define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
++#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION	GENMASK(31, 20)
+ 
+ #define HIBMC_DP_VIDEO_MSA0			0x118
+ #define HIBMC_DP_CFG_STREAM_VSTART		GENMASK(31, 16)
+@@ -102,6 +103,7 @@
+ #define HIBMC_DP_LANE_STATUS_OFFSET	0x10
+ #define HIBMC_DP_PMA_LANE0_OFFSET	0x18
+ #define HIBMC_DP_PMA_LANE1_OFFSET	0x1c
++#define HIBMC_DP_HOST_SERDES_CTRL	0x1f001c
+ #define HIBMC_DP_PMA_TXDEEMPH		GENMASK(18, 1)
+ #define DP_SERDES_DONE			0x3
+ 
+@@ -117,5 +119,8 @@
+ #define DP_SERDES_VOL2_PRE1		0x4500
+ #define DP_SERDES_VOL3_PRE0		0x600
+ #define DP_SERDES_BW_8_1		0x3
++#define DP_SERDES_BW_5_4		0x2
++#define DP_SERDES_BW_2_7		0x1
++#define DP_SERDES_BW_1_62		0x0
+ 
+ #endif
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index e6de6d5edf6b..98b01c8aee8e 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -28,9 +28,7 @@
+ #include "hibmc_drm_drv.h"
+ #include "hibmc_drm_regs.h"
+ 
+-#define HIBMC_DP_HOST_SERDES_CTRL		0x1f001c
+-#define HIBMC_DP_HOST_SERDES_CTRL_VAL		0x8a00
+-#define HIBMC_DP_HOST_SERDES_CTRL_MASK		0x7ffff
++#include "dp/dp_reg.h"
+ 
+ DEFINE_DRM_GEM_FOPS(hibmc_fops);
+ 
+@@ -121,9 +119,12 @@ static int hibmc_kms_init(struct hibmc_drm_private *priv)
+ 		return ret;
+ 	}
+ 
+-	/* if DP existed, init DP */
+-	if ((readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL) &
+-	     HIBMC_DP_HOST_SERDES_CTRL_MASK) == HIBMC_DP_HOST_SERDES_CTRL_VAL) {
++	/*
++	 * If the serdes reg is readable and is not equal to 0,
++	 * DP block exists and initializes it.
++	 */
++	ret = readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL);
++	if (ret) {
+ 		ret = hibmc_dp_init(priv);
+ 		if (ret)
+ 			drm_err(dev, "failed to init dp: %d\n", ret);
+-- 
+2.33.0
 
