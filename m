@@ -1,75 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396A51B423B;
-	Mon, 10 Mar 2025 07:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C9917BA5;
+	Mon, 10 Mar 2025 07:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591403; cv=none; b=Ek0tF4VUIyHacHsX43gjrYTBlH8tx3/+XLh1KTHajH0K28V5bN0DTSLfLE89/uQ6E51Vl6nh6ObZIaBzhUmZTw5qCDnIeoSfQjX2Y3rhMYhwE1tzvcpC6YUKgNNHb//pPe/laWjB/ndMZ8i+BGWehzMEKd1hwcl49ly+0IZ44MU=
+	t=1741591461; cv=none; b=Z3PZlSWz2pIw2+jITe++r+jvPZhu+pVw5mf5NLpPGz4bFk8O+i09pbcdpyyrH/Ec35HzIhwn+1NYFzALb9t5/1tUXjOWjNTOg4EQ+imgkQcqn5Qq8WfK0s8I8D+9ovhVdgOFGKcYZ4k/Rs0q5829f3ZwT7tt9jgHbF+1Qb/Wx18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591403; c=relaxed/simple;
-	bh=4ETkd0jFHLyp3RPMBWiubYsNSXRDodyaLu0wHY0y2XU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVAyUxFoOlzchsS8zSSrkXVRFGEqHxAEYslB9zpuSs2K3nhbpGXoI1e5HEa4a7VbOXU0W3UAUmbDW4x9Q/uP/dJVd1aaE0gDtMLlnkdGYHAse/ctnNwlxPcQ/dlaOeMKYwP/60jx2DX9sMtPbjj4lKfKK2yVnMStIxae6n9lrN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMUUmsbK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741591461; c=relaxed/simple;
+	bh=s2KVlvf7aOsyX4rM8XmAnc6ILcQMIIfx8RKWz2Liu30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h+5NsvSj4sHuFBU7PVvBNVExsD7Db+nIGl0mHKd/boJMOHqDWkm4anZntfiBPK+t7jMKMLjEc5QTawEutLWUb9PrQB2zPHbd4x38ABW6hJM3r+mIUBOgvMMk/n2/Fed0PRy6EELmCrL1NOgoVqIQZ9B+NsUqGQ5Et+eHYm/lbtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=flHiQ4KO; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMUUmsbK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59CBC4CEE5;
-	Mon, 10 Mar 2025 07:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741591402;
-	bh=4ETkd0jFHLyp3RPMBWiubYsNSXRDodyaLu0wHY0y2XU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YMUUmsbKMTpJIOzlDQphAuc2kpcQCU4fCSZ4fQtG+R+LQNt6YwQciN23OZgf0/itk
-	 ZHbKHvjGM45dX2MbZ32QNS/PwrHxj753MYl4pfeJmj8IG+zd21QH8uk7puO/mVUPw/
-	 d3vK3nq1DDBM6gRdMG2xVvD9ZnXQ2Hak9xP/rHOpyf7ZZPCVq7Hqw+ydmVGdjM56Ul
-	 ikLzRYbPfFZ8Iz2AeAtACS929d5fWzFnJTVmj1FqpnQbLhuoJ2I17qUPM4tIiCuM2Q
-	 ncunR/tRH4scVhXHG1p1hO46Jw3YcZptVCK5qVxeL7nteF7lj966YbXe+ntvpAneqj
-	 UWIIfKEDhKqqw==
-Date: Mon, 10 Mar 2025 08:23:18 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dmitry Baryshkov <lumag@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
-	Krishna Manikandan <quic_mkrishn@quicinc.com>, Jonathan Marek <jonathan@marek.ca>, 
-	Bjorn Andersson <andersson@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 04/10] dt-bindings: display/msm: qcom,sc7280-dpu:
- describe SAR2130P
-Message-ID: <20250310-eccentric-rare-rook-e4fb60@krzk-bin>
-References: <20250308-sar2130p-display-v1-0-1d4c30f43822@linaro.org>
- <20250308-sar2130p-display-v1-4-1d4c30f43822@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="flHiQ4KO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741591459; x=1773127459;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s2KVlvf7aOsyX4rM8XmAnc6ILcQMIIfx8RKWz2Liu30=;
+  b=flHiQ4KOrXL7lGWocP/2/sjrpyU6beEitY2KSuyzBc5IhMSxvl8cP1VR
+   DpeINZgLDTMQgzcamhXuwQcAluRAtAm3r3ggKUkytMMFOPsTOfTz/rzZS
+   PIuHUJdou3JUJi2t9ixKv0bncTBj6rhNaX422JAKrNUTH71aahYFq+RbQ
+   OoTs8mrCYfCnb3KfsV47NVn6nXO3bM80Ul/hTUe/sgWq0wPzq+hE8SHZX
+   bldCsjWXGcltXYgNeU5enb0ao01JYCqLbl7LDmXhG1dZpKtBZp65yOjj2
+   ZtwV04jSx4a1FAPrZPpPyENvVQbz61HLWBYEAmLsfsddU8DVFVDJMvYBR
+   g==;
+X-CSE-ConnectionGUID: G8jYTy0NSVCodA3P6TZj8A==
+X-CSE-MsgGUID: dH12eqKiStmSiSlQvlfkCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="53560332"
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="53560332"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:24:18 -0700
+X-CSE-ConnectionGUID: CXJQ/rUjQKSUG4dB8eQ+LQ==
+X-CSE-MsgGUID: 11Y7mk/oSDeCEbIxAwzXDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="119902516"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:24:16 -0700
+Message-ID: <405c30e9-73be-4812-86dc-6791b08ba43c@intel.com>
+Date: Mon, 10 Mar 2025 15:24:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250308-sar2130p-display-v1-4-1d4c30f43822@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/10] KVM: TDX: restore host xsave state when exit
+ from the guest TD
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: adrian.hunter@intel.com, seanjc@google.com, rick.p.edgecombe@intel.com,
+ Isaku Yamahata <isaku.yamahata@intel.com>
+References: <20250307212053.2948340-1-pbonzini@redhat.com>
+ <20250307212053.2948340-6-pbonzini@redhat.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250307212053.2948340-6-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Mar 08, 2025 at 03:42:22AM +0200, Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On 3/8/2025 5:20 AM, Paolo Bonzini wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
 > 
-> Describe DPU controller present on Qualcomm SAR2130P platform.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> On exiting from the guest TD, xsave state is clobbered; restore it.
+
+I prefer the implementation as this patch, which is straightforward.
+(I would be much better if the changelog can describe more)
+
+Anyway,
+
+Reviewed-by: Xiayao Li <xiaoyao.li@intel.com>
+
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Message-ID: <20250129095902.16391-8-adrian.hunter@intel.com>
+> [Rewrite to not use kvm_load_host_xsave_state. - Paolo]
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->  Documentation/devicetree/bindings/display/msm/qcom,sc7280-dpu.yaml | 1 +
->  1 file changed, 1 insertion(+)
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+>   arch/x86/kvm/vmx/tdx.c | 32 ++++++++++++++++++++++++++++++++
+>   1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 94e08fdcb775..b2948318cd8b 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -2,6 +2,7 @@
+>   #include <linux/cleanup.h>
+>   #include <linux/cpu.h>
+>   #include <asm/cpufeature.h>
+> +#include <asm/fpu/xcr.h>
+>   #include <linux/misc_cgroup.h>
+>   #include <linux/mmu_context.h>
+>   #include <asm/tdx.h>
+> @@ -735,6 +736,30 @@ static noinstr void tdx_vcpu_enter_exit(struct kvm_vcpu *vcpu)
+>   				 BIT_ULL(VCPU_REGS_R14) | \
+>   				 BIT_ULL(VCPU_REGS_R15))
+>   
+> +static void tdx_load_host_xsave_state(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+> +
+> +	/*
+> +	 * All TDX hosts support PKRU; but even if they didn't,
+> +	 * vcpu->arch.host_pkru would be 0 and the wrpkru would be
+> +	 * skipped.
+> +	 */
+> +	if (vcpu->arch.host_pkru != 0)
+> +		wrpkru(vcpu->arch.host_pkru);
+> +
+> +	if (kvm_host.xcr0 != (kvm_tdx->xfam & kvm_caps.supported_xcr0))
+> +		xsetbv(XCR_XFEATURE_ENABLED_MASK, kvm_host.xcr0);
+> +
+> +	/*
+> +	 * Likewise, even if a TDX hosts didn't support XSS both arms of
+> +	 * the comparison would be 0 and the wrmsrl would be skipped.
+> +	 */
+> +	if (kvm_host.xss != (kvm_tdx->xfam & kvm_caps.supported_xss))
+> +		wrmsrl(MSR_IA32_XSS, kvm_host.xss);
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_load_host_xsave_state);
+> +
+>   fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+>   {
+>   	/*
+> @@ -751,6 +776,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+>   
+>   	tdx_vcpu_enter_exit(vcpu);
+>   
+> +	tdx_load_host_xsave_state(vcpu);
+> +
+>   	vcpu->arch.regs_avail &= TDX_REGS_AVAIL_SET;
+>   
+>   	trace_kvm_exit(vcpu, KVM_ISA_VMX);
+> @@ -2326,6 +2353,11 @@ int __init tdx_bringup(void)
+>   		goto success_disable_tdx;
+>   	}
+>   
+> +	if (!cpu_feature_enabled(X86_FEATURE_OSXSAVE)) {
+> +		pr_err("tdx: OSXSAVE is required for TDX\n");
+> +		goto success_disable_tdx;
+> +	}
+> +
+>   	if (!cpu_feature_enabled(X86_FEATURE_MOVDIR64B)) {
+>   		pr_err("tdx: MOVDIR64B is required for TDX\n");
+>   		goto success_disable_tdx;
 
