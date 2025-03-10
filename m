@@ -1,45 +1,44 @@
 Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F87922A1CB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6F1229B01;
 	Mon, 10 Mar 2025 13:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612844; cv=none; b=olNflPzUGw7e95oa4wowRUAdiZ3IY3Sk8GvhqE/c29uu6giVmz9PHb2cEAVJ7HR5xRmBahiPxsedlCfA2zQprLwNVla0DhP+fQ/saGLzgSGgUMEHnIIFwQRiI99KDDMNtJ13P7aIwiP512DbgCz1c3BmGVmSag1LZ1eQb/01ljg=
+	t=1741612844; cv=none; b=AF7jdxjKATJkfSuPHk94jcyhkOPlmZ5h+OA1Kb2GFynEdbdCD0pmLcyfbysP7Svrh/q16rS/h8W/ncVw9rnylEwdYSaKnoGYSVMLLIbp6dLM0T05x6TAZH+tAD2daAO+2Uit5qzuqgr4jguD2XrQy39haVjxpWL8DADc1ZJ8BSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741612844; c=relaxed/simple;
-	bh=nmNQ6KojZrM/X2uo2a6p3xdSQcy/9B7lxhGB2950GEo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=l2TOYRv4iSXlfaAO5ducGrjoLE6fFK+SiBZDYWXJpckcGb3VPu/ubwLhYlDa/p9eodWnbGrH+nro0eXXDuFd+/BnLgxehJKwJxP3haOIEzaVyTooTWI+PswRyL6UDNjD+qww6Z/smyJO1LoDvbjZAeQ80EYXx6aVdnhCaWzbrJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=xCt+LEDw; arc=none smtp.client-ip=91.207.212.86
+	bh=SqV1IJTAkSWRFFjRTnZftoakZj1+AKPrc1tTCrwNB9Q=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=MX6vtdzmbK/+5P+ZFBQjcLQxs/5pb3OIagWo8EV20JNOo3Ebjqulf0j2NoVexzdrtLUY1Q0mnKDT/yvvBft62NZqUgsAb2vsB6JKaIIXFBE3wrsQa9JWnR7HIkKV6h8pYVn2FGrzMxjY8sPmT1TGatUTZt5tMu4gAyLs4Piuhzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=Hs6KCTK7; arc=none smtp.client-ip=91.207.212.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="xCt+LEDw"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="Hs6KCTK7"
 Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A7nW1h015329;
-	Mon, 10 Mar 2025 13:10:49 GMT
+	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A7nW1g015329;
+	Mon, 10 Mar 2025 13:10:44 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=+
-	Rs/zNxmCHOIg6hmgAq9pv1zTc6S6ivy81oUidFGSNU=; b=xCt+LEDwxX2Pw2dXW
-	LUv7R7+KY+gOyZ0eygBJiTVcXYnLLRi+ZxuRWJqEhy5hZX2i45j8+LB5yvsfRGvd
-	mkTthXcmvq46iL2IpOtTVCOtmyIQh1b19qSxDiH9p5NpJ7jQCIVzsQa8033lHO42
-	aziK4rMu+tqcrSdQClr1V+fdHdQgUywJinV5BUotVFBxbqCzlr/VLah3esx4k+95
-	aWwvpiqsFwoY7DWGqvpp3Bvi2cq+A2wzFB3ugE9G5SC+0/vERiYpDaIhbGFzGO26
-	rfQI+PZTaH9rgkuxJB08A8jaHZaM79OzWRdd5JrjKIgFUUUX6YKxBmUrykUY+YcL
-	jh5fA==
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=dk201812; bh=eVEunwoeTDsdAhdaNChHP7S
+	AFdZNASrhuCkvqq03in8=; b=Hs6KCTK7egH4HQMh2QoiIoV/Tp9cm4d32sOcSO0
+	dfUO3LfKW0+3FLsaM2lZTtbMYPHCBABFPAzo2/OVWq7STXjgoY8Vu+xpK+2Yc+2s
+	iKFazfIBSnApcaPpDwbnnBSzHz5Raip4TZ1HwXWdCDhyMjOCyeyZP62AXPBAC0/p
+	f+7yi7GaZZlXaeFUUHDhwfawESXqjOne6SSSz020OU7YkWktYOm3KnBttCztCkfZ
+	7RWsRQbGtU8K4gY1I/f0iZ0gejHJLm7EpbmJesKaIftNurqcpS08gMBjdM57nI3z
+	EvR3yOG+eHz2+PU8abgyVtZZJ7hK4Ry/nB5MPnWRuejUj6A==
 Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 458d1wha4q-1
+	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 458d1wha4n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 10 Mar 2025 13:10:49 +0000 (GMT)
+	Mon, 10 Mar 2025 13:10:44 +0000 (GMT)
 Received: from Matts-MacBook-Pro.local (172.25.0.133) by
  HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Mar 2025 13:10:48 +0000
+ 15.1.2507.44; Mon, 10 Mar 2025 13:10:42 +0000
 From: Matt Coster <matt.coster@imgtec.com>
-Date: Mon, 10 Mar 2025 13:10:31 +0000
-Subject: [PATCH v3 07/18] drm/imagination: Handle Rogue safety event IRQs
+Subject: [PATCH v3 00/18] Imagination BXS-4-64 MC1 GPU support
+Date: Mon, 10 Mar 2025 13:10:24 +0000
+Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,9 +47,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-7-143b3dbef02f@imgtec.com>
-References: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
-In-Reply-To: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
+X-B4-Tracking: v=1; b=H4sIAMDkzmcC/3XNvQ6DIBDA8VdpmHsNIBjt1PdoOuhxKIMfAUJsj
+ O9etEs7mNzyv+R+t7JA3lFg98vKPCUX3DTmKK4Xhn0zdgTO5GaSSyW4FBAoBmiXAApKBXMTsYc
+ kQCk0tkbUWluWj2dP1i0H/Hzl7l2Ik38ff5LYt19ScH1G5uGgyBScqlJXtXy4oYuEN5wGtptJ/
+ jiiOnVkdgprlDa1bTnaP2fbtg/kxSKOBQEAAA==
+X-Change-ID: 20241021-sets-bxs-4-64-patch-v1-44cdf9cc555f
 To: Frank Binns <frank.binns@imgtec.com>,
         Matt Coster
 	<matt.coster@imgtec.com>,
@@ -69,243 +70,129 @@ CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
         Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
         "Alessio
  Belle" <alessio.belle@imgtec.com>,
-        Alexandru Dadu <alexandru.dadu@imgtec.com>
+        Alexandru Dadu
+	<alexandru.dadu@imgtec.com>,
+        Sarah Walker <sarah.walker@imgtec.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7470;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5405;
  i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=4O9fJIp6US/LAhulAXUfV35s7P8om5oBFinS7n7Z1Yo=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3JBKuLskTsXwrh/iSzea5R81cJx9fOZk/RerZu+1
- Y9Z5eKqyo5SFgYxDgZZMUWWHSssV6j9UdOSuPGrGGYOKxPIEAYuTgGYyCoNRoZj7i+lc6Xaf50Q
- rviyafqp09p1q68HZ/N/etDz+28WV54nI8OhrhgFlxeXqz7JhVr5p+ZXafQ1rX7xImuP15KQqgC
- mW5wA
+ bh=SqV1IJTAkSWRFFjRTnZftoakZj1+AKPrc1tTCrwNB9Q=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3J+c/ib4pLjWpM1v5S8+KA46dF1vuPRb9PXzueac
+ HnGVUbFtI5SFgYxDgZZMUWWHSssV6j9UdOSuPGrGGYOKxPIEAYuTgGYCJMfw/+w+88+XNNyeV0W
+ f+WV7dsdt5nOBcocnW1iZ1ss6jcr/uAjRob1H/JSw+5JWrsnPLmcab1Cwr9izflQFRNNF5PiRr7
+ /X5kB
 X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
  fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: VYRB2zccZILu1eoCJ9hTiufhPWBWxg50
-X-Proofpoint-GUID: VYRB2zccZILu1eoCJ9hTiufhPWBWxg50
-X-Authority-Analysis: v=2.4 cv=U8+SDfru c=1 sm=1 tr=0 ts=67cee4d9 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=r_1tXGB3AAAA:8 a=EFqOhPBUpbQHUZJt0gEA:9 a=QEXdDO2ut3YA:10
- a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-ORIG-GUID: VrFyge1iEh50KcVMlLEaUiCo0fw9WM9Z
+X-Proofpoint-GUID: VrFyge1iEh50KcVMlLEaUiCo0fw9WM9Z
+X-Authority-Analysis: v=2.4 cv=U8+SDfru c=1 sm=1 tr=0 ts=67cee4d4 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=e5mUnYsNAAAA:8 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8
+ a=RIdblNn2LqOEELPeUbIA:9 a=QEXdDO2ut3YA:10 a=Vxmtnl_E_bksehYqCbjh:22 a=t8nPyN_e6usw4ciXM-Pk:22
 
-From: Alessio Belle <alessio.belle@imgtec.com>
+This GPU is found in the TI AM68 family of SoCs, with initial support
+added to the k3-j721s2 devicetree and tested on a TI SK-AM68 board.
 
-Extend interrupt handling logic to check for safety event IRQs, then clear
-and handle them in the IRQ handler thread.
+A suitable firmware binary can currently be found in the IMG
+linux-firmware repository[1] as powervr/rogue_36.53.104.796_v1.fw.
 
-Safety events need to be checked and cleared with a different set of GPU
-registers than those the IRQ handler has been using so far.
+No new UAPI will be necessary for this platform as it is sufficiently
+similar to the already supported AXE-1-16M.
 
-Only two safety events need to be handled on the host: FW fault (ECC error
-correction or detection) and device watchdog timeout. Handling right now
-simply consists of clearing any error and logging the event. If either of
-these events results in an unrecoverable GPU or FW, the driver will
-eventually attempt to recover from it e.g. via pvr_power_reset().
+UMD support is close to being complete. We're now able to pass >90% of
+Vulkan conformance on our Mesa development branch. The compiler has been
+undergoing a significant rework needed to accomodate the BXS-4-64, as
+well as to make it more flexible to support additional Rogue GPUs going
+forward. The first part of this rework landed in Mesa in [2], and more
+MRs will follow in the coming weeks.
 
-Note that Rogue GPUs may send interrupts to the host for all types of
-safety events, not just the two above. For events not handled by the host,
-clearing the associated interrupt is sufficient.
+There are several dt-bindings changes at the beginning of this series.
+We expect the result to be versatile enough to handle all Imagination
+Rogue GPUs while being a strong foundation to build bindings for the
+newer Volcanic architecture (for which we're currently developing
+support).
 
-Signed-off-by: Alessio Belle <alessio.belle@imgtec.com>
-Signed-off-by: Matt Coster <matt.coster@imgtec.com>
+The DTS changes at the end of the series are marked [DO NOT MERGE]. Once
+the series is reviewed, we will request these be taken through the
+relevant tree.
+
+[1]: https://gitlab.freedesktop.org/imagination/linux-firmware/-/tree/powervr
+[3]: https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/32258
+
 ---
 Changes in v3:
-- Added
+- Reorder some patches to ensure the proper sequencing
+- Update status of UMD support (cover)
+- Don't use more specific compatible strings when not required (P1)
+- Avoid ABI break by limiting new required properties to new compatible
+  strings (P2)
+- Move power domain changes to the patch in which they're used (P2/P5)
+- Update register definitions (P3) [Thanks, Alessio!]
+- Don't use more specific compatible strings when not required (P4)
+- Enhanced commit messages (P4)
+- Remove unnecessary example (P5)
+- Add proper fixes for threaded IRQs (P6) [Thanks, Alessio!]
+- Include fix for a separate IRQ issue (P7) [Thanks, Alessio!]
+- Don't enable firmware debug module (was P13 in v2, also in P14)
+- Change from a workaround to a regular codepath (P15)
+- Drop platform overrides framework (was P18 in v2, also in P16)
+- Mark DTS changes [DO NOT MERGE] (P17/P18)
+- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-0-3fd45d9fb0cf@imgtec.com
+
+Changes in v2:
+- Clarified justification for compatible strings (P1)
+- Simplified clocks constraints (P2)
+- Simplified power-domains constraints (P3/P4)
+- Use normal reg syntax for 64-bit values (P8/P21)
+- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-0-4ed30e865892@imgtec.com
+
 ---
- drivers/gpu/drm/imagination/pvr_device.c | 111 ++++++++++++++++++++++++++++++-
- drivers/gpu/drm/imagination/pvr_device.h |   3 +
- drivers/gpu/drm/imagination/pvr_fw.c     |   3 +
- 3 files changed, 115 insertions(+), 2 deletions(-)
+Alessio Belle (3):
+      drm/imagination: Update register defs for newer GPUs
+      drm/imagination: Mask GPU IRQs in threaded handler
+      drm/imagination: Handle Rogue safety event IRQs
 
-diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
-index b6ce936f07c8bb26d240e50b72a1d991dbe4b045..b1594dd3ed5997bd9510b1444aef2c6f0d7cfd76 100644
---- a/drivers/gpu/drm/imagination/pvr_device.c
-+++ b/drivers/gpu/drm/imagination/pvr_device.c
-@@ -146,9 +146,61 @@ static void pvr_device_process_active_queues(struct pvr_device *pvr_dev)
- 	mutex_unlock(&pvr_dev->queues.lock);
- }
- 
-+static bool pvr_device_safety_irq_pending(struct pvr_device *pvr_dev)
-+{
-+	u32 events;
-+
-+	WARN_ON_ONCE(!pvr_dev->has_safety_events);
-+
-+	events = pvr_cr_read32(pvr_dev, ROGUE_CR_EVENT_STATUS);
-+
-+	return (events & ROGUE_CR_EVENT_STATUS_SAFETY_EN) != 0;
-+}
-+
-+static void pvr_device_safety_irq_clear(struct pvr_device *pvr_dev)
-+{
-+	WARN_ON_ONCE(!pvr_dev->has_safety_events);
-+
-+	pvr_cr_write32(pvr_dev, ROGUE_CR_EVENT_CLEAR,
-+		       ROGUE_CR_EVENT_CLEAR_SAFETY_EN);
-+}
-+
-+static void pvr_device_handle_safety_events(struct pvr_device *pvr_dev)
-+{
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
-+	u32 events;
-+
-+	WARN_ON_ONCE(!pvr_dev->has_safety_events);
-+
-+	events = pvr_cr_read32(pvr_dev, ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE);
-+
-+	/* Handle only these events on the host and leave the rest to the FW. */
-+	events &= ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__FAULT_FW_EN |
-+		ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__WATCHDOG_TIMEOUT_EN;
-+
-+	pvr_cr_write32(pvr_dev, ROGUE_CR_SAFETY_EVENT_CLEAR__ROGUEXE, events);
-+
-+	if (events & ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__FAULT_FW_EN) {
-+		u32 fault_fw = pvr_cr_read32(pvr_dev, ROGUE_CR_FAULT_FW_STATUS);
-+
-+		pvr_cr_write32(pvr_dev, ROGUE_CR_FAULT_FW_CLEAR, fault_fw);
-+
-+		drm_info(drm_dev, "Safety event: FW fault (mask=0x%08x)\n", fault_fw);
-+	}
-+
-+	if (events & ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__WATCHDOG_TIMEOUT_EN) {
-+		/*
-+		 * The watchdog timer is disabled by the driver so this event
-+		 * should never be fired.
-+		 */
-+		drm_info(drm_dev, "Safety event: Watchdog timeout\n");
-+	}
-+}
-+
- static irqreturn_t pvr_device_irq_thread_handler(int irq, void *data)
- {
- 	struct pvr_device *pvr_dev = data;
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
- 	irqreturn_t ret = IRQ_NONE;
- 
- 	/* We are in the threaded handler, we can keep dequeuing events until we
-@@ -164,24 +216,76 @@ static irqreturn_t pvr_device_irq_thread_handler(int irq, void *data)
- 			pvr_device_process_active_queues(pvr_dev);
- 		}
- 
--		pm_runtime_mark_last_busy(from_pvr_device(pvr_dev)->dev);
-+		pm_runtime_mark_last_busy(drm_dev->dev);
- 
- 		ret = IRQ_HANDLED;
- 	}
- 
-+	if (pvr_dev->has_safety_events) {
-+		int err;
-+
-+		/*
-+		 * Ensure the GPU is powered on since some safety events (such
-+		 * as ECC faults) can happen outside of job submissions, which
-+		 * are otherwise the only time a power reference is held.
-+		 */
-+		err = pvr_power_get(pvr_dev);
-+		if (err) {
-+			drm_err_ratelimited(drm_dev,
-+					    "%s: could not take power reference (%d)\n",
-+					    __func__, err);
-+			return ret;
-+		}
-+
-+		while (pvr_device_safety_irq_pending(pvr_dev)) {
-+			pvr_device_safety_irq_clear(pvr_dev);
-+			pvr_device_handle_safety_events(pvr_dev);
-+
-+			ret = IRQ_HANDLED;
-+		}
-+
-+		pvr_power_put(pvr_dev);
-+	}
-+
- 	return ret;
- }
- 
- static irqreturn_t pvr_device_irq_handler(int irq, void *data)
- {
- 	struct pvr_device *pvr_dev = data;
-+	bool safety_irq_pending = false;
-+
-+	if (pvr_dev->has_safety_events)
-+		safety_irq_pending = pvr_device_safety_irq_pending(pvr_dev);
- 
--	if (!pvr_fw_irq_pending(pvr_dev))
-+	if (!pvr_fw_irq_pending(pvr_dev) && !safety_irq_pending)
- 		return IRQ_NONE; /* Spurious IRQ - ignore. */
- 
- 	return IRQ_WAKE_THREAD;
- }
- 
-+static void pvr_device_safety_irq_init(struct pvr_device *pvr_dev)
-+{
-+	u32 num_ecc_rams = 0;
-+
-+	/*
-+	 * Safety events are an optional feature of the RogueXE platform. They
-+	 * are only enabled if at least one of ECC memory or the watchdog timer
-+	 * are present in HW. While safety events can be generated by other
-+	 * systems, that will never happen if the above mentioned hardware is
-+	 * not present.
-+	 */
-+	if (!PVR_HAS_FEATURE(pvr_dev, roguexe)) {
-+		pvr_dev->has_safety_events = false;
-+		return;
-+	}
-+
-+	PVR_FEATURE_VALUE(pvr_dev, ecc_rams, &num_ecc_rams);
-+
-+	pvr_dev->has_safety_events =
-+		num_ecc_rams > 0 || PVR_HAS_FEATURE(pvr_dev, watchdog_timer);
-+}
-+
- /**
-  * pvr_device_irq_init() - Initialise IRQ required by a PowerVR device
-  * @pvr_dev: Target PowerVR device.
-@@ -199,6 +303,8 @@ pvr_device_irq_init(struct pvr_device *pvr_dev)
- 
- 	init_waitqueue_head(&pvr_dev->kccb.rtn_q);
- 
-+	pvr_device_safety_irq_init(pvr_dev);
-+
- 	pvr_dev->irq = platform_get_irq(plat_dev, 0);
- 	if (pvr_dev->irq < 0)
- 		return pvr_dev->irq;
-@@ -206,6 +312,7 @@ pvr_device_irq_init(struct pvr_device *pvr_dev)
- 	/* Clear any pending events before requesting the IRQ line. */
- 	pvr_fw_irq_clear(pvr_dev);
- 	pvr_fw_irq_enable(pvr_dev);
-+	pvr_device_safety_irq_clear(pvr_dev);
- 
- 	/*
- 	 * The ONESHOT flag ensures IRQs are masked while the thread handler is
-diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
-index 2dd8a8885fe07078896d669d822525fb2b7bab51..6c01d96657de6dc3904ef5ca28365f06cfe0f40b 100644
---- a/drivers/gpu/drm/imagination/pvr_device.h
-+++ b/drivers/gpu/drm/imagination/pvr_device.h
-@@ -308,6 +308,9 @@ struct pvr_device {
- 	 *  struct pvr_file.
- 	 */
- 	spinlock_t ctx_list_lock;
-+
-+	/** @has_safety_events: Whether this device can raise safety events. */
-+	bool has_safety_events;
- };
- 
- /**
-diff --git a/drivers/gpu/drm/imagination/pvr_fw.c b/drivers/gpu/drm/imagination/pvr_fw.c
-index 3debc9870a82ae7de9b2dc173df84c466c137bb3..9147c70edc0ef4e86d0b24c3568a43efbafb6bd8 100644
---- a/drivers/gpu/drm/imagination/pvr_fw.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw.c
-@@ -441,6 +441,9 @@ fw_runtime_cfg_init(void *cpu_ptr, void *priv)
- 	runtime_cfg->active_pm_latency_persistant = true;
- 	WARN_ON(PVR_FEATURE_VALUE(pvr_dev, num_clusters,
- 				  &runtime_cfg->default_dusts_num_init) != 0);
-+
-+	/* Keep watchdog timer disabled. */
-+	runtime_cfg->wdg_period_us = 0;
- }
- 
- static void
+Matt Coster (14):
+      dt-bindings: gpu: img: Future-proofing enhancements
+      dt-bindings: gpu: img: Add BXS-4-64 devicetree bindings
+      drm/imagination: Use new generic compatible string
+      drm/imagination: Add power domain control
+      drm/imagination: Remove firmware enable_reg
+      drm/imagination: Rename event_mask -> status_mask
+      drm/imagination: Make has_fixed_data_addr a value
+      drm/imagination: Use a lookup table for fw defs
+      drm/imagination: Use callbacks for fw irq handling
+      drm/imagination: Move ELF fw utils to common file
+      drm/imagination: Use cached memory with dma_coherent
+      drm/imagination: Add support for TI AM68 GPU
+      [DO NOT MERGE] arm64: dts: ti: k3-am62: New GPU binding details
+      [DO NOT MERGE] arm64: dts: ti: k3-j721s2: Add GPU node
 
--- 
-2.48.1
+Sarah Walker (1):
+      drm/imagination: Add RISC-V firmware processor support
+
+ .../devicetree/bindings/gpu/img,powervr-rogue.yaml |  77 +++++++++-
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi           |   3 +-
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi         |  12 ++
+ drivers/gpu/drm/imagination/Makefile               |   2 +
+ drivers/gpu/drm/imagination/pvr_device.c           | 124 ++++++++++++++--
+ drivers/gpu/drm/imagination/pvr_device.h           |  31 +++-
+ drivers/gpu/drm/imagination/pvr_drv.c              |  16 ++
+ drivers/gpu/drm/imagination/pvr_fw.c               |  28 +++-
+ drivers/gpu/drm/imagination/pvr_fw.h               |  85 +++++------
+ drivers/gpu/drm/imagination/pvr_fw_meta.c          |  23 +--
+ drivers/gpu/drm/imagination/pvr_fw_mips.c          |  82 ++---------
+ drivers/gpu/drm/imagination/pvr_fw_riscv.c         | 163 +++++++++++++++++++++
+ drivers/gpu/drm/imagination/pvr_fw_startstop.c     |  17 +++
+ drivers/gpu/drm/imagination/pvr_fw_util.c          |  67 +++++++++
+ drivers/gpu/drm/imagination/pvr_gem.c              |  10 +-
+ drivers/gpu/drm/imagination/pvr_gem.h              |   6 +-
+ drivers/gpu/drm/imagination/pvr_mmu.c              |   8 +-
+ drivers/gpu/drm/imagination/pvr_power.c            | 114 ++++++++++++++
+ drivers/gpu/drm/imagination/pvr_power.h            |   3 +
+ drivers/gpu/drm/imagination/pvr_rogue_cr_defs.h    | 153 ++++++++++++++++---
+ drivers/gpu/drm/imagination/pvr_rogue_riscv.h      |  41 ++++++
+ 21 files changed, 886 insertions(+), 179 deletions(-)
+---
+base-commit: 10232dac98d3803ec4fcc0cd8a4d1bd2a09b3e18
+change-id: 20241021-sets-bxs-4-64-patch-v1-44cdf9cc555f
 
