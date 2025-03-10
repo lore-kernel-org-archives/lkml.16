@@ -1,166 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDBD1DE899;
-	Mon, 10 Mar 2025 07:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0621B2194;
+	Mon, 10 Mar 2025 07:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591757; cv=none; b=iBHGGE0tydyzSl1vd/kZlET8zVq5qegN6owI8kk6sIGDzFd1HfAJmIlWgwtxz3tZR1scXkfXcHotK9D6V6rVDbiEiwArCFBhca7DMAhPbfi/heNV8JQuB7o2e44aK+MRmR1D+hrMhpFp+f2uiBji5h8HlQTeJ2zCLelR8AYx938=
+	t=1741591856; cv=none; b=hKqk60Ql9eT6XMCR3rY+CUB97tCZQEIq80Wx1D/A5eEhdKEMZPlQ0kOSiR3uIVMLNmjJnYGsOyGoKuMacRj2cVJg6L1VYjQ2GDKliIRel3MUOjfjkImzanv4CCzLam+/LmfyCPfFJqwmk4+4W5kmx7zw/swWKaQ/nwuCNPwTbcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591757; c=relaxed/simple;
-	bh=Qak3hDPimj5StjXL2unXWZ3LseUEHQB49RxyNvafENM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGpV7Sab2Z78RauVW0Kx8uIQ3OJidXFABVUOLLg6p8hBMfTzaHuqDQTuzIPWVliVQQfZH+L8LM1SVGvZzjWZtkZo5vj+eDsB3Z1ucSct/EFRtgBmlZ85pZTUKiCJ72TPBEPlAtriC1N8916et5rRzGobhIEBuBWu7bAg3BX6YHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HadvyXvv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741591856; c=relaxed/simple;
+	bh=84FRLwi3VEAwx0R6siAMlBRl+tmVlak6qHOsl3RR3Vs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pD1NkckvjhTFJK3nvHg8SoMgMrvL4jJJ+lSAxQR/agIhkcyZFkjBHTna4I4QqY6U8E1OZHRiSgJSTm8P3I1Z3oXcJRdeOeUIN9h0tYeo9L+Gvm9T9Uy/MO1yJdQ36UAG0nFEFTDnH6YQ3+RUSizQGV8WHvC9wKzkxusst7gDeN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KIMYRQWO; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HadvyXvv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741591755; x=1773127755;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Qak3hDPimj5StjXL2unXWZ3LseUEHQB49RxyNvafENM=;
-  b=HadvyXvvzoE0kE8JZcP18RnX40MQ6mHSsBUe8hpJdwzuq0YTovPJa7e5
-   NuuyJX1iCQemm9wDxy/JdrbgLDLyZVPhFmsck9caNhNdT82+Db0ByPhVE
-   iJ+VbtM9VVPSMr/vqlLlZRlrVUKNQ/AvXdQmbI85XbIFbtrNDQRsBauFS
-   69xIQdLYGSeN+YJhQ5Hapo33tekH1UKp7dGpxarzvPbp1YpegpTG7W0gP
-   jx2bI1K+Pd+oSCvfEFmS2LRTsUEt9BfmOWVzk+PTXQYd1k6zWPZ9xG1RJ
-   p3StqCNrxbqxd536hjoxghcJTxEjGzcZoRajAF/W2mA7xIdKey8RyG99X
-   g==;
-X-CSE-ConnectionGUID: AnpRggNnRaKzY/YQmgNdWg==
-X-CSE-MsgGUID: PgsmNOmEStOKOvk6YzCyig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="42708309"
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="42708309"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 00:29:14 -0700
-X-CSE-ConnectionGUID: 5XQOV+CbTGWX4IlFp3+DGQ==
-X-CSE-MsgGUID: odNCYfjnQouvfxfLHhZOqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
-   d="scan'208";a="157120741"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 10 Mar 2025 00:29:11 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1trXZK-0003wM-0q;
-	Mon, 10 Mar 2025 07:29:01 +0000
-Date: Mon, 10 Mar 2025 15:26:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Casey Schaufler <casey@schaufler-ca.com>, paul@paul-moore.com,
-	eparis@redhat.com, linux-security-module@vger.kernel.org,
-	audit@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, jmorris@namei.org, serge@hallyn.com,
-	keescook@chromium.org, john.johansen@canonical.com,
-	penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com,
-	linux-kernel@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] Audit: Add record for multiple object contexts
-Message-ID: <202503101524.XYSVbXHw-lkp@intel.com>
-References: <20250307183701.16970-7-casey@schaufler-ca.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIMYRQWO"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2234e4b079cso65794455ad.1;
+        Mon, 10 Mar 2025 00:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741591854; x=1742196654; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dmUbl1SNPN33YKejJF44kES5GFJl90ttXQH6Y+6xWoY=;
+        b=KIMYRQWOUaj0yAaKVZZ1tMIEI2M/3qGPIoYeA7u0UNa1gGRLIJQD41Q4wBOfY3la37
+         OfRepmrWpKXxKFqRxOby1gInloYPX8RKEitjytGOuX9r0cNEbZ3WYg6H92CBkg5mDd/n
+         8IZsnRYYnYDD5CUGoyJvLhpJzTD/gRRPytgEiaduDpwc8d19PUj913b8T90oyhbV/eYG
+         tPnA9oSzoeuzOpXsgefE42LqNw2uf0DGvSg0UgsH4v8cHPRsqs8tuMzmYSpjsV9Lp4Vx
+         I4e1amnGaFSIYKcq1BIm7BtO/WzTAiFxepz8lRTzsVympILWo65C4NhS239QuY9YFqq+
+         v6Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741591854; x=1742196654;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dmUbl1SNPN33YKejJF44kES5GFJl90ttXQH6Y+6xWoY=;
+        b=N+tsvCdANKZ2F1lKtZy9iTlTR9sVwmXjgLHk3Hga+fmlc5+/cTcY3vobkQSL9a4l9M
+         yxMh/BfCsxJE9Gp6XwiqBimAgexrj6xuSu2rl3fq1dV5FoPVXCpfPfSAcZ0SN8N4rgD6
+         OAEUOYQ2PU3Vo+2a4udHqwTPVWOfBFj1U93AHYeOPBxrAcSUGYdueXW37bWN14fg2iOc
+         HF1/UqIaGnOGPvdIomj+Q5cG0xiw7jZ1b9NHepHl30CzA2+a8TjtYvloHbCE3zNsz6Cf
+         6iRVIuDNfZJrKWPanpMI5yNaWCxUpnRbw3ojE9EGPM+fhuQxVdSRCijEzCQOr1g/7Bzw
+         TnDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKI0aMZFHaRdCDVMgvSiwYJr6IlA2Php5+6ywtMQMwY1hATmblUSdZwMrnM276Xd6FtR2zjU6ibMw/quAb9Iw=@vger.kernel.org, AJvYcCVg3EuUyYPrnkaJHiMa4bfOeXgGoOcE/01AV8OBsCU3M2aIi/zE/6dxs1OYz5yUvCtVmPeeVsAo/gRwBDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYR0rMETwTpNM6mR7z5VBcN/PN9Jy58UHHGDCXR548XZGti1l/
+	yV7hwuNxZnjVXhVtG4ZUMxmlygViaMbl6OERtx0PG/Ky4soeSqLw
+X-Gm-Gg: ASbGncs1BF8sio2C1oGBKsW19Gm0Ut2nFX54GyFDIvjcaHPC4J3ObPgI4NmcBTj5EIR
+	xt4IuH64iu5dzD2n4xrUprHEmmitg0jviVgX+3P9MbeVbxiCEejx/pbldJ0kJqhXMfJyy9+opYd
+	POlQHq7ZVN93odlRq1MdhE2l5PdYRmq2jMOEU26UtLQndnqUHSVvkV0GRIsY2QPKcw2ren4ENLn
+	ECHxUHUX3prmMzknUj9NdgsVd32mEP7XncnY+FyA8S7Nkyww+RvW/SzVcAd/0fHuEvy4mnRWlC6
+	ktNwBDe+MJfHcSu7OxRGqrU+Bo+2YoQlczQ72CoQpUbcHa7TMj5pOJkxcSdfIpSEJz2HURQytQ=
+	=
+X-Google-Smtp-Source: AGHT+IGaLXdVookzjXhdP3t9TWNQSkoPex+/Iu3eVAiYGn0yVxQx1WSTeEMykevSKZRXTuYM7jsRtA==
+X-Received: by 2002:a17:902:f686:b0:224:1ec0:8a1d with SMTP id d9443c01a7336-22428ab535bmr179596005ad.30.1741591853594;
+        Mon, 10 Mar 2025 00:30:53 -0700 (PDT)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:7ad0:37c7:5275:4b0])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7f773sm70840715ad.117.2025.03.10.00.30.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 00:30:52 -0700 (PDT)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: ojeda@kernel.org
+Cc: alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	jserv@ccns.ncku.edu.tw,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [RFC PATCH 0/2] rust: list: Add examples for linked list
+Date: Mon, 10 Mar 2025 15:30:38 +0800
+Message-ID: <20250310073040.423383-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307183701.16970-7-casey@schaufler-ca.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Casey,
+This patch series introduce runnable examples for linked list. They also
+serve as the unit tests for the methods for "List".
+A new initialized method is also introduced for "ListLinks", in order to
+provide the ability to create a new "ListLinks" instance, and provide
+simplicity for the examples.
 
-kernel test robot noticed the following build errors:
+If there exists a convenient and proper way to handle the return type
+of "ListLinks::new()", e.g. "ListLinks::try_pin_init()" , then the
+method won't be needed.
 
-[auto build test ERROR on pcmoore-selinux/next]
-[also build test ERROR on linus/master v6.14-rc6 next-20250307]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I Hsin Cheng (2):
+  rust: list: Implement normal initializer for ListLinks
+  rust: list: Add examples for linked list
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Casey-Schaufler/Audit-Create-audit_stamp-structure/20250308-024950
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git next
-patch link:    https://lore.kernel.org/r/20250307183701.16970-7-casey%40schaufler-ca.com
-patch subject: [PATCH v2 6/6] Audit: Add record for multiple object contexts
-config: s390-randconfig-r073-20250310 (https://download.01.org/0day-ci/archive/20250310/202503101524.XYSVbXHw-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250310/202503101524.XYSVbXHw-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503101524.XYSVbXHw-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   s390x-linux-ld: kernel/audit.o: in function `audit_log_object_context':
->> kernel/audit.c:2312:(.text+0x2da6): undefined reference to `lsm_objctx_cnt'
->> s390x-linux-ld: kernel/audit.c:2329:(.text+0x30d2): undefined reference to `lsm_active_cnt'
-   s390x-linux-ld: kernel/audit.c:(.text+0x3108): undefined reference to `lsm_active_cnt'
->> s390x-linux-ld: kernel/audit.c:2330:(.text+0x313e): undefined reference to `lsm_idlist'
->> s390x-linux-ld: kernel/audit.c:2312:(.text+0x32f2): undefined reference to `lsm_objctx_cnt'
-   s390x-linux-ld: kernel/audit.c:2312:(.text+0x330a): undefined reference to `lsm_objctx_cnt'
-   s390x-linux-ld: kernel/audit.c:2329:(.text+0x33a4): undefined reference to `lsm_active_cnt'
-   s390x-linux-ld: kernel/audit.c:2329:(.text+0x33bc): undefined reference to `lsm_active_cnt'
-
-
-vim +2312 kernel/audit.c
-
-  2303	
-  2304	int audit_log_object_context(struct audit_buffer *ab, struct lsm_prop *prop)
-  2305	{
-  2306		int i;
-  2307		int rc;
-  2308		int error = 0;
-  2309		char *space = "";
-  2310		struct lsm_context context;
-  2311	
-> 2312		if (lsm_objctx_cnt < 2) {
-  2313			error = security_lsmprop_to_secctx(prop, &context,
-  2314							   LSM_ID_UNDEF);
-  2315			if (error < 0) {
-  2316				if (error != -EINVAL)
-  2317					goto error_path;
-  2318				return error;
-  2319			}
-  2320			audit_log_format(ab, " obj=%s", context.context);
-  2321			security_release_secctx(&context);
-  2322			return 0;
-  2323		}
-  2324		audit_log_format(ab, " obj=?");
-  2325		error = audit_buffer_aux_new(ab, AUDIT_MAC_OBJ_CONTEXTS);
-  2326		if (error)
-  2327			goto error_path;
-  2328	
-> 2329		for (i = 0; i < lsm_active_cnt; i++) {
-> 2330			if (!lsm_idlist[i]->objctx)
-  2331				continue;
-  2332			rc = security_lsmprop_to_secctx(prop, &context,
-  2333							lsm_idlist[i]->id);
-  2334			if (rc < 0) {
-  2335				audit_log_format(ab, "%sobj_%s=?", space,
-  2336						 lsm_idlist[i]->name);
-  2337				if (rc != -EINVAL)
-  2338					audit_panic("error in audit_log_object_context");
-  2339				error = rc;
-  2340			} else {
-  2341				audit_log_format(ab, "%sobj_%s=%s", space,
-  2342						 lsm_idlist[i]->name, context.context);
-  2343				security_release_secctx(&context);
-  2344			}
-  2345			space = " ";
-  2346		}
-  2347	
-  2348		audit_buffer_aux_end(ab);
-  2349		return error;
-  2350	
-  2351	error_path:
-  2352		audit_panic("error in audit_log_object_context");
-  2353		return error;
-  2354	}
-  2355	
+ rust/kernel/list.rs | 100 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
