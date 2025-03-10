@@ -1,293 +1,89 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635BB22A818
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1436022B8AD
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741615115; cv=none; b=DZhTBXK5cl8uckmCZoe0PSPx0DyjnzZSGJJ++D3f/rr3OgBhyQYxFWaK9kSW0/OdNQZQi0ZuopuXnKoltgv9HvoQU8tseJ1GL7MyMUa3l0l0RaieSoWk48SKFB3TBkD5LM4frpEB7JMdfkrjzvCW5Q+5CVGKY+3qBy52GBH0zRs=
+	t=1741615123; cv=none; b=g2gnFuz3EAXnGBEJVrfF8IcpbldOs+RiQPSrMlB8MDf4PLaUytn/TG6d+y7uKNXUOJ9Qa+CO7jfpxbLr/i6fNOiaeeh2MqtHd52UQ1Ce+CigjNdyVM685Dxp0EUI3y2+HgRG6BRUg2Z8Udc1EEvyEYcEEwDExkM8J5Jcqk4y1Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741615115; c=relaxed/simple;
-	bh=i9GxyKAVB18HnH+g2lVwQvXz5I//zOKa3JmIOEbrK94=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZbdlbybXxUS2U+RZT2WjPk9+j9w5WTaIloSxJ5yaPXDLN5ePS+qwUXP6qgUXRxwGM1dE8uU2ogjvtzrlWpmsZC8tZhE1Nj/Ys7IDHx2RaRU9Ukr+OfFMolp+D/UiyD+VPOorID/i376XN0nYNgZqTCVaosKQs8bFOQps6/h7XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AHY/c072; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AHY/c072"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-390cf7458f5so4140440f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741615112; x=1742219912; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=x6bOGmoklXRtJQxdeWHpYOOfYuKnU0zJof9I6zGwu64=;
-        b=AHY/c072S/rTv5X4B7RzTjFt+WNE6wTGVRHpxbTVLrZCFV122NhUaa1ZGl1h+d3FzJ
-         ravRkaFQp+F0YVLAa+VXB/q5BfrZFE81RLywDtCjHLejTadqpGDN6wajA7Wukj98+rlc
-         Q5f+7l+2x1a++74psGcqjOhZS2FyRYlzK7X/tgDlXL0a3yN8SPzuax81c7QvgeLKezR2
-         NI2tl2hDaLsU/nY0Yoj05y9ueF6fYS30hk+a3vbTxFzXTG1oHUM+rD454QEnSdD+iDt8
-         88yfbRVK7lMVEtvq4wqc32w19TNg3yPHi56qroS2EATt25fKgrgLqjkeJIJlBe67d92r
-         +m3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741615112; x=1742219912;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x6bOGmoklXRtJQxdeWHpYOOfYuKnU0zJof9I6zGwu64=;
-        b=vZYiwYPz4OfvXyD80GHgQCIHfR6xsucf4j+qfakzUBzDwTvB5buk5N7+IWnoh6ndgr
-         l7dK6mWPR7qRX4M6tdDVFZfez/npTe4G6RbaAFFkl45dF6Z7YpdxXTwvplst3bURnpQ/
-         jx0KyZxIBpcqm2DgoeBKOyPNLc5JLvZzoWoyE3GdaFQBXaSKgyS3wnxaqeMjsu3MlN4o
-         //l6q1x82bN2cnZdrQ53vR0ylktBc6Cg3LiJLw3cnYnxoCqlY87iaqgQECry4+v9LW49
-         OQQT5bxs9C96PLIB8sEG1N86so0qZx4awbWhXBmTYi5PzIZbmDyYOQ7+4DKKF2sds+0/
-         LsPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMZ3XNPkG0XnFkC6Odc1IbcUeYvNaT1w1ZR4MD7jDv5U3n3L8OL815X0Mlo5+aziSC55y5SGc5ecC+jxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkGlKt7GdAt5777AKQcaMy/+HSzlTxkWszjlyDT9m+s18vWutx
-	OxYyAEheNhTkX7WAZtDkly7f1lBzaOz43KKn5DHrzaRMNVQT74VfsPnOBdLVxxg=
-X-Gm-Gg: ASbGncuKUt0YLwqnynJ7USdzgTLkUrmEEituV8TbtVOiR2//AxHt5NQcPFyABFE01GO
-	M29rmevcUTundIK1IofyHoUw+PVdgRKaZqrP3+6NmG6h2hpSd88P86p2I/IS+Gqh7Wf5WfWxQ8g
-	rjJFVJjkn5o+weTBWj7z5RFfWqaaDxdDjoHJyOXMNjSOBctT6rsu10BsJcKZwBCk+DX19uHM7N2
-	+fLYDNrvcaATkMxWxhVv2iEGBOulSsdE3WiUX5N3kIvLUydyaHWJ5ml7AHFj99ebpohH1HwqjCx
-	4h2WnNcjFlEsJxhkGwg7S7W4pqzlgdmieqV7S+zFgEeZ0Wk6xYtJglkdoEneqImj7YgcppHenrx
-	uqCQ6A0ZKyDT00vHe2YT0utE=
-X-Google-Smtp-Source: AGHT+IGyhk5+VAMcITm5rrq0aJ90sKdh4cQmUoqGgN6Meob+XW4ZpicfvmV1X3pFEScV3weEws3UqA==
-X-Received: by 2002:a05:6000:1fa4:b0:38f:577f:2f6d with SMTP id ffacd0b85a97d-39132d093demr10173742f8f.2.1741615111629;
-        Mon, 10 Mar 2025 06:58:31 -0700 (PDT)
-Received: from localhost (host-87-14-236-98.retail.telecomitalia.it. [87.14.236.98])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac299a025c7sm236754666b.51.2025.03.10.06.58.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 06:58:31 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 10 Mar 2025 14:59:41 +0100
-To: Phil Elwell <phil@raspberrypi.com>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Andrea della Porta <andrea.porta@suse.com>, andrew@lunn.ch,
-	Arnd Bergmann <arnd@arndb.de>,
-	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>,
-	bhelgaas@google.com, brgl@bgdev.pl,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com,
-	devicetree@vger.kernel.org, dragan.cvetic@amd.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
-	kw@linux.com, Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
-	manivannan.sadhasivam@linaro.org, masahiroy@kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Rob Herring <robh@kernel.org>, saravanak@google.com,
-	Stephen Boyd <sboyd@kernel.org>, thomas.petazzoni@bootlin.com,
-	Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
- using a DT overlay
-Message-ID: <Z87wTfChRC5Ruwc0@apocalypse>
-References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
- <20250213171435.1c2ce376@bootlin.com>
- <CAMEGJJ1++aeE7WWLVVesbujME+r2WicEkK+CQgigRRp2grYf=A@mail.gmail.com>
+	s=arc-20240116; t=1741615123; c=relaxed/simple;
+	bh=IRZ909ZOQaifWp9oE/ioYqYVL8y3ap2vj5f4p5RduC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NcUJTUbmERbvyKuflGSMrb247ct9tfxGmlx0brL9zZz1mnLhZmvSWoCQKVymNe0qXbie1Q+kC+I+Az9JFxGzQNFkPHciehkky3FdDveBBk1/2cw9BQXMsAKj715jfLQeYTnBOgpCybE42R3FlcPqpGCM83p3HQvxj/70PzGETL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-112-29.bstnma.fios.verizon.net [173.48.112.29])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 52ADwSVL020780
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 09:58:29 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id A0FD32E010B; Mon, 10 Mar 2025 09:58:28 -0400 (EDT)
+Date: Mon, 10 Mar 2025 09:58:28 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: linux-ext4@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: A syscall for changing birth time
+Message-ID: <20250310135828.GB8837@mit.edu>
+References: <bda3fa3f-dd12-40de-841a-e4c216ab533f@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMEGJJ1++aeE7WWLVVesbujME+r2WicEkK+CQgigRRp2grYf=A@mail.gmail.com>
+In-Reply-To: <bda3fa3f-dd12-40de-841a-e4c216ab533f@gmx.com>
 
-Hi,
-
-On 16:27 Thu 13 Feb     , Phil Elwell wrote:
-> Hi Hervé,
+On Mon, Mar 10, 2025 at 07:26:00AM +0000, Artem S. Tashkinov wrote:
 > 
-> On Thu, 13 Feb 2025 at 16:14, Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Hi Phil,
-> >
-> > On Thu, 13 Feb 2025 15:18:45 +0000
-> > Phil Elwell <phil@raspberrypi.com> wrote:
-> >
-> > > Hi Andrea,
-> > >
-> > > The problem with this approach (loading an overlay from the RP1 PCIe
-> > > driver), and it's one that I have raised with you offline, is that
-> > > (unless anyone can prove otherwise) it becomes impossible to create a
-> > > Pi 5 DTS file which makes use of the RP1's resources. How do you
-> > > declare something as simple as a button wired to an RP1 GPIO, or fan
-> > > connected to a PWM output?
-> >
-> > The driver could be improved in a second step.
-> > For instance, it could load the dtbo from user-space using request_firmare()
-> > instead of loading the embedded dtbo.
-> >
-> > >
-> > > If this is the preferred route to upstream adoption, I would prefer it
-> > > if rp1.dtso could be split in two - an rp1.dtsi similar to what we
-> > > have downstream, and an rp1.dtso that #includes it. In this way we can
-> > > keep the patching and duplication to a minimum.
-> >
-> > Indeed, having a rp1.dtsi avoid duplication but how the rp1.dtso in
-> > the the kernel sources could include user customization (button, fan, ...)
-> > without being modified ?
-> > At least we have to '#include <my_rp1_customizations.dtsi>'.
-> >
-> > Requesting the dtbo from user-space allows to let the user to create
-> > its own dtso without the need to modify the one in kernel sources.
-> >
-> > Does it make sense ?
-> 
-> I think I understand what you are saying, but at this point the RP1
-> overlay would no longer be an RP1 overlay - it would be an
-> RP1-and-everything-connected-to-it overlay, which is inherently
-> board-specific. Which user-space process do you think would be
-> responsible for loading this alternative overlay, choosing carefully
-> based on the platform it is running on? Doesn't that place quite a
-> burden on all the OS maintainers who up to now have just needed a
-> kernel and a bunch of dtb files?
-> 
-> If it is considered essential that the upstream Pi 5 dts file does not
-> include RP1 and its children, then Raspberry Pi are going to have to
-> walk a different path until we've seen how that can work. By splitting
-> rp1.dtso as I suggested, and perhaps providing an alternative helper
-> function that only applies the built-in overlay if the device node
-> doesn't already exist, we get to stay as close to upstream as
-> possible.
-> 
-> Phil
+> Why is it that the Linux kernel supports reading btime, but there's no
+> syscall to change it? At least for ext4 there's the debugfs utility, but
+> for other filesystems there's just nothing. And even debugfs is not a
+> solution, since it requires root privileges and an unmounted/mounted RO
+> filesystem.
 
-So, the problem is twofold: the first is due to the fact that downstream
-expects the dtb to be fully declared at fw load time (I'll call that
-*monolithic* dtb from now on), the second is about how to represent dependencies
-between board dtb and rp1 overlay which arises only when using overlays instead
-of a monolithic dtb.
+POSIX and Single Unix Specification also doesn't provide a way to
+allow userspace to set ctime (inode change time).  That's because the
+definition of "change time" is defined to include the time to change
+anything about the inode metadata --- including the inode timestamps.
 
-The former issue must be solved first in order for the latter to even exists
-(if we don't use overlay, the dependencies are fully exposed in the dtb since
-the beginning), so I'll concentrate on the former for now.
+Simply, the definition of "birth time" is about the time that the
+inode was "birthed", and that's not something that you can change.
+The problem is that DOS has a concept of "creation time", which seems
+to mean "the time that the abstract concept of the file was created".
+So if a file was created somewhere in a build farm in Redmond,
+Washington, that's the time that the file should have, according to
+Microsoft.  So Windows allows the "creation time" to be set to any
+arbitrary file, since installers need to be able to set the "abstract
+creation time".
 
-There are 3 possible scenarios to be reconciled:
+You can debate whether "birth time" (which can't be set) or a
+"abstract creation time" (which can set to any arbitrary value), is
+"better" but that's why Linux doesn't support a way to set the "birth
+time".
 
+Whether you think we should bow to what Microsoft dictates probably
+depends on how much you believe Windows is a legacy operating system
+or not.  :-)  Personally, it's not something I really care about, and
+if someone really wants to add a Windows-compatible "Creation Time",
+my suggestion would be to define an extended attribute where this
+could be stored.
 
-1 - MONOLITHIC DTB
+We *could* allocate space in the on-disk inode to store this
+timestamp, but since I would estimate 99.9% of deployed Linux systems
+don't care about Windows compatibility, it's not a good use of
+resources.  We could also add a mount option which changes the
+semantics of birth time, but that adds extra complexity, and again, I
+would estimate that 99.9% of Linux systems (where I include all of the
+Linux deployments in Cloud VM's) don't care about Windows
+compatibility in this way.
 
-This is the downstream case, where it's advisable to have only one dtb blob
-containing everything (rp1 included) loaded by the fw. In this case the
-resulting devicetree would looks like:
+Cheers,
 
-  axi {
-    pcie@120000 {
-      rp1_nexus {
-        pci-ep-bus@1 {
-             ...
-        }
-      }
-    }
-  }
-
-
-2 - RP1 LOADED FROM OVERLAY BY THE FW
-
-In this case the rp1 dt node is loaded from overlay directly by the fw and the 
-resulting devicetree is exactly equal to the monolithic dtb scenario.
-In order for that overlay to be loaded by fw, just add 'dtoverlay=rp1' in
-'config.txt'.
-
-
-3 - RP1 LOADED FROM OVERLAY AT RUNTIME
-
-Here it's the rp1 driver that loads the overlay at runtime, which is the case
-that this patchset originally proposed. The devicetree ends up like this:
-
-  axi {
-    pcie@120000 {
-      pci@0,0 {
-        dev@0,0 {
-          pci-ep-bus@1 {
-               ...
-          }
-        }
-      }
-    }
-  }
-
-and this is exepcially useful to cope with the case in which there's no DT
-natively used, e.g. on ACPI systems.
-
-
-In order for all those 3 mentioned scenatios to work, I propose the following
-inclusion scheme for for the dts files (the arrow points to the includer):
-                   
- 
- rp1-pci.dtso         rp1.dtso
-     ^                    ^
-     |                    |
-rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b-MONOLITHIC.dts
-   
-   
-where those dts are defined as follows (omitting the internal properties for
-clarity sake):
-
-
-- rp1-common.dtsi ------- // definition of core rp1 and its peripherals, common
-			  // for all cases
-
-	pci_ep_bus: pci-ep-bus@1 
-	{
-		rp1_clocks { };
-
-		rp1_gpio { };
-
-		rp1_eth { };
-	};
-
-- rp1-pci.dtso ---------- // ovl linked in the rp1 driver code to be loaded at
-			  // runtime from rp1 driver. Only for case 3
-
-	/plugin/;
-	fragment@0 {
-                target-path="";
-                __overlay__ {
-			#include "rp1-common.dtsi"
-		};
-	}
-
-- rp1-nexus.dtsi ------- // adapter to decouple rp1 ranges for non runtime-loaded
-		         // overlay case (i.e. only for case 1 and 2)
-
-	rp1_nexus {
-		ranges = ...
-		
-		 #include "rp1-common.dtsi"
-	};
-
-- rp1.dtso ------------ // overlay to be loaded by fw (case 2)
-
-	/plugin/;
-	&pcie2 {
-		#include "rp1-nexus.dtsi"
-	};
-
-- bcm2712-rpi-5-b-MONOLITHIC.dts --- // monolithic dtb to avoid any overlay use
-				     // (case 1)
-
-	/ {
-		... all rpi5 board dts ...
-		&pcie2 {
-        		#include "rp1-nexus.dtsi"
-		};
-	};
-
-
-with only minimal changes to the rp1 driver code, I can confirm that all those
-scenarios can coexits and are working fine. Before processding with a new patchset
-I'd like to have some thoughts about that, do you think this is a viable approach?
-
-Many thanks,
-Andrea
+						- Ted
