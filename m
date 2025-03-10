@@ -1,91 +1,92 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mail.cs.ucr.edu (mail.cs.ucr.edu [169.235.30.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BB21E519;
-	Mon, 10 Mar 2025 17:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28CD19004A;
+	Mon, 10 Mar 2025 17:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=169.235.30.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741626056; cv=none; b=PApyR14XsgRcjbCDftYcX0S5ehb4Gj+TYHcvDP1lsJbwZ1DBgnkBw4ij7YS3F3zDOYXU3ybhFmRtM1GmJ6XL8M3x5Ha30VbKemtcAzRFHCcrxb6lH0bDnH8m7+ozSPruwp2WkMvt29HQEwZ4OQL47WdepN81B5EBQK2Ebooddwo=
+	t=1741626181; cv=none; b=IqYU1sP3ha+3/JN1RtNssXqvTv7QhL8Uz46WnarppGnA4uETUyhWMQF/hkgl6QawVo2g9bqU9JhxQ0Z7epJREvsDPWH4lfS6vchl8Yp1ZJqVxE2a/ZpJBGKopEfllGuo9uCNBNF2ujeY/sH9l7D/Jvh9HSQ3EAemSQx6JBesqD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741626056; c=relaxed/simple;
-	bh=MeG1VCik5Ze8Q6an3AFip2HUlayeAdN3z/xG111Hfxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jeiZRKPG81x/O6awK3ipYUEpeMDuKJjuWYbpGae5UsmaHyJ+zpjx37xrthHEyZPehmG215V5Y8i+WzTBsdZQJ5/5pXThpVJws2RU+yPuHwgukA2sWGahOhvBCVwEiQHlwn7SHYc6vUSRr64IEboGQg7K6BVcEeC+ZAYqaa35HKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s1w14gMk; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s1w14gMk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=owMofiDXpcMMHo+/HgqyyJABYuI5qKBiRMXRGlcf8l4=; b=s1w14gMkAYfFDIL9YOPASgbOwx
-	1az5TYCE3Iop3ZjuWP2hMZHc43uhYwtz5t7FlF858GhQVCseu/YIf4c22DkYuRMnqk1hIL35OuVeK
-	a4OD0/z6Wcw9NLx0GUo6uvZO4d3b9LUdnwzgs5xQ13u1WpWMdK6M874QTs8kWKOJf6o8OhIZoPcx/
-	Ro7cyoNQl02p3o07+Rg+Tu5oODc1mDtEjn5oyDd1bpRATMvwcbbGVOV7VFvu1oPLipbVL/Pm3nlBs
-	PNJl+C5UjweOwUlE5arqj9dDswrg62muLoeiuCzqOM5IzKqqIB5wBR5O3U3u0kS8L+wLGYdnMX4Ky
-	l39qbUYg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1trgUR-00000008IkT-240a;
-	Mon, 10 Mar 2025 17:00:38 +0000
-Date: Mon, 10 Mar 2025 17:00:31 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Yu Zhao <yuzhao@google.com>, John Hubbard <jhubbard@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: Re: [PATCH v10 2/8] mm/huge_memory: add two new (not yet used)
- functions for folio_split()
-Message-ID: <Z88ar5YS99HsIRYo@casper.infradead.org>
-References: <20250307174001.242794-1-ziy@nvidia.com>
- <20250307174001.242794-3-ziy@nvidia.com>
- <Z88ToirSWa_meevw@casper.infradead.org>
- <A10312E5-F4CE-4CBA-B7CB-D435DFEA496F@nvidia.com>
- <D94BB56F-4BA0-4376-B5C4-7E38D2D92624@nvidia.com>
+	s=arc-20240116; t=1741626181; c=relaxed/simple;
+	bh=hdUusOO1njK/6Sqr856+h049ZnrUaK5BHfpdHIEg3LM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Mvzh5c2+GLw4SyU8W/46T6hgyPVOEIyWy5Lz3HwXsPOSPbKZm0T5eqnf9bk7ETCrpxrg34sXPKRaJmo3IzMpA/1Q8hxsC+mF2bDAxyw1QBJvr13kv8iJpl3h2OZ1Q3IPge5JNNgJoSDAZN/+mVy4Bjrem0ru7wLdrbgMPDYGBp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org; spf=none smtp.mailfrom=mail.cs.ucr.edu; arc=none smtp.client-ip=169.235.30.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mail.cs.ucr.edu
+Received: by mail.cs.ucr.edu (Postfix, from userid 1000)
+	id BAB902C800243; Mon, 10 Mar 2025 09:55:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cs.ucr.edu BAB902C800243
+X-Spam-Report: No
+X-Spam-Level: No
+Received: from kq.cs.ucr.edu (kq.cs.ucr.edu [169.235.27.223])
+	by mail.cs.ucr.edu (Postfix) with ESMTP id 9C2D92C8002FC;
+	Mon, 10 Mar 2025 09:55:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cs.ucr.edu 9C2D92C8002FC
+Received: by kq.cs.ucr.edu (Postfix, from userid 101072)
+	id 84D6427E46DC; Mon, 10 Mar 2025 09:54:46 -0700 (PDT)
+From: Yuan Tan <tanyuan@tinylab.org>
+To: axboe@kernel.dk,
+	syzbot+f2aaf773187f5cae54f3@syzkaller.appspotmail.com
+Cc: linux-block@vger.kernel.org,
+	akpm@linux-foundation.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	syzkaller-bugs@googlegroups.com,
+	willy@infradead.org,
+	falcon@tinylab.org,
+	tanyuan@tinylab.org
+Subject: [PATCH] block: add lock for safe nrpages access in invalidate_bdev()
+Date: Mon, 10 Mar 2025 09:54:00 -0700
+Message-Id: <20250310165400.3166618-1-tanyuan@tinylab.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <67ceb38a.050a0220.e1a89.04b1.GAE@google.com>
+References: <67ceb38a.050a0220.e1a89.04b1.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <D94BB56F-4BA0-4376-B5C4-7E38D2D92624@nvidia.com>
 
-On Mon, Mar 10, 2025 at 12:42:06PM -0400, Zi Yan wrote:
-> > Because of the “Careful” comment. But new_folio->* should be fine,
-> > since it is the same as new_head. So I probably can replace all
-> > new_head with new_folio except those VM_BUG_ON_PAGE checks?
+Syzbot reported a data-race in __filemap_add_folio / invalidate_bdev[1]
+due to concurrent access to mapping->nrpages.
+Adds a lock around the access to nrpages.
 
-Why not also the VM_BUG_ON_PAGE check?  I mean:
+[1] https://syzkaller.appspot.com/bug?extid=f2aaf773187f5cae54f3
 
-> @@ -3364,8 +3364,8 @@ static void __split_folio_to_order(struct folio *folio, int old_order,
->  		/* ->mapping in first and second tail page is replaced by other uses */
->  		VM_BUG_ON_PAGE(new_nr_pages > 2 && new_head->mapping != TAIL_MAPPING,
->  			       new_head);
+Signed-off-by: Yuan Tan <tanyuan@tinylab.org>
+Reported-by: syzbot+f2aaf773187f5cae54f3@syzkaller.appspotmail.com
+---
+ block/bdev.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-		VM_BUG_ON_PAGE(new_nr_pages > 2 && new_folio->mapping != TAIL_MAPPING, new_head);
+I had already completed and tested this patch before Matthew sent the
+email. I'm not sure if this solution is correct. If it's not, please
+ignore the patch :)
 
-(or we could just ditch the assert entirely; it's not all that useful)
-
-> -		new_head->mapping = head->mapping;
-> -		new_head->index = head->index + index;
-> +		new_folio->mapping = head->mapping;
-> +		new_folio->index = head->index + index;
-
-	new_folio->mapping = folio->mapping
-	new_folio->index = folio->index +index;
-
-(um, and that index + index looks weird; better name might be just 'i')
+diff --git a/block/bdev.c b/block/bdev.c
+index 9d73a8fbf7f9..934043d09068 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -96,7 +96,14 @@ void invalidate_bdev(struct block_device *bdev)
+ {
+ 	struct address_space *mapping = bdev->bd_mapping;
+ 
+-	if (mapping->nrpages) {
++	XA_STATE(xas, &mapping->i_pages, 0);  /* we don't care about the index */
++	unsigned long nrpages;
++
++	xas_lock_irq(&xas);
++	nrpages = mapping->nrpages;
++	xas_unlock_irq(&xas);
++
++	if (nrpages) {
+ 		invalidate_bh_lrus();
+ 		lru_add_drain_all();	/* make sure all lru add caches are flushed */
+ 		invalidate_mapping_pages(mapping, 0, -1);
+-- 
+2.25.1
 
