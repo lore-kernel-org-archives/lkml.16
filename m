@@ -1,121 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2305F22F17A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E8B22F17A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 16:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741623418; cv=none; b=eSbbQNjf1yte0eL+vIUO0pvi/6oBCuebeyhXOMJDPjHGPGdw3uZpFTkROp2TgMlpoFLGDJTA9zTRY1eDQDLAwI93bog8t21/a2e88nbRhNg/hRKcjkbTvjwVe3aKQ7ESrTmAmqEKpxkwu1i3cqsf0Y6xM1IhsQ+p+MzDlyhVj4o=
+	t=1741623432; cv=none; b=Oiw9kIHrQmGMcoMvt8b8Poi1fLY8SZwRk6dzf+N5I3f5a9qOV5CJcZ0ZMGW+qD2MbuwJBlxh4TQt5EKqUuEdVjtsaHHxLFm7Vv0TSONrYaYOSEa73dEcMztkRCz5T6aoNyRuJb75SLc3yqMJ3YEPFvJtvBL2yrq5LoQaQiavPyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741623418; c=relaxed/simple;
-	bh=emb9auBSHxF4tlyXoWTp5NptCPzqIIHlSVkgFyPWSts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eJC6ctGdRtoqs2lGzG6MzdbdVa/m8XECyyLEGzaQ65buksRMqXBZ1b5lWO3yxI3xXG3f04MN+uTp0g4pJgRMFnBszH7leX3jYgd2qSjOYtXUHNaZ1/N9FchS5kRIKaUemc4Ij3+qQi/y8Yz9qX1Dfw0ehmLzZ5NJGqW7OYjHWr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oItISY0F; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1741623432; c=relaxed/simple;
+	bh=E5gkLF4efJbEakqe2LCyGh3dRXBQKFkQyAgDGFFrD/E=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Dlvs0u/iArDsGaE5DL2VgUFc/m100ipC3GdcA7eUHF/INeHdK0/G4f9QUF4hLoJDJOTVJ5zFnoEUB9ObyoxYw3rEoR1jzmLg325sMcSWSiJWaH2+a4Yfe3PobzYH98FdCziUSN95f/2OjMdwUIxJEUTTlnNpyUQCFfELlDSbIW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AY+q+Fix; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oItISY0F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ERs6yabp7PifLMJ8plQdpvIMPOx6OSaUkIpbf+aPDzY=; b=oItISY0FIccmGQGGcaASKtVlIM
-	BafAVkQduuWkDl3em2sjHuQ6oyOIlLzKejJYJXGRMjT0x95GEflo3kgv+A62bR7QIR2wXQ9QD3Y6P
-	C/XpeaJ17N2NLXxesRzQSStIRornfx/paGQQxaYu40kTmUMm7W4luTTPpyxjlGsMCFF+UKYb8XBmI
-	1TJG5PRssBwS/y4aX3/7UIbxx0DUSBgfvlcMPRxj5n7ny1AkWre2TIa4oDcT10bSXVpAESbcBq0yU
-	AY1/N0z7S9oO8eCec5wvgxsgHmz+fokrLh1lX998Acl3DESFuKKDmdpaA13u/cknjLiZc46LQgigu
-	twNWptyw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1trfmA-00000007Qsx-3T0l;
-	Mon, 10 Mar 2025 16:16:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EA065300599; Mon, 10 Mar 2025 17:14:45 +0100 (CET)
-Date: Mon, 10 Mar 2025 17:14:45 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: mingo@kernel.org, lucas.demarchi@intel.com,
-	linux-kernel@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Subject: Re: [PATCH v3 7/7] perf: Make perf_pmu_unregister() useable
-Message-ID: <20250310161445.GI19344@noisy.programming.kicks-ass.net>
-References: <20250307193305.486326750@infradead.org>
- <20250307193723.525402029@infradead.org>
- <0f36ca48-09ab-4fca-8a8d-7ed3b2abc056@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AY+q+Fix"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2217a4bfcc7so69634945ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 09:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741623430; x=1742228230; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E5gkLF4efJbEakqe2LCyGh3dRXBQKFkQyAgDGFFrD/E=;
+        b=AY+q+Fixb/TovXaeoNGX4yu2G3DhjbwDs2qV2dHdvU0GZ6/81XD9YQQfkwbTzdV+Hq
+         uDe+zEKR5jjRxka1ut4ObLgqPo8gFKj1eKJQPIJNKU7TBhhnYjGXt3zM0zpe1tfP7aWZ
+         ppNTtLynMqw0DiIoEZJ1gsUjQVPFvKLTPKt4B4qWkI4H8oxAwTSu9XdFUz7MeQ+EqSNP
+         EcOqGiuFaWZ09PatCYsPRvQ1s7iUE1EnZ2aQ8gePwMeN5fGtz86foUQ/2twMJcU3kNLi
+         aQFRzTOKIeaFmpUEgRwQkORItGCGYZFlmQpwm1F69SaPBHgrjBw5nrGKjxqe9dR4pRNE
+         ejwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741623430; x=1742228230;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E5gkLF4efJbEakqe2LCyGh3dRXBQKFkQyAgDGFFrD/E=;
+        b=Fq3MMjJW01RC9B92HhSaIRYFQtuB4HZsSH/ZeUooQHZFpdEGLSCoqs48mmtGa9rg8i
+         W392QDfp1zQdbgh11ohxfBH70qV9XGKFjuzV6M1u7SdudWo9zlUgVT68YyqbBiYuVgjH
+         JN6ngS1CjfqPdtCl7O+LNhcsJRceftFgV+gTD5pVWT2GzNmXtbZASVhfACT82Lmb5+z+
+         TSRMMLffp8bHRcp4LkTjfIs1ZLrz2vmpeZuOjQnl0/JjuyW5aJew4DwW5lqipobHttsD
+         4jIE8pLvexUOcXDokDew+9fk2roqua7N5RNm9LXBgWB0QKTw+P6G7AjNuGq6ESoy2flb
+         QZjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnCpKoL0IizRsK7FrvOkItEZXquXl87eRNqnue+2t908Dwfl4Qa4GIKvT2L8nbYDKShCPpOFrPua9XM+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW2WvUpAXq+TY7qOUwNixcf+0euNjR2km8pyi6B/umzup1HWrm
+	ZGFWaxILFUdH9xXXiup4RDKvic1+OIy2yLgQawtE+IthXNpMtTquYx0puhmU98zEe+uL3Kr6G2k
+	F2A==
+X-Google-Smtp-Source: AGHT+IEvtopbnUmeWsy/nIhJXSJwmRVRXafyvQtfaSeezEXN0bryU3yMD0urwCDwgpBZydAdDQCaU98xn/I=
+X-Received: from pfbde10.prod.google.com ([2002:a05:6a00:468a:b0:736:48e7:45b2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3994:b0:1f3:32c1:cc5d
+ with SMTP id adf61e73a8af0-1f58cb3fe00mr534312637.21.1741623429907; Mon, 10
+ Mar 2025 09:17:09 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Mon, 10 Mar 2025 09:16:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f36ca48-09ab-4fca-8a8d-7ed3b2abc056@amd.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250310161655.1072731-1-seanjc@google.com>
+Subject: [ANNOUNCE] PUCK Agenda - 2025.03.12 - CANCELED
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 10, 2025 at 09:05:45PM +0530, Ravi Bangoria wrote:
-> > @@ -207,6 +207,7 @@ static void perf_ctx_unlock(struct perf_
-> >  }
-> >  
-> >  #define TASK_TOMBSTONE ((void *)-1L)
-> > +#define EVENT_TOMBSTONE ((void *)-1L)
-> >  
-> >  static bool is_kernel_event(struct perf_event *event)
-> >  {
-> > @@ -2348,6 +2349,11 @@ static void perf_child_detach(struct per
-> >  
-> >  	sync_child_event(event);
-> >  	list_del_init(&event->child_list);
-> > +	/*
-> > +	 * Cannot set to NULL, as that would confuse the situation vs
-> > +	 * not being a child event. See for example unaccount_event().
-> > +	 */
-> > +	event->parent = EVENT_TOMBSTONE;
-> 
-> This will cause issues where we do `event = event->parent`. No? For ex:
-> 
->   perf_pmu_unregister()
->     ...
->       perf_event_exit_event()
->         perf_event_wakeup()
->           ring_buffer_wakeup()
->             if (event->parent)
->               event = event->parent;
+In protest of Daylight Savings Time, a.k.a. the worst idea ever, PUCK is
+canceled this week.
 
-It will. However, if we do not do this, we have a potential
-use-after-free, and people seem to take a dim view of those too :-)
-
-I had convinced myself all paths that were doing this 'event =
-event->parent' were unreachable by the time we set the TOMBSTONE, but
-clearly I missed one.
-
-I suppose we can do something like so, not really pretty though.
-
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13722,9 +13722,12 @@ perf_event_exit_event(struct perf_event
- {
- 	struct perf_event *parent_event = event->parent;
- 	unsigned long detach_flags = DETACH_EXIT;
-+	bool parent_dead = false;
- 
--	if (parent_event == EVENT_TOMBSTONE)
-+	if (parent_event == EVENT_TOMBSTONE) {
- 		parent_event = NULL;
-+		parent_dead = true;
-+	}
- 
- 	if (parent_event) {
- 		/*
-@@ -13748,6 +13751,9 @@ perf_event_exit_event(struct perf_event
- 
- 	perf_remove_from_context(event, detach_flags);
- 
-+	if (parent_dead)
-+		return;
-+
- 	/*
- 	 * Child events can be freed.
- 	 */
+Paolo and other folks in Europe, would you prefer to cancel PUCK for the rest
+of March (until Europe joins the US in DST), or deal with the off-by-one error?
