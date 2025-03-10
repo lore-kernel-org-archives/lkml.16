@@ -1,152 +1,360 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490A222D4F4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C96322DFA5;
+	Mon, 10 Mar 2025 15:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622232; cv=none; b=ghpIj85x/1e13C65aJUBBHzWsFukuXCMiQtAHgWBT/US3Iv+MZc+Lm7PBfCoy68RRQO67aAX8we8nVmwgSmsm969hKrfV5uldOKqxOtqjXh5uXqCsI9QZveZljs5T8BxZVsaHnnQN2CwbXXoud9rleERCJHY80m0o21GN6K14HE=
+	t=1741622232; cv=none; b=KC730GZHBRMhLjzndyQO8+7JuVPxQKCyo6X3lbz/vndHdN9ex1Vu/BAP4IXkwxGgaKPF07rBlP09TN+Ahso58GHIiA+zs8JAJAJ/EdTpg2AuflZ1VAysVgzRf4Iqng7NzBgEJ/I89PHAV8Cpxetpwzw52cYRu4bdXV6LXiHISiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741622232; c=relaxed/simple;
-	bh=YIEFTn4o/Wiywn2P5BXfgmgT1qd2QuZ4tLJW8Pp9+uk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kgHSHFD20tKGD4pXtgniiabQ0hlynNpaYxlthKrnt4SAKzCMJnVrhDKIZVbPfp09fooIqYCb4eQSAqQwwVw0P8dSwLO0Nb8dJa0fGBINq+potLF1dIXvX/7VxF+L6EHsfTrWd2bciDHm5To2zu/1/Yc5tb9i7hBvXFkmEx80bs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EGH6bg2C; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=jG2AhQ8rfFnaTwya10N47DF4WYRctsn28OpF3DNfM1U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=q2qjhDOmfKWZottU8LOFoefNytZg3bVvLLlVc/ayxisZWKawUzIbYa5FJKsQxbBU1bgOGZIpZvFWVooIPxmE/Ujm2p69epJDmybaayD6EVy6D40JwciXmYfY9zk06u16O5M9Zs6ga66SEpUrtwQNifAVVq8S2wMgxu7aBhDsLA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fDdTLaE0; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGH6bg2C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741622229;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fDdTLaE0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DF985441BD;
+	Mon, 10 Mar 2025 15:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741622228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YIEFTn4o/Wiywn2P5BXfgmgT1qd2QuZ4tLJW8Pp9+uk=;
-	b=EGH6bg2C3IQoPFJM1z6fuxn1+AoXH30SN3SnalGFIBKF6pm0BGMclqn+1nBWmORPM9SMyB
-	YnkYU6BcxKV06t8TZiz7bKdBnTpaZnKnevRrm3YBIfAiFDHPwJau2u2+C5QhA/DMD3UFSa
-	Q6Un/01bJvdzrAoWi54Vs3IjygzUJOk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-Zyr31zlsP5e_C3YdMnWD0Q-1; Mon, 10 Mar 2025 11:57:07 -0400
-X-MC-Unique: Zyr31zlsP5e_C3YdMnWD0Q-1
-X-Mimecast-MFC-AGG-ID: Zyr31zlsP5e_C3YdMnWD0Q_1741622227
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so9123665e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:57:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741622226; x=1742227026;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YIEFTn4o/Wiywn2P5BXfgmgT1qd2QuZ4tLJW8Pp9+uk=;
-        b=w1Yz1naFPXuGQXty5IwiqqZUAzhWaVsP2gBYtm2PhLfuTkjzYtskL0YssHdgDJNwur
-         zOEN7uyID5LpfSgWLlq0PL8ObPOZj71GnMiAJ2B9PzPHL+h2rgCCSuqS7g7C3mICkv3D
-         Z+xB85Jmfldi3W6OHppRsTGnLc2PyfTpR9qLX2BOG0ATk3X4F7f8IfeB0kcKdsdQ7tMT
-         RjRN7yKtq0safVnSZ6DtPsA59suQhhkT/eE8ri9EjI2IDrddLChqPc3nQfLRAlq/F9VJ
-         SfzDulMDJGRVY4aMP+pmPv30zTtUtddFdnh7K9nXD43L273PgK3ukqDxSQzYvquw9yY0
-         0Usw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXgn1NLgCthas9s5gr8yIRX9uXqpE5kCzbUWl+JbYFph3Q7IVDfN2hEmtKTJ1IiDDZa/Phei3auDwtbxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJig6go9BzHbMXQtcf/sdnLV31TNfey1Jzd/RJwQ6mJ7oUreue
-	Kme/nwJSf8oQhgfopjU5Gr4YwtRZO47TcLrOm1zWwTWXdahJIi4xCM0bFY4moR5i3fj4iMQcY/f
-	2fvs6bAs3VqTRHHoCc0TBa6l1VyDhzBX3F78XpeyrBG03NA8Gs76DGk8VvB4hYA==
-X-Gm-Gg: ASbGncttHsF0GOWH15wpNT+2/CQSI4+PIa8BPCKczAMMYXL9uiQxS9KnveQ7GJHRxQj
-	6EirHg54raI/hosXIdTl/zg+lCsqKfr7xfUGJLyv4NahireRtZMMdnzYDUO0e2vP68MOvpoplgc
-	tsoe4J5wd+Yx8tThFD+HW2fDQWS6bxOHk5Xk416G/Z6c+CKc8BxNs5HhjWIEsngcR4Cip421H0v
-	XzzE7okUO4oUal1vgOvin45iH4l6dQsqfl7nHv8D8XcqJtr3jtTB+R6zzV1SJTGaLqlBcb8ox4k
-	4POn6lRL9K2l4ycCzzHrUaAEcpOyI9329pAi/yDG6A==
-X-Received: by 2002:a05:600c:1c9d:b0:439:86fb:7340 with SMTP id 5b1f17b1804b1-43c601d19cbmr100841315e9.30.1741622226502;
-        Mon, 10 Mar 2025 08:57:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7Wx729XLbdYNhh5Uh5+ULsnmrD5hmJxoj3oRgjANDXFizew90DDJwcouqQiqEKExMdX97wg==
-X-Received: by 2002:a05:600c:1c9d:b0:439:86fb:7340 with SMTP id 5b1f17b1804b1-43c601d19cbmr100840845e9.30.1741622226066;
-        Mon, 10 Mar 2025 08:57:06 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cf8a840e1sm37754895e9.8.2025.03.10.08.57.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 08:57:05 -0700 (PDT)
-Message-ID: <c97730cdf59fa4b32ee46bd22f3cc514deb0f51e.camel@redhat.com>
-Subject: Re: [PATCH v11 2/3] sched: Move task_mm_cid_work to mm work_struct
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Ingo Molnar <mingo@redhat.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- "Paul E. McKenney"	 <paulmck@kernel.org>, linux-mm@kvack.org
-Date: Mon, 10 Mar 2025 16:57:02 +0100
-In-Reply-To: <31fa089d-1f55-4bc7-9323-389fda4cadfa@efficios.com>
-References: <20250227153329.672079-1-gmonaco@redhat.com>
-	 <20250227153329.672079-3-gmonaco@redhat.com>
-	 <1c161066bcbc916ae9d97e7d1753ee12511da085.camel@redhat.com>
-	 <31fa089d-1f55-4bc7-9323-389fda4cadfa@efficios.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	 in-reply-to:in-reply-to:references:references;
+	bh=a+jhmNSWGtF6gwCaOphrzoK/yfH+/FtGdxKL5Im1AWA=;
+	b=fDdTLaE0lMu9sCcwKUGyQatH6KBo8vQqqQpauEEoSZXnZk/TMRckVU53ufUXXpm4gOQS8l
+	JroOu4ZPp2f9Zou5qFaVxCRB3s3aYUQsUS2XiUszRMUxWy0lFrz6wB92NLR+bUJoljddl/
+	R8pkqITMTZgF+MKuVknzHDx+Ea7bBX0mTvOqlrD1BdlXP/TjflZOdnHStENaNFCdaNL2SS
+	WVFfkcjvM227qwpJPpDcfv+UmCfAbcTUyNVfjAt1L22UWwEmETUZYv/h4Pj9t75QQjZVmC
+	hJsfIkz45GYZgcdKMfzcs4Q5GqU9A9Di5ZOyfRwRE9TsbtM0/j16mY7qBjGJKg==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Mon, 10 Mar 2025 16:56:08 +0100
+Subject: [PATCH v3 2/3] ARM: dts: imx6ul: Add Variscite VAR-SOM-MX6UL SoM
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250310-varsom6ul-concerto-dts-v3-2-551e60713523@bootlin.com>
+References: <20250310-varsom6ul-concerto-dts-v3-0-551e60713523@bootlin.com>
+In-Reply-To: <20250310-varsom6ul-concerto-dts-v3-0-551e60713523@bootlin.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7899;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=jG2AhQ8rfFnaTwya10N47DF4WYRctsn28OpF3DNfM1U=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnzwvRfQ5/SlMxY6UPIspGghDEvy5fPpJ3/Gkte
+ yubh2BJNvOJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ88L0QAKCRDRgEFAKaOo
+ NvDbD/9lXU6U5tqS2QQphRp0ULcAkQRjZjQ/Z9EMSPOpsc30i/sZYyVvJXx9tamR0IG8c1KSREw
+ wYNUby7Qb+lVXehzU/4WupCoL+jNBO2aOewGp3gEtL2Ka5LHOZmK9Z94TT1/vVD/utDnGrnKZtU
+ ycvM2m4nibTSxKOS9gIzHUWuU8vdtAEidNTjVIwYsIdg1RuBdtPbZFWI16IXZdKJeUlXp069LuV
+ bnwqBHZNleJRBwutuVQoKHQFe2ISJZTFDD0r/Km1Q9avtcopVJO080gzi0idVMi6ccDYDa9SKY3
+ czJuwM1TbDQj5z/SnH05xdRYE9jJfQ7ODWpR52HZTDEbpxEZhi1fVEi6jW6dFjlP1flRU3ryKVs
+ g0hz/f7rbx076CVqBITNl4MlQCWIf2DFhqckL4qMpcZzJ7TQUasKz+EQke7UXZllxrndgvg4VGK
+ GanCjxgNqPseMtfiEHQNJgiJL+J376hqd07AfhccMnv2th7ClMD41/HKswLiTL9FXeFwuurfruY
+ 57QV7SC6Xrpk280VJaQ3QVSTO0sxAMWQUCHMF77uBEUZTAF+tFFKT4JUrYcIHPhYalP7VgnaGO9
+ RCA1bLTWv52VZvS34eg3gqZCJCwN7qHNT4Y04kb/nQe41Dxb5K8xO4RrzWQk8vH8PBuDc6xfFko
+ E4JxdCz9qcXMMXg==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudeljeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhvdetuefghfeugfeutdeuueettdffudefgfeljeehvdetvefhjeffvdetvdehhfenucffohhmrghinhepvhgrrhhishgtihhtvgdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdpr
+ hgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: antonin.godard@bootlin.com
 
+Add support for the Variscite VAR_SOM-MX6UL SoM with:
 
+- NXP i.MX6 UltraLite SoC
+- 128–1024 MB DDR3L
+- 8–128 GB eMMC
+- 128–512 MB SLC NAND
+- Camera Interface
+- LVDS / Parallel RGB interfaces (not configured)
+- Touch controller (not configured)
+- Ethernet RMII interface (not configured)
+- On-SoM Wi-Fi/Bluetooth with CYW43353 on SDIO Module (not configured)
+- SD/MMC/SDIO interface
+- USB Host + USB OTG interface
+- I2C interfaces
+- SPI interfaces
+- PCI-Express 2.0 interface
+- on-SoM Audio Codec (not configured)
+- S/PDIF interface (not configured)
 
-On Mon, 2025-03-10 at 11:50 -0400, Mathieu Desnoyers wrote:
-> On 2025-03-10 10:46, Gabriele Monaco wrote:
-> > On Thu, 2025-02-27 at 16:33 +0100, Gabriele Monaco wrote:
-> > > Currently, the task_mm_cid_work function is called in a task work
-> > > triggered by a scheduler tick to frequently compact the mm_cids
-> > > of
-> > > each
-> > > process. This can delay the execution of the corresponding thread
-> > > for
-> > > the entire duration of the function, negatively affecting the
-> > > response
-> > > in case of real time tasks. In practice, we observe
-> > > task_mm_cid_work
-> > > increasing the latency of 30-35us on a 128 cores system, this
-> > > order
-> > > of
-> > > magnitude is meaningful under PREEMPT_RT.
-> > >=20
-> > > Run the task_mm_cid_work in a new work_struct connected to the
-> > > mm_struct rather than in the task context before returning to
-> > > userspace.
-> > >=20
-> > > This work_struct is initialised with the mm and disabled before
-> > > freeing
-> > > it. The queuing of the work happens while returning to userspace
-> > > in
-> > > __rseq_handle_notify_resume, maintaining the checks to avoid
-> > > running
-> > > more frequently than MM_CID_SCAN_DELAY.
-> > > To make sure this happens predictably also on long running tasks,
-> > > we
-> > > trigger a call to __rseq_handle_notify_resume also from the
-> > > scheduler
-> > > tick if the runtime exceeded a 100ms threshold.
-> > > [...]
-> > >=20
-> > > Fixes: 223baf9d17f2 ("sched: Fix performance regression
-> > > introduced by
-> > > mm_cid")
-> > > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> >=20
-> > Is this patch missing anything?
-> >=20
-> > I refactored a bit to have it build in configurations without RSEQ
-> > and/or MM_CID (which was failing v10)
->=20
-> Found a small nit. Please fix and resend with my reviewed-by, and
-> that version will be ready for inclusion.
+Product website: https://www.variscite.com/product/system-on-module-som/cortex-a7/var-som-6ul-nxp-imx6ul-6ull-6ulz
 
-Perfect, thank you!
-I'm changing that jiffies thing, testing a bit and sending it.
+Support is handled with a SoM-centric dtsi exporting the default
+interfaces along the default pinmuxing to be enabled by the board dts
+file.
 
-Gabriele
+I tested this on a VAR-SOM-6UL_G2_700C_512R_8N_IT_REV1.3A, which is why
+some of the features above are mentioned as "not configured" (I couldn't
+test them).
+
+This file is based on the one provided by Variscite on their own kernel,
+but adapted for mainline.
+
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi | 233 ++++++++++++++++++++++++++
+ 1 file changed, 233 insertions(+)
+
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi
+new file mode 100644
+index 0000000000000000000000000000000000000000..4e536e0252def06a7660c29b7231169e3aa38dba
+--- /dev/null
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-var-som.dtsi
+@@ -0,0 +1,233 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Support for Variscite VAR-SOM-MX6UL Module
++ *
++ * Copyright 2019 Variscite Ltd.
++ * Copyright 2025 Bootlin
++ */
++
++/dts-v1/;
++
++#include "imx6ul.dtsi"
++#include <dt-bindings/clock/imx6ul-clock.h>
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Variscite VAR-SOM-MX6UL module";
++	compatible = "variscite,var-som-imx6ul", "fsl,imx6ul";
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>;
++	};
++
++	reg_gpio_dvfs: reg-gpio-dvfs {
++		compatible = "regulator-gpio";
++		regulator-min-microvolt = <1300000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-name = "gpio_dvfs";
++		regulator-type = "voltage";
++		gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
++		states = <1300000 0x1
++			  1400000 0x0>;
++	};
++
++	rmii_ref_clk: rmii-ref-clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "rmii-ref";
++	};
++};
++
++&clks {
++	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
++	assigned-clock-rates = <786432000>;
++};
++
++&cpu0 {
++	dc-supply = <&reg_gpio_dvfs>;
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet1>, <&pinctrl_enet1_gpio>, <&pinctrl_enet1_mdio>;
++	phy-mode = "rmii";
++	phy-handle = <&ethphy0>;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <1>;
++			clocks = <&rmii_ref_clk>;
++			clock-names = "rmii-ref";
++			reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <100000>;
++			micrel,led-mode = <1>;
++			micrel,rmii-reference-clock-select-25-mhz = <1>;
++		};
++	};
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++
++	pinctrl_enet1: enet1grp {
++		fsl,pins = <
++			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
++			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
++			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
++			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
++			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
++			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
++			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
++			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
++		>;
++	};
++
++	pinctrl_enet1_gpio: enet1-gpiogrp {
++		fsl,pins = <
++			MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0 /* fec1 reset */
++		>;
++	};
++
++	pinctrl_enet1_mdio: enet1-mdiogrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
++			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
++		>;
++	};
++
++	pinctrl_hog: hoggrp {
++		fsl,pins = <
++			MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
++			MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN Enable */
++		>;
++	};
++
++	pinctrl_sai2: sai2grp {
++		fsl,pins = <
++			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
++			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
++			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x11088
++			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x11088
++			MX6UL_PAD_JTAG_TMS__SAI2_MCLK		0x17088
++		>;
++	};
++
++	pinctrl_tsc: tscgrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
++			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
++			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
++			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
++			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
++			MX6UL_PAD_UART2_CTS_B__UART2_DCE_CTS	0x1b0b1
++			MX6UL_PAD_UART2_RTS_B__UART2_DCE_RTS	0x1b0b1
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10069
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170b9
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170b9
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170b9
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170b9
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170f9
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170f9
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170f9
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170f9
++		>;
++	};
++};
++
++&pxp {
++	status = "okay";
++};
++
++&sai2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai2>;
++	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,
++			  <&clks IMX6UL_CLK_SAI2>;
++	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
++	assigned-clock-rates = <0>, <12288000>;
++	fsl,sai-mclk-direction-output;
++	status = "okay";
++};
++
++&snvs_poweroff {
++	status = "okay";
++};
++
++&tsc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_tsc>;
++	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
++	measure-delay-time = <0xffff>;
++	pre-charge-time = <0xfff>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
++	bus-width = <8>;
++	no-1-8-v;
++	non-removable;
++	keep-power-in-suspend;
++	wakeup-source;
++	status = "okay";
++};
+
+-- 
+2.47.0
 
