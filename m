@@ -1,35 +1,35 @@
 Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADE722172E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730B322156F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741608279; cv=none; b=qU+MhnIKPhuILfGNaCBM31SIjCczcsBeLCKsahauQn13ZX/vhP4neJ0DAms44XG7fZUeXmN+AagwvTCLK4Zm6aTIlVLvgw0Ktg9yEDBXg1kOR6GALckQA55wyz0pcSYEBX6bXMghs7B9hkjRf0WIK4dtTzmuFnNZr9BI9gj6OX4=
+	t=1741608280; cv=none; b=RSTqAt//cCLveaP9EqJDrJkVeMd6feUYEJgfmx7cXhHBanOWuI4hMuFcrYjUz2SSTbQFu0wPwlHDdZDcIUxdds5xslsXQHFm8hDnkHyManIvKgVgjO7nkf09mPbdevnz7l5RaY0TL5dG0jquWGFd0wyFs0o8FWFm5tVFngk5tnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741608279; c=relaxed/simple;
-	bh=2vklyyA3ErRN0JV+jV70G8ZrirPgj1dr+ngipHvmLnE=;
+	s=arc-20240116; t=1741608280; c=relaxed/simple;
+	bh=5OH6zwiSw0oNmq1LgVVbHiG2za82nMq8SrllEkAQIHg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HyqdxsGaGy1c8PE5T0SGY2kO+zB4k2ktCoTLUX0hGJdMOqbI7mqPnjVr5fqdsdlV6VwAii57Ns/S77x3VMt/mgezaZFJYz9RQ8pMFjhf3qTuHDs7hFjl3iZQIlufSbJfMdna8Rzha9eugB+ytCu1RDvSyYFBxV34BzEFZIPqezE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com; spf=pass smtp.mailfrom=yandex-team.com; dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b=tKVDYRr1; arc=none smtp.client-ip=178.154.239.72
+	 MIME-Version; b=FL6+u3YesI+DvrFQN6C4w2zhCyvlxrwOKuRwTVSgto2CUQGyvQKGqlxdH7GLJhGXcXzxmpPDbWBid9acHhpzJztNLO1VJPJ/ZGAtkAcjhO0kTkbRpFdEV7nK5ytzVh0Gwoy8BK9/xdIYgxJifs/rqUlmEVx2sayGz7SADseQFH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com; spf=pass smtp.mailfrom=yandex-team.com; dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b=N3tQSyH7; arc=none smtp.client-ip=178.154.239.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b="tKVDYRr1"
+	dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b="N3tQSyH7"
 Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:600c:0:640:a431:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id D8CAE60EAF;
-	Mon, 10 Mar 2025 15:04:12 +0300 (MSK)
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 3D4D160DE9;
+	Mon, 10 Mar 2025 15:04:06 +0300 (MSK)
 Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-nBaQjWYT;
-	Mon, 10 Mar 2025 15:04:12 +0300
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id s3o0lL2FT0U0-U5ZTnMcq;
+	Mon, 10 Mar 2025 15:04:05 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1741608252;
-	bh=9sCYhPB2JXvpHRR7mGAnOD5wFhzVOzlRXeW9jewkrPs=;
+	s=default; t=1741608245;
+	bh=QkhEET4Wo+gouJiK8Lgb4vMFbcgAXJpnZW6CjWUXYUI=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=tKVDYRr1Fc9PZMG5kcffLo5ML52XYvjB9fT2RP6/B4ZrI68qC5XErlG3jfkkQS0xQ
-	 LrPykZVjqAxqEQcIvjW8Q1fYRGUY3Nxe3UrpdFO1uG7CnyBvoqCzCxivetoS5oBrG4
-	 Z3/CxdprsbnC7nsU6PIIrdFT3yANX6Z3kGq3BFqU=
+	b=N3tQSyH7q5Aw8vLpj6oIzXJUFol2N5amtQM0FyQ56H5V1ZTHW1L15Ttrhb4B+gc9s
+	 kwO45GOraHszy2v9J2VM/BFPgJC3K8JF8XkbIkUICHgn30PaHURZx5W6AKTRCMaz9h
+	 /YGOyUFNzrS71N7G5BQA84g6wuvpXWXemUAU3A/g=
 Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
 From: Andrey Ryabinin <arbn@yandex-team.com>
 To: linux-kernel@vger.kernel.org
@@ -51,9 +51,9 @@ Cc: Alexander Graf <graf@amazon.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	David Rientjes <rientjes@google.com>,
 	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [PATCH v2 5/7] x86, kstate: Add the ability to preserve memory pages across kexec.
-Date: Mon, 10 Mar 2025 13:03:16 +0100
-Message-ID: <20250310120318.2124-6-arbn@yandex-team.com>
+Subject: [PATCH v2 2/7] kstate, kexec, x86: transfer kstate data across kexec
+Date: Mon, 10 Mar 2025 13:03:13 +0100
+Message-ID: <20250310120318.2124-3-arbn@yandex-team.com>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <20250310120318.2124-1-arbn@yandex-team.com>
 References: <20250310120318.2124-1-arbn@yandex-team.com>
@@ -65,255 +65,230 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This adds ability to specify page of memory that kstate needs to
-preserve across kexec.
-
-kstate_register_page() stores struct page in the special list of
-'struct kpage_state's. At kexec reboot stage this list iterated, pfns
-saved into kstate's data stream. The new kernel after kexec reads
-pfns from the stream and marks memory as reserved to keep it
-intact.
+Add kstate data to kexec segments so it got copied to the new kernel.
+Use cmdline to inform next kernel about kstate data location and size.
 
 Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
 ---
- include/linux/kstate.h |  30 ++++++++++
- kernel/kexec_core.c    |   3 +-
- kernel/kstate.c        | 124 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 156 insertions(+), 1 deletion(-)
+I've used cmdline as it's the simplest way to transfer address
+to the new kernel. Perhaps passing it via dtb would be more elegant
+solution, but I don't have strong opinion here.
+---
+ arch/x86/Kconfig                  |  1 +
+ arch/x86/kernel/kexec-bzimage64.c |  4 +++
+ arch/x86/kernel/setup.c           |  2 ++
+ include/linux/kexec.h             |  2 ++
+ include/linux/kstate.h            |  5 ++++
+ kernel/kexec_file.c               |  5 ++++
+ kernel/kstate.c                   | 49 ++++++++++++++++++++++++++++++-
+ 7 files changed, 67 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 0e27ebd7e36a..7358d9e15957 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -90,6 +90,7 @@ config X86
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_KCOV			if X86_64
+ 	select ARCH_HAS_KERNEL_FPU_SUPPORT
++	select ARCH_HAS_KSTATE			if X86_64
+ 	select ARCH_HAS_MEM_ENCRYPT
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 68530fad05f7..d3c98c8bda29 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -15,6 +15,7 @@
+ #include <linux/slab.h>
+ #include <linux/kexec.h>
+ #include <linux/kernel.h>
++#include <linux/kstate.h>
+ #include <linux/mm.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
+@@ -77,6 +78,9 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
+ 		len = sprintf(cmdline_ptr,
+ 			"elfcorehdr=0x%lx ", image->elf_load_addr);
+ 	}
++	if (IS_ENABLED(CONFIG_KSTATE))
++		len = sprintf(cmdline_ptr, "kstate_stream=0x0%lx@%ld ",
++			image->kstate_stream_addr, image->kstate_size);
+ 	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
+ 	cmdline_len += len;
+ 
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index cebee310e200..b32c141ffcdd 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -15,6 +15,7 @@
+ #include <linux/init_ohci1394_dma.h>
+ #include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
++#include <linux/kstate.h>
+ #include <linux/memblock.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/pci.h>
+@@ -992,6 +993,7 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	memblock_set_current_limit(ISA_END_ADDRESS);
+ 	e820__memblock_setup();
++	kstate_init();
+ 
+ 	/*
+ 	 * Needs to run after memblock setup because it needs the physical
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..bd82f04888a1 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -299,6 +299,8 @@ struct kimage {
+ 	unsigned long start;
+ 	struct page *control_code_page;
+ 	struct page *swap_page;
++	unsigned long kstate_stream_addr;
++	size_t kstate_size;
+ 	void *vmcoreinfo_data_copy; /* locates in the crash memory */
+ 
+ 	unsigned long nr_segments;
 diff --git a/include/linux/kstate.h b/include/linux/kstate.h
-index ae583d090111..36cfefd87572 100644
+index 4fc01e535bc0..ae583d090111 100644
 --- a/include/linux/kstate.h
 +++ b/include/linux/kstate.h
-@@ -88,6 +88,8 @@ struct kstate_field {
- };
+@@ -126,6 +126,8 @@ static inline unsigned long kstate_get_ulong(struct kstate_stream *stream)
  
- enum kstate_ids {
-+	KSTATE_RSVD_MEM_ID = 1,
-+	KSTATE_STRUCT_PAGE_ID,
- 	KSTATE_LAST_ID = -1,
- };
- 
-@@ -124,6 +126,8 @@ static inline unsigned long kstate_get_ulong(struct kstate_stream *stream)
-         return ret;
- }
- 
-+extern struct kstate_description page_state;
-+
  #ifdef CONFIG_KSTATE
  
- void kstate_init(void);
-@@ -141,6 +145,12 @@ void restore_kstate(struct kstate_stream *stream, int id,
- 		const struct kstate_description *kstate, void *obj);
- int kstate_load_migrate_buf(struct kimage *image);
++void kstate_init(void);
++
+ int kstate_save_state(void);
+ void free_kstate_stream(void);
  
-+int kstate_page_save(struct kstate_stream *stream, void *obj,
-+		const struct kstate_field *field);
-+int kstate_register_page(struct page *page, int order);
-+
-+bool kstate_range_is_preserved(unsigned long start, unsigned long end);
-+
+@@ -137,14 +139,17 @@ int save_kstate(struct kstate_stream *stream, int id,
+ 		void *obj);
+ void restore_kstate(struct kstate_stream *stream, int id,
+ 		const struct kstate_description *kstate, void *obj);
++int kstate_load_migrate_buf(struct kimage *image);
+ 
  #else
  
- static inline void kstate_init(void) { }
-@@ -150,6 +160,11 @@ static inline int kstate_save_state(void) { return 0; }
++static inline void kstate_init(void) { }
+ #define kstate_register(state, obj)
+ 
+ static inline int kstate_save_state(void) { return 0; }
  static inline void free_kstate_stream(void) { }
  
- static inline int kstate_load_migrate_buf(struct kimage *image) { return 0; }
-+
-+static inline bool kstate_range_is_preserved(unsigned long start,
-+					unsigned long end)
-+{ return 0; }
-+
++static inline int kstate_load_migrate_buf(struct kimage *image) { return 0; }
  #endif
  
  
-@@ -176,6 +191,21 @@ static inline int kstate_load_migrate_buf(struct kimage *image) { return 0; }
- 		.offset = offsetof(_state, _f),		\
- 	}
- 
-+#define KSTATE_PAGE(_f, _state)				\
-+	{						\
-+		.name = "page",				\
-+		.flags = KS_CUSTOM,			\
-+		.offset = offsetof(_state, _f),		\
-+		.save = kstate_page_save,		\
-+	},						\
-+	KSTATE_ADDRESS(_f, _state, KS_VMEMMAP_ADDR),	\
-+	{ 						\
-+		.name = "struct_page",			\
-+		.flags = KS_STRUCT | KS_POINTER,	\
-+		.offset = offsetof(_state, _f),		\
-+		.ksd = &page_state,			\
-+	}
-+
- #define KSTATE_END_OF_LIST() {	\
- 		.flags = KS_END,\
- 	}
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 7c79addeb93b..5d001b7a9e44 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -13,6 +13,7 @@
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad..a024ff379133 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -14,6 +14,7 @@
+ #include <linux/file.h>
  #include <linux/slab.h>
- #include <linux/fs.h>
  #include <linux/kexec.h>
 +#include <linux/kstate.h>
+ #include <linux/memblock.h>
  #include <linux/mutex.h>
  #include <linux/list.h>
- #include <linux/highmem.h>
-@@ -261,7 +262,7 @@ int kimage_is_destination_range(struct kimage *image,
- 			return 1;
- 	}
+@@ -253,6 +254,10 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* IMA needs to pass the measurement list to the next kernel. */
+ 	ima_add_kexec_buffer(image);
  
--	return 0;
-+	return kstate_range_is_preserved(start, end);
- }
++	ret = kstate_load_migrate_buf(image);
++	if (ret)
++		goto out;
++
+ 	/* Call image load handler */
+ 	ldata = kexec_image_load_default(image);
  
- int kimage_is_control_page(struct kimage *image,
 diff --git a/kernel/kstate.c b/kernel/kstate.c
-index d35996287b76..68a1272abceb 100644
+index a73a9a42e55b..d35996287b76 100644
 --- a/kernel/kstate.c
 +++ b/kernel/kstate.c
-@@ -309,6 +309,13 @@ int kstate_register(struct kstate_description *state, void *obj)
+@@ -2,6 +2,7 @@
+ #include <linux/ctype.h>
+ #include <linux/kexec.h>
+ #include <linux/kstate.h>
++#include <linux/memblock.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/vmalloc.h>
+@@ -182,6 +183,31 @@ int kstate_save_state(void)
  	return 0;
  }
  
-+int kstate_page_save(struct kstate_stream *stream, void *obj,
-+		const struct kstate_field *field)
++int kstate_load_migrate_buf(struct kimage *image)
 +{
-+	kstate_register_page(*(struct page **)obj, 0);
-+	return 0;
-+}
-+
- static int __init setup_kstate(char *arg)
- {
- 	char *end;
-@@ -323,7 +330,124 @@ static int __init setup_kstate(char *arg)
- }
- early_param("kstate_stream", setup_kstate);
- 
-+/*
-+ * TODO: probably should use folio instead/in addition,
-+ * also will need to think/decide what fields
-+ * to preserve or not
-+ */
-+struct kstate_description page_state = {
-+	.name = "struct_page",
-+	.id = KSTATE_STRUCT_PAGE_ID,
-+	.state_list = LIST_HEAD_INIT(page_state.state_list),
-+	.fields = (const struct kstate_field[]) {
-+		KSTATE_BASE_TYPE(_mapcount, struct page, atomic_t),
-+		KSTATE_BASE_TYPE(_refcount, struct page, atomic_t),
-+		KSTATE_END_OF_LIST()
-+	},
-+};
-+
-+struct state_entry preserved_se;
-+
-+struct preserved_pages {
-+	unsigned int nr_pages;
-+	struct list_head list;
-+};
-+struct kpage_state {
-+	struct list_head list;
-+	u8 order;
-+	struct page *page;
-+};
-+
-+struct preserved_pages preserved_pages = {
-+	.list = LIST_HEAD_INIT(preserved_pages.list)
-+};
-+
-+int kstate_register_page(struct page *page, int order)
-+{
-+	struct kpage_state *state;
-+
-+	state = kmalloc(sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return -ENOMEM;
-+
-+	state->page = page;
-+	state->order = order;
-+	list_add(&state->list, &preserved_pages.list);
-+	preserved_pages.nr_pages++;
-+	return 0;
-+}
-+
-+static int kstate_pages_save(struct kstate_stream *stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct kpage_state *p_state;
 +	int ret;
++	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
++		.buf_max = ULONG_MAX, .top_down = true };
 +
-+	list_for_each_entry(p_state, &preserved_pages.list, list) {
-+		unsigned long paddr = page_to_phys(p_state->page);
++	kbuf.bufsz = kstate_stream.size;
++	kbuf.buffer = kstate_stream.start;
 +
-+		ret = kstate_save_data(stream, &p_state->order,
-+				sizeof(p_state->order));
-+		if (ret)
-+			return ret;
-+		ret = kstate_save_data(stream, &paddr, sizeof(paddr));
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
++	kbuf.memsz = kstate_stream.size;
++
++	kbuf.buf_align = PAGE_SIZE;
++	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
++	ret = kexec_add_buffer(&kbuf);
++	if (ret)
++		return ret;
++	image->kstate_stream_addr = kbuf.mem;
++	image->kstate_size = kstate_stream.size;
++
++	pr_info("kstate: Loaded mig_stream at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++		kbuf.mem, kbuf.bufsz, kbuf.memsz);
++
++	return ret;
 +}
 +
-+bool kstate_range_is_preserved(unsigned long start, unsigned long end)
-+{
-+	struct kpage_state *p_state;
-+
-+	list_for_each_entry(p_state, &preserved_pages.list, list) {
-+		unsigned long pstart, pend;
-+		pstart = page_to_boot_pfn(p_state->page);
-+		pend = pstart + (p_state->order << PAGE_SHIFT) - 1;
-+		if ((end >= pstart) && (start <= pend))
-+			return 1;
-+	}
-+	return 0;
-+}
-+
-+static int __init kstate_pages_restore(struct kstate_stream *stream, void *obj,
-+			const struct kstate_field *field)
-+{
-+	struct preserved_pages *preserved_pages = obj;
-+	int nr_pages, i;
-+
-+	nr_pages = preserved_pages->nr_pages;
-+	for (i = 0; i < nr_pages; i++) {
-+		int order = kstate_get_byte(stream);
-+		unsigned long phys = kstate_get_ulong(stream);
-+
-+		memblock_reserve(phys, PAGE_SIZE << order);
-+	}
-+	return 0;
-+}
-+
-+struct kstate_description kstate_preserved_mem = {
-+	.name = "preserved_range",
-+	.id = KSTATE_RSVD_MEM_ID,
-+	.state_list = LIST_HEAD_INIT(kstate_preserved_mem.state_list),
-+	.fields = (const struct kstate_field[]) {
-+		KSTATE_BASE_TYPE(nr_pages, struct preserved_pages, unsigned int),
-+		{
-+			.name = "pages",
-+			.flags = KS_CUSTOM,
-+			.size = sizeof(struct preserved_pages),
-+			.save = kstate_pages_save,
-+			.restore = kstate_pages_restore,
-+		},
-+
-+		KSTATE_END_OF_LIST()
-+	},
-+};
-+
- void __init kstate_init(void)
+ void restore_kstate(struct kstate_stream *stream, int id,
+ 		const struct kstate_description *kstate, void *obj)
  {
- 	memblock_reserve(kstate_stream_addr, kstate_size);
-+	__kstate_register(&kstate_preserved_mem, &preserved_pages,
-+			&preserved_se);
+@@ -258,6 +284,9 @@ static void restore_migrate_state(unsigned long kstate_data,
+ 	}
  }
+ 
++static unsigned long kstate_stream_addr = -1;
++static unsigned long kstate_size;
++
+ static void __kstate_register(struct kstate_description *state, void *obj,
+ 			struct state_entry *se)
+ {
+@@ -265,7 +294,7 @@ static void __kstate_register(struct kstate_description *state, void *obj,
+ 	se->id = atomic_inc_return(&state->instance_id);
+ 	se->obj = obj;
+ 	list_add(&se->list, &states);
+-	restore_migrate_state(0 /*migrate_stream_addr*/, se);
++	restore_migrate_state(kstate_stream_addr, se);
+ }
+ 
+ int kstate_register(struct kstate_description *state, void *obj)
+@@ -280,3 +309,21 @@ int kstate_register(struct kstate_description *state, void *obj)
+ 	return 0;
+ }
+ 
++static int __init setup_kstate(char *arg)
++{
++	char *end;
++
++	if (!arg)
++		return -EINVAL;
++	kstate_stream_addr = memparse(arg, &end);
++	if (*end == '@')
++		kstate_size = memparse(end + 1, &end);
++
++	return end > arg ? 0 : -EINVAL;
++}
++early_param("kstate_stream", setup_kstate);
++
++void __init kstate_init(void)
++{
++	memblock_reserve(kstate_stream_addr, kstate_size);
++}
 -- 
 2.45.3
 
