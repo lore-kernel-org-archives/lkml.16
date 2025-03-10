@@ -1,129 +1,142 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967BA1A7046
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91371E32DA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741602398; cv=none; b=RepbFs1av1CnpHQ4+CwR4gHyqFcWf4L/GfgjSSeQeoRT67dGdvtFt+s4hT7srzPi/4z69Sv1B6cwhwX/CgodKajaoaFi0aw34V7EMgKXgSYt0Lb6j/u6bgVFJjIKudZaYih4vgACrAmCoXG2o/DmBsMWqMTvT6TUqpzkK3UyEyA=
+	t=1741602431; cv=none; b=fuXBmzuc3K2p/XzsKM+jH2RgPL9m5ePeFxnsbZhBmYbcmn3WWrAX6Ga9+DfmYJERzpsstECeJ0EqMFJMPLjX14FI+aJL5cp0VnZYC8ojCJgI7lpsInsNW/YkKrn72Z2mEyTFv+TmSsTGAu10LadQwFqJ+KAD3192jh589Segqyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741602398; c=relaxed/simple;
-	bh=oCS5Xfj4X/FFcAUnAUdKi51IRu8AeeZmD8qMXspWZeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i3fhuaQwTJMyOK6XDHwLqZrJRN81ET8Cr0pUPVWSy0jkt3fhScrasaLQNg9xf84iaKbfkYBHUwxVDSBgse5Iiw+FrCRmIBYO1A7Hvk7cTNrEM7WtduXpdjeTEFe+OqbF64dXyTQpxuK/zTa0vehtRnhMZazgG0g13Dx+ZSh2YDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=GANWGPn4; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741602431; c=relaxed/simple;
+	bh=MrBVUwCDm2OakJrVwX6zAR4hOAXk414rT6sUa1Arz4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sQ4QvmfFMAoqr19ObjtCqUrcW5cVJtgtPacHFjVtL5dcpmzteWe1ynLCONm7Y9PVm9sXmyHAbLMMuW6jdqsuh9gIu9a25iuR3Vpw8qDoJAENVvpVNPuZGvSRITa1BFVQ15tqROWOqTQ3QCbhXVU2jl/jiJIbPrhQf86lJKPumCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cMZ+iJX0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="GANWGPn4"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6407840E01AD;
-	Mon, 10 Mar 2025 10:26:34 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QWrDmRuwhB90; Mon, 10 Mar 2025 10:26:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741602389; bh=evJgpKIxgP0x4EAJW7cWZK1RzQrhPq55MehaqfbmoOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GANWGPn4iQ+WgUAcQPG5O9CfcQQhbw0AMMRmVaDQmH9CNZFuIUT2BMAs6P/fuAB6u
-	 nr842tG4sHdHv60lhNi4Cy92DF1LCgIvMHeecMWE4PvOH935Fku+1/6tu6kwTdkrDd
-	 hVftCNIfmAdkUAl2UwszYf7dZ0y/nB30WjqCdtXsO51+ZlqKDNxmXQ6xPFYQ36AXxI
-	 JL6Cezwtnf6hbkiA2cZz6NsVSUn9gQGf+wNBMnsnBxzb/v0tVOdOQ/4TErF4PqfiD7
-	 yCz1KCYxxft/ipSgZloWiRt3wKDWZYVzxVX3l8PSELiWeaycJEbU7R8aBXdT4D+H1a
-	 aXDcONaWk/WI86l7s/FZHLwiQZ/Q1WTX/3uI8wxkT8zKmIlDcblfeylJj4bgE1oB0Z
-	 3nS/DvgVh5d/2L7AMpOAxQXk5RYscX6ck7LfhSWQqbUFqHUwktQ72UaRTHb8gljAf1
-	 6koFq5WF37zOcwXgDejf+S9Z6WjKYqNwIU8GMeL7swC4lbCBT4apf5dJSCQV6Tvw/B
-	 Ssuud/EgefXnrgb/YW/QwoHnDbYw/jnlSJLtK7nYI1o+x5yjRHzKzE+19GJwcrx1H9
-	 qagMukFdUc3kUuCAc38FfSiS1ij+K5xHPYH8snYq++Z1d7JFKdf2VIb94iUPGWub16
-	 PBWRWLo3t7Kv6Q32Tjjd1/IM=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cMZ+iJX0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741602428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=a7eB7B6rszVCe0tDMlDTsG+YUCKsUgoY9Moab3I6Eks=;
+	b=cMZ+iJX0YRNd1sN2EEgP22cnVqU+VmN8mg/mBgu1AXBoSGLPu64qoP2u1AhuVSnCJkn9Uc
+	LbIk2qIhCf+FyIBLeYjRWUDRC8b3MdONAKSZXQ3pQpAhe+DyxgJ9KCgEAxOmYT4ey5vA4t
+	iIfopg9itKyDIWN3dKh7DuphHgBGX14=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-423-YFrv94yXMyeRLTgewdaJyg-1; Mon,
+ 10 Mar 2025 06:27:03 -0400
+X-MC-Unique: YFrv94yXMyeRLTgewdaJyg-1
+X-Mimecast-MFC-AGG-ID: YFrv94yXMyeRLTgewdaJyg_1741602422
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2B6C140E015D;
-	Mon, 10 Mar 2025 10:26:13 +0000 (UTC)
-Date: Mon, 10 Mar 2025 11:26:07 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ajay Kaher <ajay.kaher@broadcom.com>
-Cc: kevinloughlin@google.com, bcm-kernel-feedback-list@broadcom.com,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org, ye.li@broadcom.com,
-	bo.gan@broadcom.com, vamsi-krishna.brahmajosyula@broadcom.com,
-	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
-	florian.fainelli@broadcom.com
-Subject: Re: [PATCH] sev-snp: parse MP tables for VMware hypervisor
-Message-ID: <20250310102607.GDZ86-P3VFA-x2iy4l@fat_crate.local>
-References: <20241219114400.858980-1-ajay.kaher@broadcom.com>
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17F6D18004A9;
+	Mon, 10 Mar 2025 10:27:02 +0000 (UTC)
+Received: from thuth-p1g4.redhat.com (unknown [10.45.226.133])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 582BF1800946;
+	Mon, 10 Mar 2025 10:26:59 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	linux-s390@vger.kernel.org
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/uapi: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
+Date: Mon, 10 Mar 2025 11:26:57 +0100
+Message-ID: <20250310102657.54557-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241219114400.858980-1-ajay.kaher@broadcom.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, Dec 19, 2024 at 11:44:00AM +0000, Ajay Kaher wrote:
-> For VMware hypervisor, SEV-SNP enabled VM's could boot without UEFI.
-> In this case, mpparse_find_mptable() has to be called to parse MP
-> tables which contains boot information.
-> 
-> Fixes: 0f4a1e80989a ("x86/sev: Skip ROM range scans and validation for SEV-SNP guests")
-> Signed-off-by: Ajay Kaher <ajay.kaher@broadcom.com>
-> Signed-off-by: Ye Li <ye.li@broadcom.com>
-> Tested-by: Ye Li <ye.li@broadcom.com>
+__ASSEMBLY__ is only defined by the Makefile of the kernel, so
+this is not really useful for uapi headers (unless the userspace
+Makefile defines it, too). Let's switch to __ASSEMBLER__ which
+gets set automatically by the compiler when compiling assembly
+code.
 
-That SOB chain is wrong. Ye's SOB means, he's sending the patch but that
-doesn't look like it.
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ arch/s390/include/uapi/asm/ptrace.h | 5 +++--
+ arch/s390/include/uapi/asm/schid.h  | 4 ++--
+ arch/s390/include/uapi/asm/types.h  | 4 ++--
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-> ---
->  arch/x86/kernel/cpu/vmware.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-> index 00189cd..3e2594d 100644
-> --- a/arch/x86/kernel/cpu/vmware.c
-> +++ b/arch/x86/kernel/cpu/vmware.c
-> @@ -26,6 +26,7 @@
->  #include <linux/export.h>
->  #include <linux/clocksource.h>
->  #include <linux/cpu.h>
-> +#include <linux/efi.h>
->  #include <linux/reboot.h>
->  #include <linux/static_call.h>
->  #include <asm/div64.h>
-> @@ -35,6 +36,8 @@
->  #include <asm/apic.h>
->  #include <asm/vmware.h>
->  #include <asm/svm.h>
-> +#include <asm/mem_encrypt.h>
-> +#include <asm/efi.h>
->  
->  #undef pr_fmt
->  #define pr_fmt(fmt)	"vmware: " fmt
-> @@ -429,6 +432,10 @@ static void __init vmware_platform_setup(void)
->  		pr_warn("Failed to get TSC freq from the hypervisor\n");
->  	}
->  
-> +	if (sev_status & MSR_AMD64_SEV_SNP_ENABLED &&
-
-cpu_feature_enabled(X86_FEATURE_SEV_SNP)
-
-> +	    !efi_enabled(EFI_BOOT))
-> +		x86_init.mpparse.find_mptable = mpparse_find_mptable;
-> +
->  	vmware_paravirt_ops_setup();
->  
->  #ifdef CONFIG_X86_IO_APIC
-> -- 
-
+diff --git a/arch/s390/include/uapi/asm/ptrace.h b/arch/s390/include/uapi/asm/ptrace.h
+index bb0826024bb95..ea202072f1ad5 100644
+--- a/arch/s390/include/uapi/asm/ptrace.h
++++ b/arch/s390/include/uapi/asm/ptrace.h
+@@ -242,7 +242,8 @@
+ #define PTRACE_OLDSETOPTIONS		21
+ #define PTRACE_SYSEMU			31
+ #define PTRACE_SYSEMU_SINGLESTEP	32
+-#ifndef __ASSEMBLY__
++
++#ifndef __ASSEMBLER__
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ 
+@@ -450,6 +451,6 @@ struct user_regs_struct {
+ 	unsigned long ieee_instruction_pointer;	/* obsolete, always 0 */
+ };
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ #endif /* _UAPI_S390_PTRACE_H */
+diff --git a/arch/s390/include/uapi/asm/schid.h b/arch/s390/include/uapi/asm/schid.h
+index a3e1cf1685534..d804d1a5b1b3f 100644
+--- a/arch/s390/include/uapi/asm/schid.h
++++ b/arch/s390/include/uapi/asm/schid.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/types.h>
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ struct subchannel_id {
+ 	__u32 cssid : 8;
+@@ -15,6 +15,6 @@ struct subchannel_id {
+ 	__u32 sch_no : 16;
+ } __attribute__ ((packed, aligned(4)));
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ #endif /* _UAPIASM_SCHID_H */
+diff --git a/arch/s390/include/uapi/asm/types.h b/arch/s390/include/uapi/asm/types.h
+index 84457dbb26b4a..4ab468c5032e3 100644
+--- a/arch/s390/include/uapi/asm/types.h
++++ b/arch/s390/include/uapi/asm/types.h
+@@ -10,7 +10,7 @@
+ 
+ #include <asm-generic/int-ll64.h>
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ typedef unsigned long addr_t;
+ typedef __signed__ long saddr_t;
+@@ -25,6 +25,6 @@ typedef struct {
+ 	};
+ } __attribute__((packed, aligned(4))) __vector128;
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ #endif /* _UAPI_S390_TYPES_H */
 -- 
-Regards/Gruss,
-    Boris.
+2.48.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
