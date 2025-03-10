@@ -1,91 +1,157 @@
-Received: from smtp134-25.sina.com.cn (smtp134-25.sina.com.cn [180.149.134.25])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4507D221579
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D3C21E092;
+	Mon, 10 Mar 2025 11:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741606710; cv=none; b=P9Uu+gz9abYUi1wgEO+KJ+E8S5hFDE6cVIIYb2mdaI7LYsQDSpjt1FslxUHrccb1x1/oV2yxHr5LvgQSxsvckC+Y9sJvzqb+q8DVKy7x7ULv+AM+NTB1ehAUyJUdA5Np2YktDXlULhjQQVd1QSacnzdWYD4sjnwyeASyG5T1+u4=
+	t=1741606811; cv=none; b=KUVWEVkc4Z7L2H/qZoG2HAToQnaaUff8ByPNTSRqq92BRT3Y9QFYoqROE/l+oD+M3StlHXjGZ8e6zoN2zWokIpBiQW7XG28ZYKs3Rv2Y4JXF1H6nk8PvumXMpKXutkxLxoKMQx37ziCeUj2OMGSrOYtao8xepO/SjlkUbMue5z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741606710; c=relaxed/simple;
-	bh=zJaJ/IUKeSO0/6VNJvyQeUCOz6MLN+/kRupMnl3BPCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=skTvJEKTScanFuszmp/NIS4BJ67BZtRE/4ybtNNoxw9G5Xf4wXGp70qeq5HAVZvCw8EtA9MeD8eM/XJjHt9r9hD1SM7b9ZEBWPwNng8T2cODy5FtUwMSSsmBs6xl6lvltlYstIfVyg0YY8lL2SepFxxlcO2emHyVQlb4UOJgWSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=180.149.134.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.68.168])
-	by sina.com (10.185.250.21) with ESMTP
-	id 67CECEFF00002E2D; Mon, 10 Mar 2025 19:37:37 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 8121563408361
-X-SMAIL-UIID: A2E896C978EA4DB58A42A1A2E3B2E503-20250310-193737-1
-From: Hillf Danton <hdanton@sina.com>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-Date: Mon, 10 Mar 2025 19:37:24 +0800
-Message-ID: <20250310113726.3266-1-hdanton@sina.com>
-In-Reply-To: <20250310110914.GA26382@redhat.com>
-References: <20250304050644.2983-1-hdanton@sina.com> <20250304102934.2999-1-hdanton@sina.com> <20250304233501.3019-1-hdanton@sina.com> <20250305045617.3038-1-hdanton@sina.com> <20250305224648.3058-1-hdanton@sina.com> <20250307060827.3083-1-hdanton@sina.com> <20250307104654.3100-1-hdanton@sina.com> <20250307112920.GB5963@redhat.com> <20250307235645.3117-1-hdanton@sina.com> <20250310104910.3232-1-hdanton@sina.com>
+	s=arc-20240116; t=1741606811; c=relaxed/simple;
+	bh=kec7Xe22wLpgK4izJqAFm7oJGHVWRD9CwUdN50ODEqM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=GNzVw5t0Jx3GyY/bTsCMtA4wlhoFJ2QBdEgID0FpEE+J3ZJw6tNlYFDDifGCNjLz/GdjJhO0IXGSa07N/grKZhahf5IerV6lUM0zW19r11F2/kAHbw3WA0ww7ckbDaRGxixdD2HcvGaJyzFjHev+W3hgv8jqRO2scREWTs5pTEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cK5KKD80; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2lntwmXZ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cK5KKD80";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2lntwmXZ"
+Date: Mon, 10 Mar 2025 11:40:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741606806;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8MxmdXnTmQfNGGgvujUzBMNfCepMANVcFw/xgvmjWL8=;
+	b=cK5KKD8077yMfJs6ImH+dyZ+GCcD00UGat+CDHMWrhFewb/b89T7TTa/mvMjFEpNJ4m7/N
+	vVHishTSPBXqEM8SvrSiiUrPinwFWUunh2L8nYzvnpZy+fZCs5C3+L4lsAEsawYKcOn5fz
+	YyP2b6dnOh6mja5D3iDe86qXAOYf3Ox0HRoM4iiXBqEAWE9SEg2h5V9Uh1FR/D5MqjRXti
+	T9HDMpCPT5LbdVcLBWPEXN6YgCF7oyz5H55g/DrvJCa7en6cg8zTTAXXjviAq4CVVk+yKT
+	cZa4DZwt58GurT8JUzE3hpZswlaiX7ZPS8ptUxNFhXzdSlMHh9nhlv50ObLGsw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741606806;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8MxmdXnTmQfNGGgvujUzBMNfCepMANVcFw/xgvmjWL8=;
+	b=2lntwmXZRmFt9zSU3P/z98UanFyhD7C3hoaX+a94xf7ldkYma7K/lnPBIC0YtjGMUSJH6p
+	S9hXf2tD+yPxTXBw==
+From: "tip-bot2 for Vladis Dronov" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/sgx: Warn explicitly if X86_FEATURE_SGX_LC is
+ not enabled
+Cc: Vladis Dronov <vdronov@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+ Kai Huang <kai.huang@intel.com>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>,
+ Sean Christopherson <sean.j.christopherson@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250309172215.21777-2-vdronov@redhat.com>
+References: <20250309172215.21777-2-vdronov@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174160680181.14745.6498994786003224468.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Mar 2025 12:09:15 +0100 Oleg Nesterov
-> On 03/10, Hillf Danton wrote:
-> > On Sun, 9 Mar 2025 18:02:55 +0100 Oleg Nesterov
-> > >
-> > > So (again, in this particular case) we could apply the patch below
-> > > on top of Linus's tree.
-> > >
-> > > So, with or without these changes, the writer should be woken up at
-> > > step-03 in your scenario.
-> > >
-> > Fine, before checking my scenario once more, feel free to pinpoint the
-> > line number where writer is woken up, with the change below applied.
-> 
->     381          if (wake_writer)
-> ==> 382                  wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
->     383          if (wake_next_reader)
->     384                  wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
->     385          kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
->     386          if (ret > 0)
->     387                  file_accessed(filp);
->     388          return ret;
-> 
-> line 382, no?
-> 
-Yes, but how is the wait loop at line-370 broken?
+The following commit has been merged into the x86/urgent branch of tip:
 
- 360                 }
- 361                 mutex_unlock(&pipe->mutex);
- 362
- 363                 BUG_ON(wake_writer);
- 364                 /*
- 365                  * But because we didn't read anything, at this point we can
- 366                  * just return directly with -ERESTARTSYS if we're interrupted,
- 367                  * since we've done any required wakeups and there's no need
- 368                  * to mark anything accessed. And we've dropped the lock.
- 369                  */
- 370                 if (wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable(pipe)) < 0)
- 371                         return -ERESTARTSYS;
- 372
- 373                 wake_writer = false;
- 374                 wake_next_reader = true;
- 375                 mutex_lock(&pipe->mutex);
+Commit-ID:     65be5c95d08eedda570a6c888a12384c77fe7614
+Gitweb:        https://git.kernel.org/tip/65be5c95d08eedda570a6c888a12384c77fe7614
+Author:        Vladis Dronov <vdronov@redhat.com>
+AuthorDate:    Sun, 09 Mar 2025 18:22:16 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 10 Mar 2025 12:29:18 +01:00
+
+x86/sgx: Warn explicitly if X86_FEATURE_SGX_LC is not enabled
+
+The kernel requires X86_FEATURE_SGX_LC to be able to create SGX enclaves,
+not just X86_FEATURE_SGX.
+
+There is quite a number of hardware which has X86_FEATURE_SGX but not
+X86_FEATURE_SGX_LC. A kernel running on such hardware does not create
+the /dev/sgx_enclave file and does so silently.
+
+Explicitly warn if X86_FEATURE_SGX_LC is not enabled to properly notify
+users that the kernel disabled the SGX driver.
+
+The X86_FEATURE_SGX_LC, a.k.a. SGX Launch Control, is a CPU feature
+that enables LE (Launch Enclave) hash MSRs to be writable (with
+additional opt-in required in the 'feature control' MSR) when running
+enclaves, i.e. using a custom root key rather than the Intel proprietary
+key for enclave signing.
+
+I've hit this issue myself and have spent some time researching where
+my /dev/sgx_enclave file went on SGX-enabled hardware.
+
+Related links:
+
+  https://github.com/intel/linux-sgx/issues/837
+  https://patchwork.kernel.org/project/platform-driver-x86/patch/20180827185507.17087-3-jarkko.sakkinen@linux.intel.com/
+
+[ mingo: Made the error message a bit more verbose, and added other cases
+         where the kernel fails to create the /dev/sgx_enclave device node. ]
+
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Kai Huang <kai.huang@intel.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250309172215.21777-2-vdronov@redhat.com
+---
+ arch/x86/kernel/cpu/sgx/driver.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
+index 22b65a5..7f8d1e1 100644
+--- a/arch/x86/kernel/cpu/sgx/driver.c
++++ b/arch/x86/kernel/cpu/sgx/driver.c
+@@ -150,13 +150,15 @@ int __init sgx_drv_init(void)
+ 	u64 xfrm_mask;
+ 	int ret;
+ 
+-	if (!cpu_feature_enabled(X86_FEATURE_SGX_LC))
++	if (!cpu_feature_enabled(X86_FEATURE_SGX_LC)) {
++		pr_info("SGX disabled: SGX launch control CPU feature is not available, /dev/sgx_enclave disabled.\n");
+ 		return -ENODEV;
++	}
+ 
+ 	cpuid_count(SGX_CPUID, 0, &eax, &ebx, &ecx, &edx);
+ 
+ 	if (!(eax & 1))  {
+-		pr_err("SGX disabled: SGX1 instruction support not available.\n");
++		pr_info("SGX disabled: SGX1 instruction support not available, /dev/sgx_enclave disabled.\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -173,8 +175,10 @@ int __init sgx_drv_init(void)
+ 	}
+ 
+ 	ret = misc_register(&sgx_dev_enclave);
+-	if (ret)
++	if (ret) {
++		pr_info("SGX disabled: Unable to register the /dev/sgx_enclave driver (%d).\n", ret);
+ 		return ret;
++	}
+ 
+ 	return 0;
+ }
