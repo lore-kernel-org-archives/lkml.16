@@ -1,169 +1,104 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463152253E6;
-	Mon, 10 Mar 2025 12:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53793227B9E;
+	Mon, 10 Mar 2025 12:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741611056; cv=none; b=JZ+HcVgOPecZyrlOH0hBu9DyWWhCpm/bM5vH7vcWdzhNqOmjdXpysa2d8kOYLA9nwIP4Gn7I1u8GTiI4LGemlk9IphaSRmvnEALFti999qQse2cTtmi+I1i23jMPM7wp1Mbus0zlWGzg++MZlCshCVQA4JpgB2izdN37RTomrVg=
+	t=1741611060; cv=none; b=XkUU+Lg6IbCXbt0tyoOQowcjgQ4IlaOwP9236oOs0aqmPKlJXjR5/ZWwFvY1FNgFa5X5maPlGF3wWhlm1ImG4IMEvh9V9aRldFimM83s5ACZb3MMeSbHaLzSMez/X1ihHbhypYwLRwndj2LgfW7T7cDLoFyt3G8dxP0f/RengyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741611056; c=relaxed/simple;
-	bh=/Z94/FZmdG/LXzRBXd/oSyI+aY/5CPxrcqyu7GWwmYM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=W9+fNg7MOmFjYBACuYjm2aBCd4uiAHV40ldwLoj2HK4wJA+D9p6vqqdI0VhCrO55NbBKL5c69CXvm3+FWVJwryoTVha5oW2b6fBjo0SuyiRt1JA4GFAkuwxlPSIsFXS9lFr18eDKDYsO+MaIQSq+ISMsMLNEabYaRgOfo3F7KOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=nhroAxLz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Kadsx4et; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1741611060; c=relaxed/simple;
+	bh=m7RpVIHY+r0sfU2i8cmIAET2MityHo7vaehhJ6cZD5Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bKLHYyTCKZ+fwEZh1WdzesGLNEcU8ArWThpSA9x5NW52Hw5lWsI/A/iM0C3hRx4GY4sl34oia1z6ZgjwH6vY6cHl+IwJjpXMNRGax6nHwVpxK2Qbe/R4hpdAFV7KEVDI0U88I8UpJ7d4NIKI4g7PihsEH0avFdhcQkGbG8GVuWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MhLDU9d6; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nhroAxLz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kadsx4et"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.stl.internal (Postfix) with ESMTP id 240141140187;
-	Mon, 10 Mar 2025 08:50:53 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Mon, 10 Mar 2025 08:50:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741611052;
-	 x=1741697452; bh=Dcifg0sI1uowxb8ImXEUeIxPiiGrASO0jm94bzoN2lE=; b=
-	nhroAxLzLIDLmcMigo/SnJ03ipGo3hmWAPNy5EbNluSOiF5h9DvSlcwKlBKphXpa
-	c4+qT4sO7+TF8EqCSxxeYOCQEiwqFPOnhcZvaHrSbP8vdgbsF3xj45rhBXNqSfRg
-	UuOqou0SgrNMCI3sfsDNNjxg87oCpGKA9oFsQJSCqMg+QHJG/5PEIah/jupFUipO
-	gWe6/k18OT0T1NqtHjNkXV6JR/dfU90sCQczow/vmWdXRb+SJ14naUXp4Yhd+Ooy
-	edWJcC2n9Le20i+gxz6iFbnOz26lOQuA3hNW2ALoL43MF+HCQeYKZySBLQcxKVpB
-	iP2J9jHun5dFo+dCorAy+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741611052; x=
-	1741697452; bh=Dcifg0sI1uowxb8ImXEUeIxPiiGrASO0jm94bzoN2lE=; b=K
-	adsx4ettZaj//qI3lvzOBb2toDO3vNcMbJZXskicIPnwxK2DZTJk4p+sn3euaUQX
-	J8auB2YOkSo2J/kNqUWMrDJSt1MHA6QZ6KgcvsOjXcbrgFD1LQzCNUoo6A/aky5H
-	SvFQ4QnlkVqJRfyAmMDVDvVbDCmwNG/9YGRPTPDrlfLUPTCHLDzopaVuM+abIxDK
-	BFvKVBsotdH9u3X6ZazLtgYeAxn2eu36jjqQg1WcWrUI7zfV5t37rsCkvZrielXk
-	hMJUH8z4zt6Ok03GQxMUeHNJcZtfHFzpp2YxgbjIEUeh6SyQweg6JrTeeOP8A+V/
-	VNH6gs59sNjJwKKQIjXWQ==
-X-ME-Sender: <xms:LODOZzx3RCKv4fb3TMvr0ZiZ4yaDpxb-e7UJOX9P-sj9iFP8p04jMw>
-    <xme:LODOZ7TIjFXmq1Kp-oZrPfyMbQzvmUCIXk_8Atg1Q8OFF13ERLrGdMToVNtZKdRoW
-    O0cu6RN1mZEJqBHglg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelfeelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepveduveeigeekiedvleduvddtgfeuteeihfdv
-    jeefkedtgfdvhfffhfduveehgfelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsh
-    htrggtkhhovhgvrhhflhhofidrtghomhdprhgrshhpsggvrhhrhihpihdrtghomhdpghhi
-    thhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepkedpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtoheprghgohhruggvvghvsehlihhnuhigrdhisghmrd
-    gtohhmpdhrtghpthhtohepsghorhhnthhrrggvghgvrheslhhinhhugidrihgsmhdrtgho
-    mhdprhgtphhtthhopehgohhrsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtohephh
-    gtrgeslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhopehsvhgvnhhssehlihhnuhig
-    rdhisghmrdgtohhmpdhrtghpthhtohepthhhuhhthhesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqshefledtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:LODOZ9WEk_6DrAvQQz9ZvNMCYtJ2A8Ix8_kQvUsThP8IQ3QEIzAwnA>
-    <xmx:LODOZ9hYZl1OXSbU_7ZdNadTr6bDgO_6n5Br3JrGDVO_aaauJBg2Vw>
-    <xmx:LODOZ1CoyStZZQ3bhB0NjNk5RVt3XlAuPb-LHqfU7dFz8bGuJWRXlw>
-    <xmx:LODOZ2Imu9xkbRuZFF8HdQ31ArwVVETCIY0tGWccemgraRnE3VsjUg>
-    <xmx:LODOZ_DnSTaH8pZcdgfr8bfUvSxWiBBzaLfLdN84B_fRM1yHVhvbSuq1>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8D7F62220072; Mon, 10 Mar 2025 08:50:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhLDU9d6"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso209033466b.1;
+        Mon, 10 Mar 2025 05:50:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741611056; x=1742215856; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m7RpVIHY+r0sfU2i8cmIAET2MityHo7vaehhJ6cZD5Q=;
+        b=MhLDU9d6JMxTIliQCHLpM10w6CGvtoeDzsGFSZHJzwOcySGufaePLvVFVVeYr3zEap
+         nTKVhklOSxVFf3lHBoPHGs/cM2INkWarqU7LYaRe89DaN9g1TzHbeN0c6rjHngSHPm2X
+         qiMDxNPWhFaqnWQfqiwYBYYPHmFv5OTu7WdEZoQmJ6HRgaDY4KvT8rv0VME+vvArJkWR
+         dfwmUjd16QgXQUq93RSJsA9L1ZQy5tvPuZIdCI0opn/M0KQRgzIC0EEclIo8r+SmpMOI
+         2ln4aYYGj2an42EquunFpJuzGzB/aycwpYvXr0q4PT9ThE9Fhr0/rowCBUbfZRczvGFK
+         I6aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741611056; x=1742215856;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m7RpVIHY+r0sfU2i8cmIAET2MityHo7vaehhJ6cZD5Q=;
+        b=NI9J7f4hTwX74G7RUj/XpRmBCN+phaapa4N6AjFHoIkHYETyVaZXQK8lOSoU1cJi7u
+         Hw09cX5N6VMQWQ+pKkYMt99VinLOatcnYMIp6DTevYpRxzAzoiDuE4Sj4tVZvniCA56V
+         /xHtfi7LnZeiRDuDN6Uf86Bbx5jpcZhMk3DU6XmQqTM3EYbetR7eEgQ1xpUAOBbB7G+Z
+         MIpi4LR2rL6Om3anIjMr5yd6PJg+fltcq0URXK0Pmh6mAzad0NKOKr9xpkbxLCXy4ORk
+         jmb7j/xxc6ARe4vhgDSs045EvXoLVCs5xoI2iIlpiHVQ+ZMej7kDGCqTeFbZQXUlzlUh
+         4MdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVngT/eGuXSkVBFvfIaxcE3PjwMqHOWPGWdfrnrgZhSmz0l4CYifEMTXqHVaQO5vffwQmiXmz+qY0iipQ==@vger.kernel.org, AJvYcCX30wDtwmzgb1asSgy0Ap/6GJn5qZeUrvxjcQrrSACJtxLGFOG6hSAWR0fNj2cCa78l4/9MzS5KUdbT@vger.kernel.org, AJvYcCXT9b0adJGTOVUeB5h5kUY9q5n3a2bXrqMHxgdRt6/Ad8zLe22SMep755/Ukmx9TfYNaPHMHbh0Cs6CAxTb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbFZr3gurbwQqmBGJ8GdztkbgvcRa2mdwJqhRB9yWzGVGhBS8z
+	YJiBx8GXtl8tenzaQplCU5FiFHQY/8xxDiFCNofVJN7u/PbQkm/R9CYOrWH8UN9bU2C589oq5DH
+	3n+uMiwd8nCKTfJZdeBL6hfX8QAU=
+X-Gm-Gg: ASbGncsjof+fWUVpqBxkB2q+BsG2tXYo3A5tRDR0dOYjHzopWC3gc3mYHSGJ00Q5Ayy
+	89gFD09rSuHMCjL2yKhD643thCmP3ldXq977z/ievpDxc5eEY4ejncYTCDKeK+rW+8tQrBKwfnc
+	tkA/J0WDvaMFkPxjNHM4GVqnVlNVWf10JKqwCGbJpDzls2
+X-Google-Smtp-Source: AGHT+IEEhoCLJZRXY4Rijvv9tI0tLl/IUwNp5Orm1PRrbMcRZugzWXJ7hXwK/krnr0EUihHMQKx/Fjue7P0l/J3Yjb0=
+X-Received: by 2002:a17:906:99c2:b0:abf:4708:863e with SMTP id
+ a640c23a62f3a-ac252fb9b4emr1577886666b.39.1741611056422; Mon, 10 Mar 2025
+ 05:50:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 10 Mar 2025 13:50:28 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Thomas Huth" <thuth@redhat.com>, "Heiko Carstens" <hca@linux.ibm.com>
-Cc: "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>, linux-kernel@vger.kernel.org
-Message-Id: <1be19a7f-f43c-4025-8cf9-5f831c4125f5@app.fastmail.com>
-In-Reply-To: <7eed4668-9352-45d6-8116-235c8be43bfa@redhat.com>
-References: <20250310102657.54557-1-thuth@redhat.com>
- <20250310104910.27210B18-hca@linux.ibm.com>
- <ab1ab15a-89e1-4c26-b7a2-6147a10a2fca@app.fastmail.com>
- <7eed4668-9352-45d6-8116-235c8be43bfa@redhat.com>
-Subject: Re: [PATCH] s390/uapi: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-6-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <1740611284-27506-6-git-send-email-nunodasneves@linux.microsoft.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Mon, 10 Mar 2025 20:50:20 +0800
+X-Gm-Features: AQ5f1JrW4lh036PUCGXkQlwffXrplxrlmEnJajhWhVG9u6jh4khODFbp1KsY5xA
+Message-ID: <CAMvTesAh9hK3r81TqbSwB58c1zuXpMzhk=7=gt2cR1QvpJC35Q@mail.gmail.com>
+Subject: Re: [PATCH v5 05/10] acpi: numa: Export node_to_pxm()
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com, 
+	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org, 
+	joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de, 
+	jinankjain@linux.microsoft.com, muminulrussell@gmail.com, 
+	skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com, 
+	ssengar@linux.microsoft.com, apais@linux.microsoft.com, 
+	Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com, 
+	gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com, 
+	muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org, 
+	lenb@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2025, at 13:14, Thomas Huth wrote:
-> On 10/03/2025 12.07, Arnd Bergmann wrote:
->> On Mon, Mar 10, 2025, at 11:49, Heiko Carstens wrote:
->>> On Mon, Mar 10, 2025 at 11:26:57AM +0100, Thomas Huth wrote:
->>>
->>> Did this cause any sorts of problems? I can see this pattern all over
->>> the place, so why is this now a problem?
->>>
->>> Also, wouldn't it be better to fix this with an sed statement in
->>> scripts/headers_install.sh instead? Otherwise this is going to be a
->>> never ending story since those things will be re-introduced all the
->>> time.
->> 
->> It should certainly be done in a consistent way across all
->> architectures and architecture-independent headers. I see that
->> all uapi headers use __ASSEMBLY__ consistently, while a few non-uapi
->> headers use __ASSEMBLER__.
->> 
->> glibc obviously defines __ASSEMBLY__ whenever it includes one
->> of the kernel headers that need this from a .S file. Unless
->> there is a known problem with the current code, leaving this
->> unchanged is probably the least risky way.
+On Thu, Feb 27, 2025 at 7:10=E2=80=AFAM Nuno Das Neves
+<nunodasneves@linux.microsoft.com> wrote:
 >
-> Well, this seems to be constant source of confusion. It got my attention by 
-> Sean's recent patch for kvm-unit-tests here:
+> node_to_pxm() is used by hv_numa_node_to_pxm_info().
+> That helper will be used by Hyper-V root partition module code
+> when CONFIG_MSHV_ROOT=3Dm.
 >
->   https://lore.kernel.org/kvm/20250222014526.2302653-1-seanjc@google.com/
->
-> Quoting: "This is essentially a "rage" patch after spending
-> way, way too much time trying to understand why I couldn't include some
-> __ASSEMBLY__ protected headers in x86 assembly files."
->
-> But also if you search the net for this, there are lots of other spots where 
-> people get it wrong, e.g.:
->
->   
-> https://stackoverflow.com/questions/28924355/gcc-assembler-preprocessor-not-compatible-with-standard-headers
->   https://forums.raspberrypi.com/viewtopic.php?p=1652944#p1653834
->   https://github.com/riscv-software-src/opensbi/issues/199
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
 
-Right
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
 
-> So I thought it would be a good idea to standardize on the #define that is 
-> set by the compiler already. IMHO it would be great to get it replaced in 
-> the whole kernel, but that's a little bit bold for one patch. So the obvious 
-> first step towards that direction is to replace it in the uapi header files 
-> first, where it hopefully will help to reduce the confusion in userspace. 
-> So unless you really don't like this idea at all, I could continue with the 
-> uapi headers for the other architectures, too?
 
-Standardizing on one of the two is good, and using the one that the
-toolchain already provides makes sense. I would prefer a large patch
-that replaces all of them (uapi and internal) and removes the
-definition at the same time, the way the kvm patch does, but it's
-possible that this causes conflicts with architecture specific
-patches.
-
-There is a risk of regression when changing the uapi headers, when
-new users of the uapi headers don't define __ASSEMBLER__:
-This would then work with new kernel headers but not when building
-against older headers.
-
-There is also a (smaller) risk when there is userland building
-assembler files with a compiler other than gcc or clang, if they set
-__ASSEMBLY__ manually but the compiler does not set __ASSEMBLER__.
-I checked that gcc has defined __ASSEMBLER__ at least as far back
-as egcs-1.0.0 and gcc-2.95, probably longer.
-
-     Arnd
+--=20
+Thanks
+Tianyu Lan
