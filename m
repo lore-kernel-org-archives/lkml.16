@@ -1,166 +1,120 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD74B22E004
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA4122FF33;
+	Mon, 10 Mar 2025 15:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619636; cv=none; b=HKuNzs50XHZuyjvF11sL5rGv5ZoyiMM52G/S5JqQtjXkE31KinMWvIKw7oIhx7w8c00rr0WfV34vMH2H1hTIEelVQE/w7C3H0V/d9l10QKWNeVX2cVNHLCQXQd9jIcywoodyHsi3XJzUQEj3YQ3/EiMoOy0aniI2ypDf8LwRusk=
+	t=1741619637; cv=none; b=tC5/J3D2Z32+NJM/b8l+AuI6WzwSEEtRiAB6YkHl9oHg1yo0HCJhG0sU4/EjKEYRnq9eY1urrNm2mSuuGMNDbDeYejBL5ODxVQR+I1vROu8cezNSOJJIFB1XKWJDt5l01z7zKMZcuq8nGs/jTfebaCfQZSP4UQPRi1PiQOBlrO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619636; c=relaxed/simple;
-	bh=3Gq7Z8A+hrlF6/0Q9hK5MxRmxk1HLIsaGdv+leWkC6M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mtxEaXMd3GEDmFDxhSJ2UM6njnSNMz7Q173haYHkqwK+0fd3aKIoPKaTan4R29lZ4XoHD4D5Yeo6GNjdr4ZiKFS1sbNrNHiRnfleEry+TYkbi+k730PQTe8vyXe2XYBxAVhTAsysfzUqip0URGCAfrB24u/qxSpmBR22ladHCRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Cdz7/WQR; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1741619637; c=relaxed/simple;
+	bh=E8j4pIgtYeVUVyPLYeWsQ6wdM/3mTyY6T0E83ZHYNzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BI7kf2Q41HoWGbmm7ljOJ+gHIqhiaRg13xkKM9U67l9GPrpT4AVwVh9bmLEMXP3tiBkVyW029R2y608MywMGKKQXLAqXFfPWEshZWw6SVBESRLLQAtdmd+N+AxI+0/w3oxnjZPDfysGAZ4J/nHFioPPzTjdinmuPmRIXNzD7wX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJJujxul; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Cdz7/WQR"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22398e09e39so79073865ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1741619634; x=1742224434; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aJEE3tstWlxClRLN5XCqSGWhwaxxi8RTX0eYkvDKRxQ=;
-        b=Cdz7/WQR+7uX6hIvezcWmd3SYIK18OWbBaXZR1ZFus4W2Cd1z8o7LZxIpEzwrSf2A0
-         WYgHqtDyiST/2VT7/6Poc/4cQHf2XahmIXa5sZzJl0UeYnWqLwchUJXww8lv7UEvERvz
-         hXwX1y43/rf+FO1Da1jDthCzv0bFuRPDjYfpwoivhIoOk5rLY1XWjKJbEZPEqu8jr4Uu
-         Sqz52CRsO0xxgoUZSsj0bWbm+I4i58N84IrpU081jSNAcoCNWKYboJgFll9K06W6rx5i
-         IJsGK5J60N1mnTjWc9ApDSN+ud128BOh0pYZKW3CAega7/iSAr9dsyftwf988rC0rQHj
-         PoIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741619634; x=1742224434;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aJEE3tstWlxClRLN5XCqSGWhwaxxi8RTX0eYkvDKRxQ=;
-        b=t935IAayU+IAZAW1n5eT7kqmLtbCtExHWdCFMxWJyJFgqieqvQvVlQ6Xvo5kHq2dDi
-         qTig9Ozct/dh/cPG4GJivHIOYSevNgUvyXNm77fSOVMBXBpzjyusM1QPhihENiw3ncQc
-         E9cdR/uiG5MRtfjMw288ZuQaZU+yoJVXdfEhw2rfDuANtEP5hh4foNmaRm2fTm5MVylE
-         YK8pI8pLLacTMaenzkOWX5Y2qg4BHjt00T5lpoBdtyHQOP49SqHj0d9b0+auAul4t0dO
-         7KxG/rd9TTkWGB5lvR8IQPfEf7nDgB/jiuNLyruCXwBzVZ1tBvExsGjYcN5U7NgY1elX
-         Y2ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWtiTQ2sSkKj+qJGhnhpsAx5klXtSYZQWezTW2FG3rbknPBlaIYU0nIvLd4RodaOyOKGcszk2mDFG5aO4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmxM8SimiUn6Yy98eu8lBBJGAiKosSslzk70FCMBw0v0LlrNYK
-	e+tLFFnu7Yo3ViHiuFyiHifVkKecd8BjXKQxVuo2+/Kq2Ti0t9GUW2JOOoqmsqs=
-X-Gm-Gg: ASbGncsgpEnmrRQhFt9f5KCjCn/TdYo7w5fg7azF7Zt8J16AXVMxa9FA8dXI68lkXiC
-	1dsFgLb3yxw2P5v+mbUs/68Qx8pH2agKb4XSvWzJJQyOOMoTlQ5zlJWF7Q46r18eoikJIksuL1N
-	vdwfH4l6c3ISK8tEqbgo2roV2K1pj6ZsZb/OPtcurUBMj+ewFyfS1YsirJXOIuyadTxyMtoVkqc
-	/gJZOw92n/WLtsFMHrLp4aGiuP45UBoTntfDJBi1Er2f9bRrWjr5dC0YwEjynoC/0Ws1oa61HDF
-	q1qGPAtoZFyjaOXoRNSfCTcxlEs8hHkziXeKw2EJS8hjRg==
-X-Google-Smtp-Source: AGHT+IFu79SrTcHr6DQ0LZoB48TuSJ0ALQO1FccV1+6ehx1qbYGTJAEYU8+IrRgycH415AfK45aV/g==
-X-Received: by 2002:a17:902:f68a:b0:220:bcc5:2845 with SMTP id d9443c01a7336-2242888666bmr164594065ad.7.1741619633926;
-        Mon, 10 Mar 2025 08:13:53 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109e99dfsm79230515ad.91.2025.03.10.08.13.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 08:13:53 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v3 08/17] riscv: misaligned: add a function to check misalign trap delegability
-Date: Mon, 10 Mar 2025 16:12:15 +0100
-Message-ID: <20250310151229.2365992-9-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250310151229.2365992-1-cleger@rivosinc.com>
-References: <20250310151229.2365992-1-cleger@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJJujxul"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71B6C4CEED;
+	Mon, 10 Mar 2025 15:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741619637;
+	bh=E8j4pIgtYeVUVyPLYeWsQ6wdM/3mTyY6T0E83ZHYNzU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=iJJujxulFWEs8Br8hqbYISk8Tujo00i169PIPNHrsXDEjwmWTKGeQbbQR1ptqtjOD
+	 BSqcllLruqCfmW26xbmMOR8eY3v1xJDW1t67GDozmSCMt1BKQn2kl2y1TfTDgOyhYt
+	 0lOrjm/qTQVdfe6dVcEPsPb/KlD3uP3AAHsrNboPK0cK8s1dArLABZHjdtvKTtWQLk
+	 IwJCoNBe7esLEi0kl39cBey0pYYsQtY3/r4g++V9TlOav7pjknjitEpEnnW2W/FRH+
+	 M5clvNcj8PVkFFXH/xqg6m9uAXieKswl7vYcgv6SfCT2rShQPMsaeYmHMNxIjGEN5H
+	 0dm9Vr1I8oTPw==
+Date: Mon, 10 Mar 2025 16:13:54 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Silvano Seva <s.seva@4sigma.it>
+Cc: a.greco@4sigma.it, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: imu: st_lsm6dsx: fix possible lockup during FIFO
+ read
+Message-ID: <Z88Bstpob7Jueugd@lore-desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TCV8Nel+ysraon/u"
+Content-Disposition: inline
 
-Checking for the delegability of the misaligned access trap is needed
-for the KVM FWFT extension implementation. Add a function to get the
-delegability of the misaligned trap exception.
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
----
- arch/riscv/include/asm/cpufeature.h  |  5 +++++
- arch/riscv/kernel/traps_misaligned.c | 17 +++++++++++++++--
- 2 files changed, 20 insertions(+), 2 deletions(-)
+--TCV8Nel+ysraon/u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-index ad7d26788e6a..8b97cba99fc3 100644
---- a/arch/riscv/include/asm/cpufeature.h
-+++ b/arch/riscv/include/asm/cpufeature.h
-@@ -69,12 +69,17 @@ int cpu_online_unaligned_access_init(unsigned int cpu);
- #if defined(CONFIG_RISCV_SCALAR_MISALIGNED)
- void unaligned_emulation_finish(void);
- bool unaligned_ctl_available(void);
-+bool misaligned_traps_can_delegate(void);
- DECLARE_PER_CPU(long, misaligned_access_speed);
- #else
- static inline bool unaligned_ctl_available(void)
- {
- 	return false;
- }
-+static inline bool misaligned_traps_can_delegate(void)
-+{
-+	return false;
-+}
- #endif
- 
- bool check_vector_unaligned_access_emulated_all_cpus(void);
-diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-index db31966a834e..a67a6e709a06 100644
---- a/arch/riscv/kernel/traps_misaligned.c
-+++ b/arch/riscv/kernel/traps_misaligned.c
-@@ -716,10 +716,10 @@ static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
- }
- #endif
- 
--#ifdef CONFIG_RISCV_SBI
--
- static bool misaligned_traps_delegated;
- 
-+#ifdef CONFIG_RISCV_SBI
-+
- static int cpu_online_sbi_unaligned_setup(unsigned int cpu)
- {
- 	if (sbi_fwft_set(SBI_FWFT_MISALIGNED_EXC_DELEG, 1, 0) &&
-@@ -761,6 +761,7 @@ static int cpu_online_sbi_unaligned_setup(unsigned int cpu __always_unused)
- {
- 	return 0;
- }
-+
- #endif
- 
- int cpu_online_unaligned_access_init(unsigned int cpu)
-@@ -773,3 +774,15 @@ int cpu_online_unaligned_access_init(unsigned int cpu)
- 
- 	return cpu_online_check_unaligned_access_emulated(cpu);
- }
-+
-+bool misaligned_traps_can_delegate(void)
-+{
-+	/*
-+	 * Either we successfully requested misaligned traps delegation for all
-+	 * CPUS or the SBI does not implemented FWFT extension but delegated the
-+	 * exception by default.
-+	 */
-+	return misaligned_traps_delegated ||
-+	       all_cpus_unaligned_scalar_access_emulated();
-+}
-+EXPORT_SYMBOL_GPL(misaligned_traps_can_delegate);
-\ No newline at end of file
--- 
-2.47.2
+I guess it was v3 in this case :)
 
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+
+Regards,
+Lorenzo
+
+> Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
+> from falling in an infinite loop in case pattern_len is equal to zero and
+> the device FIFO is not empty.
+>=20
+> Fixes: 290a6ce11d93 ("iio: imu: add support to lsm6dsx driver")
+> Fixes: 801a6e0af0c6 ("iio: imu: st_lsm6dsx: add support to LSM6DSO")
+> Signed-off-by: Silvano Seva <s.seva@4sigma.it>
+> ---
+>=20
+> Changes since v1:
+> * st_lsm6dsx_read_fifo: moved check for zero pattern_len before fifo_len =
+assignment
+> * st_lsm6dsx_read_fifo: dropped check for zero fifo_len
+> * added Fixes tags in commit message
+>=20
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio=
+/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> index 0a7cd8c1aa33..8a9d2593576a 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> @@ -392,6 +392,9 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+>  	if (fifo_status & cpu_to_le16(ST_LSM6DSX_FIFO_EMPTY_MASK))
+>  		return 0;
+> =20
+> +	if (!pattern_len)
+> +		pattern_len =3D ST_LSM6DSX_SAMPLE_SIZE;
+> +
+>  	fifo_len =3D (le16_to_cpu(fifo_status) & fifo_diff_mask) *
+>  		   ST_LSM6DSX_CHAN_SIZE;
+>  	fifo_len =3D (fifo_len / pattern_len) * pattern_len;
+> @@ -623,6 +626,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw =
+*hw)
+>  	if (!fifo_len)
+>  		return 0;
+> =20
+> +	if (!pattern_len)
+> +		pattern_len =3D ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
+> +
+>  	for (read_len =3D 0; read_len < fifo_len; read_len +=3D pattern_len) {
+>  		err =3D st_lsm6dsx_read_block(hw,
+>  					    ST_LSM6DSX_REG_FIFO_OUT_TAG_ADDR,
+> --=20
+> 2.48.1
+>=20
+
+--TCV8Nel+ysraon/u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ88BsgAKCRA6cBh0uS2t
+rO6cAP9lH4mAzcPivWU2YzjjjKdDQnuieoUA6RK+0d++MzaFxwEAsxwK5sOeNt5O
+yeWZot/H9Wz2BM/v71/uWH2P+Iz2cgU=
+=iG3h
+-----END PGP SIGNATURE-----
+
+--TCV8Nel+ysraon/u--
