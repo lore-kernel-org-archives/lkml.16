@@ -1,46 +1,45 @@
 Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9A122B8B8;
-	Mon, 10 Mar 2025 13:11:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B73122CBD0;
+	Mon, 10 Mar 2025 13:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612292; cv=none; b=t5PaQ7Kb3uzl6DpvQ7WZ8y8G9dUfeqKZHBFBDH7jj+aetfWjUc/uzQ4U+8jbWA0Gbfqb3mHO3NwOPQHYpgroecOZn4X/72B7aDGlWKvLMIGyZYL5kX6eA8fpWeyvlwqeRR+APqNiTAk67kuwlYsVPY+DyYlw/yOLQiCKedvp3+M=
+	t=1741612294; cv=none; b=YAekd6nsNuu6cc/VfZByR2E99p9tc0HFc1dwfTzx8H/7J62Wzlbpbq68y6s0xRsldQd/A11xfkxsdYJfWPIwu7ttmEK9P7o6oiuQ9lKyXGtTqxXqxAgh2u0NzZpcEQImEAWDUWBCWK4hFQtUN/QVJjbXDglyLMSZElHaBGFuNgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612292; c=relaxed/simple;
-	bh=9ccPKSMezR78NMQ+/yx9D1/u2jdBiyKTKkx56WFAGUU=;
+	s=arc-20240116; t=1741612294; c=relaxed/simple;
+	bh=lJFblhnRVlwEbVEVr+0Ht7SaJduNmHI23uuZPcAfWPg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=FinUlOX0O/UOjsXZ3dqAr+BqFk6ezN+6mvGwCfg5WqN9kD1MHo0N8sFz5wdRaQ0PfnVXZh8UgFXAhxkRff0mSpw3Z6dLipsmxBYFQjJS/QO8PxrCk3QLyQNBsBBnyTl8+g2JYc+aT6P9iSGa/J7p+LocNsYPA+TeBDqTOfMMpa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=mltiXOwq; arc=none smtp.client-ip=185.132.180.163
+	 In-Reply-To:To:CC; b=dNTkjvPvYWSn2WyM2Yavn0LLl8ODmUyUyD/657wbPbrW8OlK4n+eY8CFQDUp4f/UmAGMYHpTyYDUY0eZCrmz5PIYnYfSppX7d30sCOnSWDoLH+JWamG21tUUWVtYNAAffPvQt4Ox8TC0dVJkzW2+ax6cFI+oFkJUT9vOM4El4nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=rK+CT3B5; arc=none smtp.client-ip=185.132.180.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="mltiXOwq"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="rK+CT3B5"
 Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A7GhJo014277;
-	Mon, 10 Mar 2025 13:10:45 GMT
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A55uUG006364;
+	Mon, 10 Mar 2025 13:10:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=Z
-	MD6jkgSLwhFko7H7wltiRVWaa8cNC5nrtuJvn0He8Q=; b=mltiXOwqJ7goX+ZVK
-	TEVpLg8HQSepapGXGRSH0QZ3/Jn2gpJb9JVPw78WeJvavNtXtNC8nvGTq1F07t+P
-	b0z2s82wl0suvdpET7jlpWn4qHjjv0jeF2zApT/d6yZzJHwmMVPXTfJ5zQLXs88G
-	uZhytBZ0lhlEHOfew36mqPT6Sg84hyhZV5Vs/qhJp1bqxvAXbsStwjsBoKN0aG42
-	IUDy4CueF74jEGIbErauKbz2IxPPNsZggtciFdzlkW8R8zetStIoJM7gWRhFPxNL
-	4T+cPHfpo9gmVoDubwCOayiQa9SUZa8/ZwoYzk/5ZVlgKN4n9xekF/BDUxfjtKBj
-	n8OHQ==
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=h
+	msDHaK+QJVewvj9cAcY2H3d3wipSlhYdx2PhASkXLE=; b=rK+CT3B57OdEFMaLc
+	iTzHTCvxWKcszMPBF21k66IAWy1RjD89g7ilYLZVvtKGIDX0m5hCqaXD+ajm7dFg
+	ptLib8DeEq4nyymQXHIhw7EOBdVnsfyxh2qN3r0UPcicpjXG6ripb59BAmMJBXp5
+	2qya5WLJAErM/+rrtFvL7Gw95mTjiLncEAj93TRxsQy4GRSTFlF2YQSR4TH5hxyy
+	vbpztiRyZksWsOozfiiG4WL0NI1EFNfLQD6k7rEDvc9YQAnPCp8a6cEtQVPHJkLi
+	r0jS4e/TKct8dbVwACinhdsJ36iGnLNANdMaDvDTVQfWqyAXXNv5T1c5LmZ4RB0l
+	zACkw==
 Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 458ev09ert-1
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 458ev09ery-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 10 Mar 2025 13:10:45 +0000 (GMT)
+	Mon, 10 Mar 2025 13:10:52 +0000 (GMT)
 Received: from Matts-MacBook-Pro.local (172.25.0.133) by
  HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Mar 2025 13:10:43 +0000
+ 15.1.2507.44; Mon, 10 Mar 2025 13:10:51 +0000
 From: Matt Coster <matt.coster@imgtec.com>
-Date: Mon, 10 Mar 2025 13:10:25 +0000
-Subject: [PATCH v3 01/18] dt-bindings: gpu: img: Future-proofing
- enhancements
+Date: Mon, 10 Mar 2025 13:10:35 +0000
+Subject: [PATCH v3 11/18] drm/imagination: Use a lookup table for fw defs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +48,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-1-143b3dbef02f@imgtec.com>
+Message-ID: <20250310-sets-bxs-4-64-patch-v1-v3-11-143b3dbef02f@imgtec.com>
 References: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
 In-Reply-To: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
 To: Frank Binns <frank.binns@imgtec.com>,
@@ -72,158 +71,108 @@ CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
  Belle" <alessio.belle@imgtec.com>,
         Alexandru Dadu <alexandru.dadu@imgtec.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5308;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3495;
  i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=9ccPKSMezR78NMQ+/yx9D1/u2jdBiyKTKkx56WFAGUU=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3JerDHCekv8zs1rvx475hYw+WOLWuGUC43dfZdyJ
- v7K3WSr2VHKwiDGwSArpsiyY4XlCrU/aloSN34Vw8xhZQIZwsDFKQATedLIyDDFSjD6zlSVgLsy
- Tvmzj63Octz4PHYPb4mSe21Ujs+DtBOMDHsT91d+y/v7iU1Lw+/rmrBr1kffc/6/afjdLFSe8xj
- Hak4A
+ bh=lJFblhnRVlwEbVEVr+0Ht7SaJduNmHI23uuZPcAfWPg=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaSfe3JRvJD90X6ZyKC1wnemWa8u93D+sXnhitKZ/Is/b
+ 3nq+KvsfEcpC4MYB4OsmCLLjhWWK9T+qGlJ3PhVDDOHlQlkCAMXpwBMpOMoI8PpuAleRTEvTk/3
+ 85y6ZEss5/43X87HPzJ/X5K866FZksxrRoYu17KW2XFmvy2jMq5mT/i91/X+7LtRD8q5T3bdFUg
+ 5p8AAAA==
 X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
  fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Authority-Analysis: v=2.4 cv=CeII5Krl c=1 sm=1 tr=0 ts=67cee4d5 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=w15EKZF3e2A1P0N44N0A:9
+X-Authority-Analysis: v=2.4 cv=CeII5Krl c=1 sm=1 tr=0 ts=67cee4dc cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=iYL5nd4a90DRai7o0HQA:9
  a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: onNBhZLeNRTdFLvoW9PEjjSQhAVpBr28
-X-Proofpoint-ORIG-GUID: onNBhZLeNRTdFLvoW9PEjjSQhAVpBr28
+X-Proofpoint-GUID: bf0myV8qytcAjxs5zE93AKkZnu2SMz55
+X-Proofpoint-ORIG-GUID: bf0myV8qytcAjxs5zE93AKkZnu2SMz55
 
-The first compatible strings added for the AXE-1-16M are not sufficient to
-accurately describe all the IMG Rogue GPUs. The current "img,img-axe"
-string refers to the entire family of Series AXE GPUs, but this is
-primarily a marketing term and does not denote a level of hardware
-similarity any greater than just "Rogue".
-
-The more specific "img,img-axe-1-16m" string refers to individual AXE-1-16M
-GPU. For example, unlike the rest of the Series AXE GPUs, the AXE-1-16M
-only uses a single power domain.
-
-The situation is actually slightly worse than described in the first
-paragraph, since many "series" (such as Series BXS found in the TI AM68
-among others and added later in this series) contain cores with both Rogue
-and Volcanic architectures.
-
-Besides attempting to move away from vague groupings defined only
-by marketing terms, we want to draw a line between properties inherent to
-the IP core and choices made by the silicon vendor at integration time.
-For instance, the number of power domains is a property of the IP core,
-whereas the decision to use one or multiple clocks is a vendor one.
-
-In the original compatible strings, we must use "ti,am62-gpu" to constrain
-both of these properties since the number of power domains cannot be fixed
-for "img,img-axe".
-
-Work is currently underway to add support for volcanic-based Imagination
-GPUs, for which bindings will be added in "img,powervr-volcanic.yaml".
-As alluded to previously, the split between rogue and volcanic cores is
-non-obvious at times, so add a generic top-level "img,img-rogue" compatible
-string here to allow for simpler differentiation in devicetrees without
-referring back to the bindings.
-
-The currently supported GPU (AXE-1-16M) only requires a single power
-domain. Subsequent patches will add support for BXS-4-64 MC1, which has
-two power domains. Add infrastructure now to allow for this.
-
-Also allow the dma-coherent property to be added to IMG Rogue GPUs, which
-are DMA devices. The decision for coherency is made at integration time and
-this property should be applied wherever it accurately describes the
-vendor integration.
-
-Note that the new required properties for power domains are conditional on
-the new base compatible string to avoid an ABI break.
+With more than two firmware processor types, the if/else chain in
+pvr_fw_init() gets a bit ridiculous. Use a static array indexed on
+pvr_fw_processor_type (which is now a proper enum instead of #defines)
+instead.
 
 Signed-off-by: Matt Coster <matt.coster@imgtec.com>
 ---
 Changes in v3:
-- Remove unnecessary example
-- Remove second power domain details, add these where they're used instead
-- Avoid ABI breaks by limiting new required properties to new compatible
-  strings and making all binding changes in a single patch.
-- Links to v2:
-  https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-1-3fd45d9fb0cf@imgtec.com
-  https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-3-3fd45d9fb0cf@imgtec.com
-  https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-4-3fd45d9fb0cf@imgtec.com
+- None
+- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-13-3fd45d9fb0cf@imgtec.com
+Changes in v2:
+- None
+- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-13-4ed30e865892@imgtec.com
 ---
- .../devicetree/bindings/gpu/img,powervr-rogue.yaml | 43 ++++++++++++++++++----
- 1 file changed, 36 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/imagination/pvr_device.h |  4 ----
+ drivers/gpu/drm/imagination/pvr_fw.c     | 21 ++++++++++++++++-----
+ drivers/gpu/drm/imagination/pvr_fw.h     |  7 +++++++
+ 3 files changed, 23 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-index 256e252f8087fa0d6081f771a01601d34b66fe19..5c16b2881447c9cda78e5bb46569e2f675d740c4 100644
---- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-+++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-@@ -12,10 +12,20 @@ maintainers:
+diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
+index 6c01d96657de6dc3904ef5ca28365f06cfe0f40b..12bf0b9e5bfb48ef9e5ed9faa44e0896b7555f49 100644
+--- a/drivers/gpu/drm/imagination/pvr_device.h
++++ b/drivers/gpu/drm/imagination/pvr_device.h
+@@ -739,8 +739,4 @@ pvr_ioctl_union_padding_check(void *instance, size_t union_offset,
+ 					      __union_size, __member_size);  \
+ 	})
  
- properties:
-   compatible:
--    items:
--      - enum:
--          - ti,am62-gpu
--      - const: img,img-axe # IMG AXE GPU model/revision is fully discoverable
-+    oneOf:
-+      - items:
-+          - enum:
-+              - ti,am62-gpu
-+          - const: img,img-axe-1-16m
-+          - const: img,img-rogue
+-#define PVR_FW_PROCESSOR_TYPE_META  0
+-#define PVR_FW_PROCESSOR_TYPE_MIPS  1
+-#define PVR_FW_PROCESSOR_TYPE_RISCV 2
+-
+ #endif /* PVR_DEVICE_H */
+diff --git a/drivers/gpu/drm/imagination/pvr_fw.c b/drivers/gpu/drm/imagination/pvr_fw.c
+index c331d6001550a0b1d9cfbda2cd6629533ab6ee33..6e19b20ab67c3dbfe20110cbc7bb0de05b7bb08b 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw.c
++++ b/drivers/gpu/drm/imagination/pvr_fw.c
+@@ -929,16 +929,27 @@ pvr_fw_validate_init_device_info(struct pvr_device *pvr_dev)
+ int
+ pvr_fw_init(struct pvr_device *pvr_dev)
+ {
++	static const struct pvr_fw_defs *fw_defs[PVR_FW_PROCESSOR_TYPE_COUNT] = {
++		[PVR_FW_PROCESSOR_TYPE_META] = &pvr_fw_defs_meta,
++		[PVR_FW_PROCESSOR_TYPE_MIPS] = &pvr_fw_defs_mips,
++		[PVR_FW_PROCESSOR_TYPE_RISCV] = NULL,
++	};
 +
-+      # This legacy combination of compatible strings was introduced early on
-+      # before the more specific GPU identifiers were used.
-+      - items:
-+          - enum:
-+              - ti,am62-gpu
-+          - const: img,img-axe
-+        deprecated: true
+ 	u32 kccb_size_log2 = ROGUE_FWIF_KCCB_NUMCMDS_LOG2_DEFAULT;
+ 	u32 kccb_rtn_size = (1 << kccb_size_log2) * sizeof(*pvr_dev->kccb.rtn);
+ 	struct pvr_fw_device *fw_dev = &pvr_dev->fw_dev;
+ 	int err;
  
-   reg:
-     maxItems: 1
-@@ -34,8 +44,13 @@ properties:
-   interrupts:
-     maxItems: 1
- 
--  power-domains:
--    maxItems: 1
-+  power-domains: true
+-	if (fw_dev->processor_type == PVR_FW_PROCESSOR_TYPE_META)
+-		fw_dev->defs = &pvr_fw_defs_meta;
+-	else if (fw_dev->processor_type == PVR_FW_PROCESSOR_TYPE_MIPS)
+-		fw_dev->defs = &pvr_fw_defs_mips;
+-	else
++	if (fw_dev->processor_type >= PVR_FW_PROCESSOR_TYPE_COUNT)
++		return -EINVAL;
 +
-+  power-domain-names:
-+    items:
-+      - const: a
++	fw_dev->defs = fw_defs[fw_dev->processor_type];
 +
-+  dma-coherent: true
++	/*
++	 * Not all firmware processor types are currently supported.
++	 * Once they are, this check can be removed.
++	 */
++	if (!fw_dev->defs)
+ 		return -EINVAL;
  
- required:
-   - compatible
-@@ -47,6 +62,19 @@ required:
- additionalProperties: false
+ 	err = fw_dev->defs->init(pvr_dev);
+diff --git a/drivers/gpu/drm/imagination/pvr_fw.h b/drivers/gpu/drm/imagination/pvr_fw.h
+index 180d310074e3585c641e540a9e2576b5ab2a5705..88ad713468ce3a1ee459b04dde5363c24791a4f1 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw.h
++++ b/drivers/gpu/drm/imagination/pvr_fw.h
+@@ -402,6 +402,13 @@ struct pvr_fw_device {
+ #define pvr_fw_irq_clear(pvr_dev) \
+ 	pvr_fw_irq_write_reg(pvr_dev, clear, (pvr_dev)->fw_dev.defs->irq.clear_mask)
  
- allOf:
-+  # Constraints added alongside the new compatible strings that would otherwise
-+  # create an ABI break.
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: img,img-rogue
-+    then:
-+      required:
-+        - power-domains
-+        - power-domain-names
++enum pvr_fw_processor_type {
++	PVR_FW_PROCESSOR_TYPE_META = 0,
++	PVR_FW_PROCESSOR_TYPE_MIPS,
++	PVR_FW_PROCESSOR_TYPE_RISCV,
++	PVR_FW_PROCESSOR_TYPE_COUNT,
++};
 +
-+  # Vendor integrations using a single clock domain
-   - if:
-       properties:
-         compatible:
-@@ -64,10 +92,11 @@ examples:
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
+ extern const struct pvr_fw_defs pvr_fw_defs_meta;
+ extern const struct pvr_fw_defs pvr_fw_defs_mips;
  
-     gpu@fd00000 {
--        compatible = "ti,am62-gpu", "img,img-axe";
-+        compatible = "ti,am62-gpu", "img,img-axe-1-16m", "img,img-rogue";
-         reg = <0x0fd00000 0x20000>;
-         clocks = <&k3_clks 187 0>;
-         clock-names = "core";
-         interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-         power-domains = <&k3_pds 187 TI_SCI_PD_EXCLUSIVE>;
-+        power-domain-names = "a";
-     };
 
 -- 
 2.48.1
