@@ -1,275 +1,106 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F4A22A4C3
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00C322AE7C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 13:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741612959; cv=none; b=NXLS8Wq9VBcmT9wla8lefwPZnwlAX8yhwI5QK+c1GXgvHkh9NhIC0OH+cb8V0t7tG0456fCR5ZWIcntCDhafR31SeFVwqT5ViLOsW7m5Ib8soIrXBRGxG6uapxBIvIA4GsybmvNK01tlKSGq4uqn11eZfoDx8CSUcGNDIEEKic8=
+	t=1741612965; cv=none; b=eZGL0elIm2pmju0/7wxka4N/gFWn4eTg5ir4HSkCsMF02u1/JnQuXzWZUQljza+OWCDG7bZyTwjurNDyX/TeHmg6+VEIbmGcqpino1DXY4xlKX/dnurl9a+0HIhSYdhKKQAx9/eH/2o7132reLhe3ky9ZHGS987WrM23uzTfdYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741612959; c=relaxed/simple;
-	bh=Nmr5d7AwhXzi32rUJoW0NKVITyBiEMPY6kXQ9pwa5fM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LvTJNXy4/k2CVsG734jNPycI7wsFiKFQaPsSZ1xGwp1Sa8eRFaSRoYSaLxYIpBVyTLQvKuavUi1dj2WbdcIblbKo/HrlpF53UON1Mg5MdoVm9Nrfn9vUsqfvI8K/FO1JH9JUoOI4dA+EkckdmOMljfg6KdJnSf1t5i3PQJOk2U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Nf9tyn0U; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1741612965; c=relaxed/simple;
+	bh=DPKb8ThpUtf/tZId/Di1QGFds3FHv0BZjzDL63AUYKA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u8WhmERjyvnrSBvcj0hMwaAXdAQNo9rCvh1ousrR7spIClKLzvacpqEKDw+s+gO5YTqtWjDyk+C04rVk26vPFqDhnDNrC0KTe5zWmaY/NZthtqdVKNqJG4PjWCw8TwaskTj7iOjdHybSXr1pfjFjN/Nzlc0D9Gnc8nL7Oe0I9R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Vz+qn6jX; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Nf9tyn0U"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-225477548e1so28404535ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:22:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Vz+qn6jX"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5495078cd59so4912290e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 06:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741612957; x=1742217757; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741612961; x=1742217761; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+ZMOD/Qf6hHTG0QsYxy12Mjhes8Th3228e4iu7j8c1w=;
-        b=Nf9tyn0U093zi8ErEFiueApqtgSDjC8AVdhC3u5SeFnypk85/YSph0RnbmeRACMeuM
-         XeJkXVezGHDvYmYEKwiR8QCNOv47eZjqZ/fk03fevkPLFcmCKfjFhtNo2C1Had6BO0MT
-         ksuggH8TsXLUwvleGMVGvcsVBIf1r9i8dEGyBSfLJx6E91JH2pUsBKeKYmy6G2vgHkUP
-         zxuOKXuqXkIFQ8V5qN1IChqdUaJbB+DP4HSJHkZFjGVpHx7r+H/6aU985xGJEjRXn82k
-         pHhxqZbpGZJJfLiq+AaL9P/tsBLASYKgrRG2Phex6fTIKvDn6iFgKYrwegiTnmSUyfD/
-         A2PA==
+        bh=BIR94qx8xpSJrcrgyo8EcRbXb4tKFO0K352zXBNzI/Q=;
+        b=Vz+qn6jXUoH0dwlwtlJsM/oxic8bB7UUO0LC2g4VJ1mDUGgmJBCTY1XsZxAWfWkkc7
+         U8gXFUdVQeEuBr3TdBy1a1jQT8/dK4bDdI+RQ40ZG4xogl/S5s0zTqzVhCUg/+3N/xcL
+         f65qFxW69HUKA19A2YE9B3B+qEZAbwn64BUj54AYkzLIvMLiQZgJkjeEL2r6rP1yIKUo
+         OXNd9yZaod8dwVZlSrliQdIJajhAvdHq26HIn0DY8X0aRt95XG+bfbW9/qytrmUlCeT/
+         oAwXm+OdVJ6V9sZeWtnyZPWc0gA7xTi+n+LQe4LZfH3q0DCY+kNes/4YZuvv9tgF7SI0
+         /0hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741612957; x=1742217757;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741612961; x=1742217761;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+ZMOD/Qf6hHTG0QsYxy12Mjhes8Th3228e4iu7j8c1w=;
-        b=hQPx4BWo5lx1ZuURicJRKP0fuWsLEmWTTIgJtX2Sn0Qghh2d1QX5VMVooUsch2ZJwo
-         3UmhR9VxigqJfrfQ1Z5NSbJou/d8QPp80QfB5LeGIA82y535E+WQie2qBnP76u1B2FNj
-         1QQYeEOwsXBsRCWzXtOO7UEvboQLUKJ36L+M7Xqid1PJjJKQoRX9MDEZkBtUzzZQVB3U
-         wReyreujTE2w/hwP7EdCUdmfT1qAaJKUOXDcImUrp7Yofkae0IMSzFaLGKSbHBd/r+Vm
-         wXJJCdqkQ4NRPop0Hi8Tg66Czmp2eee0miU2aO6UtZOpyFHZCu0dlIpedoN+Tvi3W3XR
-         D3Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCWroAo8vM7/+EUGBx24OeH9JPcWJGnDrlnXY95goAB6PKa8Xc/XFu4InJA3cBKVgPHOUFmZWKtgVj4sS5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT6QqRhFPhfY0VbuhQnxTDu2iBstqz2foaW8n3FMZCMJX3iZ5h
-	7dQFQZOLzyH2EAjXNJJrHA1dnJlS8dG8/+TgWXmjalT5gFYk38zgRTdPNSW4dQM=
-X-Gm-Gg: ASbGncvKWQpEdrzGCdNBCe767CKDSjsHot1Xds1NtJCoQ6OpwWGesSqzJ9738NpuOAR
-	PfC4ard5as+ppNMtRrZFXjlXq/+tQb5z94aRxZw8CUhQDV8TOhM4+ITlPzCiboQY0z9DFzmYwyD
-	wpa2Vj48ymNxUZBgsXXhIuFEthA/5SsrzREZdXcSHRyMXkioRiW8j06mYlAuNfTmcz9/ceTAJzC
-	MafEzbNfhFt50lQQeEbiqX8OT0EWTw2VidqGUsJL/1BNLJ6d2e8/n0hI89rnAAlOZFoAF0XYsTy
-	czbipYrVDVR3TVHBUdS4WtlKFdp5FMlVV4e2AOvtGgvU5F5evqJl/ehQHuFY6HiLUKFXMIX74k1
-	WN85S2pVBAmlm9oZ1RVgWn98pBG8=
-X-Google-Smtp-Source: AGHT+IFwyZ7/tPtBqU0g9RIHfp+iyK4Go8JH9gtSnoe0FV3ZnIyO4IbhPZG1IS3E7YfaXc51VxACFw==
-X-Received: by 2002:a17:903:1790:b0:224:2a6d:55ae with SMTP id d9443c01a7336-2242a6d585emr214130785ad.48.1741612957112;
-        Mon, 10 Mar 2025 06:22:37 -0700 (PDT)
-Received: from J9GPGXL7NT.bytedance.net ([61.213.176.55])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109e8617sm77318785ad.61.2025.03.10.06.22.33
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 10 Mar 2025 06:22:36 -0700 (PDT)
-From: Xu Lu <luxu.kernel@bytedance.com>
-To: akpm@linux-foundation.org,
-	tjeznach@rivosinc.com,
-	joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com
-Cc: lihangjing@bytedance.com,
-	xieyongji@bytedance.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Xu Lu <luxu.kernel@bytedance.com>
-Subject: [PATCH 2/4] iommu/riscv: Use pte_t to represent page table entry
-Date: Mon, 10 Mar 2025 21:22:20 +0800
-Message-Id: <20250310132222.58378-3-luxu.kernel@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250310132222.58378-1-luxu.kernel@bytedance.com>
-References: <20250310132222.58378-1-luxu.kernel@bytedance.com>
+        bh=BIR94qx8xpSJrcrgyo8EcRbXb4tKFO0K352zXBNzI/Q=;
+        b=IrjZo8rkLTyB80qJq59j0aOmx51agkqz5VjphgStamW+2wtVeVPGlCvkhOraiZr0aE
+         VlJHn1dxODWqORd57YYcTuGwqJZQjduproC8X8jgdszY+PrtkjVlB7f3UeoCWecNbQ2g
+         Dck484mdIJ4CjkJIfowuAOdnSpknH9fP63QQmMG23WyKvmNt3BFt0+hj/K+N+xwH4kLz
+         msH6aVacdN3yGYPPwI0I35NrKZOSijWNMs0qAoCI12cZIT1Xa6bs1RoNWBoe3J2ol3v4
+         pOkJ7xJhe328JsvcXBfqlhVdPAbxwNrSK2WKmD6vWZ64K19+YoNoma9khscyLx7Jm16n
+         e7CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVB93OI7kifXy2CGL2ZMjXAJWWFZkXOLxE6lbMdvzAgj1H0AYTXR+1bmhtNs8zJRCA5aA95cEf2RAOyYKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtTCXkSFMhQmsTgBuViPCnExEOL0yn31JfImayJ4WwPKUh/6b2
+	bFqqXTSBP7DogPfCZbK/jCoRY5tfftHdAYW8/pN7HW0cGh9JbD7dtRCGVsFoLMb5l2SkCDgOpl8
+	7Ai/DuD6nT80nFufuR2a3W8k3LN1fdzgLOS7Wmw==
+X-Gm-Gg: ASbGncvodLKhcEyV1EPLpzA2GZ/416NXa+9BRvFPM5ymAkSa/zE0mxQVcx7VkFdjNag
+	iO3kIsztmRZCOoHvWHA7wbXD6hbfSxpz71Yqzo2keZO5lfbisVZy5wPX868UpvFTVdQitLPHqVK
+	1rcVJfyrjoeMiGIfatuz8hWxhg7EFuyFO+Foow+ynnKNRhTLssql3Ci+9s/Q==
+X-Google-Smtp-Source: AGHT+IEt6orrR0LbnqijRHsXsXIoP9u4govV2U4kennnDAB8LKxqgLR624RGe5IQ9d0SgevP43EOtHRqT3+K9YyJF4I=
+X-Received: by 2002:a05:6512:3b14:b0:545:2c2c:5802 with SMTP id
+ 2adb3069b0e04-54990ec1da0mr4456748e87.48.1741612960898; Mon, 10 Mar 2025
+ 06:22:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250310-gpiochip-set-conversion-v1-0-03798bb833eb@linaro.org>
+ <20250310-gpiochip-set-conversion-v1-4-03798bb833eb@linaro.org> <475375c9-9d72-4583-a21e-37b17c6b8c46@gmail.com>
+In-Reply-To: <475375c9-9d72-4583-a21e-37b17c6b8c46@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 10 Mar 2025 14:22:29 +0100
+X-Gm-Features: AQ5f1Jr6exc6jnbdN8OgJKfOfnFqkqPylc587CtLf_MV91ith_zm5SakUGtCL8Q
+Message-ID: <CAMRc=MfofTMnfCYenUTstWUeGN5RYzJTrg2nGSzCe8tdBMksmw@mail.gmail.com>
+Subject: Re: [PATCH 04/15] gpio: bd71828: use new line value setter callbacks
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
+	Michael Buesch <m@bues.ch>, Thomas Richard <thomas.richard@bootlin.com>, 
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Andy Shevchenko <andy@kernel.org>, 
+	Support Opensource <support.opensource@diasemi.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since RISC-V IOMMU has the same pte format and translation process with
-MMU as is specified in RISC-V Privileged specification, we use pte_t to
-represent IOMMU pte too to reuse existing pte operation functions.
+On Mon, Mar 10, 2025 at 2:20=E2=80=AFPM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+>
+> > @@ -28,12 +27,10 @@ static void bd71828_gpio_set(struct gpio_chip *chip=
+, unsigned int offset,
+> >        * we are dealing with - then we are done
+> >        */
+> >       if (offset =3D=3D HALL_GPIO_OFFSET)
+> > -             return;
+> > +             return 0;
+>
+> Should this be -EINVAL (or, can this check be just dropped?) Value of an
+> input pin is tried to be set.
+>
 
-Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
----
- drivers/iommu/riscv/iommu.c | 66 ++++++++++++++++++-------------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
+I don't want to break existing users but I did notice that and figured
+that we should rather check this in core GPIO code not each individual
+driver.
 
-diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
-index 8f049d4a0e2cb..f752096989a79 100644
---- a/drivers/iommu/riscv/iommu.c
-+++ b/drivers/iommu/riscv/iommu.c
-@@ -812,7 +812,7 @@ struct riscv_iommu_domain {
- 	bool amo_enabled;
- 	int numa_node;
- 	unsigned int pgd_mode;
--	unsigned long *pgd_root;
-+	pte_t *pgd_root;
- };
- 
- #define iommu_domain_to_riscv(iommu_domain) \
-@@ -1081,27 +1081,29 @@ static void riscv_iommu_iotlb_sync(struct iommu_domain *iommu_domain,
- 
- #define PT_SHIFT (PAGE_SHIFT - ilog2(sizeof(pte_t)))
- 
--#define _io_pte_present(pte)	((pte) & (_PAGE_PRESENT | _PAGE_PROT_NONE))
--#define _io_pte_leaf(pte)	((pte) & _PAGE_LEAF)
--#define _io_pte_none(pte)	((pte) == 0)
--#define _io_pte_entry(pn, prot)	((_PAGE_PFN_MASK & ((pn) << _PAGE_PFN_SHIFT)) | (prot))
-+#define _io_pte_present(pte)	(pte_val(pte) & (_PAGE_PRESENT | _PAGE_PROT_NONE))
-+#define _io_pte_leaf(pte)	(pte_val(pte) & _PAGE_LEAF)
-+#define _io_pte_none(pte)	(pte_val(pte) == 0)
-+#define _io_pte_entry(pn, prot)	(__pte((_PAGE_PFN_MASK & ((pn) << _PAGE_PFN_SHIFT)) | (prot)))
- 
- static void riscv_iommu_pte_free(struct riscv_iommu_domain *domain,
--				 unsigned long pte, struct list_head *freelist)
-+				 pte_t pte, struct list_head *freelist)
- {
--	unsigned long *ptr;
-+	pte_t *ptr;
- 	int i;
- 
- 	if (!_io_pte_present(pte) || _io_pte_leaf(pte))
- 		return;
- 
--	ptr = (unsigned long *)pfn_to_virt(__page_val_to_pfn(pte));
-+	ptr = (pte_t *)pfn_to_virt(pte_pfn(pte));
- 
- 	/* Recursively free all sub page table pages */
- 	for (i = 0; i < PTRS_PER_PTE; i++) {
--		pte = READ_ONCE(ptr[i]);
--		if (!_io_pte_none(pte) && cmpxchg_relaxed(ptr + i, pte, 0) == pte)
-+		pte = ptr[i];
-+		if (!_io_pte_none(pte)) {
-+			ptr[i] = __pte(0);
- 			riscv_iommu_pte_free(domain, pte, freelist);
-+		}
- 	}
- 
- 	if (freelist)
-@@ -1110,12 +1112,12 @@ static void riscv_iommu_pte_free(struct riscv_iommu_domain *domain,
- 		iommu_free_page(ptr);
- }
- 
--static unsigned long *riscv_iommu_pte_alloc(struct riscv_iommu_domain *domain,
-+static pte_t *riscv_iommu_pte_alloc(struct riscv_iommu_domain *domain,
- 					    unsigned long iova, size_t pgsize,
- 					    gfp_t gfp)
- {
--	unsigned long *ptr = domain->pgd_root;
--	unsigned long pte, old;
-+	pte_t *ptr = domain->pgd_root;
-+	pte_t pte, old;
- 	int level = domain->pgd_mode - RISCV_IOMMU_DC_FSC_IOSATP_MODE_SV39 + 2;
- 	void *addr;
- 
-@@ -1131,7 +1133,7 @@ static unsigned long *riscv_iommu_pte_alloc(struct riscv_iommu_domain *domain,
- 		if (((size_t)1 << shift) == pgsize)
- 			return ptr;
- pte_retry:
--		pte = READ_ONCE(*ptr);
-+		pte = ptep_get(ptr);
- 		/*
- 		 * This is very likely incorrect as we should not be adding
- 		 * new mapping with smaller granularity on top
-@@ -1154,31 +1156,31 @@ static unsigned long *riscv_iommu_pte_alloc(struct riscv_iommu_domain *domain,
- 				goto pte_retry;
- 			}
- 		}
--		ptr = (unsigned long *)pfn_to_virt(__page_val_to_pfn(pte));
-+		ptr = (pte_t *)pfn_to_virt(pte_pfn(pte));
- 	} while (level-- > 0);
- 
- 	return NULL;
- }
- 
--static unsigned long *riscv_iommu_pte_fetch(struct riscv_iommu_domain *domain,
--					    unsigned long iova, size_t *pte_pgsize)
-+static pte_t *riscv_iommu_pte_fetch(struct riscv_iommu_domain *domain,
-+				    unsigned long iova, size_t *pte_pgsize)
- {
--	unsigned long *ptr = domain->pgd_root;
--	unsigned long pte;
-+	pte_t *ptr = domain->pgd_root;
-+	pte_t pte;
- 	int level = domain->pgd_mode - RISCV_IOMMU_DC_FSC_IOSATP_MODE_SV39 + 2;
- 
- 	do {
- 		const int shift = PAGE_SHIFT + PT_SHIFT * level;
- 
- 		ptr += ((iova >> shift) & (PTRS_PER_PTE - 1));
--		pte = READ_ONCE(*ptr);
-+		pte = ptep_get(ptr);
- 		if (_io_pte_present(pte) && _io_pte_leaf(pte)) {
- 			*pte_pgsize = (size_t)1 << shift;
- 			return ptr;
- 		}
- 		if (_io_pte_none(pte))
- 			return NULL;
--		ptr = (unsigned long *)pfn_to_virt(__page_val_to_pfn(pte));
-+		ptr = (pte_t *)pfn_to_virt(pte_pfn(pte));
- 	} while (level-- > 0);
- 
- 	return NULL;
-@@ -1191,8 +1193,9 @@ static int riscv_iommu_map_pages(struct iommu_domain *iommu_domain,
- {
- 	struct riscv_iommu_domain *domain = iommu_domain_to_riscv(iommu_domain);
- 	size_t size = 0;
--	unsigned long *ptr;
--	unsigned long pte, old, pte_prot;
-+	pte_t *ptr;
-+	pte_t pte, old;
-+	unsigned long pte_prot;
- 	int rc = 0;
- 	LIST_HEAD(freelist);
- 
-@@ -1210,10 +1213,9 @@ static int riscv_iommu_map_pages(struct iommu_domain *iommu_domain,
- 			break;
- 		}
- 
--		old = READ_ONCE(*ptr);
-+		old = ptep_get(ptr);
- 		pte = _io_pte_entry(phys_to_pfn(phys), pte_prot);
--		if (cmpxchg_relaxed(ptr, old, pte) != old)
--			continue;
-+		set_pte(ptr, pte);
- 
- 		riscv_iommu_pte_free(domain, old, &freelist);
- 
-@@ -1247,7 +1249,7 @@ static size_t riscv_iommu_unmap_pages(struct iommu_domain *iommu_domain,
- {
- 	struct riscv_iommu_domain *domain = iommu_domain_to_riscv(iommu_domain);
- 	size_t size = pgcount << __ffs(pgsize);
--	unsigned long *ptr, old;
-+	pte_t *ptr;
- 	size_t unmapped = 0;
- 	size_t pte_size;
- 
-@@ -1260,9 +1262,7 @@ static size_t riscv_iommu_unmap_pages(struct iommu_domain *iommu_domain,
- 		if (iova & (pte_size - 1))
- 			return unmapped;
- 
--		old = READ_ONCE(*ptr);
--		if (cmpxchg_relaxed(ptr, old, 0) != old)
--			continue;
-+		set_pte(ptr, __pte(0));
- 
- 		iommu_iotlb_gather_add_page(&domain->domain, gather, iova,
- 					    pte_size);
-@@ -1279,13 +1279,13 @@ static phys_addr_t riscv_iommu_iova_to_phys(struct iommu_domain *iommu_domain,
- {
- 	struct riscv_iommu_domain *domain = iommu_domain_to_riscv(iommu_domain);
- 	size_t pte_size;
--	unsigned long *ptr;
-+	pte_t *ptr;
- 
- 	ptr = riscv_iommu_pte_fetch(domain, iova, &pte_size);
--	if (_io_pte_none(*ptr) || !_io_pte_present(*ptr))
-+	if (_io_pte_none(ptep_get(ptr)) || !_io_pte_present(ptep_get(ptr)))
- 		return 0;
- 
--	return pfn_to_phys(__page_val_to_pfn(*ptr)) | (iova & (pte_size - 1));
-+	return pfn_to_phys(pte_pfn(ptep_get(ptr))) | (iova & (pte_size - 1));
- }
- 
- static void riscv_iommu_free_paging_domain(struct iommu_domain *iommu_domain)
--- 
-2.20.1
+I put that on my TODO list.
 
+Bart
