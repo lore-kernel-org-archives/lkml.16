@@ -1,440 +1,138 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F58156861
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 18:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA871C3F34;
+	Mon, 10 Mar 2025 18:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741630908; cv=none; b=A5NHWt4jvNpUBCZ71E7TrST1wOxryvovK8qCB5nTgJZ8YXim1XUyHtSNgAusaDrD6M0xyX6aj0Do3M6oWPQ+IU90ghwgllO94S8aUjWEkro+/BEiLpCI0I9VrIlpbC4ANjspplmvIJjCWdFUFVlutc2sqZ3VnviD8aoM3qCF9Fk=
+	t=1741630926; cv=none; b=pGfD8l+qyXuUePiCoi1E/GuZx3te7Nx5dDIyVkxJSCyaHRFbIlSpdmdRy5S5kMZzWJCQwAVDAAEs0De7Yp2tVK46okzefZQcn6sfdL1lCQQoItSedqI+AkcgbuuusqlYJN4CXNkH4n3UwE9XmrVcphH39fHB6CVDJcZwvzoF8uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741630908; c=relaxed/simple;
-	bh=zOuWnaznoBEsLoOm8W2GkMwOjThOD4VIeNfSt39PiBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uYDp0ox+saBz5TZaTZOuo29a8vRnvcTvoW3LDV1Z5LaNxCuuUXVlrEIE8UlyxIIOY0BoS791R+YA04IqQoIcOXkbZfL+qRMKOkf66jcsUHsbfC/UAPXsMs2t+zJmpNWO8c4ZdRIEzb6GEPg77D5ZRpy8oS/O1bXaFzUWhzmhvX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a7gXiGuL; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741630926; c=relaxed/simple;
+	bh=SkjOumrPZ8pqrIzJ1V5CWQluO4ng3WvoP3slVoeW3oo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UWCdOY4FMrd61/npqd4D5pCxSWV9c9AKKclE6/6OCJ1v6e0qYZbGwVJs/TgnSYHqQ5/R6NHXjyHAeQnFE3FAywdQypJvlNIiGqgjPThaTq+CJSGE93NcKZKrCtnzmUTjcLpyn8M3txTPCq/UCsFK4qsi3urDOzeflAijnKH1CTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxIi/1Wm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a7gXiGuL"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52AE36FQ027805;
-	Mon, 10 Mar 2025 18:20:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=cFPRrY
-	C5kUbEKVr6KVYDVjuxeBAaKJjw+U2sd/PrfYE=; b=a7gXiGuLBRsboMLI2XYYAK
-	LoJuSzpXYpKmkaSvIW7KGcwtRvou44mefwjYBri9Dupjzk8E2iAgTHG4S6xwF012
-	4Wp18ArwvyNeWZs13UILpGkwIHfZB/LpBAIXEqlRUBM9KT6hH4KBs7OZci9Qtow4
-	olq/9JsODM4GcKnCsI9QfQ1ZCK65TMk1AavokNhxHCbDeVwSIDn063Fyti60zzHf
-	+bGPWVMYkux1qCiOBVHyw9D0GrUOiGiYTKHmTgpysQH98VilO0NxFFZPjebmsve1
-	RvK9uqyw048h9E4/IF3UMOgRmJt/gIlckf/ZCEhuzwScIa7W/lSwp9Xsb26ce3/A
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a1gp1etv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 18:20:19 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52AIDpAn011231;
-	Mon, 10 Mar 2025 18:20:19 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a1gp1etq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 18:20:18 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52AHIKYj023851;
-	Mon, 10 Mar 2025 18:20:17 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4590kyr74u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 18:20:17 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52AIKFoO17498500
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Mar 2025 18:20:15 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 79ACA2004B;
-	Mon, 10 Mar 2025 18:20:15 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B5E520040;
-	Mon, 10 Mar 2025 18:20:11 +0000 (GMT)
-Received: from [9.39.22.126] (unknown [9.39.22.126])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Mar 2025 18:20:11 +0000 (GMT)
-Message-ID: <0dabf19f-96be-4c55-a4bb-8325d288eacc@linux.ibm.com>
-Date: Mon, 10 Mar 2025 23:50:10 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxIi/1Wm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 226E6C4CEEE;
+	Mon, 10 Mar 2025 18:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741630926;
+	bh=SkjOumrPZ8pqrIzJ1V5CWQluO4ng3WvoP3slVoeW3oo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HxIi/1Wm03gmXfbzvtISFLsBvvMmetPAt7JCEgwfvNoUzzLDa3+BP9lJGcUMokP4q
+	 RdQJ2Tl9dTM0bT69Z0dDvbOArqtmgpsH8pBpn0NULzDOJIA3K6O/ZsNRAumVqIYfNr
+	 eBe2NpfkqSeve02qTaKaWuzSuRrJ7wLGUc4GKxsm5MExMBnPSrq9y74PTgWgf0A13g
+	 ENgga/+BHraI2lPfLeev3b+en4iA5flMP5OEAVrMiu1P7FgQktLlpdI5tMGJD0ptcD
+	 Pv13FGAvCSA0n7YPSpatPKhw+MaM68+nDRq3Nxe3vkaqM00oBB9k8/j6D6F5icuQfB
+	 9dXLxcY9RhJ4A==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54943bb8006so5118691e87.0;
+        Mon, 10 Mar 2025 11:22:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVdsfrFssH/M8nNjTo7PCKnMBVXR69v5o+Qc84TnJ7/JGqQ+uUYVhf5S8WxcCwSO/SJJMrX6maeb+Y=@vger.kernel.org, AJvYcCWD9aV4MVfa3aTwHJtFJse7G0g1nOxUXmL4SsMyloX4o4XFAJY42HT23j5mw7LnEkEfKG7+g88Wo/N1tmJkMw==@vger.kernel.org, AJvYcCWwIgH5oU00PJuvDOqsI9wXcck+IX7HCl/uwGR0MEW4zJNn0tzIPi+LbgaI5lTxnsD5bmLw6J+Y/v7fm11A@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRJC/IRaHu7U48LPg2cvkJeNnnc+aFSOdmeDib3iCdfpGDEQoW
+	hGobT09OV1Jcfm3Dhfp5uxY5FByW4Wyi7T7AK2s1aolpcQRjW4+0vg8YExaKYvJrhwE9lx78xXQ
+	4b0Dt1qXRcYRPzEbcvXpn1GPYVYM=
+X-Google-Smtp-Source: AGHT+IF7GoDCUbQdzcJ6DIyWWAIySKv+qn9qgrauGfCi9A1X9uKn03VlhxmcPGNsWa43LGR/2J4P1S95NSjRQdBl51Q=
+X-Received: by 2002:a05:6512:b14:b0:545:532:fd2f with SMTP id
+ 2adb3069b0e04-54990e5da2cmr4479337e87.12.1741630924469; Mon, 10 Mar 2025
+ 11:22:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7 v5] sched/fair: Add push task mechanism for EAS
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: qyousef@layalina.io, hongyan.xia2@arm.com, christian.loehle@arm.com,
-        luis.machado@arm.com, qperret@google.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com, lukasz.luba@arm.com, rafael.j.wysocki@intel.com,
-        pierre.gondois@arm.com, linux-kernel@vger.kernel.org
-References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
- <20250302210539.1563190-6-vincent.guittot@linaro.org>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250302210539.1563190-6-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3CJWtl5ZC2_w3zhHAf0WVAOo0KckhDe6
-X-Proofpoint-ORIG-GUID: xwQz7MTp4z0R8HmHqEADpM5OTSK7bVdt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_06,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- mlxlogscore=999 suspectscore=0 spamscore=0 impostorscore=0 bulkscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503100140
+References: <67cd0276.050a0220.14db68.006c.GAE@google.com> <8cf7d7efdc069772d69f913b02e5f67feadce18e.camel@HansenPartnership.com>
+In-Reply-To: <8cf7d7efdc069772d69f913b02e5f67feadce18e.camel@HansenPartnership.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 10 Mar 2025 19:21:53 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXH0Myy3bV-hFNWnoUk6ZAa6MAd1zFTM-X6dXiJPx==w0A@mail.gmail.com>
+X-Gm-Features: AQ5f1JrLbe1rn0WB5HUKTnGtdoEau4kOg9QVT7Mpm8s0v1YpGXXtA4_W0dv3ECE
+Message-ID: <CAMj1kXH0Myy3bV-hFNWnoUk6ZAa6MAd1zFTM-X6dXiJPx==w0A@mail.gmail.com>
+Subject: Re: [syzbot] [efi?] [fs?] possible deadlock in efivarfs_actor
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: syzbot <syzbot+019072ad24ab1d948228@syzkaller.appspotmail.com>, jk@ozlabs.org, 
+	linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 10 Mar 2025 at 17:50, James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Sat, 2025-03-08 at 18:52 -0800, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    e056da87c780 Merge remote-tracking branch 'will/for-
+> > next/p..
+> > git tree:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-
+> > kernelci
+> > console output:
+> > https://syzkaller.appspot.com/x/log.txt?x=14ce9c64580000
+> > kernel config:
+> > https://syzkaller.appspot.com/x/.config?x=d6b7e15dc5b5e776
+> > dashboard link:
+> > https://syzkaller.appspot.com/bug?extid=019072ad24ab1d948228
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for
+> > Debian) 2.40
+> > userspace arch: arm64
+> > syz repro:
+> > https://syzkaller.appspot.com/x/repro.syz?x=111ed7a0580000
+> > C reproducer:
+> > https://syzkaller.appspot.com/x/repro.c?x=13b97c64580000
+> >
+> > Downloadable assets:
+> > disk image:
+> > https://storage.googleapis.com/syzbot-assets/3d8b1b7cc4c0/disk-e056da87.raw.xz
+> > vmlinux:
+> > https://storage.googleapis.com/syzbot-assets/b84c04cff235/vmlinux-e056da87.xz
+> > kernel image:
+> > https://storage.googleapis.com/syzbot-assets/2ae4d0525881/Image-e056da87.gz.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the
+> > commit:
+> > Reported-by: syzbot+019072ad24ab1d948228@syzkaller.appspotmail.com
+> >
+> > efivarfs: resyncing variable state
+> > ============================================
+> > WARNING: possible recursive locking detected
+> > 6.14.0-rc4-syzkaller-ge056da87c780 #0 Not tainted
+> > --------------------------------------------
+> > syz-executor772/6443 is trying to acquire lock:
+> > ffff0000c6826558 (&sb->s_type->i_mutex_key#16){++++}-{4:4}, at:
+> > inode_lock include/linux/fs.h:877 [inline]
+> > ffff0000c6826558 (&sb->s_type->i_mutex_key#16):4}, at:
+> > iterate_dir+0x3b4/0x5f4 fs/readdir.c:101
+> >
+> > other info that might help us debug this:
+> >  Possible unsafe locking scenario:
+> >
+> >        CPU0
+> >        ----
+> >   lock(&sb->s_type->i_mutex_key#16);
+> >   lock(&sb->s_type->i_mutex_key#16);
+> >
+> >  *** DEADLOCK ***
+>
+> I can't figure out how you got here.  the shared lock in readdir.c is
+> on the directory and the inode_lock in the actor is on the files within
+> the directory.  The only way to get those to be the same is if the
+> actor gets called on the '.' element, which efivarfs_pm_notify is
+> supposed to skip with the
+>
+>         file->f_pos = 2;        /* skip . and .. */
+>
+> line.  Emitting the '.' and '..' in positions 0 and 1 is hard coded
+> into libfs.c:dcache_readdir() unless you're also applying a patch that
+> alters that behaviour?
+>
 
-Hi Vincent, trying to understand this series. I see most of the places 
-are with sched_energy_enabled() checks. So it shouldn't affect non-EAS 
-systems.
+The repro log also has
 
-> EAS is based on wakeup events to efficiently place tasks on the system, but
-> there are cases where a task doesn't have wakeup events anymore or at a far
-> too low pace. For such situation, we can take advantage of the task being
-> put back in the enqueued list to check if it should be pushed on another
-> CPU. When the task is alone on the CPU, it's never put back in the enqueued
-> list; In this special case, we use the tick to run the check.
-> 
-> Wake up events remain the main way to migrate tasks but we now detect
-> situation where a task is stuck on a CPU by checking that its utilization
-> is larger than the max available compute capacity (max cpu capacity or
-> uclamp max setting)
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->   kernel/sched/fair.c  | 220 +++++++++++++++++++++++++++++++++++++++++++
->   kernel/sched/sched.h |   2 +
->   2 files changed, 222 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index a9b97bbc085f..c3e383b86808 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7051,6 +7051,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->   	hrtick_update(rq);
->   }
->   
-> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p);
->   static void set_next_buddy(struct sched_entity *se);
->   
->   /*
-> @@ -7081,6 +7082,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
->   		h_nr_idle = task_has_idle_policy(p);
->   		if (task_sleep || task_delayed || !se->sched_delayed)
->   			h_nr_runnable = 1;
-> +
-> +		fair_remove_pushable_task(rq, p);
->   	} else {
->   		cfs_rq = group_cfs_rq(se);
->   		slice = cfs_rq_min_slice(cfs_rq);
-> @@ -8589,6 +8592,197 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->   	return target;
->   }
->   
-> +static inline bool task_stuck_on_cpu(struct task_struct *p, int cpu)
-> +{
-> +	unsigned long max_capa, util;
-> +
-> +	max_capa = min(get_actual_cpu_capacity(cpu),
-> +		       uclamp_eff_value(p, UCLAMP_MAX));
-> +	util = max(task_util_est(p), task_runnable(p));
-> +
-> +	/*
-> +	 * Return true only if the task might not sleep/wakeup because of a low
-> +	 * compute capacity. Tasks, which wake up regularly, will be handled by
-> +	 * feec().
-> +	 */
-> +	return (util > max_capa);
-> +}
-> +
-> +static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
-> +{
-> +	if (p->nr_cpus_allowed == 1)
-> +		return false;
-> +
-> +	if (is_rd_overutilized(rq->rd))
-> +		return false;
-> +
-> +	if (task_stuck_on_cpu(p, cpu_of(rq)))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static int active_load_balance_cpu_stop(void *data);
-> +
-> +static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
-> +{
-> +	int new_cpu, cpu = cpu_of(rq);
-> +
-> +	if (!sched_energy_enabled())
-> +		return;
-> +
-> +	if (WARN_ON(!p))
-> +		return;
-> +
-> +	if (WARN_ON(!task_current(rq, p)))
-> +		return;
-> +
-> +	if (is_migration_disabled(p))
-> +		return;
-> +
-> +	/* If there are several task, wait for being put back */
-> +	if (rq->nr_running > 1)
-> +		return;
-> +
-> +	if (!sched_energy_push_task(p, rq))
-> +		return;
-> +
-> +	new_cpu = find_energy_efficient_cpu(p, cpu);
-> +
-> +	if (new_cpu == cpu)
-> +		return;
-> +
-> +	/*
-> +	 * ->active_balance synchronizes accesses to
-> +	 * ->active_balance_work.  Once set, it's cleared
-> +	 * only after active load balance is finished.
-> +	 */
-> +	if (!rq->active_balance) {
-> +		rq->active_balance = 1;
-> +		rq->push_cpu = new_cpu;
-> +	} else
-> +		return;
-> +
+program crashed: BUG: unable to handle kernel paging request in
+efivarfs_pm_notify
 
-Does this need preempt disable/enable guards similar to sched_balance_rq?
-
-> +	raw_spin_rq_unlock(rq);
-> +	stop_one_cpu_nowait(cpu,
-> +		active_load_balance_cpu_stop, rq,
-> +		&rq->active_balance_work);
-> +	raw_spin_rq_lock(rq);
-> +}
-> +
-> +static inline int has_pushable_tasks(struct rq *rq)
-> +{
-> +	return !plist_head_empty(&rq->cfs.pushable_tasks);
-> +}
-> +
-> +static struct task_struct *pick_next_pushable_fair_task(struct rq *rq)
-> +{
-> +	struct task_struct *p;
-> +
-> +	if (!has_pushable_tasks(rq))
-> +		return NULL;
-> +
-> +	p = plist_first_entry(&rq->cfs.pushable_tasks,
-> +			      struct task_struct, pushable_tasks);
-> +
-> +	WARN_ON_ONCE(rq->cpu != task_cpu(p));
-> +	WARN_ON_ONCE(task_current(rq, p));
-> +	WARN_ON_ONCE(p->nr_cpus_allowed <= 1);
-> +	WARN_ON_ONCE(!task_on_rq_queued(p));
-> +
-
-Isnt it better to print it everytime? it could different process each 
-time no?
-
-> +	/*
-> +	 * Remove task from the pushable list as we try only once after that
-> +	 * the task has been put back in enqueued list.
-> +	 */
-> +	plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +
-> +	return p;
-> +}
-> +
-> +/*
-> + * See if the non running fair tasks on this rq can be sent on other CPUs
-> + * that fits better with their profile.
-> + */
-> +static bool push_fair_task(struct rq *rq)
-> +{
-> +	struct task_struct *next_task;
-> +	int prev_cpu, new_cpu;
-> +	struct rq *new_rq;
-> +
-> +	next_task = pick_next_pushable_fair_task(rq);
-> +	if (!next_task)
-> +		return false;
-> +
-> +	if (is_migration_disabled(next_task))
-> +		return true;
-> +
-> +	/* We might release rq lock */
-> +	get_task_struct(next_task);
-> +
-> +	prev_cpu = rq->cpu;
-> +
-> +	new_cpu = find_energy_efficient_cpu(next_task, prev_cpu);
-> +
-> +	if (new_cpu == prev_cpu)
-> +		goto out;
-> +
-> +	new_rq = cpu_rq(new_cpu);
-> +
-> +	if (double_lock_balance(rq, new_rq)) {
-> +		/* The task has already migrated in between */
-> +		if (task_cpu(next_task) != rq->cpu) {
-> +			double_unlock_balance(rq, new_rq);
-> +			goto out;
-> +		}
-> +
-> +		deactivate_task(rq, next_task, 0);
-> +		set_task_cpu(next_task, new_cpu);
-> +		activate_task(new_rq, next_task, 0);
-> +
-> +		resched_curr(new_rq);
-> +
-> +		double_unlock_balance(rq, new_rq);
-> +	}
-> +
-> +out:
-> +	put_task_struct(next_task);
-> +
-> +	return true;
-> +}
-> +
-> +static void push_fair_tasks(struct rq *rq)
-> +{
-> +	/* push_fair_task() will return true if it moved a fair task */
-> +	while (push_fair_task(rq))
-> +		;
-> +}
-> +
-> +static DEFINE_PER_CPU(struct balance_callback, fair_push_head);
-> +
-> +static inline void fair_queue_pushable_tasks(struct rq *rq)
-> +{
-> +	if (!sched_energy_enabled() || !has_pushable_tasks(rq))
-> +		return;
-
-has_pushable_task has any tasks iff sched_energy_enabled. so this check 
-may not be needed. But it shouldnt hurt, since it is static key.
-
-> +
-> +	queue_balance_callback(rq, &per_cpu(fair_push_head, rq->cpu), push_fair_tasks);
-> +}
-> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p)
-> +{
-> +	if (sched_energy_enabled())
-> +		plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +}
-> +
-> +static void fair_add_pushable_task(struct rq *rq, struct task_struct *p)
-> +{
-> +	if (sched_energy_enabled() && task_on_rq_queued(p) && !p->se.sched_delayed) {
-> +		if (sched_energy_push_task(p, rq)) {
-> +			plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +			plist_node_init(&p->pushable_tasks, p->prio);
-> +			plist_add(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +		}
-> +	}
-> +}
-> +
->   /*
->    * select_task_rq_fair: Select target runqueue for the waking task in domains
->    * that have the relevant SD flag set. In practice, this is SD_BALANCE_WAKE,
-> @@ -8758,6 +8952,10 @@ balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
->   	return sched_balance_newidle(rq, rf) != 0;
->   }
->   #else
-> +static inline void check_pushable_task(struct task_struct *p, struct rq *rq) {}
-> +static inline void fair_queue_pushable_tasks(struct rq *rq) {}
-> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p) {}
-> +static inline void fair_add_pushable_task(struct rq *rq, struct task_struct *p) {}
->   static inline void set_task_max_allowed_capacity(struct task_struct *p) {}
->   #endif /* CONFIG_SMP */
->   
-> @@ -8947,6 +9145,12 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
->   		put_prev_entity(cfs_rq, pse);
->   		set_next_entity(cfs_rq, se);
->   
-> +		/*
-> +		 * The previous task might be eligible for being pushed on
-> +		 * another cpu if it is still active.
-> +		 */
-> +		fair_add_pushable_task(rq, prev);
-> +
->   		__set_next_task_fair(rq, p, true);
->   	}
->   
-> @@ -9019,6 +9223,13 @@ static void put_prev_task_fair(struct rq *rq, struct task_struct *prev, struct t
->   		cfs_rq = cfs_rq_of(se);
->   		put_prev_entity(cfs_rq, se);
->   	}
-> +
-> +	/*
-> +	 * The previous task might be eligible for being pushed on another cpu
-> +	 * if it is still active.
-> +	 */
-> +	fair_add_pushable_task(rq, prev);
-> +
->   }
->   
->   /*
-> @@ -13151,6 +13362,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->   	if (static_branch_unlikely(&sched_numa_balancing))
->   		task_tick_numa(rq, curr);
->   
-> +	check_pushable_task(curr, rq);
->   	update_misfit_status(curr, rq);
->   	check_update_overutilized_status(task_rq(curr));
->   
-> @@ -13303,6 +13515,8 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
->   {
->   	struct sched_entity *se = &p->se;
->   
-> +	fair_remove_pushable_task(rq, p);
-> +
->   #ifdef CONFIG_SMP
->   	if (task_on_rq_queued(p)) {
->   		/*
-> @@ -13320,6 +13534,11 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
->   	if (hrtick_enabled_fair(rq))
->   		hrtick_start_fair(rq, p);
->   
-> +	/*
-> +	 * Try to push prev task before checking misfit for next task as
-> +	 * the migration of prev can make next fitting the CPU
-> +	 */
-> +	fair_queue_pushable_tasks(rq);
->   	update_misfit_status(p, rq);
->   	sched_fair_update_stop_tick(rq, p);
->   }
-> @@ -13350,6 +13569,7 @@ void init_cfs_rq(struct cfs_rq *cfs_rq)
->   	cfs_rq->tasks_timeline = RB_ROOT_CACHED;
->   	cfs_rq->min_vruntime = (u64)(-(1LL << 20));
->   #ifdef CONFIG_SMP
-> +	plist_head_init(&cfs_rq->pushable_tasks);
->   	raw_spin_lock_init(&cfs_rq->removed.lock);
->   #endif
->   }
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index ab16d3d0e51c..2db198dccf21 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -722,6 +722,8 @@ struct cfs_rq {
->   	struct list_head	leaf_cfs_rq_list;
->   	struct task_group	*tg;	/* group that "owns" this runqueue */
->   
-> +	struct plist_head	pushable_tasks;
-> +
->   	/* Locally cached copy of our task_group's idle value */
->   	int			idle;
->   
-
+preceding the other log output regarding the locks, so the deadlock
+might be a symptom of another problem.
