@@ -1,39 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16999226D1B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 12:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86649225793;
+	Mon, 10 Mar 2025 12:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741611151; cv=none; b=sqoQZwq7bfrM8EJbZn8Z2zoUvKsD49ql+1WECKmOQpAA0Uo89zL0V9A6Gm4sVb0NTgiPdkaieCoaMnP5KphdZ9sesUy8hS3rBqLCXBAbZZBU+qYPVOlTIbfZOnHWEnu6PdBblZVntY26KQFjih6gCHGiyK5FTM6tek01s0YXBnE=
+	t=1741611186; cv=none; b=eObQxHKR6G37s0MAHbRE989srP+Odlq0lN/Q/DGjPEZhh8+aZMKyvR2qq18EwKASSFuTajFF35PSy9TA2io2AnKDhQ4q9Jv9gH8XGDyDvm1r1V1BW8sjIakDiEvdwwe2HyZ0V6fKLDVQyiYEQIdELXSbZ+o9VEwPqHy9zi7YS1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741611151; c=relaxed/simple;
-	bh=JT/XWy+b3jrVuXxpL+GJv0724MFYVVigUv9F2JafjPc=;
+	s=arc-20240116; t=1741611186; c=relaxed/simple;
+	bh=FBSUXcNcPFCcpOtQRczLMZaFejBzflBE1nRe+ghMkFE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IsmpyqbiBCjr++SpoWFK5ZZfZgdSiJXz5bGcdDzaSb/6GdxSJDGfSkOABtX/YHiZiRT2B2TZ7VWUv0xvmap4zK+Lo20DCwwg5bUn6BxN45dj2vHQdLl3aMARQbsgpQDWiyh1HZ+TRjA5V3IjK1rpwrA6LcwS6PBXSSParg5Q9Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NCRg82Nw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HJ6uIfNxSDK1CfCCR1p/pigdqxvb7eLNo9XNWzpmO+GLXzLttGr8pz/yuCCZMxa2cz/2b99UCgpBehlzIK9MSXr/CHIEsRA64GJ2I3QdTbD2e+hq+CFd0kBT066YcE4oYQ6LtLpB6DZSi4AEhRs+ZRfI2LzbS4/YsRXocetEtGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1xpHGyH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NCRg82Nw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF95C4CEE5;
-	Mon, 10 Mar 2025 12:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741611150;
-	bh=JT/XWy+b3jrVuXxpL+GJv0724MFYVVigUv9F2JafjPc=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1xpHGyH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B80ECC4CEEA;
+	Mon, 10 Mar 2025 12:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741611185;
+	bh=FBSUXcNcPFCcpOtQRczLMZaFejBzflBE1nRe+ghMkFE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NCRg82Nwlb1ILfnvZ25f2anJ13DAx+zo2aSb21hukjQUbc/FeN/HLTMiJMRP1QtE0
-	 n6b/svrzzso4B2eZy14OxFAyjuH+DgQ2IfWh/8iY8wo0BZl4BjQLCZANHcf1dAlkIg
-	 4qStK/wvNxibZyXiBpa6eIChoP3kVaMsAarxD3DI=
-Date: Mon, 10 Mar 2025 13:52:28 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH] driver/base/node.c: Fix softlockups during the
- initialization of large systems with interleaved memory blocks
-Message-ID: <2025031051-gab-viability-e288@gregkh>
-References: <20250310115305.13599-1-donettom@linux.ibm.com>
+	b=F1xpHGyHOLjcu3JPH1ihcI3UMcXLr4hpsnsK3J5oRjJ2ClI7K3A74ruv96mdYFWwp
+	 59vRNoZ3e9625wkVVcnAvfxkDxKM52vXZ7go6hTapsTy+PZbdgoaK7Mahvy2aQJDEW
+	 H/6NNIkho9IHoWWltEYreiwrbg1UojGelPTVNpVION/T2bE4fQH2mKr1y3s5dGKjmu
+	 6Gju3EeqK9YPRyrbR0qxCvMh+le63kH9krb0wUzYMxYa8rOwL92WAvM/XXo1WiJYBz
+	 mEJDd3R0YScWccXdnBZwF8umE/wFT03j/6tubc9wTu1id5LwCAapUnXt0/SY8uE9uW
+	 yTY+jLRHIIB7g==
+Date: Mon, 10 Mar 2025 07:53:04 -0500
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: fsl,layerscape-pcie-ep: Drop
+ deprecated windows
+Message-ID: <20250310125304.GA3881079-robh@kernel.org>
+References: <20250307081327.35153-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,68 +49,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250310115305.13599-1-donettom@linux.ibm.com>
+In-Reply-To: <20250307081327.35153-1-krzysztof.kozlowski@linaro.org>
 
-On Mon, Mar 10, 2025 at 06:53:05AM -0500, Donet Tom wrote:
-> On large systems with more than 64TB of DRAM, if the memory blocks
-> are interleaved, node initialization (node_dev_init()) could take
-> a long time since it iterates over each memory block. If the memory
-> block belongs to the current iterating node, the first pfn_to_nid
-> will provide the correct value. Otherwise, it will iterate over all
-> PFNs and check the nid. On non-preemptive kernels, this can result
-> in a watchdog softlockup warning. Even though CONFIG_PREEMPT_LAZY
-> is enabled in kernels now [1], we may still need to fix older
-> stable kernels to avoid encountering these kernel warnings during
-> boot.
+On Fri, Mar 07, 2025 at 09:13:26AM +0100, Krzysztof Kozlowski wrote:
+> The example DTS uses 'num-ib-windows' and 'num-ob-windows' properties
+> but these are not defined in the binding.  Binding also does not
+> reference snps,dw-pcie-common.yaml, probably because it is quite
+> different even though the device is based on Synopsys controller.
 > 
-> This patch adds a cond_resched() call in node_dev_init() to avoid
-> this warning.
+> The properties are actually deprecated, so simply drop them from the
+> example.
+
+How are we not getting warnings for them? That would be the bigger 
+issue. "status" shouldn't matter.
+
 > 
-> node_dev_init()
->     register_one_node
->         register_memory_blocks_under_node
->             walk_memory_blocks()
->                 register_mem_block_under_node_early
->                     get_nid_for_pfn
->                         early_pfn_to_nid
-> 
-> In my system node4 has a memory block ranging from memory30351
-> to memory38524, and memory128433. The memory blocks between
-> memory38524 and memory128433 do not belong to this node.
-> 
-> In  walk_memory_blocks() we iterate over all memblocks starting
-> from memory38524 to memory128433.
-> In register_mem_block_under_node_early(), up to memory38524, the
-> first pfn correctly returns the corresponding nid and the function
-> returns from there. But after memory38524 and until memory128433,
-> the loop iterates through each pfn and checks the nid. Since the nid
-> does not match the required nid, the loop continues. This causes
-> the soft lockups.
-> 
-> [1]: https://lore.kernel.org/linuxppc-dev/20241116192306.88217-1-sshegde@linux.ibm.com/
-> Fixes: 2848a28b0a60 ("drivers/base/node: consolidate node device subsystem initialization in node_dev_init()")
-> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  drivers/base/node.c | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml         | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 0ea653fa3433..107eb508e28e 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -975,5 +975,6 @@ void __init node_dev_init(void)
->  		ret = register_one_node(i);
->  		if (ret)
->  			panic("%s() failed to add node: %d\n", __func__, ret);
-> +		cond_resched();
-
-That's a horrible hack, sorry, but no, we can't sprinkle this around in
-random locations, especially as this is actually fixed by using a
-different scheduler model as you say.
-
-Why not just make the code faster so as to avoid the long time this
-takes?
-
-thanks,
-
-greg k-h
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
+> index 399efa7364c9..1fdc899e7292 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
+> @@ -94,8 +94,6 @@ examples:
+>          reg-names = "regs", "addr_space";
+>          interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
+>          interrupt-names = "pme";
+> -        num-ib-windows = <6>;
+> -        num-ob-windows = <8>;
+>          status = "disabled";
+>        };
+>      };
+> -- 
+> 2.43.0
+> 
