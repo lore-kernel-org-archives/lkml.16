@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56732253EC;
-	Mon, 10 Mar 2025 10:06:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238A92248A8;
+	Mon, 10 Mar 2025 10:09:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741601174; cv=none; b=OP6f6EhOoPTTuOmw5DiD0al4RjvY3ducF2NuF0COw56pXMGkdEPvi1UBKou3VfNMfx9Bo4n8NLiWrbpG2uLIPMFbZwpLMjcIoW58Qm3i8gKjQbmA87FRGx99bOyjx+VrcK1OHkjRwuuOJtBj+GKeKa86fvnW+FbrMy4vcVfUWrI=
+	t=1741601399; cv=none; b=hZ19c0K+moufS3PXMJnzCkC0dZ8XxxZzcywaYDqc7S7S5FwJGKXUO4EWv08pTfhO0qcSaLZWw0sLRxkU7TvXhpsm8L+ciXoH2/MXkcGI+ZdtjG6fRAlEtCDqKDvxbBuZdVTzr0WRr7VvOcDN83b98rYWgnGXkRwnAcHeCEXNwZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741601174; c=relaxed/simple;
-	bh=hP2uUw8I8mbMn2yNz3/uwyIxABFOv5u58HBG32GXAl0=;
+	s=arc-20240116; t=1741601399; c=relaxed/simple;
+	bh=lfgb+4yconhWI0GihEGvBTzUmrfm3IiGF84oD4PW/BI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/og09s4zi6mFXDLs1276zukpz8YgvTajSfsQdtXsn0lfGjouj5KTXJDcNHmS1AZdZOPc/+zLnBToYlMZvISfCCbw9/L7NgZcQCTdTn/k1opA3LCgtIrC7dJ3TOdkOKZbHwcWCprwGEWEZnKW22FmO2YjaDKlCzzByh/LsdzJgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9GKbAz7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MfcD7XJVdxDhPtU4sH9x0WU0H06p1pCcmgGIRnsuU7UDgfCICjP1WLw2I/nM8hdAEzx54nMjeVAfOF4EvCowS09cDMjgWAbyL4H0WLHIjpcl3ex3g782oRM7X1rI5dkb7tv8LDqXw+oQ+CBrVNjqhPRoY4UM+SNQfm8De6ZbaFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4Y00iF/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9GKbAz7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C343DC4CEE5;
-	Mon, 10 Mar 2025 10:06:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4Y00iF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D14FC4CEE5;
+	Mon, 10 Mar 2025 10:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741601174;
-	bh=hP2uUw8I8mbMn2yNz3/uwyIxABFOv5u58HBG32GXAl0=;
+	s=k20201202; t=1741601397;
+	bh=lfgb+4yconhWI0GihEGvBTzUmrfm3IiGF84oD4PW/BI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u9GKbAz70zpGllrnCpfsX2csmTb4K9W/vm7OhjijcPXbQES+OwRob6jgbbDN/PU0m
-	 tD7Cd201qFfaCebbzoAFaztXjhlE/G7Ebl7UTbtYNqGVp15bBK/BoCsylzysw8ddRF
-	 BzerdPTJwit9QiydxEEMVxMViLGl1pLOXJQKcwyKGoFCvF7Tw8kUL164GZcMLZrnAF
-	 gXCeMkKpDwPiEif48MlMftai2X2PYEUspi+ub90AdpT2qRMugMVLTbaYw5gfwJhsyV
-	 q3gFV0p7sXX+ZQzheW8ZuFhnyFBh2opWmnPJqsPxjcCijxHw5Onoii0QYmtAbcBvSg
-	 jYs+f05xe7iPA==
-Date: Mon, 10 Mar 2025 11:06:08 +0100
-From: Carlos Maiolino <cem@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, djwong@kernel.org, linux-xfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com, 
-	ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu, 
-	linux-ext4@vger.kernel.org
-Subject: Re: [PATCH v4 11/12] xfs: Update atomic write max size
-Message-ID: <bed7wptkueyxnjvaq4isizybxsagh7vb7nx7efcyamvtzbot5p@oqrij3ahq3vl>
-References: <20250303171120.2837067-1-john.g.garry@oracle.com>
- <2LEUjvzJ3RO3jyirsnti2pPKtOuVZZt-wKhzIi2mfCPwOESoN_SuN9GjHA4Iu_C4LRZQxiZ6dF__eT6u-p8CdQ==@protonmail.internalid>
- <20250303171120.2837067-12-john.g.garry@oracle.com>
+	b=t4Y00iF/XZiFLpxSZjMhOXUB3swUXhsjOtQn11daJRKHt/bIiWQSILaMpudvcGeTT
+	 kF4YXcjvEQOj5xrMM5VbsNBimcQvXmc0cdk9dHbiQrJSI3LDy5zcfMjPNBBKQGz6C/
+	 3YfkL3pnsQrek9w0uvkFGJflrKFjQcWH82XHXOYr1L5zjOD5eYC3AzWc0ieIiQXMKW
+	 xbc2b9xRgmbaQYEG6PiMKIH8wcJs09Cz1hMeq5Muxx6zHn1wPGa6fxDQtJfdD+NjyJ
+	 BqIoLzPvbnShbwYYEtlFuKOqW50LyMG0fZKyEGQsN7I6QREtJiES1tad6fhf8nV435
+	 BoVFCe9UC99tQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tra52-000000006bM-3NnW;
+	Mon, 10 Mar 2025 11:09:52 +0100
+Date: Mon, 10 Mar 2025 11:09:52 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: quic_jjohnson@quicinc.com, ath11k@lists.infradead.org,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	johan+linaro@kernel.org
+Subject: Re: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
+ length
+Message-ID: <Z866cCj8SWyZjCoP@hovoldconsulting.com>
+References: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
+ <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,58 +49,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250303171120.2837067-12-john.g.garry@oracle.com>
+In-Reply-To: <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
 
-Hi John.
+On Mon, Mar 10, 2025 at 09:02:17AM +0800, Miaoqing Pan wrote:
+> A relatively unusual race condition occurs between host software
+> and hardware, where the host sees the updated destination ring head
+> pointer before the hardware updates the corresponding descriptor.
+> When this situation occurs, the length of the descriptor returns 0.
 
-On Mon, Mar 03, 2025 at 05:11:19PM +0000, John Garry wrote:
-> Now that CoW-based atomic writes are supported, update the max size of an
-> atomic write.
-> 
-> For simplicity, limit at the max of what the mounted bdev can support in
-> terms of atomic write limits. Maybe in future we will have a better way
-> to advertise this optimised limit.
-> 
-> In addition, the max atomic write size needs to be aligned to the agsize.
-> Limit the size of atomic writes to the greatest power-of-two factor of the
-> agsize so that allocations for an atomic write will always be aligned
-> compatibly with the alignment requirements of the storage.
-> 
-> For RT inode, just limit to 1x block, even though larger can be supported
-> in future.
-> 
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  fs/xfs/xfs_iops.c  | 13 ++++++++++++-
->  fs/xfs/xfs_mount.c | 28 ++++++++++++++++++++++++++++
->  fs/xfs/xfs_mount.h |  1 +
->  3 files changed, 41 insertions(+), 1 deletion(-)
-> 
+I still think this description is too vague and it doesn't explain how
+this race is even possible. It sounds like there's a bug somewhere in
+the driver or firmware, but if this really is an indication the hardware
+is broken as your reply here seems to suggest:
 
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index fbed172d6770..bc96b8214173 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -198,6 +198,7 @@ typedef struct xfs_mount {
->  	bool			m_fail_unmount;
->  	bool			m_finobt_nores; /* no per-AG finobt resv. */
->  	bool			m_update_sb;	/* sb needs update in mount */
-> +	xfs_extlen_t		awu_max;	/* data device max atomic write */
+	https://lore.kernel.org/lkml/bc187777-588c-4fa0-ba8c-847e91c78d43@quicinc.com/
 
-Could you please rename this to something else? All fields within xfs_mount
-follows the same pattern m_<name>. Perhaps m_awu_max?
+then that too should be highlighted in the commit message (e.g. by
+describing this as "working around broken hardware").
 
-I was going to send a patch replacing it once I had this merged, but giving
-Dave's new comments, and the conflicts with zoned devices, you'll need to send a
-V5, so, please include this change if nobody else has any objections on keeping
-the xfs_mount naming convention.
-
-Carlos.
-
+> The current error handling method is to increment descriptor tail
+> pointer by 1, but 'sw_index' is not updated, causing descriptor and
+> skb to not correspond one-to-one, resulting in the following error:
 > 
->  	/*
->  	 * Bitsets of per-fs metadata that have been checked and/or are sick.
-> --
-> 2.31.1
+> ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1488, expected 1492
+> ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, expected 1484
 > 
+> To address this problem, temporarily skip processing the current
+> descriptor and handle it again next time. However, to prevent this
+> descriptor from continuously returning 0, use skb cb to set a flag.
+> If the length returns 0 again, this descriptor will be discarded.
+
+The ath12k ring-buffer handling looks very similar. Do you need a
+corresponding workaround in ath12k_ce_completed_recv_next()? Or are you
+sure that this (hardware) bug only affects ath11k devices?
+ 
+>  	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
+> -	if (*nbytes == 0) {
+> -		ret = -EIO;
+> -		goto err;
+> +	if (unlikely(*nbytes == 0)) {
+> +		struct ath11k_skb_rxcb *rxcb =
+> +			ATH11K_SKB_RXCB(pipe->dest_ring->skb[sw_index]);
+> +
+> +		/* A relatively unusual race condition occurs between host
+> +		 * software and hardware, where the host sees the updated
+> +		 * destination ring head pointer before the hardware updates
+> +		 * the corresponding descriptor.
+> +		 *
+> +		 * Temporarily skip processing the current descriptor and handle
+> +		 * it again next time. However, to prevent this descriptor from
+> +		 * continuously returning 0, set 'is_desc_len0' flag. If the
+> +		 * length returns 0 again, this descriptor will be discarded.
+> +		 */
+> +		if (!rxcb->is_desc_len0) {
+> +			rxcb->is_desc_len0 = true;
+> +			ret = -EIO;
+> +			goto err;
+> +		}
+>  	}
+
+I'm still waiting for feedback from one user that can reproduce the
+ring-buffer corruption very easily, but another user mentioned seeing
+multiple zero-length descriptor warnings over the weekend when running
+with this patch:
+
+	ath11k_pci 0006:01:00.0: rxed invalid length (nbytes 0, max 2048)
+
+Are there ever any valid reasons for seeing a zero-length descriptor
+(i.e. unrelated to the race at hand)? IIUC the warning would only be
+printed when processing such descriptors a second time (i.e. when
+is_desc_len0 is set).
+
+Johan
