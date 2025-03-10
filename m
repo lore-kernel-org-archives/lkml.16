@@ -1,125 +1,222 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B411922A1D5;
-	Mon, 10 Mar 2025 10:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3024E22D4E6;
+	Mon, 10 Mar 2025 10:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741603769; cv=none; b=cqn6me4esTTL2virmsY5oDPMJ9szKdRgA8GqmAwcMFDl9VvywS/lWFqOyDkNm4BCL6K1/xH6dtTX5nA/X1TIwuxz6mfjlRk/E2BeLzYy/Na5+g9h92PyeEC4PPomC9pq9Xg8pg9bWMaby3uDFm2Nm1nWPlGiA7b89XDexxE3xvY=
+	t=1741603773; cv=none; b=i/XSJMSG0ZRuy4axkxped5wjitdqZtwb1X0JFSgNzOfDjojqr9LahaApRV2sdW6noHlyt/7fEtwD8KDbu33GVseekIIwqzAMVabc8F+93UHeLcNhpgZVw9t7BnZDQ9K7rp8cRFjOSZwO1bIEs3fzD7sgDzvvUKSpK0XRTIBeZus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741603769; c=relaxed/simple;
-	bh=7r91rKZtrskh6CmIPNf+XSih9a1OoxJ8ms07oy0GExk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=byq7RDf2umCDJiWcsCjJFgjHNJ8kDjaXBbBiVYDZ8qXeiIGkPIlaUCvVgQBAYzgMM+7PKk37GOcQHOgK5waKEmWVbicRveOMASOlzs4YBeo8TRlS40uxwT9fz6wqNvRguRV+4MteYZsq0MaPA/1nr3dMNcagUmvVP9LFxZ/P52s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bjk6RAj1; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bjk6RAj1"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A3kNJe017869;
-	Mon, 10 Mar 2025 10:49:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=sKO+75m207JysMjIXv7KSQYHDy7YlP
-	HemyAx01aINeQ=; b=bjk6RAj1gYm/73g4miHHrITkpTZLeEM2xqwRejDgvimYNO
-	quInQEMglqZRTqIeqYXoqd4YLN7cZICq3Y9sHf1hHZ92XBlhyp6vU5FNuwOMMWl+
-	plTY1zZSZ6NbfBYroA0WcaGgXnvXzUW4RyCAVLHPwKV06TZ+8C9e9kfgJ/WTNivX
-	Zi+WJHO/zxDf1S009q1+Mx2b9mPN8mYb4vBricZ3BQtTRm0AWO2/phww4hGz9OK6
-	Oi1QWwxGdC0fBytqYYDKalMBIOWnhNMBVLioklJ+kN2aOAzvFatR1Eb+0PhyaPMo
-	/WQycoDFXrQl2Sv4zjUukTLA6iJQNAAp8GSbpr5Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 459rf91vn1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 10:49:17 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52AA1IRC023851;
-	Mon, 10 Mar 2025 10:49:16 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4590kypaf7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 10:49:16 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52AAnCI457606518
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Mar 2025 10:49:12 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B0672004F;
-	Mon, 10 Mar 2025 10:49:12 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D94320040;
-	Mon, 10 Mar 2025 10:49:12 +0000 (GMT)
-Received: from osiris (unknown [9.171.17.80])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 10 Mar 2025 10:49:12 +0000 (GMT)
-Date: Mon, 10 Mar 2025 11:49:10 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Thomas Huth <thuth@redhat.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] s390/uapi: Replace __ASSEMBLY__ with __ASSEMBLER__ in
- uapi headers
-Message-ID: <20250310104910.27210B18-hca@linux.ibm.com>
-References: <20250310102657.54557-1-thuth@redhat.com>
+	s=arc-20240116; t=1741603773; c=relaxed/simple;
+	bh=fxIITD7YfeumZwD1pSFoPnnCPGP2V7Qv+p2xMSFK8Ik=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EELuQcsNcueyXM3t2AxAm19LOH9yeQvIbbSeXdgSsiW6Mi+z8wYEQ99LzIxEVmsLHmAdVPk/qsZOnV8YV6+I9a6uji0lV+LlcD+3pPjsU9XFyNr+9249WvqCqBLmVMy7DshjxJ+PyIsV4V8hbp9HeY7Zdpa4x6up+XMQqX6mERo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CD6815A1;
+	Mon, 10 Mar 2025 03:49:42 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C2A633F673;
+	Mon, 10 Mar 2025 03:49:28 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 1/8] coresight: etm4x: Extract the trace unit controlling
+Date: Mon, 10 Mar 2025 10:49:12 +0000
+Message-Id: <20250310104919.58816-2-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250310104919.58816-1-leo.yan@arm.com>
+References: <20250310104919.58816-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310102657.54557-1-thuth@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: V0k3BxwPMkpJ1gdsMev1GNuAAgSEoDZj
-X-Proofpoint-GUID: V0k3BxwPMkpJ1gdsMev1GNuAAgSEoDZj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_04,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=643
- phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503100083
+Content-Transfer-Encoding: 8bit
 
+The trace unit is controlled in the ETM hardware enabling and disabling.
+The sequential changes for support AUX pause and resume will reuse the
+same operations.
 
-On Mon, Mar 10, 2025 at 11:26:57AM +0100, Thomas Huth wrote:
-> __ASSEMBLY__ is only defined by the Makefile of the kernel, so
-> this is not really useful for uapi headers (unless the userspace
-> Makefile defines it, too). Let's switch to __ASSEMBLER__ which
-> gets set automatically by the compiler when compiling assembly
-> code.
-> 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  arch/s390/include/uapi/asm/ptrace.h | 5 +++--
->  arch/s390/include/uapi/asm/schid.h  | 4 ++--
->  arch/s390/include/uapi/asm/types.h  | 4 ++--
->  3 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/s390/include/uapi/asm/ptrace.h b/arch/s390/include/uapi/asm/ptrace.h
-> index bb0826024bb95..ea202072f1ad5 100644
-> --- a/arch/s390/include/uapi/asm/ptrace.h
-> +++ b/arch/s390/include/uapi/asm/ptrace.h
-> @@ -242,7 +242,8 @@
->  #define PTRACE_OLDSETOPTIONS		21
->  #define PTRACE_SYSEMU			31
->  #define PTRACE_SYSEMU_SINGLESTEP	32
-> -#ifndef __ASSEMBLY__
-> +
-> +#ifndef __ASSEMBLER__
->  #include <linux/stddef.h>
->  #include <linux/types.h>
+Extract the operations in the etm4_{enable|disable}_trace_unit()
+functions.  A minor improvement in etm4_enable_trace_unit() is for
+returning the timeout error to callers.
 
-...
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ .../coresight/coresight-etm4x-core.c          | 126 ++++++++++--------
+ 1 file changed, 74 insertions(+), 52 deletions(-)
 
-Did this cause any sorts of problems? I can see this pattern all over
-the place, so why is this now a problem?
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index 2c1a60577728..71be566bd117 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -428,6 +428,78 @@ static void etm4_check_arch_features(struct etmv4_drvdata *drvdata,
+ }
+ #endif /* CONFIG_ETM4X_IMPDEF_FEATURE */
+ 
++static int etm4_enable_trace_unit(struct etmv4_drvdata *drvdata)
++{
++	struct coresight_device *csdev = drvdata->csdev;
++	struct device *etm_dev = &csdev->dev;
++	struct csdev_access *csa = &csdev->access;
++
++	/*
++	 * ETE mandates that the TRCRSR is written to before
++	 * enabling it.
++	 */
++	if (etm4x_is_ete(drvdata))
++		etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
++
++	etm4x_allow_trace(drvdata);
++	/* Enable the trace unit */
++	etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
++
++	/* Synchronize the register updates for sysreg access */
++	if (!csa->io_mem)
++		isb();
++
++	/* wait for TRCSTATR.IDLE to go back down to '0' */
++	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_IDLE_BIT, 0)) {
++		dev_err(etm_dev,
++			"timeout while waiting for Idle Trace Status\n");
++		return -ETIME;
++	}
++
++	/*
++	 * As recommended by section 4.3.7 ("Synchronization when using the
++	 * memory-mapped interface") of ARM IHI 0064D
++	 */
++	dsb(sy);
++	isb();
++
++	return 0;
++}
++
++static void etm4_disable_trace_unit(struct etmv4_drvdata *drvdata)
++{
++	u32 control;
++	struct coresight_device *csdev = drvdata->csdev;
++	struct device *etm_dev = &csdev->dev;
++	struct csdev_access *csa = &csdev->access;
++
++	control = etm4x_relaxed_read32(csa, TRCPRGCTLR);
++
++	/* EN, bit[0] Trace unit enable bit */
++	control &= ~0x1;
++
++	/*
++	 * If the CPU supports v8.4 Trace filter Control,
++	 * set the ETM to trace prohibited region.
++	 */
++	etm4x_prohibit_trace(drvdata);
++	/*
++	 * Make sure everything completes before disabling, as recommended
++	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
++	 * SSTATUS") of ARM IHI 0064D
++	 */
++	dsb(sy);
++	isb();
++	/* Trace synchronization barrier, is a nop if not supported */
++	tsb_csync();
++	etm4x_relaxed_write32(csa, control, TRCPRGCTLR);
++
++	/* wait for TRCSTATR.PMSTABLE to go to '1' */
++	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_PMSTABLE_BIT, 1))
++		dev_err(etm_dev,
++			"timeout while waiting for PM stable Trace Status\n");
++}
++
+ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+ {
+ 	int i, rc;
+@@ -536,33 +608,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+ 		etm4x_relaxed_write32(csa, trcpdcr | TRCPDCR_PU, TRCPDCR);
+ 	}
+ 
+-	/*
+-	 * ETE mandates that the TRCRSR is written to before
+-	 * enabling it.
+-	 */
+-	if (etm4x_is_ete(drvdata))
+-		etm4x_relaxed_write32(csa, TRCRSR_TA, TRCRSR);
+-
+-	etm4x_allow_trace(drvdata);
+-	/* Enable the trace unit */
+-	etm4x_relaxed_write32(csa, 1, TRCPRGCTLR);
+-
+-	/* Synchronize the register updates for sysreg access */
+-	if (!csa->io_mem)
+-		isb();
+-
+-	/* wait for TRCSTATR.IDLE to go back down to '0' */
+-	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
+-		dev_err(etm_dev,
+-			"timeout while waiting for Idle Trace Status\n");
+-
+-	/*
+-	 * As recommended by section 4.3.7 ("Synchronization when using the
+-	 * memory-mapped interface") of ARM IHI 0064D
+-	 */
+-	dsb(sy);
+-	isb();
+-
++	rc = etm4_enable_trace_unit(drvdata);
+ done:
+ 	etm4_cs_lock(drvdata, csa);
+ 
+@@ -906,7 +952,6 @@ static void etm4_disable_hw(void *info)
+ 	struct etmv4_drvdata *drvdata = info;
+ 	struct etmv4_config *config = &drvdata->config;
+ 	struct coresight_device *csdev = drvdata->csdev;
+-	struct device *etm_dev = &csdev->dev;
+ 	struct csdev_access *csa = &csdev->access;
+ 	int i;
+ 
+@@ -920,31 +965,8 @@ static void etm4_disable_hw(void *info)
+ 		etm4x_relaxed_write32(csa, control, TRCPDCR);
+ 	}
+ 
+-	control = etm4x_relaxed_read32(csa, TRCPRGCTLR);
++	etm4_disable_trace_unit(drvdata);
+ 
+-	/* EN, bit[0] Trace unit enable bit */
+-	control &= ~0x1;
+-
+-	/*
+-	 * If the CPU supports v8.4 Trace filter Control,
+-	 * set the ETM to trace prohibited region.
+-	 */
+-	etm4x_prohibit_trace(drvdata);
+-	/*
+-	 * Make sure everything completes before disabling, as recommended
+-	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
+-	 * SSTATUS") of ARM IHI 0064D
+-	 */
+-	dsb(sy);
+-	isb();
+-	/* Trace synchronization barrier, is a nop if not supported */
+-	tsb_csync();
+-	etm4x_relaxed_write32(csa, control, TRCPRGCTLR);
+-
+-	/* wait for TRCSTATR.PMSTABLE to go to '1' */
+-	if (coresight_timeout(csa, TRCSTATR, TRCSTATR_PMSTABLE_BIT, 1))
+-		dev_err(etm_dev,
+-			"timeout while waiting for PM stable Trace Status\n");
+ 	/* read the status of the single shot comparators */
+ 	for (i = 0; i < drvdata->nr_ss_cmp; i++) {
+ 		config->ss_status[i] =
+-- 
+2.34.1
 
-Also, wouldn't it be better to fix this with an sed statement in
-scripts/headers_install.sh instead? Otherwise this is going to be a
-never ending story since those things will be re-introduced all the
-time.
