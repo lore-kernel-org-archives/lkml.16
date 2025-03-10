@@ -1,113 +1,161 @@
-Received: from mail-m3287.qiye.163.com (mail-m3287.qiye.163.com [220.197.32.87])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3237E22EE4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 11:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082D121D3F7;
+	Mon, 10 Mar 2025 11:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741605467; cv=none; b=P8+/n6v0AQmoRBnA2V42AM2Nro9f9MmuoNqt8R1SS+8OlG0BXlx/se/GNeucXm/lGks0/IGGbl1xmV9ydYS/hFWSnnKaUg6Gmx/FlivvgMlWnSZ3HQZMRlB2eU0g6Whmt3Y4WKlCQBS8O0WlywET0kB5AEJPjTkO1FBYXgbeIuM=
+	t=1741605541; cv=none; b=NyvlmPnCsvFRZol0rDz1NsIz0oqMucOP/uJFMkctTy4J5zna8/YSqyXkjASgtpl9I89cZDWHRY9OFDEzdnuEX9JhCXtm8WfXPEOWj5P95jV/z/VaIb6Nfvaj54qRTrFDRVegb+SRd8NulsvYMjPiuuW1llOyvJ+oOZ9iy8OA2hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741605467; c=relaxed/simple;
-	bh=C56MrLlhWcU08ZYkafZUUuJbyZi0cMLonjZabttx9/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uDw4thhwDX4MFjmjRD1VIm4vDcGxgMHwqzNWUXSAVZeFjETSW8qMDBZ/GP/M3q/+oWqLzpxZaIKxhdeYvKLLerDjbZH4quAWSL0uh/Z7k6ozVJMnpBby+ULC5B2Kz1q5lhhfYdY6pgGlXKiaiiaLZoj7F5Ile97MWUKdLp21UyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=V0t69bDt; arc=none smtp.client-ip=220.197.32.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1741605541; c=relaxed/simple;
+	bh=iSfx5FlK+U5xTphC1c3YObxLSk45/xDHZO7IwewM798=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=JFlvl8HglX4sPalrKjJMy/UimSBfdy9BFtZsCb0g5UTu5X3eQVvbuDiBKMNiaSBuUJEPjBt6shR8Ho8jrZFQ4XnwdGOVVhPIFV4+ETudAr4lMTKnSfUyuE1RmgIlgEv7XOyd06WWW4OFrfTJ7YDKx2FrHSipEDXy/6nDbHgScms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pg3G48wU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="V0t69bDt"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id dc18825e;
-	Mon, 10 Mar 2025 18:42:08 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v8 04/13] dt-bindings: display: rockchip: analogix-dp: Add support to get panel from the DP AUX bus
-Date: Mon, 10 Mar 2025 18:41:05 +0800
-Message-Id: <20250310104114.2608063-5-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
-References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pg3G48wU"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52A9ZJvA012316;
+	Mon, 10 Mar 2025 11:18:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=62xgEb8g3bZDbv4vofxcE/
+	5/8alepEYXWb456WTmHus=; b=pg3G48wUz1MzHaM8m2eKAn37fEB4By18jnDgoi
+	XSKo7Efi0TR5m7XDVopDH59Mp0mr7WlQgtHyMZL4BDQOz8VMrWoAlLoXlFg6U2ny
+	sXHyQg5s8meQaqvkUOAWZ58bxSd1CwJnv005KlrL61EECIx9xICygUNalf8P34Le
+	MzOvu3epr9qz/7n19ty9dTcICRZTN8z2URh1yuD7H5L55pK9bXZrDHTrbj9+LN/7
+	DQmTjCBk8z795vFdgXt/X+UDTHI6NpomSlm0SfH62SEc7xJafC4TpzUo3tReRmJj
+	eIC4H7MI+2NeGO96RJbE+OB7nQKBLuH+oRtKxUiUVwbqJhEQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458eyucm7k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 11:18:48 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52ABIlhm007230
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Mar 2025 11:18:47 GMT
+Received: from hu-pbrahma-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 10 Mar 2025 04:18:42 -0700
+From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+Subject: [PATCH v6 0/2] Add support for GPU SMMU on QCS8300
+Date: Mon, 10 Mar 2025 16:48:33 +0530
+Message-ID: <20250310-b4-branch-gfx-smmu-v6-0-15c60b8abd99@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0sZTFZJT0kfHR8YSUpITEtWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
-	NVSktLVUpCWQY+
-X-HM-Tid: 0a957fa5d22703a3kunmdc18825e
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pgw6Hio*IzIBTSMIIzo3PS0t
-	TBoaCw9VSlVKTE9KTUtISEhLTEpDVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKSkpINwY+
-DKIM-Signature:a=rsa-sha256;
-	b=V0t69bDtUofCXFl9NUeSycvv3bm4JooxgM8eTr8UERMsGAd2BsT2W1H3fjCr1zowcQwGLwEL64vJtwNGyxLJQ8gi4N/bhYvnq3ofM0vqPnEeq51NyZrZQnrjlhZWj2JkfLkCD7JTKxCxQqNi2PFIvfD/6zT7EccqJKKoPJFudQk=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=MCo0uAKS6QHvo55swHDZpLkV/TNxwwhILy3rryJVjxs=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAInKzmcC/23Oyw6CMBAF0F8hXTumbx8r/8O4aGsLswC0lQZD+
+ HcLbjQhmc2d5J6ZiSQf0SdyriYSfcaEfVeC3lXENaarPeC9ZMIpV5QJBlaCjaZzDdRhhNS2A1g
+ quGYnLaiWpBQf0QccV/R6K7nB9Orje72R5bL9cpyKLS5LoOCNOZTRPMjj5Tmgw87tXd+SBczqB
+ 2GbP2VVkBCodVYb4RT7R+Z5/gBESXLz+wAAAA==
+X-Change-ID: 20250131-b4-branch-gfx-smmu-b03261963064
+To: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        "Joerg
+ Roedel" <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        Pratyush Brahma <quic_pbrahma@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741605522; l=2280;
+ i=quic_pbrahma@quicinc.com; s=20250113; h=from:subject:message-id;
+ bh=iSfx5FlK+U5xTphC1c3YObxLSk45/xDHZO7IwewM798=;
+ b=idMcCUSfxFH0h5+bs1DcgTiMLicPb6SLMYO56UQy6PWNk6p8NalQUjT7Oinqzy76AE4DDJ82C
+ 2rZIgCTquNnDeR2tbBYsbPV7eRNWYWjhXr7DPG+C8Dpb5P6xmVMC21y
+X-Developer-Key: i=quic_pbrahma@quicinc.com; a=ed25519;
+ pk=YvfZKC4rRO1Fot+wlXZqsoQWnAtLqrpMyEzslw3Ji+M=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=cbIormDM c=1 sm=1 tr=0 ts=67ceca98 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=7CQSdrXTAAAA:8
+ a=tA7aZXjiAAAA:8 a=JfrnYn6hAAAA:8 a=ZYyXoZZ4nwus4yg4O3YA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=a-qgeE7W1pNrGK8U0ZQC:22 a=kIIFJ0VLUOy1gFZzwZHL:22 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-ORIG-GUID: G5CPuGBsa8FAYbQw2ifzQWn3n6xSGEC6
+X-Proofpoint-GUID: G5CPuGBsa8FAYbQw2ifzQWn3n6xSGEC6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-10_04,2025-03-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501 phishscore=0
+ malwarescore=0 adultscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503100090
 
-According to Documentation/devicetree/bindings/display/dp-aux-bus.yaml,
-it is a good way to get panel through the DP AUX bus.
+Enable GPU SMMU function on QCS8300 platform. GPU SMMU is required
+for address translation in GPU device.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+---
+Changes since v5:
+- Corrected the clock order to be compatible with existing bindings
+- Link to v5: https://lore.kernel.org/r/20250211-b4-branch-gfx-smmu-v5-0-ff0bcb6a3c51@quicinc.com
+
+Changes since v4:
+- Corrected the clocks list to be inline with clock-names
+- Removed stray whitespaces
+- Added r-by tag from Krzysztof on the bindings patch
+- Link to v4: https://lore.kernel.org/r/20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com
+
+Changes since v3:
+- Modified the order of clock voting and properties as suggested by Konrad
+- Removed dependency on clocks in commit text as change is merged in
+  linux-next before current base commit
+
+Link to v3:
+https://lore.kernel.org/all/20241227105818.28516-1-quic_pbrahma@quicinc.com/
+
+Changes since v2:
+Corrected typo in cover letter to include QCS8300
+Link to
+v2:https://lore.kernel.org/all/20241227104651.4531-1-quic_pbrahma@quicinc.com/
+
+Changes since v1:
+Updated bindings for gpu smmu for qcs8300 as per Dmitry's comment
+Link to v1:
+https://lore.kernel.org/all/20241224100521.7616-1-quic_pbrahma@quicinc.com/
+
+To: Will Deacon <will@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+To: Joerg Roedel <joro@8bytes.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: iommu@lists.linux.dev
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
 
 ---
+Pratyush Brahma (2):
+      dt-bindings: arm-smmu: Document QCS8300 GPU SMMU
+      arm64: dts: qcom: qcs8300: Add device node for  gfx_smmu
 
-Changes in v4:
-- Move the dt-bindings commit before related driver commits
-
-Changes in v5:
-- Remove the unexpected change logs in commit message
+ .../devicetree/bindings/iommu/arm,smmu.yaml        |  3 +-
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi              | 39 ++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 1 deletion(-)
 ---
- .../bindings/display/rockchip/rockchip,analogix-dp.yaml        | 3 +++
- 1 file changed, 3 insertions(+)
+base-commit: a13f6e0f405ed0d3bcfd37c692c7d7fa3c052154
+change-id: 20250131-b4-branch-gfx-smmu-b03261963064
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-index 60dedf9b2be7..eaf4e67e232e 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-@@ -41,6 +41,9 @@ properties:
-     description:
-       This SoC makes use of GRF regs.
- 
-+  aux-bus:
-+    $ref: /schemas/display/dp-aux-bus.yaml#
-+
- required:
-   - compatible
-   - clocks
+Best regards,
 -- 
-2.34.1
+Pratyush Brahma <quic_pbrahma@quicinc.com>
 
