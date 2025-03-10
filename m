@@ -1,122 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8745F382;
-	Mon, 10 Mar 2025 22:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32DAE36B;
+	Mon, 10 Mar 2025 22:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741645037; cv=none; b=TVfyXYu4lKhET3zYsi45B+v9i/rH557jRKihlKR7xO5n4TLp90EZ8/LcRvIoYFlGfid7XeK8EtlBJuQT8rtiw1VgK5WLDGNaUWIXloS+BcUtLHAdZkmuekQVI2KDvdAjK6+re9DTVKyiPx/hLWJ0uq7kB4+PYp8AU+wcMhBiIbA=
+	t=1741645077; cv=none; b=PjOJByNgEXZenXvODXlIzvtzwfCaHGIdf8tqJmBVhJ/E81mcBkeBEn6cWpsmZx5Q77P/kcOpXol6cp1JtKZiBwzUY408AC4PW38mVZnGQCb7XZhhFDPDZfzD9FnKz7FPtJnEbZ4rlNALg8guowEMv9hZ8gSHKvd/x9kzZRko4YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741645037; c=relaxed/simple;
-	bh=MMlIFG8Zv8CNscu9Rs/8LPn9paecut0nXKKHd2+sAQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BvtvWWDjN7mlc2lfdXEAyxg+e5uQXfrpSBZTZqqJB8Y0vmJdA/hYi33p8Dxol42+bkdbVeSgBkusnRE2MEvzHb8vtydt+Es8qIL+G3IpEwNT45H//hhz3H7/pNBWJf2R1kdDLvjU7B29ZZSZvnbk5BF3+WAnui/jf6iPhrhMoQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCk6sLe2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741645077; c=relaxed/simple;
+	bh=1gJ8Px/hXdYSeOk/2qSjeq5whelRrLVeV0FCdhmv5dI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=s8QFb62g2Je7CmUnbROAD7LcPjlu6q9k4z0dD7FI84Ux0/5G0WndPFRt07QE4cdT7m1y6w4fxHOzswkrI4Nuy8LeDNkorl8O6uHXjLDF0V0R0cMkTjreoHb8xJxhkecU+wg3v3TXitcmf6gGuxYCiBNmQH49K1ihx1629Yi8LwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NV4OumkG; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCk6sLe2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53482C4CEE5;
-	Mon, 10 Mar 2025 22:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741645037;
-	bh=MMlIFG8Zv8CNscu9Rs/8LPn9paecut0nXKKHd2+sAQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CCk6sLe2Dd91Dh8G6F0l8+Dzz0r0BkNpj6iAF7j2qd/ROJVpkeyiqtAfH+PaeS0bG
-	 JrKo6SoPV9R6DgbEcG23JVX8ZL2Uxy/DQXEy3h9YG+lyeRpW/wbgq+PhVKXC8QSy14
-	 sqgd/c1m1lztc3YVa1uxcfDn1lpP7WwXxt9Sz1Zp8yV8Fb9JZFHscNHKtrrRb/N9zg
-	 49JCfuPsCbiBt6tpYqtZmKDW9XbdvVzrJohJ1oojogE96PazyaEdZVUNGvYQIazMPz
-	 KGjJ2R6pcwWUGOanPp2Ur0EStciAbM9SkY4lbkLi4L2w97BEHDATYaPXle4fqR2NmG
-	 3stzNiVRY+MZg==
-Date: Mon, 10 Mar 2025 15:17:14 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NV4OumkG"
+Received: from narnia.corp.microsoft.com (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E638F205492E;
+	Mon, 10 Mar 2025 15:17:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E638F205492E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741645075;
+	bh=S/hVMZ/Tm5pXhLhAqS9Ia0x+kWvutUUZYfnhEAxVL54=;
+	h=From:To:Subject:Date:From;
+	b=NV4OumkGGIKHmOv4uU63g9E6HukS9pYi5qYcIRCL554+GWmkSS2gA40WRj1GGphNh
+	 UyYTAkuW3vAukLpALywFGBDNicIYDKk8XPhDJtbg+CLVFD5PDLR4P6g8x5PtAOcBod
+	 91r+sbc8pgOVmlUyLd9YtnzbvurGHmSTp5YzXYEo=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	James Clark <james.clark@linaro.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 11/11] perf python tracepoint: Switch to using
- parse_events
-Message-ID: <Z89k6lWxRSBfCGvM@google.com>
-References: <20250228222308.626803-1-irogers@google.com>
- <20250228222308.626803-12-irogers@google.com>
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Blaise Boscaccy <bboscaccy@linux.microsoft.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Xu Kuohai <xukuohai@huawei.com>,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	bpf@vger.kernel.org,
+	selinux@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v7 bpf-next 0/2] security: Propagate caller information in bpf hooks
+Date: Mon, 10 Mar 2025 15:17:10 -0700
+Message-ID: <20250310221737.821889-1-bboscaccy@linux.microsoft.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250228222308.626803-12-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 28, 2025 at 02:23:08PM -0800, Ian Rogers wrote:
-> Rather than manually configuring an evsel, switch to using
-> parse_events for greater commonality with the rest of the perf code.
-> 
-> Reviewed-by: Howard Chu <howardchu95@gmail.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/python/tracepoint.py | 23 +++++++++++------------
->  1 file changed, 11 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/python/tracepoint.py b/tools/perf/python/tracepoint.py
-> index bba68a6d4515..38b2b6d11f64 100755
-> --- a/tools/perf/python/tracepoint.py
-> +++ b/tools/perf/python/tracepoint.py
-> @@ -5,24 +5,23 @@
->  
->  import perf
->  
-> -class tracepoint(perf.evsel):
-> -    def __init__(self, sys, name):
-> -        config = perf.tracepoint(sys, name)
-> -        perf.evsel.__init__(self,
-> -                            type   = perf.TYPE_TRACEPOINT,
-> -                            config = config,
-> -                            freq = 0, sample_period = 1, wakeup_events = 1,
-> -                            sample_type = perf.SAMPLE_PERIOD | perf.SAMPLE_TID | perf.SAMPLE_CPU | perf.SAMPLE_RAW | perf.SAMPLE_TIME)
-> -
->  def main():
-> -    tp      = tracepoint("sched", "sched_switch")
->      cpus    = perf.cpu_map()
->      threads = perf.thread_map(-1)
-> +    evlist = perf.parse_events("sched:sched_switch", cpus, threads)
-> +    # Disable tracking of mmaps and similar that are unnecessary.
-> +    for ev in evlist:
-> +        ev.tracking = False
-> +    # Configure evsels with default record options.
-> +    evlist.config()
+Hello,
 
-I think the default option uses frequency of 4000 but tracepoints want
-to use period of 1.  Also I'm not sure if it sets the proper sample type
-bits namely PERF_SAMPLE_RAW.
+While trying to implement an eBPF gatekeeper program, we ran into an
+issue whereas the LSM hooks are missing some relevant data.
 
-Thanks,
-Namhyung
+Certain subcommands passed to the bpf() syscall can be invoked from
+either the kernel or userspace. Additionally, some fields in the
+bpf_attr struct contain pointers, and depending on where the
+subcommand was invoked, they could point to either user or kernel
+memory. One example of this is the bpf_prog_load subcommand and its
+fd_array. This data is made available and used by the verifier but not
+made available to the LSM subsystem. This patchset simply exposes that
+information to applicable LSM hooks.
+
+Change list:
+- v6 -> v7
+  - use gettid/pid in lieu of getpid/tgid in test condition
+- v5 -> v6
+  - fix regression caused by is_kernel renaming
+  - simplify test logic
+- v4 -> v5
+  - merge v4 selftest breakout patch back into a single patch
+  - change "is_kernel" to "kernel"
+  - add selftest using new kernel flag
+- v3 -> v4
+  - split out selftest changes into a separate patch
+- v2 -> v3
+  - reorder params so that the new boolean flag is the last param
+  - fixup function signatures in bpf selftests
+- v1 -> v2
+  - Pass a boolean flag in lieu of bpfptr_t
+
+Revisions:
+- v6
+  https://lore.kernel.org/bpf/20250308013314.719150-1-bboscaccy@linux.microsoft.com/
+- v5
+  https://lore.kernel.org/bpf/20250307213651.3065714-1-bboscaccy@linux.microsoft.com/
+- v4
+  https://lore.kernel.org/bpf/20250304203123.3935371-1-bboscaccy@linux.microsoft.com/
+- v3
+  https://lore.kernel.org/bpf/20250303222416.3909228-1-bboscaccy@linux.microsoft.com/
+- v2
+  https://lore.kernel.org/bpf/20250228165322.3121535-1-bboscaccy@linux.microsoft.com/
+- v1
+  https://lore.kernel.org/bpf/20250226003055.1654837-1-bboscaccy@linux.microsoft.com/
 
 
-> +    # Simplify the sample_type and read_format of evsels
-> +    for ev in evlist:
-> +        ev.sample_type = ev.sample_type & ~perf.SAMPLE_IP
-> +        ev.read_format = 0
->  
-> -    evlist = perf.evlist(cpus, threads)
-> -    evlist.add(tp)
->      evlist.open()
->      evlist.mmap()
-> +    evlist.enable();
->  
->      while True:
->          evlist.poll(timeout = -1)
-> -- 
-> 2.48.1.711.g2feabab25a-goog
-> 
+Blaise Boscaccy (2):
+  security: Propagate caller information in bpf hooks
+  selftests/bpf: Add a kernel flag test for LSM bpf hook
+
+ include/linux/lsm_hook_defs.h                 |  6 +--
+ include/linux/security.h                      | 12 +++---
+ kernel/bpf/syscall.c                          | 10 ++---
+ security/security.c                           | 15 ++++---
+ security/selinux/hooks.c                      |  6 +--
+ .../selftests/bpf/prog_tests/kernel_flag.c    | 43 +++++++++++++++++++
+ .../selftests/bpf/progs/rcu_read_lock.c       |  3 +-
+ .../bpf/progs/test_cgroup1_hierarchy.c        |  4 +-
+ .../selftests/bpf/progs/test_kernel_flag.c    | 28 ++++++++++++
+ .../bpf/progs/test_kfunc_dynptr_param.c       |  6 +--
+ .../selftests/bpf/progs/test_lookup_key.c     |  2 +-
+ .../selftests/bpf/progs/test_ptr_untrusted.c  |  2 +-
+ .../bpf/progs/test_task_under_cgroup.c        |  2 +-
+ .../bpf/progs/test_verify_pkcs7_sig.c         |  2 +-
+ 14 files changed, 108 insertions(+), 33 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/kernel_flag.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_kernel_flag.c
+
+-- 
+2.48.1
+
