@@ -1,190 +1,161 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09A923371F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D7E14A098
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 15:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741619714; cv=none; b=LpDAJ2QVSPsScjvzKBzpA40gKFZKUM8mnY2emGO9y1CNvo+66jUDwYi8lYZsTjiq/fViMSwZPkLvpmVXGmrNI9qYMfJatcKYcrNdi1C1a5C5smuqpGRFypetdYhWQZCqmzEMO+ORGreKpYDEu05D4Vdw5RcvCaHdhrOHit5o9ew=
+	t=1741619764; cv=none; b=TnqPpywzpFK8Rfvrhz7GJi6RMJCJ2ur5J1NxDYBWolu0V58DcNU3CMa9ageEsCf622V8AC2PX7D0D16kups9+T41Kz9vVxlxGSZqbjdoDAA1JGjbdocsWWJxttofDDc0XYpX6QRkfCE3dP1dqeLTzSAD0YRrZI1BWFDQHIMlj1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741619714; c=relaxed/simple;
-	bh=3H55FORtmwscKRH5SzHI+X59iFLs94AL05N994sGaPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t0aobcB4CV9Umaxj0wS7lCYhOgJqDJH8ysgvGwmWZ9LdY0uHi+xOmpICrLWMBqgcEia5uKmY/wyLf2UcKz3Pp+5SpZrGhAVG+bbpTIxWTx/8wIHX31gzQc0NlqFx15IT823szfYIRHqe8Zx5k6ZYXfm+61llwmet1vLookh3ZkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=F3f9iuDZ; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1741619764; c=relaxed/simple;
+	bh=8Oin34g00wCaHk8FeIrARHeJ7CFihYZLzJBhDjqaX+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4nwI3gVdtIlCbH+RR+17nbOeJl3yFjf9MJcw8CCJTDW5/oWFH5NaVRoRyW0CX18j6TTSM9ILGgr0jkPSJyAARXSUZTXnnbAoRUpubeCW7MSYOkfu0a2pv0PsSoRVEd0IYlY6k4n7SRjVgMgMufXLsxemv+sVYJ1cL8o4GpKpPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENodMEer; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="F3f9iuDZ"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223959039f4so86625295ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 08:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1741619712; x=1742224512; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OfJ3/5A+8eTTKYRN2eD83evjq8eHQRgBJnaNQ4fOKIc=;
-        b=F3f9iuDZ1gOqc3bM+g71TDUDFrV5Wy9sxXs9cJY0K2EbYAMPyrkJC+UiSz8LIDVbFv
-         J0/B1JUSX7Z2WkFNIf6ZKynschBkvbKEGje0HL2xDZ3MQvqiU5+h2zyg0w7RqLZxqBfp
-         ja+pS5WGrVwDHiCrYtGtPYfHtkDbX0Dv2CUl8QBv15kaVhWCH1e3zj2mFBfTD+uEMYhy
-         dR8961lSy7MeQiKgauCfV+z/0sBVx+wwv4ZBOOcXmqTw8eopHTryxz862AUA3sH2m6iU
-         QXBTSLXOkHkQKKTXvUkGeICoE0bqxqLe32VTrW3opBh4e5DN7+NkFup8vKoep06R2adb
-         9i+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741619712; x=1742224512;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OfJ3/5A+8eTTKYRN2eD83evjq8eHQRgBJnaNQ4fOKIc=;
-        b=Hkc5esRbsaVwWcA42tNoxIyp7jyJMKo4rndcNuqLEj3JhedDAau7x3hVK5Z1J2wMKs
-         IAneM6dwWaiEI2xI+YvICB4DPDYEGT2XiPvlAVGudCv48ClJ1wAsZ09v1lu6AFUtD2QX
-         G237C/8GpHnST/a/bxt0TiOz5Ft7DgXjBqFeJO9jcx2MO0YX7pOY5L+4nhvbGSgD4oqV
-         8pvlAKdAsWu9XuhkoXeRu6f8BqtlmfQ4wu5BkD7wN+ghjtPoyuf4d1yeVXiEystnxWfy
-         N4YEoW9tnV19RnVjaxzBP/KHroQUB7WIfKAeDqOo3ttDIddx361ZRZbNlpfOnQPuue1v
-         VUww==
-X-Forwarded-Encrypted: i=1; AJvYcCXYipnJQJBIWOPleyC1vnr+2dpAzSQTu5X10ups/Y1x+fFf6++tc6XBSKkgi7PJc/NzLq9LQMeE/Cyk7QQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjP/EYmepEiWPIpcmQeh2Xtfcm5Y2nlggvuGOYchqAD49ItUCB
-	eKuuU1Hna/Q9qVhgGtagoHn2hVJ0LZ8mFE5W5ps+S+//tVkQZnZXLPldwI910qQ=
-X-Gm-Gg: ASbGncu/i9YfIiP2Yp14F+KPwqoUMXDBrrsDOOjZMHF61ppwK75MU85AKsw5GBc1BW9
-	Hd8fnhRCT5u2+6VKh2WSmjYZ0iCmHFRhWzaWICWIOb0/KJgAAeG2iBG4AP8m/jakQ7s806wrlM5
-	wOzaUGtISAGmfVj5Y0mqs+ooZ3IDf7EO6/1YU772aKYpyvS7rg6e00cKikz7eYs4Mi5H9ii6RSR
-	jzDSrN9CT+oRgpe/yhQyGemKvL4HLqP4SCbl+HDeNFTPl4Fa69PG228Xn1RhtnNzERxChMCukvQ
-	1a6ZbHWOhZlRT9JevCn5HyFOPZYrxkImccFuvzWLetgQbg==
-X-Google-Smtp-Source: AGHT+IFwcAES82fPdZN2juakD/f3DtxEXqN8fLDByuuUWFv0PrmjGf+tQ1Z8z/EN2hDCjCyy0IsnJg==
-X-Received: by 2002:a17:903:2b0f:b0:21f:8453:7484 with SMTP id d9443c01a7336-22428a9d15dmr204592905ad.30.1741619710747;
-        Mon, 10 Mar 2025 08:15:10 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109e99dfsm79230515ad.91.2025.03.10.08.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 08:15:10 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: [PATCH v3 17/17] RISC-V: KVM: add support for SBI_FWFT_MISALIGNED_DELEG
-Date: Mon, 10 Mar 2025 16:12:24 +0100
-Message-ID: <20250310151229.2365992-18-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250310151229.2365992-1-cleger@rivosinc.com>
-References: <20250310151229.2365992-1-cleger@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENodMEer"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741619763; x=1773155763;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8Oin34g00wCaHk8FeIrARHeJ7CFihYZLzJBhDjqaX+k=;
+  b=ENodMEerr7QK9u9g7AK1S2btUT9AtISNygFnx3bjEVYLY0BwY+kWdDvJ
+   O40aGl0DAXl/hll/R9cq9Q3Kg1Pg3WJRviwqlBFTEUmIkveKeJSenpoUf
+   NBq6kSyyQSc306+JGS56FyyrYqyunHKdVN4Brig2E1cAYcKIK+kYrYtPU
+   1P5+SIdaz/r27O3/tmnb+zT5mx+efFaS3cBSGXOuiK+CqfaOxgEF7n7Ov
+   rKLHh9yKB3QiPDp38XwGLtlWieKa6Nz3JluC5Gvby3zzdLwM2LRPG6qhI
+   QJjxa08zCDPYwWpIBTgwOfcvuUsr4icAB90g8F3/9/aWhhCtClHvUNPbc
+   w==;
+X-CSE-ConnectionGUID: PrT2fqjuSlmPU/gIN5RGqQ==
+X-CSE-MsgGUID: BnjJwJ3+TjWymEZxG+UJ7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42812445"
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="42812445"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:16:02 -0700
+X-CSE-ConnectionGUID: M3u8CCVSSZSEjbBoSINTFA==
+X-CSE-MsgGUID: YgmAbBanR+GtWfWfPwyjnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
+   d="scan'208";a="125033371"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:16:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1trerF-00000001Hzj-2uDT;
+	Mon, 10 Mar 2025 17:15:57 +0200
+Date: Mon, 10 Mar 2025 17:15:57 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org, Willy Tarreau <willy@haproxy.com>,
+	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
+Subject: Re: [PATCH v1 1/7] auxdisplay: charlcd: Partially revert "Move
+ hwidth and bwidth to struct hd44780_common"
+Message-ID: <Z88CLcR6ZLMl1OOv@smile.fi.intel.com>
+References: <20250224173010.219024-1-andriy.shevchenko@linux.intel.com>
+ <20250224173010.219024-2-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdWBGb5AXv8Ch3XhPPHc0CVYHf31tx1Feh87OU5MDUCdPQ@mail.gmail.com>
+ <Z8slexKyo7VFkSKW@smile.fi.intel.com>
+ <CAMuHMdVmg=kuPWCN6rRTxP1LSZFtK=gagd0x092kxzif8Tav2Q@mail.gmail.com>
+ <Z8tBnq-j7gKrzlpk@smile.fi.intel.com>
+ <CAMuHMdWeFhqf-A-71pCZ+eFMh+ibGudMwiE5hPrdkfCYwVXHCA@mail.gmail.com>
+ <Z86e3t8YVoaGsRlF@smile.fi.intel.com>
+ <CAMuHMdVA5pAWKXjYDZrLczgzmhvHVOAdpK3kBQC8UGY_TzEW3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVA5pAWKXjYDZrLczgzmhvHVOAdpK3kBQC8UGY_TzEW3A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-SBI_FWFT_MISALIGNED_DELEG needs hedeleg to be modified to delegate
-misaligned load/store exceptions. Save and restore it during CPU
-load/put.
+On Mon, Mar 10, 2025 at 10:39:49AM +0100, Geert Uytterhoeven wrote:
+> On Mon, 10 Mar 2025 at 09:12, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Mar 07, 2025 at 08:05:56PM +0100, Geert Uytterhoeven wrote:
+> > > On Fri, 7 Mar 2025 at 19:57, Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Fri, Mar 07, 2025 at 07:14:02PM +0100, Geert Uytterhoeven wrote:
+> > > > > On Fri, 7 Mar 2025 at 17:57, Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Fri, Mar 07, 2025 at 10:03:31AM +0100, Geert Uytterhoeven wrote:
+> > > > > > > On Mon, 24 Feb 2025 at 18:30, Andy Shevchenko
+> > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > > The commit 2545c1c948a6 ("auxdisplay: Move hwidth and bwidth to struct
+> > > > > > >
+> > > > > > > s/The commit/Commit/
+> > > > > >
+> > > > > > Why? We know that we are talking about the very specific commit.
+> > > > >
+> > > > > You can have a noun with or without an article:
+> > > >
+> > > > This is not so simple :-), esp. if a noun is a weekday or a toponym.
+> > > >
+> > > > >   - "a commit": an unspecified commit,
+> > > > >   - "the commit": a specific commit, specified by context.
+> > > > >   - "commit 1234abcd": a specific commit, specified by what follows.
+> > > > >
+> > > > > > My English is not native I would appreciate a link to a material to study
+> > > > > > the case you pointed out.
+> > > > >
+> > > > > Neither is mine, but the use of articles is similar in English and Dutch.
+> > > > > (I am aware your mother tongue does not have articles ;-)
+> > > > >
+> > > > > I found plenty of articles explaining cases 1 and 2.
+> > > > > Case 3 can be considered equivalent to "Mount Everest" in
+> > > > > https://learnenglish.britishcouncil.org/grammar/a1-a2-grammar/articles-the-or-no-article
+> > > >
+> > > > Okay, so you actually think that the hash and the title can be considered as
+> > > > "name of a place". Hmm... I don't think it applies here. It's not a place.
+> > > > Moreover some places require "the" article.
+> > >
+> > > Only if they are a region, not if they are a country (yes, that's
+> > > unrelated here).
+> > >
+> > > > Here https://www.butte.edu/departments/cas/tipsheets/grammar/articles.html,
+> > > > for example, the sentence "The 2003 federal budget" sounds to me closer to
+> > > > our case. Every year there is a federal budget, but we explicitly point out
+> > > > to one and reader knows what is this. The same with the commit.
+> > > >
+> > > > Sorry, but I am still not convinced.
+> > >
+> > > In "The 2003 federal budget", both "2003" and "federal" are adjectives.
+> > > In "commit 1234abcd", "1234abcd" is a name.
+> > >
+> > > Cfr. "King Charles".  "The King Charles" would be used only when
+> > > putting a very special emphasis on "king".
+> >
+> > I have talked to the language teacher (okay, her native is not English),
+> > and she told me that no article is for the cases of location, person, or
+> > character. None of that category the commit falls into.
+> >
+> > So, still not convinced.
+> 
+> I have a hard time finding the official rule (git commits did not
+> exist when English grammar was written ;-)... Examples are easier to
+> find.  E.g. the first sentence on [1] does not start with an article:
+> 
+>    European route E40 is the longest European route.
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
-Reviewed-by: Deepak Gupta <debug@rivosinc.com>
----
- arch/riscv/kvm/vcpu.c          |  3 +++
- arch/riscv/kvm/vcpu_sbi_fwft.c | 39 ++++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
+Okay, seems AI may help here. It tells that grammatically article is needed,
+but in technical texts (like this one) it's the usual case to drop it and
+it's considered grammatically correct.
 
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 542747e2c7f5..d98e379945c3 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -646,6 +646,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- {
- 	void *nsh;
- 	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-+	struct kvm_vcpu_config *cfg = &vcpu->arch.cfg;
- 
- 	vcpu->cpu = -1;
- 
-@@ -671,6 +672,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- 		csr->vstval = nacl_csr_read(nsh, CSR_VSTVAL);
- 		csr->hvip = nacl_csr_read(nsh, CSR_HVIP);
- 		csr->vsatp = nacl_csr_read(nsh, CSR_VSATP);
-+		cfg->hedeleg = nacl_csr_read(nsh, CSR_HEDELEG);
- 	} else {
- 		csr->vsstatus = csr_read(CSR_VSSTATUS);
- 		csr->vsie = csr_read(CSR_VSIE);
-@@ -681,6 +683,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- 		csr->vstval = csr_read(CSR_VSTVAL);
- 		csr->hvip = csr_read(CSR_HVIP);
- 		csr->vsatp = csr_read(CSR_VSATP);
-+		cfg->hedeleg = csr_read(CSR_HEDELEG);
- 	}
- }
- 
-diff --git a/arch/riscv/kvm/vcpu_sbi_fwft.c b/arch/riscv/kvm/vcpu_sbi_fwft.c
-index cce1e41d5490..756fda1cf2e7 100644
---- a/arch/riscv/kvm/vcpu_sbi_fwft.c
-+++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
-@@ -14,6 +14,8 @@
- #include <asm/kvm_vcpu_sbi.h>
- #include <asm/kvm_vcpu_sbi_fwft.h>
- 
-+#define MIS_DELEG (BIT_ULL(EXC_LOAD_MISALIGNED) | BIT_ULL(EXC_STORE_MISALIGNED))
-+
- struct kvm_sbi_fwft_feature {
- 	/**
- 	 * @id: Feature ID
-@@ -64,7 +66,44 @@ static bool kvm_fwft_is_defined_feature(enum sbi_fwft_feature_t feature)
- 	return false;
- }
- 
-+static bool kvm_sbi_fwft_misaligned_delegation_supported(struct kvm_vcpu *vcpu)
-+{
-+	if (!misaligned_traps_can_delegate())
-+		return false;
-+
-+	return true;
-+}
-+
-+static int kvm_sbi_fwft_set_misaligned_delegation(struct kvm_vcpu *vcpu,
-+					struct kvm_sbi_fwft_config *conf,
-+					unsigned long value)
-+{
-+	if (value == 1)
-+		csr_set(CSR_HEDELEG, MIS_DELEG);
-+	else if (value == 0)
-+		csr_clear(CSR_HEDELEG, MIS_DELEG);
-+	else
-+		return SBI_ERR_INVALID_PARAM;
-+
-+	return SBI_SUCCESS;
-+}
-+
-+static int kvm_sbi_fwft_get_misaligned_delegation(struct kvm_vcpu *vcpu,
-+					struct kvm_sbi_fwft_config *conf,
-+					unsigned long *value)
-+{
-+	*value = (csr_read(CSR_HEDELEG) & MIS_DELEG) != 0;
-+
-+	return SBI_SUCCESS;
-+}
-+
- static const struct kvm_sbi_fwft_feature features[] = {
-+	{
-+		.id = SBI_FWFT_MISALIGNED_EXC_DELEG,
-+		.supported = kvm_sbi_fwft_misaligned_delegation_supported,
-+		.set = kvm_sbi_fwft_set_misaligned_delegation,
-+		.get = kvm_sbi_fwft_get_misaligned_delegation,
-+	},
- };
- 
- static struct kvm_sbi_fwft_config *
+We both are right but from different angles. And yours seems the winner today
+:)
+
+I'll update the message accordingly.
+
+> [1] https://en.wikipedia.org/wiki/European_route_E40
+
 -- 
-2.47.2
+With Best Regards,
+Andy Shevchenko
+
 
