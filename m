@@ -1,144 +1,219 @@
-Received: from mail-m49225.qiye.163.com (mail-m49225.qiye.163.com [45.254.49.225])
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90470227BAA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A90622A1CB
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604252; cv=none; b=hLQ78IFvhxRILf/0NB/9qeEJZ41VSPrHrSf5aaeKv1kQGqdlnJJCYVQyoNU+GrzWISaJZHZVpsN9QTMG29nldhA3vomAtTYSodi/8vJusStjuGLSHvJGWBkTAHY5LBPotTEDi22f9K76uqV08hnci0uqf4lSKngMOBWiahV/ryU=
+	t=1741604257; cv=none; b=Eb6XOekuUEI3GsEdeU4vSlc4bkx34wgkn6I997hCH421R7HyYZIcSdIf7xku7NK38Y7LJLceVzWqB3U2OFr9VsPQgSYfHBxhUenMUO8SNLTO/1lEciEMd0AsTr+GFUggp/wXmRo33XgMWUg2m/gSlZ95My4CziaETxAARJPCUY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604252; c=relaxed/simple;
-	bh=aD06Fbbe9EMC6Hx8Zi16tcAO/wSri7Ge/ZU2T6oRbwk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m7HmuU0ioNxqBrrEA3FnctxYJnYoOpuck46BijxVsw6QCsVaEkrzjsDbPqNbv4sF9/24U9+2I9SM+yCp6d8fZBrTzaoeP3J90dcpwXqTQ8xxPB5kdRMQrMrA+7fx/AsaxGnkjC3LhcWEnC6eRLceD6fjA9piexHYplmuha4oLwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=cx/5/rIf; arc=none smtp.client-ip=45.254.49.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1741604257; c=relaxed/simple;
+	bh=G4g8+U+HLV4Gx1vaKDqvgQtTExOBv2TMnZblyvutss0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gyk27tVfPTgudkjhqENX8/N+5zYPdwVyeSlJvIfoD4IpbRcKjR8+EBM8+ljwnt0lpnJ7XZ/dKU1nYMLXL+RIK4rzK/l+ymDwNcnDcB/agrzxWWqq/z6jxlcctUao4oAmVJd7r9gO0Tsp8Wvx8Hs7mzVQpC135TZ7EBKUeh21uW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=knASrLgj; arc=none smtp.client-ip=79.135.106.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="cx/5/rIf"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id dc18826a;
-	Mon, 10 Mar 2025 18:42:10 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v8 05/13] drm/bridge: analogix_dp: Support to get &analogix_dp_device.plat_data and &analogix_dp_device.aux
-Date: Mon, 10 Mar 2025 18:41:06 +0800
-Message-Id: <20250310104114.2608063-6-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
-References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="knASrLgj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1741604251; x=1741863451;
+	bh=lqhztZytrydlxEcGl7cfjWRcRjfcWBDgUsWbhxkDSEI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=knASrLgj1v8ROp3wXvA26lKrUi+NziM5cDZGRFksM8MQg1BhHL3PblArEbIYWxc/X
+	 +06FMgKiDFiW2v93uy/H6ciJ10JruwFguhpSd/8P0g/AD9hr1ROXmEzw8Nkyr33Udn
+	 NGyg5+4l7mmiJE6vqgEeiMGo12xIpoQIhrBN9eGNRxkOqsa6ulU5pytq7Sk4+BwSJ6
+	 7FnVPwFHb25esTjh89l5rlZtoEPdLliATwGN9ytFyTXmWC2tcpRwcrAgdjT5gavKap
+	 1gh+tM8d1t4sNTQkgwENyi87iA0O+WzCHoSb3b92eqLi20GKLxZMCvNTIrvca+kOoP
+	 Z8SRQcMBnKfew==
+Date: Mon, 10 Mar 2025 10:57:24 +0000
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
+Subject: [PATCH v7 1/4] rust: types: Add Ownable/Owned types
+Message-ID: <20250310-unique-ref-v7-1-4caddb78aa05@pm.me>
+In-Reply-To: <20250310-unique-ref-v7-0-4caddb78aa05@pm.me>
+References: <20250310-unique-ref-v7-0-4caddb78aa05@pm.me>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: dc6aa8198b4e735e3bc33238a886717b525866ae
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0pDH1YeGhpOS0xOSh5MHkNWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
-	NVSktLVUpCWQY+
-X-HM-Tid: 0a957fa5db1303a3kunmdc18826a
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NzY6IQw4NzJOSSMRMzkSPShL
-	UTZPFAlVSlVKTE9KTUtISEhJQk1IVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJSEhJNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=cx/5/rIf8YViD47f5CCZTK5rwAEg9fCuUgxCgxRPiT7Re0DJYrb/E7fOSXVCOlOQDscOtEkimyXIdtNJkLW4XWn5L20Vm/4aJHuVN4nYvlxLZdV8knI+f+NZGIF8DeW3tzt4fiDPpzS2yEeO0Iu4rqu7in+mxVX7uzElLw0WAzQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=WiJhY8PG8AgEQhlaFruZbMXxvourhl/iCjB/6RJP8bw=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add two new functions: one to find &analogix_dp_device.plat_data via
-&drm_dp_aux, and the other to get &analogix_dp_device.aux. Both of them
-serve for the function of getting panel from DP AUX bus, which is why
-they are included in a single commit.
+From: Asahi Lina <lina@asahilina.net>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
+C FFI) type that *may* be owned by Rust, but need not be. Unlike
+AlwaysRefCounted, this mechanism expects the reference to be unique
+within Rust, and does not allow cloning.
 
+Conceptually, this is similar to a KBox<T>, except that it delegates
+resource management to the T instead of using a generic allocator.
+
+Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asah=
+ilina.net/
+Signed-off-by: Asahi Lina <lina@asahilina.net>
+Co-developed-by: Oliver Mangold <oliver.mangold@pm.me>
+Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
 ---
+ rust/kernel/types.rs | 109 +++++++++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 109 insertions(+)
 
-Changes in v7:
-- Use the forward-declare struct drm_dp_aux instead of including the
-  relevant header file.
----
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 14 ++++++++++++++
- include/drm/bridge/analogix_dp.h                   |  4 ++++
- 2 files changed, 18 insertions(+)
-
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index d5bbc8843a56..dd91760c4b1c 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -1764,6 +1764,20 @@ int analogix_dp_stop_crc(struct drm_connector *connector)
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 55ddd50e8aaa075ac33d5f1088a7f72df05f74f4..e0ce3646a4d3b70c069322a9b0f=
+25c00265a2af8 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -551,6 +551,115 @@ fn drop(&mut self) {
+     }
  }
- EXPORT_SYMBOL_GPL(analogix_dp_stop_crc);
- 
-+struct analogix_dp_plat_data *analogix_dp_aux_to_plat_data(struct drm_dp_aux *aux)
-+{
-+	struct analogix_dp_device *dp = to_dp(aux);
-+
-+	return dp->plat_data;
+=20
++/// Types that may be owned by Rust code or borrowed, but have a lifetime =
+managed by C code.
++///
++/// It allows such types to define their own custom destructor function to=
+ be called when
++/// a Rust-owned reference is dropped.
++///
++/// This is usually implemented by wrappers to existing structures on the =
+C side of the code.
++///
++/// # Safety
++///
++/// Implementers must ensure that any objects borrowed directly as `&T` st=
+ay alive for the duration
++/// of the lifetime, and that any objects owned by Rust as `Owned<T>`) sta=
+y alive while that owned
++/// reference exists, until the [`Ownable::release()`] trait method is cal=
+led.
++pub unsafe trait Ownable {
++    /// Releases the object (frees it or returns it to foreign ownership).
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that the object is no longer referenced after =
+this call.
++    unsafe fn release(this: NonNull<Self>);
 +}
-+EXPORT_SYMBOL_GPL(analogix_dp_aux_to_plat_data);
 +
-+struct drm_dp_aux *analogix_dp_get_aux(struct analogix_dp_device *dp)
-+{
-+	return &dp->aux;
++/// A subtrait of Ownable that asserts that an `Owned<T>` Rust reference i=
+s not only unique
++/// within Rust and keeps the `T` alive, but also guarantees that the C co=
+de follows the
++/// usual mutable reference requirements. That is, the kernel will never m=
+utate the
++/// `T` (excluding internal mutability that follows the usual rules) while=
+ Rust owns it.
++///
++/// When this type is implemented for an [`Ownable`] type, it allows `Owne=
+d<T>` to be
++/// dereferenced into a &mut T.
++///
++/// # Safety
++///
++/// Implementers must ensure that the kernel never mutates the underlying =
+type while
++/// Rust owns it.
++pub unsafe trait OwnableMut: Ownable {}
++
++/// An owned reference to an ownable kernel object.
++///
++/// The object is automatically freed or released when an instance of [`Ow=
+ned`] is
++/// dropped.
++///
++/// # Invariants
++///
++/// The pointer stored in `ptr` is non-null and valid for the lifetime of =
+the [`Owned`] instance.
++pub struct Owned<T: Ownable> {
++    ptr: NonNull<T>,
++    _p: PhantomData<T>,
 +}
-+EXPORT_SYMBOL_GPL(analogix_dp_get_aux);
 +
- MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
- MODULE_DESCRIPTION("Analogix DP Core Driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/include/drm/bridge/analogix_dp.h b/include/drm/bridge/analogix_dp.h
-index 6002c5666031..e19b0bbc57d6 100644
---- a/include/drm/bridge/analogix_dp.h
-+++ b/include/drm/bridge/analogix_dp.h
-@@ -10,6 +10,7 @@
- #include <drm/drm_crtc.h>
- 
- struct analogix_dp_device;
-+struct drm_dp_aux;
- 
- enum analogix_dp_devtype {
- 	EXYNOS_DP,
-@@ -48,4 +49,7 @@ void analogix_dp_unbind(struct analogix_dp_device *dp);
- int analogix_dp_start_crc(struct drm_connector *connector);
- int analogix_dp_stop_crc(struct drm_connector *connector);
- 
-+struct analogix_dp_plat_data *analogix_dp_aux_to_plat_data(struct drm_dp_aux *aux);
-+struct drm_dp_aux *analogix_dp_get_aux(struct analogix_dp_device *dp);
++// SAFETY: It is safe to send `Owned<T>` to another thread when the underl=
+ying `T` is `Send` because
++// it effectively means sending a unique `&mut T` pointer (which is safe b=
+ecause `T` is `Send`).
++unsafe impl<T: Ownable + Send> Send for Owned<T> {}
 +
- #endif /* _ANALOGIX_DP_H_ */
--- 
-2.34.1
++// SAFETY: It is safe to send `&Owned<T>` to another thread when the under=
+lying `T` is `Sync`
++// because it effectively means sharing `&T` (which is safe because `T` is=
+ `Sync`).
++unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
++
++impl<T: Ownable> Owned<T> {
++    /// Creates a new instance of [`Owned`].
++    ///
++    /// It takes over ownership of the underlying object.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that the underlying object is acquired and can=
+ be considered owned by
++    /// Rust.
++    pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
++        // INVARIANT: The safety requirements guarantee that the new insta=
+nce now owns the
++        // reference.
++        Self {
++            ptr,
++            _p: PhantomData,
++        }
++    }
++
++    /// Consumes the `Owned`, returning a raw pointer.
++    ///
++    /// This function does not actually relinquish ownership of the object=
+.
++    /// After calling this function, the caller is responsible for ownersh=
+ip previously managed
++    /// by the `Owned`.
++    pub fn into_raw(me: Self) -> NonNull<T> {
++        ManuallyDrop::new(me).ptr
++    }
++}
++
++impl<T: Ownable> Deref for Owned<T> {
++    type Target =3D T;
++
++    fn deref(&self) -> &Self::Target {
++        // SAFETY: The type invariants guarantee that the object is valid.
++        unsafe { self.ptr.as_ref() }
++    }
++}
++
++impl<T: Ownable + OwnableMut> DerefMut for Owned<T> {
++    fn deref_mut(&mut self) -> &mut Self::Target {
++        // SAFETY: The type invariants guarantee that the object is valid,
++        // and that we can safely return a mutable reference to it.
++        unsafe { self.ptr.as_mut() }
++    }
++}
++
++impl<T: Ownable> Drop for Owned<T> {
++    fn drop(&mut self) {
++        // SAFETY: The type invariants guarantee that the `Owned` owns the=
+ object we're about to
++        // release.
++        unsafe { T::release(self.ptr) };
++    }
++}
++
+ /// A sum type that always holds either a value of type `L` or `R`.
+ ///
+ /// # Examples
+
+--=20
+2.48.1
+
 
