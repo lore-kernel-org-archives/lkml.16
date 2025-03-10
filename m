@@ -1,43 +1,54 @@
-Received: from mail115-171.sinamail.sina.com.cn (mail115-171.sinamail.sina.com.cn [218.30.115.171])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8267A18E764
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7B328EA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 10:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741602895; cv=none; b=Rx1b2+VX4fXqfiIjZL3eYPpC6ylUWLAttvWleYVWqKvEVqaGIElCdURIcEMQRBYTojctRBFuZrXBEHMvU7GxQjKyTRn3jybjZc0k3K3mkZE/WIRxfvSiVE67kCQPdP8M9Q22ESfBl1NWLWbhAqbd6Ir8YuZeB2iNHjBUul8PXo4=
+	t=1741603066; cv=none; b=C4QyvUKktfaqDEY/h6N0BNfRNC9ga0xkvoNoTbL+eQphJQajcZNgLGvTvNGapn9G89bPJCt0lLt0UH6DZMNroNxvkrR7RKdWkLkicWBEvRMcSzL4luGMQyVidGjmuSEh1SSGSZDgtRqAZu4v4k2O5PyI3zUZP5w/iSqtXujhF38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741602895; c=relaxed/simple;
-	bh=WaO8F7Lb+tttxEdzQcfW394DmPeFgNfMI6TgBBCN31M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=STHDUVnOwHhWcZuWsf8nQc6qr+zpil9gkJq4BAwg6lR5Z1YU6IS40TxjPqYlbhJaejCHjsziT5YghMnRzWCGZCngSTdzEwehukx8/+ksyXNJox0WxBdzG8zxw7Pw+gTVHvzVwLhcQtrpVN0kSFT2HwKRDfDGiFQLEzkU53UKF+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.68.168])
-	by sina.com (10.185.250.24) with ESMTP
-	id 67CEC03C000070FA; Mon, 10 Mar 2025 18:34:42 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 6343710748428
-X-SMAIL-UIID: 0C54EB9C5620437EB60EEFC3BAEFF7DB-20250310-183442-1
-From: Hillf Danton <hdanton@sina.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: Nhat Pham <nphamcs@gmail.com>,
-	Qun-Wei Lin <qun-wei.lin@mediatek.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	s=arc-20240116; t=1741603066; c=relaxed/simple;
+	bh=X22BauJ/yxhjyd9bdHmx73unUwfLqnlpQZoxOrJ9bLs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=k/h3nfniqfFMTRtj48535iKsILwudwohmP1AQejK3BMrhUXDMeaBrEiapQILOi0sxoo8E4lF41SYlY9OHydg7oILK/zosAsK5ddZGYE8NhokXGNkYmHaSZeaar0sOfum9R2uFq2FB5bWo/Gy66SUbcD4wmA5/oA/JUa6gS/43+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1traVq-0004EG-5V; Mon, 10 Mar 2025 11:37:34 +0100
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1traVp-004yz6-1N;
+	Mon, 10 Mar 2025 11:37:33 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1traVp-001mDV-10;
+	Mon, 10 Mar 2025 11:37:33 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Sebastian Reichel <sre@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 2/2] kcompressd: Add Kcompressd for accelerated zram compression
-Date: Mon, 10 Mar 2025 18:34:26 +0800
-Message-ID: <20250310103427.3216-1-hdanton@sina.com>
-In-Reply-To: <CAGsJ_4wFfqFZQw-TOM83gUEV_rN6uio1sujXdjCRKTOipPM2SQ@mail.gmail.com>
-References: <20250307120141.1566673-1-qun-wei.lin@mediatek.com> <20250307120141.1566673-3-qun-wei.lin@mediatek.com> <CAGsJ_4xtp9iGPQinu5DOi3R2B47X9o=wS94GdhdY-0JUATf5hw@mail.gmail.com> <CAKEwX=OP9PJ9YeUvy3ZMQPByH7ELHLDfeLuuYKvPy3aCQCAJwQ@mail.gmail.com> <20250309010541.3152-1-hdanton@sina.com> <CAKEwX=Mwh9SKWfmaS9q4fym7L-v5m6GmvJrQF8eFizJJd904rA@mail.gmail.com>
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Subject: [PATCH v5 7/7] thermal: core: Record PSCR before hw_protection_shutdown()
+Date: Mon, 10 Mar 2025 11:37:32 +0100
+Message-Id: <20250310103732.423542-8-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250310103732.423542-1-o.rempel@pengutronix.de>
+References: <20250310103732.423542-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,16 +56,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mon, 10 Mar 2025 09:44:24 +1300 Barry Song <21cnbao@gmail.com>
-> I also feel extremely uncomfortable. In Eastern culture, this is an extremely
-> vulgar word, more offensive than any others.
-> 
-If culture is not abused, feel free to show us how it is defined to be
-more offensive than any others in Eastern culture.
+Enhance the thermal core to record the Power State Change Reason (PSCR)
+prior to invoking hw_protection_shutdown(). This change integrates the
+PSCR framework with the thermal subsystem, ensuring that reasons for
+power state changes, such as overtemperature events, are stored in a
+dedicated non-volatile memory (NVMEM) cell.
 
-> I strongly feel that this violates the mutual respect within the Linux
-> community. This is a serious case of verbal abuse.
->
-You will feel better I think after proving that your patch/comment is
-able to escape standing ovation, given respect is not free, lad.
+This 'black box' recording is crucial for post-mortem analysis, enabling
+a deeper understanding of system failures and abrupt shutdowns,
+especially in scenarios where PMICs or watchdog timers are incapable of
+logging such events.  The recorded data can be utilized during system
+recovery routines in the bootloader or early kernel stages of subsequent
+boots, significantly enhancing system diagnostics, reliability, and
+debugging capabilities.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/thermal/thermal_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 2328ac0d8561..af4e9cf22bf6 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -16,6 +16,7 @@
+ #include <linux/kdev_t.h>
+ #include <linux/idr.h>
+ #include <linux/thermal.h>
++#include <linux/pscrr.h>
+ #include <linux/reboot.h>
+ #include <linux/string.h>
+ #include <linux/of.h>
+@@ -380,6 +381,8 @@ static void thermal_zone_device_halt(struct thermal_zone_device *tz, bool shutdo
+ 
+ 	dev_emerg(&tz->device, "%s: critical temperature reached\n", tz->type);
+ 
++	set_power_state_change_reason(PSCR_OVERTEMPERATURE);
++
+ 	if (shutdown)
+ 		hw_protection_shutdown(msg, poweroff_delay_ms);
+ 	else
+-- 
+2.39.5
+
