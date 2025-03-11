@@ -1,52 +1,82 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F96919007D;
-	Tue, 11 Mar 2025 03:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B3B566A;
+	Tue, 11 Mar 2025 03:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741662557; cv=none; b=LmeSOab15Th1vv1V+wkTber3fwi/v9bHySwwWpKtk4EQRTQ3wiX+e5s5dOwX7eu21mYCTAz1Jj+Z/Ufyd9/yW9VbBBCy+YYFrpNoh7PYzXEBGsbRhr24u8apl/nYeUieZWbq++agePTPzhDywG6CDzzg/v+zynjK3v6TNyKMibs=
+	t=1741662789; cv=none; b=A+Bat4zmv2YqXn8wX1qjY9hYcOPTjBvohRy99a/4Obg3Q6PMxFVWqiSqgcJC/S9ZkVNumXKpsXktCq7pgYzKwHRhQpUHebd9PsA5Lg21dYUqvoVNvU2nxAp3pOtii5P7imkqfTllAcrWTbiIaifeeQgXX4aT5/jh8e747phH238=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741662557; c=relaxed/simple;
-	bh=jpF7nF3TOxCImalYkQUW1dnGf4zCL9LpRq+kndEXvcQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gF7/UA/jYPdg96lgd0MtGNC1teEGhu4sG1NGFCzihjvD6+6GLXSPMFoTPhlM2oett+pRQYC19eax0EZn8/S3wBKp6grjpHhzGqyBA1ZqG42g72xAnLtVn5peUxRQmsRTWEllBpYkrEO4kETN7X09a5ZnNPGUZYOftMqeYsQl6D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JyXyZUid; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1741662789; c=relaxed/simple;
+	bh=0ZtROUeAkpokWAQVTqN+FgobaxhT+KLFGVNjRKbYND8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L20xLcwoQfThyK49UH0qz4B59jxbPJFgTFApEMm4VGkuny8oPeQw756eibs8Bnaw1fpYmBoZAAVJowUWNfkvD8eMKHB9GGOjBvRHoYGK+BaZxQbQ4zy+HAwIlHPfStEJ2yqOIlUTN8gKROdY3rCzmQ4AYNBZLjbquyDo3VeGsuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iphp0Yka; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JyXyZUid"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1741662530;
-	bh=URGpqlmXm/gPdMSb/V6zyT1v5OpXsXe6QBAf5N53/HA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=JyXyZUidOCSAHMInO0RzYM0IlPF4UxV0khWQtd4pXk72F/g8tPiPgaZnA7PddxK7J
-	 tDKhkWNuY6XWHQukPulWeP2jNLZPW80oAZBCVzJshFgNyGTNb+Ck7d/ru0EUs2pt+j
-	 xlri6r71a2n4y0Dwp/kzPV1UDIO8qRfhaPTq/lw0=
-X-QQ-mid: bizesmtpip4t1741662517tgfbwwo
-X-QQ-Originating-IP: xvxneow0DBdsfSSOmoup5niZ/oqQn8R/tK9JRLfrlBE=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 11 Mar 2025 11:08:35 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 11756624125615866169
-From: WangYuli <wangyuli@uniontech.com>
-To: hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	svens@linux.ibm.com
-Cc: wangyuli@uniontech.com,
-	linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH] s390/boot: Ignore vmlinux.map
-Date: Tue, 11 Mar 2025 11:08:24 +0800
-Message-ID: <F884C733016D6715+20250311030824.675683-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iphp0Yka"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22355618fd9so91291135ad.3;
+        Mon, 10 Mar 2025 20:13:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741662787; x=1742267587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gUYLFFqpevSYYtdnBbdnlh9+8WjVQpn1luVNZJSd450=;
+        b=Iphp0YkavsXVAHehWT2Rsh30RwvsHXV/mQLc4fE/+zi/X9wmq6eQeO35u/dlB+OahX
+         xXi8rq7O3lRkp4XE9+ajsC1o2UT6xXt0XTZVCZiK1NaEZryhX8sP/XbJiicGqOhRGQQ8
+         19RkC7Z/5/sq3GyeZ5oIptFRC6FK3f8sVds8Y8vaSDFyZGymb1kRudtAcDEEn78n6UDN
+         syk2mqGUBD4fFFs9deeckOYAqnl6OsZN//mYtdW8BxQCDXR50snX8Nuqme0xvYUvXHaM
+         8bNXodowIQHmwuAb44Uyfl+Ubss8ewvuF81phwY5zjKUg1StCgcLOAy5udRLkVWKE322
+         w8lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741662787; x=1742267587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gUYLFFqpevSYYtdnBbdnlh9+8WjVQpn1luVNZJSd450=;
+        b=fjm6TW07mTqmZ2jwNgSreBC6NGy3LsCB76uokfs7nF4mNnxFatjuhPBlgVQVI4C4eV
+         +xMnosdEGQlj8xZo8xupLBtdXyGRDUWfePb7Y1Hw98A4ArdSAKwaaSTcS4KEk+ox4V9r
+         V+oioiky4BD8hzHHCNL2wVYDIXcllR+PybqtTQLnmzY4egYUeTMlosaC7DNhtKqjtyHw
+         uiGvQoGmgnxyAgqxMInto0GBPUddlkNKJQwN52velHUmejbCnGuFer4aB61uqt2DgKOr
+         0eaVrq+WfPMEqqRLM/ZFZ5p1gOAt3CqA3EXfgaKEJsbqIiKw1jMMGwA1uOEuK8zqmUEm
+         T/mw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQPEbi+VEg6HWWnjFFhU1LioomPBDlcnJSwu86gtJ7ykNbQKKKzCvW5LDKC9fXQa68fwNXCBDwQigyl04w@vger.kernel.org, AJvYcCXxVFwnLHMy0Jpl5wu8KwU7G28UtujPby03jd/rhajXwu1KCwbHD69X1KXI4ktiVzv6wZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHydDwZN6as7iUYM+SYM9pUPrM+VWjecerpFgKUAOiXiZ3Cpo+
+	IgGLHudUCYGQyoLR/UJjx0wZjjcySmoXsEv4eMJ8rebynpvtVSHP
+X-Gm-Gg: ASbGncsqjqQEXjBFrTFY19kM/SCsBH83algmu9vbU/XLdDkiGLO/21do1FnCVVgoTjV
+	GpoZ8xMOoiFlW6hq2JksYelOK1h8xYcAkEvudTyy38vsRS702xV5eTELDXloUKV38gFHFGNwVPo
+	TFVqKBZaaD0QibP2URtOMowLY2udO82UetO9IkSqTf2N0GymPeq+yKDEVG42QYbOZgTy2n+Ack/
+	j4GNldOHTTEDZGyYceKRA+VKIXzj+qcrgIHiv2VsU7u6R3WJoTV5itk/8wtvUDLwf9dJMNY/Lg7
+	RqYG08BhjnncVUnoeqoQLJWd1weif3eGfMp7JnpniL0qg34oCFVvog0Bi7/clAaQJO2b6IpMav+
+	w40mc
+X-Google-Smtp-Source: AGHT+IGGHBjPW6BsrXDN2iAE8f69M3g1HchCT7q9+iNXDOQr30MJItU60zlTW17YWE29rCjf6zr0gw==
+X-Received: by 2002:a05:6a00:3d0c:b0:736:39d4:ccf6 with SMTP id d2e1a72fcca58-736eb7ca147mr3593481b3a.8.1741662786938;
+        Mon, 10 Mar 2025 20:13:06 -0700 (PDT)
+Received: from localhost.localdomain ([112.169.118.157])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736d36e229bsm3628313b3a.51.2025.03.10.20.13.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 20:13:06 -0700 (PDT)
+From: Sewon Nam <swnam0729@gmail.com>
+To: Quentin Monnet <qmo@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Sewon Nam <swnam0729@gmail.com>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] bpf: bpftool: Setting error code in do_loader()
+Date: Tue, 11 Mar 2025 12:12:37 +0900
+Message-Id: <20250311031238.14865-1-swnam0729@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,47 +84,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MDN2VRNR2P4wLboSgBu+93mRK0luZ7A0kqCAVkJOsXxyb71sZ6qO9jAC
-	7TMCBLugyVtUyp9r9f3YVtMoB/TppNO9p5HcfKLaY3Xg5KUFS5ibNnnagV60PMpM1SEYGAe
-	bVN1/FY/+PvyYY9invFLO7UbPE7BPfnzMYzC3//vwWLEZEuSN70QvyDsDmPYIKAP4ysEyGW
-	dDWvoii9PIBDmkyilbvQaFiigeMy4dI/T0h4LGlhi6cC0T8mA/S1nXY7UEKHjVMBkzpb1Kk
-	HBvEMOCp9b16kPhwelHVL2N8LEbd/lWM06M3WQUEtscoxsPyDLVM3Gyt/8sDY9yIawT7lWf
-	tGhlQ8JNSVbtxTj6YXV10rIO95wMmKf0thDz9R6dqKdqUBbXyfGJqF46ILLOVz4Dmskh9xK
-	ANyNjqlt0e/NWeqQdKmJsR9maXpY4Dn4gMlo/2dFUb5IvEpePIlBDi5vD9opxeSlwaCGNuB
-	1Q/1wyKGOYDuWLJDlQAcMyNdz87+3+IddimVSNz954zFBR9gORMfJKmUHsH36UR71g25ulS
-	aZ8I/varEb3Mexx1Lmzc/JtllFscJgbg3W7J72cVLBKSE9UCveRlV3MCB30SRQEwJrHFJ/A
-	okhs7yCiw0F5RSKFv37kriulBEk77eeCpF6JiV5IeAKqGJX8RuIcswLMjZ4+SNYFGSZ8o44
-	r0Ki2TswvDE4wvtrqQN6XKHh6v9/+I17UDRSQRg4j3FkwsWCHq2QxF12jza8aL4Tf2ob7Qv
-	e4nwBGHLKaOl3Y0SIuX5sENnTdhoEpNET7MA8bWjgCRL4JRYIbfS9nGWbb0YEkxNesKt8nD
-	fdf2GDctcepSGKTvYTPBaS7n+ruaspo4mCCgL4+kJ/D1sjohkXHjIDWTPpNb+se+7iZSq7N
-	dbDwd1iTG5KUfHkVUKzgqSrJbazsZvzTozNtVXwCqaD3MtFzoKP/rSx9A1JisyDR0MvkuA/
-	yGOvRNRteC3mwLLhwQvuuTMjRqaSDGuOCwOK6tF/k5mSXViU55pB6oTXvQk7yaiFrKjiesN
-	RN85Ij27jfNG3QMOaYKbucaDA3aB4=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
 
-Upon compiling an s390 kernel, a vmlinux.map file might be generated
-in the current directory.
+missing error code in do_loader()
+bpf_object__open_file() failed, but return 0
+This means the command's exit status code was successful, so make sure to return the correct error code.
+To maintain consistency with other locations where bpf_object__open_file() is called, it returns -1 instead.
 
-Append it to the .gitignore file so that Git does not track it.
-
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Link: https://lore.kernel.org/bpf/d3b5b4b4-19bb-4619-b4dd-86c958c4a367@stanley.mountain/t/#u
+Closes: https://github.com/libbpf/bpftool/issues/156
+Signed-off-by: Sewon Nam <swnam0729@gmail.com>
 ---
- arch/s390/boot/.gitignore | 1 +
+ tools/bpf/bpftool/prog.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/boot/.gitignore b/arch/s390/boot/.gitignore
-index f5ef099e2fd3..af2a6a7bc028 100644
---- a/arch/s390/boot/.gitignore
-+++ b/arch/s390/boot/.gitignore
-@@ -5,4 +5,5 @@ relocs.S
- section_cmp.*
- vmlinux
- vmlinux.lds
-+vmlinux.map
- vmlinux.syms
--- 
-2.47.2
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index e71be67f1d86..52ffb74ae4e8 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -1928,6 +1928,7 @@ static int do_loader(int argc, char **argv)
+
+ 	obj = bpf_object__open_file(file, &open_opts);
+ 	if (!obj) {
++		err = -1;
+ 		p_err("failed to open object file");
+ 		goto err_close_obj;
+ 	}
+--
+2.39.3 (Apple Git-146)
 
