@@ -1,203 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51B529A1;
-	Tue, 11 Mar 2025 11:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E9D2505AC
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741691925; cv=none; b=JrRipWJXSK/KgpHNlMg6Nnopk4pCmlXprv/I8YL8bZdoZ4ukCK1A2m3noge9MPDBD5BPJP+Y7WLQU9n/OWWPxWRClnXV2e201EQbPn+01SUxVnl1XwElo0E/u9pzKmKDQIKlszrwlDzGJTe5itHxYKt0fn7Qdw/VqXZOSbc4Llk=
+	t=1741691949; cv=none; b=I9CLbG90lSibLsM8T94vDy8Feq7bbdzzznxkncq0KsA5sGD0a8zHlT6mjSyhbAVaTN7an4VOOxiyuq5PAnwIGhvpSGxjJ2b1Jr+9kM8QfthyMizJ3gAFwNzcFzVQhnxxE5w3TqGgSJwXFwcl4teiUjfmUwtpKaG5Z3/ngWNLvCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741691925; c=relaxed/simple;
-	bh=eV1Ot+6YRrZcBA7zWzuNDm7nIRQcDW2LUambjbhiAhs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FRt5hCiCnAm8tAa5BtoCsO4nYaFgFWChOyYtK0xOyvuuqPmsqzqP9UTBpg7dh+INHyVo6BGOJ5LbYRP3BDd0WYcFlhdMsXK+7dIB1gEtcb3iiszwS7Hvyw4deDL0AalEggtY7z63bAkc6T5VrffWnzNtPbWPzdiFGJgMADZySAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aR5Xv+JX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741691949; c=relaxed/simple;
+	bh=KG2B2zG131J/s0YjenddE96hvagPtolWZ0k0Q1oZF9k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lEKTF7rFnEevpbMal7dEs/4DgV37s6cDevbG6+FC8i0fMlgBz2mPk+ct0QDcD0k4I2re/ElF5p279E/Lgvql3dA6sGd5xC9bZy4Hlq++RehbMM0Vx5zUp0zy/xgk6lNbGFPWYIFlrQ++LvPi7/CMuFOgbLWS/AA2egSwVV9l7BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZnMDEV2b; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aR5Xv+JX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC84C4CEE9;
-	Tue, 11 Mar 2025 11:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741691925;
-	bh=eV1Ot+6YRrZcBA7zWzuNDm7nIRQcDW2LUambjbhiAhs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aR5Xv+JXW/OGpjkpBu6OK786z2RKa6Uftin8rPAQP29jmSSBS7ZZSdyHN0j1A5RIO
-	 KopJBmyosJTsEE8bck5mz6EKpGpxitwM6TLjkSfHGP2IjlPunbngwds6yIFPkNo9yq
-	 b2+QqXvJ9g7mV+9ZnlLbH9O2pejE0Cj8b9Dt0n5lW9PthEqBPXTDQw1qNxha32mm4K
-	 wexs1y1c72xFIlrENyFXdBemKuVmVPsM3pwtNn2+o/w5DK3zY11vswz+QFWG1yBRlb
-	 NUfpjSoD8h+3WmMwAKrHJQoqLsaYfPlXMShejU/4CewkdungRFrJcRgIQbeRobBZVh
-	 m+MFd1Dd7nYYQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1trxdB-00CVMK-Ga;
-	Tue, 11 Mar 2025 11:18:42 +0000
-Date: Tue, 11 Mar 2025 11:18:40 +0000
-Message-ID: <86r033olwv.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ankit Agrawal <ankita@nvidia.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	"oliver.upton@linux.dev"
-	<oliver.upton@linux.dev>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com"
-	<yuzenghui@huawei.com>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"ryan.roberts@arm.com"
-	<ryan.roberts@arm.com>,
-	"shahuang@redhat.com" <shahuang@redhat.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"david@redhat.com"
-	<david@redhat.com>,
-	Aniket Agashe <aniketa@nvidia.com>,
-	Neo Jia
-	<cjia@nvidia.com>,
-	Kirti Wankhede <kwankhede@nvidia.com>,
-	"Tarun Gupta\
- (SW-GPU)" <targupta@nvidia.com>,
-	Vikram Sethi <vsethi@nvidia.com>,
-	Andy
- Currid <acurrid@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	John
- Hubbard <jhubbard@nvidia.com>,
-	Dan Williams <danw@nvidia.com>,
-	Zhi Wang
-	<zhiw@nvidia.com>,
-	Matt Ochs <mochs@nvidia.com>,
-	Uday Dhoke
-	<udhoke@nvidia.com>,
-	Dheeraj Nigam <dnigam@nvidia.com>,
-	Krishnakant Jaju
-	<kjaju@nvidia.com>,
-	"alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>,
-	"sebastianene@google.com"
-	<sebastianene@google.com>,
-	"coltonlewis@google.com" <coltonlewis@google.com>,
-	"kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com"
-	<yi.l.liu@intel.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com"
-	<gshan@redhat.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"ddutile@redhat.com" <ddutile@redhat.com>,
-	"tabba@google.com"
-	<tabba@google.com>,
-	"qperret@google.com" <qperret@google.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using VMA flags
-In-Reply-To: <SA1PR12MB7199DD985C45943A663E7003B0D12@SA1PR12MB7199.namprd12.prod.outlook.com>
-References: <20250310103008.3471-1-ankita@nvidia.com>
-	<20250310103008.3471-2-ankita@nvidia.com>
-	<861pv5p0c3.wl-maz@kernel.org>
-	<SA1PR12MB7199DD985C45943A663E7003B0D12@SA1PR12MB7199.namprd12.prod.outlook.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZnMDEV2b"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B7lW2i031503
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:19:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	v/zsrPomSGC1iO5LSmQ+QJBzaniKLt0k5UGEjWJYgjM=; b=ZnMDEV2blLkM1v6j
+	yz+sUf2hDI0q+GO8vzhQ4koX6CWHGWxt+USTTF7vdAR8pG5Pun5GL0xLGPYlFpHm
+	VCercVTpc2OZNFgq1Sll8rcPHuSEMSkeUXkTWwDIC4JETfBANvLUmqAYvzEXbNb9
+	9PXbp6u4k0bNY1+uhh6mTp377KkHSGDJ7g7unANHauZe+W5vIQGOoy9wXbYSKLRB
+	fo8rNQvZvA1oRQ97U1Hbp4+soJs1FaqcTKjZIGA5CB1at82gqINh9OYZ9yy/44cZ
+	BHksC5VzdSSS0lnRNBQ951k31rSH+lz+RdeKhnGtQakSzCUmmd0fdXHhUehU1Q32
+	ygPmEQ==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ah3krp4e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:19:07 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e4546f8c47so16537946d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 04:19:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741691946; x=1742296746;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v/zsrPomSGC1iO5LSmQ+QJBzaniKLt0k5UGEjWJYgjM=;
+        b=ZSXITLXuulFlVNd7BKbtwLBr2m03J5YbEjt3inFZ1FkP//eBc/I3KcWc850MHv9eym
+         7CB/7rYSJSLeHALKxxalIvzbuYtZy+OoFI2QuI65Rf9NHGkPipPIvQ98NWFFtpe//AZY
+         JmKoG0wzypMlDeDbtLZyAEcV/jdpn5rGbuhtXd7Esv2ynVXhBVP3NRz2lzJgbkBoA2tC
+         ceaJ2gWuR32YlsxaIUl5ViI5yMwLUyzTE0GQUN1tF1aliUWgJl9kiB3oI0N3Pp73jVkz
+         nb1yQJB4+Ph4bw4Z0zlwLsSKlC1YDmRmHcES3YjL2a1XLElVo0T1DEPZTOKERO4Lfonn
+         uyUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNZNe0Z5lDCnLrVo4piwnK7rZQwwmx8hguTpBJbXYeTgKtiPuLh/V+4FLiW+cTBqIVtWtvhmQGM4znpmg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYrfRFXTzjE6ZQ7uA/HDeTw8jIOLm312SYGwFGXqM+rzJknB1Y
+	oKYSxDMcxE/EtSmdJKfANMUyAa7TW+J5KewjyOY8lHYCiySr4JeSOLVw892Mt5FufNSuMUwwp3d
+	dY3qwRCybqif56VCN4vCp13UkPaVQH3dgQd4Tq+NXcbPGJNQG6fsl8nu9Iz/j264=
+X-Gm-Gg: ASbGncuNb4+NJ7ygR1GXIpLNVcvffAQf82JQcHXUKl5qQ52LbHD0dX6evu/dcF33QBJ
+	xnfBGaiJ94/z5lDRXxAyPfzgXvSv4PVQOeWpzWopiEaaHM/ticmCqV9PnsebFyHm3yEP9+hgG0y
+	zYGoXYROGpt7KduLH7nMeOW4u9IQ703F9Ft+73R8dZWHMbnesIL5RZt2uzinFaIizc6RoaJ+hCs
+	TEFg5El/UkuX2fNpbd6Rknr/UxEljq/zFcVIrmzW67sq4q8GZ+Ga0K85f164zTr/80gYgZU4np1
+	1YxKVyqjSxAt530Od2fBDHmJiNUeWFHs2FN37OOW/Gega9dx4I7hVjaVz87g3PAUtLkkdw==
+X-Received: by 2002:a05:620a:1d03:b0:7c5:18b7:506d with SMTP id af79cd13be357-7c53e05f9c9mr737226885a.9.1741691945868;
+        Tue, 11 Mar 2025 04:19:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFMbOo9/SytOGUrUMo2XFyejsZDSP+j5JNs4kPwfKJu5yFVYu9xbBZSRIJg5VV2VeLv97QvVA==
+X-Received: by 2002:a05:620a:1d03:b0:7c5:18b7:506d with SMTP id af79cd13be357-7c53e05f9c9mr737225285a.9.1741691945534;
+        Tue, 11 Mar 2025 04:19:05 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2394fda1asm904961866b.78.2025.03.11.04.19.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 04:19:05 -0700 (PDT)
+Message-ID: <69fa7f33-e957-4dac-93dc-6fd40167873c@oss.qualcomm.com>
+Date: Tue, 11 Mar 2025 12:19:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/9] phy: qcom: Add M31 based eUSB2 PHY driver
+To: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250304-sm8750_usb_master-v2-0-a698a2e68e06@quicinc.com>
+ <20250304-sm8750_usb_master-v2-6-a698a2e68e06@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250304-sm8750_usb_master-v2-6-a698a2e68e06@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: ankita@nvidia.com, jgg@nvidia.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, ryan.roberts@arm.com, shahuang@redhat.com, lpieralisi@kernel.org, david@redhat.com, aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com, acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com, danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com, udhoke@nvidia.com, dnigam@nvidia.com, kjaju@nvidia.com, alex.williamson@redhat.com, sebastianene@google.com, coltonlewis@google.com, kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org, akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org, ddutile@redhat.com, tabba@google.com, qperret@google.com, seanjc@google.com, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 170GJbUAtKqYKxQF52uEqsvt3AoezeF1
+X-Authority-Analysis: v=2.4 cv=MJiamNZl c=1 sm=1 tr=0 ts=67d01c2b cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=obrcSLqBe2MPJ_po3l0A:9 a=QEXdDO2ut3YA:10
+ a=T1PIRxOFuHhLvSGs3xkl:22 a=pJ04lnu7RYOZP9TFuWaZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 170GJbUAtKqYKxQF52uEqsvt3AoezeF1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-11_01,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ mlxscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=859
+ priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0 bulkscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503110074
 
-On Tue, 11 Mar 2025 03:42:23 +0000,
-Ankit Agrawal <ankita@nvidia.com> wrote:
->=20
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0 When FWB is unsupported KVM ne=
-eds to do cache flushes
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0 (via dcache_clean_inval_poc())=
- of the underlying memory. This is
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0 only possible if the memory is=
- already mapped into the kernel map.
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0 Outright reject as the cacheab=
-le device memory is not present in
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0 the kernel map and not suitabl=
-e for cache management.
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 if (cacheable_devmem && !stage2_has_fwb(pgt)=
-) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 ret =3D -EINVAL;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 goto out_unlock;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >> +
-> >
-> > These new error reasons should at least be complemented by an
-> > equivalent check at the point where the memslot is registered. It
->=20
-> Understood. I can add such check in kvm_arch_prepare_memory_region().
->=20
->=20
-> > maybe OK to blindly return an error at fault time (because userspace
-> > has messed with the mapping behind our back), but there should at
-> > least be something telling a well behaved userspace that there is a
-> > bunch of combination we're unwilling to support.
->=20
-> How about WARN_ON() or BUG() for the faulty situation?
+On 3/4/25 10:56 PM, Melody Olvera wrote:
+> From: Wesley Cheng <quic_wcheng@quicinc.com>
+> 
+> SM8750 utilizes an eUSB2 PHY from M31.  Add the initialization
+> sequences to bring it out of reset and into an operational state.  This
+> differs to the M31 USB driver, in that the M31 eUSB2 driver will
+> require a connection to an eUSB2 repeater.  This PHY driver will handle
+> the initialization of the associated eUSB2 repeater when required.
+> 
+> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
 
-Absolutely not. Do you really want any user to randomly crash the
-kernel because they flip a mapping, which they can do anytime they
-want?
+[...]
 
-The way KVM works is that we return to userspace for the VMM to fix
-things. Either by emulating something we can't do in the kernel, or by
-fixing things so that the kernel can replay the fault and sort it out.
+> +static int msm_m31_eusb2_write_readback(void __iomem *base, u32 offset,
+> +					const u32 mask, u32 val)
+> +{
+> +	u32 write_val;
+> +	u32 tmp;
+> +
+> +	tmp = readl_relaxed(base + offset);
+> +	tmp &= ~mask;
+> +	write_val = tmp | val;
+> +
+> +	writel_relaxed(write_val, base + offset);
+> +
+> +	tmp = readl_relaxed(base + offset);
+> +	tmp &= mask;
+> +
+> +	if (tmp != val) {
+> +		pr_err("write: %x to offset: %x FAILED\n", val, offset);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
 
-Either way, this requires some form of fault syndrome so that usespace
-has a chance of understanding WTF is going on.
+Is there a reason we need to read back every write?
 
-> > Which brings me to the next point: FWB is not discoverable from
-> > userspace. How do you expect a VMM to know what it can or cannot do?
->=20
-> Good point. I am not sure if it can. I suppose you are concerned about er=
-ror
-> during fault handling when !FWB without VMM having any clear indications
-> of the cause?
+Does this have to do with some funny write buffering?
 
-No, I'm concerned that a well established API (populating a memslot)
-works in some case and doesn't work in another without a clear
-indication of *why* we have this behaviour.
-
-To me, this indicates that userspace needs to buy in this new
-behaviour, and that behaviour needs to be advertised by a capability,
-which is in turn conditional on FWB.
-
-> Perhaps we can gracefully fall back to the default device mapping
-> in such case? But that would cause VM to crash as soon as it makes some
-> access violating DEVICE_nGnRE.
-
-Which would now be a regression...
-
-My take is that this cacheable PNFMAP contraption must only be exposed
-to a guest if FWB is available. We can't prevent someone to do an
-mmap() behind our back, but we can at least:
-
-- tell userspace whether this is supported
-- only handle the fault if userspace has bought in this mode
-- report the fault to userspace for it to fix things otherwise
-
-	M.
-
---=20
-Without deviation from the norm, progress is not possible.
+Konrad
