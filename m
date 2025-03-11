@@ -1,215 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BA51D79BE;
-	Tue, 11 Mar 2025 18:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3552627E1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 18:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741717387; cv=none; b=en9tvNSCn5f2DNXwCPIG7KcKu8BQR0e25ExQ95jrZtIGi1j+wGFZMzIPvMStLuRHt0EmqN5KHvSKwOTtcQh4canuzE9Jl5DTXi+t921wHzdAyzeryeVMj2brMkgp5JLxYCVN417aqmNVYHxPV03aWb6XqxjSJw65yfSf5GEaXhU=
+	t=1741717456; cv=none; b=NyZ9NvsdVzRA7iG6KI4ROlGDme0pSkmDo5jnrNuV+xA0Q0vVeYZoEG3ODS7IM6IgNnfbAPVvivHbdh56HAY60lj+oXlzoOb4WukDXhSSpfrhNkkQaJQQ2Fsq7jZqLXsmrMdyJpqTBQRKrYMq8k1LBN7MmKolX1R8T5aLkbf162Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741717387; c=relaxed/simple;
-	bh=OKgUmyfCm5KWfufOmtbwO7y0D8vMs8o5fmUjqAFAc2Y=;
+	s=arc-20240116; t=1741717456; c=relaxed/simple;
+	bh=lpmksGqTnjCHS4LBQ9EZZlVH6U3AAEsOASjDiSMAZ/k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HHPhJEyx/sZGGD43rrmcxT/UuIz3CTy2n+Huh79B/PeCqMS0W0GFyzY9eXne9u9VkH02wXX3dCx2L3lm7TC1A1/LhuH+RMeWKA07YtLac4sdZ6WOR0S8YJEoS5VG+mMs4O8P+UbOsdqeGyEL/0soP1RtgoRfEj6fBObUuyYPA/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fexKVTeF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=et88133XD1GdhDflP7T7biF+f/1BfAwyfcYJA6mLY3UcDsqMUZgTtmXXLNxyTDhwWCHyBOqkr2G6jE98qURbZeVkgKgeE3VISGkW6SdyFMFyvhRN4yiNRy20kiHphsjffSvYQzuYbwvj2Mv/s8PQsI/m+YqngOWFtJcCxJIBM0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyG4UNAn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fexKVTeF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6097AC4CEE9;
-	Tue, 11 Mar 2025 18:23:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyG4UNAn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4B6C4CEE9;
+	Tue, 11 Mar 2025 18:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741717386;
-	bh=OKgUmyfCm5KWfufOmtbwO7y0D8vMs8o5fmUjqAFAc2Y=;
+	s=k20201202; t=1741717456;
+	bh=lpmksGqTnjCHS4LBQ9EZZlVH6U3AAEsOASjDiSMAZ/k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fexKVTeF0ZI1hyXWGq0/Oex33Rpv/AAqnN33eDYnZ7GB34N/YakJ2uNyTI8L7QEDP
-	 tzWgBIdvmOTes9rM9d4MH91vK1kHM7v3qJEVIL4z2/9o/Ot1vLgKFAxLMNu7j+1yLe
-	 KJEx+KpPnKkJzev3lAtR/OZpOd1nog29HDuHqCe13qLdxonElVUIGmHPNAozGheWFT
-	 e8w6kueMdUBY4AmfGrd6V5I4rFYmvNU9SFGLV9qr62Y2FeMA8iaCoUn4IM6o570MPc
-	 DU995SibTurpmIHWQ4YTt9sFJ7nk+fK4eDJfL6raIRYicB3T8UkMknqI/fbmJQXuBv
-	 xAVlSmqw6Lifw==
-Date: Tue, 11 Mar 2025 13:23:04 -0500
-From: Rob Herring <robh@kernel.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, Taniya Das <quic_tdas@quicinc.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Javier Carrasco <javier.carrasco@wolfvision.net>,
-	Ross Burton <ross.burton@arm.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Zhi Mao <zhi.mao@mediatek.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Ihor Matushchak <ihor.matushchak@foobox.net>,
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: Re: [RFC PATCH v2 04/16] dt-bindings: media: i2c: max96717: add
- support for pinctrl/pinconf
-Message-ID: <20250311182304.GA3925099-robh@kernel.org>
-References: <20250309084814.3114794-1-demonsingur@gmail.com>
- <20250309084814.3114794-5-demonsingur@gmail.com>
+	b=MyG4UNAnJB4is7D+csAq/6otpUF6OdhvFBB/WhaQyHF3KGAvfRYvWOsqKsebK2XjP
+	 +WaDVsv9rMQyoIeMZpVeOK1ZT5iOhxN1ng7/P2+YnDoSWmByiay+zJTLRM/3rZDzPY
+	 0tpssyV9xPWOYzDasa4TIM4rR8HNoyYZzfqD+s6PKpJBjHn58jARLj6ZaYjo9G17Uw
+	 8O48YoVIOyfInpRiJqbATeO/kBk1Nup075PZOkMViWsllbfgT9qY0FxrkbFP0CLMg8
+	 3E15+fuWkTm60av3h4cUTaHuXHuxwLpQBJe8+771hrsPTVPDlO360fUhO9VjGhqCyh
+	 mFTjNk8c70mfA==
+Date: Tue, 11 Mar 2025 19:24:09 +0100
+From: Alexey Gladkov <legion@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+	Joerg Roedel <jroedel@suse.de>, Joerg Roedel <joro@8bytes.org>,
+	"Alexey Gladkov (Intel)" <alexey.gladkov@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org, hpa@zytor.com,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
+	Larry.Dewey@amd.com
+Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
+Message-ID: <Z9B_yS_d8ny9hYUX@example.org>
+References: <Z87ce37GjCqpOLCW@8bytes.org>
+ <b2e585a7-edd5-4b13-b904-3d0913177aee@suse.com>
+ <20250310133833.GHZ87rWfuV6WgQTsoh@fat_crate.local>
+ <Z878IRbbzIbUDQvj@example.org>
+ <20250310151154.GOZ88BOinZVkbYEx0w@fat_crate.local>
+ <104b6d4f-2848-42f4-a134-3373d12d9424@suse.com>
+ <Z88Iv0w8_l9i7_8l@example.org>
+ <Z9AFyG7798M4VNJQ@suse.de>
+ <29fa0d10-0d3d-47a0-8832-b2c7fc04f637@suse.com>
+ <20250311110748.GCZ9AZhPYYAz-MXErv@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250309084814.3114794-5-demonsingur@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250311110748.GCZ9AZhPYYAz-MXErv@fat_crate.local>
 
-On Sun, Mar 09, 2025 at 10:47:56AM +0200, Cosmin Tanislav wrote:
-> MAX96717 is capable of configuring various pin properties.
+On Tue, Mar 11, 2025 at 12:07:48PM +0100, Borislav Petkov wrote:
+> On Tue, Mar 11, 2025 at 11:22:23AM +0100, Jürgen Groß wrote:
+> > I can live with that, as long as we make it possible to make e.g.
+> > /sys/guest/xen a link to /sys/hypervisor (if xen is the hypervisor
+> > the guest is directly running on). This means that /sys/guest/*/type
+> > should not conflict with /sys/hypervisor/type.
 > 
-> Add pinctrl/pinconf properties to support this usecase.
+> Yeah, so Joerg and I came up with this on IRC:
 > 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  .../media/i2c/maxim,max96717-pinctrl.yaml     | 71 +++++++++++++++++++
->  .../bindings/media/i2c/maxim,max96717.yaml    | 16 ++++-
->  MAINTAINERS                                   |  1 +
->  3 files changed, 87 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml
+> /sys/hypervisor/{sev,tdx}
+
+This directory is for guest-side information, right ?
+
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..347e66a5320c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2025 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/maxim,max96717-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim GMSL2 Serializer Pinctrl
-> +
-> +maintainers:
-> +  - Cosmin Tanislav <cosmin.tanislav@analog.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pinctrl/pincfg-node.yaml#
-> +  - $ref: /schemas/pinctrl/pinmux-node.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +properties:
-> +  function: true
-> +  pins: true
-> +  drive-open-drain: true
-> +  drive-push-pull: true
-> +  bias-disable: true
-> +  bias-pull-up: true
-> +  bias-pull-down: true
-> +  output-disable: true
-> +  output-enable: true
-> +  output-low: true
-> +  output-high: true
-> +  slew-rate: true
-> +  input-enable: true
-> +
-> +  maxim,jitter-compensation:
-> +    type: boolean
-> +    description: Enables jitter compensation.
-> +
-> +  maxim,gmsl-tx:
-> +    type: boolean
-> +    description: Enable transmitting pin value to GMSL link.
-> +
-> +  maxim,gmsl-rx:
-> +    type: boolean
-> +    description: Enable receiving pin value from GMSL link.
-> +
-> +  maxim,gmsl-tx-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Identifier used while transmitting value to GMSL link.
-> +      Default value matches the pin number.
+> * It should not disturb the current hierarchy there
+> 
+> * No need for a new hierarchy like /sys/guest - we haz enough and besides,
+> /sys/hypervisor sounds like the right place already
 
-Use normally wrapping or blank line between paragraphs.
+The /sys/hypervisor is for host-side information ?
 
-> +    minimum: 0
-> +    maximum: 31
-> +
-> +  maxim,gmsl-rx-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Identifier used while receiving value from GMSL link.
-> +      Default value matches the pin number.
-> +    minimum: 0
-> +    maximum: 31
-> +
-> +  maxim,rclkout-clock:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Clock value.
-> +      0 - XTAL / 1 = 25MHz
-> +      1 - XTAL / 2 = 12.5MHz
-> +      2 - XTAL / 4 = 6.25MHz
-> +      3 - Reference PLL output
-> +    minimum: 0
-> +    maximum: 3
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> index dd28cc397674..0a43582168a8 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> @@ -120,7 +120,21 @@ required:
->    - reg
->    - ports
->  
-> -additionalProperties: false
-> +additionalProperties:
-> +  anyOf:
-> +    - type: object
-> +      allOf:
-> +        - $ref: /schemas/media/i2c/maxim,max96717-pinctrl.yaml#
+> 
+> * ...
+> 
+> So yeah, I guess we can try this.
 
-You can drop the allOf here.
+If the answers to both questions are yes. Then I have understood
+everything correctly and I agree with it.
 
-> +
-> +      unevaluatedProperties: false
-> +
-> +    - type: object
-> +      additionalProperties:
-> +        type: object
-> +        allOf:
-> +          - $ref: /schemas/media/i2c/maxim,max96717-pinctrl.yaml#
+-- 
+Rgrds, legion
 
-And here.
-
-> +
-> +        unevaluatedProperties: false
-
-Do you really need to support 2 forms?
-
-This also allows the node names to be anything. We do that for existing 
-cases, but for new ones you should define some prefix or suffix. 
-Typically, '-pins$' is used.
-
-Rob
