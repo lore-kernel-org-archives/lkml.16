@@ -1,33 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41CC263881;
-	Tue, 11 Mar 2025 19:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A396B263881
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741722032; cv=none; b=jr+egZWlb4rFhL3vQn/CJ6tRiLgTGElaHhzIqf1JEVZH00XHzPFiO3UDLCoGLW3Zp7alYKME1M/4Dyw5XuOyBy2tJAvldL4dTpMR8DBZy5Mxqy0S6+p+lpEWH3RqedNiQeko1vh94DOsxS3KCE7F06a8elA82z3Jl+pMUJ5dViw=
+	t=1741722087; cv=none; b=AB9aHQHsZDNFmaYNCjxiA95I5LZUAxIOgHjDmQkXVg4Q4cvz4s1QFtufPoOjKWph9HBOuqe4CHVsBlpeTIEnq0ZrkMw2D8iBWYY2WIIHyBfN81XDvyWWdlIf9JA0Eoug20QsAbkdfO+tAJmfMcQbW9okyXafmGFRETr+JDtkcyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741722032; c=relaxed/simple;
-	bh=K/fwgyv7nW8Nr81zy6wIiSf6CaXY+MgzKWwDUR+eRRY=;
+	s=arc-20240116; t=1741722087; c=relaxed/simple;
+	bh=er+9jjdFTitNlebJQVzJd8lxcEmN5HEy0TqS1l7wvJc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y5/ZAm84KeAwDL8a4rrxWubrecnbaMKX+MOqAU8ppGDfHucbYUJF22WU84336NgqMInET8EQkNE+K1lNNeifDkG8xFvqxF4jJbWaPtmFcEIporLulGJP0fqxIn+LNBF0e1QrT4+w5yZTDEPbT5cmF9NFvBLI+InsfxyLpJVi8V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+Gs5cps; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kJScIzY7DAsS1GccgF7mZjOX6fy3RIz+BFZ8+YkxMObCB4GqlwBpIH6KyLpJ44xsDusSPKXqmEYM/i9vQB0tP3TqhZKswz87C2BlbLZTv73c+5bRkCgZX6lI1KeIazKBghWCCwYNK0X0iaR1XKdFy7Zcj+tJ03sO6PAkDuGuqu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UdLwz+qC; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+Gs5cps"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8650AC4CEE9;
-	Tue, 11 Mar 2025 19:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741722031;
-	bh=K/fwgyv7nW8Nr81zy6wIiSf6CaXY+MgzKWwDUR+eRRY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J+Gs5cpshqlTPxtbovaqmc6mrZ+J9x4ZIP0slOYQq+QVZC54lOHx2sV95cVJHWsfJ
-	 7eSf5ipkOogDsNYuTdMDbL6aXKOlrkd9/ptUch+XtMiDScy6c5xCGhw4WxeBinR3ml
-	 iyHiynmMFtN8rqqyyYj33ypcFjQ5KLuwjIKxsFlBz4q5Y+KF256E4b0kEhsdwRXcKD
-	 m1iGusRsDgKCMfqcmYKLrd+bY55mH276+DNx0GPaQs39wVtkuDrjVfKhsR/p+Ni4Ff
-	 NUvK741D2MtrBMDngRFmxU1pDwMr7khl1phrlszkFaej5DhVmjGCtXzWqO88KJKXom
-	 mEhc344cl2dow==
-Message-ID: <4f3c4249-5e20-4b5d-a6ab-72c79274cb49@kernel.org>
-Date: Tue, 11 Mar 2025 20:40:24 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UdLwz+qC"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d3db3b68a7so48439445ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1741722085; x=1742326885; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ry9akgKcOnrDWDxgZkeI6/C0nkDIdOIWsdgWlSMcY+I=;
+        b=UdLwz+qCr3qaR0TXiZl8DuKxkS0+h3OgIBL4r9OVVTqONvYpb6s9YrTGzMWz53sF0Y
+         YPccOLKxMYheOd+9Nvux2zEvfK5ndkjUpKYPlVITnjhsQ/Osc4at8Vzoi9+XDRITYbNk
+         1arL7k1U6oZIl+RlZkz5szB2m2Kg7OgGqpItg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741722085; x=1742326885;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ry9akgKcOnrDWDxgZkeI6/C0nkDIdOIWsdgWlSMcY+I=;
+        b=IJfp3Rz65k93bKH4pgd2dQr2MzcFfULmAgX80cvmPy9Q8ZGkRBWG+p/mUVlXgpL0W2
+         1yTTXemduGN95id+xRGRozGvBndDydJXIW254pL/6uxKM6iWcMd7Ycwmhkr2nMsbMYVx
+         GeY8etlwjYyINBjJzeZWdFMeOBB0P/BuI9Yc9ie+TEgiweytKDGQ8Hm9j7Ke1HNbcVLh
+         PEUgeSlJU3/DgdXVsfmuyTyPCP/EEgnlAb1PEq0eb0NX30TeWN86qza9KvfbCRhPm67I
+         4q3fQkYbs8ofn4PoN8W1mlsG+UYJ0ZvvhjZo/FCbUsucSUr/H5Ldt0T3LIqEO75mFBJT
+         x17Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXsd4QNMiWyYdQBng846NR6EVBlFkVCpUQoG3lYk2KODF/a8ciw8pwIvlKOokcZ6fBUA+MOgSMbT9+7MoM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo3ctXMGRLFSDCP4Jsz0CSwXnOJ1s1I3T09S4ejwBHKEeq+4oF
+	vmxIq6J84330RBNI1VaKD6lW3Lh0wls9pvsOJ+F/vDPl+bBokLXtzELJS5TY4zU=
+X-Gm-Gg: ASbGncuIQMh4AmcJ2JNKVUKmWIBhB/vZUl5vYgofp0i5LO5MFYq7Y5LiIEJso1k0qnt
+	nzg3Ro1X29tLhwFio+KvN1YN9GK4XyYN/NhSFYzG1nxtXXOWaptDsif2Po6uT1hxQGrTMy5Y++4
+	sKNxtSMNu9dT5G44QehdHAQ1XAyxlV6SrIWBK18+aHCPdEpnBf4VAg7AJn4bD+TGJGuhQh6GiUM
+	+dPFWc/A0Pa76ImhRmxJPLdXZW8RrKGrGE74r8cepZQbOeA4MmPPalracikpa/gmhMt4tag4ku+
+	Ro/q/hoOaE5j8jBVaRD25ZVwa3wJahbcPwbCkhNAjKJMaMMDQLt+35s=
+X-Google-Smtp-Source: AGHT+IE0dvgigbncy4JGuinRK+9BYgcnzpI1ilanDSCUJgDoIPF/Qbfo09x1YmeA3PCfK6PhoMafpA==
+X-Received: by 2002:a05:6e02:1706:b0:3d3:fdcc:8fb0 with SMTP id e9e14a558f8ab-3d44196231bmr217352935ab.20.1741722084502;
+        Tue, 11 Mar 2025 12:41:24 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d45dc58885sm10179065ab.46.2025.03.11.12.41.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 12:41:23 -0700 (PDT)
+Message-ID: <3d2699c0-895b-4c78-8ee8-ed062c2eb9d1@linuxfoundation.org>
+Date: Tue, 11 Mar 2025 13:41:23 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,90 +63,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] gs101 max77759 enablement (DT)
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250306-b4-max77759-mfd-dts-v1-0-9fe8b0eb8123@linaro.org>
- <b70f17589b91730ecf6080c626492368283ce7a1.camel@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 6.1 000/109] 6.1.131-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250310170427.529761261@linuxfoundation.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <b70f17589b91730ecf6080c626492368283ce7a1.camel@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250310170427.529761261@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 06/03/2025 11:57, André Draszik wrote:
-> On Thu, 2025-03-06 at 10:14 +0000, André Draszik wrote:
->> Hi,
->>
->> This series enables the recently submitted Maxim max77759 driver and
->> updates the DT for the Google Pixel 6 / Pro (oriole / raven) boards
->> accordingly.
->>
->> !!! Dependency note !!!
->>
->> This series depends on the corresponding driver and DT bindings
->> proposed in
->> https://lore.kernel.org/r/20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org
->>
->> Note that in that series bindings and gpio driver are accepted, but mfd
->> and nvmem drivers are still waiting for review comments.
+On 3/10/25 11:05, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.131 release.
+> There are 109 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> To avoid ambiguity... with 'accepted' I meant reviewed, but not merged!
+> Responses should be made by Wed, 12 Mar 2025 17:04:00 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.131-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
+Compiled and booted on my test system. No dmesg regressions.
 
-Thanks for letting me know. This must wait till bindings get applied to
-subsystem tree, so probably will miss this merge window. Anyway, please
-ping me when bindings get applied.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Best regards,
-Krzysztof
+thanks,
+-- Shuah
