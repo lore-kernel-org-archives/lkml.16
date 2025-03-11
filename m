@@ -1,62 +1,45 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF8022B5AB;
-	Tue, 11 Mar 2025 09:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F5571DE4CC;
+	Tue, 11 Mar 2025 09:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741686724; cv=none; b=m0T4wXRhQhmF1EwfEoTS52wclWh4rpHf7Y92agGAYl0QYjLOTsDeGplS/iEPrHwijxqfDNaHYSnElqOucQRye1hcxnM0oyNjRzHWfhtxx8E4qiEizwuU6cZmFb79/3MSKEoCvTIFPq7QomSRDYXkR4fT8vOO83ngaf3idFJhPw0=
+	t=1741686727; cv=none; b=bfQrSYjKOKEM86qXngJlGpoz2SJX2xjQTsoZmiucZ9S22y2Ic2Ip0s18cJOyN22WfUFMuYz9QqCGL7pBrQRdkgjvNubBy8rn+xGXDdVmKmKRS0yV0qVIGYjMPo+bHF+QvGAXAe5dT2h/sSPx181XTQinRM78Mj9kbkbNcEuDv08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741686724; c=relaxed/simple;
-	bh=Pcre2SGq59+9b917Xz4fnsDLfIMcRjXdt3MWPcJLFk8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dGInIyCSXc83l7CrolfMmF5eZbWLHPJQlycQ9dmOZlDa/Emph6ypRVEW53czCPW+Ndq8PVG8jz8gUDMdq6mKS7r2ixJDZ+Nxy8/uzoJL7cvJdelSu2vbXq76E/BiUouYnpBganHmllugNq1UhrEix9HtGaOpdPreJPizVltEq+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Cwzx5Hgb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Cwzx5Hgb"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B7jS3N022356;
-	Tue, 11 Mar 2025 09:51:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=WYyrqBzsKDbhcRh+8hUWT0zTAXYiX0agiFG
-	KGJwEqBg=; b=Cwzx5HgbuedHwOt4BOafY5IwBQGlOTnbaG/wiwEWQXW+0w0PyEb
-	u/nisvTAbZu3Z+co4djp76qKOEfyBfI4vrn7NeMQt8JfHBRr68eQEpxCalPl6muK
-	8ZLXhFaGVc5/aHoowm67WZayMGir+NAczhJdjepx8FI/BTc8bga/Yjxd2JAbNedQ
-	1kpSfPoNBvEG8jhCurJgDEJAFnuUbGoEyArxYFF1VnTwM/fZsTpIr5O4auLcOLOq
-	6tf4YiCT7vmFjqYdnkTHA21KR/zVitrp4n02/6nbqFrRSpfD5iZOVmPEShT4PUEz
-	ZH7DQBC3+U85KzRuw7/R6GaYasLaAaR+FrA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458eyug107-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 09:51:57 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52B9mssd010608;
-	Tue, 11 Mar 2025 09:51:54 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 458yn3657g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 09:51:54 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52B9psPU012991;
-	Tue, 11 Mar 2025 09:51:54 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 52B9pr6d012990
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 09:51:54 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id EFA3B5A9; Tue, 11 Mar 2025 15:21:52 +0530 (+0530)
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@quicinc.com,
-        Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH] pinctrl: qcom: sa8775p: Enable egpio function
-Date: Tue, 11 Mar 2025 15:21:51 +0530
-Message-ID: <20250311095151.1581239-1-quic_wasimn@quicinc.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1741686727; c=relaxed/simple;
+	bh=o341G45nOxRikhySnJbABEgZ/+2uLLTiz19NN7pxkyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=j4zgLzx/nbC+baK+4YmtTo6MzHPtXkDyo1e/ML7i/I68GOAeLPUT6KQprqhqkIBz1IkkBjZagQ0lRfswj8QoOFYB8FckZM8U31fHcH6wuQAbh4v+0IjaMe286ezu6iAqtVRXkRBhZ1SjLopK+ErWnZDaplhTfpBe1dfdSJPhS6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-8c-67d007b9adfb
+From: Yunjeong Mun <yunjeong.mun@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: kernel_team@skhynix.com,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	harry.yoo@oracle.com,
+	ying.huang@linux.alibaba.com,
+	gregkh@linuxfoundation.org,
+	rakie.kim@sk.com,
+	akpm@linux-foundation.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for memoryless nodes
+Date: Tue, 11 Mar 2025 18:51:45 +0900
+Message-ID: <20250311095151.446-1-yunjeong.mun@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z8-_SXm0JGjXTegL@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,128 +47,153 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=cbIormDM c=1 sm=1 tr=0 ts=67d007bd cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=O5wfUiJPRMtOadb7F1oA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: uhAz35iwqO1nHW4H3JbRvAXirCbvyBRB
-X-Proofpoint-GUID: uhAz35iwqO1nHW4H3JbRvAXirCbvyBRB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_01,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501 phishscore=0
- malwarescore=0 adultscore=0 clxscore=1011 spamscore=0 mlxlogscore=988
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503110066
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsXC9ZZnke5O9gvpBitatC3mrF/DZjF96gVG
+	ixM3G9ksft49zm7RvHg9m8XqTb4W95c9Y7G43X+O1WLVwmtsFse3zmO32HcRqGHnw7dsFsv3
+	9TNaXN41h83i3pr/rBZzv0xltli9JsNB0OPwm/fMHjtn3WX36G67zO7RcuQtq8fiPS+ZPDat
+	6mTz2PRpErvHiRm/WTx2PrT0WNgwldlj/9w17B7nLlZ4fHx6i8Xj8ya5AL4oLpuU1JzMstQi
+	fbsErowH+5wKZqtXzJvbxNLAeFCui5GTQ0LAROLKpqtsMPaG///ZQWw2AQ2Jg4dOMncxcnCI
+	CKhKtF1x72Lk4mAWaGORuPlqMSNIjbBAhMS5R6dZQGwWoJrDa7tZQWxeATOJT11bGSFmako0
+	XLrHBGJzAsWnHbkNNl9IgEfi1Yb9jBD1ghInZz4Bm8MsIC/RvHU2M8gyCYFN7BJbj19ngRgk
+	KXFwxQ2WCYz8s5D0zELSs4CRaRWjUGZeWW5iZo6JXkZlXmaFXnJ+7iZGYIwtq/0TvYPx04Xg
+	Q4wCHIxKPLwBj86lC7EmlhVX5h5ilOBgVhLhPXgFKMSbklhZlVqUH19UmpNafIhRmoNFSZzX
+	6Ft5ipBAemJJanZqakFqEUyWiYNTqoExlJVdqY07b/08O6f+I2erXL/dmnjl6aRzG2uV18YG
+	Xbp3X/bHoWCj1Ie5LYsD7xtFW55kaP2jsFjvDxN/vWnA309lF3bvmKT5c9oidbbtm4rse3/l
+	cR/fEf5jZU0ow/dskRlsmnN3XfidlbG84HXD9NcLT6Q0bbZefU3fYVd26+681S/ncW32UmIp
+	zkg01GIuKk4EAMS5iz+tAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LhmiGro7uT/UK6wcbJ8hZz1q9hs5g+9QKj
+	xYmbjWwWP+8eZ7doXryezWL1Jl+L+8uesVh8fvaa2eJ2/zlWi1ULr7FZHN86j91i30WgrsNz
+	T7Ja7Hz4ls1i+b5+RovLu+awWdxb85/VYu6XqcwWh649Z7VYvSbDQcTj8Jv3zB47Z91l9+hu
+	u8zu0XLkLavH4j0vmTw2repk89j0aRK7x4kZv1k8dj609FjYMJXZY//cNewe5y5WeHx8eovF
+	49ttD4/FLz4weXzeJBcgEMVlk5Kak1mWWqRvl8CV8WCfU8Fs9Yp5c5tYGhgPynUxcnJICJhI
+	bPj/nx3EZhPQkDh46CRzFyMHh4iAqkTbFfcuRi4OZoE2FombrxYzgtQIC0RInHt0mgXEZgGq
+	Oby2mxXE5hUwk/jUtZURYqamRMOle0wgNidQfNqR22DzhQR4JF5t2M8IUS8ocXLmE7A5zALy
+	Es1bZzNPYOSZhSQ1C0lqASPTKkaRzLyy3MTMHFO94uyMyrzMCr3k/NxNjMBoWlb7Z+IOxi+X
+	3Q8xCnAwKvHwBjw6ly7EmlhWXJl7iFGCg1lJhPfgFaAQb0piZVVqUX58UWlOavEhRmkOFiVx
+	Xq/w1AQhgfTEktTs1NSC1CKYLBMHp1QDo/HZsIu3j+86ujsq3YevIZWtd4lyze5JTmrGu0IO
+	XSk3OfQ79s/BRwXKS7m1ubbzTbYTy351wfBm5hdHm50fJPmY93gIiKVXNM7Q58/zrPQ+JrGe
+	8dI1wbmhHhV6lUzKHr3yi+zn1XrVlloLWp7Iaykx3OMawfw9sotVYeuauoelLxv3LI1VYinO
+	SDTUYi4qTgQAUPZYdqICAAA=
+X-CFilter-Loop: Reflected
 
-Egpio feature allows Island Domain IOs to be reused as TLMM GPIOs.
-sa8775p supports egpio feature for GPIOs ranging from 126 to 148.
+Hi Gregory, thanks for kind explanation.
 
-Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-sa8775p.c | 56 +++++++++++++++-----------
- 1 file changed, 33 insertions(+), 23 deletions(-)
+On Tue, 11 Mar 2025 00:42:49 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Tue, Mar 11, 2025 at 01:02:07PM +0900, Yunjeong Mun wrote:
+> 
+> forenote - Hi Andrew, please hold off on the auto-configuration patch
+> for now, the sk group has identified a hotplug issue we need to work out
+> and we'll likely need to merge these two patch set together.  I really
+> appreciate your patience with this feature.
+> 
+> > Hi Gregory,
+> >
+> > In my understanding, the reason we are seeing 12 NUMA node is because
+> > it loops through node_states[N_POSSIBLE] and its value is 4095 (twelves ones)
+> > in the code [1]  below:
+> > 
+> ... snip ...
+> 
+> Appreciated, so yes this confirms what i thought was going on.  There's
+> 4 host bridges, 2 devices on each host bridge, and an extra CFMWS per
+> socket that is intended to interleave across the host bridges.
+> 
+> As you mention below, the code in acpi/numa/srat.c will create 1 NUMA
+> node per SRAT Memory Affinity Entry - and then also 1 NUMA node per
+> CFMWS that doesn't have a matching SRAT entry (with a known corner case
+> for a missing SRAT which doesn't apply here).
+> 
+> So essentialy what the system is doing is marking that it's absolutely
+> possible to create 1 region per device and also 1 region that
+> interleaves across host each pair of host bridges (I presume this is a
+> dual socket system?).
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-index 8fdea25d8d67..e4a720eeee3b 100644
---- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-@@ -467,6 +467,7 @@ enum sa8775p_functions {
- 	msm_mux_edp2_lcd,
- 	msm_mux_edp3_hot,
- 	msm_mux_edp3_lcd,
-+	msm_mux_egpio,
- 	msm_mux_emac0_mcg0,
- 	msm_mux_emac0_mcg1,
- 	msm_mux_emac0_mcg2,
-@@ -744,6 +745,13 @@ static const char * const edp3_lcd_groups[] = {
- 	"gpio49",
- };
+Correct, it is a dual socket system. Thank you for the detailed explanation.
+It has been helpful for analyzing the code.
+> 
+> So, tl;dr: All these nodes are valid and this configuration is correct.
+> 
+> Weighted interleave presently works fine as intended, but with the
+> inclusion of the auto-configuration, there will be issues for your
+> system configuration. This means we probably need to consider
+> merging these as a group.
+> 
 
-+static const char *const egpio_groups[] = {
-+	"gpio126", "gpio127", "gpio128", "gpio129", "gpio130", "gpio131",
-+	"gpio132", "gpio133", "gpio134", "gpio135", "gpio136", "gpio137",
-+	"gpio138", "gpio139", "gpio140", "gpio141", "gpio142", "gpio143",
-+	"gpio144", "gpio145", "gpio146", "gpio147", "gpio148",
-+};
-+
- static const char * const emac0_mcg0_groups[] = {
- 	"gpio12",
- };
-@@ -1209,6 +1217,7 @@ static const struct pinfunction sa8775p_functions[] = {
- 	MSM_PIN_FUNCTION(edp2_lcd),
- 	MSM_PIN_FUNCTION(edp3_hot),
- 	MSM_PIN_FUNCTION(edp3_lcd),
-+	MSM_PIN_FUNCTION(egpio),
- 	MSM_PIN_FUNCTION(emac0_mcg0),
- 	MSM_PIN_FUNCTION(emac0_mcg1),
- 	MSM_PIN_FUNCTION(emac0_mcg2),
-@@ -1454,29 +1463,29 @@ static const struct msm_pingroup sa8775p_groups[] = {
- 	[123] = PINGROUP(123, hs2_mi2s, phase_flag, _, _, _, _, _, _, _),
- 	[124] = PINGROUP(124, hs2_mi2s, phase_flag, _, _, _, _, _, _, _),
- 	[125] = PINGROUP(125, hs2_mi2s, phase_flag, _, _, _, _, _, _, _),
--	[126] = PINGROUP(126, _, _, _, _, _, _, _, _, _),
--	[127] = PINGROUP(127, _, _, _, _, _, _, _, _, _),
--	[128] = PINGROUP(128, _, _, _, _, _, _, _, _, _),
--	[129] = PINGROUP(129, _, _, _, _, _, _, _, _, _),
--	[130] = PINGROUP(130, _, _, _, _, _, _, _, _, _),
--	[131] = PINGROUP(131, _, _, _, _, _, _, _, _, _),
--	[132] = PINGROUP(132, _, _, _, _, _, _, _, _, _),
--	[133] = PINGROUP(133, _, _, _, _, _, _, _, _, _),
--	[134] = PINGROUP(134, _, _, _, _, _, _, _, _, _),
--	[135] = PINGROUP(135, _, _, _, _, _, _, _, _, _),
--	[136] = PINGROUP(136, _, _, _, _, _, _, _, _, _),
--	[137] = PINGROUP(137, _, _, _, _, _, _, _, _, _),
--	[138] = PINGROUP(138, _, _, _, _, _, _, _, _, _),
--	[139] = PINGROUP(139, _, _, _, _, _, _, _, _, _),
--	[140] = PINGROUP(140, _, _, _, _, _, _, _, _, _),
--	[141] = PINGROUP(141, _, _, _, _, _, _, _, _, _),
--	[142] = PINGROUP(142, _, _, _, _, _, _, _, _, _),
--	[143] = PINGROUP(143, _, _, _, _, _, _, _, _, _),
--	[144] = PINGROUP(144, dbg_out, _, _, _, _, _, _, _, _),
--	[145] = PINGROUP(145, _, _, _, _, _, _, _, _, _),
--	[146] = PINGROUP(146, _, _, _, _, _, _, _, _, _),
--	[147] = PINGROUP(147, _, _, _, _, _, _, _, _, _),
--	[148] = PINGROUP(148, _, _, _, _, _, _, _, _, _),
-+	[126] = PINGROUP(126, _, _, _, _, _, _, _, _, egpio),
-+	[127] = PINGROUP(127, _, _, _, _, _, _, _, _, egpio),
-+	[128] = PINGROUP(128, _, _, _, _, _, _, _, _, egpio),
-+	[129] = PINGROUP(129, _, _, _, _, _, _, _, _, egpio),
-+	[130] = PINGROUP(130, _, _, _, _, _, _, _, _, egpio),
-+	[131] = PINGROUP(131, _, _, _, _, _, _, _, _, egpio),
-+	[132] = PINGROUP(132, _, _, _, _, _, _, _, _, egpio),
-+	[133] = PINGROUP(133, _, _, _, _, _, _, _, _, egpio),
-+	[134] = PINGROUP(134, _, _, _, _, _, _, _, _, egpio),
-+	[135] = PINGROUP(135, _, _, _, _, _, _, _, _, egpio),
-+	[136] = PINGROUP(136, _, _, _, _, _, _, _, _, egpio),
-+	[137] = PINGROUP(137, _, _, _, _, _, _, _, _, egpio),
-+	[138] = PINGROUP(138, _, _, _, _, _, _, _, _, egpio),
-+	[139] = PINGROUP(139, _, _, _, _, _, _, _, _, egpio),
-+	[140] = PINGROUP(140, _, _, _, _, _, _, _, _, egpio),
-+	[141] = PINGROUP(141, _, _, _, _, _, _, _, _, egpio),
-+	[142] = PINGROUP(142, _, _, _, _, _, _, _, _, egpio),
-+	[143] = PINGROUP(143, _, _, _, _, _, _, _, _, egpio),
-+	[144] = PINGROUP(144, dbg_out, _, _, _, _, _, _, _, egpio),
-+	[145] = PINGROUP(145, _, _, _, _, _, _, _, _, egpio),
-+	[146] = PINGROUP(146, _, _, _, _, _, _, _, _, egpio),
-+	[147] = PINGROUP(147, _, _, _, _, _, _, _, _, egpio),
-+	[148] = PINGROUP(148, _, _, _, _, _, _, _, _, egpio),
- 	[149] = UFS_RESET(ufs_reset, 0x1a2000),
- 	[150] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x199000, 15, 0),
- 	[151] = SDC_QDSD_PINGROUP(sdc1_clk, 0x199000, 13, 6),
-@@ -1511,6 +1520,7 @@ static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
- 	.ngpios = 150,
- 	.wakeirq_map = sa8775p_pdc_map,
- 	.nwakeirq_map = ARRAY_SIZE(sa8775p_pdc_map),
-+	.egpio_func = 9,
- };
+We believe our propsed hot plug patch should be added as a hot-fix to v6.14, 
+because it can be addressed independently of auto-configuring feature.
+Rakie will send v2 patch soon.
 
- static int sa8775p_pinctrl_probe(struct platform_device *pdev)
-
-base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
---
-2.48.1
-
+> During boot, the following will occur
+> 
+> 1) drivers/acpi/numa/srat.c marks 12 nodes as possible
+>    0-1) Socket nodes
+>    2-3) Cross-host-bridge interleave nodes
+>    4-11) single region nodes
+> 
+> 2) drivers/cxl/* will probe the various devices and create
+>    a root decoder for each CXL Fixed Memory Window
+>    decoder0.0 - decoder11.0  (or maybe decoder0.0 - decoder0.11)
+> 
+> 3) during probe auto-configuration of wieghted interleave occurs as a
+>    result of this code being called with hmat or cdat data:
+> 
+> void node_set_perf_attrs() {
+> ...
+> 	/* When setting CPU access coordinates, update mempolicy */
+> 	if (access == ACCESS_COORDINATE_CPU) {
+> 		if (mempolicy_set_node_perf(nid, coord)) {
+> 			pr_info("failed to set mempolicy attrs for node %d\n",
+> 				nid);
+> 		}
+> 	}
+> ...
+> }
+> 
+> under the current system, since we calculate with N_POSSIBLE, all nodes
+> will be assigned weights (assuming HMAT or CDAT data is available for
+> all of them).
+> 
+> We actually have a few issues here
+> 
+> 1) If all nodes are included in the weighting reduction, we're actually
+>    over-representing a particular set of hardware.  The interleave node
+>    and the individual device nodes would actually over-represent the
+>    bandwidth available (comparative to the CPU nodes).
+> 
+> 2) As stated on this patch line, just switching to N_MEMORY causes
+>    issues with hotplug - where the bandwidth can be reported, but if
+>    memory hasn't been added yet then we'll end up with wrong weights
+>    because it wasn't included in the calculation.
+> 
+> 3) However, not exposing the nodes because N_MEMORY isn't set yet
+>    a) prevents pre-configuration before memory is onlined, and
+>    b) hides the implications of hotplugging memory into a node from the
+>       user (adding memory causes a re-weight and may affect an
+>       interleave-all configuration).
+> 
+> but - i think it's reasonable that anyone using weighted-interleave is
+> *probably* not going to have nodes come and go.  It just seems like a
+> corner case that isn't reasonable to spend time supporting.
+> 
+> So coming back around to the hotplug patch line, I do think it's
+> reasonable hide nodes marked !N_MEMORY, but consider two issues:
+> 
+> 1) In auto mode, we need to re-weight on hotplug to only include
+>    onlined nodes.  This is because the reduction may be sensitive
+>    to the available bandwidth changes.
+> 
+>    This behavior needs to be clearly documented.
+> 
+> 2) We need to clearly define what the weight of a node will be when
+>    in manual mode and a node goes (memory -> no memory -> memory)
+>    a) does it retain it's old, manually set weight?
+>    b) does it revert to 1?
+> 
+> Sorry for the long email, just working through all the implications.
+> 
+> I think the proposed hotplug patch is a requirement for the
+> auto-configuration patch set.
+> 
+> ~Gregory
+> 
+Best regards,
+Yunjeong
