@@ -1,197 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEB522DFB8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB82A22FDE2;
+	Tue, 11 Mar 2025 09:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741686163; cv=none; b=Z6K4JoLYl7SRfbglocW0oeADokdQNfWELe00ET8shcmEIuUWybY+ei6LDbKKQjtC4d+B5HlBC9eV1RBkV0+V7YraF7NU0Uvgwh5jZTGteyZBNzJ5nIApg/zQFDMlj5Ney9huFJjr+YqjbXm1etdWD3HV4SKE4pOh9xcL7jR6+1c=
+	t=1741686165; cv=none; b=h4DYnqs92CW3SV0YcAnAw94ey678vc5PKebuNzpfvFK6/dVM/VcQQPLieYaaQExvgfEYkQo+WQNGevodPYzb/3lsT1flHvQpNfxg6wp3NFdBL5ntNmoFkQ1huPlCv0QcxBX+nUayxTGiT9QD1BjYQQgmgsyMPr7zMbPbzyfwGeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741686163; c=relaxed/simple;
-	bh=s48TuCB7hx4s0XQbfy+bStqom7rSsuzABfR49ZEXiRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IhPh6l2ClmC1CyfSDkpCCGUVfWNlmGHiMgRKTVJcJY+cQshvvlu/CpNBpVyY3Rf8nV+XxsVBKg9nKHCDI9gqnxUxkO7T2EKU+UdsETbRlb0NaBQIXwSXYhUCGCH5OB42UQL1K5hPyA0VsD/DZXuvB4VXixKsM08YUAVuDpvedwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AEB7eq7n; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741686165; c=relaxed/simple;
+	bh=L5Bw9UBbZSq2OONuxWoDsaeg1DTWC3b2DYoYYrj9MBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QqHDA/yXZ2e/pNlX8hATcQ9SCvmr99MUjm+T27HGmt8G1zndyMZGKNe+Id/B5ZtN3PggZsQtNGBdpC5J2HccsTkr9lTpQIJ3k35TdR1DbsavCmzzO19EwP5bXXiVPBU8y8Ftb0tiDpY97x6CX/gE0aoqUC9N2j3PSLq5dM/VghI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=SZP9YVXH; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AEB7eq7n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741686160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gWbgBYfOGia6Jpo6dySuLR4cc3OA1mqpDszmSXqcblw=;
-	b=AEB7eq7n35aecm87RGKKvEllubHo/eWLvyxtq4EMqLdtiCdBwsH7q35WMpag0tBfZGo5OO
-	7BkUxiB3+7vmBLbxpt10EtAP7mNd8P/HNLV1R2nr8aL4/zqmWT2WSLSISmdXwFQ0BGc8pC
-	E51fUjxiX/ziJ2lmoczkVPZGFUw8ctM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-119-13DnmO8BOK-Zbj8i73vaGA-1; Tue, 11 Mar 2025 05:42:39 -0400
-X-MC-Unique: 13DnmO8BOK-Zbj8i73vaGA-1
-X-Mimecast-MFC-AGG-ID: 13DnmO8BOK-Zbj8i73vaGA_1741686158
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e4b6eba254so4671687a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 02:42:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741686158; x=1742290958;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gWbgBYfOGia6Jpo6dySuLR4cc3OA1mqpDszmSXqcblw=;
-        b=A1ccfTR8OdnCqM4oqbex8ONpjQI45txz2lY3D1H5mKRgZUfDh+b5ylNUNX9HVcUZ/l
-         vWEiTNZ2cbhIHWPG6eFrTa8ZQ8USP/7j75uB1B0VNuKB3AfFiSWA9IMvMmtBIP9bUaTL
-         v0x8V+m1TTyoMsFo1B10QwLO+weOziJKApFd5jjNOCZ6s2j5HgSjuxaqO+FE0GbfHX8n
-         DsRNkfYnBd0WYqLUechWGVCpW83AbXcMmb/j6k11q3dvVLKsruHCyX7Zl4pzaF3vK34b
-         trVZVYGOdCsUU4UnkjoAY7cTlDx7PbreRrMJS5O+O6FCfmgLsp8n2hD5tACejVKXFHjT
-         QAMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3lud153RkOqpndmNmGqOgwohV2UTzv9r2chkoN5MzgJNVZ6gU+LrS0nHbKJ+SUeAOpt5R9zvtprNC7ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaJukc7ivA4yprhQIfXa+C4lIO5vgRFWhfXjdAZuZd5F1snEIV
-	GqhzZMZYQuZ+PCE0szYN7HEyg8hJHtawsI1FdA1EXNTVB9AIgkS3OOHi/y4yCkTxts4UsFbwVAC
-	f3TddQGWa1DoZLss5fuf92s2R8j8jTCsK1C0dpgk0LBi0hs4/mo0iytpaUSTsRQ==
-X-Gm-Gg: ASbGnctINfK7s63JvlgScliJ/F00NxqhNN5P/0b95T0upW068OJ2U6JLfC/UjC0QUmB
-	CqL6R3UOxZhHGK+8McIkS06dSHdhIJSvyBZtMALjaFMqfWIEe7fxCv5E1lJzEZvspUC6QWW4RWD
-	qCjWF3k8uZyPQfKGdGSbXn2Jp+74K3cdwFnZw+Xap8M9MaH2RZeEuxtL3K5A6vvK4TfiS1LLjyC
-	ZB0Nbp3Hz5vCfSf5m8jGExRl0Rl33DHviVwGdsQjxgIRYDgN4guBdHTucryRm4Ruj96zX8a59r7
-	XBSavRX1bf3xz8I4NnC2mAXC5RBuP4W5qy81jJOIRCh+YfGfum2QhkMYZ1ce75QbOJ/4kDRZ
-X-Received: by 2002:a05:6402:254a:b0:5e6:1602:bfbb with SMTP id 4fb4d7f45d1cf-5e75f984412mr3427191a12.27.1741686158200;
-        Tue, 11 Mar 2025 02:42:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEPkM6rVc1QOWMePtECn1wZste/fTBV6MwarFwJ8JBd8XyGWLzR60WZC4WklV0jI8qfpX5GoA==
-X-Received: by 2002:a05:6402:254a:b0:5e6:1602:bfbb with SMTP id 4fb4d7f45d1cf-5e75f984412mr3427137a12.27.1741686157633;
-        Tue, 11 Mar 2025 02:42:37 -0700 (PDT)
-Received: from localhost.localdomain (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c7472169sm8085277a12.24.2025.03.11.02.42.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 02:42:36 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	linux-integrity@vger.kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	linux-coco@lists.linux.dev,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>,
-	Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH v3 1/4] x86/sev: add SVSM vTPM probe/send_command functions
-Date: Tue, 11 Mar 2025 10:42:22 +0100
-Message-ID: <20250311094225.35129-2-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250311094225.35129-1-sgarzare@redhat.com>
-References: <20250311094225.35129-1-sgarzare@redhat.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="SZP9YVXH"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B0C3A103D3303;
+	Tue, 11 Mar 2025 10:42:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1741686154; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=ee0GouMttyoAI0zvBvt/JOBCHGowOvANqdNioGonbio=;
+	b=SZP9YVXHZk/yq4RN+3uIEDDZAtJqeOuemEx1bQ0ajxZ7hufQuMOLljjuDIoyT3KfOMH7ah
+	7Sgx/dZZzqvUXuppsQUfOOxYq++AC+RvyCSK2DxfFcRzW4fIrTwySsUXojItGeq5nddkKw
+	ZY+Od4qOCCpk1fHDZN6O+uXn5V6YhsKJVsOcDm9rlAPjOlFp78bll9CXaB+QhtjKRvQWX3
+	kiTuE++esGpUan9HglpvMBC0fbnP0dIqJj/Yp0raP4BIBlMHmG6tJ3HBPsaPJ3dYJmN8C9
+	JVuUmFxEoh9SwiCSUxnSCU7Ql++qw06Xy9KXwWCifxr2Ibivj7K4/+uCQJ5DYw==
+Date: Tue, 11 Mar 2025 10:42:25 +0100
+From: Pavel Machek <pavel@denx.de>
+To: Ron Economos <re@w6rz.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.6 000/145] 6.6.83-rc1 review
+Message-ID: <Z9AFgaBYY/VoF7X8@duo.ucw.cz>
+References: <20250310170434.733307314@linuxfoundation.org>
+ <81784d87-b837-4476-974a-87b0333e7e38@w6rz.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MoM5oHu0BFGlukw+"
+Content-Disposition: inline
+In-Reply-To: <81784d87-b837-4476-974a-87b0333e7e38@w6rz.net>
+X-Last-TLS-Session-Version: TLSv1.3
 
-Add two new functions to probe and send commands to the SVSM vTPM.
-They leverage the two calls defined by the AMD SVSM specification [1]
-for the vTPM protocol: SVSM_VTPM_QUERY and SVSM_VTPM_CMD.
 
-Expose these functions to be used by other modules such as a tpm
-driver.
+--MoM5oHu0BFGlukw+
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] "Secure VM Service Module for SEV-SNP Guests"
-    Publication # 58019 Revision: 1.00
+Hi!
 
-Co-developed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Co-developed-by: Claudio Carvalho <cclaudio@linux.ibm.com>
-Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v3:
-- removed link to the spec because those URLs are unstable [Borislav]
-- squashed "x86/sev: add SVSM call macros for the vTPM protocol" patch
-  in this one [Borislav]
-- slimmed down snp_svsm_vtpm_probe() [Borislav]
-- removed features check and any print related [Tom]
----
- arch/x86/include/asm/sev.h |  7 +++++++
- arch/x86/coco/sev/core.c   | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+> > This is the start of the stable review cycle for the 6.6.83 release.
+> > There are 145 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Wed, 12 Mar 2025 17:04:00 +0000.
+> > Anything received after that time might be too late.
+> >=20
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.8=
+3-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.g=
+it linux-6.6.y
+> > and the diffstat can be found below.
 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index ba7999f66abe..09471d058ce5 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -384,6 +384,10 @@ struct svsm_call {
- #define SVSM_ATTEST_SERVICES		0
- #define SVSM_ATTEST_SINGLE_SERVICE	1
- 
-+#define SVSM_VTPM_CALL(x)		((2ULL << 32) | (x))
-+#define SVSM_VTPM_QUERY			0
-+#define SVSM_VTPM_CMD			1
-+
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 
- extern u8 snp_vmpl;
-@@ -481,6 +485,9 @@ void snp_msg_free(struct snp_msg_desc *mdesc);
- int snp_send_guest_request(struct snp_msg_desc *mdesc, struct snp_guest_req *req,
- 			   struct snp_guest_request_ioctl *rio);
- 
-+bool snp_svsm_vtpm_probe(void);
-+int snp_svsm_vtpm_send_command(u8 *buffer);
-+
- void __init snp_secure_tsc_prepare(void);
- void __init snp_secure_tsc_init(void);
- 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 96c7bc698e6b..2166bdff88b7 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -2628,6 +2628,37 @@ static int snp_issue_guest_request(struct snp_guest_req *req, struct snp_req_dat
- 	return ret;
- }
- 
-+bool snp_svsm_vtpm_probe(void)
-+{
-+	struct svsm_call call = {};
-+
-+	/* The vTPM device is available only if a SVSM is present */
-+	if (!snp_vmpl)
-+		return false;
-+
-+	call.caa = svsm_get_caa();
-+	call.rax = SVSM_VTPM_CALL(SVSM_VTPM_QUERY);
-+
-+	if (svsm_perform_call_protocol(&call))
-+		return false;
-+
-+	/* Check platform commands contains TPM_SEND_COMMAND - platform command 8 */
-+	return (call.rcx_out & BIT_ULL(8)) == BIT_ULL(8);
-+}
-+EXPORT_SYMBOL_GPL(snp_svsm_vtpm_probe);
-+
-+int snp_svsm_vtpm_send_command(u8 *buffer)
-+{
-+	struct svsm_call call = {};
-+
-+	call.caa = svsm_get_caa();
-+	call.rax = SVSM_VTPM_CALL(SVSM_VTPM_CMD);
-+	call.rcx = __pa(buffer);
-+
-+	return svsm_perform_call_protocol(&call);
-+}
-+EXPORT_SYMBOL_GPL(snp_svsm_vtpm_send_command);
-+
- static struct platform_device sev_guest_device = {
- 	.name		= "sev-guest",
- 	.id		= -1,
--- 
-2.48.1
+> The build fails on RISC-V with:
+>=20
+> arch/riscv/kernel/suspend.c: In function 'suspend_save_csrs':
+> arch/riscv/kernel/suspend.c:14:66: error: 'RISCV_ISA_EXT_XLINUXENVCFG'
+> undeclared (first use in this function); did you mean
+> 'RISCV_ISA_EXT_ZIFENCEI'?
+> =A0=A0 14 |=A0=A0=A0=A0=A0=A0=A0=A0 if (riscv_cpu_has_extension_unlikely(=
+smp_processor_id(),
+> RISCV_ISA_EXT_XLINUXENVCFG))
+> | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> | RISCV_ISA_EXT_ZIFENCEI
+> arch/riscv/kernel/suspend.c:14:66: note: each undeclared identifier is
+> reported only once for each function it appears in
+> arch/riscv/kernel/suspend.c: In function 'suspend_restore_csrs':
+> arch/riscv/kernel/suspend.c:37:66: error: 'RISCV_ISA_EXT_XLINUXENVCFG'
+> undeclared (first use in this function); did you mean
+> 'RISCV_ISA_EXT_ZIFENCEI'?
+> =A0=A0 37 |=A0=A0=A0=A0=A0=A0=A0=A0 if (riscv_cpu_has_extension_unlikely(=
+smp_processor_id(),
+> RISCV_ISA_EXT_XLINUXENVCFG))
+> | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> | RISCV_ISA_EXT_ZIFENCEI
+> make[4]: *** [scripts/Makefile.build:243: arch/riscv/kernel/suspend.o] Er=
+ror
+> 1
+>=20
+> Reverting commit "riscv: Save/restore envcfg CSR during suspend"
+> 8bf2e196c94af0a384f7bb545d54d501a1e9c510 fixes the build.
 
+We see the same problem.
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--MoM5oHu0BFGlukw+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ9AFgQAKCRAw5/Bqldv6
+8q7WAJ4qfchFT3jtZ4DDJ95rONDfKRmv5ACgi4BMYshb0f9+bnhBj0g52O+Qbb8=
+=xFsN
+-----END PGP SIGNATURE-----
+
+--MoM5oHu0BFGlukw+--
