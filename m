@@ -1,39 +1,39 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1661EDA15
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E0C1DE894
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741680451; cv=none; b=pmgTd79ti1uOrQoF8UHANRe5LgH9O7RvCY6YCSv7rqL5psIdm76Owzj8zbQoouLezLbB51/Mu45w631ZZzjZVji246r6lSOPZB1/CnKJPSyt9SH7ACHxYwPcjJQYhSAQHLv/ZwcvPVK+MC1yYSi04ZihFmX+PaSlSYzb5zI+zEA=
+	t=1741680547; cv=none; b=ZNo+JgZ85/kDsK/MhTeadQId/3DtuoLbP71LcyDvwEJsowsVqjxdg5lbr2Rp/yEeMgRGOWbRscewhMnj7lwgf6jFB0ebxNeEigrkPSESRs91eKa/z+dqdpLWIGP8EHvZ9FfxmMg9g9x6yKD3U/OC1VnRS37y6q0UDB9iDI7pi60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741680451; c=relaxed/simple;
-	bh=Wln6HbJ1YhxwRZiQK3YIiagu79K/yCUP4PftsyrzyJo=;
+	s=arc-20240116; t=1741680547; c=relaxed/simple;
+	bh=JDmQM8Dhze4FKjCBOIy9JrDUTaaxnVukGFxN9fy/cl4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GrAM/28JcYCf2oSjxztXt2xwbPq92HX6w/xoC7+xPJkn8BxkLDSsQVCzqeA1IvXVgwg7jmQbxvfb4mZSdUFzXmsiJmh2hZn/TQ+CoSF5Kr1svTGY0OODNn79qi4Ok0DY0mJK+nkvXRVwtWTHK+hQCrwzFxCyLPggwp/kqQUoBcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AIC5nti+; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version:Content-Type; b=gDPT68gwVrQs82c9V4ViEyr62Oe7OJCceetmN5ZsIltW/8LLlta4ieQN3lTdkBC1EnACrWc/yLO8PgYyW50YNzyBAXokWQjeFy1CvqmNbdmvfV7K7r0E8hHRbpSuLImipLVHIuvDWBqIyf+N6YTHCn0fmGhPR+ec8i1S83Qc3DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JIQRQO6G; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AIC5nti+"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JIQRQO6G"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741680448;
-	bh=Wln6HbJ1YhxwRZiQK3YIiagu79K/yCUP4PftsyrzyJo=;
+	s=mail; t=1741680543;
+	bh=JDmQM8Dhze4FKjCBOIy9JrDUTaaxnVukGFxN9fy/cl4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AIC5nti+7eUbHYa6koRGpGRDZWZUbDap8+kiOPa6xudRu7/6HjjqlTTTq6qe2/eUP
-	 Lm4HrDY94i1XeUGM9dBC7TanQ2zW+Ew7KiM7mA8Ctfvllyh/j//QUiaA5cyubszlpZ
-	 rHDwH9F0Wyj/ZftoFQL26wvIBB4Sk/UFeymsxRC1g2gSxQqBxV3ptne2FoWM4mLYP7
-	 NNjC+9XFBIeDBcAmhb62N601XSk9+J/cDysAdY9y47RnM8oh/ZxJDcpITuPm5ULtQO
-	 MocuUeeR4PIDK+pPBZY+m3Epg6xukvWc30vrwWYQIjNEFgmaJYhZQZNkgdMyrtJi4q
-	 QY0VkpuOtjtlg==
+	b=JIQRQO6GB0j4uGLUnX+WM6YlhluKEHd9N8JWH1xxbqlijd6kQ6rTEdZXIfktU8C06
+	 wTNBEj3qI8eRm4T5PDZ9/T2KBPS479Xfk+o4A9PJM8v0QIqsZikKzt4d4MiNwAArfp
+	 kv60m3OTgSF8ryOydyZyk+pdaSGfqNIWxNZu3jdK1vWzSSFiKHvm2yc12LjANU8JQL
+	 jf8+ZOVPuZehRaXOHLlKi2T+9/mm8uOaPeZmErvZ8Vpq32rxxNJ8g6tSjCEH4uDDqm
+	 3PAserwgJsV6JI5jM657UDI0NPbBBWuLMYiZy3DDyogOhxrpWC+SG3yq//HTQET2/e
+	 Z8nztYk2wWWjA==
 Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A6CBD17E0237;
-	Tue, 11 Mar 2025 09:07:27 +0100 (CET)
-Date: Tue, 11 Mar 2025 09:06:49 +0100
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 06E8517E0237;
+	Tue, 11 Mar 2025 09:09:02 +0100 (CET)
+Date: Tue, 11 Mar 2025 09:08:55 +0100
 From: Boris Brezillon <boris.brezillon@collabora.com>
 To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
@@ -41,12 +41,12 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
  simona@ffwll.ch, kernel@collabora.com, linux-mediatek@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org, sjoerd@collabora.com
-Subject: Re: [PATCH v1 5/6] drm/panfrost: Enable AARCH64_4K page table
- format on mediatek_mt8188
-Message-ID: <20250311090649.0d15d74d@collabora.com>
-In-Reply-To: <20250310195921.157511-6-ariel.dalessandro@collabora.com>
+Subject: Re: [PATCH v1 6/6] drm/panfrost: Set HW_FEATURE_AARCH64_MMU feature
+ flag on Bifrost models
+Message-ID: <20250311090855.0211c114@collabora.com>
+In-Reply-To: <20250310195921.157511-7-ariel.dalessandro@collabora.com>
 References: <20250310195921.157511-1-ariel.dalessandro@collabora.com>
-	<20250310195921.157511-6-ariel.dalessandro@collabora.com>
+	<20250310195921.157511-7-ariel.dalessandro@collabora.com>
 Organization: Collabora
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -58,31 +58,46 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Mar 2025 16:59:20 -0300
+On Mon, 10 Mar 2025 16:59:21 -0300
 Ariel D'Alessandro <ariel.dalessandro@collabora.com> wrote:
 
-> Now that Panfrost supports AARCH64_4K page table format, let's enable it
-> on Mediatek MT8188.
-
-Can you maybe give more details on why this is needed
-(legacy shareability/cacheability not suitable for this GPU?)?
-
+> Set this feature flag on all Mali Bifrost platforms as the MMU supports
+> AARCH64 4K page table format.
 > 
 > Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
 > ---
->  drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpu/drm/panfrost/panfrost_features.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index 0f3935556ac76..d7b8bded6d784 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -824,6 +824,7 @@ static const struct panfrost_compatible mediatek_mt8188_data = {
->  	.num_pm_domains = ARRAY_SIZE(mediatek_mt8183_pm_domains),
->  	.pm_domain_names = mediatek_mt8183_pm_domains,
->  	.pm_features = BIT(GPU_PM_CLK_DIS) | BIT(GPU_PM_VREG_OFF),
-> +	.gpu_configs = BIT(GPU_CONFIG_AARCH64_4K),
->  };
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_features.h b/drivers/gpu/drm/panfrost/panfrost_features.h
+> index 7ed0cd3ea2d4c..52f9d69f6db9d 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_features.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_features.h
+> @@ -54,6 +54,7 @@ enum panfrost_hw_feature {
+>  	BIT_ULL(HW_FEATURE_THREAD_GROUP_SPLIT) | \
+>  	BIT_ULL(HW_FEATURE_FLUSH_REDUCTION) | \
+>  	BIT_ULL(HW_FEATURE_PROTECTED_MODE) | \
+> +	BIT_ULL(HW_FEATURE_AARCH64_MMU) | \
+>  	BIT_ULL(HW_FEATURE_COHERENCY_REG))
 >  
->  static const char * const mediatek_mt8192_supplies[] = { "mali", NULL };
+>  #define hw_features_g72 (\
+> @@ -64,6 +65,7 @@ enum panfrost_hw_feature {
+>  	BIT_ULL(HW_FEATURE_FLUSH_REDUCTION) | \
+>  	BIT_ULL(HW_FEATURE_PROTECTED_MODE) | \
+>  	BIT_ULL(HW_FEATURE_PROTECTED_DEBUG_MODE) | \
+> +	BIT_ULL(HW_FEATURE_AARCH64_MMU) | \
+>  	BIT_ULL(HW_FEATURE_COHERENCY_REG))
+>  
+>  #define hw_features_g51 hw_features_g72
+> @@ -77,6 +79,7 @@ enum panfrost_hw_feature {
+>  	BIT_ULL(HW_FEATURE_PROTECTED_MODE) | \
+>  	BIT_ULL(HW_FEATURE_PROTECTED_DEBUG_MODE) | \
+>  	BIT_ULL(HW_FEATURE_IDVS_GROUP_SIZE) | \
+> +	BIT_ULL(HW_FEATURE_AARCH64_MMU) | \
+>  	BIT_ULL(HW_FEATURE_COHERENCY_REG))
+>  
+>  #define hw_features_g76 (\
 
