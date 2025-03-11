@@ -1,40 +1,40 @@
 Received: from naesa05.arrow.com (naesa05.arrow.com [216.150.161.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B24B1E9B34;
-	Tue, 11 Mar 2025 07:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C842222CE;
+	Tue, 11 Mar 2025 07:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.150.161.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741678484; cv=none; b=CX964Kz86v72G2PDHoZiPPSpE/oeij55etDeHGcbfo9BVureGEHxqxMX50J7VbvT+GrQOa7V1A50zr29voQx9xK3jCPL9HlQhdaXxYLEE/TDoelq2ya31Pf4oRo7Vb/6kUMQcm1AikkrjKfewThHt/ywxQb0M1FB0UmOyDn9ayI=
+	t=1741678486; cv=none; b=TNBNdL2UFf3wdYgH23z1vngi1zlJvaXZ20ko2dMj7U6FL6aVK1YPy0T2FymYlYju2oMqvv/x6oIqe9cexu0UCYnGSva5FGXg1ipuwvZ0L17TRFRFBqYcGWabXG16x8gsSJ4SlANztN81XoR8xvF8rl+Vpw/4Jp+/8f1HZSwaFis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741678484; c=relaxed/simple;
-	bh=aR5wXVzzwCMTGciJgNgFTZx8tZMYxM5ueduU4KTlfJI=;
+	s=arc-20240116; t=1741678486; c=relaxed/simple;
+	bh=3hrFC8akR20pQMYn01FDGTaAf1FudakKyQp4tQR7was=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UUbEbljEuqyUwMxuhvBi4cwi4KcQAHEk3M1COJFbsOV4bN3M6fEtPaex3NSnGgSJxYUt/XD8BYToSrQrQJ5SNbrUJYqAgYp6oX2cquHdBVkOo9jlrspQtE8UQyTzQ10uK+CnDeCI5qeb/71TIQifxmObQhe3DAj3ZdSuuDo0UHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=XXvdnYHr; arc=none smtp.client-ip=216.150.161.26
+	 MIME-Version; b=mjooYki671vBJFh2bu77nhzB3IYhIP3rTspIysahCmgQ5NekzfHRUMkv8Qc52DMowNkt50uVPkgWN81m+vhOtWhNzrxVv7wnv2wOCmtOr3BPtgBqDc3CXDpcG/MZ1brV0t//rJC0SP+XaNfcMUUBB1DJ8e0v6C4MfSoD66aPfFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=hRQtnZDv; arc=none smtp.client-ip=216.150.161.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="XXvdnYHr"
+	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="hRQtnZDv"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=einfochips.com; i=@einfochips.com; l=2230; q=dns/txt;
-  s=NAESA-Selector1; t=1741678482; x=1773214482;
+  d=einfochips.com; i=@einfochips.com; l=881; q=dns/txt;
+  s=NAESA-Selector1; t=1741678484; x=1773214484;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aR5wXVzzwCMTGciJgNgFTZx8tZMYxM5ueduU4KTlfJI=;
-  b=XXvdnYHrlJaX6ww3xegaW4sRMbxVpyjpq+n6nzau5m1aqmvCSC4OqvXk
-   AZuWHZYOx41D92pDIwehhxFRf8RsHeHSwZixRndu+GyYXDEH8pLJuYVmP
-   +Tf4zIBIt5AGdx4X/t0uelL6UWV5Q0lGS3duYbN4jWpoz6VJlUu+bRnJI
-   K437qv+8ptjEkgB1CPSPD8+nUKGOlyM7JYyCLlAC71jPcrhm98bIiez6l
-   BGy+1g0fN6fF+PkmbofP69ugRRpuXNXqWG067DcJnOg6wn2hF+/gmH13+
-   yloYbAhtQbkloHJ6iyzp7mMIsdMp+vr45uVQa+3lsFHMM63Cdp6P46bSp
-   A==;
-X-CSE-ConnectionGUID: eDOvZtSlSUedXniG4qKA9w==
-X-CSE-MsgGUID: dY/Zu0H5Qu+C+HGVPOGk+Q==
+  bh=3hrFC8akR20pQMYn01FDGTaAf1FudakKyQp4tQR7was=;
+  b=hRQtnZDv91c20ARrwXt8PzgrIGL2D2aQG+95besuKhWX2gm6cyEz2nzC
+   b/7rwyYFWzafNo3BfUmsHw0pc8n9NwQLwHFZ2c1lP0QnJoLSng0EsfitR
+   HPFjLlE11FmI5ma+X7k5rlCevB7d+nWq26glJOU3BCffvV7oPRmXRZKWB
+   9jOstv0MuGPeajAywC/pYSDaxYO+a0IPaGz4uBOumr1KHqxWTHT5q/Kwd
+   93E0+hJsN8BAyhaVt2RCpSUmu3BYjnkcXL322UyNWj2cffH4qbl6kHqur
+   yMLiWLA6ip5vzTSLUGvveoLNGv7rta2nxf+xAICflItPvg91+5wJeJzm/
+   w==;
+X-CSE-ConnectionGUID: f0bM0WMnRl2RZ4csouz/9w==
+X-CSE-MsgGUID: Q5F2m52QQCSqIHzr75EAOQ==
 X-IronPort-AV: E=Sophos;i="6.14,238,1736838000"; 
-   d="scan'208";a="20386393"
+   d="scan'208";a="20386400"
 Received: from unknown (HELO eicahmirelay01.einfochips.com) ([10.100.49.50])
-  by naesa05out.arrow.com with ESMTP; 11 Mar 2025 01:34:40 -0600
+  by naesa05out.arrow.com with ESMTP; 11 Mar 2025 01:34:42 -0600
 Received: from AHMCPU1888.ap.corp.arrow.com ([172.25.5.100]) by eicahmirelay01.einfochips.com with Microsoft SMTPSVC(10.0.14393.4169);
 	 Tue, 11 Mar 2025 13:04:33 +0530
 From: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
@@ -64,9 +64,9 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 05/10] dt-bindings: cache: sifive,ccache0: Add ESWIN EIC7700 SoC compatibility
-Date: Tue, 11 Mar 2025 13:04:27 +0530
-Message-Id: <20250311073432.4068512-6-pinkesh.vaghela@einfochips.com>
+Subject: [PATCH 06/10] cache: sifive_ccache: Add ESWIN EIC7700 support
+Date: Tue, 11 Mar 2025 13:04:28 +0530
+Message-Id: <20250311073432.4068512-7-pinkesh.vaghela@einfochips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250311073432.4068512-1-pinkesh.vaghela@einfochips.com>
 References: <20250311073432.4068512-1-pinkesh.vaghela@einfochips.com>
@@ -77,87 +77,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 11 Mar 2025 07:34:33.0003 (UTC) FILETIME=[0834FFB0:01DB9258]
+X-OriginalArrivalTime: 11 Mar 2025 07:34:33.0098 (UTC) FILETIME=[08437EA0:01DB9258]
 
-From: Pritesh Patel <pritesh.patel@einfochips.com>
+This adds support for the ESWIN EIC7700 SoC which also features this
+SiFive composable cache controller.
 
-This cache controller is also used on the ESWIN EIC7700 SoC.
-However, it have 256KB private L2 Cache and shared L3 Cache of 4MB.
-So add dedicated compatible string for it.
-
-Signed-off-by: Pritesh Patel <pritesh.patel@einfochips.com>
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
 Signed-off-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
 ---
- .../bindings/cache/sifive,ccache0.yaml        | 28 +++++++++++++++++--
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ drivers/cache/sifive_ccache.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml b/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml
-index 7e8cebe21584..11e9df2cd153 100644
---- a/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml
-+++ b/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml
-@@ -39,6 +39,7 @@ properties:
-           - const: cache
-       - items:
-           - enum:
-+              - eswin,eic7700-l3-cache
-               - starfive,jh7100-ccache
-               - starfive,jh7110-ccache
-           - const: sifive,ccache0
-@@ -55,10 +56,10 @@ properties:
-     enum: [2, 3]
+diff --git a/drivers/cache/sifive_ccache.c b/drivers/cache/sifive_ccache.c
+index 6874b72ec59d..e1a283805ea7 100644
+--- a/drivers/cache/sifive_ccache.c
++++ b/drivers/cache/sifive_ccache.c
+@@ -118,6 +118,8 @@ static void ccache_config_read(void)
+ }
  
-   cache-sets:
--    enum: [1024, 2048]
-+    enum: [1024, 2048, 4096]
- 
-   cache-size:
--    const: 2097152
-+    enum: [2097152, 4194304]
- 
-   cache-unified: true
- 
-@@ -89,6 +90,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - eswin,eic7700-l3-cache
-               - sifive,fu740-c000-ccache
-               - starfive,jh7100-ccache
-               - starfive,jh7110-ccache
-@@ -122,11 +124,31 @@ allOf:
-         cache-sets:
-           const: 2048
- 
--    else:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - microchip,mpfs-ccache
-+              - sifive,fu540-c000-ccache
-+
-+    then:
-       properties:
-         cache-sets:
-           const: 1024
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - eswin,eic7700-l3-cache
-+
-+    then:
-+      properties:
-+        cache-sets:
-+          const: 4096
-+
-   - if:
-       properties:
-         compatible:
+ static const struct of_device_id sifive_ccache_ids[] = {
++	{ .compatible = "eswin,eic7700-l3-cache",
++	  .data = (void *)(QUIRK_NONSTANDARD_CACHE_OPS) },
+ 	{ .compatible = "sifive,fu540-c000-ccache" },
+ 	{ .compatible = "sifive,fu740-c000-ccache" },
+ 	{ .compatible = "starfive,jh7100-ccache",
 -- 
 2.25.1
 
