@@ -1,90 +1,122 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B3922FF21
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCDA233141
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741688242; cv=none; b=Pu6oVl9Fzl+GDaQGLroF9fb2o4/VopiUqj+LL+P774qZPO8ivjjXgEAAI3y8ylvKHKnX0zXyt65EkoAc+3pm86dK0nTyKCV1wH43TRa3C3WBhXP7lvwWug1HcyUVosmB2YXjs+3p/6cPnVc9WAXXsxquvOo70F6IZDb9t+WxRpw=
+	t=1741688258; cv=none; b=GLMVrEEcO2Ctzxe7aY6MKQm14paRm21GIGJIXZ+IHNWNCEoneFymYS4LLaWnArQKm1zX/NVxiw47LW2Z+BeG7J91uQDO101DLMlDW35MoJYDWLeAFhgKA3sIZSGsd8AFSopCKtWmlxzOVPEilOTnQwTlmLxNR4uar7dTQVABuwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741688242; c=relaxed/simple;
-	bh=S68F0p9DZTIu/HyAQHubLO+Xj56dmvH0z4g7aDCGnsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SxtLTdwaBUfl1MlVDTMbCxGNr3ymBb0MU3MdjMxINahCgrskl0yrZqEx2PIiA4accxOw4VFi3XAg0Ptr0vyri4nblS0jmRTtfWfQIcF9uU16W8BIsyaom/bUycK6qUFE+pCwny7TP2oZp57RDTkzRFv4Tt0yPH3lMwMuHJpE/2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PwNDCz7Q; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PwNDCz7Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/fIuRiwIyFbYOrfo9UeCUcec6cgs2iWB52qR01wSLRQ=; b=PwNDCz7QmRKf2FO+fz5BGttAgY
-	ldbfe8VizOpKza1lMKk0u6ZgSEBpRQ6oTmttRstrwqk02refECeBnzn9Qv4Zq5/cKSh/EgCZPJTmL
-	hQSQc1yhP2CEkAww3gQbTn1e/ZjLRB6uTC0Il9nw8dBqwJJceJ6+gKjGEdGf01ajpM1lIzYWv8XrD
-	FAAuEFxLUVL7FvSJN0/wN6RkpmktXy8Y66ofeRqn5U9ZGPJy6IjtGUB/lcHfLIBUoOx59Lq9UUiTm
-	YPTlGiqgTGGFqKle9gUYJWQAg4wX52FRnL7ID9A3Kp9g3GiOGYMrNAf9wtRDeTrKyRIgLmGdzDYhQ
-	JBS5rSRg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1trwfi-000000027qG-3GA3;
-	Tue, 11 Mar 2025 10:17:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5BD063006C0; Tue, 11 Mar 2025 11:17:14 +0100 (CET)
-Date: Tue, 11 Mar 2025 11:17:14 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v9 00/11] futex: Add support task local hash maps.
-Message-ID: <20250311101714.GC19424@noisy.programming.kicks-ass.net>
-References: <20250225170914.289358-1-bigeasy@linutronix.de>
- <20250303105416.GY11590@noisy.programming.kicks-ass.net>
- <20250303141753.tF-FoCm1@linutronix.de>
- <20250303164015.HHfy1Ibj@linutronix.de>
- <20250304145837.a8g07J-k@linutronix.de>
- <20250305090237.2Q9GwRA1@linutronix.de>
- <20250310160102.GG19344@noisy.programming.kicks-ass.net>
- <20250310162710.K9WY5tzN@linutronix.de>
+	s=arc-20240116; t=1741688258; c=relaxed/simple;
+	bh=vwnC4cysFF88dB2KQIGKsdb28HdDbXdSKUnr6pZotdE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YhqnASvEO5AVYMsQIene6pFh6IAu+WcjOpXB73NFEzJq51uULwgc1GWB9v9N8o/qWXC1Vq7oSQtP4CU6Szqhb2yotayLc/Ff6sHCT43aqSxG6z5tg28BSg6JMH6JtojABT5Hloc+6b330LNNAEjZDL+1NS3H8IBi9pxpUCw3WEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
+Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.emlix.com (Postfix) with ESMTPS id DF2925F845;
+	Tue, 11 Mar 2025 11:17:32 +0100 (CET)
+From: Rolf Eike Beer <eb@emlix.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+ Yuntao Liu <liuyuntao12@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm32: simplify ARM_MMU_KEEP usage
+Date: Tue, 11 Mar 2025 11:17:32 +0100
+Message-ID: <2225298.Mh6RI2rZIc@devpool47.emlix.com>
+Organization: emlix GmbH
+In-Reply-To:
+ <CACRpkdaAMu9WtD3a_XXGEwMfyFx6F-a263COna13eUWB0vqbcQ@mail.gmail.com>
+References:
+ <2200295.irdbgypaU6@devpool47.emlix.com>
+ <1811814.VLH7GnMWUR@devpool47.emlix.com>
+ <CACRpkdaAMu9WtD3a_XXGEwMfyFx6F-a263COna13eUWB0vqbcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310162710.K9WY5tzN@linutronix.de>
+Content-Type: multipart/signed; boundary="nextPart3678204.R56niFO833";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Mon, Mar 10, 2025 at 05:27:10PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-03-10 17:01:02 [+0100], Peter Zijlstra wrote:
-> > On Wed, Mar 05, 2025 at 10:02:37AM +0100, Sebastian Andrzej Siewior wrote:
-> > > On 2025-03-04 15:58:39 [+0100], To Peter Zijlstra wrote:
-> > > > hash. That is why I had the `released' member.
-> > > 
-> > > The box was still alive this morning so it did survive >12h testing. I
-> > > would bring back the `released' member back unless you have other
-> > > preferences.
-> > 
-> > Like I just wrote in that other email; I'm a bit confused as to how this
-> > can happen. If rcuref_put() returns success, then the value is DEAD. It must
-> > then either be decremented below RELEASED or incremented past NOREF in
-> > order for rcuref_read() to no longer return 0.
-> 
-> We can't rely on 0 to be released as it might become active. We could
-> change rcuref_read() to return 0 if it could be obtained and -1 if it
-> can not.
-> We don't have many users atm so an audit should be quick.
+--nextPart3678204.R56niFO833
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Rolf Eike Beer <eb@emlix.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] arm32: simplify ARM_MMU_KEEP usage
+Date: Tue, 11 Mar 2025 11:17:32 +0100
+Message-ID: <2225298.Mh6RI2rZIc@devpool47.emlix.com>
+Organization: emlix GmbH
+MIME-Version: 1.0
 
-Right, so I failed to understand initially. When DEAD it stays 0, but
-there is indeed the one case where it isn't yet DEAD but still returns
-0.
+On Dienstag, 24. Dezember 2024 20:25:19 Mitteleurop=C3=A4ische Normalzeit L=
+inus=20
+Walleij wrote:
+> On Wed, Dec 18, 2024 at 1:13=E2=80=AFPM Rolf Eike Beer <eb@emlix.com> wro=
+te:
+> > On Montag, 7. Oktober 2024 15:11:40 Mitteleurop=C3=A4ische Normalzeit R=
+olf Eike
+> >=20
+> > Beer wrote:
+> > > All current users need to add a KEEP() around the argument so the val=
+ue
+> > > is
+> > > actually kept, which doesn't feel very natural and is prone to upcomi=
+ng
+> > > bugs as the name suggests that this macro alone already keeps things.
+> > > Move that directly into the definition.
+> > >=20
+> > > Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+> > > ---
+> >=20
+> > Ping?
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> Please put the patch into Russell's patch tracker so he can apply it.
 
-Making the DEAD return -1 seems like a good solution.
+Ping?
+
+It's available in the tracker here:=20
+  https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=3D9439/1
+=2D-=20
+Rolf Eike Beer
+
+We are nominated for the embedded award Visit us at the embedded=20
+world 2025 March 11th to 13th, 2025 | Nuremberg Find us in hall 4 at=20
+booth 336
+
+emlix GmbH
+Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
+Phone +49 (0)551 30664-0, e-mail info@emlix.com
+District Court of G=C3=B6ttingen, Registry Number HR B 3160
+Managing Directors: Heike Jordan, Dr. Uwe Kracke
+VAT ID No. DE 205 198 055
+Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
+Office Bonn: Bachstr. 6, 53115 Bonn, Germany
+http://www.emlix.com
+
+emlix - your embedded Linux partner
+--nextPart3678204.R56niFO833
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCZ9ANvAAKCRCr5FH7Xu2t
+/PHoA/993Ou2lJsA0KucMXYTORvPiVIyVOFrdJcivrILl9JVVwlu4labkgljU32D
+VDA9k1/sWIEo/dSJR5lkZxyGPbx8t70fjEZdjXYGzqvFksHLJJW6sWn9KhPgdlkF
+pbfy56d2Jym8q/AzdQJcdAyKdTnEE/vtgzmiMirdcsnQvMzNSg==
+=CFUV
+-----END PGP SIGNATURE-----
+
+--nextPart3678204.R56niFO833--
+
+
+
