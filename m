@@ -1,421 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365E12253AB;
-	Tue, 11 Mar 2025 20:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298891E8336;
+	Tue, 11 Mar 2025 20:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741723204; cv=none; b=gGbfRnMnX/8rkxN3HAUIGOxzk6Za4mOZxuPSqFf8pXLpKdCt3+rs/BlmrKLGV2K28vieRZQKS1/t6tRdcmzPhRFLgAptVuYCiAgM2r6NJo9eComLiAJR5nKZopVv8b5QnMMoSsYtA6deUu5N2f0ytQHS7c+4LRdrZlq6wWHFc1Y=
+	t=1741723284; cv=none; b=V/XsF7DfPOWVlCKPAXU/Ou0NJnf4OnZSlY0eIt8Hu3KvY8EDnKVvDztrQNkeTByG6ofop1rC2XnKAhqoIA08WrTNwD7UvHfh1/NUZr13K8vAaLAKJ1jS23d3DQh0E+LPk69a3M9Vo36TqV9TIkufVK4ijhkF7/e7N0VpAcs2qmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741723204; c=relaxed/simple;
-	bh=v/3az4vRYWs1ucCK+L7O2rSWOUhMtd/+E8koIZNf1pk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e5o+qU3ZMvw7wikM99uID7UqzL6U+ytOvNdP6kHL6gzNFc2tczGJrhgsfFjJCa4f5ykPIqB//Lpxwa2HnDaVS2vUWjmjBJwqAyhqb2FN5Y1m0wY2a/h4EF/+7ztSII5th2ZeWmkOnwJm9o52kMYok3YHoPuxMrCTODHH8h0GZoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLzqCI33; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741723284; c=relaxed/simple;
+	bh=D2A2IZnBHN+EoyX6mct98H9AZxLT/NlYZhNNNGH4hOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YclqaIFbroTYRAjL5RDOfGYrEkRlSIEEyclsA2J+EkfM0kDshIekeUjBa7CFWF4u6/pu5zES11tmEjDxtWv7TW4+s7clz1kWBIHGm4UUi3vr7VzOPX4JmS0tHDGyJSG53gGUQbWH5pDO/6p99ejYWzBoaxbLS+yA2kE7jllg+DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aRKYs3u8; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLzqCI33"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92EF9C4CEEA;
-	Tue, 11 Mar 2025 19:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741723203;
-	bh=v/3az4vRYWs1ucCK+L7O2rSWOUhMtd/+E8koIZNf1pk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=PLzqCI33Rld89CMLqG4K05hZsXzto39OqGC8Ctlw9oBssd67NYytMot13Tsy+LPmA
-	 QN9rh68VTT7GjSVzb5UIu9UbR3TuVrlIp4cwwlAweFnBp691GTtiULPAUQQLK4V30i
-	 mTGOpceXlUjf/tbVI3a6QG7JXTLqLHagdJUSTU0BzGqFtPXeIVZ0aLzLSBmIm0nByQ
-	 u0mIh9LkHpr2OTzP0BUoE55lx0R2cQqOIAl0QzULSRCsFstwhHQRy8zF0vFbDbV15v
-	 zRNsnq8lVg8qabyi/pvnUgE6kfn4kiKvpUTwm/weVDi7ZUmMZzmddV3GFmKTKVg2Sx
-	 KzNBkYgi60aOA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Lyude Paul" <lyude@redhat.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
- <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
-  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Guangbo Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
- <tamird@gmail.com>,  "Markus Elfring" <Markus.Elfring@web.de>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 01/13] rust: hrtimer: introduce hrtimer support
-In-Reply-To: <a01b93484a4b67932413bf53f8a45cea315d8d58.camel@redhat.com>
-	(Lyude Paul's message of "Tue, 11 Mar 2025 13:06:56 -0400")
-References: <20250309-hrtimer-v3-v6-12-rc2-v12-0-73586e2bd5f1@kernel.org>
-	<20250309-hrtimer-v3-v6-12-rc2-v12-1-73586e2bd5f1@kernel.org>
-	<mgqJmos8H-QlK2HHH-RqPnV0apqkv5ljTKXvyRUHKyZvTBzorR0JGLwGK0MwHk-wLYoU19I-pRSrqJJKRCXfyQ==@protonmail.internalid>
-	<a01b93484a4b67932413bf53f8a45cea315d8d58.camel@redhat.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 11 Mar 2025 20:59:44 +0100
-Message-ID: <877c4vl4nj.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aRKYs3u8"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4394a823036so50645015e9.0;
+        Tue, 11 Mar 2025 13:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741723281; x=1742328081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8qFhtHxY/uDqNyIojZGB9+AuGiGGlLJ5Td0/uLKfH98=;
+        b=aRKYs3u8pL6iZV1KWN2iPGc5d1lxTK5E5KY4RVZi9vf5XnuyR3b2cCBL8fDaRTc1qj
+         kEmILXDTjklAOFvAzfGyjM3B+WMHeKdwnJfV5J5j9py5I7LaIqSsd/zyCptFJoT/s5bF
+         0R9viWpP/s2EvOCkYip85ZCkk4ATv/UiumZYjCAzso5xhn3HJxRH3A76zE6GPRXU1/sT
+         CRuR3TWVUs3X+4aqw4EkPRxUUaK+YTDeCVkCRGBdMNCizSZip5M70/U6ixxxkyzt1XJT
+         0ncFZgBffeG/jUWHJRMJDtCkr+Y7ODoeXdsEuWfEEgcMCWaDzqK4c6IbzjqWTTibqpD4
+         WfpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741723281; x=1742328081;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8qFhtHxY/uDqNyIojZGB9+AuGiGGlLJ5Td0/uLKfH98=;
+        b=TCvKQ8FkI+XKTFsFplUqpVMLINpfSWFb8JzvZOX5ma6qUhXNrQmrCDpuAyWfzbeF74
+         Kxm6B/8OpeGcLMxIKspeGrhbZUMfVkpSu/IQuGMcnlIkuNuCj11QU5mZfPckYBK/ai8b
+         KJVZ9yPndAPt6AkbOSDwQOECaO7yAJFng6ICPG7PsOI5I9U3F9EhbEdGHC/oBIeYxxgV
+         hbgxnDJ8axaguvOmnB+cCLi9bFEPn0s7JLQiUi6eDUqTpt9NrVd3GrSahzUhYcxvQzIr
+         vmMwklNpLn4t0v66rEhvPGlwlZpq7UXHVr+Mb3AS6EpP+NeTwx2WVZ4rY97By2Iqx6Xk
+         jMfw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/JkcEnvhMoDNNpp1/l4/pwYe0/e0eZUdJUO1uTXjOHYwa9NmsfmHWog4zPrU2x0mllbLavQbbuaHdvwbn@vger.kernel.org, AJvYcCUVuPohIHccXgMygpfj1+Kvl69j1iLfCgJS8LjbSLgcnSNaaCDnWG0aevJ/Rsk0MB3tbnu5/Ababmhf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv3+ksm5j5MDLY9mLvhOnNmtq/rnUPsk5OsZI4svDp5tm5opBz
+	vo+oa12laj7MQDV8P7KHCy6oJQwM+YmgCmGsBcdGh/94vGRrEUsMEZXQcQ==
+X-Gm-Gg: ASbGnctkMmpML4gjxYhtWN2MW03bJ9oKudEC9UUT35mYy7EFcvoqxXP2zDkcPsUztK3
+	mIup0zFSrUlbXIlqvEIsO5SqnuWWVVwQ/sgXeEX2IFNROgZb2tK4oifdSsdNALd9rR+H5JJe8my
+	2zyLV0uXp2kRmbHmSlQD3RSSR4y/ma7Cx58hvaY4VRNj4qtzUXuPNaofeG0giw1GF6+0edWqOJq
+	99O7LmdggDOyS/hIewL2cKsUJIEW3+17g1neoM8rfJR+kATscVe0/P/ENTolqTIBzuQS5SERmIr
+	MYuVLh+ml0ZpsZg83/fdrFmtR6bZm4tMI1gS+w/Lxz2YbYpyDumA4qcXQ+U2bEqtczT9u40YYaS
+	hDw4sI7M=
+X-Google-Smtp-Source: AGHT+IGtTEJDgKx6kXjkrxG8yv5xGmC0q8UwVL6/L9qjkOa0EZUeDeIKcCgT2OIJ9lu3yQy0ryso/A==
+X-Received: by 2002:a05:600c:1c81:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43d01be6389mr74488735e9.14.1741723281123;
+        Tue, 11 Mar 2025 13:01:21 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd42c588dsm215421735e9.21.2025.03.11.13.01.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 13:01:20 -0700 (PDT)
+Date: Tue, 11 Mar 2025 20:01:19 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, "Artem S. Tashkinov" <aros@gmx.com>,
+ linux-ext4@vger.kernel.org, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>
+Subject: Re: A syscall for changing birth time
+Message-ID: <20250311200119.4802d896@pumpkin>
+In-Reply-To: <20250311170725.GE8837@mit.edu>
+References: <bda3fa3f-dd12-40de-841a-e4c216ab533f@gmx.com>
+	<20250310135828.GB8837@mit.edu>
+	<20250310221243.0d5db7b3@pumpkin>
+	<20250311044935.GD69932@mit.edu>
+	<20250311045635.GP2023217@ZenIV>
+	<20250311170725.GE8837@mit.edu>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-"Lyude Paul" <lyude@redhat.com> writes:
+On Tue, 11 Mar 2025 13:07:25 -0400
+"Theodore Ts'o" <tytso@mit.edu> wrote:
 
-> Only a few nits below!
->
-> On Sun, 2025-03-09 at 16:18 +0100, Andreas Hindborg wrote:
->> Add support for intrusive use of the hrtimer system. For now,
->> only add support for embedding one timer per Rust struct.
->>
->> The hrtimer Rust API is based on the intrusive style pattern introduced by
->> the Rust workqueue API.
->>
->> Acked-by: Frederic Weisbecker <frederic@kernel.org>
->> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
->> Reviewed-by: Tamir Duberstein <tamird@gmail.com>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->> ---
->>  rust/kernel/time.rs         |   2 +
->>  rust/kernel/time/hrtimer.rs | 352 ++++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 354 insertions(+)
->>
->> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
->> index 379c0f5772e5..fab1dadfa589 100644
->> --- a/rust/kernel/time.rs
->> +++ b/rust/kernel/time.rs
->> @@ -8,6 +8,8 @@
->>  //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
->>  //! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
->>
->> +pub mod hrtimer;
->> +
->>  /// The number of nanoseconds per millisecond.
->>  pub const NSEC_PER_MSEC: i64 = bindings::NSEC_PER_MSEC as i64;
->>
->> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
->> new file mode 100644
->> index 000000000000..20d3440c2a02
->> --- /dev/null
->> +++ b/rust/kernel/time/hrtimer.rs
->> @@ -0,0 +1,352 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +//! Intrusive high resolution timers.
->> +//!
->> +//! Allows running timer callbacks without doing allocations at the time of
->> +//! starting the timer. For now, only one timer per type is allowed.
->> +//!
->> +//! # Vocabulary
->> +//!
->> +//! States:
->> +//!
->> +//! - Stopped: initialized but not started, or cancelled, or not restarted.
->> +//! - Started: initialized and started or restarted.
->> +//! - Running: executing the callback.
->> +//!
->> +//! Operations:
->> +//!
->> +//! * Start
->> +//! * Cancel
->> +//! * Restart
->> +//!
->> +//! Events:
->> +//!
->> +//! * Expire
->> +//!
->> +//! ## State Diagram
->> +//!
->> +//! ```text
->> +//!                                                   Return NoRestart
->> +//!                       +---------------------------------------------------------------------+
->> +//!                       |                                                                     |
->> +//!                       |                                                                     |
->> +//!                       |                                                                     |
->> +//!                       |                                         Return Restart              |
->> +//!                       |                                      +------------------------+     |
->> +//!                       |                                      |                        |     |
->> +//!                       |                                      |                        |     |
->> +//!                       v                                      v                        |     |
->> +//!           +-----------------+      Start      +------------------+           +--------+-----+--+
->> +//!           |                 +---------------->|                  |           |                 |
->> +//! Init      |                 |                 |                  |  Expire   |                 |
->> +//! --------->|    Stopped      |                 |      Started     +---------->|     Running     |
->> +//!           |                 |     Cancel      |                  |           |                 |
->> +//!           |                 |<----------------+                  |           |                 |
->> +//!           +-----------------+                 +---------------+--+           +-----------------+
->> +//!                                                     ^         |
->> +//!                                                     |         |
->> +//!                                                     +---------+
->> +//!                                                      Restart
->> +//! ```
->> +//!
->> +//!
->> +//! A timer is initialized in the **stopped** state. A stopped timer can be
->> +//! **started** by the `start` operation, with an **expiry** time. After the
->> +//! `start` operation, the timer is in the **started** state. When the timer
->> +//! **expires**, the timer enters the **running** state and the handler is
->> +//! executed. After the handler has returned, the timer may enter the
->> +//! **started* or **stopped** state, depending on the return value of the
->> +//! handler. A timer in the **started** or **running** state may be **canceled**
->> +//! by the `cancel` operation. A timer that is cancelled enters the **stopped**
->> +//! state.
->> +//!
->> +//! A `cancel` or `restart` operation on a timer in the **running** state takes
->> +//! effect after the handler has returned and the timer has transitioned
->> +//! out of the **running** state.
->> +//!
->> +//! A `restart` operation on a timer in the **stopped** state is equivalent to a
->> +//! `start` operation.
->> +
->> +use crate::{init::PinInit, prelude::*, time::Ktime, types::Opaque};
->> +use core::marker::PhantomData;
->> +
->> +/// A timer backed by a C `struct hrtimer`.
->> +///
->> +/// # Invariants
->> +///
->> +/// * `self.timer` is initialized by `bindings::hrtimer_setup`.
->> +#[pin_data]
->> +#[repr(C)]
->> +pub struct HrTimer<T> {
->> +    #[pin]
->> +    timer: Opaque<bindings::hrtimer>,
->> +    _t: PhantomData<T>,
->> +}
->> +
->> +// SAFETY: Ownership of an `HrTimer` can be moved to other threads and
->> +// used/dropped from there.
->> +unsafe impl<T> Send for HrTimer<T> {}
->> +
->> +// SAFETY: Timer operations are locked on the C side, so it is safe to operate
->> +// on a timer from multiple threads.
->> +unsafe impl<T> Sync for HrTimer<T> {}
->> +
->> +impl<T> HrTimer<T> {
->> +    /// Return an initializer for a new timer instance.
->> +    pub fn new() -> impl PinInit<Self>
->> +    where
->> +        T: HrTimerCallback,
->> +    {
->> +        pin_init!(Self {
->> +            // INVARIANT: We initialize `timer` with `hrtimer_setup` below.
->> +            timer <- Opaque::ffi_init(move |place: *mut bindings::hrtimer| {
->> +                // SAFETY: By design of `pin_init!`, `place` is a pointer to a
->> +                // live allocation. hrtimer_setup will initialize `place` and
->> +                // does not require `place` to be initialized prior to the call.
->> +                unsafe {
->> +                    bindings::hrtimer_setup(
->> +                        place,
->> +                        Some(T::Pointer::run),
->> +                        bindings::CLOCK_MONOTONIC as i32,
->> +                        bindings::hrtimer_mode_HRTIMER_MODE_REL,
->> +                    );
->> +                }
->> +            }),
->> +            _t: PhantomData,
->> +        })
->> +    }
->> +
->> +    /// Get a pointer to the contained `bindings::hrtimer`.
->> +    ///
->> +    /// This function is useful to get access to the value without creating
->> +    /// intermediate references.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// `this` must point to a live allocation of at least the size of `Self`.
->> +    unsafe fn raw_get(this: *const Self) -> *mut bindings::hrtimer {
->> +        // SAFETY: The field projection to `timer` does not go out of bounds,
->> +        // because the caller of this function promises that `this` points to an
->> +        // allocation of at least the size of `Self`.
->> +        unsafe { Opaque::raw_get(core::ptr::addr_of!((*this).timer)) }
->> +    }
->> +
->> +    /// Cancel an initialized and potentially running timer.
->> +    ///
->> +    /// If the timer handler is running, this function will block until the
->> +    /// handler returns.
->> +    ///
->> +    /// Note that the timer might be started by a concurrent start operation. If
->> +    /// so, the timer might not be in the **stopped** state when this function
->> +    /// returns.
->> +    ///
->> +    /// Users of the `HrTimer` API would not usually call this method directly.
->> +    /// Instead they would use the safe [`HrTimerHandle::cancel`] on the handle
->> +    /// returned when the timer was started.
->> +    ///
->> +    /// This function is useful to get access to the value without creating
->> +    /// intermediate references.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// `this` must point to a valid `Self`.
->> +    #[allow(dead_code)]
->> +    pub(crate) unsafe fn raw_cancel(this: *const Self) -> bool {
->> +        // SAFETY: `this` points to an allocation of at least `HrTimer` size.
->> +        let c_timer_ptr = unsafe { HrTimer::raw_get(this) };
->> +
->> +        // If the handler is running, this will wait for the handler to return
->> +        // before returning.
->> +        // SAFETY: `c_timer_ptr` is initialized and valid. Synchronization is
->> +        // handled on the C side.
->> +        unsafe { bindings::hrtimer_cancel(c_timer_ptr) != 0 }
->> +    }
->> +}
->> +
->> +/// Implemented by pointer types that point to structs that contain a [`HrTimer`].
->> +///
->> +/// `Self` must be [`Sync`] because it is passed to timer callbacks in another
->> +/// thread of execution (hard or soft interrupt context).
->> +///
->> +/// Starting a timer returns a [`HrTimerHandle`] that can be used to manipulate
->> +/// the timer. Note that it is OK to call the start function repeatedly, and
->> +/// that more than one [`HrTimerHandle`] associated with a [`HrTimerPointer`] may
->> +/// exist. A timer can be manipulated through any of the handles, and a handle
->> +/// may represent a cancelled timer.
->> +pub trait HrTimerPointer: Sync + Sized {
->> +    /// A handle representing a started or restarted timer.
->> +    ///
->> +    /// If the timer is running or if the timer callback is executing when the
->> +    /// handle is dropped, the drop method of [`HrTimerHandle`] should not return
->> +    /// until the timer is stopped and the callback has completed.
->> +    ///
->> +    /// Note: When implementing this trait, consider that it is not unsafe to
->> +    /// leak the handle.
->> +    type TimerHandle: HrTimerHandle;
->> +
->> +    /// Start the timer with expiry after `expires` time units. If the timer was
->> +    /// already running, it is restarted with the new expiry time.
->> +    fn start(self, expires: Ktime) -> Self::TimerHandle;
->> +}
->> +
->> +/// Implemented by [`HrTimerPointer`] implementers to give the C timer callback a
->> +/// function to call.
->> +// This is split from `HrTimerPointer` to make it easier to specify trait bounds.
->> +pub trait RawHrTimerCallback {
->> +    /// Type of the parameter passed to [`HrTimerCallback::run`]. It may be
->> +    /// [`Self`], or a pointer type derived from [`Self`].
->> +    type CallbackTarget<'a>;
->> +
->> +    /// Callback to be called from C when timer fires.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// Only to be called by C code in the `hrtimer` subsystem. `this` must point
->> +    /// to the `bindings::hrtimer` structure that was used to start the timer.
->> +    unsafe extern "C" fn run(this: *mut bindings::hrtimer) -> bindings::hrtimer_restart;
->> +}
->> +
->> +/// Implemented by structs that can be the target of a timer callback.
->> +pub trait HrTimerCallback {
->> +    /// The type whose [`RawHrTimerCallback::run`] method will be invoked when
->> +    /// the timer expires.
->> +    type Pointer<'a>: RawHrTimerCallback;
->> +
->> +    /// Called by the timer logic when the timer fires.
->> +    fn run(this: <Self::Pointer<'_> as RawHrTimerCallback>::CallbackTarget<'_>)
->> +    where
->> +        Self: Sized;
->> +}
->> +
->> +/// A handle representing a potentially running timer.
->> +///
->> +/// More than one handle representing the same timer might exist.
->> +///
->> +/// # Safety
->> +///
->> +/// When dropped, the timer represented by this handle must be cancelled, if it
->> +/// is running. If the timer handler is running when the handle is dropped, the
->> +/// drop method must wait for the handler to return before returning.
->> +///
->> +/// Note: One way to satisfy the safety requirement is to call `Self::cancel` in
->> +/// the drop implementation for `Self.`
->> +pub unsafe trait HrTimerHandle {
->> +    /// Cancel the timer. If the timer is in the running state, block till the
->> +    /// handler has returned.
->> +    ///
->> +    /// Note that the timer might be started by a concurrent start operation. If
->> +    /// so, the timer might not be in the **stopped** state when this function
->> +    /// returns.
->> +    ///
->
-> Extraneous newline
->
->> +    fn cancel(&mut self) -> bool;
->> +}
->> +
->> +/// Implemented by structs that contain timer nodes.
->> +///
->> +/// Clients of the timer API would usually safely implement this trait by using
->> +/// the [`crate::impl_has_hr_timer`] macro.
->> +///
->> +/// # Safety
->> +///
->> +/// Implementers of this trait must ensure that the implementer has a
->> +/// [`HrTimer`] field and that all trait methods are implemented according to
->> +/// their documentation. All the methods of this trait must operate on the same
->> +/// field.
->> +pub unsafe trait HasHrTimer<T> {
->> +    /// Return a pointer to the [`HrTimer`] within `Self`.
->> +    ///
->> +    /// This function is useful to get access to the value without creating
->> +    /// intermediate references.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// `this` must be a valid pointer.
->> +    unsafe fn raw_get_timer(this: *const Self) -> *const HrTimer<T>;
->> +
->> +    /// Return a pointer to the struct that is containing the [`HrTimer`] pointed
->> +    /// to by `ptr`.
->> +    ///
->> +    /// This function is useful to get access to the value without creating
->> +    /// intermediate references.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// `ptr` must point to a [`HrTimer<T>`] field in a struct of type `Self`.
->> +    unsafe fn timer_container_of(ptr: *mut HrTimer<T>) -> *mut Self
->> +    where
->> +        Self: Sized;
->> +
->> +    /// Get pointer to the contained `bindings::hrtimer` struct.
->> +    ///
->> +    /// This function is useful to get access to the value without creating
->> +    /// intermediate references.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// `this` must be a valid pointer.
->> +    unsafe fn c_timer_ptr(this: *const Self) -> *const bindings::hrtimer {
->> +        // SAFETY: `this` is a valid pointer to a `Self`.
->> +        let timer_ptr = unsafe { Self::raw_get_timer(this) };
->> +
->> +        // SAFETY: timer_ptr points to an allocation of at least `HrTimer` size.
->> +        unsafe { HrTimer::raw_get(timer_ptr) }
->> +    }
->> +
->> +    /// Start the timer contained in the `Self` pointed to by `self_ptr`. If
->> +    /// it is already running it is removed and inserted.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// - `this` must point to a valid `Self`.
->> +    /// - Caller must ensure that the pointee of `this` lives until the timer
->> +    ///   fires or is canceled.
->> +    unsafe fn start(this: *const Self, expires: Ktime) {
->> +        // SAFETY: By function safety requirement, `this`is a valid `Self`.
->
-> ---------------------------------------------------------^
-> Missing a space over there
->
-> With that fixed:
->
-> Reviewed-by: Lyude Paul <lyude@redhat.com>
+> On Tue, Mar 11, 2025 at 04:56:35AM +0000, Al Viro wrote:
+> > On Tue, Mar 11, 2025 at 12:49:35AM -0400, Theodore Ts'o wrote:
+> >   
+> > > This really goes to my question of exactly how useful the file
+> > > creation time concept really is.  Perhaps that's why the developers at
+> > > the UC Berkley made ctime be "inode change time", I suspect when they
+> > > authored the BSD Fast File System 42 years ago.  Personally, while I
+> > > don't find "change time" to be all that useful --- I find "creation
+> > > time" an order of magnitude *more* useless.  :-)  
+> > 
+> > The third timestamp had been introduced in v7 and it had been "change
+> > time" from the very beginning, with incremental backups as stated
+> > rationale in filesys(5).  "I'm sure that" from David means "I couldn't
+> > be arsed to check my WAG"...  
+> 
+> 
+> I actually pulled down the V7 sources and there was a comment in
+> /usr/sys/h/ino.h which has a comment around the on-disk inode stating
+> "creation time" (see below).  These comments are also there up to
+> 3BSD, and changed to "inode change time" in the BSD 4.2 sources,
+> probably coincident with the BSD Fast File System implementation.
+> 
+> So to be fair to David, I'm guessing this is what he saw.
 
-Thanks!
+Quite likely - it was a long time ago and I didn't take an 'offsite
+backup' of the sources (and I definitely have nothing that will read
+the system disk from an old 68010 box).
+I didn't use Unix until the mid 80s - and I think that was SVR2 rather
+than anything Berkeley. Most of the systems were SVR4 - around the time
+of the initial collaboration between AT&T and Sun to get SMP working
+(which, IIRC, pulled some BSD code into SVR4).
 
+> I still maintain that "creation time" as a concept isn't terribly
+> useful, and that's probably *why* historical Unix systems have used
+> ctime as "change time" for decades.  Whether it's 42 years or 45 years
+> doesn't really change my point.
 
-Best regards,
-Andreas Hindborg
+I do have half a brain cell that remembers it not quite being 'file
+create' time - probably just changes to di_mode, di_uid or di_gid.
 
+Anyway it is all old history.
+
+	David
+
+> 
+>   		      		      	 - Ted
+> 
+> struct dinode
+> {
+> 	unsigned short	di_mode;     	/* mode and type of file */
+> 	short	di_nlink;    	/* number of links to file */
+> 	short	di_uid;      	/* owner's user id */
+> 	short	di_gid;      	/* owner's group id */
+> 	off_t	di_size;     	/* number of bytes in file */
+> 	char  	di_addr[40];	/* disk block addresses */
+> 	time_t	di_atime;   	/* time last accessed */
+> 	time_t	di_mtime;   	/* time last modified */
+> 	time_t	di_ctime;   	/* time created */
+> };
+> 
 
