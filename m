@@ -1,98 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08EF0264A97;
-	Tue, 11 Mar 2025 17:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64DF1C1F22;
+	Tue, 11 Mar 2025 17:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741712743; cv=none; b=uir6WYRSf8Lp1TBCrZbyh1KH8avrvuxUS4Ptlnzxy5TXFPiTovZXXwDLKq1VeAh21LHfQWOkdR19s1ZmWS5wdNDQRff64CxoUC7JHtDm/7IMkQwanT/3P5NV5aZg1gT7G6UH+WzwXp3blB5SpQ3H+mIxHVOd7FIyIFw2Rrm9B6I=
+	t=1741712809; cv=none; b=PgYtJf1jwI4jPw0wiHIwo5TEBXbASU9qAgJu7dVpR1jkIa83ppvct7psd0ksoWdfjLZdJGzYkEJcr6R6QL+jPddxS1ps5Lx84YEwzSxHQKSUcm5i8Kb4OlDkrORVm+zdT7cGBiPANs8N8JwY7POHn7wHJkZ3QXsTaSAy4dTjd3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741712743; c=relaxed/simple;
-	bh=UXWV4cibA3DBNOwARNqtXEB87A1SUJIL/bVUttg1dts=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OGadFAtWXB1sQSwuKSnrv6v05oiiFO0JEMbrbTCEdClDl4eAu/kjDz9w2itBI27DBjSSa5B6LKMl6+qfWWyKMAqLGqRfCeyBZ+hYlQ9sZmWK6KCUNXARp3o9BxvtI4NyixJYqnesPYgIYQleGvjsJAdYttCaJM3qOYgLqDRuXxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAC29152B;
-	Tue, 11 Mar 2025 10:05:52 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 584593F673;
-	Tue, 11 Mar 2025 10:05:40 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
+	s=arc-20240116; t=1741712809; c=relaxed/simple;
+	bh=+IMbgaDKO4pfeb8f3+ziXscBbtXePRp6KlUDd+itvZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R9sMVwPTPsT9CRJyE4JVZl+mv76GxH/veoSPIrkmanRm7zq11marywqcIuqa8N5vlGFNnT1XLRE8fXz/vzBHCBRDabuCL++Oz4Onx18unusDjWXhGzOiJfjLzqk9s6T4fQ/jm2EFcXvV1iZOVwjagf3hS9lX5RXtL+vS6IF8t1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOfvTkbv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOfvTkbv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB5B6C4CEEC;
+	Tue, 11 Mar 2025 17:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741712809;
+	bh=+IMbgaDKO4pfeb8f3+ziXscBbtXePRp6KlUDd+itvZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gOfvTkbvNhK+6cXDALS/kvu9RAhLsoF7MfHBT0prbiJtlOTfzxV6OzdqkYBhfiU+H
+	 FpHCkmzmoMyZuBXhdfmmcNY0SzbYfo9u6EhRmYJsLn+dWoPu4dAe2Dr7MtjvX5qJm3
+	 7fQXVjcgxNsEMcEC73DDKNn/zlc4lEIVXmmWd4dGcs0nguXc6ufstTQWtogEXMxSYH
+	 1x2LHGoJf6BwurbquclqYrGTSoDfxK+dxl19dTGUCrCejpkcG9R0zXEngL5/jJtaSG
+	 Uv3suZyIxO9F6x7xLoIuwK0VrgsHQCeYDYH6/v4Cjs2mpGGdP+Po9fVryy+BWBSM/l
+	 8IMtA3OFx/8HA==
+Date: Tue, 11 Mar 2025 14:06:45 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 6/6] Documentation: coresight: Document AUX pause and resume
-Date: Tue, 11 Mar 2025 17:04:51 +0000
-Message-Id: <20250311170451.611389-7-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250311170451.611389-1-leo.yan@arm.com>
-References: <20250311170451.611389-1-leo.yan@arm.com>
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	James Clark <james.clark@linaro.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: Re: [PATCH v2 11/11] perf python tracepoint: Switch to using
+ parse_events
+Message-ID: <Z9BtpXnqSUYKr1TK@x1>
+References: <20250228222308.626803-1-irogers@google.com>
+ <20250228222308.626803-12-irogers@google.com>
+ <Z89We45bGpeJvO9C@x1>
+ <Z89WvaIVyF7klGp6@x1>
+ <CAP-5=fXzva636zCZR2isdfrjT6mM3o42C+oGWNkGieqGVajfHA@mail.gmail.com>
+ <Z89ZYVgL_bT3ampz@x1>
+ <Z9BXdbWnX19ua5Mr@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9BXdbWnX19ua5Mr@x1>
 
-This adds description for AUX pause and resume.  It gives introduction
-for what's AUX pause and resume and records usage examples.
+On Tue, Mar 11, 2025 at 12:32:05PM -0300, Arnaldo Carvalho de Melo wrote:
+>                 if (field->flags & TEP_FIELD_IS_STRING &&
+>                     is_printable_array(data + offset, len)) {
+>                         ret = PyUnicode_FromString((char *)data + offset);
+>                 } else {
+>                         ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+>                         field->flags &= ~TEP_FIELD_IS_STRING;
+>                 }
+> 
+> 
+> For some reason in sessions where bytearrays are returned, and all comes
+> as bytearrays, the problem is not noticed.
+> 
+> But when it comes as a string it breaks after a short time, /me
+> scratches head...
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- .../trace/coresight/coresight-perf.rst        | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+I think I'm getting closer, with some debugging sprinkled in the python
+binding:
 
-diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-index d087aae7d492..30be89320621 100644
---- a/Documentation/trace/coresight/coresight-perf.rst
-+++ b/Documentation/trace/coresight/coresight-perf.rst
-@@ -78,6 +78,37 @@ enabled like::
- 
- Please refer to the kernel configuration help for more information.
- 
-+Fine-grained tracing with AUX pause and resume
-+----------------------------------------------
-+
-+Arm CoreSight may generate a large amount of hardware trace data, which
-+will lead to overhead in recording and distract users when reviewing
-+profiling result. To mitigate the issue of excessive trace data, Perf
-+provides AUX pause and resume functionality for fine-grained tracing.
-+
-+The AUX pause and resume can be triggered by associated events. These
-+events can be ftrace tracepoints (including static and dynamic
-+tracepoints) or PMU events (e.g. CPU PMU cycle event). To create a perf
-+session with AUX pause / resume, three configuration terms are
-+introduced:
-+
-+- "aux-action=start-paused": it is specified for the cs_etm PMU event to
-+  launch in a paused state.
-+- "aux-action=pause": an associated event is specified with this term
-+  to pause AUX trace.
-+- "aux-action=resume": an associated event is specified with this term
-+  to resume AUX trace.
-+
-+Example for triggering AUX pause and resume with ftrace tracepoints::
-+
-+  perf record -e cs_etm/aux-action=start-paused/k,syscalls:sys_enter_openat/aux-action=resume/,syscalls:sys_exit_openat/aux-action=pause/ ls
-+
-+Example for triggering AUX pause and resume with PMU event::
-+
-+  perf record -a -e cs_etm/aux-action=start-paused/k \
-+        -e cycles/aux-action=pause,period=10000000/ \
-+        -e cycles/aux-action=resume,period=1050000/ -- sleep 1
-+
- Perf test - Verify kernel and userspace perf CoreSight work
- -----------------------------------------------------------
- 
--- 
-2.34.1
+ip 0 pid=74131 tid=74131 cpu=3
+ ( field 'prev_comm' ret=0x7f0a66a1b970 )  ( field 'prev_pid' ret=0x7f0a66b1bed0 )  ( field 'prev_prio' ret=0x7f0a74f60d08 )  ( field 'prev_state' ret=0x7f0a74f60e08 ) time 4503271651784 prev_comm=kworker/u112:14 prev_pid=74131 prev_prio=120 prev_state=0x80 ==>
+ ( field 'next_comm' ret=0x7f0a66a1b970 )  ( field 'next_pid' ret=0x7f0a74f5fe08 )  ( field 'next_prio' ret=0x7f0a74f60d08 ) next_comm=swapper/3 next_pid=0 next_prio=120
+ip 0 pid=80209 tid=80209 cpu=4
+ ( field 'prev_comm' ret=0x7f0a66a1b970 )  ( field 'prev_pid' ret=0x7f0a66b1bed0 )  ( field 'prev_prio' ret=0x7f0a74f60d08 )  ( field 'prev_state' ret=0x7f0a74f60e08 ) time 4503280531143 prev_comm=kworker/u112:3 prev_pid=80209 prev_prio=120 prev_state=0x80 ==>
+ ( field 'next_comm' ret=0x7f0a66a1b970 )  ( field 'next_pid' ret=0x7f0a74f5fe08 )  ( field 'next_prio' ret=0x7f0a74f60d08 ) next_comm=swapper/4 next_pid=0 next_prio=120
+ip 0 pid=74131 tid=74131 cpu=5
+ ( XXX '�!' len=16)  ( field 'prev_comm' ret=(nil) ) Traceback (most recent call last):
+  File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 51, in <module>
+    main()
+  File "/home/acme/git/perf-tools-next/tools/perf/python/tracepoint.py", line 40, in main
+    event.prev_comm,
+    ^^^^^^^^^^^^^^^
+AttributeError: 'perf.sample_event' object has no attribute 'prev_comm'
 
+
+So the size of the field, in the tracepoint format file is 16, its a
+comm:
+
+root@number:/home/acme/git/perf-tools-next# grep '_comm\[' /sys/kernel/tracing/events/sched/sched_switch/format 
+	field:char prev_comm[16];	offset:8;	size:16;	signed:0;
+	field:char next_comm[16];	offset:40;	size:16;	signed:0;
+root@number:/home/acme/git/perf-tools-next#
+
+But:
+
+root@number:/home/acme/git/perf-tools-next# cat /proc/74131/comm
+kworker/u112:14-events_unbound
+root@number:/home/acme/git/perf-tools-next#
+
+root@number:/home/acme/git/perf-tools-next# echo -n "kworker/u112:14-events_unbound" | wc -c
+30
+root@number:/home/acme/git/perf-tools-next#
+
+Which should explain that:
+
+( XXX '�!' len=16)  ( field 'prev_comm' ret=(nil) )
+
+That is printed by:
+
++++ b/tools/perf/util/python.c
+@@ -318,16 +318,17 @@ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
+                        if (tep_field_is_relative(field->flags))
+                                offset += field->offset + field->size;
+                }
+-               if (field->flags & TEP_FIELD_IS_STRING &&
+-                   is_printable_array(data + offset, len)) {
++               if (field->flags & TEP_FIELD_IS_STRING) {
+                        ret = PyUnicode_FromString((char *)data + offset);
++                       if (ret == NULL) {
++                               printf(" ( XXX '%.*s' len=%d) ", len, (char *)data + offset, len); fflush(stdout);
++                       }
+                } else {
+                        ret = PyByteArray_FromStringAndSize((const char *) data + offset, len);
+-                       field->flags &= ~TEP_FIELD_IS_STRING;
+                }
+
+So now trying to figure out why when the comm lenght is more than 16 the
+raw_data appears to contain trash...
+
+- Arnaldo
