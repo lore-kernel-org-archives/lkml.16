@@ -1,64 +1,82 @@
-Received: from antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF4D2080D9;
-	Tue, 11 Mar 2025 17:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B731D1C1F22;
+	Tue, 11 Mar 2025 17:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741712622; cv=none; b=RSJUWx6uAol54fKhOW650kbh11cHyMzzzmYK8TLhimsFDuNH1QFyMnwORe1W1Oz4HAht1N0CzKW3mNHU0vst0TAf6pfBUgdt2Gjqp2e2obAG/WUhVhsppDQUZiL/4jmaC1fRwVjjNP+MAxJKzXsiyaA6M/WSG8vgE2b2lEFP6rk=
+	t=1741712670; cv=none; b=dnqE7dAKti87W/fXU6gZQDCGjwVcasqcWZNeGQfXHewDNWAt4+qlZ8dax/E6QgI+9/ZNl3oOWVGBNc+uEb/PsBHIQEDAKIC3eRji2iWECbtGI4ilGAmW1YmF2gsi3rZ3CbQ42Rr0I31dcGCt3WBnie9nkdCfE2hqkNlSOJsC9GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741712622; c=relaxed/simple;
-	bh=3lgFxyV0pjLheJdj0WHk3Nfcy0PkOqA8S4AKNvnKn0U=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDzR75ZP+hrfBV1WmbDwmm5IAJJFt6pmyj/Z4bbULVRbYflgjxkWMuv+THl4u9RPP0ufSeBA58MvXhYtK4f7+6HwP5LLO6MeemMGuz+E/mkPGm72yc/84YA6Pfn/qHB58zUZzhduPYOqrDEUS8xMeB7sdLCzs0Cmer6qt6Oidzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=06Xl15Y2; arc=none smtp.client-ip=91.227.220.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
+	s=arc-20240116; t=1741712670; c=relaxed/simple;
+	bh=bB2I3mJnd9I+qCd6WsvHTfD1BEbi95Tjt4/PZYZdp7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jVzu5CuZG4bUoHifaLUcoveAy/zNQSuk+Fets8tp+yNC0F+V3yjk38/Jcu8/18WTHGQpjbAoYVGqD7o86r7uIvzWBfeirbUdW4OchxAnqkMRypeSWpBiCnD/ctf/ejlnnHIylGufp3a9teHF1gMHo24W3aZHwvbmPoJ1SJnMJf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A9uNa4z2; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="06Xl15Y2"
-Date: Tue, 11 Mar 2025 18:03:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
-	s=202107; t=1741712613;
-	bh=3lgFxyV0pjLheJdj0WHk3Nfcy0PkOqA8S4AKNvnKn0U=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To:Cc:content-type:date:From:from:
-	 in-reply-to:message-id:mime-version:references:reply-to:Sender:
-	 Subject:To;
-	b=06Xl15Y23CzM+3OGHRaYXELzF/uWpr9JOuln7W44Co+EmJlMFP2RYESWR++/Bnw7u
-	 /gMHwloI8jWdXcMhOVsvze/WmEj/ENAQJ1ZXCI4twH7PHC9tnxuwTEQhs6lmLKEIgi
-	 Miy+kDPZrRvIIwJBzSOIQFhdsPnm8R+CMy5yY21oYBXuDIzyim2kfs8I7RVcInSQ9e
-	 nBp7H7SD1MdCo3YEVj7X0acrh7+kRqGTC0+7vlaZJxH8lR0Pj0yrG8fljBlLERAY1z
-	 t/fM/KtSDj89eN3eVecvRGpjJH5a9CQ6FYHJGL/Ly8jXj0Jwj5SDCsYQwTdBV6OfHg
-	 eZerMNxrBhPCg==
-From: Markus Reichelt <lkt+2023@mareichelt.com>
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.12 000/269] 6.12.19-rc1 review
-Message-ID: <20250311170332.GC2770@pc21.mareichelt.com>
-Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250310170457.700086763@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A9uNa4z2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BF583442A3;
+	Tue, 11 Mar 2025 17:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741712665;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNPRZz6gCCKyyFXFdw9IZIUbcNdOvYF0RyfJNnSYlVs=;
+	b=A9uNa4z2UZxS3imKwWuSsDdXmWEQekV4Ngo1wVUip7lm2VyiAXH/i0+CcOawsGlwkN8Pbd
+	wBXzxZokMO3Z3dqsbNIZkFSzbcKTmh6DO3lpPggG10IzshXdGJH2z6hEO/I4a8uZZXyoaF
+	6XQ5h5HQyqsyX6WCQw+QluCKwbk4YX6WpTab3Jv+9tffi1vBPbxffdAuW5Hm5pcvZOX1q1
+	ymzlaA8iEWAZuD400jq9YrkQNv2M+Ip4eQpMvbSVm43O5pWyXsCSUxDZld/JaEUBhKtYqe
+	jWQLUyWA3QApg/FRHL+KZANiP76y0E62H7uAmiun5QlB9j9YFEcaLa7Lq/8qHg==
+Date: Tue, 11 Mar 2025 18:04:23 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Woojung Huh <woojung.huh@microchip.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, Russell King <rmk+kernel@armlinux.org.uk>,
+ Thangaraj Samynathan <Thangaraj.S@microchip.com>, Rengarajan Sundararajan
+ <Rengarajan.S@microchip.com>, kernel@pengutronix.de,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ UNGLinuxDriver@microchip.com, Phil Elwell <phil@raspberrypi.org>
+Subject: Re: [PATCH net-next v3 4/7] net: usb: lan78xx: Use
+ ethtool_op_get_link to reflect current link status
+Message-ID: <20250311180423.24232a0c@fedora.home>
+In-Reply-To: <20250310115737.784047-5-o.rempel@pengutronix.de>
+References: <20250310115737.784047-1-o.rempel@pengutronix.de>
+	<20250310115737.784047-5-o.rempel@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310170457.700086763@linuxfoundation.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvddvjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgdphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrt
+ ghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopeifohhojhhunhhgrdhhuhhhsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopehrmhhkodhkvghrnhgvlhesrghrmhhlihhnuhigrdhorhhgrdhukh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+Hello Oleksij,
 
-> This is the start of the stable review cycle for the 6.12.19 release.
-> There are 269 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, 10 Mar 2025 12:57:34 +0100
+Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+
+> Replace the custom lan78xx_get_link implementation with the standard
+> ethtool_op_get_link helper, which uses netif_carrier_ok to reflect
+> the current link status accurately.
 > 
-> Responses should be made by Wed, 12 Mar 2025 17:04:00 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Hi Greg
 
-6.12.19-rc1 compiles, boots and runs here on x86_64 (AMD Ryzen 5 7520U,
-Slackware64-current), no regressions observed.
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
+Thanks,
+
+Maxime
