@@ -1,250 +1,213 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C7A2222B4
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91886224245
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741680774; cv=none; b=ExrOrg2kVbsqRAHMG+J4fwzKm/XqartNbYlRgz7/BC8wd5WPES+3T+CQCUV+5YFZMtJVYWz4j1MfinyBd5hLaZUoIXyHX4P1G6WHz1SV0ZHwTJF2i9uLpH4nLJyq3YnLJuVESE5vfyRqQzFuHMw8Tasy0xqqOhBsNF3d/NY8yqI=
+	t=1741680782; cv=none; b=EVC5NTvH9YiDJp6kEizbMp5/cyTTxmhaYVZIR/N50098Ay7YcIXIUCWpM5y5G/v/I3Cqj3eO/LJ/C93ed1Qpa1RMLerKqj6jsmLdUnKVcfVIjW4+C3C0mF+m7t4AzVffx/JgpdlshIOrAFYsFrWLFCdiIiHlzlHfemi7wYBSO9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741680774; c=relaxed/simple;
-	bh=0c1JB1mhBjJNviQkaqiKr/lgyKO/7RrJgIykZMGH444=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=anBnTXd154akJ0eQB6XnDNS5qU7jRM6ZPLOww69qr0SPbVB8RBsh+c32OKAnhFFW3Yh2xzAodm1KuPFY6XSVIkl8O7Avgt+VQRgO+H2I0Z7USHRYp8ZmRgGAO2LmVq5ymsSNISXQ1+oI2QSyWziw/KB8FlxefCgNqe9pFXjMTsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=pThZM7nP; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1741680782; c=relaxed/simple;
+	bh=TH0u9dVGvoVbZ7K3UqXVA55ShQn2kghUIl5g3rDHr+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HossSDtJpt9meDoNeYjLGmiFIJ4LqK9S88ZVz+9wjCm6VX8KKp7r5mYGVxS5jDh6deYIt6OT3q27OACyrYrJBNXQ7LAne03EusfGYPvp4ZWA5e45qL/bVgc6YtH44A8fcZPqkgmLkuGt2vG2BFSfr1jyg1ubKPaa3MDvCRcfnCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eZhEst07; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pThZM7nP"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id roUKtq4ajVkcRruhotDgjU; Tue, 11 Mar 2025 08:11:16 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ruhktFmOXkhljruhltiwTT; Tue, 11 Mar 2025 08:11:13 +0000
-X-Authority-Analysis: v=2.4 cv=F79RdLhN c=1 sm=1 tr=0 ts=67cff023
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=OXdeduLSBdMSo9eDwqgA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=R/lmvIUe4lNj3XZkokRwvbtDuIId69U724e5krgi9KE=; b=pThZM7nPgN1l69lZs5n4FvJSgN
-	cctP7X0ETqCTUmN41PgQLiXR2Zhk/9C/NgrZtNyZugh7IieJnDDl9f9uH434A6bL0w2+4JPlDVrNP
-	IrF88Kpj7xT8yos1vAk2qMZSYRh2YtaODtzLqsp/u0OwhbmVD9kD0Akbr64zp4Wbld97we2O7ouz9
-	c3vi6OWNcrB0HDtW5WB7g5KuTnXV8ZfrzWrrj/RJULJvvPdBJalRiTvN2BhPwl6pfmN9tQrlrdEvx
-	8PjhqO3/F/I21q+gncexY3AsIYJd3ztoJ4yKeNZGP2KS3+nZ7+/k/qO8ilZ6DwjHnZV51vyL3p66s
-	megrRwng==;
-Received: from [45.124.203.140] (port=53616 helo=[192.168.0.158])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1truhj-00000003Tls-1Sv0;
-	Tue, 11 Mar 2025 03:11:12 -0500
-Message-ID: <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
-Date: Tue, 11 Mar 2025 18:40:56 +1030
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZhEst07"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3914a5def6bso1123637f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 01:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741680779; x=1742285579; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d9hUC77ttL7VpNgoPVtZetc+bIdsy8nR0pbNY/lEgyQ=;
+        b=eZhEst07rhV5kf5u7dj+6dCOlS1nDnM3V/ElrLDm+/DrYl4UmNOF6oR2L/b3hGcdJA
+         nHUr3kZUjTzlg/TR90tUYe8qWkff/MSDbm6L8ztivZCTa/0DEy4ehSXg18MDL7StLgPd
+         CWnt42erkYgYzlrwWmpccQlvE4bSVM+QvIhJ8Ku9pCRKPF/rEPMsCrWE2L4lMmWknfXZ
+         45YjXKBZA20jQte7GxWh5G2RuqhFgmFPeDVC1fQvmYLoZpRr+hAYCOfc8MaqNcY3XbHo
+         VnBKHSS9eR+h/5VKb64bR0NXHk09B9803zaJ2lrTxggqC9xYzcLLEviMMZqGIQljvYO0
+         Ypdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741680779; x=1742285579;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d9hUC77ttL7VpNgoPVtZetc+bIdsy8nR0pbNY/lEgyQ=;
+        b=Ir1aMvNWYvIQJlXdppBus4cpmV6dQivn1vhQ3joy28F4fUpV85uG4C5BR6eXpQC9P4
+         A3L0SoOO1EvdlrLN5zXkrvhif8Cx9itKBHSoshoBy6OWVIsRdBDYYAe8WIE0EtnrtdAf
+         jtWTBNHN19EpQM/N9/b0t5C1YhmLq9GFGgbQ611+2UCSUs07n9IQOTbeTLHC583NVfMP
+         daE84WI23NF+VoD47kHFdTQxG9aMCFTaauvWvT21JtCAnvPSvk3ZmuYlsLmOl3vWH3QS
+         nO1zhNtrutnkDwEwZl9Riy+b1k2WCFdp/hYg7gyD6zRz58mpQI3sVf5jpKVS2eOxMerL
+         F9Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdJ4XgqSzVb1ARXgp8L8JfRx+ucHfUYsoTNnZGB7+TGnm7HgyDQ4qfBefw60uYPtAbD60ee0FF5BxQmFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYgK0fFcGxBhS9W9/JMvBNJC2vfZ2BmiLq4LWaR7ohB4CX2tl5
+	+7/6D72wkxOXmvwiR29PTCw14yPdWEqTwrreeakDnM/Gy8V3zlSVVaC8DqiPx213PEljJtI+eGA
+	/
+X-Gm-Gg: ASbGncupC+DlbBqs2VLFZh2dlQJNIehx/G2k+NJwjZgVg+R1MzQy2JyxNVwoFm9/5Wv
+	yXD3xFZVvr2kqZrd0MRxdKhR+9BGuw3kTD5BQIEhEXkmh5cj2BGHk3pVOEzirYpc/4up1hUaPVJ
+	nRYwZ6mt6L+WFvTgAJzr504+POL4v3BRfOq5lbH5M9nn+atHOKilyC1Kr07qkrZliRt9xQMYdry
+	E4e79g+qTw1AM462tP3bMl7EuEdsgs9nw2zu+iXcOoLhqK6GrKFzWX0scq3gdNp6nHSqMiPjsgu
+	Basw21xgRZp6qWfzw0G2VcB7Q2bIMpAh1hkxZ8GdKpl4Vai1QA==
+X-Google-Smtp-Source: AGHT+IHQe5urwt2Q3djRRAmzur7elKU2h0pqAZvz5+2zIbJd7QEmn7pPxhLZABGxMIFRNedH3+9Dqg==
+X-Received: by 2002:adf:9b9d:0:b0:391:3b11:d604 with SMTP id ffacd0b85a97d-3913b11d767mr6992628f8f.54.1741680778874;
+        Tue, 11 Mar 2025 01:12:58 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912c0195bfsm17215168f8f.48.2025.03.11.01.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 01:12:58 -0700 (PDT)
+Date: Tue, 11 Mar 2025 11:12:54 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: David Thompson <davthompson@nvidia.com>
+Cc: Borislav Petkov <bp@alien8.de>, Shravan Ramani <shravankr@nvidia.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [bug report] EDAC, mellanox: Add ECC support for BlueField DDR4
+Message-ID: <7c58ba57-96ff-4d9b-a014-dfe3fc0c44b5@stanley.mountain>
+References: <046bf689-9a2b-4993-b8ca-927d7d2a0cc5@stanley.mountain>
+ <20250303145226.GCZ8XCKkC0YSLHXycB@fat_crate.local>
+ <PH7PR12MB590225F9E7C1BA48B5EF538AC7D12@PH7PR12MB5902.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kenneth Feng <kenneth.feng@amd.com>, Alex Deucher
- <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z678TNhCbTk363Tw@kspp>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <Z678TNhCbTk363Tw@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1truhj-00000003Tls-1Sv0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.158]) [45.124.203.140]:53616
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHYdftyrh8nKh+TRF73gsLSpdWLPP4MsYykX6oOq9So2KT29losmUGpHo2+s7krr+OZs6tg95suHaSMALvleQqlx0SqeLyTyaW+/VfFZZOHLlZB5SZmo
- fz7NJztHHusq3rVQ3LGAewCBvI94JZ6Od9cFoKFrwLjjwcJZmqFV3DFByyihvMXA92m0tme5jjmb3O8+B01uEt58YYzpvxTtHTrF3UndcrWzehYplXk2X5ej
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR12MB590225F9E7C1BA48B5EF538AC7D12@PH7PR12MB5902.namprd12.prod.outlook.com>
 
-Hi all,
+On Tue, Mar 11, 2025 at 02:22:20AM +0000, David Thompson wrote:
+> > -----Original Message-----
+> > From: Borislav Petkov <bp@alien8.de>
+> > Sent: Monday, March 3, 2025 9:52 AM
+> > To: Dan Carpenter <dan.carpenter@linaro.org>; David Thompson
+> > <davthompson@nvidia.com>
+> > Cc: Shravan Ramani <sramani@mellanox.com>; linux-edac@vger.kernel.org; lkml
+> > <linux-kernel@vger.kernel.org>
+> > Subject: Re: [bug report] EDAC, mellanox: Add ECC support for BlueField DDR4
+> > 
+> > On Thu, Oct 24, 2024 at 11:20:45AM +0300, Dan Carpenter wrote:
+> > > Hello Shravan Kumar Ramani,
+> > >
+> > > Commit 82413e562ea6 ("EDAC, mellanox: Add ECC support for BlueField
+> > > DDR4") from Jun 25, 2019 (linux-next), leads to the following Smatch
+> > > static checker warning:
+> > >
+> > > drivers/edac/bluefield_edac.c:205 bluefield_gather_report_ecc() error:
+> > uninitialized symbol 'dram_syndrom'.
+> > > drivers/edac/bluefield_edac.c:219 bluefield_gather_report_ecc() error:
+> > uninitialized symbol 'dram_additional_info'.
+> > > drivers/edac/bluefield_edac.c:231 bluefield_gather_report_ecc() error:
+> > uninitialized symbol 'edea0'.
+> > > drivers/edac/bluefield_edac.c:231 bluefield_gather_report_ecc() error:
+> > uninitialized symbol 'edea1'.
+> > > drivers/edac/bluefield_edac.c:256 bluefield_edac_check() error: uninitialized
+> > symbol 'ecc_count'.
+> > >
+> > > drivers/edac/bluefield_edac.c
+> > >     173 static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
+> > >     174                                         int error_cnt,
+> > >     175                                         int is_single_ecc)
+> > >     176 {
+> > >     177         struct bluefield_edac_priv *priv = mci->pvt_info;
+> > >     178         u32 dram_additional_info, err_prank, edea0, edea1;
+> > >     179         u32 ecc_latch_select, dram_syndrom, serr, derr, syndrom;
+> > >     180         enum hw_event_mc_err_type ecc_type;
+> > >     181         u64 ecc_dimm_addr;
+> > >     182         int ecc_dimm, err;
+> > >     183
+> > >     184         ecc_type = is_single_ecc ? HW_EVENT_ERR_CORRECTED :
+> > >     185                                    HW_EVENT_ERR_UNCORRECTED;
+> > >     186
+> > >     187         /*
+> > >     188          * Tell the External Memory Interface to populate the relevant
+> > >     189          * registers with information about the last ECC error occurrence.
+> > >     190          */
+> > >     191         ecc_latch_select = MLXBF_ECC_LATCH_SEL__START;
+> > >     192         err = bluefield_edac_writel(priv, MLXBF_ECC_LATCH_SEL,
+> > ecc_latch_select);
+> > >     193         if (err)
+> > >     194                 dev_err(priv->dev, "ECC latch select write failed.\n");
+> > >     195
+> > >     196         /*
+> > >     197          * Verify that the ECC reported info in the registers is of the
+> > >     198          * same type as the one asked to report. If not, just report the
+> > >     199          * error without the detailed information.
+> > >     200          */
+> > >     201         err = bluefield_edac_readl(priv, MLXBF_SYNDROM,
+> > &dram_syndrom);
+> > >     202         if (err)
+> > >     203                 dev_err(priv->dev, "DRAM syndrom read failed.\n");
+> > >
+> > > If bluefield_edac_readl() fails then dram_syndrom is uninitialized.
+> > >
+> > >     204
+> > > --> 205         serr = FIELD_GET(MLXBF_SYNDROM__SERR, dram_syndrom);
+> > >     206         derr = FIELD_GET(MLXBF_SYNDROM__DERR, dram_syndrom);
+> > >     207         syndrom = FIELD_GET(MLXBF_SYNDROM__SYN, dram_syndrom);
+> > >
+> > 
+> > This looks forgotten.
+> > 
+> > I'm thinking of:
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 8e0736dc2ee0..061149ade8c0 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8222,8 +8222,7 @@ F:
+> > 	Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
+> >  F:	drivers/edac/aspeed_edac.c
+> > 
+> >  EDAC-BLUEFIELD
+> > -M:	Shravan Kumar Ramani <shravankr@nvidia.com>
+> > -S:	Supported
+> > +S:	Orphan
+> >  F:	drivers/edac/bluefield_edac.c
+> > 
+> >  EDAC-CALXEDA
+> > 
+> > but lemme Cc people who have touched this recently first.
+> > 
+> > Thx.
+> > 
+> > --
+> > Regards/Gruss,
+> >     Boris.
+> > 
+> > https://people.kernel.org/tglx/notes-about-netiquette
+> 
+> Shravan and I will investigate solving this 'smatch' warning.
+> 
+> I setup a recent linux-next repo, installed the sparse package, and downloaded + built the smatch tool.  
+> I execute the following command to run 'smatch' over the entire linux kernel, including bluefield_edac.c:
+>    $ make CHECK="/path/to/smatch -p=kernel --file-output" C=1 -j64
+> 
+> I don't see any warnings related to the bluefield_edac.c module. That is, the generated file 
+> "drivers/edac/bluefield_edac.c.smatch" has size 0, and thus no content.
+> 
+> What is the recommended command line options to pass to Linux kernel build?
+> Is there something I am missing here?
 
-Friendly ping: who can take this, please? :)
+The actual issue is the first "return -1" in secure_readl().
 
-Thanks!
---
-Gustavo
+You need build the cross function database to see the warning in Smatch.
+In fact you'd need to build it twice because it's two functions away.
+It's not hard to build the database but it takes a few hours.
 
-On 14/02/25 18:48, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of other structs, we use the `struct_group_tagged()` helper
-> to create a new tagged `struct NISLANDS_SMC_SWSTATE_HDR` (and `struct
-> SISLANDS_SMC_SWSTATE_HDR`). This structures group together all the
-> members of the flexible `struct NISLANDS_SMC_SWSTATE` (and `struct
-> SISLANDS_SMC_SWSTATE`) except the flexible array.
-> 
-> As a result, the array is effectively separated from the rest of the
-> members without modifying the memory layout of the flexible structure.
-> We then change the type of the middle struct members currently causing
-> trouble from `struct NISLANDS_SMC_SWSTATE` to `struct
-> NISLANDS_SMC_SWSTATE_HDR` (and from `struct SISLANDS_SMC_SWSTATE` to
-> `struct SISLANDS_SMC_SWSTATE_HDR`).
-> 
-> We also want to ensure that when new members need to be added to the
-> flexible structure, they are always included within the newly created
-> tagged struct. For this, we use `static_assert()`. This ensures that
-> the memory layout for both the flexible structure and the new tagged
-> struct is the same after any changes.
-> 
-> This approach avoids having to implement `struct NISLANDS_SMC_SWSTATE_HDR`
-> (and `struct SISLANDS_SMC_SWSTATE_HDR`) as a completely separate structure,
-> thus preventing having to maintain two independent but basically identical
-> structures, closing the door to potential bugs in the future.
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure, through which we can access the flexible-array
-> member, if necessary.
-> 
-> So, with this changes, fix the following warnings:
-> 
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/sislands_smc.h:218:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:819:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:818:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:817:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:816:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c    |  7 ++++--
->   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h    | 23 +++++++++++--------
->   .../gpu/drm/amd/pm/legacy-dpm/sislands_smc.h  | 15 ++++++++----
->   3 files changed, 29 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> index a87dcf0974bc..2c9d473d122f 100644
-> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> @@ -5234,7 +5234,8 @@ static int si_init_smc_table(struct amdgpu_device *adev)
->   
->   	table->driverState.flags = table->initialState.flags;
->   	table->driverState.levelCount = table->initialState.levelCount;
-> -	table->driverState.levels[0] = table->initialState.level;
-> +	container_of(&table->driverState, SISLANDS_SMC_SWSTATE, __hdr)->levels[0] =
-> +								table->initialState.level;
->   
->   	ret = si_do_program_memory_timing_parameters(adev, amdgpu_boot_state,
->   						     SISLANDS_INITIAL_STATE_ARB_INDEX);
-> @@ -5755,7 +5756,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
->   	int ret;
->   	u32 address = si_pi->state_table_start +
->   		offsetof(SISLANDS_SMC_STATETABLE, driverState);
-> -	SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
-> +	SISLANDS_SMC_SWSTATE *smc_state =
-> +		container_of(&si_pi->smc_statetable.driverState,
-> +			     SISLANDS_SMC_SWSTATE, __hdr);
->   	size_t state_size = struct_size(smc_state, levels,
->   					new_state->performance_level_count);
->   	memset(smc_state, 0, state_size);
-> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> index 11cb7874a6bb..62530f89ebdf 100644
-> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> @@ -784,12 +784,17 @@ typedef struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL NISLANDS_SMC_HW_PERFORMANCE_LEV
->   
->   struct NISLANDS_SMC_SWSTATE
->   {
-> -    uint8_t                             flags;
-> -    uint8_t                             levelCount;
-> -    uint8_t                             padding2;
-> -    uint8_t                             padding3;
-> -    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(NISLANDS_SMC_SWSTATE_HDR, __hdr,
-> +		uint8_t                             flags;
-> +		uint8_t                             levelCount;
-> +		uint8_t                             padding2;
-> +		uint8_t                             padding3;
-> +	);
-> +	NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->   };
-> +static_assert(offsetof(struct NISLANDS_SMC_SWSTATE, levels) == sizeof(struct NISLANDS_SMC_SWSTATE_HDR),
-> +	      "struct member likely outside of struct_group_tagged()");
->   
->   typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
->   
-> @@ -813,10 +818,10 @@ struct NISLANDS_SMC_STATETABLE
->       uint32_t                            lowSMIO[NISLANDS_MAX_NO_VREG_STEPS];
->       NISLANDS_SMC_VOLTAGEMASKTABLE       voltageMaskTable;
->       PP_NIslands_DPM2Parameters          dpm2Params;
-> -    NISLANDS_SMC_SWSTATE                initialState;
-> -    NISLANDS_SMC_SWSTATE                ACPIState;
-> -    NISLANDS_SMC_SWSTATE                ULVState;
-> -    NISLANDS_SMC_SWSTATE                driverState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		initialState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		ACPIState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		ULVState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		driverState;
->       NISLANDS_SMC_HW_PERFORMANCE_LEVEL   dpmLevels[NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1];
->   };
->   
-> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h b/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> index 90ec411c5029..1711e3e35e80 100644
-> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> @@ -172,12 +172,17 @@ struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL {
->   typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SISLANDS_SMC_HW_PERFORMANCE_LEVEL;
->   
->   struct SISLANDS_SMC_SWSTATE {
-> -	uint8_t                             flags;
-> -	uint8_t                             levelCount;
-> -	uint8_t                             padding2;
-> -	uint8_t                             padding3;
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(SISLANDS_SMC_SWSTATE_HDR, __hdr,
-> +		uint8_t                             flags;
-> +		uint8_t                             levelCount;
-> +		uint8_t                             padding2;
-> +		uint8_t                             padding3;
-> +	);
->   	SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->   };
-> +static_assert(offsetof(struct SISLANDS_SMC_SWSTATE, levels) == sizeof(struct SISLANDS_SMC_SWSTATE_HDR),
-> +	      "struct member likely outside of struct_group_tagged()");
->   
->   typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
->   
-> @@ -215,7 +220,7 @@ struct SISLANDS_SMC_STATETABLE {
->   	struct SISLANDS_SMC_SWSTATE_SINGLE	initialState;
->   	struct SISLANDS_SMC_SWSTATE_SINGLE	ACPIState;
->   	struct SISLANDS_SMC_SWSTATE_SINGLE	ULVState;
-> -	SISLANDS_SMC_SWSTATE			driverState;
-> +	struct SISLANDS_SMC_SWSTATE_HDR		driverState;
->   	SISLANDS_SMC_HW_PERFORMANCE_LEVEL	dpmLevels[SISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE];
->   };
->   
+~/progs/smatch/release/smatch_scripts/build_kernel_data.sh
 
+I wouldn't bother trying to silence the warning.  We don't worry about
+false positives.  The only thing to consider is the kernel code.
+
+Probably bluefield_edac_readl() can't actually fail in real life can
+it?  There are a lot of functions like that in the kernel.  If reading
+from the PCI stops working, there is nothing you can do in the software
+to recover from that, you need to buy new hardware.  If you want I can
+just add bluefield_edac_readl() to the list of functions which don't
+actually fail.
+
+regards,
+dan carpenter
