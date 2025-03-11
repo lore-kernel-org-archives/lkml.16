@@ -1,119 +1,285 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8478225F964
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 16:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED8525F968;
+	Tue, 11 Mar 2025 16:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741709518; cv=none; b=DFc1jvYf34JRjO+3XX0Gkg60pbdon+cufE/ASy+XPdBkYblTVd1tKpk0BhsZX8wKkPIEhS/7gn/iomfl7c7AhZO2VXaEBJlH3n4qhz58v0DEpk2cUZFl+fXNL8xMOd3LDn1EqJ7kwHn/Ax8ZTXGqp2Y69bWuTChlqcsLJl9DdRk=
+	t=1741709544; cv=none; b=uf16g1ou9YEUg/8jgnYSSucB7oTHlck+q5Qq7k0TuAviyBSIy4tcHtKC/RCQ8+MqFNoBoTzFXGKuebJmB6BqNkZnU5BUQb/lL8KCdoELBermfjmbWtD8FNiJPP8bha0HoOjPRnplHOJhF8Qzhjaf3I7INgbHOO/ciZi3bEcmcI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741709518; c=relaxed/simple;
-	bh=k/54jlr9krgPTZhYjJWI7nxNZq0ii+sTeh+z9w0PQwA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MjK7bYIW/frJvwp263us2TrFR7WYjRh2icXkRfbM0KmxtSpoWFLvkOuZc0JpgLu0T0/8xsAHUGW6GKM1NfmDD/9wdcc0yAbJwu4Ivn2KkWYrYG/MFhdEm32n1xzkSNYfqOcrOFah2v0HJ6IH/lRUsw4Cv9luH1vOOGnBPyI2gtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lM9ZmwsM; arc=none smtp.client-ip=209.85.216.54
+	s=arc-20240116; t=1741709544; c=relaxed/simple;
+	bh=08ikVFE4r7eJqr1YdwoBE6cm67vMz6CsVPTbF/HeYwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C/zYpolCt2I9yicTmOwxPt0gfPQ35htpNhwz7n1EMeaA6GRwitimDSAbh6w556x5+AgiMeOPyZs7SvgM2qkyrfGCn6rKuTR6c2NXMKuN96VzhZIJxiCfgjvujeRkgamA1PXDbd9XXqV1v8Gs08IILwY5X/lJqg5B8yoY2wBR3ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YXRE2DNo; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lM9ZmwsM"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so1562000a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:11:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXRE2DNo"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43bdf0cbb6bso33874855e9.1;
+        Tue, 11 Mar 2025 09:12:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741709514; x=1742314314; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tbXgDbQe6odtzN7qJt3Hn9EsxbW1Jh0Po6Yo1yHTQZY=;
-        b=lM9ZmwsM+GF4eulkMYfRztNk5Cs6w1BQI/mcwsNMdpKtWfUlsAW24XyKb1PHqCwdxp
-         UhH0Zvt9kr6qfLZxCU/Bd7OMzQX9ZPjEBz8UWHSveIFmhDx4gy0VZnK+j8s+/taBHyDF
-         855b7d9bHFbFhIWI2h9HKeiG/YIq33sE8XgfSyKB7oge62gw5T061M+M5Rn9YvMdFXxj
-         2bljFnEJ+tOdMw8221cFasMLtJqtKoNq5F6UicwbWe4AeeuQoOl02KC9dhbKZlo3b0hO
-         jc4FyOHecRRQYk4lxOclx2gqDACTT1xhWMzXDPmBLCJnl2EFuNG6r2SnH6yb0gfW1rhE
-         4zSA==
+        d=gmail.com; s=20230601; t=1741709541; x=1742314341; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2YVAPWNU6X9KodjU6cnxu6uXZ4aud/elyY8D03IVUK4=;
+        b=YXRE2DNo23+IHfRcRwA//AEy69psE6t2cZoVubpVam6xu+VulG4AkGSj9+6RKZM0xq
+         tE+keIyScQffeHu5fBD1TaDOBp5BCR0iRzCdvQRy5SYWZepJxyfhdyFkmcsp+gCXdRCJ
+         NHVbbqCOe/rPiyrYI1qG2i5Z0rIUxHb+IJwcqdPCTnVeWXy2D43HrOb/aK8EkE3qx6oE
+         P4EsoAqg/kTiszdQZb+q52Xm6JN8wpLWS/xhD3GThsp93CwouD3oJ1swa+hbXV1kO2pS
+         Jq0Hx898oehe0QYVFZh6+zFPmqhiT9v3wIZCEruAiz2lRJCcIpEFOfUx2sP5bFfDSV8H
+         Sg3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741709514; x=1742314314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tbXgDbQe6odtzN7qJt3Hn9EsxbW1Jh0Po6Yo1yHTQZY=;
-        b=J2jPStwatZlqQQlLYfFiO6AQySJDss+58lKCp/fK8aGcEEY+xKPkbvNZ8DZFNaMX/b
-         /8JkUlAo9kG5VXc+77aD69jmK1xIeb5EIaBzDhHYFXgBhRsTbuEM6hgdo6mrv7sUpqE7
-         irSEFl9uEsA/1SZYmRgOIGyE3NTJ/cNCI9/XpgHVvaZ1KAYXv1599/7KIqSGAjCcCHBh
-         0Lqi/nl5cHACZrv4iOaryibUCxqrfXbcqiCyKs6kkF2d0q4+oiZKbQjo65CZ0BKdST9b
-         Oivd6EpMqVBUqHLiB+Eznbk3erdzxQz2R44DzlEy62dC0cdeNrWN1Fyv0sg5totMPGnj
-         TFUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWviypjbdfodbaZVNUDKys8g66tlBMoOKnYv3O2OlcbKgTXjjdPv6+C4McQz5QCp8N+Y1KEZd3jbQMPSgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDz2q1r+hJAdU1L+JyB47zWhplwb9glD85y3q95aFUlRiReFv6
-	V69PhtLLend3eovuCTFkwYESf7FqT67QHKq/wvwhY/sI7xYuURHZgKUVbNN0fzWi5aJZ0iibd7Y
-	t6vscHtIMFdoinXGuFtzgWkBk+FA=
-X-Gm-Gg: ASbGncub1jEEmJJMR3W6wUrduJFFOlv7FqWZKhsr2vi93yu/S04j0dZJOmsTnlEL6Bo
-	H2GlAl40fxEj9uXABGP5fW6leivS2uECey/SysAFMKDSzi+lPNXXM+XxrD/2QMpDjrOsnBgdFYn
-	WrRSfckpJsQ/CyiDPBBGhkXRAUIQB41Uo75hS0
-X-Google-Smtp-Source: AGHT+IHoUI2IVDeSuvbHPxuzIsIzy8DbeE/xia2Z5IbkvUSauYjGSV2OlB5NBKJvQwzYZ9fQklzxpagAfdTPP7TP2rY=
-X-Received: by 2002:a17:90b:4d0b:b0:2fe:8fa0:e7a1 with SMTP id
- 98e67ed59e1d1-300ff720794mr2092338a91.2.1741709513631; Tue, 11 Mar 2025
- 09:11:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741709541; x=1742314341;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2YVAPWNU6X9KodjU6cnxu6uXZ4aud/elyY8D03IVUK4=;
+        b=OJ6al1a0UbP+jQHtEwhj3+8kt22c85OQrIfhKXKojx5bfSOgdWV2gwX+gaMlhPay0p
+         9G+KG2pKZC5vEZceUR45T+dstEQsFOvkNnqxs7dRFMei5m9pIKjk+rLrQUECPqtnolee
+         U9U/AjCwoIfF5cGu3KuWuLudJTeKQZJSfK+AR7m5tmCihugvo73icympH2uXAJ2uloOR
+         E6PC06HNql5zp2F1mOHAgkekynC2ogd4XdRyw1rrdarSPg6glNnwd4Wf9PbGWx+JtwwR
+         D4GmKJBY4uZP54dwO6fDwYftgbHgyqwWLZlOIieEM91bI/do+KDphai3Im3mOcHL+nvJ
+         yFcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBaUhMXhx09Q2BVPgVw0coit68cAW04jRtftaUEw1yqkut+FsaptDMt97ZYLqhUk84jeWYncyR@vger.kernel.org, AJvYcCUCDLOjueLj72XahV6vTfw0RccSeMq+pzgDBKE0xihXB2S8d7PucwAv6xj1kjnCrySwXIBYrF1algEl@vger.kernel.org, AJvYcCUn2t2o2l4HPWapqiKPsn1UwZigUCvTDEJSettWFEm4lh2T9rdkkQSroJohzTmmkebUFmdiFkL72bsu5ig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWs0OWCElcA9NxolUek2cF2iw1NVTFeFLcT4/bIgo8mOZAIRuD
+	mqZ/V1tTgOBkWdqzHgZM99t+1YkpHZZQUZZaRthhSCoPqc7UWxqs
+X-Gm-Gg: ASbGncs5GFzr3RkZof2so9tE+BEDyJ7gWAlW9fYnQlIGKjSDDPt8LZBc9taDWN2EADD
+	p0K1jY8BoZLTdhM5a5HOh4pCXFEO6DrQvSvFHhUJhPnGVKhxnHa0IRMEsdiYx6gYnYrLP682BQ+
+	T8lMMhz7oVNX+JOwBAdGKLWZKaEBIJduFAUMoxK48ul6HhWVDS9d3DvU5+jp7yUUpUHffoj9Js8
+	I+rz0y7d/01u7nGoUdv2Ld4FwdRB9TtfBtRhKWoE56HgwtQvsumJKY5nuNjAwUgxgDTvW2FejqC
+	b7nVBvspH5EqxHpJfkB1/fWGANN/3DKhZVBb1PF2JL8ZUs5NgxQw/Xy8qig=
+X-Google-Smtp-Source: AGHT+IFBLUgDMtRyAUVGrvv/9k4E3aCt70nIDcjTBdSBDZPdsLITH9UrfoUY3TMgTJSh+RJ7J+y8MQ==
+X-Received: by 2002:a05:600c:3b94:b0:43c:f8fc:f686 with SMTP id 5b1f17b1804b1-43cf8fcf858mr77369445e9.3.1741709540584;
+        Tue, 11 Mar 2025 09:12:20 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:c7c:6696:8300:4d2a:98a0:d51e:4f69])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d073555e5sm15331905e9.4.2025.03.11.09.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 09:12:20 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] net: fix uninitialised access in mii_nway_restart() and cleanup error handling
+Date: Tue, 11 Mar 2025 16:11:57 +0000
+Message-Id: <20250311161157.49065-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311111501.9190-1-n.zhandarovich@fintech.ru>
-In-Reply-To: <20250311111501.9190-1-n.zhandarovich@fintech.ru>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 11 Mar 2025 12:11:41 -0400
-X-Gm-Features: AQ5f1Jo_n7znu1k53mWqt5ocAdZXDWFpNjqsQGbU5mMQMuEwRLuEpw7wKFxIBH4
-Message-ID: <CADnq5_M0vVpU-puopwNjJcaSKfHr3ZDS3_n-Cmf5MWAA_4qViQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/radeon: fix uninitialized size issue in radeon_vce_cs_parse()
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Applied.  Thanks!
+In mii_nway_restart() during the line:
 
-Alex
+        bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
 
-On Tue, Mar 11, 2025 at 7:23=E2=80=AFAM Nikita Zhandarovich
-<n.zhandarovich@fintech.ru> wrote:
->
-> On the off chance that command stream passed from userspace via
-> ioctl() call to radeon_vce_cs_parse() is weirdly crafted and
-> first command to execute is to encode (case 0x03000001), the function
-> in question will attempt to call radeon_vce_cs_reloc() with size
-> argument that has not been properly initialized. Specifically, 'size'
-> will point to 'tmp' variable before the latter had a chance to be
-> assigned any value.
->
-> Play it safe and init 'tmp' with 0, thus ensuring that
-> radeon_vce_cs_reloc() will catch an early error in cases like these.
->
-> Found by Linux Verification Center (linuxtesting.org) with static
-> analysis tool SVACE.
->
-> Fixes: 2fc5703abda2 ("drm/radeon: check VCE relocation buffer range v3")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-> ---
->  drivers/gpu/drm/radeon/radeon_vce.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/radeon/radeon_vce.c b/drivers/gpu/drm/radeon=
-/radeon_vce.c
-> index d1871af967d4..2355a78e1b69 100644
-> --- a/drivers/gpu/drm/radeon/radeon_vce.c
-> +++ b/drivers/gpu/drm/radeon/radeon_vce.c
-> @@ -557,7 +557,7 @@ int radeon_vce_cs_parse(struct radeon_cs_parser *p)
->  {
->         int session_idx =3D -1;
->         bool destroyed =3D false, created =3D false, allocated =3D false;
-> -       uint32_t tmp, handle =3D 0;
-> +       uint32_t tmp =3D 0, handle =3D 0;
->         uint32_t *size =3D &tmp;
->         int i, r =3D 0;
->
+The code attempts to call mii->mdio_read which is ch9200_mdio_read().
+
+ch9200_mdio_read() utilises a local buffer, which is initialised
+with control_read():
+
+        unsigned char buff[2];
+
+However buff is conditionally initialised inside control_read():
+
+        if (err == size) {
+                memcpy(data, buf, size);
+        }
+
+If the condition of "err == size" is not met, then buff remains
+uninitialised. Once this happens the uninitialised buff is accessed
+and returned during ch9200_mdio_read():
+
+        return (buff[0] | buff[1] << 8);
+
+The problem stems from the fact that ch9200_mdio_read() ignores the
+return value of control_read(), leading to uinit-access of buff.
+
+To fix this we should check the return value of control_read()
+and return early on error.
+
+Furthermore the get_mac_address() function has a similar problem where
+it does not directly check the return value of each control_read(),
+instead it sums up the return values and checks them all at the end
+which means if any call to control_read() fails the function just 
+continues on.
+
+Handle this by validating the return value of each call and fail fast
+and early instead of continuing.
+
+Lastly ch9200_bind() ignores the return values of multiple 
+control_write() calls.
+
+Validate each control_write() call to ensure it succeeds before
+continuing with the next call.
+
+Reported-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=3361c2d6f78a3e0892f9
+Tested-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+Fixes: 4a476bd6d1d9 ("usbnet: New driver for QinHeng CH9200 devices")
+Cc: stable@vger.kernel.org
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+ drivers/net/mii.c        |  2 ++
+ drivers/net/usb/ch9200.c | 55 +++++++++++++++++++++++++++-------------
+ 2 files changed, 40 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/net/mii.c b/drivers/net/mii.c
+index 37bc3131d31a..e305bf0f1d04 100644
+--- a/drivers/net/mii.c
++++ b/drivers/net/mii.c
+@@ -464,6 +464,8 @@ int mii_nway_restart (struct mii_if_info *mii)
+ 
+ 	/* if autoneg is off, it's an error */
+ 	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
++	if (bmcr < 0)
++		return bmcr;
+ 
+ 	if (bmcr & BMCR_ANENABLE) {
+ 		bmcr |= BMCR_ANRESTART;
+diff --git a/drivers/net/usb/ch9200.c b/drivers/net/usb/ch9200.c
+index f69d9b902da0..e938501a1fc8 100644
+--- a/drivers/net/usb/ch9200.c
++++ b/drivers/net/usb/ch9200.c
+@@ -178,6 +178,7 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
+ {
+ 	struct usbnet *dev = netdev_priv(netdev);
+ 	unsigned char buff[2];
++	int ret;
+ 
+ 	netdev_dbg(netdev, "%s phy_id:%02x loc:%02x\n",
+ 		   __func__, phy_id, loc);
+@@ -185,8 +186,10 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
+ 	if (phy_id != 0)
+ 		return -ENODEV;
+ 
+-	control_read(dev, REQUEST_READ, 0, loc * 2, buff, 0x02,
+-		     CONTROL_TIMEOUT_MS);
++	ret = control_read(dev, REQUEST_READ, 0, loc * 2, buff, 0x02,
++			   CONTROL_TIMEOUT_MS);
++	if (ret != 2)
++		return ret;
+ 
+ 	return (buff[0] | buff[1] << 8);
+ }
+@@ -303,24 +306,27 @@ static int ch9200_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 
+ static int get_mac_address(struct usbnet *dev, unsigned char *data)
+ {
+-	int err = 0;
+ 	unsigned char mac_addr[0x06];
+-	int rd_mac_len = 0;
++	int rd_mac_len;
+ 
+ 	netdev_dbg(dev->net, "%s:\n\tusbnet VID:%0x PID:%0x\n", __func__,
+ 		   le16_to_cpu(dev->udev->descriptor.idVendor),
+ 		   le16_to_cpu(dev->udev->descriptor.idProduct));
+ 
+-	memset(mac_addr, 0, sizeof(mac_addr));
+-	rd_mac_len = control_read(dev, REQUEST_READ, 0,
+-				  MAC_REG_STATION_L, mac_addr, 0x02,
+-				  CONTROL_TIMEOUT_MS);
+-	rd_mac_len += control_read(dev, REQUEST_READ, 0, MAC_REG_STATION_M,
+-				   mac_addr + 2, 0x02, CONTROL_TIMEOUT_MS);
+-	rd_mac_len += control_read(dev, REQUEST_READ, 0, MAC_REG_STATION_H,
+-				   mac_addr + 4, 0x02, CONTROL_TIMEOUT_MS);
+-	if (rd_mac_len != ETH_ALEN)
+-		err = -EINVAL;
++	rd_mac_len = control_read(dev, REQUEST_READ, 0, MAC_REG_STATION_L,
++				  mac_addr, 0x02, CONTROL_TIMEOUT_MS);
++	if (rd_mac_len != 2)
++		return rd_mac_len;
++
++	rd_mac_len = control_read(dev, REQUEST_READ, 0, MAC_REG_STATION_M,
++				  mac_addr + 2, 0x02, CONTROL_TIMEOUT_MS);
++	if (rd_mac_len != 2)
++		return rd_mac_len;
++
++	rd_mac_len = control_read(dev, REQUEST_READ, 0, MAC_REG_STATION_H,
++				  mac_addr + 4, 0x02, CONTROL_TIMEOUT_MS);
++	if (rd_mac_len != 2)
++		return rd_mac_len;
+ 
+ 	data[0] = mac_addr[5];
+ 	data[1] = mac_addr[4];
+@@ -329,12 +335,12 @@ static int get_mac_address(struct usbnet *dev, unsigned char *data)
+ 	data[4] = mac_addr[1];
+ 	data[5] = mac_addr[0];
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static int ch9200_bind(struct usbnet *dev, struct usb_interface *intf)
+ {
+-	int retval = 0;
++	int retval;
+ 	unsigned char data[2];
+ 	u8 addr[ETH_ALEN];
+ 
+@@ -357,37 +363,52 @@ static int ch9200_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	data[1] = 0x0F;
+ 	retval = control_write(dev, REQUEST_WRITE, 0, MAC_REG_THRESHOLD, data,
+ 			       0x02, CONTROL_TIMEOUT_MS);
++	if (retval)
++		return retval;
+ 
+ 	data[0] = 0xA0;
+ 	data[1] = 0x90;
+ 	retval = control_write(dev, REQUEST_WRITE, 0, MAC_REG_FIFO_DEPTH, data,
+ 			       0x02, CONTROL_TIMEOUT_MS);
++	if (retval)
++		return retval;
+ 
+ 	data[0] = 0x30;
+ 	data[1] = 0x00;
+ 	retval = control_write(dev, REQUEST_WRITE, 0, MAC_REG_PAUSE, data,
+ 			       0x02, CONTROL_TIMEOUT_MS);
++	if (retval)
++		return retval;
+ 
+ 	data[0] = 0x17;
+ 	data[1] = 0xD8;
+ 	retval = control_write(dev, REQUEST_WRITE, 0, MAC_REG_FLOW_CONTROL,
+ 			       data, 0x02, CONTROL_TIMEOUT_MS);
++	if (retval)
++		return retval;
+ 
+ 	/* Undocumented register */
+ 	data[0] = 0x01;
+ 	data[1] = 0x00;
+ 	retval = control_write(dev, REQUEST_WRITE, 0, 254, data, 0x02,
+ 			       CONTROL_TIMEOUT_MS);
++	if (retval)
++		return retval;
+ 
+ 	data[0] = 0x5F;
+ 	data[1] = 0x0D;
+ 	retval = control_write(dev, REQUEST_WRITE, 0, MAC_REG_CTRL, data, 0x02,
+ 			       CONTROL_TIMEOUT_MS);
++	if (retval)
++		return retval;
+ 
+ 	retval = get_mac_address(dev, addr);
++	if (retval)
++		return retval;
++
+ 	eth_hw_addr_set(dev->net, addr);
+ 
+-	return retval;
++	return 0;
+ }
+ 
+ static const struct driver_info ch9200_info = {
+-- 
+2.39.5
+
