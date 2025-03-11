@@ -1,123 +1,70 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BF32627E7;
-	Tue, 11 Mar 2025 18:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0AD262D37;
+	Tue, 11 Mar 2025 18:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741716648; cv=none; b=ePa4pfA+T8ZbWvKBbf8H6VO/rxDdBfMb9O7+CP43TsJ1yRU8veAbK1F3iQoRMFDK3uQ36e+rBkzl0VzNOOc0EefQoLT2eHy2JLBj/3GQDrsUfTC38r8G1pZwb38LYB7jTwmLhEpecWRYFivaInSin6njqPe7tvVC1U8ad2JBk8w=
+	t=1741716665; cv=none; b=bL92gGfFHN0TaTMZrz4SwosnYpeFvALkoxfutE6pB2eeKwkOohgWncDfZLn866LsNJf8An6XomMgHpK0nQ7iK8rAW+jNPrsmJLAuqRJzeXeDvu18R3Rx8MNddfR6nmjep4e/eiprHZ8DNxM0T7Ox1A2Hqva5RPIdgnpHtxrMgqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741716648; c=relaxed/simple;
-	bh=NQ5vweM3uskXJ3Rjrqwkk81d21CJPgD4AsVgQIQQ2QY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MH8oMrWIaKzLArmIXl510+YnLRlk7n3/ZA9mH4g8nEhebjk8TxnQTHSfd8Rbm5ozUi5u+jB7sasMP6Qk/CB40lh0qj94TE38OCXINidciBkT1ZwGUEA/6zAOhgbTckwZL4HOxUkph1w72Vq2rJ+6XBCrPNC9LmOHgOKSYYFXThc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=omaPfx8o; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="omaPfx8o"
-Received: from [192.168.42.116] (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 93C012FC0187;
-	Tue, 11 Mar 2025 19:10:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1741716642;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8V7VPjzi/nRW6RI17VuvOyviOCuBTnO+03/leDNAQJk=;
-	b=omaPfx8oiXxpuKPdW5ojk7SyQw+bHCfTHlMIixP71390YRFuJwkG16OOe5Ltn3Api7yx9F
-	/R+M1gEJiiCKrSR+kL8iiDRXy8zsdRz0bTa+yMKHhwi5bv1x5V+Uy6f30gmvFIrMb/7I5y
-	Lc4pyInzWamzCRl7uVdLr5dOiHhT/nQ=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <83ea44f6-c0ad-4cb0-a16e-dd4fa17b63c7@tuxedocomputers.com>
-Date: Tue, 11 Mar 2025 19:10:42 +0100
+	s=arc-20240116; t=1741716665; c=relaxed/simple;
+	bh=nW6kcnaVPnd2s0tPsVOrq9MHgOdzd6vGVvSPXXLhxKk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O+DVQ1SvyfzOlsRdjn9BgPXOypfgVD8eExbTlksJr1FpFqv3t/NRaBq0jzcK9Ic2IvvUNo9rQmIdUVgwv8bzP1DIhxaTXwtd19QjdlkL+UMa1CJgwahimmhbXdAPcz1Y4+OmSvBXTqJ6EQJoi01Y3IxjAZtDhKRzbKHtt2xmHJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZC1vZ0Mhpz6H7Wy;
+	Wed, 12 Mar 2025 02:07:54 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1E7771401F1;
+	Wed, 12 Mar 2025 02:11:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Mar
+ 2025 19:11:00 +0100
+Date: Tue, 11 Mar 2025 18:10:58 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, <linux-hyperv@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tero Kristo
+	<kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Jon Mason
+	<jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, Allen Hubbe
+	<allenbh@gmail.com>, <ntb@lists.linux.dev>, Wei Huang <wei.huang2@amd.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>
+Subject: Re: [patch 06/10] PCI: hv: Switch MSI descriptor locking to guard()
+Message-ID: <20250311181058.00000621@huawei.com>
+In-Reply-To: <20250309084110.521468021@linutronix.de>
+References: <20250309083453.900516105@linutronix.de>
+	<20250309084110.521468021@linutronix.de>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
-To: hdegoede@redhat.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250311180643.1107430-1-wse@tuxedocomputers.com>
- <20250311180643.1107430-2-wse@tuxedocomputers.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20250311180643.1107430-2-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Hans, Hi Dimitry,
+On Sun,  9 Mar 2025 09:41:51 +0100 (CET)
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-resending this too on the v2 to not cause confusion:
-
-Regarding remapping KEY_ZENKAKUHANKAKU to KEY_TOUCHPAD_TOGGLE:
-
-Am 11.03.25 um 19:06 schrieb Werner Sembach:
-> Currently only F23 is correctly mapped for PS/2 keyboards.
->
-> Following to this table:
-> https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/translate.pdf
->
-> - F24 and Zenkaku/Hankaku share the same scancode, but since in real world
-> Zenkaku/Hankaku keys seem to just use the tilde scancode, this patch binds the
-> scancode to F24. Note that on userspace side the KEY_ZENKAKUHANKAKU keycode is
-> currently not bound in xkeyboard-config, so it is (mostly*) unused anyway.
-
-I think what the firmware vendor actually wanted to do was to send 
-ctrl+super+f24 upon touchpad toggle. This would somewhat fall in line with, for 
-example, the copilot key being implemented as shift+super+f23.
-
-Following this, my suggestion is to do this remapping and handle the rest in 
-xkeyboard-config
-
->
-> * Qt on Wayland and therefore KDE on Wayland can see the keypress anyway for
-> some reason and it is actually used in a touchpad toggle shortcut, but this is
-> currently being fixed in both KDE and xkeyboard-config to make this less weird,
-> so it could directly be fixed to correctly handle the F24 keypress instead.
->
-> - The scancodes for F13-F22 are currently unmapped so there will probably be no
-> harm in mapping them. This would also fix the issue that some of these keys
-> can't be mapped as the target from userspace using the `setkeycodes` command.
-
-This is optional. I can split it off if wanted.
-
-Best regards,
-
-Werner
-
->
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> ---
->   drivers/input/keyboard/atkbd.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
-> index 3598a21d9d014..4bd6e6ef0715e 100644
-> --- a/drivers/input/keyboard/atkbd.c
-> +++ b/drivers/input/keyboard/atkbd.c
-> @@ -84,12 +84,12 @@ static const unsigned short atkbd_set2_keycode[ATKBD_KEYMAP_SIZE] = {
->   #include "hpps2atkbd.h"	/* include the keyboard scancodes */
->   
->   #else
-> -	  0, 67, 65, 63, 61, 59, 60, 88,  0, 68, 66, 64, 62, 15, 41,117,
-> -	  0, 56, 42, 93, 29, 16,  2,  0,  0,  0, 44, 31, 30, 17,  3,  0,
-> -	  0, 46, 45, 32, 18,  5,  4, 95,  0, 57, 47, 33, 20, 19,  6,183,
-> -	  0, 49, 48, 35, 34, 21,  7,184,  0,  0, 50, 36, 22,  8,  9,185,
-> -	  0, 51, 37, 23, 24, 11, 10,  0,  0, 52, 53, 38, 39, 25, 12,  0,
-> -	  0, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0, 85,
-> +	  0, 67, 65, 63, 61, 59, 60, 88,183, 68, 66, 64, 62, 15, 41,117,
-> +	184, 56, 42, 93, 29, 16,  2,  0,185,  0, 44, 31, 30, 17,  3,  0,
-> +	186, 46, 45, 32, 18,  5,  4, 95,187, 57, 47, 33, 20, 19,  6,183,
-> +	188, 49, 48, 35, 34, 21,  7,184,189,  0, 50, 36, 22,  8,  9,185,
-> +	190, 51, 37, 23, 24, 11, 10,  0,191, 52, 53, 38, 39, 25, 12,  0,
-> +	192, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0,194,
->   	  0, 86, 91, 90, 92,  0, 14, 94,  0, 79,124, 75, 71,121,  0,  0,
->   	 82, 83, 80, 76, 77, 72,  1, 69, 87, 78, 81, 74, 55, 73, 70, 99,
->   
+> Convert the code to use the new guard(msi_descs_lock).
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
