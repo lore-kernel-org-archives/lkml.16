@@ -1,125 +1,104 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933A6253B6A;
-	Tue, 11 Mar 2025 12:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E148241682;
+	Tue, 11 Mar 2025 12:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741696453; cv=none; b=RFucZxNul1tw010bNaP6c4bw9KIhdaZ590Vy+FAbuVLfIUgpIKar1ZPpfdLZuaVTgMD0MTvN1zKgpvGTTURPcQYtOx6+kIzhyb4F97lypBetJE1Fo/wKi5xU8ok4wBU680Eq2sj+73MLjulJ0VflbTff85RpG25UeJerROFrdUc=
+	t=1741696469; cv=none; b=E5yUnEby4QrEgocibcouXqn4uiClqBPtMctHai3ekpElx7OXYWuk2EZEJ3WFj3ybMB323Pldqlm7j0NdLlm/b9KajhYAdyzL3BQl4EBV1qoZjZgLkdUrJCm1AZKsC4WJdHFOCZEVq5tLBHY+ijzGk/Mk/KbKm3Y5puS3uHcR610=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741696453; c=relaxed/simple;
-	bh=addBakMJtFipeP5Dm9M+uBzjJaYdDmTB6XxVM3YiFNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b29Poll4WUDMFTMg01mhRdDyN5eZU7ElC/fygNGs1umXJDRcXoao8jSZCVETJrXOjvQj5qkWwss6LUbTHXbhgaY11xjHuLyDmNDrRDXUlyneYlq1PbG7YGmrcA6Bd3Gf/VIiKOdUL8xRXJqoQXdyxJMxhm7c1WnQp2Y1et+aDoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B+TNxXOU; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741696469; c=relaxed/simple;
+	bh=3nSeGjR2LRHQUTGL1OW3XfGyRxmNFSpIYqZ3BQVOSvM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cOQvP97/ubTF4xY4p6VtElZO7RA0gocawjNB20NMANQ7G8SO/VAcUBp6b9fsV5pgfpj3nz3YK/k6QgYghOULJSNQ6eJBxD2UdIrrNvAR7nZYSc566k367KCQH6DzjfUCYkQH/NPSNR7UI+r1ZpFR/R85Mdz9obztBUlbSE4FBsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Li47Gwkj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+TNxXOU"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c3bf231660so558493685a.0;
-        Tue, 11 Mar 2025 05:34:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741696450; x=1742301250; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=m1ZxqjyMUd+isnYc/2JZqNQs5zU7eDZecHhSMewZT7k=;
-        b=B+TNxXOUESk9yQpQv+5qmeChu5CC8kSE1wwoCtyl7amr2MuqPf0dpirEQFUXrwvqth
-         avV7uVarGsNVyKyDVhslvfhOyC6/OIdM4cFArFnn95j3GrZv0y2rPAzfmweeFafHtLBP
-         B6GItnEejDvx01k4wVa95yXyEqeqdyyHPLtxC8Q5io8Wu0Pq3I77AyyXOtKhKGYZEpZp
-         FhEEKaO8ZUdL6ObWBX0DGfbw1XK/JvExo2tbnesMLFUIMrdFr7O/LSZADZV+acAJXfaF
-         +c4YLAV6fztuSn4SlNSwZHT7rOsr2QQY+xMeR1pEg4xyIyI5f2WSvwtP6AkcXxi5Ysyk
-         XAOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741696450; x=1742301250;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m1ZxqjyMUd+isnYc/2JZqNQs5zU7eDZecHhSMewZT7k=;
-        b=Pf91e8/+0zjlFzg+9IBbXFxixV3Jx+SIe1BMcwZcDmYJ35TXQ2h6Oscn0GPNKTnt7r
-         6UxcGerhu2wT1NiWLmpgsgKfxgRVsQ3iSww8h6Y5RsNReDGvrctRI71Kt8dGxv5DFXMi
-         EqOeiPqRtmR17Ebk5EufOMgxwb+ujN5DTlcuuQHCSOAROe61rI60AFttYe3G7FRnFwRD
-         P4BdXnJ7YojtYXo0Hph43xes+ynFSymPBuxblHEB9D5d502i6ka1FEpj51hNaR7g0RTO
-         Scb3OAmblvlhkAdJ0o0agD30WMyRP+N7RTP4j041D8qMwuO7vReFBxaq6c3MJ5Sc9gMA
-         OfiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUr2YUBsclp3xLz5JmWcoXC/iWBa1qschUBiXU9lfkopMsDQy+UWl3yt2+szyn7BX0R1GOtxI9fukLazNpA@vger.kernel.org, AJvYcCX2r1YrZSjmgooPwXlE4uAiEQjhOdpLmaa+CnSs3aO1tetDjrl/7+kYc24BWD6rklt028Mvb78DhMXs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIEywC91YAEZtQMwPbvSv8TLD4VUuYd+QnljA9W9NhQTU+jpJZ
-	Wp2+zypB0p8N+uuQEtjrsdaljBBpZ2/LQAg7dhN0gaNUpGOGzCNa
-X-Gm-Gg: ASbGncusn9woB92xjaaBb62RwNvsQ/Kx/6HHRn1ZxW1o1agp6NsG8yHsrk/TPHs+s46
-	YQmYnYNBeJE7Dn7qRffeTsLz9w4ApI6B6OcUb3Uf1d3QzRIlAiCM9xqxlK82FKS/76Tn+FxWvCS
-	trxkMBFxf8r4iOpDp3DEnYnX4Bin4quB/utgNteb5bFp/zl0KSqwqqGgBzqwhqtHjEWtG+VEJ/p
-	n14hPmzvBdHaBxbq16sTbFF3xkLqNgUrmHFcMYyDp7Gkzf1HiiI3Ri5w7QTOJRphRSG9w78zsFY
-	0A/Q6OHNOzKVfIH6JSCo
-X-Google-Smtp-Source: AGHT+IFU2cAqaMeCXlZ0Hqy6Zv7mfjOYRy5JKPusGv2guBlnRHiq/LPliOv7yz6eaX2PsMQjmuIglQ==
-X-Received: by 2002:a05:620a:26a3:b0:7c5:55f9:4bc1 with SMTP id af79cd13be357-7c555f94e42mr850962085a.42.1741696450372;
-        Tue, 11 Mar 2025 05:34:10 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c56630e44dsm34135885a.86.2025.03.11.05.34.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 05:34:09 -0700 (PDT)
-Date: Tue, 11 Mar 2025 20:34:02 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Evan Green <evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Jesse Taube <jesse@rivosinc.com>, Andy Chiu <andybnac@gmail.com>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Yong-Xuan Wang <yongxuan.wang@sifive.com>, 
-	Yu Chien Peter Lin <peterlin@andestech.com>, Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v4 0/3] riscv: Add bfloat16 instruction support
-Message-ID: <d6t25jmcf57sqpjqwykhdf3ju6v3wwpyaiumll4x6bjfhcohl5@oikmnpusjn6u>
-References: <20250213003849.147358-1-inochiama@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Li47Gwkj"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BCShMn029496;
+	Tue, 11 Mar 2025 12:33:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=U7g7+PfQ3H9C/hSbI3ABdnYmVgectOIMQFe+/I4vY
+	sc=; b=Li47GwkjwXkji/uij1GDtxWIr4ljIHiCxJBl3Y6fAn6Oz+Lo/PGtooN+g
+	gSPElXiyzSzv8L36Jubv1h4eoiDWOKOlbqMNQUn30mLEiSgS7pA8W0qk4x4g2FB9
+	Ko4m7WNL1m9JNHS41PNySXXjMUpJ/aRQwWjAo12UWhAowX5VceyOE6k98WKI2Fjg
+	VDHUoFISCgK/xCSZEIVibucM+9bcYCkBJOsf8VMSnl6vezQRUe0+mwkxmFIUtAIO
+	f+/XO2SaZ4A9SfLU52MGAmg+4zPSbrksywWIe7UayV0TAuaPmycu2+ngpDb2XlzF
+	WwmNzZzJ12PgZ0bK4s7DrnrYfL4zg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45an7bg0qj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 12:33:32 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52B8o3ju006982;
+	Tue, 11 Mar 2025 12:33:31 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45907t4b7h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 12:33:31 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52BCXR0j37028184
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Mar 2025 12:33:27 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 565D22004B;
+	Tue, 11 Mar 2025 12:33:27 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D7D0620043;
+	Tue, 11 Mar 2025 12:33:26 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 11 Mar 2025 12:33:26 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Jeff Xu <jeffxu@chromium.org>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Kees Cook <kees@kernel.org>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH mm-unstable 0/2] mseal system mappings fix + s390 enablement
+Date: Tue, 11 Mar 2025 13:33:24 +0100
+Message-ID: <20250311123326.2686682-1-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250213003849.147358-1-inochiama@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FZ58v51MTbKQnsn9kFpmKloyYy9x14NB
+X-Proofpoint-ORIG-GUID: FZ58v51MTbKQnsn9kFpmKloyYy9x14NB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-11_02,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=394 phishscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 mlxscore=0 impostorscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503110080
 
-On Thu, Feb 13, 2025 at 08:38:44AM +0800, Inochi Amaoto wrote:
-> Add description for the BFloat16 precision Floating-Point ISA extension,
-> (Zfbfmin, Zvfbfmin, Zvfbfwma). which was ratified in commit 4dc23d62
-> ("Added Chapter title to BF16") of the riscv-isa-manual.
-> 
-> Changed from v3:
-> 1. rebase for v6.14-rc1
-> 2. patch2: add validate for zfbfmin, zvfbfmin, zvfbfwma
-> 3. patch2: apply Clément's tag
-> 
-> Changed from v2:
-> 1. rebase for v6.13-rc1
-> 
-> Changed from v1:
-> 1. patch3: add missing code in sys_hwprobe.c
-> 
-> Inochi Amaoto (3):
->   dt-bindings: riscv: add bfloat16 ISA extension description
->   riscv: add ISA extension parsing for bfloat16 ISA extension
->   riscv: hwprobe: export bfloat16 ISA extension
-> 
->  Documentation/arch/riscv/hwprobe.rst          | 12 +++++
->  .../devicetree/bindings/riscv/extensions.yaml | 45 +++++++++++++++++++
->  arch/riscv/include/asm/hwcap.h                |  3 ++
->  arch/riscv/include/uapi/asm/hwprobe.h         |  3 ++
->  arch/riscv/kernel/cpufeature.c                | 35 +++++++++++++++
->  arch/riscv/kernel/sys_hwprobe.c               |  3 ++
->  6 files changed, 101 insertions(+)
-> 
-> --
-> 2.48.1
-> 
+When rebasing the mseal series on top of the generic vdso data storage
+the VM_SEALED_SYSMAP vm flag for the vvar mapping got lost. Add that again.
 
-I wonder whether this patch could get merged? So I can
-submit the SG2044 board dts without this as dependency.
+Also add s390 support for MSEAL_SYSTEM_MAPPINGS.
 
-Regards,
-Inochi
+Heiko Carstens (2):
+  mseal sysmap: generic vdso vvar mapping
+  mseal sysmap: enable s390
+
+ arch/s390/Kconfig       | 1 +
+ arch/s390/kernel/vdso.c | 2 +-
+ lib/vdso/datastore.c    | 3 ++-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+2.45.2
+
