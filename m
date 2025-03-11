@@ -1,112 +1,140 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBF92571D8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 15:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E281E98FB;
+	Tue, 11 Mar 2025 15:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741706063; cv=none; b=X7hnAGDVJIeKMFG+eOkkap7v+OqxQ67jHnSEEEg3dNfdh9DkMeWO1gom3L+Z4QYQZAceLESEEnQPrzXBpirbI2Qt+pYLKQXichpwHKjRXx3alwvSmd2/U7fc65yDAFNhjTI96P9HqhfT7XytJjHqtIijgqbrRrGnskuHBp1kXYc=
+	t=1741706103; cv=none; b=MnmyT2NJqtPYrU+M8HJuy+4zvCErPe6Nnyki1GfDc/dy6t5XZeImV0ZzXNyoGMzO9huONZ9AStcgevXOfMtD3b4doJfmR5tQFQBD6BH3xc94dUdmWH95Q93Ed9TAAiNALDC8WJ5fOg6OLSp16Xne6h08gLY57sfdcJCakH+Xrm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741706063; c=relaxed/simple;
-	bh=iBv0SBI0u0mqJ2hLDa+I/+nk5rpoHMCvlmD4u1xS/9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nAvE7gwPQFDBqozTB/MFAwDNytoCwVKkPpbxSzMqJ8Z+8kBZpAozeAq6uZ9EwPAoWCXukkhHDenaIjaqKKnWJ7fKJpytXgDftz822Qo0Rq5/UNSc//ffRvb94vjdNVfDA+k1/tASuL/GBxb/WmzLKxf5ShiCPa1yvNKu2cdbF2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=PpvvgpV/; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1741706103; c=relaxed/simple;
+	bh=1/1jP4bOvzaF/7PxxywwaioO02SmscSfTomG7fkckZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WTwrmtI1s4sik9GkBZg1cbYTMKs7HSAqysCAOZS/Ds0WbQYm0h9u++1TP7dBMJ5PoxZjmp6FUtvLC5QN3QrQuzz3oBfJmtGC3S9x9Cna83gh9/ZL3b9Y2S6bwU5JcD316ATalffht67yhVR1vUZXMap0i/843y9RQ4nx0SB7IlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLe8AIPL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="PpvvgpV/"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c55500cf80so162718785a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1741706060; x=1742310860; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Evy3i/UzIkhyI0KxEccbdCNHkQedTc8R4M/ZChk2KNY=;
-        b=PpvvgpV/NLuHfdiYMspZ6IHKTAu+rOTZU1Nh0B0YZZQXC95ea57I2qaodMMNZA2t+b
-         B47Mm8OukEQe+CM/hMinDhRl8iJ4n6/DOroAR5tnxl5Pg574dWV+uaGrhUXC4Jtt7zS4
-         S3xyjcgTBqT5UonvENBQPoQIj4mbmi86rwEvvUBuwQHCjT8SLtIotGtu8gHTgnuZi8Bm
-         cwEV0MXxUQmTNZEizpc1Q2/sdMhizV4PQNVvIOqcGu+ONEEOZPuzHFcBLXqdo4Rq2C02
-         gyPcGxCKEv3tSt5G8sgLdWDABZE2FQC6HBnBnhP3TO8a8otKmlOCNTcRFGV174I4JJ36
-         CsWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741706060; x=1742310860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Evy3i/UzIkhyI0KxEccbdCNHkQedTc8R4M/ZChk2KNY=;
-        b=Dv9SJ1D32IZu+CI928GPq30UYKubLFGqe6U6ybvXzdkbHi2gQDKK0Fb52J9pymNHPH
-         T6pi/MS9SAN/Imaa2wdsbDjJOF4o54wvHKnjel0A+RHG/QAAr/2QdxVtVGTd7FApHY8b
-         cSNXI4HtEq9fECijdjhIGtOsl/0lmpAuYRhBZMz0Exz5vHeAUqJpM2Ui8XQKJp9lxYYr
-         aIsUmGVSl0g3ZCBEMvF2xDQGKDmu/WFEtfe6DwEQOcD/YPycrEIXOa0De3edDu0orD1o
-         ElNVLU7lPL/J6tK7E2hp8zHKzOr1LOr+a+7y1bopntqE/W7aljQ7W9jYMIhTX4PrUl7/
-         kSpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvQ9Aei/dLyG6/WueaqpVl2YwZ7OZ4xoMm/+jV1NHdrBi0O31EaLexQNcKSXx1DawhPDwaISkdNngMRjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlwptWMXWqbhR8pYl36DCes4am1+37Jh2dx1VYqCFxcabMJ41h
-	KegF8yC0sWmA++GQaW/HVfum8+y0sNh+IN7zOe8kqkdUUlE+QLpXm1FdcabS3OZio1vFnI8jTI9
-	LmFz6zTIiThxd4p3xqvxNiePYbKIJA5u/gRm7
-X-Gm-Gg: ASbGncuXJZBh61jcnttTJya85AYwLahjaawgyOpTGl4+F2/ObaW02tiTgKGxmQj0Hyb
-	dfdHWRNSq+h3hF3FuOsrmxZIm6imcbow87b6w0LDrsJPJ+0LHx9uf7ZNwLeegCoIC8hyP8xVzdO
-	GNjM5jt/BXoUqg3fft3fJvrB855g==
-X-Google-Smtp-Source: AGHT+IFSa2EhAAeUGu4Iit9E0/qpbd2+7yC/0N9EYTysdPGCdpU8ni/m9o25fyB0KM5SpgmA8E6N/2aHbDADMxT2F18=
-X-Received: by 2002:a05:620a:618e:b0:7c5:4c49:76a5 with SMTP id
- af79cd13be357-7c54c4981admr1323514285a.12.1741706060070; Tue, 11 Mar 2025
- 08:14:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLe8AIPL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08690C4CEEA;
+	Tue, 11 Mar 2025 15:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741706103;
+	bh=1/1jP4bOvzaF/7PxxywwaioO02SmscSfTomG7fkckZo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LLe8AIPLwFoitbv3b3VnX1Bd2TFoxKz76EHmRxYOPe1so01FfDN5g3DGx8yyJu4BV
+	 59eDWhvcTw27Aq9aePM2mPG5935tSXOHxSkKPmlUIl2wsQCQmM5saDdmd1CehFXWtP
+	 eEoy2rLq3GDI+nf68ODsZVL8QacV5U7YsW9EN+UEhzPX4stmaZVjE9HPDb4n8N3Tjq
+	 QZsHXlTKf9hp91InbT5B/XAEsEl9TeqW0UNrywIPnUWykyWUmxdNnh06EVvDhObM0V
+	 lTkpngFh3Ig2Gq3LFeScp3QGBmItt5QRnOk/VYZBh44evB6/0r+YHXxuLBRelv2Bu9
+	 yhPhZysIv5/tw==
+Message-ID: <23a5d017-06e5-4f4d-a522-1f4beb7a1f32@kernel.org>
+Date: Tue, 11 Mar 2025 16:14:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240801171747.3155893-1-kpsingh@kernel.org> <20250311133731.GB17395@linux-l9pv.suse>
-In-Reply-To: <20250311133731.GB17395@linux-l9pv.suse>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 11 Mar 2025 11:14:08 -0400
-X-Gm-Features: AQ5f1Jqr4_hVE1x1R6hZKxzTP8FN-7YzAhoE2LEe81DYBasZfYzjWj8gWtHnCQg
-Message-ID: <CAHC9VhQxhe6Gqjzri+SXi_OdW_7tSM06A7M9_O=FPef1AsuTkA@mail.gmail.com>
-Subject: Re: [PATCH] init/main.c: Initialize early LSMs after arch code
-To: joeyli <jlee@suse.com>
-Cc: KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, bp@alien8.de, sfr@canb.auug.org.au, 
-	peterz@infradead.org, nathan@kernel.org, Jiri Kosina <JKosina@suse.cz>, 
-	Michal Suchanek <msuchanek@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML schema
+To: Purva Yeshi <purvayeshi550@gmail.com>, ukleinek@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vz@mleia.com,
+ piotr.wojtaszczyk@timesys.com
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250311125756.24064-1-purvayeshi550@gmail.com>
+ <af6ebce2-7256-48bd-94d4-dc81e2944966@kernel.org>
+ <47f6713b-b751-4791-9059-a128dd1fc71d@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <47f6713b-b751-4791-9059-a128dd1fc71d@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 11, 2025 at 9:37=E2=80=AFAM joeyli <jlee@suse.com> wrote:
->
-> Hi KP,
->
-> On Thu, Aug 01, 2024 at 07:17:47PM +0200, KP Singh wrote:
-> > With LSMs using static calls, early_lsm_init needs to wait for setup_ar=
-ch
-> > for architecture specific functionality which includes jump tables and
-> > static calls to be initialized.
-> >
-> > This only affects "early LSMs" i.e. only lockdown when
-> > CONFIG_SECURITY_LOCKDOWN_LSM_EARLY is set.
-> >
-> > Fixes: 2732ad5ecd5b ("lsm: replace indirect LSM hook calls with static =
-calls")
-> > Signed-off-by: KP Singh <kpsingh@kernel.org>
->
-> I have tested acpi table override function by
-> CONFIG_ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD option. As this patch
-> description, the early LSM can NOT lockdown acpi table override in early
-> boot stage now.
+On 11/03/2025 15:55, Purva Yeshi wrote:
+>>>
+>>> Define properties:
+>>> Restrict `compatible` to `"nxp,lpc3220-pwm"` using `const`.
+>>> Limit `reg` to `maxItems: 1` to ensure a single register range.
+>>> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
+>>>
+>>> Mark `compatible` and `reg` as required properties.
+>>
+>> So it wasn't before? What are you implying here?
+> 
+> The compatible and reg properties were already present in the .txt file, 
+> but in a different format. I initially kept the commit message for them 
+> but have now removed it.
 
-It's been years since I've had to an ACPI DSDT override, but just so
-I'm clear, this replacement table needs to be bundled in the initrd,
-yes?  Assuming that's the case, I think that's likely okay as anyone
-who cares enough about kernel integrity to run Lockdown should also be
-protecting the kernel/initrd with a firmware and bootloader chain that
-ensures only authorized images are booted.  If the user doesn't put
-any protections in place to ensure only authorized kernels/initrds are
-booted, Lockdown is a bit silly anyway.
+What does it mean "different format"?
 
-> Do you have any plan to fix the early lockdown LSM? Or I missed any fix
-> patch in kernel mailing list?
+...
 
---=20
-paul-moore.com
+>>>
+>>>   create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.yaml b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.yaml
+>>> new file mode 100644
+>>> index 000000000..3e41cd291
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.yaml
+>>> @@ -0,0 +1,45 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/pwm/nxp,lpc32xx-pwm.yaml#
+>>
+>> Filename matching compatible.
+> 
+> In the lpc32xx-pwm.txt file, the compatible property was defined as 
+> "nxp,lpc3220-pwm", so I have kept it the same. To ensure consistency 
+> between the filename and compatible, should I rename the file to 
+> nxp,lpc3220-pwm.yaml?
+
+Use whatever is there in the compatible property as the filename.
+
+
+Best regards,
+Krzysztof
