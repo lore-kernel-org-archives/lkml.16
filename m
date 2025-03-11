@@ -1,165 +1,208 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA8622DFB4;
-	Tue, 11 Mar 2025 09:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA672222D3
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741684900; cv=none; b=HnNxEALwP5lF3L4aWVw+vu9z8uJwyz4LGRsuqLTAVyHFfeD5qMrpiImpMGvO0LWxZRgOZon01KINm7BP6c7n80dAwvDpwngxiVnK40y8nONUFChpk5M99fLm1/i4b/j4xYlZFT/4Q9txFRi/KWHMSrKQ98sQ67w4A2+W950wo1Y=
+	t=1741684967; cv=none; b=HpofCjU92ByCGo/maNtsAJb+xqCvdWbMFuXctmkK8pMsc9/xrKJD1PMOBYCBH5H6sxxgRreAkcQTUpQgZ3OxzXJ9f0iiTMA3tcxFFZgu010Io9GbvYZ16qVTv9tw0m0nMd0W5FPwqdJjvbL2RsVsgtkjW4Ieako6HDWaJlnMsuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741684900; c=relaxed/simple;
-	bh=NNCDmWvEeAkd8FhlZDmXtAIfDrkUFxd8oqdzc1UrrVk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s/6J5kBMQyaec5QOKPPgIihrZAZaVwJ5wbgRdnrfKBe/US/Ml13tzUE026s4qfa/D+IkPP9YvHU4/BK6OKvXBGU9t9QA3mum3OuI1QAasLlB78d2/+Lg9XQwAIppsuYNwojK7tCuwPVktelfg8w6462yuFi13O3ygNr0WvpJpc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U63TcZzx; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741684967; c=relaxed/simple;
+	bh=BspgR8efAUUZvEUV7Ragma+wogQI2jzTWK2a7NYT03o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p/LT9kBddJHIRZbBfRKSI0huiq1egBt7aZ3SfcM8lERIsjd5Pv4KzSjY/aWiq6cnbFHiLF2+UexEQsOwypG3jNDOhztWD7lprMXVWOSd+BoXzfrKXE/A5RkbXuoU06PimbfjqHSlDOOjno3TaeJrKGgL/jtuJ1cYu4P8BBD27DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jDmIsaWy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U63TcZzx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 855B6432FD;
-	Tue, 11 Mar 2025 09:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741684896;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDmIsaWy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741684964;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z7UQpUk6EmrJuJuxGvA3LtueMy3iwHvPLNk89wKvghY=;
-	b=U63TcZzx714/xsSVzQjZUkomYVJaYT/FhlISzbZfEwUvBH5pyaAqnCln+q/Mr+oBVO3SJO
-	08Vyv2LPU9TinK47r1ncKAtQ96tXWmX+Js7Zw6cz/UhwbKvRJl+UoA9gCQzUB2uQJ2Gi4i
-	xkfKR0Rp5o3bKLcLMl6YMiX+HgUtp7iKwZIvzNsPIxnfDDzOk4wrUGQdkF2CFVswY2a2lz
-	+HLCoW9CB34ajgOH2EQnt3esL9I2GzhDaSKAysRjpshjUIR9agjRBOzsbQtqgqgKQzECWi
-	2T1fUAbPw0BXejic0Um3l0XlHHUNDJ9edrWoYKLSeNDeuND9GSILiajG3Xge8g==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Tue, 11 Mar 2025 10:21:23 +0100
-Subject: [PATCH v2 2/2] vsprintf: remove redundant and unused %pCn format
- specifier
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aoowg98qfqmhPGYX9HCQXG0NImnz6BJb3PARBiLP8mk=;
+	b=jDmIsaWyggvlF0hAbmdXlKEh4Aq9ojOvK3IHLTtx7qDBGGRVr5WGPSSWUdi22JD4sRS5Z1
+	O7SzAw1Dgdul2PJRiG1ivxjTIaWpacUSAaOTi9zHzw7ZqCgfFrhxrnN4xt9ZqDwiCj4EyC
+	IEoR+YqgdI+RPdcYKnMRAwEFbR3jO+E=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-46-kPlozSL4MleX1tVOZiin8Q-1; Tue, 11 Mar 2025 05:22:42 -0400
+X-MC-Unique: kPlozSL4MleX1tVOZiin8Q-1
+X-Mimecast-MFC-AGG-ID: kPlozSL4MleX1tVOZiin8Q_1741684961
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so13915345e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 02:22:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741684961; x=1742289761;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aoowg98qfqmhPGYX9HCQXG0NImnz6BJb3PARBiLP8mk=;
+        b=iE29j4/IRCkzsSI/NhzRxUCFyBi/A5ZOQpGXKZZCgPKZ9TdedwzRrwZ6+Lk1xxxL5B
+         rRc0UDgD31cx1h1hy38xFWkFSKTnAp6K2ixqFAmKTqZk7qT6AsOq72r0Tf4RYo9JM12O
+         8u7gGoB061N4aoNqTfE+6T4NOr4omzpfZHIMODS8rgJvDPoi957K4wuKS6LN8IejFQdw
+         SNsldl/NcgClzk74yjdpkgPaFzQ5aiCAxooOKJEJHpN3qV2eA9yytPU98gqrDgswnP7T
+         N4uKixrMGLwii0aQmDaVddPkF9pOC0El5l2donE4+4BKMCt8YhdVyKKxeeXWQsAwwysQ
+         gsWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtmq/9tnKrKMI7iPwwWLde72zBjU4BOkLTHhZYg1pSj+jOgSnSFV5V2QSiwnvFp8DKOhdgvfCKSFoaHJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJC1V/rduU0SLrUXG7g+QYZgzqwX8UbYZ4yNyyU1vJmKjMFH6r
+	7th80fFJpjJtCb/hqECAUkjyVj7Jk0tEMAXY1xT04Sp9SaoHM6ME5jYH0Crn7i4YDgx8jeJ75J5
+	rYxSuzZwW4S8AwG67GQHhdEy8m6RKn6onqkTlgPHxwNk2VsPfQ/JyVThvmUOuVA==
+X-Gm-Gg: ASbGncvZJ9lLoW/N4kIrs/G6AWzuLgHG+z2orIHQDIEIYoc4j/tb0Hsias5wkKVGuz+
+	vlwu9SqWuH87a4iFwnC4hPXqJfcuNoG3+pdyfrFxijUbhifm6N0j3DXzlUyWtGIov+5TGSkNIpc
+	4ArY8wBvDmX8S1l3DEewdTQVetrlCr54+6sEzEE4sKGUnl5VLW4Z1wLbpTzgSHw77Lns6mNBVBl
+	JnY298fuMx4e4bdLgwSml4dOXdIkAHbOLzMil+D2Cwu0z7E2YQpuQZKXqT9yome3ie4Nc/y0yw+
+	gwEdkjdSunY1+sNPZm4YF+iQl7uX/S4I81ACPT1Fytnf2LcdZcWbuXTyDkcF/QXgVSy+zK1elfv
+	d6Q0bUbPTZfJ2ZzkYCpVEFES3NGJBtBeojt8K8VDhlbc=
+X-Received: by 2002:a05:600c:1d26:b0:43c:f597:d589 with SMTP id 5b1f17b1804b1-43cf597d965mr61902745e9.27.1741684961379;
+        Tue, 11 Mar 2025 02:22:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG3OeLTnks1AHtv43fnHPcqD//ZPkiszEEwFWvPRWLGfP75AE62MDVat+38GQNeR+vGswVmHg==
+X-Received: by 2002:a05:600c:1d26:b0:43c:f597:d589 with SMTP id 5b1f17b1804b1-43cf597d965mr61902505e9.27.1741684960961;
+        Tue, 11 Mar 2025 02:22:40 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c720:ed00:a9b3:5954:823e:3427? (p200300cbc720ed00a9b35954823e3427.dip0.t-ipconnect.de. [2003:cb:c720:ed00:a9b3:5954:823e:3427])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c102db1sm17527475f8f.95.2025.03.11.02.22.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 02:22:40 -0700 (PDT)
+Message-ID: <5f8db79f-5eb3-48f0-a7cd-a903f9cbe75e@redhat.com>
+Date: Tue, 11 Mar 2025 10:22:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250311-vsprintf-pcn-v2-2-0af40fc7dee4@bootlin.com>
-References: <20250311-vsprintf-pcn-v2-0-0af40fc7dee4@bootlin.com>
-In-Reply-To: <20250311-vsprintf-pcn-v2-0-0af40fc7dee4@bootlin.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, 
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, Liu Ying <victor.liu@nxp.com>, 
- linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvddukeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefffffgfefghfettedtfeehgfdtveekhfekudeiueetkeehleetveetjeffhedugeenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedtpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrphhiqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopeiihhhouhgsi
- hhnsghinheslhhoohhnghhsohhnrdgtnhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehpmhhlrgguvghksehsuhhsvgdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] driver/base/node.c: Fix softlockups during the
+ initialization of large systems with interleaved memory blocks
+To: Donet Tom <donettom@linux.ibm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Cc: Ritesh Harjani <ritesh.list@gmail.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+References: <20250310115305.13599-1-donettom@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250310115305.13599-1-donettom@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-%pC and %pCn print the same string, and commit 900cca294425 ("lib/vsprintf:
-add %pC{,n,r} format specifiers for clocks") introducing them does not
-clarify any intended difference. It can be assumed %pC is a default for
-%pCn as some other specifiers do, but not all are consistent with this
-policy. Moreover there is now no other suffix other than 'n', which makes a
-default not really useful.
+On 10.03.25 12:53, Donet Tom wrote:
+> On large systems with more than 64TB of DRAM, if the memory blocks
+> are interleaved, node initialization (node_dev_init()) could take
+> a long time since it iterates over each memory block. If the memory
+> block belongs to the current iterating node, the first pfn_to_nid
+> will provide the correct value. Otherwise, it will iterate over all
+> PFNs and check the nid. On non-preemptive kernels, this can result
+> in a watchdog softlockup warning. Even though CONFIG_PREEMPT_LAZY
+> is enabled in kernels now [1], we may still need to fix older
+> stable kernels to avoid encountering these kernel warnings during
+> boot.
 
-All users in the kernel were using %pC except for one which has been
-converted. So now remove %pCn and all the unnecessary extra code and
-documentation.
+If it's not an issue upstream, there is no need for an upstream patch.
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Fix stable kernels separately.
 
----
+Or did I get you wrong and this can be triggered upstream?
 
-Changes in v2:
-- update Chinese documentation (change acked by Yanteng Si <si.yanteng@linux.dev>)
----
- Documentation/core-api/printk-formats.rst                    |  3 +--
- Documentation/translations/zh_CN/core-api/printk-formats.rst |  3 +--
- lib/vsprintf.c                                               | 10 ++--------
- 3 files changed, 4 insertions(+), 12 deletions(-)
+> 
+> This patch adds a cond_resched() call in node_dev_init() to avoid
+> this warning.
+> 
+> node_dev_init()
+>      register_one_node
+>          register_memory_blocks_under_node
+>              walk_memory_blocks()
+>                  register_mem_block_under_node_early
+>                      get_nid_for_pfn
+>                          early_pfn_to_nid
+> 
+> In my system node4 has a memory block ranging from memory30351
+> to memory38524, and memory128433. The memory blocks between
+> memory38524 and memory128433 do not belong to this node.
+> 
+> In  walk_memory_blocks() we iterate over all memblocks starting
+> from memory38524 to memory128433.
+> In register_mem_block_under_node_early(), up to memory38524, the
+> first pfn correctly returns the corresponding nid and the function
+> returns from there. But after memory38524 and until memory128433,
+> the loop iterates through each pfn and checks the nid. Since the nid
+> does not match the required nid, the loop continues. This causes
+> the soft lockups.
+> 
+> [1]: https://lore.kernel.org/linuxppc-dev/20241116192306.88217-1-sshegde@linux.ibm.com/
+> Fixes: 2848a28b0a60 ("drivers/base/node: consolidate node device subsystem initialization in node_dev_init()")
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index ecccc0473da9c10f45f2464566f690472c61401e..f3009e6ec80a864c330c8812efcd82c12f4066b3 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -571,9 +571,8 @@ struct clk
- ::
- 
- 	%pC	pll1
--	%pCn	pll1
- 
--For printing struct clk structures. %pC and %pCn print the name of the clock
-+For printing struct clk structures. %pC prints the name of the clock
- (Common Clock Framework) or a unique 32-bit ID (legacy clock framework).
- 
- Passed by reference.
-diff --git a/Documentation/translations/zh_CN/core-api/printk-formats.rst b/Documentation/translations/zh_CN/core-api/printk-formats.rst
-index bd36d35eba4eb124be43a66227059a30429e4135..96a917ecc93f2a4872784b6d8e3f98bcb9f5f737 100644
---- a/Documentation/translations/zh_CN/core-api/printk-formats.rst
-+++ b/Documentation/translations/zh_CN/core-api/printk-formats.rst
-@@ -523,9 +523,8 @@ clk结构体
- ::
- 
- 	%pC	pll1
--	%pCn	pll1
- 
--用于打印clk结构。%pC 和 %pCn 打印时钟的名称（通用时钟框架）或唯一的32位
-+用于打印clk结构。%pC 打印时钟的名称（通用时钟框架）或唯一的32位
- ID（传统时钟框架）。
- 
- 通过引用传递。
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 56fe96319292674c9f79559cf78dd0d99d1a1f06..143d55cb1c12acac21a6c6bafd255437e878f280 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -1969,15 +1969,11 @@ char *clock(char *buf, char *end, struct clk *clk, struct printf_spec spec,
- 	if (check_pointer(&buf, end, clk, spec))
- 		return buf;
- 
--	switch (fmt[1]) {
--	case 'n':
--	default:
- #ifdef CONFIG_COMMON_CLK
--		return string(buf, end, __clk_get_name(clk), spec);
-+	return string(buf, end, __clk_get_name(clk), spec);
- #else
--		return ptr_to_id(buf, end, clk, spec);
-+	return ptr_to_id(buf, end, clk, spec);
- #endif
--	}
- }
- 
- static
-@@ -2382,8 +2378,6 @@ char *rust_fmt_argument(char *buf, char *end, void *ptr);
-  *      T    time64_t
-  * - 'C' For a clock, it prints the name (Common Clock Framework) or address
-  *       (legacy clock framework) of the clock
-- * - 'Cn' For a clock, it prints the name (Common Clock Framework) or address
-- *        (legacy clock framework) of the clock
-  * - 'G' For flags to be printed as a collection of symbolic strings that would
-  *       construct the specific value. Supported flags given by option:
-  *       p page flags (see struct page) given as pointer to unsigned long
+That commit only moved code; so very likely, that is not the problematic 
+commit.
+
+
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+> ---
+>   drivers/base/node.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 0ea653fa3433..107eb508e28e 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -975,5 +975,6 @@ void __init node_dev_init(void)
+>   		ret = register_one_node(i);
+>   		if (ret)
+>   			panic("%s() failed to add node: %d\n", __func__, ret);
+> +		cond_resched();
+>   	}
+>   }
+
 
 -- 
-2.48.1
+Cheers,
+
+David / dhildenb
 
