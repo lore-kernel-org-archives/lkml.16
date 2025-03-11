@@ -1,118 +1,137 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4642B22B8C8;
-	Tue, 11 Mar 2025 08:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B963226865;
+	Tue, 11 Mar 2025 08:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741683492; cv=none; b=Uf5ep1lTUr+zlxlxiW36iiLCeR93VnYSzbMqnOyNvZuNXDjuv6j62XgCqHu7r+e/fnO+OTu3v5PkOYOCDrmzrA98IIyI+eZUhI4DeF4ScmatumC1LvLLwz5kursQSBfkt6u8+mmtAI3zhmLdCrixt4vZ52g17ABHE0RAprisbLs=
+	t=1741683542; cv=none; b=dyOwavUUvOS/2WigJ1ATAaHU4bFEe5qjynlW67RVhTCsFBl3c3WLrywlGqmQc58T6Tmi7MhpqKVVdNLai2X0enyFd6FevdK8tvovzIIhsJkOW0CNz7bmsW6/mCZekPisVK39HDWedEgJo775MIMr4DS6GFni0exxOHpY5O1x4Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741683492; c=relaxed/simple;
-	bh=OoJriUqFnHkd+c0rjQnFxlTZBZ6vjf/CcBs/t4RG/qs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SORXNt9yy1fAM7Y1D47ipPLTCy6gzoPhCVhbs07ml3NgAsR7h5rqxqPLeQ/OLMRdUH6qean2KPCOvOLlpYIA0QzNAORxlFmMjJhrMWFD56j6l0FxXCDVM4hyDU/awSr+nYiWxDIkPfy4UXrighCMwoNFIUqUqfF+oo+98Xk/AcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EhKWg8H/; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741683542; c=relaxed/simple;
+	bh=98sP7xH0qPB4dwZu7HQaBb0Cqo3hmIKKPfOQ/n15WjA=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=si0nMUiB9unhqWIYHG8HPBYRm46SMsWwFDpW+vKiBk/E8BK8ckjFRzy+OSnKMx1GAzz2flW9N2E55b69FwxR2Ycqw+LXCxw0oQ1qhdLxW6fS3ShTtY3mSMl6sN45evvBrb02ox1+7x2fhRSzm3XHmG4kYyp7DnndUQA3tfG5rzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KuvSezzA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Z2RQlWC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhKWg8H/"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-223378e2b0dso74725505ad.0;
-        Tue, 11 Mar 2025 01:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741683490; x=1742288290; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lA2bydqpRt+OlncV1V8Whn8hMq0Jg5Zcz7zDV610P04=;
-        b=EhKWg8H/EED1d/oByTVJ84RBaig5RAY1EZQP4utb8PYsNCL3y6RxEq689Pct+WZ3Xb
-         f5onIEyWWRUXXDpoGg9zTdFXKi3X7HuBPmKV53tsLe5q3T49d8SGXXfYVwwsAjjB2/Tf
-         li48FYU8GGhFPHwV1kRKikEmfzqQ1XOMcBOEKKEsdAXgd3xwRdIZOwtnZqaAkkIpeVZV
-         IxIz7jnKLn64ffvFSwR+B/q3771/KWm/e8LKBBgwqkcvi0DaaQmydx+9iJJGgji5YyZa
-         QBwGgP/dYjKGsePWt6OjgcD29Pkzyq9dj8+hgb1P8KhJ3d/M2zy4X2oi5+F2lyoDAfHH
-         jNWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741683490; x=1742288290;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lA2bydqpRt+OlncV1V8Whn8hMq0Jg5Zcz7zDV610P04=;
-        b=Ii+rBTAvqwSvYJFAaO11cd6LTy64usPM7n0o80izwxS9O/GuLf+T/+b7qX3zQHPsI/
-         dwCHx4K+EULYcYfAmNE2mzz6Q29vJ/iH/yT8MHskz3vvrlMAHcyKPTmDVSiFPUzATwdg
-         tRJkmqio6sm5p4UC51Cv8svSukcRZAQ6At53xGGHvBikTOSLOlTojE7uWzTgV6LW+iPX
-         19kO4b/gyxkRnDc2ksISLamC25EQfMVhg/twTLeZsEZNUBpQuKrSkYHmQR3k22UdHuHD
-         oehTe16D4/u1RRdUo4tcVga3Zlu52Qtfo5Ql3CDhstn6mEG7OzbwALQ3j42SQm+YRqyb
-         I1yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUme9L7ZKoiJjh8DVnJ0ZBFJ6skAXgDCWY05tacaLGHOpOd33l4NSvZgqJbL9U1XOgUYKemgfAEd1JO@vger.kernel.org, AJvYcCUq3TOfbL4lZXfHr1drregjYzZZ3qwgZP5eNZai2PXQSDN6MZnXwO9DIud8dM2SYTBHc0HSN92127MbWrp5knDO5Q==@vger.kernel.org, AJvYcCXKt5KE7q11PMH/nBvKvbj3JaPuigIyozO31VkcJ+/I3J9qpeOx3MoGH+FElJXxkAlAeGQyjdczKq1kh8CW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVELYUMiLVhk6uMoH9b7OlTaQsy/tm63nLkyCUMnp5wxkNzW8Y
-	TDb2U9Z8VMLp2H197XA+Cfi04MuvC7yHeq2OGOSM+I8jlgRGl5eJPsHcc7mdBgngt95ntcj6D1B
-	lq+Von92G2NrnWomhB/+4PDFtBlA=
-X-Gm-Gg: ASbGncsy5RxcRU/FVPQr4utshcF6bqMt94sIwgjERCEm0cK4KK4xQHKiLcelsPT/d9g
-	bFm2g/zcQa0BD5sMdTLEcRAsXhAWg/SI9EH6S4joLvn67m6kKk1VxFRNq9gdjVEIBD8TWsdgWc4
-	7kcVg9SvsDwZ4dfpYjnVuwGrg=
-X-Google-Smtp-Source: AGHT+IHRbLEfFkSRN7svD/SU2NARgmIEUPnyFQQfIvjDTjaMuTGcz4qJxDZa2+cv/4IHsddy318d5FT1qriGzMT0Ex0=
-X-Received: by 2002:a17:902:ec84:b0:220:ca08:8986 with SMTP id
- d9443c01a7336-22428a98135mr255205425ad.22.1741683490491; Tue, 11 Mar 2025
- 01:58:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KuvSezzA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Z2RQlWC"
+Date: Tue, 11 Mar 2025 08:58:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741683533;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OBlYBuKQ52KIIU8RRmXma/XNz4ExHfK7mswG18r1ze4=;
+	b=KuvSezzAx/Gb/4uo3fXxuBVnAKRmVqnBiiCZrmKrq3eGbDGsyjfLCB9AbsI9f3SD+DSFZl
+	/71ug7qvr/wZcnKTNejbEPI2ze+0fna+rDvaqZbpIbXMQBkwYAi8Dhd22bbBNnUGIOq2u/
+	u+nHQoDdC3pDq+Nb6AD4RkC3gOY1zm9S+3j7tGgsFg64MwCwxgOgxOzywSQIWXh4MvH4zY
+	BwanjuVp6Xj/mYBo8XmE17jTJs+Xo0qkCfK/0XLYTGpHAqfXxuMM/hgY23gBDuA4plLu5C
+	bZLc6N+cUlpT7MDR/wVC9sc64pwIQMg99tXE/sOt2ncBou+Fhdn5RnVDfZRiXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741683533;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OBlYBuKQ52KIIU8RRmXma/XNz4ExHfK7mswG18r1ze4=;
+	b=0Z2RQlWCfreKbSTq+6fA1dKWNX909eGSBl3GxdqG6rlqcKPpAi9tTkokgFXd4ONX/7s30f
+	3NrUUOB6m7bcUWDQ==
+From:
+ tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/vdso] sparc/vdso: Always reject undefined references
+ during linking
+Cc: thomas.weissschuh@linutronix.de, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250306-vdso-checkundef-v2-2-a26cc315fd73@linutronix.de>
+References: <20250306-vdso-checkundef-v2-2-a26cc315fd73@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305100037.373782-1-daniel.baluta@nxp.com>
- <20250305100037.373782-9-daniel.baluta@nxp.com> <Z88Ib7HkbRQoiyZp@p14s>
-In-Reply-To: <Z88Ib7HkbRQoiyZp@p14s>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Tue, 11 Mar 2025 10:59:46 +0200
-X-Gm-Features: AQ5f1Jqksp8_Ow3W7CPPxQeuga9K9-0CI_LlAxXmLAD4nYxorLD8ECBrBf3t_78
-Message-ID: <CAEnQRZDeBkNYBNQwJL5LZgLK49siqomzyM_RDccdusJa22yiJA@mail.gmail.com>
-Subject: Re: [PATCH v4 8/8] imx_dsp_rproc: Use reset controller API to control
- the DSP
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, p.zabel@pengutronix.de, robh@kernel.org, 
-	krzk+dt@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, conor+dt@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, festevam@gmail.com, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	andersson@kernel.org, Frank.Li@nxp.com, peng.fan@nxp.com, 
-	laurentiu.mihalcea@nxp.com, iuliana.prodan@nxp.com, shengjiu.wang@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174168352868.14745.7829013461572260713.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2025 at 5:43=E2=80=AFPM Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> Good day,
->
-> On Wed, Mar 05, 2025 at 12:00:36PM +0200, Daniel Baluta wrote:
-> > DSP on i.MX8MP doesn't have a direct reset line so according to hardwar=
-e
-> > design team in order to handle assert/deassert/reset functionality we
-> > need to use a combination of control bits from two modules. Audio block
-> > control module for Run/Stall control of the DSP and DAP module in order
-> > to do software reset.
-> >
-> > Initial design accessed RunStall bits from audio block control using th=
-e
-> > syscon interface but this got NACKed by community because of abusing th=
-e
-> > syscon interface [1].
-> >
-> > So instead we use the reset controller API.
->
-> I am good with this patchset.  The only thing I'd like so see modified is=
- the
-> above changelog.  The second paragraph doesn't belong there, i.e it is no=
-t
-> useful to remark on a design that was not accepted.  Instead please conce=
-ntrate
-> on _why_ we are moving from the current design to using the reset control=
-ler
-> API.
->
-> This can go in the 6.15 merge window if you send me a V5 fast enough.
+The following commit has been merged into the timers/vdso branch of tip:
 
-Thanks for review. Reworded the commit message and send V5.
+Commit-ID:     82e6de7a4fe0826b813d91fd193d87625646c6d9
+Gitweb:        https://git.kernel.org/tip/82e6de7a4fe0826b813d91fd193d8762564=
+6c6d9
+Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+AuthorDate:    Thu, 06 Mar 2025 15:07:21 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 11 Mar 2025 09:49:16 +01:00
 
-Thanks,
-Daniel.
+sparc/vdso: Always reject undefined references during linking
+
+Instead of using a custom script to detect and fail on undefined
+references, use --no-undefined for all VDSO linker invocations.
+
+Drop the now unused checkundef.sh script.
+
+Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250306-vdso-checkundef-v2-2-a26cc315fd73@li=
+nutronix.de
+---
+ arch/sparc/vdso/Makefile      |  7 +++----
+ arch/sparc/vdso/checkundef.sh | 10 ----------
+ 2 files changed, 3 insertions(+), 14 deletions(-)
+ delete mode 100644 arch/sparc/vdso/checkundef.sh
+
+diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
+index 50ec297..fdc4a8f 100644
+--- a/arch/sparc/vdso/Makefile
++++ b/arch/sparc/vdso/Makefile
+@@ -22,7 +22,7 @@ targets +=3D $(foreach x, 32 64, vdso-image-$(x).c vdso$(x)=
+.so vdso$(x).so.dbg)
+=20
+ CPPFLAGS_vdso.lds +=3D -P -C
+=20
+-VDSO_LDFLAGS_vdso.lds =3D -m elf64_sparc -soname linux-vdso.so.1 --no-undefi=
+ned \
++VDSO_LDFLAGS_vdso.lds =3D -m elf64_sparc -soname linux-vdso.so.1 \
+ 			-z max-page-size=3D8192
+=20
+ $(obj)/vdso64.so.dbg: $(obj)/vdso.lds $(vobjs) FORCE
+@@ -101,7 +101,6 @@ $(obj)/vdso32.so.dbg: FORCE \
+ quiet_cmd_vdso =3D VDSO    $@
+       cmd_vdso =3D $(LD) -nostdlib -o $@ \
+ 		       $(VDSO_LDFLAGS) $(VDSO_LDFLAGS_$(filter %.lds,$(^F))) \
+-		       -T $(filter %.lds,$^) $(filter %.o,$^) && \
+-		sh $(src)/checkundef.sh '$(OBJDUMP)' '$@'
++		       -T $(filter %.lds,$^) $(filter %.o,$^)
+=20
+-VDSO_LDFLAGS =3D -shared --hash-style=3Dboth --build-id=3Dsha1 -Bsymbolic
++VDSO_LDFLAGS =3D -shared --hash-style=3Dboth --build-id=3Dsha1 -Bsymbolic --=
+no-undefined
+diff --git a/arch/sparc/vdso/checkundef.sh b/arch/sparc/vdso/checkundef.sh
+deleted file mode 100644
+index 2d85876..0000000
+--- a/arch/sparc/vdso/checkundef.sh
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#!/bin/sh
+-objdump=3D"$1"
+-file=3D"$2"
+-$objdump -t "$file" | grep '*UUND*' | grep -v '#scratch' > /dev/null 2>&1
+-if [ $? -eq 1 ]; then
+-    exit 0
+-else
+-    echo "$file: undefined symbols found" >&2
+-    exit 1
+-fi
