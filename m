@@ -1,208 +1,136 @@
-Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AC31EDA03;
-	Tue, 11 Mar 2025 07:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CB21EDA03;
+	Tue, 11 Mar 2025 07:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741677934; cv=none; b=jNp7eJ8DvBxQfZ1OAKQfuq/zl5zFxSE7qSADk80jv6/oby8Hs/pRhP1S7MnbKb3CqPPYpHo+iJf3vRxrpD/rcaheDskakimH4qB9Fm7VTPtLFUyNqza1n6mc3t5cU3KVK8xkb+sM3LehN19oRnQ0MO1V7u/CDpd0s43E4EVGbE4=
+	t=1741677950; cv=none; b=VKith56fFXnfN9fMTC4Wr35TWlb/7ElTCmu5QmiF4KVSiMsjjW2U2c3h3Ltty4kCcDHAY0fawwCU+V7He9z17p74IyN24jq6JzQkLC9FEAA1Jar0w0AoubkWkzLkmmZ0zMD2IuaIsZYQhEM52HX5TRKlam+5SPJi8FkyPOOns1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741677934; c=relaxed/simple;
-	bh=P7HYlmtZE81obGpsbL9pVBZwUJbbMn6JT5jWFUHPSPY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=gFgm7IiFKRwjdFe+Q4k+H1hTMl6pljhUAtKcFyy6eDOfDn7JW+/XpfBz44vEmGqDlhmTqQ7EKXJ56Ne+OJA0B1CmW0TAzBxQ4APeUgJEw5HgG/4SfuaIqFEUUVjVD5i0H7hBy+Ty1BvdVddIZAJbopAU2tBwTA/NB/g+rPLe2/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=yDCuOJez; arc=none smtp.client-ip=162.62.57.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="yDCuOJez"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741677616; bh=d9+2oX9Th/3/xgHPYEGkNk69EloougLjZ+ArC3bUnT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=yDCuOJezdJmVOPgs6Xpf/7hUG+5z+xOn+jvENE8Yzt7vchMt7qp+aNmj4AmI1jFr1
-	 Y1L6etRbdE0zbLfXs0ZbZr3TApqv7IvXdisxemO6V8czkDhnzff/Uo9Je+ZmtOvKXO
-	 iSuIu74vO2kzcYAvwmS28uCqWbF1ZOU2ynXJO3Ps=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id 50DB0EAF; Tue, 11 Mar 2025 15:20:13 +0800
-X-QQ-mid: xmsmtpt1741677613t1ff26inv
-Message-ID: <tencent_682C75C376DD66D03C713710966A37E84A09@qq.com>
-X-QQ-XMAILINFO: Oc+6xGkERBk5YDe3Nkkj7Vf2BUr2WM552AP7hHL6kZzXlQievidRzfPlfJ13gS
-	 ZREGuaXbUss8daQY2tHkIAOLbOBmpAbRqTdw5+24O6D/G5nVDNhPnWs/RM3ecT84P0/pcRb4wsDU
-	 S0D8pIgFLER7KHM++9oZbXIizhC6CiXAku3P4X8o5ry4Ps+mJqaqhckiL3ETmJVvEiP6jiIwJUWU
-	 DWtiDWx19bdgN1t3r+ITjW//pGeBziTSMcYsGqHNZjfWw8lON1C+ZyIo/OB7Zqky+An5+4tiqNGA
-	 Xcg5zayP0Xk40UsO7h/zqDIBMLz9JabHoA1LVXkG1/Fvyd7vDdbineKj97iHkzgZMWrYMNpTU7E7
-	 93MLSVCxQK1M1Qy5jsNyIRax+S70cMR0n5yEEZEA47lQwI2oXwvdND78mrK7wNO3i0BCSfHvyKiO
-	 2sbDR1w+3deoGKMtAyKomLxdOMnwPB6G/edlYOW+innZX684TkdgWC6jANu0e54DwI4xdJMXHHMR
-	 95MgrVwIFwGesjjTwtEuBd5NJM+5umOxQEfxAv1IfMYmGBcWu+LaxkjEyga8bZlwpJlrHSJ0KAGa
-	 b4ff+H5Ob+dsfGEDTHWd1pcQBPi6dFz3Ya5UwykEG8vgaKlJDTGOZxDOGPQMKy9jYRxb71Y+yBLn
-	 1/mZVug1dcYFj627Z5dPylyNqcn+NVCKtlLgEEC2WGHn0jsMnCoJR3Mz3PLW/gn5WCfqL4DROG8Z
-	 f01vhsAE/zDI+sGTKxNsn767Qm97oR4WOHK8Qww72iXz8Ew304aXibo8SW9oAaQPzocWpp6r0ZMw
-	 xCcN81ikAmF1P7Kq6yu6pBdLOJmyKe6JPGPY/gKqaDowpfp4TJltlV1Z5gIqsGs3/VUY/pka5I2l
-	 8IgfYAzRsKYYmUitCaqlZUP+MGIW28gIC5gE7jSUVL/tx/XcYemo8=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+0d33ab192bd50b6c91e6@syzkaller.appspotmail.com
-Cc: dwlsalmeida@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	mchehab@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH V3] media: vidtv: Terminating the subsequent process of initialization failure
-Date: Tue, 11 Mar 2025 15:20:14 +0800
-X-OQ-MSGID: <20250311072013.3858217-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67cee9e2.050a0220.1939a6.0004.GAE@google.com>
-References: <67cee9e2.050a0220.1939a6.0004.GAE@google.com>
+	s=arc-20240116; t=1741677950; c=relaxed/simple;
+	bh=QRkNwDyV70SBx+F0V9Vg4Rh30RuzgUMBM7/jeP1lkAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d7hAKWpJXANvL8cXuIgI7G0A9i92UybJwAn0tQmoJN6amAlCrXDY+GyhnTqypZVmy8xG6meq0fHk2fZ42HFEVjN81UcNito0N0iuv8LV0Qo+iEXb4r9Ot6MvgvtgrPqhB565O4YXcqGXeO+5gSHa0duU3apb2od85ot5S84HRx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-300f92661fcso1924411a91.3;
+        Tue, 11 Mar 2025 00:25:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741677948; x=1742282748;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=amwnjhquihQlw3rFST7jVWbfUF1Yah8j1kpH8njxrZY=;
+        b=CRa60Xsmtve9Dz9FFIggb9oj/DCECmy6woNddEtLFsg9sMosJA7HSe+C2t4rMtSugJ
+         BnNHQGIkmCWi5UbIdQzQejhw1rof+bYh+BtCPJ4nguCICRPJ4Sb5N3ZOtoaI7cPAHYVQ
+         Z/N3RtPaHZh9syBSHjvcjv5vKKjMekVuG6meaoAMwbuR7DPC4IU8xQEZrf5hOd0XL7k5
+         OTS3C9EG0MFCkbvKpivheRSRNK22PLSb18nktGKe3qJBQ/Z8BwgXjXLWoTnuYR1TIbeD
+         DChYb1xs81kQmoQ5zAHZjwFOyOlawcZXfY0rXrvzdTPMcUbrsx0pxxvOc6GLoP7AZSTJ
+         e/Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUHpKTZiSJd+gzxpnyQsgAUzQ6A5wW+cOobF4weAQHX14+yZ3Fb8OfOWKXYhH9l5qUbdp+DGnNLjM2TZQ==@vger.kernel.org, AJvYcCUqOaTU5OpyuK7oIPpvLZP2O1mAALRkvJVWBISZRmWpSXisLFZ4saUc8shEp5yzw5myQrZTpLyVZ72dgQ0=@vger.kernel.org, AJvYcCWrk976T67y4l2zeaZhrjpJ0QZ82RLX5eEx+xeoF5X+xQKvu4/Iu3ZBXG2x30IM3lyQox0YeuXDZoEt@vger.kernel.org, AJvYcCX6IaZWBgifcCCdYKvMIsisgL2sjGQW0DNz5rHaYShEkGKsgsXEF4dlXbD8h2l39RS+PjYjfzqY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHOi0V8+BSIMQgvDJ9+GDrUKsxd7lunBKyLBqvbc0L6M/hqJ9P
+	bko1Msqz51EhS1VSB0sQzSmRUxueJhyRaLB+vn2kwWIIdyaRkPlm
+X-Gm-Gg: ASbGncvpX4uqEYnOk18FJO8nSaW2mn2uHTAY1PnJkMvHpb+gT9d7OB+kTcssdAOoaUj
+	xzgwyyjswqO1tSeNoFS96XV97qpSu0sL1oObIbY48g5rqtz66KjmZb5bnLrfcjQM2NeFzIXmIt9
+	sjta2RPH4q7PlAFv/WxY2Z39snFXR/elHFqAWAuTNV79ZkkfoYQmpVbtUbxaRI0AvLx4aAlUAIj
+	AtgOYohbfwz2D+lut9NKVFnPAqYZisXBM5JVafTvfNMUEGnVeoXdojmNgm3IHZZsCjxKBJgoWk8
+	Bjv1mxpTyI0+IyTJr7rIQPx6ExUwhm0O6lq5jJTPxW8xWIZqJNlaQL/idPcOp3Y0JfrEXOdvWOT
+	9FqU=
+X-Google-Smtp-Source: AGHT+IFHY5f+4sJatR6BI17Adi4AuhVFX9pxsgEfHSvv5C3l/7gBr81/pwoEGMGBCuJ7SqKtWyZgYw==
+X-Received: by 2002:a17:90a:d450:b0:2ff:5ed8:83d0 with SMTP id 98e67ed59e1d1-2ff7ce91ff0mr28909573a91.16.1741677948459;
+        Tue, 11 Mar 2025 00:25:48 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-301034433e9sm909027a91.1.2025.03.11.00.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 00:25:48 -0700 (PDT)
+Date: Tue, 11 Mar 2025 16:25:46 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, vigneshr@ti.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, rogerq@kernel.org, linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com
+Subject: Re: [PATCH] PCI: j721e: Fix the value of linkdown_irq_regfield for
+ J784S4
+Message-ID: <20250311072546.GA277060@rocinante>
+References: <20250305132018.2260771-1-s-vadapalli@ti.com>
+ <20250310210746.GA2377483@rocinante>
+ <20250311051806.smcu4o4dxpngimth@uda0492258>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250311051806.smcu4o4dxpngimth@uda0492258>
 
-syzbot reported a slab-use-after-free Read in vidtv_mux_init. [1]
+Hello,
 
-After PSI initialization fails, the si member is accessed again, resulting
-in this uaf.
+> > > Hence, set 'linkdown_irq_regfield' to the macro 'J7200_LINK_DOWN' which
+> > > expands to BIT(10) and was first defined for the J7200 SoC. Other SoCs
+> > > already reuse this macro since it accurately represents the link-state
+> > > field in their respective "PCIE_INTD_ENABLE_REG_SYS_2" register.
+> > 
+> > Can you confirm for me that the following use the correct macro?
+> > 
+> >   333-static const struct j721e_pcie_data j721e_pcie_rc_data = {
+> >   337:	.linkdown_irq_regfield = LINK_DOWN,
+> >   
+> >   341-static const struct j721e_pcie_data j721e_pcie_ep_data = {
+> >   343:	.linkdown_irq_regfield = LINK_DOWN,
+> >   
+> >   347-static const struct j721e_pcie_data j7200_pcie_rc_data = {
+> >   350:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> >   
+> >   362-static const struct j721e_pcie_data am64_pcie_rc_data = {
+> >   364:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> >   
+> >   369-static const struct j721e_pcie_data am64_pcie_ep_data = {
+> >   371:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> >   
+> >   375-static const struct j721e_pcie_data j784s4_pcie_rc_data = {
+> >   379:	.linkdown_irq_regfield = LINK_DOWN,
+> >   
+> >   383-static const struct j721e_pcie_data j784s4_pcie_ep_data = {
+> >   385:	.linkdown_irq_regfield = LINK_DOWN,
+> >   
+> >   389-static const struct j721e_pcie_data j722s_pcie_rc_data = {
+> >   391:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> > 
+> > I am asking as some use LINK_DOWN, so I wanted to make sure.
+> 
+> Yes, the above are accurate except for J784S4 which is fixed by this
+> patch. LINK_DOWN i.e. BIT(1) is applicable only to J721E which was the
+> first SoC after which the driver has been named. For all other SoCs, the
+> integration of the PCIe Controller into the SoC led to BIT(10) of the
+> register being used to indicate the link status.
 
-After si initialization fails, the subsequent process needs to be exited.
+Sounds good!  Thank you for letting me know.
 
-[1]
-BUG: KASAN: slab-use-after-free in vidtv_mux_pid_ctx_init drivers/media/test-drivers/vidtv/vidtv_mux.c:78 [inline]
-BUG: KASAN: slab-use-after-free in vidtv_mux_init+0xac2/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:524
-Read of size 8 at addr ffff88802fa42acc by task syz.2.37/6059
+> > Tht said, the following has no .linkdown_irq_regfield property set:
+> > 
+> >   355-static const struct j721e_pcie_data j7200_pcie_ep_data = {
+> >   356-	.mode = PCI_MODE_EP,
+> >   357-	.quirk_detect_quiet_flag = true,
+> >   358-	.quirk_disable_flr = true,
+> >   359-	.max_lanes = 2,
+> >   360-};
+> > 
+> > Would this be a problem?  Or is this as expected?
+> 
+> Thank you for pointing this out. This has to be fixed and the
+> "linkdown_irq_regfield" member has to be added to match
+> j7200_pcie_rc_data. I will post the fix for this.
 
-CPU: 0 UID: 0 PID: 6059 Comm: syz.2.37 Not tainted 6.14.0-rc5-syzkaller #0
-Hardware name: Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
-<TASK>
-__dump_stack lib/dump_stack.c:94 [inline]
-dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
-print_address_description mm/kasan/report.c:408 [inline]
-print_report+0xc3/0x670 mm/kasan/report.c:521
-kasan_report+0xd9/0x110 mm/kasan/report.c:634
-vidtv_mux_pid_ctx_init drivers/media/test-drivers/vidtv/vidtv_mux.c:78
-vidtv_mux_init+0xac2/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:524
-vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194
-vidtv_start_feed drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
-dmx_section_feed_start_filtering drivers/media/dvb-core/dvb_demux.c:973
-dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
-dvb_dmxdev_feed_restart.isra.0 drivers/media/dvb-core/dmxdev.c:537
-dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
-dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
-dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
-__fput+0x3ff/0xb70 fs/file_table.c:464
-task_work_run+0x14e/0x250 kernel/task_work.c:227
-exit_task_work include/linux/task_work.h:40 [inline]
-do_exit+0xad8/0x2d70 kernel/exit.c:938
-do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
-__do_sys_exit_group kernel/exit.c:1098 [inline]
-__se_sys_exit_group kernel/exit.c:1096 [inline]
-__x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
-x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
-do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f871d58d169
-Code: Unable to access opcode bytes at 0x7f871d58d13f.
-RSP: 002b:00007fff4b19a788 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f871d58d169
-RDX: 0000000000000064 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 00007fff4b19a7ec R08: 0000000b4b19a87f R09: 00000000000927c0
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000003
-R13: 00000000000927c0 R14: 000000000001d553 R15: 00007fff4b19a840
- </TASK>
+No need to send a new version.
 
-Allocated by task 6059:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
- kmalloc_noprof include/linux/slab.h:901 [inline]
- kzalloc_noprof include/linux/slab.h:1037 [inline]
- vidtv_psi_pat_table_init drivers/media/test-drivers/vidtv/vidtv_psi.c:970
- vidtv_channel_si_init drivers/media/test-drivers/vidtv/vidtv_channel.c:423
- vidtv_mux_init drivers/media/test-drivers/vidtv/vidtv_mux.c:519
- vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194
- vidtv_start_feed drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
- dmx_section_feed_start_filtering drivers/media/dvb-core/dvb_demux.c:973
- dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
- dvb_dmxdev_feed_restart.isra.0 drivers/media/dvb-core/dmxdev.c:537
- dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
- dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
- dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
- __fput+0x3ff/0xb70 fs/file_table.c:464
- task_work_run+0x14e/0x250 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xad8/0x2d70 kernel/exit.c:938
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
- __do_sys_exit_group kernel/exit.c:1098 [inline]
- __se_sys_exit_group kernel/exit.c:1096 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
- x64_sys_call arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+I will update the branch directly when I pull the patch.  Not to worry.
 
-Freed by task 6059:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2353 [inline]
- slab_free mm/slub.c:4609 [inline]
- kfree+0x2c4/0x4d0 mm/slub.c:4757
- vidtv_channel_si_init drivers/media/test-drivers/vidtv/vidtv_channel.c:499
- vidtv_mux_init drivers/media/test-drivers/vidtv/vidtv_mux.c:519
- vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194
- vidtv_start_feed drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
- dmx_section_feed_start_filtering drivers/media/dvb-core/dvb_demux.c:973
- dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
- dvb_dmxdev_feed_restart.isra.0 drivers/media/dvb-core/dmxdev.c:537
- dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
- dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
- dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
- __fput+0x3ff/0xb70 fs/file_table.c:464
- task_work_run+0x14e/0x250 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xad8/0x2d70 kernel/exit.c:938
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
- __do_sys_exit_group kernel/exit.c:1098 [inline]
- __se_sys_exit_group kernel/exit.c:1096 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
- x64_sys_call arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Thank you!
 
-Fixes: 3be8037960bc ("media: vidtv: add error checks")
-Reported-by: syzbot+0d33ab192bd50b6c91e6@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=0d33ab192bd50b6c91e6
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
-V1 -> V2: replace with media: in subject
-V2 -> V3: reduce the line length of the comments
-
- drivers/media/test-drivers/vidtv/vidtv_channel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/test-drivers/vidtv/vidtv_channel.c b/drivers/media/test-drivers/vidtv/vidtv_channel.c
-index 7838e6272712..f3023e91b3eb 100644
---- a/drivers/media/test-drivers/vidtv/vidtv_channel.c
-+++ b/drivers/media/test-drivers/vidtv/vidtv_channel.c
-@@ -497,7 +497,7 @@ int vidtv_channel_si_init(struct vidtv_mux *m)
- 	vidtv_psi_sdt_table_destroy(m->si.sdt);
- free_pat:
- 	vidtv_psi_pat_table_destroy(m->si.pat);
--	return 0;
-+	return -EINVAL;
- }
- 
- void vidtv_channel_si_destroy(struct vidtv_mux *m)
--- 
-2.43.0
-
+	Krzysztof
