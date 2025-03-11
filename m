@@ -1,145 +1,114 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125564431
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7460D1D8E07;
+	Tue, 11 Mar 2025 09:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741684652; cv=none; b=m+hO3Bf0ki2udBWQGDn/GQBqh7hY+PGVYaXQJQNgZK4USKQUecIm9RmEG1Wded/IBAtQizoYvHSRLOeLUUDK2BU5EZyrimLNxOW9qfJCTygjOwYANaOODENArxT+BUQxMxNldCAeY/DFWQ/kMUhqIz3KSpus1VkkNnV++gjPErE=
+	t=1741684657; cv=none; b=fOljxF+lJUQJyncse3xb+LImxoovXuMB0RH9qYh+CC1tqKW17VhdyHnIQxl8T8vLm+DB35D0sxhfcEPVqgKljaK09dxd/d7kfH7MkNnLUxpSt8CQXC1U09PK5N2NJbGGHEK+dCVhjVBSQTEwAJFnIHDnzyROaY2DLR3VC4URz1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741684652; c=relaxed/simple;
-	bh=vSRBR6JVW9kfsloXzWOfps2gPOA+TmIHogOfqXovEpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QfUcMExrrZHZvjZScHizzXlTkdxsO385QtEwEnPMg1WCrA6DdBJzgkgdHAY278X+EfJdGB/53ORDLmNevZKkmUUy/Ozuq81qb9/IJYH7sDOSq6G0/cj5k5HtNULVVJkFdJ+SPVh1reywbs4JZbJX0OoFphtQ4m26Ei4EsE97P/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ReHkJGdJ; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741684657; c=relaxed/simple;
+	bh=mo2VOE5Pdost2IrWBbeMn+NGtDeyaW/lhYvg8WhS0/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mTGXRj9jAXBi91Q2xANceq+FIKBXDFudn2ZcV/cnlQOHdNSbUY36xggDMRzxGlSw3hMi76TCGchu/ZtKKIK4F+nplmujoak2lQIe7hOY3q3vAXLwmbRx+IaFEh63j20p/pv4OrXcBtwYR7JiDs+0ss8BkafEA6fdmF9esU1adVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=beWikhIv; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ReHkJGdJ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741684636;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Vs7ucL2qVfTeNJVnGw+KUc65l6Ql6UNvI1z2Xqd8sIw=;
-	b=ReHkJGdJOQevrZcH/C5Pk/mlXkT8yoWWVZnS+NzhZAXZMd9e4ugiNhG7qQrC9uS36JYRIA
-	MRKmHYR+Dl9DTC0JlEfb2wXzabAAU5X0r5Bd6db3NOGC9ZxfSXg2kvcwgxT0BjM2DMkg0A
-	wsbJG0PG3qIWOLHGLjACi0VBE9sTKTc=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Michael Kelley <mhklinux@outlook.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] hyperv: Remove unused union and structs
-Date: Tue, 11 Mar 2025 10:16:34 +0100
-Message-ID: <20250311091634.494888-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="beWikhIv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1741684649;
+	bh=+7rgICWy4cnzwX384jJ8pJ+8ukLphTwXiqmF9tmuYq0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=beWikhIvVfDpgOHMSRKU+GaukBeI+pGQvSxaxfWyKXfTtM6G4uJh4535HoKathiRY
+	 jOaLixcdE/RtxGl8W/6hSbpoj3W4qgZOyPjXSScwJzVlcPHywi0uqlruAwNnunGOIE
+	 XU4Ua0PBlBmcDnlD3BX8+xT+JasPZ/wZr8+8rxoQn9+zW490Z1rmIXMxge7uDUkhr6
+	 JaCGwkZsABkHpI1e33srrA1rF72uvkmxR1YEOF0fmK2i+DWkapNVHDx3LmaC/wJD+C
+	 Jf/lm1wEIeLOjdo2ufN+GK+BuwkQHv/iMAfN06XBv1lZXkTxWmqp3v44HLpnnmTTHB
+	 CVMEpAf13Ee+g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZBp7X62VWz4x3p;
+	Tue, 11 Mar 2025 20:17:27 +1100 (AEDT)
+Date: Tue, 11 Mar 2025 20:17:26 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Miguel Ojeda <ojeda@kernel.org>, Dave Airlie <airlied@redhat.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Jocelyn Falempe
+ <jfalempe@redhat.com>, DRI <dri-devel@lists.freedesktop.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the rust tree with the drm tree
+Message-ID: <20250311201726.3f45cc67@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/WRC61WYquP.DU.LnirxUgyK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The union vmpacket_largest_possible_header and several structs have not
-been used for a long time afaict - remove them.
+--Sig_/WRC61WYquP.DU.LnirxUgyK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Remove unused struct vmadditional_data as suggested by Michael Kelley
-- Link to v1: https://lore.kernel.org/r/20250310192629.443162-1-thorsten.blum@linux.dev/
----
- include/linux/hyperv.h | 56 ------------------------------------------
- 1 file changed, 56 deletions(-)
+Hi all,
 
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 4179add2864b..094395f4be24 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -371,19 +371,6 @@ struct vmtransfer_page_packet_header {
- 	struct vmtransfer_page_range ranges[];
- } __packed;
- 
--struct vmgpadl_packet_header {
--	struct vmpacket_descriptor d;
--	u32 gpadl;
--	u32 reserved;
--} __packed;
--
--struct vmadd_remove_transfer_page_set {
--	struct vmpacket_descriptor d;
--	u32 gpadl;
--	u16 xfer_pageset_id;
--	u16 reserved;
--} __packed;
--
- /*
-  * This structure defines a range in guest physical space that can be made to
-  * look virtually contiguous.
-@@ -394,30 +381,6 @@ struct gpa_range {
- 	u64 pfn_array[];
- };
- 
--/*
-- * This is the format for an Establish Gpadl packet, which contains a handle by
-- * which this GPADL will be known and a set of GPA ranges associated with it.
-- * This can be converted to a MDL by the guest OS.  If there are multiple GPA
-- * ranges, then the resulting MDL will be "chained," representing multiple VA
-- * ranges.
-- */
--struct vmestablish_gpadl {
--	struct vmpacket_descriptor d;
--	u32 gpadl;
--	u32 range_cnt;
--	struct gpa_range range[1];
--} __packed;
--
--/*
-- * This is the format for a Teardown Gpadl packet, which indicates that the
-- * GPADL handle in the Establish Gpadl packet will never be referenced again.
-- */
--struct vmteardown_gpadl {
--	struct vmpacket_descriptor d;
--	u32 gpadl;
--	u32 reserved;	/* for alignment to a 8-byte boundary */
--} __packed;
--
- /*
-  * This is the format for a GPA-Direct packet, which contains a set of GPA
-  * ranges, in addition to commands and/or data.
-@@ -429,25 +392,6 @@ struct vmdata_gpa_direct {
- 	struct gpa_range range[1];
- } __packed;
- 
--/* This is the format for a Additional Data Packet. */
--struct vmadditional_data {
--	struct vmpacket_descriptor d;
--	u64 total_bytes;
--	u32 offset;
--	u32 byte_cnt;
--	unsigned char data[1];
--} __packed;
--
--union vmpacket_largest_possible_header {
--	struct vmpacket_descriptor simple_hdr;
--	struct vmtransfer_page_packet_header xfer_page_hdr;
--	struct vmgpadl_packet_header gpadl_hdr;
--	struct vmadd_remove_transfer_page_set add_rm_xfer_page_hdr;
--	struct vmestablish_gpadl establish_gpadl_hdr;
--	struct vmteardown_gpadl teardown_gpadl_hdr;
--	struct vmdata_gpa_direct data_gpa_direct_hdr;
--};
--
- #define VMPACKET_DATA_START_ADDRESS(__packet)	\
- 	(void *)(((unsigned char *)__packet) +	\
- 	 ((struct vmpacket_descriptor)__packet)->offset8 * 8)
--- 
-2.48.1
+Today's linux-next merge of the rust tree got a conflict in:
 
+  drivers/gpu/drm/drm_panic_qr.rs
+
+between commit:
+
+  dbed4a797e00 ("drm/panic: Better binary encoding in QR code")
+
+from the drm tree and commit:
+
+  fc2f191f850d ("panic_qr: use new #[export] macro")
+
+from the rust tree.
+
+I fixed it up (I guess - see below) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/drm_panic_qr.rs
+index 5d21f6d10bcb,ecd87e8ffe05..000000000000
+--- a/drivers/gpu/drm/drm_panic_qr.rs
++++ b/drivers/gpu/drm/drm_panic_qr.rs
+@@@ -27,7 -26,8 +27,7 @@@
+  //! * <https://github.com/erwanvivien/fast_qr>
+  //! * <https://github.com/bjguillot/qr>
+ =20
+- use kernel::str::CStr;
+ -use core::cmp;
++ use kernel::{prelude::*, str::CStr};
+ =20
+  #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
+  struct Version(usize);
+
+--Sig_/WRC61WYquP.DU.LnirxUgyK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfP/6YACgkQAVBC80lX
+0GwUWAf/cQViY4ylwkS/1xzQYSshSANM8Mdpc2O/hl93LFKTqI8CF5tz1s3Dnsxv
+2Ds3e0pQED2VnOw2OAStVpKgJg/Mq48TCIiCpXV/5LYZ+/3pcChKI1X67KfXo6Cc
+ZP9DPeJ6UoVQytvYSzzzAbvPm/HUHlIEkygRcTFvS/VhzsdnQ20w2JtcCqWGkv5D
+P05bDe2xfremGB0zndwq8/GgQImITGSfQXaKy9htzlDqHubY270OYZlvqM/hYYbx
+J9z/Dx4nPQnTQ5QtMKeVXPkYN+uIU235nebW+hQznrn8BV85Z026T9nuLROYwWmX
+KVEgdPK6N7NJeHXiOqM5YO4JpIMfSg==
+=O7nl
+-----END PGP SIGNATURE-----
+
+--Sig_/WRC61WYquP.DU.LnirxUgyK--
