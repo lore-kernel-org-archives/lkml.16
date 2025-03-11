@@ -1,62 +1,35 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F39256C97;
-	Tue, 11 Mar 2025 12:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B2225487A;
+	Tue, 11 Mar 2025 12:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741696164; cv=none; b=erIZ70eOY4yjz1y0+5ZcclUTnudQcZbncI3bXMMNhMd9hD15oNMwNXUibsaaYu9YaVC1dM6CySLf3ShBa1TbjyF5BEOPd1UxHQQs/BV+GTr22xt1F1gF1WHIDK89NJ9ugn6+tOYidB1B2oC6ep7LYOh7PTwUZyLUr00EJadnV4g=
+	t=1741696198; cv=none; b=Ctwgge7iz+cyCC2e4wI+1xvn/LJLyelHmnIDvp1RTLThtZWz0ZDO24fnVu5KwZ+xC6cFFumIHNRejyt5wq33RTvQsXQhpym1EU0Crx+G1FiZRajfYEiix66cFc8v4FoD3tsBw10if49oG2O+MMLm5z6AQpUKpu43+J5CaSOQ/0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741696164; c=relaxed/simple;
-	bh=wsbYRx34YWCglXy0p0R4CnqDsNR0QSvNibV/OSOSWTc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DATzmQhDg3HUCoDf4NTndo/34tZZJUu5E/GB14d1LEZ3v7d7UKZsley/eQVynxF+ruF46DLfWc3Ab66i7AONfrqX7eclj2GNbYGV2RCpqxTNgiazNrKeUpu8PbNX5iKgZlixyrZs6O5JSF0vrIXW2uM7FzI3noDWJMPuRv0u4GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=13BhIx9g; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1741696198; c=relaxed/simple;
+	bh=QtZXEnAsq+kpo0B3XWYCNv9iskcf8SuO6bT85S2GaiA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PVbK9WAVu9JfQ+P41Y58ktaHrQTAz1YA7sBHhVe7r2QE2CR14fhuGgP3Hjhumbr8L5VLgVU8Jlkj2XvMj49dBu9l3ZBxU+aQETb4y3Tt2MuZINPvKngDvbXl5d4Fbo8YkK4ksdFr2Gt1q5we+Vu7drc/SJDbjdCshjpbuwVuKLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHlviE+2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="13BhIx9g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1741696162; x=1773232162;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wsbYRx34YWCglXy0p0R4CnqDsNR0QSvNibV/OSOSWTc=;
-  b=13BhIx9gbhfHFc+BUjUdIef9dockQIr34QsIsp+uucuQ86Wlbvd4YQvg
-   /2fxTedx+AQkYlCmkSSiTpmjKi7Ef4nysiabikeKC5SoTAQLvXLJylktQ
-   eMfpRGYYVsh4RT7uLkBf55rbpgJPnCXjo8h+D6cXdwJ7L2nSOngZRQstL
-   nhauAMCf8Ru92j33RLp+VKdKuUKV4IiEC11WAyr/f17XeVYD0yVUkETTA
-   HZ9pAm/zisG3N9eJj5xVJozjkXrxRLLZlvhCOP8z2lig5tsnBffVxMoMF
-   exTvJH/ZkEK2Z2ylLAs/xFp9jLRFnD9ZzBsgZbjFktYkz3mBscJRCxS4y
-   Q==;
-X-CSE-ConnectionGUID: d0aXCjEFQVuCEk822uv6wQ==
-X-CSE-MsgGUID: 9YqJFWjCSDuq4gNMLOkb/Q==
-X-IronPort-AV: E=Sophos;i="6.14,239,1736838000"; 
-   d="scan'208";a="39234197"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Mar 2025 05:29:19 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 11 Mar 2025 05:29:15 -0700
-Received: from che-lt-i64410lx.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 11 Mar 2025 05:29:09 -0700
-From: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
-To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <krzysztof.kozlowski+dt@linaro.org>
-CC: <balamanikandan.gunasundar@microchip.com>,
-	<linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/3] dt-bindings: mtd: microchip-nand: add atmel pmecc
-Date: Tue, 11 Mar 2025 17:58:46 +0530
-Message-ID: <20250311122847.90081-3-balamanikandan.gunasundar@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250311122847.90081-1-balamanikandan.gunasundar@microchip.com>
-References: <20250311122847.90081-1-balamanikandan.gunasundar@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHlviE+2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 112C7C4CEE9;
+	Tue, 11 Mar 2025 12:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741696198;
+	bh=QtZXEnAsq+kpo0B3XWYCNv9iskcf8SuO6bT85S2GaiA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=VHlviE+2/1h3kZo6MwoozbySOwHSmNTBqo9W6wPc9xI93K7Hlh1G56SpYUa1VJmdu
+	 U5PtWGkAOdMyUX6Ma81gm+vn3Sb8Bbny0zjVHwDOKGP7W5qk1okmgar+YP/Ysx7QLk
+	 u5GXz2t05m9rUzWKhuvckLDx84YroqLQTvXSfNovjNFXN4LesY1gbya98enSy6QGex
+	 AvHY3cCWOBgjtwsIO1DXHpRf60I4AvtZismEj3I4X4qsC2CGth0/2VMJw8YZQrvBOL
+	 2MDCcPW1JUW8Tdvr/DM9fLT3spewWApZo4x5oOs89n5G6OXpP7Dh8kjEGhrJE8bz5t
+	 VwXAk2Dgf+2vQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7123C380AC1C;
+	Tue, 11 Mar 2025 12:30:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,166 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Subject: Re: [PATCHv4 net 0/2] bonding: fix incorrect mac address setting
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174169623226.66274.17244628271427546125.git-patchwork-notify@kernel.org>
+Date: Tue, 11 Mar 2025 12:30:32 +0000
+References: <20250306023923.38777-1-liuhangbin@gmail.com>
+In-Reply-To: <20250306023923.38777-1-liuhangbin@gmail.com>
+To: Hangbin Liu <liuhangbin@gmail.com>
+Cc: netdev@vger.kernel.org, jv@jvosburgh.net, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ razor@blackwall.org, horms@kernel.org, shuah@kernel.org, cratiu@nvidia.com,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Add bindings for programmable multibit error correction code controller
-(PMECC).
+Hello:
 
-Signed-off-by: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
----
+This series was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Changes in v2:
-- Rename filename to match compatible string
-- Add constraints for sam9x7
-- Droped unused dt labels 
+On Thu,  6 Mar 2025 02:39:21 +0000 you wrote:
+> The mac address on backup slave should be convert from Solicited-Node
+> Multicast address, not from bonding unicast target address.
+> 
+> v4: no change, just repost.
+> v3: also fix the mac setting for slave_set_ns_maddr. (Jay)
+>     Add function description for slave_set_ns_maddr/slave_set_ns_maddrs (Jay)
+> v2: fix patch 01's subject
+> 
+> [...]
 
-.../devicetree/bindings/mtd/atmel-nand.txt    | 61 -----------------
- .../bindings/mtd/microchip,pmecc.yaml         | 67 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 61 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/microchip,pmecc.yaml
+Here is the summary with links:
+  - [PATCHv4,net,1/2] bonding: fix incorrect MAC address setting to receive NS messages
+    https://git.kernel.org/netdev/net/c/0c5e145a350d
+  - [PATCHv4,net,2/2] selftests: bonding: fix incorrect mac address
+    https://git.kernel.org/netdev/net/c/9318dc2357b6
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-index dbbc17a866f2..1934614a9298 100644
---- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -1,64 +1,3 @@
--* ECC engine (PMECC) bindings:
--
--Required properties:
--- compatible: should be one of the following
--	"atmel,at91sam9g45-pmecc"
--	"atmel,sama5d4-pmecc"
--	"atmel,sama5d2-pmecc"
--	"microchip,sam9x60-pmecc"
--	"microchip,sam9x7-pmecc", "atmel,at91sam9g45-pmecc"
--- reg: should contain 2 register ranges. The first one is pointing to the PMECC
--       block, and the second one to the PMECC_ERRLOC block.
--
--Example:
--
--	nfc_io: nfc-io@70000000 {
--		compatible = "atmel,sama5d3-nfc-io", "syscon";
--		reg = <0x70000000 0x8000000>;
--	};
--
--	pmecc: ecc-engine@ffffc070 {
--		compatible = "atmel,at91sam9g45-pmecc";
--                reg = <0xffffc070 0x490>,
--                      <0xffffc500 0x100>;
--	};
--
--	ebi: ebi@10000000 {
--		compatible = "atmel,sama5d3-ebi";
--		#address-cells = <2>;
--		#size-cells = <1>;
--		atmel,smc = <&hsmc>;
--		reg = <0x10000000 0x10000000
--		       0x40000000 0x30000000>;
--		ranges = <0x0 0x0 0x10000000 0x10000000
--			  0x1 0x0 0x40000000 0x10000000
--			  0x2 0x0 0x50000000 0x10000000
--			  0x3 0x0 0x60000000 0x10000000>;
--		clocks = <&mck>;
--
--                nand_controller: nand-controller {
--			compatible = "atmel,sama5d3-nand-controller";
--			atmel,nfc-sram = <&nfc_sram>;
--			atmel,nfc-io = <&nfc_io>;
--			ecc-engine = <&pmecc>;
--			#address-cells = <2>;
--			#size-cells = <1>;
--			ranges;
--
--			nand@3 {
--				reg = <0x3 0x0 0x800000>;
--				atmel,rb = <0>;
--
--				/*
--				 * Put generic NAND/MTD properties and
--				 * subnodes here.
--				 */
--			};
--		};
--	};
--
-------------------------------------------------------------------------
--
- Deprecated bindings (should not be used in new device trees):
- 
- Required properties:
-diff --git a/Documentation/devicetree/bindings/mtd/microchip,pmecc.yaml b/Documentation/devicetree/bindings/mtd/microchip,pmecc.yaml
-new file mode 100644
-index 000000000000..98260a691a2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/microchip,pmecc.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/microchip,pmecc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip pmecc controller
-+
-+maintainers:
-+  - Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
-+
-+description: |
-+  Bindings for microchip Programmable Multibit Error Correction Code
-+  Controller (PMECC). pmecc is a programmable BCH encoder/decoder. This
-+  block is passed as the value to the "ecc-engine" property of microchip
-+  nand flash controller node.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - atmel,at91sam9g45-pmecc
-+          - atmel,sama5d2-pmecc
-+          - atmel,sama5d4-pmecc
-+          - microchip,sam9x60-pmecc
-+          - microchip,sam9x7-pmecc
-+      - items:
-+          - const: microchip,sam9x7-pmecc
-+          - const: atmel,at91sam9g45-pmecc
-+      - items:
-+          - const: microchip,sam9x60-pmecc
-+          - const: atmel,at91sam9g45-pmecc
-+
-+  reg:
-+    items:
-+      - description: Base address and size of PMECC controller registers
-+      - description: Base address and size of PMECC_ERRLOC controller
-+
-+  clocks:
-+    description: The clock source for pmecc controller
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: microchip,sam9x7-pmecc
-+    then:
-+      properties:
-+        clocks:
-+          description: The clock source for pmecc controller
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    ecc-engine@ffffc070 {
-+        compatible = "microchip,sam9x7-pmecc";
-+        reg = <0xffffe000 0x300>,
-+              <0xffffe600 0x100>;
-+        clocks = <&pmc 2 48>;
-+    };
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
