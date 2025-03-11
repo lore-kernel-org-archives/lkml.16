@@ -1,117 +1,143 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0613E262D37;
-	Tue, 11 Mar 2025 19:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D792641C2;
+	Tue, 11 Mar 2025 19:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741719727; cv=none; b=HLVWzsI3v9k8jzi6jrqpi13c4FMFIxppTwihX7OrvVVZzof731KLT0iTTkz7aGnoHSFRpLnxzB6nQSexre35nb53etNOsS3VJcon6eWPpSuatYG9TaFqjCKMqII7trRgHP4cWgwzDUXx3iF5PAacmlg2DQOT0UGFaiC4HVH2ghA=
+	t=1741719730; cv=none; b=flj+rWb32JwtA3uOZL7pH9K6eGrx+F1kC0VnHy0UpQOaiDxT6aDZaqnDh61z3a4glDuvf2dX62ivx5HQNiyRXQnbSqgc2iYk3l3NEC6N9pvOfpjrJoZRr6AnTCRZKbstaa46oyUFpH+/le3CcPCrqWJX4v35OYo4Ekis/kU53w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741719727; c=relaxed/simple;
-	bh=ZyKzSu+s1wOfR3oHKYaz0cQlG4dgr/gjkEwJavyClh0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dFKV/D/HtDD7SmdTStmHYl/n3NNydLi9K2yMzNWm73XoQhM9ZOWSTwIyBZQ4AdeRUdrErkCPf93yqAvWm5vj9UEbHWH4TGwjuln5yjOXj/WJH4AVb4bGUj153MKagaGAQy3NMwRM3447854LX2TUrtW94RlCvMXopI4FWFrgw4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcIYL7Pd; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741719730; c=relaxed/simple;
+	bh=5tQ4tOGvRVCC3nq2qbLABFsKu7e+eG53DjiLLC1Zobc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKsn2hW1klyzvm9jbNZegAdjm/m6IYNyR4o8pmnh+rQM03ZNTVZRp0uyzhadK3mu5v8TJ6RQ7I4XTYcNAcVinQ7BaZ0IZcfpySR5DPUSJWuRIsFnRUNmxXV5UiOxNFuGlfYzYG/7lgXvmnGjrnKZ0oSfenGFD8FeNc11ur9TDYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeVu9ef8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcIYL7Pd"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so14350285e9.2;
-        Tue, 11 Mar 2025 12:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741719719; x=1742324519; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZM/C0Y6KtCo6GXxz4sTkdCklkA06E/YKrVilZFUzRyI=;
-        b=NcIYL7Pda1XBjInNUJICIMj7kAsZqWoRQXgY04wjFQ5m44DueBKzx85gPe2cubln/O
-         rt7o+9mA3ChGCPHbr4ymf/xI7Sv35GyLzbKejLJiEI4xEPCyPEvHuQJuPRPiKNFwLjz4
-         EuJMjl76er6Zhgw6k6OSq+94x2JlOA7A2SVFhSR4wKJuw8ajnHAFioB/+JRFJxFF4dcp
-         olI7vGu0Wu6VtUpWTpKx1prMbJAADTH9tlqMtuRSR01o5FRViM+TZmCrQYpi7Vmq0gvO
-         BXC6ndPsdCWoJYptrE5CiiwlNzfJZ7XK6UHW1QOj7M21Mai+sC05/fQ0EHuQF6E9kHCq
-         3EMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741719719; x=1742324519;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZM/C0Y6KtCo6GXxz4sTkdCklkA06E/YKrVilZFUzRyI=;
-        b=J71HXE3ToejnpKNijdzuFPX35ptOJRzAWmKEois8GsoE9ZfoF8n1KK8EfQfLrIiZ+f
-         /O3BFIZ8Yqx39Ivy4YaafFMGtGBhrHO1X31Y/2PlvgHs2Y+vmQocqJzPr4DNwXgCrJNI
-         1d9cH8Hk9mNW3EIA8g3j/p1YHckys2NlEw6vfaMOrdU0p3ryll/O4kV6oJe8Si3w6e0/
-         RicEoHDV8g0RPsJk4Spwq7E6AjK+J6tLECsE4ai4qeMcvbEccUro3iOa0oqYyobunC7z
-         LfFCrh8aW19GpCLyTdtx/RnUrFppBfDPIQ25lFvIMCmejfmoa2u7DAg3Uui9LZP4fHRt
-         zRdw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5036/7UGGl2yvhEOYNpaImj4QJQggymaL7y/WC7cN77+Q5g3LAb2ExRniutwWknmN+WQOuxIevi1sct0=@vger.kernel.org, AJvYcCWwJf/3tvbqBDfitKkqhpPj3a6s7CONgSCQe4zKL1GzWvMf0hAy4PkU+XQDNiK9s8G75900Z3U2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmHGITXqfXD+B26v994t+5vHO4JjWXKk39Ik4LD6mHtt35HFGe
-	3b9bQcbk0jdCIXsN5/zvYIZP27bKPrq5Jy/8xiKbD3ckBJ1GPpOY
-X-Gm-Gg: ASbGncsLU+0P6R4RuA/hAdRStklHLNLLfaoUOmomtLS4XVEMtcol3Ou+RLE7SSBABgg
-	g9LABeiVmuQ6icxf9v9DCr7AraQ2J8zoyL5IWDGAAKsy+9idNmtmvnelQWtFsqaJkRw+sYDlWRX
-	jOILxtfOFzm14O5YAlqYOFmq7N5bkofDCKkvfzJtGiBzqB3tPcMYf+EawIbzE3CrthwTff4i8ea
-	RpGP857tT7xcMr+T0Awnky1Q7Ahw0cmQVUSQl8/Qbt0DPSmI8uavgUMgKKzJDRJSPKfMfOegtzo
-	5GfwEZh+foYq+U+XIHT1Y/i8dEXOS0pmfkxIOHzaft3CGQ==
-X-Google-Smtp-Source: AGHT+IF8L17vBaDo66fasMWl6iiHkxzIXdBOdv+IvwdgmD89ZI0aTDkON53jTbr9t1d4zfPaflVzqA==
-X-Received: by 2002:a05:600c:4ecb:b0:43c:eeee:b70f with SMTP id 5b1f17b1804b1-43ceeeeba17mr82834005e9.24.1741719718920;
-        Tue, 11 Mar 2025 12:01:58 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:e969:4b33:5aa2:11e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cfcbdd0a7sm64617655e9.11.2025.03.11.12.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 12:01:58 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: christian.koenig@amd.com,
-	ray.huang@amd.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	thomas.hellstrom@linux.intel.com,
-	Arunpravin.PaneerSelvam@amd.com,
-	karolina.stolarek@intel.com,
-	jeff.johnson@oss.qualcomm.com,
-	bigeasy@linutronix.de
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/ttm/tests: fix potential null pointer dereference in ttm_bo_unreserve_bulk()
-Date: Tue, 11 Mar 2025 19:01:38 +0000
-Message-Id: <20250311190138.17276-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeVu9ef8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E39C4CEE9;
+	Tue, 11 Mar 2025 19:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741719729;
+	bh=5tQ4tOGvRVCC3nq2qbLABFsKu7e+eG53DjiLLC1Zobc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JeVu9ef8rWptgoNQ70LP1k1n6whR56k6I5zwVOp9pJc3jeKAiOklkp30vwOvoPOF/
+	 h7pPMRAgnDxuaXYo6UAgWotYn6PkxU/Nj51a1vX6Er68IaH9gVX+cvHOBrPT4oLPin
+	 Y64d2Bs5QKT6DRSbsk/OEgJjDK72kb4uBn3+SVt2gEl+kOvf64qBVRP2IlwB2Ts9br
+	 bU6YSUdOJpfbZjp9Lw3DkmD815+0pNsjkCZRhW8xnUeiOFwzzCthfIcrzUcfEtbjKg
+	 igtclMp9HC6K5YPz4bEabOvqQiggpiY5xcPOVqP0TufBsNHdVp/hOhSjDbcEICnaBb
+	 WY3swmsF5Kvsg==
+Date: Tue, 11 Mar 2025 21:02:03 +0200
+From: Dmitry Baryshkov <lumag@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>, 
+	Wesley Cheng <quic_wcheng@quicinc.com>, Saravana Kannan <saravanak@google.com>, 
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.li@nxp.com>, linux-arm-msm@vger.kernel.org, 
+	linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/7] usb: dwc3: qcom: Transition to flattened model
+Message-ID: <ffm23zhsp4ksbgmk6slehc2pcy47i5xb7eqhuf6ixlphoj7lbv@o524z6na3mtr>
+References: <20250226-dwc3-refactor-v4-0-4415e7111e49@oss.qualcomm.com>
+ <20250226-dwc3-refactor-v4-6-4415e7111e49@oss.qualcomm.com>
+ <vn7nrxpga7ewyqr7hpiczsn63qo2z4qzenif6powryqrtmnwjs@23jp6c7qdvxt>
+ <u2u3mkybodsk3neura7nvhgd6iwky5cjkbqwpcs3rn3tm7dzpq@ecah6hnm4t6g>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <u2u3mkybodsk3neura7nvhgd6iwky5cjkbqwpcs3rn3tm7dzpq@ecah6hnm4t6g>
 
-In the ttm_bo_unreserve_bulk() test function, resv is allocated 
-using kunit_kzalloc(), but the subsequent assertion mistakenly 
-verifies the ttm_dev pointer instead of checking the resv pointer. 
-This mistake means that if allocation for resv fails, the error will 
-go undetected, resv will be NULL and a call to dma_resv_init(resv) 
-will dereference a NULL pointer. 
+On Mon, Mar 10, 2025 at 09:46:24PM -0500, Bjorn Andersson wrote:
+> On Fri, Mar 07, 2025 at 08:41:33AM +0200, Dmitry Baryshkov wrote:
+> > On Wed, Feb 26, 2025 at 04:17:53PM -0800, Bjorn Andersson wrote:
+> > > The USB IP-block found in most Qualcomm platforms is modelled in the
+> > > Linux kernel as 3 different independent device drivers, but as shown by
+> > > the already existing layering violations in the Qualcomm glue driver
+> > > they can not be operated independently.
+> > > 
+> > > With the current implementation, the glue driver registers the core and
+> > > has no way to know when this is done. As a result, e.g. the suspend
+> > > callbacks needs to guard against NULL pointer dereferences when trying
+> > > to peek into the struct dwc3 found in the drvdata of the child.
+> > > Even with these checks, there are no way to fully protect ourselves from
+> > > the race conditions that occur if the DWC3 is unbound.
+> > > 
+> > > Missing from the upstream Qualcomm USB support is handling of role
+> > > switching, in which the glue needs to be notified upon DRD mode changes.
+> > > Several attempts has been made through the years to register callbacks
+> > > etc, but they always fall short when it comes to handling of the core's
+> > > probe deferral on resources etc.
+> > > 
+> > > Moving to a model where the DWC3 core is instantiated in a synchronous
+> > > fashion avoids above described race conditions.
+> > > 
+> > > It is however not feasible to do so without also flattening the
+> > > DeviceTree binding, as assumptions are made in the DWC3 core and
+> > > frameworks used that the device's associated of_node will the that of
+> > > the core. Furthermore, the DeviceTree binding is a direct
+> > > representation of the Linux driver model, and doesn't necessarily
+> > > describe "the USB IP-block".
+> > > 
+> > > The Qualcomm DWC3 glue driver is therefor transitioned to initialize and
+> > > operate the DWC3 within the one device context, in synchronous fashion.
+> > > 
+> > > To provide a limited time backwards compatibility, a snapshot of the
+> > > driver is retained in a previous commit. As such no care is taken in the
+> > > dwc3-qcom driver for the qcom,dwc3 backwards compatibility.
+> > > 
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> > > ---
+> > >  drivers/usb/dwc3/dwc3-qcom.c | 138 +++++++++++++++++++++----------------------
+> > >  1 file changed, 69 insertions(+), 69 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > > index 9d04c2457433..63e60f15ceaa 100644
+> > > --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > > @@ -4,7 +4,6 @@
+> > >   * Inspired by dwc3-of-simple.c
+> > >   */
+> > >  
+> > > -#include <linux/cleanup.h>
+> > >  #include <linux/io.h>
+> > >  #include <linux/of.h>
+> > >  #include <linux/clk.h>
+> > > @@ -14,7 +13,6 @@
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/extcon.h>
+> > 
+> > As a heads up, would it make sense to also drop extcon support while we
+> > are transitioning to the new driver / DT bindings?
+> > 
+> 
+> Yes, I believe this code should be cleaned out in favor of relying on
+> the core's implementation thereof and callbacks into the qcom-code for
+> configuration the glue hardware - which looks to be the same callback we
+> want to add for the usb_role_switch.
 
-Fix the assertion to properly verify the resv pointer.
+Hmm. So do you want to clean it later? Or do you plan to drop extcon
+from the next iteration?
 
-Fixes: 588c4c8d58c4 ("drm/ttm/tests: Fix a warning in ttm_bo_unreserve_bulk")
-Cc: stable@vger.kernel.org
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/gpu/drm/ttm/tests/ttm_bo_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Regards,
+> Bjorn
+> 
+> > >  #include <linux/interconnect.h>
+> > > -#include <linux/of_platform.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/phy/phy.h>
+> > >  #include <linux/usb/of.h>
+> > 
+> > -- 
+> > With best wishes
+> > Dmitry
 
-diff --git a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
-index f8f20d2f6174..e08e5a138420 100644
---- a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
-+++ b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
-@@ -340,7 +340,7 @@ static void ttm_bo_unreserve_bulk(struct kunit *test)
- 	KUNIT_ASSERT_NOT_NULL(test, ttm_dev);
- 
- 	resv = kunit_kzalloc(test, sizeof(*resv), GFP_KERNEL);
--	KUNIT_ASSERT_NOT_NULL(test, ttm_dev);
-+	KUNIT_ASSERT_NOT_NULL(test, resv);
- 
- 	err = ttm_device_kunit_init(priv, ttm_dev, false, false);
- 	KUNIT_ASSERT_EQ(test, err, 0);
 -- 
-2.39.5
-
+With best wishes
+Dmitry
