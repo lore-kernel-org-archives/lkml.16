@@ -1,69 +1,80 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082E238D5F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992B8254847
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741691614; cv=none; b=piLRQt0NmPa9MAfAIjtn1Afrae7mYLDEigg+Eb2n3LgOB5fYJj82jWgz4+sdPVPaFUhcK/bNenBLlQZ0sqY6UFJg5LB3rWPOhkGnTwCb1Gyt7FwKfzGEVZlBw2WwMQ/mCAuGkMvLjMhTCTM2pUTm2kO9JgokyI0U84oGl8Jf8Hs=
+	t=1741691632; cv=none; b=iGPpIXAmnlWndlUQmCJRb0IUZNIg/GcYMqrKnf9hbOK1TRGMiQBVhsjnHygbn1Htl2XZdfSwiCWBUBxYXJeZbNrjpg7ll3IGNKmkL5vN6t9/Q99ZLQkkaV7TIQrJ7r8m7HQEZ+6NaPZ6GePyGKrodVksedoVnf0ktJB2nmrzpO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741691614; c=relaxed/simple;
-	bh=ZSfnlQTOZD8O0fLofbS5GkGXGqJx98kuofJ7wgZMeTE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r1XkaB7icDvL9A26LIwPMUIk13/0di6i5TQUNQJ1CbtuXwyAq4p4woKFerTRdqG3VcjuaiUxFMLfgXM7yodJFevC3AfY5NPLSPJRx/BbG2JV+3mlGvpIhpRRHZQMx07EInb3BxT6HebJTNP+JrgXKnN9KQcfo3l7mxVtnjKh8JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t4HOG6zp; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741691632; c=relaxed/simple;
+	bh=qbtvWIP1+nIeEYbvoZdR0xecYHAOBTcof1Joj/nAUfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OYKlMrhW1Q0radsVWlIMcl+YexvPs5DNgFhdl5Kn0W0fq77nVCG11E6d0vQspka4bPz0l1lCzwqEYaMWQ8v96P8CLd+pjrWcV6b4pw9NWVmi15QlNKKYFRIBvPaO7sH4X+vixWYw5UfSs6uwJtU634Ic0ViDiYCkhnAu2h7njAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hx7W61u3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t4HOG6zp"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741691610;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HfPMogj46GXj+PK6wnAMkLlFbwsd12CYKYgvhpu8sPY=;
-	b=t4HOG6zpcaANRvzYUVZLQbuMvGQ0/yUxrJ2bqnY+oHDmVT0FYsg8KIRZVGeC9eekxEUWKf
-	RvgymgbuzlqBFqooyjMILKTR94Z8ZezDVo/3EIzKescXENbbQwet1xHAxMJQWxqH/ZDonD
-	eAptpFSq+FUwnJ7eXFyJAYWWxPTCoDE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] bcachefs: Use max() to improve gen_after()
-Date: Tue, 11 Mar 2025 12:13:11 +0100
-Message-ID: <20250311111310.495922-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hx7W61u3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF06CC4CEEB;
+	Tue, 11 Mar 2025 11:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741691632;
+	bh=qbtvWIP1+nIeEYbvoZdR0xecYHAOBTcof1Joj/nAUfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hx7W61u36GJWwC4o/LYS+nsWiIqB+uVKZflDZ/STvcQba1rMkyR0sMb/WTvCvXG0k
+	 PV/ssav8qlAYZPM21ROnyngQYSaNUJ7H5Enm94EUDQObkEgpD1QmFt0uCXgQaYt2w9
+	 cybLrZX1cJ+FWa8pRrmSZ0gJwAtiDSpNAH34LLtrG6Rcn//BZEwUsbUe2A2joCpFiV
+	 sBwWyQZzyAM2m3sTppC6u8swt6Ga9oCcCd8Hy97X0K1xm8TmjjwMOb+UWQ3DdC3JZ/
+	 sLPzU2R0grhsh812qwGJgnLLMEYK/afQ9ARJUamqfV88xNc9f6aOruBxCldJJM/J39
+	 wKXmeeuquRz4Q==
+Date: Tue, 11 Mar 2025 12:13:46 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Andy Yan <andyshrk@163.com>
+Cc: heiko@sntech.de, kishon@kernel.org, sebastian.reichel@collabora.com,
+	yubing.zhang@rock-chips.com, dmitry.baryshkov@linaro.org,
+	frank.wang@rock-chips.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: Re: [PATCH] phy: rockchip: usbdp: Check these parameters only
+ when the corresponding set flags are set
+Message-ID: <Z9Aa6v1/1KRdZDKE@vaman>
+References: <20250306065952.485809-1-andyshrk@163.com>
+ <Z86UOmPg/UDSBajZ@vaman>
+ <1379400c.90c.19582b05f74.Coremail.andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1379400c.90c.19582b05f74.Coremail.andyshrk@163.com>
 
-Use max() to simplify gen_after() and improve its readability.
+On 11-03-25, 08:52, Andy Yan wrote:
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- fs/bcachefs/buckets.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> Do you mean we should do it like this:
+> 
+> static int rk_udphy_dp_phy_configure(struct phy *phy,
+>                                      union phy_configure_opts *opts)
+> {
+>         struct rk_udphy *udphy = phy_get_drvdata(phy);
+>         struct phy_configure_opts_dp *dp = &opts->dp;
+>         u32 i, val, lane;
+>         int ret;
+> 
+>        .............
+>       if (dp->set_rate)
+>            	ret = rk_udphy_dp_phy_verify_link_rate(dp->link_rate);
+>      if (dp->set_lanes)
+>                 ret = rk_udphy_dp_phy_verify_link_lanes(dp->lanes);
+>      if (dp->set_voltates)
+>                ret = rk_udphy_dp_phy_verify_link_voltate(dp->voltate);
+> 
+> 
+> Add helper for each of them ?
 
-diff --git a/fs/bcachefs/buckets.h b/fs/bcachefs/buckets.h
-index a9acdd6c0c86..124ac380b22e 100644
---- a/fs/bcachefs/buckets.h
-+++ b/fs/bcachefs/buckets.h
-@@ -167,9 +167,7 @@ static inline int gen_cmp(u8 a, u8 b)
- 
- static inline int gen_after(u8 a, u8 b)
- {
--	int r = gen_cmp(a, b);
--
--	return r > 0 ? r : 0;
-+	return max(0, gen_cmp(a, b));
- }
- 
- static inline int dev_ptr_stale_rcu(struct bch_dev *ca, const struct bch_extent_ptr *ptr)
+That would look better for sure
+
 -- 
-2.48.1
-
+~Vinod
