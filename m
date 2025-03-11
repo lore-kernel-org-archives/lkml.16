@@ -1,143 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D792641C2;
-	Tue, 11 Mar 2025 19:02:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D7E2641E3;
+	Tue, 11 Mar 2025 19:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741719730; cv=none; b=flj+rWb32JwtA3uOZL7pH9K6eGrx+F1kC0VnHy0UpQOaiDxT6aDZaqnDh61z3a4glDuvf2dX62ivx5HQNiyRXQnbSqgc2iYk3l3NEC6N9pvOfpjrJoZRr6AnTCRZKbstaa46oyUFpH+/le3CcPCrqWJX4v35OYo4Ekis/kU53w0=
+	t=1741719738; cv=none; b=bH0/JL5hiYKSnNBRlI7FWvBvr324L6EX3hsBjEQ54z4cd+cIJQXvJAzhAUHBhlHmxKdPt1ZFI7ElLHmckR91WbuP2ZQjvswIofNvuzJgxSi79R06gsX3ZnqYFipAUr/wwGFugAsUCJBuUmW7nltQzAGpQjXubXpJg/jzadLtWh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741719730; c=relaxed/simple;
-	bh=5tQ4tOGvRVCC3nq2qbLABFsKu7e+eG53DjiLLC1Zobc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MKsn2hW1klyzvm9jbNZegAdjm/m6IYNyR4o8pmnh+rQM03ZNTVZRp0uyzhadK3mu5v8TJ6RQ7I4XTYcNAcVinQ7BaZ0IZcfpySR5DPUSJWuRIsFnRUNmxXV5UiOxNFuGlfYzYG/7lgXvmnGjrnKZ0oSfenGFD8FeNc11ur9TDYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeVu9ef8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741719738; c=relaxed/simple;
+	bh=s+zyL0W+ZVLDk60GQXXqVimEk+8o11ddCaQA5gPslWU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uGgbcTxLg94lEcH51xfF/MRyJ8Md6bSbw6Ngr3eVEIbNHfkPMkAJzfTe3nw8IEH+1GWSiH/3Po+5mKz73loZcVWzEucVIpRR5f/tbcTcy3RxhgfoX9gnRas4pShKoaVrl/QkIRb2U6XWJa2FeaiFOEBrARWnU/EOZ4KchHA828o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hpN+QqzA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeVu9ef8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E39C4CEE9;
-	Tue, 11 Mar 2025 19:02:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hpN+QqzA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69F5C4CEE9;
+	Tue, 11 Mar 2025 19:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741719729;
-	bh=5tQ4tOGvRVCC3nq2qbLABFsKu7e+eG53DjiLLC1Zobc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JeVu9ef8rWptgoNQ70LP1k1n6whR56k6I5zwVOp9pJc3jeKAiOklkp30vwOvoPOF/
-	 h7pPMRAgnDxuaXYo6UAgWotYn6PkxU/Nj51a1vX6Er68IaH9gVX+cvHOBrPT4oLPin
-	 Y64d2Bs5QKT6DRSbsk/OEgJjDK72kb4uBn3+SVt2gEl+kOvf64qBVRP2IlwB2Ts9br
-	 bU6YSUdOJpfbZjp9Lw3DkmD815+0pNsjkCZRhW8xnUeiOFwzzCthfIcrzUcfEtbjKg
-	 igtclMp9HC6K5YPz4bEabOvqQiggpiY5xcPOVqP0TufBsNHdVp/hOhSjDbcEICnaBb
-	 WY3swmsF5Kvsg==
-Date: Tue, 11 Mar 2025 21:02:03 +0200
-From: Dmitry Baryshkov <lumag@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>, 
-	Wesley Cheng <quic_wcheng@quicinc.com>, Saravana Kannan <saravanak@google.com>, 
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.li@nxp.com>, linux-arm-msm@vger.kernel.org, 
-	linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/7] usb: dwc3: qcom: Transition to flattened model
-Message-ID: <ffm23zhsp4ksbgmk6slehc2pcy47i5xb7eqhuf6ixlphoj7lbv@o524z6na3mtr>
-References: <20250226-dwc3-refactor-v4-0-4415e7111e49@oss.qualcomm.com>
- <20250226-dwc3-refactor-v4-6-4415e7111e49@oss.qualcomm.com>
- <vn7nrxpga7ewyqr7hpiczsn63qo2z4qzenif6powryqrtmnwjs@23jp6c7qdvxt>
- <u2u3mkybodsk3neura7nvhgd6iwky5cjkbqwpcs3rn3tm7dzpq@ecah6hnm4t6g>
+	s=k20201202; t=1741719738;
+	bh=s+zyL0W+ZVLDk60GQXXqVimEk+8o11ddCaQA5gPslWU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hpN+QqzActWSMKGdXh2GDOZEviPxHshzk95Dn3HHslkOB0qc5A4Fhtox4A+Tx3qN8
+	 CiATauxKQJj4ethtQaa36TNhDWiD63xFyFmYUb4Obg1AM54sM0jpyXSc7GAZ/EZpGj
+	 ArfpNaRb2PNbJwnAWPbLPJ5Scu7RLgSU9mVDMfNqoRSNzY6jh7ZJaKjdYAy2426JPx
+	 3eIkIk+wB6oq1bFlOZC9aT4g/NYtRdGjIdneNQ20bzunWQKg3/UVgCDdtYDNZrgV++
+	 hOnW7CNVac91fJBe/bWWhfKxstlu+TicJjoui6ll7Bn3eU3fxopL2SWVs5t/GEpg73
+	 YlIT+21tK+93g==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Ben Hutchings <ben@decadent.org.uk>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>
+Subject: [PATCH] kbuild: deb-pkg: fix versioning for -rc releases
+Date: Wed, 12 Mar 2025 04:01:33 +0900
+Message-ID: <20250311190212.634123-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <u2u3mkybodsk3neura7nvhgd6iwky5cjkbqwpcs3rn3tm7dzpq@ecah6hnm4t6g>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 10, 2025 at 09:46:24PM -0500, Bjorn Andersson wrote:
-> On Fri, Mar 07, 2025 at 08:41:33AM +0200, Dmitry Baryshkov wrote:
-> > On Wed, Feb 26, 2025 at 04:17:53PM -0800, Bjorn Andersson wrote:
-> > > The USB IP-block found in most Qualcomm platforms is modelled in the
-> > > Linux kernel as 3 different independent device drivers, but as shown by
-> > > the already existing layering violations in the Qualcomm glue driver
-> > > they can not be operated independently.
-> > > 
-> > > With the current implementation, the glue driver registers the core and
-> > > has no way to know when this is done. As a result, e.g. the suspend
-> > > callbacks needs to guard against NULL pointer dereferences when trying
-> > > to peek into the struct dwc3 found in the drvdata of the child.
-> > > Even with these checks, there are no way to fully protect ourselves from
-> > > the race conditions that occur if the DWC3 is unbound.
-> > > 
-> > > Missing from the upstream Qualcomm USB support is handling of role
-> > > switching, in which the glue needs to be notified upon DRD mode changes.
-> > > Several attempts has been made through the years to register callbacks
-> > > etc, but they always fall short when it comes to handling of the core's
-> > > probe deferral on resources etc.
-> > > 
-> > > Moving to a model where the DWC3 core is instantiated in a synchronous
-> > > fashion avoids above described race conditions.
-> > > 
-> > > It is however not feasible to do so without also flattening the
-> > > DeviceTree binding, as assumptions are made in the DWC3 core and
-> > > frameworks used that the device's associated of_node will the that of
-> > > the core. Furthermore, the DeviceTree binding is a direct
-> > > representation of the Linux driver model, and doesn't necessarily
-> > > describe "the USB IP-block".
-> > > 
-> > > The Qualcomm DWC3 glue driver is therefor transitioned to initialize and
-> > > operate the DWC3 within the one device context, in synchronous fashion.
-> > > 
-> > > To provide a limited time backwards compatibility, a snapshot of the
-> > > driver is retained in a previous commit. As such no care is taken in the
-> > > dwc3-qcom driver for the qcom,dwc3 backwards compatibility.
-> > > 
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> > > ---
-> > >  drivers/usb/dwc3/dwc3-qcom.c | 138 +++++++++++++++++++++----------------------
-> > >  1 file changed, 69 insertions(+), 69 deletions(-)
-> > > 
-> > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > > index 9d04c2457433..63e60f15ceaa 100644
-> > > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > > @@ -4,7 +4,6 @@
-> > >   * Inspired by dwc3-of-simple.c
-> > >   */
-> > >  
-> > > -#include <linux/cleanup.h>
-> > >  #include <linux/io.h>
-> > >  #include <linux/of.h>
-> > >  #include <linux/clk.h>
-> > > @@ -14,7 +13,6 @@
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/extcon.h>
-> > 
-> > As a heads up, would it make sense to also drop extcon support while we
-> > are transitioning to the new driver / DT bindings?
-> > 
-> 
-> Yes, I believe this code should be cleaned out in favor of relying on
-> the core's implementation thereof and callbacks into the qcom-code for
-> configuration the glue hardware - which looks to be the same callback we
-> want to add for the usb_role_switch.
+The version number with -rc should be considered older than the final
+release.
 
-Hmm. So do you want to clean it later? Or do you plan to drop extcon
-from the next iteration?
+For example, 6.14-rc1 should be older than 6.14, but to handle this
+correctly (just like Debian kernel), "-rc" must be replace with "~rc".
 
-> 
-> Regards,
-> Bjorn
-> 
-> > >  #include <linux/interconnect.h>
-> > > -#include <linux/of_platform.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/phy/phy.h>
-> > >  #include <linux/usb/of.h>
-> > 
-> > -- 
-> > With best wishes
-> > Dmitry
+  $ dpkg --compare-versions 6.14-rc1 lt 6.14
+  $ echo $?
+  1
+  $ dpkg --compare-versions 6.14~rc1 lt 6.14
+  $ echo $?
+  0
 
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/package/mkdebian | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+index 193e33bcb989..80ed96561993 100755
+--- a/scripts/package/mkdebian
++++ b/scripts/package/mkdebian
+@@ -167,7 +167,9 @@ version=$KERNELRELEASE
+ if [ "${KDEB_PKGVERSION:+set}" ]; then
+ 	packageversion=$KDEB_PKGVERSION
+ else
+-	packageversion=$(${srctree}/scripts/setlocalversion --no-local ${srctree})-$($srctree/scripts/build-version)
++	upstream_version=$("${srctree}/scripts/setlocalversion" --no-local "${srctree}" | sed 's/-\(rc[1-9]\)/~\1/')
++	debian_revision=$("${srctree}/scripts/build-version")
++	packageversion=${upstream_version}-${debian_revision}
+ fi
+ sourcename=${KDEB_SOURCENAME:-linux-upstream}
+ 
 -- 
-With best wishes
-Dmitry
+2.43.0
+
