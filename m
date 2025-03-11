@@ -1,125 +1,108 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ADD22423D;
-	Tue, 11 Mar 2025 08:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543461DE894;
+	Tue, 11 Mar 2025 08:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741681259; cv=none; b=max9Fjv8Ai54P2iTCzQEteXeJ2ZiJWAKZRMPSYzApymEb60n9ea0t76Iw6oBE1kyjeOo2ylk2RdBRwE9VXI8xQRycQwmIDIgtP3ETJAEd+0zoKRmkILAXexPqzEKxfJoorpckzL4a27BmOav4F55brbMrChNBVzMG1ptE22hPXY=
+	t=1741681343; cv=none; b=V+L1OCUoK6DJijFmMYE5VIOFBmcQF+EuC9sYbGdRx7CkNFCV95HHy+vrq8aWR2CB3vd0nA9xumzWsbF5Y163hd8P/3M9QMHntXvni833JT7RuEKiY1/FOfmInPLRk4nDQEoH4nPhMpqDWNw1Q3VJhP1bZgLSyvKWbKnYssOaAuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741681259; c=relaxed/simple;
-	bh=/krpf4mC7s6O3K1gfP6n3jIaWEpoHX0fgaocmRijhkU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DeIv5+CXdUDPT2pKq7poKWxhPOj37KEqOKJU9glc93FjOUX0+AH6JHsKpJGclKoiGu8J0XLaxkmDJkch9C667KjaF0BVqOnnkekULTAM6CsELpJm3csalLKxVjzWe7UUBilkMlaLWCyQisShdtlrm3X314v+dY1Z2thV1+VplQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=0Fjsb0yB; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1741681343; c=relaxed/simple;
+	bh=oDgMFfKoOYNvurMdYjsKlHk+6v4ec6TZPOD47GjfsLU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=XtbOlbUp5eejAMaEJ5HNXgRA5K5mhkuD5AwlHAGWgOpIKthINwI3KQZD67HbEsiN86WaB+aS/t8jB2pto6Nv2nopoiadbqwTXgS9WE0VYb+UrbDqRvkp0bt+ew1U0x590lLLFH62vc9V+XVItVUj559zRq/WUHchcp7+QkaFL54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpPO/8x2; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="0Fjsb0yB"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B81kWr016929;
-	Tue, 11 Mar 2025 09:20:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	mgvPHrj9w39QFxaBaXFSsD+ID+KMNA0Jvstg1hsdw/Y=; b=0Fjsb0yBbTOx9kv7
-	0vWPYYqspDp8ROlPr288Q5Gqu0hCBFOW+w90Q/aT2JRbvXBMEz6ieEzQTaDnciFP
-	pwWSQiqbdeJVgXIbaU5xl6cew2PqduOVCnLlNoboEHdwpOcq6bMsoZ0iaGB+iP9t
-	VBN+pm9N9ULZLU42297zPLfCLHrjStHtCjfbXBLX/IFXZu+WXUNtkSLtoXT8xwLj
-	n/k/cT4y4OBH/zs7KeP1YuCSwulJfRgjdbzJmjFTYYUEMqRkVOTVRn89COBdLFhI
-	B396eO+w0acQ7V08h3rewGqZSPYnYUcPqUutv15sMi2k/jjmyX/zRbUwITDFLYej
-	D5Bgnw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4590b95gfe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 09:20:36 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 37DF040063;
-	Tue, 11 Mar 2025 09:18:42 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 08650544BDE;
-	Tue, 11 Mar 2025 09:16:33 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Mar
- 2025 09:16:32 +0100
-Message-ID: <face80e3-36be-42a0-8d31-bb74e413e397@foss.st.com>
-Date: Tue, 11 Mar 2025 09:16:32 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpPO/8x2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741681341; x=1773217341;
+  h=from:to:cc:subject:date:message-id;
+  bh=oDgMFfKoOYNvurMdYjsKlHk+6v4ec6TZPOD47GjfsLU=;
+  b=mpPO/8x2coacSu2P6qOwudWw3oJw5YOmR3EwMrkwbvyv+t0Om0tnR/1y
+   TMtderfvUGd4lLzVHmSOEdY66A0LedP100aP/BA/aTTCBSmY0/avxGHK6
+   gsNL+V7hzuNTdEYuL90+c8DZEg0ybzoWchx04xktKPXwaiJXifTUMZ/33
+   mkslmY+Hghzh8OdWWQpWyqWYXLa/9nUTfiUqTTwbmcs9PGF33uQ6VWXof
+   SbbKThVb1h8PnmaWd9iJigCIOA9c5V4NzXNKO92AttoAiqPbzOsDcoAR4
+   FpWeDtgIN5lw4oW4O8EmwwTq5um6mnJ79mtJYeD7AsEUlGGmUN+dRe6eZ
+   Q==;
+X-CSE-ConnectionGUID: zmLL13wlRQ2QxC+ML4WhHA==
+X-CSE-MsgGUID: KDIhl/GdQ92p7mjDBIuO7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="68067096"
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="68067096"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:22:21 -0700
+X-CSE-ConnectionGUID: wBS/iF1eQN+yUTCZnNwSiA==
+X-CSE-MsgGUID: aj6FqxiVRdSzGBOjGhIA0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="120202946"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:22:19 -0700
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: shuah@kernel.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	qiuxu.zhuo@intel.com,
+	yi1.lai@intel.com
+Subject: [PATCH 1/1] selftests/mincore: Allow read-ahead pages to reach the end of the file
+Date: Tue, 11 Mar 2025 16:09:40 +0800
+Message-Id: <20250311080940.21413-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/4] Add support for Plymovent AQM board
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Woojung Huh
-	<woojung.huh@microchip.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>
-CC: <kernel@pengutronix.de>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20250305131425.1491769-1-o.rempel@pengutronix.de>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20250305131425.1491769-1-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_01,2025-03-11_01,2024-11-22_01
 
-Hi Oleksij
+When running the mincore_selftest on a system with an XFS file system, it
+failed the "check_file_mmap" test case due to the read-ahead pages reaching
+the end of the file. The failure log is as below:
 
-On 3/5/25 14:14, Oleksij Rempel wrote:
-> This patch series adds support for the Plymovent AQM board based on the
-> STM32MP151C SoC. Additionally, the ICS-43432 device tree binding is
-> converted to YAML to address a validation warning.
-> 
-> The ICS-43432 patch resolves one of the devicetree validation warnings.
-> However, the false-positive warning:
-> 
->    "audio-controller@44004000: port:endpoint: Unevaluated properties are
->     not allowed ('format' was unexpected)"
-> 
-> remains unresolved. The "format" property is required for proper
-> functionality of this device.
-> 
-> Best regards,
-> 
-> Oleksij Rempel (4):
->    dt-bindings: sound: convert ICS-43432 binding to YAML
->    dt-bindings: arm: stm32: Add Plymovent AQM board
->    ARM: dts: stm32: Add pinmux groups for Plymovent AQM board
->    arm: dts: stm32: Add Plymovent AQM devicetree
-> 
->   .../devicetree/bindings/arm/stm32/stm32.yaml  |   1 +
->   .../devicetree/bindings/sound/ics43432.txt    |  19 -
->   .../bindings/sound/invensense,ics43432.yaml   |  51 +++
->   arch/arm/boot/dts/st/Makefile                 |   1 +
->   arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi   | 292 ++++++++++++++
->   arch/arm/boot/dts/st/stm32mp151c-plyaqm.dts   | 376 ++++++++++++++++++
->   6 files changed, 721 insertions(+), 19 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/sound/ics43432.txt
->   create mode 100644 Documentation/devicetree/bindings/sound/invensense,ics43432.yaml
->   create mode 100644 arch/arm/boot/dts/st/stm32mp151c-plyaqm.dts
-> 
-> --
-> 2.39.5
-> 
+   RUN           global.check_file_mmap ...
+  mincore_selftest.c:264:check_file_mmap:Expected i (1024) < vec_size (1024)
+  mincore_selftest.c:265:check_file_mmap:Read-ahead pages reached the end of the file
+  check_file_mmap: Test failed
+           FAIL  global.check_file_mmap
 
-Series applied on stm32-next.
+This is because the read-ahead window size of the XFS file system on this
+machine is 4 MB, which is larger than the size from the #PF address to the
+end of the file. As a result, all the pages for this file are populated.
 
-Thanks
-Alex
+  blockdev --getra /dev/nvme0n1p5
+    8192
+  blockdev --getbsz /dev/nvme0n1p5
+    512
+
+This issue can be fixed by extending the current FILE_SIZE 4MB to a larger
+number, but it will still fail if the read-ahead window size of the file
+system is larger enough. Additionally, in the real world, read-ahead pages
+reaching the end of the file can happen and is an expected behavior.
+Therefore, allowing read-ahead pages to reach the end of the file is a
+better choice for the "check_file_mmap" test case.
+
+Reported-by: Yi Lai <yi1.lai@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+ tools/testing/selftests/mincore/mincore_selftest.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tools/testing/selftests/mincore/mincore_selftest.c b/tools/testing/selftests/mincore/mincore_selftest.c
+index e949a43a6145..efabfcbe0b49 100644
+--- a/tools/testing/selftests/mincore/mincore_selftest.c
++++ b/tools/testing/selftests/mincore/mincore_selftest.c
+@@ -261,9 +261,6 @@ TEST(check_file_mmap)
+ 		TH_LOG("No read-ahead pages found in memory");
+ 	}
+ 
+-	EXPECT_LT(i, vec_size) {
+-		TH_LOG("Read-ahead pages reached the end of the file");
+-	}
+ 	/*
+ 	 * End of the readahead window. The rest of the pages shouldn't
+ 	 * be in memory.
+-- 
+2.17.1
+
