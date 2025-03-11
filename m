@@ -1,204 +1,327 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BD5264A84;
-	Tue, 11 Mar 2025 17:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896A425FA2A;
+	Tue, 11 Mar 2025 17:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741715410; cv=none; b=sFjOVDCROVwtLJzc3Vs8WX3xRDe1XqhJo/ox4wH0czd1C4AN5I9VEMxJM70yRIUSHNc2RD/tWV47QMjz5PWfrRvLu5K+9SScWrnDhVeIdFgMjxUbEMdRKGbiuWjN3vEfnjfiE/9mp+hpAgi4zFdwjrV8GbiakqzNn61kl8pYv1A=
+	t=1741715457; cv=none; b=l49FjgVY6hHzbYyFJErhKQyRbR2GVv4+z7bQwmR+2KKhm5Qg8xcXk6GVsdE1E88cg7VbnpfC8ZV0EtKg8Gt2c8xduTh/aLFiBDmcVx1YYHI+uhp+1wtvt1WtQElRyevTxtMvmkDKI9vlhQjax/qiJrokYu4+ht9FPNjSmRtkICU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741715410; c=relaxed/simple;
-	bh=964LyMRqlPXEPxt4dRUtburkX8rzYyxtJ+Zd6YPN9n8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S7k+3lynup3Xfa5gu6qWnb7Clj1jSPJyn2pajLNMdMx0A4LS/gsTjpV8aWsy1POEjQo1eBjkxZcBAQ7AiJ4f6G3lH3pY/RrzFfeXUdZXRT07PcTa+eXG6LJX1h3pcHCcvv0g6JkLZ28/+7Ow9jj4gYwhdD/5sQOSzja6VkA7yN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwoAgrlS; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741715457; c=relaxed/simple;
+	bh=U19B1VbgcefCWApQl3IgM9D9d+Wj0G03LxjOQo70xsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwd1Oq+6ib+rMEtO9aQmIDLlkFIliuoJ6MfpgV+1h2az7jmgqHzYaI1AzoIy2aVUHPYUdrpfe4A2DTu2mnuKidZhlAgym+C4BziACJjSYbFOYxaT78l3X0aWqmwDto7VsGf1HNMmD8gQi88ZuW6mmOpr3qkSXsNSXMDXZYmfkxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hL9YICC3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwoAgrlS"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so5813146e87.1;
-        Tue, 11 Mar 2025 10:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741715407; x=1742320207; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uyciabioh/RTBRWZFgAXOHCv2udpm7yTbk+rfqYhebY=;
-        b=QwoAgrlS0hZTDzA4IQrgJBKr/u1qc8yDiUQtyDY5M0PkyMipQJ5i/541MRi2YKRYJk
-         /MfSK7pQnaIZg1+qV97GYGUbJoKNlHUDiRNYJx9NHIkLmv9yie9u/doFJpKAKlqpmQee
-         /rQFygLrk2mAg+QuaP87rQspajvigs181oF/UBdI0lo8wJrUJDMKVU5grF1QR89vJr5Q
-         DzFOYpduUToa7VlQTjPG4Iz3Ptk941Aqx+vy8vCvtK0rUwf6dAjJIU6lLO1WfbZZJwDX
-         kuWWebeQn/X6p8wFW/CZJf/ETst2xtSN1fU6Lk7SOU/Ovntjulgc+aaBoEW6YF6RFrNh
-         RayA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741715407; x=1742320207;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Uyciabioh/RTBRWZFgAXOHCv2udpm7yTbk+rfqYhebY=;
-        b=JnBarR6RM+cjHlwMoBiM/wjho8yA+9SmwFE1hraPZvvbcWG2P+eH7vWxbSOVCBiEjN
-         I36rfx9tctEQ/dwY4N64/omENQTkq0rcAh6LVxgKLmMg1T87OMQJgnmZxVVCR7SczZfP
-         gwHfksY/SL6AiWFn1iFBmdHU/B52woomVaxGCpR6InAjrUfaM43VlKMAFiEwxr0bfUlw
-         g/+PDpNAOFmff49KX2KLbiGmXfJLR3fW+SWlltToV7IrbzOHg2EC+12/5bGAIU5+6Bkw
-         pXtNdfM5xLjEFj762PUUMwZLBx1ApzGBVsf2QAi5K0rUBKc7sl9v0E8mrbyHVK3Q9ITp
-         k46w==
-X-Forwarded-Encrypted: i=1; AJvYcCVjgYctFh+1FQOR5jezPRFqbUzKUligcRq5j2M4RpGgXoNloOXzznUfpYIDodJ0M5Ht7oD0wboG3bhCj8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYigqN6UwFxlfG/aDzmKbTyK4WiAbwNHLJmDHgKKso6WZGwHuV
-	3l8akpbMJJ5GRLuEE/mXOxNlUnKnhrw+lFz6f+5oe8SPQXPlO4Bw/ZyrnQ==
-X-Gm-Gg: ASbGnct9ncA6RnzI8buOgq/1lVJmF2TbvsyiVIiVhb5Pf71FsT61D0Ok9ASQX/3+Mrh
-	4/z4ZEbrIWUQGgtGT10ZKxaX7GBxSpVhBFKemM+sXbT/c15TwrwHB5PQLh/zaJMIsa2+ohaOoRz
-	Hibuc1NQU0FBpNCbnEHyQ/TZYCmQKHGnn1jq8et1HBCxwujj3Ygu0hJMyFRoL26Q/nxgUV1Dd3V
-	cSSjxSm9zhkbOdPhrHcmyIJh2SCC8U8TZT6Sa2YLsFUSm8e9tjyNk36/tgVawRFH4X5T4JOPFos
-	etxpJF72NRRAr1l+n94dSL1VF1mcNkNFFzpixTU5/icJf3w+PmYNOUBWzyQS4ZneN9NUnqeUkwk
-	3+SBRQZMAO/XygTVOK3WeLw==
-X-Google-Smtp-Source: AGHT+IEJad4gl+z0QS4ewlzZ4karifVvk4Su2qy2hDsPEF00+XFLaO/pmT6m2hKmYpP7qT9AMIlM2A==
-X-Received: by 2002:a05:6512:2393:b0:545:2950:5360 with SMTP id 2adb3069b0e04-54990e5e2a1mr6250883e87.22.1741715406926;
-        Tue, 11 Mar 2025 10:50:06 -0700 (PDT)
-Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498ae4465fsm1921728e87.26.2025.03.11.10.50.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 10:50:05 -0700 (PDT)
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-To: rust-for-linux@vger.kernel.org,
-	daniel.almeida@collabora.com,
-	dakr@kernel.org,
-	robin.murphy@arm.com,
-	aliceryhl@google.com
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	linux-kernel@vger.kernel.org (open list),
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	airlied@redhat.com,
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Subject: [PATCH v14 11/11] rust: dma: add as_slice/write functions for CoherentAllocation
-Date: Tue, 11 Mar 2025 19:48:07 +0200
-Message-ID: <20250311174930.2348813-12-abdiel.janulgue@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250311174930.2348813-1-abdiel.janulgue@gmail.com>
-References: <20250311174930.2348813-1-abdiel.janulgue@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hL9YICC3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54FBC4CEE9;
+	Tue, 11 Mar 2025 17:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741715457;
+	bh=U19B1VbgcefCWApQl3IgM9D9d+Wj0G03LxjOQo70xsY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hL9YICC3lAvNRINCs6cAzKtSB3WciXhC3DmhFVHSluffzdBqe03Kdf2q2yeopaIoW
+	 b6M9W+J7KocCVC+zblCznTewQojkyvcnEZNxWHun8q5qi1pAxmTDccvFN/+rOREmnq
+	 XZ7X6ZbZDDdgBVwFzogLxi5nBkE2cGS2pqaB97tHAITFbHo6S4/mieWF5RhVnbyidy
+	 QL/9hAq8PRS5S4atgIVoEnxcxeoQOSnWJ9jUv+WU9+y61q3xacRX9x4OzjRD9V8e7D
+	 8cV2VBEIo5Zzi3kp8Mh9TNjXGgPgPejRYYdlZQbSVCdEzMYGx1TsGS9akjjtmzj+pd
+	 sztYzrhts4zww==
+Date: Tue, 11 Mar 2025 19:50:50 +0200
+From: Dmitry Baryshkov <lumag@kernel.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Hermes Wu <Hermes.wu@ite.com.tw>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org
+Subject: Re: [PATCH v5 1/2] drm/bridge: split HDMI Audio from
+ DRM_BRIDGE_OP_HDMI
+Message-ID: <gqizmvyunfzhxwo4qpbqwe26le5dkodu6sbur4npuoc5ij6f3n@ldqbdmah5fsd>
+References: <20250307-dp-hdmi-audio-v5-0-f3be215fdb78@linaro.org>
+ <20250307-dp-hdmi-audio-v5-1-f3be215fdb78@linaro.org>
+ <20250310-unnatural-puffin-of-revolution-59d726@houat>
+ <CALT56yPKe8+tSyChAo6ypHR8EWUpqeJDNM6mcOBUnFwFE7rg4w@mail.gmail.com>
+ <20250311-quizzical-warthog-of-leadership-53d224@houat>
+ <nx67lft5x4ytsxsd4mpxfocig5dfaolsurlwqzvkrniwzv3huz@hmwucvqykaid>
+ <20250311-benevolent-goat-of-thunder-8e73bb@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250311-benevolent-goat-of-thunder-8e73bb@houat>
 
-Add unsafe accessors for the region for reading or writing large
-blocks of data.
+On Tue, Mar 11, 2025 at 04:58:59PM +0100, Maxime Ripard wrote:
+> On Tue, Mar 11, 2025 at 05:50:09PM +0200, Dmitry Baryshkov wrote:
+> > On Tue, Mar 11, 2025 at 09:36:37AM +0100, Maxime Ripard wrote:
+> > > On Mon, Mar 10, 2025 at 08:42:29PM +0200, Dmitry Baryshkov wrote:
+> > > > On Mon, 10 Mar 2025 at 16:55, Maxime Ripard <mripard@kernel.org> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > On Fri, Mar 07, 2025 at 07:55:52AM +0200, Dmitry Baryshkov wrote:
+> > > > > > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > >
+> > > > > > As pointed out by Laurent, OP bits are supposed to describe operations.
+> > > > > > Split DRM_BRIDGE_OP_HDMI_AUDIO from DRM_BRIDGE_OP_HDMI instead of
+> > > > > > overloading DRM_BRIDGE_OP_HDMI.
+> > > > > >
+> > > > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > > ---
+> > > > > >  drivers/gpu/drm/bridge/lontium-lt9611.c        |  2 +-
+> > > > > >  drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c   |  1 +
+> > > > > >  drivers/gpu/drm/display/drm_bridge_connector.c | 59 +++++++++++++++++---------
+> > > > > >  drivers/gpu/drm/msm/hdmi/hdmi_bridge.c         |  1 +
+> > > > > >  include/drm/drm_bridge.h                       | 23 ++++++++--
+> > > > > >  5 files changed, 61 insertions(+), 25 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/bridge/lontium-lt9611.c b/drivers/gpu/drm/bridge/lontium-lt9611.c
+> > > > > > index 026803034231f78c17f619dc04119bdd9b2b6679..3b93c17e25c18ae0d13e9bb74553cf21dcc39f9d 100644
+> > > > > > --- a/drivers/gpu/drm/bridge/lontium-lt9611.c
+> > > > > > +++ b/drivers/gpu/drm/bridge/lontium-lt9611.c
+> > > > > > @@ -1130,7 +1130,7 @@ static int lt9611_probe(struct i2c_client *client)
+> > > > > >       lt9611->bridge.of_node = client->dev.of_node;
+> > > > > >       lt9611->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID |
+> > > > > >                            DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_MODES |
+> > > > > > -                          DRM_BRIDGE_OP_HDMI;
+> > > > > > +                          DRM_BRIDGE_OP_HDMI | DRM_BRIDGE_OP_HDMI_AUDIO;
+> > > > > >       lt9611->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
+> > > > > >       lt9611->bridge.vendor = "Lontium";
+> > > > > >       lt9611->bridge.product = "LT9611";
+> > > > > > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
+> > > > > > index 6166f197e37b552cb8a52b7b0d23ffc632f54557..5e5f8c2f95be1f5c4633f1093b17a00f9425bb37 100644
+> > > > > > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
+> > > > > > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
+> > > > > > @@ -1077,6 +1077,7 @@ struct dw_hdmi_qp *dw_hdmi_qp_bind(struct platform_device *pdev,
+> > > > > >       hdmi->bridge.ops = DRM_BRIDGE_OP_DETECT |
+> > > > > >                          DRM_BRIDGE_OP_EDID |
+> > > > > >                          DRM_BRIDGE_OP_HDMI |
+> > > > > > +                        DRM_BRIDGE_OP_HDMI_AUDIO |
+> > > > > >                          DRM_BRIDGE_OP_HPD;
+> > > > > >       hdmi->bridge.of_node = pdev->dev.of_node;
+> > > > > >       hdmi->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
+> > > > > > diff --git a/drivers/gpu/drm/display/drm_bridge_connector.c b/drivers/gpu/drm/display/drm_bridge_connector.c
+> > > > > > index 30c736fc0067e31a97db242e5b16ea8a5b4cf359..030f98d454608a63154827c65d4822d378df3b4c 100644
+> > > > > > --- a/drivers/gpu/drm/display/drm_bridge_connector.c
+> > > > > > +++ b/drivers/gpu/drm/display/drm_bridge_connector.c
+> > > > > > @@ -98,6 +98,13 @@ struct drm_bridge_connector {
+> > > > > >        * HDMI connector infrastructure, if any (see &DRM_BRIDGE_OP_HDMI).
+> > > > > >        */
+> > > > > >       struct drm_bridge *bridge_hdmi;
+> > > > > > +     /**
+> > > > > > +      * @bridge_hdmi_audio:
+> > > > > > +      *
+> > > > > > +      * The bridge in the chain that implements necessary support for the
+> > > > > > +      * HDMI Audio infrastructure, if any (see &DRM_BRIDGE_OP_HDMI_AUDIO).
+> > > > > > +      */
+> > > > > > +     struct drm_bridge *bridge_hdmi_audio;
+> > > > > >  };
+> > > > > >
+> > > > > >  #define to_drm_bridge_connector(x) \
+> > > > > > @@ -433,7 +440,7 @@ static int drm_bridge_connector_audio_startup(struct drm_connector *connector)
+> > > > > >               to_drm_bridge_connector(connector);
+> > > > > >       struct drm_bridge *bridge;
+> > > > > >
+> > > > > > -     bridge = bridge_connector->bridge_hdmi;
+> > > > > > +     bridge = bridge_connector->bridge_hdmi_audio;
+> > > > > >       if (!bridge)
+> > > > > >               return -EINVAL;
+> > > > > >
+> > > > > > @@ -451,7 +458,7 @@ static int drm_bridge_connector_audio_prepare(struct drm_connector *connector,
+> > > > > >               to_drm_bridge_connector(connector);
+> > > > > >       struct drm_bridge *bridge;
+> > > > > >
+> > > > > > -     bridge = bridge_connector->bridge_hdmi;
+> > > > > > +     bridge = bridge_connector->bridge_hdmi_audio;
+> > > > > >       if (!bridge)
+> > > > > >               return -EINVAL;
+> > > > > >
+> > > > > > @@ -464,7 +471,7 @@ static void drm_bridge_connector_audio_shutdown(struct drm_connector *connector)
+> > > > > >               to_drm_bridge_connector(connector);
+> > > > > >       struct drm_bridge *bridge;
+> > > > > >
+> > > > > > -     bridge = bridge_connector->bridge_hdmi;
+> > > > > > +     bridge = bridge_connector->bridge_hdmi_audio;
+> > > > > >       if (!bridge)
+> > > > > >               return;
+> > > > > >
+> > > > > > @@ -478,7 +485,7 @@ static int drm_bridge_connector_audio_mute_stream(struct drm_connector *connecto
+> > > > > >               to_drm_bridge_connector(connector);
+> > > > > >       struct drm_bridge *bridge;
+> > > > > >
+> > > > > > -     bridge = bridge_connector->bridge_hdmi;
+> > > > > > +     bridge = bridge_connector->bridge_hdmi_audio;
+> > > > > >       if (!bridge)
+> > > > > >               return -EINVAL;
+> > > > > >
+> > > > > > @@ -576,6 +583,21 @@ struct drm_connector *drm_bridge_connector_init(struct drm_device *drm,
+> > > > > >                               max_bpc = bridge->max_bpc;
+> > > > > >               }
+> > > > > >
+> > > > > > +             if (bridge->ops & DRM_BRIDGE_OP_HDMI_AUDIO) {
+> > > > > > +                     if (bridge_connector->bridge_hdmi_audio)
+> > > > > > +                             return ERR_PTR(-EBUSY);
+> > > > > > +
+> > > > > > +                     if (!bridge->hdmi_audio_max_i2s_playback_channels &&
+> > > > > > +                         !bridge->hdmi_audio_spdif_playback)
+> > > > > > +                             return ERR_PTR(-EINVAL);
+> > > > > > +
+> > > > > > +                     if (!bridge->funcs->hdmi_audio_prepare ||
+> > > > > > +                         !bridge->funcs->hdmi_audio_shutdown)
+> > > > > > +                             return ERR_PTR(-EINVAL);
+> > > > > > +
+> > > > > > +                     bridge_connector->bridge_hdmi_audio = bridge;
+> > > > > > +             }
+> > > > > > +
+> > > > > >               if (!drm_bridge_get_next_bridge(bridge))
+> > > > > >                       connector_type = bridge->type;
+> > > > > >
+> > > > > > @@ -611,22 +633,6 @@ struct drm_connector *drm_bridge_connector_init(struct drm_device *drm,
+> > > > > >                                              max_bpc);
+> > > > > >               if (ret)
+> > > > > >                       return ERR_PTR(ret);
+> > > > > > -
+> > > > > > -             if (bridge->hdmi_audio_max_i2s_playback_channels ||
+> > > > > > -                 bridge->hdmi_audio_spdif_playback) {
+> > > > > > -                     if (!bridge->funcs->hdmi_audio_prepare ||
+> > > > > > -                         !bridge->funcs->hdmi_audio_shutdown)
+> > > > > > -                             return ERR_PTR(-EINVAL);
+> > > > > > -
+> > > > > > -                     ret = drm_connector_hdmi_audio_init(connector,
+> > > > > > -                                                         bridge->hdmi_audio_dev,
+> > > > > > -                                                         &drm_bridge_connector_hdmi_audio_funcs,
+> > > > > > -                                                         bridge->hdmi_audio_max_i2s_playback_channels,
+> > > > > > -                                                         bridge->hdmi_audio_spdif_playback,
+> > > > > > -                                                         bridge->hdmi_audio_dai_port);
+> > > > > > -                     if (ret)
+> > > > > > -                             return ERR_PTR(ret);
+> > > > > > -             }
+> > > > > >       } else {
+> > > > > >               ret = drmm_connector_init(drm, connector,
+> > > > > >                                         &drm_bridge_connector_funcs,
+> > > > > > @@ -635,6 +641,19 @@ struct drm_connector *drm_bridge_connector_init(struct drm_device *drm,
+> > > > > >                       return ERR_PTR(ret);
+> > > > > >       }
+> > > > > >
+> > > > > > +     if (bridge_connector->bridge_hdmi_audio) {
+> > > > > > +             bridge = bridge_connector->bridge_hdmi_audio;
+> > > > > > +
+> > > > > > +             ret = drm_connector_hdmi_audio_init(connector,
+> > > > > > +                                                 bridge->hdmi_audio_dev,
+> > > > > > +                                                 &drm_bridge_connector_hdmi_audio_funcs,
+> > > > > > +                                                 bridge->hdmi_audio_max_i2s_playback_channels,
+> > > > > > +                                                 bridge->hdmi_audio_spdif_playback,
+> > > > > > +                                                 bridge->hdmi_audio_dai_port);
+> > > > > > +             if (ret)
+> > > > > > +                     return ERR_PTR(ret);
+> > > > > > +     }
+> > > > > > +
+> > > > > >       drm_connector_helper_add(connector, &drm_bridge_connector_helper_funcs);
+> > > > > >
+> > > > > >       if (bridge_connector->bridge_hpd)
+> > > > > > diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> > > > > > index 1456354c8af4bc7f655e8a47e958e9e0b99b7d29..ab6c8bc4a30b681f7de8ca7031f833795d1f7d94 100644
+> > > > > > --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> > > > > > +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> > > > > > @@ -515,6 +515,7 @@ int msm_hdmi_bridge_init(struct hdmi *hdmi)
+> > > > > >       bridge->ops = DRM_BRIDGE_OP_HPD |
+> > > > > >               DRM_BRIDGE_OP_DETECT |
+> > > > > >               DRM_BRIDGE_OP_HDMI |
+> > > > > > +             DRM_BRIDGE_OP_HDMI_AUDIO |
+> > > > > >               DRM_BRIDGE_OP_EDID;
+> > > > > >       bridge->hdmi_audio_max_i2s_playback_channels = 8;
+> > > > > >       bridge->hdmi_audio_dev = &hdmi->pdev->dev;
+> > > > > > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> > > > > > index d4c75d59fa12be1bd7375ce3ea56415235781b28..dff8cf035b30d5c7e00bfdf5d6e12802559823ba 100644
+> > > > > > --- a/include/drm/drm_bridge.h
+> > > > > > +++ b/include/drm/drm_bridge.h
+> > > > > > @@ -693,8 +693,10 @@ struct drm_bridge_funcs {
+> > > > > >       /**
+> > > > > >        * @hdmi_audio_prepare:
+> > > > > >        * Configures HDMI-encoder for audio stream. Can be called multiple
+> > > > > > -      * times for each setup. Mandatory if HDMI audio is enabled in the
+> > > > > > -      * bridge's configuration.
+> > > > > > +      * times for each setup.
+> > > > > > +      *
+> > > > > > +      * This callback is optional but it must be implemented by bridges that
+> > > > > > +      * set the DRM_BRIDGE_OP_HDMI_AUDIO flag in their &drm_bridge->ops.
+> > > > > >        *
+> > > > > >        * Returns:
+> > > > > >        * 0 on success, a negative error code otherwise
+> > > > > > @@ -707,8 +709,10 @@ struct drm_bridge_funcs {
+> > > > > >       /**
+> > > > > >        * @hdmi_audio_shutdown:
+> > > > > >        *
+> > > > > > -      * Shut down the audio stream. Mandatory if HDMI audio is enabled in
+> > > > > > -      * the bridge's configuration.
+> > > > > > +      * Shut down the audio stream.
+> > > > > > +      *
+> > > > > > +      * This callback is optional but it must be implemented by bridges that
+> > > > > > +      * set the DRM_BRIDGE_OP_HDMI_AUDIO flag in their &drm_bridge->ops.
+> > > > > >        *
+> > > > > >        * Returns:
+> > > > > >        * 0 on success, a negative error code otherwise
+> > > > > > @@ -814,6 +818,17 @@ enum drm_bridge_ops {
+> > > > > >        * drivers.
+> > > > > >        */
+> > > > > >       DRM_BRIDGE_OP_HDMI = BIT(4),
+> > > > > > +     /**
+> > > > > > +      * @DRM_BRIDGE_OP_HDMI_AUDIO: The bridge provides HDMI audio operations.
+> > > > > > +      * Bridges that set this flag must implement the
+> > > > > > +      * &drm_bridge_funcs->hdmi_audio_prepare and
+> > > > > > +      * &drm_bridge_funcs->hdmi_audio_shutdown callbacks.
+> > > > > > +      *
+> > > > > > +      * Note: currently there can be at most one bridge in a chain that sets
+> > > > > > +      * this bit. This is to simplify corresponding glue code in connector
+> > > > > > +      * drivers.
+> > > > > > +      */
+> > > > > > +     DRM_BRIDGE_OP_HDMI_AUDIO = BIT(5),
+> > > > >
+> > > > > We should make this conditional on HDMI being set. It doesn't make sense
+> > > > > to have OP_HDMI_AUDIO enabled when OP_HDMI isn't.
+> > > > 
+> > > > It totally does.
+> > > 
+> > > I'm sure it works properly. I meant on a conceptual level. In our
+> > > codebase, as it is today, the HDMI audio support is part of the HDMI
+> > > infrastructure, and thus implementing audio without the main part
+> > > doesn't make sense. IIRC, the spec also mandates video support, but
+> > > audio is optional.
+> > 
+> > I can imagine a HDMI bridge using OP_HDMI_AUDIO, but not OP_HDMI. For
+> > example, lontium-lt9611uxc.c. It is a 'smart' chip, which handles nearly
+> > everything on its own. I even don't know if there is a way to program
+> > the InfoFrames, etc., so I'm very skeptical about setting OP_HDMI.
+> > However at the same time, it would defeinitely benefit from using
+> > OP_HDMI_AUDIO.
+> 
+> You're going to have the same argument for that chip for audio: if not
+> be able to set the infoframe disqualifies, then there's audio infoframes
+> too and thus it should be disqualified from OP_HDMI_AUDIO.
 
-Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
----
- rust/kernel/dma.rs | 87 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+Why? OP_HDMI_AUDIO has nothing to do with InfoFrames, it's just HDMI
+codec. We need infoframes and tmds_char_rate_valid for OP_HDMI.
 
-diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-index d0c6569cfc70..514fbb27c607 100644
---- a/rust/kernel/dma.rs
-+++ b/rust/kernel/dma.rs
-@@ -253,6 +253,93 @@ pub fn dma_handle(&self) -> bindings::dma_addr_t {
-         self.dma_handle
-     }
- 
-+    /// Returns the data from the region starting from `offset` as a slice.
-+    /// `offset` and `count` are in units of `T`, not the number of bytes.
-+    ///
-+    /// Due to the safety requirements of slice, the caller should consider that the region could
-+    /// be modified by the device at anytime. For ringbuffer type of r/w access or use-cases where
-+    /// the pointer to the live data is needed, `start_ptr()` or `start_ptr_mut()` could be
-+    /// used instead.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that no hardware operations that involve the buffer are currently
-+    ///   taking place while the returned slice is live.
-+    /// * Callers must ensure that this call does not race with a write to the same region while
-+    ///   while the returned slice is live.
-+    pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result<&[T]> {
-+        let end = offset.checked_add(count).ok_or(EOVERFLOW)?;
-+        if end >= self.count {
-+            return Err(EINVAL);
-+        }
-+        // SAFETY:
-+        // - The pointer is valid due to type invariant on `CoherentAllocation`,
-+        // we've just checked that the range and index is within bounds. The immutability of the
-+        // of data is also guaranteed by the safety requirements of the function.
-+        // - `offset` can't overflow since it is smaller than `self.count` and we've checked
-+        // that `self.count` won't overflow early in the constructor.
-+        Ok(unsafe { core::slice::from_raw_parts(self.cpu_addr.add(offset), count) })
-+    }
-+
-+    /// Performs the same functionality as [`CoherentAllocation::as_slice`], except that a mutable
-+    /// slice is returned.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that no hardware operations that involve the buffer are currently
-+    ///   taking place while the returned slice is live.
-+    /// * Callers must ensure that this call does not race with a read or write to the same region
-+    ///   while the returned slice is live.
-+    pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
-+        let end = offset.checked_add(count).ok_or(EOVERFLOW)?;
-+        if end >= self.count {
-+            return Err(EINVAL);
-+        }
-+        // SAFETY:
-+        // - The pointer is valid due to type invariant on `CoherentAllocation`,
-+        // we've just checked that the range and index is within bounds. The immutability of the
-+        // of data is also guaranteed by the safety requirements of the function.
-+        // - `offset` can't overflow since it is smaller than `self.count` and we've checked
-+        // that `self.count` won't overflow early in the constructor.
-+        Ok(unsafe { core::slice::from_raw_parts_mut(self.cpu_addr.add(offset), count) })
-+    }
-+
-+    /// Writes data to the region starting from `offset`. `offset` is in units of `T`, not the
-+    /// number of bytes.
-+    ///
-+    /// # Safety
-+    ///
-+    /// * Callers must ensure that no hardware operations that involve the buffer overlaps with
-+    ///   this write.
-+    /// * Callers must ensure that this call does not race with a read or write to the same region
-+    ///   that overlaps with this write.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// # fn test(alloc: &mut kernel::dma::CoherentAllocation<u8>) -> Result {
-+    /// let somedata: [u8; 4] = [0xf; 4];
-+    /// let buf: &[u8] = &somedata;
-+    /// // SAFETY: No hw operation on the device and no other r/w access to the region at this point.
-+    /// unsafe { alloc.write(buf, 0)?; }
-+    /// # Ok::<(), Error>(()) }
-+    /// ```
-+    pub unsafe fn write(&self, src: &[T], offset: usize) -> Result {
-+        let end = offset.checked_add(src.len()).ok_or(EOVERFLOW)?;
-+        if end >= self.count {
-+            return Err(EINVAL);
-+        }
-+        // SAFETY:
-+        // - The pointer is valid due to type invariant on `CoherentAllocation`
-+        // and we've just checked that the range and index is within bounds.
-+        // - `offset` can't overflow since it is smaller than `self.count` and we've checked
-+        // that `self.count` won't overflow early in the constructor.
-+        unsafe {
-+            core::ptr::copy_nonoverlapping(src.as_ptr(), self.cpu_addr.add(offset), src.len())
-+        };
-+        Ok(())
-+    }
-+
-     /// Returns a pointer to an element from the region with bounds checking. `offset` is in
-     /// units of `T`, not the number of bytes.
-     ///
+> 
+> I don't believe it's an issue though: if a driver doesn't want the
+> infoframes for whatever reason, it's free to do so.
+> 
+> It's also something I'd like to reevaluate when we actually have that
+> problem to deal with. At the moment, it sounds like reducing the safety
+> of the API for an hypothetical case.
+
+Well, you can guess, I'd like to submit a patch for that driver as soon
+as we settle on OP_HDMI_AUDIO.
+
+
 -- 
-2.43.0
-
+With best wishes
+Dmitry
