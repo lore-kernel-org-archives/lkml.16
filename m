@@ -1,46 +1,56 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786E2253B46
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0142B24EF8E;
+	Tue, 11 Mar 2025 11:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741693218; cv=none; b=dZcAp6iIaUUgZzFunq4EtV/iea/n6HaEymhrR79kRxqudcG7TKQqRCUsb23PkCCfBZ7IKOZHKfBpvw0frQ9R+E8wWCNtMvChxl38E0AGXbnpyBVpXcUSoJkOrENhKHD97BHRTYmkhpcfalacWhJAUweN9DG2JjEv8gdJdlKzG0A=
+	t=1741693245; cv=none; b=cIhNh3YdOsogWNnqLJA+87NtS4ajNTp9+QOZu9cE4N0QfALf93SbCjnJ7NILuZPTZw4QWfM5zDDePBGgTmq28Pg21q1h1IurEi66jaKACmYmCk8lrwdjNjAaj63BUbaATkbxmlzzypovzTNzv2KkH9NsO7uTCR0JakWnYz35b5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741693218; c=relaxed/simple;
-	bh=6RIhLeZWE5sEhtVGPkBXsCtoy7n8k/IF8zXcLM2YqzE=;
+	s=arc-20240116; t=1741693245; c=relaxed/simple;
+	bh=+uJX8/966KEhOX1GBFyKHP+XMrltWM13u4aR/id8BsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FKSwJI38kuks2NDWmZAeyATY7QZzNOTg32i0+AzYfo1iQtRKJgxFwGqf37dMGw0Vltp0J/qQi9QcbffV41kfDVboyDnPWGgeKDfZn1A8/2bQB3GRq9RVXHwhTnFd+1MH/jSbIuOhn2fQCnOoXrcrMS4mXSCe2orJ8V3EjyJMGYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kjsVZCHW; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=NokI98PtvB5uCux3SZqiOaJ+j8UtyimQG2AAelxxmnGQrU2NVz/hAcViVQBa0CE8pq7lVzIwC0HksCbDMQrV2JWATbC/3YGKICqwbOr1od7nAKEdzLD/EFxEImR4JIYH4lwcRA2Xh7mXU40/t0I4FXky9gjIPCf/+w5oq6mf3Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jy0iq12A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kjsVZCHW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=S4g3I2UJAcBxO5zytx/wxy6Z9dR7Rinx/CzGz1kt9W0=; b=kjsVZCHWopQAWW3ws9adP6nrM3
-	baJBJDRCwXMxtA4uenO4gOLVN9QxX3qVw1vHP95H+mbV3dyNlkgd87pYhMihbehmhcmAnRE8enmoL
-	CwphVeqm/Ti5r48V0g1UIZGHl06TBfc39B0w0tys+C6WF6SPy/fDGaAS/KLbOBvH8Dcq63F+80GT0
-	igsd0zmc5MLrVnfRk4Ps1DVu4RnA4yD6qxY2I6RcxBcopyHzw430HTYKkn4iT4nAn6ysT3boAc9b/
-	zi9EG423MrEZRZLiaZI7seccm6/NO2tnMjYOvzWsqKuSeXZxs4ymwoz1QkeKmfg44x8PrQCxDQoQm
-	zA55x5KA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1trxy0-000000028bg-3RWS;
-	Tue, 11 Mar 2025 11:40:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 63E603002C7; Tue, 11 Mar 2025 12:40:12 +0100 (CET)
-Date: Tue, 11 Mar 2025 12:40:12 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: kan.liang@linux.intel.com
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	linux-kernel@vger.kernel.org, ak@linux.intel.com,
-	eranian@google.com
-Subject: Re: [PATCH] perf: Extend per event callchain limit to branch stack
-Message-ID: <20250311114012.GE19424@noisy.programming.kicks-ass.net>
-References: <20250310181536.3645382-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jy0iq12A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A75AC4CEED;
+	Tue, 11 Mar 2025 11:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741693244;
+	bh=+uJX8/966KEhOX1GBFyKHP+XMrltWM13u4aR/id8BsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jy0iq12AnsMIgVe3uUuG2Vb0J1re8F3/OPHbboZBhVadT+d8LLPyVgPu3+OPvq8Cs
+	 JLxIDkLqdb9IaWCLu+m70qK2fUSL2bq4/txnb06XLgcDdPGPV+O7BOLA0x79LM0fYl
+	 AzHVzTCeyZIqvaaVIAkJunkvu6dDI/mfdTDdNKex/rmoCViOgLp6srdnigbmG7THZt
+	 lw4NJHxo8tUIJcaUWDryzc6uxC5pVF4idsCDkLi1cDn3metAYhcDT7hh4ZBSpV0c7n
+	 fHLlfkNymGAQ9RbRujaTRa3EVVxmdL3aZE3s3hQx2W5zNELFvGGujbXEOLm4NeoWM4
+	 tON/JZFSkpOfA==
+Date: Tue, 11 Mar 2025 12:40:39 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Daniel Danzberger <dd@embedd.com>, Arnd Bergmann <arnd@arndb.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Nikita Shubin <nikita.shubin@maquefel.me>,
+	Guo Ren <guoren@kernel.org>, Yangyu Chen <cyy@cyyself.name>,
+	Ben Hutchings <ben@decadent.org.uk>, Felix Fietkau <nbd@nbd.name>,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-phy@lists.infradead.org, linux-mediatek@lists.infradead.org,
+	linux-usb@vger.kernel.org, upstream@airoha.com
+Subject: Re: [PATCH 10/13] phy: airoha: Add support for Airoha AN7581 USB PHY
+Message-ID: <Z9AhN9T8s1oogCUn@vaman>
+References: <20250309132959.19045-1-ansuelsmth@gmail.com>
+ <20250309132959.19045-11-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,64 +59,197 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250310181536.3645382-1-kan.liang@linux.intel.com>
+In-Reply-To: <20250309132959.19045-11-ansuelsmth@gmail.com>
 
-On Mon, Mar 10, 2025 at 11:15:36AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+On 09-03-25, 14:29, Christian Marangi wrote:
+> Add support for Airoha AN7581 USB PHY driver. AN7581 supports up to 2
+> USB port with USB 2.0 mode always supported and USB 3.0 mode available
+> only if the Serdes port is correctly configured for USB 3.0.
 > 
-> The commit 97c79a38cd45 ("perf core: Per event callchain limit")
-> introduced a per-event term to allow finer tuning of the depth of
-> callchains to save space.
+> On xLate probe, the Serdes mode is validated and the driver return error
+> if the Serdes mode doesn't reflect the expected mode. This is required
+> as Serdes mode are controlled by the SCU SSR bits and can be either USB
+> 3.0 mode or HSGMII or PCIe 2. In such case USB 3.0 won't work.
 > 
-> It should be applied to the branch stack as well. For example, autoFDO
-> collections require maximum LBR entries. In the meantime, other
-> system-wide LBR users may only be interested in the latest a few number
-> of LBRs. A per-event LBR depth would save the perf output buffer.
+> If the USB 3.0 mode is not supported, the modes needs to be also
+> disabled in the xHCI node or the driver will report unsable clock and
+> fail probe.
 > 
-> The patch simply drops the uninterested branches, but HW still collects
-> the maximum branches. There may be a model-specific optimization that
-> can reduce the HW depth for some cases to reduce the overhead further.
-> But it isn't included in the patch set. Because it's not useful for all
-> cases. For example, ARCH LBR can utilize the PEBS and XSAVE to collect
-> LBRs. The depth should have less impact on the collecting overhead.
-> The model-specific optimization may be implemented later separately.
-> 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks!
-
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 > ---
->  include/linux/perf_event.h      | 3 +++
->  include/uapi/linux/perf_event.h | 2 ++
->  2 files changed, 5 insertions(+)
+>  MAINTAINERS                         |   1 +
+>  drivers/phy/Kconfig                 |   1 +
+>  drivers/phy/Makefile                |   3 +-
+>  drivers/phy/airoha/Kconfig          |  13 +
+>  drivers/phy/airoha/Makefile         |   3 +
+>  drivers/phy/airoha/phy-airoha-usb.c | 554 ++++++++++++++++++++++++++++
+>  6 files changed, 574 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/phy/airoha/Kconfig
+>  create mode 100644 drivers/phy/airoha/Makefile
+>  create mode 100644 drivers/phy/airoha/phy-airoha-usb.c
 > 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 24f2eba200ac..bca1dfd30276 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1347,6 +1347,9 @@ static inline void perf_sample_save_brstack(struct perf_sample_data *data,
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c2dd385e9165..1835e488ccaa 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -758,6 +758,7 @@ M:	Christian Marangi <ansuelsmth@gmail.com>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/phy/airoha,an7581-usb-phy.yam
+> +F:	drivers/phy/airoha/phy-airoha-usb.c
 >  
->  	if (branch_sample_hw_index(event))
->  		size += sizeof(u64);
+>  AIRSPY MEDIA DRIVER
+>  L:	linux-media@vger.kernel.org
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 8d58efe998ec..19c9c518fc3d 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -93,6 +93,7 @@ config PHY_NXP_PTN3222
+>  	  schemes. It supports all three USB 2.0 data rates: Low Speed, Full
+>  	  Speed and High Speed.
+>  
+> +source "drivers/phy/airoha/Kconfig"
+>  source "drivers/phy/allwinner/Kconfig"
+>  source "drivers/phy/amlogic/Kconfig"
+>  source "drivers/phy/broadcom/Kconfig"
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index e281442acc75..71708c6865b8 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -12,7 +12,8 @@ obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
+>  obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
+>  obj-$(CONFIG_PHY_AIROHA_PCIE)		+= phy-airoha-pcie.o
+>  obj-$(CONFIG_PHY_NXP_PTN3222)		+= phy-nxp-ptn3222.o
+> -obj-y					+= allwinner/	\
+> +obj-y					+= airoha/	\
+
+Directory for a single driver? Also move the PCIe driver in, if you
+really want to do this
+
+> +struct airoha_usb_phy_priv {
+> +	struct device *dev;
 > +
-> +	brs->nr = min_t(u16, event->attr.sample_max_stack, brs->nr);
+> +	struct regmap *regmap;
 > +
->  	size += brs->nr * sizeof(struct perf_branch_entry);
->  
->  	/*
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 0524d541d4e3..5fc753c23734 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -385,6 +385,8 @@ enum perf_event_read_format {
->   *
->   * @sample_max_stack: Max number of frame pointers in a callchain,
->   *		      should be < /proc/sys/kernel/perf_event_max_stack
-> + *		      Max number of entries of branch stack
-> + *		      should be < hardware limit
->   */
->  struct perf_event_attr {
->  
-> -- 
-> 2.38.1
-> 
+> +	unsigned int id;
+> +
+> +	struct airoha_usb_phy_instance *phys[AIROHA_USB_PHY_MAX_INSTANCE];
+
+No need for empty lines here?
+
+> +static int airoha_usb_phy_u2_slew_rate_calibration(struct airoha_usb_phy_priv *priv)
+> +{
+> +	u32 fm_out;
+> +	u32 srctrl;
+> +
+> +	/* Enable HS TX SR calibration */
+> +	regmap_set_bits(priv->regmap, AIROHA_USB_PHY_USBPHYACR5,
+> +			AIROHA_USB_PHY_USB20_HSTX_SRCAL_EN);
+> +
+> +	usleep_range(1000, 1500);
+> +
+> +	/* Enable Free run clock */
+> +	regmap_set_bits(priv->regmap, AIROHA_USB_PHY_FMMONR1,
+> +			AIROHA_USB_PHY_FRCK_EN);
+> +
+> +	/* Select Monitor Clock */
+> +	regmap_update_bits(priv->regmap, AIROHA_USB_PHY_FMCR0,
+> +			   AIROHA_USB_PHY_MONCLK_SEL,
+> +			   priv->id == 0 ? AIROHA_USB_PHY_MONCLK_SEL0 :
+> +					   AIROHA_USB_PHY_MONCLK_SEL1);
+> +
+> +	/* Set cyclecnt */
+> +	regmap_update_bits(priv->regmap, AIROHA_USB_PHY_FMCR0,
+> +			   AIROHA_USB_PHY_CYCLECNT,
+> +			   FIELD_PREP(AIROHA_USB_PHY_CYCLECNT,
+> +				      AIROHA_USB_PHY_U2_FM_DET_CYCLE_CNT));
+> +
+> +	/* Enable Frequency meter */
+> +	regmap_set_bits(priv->regmap, AIROHA_USB_PHY_FMCR0,
+> +			AIROHA_USB_PHY_FREQDET_EN);
+> +
+> +	/* Timeout can happen and we will apply workaround at the end */
+> +	regmap_read_poll_timeout(priv->regmap, AIROHA_USB_PHY_FMMONR0, fm_out,
+> +				 fm_out, AIROHA_USB_PHY_FREQDET_SLEEP,
+> +				 AIROHA_USB_PHY_FREQDET_TIMEOUT);
+> +
+> +	/* Disable Frequency meter */
+> +	regmap_clear_bits(priv->regmap, AIROHA_USB_PHY_FMCR0,
+> +			  AIROHA_USB_PHY_FREQDET_EN);
+> +
+> +	/* Disable Free run clock */
+> +	regmap_clear_bits(priv->regmap, AIROHA_USB_PHY_FMMONR1,
+> +			  AIROHA_USB_PHY_FRCK_EN);
+> +
+> +	/* Disable HS TX SR calibration */
+> +	regmap_clear_bits(priv->regmap, AIROHA_USB_PHY_USBPHYACR5,
+> +			  AIROHA_USB_PHY_USB20_HSTX_SRCAL_EN);
+> +
+> +	usleep_range(1000, 1500);
+> +
+> +	/* Frequency was not detected, use default SR calibration value */
+> +	if (!fm_out) {
+> +		srctrl = 0x5;
+
+magic?
+
+> +		dev_err(priv->dev, "Frequency not detected, using default SR calibration.\n");
+> +	/* (1024 / FM_OUT) * REF_CK * U2_SR_COEF (round to the nearest digits) */
+> +	} else {
+> +		srctrl = AIROHA_USB_PHY_REF_CK * AIROHA_USB_PHY_U2_SR_COEF;
+> +		srctrl = (srctrl * AIROHA_USB_PHY_U2_FM_DET_CYCLE_CNT) / fm_out;
+> +		srctrl = DIV_ROUND_CLOSEST(srctrl, AIROHA_USB_PHY_U2_SR_COEF_DIVISOR);
+> +		dev_dbg(priv->dev, "SR calibration applied: %x\n", srctrl);
+> +	}
+> +
+> +	regmap_update_bits(priv->regmap, AIROHA_USB_PHY_USBPHYACR5,
+> +			   AIROHA_USB_PHY_USB20_HSTX_SRCTRL,
+> +			   FIELD_PREP(AIROHA_USB_PHY_USB20_HSTX_SRCTRL, srctrl));
+> +
+> +	return 0;
+
+This is the only return... consider making it void return then?
+Here and other places
+
+> +static int airoha_usb_phy_exit(struct phy *phy)
+> +{
+> +	return 0;
+> +}
+
+you can drop this
+
+> +static int airoha_usb_phy_power_on(struct phy *phy)
+> +{
+> +	struct airoha_usb_phy_instance *instance = phy_get_drvdata(phy);
+> +	struct airoha_usb_phy_priv *priv = dev_get_drvdata(phy->dev.parent);
+> +
+> +	if (instance->type == PHY_TYPE_USB2)
+> +		return airoha_usb_phy_u2_power_on(priv);
+> +
+> +	return airoha_usb_phy_u3_power_on(priv);
+
+for non USB2, you power both why?
+
+> +static int airoha_usb_phy_u2_set_mode(struct airoha_usb_phy_priv *priv,
+> +				      enum phy_mode mode)
+> +{
+> +	u32 val = 0;
+> +
+> +	/*
+> +	 * For Device and Host mode, enable force IDDIG.
+> +	 * For Device set IDDIG, for Host clear IDDIG.
+> +	 * For OTG disable force and clear IDDIG bit while at it.
+> +	 */
+> +	switch (mode) {
+> +	case PHY_MODE_USB_DEVICE:
+> +		val |= AIROHA_USB_PHY_IDDIG;
+> +		fallthrough;
+> +	case PHY_MODE_USB_HOST:
+> +		val |= AIROHA_USB_PHY_FORCE_IDDIG;
+> +		break;
+> +	case PHY_MODE_USB_OTG:
+> +		break;
+
+Not expecting to set this?
+-- 
+~Vinod
