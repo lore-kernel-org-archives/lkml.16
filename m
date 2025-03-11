@@ -1,116 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CABB1DE3D2;
-	Tue, 11 Mar 2025 02:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CF71E2858;
+	Tue, 11 Mar 2025 02:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741659228; cv=none; b=oJdbLQO5ThXL8gThpvWERmOeOdVDq/RwuTP7AZh5s26BgBbwW1lKKGveUY8ENzLTIGN1Ch48FRmPViCxIslQ/d4Gvv6yft7Fk/dJXZDhZZA7APB+NuWn9ZpsrVgf/B6PWbqahXNJr9inQDDo0+zymepPLIPSM1xnFwzSTJbYBcg=
+	t=1741659315; cv=none; b=JdlSLT3VGps1FE5nsUoO4T8PFx88d8854ap5nmZx/VELA0M9sUg4RH3f5cRMKTK5z7BGgdRTt91x37yBbnlcDLpXg9rOsNopYycpEL/BZM/EkIY8msg2OnjXi7G6X4tOA2stxaURxCirA/lilntiV0E7vSA9ysjcHtoTw+F2clo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741659228; c=relaxed/simple;
-	bh=veBU3gkYLoi0TeNh5/TA2R536cT3gCV1L2V1p3IRA/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XnuzmfvFgBj+ZXF6H7RD+WUrcHaZrr9z+mEUUJuVanuxeFrbAYWK8cVqLz1nVmR3V8KahUOks71A4MUh06oGoXkKK4iR8mEEdEJuS4oCQkbGz5k4nqiMQU6D4OoVCnS8R/XZj1bZbrtSbGNpbSFmqHkdh9V4NLcPF5W1BKN1I9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y41IjJDQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741659315; c=relaxed/simple;
+	bh=6Pe6SYwxr/nOlWekTsT85wDU244rwpBxVMTiH4qMIIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rGHEfAzVtx9Ig6unBDEQHBjPlG4xsOwBprk56ASGLF8aSvq7LLhBVRd8//gex5+CqCq0hIv649nzo6yc/O6KNFn2SGSirX0qHvd1c4Kut1fNb5T1D+l+Go1XCZprU0H9iOeByi3azw7uiK/mgZy6Qz5oTpw9GE3DqwJaLW/jzd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=X5KhHjqq; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y41IjJDQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51A4EC4CEE5;
-	Tue, 11 Mar 2025 02:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741659228;
-	bh=veBU3gkYLoi0TeNh5/TA2R536cT3gCV1L2V1p3IRA/U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Y41IjJDQcmdaRzaB7WhHlkqJReRUiFA93fF7QfXja1+jSvLsV+wNiYsVacwgZQEQR
-	 j04G8X7p+/G2ypzDSIdCGhWKHjBG4GGlb9Z30CMl3Yno+DI9ezWZqV+ioxLE+QN9dR
-	 LV2wXx9IjspHfKV7Su5Wc9D7QtXOOwn+B/mTzmYpz2h9z62DX3vtm/owRo7/Pysxzz
-	 5jzAkmb9/MpAlOTGXTsJklk9lyVgTGDcWL/H8fgVsMfMCzOCXI+heUAXOcp9seqBHB
-	 UXcIZMBqpf/sfBto4CgDkHw6o+L0oactjovF/Zi4F38Fq40/ugx3G5rH3BbOfSJFOO
-	 MZ867VmY/wRyg==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bf8632052so36045001fa.0;
-        Mon, 10 Mar 2025 19:13:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXJMGf8zzl0rCFAh2afnfslyThIaeDJipLmE4XzU2wwMLwnZGTen3bHRu4wpSm7flJTo1ixbarI0L+kOKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeJR7tjeALAXGm4nciJaelqu+U+D6FvUadAa+dEXDS6ZzrUk+Y
-	1LC6U6GjgKHmj3ORrhgHONV8BO3w6bRh6IXQH9Y/Cn6l1leQm5xgK7ErXcYoU9wDrS6xuG3mZi/
-	YtBCYopnwsqRArW6B7yIav1zIYmI=
-X-Google-Smtp-Source: AGHT+IEUuj/ui7psFQVzyIso3elVkavHuoG7h3ILW8sx0F2My/4VP6bvJilVOpEgFYzuQEM+y43vM5HSURricFcL4zE=
-X-Received: by 2002:a05:6512:b14:b0:545:c89:2bc9 with SMTP id
- 2adb3069b0e04-549910cb4a9mr5955367e87.43.1741659227043; Mon, 10 Mar 2025
- 19:13:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X5KhHjqq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1741659311;
+	bh=H3bE3BXEcliSsdQIHq1WNgNGjfLvX5g6Km0crdEHh7E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X5KhHjqq5iXL61SSWrpNhpaqzQCyTaS11sEHf4GE5QWM5Zes3Qv4XwKxb3T18DKfF
+	 IYe1giSs7SS+ubbFrfjqTAv6J7oyIoigoeaiuKvi4m0Juj8sJSNlahRmJmDSmpI5Pk
+	 oF9DTByMTMFq6KMqRxmW+2etwmr4oQyyJdqQnoIxsM0tiyzSnQubxyZ60tVRgP34s6
+	 Mt8OcFWKobL16vSJd19z7XvEzQfCqzmrlsB4eryBjI1z7NkOGqhC6eYY+eSIy61Cw0
+	 Z+4Ve1xyIbNcRIb9Rg7B7nc3uiIFTWQQUEEr+npOFSk4c67Z6g6Ix3stf3yWeX+KbQ
+	 lXeWVzXNJGuRg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZBcmG6ZJHz4x04;
+	Tue, 11 Mar 2025 13:15:10 +1100 (AEDT)
+Date: Tue, 11 Mar 2025 13:15:10 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>, Dave Airlie
+ <airlied@redhat.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0?=
+ =?UTF-8?B?csO2bQ==?= <thomas.hellstrom@linux.intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Balbir Singh <balbirs@nvidia.com>, Matthew Brost
+ <matthew.brost@intel.com>, DRM XE List <intel-xe@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, DRI
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: linux-next: build failure after merge of the drm-xe tree
+Message-ID: <20250311131510.2111c8c3@canb.auug.org.au>
+In-Reply-To: <20250307132112.18b6ce90@canb.auug.org.au>
+References: <20250307132112.18b6ce90@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250308040451.585561-1-xin@zytor.com> <CAK7LNARHvn4Sy-e4hMmjGt0C7TFaWrGJrLq3YvN0BjehZ8QwSg@mail.gmail.com>
- <6149ac51-07da-45e2-863e-1d4418f6b662@zytor.com> <CAK7LNATGToVHEfZ-hmJ=3xbQCdHmBZf7x9w2QtQVGV-nMiP2Ag@mail.gmail.com>
-In-Reply-To: <CAK7LNATGToVHEfZ-hmJ=3xbQCdHmBZf7x9w2QtQVGV-nMiP2Ag@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 11 Mar 2025 11:13:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQHfOo3+vnqTt5A=X3SQEpMxz2aQBW2Hmvc_g0gg2ohLw@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo0vXtTVwaaYwhqwxThusV4-7vUM90Qt5a8pipY3XSkQYGMJLRAZi3MIUc
-Message-ID: <CAK7LNAQHfOo3+vnqTt5A=X3SQEpMxz2aQBW2Hmvc_g0gg2ohLw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] kbuild: Add "make headers" to "make help" output
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	nathan@kernel.org, nicolas@fjasle.eu, bp@alien8.de, hpa@zytor.com, 
-	sraithal@amd.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Ei=AgDAf1QEyUaGu.mJ9V3O";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/Ei=AgDAf1QEyUaGu.mJ9V3O
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 10:52=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.=
-org> wrote:
+Hi Stephen,
+
+On Fri, 7 Mar 2025 13:21:12 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
 >
-> On Mon, Mar 10, 2025 at 3:23=E2=80=AFPM Xin Li <xin@zytor.com> wrote:
-> >
-> > On 3/8/2025 7:12 AM, Masahiro Yamada wrote:
-> > > On Sat, Mar 8, 2025 at 1:05=E2=80=AFPM Xin Li (Intel) <xin@zytor.com>=
- wrote:
-> > >>
-> > >> Meanwhile explicitly state that the headers are uapi headers.
-> > >
-> > > There are many internal-use targets, which are not documented in the
-> > > help message.
-> > > I assume this one is the case.
-> > >
-> > > If users want to install UAPI headers, 'headers_install' is
-> > > the user-visible interface and it is already documented.
-> > >
-> > >
-> >
-> > hpa and Boris prefer to add it, which I also agree.  But ofc it's your
-> > call :)
-> >
-> > If you don't want to add help for "headers", it probably still makes
-> > sense to explicitly state that the headers are uapi headers, no?
-> >
-> > Thanks!
-> >      Xin
->
->
-> If a help message for "headers" is desired, how about this?
->
->   headers  - Build read-to-install uapi headers in usr/include
+> Hi all,
+>=20
+> After merging the drm-xe tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> In file included from include/linux/kernel.h:22,
+>                  from include/linux/cpumask.h:11,
+>                  from arch/x86/include/asm/paravirt.h:21,
+>                  from arch/x86/include/asm/irqflags.h:80,
+>                  from include/linux/irqflags.h:18,
+>                  from include/linux/spinlock.h:59,
+>                  from include/linux/mmzone.h:8,
+>                  from include/linux/gfp.h:7,
+>                  from include/linux/mm.h:7,
+>                  from include/linux/pagemap.h:8,
+>                  from include/drm/ttm/ttm_tt.h:30,
+>                  from drivers/gpu/drm/xe/xe_bo.h:9,
+>                  from drivers/gpu/drm/xe/xe_svm.c:6:
+> drivers/gpu/drm/xe/xe_svm.c: In function 'page_to_vr':
+> drivers/gpu/drm/xe/xe_svm.c:344:33: error: 'struct page' has no member na=
+med 'pgmap'
+>   344 |         return container_of(page->pgmap, struct xe_vram_region, p=
+agemap);
+>       |                                 ^~
+> include/linux/container_of.h:19:33: note: in definition of macro 'contain=
+er_of'
+>    19 |         void *__mptr =3D (void *)(ptr);                          =
+         \
+>       |                                 ^~~
+> In file included from include/linux/init.h:5,
+>                  from include/linux/printk.h:6,
+>                  from include/asm-generic/bug.h:22,
+>                  from arch/x86/include/asm/bug.h:99,
+>                  from include/linux/bug.h:5,
+>                  from include/linux/mmdebug.h:5,
+>                  from include/linux/mm.h:6:
+> drivers/gpu/drm/xe/xe_svm.c:344:33: error: 'struct page' has no member na=
+med 'pgmap'
+>   344 |         return container_of(page->pgmap, struct xe_vram_region, p=
+agemap);
+>       |                                 ^~
+> include/linux/build_bug.h:78:56: note: in definition of macro '__static_a=
+ssert'
+>    78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+>       |                                                        ^~~~
+> include/linux/container_of.h:20:9: note: in expansion of macro 'static_as=
+sert'
+>    20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||=
+       \
+>       |         ^~~~~~~~~~~~~
+> include/linux/container_of.h:20:23: note: in expansion of macro '__same_t=
+ype'
+>    20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||=
+       \
+>       |                       ^~~~~~~~~~~
+> drivers/gpu/drm/xe/xe_svm.c:344:16: note: in expansion of macro 'containe=
+r_of'
+>   344 |         return container_of(page->pgmap, struct xe_vram_region, p=
+agemap);
+>       |                ^~~~~~~~~~~~
+> drivers/gpu/drm/xe/xe_svm.c:344:33: error: 'struct page' has no member na=
+med 'pgmap'
+>   344 |         return container_of(page->pgmap, struct xe_vram_region, p=
+agemap);
+>       |                                 ^~
+> include/linux/build_bug.h:78:56: note: in definition of macro '__static_a=
+ssert'
+>    78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+>       |                                                        ^~~~
+> include/linux/container_of.h:20:9: note: in expansion of macro 'static_as=
+sert'
+>    20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||=
+       \
+>       |         ^~~~~~~~~~~~~
+> include/linux/container_of.h:21:23: note: in expansion of macro '__same_t=
+ype'
+>    21 |                       __same_type(*(ptr), void),                 =
+       \
+>       |                       ^~~~~~~~~~~
+> drivers/gpu/drm/xe/xe_svm.c:344:16: note: in expansion of macro 'containe=
+r_of'
+>   344 |         return container_of(page->pgmap, struct xe_vram_region, p=
+agemap);
+>       |                ^~~~~~~~~~~~
+> include/linux/compiler_types.h:483:27: error: expression in static assert=
+ion is not an integer
+>   483 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a),=
+ typeof(b))
+>       |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/build_bug.h:78:56: note: in definition of macro '__static_a=
+ssert'
+>    78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+>       |                                                        ^~~~
+> include/linux/container_of.h:20:9: note: in expansion of macro 'static_as=
+sert'
+>    20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||=
+       \
+>       |         ^~~~~~~~~~~~~
+> include/linux/container_of.h:20:23: note: in expansion of macro '__same_t=
+ype'
+>    20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||=
+       \
+>       |                       ^~~~~~~~~~~
+> drivers/gpu/drm/xe/xe_svm.c:344:16: note: in expansion of macro 'containe=
+r_of'
+>   344 |         return container_of(page->pgmap, struct xe_vram_region, p=
+agemap);
+>       |                ^~~~~~~~~~~~
+>=20
+> Caused by commit
+>=20
+>   11bbe0d9aa96 ("drm/xe: Add drm_pagemap ops to SVM")
+>=20
+> interacting with commit
+>=20
+>   089b22f60a0f ("mm: allow compound zone device pages")
+>=20
+> from the mm-unstable branch of the mm tree.
+>=20
+> I have applied the following merge fix patch for today
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 7 Mar 2025 13:14:37 +1100
+> Subject: [PATCH] fixup for "drm/xe: Add drm_pagemap ops to SVM"
+>=20
+>   089b22f60a0f ("mm: allow compound zone device pages")
+>=20
+> from the mm-unstable branch of the mm tree.
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/gpu/drm/xe/xe_svm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/xe/xe_svm.c b/drivers/gpu/drm/xe/xe_svm.c
+> index 516898e99b26..3e829c87d7b4 100644
+> --- a/drivers/gpu/drm/xe/xe_svm.c
+> +++ b/drivers/gpu/drm/xe/xe_svm.c
+> @@ -341,7 +341,7 @@ static void xe_svm_garbage_collector_work_func(struct=
+ work_struct *w)
+> =20
+>  static struct xe_vram_region *page_to_vr(struct page *page)
+>  {
+> -	return container_of(page->pgmap, struct xe_vram_region, pagemap);
+> +	return container_of(page_pgmap(page), struct xe_vram_region, pagemap);
+>  }
+> =20
+>  static struct xe_tile *vr_to_tile(struct xe_vram_region *vr)
+> --=20
+> 2.45.2
 
-
-
-
-For clarification, the following is the rationale.
-
-
-Build                 Installation
--------------------------------------
-vmlinux               install
-modules               modules_install
-dtbs                  dtbs_install
-headers               headers_install
-
-
-
-In Kbuild, the Build and Installation are separate steps,
-since the latter usually requires the root permission.
-
+This is now a semantic conflict between the mm tree and the drm tree.
 
 --=20
-Best Regards
-Masahiro Yamada
+Cheers,
+Stephen Rothwell
+
+--Sig_/Ei=AgDAf1QEyUaGu.mJ9V3O
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfPnK4ACgkQAVBC80lX
+0Gwt3Qf/QFt6K+0NCWbthrLa8s60vX/xuO9fu+5KuBS7ZE1FChOFbgbRi/z/xflf
+MqKqfVskxJoSaGTobKNqKdD0/Of4FrwGo63+14/kGbl3Hj1/9QEzBE5MOYjb7DsJ
+t3+uVHgJlxF8lWUEu9TTeS05bHpPB/CdoPehgOQYzYTvQE78ATfTbjhPf0M+fA6n
+VKVHWDyALxC7XsVdVM8yY5JuETLpd7144Gxaw+wMuh9rNCECT9G2Y1KKJBZggejf
+609UZHsk99f47i5s8HkF0i6VwSiiOjgsTgMz7CS8dbjMSQ1tYAoQetjTQswAQuIB
+z615n52fVlxyO405j0SOnz9zskx8gw==
+=akB5
+-----END PGP SIGNATURE-----
+
+--Sig_/Ei=AgDAf1QEyUaGu.mJ9V3O--
