@@ -1,105 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094BF320F;
-	Tue, 11 Mar 2025 05:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C9F29A1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 05:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741671230; cv=none; b=XZiwXdRMdgkl9RmbpszxDZYYA/DovCi+EtcRwvBm2FY44vezRSDYQ4ZD/LfMUduh25riE4PXml9k1n/6t45un3bfXVkdeL6dAn3eg9csE8NTx9zMkQIeNmMkv/e0Roov7e1fVdjviNLCJxw1qZYgbAjwVJZ345p44DQ8ciTQ08k=
+	t=1741671621; cv=none; b=kwsAsjNOU1p1E+zvkDm9bQeRgTaSxCdig9VYV8mYw+cqOWOz/52cw96+d8QyZpCS3XKof3KoS6W37rBw9i3EwinWA7XdXjfLaYK5Rc6YTkoXmioRYJvZmAGEZM/81HHefI/0DNv7jCg8DcLS1m7nv3qRsUdOFUkZ13Ub4SZva4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741671230; c=relaxed/simple;
-	bh=DLYuGmG8iFWf5LcT050MwmMyWf6njd/yrSqW870b0NQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kq+7V+qIMUaOck/6JqMh6gwNSgTnfnCXlIw+JPCjIwPWbgewxrOXmmYf3sfCXJuwRq5KG5ICpYUA8YW+Kq6UoAIpOi3UFfZJF7TNARjiS/fKgDsBIU9lhMB8SyCUlyeB/Ce8Lxuoz/3QTzjy7dfylP/ciieI0nzoJTxf/ejZQU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OPNJQ9WO; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741671621; c=relaxed/simple;
+	bh=oYweTKx7ALuJMlsAQRAxSOuMULV72Za28r/jTArWsTg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=pDsbv0P1Mjltxv/i3LRq+vdbi1oIWAohWHOMrX9pHf26q8BPwJ50wHdMfM7H9cjNtilBG4IhMnGC5u+1r3V+3aTNF54EfQ3KrokDi+AHAvGYaF9FjwB8k32zBtlhgRLfn+kiYe015vqoL66ubjMZKoBuEjOYkuBClnUaJAhoU20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dADlVhwF; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OPNJQ9WO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dADlVhwF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741671229; x=1773207229;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DLYuGmG8iFWf5LcT050MwmMyWf6njd/yrSqW870b0NQ=;
-  b=OPNJQ9WO6owtRiG51u+pD9WpnMUnZXJcfsF0Hk+kBgMbWLk+TX6xHMbJ
-   OHZwngz3pK/euluvYvI2LYYlDfBuFsDg20l9BTlkrQc7agvabwmp1jnJW
-   K5evkPWdt6RQRkXCQ/y0FFDRTUHZ7qN7Wyc1bQn80brjeAUPwGX0dHzxm
-   Iq0SvZgtvTpKvfIrGwoBD3Ji9owwXECjPC9lRJ7WopeZN4MY8ugcnbkBR
-   I1W0E4gjLhdl9eE9RYJpqs4h3G06mTBbqrGivQF90Pjd+rSPGuOrc6U/4
-   apk5PIuTFsK9wx8ru41YAx0Sh7+OroLMGufMotJwHLDOJFBgmhl5bu2Yx
+  t=1741671619; x=1773207619;
+  h=date:from:to:cc:subject:message-id;
+  bh=oYweTKx7ALuJMlsAQRAxSOuMULV72Za28r/jTArWsTg=;
+  b=dADlVhwFW+dDdF24j1hcY6BVNOWLqaHUGuAbVyXqKNvW07U7tKsZOkPD
+   GVUrxnBnjW6YKZkddUxk5Sdlfj3msN/bQkeWBXELDTfDAyJXCgY1yMQvb
+   8PF26OxDVDI81n6pUnVPV+NsMurjmaLnRuWn7X5R5+hl+kWSxpDRB9Je/
+   Z7wfckLG02GP2r6z0Ggb+N/WmkeUpC6kviIsqNJIZiJrLtxNVoSDF+aBw
+   5bt/X0+kvM8zDe+zxLnkg1ISipdtKV0nvOsrY5gUX2I//gyxnRhYk+2Vd
+   Rk2FciOsBmZrOnefwJ82Vr2zfcdx++CPOgl8B9X3Q27B2UOsq/E5iGooP
    g==;
-X-CSE-ConnectionGUID: IfEg6M00RiGDIwGV+PMVHg==
-X-CSE-MsgGUID: luwnjhpdRSaWxN3gEvg08g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42602730"
+X-CSE-ConnectionGUID: gabBY9NNSeG1B489uCIRyg==
+X-CSE-MsgGUID: wZuAyaxiTO23CkFzO8Exow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="60241321"
 X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="42602730"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 22:33:47 -0700
-X-CSE-ConnectionGUID: CWULG/1UQUuYYhAiVQ7Zew==
-X-CSE-MsgGUID: nO6dDApWTfWOLHIaR7SBuA==
+   d="scan'208";a="60241321"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 22:40:17 -0700
+X-CSE-ConnectionGUID: mygwctF2REqT8BRrNG1n2g==
+X-CSE-MsgGUID: KvvI4gcVQhe/7mQyYol9cA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="143395086"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.21.123]) ([10.247.21.123])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 22:33:44 -0700
-Message-ID: <3bc2cc11-3a87-479e-a0e0-c593e3214540@linux.intel.com>
-Date: Tue, 11 Mar 2025 13:33:42 +0800
+   d="scan'208";a="120170929"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa006.jf.intel.com with ESMTP; 10 Mar 2025 22:40:17 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1trsLe-0006OI-11;
+	Tue, 11 Mar 2025 05:40:14 +0000
+Date: Tue, 11 Mar 2025 13:39:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ e3e89178a9f4a80092578af3ff3c8478f9187d59
+Message-ID: <202503111329.CXHJQLOi-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v1 1/1] stmmac: intel: Fix warning message for
- return value in intel_tsn_lane_is_available()
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Dan Carpenter <dan.carpenter@linaro.org>,
- netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250310050835.808870-1-yong.liang.choong@linux.intel.com>
- <20250310152014.1d593255@kmaincent-XPS-13-7390>
-Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <20250310152014.1d593255@kmaincent-XPS-13-7390>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: e3e89178a9f4a80092578af3ff3c8478f9187d59  x86/microcode/AMD: Fix out-of-bounds on systems with CPU-less NUMA nodes
 
+elapsed time: 862m
 
-On 10/3/2025 10:20 pm, Kory Maincent wrote:
-> On Mon, 10 Mar 2025 13:08:35 +0800
-> Choong Yong Liang <yong.liang.choong@linux.intel.com> wrote:
-> 
->> Fix the warning "warn: missing error code? 'ret'" in the
->> intel_tsn_lane_is_available() function.
->>
->> The function now returns 0 to indicate that a TSN lane was found and
->> returns -EINVAL when it is not found.
->>
->> Fixes: a42f6b3f1cc1 ("net: stmmac: configure SerDes according to the
->> interface mode")
->> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> 
-> This patch is a fix it should go net instead net-next.
-> Could you resend the patch with net prefix?
-> 
-> Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
-> 
-> Thank you!
+configs tested: 19
+configs skipped: 127
 
-Hi Kory,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thank you for your feedback. I understand that the patch is a fix. However, 
-since the code is not yet in the 'net' tree, we are unable to apply the fix 
-there.
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250311    gcc-12
+i386    buildonly-randconfig-002-20250311    clang-19
+i386    buildonly-randconfig-003-20250311    clang-19
+i386    buildonly-randconfig-004-20250311    clang-19
+i386    buildonly-randconfig-005-20250311    clang-19
+i386    buildonly-randconfig-006-20250311    gcc-11
+i386                            defconfig    clang-19
+x86_64                        allnoconfig    clang-19
+x86_64                       allyesconfig    clang-19
+x86_64  buildonly-randconfig-001-20250311    gcc-12
+x86_64  buildonly-randconfig-002-20250311    gcc-12
+x86_64  buildonly-randconfig-003-20250311    clang-19
+x86_64  buildonly-randconfig-004-20250311    clang-19
+x86_64  buildonly-randconfig-005-20250311    gcc-12
+x86_64  buildonly-randconfig-006-20250311    gcc-12
+x86_64                          defconfig    gcc-11
 
-I'm not sure if there is another way to handle this fix other than sending 
-it to the 'net-next' tree. I would appreciate any guidance you might have 
-on this matter.
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
