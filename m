@@ -1,146 +1,86 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305EE2580D7;
-	Tue, 11 Mar 2025 12:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD102356D7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741695318; cv=none; b=Vp6b3plP3H/iSSGSOHj67W/tGzL5qQO6vCMjSXSON+JhS816ZOgABJDWl4rEmMDCf7rRGbbzN1ZqbnR+Kdi1ufHAeeXEKRA7cuSaNNUDO8AUtVZYX5FBSoFjgOW9XmxIydHZtitDyT7WSuIkO+qQnJudEXOYZ+pIbaaGG8Og2Z0=
+	t=1741695365; cv=none; b=im4TqJOwrpppqfCNgMchG8TUOnTCD1mqJIzOfod+CSErWH7HiD7FJGBhUuu4a+0tsEWM28EK1sg7OMXepU6G43Ri50CE+qgXmIohAitK0nX5HEQodQi2jBqZ1+gZ8mDqQFf6Wlozn1XneJS2a/pZyoIjBuRyqSDxmqfpC9lq0rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741695318; c=relaxed/simple;
-	bh=1M2j+VphYEloq3qhOq71k3Qty/uujuzsSuIGAGbd3y0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NT38DgKM6ZvvhbnIGdllV4Eo4S2TqzT7AN2Yg9Qqsq3REIZxfoymb6wN6Hdyl7Is8leq4pWZcYfL9Xx4VjkuKJaZXLMG24hiXMObHaedkvpk9ebPU7fzSzR3DGxhBIcwuFt7jZHGW8vgWRILEze+RSr7AESocIDs9xT8Pb15Lu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZBszc3S2jz2RTTd;
-	Tue, 11 Mar 2025 20:10:52 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id D946C180042;
-	Tue, 11 Mar 2025 20:15:12 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 11 Mar 2025 20:15:12 +0800
-Received: from [10.67.121.59] (10.67.121.59) by kwepemn100009.china.huawei.com
- (7.202.194.112) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 11 Mar
- 2025 20:15:12 +0800
-Message-ID: <c068c5c3-f4c0-367e-75c8-5d2b0847ea62@huawei.com>
-Date: Tue, 11 Mar 2025 20:15:11 +0800
+	s=arc-20240116; t=1741695365; c=relaxed/simple;
+	bh=JmYUzDvAxPGj4zbO2i1wDLyR5cCoRXGD9vm51/Rv110=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qNqC+GjpPlGEIiGH7ciqFmNpj/6qhtXegSjHyWgDjiMJ7R0zt+aql6jQDHEOhVKZeWn3gTDXyL9ekppn2HWl16FWFgLlYZSFfVQRa6OBrDCirVP1D+BL1W97/5aRcLYd0r8zIaazgfEm+VfDxU4le9nM6bAanyLfcXg0BOI62Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F48nVGS7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F48nVGS7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741695362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=L66ODmBs+dCHgrMRGT2Pjz0+6wIG2q2DYOyUrGumZ1k=;
+	b=F48nVGS7Kim3mvgZsZJ16u9pAGPGoXNHxBJ+RYlzdbko753l7xBtJYQq20BxCJWduqGaAk
+	K55ob8EgvrR0l+DhNMt7Gen2XX3myIaC2HSYzMcSFoM4LW0VcUqtMtCliP6o/TEQ4GlB79
+	tfzi0H2kSseota/NvQ2cbGBA4h/Vdno=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-468-F4Pfz6OmP5CPe6M57fyX2g-1; Tue,
+ 11 Mar 2025 08:15:57 -0400
+X-MC-Unique: F4Pfz6OmP5CPe6M57fyX2g-1
+X-Mimecast-MFC-AGG-ID: F4Pfz6OmP5CPe6M57fyX2g_1741695355
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87EDE1828A80;
+	Tue, 11 Mar 2025 12:15:55 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.52])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BEBD01800944;
+	Tue, 11 Mar 2025 12:15:52 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH 0/4] Documentation/rtla: Cover BPF sample collection
+Date: Tue, 11 Mar 2025 12:49:32 +0100
+Message-ID: <20250311114936.148012-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v2 01/13] mailbox: pcc: Fix the possible race in updation
- of chan_in_use flag
-To: Sudeep Holla <sudeep.holla@arm.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Jassi Brar
-	<jassisinghbrar@gmail.com>, Adam Young <admiyo@os.amperecomputing.com>,
-	Robbie King <robbiek@xsightlabs.com>
-References: <20250305-pcc_fixes_updates-v2-0-1b1822bc8746@arm.com>
- <20250305-pcc_fixes_updates-v2-1-1b1822bc8746@arm.com>
- <4ecf3a7a-7a68-fd56-ed93-fbae82e2b0e3@huawei.com> <Z9AmSEBL_UcZ2Hoo@bogus>
-From: "lihuisong (C)" <lihuisong@huawei.com>
-In-Reply-To: <Z9AmSEBL_UcZ2Hoo@bogus>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemn100009.china.huawei.com (7.202.194.112)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+This is a follow-up to the BPF sample collection patchset [1],
+documenting both the feature's build requirements in the readme and
+the feature itself in the manpages.
 
-在 2025/3/11 20:02, Sudeep Holla 写道:
-> On Tue, Mar 11, 2025 at 07:40:53PM +0800, lihuisong (C) wrote:
->> 在 2025/3/6 0:38, Sudeep Holla 写道:
->>> From: Huisong Li <lihuisong@huawei.com>
->>>
->>> The function mbox_chan_received_data() calls the Rx callback of the
->>> mailbox client driver. The callback might set chan_in_use flag from
->>> pcc_send_data(). This flag's status determines whether the PCC channel
->>> is in use.
->>>
->>> However, there is a potential race condition where chan_in_use is
->>> updated incorrectly due to concurrency between the interrupt handler
->>> (pcc_mbox_irq()) and the command sender(pcc_send_data()).
->>>
->>> The 'chan_in_use' flag of a channel is set to true after sending a
->>> command. And the flag of the new command may be cleared erroneous by
->>> the interrupt handler afer mbox_chan_received_data() returns,
->>>
->>> As a result, the interrupt being level triggered can't be cleared in
->>> pcc_mbox_irq() and it will be disabled after the number of handled times
->>> exceeds the specified value. The error log is as follows:
->>>
->>>     |  kunpeng_hccs HISI04B2:00: PCC command executed timeout!
->>>     |  kunpeng_hccs HISI04B2:00: get port link status info failed, ret = -110
->>>     |  irq 13: nobody cared (try booting with the "irqpoll" option)
->>>     |  Call trace:
->>>     |   dump_backtrace+0x0/0x210
->>>     |   show_stack+0x1c/0x2c
->>>     |   dump_stack+0xec/0x130
->>>     |   __report_bad_irq+0x50/0x190
->>>     |   note_interrupt+0x1e4/0x260
->>>     |   handle_irq_event+0x144/0x17c
->>>     |   handle_fasteoi_irq+0xd0/0x240
->>>     |   __handle_domain_irq+0x80/0xf0
->>>     |   gic_handle_irq+0x74/0x2d0
->>>     |   el1_irq+0xbc/0x140
->>>     |   mnt_clone_write+0x0/0x70
->>>     |   file_update_time+0xcc/0x160
->>>     |   fault_dirty_shared_page+0xe8/0x150
->>>     |   do_shared_fault+0x80/0x1d0
->>>     |   do_fault+0x118/0x1a4
->>>     |   handle_pte_fault+0x154/0x230
->>>     |   __handle_mm_fault+0x1ac/0x390
->>>     |   handle_mm_fault+0xf0/0x250
->>>     |   do_page_fault+0x184/0x454
->>>     |   do_translation_fault+0xac/0xd4
->>>     |   do_mem_abort+0x44/0xb4
->>>     |   el0_da+0x40/0x74
->>>     |   el0_sync_handler+0x60/0xb4
->>>     |   el0_sync+0x168/0x180
->>>     |  handlers:
->>>     |   pcc_mbox_irq
->>>     |  Disabling IRQ #13
->>>
->>> To solve this issue, pcc_mbox_irq() must clear 'chan_in_use' flag before
->>> the call to mbox_chan_received_data().
->>>
->>> Signed-off-by: Huisong Li <lihuisong@huawei.com>
->>> (sudeep.holla: Minor updates to the subject and commit message)
->>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->>> ---
->>>    drivers/mailbox/pcc.c | 7 ++++++-
->>>    1 file changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
->>> index 82102a4c5d68839170238540a6fed61afa5185a0..f2e4087281c70eeb5b9b33371596613a371dff4f 100644
->>> --- a/drivers/mailbox/pcc.c
->>> +++ b/drivers/mailbox/pcc.c
->>> @@ -333,10 +333,15 @@ static irqreturn_t pcc_mbox_irq(int irq, void *p)
->>>    	if (pcc_chan_reg_read_modify_write(&pchan->plat_irq_ack))
->>>    		return IRQ_NONE;
->>> +	/*
->>> +	 * Clear this flag immediately after updating interrupt ack register
->>> +	 * to avoid possible race in updatation of the flag from
->>> +	 * pcc_send_data() that could execute from mbox_chan_received_data()
->> This comment may be inappropriate becuase of the moving of clearing
->> interrupt ack register in patch 2/13.
->> I suggested that fix it in this patch or patch 2/13.
-> Right, I did think of updating or did update and missed to commit.
-> I wanted to update something like:
-> "
-> Clear this flag after updating interrupt ack register and just before
-> mbox_chan_received_data() which might call pcc_send_data() where the
-> flag is set again to start new transfer
-> "
-Ack
->
-> Hope that is more apt to the current situation.
->
+A few fixes affecting the same manpages are also included in
+the patchset.
+
+[1] https://lore.kernel.org/linux-trace-kernel/20250218145859.27762-1-tglozar@redhat.com/T/#u
+
+Tomas Glozar (4):
+  Documentation/rtla: Fix duplicate text about timerlat tracer
+  Documentation/rtla: Fix typo in rtla-timerlat.rst
+  Documentation/rtla: Fix typo in common_timerlat_description.rst
+  Documentation/rtla: Include BPF sample collection
+
+ .../tools/rtla/common_timerlat_description.rst         | 10 +++++++++-
+ Documentation/tools/rtla/rtla-timerlat.rst             |  9 +++------
+ tools/tracing/rtla/README.txt                          |  7 +++++++
+ 3 files changed, 19 insertions(+), 7 deletions(-)
+
+-- 
+2.48.1
+
