@@ -1,113 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599E525E820;
-	Tue, 11 Mar 2025 15:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9195B25DCFA;
+	Tue, 11 Mar 2025 15:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741707596; cv=none; b=iKJVSBQYgDwwqHrDlpzoGAJwrSZ4cw/9bXaP6IcXIclghU0FYRBPQHym4jD6vD5VcqEptBJYTsHvkPVHbuJXlHDlnyy+lyTfY19iiYPtxxRW83+NVvvZt84l5aUtW6D6kcLIYQxZ2zLSwpVvt15iMyF5WK1SH115wm9a5xIEwb4=
+	t=1741707599; cv=none; b=phUbCG8+AzVJ/GFTuVHb7QsLMpYJ1mG//6WXoY5ueaSD1zsxxXsZ4sbhacwoT4up4lpRsnX0mDBr17dlCFz6p8m2fDAAXmS/h8ToP8vaAhyoOBuq0iCXniFTCtzbCXpcKyXiWzBCHrjUk0Q26RSlGmf8BHt46pVMDvknrqu6Awg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741707596; c=relaxed/simple;
-	bh=0uaioJB2qNBcM6iTwrAoMMsO3wwEbIudWy2wENjYiLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F5G+g8aDmKRVtmoJ47m3QQmOq/hoe/maZ8y6mN85+jS4dTJkwVQqWD4xHQQCEXMBfmwglZx8TFOnOnmLUHcSQtdVz9THmQw9hpNW9mDWxifpy1a/QoT+gHtZgvlnNbITm6WoC+QQvmwiGcSI3Oq12+YjTXTwTSpRDmbYD/hpbT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TzKC5yKE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741707599; c=relaxed/simple;
+	bh=0xS63COg9IolEiawfiarzZAPZOEOB7gam7z/7loFwdA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=GBgTp55J19GSUuNWyOxUthKb2isamotdfnT2lOaOlyP0VKYMtUZWbXDWapNpC5eH7nM11COkfoRLHGuTxhnhv4lgikuY9WWKfCbvh9l/4v0kPruVUEpilURkPYrgPR6G62nEt4lvjq4IjqLCCIdgdovQ6yX1DrBPsmM2Kj34E4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LRFiBvTQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TzKC5yKE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C324AC4CEE9;
-	Tue, 11 Mar 2025 15:39:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LRFiBvTQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D0DAC4CEE9;
+	Tue, 11 Mar 2025 15:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741707596;
-	bh=0uaioJB2qNBcM6iTwrAoMMsO3wwEbIudWy2wENjYiLM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TzKC5yKEUVlwntBZl6Bg0L6W4nqeVZP858CD8HC+F/0nA72LQlPvyzv+qendn6xjx
-	 ZfInROABdvFflu8fEb/92c5/jMMnir9jcERDxZji+bQwGcF/PhnxQLnu82zCXbbHEH
-	 r9szJQcVJHm/UQs4I1EHaPc40lbsWvAou9ztggjyZCnuqokoiBSq/KjdCmCrlIhRE1
-	 rfBJnLhrFp6vG//MnAp1+0pIhYW9s9Cd9KtOhSSC7pib6MTehFQWEzUaF7C58tpNIF
-	 Kcn3FivMNhIIngvj2tq783e/FLNt7eDNtADLkhyuq7ADdn95iiq2Nfkh97CNy0CTSo
-	 ry7Py+FrYdLzw==
-Date: Tue, 11 Mar 2025 17:39:48 +0200
-From: Dmitry Baryshkov <lumag@kernel.org>
-To: Ayushi Makhija <quic_amakhija@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run, 
-	marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org, robh+dt@kernel.org, 
-	krzk+dt@kernel.org, konradybcio@kernel.org, conor+dt@kernel.org, 
-	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
-	quic_abhinavk@quicinc.com, quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com, 
-	quic_jesszhan@quicinc.com
-Subject: Re: [PATCH v2 08/10] drm/bridge: anx7625: enable HPD interrupts
-Message-ID: <5hvpacx3qeqhjqemhqizws4esdhwg7reli77qey2nin2fggljp@ykgyayj2v3e6>
-References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
- <20250311122445.3597100-9-quic_amakhija@quicinc.com>
+	s=k20201202; t=1741707599;
+	bh=0xS63COg9IolEiawfiarzZAPZOEOB7gam7z/7loFwdA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LRFiBvTQ5HlRY06f7s85fH51/CsBWh3RvPKKdSewOjyY4ZCf3Lr/zAjyrMQFlT4kt
+	 JSeFqBcFqiqEGANcvGvarsnj4MkALW5sBlhL4xqgBDvR4A68oh5aB159y1nRO1PkgW
+	 T31iZUtREkwphJeyBRI5a5MbPU5sbIFfmGS4XGa6VPDGT9R2D7To5Z3xpbfdie2HyM
+	 bSYad/lZXiQMRbdb/Rw5yqnLpgCsmVEIIqLV67v4xNwLznmxkImRacViCVHT6LNZah
+	 w0qRYgRDLSgMdCRvgSzvzOBH4AyThmgXGl1GdXIQMNnlnG/NyKzo+UEW1jyTq1A9Ww
+	 YARAbvj6DQq6Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE002380AC1C;
+	Tue, 11 Mar 2025 15:40:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311122445.3597100-9-quic_amakhija@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] Bluetooth: Fix error code in chan_alloc_skb_cb()
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <174170763351.128681.166862015675971254.git-patchwork-notify@kernel.org>
+Date: Tue, 11 Mar 2025 15:40:33 +0000
+References: <2144b990-e584-4f77-a3be-5987b56d051a@stanley.mountain>
+In-Reply-To: <2144b990-e584-4f77-a3be-5987b56d051a@stanley.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: jukka.rissanen@linux.intel.com, marcel@holtmann.org,
+ johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
 
-On Tue, Mar 11, 2025 at 05:54:43PM +0530, Ayushi Makhija wrote:
-> When device enters the suspend state, it prevents
-> HPD interrupts from occurring. To address this,
-> add an additional PM runtime vote in hpd_enable().
-> This vote is removed in hpd_disable().
+Hello:
 
-Is it really enough to toggle the HPD interrupts? Is there any kind of
-programming that should be moved to .hpd_enable() too (so that by
-default the bridge doesn't generate HPD interrupts)?
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
+On Mon, 10 Mar 2025 22:46:56 +0300 you wrote:
+> The chan_alloc_skb_cb() function is supposed to return error pointers on
+> error.  Returning NULL will lead to a NULL dereference.
 > 
-> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+> Fixes: 6b8d4a6a0314 ("Bluetooth: 6LoWPAN: Use connected oriented channel instead of fixed one")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  drivers/gpu/drm/bridge/analogix/anx7625.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> index 4be34d5c7a3b..764da1c1dc11 100644
-> --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-> +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> @@ -2474,6 +2474,22 @@ static const struct drm_edid *anx7625_bridge_edid_read(struct drm_bridge *bridge
->  	return anx7625_edid_read(ctx);
->  }
->  
-> +static void anx7625_bridge_hpd_enable(struct drm_bridge *bridge)
-> +{
-> +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> +	struct device *dev = ctx->dev;
-> +
-> +	pm_runtime_get_sync(dev);
-> +}
-> +
-> +static void anx7625_bridge_hpd_disable(struct drm_bridge *bridge)
-> +{
-> +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> +	struct device *dev = ctx->dev;
-> +
-> +	pm_runtime_put_sync(dev);
-> +}
-> +
->  static const struct drm_bridge_funcs anx7625_bridge_funcs = {
->  	.attach = anx7625_bridge_attach,
->  	.detach = anx7625_bridge_detach,
-> @@ -2487,6 +2503,8 @@ static const struct drm_bridge_funcs anx7625_bridge_funcs = {
->  	.atomic_reset = drm_atomic_helper_bridge_reset,
->  	.detect = anx7625_bridge_detect,
->  	.edid_read = anx7625_bridge_edid_read,
-> +	.hpd_enable = anx7625_bridge_hpd_enable,
-> +	.hpd_disable = anx7625_bridge_hpd_disable,
->  };
->  
->  static int anx7625_register_i2c_dummy_clients(struct anx7625_data *ctx,
-> -- 
-> 2.34.1
-> 
+>  net/bluetooth/6lowpan.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
+Here is the summary with links:
+  - Bluetooth: Fix error code in chan_alloc_skb_cb()
+    https://git.kernel.org/bluetooth/bluetooth-next/c/3144ba2a70e6
+
+You are awesome, thank you!
 -- 
-With best wishes
-Dmitry
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
