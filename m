@@ -1,307 +1,203 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2052.outbound.protection.outlook.com [40.107.95.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7B225EF90
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 16:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741709220; cv=none; b=OsWDHyhUNIY0vCfKHK2ly0cTMHyvcFHlkOTNNFXcK/ZHYIKH+kb0/i56gjsIfWVP1O9VjXmZoWnGZNh0HwFB7psO9cAIn0vYoYY5Fb7gjkwKVDEXhAts3slERfk4nkIWgtosbk6xUeOZQTk3LGIzZKuoX7AiuowPMgzTJu23sc0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741709220; c=relaxed/simple;
-	bh=9xfrqn5PaUD3Cww4DF0JnKtGG8IfmxoEKQSBl/5uVoU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JpI9X71QNpAJ3u+5H9/Ibk0XCj5q4LjgvU4xgBYXa4mbA2buln8fFi6YA3E90VNazoWDNwPVxdZrOmoMzujFhAelnNWOtHy9ShK9zhgRAcnUGnCEwyDSUiOuIfMCISaVVd70VndIXXsZ+2DiizBjOznHyGtj7QT4QnS1CsMtgDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S2hiYyN/; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DA510E5;
+	Tue, 11 Mar 2025 16:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741709291; cv=fail; b=BHXKOuetjdDj1o6KLUpdQPny2N0QsVCQiiv0Hs+U3SOQJYBjWe4x5wkHzJ37u3/V7V+ehVnWS7U86EcImqUDSMc3aAkkkg121IDj5ZETB99GbDnZwSJAky12Rw1w75HdTHa9AiV3HMDeavHAKJD9tS/IQR4rxe+AFiHNMYPrsMQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741709291; c=relaxed/simple;
+	bh=jtkuuebUjzdv4cTYwnj581jRKRMNJalYfafMkblVlds=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CjbMsjxG62GUIVP71cG1kpzrWNZpiKMszJHc2l3GQzb7bpWsqL34rqjfYDK2SkzQkAvAa957KT8R6hUGM/B6FttfmaYi+VxXUJNzThPBC9bZ9r/T3SZAcWV1K80UyE919DkBacbSYFDRFnuyBllxQsqaHgxOsI5bcbFuORZup88=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=h/LyCMxV; arc=fail smtp.client-ip=40.107.95.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S2hiYyN/"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff187f027fso9675694a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1741709218; x=1742314018; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hM4rbW6LjxVDNSNvYjso9fRHbCk2dFhxwSUcK0gnU+A=;
-        b=S2hiYyN/EAheqYsBK+EUVUdJquOtswQ/yRfMp+Z/+/UmqBbWSCfC6aiEh9SnWlwhZh
-         eNx/cjP7tl7zBYmJSna5YFGfbxf/PafzST1bWTF4hZPtJCDFKdcYGQink9BMoyJ0qSWD
-         yq31f2JPFCLymnl+yV+3MQ1CzouexBztpl+Vw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741709218; x=1742314018;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hM4rbW6LjxVDNSNvYjso9fRHbCk2dFhxwSUcK0gnU+A=;
-        b=mhTvIy8Nwr1ryQi1M6AOPEaBgwV3HOMvYEKaI8XSe6PQkw2Xcvfv8lDrpbOxlT1fnA
-         uOmvW3Zbt7hhbNKStgg1tEYQlHMv8CsFMToIkAI7KVjFGu3EHqPszpiqWjPyHUjwkdT5
-         tZoPtTLvxs91LGIpEVIF6miSR3bBrQomLy8yvDGZX0O37OZf1BdJg84YQiJcjmRAFCz9
-         IpLA9xgRATkcPsF8idz/l/yrp0YiOmeWve2IAflB0/XGf+NFbLSkQqP8ETM+eFpy1Gjb
-         khqr8sHEAV+gCnQgzeURhyLF76m8bfn5kmf3iLOL7T6G+KKrnxf3Clq9qWldoodaLMOD
-         jutw==
-X-Forwarded-Encrypted: i=1; AJvYcCXccaYPQgqL7Zm2HZ7XuCJ4WO1mRIazbXdyypRnMWtds1AT1q3QHxGvWGxGgG34IOqo1JrL/QuKkvFCzrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5vzp34dWKpNfkUFfAiRkYq1a0NqsMZkhnRecOMjbxDWLcwO46
-	tic4wjSMt2fo5qpmtWlISL/D6PeKFzQvJWJltp+vNep8r5QdA7E0MJJZmjlMIJyL79enHYvv9+v
-	WX6Z3i+54oytCTKkvQdUtL/fEuJDr1H88O8EY
-X-Gm-Gg: ASbGncvSUtXaMmo9IVJreZjWDjQVrb0bazzd1JePda8DyfZtFdNYkE70SbtkWI7Eqrq
-	BincHJryla5pJicsz5DsGGaXXp1uyncjHgr/fykl96ISTn4s/Py3nTRNFhb+YiCUBRG85j8fo93
-	XzLkUWpmeDSgecJBAsYrwklq5quQw=
-X-Google-Smtp-Source: AGHT+IE36fk6W16fZ24D9Um05YI34qYQeMpFD/Fu13W3g0zHxL6+gSNZuwbSkxqQdxCB8t1MRNP32lKWlS+bzVOdJuM=
-X-Received: by 2002:a17:90b:53c3:b0:2fa:6793:e860 with SMTP id
- 98e67ed59e1d1-301002eadf6mr5953818a91.0.1741709217074; Tue, 11 Mar 2025
- 09:06:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="h/LyCMxV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rnVBfNOEOq4ejXWJbNe9XDBWNCsbdzsn6USCruBCZgza6bqBXvBn/lj1p2+HVv5s6Bu50vY8Yr3jMRYAMRpyv/MzNQsu67sOOev/5NpPu5bCIZYKw7H+ykjspFgQZyeQQXuJ+4yU2k4P7qIYaNpQMNEpM5E2cHBzgBkPXJpvbCwVJzQJcXV164QHVCpJZYxaZ/0OBE3RFmT/uUrTkufWydlBd5PE0L8dI/amY8czAX70Bbk4BGAdP6w7u0STKu4pcqJ71M2fMi60nZvAmfnSNEG5VnsbKp8VYMxivi4qb/s/7FrWmtFldR0OPSpgp6X+l8d+ACLMwFYLFhid0Fr1Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q/rjwdr7B3BKMjtpzt/ryDf63xctjzs49MO8ZKl++yI=;
+ b=T/mIhuiroH3q9TQN++BOIHKT+wT8QPf7UyrOjKtVgQ6XGVPYRbqOvLUa4Pz8sRGrDJtIu3TJ18IxCeVILwcahJd6Wkps91fC/Yv1tP4RNZXHg20fizyxPoYNrWrlZU9XlTIOZWgyUofkzaluXuRGh6Z8DYZl6cstuLPZVmOngm/5+WYFB9STquQz4Ysg1q0NzZ9LWBxZbEdZCCDgtzrMXw54CJTpUvH5KZ3hON90kSaoVzVPFVrdM45QZgi7GrTx5hOXNw2u91alH5AG1PMYa9llHOFBk2XKwE4Y66tyw+ox9PkLUNQgRqlKBcOAbTuUGjkWIXs7mQA1Y5O6qv6YhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q/rjwdr7B3BKMjtpzt/ryDf63xctjzs49MO8ZKl++yI=;
+ b=h/LyCMxVToIkJXuzMHPQl4JK0dFac0kHc9/lwEQiyPBnZNvKCyxYQps7dOxZB/EMftqfp8CQlYLL2IqZfLdwBLziPi1/HECappeGyL67Ie7c0DPleUG3F8xYspVT+1DmKndmfZ1mI18I3wYjQBqmrczljePDb/JlOOzdZW5OngiplPn6xwM1A1NmR+PKg3KTi8eGgGaCLePFZ5ziENMwdjg6E/n9CzVk1dOrt0Z4LXfUPWQiROCaJr9g5nYnVFf4Q0bvJ+8kZW4G9Xj5qJJkcGd7Bac3TNXJxGAiDA0dHVzannj1/EHM5mJqw5tSiknVRpb2fN7Mnrp1H4+EvhJMXg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ IA0PR12MB8907.namprd12.prod.outlook.com (2603:10b6:208:492::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
+ 2025 16:08:07 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8511.026; Tue, 11 Mar 2025
+ 16:08:07 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: David Hildenbrand <david@redhat.com>, Yang Shi <shy828301@gmail.com>,
+ lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
+Date: Tue, 11 Mar 2025 12:08:03 -0400
+X-Mailer: MailMate (2.0r6233)
+Message-ID: <7A60A7B1-0BFF-45ED-8A11-06F0D5286723@nvidia.com>
+In-Reply-To: <Z9BdwFZ-ZRpMSabG@gourry-fedora-PF4VCD3F>
+References: <Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F>
+ <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
+ <Z7TLwtQY3vGUw2bO@gourry-fedora-PF4VCD3F>
+ <1b4c6442-a2b0-4290-8b89-c7b82a66d358@redhat.com>
+ <Z7TswQbpPV590ADr@gourry-fedora-PF4VCD3F>
+ <bda4cf52-d81a-4935-b45a-09e9439e33b6@redhat.com>
+ <CAHbLzkqDQcrHLPzk8n0SMgkidH2ByCqdwfYXX=uBPQfOArWf8A@mail.gmail.com>
+ <Z7d3vVdJ8UWU5oex@gourry-fedora-PF4VCD3F>
+ <4ae838ee-b079-408e-8799-e9530ca50417@redhat.com>
+ <0C5749C4-B3EE-4393-A8EA-AA56B399E9E3@nvidia.com>
+ <Z9BdwFZ-ZRpMSabG@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: SJ0PR03CA0005.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::10) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311150136.46938-1-kamal.dasu@broadcom.com> <aa4284fa-1f68-4c7e-8d58-1c5129adda27@broadcom.com>
-In-Reply-To: <aa4284fa-1f68-4c7e-8d58-1c5129adda27@broadcom.com>
-From: Kamal Dasu <kamal.dasu@broadcom.com>
-Date: Tue, 11 Mar 2025 12:06:19 -0400
-X-Gm-Features: AQ5f1JpSi62VLJlBuC0dak2KFHVpwzvRvnj9P8OVAxmHNa-s7uCtBu4nwXoQ5HI
-Message-ID: <CAKekbevwB9Nd36WNkuh6Xh45puf3dPmfHDKgQBgUEVApbTm2rw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-brcmstb: add cqhci suspend/resume to PM ops
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Al Cooper <alcooperx@gmail.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000042cdf60630134729"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|IA0PR12MB8907:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad892dcd-63e1-4543-98d6-08dd60b6e96d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YktvRmRGV05NWWZhc2YxTjQrWEtORVJtanRwaHZnU1liT3BIWURjaWVLT3F3?=
+ =?utf-8?B?MHZwMG56Y09pMk9wcVUyNTFOMzJnNnhyWnZyMS9mYWpRTlpIczRQZ0NNeitQ?=
+ =?utf-8?B?aXNHbWx5YXcyR3Y4cTZxR1oxbFQ3eDJQemV5VzZPb3BsZDBSQ0JGSTUwZU9k?=
+ =?utf-8?B?c1dGM040dDdGUzNwdFh0T2JlUlh6cGVOaFdlUVJuK3NUYm4yUVUwc3VpZkZz?=
+ =?utf-8?B?bkRzVGJDdS9pR3Y2VFRwaXhzeHBoTHNLTjdyTU9oZkk3TVhMUTJnMWFRbUor?=
+ =?utf-8?B?UlB6WEhoSjVoUmUxTGphdzc4aWRVK0pzMFpwdm52a1FYZ3l3bTVjR2tRNjlZ?=
+ =?utf-8?B?N1VsK2xwNVR2dCtoV21aOSs2QUJQVldZeXVENzRnQU9OOUtDRWZWSXRQeHJ3?=
+ =?utf-8?B?Qmw0ODJiK2cyR05RTDVEeTVSSXhPWnRzdnJZdEVNYTdnZ2lEbDdwbitjTUV4?=
+ =?utf-8?B?eU9OMENBTmgrcERLcTd5cVlhUUdkWHNtMkxVY2J1b1pjUGxuMVg5UEhmTWU1?=
+ =?utf-8?B?cmpPSUUxMjZlQ25CRnY4SXRSeGo0b3pJNitKQkpEaTVzMEdGaUJDZmUyU1hW?=
+ =?utf-8?B?RFkvdjNrdFJrWmpPZlljdUFpV0RKMUxIeTB5RWtCRzJOekNNWm5Cbmo2SUwv?=
+ =?utf-8?B?U2E2aDRwQnBaajNJZGdFS21WTVdHcWJKNlBYNGpZTjN2L29YaVhzc1RjK0Zx?=
+ =?utf-8?B?L2tNWGN2Q3JpU0ltb3ZlSk8yMVpXd1hrbmR3UFZYanA3TG5kdUYrYXM0M3B5?=
+ =?utf-8?B?OUJwcmtyTDZDblpQdFIxdGJ0aDNmQkoyZXRnR29Jd2Q0R0RIOXNDei9zdTlL?=
+ =?utf-8?B?Q0dnNStoVzBwbUcwZU1qek9iaFk1ZDBHSGJqTktnRHpuZGhCT3dReUNnVDhi?=
+ =?utf-8?B?cWlaVWdjdVpKbHliVlpzZ3pjeHpOaTBxWmxsMklKZGhtMHBwdWIwemJqUERk?=
+ =?utf-8?B?UmdLMjFyU2JGMnc0V1J6dDM2NG5ROERoQSs5SlJuU05WTnJGY1dwZ3BQNzlB?=
+ =?utf-8?B?YSszOWw3bVMvVFFZY3pFOXhXWnpFZ1orY2VHMno4MGt1aXRjbEk1cHE3bnpr?=
+ =?utf-8?B?WWhMbmFzUzNobXFIZ090Yk9tcFNqYi9XTStrbEt2U0RobWpCZnhHcHczczFj?=
+ =?utf-8?B?b0xRZ280RHlWOEdSaFNVOXk3UzFUcFJjbTZuQ1d2SkNVTXZlejByVlg3UkVs?=
+ =?utf-8?B?ZUt3L1o5WU1KQkRpenZxb2wwSUpYQkxNdWhST3d6Nm9YdW1pSndZc1JtR0NS?=
+ =?utf-8?B?K3drZ0hPSC8xRndMM1FHdFNoSjU5Snk3UFdHMVNQWVlUL214OUxBK253TDQy?=
+ =?utf-8?B?QkpwUGhKZFdEdmgxS3NXVmU4M3NKNGpmZlU1TGRwQisreVlIcUw4RU5vdk1I?=
+ =?utf-8?B?RFBFczJuNkVSbEFkZjdpK1dEVWpZOHZKcEIzUzROV3lXSTBCRWR3OEUrYyth?=
+ =?utf-8?B?QVhEWkZ6R2hqblRBcklZelpidnhMMlZtL1plZVNqZXlCcFlhTnU3Y3U4TTlx?=
+ =?utf-8?B?dlJGeCthS1VlR2RWSWFhRW9ZcHMwd3BGU3RlVWRlME41Ti9Qc0NOVVNjU2NN?=
+ =?utf-8?B?Yk9VZFY4ME5rNjJ0dldwMGw0Vk9wemdvOFg2a1pqK2VyeWVQZlVIdWlsYnUy?=
+ =?utf-8?B?UUtEcTYrQ0ZWVmE0eXNKNnhRTitqTkZzMHlIVHgyQTBFTzdUT1Zhd2VnSzFj?=
+ =?utf-8?B?cDgyLy8rajF2Umo0NlJOREsrZWpGaFJXY1B2MGg2L1l2NkV0R054Z2UrMk1V?=
+ =?utf-8?B?eWFvQXMyUS9OS0VVWHNqZEhQWFJqdWtLVnU3TkZKRzBmZ3Rhbnd4RlExNkpy?=
+ =?utf-8?B?TXcxUVhEUUdqeFVYYnZZSDVZNFkxVXdDSmxIYUJveFdwNlNLRHo1cFk3QjI5?=
+ =?utf-8?Q?xY3TORHJWAWrX?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VVFxVDlMMzZPVTdpaFdBT0JDUm0xamtoY3pYV21CNFRFL3JZclJOMDByZUNq?=
+ =?utf-8?B?anRNb00xOUNjOURSRWlIOGFvMDhTbGI5cWY5TXdhMENyQlJRNm5JaW1RR0hu?=
+ =?utf-8?B?Y2dHQXlraEJKdHRvd1J3MTdTNC9UVHlLT0xITGRxNEpRK0I0Sm5WSExsV3lF?=
+ =?utf-8?B?Y2VsckdPbHhqY0hZWEI3WDNvSEZubUVTWlhwbS81Y1RsdnM1ZFE4bExMZWgr?=
+ =?utf-8?B?SUpHTWJhVmZlaml4SFkyZ3V2YzQ2VXBvMXl1ZVVVUXZXRU5lU1FwaEJoclZ3?=
+ =?utf-8?B?anNvYU8yYXRoY1NpR0JaWVF4SG5qN3dQSUl0VTgyUzhZd3NEdEc0MFRCY2hL?=
+ =?utf-8?B?cWZDcitqaExOVlg3SXc4WE10QjZDNzJXMFRSV0tpc040bkJ1S1lxdHNRMXV1?=
+ =?utf-8?B?Zk9MdDRxczRrUGNHSVREWmE4WHlob2JCSWJJWUY2QUdkaldoRGJWZHN4Yjkr?=
+ =?utf-8?B?VktrZW1VdmhyNzBpYWRjVllKSXZhM0ZYV1JnWmExQUdvTFJ0c2FOTXduSnl6?=
+ =?utf-8?B?M2lXb1N4dkd5TzE5RDEzdmh3dW40aVBHbUpPUDczZGpKREtPa0hzZHlLODdR?=
+ =?utf-8?B?cGd0ejR6bHNUVEgxYStQNTd2dVlESVU2RWNCeHUxUGtzVkxuTDFUaDQ0Q0RC?=
+ =?utf-8?B?aE5lSFo4dnc0T0hwbnczUXNmMzZjMFMvRnF6U2V1ckdPUC9DNVh0STJVNG1M?=
+ =?utf-8?B?ak5RdGRYeUlrUEZtVzllUTh0b1huLzhMSWJvS0V6cDFkeWwzN3NFcGVpaTRt?=
+ =?utf-8?B?WUxqcTFBaENQZkkwRk04cS95SmtLcnBML2RCVUhTVHBxa1JudEQyNE5tYWRh?=
+ =?utf-8?B?U3VaTjlBNVdhZWx3RmxFUGhNZ3lPK2R6a3YxeE1ROGVJMFZIZ3g1U0NiV0VC?=
+ =?utf-8?B?YmZGRFIxSXNXc2g1Z1NlZUQyQXNXUHdvM3BxTmZpN3hGWHZ1aHNSMjJkbjJT?=
+ =?utf-8?B?Vm1DbHZLSjZhT1R0Tkp1SS9yYU5UR3JVM0p2V2h1UXVkT1RzeDJVK2FqU1c2?=
+ =?utf-8?B?a0J0TVRzMVdlZ1I3bFd1Ymw5bVh1ZHl2RGIxWGxHRzZNSFpRYlN4bHVKRzVG?=
+ =?utf-8?B?TjFaSEpmWVNlME81SHZPc3NUd0t6Si9UUE1nYlozamJMOFRab2plTFc0TENn?=
+ =?utf-8?B?eWdmVktnc3dqbElTTWxPVlpncTJncVJ0K0NKMTZGK01VeUkzZ3VMdmxqSVZj?=
+ =?utf-8?B?UXhrdFVSOWZaaDZIL2ZPeS9CVUgvcGh3UzNNaVI2OHN0MUJjYzZCbFZUMm1G?=
+ =?utf-8?B?cjdUY2QxaitsSlNBZE1aU1M3VjhOQ2V0QXpySjhuaXJaUlRad3pmdTdQdGVR?=
+ =?utf-8?B?Z09nTnArMU05Y3UyOC9ZRCtYSDdEKzlETjFCS0duYi81d3kzT0tpZWlyeU56?=
+ =?utf-8?B?ZTBwUzRJTUpiTU9nL2VZMFIwVGcrWWROdmsyY3ViajZiUUxiUWVhM2NHUzY5?=
+ =?utf-8?B?dE1ZWUlldWFzSnFobWdUdjBxdUhGQ0swc0lrK3QvSy8wZGVsK3BDRHUvR0U0?=
+ =?utf-8?B?dzJvS1JiVHNBaVFLMDFmOU5xMTJ6YnYyQXd4aWlBeFE3eDRLZ3NuV1lmRXIx?=
+ =?utf-8?B?T25sMzZycno5dGhxc1NtVGNpZkJkL0c2NC9GSEFMZVpISzhReEhNL0kzWDEw?=
+ =?utf-8?B?ZnFuZU1Fay9QbzcxSDJOd2hwck9WWmR3WlV3YWxiTmJjaGtYZkV0d2RyK3FT?=
+ =?utf-8?B?ZGNOWkM3R05KQ3RIZ2tOMWhpcTFzSG5lOUs0UW53ckJjYXlKc2xnOFRreFZC?=
+ =?utf-8?B?UWwyQU9aZ1JQQ0JCNExTb25iQ2NEYnZkNUdKblhWYUsrZkFBWlFES1hxVzBo?=
+ =?utf-8?B?REFkWVRTWlVFemI4R3dxYXBoZVRCSGtuZjZ6MDQrN0ZxdWtwYjNtOHlCSFZ5?=
+ =?utf-8?B?SloyZWRUSHFXL3E0emFZMTZWZ29SU1A1OXVTMVRGM0RVNUIvL2FFUGFCRUIx?=
+ =?utf-8?B?cW9aeTY4QnVDT2hSeTkxMVloSkgxZTl1ZG1RYWxtZmQ1Ync0cmJRaG9lbnZD?=
+ =?utf-8?B?UVMvTEFuSE5VQjlTRzIxL3BUMnB0d1ZUaW5LbW56cW9XZDhYdi9KTXRSbUxH?=
+ =?utf-8?B?NldxMDUxQVZRNjZHWlRyYjBtU1FrNnVzVEwzdlJkM2tzcXYreTVMTWNCa3RZ?=
+ =?utf-8?Q?NpK8=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad892dcd-63e1-4543-98d6-08dd60b6e96d
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 16:08:07.4161
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ai1RcQ9WA88giwZ/U6BE7tSRI8zubnJOYgqYiYxtg4B8gh5A4hJxOnsBdJgYiZKH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8907
 
---00000000000042cdf60630134729
-Content-Type: multipart/alternative; boundary="0000000000002fc6fc06301347ad"
+On 11 Mar 2025, at 11:58, Gregory Price wrote:
 
---0000000000002fc6fc06301347ad
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 11, 2025 at 11:46=E2=80=AFAM Florian Fainelli <
-florian.fainelli@broadcom.com> wrote:
-
-> On 3/11/25 08:01, Kamal Dasu wrote:
-> > cqhci timeouts observed on brcmstb platforms during suspend:
-> >    ...
-> >    [  164.832853] mmc0: cqhci: timeout for tag 18
-> >    ...
-> >
-> > Adding cqhci_suspend()/resume() calls to disable cqe
-> > in sdhci_brcmstb_suspend()/resume() respectively to fix
-> > CQE timeouts seen on PM suspend.
-> >
-> > Fixes: d46ba2d17f90 ("mmc: sdhci-brcmstb: Add support for Command
-> Queuing (CQE)")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Kamal Dasu <kamal.dasu@broadcom.com>
-> > ---
-> >   drivers/mmc/host/sdhci-brcmstb.c | 9 +++++++++
-> >   1 file changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-brcmstb.c
-> b/drivers/mmc/host/sdhci-brcmstb.c
-> > index 0ef4d578ade8..bf55a9185eb6 100644
-> > --- a/drivers/mmc/host/sdhci-brcmstb.c
-> > +++ b/drivers/mmc/host/sdhci-brcmstb.c
-> > @@ -505,6 +505,12 @@ static int sdhci_brcmstb_suspend(struct device *de=
-v)
-> >       struct sdhci_brcmstb_priv *priv =3D sdhci_pltfm_priv(pltfm_host);
+> On Tue, Mar 11, 2025 at 10:53:41AM -0400, Zi Yan wrote:
+>> On 20 Feb 2025, at 14:26, David Hildenbrand wrote:
+>>
+>>> Yes, the only way to get some 1 GiB pages is by using larger memory blo=
+cks (e.g., 2 GiB on x86-64), which comes with a different set of issues (es=
+p. hotplug granularity).
+>>
+>> An alternative I can think of is to mark a hot-plugged memory block dedi=
+cated
+>> to memmap and use it for new memory block=E2=80=99s memmap provision. In=
+ this way,
+>> a 256MB memory block can be used for 256MB*(256MB/4MB)=3D16GB hot plugge=
+d memory.
+>> Yes, it will waste memory before 256MB+16GB is online, but that might be
+>> easier to handle than variable sized memory block, I suppose?
+>>
+>>>
 >
-> Missing an int ret declaration here, otherwise that won't build.
->
-> oops will fix it and send v2.
+> The devil is in the details here.  We'd need a way for the driver to
+> tell hotplug "use this for memmap for some yet-to-be-mapped region" -
+> rather than having that allocate naturally.  Either this, or a special
+> ZONE specifically for memmap allocations.
+
+Or a new option for memmap_on_memory like =E2=80=9Cuse_whole_block=E2=80=9D=
+, then hotplug
+code checks altmap is NULL or not when a memory block is plugged.
+If altmap is NULL, the hot plugged memory block is used as memmap,
+otherwise, the memory block is plugged as normal memory. The code also
+needs to maintain which part of the altmap is used to tell whether
+the memmap=E2=80=99d memory block can be offline or not.
 
 
-> >
-> >       clk_disable_unprepare(priv->base_clk);
-> > +     if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> > +             ret =3D cqhci_suspend(host->mmc);
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
-> > +
-> >       return sdhci_pltfm_suspend(dev);
-> >   }
-> >
-> > @@ -529,6 +535,9 @@ static int sdhci_brcmstb_resume(struct device *dev)
-> >                       ret =3D clk_set_rate(priv->base_clk,
-> priv->base_freq_hz);
-> >       }
-> >
-> > +     if (host->mmc->caps2 & MMC_CAP2_CQE)
-> > +             ret =3D cqhci_resume(host->mmc);
-> > +
-> >       return ret;
-> >   }
-> >   #endif
->
->
-> --
-> Florian
->
-
---0000000000002fc6fc06301347ad
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=
-=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Mar 11, 2025=
- at 11:46=E2=80=AFAM Florian Fainelli &lt;<a href=3D"mailto:florian.fainell=
-i@broadcom.com" target=3D"_blank">florian.fainelli@broadcom.com</a>&gt; wro=
-te:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px =
-0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On 3/11/25 0=
-8:01, Kamal Dasu wrote:<br>
-&gt; cqhci timeouts observed on brcmstb platforms during suspend:<br>
-&gt;=C2=A0 =C2=A0 ...<br>
-&gt;=C2=A0 =C2=A0 [=C2=A0 164.832853] mmc0: cqhci: timeout for tag 18<br>
-&gt;=C2=A0 =C2=A0 ...<br>
-&gt; <br>
-&gt; Adding cqhci_suspend()/resume() calls to disable cqe<br>
-&gt; in sdhci_brcmstb_suspend()/resume() respectively to fix<br>
-&gt; CQE timeouts seen on PM suspend.<br>
-&gt; <br>
-&gt; Fixes: d46ba2d17f90 (&quot;mmc: sdhci-brcmstb: Add support for Command=
- Queuing (CQE)&quot;)<br>
-&gt; Cc: <a href=3D"mailto:stable@vger.kernel.org" target=3D"_blank">stable=
-@vger.kernel.org</a><br>
-&gt; Signed-off-by: Kamal Dasu &lt;<a href=3D"mailto:kamal.dasu@broadcom.co=
-m" target=3D"_blank">kamal.dasu@broadcom.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 =C2=A0drivers/mmc/host/sdhci-brcmstb.c | 9 +++++++++<br>
-&gt;=C2=A0 =C2=A01 file changed, 9 insertions(+)<br>
-&gt; <br>
-&gt; diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci=
--brcmstb.c<br>
-&gt; index 0ef4d578ade8..bf55a9185eb6 100644<br>
-&gt; --- a/drivers/mmc/host/sdhci-brcmstb.c<br>
-&gt; +++ b/drivers/mmc/host/sdhci-brcmstb.c<br>
-&gt; @@ -505,6 +505,12 @@ static int sdhci_brcmstb_suspend(struct device *d=
-ev)<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0struct sdhci_brcmstb_priv *priv =3D sdhci_pl=
-tfm_priv(pltfm_host);<br>
-<br>
-Missing an int ret declaration here, otherwise that won&#39;t build.<br>
-<br></blockquote><div>oops will fix it and send v2.</div><div>=C2=A0</div><=
-blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
-eft:1px solid rgb(204,204,204);padding-left:1ex">
-&gt;=C2=A0 =C2=A0<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0clk_disable_unprepare(priv-&gt;base_clk);<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0if (host-&gt;mmc-&gt;caps2 &amp; MMC_CAP2_CQE) {<=
-br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D cqhci_suspend=
-(host-&gt;mmc);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0return ret;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return sdhci_pltfm_suspend(dev);<br>
-&gt;=C2=A0 =C2=A0}<br>
-&gt;=C2=A0 =C2=A0<br>
-&gt; @@ -529,6 +535,9 @@ static int sdhci_brcmstb_resume(struct device *dev=
-)<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0ret =3D clk_set_rate(priv-&gt;base_clk, priv-&gt;base_freq_hz)=
-;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-&gt;=C2=A0 =C2=A0<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (host-&gt;mmc-&gt;caps2 &amp; MMC_CAP2_CQE)<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D cqhci_resume(=
-host-&gt;mmc);<br>
-&gt; +<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
-&gt;=C2=A0 =C2=A0}<br>
-&gt;=C2=A0 =C2=A0#endif<br>
-<br>
-<br>
--- <br>
-Florian<br>
-</blockquote></div></div>
-</div>
-
---0000000000002fc6fc06301347ad--
-
---00000000000042cdf60630134729
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-DxuNuBlySpn/GYqPcDcRZd8EENWqnZrjtjHMk0j7ZfrPGXq8sQkbG3OX+DOwSaefPRq1pLGWBZaZ
-YuUo5O7CNHo7h7Hc9GgjiW+6X9BjKAzSaDy8jwIDAQABo4IB2DCCAdQwDgYDVR0PAQH/BAQDAgWg
-MIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
-LmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUFBzABhjVo
-dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMDBNBgNV
-HSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2ln
-bi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRwOi8vY3Js
-Lmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAiBgNVHREEGzAZ
-gRdrYW1hbC5kYXN1QGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAW
-gBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUcRYSWvAVyA3hgTrQ2c4AFquBsG0wDQYJ
-KoZIhvcNAQELBQADggEBAIKB2IOweF2sIYGBZTDm+Hwmhga+sjekM167Sk/KwxxvQFwZYP6i0SnR
-7aR59vbfVQVaAiZH/a+35EYxP/sXaIM4+E3bFykBuXwcGEnYyEn6MceiOCkjkWQq1Co2JyOdNvkP
-nAxyPoWlsJtr+N/MF1EYKGpYMdPM7S2T/gujjO9N56BCGu9yJElszWcXHmBl5IsaQqMS36vhsV0b
-NxffjNkeAdgfN/SS9S9Rj4WXD7pF1M0Xq8gPLCLyXrx1i2KkYOYJsj0PWlC6VRg6E1xXkYDte0VL
-fAAG4QsETU27E1HBNQyp5zF1PoPCPvq3EnWQnbLgYk+Jz2iwIUwiqwr/bDgxggJgMIICXAIBATBr
-MFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9i
-YWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgw89WX2Pp7ue922QVkwDQYJYIZI
-AWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIFI8CS7ruiokp1AAnPPloQL5mWMLRhBc5BZqZzDA
-EMlUMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMxMTE2MDY1
-OFowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQB
-AjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIB
-ABglf3sIsmAe5TJQX4ezh8yohJ7UJU/zdGG2edFl0TexHW/cNxDmAqJAjDTSTf0jV4P+BggtWBk3
-0Zy3MKcKaHYkynhnHIkUb57ruuGZt1HDnroORnqeqMNFBEhX7EaID29iL2XnMEviLk1YyyHykwX0
-vjkQ6OFtO5Vjz8OLuWb05KP0oqqc/4FVJJ3tSl6B/BlaYDk3XefIvjy67KOwfv8Xkgh+x0YRhrvx
-7P3q8qzKes9eK1ownmvvQfR0LxIn8/7Iumc2a97szTpY3GHKPBsasjUc4ZURytGD11CgZPqZTsBm
-MIaeI8fvbOzA7jZRiF/QWyjzQznL/V6RBWSb7rU=
---00000000000042cdf60630134729--
+Best Regards,
+Yan, Zi
