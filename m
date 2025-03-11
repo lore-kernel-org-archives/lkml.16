@@ -1,155 +1,162 @@
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43C525C6F9;
-	Tue, 11 Mar 2025 18:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14A9825C6F9;
+	Tue, 11 Mar 2025 18:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741717189; cv=none; b=YFOIZVf5uGCvSi+Xyteea9oBPxp8G3Az2LOluSKqlJTYqZyUUD/3BjJZKvt9lRNquA9ysl7I+xN/tVPuAyWy29eRm0l2Hots0DbfwudeVfOtSb28qsEm8aP0uXmBE7wlKnfDi+p/1JWLiT7qsqHdOTttMjPC4ZNeUN8lbnfsBSY=
+	t=1741717205; cv=none; b=Pp4In3mDCiOsJVFFpYXFqyr/Vc4hZqBxMwu6lZCL8GtAYJMZpLSgPeNGAKekkD4k71a6ZD/xEPjdZLPLeGj11dlGHmYgX9bB5xISCvEEEo/gqzzLgPA5EgHGIfRkCSe8cWU5N+OT9AEyybWyzKjTES8YegtO0VpqCI69kNC2RKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741717189; c=relaxed/simple;
-	bh=MHVyXDoO64HS3559zU6bnpyhretFKohKi5W0Sl1YvqY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tF4vl40xlsbbc2szLjQVmc/Eqy+dpEjH7J6fBo9PTp1UPo+D/dpD/Q6LTP/89d0t5bVuAYKxoKrEigBYLeMPf0T/3DDPh6qiHeHZSzSzlZJdfhLSUkIAl9d4gu0wuir509qJYphfgY/cBv0yhEThtWHT87RvQQB+vW9WEe6pqX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
-Received: from [2a02:578:851f:1502:391e:c5f5:10e2:b9a3] (helo=deadeye)
-	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1ts3Wp-008fZK-2f;
-	Tue, 11 Mar 2025 17:36:30 +0000
-Received: from ben by deadeye with local (Exim 4.98)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1ts3Wn-00000005VjB-3swI;
-	Tue, 11 Mar 2025 18:36:29 +0100
-Message-ID: <c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk>
-Subject: Re: [PATCH] kbuild, rust: use -fremap-path-prefix to make paths
- relative
-From: Ben Hutchings <ben@decadent.org.uk>
-To: Masahiro Yamada <masahiroy@kernel.org>, Miguel Ojeda
-	 <miguel.ojeda.sandonis@gmail.com>
-Cc: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel
- Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
- <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron	 <bjorn3_gh@protonmail.com>, Benno
- Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich	 <dakr@kernel.org>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	rust-for-linux@vger.kernel.org, Urgau
- <urgau@numericable.fr>
-Date: Tue, 11 Mar 2025 18:36:25 +0100
-In-Reply-To: <CAK7LNATKK4bZCY7izDdEzNcUu60wjH57TK8ESM50QhUG2a4bRw@mail.gmail.com>
-References: <20250210-rust-path-remap-v1-1-021c48188df1@weissschuh.net>
-	 <CANiq72mcpVL1YXyDFi-PrbQ2Uh0WUA_VNqLZaOeqQnpY5HnX8Q@mail.gmail.com>
-	 <CAK7LNATKK4bZCY7izDdEzNcUu60wjH57TK8ESM50QhUG2a4bRw@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-SHz5T4wd+MHzPWqVsRS0"
-User-Agent: Evolution 3.55.3-1 
+	s=arc-20240116; t=1741717205; c=relaxed/simple;
+	bh=lrA7X7dr/o7Vl9yRSzzERDbxoLlxULn4YSC2YPrCtWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nDeDYYVzEADmVnn++oUOeVGiIOG7JpAP+BFvvpA2DpBdutLAZjaDhCmxL8/5woBnqFzHSpysp8b2QrvXcqfrzBWFtMHWz/MKUCTLp6clb/VZ8S+0/qAhhwLG/PccnDML5rPg3ePkRE+JXnt7E3yPXfqGtH+hbpcbvhJTtQYgVk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZC1Xf6JvGz9sgH;
+	Tue, 11 Mar 2025 18:51:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id fvDIzXamRURc; Tue, 11 Mar 2025 18:51:30 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZC1Xf5CWCz9sVm;
+	Tue, 11 Mar 2025 18:51:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9A2E28B768;
+	Tue, 11 Mar 2025 18:51:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 175KqGxnGV_Y; Tue, 11 Mar 2025 18:51:30 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3AF2D8B763;
+	Tue, 11 Mar 2025 18:51:29 +0100 (CET)
+Message-ID: <61e746ca-456f-4824-9678-85399b450bce@csgroup.eu>
+Date: Tue, 11 Mar 2025 18:51:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a02:578:851f:1502:391e:c5f5:10e2:b9a3
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] powerpc, bpf: Inline bpf_get_smp_processor_id()
+To: Saket Kumar Bhaskar <skb99@linux.ibm.com>, bpf@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: ast@kernel.org, hbathini@linux.ibm.com, andrii@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, eddyz87@gmail.com,
+ song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ naveen@kernel.org, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com
+References: <20250311160955.825647-1-skb99@linux.ibm.com>
+ <20250311160955.825647-3-skb99@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250311160955.825647-3-skb99@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---=-SHz5T4wd+MHzPWqVsRS0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-03-11 at 20:03 +0900, Masahiro Yamada wrote:
-> On Mon, Feb 17, 2025 at 10:23=E2=80=AFPM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >=20
-> > On Mon, Feb 10, 2025 at 6:11=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@we=
-issschuh.net> wrote:
-> > >=20
-> > > Remap source path prefixes in all output, including compiler
-> > > diagnostics, debug information, macro expansions, etc.
-> >=20
-> > Hmm... We don't do all the cases in the C side -- the docs ask to use
-> > `KCFLAGS` when one wants to remove them in the debug info:
-> >=20
-> >     https://docs.kernel.org/kbuild/reproducible-builds.html#absolute-fi=
-lenames
-> >=20
-> > I am not sure if there is a reason not to cover all cases in C (Cc'ing =
-Ben).
+Le 11/03/2025 à 17:09, Saket Kumar Bhaskar a écrit :
+> [Vous ne recevez pas souvent de courriers de skb99@linux.ibm.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> Inline the calls to bpf_get_smp_processor_id() in the powerpc bpf jit.
+> 
+> powerpc saves the Logical processor number (paca_index) in paca.
+> 
+> Here is how the powerpc JITed assembly changes after this commit:
+> 
+> Before:
+> 
+> cpu = bpf_get_smp_processor_id();
+> 
+> addis 12, 2, -517
+> addi 12, 12, -29456
+> mtctr 12
+> bctrl
+> mr      8, 3
+> 
+> After:
+> 
+> cpu = bpf_get_smp_processor_id();
+> 
+> lhz 8, 8(13)
+> 
+> To evaluate the performance improvements introduced by this change,
+> the benchmark described in [1] was employed.
+> 
+> +---------------+-------------------+-------------------+--------------+
+> |      Name     |      Before       |        After      |   % change   |
+> |---------------+-------------------+-------------------+--------------|
+> | glob-arr-inc  | 41.580 ± 0.034M/s | 54.137 ± 0.019M/s |   + 30.20%   |
+> | arr-inc       | 39.592 ± 0.055M/s | 54.000 ± 0.026M/s |   + 36.39%   |
+> | hash-inc      | 25.873 ± 0.012M/s | 26.334 ± 0.058M/s |   + 1.78%    |
+> +---------------+-------------------+-------------------+--------------+
+> 
 
-I think we should use the prefix-map options by default, for both C and
-Rust code.
+Nice improvement.
 
-The default of using absolute filenames only works when the build and
-debug systems have their sources in the same absolute directory.  For
-some developers this will always be true because they're the same
-system.  In the general case, and particularly in production, it's
-unlikely to be true.  See below.
+I see that bpf_get_current_task() could be inlined as well, on PPC32 it 
+is in r2, on PPC64 it is in paca.
 
-> GCC manual mentions the below about the -fdebug-prefix-map=3Dold=3Dnew
->=20
->=20
-> "It can also be used to change an absolute path to
-> a relative path by using . for new.
-> This can give more reproducible builds, which are location
-> independent, but may require an extra command to tell GDB
-> where to find the source files."
->=20
->=20
-> I guess "the extra command" might be a bit annoying.
+> [1] https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fanakryiko%2Flinux%2Fcommit%2F8dec900975ef&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C1d1f40ce41344cf1ecf508dd60b73ae0%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638773062267813839%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=T%2BG206FHtW7hhFT1%2BXxRwN7pc%2BRzu8SiMlZ5njIlhB8%3D&reserved=0
+> 
+> Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+> ---
+>   arch/powerpc/net/bpf_jit_comp.c   | 10 ++++++++++
+>   arch/powerpc/net/bpf_jit_comp64.c |  5 +++++
+>   2 files changed, 15 insertions(+)
+> 
+> diff --git a/arch/powerpc/net/bpf_jit_comp.c b/arch/powerpc/net/bpf_jit_comp.c
+> index 3d4bd45a9a22..4b79b2d95469 100644
+> --- a/arch/powerpc/net/bpf_jit_comp.c
+> +++ b/arch/powerpc/net/bpf_jit_comp.c
+> @@ -445,6 +445,16 @@ bool bpf_jit_supports_percpu_insn(void)
+>          return true;
+>   }
+> 
+> +bool bpf_jit_inlines_helper_call(s32 imm)
+> +{
+> +       switch (imm) {
+> +       case BPF_FUNC_get_smp_processor_id:
+> +               return true;
+> +       default:
+> +               return false;
+> +       }
+> +}
 
-The command in question is "dir <source-root-directory>".  It's not
-particulary annoying.  It also isn't needed when invoking gdb with the
-kernel source root as its current directory.
+What about PPC32 ?
 
-Running that command adds the directory to gdb's source search path,
-causing it to look for sources referenced in debug info by:
 
-1. Appending the full filename to that directory
-2. Appending the base filename to that directory
+> +
+>   void *arch_alloc_bpf_trampoline(unsigned int size)
+>   {
+>          return bpf_prog_pack_alloc(size, bpf_jit_fill_ill_insns);
+> diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
+> index 06f06770ceea..a8de12c026da 100644
+> --- a/arch/powerpc/net/bpf_jit_comp64.c
+> +++ b/arch/powerpc/net/bpf_jit_comp64.c
+> @@ -1087,6 +1087,11 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+>                  case BPF_JMP | BPF_CALL:
+>                          ctx->seen |= SEEN_FUNC;
+> 
+> +                       if (insn[i].src_reg == 0 && imm == BPF_FUNC_get_smp_processor_id) {
 
-(This is slightly simplified from the docuemntation at:
-<https://sourceware.org/gdb/current/onlinedocs/gdb.html/Source-Path.html#So=
-urce-Path>.)
+Please use BPF_REG_0 instead of just 0.
 
-When the debug info has relative filenames, case 1 should always work.
+> +                               EMIT(PPC_RAW_LHZ(bpf_to_ppc(BPF_REG_0), _R13, offsetof(struct paca_struct, paca_index)));
 
-When the debug info has absolute filenames,=C2=A0case 2 can work if all
-sources are in the same directory.  But the kernel has source files
-spread across many directories, so there's no general way to make gdb
-find them all.
+Can just use 'src_reg' instead of 'bpf_to_ppc(BPF_REG_0)'
 
-Ben.
+> +                               break;
+> +                       }
+> +
+>                          ret = bpf_jit_get_func_addr(fp, &insn[i], extra_pass,
+>                                                      &func_addr, &func_addr_fixed);
+>                          if (ret < 0)
+> --
+> 2.43.5
+> 
 
---=20
-Ben Hutchings
-A free society is one where it is safe to be unpopular.
-                                                      - Adlai Stevenson
-
---=-SHz5T4wd+MHzPWqVsRS0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmfQdJkACgkQ57/I7JWG
-EQmoUA//bvfMyVxAIIZMWScGpaRq/gpNTlamMQSFtw1CYif6BFsPte+S7LrofDBa
-CsyVy+IMGqUnusl/sSL7EWHBq8egHTxLX3mWytZgiGl9f47rkL4zeVIqOFra1fPi
-bC0xuk2qjRH/TNS3+WIu26v2w8PMM+OWRnxtUiICCbiL/6w2tNjtseXfvpwAbXid
-MmxmELMAC1IwFJTNHiuN4dhGFdBdcWJLh0RrRV81PKXrw/8fpR0aJPmZ4NqhUVxP
-jyRPqJ9g8bMWCKlBYAjVZeWw6Tv280YXppRs4L8t9e+K4p+D0EuIy9PzSLea3kwu
-foYm5R/mPH9OXYWGVvSN1ag5slsWEGQCssi21Yary9/JmQtcKYMbFDPBJ5Euf3bM
-UqOWmsAd3/Dz3Unm4g+EDxY5sz25lhpxCj0m929MHrIJgqj/58AzCc9HrZh0P6G2
-e9G5Kd/0NHpWwOLqRsEn7f18YPfMoxWkjZn3MCQwPQAGGItLlwXFbvro29oX7QPq
-4N6G7jZA9yTKR+1nfLyGS1JAoXJdgPyAPx8UkK+hK60SGatHJkjhznaU4rTAdyi1
-nsLmqnoqe1FolwU6VeSrbU4/fNUxwuYHZ3geLUOiwCNLjbPdnOl5o8Plky4Jxm7n
-7nNEsT72Hvgg6UBmEJHE/jH4bEy4mUHxlKWNP7RjSQ/VMoAzdkU=
-=JjRR
------END PGP SIGNATURE-----
-
---=-SHz5T4wd+MHzPWqVsRS0--
