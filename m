@@ -1,112 +1,95 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ksmg02.maxima.ru (ksmg02.maxima.ru [81.200.124.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5351917C9F1;
-	Tue, 11 Mar 2025 14:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A488E156C62;
+	Tue, 11 Mar 2025 14:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741703018; cv=none; b=J2UUdfXCCTtMDsB502KF8xIpOPKrFxSxJDMvgRNmTKNP1+P+tmcXOt3lOPZFNAxUtYZCoKZDoKJEh++gWQWNWEYzymmyCxedjTv1ByRV5GaQRztlX1azGW/0FwK7B6F4YmNCevAiy7HPuVZubfinJj4NMxMVH8UP3WNHB/Ejzqo=
+	t=1741703147; cv=none; b=cSW1U4JRq0rFOAKYfgqhGT5iCmtbzsioyLDSFQQFW1Njh8MMgovUY6K4L4/ovWE1QN1i3q2lbaNtsjEFpn0jvEWqxR0uOepQeyxEk6W/SEHKynzX27mxOsk/uUxgkovXMEtGULKtLeYVdEOWoczKSj87fMLiXg44mF4AVS5YVdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741703018; c=relaxed/simple;
-	bh=bVsNey6nqpLgc9wuzfwetyTPGy3g4G0YH24pC9RLxqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjYpMnGXTsXt3bz0XGw7piYV6RFZBba/BLmD9/YhFopJbhZVj2ygqnLZxsP0mCil7jVyL/HEja7S7A/APb9SKj5/x7DozJ4IuJzYkQm189V5LOKNlHyZqAH6JtUgtVeM6wNG7nyE+OmK6Xs/w4p09bZsNBeSudsBFvKX1jLbOZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=InI0GoQz; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741703147; c=relaxed/simple;
+	bh=05bZVaLA9/Kh87yiopcsB70RUi/bZ2X4rpmzaPDGjRU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ChEReVoZLWyIsvqSWSqJEZfqYw1s/rvjwT0Q+cSosAtttNQz6nZUZHp8SdT9pv0BZC3INJOvPMhjtegjNUcVy1lk5HtcMH2MbwCNz8IHgO0C+FSAKqH4/8BIbXfR2w5jQILZ8VEIDRdXIPjO7W8gQzABlrIw210yPnAHUU6f3GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=e1EdwjGs; arc=none smtp.client-ip=81.200.124.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InI0GoQz"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-225a28a511eso7144475ad.1;
-        Tue, 11 Mar 2025 07:23:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741703016; x=1742307816; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bVsNey6nqpLgc9wuzfwetyTPGy3g4G0YH24pC9RLxqM=;
-        b=InI0GoQzsNjF6suEIDz9jLS+cBs6zHcmm9E5uAzcHucpUIEPT/cgBMAt9imUlTMvrr
-         ctvWClFb4XMkEoJxSCjnjtyIMkKoG8Z0ZkeNmsIhZ/Ykj+/xyEnNAbgNn+/G6rSapXQo
-         qrWfkeV+Z53io1xB2sXFXuM68Jqpgdl1Mkzxl0reZXtNHegyyFt4pOxRszmeuz0jsvit
-         TRCOj+pge+gA/wSo/9mBIpUJIuUrKe/Rx8vefK7TI3auVthkcsdsiFdrrEskbT2fhhvp
-         usxvTmNHzeIUgze39udWtDuWHAMopsZrWVwXbbs8kgJ1AGlkaflOQE++Ujel0yKeEhh8
-         jGiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741703016; x=1742307816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bVsNey6nqpLgc9wuzfwetyTPGy3g4G0YH24pC9RLxqM=;
-        b=VJ+DIdxCrgd5YVzJI7VssWAvF+gTBTCCCvmkxb0lag9pRsXshN/1f+zU4vnd7T8DdA
-         acvpw4slh+mvYPgCYadt9kGZLdDwWHl5i6NQAetdV94DYH/F5uRxUOFymjQOQp3uET2W
-         tQWS1Brqdr6XEheu81eN5fuaUkcNzvOR/ML+AEQ7+9mho3Zv6Tx3N7b3BeA67T8kri4P
-         7tew5wsj1d8xxV5SrCFoYWhegRmeqyoPZgWq7FklFqDzJ4K1J2EzoYjDsaH69/9NmOZM
-         CWlvwcJmZIKoUI2EL1ygjfzvVehLoo9sOBbd8vNDtx/AeJuO14aBaYAg6UMoFY7h4tc+
-         vReQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULR4L8PdrtywudHR4hdQFc2nAer07zYp8YwaXaActwS92+zOu7dQmV+CFzwckfRMl51y88CFjuDYcnmEnw@vger.kernel.org, AJvYcCV98p9f05b5yEP0OhsGl4fvG558y/W+GSrLHkxRcjm97ZyITR/ee8MzKVgREMb34IAMZDSmHoa4870=@vger.kernel.org, AJvYcCWWliUuheWGda6d7PpEUmrHChqls4beYiT24fScqateDOf2CrOEn8YmrlbrAFc3Z2TcB5XEr7Z6KseiwGV9QasWYe20@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOwNynN+c271tfwoGtNIZWXQZ5ab+ovaXAy2Y5+3X1lGShEbcP
-	SZgIeNipMH29cHVdxKkPUW7TRjWwDhIWIRLmPkyhAJkJxuYVaaPp
-X-Gm-Gg: ASbGnctBboH2a1BNi5l6dygs2kDhFiOsvn/kinwp1Dp9zAgFAHACM5tOJ0uOXc5NXoW
-	yGJEt0kFFeU14lLgJz0X1BBiO3LFdsI6YhCcVEvTcf+o5suWxL8j14/ToIOEOELU2hunM6cUwor
-	F4V3g7CzeZxQkEXjOzCmV/03bceph6k/VZjuUB3veprBubagFZX2wARJBNmfjqpla+GHc++OeoU
-	jmIj/kSeenev1zGUvAK+tkC7HT+ru/OUZXUVAHU2XM3EsWn2cerELS7/YS6fmUHnvU1NVISgVXq
-	KIFsfu/HZ3zx8JUAlu+si78cDU+xf95ETMFiydIg3pYw
-X-Google-Smtp-Source: AGHT+IHqrPFh17Cmi1OZseYWRYA77dEJerZdXXiZoErlG8RlygvpGsCvt+XYSvfs8p54D3Zlh1fLkw==
-X-Received: by 2002:a17:902:f686:b0:224:1ec0:8a1d with SMTP id d9443c01a7336-22428ab535bmr240669445ad.30.1741703016149;
-        Tue, 11 Mar 2025 07:23:36 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a91985sm98340635ad.194.2025.03.11.07.23.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 07:23:34 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id CAC7A41F562C; Tue, 11 Mar 2025 21:23:31 +0700 (WIB)
-Date: Tue, 11 Mar 2025 21:23:31 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Purva Yeshi <purvayeshi550@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, corbet@lwn.net
-Cc: mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/3] docs: tracing: Refactor index.rst documentation
-Message-ID: <Z9BHY1UH1Q3fET4P@archie.me>
-References: <20250311124158.22950-1-purvayeshi550@gmail.com>
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="e1EdwjGs"
+Received: from ksmg02.maxima.ru (localhost [127.0.0.1])
+	by ksmg02.maxima.ru (Postfix) with ESMTP id 72DE21E0011;
+	Tue, 11 Mar 2025 17:25:35 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg02.maxima.ru 72DE21E0011
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1741703135; bh=pVr5Bxi/FvTbaIsz7rL3SBie1NbHtO1UVIGxudFCGWg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=e1EdwjGs2bi1w1Xyde5W6L6U9yFZTMft2RCiTCma/+gH+qRR1AtgEqW/SY3FNudPS
+	 5MCO+wiTVpPOdntOgCNjDqQTdAA058oGfpMLZKY16x/wBcp13xjQi+G8k0lzRX4vfK
+	 RgxN4dLw4HJxHTrRbJt7YW9RtQ99HHv3iHtJ4DFut36iLN1MS+ShOpsGrTCLEEenyI
+	 3/+4750tnFdF+Z60/qqgAxE7QlwdrIJEf1dOq7BBbFnCcaVYdnWYt6/rs2WnRRDxtf
+	 KifL/Bm4HaAQ2CtzctmaaYAITYI3NMN8dENYwsTY/wMRIhzqGSMhUDFIiG57dC7JZD
+	 GQFr3EOgZuXSw==
+Received: from ksmg02.maxima.ru (mail.maxima.ru [81.200.124.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg02.maxima.ru (Postfix) with ESMTPS;
+	Tue, 11 Mar 2025 17:25:35 +0300 (MSK)
+Received: from GS-NOTE-190.mt.ru (10.0.246.70) by mmail-p-exch02.mt.ru
+ (81.200.124.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.4; Tue, 11 Mar
+ 2025 17:25:31 +0300
+From: Murad Masimov <m.masimov@mt-integration.ru>
+To: Steve French <sfrench@samba.org>
+CC: Paulo Alcantara <pc@manguebit.com>, Ronnie Sahlberg
+	<ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom
+ Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, Jeff Layton
+	<jlayton@kernel.org>, Suresh Jayaraman <sjayaraman@suse.de>, "Paulo Alcantara
+ (SUSE)" <pc@cjr.nz>, <linux-cifs@vger.kernel.org>,
+	<samba-technical@lists.samba.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, Murad Masimov <m.masimov@mt-integration.ru>
+Subject: [PATCH 0/4] cifs: Fix integer overflow while processing mount options
+Date: Tue, 11 Mar 2025 17:22:02 +0300
+Message-ID: <20250311142206.2045-1-m.masimov@mt-integration.ru>
+X-Mailer: git-send-email 2.46.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IDclmnVtmqF5WZTo"
-Content-Disposition: inline
-In-Reply-To: <20250311124158.22950-1-purvayeshi550@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch02.mt.ru
+ (81.200.124.62)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: m.masimov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, mt-integration.ru:7.1.1;81.200.124.62:7.1.2;ksmg02.maxima.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.62
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191671 [Mar 11 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/11 08:08:00 #27707391
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
+These patches fix similar issues that have different origin commits.
+User-provided mount parameters are intended to have upper limits, but
+are validated after their values are converted from seconds to jiffies,
+which can lead to an integer overflow.
 
---IDclmnVtmqF5WZTo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Murad Masimov (4):
+  cifs: Fix integer overflow while processing acregmax mount option
+  cifs: Fix integer overflow while processing acdirmax mount option
+  cifs: Fix integer overflow while processing actimeo mount option
+  cifs: Fix integer overflow while processing closetimeo mount option
 
-On Tue, Mar 11, 2025 at 06:11:58PM +0530, Purva Yeshi wrote:
-> Refactor Documentation/trace/index.rst to improve clarity, structure,
-> and organization. Reformat sections and add appropriate headings for
-> better readability.
->=20
-> Improve section grouping and refine descriptions for better usability.
+ fs/smb/client/fs_context.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Where are patches [2/3] and [3/3]?
+--
+2.39.2
 
-Confused...
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---IDclmnVtmqF5WZTo
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ9BHXgAKCRD2uYlJVVFO
-o5uoAQCj+toCQB1w4pPX2Y08OQjlVmrltaLUyZYWdezv2/Rz2AD/UnpRB4fxSlqU
-EWbYci2rNEeq10P541gFEii25XTTRAY=
-=QEAM
------END PGP SIGNATURE-----
-
---IDclmnVtmqF5WZTo--
