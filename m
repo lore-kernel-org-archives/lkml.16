@@ -1,338 +1,197 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF9522170A;
-	Tue, 11 Mar 2025 08:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87102222CB
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741682713; cv=none; b=bgk2RNbSp6RPn328h9A8u0cm6lDtyaXHVTSD57x6eDrVlTFFcs61kpIRWfjGhRS9kcGN4DaRXhFLILlPp/QT2jrkQX/Z8HxsKco/R/NkshjKsPtR64oiKUXBobbdjdxX4V96C6SC4LgKe89L1udTxGQjFiPp0zC7BV/exhPUE00=
+	t=1741682831; cv=none; b=TkfdMvOwilg+UOwkVhVYFx0WIDyB2SSEruKEP2Y3SemjP5qf1E+64T0zJ0ExtmgsPIJ/MLT2jLXkX3a+svX801mFB1LjxXwJUZG1llFL17CcqjD4fHgXgTY2e/RrfoPtSibWjxbFqpfj1m12ocUNpNY/vSofd8Lr5L52Iig1z/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741682713; c=relaxed/simple;
-	bh=+3CmN/hQnydkKUnM5uIxjVQDt8oxaE5y4SW4pVBWnTw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FuVkE42fe+vIYIsZ60CwFdPXv2dqOwB8368L49wH61h+WA1BOoy2TMp9BkJRv7w0wb4n1KBCzOdTC+a++C6Ln5uLe9Y5FNJIORukkoPQblsOV+0urImDVdFpnbDP19ltwayV8/3+gY7fTpWO9qZplA4tRF7gBEJ7vFzZDEzQTM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22349bb8605so94706025ad.0;
-        Tue, 11 Mar 2025 01:45:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741682710; x=1742287510;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PuAh2RSgJjAezLxauY4sdNf9iEvDGbpYz+rU1XxvKrQ=;
-        b=QEbS1L3s9L226anVtYFctCqcufuipQ8EN6aUIxSGuF1h3rYism1oTXpGDUDx6iNqUF
-         aU4naQYX1i0/RPGk+mQ1ib3PQTM2Bqkt07ju82rMSqLRd27xTxC2zclKhm6tIIpDCjNS
-         /qBP9JFDfUyR03fvyQfpTMU8iSVzSgiChd0DLBfHaWUL9Uu04Ml7XtQSRGCZBmyMZEKG
-         3AxEkfzvRQYW1DDbmtDBRYrGJEeiUd8MIQk0I5khvEeWo/xdM/82rTLy64SHO4R1RYx0
-         65Cpr1s9+Hh9gNR9s3N7RnYz+Cu/26JomuQ79dTF2J/XW3dnlG2vWytqQ3Y6WSSZ9Ltx
-         EMIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWo/TR4ljZpNtphgRRrq1YDZYWz0IsQxrbf+UX4HkTNS09lH98PCitu8w1+aHJuysrwd4Cx6IehHKcZidc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/dmbeh4BeDPrQSODxIAJPPi2HXcolLa89l4lYQpvOz2sBfbKz
-	x50roC/8sQPXeWdx0xGXMn0mrkqJzIcXE4dGjKNxI941BpFdqKyZzPffSYkdsA==
-X-Gm-Gg: ASbGncskm3hY5I0SzOLsVIsUat7mJEyzXsPguMFARlv+T2NCJj2KnRy3uiYOKB8zIhC
-	yZfY1Pq28DfOC8tF6GYUEsOHNl2PWh1dU2ZB8KrHA+0yd5CxVehlFxGu9o7PNwd+6LZDJXLNaLG
-	ktpfJoumQaacLENyyjPOqerWaW/Z8PAR3wSK7Y44+rZ3u4fZ4+du0Q5FZadK3OGtfyFCMvsPOwQ
-	5BfHQjfDe7w4cKU8jxw9SfZHwSStcqJry94Sj8GEvxdGD0ZXfhIBRZj2UEe+j3B5v+/YhjHRh/A
-	dxuFqJD3qYkMHS4UzV/bNJwUWBdi9kwoOIMNBnWmU0WD
-X-Google-Smtp-Source: AGHT+IEQs6DDe/oWH3AMOWS/T0vwEoYPShu0BVFY2O4Dri6XvVkbj2ncyyh4YUSVv79SHKHc2dGvrQ==
-X-Received: by 2002:a05:6a20:d491:b0:1f3:418d:91b5 with SMTP id adf61e73a8af0-1f544b2272amr28282918637.24.1741682710203;
-        Tue, 11 Mar 2025 01:45:10 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:2844:3d8f:bf3e:12cc])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af52f391035sm2980035a12.77.2025.03.11.01.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 01:45:09 -0700 (PDT)
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-kernel@vger.kernel.org,
-	willemdebruijn.kernel@gmail.com,
-	jasowang@redhat.com,
-	andrew+netdev@lunn.ch,
-	horms@kernel.org,
-	sdf@fomichev.me,
-	jdamato@fastly.com,
-	kory.maincent@bootlin.com,
-	atenart@kernel.org,
-	kuniyu@amazon.com,
-	Kohei Enju <enjuk@amazon.com>
-Subject: [PATCH net-next 1/2] Revert "net: replace dev_addr_sem with netdev instance lock"
-Date: Tue, 11 Mar 2025 01:45:06 -0700
-Message-ID: <20250311084507.3978048-2-sdf@fomichev.me>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250311084507.3978048-1-sdf@fomichev.me>
-References: <20250311084507.3978048-1-sdf@fomichev.me>
+	s=arc-20240116; t=1741682831; c=relaxed/simple;
+	bh=t+qxbdjqT90HBsCbN8OK5I4IJn8eZdvYfgX9yqYhxak=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=iFGWguUek5QS4j6Q5+VaqwSmi9Oddc/UbLdtbxVNb56hwYvZR9dMDYHLoshhRt9YCqQl8hxcdFovh4PmmqB8ohDhTKaKMq/inpvPlw0OYpusgS4eYP5cTX3yPPZZD6t0u5pF45h3QROgA4XmkvuODJcTcldEvx/Xp1uHejOSimc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q37KFYar; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q37KFYar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741682829; x=1773218829;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=t+qxbdjqT90HBsCbN8OK5I4IJn8eZdvYfgX9yqYhxak=;
+  b=Q37KFYarCb5iregFFYmFzCzv+6neIwLU5vG9pHa9h0oJWNx62fGUN4J2
+   YEI2+gqK6INN7SvEwynlP12gPCMhCr8SSeuSrI2pZoY2jx5bwt5lExVwm
+   z5sCU8i7FgXEyOcYIhVq+w0mPoxGkwrzVdU1XpkbgRN//fv9CkLxRtDGe
+   CUEteJvqA80nD9lB9LGshLOeFjyBWQBKDseQQge3FtVdnRxnOyvoI5Cj8
+   P7Bl+MRrkiUMww5wkSvnGwK0Vnav1PT3CPCDTY+Sl6FxOPrWXdXHAW5gB
+   hJUQ0LY2HGwm0M3lUzRSlKgzKvi9GZlJ0cAWI2+X3j8nIIhjx/UcNQQvl
+   w==;
+X-CSE-ConnectionGUID: tvwO+DuhTSqC/O55hamMIw==
+X-CSE-MsgGUID: MftT/bK9QGGYNUi+RQIaWA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="52915724"
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="52915724"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:47:09 -0700
+X-CSE-ConnectionGUID: 8bort+IOT0GtxNyE9nztbw==
+X-CSE-MsgGUID: TGuCczlKRySnmgtFgPixyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="125287912"
+Received: from ipu5-build.bj.intel.com (HELO [10.238.232.136]) ([10.238.232.136])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:47:09 -0700
+Subject: Re: udmabuf vmap failed (Revert "udmabuf: fix vmap_udmabuf error page
+ set" can help)
+To: Huan Yang <link@vivo.com>, vivek.kasireddy@intel.com
+Cc: linux-kernel@vger.kernel.org, christian.koenig@amd.com,
+ dri-devel@lists.freedesktop.org
+References: <9172a601-c360-0d5b-ba1b-33deba430455@linux.intel.com>
+ <d7a54599-350e-4e58-81b6-119ffa2ab03e@vivo.com>
+From: Bingbu Cao <bingbu.cao@linux.intel.com>
+Message-ID: <ab468ce7-c8ac-48eb-a6c0-386ea7aa9a0c@linux.intel.com>
+Date: Tue, 11 Mar 2025 16:42:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <d7a54599-350e-4e58-81b6-119ffa2ab03e@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 
-This reverts commit df43d8bf10316a7c3b1e47e3cc0057a54df4a5b8.
+Huan,
 
-Cc: Kohei Enju <enjuk@amazon.com>
-Fixes: df43d8bf1031 ("net: replace dev_addr_sem with netdev instance lock")
+Thanks for your response.
 
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
----
- drivers/net/tap.c         |  2 +-
- drivers/net/tun.c         |  2 +-
- include/linux/netdevice.h |  6 ++++-
- net/core/dev.c            | 52 +++++++++++++++++++--------------------
- net/core/dev.h            |  3 ++-
- net/core/dev_api.c        | 17 +++++++++++--
- net/core/dev_ioctl.c      |  2 +-
- net/core/net-sysfs.c      |  7 ++++--
- net/core/rtnetlink.c      |  6 +----
- 9 files changed, 56 insertions(+), 41 deletions(-)
+On 3/11/25 3:12 PM, Huan Yang wrote:
+> 
+> 在 2025/3/11 14:40, Bingbu Cao 写道:
+>> [You don't often get email from bingbu.cao@linux.intel.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+>>
+>> Huan Yang and Vivek,
+>>
+>> I am trying to use udmabuf for my test, and I cannot vmap the udmabuf
+>> buffers now. vmap_pfn_apply() will report a warning to complain that
+>> the pfns are invalid.
+>> I dump the pfn numbers as below:
+>> [ 3365.399641] pg[0] pfn 1148695
+>> [ 3365.399642] pg[1] pfn 1145057
+>> [ 3365.399642] pg[2] pfn 1134070
+>> [ 3365.399643] pg[3] pfn 1148700
+>> [ 3365.399643] pg[4] pfn 1144871
+>> [ 3365.399643] pg[5] pfn 1408686
+>> [ 3365.399643] pg[6] pfn 1408683
+>> ...
+>> [ 3365.399660] WARNING: CPU: 3 PID: 2772 at mm/vmalloc.c:3489 vmap_pfn_apply+0xb7/0xd0
+>> [ 3365.399667] Modules linked in:...
+>> [ 3365.399750] CPU: 3 UID: 0 PID: 2772 Comm: drm-test Not tainted 6.13.0-rc2-rvp #845
+>> [ 3365.399752] Hardware name: Intel Corporation Client Platform/xxxx, BIOS xxxFWI1.R00.3221.D83.2408120121 08/12/2024
+>> [ 3365.399753] RIP: 0010:vmap_pfn_apply+0xb7/0xd0
+>> [ 3365.399755] Code: 5b 41 5c 41 5d 5d c3 cc cc cc cc 48 21 c3 eb d1 48 21 c3 48 23 3d 31 c0 26 02 eb c5 48 c7 c7 c4 3c 20 a8 e8 5b c0 d8 ff eb 8a <0f> 0b b8 ea ff ff ff 5b 41 5c 41 5d 5d c3 cc cc cc cc 0f 1f 80 00
+>> [ 3365.399756] RSP: 0018:ffffb9b50c32fad0 EFLAGS: 00010202
+>> [ 3365.399757] RAX: 0000000000000001 RBX: 0000000000118717 RCX: 0000000000000000
+>> [ 3365.399758] RDX: 0000000080000000 RSI: ffffb9b50c358000 RDI: 00000000ffffffff
+>> [ 3365.399758] RBP: ffffb9b50c32fae8 R08: ffffb9b50c32fbd0 R09: 0000000000000001
+>> [ 3365.399759] R10: ffff941602479288 R11: 0000000000000000 R12: ffffb9b50c32fbd0
+>> [ 3365.399759] R13: ffff941618665ac0 R14: ffffb9b50c358000 R15: ffff941618665ac8
+>> [ 3365.399760] FS:  00007ff9e9ddd740(0000) GS:ffff94196f780000(0000) knlGS:0000000000000000
+>> [ 3365.399760] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [ 3365.399761] CR2: 000055fda5dc69d9 CR3: 00000001544de003 CR4: 0000000000f72ef0
+>> [ 3365.399762] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> [ 3365.399762] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
+>> [ 3365.399763] PKRU: 55555554
+>> [ 3365.399763] Call Trace:
+>> [ 3365.399765]  <TASK>
+>> [ 3365.399769]  ? show_regs+0x6d/0x80
+>> [ 3365.399773]  ? __warn+0x97/0x160
+>> [ 3365.399777]  ? vmap_pfn_apply+0xb7/0xd0
+>> [ 3365.399777]  ? report_bug+0x1ec/0x240
+>> [ 3365.399782]  ? handle_bug+0x63/0xa0
+>> [ 3365.399784]  ? exc_invalid_op+0x1d/0x80
+>> [ 3365.399785]  ? asm_exc_invalid_op+0x1f/0x30
+>> [ 3365.399790]  ? vmap_pfn_apply+0xb7/0xd0
+>> [ 3365.399791]  __apply_to_page_range+0x522/0x8a0
+>> [ 3365.399794]  ? __pfx_vmap_pfn_apply+0x10/0x10
+>> [ 3365.399795]  apply_to_page_range+0x18/0x20
+>> [ 3365.399796]  vmap_pfn+0x77/0xd0
+>> [ 3365.399797]  vmap_udmabuf+0xc5/0x110
+>> [ 3365.399802]  dma_buf_vmap+0x96/0x130
+>>
+>> I did an experiment to revert 18d7de823b7150344d242c3677e65d68c5271b04,
+>> then I can vmap the pages. Could you help what's wrong with that?
+> 
+> Sorry for that, as I reviewed pfn_valid, that's someting wired:
+> 
+> /**
+>  * pfn_valid - check if there is a valid memory map entry for a PFN
+>  * @pfn: the page frame number to check
+>  *
+>  * Check if there is a valid memory map entry aka struct page for the @pfn.
+>  * Note, that availability of the memory map entry does not imply that
+>  * there is actual usable memory at that @pfn. The struct page may
+>  * represent a hole or an unusable page frame.
+>  *
+>  * Return: 1 for PFNs that have memory map entries and 0 otherwise
+>  */
+> 
+> So, if pfn valid, it's return 1, else 0. So mean, only 1 is a valid pfn. But vmap_pfn_apply in there:
+> 
+> static int vmap_pfn_apply(pte_t *pte, unsigned long addr, void *private)
+> {
+>     struct vmap_pfn_data *data = private;
+>     unsigned long pfn = data->pfns[data->idx];
+>     pte_t ptent;
+> 
+>     if (WARN_ON_ONCE(pfn_valid(pfn)))
+>         return -EINVAL;
+> 
+>     ptent = pte_mkspecial(pfn_pte(pfn, data->prot));
+>     set_pte_at(&init_mm, addr, pte, ptent);
+> 
+>     data->idx++;
+>     return 0;
+> }
+> 
+> Do it give a wrong check? maybe should fix by:
 
-diff --git a/drivers/net/tap.c b/drivers/net/tap.c
-index 4382f5e323b0..d4ece538f1b2 100644
---- a/drivers/net/tap.c
-+++ b/drivers/net/tap.c
-@@ -1017,7 +1017,7 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
- 			rtnl_unlock();
- 			return -ENOLINK;
- 		}
--		ret = dev_set_mac_address(tap->dev, &sa, NULL);
-+		ret = dev_set_mac_address_user(tap->dev, &sa, NULL);
- 		tap_put_tap_dev(tap);
- 		rtnl_unlock();
- 		return ret;
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 55b60cb68d00..f75f912a0225 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -3193,7 +3193,7 @@ static long __tun_chr_ioctl(struct file *file, unsigned int cmd,
- 
- 	case SIOCSIFHWADDR:
- 		/* Set hw address */
--		ret = dev_set_mac_address(tun->dev, &ifr.ifr_hwaddr, NULL);
-+		ret = dev_set_mac_address_user(tun->dev, &ifr.ifr_hwaddr, NULL);
- 		break;
- 
- 	case TUNGETSNDBUF:
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 9a297757df7e..42c75cb028e7 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -2498,7 +2498,7 @@ struct net_device {
- 	 *
- 	 * Protects:
- 	 *	@gro_flush_timeout, @napi_defer_hard_irqs, @napi_list,
--	 *	@net_shaper_hierarchy, @reg_state, @threaded, @dev_addr
-+	 *	@net_shaper_hierarchy, @reg_state, @threaded
- 	 *
- 	 * Partially protects (writers must hold both @lock and rtnl_lock):
- 	 *	@up
-@@ -4198,6 +4198,10 @@ int netif_set_mac_address(struct net_device *dev, struct sockaddr *sa,
- 			  struct netlink_ext_ack *extack);
- int dev_set_mac_address(struct net_device *dev, struct sockaddr *sa,
- 			struct netlink_ext_ack *extack);
-+int netif_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
-+			       struct netlink_ext_ack *extack);
-+int dev_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
-+			     struct netlink_ext_ack *extack);
- int dev_get_mac_address(struct sockaddr *sa, struct net *net, char *dev_name);
- int dev_get_port_parent_id(struct net_device *dev,
- 			   struct netdev_phys_item_id *ppid, bool recurse);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 1cb134ff7327..5a64389461e2 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -1059,28 +1059,6 @@ struct net_device *netdev_get_by_index_lock(struct net *net, int ifindex)
- 	return __netdev_put_lock(dev);
- }
- 
--/**
-- * netdev_get_by_name_lock() - find a device by its name
-- * @net: the applicable net namespace
-- * @name: name of device
-- *
-- * Search for an interface by name. If a valid device
-- * with @name is found it will be returned with netdev->lock held.
-- * netdev_unlock() must be called to release it.
-- *
-- * Return: pointer to a device with lock held, NULL if not found.
-- */
--struct net_device *netdev_get_by_name_lock(struct net *net, const char *name)
--{
--	struct net_device *dev;
--
--	dev = dev_get_by_name(net, name);
--	if (!dev)
--		return NULL;
--
--	return __netdev_put_lock(dev);
--}
--
- struct net_device *
- netdev_xa_find_lock(struct net *net, struct net_device *dev,
- 		    unsigned long *index)
-@@ -9612,24 +9590,44 @@ int netif_set_mac_address(struct net_device *dev, struct sockaddr *sa,
- 	return 0;
- }
- 
-+DECLARE_RWSEM(dev_addr_sem);
-+
-+int netif_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
-+			       struct netlink_ext_ack *extack)
-+{
-+	int ret;
-+
-+	down_write(&dev_addr_sem);
-+	ret = netif_set_mac_address(dev, sa, extack);
-+	up_write(&dev_addr_sem);
-+	return ret;
-+}
-+
- int dev_get_mac_address(struct sockaddr *sa, struct net *net, char *dev_name)
- {
- 	size_t size = sizeof(sa->sa_data_min);
- 	struct net_device *dev;
-+	int ret = 0;
- 
--	dev = netdev_get_by_name_lock(net, dev_name);
--	if (!dev)
--		return -ENODEV;
-+	down_read(&dev_addr_sem);
-+	rcu_read_lock();
- 
-+	dev = dev_get_by_name_rcu(net, dev_name);
-+	if (!dev) {
-+		ret = -ENODEV;
-+		goto unlock;
-+	}
- 	if (!dev->addr_len)
- 		memset(sa->sa_data, 0, size);
- 	else
- 		memcpy(sa->sa_data, dev->dev_addr,
- 		       min_t(size_t, size, dev->addr_len));
- 	sa->sa_family = dev->type;
--	netdev_unlock(dev);
- 
--	return 0;
-+unlock:
-+	rcu_read_unlock();
-+	up_read(&dev_addr_sem);
-+	return ret;
- }
- EXPORT_SYMBOL(dev_get_mac_address);
- 
-diff --git a/net/core/dev.h b/net/core/dev.h
-index 0ddd3631acb0..7ee203395d8e 100644
---- a/net/core/dev.h
-+++ b/net/core/dev.h
-@@ -29,7 +29,6 @@ netdev_napi_by_id_lock(struct net *net, unsigned int napi_id);
- struct net_device *dev_get_by_napi_id(unsigned int napi_id);
- 
- struct net_device *netdev_get_by_index_lock(struct net *net, int ifindex);
--struct net_device *netdev_get_by_name_lock(struct net *net, const char *name);
- struct net_device *__netdev_put_lock(struct net_device *dev);
- struct net_device *
- netdev_xa_find_lock(struct net *net, struct net_device *dev,
-@@ -71,6 +70,8 @@ extern int		weight_p;
- extern int		dev_weight_rx_bias;
- extern int		dev_weight_tx_bias;
- 
-+extern struct rw_semaphore dev_addr_sem;
-+
- /* rtnl helpers */
- extern struct list_head net_todo_list;
- void netdev_run_todo(void);
-diff --git a/net/core/dev_api.c b/net/core/dev_api.c
-index 1f0e24849bc6..2e17548af685 100644
---- a/net/core/dev_api.c
-+++ b/net/core/dev_api.c
-@@ -84,6 +84,19 @@ void dev_set_group(struct net_device *dev, int new_group)
- 	netdev_unlock_ops(dev);
- }
- 
-+int dev_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
-+			     struct netlink_ext_ack *extack)
-+{
-+	int ret;
-+
-+	netdev_lock_ops(dev);
-+	ret = netif_set_mac_address_user(dev, sa, extack);
-+	netdev_unlock_ops(dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(dev_set_mac_address_user);
-+
- /**
-  * dev_change_net_namespace() - move device to different nethost namespace
-  * @dev: device
-@@ -299,9 +312,9 @@ int dev_set_mac_address(struct net_device *dev, struct sockaddr *sa,
- {
- 	int ret;
- 
--	netdev_lock(dev);
-+	netdev_lock_ops(dev);
- 	ret = netif_set_mac_address(dev, sa, extack);
--	netdev_unlock(dev);
-+	netdev_unlock_ops(dev);
- 
- 	return ret;
- }
-diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index 5471cf4fc984..eb8b41ec5523 100644
---- a/net/core/dev_ioctl.c
-+++ b/net/core/dev_ioctl.c
-@@ -575,7 +575,7 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, void __user *data,
- 	case SIOCSIFHWADDR:
- 		if (dev->addr_len > sizeof(struct sockaddr))
- 			return -EINVAL;
--		return dev_set_mac_address(dev, &ifr->ifr_hwaddr, NULL);
-+		return dev_set_mac_address_user(dev, &ifr->ifr_hwaddr, NULL);
- 
- 	case SIOCSIFHWBROADCAST:
- 		if (ifr->ifr_hwaddr.sa_family != dev->type)
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index 529a0f721268..abaa1c919b98 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -263,11 +263,14 @@ static ssize_t address_show(struct device *dev, struct device_attribute *attr,
- 	struct net_device *ndev = to_net_dev(dev);
- 	ssize_t ret = -EINVAL;
- 
--	netdev_lock(ndev);
-+	down_read(&dev_addr_sem);
-+
-+	rcu_read_lock();
- 	if (dev_isalive(ndev))
- 		ret = sysfs_format_mac(buf, ndev->dev_addr, ndev->addr_len);
--	netdev_unlock(ndev);
-+	rcu_read_unlock();
- 
-+	up_read(&dev_addr_sem);
- 	return ret;
- }
- static DEVICE_ATTR_RO(address);
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 90597bf84e3d..9355058bf996 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -3090,11 +3090,7 @@ static int do_setlink(const struct sk_buff *skb, struct net_device *dev,
- 		sa->sa_family = dev->type;
- 		memcpy(sa->sa_data, nla_data(tb[IFLA_ADDRESS]),
- 		       dev->addr_len);
--		if (!netdev_need_ops_lock(dev))
--			netdev_lock(dev);
--		err = netif_set_mac_address(dev, sa, extack);
--		if (!netdev_need_ops_lock(dev))
--			netdev_unlock(dev);
-+		err = netif_set_mac_address_user(dev, sa, extack);
- 		kfree(sa);
- 		if (err)
- 			goto errout;
+I guess not, it looks more like warning when you trying to vmap a
+pfn which already took a valid entry in pte.
+
+However, the MM code is so complex for me, just my guess. :)
+
+> 
+> static int vmap_pfn_apply(pte_t *pte, unsigned long addr, void *private)
+> {
+>     struct vmap_pfn_data *data = private;
+>     unsigned long pfn = data->pfns[data->idx];
+>     pte_t ptent;
+> 
+> -    if (WARN_ON_ONCE(pfn_valid(pfn)))
+> +    if (WARN_ON_ONCE(!pfn_valid(pfn)))
+>         return -EINVAL;
+> 
+>     ptent = pte_mkspecial(pfn_pte(pfn, data->prot));
+>     set_pte_at(&init_mm, addr, pte, ptent);
+> 
+>     data->idx++;
+>     return 0;
+> }
+> 
+> Please help me check it, also, you can apply this and then check it.:)
+> 
+>>
+>>
+>> -- 
+>> Best regards,
+>> Bingbu Cao
+
 -- 
-2.48.1
-
+Best regards,
+Bingbu Cao
