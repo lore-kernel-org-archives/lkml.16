@@ -1,118 +1,102 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784321C5799;
-	Tue, 11 Mar 2025 03:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86CE1E7C1C;
+	Tue, 11 Mar 2025 03:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741662494; cv=none; b=kcNVauMN4wiylfJImIkbinFn/EbMcAMM5P+KaWxdmwSEZSA1RZYr+iXbpmGfxpwWKpZK2HtrgxoAO5UioTdSakQhqOV5hJdlxEhjVlUo4UjXrGyhbi4kKnNBLneSKQg9lLQ75ErIQfiGg5ULCs9hdsWjjYS5fSog0ReutYjmaFI=
+	t=1741662510; cv=none; b=XVvLiT4H+B0kRM567VoeaprlLYOmCNPoEytxzaL3Rb7rahIb5sl1M1olEOWupF45xp8HWS48Ifb2SBAn+gZ17+JRMrBoKM8UcOkdTpaZoBoKAvL/sANOYkm/CW5K1G/F1JLgnZe2be97SU3HI/QD6/80EvKQdW54wz1G/9Ji2Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741662494; c=relaxed/simple;
-	bh=SEjKj02X+kopJyS649zkKcEN6zxqJ1THnjbFT3fKYRc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=axI+LdnZfZ8yjW5struJR1FRuyJFNyJ0EnQTgkGCZ0p1jMksTsWQX3m6VNuwYo40QZRrFfAYrjCuRjxMIAKBzWentezNtafn3WmbQPx2du7XXKtMhHVTo2P0UGSoIMNsaOquiS65Sf3hHY2xEud/HmYcnfnq3onlVWiUWH6ljEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZBdwq6Pjxz4f3jcm;
-	Tue, 11 Mar 2025 11:07:39 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3911B1A06D7;
-	Tue, 11 Mar 2025 11:08:02 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgAXe18Qqc9nUbWWGA--.13861S3;
-	Tue, 11 Mar 2025 11:08:02 +0800 (CST)
-Subject: Re: [PATCH] blk-throttle: support io merge over iops_limit
-To: Tejun Heo <tj@kernel.org>, Ming Lei <ming.lei@redhat.com>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk, josef@toxicpanda.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250307090152.4095551-1-yukuai1@huaweicloud.com>
- <Z8sZyElaHQQwKqpB@slm.duckdns.org>
- <5fc124c9-e202-99ca-418d-0f52d027640f@huaweicloud.com>
- <Z85LjhvkCzlqBVZy@fedora> <Z88K5JtR4rhhIFsY@slm.duckdns.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <baba2f82-6c35-8c24-847c-32a002009b63@huaweicloud.com>
-Date: Tue, 11 Mar 2025 11:08:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1741662510; c=relaxed/simple;
+	bh=qXZhNxUy9y5s5LhZ9M7FyoFK7Zgj7Uh6fOjZphxmzps=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mOIhGuxw6nVQzvA7JGCV3AHjmdKe3xwjaGQYD15AZPhgRFCIPf/vWuUIPtMYS4vpzmfQPVaxhMer58DYdqStF5YDI/fUsMF5QzyGAntpsBxLjrWZLBwJHBf0PnCTwid0/t/RsJtV4mIsCP9UyZYLW9roWfQkwn543DRwV2Z5O5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtjE3WsA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtjE3WsA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8D2A0C4AF0B;
+	Tue, 11 Mar 2025 03:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741662510;
+	bh=qXZhNxUy9y5s5LhZ9M7FyoFK7Zgj7Uh6fOjZphxmzps=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=OtjE3WsAVX93Kfi+2HoCjHhOcJ27AmcZwt3ppnX7OdBdiKINw0kvkAWxX3hjiKQ80
+	 Rf6SydKIgqvgJykjLDe9wPNzruejDxMSR3HX3Byn8bzEUDX7qc2Q4tjUhTjcuMd3CC
+	 20cFVRBbXZINoWaN+CbOuVjtBo8sPd40iWWnS/EJ8wag4SV3yO5KMIDU+WZsGjRqsq
+	 ac+LuxbApCVBJI0j1uepMYZhlWPg+oljRRGX07Vlld9Sin7fxLuywK6nbYD36fMJlx
+	 C7IFeoKd90lAzTBIMDTJtMisZHKNXsX14hJxch/BXKtm9ouDu9TlqP7pyGIZdcwK8i
+	 i/UvkPb0bW9Cw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D99BC28B2E;
+	Tue, 11 Mar 2025 03:08:30 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Date: Tue, 11 Mar 2025 11:08:30 +0800
+Subject: [PATCH v5 4/4] arm64: dts: Add gpio_intc node for Amlogic A5 SoCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Z88K5JtR4rhhIFsY@slm.duckdns.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXe18Qqc9nUbWWGA--.13861S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr43GF13WFyfCw1Dur1xXwb_yoW8Wr4Dpa
-	yS93WDKrn7Xr17Kwn7Zws2q3yvy34xWryrCryrtry09rs8JrnxtrWfZr45uFWDurWxuw12
-	va42qF1ruw4DAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250311-irqchip-gpio-a4-a5-v5-4-ca4cc276c18c@amlogic.com>
+References: <20250311-irqchip-gpio-a4-a5-v5-0-ca4cc276c18c@amlogic.com>
+In-Reply-To: <20250311-irqchip-gpio-a4-a5-v5-0-ca4cc276c18c@amlogic.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Heiner Kallweit <hkallweit1@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741662508; l=835;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=+kt3Jevc/8KR/ZsMbFbD2TjHFreHkm3hzIePStnSOmI=;
+ b=eLM/Fg5wgOWvIrSzv/pUKjogLQUlLKhAZf3PT9YVtWAK5FkKOLp0RACQSauS1ciE0UYl9a0Mz
+ Ij0EYM0frGaBzdrNYdO1mOkwTSHZyLDePojzSAJbMs299zK8kH0EO2I
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-Hi,
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-ÔÚ 2025/03/10 23:53, Tejun Heo Ð´µÀ:
-> Hello,
-> 
-> On Mon, Mar 10, 2025 at 10:16:46AM +0800, Ming Lei wrote:
-> ...
->>> Yes, but it's a litter hard to explain to users the differece between IO
->>> split and IO merge, they just think IO split is the numer of IOs issued
->>> to disk, and IO merge is the number of IOs issued from user.
->>
->> Here it is really one trouble.
->>
->> a) Sometimes people think IOs wrt. IOPS means that the read/write IO
->> submitted from application, one typical example is `fio`.
->>
->> b) Sometimes people think it is the data observed from `iostat`.
->>
->> In a), io merge/split isn't taken into account, but b) does cover io
->> merge and split.
->>
->> So question is that what is the correct way for user to observe IOPS
->> wrt. iops throttle?
-> 
-> If we could go back in time, I think the right metric to use is
-> hardware-seen IOPS as that's better correlated with the actual capacity
-> available (the correlation is very flawed but still better) and the number
-> of issued bio's can easily change depending on kernel implementation
-> details.
+Add GPIO interrupt controller device.
 
-Yes, I agree the right metric is to use b), which cover IO merge and
-split(and also filesystem meta and log).
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+ arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> 
-> That said, I'm not sure about changing the behavior now. blk-throtl has
-> mostly used the number of bios as long as it has existed and given that
-> there can be a signficant difference between the two metrics, I'm not sure
-> the change is justified at this point.
+diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+index 17a6316de891..32ed1776891b 100644
+--- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
++++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+@@ -48,3 +48,15 @@ pwrc: power-controller {
+ 		};
+ 	};
+ };
++
++&apb {
++	gpio_intc: interrupt-controller@4080 {
++		compatible = "amlogic,a5-gpio-intc",
++			     "amlogic,meson-gpio-intc";
++		reg = <0x0 0x4080 0x0 0x20>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		amlogic,channel-interrupts =
++			<10 11 12 13 14 15 16 17 18 19 20 21>;
++	};
++};
 
-If we really concern about the behavior change, can we consider a new
-flag that can switch to the old behavior? We'll see if any user will
-complain.
+-- 
+2.37.1
 
-Thanks,
-Kuai
-
-> 
-> Thanks.
-> 
 
