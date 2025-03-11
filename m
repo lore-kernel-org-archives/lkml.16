@@ -1,184 +1,218 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE16025B673
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC61253F05;
+	Tue, 11 Mar 2025 12:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741696631; cv=none; b=UvBU1KS14afAfujWXpTkQJSyy1kKpTtFDXjJ5adleto2MZYpBptoj+pZXYkjPNORJzc4+UxJrtZfabIYCC6V+CguwwYrsJb7pAHgkOdPNp8e56NL6WDWdRcD+PgzObA2ZkWW5hYKMA2RqcKTwpt2SNhaXXWDwtdihJ2eChRZcOY=
+	t=1741696681; cv=none; b=BEDYfFeJANYovHPWqqQXMalGQ7AOAEQ3dZSWF9byOixjVAkX/t8KUz8iOHkJH4+u0immYwYTBCVrhSEDpPwDBZepTR2JNRBrWwtuErbyP7EA9+gJzAAAKPQysUpn9s/ED9eVSEP/YdDyE7bwNTDaQGaogzRkoKfqVHizfuCUjis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741696631; c=relaxed/simple;
-	bh=eOYfV3hkQJ4COrJVGB6V6NB92ZYbl7TFTpc5f+sHq+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fFvAaBQ1rrFVrUwxPqjvFYSDgWK2VL0mxuSWPk6pDTRGbRCmlLk7mY8VjycNVFZbt9j7j+Gf9imQtdF9qhkv7lFOT1/QJateB1yaB03V2ZGl+2ptxq6FQhS10UMKVphOWeZGaTqEyiMeHawi2IDl1Qw3maZnI11wlUrSHNnSZWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Gj6+wHTo; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1741696681; c=relaxed/simple;
+	bh=OEJyXK8gJanEDc24LcAoqkNul9aACtqIx/G0Aob4YPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qbWGV4jUBlyE5SEffgRAGFeI5kSEHOBaA12TNwqU4cSu+VFMXM+ymgEx6kLDEj9OQmMO2RkytwqvcPYlsjCaCBYKLBofZgeatnpje8e4t0gJ5KbINUlvPoMuBH2elaJPh16iX/ftxEaYO8c6EiZlHUD4pdJXSxHN5GdvTqDUfc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b=eJTvEO0E; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Gj6+wHTo"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso17326755e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 05:37:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741696627; x=1742301427; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DXKXrFA2VlkBneAZZTTJT0fgxthnXkiDyglv3h81Of0=;
-        b=Gj6+wHTolGFeAgq22JiafPqm8VHBHP0h/rnlt1cfsS+rrHR0pO6waVKh7/+5iZh3Qx
-         qphA3U9dDmz+ZLsJc7gR46WS4WOoqTCuJu5nYw6OVlbHxZWMkVIAcD1OEVhdQZnaKYmf
-         HGVOUqLmmM34MGVI0ziF4AZOZwLshw0t3B2SJLyWrFx/d75zL3HRtNx0ZA0xDzn9UvPa
-         gcUEl2MDR6Tccapij03aYYIktHjH2hA+TNV7LR0HTDaQtb5WuPiwveoOXxQT4ySGBW6R
-         fgM7u7kVfMzSWo6QPHImJxQ3UnzZ/AqQHhp3eepAYj0dNJTy1lwgpidVvOpCBLF3hYgn
-         +MmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741696627; x=1742301427;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DXKXrFA2VlkBneAZZTTJT0fgxthnXkiDyglv3h81Of0=;
-        b=JA9vPuGt0q4LGqKp0g7mpt40NX+uz5uZcX+9oAoXg9ui/tVVR4xZNMWPZ6nPf6cXde
-         cRLqdahquwZftI/nKJOKYOh9v62YKkK/0V249jTez1s/zVT3VnDSSw2l2YFjXrv+Zocu
-         JbULY+bE6Dinciu9xQoM3zFtpGHjnh7F0hL0e3znoXC0pPESkypTJfsvjxOQF1SHAlij
-         SpnCQ5qsIby/pXXBNfg/71s+q3MRwyiV45O8uyZKUUutDu58WYtNsugyaWz9seXYAKH3
-         g0Ofz859tGshZxsfSI0dpbuH4LPqT9tRkzMkL3x2HWGb0DCtUdTHeD1l7/q+FZG9HauA
-         pIrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtZ8mndzpsKoLuoy+jUZcWJroFz4bt/9tTJTmptI/3d2gxS8d4B19JmIJVclt50QDrHDV198yBG7PeJfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYbh9S11t7ccOo2gnElmri3GTq8a9N+6Jg4AdWPd3WuyawCOyY
-	NhmVI5efzyEdjncSE7loA0UsxJVikxu/v5FpHfrhFa3k13NSQHPHVkiLGWPXzN8=
-X-Gm-Gg: ASbGncuMqBNvkmSqWDLHpCVNOxX5D3QG81eERYC4VH7iGN3l3Uci+zRvj7nXkEeOoq1
-	DyCNx88GmRWblv6t9IgOEaE5q7EiliZBSC96PBSu1KyWCCGW2TkXoAtdYIzCh36CxEeAnYg9M8v
-	2lIb1VsfF4r0FS/MSGs+AqzNqkppqHWhKXgzZ2M1lEcIx+AjVFmFhER3XetgZx9zIyvTMBRVzp1
-	7FKNp2kogU+IAUSP5z5hXNXX1CLjYNCqd+fM0D0jIOBK9nHwcjoG1Sl3mNQhNr4UXb3EK9FzFHG
-	rU/E+vyTfq0hqhAoxREOJvtf7kkcvfaXh52AhlgJflw4rFU=
-X-Google-Smtp-Source: AGHT+IGxtVT4Mv/MwWFfw1GFVyifXbknAcM7hLfQYB/ggvVos7rNOTA6kXKjciYRQIAM+TQeTmsWVw==
-X-Received: by 2002:a05:600c:46cf:b0:43c:e8ca:5140 with SMTP id 5b1f17b1804b1-43ce8ca528dmr93497435e9.23.1741696627217;
-        Tue, 11 Mar 2025 05:37:07 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d04004240sm9742265e9.3.2025.03.11.05.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 05:37:07 -0700 (PDT)
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Tejun Heo <tj@kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Subject: [PATCH v2 11/11] blk-cgroup: Simplify policy files registration
-Date: Tue, 11 Mar 2025 13:36:28 +0100
-Message-ID: <20250311123640.530377-12-mkoutny@suse.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250311123640.530377-1-mkoutny@suse.com>
-References: <20250311123640.530377-1-mkoutny@suse.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b="eJTvEO0E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1741696660; x=1742301460; i=fiona.klute@gmx.de;
+	bh=BbL9JHXclr2BMUrynD6ixpEkOrje39v6gTZp9Fbsn34=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=eJTvEO0Eza7PGDkhhuCjieynidcBLNZIWgRe7HwR7Sgd/dzfJDpdhT8m/8VtKKKC
+	 RNDLSEHWgWP5Y/68VF/BOLD1EgCk0PIL9aotTEYAm9dc/ZX9gHnWzDP/QmdblXpu6
+	 Q1Mc7RScJWlTmFGg0lSqSZTeGDf7leRHq2ObS4Xxuk6zySyG6FWAcfQFmZCbHTBt5
+	 H5+cG/c3Xssfq1foKGvfvKTUrpmvO8LKTd4zjOtV3yUWESM0ngUtSWD2+v88bfett
+	 XqAIkeLZbs/xc11vOVuMQQMRdoFrJsEFdn4jl1twa8kiSHm0A08J00/do4+E+zzPY
+	 91RJMyDkwwQoG3r35w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.7.2] ([85.22.124.191]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWih0-1th1au2jFo-00R4D1; Tue, 11
+ Mar 2025 13:37:40 +0100
+Message-ID: <81ac2930-161e-4fb0-8027-2afe269229a5@gmx.de>
+Date: Tue, 11 Mar 2025 13:37:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: usb: lan78xx: Enforce a minimum interrupt polling
+ period
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: netdev@vger.kernel.org, Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+ Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
+ UNGLinuxDriver@microchip.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-list@raspberrypi.com,
+ stable@vger.kernel.org
+References: <20250310165932.1201702-1-fiona.klute@gmx.de>
+ <d52e460d-2c73-4117-95b9-bed3892ac41d@rowland.harvard.edu>
+Content-Language: en-US, de-DE-1901, de-DE
+From: Fiona Klute <fiona.klute@gmx.de>
+Autocrypt: addr=fiona.klute@gmx.de; keydata=
+ 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
+In-Reply-To: <d52e460d-2c73-4117-95b9-bed3892ac41d@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/h7Gk6DRwhjdHYJEnAD3tMIurlFFHNF8R/t0798If3lYy7eUnX1
+ w0XcROK+WQmUT28XYdj7wnRJ8PiJhaRGirQ+96JFC/SZK5ScI4pSjNFtvzxRj5+hasogQi+
+ YJMCb15MVdsQbqLD35WmNVFLYc4vezrFH6gzFbexmcEZHFzc3STxudXX6RXnBEtFnyVOoZs
+ oXdyFdGNUjLah8HCoLaCg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VpA8MuiRC8o=;z6oZBcF4DAd29mcvkrFGsNvora6
+ rroNyQmiNKO/JjyeEjzvLWwFl2S4Ly9WNJZz0/YZVe4qxjEdurVhP3sFBEAXEPfs4JM6DaGJn
+ PSGXch/wOIwoLcWQIED2txaOqJL6uSeDqKCVjK+xpAOGATvouJco800WXiqFWOACb/7fCLpyM
+ XE1KzhF3vldUdO9V1rRs5Fpav1bclXU86Wfj+n5ZTgxNFklwfgntpY6yPwTw+DewV75p3m9QN
+ Zi/NdWWsCsIpSbM4ilPc3hsIq6s7kmoiwhFTDjjzsOXXqr34LhKS62D15EVToJ2qnk+MExKBt
+ QVOwAHOWLyXIxZv2q8wvQ6YSv+Wvn2qc+q13esX3LliPuprm9dxbdx96kmu8TE4lzrmQxtCZX
+ 4Nnp3k/AtejoynBmTBkMpvs36EDm1q8VPH/X+8raPZnB1quTlP42rPNp/HIeGHJlq5dAhFTCw
+ quM5F2cOUlMNnkk/QEtsQdnt/eM3B0R6auGihuUZhiHzR/3lX1D/tCuAu611v956bzXMnls2Y
+ 43kyYr2W7Gr4ww6J6O9HN5uxsuKgl5HHxkEW7fgthCce58BoYZYeYUE+V6+uN0EuBgL8cxtP3
+ gZn9/eZu6y9VSbDoqlg954EV25JLWInpBJI99b/HnzD7YWjQbEYyeYrBEsgZxkhXVv1ZOO3H4
+ w6/dTPmqTBOamqPBnHnle2pb+mQXGBLJfdUQUaEMDLHJHq/ExPKQwuhcimeBOW40Wt99BgK9l
+ n7MSJ1q/fcFGXMhx00JXMUB2NUUptbIeN9fHJHoQL1BhElqsFihs31Hwvkg68QGQrKGOrLLNQ
+ ZbOyryIpSdztkynY4ZROj2Vnx/oGiJvO6SYYJpzhhohVJDSruPfqy+xECJGYSM+J9F+pt8EDj
+ T/n+GElCQ4Qu8O5SQ1YEJNzQgNtKxV++AAmQDLb3x3RjPRpVET7ArewQu7t1hbTIzuWHXHoxg
+ ZGKmhdeKlGAPPAAP3iaB/fbXTFhjWBEKnha/KbOi9NyONRrCpe9GoiLh8i3bvcK5QWkkkxkfO
+ N9u5UGu1HWuPC8jtD2wvdBT1JFcdiTm2gqTwo1C3JV0f+wVAX8I37wSIl0RP0c2Qwf6bDhkJ+
+ EBoAh5kns1wZpqylVzVaF4CCNs3NlMpCaOxNURhUo/atCoYd6X1rJVL4FF73FbDnAIVl4GJ/d
+ PrXwhXZTq7/SbkyeGQbzv22G1nEUkLy7WKGc/OYiqwPgjX4HJ2yWWlrii089ZObdchhmiWH70
+ auUYLYAdPFE358FCWB8+biHsi3SfDNlvQn5MMWIPoMWKWgmuPs6K0STIS0pw/OQIeIT2iVfzc
+ a0n8F+TcOQdQTqjXpD4geGOcdVSQz2WvMIbm6JhCrpGbm4N5wl7pOCFPtbK3DAC1IKgAD9GsA
+ dR0uFRPVIzhD4FTyRwNVSLmG9Ek/h0ag4Ul8eCzrp6eWQjADCcwijmV8IFlLH9I303g+8y5w6
+ ZeKlFJktl+aeB4iu/jtuYpWLbcUXMcFXwnPIQwzq+F2GQa9MB
 
-Use one set of files when there is no difference between default and
-legacy files, similar to regular subsys files registration. No
-functional change.
+Am 10.03.25 um 19:06 schrieb Alan Stern:
+> On Mon, Mar 10, 2025 at 05:59:31PM +0100, Fiona Klute wrote:
+>> If a new reset event appears before the previous one has been
+>> processed, the device can get stuck into a reset loop. This happens
+>> rarely, but blocks the device when it does, and floods the log with
+>> messages like the following:
+>>
+>>    lan78xx 2-3:1.0 enp1s0u3: kevent 4 may have been dropped
+>>
+>> The only bit that the driver pays attention to in the interrupt data
+>> is "link was reset". If there's a flapping status bit in that endpoint
+>> data (such as if PHY negotiation needs a few tries to get a stable
+>> link), polling at a slower rate allows the state to settle.
+>>
+>> This is a simplified version of a patch that's been in the Raspberry
+>> Pi downstream kernel since their 4.14 branch, see also:
+>> https://github.com/raspberrypi/linux/issues/2447
+>>
+>> Signed-off-by: Fiona Klute <fiona.klute@gmx.de>
+>> Cc: kernel-list@raspberrypi.com
+>> Cc: stable@vger.kernel.org
+>> ---
+>> For the stable crew: I've *tested* the patch with 6.12.7 and 6.13.5 on
+>> a Revolution Pi Connect 4 (Raspberry Pi CM4 based device with built-in
+>> LAN7800 as second ethernet port), according to the linked issue for
+>> the RPi downstream kernel the problem should be present in all
+>> maintained longterm kernel versions, too (based on how long they've
+>> carried a patch).
+>>
+>>   drivers/net/usb/lan78xx.c | 12 +++++++++++-
+>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+>> index a91bf9c7e31d..7bf01a31a932 100644
+>> --- a/drivers/net/usb/lan78xx.c
+>> +++ b/drivers/net/usb/lan78xx.c
+>> @@ -173,6 +173,12 @@
+>>   #define INT_EP_GPIO_1			(1)
+>>   #define INT_EP_GPIO_0			(0)
+>>
+>> +/* highspeed device, so polling interval is in microframes (eight per
+>> + * millisecond)
+>> + */
+>> +#define INT_URB_MICROFRAMES_PER_MS	8
+>> +#define MIN_INT_URB_INTERVAL_MS		8
+>> +
+>>   static const char lan78xx_gstrings[][ETH_GSTRING_LEN] =3D {
+>>   	"RX FCS Errors",
+>>   	"RX Alignment Errors",
+>> @@ -4527,7 +4533,11 @@ static int lan78xx_probe(struct usb_interface *i=
+ntf,
+>>   	if (ret < 0)
+>>   		goto out4;
+>>
+>> -	period =3D ep_intr->desc.bInterval;
+>> +	period =3D max(ep_intr->desc.bInterval,
+>> +		     MIN_INT_URB_INTERVAL_MS * INT_URB_MICROFRAMES_PER_MS);
+>
+> This calculation is completely wrong.  For high-speed interrupt
+> endpoints, the bInterval value is encoded using a logarithmic scheme.
+> The actual interval in microframes is given by 2^(bInterval - 1) (see
+> Table 9-13 in the USB 2.0 spec).  Furthermore, when the value is passed
+> to usb_fill_int_urb(), the interval argument must be encoded in the same
+> way (see the kerneldoc for usb_fill_int_urb() in include/linux/usb.h).
+>
+> The encoded value corresponding to 8 ms is 7, not 64, since 8 ms =3D 64
+> uframes and 64 =3D 2^(7-1).
 
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
----
- block/blk-cgroup.c     |  7 +++++--
- block/blk-ioprio.c     | 23 +++++++----------------
- include/linux/cgroup.h |  1 +
- kernel/cgroup/cgroup.c |  2 +-
- 4 files changed, 14 insertions(+), 19 deletions(-)
+Thanks, I'll have to fix that if I send a revision. Though after Andrew
+Lunn's response and seeing the bug again today despite the patch after a
+few hundred good boots I suspect a different fix is needed.
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 1464c968eeb0c..1994a11ff9034 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1771,12 +1771,15 @@ int blkcg_policy_register(struct blkcg_policy *pol)
- 	mutex_unlock(&blkcg_pol_mutex);
- 
- 	/* everything is in place, add intf files for the new policy */
--	if (pol->dfl_cftypes)
-+	if (pol->dfl_cftypes == pol->legacy_cftypes) {
-+		WARN_ON(cgroup_add_cftypes(&io_cgrp_subsys,
-+					   pol->dfl_cftypes));
-+	} else {
- 		WARN_ON(cgroup_add_dfl_cftypes(&io_cgrp_subsys,
- 					       pol->dfl_cftypes));
--	if (pol->legacy_cftypes)
- 		WARN_ON(cgroup_add_legacy_cftypes(&io_cgrp_subsys,
- 						  pol->legacy_cftypes));
-+	}
- 	mutex_unlock(&blkcg_pol_register_mutex);
- 	return 0;
- 
-diff --git a/block/blk-ioprio.c b/block/blk-ioprio.c
-index 8fff7ccc0ac73..13659dc15c3ff 100644
---- a/block/blk-ioprio.c
-+++ b/block/blk-ioprio.c
-@@ -113,27 +113,18 @@ static void ioprio_free_cpd(struct blkcg_policy_data *cpd)
- 	kfree(blkcg);
- }
- 
--#define IOPRIO_ATTRS						\
--	{							\
--		.name		= "prio.class",			\
--		.seq_show	= ioprio_show_prio_policy,	\
--		.write		= ioprio_set_prio_policy,	\
--	},							\
--	{ } /* sentinel */
--
--/* cgroup v2 attributes */
- static struct cftype ioprio_files[] = {
--	IOPRIO_ATTRS
--};
--
--/* cgroup v1 attributes */
--static struct cftype ioprio_legacy_files[] = {
--	IOPRIO_ATTRS
-+	{
-+		.name		= "prio.class",
-+		.seq_show	= ioprio_show_prio_policy,
-+		.write		= ioprio_set_prio_policy,
-+	},
-+	{ } /* sentinel */
- };
- 
- static struct blkcg_policy ioprio_policy = {
- 	.dfl_cftypes	= ioprio_files,
--	.legacy_cftypes = ioprio_legacy_files,
-+	.legacy_cftypes = ioprio_files,
- 
- 	.cpd_alloc_fn	= ioprio_alloc_cpd,
- 	.cpd_free_fn	= ioprio_free_cpd,
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index f8ef47f8a634d..8e7415c64ed1d 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -113,6 +113,7 @@ int cgroup_transfer_tasks(struct cgroup *to, struct cgroup *from);
- 
- int cgroup_add_dfl_cftypes(struct cgroup_subsys *ss, struct cftype *cfts);
- int cgroup_add_legacy_cftypes(struct cgroup_subsys *ss, struct cftype *cfts);
-+int cgroup_add_cftypes(struct cgroup_subsys *ss, struct cftype *cfts);
- int cgroup_rm_cftypes(struct cftype *cfts);
- void cgroup_file_notify(struct cgroup_file *cfile);
- void cgroup_file_show(struct cgroup_file *cfile, bool show);
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 3a5af0fc544a6..e93b0563a8964 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4447,7 +4447,7 @@ int cgroup_rm_cftypes(struct cftype *cfts)
-  * function currently returns 0 as long as @cfts registration is successful
-  * even if some file creation attempts on existing cgroups fail.
-  */
--static int cgroup_add_cftypes(struct cgroup_subsys *ss, struct cftype *cfts)
-+int cgroup_add_cftypes(struct cgroup_subsys *ss, struct cftype *cfts)
- {
- 	int ret;
- 
--- 
-2.48.1
+>> +	dev_info(&intf->dev,
+>> +		 "interrupt urb period set to %d, bInterval is %d\n",
+>> +		 period, ep_intr->desc.bInterval);
+>
+> I doubt that this dev_info() will be very helpful to anyone (in addition
+> to being wrong since the value in "period" is not the actual period).
+I figured it'd be useful to note that the interval has been modified,
+especially for possible debugging.
+
+Best regards,
+Fiona
 
