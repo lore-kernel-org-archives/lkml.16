@@ -1,105 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1374D2627F7;
-	Tue, 11 Mar 2025 17:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5366C2620D7;
+	Tue, 11 Mar 2025 17:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741712732; cv=none; b=eFKdh6RoviHo8M3uCO4J3YE/6Rg0qXhgDaQcGd9dtjVc6SQsrkx3ITIR6ulLxtkf4i6imgIeV2tLdydoiyMN0Bf+tEjkWF8AwgxWvbI1AgMBJRaPH46u0DQSjMBaPcGyzvbVSx5k1USEMWa7sLKn5hL6EDGeXkpW4WE5oBPt/xs=
+	t=1741712735; cv=none; b=cI9o1hiG0m/C4JAi7eoj/o06qCE7LWIWwzxgkfJ6aUohdSXhMhIxedtel80A0e8w8ecQhx3usF+A+G/2MfCbmpXMTW0pE6i2PR5mjFcbKI3Ta3QiL9IY8n5Q1YlSe4ZUKw9RyiEVO8gHAyrbUoYk/HO0rSnMlp/a+ep6Imjkhb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741712732; c=relaxed/simple;
-	bh=D+9wO9dNN3EYV0lv+fWUQwBnCRPK8BfN8oSeYBiKgwM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mOgFeblupDtQRuDiA5n5Uj/hQci/bpW966SJFq8lLewjWQXNCJT2KmbrBcpvdqjc5OL+SYnin4PkJxxnKMLAuop2CxFZAOUTvDRAeZKDnLplVvPn2+Q8e6ofGRGXJUWk7BScDXdHF0PkCeXA/ldwNiRwat/4XBlye5H3h1zqoI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JX/apJ6A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ODNxZbHi; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JX/apJ6A";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ODNxZbHi"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741712729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X+UQEszhhyx5orvv0upRMEVuQLmNZT576sheEcGpELI=;
-	b=JX/apJ6Aq294GtNFtWBDY1h21N4G6n7nl2fRrE9E/WmEtZxy+1i5wRJW8fYrOGeb/ne36d
-	uQyhzCAFSVA8hju3+hF3tRS7+rgin2pLZGjVSDhwCthQwHeWkP94K3AMXQr30P6IXeGEoa
-	HL+sMqICIQQxBDqXfSGX25QYqhvWFEoLWeVJl/IC0C8wgIZg3YZ0s7s04N0bNsCr5khmwA
-	idNvJOGBJNBa4ZLsrbTQFgZusuVtFEtS1XUSl/2ZafM190I9RobcPkPLgtscKhI8uNquBy
-	1Q0kgD4cDtgg9dIhW0IWmM2gYavNzTvAjCtXXlABbhsFlKDWfR9LtFJ3HA+sVw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741712729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X+UQEszhhyx5orvv0upRMEVuQLmNZT576sheEcGpELI=;
-	b=ODNxZbHikYX6l09olaUFn80cowWI3Hts4RadOge3WcTBvX7pReRC+rR5OK+shtOPsdb7wH
-	KpNeVsKUza8mjmDw==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	john.ogness@linutronix.de,
-	linux-trace-kernel@vger.kernel.org,
+	s=arc-20240116; t=1741712735; c=relaxed/simple;
+	bh=udctrwbuiTyYZLDxzpiksmAUIKV99gHl3fUEtUiKXzs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZXkWCGkwERdzj1LG0AqWEfTpY1IUkekz2UI7TfL9Qx+IE9TfLqGutVsOhBl1zI5BmUoRJdMKMq80dj4LvYCsKdVnjXlY/gDs/SXcQrRoOhXPXubxao9+yKYOvYTdv3OIJOEndqJp5O7wUo269pXt9+SJJJIkNmIMD9iJk3vNtsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FB73152B;
+	Tue, 11 Mar 2025 10:05:42 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BF4663F673;
+	Tue, 11 Mar 2025 10:05:29 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 07/10] arm64: mm: Add page fault trace points
-Date: Tue, 11 Mar 2025 18:05:08 +0100
-Message-Id: <b0e391920b441487d52652edef822883923e3b39.1741708239.git.namcao@linutronix.de>
-In-Reply-To: <cover.1741708239.git.namcao@linutronix.de>
-References: <cover.1741708239.git.namcao@linutronix.de>
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v3 0/6] Arm CoreSight: Support AUX pause and resume
+Date: Tue, 11 Mar 2025 17:04:45 +0000
+Message-Id: <20250311170451.611389-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Add page fault trace points, which are useful to implement RV monitor which
-watches page faults.
+This series is to enable AUX pause and resume on Arm CoreSight.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm64/mm/fault.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The first patch extracts the trace unit controlling operations to two
+functions.  These two functions will be used by AUX pause and resume.
 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index ef63651099a9..e3f096b0dffd 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -44,6 +44,9 @@
- #include <asm/tlbflush.h>
- #include <asm/traps.h>
-=20
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/exceptions.h>
-+
- struct fault_info {
- 	int	(*fn)(unsigned long far, unsigned long esr,
- 		      struct pt_regs *regs);
-@@ -559,6 +562,11 @@ static int __kprobes do_page_fault(unsigned long far, =
-unsigned long esr,
- 	if (kprobe_page_fault(regs, esr))
- 		return 0;
-=20
-+	if (user_mode(regs))
-+		trace_page_fault_user(addr, regs, esr);
-+	else
-+		trace_page_fault_kernel(addr, regs, esr);
-+
- 	/*
- 	 * If we're in an interrupt or have no user context, we must not take
- 	 * the fault.
---=20
-2.39.5
+Patches 02 and 03 change the ETMv4 driver to prepare callback functions
+for AUX pause and resume.
+
+Patch 04 changes the ETM perf layer to support AUX pause and resume in a
+perf session.  The patches 05 updates buffer on AUX pause occasion,
+which can mitigate the trace data lose issue.
+
+Patch 07 documents the AUX pause usages with Arm CoreSight.
+
+This patch set has been verified on the Hikey960 board and TC platform.
+The previous one uses ETR and the later uses TRBE as sink.
+
+It is suggested to disable CPUIdle (add `nohlt` option in Linux command
+line) when verifying this series.  ETM and funnel drivers are found
+issues during CPU suspend and resume which will be addressed separately.
+
+Changes from v2:
+- Rebased on CoreSight next branch.
+- Dropped the uAPI 'update_buf_on_pause' and updated document
+  respectively (Suzuki).
+- Renamed ETM callbacks to .pause_perf() and .resume_perf() (Suzuki).
+- Minor improvement for error handling in the AUX resume flow.
+
+Changes from v1:
+- Added validation function pointers in pause and resume APIs (Mike).
+
+
+Leo Yan (6):
+  coresight: etm4x: Extract the trace unit controlling
+  coresight: Introduce pause and resume APIs for source
+  coresight: etm4x: Hook pause and resume callbacks
+  coresight: perf: Support AUX trace pause and resume
+  coresight: perf: Update buffer on AUX pause
+  Documentation: coresight: Document AUX pause and resume
+
+ .../trace/coresight/coresight-perf.rst        |  31 ++++
+ drivers/hwtracing/coresight/coresight-core.c  |  22 +++
+ .../hwtracing/coresight/coresight-etm-perf.c  |  84 +++++++++-
+ .../coresight/coresight-etm4x-core.c          | 143 +++++++++++++-----
+ drivers/hwtracing/coresight/coresight-etm4x.h |   2 +
+ drivers/hwtracing/coresight/coresight-priv.h  |   2 +
+ include/linux/coresight.h                     |   4 +
+ 7 files changed, 246 insertions(+), 42 deletions(-)
+
+-- 
+2.34.1
 
