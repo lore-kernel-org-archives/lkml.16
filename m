@@ -1,78 +1,73 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40274259C98
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1524C221F03;
+	Tue, 11 Mar 2025 12:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741695921; cv=none; b=Gao/fP0bXvaugb0uRxUnOcja5m6RLk3ybM5b56oNF00fmIB+N4r/0fzYZ6TGIGL6P+RamjoHCYHwVoVfAWs+hh1NRqUxfH88OgkyymIbhumIEOaLZGySBuhO+nGoDJncrsgryctSR72R7iEeRLIXZpp4WeK1y/ZzZWu+f6qVr+g=
+	t=1741695917; cv=none; b=umfBJ/RvNI7NNMFTCHAmIiqx4R5lvYm8W8hL41edpWuRTWsfp5heinIfu4k+JdoK1ZUfnu2awKZnA1ANF0DSXtBz61MOPsGkH5PF5xw9dQcAhzoClcdpDrsghye1QEf+PwEDgi26NJNGDSVZQbA5eobpi2U8Wzs7VvetFgKhl8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741695921; c=relaxed/simple;
-	bh=BWCDKEOx5rpXfv2Ehoc4ZbjOk+5fknqmSHI9WUgHxBY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KP8lmLFpfy3s4kUfJq0RqeMOKFyhIvmeS3imceomiy9RPlXCp8clpj0XgFM+g14JAnw7lW7+5w7Bsx9uVOZOmmgmEo11oEweosLiQ8lCCpqTmacuGK6Sjuga4XDr7lSFOi1zFSrfXdaAxETLhMiqGgS5DxjNqLBSWN+PeMpX+IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fNMIKFgC; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1741695917; c=relaxed/simple;
+	bh=MKEykAs8Uo47Fab54lYnG6uQnj0K1i+/SyAl1+iUpHI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SRje60TGMgydmkvXNWH9UCkgKeKu7dUiA82I99LqG25RZ5V0zpc6E5IaFgfKTKJBXAaTWWc+3mBc9JLA+U5GRl9/GFHMNhh6c5ASfYb9+kf63F1A8vYYj1WkB4w3hoxTIKhQdldKgD7GWfpnW/onwCgs6+8vZAcwNblxTDhLZ2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gineidVz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fNMIKFgC"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22403cbb47fso101986415ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 05:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741695918; x=1742300718; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x+cFskIjc2R+b1eOxd5DFriJfYFabuqe5pHc955ET08=;
-        b=fNMIKFgCS0nD+Ma3C9GSZNyoLbYDajt06hA+e1xANo6RjahNp/xAOaTmZtSTWvQ0To
-         iF6YmGI2rmkeSGFcIFUNEwtMshuwp3zYBGsBXBTupHzBXUIBxxz0kzU9fVFH1rLDW9i/
-         JRLvEOX1+eANpUnfgNjeXvpIDAlV8jgxctbYExW+qqrqgbu+M8KGpBFvGWci48KChSky
-         KrFhJWtkQNS5tLkAVx2TCWJ0ww3nz0rLxO08P0ojhC1jDD5vsru6hYYxUugsTXw6Nhyp
-         io9OPxNJxmszRF7OCJwguJnMb0fC/2X6IcMSza4Y/5zR4pKivgoujDLaEqP9WniJhzSd
-         OQig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741695918; x=1742300718;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=x+cFskIjc2R+b1eOxd5DFriJfYFabuqe5pHc955ET08=;
-        b=trUpVzEPw5v7MPcPB41cX8fKOec0VcAeeNAQqGENsENhbe+mL1KBshMtsG68SPCZ6v
-         iGPobuuy823x4mLMM7v9iG3ors8ImbHjqXaOdlPzhndJk3wWyPWE/6gmgvbOi57ppFnG
-         81NwOOnHJudAb5oXrIfmUH1TeRLpEgCGpDU3l8uQ/0xk3JXp2A/B3lSWjTOlA/5p1bQM
-         Tz73Lcll3/E1MBl+gZV+LjTdLRLYdY2qOsexFdoT9qwM7AjE6zedOv9/p29q/MvtNMEC
-         hF/fErk/jfnn4lHkaSPjYK0qI48lM+CskhzfargiHB1zo7PbvM3al3v8GKessVzHsnzC
-         CCAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUm3DexOUSTtPqwgPqaRYp5tic5QuUdGB/5KLLcPZj4HJErdAMSDsdS9yzz5xZtdpbn6g2bm43wf3OHqyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw6rknjqXOAvvBeoaRwHIFn0pWhiZfQfIrHL0VRBq9/umPzJQD
-	NZAj05MZjkZuQ0cPR4TvCWuhKCQ/7T/oKzrsHPKz1bqmnxKtrz8wz9Lykd/qaJ4=
-X-Gm-Gg: ASbGncsN/sJywMtv9Z0wptqCQBNASltw2c3neqdWIm0/bR7yjOJO2aXQ9vjSkak+fz4
-	t2q0mvi2YG8clJo/AAFH1iJ75XJbm1S7t245JABa6uemwcSsuMTxJpxcG2Gmr8raFnubN9WDjNH
-	jElswJXWAtVT8u8saRrzbfpzLXAGjmcCxceXpAWiRCZVhI8K/dMb4/AjXG/lBCiHpdQzyULbJ5S
-	lN5c6ifg9aXfPpUT2Fs1aItLa/UrrOY3om2AbpcT2OS4QanY3FMSeY6RFvmJpqYU6rE8b8pHhEw
-	C3oqQ220omNubUQGbaZpe3fCkpitSCJ3tptNL/cG3yelh+hl9UdW+tkujaQXanmLiv4zdyjVSsd
-	iXMdLzq1XQe1vZ9VXkdkl+u19qVM=
-X-Google-Smtp-Source: AGHT+IHG1hIfRPGfeBWtZBg6vmzBDsRxutGZo9a7a1tFhmE6ZGkKIhVjEQFMDqp9Q4XTijdI+P3nug==
-X-Received: by 2002:a17:903:32c5:b0:224:249f:9734 with SMTP id d9443c01a7336-2242887ecd7mr261999215ad.4.1741695918352;
-        Tue, 11 Mar 2025 05:25:18 -0700 (PDT)
-Received: from J9GPGXL7NT.bytedance.net ([61.213.176.56])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73698450244sm10226621b3a.80.2025.03.11.05.25.14
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 11 Mar 2025 05:25:18 -0700 (PDT)
-From: Xu Lu <luxu.kernel@bytedance.com>
-To: akpm@linux-foundation.org,
-	jhubbard@nvidia.com,
-	kirill.shutemov@linux.intel.com,
-	tjeznach@rivosinc.com,
-	joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com
-Cc: lihangjing@bytedance.com,
-	xieyongji@bytedance.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Xu Lu <luxu.kernel@bytedance.com>
-Subject: [PATCH v2 0/4] riscv: iommu: Support Svnapot
-Date: Tue, 11 Mar 2025 20:25:06 +0800
-Message-Id: <20250311122510.72934-1-luxu.kernel@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gineidVz"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B788xl025707;
+	Tue, 11 Mar 2025 12:24:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=IPc6R0KbbL3
+	FySTaON+41nl25NWycMxj86fB+4np2NY=; b=gineidVzXARki2zXqlFPJVsOV+z
+	VIyXKsW3wCj8K8GUm2kuU4dJxDb/xSFrNzCjhlsc6IlGTFnmfoWAsKgPW8i/DcS6
+	nyt0JDu15b5S+wwoD9LyLU5Z4zP2Lb/mGaW6jAp78jxYI4vnCL/jX4eZ01Ua8kKw
+	enF6on4COZb04S6PV666n43uXYwgpmJxNeRABJen2ijciSThAaS0sQEeQ9gDTssL
+	k9sOp8W0xRydRszB0zItvf36B8rbs0US1kE8R7K/oPKFLsLw5B/yqqYJimg0CWGt
+	QRmbsR2axeex/F1mxeWiZX6viz5UVbYAwO2T8vCO+9sEsEcwvxYzWvqhKGw==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458ewk8ha5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 12:24:54 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52BCOokI008159;
+	Tue, 11 Mar 2025 12:24:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 458yn373wr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 12:24:50 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52BCOo6l008136;
+	Tue, 11 Mar 2025 12:24:50 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 52BCOnAZ008129
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 12:24:50 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
+	id 3D043599; Tue, 11 Mar 2025 17:54:48 +0530 (+0530)
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
+        dmitry.baryshkov@linaro.org, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: [PATCH v2 06/10] arm64: dts: qcom: sa8775p: add Display Serial Interface device nodes
+Date: Tue, 11 Mar 2025 17:54:41 +0530
+Message-Id: <20250311122445.3597100-7-quic_amakhija@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
+References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,28 +75,249 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Tr8chCXh c=1 sm=1 tr=0 ts=67d02b96 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=3nFnvXdk7A2PnE-P1t8A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: Wtj6tWyTpQsKVYFBxHDr06a2q-ivFk0N
+X-Proofpoint-ORIG-GUID: Wtj6tWyTpQsKVYFBxHDr06a2q-ivFk0N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-11_02,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 phishscore=0 malwarescore=0 impostorscore=0
+ bulkscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503110080
 
-According to the RISC-V IOMMU hardware spec, the IOMMU implementation
-has the same translation process as MMU and supports Svnapot standard
-extension as well. These patches add support for Svnapot in the IOMMU
-driver to make 64K also an available page size during DMA mapping.
+Add device tree nodes for the DSI0 and DSI1 controllers
+with their corresponding PHYs found on Qualcomm SA8775P SoC.
 
-Changes in V2:
-1. Supply more details about huge pte issue in follow_page_pte().
-2. Fix some style problems.
+Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi | 186 +++++++++++++++++++++++++-
+ 1 file changed, 185 insertions(+), 1 deletion(-)
 
-Xu Lu (4):
-  mm/gup: Add huge pte handling logic in follow_page_pte()
-  iommu/riscv: Use pte_t to represent page table entry
-  iommu/riscv: Introduce IOMMU page table lock
-  iommu/riscv: Add support for Svnapot
-
- arch/riscv/include/asm/pgtable.h |   6 +
- drivers/iommu/riscv/iommu.c      | 258 +++++++++++++++++++++++++------
- include/linux/pgtable.h          |   8 +
- mm/gup.c                         |  17 +-
- 4 files changed, 233 insertions(+), 56 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+index 3394ae2d1300..edc5130f4bae 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+@@ -6,6 +6,7 @@
+ 
+ #include <dt-bindings/interconnect/qcom,icc.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/qcom,dsi-phy-28nm.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,sa8775p-dispcc.h>
+ #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
+@@ -3890,6 +3891,22 @@ dpu_intf4_out: endpoint {
+ 							remote-endpoint = <&mdss0_dp1_in>;
+ 						};
+ 					};
++
++					port@2 {
++						reg = <2>;
++
++						dpu_intf1_out: endpoint {
++							remote-endpoint = <&mdss0_dsi0_in>;
++						};
++					};
++
++					port@3 {
++						reg = <3>;
++
++						dpu_intf2_out: endpoint {
++							remote-endpoint = <&mdss0_dsi1_in>;
++						};
++					};
+ 				};
+ 
+ 				mdss0_mdp_opp_table: opp-table {
+@@ -3917,6 +3934,170 @@ opp-650000000 {
+ 				};
+ 			};
+ 
++			mdss0_dsi0: dsi@ae94000 {
++				compatible = "qcom,sa8775p-dsi-ctrl", "qcom,mdss-dsi-ctrl";
++				reg = <0x0 0x0ae94000 0x0 0x400>;
++				reg-names = "dsi_ctrl";
++
++				interrupt-parent = <&mdss0>;
++				interrupts = <4>;
++
++				clocks = <&dispcc0 MDSS_DISP_CC_MDSS_BYTE0_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_BYTE0_INTF_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_PCLK0_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_ESC0_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_AHB_CLK>,
++					 <&gcc GCC_DISP_HF_AXI_CLK>;
++				clock-names = "byte",
++					      "byte_intf",
++					      "pixel",
++					      "core",
++					      "iface",
++					      "bus";
++				assigned-clocks = <&dispcc0 MDSS_DISP_CC_MDSS_BYTE0_CLK_SRC>,
++						  <&dispcc0 MDSS_DISP_CC_MDSS_PCLK0_CLK_SRC>;
++				assigned-clock-parents = <&mdss0_dsi0_phy DSI_BYTE_PLL_CLK>,
++							 <&mdss0_dsi0_phy DSI_PIXEL_PLL_CLK>;
++				phys = <&mdss0_dsi0_phy>;
++
++				operating-points-v2 = <&dsi0_opp_table>;
++				power-domains = <&rpmhpd SA8775P_MMCX>;
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				status = "disabled";
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++
++						mdss0_dsi0_in: endpoint {
++							remote-endpoint = <&dpu_intf1_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						mdss0_dsi0_out: endpoint{ };
++					};
++				};
++
++				dsi0_opp_table: opp-table {
++					compatible = "operating-points-v2";
++
++					opp-358000000 {
++						opp-hz = /bits/ 64 <358000000>;
++						required-opps = <&rpmhpd_opp_svs_l1>;
++					};
++				};
++			};
++
++			mdss0_dsi0_phy: phy@ae94400 {
++				compatible = "qcom,sa8775p-dsi-phy-5nm";
++				reg = <0x0 0x0ae94400 0x0 0x200>,
++				      <0x0 0x0ae94600 0x0 0x280>,
++				      <0x0 0x0ae94900 0x0 0x27c>;
++				reg-names = "dsi_phy",
++					    "dsi_phy_lane",
++					    "dsi_pll";
++
++				#clock-cells = <1>;
++				#phy-cells = <0>;
++
++				clocks = <&dispcc0 MDSS_DISP_CC_MDSS_AHB_CLK>,
++					 <&rpmhcc RPMH_CXO_CLK>;
++				clock-names = "iface", "ref";
++
++				status = "disabled";
++			};
++
++			mdss0_dsi1: dsi@ae96000 {
++				compatible = "qcom,sa8775p-dsi-ctrl", "qcom,mdss-dsi-ctrl";
++				reg = <0x0 0x0ae96000 0x0 0x400>;
++				reg-names = "dsi_ctrl";
++
++				interrupt-parent = <&mdss0>;
++				interrupts = <5>;
++
++				clocks = <&dispcc0 MDSS_DISP_CC_MDSS_BYTE1_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_BYTE1_INTF_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_PCLK1_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_ESC1_CLK>,
++					 <&dispcc0 MDSS_DISP_CC_MDSS_AHB_CLK>,
++					 <&gcc GCC_DISP_HF_AXI_CLK>;
++				clock-names = "byte",
++					      "byte_intf",
++					      "pixel",
++					      "core",
++					      "iface",
++					      "bus";
++				assigned-clocks = <&dispcc0 MDSS_DISP_CC_MDSS_BYTE1_CLK_SRC>,
++						  <&dispcc0 MDSS_DISP_CC_MDSS_PCLK1_CLK_SRC>;
++				assigned-clock-parents = <&mdss0_dsi1_phy DSI_BYTE_PLL_CLK>,
++							 <&mdss0_dsi1_phy DSI_PIXEL_PLL_CLK>;
++				phys = <&mdss0_dsi1_phy>;
++
++				operating-points-v2 = <&dsi1_opp_table>;
++				power-domains = <&rpmhpd SA8775P_MMCX>;
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				status = "disabled";
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++
++						mdss0_dsi1_in: endpoint {
++							remote-endpoint = <&dpu_intf2_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						mdss0_dsi1_out: endpoint { };
++					};
++				};
++
++				dsi1_opp_table: opp-table {
++					compatible = "operating-points-v2";
++
++					opp-358000000 {
++						opp-hz = /bits/ 64 <358000000>;
++						required-opps = <&rpmhpd_opp_svs_l1>;
++					};
++				};
++			};
++
++			mdss0_dsi1_phy: phy@ae96400 {
++				compatible = "qcom,sa8775p-dsi-phy-5nm";
++				reg = <0x0 0x0ae96400 0x0 0x200>,
++				      <0x0 0x0ae96600 0x0 0x280>,
++				      <0x0 0x0ae96900 0x0 0x27c>;
++				reg-names = "dsi_phy",
++					    "dsi_phy_lane",
++					    "dsi_pll";
++
++				#clock-cells = <1>;
++				#phy-cells = <0>;
++
++				clocks = <&dispcc0 MDSS_DISP_CC_MDSS_AHB_CLK>,
++					 <&rpmhcc RPMH_CXO_CLK>;
++				clock-names = "iface", "ref";
++
++				status = "disabled";
++			};
++
+ 			mdss0_dp0_phy: phy@aec2a00 {
+ 				compatible = "qcom,sa8775p-edp-phy";
+ 
+@@ -4123,7 +4304,10 @@ dispcc0: clock-controller@af00000 {
+ 				 <&sleep_clk>,
+ 				 <&mdss0_dp0_phy 0>, <&mdss0_dp0_phy 1>,
+ 				 <&mdss0_dp1_phy 0>, <&mdss0_dp1_phy 1>,
+-				 <0>, <0>, <0>, <0>;
++				 <&mdss0_dsi0_phy DSI_BYTE_PLL_CLK>,
++				 <&mdss0_dsi0_phy DSI_PIXEL_PLL_CLK>,
++				 <&mdss0_dsi1_phy DSI_BYTE_PLL_CLK>,
++				 <&mdss0_dsi1_phy DSI_PIXEL_PLL_CLK>;
+ 			power-domains = <&rpmhpd SA8775P_MMCX>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
 -- 
-2.20.1
+2.34.1
 
