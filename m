@@ -1,85 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4E519D067
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 14:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAEFF1C5D61;
+	Tue, 11 Mar 2025 14:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741702594; cv=none; b=g+eqjDRViPgy6gw7vJ4jgQuE2fOAwEAEixPnV6L+Mu+nqY3MjGUiqccF154rKsDkcpYOUPF9aefOYz3kNlf3uDyngD39IJozRf8FswI/49lZ7QCXKp4XRVkxajLM6UltxFsUhTn7DBg9Rm3i41MzM5rfZfh462Hl/35zOqhSSB8=
+	t=1741702648; cv=none; b=f2JTOflkVSydf+Tba3FQweiIYjf8G6RD3UTI2fBOHwDWfVEMBjnBG5Qq7QLDX2J5NHzPfKcr2ZFzWzVDBnwCwkyhzW4LBdNqohepSRDDaTO1NRyQbUobxOUB7gp2mPaL3SO7k5bRpXlXFEw2kKzYCiiOdbiUynOh/YCygs4fU74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741702594; c=relaxed/simple;
-	bh=UfXHTMaPVdG7ZxNL1lHSUbJV5e4J5vNj/AHB9cZQTac=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dyKozvEIEvTP2xtZCrQYcSfzf/g/D8Y471aujtcyAHp8CL9o7SUSt8UdeP3DMvp7tD2RbO7ue0K4E/09QSS9fZeiNwQlexBoOH/nsvVhIrAg+EfwZ0GIkVaaiBouvkjKK6pep5a5tmfMOeVkxIr6LZIkv4Wyg8zVPAro57IlTHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=chQdwNG6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=00ArYphL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="chQdwNG6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="00ArYphL"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741702591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DwyWWMDbvftDi6swFTAUyPJOVj0fxdOJ/gPcHhgwuoQ=;
-	b=chQdwNG6AzEXXMLe1zDBCnPTPxLEyGI02HWMKBlIwLf/dyPTJkOpO15oa+Z1NzhOt9iGNa
-	4L6LFuT+W6ryBgHTafQ+os29/0QSxjv/1HyZsdm4HKWsMkIUAdj3/EeGFyib9/386EsIWA
-	Y7ZhJf/Vw69Rt5znxAVfa1e6jF/c7puI0n5gFCUex0ak4aocmOMdmWcrv5dF5PEyGWIIJm
-	s+RrfoZF/GkAsCRXODRnXkvqZO7BptTY/h05WtkLViSBXcitGpflutSfU8zmvIsikx31Is
-	A/cu1VVizPKFCnuRxS1XUpY5m0dEdhIsgUgtDIfpBu6J3e5m1ni1I/cHIiCq3w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741702591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DwyWWMDbvftDi6swFTAUyPJOVj0fxdOJ/gPcHhgwuoQ=;
-	b=00ArYphLbzRh7uDnC9ScRsfnzlUUL+SAj/I1l0rK3Vz0RsOmCo2s2i+B/0HgBVmT+SGTPc
-	R4E6ssgEhps0ETBw==
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Benjamin Segall <bsegall@google.com>, Eric
- Dumazet <edumazet@google.com>, Andrey Vagin <avagin@openvz.org>, Pavel
- Tikhomirov <ptikhomirov@virtuozzo.com>, Peter Zijlstra
- <peterz@infradead.org>, Cyrill Gorcunov <gorcunov@gmail.com>
-Subject: Re: [patch V3 02/18] posix-timers: Initialise timer before adding
- it to the hash table
-In-Reply-To: <Z9A5uixC_Tjk308w@localhost.localdomain>
-References: <20250308155501.391430556@linutronix.de>
- <20250308155623.572035178@linutronix.de>
- <Z9A5uixC_Tjk308w@localhost.localdomain>
-Date: Tue, 11 Mar 2025 15:16:30 +0100
-Message-ID: <87y0xbzm81.ffs@tglx>
+	s=arc-20240116; t=1741702648; c=relaxed/simple;
+	bh=txT6ecDe6SJc28gdi7DRBSzVeUr4dFoNyVNQOww37jI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BwhNLqpHE1S7llTtd8ftvvRfs1DgEkZmyMUXjYkKy3tZuBqnW2EexZzY5s/cLr6MFOd0MeLpR6RlSx8GRWQj3JpPfaGs5UZUFWAe7kxuGbEBagt2qj3FFzXbBvpgsjwhWcS839v7CiHIs2rQmlJHOB+XcFa2pubdK2iSVFyiLas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47CED1516;
+	Tue, 11 Mar 2025 07:17:37 -0700 (PDT)
+Received: from beelzebub.ast.arm.com (u203013-lin.austin.arm.com [10.118.28.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E2D43F694;
+	Tue, 11 Mar 2025 07:17:26 -0700 (PDT)
+From: Stuart Yoder <stuart.yoder@arm.com>
+To: jarkko@kernel.org,
+	sfr@canb.auug.org.au
+Cc: linux-next@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 5/5] Documentation: tpm: add documentation for the CRB FF-A interface
+Date: Tue, 11 Mar 2025 09:17:18 -0500
+Message-Id: <20250311141718.145276-1-stuart.yoder@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 11 2025 at 14:25, Frederic Weisbecker wrote:
-> Le Sat, Mar 08, 2025 at 05:48:14PM +0100, Thomas Gleixner a =C3=A9crit :
->>=20=20
->> -static struct k_itimer *posix_timer_by_id(timer_t id)
->> +static inline struct signal_struct *posix_sig_owner(const struct k_itim=
-er *timer)
->>  {
->> -	struct signal_struct *sig =3D current->signal;
->> -	struct hlist_head *head =3D &posix_timers_hashtable[hash(sig, id)];
->> +	unsigned long val =3D (unsigned long)timer->it_signal;
->
-> When used from posix_timer_add() -> posix_timer_hashed(), it can race
-> with another do_timer_create() that clears the BIT 0. It's fine but
-> KCSAN is going to warn sooner or later.
+Add documentation providing details of how the CRB driver interacts
+with FF-A.
 
-Indeed
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ Documentation/security/tpm/index.rst       |  1 +
+ Documentation/security/tpm/tpm_ffa_crb.rst | 65 ++++++++++++++++++++++
+ 2 files changed, 66 insertions(+)
+ create mode 100644 Documentation/security/tpm/tpm_ffa_crb.rst
 
-> It looks like a good candidate for data_race() ? Well, READ_ONCE() is
-> fine too.
+diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
+index fa593d960040..deda952eacbe 100644
+--- a/Documentation/security/tpm/index.rst
++++ b/Documentation/security/tpm/index.rst
+@@ -10,3 +10,4 @@ Trusted Platform Module documentation
+    tpm_vtpm_proxy
+    xen-tpmfront
+    tpm_ftpm_tee
++   tpm_ffa_crb
+diff --git a/Documentation/security/tpm/tpm_ffa_crb.rst b/Documentation/security/tpm/tpm_ffa_crb.rst
+new file mode 100644
+index 000000000000..0184193da3c7
+--- /dev/null
++++ b/Documentation/security/tpm/tpm_ffa_crb.rst
+@@ -0,0 +1,65 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++========================
++TPM CRB over FF-A Driver
++========================
++
++The TPM Command Response Buffer (CRB) interface is a standard TPM interface
++defined in the TCG PC Client Platform TPM Profile (PTP) Specification [1]_.
++The CRB provides a structured set of control registers a client uses when
++interacting with a TPM as well as a data buffer for storing TPM commands and
++responses. A CRB interface can be implemented in:
++
++- hardware registers in a discrete TPM chip
++
++- in memory for a TPM running in isolated environment where shared memory
++  allows a client to interact with the TPM
++
++The Firmware Framework for Arm A-profile (FF-A) [2]_ is a specification
++that defines interfaces and protocols for the following purposes:
++
++- Compartmentalize firmware into software partitions that run in the Arm
++  Secure world environment (also know as TrustZone)
++
++- Provide a standard interface for software components in the Non-secure
++  state, for example OS and Hypervisors, to communicate with this firmware.
++
++A TPM can be implemented as an FF-A secure service.  This could be a firmware
++TPM or could potentially be a TPM service that acts as a proxy to a discrete
++TPM chip. An FF-A based TPM abstracts hardware details (e.g. bus controller
++and chip selects) away from the OS and can protect locality 4 from access
++by an OS.  The TCG-defined CRB interface is used by clients to interact
++with the TPM service.
++
++The Arm TPM Service Command Response Buffer Interface Over FF-A [3]_
++specification defines FF-A messages that can be used by a client to signal
++when updates have been made to the CRB.
++
++How the Linux CRB driver interacts with FF-A is summarized below:
++
++- The tpm_crb_ffa driver registers with the FF-A subsystem in the kernel
++  with an architected TPM service UUID defined in the CRB over FF-A spec.
++
++- If a TPM service is discovered by FF-A, the probe() function in the
++  tpm_crb_ffa driver runs, and the driver initializes.
++
++- The probing and initialization of the Linux CRB driver is triggered
++  by the discovery of a TPM advertised via ACPI.  The CRB driver can
++  detect the type of TPM through the ACPI 'start' method.  The start
++  method for Arm FF-A was defined in TCG ACPI v1.4 [4]_.
++
++- When the CRB driver performs its normal functions such as signaling 'start'
++  and locality request/relinquish it invokes the tpm_crb_ffa_start() funnction
++  in the tpm_crb_ffa driver which handles the FF-A messaging to the TPM.
++
++References
++==========
++
++.. [1] **TCG PC Client Platform TPM Profile (PTP) Specification**
++   https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
++.. [2] **Arm Firmware Framework for Arm A-profile (FF-A)**
++   https://developer.arm.com/documentation/den0077/latest/
++.. [3] **Arm TPM Service Command Response Buffer Interface Over FF-A**
++   https://developer.arm.com/documentation/den0138/latest/
++.. [4] **TCG ACPI Specification**
++   https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
+-- 
+2.34.1
 
-READ_ONCE() is the right thing to do.
