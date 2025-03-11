@@ -1,215 +1,144 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A35260A32;
-	Tue, 11 Mar 2025 18:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19487262801
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 18:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741716164; cv=none; b=E3vNxAW9EH/j5gZAiRX0rW9TUBYssSo2aQS3ZzLaIvfkGr+MuS1CQscSl1UWkeJIt0SszcqDXlyxsdMFtvK9tJLXRdp7sUhT+61ulD7Exo8OPv+gQYv/gf16DvH6jUKtq/vYUK6krRX3/bnUrhcXNedX4SoCv2twHlSu0hSCjoY=
+	t=1741716184; cv=none; b=OonEWZd7g3Xptaxu60RGsNu0THGCj2FiRvsTEcKxxGqmhZkO7OWXJSYcptdJydVePrCDMnXygGSIwy2k1/9hNfkH2hWntv9wgPWye9j6y1MMtPlgbVBXbQPYoWE0yQBlZNGJInckDHV/hn/hzH1SzAj32tNWnt1z2qCBNebNtVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741716164; c=relaxed/simple;
-	bh=cJJ60I0voD1FU/MBcN/l1RUYb420JRiuQNZp6VwoIRw=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Dce4SfwKg1Ffm1bx/cuySC1MuZElolWEXzAyyg7ge6oWLYUgHBofMxWcY4HG0Vf4jhF3xuLacE8y+AARQ+llLn138mff4lf92Kz4iiGaRasH0vHYy9z7e2CQdudXXzLspWQLKtGFrpDYLHAqCJlPhnQaFvY7UGHj3cb6ekg50tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=Y7aVSKvC; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1741716184; c=relaxed/simple;
+	bh=TSHmhqZwyLnRao31ZE/kuynrWIfbFM/u9czNvOIv9MM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UVt4n3FrBfKtp3UnioFUYj6Jmcj5WKTAs+rfR0Bj0cjIo7/kW0zWAd5TAQc1biU9qGOJL+kks6i7lySdWspoYax6SYzb5RbE8BwAeJ9hpKq5baxQ10PecL6PmoaLYwhYVya0gpsiGGsrj+/Yxsmuqffyow8191Evy96Sf5e4beA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TH2cX9i1; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Y7aVSKvC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=From:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=sfOzXF32SVgBzw0bop+7o2FnHha6RNF67mlrgAvS+p0=; b=Y7aVSKvCLCiDDigNnsoRSbI2F/
-	Id9YZtVfW86h3pv411HtwRrhGQ2AXkz3XtB2Nn9pygSPDm7xYhxaCSQamdwzB4WJLhFMUlMH8WOnY
-	THKqurYoyiHy8q1DCp+GqdiuJ9717FpsQLHg2wCSrqN/2Ow+TDOgvyMftSjnxDjQQhy1erj30WFMX
-	ONwDdyTwFTW/RTXSb/XYmxo45TLxVuh0tUgGnn6jYrm5Pyuwl/xdUjB+eZ6tJkydTrBTbYdQACbjd
-	8HjJ2fTvEQrZCYxLpBmJQsOVbe01e8bg8wNmNAJNo28gBhdUK5EKHJwy0/6QoteGfNX+gWTNtu0D6
-	wZ0gt7Pg==;
-From: Andreas Kemnade <andreas@kemnade.info>
-To: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	tony@atomide.com,
-	andreas@kemnade.info,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: clock: ti: Convert ti-clkctrl.txt to json-schema
-Date: Tue, 11 Mar 2025 19:02:15 +0100
-Message-Id: <20250311180215.173634-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TH2cX9i1"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac25520a289so779913266b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:03:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741716181; x=1742320981; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ccls6QlRwKxRURW2wbvi5fD6dk24Crfv3eaY7igy5w=;
+        b=TH2cX9i1X7qPGcCjitS15NQto7EzckVYHXsKtXY9mCSpeiTb0GzbM2doZGnOWkkJv9
+         QH5Cwvt3dKeFMQ4uhafRXi3Y2qFsxEoj4qnEa9VYD3lTTKUmq51EwIE5I3c/iuN2cnqR
+         V5LwrzBmW67kwkzCCyG9nUZZpYigbN9WFQI8bLGeQsjxAnBiZbWncJs2uGuZFt/h59nK
+         fphE14ihHswjXZhKhvwnk4qjCDI9N67pkB5YKP0jvn5I9OgkeFheB77dxddIk2j0fqI5
+         vaEJr+7Tglhl6TrWy2ga/3mvNxPDma86AmQ7B+RUJXebqltaXgTXsmh92TqFu4jgl1gx
+         BIkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741716181; x=1742320981;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0ccls6QlRwKxRURW2wbvi5fD6dk24Crfv3eaY7igy5w=;
+        b=QXhDBm9r/ohkE1geZ6mWDxW+WGsFOZ5BlLp7xhbNTwiA6dlfEyv2sdbPXzQb/SlsTx
+         OHj131DeTHLO85bZ1tvACnN30pt2Xpi/MoOYQdA/ukJF08+Jx/aKPe/+KhExam0A5jT8
+         rdeRH7d9tPXruIcJm6/bBJ8mDosEX4tRyFyxSZnj6P5ghAxhEBlay4KyfXNADZxJrCtb
+         QBzu2/Y+D2mHXcNsoKAxUAxbFryX55OHsnuKYXUuvMw1ke8BP1rcBxZiu0LdNZMrSfCw
+         LX8hffDnpAo5ZSDUOm/NZMqDk0smtARtO64dqoM4iyZU+Ox6A/9nSBS8dAQV3W0eU9m6
+         GnAw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+80XQgFtoYbpAAuIeTVE4CY3XqSMkFcxoJAh+JnI0oBh9vOztTeFxXX76ZOqGstw7YPGug0EWQgE3bXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyci8SLMuT1W8hyAt1dsxnTGKqp40s++JPn6apMDPxU87p9Ou1M
+	+Y8i5wR7Dd+y4xUzYa3pw+aXlrVz3wEwRhwEDKDwdualLELXOqx4NjXYGT6NGEM=
+X-Gm-Gg: ASbGncup5bTfCiEGnfihFmiuH6CQFqlyzHjwyudctOaFMPYJkY1t1vR5SdwGdO0r1Sn
+	oIUjoqjcDXl7wHu6fz86GQC1Cd5cjR30cBapJ8/TDd6NjwKKeB+UXgq+8VNSKigHz2ddVkvPRxE
+	TBGxCl/sQKz2nUeZZeS3qfBCb4moG1r8GtsWg58ggslV4hWHRpShuqWH7vp+Dhc/c9NWy1fu6p+
+	LxtgwX3qUO0Pi/+YLi3GlIdECopJJ6NSlFY5fXhxWSQn+4mOTRV02XV+QvNOBXAlaQHP+RpMo9c
+	Y8dyf9gw88sAuxXypWdQeeCYm1Hj3bpPG3xUyCZMO3GqEcT44XfWOYs=
+X-Google-Smtp-Source: AGHT+IGnY0H7YzlXD8CZSfCox70QPKmTLZoV4lqMqMMxiyALS3HVvR/aMstzphLmsjj59KVicmXt3g==
+X-Received: by 2002:a17:907:1c24:b0:ac1:e1e1:1f30 with SMTP id a640c23a62f3a-ac252fa0c31mr2141888066b.38.1741716181234;
+        Tue, 11 Mar 2025 11:03:01 -0700 (PDT)
+Received: from localhost ([185.194.66.242])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ac2394894cbsm957805166b.70.2025.03.11.11.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 11:03:00 -0700 (PDT)
+From: Christopher Obbard <christopher.obbard@linaro.org>
+Date: Tue, 11 Mar 2025 19:02:56 +0100
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm interconnects as
+ built-in
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250311-wip-obbardc-qcom-defconfig-interconnects-builtin-v1-1-675b6bc57176@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAM960GcC/x2NQQrCMBAAv1L27EI3UlG/Ih6azaYu6KYmUQulf
+ 2/wNnOZWaFIVilw7VbI8tWiyZrQoQN+jDYJamgOrndDfyTCn86YvB9zYHxzemGQyMmiTqhWJTc
+ 24VrQf/RZ1dAN58h8OZEngpads0Rd/svbfdt2VwwgJIIAAAA=
+X-Change-ID: 20250311-wip-obbardc-qcom-defconfig-interconnects-builtin-258fcc961b11
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Christopher Obbard <christopher.obbard@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1644;
+ i=christopher.obbard@linaro.org; h=from:subject:message-id;
+ bh=TSHmhqZwyLnRao31ZE/kuynrWIfbFM/u9czNvOIv9MM=;
+ b=owEBbQKS/ZANAwAKAWNNxPBocEb4AcsmYgBn0HrQzl89Jaz1kNZJdzDGOQWcFYbCljywikz7i
+ iJbfuU8tICJAjMEAAEKAB0WIQTxi9yLbCX5CqI9UXRjTcTwaHBG+AUCZ9B60AAKCRBjTcTwaHBG
+ +DL6D/9IB7zq4cq3vY1Uw0waKJ/M8zCahI2LFsClUcFcgNnupikDLQ+SmcrOS6iYWqy/YcZQoD6
+ VT3RQcN9OCgdeYSkAuhR6fXeN8GGJgiZXkSHWC/pn6M4exxHBGjRgn2i0cQqaMin+hW9G60fI5K
+ L9aL0T/EP/MTgglpTKzhy+95WWh2JGR9hTXLfcSgen6fX/qiMIMsEKwtW24moUHMD9D4wb73+mY
+ 4scWoq5pWJ+TuVdpaurhAxFfRwgOObeiDEsRR+pqqU6iom1pTmV5cA9CpNaRjhmUNGnTYB0uqV1
+ iBhsy/R2yd8AsX+Jrz52OHGpqmxa/+jJPFc20S7Tpx/aVmvvzXo3JkF4Zhfc7a19JEW8smZjJ5n
+ 3Scp8cnscwYBiVIYopZZ6HMjFsA0V5KXoOacBiqnXnw1CDHs48i2ZUoaF5R6OAkR2ueArZm8R8r
+ kgGKM3zKTVdqsFWN7FAmx9x4aWY0omSWN+IY2TWvUOtA8NMJnFuKmFwu79SdpdKj84yxxZOKGKs
+ 49HqauXRI+g6UCm0G60qdDwWUqHqX65zjMMOS3vMwVUjVd3dbDS2uEnQ60Zuw6UJyQr0gZ2wTCK
+ Cl/4MRMdb0P3wqr0E6eL7aZGJJixWG+nDMMk9R0t89eRki5HOd73rNgzb56w97aUAhQoU0HljoI
+ CT5uZJChxYybamg==
+X-Developer-Key: i=christopher.obbard@linaro.org; a=openpgp;
+ fpr=F18BDC8B6C25F90AA23D5174634DC4F0687046F8
 
-Convert the TI clkctrl clock device tree binding to json-schema.
-Specify the creator of the original binding as a maintainer.
+Currently some Qualcomm interconnect drivers are enabled
+as modules which isn't overly useful since the interconnects
+are required to be loaded during early boot.
 
-reg property is used mostly with one item, in am3xxx also with
-an arbitrary number of items, so divert from the original binding
-specifying two (probably meaning one address and one size).
-The consumer part of the example is left out because the full consumer
-node would be needed.
+Loading the interconnects late (e.g. in initrd or as module)
+can cause boot issues, such as slowdown or even not booting
+at all (since the interconnect would be required for storage
+devices).
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Be consistent and enable all of the Qualcomm interconnect
+drivers as built-in to the kernel image.
+
+Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
 ---
-Changes in V2:
-- additional maintainer
-- remove txt binding
-- dual licensing
+ arch/arm64/configs/defconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- .../devicetree/bindings/clock/ti,clkctrl.yaml | 65 +++++++++++++++++++
- .../devicetree/bindings/clock/ti-clkctrl.txt  | 63 ------------------
- 2 files changed, 65 insertions(+), 63 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/ti,clkctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 219ef05ee5a757c43a37ec9f8571ce9976354830..6582baee2ab02ecb2ff442c6e73aa6a23fee8d7f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1656,11 +1656,11 @@ CONFIG_INTERCONNECT_IMX8MN=m
+ CONFIG_INTERCONNECT_IMX8MQ=m
+ CONFIG_INTERCONNECT_IMX8MP=y
+ CONFIG_INTERCONNECT_QCOM=y
+-CONFIG_INTERCONNECT_QCOM_MSM8916=m
++CONFIG_INTERCONNECT_QCOM_MSM8916=y
+ CONFIG_INTERCONNECT_QCOM_MSM8996=y
+-CONFIG_INTERCONNECT_QCOM_OSM_L3=m
++CONFIG_INTERCONNECT_QCOM_OSM_L3=y
+ CONFIG_INTERCONNECT_QCOM_QCM2290=y
+-CONFIG_INTERCONNECT_QCOM_QCS404=m
++CONFIG_INTERCONNECT_QCOM_QCS404=y
+ CONFIG_INTERCONNECT_QCOM_QCS615=y
+ CONFIG_INTERCONNECT_QCOM_QCS8300=y
+ CONFIG_INTERCONNECT_QCOM_QDU1000=y
 
-diff --git a/Documentation/devicetree/bindings/clock/ti,clkctrl.yaml b/Documentation/devicetree/bindings/clock/ti,clkctrl.yaml
-new file mode 100644
-index 0000000000000..49787550ce450
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti,clkctrl.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/ti,clkctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments clkctrl clock
-+
-+maintainers:
-+  - Tony Lindgren <tony@atomide.com>
-+  - Andreas Kemnade <andreas@kemnade.info>
-+
-+description: |
-+  Texas Instruments SoCs can have a clkctrl clock controller for each
-+  interconnect target module. The clkctrl clock controller manages functional
-+  and interface clocks for each module. Each clkctrl controller can also
-+  gate one or more optional functional clocks for a module, and can have one
-+  or more clock muxes. There is a clkctrl clock controller typically for each
-+  interconnect target module on omap4 and later variants.
-+
-+  The clock consumers can specify the index of the clkctrl clock using
-+  the hardware offset from the clkctrl instance register space. The optional
-+  clocks can be specified by clkctrl hardware offset and the index of the
-+  optional clock.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,clkctrl
-+      - ti,clkctrl-l4-cfg
-+      - ti,clkctrl-l4-per
-+      - ti,clkctrl-l4-secure
-+      - ti,clkctrl-l4-wkup
-+
-+  "#clock-cells":
-+    const: 2
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 8 # arbitrary, should be enough
-+
-+required:
-+  - compatible
-+  - "#clock-cells"
-+  - clock-output-names
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    bus {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      clock@20 {
-+        compatible = "ti,clkctrl";
-+        clock-output-names = "l4_per";
-+        reg = <0x20 0x1b0>;
-+        #clock-cells = <2>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-deleted file mode 100644
-index d20db7974a383..0000000000000
---- a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-+++ /dev/null
-@@ -1,63 +0,0 @@
--Texas Instruments clkctrl clock binding
--
--Texas Instruments SoCs can have a clkctrl clock controller for each
--interconnect target module. The clkctrl clock controller manages functional
--and interface clocks for each module. Each clkctrl controller can also
--gate one or more optional functional clocks for a module, and can have one
--or more clock muxes. There is a clkctrl clock controller typically for each
--interconnect target module on omap4 and later variants.
--
--The clock consumers can specify the index of the clkctrl clock using
--the hardware offset from the clkctrl instance register space. The optional
--clocks can be specified by clkctrl hardware offset and the index of the
--optional clock.
--
--For more information, please see the Linux clock framework binding at
--Documentation/devicetree/bindings/clock/clock-bindings.txt.
--
--Required properties :
--- compatible : shall be "ti,clkctrl" or a clock domain specific name:
--	       "ti,clkctrl-l4-cfg"
--	       "ti,clkctrl-l4-per"
--	       "ti,clkctrl-l4-secure"
--	       "ti,clkctrl-l4-wkup"
--- clock-output-names : from common clock binding
--- #clock-cells : shall contain 2 with the first entry being the instance
--		 offset from the clock domain base and the second being the
--		 clock index
--- reg : clock registers
--
--Example: Clock controller node on omap 4430:
--
--&cm2 {
--	l4per: cm@1400 {
--		cm_l4per@0 {
--			cm_l4per_clkctrl: clock@20 {
--				compatible = "ti,clkctrl";
--				clock-output-names = "l4_per";
--				reg = <0x20 0x1b0>;
--				#clock-cells = <2>;
--			};
--		};
--	};
--};
--
--Example: Preprocessor helper macros in dt-bindings/clock/ti-clkctrl.h
--
--#define OMAP4_CLKCTRL_OFFSET		0x20
--#define OMAP4_CLKCTRL_INDEX(offset)	((offset) - OMAP4_CLKCTRL_OFFSET)
--#define MODULEMODE_HWCTRL		1
--#define MODULEMODE_SWCTRL		2
--
--#define OMAP4_GPTIMER10_CLKTRL		OMAP4_CLKCTRL_INDEX(0x28)
--#define OMAP4_GPTIMER11_CLKTRL		OMAP4_CLKCTRL_INDEX(0x30)
--#define OMAP4_GPTIMER2_CLKTRL		OMAP4_CLKCTRL_INDEX(0x38)
--...
--#define OMAP4_GPIO2_CLKCTRL		OMAP_CLKCTRL_INDEX(0x60)
--
--Example: Clock consumer node for GPIO2:
--
--&gpio2 {
--       clocks = <&cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL 0
--		 &cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL 8>;
--};
+---
+base-commit: b098bcd8278b89cb3eb73fdb6e06dc49af75ad37
+change-id: 20250311-wip-obbardc-qcom-defconfig-interconnects-builtin-258fcc961b11
+
+Best regards,
 -- 
-2.39.5
+Christopher Obbard <christopher.obbard@linaro.org>
 
