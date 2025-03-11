@@ -1,236 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04EB1E7C06;
-	Tue, 11 Mar 2025 07:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6825D22173C;
+	Tue, 11 Mar 2025 07:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741679072; cv=none; b=NfQpWTr6s1xa8+1pDmEPejtFAoyrdFOV/Roh8SeMsnbMYFZ2Og7WeraEmJSFa2DaMsjI6tqyPRqG37nMZPr4vYnohOqhwWcqlRlJ+1wu6MTV1ollfi1H2XED/DZBY3RwoTQ/keQMNXjufGwhiyOoDjecnjt95tJ+1gdDSemPsIM=
+	t=1741679101; cv=none; b=J80QaArpzFDH7Usi2ACOG71jstZiokh8uJpN9fjEY1ACZqsT+IZw0SrmjFMy4yrimcykBLZq62VIEIunMZtEA+t7xroBeG+FrCkhDhiYXFuqADYAV2RPfOr3Z3T6eh/Z0Kx75QrPsydtez57wPmfNtR/vrDQoJtw+48v5OOenlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741679072; c=relaxed/simple;
-	bh=2eIaNlwJa4dzv5id5JOusE6+2FtezRKb/pqzF4d5egQ=;
+	s=arc-20240116; t=1741679101; c=relaxed/simple;
+	bh=1ADFlvq1wbboRCA2G1LV3CEb9m8pqmqaV3auLbDu4+s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lS0Th+IJIHGg4bG7cFm37vHjRm0dqOOv4OLYlIRQRyJci3EzD26DnrfgzcYyIhFmsrSLCVCpGCJD4+XVTvWlpLCBgY1NlPInlmarPSbc3i+XQnKRMAhXE7nLsuspchxlsdI13P/NnpUzVARTgJa3A3QaNk2AKSdmeo1x6eUmB1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9kZY4+3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UqspIdNLMyKyu2QywreX+xSHV/JW5RdAK9uk3QNmef3cR9YxCVyT6JhTqM5+qjoynH4QfXGb6t4PpumK9ytlqIXm6SpqaUFny1xZOAxpfhOl0u+/hu8E1pGu1MjtESHpidE7bBEZN3trg9A3UBLrTUHOpAzH7ucJ9Ij4o/g768E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NWjS0NOJ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9kZY4+3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A766DC4CEE9;
-	Tue, 11 Mar 2025 07:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741679071;
-	bh=2eIaNlwJa4dzv5id5JOusE6+2FtezRKb/pqzF4d5egQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R9kZY4+3EjEOh8Obpcsb1AzEJSSjlYsRlaBq/MiXkRP2T+AfnVqVtTHZV2PM2eBKc
-	 E1IvHxv1/b6J5IG3UBLj7AaA9AF+pCBQBBMVbmhLhyxEA7GQI6clX3vmFDfLE3oJdv
-	 OMGcWh8d2Qht3FRcKqFMDMLe5oI5eI1mNVDrc10X1IhW8+LwYQIWCzfJMK7PrH0R/P
-	 Z6cooRdwxLrJ4VmHi+53n2XuBXpevvBy28WttFVaY00qTfMtUUmV7cacS9jlkYGcoc
-	 sM5gPA0LvdgzYQp9wZJLZfDSEetjqDtFuys8MEaxwGwj4e3rWZawXGHKnCD1BwJ8IS
-	 zA0RE+Dd32zAw==
-Date: Tue, 11 Mar 2025 08:44:28 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, andrzej.hajda@intel.com, 
-	neil.armstrong@linaro.org, rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch
-Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
- color encoder
-Message-ID: <20250311-logical-spirited-mustang-e62afd@houat>
-References: <20250304101530.969920-4-victor.liu@nxp.com>
- <20250304152320.GA2630063-robh@kernel.org>
- <1891036.atdPhlSkOF@steina-w>
- <20250305163805.GA2071011-robh@kernel.org>
- <7d98163d-10c8-457d-92e7-6a1d6e379beb@nxp.com>
- <20250306-kangaroo-of-pastoral-typhoon-8aefb2@houat>
- <20250306203444.GA570402-robh@kernel.org>
- <3836a4d2-ef4e-427e-a820-39dd4823458b@nxp.com>
- <20250310-orthodox-unyielding-kagu-decaf9@houat>
- <8148d63e-a6ef-403b-b730-f64c572113af@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NWjS0NOJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741679100; x=1773215100;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1ADFlvq1wbboRCA2G1LV3CEb9m8pqmqaV3auLbDu4+s=;
+  b=NWjS0NOJLsidFQTyMTLgLwI4FBNZlYkH2CFeeaQoWAcXPTU1Q+srl2zw
+   qNmjQMWroq8KR/pEVaD6d3bfPKeQZiMFz2EQScaH+oplQpoVKha7YGXQ7
+   rv2yhglMyVG+P+CzP5gfv3ddd6O+xHLvkvjmlf1dBXiJCNF6mCfNS0iRi
+   xfI+kTNRM85hX7n10xGt0VRefDhYg5kiDroSq1m0i/KqX2mpBeK6K4fh+
+   pBO2+JowPQN5DI1ME+JRLaTqL+YcB8BVt2gi/34h9Ag/R1MUL5lGw4lRu
+   TK3pmP77kdleA0o+y7Djsf+0lCzjBTFGBbM8GChex9Y3i6pz7xam9C00+
+   w==;
+X-CSE-ConnectionGUID: bV4JgXrgRzetqh/oBsaMqQ==
+X-CSE-MsgGUID: fnSlpjnOSDWBqlO05yTiaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42613009"
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="42613009"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:45:00 -0700
+X-CSE-ConnectionGUID: RgQRP+pgRw+gu3XAjNHaAw==
+X-CSE-MsgGUID: /tDWz1lJQSa9OLn3xj5WMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="143439123"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:44:56 -0700
+Date: Tue, 11 Mar 2025 08:41:04 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shay Drory <shayd@nvidia.com>
+Subject: Re: [PATCH net 4/6] net/mlx5: Lag, Check shared fdb before creating
+ MultiPort E-Switch
+Message-ID: <Z8/pEN9xy4Pw7kHF@mev-dev.igk.intel.com>
+References: <1741644104-97767-1-git-send-email-tariqt@nvidia.com>
+ <1741644104-97767-5-git-send-email-tariqt@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pno4qowwcglhp5do"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8148d63e-a6ef-403b-b730-f64c572113af@nxp.com>
+In-Reply-To: <1741644104-97767-5-git-send-email-tariqt@nvidia.com>
 
+On Tue, Mar 11, 2025 at 12:01:42AM +0200, Tariq Toukan wrote:
+> From: Shay Drory <shayd@nvidia.com>
+> 
+> Currently, MultiPort E-Switch is requesting to create a LAG with shared
+> FDB without checking the LAG is supporting shared FDB.
+> Add the check.
+> 
+> Fixes: a32327a3a02c ("net/mlx5: Lag, Control MultiPort E-Switch single FDB mode")
+> Signed-off-by: Shay Drory <shayd@nvidia.com>
+> Reviewed-by: Mark Bloch <mbloch@nvidia.com>
+> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c   | 4 ++--
+>  drivers/net/ethernet/mellanox/mlx5/core/lag/lag.h   | 1 +
+>  drivers/net/ethernet/mellanox/mlx5/core/lag/mpesw.c | 3 ++-
+>  3 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
+> index cea5aa314f6c..ed2ba272946b 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
+> @@ -951,7 +951,7 @@ void mlx5_disable_lag(struct mlx5_lag *ldev)
+>  				mlx5_eswitch_reload_ib_reps(ldev->pf[i].dev->priv.eswitch);
+>  }
+>  
+> -static bool mlx5_shared_fdb_supported(struct mlx5_lag *ldev)
+> +bool mlx5_lag_shared_fdb_supported(struct mlx5_lag *ldev)
+>  {
+>  	int idx = mlx5_lag_get_dev_index_by_seq(ldev, MLX5_LAG_P1);
+>  	struct mlx5_core_dev *dev;
+> @@ -1038,7 +1038,7 @@ static void mlx5_do_bond(struct mlx5_lag *ldev)
+>  	}
+>  
+>  	if (do_bond && !__mlx5_lag_is_active(ldev)) {
+> -		bool shared_fdb = mlx5_shared_fdb_supported(ldev);
+> +		bool shared_fdb = mlx5_lag_shared_fdb_supported(ldev);
+>  
+>  		roce_lag = mlx5_lag_is_roce_lag(ldev);
+>  
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.h b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.h
+> index 01cf72366947..c2f256bb2bc2 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.h
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.h
+> @@ -92,6 +92,7 @@ mlx5_lag_is_ready(struct mlx5_lag *ldev)
+>  	return test_bit(MLX5_LAG_FLAG_NDEVS_READY, &ldev->state_flags);
+>  }
+>  
+> +bool mlx5_lag_shared_fdb_supported(struct mlx5_lag *ldev);
+>  bool mlx5_lag_check_prereq(struct mlx5_lag *ldev);
+>  void mlx5_modify_lag(struct mlx5_lag *ldev,
+>  		     struct lag_tracker *tracker);
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag/mpesw.c b/drivers/net/ethernet/mellanox/mlx5/core/lag/mpesw.c
+> index ffac0bd6c895..1770297a112e 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lag/mpesw.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lag/mpesw.c
+> @@ -83,7 +83,8 @@ static int enable_mpesw(struct mlx5_lag *ldev)
+>  	if (mlx5_eswitch_mode(dev0) != MLX5_ESWITCH_OFFLOADS ||
+>  	    !MLX5_CAP_PORT_SELECTION(dev0, port_select_flow_table) ||
+>  	    !MLX5_CAP_GEN(dev0, create_lag_when_not_master_up) ||
+> -	    !mlx5_lag_check_prereq(ldev))
+> +	    !mlx5_lag_check_prereq(ldev) ||
+> +	    !mlx5_lag_shared_fdb_supported(ldev))
+>  		return -EOPNOTSUPP;
+>  
+>  	err = mlx5_mpesw_metadata_set(ldev);
 
---pno4qowwcglhp5do
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
- color encoder
-MIME-Version: 1.0
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-Hi,
-
-On Tue, Mar 11, 2025 at 10:29:28AM +0800, Liu Ying wrote:
-> On 03/10/2025, Maxime Ripard wrote:
-> > On Fri, Mar 07, 2025 at 11:25:40AM +0800, Liu Ying wrote:
-> >> On 03/07/2025, Rob Herring wrote:
-> >>> On Thu, Mar 06, 2025 at 12:35:49PM +0100, Maxime Ripard wrote:
-> >>>> On Thu, Mar 06, 2025 at 03:02:41PM +0800, Liu Ying wrote:
-> >>>>> On 03/06/2025, Rob Herring wrote:
-> >>>>>> On Wed, Mar 05, 2025 at 10:35:26AM +0100, Alexander Stein wrote:
-> >>>>>>> Hi,
-> >>>>>>>
-> >>>>>>> Am Dienstag, 4. M=E4rz 2025, 16:23:20 CET schrieb Rob Herring:
-> >>>>>>>> On Tue, Mar 04, 2025 at 06:15:28PM +0800, Liu Ying wrote:
-> >>>>>>>>> A DPI color encoder, as a simple display bridge, converts input=
- DPI color
-> >>>>>>>>> coding to output DPI color coding, like Adafruit Kippah DPI hat=
-[1] which
-> >>>>>>>>> converts input 18-bit pixel data to 24-bit pixel data(with 2 lo=
-w padding
-> >>>>>>>>> bits in every color component though). Document the DPI color e=
-ncoder.
-> >>>>>>>>
-> >>>>>>>> Why do we need a node for this? Isn't this just wired how it is =
-wired=20
-> >>>>>>>> and there's nothing for s/w to see or do? I suppose if you are t=
-rying to=20
-> >>>>>>>> resolve the mode with 24-bit on one end and 18-bit on the other =
-end, you=20
-> >>>>>>>> need to allow that and not require an exact match. You still mig=
-ht need=20
-> >>>>>>>> to figure out which pins the 18-bit data comes out on, but you h=
-ave that=20
-> >>>>>>>> problem with an 18-bit panel too. IOW, how is this any different=
- if you=20
-> >>>>>>>> have an 18-bit panel versus 24-bit panel?
-> >>>>>>>
-> >>>>>>> Especially panel-simple.c has a fixed configuration for each disp=
-lay, such as:
-> >>>>>>>> .bus_format =3D MEDIA_BUS_FMT_RGB666_1X18
-> >>>>>>>
-> >>>>>>> How would you allow or even know it should be addressed as
-> >>>>>>> MEDIA_BUS_FMT_RGB888_1X24 instead? I see different ways:
-> >>>>>>> 1. Create a new display setting/compatible
-> >>>>>>> 2. Add an overwrite property to the displays
-> >>>>>>> 3. Use a (transparent) bridge (this series)
-> >>>>>>>
-> >>>>>>> Number 1 is IMHO out of question.=20
-> >>>>>>
-> >>>>>> Agreed.
-> >>>>>>
-> >>>>>>> I personally don't like number 2 as this
-> >>>>>>> feels like adding quirks to displays, which they don't have.
-> >>>>>>
-> >>>>>> This is what I would do except apply it to the controller side. We=
- know=20
-> >>>>>> the panel side already. This is a board variation, so a property m=
-akes=20
-> >>>>>> sense. I don't think you need any more than knowing what's on each=
- end.=20
-> >>>>>
-> >>>>> With option 2, no matter putting a property in source side or sink =
-side,
-> >>>>> impacted display drivers and DT bindings need to be changed, once a=
- board
-> >>>>> manipulates the DPI color coding.  This adds burdens and introduces=
- new
-> >>>>> versions of those DT bindings.  Is this what we want?
-> >>>>
-> >>>> There's an option 4: make it a property of the OF graph endpoints. In
-> >>>> essence, it's similar to properties that are already there like
-> >>>> lane-mapping, and it wouldn't affect the panel drivers, or create an
-> >>>> intermediate bridge.
-> >>>
-> >>> Yes, that's actually where I meant to put the property(ies).
-> >>
-> >> Put optional dpi-color-coding or something else in endpoint-base?
-> >=20
-> > I'm not sure what you mean by endpoint base, but it would be just like
->=20
-> I meant the endpoint-base definition in graph.yaml.
->=20
-> https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/gr=
-aph.yaml#L37
-
-I don't think it should be put in the graph binding document, but either
-in video-interfaces, or, since it's mostly used by v4l2, in a similar
-but separate document for DRM.
-
-> If optional dpi-color-coding property or something else is put there, then
-> any existing DT binding doc which references it starts to contain the
-> additional property automatically, which means those existing DT binding =
-docs
-> don't need any change.  I'm not saying that this is ok to do(due to burde=
-ns
-> added by driver modification and maintainence) - I still think option 3 i=
-s the
-> right thing to do.
-
-If the property is generic, and the support for it done well enough,
-it's probably going to be a single function call in drivers. I wouldn't
-call that a burden.
-
-> > data-lanes, on the endpoint itself, right next to remote-endpoint. Given
-> > the nomenclature we have, something like "color-format" or
-> > "color-encoding", and taking the media format bus as value.
->=20
-> This requires to change drivers and maintain the change, which adds burde=
-ns.
->=20
-> >=20
-> >> Assuming it's optional, then it implies that it will overwrite OS's
-> >> setting, which sounds kinda awkward, because it is supposed to be
-> >> required to describe the actual color coding.
-> >=20
-> > I'm sorry, I don't understand what you mean here. Your bridge would have
->=20
-> I meant an optional new property is not that welcomed
-
-Not that welcomed by whom?
-
-> and it is supposed to be required.
-
-Not supposed to be required by whom?
-
-> > been optional as well, right?
->=20
-> No, if _no_ additional property is added to endpoint-base in graph.yaml or
-> to video-interfaces.yaml, then my bridge would be required, not optional,
-> because that would be the only way to support DPI color encoding.
-
-I mean, you can turn that any way you like, but we've supported the
-setups your bridge needs to cover fine so far. Your work would
-definitely improve the situation, but it's definitely not going to be
-mandatory. Just like the color encoding property wouldn't be.
-
-> > Worst case scenario, your driver could make that property mandatory on
-> > its endpoints. Plenty of drivers are doing it.
->=20
-> This adds a new property to existing DT binding docs(yet another new vers=
-ion
-> of DT binding doc) and requires modifications on existing drivers, which =
-again
-> adds burdens.  It's also a burden for developers to support that property=
- in
-> new DT binding docs and new drivers.  For existing DT binding docs and dr=
-ivers
-> which are using that property, that's fine and good to them.
-
-Both Rob and I are maintainers of the affected code, let us worry about
-the maintenance burden.
-
-Maxime
-
---pno4qowwcglhp5do
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ8/p2wAKCRDj7w1vZxhR
-xXlzAPsGF9+77AXR6dApIVQpZ5rZw1fme2nfCNLRrk2Dj1Dx6AD7BO5GhER4PzgQ
-Pi5bdRu4bOGNzag++sVBx3pDA2ou+Ag=
-=lPnL
------END PGP SIGNATURE-----
-
---pno4qowwcglhp5do--
+> -- 
+> 2.31.1
