@@ -1,110 +1,129 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0095F1E520E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 02:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E231C1DE3B1;
+	Tue, 11 Mar 2025 02:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741660672; cv=none; b=mLnk9Smx+ewPQSzw5n/UBSnMeUILCZYVdf3Ua1oy3WKusgbB5ALQSlI8t/Ut7s5/1IJm06LjZ0tc0KOTbreeIRaplxdQQzDYIS/cjYLzPcszbl949DwZ8BTggzn9A4/jpNuZvcLyxreOBnCdT0swBfB+R3mLudg/rm8f5U+kCb8=
+	t=1741660765; cv=none; b=VB6HgaY+OHDmytKw0gZv9rm53IMrj5r5T0BTRTnDj8NF8IYLZRNxMGtzuK4YmYgMiDgqFlwYgQCsYG+cjdMD0Z0VTALiBtRuEAhNm50mjE9rQBHC7Yk8d4+BEyUm2POINdtUo0kz/IEw1kPpBsoaZ4NMKZyVQxyBAS7UsZqCfY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741660672; c=relaxed/simple;
-	bh=hh7QDsywcXB+6disdfK5pr9T8ubWm1fW4QiNis++4VA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Dp63V+VozYbUEt6L23bgea4XAm4rmPouN0eGsqSHpsmMlGbmKrKaCD7uzaCv7K9misO9zC5MJqAhF1DIzquMVTrstUilVlUtNml++i3la9PP2KUfwOxFlrbtE5IymwirR7cZIxPQxc4yEVIjBAndtuE6ZOseS9wOQGvPUVNd3nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=JMhGny2o; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1741660765; c=relaxed/simple;
+	bh=LnmuzoRtltn2EeudiDcylpdiaUGszUXlXCyPD7IoncI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s8Bf+2KG0yBlUFFZxgwgnFcyLhFhW4oqs9uV9Q+WXMXsktj3X3uD9+0RzLj/uSJsMmNkkgM9/sikJZKqcjufkWHrU16Iq1kyZT1i0KEb4vKzWKquHZpHma1yl4MhvLZlf4tJVtCP7C3ZwNMd9b7/gw8tg0NCj1kLbd3aCu+YpGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuE5qKAw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JMhGny2o"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2234e4b079cso88530885ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 19:37:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1741660670; x=1742265470; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1EJIiSH26iW36iQ0AY70VtFe7J14wVFHIbN5UzXmWNM=;
-        b=JMhGny2ohaL4dT2gQ+rZcQbfAnckNl3h8rXMQpctLvpJmwhA2GT/aWwrfFAh2BUvf5
-         7qyUkrPEiin91wP/MrOrL78HqgGvfPH3PMcdE+ynYSc5XXBmi0K8FTGZ7S6rL0m9oV5/
-         4F9IARyhLjC6KzQguBRKZ0tSSc7nNff0oX/X3faMMwtan0p+g53A10olLu8tEcOoRasr
-         I46J5Y4A/1TR1irDJsmhXws7KZVvhxL9Scf1eY2CQ82N45KJeiul2Fqw4dfV1ujkZpwy
-         RNlhZoCZvuGZ17sLdFve3qT07JfAxerTvTjDFuvi2nj7JdiqzJIL/DWqjCwSh7RHZyRq
-         khjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741660670; x=1742265470;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1EJIiSH26iW36iQ0AY70VtFe7J14wVFHIbN5UzXmWNM=;
-        b=vJ4pIoBSZ1E+4elX+OhsfUnb8I3DYSrmp4j/5MhFPhGejbPLXdqVm1WOA+VO+HVFIW
-         fHeInQPaEUYK2ighYlLVkZaUG2pOhP3ktxgShnzYS0z27kC+cGCWOGkyzv077l3FYvVV
-         dgoIrLtkGaqwhbghC1pOz9JU0fXAT7L+9hvJKoB05o6nROukHK2VmQVxtcKjx9sJS0zr
-         1z4YOSU0gX3goQxXCz6lBdN0ddY810l28FsCPJZvXDT77Td7NU1N57dA3T5tOPfQE3ML
-         pKDQYgHWoIyjLlKm3Pcy3jUZTyNgYKUxFK2rMCSg8TQhE7Kcji2c8FuN2RC0Hw4/DtoT
-         D++w==
-X-Forwarded-Encrypted: i=1; AJvYcCUfL8CDCAvKX8mDRy/S0tl/fKr4/ZJsjpCUHeqz59Nniu9EH+rKsOVUz1JK/NWBIqOOvGFuhQtel1BjE7U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5tBOTwt1RJYmjqU+NqCdXMb3Vf7TB4rs1WYaXcV8m3mA0DOEc
-	ASk5GezfobMo9Of8JpZx8/0k15I+NvQR9WFlWxZ4Jc6Wp6ijmjtuBy2tk8NhNdw=
-X-Gm-Gg: ASbGncv8H3OlDTlnEh7w/R7W3C1UVQqeioDvkgF2r4U2RfCqPyqc8+DboZOKpBrAmW0
-	zOZEQFtzh4BPdsfl4UA8vyfng8u+8s+sJxHsy6Vg2N24PEQ8ix97e1WE35tD+dpQVemJPzeTUL4
-	FRDmPuebjJuy9v4uqCjYdvwgqEzgl81svKjDmdYtqUkp8LwAeCLtH4aCBN5Kpywv6sYUWo0ShSx
-	Sakem5pR7ueREIVuxyKL6VW4W31R9VVRRWX+aLjFd//kTBfDJbllp9KDsiBmB2pdDGCnw2x2Fa0
-	hJNMVajFR4gYHuVsJucEgt02CgYOCipjbjXbJdpdDtbyVzEIggurSCE0LNrIOu/GG86ciu8keZm
-	DzvuI
-X-Google-Smtp-Source: AGHT+IGqOQCr1tOk5CkVd1S+i7SxypBwbxwvlNPK+GIp3D5+3dsq4NswgC6lEGNZin82dMDVWEMT1Q==
-X-Received: by 2002:a17:902:e88d:b0:21f:768:cced with SMTP id d9443c01a7336-22428886828mr219614335ad.8.1741660670288;
-        Mon, 10 Mar 2025 19:37:50 -0700 (PDT)
-Received: from cyan-mbp.internal.sifive.com ([136.226.240.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410aa4a79sm85850615ad.214.2025.03.10.19.37.48
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 10 Mar 2025 19:37:49 -0700 (PDT)
-From: Cyan Yang <cyan.yang@sifive.com>
-To: akpm@linux-foundation.org,
-	shuah@kernel.org,
-	david@redhat.com
-Cc: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Cyan Yang <cyan.yang@sifive.com>
-Subject: [PATCH] selftests/mm/cow: Fix the incorrect error handling
-Date: Tue, 11 Mar 2025 10:37:30 +0800
-Message-Id: <20250311023730.56658-1-cyan.yang@sifive.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuE5qKAw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53535C4CEEE;
+	Tue, 11 Mar 2025 02:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741660764;
+	bh=LnmuzoRtltn2EeudiDcylpdiaUGszUXlXCyPD7IoncI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZuE5qKAw9dvqbyE1Zg3V2DK4hmbk9HVp/NinPEnMsa6T+PruCmBXLFsL+JAioQmGX
+	 gpQoVbry7USAXeTXZnwgf79Vp8eR0XmhFTuqou79oJg+p03i3A6NKT3km/jDyuSy1r
+	 ylbD7T0ACRpN3xx/fNe92PIN3wKDec9GCN+Cmk4XAx7CCbvjqpD4WsjIX2GDZCZ/zE
+	 lql+SDwttBngNp4gBefXYxCy1A4NhyjTPWfMFVICG6jwDjpaKF/b09JdlenZh77JxL
+	 wCaH357SSxlCj2HJby7H3KlQyVLqaoVxLo5oZXox119FpEXmJfxdQlE+Hn8NBYByBz
+	 fVXOCsDz8kdUA==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so5243535e87.2;
+        Mon, 10 Mar 2025 19:39:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVxiRArsHdnaDEJG5J3JwQe2UfBQ3j3yMm6aARTcdu6f0Cs2+rG0uw+KBo7xJ/65DghH0DQtL/IFEhPc1E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVdl/Z4GyP4c793y3/YRV9rY+w3HlhEtO1yXkSgiCqWNNaGiaJ
+	D5uvc1EC2ylIkvX8JAPV6Nzob0iUTaTzHGqJpl9EXzGo6CgFGG1lxfKsX7n/dkFvAWzbYnUo+ad
+	iQ0rJApVRYmD3IRDkJLBhIwQzKc4=
+X-Google-Smtp-Source: AGHT+IGs1BK9/xmuuvL4MZUqWyatSUGU/ZZw7BQeXXcDh6YdPqA2Gwtl7XzWqDMrTeBuOX+vz5BXGu7sl3LfPUOHB/E=
+X-Received: by 2002:a05:6512:4011:b0:545:2f04:31da with SMTP id
+ 2adb3069b0e04-549910cb49emr4751316e87.46.1741660762903; Mon, 10 Mar 2025
+ 19:39:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250224132132.1765115-6-ardb+git@google.com> <CAMj1kXHamiZ8u4YO9FnrWhpcotUkAusDF_db_5H2qaVD85qmVA@mail.gmail.com>
+ <CAK7LNATLf2iXNGi-UKRg=+PRRqgmxry5QQnQ4GUNsuVmDBAnmw@mail.gmail.com>
+ <CAMj1kXGVe-R7VF1nHmRx+UB4FuhSjiwMU=n_uWCLC99rTTa5ZQ@mail.gmail.com>
+ <CAK7LNATkaTvAwPmNM3kSOCkCptW-bo9Ko6asWyFVcGYgu5rHtw@mail.gmail.com>
+ <CAMj1kXHCia-gQy7fkVC5SgMyFqz6rRgpVbz6_W7e9jk7ENaQxA@mail.gmail.com> <Z81j8EguDyz_uesu@gmail.com>
+In-Reply-To: <Z81j8EguDyz_uesu@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 11 Mar 2025 11:38:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATb40pkqXXH+o_CXW6Vf3zavAj8oSeWnpGfXq6SCto4kw@mail.gmail.com>
+X-Gm-Features: AQ5f1JqRQONy4dygKtwyr9gpdY9gYEAosA8acpKjKOrbPOod07yZuJNq2-84VFU
+Message-ID: <CAK7LNATb40pkqXXH+o_CXW6Vf3zavAj8oSeWnpGfXq6SCto4kw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] x86/build: Get rid of vmlinux postlink step
+To: Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-kbuild@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There are two error handlings did not check the correct return value.
-This patch will fix them.
+On Sun, Mar 9, 2025 at 6:48=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrote=
+:
+>
+>
+> * Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> > On Sat, 8 Mar 2025 at 17:17, Masahiro Yamada <masahiroy@kernel.org> wro=
+te:
+> > >
+> > ...
+> > > I do not think it is broken.
+> > > As I mentioned above, I regard vmlinux.relocs as a byproduct
+> > > of the atomic build rule of vmlinux. This works.
+>
+> Except when it doesn't work, such as when an intermediate linking step
+> fails, and intermediate build products are lost and cannot be recreated
+> easily (or at all without modifying the source)?
+>
+> And the thing is, there should be no such thing as an 'atomic build
+> rule of vmlinux' if it means lost information when the build is broken
+> at an intermediate step. What purpose does it have?
+>
+> > There is no make rule for vmlinux.relocs, and so
+> >
+> > - if it gets deleted, it cannot be rebuilt and even though the build
+> > does not break, the relocation data is missing from the compressed
+> > image, and this could potentially break the kaslr startup code,
+> > - it vmlinux.relocs is older than vmlinux for some reason, make will
+> > not notice and silently reuse the outdated version,
+> > - when creating vmlinux.relocs from vmlinux and an error occurs,
+> > vmlinux is deleted, making it difficult to diagnose the problem.
+> >
+> > I think this is badly broken, but if you think this is all working as
+> > it should, I am not going to debate this further, and you can consider
+> > the patch series withdrawn.
+>
+> That's very sad, as both the simplification is substantial:
+>
+>   19 files changed, 52 insertions(+), 87 deletions(-)
+>
+> and the increase in debuggability is substantial as well.
+>
+> Thanks,
+>
+>         Ingo
 
-Fixes: f4b5fd6946e244cdedc3bbb9a1f24c8133b2077a ("selftests/vm: anon_cow: THP tests")
-Signed-off-by: Cyan Yang <cyan.yang@sifive.com>
----
- tools/testing/selftests/mm/cow.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+When a byproduct is accidentally lost
+(for example, manually deleted), it is not automatically restored.
+Running 'rm vmlinux' or 'make clean' is needed.
 
-diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
-index 9446673645eb..16fcadc090a4 100644
---- a/tools/testing/selftests/mm/cow.c
-+++ b/tools/testing/selftests/mm/cow.c
-@@ -876,13 +876,13 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 		mremap_size = thpsize / 2;
- 		mremap_mem = mmap(NULL, mremap_size, PROT_NONE,
- 				  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
--		if (mem == MAP_FAILED) {
-+		if (mremap_mem == MAP_FAILED) {
- 			ksft_test_result_fail("mmap() failed\n");
- 			goto munmap;
- 		}
- 		tmp = mremap(mem + mremap_size, mremap_size, mremap_size,
- 			     MREMAP_MAYMOVE | MREMAP_FIXED, mremap_mem);
--		if (tmp != mremap_mem) {
-+		if (tmp == MAP_FAILED) {
- 			ksft_test_result_fail("mremap() failed\n");
- 			goto munmap;
- 		}
--- 
-2.39.5 (Apple Git-154)
+vmlinux.relocs is one such byproduct.
+Another is the map file when CONFIG_VMLINUX_MAP=3Dy is enabled.
 
+I am a bit concerned about having more and more
+intermediate vmlinux.* files, but maybe only me.
+I hope vmlinux.unstripped is the only/last one.
+
+
+OK, let's do this.
+
+Ard, please send v2 with .gitignore and 'clean' target updates.
+
+
+--
+Best Regards
+Masahiro Yamada
