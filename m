@@ -1,113 +1,89 @@
-Received: from a8-95.smtp-out.amazonses.com (a8-95.smtp-out.amazonses.com [54.240.8.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F96A233D89;
-	Tue, 11 Mar 2025 23:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.8.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A12B225764;
+	Tue, 11 Mar 2025 23:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741737528; cv=none; b=UVepzrs16sRe527T5cH+ClBLOAAgljr2P++2Ri18ymMKQg49LtirIEtujfYGxQQARXsfunYlH2CZWtGU/oif6ISMK7zlP2ToZNYnUitti6Q5XNl330NpE+IL+kTIj7qQjNZ3I3VaL95vrr+Gp8VMnHtDZaRhTQeKlan6RizIZUo=
+	t=1741737593; cv=none; b=E1YO6SRJ8oBIZTQjpKgnpW4umgDibtb21qMmPRrvr99psQPsCgNbpe2ThZOslm2ZW8cBlKQzY+0GdyAmMZKP1pSAG/fnRdWT746gqf4aUKVpkc7j3gUrVlEwpk2YYMGint3IVDX2bmPvmaJJHoHNp0OA6BgGLZpx0F0EeGwPH8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741737528; c=relaxed/simple;
-	bh=S89VYiNjTrAawzR8pDNsckPg14WX/oNcDQkKjNu0KPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lN6Y37EjeFPG1tN0vezwUIAnlt1ua43uLUXw14+bsUSmu+sONF5aVJ49e9nkbtQUCYGrsA+jb0Qz9ljg/RUsouaPg1lroZk03KYOBIQ38IlmAfaM567hxPkbZL/PqyHQNVxNpCjjK1/id7cu4K2wZYoziiFgy4uXTontTja23Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antoniohickey.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (2048-bit key) header.d=antoniohickey.com header.i=@antoniohickey.com header.b=2cNXV4WV; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=UoYVnyIr; arc=none smtp.client-ip=54.240.8.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antoniohickey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	s=arc-20240116; t=1741737593; c=relaxed/simple;
+	bh=S/xTYReOYh4NPz6mC18vsMNnkJPaisPIMIw02e2v9eQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tGdftChvcrsgEcY0Z9Lv1lAeoSg5U4munTFTuIZayxTgamqFTv7Azoztx5xWeFU5yQt2Dk7iVCepwUiDRIa/1mBSGgqutF+YcLE1alfaa9vH+IHL8ksljoeJuI9yQV5PfIkMW+OpIv65BaqoJCNMBT+3UGjIrJdIUNCkyeinDKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smGdKmSF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antoniohickey.com header.i=@antoniohickey.com header.b="2cNXV4WV";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UoYVnyIr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=cgcwyxycg75iw36cao5ku2ksreqpjkvc; d=antoniohickey.com;
-	t=1741737526;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=S89VYiNjTrAawzR8pDNsckPg14WX/oNcDQkKjNu0KPc=;
-	b=2cNXV4WVUh0BE51JLrfSf+4fdWdlgJ9QJYZ+3MJR9psS5FDJhXmyPU/htyhtEv5u
-	S4gm1z87X9wMuV1kMizprRD4MwHzjHGa3glXTd6O5vkjKWy6UX4RI1iwRFy+Bi/Ij2N
-	xTJDWafRJfjEOfgnbLPRay+HGsT5hwTerr2lmABIgRgro0puw+n/o+XBA/9Twx5Zn1o
-	fknYiaYNTkLz3AkzrpMxlZL9uruLXGjm3U0cErnn9z9Ei0NoE/tbUgWEl04rT4/v6+m
-	4H+0F1dh4z0Uj/abO7gJcu5NXWE2QoN0fSoOaCAf+tZ4w1ZSUG7ZslZ27M5WWyTIKxE
-	vwb8KtxL6g==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1741737526;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-	bh=S89VYiNjTrAawzR8pDNsckPg14WX/oNcDQkKjNu0KPc=;
-	b=UoYVnyIrpN96davRcwMWnJySD49emQU1HoHu+xreGg2Eqvzb9fJsVclZd4bODTa4
-	cv2PD6EFbiMy4LqPJ043QrhDdq/4N8i33mRNEXZzD15FYnMitQahR9lR4dz5tRB0HmP
-	6t0racLtAVr+6F/Xld/hs5jKiWuajfM7W4Kc6zv4=
-From: Antonio Hickey <contact@antoniohickey.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>
-Cc: Antonio Hickey <contact@antoniohickey.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
-Subject: [PATCH v2] rust: uaccess: mark UserSliceReader methods inline
-Date: Tue, 11 Mar 2025 23:58:45 +0000
-Message-ID: <0100019587a58230-1aed0f55-60a5-48c1-8791-10f28ce74cb3-000000@email.amazonses.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <0100019582fc6956-3b420cce-f122-4a26-8fea-94000b22bc90-000000@email.amazonses.com>
-References: <0100019582fc6956-3b420cce-f122-4a26-8fea-94000b22bc90-000000@email.amazonses.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smGdKmSF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3EF2C4CEE9;
+	Tue, 11 Mar 2025 23:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741737592;
+	bh=S/xTYReOYh4NPz6mC18vsMNnkJPaisPIMIw02e2v9eQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=smGdKmSFRSd/gf6rgcBA1N5JimFPdyni7ra6QuDRfxCu52SwmgCTt8qHjb/lbvnUb
+	 0NdyR0Mr/nEE6133b9k/+zxCBIkeo3HhB7UxdnvoVJEzdgEobrcdChQ9TbuVHsDRps
+	 dLMMNPzGP+ceJrFz6XsDl2BYDgfSjSA1d0jPV3y6z/ZQ9oSsyK2/5sXTcekXA7Yu6Z
+	 dDAwijNnsEovi1PR0rXYTuF7Urzs3WyL5uukZ1pfj8lZH7IkFQzpH4lbZ4hsjX+R0/
+	 nIU+kwoD1grC+tjz3rUMsLkgNXwFvvMdFQiQfveD4fKji6LtGuXOx9RZPOxN0yDzNR
+	 tvPxL4/7+syZA==
+Date: Tue, 11 Mar 2025 13:59:51 -1000
+From: Tejun Heo <tj@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH cgroup/for-6.15] mm: Fix a build breakage in memcontrol-v1.c
+Message-ID: <Z9DOd8Iwz1iGw8_r@slm.duckdns.org>
+References: <202503120710.guZkJx0h-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Feedback-ID: ::1.us-east-1.3SHHfi5Rh4c+NdtIv+pxNWeqDT0J3zAhYZLMebdhE9o=:AmazonSES
-X-SES-Outgoing: 2025.03.11-54.240.8.95
+In-Reply-To: <202503120710.guZkJx0h-lkp@intel.com>
 
-When you build the kernel using the llvm-19.1.4-rust-1.83.0-x86_64
-toolchain provided by kernel.org with ARCH=x86_64, the following symbols
-are generated:
+From b0543d50c4cbc34ca612ab17c3cc9f2d174be8e0 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Tue, 11 Mar 2025 13:56:11 -1000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-$nm vmlinux | grep ' _R'.*UserSliceReader | rustfilt
-ffffffff817c3320 T <kernel::uaccess::UserSliceReader>::read_slice
-ffffffff817c32b0 T <kernel::uaccess::UserSliceReader>::read_raw
+While adding a deprecation message, fd4fd0a869e9 ("mm: Add transformation
+message for per-memcg swappiness") missed the semicolon after the new
+pr_info_once() statement causing build breakage when CONFIG_MEMCG_V1 is
+enabled. Fix it.
 
-However, these Rust symbols are trivial wrappers around the functions
-copy_from_user, _copy_from_user respectively. It doesn't
-make sense to go through a trivial wrapper for these functions, so mark
-them inline.
-
-After applying this patch, the above command will produce no output.
-
-Link: https://github.com/Rust-for-Linux/linux/issues/1145
-Suggested-by: https://github.com/Rust-for-Linux/linux/issues/1145
-Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Fixes: fd4fd0a869e9 ("mm: Add transformation message for per-memcg swappiness")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202503120710.guZkJx0h-lkp@intel.com/
 ---
- rust/kernel/uaccess.rs | 2 ++
- 1 file changed, 2 insertions(+)
+Applied to cgroup/for-6.15.
 
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index 719b0a48ff55..3d8a08aeed89 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -218,6 +218,7 @@ pub fn is_empty(&self) -> bool {
-     /// # Guarantees
-     ///
-     /// After a successful call to this method, all bytes in `out` are initialized.
-+    #[inline]
-     pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
-         let len = out.len();
-         let out_ptr = out.as_mut_ptr().cast::<c_void>();
-@@ -239,6 +240,7 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
-     ///
-     /// Fails with [`EFAULT`] if the read happens on a bad address, or if the read goes out of
-     /// bounds of this [`UserSliceReader`]. This call may modify `out` even if it returns an error.
-+    #[inline]
-     pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
-         // SAFETY: The types are compatible and `read_raw` doesn't write uninitialized bytes to
-         // `out`.
+Thanks.
+
+ mm/memcontrol-v1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
+index 93291c0e6eac..67e786d3b17c 100644
+--- a/mm/memcontrol-v1.c
++++ b/mm/memcontrol-v1.c
+@@ -1857,7 +1857,7 @@ static int mem_cgroup_swappiness_write(struct cgroup_subsys_state *css,
+ 
+ 	if (!mem_cgroup_is_root(memcg)) {
+ 		pr_info_once("Per memcg swappiness does not exist in cgroup v2. "
+-			     "See memory.reclaim or memory.swap.max there\n ")
++			     "See memory.reclaim or memory.swap.max there\n ");
+ 		WRITE_ONCE(memcg->swappiness, val);
+ 	} else
+ 		WRITE_ONCE(vm_swappiness, val);
 -- 
 2.48.1
 
