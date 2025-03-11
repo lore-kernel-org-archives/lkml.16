@@ -1,294 +1,259 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BF325E818;
-	Tue, 11 Mar 2025 16:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C953184F;
+	Tue, 11 Mar 2025 16:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741712027; cv=none; b=RzxHUqeLy128cWjRvMN0hC0mtkf8sVAV06dLhSHhwr+eg/5+LvQBHEgr9gHH40dcMnx1lkJDdDNtDVtmRheKYehtmg3rSReqZilK7bnjitjF9QW7el3Ec9VD2Nc+bQ1sCew9sREfPCXWocE8+rMqGpZOnjVERi6+6YzJ4GJwYhA=
+	t=1741712220; cv=none; b=IkloNwa0A3QujEplnpPJk+PZH54gMMm4b+Qpq5lKmOer4hO88nANbFuQIyVSspSbkb+btRL0ZZrzmIiQeM0RWY2725oVii7FuqPvMZGfjtuYhtjE0gU0AB/zALFmk8T13bX2Q8nY4DL3/hDznYThvabti2FUuPzEqIRqur0XEpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741712027; c=relaxed/simple;
-	bh=PwmyiwWj5CkqBXwksTcHrCsjtGwDUXY0Pqgb7toQ+Xk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QCc2mZKK9TFCfHvxhP8IWGD83PojjwMNQ7Tf7Oc/RLxxboMcVOT+uX1YSTQV/vTe26u6PcOoqbMW+BXf1nBMj+kjAR3yhJmoSWkYWa0k1P7uO1eMNZayNhh+GMCvBt5QF0dJPYhVVFuU5PlNMpbH3PcPNhIAQ1PBfvwzPx5UvO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uvc+4+0z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741712220; c=relaxed/simple;
+	bh=nDMt8eiwz7+zam9WwPXd2KG0XnvM1fHkqQ7RgCtM+vA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZNST/oMdN0+akNSbFu7MfKLU8PoTxJqokakPIPwJ0TBUaRRfv7hMjyz1RK5bFu2FfFDLYoEElbhrQNwL0QJwBF/OiRrHq8vJvftCk6bNDanhlNeGIu/ooBZW+Xaujfm6U0gMvWdiED6R/fqiT7KoQM5CleJ7zIofLhdCpIH/LVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=lbjV6Vna; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uvc+4+0z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EE75C4CEE9;
-	Tue, 11 Mar 2025 16:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741712026;
-	bh=PwmyiwWj5CkqBXwksTcHrCsjtGwDUXY0Pqgb7toQ+Xk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Uvc+4+0zHeg34G0Bav2KvqLvdnpjNChvBmmvWb3bMm2aUubh6KD65CWHcYyTbx/ay
-	 0D0FMQ4lCcb5+MbFZrepvTRH+UnbnUc8Hhnq0CwHzgDBeXvvN6s69vTmA/vIBFeysG
-	 9ebDiBajMg2ihEq42Ot1k7YOnyPZiux0R6ZMn5iAaExxTPF8JdNuEeaUSgKWVu2E8A
-	 uiTxz3Ofw53b9ab2rbLzcrQOWPhF/dDVdEX2H5Ebfficwtnp8EHL/m9eb9QGoHgDfd
-	 47vWOleDdHaQZwn0RqtAEu8+3er6iLM8QGH/5BkXjIBzReqz5x+OjE60ybRKu+BfQF
-	 vat7Jw36agkjQ==
-From: Sasha Levin <sashal@kernel.org>
-To: workflows@vger.kernel.org
-Cc: apw@canonical.com,
-	conor@kernel.org,
-	corbet@lwn.net,
-	dwaipayanray1@gmail.com,
-	geert+renesas@glider.be,
-	gitster@pobox.com,
-	horms@kernel.org,
-	joe@perches.com,
-	kees@kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@leemhuis.info,
-	lukas.bulwahn@gmail.com,
-	miguel.ojeda.sandonis@gmail.com,
-	niklas.soderlund@corigine.com,
-	torvalds@linux-foundation.org,
-	willy@infradead.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH] scripts: Add git-resolve tool for full SHA-1 resolution
-Date: Tue, 11 Mar 2025 12:53:36 -0400
-Message-Id: <20250311165336.248120-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lbjV6Vna"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1741712219; x=1773248219;
+  h=message-id:date:mime-version:reply-to:subject:to:cc:
+   references:from:in-reply-to:content-transfer-encoding;
+  bh=tlV9Mo9aek/qm0du1iKz9kkFBfH6SyE9Qgk2PjqxtjE=;
+  b=lbjV6VnaIXFhjHX8QYJsT9wL0C7i3XdJzLBucFTccLiaqePr6YNfELW+
+   vKhWBa0V5M2L39XbwgJc9gqU+3P8MGbY1gTJxdQsnIIYA26ri5r9cRAnS
+   IbnDJqKAAVcZ/0ZPhUwMob0ebmjzq3sUBsbb+MRzvFwyGfkLFtMYR5SrV
+   E=;
+X-IronPort-AV: E=Sophos;i="6.14,239,1736812800"; 
+   d="scan'208";a="385729533"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 16:56:50 +0000
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.17.79:6023]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.251:2525] with esmtp (Farcaster)
+ id f548cd40-c792-49af-ad1d-1f5d23f80cf5; Tue, 11 Mar 2025 16:56:49 +0000 (UTC)
+X-Farcaster-Flow-ID: f548cd40-c792-49af-ad1d-1f5d23f80cf5
+Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 11 Mar 2025 16:56:49 +0000
+Received: from [10.95.111.253] (10.95.111.253) by
+ EX19D022EUC002.ant.amazon.com (10.252.51.137) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 11 Mar 2025 16:56:48 +0000
+Message-ID: <9e7536cc-211d-40ca-b458-66d3d8b94b4d@amazon.com>
+Date: Tue, 11 Mar 2025 16:56:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Reply-To: <kalyazin@amazon.com>
+Subject: Re: [RFC PATCH 0/5] KVM: guest_memfd: support for uffd missing
+To: Peter Xu <peterx@redhat.com>
+CC: James Houghton <jthoughton@google.com>, <akpm@linux-foundation.org>,
+	<pbonzini@redhat.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <lorenzo.stoakes@oracle.com>, <david@redhat.com>,
+	<ryan.roberts@arm.com>, <quic_eberman@quicinc.com>, <graf@amazon.de>,
+	<jgowans@amazon.com>, <roypat@amazon.co.uk>, <derekmn@amazon.com>,
+	<nsaenz@amazon.es>, <xmarcalx@amazon.com>
+References: <20250303133011.44095-1-kalyazin@amazon.com>
+ <Z8YfOVYvbwlZST0J@x1.local>
+ <CADrL8HXOQ=RuhjTEmMBJrWYkcBaGrqtXmhzPDAo1BE3EWaBk4g@mail.gmail.com>
+ <Z8i0HXen8gzVdgnh@x1.local> <fdae95e3-962b-4eaf-9ae7-c6bd1062c518@amazon.com>
+ <Z89EFbT_DKqyJUxr@x1.local>
+Content-Language: en-US
+From: Nikita Kalyazin <kalyazin@amazon.com>
+Autocrypt: addr=kalyazin@amazon.com; keydata=
+ xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
+ JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
+ BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
+ IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
+ CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
+ ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
+ ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
+ i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
+In-Reply-To: <Z89EFbT_DKqyJUxr@x1.local>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D010EUA004.ant.amazon.com (10.252.50.94) To
+ EX19D022EUC002.ant.amazon.com (10.252.51.137)
 
-Introduce git-resolve.sh, a tool that resolves short git commit IDs to their
-full SHA-1 hash. This is particularly useful for navigating references in commit
-messages and verifying Fixes tags.
 
-When faced with ambiguous commit IDs or imprecise references in messages,
-this tool can help by resolving commit hashes based on not just the ID
-itself but also the commit subject, making it more robust than standard
-git rev-parse.
 
-This is especially valuable for maintainers who need to verify Fixes tags
-or cross-reference commits. Unlike proposals to add dates to Fixes tags
-(which would break existing tooling), this script provides a way to
-disambiguate commits without changing the established tag format.
+On 10/03/2025 19:57, Peter Xu wrote:
+> On Mon, Mar 10, 2025 at 06:12:22PM +0000, Nikita Kalyazin wrote:
+>>
+>>
+>> On 05/03/2025 20:29, Peter Xu wrote:
+>>> On Wed, Mar 05, 2025 at 11:35:27AM -0800, James Houghton wrote:
+>>>> I think it might be useful to implement an fs-generic MINOR mode. The
+>>>> fault handler is already easy enough to do generically (though it
+>>>> would become more difficult to determine if the "MINOR" fault is
+>>>> actually a MISSING fault, but at least for my userspace, the
+>>>> distinction isn't important. :)) So the question becomes: what should
+>>>> UFFDIO_CONTINUE look like?
+>>>>
+>>>> And I think it would be nice if UFFDIO_CONTINUE just called
+>>>> vm_ops->fault() to get the page we want to map and then mapped it,
+>>>> instead of having shmem-specific and hugetlb-specific versions (though
+>>>> maybe we need to keep the hugetlb specialization...). That would avoid
+>>>> putting kvm/gmem/etc. symbols in mm/userfaultfd code.
+>>>>
+>>>> I've actually wanted to do this for a while but haven't had a good
+>>>> reason to pursue it. I wonder if it can be done in a
+>>>> backwards-compatible fashion...
+>>>
+>>> Yes I also thought about that. :)
+>>
+>> Hi Peter, hi James.  Thanks for pointing at the race condition!
+>>
+>> I did some experimentation and it indeed looks possible to call
+>> vm_ops->fault() from userfault_continue() to make it generic and decouple
+>> from KVM, at least for non-hugetlb cases.  One thing is we'd need to prevent
+>> a recursive handle_userfault() invocation, which I believe can be solved by
+>> adding a new VMF flag to ignore the userfault path when the fault handler is
+>> called from userfault_continue().  I'm open to a more elegant solution
+>> though.
+> 
+> It sounds working to me.  Adding fault flag can also be seen as part of
+> extension of vm_operations_struct ops.  So we could consider reusing
+> fault() API indeed.
 
-The script includes several features:
-- Resolves short commit IDs to full SHA-1 hashes
-- Uses commit subjects to disambiguate between multiple potential matches
-- Supports wildcard patterns in subjects with ellipsis (...)
-- Provides a force mode to attempt resolution by subject when ID lookup fails
-- Includes comprehensive self-tests
+Great!
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/git-resolve.sh | 199 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 199 insertions(+)
- create mode 100755 scripts/git-resolve.sh
+>>
+>> Regarding usage of the MINOR notification, in what case do you recommend
+>> sending it?  If following the logic implemented in shmem and hugetlb, ie if
+>> the page is _present_ in the pagecache, I can't see how it is going to work
+> 
+> It could be confusing when reading that chunk of code, because it looks
+> like it notifies minor fault when cache hit. But the critical part here is
+> that we rely on the pgtable missing causing the fault() to trigger first.
+> So it's more like "cache hit && pgtable missing" for minor fault.
 
-diff --git a/scripts/git-resolve.sh b/scripts/git-resolve.sh
-new file mode 100755
-index 0000000000000..204a8c9bd4ea8
---- /dev/null
-+++ b/scripts/git-resolve.sh
-@@ -0,0 +1,199 @@
-+#!/bin/bash
-+
-+usage() {
-+	echo "Usage: $(basename "$0") [--selftest] [--force] <commit-id> [commit-subject]"
-+	echo "Resolves a short git commit ID to its full SHA-1 hash, particularly useful for fixing references in commit messages."
-+	echo ""
-+	echo "Arguments:"
-+	echo "  --selftest      Run self-tests"
-+	echo "  --force         Try to find commit by subject if ID lookup fails"
-+	echo "  commit-id       Short git commit ID to resolve"
-+	echo "  commit-subject  Optional commit subject to help resolve between multiple matches"
-+	exit 1
-+}
-+
-+# Convert subject with ellipsis to grep pattern
-+convert_to_grep_pattern() {
-+	local subject="$1"
-+	# First escape ALL regex special characters
-+	local escaped_subject
-+	escaped_subject=$(printf '%s\n' "$subject" | sed 's/[[\.*^$()+?{}|]/\\&/g')
-+	# Also escape colons, parentheses, and hyphens as they are special in our context
-+	escaped_subject=$(echo "$escaped_subject" | sed 's/[:-]/\\&/g')
-+	# Then convert escaped ... sequence to .*?
-+	escaped_subject=$(echo "$escaped_subject" | sed 's/\\\.\\\.\\\./.*?/g')
-+	echo "^${escaped_subject}$"
-+}
-+
-+git_resolve_commit() {
-+	local force=0
-+	if [ "$1" = "--force" ]; then
-+		force=1
-+		shift
-+	fi
-+
-+	# Split input into commit ID and subject
-+	local input="$*"
-+	local commit_id="${input%% *}"
-+	local subject=""
-+
-+	# Extract subject if present (everything after the first space)
-+	if [[ "$input" == *" "* ]]; then
-+		subject="${input#* }"
-+		# Strip the ("...") quotes if present
-+		subject="${subject#*(\"}"
-+		subject="${subject%\")*}"
-+	fi
-+
-+	# Get all possible matching commit IDs
-+	local matches
-+	readarray -t matches < <(git rev-parse --disambiguate="$commit_id" 2>/dev/null)
-+
-+	# Return immediately if we have exactly one match
-+	if [ ${#matches[@]} -eq 1 ]; then
-+		echo "${matches[0]}"
-+		return 0
-+	fi
-+
-+	# If no matches and not in force mode, return failure
-+	if [ ${#matches[@]} -eq 0 ] && [ $force -eq 0 ]; then
-+		return 1
-+	fi
-+
-+	# If we have a subject, try to find a match with that subject
-+	if [ -n "$subject" ]; then
-+		# Convert subject with possible ellipsis to grep pattern
-+		local grep_pattern
-+		grep_pattern=$(convert_to_grep_pattern "$subject")
-+
-+		# In force mode with no ID matches, use git log --grep directly
-+		if [ ${#matches[@]} -eq 0 ] && [ $force -eq 1 ]; then
-+			# Use git log to search, but filter to ensure subject matches exactly
-+			local match
-+			match=$(git log --format="%H %s" --grep="$grep_pattern" --perl-regexp -10 | \
-+					while read -r hash subject; do
-+						if echo "$subject" | grep -qP "$grep_pattern"; then
-+							echo "$hash"
-+							break
-+						fi
-+					done)
-+			if [ -n "$match" ]; then
-+				echo "$match"
-+				return 0
-+			fi
-+		else
-+			# Normal subject matching for existing matches
-+			for match in "${matches[@]}"; do
-+				if git log -1 --format="%s" "$match" | grep -qP "$grep_pattern"; then
-+					echo "$match"
-+					return 0
-+				fi
-+			done
-+		fi
-+	fi
-+
-+	# No match found
-+	return 1
-+}
-+
-+run_selftest() {
-+	local test_cases=(
-+		'00250b5 ("MAINTAINERS: add new Rockchip SoC list")'
-+		'0037727 ("KVM: selftests: Convert xen_shinfo_test away from VCPU_ID")'
-+		'ffef737 ("net/tls: Fix skb memory leak when running kTLS traffic")'
-+		'd3d7 ("cifs: Improve guard for excluding $LXDEV xattr")'
-+		'dbef ("Rename .data.once to .data..once to fix resetting WARN*_ONCE")'
-+		'12345678'  # Non-existent commit
-+		'12345 ("I'\''m a dummy commit")'  # Valid prefix but wrong subject
-+		'--force 99999999 ("net/tls: Fix skb memory leak when running kTLS traffic")'  # Force mode with non-existent ID but valid subject
-+		'83be ("firmware: ... auto-update: fix poll_complete() ... errors")'  # Wildcard test
-+		'--force 999999999999 ("firmware: ... auto-update: fix poll_complete() ... errors")'  # Force mode wildcard test
-+	)
-+
-+	local expected=(
-+		"00250b529313d6262bb0ebbd6bdf0a88c809f6f0"
-+		"0037727b3989c3fe1929c89a9a1dfe289ad86f58"
-+		"ffef737fd0372ca462b5be3e7a592a8929a82752"
-+		"d3d797e326533794c3f707ce1761da7a8895458c"
-+		"dbefa1f31a91670c9e7dac9b559625336206466f"
-+		""  # Expect empty output for non-existent commit
-+		""  # Expect empty output for wrong subject
-+		"ffef737fd0372ca462b5be3e7a592a8929a82752"  # Should find commit by subject in force mode
-+		"83beece5aff75879bdfc6df8ba84ea88fd93050e"  # Wildcard test
-+		"83beece5aff75879bdfc6df8ba84ea88fd93050e"  # Force mode wildcard test
-+	)
-+
-+	local expected_exit_codes=(
-+		0
-+		0
-+		0
-+		0
-+		0
-+		1  # Expect failure for non-existent commit
-+		1  # Expect failure for wrong subject
-+		0  # Should succeed in force mode
-+		0  # Should succeed with wildcard
-+		0  # Should succeed with force mode and wildcard
-+	)
-+
-+	local failed=0
-+
-+	echo "Running self-tests..."
-+	for i in "${!test_cases[@]}"; do
-+		# Capture both output and exit code
-+		local result
-+		result=$(git_resolve_commit ${test_cases[$i]})  # Removed quotes to allow --force to be parsed
-+		local exit_code=$?
-+
-+		# Check both output and exit code
-+		if [ "$result" != "${expected[$i]}" ] || [ $exit_code != ${expected_exit_codes[$i]} ]; then
-+			echo "Test case $((i+1)) FAILED"
-+			echo "Input: ${test_cases[$i]}"
-+			echo "Expected output: '${expected[$i]}'"
-+			echo "Got output: '$result'"
-+			echo "Expected exit code: ${expected_exit_codes[$i]}"
-+			echo "Got exit code: $exit_code"
-+			failed=1
-+		else
-+			echo "Test case $((i+1)) PASSED"
-+		fi
-+	done
-+
-+	if [ $failed -eq 0 ]; then
-+		echo "All tests passed!"
-+		exit 0
-+	else
-+		echo "Some tests failed!"
-+		exit 1
-+	fi
-+}
-+
-+# Check for selftest
-+if [ "$1" = "--selftest" ]; then
-+	run_selftest
-+	exit $?
-+fi
-+
-+# Handle --force flag
-+force=""
-+if [ "$1" = "--force" ]; then
-+	force="--force"
-+	shift
-+fi
-+
-+# Verify arguments
-+if [ $# -eq 0 ]; then
-+	usage
-+fi
-+
-+# Skip validation in force mode
-+if [ -z "$force" ]; then
-+	# Validate that the first argument matches at least one git commit
-+	if [ "$(git rev-parse --disambiguate="$1" 2>/dev/null | wc -l)" -eq 0 ]; then
-+		echo "Error: '$1' does not match any git commit"
-+		exit 1
-+	fi
-+fi
-+
-+git_resolve_commit $force "$@"
-+exit $?
--- 
-2.39.5
+Right, but the cache hit still looks like a precondition for the minor 
+fault event?
+
+>> with the write syscall, as we'd like to know when the page is _missing_ in
+>> order to respond with the population via the write.  If going against
+>> shmem/hugetlb logic, and sending the MINOR event when the page is missing
+>> from the pagecache, how would it solve the race condition problem?
+> 
+> Should be easier we stick with mmap() rather than write().  E.g. for shmem
+> case of current code base:
+> 
+>          if (folio && vma && userfaultfd_minor(vma)) {
+>                  if (!xa_is_value(folio))
+>                          folio_put(folio);
+>                  *fault_type = handle_userfault(vmf, VM_UFFD_MINOR);
+>                  return 0;
+>          }
+> 
+> vma is only availble if vmf!=NULL, aka in fault context.  With that, in
+> write() to shmem inodes, nothing will generate a message, because minor
+> fault so far is only about pgtable missing.  It needs to be mmap()ed first,
+> and has nothing yet to do with write() syscalls.
+
+Yes, that's true that write() itself isn't going to generate a message. 
+My idea was to _respond_ to a message generated by the fault handler 
+(vmf != NULL) with a write().  I didn't mean to generate it from write().
+
+What I wanted to achieve was send a message on fault + cache miss and 
+respond to the message with a write() to fill the cache followed by a 
+UFFDIO_CONTINUE to set up pagetables.  I understand that a MINOR trap 
+(MINOR + UFFDIO_CONTINUE) is preferable, but how does it fit into this 
+model?  What/how will guarantee a cache hit that would trigger the MINOR 
+message?
+
+To clarify, I would like to be able to populate pages _on-demand_, not 
+only proactively (like in the original UFFDIO_CONTINUE cover letter 
+[1]).  Do you think the MINOR trap could still be applicable or would it 
+necessarily require the MISSING trap?
+
+[1] 
+https://lore.kernel.org/linux-fsdevel/20210301222728.176417-1-axelrasmussen@google.com/T/
+
+>>
+>> Also, where would the check for the folio_test_uptodate() mentioned by James
+>> fit into here?  Would it only be used for fortifying the MINOR (present)
+>> against the race?
+>>
+>>> When Axel added minor fault, it's not a major concern as it's the only fs
+>>> that will consume the feature anyway in the do_fault() path - hugetlbfs has
+>>> its own path to take care of.. even until now.
+>>>
+>>> And there's some valid points too if someone would argue to put it there
+>>> especially on folio lock - do that in shmem.c can avoid taking folio lock
+>>> when generating minor fault message.  It might make some difference when
+>>> the faults are heavy and when folio lock is frequently taken elsewhere too.
+>>
+>> Peter, could you expand on this?  Are you referring to the following
+>> (shmem_get_folio_gfp)?
+>>
+>>        if (folio) {
+>>                folio_lock(folio);
+>>
+>>                /* Has the folio been truncated or swapped out? */
+>>                if (unlikely(folio->mapping != inode->i_mapping)) {
+>>                        folio_unlock(folio);
+>>                        folio_put(folio);
+>>                        goto repeat;
+>>                }
+>>                if (sgp == SGP_WRITE)
+>>                        folio_mark_accessed(folio);
+>>                if (folio_test_uptodate(folio))
+>>                        goto out;
+>>                /* fallocated folio */
+>>                if (sgp != SGP_READ)
+>>                        goto clear;
+>>                folio_unlock(folio);
+>>                folio_put(folio);
+>>        }
+>>
+>> Could you explain in what case the lock can be avoided?  AFAIC, the function
+>> is called by both the shmem fault handler and userfault_continue().
+> 
+> I think you meant the UFFDIO_CONTINUE side of things.  I agree with you, we
+> always need the folio lock.
+> 
+> What I was saying is the trapping side, where the minor fault message can
+> be generated without the folio lock now in case of shmem.  It's about
+> whether we could generalize the trapping side, so handle_mm_fault() can
+> generate the minor fault message instead of by shmem.c.
+> 
+> If the only concern is "referring to a module symbol from core mm", then
+> indeed the trapping side should be less of a concern anyway, because the
+> trapping side (when in the module codes) should always be able to reference
+> mm functions.
+> 
+> Actually.. if we have a fault() flag introduced above, maybe we can
+> generalize the trap side altogether without the folio lock overhead.  When
+> the flag set, if we can always return the folio unlocked (as long as
+> refcount held), then in UFFDIO_CONTINUE ioctl we can lock it.
+
+Where does this locking happen exactly during trapping?  I was thinking 
+it was only done when the page was allocated.  The trapping part (quoted 
+by you above) only looks up the page in the cache and calls 
+handle_userfault().  Am I missing something?
+
+>>
+>>> It might boil down to how many more FSes would support minor fault, and
+>>> whether we would care about such difference at last to shmem users. If gmem
+>>> is the only one after existing ones, IIUC there's still option we implement
+>>> it in gmem code.  After all, I expect the change should be very under
+>>> control (<20 LOCs?)..
+>>>
+>>> --
+>>> Peter Xu
+>>>
+>>
+> 
+> --
+> Peter Xu
+> 
 
