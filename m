@@ -1,53 +1,53 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1554C253F05;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1529E2356D7;
 	Tue, 11 Mar 2025 12:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741695916; cv=none; b=gnu8H/sxAzF+Qg8WMnZcy1VqwBi9wvocomsiXm+dABf0dHSYR0tdRrYYncw9ywAzoju8SN8cSS/1Z5jMg7Qs+lYIsGS3R+HsJguyDx8SDnLlJcqmp+Np1/fM6E6yIES14JOoYzJ+nEVG+OJbfb1ijOAS42iVb+CDOqjkHQ95eF0=
+	t=1741695916; cv=none; b=rhzaQMvZ5T0GW6KRjwRmHmEZRwnbz2m2r62qlW39DyJX0jivfgBB70SQYwUpP1xA1tl872766XrsyVFOIKt6ncFwzMfK+PvZqQVTkEQ4nqeNeWgT9Cm4F5lJP01yQDdKoP/F0RRME/dJoJ12RD24CBr3YizWpIG2JPq52Hag/CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741695916; c=relaxed/simple;
-	bh=hPdVvl8s9HoRLsM2tC28NRzwdAflyBhK/J9JzpSZFAU=;
+	bh=wnYkYfDqfk+kZ/f1H+m2iYgO5IDcln41zjPQtSO5IMM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hO+Gs1+iDhiPbyhZzQRWSlBTZB3EQuvpsXj9T+AmSXu3dUjuQeFBstngcGS4aCXLKDhxxyHoONtcs6aebSEMRqrq4d+11WX7Hh9dxYYqpP+Oa1nZkacSZmuMd24iNOdq10iOXN2MPrCyEJs+z6qQZbMN9qSGsADSO1+Dh3a5xfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ih5sBx86; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=Zv4d/MEF3UMfs51o9qh4Xz1Sjc5b5wJJxIzE6agCqIolOrweoxFBrA2vJshQXptwPaxpzHYajG/op4iFDLEmrQevE3sxksbT/E6rVCHHRZzFz/UafgLS8skySZBdyFufL+KN3nBcqqOWjYlR0rof5g3/4Z8I/StHbr0dTVNgru4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l6A2y39M; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ih5sBx86"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l6A2y39M"
 Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B7o27F024476;
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B7oMFX025277;
 	Tue, 11 Mar 2025 12:24:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=mSPwD5GsdTh
-	MOhvoI85Vfs7lqGc3ofuKzpxMTIhaeMg=; b=ih5sBx86nf9qbtdGvFreZ4FUslW
-	FlnXn6jjMG+uZtkx6XFwXRPW2NO/C2WmowLF3DHEack0a9NQkDDhEloN1iBIZvKr
-	38hpxSB/3xhbnaPPGNj7f6iOuMeWXM4OpEczrcYiN6cN09wKtDSUAQzGoYzuT0bs
-	CnFW925b8C6bXNNk6IrBZ/Aunt92r4pon+X0MupfbuTVXUQcC6qMbpV0e5r93VVv
-	Yunm8GWGRun4zjtpfXEJfdu+oxTdMML+UhP/2ZaMqWCfAd7qokXph4LXfhpgMBkN
-	hbDSoVesn3xWQMOnb9oLEBbKw3KzVuFT0ahC6EeuTdkiZpGn5AxBVpOr8AQ==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=NyNLqDlNzEo
+	sNOMbIMuAXemH2lNKQQyCyxonCC0PXkk=; b=l6A2y39MZFU1241Kjcz/XQ105ze
+	EuAspI7tfl0jRGqWsfcr6Rwk5YAYV4HPFvBplVqOh66pYVNq7F6vBXwplK20niLC
+	TepHK5p9f7P6n+LxMt5ZLAGkiPtBgPlGzMS1BcJGmyjXDH56PclO49MYAc+OKnFe
+	6Gmf7fcKGqXwR5apRgxAHkacCGBeGcXSXZ8A24/e4wpCVVjegU9UApNdvvC5SD23
+	wJEYr6r8pxTZzNrzim1XYbr5nKltPyHX9UXMtl6sE+b6hRGcvi8fThHJeGuQAytY
+	DCJZAfaPuoX9KoA6tSjsvtWVOkT/utyYYqFCGrKor3SaA09jfRcdtsB3vBg==
 Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ah4t0vbu-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ah4t0vbv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 11 Mar 2025 12:24:53 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52BCOoQY008164;
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52BCOoxN008181;
 	Tue, 11 Mar 2025 12:24:50 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 458yn373wt-1
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 458yn373x6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 11 Mar 2025 12:24:50 +0000
 Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52BCOoHM008137;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52BCOoY6008146;
 	Tue, 11 Mar 2025 12:24:50 GMT
 Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 52BCOng1008132
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 52BCOnQV008131
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 11 Mar 2025 12:24:50 +0000
 Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
-	id 4CEC259D; Tue, 11 Mar 2025 17:54:48 +0530 (+0530)
+	id 37B8F598; Tue, 11 Mar 2025 17:54:48 +0530 (+0530)
 From: Ayushi Makhija <quic_amakhija@quicinc.com>
 To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
         jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
         quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
         quic_jesszhan@quicinc.com
-Subject: [PATCH v2 09/10] drm/bridge: anx7625: update bridge_ops and sink detect logic
-Date: Tue, 11 Mar 2025 17:54:44 +0530
-Message-Id: <20250311122445.3597100-10-quic_amakhija@quicinc.com>
+Subject: [PATCH v2 05/10] drm/msm/dsi: add DSI support for SA8775P
+Date: Tue, 11 Mar 2025 17:54:40 +0530
+Message-Id: <20250311122445.3597100-6-quic_amakhija@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
 References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
@@ -79,9 +79,9 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: j97_ZSzsW3l73LgccQRR7N3Or7t1OOuA
-X-Authority-Analysis: v=2.4 cv=fZ9Xy1QF c=1 sm=1 tr=0 ts=67d02b96 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=KzNNLWg-im-pYHkXERoA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: j97_ZSzsW3l73LgccQRR7N3Or7t1OOuA
+X-Proofpoint-ORIG-GUID: DNpSpHr0QvtyOB6w5KZ-u4SDXZBOlFIQ
+X-Authority-Analysis: v=2.4 cv=fZ9Xy1QF c=1 sm=1 tr=0 ts=67d02b96 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=FC0MWNbw2lKpcE6E8h4A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: DNpSpHr0QvtyOB6w5KZ-u4SDXZBOlFIQ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-11_02,2025-03-11_02,2024-11-22_01
@@ -92,59 +92,62 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspect
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
  definitions=main-2503110080
 
-The anx7625_link_bridge() checks if a device is not a panel
-bridge and add DRM_BRIDGE_OP_HPD and DRM_BRIDGE_OP_DETECT to
-the bridge operations. However, on port 1 of the anx7625
-bridge, any device added is always treated as a panel
-bridge, preventing connector_detect function from being
-called. To resolve this, instead of just checking if it is a
-panel bridge, verify the type of panel bridge
-whether it is a DisplayPort or eDP panel. If the panel
-bridge is not of the eDP type, add DRM_BRIDGE_OP_HPD and
-DRM_BRIDGE_OP_DETECT to the bridge operations.
-
-In the anx7625_sink_detect(), the device is checked to see
-if it is a panel bridge, and it always sends a "connected"
-status to the connector. When adding the DP port on port 1 of the
-anx7625, it incorrectly treats it as a panel bridge and sends an
-always "connected" status. Instead of checking the status on the
-panel bridge, it's better to check the hpd_status for connectors
-like DisplayPort. This way, it verifies the hpd_status variable
-before sending the status to the connector.
+Add DSI Controller v2.5.1 support for SA8775P SoC.
 
 Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
 ---
- drivers/gpu/drm/bridge/analogix/anx7625.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c | 18 ++++++++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+ 2 files changed, 19 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index 764da1c1dc11..ad99ad19653f 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -1814,9 +1814,6 @@ static enum drm_connector_status anx7625_sink_detect(struct anx7625_data *ctx)
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+index 7754dcec33d0..7675558ae2e5 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+@@ -221,6 +221,22 @@ static const struct msm_dsi_config sc7280_dsi_cfg = {
+ 	},
+ };
  
- 	DRM_DEV_DEBUG_DRIVER(dev, "sink detect\n");
- 
--	if (ctx->pdata.panel_bridge)
--		return connector_status_connected;
--
- 	return ctx->hpd_status ? connector_status_connected :
- 				     connector_status_disconnected;
- }
-@@ -2608,9 +2605,10 @@ static int anx7625_link_bridge(struct drm_dp_aux *aux)
- 	platform->bridge.of_node = dev->of_node;
- 	if (!anx7625_of_panel_on_aux_bus(dev))
- 		platform->bridge.ops |= DRM_BRIDGE_OP_EDID;
--	if (!platform->pdata.panel_bridge)
--		platform->bridge.ops |= DRM_BRIDGE_OP_HPD |
--					DRM_BRIDGE_OP_DETECT;
-+	if (!platform->pdata.panel_bridge ||
-+	    platform->pdata.panel_bridge->type != DRM_MODE_CONNECTOR_eDP) {
-+		platform->bridge.ops |= DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_DETECT;
-+	}
- 	platform->bridge.type = platform->pdata.panel_bridge ?
- 				    DRM_MODE_CONNECTOR_eDP :
- 				    DRM_MODE_CONNECTOR_DisplayPort;
++static const struct regulator_bulk_data sa8775p_dsi_regulators[] = {
++	{ .supply = "vdda", .init_load_uA = 8300 },    /* 1.2 V */
++	{ .supply = "refgen" },
++};
++
++static const struct msm_dsi_config sa8775p_dsi_cfg = {
++	.io_offset = DSI_6G_REG_SHIFT,
++	.regulator_data = sa8775p_dsi_regulators,
++	.num_regulators = ARRAY_SIZE(sa8775p_dsi_regulators),
++	.bus_clk_names = dsi_v2_4_clk_names,
++	.num_bus_clks = ARRAY_SIZE(dsi_v2_4_clk_names),
++	.io_start = {
++		{ 0xae94000, 0xae96000 },
++	},
++};
++
+ static const struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+ 	.link_clk_set_rate = dsi_link_clk_set_rate_v2,
+ 	.link_clk_enable = dsi_link_clk_enable_v2,
+@@ -294,6 +310,8 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+ 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_5_0,
+ 		&sc7280_dsi_cfg, &msm_dsi_6g_v2_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_5_1,
++		&sa8775p_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_6_0,
+ 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_7_0,
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+index 120cb65164c1..65b0705fac0e 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+@@ -27,6 +27,7 @@
+ #define MSM_DSI_6G_VER_MINOR_V2_4_0	0x20040000
+ #define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
+ #define MSM_DSI_6G_VER_MINOR_V2_5_0	0x20050000
++#define MSM_DSI_6G_VER_MINOR_V2_5_1	0x20050001
+ #define MSM_DSI_6G_VER_MINOR_V2_6_0	0x20060000
+ #define MSM_DSI_6G_VER_MINOR_V2_7_0	0x20070000
+ #define MSM_DSI_6G_VER_MINOR_V2_8_0	0x20080000
 -- 
 2.34.1
 
