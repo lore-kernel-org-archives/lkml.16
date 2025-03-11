@@ -1,85 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D287262D11;
-	Tue, 11 Mar 2025 17:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EA741C72
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 17:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741715736; cv=none; b=dzLKrDVzByZLmJFbFbvv6WBEXrq8SIJPWqW4JzJOnub9IYnHk6GeWbyAFLyYR0SPWREWMpBtfLX60YjboVIR8dAvECuVBXPCJthDDLzx9zKuZ9/i9D2MjijTSZNq7PfRBYpj4CSUy5009dEWlMATYfQKQT4Tv6yXrMhrxu+4WNU=
+	t=1741715805; cv=none; b=OHJH/L1OEteNQYvaM6Q7c/Uac7jZARoY5OUwll/IrQmaDy9e1dZmWXBhD+WfnqLtXd91ARP4EWufg2idqme5LGYM93x+QL8HUpmU4ZtpoK+VWGBKv2Ux98gLbtnzkPKYLJHxWC3VTqfkdx3ngFQLYqCB+zLolrsHWt+onxUDqic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741715736; c=relaxed/simple;
-	bh=8u4pLdHTIPFDK61uW8Pwmuh4P/pSUrHF80u1BGQPw1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rxNu9fn1/PYqpEsbg3Km9VKtoRUhOG4sGOZ35ldInTy1yfjVPekmqORNO0dgJvwmsYybFzcnY4jPs7xhvzjN9bfSh+JYf8jdcm+bhBjf0iDRDd8DJqYDhLBpXAyPiD8Hh58APYwt/sPoe8Cu/iqs9mZ1fg8tvW4Tm3bUQUrPvNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPM+UPYp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741715805; c=relaxed/simple;
+	bh=m+E4x6BESOvidyJ6BzlnfN57DWpXekcwokm9f0yqX8E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pzBLkV7l0Odo+RbknjvrKhGqWB0E6BbgWi4Wr/MzqYzyBm3Z0cjLJgA3t7TEyTV8zDXkafGyJloHEGgcosVuOeQL5eTjEP5fxdEc1R9jl8WdlOJFJVGOMktVhm2hkU1pfRmMa248qNUFqr6S/MjpZspdhMM8UsCJnlVYOYDW0Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=G0nIZ1Km; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPM+UPYp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94A55C4CEE9;
-	Tue, 11 Mar 2025 17:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741715736;
-	bh=8u4pLdHTIPFDK61uW8Pwmuh4P/pSUrHF80u1BGQPw1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hPM+UPYp+Dl9QmdvLVZP8/GlmuodV3AIhgCje1OSt7+3NoWS+fJHPJy17889lPa3a
-	 CG84EdQhEZW3BwePkfymcv95wgGXaD1vtQUdwOXMmhEqCV5hgxiikHjRjYJ2Y/v0E9
-	 WM5i/vw30jFFELw59CjhpP80sFQIfNiklgei14DqpgQQCn2/tpFtaGukHDvxOiTBLe
-	 DMewDLdlM8KBeWnfPKcatcsXN489qLe4brSdeMrSfrB2G9Yp2l6TmfciXHC8RSWi4H
-	 t5sU0vqoglfhHOiANV51YkT5bvJLYhIMPKAShrzcy9iUeCxVwEHSgFY+wVO8jfoSNg
-	 O4YnIeQ0R3Eyw==
-Date: Tue, 11 Mar 2025 17:55:30 +0000
-From: Will Deacon <will@kernel.org>
-To: robdclark@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	jgg@ziepe.ca, jsnitsel@redhat.com, robh@kernel.org,
-	krzysztof.kozlowski@linaro.org, quic_c_gdjako@quicinc.com,
-	dmitry.baryshkov@linaro.org,
-	Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-Cc: catalin.marinas@arm.com, kernel-team@android.com, iommu@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v18 0/5] iommu/arm-smmu: introduction of ACTLR
- implementation for Qualcomm SoCs
-Message-ID: <20250311175528.GA5216@willie-the-truck>
-References: <20241212151402.159102-1-quic_bibekkum@quicinc.com>
- <173625436399.258197.10961901698600591079.b4-ty@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="G0nIZ1Km"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso35201645e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741715802; x=1742320602; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hYTLWKUhmky2iO/fcuHYIl1wOvlVQaoKuMWD5eXkddc=;
+        b=G0nIZ1KmOG8EhUiYm79XNXYhdMTJnXpWGMJRbeELjUnDrIRRfR9ZL11yG7h3qx4E5Q
+         ocLDZ+0c+E8xwSMNJ0WObZaGyIZXKNnIw4l4YuIV3nVKbro2IGUiyJEH0i6Rw39SSqUj
+         5uMPESxPhbHrW4tWdm3A5/+owdK3PzSJicdru3EmfXHdAjUYRdV1M1I/ZHlKUxEcXysh
+         R4Puisx5oVlgOic/YxzuT0yujIyLUOYe7fBWwS8GtxWZu2DZ3/pgpRXvhevB1R9jlbSa
+         BpOMgJBQ6dBNeFoVs37Ywuli0r4/66gTiDJ54PLMZ5XWuQ3/3YiCcxPT9O3j+43C+e38
+         jewg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741715802; x=1742320602;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hYTLWKUhmky2iO/fcuHYIl1wOvlVQaoKuMWD5eXkddc=;
+        b=GicoZzw+8ox+QgglJDoApSCASl86bDcBxksN3UTt55rTxns7vMdcV0ElcuiTPEjDrQ
+         Rv71qatuel/6NWSTtMq2KGRhOrem0Tcv86YfiFcXTcHB5n3YPsub6JovOSsDQiGnfuXR
+         kUpGEDqSNl3wmAnBA1w3UxaKgShBMiOlt0+cEY+vx9C3vEvU/TGl9sIpMGaojYlS2082
+         NavODSyJS6+Lz224kJuIUwkSlo6a9A9exB/q6LgpdmVYz9MS3a+rDauav7Tv0/pNpcJh
+         fju6I3kNTKvKd9kT7LLJzC4A3Y2gVu+9opvWs1/aEOH0smn9XpM3r4QY3y55ELKjU18o
+         1Teg==
+X-Forwarded-Encrypted: i=1; AJvYcCXxBoi5yqI5Adp+kP0Dl3jwGoncHGfTJz2/JQAnMIKOSjNcyj5mI0ymfM96BT0maxwY+Knm3bhyw0yp7Mk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZopmi84C5yq0PjGiELVehynz9kyHj5s3CpMo0aUmRTTpqPjZt
+	Yon16NI4AdhJNy1DsgYsnBOxz13XFVD3qF3vagqLHl0gmFARrLqvKf9mHSSdClU=
+X-Gm-Gg: ASbGnctiGFxvGHGSSXuq2Ax4sjNu+hsdGUvAhTavPNTqxO3lDLi2A+kxOMM85ILaxIq
+	6bPuuISaAGXP3cKxWPK9rp44c9Ddeu0K1hGT8YIkR3Nzmpu5RGz8/UFaqmStZgGZNazXE9ezpWn
+	VYBllbEmnxsBAgvqmqYXm4gUEQhmUHgr7pcSk5QsNykcc1dnkLgpNAbAuRxYyZd0TXPVzHJwzxY
+	WzjOm3dclNDGWjt+QHThuIooAgdDB2Lgl3qUmDSuvJJMVRXC7cKJV4wwojT4g4zDzSTttJofXYi
+	NwiTm24yPwBsRMqnbhkv39gdA2IlNTTgRqR5QyIgwfc=
+X-Google-Smtp-Source: AGHT+IFqNxNbNzW3a+bcFj3Gqczzv+XM9uvQIRQPwUJUsJPD9b8ikMTcbzP10W5a+LHdkzOVRocdCA==
+X-Received: by 2002:a05:600c:3b94:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-43cf8fcf902mr87027045e9.4.1741715801708;
+        Tue, 11 Mar 2025 10:56:41 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5946:3143:114d:3f3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cf82f790esm81445215e9.10.2025.03.11.10.56.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 10:56:41 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Genes Lists <lists@sapience.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH] gpiolib: don't check the retval of get_direction() when registering a chip
+Date: Tue, 11 Mar 2025 18:56:31 +0100
+Message-ID: <20250311175631.83779-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173625436399.258197.10961901698600591079.b4-ty@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 07, 2025 at 04:42:39PM +0000, Will Deacon wrote:
-> On Thu, 12 Dec 2024 20:43:57 +0530, Bibek Kumar Patro wrote:
-> > This patch series consist of six parts and covers the following:
-> > 
-> > 1. Provide option to re-enable context caching to retain prefetcher
-> >    settings during reset and runtime suspend.
-> > 
-> > 2. Remove cfg inside qcom_smmu structure and replace it with single
-> >    pointer to qcom_smmu_match_data avoiding replication of multiple
-> >    members from same.
-> > 
-> > [...]
-> 
-> Applied to iommu (arm/smmu/updates), thanks!
-> 
-> [1/5] iommu/arm-smmu: Re-enable context caching in smmu reset operation
->       https://git.kernel.org/iommu/c/ef4144b1b47d
-> [2/5] iommu/arm-smmu: Refactor qcom_smmu structure to include single pointer
->       https://git.kernel.org/iommu/c/445d7a8ed90e
-> [3/5] iommu/arm-smmu: Add support for PRR bit setup
->       https://git.kernel.org/iommu/c/7f2ef1bfc758
-> [4/5] iommu/arm-smmu: Introduce ACTLR custom prefetcher settings
->       https://git.kernel.org/iommu/c/9fe18d825a58
-> [5/5] iommu/arm-smmu: Add ACTLR data and support for qcom_smmu_500
->       https://git.kernel.org/iommu/c/3e35c3e725de
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Hrm. I'm not seeing any user of the new ->set_prr*_() functions in
-linux-next yet. Is there something under review, or should I revert this
-for now?
+During chip registration we should neither check the return value of
+gc->get_direction() nor hold the SRCU lock when calling it. The former
+is because pin controllers may have pins set to alternate functions and
+return errors from their get_direction() callbacks. That's alright - we
+should default to the safe INPUT state and not bail-out. The latter is
+not needed because we haven't registered the chip yet so there's nothing
+to protect against dynamic removal. In fact: we currently hit a lockdep
+splat. Revert to calling the gc->get_direction() callback directly and
+*not* checking its value.
 
-Will
+Fixes: 9d846b1aebbe ("gpiolib: check the return value of gpio_chip::get_direction()")
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Closes: https://lore.kernel.org/all/81f890fc-6688-42f0-9756-567efc8bb97a@samsung.com/
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Link: https://lore.kernel.org/r/20250226-retval-fixes-v2-1-c8dc57182441@linaro.org
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+This commit is in linux-next as 9becde08f1bc ("gpiolib: don't use
+gpiochip_get_direction() when registering a chip") and was applied as
+a fix to commits e623c4303ed1 ("gpiolib: sanitize the return value of
+gpio_chip::get_direction()") and 9d846b1aebbe ("gpiolib: check the return
+value of gpio_chip::get_direction()"). Becuase the former is queued for
+v6.15-rc1, this fix was never applied to v6.14 and sent upstream.
+
+However, the warning it addresses is now queued for v6.14. I've rebased
+this commit on top of v6.14-rc6 and would like to send it upstream. Once
+merged, I'll pull v6.14-rc7 back into my for-next branch and fix the
+conflicts.
+
+ drivers/gpio/gpiolib.c | 27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 8741600af7ef..de708d081858 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1056,24 +1056,19 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 
+ 		desc->gdev = gdev;
+ 
+-		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
+-			ret = gc->get_direction(gc, desc_index);
+-			if (ret < 0)
+-				/*
+-				 * FIXME: Bail-out here once all GPIO drivers
+-				 * are updated to not return errors in
+-				 * situations that can be considered normal
+-				 * operation.
+-				 */
+-				dev_warn(&gdev->dev,
+-					 "%s: get_direction failed: %d\n",
+-					 __func__, ret);
+-
+-			assign_bit(FLAG_IS_OUT, &desc->flags, !ret);
+-		} else {
++		/*
++		 * We would typically want to check the return value of
++		 * get_direction() here but we must not check the return value
++		 * and bail-out as pin controllers can have pins configured to
++		 * alternate functions and return -EINVAL. Also: there's no
++		 * need to take the SRCU lock here.
++		 */
++		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index))
++			assign_bit(FLAG_IS_OUT, &desc->flags,
++				   !gc->get_direction(gc, desc_index));
++		else
+ 			assign_bit(FLAG_IS_OUT,
+ 				   &desc->flags, !gc->direction_input);
+-		}
+ 	}
+ 
+ 	ret = of_gpiochip_add(gc);
+-- 
+2.45.2
+
