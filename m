@@ -1,141 +1,108 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5A83FD1;
-	Tue, 11 Mar 2025 02:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CAA3FD1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 02:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741659140; cv=none; b=a3uKVEGraAQKSuEitdUhEKyRFIBEu49zqQ39ttqbHHdKVukdEsaE/a8qTWyeP7asfkGBRIHHqPromiHC+gMGnd3gXnU477fuY6JFwrI0CAWfByaEXTBJQCu/a4SXzYiHXXWy1WdYRwQapoZMhQBDCdVsQ1dl2YIpBk9HK4OUkyk=
+	t=1741659200; cv=none; b=qCZoyYfjHNsjm0mNn+/GQcpSclaEXpiaKNRwlinQsmyMktHsIyw2UKO+bXbTQWuTBC1UgbQKT/4DrYi8MUzPfW4KHo/4x7oOi+HdPWBgN7N6DujAX17KlneX5h4bp3sPD2OiCnY0rtdPEA9afskBqj+WxPwZASyVBSbGAWiUr2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741659140; c=relaxed/simple;
-	bh=9BewszbnyKceG31QbpOA8h948LA+GGo/buud95D3c/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L3MRq1M1J2wKjA0sZVK9T/vb7aPkXY5EOcFaA8pR8Sv8cO1LWa8o38DSEdPcfLFpZ8LzwCHM35HML4Yoh+YuOJDe2o9gcs9vZxFd1DoJ/wzVJ3cyB4YBRDRhUxYx4Anb/6mAXThyJV2tP36oZqAXcAlY97Y05vzIP4oOXBvYIJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fNPJBRQU; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1741659200; c=relaxed/simple;
+	bh=udy8jRbGI1xRGhqFWBbV+CYLNO8MxK1GHbq47bU8y3Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FfPLYsDJTke0xL3zvg0xB0Zl5ARlzwBPH0jCe5qLiWD819+GRPY4EBlnYakCf8+Qd5+64npIncXNKkIHf0HuZ5Fuw8ILfV4mqm8HpTCOYcZVTfRG6f/a8I12qGJqVhiUxlyAoT0ylU+VyE/EIiIG2qoGF+7JzWejD+ejljMgaoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bhwMc9I7; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fNPJBRQU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1741659135;
-	bh=sPRc+SLGGmBsjVapsNsec//vcORc+A/EDQ02Tjp9hxk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fNPJBRQUlWyQoZ4l+yuMk9PjEFga7EpUUJBxPHBvL/78UNUd5LK9ekyvB0VfzcNbX
-	 8kRos6qJs5Fjh8LdO1KnzQCq5XHhg+v3Cu9q6LRv0TxoTHHlQUX6g+r8Mbg7pC/xpP
-	 I0AGq+wOL2qBzOUdyt3UHC8zkIxtoMZbO7+bhy/F1p3BYGyw3iSSrEeMMF6mqFnwZB
-	 ZCpsM6U7WQJ0zdnz/IF9v78uRkO/9tsWcNFLRA7HNRhdFdc3F7bNHvguKTYuh4qo9C
-	 INEq465rvxTzR+io+c4V2G5PgDbqRTOuL2gq4ilIypqLGcOcDQXtKboS72TlqFbmNA
-	 WZZ2wCuXZVUTw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZBchv00qfz4wcw;
-	Tue, 11 Mar 2025 13:12:14 +1100 (AEDT)
-Date: Tue, 11 Mar 2025 13:12:14 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>, Dave Airlie
- <airlied@redhat.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0?=
- =?UTF-8?B?csO2bQ==?= <thomas.hellstrom@linux.intel.com>, DRM XE List
- <intel-xe@lists.freedesktop.org>, Alistair Popple <apopple@nvidia.com>,
- Balbir Singh <balbirs@nvidia.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Matthew Brost <matthew.brost@intel.com>, DRI
- <dri-devel@lists.freedesktop.org>
-Subject: Re: linux-next: manual merge of the drm-xe tree with the mm tree
-Message-ID: <20250311131214.530934a4@canb.auug.org.au>
-In-Reply-To: <20250307122954.1ab65809@canb.auug.org.au>
-References: <20250307122954.1ab65809@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bhwMc9I7"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2239c066347so85925365ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 19:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1741659198; x=1742263998; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eEx1nNscCBpj8PvDfq9jNWOzGRxlbE/gLhvOGDUNIIs=;
+        b=bhwMc9I7pKKyC28TA5/PVy9ed3bcLQ1DSTLEolKAnI39CIRIZ5szwnxaWp5qI7TXhb
+         IeDd1BplwJVnmgm3DpGuxoqls3Io/Jd0WVA6z7BMWeuVXwODT/1KuNoUtGJa03XK/ba0
+         lglqr4X0xiYVD+1/+IOBwC7GeEmC0/odi+Rjf8JDICLbZ/0zGL4E1qe1H8hWgYrPA6Cz
+         1K2Ul4NTMaUf9yrIEKsPLRMdIcAcrfQWB/DrDm+hH+6HMxhWZpAkLlRRFNPGaomQvdaR
+         v+CEy7iL0q8N8KrXdcNoBRozJjlCmV5cWwkgQNh8x7zriYPZGUMexsA07FBoi+tgmX/6
+         BHJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741659198; x=1742263998;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eEx1nNscCBpj8PvDfq9jNWOzGRxlbE/gLhvOGDUNIIs=;
+        b=V9dQp6SvthAsDOlnTBPb2cbK9CdBxOH7XjZIq+8B8+v1yRh4TOPn4MXI+3JYhGa2Xo
+         0gWUzGAWc+04SEV840yaCTspC4DWvfilQh9KyJkipGcYm9/M/BogEStdUom3dqhNnyxz
+         hZNJu9YujpB0k0RLJLgJGIg1abTcJ3TRgmQF3au1JF7Ueyt4gfIOqFC6b8lF4BOojOxy
+         kp7KQlhqVYQULmGs34z93ijFC+YKTcAzh/hwIsbK2KJTMdJ9jQUyAIhe3xHXJRTu0+9u
+         ToH2vkgpek1Vo5e1Wm7F3E0siuHFVEY/GpkYgYEGdESmR4XG/IApwwK1pbiTRLmGRpZ9
+         N4eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVXonmvel1+7BQkXyhLdHWzMKHTq8k3B7EEPsmTk+JZL8G89mgd8A97mN785S0FhicduVfG5/GCSKeNOs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfO/mBm9kCYFf54dvq/K2ovavVTDlKERQSGidLx2ZdGAG2S4Td
+	ZMC45BCeg+aQvL5bg3vaHFvXa15wNNYe0y8ZPtYmgZrGYZ1DQyf0Kp3yWcf+EUw=
+X-Gm-Gg: ASbGnctDj1+kQ4vN1+PpfiRaJNPFFhEg8MfJwXWTDQ40K1gj3xKsSFqQsF3Heg38tgL
+	DrrV9+rXCVHy1WudwPOiafzxRSxj9hh2pcf2ZIFfjH5l9T57VoRrj5y2PTieb/gxfGPpDPPZeS3
+	OGbpH+jxpMJ7OpwKRBwpVlJkV5EFwE/qCq8vbLbvlW5VPwWy6JOZOqaXD0Mwux/JNQrTwkJL/le
+	so8qkj5vlyvF/OGOKtHvf4sgXYTgu2ZYZT92v4ou1qlilJmp8M2rN1GIhH8C0JFeGYR8Xmu3uRA
+	i3onuE0fReDS7Pdvzc+ai2ooVaDAcN/iHCESiUDZG1gQ9/sB6I/uTySWde3zszibtg==
+X-Google-Smtp-Source: AGHT+IEAV3kSCGbgGRfNs1o/R+ErPgdvcNrYhYzTSAbHfjdRjgn5bgiqiwCUDib6f5F0APcd1aFqXw==
+X-Received: by 2002:aa7:88cd:0:b0:736:621d:fd32 with SMTP id d2e1a72fcca58-736aaae44efmr21428387b3a.22.1741659197793;
+        Mon, 10 Mar 2025 19:13:17 -0700 (PDT)
+Received: from n13-144-013.byted.org ([36.110.131.117])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73698204fbesm9132193b3a.36.2025.03.10.19.13.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 19:13:17 -0700 (PDT)
+From: Diangang Li <lidiangang@bytedance.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Diangang Li <lidiangang@bytedance.com>
+Subject: [PATCH] ext4: clear DISCARD flag if device does not support discard
+Date: Tue, 11 Mar 2025 10:13:10 +0800
+Message-Id: <20250311021310.669524-1-lidiangang@bytedance.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//FZSXrmCnoUDnIwitfLYCfG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_//FZSXrmCnoUDnIwitfLYCfG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+commit 79add3a3f795e ("ext4: notify when discard is not supported")
+noted that keeping the DISCARD flag is for possibility that the underlying
+device might change in future even without file system remount. However,
+this scenario has rarely occurred in practice on the device side. Even if
+it does occur, it can be resolved with remount. Clearing the DISCARD flag
+not only prevents confusion caused by mount options but also avoids
+sending unnecessary discard commands.
 
-Hi all,
+Signed-off-by: Diangang Li <lidiangang@bytedance.com>
+---
+ fs/ext4/super.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On Fri, 7 Mar 2025 12:29:54 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Hi all,
->=20
-> Today's linux-next merge of the drm-xe tree got a conflict in:
->=20
->   mm/memory.c
->=20
-> between commit:
->=20
->   089b22f60a0f ("mm: allow compound zone device pages")
->=20
-> from the mm-unstable branch of the mm tree and commit:
->=20
->   1afaeb8293c9 ("mm/migrate: Trylock device page in do_swap_page")
->=20
-> from the drm-xe tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> diff --cc mm/memory.c
-> index d21f6cded7e3,59b804f4bf3f..000000000000
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@@ -4473,11 -4348,15 +4473,16 @@@ vm_fault_t do_swap_page(struct vm_faul
->   			 * Get a page reference while we know the page can't be
->   			 * freed.
->   			 */
-> - 			get_page(vmf->page);
-> - 			pte_unmap_unlock(vmf->pte, vmf->ptl);
-> - 			pgmap =3D page_pgmap(vmf->page);
-> - 			ret =3D pgmap->ops->migrate_to_ram(vmf);
-> - 			put_page(vmf->page);
-> + 			if (trylock_page(vmf->page)) {
-> + 				get_page(vmf->page);
-> + 				pte_unmap_unlock(vmf->pte, vmf->ptl);
->  -				ret =3D vmf->page->pgmap->ops->migrate_to_ram(vmf);
-> ++				pgmap =3D page_pgmap(vmf->page);
-> ++				ret =3D pgmap->ops->migrate_to_ram(vmf);
-> + 				unlock_page(vmf->page);
-> + 				put_page(vmf->page);
-> + 			} else {
-> + 				pte_unmap_unlock(vmf->pte, vmf->ptl);
-> + 			}
->   		} else if (is_hwpoison_entry(entry)) {
->   			ret =3D VM_FAULT_HWPOISON;
->   		} else if (is_pte_marker_entry(entry)) {
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index a50e5c31b937..1b4d8475a08c 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -5616,9 +5616,11 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+ 			goto failed_mount9;
+ 	}
+ 
+-	if (test_opt(sb, DISCARD) && !bdev_max_discard_sectors(sb->s_bdev))
++	if (test_opt(sb, DISCARD) && !bdev_max_discard_sectors(sb->s_bdev)) {
+ 		ext4_msg(sb, KERN_WARNING,
+ 			 "mounting with \"discard\" option, but the device does not support discard");
++		clear_opt(sb, DISCARD);
++	}
+ 
+ 	if (es->s_error_count)
+ 		mod_timer(&sbi->s_err_report, jiffies + 300*HZ); /* 5 minutes */
+-- 
+2.20.1
 
-This is now conflict between the mm tree and the drm tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//FZSXrmCnoUDnIwitfLYCfG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfPm/4ACgkQAVBC80lX
-0GwWgwf/dqiOYAQOJABrMGZlP96+Re5v5AI0/oZmQI8+MQRGYeeXMNCjKfQiMaTb
-zvZ12zDkJ3vfTd4aNBcO8uGO+rxiq9vH1w4vCyGhq+IHGITnDwos5pxLegtaUI/p
-69kuQNxO+iQL41EBii0t7w+tEUj0UEkUyfwi1zyPlPaunLtDVpEL05t2n8aD9A0O
-NKYrvND55PlC2OMncDvOwhy3B66KtUgFB3EyG1UdWYIPwlcwg3qiI1XBumb1pWFX
-/MihC/1QVJbzim3rbNmljyQM8GhBaz++2D7lf6LInAnVRwavcPHZoi0kKep12oYn
-vev33M8do2498+8JyrckThlnZnqxqQ==
-=Zw5K
------END PGP SIGNATURE-----
-
---Sig_//FZSXrmCnoUDnIwitfLYCfG--
