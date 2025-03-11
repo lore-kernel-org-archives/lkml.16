@@ -1,97 +1,116 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from nbd.name (nbd.name [46.4.11.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD26199FBA;
-	Tue, 11 Mar 2025 21:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321C2229B18;
+	Tue, 11 Mar 2025 21:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741728293; cv=none; b=iQ7erWjZQ/iOjZc4fOSBeRd5JQwwSVxbHPc1J5xNr4MIi3DDgag5cxyv5gdGg0/zQAKAVzyCAauWpNj38Xdui3gKbQPc5Bx9tG9InabwtFknw4hxVHsbCi5DXYVWr8qf9fSdTGlGzV5B1L8qtccbLyGr68a64lWRm/i7+Hk/UF4=
+	t=1741728346; cv=none; b=VrxtEWmnFScK5vYcQESMmKsXusfQg4dlmh7gobxgqLY5VIMbyFX9K/FUfgiF2YuwQEHhFDa0W1Eab7xqfzp5dvGpgQX9hA0TXS/qpjfO8gd6dgOHCL8R5RG17jWmd/Krp0Ew6o+JES39tBR4znqgjk6l+hDPXcE+/sSy9GzOyWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741728293; c=relaxed/simple;
-	bh=1fLXz1Z17KdztB9Xq5D8pNArueYNUOphN1H9sPeg3Ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=UUElfGxzPEchPHqHwd0uDkSSfSBqgGBYIvPPF9ORHrL3KrexkMo0YpSAvVBqzlhXCUBOYWypkdwdvuv/SKh2o164A4gh9sa4XQZ5d5a6HjuLs1s0rBfm+kzcJfS0Wd+GiTGbUzH2DugHQGnqDYxZrf0RB0wcWRURDoUDv188GZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=dUKvmBw1; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1741728346; c=relaxed/simple;
+	bh=OcjTRdDfTy9z/5Ut/8Y7X1Cm6KzGic8f8bEjZ7yCPKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Irsxj891t6WA0p21ngAge6eR0TKFh9eZr3yTB8rQP0Uvp/zRV7qQbSEn6/L7a9DEux5HqYfjk+/ql1dslYCYc2+NChDZSAUDiNDVrYFVAYHfSYDvYbEo9gAC/iYibNo81Hof1/di6SdZ7eALZrdPuvHuxg+P8EifN6ZB/1FZWmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=NG79b0uv; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dUKvmBw1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1741728280;
-	bh=ZsmVQ5DlB1ZpsAtkvACr0C5cAsnPSC+0UeEEHIOW8ag=;
-	h=Date:From:To:Cc:Subject:From;
-	b=dUKvmBw1VfF/PNWUYgg9DkUPZ7pnXd7LKELZ4C4nucQMlyoWydL54MYS/02G+MYkm
-	 OB/bwrIX214zDu7cqQ204+vEeC6K66BrFuQjYuuyijyxiJUIYmJ+A11CEFt6IOgYV2
-	 XJVCrlG7THfIlw6U9q7jmJELOXeXuSY5mFNjutPpILbu+oUkkOeRFMmMTQ+faqJXTK
-	 h9fpLRbQBDT6/CAju1v4MwiVmjL7t4b+2Xhbbba4JYMmLyrh2Qhuezsq8EEBtm4WKu
-	 rAgeuw8P1P6qkpWc2sQpyMaO12KXnqamuBxSKlO/i66i4QhTfmYZZePZGt64z2/vSL
-	 J+09IRaR/g9jQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZC6Gc19pLz4x8R;
-	Wed, 12 Mar 2025 08:24:40 +1100 (AEDT)
-Date: Wed, 12 Mar 2025 08:24:39 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the sunxi tree
-Message-ID: <20250312082439.098124ee@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="NG79b0uv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=dYfijsKRkDi3VDGlOSu79wAwgSd8W8dIZLzw9V1UFSk=; b=NG79b0uvn/YcMp+J7vQ0p2IF2N
+	P3rAfd6sCvZblvzFzouD39ah5/WMRmRIakmPrgtpioJcX6bL6iMpGk8C+zntYLo6aS5fm4ynhh4pR
+	T2I2rTEHVDGqr+oT/KWZzsjPPS91KxXAkMSCcAdbvhIEJn6li8Ka1RiHsoLX6+uArets=;
+Received: from p5b206ef1.dip0.t-ipconnect.de ([91.32.110.241] helo=Maecks.lan)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+	(Exim 4.96)
+	(envelope-from <nbd@nbd.name>)
+	id 1ts76R-00G2NA-2A;
+	Tue, 11 Mar 2025 22:25:31 +0100
+From: Felix Fietkau <nbd@nbd.name>
+To: netdev@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH net v3] net: ipv6: fix TCP GSO segmentation with NAT
+Date: Tue, 11 Mar 2025 22:25:30 +0100
+Message-ID: <20250311212530.91519-1-nbd@nbd.name>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/43b010ypr4rpN6VAbDG1lFe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/43b010ypr4rpN6VAbDG1lFe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When updating the source/destination address, the TCP/UDP checksum needs to
+be updated as well.
 
-Hi all,
+Fixes: bee88cd5bd83 ("net: add support for segmenting TCP fraglist GSO packets")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+v2: move code to make it similar to __tcpv4_gso_segment_list_csum
+v3: fix uninitialized variable
 
-Commits
+ net/ipv6/tcpv6_offload.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-  575464821eb0 ("clk: sunxi-ng: add support for the A523/T527 PRCM CCU")
-  9c8d960c13ab ("clk: sunxi-ng: a523: add reset lines")
-  4548c0414839 ("clk: sunxi-ng: a523: add bus clock gates")
-  680f52d723e2 ("clk: sunxi-ng: a523: remaining mod clocks")
-  5fd7421770fb ("clk: sunxi-ng: a523: add USB mod clocks")
-  dd19c52e686e ("clk: sunxi-ng: a523: add interface mod clocks")
-  9bc061e57b4d ("clk: sunxi-ng: a523: add system mod clocks")
-  4b759de121c4 ("clk: sunxi-ng: a523: add video mod clocks")
-  2d47dae93981 ("clk: sunxi-ng: a523: Add support for bus clocks")
-  04f6ff49525a ("clk: sunxi-ng: Add support for the A523/T527 CCU PLLs")
-  38ea575784d3 ("clk: sunxi-ng: Add support for update bit")
-  24ad1a7e8a3e ("clk: sunxi-ng: mp: provide wrappers for setting feature fl=
-ags")
-  af7a221c1213 ("clk: sunxi-ng: mp: introduce dual-divider clock")
-  17bed1817f11 ("dt-bindings: clk: sunxi-ng: document two Allwinner A523 CC=
-Us")
+diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
+index a45bf17cb2a1..ae2da28f9dfb 100644
+--- a/net/ipv6/tcpv6_offload.c
++++ b/net/ipv6/tcpv6_offload.c
+@@ -94,14 +94,23 @@ INDIRECT_CALLABLE_SCOPE int tcp6_gro_complete(struct sk_buff *skb, int thoff)
+ }
+ 
+ static void __tcpv6_gso_segment_csum(struct sk_buff *seg,
++				     struct in6_addr *oldip,
++				     const struct in6_addr *newip,
+ 				     __be16 *oldport, __be16 newport)
+ {
+-	struct tcphdr *th;
++	struct tcphdr *th = tcp_hdr(seg);
++
++	if (!ipv6_addr_equal(oldip, newip)) {
++		inet_proto_csum_replace16(&th->check, seg,
++					  oldip->s6_addr32,
++					  newip->s6_addr32,
++					  true);
++		*oldip = *newip;
++	}
+ 
+ 	if (*oldport == newport)
+ 		return;
+ 
+-	th = tcp_hdr(seg);
+ 	inet_proto_csum_replace2(&th->check, seg, *oldport, newport, false);
+ 	*oldport = newport;
+ }
+@@ -129,10 +138,10 @@ static struct sk_buff *__tcpv6_gso_segment_list_csum(struct sk_buff *segs)
+ 		th2 = tcp_hdr(seg);
+ 		iph2 = ipv6_hdr(seg);
+ 
+-		iph2->saddr = iph->saddr;
+-		iph2->daddr = iph->daddr;
+-		__tcpv6_gso_segment_csum(seg, &th2->source, th->source);
+-		__tcpv6_gso_segment_csum(seg, &th2->dest, th->dest);
++		__tcpv6_gso_segment_csum(seg, &iph2->saddr, &iph->saddr,
++					 &th2->source, th->source);
++		__tcpv6_gso_segment_csum(seg, &iph2->daddr, &iph->daddr,
++					 &th2->dest, th->dest);
+ 	}
+ 
+ 	return segs;
+-- 
+2.47.1
 
-are missing a Signed-off-by from their committers.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/43b010ypr4rpN6VAbDG1lFe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfQqhcACgkQAVBC80lX
-0Gw+cAf/dGLRCMVZP5QcNYjLoiNw/RnVlBRIWKujXiZ0Ls2SIFnpjHIzYCsbpQpF
-3U/bqqDF0Bk8xgy8oZVtvCPcLaadd2AzRdWXScgnc7hgsjYjUp8oaiQGruB5euEd
-SE6npbR3T5c34oea2eR6NWNCapf/0NyVL68RAljl3izSSyjKzy63i46Db8qyX0zH
-QVyhZpJi3/QIXK7fwZt1RG24naL9jszb0bN3IkSSPQiig3bveQt5fb28yoeADUG5
-6k1dlH74v3X3aPK2MqC6uHjHob3pXrACuzfRAai6HYdL2JFmFeQzq4h2vOzICJYp
-qmkUFzyJjpcGm8iL+iQjUN+0GHvu7w==
-=306N
------END PGP SIGNATURE-----
-
---Sig_/43b010ypr4rpN6VAbDG1lFe--
