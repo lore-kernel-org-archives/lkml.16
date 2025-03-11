@@ -1,115 +1,117 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29D72638BF
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 18:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5C926389D
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 18:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741716686; cv=none; b=TTwqBXDe+Fbl9pMmiK8tRjSTqyyz19j/Ou+AhsiiNm+bFcf0KgzIduzprl+hVdRRwV7hOadgZt1B6j5N+ItKC8yHULitTImurpYYNRx/2RMOrxURW41mXWJU+0703yIUA0iituLZgHiQhx4oE1uJjAmiR735tXbJ7ki4wgpmsDM=
+	t=1741716704; cv=none; b=JUFytO6aUCkdeaA0EDZAHGXC9yGNXyBKsk14EqAHRh9pt5p7hCl1J0R/98DBq9pCWhIRuGVFrA2cQzVPbIoKTu2/2dTZ1h7EcVCAU+6sKyF2jLMG9NmDocOQ2QeWOT8jUAA4PA/yxkcujfhUvMIJBT/1XLECFtdwi0mrCitGga0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741716686; c=relaxed/simple;
-	bh=BRd7+HtTtvaBFcdTTNSbCQPKzTGFFg/AS6THF+DAXJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=drD4YA4KWSsExi/ugnhKvkgwQgF08BW+mZ4zXSqglUG+fBR5aPsvQGQvu71H8hcyCr2D0Hcyi9TBrQlU9sehnSsyDVia5kAmrEChHeZcSiCEw0AnLcvOhhkbUs5UlTj/hKRzneQvFxrWSReg0khPjMhkTd5b+qu1QefOdT+SGS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IA5jojoB; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741716704; c=relaxed/simple;
+	bh=bE6PkRpllkCxKlej02vHSlOzbCcwwgn/UGaMPH9i/L8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLG3VGGKQHCLJYaLQkXkD+q2OsAq0Nbp5DO49Tw0hUj5xs5O2ZT6gKQ4J9qHwtMUAXRxoMcL7y2T0Wuf3te+2W+bIXqqJBG76HCwB7xES2BpA1yu2zpqg3tCj8XbOIJUGD09PbSN+7lnVICzqsfRWLmgLIeAY3V00uybYBf3ldk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7M7tmFC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IA5jojoB"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac297cbe017so20334266b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741716683; x=1742321483; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=imQlH5hLyEPyeFpcTG/nV9BIkwuBSyfjOhkAYwjO1MI=;
-        b=IA5jojoB7fcbxyJpLQ9DKynZhmXSr7okK0sFzTXiezwpDvYUv+LwIT9U1B/prnNhan
-         nqY2B7gF6qvo55Ra4izZ0u38iV18CQtOP5VL2ctyERrW0Q3Gbvj9AaujIHSGdir5OjSm
-         rJQZYnB1fU4Bw1fcWoBNR8iDdIR3stvXU4ZyewnzMd4A/yPAqZ830fB4xAIJzUH7L8dL
-         /pBcOn2xTOsm9fkEE1QDPLTaKEPJQAm3j9++nDwqmIlYZGOR2WBxuQ/S2RtkeJ9IZq/X
-         Rv0YeFd5sF86/d61k474QMxQ4RmtEUoRFpOs967i88nUzUmsqPdcakqb6eQ4gEZvdwY+
-         jcpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741716683; x=1742321483;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=imQlH5hLyEPyeFpcTG/nV9BIkwuBSyfjOhkAYwjO1MI=;
-        b=rjRjyjdly188EKFw9yt7sZ9ZCIv8ZYAK35vqsJep2OWWRCaR+t9SsIimz2tcoo2pB+
-         fdAriqH1Lu/7bqRc/quEUYEbgS/qUt6koD5KbrhcyYxkEdMXEAQals98lGYUYx5MUFeU
-         2kWf6Woep/52ao85uj5iEejf+F79S4+vBp2LvhrHlw54C+IyH5zV2BsyJlQXNpUFCxnN
-         VrJ4LbpcWmaWu7M8EZOEnbXkaEgSieSrZ2WN6jVNx6C6RXrCA7E9KesWfJAlKPPzu4NZ
-         NF78+OTnytfmEh8meiluxYOxeXpQ5SbkojB0HA0wBiSUjP/JOaqzoGGr9upKwrHYq7YJ
-         ZZ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVoc7DxfMxHisRi79lV9Qj+fIDLL1OHkwON/e2o4J7uG5Fs5sNp9fiXj0KQkli70HkoB/mxW8mwtuh3yQI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOaPYtV2zsY2iY7/+UivyZB2dbEnE37X4OArPlink7D4T9vrFL
-	JGc+JmkyEszVzsN6aW8x7WtMYncTKZNuQ7n5U0OTFC7ALtx/6ZWd233KL10MBt4=
-X-Gm-Gg: ASbGncvGzjC6mDyIXMzgNwdZcqwhb59tn0eMUj9TaJrzK5hQWe5CaR9tBMqPkeK1QPe
-	q0Xco8DCcPlbzENr3Y+yO0hIlCfSD8aWnmvTe5zzJaKFi1gmwqDHiw8JMLjTifFwPieXaCE25sG
-	j52HTbKYpO9xzKjC4Z0F8rIL/iE4/N5Dwj2EUy4GJGvC7SwY7Rxq/26kfK2+4J2+x1mGzLvQ1AG
-	lSVHsW8VGdukiyXK4db8u8zn9Rtppkn4Pn8CU5JmodR1Ry6goG1Z6HwYHSurnSVUtHgnH+WCXRE
-	nIcOa3ICehvecEz+uC23w/oD4A7s7hWaKvyzhuiw6MR1ne0cR8E5dngKZZDKApnm6AjaTCNgZ+x
-	hioaRUbNO+3H5WVebjOHz
-X-Google-Smtp-Source: AGHT+IERTZ3nFwIDF0pC/Jsa9/UMytNY/0RkyK1in1I6p0biiBCy+0RcM+HnsMyf2YSwOxxQbZ6xSQ==
-X-Received: by 2002:a17:907:2d0d:b0:abf:6e88:3a63 with SMTP id a640c23a62f3a-ac2ba4c7b97mr529724766b.9.1741716682967;
-        Tue, 11 Mar 2025 11:11:22 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac288ffe157sm509101066b.132.2025.03.11.11.11.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 11:11:22 -0700 (PDT)
-Message-ID: <b21b5f03-e328-4708-a854-1b3fa9c3dfa3@linaro.org>
-Date: Tue, 11 Mar 2025 18:11:21 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7M7tmFC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741716701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TzrnYIEosGlaSeyPR0KJldsPFTrK0e57CDLAtUE1YhI=;
+	b=a7M7tmFCDuq6IuwY+XAQ7JwrywfNxYrp++Esfmzv7MX1Zgygnt5L4AJcWxnRKU1PMUlDvW
+	PHmD6ovrvR9wqF6k+hUrwAkAYFJSy7aHTdVF4Octgybwr1sPz0uHK1atTciSn0TRtIA7OU
+	o11KeKqe5u05A+4Uzhk3lxsTI+3+KcU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-353-8FHXh_3OPY6-5jtrBpPWMw-1; Tue,
+ 11 Mar 2025 14:11:37 -0400
+X-MC-Unique: 8FHXh_3OPY6-5jtrBpPWMw-1
+X-Mimecast-MFC-AGG-ID: 8FHXh_3OPY6-5jtrBpPWMw_1741716696
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 56C18180025A;
+	Tue, 11 Mar 2025 18:11:35 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.22.90.58])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AED7118001F6;
+	Tue, 11 Mar 2025 18:11:29 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 11 Mar 2025 19:11:04 +0100 (CET)
+Date: Tue, 11 Mar 2025 19:10:57 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>, stable@vger.kernel.org,
+	Fangrui Song <i@maskray.me>, Nathan Chancellor <nathan@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH] x86/stackprotector: fix build failure with
+ CONFIG_STACKPROTECTOR=n
+Message-ID: <20250311181056.GF3493@redhat.com>
+References: <CAMzpN2iUi_q_CfDa53H8MEV_zkb8NRtXtQPvOwDrEks58=3uAg@mail.gmail.com>
+ <CAMj1kXF8PZq4660mzNYcT=QmWywB1gOOfZGzZhi1sQxQacUX=g@mail.gmail.com>
+ <20250310214402.GBZ89dIo_NLF4zOSKh@fat_crate.local>
+ <CAMj1kXEK0Kgx-C8sOvWJ9rkmC0ioWDEb+tpM9BTeWVwOWyGNog@mail.gmail.com>
+ <20250311102326.GAZ9APHqe5aSQ1m5ND@fat_crate.local>
+ <CAMj1kXHTLz4onmR5iyowptRE38RCK4jNT3BoURBkq2FoDOMTxQ@mail.gmail.com>
+ <20250311112112.GEZ9AcqM2ceIQVUA0N@fat_crate.local>
+ <20250311131356.GGZ9A3FNOxp32eGAgV@fat_crate.local>
+ <20250311143724.GE3493@redhat.com>
+ <20250311174626.GHZ9B28rDrfWKJthsN@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/8] clk: qcom: Add support to attach multiple power
- domains in cc probe
-To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Jagadeesh Kona <quic_jkona@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <CMTYKKilQJYeHUYYKvlqnwv4Q2P-58Ic1v1ndS9HQ8Yhq2xpHuNThibFDjXDEQ1PyNbx__f9BVBr0peoTUdvPg==@protonmail.internalid>
- <20250306-videocc-pll-multi-pd-voting-v2-0-0cd00612bc0e@quicinc.com>
- <5a45fd25-74ed-46e3-b0e3-5adf92b5e9f7@linaro.org>
- <46d4f090-3e31-414f-abfc-3d1018913c56@linaro.org>
- <9e6fdcfe-3c6d-44c7-95a3-7652c0650bf4@linaro.org>
- <caa00d62-b24d-4db7-9e12-170a10c073e3@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <caa00d62-b24d-4db7-9e12-170a10c073e3@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250311174626.GHZ9B28rDrfWKJthsN@fat_crate.local>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 11/03/2025 17:55, Vladimir Zapolskiy wrote:
-> 
-> I kindly ask to elaborate here.
-> 
-> This series does not touch CAMCC at all, and if the series touches CAMCC,
-> then it changes DT ABI, which is objected. Or is it for some reason
-> objected only for SM8550 and not for the other platforms? More information
-> is needed.
+On 03/11, Borislav Petkov wrote:
+>
+> On Tue, Mar 11, 2025 at 03:37:25PM +0100, Oleg Nesterov wrote:
+> > sorry for the off-topic noise, but what about the
+> >
+> > 	[PATCH] x86/stackprotector: fix build failure with CONFIG_STACKPROTECTOR=n
+> > 	https://lore.kernel.org/all/20241206123207.GA2091@redhat.com/
+> >
+> > fix for the older binutils? It was acked by Ard.
+> >
+> > Should I resend it?
+>
+> Can you pls explain how you trigger this?
+>
+> I just did a
+>
+> # CONFIG_STACKPROTECTOR is not set
+>
+> build here and it was fine.
+>
+> So there's something else I'm missing.
 
-No but it _should_ Vlad, that's the ask.
+See the "older binutils?" above ;)
 
-Both of these clock controllers will require this same change to be 
-implemented, that's what I'm asking Jagadeesh to do.
+my toolchain is quite old,
 
-Certainly that's the case for x1e and asking Jagadeesh to also check 
-that for sm8650.
+	$ ld -v
+	GNU ld version 2.25-17.fc23
 
----
-bod
+but according to Documentation/process/changes.rst
+
+	binutils               2.25             ld -v
+
+it should be still supported.
+
+Oleg.
+
