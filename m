@@ -1,107 +1,92 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8623125BAAC;
-	Tue, 11 Mar 2025 14:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7411125C714;
+	Tue, 11 Mar 2025 14:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741702405; cv=none; b=ROneduDXKHqssIDqvXMHahYuRLliIk7AXNDb2b0eD5q80dBbSBvaHo6rPE7MIQWU/4k+uWY8kR95zRH5AD8vkQFXeOOWWgAMx2ib85gN67oYe+Q6taQdfCfC+LjRUpZqBjRes03mfv2/tFsB3MRh3iRm8xGcxJW7jmKMmQf2pTE=
+	t=1741702409; cv=none; b=uMRgmrCjeh4rWACbxKjD5X8FsEymOgj3EomznhKcIcNDery0vP19KORlVeL+1lni4THRGUsC3rodTudOJHFq/fL8UCchcd2LMp6wnBud/hNPvBPdfXNe2IKtA94zKhJPos4mzxhUO5wBoHXiayxbP4BiTKLHb7nRJ3j37efxkN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741702405; c=relaxed/simple;
-	bh=YrUQq3EgWI9ojUp8z5yjj68FWJDOMNllETewQ04KCAE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLcZJCvoTa9nnoB7L4JW5BjVqIqDRlhct/zAiIHHik7ZkhS6Mo6Pizk3n3rOC1P06pe6U15qUlDbABoxh/hlMBBQT/C8M3bT7tN8AizXUPFuFuUeXB0n+gGZa5JiJJTozW0p65tCRALJW8vAg0YcSpxkjZVeCWx0DuMx0V/mXbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W6e4tPG2; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1741702409; c=relaxed/simple;
+	bh=llvOW0bBcJIDSKQQ5wQKAiogGziM8VntLYU7HA3+t+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8jy3oVaP0UwQBhDmM4Z6oVTebNZxCencDRkINN9dwNwONuHkVP3o/WcfAROIcHyoIbPtcsfSk1LGYbIOfxweT0tCR/Bp2JJnzooywHY0rdEGOS+hgNcAE7aakl8BW92THWlmlHe8YWiaZjJHBjQZyky1XNhIoVAi6xZZby4Li4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DonzDBUd; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6e4tPG2"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff611f2ed1so1450970a91.0;
-        Tue, 11 Mar 2025 07:13:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DonzDBUd"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fea8d8c322so10798760a91.2;
+        Tue, 11 Mar 2025 07:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741702404; x=1742307204; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sfx/0w7tHML6j3jIZPou4W5Z11/9NxaRP60Pu8EnFQo=;
-        b=W6e4tPG290rANxtEISiO9Ph+Kc/krq92R43mySOtViGHxpsjpyvAp4a3ESv9vi9xv0
-         AiGh+eDvFOvBYTS2MwMqSYSmjrevRWznaZbj1RVZCMs+lh407xafvjADWVsoHCLT5Emw
-         A1QGYxq9WBmvYgnGNgb5vGUI969pUFG7kh/a3eQUNV3ojHVsZrIQpgBFQs67yXm0cdXQ
-         MuVxpri8W539NwdU37GxQPmajVkhpTQcpKuW7m/TjJbM/aE9O6nK8kruAzOdoH+eNc7I
-         Vg8RE1sYQpO0mpUveq1DXqLmabez/+rKveI+913hU3xDxyG5qE3ZKIR2gwhCVoavX4tn
-         x5xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741702404; x=1742307204;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1741702407; x=1742307207; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sfx/0w7tHML6j3jIZPou4W5Z11/9NxaRP60Pu8EnFQo=;
-        b=fHCEUGvl3OZ6xdrjfn8jfUVQJ6m5XlUVbXJsw8xjYjnmTZEzypgLPfgnnGQXq9pzVV
-         LcqFDImFPB2TFit2WQ5Xsv7LQJKxQzw3Kkoa6X3iyCGAf6FK1TaBFJHb5SJkFe7F+fzw
-         8ONwPM0Anmamu0B85lpxByypQ+az1we59ghTGhu3iiIDdJWTtpn1nQ3Y6WzDAtxGBx52
-         WeSaQFS8eGRtsU4B1f5EbHoW0pVIzcRA9OfUxUckjOJG8PKu27+uKaRMn2omJvCpGIad
-         guilou/s4RDFpBuNYZJfaCU4oWuVWtOeFC98gEwP2MTMLl+O/uuHpqVlkBxLdETGvUsM
-         YHzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMIZHGsO95YljSj1ArpvPhGudCwfuEVQo/jByCWT+/+fRUz84/r4lvMkk+0tj7JvBx66HLafVj89wP@vger.kernel.org, AJvYcCXxMEdMVfKkLjKvB25v2W9tW+pmvog8DUd7bshxBBRYMbkL9jMhjEow+HwyO3Gcf37HtFadrGx1B5n25cuw@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvUBHY1xqOIdHSCsrGBByk3XdAceE2bxJ3a/NfbbCmY7DaYy1l
-	AHF33Fc7Zo6ty27oF+MK8gav4AnjhUx6aOqNCH1RGpEIo4vJ352nQkUEU8UJ
-X-Gm-Gg: ASbGncvbbFcjgRJRPPUjmDLQzdsmHIOi3gs8Ad23I+zi4sstwobMsltPZt+mO1nlOc9
-	p+XHyWeIJSbjC5fwp0VhzVVHzQ4PSlmEl5lHJTO46uOp2JBVwYwdbCxg4U7xWnPUwbaXTNZC+97
-	crfTnm0RlG9rsj1/V7CENn29m8nTQuErOVieFAkxIIiGIDooDkFWvHi/KyW3cBGVNIJUf9BuVun
-	jsU4fr7M5aQCFv5HEcfnWgARCRZNg5JnzF8GknSHNVG8XsF9LWlH5ZpO2tBuviaXQ8egangrW4S
-	oabY8fRSZ1pTOCUgzUwqeAco11ZFtux6eAiTPHrlUNsqYw==
-X-Google-Smtp-Source: AGHT+IE7O4OIqI5Hjq/tsry6aj7lx93QdJ7EXMkPekETaZ95tGM87nsuJvUD/hTrx6nTT6gvYxlT2g==
-X-Received: by 2002:a17:90b:1808:b0:2ff:6941:9b6a with SMTP id 98e67ed59e1d1-300a575a5camr7228931a91.3.1741702403671;
-        Tue, 11 Mar 2025 07:13:23 -0700 (PDT)
-Received: from rock-5b.. ([45.32.55.39])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e7ff96esm11875300a91.35.2025.03.11.07.13.06
+        bh=vMedfzunbXKnIyIbLa9JRvGembMzcmlTG+fcGqUIJ9s=;
+        b=DonzDBUdz0So1Cg47zL7NPjjO8uWCLtW9yltpZqD7Xs4YDTZzpSBDHU1mWUV+xyPud
+         +vFkhVGsVBUWSDjTF5uuLl46tDM7B6/KfXNsPnxHPCZOYiJMcHNO0CwpsS6gYXokasK3
+         WO12PcmbCZRI/tkYp9KyEAwbSoZ2VbSl95D3dXNn2vG+BoBuLhZGk/+ajsVi6evMC84t
+         HugZfpXE2/HnqI62pfAtXS611Jsdve7STjhWaN08mIJQ0b3J4sqafS7R0krb001gVGuw
+         QJEFJe+tLyA7hYpqbdi4238ypsNOMs4hWJJ2g+e1Q4UQwWv2ylf8Vj0bS4QDtkEsupz4
+         j2CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741702407; x=1742307207;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vMedfzunbXKnIyIbLa9JRvGembMzcmlTG+fcGqUIJ9s=;
+        b=AkFI+KybK4e47V9hzVWNg5DhLpBShsTh05NCDNZmVcwOlU364KeUE4iIgLWPiTzM5l
+         1hqdaRaDGM3pJOMoaRARSJHSqMLddu5LD4sPYNiRetlGLiRrHC1NQwQQChYgjsbWZTs9
+         C8GUI/IgkJ09Rk6P4D8zoA38ewUJSMDVKS6O2zQsLwGrlKA12Yeg2dE+8+3rogYVUenl
+         aLh4Z7nYGYhq0T9QnKQy4we1KyMP9Z7ZgRXMT7DQJFWTQUMElBTb79q5YSdqiytxcL1q
+         CUNE5IzxRrZFJfBfc4qRRKSwRyfvEL8Nrn/c4jpfyP3wSVGygtJ+AD7M3HmWpEFpYuiX
+         a9tw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfiBuAYaB7EsBasUWHbPsKwwbMu18XgdnUExtM2sfSz4Fwp1hMrfqOlBsuhn9qwCpkOtL0n9dPA3g=@vger.kernel.org, AJvYcCWqn+ka8h+DveLhjepCRkg3CgO2zLrS6+vzfceBlEuGjuwLd2S7vqYEA+1JIOsN/EEsXCuZ5qVQxpN8aYbg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqmnsJlCKQX6xWyYBASNIlYPROV5BnrmB85C2SgHdn9UcIozrH
+	Uqj5WHwsoAaZk1KW2A1/Wq9AjM72Y4r3R+9LR33hK1J5JG3xPzUpLXgTTA==
+X-Gm-Gg: ASbGnctr1KtUcHUCb5RZUbdOG7PcDvfY4X8eAHWB8GLKrc9Xskd552Li1A/03bVGxcY
+	ppd87WVOVc+KIL/ivMFV7VNqmAmebw+whnvnFWt4NxXbstJgMj3gMA3R8Gm5X/fd0SKk/16tPOm
+	bFeJIpMrwgoK7rpQLyG026uabzcl9cSRYHNjMIKxVJ0r6RLlYRjqMzZ3zg6lpFAz6j55/G6OgGN
+	5TIwEpBZWc7tbFAe1XMtqPu47wTFQoSprO1SCCRZZIn7eEx9v7R1gSRAAceMBlh4hzjY0LNWF3K
+	IX+AvpRTHHkTAMcIcsec3H6C2CsE8WVNtmqqOYKSMmed+9kErzIo+s+xtA==
+X-Google-Smtp-Source: AGHT+IGS5r/KAbCAZgsoPkYZJ5EAM8UHb1LtA78SDi0KLHm5GnABYYgm4Mn8K7vxXVcSREApyW5asg==
+X-Received: by 2002:a17:90b:164f:b0:2ee:45fd:34f2 with SMTP id 98e67ed59e1d1-2ff7ce596edmr25892400a91.6.1741702406784;
+        Tue, 11 Mar 2025 07:13:26 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff69374942sm10039071a91.29.2025.03.11.07.13.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 07:13:22 -0700 (PDT)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Jimmy Hon <honyuenkwun@gmail.com>,
-	Jianfeng Liu <liujianfeng1994@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: Fix pcie reset gpio on Orange Pi 5 Max
-Date: Tue, 11 Mar 2025 22:12:39 +0800
-Message-ID: <20250311141245.2719796-1-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Tue, 11 Mar 2025 07:13:26 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 11 Mar 2025 07:13:25 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH v1 1/1] hwmon: (dell-smm) Increment the number of fans
+Message-ID: <bfb70a81-2ac1-428c-a327-d5098a8d3ce8@roeck-us.net>
+References: <20250304055249.51940-2-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304055249.51940-2-kuurtb@gmail.com>
 
-According to the schematic, pcie reset gpio is GPIO3_D4,
-not GPIO4_D4.
+On Tue, Mar 04, 2025 at 12:52:50AM -0500, Kurt Borja wrote:
+> Some Alienware laptops that support the SMM interface, may have up to 4
+> fans.
+> 
+> Tested on an Alienware x15 r1.
+> 
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 
-Fixes: c600d252dc52 ("arm64: dts: rockchip: Add Orange Pi 5 Max board")
-Signed-off-by: Jianfeng Liu <liujianfeng1994@gmail.com>
----
+Oh, never mind, I'll apply this patch. If it causes trouble on older machines,
+we may have to make it conditional, but that is not a reason to hold it up. 
 
- arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-compact.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-compact.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-compact.dtsi
-index 6e4dcd8fff26..f748c6f760d8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-compact.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-compact.dtsi
-@@ -64,7 +64,7 @@ &led_blue_pwm {
- 
- /* phy2 */
- &pcie2x1l1 {
--	reset-gpios = <&gpio4 RK_PD4 GPIO_ACTIVE_HIGH>;
-+	reset-gpios = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
- 	vpcie3v3-supply = <&vcc3v3_pcie_eth>;
- 	status = "okay";
- };
--- 
-2.43.0
-
+Guenter
