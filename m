@@ -1,105 +1,84 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF9E184F;
-	Tue, 11 Mar 2025 17:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94374184F;
+	Tue, 11 Mar 2025 17:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741713398; cv=none; b=cDV3OoShfISIKIf1+fuHTiBoJ3nhieyXJkp4LlN46YAPDCNSGQT7zpVVZpuU9TIlW8+vUj+eJgCwSMxW7ejmuJIvulepGIN+jDBkGoftT4e03ynRkRztjN5SeToT4lqxpoNCKAhWTiYgQ08+LCH7+AzsYvaOS/Mc4ujFFGDWVOM=
+	t=1741713446; cv=none; b=QNSpvB55NnPMXbRV3jlnFVadMvmd2mu5iXkgb3Z5cTtj+wXX5nnKYrxwD2AdteOc6SYxq3DOX1cyG7MTwfZcWKZA/5cYt8YzLvKBXiFoMiF+tz8LZP5AZEEYActOLI4fEgF9lYuIJFQMmPv4Lg9j20KGBnasR+49C2SZeHHLfgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741713398; c=relaxed/simple;
-	bh=6VtpIaZAThOf4OSwD0QtCsTDKIARmF8cER4Japn3miM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZtmaBfvmiAzkIdcNk0jU9TIETLrIJcR6jSQ91UmitoIACUaRZYFWf59PAosqyFckaCmcs+Uo43eMZY1shtVsfdE77qC4vRjrIHrqrWWgMT0IOhTwtErBj/ly8Zj69PMFAwizS/LhUh0SdrZfdF+z/y4F7nLHZBK5/ORA2+nvnAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m4dJB+Ex; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741713446; c=relaxed/simple;
+	bh=RdfYl4n2/9SgcMMHHzjpqeg67v0PMk9cjFox8uwI04E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RWu2wky/8/Recp5yRFE/dBHwmHRRmnDEjqx217RVTH+T9xvqc81w6y2Qr6mfBY77iGXa2fjo7X8US4COx1rqCHzLT9u3CyWWAhmmUxidH2HVXXqPWSvRnuTP+sP2Ja0rX1sezTm5o5fGmX1P7SUlwy7aI2G/47Mr0Myt5q5IaS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRe4HbNG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4dJB+Ex"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22548a28d0cso22021615ad.3;
-        Tue, 11 Mar 2025 10:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741713396; x=1742318196; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lT6HbYuunsljXKwEKEIlzgVY1rUKGqX9qGYC4t06fpU=;
-        b=m4dJB+Ex2JhuqG6EXq9QoLq6tOBSTWdfi/1fHjSAiN8hL+VfjthQKMMuDqOUAjGg/M
-         e9WzCL4V05dHJdjbqxcOK7ZPRQDwEh4e4TcpwWlESNw4dXcEX1ifK2AFlqo5arjYf5L6
-         Ca3Q16C4AXTj0B9uU/AcRsVzclPU6eJ1jK8uX08CGQ6UfUEO0jHwhAfMk5Q4LC7XLtFA
-         XleQS/fVULlUeDJij7MUzdCo3VIaaKqTvSXaogZIDjQJ59aKcG/CeGVbZTn+3/KQ/1xO
-         0zzerRkWxfqt+RpQayeZgSHY43B+lXLV9wuhYvB7QJV7ZOZ7n7zxfGIw48KAH3Lr7/0v
-         Y2VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741713396; x=1742318196;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lT6HbYuunsljXKwEKEIlzgVY1rUKGqX9qGYC4t06fpU=;
-        b=wqDF9ZzfKrE1TKmm9GGgezVNJoD+99sisX2RNvNNgzkXVGfRAFipVwNlqSOLwr3GNf
-         H08MKWRGKVbazkpHMKsLvNBwg/wqHfdXXaVGbrmJ+ZHCZurx/cr6b4mSKn4iqobcwY2W
-         w5A2CKH9Ll06zbRZ1pQPJYGT7fonzGyY/kQABRUYeP0iB7SH5bMOz+GpF9usxKleVAvX
-         vu1cWvFVfHIduFIaFat6bvfeN8VvcW3V2CG+AtzUkki08uouv6MjTjBJFO1/7vFwWkjJ
-         IQv0cw2nnWoW9zO9XG3qVivqOFdSsa4u/7k//oTexDppSE1hntylt9qvnCSowHvFREgI
-         T6pw==
-X-Forwarded-Encrypted: i=1; AJvYcCVprFmiOllQJPv2BFxpDPeRyySiBW3Jzwllf+GFBkTf3mYU4ZXC3AKVjNcVOuavkUN4CG0lkeZborXctWo=@vger.kernel.org, AJvYcCWdIayAQLXlb8KZf+7OLFY567+qyv6rrFB2eM9yMGgUAPcs56VxYDYtS8wPAUUPdcsOw2zpFHh6ht3Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB5kttqWXQn3sQDQPcuAjbJkD+t+GkscsG5nG+RoerVJGpVMj7
-	RwAUIGhfGqu1epE6fwWI0Z63I0sO7EQM9q6YeXlxyydIYqpuQxzgqkAeuQjRv40=
-X-Gm-Gg: ASbGncv03DxGeWg4W0b7DV/z2niGvo8X46sptTK+XEMDWBza6bIXSBps9wfm+Ab3E45
-	w3ha0TD1I688vNaoWJoRononDT5AdDr1tPkoQnccKZ7BiyZuidMmxDoVVmjOecXQRVr1JEj3q0e
-	sTfSPjeXBmC2pGxWzDFoOH/JAf1tgTKOwT2Z+Y2L8iQYGwPEp0fj6DKopkD3efE/Rwg1wiC5D09
-	ZLiRmfudw5G28wMCaNcV45exw+347gVhiuD6aoys4eyz7EHSAodCmx0u0C9rREdD6kY9wPvDn5T
-	avwPgi4yOf6TgZua0c+/dLZG6q0zmHqSGYMvt9ln5yCgd3nxtDK84AIokVgDqvUXefBMMOHqdA6
-	s0Eo/Kg1P6eSRYgxJnLlHYAnZQpXZE8yNR0a9ZA==
-X-Google-Smtp-Source: AGHT+IH1OUso3CipiM8A7ut3LZdOM7zcTJ9rSxITsNl+2lH6MYI4WmDS3FW35rPKJqyjVMP6JZHB9Q==
-X-Received: by 2002:a17:903:1a0d:b0:223:4bd6:3869 with SMTP id d9443c01a7336-2242889524fmr291812325ad.15.1741713396076;
-        Tue, 11 Mar 2025 10:16:36 -0700 (PDT)
-Received: from test-suraj.qjz2hk5f2gku1a3adsvczrat5c.xx.internal.cloudapp.net ([20.9.134.79])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109e974fsm100697625ad.78.2025.03.11.10.16.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 10:16:35 -0700 (PDT)
-From: Suraj Patil <surajpatil522@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: oneukum@suse.com,
-	stern@rowland.harvard.edu,
-	viro@zeniv.linux.org.uk,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Suraj Patil <surajpatil522@gmail.com>
-Subject: [PATCH] usb: cdc-wdm: Fix typo in comment
-Date: Tue, 11 Mar 2025 17:16:33 +0000
-Message-ID: <20250311171633.469024-1-surajpatil522@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRe4HbNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8CCFC4CEE9;
+	Tue, 11 Mar 2025 17:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741713446;
+	bh=RdfYl4n2/9SgcMMHHzjpqeg67v0PMk9cjFox8uwI04E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=CRe4HbNGIPbAqili4lACHIPgh+PthkDcZheWnoZep6Z74Ex7lU4FknU3yPZ0xP0UZ
+	 3ynHWYbuUBdeSmYYDXhyYWrr3oQ/48Jk49j97heh0/bOfGk8nJOT9KTsyEyGFVVFwn
+	 XUEg8azh8iFUF11K4utyyzsJvjQFQInn6kAaUYM5hEMGE28UAKXWP8BuC/fLSpQTiv
+	 yA1OSNzne3y6NNtYwv/LA3An3aNytW6sxxog8b/vD+LGUNk6OpBXSyvGuCOki1i/ZF
+	 1VQ/GHWLxWwVEQWw9uNFubcDcqmudDJwHOaTZ+IyuqjLJCg1qyIE8UwSL6Q1xjtojN
+	 WqggFxvs3ZWdw==
+From: Mark Brown <broonie@kernel.org>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, linux-spi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <2f4b0a0b-2c03-41c0-8a4a-3d789a83832d@stanley.mountain>
+References: <2f4b0a0b-2c03-41c0-8a4a-3d789a83832d@stanley.mountain>
+Subject: Re: [PATCH next] spi: spi-qpic-snand: Fix ECC_CFG_ECC_DISABLE
+ shift in qcom_spi_read_last_cw()
+Message-Id: <174171344440.214660.8181081504120181390.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 17:17:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-cdc-wdm: Fix typo in comment
+On Thu, 06 Mar 2025 12:40:01 +0300, Dan Carpenter wrote:
+> The ECC_CFG_ECC_DISABLE define is BIT(0).  It's supposed to be used
+> directly instead of used as a shifter.
+> 
+> 
 
-Corrected 'interferring' to 'interfering' in a comment
-to improve readability and maintain code quality.
-No functional changes.
+Applied to
 
-Signed-off-by: Suraj Patil <surajpatil522@gmail.com>
----
- drivers/usb/class/cdc-wdm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-index 86ee39db013f..c5123db416fa 100644
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -1181,7 +1181,7 @@ static int wdm_probe(struct usb_interface *intf, const struct usb_device_id *id)
-  *
-  * The subdriver will manage the given interrupt endpoint exclusively
-  * and will issue control requests referring to the given intf. It
-- * will otherwise avoid interferring, and in particular not do
-+ * will otherwise avoid interfering, and in particular not do
-  * usb_set_intfdata/usb_get_intfdata on intf.
-  *
-  * The return value is a pointer to the subdriver's struct usb_driver.
--- 
-2.43.0
+Thanks!
+
+[1/1] spi: spi-qpic-snand: Fix ECC_CFG_ECC_DISABLE shift in qcom_spi_read_last_cw()
+      commit: cf1ba3cb245020459f2ca446b7a7b199839f5d83
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
