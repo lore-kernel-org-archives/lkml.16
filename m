@@ -1,110 +1,102 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C774262D2C;
-	Tue, 11 Mar 2025 17:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6689E26158C;
+	Tue, 11 Mar 2025 17:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741715239; cv=none; b=tkshutNG/lTmtnLTZft8YcGUxxcs0Fg3w0JZKWEz7s/n8z1XcgLahu3M8liKSsvhjsRfYnhO9Bp/lwDm6BGIocPYOumtlbS/+i46DAivZFQHsR42PTXgKhp1MEoxf6xUCoqxqkhblSbnob1M0taUGuS3l7iExXdO9EOmmXFq3Qo=
+	t=1741715242; cv=none; b=TuBkW9Ewk8lvr3HhKw/oaMSe5ZOmBBHsyH5V2+AvfU2DfGd/v9xRsN030PB5BxCMtOUKxSl+0555ZAeuwkDF9BfuxlI4lZmGA3AUsi9EGqF3W6C9rKmwqtJS7N5MMt0R269DW4Vw4LEplJt9R7/1gL5I1Zi50r9N473h3Qk5OJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741715239; c=relaxed/simple;
-	bh=ller/jF40I2PeAHtTc9aN51gI+/jDyDYgF8J1WuNz14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JJNRIoyPD/bRzhpmqMcrBWozc+0WvqIPMrwoVlPSXLNrh5gXsZumNqnV+EAvsDyCQkfjmFn+ta1AWZyhbYp/TiTX4YeW260w5l336To4ZkjZjOBTR1ttgqkBXkwjakAlMClPi+wS6Bp2QpqHAKaWj27h1KkxSnaAdbHRgaapYpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kv3vv+V7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741715242; c=relaxed/simple;
+	bh=6KeP7/65CU2roRCfckZMDuoWh/RmFYC3xcvJpC2jw2o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OISjaqb/7BvBV3m01Nx8P1k6LoQ150veCM2o9N7zGoNdxMHUGvHDP5fuaAjwC1fm2nD6S2/TnIMFn/QaztzmdXECeP30zXNSjBYk/g5rNakJWEs8/dh3G9kIYugEqQHU84agZk9HkuI5QjM7yqcM64M9ipMis7kvxVhNwgprX6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g0t6rNNu; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kv3vv+V7"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BD0LAI029532;
-	Tue, 11 Mar 2025 17:47:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	m4bTi103PR1qOqcJp3CYevL2i5earH629nNCcbiv3jk=; b=Kv3vv+V7ea8lM/cg
-	XtIOGlQ9E44xDrI2zDZd0Vq+C9DM0lXM3B3Wd5Fk0IW+ivIk+Jyj5YtKYCjJ/LuY
-	jBXF38EUBveKKVHCLfk4hfo9uVZkXJpnSSu7dIAHytqvvUTUMq0RRfIp0N1e77Sx
-	e+7gGbuBfQBDif9hPfDy+X9epSQ7fAF68L8zPHO1fvb1WYBaZb8OMqK0Cl4IXILI
-	vVp4b0rMwqnQeOX4E3lwoo2QBkV73Das3txeK4p5bX/Y9MFNmPWj7qQx+4T8Ej5o
-	W67o4/d0WUglAdBAleoTTqxEhc6xuukArIKNLw4lxQHoSf0KfvZyQ8gVdfxRoK31
-	ZUjeag==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f6ahk8g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 17:47:14 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52BHlDmH020411
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 17:47:13 GMT
-Received: from [10.216.38.182] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Mar
- 2025 10:47:09 -0700
-Message-ID: <40d1a27e-aee9-bd68-a82b-a51ef8ccde05@quicinc.com>
-Date: Tue, 11 Mar 2025 23:17:06 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g0t6rNNu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741715242; x=1773251242;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6KeP7/65CU2roRCfckZMDuoWh/RmFYC3xcvJpC2jw2o=;
+  b=g0t6rNNuaKKO90JLOegeTQxd+xjDWyaOe5JjmZrCJrXvLfh4VXOwWoaF
+   N5K2RYfhf1OllAVwB/kbfVh/CAokwyRXbEgPPjKXZxY8vBYuKRaAgNsDL
+   vBMWThtZam4VCcYmhJKp2CdFvSJ4ZePy27SRSEbJQrZHxLjZQh1t+aYHw
+   PMOaRtpCBpkmwOwRLxOIQkEA5+bK8raxCLP7PnA8HgKGhW5+Qsa65azWj
+   fzeJb36onIdRaqeWoDuzknfp9aPePe0vPgp3bxdcmMYctYYLhlKPIh7XG
+   2oNZrcTr1TIuxiZOJvPoi2pKbbv57zIzCbg1DeY30+GF9abuPboTDt67n
+   w==;
+X-CSE-ConnectionGUID: /3H/plutQKay6u7qtKYcGg==
+X-CSE-MsgGUID: jo1TbBkLTGmgbyXgDKDJyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="46414994"
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="46414994"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 10:47:21 -0700
+X-CSE-ConnectionGUID: kVbw+0gPQzywyKoG4Qmvlg==
+X-CSE-MsgGUID: oyJwascxQMy1RUINsSbkUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="125291599"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.251])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 10:47:19 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 3/4] PCI: Make pci_setup_bridge() static
+Date: Tue, 11 Mar 2025 19:47:00 +0200
+Message-Id: <20250311174701.3586-3-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250311174701.3586-1-ilpo.jarvinen@linux.intel.com>
+References: <20250311174701.3586-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 1/4] dt-bindings: media: qcom,sm8550-iris: update power
- domain name
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250311-dtbinding-v1-0-5c807d33f7ae@quicinc.com>
- <20250311-dtbinding-v1-1-5c807d33f7ae@quicinc.com>
- <607f842d-07b5-4c1f-ad26-0fd34e6e605b@kernel.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <607f842d-07b5-4c1f-ad26-0fd34e6e605b@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=WsDRMcfv c=1 sm=1 tr=0 ts=67d07722 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=963PLJbrCG0W5q-lhu8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: hFBdlSlsYbkdhfF8fncfCc8hwWlkStJR
-X-Proofpoint-ORIG-GUID: hFBdlSlsYbkdhfF8fncfCc8hwWlkStJR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=774 clxscore=1015
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503110113
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+pci_setup_bridge() is only used within setup-bus.c. Therefore, make it
+a static function.
 
-On 3/11/2025 11:03 PM, Krzysztof Kozlowski wrote:
-> On 11/03/2025 13:03, Vikash Garodia wrote:
->> Not all platforms has a collapsible mx, so use the more generic naming
->> of mx in the binding.
->>
-> 
-> No, neither tested, nor justified. Read the file. How many platforms do
-> you have there? One. Out of this one platform you claim not all of them
-> have MX collapsible, so you want MX?
-Let say we have one which is non-collapsible, what should be the way in that
-case to use the bindings which differ only in the MX/MXC part ?
-Regards,
-Vikash
-> 
-> Best regards,
-> Krzysztof
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 2 +-
+ include/linux/pci.h     | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 5e00cecf1f1a..836d260328a8 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -694,7 +694,7 @@ void __weak pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
+ {
+ }
+ 
+-void pci_setup_bridge(struct pci_bus *bus)
++static void pci_setup_bridge(struct pci_bus *bus)
+ {
+ 	unsigned long type = IORESOURCE_IO | IORESOURCE_MEM |
+ 				  IORESOURCE_PREFETCH;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c629962f4ccd..9a703355ef06 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1634,7 +1634,6 @@ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+ 		  void *userdata);
+ int pci_cfg_space_size(struct pci_dev *dev);
+ unsigned char pci_bus_max_busnr(struct pci_bus *bus);
+-void pci_setup_bridge(struct pci_bus *bus);
+ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+ 					 unsigned long type);
+ 
+-- 
+2.39.5
+
