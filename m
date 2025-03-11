@@ -1,114 +1,160 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38971E7C2B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA34C42065
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741687574; cv=none; b=QVPM41NfzJkVC1zZFKv/tQh+wj+FJY5nnXUUCFcnwkZ12IWIZWiDYWHg/5wdhB/1+tC9NFkrrIGX14+xiayNKojUe/a4mtBw7ARLvVN45pezkLhtS0hPmny6P6JcbNFLblubWepZPSlRLWOeTkOIQDw9zqT1eMhBKKsFbdPFWlA=
+	t=1741687640; cv=none; b=lICfzcJFnFJFUM4eCX4vTQQU5NKnJyLnDvyPbGMIW4qmCNDWqPDYizMmHBCt3/AVocfC0sjdGctmsALwvR/Z0Wf7NCwP4Q1jmVcpVCVHJJ+Jahxu3dViCoyFlfQVEt85PMoo6U7cSEEU8I5U5M6YF3lxPnsK7bfbgdKk6YwV8+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741687574; c=relaxed/simple;
-	bh=rjkpyxd6RWcA9w9OKfTstC4hp2OuOWUSlwYw8CdoWwI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=knbyE/VU4gOFVY0fGk9QURAwivFzyeqcHNVGsRrDoNSddt/f0OjhfMCvRuIgETy6bNs7nQs7iN10CbzzFonf83waPRTlRk3eBWX8+/lt32PvGcCqlXm9xrUCKZuR0yTzxjU4lI8SDr6FaKAk58znpolifvhas1KGAreDodcfUKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=EAy//yhi; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1741687640; c=relaxed/simple;
+	bh=ks/m4Dg9e0LsX5W+24SIh9BwJqlTaUJ+OARn0HBP7Yw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oOwq4p+vFt4mcLM2YRSLG4xfp+MfBzgv9mIPMhyLB3agqYL/V88/oaCU5B5LP7nIDgChjG+6GrSYBirDp9WNv0PQ2aE6MViH0sRTWVelEGEyDOdsxHbD7Mjn9xjLa6P/rwPlP5MLHLhpJBOqjCCSwqP0we4VwRvqJnLqMkEKe7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vHMgUjq/; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="EAy//yhi"
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-	by cmsmtp with ESMTPS
-	id roGDtQqJjXshwrwUvtZDVF; Tue, 11 Mar 2025 10:06:05 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id rwUutWvaOZozcrwUvtTVTC; Tue, 11 Mar 2025 10:06:05 +0000
-X-Authority-Analysis: v=2.4 cv=GvNE+F1C c=1 sm=1 tr=0 ts=67d00b0d
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VGeZqF52+y3Rppa+8xZLTmlKkc+wJljUH1xmwaROc6Y=; b=EAy//yhiPgty5l4xUtFNo0yZ4q
-	poel9alzEyUTFCmHPWCPk181FHWPZ6NY+mJBafdWLRebXoJX/BzT0oxDOlYHAKlZfp+Si9nKN4NSA
-	Z4rtW1J59GaMi/iEzecJD8mna4dEjm88QNQqj9jMZ8uIC6m6vRmGwlpt+m3u35gY/zCxyJBW8dR1N
-	ym/Dre2nxIlrRe3JK2muDfYv6YO2qf2EtZplHk7pLxsn56ivUOLZVVXKdLV2LMHdmarNlMaAD25No
-	hPRXd6d2qTxDKjSev0AYCkVQjrBMNzEngysAJPtxJtf3KnmXF3a5HMCYho8LMJNOxdbihkfzc1B5q
-	hwbkSfWg==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:57318 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1trwUs-00000001SwB-3ANY;
-	Tue, 11 Mar 2025 04:06:02 -0600
-Message-ID: <4bad0d2f-e359-438d-9160-b70b610f7ae8@w6rz.net>
-Date: Tue, 11 Mar 2025 03:05:59 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHMgUjq/"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4394c489babso26126345e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 03:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741687637; x=1742292437; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6gKIm9f9CvLqznwxBzrfnGnuGny9X8dBk6FhNmJ3B9Q=;
+        b=vHMgUjq/ssU1zIaLt1vOipk+B7sHPXhE17iQFWczzaFqVJ/j0wqhc5KnqkAae2mooI
+         wcHM9Wmf2GmY+Z/tFvDvkdmwGVf6Vep7qNyimmyZokE6QyNDaGGjk2Xbrc3OUzXagWOh
+         X5TIbKEW0jZIwucLSAjxkqBf0zeIVI2r5aVD9tLpNZW2E74Tyv14p21nWwUbmMEQJkpd
+         RE1WZmGSWfHulrSI2nEmOUo2devSWHQDr+Lo6E9o/G1R+LN6SXHutCKLgqPbinxcoVm1
+         DKVMR1GtO/yS8RRoDsdsYfoa6LSQy6CHKh2H7IwAMP82Uk6nVIC3dd4Yn+uORzAbEetv
+         G+jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741687637; x=1742292437;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6gKIm9f9CvLqznwxBzrfnGnuGny9X8dBk6FhNmJ3B9Q=;
+        b=RHlpQOuheS+VNB4ntuzy+5SVYmV0JF5wCA0EYLfjuSyFQd1M+5CdMZze4pcYnVAeya
+         2BawoYYRwaiuIspPl/12N9FXUhXUFRtWjOffzEE+JFKBacRAzQNvfGYghGQ+/JKBaac7
+         cb2JmNdoLdbiIfq+JS16eLsuiyML05+rTCgbemDWq1YdsVBLjYWYZEmV/iRBiHbFNthJ
+         pb2ksvfeetK2QHJun6TNMvZMt8/PAkFtOTEXVPQJ+fLChlukw9tWtGJ30oHz3skkKpSV
+         Fuh8Wko6CtGRhG4NJ8o8zxh/Q30HGM+Ykxz7fA29ko9ivlPRT2lHV6OZvIGVtyO/jVLS
+         5cdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsbxq59/81hfChCSg5tQEk2ngXO7Mu3A0/kxiQ2tWJ5mHpA3UXHO//ncECXWoFQuIpJ+qe2mwiq+mNir8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX7iVM7cwl91YXvnCDglQsmEBXKpu1IdkwMYiGLwBy8yNPcRkV
+	RcflEQiDo9+uK8dtyKDIDOxvyjLNVO6fFUqMlyYKLGbg4w/++imVzkFlBLIKwpChNUBeu9ObymV
+	QcdkMS2fopEqQ3g==
+X-Google-Smtp-Source: AGHT+IHm3IFgyjHliXGRSyHcjqv5KSX/xVFX6JhRSVcGMyAOulpQHr5iOaqTDRsQTZV+1DDQGv83dxho+R9CegY=
+X-Received: from wmgg5.prod.google.com ([2002:a05:600d:5:b0:43b:bd03:5d2])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:5120:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-43cf85d1427mr68893195e9.17.1741687637311;
+ Tue, 11 Mar 2025 03:07:17 -0700 (PDT)
+Date: Tue, 11 Mar 2025 10:07:15 +0000
+In-Reply-To: <Z88rhn5nVbd4-JSE@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/269] 6.12.19-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250310170457.700086763@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250310170457.700086763@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1trwUs-00000001SwB-3ANY
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:57318
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLaGsT95hg02jCNw0ZF+oo5RpGXNQTK23ceG725eLTKd/5aIR8upGRShd/RAoPga1qNdvr5mFm/da1oQ5uvZk1mQIqiFJ4KibmXejNI5xoPhK3Mq//cH
- BPe9IWaRDXFofKLUhXBhhgNDfB93RBhHpP0xNk8iBc1ElPT1tEf56NfYhTfSRX0mmTx2H4XnWasd2ollUTqiI4jzci5af01NoX4=
+Mime-Version: 1.0
+References: <20250310161947.1767855-2-bqe@google.com> <Z88rhn5nVbd4-JSE@thinkpad>
+Message-ID: <Z9ALU7XVPt8JKKFR@google.com>
+Subject: Re: [PATCH v3] rust: add bindings and API for bitmap.h and bitops.h.
+From: Alice Ryhl <aliceryhl@google.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 3/10/25 10:02, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.19 release.
-> There are 269 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 12 Mar 2025 17:04:00 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.19-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon, Mar 10, 2025 at 02:12:22PM -0400, Yury Norov wrote:
+> On Mon, Mar 10, 2025 at 04:19:46PM +0000, Burak Emir wrote:
+> > Adds a Rust bitmap API and necessary bitmap and bitops bindings.
+> > These are for porting the approach from commit 15d9da3f818c ("binder:
+> > use bitmap for faster descriptor lookup") to Rust. The functionality
+> > in dbitmap.h makes use of bitmap and bitops.
+> 
+> Please add it in the same series that converts dbitmap to rust. This
+> all is a dead code otherwise, right?
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Rust Binder is not upstream yet. We are upstreaming its dependencies
+before the driver itself, so there will be dead code no matter what. The
+number of dependencies is so large that it's completely impractical to
+land them together with the driver.
 
-Tested-by: Ron Economos <re@w6rz.net>
+We can include a patch that includes the wrapper data structure that
+Rust Binder builds on top of bitmap. We can also include a link to the
+Rust Binder change that makes Binder start using this code.
 
+> > +            let ptr = unsafe { bindings::bitmap_zalloc(nbits_u32, flags.as_raw()) };
+> > +            // Zero-size allocation is ok and yields a dangling pointer.
+> 
+> Zero-sized allocation makes no sense, and usually is a sign of a bug.
+> What for you explicitly allow it?
+
+I do think that it makes sense to allow a bitmap of size zero. We allow
+bitmaps of any other length. Why should that length be special?
+
+Of course, I guess it might make sense to not call `bitmap_zalloc` when
+calling `new(0)`? But kmalloc does seem to allow them.
+
+> > +    /// Copies all bits from `src` and sets any remaining bits to zero.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `src.nbits` has more bits than this bitmap.
+> > +    #[inline]
+> > +    pub fn copy_from_bitmap_and_extend(&mut self, src: &Bitmap) {
+> > +        if self.nbits < src.nbits {
+> > +            panic_not_in_bounds_le("src.nbits", self.nbits, src.nbits);
+> 
+> The _lt usually stands for 'less than', or '<'. And _le is 'less than or
+> equal', or '<='. But in your code you do exactly opposite. Is that on
+> purpose?
+> 
+> Also, you can make it similar to BUG_ON() semantics, so that it will
+> be a single line of code, not 3:
+> 
+>         RUST_PANIC("Copy: out of bonds", self.nbits < src.nbits);
+> 
+> And to that extend, panic message should be available to all rust
+> subsystems, just like BUG_ON().
+
+We could use
+assert!(src.nbits <= self.nbits, "Copy: out of bounds.");
+
+but using these explicit function calls would generate less code and
+avoid duplicating the error messages.
+
+Also, we should add #[track_caller] to these methods so that the line
+number in the panic message is taken from the caller rather than this
+file.
+
+> > +        }
+> > +    }
+> > +
+> > +    /// Finds the next zero bit, searching up to `nbits` bits, with offset `offset`.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `nbits` is too large for this bitmap.
+> > +    #[inline]
+> > +    pub fn find_next_zero_bit_upto_offset(&self, nbits: usize, offset: usize) -> usize {
+> > +        if self.nbits < nbits {
+> > +            panic_not_in_bounds_le("nbits", self.nbits, nbits);
+> > +        }
+> > +        // SAFETY: nbits == 0 and out-of-bounds offset is supported, and access is within bounds.
+> 
+> find_bit() functions are all safe against nbits == 0 or
+> offset >= nbits. If you add those panics for hardening reasons - it's
+> OK. If you add them to make your code safer - you don't need them. The
+> C version is already safe.
+
+Ah, that's nice! I do think it's still good to have them for hardening
+reasons. Passing an out-of-bouds offset is a bug.
+
+Alice
