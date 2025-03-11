@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FF1E7C2B;
-	Tue, 11 Mar 2025 08:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ADD22423D;
+	Tue, 11 Mar 2025 08:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741681229; cv=none; b=t1x97OMY38ou7zpppIfPLW3m7oHs1QqqXC2YX71bgAZY8zVihsadbRsLcd5NVLoFKQDN0RGVX0mNFN995EhFiv1XED33BAN7hqbQZz1T2otFs6g59mvr0kWnNIsg8bF7/XY6gYaC23P1wwCBppmybBCv7HiRA/GCTDYEouFzch4=
+	t=1741681259; cv=none; b=max9Fjv8Ai54P2iTCzQEteXeJ2ZiJWAKZRMPSYzApymEb60n9ea0t76Iw6oBE1kyjeOo2ylk2RdBRwE9VXI8xQRycQwmIDIgtP3ETJAEd+0zoKRmkILAXexPqzEKxfJoorpckzL4a27BmOav4F55brbMrChNBVzMG1ptE22hPXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741681229; c=relaxed/simple;
-	bh=Liygq0XgfhMoR0han+8fEYkAEuEyqeTxQkV/x/4uT+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gL1apjNsHRxBlDdsIc/B0vDDW0Wl6WCBzMt76/wvilFpiWR8zYAthmNu9y+Pmr8rpCudI2GoQx8jjNmhHiPJXr6rXQ8WcTZfw4nL9/GvIdGMHK0CgNCJg9iVAxm/Pd7lOcszrs9KyNFK89ryWSX3SvXQP3mvlGq5YEYz6HtSa9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxJHnjs0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741681259; c=relaxed/simple;
+	bh=/krpf4mC7s6O3K1gfP6n3jIaWEpoHX0fgaocmRijhkU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DeIv5+CXdUDPT2pKq7poKWxhPOj37KEqOKJU9glc93FjOUX0+AH6JHsKpJGclKoiGu8J0XLaxkmDJkch9C667KjaF0BVqOnnkekULTAM6CsELpJm3csalLKxVjzWe7UUBilkMlaLWCyQisShdtlrm3X314v+dY1Z2thV1+VplQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=0Fjsb0yB; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxJHnjs0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE43C4CEED;
-	Tue, 11 Mar 2025 08:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741681228;
-	bh=Liygq0XgfhMoR0han+8fEYkAEuEyqeTxQkV/x/4uT+g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oxJHnjs0b3dO/j7O+4GF59p6nmbracwB+SwUGw9Ls5Nu67vMXePv5rZoFOaI8KOrT
-	 zYBX3hntsy0JrPQvDpbjd3l2k00aJsI1Zpxtaur/gL7ax5NUup/rYnVOvjpjKoF9KF
-	 XvXoE2h+VLmN+dwVQe7C5qYga1NvdDDGinTY3kTI0ceX9OUarVyz5xw3dKN6B8alVm
-	 9WU+WXHOfdnojIVWhg1QCwI6v4tOXyOc8SfBTGLdUii2ySec8LDFLRdtgjfaz32WpU
-	 kqccNaIMxiQuI5/W6kqHYz/5rHEwwPkMSk57Jgby4wU2TVoKAbcXStvEEgbCk4agOG
-	 PUvJmNoSKs/XA==
-Message-ID: <dc772e9e-632f-4c38-a654-833df0800ee1@kernel.org>
-Date: Tue, 11 Mar 2025 09:20:21 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="0Fjsb0yB"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B81kWr016929;
+	Tue, 11 Mar 2025 09:20:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	mgvPHrj9w39QFxaBaXFSsD+ID+KMNA0Jvstg1hsdw/Y=; b=0Fjsb0yBbTOx9kv7
+	0vWPYYqspDp8ROlPr288Q5Gqu0hCBFOW+w90Q/aT2JRbvXBMEz6ieEzQTaDnciFP
+	pwWSQiqbdeJVgXIbaU5xl6cew2PqduOVCnLlNoboEHdwpOcq6bMsoZ0iaGB+iP9t
+	VBN+pm9N9ULZLU42297zPLfCLHrjStHtCjfbXBLX/IFXZu+WXUNtkSLtoXT8xwLj
+	n/k/cT4y4OBH/zs7KeP1YuCSwulJfRgjdbzJmjFTYYUEMqRkVOTVRn89COBdLFhI
+	B396eO+w0acQ7V08h3rewGqZSPYnYUcPqUutv15sMi2k/jjmyX/zRbUwITDFLYej
+	D5Bgnw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4590b95gfe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 09:20:36 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 37DF040063;
+	Tue, 11 Mar 2025 09:18:42 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 08650544BDE;
+	Tue, 11 Mar 2025 09:16:33 +0100 (CET)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Mar
+ 2025 09:16:32 +0100
+Message-ID: <face80e3-36be-42a0-8d31-bb74e413e397@foss.st.com>
+Date: Tue, 11 Mar 2025 09:16:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,80 +52,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: thermal: generic-adc: Add optional
- io-channel-cells property
-To: Svyatoslav Ryhel <clamor95@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250310075638.6979-1-clamor95@gmail.com>
- <20250310075638.6979-2-clamor95@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 0/4] Add support for Plymovent AQM board
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Woojung Huh
+	<woojung.huh@microchip.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>
+CC: <kernel@pengutronix.de>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20250305131425.1491769-1-o.rempel@pengutronix.de>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250310075638.6979-2-clamor95@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20250305131425.1491769-1-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-11_01,2025-03-11_01,2024-11-22_01
 
-On 10/03/2025 08:56, Svyatoslav Ryhel wrote:
-> This implements a mechanism to derive temperature values from an existing
-> ADC IIO channel, effectively creating a temperature IIO channel. This
-> approach avoids adding a new sensor and its associated conversion table,
-> while providing IIO-based temperature data for devices that may not utilize
-> hwmon.
+Hi Oleksij
+
+On 3/5/25 14:14, Oleksij Rempel wrote:
+> This patch series adds support for the Plymovent AQM board based on the
+> STM32MP151C SoC. Additionally, the ICS-43432 device tree binding is
+> converted to YAML to address a validation warning.
+> 
+> The ICS-43432 patch resolves one of the devicetree validation warnings.
+> However, the false-positive warning:
+> 
+>    "audio-controller@44004000: port:endpoint: Unevaluated properties are
+>     not allowed ('format' was unexpected)"
+> 
+> remains unresolved. The "format" property is required for proper
+> functionality of this device.
+> 
+> Best regards,
+> 
+> Oleksij Rempel (4):
+>    dt-bindings: sound: convert ICS-43432 binding to YAML
+>    dt-bindings: arm: stm32: Add Plymovent AQM board
+>    ARM: dts: stm32: Add pinmux groups for Plymovent AQM board
+>    arm: dts: stm32: Add Plymovent AQM devicetree
+> 
+>   .../devicetree/bindings/arm/stm32/stm32.yaml  |   1 +
+>   .../devicetree/bindings/sound/ics43432.txt    |  19 -
+>   .../bindings/sound/invensense,ics43432.yaml   |  51 +++
+>   arch/arm/boot/dts/st/Makefile                 |   1 +
+>   arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi   | 292 ++++++++++++++
+>   arch/arm/boot/dts/st/stm32mp151c-plyaqm.dts   | 376 ++++++++++++++++++
+>   6 files changed, 721 insertions(+), 19 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/sound/ics43432.txt
+>   create mode 100644 Documentation/devicetree/bindings/sound/invensense,ics43432.yaml
+>   create mode 100644 arch/arm/boot/dts/st/stm32mp151c-plyaqm.dts
+> 
+> --
+> 2.39.5
 > 
 
-You got comments from Rob few days ago to which you did not respond.
-Instead you decided to send next version, which hides the previous
-unresolved discussion.
+Series applied on stm32-next.
 
-This patch does not look necessary based on earlier discussion.
-
-Best regards,
-Krzysztof
+Thanks
+Alex
