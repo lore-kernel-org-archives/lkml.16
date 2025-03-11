@@ -1,109 +1,89 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C972566DF;
-	Tue, 11 Mar 2025 12:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218A9253B5C;
+	Tue, 11 Mar 2025 12:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741696374; cv=none; b=sdSE50FZcZYvL98JMdRi5Scz5y0YsF9KImVqJAxmuowF5kgrsFZUxAM4uGakawKjjONO6uCxHMLHNr5ChNI8tmwL2P6WRrKRUbUq+NIF0ZRECaTZUyZtRu88B50m2PFLSPRKL6xb/+/s7ja6+WBRctitCbit5qOWMWCQaE5wupM=
+	t=1741696407; cv=none; b=VFIEAG9PXpv2eboPFOAIP959oBS0pDe0Y6SjJxdp3f9b5I3YN9lUxFhBzkbBtjHmqNQwvTmeaLcFGI1FrrdlCbUKC40xpvxXdgG7F3mH/NCJrvq9TwSpBQy9Gmzi12iCaP5T5aY6txSIO6gJ+70qeZuDehe4P2uE9e+lge77sV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741696374; c=relaxed/simple;
-	bh=fnfUwCVpxgGFnIhUtch5ji1/4WPSF8TxZw77sXyT+W0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=QKXEhw2KFnLDsielmo2BeK7svkpSnFmp6Paetm4L9avSyBpXjRCIX40CI6sDj7iK/x53MOxai5gDfQp96voleQYmy1KkRUsbYWhr8t1IZbwIftmvVFjS5iP4sRMi9msnHmRkLluRVB3rHKU9WXdXM1j6eofZueFgb6Nbbc/LYIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=PuR4A86a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iSRaSERv; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1741696407; c=relaxed/simple;
+	bh=6sk3JXmr83vP2HTVckDzIW0yBIvG5WhKLbVadL39CzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoxhvOSU9eOA/R83zFffpegNB/SZ8cXOlbPMCrWQo3bpFWeKwuP2jtvv89BWveX/6zgT9tRi8yfRYvhM7sBZI2dV0w/2ZbtEhQ5VLkSGEoGd0szJuBpgAyBRnowjPtiWHIiBFVItpoBdIxpLTCw45YRDWwgM2PU4SDLBz7CeWGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lvv53IZ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="PuR4A86a";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iSRaSERv"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.stl.internal (Postfix) with ESMTP id 5272E1140153;
-	Tue, 11 Mar 2025 08:32:50 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Tue, 11 Mar 2025 08:32:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741696370;
-	 x=1741782770; bh=AHRUDiDL+udOA0j+pbNQc9o/g3Xg+29U5On+bEc2WEI=; b=
-	PuR4A86a2ISknob+LndBjLNMKvP7Wv2423VT1nrr9ARvYJjGaxQVBtiLRKjRLLVc
-	RC4VSu8toeGZA0AL+RgM5ohK0Oc/h2D+EslwAzHUFpsLd8ByX0LwRDiMbEOCsAkP
-	BGdgdEttwqyMzWvcR6EwM4XQnAwdKcWltgKdzSAsSBrRwCStwKVfV0laqN/5Fygb
-	YJEXxALluMepOYdmIreEkZhJc+xRm3L4Yk1WMPQVjnAProPpgfDphg0sQN8pTQZT
-	2t0bsyiK1qACK+t7dAofor1HpnnavK/vx/ABTaTiZpPw1mu3iyYN+dyJxv9yAfiI
-	tCq6QfQTosUJDD95XU4zvA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741696370; x=
-	1741782770; bh=AHRUDiDL+udOA0j+pbNQc9o/g3Xg+29U5On+bEc2WEI=; b=i
-	SRaSERvRIUzwuvDbNKkrrLBhjDwc8ZawxUmlu8YGWw45md73Png1zy5Fvp7/PAFe
-	zQrvobhl0B08DRcrY++sCgPHtqhlEuJE5d26g2AKeXEZEv+SJm9Z14FrXOhHaZWE
-	v83OJjOD+lESGutH7fo1DeZC7xDF3nyPjwUtWGW38eCMS5n87VqQT039QN7+OCqc
-	ByUKBbJ0YA4acyJI5HGZveGC/WBhYFYgvnCmuuw7E3BUvKi/xiq8wf3/h0GWFvAo
-	wWuC4pyT9zkZzVcr5CVV0AbwHdnPQGyvJT2boVUrYDGKYHfbyu6po4ZBkCxrYn+h
-	eqVx1YZvk3GFcvuV0ofpw==
-X-ME-Sender: <xms:cC3QZ5VvmQv6af1sYcTh4L2sVCSIPb852VduAnglhAiOej0LubyVkQ>
-    <xme:cC3QZ5l85iX5kWWtvAVbgkSuVRfPtzYU9sUdn93_tkithsX7qDJDsSPrLjACv3yaS
-    HtlHNYBkvLVK0MV6GU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvddvvdegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeej
-    feekkeelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehsmhhuvghllhgvrhestghhrhhonhhogidruggvpdhrtghpthhtohepuggr
-    vhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehhvghrsggvrhhtsehgoh
-    hnughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtoheprghruggssehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epvggsihhgghgvrhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgt
-    rhihphhtohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghs
-    seifuhhnnhgvrhdruggv
-X-ME-Proxy: <xmx:cC3QZ1bbgLm91JnS19xYkrR6P8IQvD8nkfLL67KrWDqfhTo-ZLGhJQ>
-    <xmx:cC3QZ8UTGM0h1qv3E9e4tgFW8VEANX2qjYO15tDNFLOmddC8b9aihQ>
-    <xmx:cC3QZzkt40D7dGmwXby_7I4nxQYayu0p5O2G-ghRrAO3h7x1cyXaTQ>
-    <xmx:cC3QZ5cTzlqW1toGdUTeFSNyD328KlBcWTJ762bcgxCdCTOsenCrBA>
-    <xmx:ci3QZ15FFfbibcUpl4OtJIdYJjvb2Gu0ZFeNstm6CxgczfbbhVoIlhrr>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8BF532220071; Tue, 11 Mar 2025 08:32:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lvv53IZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D8FDC4CEE9;
+	Tue, 11 Mar 2025 12:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741696406;
+	bh=6sk3JXmr83vP2HTVckDzIW0yBIvG5WhKLbVadL39CzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lvv53IZ+xvUMPfHrYVBM9OcHNxVFOboZzF2gZzbxHFvo1DMWLOr95aME4R1LtQDPL
+	 OAu7QMxFg4YGxxJHtEvEFEny9Nrk0M82/tVeHQEn5YwdsgrVWk5X8Ysl2LPv6FotKc
+	 5lZn0Wf47JLPdEVltJbp7Qs/s+Pc4zQCBoUIfZb1FBNIrdilg7MoW89tUVJYcQ5sWt
+	 wokXQM/8sZNU1pVmrXt+bFaAsA+aADyiRNRMEAUtHf6d21NKukpgEnTrJwGOPnGxTf
+	 CEnyByLN3afwvdYwwGcEjk+Hk47VZQExG+0YK/aGvsWGJp+ktRAtcTVLUz9TjQU1RF
+	 CgobVTPLwPmGA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1trynR-0000000005R-2vLA;
+	Tue, 11 Mar 2025 13:33:22 +0100
+Date: Tue, 11 Mar 2025 13:33:21 +0100
+From: Johan Hovold <johan@kernel.org>
+To: "Ng, Boon Khai" <boon.khai.ng@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb <linux-usb@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Boon Khai Ng <boon.khai.ng@altera.com>,
+	Tien Sung Ang <tien.sung.ang@altera.com>
+Subject: Re: [PATCH v2] USB: serial: ftdi_sio: add support for Altera USB
+ Blaster 3
+Message-ID: <Z9AtkeGJqFTGMyTB@hovoldconsulting.com>
+References: <20250307154355.30772-1-boon.khai.ng@intel.com>
+ <Z8_tDGssqs9DBaPU@hovoldconsulting.com>
+ <DM8PR11MB5751B33EF33ED26FD8E63508C1D12@DM8PR11MB5751.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Mar 2025 13:32:27 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Eric Biggers" <ebiggers@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Herbert Xu" <herbert@gondor.apana.org.au>,
- "David S . Miller" <davem@davemloft.net>, "Ard Biesheuvel" <ardb@kernel.org>,
- "Lukas Wunner" <lukas@wunner.de>, "Stephan Mueller" <smueller@chronox.de>,
- linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <684865c2-c214-4b51-9742-a56119c83e6e@app.fastmail.com>
-In-Reply-To: <20250310172403.GD1701@sol.localdomain>
-References: <20250310132647.3256818-1-arnd@kernel.org>
- <20250310172403.GD1701@sol.localdomain>
-Subject: Re: [PATCH 1/2] crypto: fix dependencies on lib/crypto modules
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB5751B33EF33ED26FD8E63508C1D12@DM8PR11MB5751.namprd11.prod.outlook.com>
 
-On Mon, Mar 10, 2025, at 18:24, Eric Biggers wrote:
-> On Mon, Mar 10, 2025 at 02:26:39PM +0100, Arnd Bergmann wrote:
->
-> Looks the same as
-> https://lore.kernel.org/linux-crypto/Z8UdUoaKtDKzgPph@gondor.apana.org.au/ which
-> was already applied.
->
+On Tue, Mar 11, 2025 at 10:34:33AM +0000, Ng, Boon Khai wrote:
 
-Right, I see it in today's linux-next. I should have waited a day...
+> > These configurations were not mentioned in the commit message. Are they
+> > also used for embedded designs?
+> 
+> Looks like the table I provided in the commit message is mismatched with 
+> the one that I intended to check in for upstream.
+> 
+> Let me correct this, the one that I published for upstream was the actual tested
+> code, whereby we want the UART to be exposed to the ftdi_sio driver.
+> 
+> Below is the updated table, 
+> 1) PID 0x6022, FT2232, 1 JTAG port(Port A) + Port B as UART
+> 2) PID 0x6025, FT4232, 1 JTAG port(Port A) + Port C as UART
+> 3) PID 0x6026, FT4232, 1 JTAG port(Port A) + Port C, D as UART
+> 4) PID 0x6029, FT4232, 1 JTAG port(Port B) + Port C as UART
+> 5) PID 0x602a, FT4232, 1 JTAG port(Port B) + Port C, D as UART
+> 6) PID 0x602c, FT4232, 1 JTAG port(Port A) + Port B as UART
+> 7) PID 0x602d, FT4232, 1 JTAG port(Port A) + Port B, C as UART
+> 8) PID 0x602e, FT4232, 1 JTAG port(Port A) + Port B, C, D as UART
+> 
+> Since we need UART to be exposed to the ftdi_sio driver and the cable USB Blaster
+> does not support UART, will reword that on the commit message to remove the 
+> cable USB Blaster and left only the on-board USB Blaster.
 
-     Arnd
+It may still be good to mention the cable in some way as it's not
+obvious that there are both standalone (cable) and embedded variants.
+ 
+> Will submit a v3 on this, with the reworded commit message plus the change log.
+
+Sounds good. I'll wait for the v3.
+
+Johan
