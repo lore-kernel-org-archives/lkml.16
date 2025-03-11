@@ -1,141 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3203BE67;
-	Tue, 11 Mar 2025 15:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8831925FA26
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 15:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741708643; cv=none; b=oJt630bvsM/dfK4G+Wup5I2ssXDhMB51+qwuZ68zU7He9A9vwJNTPr8CJ0iz2w85Zn7B7JfQGxzBmqORSboZjthWqlPhQEN/A0RHcMfzzH0BSPvfOBpZ5OcqpaTmTgF7xnrnf/y9rX9tw0sc6/RmanVKshiJjIhx26n79ihu4TI=
+	t=1741708649; cv=none; b=B5G3FC/lvWUltZAzE62V2Zi/jgpPwfL0fE4ls6sGBszqRaF2dI4E9IFZKKR0t0YLftAVHwbLVd4eI4iZv67xI4q3ozNfG2aZBJZjcKKOjTH0OEy1G/4z7mf/Tu8dMt1odR8yXBQh6qTMH6s5HzIzS9u0sWqXMz/akTcCyFzr410=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741708643; c=relaxed/simple;
-	bh=BZTxXXA67zvcYZUPAms2o1IQhwkgm/4LnFmDVxI2ONs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYr2aIlSTN/o94qzp9Rn4W0d1sHMmab2lCeBi5Z9jMR6tiuuE4yuIkSfgICtV3+OFV4a8OsfOKKu3+MBMfHHpQgsAnC6RcNoz9RKWA3zPoOYLxY/EU9K2w5lmQgId9TMuiz4JQk8nRjlnYKlvzZd5a5LZGsIBoHGJMYMhWmboGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYrFmUvf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741708649; c=relaxed/simple;
+	bh=hAJYtbMjNLrldTe/Ke+tjWgQR2+x33wOZmSvOMQ3hoY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qubejWIGuY+tS+TL5ku7AzePc0zBPFqVeyXQYspP9FRU6+3iOYpPKVQeyPyQkR4NrExMk5hw8NiYF4ReDdrXrX1byEG38aKaroCj76m5dhT6ZxnqO5YO+bwfrv6S5ZhEtAma4YuLnPUkOPVN+OePpzprtjLxchFDLInNRGo9r50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PexjdJN+; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYrFmUvf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D941C4CEEC;
-	Tue, 11 Mar 2025 15:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741708643;
-	bh=BZTxXXA67zvcYZUPAms2o1IQhwkgm/4LnFmDVxI2ONs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NYrFmUvfLJTnTAUuNsvf7jl110FlX1XQjHYJv6UtMkxM487T1UwPjrJnb/KFOOXDY
-	 4c/FTYEtU3qswKyPGejNRtq9L4QnNxy+rDETa8i1IAL2MhiMEW+6PJnE6ajqGYLfL8
-	 JHDnS7kP7oW2bNHPkridid0tOs53GJHG9msqCSX/ReUA415polcodWwWksAHJXoQwk
-	 Q7zbpaLmB369VDgojkiXPq1kNn+gICyoTQ0g91wrOQkty74sa2qKd3by0RjZGS6WNw
-	 fqrMTu3Rb7/NHMMay2gFyahQ3CSkmM+sNuZejCnSqzmPMrrEf+Q4+Prhg3OjPWvlZH
-	 XOobXYZ3D+D9g==
-Date: Tue, 11 Mar 2025 15:57:16 +0000
-From: Will Deacon <will@kernel.org>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, joro@8bytes.org,
-	suravee.suthikulpanit@amd.com, robin.murphy@arm.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org,
-	mshavit@google.com, shameerali.kolothum.thodi@huawei.com,
-	smostafa@google.com, ddutile@redhat.com, yi.l.liu@intel.com,
-	praan@google.com, patches@lists.linux.dev
-Subject: Re: [PATCH v8 12/14] iommu/arm-smmu-v3: Introduce struct
- arm_smmu_vmaster
-Message-ID: <20250311155714.GC5138@willie-the-truck>
-References: <cover.1740504232.git.nicolinc@nvidia.com>
- <f205a4e2f5971cd4b1033d7cac41683e10ebabfb.1740504232.git.nicolinc@nvidia.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PexjdJN+"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so4589032a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:57:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1741708645; x=1742313445; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5aSw78de2mCMGc1nBdrYo0b6FIM8P0VsjFuePWhw/p0=;
+        b=PexjdJN+LKyWyp1Gn45Hgrc4/j7CuFnnE1GvOrLczUBYm+6nKSPxrWw/grvRZKaU08
+         dsqK3VJq20pithKVbKVukWERldIJ2+aYZ2bxB2VkTFTN3u2hV5ec6mGLvE22Tp8yF9v/
+         x6Arj+CsTADhuZWjIuXMY43RG+3+jcZsVxzJE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741708645; x=1742313445;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5aSw78de2mCMGc1nBdrYo0b6FIM8P0VsjFuePWhw/p0=;
+        b=tMxctgFN1vRbljAdJoEEgjcG1SjQ40AE/vqzojCCS8DTqWxTmfa7jgn9tr8b2qssk0
+         p+wxtHQZiL2BX3s/liDJULqy5oY8kORDAafLx+FgJwLTsVFQU27UTiX8j9LPBQHVzVCz
+         iSHZYOZ9gyhxpG3qUmIfU6+SNUtgYFlA+u5KcuI7iZYlj1hh1uW85SQM5bBSyr1PeAjS
+         hqWCx1PjKGGHKF7jQwAF+5JLf1jSgTCmFCnlj970XAE/AENp4xn/ysdEgH+zhD1DNgvb
+         1ucb04aDqZv16nonrPneqM+qnCEmREUyUswPQRaDbm9xf1/LE3akKUcCvjVylgYUh4Gl
+         Nx3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVA++e6aquIcSbPYIDShQtLN+I4g15lPTxQRWW7GT6KLZLwdwdfh9yrAmyETegIRys0/9fEXH6jcY212BY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOm6iDZCh09VFsLnGbMIBd6hz0uJqnADpaDzCmAhe8qHuKlxc/
+	Ou7cm84KU1whpC5+Z2CMDNhnLGKhwTTdkdVBP1jcflZyUC0kVEuaMI/h4bzIYkibNos4qBY0Sjc
+	kvHG/
+X-Gm-Gg: ASbGncv6bFwQqyZV7I9FigzNBEc9463Vni7pK59iDrBY+PQvcCyBaWM+e1jcVBwNywO
+	qrEB/uT7vk81SGG30Y+C0lyEu1Hy4vLX4iXOY4/hnqjLRRKnz33HTmWQcm+t0Lo+5n9ta2aLQdB
+	FmljXzYJXAkgFfZmPBYXicsO8V5veM05la+JOkiPsIa44lZmTwlcX0hwnND0twGxpX26J/ndfxz
+	gk/NU+E39zCgv3/TndaAJLYPDm9y271JjykLOd/pFSEocGB1IlxzsiuLdtSVMjkuavBsGHyWMNV
+	WurxYLp8r5KkX1OI9ml2QRoK/oWnDALjI2UVM4UuLt4SH2DvclE+UaVORsYagZZqlxkkvaNZ14W
+	fa0aiVlGN
+X-Google-Smtp-Source: AGHT+IFv3mm8BosDVuUoYD6ZuSyCzqWu39XVhD2hLRoRfB63/AW2Ggul+KaGrJVT8GCGojLDKiksMg==
+X-Received: by 2002:a05:6402:40ca:b0:5e6:e842:f9d2 with SMTP id 4fb4d7f45d1cf-5e6e8430a5cmr10997270a12.29.1741708644714;
+        Tue, 11 Mar 2025 08:57:24 -0700 (PDT)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c768f98asm8429744a12.68.2025.03.11.08.57.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 08:57:23 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2b10bea16so282357366b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:57:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX5lF7DBfqvrsS3oBgxFepS1kkgPgfUZUno+XbLTxRQXCVZWwspL27UhAJEfj4PPtxGvcyi5aMqznvpehI=@vger.kernel.org
+X-Received: by 2002:a05:6512:39c7:b0:542:28b4:23ad with SMTP id
+ 2adb3069b0e04-54990e5da4dmr7908205e87.16.1741708321042; Tue, 11 Mar 2025
+ 08:52:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f205a4e2f5971cd4b1033d7cac41683e10ebabfb.1740504232.git.nicolinc@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20250310-mipi-synaptic-1-v2-1-20ee4397c670@redhat.com>
+In-Reply-To: <20250310-mipi-synaptic-1-v2-1-20ee4397c670@redhat.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 11 Mar 2025 08:51:49 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WW1ak-_MEBVks==Yr1tUdfFZ3K16_gcdJQ9rwE4ZduNg@mail.gmail.com>
+X-Gm-Features: AQ5f1JqjhYIh-K-V6kVV6ysPirVcNFNTBtRezYB438xMMjh4zAHshLydS3Jw1pI
+Message-ID: <CAD=FV=WW1ak-_MEBVks==Yr1tUdfFZ3K16_gcdJQ9rwE4ZduNg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/panel/synaptics-r63353: Use _multi variants
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Tejas Vipin <tejasvipin76@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025 at 09:25:40AM -0800, Nicolin Chen wrote:
-> Use it to store all vSMMU-related data. The vsid (Virtual Stream ID) will
-> be the first use case. Since the vsid reader will be the eventq handler
-> that already holds a streams_mutex, reuse that to fenche the vmaster too.
+Hi,
 
-"fenche"?
+On Mon, Mar 10, 2025 at 1:58=E2=80=AFPM Anusha Srivatsa <asrivats@redhat.co=
+m> wrote:
+>
+> @@ -70,6 +70,7 @@ static int r63353_panel_power_on(struct r63353_panel *r=
+panel)
+>  {
+>         struct mipi_dsi_device *dsi =3D rpanel->dsi;
+>         struct device *dev =3D &dsi->dev;
+> +       struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi };
+>         int ret;
+>
+>         ret =3D regulator_enable(rpanel->avdd);
+> @@ -78,7 +79,7 @@ static int r63353_panel_power_on(struct r63353_panel *r=
+panel)
+>                 return ret;
+>         }
+>
+> -       usleep_range(15000, 25000);
+> +       mipi_dsi_usleep_range(&dsi_ctx, 15000, 25000);
 
-> Also add a pair of arm_smmu_attach_prepare/commit_vmaster helpers to set
-> or unset the master->vmaster point. Put these helpers inside the existing
+No. None of the conversions in this function are correct.
+mipi_dsi_usleep_range() is only for use when you're in the middle of a
+bunch of other "multi" calls and want the sleep to be conditional upon
+there being no error. Here there is no chance of an error because no
+_multi() are used. Go back to the normal usleep_range().
 
-s/point/pointer/
+> @@ -106,53 +107,46 @@ static int r63353_panel_power_off(struct r63353_pan=
+el *rpanel)
+>  static int r63353_panel_activate(struct r63353_panel *rpanel)
+>  {
+>         struct mipi_dsi_device *dsi =3D rpanel->dsi;
+> -       struct device *dev =3D &dsi->dev;
+> -       int i, ret;
+> +       struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi };
+> +       int i;
+>
+> -       ret =3D mipi_dsi_dcs_soft_reset(dsi);
+> -       if (ret < 0) {
+> -               dev_err(dev, "Failed to do Software Reset (%d)\n", ret);
+> +       mipi_dsi_dcs_soft_reset_multi(&dsi_ctx);
+> +       if (dsi_ctx.accum_err)
+>                 goto fail;
+> -       }
 
-> arm_smmu_attach_prepare/commit().
-> 
-> For identity/blocked ops that don't call arm_smmu_attach_prepare/commit(),
-> add a simpler arm_smmu_master_clear_vmaster helper to unset the vmaster.
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Pranjal Shrivastavat <praan@google.com>
+This isn't how the _multi() functions are intended to be used. The
+whole idea is _not_ to have scattered "if" statements everywhere and
+to just deal with errors at the appropriate places. You just trust
+that the _multi() functions are no-ops if an error is set and so it
+doesn't hurt to keep calling them. In this case you'd just have a pile
+of _multi() functions with no "if" checks and then at the very end of
+the function you check for the error. If the error is set then you set
+the reset GPIO and return the error.
 
-(per Pranjal: please fix his mis-spelling of his own name here and in
-the other patches too!)
-
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   | 28 ++++++++++++
->  .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     | 45 +++++++++++++++++++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   | 18 +++++++-
->  3 files changed, 90 insertions(+), 1 deletion(-)
-
-[...]
-
-> @@ -1055,9 +1062,30 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
->  				       struct iommu_domain *parent,
->  				       struct iommufd_ctx *ictx,
->  				       unsigned int viommu_type);
-> +int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
-> +				    struct arm_smmu_nested_domain *nested_domain);
-> +void arm_smmu_attach_commit_vmaster(struct arm_smmu_attach_state *state);
-> +void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master);
->  #else
->  #define arm_smmu_hw_info NULL
->  #define arm_vsmmu_alloc NULL
-> +
-> +static inline int
-> +arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
-> +				struct arm_smmu_nested_domain *nested_domain)
-> +{
-> +	return 0; /* NOP */
-> +}
-
-Please drop this comment.
-
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> index 5aa2e7af58b4..6b712b1ab429 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> @@ -85,6 +85,51 @@ static void arm_smmu_make_nested_domain_ste(
->  	}
->  }
->  
-> +int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
-> +				    struct arm_smmu_nested_domain *nested_domain)
-> +{
-> +	struct arm_smmu_vmaster *vmaster;
-> +	unsigned long vsid;
-> +	int ret;
-> +
-> +	iommu_group_mutex_assert(state->master->dev);
-> +
-> +	/* Skip invalid vSTE */
-> +	if (!(nested_domain->ste[0] & cpu_to_le64(STRTAB_STE_0_V)))
-> +		return 0;
-
-Ok, and we don't need to set 'state->vmaster' in this case because we
-only report stage-1 faults back to the vSMMU?
-
-With the nits fixed:
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Thanks,
-
-Will
+-Doug
