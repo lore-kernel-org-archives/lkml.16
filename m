@@ -1,92 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E941A2641CF;
-	Tue, 11 Mar 2025 19:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60B4149C55;
+	Tue, 11 Mar 2025 19:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741720842; cv=none; b=e6vg9c1khBZKNBq/rIvU6T92/UZrN+BrWMhRhmjyM2/GqREU7thvEAnZyrnR+4ZpyhxGU/odxJEYMYltC4esNYYuJHqjPO4ZH3Bi6ZurywPux7D62znKih7VIPBfprZuFXwEf7vSxNryN63ZnrgBymMKnOWp1xQS/s4v+8ZkcTs=
+	t=1741720927; cv=none; b=HwKCRjx3JZUwnyBG9n1pYglIVIKohWxL6Q9VATGjXq37qYZqEjwDusCYTlDb8ixSlSqTIpngZPjU57ciTXsycBkAofF/zuzMGgstDgrOUUECMWOmXirm1OZrMOXdrlRx2z07TxdeH6MdDHSg69aydTq7UHtcZ/z6+FE2qhJDGf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741720842; c=relaxed/simple;
-	bh=dw1pXNbdvIGlHzr6r+Tj3I/DfsC1dGH9LTUcJvxWMaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hEWBICTOovSsp5bCylGF7QUN3xPw32es+dMA4duafa9ZpQsv3XOKkajtfz2aIy/DRbFY+Tpw+kV+yQS+L47QX85jiTvAm6Saxhm18azMQmhBdTCPhMJ4NgnFn3ZJSwM9U9EpN8hJeRJZJzDo59mWANFkAADu9grOLJrSwXMwdzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJuBeLjN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741720927; c=relaxed/simple;
+	bh=+aajBLwo+9Ipl1oDNXM4YLQi5b40hCdt202MuuiG80g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U9+eYJEeqxlwXmGUmOMbJMxXUG8UuKdm99pUJ9H9ghBHVDE70lt0vycoahUu4kRLMo/CUIQSIbaZPDDJzCXq4FKWmo7lBkcWO3CbWiRKcKe4quc/ftIUto294SSeDR2JTn+L97/9g+cCZcS0EznisaMer2uoOmZWv7SOMMzwis8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=od2kLM23; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJuBeLjN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44181C4CEE9;
-	Tue, 11 Mar 2025 19:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741720840;
-	bh=dw1pXNbdvIGlHzr6r+Tj3I/DfsC1dGH9LTUcJvxWMaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QJuBeLjNHCpkltZtT4v5FHUrLQW+2NS4YeT4c/gxYqI7EF5P0WGMMdoKlXO3IBBLw
-	 rJGTUhV4TqtJg/kPV60Jn5c3MUXX4QJw7U4OQoYeITcA+co6zlcqd562S7vQhYo9HZ
-	 82Y3tXHr8KFL4SWAt0ogKmMOOGgJyU8MHWOjsbhPZyBq8O6IEyEMO5gu9fpYdYN+Qg
-	 A0Lzobh5lC+CZ+JdTzcwpwL8bBOmVuOnXILZxT80ME+2ztloJY+pr3qXHAUexf9Iqo
-	 0Y/CvFeWiy8f7hPwI2LVmeRxqe0kfIT3zN6PA5xRGe9BxOOpd5NKzIuUgOpD7ezWSD
-	 3yG/LYXVQ2fRQ==
-Date: Tue, 11 Mar 2025 20:20:36 +0100
-From: Nathan Chancellor <nathan@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ben Hutchings <ben@decadent.org.uk>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: Re: [PATCH] kbuild: deb-pkg: fix versioning for -rc releases
-Message-ID: <20250311192036.GC1958594@ax162>
-References: <20250311190212.634123-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="od2kLM23"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1741720919; x=1742325719; i=w_armin@gmx.de;
+	bh=Wlvpw/LpumOboiY53p7LYGtKWw9smKDO/kRHBZhGW0Y=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=od2kLM23YE4L5lz8oW5BzWqd8sPZJsjKHc1rZnxbe6CUQHTWbd9Msniju9uEtrtx
+	 5agDknsxf0nxCx4FsWmLSOOX5oHFQ8gGjYggQ2wMzEu8SlcZZEF+JRkNR66P2lzXV
+	 oWl9whkattJT1rmcZBrrapTEXSCFQPAXFQLmnuWq/PyNkrnfQ4fB/54EPCT+U1MZy
+	 THEkgwa4yhEkpgFqcoUUOm9YZOSREh8y+hN77qLTdQt48jzZPGPP8M/fgHdRhS/z/
+	 pUbZuy2NVP+oLeEqWt5SGvEDIgM2WxIuQ8leA+ra929ZqeoObG60UgpP9lSGVNTBf
+	 Hhse95N8ARIx+z/ZDw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MY6Cl-1tiZ2o1T4P-00S4gn; Tue, 11
+ Mar 2025 20:21:59 +0100
+Message-ID: <9c172560-65ee-4468-93f7-ea5c11fe033f@gmx.de>
+Date: Tue, 11 Mar 2025 20:21:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311190212.634123-1-masahiroy@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 1/2] platform/x86: wmi: Add
+ wmidev_get_acpi_device_uid()
+To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dell.Client.Kernel@dell.com
+References: <20250309-awcc-uid-v2-0-5338c6380b2f@gmail.com>
+ <20250309-awcc-uid-v2-1-5338c6380b2f@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250309-awcc-uid-v2-1-5338c6380b2f@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vyEyETMwRJsLnou5PUBCowckoes/zhRbd7dXNlNAfUG45uskRGw
+ 7lVDGj9TttZWkDmpivqo4PafC/RbJzedeBt+bAsS3NWo/3VHIpVb257HaILHTCvS9xka9oh
+ lFAcNjTEe4nlw8DHrF5w4hhp5SLkjs4hVyWfWroDxwEmx/UIorJX71AzDpWSTFrReGp8inM
+ nJdGTCI1YG6/xzIF0/Wxw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:tL1aw/I+w10=;kUTwEIRJc490191b2OZl/eRocp1
+ oP+oh66kSvVv6Bbwa0ve82AWQA7LQU9abfoO1WVWQko8JpY6NkuPWk534e/A485kj+n7TemM1
+ pbOHYGB8p/XZzpry7i9JvsDqX+9wHtx2BRmjRTOoXCV8ltpsz5r/9sa/nAQKttpHWz3EVyHnW
+ x9wFWhZ4sn+XTIb64F800AawkyCDBK1CPIy0inwm54S1aDEWVXd/ha8euCw+EkCCIldufC5fT
+ 69remTOuGR/Xq0SzZyn4MspzKZf49wt88MkfRqMyVOG+i3pajPokgB8WXzJTyTTFhbXm6cwlK
+ KWSuZ/YpDVEzpiVr2wXraKLM6jjXBRqga4Phs+9AqtG+c9Q4XHaWbG9krfHT8eMVw0tv++J1H
+ 9K0Pz2Yale5Rbdu29/z+jRCfGlO+MuBZDHHK/BkTQkYPaW3BuhyMYG2hGdE+lEezrevGhW3zo
+ 7MpzTWF8evYWAIHea1J8Q2DdjUdXUDN3B0tLCtQ/ngyhpT8HMHnkb7eUI3yOWHi7VXuicy+VQ
+ zbS6YntA7GHlW0Gk7MVJ+kX9s0uK2sVQLVPmCY+KsE/bDFHak7S9J+BrcL4N/K41aq3iD2lHr
+ +L8U94XRnNG62c7O+KE1K7Mc5cM2AJ8FAWR8dX30j5gRgC3TY5miyzOkC2L6F8oZXtd774iWS
+ i5oqWO8HNbAf4lwieu+0pNqCdg3QbOSU/iQ9SGUKGy1riBNs9LWzo+g4DazxId2vj0nuJo0Yu
+ dBfuNm1Ehp0HiZpuSLbGt8DfE4e8EExPlX6867Up5Znkt/C9Ru8oHQ4TIfAQA0GrJXhhaTUvu
+ VMM+fcn7mCCmIvcyZM7E3jUNPZ2ifqWIqsf7XiRHcCUh2L58w4xwL63zaWagOnUBtfsAsT2mA
+ rtjAXfD3uhI1rc8dGWHdyG3eDhNimQK3bp8yTZ5BuQUqDOQJgPXvvQNEiz+fMsmJAwBwChDr9
+ ei3SYO0ebt77TdRMgYdgTmttiGMJw7Bak5u6ms5SXK8Y4BAUQDpT+BWxmCWNgrffqFGaWihuz
+ hw/NOPJYil/X1II16ibdhnErgioLK8extziAXN5kdi56Hypwbsc6AN21lKfvZhDCEegAm879K
+ 91gNjoBBX8QEfsZT3JwIsPGvp6XxQABBxjdy+9UBjbO7H2oQyrfothkFcjzjKqSKKONbX7w9r
+ 2QXSjSDaElkxPk3+vcmSKdRL29kgz7waryEy3covYSAIHNSDbtOKzG6OFn8QOC0gkgeNoMpaV
+ NcHkfYxSophT1KbBXgo5MZU62ftQfAiIUpi9sZrZmjbnAblO5ROri0q0nrSC1MJu3T3N1pzle
+ km5AVTApMHgAQG8DWQBH7EKZSnXghYq/Yv5CLhRObKJWJXj03wUtfKn2GoNjE6SUEG2Kjia3S
+ zg2SZjVtHMPuLOQXWN1uZI4IPuAcnFVnpo/L/RlhvvBAGJcCFjxwODFsiyMd4Golv2NLLjx1k
+ +2Jz1qYPCTldojksrwTX/L53nEJo=
 
-On Wed, Mar 12, 2025 at 04:01:33AM +0900, Masahiro Yamada wrote:
-> The version number with -rc should be considered older than the final
-> release.
-> 
-> For example, 6.14-rc1 should be older than 6.14, but to handle this
-> correctly (just like Debian kernel), "-rc" must be replace with "~rc".
-> 
->   $ dpkg --compare-versions 6.14-rc1 lt 6.14
->   $ echo $?
->   1
->   $ dpkg --compare-versions 6.14~rc1 lt 6.14
->   $ echo $?
->   0
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Am 09.03.25 um 06:13 schrieb Kurt Borja:
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Add a non-deprecated version of wmi_get_acpi_device_uid().
 
+Hi,
+
+i can understand you motivation behind this patch, but this is IMHO the wr=
+ong approach.
+Nothing guarantees us that a given ACPI _UID value will reliably signal th=
+e presence of
+WMI methods now or in the future. Because of this i am against this patch.
+
+The correct way would be to use the BMOF data to check for missing WMI met=
+hods. I did
+some work on that which i will announce soon.
+
+Thanks,
+Armin Wolf
+
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
-> 
->  scripts/package/mkdebian | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-> index 193e33bcb989..80ed96561993 100755
-> --- a/scripts/package/mkdebian
-> +++ b/scripts/package/mkdebian
-> @@ -167,7 +167,9 @@ version=$KERNELRELEASE
->  if [ "${KDEB_PKGVERSION:+set}" ]; then
->  	packageversion=$KDEB_PKGVERSION
->  else
-> -	packageversion=$(${srctree}/scripts/setlocalversion --no-local ${srctree})-$($srctree/scripts/build-version)
-> +	upstream_version=$("${srctree}/scripts/setlocalversion" --no-local "${srctree}" | sed 's/-\(rc[1-9]\)/~\1/')
-
-I don't think there has ever been an -rc10 but would it hurt to make it
-[1-9]+?
-
-> +	debian_revision=$("${srctree}/scripts/build-version")
-> +	packageversion=${upstream_version}-${debian_revision}
->  fi
->  sourcename=${KDEB_SOURCENAME:-linux-upstream}
->  
-> -- 
-> 2.43.0
-> 
+>   drivers/platform/x86/wmi.c | 20 +++++++++++++++++---
+>   include/linux/wmi.h        |  2 ++
+>   2 files changed, 19 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index e46453750d5f1475eb87342b1c5fd04fe20df335..39f379777ad08efd3cda7313=
+f293522c68773dbe 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -636,7 +636,6 @@ EXPORT_SYMBOL_GPL(wmi_has_guid);
+>    */
+>   char *wmi_get_acpi_device_uid(const char *guid_string)
+>   {
+> -	struct wmi_block *wblock;
+>   	struct wmi_device *wdev;
+>   	char *uid;
+>
+> @@ -644,8 +643,7 @@ char *wmi_get_acpi_device_uid(const char *guid_strin=
+g)
+>   	if (IS_ERR(wdev))
+>   		return NULL;
+>
+> -	wblock =3D container_of(wdev, struct wmi_block, dev);
+> -	uid =3D acpi_device_uid(wblock->acpi_device);
+> +	uid =3D wmidev_get_acpi_device_uid(wdev);
+>
+>   	wmi_device_put(wdev);
+>
+> @@ -653,6 +651,22 @@ char *wmi_get_acpi_device_uid(const char *guid_stri=
+ng)
+>   }
+>   EXPORT_SYMBOL_GPL(wmi_get_acpi_device_uid);
+>
+> +/**
+> + * wmidev_get_acpi_device_uid() - Get _UID name of a WMI device
+> + * @wdev: A wmi bus device from a driver
+> + *
+> + * Find the _UID of the ACPI device associated with this WMI device.
+> + *
+> + * Return: The ACPI _UID field or NULL if there is no _UID
+> + */
+> +char *wmidev_get_acpi_device_uid(struct wmi_device *wdev)
+> +{
+> +	struct wmi_block *wblock =3D container_of(wdev, struct wmi_block, dev)=
+;
+> +
+> +	return acpi_device_uid(wblock->acpi_device);
+> +}
+> +EXPORT_SYMBOL_GPL(wmidev_get_acpi_device_uid);
+> +
+>   /*
+>    * sysfs interface
+>    */
+> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+> index 10751c8e5e6a0ad3ac9ae317b6f8ecfb14c9a983..625c52ee125219aaa23cf946=
+333af33ad118aafa 100644
+> --- a/include/linux/wmi.h
+> +++ b/include/linux/wmi.h
+> @@ -46,6 +46,8 @@ extern union acpi_object *wmidev_block_query(struct wm=
+i_device *wdev,
+>
+>   acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, con=
+st struct acpi_buffer *in);
+>
+> +char *wmidev_get_acpi_device_uid(struct wmi_device *wdev);
+> +
+>   u8 wmidev_instance_count(struct wmi_device *wdev);
+>
+>   /**
+>
