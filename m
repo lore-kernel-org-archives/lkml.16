@@ -1,231 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87741E7C3B;
-	Tue, 11 Mar 2025 03:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F96919007D;
+	Tue, 11 Mar 2025 03:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741662510; cv=none; b=CmrU+x3mK4Z9+pY6s9qfsDx5D6YkUKpDDOTtZgwKvVvG6JMfMz0JCO3AYjDXF1dw0F+XuuVR5Az3fTOxPSu1yu0mx9y0rbj25sFmwaJ+0i86Lhi4yyWfaTxKgpotg5VCXEbgHuUJN4xrW8rz0Ra6F/9AGLqL3ctQGt3DurtWWzs=
+	t=1741662557; cv=none; b=LmeSOab15Th1vv1V+wkTber3fwi/v9bHySwwWpKtk4EQRTQ3wiX+e5s5dOwX7eu21mYCTAz1Jj+Z/Ufyd9/yW9VbBBCy+YYFrpNoh7PYzXEBGsbRhr24u8apl/nYeUieZWbq++agePTPzhDywG6CDzzg/v+zynjK3v6TNyKMibs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741662510; c=relaxed/simple;
-	bh=wLblY5LYM6rRTYmHBYfj6iDjJpyS5HVOtmrI9unAE30=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UxcnsdjnfBY61mytTdJinNcza5bVMO5dhrD4/D92eGZg7UCADndV0tbtvITXrHCBlQYV/4mtXqMCEFTui4m5izUHpKj5gwKbAQLGlhvONXypPjrevLBTFB+RNQ+7iZ3GYU06yI7JxMvQmxNhbiJHE7gPaetATfkvpN0ybcNZYu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GB8tQRv2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741662557; c=relaxed/simple;
+	bh=jpF7nF3TOxCImalYkQUW1dnGf4zCL9LpRq+kndEXvcQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gF7/UA/jYPdg96lgd0MtGNC1teEGhu4sG1NGFCzihjvD6+6GLXSPMFoTPhlM2oett+pRQYC19eax0EZn8/S3wBKp6grjpHhzGqyBA1ZqG42g72xAnLtVn5peUxRQmsRTWEllBpYkrEO4kETN7X09a5ZnNPGUZYOftMqeYsQl6D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JyXyZUid; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GB8tQRv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7864EC4CEEF;
-	Tue, 11 Mar 2025 03:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741662510;
-	bh=wLblY5LYM6rRTYmHBYfj6iDjJpyS5HVOtmrI9unAE30=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=GB8tQRv2IU996oGjjysjzrrNjJ1rhWWbh/AdrSjYTmCUmwE59+sVnJABmGTwD6yvp
-	 RsZU8mYkdtQpmpvK2Dol/OZXpgUUmIbPHYhDXP9D804RQzLajmbTILUbPaxXWW00k1
-	 BpPeOmOE1szvZHVdxM0IR003kMIdbcmngUSNTU27Gs1M6sYH4D4+887J3Vvg3xXlZO
-	 VoxlV0CFDYWb4KTedTYJU52rTfOGuU3SXSrdbmZVEm98N54bog/5FUQLNwrSvJAlul
-	 hljib61PHKJSt5AmiEob5wVQIiP23kkwAOifXobWSPkHERIxUytpO0wMfKM7YviN/j
-	 DGAQMGJ+hsJUg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640CEC282DE;
-	Tue, 11 Mar 2025 03:08:30 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Tue, 11 Mar 2025 11:08:28 +0800
-Subject: [PATCH v5 2/4] irqchip: Add support for Amlogic A4 and A5 SoCs
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JyXyZUid"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1741662530;
+	bh=URGpqlmXm/gPdMSb/V6zyT1v5OpXsXe6QBAf5N53/HA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=JyXyZUidOCSAHMInO0RzYM0IlPF4UxV0khWQtd4pXk72F/g8tPiPgaZnA7PddxK7J
+	 tDKhkWNuY6XWHQukPulWeP2jNLZPW80oAZBCVzJshFgNyGTNb+Ck7d/ru0EUs2pt+j
+	 xlri6r71a2n4y0Dwp/kzPV1UDIO8qRfhaPTq/lw0=
+X-QQ-mid: bizesmtpip4t1741662517tgfbwwo
+X-QQ-Originating-IP: xvxneow0DBdsfSSOmoup5niZ/oqQn8R/tK9JRLfrlBE=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 11 Mar 2025 11:08:35 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11756624125615866169
+From: WangYuli <wangyuli@uniontech.com>
+To: hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com
+Cc: wangyuli@uniontech.com,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH] s390/boot: Ignore vmlinux.map
+Date: Tue, 11 Mar 2025 11:08:24 +0800
+Message-ID: <F884C733016D6715+20250311030824.675683-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250311-irqchip-gpio-a4-a5-v5-2-ca4cc276c18c@amlogic.com>
-References: <20250311-irqchip-gpio-a4-a5-v5-0-ca4cc276c18c@amlogic.com>
-In-Reply-To: <20250311-irqchip-gpio-a4-a5-v5-0-ca4cc276c18c@amlogic.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Heiner Kallweit <hkallweit1@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741662508; l=5499;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=5O2iR5TSppAsjl+rvJ5i1mjskWacRUIg1rYHkAl0n7A=;
- b=Qgg4fm9Jh64QT6USJwPi80nxkTWeLhcrgs6pDBWZok+f7mJwJfx1G2ZW9dMqLjHTx69Z0ijn3
- U8JbwPonfkUDZjWVIkX81oKq87zFbPKE4f8UHneAKKdEStHwNu4Z+Mg
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MDN2VRNR2P4wLboSgBu+93mRK0luZ7A0kqCAVkJOsXxyb71sZ6qO9jAC
+	7TMCBLugyVtUyp9r9f3YVtMoB/TppNO9p5HcfKLaY3Xg5KUFS5ibNnnagV60PMpM1SEYGAe
+	bVN1/FY/+PvyYY9invFLO7UbPE7BPfnzMYzC3//vwWLEZEuSN70QvyDsDmPYIKAP4ysEyGW
+	dDWvoii9PIBDmkyilbvQaFiigeMy4dI/T0h4LGlhi6cC0T8mA/S1nXY7UEKHjVMBkzpb1Kk
+	HBvEMOCp9b16kPhwelHVL2N8LEbd/lWM06M3WQUEtscoxsPyDLVM3Gyt/8sDY9yIawT7lWf
+	tGhlQ8JNSVbtxTj6YXV10rIO95wMmKf0thDz9R6dqKdqUBbXyfGJqF46ILLOVz4Dmskh9xK
+	ANyNjqlt0e/NWeqQdKmJsR9maXpY4Dn4gMlo/2dFUb5IvEpePIlBDi5vD9opxeSlwaCGNuB
+	1Q/1wyKGOYDuWLJDlQAcMyNdz87+3+IddimVSNz954zFBR9gORMfJKmUHsH36UR71g25ulS
+	aZ8I/varEb3Mexx1Lmzc/JtllFscJgbg3W7J72cVLBKSE9UCveRlV3MCB30SRQEwJrHFJ/A
+	okhs7yCiw0F5RSKFv37kriulBEk77eeCpF6JiV5IeAKqGJX8RuIcswLMjZ4+SNYFGSZ8o44
+	r0Ki2TswvDE4wvtrqQN6XKHh6v9/+I17UDRSQRg4j3FkwsWCHq2QxF12jza8aL4Tf2ob7Qv
+	e4nwBGHLKaOl3Y0SIuX5sENnTdhoEpNET7MA8bWjgCRL4JRYIbfS9nGWbb0YEkxNesKt8nD
+	fdf2GDctcepSGKTvYTPBaS7n+ruaspo4mCCgL4+kJ/D1sjohkXHjIDWTPpNb+se+7iZSq7N
+	dbDwd1iTG5KUfHkVUKzgqSrJbazsZvzTozNtVXwCqaD3MtFzoKP/rSx9A1JisyDR0MvkuA/
+	yGOvRNRteC3mwLLhwQvuuTMjRqaSDGuOCwOK6tF/k5mSXViU55pB6oTXvQk7yaiFrKjiesN
+	RN85Ij27jfNG3QMOaYKbucaDA3aB4=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Upon compiling an s390 kernel, a vmlinux.map file might be generated
+in the current directory.
 
-The Amlogic A4 SoCs support 12 GPIO IRQ lines and 2 AO GPIO IRQ lines,
-A5 SoCs support 12 GPIO IRQ lines, details are as below.
+Append it to the .gitignore file so that Git does not track it.
 
-A4 IRQ Number:
-- 72:55   18 pins on bank T
-- 54:32   23 pins on bank X
-- 31:16   16 pins on bank D
-- 15:14    2 pins on bank E
-- 13:0    14 pins on bank B
-
-A4 AO IRQ Number:
-- 7       1 pin  on bank TESTN
-- 6:0     7 pins on bank AO
-
-A5 IRQ Number:
-- 98      1 pin  on bank TESTN
-- 97:82   16 pins on bank Z
-- 81:62   20 pins on bank X
-- 61:48   14 pins on bank T
-- 47:32   16 pins on bank D
-- 31:27    5 pins on bank H
-- 26:25    2 pins on bank E
-- 24:14   11 pins on bank C
-- 13:0    14 pins on bank B
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- drivers/irqchip/irq-meson-gpio.c | 48 +++++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 11 deletions(-)
+ arch/s390/boot/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-index cd789fa51519..0a25536a5d07 100644
---- a/drivers/irqchip/irq-meson-gpio.c
-+++ b/drivers/irqchip/irq-meson-gpio.c
-@@ -26,8 +26,6 @@
- 
- /* use for A1 like chips */
- #define REG_PIN_A1_SEL	0x04
--/* Used for s4 chips */
--#define REG_EDGE_POL_S4	0x1c
- 
- /*
-  * Note: The S905X3 datasheet reports that BOTH_EDGE is controlled by
-@@ -72,6 +70,7 @@ struct meson_gpio_irq_params {
- 	bool support_edge_both;
- 	unsigned int edge_both_offset;
- 	unsigned int edge_single_offset;
-+	unsigned int edge_pol_reg;
- 	unsigned int pol_low_offset;
- 	unsigned int pin_sel_mask;
- 	struct irq_ctl_ops ops;
-@@ -105,6 +104,18 @@ struct meson_gpio_irq_params {
- 	.pin_sel_mask = 0x7f,					\
- 	.nr_channels = 8,					\
- 
-+#define INIT_MESON_A4_AO_COMMON_DATA(irqs)			\
-+	INIT_MESON_COMMON(irqs, meson_a1_gpio_irq_init,		\
-+			  meson_a1_gpio_irq_sel_pin,		\
-+			  meson_s4_gpio_irq_set_type)		\
-+	.support_edge_both = true,				\
-+	.edge_both_offset = 0,					\
-+	.edge_single_offset = 12,				\
-+	.edge_pol_reg = 0x8,					\
-+	.pol_low_offset = 0,					\
-+	.pin_sel_mask = 0xff,					\
-+	.nr_channels = 2,					\
-+
- #define INIT_MESON_S4_COMMON_DATA(irqs)				\
- 	INIT_MESON_COMMON(irqs, meson_a1_gpio_irq_init,		\
- 			  meson_a1_gpio_irq_sel_pin,		\
-@@ -112,6 +123,7 @@ struct meson_gpio_irq_params {
- 	.support_edge_both = true,				\
- 	.edge_both_offset = 0,					\
- 	.edge_single_offset = 12,				\
-+	.edge_pol_reg = 0x1c,					\
- 	.pol_low_offset = 0,					\
- 	.pin_sel_mask = 0xff,					\
- 	.nr_channels = 12,					\
-@@ -146,6 +158,18 @@ static const struct meson_gpio_irq_params a1_params = {
- 	INIT_MESON_A1_COMMON_DATA(62)
- };
- 
-+static const struct meson_gpio_irq_params a4_params = {
-+	INIT_MESON_S4_COMMON_DATA(81)
-+};
-+
-+static const struct meson_gpio_irq_params a4_ao_params = {
-+	INIT_MESON_A4_AO_COMMON_DATA(8)
-+};
-+
-+static const struct meson_gpio_irq_params a5_params = {
-+	INIT_MESON_S4_COMMON_DATA(99)
-+};
-+
- static const struct meson_gpio_irq_params s4_params = {
- 	INIT_MESON_S4_COMMON_DATA(82)
- };
-@@ -168,6 +192,9 @@ static const struct of_device_id meson_irq_gpio_matches[] __maybe_unused = {
- 	{ .compatible = "amlogic,meson-sm1-gpio-intc", .data = &sm1_params },
- 	{ .compatible = "amlogic,meson-a1-gpio-intc", .data = &a1_params },
- 	{ .compatible = "amlogic,meson-s4-gpio-intc", .data = &s4_params },
-+	{ .compatible = "amlogic,a4-gpio-ao-intc", .data = &a4_ao_params },
-+	{ .compatible = "amlogic,a4-gpio-intc", .data = &a4_params },
-+	{ .compatible = "amlogic,a5-gpio-intc", .data = &a5_params },
- 	{ .compatible = "amlogic,c3-gpio-intc", .data = &c3_params },
- 	{ .compatible = "amlogic,t7-gpio-intc", .data = &t7_params },
- 	{ }
-@@ -299,11 +326,10 @@ meson_gpio_irq_release_channel(struct meson_gpio_irq_controller *ctl,
- static int meson8_gpio_irq_set_type(struct meson_gpio_irq_controller *ctl,
- 				    unsigned int type, u32 *channel_hwirq)
- {
--	u32 val = 0;
-+	const struct meson_gpio_irq_params *params = ctl->params;
- 	unsigned int idx;
--	const struct meson_gpio_irq_params *params;
-+	u32 val = 0;
- 
--	params = ctl->params;
- 	idx = meson_gpio_irq_get_channel_idx(ctl, channel_hwirq);
- 
- 	/*
-@@ -356,19 +382,19 @@ static int meson8_gpio_irq_set_type(struct meson_gpio_irq_controller *ctl,
- static int meson_s4_gpio_irq_set_type(struct meson_gpio_irq_controller *ctl,
- 				      unsigned int type, u32 *channel_hwirq)
- {
--	u32 val = 0;
-+	const struct meson_gpio_irq_params *params = ctl->params;
- 	unsigned int idx;
-+	u32 val = 0;
- 
- 	idx = meson_gpio_irq_get_channel_idx(ctl, channel_hwirq);
- 
- 	type &= IRQ_TYPE_SENSE_MASK;
- 
--	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL_S4, BIT(idx), 0);
-+	meson_gpio_irq_update_bits(ctl, params->edge_pol_reg, BIT(idx), 0);
- 
- 	if (type == IRQ_TYPE_EDGE_BOTH) {
--		val |= BIT(ctl->params->edge_both_offset + idx);
--		meson_gpio_irq_update_bits(ctl, REG_EDGE_POL_S4,
--					   BIT(ctl->params->edge_both_offset + idx), val);
-+		val = BIT(ctl->params->edge_both_offset + idx);
-+		meson_gpio_irq_update_bits(ctl, params->edge_pol_reg, val, val);
- 		return 0;
- 	}
- 
-@@ -378,7 +404,7 @@ static int meson_s4_gpio_irq_set_type(struct meson_gpio_irq_controller *ctl,
- 	if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
- 		val |= BIT(ctl->params->edge_single_offset + idx);
- 
--	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL,
-+	meson_gpio_irq_update_bits(ctl, params->edge_pol_reg,
- 				   BIT(idx) | BIT(12 + idx), val);
- 	return 0;
- };
-
+diff --git a/arch/s390/boot/.gitignore b/arch/s390/boot/.gitignore
+index f5ef099e2fd3..af2a6a7bc028 100644
+--- a/arch/s390/boot/.gitignore
++++ b/arch/s390/boot/.gitignore
+@@ -5,4 +5,5 @@ relocs.S
+ section_cmp.*
+ vmlinux
+ vmlinux.lds
++vmlinux.map
+ vmlinux.syms
 -- 
-2.37.1
-
+2.47.2
 
