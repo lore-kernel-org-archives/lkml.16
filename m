@@ -1,103 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A94422257B;
-	Tue, 11 Mar 2025 07:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD112222DB
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 07:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741678967; cv=none; b=mk1oasbkoJut2v9S2N24WCGyij60HygToT05Xudy8lKan0Z6tXHq6+9IzJXz8P+vhtV2WnbLF05M/DJ3ukuLfuNNBhUC/RpZnGhAub05IAyXAa1Kfi8PBtDxRHVPmzwnJnMcHtiVMi/qCh5ydUwZn6FB3v+HaLwsQMOAfmLXuus=
+	t=1741679031; cv=none; b=u+zgVO+PGa1FPG950bZy6TSaNMqlLkKADzXsQEb9kpkBqWiPyy3pWZz9/BHIPGerfcz7bXDCda78nM1YyCWh2clWfYx6Tvp9CgMSKNerM1FOBlMz6t+7op/NpBuOafF5PlRal8ZOqvuxU1yyv6hD7aJHxb0QoUswAuet+mUF048=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741678967; c=relaxed/simple;
-	bh=SEVKryVmw9EdI0nGbBI78wK4YjhFT5TtzcIWAsyinnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=badzu5RfW+Q/KHeUeCybdES2wxVqnkRSidoTNVpYrfF7YuvGlpTKQ0S+sWa4ah4+2THnQ2nu+d17i/mDuKWQgFNq6gruTNPrIf/M6qkYWfV7wpAoxD8Y/pfnD13paMgfzo755WhjrzqhVloc8uMvmwWv6kUyiD2C7O5u6WaXA4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sy+AHpPv; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741679031; c=relaxed/simple;
+	bh=rEB1phDGuMJuuHMPeNJgudH6DWwTHq/O/9wLKkeg5Fc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rSH0w2T517rtVMz84u9OAsRGqB0+kKA2gChhkFau9f82O7sxvlvYhJORslXEBOjiNA0t4H2tuwSU5eflCYxOjv0iafbKFvvDydkun3qrZLWXGb9kSr/0uCl9ssBVeBTCqhCHP31y3ADx8QLa60XQa4QNO39qw0Yz5u55uS8zwS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rBSpbxDR; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sy+AHpPv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741678965; x=1773214965;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SEVKryVmw9EdI0nGbBI78wK4YjhFT5TtzcIWAsyinnE=;
-  b=Sy+AHpPv7XKq0XLGUEld20vsLm+LMAA+FmBuqzZzSwkYAQA3EUIK4Ajm
-   OJd0blVwzEOwHxVw9acs3qDLPZHfg62OBiCvnMZKFYP7O0rxLZaWcir9s
-   C067h8XT8eUCmYNWcahPXTEL4QKNp3MQ50IkeQwICiLI3l4be6tshRw4q
-   PJhEpe24n2lSvEkYDxU+b1iBgcPvaOAZY6I6qO3lyY4/eVzzi8SNGRily
-   OrkM2EHQ52nZVxSvnxvLKpkRThjjAcYHgF4cZIDnshIdiAj069SIxWsXG
-   J10dSveUNtNQf0e5Ibe7qRfGCGoWdCI9e4I0P++1EnGHNH5isO0Ayf11n
-   Q==;
-X-CSE-ConnectionGUID: hiiznS35Qbm5U+PSnRjItQ==
-X-CSE-MsgGUID: sV9BoiNBSqyMOPIz9shSYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42554464"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="42554464"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:42:44 -0700
-X-CSE-ConnectionGUID: 8Xd3d6ptR5aeRVwVhOuHAQ==
-X-CSE-MsgGUID: BI1CVhApRNCY8ANLDLsc9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="124839811"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:42:41 -0700
-Date: Tue, 11 Mar 2025 08:38:50 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shay Drory <shayd@nvidia.com>
-Subject: Re: [PATCH net 3/6] net/mlx5: Fix incorrect IRQ pool usage when
- releasing IRQs
-Message-ID: <Z8/oigZe964EbsHh@mev-dev.igk.intel.com>
-References: <1741644104-97767-1-git-send-email-tariqt@nvidia.com>
- <1741644104-97767-4-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rBSpbxDR"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3913b539aabso1570333f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 00:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741679027; x=1742283827; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rEB1phDGuMJuuHMPeNJgudH6DWwTHq/O/9wLKkeg5Fc=;
+        b=rBSpbxDRp1qVKi1RjDki0YIcaMoUptMtJ2B0SLS0cKW1T4GyOEiVIpffT9n4GOQd2f
+         FFDce7XSiEiX3SYxcW/DONVlpAN4WSamRChReriCBotMx4sybXBJQEDs2gr37S6fw29J
+         L3gmjgjD1y3eEHMiHK9bMpAqCA+MCObXqeLeYKOv4V47JAf3fvE5KJ2QKjjWpr1jeIRc
+         Ao7Xdk1+u6AbN+7D6FUpmvDGB1fFuDHNqfPn70q12krpg1uu9CS7r35LfWFpEWBKjEzv
+         LzbeWZnO/7H8x50YnuVnuYSgHNmzksmeWVup3AUI2QPmg6Uden2tCmx0zaBVqNbX4SNu
+         x0Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741679027; x=1742283827;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rEB1phDGuMJuuHMPeNJgudH6DWwTHq/O/9wLKkeg5Fc=;
+        b=A2JZETiI8XZHju0/VJjfV0IBttcm7rdE0acyTaRS+ee5KHT7cznlJwOp24CR9aUHdo
+         xQeKphCfPXFRZMZMd29QDFsidB2UZHBhGVkgig/smE5j4g88kR1pyVIxSUXtE4LpVAFc
+         fqzBy8WQfpzqS8rZFdv+HJP+0y1jxW+oXhSpn/sb4wOqL0ZTBYuf4Uazb1XxQr3OOi2/
+         OYr6iS+HLiVwruDyoYuLmYb4blORH6HAgskh+nZ0mrpd8xmH+RHMTKgxr+OCx19YEoxQ
+         jwOabVo61x/Lg7532p2VQkU5rzeVZ5oLCmgufscprDiqdRXJZKML82sxicndV6oQlljx
+         yzaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWl9renv7Gdn4k78aZBDJpn6BocUx8N19W29ALOLSMm4O3pUyvEiNIfMwMZdMwSIoFGi+DoJbDbNSq9byY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRZuTosiIYCZJp68i2uDBwCuPNjyvZu8ALJEMZnEk7KQw8le/l
+	j60ma6BjV9MlHMLFGjM7Fqy4mOWbJx3b2LgIpu+jrsG/h1XgF+EsFIXMAiGXOqAb/S681PEhCFg
+	27H4q1xpRR0WUmD0DHb6/31FxDV+Uf93oKQ+1
+X-Gm-Gg: ASbGnctwKTqM7J6Sk6QKroHLduUSzNhVHZzb+sW4hIREabUb7hA0swW2DyI9OrV7MCg
+	oHxh4hCfZZlu4WOFIs4fAo28FupV1s9IxK4DO1InyAs5RYqY2FuxlkeCy9/sr6HUwUVL0iV0ulZ
+	dIxhzIsJBC9SbUvItmJcLoXLp0Sos=
+X-Google-Smtp-Source: AGHT+IElGicg9Noy3KNYc3X1Hx3ljvy9PPIG+fte0j2wopqhPKBVVw/+1a1GI96/SevkXuNGDp7MGGQrGtMUp4y0Itg=
+X-Received: by 2002:a05:6000:1844:b0:391:29c0:83f5 with SMTP id
+ ffacd0b85a97d-39132da9406mr14060098f8f.44.1741679027502; Tue, 11 Mar 2025
+ 00:43:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1741644104-97767-4-git-send-email-tariqt@nvidia.com>
+References: <0100019582fc6956-3b420cce-f122-4a26-8fea-94000b22bc90-000000@email.amazonses.com>
+In-Reply-To: <0100019582fc6956-3b420cce-f122-4a26-8fea-94000b22bc90-000000@email.amazonses.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 11 Mar 2025 08:43:35 +0100
+X-Gm-Features: AQ5f1JrorvKt0joSAmNhbI8X1OvgY1sTRzY-RUvYu31UhNpzzuvWgmT9z1NH5g4
+Message-ID: <CAH5fLgi+HrV8raKqdzHyJ3HweFwbkY+D6OkWxhOrYg8q2TgRaQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: uaccess: mark UserSliceReader methods inline
+To: Antonio Hickey <contact@antoniohickey.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 12:01:41AM +0200, Tariq Toukan wrote:
-> From: Shay Drory <shayd@nvidia.com>
-> 
-> mlx5_irq_pool_get() is a getter for completion IRQ pool only.
-> However, after the cited commit, mlx5_irq_pool_get() is called during
-> ctrl IRQ release flow to retrieve the pool, resulting in the use of an
-> incorrect IRQ pool.
-> 
-> Hence, use the newly introduced mlx5_irq_get_pool() getter to retrieve
-> the correct IRQ pool based on the IRQ itself. While at it, rename
-> mlx5_irq_pool_get() to mlx5_irq_table_get_comp_irq_pool() which
-> accurately reflects its purpose and improves code readability.
-> 
-> Fixes: 0477d5168bbb ("net/mlx5: Expose SFs IRQs")
-> Signed-off-by: Shay Drory <shayd@nvidia.com>
-> Reviewed-by: Maher Sanalla <msanalla@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/eq.c        |  2 +-
->  .../net/ethernet/mellanox/mlx5/core/irq_affinity.c  |  2 +-
->  drivers/net/ethernet/mellanox/mlx5/core/mlx5_irq.h  |  4 +++-
->  drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c   | 13 ++++++++++---
->  drivers/net/ethernet/mellanox/mlx5/core/pci_irq.h   |  2 +-
->  5 files changed, 16 insertions(+), 7 deletions(-)
-> 
-[...]
+On Tue, Mar 11, 2025 at 3:15=E2=80=AFAM Antonio Hickey
+<contact@antoniohickey.com> wrote:
+>
+> When you build the kernel using the llvm-19.1.4-rust-1.83.0-x86_64
+> toolchain provided by kernel.org with ARCH=3Dx86_64, the following symbol=
+s
+> are generated:
+>
+> $nm vmlinux | grep ' _R'.*UserSliceReader | rustfilt
+> ffffffff817c3320 T <kernel::uaccess::UserSliceReader>::read_slice
+> ffffffff817c32b0 T <kernel::uaccess::UserSliceReader>::read_raw
+>
+> However, these Rust symbols are trivial wrappers around the functions
+> copy_from_user, _copy_from_user respectively. It doesn't
+> make sense to go through a trivial wrapper for these functions, so mark
+> them inline.
+>
+> After applying this patch, the above command will produce no output.
+>
+> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+I believe you're missing a Link: and Suggested-by: tag.
 
-> -- 
-> 2.31.1
+Otherwise looks good to me.
+
+Alice
