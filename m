@@ -1,31 +1,31 @@
 Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75C0221F2A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:15:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F3023535A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741688150; cv=none; b=bHBZXkfpSRLPa9Kj/wuwl/tOa9dcxT52WAT3h4bNa0m248BpJn5NMPjYcdcWpWsOawWfd+sSkZUz7+9Z0/DOyMmc/RWhOrySe/YSI6sE6mFX7iyzSoeXcrU3+2ju828sWoMI6Q+j44mQhN9wtSOwU6YP15XN+4n6tHtwYJkgXxA=
+	t=1741688158; cv=none; b=gbqE8STNPQTvxYNYMUiXBRQmTs0Y5ZTwVVuB0LCW5ZOYDfyvpLlaOF3ywA3cXCptuBQdghMCM82TuLpq23qLwXTGvKa3pfOD8raLXgkUnavS9fvShFSv1vRHqMlVkZa5DjspJWFan75Ah/4A1IuqPUUJpksNv4QyRcZfxSF1ICY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741688150; c=relaxed/simple;
-	bh=TcXlkWHAcLlKA5YdGtboJUi8xph6EctsfembkpGTiMY=;
+	s=arc-20240116; t=1741688158; c=relaxed/simple;
+	bh=3z92NOgOTTQQWHcSlS7PdzZy6VlnQaGrUiQQFjm1O4M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q4dq2CNvyKAuiWn0peHVaye9WSZ4W7PdEDaVauQcooB9FTIIEKJ2VFh76fIKbWc0pn3iIZYKf/YEouuiLQfMdJeU3SE415ibPTmz1H6Ip/oBONZMYHrS248pn1+J1If6B0wuddMd84iEdsCjf7tkpLKG8GyLKGvSzMwhZu6zg6Q=
+	 MIME-Version:Content-Type; b=HR2sGZFeb5VyTV/2WIlH/8uK3UV9NEBN24hcKPZBQPl7wrxSMcTZe5jupMlLxub9gkVLyWN0EDBs9aJdQ9Q3cChfGSEDt3bqIw/rnpoUv1yBGrZ/n9ED5o6BQs3apl50RSoj/TfbZnNPSNTsv9x2nX0Kj+1tlDgzSdOxh0hZRO0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
 Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
 	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id 11BBD5F8F8;
+	by mx1.emlix.com (Postfix) with ESMTPS id 657885FE1E;
 	Tue, 11 Mar 2025 11:15:26 +0100 (CET)
 From: Rolf Eike Beer <eb@emlix.com>
 To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
 Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Jerry Snitselaar <jsnitsel@redhat.com>, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 2/4] iommu: make inclusion of intel directory conditional
-Date: Tue, 11 Mar 2025 11:10:17 +0100
-Message-ID: <3271463.5fSG56mABF@devpool47.emlix.com>
+ Bert Karwatzki <spasswolf@web.de>, Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 1/4] iommu: remove duplicate selection of DMAR_TABLE
+Date: Tue, 11 Mar 2025 11:07:03 +0100
+Message-ID: <3865592.kQq0lBPeGt@devpool47.emlix.com>
 Organization: emlix GmbH
 In-Reply-To: <2301497.iZASKD2KPV@devpool47.emlix.com>
 References: <2301497.iZASKD2KPV@devpool47.emlix.com>
@@ -38,42 +38,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Nothing in there is active if CONFIG_INTEL_IOMMU is not enabled, so the who=
-le
-directory can depend on that switch as well.
+This is already done in intel/Kconfig.
 
-=46ixes: ab65ba57e3ac ("iommu/vt-d: Move Kconfig and Makefile bits down int=
-o intel directory")
+=46ixes: 70bad345e622 ("iommu: Fix compilation without CONFIG_IOMMU_INTEL")
 Signed-off-by: Rolf Eike Beer <eb@emlix.com>
 =2D--
- drivers/iommu/Makefile       | 3 ++-
- drivers/iommu/intel/Makefile | 2 --
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/iommu/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 5e5a83c6c2aa..ed673c8fd056 100644
-=2D-- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
-=2Dobj-y +=3D amd/ intel/ arm/ iommufd/ riscv/
-+obj-y +=3D amd/ arm/ iommufd/ riscv/
-+obj-$(CONFIG_INTEL_IOMMU) +=3D intel/
- obj-$(CONFIG_IOMMU_API) +=3D iommu.o
- obj-$(CONFIG_IOMMU_API) +=3D iommu-traces.o
- obj-$(CONFIG_IOMMU_API) +=3D iommu-sysfs.o
-diff --git a/drivers/iommu/intel/Makefile b/drivers/iommu/intel/Makefile
-index 6c7528130cf9..7007db03b351 100644
-=2D-- a/drivers/iommu/intel/Makefile
-+++ b/drivers/iommu/intel/Makefile
-@@ -5,7 +5,5 @@ obj-$(CONFIG_DMAR_TABLE) +=3D trace.o
- obj-$(CONFIG_DMAR_PERF) +=3D perf.o
- obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) +=3D debugfs.o
- obj-$(CONFIG_INTEL_IOMMU_SVM) +=3D svm.o
-=2Difdef CONFIG_INTEL_IOMMU
- obj-$(CONFIG_IRQ_REMAP) +=3D irq_remapping.o
-=2Dendif
- obj-$(CONFIG_INTEL_IOMMU_PERF_EVENTS) +=3D perfmon.o
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index ec1b5e32b972..fceea41b7f58 100644
+=2D-- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -200,7 +200,6 @@ source "drivers/iommu/riscv/Kconfig"
+ config IRQ_REMAP
+ 	bool "Support for Interrupt Remapping"
+ 	depends on X86_64 && X86_IO_APIC && PCI_MSI && ACPI
+=2D	select DMAR_TABLE if INTEL_IOMMU
+ 	help
+ 	  Supports Interrupt remapping for IO-APIC and MSI devices.
+ 	  To use x2apic mode in the CPU's which support x2APIC enhancements or
 =2D-=20
 2.48.1
 
