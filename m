@@ -1,145 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86C5146593;
-	Tue, 11 Mar 2025 07:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCE022422A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 07:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741679511; cv=none; b=XI5raFM0iSmJA0HIGUumFgOAn+Ua475xisOF8PGVuQy6Tgu1zvV8gOrQgC2UOmd1zLVecPY27xPvm+euF06uH5WVgc1HtC4HzCV9CF0lb/sz67+0ejm06f2QCwu14Rd/SeLzWAMYua6yvJYBohFFICebeXc8rlDfq8nZmzqXMeg=
+	t=1741679517; cv=none; b=WD9aPVaCfCcpa5DMSjzGyBd5X5jO/iqffKPAIQDjfp9i8frW8oJ4ZnpQpCX68cnwRN3rOmr/AgpcoQBax5V4qAD9st3FXH0EPUfxX+bxpbVVjijpf7xjrZh8Sdr3ra8UgXrsWdugjd5ddA6RS6qIsh/9E2mHUxdxOCKSvK8Lj0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741679511; c=relaxed/simple;
-	bh=sgPc3Qvg0vgmi1gbRN19F9lZOqeVer1XVd9n2oDi5Nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2FK899EcazCp62VWHZLjID8J1oBCYwSMjJytd8kYuugLJ7puPpfh2ghuH+ZpdEdbeb/cYar+Wkv5LfNyMMaxi+i7ovsqZpMJRWE6jA6WTto3BBZl9zJ81G/fVArkMSKYi/PdNYDN6/Et75s0c0rGwInr+5mZ+hvKHa9aRp7hKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBlgToLC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBlgToLC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B819EC4CEE9;
-	Tue, 11 Mar 2025 07:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741679511;
-	bh=sgPc3Qvg0vgmi1gbRN19F9lZOqeVer1XVd9n2oDi5Nk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hBlgToLCWNhHLQM49b0jfSigvXzWgDtpL4wroyDom0phMXBTPN/44Iqyvdw1dr4He
-	 48/fKjrsIbLP82a0DaqlamJ6Nc/ZXp9W8dUS2g3AV2dD4ufXMyyed9zWq4jsaQ5R30
-	 wP+MyCVPxyX0eqD9FGpOiROcux4u3HxxeHRiw3KVuquuzbphqV62qdPjBs7AA/aCvX
-	 1uyVADxfKpDtjqwCXCqmYAr0F98W0y+XQbWI/ASI+Tyf+r0caRUDXQnCddp36vyFiy
-	 4C/huKSzMg593dmW4vrZJZRhvSIBf3utvIDxILeOHV0x68VWaTgjb6JEGjG7u40wJK
-	 Fix209mp90HcQ==
-Date: Tue, 11 Mar 2025 08:51:48 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Matt Coster <matt.coster@imgtec.com>
-Cc: Frank Binns <frank.binns@imgtec.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>, 
-	Alessio Belle <alessio.belle@imgtec.com>, Alexandru Dadu <alexandru.dadu@imgtec.com>
-Subject: Re: [PATCH v3 02/18] dt-bindings: gpu: img: Add BXS-4-64 devicetree
- bindings
-Message-ID: <20250311-bizarre-debonair-macaque-451c4f@krzk-bin>
-References: <20250310-sets-bxs-4-64-patch-v1-v3-0-143b3dbef02f@imgtec.com>
- <20250310-sets-bxs-4-64-patch-v1-v3-2-143b3dbef02f@imgtec.com>
+	s=arc-20240116; t=1741679517; c=relaxed/simple;
+	bh=LTw3sIdttClMYJDhuYcNqZcDUZWinADAyvvfY7o3kng=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wm6eXfv2Hwmme0iwn+/mObKKNKCN0jaC2SVkanvMtJDpeuebP4dc4ODRXU16t0yHpcgbd2NThzhhM2JX1PNxiLrFEgaIXgrYXVUYHn79W7O5AYNYDjUDUcae5Gs3yhQ+Bf6P/3Bep68wVlkwAn1aHEJ+5TrnBFZzHErxkKbwqAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZBm7h0CXBz2RTR0;
+	Tue, 11 Mar 2025 15:47:28 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 27B0F1402CD;
+	Tue, 11 Mar 2025 15:51:48 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 11 Mar 2025 15:51:47 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <sudeep.holla@arm.com>,
+	<tglx@linutronix.de>, <peterz@infradead.org>, <mpe@ellerman.id.au>,
+	<linux-arm-kernel@lists.infradead.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <pierre.gondois@arm.com>,
+	<dietmar.eggemann@arm.com>
+CC: <linuxppc-dev@lists.ozlabs.org>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <morten.rasmussen@arm.com>,
+	<msuchanek@suse.de>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
+	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>, <xuwei5@huawei.com>,
+	<guohanjun@huawei.com>, <sshegde@linux.ibm.com>
+Subject: [PATCH v12 2/4] arch_topology: Support SMT control for OF based system
+Date: Tue, 11 Mar 2025 15:51:41 +0800
+Message-ID: <20250311075143.61078-3-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20250311075143.61078-1-yangyicong@huawei.com>
+References: <20250311075143.61078-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250310-sets-bxs-4-64-patch-v1-v3-2-143b3dbef02f@imgtec.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-On Mon, Mar 10, 2025 at 01:10:26PM +0000, Matt Coster wrote:
-> Unlike AXE-1-16M, BXS-4-64 uses two power domains.
-> 
-> Like the existing AXE-1-16M integration, BXS-4-64 uses the single clock
-> integration in the TI k3-j721s2.
-> 
-> Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-> ---
-> Changes in v3:
-> - Include adding the second power domain so it's in context
-> - Remove unnecessary example
-> - Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-8-3fd45d9fb0cf@imgtec.com
-> Changes in v2:
-> - Use normal reg syntax for 64-bit values
-> - Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-8-4ed30e865892@imgtec.com
-> ---
->  .../devicetree/bindings/gpu/img,powervr-rogue.yaml | 34 +++++++++++++++++++++-
->  1 file changed, 33 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> index 5c16b2881447c9cda78e5bb46569e2f675d740c4..d9409d33154d429019776ddbf9d123b33f8c9740 100644
-> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> @@ -18,6 +18,11 @@ properties:
->                - ti,am62-gpu
->            - const: img,img-axe-1-16m
->            - const: img,img-rogue
-> +      - items:
-> +          - enum:
-> +              - ti,j721s2-gpu
-> +          - const: img,img-bxs-4-64
-> +          - const: img,img-rogue
->  
->        # This legacy combination of compatible strings was introduced early on
->        # before the more specific GPU identifiers were used.
-> @@ -49,6 +54,7 @@ properties:
->    power-domain-names:
->      items:
->        - const: a
-> +      - const: b
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-No, you just affected old device claiming it has two items. What's more,
-it's not synced with power-domains. Both properties must have the same
-constraints, but above power domains have "anything".
+On building the topology from the devicetree, we've already gotten the
+SMT thread number of each core. Update the largest SMT thread number
+and enable the SMT control by the end of topology parsing.
 
->  
->    dma-coherent: true
->  
-> @@ -74,12 +80,38 @@ allOf:
->          - power-domains
->          - power-domain-names
->  
-> +  # Cores with one power domain
+The framework's SMT control provides two interface to the users [1]
+through /sys/devices/system/cpu/smt/control:
+1) enable SMT by writing "on" and disable by "off"
+2) enable SMT by writing max_thread_number or disable by writing 1
 
-Drop
+Both method support to completely disable/enable the SMT cores so both
+work correctly for symmetric SMT platform and asymmetric platform with
+non-SMT and one type SMT cores like:
+core A: 1 thread
+core B: X (X!=1) threads
 
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: img,img-axe-1-16m
-> +    then:
-> +      properties:
-> +        power-domain-names:
-> +          minItems: 1
+Note that for a theoretically possible multiple SMT-X (X>1) core
+platform the SMT control is also supported as expected but only
+by writing the "on/off" method.
 
-Drop
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-devices-system-cpu#n542
+Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/base/arch_topology.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-> +          maxItems: 1
-> +
-> +  # Cores with two power domains
-
-Drop
-
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: img,img-bxs-4-64
-> +    then:
-> +      properties:
-> +        power-domain-names:
-> +          minItems: 2
-> +          maxItems: 2
-
-Missing constraints for power-domains.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 3ebe77566788..d409d323ee64 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -11,6 +11,7 @@
+ #include <linux/cleanup.h>
+ #include <linux/cpu.h>
+ #include <linux/cpufreq.h>
++#include <linux/cpu_smt.h>
+ #include <linux/device.h>
+ #include <linux/of.h>
+ #include <linux/slab.h>
+@@ -506,6 +507,10 @@ core_initcall(free_raw_capacity);
+ #endif
+ 
+ #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
++
++/* Used to enable the SMT control */
++static unsigned int max_smt_thread_num = 1;
++
+ /*
+  * This function returns the logic cpu number of the node.
+  * There are basically three kinds of return values:
+@@ -565,6 +570,8 @@ static int __init parse_core(struct device_node *core, int package_id,
+ 		i++;
+ 	} while (1);
+ 
++	max_smt_thread_num = max_t(unsigned int, max_smt_thread_num, i);
++
+ 	cpu = get_cpu_for_node(core);
+ 	if (cpu >= 0) {
+ 		if (!leaf) {
+@@ -677,6 +684,17 @@ static int __init parse_socket(struct device_node *socket)
+ 	if (!has_socket)
+ 		ret = parse_cluster(socket, 0, -1, 0);
+ 
++	/*
++	 * Reset the max_smt_thread_num to 1 on failure. Since on failure
++	 * we need to notify the framework the SMT is not supported, but
++	 * max_smt_thread_num can be initialized to the SMT thread number
++	 * of the cores which are successfully parsed.
++	 */
++	if (ret)
++		max_smt_thread_num = 1;
++
++	cpu_smt_set_num_threads(max_smt_thread_num, max_smt_thread_num);
++
+ 	return ret;
+ }
+ 
+-- 
+2.24.0
 
