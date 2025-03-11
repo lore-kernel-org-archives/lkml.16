@@ -1,180 +1,178 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCD2187554
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0797F156880
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741699087; cv=none; b=SwhMa1QTfVeNbtc0evTABY2EMz4dqxuBl2VQaAYdoaCJDQy8FkDYWBjPBtthuAYFvY6pSXf9xZ77MAH/10Fk/9a4xBGIGFzdmrJXyer6OIn08bAIH7Xd0pit2eW14LpqUaUyDdjJSqiuOsACjldz8JRG/4LYT5EutsXSQpMe7U8=
+	t=1741699101; cv=none; b=ZBGiZWssxQlrm/S1akw4nALgN2FfHw4y4kmT+ShioLaeXVNqrBfWHIgrOL+aUnD11C2wPcYSzFe48Bgl2cn8BJQM4z8qf+4WGe/tYlI0F69y6RhvKVJ08RWze79D9zrHc4NTzDY8ihhZ/1s2NK2X4V+0jcD2FvZziRsUkAxLIKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741699087; c=relaxed/simple;
-	bh=nVCsjTgW37BdBSlETCcrwnkUH9bmIvNz4ug0yrwgjtQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cWdPDud/m/VbnJ1n68GEwEMgRdvp53eLjn9yaKzd81ZsgIo1SM6awkrPw7ilAITPWk3MWYbJb/C5g0xzyUWoNcguggMHzjf4HxCRZK2O6wcQaU1NfmPcmcAv8HdWmqnJyzimuOZyGbO75lEqsep3rtBf4GrxCC6D99FzFVhjtvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a8gsCiwK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741699101; c=relaxed/simple;
+	bh=kZWbCuYaORPFU8w7lpayL1MqlPThbNYBuwG+AoUzEec=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CxxM8HVUSI9KCpeJa8x02dXxqtpVw1Y6ZTzjUrHR0hf7A7D6/wGCZBSk5viIq7CkR957gXuN+LsSdD99oyyUY9qwciNc07AQzR3v7O/qvtsStX/HkwdoXSfL56Hg5kIhIFW/hvTnbd2bPXFI0WI8UuKhwx0lt3uviKM2c6F9v2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jbdTYZc9; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a8gsCiwK"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B7D77E001448;
-	Tue, 11 Mar 2025 13:17:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+NehKP8e4S0NppJuqsk5lNv/Xu+eR8eN6r9S0JKM6qA=; b=a8gsCiwKjbAXcqn9
-	LeeKewZfmNGS/MVxIhueHsPgqvYfyfpc3OJ4oWqbB/m+ZHG7sEHFFqskehwJoN40
-	XiCsJLGkAouRqfJ/GfUq2CSQWHt7a+9x/zSYN3r9DvkSnOIWzNyu233guxO2+Lji
-	OoiKe/uaYSbDO9r6DHH+xqiIa2lbcA74CrBVfAlJ9pLjyFwv887qqLEy330UyGjY
-	QpWlkHi3S8EMRqy2qJWeiMtFPv4Nsan2gfgfAS7xFqIFLxtlv5fM9X9ZNA5Xma/M
-	7HJIhtvP/W9Sh+QQ3Q4cP3XVd0CYvuMM9hdhj3nj7yGhsm7i9LQqNZQsCxvq2I+V
-	Rpv0Pw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f6ags2q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 13:17:53 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52BDHq1g005318
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 13:17:52 GMT
-Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 11 Mar 2025 06:17:50 -0700
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-To: <mst@redhat.com>, <jasowang@redhat.com>, <xuanzhuo@linux.alibaba.com>,
-        <eperezma@redhat.com>,
-        <syzbot+efe683d57990864b8c8e@syzkaller.appspotmail.com>
-CC: <virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <quic_zhonhan@quicinc.com>, <syzkaller-bugs@googlegroups.com>
-Subject: [PATCH] virtio_ring: Fix data race when accessing the event_triggered field of vring_virtqueue
-Date: Tue, 11 Mar 2025 21:17:35 +0800
-Message-ID: <20250311131735.3205493-1-quic_zhonhan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <67c7761a.050a0220.15b4b9.0018.GAE@google.com>
-References: <67c7761a.050a0220.15b4b9.0018.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jbdTYZc9"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d01024089so11528415e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 06:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741699098; x=1742303898; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y/V3ij2YZYBELRjrNa6UOH2HSQ/70gTUpUW2w6XjdEU=;
+        b=jbdTYZc9CYChxKxJeexq7ATKWviMtjKR0YazIXTyIcyXSuNwiIekpv9z47JO3epmuP
+         6r0liaKd+1FcZKYjBz4YPqdrVg2BfuZIu4Z5+xn6FUWtjsPZOUJP2n34WrcabNHcwlOt
+         a+KLNHEs2UYePwttoIpa+Srn70sUgvZb2aFg92nPyU1pdUkjlkCLj46omV44lHTCE2sl
+         OAZiDFC06857mmnRinRlbqEaooJlTEYlVscWhPiBSwI8r82vY4MF6EOSgqWOL4s4UK8u
+         Dnd5e04lNHcG71AGfqetPppeo+wyWabc1Xg/yi57tKHyZydpFVBBNTWt+xxSBa6uuwz5
+         wbkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741699098; x=1742303898;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y/V3ij2YZYBELRjrNa6UOH2HSQ/70gTUpUW2w6XjdEU=;
+        b=lylQEg0m0YY5w20d5ziM85kpOIYjcuJgBVLd2aCxNKJJ5Eb6P3z9EIlKvwTvgfl5hG
+         qgYRiOf2HNrjGm2GQJfgZUWqNIoMr40qEUM2flS59XIGKVTXVYAAcrbshRaQMzxqtw9K
+         SoidkSe/xfrbCnlTH1Q7iDRsa60RGebhXyoquSANb01GiQgRpStcdKsY80Kk6IydFkrf
+         muoSZsVPlzVLbLzK3lp1rbND+KnHvbkdF8ndFOv1JIG0QKMNBmE1gcdNrwHC8ZyRQyXb
+         bpNCZsSnM6XefwCCdtDoFM0GFty1DH+Fr/72XSQTnCri0MbelXBaL4lCvHJljWKOJOZQ
+         pWrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDLpqHjkbG8nfnVu0PesbyMEs730sptFmnz2NyTby0VkvUSeyf5iCnwF+gvV4LMlZuu7LFU+oa2kOZMvI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA5wlHzNA8ZHzdDnPMb27p2RR3z/7vIoI1aVKArmJNT2yQ5mZS
+	+q8141lwJ81v66+HiYZ2pkUp4OQQE29nn3kGgCvn4yPCvb100a7Ck7mkDaoD5O8AAsie1AesUh6
+	GZ5D8QrC2Ww==
+X-Google-Smtp-Source: AGHT+IEdpBmFLHqg0EwNWaYJjDN9PewywJgWEJo/obnFlbCutpR2jQdlCSgkfmSa3XZZhJ1mYrZR1WEEKTY4zw==
+X-Received: from wmqc17.prod.google.com ([2002:a05:600c:a51:b0:43c:f5b8:aad0])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1d1a:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-43d03df4496mr34621635e9.6.1741699098504;
+ Tue, 11 Mar 2025 06:18:18 -0700 (PDT)
+Date: Tue, 11 Mar 2025 13:18:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=WsDRMcfv c=1 sm=1 tr=0 ts=67d03801 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=hSkVLCK3AAAA:8 a=COk6AnOGAAAA:8
- a=edFxmn3aAle89QKSA5UA:9 a=cQPPKAXgyycSBL8etih5:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: s2kuMPb435NXyKGbyoqyl2oB-Nz3a6Ja
-X-Proofpoint-ORIG-GUID: s2kuMPb435NXyKGbyoqyl2oB-Nz3a6Ja
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_03,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 clxscore=1011
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503110085
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIABQ40GcC/3XNTQ6CMBCG4auQrq0p0x/QlfcwLqCdQhOgpiVEQ
+ 7i7hRViXH6TPO/MJGJwGMk1m0nAyUXnhzTEKSO6rYYGqTNpE2AgGQCjfU8jdnbEOEYKpjBMCrC
+ VRpLIM6B1ry13f6Tdujj68N7qU75e/4SmnDJ6qWsrC6OEUPzWeN90eNa+J2tpgr3ODxqShlILo xQvuZY/mu91edB8/S1L5LWyDNj372VZPqv0VHIlAQAA
+X-Change-Id: 20250220-mm-selftests-2d7d0542face
+X-Mailer: b4 0.14.2
+Message-ID: <20250311-mm-selftests-v4-0-dec210a658f5@google.com>
+Subject: [PATCH v4 00/12] selftests/mm: Some cleanups from trying to run them
+From: Brendan Jackman <jackmanb@google.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>
+Cc: Dev Jain <dev.jain@arm.com>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>, 
+	Mateusz Guzik <mjguzik@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 
-Syzkaller reports a data-race when accessing the event_triggered field of
-vring_virtqueue in virtqueue_disable_cb / virtqueue_enable_cb_delayed.
-Here is the simplified stack when the issue occurred:
+I never had much luck running mm selftests so I spent a few hours
+digging into why.
 
-==================================================================
-BUG: KCSAN: data-race in virtqueue_disable_cb / virtqueue_enable_cb_delayed
+Looks like most of the reason is missing SKIP checks, so this series is
+just adding a bunch of those that I found. I did not do anything like
+all of them, just the ones I spotted in gup_longterm, gup_test, mmap,
+userfaultfd and memfd_secret.
 
-write to 0xffff8881025bc452 of 1 bytes by task 3288 on cpu 0:
- virtqueue_enable_cb_delayed+0x42/0x3c0 drivers/virtio/virtio_ring.c:2653
- start_xmit+0x230/0x1310 drivers/net/virtio_net.c:3264
- __netdev_start_xmit include/linux/netdevice.h:5151 [inline]
- netdev_start_xmit include/linux/netdevice.h:5160 [inline]
- xmit_one net/core/dev.c:3800 [inline]
- dev_hard_start_xmit+0x119/0x3f0 net/core/dev.c:3816
- sch_direct_xmit+0x1a9/0x580 net/sched/sch_generic.c:343
- __dev_xmit_skb net/core/dev.c:4039 [inline]
- __dev_queue_xmit+0xf6a/0x2090 net/core/dev.c:4615
+It's a bit unfortunate to have to skip those tests when ftruncate()
+fails, but I don't have time to dig deep enough into it to actually make
+them pass. I have observed the issue on 9pfs and heard rumours that NFS
+has a similar problem.
 
-read to 0xffff8881025bc452 of 1 bytes by interrupt on cpu 1:
- virtqueue_disable_cb_split drivers/virtio/virtio_ring.c:880 [inline]
- virtqueue_disable_cb+0x92/0x180 drivers/virtio/virtio_ring.c:2566
- skb_xmit_done+0x5f/0x140 drivers/net/virtio_net.c:777
- vring_interrupt+0x161/0x190 drivers/virtio/virtio_ring.c:2715
- __handle_irq_event_percpu+0x95/0x490 kernel/irq/handle.c:158
- handle_irq_event_percpu kernel/irq/handle.c:193 [inline]
- handle_irq_event+0x64/0xf0 kernel/irq/handle.c:210
- handle_edge_irq+0x16d/0x5b0 kernel/irq/chip.c:831
- generic_handle_irq_desc include/linux/irqdesc.h:173 [inline]
- handle_irq arch/x86/kernel/irq.c:249 [inline]
+I'm now able to run these test groups successfully:
 
-value changed: 0x01 -> 0x00
-==================================================================
+- mmap
+- gup_test
+- compaction
+- migration
+- page_frag
+- userfaultfd
+- mlock
 
-After an interrupt is triggered, event_triggered can be set to true in the
-func vring_interrupt(). Then virtqueue_disable_cb_split() will read it as
-true and stop further work of disabling cbs. During this time, if another
-virtqueue processing sets same event_triggered to false in func
-virtqueue_enable_cb_delayed(), a race condition will occur, potentially
-leading to further vq data inconsistency because both
-virtqueue_disable_cb_split() and virtqueue_enable_cb_delayed() can
-continue read/write multiple field members of vring_virtqueue.
+I've never gone past "Waiting for hugetlb memory to get depleted", in
+the hugetlb tests. I don't know if they are stuck or if they would
+eventually work if I was patient enough (testing on a 1G machine). I
+have not investigated further.
 
-Fix this by using smp_load_acquire() and smp_store_release().
+I had some issues with mlock tests failing due to -ENOSRCH from
+mlock2(), I can no longer reproduce that though, things work OK now.
 
-Additionally, virtqueue_disable_cb_packed() may be called in the same
-stack as virtqueue_disable_cb_split() while vq->packed_ring is true in
-func virtqueue_disable_cb(), so event_triggered should also be protected
-in it.
+Of the remaining tests there may be others that work fine, but there's
+no convenient way to survey the whole output of run_vmtests.sh so I'm
+just going test by test here.
 
-Reported-by: syzbot+efe683d57990864b8c8e@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67c7761a.050a0220.15b4b9.0018.GAE@google.com/
-Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+In my spare moments I am slowly chipping away at a setup to run these
+tests continuously in a reasonably hermetic QEMU environment via
+virtme-ng:
+
+https://github.com/bjackman/linux/blob/5fad4b9c592290f38e0f8bc73c9abb9c99d8787c/README.md
+
+Hopefully that will eventually offer a way to provide a "canned"
+environment where the tests are known to work, which can be fairly
+easily reproduced by any developer.
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- drivers/virtio/virtio_ring.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Changes in v4:
+- NOT ADDRESSED: still using errno==ENOENT as a hacky way to detect
+  buggy filesystems:
+  https://lore.kernel.org/all/CA+i-1C3srkh44tN8dMQ5aD-jhoksUkdEpa+mMfdDtDrPAUv7gQ@mail.gmail.com/
+- Added some incomplete cleanups for the mlock tests.
+- Fixed divide-by-zero error when running uffd-stress on <32cpu systems.
+- Fixed misnamed nr_threads variable (now nr_parallel).
+- Fixed reporting io_uring errors (retval instead of errno).
+- Link to v3: https://lore.kernel.org/r/20250228-mm-selftests-v3-0-958e3b6f0203@google.com
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index fdd2d2b07b5a..b8ff82730618 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -875,9 +875,10 @@ static void virtqueue_disable_cb_split(struct virtqueue *_vq)
- 
- 		/*
- 		 * If device triggered an event already it won't trigger one again:
--		 * no need to disable.
-+		 * no need to disable. smp_load_acquire pairs with smp_store_release()
-+		 * in virtqueue_enable_cb_delayed()
- 		 */
--		if (vq->event_triggered)
-+		if (smp_load_acquire(&vq->event_triggered))
- 			return;
- 
- 		if (vq->event)
-@@ -1802,9 +1803,10 @@ static void virtqueue_disable_cb_packed(struct virtqueue *_vq)
- 
- 		/*
- 		 * If device triggered an event already it won't trigger one again:
--		 * no need to disable.
-+		 * no need to disable. smp_load_acquire pairs with smp_store_release()
-+		 * in virtqueue_enable_cb_delayed()
- 		 */
--		if (vq->event_triggered)
-+		if (smp_load_acquire(&vq->event_triggered))
- 			return;
- 
- 		vq->packed.vring.driver->flags =
-@@ -2650,7 +2652,8 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *_vq)
- 	struct vring_virtqueue *vq = to_vvq(_vq);
- 
- 	if (vq->event_triggered)
--		vq->event_triggered = false;
-+		/* Pairs with smp_load_acquire in virtqueue_disable_cb_split/packed() */
-+		smp_store_release(&vq->event_triggered, false);
- 
- 	return vq->packed_ring ? virtqueue_enable_cb_delayed_packed(_vq) :
- 				 virtqueue_enable_cb_delayed_split(_vq);
+Changes in v3:
+- Added fix for userfaultfd tests.
+- Dropped attempts to use sudo.
+- Fixed garbage printf in uffd-stress.
+  (Added EXTRA_CFLAGS=-Werror FORCE_TARGETS=1 to my scripts to prevent
+   such errors happening again).
+- Fixed missing newlines in ksft_test_result_skip() calls.
+- Link to v2: https://lore.kernel.org/r/20250221-mm-selftests-v2-0-28c4d66383c5@google.com
+
+Changes in v2 (Thanks to Dev for the reviews):
+- Improve and cleanup some error messages
+- Add some extra SKIPs
+- Fix misnaming of nr_cpus variable in uffd tests
+- Link to v1: https://lore.kernel.org/r/20250220-mm-selftests-v1-0-9bbf57d64463@google.com
+
+---
+Brendan Jackman (12):
+      selftests/mm: Report errno when things fail in gup_longterm
+      selftests/mm: Skip uffd-stress if userfaultfd not available
+      selftests/mm: Skip uffd-wp-mremap if userfaultfd not available
+      selftests/mm/uffd: Rename nr_cpus -> nr_parallel
+      selftests/mm: Print some details when uffd-stress gets bad params
+      selftests/mm: Don't fail uffd-stress if too many CPUs
+      selftests/mm: Skip map_populate on weird filesystems
+      selftests/mm: Skip gup_longterm tests on weird filesystems
+      selftests/mm: Drop unnecessary sudo usage
+      selftests/mm: Ensure uffd-wp-mremap gets pages of each size
+      selftests/mm: Skip mlock tests if nobody user can't read it
+      selftests/mm/mlock: Print error on failure
+
+ tools/testing/selftests/mm/gup_longterm.c      | 45 +++++++++++++++++---------
+ tools/testing/selftests/mm/map_populate.c      |  7 ++++
+ tools/testing/selftests/mm/mlock-random-test.c |  4 +--
+ tools/testing/selftests/mm/mlock2.h            |  8 ++++-
+ tools/testing/selftests/mm/run_vmtests.sh      | 27 ++++++++++++++--
+ tools/testing/selftests/mm/uffd-common.c       |  8 ++---
+ tools/testing/selftests/mm/uffd-common.h       |  2 +-
+ tools/testing/selftests/mm/uffd-stress.c       | 42 +++++++++++++++---------
+ tools/testing/selftests/mm/uffd-unit-tests.c   |  2 +-
+ tools/testing/selftests/mm/uffd-wp-mremap.c    |  5 ++-
+ 10 files changed, 105 insertions(+), 45 deletions(-)
+---
+base-commit: dcb38e6757f1b7944af9347ce6b54263d3666478
+change-id: 20250220-mm-selftests-2d7d0542face
+
+Best regards,
 -- 
-2.25.1
+Brendan Jackman <jackmanb@google.com>
 
