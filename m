@@ -1,103 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ADF2627EC
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 18:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AE325D8E8;
+	Tue, 11 Mar 2025 18:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741716831; cv=none; b=XUecUbnQ9sIfkiJizwGgg00zKO2gvoGXW6cOkE3HemmfVXsaMVrtUUwSDS2XHgVLznovU0n+JqeCVaU4wgIU+warBdsWfzcbS4nXCMQv+P3yO1E6vo+ogMFKnbMfK2eNYOJTAt8C0fKj7Sy8veeixs1PirO4GOD9n+PqIdtOSe8=
+	t=1741716832; cv=none; b=D75GGUs7mQ2B2zInEpakgL3pQAbxYD73V3pTnA/Ru+/oZtqPITPI1I0+kUCOPXNdfW2qX6QeOOJKtxk7AgAxebtxIsAyWlCoPoE/wU62m4Xz3UPGZKiFScuhRNyltqOhRd4fcV4zIfKdQXSFyCQ8IQ426Kyfx+6lXD+x60kwIPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741716831; c=relaxed/simple;
-	bh=cXeEF19DxsIvhCU468MqIFBIEu8EdcfdGkQCRwLdTrU=;
+	s=arc-20240116; t=1741716832; c=relaxed/simple;
+	bh=9m9qnAFjRPZmuEIFsmWAz+dfmmyZZkKzpyFeZwHGM8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d8l2YzAGuR1//6FMNEbfGod7Wt+/VU4onT97V2WHsPShoZZZQu7ggzTsO0kkKUhRuI8llR9L1Zzo3BakSg//tI8moVzSD1XpQ8Bsysw2oE6AFBP8OxqVsd4d1g9bNCcb1f8gGBWvxeRmMIQRypgJ6y3Trd5Ch+21Pebwoy4XskQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dfyX1trx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AwjK5mP7C42BzRG+Go2mZ+S5/gJT/Rer4F1G4tdpOgpsHRoKdwfCxwlpICNUJYjZMbEhKCtmMK7CUeZIcO7CbVM/TW1uSiKDrpGbqpRSMK+ULSnrl2en8siqYJon2DBQfmiiPDmKwoI49A9JDeafF/O82AOGd8RMM67e0bDn34o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6fT48+n; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dfyX1trx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66198C4CEEA;
-	Tue, 11 Mar 2025 18:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741716831;
-	bh=cXeEF19DxsIvhCU468MqIFBIEu8EdcfdGkQCRwLdTrU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dfyX1trx/EccwwLbzWdaAudGQXy5b9nMnw+QVquoCqaZSgfl6hVvvXIAY/rRAfwYr
-	 WVLjquiD+w/wM2tfq/29PMsoqu2E8aK5cb+9NAl8eYwpigHu2JltVq1kmmxKtlUKhh
-	 9qseAYJZJiqOOdPnJZhxGZv7VlB6fr58XuvpGlSIxyxRZewELmgTy9nqiCZ3g7gIsR
-	 MBfPq6PXQGzaYDOOcaUMCQuYwHWtslr0xxkU/lYe/Gjt2LiZ7kV24m36xosNArmZzx
-	 UphkzBNqCZ1Luzl4gLoGawpT/9Kv3iT0FQvSV2tPOytnT0gYHwMHYkga6ayCtFwqvZ
-	 Ts2jHykra/H3g==
-Date: Tue, 11 Mar 2025 19:13:45 +0100
-From: Alexey Gladkov <legion@kernel.org>
-To: Joerg Roedel <jroedel@suse.de>
-Cc: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-	Borislav Petkov <bp@alien8.de>, Joerg Roedel <joro@8bytes.org>,
-	"Alexey Gladkov (Intel)" <alexey.gladkov@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@kernel.org>,
-	x86@kernel.org, hpa@zytor.com,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
-	Larry.Dewey@amd.com
-Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
-Message-ID: <Z9B9WWwfsraBoU41@example.org>
-References: <Z87L0bRi8tcAIsDw@example.org>
- <e9d58d64-ab0f-49e8-ac87-c02bda6bc837@suse.com>
- <Z87ce37GjCqpOLCW@8bytes.org>
- <b2e585a7-edd5-4b13-b904-3d0913177aee@suse.com>
- <20250310133833.GHZ87rWfuV6WgQTsoh@fat_crate.local>
- <Z878IRbbzIbUDQvj@example.org>
- <20250310151154.GOZ88BOinZVkbYEx0w@fat_crate.local>
- <104b6d4f-2848-42f4-a134-3373d12d9424@suse.com>
- <Z88Iv0w8_l9i7_8l@example.org>
- <Z9AFyG7798M4VNJQ@suse.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6fT48+n"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c24ae82de4so640330885a.1;
+        Tue, 11 Mar 2025 11:13:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741716830; x=1742321630; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lDEhMmQUxmOxo689QhSb5GTtdGxxmyO1TdT2sutKhIU=;
+        b=b6fT48+n5ajBu7vdj9IHQOYAQGMqc+iCWks03ks/5x75h27qIyaZqpew1MSiBC2SSI
+         YfTovbrNX5Y35arEdVH2oyAwK3NPQhUeKUEYOR+Y38iQRVTeFpYyhCCEykFQSwv48Pau
+         2t9rMbfGBltKyYuKxF73uSUxnrSg+qZlTyEa3iB+pjKtseUn7HPQhzZxI6zN0cgS2Uq+
+         vXWSz4B4rlAxKC9I5lpFSMN1nf7BDo8Fx8MNGdXqIcRJeP0PWKM+J42bXB8jRcokEbUM
+         DHIV2YgF16CFXecfq0bHwOobKL7kf4bh6LwPiJYXvknA2+SjRhNB/8YkklNMCoLwmxFV
+         5TzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741716830; x=1742321630;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lDEhMmQUxmOxo689QhSb5GTtdGxxmyO1TdT2sutKhIU=;
+        b=XyYuuyH6m0KTNBXegXufuHasMdypHsgGwAV16lRNWHKuHTkVmBzxQkH+Td5G1Jh0vU
+         UL6mTQ2aw/x8RVNdFDC/m5BGbpNxKbvmwnv7VHtzFDncdYgf1Je1WwIdwAOqjCIisyVi
+         HhTaIaIT+/kyNCEym+QHLp6wYqi5ttZTQDS5pOvA0ffzixWJ/hG3TNovBhpVcGhbD04Y
+         pkcshkHjJK7jzeUk0G+0cDrWZRHEcuFJlYdRt2dYBH5vOH3218W2XhJak8SVYHKe7Gx8
+         Z9j6tlCbJe7V4aEnpxtRKnMe0geJMviqcHyyD/J586JUqBxtFszObxitqoa+Rg7x9TXo
+         OUgg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3I7L3GpQ6OD/VSj98i7e70zOXfqtP/pyO85JuQQ83qMub79gYZugA9V9Thv9Pxd5k6l1Bip1tPuPEP3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7m3WhSGAMJxkdloqzr1OUICDO0Nwu4keHoLPXPPulBR+sKCqk
+	XLrFXkGbQTBfir8UzpSfjr0MrI3RV9eM8+tyTTJZojQx8xumPlM2
+X-Gm-Gg: ASbGncuR0Kiyqxd95JMfl5s3kOG8acBmc+2o8s0ncI3Grv7NBeTD2Hxfwky7QyE4Vwa
+	OLxWdPre5SIEQasiJteLn73Bwp1oiSRJX6+AfkRmNI5phLZOEuDMKOj/+rAbiDxcZzMBZR3/bWW
+	flKtRHfYfA18Dw6692WZ+A0xzciPYh2URlwUBQ+Q+2VUacIiRkdTK88F0m1FC4zuxanpL8k0T/6
+	TJ5Y1vFRhzWy3icIKwN/NAOOSBzfcjTb6LuiSsVC+6cA+F1lDeT1hijhLzNfhwePuFHr9T4UI1P
+	1LYAS53+WXhA9iQLpMMYlT8kJWTwtwzcSDswJz8rRHFse87XFfBBX218HbSjbSXhs7G5G1uNWA6
+	plpdyYJ2n5OX8jYRoZpdNWPNYTvVdbAFL22g=
+X-Google-Smtp-Source: AGHT+IGV5qUTHMkgjUEPn2/eKhIVvHOorUKXCES2+LeLdAqsZ2U/IXaPlqtaVS6mO9jhfs6UoSNQZA==
+X-Received: by 2002:a05:620a:24c5:b0:7c5:5ebc:392f with SMTP id af79cd13be357-7c55ebc39a6mr561247785a.0.1741716829592;
+        Tue, 11 Mar 2025 11:13:49 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c55b4ab89esm231025685a.17.2025.03.11.11.13.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 11:13:49 -0700 (PDT)
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 55633120006E;
+	Tue, 11 Mar 2025 14:13:48 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Tue, 11 Mar 2025 14:13:48 -0400
+X-ME-Sender: <xms:XH3QZ6R6dlme6g7Si5SkgC8t4r6U4nUwYNlVmZLBGT66fXLYZIGnVg>
+    <xme:XH3QZ_yrxxibrMYWi29hxXWQxENgZ6Q7SDQc3kwBgfDE6Isq6Qip8r0Yppb8QT9gy
+    0xmddFzDon9EDAzyg>
+X-ME-Received: <xmr:XH3QZ336OP3qiqC1URlPz1CqrIMayero0mrcd2EfAHDYRmyY-PNEFpAq3hE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvddvledvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
+    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvddtpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopegrsgguihgvlhdrjhgrnhhulhhguhgvse
+    hgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdgrlhhmvghiuggrse
+    gtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehrohgsihhnrdhmuhhrphhhhiesrghrmhdrtghomhdprhgtphhtth
+    hopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehojhgvuggr
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrih
+    hlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvght
+X-ME-Proxy: <xmx:XH3QZ2BhbphbYZK7sD9DZqF2ODhUZ5dJU0uI_WxbwrlR54Cur3j96Q>
+    <xmx:XH3QZzh6P1MioxmPF4eQk3IQV1yBy1F8Swe-dFJ2SF9xhbmzI_sWSA>
+    <xmx:XH3QZyr2Wzbxs6MH3Zgzfpf9V2VdL0e7NZgy8P_fDl504ETVY9Lyvw>
+    <xmx:XH3QZ2gdp5GF4QtBYta1qj1aY85Jd9HHhbn69y69ysm8lsUVn3DuLg>
+    <xmx:XH3QZyTCI30w-PDqu9Wk4GpK6UAVgeiVtbArRsWdU9ER4cw_2m6VYV_k>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Mar 2025 14:13:47 -0400 (EDT)
+Date: Tue, 11 Mar 2025 11:12:24 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, daniel.almeida@collabora.com,
+	dakr@kernel.org, robin.murphy@arm.com, aliceryhl@google.com,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v14 02/11] rust: add dma coherent allocator abstraction.
+Message-ID: <Z9B9CNRatBtyAO8Q@boqun-archlinux>
+References: <20250311174930.2348813-1-abdiel.janulgue@gmail.com>
+ <20250311174930.2348813-3-abdiel.janulgue@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9AFyG7798M4VNJQ@suse.de>
+In-Reply-To: <20250311174930.2348813-3-abdiel.janulgue@gmail.com>
 
-On Tue, Mar 11, 2025 at 10:43:36AM +0100, Joerg Roedel wrote:
-> On Mon, Mar 10, 2025 at 04:43:59PM +0100, Alexey Gladkov wrote:
-> > If in the /sys/hypervisor we have information for guest (for running under
-> > a hypervisor), where do you propose to put the information for the
-> > host-side (for running as a hypervisor) ?
-> 
-> Okay, so let's not mix things up too much here. The only (upstream) case
-> where Linux _is_ the hypervisor is when running KVM guests. What
-> information needs to be provided for this case in SYSFS that is not
-> already provided elsewhere, e.g. by the KVM modules or, in case of SEV,
-> by /dev/sev? What does Intel expose for TDX?
+On Tue, Mar 11, 2025 at 07:47:58PM +0200, Abdiel Janulgue wrote:
+[...]
+> +    /// Reads the value of `field` and ensures that its type is [`FromBytes`].
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// This must be called from the [`dma_read`] macro which ensures that the `field` pointer is
+> +    /// validated beforehand.
+> +    ///
+> +    /// Public but hidden since it should only be used from [`dma_read`] macro.
+> +    #[doc(hidden)]
+> +    pub unsafe fn field_read<F: FromBytes>(&self, field: *const F) -> F {
+> +        // SAFETY: By the safety requirements field is valid.
+> +        unsafe { field.read_volatile() }
 
-Right now tdx does not export any information to userspace (neither
-host-side nor guest-side). I want to change that. I want to export
-version, attributes and features, maybe something else.
+I agree with Andreas that we should document the exception of usage on
+{read,write}_volatile() here. How about:
 
-> Back to the guest-side, I agree with introducing a new directory in
-> SYSFS with sub-directories for each detected hypervisor. To maximise
-> confusion, it can be called '/sys/hypervisors/', or just /sys/guest/ (as
-> Boris suggested).
-> 
-> Regards,
-> 
-> -- 
-> Jörg Rödel
-> jroedel@suse.de
-> 
-> SUSE Software Solutions Germany GmbH
-> Frankenstraße 146
-> 90461 Nürnberg
-> Germany
-> https://www.suse.com/
-> 
-> Geschäftsführer: Ivo Totev, Andrew McDonald, Werner Knoblich
-> (HRB 36809, AG Nürnberg)
-> 
+When dealing with a potential race from a hardware or code outside
+kernel (e.g. user-space program), we need that read and write on a valid
+memory are not UBs. Currently {read,write}_volatile() are used for this,
+and the rationale behind is that they should generate the same code as
+READ_ONCE() and WRITE_ONCE() which kernel already relies on to avoid UBs
+on data races. Note that the usage of {read,write}_volatile() is limited
+to this particular case, they cannot be used to emit the UBs caused by
+racing between two kernel functions nor do they provide atomicity.
 
--- 
-Rgrds, legion
+Thoughts? One problem is that I don't know where to put this document
+:-( Any suggestion?
 
+Regards,
+Boqun
+
+> +    }
+> +
+> +    /// Writes a value to `field` and ensures that its type is [`AsBytes`].
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// This must be called from the [`dma_write`] macro which ensures that the `field` pointer is
+> +    /// validated beforehand.
+> +    ///
+> +    /// Public but hidden since it should only be used from [`dma_write`] macro.
+> +    #[doc(hidden)]
+> +    pub unsafe fn field_write<F: AsBytes>(&self, field: *mut F, val: F) {
+> +        // SAFETY: By the safety requirements field is valid.
+> +        unsafe { field.write_volatile(val) }
+> +    }
+> +}
+[...]
