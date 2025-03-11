@@ -1,128 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63182641D7;
-	Tue, 11 Mar 2025 19:32:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFCA1EBFFD
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741721578; cv=none; b=kidyBCwVV1z2fXb6flezy2+O4W8OnhjtQ8VWnIrLGRInURSZVBZv77PU/DrBaQ0Z9oUcQJuLTSGgO9dFxnC6hylGLUBWNML9mbKL44gR8urvAd9lArUuS8HZ0mf7mDWCWW4lWItRBc2tEG0TvgVrs1PJTiBsyKXoSIo6YAFEEDE=
+	t=1741721608; cv=none; b=gpPN97IuWQ3pZBymLRoJ+cMpOaIgVwcc+p7X9XwUeJtDqU1W5Sq/A3LMVSa9lgHUrUMIFqVTzDX0KY8PXStfl2mmPeUbEMD/xngiC3vUj4aPN/YHkIJ1rcHFPteEDJwI0zx3XnczALQY6+Xfb6YtqRhJi3qt2qEimH067voJZyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741721578; c=relaxed/simple;
-	bh=Wxt9plsY76hBns2l6MjcqJuJ40OKk7QprTRvYCqzogs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JFqNI0YgT7QRIhR7hx1GmeHYm/UUAy3enO7o+5td7ccshQzUCQQr1wcErhUy6kZ6ddWP0zf6FLmAl+gNi3YtYaBjFATDaOpQhaUJ7nQS/TML/Fv02LYpBuaSx/Rj1GhK1WAkP36AfylqWruB6o1lPwHAkGvWWTPx644V1Jbbw3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLbLn+j1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741721608; c=relaxed/simple;
+	bh=0eBZ3mKbc6FbHFU4M90DMSCxTvs8xVQcHIMudr/3iH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C1ixVfvqUkjs4KMtKUlC0QekiTCfYmhJZ1S79Ry4ngIe0J3WQiWL4TgwkQe+diBF9cAEyLanvN136KWxQVILOAkoSrraa37hjeKOPEjoZpjv4qy/VxlLR/Y8Gikv7ByisYrz4C5nlGy/OPhW2O0XXsSeSGExrbz7kQXqXC3YPcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6ZF0rBC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLbLn+j1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40690C4CEE9;
-	Tue, 11 Mar 2025 19:32:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6ZF0rBC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2586C4CEE9;
+	Tue, 11 Mar 2025 19:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741721578;
-	bh=Wxt9plsY76hBns2l6MjcqJuJ40OKk7QprTRvYCqzogs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SLbLn+j1kXoKbh1UW+AgREKRKt2XTzF3SpnlVXJDCJog0MZUtwXU+P/GjLLFT/jMd
-	 uFeHq7WdvKhWfIN3XwhtV/fxtqFxCSSYTy3ZYHxUyexg9svxLKWj92muJ5cbyccchd
-	 LEQPMBr1eAzdxS7oA3exHBJbaO7I1pizhNfWih3ht7CcEAhWncGb+gs2IX45bA3Wyu
-	 62B8SqydwDl/kmsHvy30oyQBKwIwoHyL2inYJcR7gX+xhB3J7/6Jn+J8+u9RGqVZdH
-	 k/vXIAsxCp05zz07xxe+BK1K7JkdnCY/spbfpAep6UytmBHCs6tbs1MMrMw4iStLIG
-	 R/HQ5xRTyrQVw==
-Message-ID: <c2e2c78c-e85e-406a-90a7-07d5b4fa82a6@kernel.org>
-Date: Tue, 11 Mar 2025 20:32:50 +0100
+	s=k20201202; t=1741721608;
+	bh=0eBZ3mKbc6FbHFU4M90DMSCxTvs8xVQcHIMudr/3iH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G6ZF0rBC0uON6Bxk4pzSubjG+D7fEz5iFql20/A9fDOLyhhOz/epbP69jyqm0PVuW
+	 9Phr2qNIQDIwAmJHFJkhT7JGi54PqDXmdnQ5ync4Lg2z4I+zfI8e3lGS/YLWLk0waS
+	 uTzXwxKIOIVWlo0LR71FIrXaD7jKjlPzyc3vTXk4NfGdD2bNLjK9Jnbf5vmVEEO+D2
+	 mGqSjzh/KGehZeuwgXZ8xZE260ymuTUymhRAQyCKXLiLuZ/QhdKh044ZevNnv+BUJi
+	 3r63Go0jxaCgpNouGrpEz3JbB6QmMnZppk5h0cjGokhzSJveP6xEQtpR0b7EmxIjBE
+	 aiTXxBDpHb6MQ==
+Date: Tue, 11 Mar 2025 21:33:23 +0200
+From: Dmitry Baryshkov <lumag@kernel.org>
+To: Tejas Vipin <tejasvipin76@gmail.com>
+Cc: neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	lujianhua000@gmail.com, quic_jesszhan@quicinc.com, dianders@chromium.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, asrivats@redhat.com
+Subject: Re: [PATCH v3] drm/panel: novatek-nt36523: transition to mipi_dsi
+ wrapped functions
+Message-ID: <7q7qdqh3my37uvvgl6ygo6amrw4nf57mbnscmxx6wwu5fsntny@a2uedhwg2a6p>
+References: <20250309040355.381386-1-tejasvipin76@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] pinctrl: samsung: add dedicated SoC eint
- suspend/resume callbacks
-To: Peter Griffin <peter.griffin@linaro.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, kernel-team@android.com, jaewon02.kim@samsung.com
-References: <20250307-pinctrl-fltcon-suspend-v4-0-2d775e486036@linaro.org>
- <20250307-pinctrl-fltcon-suspend-v4-2-2d775e486036@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250307-pinctrl-fltcon-suspend-v4-2-2d775e486036@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309040355.381386-1-tejasvipin76@gmail.com>
 
-On 07/03/2025 11:29, Peter Griffin wrote:
-> gs101 needs it's own suspend/resume callbacks to use the newly
-> added eint_fltcon_offset for saving & restoring fltcon0 & fltcon1
-> registers. It also differs to previous SoCs in that fltcon1
-> register doesn't always exist for each bank.
+On Sun, Mar 09, 2025 at 09:33:55AM +0530, Tejas Vipin wrote:
+> Changes the novatek-nt36523 panel to use multi style functions for
+> improved error handling.
 > 
-> exynosautov920 also has dedicated logic for using eint_con_offset
-> and eint_mask_offset for saving & restoring it's registers.
+> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+> ---
+> Changes in v3:
+>     - Remove mipi_dsi_dual_msleep
+>     - Change mipi_dsi_dual_dcs_write_seq_multi to use the same dsi_ctx
+>       by swapping the dsi accordingly.
 > 
-> Refactor the existing platform specific suspend/resume callback
-> so that each SoC variant has their own callback containing the
-> SoC specific logic.
+> Link to v2: https://lore.kernel.org/all/20250307091519.245889-1-tejasvipin76@gmail.com/
+> 
+> Changes in v2:
+>     - Uses mipi_dsi_dual_msleep
+>     - Changed mipi_dsi_dual_dcs_write_seq_multi to not equate accum_err
+>       of either dsi_ctx.
+> 
+> Link to v1: https://lore.kernel.org/all/20250306134350.139792-1-tejasvipin76@gmail.com/
+> ---
+>  drivers/gpu/drm/panel/panel-novatek-nt36523.c | 1681 ++++++++---------
+>  1 file changed, 821 insertions(+), 860 deletions(-)
+
+
+[..]
+
+> 
+> @@ -1063,18 +1026,16 @@ static int nt36523_prepare(struct drm_panel *panel)
+>  static int nt36523_disable(struct drm_panel *panel)
+>  {
+>  	struct panel_info *pinfo = to_panel_info(panel);
+> -	int i, ret;
+> +	int i;
+>  
+>  	for (i = 0; i < DSI_NUM_MIN + pinfo->desc->is_dual_dsi; i++) {
+> -		ret = mipi_dsi_dcs_set_display_off(pinfo->dsi[i]);
+> -		if (ret < 0)
+> -			dev_err(&pinfo->dsi[i]->dev, "failed to set display off: %d\n", ret);
+> +		mipi_dsi_dcs_set_display_off_multi(
+
+-:1726: CHECK:OPEN_ENDED_LINE: Lines should not end with a '('
+#1726: FILE: drivers/gpu/drm/panel/panel-novatek-nt36523.c:1032:
++		mipi_dsi_dcs_set_display_off_multi(
+
+> +			&(struct mipi_dsi_multi_context){.dsi = pinfo->dsi[i]});
+>  	}
+>  
+>  	for (i = 0; i < DSI_NUM_MIN + pinfo->desc->is_dual_dsi; i++) {
+> -		ret = mipi_dsi_dcs_enter_sleep_mode(pinfo->dsi[i]);
+> -		if (ret < 0)
+> -			dev_err(&pinfo->dsi[i]->dev, "failed to enter sleep mode: %d\n", ret);
+> +		mipi_dsi_dcs_enter_sleep_mode_multi(
+
+Same here. I think it might be cleaner to define a variable of struct
+mipi_dsi_multi_context type and pass it here.
+
+> +			&(struct mipi_dsi_multi_context){.dsi = pinfo->dsi[i]});
+>  	}
+>  
+>  	msleep(70);
+> -- 
+> 2.48.1
 > 
 
-
-> Additionally we now call drvdata->suspend() & drvdata->resume()
-> from within the loop that iterates the banks in
-> samsung_pinctrl_suspend() and samsung_pinctrl_resume().
->
-> This simplifies the logic, and allows us to remove the
-> clk_enable() and clk_disable() from the callbacks.
-
-Can you make this a separate commit? This would be nicely self-contained
-and without any functional impact.
-
-Getting own suspend/resume would be the next commit.
-
-
-Best regards,
-Krzysztof
+-- 
+With best wishes
+Dmitry
