@@ -1,119 +1,139 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7884E25CC6B;
-	Tue, 11 Mar 2025 20:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98071E833F;
+	Tue, 11 Mar 2025 20:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741723424; cv=none; b=RmOYtK8LjMftOlNRyRlRFC/Ta6v3YxCnf+4blPfYQ217OCA+MRP3VeqDRshDlwoULRcXGMJoqQVd9jHfOQoG+hSs3q2FjjL15XrJg1T5Bwufp2sOVnHhIMJOmUKU6fp8RNqvf1zeQWbsdxD2KC5mY1/ngZZqk3g65GNJXOUdCZs=
+	t=1741723588; cv=none; b=fe1fe1bsPIbBEXcCK5+H1sAb4prtQmtFDPp7JGlMfmP7V1yQHXj3CvOUDBMTPuhmqSEqAFNaLPhYWSN9iZEqM2I0MOuJU4i1kjl4hQD0YEHlIdZ6wN9bKJ4O0aTOOXSEzoFs1yxBzcGwwhhZ0T9vaPzsgLsJowGx3/qNQqMgLS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741723424; c=relaxed/simple;
-	bh=/Y1uKhocepPEVr4gRndRQFJfp4PlO9xpVDQBkK0VWtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TvH9pQcfNegcnIE0EFehoLqHyu5rwXjppPc3ihxDsSvTuwEv2o6JO8MUXm5xcmmA+riRoUdaJR8sjEpVgeHaawPmH68xP8lCXjLP3TKV6bxabusJsRYJOiBuT+v0knOBipmd9mAirgWDjRxRrFfvkzQo0QgmON2oqIi7HCzGhhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SNWQIyCS; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741723588; c=relaxed/simple;
+	bh=Gti7/A9BWac5/4NqS14sIP1I/ISfrQITkGaBNSl6lrE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=WkVw/phbWu1IJFgXwO7+xPY0Vpl1do7fNYf+Clfy6XLbnYgtT7o3hfbcDJdYi97wMFzUQRQcs3s1ul8c37Zs0eQZgoH1VTPUKgjY56/uWYH3ORTO+NFxL98bxufq4rheRUocVIohOyA2RDSns/wdjQa7TRS5hyBWXNBhCcnDSnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LSlYGTiK; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNWQIyCS"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3cf82bd380bso47356825ab.0;
-        Tue, 11 Mar 2025 13:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741723421; x=1742328221; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GW523EAS3Rk6Z2Gf4pN5+J61D3es3lTSy0uI9oNxP9Q=;
-        b=SNWQIyCSjqPx8dCgqabzxh+CoawTNkIF2jSmU564pdpmCepWoxNjvMOMA3VgphLXUv
-         8qUdlP1O75MLGv9T8jx5gQRvGUuwQ91ub1POjxLblVLMDItOA4B71TAtGrPnJ/s6FMpj
-         DfKsLG9PNCKpa3DM0bgkSCUx6YcXpFZUTWO/LePyPoqCRroRNF5wfm433kJ8mpQyYI3Z
-         iRPZ5oiBsqZO/19jDPdFAUsustT8n4Z4vuCxkcsH75F/90+7QwTcyoK+7D55lzgcq3iI
-         Yl7xeTGT00PvHDNm8BT0KXvFWBk0ViNMg6exQWedhzAN92MASeI+x6uhUlyDFQjDTP8E
-         3jbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741723421; x=1742328221;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GW523EAS3Rk6Z2Gf4pN5+J61D3es3lTSy0uI9oNxP9Q=;
-        b=op6rUpLdC0AiL79IBUIcIPgjuvbmmamP6SUKN7qHDHk99jU/dI+YLJ7bnWh4FtWamq
-         o3kkLnzOw2DDwOsygIZDb8Ouek7ipekodrd2MY1Be9x45/GP6enXs8ypEHxnWeYe1BE+
-         5yhFyQrITjF0VRDdUSR+SRpX7rLFWtE4/pA5+qpYBzkuub7CS/XsGcqgUNXjtrnDoMJI
-         UDqmPWC0soLOk5iMXD6IH5JWrlrcyz7tQ5H74GRGizdAk0n136kZ6F3ceHLPKZHiReTu
-         nYxB5fS8JvngS80SOB9U2p+j84GjnBzzHvcMTdt3kKxbGgDCpdQCJJfHtgC14fPHIQee
-         Xx2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUJhwH3YWke2Pt8VZASbCCwk/fojT5Fc2Tq4yYE7cXAVyQPFbuuQef1fF8kM/KOkiXSMiSmSG8rzxRHgTtp@vger.kernel.org, AJvYcCWf2aWYlYm7DLp0GKgjsNQCbaidwGw7PS2dvIwAP6Yx4GEeZfnNQavRqed9LLaX74p4yNZJpAbkSlDblgMO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb5V/Y3tKLmdONpVomZSD4iQtB2/jzO/SZyqJwGVXmnOhQ1Qtp
-	dQorStnmRwDIJTQppZaPxWMLK7DneRPj6YmWDKOICTpC2wMgWbN3m3CD8f+EUoehkK/oN2RW9Wu
-	/sO0DlefDI/Badm1rPXKUBmre+Wg=
-X-Gm-Gg: ASbGncs4KgnhHNV9M0JMlhD/G5tXyU2UuQeUBdPgpsNZomapYg7owmsR1ja5ee7gxBz
-	TnclCZnn86IaPRVt2efBJ3dDAmaY+BcDK7kNs2hWkyKMIv/wGoLDQG+solaZzpRPdiireSvgvAb
-	pLvniFcs2eeOhQFtrKZvR/oBQrdYzFvT3iWgba3KSd8027YgUOraaoLiaS
-X-Google-Smtp-Source: AGHT+IFYEIdqAXj57O99Zh2iip2gE6hYr3XolthP5tdHAJes3eWs+x8BQxcINUUI2peKOTGt7uFekvG8SKVQk3DUgs8=
-X-Received: by 2002:a05:6e02:174a:b0:3d3:e296:1c1c with SMTP id
- e9e14a558f8ab-3d468921f95mr51075145ab.9.1741723421512; Tue, 11 Mar 2025
- 13:03:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LSlYGTiK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1741723577; x=1742328377; i=w_armin@gmx.de;
+	bh=DZBmXE3PhEOsVN8AoczAX6QJdKpQt5bApj5pggD05dA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=LSlYGTiKojOEOqvsNuOOtCdrWnA2q8AEbTmMRgPfcVz3Al4w7qPQEdYlcCZqRpX8
+	 G7t/hpGE8OfxU/ORkLNRYuiYyqwdC4Xx1tdQnVq2E/jegdEEZuD1C0e+tXxKV7e3U
+	 /PK/11bI6Sw2n1Jpeew+gAPN9f0EIGkoBbOcrD5jkcNBl2+chFZvfR/VSzlugzx3h
+	 eohyzTX7zVG64wxQ0mF3b8x4xWI3vinvJVIIsowZUbs357sHR6S45C1X6O2xKBbOZ
+	 bnifa+NrKNp2hAgjHcBxq1RmSb6kiAjuOEWgjmEqaf86Vi1A2bOMrZa+DWVBpr2g7
+	 cyWeJdeWFFuFbe3XOg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTAFh-1tnWVC1uN5-00VuUl; Tue, 11
+ Mar 2025 21:06:17 +0100
+Message-ID: <a18f2f93-c8ee-47af-9446-97e3714fc275@gmx.de>
+Date: Tue, 11 Mar 2025 21:06:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212151402.159102-1-quic_bibekkum@quicinc.com>
- <173625436399.258197.10961901698600591079.b4-ty@kernel.org> <20250311175528.GA5216@willie-the-truck>
-In-Reply-To: <20250311175528.GA5216@willie-the-truck>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 11 Mar 2025 13:03:29 -0700
-X-Gm-Features: AQ5f1JrHvI_RF7xvW5BrP_PBmrcW3VTWeSbeCSaeqxqwJS9gRSEMDCWlVX4sKfA
-Message-ID: <CAF6AEGvDyPtXN7Cn98BKsTM9GjUzy1sTEOsLiz-cdvaZ14qWyA@mail.gmail.com>
-Subject: Re: [PATCH v18 0/5] iommu/arm-smmu: introduction of ACTLR
- implementation for Qualcomm SoCs
-To: Will Deacon <will@kernel.org>
-Cc: robin.murphy@arm.com, joro@8bytes.org, jgg@ziepe.ca, jsnitsel@redhat.com, 
-	robh@kernel.org, krzysztof.kozlowski@linaro.org, quic_c_gdjako@quicinc.com, 
-	dmitry.baryshkov@linaro.org, Bibek Kumar Patro <quic_bibekkum@quicinc.com>, 
-	catalin.marinas@arm.com, kernel-team@android.com, iommu@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ "linux@weissschuh.net" <linux@weissschuh.net>, Kurt Borja
+ <kuurtb@gmail.com>, akpm@linux-foundation.org, mcgrof@kernel.org,
+ russ.weight@linux.dev, dakr@kernel.org
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+From: Armin Wolf <W_Armin@gmx.de>
+Subject: In-kernel parser for the BMOF format used by WMI-ACPI
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pifAFIH/MdkCINMdtBpl9GRvvRacmhl8BBbuaAju7gpDOIML/vl
+ EN1roCDbeoJEsIsrnSId9bH4e7Ttod2tPCRY7+cPHacdHHnWhXnY6DvPlnwmgltvhdjjcJg
+ /4E2cFwyOg+9+Pmr7ISUz6Us5J7oxNSuGLCjg8IdRgu4UwuSMtSYDsD3PzevXCWXg51IdcK
+ IuXP2FXcd7ke8qpF45GoA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VpPaDzBZEeQ=;BjNxB/FzusFAZMkhAloUumPNcqf
+ Gi4j6W73NeoLC8rn3sOCsdSjRJgYzbfE517CbkoJnFXeH8XuuSkeJEMLVuzs1T4lARzV/6uli
+ bbRkJYcUe1eEBly0tJ+p3HHlq2iDZwkvLgPSVNJaRP801IMzDcVewxdYXpL7B9YULt5C4U5Ed
+ pePHoNXZP+qjDCqZmdNMFHvA+hqPOtBu+Scm5eB4/dP06SPVMgJ/vt100/cZG2J+m1XK3lCRu
+ gR0Ci4OxPGi/Gmh+FyMcO5uCu77jqWtyjOcnvApMLTSpYBmZIrttkf5LVu0kzfOKgvHGA9viT
+ YMMRAh5l7ucpQsU48P4v3TClwPrfxnPabYJ8DEgB+7/oZJ+8kYraVdDJbCnmxndmmzAkyJFwO
+ 58H7TE7m9fBq+stTH1YIFO37DGooNpdRsQ+b5voyT+DcfX1SijvSh8KYE/UOqUUEq4zA55VD3
+ a17ULh6zACM0TW7S2oxVrdgwAoZFh173nmPtSRqODloRNByg7v49Oaei35uLC+tx0mZ2l5G75
+ Aaqp9aa6XSX2EJJHxB/lsj+0NbDXysNBSmxrqNqk4GQGJiTVm7iPi0zjspeFS1TpEDbGJCrh8
+ LQlDXEJ0WIPxZme2uOuqc0+0PH53tPc/ml0gqJIcPKkM4oKmMAzBOnDn6dRudRCt0BBn/BlZJ
+ liv/BrH1GwNMi96wLNiqMzLUeUFFjF3Bmngx2fXVCc2/zV3qlca2UmvruII3TcggA+TJv5kBV
+ kYjPsszhmX6iZDC2T1o0VqR2hj/CxjCoR0zXTc4SJGc8fKJfb6ixKpI2gqevW9Tk+OZVNsuKp
+ F99YdAOC0H/GDYWxneg6aaaqT1bh4WpQ/0aa2X00L4WOzqmpo9mVQzb/MCOk7UIAeXqfLmjoT
+ rhCeT/nw3Ikj3r6CRg/coBz5zwThfw2dvYPBFYG35JVWv0+xePUw1pKl1KK0I2LRlfIjD6SOT
+ cIvvsNX3wfBUIZsAj69eWzIt5tUDM73ZEgYJt2Fg1rJeOU5PTxOocLrXLBL4zVPRtAb/k6ZQE
+ mmV8uIKv/2Iy1fe5SmHZOsxnKZsFmEd3bG728Eq2ZfyIvMasFg0lpMrhTpGcsfkWo85InOAKY
+ didEYnMHfj3JikqMsaWSHOHnywKzyylBOiN4PUEfcC3d3557VLUTHsLEUzTzVu37lQtaGhrcm
+ LkpIFaoCeekWl30p6oJQRSRdYIHwxerjpT/M3SDgHLZV8V0QwYbcOatPHGWrFPRcm8CQ6cQ5v
+ aPukZ/XcLvpTLs4ERfcHAPgs5a0z2g9qvtkNCRAjxwrIGoJCSjqU2VVGNPzM7FBe3IY3tfXp3
+ wu3Au2LdZC2bgamFzJUmvrDqfALQIiM2NDVIEbWRkcx8jayQdeudfmq/zoGfJCeUO8CCyqag3
+ gJdDmxnQf8vudjirMO8vaIRwi38lLzmDhB/XVAYduaslRA4C8TviiRxaT2ngLXpGDvXbv5fml
+ vuoZ3d8Dp9fI/9D0bWW/CyS+R5iEpvTku9rhZxqrg+BNLM/6hBpLTwXsqPu4Y7/CrgpyMLw==
 
-On Tue, Mar 11, 2025 at 10:55=E2=80=AFAM Will Deacon <will@kernel.org> wrot=
-e:
->
-> On Tue, Jan 07, 2025 at 04:42:39PM +0000, Will Deacon wrote:
-> > On Thu, 12 Dec 2024 20:43:57 +0530, Bibek Kumar Patro wrote:
-> > > This patch series consist of six parts and covers the following:
-> > >
-> > > 1. Provide option to re-enable context caching to retain prefetcher
-> > >    settings during reset and runtime suspend.
-> > >
-> > > 2. Remove cfg inside qcom_smmu structure and replace it with single
-> > >    pointer to qcom_smmu_match_data avoiding replication of multiple
-> > >    members from same.
-> > >
-> > > [...]
-> >
-> > Applied to iommu (arm/smmu/updates), thanks!
-> >
-> > [1/5] iommu/arm-smmu: Re-enable context caching in smmu reset operation
-> >       https://git.kernel.org/iommu/c/ef4144b1b47d
-> > [2/5] iommu/arm-smmu: Refactor qcom_smmu structure to include single po=
-inter
-> >       https://git.kernel.org/iommu/c/445d7a8ed90e
-> > [3/5] iommu/arm-smmu: Add support for PRR bit setup
-> >       https://git.kernel.org/iommu/c/7f2ef1bfc758
-> > [4/5] iommu/arm-smmu: Introduce ACTLR custom prefetcher settings
-> >       https://git.kernel.org/iommu/c/9fe18d825a58
-> > [5/5] iommu/arm-smmu: Add ACTLR data and support for qcom_smmu_500
-> >       https://git.kernel.org/iommu/c/3e35c3e725de
->
-> Hrm. I'm not seeing any user of the new ->set_prr*_() functions in
-> linux-next yet. Is there something under review, or should I revert this
-> for now?
+Hello,
 
-It is WIP, part of a larger patchset adding sparse binding support in
-drm/msm.  Please do not revert.
+since around 2017 we are able to partially decode the Binary MOF (BMOF) da=
+ta used to describe the interfaces of WMI-ACPI
+devices found inside modern devices. This initial reverse-engineering was =
+done by Pali Roh=C3=A1r and implementing a BMOF parser
+inside the kernel was originally also proposed by him (see https://lore.ke=
+rnel.org/lkml/201706041809.21573@pali/T/).
 
-BR,
--R
+As part of my bachelor thesis i finished the reverse-engineering and creat=
+ed yet another utility for parsing BMOF data.
+This utility can be found at github (https://github.com/Wer-Wolf/tarkin) a=
+nd i now intend to use it to finally implement
+a BMOF parser inside the kernel.
+
+There exists a growing list of WMI drivers using quirk tables for detectin=
+g the presence of specific WMI methods on a given
+device. This approach is maintenance-intensive and not exactly user friend=
+ly (end users rarely send kernel patches). Because
+of this we need this BMOF parser so that we can check which WMI methods ar=
+e available.
+
+My current idea for this BMOF parser looks like this:
+
+  - support for the MS-DOS Doublespace compression algorithm (only decompr=
+ession) lands in lib/ds/
+
+  - WMI driver core moves into drivers/platform/x86/wmi/
+
+  - a new component called the WMI repository will hold all BMOF data know=
+n to the kernel (necessary to emulate the WMI infrastructure under Windows=
+)
+
+  - parsing of BMOF data is only done by the WMI repository which exposes =
+a in-kernel API under include/linux/wmi/repository.h
+
+  - BMOF data can be loaded into the WMI repository by the wmi-bmof driver=
+ (for firmware-provided BMOF data) or by WMI drivers themself (for WMI dev=
+ices with firmware-provided BMOF data)
+
+The remaining questions are:
+
+  - How to structure the library code inside /lib/ds/?
+
+  - Is there any way to check whether the Doublespace compression algorith=
+m is still encumbered by patents?
+
+  - Can BMOF files used by WMI drivers be included inside linux-firmware e=
+ven if they only hold configuration data?
+
+I would be very happy if the relevant maintainers could comment on the abo=
+ve questions.
+
+Thanks,
+Armin Wolf
+
+
