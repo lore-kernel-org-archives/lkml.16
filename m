@@ -1,186 +1,211 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F1C1E260A;
-	Tue, 11 Mar 2025 13:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741701248; cv=fail; b=Vyeda1VQ992UFA9HWt1iWd2pO52eD/fBkNsJ4V4hv1JvOWyrmvBpJMwJkWhTRLiSlIYAcRyH3wkDCRYqxi8d8OsMxPxI85M/bMHDRpBsp0OwIrUq9E5DkXm9mwxEIb6fh272/uWUrVLyCwdZl4dV3YvLz3KoKneJrhc4iJ57CQU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741701248; c=relaxed/simple;
-	bh=rpSuvwx9MPS494S2GT+nieGQcOyykndaYQ1uf5RjXnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dNCSfcKu3pezGUOF8mGo6OCWVxQhcYE6nYZiZiAXQFAtEJyFfXT+7CoNQpuWEb4AGVs0TJaS2WGsL+zT/Cx8cboa8eyNVlDJAbL9cxqCa3u8nrIrDJyMmSz3/hT/pwY6L1tt2NH/nvSGVjgU2XZ8VoQTRgdKRCH7NYZPsJYu03o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BBh3M2017197;
-	Tue, 11 Mar 2025 13:53:54 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2045.outbound.protection.outlook.com [104.47.55.45])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 458b413gsy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 13:53:53 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jm8u48utoxmDlJeKPtXccoyDOcUn01YWG+PhAqJOMrseRaPMHWkkwrIvsWEIAt7uiLLgjLd79burc7kKm0FD4EqGJgayPGpNHUO3ZEeuKAiGVOycScZakFctQEHmF7NQyzjwtx0t+6ktij3greg1A8grQrZd2hFeSYBRlA5sLhPDtXwU8I8k+w819r3GDCG+nqedd5kREuwFuHO3S8qm41yM+o9tynJVNBGpmMdJeMU6R6C29qkVhYCHY3tc9UXSS2P+KK8Pze7HDvsYEhC53BzlbVGL24ns+Kgrj46/U+7FSxmJGdhKvYqUtzcCRDyLVBDqwnE4JXTS2C35uK/UiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cuy6yDIGgB4FkRjtcjNCLWK4aO3/8HrKM1dxZNMw4n8=;
- b=i9Q8zxLTGLolktOn0W9TZgDw4jGFQRCbU1ZSvpnRkEdRN35WbTbsyU3yzVv29avrHxfWSkVtnNTzIqx9eKEjyeY/FlvT5MW919DdX5xncNJA6i/LEhM3PYoewSEaJoFMgVzrwNE5rxM2VIU/PDAmo6G01kzfvZKcX9hLzHUXDnNkBS8VGbulYLyGBg7zOXkQRnPxWseGIEZHyHqTM6ZSLN9lgOiZxowO1p1iYXFZk7hbVQGVYScMigThnRYULsN5T2LIMWCZqk7PeLAdW9adMWT2/4hGpSLNZapYwPl3tp60zRq+4+cBQQdHewcTpaDEJmVbyEoIyU+ZIhYg/Rvfmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from SJ0PR11MB5866.namprd11.prod.outlook.com (2603:10b6:a03:429::10)
- by DM4PR11MB6454.namprd11.prod.outlook.com (2603:10b6:8:b8::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.27; Tue, 11 Mar 2025 13:53:51 +0000
-Received: from SJ0PR11MB5866.namprd11.prod.outlook.com
- ([fe80::265f:31c0:f775:c25b]) by SJ0PR11MB5866.namprd11.prod.outlook.com
- ([fe80::265f:31c0:f775:c25b%4]) with mapi id 15.20.8489.025; Tue, 11 Mar 2025
- 13:53:51 +0000
-From: Bo Sun <Bo.Sun.CN@windriver.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kevin Hao <kexin.hao@windriver.com>,
-        Bo Sun <Bo.Sun.CN@windriver.com>, Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH v2 2/2] PCI: of_property: Omit 'bus-range' property if no secondary bus
-Date: Tue, 11 Mar 2025 21:52:29 +0800
-Message-ID: <20250311135229.3329381-3-Bo.Sun.CN@windriver.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250311135229.3329381-1-Bo.Sun.CN@windriver.com>
-References: <20250311135229.3329381-1-Bo.Sun.CN@windriver.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0140.jpnprd01.prod.outlook.com
- (2603:1096:404:2d::32) To SJ0PR11MB5866.namprd11.prod.outlook.com
- (2603:10b6:a03:429::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FE5241682
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741701255; cv=none; b=nx3gmhOjGCaCFIiAZYSWMvl4n2mxv8KTs2WAGfwBC7gK4eTyofCMf7YfXi4zFXLI9WfZtRLDz2HWqBZVdBGHHakAiQkCjGov/vZb991OBxLI45iXVGDSKF+LwMOUeCbx1Z/SNN953h1xD3Y5FMStcyVe2FcrGlpxkWWWajJLYmk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741701255; c=relaxed/simple;
+	bh=AGcHUb372Qb4xp3PIIbgqrFpbsdhvyHF+3MvUWkEIUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LG0VHTCQY3e04IvrDcP9v79ZHVDcsiNPiE9QHqEQnu+6dSSx4HNzZbSXyuoA851avwDd99YnymSCSeBjWgvMqsXtQ4QsnnIklMIi998hS2nc7RNB+W0Ur1oGx1dLP1PAS2gMEaU1iM+IcTGiQ8eGGeyp2tNDlOZDYWWQZxKxb9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=RwdRgjPw; arc=none smtp.client-ip=94.124.121.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="RwdRgjPw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=xus23xtK3M/qRjR6KMXHiICpWAcFs8WV4zaduJRJqis=;
+	b=RwdRgjPw84rYbU0uTbR5bXlPAUGBNjN0JVROqGEG+jZACXgHamTSYK22FqvqEXyMXbYLeGPp7r71v
+	 UVDxvkIaqvmG+ofG70jSoQ7Cr8QS3HZo6zc/rcxe+Wy8tQo5Ucmbhp/fvQeU5CiTMVnUKHHN/D/OA1
+	 dTUybv0heA5IJbWYz4KfXpZguGUFOy3nZ3j5IiGjdmGGjOX9MtBW7cB1k9NJUsV7hyZKUNTuKGaLkg
+	 qKDByLICJDRTBCi8EI1hgKjBmsAA8nQGfe9NmEUq7IKvbMwjgNMSWkYOzy1HKj6BWC7DMGRdiHLLuE
+	 bbvyyXZd3XPpO/PYw1hUr8mlqedJf6A==
+X-MSG-ID: 4da3203a-fe80-11ef-a3a3-00505681446f
+Date: Tue, 11 Mar 2025 14:54:07 +0100
+From: David Jander <david@protonic.nl>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RFT] gpio: cdev: use raw notifier
+Message-ID: <20250311145407.7e05b5d9@erd003.prtnl>
+In-Reply-To: <20250311-gpiolib-line-state-raw-notifier-v1-1-d0fa44fd67cc@linaro.org>
+References: <20250311-gpiolib-line-state-raw-notifier-v1-1-d0fa44fd67cc@linaro.org>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR11MB5866:EE_|DM4PR11MB6454:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71f800ea-d42a-4acc-6167-08dd60a42753
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1cN6yib1uBH6jY/xjZ+onI5p674a0G61/oN5ts43K0FZXcJHK94OJ+omIFRG?=
- =?us-ascii?Q?dTGgs3ozZ0077T78GkDXMLpfU+UsO0f5ihGjfbQkXgNE4RDOaGieADB0kuk/?=
- =?us-ascii?Q?5Rz3ijFRnEF0js4mBhSDW10pZdDDSqVl+JJbkMDkPH72QEMa3+Vu3fd3x/+M?=
- =?us-ascii?Q?cy3coyyL4mk7wPqd5W4WgmWf66TZtufYXNPIRotXqxOjfT0CxhA1H5GzRW3Z?=
- =?us-ascii?Q?OEhAQgChihF284PE367oTLC+cDPJoFXQPFYb3/AwhfrS+hdggZYpB46NdkQ+?=
- =?us-ascii?Q?DXP/0+qEWl9Z9dvpTyUkdT4JD6hBmc9iOL/p6QK3C3tyMEPoqxdN3nTdxbOw?=
- =?us-ascii?Q?1HES2FxYjzmkxGJFMP2FpwN/d5dZWYiY82Fc0bWZU1y2O2jQjYQ8/TQQ9zuu?=
- =?us-ascii?Q?l9LDQ+Ge4qrrZqCWzkCXVZawyPxD78yQVaNBgZ1CYIbKBfthU5JUHsCLD1ef?=
- =?us-ascii?Q?vgsqeUnvGlWaajxiINa4L1cZxY+pCQqbF5Ew6wy/dlo/yGBYD22ARangmeiE?=
- =?us-ascii?Q?9Vr3aaxQGm7K2c50JeMje6isx1yiSWMfntfa8YN0k5hicynuOYmRKxsSYoyC?=
- =?us-ascii?Q?Z9YurzptbmkpyNwIht2nhakrx2EfyqP/ewB3qMCGQQOK3/XKpwB8jIsPVtWn?=
- =?us-ascii?Q?vkR4nv/QRqXSAJWhIB+WjJ3AmHbFVlVIXJszOGMVDPBraQ01ktLAFTbZ2jXx?=
- =?us-ascii?Q?wIm+EnHyMok9bhvCiZkA3tc516W7hq08ku6J3Bfpr2PnGoZmGCBVAOzm+sQG?=
- =?us-ascii?Q?e09EwwHaW6MAo32fHwH+lZzSUb1l+6594bdGaUfj84L1L5af1S7pAC3QGIqJ?=
- =?us-ascii?Q?6pVp9WykvDZ0er0Q0F7FRGzVEgzAcMWlr3JmPtWD3iuaDygitiPQXSiP0J8k?=
- =?us-ascii?Q?9IoxuM+qKCsp932PoIoLDD/rKA1eSWyUe9d1LdlmTs/rEVdkc9VmADOTzbqH?=
- =?us-ascii?Q?u6EYaF92rHBSMmQDv8r8IabrWsVioU+jD3W9rpKiCJfAzTlGuWt6gyLV7mlX?=
- =?us-ascii?Q?wc0wMT7uuuBqZ+0kLdAPBUdZCa2ybmDEJXB+IuKvbCTxSpAOskEl8p1XBGcI?=
- =?us-ascii?Q?Arm2idbljdouRz9yzsXrApcA3TrZ3ZYzCW24fp4BaxBh6YwKxByvHmA2d7y/?=
- =?us-ascii?Q?ziebvjvO3bLbBXtirpduzZqkeybZwiJZRkUmybWke4596+N/gzWAfQcH1yc1?=
- =?us-ascii?Q?J9aNps4baeD5If7Ze/nGicMWWJfIkttyLrWvSS/YoHjJoxDjMV512nnWnqCi?=
- =?us-ascii?Q?ezzYnZ85Cq3CKAnvfmTcTtKi/vi7hQGBiha5hU/4KndnCXlyZ9u6WnsSZtDJ?=
- =?us-ascii?Q?2O7UhiDU32SUDpkD8L85rNOWPowFR1XA5aII3VRTSKa6ptfXrZt9Nx9n4rOe?=
- =?us-ascii?Q?faYCvgid0sTC5hQDk57vWw0DnBLJiTfzKExerubhJvPuC51OEEFytTlfTFy9?=
- =?us-ascii?Q?0PqDSjGCJjZVAunjBocw6ys/oPJb6cLn?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5866.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1D/ck6zoSb4vmexGGDLD9sUeOaXk54D7582zEUlU8gieIvRu8FYalJ19oz9F?=
- =?us-ascii?Q?lSF8oH30uibp5Czff8Auym4ZueQpTrwVZV769BoS4MJB80dtXszW+kH9u9Ji?=
- =?us-ascii?Q?KO6Xvm4fg0PgLy8CN6z9bMu5QYdTbBX1XV3hBWYpvWJWsX1y7NvEkJxUFiV5?=
- =?us-ascii?Q?RuwdihskedT6TgspmGjueXdNljDvRUzjSPBWXJ8qu3umMDsgykBULj55cyEf?=
- =?us-ascii?Q?R+nwO7o2ePexm1SoTkUuQhLPpP9SvnoKiYkvzMIxVBDqCGUmRJK6DUdWksdP?=
- =?us-ascii?Q?hmAG6NlBN6A//rUud9AGdVZF4txlKGxwu7G50g0x6+h4yTYByl7HsR6fWDGu?=
- =?us-ascii?Q?WE2Bl1hBiLFdzywpi5I5eVP5Kirc8qJu5ADaFJ9b9x/ivNieLNDQCVgFR+qS?=
- =?us-ascii?Q?F2EgovoSjy8Mm6kRJBYp/RkTn01ZnIC9E8Es0YTRN7jsExFjpoTHsc2QmxO/?=
- =?us-ascii?Q?SRjl3FKbABYLy4qUVx+B82aX2/hlV6uPNwduPuwMO0sBlv2iR2G5u/Dx5i++?=
- =?us-ascii?Q?pHgjCfB9218K4lTH8HKHg6UpyBdzIaZqGgB8FA/2Zd8O2acXOYiuFhuCTNgh?=
- =?us-ascii?Q?AuXeyiZ/kMvD1zJL2r6v8In9RgvR9B1DLvZfOANj+WA6bzaxYoL1tDde4iOg?=
- =?us-ascii?Q?SPXft7iQSS4jcCF492Mc/NzOF6v86EisEQbs7s+h6pcr52sglyhSxnvEyhtV?=
- =?us-ascii?Q?drWD/MfN7+K2PSrgV5F7SwoiJOOiDV6jdU27XB/YWmRzHq/INPkrbxPC0ZmO?=
- =?us-ascii?Q?nWknAbBjB3e6peV9vPpkDP99C9AULWG23vvrrdrYqxxUEl3ajTc3q685oucs?=
- =?us-ascii?Q?0ieQ/FrKcq9b3+32YEvZ/gfMwAqnzWTqwbNIxFrviUQQeVFFYuLYqHonGy5b?=
- =?us-ascii?Q?8nw+I+xwWGWR1bkGEb1SrVhdO1Af7Aueiyb5+EnE4/EA8w0MyOM9XMWyVJhX?=
- =?us-ascii?Q?VqL3d+v7ZiKMQ/9FCLd1HITYEuW7QF6SgEthrYUBI6JXM197cVGErewxoRqY?=
- =?us-ascii?Q?BE0lEis7XCoa1XfCSRasIDcJgTdZ8HfxtuAjSlNoe4SAGjAFoG72PQ92GiQE?=
- =?us-ascii?Q?jw/VNrR6Eam0gp63F1fzbLQ/AuIHlkOuihhf1MD8GbXLC+LxhtEVDvgQSgXJ?=
- =?us-ascii?Q?5SX5eBm0eViYD+y0qA5RMe06s303t0rUpkBkiio1GQGgiDlghKHduM9zLPnK?=
- =?us-ascii?Q?+suq8jaCr8AR1cyWRxFe5rtsxdHMWKOuI5KV2a9IqEpso5Ld0dvgXfi3Ki4t?=
- =?us-ascii?Q?PnedWxzPJrvNZV9WCMIw3PZGRAIkAkzMia2phkkSF/I6IABw0p6My7DyjwTu?=
- =?us-ascii?Q?qNj8FSYdD77gdF0+2buueBBEwFYJhDKHW/n26m8AqMOQ6Ytgkrj51eIlToGT?=
- =?us-ascii?Q?TZ12P1Zjz7v9vsMUFHKKDW+pxS1gpkb1RuHWR/F4xw1xB+pUuCFRlam3rK0E?=
- =?us-ascii?Q?TGBOnfVEQXD1XSjJSEXaNY7CBmF/B5WmehASWYtGQHdzZz254DI/YP3iDcxi?=
- =?us-ascii?Q?IV/KPOAMGLktRgGR27YkrMoQzmRyYJGjfqANfrJ8biCWnGPgk8VgQ23pyABl?=
- =?us-ascii?Q?SLJ4Vp//wBKTOfKN/PAvjiLgbOTCuRtTGfmfU+LBAdkkRNk0XQ7nJinqui1q?=
- =?us-ascii?Q?OQ=3D=3D?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71f800ea-d42a-4acc-6167-08dd60a42753
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5866.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 13:53:50.9836
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S6XPE1cYPWI5Q3B3cDbiHcDYOwqmlpup+VL6IApafrYojAPQcWL40ZktDUl2PpQccgQzaEVNfTcHBWQAxawSUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6454
-X-Authority-Analysis: v=2.4 cv=JYNGrVKV c=1 sm=1 tr=0 ts=67d04071 cx=c_pps a=R19XVbJ/69TrMGWtO/A4Aw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=Vs1iUdzkB0EA:10
- a=VwQbUJbxAAAA:8 a=t7CeM3EgAAAA:8 a=UaaBw9Nihny3kgCARB4A:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: 4JRK82gFdIN3Mrzq2EKQnBV9wqpSGwUz
-X-Proofpoint-GUID: 4JRK82gFdIN3Mrzq2EKQnBV9wqpSGwUz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_03,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
- priorityscore=1501 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502100000
- definitions=main-2503110088
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The previous implementation of of_pci_add_properties() and
-of_pci_prop_bus_range() assumed that a valid secondary bus is always
-present, which can be problematic in cases where no bus numbers are
-assigned for a secondary bus. This patch introduces a check for a valid
-secondary bus and omits the 'bus-range' property if it is not available,
-preventing dereferencing the NULL pointer.
+On Tue, 11 Mar 2025 14:19:40 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Bo Sun <Bo.Sun.CN@windriver.com>
----
-v2: New patch.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Atomic notifiers call rcu_synchronize() in
+> atomic_notifier_chain_unregister() causing a considerable delay in some
+> circumstances. Replace the atomic notifier with the raw variant and
+> provide synchronization with a read-write spinlock.
+> 
+> Fixes: fcc8b637c542 ("gpiolib: switch the line state notifier to atomic")
+> Reported-by: David Jander <david@protonic.nl>
+> Closes: https://lore.kernel.org/all/20250311110034.53959031@erd003.prtnl/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 15 +++++++++------
+>  drivers/gpio/gpiolib.c      |  8 +++++---
+>  drivers/gpio/gpiolib.h      |  5 ++++-
+>  3 files changed, 18 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 40f76a90fd7d..107d75558b5a 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -2729,8 +2729,9 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+>  	cdev->gdev = gpio_device_get(gdev);
+>  
+>  	cdev->lineinfo_changed_nb.notifier_call = lineinfo_changed_notify;
+> -	ret = atomic_notifier_chain_register(&gdev->line_state_notifier,
+> -					     &cdev->lineinfo_changed_nb);
+> +	scoped_guard(write_lock_irqsave, &gdev->line_state_lock)
+> +		ret = raw_notifier_chain_register(&gdev->line_state_notifier,
+> +						  &cdev->lineinfo_changed_nb);
+>  	if (ret)
+>  		goto out_free_bitmap;
+>  
+> @@ -2754,8 +2755,9 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+>  	blocking_notifier_chain_unregister(&gdev->device_notifier,
+>  					   &cdev->device_unregistered_nb);
+>  out_unregister_line_notifier:
+> -	atomic_notifier_chain_unregister(&gdev->line_state_notifier,
+> -					 &cdev->lineinfo_changed_nb);
+> +	scoped_guard(write_lock_irqsave, &gdev->line_state_lock)
+> +		raw_notifier_chain_unregister(&gdev->line_state_notifier,
+> +					      &cdev->lineinfo_changed_nb);
+>  out_free_bitmap:
+>  	gpio_device_put(gdev);
+>  	bitmap_free(cdev->watched_lines);
+> @@ -2779,8 +2781,9 @@ static int gpio_chrdev_release(struct inode *inode, struct file *file)
+>  
+>  	blocking_notifier_chain_unregister(&gdev->device_notifier,
+>  					   &cdev->device_unregistered_nb);
+> -	atomic_notifier_chain_unregister(&gdev->line_state_notifier,
+> -					 &cdev->lineinfo_changed_nb);
+> +	scoped_guard(write_lock_irqsave, &gdev->line_state_lock)
+> +		raw_notifier_chain_unregister(&gdev->line_state_notifier,
+> +					      &cdev->lineinfo_changed_nb);
+>  	bitmap_free(cdev->watched_lines);
+>  	gpio_device_put(gdev);
+>  	kfree(cdev);
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index e5eb3f0ee071..b8197502a5ac 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1075,7 +1075,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  		}
+>  	}
+>  
+> -	ATOMIC_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+> +	rwlock_init(&gdev->line_state_lock);
+> +	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+>  	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+>  
+>  	ret = init_srcu_struct(&gdev->srcu);
+> @@ -4361,8 +4362,9 @@ EXPORT_SYMBOL_GPL(gpiod_set_array_value_cansleep);
+>  
+>  void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action)
+>  {
+> -	atomic_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -				   action, desc);
+> +	guard(read_lock_irqsave)(&desc->gdev->line_state_lock);
+> +
+> +	raw_notifier_call_chain(&desc->gdev->line_state_notifier, action, desc);
+>  }
+>  
+>  /**
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index a738e6c647d8..58f64056de77 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -16,6 +16,7 @@
+>  #include <linux/gpio/driver.h>
+>  #include <linux/module.h>
+>  #include <linux/notifier.h>
+> +#include <linux/spinlock.h>
+>  #include <linux/srcu.h>
+>  #include <linux/workqueue.h>
+>  
+> @@ -47,6 +48,7 @@
+>   * @list: links gpio_device:s together for traversal
+>   * @line_state_notifier: used to notify subscribers about lines being
+>   *                       requested, released or reconfigured
+> + * @line_state_lock: RW-spinlock protecting the line state notifier
+>   * @line_state_wq: used to emit line state events from a separate thread in
+>   *                 process context
+>   * @device_notifier: used to notify character device wait queues about the GPIO
+> @@ -75,7 +77,8 @@ struct gpio_device {
+>  	const char		*label;
+>  	void			*data;
+>  	struct list_head        list;
+> -	struct atomic_notifier_head line_state_notifier;
+> +	struct raw_notifier_head line_state_notifier;
+> +	rwlock_t		line_state_lock;
+>  	struct workqueue_struct	*line_state_wq;
+>  	struct blocking_notifier_head device_notifier;
+>  	struct srcu_struct	srcu;
+> 
+> ---
+> base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+> change-id: 20250311-gpiolib-line-state-raw-notifier-70c1ad3e99eb
+> 
+> Best regards,
 
- drivers/pci/of_property.c | 3 +++
- 1 file changed, 3 insertions(+)
+Tested-by: David Jander <david@protonic.nl>
 
-diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index 58fbafac7c6a..792b0163af45 100644
---- a/drivers/pci/of_property.c
-+++ b/drivers/pci/of_property.c
-@@ -91,6 +91,9 @@ static int of_pci_prop_bus_range(struct pci_dev *pdev,
- 				 struct of_changeset *ocs,
- 				 struct device_node *np)
- {
-+	if (!pdev->subordinate)
-+		return -EINVAL;
-+
- 	u32 bus_range[] = { pdev->subordinate->busn_res.start,
- 			    pdev->subordinate->busn_res.end };
- 
+Thanks!
+
+Seems to work correctly under some basic testing.
+
+$ time gpiofind LPOUT0
+gpiochip7 9
+real    0m 0.02s
+user    0m 0.00s
+sys     0m 0.01s
+
+$ time gpiodetect
+gpiochip0 [GPIOA] (16 lines)
+gpiochip1 [GPIOB] (16 lines)
+gpiochip10 [GPIOK] (8 lines)
+gpiochip11 [GPIOZ] (8 lines)
+gpiochip12 [unknown] (22 lines)
+gpiochip13 [mcp23s17.0] (16 lines)
+gpiochip14 [0-0020] (16 lines)
+gpiochip15 [0-0021] (16 lines)
+gpiochip2 [GPIOC] (16 lines)
+gpiochip3 [GPIOD] (16 lines)
+gpiochip4 [GPIOE] (16 lines)
+gpiochip5 [GPIOF] (16 lines)
+gpiochip6 [GPIOG] (16 lines)
+gpiochip7 [GPIOH] (16 lines)
+gpiochip8 [GPIOI] (16 lines)
+gpiochip9 [GPIOJ] (16 lines)
+real    0m 0.03s
+user    0m 0.00s
+sys     0m 0.01s
+
+Best regards,
+
 -- 
-2.48.1
-
+David Jander
