@@ -1,106 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8E61EB5E7;
-	Tue, 11 Mar 2025 17:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA15262D14
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 17:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741714566; cv=none; b=guIb3XfjaK0LHc8AmnEgu9mM85OhLD5HUbtedL77ongmm2DL53DmH7kKioTYueUfCKpT8riN14TTiwYal11hwc2kXq1IoZ42qtKhqrIisF5dIVlR7exIj2Pd9pM46a+5YblnlsSZ2EXteN8Z0XNr/c7nNE4oXsvjpWPZoat1Agw=
+	t=1741714570; cv=none; b=EqF2CIGG51Zlpto47snZ5hTJBqpr0dqe8bjTwgG8oT2Wy1Qhaw8j/oMNUKqPphW9mxjtYryc3LvrQ28cqC140tdC2EotAzZYW6t4ww2Oip6BPttMhleMXSt5tzdi0V/V7gM6DFHFJcuxAZd/0S72Zx0v44o/hTXtaihzHcM0G+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741714566; c=relaxed/simple;
-	bh=68nMgbh1aMDdXTFMA4jy6p7PMf4uI8Y4axeRZRKvuI4=;
+	s=arc-20240116; t=1741714570; c=relaxed/simple;
+	bh=5aUsqOrI16iMveQNEajx0BokuB8rnFuNsAld9sPRVSo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MiuI5vVXRlI731PcQ92EUoIGDBj9xY4b+S/zcHdzN3mpZPSx7fya95tbyUblPqRmvmRfCCGmeggRAW/SZ3XiiXPHOZajQVkTk2jo0weGTNh6F1voQU9NhCj7hk2RTQTnNm0oVNL9EuT6qNWcwbiPgClkU5aohOYfYEeib/gaLlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JyQ+/pWg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tAaaKSc0eO/Um3N4/HNKcN0sKJ+iOFC3FifFalietc+TPHdys3ArDjBWQ1wJQlWthIjmEkCJy7vaYEXBg6Gsf1OxAsvsWdiu52QE3lTxv8ZvBHkU5z5eW7WOsKsiqiFlcxj0PpjuzqK6B55QYppiwmTW1T1Inf76mx94xwL14ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YJlDg6+G; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JyQ+/pWg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C343C4CEE9;
-	Tue, 11 Mar 2025 17:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741714566;
-	bh=68nMgbh1aMDdXTFMA4jy6p7PMf4uI8Y4axeRZRKvuI4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JyQ+/pWgmfh6w04OmtDWhAUg5OCxvwUG6tM57qY83aZgbqcpBjOticoeGzm+8nemx
-	 rHl7glyFr0Wvj0xVUdf0y0AUJq8uIgdeG5T6UMgxM3w1RTtp+C4Wx0JK2scqOimyGe
-	 RjwTg2/+fUdZYX6yPnstJHiL/JQpByzG3gc9G+oXfQM48Mfnm06MMdmxHpvz6PNSzx
-	 xmEHPyxrYK1k4OAVuSlcQs7R+BVCKMF+mn5AYeEwva+UcoUatwuuELL+P8Kw4H28X0
-	 lutkhmx1oYP3dSoI+aIg8Nzht2l6kMS7ikFVvdHjzjClFqZBv6MTsrSgAzT8gUYErJ
-	 lDd0B0wNl7huw==
-Message-ID: <7e8350dc-dab4-4306-877c-59139b049e26@kernel.org>
-Date: Tue, 11 Mar 2025 18:35:59 +0100
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YJlDg6+G"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2bcc0c6c149so5474196fac.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1741714568; x=1742319368; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4/AZGEVmfxF0jKoqVNVNRMBGz9sxfr8KBwzFyulmeIs=;
+        b=YJlDg6+GFLBTrY5+hbodE6loh2u46+g1BNHmXUiata7GIe7AyA7U97p/a4f+9QdmGG
+         MIxBquwZV7z4DtCoOXGES3AZteZc+Ei8I7q522qbgL6oHGZ9Ws8qNIYWxQOuWqD7m18U
+         3YI3M31CEnkJ999vm+dQ0Luq3gaY7FwlAiA4I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741714568; x=1742319368;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4/AZGEVmfxF0jKoqVNVNRMBGz9sxfr8KBwzFyulmeIs=;
+        b=C6M/y31KdmWTmx7rrrfuRBOK7sIqobTjnSoU2cgCtPTR/Nd0llv5zpIvob74LoXjAm
+         MeqAa/YM7WW/2NzvYpBmlVdPJzHpAg9pd2Py45vfUEA7cTcJNXoGDl3DaV7lLimHh4RW
+         NGO1HYbTl/e0v/x1/nBlP2Qvdj0EM6k8FTbfNE3TKv7la5gitXloeXeoGLkalHFpSLE/
+         BoN9imdvyqTw4AuF9rS8094w919MaiyWIxPXMCyaVCIG+Cow9oJxuaMx1DI6pPObMy6t
+         oSOM/Qt37QkwGRkAssEW3DgRvPs3QcLSjBHwLOwCpemJ2ufWoJitGrEcaUBsai7SkPCU
+         hZbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXK2VDcOWk/83SC+Eh9yqiu7ezbPx6j1PvPjRHyuA+QDbW7tcTH/SBdicY3eMhwCF7EB0Z8S5+pUk7kHhM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5f+j/oYyrLobjtlivyAXxZ04zTvNQlISG47+1VvlnP8syesVo
+	+Zfgd+IMNuw/LTGK2OGpcxE8fjJwgAVbXKk47vb/WWFLFMfPE98JQBGUg7tZvQ==
+X-Gm-Gg: ASbGncvTm3FCOdnZ8fzboa8z0rw0I/mtYbewQaHhv2lvSETs4Lh1pd/G6HhtGObnQYx
+	FKHUgDKrIN2c9NgU9Hfsn1ONCc49mIryLOIDye1iOFhPGUnpxXDipLEu3AafVJluln2XpxzwY6p
+	8+thVAKmtz8QfmKxTWxfrBGBBuXYKsLLHB2ldp15Rs0wrBUwwbvoxXHeECjow1OxWuZVsPyk5di
+	ITob2uWgVoupNlzFJetm2V1nqG+i8oL5CRxt69TkAB/rPaH7e6lQpL4NpThz9eaygiedfpAzDnz
+	/ayDH1tqp7aMsx6CVx6xvDFuT0PTEBwSe1VRSjhcfE7sHwiZPHE9hIPkcmbJipz0YWoi9mvHF3N
+	fbhus
+X-Google-Smtp-Source: AGHT+IF6stv4KV1HaEag5+77smmBKlZX0b6JVQBTx2uQ9Bg2ZjG5KNAD+BqnyMHU0PQVstMcpo8f2A==
+X-Received: by 2002:a05:6871:8416:b0:2c2:c404:465f with SMTP id 586e51a60fabf-2c2c4044b38mr3090975fac.6.1741714568018;
+        Tue, 11 Mar 2025 10:36:08 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.161.248])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c2d749e115sm661597fac.13.2025.03.11.10.36.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 10:36:06 -0700 (PDT)
+Message-ID: <9188b3d1-ee61-c1d1-f06e-854ffd2ccff7@broadcom.com>
+Date: Tue, 11 Mar 2025 10:20:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: media: qcom,sm8550-iris: document
- SA8775p IRIS accelerator
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250311-dtbinding-v1-0-5c807d33f7ae@quicinc.com>
- <20250311-dtbinding-v1-2-5c807d33f7ae@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [RFC] misc: bcm-vk: avoid -Wflex-array-member-not-at-end warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Z8_twT77rSIK-S_-@kspp>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250311-dtbinding-v1-2-5c807d33f7ae@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+From: Scott Branden <scott.branden@broadcom.com>
+In-Reply-To: <Z8_twT77rSIK-S_-@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11/03/2025 13:03, Vikash Garodia wrote:
-> Document the IRIS video decoder and encoder accelerator found in the
-> SA8775P platform. SA8775P has collapsible MX compared to SM8550.
-Does this make interface incompatible? Does not look like.
+Hi Gustavo,
 
-Best regards,
-Krzysztof
+On 2025-03-11 01:01, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> I'm trying to fix the following warning:
+> 
+> drivers/misc/bcm-vk/bcm_vk.h:415:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> after a quick look, I don't see any code directly using the flexible
+> array `data[]`, so this patch should probably suffice:
+> 
+> diff --git a/drivers/misc/bcm-vk/bcm_vk.h b/drivers/misc/bcm-vk/bcm_vk.h
+> index 386884c2a263..9344c2366a4b 100644
+> --- a/drivers/misc/bcm-vk/bcm_vk.h
+> +++ b/drivers/misc/bcm-vk/bcm_vk.h
+> @@ -311,7 +311,6 @@ struct bcm_vk_peer_log {
+>          u32 wr_idx;
+>          u32 buf_size;
+>          u32 mask;
+> -       char data[];
+>   };
+> 
+> What do you think?
+If it is changed to data[0] does the warning go away?  If not, you could 
+remove it or change the code to use it instead of the sizeof used to
+calculate peer offset.
+> 
+> Thanks
+> --
+> Gustavo
