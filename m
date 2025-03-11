@@ -1,224 +1,67 @@
-Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218BA1C5F14
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4C21C245C;
+	Tue, 11 Mar 2025 13:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741701062; cv=none; b=MGyHmkxMJZkGW9y1I5/8xrznmFgqYnW5PWh0fS6dS+0rQ2k+cbOs+UwLAmswFyBKnFycl54wXlU9Et4CfFG+ANERrTM4Rx8WyRjJ3wgQqaBJIDyQnk7xPUGSQizHk8ACAjtSY1WtQxzxkz0MZQNlXIhGWlcBleQUc+BSkUz7AQ4=
+	t=1741701162; cv=none; b=BSwZ0J+s+y6LZnA0869H9nVqsNdDM4Wj5rfIQAmwxmEiN0yYIc6CH7Bjiwn9836S9igPuXo/gHkW75MIasiwWWwS0RgQSCy/HfeMEjGzuvkqfPVoFB1VNRp7jL94Hy3e9yNePJOSMOFwx2Nji+od0AiZPTCcQ5qEKxVH9Aktgjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741701062; c=relaxed/simple;
-	bh=B1drBOZv9ezPrgWUPpogByQ0O6JbrI3vQZLKWtZt0hQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HEQEwUjZXGyxh8a2/YURQYHpw+8o23ACH9Plqb94VOHtI6sn5uLo3imNmkMSAlJF9c/dMohjlZLNT9h5qDmExyRbiOvKH98lToypeK8PxX1QRO97rIEQWx+aof24E2JIXKEmliOnUgLfmR8kSJpOGo/08XcVpFZDLB6P0wTmRiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=felix.moessbauer@siemens.com header.b=Oh0IUokB; arc=none smtp.client-ip=185.136.64.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1741701162; c=relaxed/simple;
+	bh=n45UPAxWADbzGDd4VBZbcmVUcHI4dsPczYexj1kkWEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QOAoavALe1cxNuVKrmGQXMk30FDmOV+2EyOTre+fWoP5HT0DFHjK4o7FGL7VUoyHEDnX2fVxaaJMKhdgPWAg6OvUbRq3liXJ5eC5R1ej771koO6cXiAyMSYb8dcqc7KeaCVV0oGEg0Q5d6aYQWNLYhcb3WmnmjwmVn8LsoLCm1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWg4qFbR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=felix.moessbauer@siemens.com header.b="Oh0IUokB"
-Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 20250311135051ecd52e137a4d4ddcf7
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 11 Mar 2025 14:50:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=felix.moessbauer@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=JbxsWCQEvdcvIOcP/MvY4CehNNotjYZd3ttvNWCCYRI=;
- b=Oh0IUokBOG0KXKXb/c90m9QbYzEQmth/XynQGBIo++CIeN14qAG1QMMu2aLSZIO7Gn0SO6
- bgGZhvTJA3mgFtlP2zCwdg23vpVWEO8tTxKwZueyf5zFVeBmYKkXEzGXfLI7lIA4ymzFCl6H
- 6STgif5pLVw+68DgbMbud+nU9jR7dxcGIVD72rWYijzAlUsuIdvu0Jvhx6lIgrDDtTiz10UZ
- IbLJzA/7SXyKtKTkF8H55JAAp3xLRmEAupvzx/G3Qz1gxvv6qMaK04AHqnrsAKKfEFlzK4iB
- GCpgMfb1glwbzKvLNH2ifXq3PZJC/mPNI8i/aWhlfmI7uOxTWdErfS1g==;
-From: Felix Moessbauer <felix.moessbauer@siemens.com>
-To: stable@vger.kernel.org
-Cc: Felix Moessbauer <felix.moessbauer@siemens.com>,
-	linux-kernel@vger.kernel.org,
-	tglx@linutronix.de,
-	qyousef@layalina.io,
-	frederic@kernel.org,
-	jan.kiszka@siemens.com,
-	bigeasy@linutronix.de,
-	anna-maria@linutronix.de
-Subject: [PATCH 6.6.y 1/1] hrtimer: Use and report correct timerslack values for realtime tasks
-Date: Tue, 11 Mar 2025 14:49:18 +0100
-Message-ID: <20250311134931.290856-1-felix.moessbauer@siemens.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWg4qFbR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF739C4CEE9;
+	Tue, 11 Mar 2025 13:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741701162;
+	bh=n45UPAxWADbzGDd4VBZbcmVUcHI4dsPczYexj1kkWEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BWg4qFbRX+MK5lX3pYS8YQg/kViYWdb7cQsXn5bTDT4CfmScsfpNDELBKWBAR6vIC
+	 RF6he+8/ejSI/Yt4NttNln+tNp4X2pYPmXHs3owBpmfhmR2c/y56f+5MhXpmBOQBGo
+	 qq9M0HX5l7XoR/qqtUiic4dKBb18YwgUU+SUHUNusab675xkWoD7jlz7Bgyzr65IwH
+	 xnm6HZUh69Ha2gJvM/X/Y+aXbE3N4LdtpDVmln6HYJ3TF4R5WoeDXrOouMfwGi9c8J
+	 nJUZDOXG+xLiFYq9YdV0MLUF7tVPTK1sOyB3pTYCKOkcE+PhhJ+khcuOs0YSoTnzO9
+	 KtclIZyqaQfPg==
+Date: Tue, 11 Mar 2025 14:52:36 +0100
+From: Simon Horman <horms@kernel.org>
+To: Rui Salvaterra <rsalvaterra@gmail.com>
+Cc: muhammad.husaini.zulkifli@intel.com, anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com, edumazet@google.com, kuba@kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] igc: enable HW VLAN insertion/stripping by default
+Message-ID: <20250311135236.GO4159220@kernel.org>
+References: <20250307110339.13788-1-rsalvaterra@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1321639:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307110339.13788-1-rsalvaterra@gmail.com>
 
-commit ed4fb6d7ef68111bb539283561953e5c6e9a6e38 upstream.
+On Fri, Mar 07, 2025 at 11:02:39AM +0000, Rui Salvaterra wrote:
+> This is enabled by default in other Intel drivers I've checked (e1000, e1000e,
+> iavf, igb and ice). Fixes an out-of-the-box performance issue when running
+> OpenWrt on typical mini-PCs with igc-supported Ethernet controllers and 802.1Q
+> VLAN configurations, as ethtool isn't part of the default packages and sane
+> defaults are expected.
+> 
+> In my specific case, with an Intel N100-based machine with four I226-V Ethernet
+> controllers, my upload performance increased from under 30 Mb/s to the expected
+> ~1 Gb/s.
+> 
+> Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+> ---
+> 
+> This patch cost me two afternoons of network debugging, last weekend. Is there
+> any plausible reason why VLAN acceleration wasn't enabled by default for this
+> driver, specifically?
 
-The timerslack_ns setting is used to specify how much the hardware
-timers should be delayed, to potentially dispatch multiple timers in a
-single interrupt. This is a performance optimization. Timers of
-realtime tasks (having a realtime scheduling policy) should not be
-delayed.
-
-This logic was inconsitently applied to the hrtimers, leading to delays
-of realtime tasks which used timed waits for events (e.g. condition
-variables). Due to the downstream override of the slack for rt tasks,
-the procfs reported incorrect (non-zero) timerslack_ns values.
-
-This is changed by setting the timer_slack_ns task attribute to 0 for
-all tasks with a rt policy. By that, downstream users do not need to
-specially handle rt tasks (w.r.t. the slack), and the procfs entry
-shows the correct value of "0". Setting non-zero slack values (either
-via procfs or PR_SET_TIMERSLACK) on tasks with a rt policy is ignored,
-as stated in "man 2 PR_SET_TIMERSLACK":
-
-  Timer slack is not applied to threads that are scheduled under a
-  real-time scheduling policy (see sched_setscheduler(2)).
-
-The special handling of timerslack on rt tasks in downstream users
-is removed as well.
-
-Signed-off-by: Felix Moessbauer <felix.moessbauer@siemens.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20240814121032.368444-2-felix.moessbauer@siemens.com
----
- fs/proc/base.c        |  9 +++++----
- fs/select.c           | 11 ++++-------
- kernel/sched/core.c   |  8 ++++++++
- kernel/sys.c          |  2 ++
- kernel/time/hrtimer.c | 18 +++---------------
- 5 files changed, 22 insertions(+), 26 deletions(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 699f085d4de7d..91fe20b7657c0 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -2633,10 +2633,11 @@ static ssize_t timerslack_ns_write(struct file *file, const char __user *buf,
- 	}
- 
- 	task_lock(p);
--	if (slack_ns == 0)
--		p->timer_slack_ns = p->default_timer_slack_ns;
--	else
--		p->timer_slack_ns = slack_ns;
-+	if (task_is_realtime(p))
-+		slack_ns = 0;
-+	else if (slack_ns == 0)
-+		slack_ns = p->default_timer_slack_ns;
-+	p->timer_slack_ns = slack_ns;
- 	task_unlock(p);
- 
- out:
-diff --git a/fs/select.c b/fs/select.c
-index 3f730b8581f65..e66b6189845ea 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -77,19 +77,16 @@ u64 select_estimate_accuracy(struct timespec64 *tv)
- {
- 	u64 ret;
- 	struct timespec64 now;
-+	u64 slack = current->timer_slack_ns;
- 
--	/*
--	 * Realtime tasks get a slack of 0 for obvious reasons.
--	 */
--
--	if (rt_task(current))
-+	if (slack == 0)
- 		return 0;
- 
- 	ktime_get_ts64(&now);
- 	now = timespec64_sub(*tv, now);
- 	ret = __estimate_accuracy(&now);
--	if (ret < current->timer_slack_ns)
--		return current->timer_slack_ns;
-+	if (ret < slack)
-+		return slack;
- 	return ret;
- }
- 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 784a4f8409453..3d6dc03e4a7d3 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7530,6 +7530,14 @@ static void __setscheduler_params(struct task_struct *p,
- 	else if (fair_policy(policy))
- 		p->static_prio = NICE_TO_PRIO(attr->sched_nice);
- 
-+	/* rt-policy tasks do not have a timerslack */
-+	if (task_is_realtime(p)) {
-+		p->timer_slack_ns = 0;
-+	} else if (p->timer_slack_ns == 0) {
-+		/* when switching back to non-rt policy, restore timerslack */
-+		p->timer_slack_ns = p->default_timer_slack_ns;
-+	}
-+
- 	/*
- 	 * __sched_setscheduler() ensures attr->sched_priority == 0 when
- 	 * !rt_policy. Always setting this ensures that things like
-diff --git a/kernel/sys.c b/kernel/sys.c
-index 44b5759903332..355de0b65c235 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -2535,6 +2535,8 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 			error = current->timer_slack_ns;
- 		break;
- 	case PR_SET_TIMERSLACK:
-+		if (task_is_realtime(current))
-+			break;
- 		if (arg2 <= 0)
- 			current->timer_slack_ns =
- 					current->default_timer_slack_ns;
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index e99b1305e1a5f..5db6912b8f6e1 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -2093,14 +2093,9 @@ long hrtimer_nanosleep(ktime_t rqtp, const enum hrtimer_mode mode,
- 	struct restart_block *restart;
- 	struct hrtimer_sleeper t;
- 	int ret = 0;
--	u64 slack;
--
--	slack = current->timer_slack_ns;
--	if (rt_task(current))
--		slack = 0;
- 
- 	hrtimer_init_sleeper_on_stack(&t, clockid, mode);
--	hrtimer_set_expires_range_ns(&t.timer, rqtp, slack);
-+	hrtimer_set_expires_range_ns(&t.timer, rqtp, current->timer_slack_ns);
- 	ret = do_nanosleep(&t, mode);
- 	if (ret != -ERESTART_RESTARTBLOCK)
- 		goto out;
-@@ -2281,7 +2276,7 @@ void __init hrtimers_init(void)
- /**
-  * schedule_hrtimeout_range_clock - sleep until timeout
-  * @expires:	timeout value (ktime_t)
-- * @delta:	slack in expires timeout (ktime_t) for SCHED_OTHER tasks
-+ * @delta:	slack in expires timeout (ktime_t)
-  * @mode:	timer mode
-  * @clock_id:	timer clock to be used
-  */
-@@ -2308,13 +2303,6 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u64 delta,
- 		return -EINTR;
- 	}
- 
--	/*
--	 * Override any slack passed by the user if under
--	 * rt contraints.
--	 */
--	if (rt_task(current))
--		delta = 0;
--
- 	hrtimer_init_sleeper_on_stack(&t, clock_id, mode);
- 	hrtimer_set_expires_range_ns(&t.timer, *expires, delta);
- 	hrtimer_sleeper_start_expires(&t, mode);
-@@ -2334,7 +2322,7 @@ EXPORT_SYMBOL_GPL(schedule_hrtimeout_range_clock);
- /**
-  * schedule_hrtimeout_range - sleep until timeout
-  * @expires:	timeout value (ktime_t)
-- * @delta:	slack in expires timeout (ktime_t) for SCHED_OTHER tasks
-+ * @delta:	slack in expires timeout (ktime_t)
-  * @mode:	timer mode
-  *
-  * Make the current task sleep until the given expiry time has
--- 
-2.47.2
-
+Having looked over this I am also curious to know the answer to that question.
+This does seem to be the default for other Intel drivers (at least).
