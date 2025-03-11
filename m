@@ -1,78 +1,125 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9462524EF6E;
-	Tue, 11 Mar 2025 17:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520341D5ADC
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 17:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741714925; cv=none; b=LLOPYeECJWj2L9VCRV0pYy17hjYto/aerxMULwI8cABdPp/rfYH7RqJvACy6XAr6oSphXLFxFAY4PUkW2EGbcN7sMN+GqSBXysJTiTTpBOEd314hneOJNCrB6yHizFXGe7lbcrdPabt1oUiZmOUDbDQfz1WjDPaHsbxqqPSa9vA=
+	t=1741714979; cv=none; b=GuEvjJYYAKPNtrXuZhN3HlP4GFr7xfM/XBBuD6YpzeHTuJA533GGE3eYdJZSBFWudKraCVqKKQO1OxhNqEZyTJwNlRllx0XS1Zv0C5/svko8Dwfkd1WnEumLvkCXugo4QfF0KvIwhw6t/Ns9vNZiufAnKw4vTIlAvzRVgKF52fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741714925; c=relaxed/simple;
-	bh=hJlpa7qzIxdqn3x3F/DyyzikAdq8ql0x6CY4+XW6PdA=;
-	h=To:Cc:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=l4wmOx4noV+LJ5ugMuKJeAvRv8xyF0QFZ0PDlYW8fPJFPeUf8cHt14xctDTHsBdZT59kOFXf0RwfswH6v4r3laS01P/5Dfo5XyFmN1BrbPiblc+XzrKcXj1P6myul/JGB5en6t8EemV5NumFeBCkt1QVTd1/xc4yM6f8eitaDZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with ESMTPSA id 7603112560D;
-	Tue, 11 Mar 2025 18:33:10 +0100 (CET)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id CE0F960187F25;
-	Tue, 11 Mar 2025 18:33:09 +0100 (CET)
-To: linux-perf-users@vger.kernel.org,
- linux-kernel <linux-kernel@vger.kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Guilherme Amadio <amadio@gentoo.org>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Subject: [PATCH] perf build: filter all combinations of -flto for libbperl
-Organization: Applied Asynchrony, Inc.
-Message-ID: <fa1c3b38-6a23-af22-0e5e-280fa523d06a@applied-asynchrony.com>
-Date: Tue, 11 Mar 2025 18:33:09 +0100
+	s=arc-20240116; t=1741714979; c=relaxed/simple;
+	bh=U0wYOy8nIyoUWWRkX9zLBV6ZqaC3SJYdujCzKBYiThY=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NuToE5JCnIjFANWMDh5OSVTsPamEIDu3DXwT8hrZW26RvWENXHODHQl36XRohypDPOADw/eaNPFfdxNFAFA6dxZ7Io7xhiO14lJs2HhM9cMD3M2CfTNVDPjnqZlYcnORdFa+pfe0HXQHUgVDH6StC7ZHyrh2Hz+ITBVR1vmHtdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SaFp8NMZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SaFp8NMZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741714977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YjJN5Ua84fREKDPZZYib+AuzoDJ3MB1bjMV251DsdaI=;
+	b=SaFp8NMZQ6vUwx3ThiBqkRfXjdh78Mt2j+YYYRS5NGKVAHtEuRoWWwCMeAeChoXaiwNA+e
+	jVQ7VfPNRgKrloo1qoII7EZDwu5X0fEq1IqtcIPz6p6XKnwBieSfXNBr1QWBU1Uv2ky4Gr
+	Mc5HPG2P1hN2QS9+cQ2BHEMcvM7RPXQ=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-571-vhg5zR4WNt20dn5ECKI2cg-1; Tue, 11 Mar 2025 13:42:55 -0400
+X-MC-Unique: vhg5zR4WNt20dn5ECKI2cg-1
+X-Mimecast-MFC-AGG-ID: vhg5zR4WNt20dn5ECKI2cg_1741714975
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c3c5e92d41so1075861585a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 10:42:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741714975; x=1742319775;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YjJN5Ua84fREKDPZZYib+AuzoDJ3MB1bjMV251DsdaI=;
+        b=figQuBmpXTHLoxL91iz4g1KcgweYJG9Cd6PkrFwMwfWXU6GoQ2MCxC7paoXNeZrKqW
+         O7b7yFzBhiXYx1Q0Wl/+oppXQ+CcCZAHgb7hR0EDXog081MQQBV2tUc7pGTduzXPc2yJ
+         jb6dQ2EdvxR8BB4Sa77LkrZHlox9jXUeseODgL2ARhYj8KzXmfI4AwlYGBa7UpFcOiiE
+         KlhSvTvdsZVOc1E3AdJBWadJEDG8szbcO5CySd95F4tF+fswcC8g5OdvLYP8iHuCjJC/
+         VlGsv6HTdTSg5CDLnSyJNgEai13rNOggpnypIAFF9dw5fEz9jYFtv0ThVx92QEAAHR5J
+         4FPg==
+X-Gm-Message-State: AOJu0Yw7YcTqpxSe5OWSE1EJVRu1XV8KPoZJBHFmbCxTMLJsgDzBXyLm
+	Db2HEXzlcsWH+zBLP62dB7ct8m/N/w6pF5QDk0NxURJMNDG8m4znKlGD8X2mi8MGM1nEY2TjI71
+	5d2jOvSGEPjiFf0k0j8XdLVRMR84rhwSv85HwfGjfGYZ+Tz67x/u/A/tseByl9g==
+X-Gm-Gg: ASbGncu4QpG0KJN7Cc/8+djwYGyQF9PXr2FQOw5ZQdqvsOEbhkedCnuqY4tOMZbvBpT
+	yCzabnqO8/wTkP+N1pQWiJ5106whqCjAnZQvqTBREkrLc4cqDdWlt4RHiBH5R88qTdeWXEkorcK
+	Ff4trWQlRynfAar3RGQGQ7h8JWcldIiBgsRs8JWKJT0t88axLNbUuJdmU8F8G3RxDAuzgWGi/3q
+	5Eojy0coSpVmekVebAws7JYeXpVEOqj0UEpJ6K5aZUxQ8h92I64VtoPvuddv29jpgOGmvrRA3XX
+	CfQ2tU4OXPO0wqTBzA9ydq7jeXQkvzw+9vB1yTcBWClsJ1MErUBIG3SMdZKgwQ==
+X-Received: by 2002:a05:620a:6a04:b0:7c5:4dc4:ae33 with SMTP id af79cd13be357-7c55e96c1d2mr650571185a.55.1741714975332;
+        Tue, 11 Mar 2025 10:42:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEIe7vrZJHTSV4Bk89jXHOrZpa1Y2CWkaGfBEgZf6DIZP5HbI799cFbIcNOvIM9HGc5h5GmyQ==
+X-Received: by 2002:a05:620a:6a04:b0:7c5:4dc4:ae33 with SMTP id af79cd13be357-7c55e96c1d2mr650568685a.55.1741714975043;
+        Tue, 11 Mar 2025 10:42:55 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c55e15e86csm187003085a.48.2025.03.11.10.42.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 10:42:54 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <825fb8bc-91ca-4de4-9c8d-44590b6c1cba@redhat.com>
+Date: Tue, 11 Mar 2025 13:42:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/numa: skip VMA scanning on memory pinned to one
+ NUMA node via cpuset.mems
+To: Libo Chen <libo.chen@oracle.com>, peterz@infradead.org,
+ mgorman@techsingularity.net
+Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, tj@kernel.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com
+References: <20250311160447.2813222-1-libo.chen@oracle.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250311160447.2813222-1-libo.chen@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When building the libperl feature the build uses perl's build flags
-(ccopts) but filters out various flags, e.g. for LTO.
-While this is conceptually correct, it is insufficient in practice,
-since only "-flto=auto" is filterd out. When perl itself is built with
-"-flto" this can cause parts of perf being built with LTO and others
-without, giving exciting build errors like e.g.:
+On 3/11/25 12:04 PM, Libo Chen wrote:
+> When the memory of the current task is pinned to one NUMA node by cgroup,
+> there is no point in continuing the rest of VMA scanning and hinting page
+> faults as they will just be overhead. With this change, there will be no
+> more unnecessary PTE updates or page faults in this scenario.
+>
+> Signed-off-by: Libo Chen <libo.chen@oracle.com>
+> ---
+>   kernel/sched/fair.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index c798d27952431..ec4749a7be33a 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3315,6 +3315,13 @@ static void task_numa_work(struct callback_head *work)
+>   	if (p->flags & PF_EXITING)
+>   		return;
+>   
+> +	/*
+> +	 * Memory is pinned to only one NUMA node via cpuset.mems, naturally
+> +	 * no page can be migrated.
+> +	 */
+> +	if (nodes_weight(cpuset_current_mems_allowed) == 1)
+> +		return;
+> +
+>   	if (!mm->numa_next_scan) {
+>   		mm->numa_next_scan = now +
+>   			msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
 
-   ../tools/perf/pmu-events/pmu-events.c:72851:(.text+0xb79): undefined
-   reference to `strcmp_cpuid_str' collect2: error: ld returned 1 exit status
+Do you have any performance improvement data that can be included in the 
+commit log?
 
-Fix this by filtering all matching flag values of -flto{=n,auto,..}.
+Cheers,
+Longman
 
-Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
----
-  tools/perf/Makefile.config | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a148ca9ef..4f5a40ab8 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -820,7 +820,7 @@ else
-    PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
-    PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
-    PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
--  PERL_EMBED_CCOPTS := $(filter-out -flto=auto -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
-+  PERL_EMBED_CCOPTS := $(filter-out -flto% -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
-    PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
-    FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
-  
--- 
-2.48.1
