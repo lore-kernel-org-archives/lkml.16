@@ -1,80 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2766F17591;
-	Tue, 11 Mar 2025 19:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741721498; cv=none; b=qyfNz0y4/0z12T8EQLdb+upfbob9qfa34jM4XMi7rfsb3+otlMt1F7EpaH81ozFCDx4EYqcCh7cEYb/PeJAwkdUDrArAAjr8zgu2Gi6IxgZ2vD/mL3IScBqU/AZksBPxiDi4Mj/V6kRpUHerOy9WzivGAcJn9eX9NGyXNHsDAys=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741721498; c=relaxed/simple;
-	bh=9vKWwaB9nvbKVoEN30+SqReCmCUlZ1KxsGwp8d3wTDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/RRnU7R0iF8gCYe0Y2UH20gL9ps/PXiT0DDkqBMDJt7is82eGideg2zmBapf968idglHhAzh+nhe87HqSH/G3k/MgG5r06eSCdANErl24MV02zLqRsMssTiBRB7uGKghfvsJZtx002gdFUgKBD/Ln6pbXX6fdj0v3+vBQLIjGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQVfBiRm; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741BA25C6E9;
+	Tue, 11 Mar 2025 19:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741721577; cv=fail; b=AOM0WZNzFT+rcPy4mJXllz4P5f4+EdScdfT1oWyllVq64x2uwUcaOEgD7vLgiZH7sp2YN8x50hTnf147P/mGuPpy+n6EI2u2Vv1uK4QWBtWG6stgoydCkpshLvUPw3JsK2wxqIgqPts+cVQNFZpLcIBk1QX0OkUyPGAvWPXcj90=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741721577; c=relaxed/simple;
+	bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=m0cEUPh3eRdDx1DWxbqJhomQTf5aQB/QeU4wxk4b11cz2uYbFopziNmtrAzu//+NRP/VwUK5tWs84PHoNZvFb2d9445G2SXupG45yKl//FENeyPh733Mkg+aVA7Rqb72EQBY0h3NnnW06ncjut7d0YaDZQJuldu6WqtyjaCx+MU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=u1x9L7ey; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=fqOmzWlM; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQVfBiRm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6029BC4CEE9;
-	Tue, 11 Mar 2025 19:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741721497;
-	bh=9vKWwaB9nvbKVoEN30+SqReCmCUlZ1KxsGwp8d3wTDg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bQVfBiRm+tK9ub7XWhRYH1fSA49LyxojZHcoZIEpA2/y4jhfdzeYaHh3wH8Fx9fCS
-	 FJO7D9rGCl5jwWWYHY8bJV7Eh+Bck5edTeD4AS6JQh+9tvcGzP8CzNhgM1odt8/Wc9
-	 VZTfjWf+Momec4SVf3GjKfFZ+KHuiXUiCFq8SIoAHw0YxoDmleV3dpAmZJw9eMyadV
-	 BzRcwnE4de5gCMjGdGVRdjrJ77katc+Lf9ggRuIWdYcjqrNBYioZL9/840QlBDdSe9
-	 u6LXsizYPXEVlmxNDWCPJB03oJAXuTY1tNLWRli9pq4rFlo52DRjd9tPOCE1RWdQWn
-	 ckSJ29Nhs5sww==
-Date: Tue, 11 Mar 2025 14:31:36 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: Yao Zi <ziyao@disroot.org>, "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	David Wu <david.wu@rock-chips.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, devicetree@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: net: rockchip-dwmac: Add compatible
- string for RK3528
-Message-ID: <174172149414.4181803.16963634632371171945.robh@kernel.org>
-References: <20250309232622.1498084-1-jonas@kwiboo.se>
- <20250309232622.1498084-2-jonas@kwiboo.se>
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="u1x9L7ey";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="fqOmzWlM"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id 6B993480A55;
+	Tue, 11 Mar 2025 15:32:55 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1741721575;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+ b=u1x9L7eyfhDDNBjHtzMNLaqMDFMyKZRD2nfztEb/9MisNOEqcbViC+p7xJEJbbXalkZIX
+ ybj6VTdcmRL5h9BCg==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1741721575;
+	cv=none; b=XxFPAuK6Knwt22rlC/01coV1a1TeKd5uUiU4oSOAmzFyf/xkehDy/MeMo7EyjRoPOP1gLr4gz4s3h1fFEnsEfsrXpOUNZ5gVLl/8IztovK8C2mRfhZCrnrT+3+PsscmN5Py5pYdoRshCpaQkRCP6TfGoOcjLyS3NWkBmjG++lyVisZylD5P4SmoC5VfIXgX2CCBQgDvfg5J+N+EtpEuCcMLUHNU0EGS+KxzOSeeX1d3WibH/IXFQLtiIHZS5vq/uMx+H54LwQm9g1VE+LVziurceS6jjjRzw9kFmizZ+e4Hv9g0vjBApVeY3jW/q9hTmMlPUTR0otsR4GvG2Oj1mpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1741721575; c=relaxed/simple;
+	bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=vBv6OSskje2UvHAPgNLoW9Sn/ODwrLiIUn4zjXyuhTkAWqi+fq0IhTO+jxKz+/M0mAapxMJBXhu+MNiKp5J+eDGero9Ac/pcIRgSmPloAnqB8cJYAWnZCe6f7nDdwod6LZb1GzKgVomJ0sWkM+Yo0rkx3+2ImZ0rP28Wpuj1nY2vP0QhhxP2oE3rz1ACF4fLyYrWgFSKgp0kEJAzyXGABb1J5AQBCcVix4HQFlrQb13Mi7/Uyfm7XToNERRC2ZR/l/EFETORVFqZdLzIMk8OcREiVc+Vc7UhKWgzvSrGwnUQqED44O2EaYWZPCjuEcg7CWErWzwzQ5CnEZQsT6QdYQ==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1741721575;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+ b=fqOmzWlM6BJCSw3pwY6xfQA2DA4fjqdAsUhOfT07jzA3BvDF72xM6tBd8j01EL4uyh6JY
+ SMF7m9ol+0lNGlRavQC8HB2ndh+kUgDcYsFVkkultyK4tEXLCFAyG9r6X+eentaq3RerVSl
+ AnNmZSHr6opkiAceebMBTkhmihY2egP/lT6fDBMAQ0EzQOqGXejQftvqU32n7avy794quEv
+ L7xFUWeiR0NbiRt7ZCcnCkquFkGVY0l5go8onn12NQXzQqzaPfMfV5a9gzvCjlWvufkaE82
+ MTa2BxsQvU6pWXwaAOAs1IxKS4+Nc+Kdejj2L9h6eFQMjJm2Plzr+P6M/cAQ==
+Received: by srv8.prv.sapience.com (Postfix) id 3F94E28003C;
+	Tue, 11 Mar 2025 15:32:55 -0400 (EDT)
+Message-ID: <aadd3bef2732a99cf611323aa1a3a39b655376fc.camel@sapience.com>
+Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
+ get_direction failed
+From: Genes Lists <lists@sapience.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 11 Mar 2025 15:32:55 -0400
+In-Reply-To: <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
+References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
+			 <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
+			 <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com>
+	 <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-krYBO8OLqVZriyabkDaA"
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309232622.1498084-2-jonas@kwiboo.se>
 
 
-On Sun, 09 Mar 2025 23:26:11 +0000, Jonas Karlman wrote:
-> Rockchip RK3528 has two Ethernet controllers based on Synopsys DWC
-> Ethernet QoS IP.
-> 
-> Add compatible string for the RK3528 variant.
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> ---
-> Changes in v2:
-> - Restrict the minItems: 4 change to rockchip,rk3528-gmac
-> 
-> The enum will be extended in a future patch, Pending RK3562 and a future
-> RK3506 variant also only have 4 clocks.
-> 
-> Because snps,dwmac-4.20a is already listed in snps,dwmac.yaml adding the
-> rockchip,rk3528-gmac compatible did not seem necessary.
-> ---
->  .../devicetree/bindings/net/rockchip-dwmac.yaml  | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
+--=-krYBO8OLqVZriyabkDaA
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+On Tue, 2025-03-11 at 15:30 -0400, Genes Lists wrote:
+>=20
+> Thank you Bart.
+>=20
+Sorry - I forgot to mention that the number of warnings with your
+pinctl patch =C2=A0is down to 87 from 194.
+=C2=A0
 
+thanks
+--=20
+Gene
+
+
+--=-krYBO8OLqVZriyabkDaA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ9CP5wAKCRA5BdB0L6Ze
+2715AQC1UrvvteMiysF/cbWkAVWl+dGBmdsaVMzb31cn9qMl1gEAyxEBMbvhnnoj
+e0IkzB8P2R3QHdDMbtQ9+rikcX30sgQ=
+=QDp1
+-----END PGP SIGNATURE-----
+
+--=-krYBO8OLqVZriyabkDaA--
