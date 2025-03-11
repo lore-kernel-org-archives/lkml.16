@@ -1,156 +1,116 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A827A1E32D7;
-	Tue, 11 Mar 2025 02:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CABB1DE3D2;
+	Tue, 11 Mar 2025 02:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741659224; cv=none; b=NIz/tAPmRdGwmJTj3dwH/xe3RRxeu/klDAag+cwyThyV8hMseGPAMdoNJg58mKncNW5kx8Ssfht/MfpY/lBDS9JBZ8i9O3nvZOJBu6OTRM2pBpTXVAocKJ8dK+jDEBFdxQl/szhEoICO5KKWYPmVvqKGqdO5rH/7pFZoPVbfy1M=
+	t=1741659228; cv=none; b=oJdbLQO5ThXL8gThpvWERmOeOdVDq/RwuTP7AZh5s26BgBbwW1lKKGveUY8ENzLTIGN1Ch48FRmPViCxIslQ/d4Gvv6yft7Fk/dJXZDhZZA7APB+NuWn9ZpsrVgf/B6PWbqahXNJr9inQDDo0+zymepPLIPSM1xnFwzSTJbYBcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741659224; c=relaxed/simple;
-	bh=oIY+KbIBgXSADPq7hL/savecV9P6KoaDtPIj4g7cKxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hKr3pPV7ZKGsx8fJx773pCDi0O2ysMgNQzi0PoN3bZ6ionmK44CCD4xQRb1Z1bUj5YNV7pqGmzWrEIimYcJKoQvClnLqCjV1gIYAPE4IPrZ5Gbts8G0151GyU1YplYtdc+7o3ZXZkfWIJDOFM9pDlpDe6G+n8tPHAoDJqIjXZt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CCBWMS0b; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1741659228; c=relaxed/simple;
+	bh=veBU3gkYLoi0TeNh5/TA2R536cT3gCV1L2V1p3IRA/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XnuzmfvFgBj+ZXF6H7RD+WUrcHaZrr9z+mEUUJuVanuxeFrbAYWK8cVqLz1nVmR3V8KahUOks71A4MUh06oGoXkKK4iR8mEEdEJuS4oCQkbGz5k4nqiMQU6D4OoVCnS8R/XZj1bZbrtSbGNpbSFmqHkdh9V4NLcPF5W1BKN1I9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y41IjJDQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CCBWMS0b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1741659219;
-	bh=7Qevq9QzjFUqxnBRE+w/EKgCoGRLm32xgy1oXGbBc64=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CCBWMS0b7iTrrYL+mchXz9lUfSrnkxmwqmxC+8tg68WpcRnTbJmA+Xqa14Tlo+YEm
-	 Tgo8O6GAgqTYsqgMAGal78N2SrRYej2Oi59XP93H0oK30ESF7BuegfwUFgbS0JNeBH
-	 2pvBo1B8FIKgL/QnBVa6rHf+rNVUvxouq4OTsCV7pr26QaD8xTmGzFFn7hu2gRNQXV
-	 nWQqLz1SaHqkhk8mHunUfyqXU2ZQ0GPWv0xFbIaTEykAd5KjNcWtl8jSVlAG6N+vlv
-	 FIEDJXYSIu65enIpy6h57Z7cPazDqbEYZx1FoUyylKbDumcFjemm21qT9OoV7wLrMg
-	 f0P9hqtDz0AnA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZBckW26bzz4wcw;
-	Tue, 11 Mar 2025 13:13:39 +1100 (AEDT)
-Date: Tue, 11 Mar 2025 13:13:38 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>, Dave Airlie
- <airlied@redhat.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0?=
- =?UTF-8?B?csO2bQ==?= <thomas.hellstrom@linux.intel.com>, Matthew Brost
- <matthew.brost@intel.com>, Alistair Popple <apopple@nvidia.com>, Balbir
- Singh <balbirs@nvidia.com>, DRM XE List <intel-xe@lists.freedesktop.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, DRI
- <dri-devel@lists.freedesktop.org>
-Subject: Re: linux-next: build failure after merge of the drm-xe tree
-Message-ID: <20250311131338.23a27793@canb.auug.org.au>
-In-Reply-To: <20250307125803.198cdedb@canb.auug.org.au>
-References: <20250307125803.198cdedb@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y41IjJDQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51A4EC4CEE5;
+	Tue, 11 Mar 2025 02:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741659228;
+	bh=veBU3gkYLoi0TeNh5/TA2R536cT3gCV1L2V1p3IRA/U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Y41IjJDQcmdaRzaB7WhHlkqJReRUiFA93fF7QfXja1+jSvLsV+wNiYsVacwgZQEQR
+	 j04G8X7p+/G2ypzDSIdCGhWKHjBG4GGlb9Z30CMl3Yno+DI9ezWZqV+ioxLE+QN9dR
+	 LV2wXx9IjspHfKV7Su5Wc9D7QtXOOwn+B/mTzmYpz2h9z62DX3vtm/owRo7/Pysxzz
+	 5jzAkmb9/MpAlOTGXTsJklk9lyVgTGDcWL/H8fgVsMfMCzOCXI+heUAXOcp9seqBHB
+	 UXcIZMBqpf/sfBto4CgDkHw6o+L0oactjovF/Zi4F38Fq40/ugx3G5rH3BbOfSJFOO
+	 MZ867VmY/wRyg==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bf8632052so36045001fa.0;
+        Mon, 10 Mar 2025 19:13:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXJMGf8zzl0rCFAh2afnfslyThIaeDJipLmE4XzU2wwMLwnZGTen3bHRu4wpSm7flJTo1ixbarI0L+kOKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeJR7tjeALAXGm4nciJaelqu+U+D6FvUadAa+dEXDS6ZzrUk+Y
+	1LC6U6GjgKHmj3ORrhgHONV8BO3w6bRh6IXQH9Y/Cn6l1leQm5xgK7ErXcYoU9wDrS6xuG3mZi/
+	YtBCYopnwsqRArW6B7yIav1zIYmI=
+X-Google-Smtp-Source: AGHT+IEUuj/ui7psFQVzyIso3elVkavHuoG7h3ILW8sx0F2My/4VP6bvJilVOpEgFYzuQEM+y43vM5HSURricFcL4zE=
+X-Received: by 2002:a05:6512:b14:b0:545:c89:2bc9 with SMTP id
+ 2adb3069b0e04-549910cb4a9mr5955367e87.43.1741659227043; Mon, 10 Mar 2025
+ 19:13:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/L5ZJc0WoRyhGhkChn_8Xg_x";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/L5ZJc0WoRyhGhkChn_8Xg_x
-Content-Type: text/plain; charset=US-ASCII
+References: <20250308040451.585561-1-xin@zytor.com> <CAK7LNARHvn4Sy-e4hMmjGt0C7TFaWrGJrLq3YvN0BjehZ8QwSg@mail.gmail.com>
+ <6149ac51-07da-45e2-863e-1d4418f6b662@zytor.com> <CAK7LNATGToVHEfZ-hmJ=3xbQCdHmBZf7x9w2QtQVGV-nMiP2Ag@mail.gmail.com>
+In-Reply-To: <CAK7LNATGToVHEfZ-hmJ=3xbQCdHmBZf7x9w2QtQVGV-nMiP2Ag@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 11 Mar 2025 11:13:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQHfOo3+vnqTt5A=X3SQEpMxz2aQBW2Hmvc_g0gg2ohLw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jo0vXtTVwaaYwhqwxThusV4-7vUM90Qt5a8pipY3XSkQYGMJLRAZi3MIUc
+Message-ID: <CAK7LNAQHfOo3+vnqTt5A=X3SQEpMxz2aQBW2Hmvc_g0gg2ohLw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] kbuild: Add "make headers" to "make help" output
+To: Xin Li <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	nathan@kernel.org, nicolas@fjasle.eu, bp@alien8.de, hpa@zytor.com, 
+	sraithal@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-On Fri, 7 Mar 2025 12:58:03 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+On Tue, Mar 11, 2025 at 10:52=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.=
+org> wrote:
 >
-> After merging the drm-xe tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> drivers/gpu/drm/drm_gpusvm.c: In function 'drm_gpusvm_range_get_pages':
-> drivers/gpu/drm/drm_gpusvm.c:1404:44: error: 'struct page' has no member =
-named 'pgmap'
->  1404 |                         if (pagemap !=3D page->pgmap) {
->       |                                            ^~
-> drivers/gpu/drm/drm_gpusvm.c:1410:47: error: 'struct page' has no member =
-named 'pgmap'
->  1410 |                                 pagemap =3D page->pgmap;
->       |                                               ^~
->=20
-> Caused by commit
->=20
->   99624bdff867 ("drm/gpusvm: Add support for GPU Shared Virtual Memory")
->=20
-> interacting with commit
->=20
->   089b22f60a0f ("mm: allow compound zone device pages")
->=20
-> from the mm-unstable branch of the mm tree.
->=20
-> I have applied the following merge fix patch for today.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Fri, 7 Mar 2025 12:48:32 +1100
-> Subject: [PATCH] fix up for "drm/gpusvm: Add support for GPU Shared Virtu=
-al
->  Memory"
->=20
-> interacting with commit
->=20
->   089b22f60a0f ("mm: allow compound zone device pages")
->=20
-> from the mm-unstable branch of the mm tree.
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/gpu/drm/drm_gpusvm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_gpusvm.c b/drivers/gpu/drm/drm_gpusvm.c
-> index f314f5c4af0f..5e9b18ce65f8 100644
-> --- a/drivers/gpu/drm/drm_gpusvm.c
-> +++ b/drivers/gpu/drm/drm_gpusvm.c
-> @@ -1401,13 +1401,13 @@ int drm_gpusvm_range_get_pages(struct drm_gpusvm =
-*gpusvm,
->  				goto err_unmap;
->  			}
->  			zdd =3D page->zone_device_data;
-> -			if (pagemap !=3D page->pgmap) {
-> +			if (pagemap !=3D page_pgmap(page)) {
->  				if (i > 0) {
->  					err =3D -EOPNOTSUPP;
->  					goto err_unmap;
->  				}
-> =20
-> -				pagemap =3D page->pgmap;
-> +				pagemap =3D page_pgmap(page);
->  				dpagemap =3D zdd->devmem_allocation->dpagemap;
->  				if (drm_WARN_ON(gpusvm->drm, !dpagemap)) {
->  					/*
-> --=20
-> 2.45.2
+> On Mon, Mar 10, 2025 at 3:23=E2=80=AFPM Xin Li <xin@zytor.com> wrote:
+> >
+> > On 3/8/2025 7:12 AM, Masahiro Yamada wrote:
+> > > On Sat, Mar 8, 2025 at 1:05=E2=80=AFPM Xin Li (Intel) <xin@zytor.com>=
+ wrote:
+> > >>
+> > >> Meanwhile explicitly state that the headers are uapi headers.
+> > >
+> > > There are many internal-use targets, which are not documented in the
+> > > help message.
+> > > I assume this one is the case.
+> > >
+> > > If users want to install UAPI headers, 'headers_install' is
+> > > the user-visible interface and it is already documented.
+> > >
+> > >
+> >
+> > hpa and Boris prefer to add it, which I also agree.  But ofc it's your
+> > call :)
+> >
+> > If you don't want to add help for "headers", it probably still makes
+> > sense to explicitly state that the headers are uapi headers, no?
+> >
+> > Thanks!
+> >      Xin
+>
+>
+> If a help message for "headers" is desired, how about this?
+>
+>   headers  - Build read-to-install uapi headers in usr/include
 
-This is now a semantic conflict between the mm tree and the drm tree.
+
+
+
+For clarification, the following is the rationale.
+
+
+Build                 Installation
+-------------------------------------
+vmlinux               install
+modules               modules_install
+dtbs                  dtbs_install
+headers               headers_install
+
+
+
+In Kbuild, the Build and Installation are separate steps,
+since the latter usually requires the root permission.
+
 
 --=20
-Cheers,
-Stephen Rothwell
-
---Sig_/L5ZJc0WoRyhGhkChn_8Xg_x
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfPnFIACgkQAVBC80lX
-0GyF+Af+PCRiooMk/aMZlisH+em5ZTPvbQy6/Y7mKiAWPVCXI0dxpFZJ/LjJnI86
-k65rhtJyrfv2dsPDO1UDlFBL37EZeWX4drT9xuhI1H9UhuVF4pY3E26Q9QWPnlzw
-PUOpmyo5+4jHmIJFgglhw7Fankmz4H57jzo+OlAFDqA2AobKOVEicbQ39WkNa3Cp
-f90Az9m/xwh1XpWWKwSmap+LfI6GI+kGTflZZKMva5Fbwndo9feeFNQwZ01X7Slc
-xHkRKX/r4V9qwGqdWwvP/Iqy5DLh49L6lpz6xGAY4w0BY2cOQ4rTeJPd38h+mF2G
-tdLb76+ps9t3hlRw5gCeoTBfhU43wA==
-=pgxR
------END PGP SIGNATURE-----
-
---Sig_/L5ZJc0WoRyhGhkChn_8Xg_x--
+Best Regards
+Masahiro Yamada
