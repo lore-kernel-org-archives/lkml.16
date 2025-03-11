@@ -1,121 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0656360
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 06:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415D2156861
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 06:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741675532; cv=none; b=PdFDteEhUhcWAiKeq4LmZJ4ZdafKe/Eu1wcjk34L5tdMyE9RUbsBiuHZqx48BSDFfVXNugJt/6tKWLtgnYWlBq7zzFC6SmE0LO6YlfeklcfaBpB/KT7R05xXkXAZ+IBaP41LY2o8zUNn3PixG6/ezvFOXNA29oult7uLIPJJJpE=
+	t=1741675702; cv=none; b=Ok0vDmZyfGHRi54TDhkHfgk7edE5NWaB/OzL4rwVjlXacLyFTkoONM4tn5XlHutO2Uu0K32wZl2GlGWpO7Uuc/D/L3tbU4q5Z5y5pxCcpBk/yxtbp7ITJbAFnm0PL57x7cDbtJRAFLzhF8qcO/vfp1Q2WWqBB+EQoR7dptjXoy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741675532; c=relaxed/simple;
-	bh=wUx86Xs4QmwfkauzxHUVzTI+dcKFK5TmOSvB8z7y32c=;
-	h=From:To:Cc:Subject:Message-ID:Date:MIME-Version:Content-Type; b=W1qBK1/z8EH2OEBboPuM5M9o+3CPA34d6S2WD+SZ2qjVWD4EqKoAsM4t7C8UTsQGfap7fHOcxwZIWqfOfU+ah1/ED8qcbCnWYVTcoA9uvLXOdrAnXA78qcy5lFypr9PasDTvJgtVx+V+VlGiWkXY1Fk1AfFp62Gr6Kx1DAD7JXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ayMr+Zcc; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741675702; c=relaxed/simple;
+	bh=kdW4lBDadmuM4Z/e6yPR8yUiON/o70lgDWYdaej70Wo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kvRlfOp6kQu/0NWD9PdeeaXY32tPCrhoYjrFSx6C+JL4XNfMJeIjjajfEQ7na1//432QUS4X9tpuiVqrI0aG+TmLHDZO0lezY4Mkh9NufdREi1fP3PaqA8pmOn5zxjzVOyaUo8vF4WRef0XFXdJrfuCgPqC3p3219WEU0Nf3Pzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dSj6L1vD; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ayMr+Zcc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741675531; x=1773211531;
-  h=from:to:cc:subject:message-id:date:mime-version:
-   content-transfer-encoding;
-  bh=wUx86Xs4QmwfkauzxHUVzTI+dcKFK5TmOSvB8z7y32c=;
-  b=ayMr+Zcc0fuCBk9p8nH9PFKsMN06/Kqu+66XAPMoGNk2b4/jqHiA8QTX
-   XIFLs/+RPGJ5ToNqWE1rtEIaEdXgcCptC5fdlpeUrgDszL6YsjQqj4pG0
-   ECwPF/ex6D0kLIRdq/kc88TDbxmNDtOip3YZHiNz1Uh/d9TDNAoq97z/Y
-   anmsSBe+CniWyQUHiMnpR47LaCSYvh1uqxA6CuCOixrBgxAspQRB8ZhuF
-   Nj3bJ1jkW6TqK5IqkP+UNOCmV8GQGsnSFMkkKz/rQCmdCAnSPKT5if7Ob
-   d5cMptL7k3szWvxEuXfpwxL3R/Es9xMDesb3iccMjbAMwe7HpBfErA9R0
-   A==;
-X-CSE-ConnectionGUID: n7tbBfezQaaIjlM2FEnr5Q==
-X-CSE-MsgGUID: KYM4Dq6JTo+QpdQLnqKWDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42883440"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="42883440"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 23:45:30 -0700
-X-CSE-ConnectionGUID: zDAqQkwdRFaMnP+zKR7U9g==
-X-CSE-MsgGUID: HQwrlAh4QxmEEYn7FigIcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="125424464"
-Received: from ipu5-build.bj.intel.com (HELO [10.238.232.136]) ([10.238.232.136])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 23:45:29 -0700
-From: Bingbu Cao <bingbu.cao@linux.intel.com>
-To: link@vivo.com, vivek.kasireddy@intel.com
-Cc: linux-kernel@vger.kernel.org, christian.koenig@amd.com,
- dri-devel@lists.freedesktop.org
-Subject: udmabuf vmap failed (Revert "udmabuf: fix vmap_udmabuf error page
- set" can help)
-Message-ID: <9172a601-c360-0d5b-ba1b-33deba430455@linux.intel.com>
-Date: Tue, 11 Mar 2025 14:40:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSj6L1vD"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6fda22908d9so38135797b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 23:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741675700; x=1742280500; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eOnoY/5kztlCwhF/Bn+TEbdQ0a8Ic09Wnz9SPxYkbho=;
+        b=dSj6L1vDnheutz0RdTICNQNpAWrA+Q5jCPGrp9fALM3wQE1zzrHZmjKVOAgvwO3qSo
+         WnmdvCJxuwEafPOLhasOaEEDBbpGFCx3p2ZNpMvJ2RP9JwpB9YhaAUe00KLzA5K4zCBc
+         tpZ/2pBlZxqLuldPhAWAGLysRUOeldQ2foRqW5RRWhafAmnTmLSs+6fNyjRDF1Guj40F
+         UvZUJj94XqtE8jCnYalbBoqrDF1p7ME3uLAdNESe23xWfvAll3gL9Aq9V9ro7mUAQz3A
+         DndZLW4AqVC0zjvykucfyeZS042DjQFWta6JVsaa90X6goDqN96dci5HWghllMVF6xQr
+         yaNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741675700; x=1742280500;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eOnoY/5kztlCwhF/Bn+TEbdQ0a8Ic09Wnz9SPxYkbho=;
+        b=MNLuoRkPAzDuPJbrIW/ZBJ53FmXlbCM+9USmITq8V+6rucHS0EOQfDGc8YDOX1f8hl
+         5ya/Nc/4NQIVImcKTqUR+wKnVvLV+O1ImMfKnsBiismZ0QwztvzXEGjmrOLzjbiwdMyx
+         atsB1nPb4aAs/wQCsBjLK6TOUurGjF6Kb8OGzaPLlo7+WU2JE7NAVwTwJPbapW+vWEPT
+         YaogzCEcZ03KPjmqx6YI4RkCcbDfsFX8cc3gZGZfBuQf9zOsJuMW83i0FZn+E5FCNt+7
+         +ui5cOATzbU0+CJS8cx/TdsaKYlUfVIdjq4pDQ7psqgXQTQLgHIAALy8guiB9t6XL3iW
+         63pg==
+X-Gm-Message-State: AOJu0YylGBV33h6v7tIo8Ra/oAq+I9P5OS3tljSgHvgXJnXFeUIIagYY
+	IhgTYR2EPvffzAwVusttLos/98tlGajcHWanKHlNJlP7AehwGJhVNFNye5tZnv4tefVbf9aRqjX
+	WitXP0LlOmQFYiz8DKek7v5UoJmBObS7vJhvrhsBg
+X-Gm-Gg: ASbGncuWWI4pPLTagBfL4zirCQyU6OGQJAcNJlOS75S2WkGh+6dUd1T3nzSifcBxWX3
+	Rhuw3ydgRjbBfpeaRzCf3DhN35HQt4Yo5nA6BHfW4OTO3L/2V3EJ+RuNvgIFE9shMS8BUxKECE7
+	jtDbfmGoXvQmLQiAYkGuebC+1o1LIDZkib3GnyuxY5sYn309Fkp7iiNOP08J8=
+X-Google-Smtp-Source: AGHT+IFQCg1K1NRXUHUZkHPAga69L2cGS8uouCiyHSDg/OMJb2jeC93rPn3TmYWI710dM2K4sm5LJz43eAYjlF4ychg=
+X-Received: by 2002:a05:690c:6813:b0:6ef:4fba:8137 with SMTP id
+ 00721157ae682-6febf292796mr233690747b3.6.1741675699951; Mon, 10 Mar 2025
+ 23:48:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAFf+5zj=KmBG0Avqy6cq9qtpGKR3HnYNc6rK6y8B_78Ajt4RhQ@mail.gmail.com>
+ <20250311003554.GN2023217@ZenIV> <CAFf+5zjGKMSCYNZvOzaCNRFKHjWe2a6TKmmKqg7Fe-TLQW07yA@mail.gmail.com>
+ <20250311044231.GO2023217@ZenIV>
+In-Reply-To: <20250311044231.GO2023217@ZenIV>
+From: Amit <amitchoudhary0523@gmail.com>
+Date: Tue, 11 Mar 2025 12:18:08 +0530
+X-Gm-Features: AQ5f1JqPXd4zm0WP4MffmU7O6IWPnEr7OyTZoQtf9n7cWIwuiGU5Z69MnD6-NZE
+Message-ID: <CAFf+5ziTDC1RYyfwRMdYMxtdDmb1dk=PY4++2aM3e1M444zO8A@mail.gmail.com>
+Subject: Re: Catching use-after-free easily in linux kernel.
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-Huan Yang and Vivek,
-
-I am trying to use udmabuf for my test, and I cannot vmap the udmabuf
-buffers now. vmap_pfn_apply() will report a warning to complain that
-the pfns are invalid.
-I dump the pfn numbers as below:
-[ 3365.399641] pg[0] pfn 1148695
-[ 3365.399642] pg[1] pfn 1145057
-[ 3365.399642] pg[2] pfn 1134070
-[ 3365.399643] pg[3] pfn 1148700
-[ 3365.399643] pg[4] pfn 1144871
-[ 3365.399643] pg[5] pfn 1408686
-[ 3365.399643] pg[6] pfn 1408683
+On Tue, 11 Mar 2025 at 10:12, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Tue, Mar 11, 2025 at 08:46:36AM +0530, Amit wrote:
+> > On Tue, Mar 11, 2025, 6:05=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk>=
+ wrote:
+> >
+> > > On Mon, Mar 10, 2025 at 01:24:54PM +0530, Amit wrote:
+> > > > Hi,
+> > > >
+> > > > We can catch use-after-free easily if we do the following:
+> > > >
+> > > > kfree(x);
+> > > > (x) =3D NULL;
+> > > >
+> > > > Now, if someone uses 'x' again then the kernel will crash and we wi=
+ll
+> > > know where
+> > > > the use-after-free is happening and then we can fix it.
+> > >
+> > > That assumes that no pointer is ever stored in more than one place.
+> > > Which is very clearly false.
+> > >
+> >
+> >
+> > I will do some experiments and then I will reply if I find something.
+> >
+> > I will introduce a global macro and then change all kfree() to this mac=
+ro
+> > name using cscope probably.
+> >
+> > Then I will compile the kernel and run the new kernel and see if some c=
+rash
+> > is happening or not.
+>
+> What would that test, exactly?  And why would that be any more useful tha=
+n
+> adding global variables named wank and magic and replacing every kfree(p)=
+ with
+> ((magic =3D wank++),kfree(p))?  That also would not introduce any crashes=
 ...
-[ 3365.399660] WARNING: CPU: 3 PID: 2772 at mm/vmalloc.c:3489 vmap_pfn_apply+0xb7/0xd0
-[ 3365.399667] Modules linked in:...
-[ 3365.399750] CPU: 3 UID: 0 PID: 2772 Comm: drm-test Not tainted 6.13.0-rc2-rvp #845
-[ 3365.399752] Hardware name: Intel Corporation Client Platform/xxxx, BIOS xxxFWI1.R00.3221.D83.2408120121 08/12/2024
-[ 3365.399753] RIP: 0010:vmap_pfn_apply+0xb7/0xd0
-[ 3365.399755] Code: 5b 41 5c 41 5d 5d c3 cc cc cc cc 48 21 c3 eb d1 48 21 c3 48 23 3d 31 c0 26 02 eb c5 48 c7 c7 c4 3c 20 a8 e8 5b c0 d8 ff eb 8a <0f> 0b b8 ea ff ff ff 5b 41 5c 41 5d 5d c3 cc cc cc cc 0f 1f 80 00
-[ 3365.399756] RSP: 0018:ffffb9b50c32fad0 EFLAGS: 00010202
-[ 3365.399757] RAX: 0000000000000001 RBX: 0000000000118717 RCX: 0000000000000000
-[ 3365.399758] RDX: 0000000080000000 RSI: ffffb9b50c358000 RDI: 00000000ffffffff
-[ 3365.399758] RBP: ffffb9b50c32fae8 R08: ffffb9b50c32fbd0 R09: 0000000000000001
-[ 3365.399759] R10: ffff941602479288 R11: 0000000000000000 R12: ffffb9b50c32fbd0
-[ 3365.399759] R13: ffff941618665ac0 R14: ffffb9b50c358000 R15: ffff941618665ac8
-[ 3365.399760] FS:  00007ff9e9ddd740(0000) GS:ffff94196f780000(0000) knlGS:0000000000000000
-[ 3365.399760] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3365.399761] CR2: 000055fda5dc69d9 CR3: 00000001544de003 CR4: 0000000000f72ef0
-[ 3365.399762] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 3365.399762] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
-[ 3365.399763] PKRU: 55555554
-[ 3365.399763] Call Trace:
-[ 3365.399765]  <TASK>
-[ 3365.399769]  ? show_regs+0x6d/0x80
-[ 3365.399773]  ? __warn+0x97/0x160
-[ 3365.399777]  ? vmap_pfn_apply+0xb7/0xd0
-[ 3365.399777]  ? report_bug+0x1ec/0x240
-[ 3365.399782]  ? handle_bug+0x63/0xa0
-[ 3365.399784]  ? exc_invalid_op+0x1d/0x80
-[ 3365.399785]  ? asm_exc_invalid_op+0x1f/0x30
-[ 3365.399790]  ? vmap_pfn_apply+0xb7/0xd0
-[ 3365.399791]  __apply_to_page_range+0x522/0x8a0
-[ 3365.399794]  ? __pfx_vmap_pfn_apply+0x10/0x10
-[ 3365.399795]  apply_to_page_range+0x18/0x20
-[ 3365.399796]  vmap_pfn+0x77/0xd0
-[ 3365.399797]  vmap_udmabuf+0xc5/0x110
-[ 3365.399802]  dma_buf_vmap+0x96/0x130
 
-I did an experiment to revert 18d7de823b7150344d242c3677e65d68c5271b04,
-then I can vmap the pages. Could you help what's wrong with that? 
+My test is quite evident from my first mail (kfree(x); x =3D NULL;).
 
+Your example is nowhere related to my proposal.
 
--- 
-Best regards,
-Bingbu Cao
+So, either you didn't understand my issue properly or you thought that
+I was a fool. That's ok.
+
+You thought that I was a fool and I also think that you are a fool.
+
+Tit for tat.
+
+By the way, if you think that you are great because you are working in
+the linux kernel then at least I don't think so.
+
+I have also contributed a few patches to the linux kernel a long time
+ago and they were mostly related to memory leaks.
+
+Anyone who spends ""one year"" hacking the linux kernel will become a
+great linux kernel programmer.
+
+By the way, from my point of view, there's not much to do in the linux
+kernel ""now"". The main part of the kernel is device drivers and
+device drivers can only be written by people who have access to the
+hardware and the data sheet of the hardware. And these guys are mostly
+employed people in companies that release new hardware like Broadcom,
+etc.
+
+I had done a lot of hardware programming for ethernet switches at
+Juniper Networks in the FreeBSD kernel.
+
+I have worked on a few other kernels also - RT Linux, Nucleus OS,
+HP-UX, and VxWorks.
+
+If device drivers are taken out then there's not much work in the
+kernel - the only things left will be filesystems and networking
+subsystem and scheduling but probably there's not much to do there.
+
+So, the real stuff in the kernel is done by people who work for
+companies that develop new hardware and give the driver code to the
+linux kernel.
+
+Long time ago, I also worked on the linux kernel's wireless driver as
+an employee of a company (my work was related to searching for new APs
+if the signal quality falls below a certain threshold and then joining
+an AP having the highest signal quality - this was not there in the
+kernel at that time). However, the end client didn't give us the
+permission to release the patches to the linux kernel.
+
+I had also made modifications to the RT Linux kernel a long time ago,
+basically related to scheduling and priority inversion.
+
+Anyways, given all this, I actually don't think that people who work
+in the linux kernel are great people EXCEPT LINUS TORVALDS.
+
+Linus Torvalds is a great person and a great software engineer and he
+doesn't have much ego and he doesn't throw around his ego over all
+people.
+
+----
