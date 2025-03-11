@@ -1,117 +1,143 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97AE5680;
-	Tue, 11 Mar 2025 13:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE445680
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741700148; cv=none; b=s2U9jjzjz/2feMlpl8u9Npc37MG8H1Ct0gXIKwi1OY4dvGDMXWT7zaSxfjeq8h+sVxJqCpiN+QNTUUM3dLDg9+57Q6XF20S7IVqisvPhoE30VosHkoGCf7TTZsHp2FjVvjJkwu49HKh/BFtiv2U3rwrpK9Cl8j4mYF7KamoyEr0=
+	t=1741700223; cv=none; b=UzbgtrwH8QX2CsL3XzeqMhGQg2Jjm+3CNfZ2m0jobf6JBeFLvUGhIarI2Qy0K3PDGQVuJV7U1TIE8sYCu6x0bU3qcotRBT1UtyqRh7oMGI+Yj1tZLA+A3ipEdy2wDLT+FoL6CPvuctUDucp7mAcHy19JQarq/tyO9915On9y1RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741700148; c=relaxed/simple;
-	bh=GkcFE4LozpHKFxYYuNtMXyCbGTtq8p5Q/ljO4LAzDCA=;
+	s=arc-20240116; t=1741700223; c=relaxed/simple;
+	bh=y/QQH6mqm+8Ho9Aa1K99xXG1QESr4asCjdKr3JIx2Ik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uGfs9+qy7sBiXInSvkzuisZoHBsQ7mNawd+InengS0kZPlj+DkpdAb5mtQaIbrqR3vxmRAe1TdVpx03eLp3SWbJlNyEntGO9Bp3Oo79e8AF1dsjMMU02i7S9gZQTMKfmoKvwfuF1SnMvhht1ACBoFcPi/LNhi+ZCkMROFDg3kSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rO1cdg6t; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LwJFaOQ1CFwduyzFUoDGHMfxr7nDgAHuopWyztNSiqNK28lzjJVgPk/f4/3CAzTuv7oJ04sCnJwk2SdoujqfxBCoO693pWdvgq0kYJJJviq0jhMkk/t3WpzuWzOyYBZFvPNXWrqltlXufLVUJIZfKy9BiXwHlj/gehQpEhta64U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o8ackYSB; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rO1cdg6t"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B7uSBG016551;
-	Tue, 11 Mar 2025 13:33:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=mr7/vg
-	z6z9VChc4A6lC4P1SOGCYwupdTeYiYt187Y5A=; b=rO1cdg6t//szdZtK+tdw9o
-	zrj/rQIPH/AKdyRI6rd7Aj71nfGhZ/Rq+T5zfiw98E0XAz+26jxep3aYqtC0MjKv
-	+3ZDKEWuFgA6HUp8OcV7QiMlRG6hkFxFmrTZcdx2+ClUt0MW+35uUV91iZrTB4un
-	3EoCbVsg6/SjCNcqfuQBkafwr53A1H1WOMt31IIq+dZLhnyo29RdQ8lDL1JTafqn
-	mhn1DVYxFq5IijxR6QQYDQKgWPCZ0sVMLeBZBbcPSLAj/R6XyC+dtcnnarA4/eRq
-	75D+FZKUmnnrxIRSiYQMMsof1KQjz40VSaYC7vxyluA+Iub8RI2BJVZdXDCH3rig
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a1gp6c9s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 13:33:05 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52BAgfLe014460;
-	Tue, 11 Mar 2025 13:33:04 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4592ekc40r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 13:33:04 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52BDX1ds41419254
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 13:33:01 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC1C420043;
-	Tue, 11 Mar 2025 13:33:00 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E25020040;
-	Tue, 11 Mar 2025 13:33:00 +0000 (GMT)
-Received: from osiris (unknown [9.179.21.35])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 11 Mar 2025 13:33:00 +0000 (GMT)
-Date: Tue, 11 Mar 2025 14:32:58 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jeff Xu <jeffxu@chromium.org>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Kees Cook <kees@kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH mm-unstable 1/2] mseal sysmap: generic vdso vvar mapping
-Message-ID: <20250311133258.12846C3b-hca@linux.ibm.com>
-References: <20250311123326.2686682-1-hca@linux.ibm.com>
- <20250311123326.2686682-2-hca@linux.ibm.com>
- <20250311135542-574f3a8a-525f-4e84-9f04-c9d1ded0deef@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8ackYSB"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe808908so44835e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 06:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741700219; x=1742305019; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QIICvZUAuF3f8dZklYxLa0v6cPMJSO6jrRsSfDmTFwU=;
+        b=o8ackYSBoySwe7rxifFc0DflvVtOpEQHI5aGJhbk4xtqvv41wH8H3JmCxeWUdO0YsT
+         6klLwzF9S4qlVeKHOLK45ePhPc0se8QTwAbWytvnWB/7EDIjallMbordAsAEpD+TCqeN
+         I87kSHRXB+OG/5H3fxtqIl9NJwGrhz/mq1WQn/NlB5TXl73+3tsUNq7KnqDZsCcyJj4d
+         kbOP+usR1/6D5Vmp8dwoRNM38KpNmeDwfMDC1/55zIm0jafqNtepVgWUCvNnn6wARrgV
+         7oHm+8LXyJdUaPgS3xPvEblUTtr6bkyTaWBJG1UoeOJL3TbD+O4H7qZi0VntPxkcfqEv
+         pdkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741700219; x=1742305019;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QIICvZUAuF3f8dZklYxLa0v6cPMJSO6jrRsSfDmTFwU=;
+        b=EYiWAaF8+wVResCW0ktk3JL4Rl/O2SHgfCzH6keNmrSButSTZA7g8k8kMY5CXaLwq1
+         +mQrF19Kxs5nK2Dh/kweZUty1urRZ4YYFaFoWjGkZqKlqPX4mXnJ7H/iGSpA8fZScC2D
+         1k1WG+1gEtRmXZO6fzB4dM1Of+rFcp7jElqcfQ4eXrg6vSaJdK7NEU4bRwYVZ8HVQjRk
+         k6cj+DiaUHTW+qHlJMuEdhq3fAOQsZxPiXseyUu5huoN3A5XMUUtVWuFlxEkRvqTPZwE
+         S1ueouuwTV0kUZIFUTFji5K6tEk7HluGO6QFi56uluLMaxFHfYY0tcaorbmvNGw5Btpe
+         FSNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7fj9zhlSx10oWO2kkhddegF1FRVZ32bDjGK181tHsSkP68u30xURhNw6BXUZADKZIE2TzEj/fdDXFmqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybK2DzKfreGGk+IZ4ieHPCncWpKBjjzAS4NITNt98IPNLC6BC5
+	sRqfVsP5EydmH+MRNd7cAuCRk3Rz9+IqoQRaVTAliTD0SWa0VdXsZ1+A6b7WmQ==
+X-Gm-Gg: ASbGnct2XI44ZKPeGPTJABoN0XKouQTk+Mpf6FBhy5aw1txx0MoPR5cOqN1ihcp9Eeg
+	cH7/3sc22S2g2Is1RppF6+fKFJcfZOvIRxokOy0aDi7LL2hFPeiiI0jzfc7IApb2je5HMKWLZUu
+	uANx5ctpkXSN3+d2YBq94I9afPHHetVVQNf177Vk/Qs35HPThtQ1eF5c9NqW+ejfJ/LXPmMEhH4
+	zI8F9Bcf8V+ziQOqJV9rxb+FGeTZLd/aUIBs+xy8Jvf/3VNssWEZ8rRr3JlVSYT/xcJIECQw0P1
+	FkkyHkrQuJ4v+XpQeJNqSTkZCuaThYXTkbhJAvdZM3/pAKGvqo4+P8+u9hmCSMZClf75WDEGQIO
+	gsV82cyk=
+X-Google-Smtp-Source: AGHT+IE85f6Sug78tXLPKOdprCo2ei71bex/CBY062wy6JnIWa+O1MeYF2KGYxUN1KWTV+KXujzTgA==
+X-Received: by 2002:a05:600c:6002:b0:43b:c744:1b39 with SMTP id 5b1f17b1804b1-43ce90989c3mr4155125e9.1.1741700219431;
+        Tue, 11 Mar 2025 06:36:59 -0700 (PDT)
+Received: from google.com (158.100.79.34.bc.googleusercontent.com. [34.79.100.158])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c11e9desm17876951f8f.101.2025.03.11.06.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 06:36:58 -0700 (PDT)
+Date: Tue, 11 Mar 2025 13:36:54 +0000
+From: Brendan Jackman <jackmanb@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Patrick Bellasi <derkling@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Patrick Bellasi <derkling@matbug.net>,
+	David Kaplan <David.Kaplan@amd.com>
+Subject: Re: [PATCH final?] x86/bugs: KVM: Add support for SRSO_MSR_FIX
+Message-ID: <Z9A8djMzajTAOawM@google.com>
+References: <20250303150557.171528-1-derkling@google.com>
+ <20250311120340.GFZ9AmnAcZg-4pXOBv@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250311135542-574f3a8a-525f-4e84-9f04-c9d1ded0deef@linutronix.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: SmyYxSi9cZdoEJKUXlm4nWhXpj0cG8wx
-X-Proofpoint-ORIG-GUID: SmyYxSi9cZdoEJKUXlm4nWhXpj0cG8wx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_03,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- mlxlogscore=470 suspectscore=0 spamscore=0 impostorscore=0 bulkscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503110086
+In-Reply-To: <20250311120340.GFZ9AmnAcZg-4pXOBv@fat_crate.local>
 
-On Tue, Mar 11, 2025 at 01:59:21PM +0100, Thomas Weißschuh wrote:
-> Hi Heiko,
+On Tue, Mar 11, 2025 at 01:03:40PM +0100, Borislav Petkov wrote:
+> On Mon, Mar 03, 2025 at 03:05:56PM +0000, Patrick Bellasi wrote:
+> > That's why we are also going to detect this cases and set
+> > SRSO_MITIGATION_BP_SPEC_REDUCE_NA, so that we get a:
+> > 
+> >   "Vulnerable: Reduced Speculation, not available"
+> > 
+> > from vulnerabilities/spec_rstack_overflow, which should be the only place users
+> > look for to assess the effective mitigation posture, ins't it?
 > 
-> On Tue, Mar 11, 2025 at 01:33:25PM +0100, Heiko Carstens wrote:
-> > With the introduction of the generic vdso data storage the VM_SEALED_SYSMAP
-> > vm flag must be moved from the architecture specific
-> > _install_special_mapping() call [1] [2] which maps the vvar mapping to
-> > generic code.
+> If they even look. The strategy so far has been that the kernel should simply
+> DTRT (it being the default) if the user doesn't know anything about
+> mitigations etc.
 > 
-> I think this change should be part of the merge commit between the
-> trees carrying the generic vdso data storage and mseal for system mappings.
+> So I have another idea: how about we upstream enough ASI bits - i.e., the
+> function which checks whether ASI is enabled - and use that in the mitigation
+> selection?
 > 
-> https://lore.kernel.org/lkml/20250307151426.5f3c0c39@canb.auug.org.au/
-> https://lore.kernel.org/lkml/20250311150847.5a63db36@canb.auug.org.au/
+> IOW:
+> 	case SRSO_CMD_BP_SPEC_REDUCE:
+> 		if ((boot_cpu_has(X86_FEATURE_SRSO_BP_SPEC_REDUCE)) {
+> 			select it
+> 		} else {
+> 			if (ASI enabled)
+> 				do not fall back to IBPB;
+> 			else
+> 				fallback to IBPB;
+> 		}
+> 
+> "ASI enabled" will return false upstream - at least initially only, until ASI
+> is out-of-tree - and then it'll fall back.
+> 
+> On your kernels, it'll return true and there it won't fall back.
+> 
+> We just need to sync with Brendan what "ASI enabled" would be and then it
+> should work and your backports would be easy in that respect.
+> 
+> Until ASI is not upstream, that is.
+> 
+> Hmmmm?
 
-Yes, but Andrew added your patches into his tree and on top of that
-the mseal patches:
-https://lore.kernel.org/all/20250306235802.ff0f406acd0117bcfe927082@linux-foundation.org/
-https://web.git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=mm-unstable
+This seems like a good idea to me, assuming we want ASI in the code
+eventually it seems worthwhile to make visible the places where we
+know we'll want to update the code when we get it in.
 
-When doing that the vvar bits got lost. I don't know what Andrew's
-plans for the merge window are, but right now there is no merge commit
-which could be fixed.
+In RFCv2 this would be static_asi_enabled() [1] - I think in the
+current implementation it would be fine to use it directly, but in
+general we do need to be aware of initializion order.
+
+[0] (first half of)
+https://lore.kernel.org/all/DS0PR12MB9273553AE4096FCCBBB4000E94D62@DS0PR12MB9273.namprd12.prod.outlook.com/
+
+[1]
+https://lore.kernel.org/linux-mm/20250110-asi-rfc-v2-v2-4-8419288bc805@google.com/
+
+Of course I'm biased here, from my perspective having such mentions of
+ASI in the code is unambiguously useful. But if others perceived it as
+useless noise I would understand!
