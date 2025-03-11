@@ -1,110 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA231EB195;
-	Tue, 11 Mar 2025 07:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2815B1E7C06;
+	Tue, 11 Mar 2025 07:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741678301; cv=none; b=ECUhzEl1RxotJYT1tMQrqAPibaPNtFA/1cXI4iUn/HRAbTMa8SRxBc31JojU4HL6MqeAHmqk97Xsdfqf0Of1Ox0bs9i7QQ5DAyLJoTp3WXZldsctdiXxQ57B2C/j9PzsojTHpRbEFoTlqN+SWybqedBNPI60WpgJ5eNDJaWP2MI=
+	t=1741678352; cv=none; b=Z60X+KX/S0i48IxyaYstk3yZE5v1lSnvJk+AoimAQV5vin4wvpneRAxTCVDKMnGjwKGp3N3S48yp55QOKLLFce/2Sj9fDrzSnAfLoGEobhXITuXN8cyeBQfa1szz5DG/Aha/Qqz+Iv1w3Sa2PFwdRER1OMyFzmTgpzQy0JVfCi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741678301; c=relaxed/simple;
-	bh=Hq9oj7wLpWMy8mr3CBZv+PzeXcEG672QxLovOqz+Mco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6t3iwyPgrJSRe6Q005I3nuRdEHPx2wbjH5MCTSBKns3dIpNmHCdnpY4IibQC2sDWXy9dTqgvNN0OXbg+rAhDQik+vKyriCluBzjTUSeeKNi2JMFjJAe2cXRY1rYjMww3S1zXhp43QLooNHX+DNWyz/YOIo4sjZUnEPknfV9c2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eARvd6Ww; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741678352; c=relaxed/simple;
+	bh=Ya6le97lQO/QUzfLoztyjsewtNn6ASubIT9SkgopjuE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EnsWlYOlPlA7ea/YbtR+zrHcueRg+jkjs7F4OfbOvryB1ls9/Hl67SxruB5iUK5+2feFMDgNA7OzxmbJuoODrrqetiDHr9OKxapvpzRRogveOhKt16sf0mA0VLydx93UCr6bPVXK+0zgJbu6dZQ2fTRgWjLQSnFk57sqxvZzYkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Gl+Q5VdC; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eARvd6Ww"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741678300; x=1773214300;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Hq9oj7wLpWMy8mr3CBZv+PzeXcEG672QxLovOqz+Mco=;
-  b=eARvd6WwoBHVoDyX97WM0ZB1H6QPqhqOnIoWBJyUIjvOgIvByXZH/rUF
-   fmmBcol8C+lLnzX2kZXJ5OcgLFpgdz/7umy81TZStjWd1RIUXXbwE+enK
-   /dztaOLso6XgxKQMtSLwOmMaSfd/co5k2HY+k2wkowgy2DGMd7M+wXAZz
-   /FgIPBBdjuqcxfDq/lYCef2CQoB6sPSHzPDBsIOUWoSt+DVNd9FE1bDMH
-   0EuFh1Hl7O28lacpnQHb9fpF6+KJw+/yf6U0aAi04yXup+qS6RG665A5G
-   A2mhF0YwPyRDParhy3dzXVfu/1OHx7XNi/TcSOFFlwIAKKFxD15s2+EE0
-   Q==;
-X-CSE-ConnectionGUID: 6ss0DhYZTMeXfqIIaaiouQ==
-X-CSE-MsgGUID: FiDQXVD7QoaM/VBP+XhlbA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="46350713"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="46350713"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:31:40 -0700
-X-CSE-ConnectionGUID: NTagemLOSlibh4jwNKS8ng==
-X-CSE-MsgGUID: u9trQ7IgS0q9Htl59JSXvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="125283253"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:31:37 -0700
-Date: Tue, 11 Mar 2025 08:27:45 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: macb: Truncate TX1519CNT for trailing NUL
-Message-ID: <Z8/l8eM5u7QeUROt@mev-dev.igk.intel.com>
-References: <20250310222415.work.815-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gl+Q5VdC"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52B7WING699670
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Mar 2025 02:32:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741678339;
+	bh=SV7h4ls8IB7WbhH4rLYzHQP8pvDUXO29NP9uDd/G99g=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Gl+Q5VdCOk2Jt5F2GpIdEvc9OC9FNT8oJEQlDLVGsHP4gFb+C8D47CsoODSuJbidw
+	 i2g7qZ1NB8jXzS7Fl7TWLDK3gmdm9Q1BAAwM5PxIJ/AC4wSk+9ZgPxzbDTiL+4nFRl
+	 yRAIIPoBSysf0Ov+Oe9EnWbv57invSfO5yjO14QI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52B7WI1Z003237
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 11 Mar 2025 02:32:18 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 11
+ Mar 2025 02:32:18 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 11 Mar 2025 02:32:18 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52B7WHV9008584;
+	Tue, 11 Mar 2025 02:32:18 -0500
+Date: Tue, 11 Mar 2025 13:02:16 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <vigneshr@ti.com>, <manivannan.sadhasivam@linaro.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <rogerq@kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+Subject: Re: [PATCH] PCI: j721e: Fix the value of linkdown_irq_regfield for
+ J784S4
+Message-ID: <20250311073216.ynw7rzmu36dwywij@uda0492258>
+References: <20250305132018.2260771-1-s-vadapalli@ti.com>
+ <20250310210746.GA2377483@rocinante>
+ <20250311051806.smcu4o4dxpngimth@uda0492258>
+ <20250311072546.GA277060@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20250310222415.work.815-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250311072546.GA277060@rocinante>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Mar 10, 2025 at 03:24:16PM -0700, Kees Cook wrote:
-> GCC 15's -Wunterminated-string-initialization saw that this string was
-> being truncated. Adjust the initializer so that the needed final NUL
-> character will be present.
+On Tue, Mar 11, 2025 at 04:25:46PM +0900, Krzysztof Wilczyński wrote:
+> Hello,
 > 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  drivers/net/ethernet/cadence/macb.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > Hence, set 'linkdown_irq_regfield' to the macro 'J7200_LINK_DOWN' which
+> > > > expands to BIT(10) and was first defined for the J7200 SoC. Other SoCs
+> > > > already reuse this macro since it accurately represents the link-state
+> > > > field in their respective "PCIE_INTD_ENABLE_REG_SYS_2" register.
+> > > 
+> > > Can you confirm for me that the following use the correct macro?
+> > > 
+> > >   333-static const struct j721e_pcie_data j721e_pcie_rc_data = {
+> > >   337:	.linkdown_irq_regfield = LINK_DOWN,
+> > >   
+> > >   341-static const struct j721e_pcie_data j721e_pcie_ep_data = {
+> > >   343:	.linkdown_irq_regfield = LINK_DOWN,
+> > >   
+> > >   347-static const struct j721e_pcie_data j7200_pcie_rc_data = {
+> > >   350:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> > >   
+> > >   362-static const struct j721e_pcie_data am64_pcie_rc_data = {
+> > >   364:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> > >   
+> > >   369-static const struct j721e_pcie_data am64_pcie_ep_data = {
+> > >   371:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> > >   
+> > >   375-static const struct j721e_pcie_data j784s4_pcie_rc_data = {
+> > >   379:	.linkdown_irq_regfield = LINK_DOWN,
+> > >   
+> > >   383-static const struct j721e_pcie_data j784s4_pcie_ep_data = {
+> > >   385:	.linkdown_irq_regfield = LINK_DOWN,
+> > >   
+> > >   389-static const struct j721e_pcie_data j722s_pcie_rc_data = {
+> > >   391:	.linkdown_irq_regfield = J7200_LINK_DOWN,
+> > > 
+> > > I am asking as some use LINK_DOWN, so I wanted to make sure.
+> > 
+> > Yes, the above are accurate except for J784S4 which is fixed by this
+> > patch. LINK_DOWN i.e. BIT(1) is applicable only to J721E which was the
+> > first SoC after which the driver has been named. For all other SoCs, the
+> > integration of the PCIe Controller into the SoC led to BIT(10) of the
+> > register being used to indicate the link status.
 > 
-> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-> index 2847278d9cd4..9a6acb97c82d 100644
-> --- a/drivers/net/ethernet/cadence/macb.h
-> +++ b/drivers/net/ethernet/cadence/macb.h
-> @@ -1067,7 +1067,8 @@ static const struct gem_statistic gem_statistics[] = {
->  	GEM_STAT_TITLE(TX256CNT, "tx_256_511_byte_frames"),
->  	GEM_STAT_TITLE(TX512CNT, "tx_512_1023_byte_frames"),
->  	GEM_STAT_TITLE(TX1024CNT, "tx_1024_1518_byte_frames"),
-> -	GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
-> +	GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frame"),
-> +
->  	GEM_STAT_TITLE_BITS(TXURUNCNT, "tx_underrun",
->  			    GEM_BIT(NDS_TXERR)|GEM_BIT(NDS_TXFIFOERR)),
->  	GEM_STAT_TITLE_BITS(SNGLCOLLCNT, "tx_single_collision_frames",
-
-"rx_greater_than_1518_byte_frames" is also 32, probably you should fix
-that too.
-
-Thanks
-
-> -- 
-> 2.34.1
+> Sounds good!  Thank you for letting me know.
 > 
+> > > Tht said, the following has no .linkdown_irq_regfield property set:
+> > > 
+> > >   355-static const struct j721e_pcie_data j7200_pcie_ep_data = {
+> > >   356-	.mode = PCI_MODE_EP,
+> > >   357-	.quirk_detect_quiet_flag = true,
+> > >   358-	.quirk_disable_flr = true,
+> > >   359-	.max_lanes = 2,
+> > >   360-};
+> > > 
+> > > Would this be a problem?  Or is this as expected?
+> > 
+> > Thank you for pointing this out. This has to be fixed and the
+> > "linkdown_irq_regfield" member has to be added to match
+> > j7200_pcie_rc_data. I will post the fix for this.
+> 
+> No need to send a new version.
+> 
+> I will update the branch directly when I pull the patch.  Not to worry.
+
+Thank you Krzysztof :)
+
+Regards,
+Siddharth.
