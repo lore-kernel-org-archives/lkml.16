@@ -1,100 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D702E1EB5E7;
-	Tue, 11 Mar 2025 17:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F7E1D514A;
+	Tue, 11 Mar 2025 17:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741714600; cv=none; b=sLE+01JouHhYtv4aqniBTq6/RwuyHgnJmmHl7Kf9SHvQ8hy2l50k2uEcF2/hh4lpw9czZbnSvwzC6YJiv8sv3ExacK858M6IYy9w2jc2awpUCkoM9EogIV0wZVZ/SOLkGG+zrSHpVouY4ASUyUB6BsY6IQGk+OKWc6ngVMAHhTg=
+	t=1741714781; cv=none; b=tEI9KbvsGMc20Ehv9ujmuU+U8UP4sxyER3/B6YkNcWlNZm2t3tV1pO9yxVvOrdB6D2WC9uW7YM5GqSGkJknziPGhF8PnjYnN8YlRvY/48RNxCc4BhuCmIN5ky25bwxtKeGNyaooqqiCt06D9CkGUwher2sPG13gDpFK8gVZE+Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741714600; c=relaxed/simple;
-	bh=Upf2eyD1OvYuj+z2ZLiUjkVaA3b7XtDSb9cBpeAfsMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OiWMNPm3BQ66+DAK2nLBK0WCB1YHVPnBuyrifKWXW8LJAfm3dDHATTg5SziNdN+w+0kyUw54+iKahLMPHXzd7pX9hoey4WTfHh22H8ps9o8XVr5wUVcsHTeDOPVJeClQmanB3Vg+BVqzYH3BLJXLXRZFxKA22EFoi4N0/YfRZs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ojTrRDoo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741714781; c=relaxed/simple;
+	bh=kv+WwmqbGUNvAZ6GSHtKuPsxWSYd7YbvpRYthTPZg+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pZeHnQ55nLoL4fWHxmPPW4UwFKba2ZXeZNPX57oAh9FQgzu79N/KQKTazrefjyfd0VnJO4HSGoSbOligQrGdQZQWbTPp5dAsqs37fbCIpLFz7qoqLZ5+97ZWJISYp49IoRM/gY99Ae7gjPWW+ehTeUW9R5/AMBd+tcyXqF89M4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cH/02nWr; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ojTrRDoo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47ABC4CEE9;
-	Tue, 11 Mar 2025 17:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741714600;
-	bh=Upf2eyD1OvYuj+z2ZLiUjkVaA3b7XtDSb9cBpeAfsMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ojTrRDoo+i5XTjAm8Cn8HbC6VoulsrS/f9bUgv9VE/Ms3lM/65udTntwgSnbXINyZ
-	 uK4U+zEXQRM2WQf4mqIfb5uD7cIcwBNg+jfR8CbSqhJH+oYdohOMwTKe4STDVShRI/
-	 kdZAOm932ORORn2oBO6p1IrbxgP6mhnomCFA+UTE=
-Date: Tue, 11 Mar 2025 18:36:37 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Suraj Patil <surajpatil522@gmail.com>
-Cc: oneukum@suse.com, stern@rowland.harvard.edu, viro@zeniv.linux.org.uk,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: cdc-wdm: Fix typo in comment
-Message-ID: <2025031124-unroll-wife-8844@gregkh>
-References: <20250311171633.469024-1-surajpatil522@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cH/02nWr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741714780; x=1773250780;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=kv+WwmqbGUNvAZ6GSHtKuPsxWSYd7YbvpRYthTPZg+M=;
+  b=cH/02nWrJ5/0trGF3xk5H31DCm9kiMXtf0KJprTtsMC3T/BzQ98XQqhV
+   zbjy6cYj++Mr+jf02AKyjfTcKmBvj1/a1iUJvxo0EOdF9jaOtbrWDELqv
+   lrTRHqhEFldQ1NRBzw4FmRJwBle8d0ehfpGVWmZlkSGakdqqoF0H4U4Fj
+   IKzrMBCW7T5n3oiRTsFUj8HNCKYKHI2T3Y5bNI4Vr9H6YT9WHIfGiJlos
+   oOe3WlzP5j05NAjhDCpNx42X7K8qMghwLiSd/Lof5V0amvR1No8cf/vD6
+   zT+WJ/GI1pKknCrigXPb3je0oRPNOXbhVKVbtNzLksKNwkpVAf8/mfeYY
+   g==;
+X-CSE-ConnectionGUID: 1eNGaYU4QCypM6VAm/4K6Q==
+X-CSE-MsgGUID: w3lOysZGQ+evXyLkHiRQpw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="54151993"
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="54151993"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 10:39:39 -0700
+X-CSE-ConnectionGUID: lukZ3jFvQKqbjZc2kJGWfw==
+X-CSE-MsgGUID: 81yNK9BARMSc9B197TEYsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="143583704"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.251])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 10:39:32 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, 
+ Patil Rajesh Reddy <Patil.Reddy@amd.com>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <232231fc-6a71-495e-971b-be2a76f6db4c@stanley.mountain>
+References: <232231fc-6a71-495e-971b-be2a76f6db4c@stanley.mountain>
+Subject: Re: [PATCH v2] platform/x86/amd/pmf: fix cleanup in
+ amd_pmf_init_smart_pc()
+Message-Id: <174171476741.1715.12385728122456798855.b4-ty@linux.intel.com>
+Date: Tue, 11 Mar 2025 19:39:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311171633.469024-1-surajpatil522@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, Mar 11, 2025 at 05:16:33PM +0000, Suraj Patil wrote:
-> cdc-wdm: Fix typo in comment
+On Mon, 10 Mar 2025 22:48:29 +0300, Dan Carpenter wrote:
+
+> There are a few problems in this code:
 > 
-> Corrected 'interferring' to 'interfering' in a comment
-> to improve readability and maintain code quality.
-> No functional changes.
+> First, if amd_pmf_tee_init() fails then the function returns directly
+> instead of cleaning up.  We cannot simply do a "goto error;" because
+> the amd_pmf_tee_init() cleanup calls tee_shm_free(dev->fw_shm_pool);
+> and amd_pmf_tee_deinit() calls it as well leading to a double free.
+> I have re-written this code to use an unwind ladder to free the
+> allocations.
 > 
-> Signed-off-by: Suraj Patil <surajpatil522@gmail.com>
-> ---
->  drivers/usb/class/cdc-wdm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-> index 86ee39db013f..c5123db416fa 100644
-> --- a/drivers/usb/class/cdc-wdm.c
-> +++ b/drivers/usb/class/cdc-wdm.c
-> @@ -1181,7 +1181,7 @@ static int wdm_probe(struct usb_interface *intf, const struct usb_device_id *id)
->   *
->   * The subdriver will manage the given interrupt endpoint exclusively
->   * and will issue control requests referring to the given intf. It
-> - * will otherwise avoid interferring, and in particular not do
-> + * will otherwise avoid interfering, and in particular not do
->   * usb_set_intfdata/usb_get_intfdata on intf.
->   *
->   * The return value is a pointer to the subdriver's struct usb_driver.
-> -- 
-> 2.43.0
-> 
-> 
+> [...]
 
-Hi,
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+The list of commits applied:
+[1/1] platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()
+      commit: 5b1122fc4995f308b21d7cfc64ef9880ac834d20
 
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
+--
+ i.
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
