@@ -1,71 +1,96 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F601DF25D;
-	Tue, 11 Mar 2025 01:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5F71DF977;
+	Tue, 11 Mar 2025 01:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741657190; cv=none; b=PKupW26hw/t/D6U1vTtfjcAzwkgNvn3yxSmGLyGKfWsBft420mrdhc6vnmWpftFZmQOQ+uEqgP/5s8oRFfOTNQdSlEEW1KF+++ejIB1FQlQzRm5FWzkfJ7+dGZAgAOHR0adp3MxxcWFKTja7YVIIDjyKwWO25dQwG7B/gxIKsp4=
+	t=1741657200; cv=none; b=i3ysf2XZoey7y8FLyHexHDqsrwNRN2qF/H1RlhI/uCVcOEkO2nrP1uMmXtVIsCLTfF1cOW7rB/UEWHZMc52Ho2Olf2BitkU8EaXKOuQtopK+JDar6etFnrWr9DEJet4aCg+zvUvM9gr7mpmmeX7t8EezV2eNSOMVx8dq7JjAmQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741657190; c=relaxed/simple;
-	bh=RqPfnh/4IjE+WtsfZvkx6YqNHsgX5Uso7lCYLf0mcyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WyLkmoKJw3lYzFLdW6vcLJGeBAIKyzlw2TD1wV6yOryNgTVgq6uWOJwxDTHl4qZERmZkSmlPeBR3xW71jVpDysOO1QikvbBsy/kSSJZYWP0pwj5B+6dPcmMy4CeVqlVpK39tRFVj/EYK/pMpSegVotrRgB68n0rHMKeWSdEZXMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=O8Iu6ebB; arc=none smtp.client-ip=220.197.32.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="O8Iu6ebB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=VJT4xsqbCeKyk7dx2NmpkzCo8Yb5OL/Hrsp+1j5RBYs=;
-	b=O8Iu6ebBGznucoDxC+RfhL7A/nGyaoT5hck34WWzMoW1onI5FYl7g5NiF746J/
-	N5u/1QGZY9Zo3xcmxvwI5uph9f5XMBH1TKcCkJ/kmU4Xg2qY/0c70+cq2mBhSnBa
-	coN6uxisRc7hTlX1LziCcQNsBLPbsy4grYM2ZiULjj7o8=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgD3H27uk89ng7SzAA--.51122S3;
-	Tue, 11 Mar 2025 09:37:52 +0800 (CST)
-Date: Tue, 11 Mar 2025 09:37:50 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, Frank Li <Frank.li@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Abel Vesa <abel.vesa@linaro.org>, Marek Vasut <marex@denx.de>,
-	linux-clk@vger.kernel.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 0/6] arm64: dts: freescale: imx8mp-skov: switch to
- nominal drive mode
-Message-ID: <Z8+T7sdtIsvkJ1i2@dragon>
-References: <20250218-imx8m-clk-v4-0-b7697dc2dcd0@pengutronix.de>
+	s=arc-20240116; t=1741657200; c=relaxed/simple;
+	bh=vhZIzTDN0OSeiT0046Ezc3Do+jQB3FRS93pF8EYxZIY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DgQwFUDLsanu3t08d98FCH9Gn9ZIiIhhc4WJm46AJuEspvn4TxK0qG6fvqzFu3KjXt/66V48CH2JVqcuWGU3r5WxcqrPzceqYLxUJummXLMZV59Eyix0ejSRavoAnW5xKSjohn+LxWMPPoDMsAkkQSktAba5FRAjSb534sS9yl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowABHsMlZlM9nXH7HEw--.388S2;
+	Tue, 11 Mar 2025 09:39:45 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: eli.billauer@gmail.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] char: xillybus: Fix error handling in xillybus_init_chrdev()
+Date: Tue, 11 Mar 2025 09:39:35 +0800
+Message-Id: <20250311013935.219615-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218-imx8m-clk-v4-0-b7697dc2dcd0@pengutronix.de>
-X-CM-TRANSID:Ms8vCgD3H27uk89ng7SzAA--.51122S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUVNeODUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEh0NZWfPVKmw0gAAsQ
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABHsMlZlM9nXH7HEw--.388S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrKr4ktr47JrWfJF4kKry8Krg_yoW8JF1UpF
+	47W3WrKrW5Ja1jyr1DJa1DGFW3JayqvF9rur47K3sxZw15u3W8JFWrCrWUJFyDX3yrKay5
+	AFsxA3Z5JryxZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+	0VAGYxC7MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWI
+	evJa73UjIFyTuYvjfUY3kuUUUUU
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-On Tue, Feb 18, 2025 at 07:26:40PM +0100, Ahmad Fatoum wrote:
-> Ahmad Fatoum (6):
->       dt-bindings: clock: imx8m: document nominal/overdrive properties
->       arm64: dts: imx8mp: Add optional nominal drive mode DTSI
->       arm64: dts: imx8mp: add fsl,nominal-mode property into nominal.dtsi
->       arm64: dts: freescale: imx8mp-skov: configure LDB clock automatically
->       arm64: dts: freescale: imx8mp-skov: operate SoC in nominal mode
+After cdev_alloc() succeed and cdev_add() failed, call cdev_del() to
+remove unit->cdev from the system properly.
 
-Applied 4 DTS changes, thanks!
+Found by code review.
 
->       clk: imx8mp: inform CCF of maximum frequency of clocks
+Cc: stable@vger.kernel.org
+Fixes: 8cb5d216ab33 ("char: xillybus: Move class-related functions to new xillybus_class.c")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+Changes in v2:
+- modified the patch as suggestions to avoid UAF.
+---
+ drivers/char/xillybus/xillybus_class.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/char/xillybus/xillybus_class.c b/drivers/char/xillybus/xillybus_class.c
+index c92a628e389e..356af6551b0d 100644
+--- a/drivers/char/xillybus/xillybus_class.c
++++ b/drivers/char/xillybus/xillybus_class.c
+@@ -104,8 +104,7 @@ int xillybus_init_chrdev(struct device *dev,
+ 	if (rc) {
+ 		dev_err(dev, "Failed to add cdev.\n");
+ 		/* kobject_put() is normally done by cdev_del() */
+-		kobject_put(&unit->cdev->kobj);
+-		goto unregister_chrdev;
++		goto err_cdev;
+ 	}
+ 
+ 	for (i = 0; i < num_nodes; i++) {
+@@ -157,6 +156,7 @@ int xillybus_init_chrdev(struct device *dev,
+ 		device_destroy(&xillybus_class, MKDEV(unit->major,
+ 						     i + unit->lowest_minor));
+ 
++err_cdev:
+ 	cdev_del(unit->cdev);
+ 
+ unregister_chrdev:
+-- 
+2.25.1
 
